@@ -1,0 +1,9 @@
+<environment_context>
+  <cwd>/home/milnes/APASVERUS/APAS-AI/apas-ai</cwd>
+  <approval_policy>never</approval_policy>
+  <sandbox_mode>danger-full-access</sandbox_mode>
+  <network_access>restricted</network_access>
+  <shell>bash</shell>
+</environment_context>
+
+<!-- write-test: 2025-02-18 verified -->

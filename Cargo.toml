@@ -1,0 +1,29 @@
+[package]
+name = "apas-verus"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+[lib]
+path = "src/lib.rs"
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[profile.release]
+incremental = true
+
+[lints.rust]
+non_snake_case = "allow"
+non_upper_case_globals = "allow"
+unused_imports = "allow"
+dead_code = "allow"
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(verus_keep_ghost)'] }
+
+[lints.clippy]
+module_inception = "allow"
+type_complexity = "allow"
+
+[workspace]
+members = [ "."]
