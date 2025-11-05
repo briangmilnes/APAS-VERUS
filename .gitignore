@@ -1,5 +1,6 @@
 # Rust
 /target
+Cargo.lock
 
 # Emacs
 *~
@@ -13,3 +14,4 @@ tramp
 .\#*
 \#*
 *~
+TAGS

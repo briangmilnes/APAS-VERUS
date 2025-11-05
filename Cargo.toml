@@ -4,9 +4,14 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+vstd = "0.0.0-2025-08-12-1837"
 
 [lib]
 path = "src/lib.rs"
+
+[[test]]
+name = "TestInsertionSortStEph"
+path = "tests/Chap03/TestInsertionSortStEph.rs"
 
 [dev-dependencies]
 criterion = { version = "0.5", features = ["html_reports"] }
