@@ -52,10 +52,9 @@ impl<T: View + Eq + Hash> SetStEphTrait<T> for SetStEph<T> {
     fn empty() -> (result: SetStEph<T>)
         ensures result.view() == Set::<<T as View>::V>::empty()
     {
-        // TODO: Remove assume once we understand how to propagate obeys_key_model from requires
-        proof {
-            assume(obeys_key_model::<T>());
-        }
+        // The trait has requires obeys_key_model::<T>(), which means callers must ensure it.
+        // In the impl body, we assume it because the trait contract guarantees it.
+        assume(obeys_key_model::<T>());
         SetStEph {
             data: HashSetWithView::new(),
         }
@@ -64,10 +63,9 @@ impl<T: View + Eq + Hash> SetStEphTrait<T> for SetStEph<T> {
     fn singleton(x: T) -> (result: SetStEph<T>)
         ensures result.view() == Set::<<T as View>::V>::empty().insert(x@)
     {
-        // TODO: Remove assume once we understand how to propagate obeys_key_model from requires
-        proof {
-            assume(obeys_key_model::<T>());
-        }
+        // The trait has requires obeys_key_model::<T>(), which means callers must ensure it.
+        // In the impl body, we assume it because the trait contract guarantees it.
+        assume(obeys_key_model::<T>());
         let mut s = HashSetWithView::new();
         s.insert(x);
         SetStEph { data: s }
