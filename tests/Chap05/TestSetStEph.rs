@@ -6,6 +6,12 @@ use vstd::prelude::*;
 
 verus! {
 
+#[cfg(verus_keep_ghost)]
+use vstd::std_specs::hash::axiom_u64_obeys_hash_table_key_model;
+
+#[cfg(verus_keep_ghost)]
+broadcast use axiom_u64_obeys_hash_table_key_model;
+
 #[test]
 fn test_set_u64_empty() {
     let s = SetStEph::<u64>::empty();

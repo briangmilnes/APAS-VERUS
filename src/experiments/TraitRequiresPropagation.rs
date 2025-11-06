@@ -4,9 +4,11 @@
 pub mod TraitRequiresPropagation {
     use vstd::prelude::*;
     use vstd::hash_set::*;
-    use vstd::std_specs::hash::obeys_key_model;
 
     verus! {
+
+#[cfg(verus_keep_ghost)]
+use vstd::std_specs::hash::obeys_key_model;
 
 // A simple trait with a requires clause
 pub trait SimpleTrait<T: View + Eq + std::hash::Hash> {

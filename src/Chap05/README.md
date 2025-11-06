@@ -100,7 +100,51 @@ pub fn example() {
 
 ## Implementation Strategy
 
-**We chose Option 2: Wrap vstd's wrappers**
+**We chose Option 2: Wrap vstd's wrappers using the standard Verus pattern**
+
+### The `obeys_key_model` Pattern
+
+Hash collections in Verus require that key types satisfy `obeys_key_model::<Key>()`, which ensures that:
+```rust
+forall |k1: Key, k2: Key| k1@ == k2@ ==> k1 == k2
+```
+
+This means that if two keys have the same spec-level view, they must be equal at the executable level.
+
+**Standard Verus Pattern** (used by CapybaraKV and throughout the ecosystem):
+1. **In trait methods**: Add `requires obeys_key_model::<T>()` to push the requirement to callers
+2. **In impl bodies**: Use `assume(obeys_key_model::<T>())` to satisfy `HashSetWithView::new()` preconditions
+3. **At call sites with concrete types**: Use `broadcast use axiom_T_obeys_hash_table_key_model` where `T` is `u64`, `u8`, etc.
+
+**Example from our SetStEph**:
+```rust
+pub trait SetStEphTrait<T: View + Eq + Hash>: Sized {
+    fn empty() -> Self
+        requires obeys_key_model::<T>();  // Push requirement to callers
+}
+
+impl<T: View + Eq + Hash> SetStEphTrait<T> for SetStEph<T> {
+    fn empty() -> SetStEph<T> {
+        assume(obeys_key_model::<T>());  // Assume it in impl body
+        SetStEph { data: HashSetWithView::new() }
+    }
+}
+```
+
+**Example test usage**:
+```rust
+use vstd::std_specs::hash::axiom_u64_obeys_hash_table_key_model;
+
+verus! {
+broadcast use axiom_u64_obeys_hash_table_key_model;  // Satisfy requirement for u64
+
+#[test]
+fn test_set_u64() {
+    let mut s = SetStEph::<u64>::empty();  // ✅ Works! axiom satisfies requires
+    s.insert(42);
+}
+}
+```
 
 ### Completed Wrappers
 
@@ -109,24 +153,28 @@ pub fn example() {
 - View type: `Set<<T as View>::V>`
 - Verified operations: `empty()`, `singleton()`, `size()`, `mem()`, `insert()`
 - Bounds: `T: View + Eq + Hash`
+- **Status**: ✅ Verified and tested with u64
 
 #### `MappingStEph<K, V>`
 - Wraps: `HashMapWithView<K, V>`
 - View type: `Map<<K as View>::V, V>`
 - Verified operations: `empty()`, `size()`, `mem()`, `get()`, `insert()`
 - Bounds: `K: View + Eq + Hash`, `V: PartialEq`
+- **Status**: ⏳ Needs testing
 
 #### `RelationStEph<T, U>`
-- Wraps: `HashSetWithView<(T, U)>`
+- Wraps: `HashSetWithView<Pair<T, U>>`
 - View type: `Set<(<T as View>::V, <U as View>::V)>`
 - Verified operations: `empty()`, `size()`, `mem()`, `insert()`
 - Bounds: `T: View + Eq + Hash + Copy`, `U: View + Eq + Hash + Copy`
-- **Note**: Uses Rust tuples `(T, U)` instead of `Pair<T, U>` because vstd's `View` trait is pre-implemented for tuples
+- **Note**: Uses custom `Pair<T, U>` type with `View` impl that maps to tuples at spec level
+- **Status**: ⏳ Needs testing
 
 ### Limitations
 
 - **No iterators**: `HashSetWithView` doesn't expose iterators, so `union()`, `intersection()`, `domain()`, `range()` operations are not yet implementable
 - **Copy requirement**: `RelationStEph::mem()` requires `T` and `U` to be `Copy` to avoid move issues with `contains()`
+- **Generic limitation**: `obeys_key_model` can only be proven for concrete types with axioms; generic use requires callers to ensure the precondition
 
 ## Files
 

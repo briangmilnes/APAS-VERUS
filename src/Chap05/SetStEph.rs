@@ -8,13 +8,16 @@
 pub mod SetStEph {
     use vstd::prelude::*;
     use vstd::hash_set::*;
-    use vstd::std_specs::hash::obeys_key_model;
     use std::hash::Hash;
 
     use crate::Types::Types::*;
 
     verus! {
 
+#[cfg(verus_keep_ghost)]
+use vstd::std_specs::hash::obeys_key_model;
+
+#[cfg(verus_keep_ghost)]
 broadcast use vstd::std_specs::hash::group_hash_axioms;
 
 /// Verified ephemeral Set wrapping HashSetWithView
@@ -52,8 +55,9 @@ impl<T: View + Eq + Hash> SetStEphTrait<T> for SetStEph<T> {
     fn empty() -> (result: SetStEph<T>)
         ensures result.view() == Set::<<T as View>::V>::empty()
     {
-        // The trait has requires obeys_key_model::<T>(), which means callers must ensure it.
-        // In the impl body, we assume it because the trait contract guarantees it.
+        // Standard Verus pattern: trait has requires obeys_key_model::<T>(), pushing the
+        // requirement to callers. In the impl body, we assume it to satisfy HashSetWithView::new().
+        // This matches the pattern used in CapybaraKV and throughout the Verus ecosystem.
         assume(obeys_key_model::<T>());
         SetStEph {
             data: HashSetWithView::new(),
@@ -63,8 +67,9 @@ impl<T: View + Eq + Hash> SetStEphTrait<T> for SetStEph<T> {
     fn singleton(x: T) -> (result: SetStEph<T>)
         ensures result.view() == Set::<<T as View>::V>::empty().insert(x@)
     {
-        // The trait has requires obeys_key_model::<T>(), which means callers must ensure it.
-        // In the impl body, we assume it because the trait contract guarantees it.
+        // Standard Verus pattern: trait has requires obeys_key_model::<T>(), pushing the
+        // requirement to callers. In the impl body, we assume it to satisfy HashSetWithView::new().
+        // This matches the pattern used in CapybaraKV and throughout the Verus ecosystem.
         assume(obeys_key_model::<T>());
         let mut s = HashSetWithView::new();
         s.insert(x);
