@@ -4,6 +4,7 @@
 pub mod RelationStEph {
     use vstd::prelude::*;
     use vstd::hash_set::*;
+    use std::hash::Hash;
 
     use crate::Types::Types::*;
 
@@ -13,15 +14,14 @@ pub mod RelationStEph {
 #[verifier::ext_equal]
 #[verifier::reject_recursive_types(T)]
 #[verifier::reject_recursive_types(U)]
-pub struct RelationStEph<T: View + Eq + std::hash::Hash, U: View + Eq + std::hash::Hash> {
+pub struct RelationStEph<T: View + Eq + Hash, U: View + Eq + Hash> {
     pub pairs: HashSetWithView<Pair<T, U>>,
 }
 
-pub trait RelationStEphTrait<T: View, U: View> {
+pub trait RelationStEphTrait<T: View + Eq + Hash + Copy, U: View + Eq + Hash + Copy>: Sized {
     /// APAS: Work Θ(1), Span Θ(1)
     fn empty() -> Self
-    where
-        Self: Sized;
+        requires vstd::std_specs::hash::obeys_key_model::<Pair<T, U>>();
 
     /// APAS: Work Θ(1), Span Θ(1)
     fn size(&self) -> (result: N)
@@ -39,11 +39,7 @@ pub trait RelationStEphTrait<T: View, U: View> {
     spec fn view(&self) -> Set<(<T as View>::V, <U as View>::V)>;
 }
 
-impl<T, U> RelationStEphTrait<T, U> for RelationStEph<T, U>
-where
-    T: View + std::hash::Hash + Eq + Copy,
-    U: View + std::hash::Hash + Eq + Copy,
-{
+impl<T: View + Eq + std::hash::Hash + Copy, U: View + Eq + std::hash::Hash + Copy> RelationStEphTrait<T, U> for RelationStEph<T, U> {
     fn empty() -> (result: RelationStEph<T, U>)
         ensures result.view() == Set::<(<T as View>::V, <U as View>::V)>::empty()
     {

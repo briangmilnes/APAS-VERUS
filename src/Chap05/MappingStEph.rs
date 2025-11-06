@@ -4,6 +4,7 @@
 pub mod MappingStEph {
     use vstd::prelude::*;
     use vstd::hash_map::*;
+    use std::hash::Hash;
 
     use crate::Types::Types::*;
 
@@ -13,15 +14,14 @@ pub mod MappingStEph {
 #[verifier::ext_equal]
 #[verifier::reject_recursive_types(K)]
 #[verifier::reject_recursive_types(V)]
-pub struct MappingStEph<K: View + Eq + std::hash::Hash, V> {
+pub struct MappingStEph<K: View + Eq + Hash, V> {
     pub data: HashMapWithView<K, V>,
 }
 
-pub trait MappingStEphTrait<K: View, V> {
+pub trait MappingStEphTrait<K: View + Eq + Hash, V: PartialEq>: Sized {
     /// APAS: Work Θ(1), Span Θ(1)
     fn empty() -> Self
-    where
-        Self: Sized;
+        requires vstd::std_specs::hash::obeys_key_model::<K>();
 
     /// APAS: Work Θ(1), Span Θ(1)
     fn size(&self) -> (result: N)
@@ -46,11 +46,7 @@ pub trait MappingStEphTrait<K: View, V> {
     spec fn view(&self) -> Map<<K as View>::V, V>;
 }
 
-impl<K, V> MappingStEphTrait<K, V> for MappingStEph<K, V>
-where
-    K: View + std::hash::Hash + Eq,
-    V: PartialEq,
-{
+impl<K: View + Eq + Hash, V: PartialEq> MappingStEphTrait<K, V> for MappingStEph<K, V> {
     fn empty() -> (result: MappingStEph<K, V>)
         ensures result.view() == Map::<<K as View>::V, V>::empty()
     {

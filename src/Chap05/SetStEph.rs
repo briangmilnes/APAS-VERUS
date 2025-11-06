@@ -8,6 +8,7 @@
 pub mod SetStEph {
     use vstd::prelude::*;
     use vstd::hash_set::*;
+    use std::hash::Hash;
 
     use crate::Types::Types::*;
 
@@ -16,20 +17,18 @@ pub mod SetStEph {
 /// Verified ephemeral Set wrapping HashSetWithView
 #[verifier::ext_equal]
 #[verifier::reject_recursive_types(T)]
-pub struct SetStEph<T: View + Eq + std::hash::Hash> {
+pub struct SetStEph<T: View + Eq + Hash> {
     pub data: HashSetWithView<T>,
 }
 
-pub trait SetStEphTrait<T: View> {
+pub trait SetStEphTrait<T: View + Eq + Hash>: Sized {
     /// APAS: Work Θ(1), Span Θ(1)
     fn empty() -> Self
-    where
-        Self: Sized;
+        requires vstd::std_specs::hash::obeys_key_model::<T>();
 
     /// APAS: Work Θ(1), Span Θ(1)
     fn singleton(x: T) -> Self
-    where
-        Self: Sized;
+        requires vstd::std_specs::hash::obeys_key_model::<T>();
 
     /// APAS: Work Θ(1), Span Θ(1)
     fn size(&self) -> (result: N)
@@ -46,10 +45,7 @@ pub trait SetStEphTrait<T: View> {
     spec fn view(&self) -> Set<<T as View>::V>;
 }
 
-impl<T> SetStEphTrait<T> for SetStEph<T>
-where
-    T: View + std::hash::Hash + Eq,
-{
+impl<T: View + Eq + Hash> SetStEphTrait<T> for SetStEph<T> {
     fn empty() -> (result: SetStEph<T>)
         ensures result.view() == Set::<<T as View>::V>::empty()
     {
