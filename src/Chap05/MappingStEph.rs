@@ -10,13 +10,18 @@ pub mod MappingStEph {
     verus! {
 
 /// Verified ephemeral Mapping wrapping HashMapWithView
+#[verifier::ext_equal]
+#[verifier::reject_recursive_types(K)]
+#[verifier::reject_recursive_types(V)]
 pub struct MappingStEph<K: View + Eq + std::hash::Hash, V> {
-    data: HashMapWithView<K, V>,
+    pub data: HashMapWithView<K, V>,
 }
 
 pub trait MappingStEphTrait<K: View, V> {
     /// APAS: Work Θ(1), Span Θ(1)
-    fn empty() -> Self;
+    fn empty() -> Self
+    where
+        Self: Sized;
 
     /// APAS: Work Θ(1), Span Θ(1)
     fn size(&self) -> (result: N)
@@ -39,15 +44,6 @@ pub trait MappingStEphTrait<K: View, V> {
         ensures self.view() == old(self).view().insert(k@, v);
 
     spec fn view(&self) -> Map<<K as View>::V, V>;
-}
-
-impl<K, V> MappingStEph<K, V>
-where
-    K: View + std::hash::Hash + Eq,
-{
-    pub open spec fn view(&self) -> Map<<K as View>::V, V> {
-        self.data@
-    }
 }
 
 impl<K, V> MappingStEphTrait<K, V> for MappingStEph<K, V>
@@ -73,7 +69,7 @@ where
         ensures result == (self.view().contains_key(k@) && self.view()[k@] == *v)
     {
         match self.data.get(k) {
-            Some(val) => val == v,
+            Some(val) => *val == *v,
             None => false,
         }
     }
@@ -93,7 +89,21 @@ where
     {
         self.data.insert(k, v);
     }
+
+    open spec fn view(&self) -> Map<<K as View>::V, V> {
+        self.data@
+    }
 }
 
     } // verus!
+
+    // Simplified MappingLit macro for our verified wrapper
+    // Note: Does not support literal syntax yet - need to add FromVec/FromPairs methods
+    #[macro_export]
+    macro_rules! MappingLit {
+        () => {{
+            < $crate::Chap05::MappingStEph::MappingStEph::MappingStEph<_, _> >::empty()
+        }};
+        // TODO: Add syntax for ($( ($k:expr, $v:expr) ),*) once we have FromVec
+    }
 }

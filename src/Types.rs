@@ -22,10 +22,6 @@ pub mod Types {
     // Note: bool already implements Display, Debug, Not, etc.
     // No custom implementations needed when B = bool
 
-    // Newtype wrapper for key-value pairs that implements Display
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-    pub struct Pair<K, V>(pub K, pub V);
-
     // Triple wrapper for three-element tuples
     #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Triple<A, B, C>(pub A, pub B, pub C);
@@ -249,10 +245,6 @@ pub mod Types {
         fn from(p: Pair<A, B>) -> Self { (p.0, p.1) }
     }
 
-    impl<K: Display, V: Display> Display for Pair<K, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result { write!(f, "({} -> {})", self.0, self.1) }
-    }
-
     impl<A: Display, B: Display, C: Display> Display for Triple<A, B, C> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result { write!(f, "({}, {}, {})", self.0, self.1, self.2) }
     }
@@ -321,23 +313,31 @@ pub mod Types {
             vec![ $( $crate::PairLit!($a, $b) ),* ]
         };
     }
-}
 
-// Verus View implementation for Pair
-#[cfg(verus_keep_ghost)]
-pub mod verus_pair_view {
-    use super::Types::*;
+    // Verus-verified Pair type
+    // Defined in verus! block so it can implement View
     use vstd::prelude::*;
 
     verus! {
 
-    impl<K: View, V: View> View for Pair<K, V> {
-        type V = Pair<K::V, V::V>;
+    /// Newtype wrapper for key-value pairs with better Display than tuples
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    pub struct Pair<K, V>(pub K, pub V);
 
-        closed spec fn view(&self) -> Pair<K::V, V::V> {
-            Pair(self.0@, self.1@)
+    impl<K: View, V: View> View for Pair<K, V> {
+        type V = (K::V, V::V);
+
+        open spec fn view(&self) -> (K::V, V::V) {
+            (self.0@, self.1@)
         }
     }
 
     } // verus!
+
+    // Display implementation for Pair (outside verus! block)
+    impl<K: Display, V: Display> Display for Pair<K, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "({} -> {})", self.0, self.1)
+        }
+    }
 }

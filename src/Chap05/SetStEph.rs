@@ -14,16 +14,22 @@ pub mod SetStEph {
     verus! {
 
 /// Verified ephemeral Set wrapping HashSetWithView
+#[verifier::ext_equal]
+#[verifier::reject_recursive_types(T)]
 pub struct SetStEph<T: View + Eq + std::hash::Hash> {
-    data: HashSetWithView<T>,
+    pub data: HashSetWithView<T>,
 }
 
 pub trait SetStEphTrait<T: View> {
     /// APAS: Work Θ(1), Span Θ(1)
-    fn empty() -> Self;
+    fn empty() -> Self
+    where
+        Self: Sized;
 
     /// APAS: Work Θ(1), Span Θ(1)
-    fn singleton(x: T) -> Self;
+    fn singleton(x: T) -> Self
+    where
+        Self: Sized;
 
     /// APAS: Work Θ(1), Span Θ(1)
     fn size(&self) -> (result: N)
@@ -38,15 +44,6 @@ pub trait SetStEphTrait<T: View> {
         ensures self.view() == old(self).view().insert(x@);
 
     spec fn view(&self) -> Set<<T as View>::V>;
-}
-
-impl<T> SetStEph<T>
-where
-    T: View + std::hash::Hash + Eq,
-{
-    pub open spec fn view(&self) -> Set<<T as View>::V> {
-        self.data@
-    }
 }
 
 impl<T> SetStEphTrait<T> for SetStEph<T>
@@ -86,7 +83,23 @@ where
     {
         self.data.insert(x);
     }
+
+    open spec fn view(&self) -> Set<<T as View>::V> {
+        self.data@
+    }
 }
 
     } // verus!
+
+    #[macro_export]
+    macro_rules! SetLit {
+        () => {{
+            < $crate::Chap05::SetStEph::SetStEph::SetStEph<_> >::empty()
+        }};
+        ($($x:expr),* $(,)?) => {{
+            let mut __s = < $crate::Chap05::SetStEph::SetStEph::SetStEph<_> >::empty();
+            $( __s.insert($x); )*
+            __s
+        }};
+    }
 }
