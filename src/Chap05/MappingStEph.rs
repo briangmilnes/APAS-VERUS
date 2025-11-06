@@ -4,6 +4,7 @@
 pub mod MappingStEph {
     use vstd::prelude::*;
     use vstd::hash_map::*;
+    use vstd::std_specs::hash::obeys_key_model;
     use std::hash::Hash;
 
     use crate::Types::Types::*;
@@ -21,7 +22,7 @@ pub struct MappingStEph<K: View + Eq + Hash, V> {
 pub trait MappingStEphTrait<K: View + Eq + Hash, V: PartialEq>: Sized {
     /// APAS: Work Θ(1), Span Θ(1)
     fn empty() -> Self
-        requires vstd::std_specs::hash::obeys_key_model::<K>();
+        requires obeys_key_model::<K>();
 
     /// APAS: Work Θ(1), Span Θ(1)
     fn size(&self) -> (result: N)

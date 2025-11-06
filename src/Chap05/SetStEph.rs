@@ -8,6 +8,7 @@
 pub mod SetStEph {
     use vstd::prelude::*;
     use vstd::hash_set::*;
+    use vstd::std_specs::hash::obeys_key_model;
     use std::hash::Hash;
 
     use crate::Types::Types::*;
@@ -24,11 +25,11 @@ pub struct SetStEph<T: View + Eq + Hash> {
 pub trait SetStEphTrait<T: View + Eq + Hash>: Sized {
     /// APAS: Work Θ(1), Span Θ(1)
     fn empty() -> Self
-        requires vstd::std_specs::hash::obeys_key_model::<T>();
+        requires obeys_key_model::<T>();
 
     /// APAS: Work Θ(1), Span Θ(1)
     fn singleton(x: T) -> Self
-        requires vstd::std_specs::hash::obeys_key_model::<T>();
+        requires obeys_key_model::<T>();
 
     /// APAS: Work Θ(1), Span Θ(1)
     fn size(&self) -> (result: N)

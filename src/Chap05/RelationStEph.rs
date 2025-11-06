@@ -4,6 +4,7 @@
 pub mod RelationStEph {
     use vstd::prelude::*;
     use vstd::hash_set::*;
+    use vstd::std_specs::hash::obeys_key_model;
     use std::hash::Hash;
 
     use crate::Types::Types::*;
@@ -21,7 +22,7 @@ pub struct RelationStEph<T: View + Eq + Hash, U: View + Eq + Hash> {
 pub trait RelationStEphTrait<T: View + Eq + Hash + Copy, U: View + Eq + Hash + Copy>: Sized {
     /// APAS: Work Θ(1), Span Θ(1)
     fn empty() -> Self
-        requires vstd::std_specs::hash::obeys_key_model::<Pair<T, U>>();
+        requires obeys_key_model::<Pair<T, U>>();
 
     /// APAS: Work Θ(1), Span Θ(1)
     fn size(&self) -> (result: N)
