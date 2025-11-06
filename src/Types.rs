@@ -233,11 +233,13 @@ pub mod Types {
     }
 
     // Import OrderedFloat from the ordered-float crate
-    pub use ordered_float::OrderedFloat;
+    // COMMENTED OUT: Not needed for Chapter 5 verified wrappers
+    // pub use ordered_float::OrderedFloat;
 
     // Convenience type aliases for common float types
-    pub type OrderedF32 = OrderedFloat<f32>;
-    pub type OrderedF64 = OrderedFloat<f64>;
+    // COMMENTED OUT: Not needed for Chapter 5 verified wrappers
+    // pub type OrderedF32 = OrderedFloat<f32>;
+    // pub type OrderedF64 = OrderedFloat<f64>;
 
     impl<A, B> From<(A, B)> for Pair<A, B> {
         fn from(t: (A, B)) -> Self { Pair(t.0, t.1) }
@@ -277,13 +279,14 @@ pub mod Types {
     // - Default pool size (num_cpus threads, typically 8-16)
     // - Work-stealing prevents deadlock during nested parallelism
     // - Allows parallel recursion without thread explosion
-    #[macro_export]
-    macro_rules! ParaPair {
-        ( $left:expr, $right:expr ) => {{
-            let (left_result, right_result) = rayon::join($left, $right);
-            $crate::Types::Types::Pair(left_result, right_result)
-        }};
-    }
+    // COMMENTED OUT: Not needed for Chapter 5 verified wrappers
+    // #[macro_export]
+    // macro_rules! ParaPair {
+    //     ( $left:expr, $right:expr ) => {{
+    //         let (left_result, right_result) = rayon::join($left, $right);
+    //         $crate::Types::Types::Pair(left_result, right_result)
+    //     }};
+    // }
 
     #[macro_export]
     macro_rules! EdgeLit {
