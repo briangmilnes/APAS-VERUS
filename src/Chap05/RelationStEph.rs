@@ -40,7 +40,7 @@ pub trait RelationStEphTrait<T: View + Eq + Hash + Copy, U: View + Eq + Hash + C
 }
 
 impl<T: View + Eq + std::hash::Hash + Copy, U: View + Eq + std::hash::Hash + Copy> RelationStEphTrait<T, U> for RelationStEph<T, U> {
-    fn empty() -> (result: RelationStEph<T, U>)
+    fn empty() -> (result: Self)
         ensures result.view() == Set::<(<T as View>::V, <U as View>::V)>::empty()
     {
         RelationStEph {
