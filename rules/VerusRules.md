@@ -58,6 +58,24 @@ verus! {
 
 This pattern allows the code to compile with `cargo` while remaining verifiable with the `verus` tool.
 
+#### No mod.rs Files
+
+- **NEVER** create `mod.rs` files to declare submodules
+- Always declare all modules in `src/lib.rs` using `pub mod`
+- Rationale: Keeps module declarations centralized and visible in one place
+- **Violating pattern** (WRONG):
+  ```
+  src/Chap03/mod.rs        ❌ Don't create this
+  ```
+- **Correct pattern**:
+  ```rust
+  // In src/lib.rs:
+  pub mod Chap03 {
+      pub mod InsertionSortStEph;
+      pub mod QuickSortStEph;
+  }
+  ```
+
 ### Verification Rules
 
 #### No Assumes Without Explicit Permission (MANDATORY)
