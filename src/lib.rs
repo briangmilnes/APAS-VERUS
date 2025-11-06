@@ -1,5 +1,7 @@
 //! APAS-VERUS library crate
 
+pub mod Types;
+
 pub mod vstdadditions {
     pub mod TotalOrdered;
 }
@@ -7,3 +9,5 @@ pub mod vstdadditions {
 pub mod Chap03 {
     pub mod InsertionSortStEph;
 }
+
+pub mod Chap05;
