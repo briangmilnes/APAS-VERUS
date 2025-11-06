@@ -321,7 +321,7 @@ pub mod Types {
     verus! {
 
     /// Newtype wrapper for key-value pairs with better Display than tuples
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Pair<K, V>(pub K, pub V);
 
     impl<K: View, V: View> View for Pair<K, V> {
