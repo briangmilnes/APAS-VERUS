@@ -44,6 +44,25 @@ pub fn make_u64_set() -> (result: HashSetWithView<u64>)
     HashSetWithView::new()
 }
 
+// Also works: trait with concrete type
+pub trait ConcreteSetTrait {
+    fn make_set() -> HashSetWithView<u64>;
+}
+
+pub struct ConcreteImpl;
+
+impl ConcreteSetTrait for ConcreteImpl {
+    fn make_set() -> HashSetWithView<u64> {
+        // This works! Concrete types have axioms that satisfy obeys_key_model
+        HashSetWithView::new()
+    }
+}
+
+// CONCLUSION: You can't wrap HashSetWithView in traits with generic type parameters.
+// The obeys_key_model precondition can only be satisfied for concrete types where
+// vstd has proven the axioms. Use HashSetWithView directly, or only provide trait
+// implementations for specific concrete types.
+
     } // verus!
 }
 
