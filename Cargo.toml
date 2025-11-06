@@ -23,6 +23,10 @@ path = "tests/Chap03/TestInsertionSortStEph.rs"
 name = "TestSetStEph"
 path = "tests/Chap05/TestSetStEph.rs"
 
+[[test]]
+name = "TestRelationStEph"
+path = "tests/Chap05/TestRelationStEph.rs"
+
 [[bench]]
 name = "BenchInsertionSortStEph"
 path = "benches/Chap03/BenchInsertionSortStEph.rs"

@@ -1,10 +1,10 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
-use apas_ai::Chap05::RelationStEph::RelationStEph::*;
-use apas_ai::Chap05::SetStEph::SetStEph::*;
-use apas_ai::{RelationLit, SetLit};
-use apas_ai::Types::Types::*; // macro import
-use apas_ai::*;
+use apas_verus::Chap05::RelationStEph::RelationStEph::*;
+use apas_verus::Chap05::SetStEph::SetStEph::*;
+use apas_verus::{RelationLit, SetLit};
+use apas_verus::Types::Types::*; // macro import
+use apas_verus::*;
 
 #[test]
 fn test_relationlit_macro_functionality() {
