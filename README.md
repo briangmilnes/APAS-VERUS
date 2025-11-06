@@ -312,7 +312,7 @@ Verus LOC (Spec/Proof/Exec)
 
 ---
 
-**Algorithms to prove before I sleep: 41 chapters, 60+ algorithms remaining**
+**Algorithms to prove before I sleep: 41 chapters, 47 algorithms remaining**
 
 ---
 
