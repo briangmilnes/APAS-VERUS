@@ -19,6 +19,10 @@ path = "src/lib.rs"
 name = "TestInsertionSortStEph"
 path = "tests/Chap03/TestInsertionSortStEph.rs"
 
+[[test]]
+name = "TestSetStEph"
+path = "tests/Chap05/TestSetStEph.rs"
+
 [[bench]]
 name = "BenchInsertionSortStEph"
 path = "benches/Chap03/BenchInsertionSortStEph.rs"
