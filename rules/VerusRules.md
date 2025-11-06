@@ -58,3 +58,31 @@ verus! {
 
 This pattern allows the code to compile with `cargo` while remaining verifiable with the `verus` tool.
 
+### Verification Rules
+
+#### No Assumes Without Explicit Permission (MANDATORY)
+
+- **NEVER** use `assume` statements in verified code without explicitly asking the user first
+- `assume` statements bypass verification and undermine the entire point of formal verification
+- If a proof obligation cannot be satisfied, discuss the issue with the user before resorting to `assume`
+- Rationale: Every `assume` is a hole in the verification - it's admitting defeat rather than proving correctness
+- **Violating pattern** (WRONG):
+  ```rust
+  fn foo() {
+      assume(some_property());  // ❌ NEVER add assume without asking
+      // ...
+  }
+  ```
+- **Correct pattern**:
+  ```rust
+  // Discuss with user why the property can't be proven
+  // Find a way to prove it, restructure the code, or get explicit permission to assume
+  ```
+
+#### When Assumes Are Acceptable (Only with Permission)
+
+- Temporarily during development when explicitly approved by the user
+- For axioms that are provably true but outside the scope of Verus (e.g., external library properties)
+- As a documented limitation when a proof is infeasible and the user has approved it
+- Always document why the assume is needed and what would be required to remove it
+

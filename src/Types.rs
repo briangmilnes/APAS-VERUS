@@ -54,11 +54,6 @@ pub mod Types {
         fn new_mt(inner: Self::Inner) -> Self;
     }
 
-    // HashFunClone: DEPRECATED - Used by old Chap47 (now in attic)
-    // New Chap47 uses HashFunGen pattern instead
-    // pub trait HashFunClone<K>: crate::Chap47::HashFunctionTraits::HashFunctionTraits::HashFunction<K> + Clone {}
-    // impl<K, T> HashFunClone<K> for T where T: crate::Chap47::HashFunctionTraits::HashFunctionTraits::HashFunction<K> + Clone {}
-
     // MtKey: Multi-threaded key type with ordering and static lifetime
     // Common pattern: StTInMtT + Ord + 'static (appears 15+ times)
     pub trait MtKey: StTInMtT + Ord + 'static {}
