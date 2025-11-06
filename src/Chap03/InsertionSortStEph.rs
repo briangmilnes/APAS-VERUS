@@ -16,8 +16,8 @@ pub mod InsertionSortStEph {
             forall|k: int, l: int| 0 <= k < l < i ==> #[trigger] v[k] <= #[trigger] v[l]
         }
 
-        pub open spec fn slice_j_excl_i_incl_gt_key(a: &[u64], j: int, i: int, key: u64) -> bool {
-            forall|k: int| j < k <= i ==> #[trigger] a[k] > key
+        pub open spec fn slice_down_excl_up_incl_gt_key(a: &[u64], down: int, up: int, key: u64) -> bool {
+            forall|k: int| down < k <= up ==> #[trigger] a[k] > key
         }
 
         proof fn lemma_sorted_prefix_full_implies_sorted(v: &[u64])
@@ -29,14 +29,14 @@ pub mod InsertionSortStEph {
             }
         }
 
-        proof fn lemma_insert_key_extends_sorted_prefix(a: &[u64], j: int, i: int, key: u64)
+        proof fn lemma_insert_key_extends_sorted_prefix(a: &[u64], down: int, up: int, key: u64)
             requires
-                0 <= j <= i,
-                sorted_prefix(a, j),
-                slice_j_excl_i_incl_gt_key(a, j, i, key),
-                j == 0 || a[(j - 1) as int] <= key,
+                0 <= down <= up,
+                sorted_prefix(a, down),
+                slice_down_excl_up_incl_gt_key(a, down, up, key),
+                down == 0 || a[(down - 1) as int] <= key,
             ensures
-                sorted_prefix(a, (i + 1) as int),
+                sorted_prefix(a, (up + 1) as int),
         {
             assume(false);
         }
@@ -53,38 +53,38 @@ pub mod InsertionSortStEph {
                 a
             } else {
                 assert(a@.to_multiset() == old(a)@.to_multiset());
-                let l = a.len();
-                let mut i: usize = 1;
-                while i < l
+                let alen = a.len();
+                let mut up = 1;
+                while up < alen
                     invariant 
                         a.len() == old(a).len(),
-                        a.len() == l,
-                        0 < i <= l,
+                        a.len() == alen,
+                        0 < up <= alen,
                         a@.to_multiset() == old(a)@.to_multiset(),
-                        sorted_prefix(a, i as int),
-                    decreases a.len() - i
+                        sorted_prefix(a, up as int),
+                    decreases a.len() - up
                 {
-                    let mut j = i;
-                    while j > 0   
+                    let mut down = up;
+                    while down > 0   
                       invariant 
                         a.len() == old(a).len(),
-                        a.len() == l,
-                        j < l,
-                        0 <= j <= i,
+                        a.len() == alen,
+                        down < alen,
+                        0 <= down <= up,
                         a@.to_multiset() == old(a)@.to_multiset(),
-                        sorted_prefix(a, j as int),
-                      decreases j
+                        sorted_prefix(a, down as int),
+                      decreases down
                     {
-                        if a[j - 1] > a[j] {
-                            let tmp = a[j];
-                            a[j] = a[j - 1];
-                            a[j - 1] = tmp;
-                            j -= 1;
+                        if a[down - 1] > a[down] {
+                            let swapme = a[down];
+                            a[down] = a[down - 1];
+                            a[down - 1] = swapme;
+                            down -= 1;
                         } else {
                             break;
                         }
                     }
-                    i += 1;
+                    up += 1;
                 }
                 a
                 }
