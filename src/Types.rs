@@ -334,6 +334,13 @@ pub mod Types {
 
     } // verus!
 
+    // Clone implementation for Pair (outside verus! block for non-Copy types)
+    impl<K: Clone, V: Clone> Clone for Pair<K, V> {
+        fn clone(&self) -> Self {
+            Pair(self.0.clone(), self.1.clone())
+        }
+    }
+
     // Display implementation for Pair (outside verus! block)
     impl<K: Display, V: Display> Display for Pair<K, V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
