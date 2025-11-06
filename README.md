@@ -24,6 +24,32 @@ This trait enables writing generic verified sorting and ordering algorithms. We 
 
 **Why not in vstd?** This trait is currently only in tutorial examples. We include it here as a reusable component for any algorithm requiring total orderings.
 
+## Lines of Code
+
+```
+Verus LOC (Spec/Proof/Exec)
+
+       0/       0/       0 benches/Chap03/BenchInsertionSortStEph.rs
+       6/       0/      58 src/Chap03/InsertionSortStEph.rs
+       0/       0/      37 src/experiments/ArrayVal.rs
+       0/       0/      45 src/experiments/ArrayVecSet.rs
+       0/       0/      60 src/experiments/ForFor.rs
+       0/       0/      21 src/experiments/ForLoops.rs
+       0/       0/      67 src/experiments/WhileWhile.rs
+       0/       0/       0 src/lib.rs
+      71/     141/     124 src/vstdadditions/TotalOrdered.rs
+       0/       0/       0 tests/Chap03/TestInsertionSortStEph.rs
+
+      77/     141/     412 total
+     794 total lines
+```
+
+**Breakdown:**
+- **Spec code**: 77 lines (specifications, invariants, ensures clauses)
+- **Proof code**: 141 lines (lemmas, proof blocks, manual proofs)
+- **Exec code**: 412 lines (executable implementations)
+- **Total**: 630 lines of Verus code (794 including tests/benches/experiments)
+
 ## Algorithm Status
 
 ### Chapter 03: Sorting - ✅ COMPLETE
