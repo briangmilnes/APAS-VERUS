@@ -312,6 +312,10 @@ Verus LOC (Spec/Proof/Exec)
 
 ---
 
+**Algorithms to prove before I sleep: 41 chapters, 60+ algorithms remaining**
+
+---
+
 **Legend:**
 - ✅ Complete - All algorithms in chapter verified, tested, and benchmarked
 - 🔄 In Progress - Some work done but not complete
