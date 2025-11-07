@@ -1,9 +1,7 @@
-//! HashSetWithViewPlus - extends HashSetWithView with clone and iterators
-//!
-//! This fills a gap in vstd's HashSetWithView which doesn't expose clone() or iter().
-//! We provide these as trusted external_body functions with appropriate specs.
+//! Wrapper around `std::collections::HashSet` that provides `clone()` and `iter()` methods.
+//! vstd's HashSetWithView doesn't expose clone() or iter().
 
-pub mod HashSetWithViewPlus {
+pub mod hash_set_with_view {
     use vstd::prelude::*;
     use std::collections::HashSet;
     use std::collections::hash_set::Iter;
@@ -17,7 +15,6 @@ pub mod HashSetWithViewPlus {
     #[cfg(verus_keep_ghost)]
     broadcast use vstd::std_specs::hash::group_hash_axioms;
 
-    /// Extended wrapper around std::collections::HashSet with View and additional methods
     #[verifier::ext_equal]
     #[verifier::reject_recursive_types(Key)]
     pub struct HashSetWithViewPlus<Key> where Key: View + Eq + Hash + Clone {

@@ -27,6 +27,14 @@ path = "tests/Chap05/TestSetStEph.rs"
 name = "TestRelationStEph"
 path = "tests/Chap05/TestRelationStEph.rs"
 
+[[test]]
+name = "test_total_order"
+path = "tests/vstdplus/test_total_order.rs"
+
+[[test]]
+name = "test_partial_order"
+path = "tests/vstdplus/test_partial_order.rs"
+
 [[bench]]
 name = "BenchInsertionSortStEph"
 path = "benches/Chap03/BenchInsertionSortStEph.rs"
@@ -50,7 +58,7 @@ module_inception = "allow"
 type_complexity = "allow"
 
 [workspace]
-members = [ "."]
+members = ["."]
 
 # Use local Verus fork for vstd (for rust-analyzer navigation)
 [patch.crates-io]

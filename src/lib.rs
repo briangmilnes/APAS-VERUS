@@ -3,10 +3,11 @@
 pub mod Types;
 
 pub mod vstdplus {
-    pub mod TotalOrdered;
-    pub mod SetView;
-    pub mod SetTrait;
-    pub mod HashSetWithViewPlus;
+    pub mod set;
+    pub mod set_with_view;
+    pub mod hash_set_with_view;
+    pub mod total_order;
+    pub mod partial_order;
 }
 
 pub mod Chap03 {
@@ -14,11 +15,10 @@ pub mod Chap03 {
 }
 
 pub mod Chap05 {
-    // TODO: Fix vstd::string::View name resolution bug in trait
+    // All commented out while testing vstdplus::Set
     // pub mod SetStEph;
-    pub mod SetStEph2;  // Test SetTraitWithView implementation
-    // pub mod SetStEphPlus;  // Temporarily commented to test SetStEph2
-    // pub mod RelationStEph;  // Depends on SetStEph
-    // TODO: Apply trusted pattern to MappingStEph
+    // pub mod SetStEph2;
+    // pub mod SetStEphPlus;
+    // pub mod RelationStEph;
     // pub mod MappingStEph;
 }
