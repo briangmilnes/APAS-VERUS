@@ -30,7 +30,6 @@ pub mod SetWithView {
             ensures result@ == self@.difference(other@);
 
         fn len(&self) -> (result: usize)
-            requires self@.finite(),
             ensures result == self@.len();
 
         fn is_empty(&self) -> (result: bool)

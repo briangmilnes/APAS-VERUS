@@ -76,23 +76,6 @@ fn float_example() {
 
 ### Set Traits
 
-#### `Set` (`set.rs`)
-Basic set operations with no View dependency or specifications.
-
-```rust
-pub trait Set<T>: Sized {
-    fn empty() -> Self;
-    fn contains(&self, x: &T) -> bool;
-    fn insert(&mut self, x: T);
-    fn remove(&mut self, x: &T);
-    fn union(&self, other: &Self) -> Self;
-    fn intersect(&self, other: &Self) -> Self;
-    fn difference(&self, other: &Self) -> Self;
-    fn len(&self) -> usize;
-    fn is_empty(&self) -> bool;
-}
-```
-
 #### `SetWithView` (`set_with_view.rs`)
 Set trait with `View` and full specifications using `self@` syntax.
 
@@ -107,16 +90,29 @@ pub trait SetWithView<T: View>: Sized + View<V = vstd::set::Set<<T as View>::V>>
     fn insert(&mut self, x: T)
         ensures self@ == old(self)@.insert(x@);
     
-    // ... etc
+    fn remove(&mut self, x: &T)
+        ensures self@ == old(self)@.remove(x@);
+    
+    fn union(&self, other: &Self) -> (result: Self)
+        ensures result@ == self@.union(other@);
+    
+    fn intersect(&self, other: &Self) -> (result: Self)
+        ensures result@ == self@.intersect(other@);
+    
+    fn difference(&self, other: &Self) -> (result: Self)
+        ensures result@ == self@.difference(other@);
+    
+    fn len(&self) -> (result: usize)
+        ensures result == self@.len();
+    
+    fn is_empty(&self) -> (result: bool)
+        ensures result <==> self@ == Set::<<T as View>::V>::empty();
 }
 ```
 
-**Design**: Two-tier approach avoids `vstd::string::View` name resolution bug in trait definitions.
+**Note**: No `requires self@.finite()` on `len()` because implementations (like `HashSetWithView`) are always finite.
 
-#### `HashSetWithView` (`hash_set_with_view.rs`)
-Extended wrapper around `std::collections::HashSet` that exposes `clone()` and `iter()` methods (missing from `vstd::hash_set::HashSetWithView`).
-
-**Verification**: ✅ 1 verified, 0 errors
+**Verification**: ✅ Foundation trait for verified set implementations
 
 ## Testing
 
@@ -129,6 +125,7 @@ All modules have runtime tests in `tests/vstdplus/`:
 The `attic/vstdplus/` directory contains:
 - Alternative float implementations that don't compile (Verus limitation: no `spec_le` for floats)
 - Comparison documentation explaining why uninterpreted specs are necessary
+- `hash_set_with_view.rs`: Redundant wrapper (replaced by `transmute` approach in `SetStEph`)
 
 ## Design Principles
 
@@ -140,13 +137,11 @@ The `attic/vstdplus/` directory contains:
 ## Verification Summary
 
 ```
-✅ set.rs:                0 verified, 0 errors
-✅ set_with_view.rs:       0 verified, 0 errors  
-✅ hash_set_with_view.rs:  1 verified, 0 errors
+✅ set_with_view.rs:       0 verified, 0 errors (trait definitions only)
 ✅ total_order.rs:        60 verified, 0 errors
 ✅ partial_order.rs:      54 verified, 0 errors
 
-Total: 115 verified, 0 errors
+Total: 114 verified, 0 errors
 ```
 
 ## Future Work

@@ -2,9 +2,9 @@
 
 use apas_verus::Chap05::RelationStEph::RelationStEph::*;
 use apas_verus::Chap05::SetStEph::SetStEph::*;
-use apas_verus::{RelationLit, SetLit};
+use apas_verus::vstdplus::set_with_view::SetWithView::SetWithView;
+use apas_verus::{RelationLit, SetLit, PairLit};
 use apas_verus::Types::Types::*; // macro import
-use apas_verus::*;
 
 #[test]
 fn test_relationlit_macro_functionality() {

@@ -1,6 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 use apas_verus::Chap05::SetStEph::SetStEph::*;
+use apas_verus::vstdplus::set_with_view::SetWithView::SetWithView;
 use apas_verus::{PairLit, SetLit};
 use apas_verus::Types::Types::*; // macro import
 
@@ -469,7 +470,7 @@ fn test_set_maximum_size_boundary() {
 
 #[test]
 fn test_trait_empty() {
-    let s: SetStEph<i32> = <SetStEph<i32> as SetStEphTrait<i32>>::empty();
+    let s: SetStEph<i32> = SetStEph::empty();
     assert_eq!(s.size(), 0);
 }
 
@@ -484,7 +485,7 @@ fn test_trait_singleton() {
 fn test_trait_union() {
     let s1 = SetLit![1, 2];
     let s2 = SetLit![2, 3];
-    let u: SetStEph<i32> = <SetStEph<i32> as SetStEphTrait<i32>>::union(&s1, &s2);
+    let u: SetStEph<i32> = s1.union(&s2);
     assert_eq!(u.size(), 3);
 }
 
@@ -492,7 +493,7 @@ fn test_trait_union() {
 fn test_trait_intersection() {
     let s1 = SetLit![1, 2, 3];
     let s2 = SetLit![2, 3, 4];
-    let i: SetStEph<i32> = <SetStEph<i32> as SetStEphTrait<i32>>::intersection(&s1, &s2);
+    let i: SetStEph<i32> = s1.intersect(&s2);
     assert_eq!(i.size(), 2);
 }
 
@@ -516,7 +517,7 @@ fn test_trait_cartesian_product() {
 #[test]
 fn test_trait_insert() {
     let mut s = SetStEph::<i32>::empty();
-    <SetStEph<i32> as SetStEphTrait<i32>>::insert(&mut s, 42);
+    s.insert(42);
     assert_eq!(s.size(), 1);
 }
 

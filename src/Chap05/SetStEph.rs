@@ -1,18 +1,17 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 5.1 ephemeral Set built on `vstd::hash_set::HashSetWithView`.
 //!
-//! Maximally verified approach: verify what we can (size, mem, insert)
-//! Trust operations that require iteration (HashSetWithView doesn't expose iter())
+//! SetStEph implements SetWithView (verified specs) and extends with APAS-specific API.
 
 pub mod SetStEph {
 
-    use vstd::prelude::View;
-    use vstd::prelude::{Set, verus, old};
-    use vstd::hash_set::HashSetWithView;
+    use vstd::prelude::*;
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::{Hash, Hasher};
 
     use crate::Types::Types::*;
+    use crate::vstdplus::set_with_view::SetWithView::SetWithView;
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
 
     verus! {
 
@@ -22,92 +21,218 @@ use vstd::std_specs::hash::obeys_key_model;
 #[cfg(verus_keep_ghost)]
 broadcast use vstd::std_specs::hash::group_hash_axioms;
 
-/// Verified ephemeral Set wrapping HashSetWithView
-/// Note: Limited API due to HashSetWithView not exposing iterators
-#[verifier::ext_equal]
-#[verifier::reject_recursive_types(T)]
-pub struct SetStEph<T: vstd::prelude::View + Eq + Hash> {
-    pub data: HashSetWithView<T>,
+pub trait SetStEphTrait<T: StT + Hash>: SetWithView<T> {
+    fn singleton(x: T) -> (result: Self)
+        ensures result@ == Set::<<T as View>::V>::empty().insert(x@)
+    {
+        let mut s = Self::empty();
+        s.insert(x);
+        s
+    }
+
+    fn size(&self) -> (result: N)
+        ensures result == self@.len()
+    {
+        self.len()
+    }
+
+    fn mem(&self, x: &T) -> (result: B)
+        ensures result == self@.contains(x@)
+    {
+        self.contains(x)
+    }
+
+    fn iter(&self) -> std::collections::hash_set::Iter<'_, T>;
+
+    fn FromVec(v: Vec<T>) -> Self;
+
+    fn CartesianProduct<U: StT + Hash>(&self, other: &SetStEph<U>) -> SetStEph<Pair<T, U>>;
+
+    fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> B;
 }
 
-impl<T: vstd::prelude::View + Eq + Hash> vstd::prelude::View for SetStEph<T> {
-    type V = Set<<T as vstd::prelude::View>::V>;
 
-    open spec fn view(&self) -> Set<<T as vstd::prelude::View>::V> {
+/// Verified ephemeral Set wrapping HashSetWithViewPlus
+/// Implements SetWithView for verified specs, extends with APAS API
+#[verifier::ext_equal]
+#[verifier::reject_recursive_types(T)]
+pub struct SetStEph<T: View + Eq + Hash + Clone> {
+    pub data: HashSetWithViewPlus<T>,
+}
+
+impl<T: View + Eq + Hash + Clone> SetStEph<T> {
+    pub open spec fn view(&self) -> Set<<T as View>::V> {
         self.data@
     }
 }
 
-pub trait SetStEphTrait<T: StT + Hash>: Sized + vstd::prelude::View {
-    /// APAS: Work Θ(1), Span Θ(1)
-    /// TRUSTED: generic obeys_key_model
-    fn empty() -> Self;
+impl<T: View + Eq + Hash + Clone> View for SetStEph<T> {
+    type V = Set<<T as View>::V>;
 
-    /// APAS: Work Θ(1), Span Θ(1)
-    /// TRUSTED: generic obeys_key_model
-    fn singleton(x: T) -> Self;
-
-    /// APAS: Work Θ(1), Span Θ(1)
-    /// VERIFIED
-    fn size(&self) -> (result: N)
-        ensures result == vstd::prelude::View::view(self).len();
-
-    /// APAS: Work Θ(1), Span Θ(1)
-    /// VERIFIED
-    fn mem(&self, x: &T) -> (result: B)
-        ensures result == vstd::prelude::View::view(self).contains(x@);
-
-    /// APAS: Work Θ(1), Span Θ(1)
-    /// VERIFIED
-    fn insert(&mut self, x: T)
-        ensures vstd::prelude::View::view(self) == vstd::prelude::View::view(&old(self)).insert(x@);
+    open spec fn view(&self) -> Set<<T as View>::V> {
+        Self::view(self)
+    }
 }
 
-// Maximally verified implementation
-impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
-    // TRUSTED: Can't verify generic obeys_key_model
+
+// Implement SetWithView trait for verified specs
+impl<T: StT + Hash> SetWithView<T> for SetStEph<T> {
     #[verifier::external_body]
-    fn empty() -> (result: SetStEph<T>)
-        ensures <SetStEph<T> as vstd::prelude::View>::view(&result) == Set::<<T as vstd::prelude::View>::V>::empty()
-    {
-        SetStEph {
-            data: HashSetWithView::new(),
-        }
+    fn empty() -> (result: Self) {
+        SetStEph { data: HashSetWithViewPlus::new() }
     }
 
-    // TRUSTED: Can't verify generic obeys_key_model
-    #[verifier::external_body]
-    fn singleton(x: T) -> (result: SetStEph<T>)
-        ensures <SetStEph<T> as vstd::prelude::View>::view(&result) == Set::<<T as vstd::prelude::View>::V>::empty().insert(x@)
-    {
-        let mut s = HashSetWithView::new();
-        s.insert(x);
-        SetStEph { data: s }
-    }
-
-    // VERIFIED: Direct call to HashSetWithView::len
-    fn size(&self) -> (result: N)
-        ensures result == self@.len()
-    {
-        self.data.len()
-    }
-
-    // VERIFIED: Direct call to HashSetWithView::contains
-    fn mem(&self, x: &T) -> (result: B)
-        ensures result == self@.contains(x@)
-    {
+    fn contains(&self, x: &T) -> (result: bool) {
         self.data.contains(x)
     }
 
-    // VERIFIED: Direct call to HashSetWithView::insert
-    fn insert(&mut self, x: T)
-        ensures self@ == old(self)@.insert(x@)
-    {
+    fn insert(&mut self, x: T) {
         self.data.insert(x);
+    }
+
+    fn remove(&mut self, x: &T) {
+        self.data.remove(x);
+    }
+
+    fn union(&self, other: &Self) -> (result: Self) {
+        SetStEph { data: self.data.union(&other.data) }
+    }
+
+    fn intersect(&self, other: &Self) -> (result: Self) {
+        SetStEph { data: self.data.intersection(&other.data) }
+    }
+
+    fn difference(&self, other: &Self) -> (result: Self) {
+        SetStEph { data: self.data.difference(&other.data) }
+    }
+
+    fn len(&self) -> (result: usize) {
+        self.data.len()
+    }
+
+    #[verifier::external_body]
+    fn is_empty(&self) -> (result: bool) {
+        self.data.len() == 0
     }
 }
 
-    } // verus!
+// SetStEph implements SetStEphTrait (default implementations only, no verus specs)
+impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
+    fn iter(&self) -> std::collections::hash_set::Iter<'_, T> {
+        self.data.iter()
+    }
+
+    #[verifier::external_body]
+    fn FromVec(v: Vec<T>) -> Self {
+        let mut s = Self::empty();
+        for x in v {
+            s.insert(x);
+        }
+        s
+    }
+
+    #[verifier::external_body]
+    fn CartesianProduct<U: StT + Hash>(&self, other: &SetStEph<U>) -> SetStEph<Pair<T, U>> {
+        let mut result = SetStEph::empty();
+        for x in self.iter() {
+            for y in other.iter() {
+                result.insert(Pair(x.clone(), y.clone()));
+            }
+        }
+        result
+    }
+
+    #[verifier::external_body]
+    fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> B {
+        for x in self.iter() {
+            let mut count: N = 0;
+            for part in parts.iter() {
+                if part.contains(x) {
+                    count += 1;
+                    if count > 1 {
+                        return false;
+                    }
+                }
+            }
+            if count == 0 {
+                return false;
+            }
+        }
+        true
+    }
+}
+
+// Additional convenience methods outside the trait
+impl<T: StT + Hash> SetStEph<T> {
+    pub fn intersection(&self, other: &Self) -> Self {
+        self.intersect(other)
+    }
+}
+
+} // verus!
+
+    // Pedagogical runtime trait implementations using HashSetWithViewPlus
+
+    impl<T: StT + Hash> PartialEq for SetStEph<T> {
+        fn eq(&self, other: &Self) -> bool {
+            if self.data.len() != other.data.len() {
+                return false;
+            }
+            for x in self.data.iter() {
+                if !other.data.contains(x) {
+                    return false;
+                }
+            }
+            true
+        }
+    }
+
+    impl<T: StT + Hash> Eq for SetStEph<T> {}
+
+    impl<T: StT + Hash> Clone for SetStEph<T> {
+        fn clone(&self) -> Self {
+            SetStEph { data: self.data.clone() }
+        }
+    }
+
+    impl<T: StT + Hash> Debug for SetStEph<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            f.debug_set().entries(self.data.iter()).finish()
+        }
+    }
+
+    impl<T: StT + Hash> Display for SetStEph<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            write!(f, "{{")?;
+            let mut first = true;
+            for x in self.data.iter() {
+                if !first {
+                    write!(f, ", ")?;
+                } else {
+                    first = false;
+                }
+                write!(f, "{x}")?;
+            }
+            write!(f, "}}")
+        }
+    }
+
+    impl<T: StT + Hash> Hash for SetStEph<T> {
+        fn hash<H: Hasher>(&self, state: &mut H) {
+            use std::collections::hash_map::DefaultHasher;
+            let mut element_hashes = Vec::<u64>::with_capacity(self.data.len());
+            for e in self.data.iter() {
+                let mut h = DefaultHasher::new();
+                e.hash(&mut h);
+                element_hashes.push(h.finish());
+            }
+            element_hashes.sort_unstable();
+            self.data.len().hash(state);
+            for h in element_hashes {
+                h.hash(state);
+            }
+        }
+    }
 
     #[macro_export]
     macro_rules! SetLit {
