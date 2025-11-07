@@ -7,7 +7,7 @@
 pub mod SetStEph {
 
     use vstd::prelude::View;
-    use vstd::prelude::{Set, verus};
+    use vstd::prelude::{Set, verus, old};
     use vstd::hash_set::HashSetWithView;
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::{Hash, Hasher};
@@ -50,17 +50,17 @@ pub trait SetStEphTrait<T: StT + Hash>: Sized + vstd::prelude::View {
     /// APAS: Work Θ(1), Span Θ(1)
     /// VERIFIED
     fn size(&self) -> (result: N)
-        ensures result == self@.len();
+        ensures result == vstd::prelude::View::view(self).len();
 
     /// APAS: Work Θ(1), Span Θ(1)
     /// VERIFIED
     fn mem(&self, x: &T) -> (result: B)
-        ensures result == self@.contains(x@);
+        ensures result == vstd::prelude::View::view(self).contains(x@);
 
     /// APAS: Work Θ(1), Span Θ(1)
     /// VERIFIED
     fn insert(&mut self, x: T)
-        ensures self@ == old(self)@.insert(x@);
+        ensures vstd::prelude::View::view(self) == vstd::prelude::View::view(&old(self)).insert(x@);
 }
 
 // Maximally verified implementation

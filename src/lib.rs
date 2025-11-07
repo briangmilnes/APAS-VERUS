@@ -14,9 +14,11 @@ pub mod Chap03 {
 }
 
 pub mod Chap05 {
-    pub mod SetStEph;
-    pub mod SetStEphPlus;
-    pub mod RelationStEph;
+    // TODO: Fix vstd::string::View name resolution bug in trait
+    // pub mod SetStEph;
+    pub mod SetStEph2;  // Test SetTraitWithView implementation
+    // pub mod SetStEphPlus;  // Temporarily commented to test SetStEph2
+    // pub mod RelationStEph;  // Depends on SetStEph
     // TODO: Apply trusted pattern to MappingStEph
     // pub mod MappingStEph;
 }

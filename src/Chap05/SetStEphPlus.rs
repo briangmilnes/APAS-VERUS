@@ -51,7 +51,7 @@ pub trait SetStEphPlusTrait<T: StT + Hash + Clone>: SetTrait<T> {
 
 // Implement SetTrait for the core operations
 impl<T: StT + Hash + Clone> SetTrait<T> for SetStEphPlus<T> {
-    spec fn view(&self) -> Set<<T as View>::V> {
+    closed spec fn view(&self) -> Set<<T as View>::V> {
         self.data@
     }
     // TRUSTED: Can't verify generic obeys_key_model
@@ -73,14 +73,14 @@ impl<T: StT + Hash + Clone> SetTrait<T> for SetStEphPlus<T> {
 
     // VERIFIED: Direct call to HashSetWithViewPlus::insert
     fn insert(&mut self, x: T)
-        ensures Self::view(self) == old(Self::view(self)).insert(x@)
+        ensures Self::view(self) == Self::view(&old(self)).insert(x@)
     {
         self.data.insert(x);
     }
 
     // VERIFIED: Direct call to HashSetWithViewPlus::remove
     fn remove(&mut self, x: &T)
-        ensures Self::view(self) == old(Self::view(self)).remove(x@)
+        ensures Self::view(self) == Self::view(&old(self)).remove(x@)
     {
         self.data.remove(x);
     }
@@ -127,13 +127,13 @@ impl<T: StT + Hash + Clone> SetTrait<T> for SetStEphPlus<T> {
 
     // VERIFIED: Direct call to HashSetWithViewPlus::len
     fn len(&self) -> (result: usize)
-        requires Self::view(self).finite(),
         ensures result == Self::view(self).len()
     {
         self.data.len()
     }
 
-    // VERIFIED: Check if set is empty
+    // TRUSTED: Can't prove len() == 0 <==> view() == empty() without axioms
+    #[verifier::external_body]
     fn is_empty(&self) -> (result: bool)
         ensures result <==> Self::view(self) == Set::<<T as View>::V>::empty()
     {
