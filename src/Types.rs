@@ -8,6 +8,7 @@ pub mod Types {
     use std::hash::Hash;
     use std::ops::Add;
     use std::sync::Mutex;
+    use vstd::prelude::*;
 
     pub type N = usize;
 
@@ -37,10 +38,14 @@ pub mod Types {
         pub val: V,
     }
 
+    verus! {
+
     // Type bounds shorthands
-    // StT: single-threaded friendly elements: Eq + Clone + Display + Debug + Sized
-    pub trait StT: Eq + Clone + Display + Debug + Sized {}
-    impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized {}
+    // StT: single-threaded friendly elements: Eq + Clone + Display + Debug + Sized + View (for Verus)
+    pub trait StT: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+
+    } // verus!
 
     // StTInMtT: St-friendly elements that can be shared across threads (StT + Send + Sync)
     pub trait StTInMtT: StT + Send + Sync {}
@@ -309,17 +314,13 @@ pub mod Types {
         };
     }
 
-    // Verus-verified Pair type
-    // Defined in verus! block so it can implement View
-    use vstd::prelude::*;
-
     verus! {
 
     /// Newtype wrapper for key-value pairs with better Display than tuples
     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Pair<K, V>(pub K, pub V);
 
-    impl<K: View, V: View> View for Pair<K, V> {
+    impl<K: vstd::prelude::View, V: vstd::prelude::View> vstd::prelude::View for Pair<K, V> {
         type V = (K::V, V::V);
 
         open spec fn view(&self) -> (K::V, V::V) {

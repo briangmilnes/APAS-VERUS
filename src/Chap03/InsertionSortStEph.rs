@@ -5,7 +5,7 @@ pub mod InsertionSortStEph {
     use vstd::multiset::*;
     use vstd::prelude::*;
     use vstd::relations::*;
-    use crate::vstdadditions::TotalOrdered::TotalOrdered::*;
+    use crate::vstdplus::TotalOrdered::TotalOrdered::*;
 
     verus! {
 
