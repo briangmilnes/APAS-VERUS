@@ -7,7 +7,7 @@
 pub mod SetStEph {
 
     use vstd::prelude::View;
-    use vstd::prelude::{Set, verus, old};
+    use vstd::prelude::{Set, verus};
     use vstd::hash_set::HashSetWithView;
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::{Hash, Hasher};

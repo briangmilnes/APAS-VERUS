@@ -5,6 +5,7 @@ pub mod Types;
 pub mod vstdplus {
     pub mod TotalOrdered;
     pub mod SetView;
+    pub mod SetTrait;
     pub mod HashSetWithViewPlus;
 }
 

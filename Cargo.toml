@@ -51,3 +51,7 @@ type_complexity = "allow"
 
 [workspace]
 members = [ "."]
+
+# Use local Verus fork for vstd (for rust-analyzer navigation)
+[patch.crates-io]
+vstd = { path = "/home/milnes/projects/verus-lang/source/vstd" }
