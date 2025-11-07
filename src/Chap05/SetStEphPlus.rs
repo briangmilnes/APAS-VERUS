@@ -1,7 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Chapter 5.1 ephemeral Set with SetView as supertrait (Option 1 approach)
+//! Chapter 5.1 ephemeral Set implementing SetTrait
 //!
-//! Demonstrates using SetView as a supertrait to provide verified core operations
+//! Uses SetTrait which matches vstd::set::Set<A> API
 
 pub mod SetStEphPlus {
 
@@ -12,7 +12,7 @@ pub mod SetStEphPlus {
     use std::collections::hash_set::Iter;
 
     use crate::Types::Types::*;
-    use crate::vstdplus::SetView::SetView::SetView;
+    use crate::vstdplus::SetTrait::SetTrait::SetTrait;
     use crate::vstdplus::HashSetWithViewPlus::HashSetWithViewPlus::HashSetWithViewPlus;
 
     verus! {
@@ -30,16 +30,8 @@ pub struct SetStEphPlus<T: vstd::prelude::View + Eq + Hash + Clone> {
     data: HashSetWithViewPlus<T>,
 }
 
-impl<T: vstd::prelude::View + Eq + Hash + Clone> vstd::prelude::View for SetStEphPlus<T> {
-    type V = Set<<T as vstd::prelude::View>::V>;
-
-    open spec fn view(&self) -> Set<<T as vstd::prelude::View>::V> {
-        self.data@
-    }
-}
-
-// SetStEphPlusTrait extends SetView and adds APAS-specific operations
-pub trait SetStEphPlusTrait<T: StT + Hash + Clone>: SetView<T> {
+// SetStEphPlusTrait adds APAS-specific operations beyond SetTrait
+pub trait SetStEphPlusTrait<T: StT + Hash + Clone>: SetTrait<T> {
     /// APAS: Work Θ(|parts| × |a|²), Span Θ(1)
     // Commented out: requires nesting HashSetWithViewPlus which needs Hash on SetStEphPlus
     // fn partition(&self, parts: &SetStEphPlus<SetStEphPlus<T>>) -> B;
@@ -57,50 +49,46 @@ pub trait SetStEphPlusTrait<T: StT + Hash + Clone>: SetView<T> {
     fn singleton(x: T) -> Self;
 }
 
-// Implement SetView for the core operations
-impl<T: StT + Hash + Clone> SetView<T> for SetStEphPlus<T> {
+// Implement SetTrait for the core operations
+impl<T: StT + Hash + Clone> SetTrait<T> for SetStEphPlus<T> {
+    spec fn view(&self) -> Set<<T as View>::V> {
+        self.data@
+    }
     // TRUSTED: Can't verify generic obeys_key_model
     #[verifier::external_body]
     fn empty() -> (result: Self)
-        ensures result@ == Set::<T::V>::empty()
+        ensures Self::view(&result) == Set::<<T as View>::V>::empty()
     {
         SetStEphPlus {
             data: HashSetWithViewPlus::new(),
         }
     }
 
-    // VERIFIED: Direct call to HashSetWithViewPlus::len
-    fn size(&self) -> (result: N)
-        ensures result == self@.len()
-    {
-        self.data.len()
-    }
-
     // VERIFIED: Direct call to HashSetWithViewPlus::contains
-    fn mem(&self, x: &T) -> (result: B)
-        ensures result == self@.contains(x@)
+    fn contains(&self, x: &T) -> (result: B)
+        ensures result == Self::view(self).contains(x@)
     {
         self.data.contains(x)
     }
 
     // VERIFIED: Direct call to HashSetWithViewPlus::insert
     fn insert(&mut self, x: T)
-        ensures self@ == old(self)@.insert(x@)
+        ensures Self::view(self) == old(Self::view(self)).insert(x@)
     {
         self.data.insert(x);
     }
 
     // VERIFIED: Direct call to HashSetWithViewPlus::remove
-    fn remove(&mut self, x: T)
-        ensures self@ == old(self)@.remove(x@)
+    fn remove(&mut self, x: &T)
+        ensures Self::view(self) == old(Self::view(self)).remove(x@)
     {
-        self.data.remove(&x);
+        self.data.remove(x);
     }
 
     // TRUSTED: external_body for clone + iteration
     #[verifier::external_body]
     fn union(&self, other: &Self) -> (result: Self)
-        ensures result@ == self@.union(other@)
+        ensures Self::view(&result) == Self::view(self).union(Self::view(other))
     {
         let mut out_data = self.data.clone();
         for x in other.data.iter() {
@@ -111,8 +99,8 @@ impl<T: StT + Hash + Clone> SetView<T> for SetStEphPlus<T> {
 
     // TRUSTED: external_body for iteration
     #[verifier::external_body]
-    fn intersection(&self, other: &Self) -> (result: Self)
-        ensures result@ == self@.intersect(other@)
+    fn intersect(&self, other: &Self) -> (result: Self)
+        ensures Self::view(&result) == Self::view(self).intersect(Self::view(other))
     {
         let mut out_data = HashSetWithViewPlus::new();
         for x in self.data.iter() {
@@ -121,6 +109,35 @@ impl<T: StT + Hash + Clone> SetView<T> for SetStEphPlus<T> {
             }
         }
         SetStEphPlus { data: out_data }
+    }
+
+    // TRUSTED: external_body for iteration
+    #[verifier::external_body]
+    fn difference(&self, other: &Self) -> (result: Self)
+        ensures Self::view(&result) == Self::view(self).difference(Self::view(other))
+    {
+        let mut out_data = HashSetWithViewPlus::new();
+        for x in self.data.iter() {
+            if !other.data.contains(x) {
+                out_data.insert(x.clone());
+            }
+        }
+        SetStEphPlus { data: out_data }
+    }
+
+    // VERIFIED: Direct call to HashSetWithViewPlus::len
+    fn len(&self) -> (result: usize)
+        requires Self::view(self).finite(),
+        ensures result == Self::view(self).len()
+    {
+        self.data.len()
+    }
+
+    // VERIFIED: Check if set is empty
+    fn is_empty(&self) -> (result: bool)
+        ensures result <==> Self::view(self) == Set::<<T as View>::V>::empty()
+    {
+        self.data.len() == 0
     }
 }
 
@@ -183,7 +200,7 @@ impl<T: StT + Hash + Clone> SetStEphPlusTrait<T> for SetStEphPlus<T> {
     // TRUSTED: Can't verify generic obeys_key_model
     #[verifier::external_body]
     fn singleton(x: T) -> (result: SetStEphPlus<T>)
-        ensures result@ == Set::<T::V>::empty().insert(x@)
+        ensures SetStEphPlus::view(&result) == Set::<<T as View>::V>::empty().insert(x@)
     {
         let mut s = HashSetWithViewPlus::new();
         s.insert(x);
@@ -192,5 +209,43 @@ impl<T: StT + Hash + Clone> SetStEphPlusTrait<T> for SetStEphPlus<T> {
 }
 
     } // verus!
-}
 
+    // Runtime trait implementations outside verus! block
+    impl<T: StT + Hash + Clone> PartialEq for SetStEphPlus<T> {
+        fn eq(&self, other: &Self) -> bool {
+            if self.data.len() != other.data.len() {
+                return false;
+            }
+            for x in self.data.iter() {
+                if !other.data.contains(x) {
+                    return false;
+                }
+            }
+            true
+        }
+    }
+
+    impl<T: StT + Hash + Clone> Eq for SetStEphPlus<T> {}
+
+    impl<T: StT + Hash + Clone> Debug for SetStEphPlus<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            f.debug_set().entries(self.data.iter()).finish()
+        }
+    }
+
+    impl<T: StT + Hash + Clone> Display for SetStEphPlus<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            write!(f, "{{")?;
+            let mut first = true;
+            for x in self.data.iter() {
+                if !first {
+                    write!(f, ", ")?;
+                } else {
+                    first = false;
+                }
+                write!(f, "{x}")?;
+            }
+            write!(f, "}}")
+        }
+    }
+}
