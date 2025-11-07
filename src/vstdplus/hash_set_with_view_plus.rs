@@ -11,6 +11,8 @@ use vstd::prelude::*;
 use vstd::set::*;
 #[cfg(verus_keep_ghost)]
 use vstd::std_specs::hash::obeys_key_model;
+#[cfg(verus_keep_ghost)]
+use vstd::std_specs::hash::SetIterAdditionalSpecFns;
 use core::hash::Hash;
 use std::collections::HashSet;
 use std::collections::hash_set::Iter;
@@ -161,7 +163,16 @@ impl<Key> HashSetWithViewPlus<Key> where Key: View + Eq + Hash + Clone {
         Self { m: self.m.clone() }
     }
 
-    pub fn iter(&self) -> Iter<'_, Key>
+    #[verifier::external_body]
+    pub fn iter(&self) -> (r: std::collections::hash_set::Iter<'_, Key>)
+        ensures
+            obeys_key_model::<Key>() ==> {
+                let (index, s) = r@;
+                &&& index == 0
+                &&& forall|k: Key| s.contains(k) ==> self@.contains(k@)
+                &&& forall|kv: Key::V| self@.contains(kv) ==> exists|k: Key| s.contains(k) && k@ == kv
+                &&& s.no_duplicates()
+            },
     {
         self.m.iter()
     }

@@ -53,7 +53,7 @@ pub trait RelationStEphTrait<T: StT + Hash, U: StT + Hash>: Sized + View<V = Set
     fn range(&self) -> (result: SetStEph<U>)
         ensures forall |u: U::V| result@.contains(u) <==> exists |t: T::V| self@.contains((t, u));
 
-    fn iter(&self) -> std::collections::hash_set::Iter<'_, Pair<T, U>>;
+    fn iter(&self) -> crate::Types::Types::PairIter<'_, T, U>;
 
     open spec fn spec_view(&self) -> Set<(<T as View>::V, <U as View>::V)> {
         self@
@@ -101,30 +101,34 @@ impl<T: StT + Hash, U: StT + Hash> RelationStEphTrait<T, U> for RelationStEph<T,
         }
     }
 
+    // TODO: Remove external_body once Verus supports ForLoopGhostIterator for newtype wrappers
+    // The issue: PairIter wraps hash_set::Iter<Pair<T,U>>, but Verus doesn't recognize the
+    // ForLoopGhostIteratorNew impl on newtypes in for loops (orphan rule workaround limitation)
     #[verifier::external_body]
     fn domain(&self) -> (result: SetStEph<T>)
         ensures forall |t: T::V| result@.contains(t) <==> exists |u: U::V| self@.contains((t, u))
     {
         let mut out = SetStEph::<T>::empty();
-        for Pair(a, _) in self.pairs.iter() {
-            out.insert(a.clone());
+        for pair in self.iter() {
+            out.insert(pair.0.clone());
         }
         out
     }
 
+    // TODO: Remove external_body once Verus supports ForLoopGhostIterator for newtype wrappers
     #[verifier::external_body]
     fn range(&self) -> (result: SetStEph<U>)
         ensures forall |u: U::V| result@.contains(u) <==> exists |t: T::V| self@.contains((t, u))
     {
         let mut out = SetStEph::<U>::empty();
-        for Pair(_, b) in self.pairs.iter() {
-            out.insert(b.clone());
+        for pair in self.iter() {
+            out.insert(pair.1.clone());
         }
         out
     }
 
-    fn iter(&self) -> std::collections::hash_set::Iter<'_, Pair<T, U>> {
-        self.pairs.iter()
+    fn iter(&self) -> crate::Types::Types::PairIter<'_, T, U> {
+        crate::Types::Types::PairIter(self.pairs.iter())
     }
 }
 

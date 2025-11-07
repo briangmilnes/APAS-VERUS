@@ -9,6 +9,8 @@ pub mod Types {
     use std::ops::Add;
     use std::sync::Mutex;
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::SetIterAdditionalSpecFns;
 
     pub type N = usize;
 
@@ -328,7 +330,92 @@ pub mod Types {
         }
     }
 
+    // Newtype wrapper for Pair iterator to implement ForLoopGhostIterator (orphan rule)
+    // Note: Currently unused due to Verus limitation - for loops don't recognize ForLoopGhostIteratorNew
+    // on newtype wrappers. Kept for future use when this is supported.
+    pub struct PairIter<'a, K: 'a, V: 'a>(pub std::collections::hash_set::Iter<'a, Pair<K, V>>);
+
+    // Ghost iterator for iterating over Pair<K, V> in hash sets
+    pub struct PairIterGhostIterator<'a, K, V> {
+        pub pos: int,
+        pub elements: Seq<Pair<K, V>>,
+        pub phantom: core::marker::PhantomData<&'a ()>,
+    }
+
+    impl<'a, K: 'a, V: 'a> vstd::pervasive::ForLoopGhostIteratorNew for PairIter<'a, K, V> {
+        type GhostIter = PairIterGhostIterator<'a, K, V>;
+
+        open spec fn ghost_iter(&self) -> PairIterGhostIterator<'a, K, V> {
+            PairIterGhostIterator { pos: self.0@.0, elements: self.0@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, K: 'a, V: 'a> vstd::pervasive::ForLoopGhostIterator for PairIterGhostIterator<'a, K, V> {
+        type ExecIter = PairIter<'a, K, V>;
+
+        type Item = &'a Pair<K, V>;
+
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &PairIter<'a, K, V>) -> bool {
+            &&& self.pos == exec_iter.0@.0
+            &&& self.elements == exec_iter.0@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<&'a Pair<K, V>> {
+            if 0 <= self.pos < self.elements.len() {
+                Some(&self.elements[self.pos as int])
+            } else {
+                None
+            }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &PairIter<'a, K, V>) -> PairIterGhostIterator<'a, K, V> {
+            PairIterGhostIterator { pos: self.pos + 1, ..*self }
+        }
+    }
+
     } // verus!
+
+    // Implement Iterator for PairIter to enable for loops (must be outside verus! block)
+    impl<'a, K: 'a, V: 'a> Iterator for PairIter<'a, K, V> {
+        type Item = &'a Pair<K, V>;
+
+        fn next(&mut self) -> Option<Self::Item> {
+            self.0.next()
+        }
+    }
+
+    // Implement Deref for easier access
+    impl<'a, K: 'a, V: 'a> std::ops::Deref for PairIter<'a, K, V> {
+        type Target = std::collections::hash_set::Iter<'a, Pair<K, V>>;
+
+        fn deref(&self) -> &Self::Target {
+            &self.0
+        }
+    }
+
+    impl<'a, K: 'a, V: 'a> std::ops::DerefMut for PairIter<'a, K, V> {
+        fn deref_mut(&mut self) -> &mut Self::Target {
+            &mut self.0
+        }
+    }
 
     // Clone implementation for Pair (outside verus! block for non-Copy types)
     impl<K: Clone, V: Clone> Clone for Pair<K, V> {
