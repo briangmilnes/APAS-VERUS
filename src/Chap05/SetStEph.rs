@@ -19,7 +19,7 @@ pub mod SetStEph {
 use vstd::std_specs::hash::obeys_key_model;
 
 #[cfg(verus_keep_ghost)]
-broadcast use vstd::std_specs::hash::group_hash_axioms;
+broadcast use {vstd::std_specs::hash::group_hash_axioms, crate::vstdplus::clone_view::clone_view::group_clone_view_axioms};
 
 pub trait SetStEphTrait<T: StT + Hash>: SetWithView<T> {
     fn singleton(x: T) -> (result: Self)
@@ -127,11 +127,21 @@ impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
         self.data.iter()
     }
 
-    #[verifier::external_body]
-    fn FromVec(v: Vec<T>) -> Self {
+    fn FromVec(v: Vec<T>) -> (result: Self)
+        ensures forall |i: int| #![trigger result@.contains(v@[i]@)] 0 <= i < v@.len() ==> result@.contains(v@[i]@)
+    {
         let mut s = Self::empty();
-        for x in v {
+        let mut i: usize = 0;
+        while i < v.len()
+            invariant
+                i <= v.len(),
+                forall |j: int| #![trigger s@.contains(v@[j]@)] 0 <= j < i ==> s@.contains(v@[j]@),
+            decreases v.len() - i
+        {
+            let x = v[i].clone();
+            // axiom_clone_preserves_view should apply here
             s.insert(x);
+            i += 1;
         }
         s
     }

@@ -8,6 +8,7 @@ pub mod vstdplus {
     pub mod hash_set_with_view_plus;
     pub mod total_order;
     pub mod partial_order;
+    pub mod clone_view;
 }
 
 pub mod Chap03 {

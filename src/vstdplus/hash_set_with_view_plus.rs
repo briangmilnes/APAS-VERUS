@@ -169,8 +169,8 @@ impl<Key> HashSetWithViewPlus<Key> where Key: View + Eq + Hash + Clone {
             obeys_key_model::<Key>() ==> {
                 let (index, s) = r@;
                 &&& index == 0
-                &&& forall|k: Key| s.contains(k) ==> self@.contains(k@)
-                &&& forall|kv: Key::V| self@.contains(kv) ==> exists|k: Key| s.contains(k) && k@ == kv
+                &&& forall|k: Key| #![auto] s.contains(k) ==> self@.contains(k@)
+                &&& forall|kv: Key::V| #![auto] self@.contains(kv) ==> exists|k: Key| #![auto] s.contains(k) && k@ == kv
                 &&& s.no_duplicates()
             },
     {
