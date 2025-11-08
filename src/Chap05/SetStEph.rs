@@ -50,8 +50,13 @@ pub trait SetStEphTrait<T: StT + Hash>: SetWithView<T> {
         requires vstd::std_specs::hash::obeys_key_model::<T>(),
                  forall|t1: T, t2: T| t1@ == t2@ ==> t1 == t2;
 
-    fn CartesianProduct<U: StT + Hash>(&self, other: &SetStEph<U>) -> SetStEph<Pair<T, U>>
-        requires vstd::std_specs::hash::obeys_key_model::<Pair<T, U>>();
+    fn CartesianProduct<U: StT + Hash>(&self, other: &SetStEph<U>) -> (result: SetStEph<Pair<T, U>>)
+        requires vstd::std_specs::hash::obeys_key_model::<Pair<T, U>>(),
+        ensures
+            forall|t: T::V, u: U::V| 
+                #![trigger result@.contains((t, u))]
+                result@.contains((t, u)) <==> (self@.contains(t) && other@.contains(u)),
+        ;
 
     fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> B;
 }
@@ -145,7 +150,7 @@ impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
         s
     }
 
-    #[verifier::external_body]
+//    #[verifier::external_body]
     fn CartesianProduct<U: StT + Hash>(&self, other: &SetStEph<U>) -> SetStEph<Pair<T, U>> {
         let mut result = SetStEph::empty();
         for x in self.iter() {
