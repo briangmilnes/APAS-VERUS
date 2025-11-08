@@ -191,9 +191,10 @@ impl<T: StT + Hash> SetStEph<T> {
         fn eq(&self, other: &Self) -> (result: bool)
             ensures result == (self@ == other@)
         {
-            // TODO: Verus ForLoopGhostIterator for HashSet exists, but tracking checked elements is challenging
-            // Need invariant: "all elements seen so far are in other", but can't easily express without
-            // referencing iterator's ghost state (which isn't directly accessible in invariant scope)
+            // TODO: Can use for x in it: self.data.iter() syntax to name iterator
+            // Issue: Need invariant forall|k: T| it.elements.contains(k) <==> self@.contains(k@)
+            // But HashSetWithViewPlus::iter() spec doesn't provide this bi-directional relationship cleanly
+            // The spec gives us the relationship in terms of View types, but we need it for exec types
             if self.data.len() != other.data.len() {
                 return false;
             }
