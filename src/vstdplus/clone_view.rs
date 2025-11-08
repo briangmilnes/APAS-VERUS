@@ -2,6 +2,9 @@
 //!
 //! For types that implement both Clone and View, we need axioms that
 //! connect the executable clone() operation to the spec-level view.
+//!
+//! NOTE: vstd provides `cloned(a, b)` predicate but does NOT provide
+//! the bridge to View: `cloned(a, b) ==> a@ == b@`. This axiom fills that gap.
 
 pub mod clone_view {
     use vstd::prelude::*;
