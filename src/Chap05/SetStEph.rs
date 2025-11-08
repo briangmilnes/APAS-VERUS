@@ -114,10 +114,8 @@ impl<T: StT + Hash> SetWithView<T> for SetStEph<T> {
         self.data.len()
     }
 
-    #[verifier::external_body]
     fn is_empty(&self) -> (result: bool) {
-        // TODO: Need axiom that self@.len() == 0 <==> (forall a, !self@.contains(a))
-        // Currently vstd has axiom_set_empty_len but not the reverse direction
+        broadcast use crate::vstdplus::set_axioms::set_axioms::group_set_axioms_plus;
         self.data.len() == 0
     }
 }

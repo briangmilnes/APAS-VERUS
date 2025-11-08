@@ -5,6 +5,7 @@ pub mod Types;
 pub mod vstdplus {
     pub mod set;
     pub mod set_with_view;
+    pub mod set_axioms;
     pub mod hash_set_with_view_plus;
     pub mod total_order;
     pub mod partial_order;
