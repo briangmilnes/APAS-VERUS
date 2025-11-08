@@ -12,9 +12,9 @@ pub mod set_axioms {
     /// 
     /// This axiom provides the bi-directional equivalence needed to prove
     /// is_empty() without external_body.
-    pub broadcast proof fn axiom_set_len_zero_iff_empty<A>(s: Set<A>)
+    pub broadcast proof fn axiom_set_len_zero_iff_empty<V>(s: Set<V>)
         ensures
-            #[trigger] s.len() == 0 <==> s == Set::<A>::empty(),
+            #[trigger] s.len() == 0 <==> s == Set::<V>::empty(),
     {
         admit();
     }
