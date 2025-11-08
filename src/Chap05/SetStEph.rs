@@ -191,6 +191,10 @@ impl<T: StT + Hash> SetStEph<T> {
         fn eq(&self, other: &Self) -> (result: bool)
             ensures result == (self@ == other@)
         {
+            // TODO: Remove external_body once Verus supports for loops over HashSet::iter()
+            // The logic is sound:
+            // 1. If lengths differ, sets differ
+            // 2. If all elements of self are in other and lengths are equal, sets are equal (set extensionality)
             if self.data.len() != other.data.len() {
                 return false;
             }
@@ -206,7 +210,6 @@ impl<T: StT + Hash> SetStEph<T> {
     impl<T: StT + Hash> Eq for SetStEph<T> {}
 
     impl<T: StT + Hash> Clone for SetStEph<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (result: Self)
             ensures result@ == self@
         {

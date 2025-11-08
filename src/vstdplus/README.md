@@ -74,7 +74,21 @@ This matches `vstd::std_specs::cmp::ExPartialOrd` approach.
 
 **Status**: Using `#[verifier::external_body]` with complete specs. All these methods work correctly at runtime.
 
-### 4. ForLoopGhostIterator for Newtype Wrappers (RelationStEph::domain, range)
+### 4. ForLoopGhostIterator for HashSet::iter() (SetStEph::PartialEq, CartesianProduct, partition)
+**Issue**: Cannot verify `for` loops over `std::collections::hash_set::Iter<T>` in verified code.
+
+**Why**: Verus's `ForLoopGhostIterator` support for `HashSet::iter()` is incomplete. While vstd provides `SetIterAdditionalSpecFns` to add a `view()` method to the iterator, there's no `ForLoopGhostIterator` implementation to connect the exec iterator to ghost iteration in `for` loops.
+
+**Workaround Attempted**: Converting to `while` loops requires building a `Vec<T>` from the iterator, but `.cloned().collect()` is not supported by Verus.
+
+**Status**: Using `#[verifier::external_body]` with complete specs for:
+- `SetStEph::PartialEq::eq()` - Set equality check
+- `SetStEph::CartesianProduct()` - Nested iteration over two sets
+- `SetStEph::partition()` - Nested iteration to check partition property
+
+All these methods work correctly at runtime and their specifications are sound.
+
+### 5. ForLoopGhostIterator for Newtype Wrappers (RelationStEph::domain, range)
 **Issue**: `PairIter` (newtype wrapper for `std::collections::hash_set::Iter<Pair<T,U>>`) doesn't work with Verus's `for` loop verification, even with complete `ForLoopGhostIteratorNew` and `ForLoopGhostIterator` implementations.
 
 **Why**: Suspected Verus compiler limitation - the `verus_builtin` mechanism doesn't recognize newtype wrappers.
@@ -83,7 +97,7 @@ This matches `vstd::std_specs::cmp::ExPartialOrd` approach.
 
 **Status**: Using `#[verifier::external_body]` with complete specs. Documented as TODO in code.
 
-### 5. Formatter/Hasher Specs (SetStEph::Debug/Display/Hash)
+### 6. Formatter/Hasher Specs (SetStEph::Debug/Display/Hash)
 **Issue**: `core::fmt::Formatter`, `core::fmt::Result`, and `std::hash::Hasher` types are not supported by Verus in verified code.
 
 **Why**: These types involve complex trait machinery and side effects that Verus doesn't model.
@@ -96,17 +110,18 @@ This matches `vstd::std_specs::cmp::ExPartialOrd` approach.
 |----------|-------|--------|
 | obeys_key_model preconditions | ~10 | **Documented** - Verus standard pattern |
 | HashSetWithViewPlus external_body | 25 | **Inherent** - std internals unprovable |
-| Clone+View axiom | 1 | **Solvable** - need call_ensures pattern |
+| Clone+View axiom | 0 | **SOLVED** - using broadcast axiom! |
 | Set len==0 axiom | 1 | **Needs vstd fix** - missing reverse axiom |
 | Vec ForLoopGhostIterator | 3 | **Verus limitation** - generic Vec iteration |
+| HashSet::iter() ForLoopGhostIterator | 3 | **Verus limitation** - no ForLoopGhostIterator impl |
 | Newtype ForLoopGhostIterator | 2 | **Verus limitation** - compiler issue |
 | Float admits | 6 | **Inherent** - non-deterministic floats |
 | Debug/Display/Hash | 3 | **Expected** - outside verification scope |
 
-**Total**: ~51 markers, of which:
+**Total**: ~53 markers, of which:
 - **34 are inherent/expected** (HashSetWithViewPlus, floats, display traits)
 - **10 are design choices** (obeys_key_model preconditions)
-- **7 are solvable** (Clone+View axiom, len==0 axiom, loop iterators)
+- **9 are Verus limitations** (loop iterators, len==0 axiom)
 
 ## Testing
 
