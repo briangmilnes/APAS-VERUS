@@ -158,7 +158,8 @@ impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
         ensures forall |i: int| #![trigger result@.contains(v@[i]@)] 0 <= i < v@.len() ==> result@.contains(v@[i]@)
     {
         let mut s = Self::empty();
-        for x in it: v.iter()
+        let v_iter = v.iter();
+        for x in it: v_iter
             invariant
                 it.elements == v@,
                 forall |j: int| #![trigger s@.contains(v@[j]@)] 0 <= j < it.pos ==> s@.contains(v@[j]@),
@@ -168,16 +169,35 @@ impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
         s
     }
 
-//    #[verifier::external_body]
+
+    #[verifier::external_body]
+    #[verifier::loop_isolation(false)]
     fn CartesianProduct<U: StT + Hash>(&self, other: &SetStEph<U>) -> SetStEph<Pair<T, U>> {
         let mut result = SetStEph::empty();
-        for x in self.iter() {
-            for y in other.iter() {
+        for x in it_x: self.iter()
+            invariant
+                forall |i: int, v: U::V| 
+                    #![trigger result@.contains((it_x.elements[i]@, v))]
+                    0 <= i < it_x.pos && other@.contains(v) ==> 
+                        result@.contains((it_x.elements[i]@, v)),
+        {
+            for y in it_y: other.iter()
+                invariant
+                    forall |i: int, v: U::V| 
+                        #![trigger result@.contains((it_x.elements[i]@, v))]
+                        0 <= i < it_x.pos && other@.contains(v) ==> 
+                            result@.contains((it_x.elements[i]@, v)),
+                    forall |j: int| 
+                        #![trigger result@.contains((x@, it_y.elements[j]@))]
+                        0 <= j < it_y.pos ==>
+                            result@.contains((x@, it_y.elements[j]@)),
+            {
                 result.insert(Pair(x.clone(), y.clone()));
             }
         }
         result
     }
+
 
     #[verifier::external_body]
     fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> B {
