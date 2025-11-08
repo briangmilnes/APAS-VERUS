@@ -50,6 +50,10 @@ pub trait SetStEphTrait<T: StT + Hash>: SetWithView<T> {
         requires vstd::std_specs::hash::obeys_key_model::<T>(),
                  forall|t1: T, t2: T| t1@ == t2@ ==> t1 == t2;
 
+    fn FromVecFor(v: Vec<T>) -> Self
+        requires vstd::std_specs::hash::obeys_key_model::<T>(),
+                 forall|t1: T, t2: T| t1@ == t2@ ==> t1 == t2;
+
     fn CartesianProduct<U: StT + Hash>(&self, other: &SetStEph<U>) -> (result: SetStEph<Pair<T, U>>)
         requires vstd::std_specs::hash::obeys_key_model::<Pair<T, U>>(),
         ensures
@@ -146,6 +150,20 @@ impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
             // axiom_clone_preserves_view should apply here
             s.insert(x);
             i += 1;
+        }
+        s
+    }
+
+    fn FromVecFor(v: Vec<T>) -> (result: Self)
+        ensures forall |i: int| #![trigger result@.contains(v@[i]@)] 0 <= i < v@.len() ==> result@.contains(v@[i]@)
+    {
+        let mut s = Self::empty();
+        for x in it: v.iter()
+            invariant
+                it.elements == v@,
+                forall |j: int| #![trigger s@.contains(v@[j]@)] 0 <= j < it.pos ==> s@.contains(v@[j]@),
+        {
+            s.insert(x.clone());
         }
         s
     }
