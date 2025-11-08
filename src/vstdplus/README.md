@@ -1,152 +1,117 @@
-# vstdplus - Verus Standard Library Extensions
+# vstdplus - Extensions to Verus Standard Library
 
-Extensions and additions to Verus's `vstd` library, created for APAS-VERUS.
+This module contains traits and wrappers that extend `vstd` with additional functionality needed for APAS-VERUS.
 
 ## Modules
 
-### Ordering Traits
+### `set.rs` - Pure Set Operations Trait
+Basic set trait without View requirements - for generic algorithms that don't need spec-level reasoning.
 
-#### `TotalOrder` (`total_order.rs`)
-A trait for types with total ordering, connecting spec-level `le` to executable `cmp`.
+### `set_with_view.rs` - Verified Set Trait
+Set trait with `View<V = vstd::set::Set<T::V>>` and complete specifications. All methods include `requires`/`ensures` clauses for verification.
 
-**Properties**:
-- Reflexive: `x ≤ x`
-- Transitive: `x ≤ y ∧ y ≤ z ⟹ x ≤ z`
-- Antisymmetric: `x ≤ y ∧ y ≤ x ⟹ x = y`
-- Total: `x ≤ y ∨ y ≤ x` (all pairs comparable)
+**Design Choice**: `empty()` requires `obeys_key_model::<T>()` as a precondition. This is Verus's standard pattern for hash-based collections. Callers must satisfy this precondition, either:
+- For primitive types: use `broadcast use vstd::std_specs::hash::group_hash_axioms` which provides `obeys_key_model` axioms
+- For custom types: assume or prove `obeys_key_model` at call sites
+- For generic code: propagate the `requires obeys_key_model::<T>()` clause
 
-**Implementations**: All integer types (`u8`-`u128`, `i8`-`i128`, `usize`, `isize`)
+### `hash_set_with_view_plus.rs` - Extended HashSetWithView
+Wrapper around `std::collections::HashSet` that provides:
+- Complete `View` specification (uninterpreted due to std internals)
+- Basic operations: `new`, `len`, `contains`, `insert`, `remove`
+- Set operations: `clone`, `union`, `intersection`, `difference`
+- Iteration: `iter()` with spec
 
-**Verification**: ✅ 60 verified, 0 errors
+**Verification Holes**: 25 `#[verifier::external_body]` markers. These are **inherent limitations**:
+1. `std::collections::HashSet` internals are not accessible to Verus
+2. The `view()` function must be uninterpreted (cannot look inside `HashSet`)
+3. All methods that manipulate the underlying `HashSet` require `external_body`
+4. The `ensures` clauses are **trusted** but match Rust's actual semantics
 
-**Example**:
-```rust
-use vstdplus::total_order::total_order::TotalOrder;
+This is the **same approach** used by `vstd::hash_set::HashSetWithView` - we extend it with additional operations.
 
-fn example(x: u64, y: u64) {
-    let result = TotalOrder::cmp(&x, &y);
-    match result {
-        Ordering::Less => { /* x < y */ },
-        Ordering::Equal => { /* x == y */ },
-        Ordering::Greater => { /* x > y */ },
-    }
-}
-```
+### `total_order.rs` - Total Ordering Trait
+Connects spec-level `le` function to executable `cmp` method, following the pattern from Verus PR #1569 (Chris Hawblitzel).
 
-#### `PartialOrder` (`partial_order.rs`)
-A trait for types with partial ordering, where some pairs may be incomparable (e.g., NaN in floats).
+Uses `vstd::std_specs::cmp::obeys_cmp_spec` and `vstd::laws_cmp::group_laws_cmp` for built-in types.
 
-**Properties**:
-- Reflexive: `x ≤ x`
-- Transitive: `x ≤ y ∧ y ≤ z ⟹ x ≤ z`
-- Antisymmetric: `x ≤ y ∧ y ≤ x ⟹ x = y`
-- **No totality**: Not all pairs need be comparable
+Implemented for: u8, u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize
 
-**Key difference from TotalOrder**: Returns `Option<Ordering>` where `None` indicates incomparable elements.
+### `partial_order.rs` - Partial Ordering Trait
+Similar to `TotalOrder` but for types that may not have a total order.
 
-**Implementations**: 
-- All integer types (always return `Some`)
-- **Float types** (`f32`, `f64`) using uninterpreted specs
+**Float Support**: `f32` and `f64` implementations use **uninterpreted specifications** (`arbitrary()` for `le`, `admit()` for proofs, `#[verifier::external_body]` for `compare`). This is **Verus's standard pattern** for floats because:
+1. Rust floating-point operations are **non-deterministic** (RFC 3514)
+2. Verus cannot provide deterministic specifications for non-deterministic operations
+3. Users must axiomatize float behavior for their specific use cases
 
-**Verification**: ✅ 54 verified, 0 errors
+This matches `vstd::std_specs::cmp::ExPartialOrd` approach.
 
-**Float handling**:
-```rust
-use vstdplus::partial_order::partial_order::PartialOrder;
+## Known Limitations
 
-fn float_example() {
-    // Normal comparisons return Some
-    assert_eq!(PartialOrder::compare(&5.0f32, &3.0f32), Some(Ordering::Greater));
-    
-    // NaN comparisons return None (incomparable)
-    let nan = f32::NAN;
-    assert_eq!(PartialOrder::compare(&nan, &5.0f32), None);
-    assert_eq!(PartialOrder::compare(&nan, &nan), None);
-    
-    // Infinity works as expected
-    assert_eq!(PartialOrder::compare(&f32::INFINITY, &1.0f32), Some(Ordering::Greater));
-}
-```
+### 1. Clone + View Axiom (RelationStEph::mem)
+**Issue**: Cannot prove that `x.clone()@ == x@` for generic types with `Clone + View`.
 
-**Why uninterpreted specs for floats?**
-- Rust float operations are non-deterministic ([RFC 3514](https://github.com/rust-lang/rfcs/blob/master/text/3514-float-semantics.md))
-- Verus has no spec-level `<=` for floats (no `spec_le`)
-- Uses `arbitrary()` for spec `le` and `uninterp spec fn partial_order_ensures`
-- Follows `vstd::std_specs::cmp` pattern for soundness
+**Why**: `clone()` is an exec function and cannot be called in spec context.
 
-### Set Traits
+**Solution Exists**: `vstd::pervasive::strictly_cloned<T>` uses `call_ensures(T::clone, (&a,), b)` to connect exec cloning to spec.
 
-#### `SetWithView` (`set_with_view.rs`)
-Set trait with `View` and full specifications using `self@` syntax.
+**Status**: Currently using `#[verifier::external_body]` with complete specs. Future work: implement the `call_ensures` pattern.
 
-```rust
-pub trait SetWithView<T: View>: Sized + View<V = vstd::set::Set<<T as View>::V>> {
-    fn empty() -> (result: Self)
-        ensures result@ == Set::<<T as View>::V>::empty();
-    
-    fn contains(&self, x: &T) -> (result: bool)
-        ensures result == self@.contains(x@);
-    
-    fn insert(&mut self, x: T)
-        ensures self@ == old(self)@.insert(x@);
-    
-    fn remove(&mut self, x: &T)
-        ensures self@ == old(self)@.remove(x@);
-    
-    fn union(&self, other: &Self) -> (result: Self)
-        ensures result@ == self@.union(other@);
-    
-    fn intersect(&self, other: &Self) -> (result: Self)
-        ensures result@ == self@.intersect(other@);
-    
-    fn difference(&self, other: &Self) -> (result: Self)
-        ensures result@ == self@.difference(other@);
-    
-    fn len(&self) -> (result: usize)
-        ensures result == self@.len();
-    
-    fn is_empty(&self) -> (result: bool)
-        ensures result <==> self@ == Set::<<T as View>::V>::empty();
-}
-```
+### 2. Set Length Zero Implies Empty (SetStEph::is_empty)
+**Issue**: Cannot prove `self@.len() == 0 ==> self@ == Set::empty()`.
 
-**Note**: No `requires self@.finite()` on `len()` because implementations (like `HashSetWithView`) are always finite.
+**Why**: vstd has `axiom_set_empty_len` (forward direction: empty set has length 0) but not the reverse (length 0 implies empty).
 
-**Verification**: ✅ Foundation trait for verified set implementations
+**Solution Needed**: Add axiom to vstd: `self@.len() == 0 <==> (forall |a| !self@.contains(a))`.
+
+**Status**: Using `#[verifier::external_body]` with complete spec.
+
+### 3. ForLoopGhostIterator for Vec<T> (SetStEph::FromVec, etc.)
+**Issue**: Cannot verify `for` loops over `Vec::into_iter()` for generic `T: StT + Hash`.
+
+**Why**: Verus's `ForLoopGhostIterator` support for `Vec<T>` appears incomplete for custom `T`.
+
+**Status**: Using `#[verifier::external_body]` with complete specs. All these methods work correctly at runtime.
+
+### 4. ForLoopGhostIterator for Newtype Wrappers (RelationStEph::domain, range)
+**Issue**: `PairIter` (newtype wrapper for `std::collections::hash_set::Iter<Pair<T,U>>`) doesn't work with Verus's `for` loop verification, even with complete `ForLoopGhostIteratorNew` and `ForLoopGhostIterator` implementations.
+
+**Why**: Suspected Verus compiler limitation - the `verus_builtin` mechanism doesn't recognize newtype wrappers.
+
+**Workaround Attempted**: Implemented full ghost iterator infrastructure in `Types.rs`.
+
+**Status**: Using `#[verifier::external_body]` with complete specs. Documented as TODO in code.
+
+### 5. Formatter/Hasher Specs (SetStEph::Debug/Display/Hash)
+**Issue**: `core::fmt::Formatter`, `core::fmt::Result`, and `std::hash::Hasher` types are not supported by Verus in verified code.
+
+**Why**: These types involve complex trait machinery and side effects that Verus doesn't model.
+
+**Status**: Implementations are **outside** `verus!` blocks. These are pedagogical runtime traits for display/debugging, not part of verified specifications.
+
+## Summary of Proof Holes
+
+| Category | Count | Status |
+|----------|-------|--------|
+| obeys_key_model preconditions | ~10 | **Documented** - Verus standard pattern |
+| HashSetWithViewPlus external_body | 25 | **Inherent** - std internals unprovable |
+| Clone+View axiom | 1 | **Solvable** - need call_ensures pattern |
+| Set len==0 axiom | 1 | **Needs vstd fix** - missing reverse axiom |
+| Vec ForLoopGhostIterator | 3 | **Verus limitation** - generic Vec iteration |
+| Newtype ForLoopGhostIterator | 2 | **Verus limitation** - compiler issue |
+| Float admits | 6 | **Inherent** - non-deterministic floats |
+| Debug/Display/Hash | 3 | **Expected** - outside verification scope |
+
+**Total**: ~51 markers, of which:
+- **34 are inherent/expected** (HashSetWithViewPlus, floats, display traits)
+- **10 are design choices** (obeys_key_model preconditions)
+- **7 are solvable** (Clone+View axiom, len==0 axiom, loop iterators)
 
 ## Testing
 
-All modules have runtime tests in `tests/vstdplus/`:
-- `test_total_order.rs`: 4 tests passing
-- `test_partial_order.rs`: 11 tests passing (including NaN and infinity edge cases)
+All modules have runtime tests:
+- `tests/vstdplus/test_total_order.rs` - TotalOrder trait tests
+- `tests/vstdplus/test_partial_order.rs` - PartialOrder trait tests  
 
-## Attic
-
-The `attic/vstdplus/` directory contains:
-- Alternative float implementations that don't compile (Verus limitation: no `spec_le` for floats)
-- Comparison documentation explaining why uninterpreted specs are necessary
-- `hash_set_with_view.rs`: Redundant wrapper (replaced by `transmute` approach in `SetStEph`)
-
-## Design Principles
-
-1. **Follow vstd patterns**: Match vstd's style and conventions
-2. **Minimal comments**: Avoid "jejune" comments that just restate the signature
-3. **Sound verification**: Use uninterpreted specs where necessary (e.g., floats)
-4. **Pragmatic**: Provide working implementations, document limitations
-
-## Verification Summary
-
-```
-✅ set_with_view.rs:       0 verified, 0 errors (trait definitions only)
-✅ total_order.rs:        60 verified, 0 errors
-✅ partial_order.rs:      54 verified, 0 errors
-
-Total: 114 verified, 0 errors
-```
-
-## Future Work
-
-- Proof-time testing infrastructure (currently using runtime tests only)
-- Generic blanket implementations (blocked by Verus limitations)
-- Additional ordering traits (e.g., `StrictTotalOrder`, `PreOrder`)
-
+Chapter 3 and Chapter 5 tests verify that the traits work correctly for APAS algorithms.
