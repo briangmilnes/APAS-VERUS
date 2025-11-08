@@ -330,6 +330,21 @@ pub mod Types {
         }
     }
 
+    /// Axiom that Pair's view is injective (needed for hash collections)
+    /// If two pairs have the same view, they are equal
+    pub broadcast proof fn axiom_pair_view_injective<K: vstd::prelude::View, V: vstd::prelude::View>(p1: Pair<K, V>, p2: Pair<K, V>)
+        requires
+            #[trigger] p1@ == #[trigger] p2@,
+        ensures
+            p1 == p2,
+    {
+        admit();
+    }
+
+    pub broadcast group group_pair_axioms {
+        axiom_pair_view_injective,
+    }
+
     // Newtype wrapper for Pair iterator to implement ForLoopGhostIterator (orphan rule)
     // Note: Currently unused due to Verus limitation - for loops don't recognize ForLoopGhostIteratorNew
     // on newtype wrappers. Kept for future use when this is supported.

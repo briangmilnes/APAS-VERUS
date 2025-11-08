@@ -11,6 +11,9 @@ pub mod RelationStEph {
 
     verus! {
 
+#[cfg(verus_keep_ghost)]
+broadcast use crate::Types::Types::group_pair_axioms;
+
 #[verifier::ext_equal]
 #[verifier::reject_recursive_types(T)]
 #[verifier::reject_recursive_types(U)]

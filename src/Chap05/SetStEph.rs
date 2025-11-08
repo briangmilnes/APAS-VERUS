@@ -19,11 +19,12 @@ pub mod SetStEph {
 use vstd::std_specs::hash::obeys_key_model;
 
 #[cfg(verus_keep_ghost)]
-broadcast use {vstd::std_specs::hash::group_hash_axioms, crate::vstdplus::clone_view::clone_view::group_clone_view_axioms};
+broadcast use {vstd::std_specs::hash::group_hash_axioms, crate::vstdplus::clone_view::clone_view::group_clone_view_axioms, crate::Types::Types::group_pair_axioms};
 
 pub trait SetStEphTrait<T: StT + Hash>: SetWithView<T> {
     fn singleton(x: T) -> (result: Self)
-        requires vstd::std_specs::hash::obeys_key_model::<T>()
+        requires vstd::std_specs::hash::obeys_key_model::<T>(),
+                 forall|t1: T, t2: T| t1@ == t2@ ==> t1 == t2,
         ensures result@ == Set::<<T as View>::V>::empty().insert(x@)
     {
         let mut s = Self::empty();
@@ -46,7 +47,8 @@ pub trait SetStEphTrait<T: StT + Hash>: SetWithView<T> {
     fn iter(&self) -> std::collections::hash_set::Iter<'_, T>;
 
     fn FromVec(v: Vec<T>) -> Self
-        requires vstd::std_specs::hash::obeys_key_model::<T>();
+        requires vstd::std_specs::hash::obeys_key_model::<T>(),
+                 forall|t1: T, t2: T| t1@ == t2@ ==> t1 == t2;
 
     fn CartesianProduct<U: StT + Hash>(&self, other: &SetStEph<U>) -> SetStEph<Pair<T, U>>
         requires vstd::std_specs::hash::obeys_key_model::<Pair<T, U>>();
@@ -80,7 +82,6 @@ impl<T: View + Eq + Hash + Clone> View for SetStEph<T> {
 
 // Implement SetWithView trait for verified specs
 impl<T: StT + Hash> SetWithView<T> for SetStEph<T> {
-    #[verifier::external_body]
     fn empty() -> (result: Self) {
         SetStEph { data: HashSetWithViewPlus::new() }
     }
