@@ -75,11 +75,14 @@ impl<T: StT + Hash, U: StT + Hash> RelationStEphTrait<T, U> for RelationStEph<T,
         self.pairs.size()
     }
 
-    #[verifier::external_body]
     fn mem(&self, t: &T, u: &U) -> (result: B)
         ensures result == self.spec_view().contains((t@, u@))
     {
-        self.pairs.mem(&Pair(t.clone(), u.clone()))
+        let pair = Pair(t.clone(), u.clone());
+        proof {
+            assert(pair@ == (t@, u@));
+        }
+        self.pairs.mem(&pair)
     }
 
     fn insert(&mut self, t: T, u: U)
