@@ -191,10 +191,9 @@ impl<T: StT + Hash> SetStEph<T> {
         fn eq(&self, other: &Self) -> (result: bool)
             ensures result == (self@ == other@)
         {
-            // TODO: Remove external_body once Verus supports for loops over HashSet::iter()
-            // The logic is sound:
-            // 1. If lengths differ, sets differ
-            // 2. If all elements of self are in other and lengths are equal, sets are equal (set extensionality)
+            // TODO: Verus ForLoopGhostIterator for HashSet exists, but tracking checked elements is challenging
+            // Need invariant: "all elements seen so far are in other", but can't easily express without
+            // referencing iterator's ghost state (which isn't directly accessible in invariant scope)
             if self.data.len() != other.data.len() {
                 return false;
             }

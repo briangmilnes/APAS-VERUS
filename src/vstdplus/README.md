@@ -75,14 +75,22 @@ This matches `vstd::std_specs::cmp::ExPartialOrd` approach.
 **Status**: Using `#[verifier::external_body]` with complete specs. All these methods work correctly at runtime.
 
 ### 4. ForLoopGhostIterator for HashSet::iter() (SetStEph::PartialEq, CartesianProduct, partition)
-**Issue**: Cannot verify `for` loops over `std::collections::hash_set::Iter<T>` in verified code.
+**Issue**: Cannot write invariants that reference the iterator's ghost state to track progress through the loop.
 
-**Why**: Verus's `ForLoopGhostIterator` support for `HashSet::iter()` is incomplete. While vstd provides `SetIterAdditionalSpecFns` to add a `view()` method to the iterator, there's no `ForLoopGhostIterator` implementation to connect the exec iterator to ghost iteration in `for` loops.
+**Discovery**: Verus DOES have `ForLoopGhostIterator` implementation for `std::collections::hash_set::Iter<T>` in `vstd::std_specs::hash`. The `for` loops compile and the iterator infrastructure is complete.
 
-**Workaround Attempted**: Converting to `while` loops requires building a `Vec<T>` from the iterator, but `.cloned().collect()` is not supported by Verus.
+**The Real Problem**: To prove `PartialEq::eq()`, we need an invariant like "all elements we've seen so far are in `other`". This requires referencing the iterator's ghost state (which elements have been processed), but the iterator variable isn't directly accessible in the invariant scope. We'd need something like:
+```rust
+for x in iter: self.data.iter()
+    invariant forall |i: int| 0 <= i < iter.ghost_iter().pos ==> 
+        other@.contains(iter.ghost_iter().elements[i])
+```
+But `iter` is not in scope within the invariant clause.
+
+**Workaround Attempted**: Simplified invariants without tracking progress, but then can't prove the postcondition.
 
 **Status**: Using `#[verifier::external_body]` with complete specs for:
-- `SetStEph::PartialEq::eq()` - Set equality check
+- `SetStEph::PartialEq::eq()` - Set equality check  
 - `SetStEph::CartesianProduct()` - Nested iteration over two sets
 - `SetStEph::partition()` - Nested iteration to check partition property
 
