@@ -9,6 +9,7 @@ pub mod SetWithView {
     /// Does NOT extend Set - this is for verified code only.
     pub trait SetWithView<T: View>: Sized + View<V = vstd::set::Set<<T as View>::V>> {
         fn empty() -> (result: Self)
+            requires vstd::std_specs::hash::obeys_key_model::<T>()
             ensures result@ == vstd::set::Set::<<T as View>::V>::empty();
 
         fn contains(&self, x: &T) -> (result: bool)

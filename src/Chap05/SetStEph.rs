@@ -110,8 +110,9 @@ impl<T: StT + Hash> SetWithView<T> for SetStEph<T> {
         self.data.len()
     }
 
-    #[verifier::external_body]
     fn is_empty(&self) -> (result: bool) {
+        broadcast use vstd::set::group_set_axioms;
+        
         self.data.len() == 0
     }
 }
@@ -171,7 +172,9 @@ impl<T: StT + Hash> SetStEph<T> {
 
 } // verus!
 
-    // Pedagogical runtime trait implementations using HashSetWithViewPlus
+    // Pedagogical runtime trait implementations
+    // Note: These use types (Formatter, Hasher) that Verus doesn't understand,
+    // so they must be outside the verus! block
 
     impl<T: StT + Hash> PartialEq for SetStEph<T> {
         fn eq(&self, other: &Self) -> bool {
