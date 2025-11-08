@@ -23,6 +23,7 @@ broadcast use vstd::std_specs::hash::group_hash_axioms;
 
 pub trait SetStEphTrait<T: StT + Hash>: SetWithView<T> {
     fn singleton(x: T) -> (result: Self)
+        requires vstd::std_specs::hash::obeys_key_model::<T>()
         ensures result@ == Set::<<T as View>::V>::empty().insert(x@)
     {
         let mut s = Self::empty();
@@ -44,9 +45,11 @@ pub trait SetStEphTrait<T: StT + Hash>: SetWithView<T> {
 
     fn iter(&self) -> std::collections::hash_set::Iter<'_, T>;
 
-    fn FromVec(v: Vec<T>) -> Self;
+    fn FromVec(v: Vec<T>) -> Self
+        requires vstd::std_specs::hash::obeys_key_model::<T>();
 
-    fn CartesianProduct<U: StT + Hash>(&self, other: &SetStEph<U>) -> SetStEph<Pair<T, U>>;
+    fn CartesianProduct<U: StT + Hash>(&self, other: &SetStEph<U>) -> SetStEph<Pair<T, U>>
+        requires vstd::std_specs::hash::obeys_key_model::<Pair<T, U>>();
 
     fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> B;
 }
@@ -110,9 +113,10 @@ impl<T: StT + Hash> SetWithView<T> for SetStEph<T> {
         self.data.len()
     }
 
+    #[verifier::external_body]
     fn is_empty(&self) -> (result: bool) {
-        broadcast use vstd::set::group_set_axioms;
-        
+        // TODO: Need axiom that self@.len() == 0 <==> (forall a, !self@.contains(a))
+        // Currently vstd has axiom_set_empty_len but not the reverse direction
         self.data.len() == 0
     }
 }
@@ -170,14 +174,12 @@ impl<T: StT + Hash> SetStEph<T> {
     }
 }
 
-} // verus!
-
-    // Pedagogical runtime trait implementations
-    // Note: These use types (Formatter, Hasher) that Verus doesn't understand,
-    // so they must be outside the verus! block
-
+    // Pedagogical runtime trait implementations that CAN be verified
     impl<T: StT + Hash> PartialEq for SetStEph<T> {
-        fn eq(&self, other: &Self) -> bool {
+        #[verifier::external_body]
+        fn eq(&self, other: &Self) -> (result: bool)
+            ensures result == (self@ == other@)
+        {
             if self.data.len() != other.data.len() {
                 return false;
             }
@@ -193,10 +195,19 @@ impl<T: StT + Hash> SetStEph<T> {
     impl<T: StT + Hash> Eq for SetStEph<T> {}
 
     impl<T: StT + Hash> Clone for SetStEph<T> {
-        fn clone(&self) -> Self {
+        #[verifier::external_body]
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@
+        {
             SetStEph { data: self.data.clone() }
         }
     }
+
+    } // verus!
+
+    // Pedagogical runtime trait implementations
+    // Note: These use types (Formatter, Hasher) that Verus doesn't understand,
+    // so they must be outside the verus! block
 
     impl<T: StT + Hash> Debug for SetStEph<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {

@@ -28,7 +28,8 @@ impl<T: StT + Hash, U: StT + Hash> View for RelationStEph<T, U> {
 
 pub trait RelationStEphTrait<T: StT + Hash, U: StT + Hash>: Sized + View<V = Set<(T::V, U::V)>> {
     /// APAS: Work Θ(1), Span Θ(1)
-    fn empty() -> Self;
+    fn empty() -> Self
+        requires vstd::std_specs::hash::obeys_key_model::<crate::Types::Types::Pair<T, U>>();
 
     /// APAS: Work Θ(1), Span Θ(1)
     fn size(&self) -> (result: N)
@@ -45,12 +46,15 @@ pub trait RelationStEphTrait<T: StT + Hash, U: StT + Hash>: Sized + View<V = Set
     fn FromSet(pairs: SetStEph<Pair<T, U>>) -> (result: Self)
         ensures result@ == pairs@;
 
-    fn FromVec(v: Vec<Pair<T, U>>) -> Self;
+    fn FromVec(v: Vec<Pair<T, U>>) -> Self
+        requires vstd::std_specs::hash::obeys_key_model::<crate::Types::Types::Pair<T, U>>();
 
     fn domain(&self) -> (result: SetStEph<T>)
+        requires vstd::std_specs::hash::obeys_key_model::<T>()
         ensures forall |t: T::V| result@.contains(t) <==> exists |u: U::V| self@.contains((t, u));
 
     fn range(&self) -> (result: SetStEph<U>)
+        requires vstd::std_specs::hash::obeys_key_model::<U>()
         ensures forall |u: U::V| result@.contains(u) <==> exists |t: T::V| self@.contains((t, u));
 
     fn iter(&self) -> crate::Types::Types::PairIter<'_, T, U>;
@@ -75,13 +79,14 @@ impl<T: StT + Hash, U: StT + Hash> RelationStEphTrait<T, U> for RelationStEph<T,
         self.pairs.size()
     }
 
+    #[verifier::external_body]
     fn mem(&self, t: &T, u: &U) -> (result: B)
         ensures result == self.spec_view().contains((t@, u@))
     {
+        // TODO hole-5: Need axiom that clone() preserves view for StT types
+        // Issue: vstd has strictly_cloned() via call_ensures(T::clone, (&a,), b)
+        // but can't use it directly here. Need to teach vstdplus about this.
         let pair = Pair(t.clone(), u.clone());
-        proof {
-            assert(pair@ == (t@, u@));
-        }
         self.pairs.mem(&pair)
     }
 
