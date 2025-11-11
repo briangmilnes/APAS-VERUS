@@ -17,6 +17,18 @@ pub mod Chap03 {
 }
 
 pub mod Chap05 {
-    pub mod SetStEph;
-    pub mod RelationStEph;
+    // pub mod SetStEph;
+    // pub mod RelationStEph;
+}
+
+pub mod experiments {
+//    pub mod SetLoops;
+//    pub mod ToVecProof;
+//    pub mod supertrait;
+//    pub mod minimal_iter;
+//    pub mod triangle;
+    pub mod verus_iterator;
+    pub mod verus_vec_iterator;
+//    pub mod verus_sum_loops_iterators;
+    pub mod seq_basics;
 }

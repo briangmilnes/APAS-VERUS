@@ -1,0 +1,25 @@
+# rustfmt configuration for APAS-VERUS
+# Prefer longer lines and single-line formatting
+
+# Allow longer lines
+max_width = 120
+
+# Maximize single-line formatting (key setting!)
+use_small_heuristics = "Max"
+
+# Keep function parameters on one line when possible
+fn_params_layout = "Compressed"
+
+# Put where clauses on single line
+where_single_line = true
+
+# Don't wrap comments at max_width
+wrap_comments = false
+
+# Keep chains on one line when possible
+chain_width = 80
+
+# Keep arrays/structs inline when short
+array_width = 120
+struct_lit_width = 120
+
