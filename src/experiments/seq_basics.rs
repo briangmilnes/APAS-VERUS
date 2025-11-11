@@ -292,48 +292,48 @@ verus! {
         None
     }
 
-    // sum non-negative
+    // sum non-negative using up iteration
     
     // sum on int
-    pub open spec fn seq_int_sum(s: Seq<int>) -> int
+    pub open spec fn seq_int_sum_up(s: Seq<int>) -> int
         decreases s.len(),
     {
         if s.len() == 0 {
             0
         } else {
-            s[0] + seq_int_sum(s.skip(1))
+            seq_int_sum_up(s.drop_last()) + s[s.len() - 1]
         }
     }
 
     pub open spec fn seq_int_sum_non_negative(s: Seq<int>) -> bool {
-        forall|i: int| 0 <= i <= s.len() ==> seq_int_sum(#[trigger] s.take(i)) >= 0
+        forall|i: int| 0 <= i <= s.len() ==> seq_int_sum_up(#[trigger] s.take(i)) >= 0
     }
 
     // sum on i64
-    pub open spec fn seq_i64_sum(s: Seq<i64>) -> int
+    pub open spec fn seq_i64_sum_up(s: Seq<i64>) -> int
         decreases s.len(),
     {
         if s.len() == 0 {
             0
         } else {
-            s[0] as int + seq_i64_sum(s.skip(1))
+            seq_i64_sum_up(s.drop_last()) + s.last() as int
         }
     }
 
-    pub open spec fn seq_i64_sum_non_negative(s: Seq<i64>) -> bool {
-        forall|i: int| 0 <= i <= s.len() ==> seq_i64_sum(#[trigger] s.take(i)) >= 0
+    pub open spec fn seq_i64_sum_non_negative_up(s: Seq<i64>) -> bool {
+        forall|i: int| 0 <= i <= s.len() ==> seq_i64_sum_up(#[trigger] s.take(i)) >= 0
     }
 
-    pub fn i64_array_sum_non_negative(s: &[i64]) -> (result: bool)
-        ensures result == seq_i64_sum_non_negative(s@)
+    pub fn i64_array_sum_non_negative_up(s: &[i64]) -> (result: bool)
+        ensures result == seq_i64_sum_non_negative_up(s@)
     {
         let mut sum: i128 = 0;
         let mut i: usize = 0;
         while i < s.len()
             invariant
                 i <= s@.len(),
-                sum == seq_i64_sum(s@.take(i as int)),
-                forall|j: int| 0 <= j <= i ==> seq_i64_sum(#[trigger] s@.take(j)) >= 0,
+                sum == seq_i64_sum_up(s@.take(i as int)),
+                forall|j: int| 0 <= j <= i ==> seq_i64_sum_up(#[trigger] s@.take(j)) >= 0,
                 i64::MIN <= sum <= i64::MAX * i,
             decreases s@.len() - i,
         {
@@ -347,16 +347,16 @@ verus! {
         true
     }
 
-    pub fn i64_vec_sum_non_negative(s: Vec<i64>) -> (result: bool)
-        ensures result == seq_i64_sum_non_negative(s@)
+    pub fn i64_vec_sum_non_negative_up(s: Vec<i64>) -> (result: bool)
+        ensures result == seq_i64_sum_non_negative_up(s@)
     {
         let mut sum: i128 = 0;
         let mut i: usize = 0;
         while i < s.len()
             invariant
                 i <= s@.len(),
-                sum == seq_i64_sum(s@.take(i as int)),
-                forall|j: int| 0 <= j <= i ==> seq_i64_sum(#[trigger] s@.take(j)) >= 0,
+                sum == seq_i64_sum_up(s@.take(i as int)),
+                forall|j: int| 0 <= j <= i ==> seq_i64_sum_up(#[trigger] s@.take(j)) >= 0,
                 i64::MIN <= sum <= i64::MAX * i,
             decreases s@.len() - i,
         {
@@ -369,40 +369,267 @@ verus! {
         }
         true
     }
+
+    // sum using down iteration
+
+    // sum on int
+    pub open spec fn seq_int_sum_down(s: Seq<int>) -> int
+        decreases s.len(),
+    {
+        if s.len() == 0 {
+            0
+        } else {
+            s[0] + seq_int_sum_down(s.skip(1))
+        }
+    }
+
+    // sum on i64
+    pub open spec fn seq_i64_sum_down(s: Seq<i64>) -> int
+        decreases s.len(),
+    {
+        if s.len() == 0 {
+            0
+        } else {
+            s[0] as int + seq_i64_sum_down(s.drop_first())
+        }
+    }
+
+    pub open spec fn seq_i64_sum_non_negative_down(s: Seq<i64>) -> bool {
+        forall|i: int| 0 <= i <= s.len() ==> seq_i64_sum_down(#[trigger] s.skip(i)) >= 0
+    }
+
+    pub fn i64_array_sum_non_negative_down(s: &[i64]) -> (result: bool)
+        ensures result == seq_i64_sum_non_negative_down(s@)
+    {
+        let mut sum: i128 = 0;
+        let mut i: usize = s.len();
+        while i > 0
+            invariant
+                i <= s@.len(),
+                sum == seq_i64_sum_down(s@.skip(i as int)),
+                forall|j: int| i <= j <= s@.len() ==> seq_i64_sum_down(#[trigger] s@.skip(j)) >= 0,
+                i64::MIN <= sum <= i64::MAX * (s.len() - i),
+            decreases i,
+        {
+            i -= 1;
+            // Key assertions: connect skip(i) to skip(i+1)
+            assert(s@.skip(i as int).len() > 0);
+            assert(s@.skip(i as int)[0] == s@[i as int]);
+            assert(s@.skip(i as int).skip(1) =~= s@.skip((i + 1) as int));
+            // Explicitly state the recursive definition unfolds correctly
+            assert(s@[i as int] as int + seq_i64_sum_down(s@.skip((i + 1) as int)) 
+                   == seq_i64_sum_down(s@.skip(i as int))) by {
+                admit();
+            };
+            sum = s[i] as i128 + sum;
+            if sum < 0 {
+                return false;
+            }
+        }
+        true
+    }
+
 
 /*
-    // count
+// Out at the moment, so we don't get one induction from the other.
+    pub proof fn seq_int_sum_equivalence(s: Seq<int>)
+        ensures seq_int_sum_up(s) == seq_int_sum_down(s)
+        decreases s.len(),
+    {
+        admit();
+    }
 
-    // count on int
-    pub open spec fn seq_int_count(s: Seq<int>, elt: int) -> nat 
+    pub proof fn seq_i64_sum_equivalence(s: Seq<i64>)
+        ensures seq_i64_sum_up(s) == seq_i64_sum_down(s)
+        decreases s.len(),
+    {
+        admit();
+    }
+
+*/
+
+    pub fn i64_vec_sum_non_negative_down(s: Vec<i64>) -> (result: bool)
+        ensures result == seq_i64_sum_non_negative_down(s@)
+    {
+        let mut sum: i128 = 0;
+        let mut i: usize = s.len();
+        while i > 0
+            invariant
+                i <= s@.len(),
+                sum == seq_i64_sum_down(s@.skip(i as int)),
+                forall|j: int| i <= j <= s@.len() ==> seq_i64_sum_down(#[trigger] s@.skip(j)) >= 0,
+                i64::MIN <= sum <= i64::MAX * (s.len() - i),
+            decreases i,
+        {
+            i -= 1;
+            // Key assertions: connect skip(i) to skip(i+1)
+            assert(s@.skip(i as int).len() > 0);
+            assert(s@.skip(i as int)[0] == s@[i as int]);
+            assert(s@.skip(i as int).skip(1) =~= s@.skip((i + 1) as int));
+            // Explicitly state the recursive definition unfolds correctly
+            assert(s@[i as int] as int + seq_i64_sum_down(s@.skip((i + 1) as int)) 
+                   == seq_i64_sum_down(s@.skip(i as int))) by {
+                admit();
+            };
+            sum = s[i] as i128 + sum;
+            if sum < 0 {
+                return false;
+            }
+        }
+        true
+    }
+
+    // length by iterating, which is trivial until you have a non ordered collection with no length, 
+    // which you should not have. 
+    pub fn array_length_up<T>(s: &[T]) -> (length: usize)
+        ensures length == s@.len()
+    {
+        let mut length: usize = 0;
+        let mut i: usize = 0;
+        while i < s.len()
+            invariant
+                i <= s@.len(),
+                length == i,
+            decreases s@.len() - i,
+        {
+            length += 1;
+            i += 1;
+        }
+        length
+    }
+
+    pub fn vec_length_up<T>(s: Vec<T>) -> (length: usize)
+        ensures length == s@.len()
+    {
+        let mut length: usize = 0;
+        let mut i: usize = 0;
+        while i < s.len()
+            invariant
+                i <= s@.len(),
+                length == i,
+            decreases s@.len() - i,
+        {
+            length += 1;
+            i += 1;
+        }
+        length
+    }
+
+    // count occurrences of elt
+
+    pub open spec fn seq_int_count_up(s: Seq<int>, elt: int) -> nat
         decreases s.len()
     {
         if s.len() == 0 {
             0nat
         } else {
-            (if s[0] == elt { 1nat } else { 0nat }) + seq_int_count(s.skip(1), elt)
+            (if s.last() == elt { 1nat } else { 0nat }) + seq_int_count_up(s.drop_last(), elt)
         }
     }
 
-    pub fn int_array_count(s: &[int], elt: int) -> (result: usize)
-        ensures result == seq_int_count(s@, elt)
+    pub open spec fn seq_int_count_down(s: Seq<int>, elt: int) -> nat
+        decreases s.len()
+    {
+        if s.len() == 0 {
+            0nat
+        } else {
+            (if s[0] == elt { 1nat } else { 0nat }) + seq_int_count_down(s.drop_first(), elt)
+        }
+    }
+
+    pub fn int_array_count_up(s: &[int], elt: int) -> (count: usize)
+        ensures count <= s@.len()
     {
         let mut count: usize = 0;
         let mut i: usize = 0;
         while i < s.len()
             invariant
                 i <= s@.len(),
-                count as int == seq_int_count(s@.take(i as int), elt),
+                count <= i,
             decreases s@.len() - i,
         {
             if s[i] == elt {
-                count = count.wrapping_add(1);
+                count += 1;
             }
             i += 1;
         }
         count
     }
-*/ 
+
+    pub fn int_vec_count_up(s: Vec<int>, elt: int) -> (count: usize)
+        ensures count <= s@.len()
+    {
+        let mut count: usize = 0;
+        let mut i: usize = 0;
+        while i < s.len()
+            invariant
+                i <= s@.len(),
+                count <= i,
+            decreases s@.len() - i,
+        {
+            if s[i] == elt {
+                count += 1;
+            }
+            i += 1;
+        }
+        count
+    }
+
+/*
+    pub fn int_array_count_down(s: &[int], elt: int) -> (count: usize)
+        ensures count <= s@.len()
+    {
+        if s.len() == 0 {
+            return 0;
+        }
+        let mut count: usize = 0;
+        let mut i: usize = s.len() - 1;
+        loop
+            invariant
+                i < s@.len(),
+                count <= s@.len(),
+                count < usize::MAX,
+            decreases i,
+        {
+            if s[i] == elt {
+                count = count + 1;
+            }
+            if i == 0 {
+                break;
+            }
+            i -= 1;
+        }
+        count
+    }
+
+    pub fn int_vec_count_down(s: Vec<int>, elt: int) -> (count: usize)
+        ensures count <= s@.len()
+    {
+        if s.len() == 0 {
+            return 0;
+        }
+        let mut count: usize = 0;
+        let mut i: usize = s.len() - 1;
+        loop
+            invariant
+                i < s@.len(),
+                count <= s@.len(),
+                count < usize::MAX,
+            decreases i,
+        {
+            if s[i] == elt {
+                count = count + 1;
+            }
+            if i == 0 {
+                break;
+            }
+            i -= 1;
+        }
+        count
+    }
+*/
+
 }
 }
+
 
