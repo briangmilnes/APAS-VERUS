@@ -1,8 +1,6 @@
-pub mod seq_basics {
+pub mod seq_while_basic_proofs {
 
     use vstd::prelude::*;
-    use crate::experiments::verus_iterator::*;
-    use crate::experiments::verus_vec_iterator::*;
 
 verus! {
     //  Seq basics
@@ -54,13 +52,13 @@ verus! {
     { s.len() }
 
 
-    // Member on int
-    pub open spec fn seq_int_member(s: Seq<int>, elt: int) -> bool {
+    // Mem on int
+    pub open spec fn seq_int_mem(s: Seq<int>, elt: int) -> bool {
         exists|i: int| 0 <= i < s.len() && s[i] == elt
     }
 
-    pub fn int_array_member(s: &[int], elt: int) -> (result: bool)
-        ensures result == seq_int_member(s@, elt)
+    pub fn int_array_mem_while(s: &[int], elt: int) -> (result: bool)
+        ensures result == seq_int_mem(s@, elt)
     {
         let mut i: usize = 0;
         while i < s.len()
@@ -77,8 +75,8 @@ verus! {
         false
     }
 
-    pub fn int_vec_member(s: Vec<int>, elt: int) -> (result: bool)
-        ensures result == seq_int_member(s@, elt)
+    pub fn int_vec_mem_while(s: Vec<int>, elt: int) -> (result: bool)
+        ensures result == seq_int_mem(s@, elt)
     {
         let mut i: usize = 0;
         while i < s.len()
@@ -95,13 +93,13 @@ verus! {
         false
     }
 
-    // Member on usize
-    pub open spec fn seq_usize_member(s: Seq<usize>, elt: usize) -> bool {
+    // Mem on usize
+    pub open spec fn seq_usize_mem(s: Seq<usize>, elt: usize) -> bool {
         exists|i: int| 0 <= i < s.len() && s[i] == elt
     }
 
-    pub fn usize_array_member(s: &[usize], elt: usize) -> (result: bool)
-        ensures result == seq_usize_member(s@, elt)
+    pub fn usize_array_mem_while(s: &[usize], elt: usize) -> (result: bool)
+        ensures result == seq_usize_mem(s@, elt)
     {
         let mut i: usize = 0;
         while i < s.len()
@@ -118,8 +116,8 @@ verus! {
         false
     }
 
-    pub fn usize_vec_member(s: Vec<usize>, elt: usize) -> (result: bool)
-        ensures result == seq_usize_member(s@, elt)
+    pub fn usize_vec_mem_while(s: Vec<usize>, elt: usize) -> (result: bool)
+        ensures result == seq_usize_mem(s@, elt)
     {
         let mut i: usize = 0;
         while i < s.len()
@@ -136,14 +134,25 @@ verus! {
         false
     }
 
-    // Member on T
 /*
-    pub open spec fn seq_t_member<T: Eq>(s: Seq<T>, elt: T) -> bool {
+    // Mem on T won't work without generic equality and some axioms which are
+    // not in Verus.
+    pub open spec fn seq_t_mem<T: Eq>(s: Seq<T>, elt: T) -> bool {
         exists|i: int| 0 <= i < s.len() && s[i] == elt
     }
 
-    pub fn t_array_member<T: Eq>(s: &[T], elt: T) -> (result: bool)
-        ensures result == seq_t_member(s@, elt)
+    // AXIOM: executable equality test corresponds to spec equality for T: Eq which
+    // is not provided by default in Verus.
+    pub proof fn axiom_eq_exec_to_spec<T: Eq>(s: Seq<T>, i: int, elt: T)
+        requires 0 <= i < s.len()
+        ensures 
+            s@[i] == elt || s@[i] != elt,  // One or the other must be true
+    {
+        admit();  
+    }
+
+    pub fn t_array_mem<T: Eq>(s: &[T], elt: T) -> (result: bool)
+        ensures result == seq_t_mem(s@, elt)
     {
         let mut i: usize = 0;
         while i < s.len()
@@ -153,7 +162,8 @@ verus! {
             decreases s@.len() - i,
         {
             if s[i] == elt {
-                assert(s@[i as int] == elt);
+                proof {axiom_eq_exec_to_spec(s, i, elt); }
+                assert(s[i] == elt);
                 return true;
             }
             assert(s@[i as int] != elt);
@@ -161,27 +171,6 @@ verus! {
         }
         false
     }
-
-    pub fn t_vec_member<T: Eq>(s: Vec<T>, elt: T) -> (result: bool)
-        ensures result == seq_t_member(s@, elt)
-    {
-        let mut i: usize = 0;
-        while i < s.len()
-            invariant
-                i <= s@.len(),
-                forall|j: int| 0 <= j < i ==> s@[j] != elt,
-            decreases s@.len() - i,
-        {
-            if s[i] == elt {
-                assert(s@[i as int] == elt);
-                return true;
-            }
-            assert(s@[i as int] != elt);
-            i += 1;
-        }
-        false
-    }
-
 */
 
     // find 
@@ -195,7 +184,7 @@ verus! {
         }
     }
 
-    pub fn int_array_find(s: &[int], elt: int) -> (result: Option<usize>)
+    pub fn int_array_find_while(s: &[int], elt: int) -> (result: Option<usize>)
         ensures
             match result {
                 Some(i) => i < s@.len() && s@[i as int] == elt && (forall|j: int| 0 <= j < i ==> s@[j] != elt),
@@ -217,7 +206,7 @@ verus! {
         None
     }
 
-    pub fn int_vec_find(s: Vec<int>, elt: int) -> (result: Option<usize>)
+    pub fn int_vec_find_while(s: Vec<int>, elt: int) -> (result: Option<usize>)
         ensures
             match result {
                 Some(i) => i < s@.len() && s@[i as int] == elt && (forall|j: int| 0 <= j < i ==> s@[j] != elt),
@@ -248,7 +237,7 @@ verus! {
         }
     }
 
-    pub fn usize_array_find(s: &[usize], elt: usize) -> (result: Option<usize>)
+    pub fn usize_array_find_while(s: &[usize], elt: usize) -> (result: Option<usize>)
         ensures
             match result {
                 Some(i) => i < s@.len() && s@[i as int] == elt && (forall|j: int| 0 <= j < i ==> s@[j] != elt),
@@ -270,7 +259,7 @@ verus! {
         None
     }
 
-    pub fn usize_vec_find(s: Vec<usize>, elt: usize) -> (result: Option<usize>)
+    pub fn usize_vec_find_while(s: Vec<usize>, elt: usize) -> (result: Option<usize>)
         ensures
             match result {
                 Some(i) => i < s@.len() && s@[i as int] == elt && (forall|j: int| 0 <= j < i ==> s@[j] != elt),
@@ -324,7 +313,7 @@ verus! {
         forall|i: int| 0 <= i <= s.len() ==> seq_i64_sum_up(#[trigger] s.take(i)) >= 0
     }
 
-    pub fn i64_array_sum_non_negative_up(s: &[i64]) -> (result: bool)
+    pub fn i64_array_sum_non_negative_up_while(s: &[i64]) -> (result: bool)
         ensures result == seq_i64_sum_non_negative_up(s@)
     {
         let mut sum: i128 = 0;
@@ -347,7 +336,7 @@ verus! {
         true
     }
 
-    pub fn i64_vec_sum_non_negative_up(s: Vec<i64>) -> (result: bool)
+    pub fn i64_vec_sum_non_negative_up_while(s: Vec<i64>) -> (result: bool)
         ensures result == seq_i64_sum_non_negative_up(s@)
     {
         let mut sum: i128 = 0;
@@ -398,7 +387,7 @@ verus! {
         forall|i: int| 0 <= i <= s.len() ==> seq_i64_sum_down(#[trigger] s.skip(i)) >= 0
     }
 
-    pub fn i64_array_sum_non_negative_down(s: &[i64]) -> (result: bool)
+    pub fn i64_array_sum_non_negative_down_while(s: &[i64]) -> (result: bool)
         ensures result == seq_i64_sum_non_negative_down(s@)
     {
         let mut sum: i128 = 0;
@@ -430,25 +419,7 @@ verus! {
     }
 
 
-/*
-// Out at the moment, so we don't get one induction from the other.
-    pub proof fn seq_int_sum_equivalence(s: Seq<int>)
-        ensures seq_int_sum_up(s) == seq_int_sum_down(s)
-        decreases s.len(),
-    {
-        admit();
-    }
-
-    pub proof fn seq_i64_sum_equivalence(s: Seq<i64>)
-        ensures seq_i64_sum_up(s) == seq_i64_sum_down(s)
-        decreases s.len(),
-    {
-        admit();
-    }
-
-*/
-
-    pub fn i64_vec_sum_non_negative_down(s: Vec<i64>) -> (result: bool)
+    pub fn i64_vec_sum_non_negative_down_while(s: Vec<i64>) -> (result: bool)
         ensures result == seq_i64_sum_non_negative_down(s@)
     {
         let mut sum: i128 = 0;
@@ -481,7 +452,7 @@ verus! {
 
     // length by iterating, which is trivial until you have a non ordered collection with no length, 
     // which you should not have. 
-    pub fn array_length_up<T>(s: &[T]) -> (length: usize)
+    pub fn array_length_up_while<T>(s: &[T]) -> (length: usize)
         ensures length == s@.len()
     {
         let mut length: usize = 0;
@@ -498,7 +469,7 @@ verus! {
         length
     }
 
-    pub fn vec_length_up<T>(s: Vec<T>) -> (length: usize)
+    pub fn vec_length_up_while<T>(s: Vec<T>) -> (length: usize)
         ensures length == s@.len()
     {
         let mut length: usize = 0;
@@ -537,7 +508,7 @@ verus! {
         }
     }
 
-    pub fn int_array_count_up(s: &[int], elt: int) -> (count: usize)
+    pub fn int_array_count_up_while(s: &[int], elt: int) -> (count: usize)
         ensures count <= s@.len()
     {
         let mut count: usize = 0;
@@ -556,7 +527,7 @@ verus! {
         count
     }
 
-    pub fn int_vec_count_up(s: Vec<int>, elt: int) -> (count: usize)
+    pub fn int_vec_count_up_while(s: Vec<int>, elt: int) -> (count: usize)
         ensures count <= s@.len()
     {
         let mut count: usize = 0;
@@ -575,61 +546,45 @@ verus! {
         count
     }
 
-/*
-    pub fn int_array_count_down(s: &[int], elt: int) -> (count: usize)
-        ensures count <= s@.len()
+    pub proof fn seq_int_sum_equivalence(s: Seq<int>)
+        ensures seq_int_sum_up(s) == seq_int_sum_down(s)
+        decreases s.len(),
     {
         if s.len() == 0 {
-            return 0;
+        } else if s.len() == 1 {
+            assert(s.drop_last().len() == 0);
+            assert(s.skip(1).len() == 0);
+            assert(seq_int_sum_up(s.drop_last()) == 0);
+            assert(seq_int_sum_down(s.skip(1)) == 0);
+            assert(s[0] == s.last());
+        } else {
+            seq_int_sum_equivalence(s.drop_last());
+            seq_int_sum_equivalence(s.skip(1));
+            assert(s.drop_last().skip(1) =~= s.skip(1).drop_last());
+            seq_int_sum_equivalence(s.drop_last().skip(1));
         }
-        let mut count: usize = 0;
-        let mut i: usize = s.len() - 1;
-        loop
-            invariant
-                i < s@.len(),
-                count <= s@.len(),
-                count < usize::MAX,
-            decreases i,
-        {
-            if s[i] == elt {
-                count = count + 1;
-            }
-            if i == 0 {
-                break;
-            }
-            i -= 1;
-        }
-        count
     }
 
-    pub fn int_vec_count_down(s: Vec<int>, elt: int) -> (count: usize)
-        ensures count <= s@.len()
+    pub proof fn seq_i64_sum_equivalence(s: Seq<i64>)
+        ensures seq_i64_sum_up(s) == seq_i64_sum_down(s)
+        decreases s.len(),
     {
         if s.len() == 0 {
-            return 0;
+        } else if s.len() == 1 {
+            assert(s.drop_last().len() == 0);
+            assert(s.drop_first().len() == 0);
+            assert(seq_i64_sum_up(s.drop_last()) == 0);
+            assert(seq_i64_sum_down(s.drop_first()) == 0);
+            assert(s[0] == s.last());
+        } else {
+            seq_i64_sum_equivalence(s.drop_last());
+            seq_i64_sum_equivalence(s.drop_first());
+            
+            assert(s.drop_last().drop_first() =~= s.drop_first().drop_last());
+            seq_i64_sum_equivalence(s.drop_last().drop_first());
         }
-        let mut count: usize = 0;
-        let mut i: usize = s.len() - 1;
-        loop
-            invariant
-                i < s@.len(),
-                count <= s@.len(),
-                count < usize::MAX,
-            decreases i,
-        {
-            if s[i] == elt {
-                count = count + 1;
-            }
-            if i == 0 {
-                break;
-            }
-            i -= 1;
-        }
-        count
     }
-*/
-
-}
+ }
 }
 
 

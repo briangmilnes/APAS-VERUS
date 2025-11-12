@@ -30,5 +30,7 @@ pub mod experiments {
     pub mod verus_iterator;
     pub mod verus_vec_iterator;
 //    pub mod verus_sum_loops_iterators;
-    pub mod seq_basics;
+    pub mod seq_while_basic_proofs;
+    pub mod seq_loop_basic_proofs;
+    pub mod seq_for_basic_proofs;
 }
