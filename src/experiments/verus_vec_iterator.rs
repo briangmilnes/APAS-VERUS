@@ -3,7 +3,6 @@ use crate::experiments::verus_iterator::*;
 
 verus! {
 
-// Ghost state for Vec iterator
 pub struct VecGhostIter {
     pub cur: int,
     pub end: int,
@@ -57,7 +56,6 @@ impl GhostIteratorTrait for VecGhostIter {
     }
 }
 
-// Concrete iterator for Vec
 pub struct VecExecIter {
     pub data: Vec<usize>,
     pub cur: usize,
@@ -75,7 +73,6 @@ impl View for VecExecIter {
     }
 }
 
-// Collection wrapper
 pub struct VecCollection {
     pub data: Vec<usize>,
 }
@@ -112,5 +109,68 @@ impl ExecIteratorTrait for VecCollection {
     }
 }
 
+impl vstd::pervasive::ForLoopGhostIteratorNew for VecExecIter {
+    type GhostIter = VecGhostIter;
+    
+    open spec fn ghost_iter(&self) -> VecGhostIter {
+        self@
+    }
 }
 
+impl vstd::pervasive::ForLoopGhostIterator for VecGhostIter {
+    type ExecIter = VecExecIter;
+    type Item = usize;
+    type Decrease = int;
+    
+    open spec fn exec_invariant(&self, exec_iter: &VecExecIter) -> bool {
+        &&& 0 <= self.cur <= self.end
+        &&& self.cur == exec_iter.cur as int
+        &&& self.end == exec_iter.data.len() as int
+        &&& self.data == exec_iter.data@
+    }
+    
+    open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+        match init {
+            Some(init_iter) => {
+                &&& self.end == init_iter.end
+                &&& self.data == init_iter.data
+                &&& init_iter.cur <= self.cur <= self.end
+            },
+            None => true,
+        }
+    }
+    
+    open spec fn ghost_ensures(&self) -> bool {
+        self.cur == self.end
+    }
+    
+    open spec fn ghost_decrease(&self) -> Option<int> {
+        Some(self.end - self.cur)
+    }
+    
+    open spec fn ghost_peek_next(&self) -> Option<usize> {
+        if self.cur < self.end {
+            Some(self.data[self.cur])
+        } else {
+            None
+        }
+    }
+    
+    open spec fn ghost_advance(&self, _exec_iter: &VecExecIter) -> VecGhostIter {
+        VecGhostIter {
+            cur: self.cur + 1,
+            end: self.end,
+            data: self.data,
+        }
+    }
+}
+
+impl Iterator for VecExecIter {
+    type Item = usize;
+    
+    fn next(&mut self) -> Option<Self::Item> {
+        VecCollection::next(self)
+    }
+}
+
+}

@@ -106,6 +106,15 @@ APAS-VERUS has developed custom traits (`GhostIteratorTrait` and `ExecIteratorTr
 | `GhostIteratorTrait` | `src/experiments/verus_iterator.rs` | 5 | Custom ghost state for manual `while`/`loop` iteration. Defines same methods as `ForLoopGhostIterator` but designed for explicit `next()` calls. |
 | `ExecIteratorTrait` | `src/experiments/verus_iterator.rs` | 18 | Custom executable iterator with `iter()` and `next()` methods. Provides ghost state connections via `requires`/`ensures`. |
 
+**Loop Types Supported:**
+
+| Loop Type | Vec Custom (`Vec<usize>`) |
+|-----------|---------------------------|
+| `while` | ✅ (287 functions verified) |
+| `loop` | ✅ (287 functions verified) |
+| `for` (Range) | N/A |
+| `for` (General) | ⚠️ Buggy (incomplete) |
+
 ---
 
 ## Vec Iterator Implementation
