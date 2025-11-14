@@ -1,0 +1,1648 @@
+DefId(0:0 ~ vec_length_while_rust[c3d7]) => OwnerNodes {
+    node: ParentedNode {
+        parent: 4294967040,
+        node: Crate(
+            Mod {
+                spans: ModSpans {
+                    inner_span: vec_length_while_rust.rs:1:1: 16:2 (#0),
+                    inject_use_span: no-location (#0),
+                },
+                item_ids: [
+                    ItemId {
+                        owner_id: DefId(0:1 ~ vec_length_while_rust[c3d7]::std),
+                    },
+                    ItemId {
+                        owner_id: DefId(0:2 ~ vec_length_while_rust[c3d7]::{use#0}),
+                    },
+                    ItemId {
+                        owner_id: DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while),
+                    },
+                    ItemId {
+                        owner_id: DefId(0:4 ~ vec_length_while_rust[c3d7]::main),
+                    },
+                ],
+            },
+        ),
+    },
+    parents: [
+        (0, 4294967040),
+    ],
+    bodies: {},
+    opt_hash_including_bodies: None,
+}
+DefId(0:1 ~ vec_length_while_rust[c3d7]::std) => OwnerNodes {
+    node: ParentedNode {
+        parent: 4294967040,
+        node: Item(
+            Item {
+                owner_id: DefId(0:1 ~ vec_length_while_rust[c3d7]::std),
+                kind: ExternCrate(
+                    None,
+                    std#2,
+                ),
+                span: no-location (#1),
+                vis_span: no-location (#1),
+                has_delayed_lints: false,
+            },
+        ),
+    },
+    parents: [
+        (0, 4294967040),
+    ],
+    bodies: {},
+    opt_hash_including_bodies: None,
+}
+DefId(0:2 ~ vec_length_while_rust[c3d7]::{use#0}) => OwnerNodes {
+    node: ParentedNode {
+        parent: 4294967040,
+        node: Item(
+            Item {
+                owner_id: DefId(0:2 ~ vec_length_while_rust[c3d7]::{use#0}),
+                kind: Use(
+                    Path {
+                        span: no-location (#1),
+                        res: PerNS {
+                            value_ns: Some(
+                                Err,
+                            ),
+                            type_ns: Some(
+                                Err,
+                            ),
+                            macro_ns: Some(
+                                Err,
+                            ),
+                        },
+                        segments: [
+                            PathSegment {
+                                ident: {{root}}#1,
+                                hir_id: HirId(DefId(0:2 ~ vec_length_while_rust[c3d7]::{use#0}).1),
+                                res: Err,
+                                args: None,
+                                infer_args: false,
+                            },
+                            PathSegment {
+                                ident: std#1,
+                                hir_id: HirId(DefId(0:2 ~ vec_length_while_rust[c3d7]::{use#0}).2),
+                                res: Err,
+                                args: None,
+                                infer_args: false,
+                            },
+                            PathSegment {
+                                ident: prelude#1,
+                                hir_id: HirId(DefId(0:2 ~ vec_length_while_rust[c3d7]::{use#0}).3),
+                                res: Err,
+                                args: None,
+                                infer_args: false,
+                            },
+                            PathSegment {
+                                ident: rust_2015#1,
+                                hir_id: HirId(DefId(0:2 ~ vec_length_while_rust[c3d7]::{use#0}).4),
+                                res: Err,
+                                args: None,
+                                infer_args: false,
+                            },
+                        ],
+                    },
+                    Glob,
+                ),
+                span: no-location (#1),
+                vis_span: no-location (#1),
+                has_delayed_lints: false,
+            },
+        ),
+    },
+    parents: [
+        (0, 4294967040),
+        (1, 0),
+        (2, 0),
+        (3, 0),
+        (4, 0),
+    ],
+    bodies: {},
+    opt_hash_including_bodies: None,
+}
+DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while) => OwnerNodes {
+    node: ParentedNode {
+        parent: 4294967040,
+        node: Item(
+            Item {
+                owner_id: DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while),
+                kind: Fn {
+                    sig: FnSig {
+                        header: FnHeader {
+                            safety: Normal(
+                                Safe,
+                            ),
+                            constness: NotConst,
+                            asyncness: NotAsync,
+                            abi: Rust,
+                        },
+                        decl: FnDecl {
+                            inputs: [
+                                Ty {
+                                    hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).52),
+                                    span: vec_length_while_rust.rs:1:28: 1:39 (#0),
+                                    kind: Ref(
+                                        Lifetime {
+                                            hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).47),
+                                            ident: '_#0,
+                                            kind: Param(
+                                                DefId(0:5 ~ vec_length_while_rust[c3d7]::vec_length_while::'_),
+                                            ),
+                                            source: Reference,
+                                            syntax: Implicit,
+                                        },
+                                        MutTy {
+                                            ty: Ty {
+                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).48),
+                                                span: vec_length_while_rust.rs:1:29: 1:39 (#0),
+                                                kind: Path(
+                                                    Resolved(
+                                                        None,
+                                                        Path {
+                                                            span: vec_length_while_rust.rs:1:29: 1:39 (#0),
+                                                            res: Def(
+                                                                Struct,
+                                                                DefId(3:8079 ~ alloc[c6e2]::vec::Vec),
+                                                            ),
+                                                            segments: [
+                                                                PathSegment {
+                                                                    ident: Vec#0,
+                                                                    hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).51),
+                                                                    res: Def(
+                                                                        Struct,
+                                                                        DefId(3:8079 ~ alloc[c6e2]::vec::Vec),
+                                                                    ),
+                                                                    args: Some(
+                                                                        GenericArgs {
+                                                                            args: [
+                                                                                Type(
+                                                                                    Ty {
+                                                                                        hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).49),
+                                                                                        span: vec_length_while_rust.rs:1:33: 1:38 (#0),
+                                                                                        kind: Path(
+                                                                                            Resolved(
+                                                                                                None,
+                                                                                                Path {
+                                                                                                    span: vec_length_while_rust.rs:1:33: 1:38 (#0),
+                                                                                                    res: PrimTy(
+                                                                                                        Uint(
+                                                                                                            usize,
+                                                                                                        ),
+                                                                                                    ),
+                                                                                                    segments: [
+                                                                                                        PathSegment {
+                                                                                                            ident: usize#0,
+                                                                                                            hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).50),
+                                                                                                            res: PrimTy(
+                                                                                                                Uint(
+                                                                                                                    usize,
+                                                                                                                ),
+                                                                                                            ),
+                                                                                                            args: None,
+                                                                                                            infer_args: false,
+                                                                                                        },
+                                                                                                    ],
+                                                                                                },
+                                                                                            ),
+                                                                                        ),
+                                                                                    },
+                                                                                ),
+                                                                            ],
+                                                                            constraints: [],
+                                                                            parenthesized: No,
+                                                                            span_ext: vec_length_while_rust.rs:1:32: 1:39 (#0),
+                                                                        },
+                                                                    ),
+                                                                    infer_args: false,
+                                                                },
+                                                            ],
+                                                        },
+                                                    ),
+                                                ),
+                                            },
+                                            mutbl: Not,
+                                        },
+                                    ),
+                                },
+                            ],
+                            output: Return(
+                                Ty {
+                                    hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).53),
+                                    span: vec_length_while_rust.rs:1:44: 1:49 (#0),
+                                    kind: Path(
+                                        Resolved(
+                                            None,
+                                            Path {
+                                                span: vec_length_while_rust.rs:1:44: 1:49 (#0),
+                                                res: PrimTy(
+                                                    Uint(
+                                                        usize,
+                                                    ),
+                                                ),
+                                                segments: [
+                                                    PathSegment {
+                                                        ident: usize#0,
+                                                        hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).54),
+                                                        res: PrimTy(
+                                                            Uint(
+                                                                usize,
+                                                            ),
+                                                        ),
+                                                        args: None,
+                                                        infer_args: false,
+                                                    },
+                                                ],
+                                            },
+                                        ),
+                                    ),
+                                },
+                            ),
+                            c_variadic: false,
+                            implicit_self: None,
+                            lifetime_elision_allowed: true,
+                        },
+                        span: vec_length_while_rust.rs:1:1: 1:49 (#0),
+                    },
+                    ident: vec_length_while#0,
+                    generics: Generics {
+                        params: [
+                            GenericParam {
+                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).46),
+                                def_id: DefId(0:5 ~ vec_length_while_rust[c3d7]::vec_length_while::'_),
+                                name: Fresh,
+                                span: vec_length_while_rust.rs:1:28: 1:29 (#0),
+                                pure_wrt_drop: false,
+                                kind: Lifetime {
+                                    kind: Elided(
+                                        Ampersand,
+                                    ),
+                                },
+                                colon_span: None,
+                                source: Generics,
+                            },
+                        ],
+                        predicates: [],
+                        has_where_clause_predicates: false,
+                        where_clause_span: vec_length_while_rust.rs:1:49: 1:49 (#0),
+                        span: vec_length_while_rust.rs:1:24: 1:24 (#0),
+                    },
+                    body: BodyId {
+                        hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).45),
+                    },
+                    has_body: true,
+                },
+                span: vec_length_while_rust.rs:1:1: 10:2 (#0),
+                vis_span: vec_length_while_rust.rs:1:1: 1:4 (#0),
+                has_delayed_lints: false,
+            },
+        ),
+    },
+    parents: [
+        (0, 4294967040),
+        (1, 0),
+        (2, 1),
+        (3, 45),
+        (4, 3),
+        (5, 8),
+        (6, 5),
+        (7, 8),
+        (8, 4),
+        (9, 8),
+        (10, 3),
+        (11, 14),
+        (12, 11),
+        (13, 14),
+        (14, 10),
+        (15, 14),
+        (16, 42),
+        (17, 40),
+        (18, 17),
+        (19, 18),
+        (20, 17),
+        (21, 20),
+        (22, 20),
+        (23, 22),
+        (24, 35),
+        (25, 29),
+        (26, 25),
+        (27, 26),
+        (28, 25),
+        (29, 24),
+        (30, 34),
+        (31, 30),
+        (32, 31),
+        (33, 30),
+        (34, 24),
+        (35, 40),
+        (36, 37),
+        (37, 38),
+        (38, 39),
+        (39, 40),
+        (40, 41),
+        (41, 16),
+        (42, 3),
+        (43, 3),
+        (44, 43),
+        (45, 0),
+        (46, 0),
+        (47, 52),
+        (48, 52),
+        (49, 48),
+        (50, 49),
+        (51, 48),
+        (52, 0),
+        (53, 0),
+        (54, 53),
+    ],
+    bodies: {
+        45: Body {
+            params: [
+                Param {
+                    hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).1),
+                    pat: Pat {
+                        hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).2),
+                        kind: Binding(
+                            BindingMode(
+                                No,
+                                Not,
+                            ),
+                            HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).2),
+                            s#0,
+                            None,
+                        ),
+                        span: vec_length_while_rust.rs:1:25: 1:26 (#0),
+                        default_binding_modes: true,
+                    },
+                    ty_span: vec_length_while_rust.rs:1:28: 1:39 (#0),
+                    span: vec_length_while_rust.rs:1:25: 1:39 (#0),
+                },
+            ],
+            value: Expr {
+                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).45),
+                kind: Block(
+                    Block {
+                        stmts: [
+                            Stmt {
+                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).4),
+                                kind: Let(
+                                    LetStmt {
+                                        super_: None,
+                                        pat: Pat {
+                                            hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).9),
+                                            kind: Binding(
+                                                BindingMode(
+                                                    No,
+                                                    Mut,
+                                                ),
+                                                HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).9),
+                                                length#0,
+                                                None,
+                                            ),
+                                            span: vec_length_while_rust.rs:2:9: 2:19 (#0),
+                                            default_binding_modes: true,
+                                        },
+                                        ty: Some(
+                                            Ty {
+                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).5),
+                                                span: vec_length_while_rust.rs:2:21: 2:26 (#0),
+                                                kind: Path(
+                                                    Resolved(
+                                                        None,
+                                                        Path {
+                                                            span: vec_length_while_rust.rs:2:21: 2:26 (#0),
+                                                            res: PrimTy(
+                                                                Uint(
+                                                                    usize,
+                                                                ),
+                                                            ),
+                                                            segments: [
+                                                                PathSegment {
+                                                                    ident: usize#0,
+                                                                    hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).6),
+                                                                    res: PrimTy(
+                                                                        Uint(
+                                                                            usize,
+                                                                        ),
+                                                                    ),
+                                                                    args: None,
+                                                                    infer_args: false,
+                                                                },
+                                                            ],
+                                                        },
+                                                    ),
+                                                ),
+                                            },
+                                        ),
+                                        init: Some(
+                                            Expr {
+                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).7),
+                                                kind: Lit(
+                                                    Spanned {
+                                                        node: Int(
+                                                            Pu128(
+                                                                0,
+                                                            ),
+                                                            Unsuffixed,
+                                                        ),
+                                                        span: vec_length_while_rust.rs:2:29: 2:30 (#0),
+                                                    },
+                                                ),
+                                                span: vec_length_while_rust.rs:2:29: 2:30 (#0),
+                                            },
+                                        ),
+                                        els: None,
+                                        hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).8),
+                                        span: vec_length_while_rust.rs:2:5: 2:31 (#0),
+                                        source: Normal,
+                                    },
+                                ),
+                                span: vec_length_while_rust.rs:2:5: 2:31 (#0),
+                            },
+                            Stmt {
+                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).10),
+                                kind: Let(
+                                    LetStmt {
+                                        super_: None,
+                                        pat: Pat {
+                                            hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).15),
+                                            kind: Binding(
+                                                BindingMode(
+                                                    No,
+                                                    Mut,
+                                                ),
+                                                HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).15),
+                                                i#0,
+                                                None,
+                                            ),
+                                            span: vec_length_while_rust.rs:3:9: 3:14 (#0),
+                                            default_binding_modes: true,
+                                        },
+                                        ty: Some(
+                                            Ty {
+                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).11),
+                                                span: vec_length_while_rust.rs:3:16: 3:21 (#0),
+                                                kind: Path(
+                                                    Resolved(
+                                                        None,
+                                                        Path {
+                                                            span: vec_length_while_rust.rs:3:16: 3:21 (#0),
+                                                            res: PrimTy(
+                                                                Uint(
+                                                                    usize,
+                                                                ),
+                                                            ),
+                                                            segments: [
+                                                                PathSegment {
+                                                                    ident: usize#0,
+                                                                    hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).12),
+                                                                    res: PrimTy(
+                                                                        Uint(
+                                                                            usize,
+                                                                        ),
+                                                                    ),
+                                                                    args: None,
+                                                                    infer_args: false,
+                                                                },
+                                                            ],
+                                                        },
+                                                    ),
+                                                ),
+                                            },
+                                        ),
+                                        init: Some(
+                                            Expr {
+                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).13),
+                                                kind: Lit(
+                                                    Spanned {
+                                                        node: Int(
+                                                            Pu128(
+                                                                0,
+                                                            ),
+                                                            Unsuffixed,
+                                                        ),
+                                                        span: vec_length_while_rust.rs:3:24: 3:25 (#0),
+                                                    },
+                                                ),
+                                                span: vec_length_while_rust.rs:3:24: 3:25 (#0),
+                                            },
+                                        ),
+                                        els: None,
+                                        hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).14),
+                                        span: vec_length_while_rust.rs:3:5: 3:26 (#0),
+                                        source: Normal,
+                                    },
+                                ),
+                                span: vec_length_while_rust.rs:3:5: 3:26 (#0),
+                            },
+                            Stmt {
+                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).42),
+                                kind: Expr(
+                                    Expr {
+                                        hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).16),
+                                        kind: Loop(
+                                            Block {
+                                                stmts: [],
+                                                expr: Some(
+                                                    Expr {
+                                                        hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).40),
+                                                        kind: If(
+                                                            Expr {
+                                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).17),
+                                                                kind: Binary(
+                                                                    Spanned {
+                                                                        node: Lt,
+                                                                        span: vec_length_while_rust.rs:5:13: 5:14 (#0),
+                                                                    },
+                                                                    Expr {
+                                                                        hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).18),
+                                                                        kind: Path(
+                                                                            Resolved(
+                                                                                None,
+                                                                                Path {
+                                                                                    span: vec_length_while_rust.rs:5:11: 5:12 (#0),
+                                                                                    res: Local(
+                                                                                        HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).15),
+                                                                                    ),
+                                                                                    segments: [
+                                                                                        PathSegment {
+                                                                                            ident: i#0,
+                                                                                            hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).19),
+                                                                                            res: Local(
+                                                                                                HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).15),
+                                                                                            ),
+                                                                                            args: None,
+                                                                                            infer_args: true,
+                                                                                        },
+                                                                                    ],
+                                                                                },
+                                                                            ),
+                                                                        ),
+                                                                        span: vec_length_while_rust.rs:5:11: 5:12 (#0),
+                                                                    },
+                                                                    Expr {
+                                                                        hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).20),
+                                                                        kind: MethodCall(
+                                                                            PathSegment {
+                                                                                ident: len#0,
+                                                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).21),
+                                                                                res: Err,
+                                                                                args: None,
+                                                                                infer_args: true,
+                                                                            },
+                                                                            Expr {
+                                                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).22),
+                                                                                kind: Path(
+                                                                                    Resolved(
+                                                                                        None,
+                                                                                        Path {
+                                                                                            span: vec_length_while_rust.rs:5:15: 5:16 (#0),
+                                                                                            res: Local(
+                                                                                                HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).2),
+                                                                                            ),
+                                                                                            segments: [
+                                                                                                PathSegment {
+                                                                                                    ident: s#0,
+                                                                                                    hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).23),
+                                                                                                    res: Local(
+                                                                                                        HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).2),
+                                                                                                    ),
+                                                                                                    args: None,
+                                                                                                    infer_args: true,
+                                                                                                },
+                                                                                            ],
+                                                                                        },
+                                                                                    ),
+                                                                                ),
+                                                                                span: vec_length_while_rust.rs:5:15: 5:16 (#0),
+                                                                            },
+                                                                            [],
+                                                                            vec_length_while_rust.rs:5:17: 5:22 (#0),
+                                                                        ),
+                                                                        span: vec_length_while_rust.rs:5:15: 5:22 (#0),
+                                                                    },
+                                                                ),
+                                                                span: vec_length_while_rust.rs:5:11: 5:22 (#0),
+                                                            },
+                                                            Expr {
+                                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).35),
+                                                                kind: Block(
+                                                                    Block {
+                                                                        stmts: [
+                                                                            Stmt {
+                                                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).29),
+                                                                                kind: Semi(
+                                                                                    Expr {
+                                                                                        hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).25),
+                                                                                        kind: AssignOp(
+                                                                                            Spanned {
+                                                                                                node: AddAssign,
+                                                                                                span: vec_length_while_rust.rs:6:11: 6:13 (#0),
+                                                                                            },
+                                                                                            Expr {
+                                                                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).26),
+                                                                                                kind: Path(
+                                                                                                    Resolved(
+                                                                                                        None,
+                                                                                                        Path {
+                                                                                                            span: vec_length_while_rust.rs:6:9: 6:10 (#0),
+                                                                                                            res: Local(
+                                                                                                                HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).15),
+                                                                                                            ),
+                                                                                                            segments: [
+                                                                                                                PathSegment {
+                                                                                                                    ident: i#0,
+                                                                                                                    hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).27),
+                                                                                                                    res: Local(
+                                                                                                                        HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).15),
+                                                                                                                    ),
+                                                                                                                    args: None,
+                                                                                                                    infer_args: true,
+                                                                                                                },
+                                                                                                            ],
+                                                                                                        },
+                                                                                                    ),
+                                                                                                ),
+                                                                                                span: vec_length_while_rust.rs:6:9: 6:10 (#0),
+                                                                                            },
+                                                                                            Expr {
+                                                                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).28),
+                                                                                                kind: Lit(
+                                                                                                    Spanned {
+                                                                                                        node: Int(
+                                                                                                            Pu128(
+                                                                                                                1,
+                                                                                                            ),
+                                                                                                            Unsuffixed,
+                                                                                                        ),
+                                                                                                        span: vec_length_while_rust.rs:6:14: 6:15 (#0),
+                                                                                                    },
+                                                                                                ),
+                                                                                                span: vec_length_while_rust.rs:6:14: 6:15 (#0),
+                                                                                            },
+                                                                                        ),
+                                                                                        span: vec_length_while_rust.rs:6:9: 6:15 (#0),
+                                                                                    },
+                                                                                ),
+                                                                                span: vec_length_while_rust.rs:6:9: 6:16 (#0),
+                                                                            },
+                                                                            Stmt {
+                                                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).34),
+                                                                                kind: Semi(
+                                                                                    Expr {
+                                                                                        hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).30),
+                                                                                        kind: AssignOp(
+                                                                                            Spanned {
+                                                                                                node: AddAssign,
+                                                                                                span: vec_length_while_rust.rs:7:16: 7:18 (#0),
+                                                                                            },
+                                                                                            Expr {
+                                                                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).31),
+                                                                                                kind: Path(
+                                                                                                    Resolved(
+                                                                                                        None,
+                                                                                                        Path {
+                                                                                                            span: vec_length_while_rust.rs:7:9: 7:15 (#0),
+                                                                                                            res: Local(
+                                                                                                                HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).9),
+                                                                                                            ),
+                                                                                                            segments: [
+                                                                                                                PathSegment {
+                                                                                                                    ident: length#0,
+                                                                                                                    hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).32),
+                                                                                                                    res: Local(
+                                                                                                                        HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).9),
+                                                                                                                    ),
+                                                                                                                    args: None,
+                                                                                                                    infer_args: true,
+                                                                                                                },
+                                                                                                            ],
+                                                                                                        },
+                                                                                                    ),
+                                                                                                ),
+                                                                                                span: vec_length_while_rust.rs:7:9: 7:15 (#0),
+                                                                                            },
+                                                                                            Expr {
+                                                                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).33),
+                                                                                                kind: Lit(
+                                                                                                    Spanned {
+                                                                                                        node: Int(
+                                                                                                            Pu128(
+                                                                                                                1,
+                                                                                                            ),
+                                                                                                            Unsuffixed,
+                                                                                                        ),
+                                                                                                        span: vec_length_while_rust.rs:7:19: 7:20 (#0),
+                                                                                                    },
+                                                                                                ),
+                                                                                                span: vec_length_while_rust.rs:7:19: 7:20 (#0),
+                                                                                            },
+                                                                                        ),
+                                                                                        span: vec_length_while_rust.rs:7:9: 7:20 (#0),
+                                                                                    },
+                                                                                ),
+                                                                                span: vec_length_while_rust.rs:7:9: 7:21 (#0),
+                                                                            },
+                                                                        ],
+                                                                        expr: None,
+                                                                        hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).24),
+                                                                        rules: DefaultBlock,
+                                                                        span: vec_length_while_rust.rs:5:23: 8:6 (#0),
+                                                                        targeted_by_break: false,
+                                                                    },
+                                                                    None,
+                                                                ),
+                                                                span: vec_length_while_rust.rs:5:23: 8:6 (#0),
+                                                            },
+                                                            Some(
+                                                                Expr {
+                                                                    hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).39),
+                                                                    kind: Block(
+                                                                        Block {
+                                                                            stmts: [
+                                                                                Stmt {
+                                                                                    hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).37),
+                                                                                    kind: Expr(
+                                                                                        Expr {
+                                                                                            hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).36),
+                                                                                            kind: Break(
+                                                                                                Destination {
+                                                                                                    label: None,
+                                                                                                    target_id: Ok(
+                                                                                                        HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).16),
+                                                                                                    ),
+                                                                                                },
+                                                                                                None,
+                                                                                            ),
+                                                                                            span: vec_length_while_rust.rs:5:5: 8:6 (#8),
+                                                                                        },
+                                                                                    ),
+                                                                                    span: vec_length_while_rust.rs:5:5: 8:6 (#8),
+                                                                                },
+                                                                            ],
+                                                                            expr: None,
+                                                                            hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).38),
+                                                                            rules: DefaultBlock,
+                                                                            span: vec_length_while_rust.rs:5:5: 8:6 (#8),
+                                                                            targeted_by_break: false,
+                                                                        },
+                                                                        None,
+                                                                    ),
+                                                                    span: vec_length_while_rust.rs:5:5: 8:6 (#8),
+                                                                },
+                                                            ),
+                                                        ),
+                                                        span: vec_length_while_rust.rs:5:5: 8:6 (#8),
+                                                    },
+                                                ),
+                                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).41),
+                                                rules: DefaultBlock,
+                                                span: vec_length_while_rust.rs:5:5: 8:6 (#8),
+                                                targeted_by_break: false,
+                                            },
+                                            None,
+                                            While,
+                                            vec_length_while_rust.rs:5:5: 5:22 (#8),
+                                        ),
+                                        span: vec_length_while_rust.rs:5:5: 8:6 (#0),
+                                    },
+                                ),
+                                span: vec_length_while_rust.rs:5:5: 8:6 (#0),
+                            },
+                        ],
+                        expr: Some(
+                            Expr {
+                                hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).43),
+                                kind: Path(
+                                    Resolved(
+                                        None,
+                                        Path {
+                                            span: vec_length_while_rust.rs:9:5: 9:11 (#0),
+                                            res: Local(
+                                                HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).9),
+                                            ),
+                                            segments: [
+                                                PathSegment {
+                                                    ident: length#0,
+                                                    hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).44),
+                                                    res: Local(
+                                                        HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).9),
+                                                    ),
+                                                    args: None,
+                                                    infer_args: true,
+                                                },
+                                            ],
+                                        },
+                                    ),
+                                ),
+                                span: vec_length_while_rust.rs:9:5: 9:11 (#0),
+                            },
+                        ),
+                        hir_id: HirId(DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while).3),
+                        rules: DefaultBlock,
+                        span: vec_length_while_rust.rs:1:50: 10:2 (#0),
+                        targeted_by_break: false,
+                    },
+                    None,
+                ),
+                span: vec_length_while_rust.rs:1:50: 10:2 (#0),
+            },
+        },
+    },
+    opt_hash_including_bodies: None,
+}
+DefId(0:4 ~ vec_length_while_rust[c3d7]::main) => OwnerNodes {
+    node: ParentedNode {
+        parent: 4294967040,
+        node: Item(
+            Item {
+                owner_id: DefId(0:4 ~ vec_length_while_rust[c3d7]::main),
+                kind: Fn {
+                    sig: FnSig {
+                        header: FnHeader {
+                            safety: Normal(
+                                Safe,
+                            ),
+                            constness: NotConst,
+                            asyncness: NotAsync,
+                            abi: Rust,
+                        },
+                        decl: FnDecl {
+                            inputs: [],
+                            output: DefaultReturn(
+                                vec_length_while_rust.rs:12:10: 12:10 (#0),
+                            ),
+                            c_variadic: false,
+                            implicit_self: None,
+                            lifetime_elision_allowed: false,
+                        },
+                        span: vec_length_while_rust.rs:12:1: 12:10 (#0),
+                    },
+                    ident: main#0,
+                    generics: Generics {
+                        params: [],
+                        predicates: [],
+                        has_where_clause_predicates: false,
+                        where_clause_span: vec_length_while_rust.rs:12:10: 12:10 (#0),
+                        span: vec_length_while_rust.rs:12:8: 12:8 (#0),
+                    },
+                    body: BodyId {
+                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).65),
+                    },
+                    has_body: true,
+                },
+                span: vec_length_while_rust.rs:12:1: 16:2 (#0),
+                vis_span: vec_length_while_rust.rs:12:1: 12:1 (#0),
+                has_delayed_lints: false,
+            },
+        ),
+    },
+    parents: [
+        (0, 4294967040),
+        (1, 65),
+        (2, 1),
+        (3, 19),
+        (4, 3),
+        (5, 6),
+        (6, 4),
+        (7, 4),
+        (8, 3),
+        (9, 8),
+        (10, 9),
+        (11, 9),
+        (12, 9),
+        (13, 8),
+        (14, 13),
+        (15, 13),
+        (16, 13),
+        (17, 13),
+        (18, 13),
+        (19, 2),
+        (20, 19),
+        (21, 1),
+        (22, 28),
+        (23, 22),
+        (24, 23),
+        (25, 22),
+        (26, 25),
+        (27, 26),
+        (28, 21),
+        (29, 28),
+        (30, 64),
+        (31, 30),
+        (32, 63),
+        (33, 32),
+        (34, 33),
+        (35, 33),
+        (36, 33),
+        (37, 32),
+        (38, 40),
+        (39, 40),
+        (40, 41),
+        (41, 61),
+        (42, 44),
+        (43, 42),
+        (44, 49),
+        (45, 46),
+        (46, 48),
+        (47, 48),
+        (48, 49),
+        (49, 50),
+        (50, 52),
+        (51, 52),
+        (52, 53),
+        (53, 62),
+        (54, 55),
+        (55, 56),
+        (56, 61),
+        (57, 58),
+        (58, 60),
+        (59, 60),
+        (60, 61),
+        (61, 62),
+        (62, 37),
+        (63, 31),
+        (64, 1),
+        (65, 0),
+    ],
+    bodies: {
+        65: Body {
+            params: [],
+            value: Expr {
+                hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).65),
+                kind: Block(
+                    Block {
+                        stmts: [
+                            Stmt {
+                                hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).2),
+                                kind: Let(
+                                    LetStmt {
+                                        super_: None,
+                                        pat: Pat {
+                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).20),
+                                            kind: Binding(
+                                                BindingMode(
+                                                    No,
+                                                    Not,
+                                                ),
+                                                HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).20),
+                                                v#0,
+                                                None,
+                                            ),
+                                            span: vec_length_while_rust.rs:13:9: 13:10 (#0),
+                                            default_binding_modes: true,
+                                        },
+                                        ty: None,
+                                        init: Some(
+                                            Expr {
+                                                hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).3),
+                                                kind: Call(
+                                                    Expr {
+                                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).4),
+                                                        kind: Path(
+                                                            TypeRelative(
+                                                                Ty {
+                                                                    hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).6),
+                                                                    span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/alloc/src/macros.rs:50:10: 50:13 (#4),
+                                                                    kind: Slice(
+                                                                        Ty {
+                                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).5),
+                                                                            span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/alloc/src/macros.rs:50:11: 50:12 (#4),
+                                                                            kind: Infer(
+                                                                                (),
+                                                                            ),
+                                                                        },
+                                                                    ),
+                                                                },
+                                                                PathSegment {
+                                                                    ident: into_vec#4,
+                                                                    hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).7),
+                                                                    res: Err,
+                                                                    args: None,
+                                                                    infer_args: true,
+                                                                },
+                                                            ),
+                                                        ),
+                                                        span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/alloc/src/macros.rs:50:9: 50:24 (#4),
+                                                    },
+                                                    [
+                                                        Expr {
+                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).8),
+                                                            kind: Call(
+                                                                Expr {
+                                                                    hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).9),
+                                                                    kind: Path(
+                                                                        Resolved(
+                                                                            None,
+                                                                            Path {
+                                                                                span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/alloc/src/macros.rs:53:13: 53:35 (#4),
+                                                                                res: Def(
+                                                                                    Fn,
+                                                                                    DefId(3:676 ~ alloc[c6e2]::boxed::box_new),
+                                                                                ),
+                                                                                segments: [
+                                                                                    PathSegment {
+                                                                                        ident: $crate#4,
+                                                                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).10),
+                                                                                        res: Def(
+                                                                                            Mod,
+                                                                                            DefId(3:0 ~ alloc[c6e2]),
+                                                                                        ),
+                                                                                        args: None,
+                                                                                        infer_args: true,
+                                                                                    },
+                                                                                    PathSegment {
+                                                                                        ident: boxed#4,
+                                                                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).11),
+                                                                                        res: Def(
+                                                                                            Mod,
+                                                                                            DefId(3:259 ~ alloc[c6e2]::boxed),
+                                                                                        ),
+                                                                                        args: None,
+                                                                                        infer_args: true,
+                                                                                    },
+                                                                                    PathSegment {
+                                                                                        ident: box_new#4,
+                                                                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).12),
+                                                                                        res: Def(
+                                                                                            Fn,
+                                                                                            DefId(3:676 ~ alloc[c6e2]::boxed::box_new),
+                                                                                        ),
+                                                                                        args: None,
+                                                                                        infer_args: true,
+                                                                                    },
+                                                                                ],
+                                                                            },
+                                                                        ),
+                                                                    ),
+                                                                    span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/alloc/src/macros.rs:53:13: 53:35 (#4),
+                                                                },
+                                                                [
+                                                                    Expr {
+                                                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).13),
+                                                                        kind: Array(
+                                                                            [
+                                                                                Expr {
+                                                                                    hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).14),
+                                                                                    kind: Lit(
+                                                                                        Spanned {
+                                                                                            node: Int(
+                                                                                                Pu128(
+                                                                                                    1,
+                                                                                                ),
+                                                                                                Unsuffixed,
+                                                                                            ),
+                                                                                            span: vec_length_while_rust.rs:13:18: 13:19 (#0),
+                                                                                        },
+                                                                                    ),
+                                                                                    span: vec_length_while_rust.rs:13:18: 13:19 (#0),
+                                                                                },
+                                                                                Expr {
+                                                                                    hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).15),
+                                                                                    kind: Lit(
+                                                                                        Spanned {
+                                                                                            node: Int(
+                                                                                                Pu128(
+                                                                                                    2,
+                                                                                                ),
+                                                                                                Unsuffixed,
+                                                                                            ),
+                                                                                            span: vec_length_while_rust.rs:13:21: 13:22 (#0),
+                                                                                        },
+                                                                                    ),
+                                                                                    span: vec_length_while_rust.rs:13:21: 13:22 (#0),
+                                                                                },
+                                                                                Expr {
+                                                                                    hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).16),
+                                                                                    kind: Lit(
+                                                                                        Spanned {
+                                                                                            node: Int(
+                                                                                                Pu128(
+                                                                                                    3,
+                                                                                                ),
+                                                                                                Unsuffixed,
+                                                                                            ),
+                                                                                            span: vec_length_while_rust.rs:13:24: 13:25 (#0),
+                                                                                        },
+                                                                                    ),
+                                                                                    span: vec_length_while_rust.rs:13:24: 13:25 (#0),
+                                                                                },
+                                                                                Expr {
+                                                                                    hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).17),
+                                                                                    kind: Lit(
+                                                                                        Spanned {
+                                                                                            node: Int(
+                                                                                                Pu128(
+                                                                                                    4,
+                                                                                                ),
+                                                                                                Unsuffixed,
+                                                                                            ),
+                                                                                            span: vec_length_while_rust.rs:13:27: 13:28 (#0),
+                                                                                        },
+                                                                                    ),
+                                                                                    span: vec_length_while_rust.rs:13:27: 13:28 (#0),
+                                                                                },
+                                                                                Expr {
+                                                                                    hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).18),
+                                                                                    kind: Lit(
+                                                                                        Spanned {
+                                                                                            node: Int(
+                                                                                                Pu128(
+                                                                                                    5,
+                                                                                                ),
+                                                                                                Unsuffixed,
+                                                                                            ),
+                                                                                            span: vec_length_while_rust.rs:13:30: 13:31 (#0),
+                                                                                        },
+                                                                                    ),
+                                                                                    span: vec_length_while_rust.rs:13:30: 13:31 (#0),
+                                                                                },
+                                                                            ],
+                                                                        ),
+                                                                        span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/alloc/src/macros.rs:53:36: 53:45 (#4),
+                                                                    },
+                                                                ],
+                                                            ),
+                                                            span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/alloc/src/macros.rs:53:13: 53:46 (#4),
+                                                        },
+                                                    ],
+                                                ),
+                                                span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/alloc/src/macros.rs:50:9: 54:10 (#4),
+                                            },
+                                        ),
+                                        els: None,
+                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).19),
+                                        span: vec_length_while_rust.rs:13:5: 13:33 (#0),
+                                        source: Normal,
+                                    },
+                                ),
+                                span: vec_length_while_rust.rs:13:5: 13:33 (#0),
+                            },
+                            Stmt {
+                                hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).21),
+                                kind: Let(
+                                    LetStmt {
+                                        super_: None,
+                                        pat: Pat {
+                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).29),
+                                            kind: Binding(
+                                                BindingMode(
+                                                    No,
+                                                    Not,
+                                                ),
+                                                HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).29),
+                                                len#0,
+                                                None,
+                                            ),
+                                            span: vec_length_while_rust.rs:14:9: 14:12 (#0),
+                                            default_binding_modes: true,
+                                        },
+                                        ty: None,
+                                        init: Some(
+                                            Expr {
+                                                hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).22),
+                                                kind: Call(
+                                                    Expr {
+                                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).23),
+                                                        kind: Path(
+                                                            Resolved(
+                                                                None,
+                                                                Path {
+                                                                    span: vec_length_while_rust.rs:14:15: 14:31 (#0),
+                                                                    res: Def(
+                                                                        Fn,
+                                                                        DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while),
+                                                                    ),
+                                                                    segments: [
+                                                                        PathSegment {
+                                                                            ident: vec_length_while#0,
+                                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).24),
+                                                                            res: Def(
+                                                                                Fn,
+                                                                                DefId(0:3 ~ vec_length_while_rust[c3d7]::vec_length_while),
+                                                                            ),
+                                                                            args: None,
+                                                                            infer_args: true,
+                                                                        },
+                                                                    ],
+                                                                },
+                                                            ),
+                                                        ),
+                                                        span: vec_length_while_rust.rs:14:15: 14:31 (#0),
+                                                    },
+                                                    [
+                                                        Expr {
+                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).25),
+                                                            kind: AddrOf(
+                                                                Ref,
+                                                                Not,
+                                                                Expr {
+                                                                    hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).26),
+                                                                    kind: Path(
+                                                                        Resolved(
+                                                                            None,
+                                                                            Path {
+                                                                                span: vec_length_while_rust.rs:14:33: 14:34 (#0),
+                                                                                res: Local(
+                                                                                    HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).20),
+                                                                                ),
+                                                                                segments: [
+                                                                                    PathSegment {
+                                                                                        ident: v#0,
+                                                                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).27),
+                                                                                        res: Local(
+                                                                                            HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).20),
+                                                                                        ),
+                                                                                        args: None,
+                                                                                        infer_args: true,
+                                                                                    },
+                                                                                ],
+                                                                            },
+                                                                        ),
+                                                                    ),
+                                                                    span: vec_length_while_rust.rs:14:33: 14:34 (#0),
+                                                                },
+                                                            ),
+                                                            span: vec_length_while_rust.rs:14:32: 14:34 (#0),
+                                                        },
+                                                    ],
+                                                ),
+                                                span: vec_length_while_rust.rs:14:15: 14:35 (#0),
+                                            },
+                                        ),
+                                        els: None,
+                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).28),
+                                        span: vec_length_while_rust.rs:14:5: 14:36 (#0),
+                                        source: Normal,
+                                    },
+                                ),
+                                span: vec_length_while_rust.rs:14:5: 14:36 (#0),
+                            },
+                            Stmt {
+                                hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).64),
+                                kind: Semi(
+                                    Expr {
+                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).30),
+                                        kind: Block(
+                                            Block {
+                                                stmts: [
+                                                    Stmt {
+                                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).63),
+                                                        kind: Semi(
+                                                            Expr {
+                                                                hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).32),
+                                                                kind: Call(
+                                                                    Expr {
+                                                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).33),
+                                                                        kind: Path(
+                                                                            Resolved(
+                                                                                None,
+                                                                                Path {
+                                                                                    span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:9: 143:27 (#5),
+                                                                                    res: Def(
+                                                                                        Fn,
+                                                                                        DefId(1:3791 ~ std[6c96]::io::stdio::_print),
+                                                                                    ),
+                                                                                    segments: [
+                                                                                        PathSegment {
+                                                                                            ident: $crate#5,
+                                                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).34),
+                                                                                            res: Def(
+                                                                                                Mod,
+                                                                                                DefId(1:0 ~ std[6c96]),
+                                                                                            ),
+                                                                                            args: None,
+                                                                                            infer_args: true,
+                                                                                        },
+                                                                                        PathSegment {
+                                                                                            ident: io#5,
+                                                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).35),
+                                                                                            res: Def(
+                                                                                                Mod,
+                                                                                                DefId(1:2721 ~ std[6c96]::io),
+                                                                                            ),
+                                                                                            args: None,
+                                                                                            infer_args: true,
+                                                                                        },
+                                                                                        PathSegment {
+                                                                                            ident: _print#5,
+                                                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).36),
+                                                                                            res: Def(
+                                                                                                Fn,
+                                                                                                DefId(1:3791 ~ std[6c96]::io::stdio::_print),
+                                                                                            ),
+                                                                                            args: None,
+                                                                                            infer_args: true,
+                                                                                        },
+                                                                                    ],
+                                                                                },
+                                                                            ),
+                                                                        ),
+                                                                        span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:9: 143:27 (#5),
+                                                                    },
+                                                                    [
+                                                                        Expr {
+                                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).37),
+                                                                            kind: Block(
+                                                                                Block {
+                                                                                    stmts: [
+                                                                                        Stmt {
+                                                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).53),
+                                                                                            kind: Let(
+                                                                                                LetStmt {
+                                                                                                    super_: Some(
+                                                                                                        /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:28: 143:61 (#10),
+                                                                                                    ),
+                                                                                                    pat: Pat {
+                                                                                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).51),
+                                                                                                        kind: Binding(
+                                                                                                            BindingMode(
+                                                                                                                No,
+                                                                                                                Not,
+                                                                                                            ),
+                                                                                                            HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).51),
+                                                                                                            args#10,
+                                                                                                            None,
+                                                                                                        ),
+                                                                                                        span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:28: 143:61 (#10),
+                                                                                                        default_binding_modes: true,
+                                                                                                    },
+                                                                                                    ty: None,
+                                                                                                    init: Some(
+                                                                                                        Expr {
+                                                                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).50),
+                                                                                                            kind: Array(
+                                                                                                                [
+                                                                                                                    Expr {
+                                                                                                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).49),
+                                                                                                                        kind: Call(
+                                                                                                                            Expr {
+                                                                                                                                hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).48),
+                                                                                                                                kind: Path(
+                                                                                                                                    TypeRelative(
+                                                                                                                                        Ty {
+                                                                                                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).46),
+                                                                                                                                            span: vec_length_while_rust.rs:15:23: 15:25 (#10),
+                                                                                                                                            kind: Path(
+                                                                                                                                                Resolved(
+                                                                                                                                                    None,
+                                                                                                                                                    Path {
+                                                                                                                                                        span: vec_length_while_rust.rs:15:23: 15:25 (#10),
+                                                                                                                                                        res: Def(
+                                                                                                                                                            Struct,
+                                                                                                                                                            DefId(2:50737 ~ core[88dc]::fmt::rt::Argument),
+                                                                                                                                                        ),
+                                                                                                                                                        segments: [
+                                                                                                                                                            PathSegment {
+                                                                                                                                                                ident: format_argument#10,
+                                                                                                                                                                hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).45),
+                                                                                                                                                                res: Def(
+                                                                                                                                                                    Struct,
+                                                                                                                                                                    DefId(2:50737 ~ core[88dc]::fmt::rt::Argument),
+                                                                                                                                                                ),
+                                                                                                                                                                args: None,
+                                                                                                                                                                infer_args: true,
+                                                                                                                                                            },
+                                                                                                                                                        ],
+                                                                                                                                                    },
+                                                                                                                                                ),
+                                                                                                                                            ),
+                                                                                                                                        },
+                                                                                                                                        PathSegment {
+                                                                                                                                            ident: new_display#10,
+                                                                                                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).47),
+                                                                                                                                            res: Err,
+                                                                                                                                            args: None,
+                                                                                                                                            infer_args: true,
+                                                                                                                                        },
+                                                                                                                                    ),
+                                                                                                                                ),
+                                                                                                                                span: vec_length_while_rust.rs:15:23: 15:25 (#10),
+                                                                                                                            },
+                                                                                                                            [
+                                                                                                                                Expr {
+                                                                                                                                    hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).44),
+                                                                                                                                    kind: AddrOf(
+                                                                                                                                        Ref,
+                                                                                                                                        Not,
+                                                                                                                                        Expr {
+                                                                                                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).42),
+                                                                                                                                            kind: Path(
+                                                                                                                                                Resolved(
+                                                                                                                                                    None,
+                                                                                                                                                    Path {
+                                                                                                                                                        span: vec_length_while_rust.rs:15:28: 15:31 (#0),
+                                                                                                                                                        res: Local(
+                                                                                                                                                            HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).29),
+                                                                                                                                                        ),
+                                                                                                                                                        segments: [
+                                                                                                                                                            PathSegment {
+                                                                                                                                                                ident: len#0,
+                                                                                                                                                                hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).43),
+                                                                                                                                                                res: Local(
+                                                                                                                                                                    HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).29),
+                                                                                                                                                                ),
+                                                                                                                                                                args: None,
+                                                                                                                                                                infer_args: true,
+                                                                                                                                                            },
+                                                                                                                                                        ],
+                                                                                                                                                    },
+                                                                                                                                                ),
+                                                                                                                                            ),
+                                                                                                                                            span: vec_length_while_rust.rs:15:28: 15:31 (#0),
+                                                                                                                                        },
+                                                                                                                                    ),
+                                                                                                                                    span: vec_length_while_rust.rs:15:28: 15:31 (#10),
+                                                                                                                                },
+                                                                                                                            ],
+                                                                                                                        ),
+                                                                                                                        span: vec_length_while_rust.rs:15:23: 15:25 (#10),
+                                                                                                                    },
+                                                                                                                ],
+                                                                                                            ),
+                                                                                                            span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:28: 143:61 (#10),
+                                                                                                        },
+                                                                                                    ),
+                                                                                                    els: None,
+                                                                                                    hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).52),
+                                                                                                    span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:28: 143:61 (#10),
+                                                                                                    source: Normal,
+                                                                                                },
+                                                                                            ),
+                                                                                            span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:28: 143:61 (#10),
+                                                                                        },
+                                                                                    ],
+                                                                                    expr: Some(
+                                                                                        Expr {
+                                                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).61),
+                                                                                            kind: Call(
+                                                                                                Expr {
+                                                                                                    hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).60),
+                                                                                                    kind: Path(
+                                                                                                        TypeRelative(
+                                                                                                            Ty {
+                                                                                                                hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).58),
+                                                                                                                span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:28: 143:61 (#10),
+                                                                                                                kind: Path(
+                                                                                                                    Resolved(
+                                                                                                                        None,
+                                                                                                                        Path {
+                                                                                                                            span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:28: 143:61 (#10),
+                                                                                                                            res: Def(
+                                                                                                                                Struct,
+                                                                                                                                DefId(2:50828 ~ core[88dc]::fmt::Arguments),
+                                                                                                                            ),
+                                                                                                                            segments: [
+                                                                                                                                PathSegment {
+                                                                                                                                    ident: format_arguments#10,
+                                                                                                                                    hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).57),
+                                                                                                                                    res: Def(
+                                                                                                                                        Struct,
+                                                                                                                                        DefId(2:50828 ~ core[88dc]::fmt::Arguments),
+                                                                                                                                    ),
+                                                                                                                                    args: None,
+                                                                                                                                    infer_args: true,
+                                                                                                                                },
+                                                                                                                            ],
+                                                                                                                        },
+                                                                                                                    ),
+                                                                                                                ),
+                                                                                                            },
+                                                                                                            PathSegment {
+                                                                                                                ident: new_v1#10,
+                                                                                                                hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).59),
+                                                                                                                res: Err,
+                                                                                                                args: None,
+                                                                                                                infer_args: true,
+                                                                                                            },
+                                                                                                        ),
+                                                                                                    ),
+                                                                                                    span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:28: 143:61 (#10),
+                                                                                                },
+                                                                                                [
+                                                                                                    Expr {
+                                                                                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).41),
+                                                                                                        kind: AddrOf(
+                                                                                                            Ref,
+                                                                                                            Not,
+                                                                                                            Expr {
+                                                                                                                hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).40),
+                                                                                                                kind: Array(
+                                                                                                                    [
+                                                                                                                        Expr {
+                                                                                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).38),
+                                                                                                                            kind: Lit(
+                                                                                                                                Spanned {
+                                                                                                                                    node: Str(
+                                                                                                                                        "Length: ",
+                                                                                                                                        Cooked,
+                                                                                                                                    ),
+                                                                                                                                    span: vec_length_while_rust.rs:15:14: 15:26 (#0),
+                                                                                                                                },
+                                                                                                                            ),
+                                                                                                                            span: vec_length_while_rust.rs:15:14: 15:26 (#0),
+                                                                                                                        },
+                                                                                                                        Expr {
+                                                                                                                            hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).39),
+                                                                                                                            kind: Lit(
+                                                                                                                                Spanned {
+                                                                                                                                    node: Str(
+                                                                                                                                        "\n",
+                                                                                                                                        Cooked,
+                                                                                                                                    ),
+                                                                                                                                    span: vec_length_while_rust.rs:15:14: 15:26 (#0),
+                                                                                                                                },
+                                                                                                                            ),
+                                                                                                                            span: vec_length_while_rust.rs:15:14: 15:26 (#0),
+                                                                                                                        },
+                                                                                                                    ],
+                                                                                                                ),
+                                                                                                                span: vec_length_while_rust.rs:15:14: 15:26 (#0),
+                                                                                                            },
+                                                                                                        ),
+                                                                                                        span: vec_length_while_rust.rs:15:14: 15:26 (#0),
+                                                                                                    },
+                                                                                                    Expr {
+                                                                                                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).56),
+                                                                                                        kind: AddrOf(
+                                                                                                            Ref,
+                                                                                                            Not,
+                                                                                                            Expr {
+                                                                                                                hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).55),
+                                                                                                                kind: Path(
+                                                                                                                    Resolved(
+                                                                                                                        None,
+                                                                                                                        Path {
+                                                                                                                            span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:28: 143:61 (#10),
+                                                                                                                            res: Local(
+                                                                                                                                HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).51),
+                                                                                                                            ),
+                                                                                                                            segments: [
+                                                                                                                                PathSegment {
+                                                                                                                                    ident: args#10,
+                                                                                                                                    hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).54),
+                                                                                                                                    res: Local(
+                                                                                                                                        HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).51),
+                                                                                                                                    ),
+                                                                                                                                    args: None,
+                                                                                                                                    infer_args: true,
+                                                                                                                                },
+                                                                                                                            ],
+                                                                                                                        },
+                                                                                                                    ),
+                                                                                                                ),
+                                                                                                                span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:28: 143:61 (#10),
+                                                                                                            },
+                                                                                                        ),
+                                                                                                        span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:28: 143:61 (#10),
+                                                                                                    },
+                                                                                                ],
+                                                                                            ),
+                                                                                            span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:28: 143:61 (#10),
+                                                                                        },
+                                                                                    ),
+                                                                                    hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).62),
+                                                                                    rules: DefaultBlock,
+                                                                                    span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:28: 143:61 (#10),
+                                                                                    targeted_by_break: false,
+                                                                                },
+                                                                                None,
+                                                                            ),
+                                                                            span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:28: 143:61 (#6),
+                                                                        },
+                                                                    ],
+                                                                ),
+                                                                span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:9: 143:62 (#5),
+                                                            },
+                                                        ),
+                                                        span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:143:9: 143:63 (#5),
+                                                    },
+                                                ],
+                                                expr: None,
+                                                hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).31),
+                                                rules: DefaultBlock,
+                                                span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:142:23: 144:6 (#5),
+                                                targeted_by_break: false,
+                                            },
+                                            None,
+                                        ),
+                                        span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:142:23: 144:6 (#5),
+                                    },
+                                ),
+                                span: /rustc/7c275d09ea6b953d2cca169667184a7214bd14c7/library/std/src/macros.rs:142:23: 144:6 (#5),
+                            },
+                        ],
+                        expr: None,
+                        hir_id: HirId(DefId(0:4 ~ vec_length_while_rust[c3d7]::main).1),
+                        rules: DefaultBlock,
+                        span: vec_length_while_rust.rs:12:11: 16:2 (#0),
+                        targeted_by_break: false,
+                    },
+                    None,
+                ),
+                span: vec_length_while_rust.rs:12:11: 16:2 (#0),
+            },
+        },
+    },
+    opt_hash_including_bodies: None,
+}

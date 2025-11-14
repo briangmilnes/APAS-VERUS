@@ -24,6 +24,35 @@ This trait enables writing generic verified sorting and ordering algorithms. We 
 
 **Why not in vstd?** This trait is currently only in tutorial examples. We include it here as a reusable component for any algorithm requiring total orderings.
 
+## experiments
+
+The `src/experiments/` directory contains explorations of Verus verification techniques and proofs of fundamental loop patterns:
+
+### Loop Verification Study
+
+A comprehensive study of how Verus verifies different loop constructs (`while`, `loop`, `for`) with various iterator patterns:
+
+- **`seq_while_basic_proofs.rs`** - Verified `while` loops for basic sequence operations (length, membership, find, count, sum) on arrays and vectors
+- **`seq_loop_basic_proofs.rs`** - Same operations using `loop { ... return }` patterns 
+- **`seq_for_basic_proofs.rs`** - Same operations using `for` loops with range iterators
+- **`verus_wrapped_iter_loops.rs`** - **Manual desugaring of `for` loop auto-invariants**, demonstrating what Verus generates automatically:
+  - Shows the full `Range<usize>` iterator creation and ghost state (`RangeGhostIterator`)
+  - Shows `Vec::into_iter()` with `IntoIterGhostIterator` ghost state
+  - Documents `ForLoopGhostIterator` traits: `exec_invariant`, `ghost_invariant`, `ghost_advance`
+  - Proves that the manual expansion is equivalent to Verus's auto-generated invariants
+
+**Key findings:**
+1. `for` loop auto-invariants manage substantial hidden complexity (Range iterator state, ghost tracking)
+2. Manual invariants must supplement (not replace) auto-invariants for domain-specific properties
+3. The `original_seq == s@` bridge invariant is essential when iterators consume collections
+
+### Documentation
+
+See `docs/` for detailed write-ups:
+- **`VerusStandardLoopProofs.md`** - Top-down view of how Verus proves loops, with verified examples
+- **`VerusStandardIters.md`** - Complete catalog of Verus's `ForLoopGhostIterator` traits and implementations
+- **`VerusRules.md`** - Running notes on Verus syntax, semantics, and proof patterns
+
 ## Lines of Code
 
 ```

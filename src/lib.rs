@@ -27,13 +27,17 @@ pub mod experiments {
 //    pub mod supertrait;
 //    pub mod minimal_iter;
 //    pub mod triangle;
-    pub mod verus_iterator;
-    pub mod verus_vec_iterator;
-    pub mod verus_vec_iterator_while_basic_proofs;
-    pub mod verus_vec_iterator_loop_basic_proofs;
-    pub mod verus_vec_iterator_for_basic_proofs;
+//    pub mod verus_iterator;
+//    pub mod verus_vec_iterator;
+//    pub mod verus_vec_iterator_while_basic_proofs;
+//    pub mod verus_vec_iterator_loop_basic_proofs;
+//    pub mod verus_vec_iterator_for_basic_proofs;
 //    pub mod verus_sum_loops_iterators;
+//    pub mod seq_vec_equality;
+//    pub mod executable_use_of_int;
+//    pub mod VSTDLoopProofs;
     pub mod seq_while_basic_proofs;
-    pub mod seq_loop_basic_proofs;
     pub mod seq_for_basic_proofs;
+    pub mod seq_loop_basic_proofs;
+    pub mod verus_wrapped_iter_loops;
 }

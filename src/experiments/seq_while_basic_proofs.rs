@@ -8,16 +8,17 @@ verus! {
     // length on int
     pub open spec fn seq_int_length(s: Seq<int>) -> nat { s.len() }
 
-    pub fn fixed_length_int_array(s: [int; 3]) -> (l: usize)
-        ensures l == seq_int_length(s@)
+    pub open spec fn seq_i64_length(s: Seq<i64>) -> nat { s.len() }
+    pub fn fixed_length_i64_array(s: [i64; 3]) -> (l: usize)
+        ensures l == seq_i64_length(s@)
     { s.len() }
 
-    pub fn length_int_array(s: &[int]) -> (l: usize)
-        ensures l == seq_int_length(s@)
+    pub fn length_i64_array(s: &[i64]) -> (l: usize)
+        ensures l == seq_i64_length(s@)
     { s.len() }
 
-    pub fn length_int_vec(s: Vec<int>) -> (l: usize)
-        ensures l == seq_int_length(s@)
+    pub fn length_i64_vec(s: Vec<i64>) -> (l: usize)
+        ensures l == seq_i64_length(s@)
     { s.len() }
 
     // length on usize
@@ -57,8 +58,11 @@ verus! {
         exists|i: int| 0 <= i < s.len() && s[i] == elt
     }
 
-    pub fn int_array_mem_while(s: &[int], elt: int) -> (result: bool)
-        ensures result == seq_int_mem(s@, elt)
+    pub open spec fn seq_i64_mem(s: Seq<i64>, elt: i64) -> bool {
+        exists|i: int| 0 <= i < s.len() && s[i] == elt
+    }
+    pub fn i64_array_mem_while(s: &[i64], elt: i64) -> (result: bool)
+        ensures result == seq_i64_mem(s@, elt)
     {
         let mut i: usize = 0;
         while i < s.len()
@@ -75,8 +79,8 @@ verus! {
         false
     }
 
-    pub fn int_vec_mem_while(s: Vec<int>, elt: int) -> (result: bool)
-        ensures result == seq_int_mem(s@, elt)
+    pub fn i64_vec_mem_while(s: Vec<i64>, elt: i64) -> (result: bool)
+        ensures result == seq_i64_mem(s@, elt)
     {
         let mut i: usize = 0;
         while i < s.len()
@@ -184,7 +188,7 @@ verus! {
         }
     }
 
-    pub fn int_array_find_while(s: &[int], elt: int) -> (result: Option<usize>)
+    pub fn i64_array_find_while(s: &[i64], elt: i64) -> (result: Option<usize>)
         ensures
             match result {
                 Some(i) => i < s@.len() && s@[i as int] == elt && (forall|j: int| 0 <= j < i ==> s@[j] != elt),
@@ -206,7 +210,7 @@ verus! {
         None
     }
 
-    pub fn int_vec_find_while(s: Vec<int>, elt: int) -> (result: Option<usize>)
+    pub fn i64_vec_find_while(s: Vec<i64>, elt: i64) -> (result: Option<usize>)
         ensures
             match result {
                 Some(i) => i < s@.len() && s@[i as int] == elt && (forall|j: int| 0 <= j < i ==> s@[j] != elt),
@@ -508,7 +512,7 @@ verus! {
         }
     }
 
-    pub fn int_array_count_up_while(s: &[int], elt: int) -> (count: usize)
+    pub fn i64_array_count_up_while(s: &[i64], elt: i64) -> (count: usize)
         ensures count <= s@.len()
     {
         let mut count: usize = 0;
@@ -527,7 +531,7 @@ verus! {
         count
     }
 
-    pub fn int_vec_count_up_while(s: Vec<int>, elt: int) -> (count: usize)
+    pub fn i64_vec_count_up_while(s: Vec<i64>, elt: i64) -> (count: usize)
         ensures count <= s@.len()
     {
         let mut count: usize = 0;
