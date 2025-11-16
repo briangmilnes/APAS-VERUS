@@ -4,13 +4,14 @@
 
 ### Using vargo
 - `vargo` is Verus's cargo wrapper that manages custom build paths and verification artifacts.
-- **Always use `-j N` for parallel builds** (e.g., `-j 10` for 10 parallel jobs):
+- **Build Verus from source**:
   ```bash
   cd source  # in verus-lang repository
-  source ../tools/activate  # adds vargo to PATH
-  vargo build --release -j 10
+  source ../tools/activate  # adds vargo to PATH (for bash/zsh)
+  vargo build --release
   ```
 - `vargo` accepts standard cargo commands: `build`, `test`, `run`, `clean`, `fmt`, `metadata`
+- **Note**: `vargo` does NOT support `-j N` parallel build flag (unlike cargo)
 - **No `--help` flag**: vargo is minimal and doesn't provide detailed help output
 - To add `vargo` to PATH permanently, add to `~/.bashrc`:
   ```bash
@@ -26,11 +27,24 @@
 - One step at a time. Read first, then make a single focused change.
 
 ### STEP Methodology
-1. **Read** - Always read the current state first
-2. **Make Change** - One focused modification
-3. **Compile** - Check syntax
-4. **Validate** - Run Verus verification
-5. **Pause** - Wait for feedback before proceeding
+
+When the user requests "N STEP", complete the task in N iterations following this exact process:
+
+**Each STEP consists of:**
+
+0. **Read** - Read the current state of the file(s) we're working on
+1. **Think** - Understand what change the user is requesting
+2. **Implement** - Make that change without adding, deleting, or transforming unnecessarily
+3. **Validate** - Run Verus verification on the change
+4. **Show Errors** - Display the full validation output (no filtering, no grep)
+5. **PAUSE** - Wait for user feedback before proceeding to next STEP
+
+**Critical Rules:**
+- Always read the file first - never assume you know its current state
+- Never skip showing validation errors
+- Never make multiple changes without validation between them
+- Never summarize or hide error output - show the raw Verus output
+- Each STEP is atomic: read, think, implement, validate, show errors, pause
 
 ### Proof Development Strategy
 - Use **mixed top-down/bottom-up reasoning**:
