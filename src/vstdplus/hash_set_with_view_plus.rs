@@ -28,7 +28,6 @@ pub struct HashSetWithViewPlus<Key> where Key: View + Eq + Hash + Clone {
 
 impl<Key> View for HashSetWithViewPlus<Key> where Key: View + Eq + Hash + Clone {
     type V = Set<<Key as View>::V>;
-
     uninterp spec fn view(&self) -> Self::V;
 }
 

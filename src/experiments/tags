@@ -1,0 +1,32 @@
+
+Case 1 
+1. no config for etags or xref. -y
+2. restart emacs -y 
+3. visit tags table -y 
+4. visit file -y 
+5. hit a tag, not found -y 
+6. M-x xref-etags-mode - enable -y 
+7. tag found in xref window - y 
+8. M-x xref-etags-mode - disable - y
+9. new tag found in xref window -y 
+10. M-x xref-etags-mode - enable  -y 
+11. new tag found in xref window -y
+
+Case 2 
+1. all three hooks set - y
+2. restart emacs - y
+3. visit tags table - y 
+4. visit file - y
+5. hit a tag, not found -y
+6. M-x xref-etags-mode - disable - y
+7. tag found in xref window - y 
+8. M-x xref-etags-mode - enable -y 
+9. new tag found in xref window -y
+10. visit a new file -y 
+11. M-. new tag - not found  -y
+12. M-x xref-etags-mode - disable -y
+13. M-. new tag - found -y 
+14. M-x xref-etags-mode - enabled -y
+15. M-. new tag found - y
+16. M-x xref-etags-mode - disabled - y
+17. M-. new tag found - y

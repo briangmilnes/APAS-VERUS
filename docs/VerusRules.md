@@ -1,5 +1,22 @@
 # Verus Rules and Lessons Learned
 
+## Building Verus
+
+### Using vargo
+- `vargo` is Verus's cargo wrapper that manages custom build paths and verification artifacts.
+- **Always use `-j N` for parallel builds** (e.g., `-j 10` for 10 parallel jobs):
+  ```bash
+  cd source  # in verus-lang repository
+  source ../tools/activate  # adds vargo to PATH
+  vargo build --release -j 10
+  ```
+- `vargo` accepts standard cargo commands: `build`, `test`, `run`, `clean`, `fmt`, `metadata`
+- **No `--help` flag**: vargo is minimal and doesn't provide detailed help output
+- To add `vargo` to PATH permanently, add to `~/.bashrc`:
+  ```bash
+  export PATH=~/projects/verus-lang/tools/vargo/target/release:$PATH
+  ```
+
 ## Core Principles
 
 ### Don't Dig Holes
@@ -109,6 +126,9 @@ For `for x in collection.iter() { body }`:
 - `impl View for ConcreteType { type V = GhostType; fn view(&self) -> GhostType }`
 - Access view with `concrete_value@` syntax.
 - View connects executable state to specification state.
+- **Critical**: `self@` returns the abstract type (`V`), not the struct. So `self@.len()` works for `Set`, but `self@.field.len()` doesn't.
+- **Trait bounds**: Adding `: View` as a supertrait can cause ambiguity - compiler may resolve to `vstd::string::View` instead of `vstd::prelude::View`. Avoid View in trait supertraits if possible.
+- **Return types**: `&mut Self` return types are **not supported** in Verus trait methods. Use `()` or `bool` instead.
 
 ## Generic Types
 
@@ -141,6 +161,22 @@ For `for x in collection.iter() { body }`:
 - `s.is_empty()` - empty check
 - Define `singleton(x)` helper for single-element sets.
 
+### Recursive Collection Types
+- Use `#[verifier::reject_recursive_types(T)]` for types that contain collections of themselves.
+- Example: `SetStEph<T>` containing `HashSet<T>` needs this attribute to prevent infinite type expansion.
+- Without it: `error: Type parameter T must be declared #[verifier::reject_recursive_types]`
+
+### Standard Library Specifications
+- Many `std` types lack Verus specs (e.g., `HashSet::clone`).
+- Use `assume_specification` to provide specs for unsupported std methods:
+  ```rust
+  pub assume_specification<T, S> [<std::collections::HashSet<T, S> as std::clone::Clone>::clone]
+      (_0: &std::collections::HashSet<T, S>) -> std::collections::HashSet<T, S>
+  where S: std::clone::Clone, T: std::clone::Clone,
+  ;
+  ```
+- Place specs in a dedicated module (e.g., `vstdplus/hash_set_specs.rs`).
+
 ## Common Pitfalls
 
 ### Overflow
@@ -171,6 +207,19 @@ For `for x in collection.iter() { body }`:
 - Use descriptive names for complex ghost state (`previous`, `current`, `future`).
 
 ## Working with Verus Tooling
+
+### Verification Command
+- **Always use the full Verus command for verification:**
+  ```bash
+  cd ~/projects/APAS-VERUS && \
+  ~/projects/verus-lang/source/target-verus/release/verus \
+  --crate-type=lib src/lib.rs \
+  --multiple-errors 20 \
+  --expand-errors \
+  --time-expanded
+  ```
+- **Never** use `verus` on a single file when the file has crate dependencies (will fail with "could not find X in crate root").
+- **Never** use `cargo build` or `vargo build` for verification - they don't run the Verus verifier.
 
 ### Validation Output
 - Always show validation errors in tool output, not hidden in terminal.

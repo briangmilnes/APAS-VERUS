@@ -144,7 +144,35 @@ pub fn i64_vec_mem_for_no_auto(s: Vec<i64>, elt: i64) -> (result: bool)
 //
 // The postcondition refers to s@, but s is consumed by into_iter().
 // We prove properties about original_seq but must bridge to s@ in ensures.
-// This requires assumes because s is moved.
+// The bridge invariant (original_seq == s@) is essential.
+
+/* VERUS DOESN'T SUPPORT THIS - see error below
+// The natural for-in loop over Vec - what we'd write in normal Rust:
+pub fn i64_vec_mem_for_into_iter_natural(s: Vec<i64>, elt: i64) -> (result: bool)
+    ensures result == seq_i64_mem(s@, elt)
+{
+    for val in s {
+        if val == elt {
+            return true;
+        }
+    }
+    false
+}
+
+// Verus error:
+// error: `alloc::vec::impl&%17::into_iter` is not supported
+//   --> src/experiments/verus_wrapped_iter_loops.rs:XX:YY
+//    |
+// XX |     for val in s {
+//    |  _____^          -
+//    |
+//    = help: The following declaration may resolve this error:
+//            pub assume_specification<'a, T, A> [<&'a std::vec::Vec<T, A> as std::iter::IntoIterator>::into_iter]
+//
+// Verus requires an assume_specification for Vec::into_iter to use for-in loops.
+// Instead, we manually desugar to loop + next() below.
+*/
+
 pub fn i64_vec_mem_for_into_iter(s: Vec<i64>, elt: i64) -> (result: bool)
     ensures result == seq_i64_mem(s@, elt)
 {
