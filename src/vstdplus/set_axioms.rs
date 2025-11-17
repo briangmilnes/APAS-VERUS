@@ -72,10 +72,21 @@ pub mod set_axioms {
         }
     }
 
+    /// Lemma: Union distributes over insert: a.union(b.insert(x)) == a.union(b).insert(x)
+    /// 
+    /// This is the key property needed for iterator-based union verification:
+    /// when we insert an element into one side of a union, it's equivalent to
+    /// inserting into the union result.
+    pub broadcast proof fn lemma_union_insert_commute<V>(a: Set<V>, b: Set<V>, x: V)
+        ensures
+            #[trigger] a.union(b.insert(x)) =~= a.union(b).insert(x),
+    {
+    }
     /// Axiom group for additional set axioms
     pub broadcast group group_set_axioms_plus {
         axiom_set_len_zero_iff_empty,
         lemma_set_split_element,
+        lemma_union_insert_commute,
     }
 
     } // verus!

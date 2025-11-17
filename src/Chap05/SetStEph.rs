@@ -17,8 +17,12 @@ verus! {
     use crate::vstdplus::hash_set_specs::hash_set_specs::*;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
     use crate::vstdplus::set_with_view::SetWithView::SetWithView;
+    use crate::vstdplus::set_axioms::set_axioms::*;
+    use crate::vstdplus::clone_view::clone_view::*;
 
     use crate::Types::Types::*;
+
+    broadcast use {vstd::seq_lib::group_seq_properties, group_clone_view_axioms};
 
     pub open spec fn valid_key_type<T: View>() -> bool {
         &&& vstd::std_specs::hash::obeys_key_model::<T>()
@@ -237,47 +241,48 @@ verus! {
             self.data.contains(x)
         }
 
-#[verifier::external_body]
-        fn union_lowlevel(&self, other: &SetStEph<T>) -> (result: SetStEph<T>)
-//            ensures result@ == self@.union(other@)
+        fn union_lowlevel(&self, s2: &SetStEph<T>) -> (result: SetStEph<T>)
+            ensures gresult@ == self@.union(s2@)
         {
+            let ghost self_at : Set<<T as View>::V> = self@;
+
             let mut out: SetStEph<T> = self.clone();
-            assert(out.data@.subset_of(out.data@));
-            assert(self.data@.subset_of(out.data@));
-            assert(self.data@ == out.data@);
 
-            let iter: SetStEphIter<'_, T> = other.iter();
-            let ghost g_elements: Seq<T> = iter@.1;
-
-            let self_data                  : HashSetWithViewPlus<T> = self.data.clone();
-            let ghost g_self_data_at       : Set<<T as vstd::view::View>::V> = self_data@;
-
-            let ghost g_elements_map       : Seq<<T as vstd::view::View>::V> = g_elements.map(|i: int, x: T| x@);
-            let ghost g_elements_map_to_set: Set<<T as vstd::view::View>::V> = g_elements.map(|i: int, x: T| x@).to_set();
-
-//            assert(other@ == g_elements_map_to_set);  // other's view equals its iterator's elements
+            let iter                : SetStEphIter<'_, T> = s2.iter();
+            let ghost s2_seq        : Seq<T>              = iter@.1;                       // Seq of s2 elements.
+            let ghost s2_seq_mapped : Seq<<T as View>::V> = s2_seq.map(|i: int, x: T| x@); // With elements views.
+            let ghost s2_seq_set    : Set<<T as View>::V> = s2_seq_mapped.to_set();        // As a set.
+            let ghost s2_at         : Set<<T as View>::V> = s2@;
+            assume(s2_seq_set == s2_at);
 
             for x in it: iter
                 invariant
-                    it.elements == g_elements,
-//                    self.data@ == out.data@,
-//                    forall|i: int| #![auto] 0 <= i < it.pos ==> out@.contains(g_elements[i]@),
-//                    forall|v: <T as vstd::view::View>::V| #![auto] self@.contains(v) ==> out@.contains(v),
+                    it.elements == s2_seq,                                     // is.elements is the full seq of elements to iterator over and is unchanging.
+                    s2_seq.map(|i: int, x: T| x@).to_set() == s2@,             // And they are the same as s2@ at the view level.
+                    self@ <= out@,                                             // out is increasing 
+                    // it@ : Seq<T> = it.elements.take(it.pos), the subsequence of elements iterated so far.
+                    // We then convert to a Seq<<T as View>::V>> then a set.
+                    out@ == self@.union(it@.map(|i: int, x: T| x@).to_set()),
             {
-                let _ = out.data.insert(x.clone());
+                let x_clone = x.clone();
+                proof {
+//                    axiom_clone_preserves_view(x, &x_clone);
+                    assert(x@ == x_clone@);
+                }
+                let _ = out.data.insert(x_clone);
             }
             out
         }
 
-        fn union(&self, other: &SetStEph<T>) -> (result: SetStEph<T>)
+        fn union(&self, s2: &SetStEph<T>) -> (result: SetStEph<T>)
         {  self.clone()
 /*
             let mut out = self.clone();
-            let other_iter = other.iter();
-            assert(other_iter@.0 == 0);
-            let ghost g_elements = other_iter@.1;
+            let s2_iter = s2.iter();
+            assert(s2_iter@.0 == 0);
+            let ghost g_elements = s2_iter@.1;
             
-            for x in it: other_iter
+            for x in it: s2_iter
                 invariant
                     it.elements == g_elements,
                     valid_key_type::<T>(),
@@ -298,12 +303,12 @@ verus! {
 
  }/*
 
-        fn intersection(&self, other: &SetStEph<T>) -> SetStEph<T>
+        fn intersection(&self, s2: &SetStEph<T>) -> SetStEph<T>
         where
             T: Clone,
         {
-            let mut out = HashSet::with_capacity(self.data.len().min(other.data.len()));
-            for x in self.data.intersection(&other.data) {
+            let mut out = HashSet::with_capacity(self.data.len().min(s2.data.len()));
+            for x in self.data.intersection(&s2.data) {
                 let _ = out.insert(x.clone());
             }
             SetStEph { data: out }
