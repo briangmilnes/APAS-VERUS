@@ -2,26 +2,6 @@
 
 pub mod Types;
 
-pub mod vstdplus {
-    pub mod set;
-    pub mod set_with_view;
-    pub mod set_axioms;
-    pub mod hash_set_with_view_plus;
-    pub mod hash_set_specs;
-    pub mod total_order;
-    pub mod partial_order;
-    pub mod clone_view;
-}
-
-pub mod Chap03 {
-    pub mod InsertionSortStEph;
-}
-
-pub mod Chap05 {
-     pub mod SetStEph;
-    // pub mod RelationStEph;
-}
-
 pub mod experiments {
 //    pub mod SetLoops;
 //    pub mod ToVecProof;
@@ -41,6 +21,28 @@ pub mod experiments {
 //    pub mod seq_for_basic_proofs;
 //    pub mod seq_loop_basic_proofs;
 //    pub mod verus_wrapped_iter_loops;
-    pub mod hash_set_iter;
-    pub mod hash_set_with_view_plus_loops;
+//    pub mod possession;
+//    pub mod simple_seq_iter;
+//    pub mod hash_set_iter;
+//    pub mod hash_set_with_view_plus_loops;
+}
+
+pub mod vstdplus {
+    pub mod set;
+    pub mod set_with_view;
+    pub mod set_axioms;
+    pub mod hash_set_with_view_plus;
+    pub mod hash_set_specs;
+    pub mod total_order;
+    pub mod partial_order;
+    pub mod clone_view;
+}
+
+pub mod Chap03 {
+    pub mod InsertionSortStEph;
+}
+
+pub mod Chap05 {
+     pub mod SetStEph;
+    // pub mod RelationStEph;
 }

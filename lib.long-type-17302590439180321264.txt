@@ -1,1 +1,0 @@
-experiments::verus_vec_iterator::ArrayGhostIter<T>: experiments::verus_iterator::GhostIteratorTrait
