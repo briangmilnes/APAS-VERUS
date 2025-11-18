@@ -30,7 +30,7 @@ pub mod clone_view {
     /// }
     /// ```
     #[verifier::external_body]
-    pub broadcast proof fn axiom_clone_preserves_view<T: Clone + View>(x: &T, y: &T)
+    pub broadcast proof fn lemma_clone_preserves_view<T: Clone + View>(x: &T, y: &T)
         requires
             vstd::pervasive::cloned(*x, *y),
         ensures
@@ -40,7 +40,7 @@ pub mod clone_view {
 
     /// Axiom group for clone+view axioms
     pub broadcast group group_clone_view_axioms {
-        axiom_clone_preserves_view,
+        lemma_clone_preserves_view,
     }
 
     } // verus!

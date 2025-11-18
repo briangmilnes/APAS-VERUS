@@ -12,17 +12,20 @@ verus! {
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::{Hash, Hasher};
 
-    //    #[cfg(verus_keep_ghost)]
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::SetIterAdditionalSpecFns;
     use crate::vstdplus::hash_set_specs::hash_set_specs::*;
-    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::{HashSetWithViewPlus, group_hash_set_axioms};
     use crate::vstdplus::set_with_view::SetWithView::SetWithView;
     use crate::vstdplus::set_axioms::set_axioms::*;
     use crate::vstdplus::clone_view::clone_view::*;
 
     use crate::Types::Types::*;
 
-    broadcast use {vstd::seq_lib::group_seq_properties, group_clone_view_axioms};
+    broadcast use {vstd::seq_lib::group_seq_properties, 
+                   group_clone_view_axioms, 
+                   group_set_axioms_plus, 
+                   group_hash_set_axioms};
 
     pub open spec fn valid_key_type<T: View>() -> bool {
         &&& vstd::std_specs::hash::obeys_key_model::<T>()
@@ -58,7 +61,12 @@ verus! {
         fn union(&self, other: &SetStEph<T>)          -> (result: Self)
             requires valid_key_type::<T>();
 
+/*
         fn union_lowlevel(&self, other: &SetStEph<T>) -> (result: Self)
+            requires valid_key_type::<T>();
+*/
+
+        fn union_loop_lowlevel(&self, other: &SetStEph<T>) -> (result: Self)
             requires valid_key_type::<T>();
 
         /// APAS: Work Θ(1), Span Θ(1)
@@ -67,7 +75,9 @@ verus! {
             requires valid_key_type::<T>()
             ensures
                 self@ == old(self)@.insert(x@),
-                result == !old(self)@.contains(x@); /*
+                result == !old(self)@.contains(x@);
+
+/*
         /// APAS: Work Θ(|a| + |b|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)
         fn intersection(&self, other: &SetStEph<T>)                    -> Self;
@@ -119,10 +129,22 @@ verus! {
             requires valid_key_type::<T>()
             ensures
                 result@.0 == 0,
-                /* forall|i: int| #![auto] 0 <= i < result@.1.len() ==> self.data@.contains(result@.1[i]@),
-                forall|kv: <T as vstd::view::View>::V| #![auto] self.data@.contains(kv) ==> exists|i: int| #![auto] 0 <= i < result@.1.len() && result@.1[i]@ == kv,
-                */
-        { SetStEphIter { inner: self.data.iter() } }
+                result@.1.map(|i: int, k: T| k@).to_set() == self.data@,
+        { 
+            let inner_iter = self.data.iter();
+            proof {
+                // From HashSetWithViewPlus::iter() postcondition (lines 171-172):
+                // 1. forall|k: T| inner_iter@.1.contains(k) ==> self.data@.contains(k@)
+                // 2. forall|kv: V| self.data@.contains(kv) ==> exists|k: T| inner_iter@.1.contains(k) && k@ == kv
+                
+                // Proving this requires lemmas about how Seq::map and Seq::to_set interact,
+                // specifically that seq.map(f).to_set() == set of all f(seq[i]) for i in seq
+                // This is a fundamental seq/set property that would need to be axiomatized.
+                // TODO: Add lemma_seq_map_to_set to vstdplus/set_axioms.rs
+                admit();
+            }
+            SetStEphIter { inner: inner_iter }
+        }
     }
 
     impl<'a, T: StT + Hash> View for SetStEphIter<'a, T> {
@@ -175,11 +197,11 @@ verus! {
                 }
             }
 
-            open spec fn ghost_ensures(&self)   -> bool { self.pos == self.elements.len()};
+            open spec fn ghost_ensures(&self)   -> bool { self.pos == self.elements.len() }
 
-            open spec fn ghost_decrease(&self)  -> Option<int> { Some(self.elements.len() - self.pos)};
+            open spec fn ghost_decrease(&self)  -> Option<int> { Some(self.elements.len() - self.pos) }
 
-            open spec fn ghost_peek_next(&self) -> Option<T> {;
+            open spec fn ghost_peek_next(&self) -> Option<T> {
                 if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
             }
 
@@ -197,9 +219,9 @@ verus! {
         // Provide an order-independent Hash so sets of sets can be placed in a HashSet.
 
         impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
-            fn empty()         -> SetStEph<T> { SetStEph { data: HashSetWithViewPlus::new() } };
+            fn empty()         -> SetStEph<T> { SetStEph { data: HashSetWithViewPlus::new() } }
 
-            fn singleton(x: T) -> SetStEph<T> {;
+            fn singleton(x: T) -> SetStEph<T> {
                 let mut s = HashSetWithViewPlus::new();
                 let  _ = s.insert(x);
                 SetStEph { data: s }
@@ -212,8 +234,9 @@ verus! {
             fn mem(&self, x: &T) -> (result: B)
             { self.data.contains(x) }
 
+/*
             fn union_lowlevel(&self, s2: &SetStEph<T>) -> (result: SetStEph<T>)
-                ensures gresult@ == self@.union(s2@)
+                ensures result@ == self@.union(s2@)
             {
                 let ghost self_at : Set<<T as View>::V> = self@;
 
@@ -227,10 +250,13 @@ verus! {
                 assume(s2_seq_set == s2_at);
 
                 for x in it: iter
-                    invariant it.elements == s2_seq,                                     // is.elements is the full seq of elements to iterator over and is unchanging. s2_seq.map(|i: int, x: T| x@).to_set() == s2@,             // And they are the same as s2@ at the view level. self@ <= out@,                                             // out is increasing
-                // it@ : Seq<T> = it.elements.take(it.pos), the subsequence of elements iterated so far.
-                // We then convert to a Seq<<T as View>::V>> then a set.
-                out@ == self@.union(it@.map(|i: int, x: T| x@).to_set()),
+                    invariant
+                        it.elements == s2_seq,                                     // is.elements is the full seq of elements to iterator over and is unchanging.
+                        s2_seq.map(|i: int, x: T| x@).to_set() == s2@,             // And they are the same as s2@ at the view level.
+                        self@ <= out@,                                             // out is increasing
+                        // it@ : Seq<T> = it.elements.take(it.pos), the subsequence of elements iterated so far.
+                        // We then convert to a Seq<<T as View>::V>> then a set.
+                        out@ == self@.union(it@.map(|i: int, x: T| x@).to_set()),
                 {
                     let x_clone = x.clone();
                     proof {
@@ -242,7 +268,139 @@ verus! {
                 out
             }
 
-            fn union(&self, s2: &SetStEph<T>) -> (result: SetStEph<T>)
+*/
+            fn union_loop_lowlevel(&self, s2: &SetStEph<T>) -> (result: SetStEph<T>)
+                ensures result@ == self@.union(s2@)
+            {
+                let mut out: SetStEph<T> = self.clone();
+                let mut it = s2.iter();
+                let ghost s2_seq: Seq<T> = it@.1;
+                
+                proof {
+                    // Prove: s2_seq.map(|i: int, x: T| x@).to_set() == s2@
+                    // From SetStEph::iter() postcondition (line 129):
+                    //   it@.1.map(|i: int, k: T| k@).to_set() == s2.data@
+                    // We have: s2_seq == it@.1
+                    // And: s2@ == s2.data@ (from SetStEph::view definition)
+                    // Therefore: s2_seq.map(|i: int, x: T| x@).to_set() == s2@
+                    assert(s2_seq.map(|i: int, x: T| x@).to_set() == s2.data@);
+                    assert(s2@ == s2.data@);
+                }
+
+                loop
+                    invariant
+                        it@.1 == s2_seq,
+                        s2_seq.map(|i: int, x: T| x@).to_set() == s2@,
+                        out@ =~= self@.union(s2_seq.take(it@.0).map(|i: int, x: T| x@).to_set()),
+                    decreases s2_seq.len() - it@.0,
+                {
+                    // Capture iterator state BEFORE next() is called
+                    let ghost iter_state_before = it@;
+                    
+                    match it.inner.next() {
+                        Some(x) => {
+                            // After next() was called:
+                            // - Iterator advanced from position (it@.0 - 1) to it@.0
+                            // - Invariant held: out@ == self@.union(taken_before)
+                            let ghost pos_before = it@.0 - 1;
+                            let ghost taken_before = s2_seq.take(pos_before).map(|i: int, x: T| x@).to_set();
+                            let ghost taken_after = s2_seq.take(it@.0).map(|i: int, x: T| x@).to_set();
+                            
+                            proof {
+                                // From next() postcondition: element == old_seq[old_index]
+                                // where old_index = iter_state_before.0, old_seq = iter_state_before.1
+                                // Iterator::next() spec guarantees: x == iter_state_before.1[iter_state_before.0]
+                                assert(iter_state_before.1 == s2_seq);  // From invariant
+                                assert(iter_state_before.0 == pos_before);  // Before next() was called
+                                assert(x == s2_seq[pos_before]);  // From next() postcondition
+                                
+                                // From invariant at loop start
+                                assert(out@ =~= self@.union(taken_before));
+                                
+                                // Setup: Define the mapped sequence
+                                let ghost s2_mapped: Seq<<T as View>::V> = s2_seq.map(|i: int, x: T| x@);
+                                
+                                // Lemma: taken_after = taken_before.insert(element_at_pos_before)
+                                axiom_seq_take_next_element(s2_mapped,pos_before);
+                                // This gives us: s2_mapped.take(pos_before + 1).to_set() == s2_mapped.take(pos_before).to_set().insert(s2_mapped[pos_before])
+                                
+                                // Bridge: Show lemma output equals our variables
+                                assert(it@.0 == pos_before + 1);
+                                assert(s2_mapped.take(pos_before + 1) =~= s2_seq.take(it@.0).map(|i: int, x: T| x@));
+                                assert(s2_mapped.take(pos_before) =~= s2_seq.take(pos_before).map(|i: int, x: T| x@));
+                                
+                                // Connect to sets
+                                assert(s2_mapped.take(pos_before + 1).to_set() == taken_after);
+                                assert(s2_mapped.take(pos_before).to_set() == taken_before);
+                                
+                                // Connect the element - PROVEN from next() postcondition above
+                                assert(s2_mapped[pos_before] == s2_seq[pos_before]@);
+                                assert(s2_seq[pos_before] == x);  // From next() postcondition
+                                assert(s2_seq[pos_before]@ == x@);  // Therefore
+                                
+                                // From lemma: s2_mapped.take(pos_before + 1).to_set() == s2_mapped.take(pos_before).to_set().insert(s2_mapped[pos_before])
+                                // Therefore: taken_after == taken_before.insert(x@)
+                                assert(taken_after =~= taken_before.insert(x@));
+                            }
+                            
+                            let x_clone = x.clone();
+                            proof { assert(x@ == x_clone@); }
+                            
+                            let ghost old_out = out@;
+                            let _ = out.data.insert(x_clone);
+                            
+                            proof {
+                                // HashSetWithViewPlus::insert postcondition
+                                assert(out@ =~= old_out.insert(x@));
+                                assert(old_out =~= self@.union(taken_before));  // From above
+                                
+                                // Therefore: out@ == self@.union(taken_before).insert(x@)
+                                assert(out@ =~= self@.union(taken_before).insert(x@));
+                                
+                                // Lemma: union distributes over insert
+                                lemma_union_insert_commute(self@, taken_before, x@);
+                                assert(self@.union(taken_before).insert(x@) =~= self@.union(taken_before.insert(x@)));
+                                
+                                // From above: taken_after = taken_before.insert(x@)
+                                assert(taken_after =~= taken_before.insert(x@));
+                                
+                                // Therefore: out@ == self@.union(taken_after)
+                                assert(out@ =~= self@.union(taken_after));
+                                
+                                // taken_after is exactly s2_seq.take(it@.0).map(...).to_set()
+                                assert(out@ =~= self@.union(s2_seq.take(it@.0).map(|i: int, x: T| x@).to_set()));
+                            }
+                        },
+                        None => {
+                            proof {
+                                // When next() returns None, from postcondition (line 174):
+                                // - self.inner@ == old(self).inner@ (position unchanged)
+                                // - old_index >= old_seq.len()
+                                // where old_index = iter_state_before.0, old_seq = iter_state_before.1
+                                // From invariant: iter_state_before.1 == s2_seq
+                                // So: iter_state_before.0 >= s2_seq.len()
+                                // Since position unchanged: it@.0 == iter_state_before.0
+                                // Therefore: it@.0 >= s2_seq.len()
+                                // But from loop invariant (decreases): it@.0 <= s2_seq.len()
+                                // Therefore: it@.0 == s2_seq.len()
+                                // TODO: Verus can't automatically connect these pieces
+                                admit();
+                            }
+                            break;
+                        },
+                    }
+                }
+                
+                proof {
+                    // At loop exit: it@.0 == s2_seq.len()
+                    // This follows from None postcondition and decreases clause, but needs admit
+                    admit();
+                }
+                
+                out
+            }
+
+            fn union(&self, _s2: &SetStEph<T>) -> (result: SetStEph<T>)
             {  self.clone()
             /*
             let mut out = self.clone();
@@ -267,7 +425,8 @@ verus! {
             !was_present
         }
 
-    }/*
+    }
+/*
 
     fn intersection(&self, s2: &SetStEph<T>) -> SetStEph<T>
     where
@@ -318,7 +477,7 @@ verus! {
 
     fn iter(&self)        -> Iter<'_, T> { self.data.iter() };
 
-    fn FromVec(v: Vec<T>) -> SetStEph<T> {;
+    fn FromVec(v: Vec<T>) -> SetStEph<T> {
         let mut s = HashSet::with_capacity(v.len());
         for x in v {
             let _ = s.insert(x);

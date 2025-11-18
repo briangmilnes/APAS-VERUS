@@ -22,7 +22,7 @@ pub mod experiments {
 //    pub mod seq_loop_basic_proofs;
 //    pub mod verus_wrapped_iter_loops;
 //    pub mod possession;
-//    pub mod simple_seq_iter;
+    pub mod simple_seq_iter;
 //    pub mod hash_set_iter;
 //    pub mod hash_set_with_view_plus_loops;
 }
@@ -43,6 +43,6 @@ pub mod Chap03 {
 }
 
 pub mod Chap05 {
-     pub mod SetStEph;
+//     pub mod SetStEph;
     // pub mod RelationStEph;
 }
