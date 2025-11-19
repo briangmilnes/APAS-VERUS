@@ -131,6 +131,38 @@
 
 ---
 
+## Master Table: APAS vstdplus Lemmas/Axioms
+
+| Lemma/Axiom | S1 | S2 | S3 | Req | Trigger | Notes |
+|-------------|----|----|----|----|---------|-------|
+| **seq_set.rs** |
+| `lemma_seq_index_in_to_set` | ☑ | | | ☑ | N/A (call explicitly) | Seq index → to_set |
+| `lemma_push_not_contains_to_set_subset` | ☑ | | | ☑ | N/A | Push preserves subset |
+| `lemma_push_not_contains_to_set_superset` | ☑ | | | ☑ | N/A | Push preserves superset |
+| `lemma_push_not_contains_to_set` | ☑ | | | ☑ | N/A | Push equality (calls above 2) |
+| `lemma_take_full` | ☑ | | | | N/A | take(len) == seq |
+| `lemma_take_full_to_set` | ☑ | | | | N/A | take(len).to_set() == seq.to_set() |
+| `lemma_seq_equal_to_set_equal` | ☑ | | | ☑ | N/A | Seq equal → set equal |
+| `lemma_take_extends_set_subset` | ☑ | | | ☑ | N/A | take(n) + elem ⊆ take(n+1) |
+| `lemma_take_extends_set_superset` | ☑ | | | ☑ | N/A | take(n+1) ⊆ take(n) + elem |
+| `lemma_take_extends_set` | ☑ | | | ☑ | N/A | Equality (calls above 2) |
+| **set_axioms.rs** |
+| `lemma_singleton_len` | ☑ | | | | N/A | singleton(x).len() == 1 |
+| `axiom_set_len_zero_iff_empty` | | ☑ | | | `s.len()` | len == 0 <==> empty |
+| `lemma_set_split_element` | | ☑ | | ☑ | `s.remove(x)` | s == {x} + s.remove(x) |
+| `lemma_set_move_element_preserves_union` | ☑ | | | ☑ | N/A | Move elem preserves union |
+| `lemma_union_insert_commute` | | ☑ | | | `a.union(b.insert(x))` | Union distributes insert |
+| **clone_view.rs** |
+| `lemma_clone_preserves_view` | | ☑ | | ☑ | `x@`, `y@` | cloned(x,y) ==> x@ == y@ |
+
+**Summary for vstdplus:**
+- Style 1: 11 (explicit call lemmas)
+- Style 2: 4 (broadcast with forall/requires)
+- Style 3: 0
+- **Total: 15**
+
+---
+
 ## Grand Summary
 
 | File | Style 1 | Style 2 | Style 3 | Total |
@@ -138,7 +170,9 @@
 | `seq.rs` | 0 | 2 | 16 | 18 |
 | `set.rs` | 0 | 8 | 19 | 27 |
 | `seq_lib.rs` (broadcast) | 0 | 3 | 19 | 22 |
-| **Total** | **0** | **13** | **54** | **67** |
+| **vstd subtotal** | **0** | **13** | **54** | **67** |
+| `vstdplus` (all) | 11 | 4 | 0 | 15 |
+| **Grand Total** | **11** | **17** | **54** | **82** |
 
 **Additional:** `seq_lib.rs` has ~50+ Style 1 non-broadcast lemmas.
 

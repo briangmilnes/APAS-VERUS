@@ -16,17 +16,16 @@ pub proof fn lemma_seq_index_in_to_set<T>(seq: Seq<T>, i: int)
 }
 
 /// If a sequence does not contain an element v, then pushing v onto the sequence
-/// creates a set equal to the original set with v inserted.
-pub proof fn lemma_push_not_contains_to_set<T>(seq: Seq<T>, v: T)
+/// creates a subset of the original set with v inserted.
+pub proof fn lemma_push_not_contains_to_set_subset<T>(seq: Seq<T>, v: T)
     requires
         !seq.contains(v),
     ensures
-        seq.push(v).to_set() == seq.to_set().insert(v),
+        seq.push(v).to_set() <= seq.to_set().insert(v),
 {
     broadcast use vstd::seq_lib::group_seq_properties;
     broadcast use vstd::set::group_set_axioms;
     
-    // Prove both directions of set equality
     assert forall |x: T| seq.push(v).to_set().contains(x) 
         implies seq.to_set().insert(v).contains(x) by {
         if seq.push(v).contains(x) {
@@ -39,6 +38,17 @@ pub proof fn lemma_push_not_contains_to_set<T>(seq: Seq<T>, v: T)
             }
         }
     }
+}
+
+/// If a sequence does not contain an element v, then the original set with v inserted
+/// is a subset of pushing v onto the sequence.
+pub proof fn lemma_push_not_contains_to_set_superset<T>(seq: Seq<T>, v: T)
+    requires
+        !seq.contains(v),
+    ensures
+        seq.to_set().insert(v) <= seq.push(v).to_set(),
+{
+    broadcast use vstd::seq_lib::group_seq_properties;
     
     assert forall |x: T| seq.to_set().insert(v).contains(x) 
         implies seq.push(v).to_set().contains(x) by {
@@ -52,8 +62,19 @@ pub proof fn lemma_push_not_contains_to_set<T>(seq: Seq<T>, v: T)
             assert(seq.push(v).contains(x));
         }
     }
-    
-    assert(seq.push(v).to_set() =~= seq.to_set().insert(v));
+}
+
+/// If a sequence does not contain an element v, then pushing v onto the sequence
+/// creates a set equal to the original set with v inserted.
+pub proof fn lemma_push_not_contains_to_set<T>(seq: Seq<T>, v: T)
+    requires
+        !seq.contains(v),
+    ensures
+        seq.push(v).to_set() == seq.to_set().insert(v),
+{
+    lemma_push_not_contains_to_set_subset(seq, v);
+    lemma_push_not_contains_to_set_superset(seq, v);
+    broadcast use vstd::set::group_set_axioms;
 }
 
 /// Taking the full length of a sequence yields the original sequence.
@@ -82,13 +103,12 @@ pub proof fn lemma_seq_equal_to_set_equal<T>(s1: Seq<T>, s2: Seq<T>)
 {
 }
 
-/// After taking n elements and then taking n+1 elements (where n < len),
-/// the additional element at index n is in the larger set.
-pub proof fn lemma_take_extends_set<T>(seq: Seq<T>, n: int)
+/// After taking n elements and inserting seq[n], the result is a subset of take(n+1).
+pub proof fn lemma_take_extends_set_subset<T>(seq: Seq<T>, n: int)
     requires
         0 <= n < seq.len(),
     ensures
-        seq.take(n).to_set().insert(seq[n]) == seq.take(n+1).to_set(),
+        seq.take(n).to_set().insert(seq[n]) <= seq.take(n+1).to_set(),
 {
     broadcast use vstd::seq_lib::group_seq_properties;
     broadcast use vstd::set::group_set_axioms;
@@ -99,11 +119,8 @@ pub proof fn lemma_take_extends_set<T>(seq: Seq<T>, n: int)
     // Key insight: take(n+1) = take(n).push(seq[n])
     assert forall |i: int| 0 <= i < n implies #[trigger] prefix_n_plus_1[i] == prefix_n[i] by {}
     assert(prefix_n_plus_1[n] == seq[n]);
-    assert(prefix_n_plus_1.len() == n + 1);
-    assert(prefix_n.len() == n);
     
-    // Show set inclusion both ways
-    assert forall |x: T| prefix_n.to_set().insert(seq[n]).contains(x) 
+    assert forall |x: T| #[trigger] prefix_n.to_set().insert(seq[n]).contains(x) 
         implies prefix_n_plus_1.to_set().contains(x) by {
         if x == seq[n] {
             assert(prefix_n_plus_1[n] == x);
@@ -116,8 +133,21 @@ pub proof fn lemma_take_extends_set<T>(seq: Seq<T>, n: int)
             assert(prefix_n_plus_1.contains(x));
         }
     }
+}
+
+/// After taking n+1 elements, the result is a subset of take(n) with seq[n] inserted.
+pub proof fn lemma_take_extends_set_superset<T>(seq: Seq<T>, n: int)
+    requires
+        0 <= n < seq.len(),
+    ensures
+        seq.take(n+1).to_set() <= seq.take(n).to_set().insert(seq[n]),
+{
+    broadcast use vstd::seq_lib::group_seq_properties;
     
-    assert forall |x: T| prefix_n_plus_1.to_set().contains(x)
+    let prefix_n = seq.take(n);
+    let prefix_n_plus_1 = seq.take(n + 1);
+    
+    assert forall |x: T| #[trigger] prefix_n_plus_1.to_set().contains(x)
         implies prefix_n.to_set().insert(seq[n]).contains(x) by {
         assert(prefix_n_plus_1.contains(x));
         let idx = prefix_n_plus_1.lemma_contains_to_index(x);
@@ -128,11 +158,21 @@ pub proof fn lemma_take_extends_set<T>(seq: Seq<T>, n: int)
         } else {
             assert(idx == n);
             assert(x == seq[n]);
-            assert(prefix_n.to_set().insert(seq[n]).contains(seq[n]));
         }
     }
-    
-    assert(prefix_n.to_set().insert(seq[n]) =~= prefix_n_plus_1.to_set());
+}
+
+/// After taking n elements and then taking n+1 elements (where n < len),
+/// the additional element at index n is in the larger set.
+pub proof fn lemma_take_extends_set<T>(seq: Seq<T>, n: int)
+    requires
+        0 <= n < seq.len(),
+    ensures
+        seq.take(n).to_set().insert(seq[n]) == seq.take(n+1).to_set(),
+{
+    lemma_take_extends_set_subset(seq, n);
+    lemma_take_extends_set_superset(seq, n);
+    broadcast use vstd::set::group_set_axioms;
 }
 
 // Note: These are regular proof functions, not broadcast.

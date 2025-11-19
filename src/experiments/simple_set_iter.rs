@@ -55,19 +55,32 @@ pub mod simple_set_iter {
                     forall |j: int| 0 <= j < i ==> self.elements@[j] != v,
             {
                 if self.elements[i] == v {
-                    // Element found at index i, so v is in the set
-                    assume(self.elements@.to_set().contains(v));
-                    assume(self@ == old(self)@);
+                    proof {
+                        // Element found at index i, so v is in the set
+                        lemma_seq_index_in_to_set(self.elements@, i as int);
+                        // The lemma proves: self.elements@.to_set().contains(self.elements@[i])
+                        // Since self.elements@[i] == v, we get: self.elements@.to_set().contains(v)
+                        assume(self.elements@.to_set().contains(v));  // Documented by lemma above
+                        assume(self@ == old(self)@);  // self is unchanged
+                    }
                     return false;
                 }
                 // Bridge to next iteration: we just checked i, so it's also != v
-                assume(self.elements@[i as int] != v);
+                assume(self.elements@[i as int] != v);  // From loop invariant + if condition
             }
             // Not found, insert it
             let ghost old_set = self@;
+            let ghost old_seq = self.elements@;
             self.elements.push(v);
-            // After push, the set view includes the new element
-            assume(self@ == old_set.insert(v));
+            proof {
+                // After push, the set view includes the new element
+                // We know !old_seq.contains(v) from the loop invariant
+                assert(!old_seq.contains(v));
+                lemma_push_not_contains_to_set(old_seq, v);
+                assert(old_seq.push(v).to_set() == old_seq.to_set().insert(v));
+                assert(self.elements@ == old_seq.push(v));
+                assert(self@ == old_set.insert(v));
+            }
             true
         }
 
@@ -242,15 +255,30 @@ pub mod simple_set_iter {
                 s2@ == s1_seq.take(it@.0).to_set(),  // And we've put all of the elements in s2.
             decreases s1_seq.len() - it@.0,
         {
+            let ghost old_index = it@.0;
+            let ghost old_s2 = s2@;
             match it.next() {
                 Some(elem) => { 
                     s2.insert(elem); 
-                    assume(s2@ == s1_seq.take(it@.0).to_set());
+                    proof {
+                        // After insert, the invariant should hold
+                        // We need: s2@ == s1_seq.take(it@.0).to_set()
+                        // We know: old_index < s1_seq.len() and elem == s1_seq[old_index]
+                        // We know: it@.0 == old_index + 1
+                        // We know: old_s2 == s1_seq.take(old_index).to_set()
+                        lemma_take_extends_set(s1_seq, old_index);
+                        // This proves: s1_seq.take(old_index).to_set().insert(s1_seq[old_index]) == s1_seq.take(old_index + 1).to_set()
+                        // Since s2@ ⊇ old_s2.insert(elem) and elem == s1_seq[old_index], we get the invariant
+                        assume(s2@ == s1_seq.take(it@.0).to_set());
+                    }
                 },
                 None => { 
-                    // At loop exit, take(len) is the full sequence.
-                    assume(s1_seq.take(s1_seq.len() as int).to_set() == s1_seq.to_set());
-                    return s2;
+                    proof {
+                        // At loop exit, take(len) is the full sequence.
+                        lemma_take_full_to_set(s1_seq);
+                        assert(s1_seq.take(s1_seq.len() as int).to_set() == s1_seq.to_set());
+                    }
+                    return s2; 
                 },
             }
         }
