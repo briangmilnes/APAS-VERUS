@@ -23,6 +23,12 @@ pub mod experiments {
 //    pub mod verus_wrapped_iter_loops;
 //    pub mod possession;
     pub mod simple_seq_iter;
+    pub mod simple_set_iter;
+//    pub mod invariant_proof_test;
+//    pub mod assume_spec_test; 
+//    pub mod struct_construction_test; 
+//    pub mod pub_crate_test;
+//    pub mod verus_pub_crate_test;  // Has type_invariant failure
 //    pub mod hash_set_iter;
 //    pub mod hash_set_with_view_plus_loops;
 }
@@ -31,6 +37,7 @@ pub mod vstdplus {
     pub mod set;
     pub mod set_with_view;
     pub mod set_axioms;
+    pub mod seq_set;
     pub mod hash_set_with_view_plus;
     pub mod hash_set_specs;
     pub mod total_order;

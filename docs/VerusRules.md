@@ -1,5 +1,43 @@
 # Verus Rules and Lessons Learned
 
+## Verification Command
+
+**Always verify through `lib.rs`, not individual files:**
+
+```bash
+cd ~/projects/APAS-VERUS && \
+  ~/projects/verus-lang/source/target-verus/release/verus \
+  --crate-type=lib src/lib.rs \
+  --multiple-errors 20 \
+  --expand-errors \
+  --time-expanded
+```
+
+### Command Flags
+
+- `--crate-type=lib`: Treat as library crate
+- `--multiple-errors 20`: Show up to 20 errors (default is 1)
+- `--expand-errors`: Show expanded error context
+- `--time-expanded`: Show timing information for verification
+
+### Experiment Modules
+
+All experiment files should be added to `src/lib.rs` under the `experiments` module:
+
+```rust
+pub mod experiments {
+    pub mod simple_seq_iter;
+    pub mod invariant_proof_test;
+    // pub mod assume_spec_test;  // Comment with reason if disabled
+}
+```
+
+**Benefits of verifying through lib.rs:**
+- Single consistent command for all verification
+- Experiments can reference each other and main codebase
+- Easy to enable/disable experiments by commenting module declarations
+- Ensures all code compiles together as a cohesive crate
+
 ## Building Verus
 
 ### Using vargo
