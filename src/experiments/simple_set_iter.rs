@@ -16,6 +16,24 @@ pub mod simple_set_iter {
             crate::vstdplus::clone_view::clone_view::group_clone_view_axioms
     };
 
+    // AXIOM ATTEMPT: Bridge exec Vec indexing equality to spec equality for generic types.
+    // NOTE: This does not work for generics! Verus only bridges exec == to spec == for
+    // concrete types (u64, i32, etc.). For generic V: Eq, there is no automatic bridge.
+    // This axiom cannot be written because:
+    // 1. We cannot reference exec equality (vec[i] == v) in spec code
+    // 2. Even if we could, broadcast axioms trigger on spec patterns, not exec control flow
+    // 3. The fundamental issue is that exec Eq::eq and spec == are separate operations
+    //
+    // broadcast proof fn axiom_vec_exec_eq_spec_eq<V: Eq>(vec: &Vec<V>, i: int, v: V)
+    //     requires
+    //         0 <= i < vec@.len(),
+    //         // PROBLEM: Can't write "vec[i as usize] == v" here - it's exec, not spec!
+    //     ensures
+    //         vec@[i] == v,  // This is what we want to prove
+    // {
+    //     admit();  // Would need to admit because there's no proof
+    // }
+
     // SimpleSet backed by Vec (no duplicates maintained by insert).
     #[verifier::reject_recursive_types(V)]
     pub struct SimpleSet<V> {pub elements: Vec<V>, }
