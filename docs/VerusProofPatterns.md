@@ -24,8 +24,8 @@
 
 ## Master Table: vstd Seq Axioms (`seq.rs`)
 
-| Axiom/Lemma | Style 1 | Style 2 | Style 3 | Has `requires` | Trigger | Notes |
-|-------------|---------|---------|---------|----------------|---------|-------|
+| Axiom/Lemma | S1 | S2 | S3 | Req | Trigger | Notes |
+|-------------|----|----|----|----|---------|-------|
 | `axiom_seq_index_decreases` | | | ☑ | ☑ | `s[i]` | Decreases axiom |
 | `axiom_seq_len_decreases` | | ☑ | | ☑ | `trigger(s2[i2])` | Has forall in requires |
 | `axiom_seq_subrange_decreases` | | | ☑ | ☑ | `s.subrange(i,j)` | Has proof body |
@@ -56,8 +56,8 @@
 
 ## Master Table: vstd Set Axioms (`set.rs`)
 
-| Axiom/Lemma | Style 1 | Style 2 | Style 3 | Has `requires` | Trigger | Notes |
-|-------------|---------|---------|---------|----------------|---------|-------|
+| Axiom/Lemma | S1 | S2 | S3 | Req | Trigger | Notes |
+|-------------|----|----|----|----|---------|-------|
 | `axiom_set_empty` | | | ☑ | | `Set::empty().contains(a)` | Always false |
 | `axiom_set_new` | | | ☑ | | `Set::new(f).contains(a)` | Constructor |
 | `axiom_set_insert_same` | | | ☑ | | `s.insert(a).contains(a)` | Always true |
@@ -96,8 +96,8 @@
 
 ## Master Table: vstd Seq Lemmas (`seq_lib.rs` - Broadcast Only)
 
-| Lemma | Style 1 | Style 2 | Style 3 | Has `requires` | Trigger | Notes |
-|-------|---------|---------|---------|----------------|---------|-------|
+| Lemma | S1 | S2 | S3 | Req | Trigger | Notes |
+|-------|----|----|----|----|---------|-------|
 | `lemma_seq_union_to_multiset_commutative` | | | ☑ | | `(a + b).to_multiset()` | Multiset conversion |
 | `lemma_seq_contains` | | ☑ | | | `s.contains(x)` | Has exists in <==> |
 | `lemma_seq_empty_contains_nothing` | | | ☑ | | `Seq::<A>::empty().contains(x)` | Always false |
