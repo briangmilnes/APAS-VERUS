@@ -1,4 +1,6 @@
 //! Lemmas about the relationship between Seq operations (take, skip, push) and to_set()
+// Note: These are regular proof functions, not broadcast.
+// Broadcast versions caused massive performance issues (30M+ rlimit).
 
 use vstd::prelude::*;
 
@@ -164,7 +166,7 @@ pub proof fn lemma_take_extends_set_superset<T>(seq: Seq<T>, n: int)
 
 /// After taking n elements and then taking n+1 elements (where n < len),
 /// the additional element at index n is in the larger set.
-pub proof fn lemma_take_extends_set<T>(seq: Seq<T>, n: int)
+pub proof fn lemma_take_one_more_extends_the_seq_set<T>(seq: Seq<T>, n: int)
     requires
         0 <= n < seq.len(),
     ensures
@@ -175,9 +177,16 @@ pub proof fn lemma_take_extends_set<T>(seq: Seq<T>, n: int)
     broadcast use vstd::set::group_set_axioms;
 }
 
-// Note: These are regular proof functions, not broadcast.
-// Broadcast versions caused massive performance issues (30M+ rlimit).
-// Call them explicitly where needed.
+pub proof fn lemma_set_contains_insert_idempotent<V>(s: Set<V>, v: V)
+    requires
+        s.contains(v),
+    ensures
+        s.insert(v) == s,
+{
+    assert forall |x| s.insert(v).contains(x) implies #[trigger] s.contains(x) by {};
+    assert forall |x| #[trigger] s.contains(x) implies s.insert(v).contains(x) by {};
+    broadcast use vstd::set::group_set_axioms;
+}
 
 } // verus!
 

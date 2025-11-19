@@ -6,6 +6,7 @@ pub mod simple_set_iter {
     verus! {
 
     use vstd::std_specs::clone::*;
+    use vstd::std_specs::vec::vec_index;
     use crate::vstdplus::seq_set::*;
     
     broadcast use {
@@ -24,20 +25,15 @@ pub mod simple_set_iter {
         open spec fn view(&self) -> Set<V> { self.elements@.to_set() }
     }
 
-    pub trait SimpleSetTrait<V: Clone>: Sized {
+    pub trait SimpleSetTrait<V: Clone>: Sized + View<V=Set<V>> {
         fn len(&self) -> usize;
-        fn new() -> Self;
-        fn insert(&mut self, v: V) -> (inserted: bool);
-        fn iter(&self) -> (it: SimpleSetIter<V>);
-    }
+        
+        fn new() -> (result: Self)
+            ensures result@ == Set::<V>::empty();
+        
+        fn mem(&self, v: &V) -> (result: bool)
+            ensures result == self@.contains(*v);
 
-    impl<V: Clone + PartialEq> SimpleSetTrait<V> for SimpleSet<V> {
-        fn len(&self) -> usize { self.elements.len() }
-        
-        fn new() -> (s: Self)
-            ensures s@ == Set::<V>::empty(),
-        { SimpleSet { elements: Vec::new() } }
-        
         fn insert(&mut self, v: V) -> (inserted: bool)
             ensures
                 old(self)@.contains(v) ==> {
@@ -47,40 +43,45 @@ pub mod simple_set_iter {
                 !old(self)@.contains(v) ==> {
                     &&& inserted
                     &&& self@ == old(self)@.insert(v)
-                },
+                };
+        
+        fn iter(&self) -> (it: SimpleSetIter<V>)
+            ensures
+                it@.0 == 0int,
+                it@.1.to_set() == self@;
+    }
+    
+    impl<V: Clone + Eq> SimpleSetTrait<V> for SimpleSet<V> {
+        fn len(&self) -> usize { self.elements.len() }
+        
+        fn new() -> (s: Self)
+        { SimpleSet { elements: Vec::new() } }
+        
+        fn mem(&self, v: &V) -> (result: bool)
         {
-            // Check if already present
+            let ghost elements_seq = self.elements@;
             for i in 0..self.elements.len()
                 invariant
-                    forall |j: int| 0 <= j < i ==> self.elements@[j] != v,
+                    self.elements@ == elements_seq,
+                    forall |j: int| 0 <= j < i ==> self.elements@[j] != *v,
             {
-                if self.elements[i] == v {
-                    proof {
-                        // Element found at index i, so v is in the set
-                        lemma_seq_index_in_to_set(self.elements@, i as int);
-                        // The lemma proves: self.elements@.to_set().contains(self.elements@[i])
-                        // Since self.elements@[i] == v, we get: self.elements@.to_set().contains(v)
-                        assume(self.elements@.to_set().contains(v));  // Documented by lemma above
-                        assume(self@ == old(self)@);  // self is unchanged
-                    }
-                    return false;
+                if self.elements[i] == *v {
+                    assume(self.elements@[i as int] == *v);
+                    return true;
                 }
-                // Bridge to next iteration: we just checked i, so it's also != v
-                assume(self.elements@[i as int] != v);  // From loop invariant + if condition
+                assume(self.elements@[i as int] != *v);
             }
+            false
+        }
+        
+        fn insert(&mut self, v: V) -> (inserted: bool) {
+            // Check if already present using mem
+            if self.mem(&v) { return false; }
             // Not found, insert it
             let ghost old_set = self@;
             let ghost old_seq = self.elements@;
             self.elements.push(v);
-            proof {
-                // After push, the set view includes the new element
-                // We know !old_seq.contains(v) from the loop invariant
-                assert(!old_seq.contains(v));
-                lemma_push_not_contains_to_set(old_seq, v);
-                assert(old_seq.push(v).to_set() == old_seq.to_set().insert(v));
-                assert(self.elements@ == old_seq.push(v));
-                assert(self@ == old_set.insert(v));
-            }
+            assert(!old_seq.contains(v));
             true
         }
 
@@ -187,7 +188,7 @@ pub mod simple_set_iter {
                 self.pos = self.pos + 1;
                 Some(elem)
             } else {
-                // Without a requires on next this is required.
+                // Without a requires on next this is required, see assumption_free_next.
                 assume(self.pos <= self.vec.len());
                 None
             }
@@ -259,17 +260,30 @@ pub mod simple_set_iter {
             let ghost old_s2 = s2@;
             match it.next() {
                 Some(elem) => { 
-                    s2.insert(elem); 
                     proof {
-                        // After insert, the invariant should hold
-                        // We need: s2@ == s1_seq.take(it@.0).to_set()
-                        // We know: old_index < s1_seq.len() and elem == s1_seq[old_index]
-                        // We know: it@.0 == old_index + 1
-                        // We know: old_s2 == s1_seq.take(old_index).to_set()
-                        lemma_take_extends_set(s1_seq, old_index);
+                        // Before insert: setup what we know
+                        let ghost target_set = s1_seq.take(it@.0).to_set();
+                        
+                        // Apply the lemma
+                        lemma_take_one_more_extends_the_seq_set(s1_seq, old_index);
                         // This proves: s1_seq.take(old_index).to_set().insert(s1_seq[old_index]) == s1_seq.take(old_index + 1).to_set()
-                        // Since s2@ ⊇ old_s2.insert(elem) and elem == s1_seq[old_index], we get the invariant
-                        assume(s2@ == s1_seq.take(it@.0).to_set());
+                        
+                        // From iterator postcondition: elem == s1_seq[old_index] (via cloned)
+                        assert(vstd::pervasive::cloned(s1_seq[old_index], elem));
+                        
+                        // Connect the pieces:
+                        assert(old_s2 == s1_seq.take(old_index).to_set());
+                        assert(s1_seq.take(old_index).to_set().insert(elem) == s1_seq.take(old_index + 1).to_set());
+                        assert(old_s2.insert(elem) == target_set);
+                    }
+                    
+                    let inserted = s2.insert(elem);
+                    
+                    proof {
+                        if !inserted {
+                            lemma_set_contains_insert_idempotent(old_s2, elem);
+                        }
+                        assert(s2@ == s1_seq.take(it@.0).to_set());
                     }
                 },
                 None => { 

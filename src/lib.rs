@@ -24,6 +24,7 @@ pub mod experiments {
 //    pub mod possession;
     pub mod simple_seq_iter;
     pub mod simple_set_iter;
+    pub mod vec_if;
 //    pub mod invariant_proof_test;
 //    pub mod assume_spec_test; 
 //    pub mod struct_construction_test; 
