@@ -229,6 +229,26 @@ For `for x in collection.iter() { body }`:
   ```
 - Place specs in a dedicated module (e.g., `vstdplus/hash_set_specs.rs`).
 
+### HashSetWithView - The Right Way
+- **Use `vstd::hash_set::HashSetWithView<T>` directly** instead of wrapping `std::collections::HashSet<T>`.
+- `HashSetWithView` provides:
+  - `View` trait implementation: `type V = Set<<T as View>::V>`
+  - Verified methods: `new()`, `insert()`, `remove()`, `contains()`, `len()`, etc.
+  - **Working iterator specs** that integrate with Verus's for-loop auto-invariants
+- **For-loop verification works automatically**:
+  ```rust
+  for x in hash_set.m.iter() {  // hash_set: HashSetWithView<T>
+      // Auto-invariants handle most cases!
+  }
+  ```
+- **Prerequisites**:
+  ```rust
+  #[cfg(verus_keep_ghost)]
+  use vstd::std_specs::hash::SetIterAdditionalSpecFns;  // Brings iterator specs into scope
+  ```
+- **Key insight**: Don't build custom iterator wrappers unless you need data-structure-specific ghost state. vstd's iterators already work.
+- **Result**: SetStEph.rs went from 543 lines (with custom iterators) to 132 lines (using HashSetWithView directly), with union's for-loop verifying automatically.
+
 ## Common Pitfalls
 
 ### Overflow

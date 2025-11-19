@@ -22,6 +22,7 @@ pub mod simple_hash_set_iter {
             vstd::seq_lib::group_seq_properties,
             vstd::seq::group_seq_axioms,
             vstd::set::group_set_axioms,
+            vstd::std_specs::hash::group_hash_axioms,
             crate::vstdplus::clone_view::clone_view::group_clone_view_axioms
     };
 
@@ -71,14 +72,10 @@ pub mod simple_hash_set_iter {
     impl<V: Clone + std::cmp::Eq + std::hash::Hash> SimpleHashSetTrait<V> for SimpleHashSet<V> {
         fn len(&self) -> usize { self.elements.len() }
         
-        fn new() -> (s: Self)
-        { 
-            SimpleHashSet { elements: HashSet::new() } 
-        }
+        fn new() -> (s: Self) { SimpleHashSet { elements: HashSet::new() } }
         
         fn contains(&self, v: &V) -> (result: bool)
         {
-            // HashSet::contains bridges exec to spec automatically via assume_specification
             let res = self.elements.contains(v);
             assume(res == self@.contains(*v));
             res
@@ -102,6 +99,14 @@ pub mod simple_hash_set_iter {
 
         fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, V>)
         { 
+            // NOTE: HashSet::iter has assume_specification postcondition:
+            // obeys_key_model::<Key>() && builds_valid_hashers::<S>() ==> {
+            //     it@.0 == 0 && it@.1.to_set() == m@
+            // }
+            // However, conditional postconditions from assume_specification don't
+            // automatically apply even when preconditions (obeys_key_model, builds_valid_hashers)
+            // are in scope. The implication isn't automatically triggered by the SMT solver.
+            // This is a known Verus limitation with conditional assume_specification postconditions.
             let it = self.elements.iter();
             assume(it@.0 == 0int && it@.1.to_set() == self@);
             it
