@@ -26,6 +26,15 @@ impl<Key: View + Eq + Hash> View for HashSetWithViewPlus<Key> {
     open spec fn view(&self) -> Self::V { self.inner@}
 }
 
+impl<Key: View + Eq + Hash + Clone> Clone for HashSetWithViewPlus<Key> {
+    #[verifier::external_body]
+    fn clone(&self) -> (result: Self)
+        ensures result@ == self@
+    {
+        HashSetWithViewPlus { inner: HashSetWithView { m: self.inner.m.clone() } }
+    }
+}
+
 impl<Key: View + Eq + Hash> HashSetWithViewPlus<Key> {
     pub fn new() -> (result: Self)
         requires

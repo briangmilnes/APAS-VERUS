@@ -7,15 +7,18 @@ pub mod SetStEph {
 
 verus! {
 
-    use std::collections::HashSet;
     use std::fmt::{Formatter, Result, Debug, Display};
-    use std::hash::{Hash, Hasher};
+    use std::hash::Hash;
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::SetIterAdditionalSpecFns;
-
+    use vstd::std_specs::clone::*;
+    use crate::vstdplus::seq_set::*;
+    use vstd::hash_set::HashSetWithView;
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
     use crate::Types::Types::*;
 
     broadcast use vstd::seq_lib::group_seq_properties;
@@ -26,7 +29,7 @@ verus! {
 
     #[verifier::reject_recursive_types(T)]
     pub struct SetStEph<T: StT + Hash> { 
-        pub data: HashSet<T> 
+        pub elements: HashSetWithViewPlus<T>,
     }
 
     pub trait SetStEphTrait<T: StT + Hash + Clone + vstd::view::View> : vstd::view::View<V = Set<<T as vstd::view::View>::V>> + Sized {
@@ -57,12 +60,19 @@ verus! {
             ensures
                 self@ == old(self)@.insert(x@),
                 result == !old(self)@.contains(x@);
+        
+        fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, T>)
+            requires valid_key_type::<T>()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, k: T| k@).to_set() == self@,
+                it@.1.no_duplicates();
     }
 
     impl<T: StT + Hash> vstd::view::View for SetStEph<T> {
         type V = Set<<T as vstd::view::View>::V>;
         open spec fn view(&self) -> Self::V { 
-            self.data@ 
+            self.elements@ 
         }
     }
 
@@ -71,29 +81,29 @@ verus! {
         fn clone(&self) -> (result: Self)
             ensures result@ == self@
         { 
-            SetStEph { data: self.data.clone() }
+            SetStEph { elements: self.elements.clone() }
         }
     }
 
     impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
         fn empty() -> SetStEph<T> { 
-            SetStEph { data: HashSet::new() } 
+            SetStEph { elements: HashSetWithViewPlus::new() } 
         }
 
         fn singleton(x: T) -> SetStEph<T> {
-            let mut s = HashSet::new();
+            let mut s = HashSetWithViewPlus::new();
             let _ = s.insert(x);
-            SetStEph { data: s }
+            SetStEph { elements: s }
         }
 
         fn size(&self) -> (result: N)
             ensures result == self@.len()
         { 
-            self.data.len() 
+            self.elements.len() 
         }
 
         fn mem(&self, x: &T) -> (result: B) { 
-            self.data.contains(x) 
+            self.elements.contains(x) 
         }
 
         fn union(&self, other: &SetStEph<T>) -> (result: SetStEph<T>)
@@ -101,8 +111,8 @@ verus! {
         {
             let mut out = self.clone();
             
-            for x in other.data.iter() {
-                let _ = out.data.insert(x.clone());
+            for x in other.elements.iter() {
+                let _ = out.elements.insert(x.clone());
             }
             
             proof {
@@ -114,9 +124,14 @@ verus! {
             out
         }
 
-        #[verifier::external_body]
-        fn insert(&mut self, x: T) -> (result: bool) {
-            self.data.insert(x)
+        fn insert(&mut self, x: T) -> (result: bool) { self.elements.insert(x) }
+        
+        fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, T>) {
+            let it = self.elements.iter();
+            assume(it@.0 == 0int);
+            assume(it@.1.map(|i: int, k: T| k@).to_set() == self@);
+            assume(it@.1.no_duplicates());
+            it
         }
     }
 
