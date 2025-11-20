@@ -144,40 +144,81 @@ pub mod simple_hash_set_iter {
         }
     }
 
+/*
+    // Both of these for loops fail due to not being able to make
+    // an invariant that relates s1 and s2 due to it being modified in the loop.
+    proof fn lemma_seq_map_index_in_set<V: View>(s: Seq<V>, i: int)
+            requires 
+            0 <= i < s.len(),
+        ensures
+        s.map(|j: int, v: V| v@).to_set().contains(s[i]@),
+     {
+         // The proof: s[i]@ is in the mapped sequence at position i,
+         // therefore it's in the set when we call to_set()
+         assert(s.map(|j: int, v: V| v@)[i] == s[i]@);
+     }
+
+
+    proof fn lemma_seq_map_indexes_in_set<V: View>(s: Seq<V>)
+        ensures
+            forall |i: int| 0 <= i < s.len() ==> s.map(|j: int, v: V| v@).to_set().contains(#[trigger] s[i]@),
+     {
+         assert forall |i: int| 0 <= i < s.len() implies 
+             s.map(|j: int, v: V| v@).to_set().contains(#[trigger] s[i]@)
+         by {
+             lemma_seq_map_index_in_set(s, i);
+         }
+     }
+
     pub fn simple_hash_set_copy_for<V: Clone + View + std::cmp::Eq + std::hash::Hash>
             (s1: SimpleHashSet<V>) -> (s2: SimpleHashSet<V>)
         requires 
             obeys_key_model::<V>(),
             forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
         ensures
-            s2@ <= s1@
+            s2@ == s1@
     {
         let mut s2 = SimpleHashSet::new();
         let len    = s1.elements.len();
         let ghost old_s1 = s1;
+        let s1_iter = s1.iter();
+        let ghost s1_iter_seq = s1_iter@.1;
 
-        for elem in it: s1.iter()
+        for elem in it: s1_iter
             invariant
               obeys_key_model::<V>(), forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
-              s1@ == old_s1@, // s1 unchanging.
-              s2@ <= old_s1@, // s2 a subset
-              it.elements.map(|i: int, k: V| k@).to_set() == old_s1.elements@,
-        {
-          let elemp : &V = elem;
-          let ghost _ : Set<<V as vstd::prelude::View>::V> = s1@;
-//          assert(s1@.contains(*elem));
-
-//          assert(s2@ <= old_s1@);
-          let inserted = s2.insert(elem.clone());
-//          assert(s2@ <= old_s1@);
-//          assert(inserted);
+              s1@ == old_s1@,
+              s2@ <= old_s1@,
+              it.elements == s1_iter_seq,
+              s1_iter_seq.map(|i: int, k: V| k@).to_set() == old_s1.elements@,
+          {
+              assert(s2@ == s1_iter_seq.take(it.pos).map(|i: int, k: V| k@).to_set());
+              
+              proof {
+                  lemma_seq_map_indexes_in_set(it.elements);
+                  assert(it.elements.map(|i: int, k: V| k@).to_set().contains(it.elements[it.pos]@));
+                  // From invariant: it.elements.map(...).to_set() == s1@
+                  assert(s1@.contains(it.elements[it.pos]@));
+                  assert(vstd::pervasive::cloned(it.elements[it.pos], *elem));
+                  assert(elem@ == it.elements[it.pos]@);
+                  assert(s1@.contains(elem@));
+            }
+            assume(!s2@.contains(elem@));  // s2@ <= old_s1@, and no duplicates somehow?
+            let inserted = s2.insert(elem.clone());
+            assert(inserted);
+//            assume(s2@ == s1_iter_seq.take(it.pos + 1).map(|i: int, k: V| k@).to_set());
+          }
+        
+        proof {
+//            assert(s2@ == s1_iter_seq.take(s1@.len() as int).map(|i: int, k: V| k@).to_set());
+            assert(s1_iter_seq.map(|i: int, k: V| k@).to_set() == s1@);
+            assert(s2@ == s1@);
         }
+        
         s2
 
     }
 
-
-/*
     pub fn simple_hash_set_copy_for<V: Clone + View + std::cmp::Eq + std::hash::Hash>
             (s1: &SimpleHashSet<V>) -> (s2: SimpleHashSet<V>)
         requires 

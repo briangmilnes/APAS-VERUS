@@ -330,7 +330,7 @@ pub mod simple_set_iter {
                 it.pos <= it.elements.len(),
                 s2@ == it.elements.take(it.pos).to_set(), 
         {
-            s2.insert(elem);
+          s2.insert(elem);
         }
         s2
     }

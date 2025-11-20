@@ -21,8 +21,7 @@ verus! {
     broadcast use vstd::seq_lib::group_seq_properties;
 
     pub open spec fn valid_key_type<T: View>() -> bool {
-        &&& obeys_key_model::<T>()
-        &&& forall|k1: T, k2: T| k1@ == k2@ ==> k1 == k2
+        &&& obeys_key_model::<T>() &&& forall|k1: T, k2: T| k1@ == k2@ ==> k1 == k2
     }
 
     #[verifier::reject_recursive_types(T)]
