@@ -188,5 +188,63 @@ pub proof fn lemma_set_contains_insert_idempotent<V>(s: Set<V>, v: V)
     broadcast use vstd::set::group_set_axioms;
 }
 
+// View-aware lemmas for sequences with map operations
+
+/// After taking n elements, mapping through view, and inserting seq[n]@,
+/// the result equals take(n+1) mapped through view and converted to set.
+pub proof fn lemma_take_one_more_extends_the_seq_set_with_view<T: View>(seq: Seq<T>, n: int)
+    requires
+        0 <= n < seq.len(),
+    ensures
+        seq.take(n).map(|i: int, k: T| k@).to_set().insert(seq[n]@) == seq.take(n+1).map(|i: int, k: T| k@).to_set(),
+{
+    broadcast use vstd::seq_lib::group_seq_properties;
+    broadcast use vstd::set::group_set_axioms;
+    
+    let mapped_n = seq.take(n).map(|i: int, k: T| k@);
+    let mapped_n_plus_1 = seq.take(n+1).map(|i: int, k: T| k@);
+    
+    // Key: take(n+1) = take(n).push(seq[n])
+    assert forall |i: int| 0 <= i < n implies #[trigger] mapped_n_plus_1[i] == mapped_n[i] by {
+        assert(seq.take(n+1)[i] == seq.take(n)[i]);
+        assert(mapped_n_plus_1[i] == seq.take(n+1)[i]@);
+        assert(mapped_n[i] == seq.take(n)[i]@);
+    }
+    assert(mapped_n_plus_1[n] == seq[n]@);
+    
+    // Subset: mapped_n.to_set().insert(seq[n]@) <= mapped_n_plus_1.to_set()
+    assert forall |x| #[trigger] mapped_n.to_set().insert(seq[n]@).contains(x) 
+        implies mapped_n_plus_1.to_set().contains(x) by {
+        if x == seq[n]@ {
+            assert(mapped_n_plus_1[n] == x);
+        } else if mapped_n.to_set().contains(x) {
+            let idx = mapped_n.lemma_contains_to_index(x);
+            assert(mapped_n_plus_1[idx] == x);
+        }
+    }
+    
+    // Superset: mapped_n_plus_1.to_set() <= mapped_n.to_set().insert(seq[n]@)
+    assert forall |x| #[trigger] mapped_n_plus_1.to_set().contains(x)
+        implies mapped_n.to_set().insert(seq[n]@).contains(x) by {
+        let idx = mapped_n_plus_1.lemma_contains_to_index(x);
+        if idx < n {
+            assert(mapped_n[idx] == x);
+        } else {
+            assert(idx == n);
+            assert(x == seq[n]@);
+        }
+    }
+}
+
+/// Taking the full length of a sequence, mapping through view, and converting to set
+/// yields the same set as mapping the full sequence through view and converting to set.
+pub proof fn lemma_take_full_to_set_with_view<T: View>(seq: Seq<T>)
+    ensures
+        seq.take(seq.len() as int).map(|i: int, k: T| k@).to_set() == seq.map(|i: int, k: T| k@).to_set(),
+{
+    broadcast use vstd::seq_lib::group_seq_properties;
+    assert(seq.take(seq.len() as int) =~= seq);
+}
+
 } // verus!
 

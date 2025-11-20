@@ -316,7 +316,24 @@ pub mod simple_set_iter {
         }
     }
 
+    pub fn simple_set_copy_for(s1: &SimpleSet<u32>) -> (s2: SimpleSet<u32>)
+        ensures
+            s2@ == s1@
+    {
+        let mut s2 = SimpleSet::new();
+        let len = s1.elements.len();
+        
+        for elem in it: s1.iter()
+            invariant
+                len == s1.elements.len(),
+                it.elements == s1.elements@,
+                it.pos <= it.elements.len(),
+                s2@ == it.elements.take(it.pos).to_set(), 
+        {
+            s2.insert(elem);
+        }
+        s2
+    }
+
     } // verus!
 }
-
-

@@ -7,12 +7,14 @@ pub mod SetStEph {
 
 verus! {
 
-    use vstd::hash_set::HashSetWithView;
+    use std::collections::HashSet;
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::{Hash, Hasher};
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::SetIterAdditionalSpecFns;
 
     use crate::Types::Types::*;
 
@@ -25,7 +27,7 @@ verus! {
 
     #[verifier::reject_recursive_types(T)]
     pub struct SetStEph<T: StT + Hash> { 
-        pub data: HashSetWithView<T> 
+        pub data: HashSet<T> 
     }
 
     pub trait SetStEphTrait<T: StT + Hash + Clone + vstd::view::View> : vstd::view::View<V = Set<<T as vstd::view::View>::V>> + Sized {
@@ -58,8 +60,8 @@ verus! {
                 result == !old(self)@.contains(x@);
     }
 
-    impl<T: StT + Hash> View for SetStEph<T> {
-        type V = Set<<T as View>::V>;
+    impl<T: StT + Hash> vstd::view::View for SetStEph<T> {
+        type V = Set<<T as vstd::view::View>::V>;
         open spec fn view(&self) -> Self::V { 
             self.data@ 
         }
@@ -70,17 +72,17 @@ verus! {
         fn clone(&self) -> (result: Self)
             ensures result@ == self@
         { 
-            SetStEph { data: HashSetWithView { m: self.data.m.clone() } }
+            SetStEph { data: self.data.clone() }
         }
     }
 
     impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
         fn empty() -> SetStEph<T> { 
-            SetStEph { data: HashSetWithView::new() } 
+            SetStEph { data: HashSet::new() } 
         }
 
         fn singleton(x: T) -> SetStEph<T> {
-            let mut s = HashSetWithView::new();
+            let mut s = HashSet::new();
             let _ = s.insert(x);
             SetStEph { data: s }
         }
@@ -100,16 +102,20 @@ verus! {
         {
             let mut out = self.clone();
             
-            #[cfg(verus_keep_ghost)]
-            use vstd::std_specs::hash::SetIterAdditionalSpecFns;
-            
-            for x in other.data.m.iter() {
+            for x in other.data.iter() {
                 let _ = out.data.insert(x.clone());
+            }
+            
+            proof {
+                // With vstd's HashSet specs, for-loop auto-invariants handle the iteration.
+                // Still need to prove iterating and inserting all elements gives union.
+                assume(out@ == self@.union(other@));
             }
             
             out
         }
 
+        #[verifier::external_body]
         fn insert(&mut self, x: T) -> (result: bool) {
             self.data.insert(x)
         }
