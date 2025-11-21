@@ -120,8 +120,7 @@ verus! {
         { SetStEph { elements: self.elements.clone() } }
     }
 
-
-    impl<T: StT + Hash + Clone + View> SetStEphTrait<T> for SetStEph<T> {
+    impl<T: StT + Hash + Clone + View + Eq> SetStEphTrait<T> for SetStEph<T> {
         fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, T>) {
             let it = self.elements.iter();
             proof { lemma_seq_map_to_set_equality(it@.1, self@); }
@@ -382,7 +381,35 @@ verus! {
 
     }
 
-} // verus!
+    impl<T: StT + Hash> std::hash::Hash for SetStEph<T> {
+        #[verifier::external_body]
+        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+            self.elements.hash(state);
+        }
+    }
+
+    impl<T: StT + Hash> PartialEq for SetStEph<T> {
+        #[verifier::external_body]
+        fn eq(&self, other: &Self) -> bool {
+            self.elements == other.elements
+        }
+    }
+
+    impl<T: StT + Hash> Eq for SetStEph<T> {}
+
+    impl<T: StT + Hash> Display for SetStEph<T> {
+        #[verifier::external_body]
+        fn fmt(&self, f: &mut Formatter) -> Result {
+            write!(f, "Set({})", self.elements.len())
+        }
+    }
+
+    impl<T: StT + Hash> Debug for SetStEph<T> {
+        #[verifier::external_body]
+        fn fmt(&self, f: &mut Formatter) -> Result {
+            write!(f, "SetStEph({})", self.elements.len())
+        }
+    }
 
     #[macro_export]
     macro_rules! SetLit {
@@ -395,4 +422,5 @@ verus! {
             __s
         }};
     }
+  } // verus!
 }
