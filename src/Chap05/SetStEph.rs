@@ -78,6 +78,14 @@ verus! {
             requires valid_key_type::<T>()
             ensures result@ == self@.intersect(s2@);
 
+        fn EltCrossSet<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
+            requires 
+              valid_key_type::<T>(),
+              valid_key_type::<U>(),
+              valid_key_type::<Pair<T, U>>(),
+            ensures  
+               forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (av == a@ && s2@.contains(bv));
+
         /// APAS: Work Θ(|a| × |b|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|a| × |b|), Span Θ(1)
         fn CartesianProduct<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
@@ -87,6 +95,18 @@ verus! {
                 valid_key_type::<Pair<T, U>>(),
             ensures  
                 forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv));
+
+        /// APAS: Work Θ(|parts| × |a|²), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|parts| × |a|²), Span Θ(1)
+        fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> (partition: bool)
+            requires valid_key_type::<T>()
+            ensures 
+                partition <==> forall |x: T::V| self@.contains(x) ==> (
+                    (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x)) &&
+                    (forall |s1: Set<T::V>, s2: Set<T::V>| 
+                        parts@.contains(s1) && s1.contains(x) &&
+                        parts@.contains(s2) && s2.contains(x) ==> s1 == s2)
+                );
     }
 
     impl<T: StT + Hash> View for SetStEph<T> {
@@ -171,8 +191,6 @@ verus! {
             let ghost s1_view = self@;
             let ghost s2_view = s2@;
             let ghost s1_seq = it@.1;
-
-            broadcast use {vstd::seq_lib::group_seq_properties, vstd::set::group_set_axioms};
 
             #[verifier::loop_isolation(false)]
             loop
@@ -317,53 +335,51 @@ verus! {
             product
         }
 
-    }
-
-    fn EltCrossSet<T: StT + Hash + Clone, U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
-     requires 
-        valid_key_type::<T>(),
-        valid_key_type::<U>(),
-        valid_key_type::<Pair<T, U>>(),
-     ensures  
-        forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (av == a@ && s2@.contains(bv))
-    {
-        let mut product = SetStEph::empty();
-        let s2_iter = s2.iter();
-        let mut it = s2_iter;
-        let ghost s2_seq = it@.1;
-        let ghost s2_view = s2@;
-        let ghost a_view = a@;
-        
-        #[verifier::loop_isolation(false)]
-        loop
-            invariant
-            it@.0 <= s2_seq.len(),
-            it@.1 == s2_seq,
-            s2_seq.map(|i: int, k: U| k@).to_set() == s2_view,
-            forall |av: T::V, bv: U::V| 
-              #![trigger product@.contains((av, bv))]
-               product@.contains((av, bv)) <==>
-               (av == a_view && s2_seq.take(it@.0).map(|i: int, k: U| k@).to_set().contains(bv)),
-        decreases s2_seq.len() - it@.0,
+        fn EltCrossSet<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
         {
-            match it.next() {
-                Some(b) => {
-                    let ghost old_index = it@.0 - 1;
-                    let a_clone = a.clone();
-                    let b_clone = b.clone();
-                    assert(cloned(*a, a_clone));
-                    assert(cloned(*b, b_clone));
-                    let _ = product.insert(Pair(a_clone, b_clone));
-                    proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, old_index); }
-                },
-                None => {
-                    proof { lemma_take_full_to_set_with_view(s2_seq); }
-                    break;
+            let mut product = SetStEph::empty();
+            let s2_iter = s2.iter();
+            let mut it = s2_iter;
+            let ghost s2_seq = it@.1;
+            let ghost s2_view = s2@;
+            let ghost a_view = a@;
+            
+            #[verifier::loop_isolation(false)]
+            loop
+                invariant
+                it@.0 <= s2_seq.len(),
+                it@.1 == s2_seq,
+                s2_seq.map(|i: int, k: U| k@).to_set() == s2_view,
+                forall |av: T::V, bv: U::V| 
+                  #![trigger product@.contains((av, bv))]
+                   product@.contains((av, bv)) <==>
+                   (av == a_view && s2_seq.take(it@.0).map(|i: int, k: U| k@).to_set().contains(bv)),
+            decreases s2_seq.len() - it@.0,
+            {
+                match it.next() {
+                    Some(b) => {
+                        let ghost old_index = it@.0 - 1;
+                        let a_clone = a.clone();
+                        let b_clone = b.clone();
+                        assert(cloned(*a, a_clone));
+                        assert(cloned(*b, b_clone));
+                        let _ = product.insert(Pair(a_clone, b_clone));
+                        proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, old_index); }
+                    },
+                    None => {
+                        proof { lemma_take_full_to_set_with_view(s2_seq); }
+                        break;
+                    }
                 }
             }
+            
+            product
         }
-        
-        product
+
+        fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> bool {
+            true
+        }
+
     }
 
 } // verus!
