@@ -72,8 +72,7 @@ pub mod simple_set_iter {
     impl<V: Clone + Eq> SimpleSetTrait<V> for SimpleSet<V> {
         fn len(&self) -> usize { self.elements.len() }
         
-        fn new() -> (s: Self)
-        { SimpleSet { elements: Vec::new() } }
+        fn new() -> (s: Self) { SimpleSet { elements: Vec::new() } }
         
         fn mem(&self, v: &V) -> (result: bool)
         {

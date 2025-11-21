@@ -111,7 +111,7 @@ pub mod simple_hash_set_iter {
             let ghost old_index = it@.0;
             let ghost old_s2 = s2@;
             match it.next() {
-                Some(elem) => { 
+                Some(elem) => {
                     proof {
                         let ghost target_set = s1_seq.take(it@.0).map(|i: int, k: V| k@).to_set();
                         lemma_take_one_more_extends_the_seq_set_with_view(s1_seq, old_index);

@@ -111,6 +111,19 @@ When the user requests "N STEP", complete the task in N iterations following thi
 - Comment out `assume` statements once the real proof is in place.
 - Never ship code with uncommented `assume` statements.
 
+### Admitting Proof Obligations
+- **Use `admit()` instead of `assume(false)` to mark incomplete proofs.**
+- `admit()` is a proof function that accepts any proof obligation and marks it as incomplete.
+- `assume(false)` makes the branch unreachable (proves anything by contradiction), which can hide bugs.
+- **Pattern for incremental proof development**:
+  ```rust
+  proof {
+      // ... some proven facts ...
+      admit();  // FIXME: prove remaining obligation
+  }
+  ```
+- Like `assume`, `admit()` should only be temporary and removed once the proof is complete.
+
 ## Iterator Verification
 
 ### Ghost vs Executable State

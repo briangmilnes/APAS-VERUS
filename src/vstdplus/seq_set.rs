@@ -28,7 +28,7 @@ pub proof fn lemma_push_not_contains_to_set_subset<T>(seq: Seq<T>, v: T)
     broadcast use vstd::seq_lib::group_seq_properties;
     broadcast use vstd::set::group_set_axioms;
     
-    assert forall |x: T| seq.push(v).to_set().contains(x) 
+    assert forall |x: T| #[trigger] seq.push(v).to_set().contains(x) 
         implies seq.to_set().insert(v).contains(x) by {
         if seq.push(v).contains(x) {
             if x == v {
@@ -52,7 +52,7 @@ pub proof fn lemma_push_not_contains_to_set_superset<T>(seq: Seq<T>, v: T)
 {
     broadcast use vstd::seq_lib::group_seq_properties;
     
-    assert forall |x: T| seq.to_set().insert(v).contains(x) 
+    assert forall |x: T| #[trigger] seq.to_set().insert(v).contains(x) 
         implies seq.push(v).to_set().contains(x) by {
         if x == v {
             assert(seq.push(v)[seq.len() as int] == v);
@@ -244,6 +244,111 @@ pub proof fn lemma_take_full_to_set_with_view<T: View>(seq: Seq<T>)
 {
     broadcast use vstd::seq_lib::group_seq_properties;
     assert(seq.take(seq.len() as int) =~= seq);
+}
+
+/// Proves that a sequence mapped through view equals a target set when bidirectional containment holds.
+/// This lemma bridges the gap between iterator specs and set equality.
+pub proof fn lemma_seq_map_to_set_equality<T: View>(seq: Seq<T>, target: Set<T::V>)
+    requires
+        seq.no_duplicates(),
+        forall|k: T| #![trigger seq.contains(k), target.contains(k@)] seq.contains(k) ==> target.contains(k@),
+        forall|kv: T::V| #[trigger] target.contains(kv) ==> exists|k: T| #![trigger seq.contains(k)] seq.contains(k) && k@ == kv,
+    ensures
+        seq.map(|i: int, k: T| k@).to_set() == target,
+{
+    broadcast use vstd::seq_lib::group_seq_properties;
+    broadcast use vstd::set::group_set_axioms;
+    
+    let mapped_set = seq.map(|i: int, k: T| k@).to_set();
+    
+    // Prove subset: mapped_set <= target
+    assert forall |kv: T::V| #[trigger] mapped_set.contains(kv) implies target.contains(kv) by {
+        if mapped_set.contains(kv) {
+            let mapped_seq = seq.map(|i: int, k: T| k@);
+            let idx = mapped_seq.lemma_contains_to_index(kv);
+            assert(seq.contains(seq[idx]));
+        }
+    }
+    
+    // Prove superset: target <= mapped_set
+    assert forall |kv: T::V| #[trigger] target.contains(kv) implies mapped_set.contains(kv) by {
+        if target.contains(kv) {
+            // From precondition: exists k such that seq.contains(k) && k@ == kv
+            let k = choose|k: T| #![trigger seq.contains(k)] seq.contains(k) && k@ == kv;
+            let idx = seq.lemma_contains_to_index(k);
+            assert(seq[idx] == k);
+            let mapped_seq = seq.map(|i: int, k: T| k@);
+            assert(mapped_seq[idx] == seq[idx]@);
+        }
+    }
+}
+
+/// After taking n elements and mapping through view, intersecting with a set s2,
+/// extending to n+1 either adds seq[n]@ (if in s2) or keeps the intersection unchanged.
+pub proof fn lemma_take_one_more_intersect<T: View>(seq: Seq<T>, s2: Set<T::V>, n: int)
+    requires
+        0 <= n < seq.len(),
+    ensures
+        seq.take(n+1).map(|i: int, k: T| k@).to_set().intersect(s2) == 
+            if s2.contains(seq[n]@) {
+                seq.take(n).map(|i: int, k: T| k@).to_set().intersect(s2).insert(seq[n]@)
+            } else {
+                seq.take(n).map(|i: int, k: T| k@).to_set().intersect(s2)
+            },
+{
+    broadcast use vstd::seq_lib::group_seq_properties;
+    broadcast use vstd::set::group_set_axioms;
+    
+    let mapped_n = seq.take(n).map(|i: int, k: T| k@);
+    let mapped_n_plus_1 = seq.take(n+1).map(|i: int, k: T| k@);
+    let set_n = mapped_n.to_set();
+    let set_n_plus_1 = mapped_n_plus_1.to_set();
+    
+    // From lemma_take_one_more_extends_the_seq_set_with_view:
+    // set_n_plus_1 == set_n.insert(seq[n]@)
+    lemma_take_one_more_extends_the_seq_set_with_view(seq, n);
+    assert(set_n_plus_1 == set_n.insert(seq[n]@));
+    
+    if s2.contains(seq[n]@) {
+        // Case 1: seq[n]@ is in s2
+        // (A ∪ {x}) ∩ B = (A ∩ B) ∪ {x} when x ∈ B
+        assert forall |v: T::V| #[trigger] set_n_plus_1.intersect(s2).contains(v) 
+            implies set_n.intersect(s2).insert(seq[n]@).contains(v) by {
+            assert(set_n_plus_1.contains(v) && s2.contains(v));
+            if v == seq[n]@ {
+                assert(set_n.intersect(s2).insert(seq[n]@).contains(v));
+            } else {
+                assert(set_n.contains(v));
+                assert(set_n.intersect(s2).contains(v));
+            }
+        }
+        
+        assert forall |v: T::V| #[trigger] set_n.intersect(s2).insert(seq[n]@).contains(v)
+            implies set_n_plus_1.intersect(s2).contains(v) by {
+            if v == seq[n]@ {
+                assert(set_n_plus_1.contains(v));
+                assert(s2.contains(v));
+            } else if set_n.intersect(s2).contains(v) {
+                assert(set_n.contains(v));
+                assert(set_n_plus_1.contains(v));
+            }
+        }
+    } else {
+        // Case 2: seq[n]@ is not in s2
+        // (A ∪ {x}) ∩ B = A ∩ B when x ∉ B
+        assert forall |v: T::V| #[trigger] set_n_plus_1.intersect(s2).contains(v)
+            implies set_n.intersect(s2).contains(v) by {
+            assert(set_n_plus_1.contains(v) && s2.contains(v));
+            assert(v != seq[n]@); // because seq[n]@ is not in s2
+            assert(set_n.contains(v));
+        }
+        
+        assert forall |v: T::V| #[trigger] set_n.intersect(s2).contains(v)
+            implies set_n_plus_1.intersect(s2).contains(v) by {
+            assert(set_n.contains(v) && s2.contains(v));
+            assert(set_n_plus_1.contains(v));
+        }
+    }
 }
 
 } // verus!
