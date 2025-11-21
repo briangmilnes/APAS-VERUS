@@ -103,7 +103,8 @@ verus! {
             ensures 
                 partition <==> forall |x: T::V| self@.contains(x) ==> (
                     (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x)) &&
-                    (forall |s1: Set<T::V>, s2: Set<T::V>| 
+                    (forall |s1: Set<T::V>, s2: Set<T::V>|
+                        #![trigger parts@.contains(s1), parts@.contains(s2)]
                         parts@.contains(s1) && s1.contains(x) &&
                         parts@.contains(s2) && s2.contains(x) ==> s1 == s2)
                 );
@@ -227,110 +228,40 @@ verus! {
         
         fn CartesianProduct<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
         {
-            let mut  product = SetStEph::empty();
-            let      s1_iter = self.iter();
-            let mut    s1_it = s1_iter;
-            let ghost s1_seq = s1_it@.1;
+            let mut product = SetStEph::empty();
+            let s1_iter = self.iter();
+            let mut it = s1_iter;
+            let ghost s1_seq = it@.1;
             let ghost s1_view = self@;
             let ghost s2_view = s2@;
             
-            broadcast use {vstd::seq_lib::group_seq_properties, vstd::set::group_set_axioms};
-
             #[verifier::loop_isolation(false)]
             loop
                 invariant
-                    s1_it@.0 <= s1_seq.len(),
-                    s1_it@.1 == s1_seq,
+                    it@.0 <= s1_seq.len(),
+                    it@.1 == s1_seq,
                     s1_seq.map(|i: int, k: T| k@).to_set() == s1_view,
                     forall |av: T::V, bv: U::V| 
                         product@.contains((av, bv)) <==>
-                            (s1_seq.take(s1_it@.0).map(|i: int, k: T| k@).to_set().contains(av) && s2_view.contains(bv)),
-                decreases s1_seq.len() - s1_it@.0,
+                            (s1_seq.take(it@.0).map(|i: int, k: T| k@).to_set().contains(av) && s2_view.contains(bv)),
+                decreases s1_seq.len() - it@.0,
             {
-                let ghost old_s1_index = s1_it@.0;
+                let ghost old_index = it@.0;
                 let ghost old_product = product@;
                 
-                match s1_it.next() {
+                match it.next() {
                     Some(a) => {
-                        let        s2_iter = s2.iter();
-                        let mut   inner_it = s2_iter;
-                        let ghost   s2_seq = inner_it@.1;
-                        let ghost   a_view = a@;
-                        
-                        #[verifier::loop_isolation(false)]
-                        loop
-                            invariant
-                                inner_it@.0 <= s2_seq.len(),
-                                inner_it@.1 == s2_seq,
-                                s2_seq.map(|i: int, k: U| k@).to_set() == s2_view,
-                                s1_it@.0 == old_s1_index + 1,
-                                s1_it@.1 == s1_seq,
-                                a_view == s1_seq[old_s1_index]@,
-                                forall |av: T::V, bv: U::V| 
-                                    #![trigger product@.contains((av, bv))]
-                                    product@.contains((av, bv)) <==>
-                                        (old_product.contains((av, bv)) || 
-                                         (av == a_view && s2_seq.take(inner_it@.0).map(|i: int, k: U| k@).to_set().contains(bv))),
-                            decreases s2_seq.len() - inner_it@.0,
-                        {
-                            match inner_it.next() {
-                                Some(b) => {
-                                    let ghost old_inner_index = inner_it@.0 - 1;
-                                    let ghost old_inner_product = product@;
-                                    let a_clone = a.clone();
-                                    let b_clone = b.clone();
-                                    assert(cloned(*a, a_clone));
-                                    assert(cloned(*b, b_clone));
-                                    let _ = product.insert(Pair(a_clone, b_clone));
-                                    
-                                    proof {
-                                        assert(product@ == old_inner_product.insert((a@, b@)));
-                                        assert(s2_seq[old_inner_index] == *b);
-                                        assert(b@ == s2_seq[old_inner_index]@);
-                                        lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, old_inner_index);
-                                        assert(s2_seq.take(inner_it@.0).map(|i: int, k: U| k@).to_set() ==
-                                               s2_seq.take(old_inner_index).map(|i: int, k: U| k@).to_set().insert(b@));
-                                    }
-                                },
-                                None => {
-                                    proof {
-                                        assert(inner_it@.0 == s2_seq.len());
-                                        lemma_take_full_to_set_with_view(s2_seq);
-                                        assert(s2_seq.take(inner_it@.0).map(|i: int, k: U| k@).to_set() == s2_view);
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                        
-                        proof {
-                            assert(s1_seq[old_s1_index] == *a);
-                            assert(a@ == s1_seq[old_s1_index]@);
-                            lemma_take_one_more_extends_the_seq_set_with_view(s1_seq, old_s1_index);
-                            let s1_take_new = s1_seq.take(s1_it@.0).map(|i: int, k: T| k@).to_set();
-                            let s1_take_old = s1_seq.take(old_s1_index).map(|i: int, k: T| k@).to_set();
-                            assert(s1_take_new == s1_take_old.insert(a@));
-                            assert forall |av: T::V, bv: U::V| #[trigger] product@.contains((av, bv)) implies
-                                s1_take_new.contains(av) && s2_view.contains(bv) by {
-                                // From inner invariant: product@.contains((av, bv)) iff (old_product.contains((av, bv)) || (av == a@ && s2_view.contains(bv)))                                    
-                                    admit();
-                            }
-                            
-                            assert forall |av: T::V, bv: U::V| s1_take_new.contains(av) && s2_view.contains(bv) implies
-                                #[trigger] product@.contains((av, bv)) by {
-                                admit();
-                            }
-                        }
+                        let ghost a_view = a@;
+                        let a_cross = Self::EltCrossSet(a, s2);
+                        product = product.union(&a_cross);
+                        proof { lemma_take_one_more_extends_the_seq_set_with_view(s1_seq, old_index); }
                     },
                     None => {
-                        assert(s1_it@.0 == s1_seq.len());
                         proof { lemma_take_full_to_set_with_view(s1_seq); }
                         break;
-                     }
+                    }
                 }
             }
-            
-            assume(forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv)));
             product
         }
 
@@ -376,6 +307,101 @@ verus! {
         }
 
         fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> bool {
+            let s1_iter = self.iter();
+            let mut s1_it = s1_iter;
+            let ghost s1_seq = s1_it@.1;
+            let ghost s1_view = self@;
+            let ghost parts_view = parts@;
+            
+            assume(valid_key_type::<SetStEph<T>>());
+
+            #[verifier::loop_isolation(false)]
+            loop
+                invariant
+                    valid_key_type::<T>(),
+                    s1_it@.0 <= s1_seq.len(),
+                    s1_it@.1 == s1_seq,
+                    s1_seq.map(|i: int, k: T| k@).to_set() == s1_view,
+                    forall |x_processed: T::V| #![trigger s1_view.contains(x_processed)]
+                        s1_seq.take(s1_it@.0).map(|i: int, k: T| k@).to_set().contains(x_processed) ==> (
+                            (exists |s: Set<T::V>| #![trigger parts_view.contains(s)] parts_view.contains(s) && s.contains(x_processed)) &&
+                            (forall |s1: Set<T::V>, s2: Set<T::V>| 
+                                parts_view.contains(s1) && s1.contains(x_processed) &&
+                                parts_view.contains(s2) && s2.contains(x_processed) ==> s1 == s2)
+                        ),
+                decreases s1_seq.len() - s1_it@.0,
+            {
+                let ghost old_s1_index = s1_it@.0;
+                match s1_it.next() {
+                    Some(x) => {
+                        let ghost x_view = x@;
+                        let parts_iter = parts.iter();
+                        let mut parts_it = parts_iter;
+                        let ghost parts_seq = parts_it@.1;
+                        let mut count: N = 0;
+
+                        #[verifier::loop_isolation(false)]
+                        loop
+                            invariant
+                                valid_key_type::<T>(),
+                                parts_it@.0 <= parts_seq.len(),
+                                parts_it@.1 == parts_seq,
+                                parts_seq.map(|i: int, k: SetStEph<T>| k@).to_set() == parts_view,
+                                count == parts_seq.take(parts_it@.0).map(|i: int, k: SetStEph<T>| k@).filter(|s: Set<T::V>| s.contains(x_view)).len(),
+                                count <= 1,
+                            decreases parts_seq.len() - parts_it@.0,
+                        {
+                            match parts_it.next() {
+                                Some(subset) => {
+                                    let ghost old_parts_index = parts_it@.0 - 1;
+                                    if subset.mem(x) {
+                                        count = count + 1;
+                                        assume(count == parts_seq.take(parts_it@.0).map(|i: int, k: SetStEph<T>| k@).filter(|s: Set<T::V>| s.contains(x_view)).len());
+                                        if count > 1 {
+                                            assume(!(forall |x: T::V| self@.contains(x) ==> (
+                                                (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x)) &&
+                                                (forall |s1: Set<T::V>, s2: Set<T::V>|
+                                                    #![trigger parts@.contains(s1), parts@.contains(s2)]
+                                                    parts@.contains(s1) && s1.contains(x) &&
+                                                    parts@.contains(s2) && s2.contains(x) ==> s1 == s2)
+                                            )));
+                                            return false;
+                                        }
+                                    } else {
+                                        assume(count == parts_seq.take(parts_it@.0).map(|i: int, k: SetStEph<T>| k@).filter(|s: Set<T::V>| s.contains(x_view)).len());
+                                    }
+                                },
+                                None => {
+                                    break;
+                                }
+                            }
+                        }
+                        if count == 0 {
+                            assume(!(forall |x: T::V| self@.contains(x) ==> (
+                                (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x)) &&
+                                (forall |s1: Set<T::V>, s2: Set<T::V>|
+                                    #![trigger parts@.contains(s1), parts@.contains(s2)]
+                                    parts@.contains(s1) && s1.contains(x) &&
+                                    parts@.contains(s2) && s2.contains(x) ==> s1 == s2)
+                            )));
+                            return false;
+                        }
+                    },
+                    None => {
+                        break;
+                    }
+                }
+                proof {
+                    admit();
+                }
+            }
+            assume(forall |x: T::V| self@.contains(x) ==> (
+                (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x)) &&
+                (forall |s1: Set<T::V>, s2: Set<T::V>|
+                    #![trigger parts@.contains(s1), parts@.contains(s2)]
+                    parts@.contains(s1) && s1.contains(x) &&
+                    parts@.contains(s2) && s2.contains(x) ==> s1 == s2)
+            ));
             true
         }
 
@@ -397,20 +423,6 @@ verus! {
 
     impl<T: StT + Hash> Eq for SetStEph<T> {}
 
-    impl<T: StT + Hash> Display for SetStEph<T> {
-        #[verifier::external_body]
-        fn fmt(&self, f: &mut Formatter) -> Result {
-            write!(f, "Set({})", self.elements.len())
-        }
-    }
-
-    impl<T: StT + Hash> Debug for SetStEph<T> {
-        #[verifier::external_body]
-        fn fmt(&self, f: &mut Formatter) -> Result {
-            write!(f, "SetStEph({})", self.elements.len())
-        }
-    }
-
     #[macro_export]
     macro_rules! SetLit {
         () => {{
@@ -423,4 +435,19 @@ verus! {
         }};
     }
   } // verus!
+
+#[verifier::external]
+impl<T: crate::Types::Types::StT + std::hash::Hash> std::fmt::Display for SetStEph<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Set({})", self.elements.len())
+    }
+}
+
+#[verifier::external]
+impl<T: crate::Types::Types::StT + std::hash::Hash> std::fmt::Debug for SetStEph<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "SetStEph({})", self.elements.len())
+    }
+}
+
 }

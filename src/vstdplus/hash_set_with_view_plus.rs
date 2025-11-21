@@ -94,6 +94,24 @@ impl<Key: View + Eq + Hash> HashSetWithViewPlusTrait<Key> for HashSetWithViewPlu
     }
 }
 
+impl<Key: View + Eq + Hash> std::hash::Hash for HashSetWithViewPlus<Key> {
+    #[verifier::external_body]
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        for key in self.inner.m.iter() {
+            key.hash(state);
+        }
+    }
+}
+
+impl<Key: View + Eq + Hash> PartialEq for HashSetWithViewPlus<Key> {
+    #[verifier::external_body]
+    fn eq(&self, other: &Self) -> bool {
+        self.inner.m == other.inner.m
+    }
+}
+
+impl<Key: View + Eq + Hash> Eq for HashSetWithViewPlus<Key> {}
+
 } // verus!
 
 }
