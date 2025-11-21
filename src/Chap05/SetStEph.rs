@@ -408,17 +408,7 @@ verus! {
     }
 
     impl<T: StT + Hash> std::hash::Hash for SetStEph<T> {
-        #[verifier::external_body]
-        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-            self.elements.hash(state);
-        }
-    }
-
-    impl<T: StT + Hash> PartialEq for SetStEph<T> {
-        #[verifier::external_body]
-        fn eq(&self, other: &Self) -> bool {
-            self.elements == other.elements
-        }
+        fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.elements.hash(state); }
     }
 
     impl<T: StT + Hash> Eq for SetStEph<T> {}
@@ -435,6 +425,10 @@ verus! {
         }};
     }
   } // verus!
+
+    impl<T: StT + Hash> PartialEq for SetStEph<T> {
+        fn eq(&self, other: &Self) -> bool { self.elements == other.elements }
+    }
 
 #[verifier::external]
 impl<T: crate::Types::Types::StT + std::hash::Hash> std::fmt::Display for SetStEph<T> {
