@@ -100,6 +100,7 @@ verus! {
         { SetStEph { elements: self.elements.clone() } }
     }
 
+
     impl<T: StT + Hash + Clone + View> SetStEphTrait<T> for SetStEph<T> {
         fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, T>) {
             let it = self.elements.iter();
@@ -206,13 +207,13 @@ verus! {
             
             intersection
         }
-
+        
         fn CartesianProduct<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
         {
-            let mut product = SetStEph::empty();
-            let s1_iter = self.iter();
-            let mut outer_it = s1_iter;
-            let ghost s1_seq = outer_it@.1;
+            let mut  product = SetStEph::empty();
+            let      s1_iter = self.iter();
+            let mut    s1_it = s1_iter;
+            let ghost s1_seq = s1_it@.1;
             let ghost s1_view = self@;
             let ghost s2_view = s2@;
             
@@ -221,24 +222,23 @@ verus! {
             #[verifier::loop_isolation(false)]
             loop
                 invariant
-                    outer_it@.0 <= s1_seq.len(),
-                    outer_it@.1 == s1_seq,
+                    s1_it@.0 <= s1_seq.len(),
+                    s1_it@.1 == s1_seq,
                     s1_seq.map(|i: int, k: T| k@).to_set() == s1_view,
-                    // product contains all pairs (a@, b@) where a is from the first outer_it@.0 elements and b is from s2
                     forall |av: T::V, bv: U::V| 
                         product@.contains((av, bv)) <==>
-                            (s1_seq.take(outer_it@.0).map(|i: int, k: T| k@).to_set().contains(av) && s2_view.contains(bv)),
-                decreases s1_seq.len() - outer_it@.0,
+                            (s1_seq.take(s1_it@.0).map(|i: int, k: T| k@).to_set().contains(av) && s2_view.contains(bv)),
+                decreases s1_seq.len() - s1_it@.0,
             {
-                let ghost old_outer_index = outer_it@.0;
+                let ghost old_s1_index = s1_it@.0;
                 let ghost old_product = product@;
                 
-                match outer_it.next() {
+                match s1_it.next() {
                     Some(a) => {
-                        let s2_iter = s2.iter();
-                        let mut inner_it = s2_iter;
-                        let ghost s2_seq = inner_it@.1;
-                        let ghost a_view = a@;
+                        let        s2_iter = s2.iter();
+                        let mut   inner_it = s2_iter;
+                        let ghost   s2_seq = inner_it@.1;
+                        let ghost   a_view = a@;
                         
                         #[verifier::loop_isolation(false)]
                         loop
@@ -246,13 +246,11 @@ verus! {
                                 inner_it@.0 <= s2_seq.len(),
                                 inner_it@.1 == s2_seq,
                                 s2_seq.map(|i: int, k: U| k@).to_set() == s2_view,
-                                outer_it@.0 == old_outer_index + 1,
-                                outer_it@.1 == s1_seq,
-                                a_view == s1_seq[old_outer_index]@,
-                                // product contains:
-                                // 1. All pairs from before the outer loop iteration (old_product)
-                                // 2. Pairs (a@, b@) for b in the first inner_it@.0 elements of s2
+                                s1_it@.0 == old_s1_index + 1,
+                                s1_it@.1 == s1_seq,
+                                a_view == s1_seq[old_s1_index]@,
                                 forall |av: T::V, bv: U::V| 
+                                    #![trigger product@.contains((av, bv))]
                                     product@.contains((av, bv)) <==>
                                         (old_product.contains((av, bv)) || 
                                          (av == a_view && s2_seq.take(inner_it@.0).map(|i: int, k: U| k@).to_set().contains(bv))),
@@ -269,22 +267,9 @@ verus! {
                                     let _ = product.insert(Pair(a_clone, b_clone));
                                     
                                     proof {
-                                        // Pair(a_clone, b_clone)@ == (a_clone@, b_clone@) == (a@, b@)
-/*
-                                        assert(Pair(a_clone, b_clone)@ == (a_clone@, b_clone@));
-                                        assert(a_clone@ == a@);
-                                        assert(b_clone@ == b@);
-                                        assert(Pair(a_clone, b_clone)@ == (a@, b@));
-*/
-                                        
-                                        // After insert, product@ should equal old_inner_product.insert((a@, b@))
                                         assert(product@ == old_inner_product.insert((a@, b@)));
-                                        
-                                        // b was at old_inner_index
                                         assert(s2_seq[old_inner_index] == *b);
                                         assert(b@ == s2_seq[old_inner_index]@);
-                                        
-                                        // Use lemma for s2_seq
                                         lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, old_inner_index);
                                         assert(s2_seq.take(inner_it@.0).map(|i: int, k: U| k@).to_set() ==
                                                s2_seq.take(old_inner_index).map(|i: int, k: U| k@).to_set().insert(b@));
@@ -292,11 +277,8 @@ verus! {
                                 },
                                 None => {
                                     proof {
-                                        // At inner loop exit, inner_it@.0 == s2_seq.len()
                                         assert(inner_it@.0 == s2_seq.len());
-                                        // So s2_seq.take(s2_seq.len()) == s2_seq
                                         lemma_take_full_to_set_with_view(s2_seq);
-                                        // Thus product contains all pairs (a@, b@) for all b in s2
                                         assert(s2_seq.take(inner_it@.0).map(|i: int, k: U| k@).to_set() == s2_view);
                                     }
                                     break;
@@ -305,17 +287,12 @@ verus! {
                         }
                         
                         proof {
-                            // s1_seq[old_outer_index] == *a
-                            assert(s1_seq[old_outer_index] == *a);
-                            assert(a@ == s1_seq[old_outer_index]@);
-                            
-                            // s1_seq.take(outer_it@.0) includes a@
-                            lemma_take_one_more_extends_the_seq_set_with_view(s1_seq, old_outer_index);
-                            let s1_take_new = s1_seq.take(outer_it@.0).map(|i: int, k: T| k@).to_set();
-                            let s1_take_old = s1_seq.take(old_outer_index).map(|i: int, k: T| k@).to_set();
+                            assert(s1_seq[old_s1_index] == *a);
+                            assert(a@ == s1_seq[old_s1_index]@);
+                            lemma_take_one_more_extends_the_seq_set_with_view(s1_seq, old_s1_index);
+                            let s1_take_new = s1_seq.take(s1_it@.0).map(|i: int, k: T| k@).to_set();
+                            let s1_take_old = s1_seq.take(old_s1_index).map(|i: int, k: T| k@).to_set();
                             assert(s1_take_new == s1_take_old.insert(a@));
-                            
-                            // Prove the outer invariant
                             assert forall |av: T::V, bv: U::V| #[trigger] product@.contains((av, bv)) implies
                                 s1_take_new.contains(av) && s2_view.contains(bv) by {
                                 // From inner invariant: product@.contains((av, bv)) iff (old_product.contains((av, bv)) || (av == a@ && s2_view.contains(bv)))                                    
@@ -329,10 +306,8 @@ verus! {
                         }
                     },
                     None => {
-                        assert(outer_it@.0 == s1_seq.len());
-                        proof {
-                            lemma_take_full_to_set_with_view(s1_seq);
-                        }
+                        assert(s1_it@.0 == s1_seq.len());
+                        proof { lemma_take_full_to_set_with_view(s1_seq); }
                         break;
                      }
                 }
@@ -341,9 +316,57 @@ verus! {
             assume(forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv)));
             product
         }
+
     }
 
- } // verus!
+    fn EltCrossSet<T: StT + Hash + Clone, U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
+     requires 
+        valid_key_type::<T>(),
+        valid_key_type::<U>(),
+        valid_key_type::<Pair<T, U>>(),
+     ensures  
+        forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (av == a@ && s2@.contains(bv))
+    {
+        let mut product = SetStEph::empty();
+        let s2_iter = s2.iter();
+        let mut it = s2_iter;
+        let ghost s2_seq = it@.1;
+        let ghost s2_view = s2@;
+        let ghost a_view = a@;
+        
+        #[verifier::loop_isolation(false)]
+        loop
+            invariant
+            it@.0 <= s2_seq.len(),
+            it@.1 == s2_seq,
+            s2_seq.map(|i: int, k: U| k@).to_set() == s2_view,
+            forall |av: T::V, bv: U::V| 
+              #![trigger product@.contains((av, bv))]
+               product@.contains((av, bv)) <==>
+               (av == a_view && s2_seq.take(it@.0).map(|i: int, k: U| k@).to_set().contains(bv)),
+        decreases s2_seq.len() - it@.0,
+        {
+            match it.next() {
+                Some(b) => {
+                    let ghost old_index = it@.0 - 1;
+                    let a_clone = a.clone();
+                    let b_clone = b.clone();
+                    assert(cloned(*a, a_clone));
+                    assert(cloned(*b, b_clone));
+                    let _ = product.insert(Pair(a_clone, b_clone));
+                    proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, old_index); }
+                },
+                None => {
+                    proof { lemma_take_full_to_set_with_view(s2_seq); }
+                    break;
+                }
+            }
+        }
+        
+        product
+    }
+
+} // verus!
 
     #[macro_export]
     macro_rules! SetLit {
