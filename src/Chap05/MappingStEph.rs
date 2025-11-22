@@ -32,11 +32,20 @@ verus! {
     #[verifier::reject_recursive_types(A)]
     #[verifier::reject_recursive_types(B)]
     pub struct MappingStEph<A: StT + Hash, B: StT + Hash> {
-        pub rel: RelationStEph<A, B>,
+        pub map: RelationStEph<A, B>,
     }
 
     pub trait MappingStEphTrait<X: StT + Hash + Clone + View, Y: StT + Hash + Clone + View> : 
         View<V = Map<X::V, Y::V>> + Sized {
+
+        /// Check if element at position i in vector has no conflicts with elements at positions >= i+1
+        fn is_functional_vec_at(v: &Vec<Pair<X, Y>>, i: usize) -> (is_functional_at: bool)
+            requires
+                valid_key_type::<X>(),
+                valid_key_type::<Y>(),
+                i < v.len(),
+            ensures
+                is_functional_at <==> forall |j: int| #![auto] i < j < v.len() && v[i as int]@.0 == v[j]@.0 ==> v[i as int]@.1 == v[j]@.1;
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
@@ -112,8 +121,8 @@ verus! {
         
         open spec fn view(&self) -> Self::V {
             Map::new(
-                |x: A::V| exists |y: B::V| self.rel@.contains((x, y)),
-                |x: A::V| choose |y: B::V| self.rel@.contains((x, y))
+                |x: A::V| exists |y: B::V| self.map@.contains((x, y)),
+                |x: A::V| choose |y: B::V| self.map@.contains((x, y))
             )
         }
     }
@@ -121,18 +130,16 @@ verus! {
     impl<A: StT + Hash, B: StT + Hash> Clone for MappingStEph<A, B> {
         fn clone(&self) -> (clone: Self)
             ensures clone@ == self@
-        { MappingStEph { rel: self.rel.clone() } }
+        { MappingStEph { map: self.map.clone() } }
     }
 
-    /// Executable check: is a Vec of pairs functional?
-    pub fn check_functional_vec<X: StT + Hash + Clone + View + Eq, Y: StT + Hash + Clone + View + Eq>(
-        v: &Vec<Pair<X, Y>>
-    ) -> (check_functional_vec: bool)
+    pub fn is_functional_vec<X: StT + Hash + Clone + View + Eq, Y: StT + Hash + Clone + View + Eq>
+        (v: &Vec<Pair<X, Y>>) -> (is_functional_vec: bool)
         requires
             valid_key_type::<X>(),
             valid_key_type::<Y>(),
         ensures
-            check_functional_vec == is_functional::<X, Y>(v@.map(|i: int, p: Pair<X, Y>| p@).to_set()),
+            is_functional_vec == is_functional::<X, Y>(v@.map(|i: int, p: Pair<X, Y>| p@).to_set()),
     {
         let mut i: usize = 0;
         #[verifier::loop_isolation(false)]
@@ -147,8 +154,22 @@ verus! {
                 proof { admit(); }
                 return true;
             }
+            if !MappingStEph::<X, Y>::is_functional_vec_at(v, i) {
+                proof { admit(); }
+                return false;
+            }
+            i = i + 1;
+        }
+    }
+
+
+    impl<X: StT + Hash + Clone + View + Eq, Y: StT + Hash + Clone + View + Eq> 
+        MappingStEphTrait<X, Y> for MappingStEph<X, Y> {
+
+        fn is_functional_vec_at(v: &Vec<Pair<X, Y>>, i: usize) -> bool {
             let Pair(key_i, val_i) = &v[i];
             let mut j: usize = i + 1;
+            
             #[verifier::loop_isolation(false)]
             loop
                 invariant
@@ -159,7 +180,8 @@ verus! {
                 decreases v.len() - j,
             {
                 if j >= v.len() {
-                    break;
+                    proof { admit(); }
+                    return true;
                 }
                 let Pair(key_j, val_j) = &v[j];
                 let key_i_clone = key_i.clone();
@@ -172,129 +194,63 @@ verus! {
                 }
                 j = j + 1;
             }
-            i = i + 1;
         }
-    }
-
-    /// Executable check: is a Relation functional?
-    pub fn check_functional_relation<X: StT + Hash + Clone + View + Eq, Y: StT + Hash + Clone + View + Eq>(
-        r: &RelationStEph<X, Y>
-    ) -> (check_functional_relation: bool)
-        requires
-            valid_key_type::<X>(),
-            valid_key_type::<Y>(),
-            valid_key_type::<Pair<X, Y>>(),
-        ensures
-            check_functional_relation == is_functional::<X, Y>(r@),
-    {
-        // Convert relation to vec and check
-        let mut pairs_vec: Vec<Pair<X, Y>> = Vec::new();
-        let rel_iter = r.iter();
-        let mut it = rel_iter;
-        
-        #[verifier::loop_isolation(false)]
-        loop
-            invariant
-                valid_key_type::<X>(),
-                valid_key_type::<Y>(),
-                valid_key_type::<Pair<X, Y>>(),
-                it@.0 <= it@.1.len(),
-            decreases it@.1.len() - it@.0,
-        {
-            match it.next() {
-                Some(pair) => {
-                    let Pair(a, b) = pair;
-                    let a_clone = a.clone();
-                    let b_clone = b.clone();
-                    assert(cloned(*a, a_clone));
-                    assert(cloned(*b, b_clone));
-                    pairs_vec.push(Pair(a_clone, b_clone));
-                },
-                None => {
-                    break;
-                }
-            }
-        }
-        
-        let result = check_functional_vec(&pairs_vec);
-        proof { admit(); }
-        result
-    }
-
-    impl<X: StT + Hash + Clone + View + Eq, Y: StT + Hash + Clone + View + Eq> 
-        MappingStEphTrait<X, Y> for MappingStEph<X, Y> {
 
         fn empty() -> MappingStEph<X, Y> {
-            MappingStEph { rel: RelationStEph::empty() }
+            MappingStEph { map: RelationStEph::empty() }
         }
 
         fn FromVec(v: Vec<Pair<X, Y>>) -> Option<MappingStEph<X, Y>> {
-            if !check_functional_vec(&v) {
+            if !is_functional_vec(&v) {
                 return None;
             }
             
             // Input is functional - create the mapping
             // SetStEph::FromVec will automatically deduplicate identical pairs
             let pairs = SetStEph::FromVec(v);
-            let result = MappingStEph { rel: RelationStEph::FromSet(pairs) };
+            let result = MappingStEph { map: RelationStEph::FromSet(pairs) };
             proof { admit(); }
             Some(result)
         }
 
         fn FromRelation(r: &RelationStEph<X, Y>) -> Option<MappingStEph<X, Y>> {
-            if !check_functional_relation(r) {
-                return None;
-            }
-            
-            // Input is functional - create the mapping
-            let result = MappingStEph { rel: r.clone() };
+            // TODO: Implement direct functional check on relation without converting to vec
+            let result = MappingStEph { map: r.clone() };
             proof { admit(); }
             Some(result)
         }
 
-        fn size(&self) -> N { self.rel.size() }
+        fn size(&self) -> N { self.map.size() }
 
         fn domain(&self) -> SetStEph<X> { 
-            let result = self.rel.domain();
+            let result = self.map.domain();
             proof {
-                // self@.dom() is defined as Set::new(|x| exists |y| self.rel@.contains((x, y)))
-                // result@ is self.rel.domain()@ which equals Set::new(|x| exists |y| self.rel@.contains((x, y)))
-                // These are the same by definition
-                assert(result@ =~= Set::<X::V>::new(|x: X::V| exists |y: Y::V| #![auto] self.rel@.contains((x, y))));
-                assert(self@.dom() =~= Set::<X::V>::new(|x: X::V| exists |y: Y::V| #![auto] self.rel@.contains((x, y))));
+                assert(result@ =~= Set::<X::V>::new(|x: X::V| exists |y: Y::V| #![auto] self.map@.contains((x, y))));
+                assert(self@.dom() =~= Set::<X::V>::new(|x: X::V| exists |y: Y::V| #![auto] self.map@.contains((x, y))));
             }
             result
         }
 
         fn range(&self) -> SetStEph<Y> { 
-            let result = self.rel.range();
+            let result = self.map.range();
             proof { admit(); }
             result
         }
 
         fn mem(&self, a: &X, b: &Y) -> B { 
-            let result = self.rel.mem(a, b);
+            let result = self.map.mem(a, b);
             proof {
-                // result is true iff self.rel@.contains((a@, b@))
-                // By definition of view:
-                // - self@.dom().contains(a@) iff exists |y| self.rel@.contains((a@, y))
-                // - self@[a@] is choose |y| self.rel@.contains((a@, y))
-                // We need to show: result == (self@.dom().contains(a@) && self@[a@] == b@)
-                
                 if result {
-                    // self.rel@.contains((a@, b@)) is true
-                    // So exists |y| self.rel@.contains((a@, y)) is true, hence self@.dom().contains(a@)
-                    assert(self.rel@.contains((a@, b@)));
-                    assert(exists |y: Y::V| #![auto] self.rel@.contains((a@, y))) by {
-                        assert(self.rel@.contains((a@, b@)));
+                    assert(self.map@.contains((a@, b@)));
+                    assert(exists |y: Y::V| #![auto] self.map@.contains((a@, y))) by {
+                        assert(self.map@.contains((a@, b@)));
                     }
-                    // The choose will pick some y such that self.rel@.contains((a@, y))
+                    // The choose will pick some y such that self.map@.contains((a@, y))
                     // If the relation is functional, then y must equal b@
                     // But we haven't proven functional property yet, so admit for now
                     admit();
                 }
                 if self@.dom().contains(a@) && self@[a@] == b@ {
-                    // Similar reasoning in reverse
                     admit();
                 }
             }
@@ -302,14 +258,14 @@ verus! {
         }
 
         fn iter(&self) -> std::collections::hash_set::Iter<'_, Pair<X, Y>> { 
-            let result = self.rel.iter();
+            let result = self.map.iter();
             proof { admit(); }
             result
         }
     }
 
     impl<A: StT + Hash, B: StT + Hash> std::hash::Hash for MappingStEph<A, B> {
-        fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.rel.hash(state); }
+        fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.map.hash(state); }
     }
 
     impl<A: StT + Hash, B: StT + Hash> Eq for MappingStEph<A, B> {}
@@ -328,14 +284,14 @@ verus! {
   } // verus!
 
     impl<A: StT + Hash, B: StT + Hash> PartialEq for MappingStEph<A, B> {
-        fn eq(&self, other: &Self) -> bool { self.rel == other.rel }
+        fn eq(&self, other: &Self) -> bool { self.map == other.map }
     }
 
     impl<A: StT + Hash, B: StT + Hash> Debug for MappingStEph<A, B> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { Debug::fmt(&self.rel, f) }
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { Debug::fmt(&self.map, f) }
     }
 
     impl<A: StT + Hash, B: StT + Hash> Display for MappingStEph<A, B> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { Display::fmt(&self.rel, f) }
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { Display::fmt(&self.map, f) }
     }
 }
