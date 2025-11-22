@@ -1,190 +1,264 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Chapter 5.2 ephemeral Relation built on SetStEph<Pair<A,B>>.
+//! Chapter 5.2 ephemeral Relation built on `SetStEph<Pair<A,B>>`.
 
 pub mod RelationStEph {
+
     use vstd::prelude::*;
+
+verus! {
+
+    use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::Hash;
 
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::obeys_key_model;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::SetIterAdditionalSpecFns;
+    use vstd::std_specs::clone::*;
+    use crate::vstdplus::seq_set::*;
     use crate::Chap05::SetStEph::SetStEph::*;
-    use crate::vstdplus::set_with_view::SetWithView::SetWithView;
     use crate::Types::Types::*;
 
-    verus! {
+    broadcast use {vstd::seq_lib::group_seq_properties, vstd::set::group_set_axioms};
 
-#[cfg(verus_keep_ghost)]
-broadcast use crate::Types::Types::group_pair_axioms;
-
-#[verifier::ext_equal]
-#[verifier::reject_recursive_types(T)]
-#[verifier::reject_recursive_types(U)]
-pub struct RelationStEph<T: StT + Hash, U: StT + Hash> {
-    pub pairs: SetStEph<Pair<T, U>>,
-}
-
-impl<T: StT + Hash, U: StT + Hash> View for RelationStEph<T, U> {
-    type V = Set<(<T as View>::V, <U as View>::V)>;
-
-    open spec fn view(&self) -> Self::V {
-        self.pairs@
+    #[verifier::reject_recursive_types(A)]
+    #[verifier::reject_recursive_types(B)]
+    pub struct RelationStEph<A: StT + Hash, B: StT + Hash> {
+        pub pairs: SetStEph<Pair<A, B>>,
     }
-}
 
-pub trait RelationStEphTrait<T: StT + Hash, U: StT + Hash>: Sized + View<V = Set<(T::V, U::V)>> {
-    /// APAS: Work Θ(1), Span Θ(1)
-    fn empty() -> Self
-        requires vstd::std_specs::hash::obeys_key_model::<crate::Types::Types::Pair<T, U>>();
+    pub trait RelationStEphTrait<X: StT + Hash + Clone + View, Y: StT + Hash + Clone + View> : 
+        View<V = Set<(<X as View>::V, <Y as View>::V)>> + Sized {
 
-    /// APAS: Work Θ(1), Span Θ(1)
-    fn size(&self) -> (result: N)
-        ensures result == self.spec_view().len();
+        /// APAS: Work Θ(1), Span Θ(1)
+        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        fn empty() -> (result: Self)
+            requires 
+                valid_key_type::<X>(),
+                valid_key_type::<Y>(),
+                valid_key_type::<Pair<X, Y>>(),
+            ensures result@ == Set::<(<X as View>::V, <Y as View>::V)>::empty();
 
-    /// APAS: Work Θ(1), Span Θ(1)
-    fn mem(&self, t: &T, u: &U) -> (result: B)
-        ensures result == self.spec_view().contains((t@, u@));
+        /// APAS: Work Θ(|pairs|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|pairs|), Span Θ(1)
+        fn FromSet(pairs: SetStEph<Pair<X, Y>>) -> (result: Self)
+            requires 
+                valid_key_type::<X>(),
+                valid_key_type::<Y>(),
+                valid_key_type::<Pair<X, Y>>(),
+            ensures result@ == pairs@;
 
-    /// APAS: Work Θ(1), Span Θ(1)
-    fn insert(&mut self, t: T, u: U)
-        ensures self.spec_view() == old(self).spec_view().insert((t@, u@));
+        fn FromVec(v: Vec<Pair<X, Y>>) -> (result: Self)
+            requires 
+                valid_key_type::<X>(),
+                valid_key_type::<Y>(),
+                valid_key_type::<Pair<X, Y>>(),
+            ensures result@ == v@.map(|i: int, p: Pair<X, Y>| p@).to_set();
 
-    fn FromSet(pairs: SetStEph<Pair<T, U>>) -> (result: Self)
-        ensures result@ == pairs@;
+        /// APAS: Work Θ(1), Span Θ(1)
+        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        fn size(&self) -> N;
 
-    fn FromVec(v: Vec<Pair<T, U>>) -> Self
-        requires vstd::std_specs::hash::obeys_key_model::<crate::Types::Types::Pair<T, U>>();
+        /// APAS: Work Θ(|R|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|R|), Span Θ(1)
+        fn domain(&self) -> (result: SetStEph<X>)
+            requires 
+                valid_key_type::<X>(),
+                valid_key_type::<Y>(),
+                valid_key_type::<Pair<X, Y>>(),
+            ensures result@ == Set::<X::V>::new(|x: X::V| exists |y: Y::V| self@.contains((x, y)));
 
-    fn domain(&self) -> (result: SetStEph<T>)
-        requires vstd::std_specs::hash::obeys_key_model::<T>()
-        ensures forall |t: T::V| result@.contains(t) <==> exists |u: U::V| self@.contains((t, u));
+        /// APAS: Work Θ(|R|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|R|), Span Θ(1)
+        fn range(&self) -> (result: SetStEph<Y>)
+            requires 
+                valid_key_type::<X>(),
+                valid_key_type::<Y>(),
+                valid_key_type::<Pair<X, Y>>(),
+            ensures result@ == Set::<Y::V>::new(|y: Y::V| exists |x: X::V| self@.contains((x, y)));
 
-    fn range(&self) -> (result: SetStEph<U>)
-        requires vstd::std_specs::hash::obeys_key_model::<U>()
-        ensures forall |u: U::V| result@.contains(u) <==> exists |t: T::V| self@.contains((t, u));
+        /// APAS: Work Θ(1), Span Θ(1)
+        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        fn mem(&self, a: &X, b: &Y) -> (result: B)
+            requires 
+                valid_key_type::<X>(),
+                valid_key_type::<Y>(),
+                valid_key_type::<Pair<X, Y>>(),
+            ensures result == self@.contains((a@, b@));
 
-    fn iter(&self) -> crate::Types::Types::PairIter<'_, T, U>;
-
-    open spec fn spec_view(&self) -> Set<(<T as View>::V, <U as View>::V)> {
-        self@
+        fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, Pair<X, Y>>)
+            requires 
+                valid_key_type::<X>(),
+                valid_key_type::<Y>(),
+                valid_key_type::<Pair<X, Y>>(),
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, p: Pair<X, Y>| p@).to_set() == self@,
+                it@.1.no_duplicates();
     }
-}
 
-impl<T: StT + Hash, U: StT + Hash> RelationStEphTrait<T, U> for RelationStEph<T, U> {
-    fn empty() -> (result: Self)
-        ensures result.spec_view() == Set::<(<T as View>::V, <U as View>::V)>::empty()
-    {
-        RelationStEph {
-            pairs: SetStEph::empty(),
+    impl<A: StT + Hash, B: StT + Hash> View for RelationStEph<A, B> {
+        type V = Set<(<A as View>::V, <B as View>::V)>;
+        open spec fn view(&self) -> Self::V { self.pairs@ }
+    }
+
+    impl<A: StT + Hash, B: StT + Hash> Clone for RelationStEph<A, B> {
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@
+        { RelationStEph { pairs: self.pairs.clone() } }
+    }
+
+    impl<X: StT + Hash + Clone + View + Eq, Y: StT + Hash + Clone + View + Eq> 
+        RelationStEphTrait<X, Y> for RelationStEph<X, Y> {
+
+        fn empty() -> RelationStEph<X, Y> {
+            RelationStEph { pairs: SetStEph::empty() }
         }
-    }
 
-    fn size(&self) -> (result: N)
-        ensures result == self.spec_view().len()
-    {
-        self.pairs.size()
-    }
-
-    #[verifier::external_body]
-    fn mem(&self, t: &T, u: &U) -> (result: B)
-        ensures result == self.spec_view().contains((t@, u@))
-    {
-        // TODO hole-5: Need axiom that clone() preserves view for StT types
-        // Issue: vstd has strictly_cloned() via call_ensures(T::clone, (&a,), b)
-        // but can't use it directly here. Need to teach vstdplus about this.
-        let pair = Pair(t.clone(), u.clone());
-        self.pairs.mem(&pair)
-    }
-
-    fn insert(&mut self, t: T, u: U)
-        ensures self.spec_view() == old(self).spec_view().insert((t@, u@))
-    {
-        self.pairs.insert(Pair(t, u));
-    }
-
-    fn FromSet(pairs: SetStEph<Pair<T, U>>) -> (result: Self)
-        ensures result@ == pairs@
-    {
-        RelationStEph { pairs }
-    }
-
-    #[verifier::external_body]
-    fn FromVec(v: Vec<Pair<T, U>>) -> Self {
-        RelationStEph {
-            pairs: SetStEphTrait::FromVec(v),
+        fn FromSet(pairs: SetStEph<Pair<X, Y>>) -> RelationStEph<X, Y> {
+            RelationStEph { pairs }
         }
-    }
 
-    // TODO: Remove external_body once Verus supports ForLoopGhostIterator for newtype wrappers
-    // The issue: PairIter wraps hash_set::Iter<Pair<T,U>>, but Verus doesn't recognize the
-    // ForLoopGhostIteratorNew impl on newtypes in for loops (orphan rule workaround limitation)
-    #[verifier::external_body]
-    fn domain(&self) -> (result: SetStEph<T>)
-        ensures forall |t: T::V| result@.contains(t) <==> exists |u: U::V| self@.contains((t, u))
-    {
-        let mut out = SetStEph::<T>::empty();
-        for pair in self.iter() {
-            out.insert(pair.0.clone());
-        }
-        out
-    }
-
-    // TODO: Remove external_body once Verus supports ForLoopGhostIterator for newtype wrappers
-    #[verifier::external_body]
-    fn range(&self) -> (result: SetStEph<U>)
-        ensures forall |u: U::V| result@.contains(u) <==> exists |t: T::V| self@.contains((t, u))
-    {
-        let mut out = SetStEph::<U>::empty();
-        for pair in self.iter() {
-            out.insert(pair.1.clone());
-        }
-        out
-    }
-
-    fn iter(&self) -> crate::Types::Types::PairIter<'_, T, U> {
-        crate::Types::Types::PairIter(self.pairs.iter())
-    }
-}
-
-    } // verus!
-
-    // Pedagogical runtime trait implementations
-    use std::fmt::{Debug, Display, Formatter, Result};
-
-    impl<T: StT + Hash, U: StT + Hash> Clone for RelationStEph<T, U> {
-        fn clone(&self) -> Self {
+        fn FromVec(v: Vec<Pair<X, Y>>) -> RelationStEph<X, Y> {
             RelationStEph {
-                pairs: self.pairs.clone(),
+                pairs: SetStEph::FromVec(v),
             }
         }
-    }
 
-    impl<T: StT + Hash, U: StT + Hash> PartialEq for RelationStEph<T, U> {
-        fn eq(&self, other: &Self) -> bool {
-            self.pairs == other.pairs
-        }
-    }
+        fn size(&self) -> N { self.pairs.size() }
 
-    impl<T: StT + Hash, U: StT + Hash> Eq for RelationStEph<T, U> {}
+        fn domain(&self) -> SetStEph<X> {
+            let mut out = SetStEph::<X>::empty();
+            let pairs_iter = self.pairs.iter();
+            let mut it = pairs_iter;
+            let ghost pairs_seq = it@.1;
+            let ghost pairs_view = self.pairs@;
 
-    impl<T: StT + Hash, U: StT + Hash> Debug for RelationStEph<T, U> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-            f.debug_set().entries(self.pairs.iter()).finish()
-        }
-    }
-
-    impl<T: StT + Hash, U: StT + Hash> Display for RelationStEph<T, U> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-            write!(f, "{{")?;
-            let mut first = true;
-            for pair in self.pairs.iter() {
-                if !first {
-                    write!(f, ", ")?;
-                } else {
-                    first = false;
+            #[verifier::loop_isolation(false)]
+            loop
+                invariant
+                    valid_key_type::<X>(),
+                    valid_key_type::<Y>(),
+                    valid_key_type::<Pair<X, Y>>(),
+                    it@.0 <= pairs_seq.len(),
+                    it@.1 == pairs_seq,
+                    pairs_seq.map(|i: int, p: Pair<X, Y>| p@).to_set() == pairs_view,
+                    out@ == Set::<X::V>::new(|x: X::V| 
+                        exists |i: int| #![auto] 0 <= i < it@.0 && pairs_seq[i]@.0 == x),
+                decreases pairs_seq.len() - it@.0,
+            {
+                match it.next() {
+                    Some(pair) => {
+                        let Pair(a, _b) = pair;
+                        let a_clone = a.clone();
+                        assert(cloned(*a, a_clone));
+                        let _ = out.insert(a_clone);
+                    },
+                    None => {
+                        proof {
+                            // Connect invariant to postcondition
+                            assert(it@.0 == pairs_seq.len());
+                            assert forall |x: X::V| out@.contains(x) implies 
+                                (exists |y: Y::V| self@.contains((x, y))) by {
+                                if out@.contains(x) {
+                                    let i = choose |i: int| #![auto] 0 <= i < pairs_seq.len() && pairs_seq[i]@.0 == x;
+                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(pairs_seq, i);
+                                    assert(self@.contains(pairs_seq[i]@));
+                                    assert(self@.contains((x, pairs_seq[i]@.1)));
+                                }
+                            }
+                            assert forall |x: X::V| (exists |y: Y::V| self@.contains((x, y))) implies 
+                                out@.contains(x) by {
+                                if exists |y: Y::V| self@.contains((x, y)) {
+                                    let y = choose |y: Y::V| #![auto] self@.contains((x, y));
+                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(pairs_seq, (x, y));
+                                    let i = choose |i: int| #![auto] 0 <= i < pairs_seq.len() && (x, y) == pairs_seq[i]@;
+                                    assert(pairs_seq[i]@.0 == x);
+                                    assert(out@.contains(x));
+                                }
+                            }
+                        }
+                        return out;
+                    }
                 }
-                write!(f, "{pair}")?;
             }
-            write!(f, "}}")
+        }
+
+        fn range(&self) -> SetStEph<Y> {
+            let mut out = SetStEph::<Y>::empty();
+            let pairs_iter = self.pairs.iter();
+            let mut it = pairs_iter;
+            let ghost pairs_seq = it@.1;
+            let ghost pairs_view = self.pairs@;
+
+            #[verifier::loop_isolation(false)]
+            loop
+                invariant
+                    valid_key_type::<X>(),
+                    valid_key_type::<Y>(),
+                    valid_key_type::<Pair<X, Y>>(),
+                    it@.0 <= pairs_seq.len(),
+                    it@.1 == pairs_seq,
+                    pairs_seq.map(|i: int, p: Pair<X, Y>| p@).to_set() == pairs_view,
+                    out@ == Set::<Y::V>::new(|y: Y::V| 
+                        exists |i: int| #![auto] 0 <= i < it@.0 && pairs_seq[i]@.1 == y),
+                decreases pairs_seq.len() - it@.0,
+            {
+                match it.next() {
+                    Some(pair) => {
+                        let Pair(_a, b) = pair;
+                        let b_clone = b.clone();
+                        assert(cloned(*b, b_clone));
+                        let _ = out.insert(b_clone);
+                    },
+                    None => {
+                        proof {
+                            // Connect invariant to postcondition
+                            assert(it@.0 == pairs_seq.len());
+                            assert forall |y: Y::V| out@.contains(y) implies 
+                                (exists |x: X::V| self@.contains((x, y))) by {
+                                if out@.contains(y) {
+                                    let i = choose |i: int| #![auto] 0 <= i < pairs_seq.len() && pairs_seq[i]@.1 == y;
+                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(pairs_seq, i);
+                                    assert(self@.contains(pairs_seq[i]@));
+                                    assert(self@.contains((pairs_seq[i]@.0, y)));
+                                }
+                            }
+                            assert forall |y: Y::V| (exists |x: X::V| self@.contains((x, y))) implies 
+                                out@.contains(y) by {
+                                if exists |x: X::V| self@.contains((x, y)) {
+                                    let x = choose |x: X::V| #![auto] self@.contains((x, y));
+                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(pairs_seq, (x, y));
+                                    let i = choose |i: int| #![auto] 0 <= i < pairs_seq.len() && (x, y) == pairs_seq[i]@;
+                                    assert(pairs_seq[i]@.1 == y);
+                                    assert(out@.contains(y));
+                                }
+                            }
+                        }
+                        return out;
+                    }
+                }
+            }
+        }
+
+        fn mem(&self, a: &X, b: &Y) -> B {
+            let a_clone = a.clone();
+            let b_clone = b.clone();
+            assert(cloned(*a, a_clone));
+            assert(cloned(*b, b_clone));
+            self.pairs.mem(&Pair(a_clone, b_clone))
+        }
+
+        fn iter(&self) -> std::collections::hash_set::Iter<'_, Pair<X, Y>> {
+            self.pairs.iter()
         }
     }
+
+    impl<A: StT + Hash, B: StT + Hash> std::hash::Hash for RelationStEph<A, B> {
+        fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.pairs.hash(state); }
+    }
+
+    impl<A: StT + Hash, B: StT + Hash> Eq for RelationStEph<A, B> {}
 
     #[macro_export]
     macro_rules! RelationLit {
@@ -192,9 +266,23 @@ impl<T: StT + Hash, U: StT + Hash> RelationStEphTrait<T, U> for RelationStEph<T,
             < $crate::Chap05::RelationStEph::RelationStEph::RelationStEph<_, _> >::empty()
         }};
         ( $( ($a:expr, $b:expr) ),* $(,)? ) => {{
-            < $crate::Chap05::RelationStEph::RelationStEph::RelationStEph<_, _> >::FromVec(
-                vec![ $( $crate::Types::Types::Pair($a, $b) ),* ]
-            )
+            let mut __pairs = < $crate::Chap05::SetStEph::SetStEph::SetStEph<_> >::empty();
+            $( let _ = __pairs.insert($crate::Types::Types::Pair($a, $b)); )*
+            < $crate::Chap05::RelationStEph::RelationStEph::RelationStEph<_, _> >::FromSet(__pairs)
         }};
+    }
+
+  } // verus!
+
+    impl<A: StT + Hash, B: StT + Hash> PartialEq for RelationStEph<A, B> {
+        fn eq(&self, other: &Self) -> bool { self.pairs == other.pairs }
+    }
+
+    impl<A: StT + Hash, B: StT + Hash> Debug for RelationStEph<A, B> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { std::fmt::Debug::fmt(&self.pairs, f) }
+    }
+
+    impl<A: StT + Hash, B: StT + Hash> Display for RelationStEph<A, B> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { std::fmt::Display::fmt(&self.pairs, f) }
     }
 }
