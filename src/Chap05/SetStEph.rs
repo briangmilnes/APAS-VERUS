@@ -411,61 +411,66 @@ verus! {
             let ghost parts_view = parts@;
             let ghost x_view = x@;
             let mut count: N = 0;
+            let ghost mut found_index: Option<int> = None;
 
             #[verifier::loop_isolation(false)]
             loop
                 invariant
                     valid_key_type::<T>(),
+                    valid_key_type::<SetStEph<T>>(),
                     parts_it@.0 <= parts_seq.len(),
                     parts_it@.1 == parts_seq,
                     parts_seq.map(|i: int, k: SetStEph<T>| k@).to_set() == parts_view,
-                    count == parts_seq.take(parts_it@.0).map(|i: int, k: SetStEph<T>| k@).filter(|s: Set<T::V>| s.contains(x_view)).len(),
                     count <= 1,
+                    match found_index {
+                        Some(idx) => 0 <= idx < parts_it@.0 && parts_seq[idx]@.contains(x_view) && count == 1,
+                        None => count == 0,
+                    },
+                    forall |i: int| #![auto] 0 <= i < parts_it@.0 && parts_seq[i]@.contains(x_view) ==> 
+                        found_index == Some(i),
                 decreases parts_seq.len() - parts_it@.0,
             {
+                let ghost old_pos = parts_it@.0;
                 match parts_it.next() {
                     Some(subset) => {
-                        let ghost old_parts_index = parts_it@.0 - 1;
                         if subset.mem(x) {
+                            let ghost prev_found_index = found_index;
                             count = count + 1;
-                            assume(count == parts_seq.take(parts_it@.0).map(|i: int, k: SetStEph<T>| k@).filter(|s: Set<T::V>| s.contains(x_view)).len());
+                            proof {
+                                found_index = Some(old_pos);
+                            }
                             if count > 1 {
-                                assume(!(
-                                    (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x@)) &&
-                                    (forall |s1: Set<T::V>, s2: Set<T::V>|
+                                proof {
+                                    let prev_idx = match prev_found_index { Some(i) => i, None => arbitrary() };
+                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(parts_seq, prev_idx);
+                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(parts_seq, old_pos);
+                                    assert(!(forall |s1: Set<T::V>, s2: Set<T::V>|
                                         #![trigger parts@.contains(s1), parts@.contains(s2)]
                                         parts@.contains(s1) && s1.contains(x@) &&
-                                        parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
-                                ));
+                                        parts@.contains(s2) && s2.contains(x@) ==> s1 == s2));
+                                }
                                 return false;
                             }
-                        } else {
-                            assume(count == parts_seq.take(parts_it@.0).map(|i: int, k: SetStEph<T>| k@).filter(|s: Set<T::V>| s.contains(x_view)).len());
                         }
                     },
                     None => {
-                        break;
+                        if count == 0 {
+                                assert(!(exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x@)));
+                            return false;
+                        } else {
+                          proof {
+                                let idx = match found_index { Some(i) => i, None => arbitrary() };
+                                crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(parts_seq, idx);
+                                assert forall |s1: Set<T::V>, s2: Set<T::V>|
+                                    #![trigger parts@.contains(s1), parts@.contains(s2)]
+                                    parts@.contains(s1) && s1.contains(x@) &&
+                                    parts@.contains(s2) && s2.contains(x@) implies s1 == s2 by {}
+                            }
+                            return true;
+                        }
                     }
                 }
             }
-            if count == 0 {
-                assume(!(
-                    (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x@)) &&
-                    (forall |s1: Set<T::V>, s2: Set<T::V>|
-                        #![trigger parts@.contains(s1), parts@.contains(s2)]
-                        parts@.contains(s1) && s1.contains(x@) &&
-                        parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
-                ));
-                return false;
-            }
-            assume(
-                (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x@)) &&
-                (forall |s1: Set<T::V>, s2: Set<T::V>|
-                    #![trigger parts@.contains(s1), parts@.contains(s2)]
-                    parts@.contains(s1) && s1.contains(x@) &&
-                    parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
-            );
-            true
         }
 
         fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> bool {

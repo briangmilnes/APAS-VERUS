@@ -262,6 +262,24 @@ pub proof fn lemma_seq_index_in_map_to_set<T: View>(seq: Seq<T>, i: int)
     assert(mapped_seq.to_set().contains(mapped_seq[i]));
 }
 
+/// Lemma: If s is in seq.map(...).to_set(), then there exists an index i such that s == seq[i]@
+pub proof fn lemma_map_to_set_contains_index<T: View>(seq: Seq<T>, s: T::V)
+    requires
+        seq.map(|i: int, k: T| k@).to_set().contains(s),
+    ensures
+        exists |i: int| #![auto] 0 <= i < seq.len() && s == seq[i]@,
+{
+    broadcast use vstd::seq_lib::group_seq_properties;
+    broadcast use vstd::set::group_set_axioms;
+    
+    let mapped_seq = seq.map(|i: int, k: T| k@);
+    assert(mapped_seq.to_set().contains(s));
+    let idx = mapped_seq.lemma_contains_to_index(s);
+    assert(mapped_seq[idx] == s);
+    assert(seq[idx]@ == s);
+    assert(0 <= idx < seq.len());
+}
+
 /// This lemma bridges the gap between iterator specs and set equality.
 pub proof fn lemma_seq_map_to_set_equality<T: View>(seq: Seq<T>, target: Set<T::V>)
     requires
