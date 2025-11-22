@@ -55,9 +55,9 @@ verus! {
                 valid_key_type::<Y>(),
                 valid_key_type::<Pair<X, Y>>(),
             ensures 
-                matches!(result, Some(_)) ==> is_functional::<X, Y>(v@.map(|i: int, p: Pair<X, Y>| p@).to_set()),
                 match result {
                     Some(mapping) => {
+                        &&& is_functional::<X, Y>(v@.map(|i: int, p: Pair<X, Y>| p@).to_set())
                         &&& mapping@.dom() =~= v@.map(|i: int, p: Pair<X, Y>| p@.0).to_set()
                         &&& forall |x: X::V| #![auto] mapping@.dom().contains(x) ==> 
                             exists |i: int| #![auto] 0 <= i < v.len() && v[i]@.0 == x && mapping@[x] == v[i]@.1
@@ -72,9 +72,9 @@ verus! {
                 valid_key_type::<Y>(),
                 valid_key_type::<Pair<X, Y>>(),
             ensures 
-                matches!(result, Some(_)) ==> is_functional::<X, Y>(r@),
                 match result {
                     Some(mapping) => {
+                        &&& is_functional::<X, Y>(r@)
                         &&& mapping@.dom() =~= Set::<X::V>::new(|x: X::V| exists |y: Y::V| r@.contains((x, y)))
                         &&& forall |x: X::V| #![auto] mapping@.dom().contains(x) ==> r@.contains((x, mapping@[x]))
                     },
