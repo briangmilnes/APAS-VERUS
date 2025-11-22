@@ -9,7 +9,6 @@ verus! {
 
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::Hash;
-    use std::collections::HashMap;
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
@@ -140,18 +139,58 @@ verus! {
         { MappingStEph { rel: self.rel.clone() } }
     }
 
-    // Helper function to ensure functional property (last value wins for each key)
-    #[verifier::external_body]
-    fn unique_pairs<X: StT + Hash, Y: StT + Hash>(v: Vec<Pair<X, Y>>) -> (unique_pairs: Vec<Pair<X, Y>>)
+    /// Executable check: is a Vec of pairs functional?
+    fn check_functional<X: StT + Hash + Clone + View + Eq, Y: StT + Hash + Clone + View + Eq>(
+        v: &Vec<Pair<X, Y>>
+    ) -> (check_functional: bool)
+        requires
+            valid_key_type::<X>(),
+            valid_key_type::<Y>(),
         ensures
-            unique_pairs@.len() <= v@.len(),
+            check_functional == is_functional::<X, Y>(v@.map(|i: int, p: Pair<X, Y>| p@).to_set()),
     {
-        let mut map = HashMap::<X, Y>::new();
-        for Pair(a, b) in v {
-            map.insert(a, b);
+        let mut i: usize = 0;
+        #[verifier::loop_isolation(false)]
+        loop
+            invariant
+                valid_key_type::<X>(),
+                valid_key_type::<Y>(),
+                i <= v.len(),
+            decreases v.len() - i,
+        {
+            if i >= v.len() {
+                proof { admit(); }
+                return true;
+            }
+            let Pair(key_i, val_i) = &v[i];
+            let mut j: usize = i + 1;
+            #[verifier::loop_isolation(false)]
+            loop
+                invariant
+                    valid_key_type::<X>(),
+                    valid_key_type::<Y>(),
+                    i < v.len(),
+                    j <= v.len(),
+                decreases v.len() - j,
+            {
+                if j >= v.len() {
+                    break;
+                }
+                let Pair(key_j, val_j) = &v[j];
+                let key_i_clone = key_i.clone();
+                let key_j_clone = key_j.clone();
+                let val_i_clone = val_i.clone();
+                let val_j_clone = val_j.clone();
+                if key_i_clone == key_j_clone && val_i_clone != val_j_clone {
+                    proof { admit(); }
+                    return false;
+                }
+                j = j + 1;
+            }
+            i = i + 1;
         }
-        map.into_iter().map(|(a, b)| Pair(a, b)).collect()
     }
+
 
     impl<X: StT + Hash + Clone + View + Eq, Y: StT + Hash + Clone + View + Eq> 
         MappingStEphTrait<X, Y> for MappingStEph<X, Y> {
@@ -161,48 +200,13 @@ verus! {
         }
 
         fn FromVec(v: Vec<Pair<X, Y>>) -> Option<MappingStEph<X, Y>> {
-            // Check if input is functional (no duplicate keys with different values)
-            let mut i: usize = 0;
-            #[verifier::loop_isolation(false)]
-            loop
-                invariant
-                    valid_key_type::<X>(),
-                    valid_key_type::<Y>(),
-                    i <= v.len(),
-                decreases v.len() - i,
-            {
-                if i >= v.len() {
-                    break;
-                }
-                let Pair(key_i, val_i) = &v[i];
-                let mut j: usize = i + 1;
-                #[verifier::loop_isolation(false)]
-                loop
-                    invariant
-                        valid_key_type::<X>(),
-                        valid_key_type::<Y>(),
-                        i < v.len(),
-                        j <= v.len(),
-                    decreases v.len() - j,
-                {
-                    if j >= v.len() {
-                        break;
-                    }
-                    let Pair(key_j, val_j) = &v[j];
-                    let key_i_clone = key_i.clone();
-                    let key_j_clone = key_j.clone();
-                    let val_i_clone = val_i.clone();
-                    let val_j_clone = val_j.clone();
-                    if key_i_clone == key_j_clone && val_i_clone != val_j_clone {
-                        return None;
-                    }
-                    j = j + 1;
-                }
-                i = i + 1;
+            if !check_functional(&v) {
+                return None;
             }
             
-            let pairs_vec = unique_pairs(v);
-            let pairs = SetStEph::FromVec(pairs_vec);
+            // Input is functional - create the mapping
+            // SetStEph::FromVec will automatically deduplicate identical pairs
+            let pairs = SetStEph::FromVec(v);
             let result = MappingStEph { rel: RelationStEph::FromSet(pairs) };
             proof { admit(); }
             Some(result)
@@ -239,47 +243,13 @@ verus! {
             }
             
             // Check if the relation is functional
-            let mut i: usize = 0;
-            #[verifier::loop_isolation(false)]
-            loop
-                invariant
-                    valid_key_type::<X>(),
-                    valid_key_type::<Y>(),
-                    i <= pairs_vec.len(),
-                decreases pairs_vec.len() - i,
-            {
-                if i >= pairs_vec.len() {
-                    break;
-                }
-                let Pair(key_i, val_i) = &pairs_vec[i];
-                let mut j: usize = i + 1;
-                #[verifier::loop_isolation(false)]
-                loop
-                    invariant
-                        valid_key_type::<X>(),
-                        valid_key_type::<Y>(),
-                        i < pairs_vec.len(),
-                        j <= pairs_vec.len(),
-                    decreases pairs_vec.len() - j,
-                {
-                    if j >= pairs_vec.len() {
-                        break;
-                    }
-                    let Pair(key_j, val_j) = &pairs_vec[j];
-                    let key_i_clone = key_i.clone();
-                    let key_j_clone = key_j.clone();
-                    let val_i_clone = val_i.clone();
-                    let val_j_clone = val_j.clone();
-                    if key_i_clone == key_j_clone && val_i_clone != val_j_clone {
-                        return None;
-                    }
-                    j = j + 1;
-                }
-                i = i + 1;
+            if !check_functional(&pairs_vec) {
+                return None;
             }
             
-            let unique_pairs_vec = unique_pairs(pairs_vec);
-            let pairs = SetStEph::FromVec(unique_pairs_vec);
+            // Input is functional - create the mapping
+            // SetStEph::FromVec will automatically deduplicate identical pairs
+            let pairs = SetStEph::FromVec(pairs_vec);
             let result = MappingStEph { rel: RelationStEph::FromSet(pairs) };
             proof { admit(); }
             Some(result)
