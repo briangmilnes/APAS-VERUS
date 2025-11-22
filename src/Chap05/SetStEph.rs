@@ -135,7 +135,7 @@ verus! {
                             parts@.contains(s1) && s1.contains(x) &&
                             parts@.contains(s2) && s2.contains(x) ==> s1 == s2)
                     )) &&
-                    (forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> !s.is_empty())
+                    (forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0)
                 );
     }
 
@@ -474,6 +474,15 @@ verus! {
         }
 
         fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> bool {
+            // First check if all parts are non-empty
+            if !Self::all_nonempty(parts) {
+                proof {
+                    // all_nonempty returned false, so its postcondition tells us the nonempty condition is violated
+                    assert(!(forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0));
+                }
+                return false;
+            }
+            
             let s1_iter = self.iter();
             let mut s1_it = s1_iter;
             let ghost s1_seq = s1_it@.1;
@@ -488,22 +497,23 @@ verus! {
                     s1_it@.0 <= s1_seq.len(),
                     s1_it@.1 == s1_seq,
                     s1_seq.map(|i: int, k: T| k@).to_set() == s1_view,
-                    forall |x_processed: T::V| #![trigger s1_view.contains(x_processed)]
-                        s1_seq.take(s1_it@.0).map(|i: int, k: T| k@).to_set().contains(x_processed) ==> (
-                            (exists |s: Set<T::V>| #![trigger parts_view.contains(s)] parts_view.contains(s) && s.contains(x_processed)) &&
-                            (forall |s1: Set<T::V>, s2: Set<T::V>| 
-                                parts_view.contains(s1) && s1.contains(x_processed) &&
-                                parts_view.contains(s2) && s2.contains(x_processed) ==> s1 == s2)
-                        ),
+                    forall |i: int| #![trigger s1_seq[i]] 0 <= i < s1_it@.0 ==> {
+                        let x_view = s1_seq[i]@;
+                        (exists |s: Set<T::V>| #![trigger parts_view.contains(s)] parts_view.contains(s) && s.contains(x_view)) &&
+                        (forall |s1: Set<T::V>, s2: Set<T::V>| 
+                            #![trigger parts_view.contains(s1), parts_view.contains(s2)]
+                            parts_view.contains(s1) && s1.contains(x_view) &&
+                            parts_view.contains(s2) && s2.contains(x_view) ==> s1 == s2)
+                    },
                 decreases s1_seq.len() - s1_it@.0,
             {
-                let ghost old_s1_index = s1_it@.0;
+                let ghost old_pos = s1_it@.0;
                 match s1_it.next() {
                     Some(x) => {
-                        let ghost x_view = x@;
                         if !Self::partition_on_elt(x, parts) {
                             proof {
-                                assume(!(forall |x: T::V| self@.contains(x) ==> (
+                                crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(s1_seq, old_pos);
+                                assert(!(forall |x: T::V| self@.contains(x) ==> (
                                     (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x)) &&
                                     (forall |s1: Set<T::V>, s2: Set<T::V>|
                                         #![trigger parts@.contains(s1), parts@.contains(s2)]
@@ -515,44 +525,27 @@ verus! {
                         }
                     },
                     None => {
-                        break;
+                        proof {
+                            assert forall |x: T::V| self@.contains(x) implies (
+                                (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x)) &&
+                                (forall |s1: Set<T::V>, s2: Set<T::V>|
+                                    #![trigger parts@.contains(s1), parts@.contains(s2)]
+                                    parts@.contains(s1) && s1.contains(x) &&
+                                    parts@.contains(s2) && s2.contains(x) ==> s1 == s2)
+                            ) by {
+                                if self@.contains(x) {
+                                    // x is in self@, which equals s1_seq.map(...).to_set()
+                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(s1_seq, x);
+                                    let i = choose |i: int| #![auto] 0 <= i < s1_seq.len() && x == s1_seq[i]@;
+                                    // By invariant, the partition property holds for s1_seq[i]@, which equals x
+                                    assert(s1_seq[i]@ == x);
+                                }
+                            }
+                        }
+                        return true;
                     }
                 }
-                proof {
-                    // TODO: Need a lemma proving: take(n+1) = take(n).push(seq[n])
-                    // This is provable but not directly helping the invariant
-                    assume(s1_seq.take((old_s1_index + 1) as int) == s1_seq.take(old_s1_index as int).push(s1_seq[old_s1_index as int]));
-                    // Even with the above, we still need to prove the partition property extends
-                    // This is what the actual lemma would prove
-                    admit();
-                }
             }
-            if !Self::all_nonempty(parts) {
-                proof {
-                    assume(!(
-                        (forall |x: T::V| self@.contains(x) ==> (
-                            (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x)) &&
-                            (forall |s1: Set<T::V>, s2: Set<T::V>|
-                                #![trigger parts@.contains(s1), parts@.contains(s2)]
-                                parts@.contains(s1) && s1.contains(x) &&
-                                parts@.contains(s2) && s2.contains(x) ==> s1 == s2)
-                        )) &&
-                        (forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> !s.is_empty())
-                    ));
-                }
-                return false;
-            }
-            assume(
-                (forall |x: T::V| self@.contains(x) ==> (
-                    (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x)) &&
-                    (forall |s1: Set<T::V>, s2: Set<T::V>|
-                        #![trigger parts@.contains(s1), parts@.contains(s2)]
-                        parts@.contains(s1) && s1.contains(x) &&
-                        parts@.contains(s2) && s2.contains(x) ==> s1 == s2)
-                )) &&
-                (forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> !s.is_empty())
-            );
-            true
         }
 
     }
