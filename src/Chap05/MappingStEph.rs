@@ -36,13 +36,6 @@ verus! {
         pub rel: RelationStEph<A, B>,
     }
 
-    impl<A: StT + Hash, B: StT + Hash> MappingStEph<A, B> {
-        /// Invariant: the underlying relation is functional
-        pub closed spec fn is_valid(&self) -> bool {
-            is_functional::<A, B>(self.rel@)
-        }
-    }
-
     pub trait MappingStEphTrait<X: StT + Hash + Clone + View, Y: StT + Hash + Clone + View> : 
         View<V = Map<X::V, Y::V>> + Sized {
 
@@ -56,25 +49,37 @@ verus! {
                 result@ == Map::<X::V, Y::V>::empty();
 
         /// APAS: Work Θ(|v|), Span Θ(1)
-        fn FromVec(v: Vec<Pair<X, Y>>) -> (result: Self)
+        fn FromVec(v: Vec<Pair<X, Y>>) -> (result: Option<Self>)
             requires 
                 valid_key_type::<X>(),
                 valid_key_type::<Y>(),
                 valid_key_type::<Pair<X, Y>>(),
             ensures 
-                result@.dom() =~= v@.map(|i: int, p: Pair<X, Y>| p@.0).to_set(),
-                forall |x: X::V| #![auto] result@.dom().contains(x) ==> 
-                    exists |i: int| #![auto] 0 <= i < v.len() && v[i]@.0 == x && result@[x] == v[i]@.1;
+                matches!(result, Some(_)) ==> is_functional::<X, Y>(v@.map(|i: int, p: Pair<X, Y>| p@).to_set()),
+                match result {
+                    Some(mapping) => {
+                        &&& mapping@.dom() =~= v@.map(|i: int, p: Pair<X, Y>| p@.0).to_set()
+                        &&& forall |x: X::V| #![auto] mapping@.dom().contains(x) ==> 
+                            exists |i: int| #![auto] 0 <= i < v.len() && v[i]@.0 == x && mapping@[x] == v[i]@.1
+                    },
+                    None => true,
+                };
 
         /// APAS: Work Θ(|r|), Span Θ(1)
-        fn FromRelation(r: &RelationStEph<X, Y>) -> (result: Self)
+        fn FromRelation(r: &RelationStEph<X, Y>) -> (result: Option<Self>)
             requires 
                 valid_key_type::<X>(),
                 valid_key_type::<Y>(),
                 valid_key_type::<Pair<X, Y>>(),
             ensures 
-                result@.dom() =~= Set::<X::V>::new(|x: X::V| exists |y: Y::V| r@.contains((x, y))),
-                forall |x: X::V| #![auto] result@.dom().contains(x) ==> r@.contains((x, result@[x]));
+                matches!(result, Some(_)) ==> is_functional::<X, Y>(r@),
+                match result {
+                    Some(mapping) => {
+                        &&& mapping@.dom() =~= Set::<X::V>::new(|x: X::V| exists |y: Y::V| r@.contains((x, y)))
+                        &&& forall |x: X::V| #![auto] mapping@.dom().contains(x) ==> r@.contains((x, mapping@[x]))
+                    },
+                    None => true,
+                };
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn size(&self) -> N;
@@ -155,15 +160,55 @@ verus! {
             MappingStEph { rel: RelationStEph::empty() }
         }
 
-        fn FromVec(v: Vec<Pair<X, Y>>) -> MappingStEph<X, Y> {
+        fn FromVec(v: Vec<Pair<X, Y>>) -> Option<MappingStEph<X, Y>> {
+            // Check if input is functional (no duplicate keys with different values)
+            let mut i: usize = 0;
+            #[verifier::loop_isolation(false)]
+            loop
+                invariant
+                    valid_key_type::<X>(),
+                    valid_key_type::<Y>(),
+                    i <= v.len(),
+                decreases v.len() - i,
+            {
+                if i >= v.len() {
+                    break;
+                }
+                let Pair(key_i, val_i) = &v[i];
+                let mut j: usize = i + 1;
+                #[verifier::loop_isolation(false)]
+                loop
+                    invariant
+                        valid_key_type::<X>(),
+                        valid_key_type::<Y>(),
+                        i < v.len(),
+                        j <= v.len(),
+                    decreases v.len() - j,
+                {
+                    if j >= v.len() {
+                        break;
+                    }
+                    let Pair(key_j, val_j) = &v[j];
+                    let key_i_clone = key_i.clone();
+                    let key_j_clone = key_j.clone();
+                    let val_i_clone = val_i.clone();
+                    let val_j_clone = val_j.clone();
+                    if key_i_clone == key_j_clone && val_i_clone != val_j_clone {
+                        return None;
+                    }
+                    j = j + 1;
+                }
+                i = i + 1;
+            }
+            
             let pairs_vec = unique_pairs(v);
             let pairs = SetStEph::FromVec(pairs_vec);
             let result = MappingStEph { rel: RelationStEph::FromSet(pairs) };
             proof { admit(); }
-            result
+            Some(result)
         }
 
-        fn FromRelation(r: &RelationStEph<X, Y>) -> MappingStEph<X, Y> {
+        fn FromRelation(r: &RelationStEph<X, Y>) -> Option<MappingStEph<X, Y>> {
             // Convert iterator to Vec first
             let mut pairs_vec: Vec<Pair<X, Y>> = Vec::new();
             let rel_iter = r.iter();
@@ -193,11 +238,51 @@ verus! {
                 }
             }
             
+            // Check if the relation is functional
+            let mut i: usize = 0;
+            #[verifier::loop_isolation(false)]
+            loop
+                invariant
+                    valid_key_type::<X>(),
+                    valid_key_type::<Y>(),
+                    i <= pairs_vec.len(),
+                decreases pairs_vec.len() - i,
+            {
+                if i >= pairs_vec.len() {
+                    break;
+                }
+                let Pair(key_i, val_i) = &pairs_vec[i];
+                let mut j: usize = i + 1;
+                #[verifier::loop_isolation(false)]
+                loop
+                    invariant
+                        valid_key_type::<X>(),
+                        valid_key_type::<Y>(),
+                        i < pairs_vec.len(),
+                        j <= pairs_vec.len(),
+                    decreases pairs_vec.len() - j,
+                {
+                    if j >= pairs_vec.len() {
+                        break;
+                    }
+                    let Pair(key_j, val_j) = &pairs_vec[j];
+                    let key_i_clone = key_i.clone();
+                    let key_j_clone = key_j.clone();
+                    let val_i_clone = val_i.clone();
+                    let val_j_clone = val_j.clone();
+                    if key_i_clone == key_j_clone && val_i_clone != val_j_clone {
+                        return None;
+                    }
+                    j = j + 1;
+                }
+                i = i + 1;
+            }
+            
             let unique_pairs_vec = unique_pairs(pairs_vec);
             let pairs = SetStEph::FromVec(unique_pairs_vec);
             let result = MappingStEph { rel: RelationStEph::FromSet(pairs) };
             proof { admit(); }
-            result
+            Some(result)
         }
 
         fn size(&self) -> N { self.rel.size() }
@@ -269,7 +354,7 @@ verus! {
         }};
         ( $( ($a:expr, $b:expr) ),* $(,)? ) => {{
             let __pairs = vec![ $( $crate::Types::Types::Pair($a, $b) ),* ];
-            < $crate::Chap05::MappingStEph::MappingStEph::MappingStEph<_, _> >::FromVec(__pairs)
+            < $crate::Chap05::MappingStEph::MappingStEph::MappingStEph<_, _> >::FromVec(__pairs).expect("MappingLit: duplicate keys with different values")
         }};
     }
 
