@@ -54,4 +54,5 @@ pub mod Chap03 {
 pub mod Chap05 {
     pub mod SetStEph;
     pub mod RelationStEph;
+    pub mod MappingStEph;
 }
