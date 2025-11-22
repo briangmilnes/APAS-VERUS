@@ -40,22 +40,22 @@ verus! {
         View<V = Map<X::V, Y::V>> + Sized {
 
         /// APAS: Work Θ(1), Span Θ(1)
-        fn empty() -> (result: Self)
+        fn empty() -> (empty: Self)
             requires 
                 valid_key_type::<X>(),
                 valid_key_type::<Y>(),
                 valid_key_type::<Pair<X, Y>>(),
             ensures 
-                result@ == Map::<X::V, Y::V>::empty();
+                empty@ == Map::<X::V, Y::V>::empty();
 
         /// APAS: Work Θ(|v|), Span Θ(1)
-        fn FromVec(v: Vec<Pair<X, Y>>) -> (result: Option<Self>)
+        fn FromVec(v: Vec<Pair<X, Y>>) -> (mapping: Option<Self>)
             requires 
                 valid_key_type::<X>(),
                 valid_key_type::<Y>(),
                 valid_key_type::<Pair<X, Y>>(),
             ensures 
-                match result {
+                match mapping {
                     Some(mapping) => {
                         &&& is_functional::<X, Y>(v@.map(|i: int, p: Pair<X, Y>| p@).to_set())
                         &&& mapping@.dom() =~= v@.map(|i: int, p: Pair<X, Y>| p@.0).to_set()
@@ -66,13 +66,13 @@ verus! {
                 };
 
         /// APAS: Work Θ(|r|), Span Θ(1)
-        fn FromRelation(r: &RelationStEph<X, Y>) -> (result: Option<Self>)
+        fn FromRelation(r: &RelationStEph<X, Y>) -> (mapping: Option<Self>)
             requires 
                 valid_key_type::<X>(),
                 valid_key_type::<Y>(),
                 valid_key_type::<Pair<X, Y>>(),
             ensures 
-                match result {
+                match mapping {
                     Some(mapping) => {
                         &&& is_functional::<X, Y>(r@)
                         &&& mapping@.dom() =~= Set::<X::V>::new(|x: X::V| exists |y: Y::V| r@.contains((x, y)))
@@ -85,31 +85,31 @@ verus! {
         fn size(&self) -> N;
 
         /// APAS: Work Θ(|m|), Span Θ(1)
-        fn domain(&self) -> (result: SetStEph<X>)
+        fn domain(&self) -> (domain: SetStEph<X>)
             requires 
                 valid_key_type::<X>(),
                 valid_key_type::<Y>(),
                 valid_key_type::<Pair<X, Y>>(),
             ensures 
-                result@ == self@.dom();
+                domain@ == self@.dom();
 
         /// APAS: Work Θ(|m|), Span Θ(1)
-        fn range(&self) -> (result: SetStEph<Y>)
+        fn range(&self) -> (range: SetStEph<Y>)
             requires 
                 valid_key_type::<X>(),
                 valid_key_type::<Y>(),
                 valid_key_type::<Pair<X, Y>>(),
             ensures 
-                result@ =~= Set::<Y::V>::new(|y: Y::V| exists |x: X::V| #![auto] self@.dom().contains(x) && self@[x] == y);
+                range@ =~= Set::<Y::V>::new(|y: Y::V| exists |x: X::V| #![auto] self@.dom().contains(x) && self@[x] == y);
 
         /// APAS: Work Θ(1), Span Θ(1)
-        fn mem(&self, a: &X, b: &Y) -> (result: B)
+        fn mem(&self, a: &X, b: &Y) -> (contains: B)
             requires 
                 valid_key_type::<X>(),
                 valid_key_type::<Y>(),
                 valid_key_type::<Pair<X, Y>>(),
             ensures 
-                result == (self@.dom().contains(a@) && self@[a@] == b@);
+                contains == (self@.dom().contains(a@) && self@[a@] == b@);
 
         fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, Pair<X, Y>>)
             requires 
@@ -135,16 +135,16 @@ verus! {
     }
 
     impl<A: StT + Hash, B: StT + Hash> Clone for MappingStEph<A, B> {
-        fn clone(&self) -> (result: Self)
-            ensures result@ == self@
+        fn clone(&self) -> (clone: Self)
+            ensures clone@ == self@
         { MappingStEph { rel: self.rel.clone() } }
     }
 
     // Helper function to ensure functional property (last value wins for each key)
     #[verifier::external_body]
-    fn unique_pairs<X: StT + Hash, Y: StT + Hash>(v: Vec<Pair<X, Y>>) -> (result: Vec<Pair<X, Y>>)
+    fn unique_pairs<X: StT + Hash, Y: StT + Hash>(v: Vec<Pair<X, Y>>) -> (unique_pairs: Vec<Pair<X, Y>>)
         ensures
-            result@.len() <= v@.len(),
+            unique_pairs@.len() <= v@.len(),
     {
         let mut map = HashMap::<X, Y>::new();
         for Pair(a, b) in v {

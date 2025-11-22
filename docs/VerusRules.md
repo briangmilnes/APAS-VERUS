@@ -344,3 +344,29 @@ For `for x in collection.iter() { body }`:
 - One focused task per STEP cycle.
 - Don't force the programmer to think about irrelevant details.
 
+### Return Value Naming
+When a function returns a value with a named return type `(name: Type)`, the name should be semantically meaningful:
+
+**Bad Examples:**
+```rust
+fn partition(...) -> (result: bool)  // Generic, no semantic information
+fn mem(&self, x: &T) -> (result: B)  // What does "result" mean?
+fn empty() -> (result: Self)         // "result" adds nothing
+```
+
+**Good Examples:**
+```rust
+fn partition(...) -> (partition: bool)     // Named after function
+fn mem(&self, x: &T) -> (contains: B)      // Semantic meaning
+fn empty() -> (empty: Self)                // Named after function
+fn clone(&self) -> (clone: Self)           // Named after function
+fn domain(&self) -> (domain: SetStEph<X>)  // Named after function
+fn unique_pairs(...) -> (unique_pairs: Vec<Pair<X, Y>>)  // Named after function
+```
+
+**Pattern:**
+- Name the return value after the function name when it clearly represents what the function does
+- Use semantic names that describe the meaning: `contains` not `result`, `mapping` not `result`
+- Generic "result" provides no semantic information and should always be replaced
+- Even for simple functions like `empty()` and `clone()`, use the function name
+

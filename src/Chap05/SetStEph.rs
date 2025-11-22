@@ -47,9 +47,9 @@ verus! {
                 it@.1.no_duplicates();
 
         /// APAS: Work Θ(1), Span Θ(1)
-        fn empty()                           -> (result: Self)
+        fn empty()                           -> (empty: Self)
             requires valid_key_type::<T>()
-            ensures result@ == Set::<<T as View>::V>::empty();
+            ensures empty@ == Set::<<T as View>::V>::empty();
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn singleton(x: T)                   -> Self
@@ -59,9 +59,9 @@ verus! {
         fn size(&self)                       -> N;
 
         /// APAS: Work Θ(1), Span Θ(1)
-        fn mem(&self, x: &T)                 -> (result: B)
+        fn mem(&self, x: &T)                 -> (contains: B)
             requires valid_key_type::<T>()
-            ensures result == self@.contains(x@);
+            ensures contains == self@.contains(x@);
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn insert(&mut self, x: T)           -> (inserted: bool)
@@ -71,16 +71,16 @@ verus! {
                 inserted == !old(self)@.contains(x@);
 
         /// APAS: Work Θ(|a| + |b|), Span Θ(1)
-        fn union(&self, s2: &SetStEph<T>) -> (result: Self)
+        fn union(&self, s2: &SetStEph<T>) -> (union: Self)
             requires 
                valid_key_type::<T>(),
-            ensures result@ == self@.union(s2@);
+            ensures union@ == self@.union(s2@);
 
         /// APAS: Work Θ(|a| + |b|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)
-        fn intersection(&self, s2: &SetStEph<T>) -> (result: Self)
+        fn intersection(&self, s2: &SetStEph<T>) -> (intersection: Self)
             requires valid_key_type::<T>()
-            ensures result@ == self@.intersect(s2@);
+            ensures intersection@ == self@.intersect(s2@);
 
         fn EltCrossSet<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
             requires 
@@ -107,12 +107,12 @@ verus! {
             ensures 
                 result <==> forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0;
 
-        fn partition_on_elt(x: &T, parts: &SetStEph<SetStEph<T>>) -> (result: bool)
+        fn partition_on_elt(x: &T, parts: &SetStEph<SetStEph<T>>) -> (partition_on_elt: bool)
             requires 
                 valid_key_type::<T>(),
                 valid_key_type::<SetStEph<T>>(),
             ensures 
-                result <==> (
+                partition_on_elt <==> (
                     (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x@)) &&
                     (forall |s1: Set<T::V>, s2: Set<T::V>|
                         #![trigger parts@.contains(s1), parts@.contains(s2)]
@@ -145,8 +145,8 @@ verus! {
     }
 
     impl<T: StT + Hash> Clone for SetStEph<T> {
-        fn clone(&self) -> (result: Self)
-            ensures result@ == self@
+        fn clone(&self) -> (clone: Self)
+            ensures clone@ == self@
         { SetStEph { elements: self.elements.clone() } }
     }
 
@@ -198,11 +198,11 @@ verus! {
             SetStEph { elements: s }
         }
 
-        fn size(&self) -> (result: N)
-            ensures result == self@.len()
+        fn size(&self) -> (size: N)
+            ensures size == self@.len()
         { self.elements.len() }
 
-        fn mem(&self, x: &T) -> (result: B) { self.elements.contains(x) }
+        fn mem(&self, x: &T) -> (contains: B) { self.elements.contains(x) }
 
         fn insert(&mut self, x: T) -> (inserted: bool)
         { self.elements.insert(x) }
