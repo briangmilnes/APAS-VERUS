@@ -327,41 +327,6 @@ verus! {
             product
         }
 
-        fn all_nonempty(parts: &SetStEph<SetStEph<T>>) -> bool {
-            let parts_iter       =  parts.iter();
-            let mut parts_it     = parts_iter;
-            let ghost parts_seq  = parts_it@.1;
-            let ghost parts_view = parts@;
-
-            #[verifier::loop_isolation(false)]
-            loop
-                invariant
-                    valid_key_type::<T>(),
-                    valid_key_type::<SetStEph<T>>(),
-                    parts_it@.0 <= parts_seq.len(),
-                    parts_it@.1 == parts_seq,
-                    parts_seq.map(|i: int, k: SetStEph<T>| k@).to_set() == parts_view,
-                    forall |s: Set<T::V>| 
-                        parts_seq.take(parts_it@.0).map(|i: int, k: SetStEph<T>| k@).to_set().contains(s) ==> s.len() != 0
-                decreases parts_seq.len() - parts_it@.0,
-            {
-                match parts_it.next() {
-                    Some(subset) => {
-                        if subset.size() == 0 {
-                            assert(subset@.len() == 0);
-                            assert(exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.len() == 0);
-                            assert(false <==> forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0);
-                            return false;
-                        }
-                    },
-                    None => {
-                        assume(forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0);
-                        return true;
-                    }
-                }
-            }
-        }
-
         fn EltCrossSet<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
         {
             let mut product = SetStEph::empty();
@@ -402,6 +367,42 @@ verus! {
             
             product
         }
+
+        fn all_nonempty(parts: &SetStEph<SetStEph<T>>) -> bool {
+            let parts_iter       =  parts.iter();
+            let mut parts_it     = parts_iter;
+            let ghost parts_seq  = parts_it@.1;
+            let ghost parts_view = parts@;
+
+            #[verifier::loop_isolation(false)]
+            loop
+                invariant
+                    valid_key_type::<T>(),
+                    valid_key_type::<SetStEph<T>>(),
+                    parts_it@.0 <= parts_seq.len(),
+                    parts_it@.1 == parts_seq,
+                    parts_seq.map(|i: int, k: SetStEph<T>| k@).to_set() == parts_view,
+                    forall |i: int| #![auto] 0 <= i < parts_it@.0 ==> parts_seq[i]@.len() != 0,
+                decreases parts_seq.len() - parts_it@.0,
+            {
+                let ghost old_pos = parts_it@.0;
+                match parts_it.next() {
+                    Some(subset) => {
+                        if subset.size() == 0 {
+                            proof {
+                                crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(parts_seq, old_pos);
+                                assert(exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.len() == 0);
+                            }
+                            return false;
+                        }
+                    },
+                    None => {
+                        return true;
+                    }
+                }
+            }
+        }
+
 
         fn partition_on_elt(x: &T, parts: &SetStEph<SetStEph<T>>) -> bool {
             let parts_iter = parts.iter();

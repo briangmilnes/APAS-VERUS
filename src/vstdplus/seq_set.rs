@@ -247,6 +247,21 @@ pub proof fn lemma_take_full_to_set_with_view<T: View>(seq: Seq<T>)
 }
 
 /// Proves that a sequence mapped through view equals a target set when bidirectional containment holds.
+/// Lemma: If i is a valid index, then seq.map(...)[i] is in seq.map(...).to_set()
+pub proof fn lemma_seq_index_in_map_to_set<T: View>(seq: Seq<T>, i: int)
+    requires
+        0 <= i < seq.len(),
+    ensures
+        seq.map(|i: int, k: T| k@).to_set().contains(seq[i]@),
+{
+    broadcast use vstd::seq_lib::group_seq_properties;
+    broadcast use vstd::set::group_set_axioms;
+    
+    let mapped_seq = seq.map(|i: int, k: T| k@);
+    assert(mapped_seq[i] == seq[i]@);
+    assert(mapped_seq.to_set().contains(mapped_seq[i]));
+}
+
 /// This lemma bridges the gap between iterator specs and set equality.
 pub proof fn lemma_seq_map_to_set_equality<T: View>(seq: Seq<T>, target: Set<T::V>)
     requires
