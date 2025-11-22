@@ -111,19 +111,12 @@ verus! {
     impl<X: StT + Hash + Clone + View + Eq, Y: StT + Hash + Clone + View + Eq> 
         RelationStEphTrait<X, Y> for RelationStEph<X, Y> {
 
-        fn empty() -> RelationStEph<X, Y> {
-            RelationStEph { pairs: SetStEph::empty() }
-        }
+        fn empty() -> RelationStEph<X, Y> { RelationStEph { pairs: SetStEph::empty() }}
 
-        fn FromSet(pairs: SetStEph<Pair<X, Y>>) -> RelationStEph<X, Y> {
-            RelationStEph { pairs }
-        }
+        fn FromSet(pairs: SetStEph<Pair<X, Y>>) -> RelationStEph<X, Y> { RelationStEph { pairs } }
 
         fn FromVec(v: Vec<Pair<X, Y>>) -> RelationStEph<X, Y> {
-            RelationStEph {
-                pairs: SetStEph::FromVec(v),
-            }
-        }
+            RelationStEph { pairs: SetStEph::FromVec(v), } }
 
         fn size(&self) -> N { self.pairs.size() }
 
@@ -157,7 +150,6 @@ verus! {
                     None => {
                         proof {
                             // Connect invariant to postcondition
-                            assert(it@.0 == pairs_seq.len());
                             assert forall |x: X::V| out@.contains(x) implies 
                                 (exists |y: Y::V| self@.contains((x, y))) by {
                                 if out@.contains(x) {
@@ -249,9 +241,7 @@ verus! {
             self.pairs.mem(&Pair(a_clone, b_clone))
         }
 
-        fn iter(&self) -> std::collections::hash_set::Iter<'_, Pair<X, Y>> {
-            self.pairs.iter()
-        }
+        fn iter(&self) -> std::collections::hash_set::Iter<'_, Pair<X, Y>> { self.pairs.iter() }
     }
 
     impl<A: StT + Hash, B: StT + Hash> std::hash::Hash for RelationStEph<A, B> {
