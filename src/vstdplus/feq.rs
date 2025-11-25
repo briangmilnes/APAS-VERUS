@@ -6,6 +6,7 @@
 pub mod feq {
     use vstd::prelude::*;
     use vstd::std_specs::cmp::PartialEqSpec;
+    use vstd::pervasive::strictly_cloned;
     use core::cmp::Eq;
     use core::marker::PointeeSized;
 
@@ -45,7 +46,10 @@ pub mod feq {
     }
 
     pub open spec fn obeys_feq_clone<T: Eq + Clone + Sized>() -> bool {
-        forall|x: T, y: T| cloned(x, y) ==> #[trigger] x.eq_spec(&y)
+        &&& forall|x: T, y: T| #[trigger] cloned(x, y) ==> x.eq_spec(&y)
+        &&& forall|x: &T, y: T| #[trigger] cloned(*x, y) ==> x.eq_spec(&y)
+        &&& forall|x: T, y: T| #[trigger] strictly_cloned(x, y) ==> x.eq_spec(&y)
+        &&& forall|x: &T, y: T| #[trigger] strictly_cloned(*x, y) ==> x.eq_spec(&y)
     }
 
     // The eq_spec function and the == operator mean the same thing.
@@ -53,9 +57,15 @@ pub mod feq {
         forall|x: T, y: T| #[trigger] x.eq_spec(&y) <==> x == y
     }
 
+    // View injectivity: equal views imply equal values
+    pub open spec fn obeys_feq_view_injective<T: Eq + View + Sized>() -> bool {
+        forall|x: T, y: T| #[trigger] x.view() == #[trigger] y.view() ==> x == y
+    }
+
     pub open spec fn obeys_feq_full<T: Eq + View + Clone + Sized>() -> bool {
         &&& obeys_feq_properties::<T>()
         &&& obeys_feq_view::<T>()
+        &&& obeys_feq_view_injective::<T>()
         &&& obeys_feq_clone::<T>()
         &&& obeys_feq_eq::<T>()
     }
@@ -122,6 +132,18 @@ pub mod feq {
 
     impl FeqSpecImpl for isize {
         open spec fn obeys_feq() -> bool { obeys_feq_properties::<isize>() }
+    }
+
+    // Broadcast proof: cloned values are equal
+    pub broadcast proof fn axiom_cloned_implies_eq<T: Eq + Clone + Sized>(x: &T, y: T)
+        requires #[trigger] cloned(*x, y), obeys_feq_clone::<T>()
+        ensures *x == y
+    {
+        admit();
+    }
+
+    pub broadcast group group_feq_axioms {
+        axiom_cloned_implies_eq,
     }
 
     } // verus!

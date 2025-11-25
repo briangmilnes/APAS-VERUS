@@ -16,6 +16,8 @@ verus! {
     use vstd::std_specs::hash::SetIterAdditionalSpecFns;
     use vstd::std_specs::clone::*;
     use crate::vstdplus::seq_set::*;
+    use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
 
@@ -143,8 +145,7 @@ verus! {
                 match it.next() {
                     Some(pair) => {
                         let Pair(a, _b) = pair;
-                        let a_clone = a.clone();
-                        assert(cloned(*a, a_clone));
+                        let a_clone = a.clone_plus();
                         let _ = out.insert(a_clone);
                     },
                     None => {
@@ -199,8 +200,7 @@ verus! {
                 match it.next() {
                     Some(pair) => {
                         let Pair(_a, b) = pair;
-                        let b_clone = b.clone();
-                        assert(cloned(*b, b_clone));
+                        let b_clone = b.clone_plus();
                         let _ = out.insert(b_clone);
                     },
                     None => {
@@ -234,10 +234,8 @@ verus! {
         }
 
         fn mem(&self, a: &X, b: &Y) -> B {
-            let a_clone = a.clone();
-            let b_clone = b.clone();
-            assert(cloned(*a, a_clone));
-            assert(cloned(*b, b_clone));
+            let a_clone = a.clone_plus();
+            let b_clone = b.clone_plus();
             self.pairs.mem(&Pair(a_clone, b_clone))
         }
 

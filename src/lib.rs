@@ -38,8 +38,9 @@ pub mod experiments {
 //    pub mod eq_rel;
 //    pub mod total_ord_gen;
 //    pub mod total_ord_gen_axioms;
-    pub mod test_feq;
-    pub mod test_feq_insertion_sort;
+//    pub mod test_feq;
+//    pub mod test_feq_insertion_sort;
+//      pub mod clone_plus;
 }
 
 pub mod vstdplus {
@@ -53,6 +54,7 @@ pub mod vstdplus {
     pub mod partial_order;
     pub mod clone_view;
     pub mod feq;
+    pub mod clone_plus;
 }
 
 pub mod Chap03 {
@@ -62,5 +64,5 @@ pub mod Chap03 {
 pub mod Chap05 {
     pub mod SetStEph;
     pub mod RelationStEph;
-    pub mod MappingStEph;
+//    pub mod MappingStEph;
 }

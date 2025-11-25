@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 5.1 ephemeral Set built on `std::collections::HashSet`.
 
 pub mod SetStEph {
@@ -15,21 +15,21 @@ verus! {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::SetIterAdditionalSpecFns;
     use vstd::std_specs::clone::*;
+    use vstd::pervasive::strictly_cloned;
     use vstd::laws_eq::*;
     use crate::vstdplus::seq_set::*;
+    use crate::vstdplus::feq::feq::*;
     use vstd::hash_set::HashSetWithView;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
     use crate::Types::Types::*;
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
 
-    broadcast use {vstd::seq_lib::group_seq_properties, vstd::set::group_set_axioms};
+    broadcast use {vstd::seq_lib::group_seq_properties, vstd::set::group_set_axioms, crate::vstdplus::feq::feq::group_feq_axioms};
 
     pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
         &&& obeys_key_model::<T>() 
-        &&& obeys_view_eq::<T>()
-        &&& forall|k1: T, k2: T| k1@ == k2@ ==> k1 == k2
-        // So we can clone elements and put them in a set.
-        &&& forall|x:T, x_cloned:T| cloned(x, x_cloned) ==> x == x_cloned 
+        &&& obeys_feq_full::<T>()
     }
 
     #[verifier::reject_recursive_types(T)]
@@ -174,8 +174,7 @@ verus! {
                 }
                 
                 let x = &v[i];
-                let x_clone = x.clone();
-                assert(cloned(*x, x_clone));
+                let x_clone = x.clone_plus();
                 let _ = s.insert(x_clone);
                 
                 proof { lemma_take_one_more_extends_the_seq_set_with_view(v_seq, i as int); }
@@ -211,7 +210,7 @@ verus! {
 
         fn union(&self, s2: &SetStEph<T>) -> (union: SetStEph<T>)
         {
-            let mut union = self.clone();
+            let mut union = self.clone_plus();
             let s2_iter = s2.iter();
             let mut it = s2_iter;
             let ghost s1_view = self@;
@@ -232,13 +231,11 @@ verus! {
                 
                 match it.next() {
                     Some(x) => {
-                        let x_clone = x.clone();
-                        assert(cloned(*x, x_clone));
+                        let x_clone = x.clone_plus();
                         let _ = union.insert(x_clone);
                         proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, old_index); }
                     },
                     None => {
-                        assert(it@.0 == s2_seq.len());
                         proof { lemma_take_full_to_set_with_view(s2_seq); }
                         break;
                     }
@@ -274,13 +271,11 @@ verus! {
                         proof { lemma_take_one_more_intersect(s1_seq, s2_view, old_index); }
                         
                         if s2.mem(s1mem) {
-                            let s1mem_clone = s1mem.clone();
-                            assert(cloned(*s1mem, s1mem_clone));
+                            let s1mem_clone = s1mem.clone_plus();
                             let _ = intersection.insert(s1mem_clone);
                         } 
                     },
                     None => {
-                        assert(it@.0 == s1_seq.len());
                         proof { lemma_take_full_to_set_with_view(s1_seq); }
                         break;
                     }
@@ -353,10 +348,8 @@ verus! {
                 match it.next() {
                     Some(b) => {
                         let ghost old_index = it@.0 - 1;
-                        let a_clone = a.clone();
-                        let b_clone = b.clone();
-                        assert(cloned(*a, a_clone));
-                        assert(cloned(*b, b_clone));
+                        let a_clone = a.clone_plus();
+                        let b_clone = b.clone_plus();
                         let _ = product.insert(Pair(a_clone, b_clone));
                         proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, old_index); }
                     },
@@ -393,7 +386,6 @@ verus! {
                         if subset.size() == 0 {
                             proof {
                                 crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(parts_seq, old_pos);
-                                assert(exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.len() == 0);
                             }
                             return false;
                         }
@@ -446,10 +438,6 @@ verus! {
                                     let prev_idx = match prev_found_index { Some(i) => i, None => arbitrary() };
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(parts_seq, prev_idx);
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(parts_seq, old_pos);
-                                    assert(!(forall |s1: Set<T::V>, s2: Set<T::V>|
-                                        #![trigger parts@.contains(s1), parts@.contains(s2)]
-                                        parts@.contains(s1) && s1.contains(x@) &&
-                                        parts@.contains(s2) && s2.contains(x@) ==> s1 == s2));
                                 }
                                 return false;
                             }
@@ -457,16 +445,11 @@ verus! {
                     },
                     None => {
                         if count == 0 {
-                                assert(!(exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x@)));
                             return false;
                         } else {
                           proof {
                                 let idx = match found_index { Some(i) => i, None => arbitrary() };
                                 crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(parts_seq, idx);
-                                assert forall |s1: Set<T::V>, s2: Set<T::V>|
-                                    #![trigger parts@.contains(s1), parts@.contains(s2)]
-                                    parts@.contains(s1) && s1.contains(x@) &&
-                                    parts@.contains(s2) && s2.contains(x@) implies s1 == s2 by {}
                             }
                             return true;
                         }
@@ -478,10 +461,6 @@ verus! {
         fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> bool {
             // First check if all parts are non-empty
             if !Self::all_nonempty(parts) {
-                proof {
-                    // all_nonempty returned false, so its postcondition tells us the nonempty condition is violated
-                    assert(!(forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0));
-                }
                 return false;
             }
             
@@ -515,41 +494,16 @@ verus! {
                         if !Self::partition_on_elt(x, parts) {
                             proof {
                                 crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(s1_seq, old_pos);
-                                assert(!(forall |x: T::V| self@.contains(x) ==> (
-                                    (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x)) &&
-                                    (forall |s1: Set<T::V>, s2: Set<T::V>|
-                                        #![trigger parts@.contains(s1), parts@.contains(s2)]
-                                        parts@.contains(s1) && s1.contains(x) &&
-                                        parts@.contains(s2) && s2.contains(x) ==> s1 == s2)
-                                )));
                             }
                             return false;
                         }
                     },
                     None => {
-                        proof {
-                            assert forall |x: T::V| self@.contains(x) implies (
-                                (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x)) &&
-                                (forall |s1: Set<T::V>, s2: Set<T::V>|
-                                    #![trigger parts@.contains(s1), parts@.contains(s2)]
-                                    parts@.contains(s1) && s1.contains(x) &&
-                                    parts@.contains(s2) && s2.contains(x) ==> s1 == s2)
-                            ) by {
-                                if self@.contains(x) {
-                                    // x is in self@, which equals s1_seq.map(...).to_set()
-                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(s1_seq, x);
-                                    let i = choose |i: int| #![auto] 0 <= i < s1_seq.len() && x == s1_seq[i]@;
-                                    // By invariant, the partition property holds for s1_seq[i]@, which equals x
-                                    assert(s1_seq[i]@ == x);
-                                }
-                            }
-                        }
                         return true;
                     }
                 }
             }
         }
-
     }
 
     impl<T: StT + Hash> std::hash::Hash for SetStEph<T> {

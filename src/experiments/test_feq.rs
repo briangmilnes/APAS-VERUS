@@ -3,10 +3,7 @@
 pub mod test_feq {
     use vstd::prelude::*;
     use vstd::std_specs::cmp::PartialEqSpec;
-    use crate::vstdplus::feq::feq::{
-        FeqSpec, feq_reflexive, feq_symmetric, feq_transitive,
-        obeys_feq_properties, obeys_feq_view, obeys_feq_clone, obeys_feq_full
-    };
+    use crate::vstdplus::feq::feq::*;
 
     verus! {
 
@@ -153,6 +150,16 @@ pub mod test_feq {
         }
     }
 
+    fn test_generic_view_injective<T: Eq + View + Clone + Sized>(x: T, y: T)
+        requires obeys_feq_full::<T>()
+    {
+        proof {
+            if x@ == y@ {
+                assert(x == y);
+            }
+        }
+    }
+
     fn test_generic_clone<T: Eq + View + Clone + Sized>(x: T)
         requires obeys_feq_full::<T>()
     {
@@ -203,6 +210,15 @@ pub mod test_feq {
             assert(obeys_feq_view::<u64>());
             if x.eq_spec(&y) {
                 assert(x@ == y@);
+            }
+        }
+    }
+
+    fn test_u64_view_injective(x: u64, y: u64) {
+        proof {
+            assert(obeys_feq_view_injective::<u64>());
+            if x@ == y@ {
+                assert(x == y);
             }
         }
     }
