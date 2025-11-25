@@ -15,6 +15,7 @@ verus! {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::SetIterAdditionalSpecFns;
     use vstd::std_specs::clone::*;
+    use vstd::laws_eq::*;
     use crate::vstdplus::seq_set::*;
     use vstd::hash_set::HashSetWithView;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
@@ -23,8 +24,9 @@ verus! {
 
     broadcast use {vstd::seq_lib::group_seq_properties, vstd::set::group_set_axioms};
 
-    pub open spec fn valid_key_type<T: View + Clone>() -> bool {
+    pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
         &&& obeys_key_model::<T>() 
+        &&& obeys_view_eq::<T>()
         &&& forall|k1: T, k2: T| k1@ == k2@ ==> k1 == k2
         // So we can clone elements and put them in a set.
         &&& forall|x:T, x_cloned:T| cloned(x, x_cloned) ==> x == x_cloned 

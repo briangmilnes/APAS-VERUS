@@ -181,6 +181,55 @@ For `for x in collection.iter() { body }`:
 
 ## Type System and Traits
 
+### Clone and the `cloned` Relationship
+
+**The `.clone()` method establishes the `cloned` relationship, but you must assert it for the SMT solver:**
+
+```rust
+let x_clone = x.clone();
+// .clone() postcondition establishes: cloned(x, x_clone)
+// But you must assert it to make the SMT solver use it:
+proof {
+    assert(cloned(x, x_clone));  // Proves automatically, but REQUIRED
+}
+```
+
+**How it works:**
+- `cloned(a, b)` is defined as: `strictly_cloned(a, b) || a == b`
+- `strictly_cloned(a, b)` is defined as: `call_ensures(T::clone, (&a,), b)`
+- When you call `.clone()`, Verus establishes `call_ensures(T::clone, (&x,), x_clone)` in the postcondition
+- **But** the SMT solver won't automatically reason with this fact
+- You must explicitly `assert(cloned(...))` to bring it into the active proof context
+
+**In practice:**
+```rust
+let key_i_clone = key_i.clone();
+let key_j_clone = key_j.clone();
+
+proof {
+    // These assertions prove automatically (from .clone() postcondition)
+    // BUT they are REQUIRED - without them, later assertions will fail
+    assert(cloned(*key_i, key_i_clone));
+    assert(cloned(*key_j, key_j_clone));
+    
+    // Now you can use facts about the clones
+    assert(key_i_clone == key_j_clone ==> key_i@ == key_j@);
+}
+```
+
+**Bad (don't assume):**
+```rust
+proof {
+    assume(cloned(*key_i, key_i_clone));  // Don't assume - assert instead!
+}
+```
+
+**Key insight:** 
+- `.clone()` postcondition establishes `cloned(original, clone)`
+- BUT you must `assert(cloned(...))` to activate this fact for the SMT solver
+- The assert WILL prove (no lemma needed), but it IS required
+- This is a common Verus pattern: postconditions exist but must be asserted to be used
+
 ### Rust/Verus Trait Limitations
 - **No method overriding in subtraits**: Can't redefine a method from a supertrait with different specs.
 - **No specification refinement**: Can't add `requires` to an inherited trait method in an implementation.

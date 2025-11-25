@@ -325,9 +325,7 @@ pub mod Types {
     impl<K: vstd::prelude::View, V: vstd::prelude::View> vstd::prelude::View for Pair<K, V> {
         type V = (K::V, V::V);
 
-        open spec fn view(&self) -> (K::V, V::V) {
-            (self.0@, self.1@)
-        }
+        open spec fn view(&self) -> (K::V, V::V) {(self.0@, self.1@)}
     }
 
     /// Axiom that Pair's view is injective (needed for hash collections)

@@ -35,6 +35,10 @@ path = "tests/vstdplus/test_total_order.rs"
 name = "test_partial_order"
 path = "tests/vstdplus/test_partial_order.rs"
 
+[[test]]
+name = "test_feq"
+path = "tests/vstdplus/test_feq.rs"
+
 [[bench]]
 name = "BenchInsertionSortStEph"
 path = "benches/Chap03/BenchInsertionSortStEph.rs"

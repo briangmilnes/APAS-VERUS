@@ -22,10 +22,9 @@ pub mod experiments {
 //    pub mod seq_loop_basic_proofs;
 //    pub mod verus_wrapped_iter_loops;
 //    pub mod possession;
-    pub mod simple_seq_iter;
-    pub mod simple_set_iter;
-    pub mod simple_hash_set_iter;
-    pub mod vec_if;
+//    pub mod simple_seq_iter;
+//    pub mod simple_set_iter;
+//    pub mod simple_hash_set_iter;
 //    pub mod invariant_proof_test;
 //    pub mod assume_spec_test; 
 //    pub mod struct_construction_test; 
@@ -33,6 +32,14 @@ pub mod experiments {
 //    pub mod verus_pub_crate_test;  // Has type_invariant failure
 //    pub mod hash_set_iter;
 //    pub mod hash_set_with_view_plus_loops;
+//    pub mod vec_if;
+//    pub mod clone;
+//    pub mod proof_fn_in_trait;
+//    pub mod eq_rel;
+//    pub mod total_ord_gen;
+//    pub mod total_ord_gen_axioms;
+    pub mod test_feq;
+    pub mod test_feq_insertion_sort;
 }
 
 pub mod vstdplus {
@@ -45,6 +52,7 @@ pub mod vstdplus {
     pub mod total_order;
     pub mod partial_order;
     pub mod clone_view;
+    pub mod feq;
 }
 
 pub mod Chap03 {
