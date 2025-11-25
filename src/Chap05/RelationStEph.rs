@@ -156,7 +156,6 @@ verus! {
                                 if out@.contains(x) {
                                     let i = choose |i: int| #![auto] 0 <= i < pairs_seq.len() && pairs_seq[i]@.0 == x;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(pairs_seq, i);
-                                    assert(self@.contains(pairs_seq[i]@));
                                     assert(self@.contains((x, pairs_seq[i]@.1)));
                                 }
                             }
@@ -165,9 +164,6 @@ verus! {
                                 if exists |y: Y::V| self@.contains((x, y)) {
                                     let y = choose |y: Y::V| #![auto] self@.contains((x, y));
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(pairs_seq, (x, y));
-                                    let i = choose |i: int| #![auto] 0 <= i < pairs_seq.len() && (x, y) == pairs_seq[i]@;
-                                    assert(pairs_seq[i]@.0 == x);
-                                    assert(out@.contains(x));
                                 }
                             }
                         }
@@ -205,14 +201,11 @@ verus! {
                     },
                     None => {
                         proof {
-                            // Connect invariant to postcondition
-                            assert(it@.0 == pairs_seq.len());
                             assert forall |y: Y::V| out@.contains(y) implies 
                                 (exists |x: X::V| self@.contains((x, y))) by {
                                 if out@.contains(y) {
                                     let i = choose |i: int| #![auto] 0 <= i < pairs_seq.len() && pairs_seq[i]@.1 == y;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(pairs_seq, i);
-                                    assert(self@.contains(pairs_seq[i]@));
                                     assert(self@.contains((pairs_seq[i]@.0, y)));
                                 }
                             }
@@ -221,9 +214,6 @@ verus! {
                                 if exists |x: X::V| self@.contains((x, y)) {
                                     let x = choose |x: X::V| #![auto] self@.contains((x, y));
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(pairs_seq, (x, y));
-                                    let i = choose |i: int| #![auto] 0 <= i < pairs_seq.len() && (x, y) == pairs_seq[i]@;
-                                    assert(pairs_seq[i]@.1 == y);
-                                    assert(out@.contains(y));
                                 }
                             }
                         }
