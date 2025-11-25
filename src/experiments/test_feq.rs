@@ -4,6 +4,7 @@ pub mod test_feq {
     use vstd::prelude::*;
     use vstd::std_specs::cmp::PartialEqSpec;
     use crate::vstdplus::feq::feq::*;
+    use crate::Types::Types::Pair;
 
     verus! {
 
@@ -85,7 +86,6 @@ pub mod test_feq {
     pub open spec fn point_feq_trigger() -> bool { true }
     pub open spec fn color_feq_trigger() -> bool { true }
     pub open spec fn inttree_feq_trigger() -> bool { true }
-
     // Per-type broadcast axioms for obeys_feq_full
     broadcast proof fn axiom_point_feq()
         requires #[trigger] point_feq_trigger()
@@ -156,6 +156,31 @@ pub mod test_feq {
         proof {
             if x@ == y@ {
                 assert(x == y);
+            }
+        }
+    }
+
+    // Test: exec == should give us spec == and view ==
+    // but can't!. 
+    #[verifier::external_body]
+    fn test_exec_eq_implies_view_eq<T: Eq + View + Clone + Sized>(x: &T, y: &T)
+        requires obeys_feq_full::<T>()
+    {
+        if *x == *y {
+            proof {
+                assert(*x == *y);
+                assert(x@ == y@);
+            }
+        }
+    }
+
+    fn test_exec_feq_implies_eq_and_view<T: Eq + View + Clone + Sized>(x: &T, y: &T)
+        requires obeys_feq_full::<T>()
+    {
+        if feq(x,y) {
+            proof {
+                assert(*x == *y);
+                assert(x@ == y@);
             }
         }
     }
@@ -314,6 +339,40 @@ pub mod test_feq {
             assert(inttree_feq_trigger()); // Fire the axiom
             assert(obeys_feq_full::<IntTree>()); // Now this works
             assert(t.eq_spec(&t));
+        }
+    }
+
+    // Tests for Pair<u64, u64>
+    fn test_pair_reflexive(p: Pair<u64, u64>)
+        requires obeys_feq_full::<Pair<u64, u64>>()
+    {
+        test_generic_reflexive(p);
+    }
+
+    fn test_pair_symmetric(p1: Pair<u64, u64>, p2: Pair<u64, u64>)
+        requires obeys_feq_full::<Pair<u64, u64>>()
+    {
+        test_generic_symmetric(p1, p2);
+    }
+
+    fn test_pair_view(p1: Pair<u64, u64>, p2: Pair<u64, u64>)
+        requires obeys_feq_full::<Pair<u64, u64>>()
+    {
+        test_generic_view(p1, p2);
+    }
+
+    fn test_pair_view_injective(p1: Pair<u64, u64>, p2: Pair<u64, u64>)
+        requires obeys_feq_full::<Pair<u64, u64>>()
+    {
+        test_generic_view_injective(p1, p2);
+    }
+
+    fn test_pair_with_axiom(p: Pair<u64, u64>) {
+        broadcast use crate::Types::Types::group_Pair_axioms;
+        proof {
+            assert(crate::Types::Types::Pair_feq_trigger::<u64, u64>()); // Fire the axiom
+            assert(obeys_feq_full::<Pair<u64, u64>>()); // Now this works
+            assert(p.eq_spec(&p));
         }
     }
 

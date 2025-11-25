@@ -330,7 +330,7 @@ pub mod Types {
 
     /// Axiom that Pair's view is injective (needed for hash collections)
     /// If two pairs have the same view, they are equal
-    pub broadcast proof fn axiom_pair_view_injective<K: vstd::prelude::View, V: vstd::prelude::View>(p1: Pair<K, V>, p2: Pair<K, V>)
+    pub broadcast proof fn axiom_Pair_view_injective<K: vstd::prelude::View, V: vstd::prelude::View>(p1: Pair<K, V>, p2: Pair<K, V>)
         requires
             #[trigger] p1@ == #[trigger] p2@,
         ensures
@@ -339,8 +339,29 @@ pub mod Types {
         admit();
     }
 
-    pub broadcast group group_pair_axioms {
-        axiom_pair_view_injective,
+    use crate::vstdplus::feq::feq::obeys_feq_full;
+    use vstd::std_specs::hash::obeys_key_model;
+
+    pub open spec fn Pair_feq_trigger<K, V>() -> bool { true }
+
+    pub broadcast proof fn axiom_Pair_feq<K: Eq + vstd::prelude::View + Clone + Sized, V: Eq + vstd::prelude::View + Clone + Sized>()
+        requires #[trigger] Pair_feq_trigger::<K, V>()
+        ensures obeys_feq_full::<Pair<K, V>>()
+    { admit(); }
+
+    pub broadcast group group_Pair_axioms {
+        axiom_Pair_view_injective,
+        axiom_Pair_feq,
+    }
+
+    // For verus wrapped hash tables we need obeys_key_model and for our use of a full equality we need obeys_feq_full.
+    pub open spec fn valid_key_type_Pair<K: Eq + View + Clone + Sized + Hash, V: Eq + View + Clone + Sized + Hash>() -> bool {
+        &&& obeys_key_model::<K>() && obeys_key_model::<V>() && obeys_key_model::<Pair<K, V>>()
+        &&& obeys_feq_full::<K>() && obeys_feq_full::<V>() && obeys_feq_full::<Pair<K, V>>()
+    }
+
+    pub open spec fn obeys_feq_full_Pair<K: Eq + View + Clone + Sized, V: Eq + View + Clone + Sized>() -> bool {
+        obeys_feq_full::<K>() && obeys_feq_full::<V>() && obeys_feq_full::<Pair<K, V>>()
     }
 
     // Newtype wrapper for Pair iterator to implement ForLoopGhostIterator (orphan rule)

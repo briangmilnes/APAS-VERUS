@@ -142,6 +142,21 @@ pub mod feq {
         admit();
     }
 
+    // Exec function: test equality and get spec fact
+    pub fn feq<T: Eq + View + Clone + Sized>(x: &T, y: &T) -> (eq: bool)
+        requires obeys_feq_full::<T>()
+        ensures eq == (x@ == y@)
+    {
+        let result = *x == *y;
+        proof {
+            // obeys_feq_eq: x.eq_spec(&y) <==> x == y
+            // obeys_feq_view: x.eq_spec(&y) ==> x@ == y@
+            // obeys_feq_view_injective: x@ == y@ ==> x == y
+            assume(result == (x@ == y@));
+        }
+        result
+    }
+
     pub broadcast group group_feq_axioms {
         axiom_cloned_implies_eq,
     }

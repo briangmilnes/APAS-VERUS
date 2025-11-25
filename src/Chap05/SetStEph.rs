@@ -35,7 +35,7 @@ verus! {
     #[verifier::reject_recursive_types(T)]
     pub struct SetStEph<T: StT + Hash> { pub elements: HashSetWithViewPlus<T> }
 
-    pub trait SetStEphTrait<T: StT + Hash + Clone + View> : View<V = Set<<T as View>::V>> + Sized {
+    pub trait SetStEphTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
 
         fn FromVec(v: Vec<T>) -> (s: SetStEph<T>)
             requires valid_key_type::<T>()
@@ -152,7 +152,7 @@ verus! {
         { SetStEph { elements: self.elements.clone() } }
     }
 
-    impl<T: StT + Hash + Clone + View + Eq> SetStEphTrait<T> for SetStEph<T> {
+    impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
 
         fn FromVec(v: Vec<T>) -> SetStEph<T> {
             let mut s = SetStEph::empty();

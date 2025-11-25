@@ -29,32 +29,23 @@ verus! {
         pub pairs: SetStEph<Pair<A, B>>,
     }
 
-    pub trait RelationStEphTrait<X: StT + Hash + Clone + View, Y: StT + Hash + Clone + View> : 
+    pub trait RelationStEphTrait<X: StT + Hash, Y: StT + Hash> : 
         View<V = Set<(<X as View>::V, <Y as View>::V)>> + Sized {
 
         /// APAS: Work Θ(1), Span Θ(1)
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
-            requires 
-                valid_key_type::<X>(),
-                valid_key_type::<Y>(),
-                valid_key_type::<Pair<X, Y>>(),
+            requires valid_key_type_Pair::<X, Y>()
             ensures empty@ == Set::<(<X as View>::V, <Y as View>::V)>::empty();
 
         /// APAS: Work Θ(|pairs|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|pairs|), Span Θ(1)
         fn FromSet(pairs: SetStEph<Pair<X, Y>>) -> (relation: Self)
-            requires 
-                valid_key_type::<X>(),
-                valid_key_type::<Y>(),
-                valid_key_type::<Pair<X, Y>>(),
+            requires valid_key_type_Pair::<X, Y>()
             ensures relation@ == pairs@;
 
         fn FromVec(v: Vec<Pair<X, Y>>) -> (relation: Self)
-            requires 
-                valid_key_type::<X>(),
-                valid_key_type::<Y>(),
-                valid_key_type::<Pair<X, Y>>(),
+            requires valid_key_type_Pair::<X, Y>()
             ensures relation@ == v@.map(|i: int, p: Pair<X, Y>| p@).to_set();
 
         /// APAS: Work Θ(1), Span Θ(1)
@@ -64,35 +55,23 @@ verus! {
         /// APAS: Work Θ(|R|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|R|), Span Θ(1)
         fn domain(&self) -> (domain: SetStEph<X>)
-            requires 
-                valid_key_type::<X>(),
-                valid_key_type::<Y>(),
-                valid_key_type::<Pair<X, Y>>(),
+            requires valid_key_type_Pair::<X, Y>()
             ensures domain@ == Set::<X::V>::new(|x: X::V| exists |y: Y::V| self@.contains((x, y)));
 
         /// APAS: Work Θ(|R|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|R|), Span Θ(1)
         fn range(&self) -> (range: SetStEph<Y>)
-            requires 
-                valid_key_type::<X>(),
-                valid_key_type::<Y>(),
-                valid_key_type::<Pair<X, Y>>(),
+            requires valid_key_type_Pair::<X, Y>()
             ensures range@ == Set::<Y::V>::new(|y: Y::V| exists |x: X::V| self@.contains((x, y)));
 
         /// APAS: Work Θ(1), Span Θ(1)
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn mem(&self, a: &X, b: &Y) -> (contains: B)
-            requires 
-                valid_key_type::<X>(),
-                valid_key_type::<Y>(),
-                valid_key_type::<Pair<X, Y>>(),
+            requires valid_key_type_Pair::<X, Y>()
             ensures contains == self@.contains((a@, b@));
 
         fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, Pair<X, Y>>)
-            requires 
-                valid_key_type::<X>(),
-                valid_key_type::<Y>(),
-                valid_key_type::<Pair<X, Y>>(),
+            requires valid_key_type_Pair::<X, Y>()
             ensures
                 it@.0 == 0int,
                 it@.1.map(|i: int, p: Pair<X, Y>| p@).to_set() == self@,
@@ -110,7 +89,7 @@ verus! {
         { RelationStEph { pairs: self.pairs.clone() } }
     }
 
-    impl<X: StT + Hash + Clone + View + Eq, Y: StT + Hash + Clone + View + Eq> 
+    impl<X: StT + Hash, Y: StT + Hash> 
         RelationStEphTrait<X, Y> for RelationStEph<X, Y> {
 
         fn empty() -> RelationStEph<X, Y> { RelationStEph { pairs: SetStEph::empty() }}
@@ -132,9 +111,7 @@ verus! {
             #[verifier::loop_isolation(false)]
             loop
                 invariant
-                    valid_key_type::<X>(),
-                    valid_key_type::<Y>(),
-                    valid_key_type::<Pair<X, Y>>(),
+                    valid_key_type_Pair::<X, Y>(),
                     it@.0 <= pairs_seq.len(),
                     it@.1 == pairs_seq,
                     pairs_seq.map(|i: int, p: Pair<X, Y>| p@).to_set() == pairs_view,
@@ -183,9 +160,7 @@ verus! {
             #[verifier::loop_isolation(false)]
             loop
                 invariant
-                    valid_key_type::<X>(),
-                    valid_key_type::<Y>(),
-                    valid_key_type::<Pair<X, Y>>(),
+                    valid_key_type_Pair::<X, Y>(),
                     it@.0 <= pairs_seq.len(),
                     it@.1 == pairs_seq,
                     pairs_seq.map(|i: int, p: Pair<X, Y>| p@).to_set() == pairs_view,
