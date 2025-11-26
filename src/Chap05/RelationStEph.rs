@@ -29,6 +29,41 @@ verus! {
         pub pairs: SetStEph<Pair<A, B>>,
     }
 
+    // Iterator wrapper to hide SetStEphIter<Pair<X, Y>>
+    #[verifier::reject_recursive_types(X)]
+    #[verifier::reject_recursive_types(Y)]
+    pub struct RelationStEphIter<'a, X: StT + Hash, Y: StT + Hash> {
+        pub inner: SetStEphIter<'a, Pair<X, Y>>,
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> View for RelationStEphIter<'a, X, Y> {
+        type V = (int, Seq<Pair<X, Y>>);
+        open spec fn view(&self) -> (int, Seq<Pair<X, Y>>) { self.inner@ }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> RelationStEphIter<'a, X, Y> {
+        pub fn next(&mut self) -> (result: Option<&'a Pair<X, Y>>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match result {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            self.inner.next()
+        }
+    }
+
     pub trait RelationStEphTrait<X: StT + Hash, Y: StT + Hash> : 
         View<V = Set<(<X as View>::V, <Y as View>::V)>> + Sized {
 
@@ -65,12 +100,16 @@ verus! {
             ensures range@ == Set::<Y::V>::new(|y: Y::V| exists |x: X::V| self@.contains((x, y)));
 
         /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn mem(&self, a: &X, b: &Y) -> (contains: B)
             requires valid_key_type_Pair::<X, Y>()
             ensures contains == self@.contains((a@, b@));
 
-        fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, Pair<X, Y>>)
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn relates(&self, p: &Pair<X, Y>) -> (contains: B)
+            requires valid_key_type_Pair::<X, Y>()
+            ensures contains == self@.contains(p@);
+
+        fn iter<'a>(&'a self) -> (it: RelationStEphIter<'a, X, Y>)
             requires valid_key_type_Pair::<X, Y>()
             ensures
                 it@.0 == 0int,
@@ -103,10 +142,9 @@ verus! {
 
         fn domain(&self) -> SetStEph<X> {
             let mut out = SetStEph::<X>::empty();
-            let pairs_iter = self.pairs.iter();
-            let mut it = pairs_iter;
+            let mut it = self.iter();
             let ghost pairs_seq = it@.1;
-            let ghost pairs_view = self.pairs@;
+            let ghost pairs_view = self@;
 
             #[verifier::loop_isolation(false)]
             loop
@@ -152,10 +190,9 @@ verus! {
 
         fn range(&self) -> SetStEph<Y> {
             let mut out = SetStEph::<Y>::empty();
-            let pairs_iter = self.pairs.iter();
-            let mut it = pairs_iter;
+            let mut it = self.iter();
             let ghost pairs_seq = it@.1;
-            let ghost pairs_view = self.pairs@;
+            let ghost pairs_view = self@;
 
             #[verifier::loop_isolation(false)]
             loop
@@ -204,7 +241,13 @@ verus! {
             self.pairs.mem(&Pair(a_clone, b_clone))
         }
 
-        fn iter(&self) -> std::collections::hash_set::Iter<'_, Pair<X, Y>> { self.pairs.iter() }
+        fn relates(&self, p: &Pair<X, Y>) -> B {
+            self.mem(&p.0, &p.1)
+        }
+
+        fn iter(&self) -> RelationStEphIter<'_, X, Y> {
+            RelationStEphIter { inner: self.pairs.iter() }
+        }
     }
 
     impl<A: StT + Hash, B: StT + Hash> std::hash::Hash for RelationStEph<A, B> {

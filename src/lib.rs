@@ -3,6 +3,7 @@
 pub mod Types;
 
 pub mod experiments {
+    pub mod abstract_set_iter;
 //    pub mod SetLoops;
 //    pub mod ToVecProof;
 //    pub mod supertrait;
@@ -55,6 +56,7 @@ pub mod vstdplus {
     pub mod clone_view;
     pub mod feq;
     pub mod clone_plus;
+    pub mod vec;
 }
 
 pub mod Chap03 {

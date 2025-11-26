@@ -54,6 +54,41 @@ verus! {
         pub mapping: RelationStEph<A, B>,
     }
 
+    // Iterator wrapper to hide RelationStEphIter<X, Y>
+    #[verifier::reject_recursive_types(X)]
+    #[verifier::reject_recursive_types(Y)]
+    pub struct MappingStEphIter<'a, X: StT + Hash, Y: StT + Hash> {
+        pub inner: RelationStEphIter<'a, X, Y>,
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> View for MappingStEphIter<'a, X, Y> {
+        type V = (int, Seq<Pair<X, Y>>);
+        open spec fn view(&self) -> (int, Seq<Pair<X, Y>>) { self.inner@ }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> MappingStEphIter<'a, X, Y> {
+        pub fn next(&mut self) -> (result: Option<&'a Pair<X, Y>>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match result {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            self.inner.next()
+        }
+    }
+
     pub trait MappingStEphTrait<X: StT + Hash, Y: StT + Hash> : 
         View<V = Map<X::V, Y::V>> + Sized {
 
@@ -108,7 +143,7 @@ verus! {
             requires valid_key_type_Pair::<X, Y>(), self.is_functional()
             ensures contains == (self@.dom().contains(p@.0) && self@[p@.0] == p@.1);
 
-        fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, Pair<X, Y>>)
+        fn iter<'a>(&'a self) -> (it: MappingStEphIter<'a, X, Y>)
             requires valid_key_type_Pair::<X, Y>(), self.is_functional()
             ensures
                 it@.0 == 0int,
@@ -287,7 +322,7 @@ verus! {
         }
 
         fn size(&self) -> N { self.mapping.size() }
-        fn mem(&self, p: &Pair<X, Y>) -> B { let Pair(a, b) = p; self.mapping.mem(a, b) }
+        fn mem(&self, p: &Pair<X, Y>) -> B { self.mapping.relates(p) }
         fn domain(&self) -> SetStEph<X> { self.mapping.domain() }
 
         fn range(&self) -> SetStEph<Y> { 
@@ -305,8 +340,8 @@ verus! {
             result
         }
 
-        fn iter(&self) -> std::collections::hash_set::Iter<'_, Pair<X, Y>> { 
-            self.mapping.iter()
+        fn iter(&self) -> MappingStEphIter<'_, X, Y> { 
+            MappingStEphIter { inner: self.mapping.iter() }
         }
     }
 

@@ -35,14 +35,52 @@ verus! {
     #[verifier::reject_recursive_types(T)]
     pub struct SetStEph<T: StT + Hash> { pub elements: HashSetWithViewPlus<T> }
 
+    // Iterator wrapper to hide std::collections::hash_set::Iter
+    #[verifier::reject_recursive_types(T)]
+    pub struct SetStEphIter<'a, T: StT + Hash> {
+        pub inner: std::collections::hash_set::Iter<'a, T>,
+    }
+
+    impl<'a, T: StT + Hash> View for SetStEphIter<'a, T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant<'a, T: StT + Hash>(it: &SetStEphIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<'a, T: StT + Hash> SetStEphIter<'a, T> {
+        pub fn next(&mut self) -> (result: Option<&'a T>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match result {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            self.inner.next()
+        }
+    }
+
     pub trait SetStEphTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
 
         fn FromVec(v: Vec<T>) -> (s: SetStEph<T>)
             requires valid_key_type::<T>()
             ensures s@ == v@.map(|i: int, x: T| x@).to_set();
 
-        fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, T>)
-            requires valid_key_type::<T>(),
+        fn iter<'a>(&'a self) -> (it: SetStEphIter<'a, T>)
+            requires valid_key_type::<T>()
             ensures
                 it@.0 == 0int,
                 it@.1.map(|i: int, k: T| k@).to_set() == self@,
@@ -176,19 +214,17 @@ verus! {
                 let x = &v[i];
                 let x_clone = x.clone_plus();
                 let _ = s.insert(x_clone);
-                
                 proof { lemma_take_one_more_extends_the_seq_set_with_view(v_seq, i as int); }
-                
                 i = i + 1;
             }
             
             s
         }
 
-        fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, T>) {
-            let it = self.elements.iter();
-            proof { lemma_seq_map_to_set_equality(it@.1, self@); }
-            it
+        fn iter<'a>(&'a self) -> (it: SetStEphIter<'a, T>) {
+            let inner = self.elements.iter();
+            proof { lemma_seq_map_to_set_equality(inner@.1, self@); }
+            SetStEphIter { inner }
         }
 
         fn empty() -> SetStEph<T> { SetStEph { elements: HashSetWithViewPlus::new() } }
