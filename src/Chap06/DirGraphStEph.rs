@@ -26,8 +26,8 @@ pub mod DirGraphStEph {
 
     #[verifier::reject_recursive_types(V)]
     pub struct DirGraphStEph<V: StT + Hash> {
-        V: SetStEph<V>,
-        A: SetStEph<Edge<V>>,
+        pub V: SetStEph<V>,
+        pub A: SetStEph<Edge<V>>,
     }
 
     impl<V: StT + Hash> DirGraphStEph<V> {
@@ -70,6 +70,33 @@ pub mod DirGraphStEph {
         }
     }
 
+    // View implementation: (vertices, arcs) as spec sets
+    impl<V: StT + Hash> View for DirGraphStEph<V> {
+        type V = (Set<<V as View>::V>, Set<(<V as View>::V, <V as View>::V)>);
+        
+        open spec fn view(&self) -> Self::V {
+            (self.V@, self.A@)
+        }
+    }
+
+    // Derived spec functions in impl block (not trait) for complex properties
+    impl<V: StT + Hash> DirGraphStEph<V> {
+        /// Out-neighbors: vertices w such that (v, w) is an arc
+        pub open spec fn spec_nplus(&self, v: V::V) -> Set<V::V> {
+            Set::new(|w: V::V| self@.1.contains((v, w)))
+        }
+
+        /// In-neighbors: vertices u such that (u, v) is an arc
+        pub open spec fn spec_nminus(&self, v: V::V) -> Set<V::V> {
+            Set::new(|u: V::V| self@.1.contains((u, v)))
+        }
+
+        /// All neighbors: union of in and out neighbors
+        pub open spec fn spec_ng(&self, v: V::V) -> Set<V::V> {
+            self.spec_nplus(v).union(self.spec_nminus(v))
+        }
+    }
+
     // View type: (vertices, arcs) as spec sets
     pub trait DirGraphStEphTrait<V: StT + Hash>: 
         View<V = (Set<<V as View>::V>, Set<(<V as View>::V, <V as View>::V)>)> + Sized {
@@ -83,7 +110,7 @@ pub mod DirGraphStEph {
         /// APAS: Work Θ(|V| + |A|), Span Θ(1)
         fn FromSets(vertices: SetStEph<V>, arcs: SetStEph<Edge<V>>) -> (g: DirGraphStEph<V>)
             ensures g@.0 =~= vertices@,
-                    g@.1 =~= arcs@.map(|e: (V::V, V::V)| e);
+                    g@.1 =~= arcs@;
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
@@ -91,7 +118,7 @@ pub mod DirGraphStEph {
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn arcs(&self) -> (a: &SetStEph<Edge<V>>)
-            ensures a@.map(|e: (V::V, V::V)| e) =~= self@.1;
+            ensures a@ =~= self@.1;
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn sizeV(&self) -> (n: N)
@@ -151,13 +178,6 @@ pub mod DirGraphStEph {
     }
 
     impl<V: StT + Hash> DirGraphStEphTrait<V> for DirGraphStEph<V> {
-        closed spec fn spec_vertices(&self) -> Set<V::V> {
-            self.V@
-        }
-
-        closed spec fn spec_arcs(&self) -> Set<(V::V, V::V)> {
-            self.A@
-        }
 
         fn empty() -> (g: DirGraphStEph<V>) {
             DirGraphStEph {
@@ -166,28 +186,19 @@ pub mod DirGraphStEph {
             }
         }
 
-        fn FromSets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> DirGraphStEph<V> { DirGraphStEph { V, A } }
+        fn FromSets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (g: DirGraphStEph<V>) { 
+            DirGraphStEph { V, A } 
+        }
 
-        fn vertices(&self) -> (v: &SetStEph<V>)
-            ensures v@ == self.spec_vertices()
-        { &self.V }
+        fn vertices(&self) -> (v: &SetStEph<V>) { &self.V }
 
-        fn arcs(&self) -> (a: &SetStEph<Edge<V>>)
-            ensures a@ == self.spec_arcs()
-        { &self.A }
+        fn arcs(&self) -> (a: &SetStEph<Edge<V>>) { &self.A }
 
-        fn sizeV(&self) -> (n: N)
-            ensures n == self.spec_vertices().len()
-        { self.V.size() }
+        fn sizeV(&self) -> (n: N) { self.V.size() }
 
-        fn sizeA(&self) -> (n: N)
-            ensures n == self.spec_arcs().len()
-        { self.A.size() }
+        fn sizeA(&self) -> (n: N) { self.A.size() }
 
-        fn Neighbor(&self, u: &V, v: &V) -> (b: B)
-            ensures b == self.spec_neighbor(u@, v@)
-        {
-            // Adjacent if there is an arc either way
+        fn Neighbor(&self, u: &V, v: &V) -> (b: B) {
             self.A.mem(&Edge(u.clone_plus(), v.clone_plus()))
         }
 
@@ -255,9 +266,9 @@ pub mod DirGraphStEph {
             result
         }
 
-        fn Incident(&self, e: &Edge<V>, v: &V) -> (b: B)
-            ensures b == self.spec_incident(e@, v@)
-        { feq(&e.0, v) || feq(&e.1, v) }
+        fn Incident(&self, e: &Edge<V>, v: &V) -> (b: B) { 
+            feq(&e.0, v) || feq(&e.1, v) 
+        }
 
         #[verifier::external_body]  // overflow check on addition
         fn Degree(&self, v: &V) -> N { self.InDegree(v) + self.OutDegree(v) }
