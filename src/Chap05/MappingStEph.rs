@@ -14,9 +14,14 @@ verus! {
     use vstd::std_specs::hash::obeys_key_model;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::SetIterAdditionalSpecFns;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
     use crate::vstdplus::seq_set::*;
+    #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::vstdplus::feq::feq::feq;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpec;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::Chap05::RelationStEph::RelationStEph::*;
@@ -351,6 +356,8 @@ verus! {
 
     impl<A: StT + Hash, B: StT + Hash> Eq for MappingStEph<A, B> {}
 
+  } // verus!
+
     #[macro_export]
     macro_rules! MappingLit {
         () => {{
@@ -358,11 +365,17 @@ verus! {
         }};
         ( $( ($a:expr, $b:expr) ),* $(,)? ) => {{
             let __pairs = vec![ $( $crate::Types::Types::Pair($a, $b) ),* ];
-            < $crate::Chap05::MappingStEph::MappingStEph::MappingStEph<_, _> >::FromVec(__pairs).expect("MappingLit: duplicate keys with different values")
+            // Check for duplicate domain elements
+            let mut __seen_keys = std::collections::HashSet::new();
+            for pair in &__pairs {
+                let key = &pair.0;
+                if !__seen_keys.insert(key) {
+                    panic!("MappingLit!: duplicate domain element {:?}", key);
+                }
+            }
+            < $crate::Chap05::MappingStEph::MappingStEph::MappingStEph<_, _> >::FromVec(__pairs)
         }};
     }
-
-  } // verus!
 
     impl<A: StT + Hash, B: StT + Hash> PartialEq for MappingStEph<A, B> {
         fn eq(&self, other: &Self) -> bool { self.mapping == other.mapping }
@@ -376,4 +389,11 @@ verus! {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { Display::fmt(&self.mapping, f) }
     }
 
+    // Implement std::iter::Iterator for MappingStEphIter to enable standard iteration methods
+    impl<'a, A: StT + Hash, B: StT + Hash> std::iter::Iterator for MappingStEphIter<'a, A, B> {
+        type Item = &'a crate::Types::Types::Pair<A, B>;
+        fn next(&mut self) -> Option<Self::Item> {
+            self.inner.next()
+        }
+    }
 }

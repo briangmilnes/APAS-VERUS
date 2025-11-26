@@ -25,29 +25,27 @@ pub mod Types {
     // Note: bool already implements Display, Debug, Not, etc.
     // No custom implementations needed when B = bool
 
+    verus! {
+
     // Triple wrapper for three-element tuples
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Triple<A, B, C>(pub A, pub B, pub C);
 
     // Quadruple wrapper for four-element tuples
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Quadruple<A, B, C, D>(pub A, pub B, pub C, pub D);
 
     // Key-value struct with named fields
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct KeyVal<K, V> {
         pub key: K,
         pub val: V,
     }
 
-    verus! {
-
     // Type bounds shorthands
     // StT: single-threaded friendly elements: Eq + Clone + Display + Debug + Sized + View (for Verus)
     pub trait StT: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
-
-    } // verus!
 
     // StTInMtT: St-friendly elements that can be shared across threads (StT + Send + Sync)
     pub trait StTInMtT: StT + Send + Sync {}
@@ -96,27 +94,203 @@ pub mod Types {
     pub trait PredMt<T>: Fn(&T) -> B + Send + Sync + 'static {}
     impl<F, T> PredMt<T> for F where F: Fn(&T) -> B + Send + Sync + 'static {}
 
-    // Backward compatibility alias (many existing uses)
-    pub use PredMt as Pred;
-
     // PredVal: Multi-threaded predicate function taking values by value
     // Common pattern: Fn(T) -> B + Send + Sync + 'static (for Copy types like N)
     pub trait PredVal<T>: Fn(T) -> B + Send + Sync + 'static {}
     impl<F, T> PredVal<T> for F where F: Fn(T) -> B + Send + Sync + 'static {}
-
-    // Note: StT + Send + Sync is already covered by existing StTInMtT trait
-    // StTInMtT + 'static pattern can be expressed as StTInMtT + 'static inline
 
     // HashOrd: Type that can be hashed and ordered (for graph vertices)
     // Common pattern: StT + MtT + Hash + Ord (appears in graph modules)
     pub trait HashOrd: StT + Hash + Ord {}
     impl<T> HashOrd for T where T: StT + Hash + Ord {}
 
+    /// Edge wrapper to enable Display/Debug for pairs (V,V) under baseline bounds.
+    #[verifier::reject_recursive_types(V)]
+    #[derive(Copy, PartialEq, Eq, Hash, Debug)]
+    pub struct Edge<V: StT>(pub V, pub V);
+
+    /// Labeled Edge wrapper to enable edges with labels.
+    #[verifier::reject_recursive_types(V)]
+    #[verifier::reject_recursive_types(L)]
+    #[derive(Copy, PartialEq, Eq, Hash, Debug)]
+    pub struct LabEdge<V: StT, L: StT + Hash>(pub V, pub V, pub L);
+
+    /// Newtype wrapper for key-value pairs with better Display than tuples
+    #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    pub struct Pair<K, V>(pub K, pub V);
+
+    impl<K: vstd::prelude::View, V: vstd::prelude::View> vstd::prelude::View for Pair<K, V> {
+        type V = (K::V, V::V);
+
+        open spec fn view(&self) -> (K::V, V::V) {(self.0@, self.1@)}
+    }
+
+    impl<V: StT> vstd::prelude::View for Edge<V> {
+        type V = (V::V, V::V);
+
+        open spec fn view(&self) -> (V::V, V::V) {(self.0@, self.1@)}
+    }
+
+    impl<V: StT, L: StT + Hash> vstd::prelude::View for LabEdge<V, L> {
+        type V = (V::V, V::V, L::V);
+
+        open spec fn view(&self) -> (V::V, V::V, L::V) {(self.0@, self.1@, self.2@)}
+    }
+
+    impl<A: vstd::prelude::View, B: vstd::prelude::View, C: vstd::prelude::View> vstd::prelude::View for Triple<A, B, C> {
+        type V = (A::V, B::V, C::V);
+
+        open spec fn view(&self) -> (A::V, B::V, C::V) {(self.0@, self.1@, self.2@)}
+    }
+
+    impl<A: vstd::prelude::View, B: vstd::prelude::View, C: vstd::prelude::View, D: vstd::prelude::View> vstd::prelude::View for Quadruple<A, B, C, D> {
+        type V = (A::V, B::V, C::V, D::V);
+
+        open spec fn view(&self) -> (A::V, B::V, C::V, D::V) {(self.0@, self.1@, self.2@, self.3@)}
+    }
+
+    impl<K: vstd::prelude::View, V: vstd::prelude::View> vstd::prelude::View for KeyVal<K, V> {
+        type V = (K::V, V::V);
+
+        open spec fn view(&self) -> (K::V, V::V) {(self.key@, self.val@)}
+    }
+
+    /// Axiom that Pair's view is injective (needed for hash collections)
+    /// If two pairs have the same view, they are equal
+    pub broadcast proof fn axiom_Pair_view_injective<K: vstd::prelude::View, V: vstd::prelude::View>(p1: Pair<K, V>, p2: Pair<K, V>)
+        requires
+            #[trigger] p1@ == #[trigger] p2@,
+        ensures
+            p1 == p2,
+    {
+        admit();
+    }
+
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::obeys_key_model;
+
+    pub open spec fn Pair_feq_trigger<K, V>() -> bool { true }
+
+    pub broadcast proof fn axiom_Pair_feq<K: Eq + vstd::prelude::View + Clone + Sized, V: Eq + vstd::prelude::View + Clone + Sized>()
+        requires #[trigger] Pair_feq_trigger::<K, V>()
+        ensures obeys_feq_full::<Pair<K, V>>()
+    { admit(); }
+
+    pub broadcast group group_Pair_axioms {
+        axiom_Pair_view_injective,
+        axiom_Pair_feq,
+    }
+
+    // For verus wrapped hash tables we need obeys_key_model and for our use of a full equality we need obeys_feq_full.
+    pub open spec fn valid_key_type_Pair<K: Eq + View + Clone + Sized + Hash, V: Eq + View + Clone + Sized + Hash>() -> bool {
+        &&& obeys_key_model::<K>() && obeys_key_model::<V>() && obeys_key_model::<Pair<K, V>>()
+        &&& obeys_feq_full::<K>() && obeys_feq_full::<V>() && obeys_feq_full::<Pair<K, V>>()
+    }
+
+    pub open spec fn obeys_feq_full_Pair<K: Eq + View + Clone + Sized, V: Eq + View + Clone + Sized>() -> bool {
+        obeys_feq_full::<K>() && obeys_feq_full::<V>() && obeys_feq_full::<Pair<K, V>>()
+    }
+
+    // Edge axioms and predicates
+    pub open spec fn Edge_feq_trigger<V>() -> bool { true }
+
+    pub broadcast proof fn axiom_Edge_feq<V: StT>()
+        requires #[trigger] Edge_feq_trigger::<V>()
+        ensures obeys_feq_full::<Edge<V>>()
+    { admit(); }
+
+    pub broadcast proof fn axiom_Edge_key_model<V: StT + Hash>()
+        requires #[trigger] Edge_feq_trigger::<V>()
+        ensures obeys_key_model::<Edge<V>>()
+    { admit(); }
+
+    pub broadcast group group_Edge_axioms {
+        axiom_Edge_feq,
+        axiom_Edge_key_model,
+    }
+
+    // For verus wrapped hash tables we need obeys_key_model and for our use of a full equality we need obeys_feq_full.
+    pub open spec fn valid_key_type_Edge<V: StT + Hash>() -> bool {
+        &&& obeys_key_model::<V>() && obeys_key_model::<Edge<V>>()
+        &&& obeys_feq_full::<V>() && obeys_feq_full::<Edge<V>>()
+    }
+
+    pub open spec fn obeys_feq_full_Edge<V: StT>() -> bool {
+        obeys_feq_full::<V>() && obeys_feq_full::<Edge<V>>()
+    }
+
+    // Newtype wrapper for Pair iterator to implement ForLoopGhostIterator (orphan rule)
+    // Note: Currently unused due to Verus limitation - for loops don't recognize ForLoopGhostIteratorNew
+    // on newtype wrappers. Kept for future use when this is supported.
+    pub struct PairIter<'a, K: 'a, V: 'a>(pub std::collections::hash_set::Iter<'a, Pair<K, V>>);
+
+    // Ghost iterator for iterating over Pair<K, V> in hash sets
+    pub struct PairIterGhostIterator<'a, K, V> {
+        pub pos: int,
+        pub elements: Seq<Pair<K, V>>,
+        pub phantom: core::marker::PhantomData<&'a ()>,
+    }
+
+    impl<'a, K: 'a, V: 'a> vstd::pervasive::ForLoopGhostIteratorNew for PairIter<'a, K, V> {
+        type GhostIter = PairIterGhostIterator<'a, K, V>;
+
+        open spec fn ghost_iter(&self) -> PairIterGhostIterator<'a, K, V> {
+            PairIterGhostIterator { pos: self.0@.0, elements: self.0@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, K: 'a, V: 'a> vstd::pervasive::ForLoopGhostIterator for PairIterGhostIterator<'a, K, V> {
+        type ExecIter = PairIter<'a, K, V>;
+
+        type Item = &'a Pair<K, V>;
+
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &PairIter<'a, K, V>) -> bool {
+            &&& self.pos == exec_iter.0@.0
+            &&& self.elements == exec_iter.0@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<&'a Pair<K, V>> {
+            if 0 <= self.pos < self.elements.len() {
+                Some(&self.elements[self.pos as int])
+            } else {
+                None
+            }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &PairIter<'a, K, V>) -> PairIterGhostIterator<'a, K, V> {
+            PairIterGhostIterator { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    } // verus!
+
     // ArithmeticT: Type supporting arithmetic operations (for reductions)
     // Common pattern: StT + Add<Output = T> + Default + Copy
+    // Must be outside verus! block because Default is not supported
     pub trait ArithmeticT: StT + Add<Output = Self> + Default + Copy {}
     impl<T> ArithmeticT for T where T: StT + Add<Output = T> + Default + Copy {}
 
+    // MtT implementations must be outside verus! block (use Mutex, Clone, etc.)
     impl<T: StT + Send> MtT for Mutex<T> {
         type Inner = T;
         fn clone_mt(&self) -> Self {
@@ -188,19 +362,15 @@ pub mod Types {
         fn new_mt(inner: Self::Inner) -> Self { inner }
     }
 
-    // String slice implementation
+    // Backward compatibility alias (many existing uses) - must be outside verus! block
+    pub use PredMt as Pred;
+
+    // String slice implementation - must be outside verus! block (lifetime issues)
     impl<'a> MtT for &'a str {
         type Inner = &'a str;
         fn clone_mt(&self) -> Self { self }
         fn new_mt(inner: Self::Inner) -> Self { inner }
     }
-
-    // Note: bool already has MtT implementation above (line ~112)
-    // No custom implementation needed when B = bool
-
-    /// Edge wrapper to enable Display/Debug for pairs (V,V) under baseline bounds.
-    #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-    pub struct Edge<V: StT>(pub V, pub V);
 
     impl<V: StT> Display for Edge<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result { write!(f, "({}, {})", self.0, self.1) }
@@ -213,10 +383,6 @@ pub mod Types {
     impl<V: StT> From<Edge<V>> for (V, V) {
         fn from(e: Edge<V>) -> (V, V) { (e.0, e.1) }
     }
-
-    /// Labeled Edge wrapper to enable edges with labels.
-    #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-    pub struct LabEdge<V: StT, L: StT + Hash>(pub V, pub V, pub L);
 
     impl<V: StT, L: StT + Hash> Display for LabEdge<V, L> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result { write!(f, "({}, {}, {})", self.0, self.1, self.2) }
@@ -231,11 +397,10 @@ pub mod Types {
     }
 
     // Import OrderedFloat from the ordered-float crate
-    // COMMENTED OUT: Not needed for Chapter 5 verified wrappers
+    // Commented out - Verus doesn't see Cargo dependencies; uncomment when Chap06 is enabled
     // pub use ordered_float::OrderedFloat;
 
     // Convenience type aliases for common float types
-    // COMMENTED OUT: Not needed for Chapter 5 verified wrappers
     // pub type OrderedF32 = OrderedFloat<f32>;
     // pub type OrderedF64 = OrderedFloat<f64>;
 
@@ -261,26 +426,82 @@ pub mod Types {
         }
     }
 
-    // ARCHITECTURE NOTE: Thread Pool-Based Parallelism
-    // ================================================
-    // Implements the APAS textbook's || (parallel pair) operator.
-    // Previous implementation spawned unbounded threads, causing exponential growth:
-    // - 16 elements → ~16 threads
-    // - 32 elements → ~32+ threads
-    // - Resulted in SIGABRT crashes and thread exhaustion
-    //
-    // Current implementation uses rayon's work-stealing thread pool:
-    // - Default pool size (num_cpus threads, typically 8-16)
-    // - Work-stealing prevents deadlock during nested parallelism
-    // - Allows parallel recursion without thread explosion
-    // COMMENTED OUT: Not needed for Chapter 5 verified wrappers
-    // #[macro_export]
-    // macro_rules! ParaPair {
-    //     ( $left:expr, $right:expr ) => {{
-    //         let (left_result, right_result) = rayon::join($left, $right);
-    //         $crate::Types::Types::Pair(left_result, right_result)
-    //     }};
-    // }
+    // Implement Iterator for PairIter to enable for loops (must be outside verus! block)
+    impl<'a, K: 'a, V: 'a> Iterator for PairIter<'a, K, V> {
+        type Item = &'a Pair<K, V>;
+
+        fn next(&mut self) -> Option<Self::Item> {
+            self.0.next()
+        }
+    }
+
+    // Implement Deref for easier access
+    impl<'a, K: 'a, V: 'a> std::ops::Deref for PairIter<'a, K, V> {
+        type Target = std::collections::hash_set::Iter<'a, Pair<K, V>>;
+
+        fn deref(&self) -> &Self::Target {
+            &self.0
+        }
+    }
+
+    impl<'a, K: 'a, V: 'a> std::ops::DerefMut for PairIter<'a, K, V> {
+        fn deref_mut(&mut self) -> &mut Self::Target {
+            &mut self.0
+        }
+    }
+
+    // Clone implementations (outside verus! block to avoid Verus autoderive warnings)
+    impl<A: Clone, B: Clone, C: Clone> Clone for Triple<A, B, C> {
+        fn clone(&self) -> Self {
+            Triple(self.0.clone(), self.1.clone(), self.2.clone())
+        }
+    }
+
+    impl<A: Clone, B: Clone, C: Clone, D: Clone> Clone for Quadruple<A, B, C, D> {
+        fn clone(&self) -> Self {
+            Quadruple(self.0.clone(), self.1.clone(), self.2.clone(), self.3.clone())
+        }
+    }
+
+    impl<K: Clone, V: Clone> Clone for KeyVal<K, V> {
+        fn clone(&self) -> Self {
+            KeyVal { key: self.key.clone(), val: self.val.clone() }
+        }
+    }
+
+    impl<V: StT> Clone for Edge<V> {
+        fn clone(&self) -> Self {
+            Edge(self.0.clone(), self.1.clone())
+        }
+    }
+
+    impl<V: StT, L: StT + Hash> Clone for LabEdge<V, L> {
+        fn clone(&self) -> Self {
+            LabEdge(self.0.clone(), self.1.clone(), self.2.clone())
+        }
+    }
+
+    impl<K: Clone, V: Clone> Clone for Pair<K, V> {
+        fn clone(&self) -> Self {
+            Pair(self.0.clone(), self.1.clone())
+        }
+    }
+
+    // Display implementation for Pair (outside verus! block)
+    impl<K: Display, V: Display> Display for Pair<K, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "({} -> {})", self.0, self.1)
+        }
+    }
+
+    // Macros are defined outside verus! blocks to allow importing via `use crate::MacroName;` from other modules.
+    #[macro_export]
+    macro_rules! ParaPair {
+        ( $left:expr, $right:expr ) => {{
+            let (left_result, right_result) = rayon::join($left, $right);
+            $crate::Types::Types::Pair(left_result, right_result)
+        }};
+    }
 
     #[macro_export]
     macro_rules! EdgeLit {
@@ -314,154 +535,5 @@ pub mod Types {
         ( $( ($a:expr, $b:expr) ),* $(,)? ) => {
             vec![ $( $crate::PairLit!($a, $b) ),* ]
         };
-    }
-
-    verus! {
-
-    /// Newtype wrapper for key-value pairs with better Display than tuples
-    #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-    pub struct Pair<K, V>(pub K, pub V);
-
-    impl<K: vstd::prelude::View, V: vstd::prelude::View> vstd::prelude::View for Pair<K, V> {
-        type V = (K::V, V::V);
-
-        open spec fn view(&self) -> (K::V, V::V) {(self.0@, self.1@)}
-    }
-
-    /// Axiom that Pair's view is injective (needed for hash collections)
-    /// If two pairs have the same view, they are equal
-    pub broadcast proof fn axiom_Pair_view_injective<K: vstd::prelude::View, V: vstd::prelude::View>(p1: Pair<K, V>, p2: Pair<K, V>)
-        requires
-            #[trigger] p1@ == #[trigger] p2@,
-        ensures
-            p1 == p2,
-    {
-        admit();
-    }
-
-    use crate::vstdplus::feq::feq::obeys_feq_full;
-    use vstd::std_specs::hash::obeys_key_model;
-
-    pub open spec fn Pair_feq_trigger<K, V>() -> bool { true }
-
-    pub broadcast proof fn axiom_Pair_feq<K: Eq + vstd::prelude::View + Clone + Sized, V: Eq + vstd::prelude::View + Clone + Sized>()
-        requires #[trigger] Pair_feq_trigger::<K, V>()
-        ensures obeys_feq_full::<Pair<K, V>>()
-    { admit(); }
-
-    pub broadcast group group_Pair_axioms {
-        axiom_Pair_view_injective,
-        axiom_Pair_feq,
-    }
-
-    // For verus wrapped hash tables we need obeys_key_model and for our use of a full equality we need obeys_feq_full.
-    pub open spec fn valid_key_type_Pair<K: Eq + View + Clone + Sized + Hash, V: Eq + View + Clone + Sized + Hash>() -> bool {
-        &&& obeys_key_model::<K>() && obeys_key_model::<V>() && obeys_key_model::<Pair<K, V>>()
-        &&& obeys_feq_full::<K>() && obeys_feq_full::<V>() && obeys_feq_full::<Pair<K, V>>()
-    }
-
-    pub open spec fn obeys_feq_full_Pair<K: Eq + View + Clone + Sized, V: Eq + View + Clone + Sized>() -> bool {
-        obeys_feq_full::<K>() && obeys_feq_full::<V>() && obeys_feq_full::<Pair<K, V>>()
-    }
-
-    // Newtype wrapper for Pair iterator to implement ForLoopGhostIterator (orphan rule)
-    // Note: Currently unused due to Verus limitation - for loops don't recognize ForLoopGhostIteratorNew
-    // on newtype wrappers. Kept for future use when this is supported.
-    pub struct PairIter<'a, K: 'a, V: 'a>(pub std::collections::hash_set::Iter<'a, Pair<K, V>>);
-
-    // Ghost iterator for iterating over Pair<K, V> in hash sets
-    pub struct PairIterGhostIterator<'a, K, V> {
-        pub pos: int,
-        pub elements: Seq<Pair<K, V>>,
-        pub phantom: core::marker::PhantomData<&'a ()>,
-    }
-
-    impl<'a, K: 'a, V: 'a> vstd::pervasive::ForLoopGhostIteratorNew for PairIter<'a, K, V> {
-        type GhostIter = PairIterGhostIterator<'a, K, V>;
-
-        open spec fn ghost_iter(&self) -> PairIterGhostIterator<'a, K, V> {
-            PairIterGhostIterator { pos: self.0@.0, elements: self.0@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, K: 'a, V: 'a> vstd::pervasive::ForLoopGhostIterator for PairIterGhostIterator<'a, K, V> {
-        type ExecIter = PairIter<'a, K, V>;
-
-        type Item = &'a Pair<K, V>;
-
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &PairIter<'a, K, V>) -> bool {
-            &&& self.pos == exec_iter.0@.0
-            &&& self.elements == exec_iter.0@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<&'a Pair<K, V>> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(&self.elements[self.pos as int])
-            } else {
-                None
-            }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &PairIter<'a, K, V>) -> PairIterGhostIterator<'a, K, V> {
-            PairIterGhostIterator { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    } // verus!
-
-    // Implement Iterator for PairIter to enable for loops (must be outside verus! block)
-    impl<'a, K: 'a, V: 'a> Iterator for PairIter<'a, K, V> {
-        type Item = &'a Pair<K, V>;
-
-        fn next(&mut self) -> Option<Self::Item> {
-            self.0.next()
-        }
-    }
-
-    // Implement Deref for easier access
-    impl<'a, K: 'a, V: 'a> std::ops::Deref for PairIter<'a, K, V> {
-        type Target = std::collections::hash_set::Iter<'a, Pair<K, V>>;
-
-        fn deref(&self) -> &Self::Target {
-            &self.0
-        }
-    }
-
-    impl<'a, K: 'a, V: 'a> std::ops::DerefMut for PairIter<'a, K, V> {
-        fn deref_mut(&mut self) -> &mut Self::Target {
-            &mut self.0
-        }
-    }
-
-    // Clone implementation for Pair (outside verus! block for non-Copy types)
-    impl<K: Clone, V: Clone> Clone for Pair<K, V> {
-        fn clone(&self) -> Self {
-            Pair(self.0.clone(), self.1.clone())
-        }
-    }
-
-    // Display implementation for Pair (outside verus! block)
-    impl<K: Display, V: Display> Display for Pair<K, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(f, "({} -> {})", self.0, self.1)
-        }
     }
 }

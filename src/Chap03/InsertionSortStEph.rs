@@ -24,7 +24,7 @@ pub open spec fn is_sorted<T: TotalOrder>(v: &[T]) -> bool {
     forall|i: int, j: int| 0 <= i < j < v.len() ==> T::le(#[trigger] v[i], #[trigger] v[j])
 }
 
-#[verifier::loop_isolation(false)]
+#[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
 pub fn insertion_sort<T: TotalOrder + Copy>(a: &mut [T]) -> (r: &[T])
     ensures
         r.len() == old(a).len(),

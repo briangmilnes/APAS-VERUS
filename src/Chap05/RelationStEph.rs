@@ -14,9 +14,13 @@ verus! {
     use vstd::std_specs::hash::obeys_key_model;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::SetIterAdditionalSpecFns;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
     use crate::vstdplus::seq_set::*;
+    #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::vstdplus::feq::feq::feq;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
@@ -146,7 +150,7 @@ verus! {
             let ghost pairs_seq = it@.1;
             let ghost pairs_view = self@;
 
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type_Pair::<X, Y>(),
@@ -194,7 +198,7 @@ verus! {
             let ghost pairs_seq = it@.1;
             let ghost pairs_view = self@;
 
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type_Pair::<X, Y>(),
@@ -256,6 +260,8 @@ verus! {
 
     impl<A: StT + Hash, B: StT + Hash> Eq for RelationStEph<A, B> {}
 
+  } // verus!
+
     #[macro_export]
     macro_rules! RelationLit {
         () => {{
@@ -268,8 +274,6 @@ verus! {
         }};
     }
 
-  } // verus!
-
     impl<A: StT + Hash, B: StT + Hash> PartialEq for RelationStEph<A, B> {
         fn eq(&self, other: &Self) -> bool { self.pairs == other.pairs }
     }
@@ -280,5 +284,13 @@ verus! {
 
     impl<A: StT + Hash, B: StT + Hash> Display for RelationStEph<A, B> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { std::fmt::Display::fmt(&self.pairs, f) }
+    }
+
+    // Implement std::iter::Iterator for RelationStEphIter to enable standard iteration methods
+    impl<'a, A: StT + Hash, B: StT + Hash> std::iter::Iterator for RelationStEphIter<'a, A, B> {
+        type Item = &'a crate::Types::Types::Pair<A, B>;
+        fn next(&mut self) -> Option<Self::Item> {
+            self.inner.next()
+        }
     }
 }

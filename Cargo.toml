@@ -8,9 +8,8 @@ verify = true
 
 [dependencies]
 vstd = "0.0.0-2025-08-12-1837"
-# COMMENTED OUT: Not needed for Chapter 5 verified wrappers
-# ordered-float = "4.5.0"
-# rayon = "1.10.0"
+ordered-float = "4.5.0"
+rayon = "1.10.0"
 
 [lib]
 path = "src/lib.rs"
@@ -38,6 +37,10 @@ path = "tests/vstdplus/test_partial_order.rs"
 [[test]]
 name = "test_feq"
 path = "tests/vstdplus/test_feq.rs"
+
+[[test]]
+name = "TestDirGraphStEph"
+path = "tests/Chap06/TestDirGraphStEph.rs"
 
 [[bench]]
 name = "BenchInsertionSortStEph"

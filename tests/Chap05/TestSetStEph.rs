@@ -493,7 +493,7 @@ fn test_trait_union() {
 fn test_trait_intersection() {
     let s1 = SetLit![1, 2, 3];
     let s2 = SetLit![2, 3, 4];
-    let i: SetStEph<i32> = s1.intersect(&s2);
+    let i: SetStEph<i32> = s1.intersection(&s2);
     assert_eq!(i.size(), 2);
 }
 
@@ -538,5 +538,6 @@ fn test_debug_trait() {
 fn test_display_trait() {
     let s = SetLit![1, 2, 3];
     let display_str = format!("{}", s);
-    assert!(display_str.contains("1"));
+    // Display shows "Set(count)" format
+    assert!(display_str.contains("Set(3)"));
 }

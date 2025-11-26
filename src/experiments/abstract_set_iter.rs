@@ -246,6 +246,7 @@ pub mod abstract_set_iter {
                 let elem = self.vec[self.pos].clone_plus();
                 // Use feq to prove elem == old_seq[old_pos]
                 // For V: View<V=V>, feq gives elem@ == vec[pos]@ which is elem == vec[pos]
+                #[allow(unused_variables)]
                 let eq = feq(&elem, &self.vec[self.pos]);
                 // feq ensures: eq == (elem@ == self.vec[self.pos]@)
                 // Since V::V = V, this is: eq == (elem == self.vec[self.pos])

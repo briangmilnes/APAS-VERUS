@@ -1,4 +1,5 @@
 //! APAS-VERUS library crate
+#![feature(stmt_expr_attributes)]
 
 pub mod Types;
 
@@ -65,9 +66,25 @@ pub mod Chap03 {
 
 pub mod Chap05 {
     pub mod SetStEph;
-    pub mod SetStEphWithIter;
     pub mod RelationStEph;
-    pub mod RelationStEphWithIter;
     pub mod MappingStEph;
-    pub mod MappingStEphWithIter;
+}
+
+pub mod Chap06 {
+    pub mod DirGraphStEph;
+//     pub mod DirGraphMtEph;
+//     pub mod UnDirGraphStEph;
+//     pub mod UnDirGraphMtEph;
+//     pub mod LabDirGraphStEph;
+//     pub mod LabDirGraphMtEph;
+//     pub mod LabUnDirGraphStEph;
+//     pub mod LabUnDirGraphMtEph;
+//     pub mod WeightedDirGraphStEphInt;
+//     pub mod WeightedDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
+//     pub mod WeightedDirGraphMtEphInt;
+//     pub mod WeightedDirGraphMtEphFloat;  // OrderedFloat - only PartialEq, no Eq
+//     pub mod WeightedUnDirGraphStEphInt;
+//     pub mod WeightedUnDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
+//     pub mod WeightedUnDirGraphMtEphInt;
+//     pub mod WeightedUnDirGraphMtEphFloat;  // OrderedFloat - only PartialEq, no Eq
 }

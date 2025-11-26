@@ -3,6 +3,7 @@
 //! Uses external_trait_specification/external_trait_extension pattern like vstd/std_specs/cmp.rs
 //! to add full equality specs to Rust's Eq trait.
 
+#[cfg(verus_keep_ghost)]
 pub mod feq {
     use vstd::prelude::*;
     use vstd::std_specs::cmp::PartialEqSpec;
@@ -164,3 +165,11 @@ pub mod feq {
     } // verus!
 }
 
+// Stub module for non-Verus compilation
+#[cfg(not(verus_keep_ghost))]
+pub mod feq {
+    /// Stub feq function for non-Verus builds - just uses ==
+    pub fn feq<T: Eq>(x: &T, y: &T) -> bool {
+        *x == *y
+    }
+}

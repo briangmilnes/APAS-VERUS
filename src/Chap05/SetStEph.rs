@@ -14,11 +14,17 @@ verus! {
     use vstd::std_specs::hash::obeys_key_model;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::SetIterAdditionalSpecFns;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
+    #[cfg(verus_keep_ghost)]
     use vstd::pervasive::strictly_cloned;
+    #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::*;
     use crate::vstdplus::seq_set::*;
+    #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::vstdplus::feq::feq::feq;
     use vstd::hash_set::HashSetWithView;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
@@ -197,7 +203,7 @@ verus! {
             let mut i: usize = 0;
             let ghost v_seq = v@;
             
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type::<T>(),
@@ -252,7 +258,7 @@ verus! {
             let ghost s1_view = self@;
             let ghost s2_seq = it@.1;
 
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop 
                 invariant
                     valid_key_type::<T>(),
@@ -289,7 +295,7 @@ verus! {
             let ghost s2_view = s2@;
             let ghost s1_seq = it@.1;
 
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type::<T>(),
@@ -330,7 +336,7 @@ verus! {
             let ghost s1_view = self@;
             let ghost s2_view = s2@;
             
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     it@.0 <= s1_seq.len(),
@@ -369,7 +375,7 @@ verus! {
             let ghost s2_view = s2@;
             let ghost a_view = a@;
             
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                 it@.0 <= s2_seq.len(),
@@ -405,7 +411,7 @@ verus! {
             let ghost parts_seq  = parts_it@.1;
             let ghost parts_view = parts@;
 
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type::<T>(),
@@ -443,7 +449,7 @@ verus! {
             let mut count: N = 0;
             let ghost mut found_index: Option<int> = None;
 
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type::<T>(),
@@ -506,7 +512,7 @@ verus! {
             let ghost s1_view = self@;
             let ghost parts_view = parts@;
 
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type::<T>(),
@@ -548,6 +554,8 @@ verus! {
 
     impl<T: StT + Hash> Eq for SetStEph<T> {}
 
+  } // verus!
+
     #[macro_export]
     macro_rules! SetLit {
         () => {{
@@ -559,7 +567,6 @@ verus! {
             __s
         }};
     }
-  } // verus!
 
     impl<T: StT + Hash> PartialEq for SetStEph<T> {
         fn eq(&self, other: &Self) -> bool { self.elements == other.elements }
@@ -574,6 +581,14 @@ verus! {
     impl<T: crate::Types::Types::StT + std::hash::Hash> std::fmt::Debug for SetStEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
             write!(f, "SetStEph({})", self.elements.len())
+        }
+    }
+
+    // Implement std::iter::Iterator for SetStEphIter to enable standard iteration methods
+    impl<'a, T: crate::Types::Types::StT + std::hash::Hash> std::iter::Iterator for SetStEphIter<'a, T> {
+        type Item = &'a T;
+        fn next(&mut self) -> Option<Self::Item> {
+            self.inner.next()
         }
     }
 }
