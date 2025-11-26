@@ -67,5 +67,7 @@ pub mod Chap05 {
     pub mod SetStEph;
     pub mod SetStEphWithIter;
     pub mod RelationStEph;
+    pub mod RelationStEphWithIter;
     pub mod MappingStEph;
+    pub mod MappingStEphWithIter;
 }
