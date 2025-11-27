@@ -221,6 +221,52 @@ pub mod Types {
         obeys_feq_full::<V>() && obeys_feq_full::<Edge<V>>()
     }
 
+    // LabEdge axioms
+    pub open spec fn LabEdge_feq_trigger<V: StT + Hash, L: StT + Hash>() -> bool { true }
+
+    pub broadcast proof fn axiom_LabEdge_feq<V: StT + Hash, L: StT + Hash>()
+        requires #[trigger] LabEdge_feq_trigger::<V, L>()
+        ensures obeys_feq_full::<LabEdge<V, L>>()
+    { admit(); }
+
+    pub broadcast proof fn axiom_LabEdge_key_model<V: StT + Hash, L: StT + Hash>()
+        requires #[trigger] LabEdge_feq_trigger::<V, L>()
+        ensures obeys_key_model::<LabEdge<V, L>>()
+    { admit(); }
+
+    pub broadcast group group_LabEdge_axioms {
+        axiom_LabEdge_feq,
+        axiom_LabEdge_key_model,
+    }
+
+    pub open spec fn valid_key_type_LabEdge<V: StT + Hash, L: StT + Hash>() -> bool {
+        &&& obeys_key_model::<V>() && obeys_key_model::<L>() && obeys_key_model::<LabEdge<V, L>>()
+        &&& obeys_feq_full::<V>() && obeys_feq_full::<L>() && obeys_feq_full::<LabEdge<V, L>>()
+    }
+
+    // Triple axioms
+    pub open spec fn Triple_feq_trigger<A: StT + Hash, B: StT + Hash, C: StT + Hash>() -> bool { true }
+
+    pub broadcast proof fn axiom_Triple_feq<A: StT + Hash, B: StT + Hash, C: StT + Hash>()
+        requires #[trigger] Triple_feq_trigger::<A, B, C>()
+        ensures obeys_feq_full::<Triple<A, B, C>>()
+    { admit(); }
+
+    pub broadcast proof fn axiom_Triple_key_model<A: StT + Hash, B: StT + Hash, C: StT + Hash>()
+        requires #[trigger] Triple_feq_trigger::<A, B, C>()
+        ensures obeys_key_model::<Triple<A, B, C>>()
+    { admit(); }
+
+    pub broadcast group group_Triple_axioms {
+        axiom_Triple_feq,
+        axiom_Triple_key_model,
+    }
+
+    pub open spec fn valid_key_type_Triple<A: StT + Hash, B: StT + Hash, C: StT + Hash>() -> bool {
+        &&& obeys_key_model::<A>() && obeys_key_model::<B>() && obeys_key_model::<C>() && obeys_key_model::<Triple<A, B, C>>()
+        &&& obeys_feq_full::<A>() && obeys_feq_full::<B>() && obeys_feq_full::<C>() && obeys_feq_full::<Triple<A, B, C>>()
+    }
+
     // Newtype wrapper for Pair iterator to implement ForLoopGhostIterator (orphan rule)
     // Note: Currently unused due to Verus limitation - for loops don't recognize ForLoopGhostIteratorNew
     // on newtype wrappers. Kept for future use when this is supported.

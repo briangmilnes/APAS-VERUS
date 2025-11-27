@@ -1,9 +1,9 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
-use apas_ai::Chap05::SetStEph::SetStEph::*;
-use apas_ai::Chap06::LabDirGraphStEph::LabDirGraphStEph::*;
-use apas_ai::LabDirGraphStEphLit;
-use apas_ai::Types::Types::*;
+use apas_verus::Chap05::SetStEph::SetStEph::*;
+use apas_verus::Chap06::LabDirGraphStEph::LabDirGraphStEph::*;
+use apas_verus::LabDirGraphStEphLit;
+use apas_verus::Types::Types::*;
 
 #[test]
 fn test_labdirgraphstephlit_macro_functionality() {
@@ -26,7 +26,7 @@ fn test_labelled_dir_graph_empty() {
     let g = LabDirGraphStEph::<i32, &str>::empty();
     assert_eq!(g.vertices().size(), 0);
     assert_eq!(g.labeled_arcs().size(), 0);
-    assert_eq!(format!("{g}"), "LabDirGraph(V: {}, A: {})");
+    assert_eq!(format!("{g}"), "LabDirGraph(V: Set(0), A: Set(0))");
 }
 
 #[test]

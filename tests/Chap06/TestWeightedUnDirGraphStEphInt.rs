@@ -1,12 +1,12 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for Chap06 WeightedUnDirGraphStEphInt.
 
-use apas_ai::Chap05::SetStEph::SetStEph::*;
-use apas_ai::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
-use apas_ai::Chap06::WeightedUnDirGraphStEphInt::WeightedUnDirGraphStEphInt::*;
-use apas_ai::SetLit;
-use apas_ai::Types::Types::*;
-use apas_ai::WeightedUnDirGraphStEphIntLit;
+use apas_verus::Chap05::SetStEph::SetStEph::*;
+use apas_verus::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
+use apas_verus::Chap06::WeightedUnDirGraphStEphInt::WeightedUnDirGraphStEphInt::*;
+use apas_verus::SetLit;
+use apas_verus::Types::Types::*;
+use apas_verus::WeightedUnDirGraphStEphIntLit;
 
 #[test]
 fn test_weightedundirgraphstephintlit_macro_functionality() {

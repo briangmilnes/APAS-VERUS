@@ -6,105 +6,251 @@ pub mod WeightedUnDirGraphStEphInt {
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
 
+    use vstd::prelude::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::feq::feq::feq;
+
+verus! {
+
+    broadcast use {
+        vstd::std_specs::hash::group_hash_axioms,
+        vstd::set_lib::group_set_lib_default,
+        vstd::set::group_set_axioms,
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        crate::Types::Types::group_Pair_axioms,
+        crate::Types::Types::group_Edge_axioms,
+        crate::Types::Types::group_LabEdge_axioms,
+        crate::Types::Types::group_Triple_axioms,
+    };
 
     pub type WeightedUnDirGraphStEphInt<V> = LabUnDirGraphStEph<V, i32>;
 
-    /// Convenience functions for weighted undirected graphs with integer weights
-    pub trait WeightedUnDirGraphStEphIntTrait<V: StT + Hash + Ord> {
-        fn from_weighted_edges(vertices: SetStEph<V>, edges: SetStEph<Triple<V, V, i32>>) -> Self;
-        fn add_weighted_edge(&mut self, v1: V, v2: V, weight: i32);
-        fn get_edge_weight(&self, v1: &V, v2: &V)                                         -> Option<i32>;
-        fn weighted_edges(&self)                                                          -> SetStEph<Triple<V, V, i32>>;
-        fn neighbors_weighted(&self, v: &V)                                               -> SetStEph<Pair<V, i32>>;
-        fn total_weight(&self)                                                            -> i32;
-        fn vertex_degree(&self, v: &V)                                                    -> usize;
-        fn is_connected(&self)                                                            -> bool;
+    pub trait WeightedUnDirGraphStEphIntTrait<V: StT + Hash + Ord>: 
+        View<V = (Set<<V as View>::V>, Set<(<V as View>::V, <V as View>::V, i32)>)> + Sized + LabUnDirGraphStEphTrait<V, i32> {
+
+        open spec fn spec_total_weight(&self) -> int {
+            self@.1.fold(0int, |acc: int, t: (V::V, V::V, i32)| acc + t.2 as int)
+        }
+
+        fn from_weighted_edges(vertices: SetStEph<V>, edges: SetStEph<Triple<V, V, i32>>) -> (g: WeightedUnDirGraphStEphInt<V>)
+            requires 
+                valid_key_type_LabEdge::<V, i32>(),
+                valid_key_type_Triple::<V, V, i32>();
+
+        fn add_weighted_edge(&mut self, v1: V, v2: V, weight: i32)
+            requires valid_key_type_LabEdge::<V, i32>();
+
+        fn get_edge_weight(&self, v1: &V, v2: &V) -> (result: Option<i32>)
+            requires valid_key_type_LabEdge::<V, i32>()
+            ensures 
+                result.is_some() == (exists |w: i32| #![auto] self@.1.contains((v1@, v2@, w)) || self@.1.contains((v2@, v1@, w))),
+                result.is_some() ==> (self@.1.contains((v1@, v2@, result.unwrap())) || self@.1.contains((v2@, v1@, result.unwrap())));
+
+        fn weighted_edges(&self) -> (result: SetStEph<Triple<V, V, i32>>)
+            requires 
+                valid_key_type_LabEdge::<V, i32>(),
+                valid_key_type_Triple::<V, V, i32>()
+            ensures 
+                forall |t: (V::V, V::V, i32)| result@.contains(t) == self@.1.contains(t);
+
+        fn neighbors_weighted(&self, v: &V) -> (result: SetStEph<Pair<V, i32>>)
+            requires 
+                valid_key_type_LabEdge::<V, i32>(),
+                valid_key_type_Pair::<V, i32>()
+            ensures 
+                forall |p: (V::V, i32)| result@.contains(p) == 
+                    ((exists |w: i32| #![auto] self@.1.contains((v@, p.0, w)) && p.1 == w) ||
+                     (exists |w: i32| #![auto] self@.1.contains((p.0, v@, w)) && p.1 == w));
+
+        fn total_weight(&self) -> (result: i32)
+            requires valid_key_type_LabEdge::<V, i32>()
+            ensures result as int == self.spec_total_weight();
+
+        fn vertex_degree(&self, v: &V) -> (result: usize)
+            requires valid_key_type_LabEdge::<V, i32>()
+            ensures result == self.spec_neighbors(v@).len();
+
+        fn is_connected(&self) -> (result: bool)
+            requires valid_key_type_LabEdge::<V, i32>();
     }
 
     impl<V: StT + Hash + Ord> WeightedUnDirGraphStEphIntTrait<V> for WeightedUnDirGraphStEphInt<V> {
-        /// Create from vertices and weighted edges
-        /// APAS: Work Θ(|V| + |E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V| + |E|), Parallelism Θ(1) - sequential
-        fn from_weighted_edges(vertices: SetStEph<V>, edges: SetStEph<Triple<V, V, i32>>) -> Self {
-            let labeled_edges = edges
-                .iter()
-                .map(|Triple(v1, v2, weight)| LabEdge(v1.clone(), v2.clone(), *weight))
-                .collect::<Vec<_>>();
 
-            let mut edge_set = SetStEph::empty();
-            for edge in labeled_edges {
-                edge_set.insert(edge);
-            }
+        fn from_weighted_edges(vertices: SetStEph<V>, edges: SetStEph<Triple<V, V, i32>>) -> (g: WeightedUnDirGraphStEphInt<V>) {
+            let mut edge_set: SetStEph<LabEdge<V, i32>> = SetStEph::empty();
+            let mut it = edges.iter();
+            let ghost edge_seq = it@.1;
 
-            Self::from_vertices_and_labeled_edges(vertices, edge_set)
-        }
-
-        /// Add a weighted edge to the graph (undirected)
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
-        fn add_weighted_edge(&mut self, v1: V, v2: V, weight: i32) { self.add_labeled_edge(v1, v2, weight); }
-
-        /// Get the weight of an edge, if it exists
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1) - sequential search
-        fn get_edge_weight(&self, v1: &V, v2: &V) -> Option<i32> { self.get_edge_label(v1, v2).copied() }
-
-        /// Get all weighted edges as (v1, v2, weight) tuples
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1) - sequential map
-        fn weighted_edges(&self) -> SetStEph<Triple<V, V, i32>> {
-            let mut edges = SetStEph::empty();
-            for labeled_edge in self.labeled_edges().iter() {
-                edges.insert(Triple(labeled_edge.0.clone(), labeled_edge.1.clone(), labeled_edge.2));
-            }
-            edges
-        }
-
-        /// Get neighbors with weights
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1) - sequential filter
-        fn neighbors_weighted(&self, v: &V) -> SetStEph<Pair<V, i32>> {
-            let mut neighbors = SetStEph::empty();
-            for labeled_edge in self.labeled_edges().iter() {
-                if labeled_edge.0 == *v {
-                    neighbors.insert(Pair(labeled_edge.1.clone(), labeled_edge.2));
-                } else if labeled_edge.1 == *v {
-                    neighbors.insert(Pair(labeled_edge.0.clone(), labeled_edge.2));
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, i32>(),
+                    valid_key_type_Triple::<V, V, i32>(),
+                    it@.0 <= edge_seq.len(),
+                    it@.1 == edge_seq,
+                decreases edge_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => break,
+                    Some(triple) => {
+                        let _ = edge_set.insert(LabEdge(triple.0.clone_plus(), triple.1.clone_plus(), triple.2));
+                    },
                 }
             }
-            neighbors
+
+            LabUnDirGraphStEph::from_vertices_and_labeled_edges(vertices, edge_set)
         }
 
-        /// Get the total weight of all edges
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1) - sequential sum
-        fn total_weight(&self) -> i32 { self.labeled_edges().iter().map(|edge| edge.2).sum() }
+        fn add_weighted_edge(&mut self, v1: V, v2: V, weight: i32) { 
+            self.add_labeled_edge(v1, v2, weight); 
+        }
 
-        /// Get the degree of a vertex (number of incident edges)
-        fn vertex_degree(&self, v: &V) -> usize { self.neighbors(v).size() }
+        fn get_edge_weight(&self, v1: &V, v2: &V) -> (result: Option<i32>) { 
+            match self.get_edge_label(v1, v2) {
+                Some(w) => Some(*w),
+                None => None,
+            }
+        }
 
-        /// Check if the graph is connected (all vertices reachable from any vertex)
-        fn is_connected(&self) -> bool {
+        fn weighted_edges(&self) -> (result: SetStEph<Triple<V, V, i32>>) {
+            let mut edges: SetStEph<Triple<V, V, i32>> = SetStEph::empty();
+            let mut it = self.labeled_edges().iter();
+            let ghost le_seq = it@.1;
+            let ghost le_view = self@.1;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, i32>(),
+                    valid_key_type_Triple::<V, V, i32>(),
+                    it@.0 <= le_seq.len(),
+                    it@.1 == le_seq,
+                    le_seq.map(|i: int, e: LabEdge<V, i32>| e@).to_set() == le_view,
+                    forall |t: (V::V, V::V, i32)| edges@.contains(t) == 
+                        (exists |i: int| #![auto] 0 <= i < it@.0 && le_seq[i]@ == t),
+                decreases le_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            assert forall |t: (V::V, V::V, i32)| #[trigger] edges@.contains(t) implies le_view.contains(t) by {
+                                if edges@.contains(t) {
+                                    let i = choose |i: int| #![auto] 0 <= i < le_seq.len() && le_seq[i]@ == t;
+                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(le_seq, i);
+                                }
+                            }
+                            assert forall |t: (V::V, V::V, i32)| #[trigger] le_view.contains(t) implies edges@.contains(t) by {
+                                if le_view.contains(t) {
+                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(le_seq, t);
+                                }
+                            }
+                        }
+                        return edges;
+                    },
+                    Some(labeled_edge) => {
+                        let _ = edges.insert(Triple(labeled_edge.0.clone_plus(), labeled_edge.1.clone_plus(), labeled_edge.2));
+                    },
+                }
+            }
+        }
+
+        fn neighbors_weighted(&self, v: &V) -> (result: SetStEph<Pair<V, i32>>) {
+            let mut neighbors: SetStEph<Pair<V, i32>> = SetStEph::empty();
+            let mut it = self.labeled_edges().iter();
+            let ghost le_seq = it@.1;
+            let ghost v_view = v@;
+            let ghost le_view = self@.1;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, i32>(),
+                    valid_key_type_Pair::<V, i32>(),
+                    it@.0 <= le_seq.len(),
+                    it@.1 == le_seq,
+                    le_seq.map(|i: int, e: LabEdge<V, i32>| e@).to_set() == le_view,
+                    forall |p: (V::V, i32)| neighbors@.contains(p) == 
+                        (exists |i: int| #![auto] 0 <= i < it@.0 && 
+                            ((le_seq[i]@.0 == v_view && le_seq[i]@.1 == p.0 && le_seq[i]@.2 == p.1) ||
+                             (le_seq[i]@.1 == v_view && le_seq[i]@.0 == p.0 && le_seq[i]@.2 == p.1))),
+                decreases le_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            assert forall |p: (V::V, i32)| neighbors@.contains(p) implies 
+                                ((exists |w: i32| #![auto] le_view.contains((v_view, p.0, w)) && p.1 == w) ||
+                                 (exists |w: i32| #![auto] le_view.contains((p.0, v_view, w)) && p.1 == w)) by {
+                                if neighbors@.contains(p) {
+                                    let i = choose |i: int| #![auto] 0 <= i < le_seq.len() && 
+                                        ((le_seq[i]@.0 == v_view && le_seq[i]@.1 == p.0 && le_seq[i]@.2 == p.1) ||
+                                         (le_seq[i]@.1 == v_view && le_seq[i]@.0 == p.0 && le_seq[i]@.2 == p.1));
+                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(le_seq, i);
+                                }
+                            }
+                            assert forall |p: (V::V, i32)| 
+                                ((exists |w: i32| #![auto] le_view.contains((v_view, p.0, w)) && p.1 == w) ||
+                                 (exists |w: i32| #![auto] le_view.contains((p.0, v_view, w)) && p.1 == w)) implies 
+                                neighbors@.contains(p) by {
+                                if exists |w: i32| #![auto] le_view.contains((v_view, p.0, w)) && p.1 == w {
+                                    let w = choose |w: i32| #![auto] le_view.contains((v_view, p.0, w)) && p.1 == w;
+                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(le_seq, (v_view, p.0, w));
+                                } else if exists |w: i32| #![auto] le_view.contains((p.0, v_view, w)) && p.1 == w {
+                                    let w = choose |w: i32| #![auto] le_view.contains((p.0, v_view, w)) && p.1 == w;
+                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(le_seq, (p.0, v_view, w));
+                                }
+                            }
+                        }
+                        return neighbors;
+                    },
+                    Some(labeled_edge) => {
+                        if feq(&labeled_edge.0, v) {
+                            let _ = neighbors.insert(Pair(labeled_edge.1.clone_plus(), labeled_edge.2));
+                        } else if feq(&labeled_edge.1, v) {
+                            let _ = neighbors.insert(Pair(labeled_edge.0.clone_plus(), labeled_edge.2));
+                        }
+                    },
+                }
+            }
+        }
+
+        #[verifier::external_body]
+        fn total_weight(&self) -> (result: i32) { 
+            self.labeled_edges().iter().map(|edge| edge.2).sum() 
+        }
+
+        fn vertex_degree(&self, v: &V) -> (result: usize) { 
+            self.neighbors(v).size() 
+        }
+
+        #[verifier::external_body]
+        fn is_connected(&self) -> (result: bool) {
             if self.vertices().size() == 0 {
-                return true; // Empty graph is considered connected
+                return true;
             }
 
-            // Simple connectivity check using DFS from first vertex
-            let mut visited = SetStEph::empty();
+            let mut visited: SetStEph<V> = SetStEph::empty();
             let mut stack = Vec::new();
 
             if let Some(start) = self.vertices().iter().next() {
-                stack.push(start.clone());
+                stack.push(start.clone_plus());
 
                 while let Some(current) = stack.pop() {
                     if !visited.mem(&current) {
-                        visited.insert(current.clone());
-                        for neighbor in self.neighbors(&current).iter() {
-                            if !visited.mem(neighbor) {
-                                stack.push(neighbor.clone());
+                        let _ = visited.insert(current.clone_plus());
+                        let neighbors = self.neighbors(&current);
+                        let mut neighbor_it = neighbors.iter();
+                        loop {
+                            match neighbor_it.next() {
+                                None => break,
+                                Some(neighbor) => {
+                                    if !visited.mem(neighbor) {
+                                        stack.push(neighbor.clone_plus());
+                                    }
+                                },
                             }
                         }
                     }
@@ -115,8 +261,8 @@ pub mod WeightedUnDirGraphStEphInt {
         }
     }
 
-    /// Macro requires explicit Triple wrappers: `E: [Triple(v1, v2, weight), ...]`
-    /// No automatic wrapping - enforces type safety at call site.
+} // verus!
+
     #[macro_export]
     macro_rules! WeightedUnDirGraphStEphIntLit {
         () => {{
@@ -125,7 +271,7 @@ pub mod WeightedUnDirGraphStEphInt {
         ( V: [ $( $v:expr ),* $(,)? ], E: [ $( $edge:expr ),* $(,)? ] ) => {{
             let vertices = $crate::SetLit![ $( $v ),* ];
             let edges = $crate::SetLit![ $( $edge ),* ];
-            $crate::Chap06::WeightedUnDirGraphStEphInt::WeightedUnDirGraphStEphInt::WeightedUnDirGraphStEphInt::from_weighted_edges(vertices, edges)
+            <$crate::Chap06::WeightedUnDirGraphStEphInt::WeightedUnDirGraphStEphInt::WeightedUnDirGraphStEphInt<_> as $crate::Chap06::WeightedUnDirGraphStEphInt::WeightedUnDirGraphStEphInt::WeightedUnDirGraphStEphIntTrait<_>>::from_weighted_edges(vertices, edges)
         }};
     }
 }

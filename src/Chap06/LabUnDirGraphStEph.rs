@@ -6,131 +6,341 @@ pub mod LabUnDirGraphStEph {
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
 
+    use vstd::prelude::*;
     use crate::Chap05::SetStEph::SetStEph::*;
-    use crate::SetLit;
     use crate::Types::Types::*;
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::feq::feq::feq;
 
-    #[derive(Clone)]
+verus! {
+
+    broadcast use {
+        vstd::std_specs::hash::group_hash_axioms,
+        vstd::set_lib::group_set_lib_default,
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        crate::Types::Types::group_Pair_axioms,
+        crate::Types::Types::group_Edge_axioms,
+        crate::Types::Types::group_LabEdge_axioms,
+    };
+
+    #[verifier::reject_recursive_types(V)]
+    #[verifier::reject_recursive_types(L)]
     pub struct LabUnDirGraphStEph<V: HashOrd, L: StT + Hash> {
-        vertices: SetStEph<V>,
-        labeled_edges: SetStEph<LabEdge<V, L>>,
+        pub vertices: SetStEph<V>,
+        pub labeled_edges: SetStEph<LabEdge<V, L>>,
     }
 
-    pub trait LabUnDirGraphStEphTrait<V: HashOrd, L: StT + Hash> {
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
-        fn empty()                                                                                        -> Self;
-        /// APAS: Work Θ(|V| + |E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V| + |E|), Parallelism Θ(1) - sequential
-        fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> Self;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
-        fn vertices(&self)                                                                                -> &SetStEph<V>;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
-        fn labeled_edges(&self)                                                                           -> &SetStEph<LabEdge<V, L>>;
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1) - sequential map
-        fn edges(&self)                                                                                   -> SetStEph<Edge<V>>;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
-        fn add_vertex(&mut self, v: V);
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
-        fn add_labeled_edge(&mut self, v1: V, v2: V, label: L);
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1) - sequential search
-        fn get_edge_label(&self, v1: &V, v2: &V)                                                          -> Option<&L>;
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1) - sequential search
-        fn has_edge(&self, v1: &V, v2: &V)                                                                -> bool;
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1) - sequential filter
-        fn neighbors(&self, v: &V)                                                                        -> SetStEph<V>;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
-        fn normalize_edge(v1: V, v2: V)                                                                   -> LabEdge<V, L>;
+    impl<V: HashOrd, L: StT + Hash> View for LabUnDirGraphStEph<V, L> {
+        type V = (Set<<V as View>::V>, Set<(<V as View>::V, <V as View>::V, <L as View>::V)>);
+        
+        open spec fn view(&self) -> Self::V {
+            (self.vertices@, self.labeled_edges@)
+        }
+    }
+
+    pub trait LabUnDirGraphStEphTrait<V: HashOrd, L: StT + Hash>:
+    View<V = (Set<<V as View>::V>, Set<(<V as View>::V, <V as View>::V, <L as View>::V)>)> + Sized {
+
+        /// Neighbors of v: vertices adjacent via any edge containing v (undirected)
+        open spec fn spec_neighbors(&self, v: V::V) -> Set<V::V> { 
+            Set::new(|w: V::V| exists |l: L::V| #![auto] 
+                self@.1.contains((v, w, l)) || self@.1.contains((w, v, l)))
+        }
+
+        /// Unlabeled edges
+        open spec fn spec_edges(&self) -> Set<(V::V, V::V)> {
+            Set::new(|e: (V::V, V::V)| exists |l: L::V| #![auto] self@.1.contains((e.0, e.1, l)))
+        }
+
+        fn empty() -> (g: LabUnDirGraphStEph<V, L>)
+            requires valid_key_type_LabEdge::<V, L>()
+            ensures
+                g@.0 =~= Set::<<V as View>::V>::empty(),
+                g@.1 =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
+
+        fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: LabUnDirGraphStEph<V, L>)
+            ensures
+                g@.0 =~= vertices@,
+                g@.1 =~= labeled_edges@;
+
+        fn vertices(&self) -> (v: &SetStEph<V>)
+            ensures v@ == self@.0;
+
+        fn labeled_edges(&self) -> (e: &SetStEph<LabEdge<V, L>>)
+            ensures e@ =~= self@.1;
+
+        fn edges(&self) -> (result: SetStEph<Edge<V>>)
+            requires valid_key_type_LabEdge::<V, L>(), valid_key_type_Edge::<V>()
+            ensures 
+                forall |e: (V::V, V::V)| result@.contains(e) == (exists |l: L::V| #![auto] self@.1.contains((e.0, e.1, l)));
+
+        fn add_vertex(&mut self, v: V)
+            requires valid_key_type_LabEdge::<V, L>()
+            ensures self@.0 == old(self)@.0.insert(v@), self@.1 == old(self)@.1;
+
+        fn add_labeled_edge(&mut self, v1: V, v2: V, label: L)
+            requires valid_key_type_LabEdge::<V, L>()
+            ensures 
+                self@.0 == old(self)@.0.insert(v1@).insert(v2@),
+                self@.1 == old(self)@.1.insert((v1@, v2@, label@)) || 
+                self@.1 == old(self)@.1.insert((v2@, v1@, label@));
+
+        fn get_edge_label(&self, v1: &V, v2: &V) -> (result: Option<&L>)
+            requires valid_key_type_LabEdge::<V, L>()
+            ensures 
+                result.is_some() == (exists |l: L::V| #![auto] 
+                    self@.1.contains((v1@, v2@, l)) || self@.1.contains((v2@, v1@, l))),
+                result.is_some() ==> (self@.1.contains((v1@, v2@, result.unwrap()@)) || 
+                                      self@.1.contains((v2@, v1@, result.unwrap()@)));
+
+        fn has_edge(&self, v1: &V, v2: &V) -> (b: bool)
+            requires valid_key_type_LabEdge::<V, L>()
+            ensures b == (exists |l: L::V| #![auto] 
+                self@.1.contains((v1@, v2@, l)) || self@.1.contains((v2@, v1@, l)));
+
+        fn neighbors(&self, v: &V) -> (result: SetStEph<V>)
+            requires valid_key_type_LabEdge::<V, L>()
+            ensures result@ == self.spec_neighbors(v@);
     }
 
     impl<V: HashOrd, L: StT + Hash> LabUnDirGraphStEphTrait<V, L> for LabUnDirGraphStEph<V, L> {
-        fn empty() -> Self {
-            LabUnDirGraphStEph {
-                vertices: SetStEph::empty(),
-                labeled_edges: SetStEph::empty(),
+
+        fn empty() -> (g: LabUnDirGraphStEph<V, L>) {
+            LabUnDirGraphStEph { vertices: SetStEph::empty(), labeled_edges: SetStEph::empty() }
+        }
+
+        fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: LabUnDirGraphStEph<V, L>) { 
+            LabUnDirGraphStEph { vertices, labeled_edges } 
+        }
+
+        fn vertices(&self) -> (v: &SetStEph<V>) { &self.vertices }
+
+        fn labeled_edges(&self) -> (e: &SetStEph<LabEdge<V, L>>) { &self.labeled_edges }
+
+        fn edges(&self) -> (result: SetStEph<Edge<V>>) {
+            let mut edges: SetStEph<Edge<V>> = SetStEph::empty();
+            let mut it = self.labeled_edges.iter();
+            let ghost le_seq = it@.1;
+            let ghost le_view = self@.1;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, L>(),
+                    valid_key_type_Edge::<V>(),
+                    it@.0 <= le_seq.len(),
+                    it@.1 == le_seq,
+                    le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
+                    forall |e: (V::V, V::V)| edges@.contains(e) == 
+                        (exists |i: int| #![auto] 0 <= i < it@.0 && le_seq[i]@.0 == e.0 && le_seq[i]@.1 == e.1),
+                decreases le_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            assert forall |e: (V::V, V::V)| edges@.contains(e) implies 
+                                (exists |l: L::V| #![auto] le_view.contains((e.0, e.1, l))) by {
+                                if edges@.contains(e) {
+                                    let i = choose |i: int| #![auto] 0 <= i < le_seq.len() && le_seq[i]@.0 == e.0 && le_seq[i]@.1 == e.1;
+                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(le_seq, i);
+                                }
+                            }
+                            assert forall |e: (V::V, V::V)| (exists |l: L::V| #![auto] le_view.contains((e.0, e.1, l))) implies 
+                                edges@.contains(e) by {
+                                if exists |l: L::V| #![auto] le_view.contains((e.0, e.1, l)) {
+                                    let l = choose |l: L::V| #![auto] le_view.contains((e.0, e.1, l));
+                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(le_seq, (e.0, e.1, l));
+                                }
+                            }
+                        }
+                        return edges;
+                    },
+                    Some(labeled_edge) => {
+                        let _ = edges.insert(Edge(labeled_edge.0.clone_plus(), labeled_edge.1.clone_plus()));
+                    },
+                }
             }
         }
 
-        fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> Self {
-            LabUnDirGraphStEph {
-                vertices,
-                labeled_edges,
-            }
-        }
-
-        fn vertices(&self) -> &SetStEph<V> { &self.vertices }
-
-        fn labeled_edges(&self) -> &SetStEph<LabEdge<V, L>> { &self.labeled_edges }
-
-        fn edges(&self) -> SetStEph<Edge<V>> {
-            let mut edges = SetStEph::empty();
-            for labeled_edge in self.labeled_edges.iter() {
-                edges.insert(Edge(labeled_edge.0.clone(), labeled_edge.1.clone()));
-            }
-            edges
-        }
-
-        fn add_vertex(&mut self, v: V) { self.vertices.insert(v); }
+        fn add_vertex(&mut self, v: V) { let _ = self.vertices.insert(v); }
 
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) {
-            self.vertices.insert(v1.clone());
-            self.vertices.insert(v2.clone());
-            let normalized_edge = if v1 <= v2 {
-                LabEdge(v1, v2, label)
+            let _ = self.vertices.insert(v1.clone_plus());
+            let _ = self.vertices.insert(v2.clone_plus());
+            if v1 <= v2 {
+                let _ = self.labeled_edges.insert(LabEdge(v1, v2, label));
             } else {
-                LabEdge(v2, v1, label)
-            };
-            self.labeled_edges.insert(normalized_edge);
+                let _ = self.labeled_edges.insert(LabEdge(v2, v1, label));
+            }
         }
 
-        fn get_edge_label(&self, v1: &V, v2: &V) -> Option<&L> {
-            // Check both orientations since this is undirected
-            for labeled_edge in self.labeled_edges.iter() {
-                if (labeled_edge.0 == *v1 && labeled_edge.1 == *v2) || (labeled_edge.0 == *v2 && labeled_edge.1 == *v1)
-                {
-                    return Some(&labeled_edge.2);
+        fn get_edge_label(&self, v1: &V, v2: &V) -> (result: Option<&L>) {
+            let mut it = self.labeled_edges.iter();
+            let ghost le_seq = it@.1;
+            let ghost le_view = self@.1;
+            let ghost v1_view = v1@;
+            let ghost v2_view = v2@;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, L>(),
+                    it@.0 <= le_seq.len(),
+                    it@.1 == le_seq,
+                    le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
+                    forall |i: int| #![auto] 0 <= i < it@.0 ==> 
+                        !((le_seq[i]@.0 == v1_view && le_seq[i]@.1 == v2_view) ||
+                          (le_seq[i]@.0 == v2_view && le_seq[i]@.1 == v1_view)),
+                decreases le_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            assert forall |l: L::V| 
+                                !(le_view.contains((v1_view, v2_view, l)) || le_view.contains((v2_view, v1_view, l))) by {
+                                if le_view.contains((v1_view, v2_view, l)) {
+                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(le_seq, (v1_view, v2_view, l));
+                                }
+                                if le_view.contains((v2_view, v1_view, l)) {
+                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(le_seq, (v2_view, v1_view, l));
+                                }
+                            }
+                        }
+                        return None;
+                    },
+                    Some(labeled_edge) => {
+                        if (feq(&labeled_edge.0, v1) && feq(&labeled_edge.1, v2)) || 
+                           (feq(&labeled_edge.0, v2) && feq(&labeled_edge.1, v1)) {
+                            proof {
+                                let idx = it@.0 - 1;
+                                crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(le_seq, idx);
+                                let edge_view = le_seq[idx]@;
+                                assert(le_view.contains((v1_view, v2_view, labeled_edge.2@)) || 
+                                       le_view.contains((v2_view, v1_view, labeled_edge.2@)));
+                            }
+                            return Some(&labeled_edge.2);
+                        }
+                    },
                 }
             }
-            None
         }
 
-        fn has_edge(&self, v1: &V, v2: &V) -> bool {
-            // Check both orientations since this is undirected
-            for labeled_edge in self.labeled_edges.iter() {
-                if (labeled_edge.0 == *v1 && labeled_edge.1 == *v2) || (labeled_edge.0 == *v2 && labeled_edge.1 == *v1)
-                {
-                    return true;
+        fn has_edge(&self, v1: &V, v2: &V) -> (b: bool) {
+            let mut it = self.labeled_edges.iter();
+            let ghost le_seq = it@.1;
+            let ghost le_view = self@.1;
+            let ghost v1_view = v1@;
+            let ghost v2_view = v2@;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, L>(),
+                    it@.0 <= le_seq.len(),
+                    it@.1 == le_seq,
+                    le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
+                    forall |i: int| #![auto] 0 <= i < it@.0 ==> 
+                        !((le_seq[i]@.0 == v1_view && le_seq[i]@.1 == v2_view) ||
+                          (le_seq[i]@.0 == v2_view && le_seq[i]@.1 == v1_view)),
+                decreases le_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            assert forall |l: L::V| 
+                                !(le_view.contains((v1_view, v2_view, l)) || le_view.contains((v2_view, v1_view, l))) by {
+                                if le_view.contains((v1_view, v2_view, l)) {
+                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(le_seq, (v1_view, v2_view, l));
+                                }
+                                if le_view.contains((v2_view, v1_view, l)) {
+                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(le_seq, (v2_view, v1_view, l));
+                                }
+                            }
+                        }
+                        return false;
+                    },
+                    Some(labeled_edge) => {
+                        if (feq(&labeled_edge.0, v1) && feq(&labeled_edge.1, v2)) || 
+                           (feq(&labeled_edge.0, v2) && feq(&labeled_edge.1, v1)) {
+                            proof {
+                                let idx = it@.0 - 1;
+                                crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(le_seq, idx);
+                                let arc_view = le_seq[idx]@;
+                                let witness_l = arc_view.2;
+                                assert(le_view.contains((v1_view, v2_view, witness_l)) || 
+                                       le_view.contains((v2_view, v1_view, witness_l)));
+                            }
+                            return true;
+                        }
+                    },
                 }
             }
-            false
         }
 
-        fn neighbors(&self, v: &V) -> SetStEph<V> {
-            let mut neighbors = SetStEph::empty();
-            for labeled_edge in self.labeled_edges.iter() {
-                if labeled_edge.0 == *v {
-                    neighbors.insert(labeled_edge.1.clone());
-                } else if labeled_edge.1 == *v {
-                    neighbors.insert(labeled_edge.0.clone());
+        fn neighbors(&self, v: &V) -> (result: SetStEph<V>) {
+            let mut neighbors: SetStEph<V> = SetStEph::empty();
+            let mut it = self.labeled_edges.iter();
+            let ghost le_seq = it@.1;
+            let ghost v_view = v@;
+            let ghost le_view = self@.1;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, L>(),
+                    it@.0 <= le_seq.len(),
+                    it@.1 == le_seq,
+                    le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
+                    neighbors@ == Set::new(|w: V::V| 
+                        exists |i: int| #![auto] 0 <= i < it@.0 && 
+                            ((le_seq[i]@.0 == v_view && le_seq[i]@.1 == w) ||
+                             (le_seq[i]@.1 == v_view && le_seq[i]@.0 == w))),
+                decreases le_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            assert forall |w: V::V| #![auto] neighbors@.contains(w) implies 
+                                self.spec_neighbors(v_view).contains(w) by {
+                                if neighbors@.contains(w) {
+                                    let i = choose |i: int| #![auto] 0 <= i < le_seq.len() && 
+                                        ((le_seq[i]@.0 == v_view && le_seq[i]@.1 == w) ||
+                                         (le_seq[i]@.1 == v_view && le_seq[i]@.0 == w));
+                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(le_seq, i);
+                                }
+                            }
+                            assert forall |w: V::V| #![auto] self.spec_neighbors(v_view).contains(w) implies 
+                                neighbors@.contains(w) by {
+                                if self.spec_neighbors(v_view).contains(w) {
+                                    if exists |l: L::V| #![auto] le_view.contains((v_view, w, l)) {
+                                        let l = choose |l: L::V| #![auto] le_view.contains((v_view, w, l));
+                                        crate::vstdplus::seq_set::lemma_map_to_set_contains_index(le_seq, (v_view, w, l));
+                                    } else {
+                                        let l = choose |l: L::V| #![auto] le_view.contains((w, v_view, l));
+                                        crate::vstdplus::seq_set::lemma_map_to_set_contains_index(le_seq, (w, v_view, l));
+                                    }
+                                }
+                            }
+                        }
+                        return neighbors;
+                    },
+                    Some(labeled_edge) => {
+                        if feq(&labeled_edge.0, v) {
+                            let _ = neighbors.insert(labeled_edge.1.clone_plus());
+                        } else if feq(&labeled_edge.1, v) {
+                            let _ = neighbors.insert(labeled_edge.0.clone_plus());
+                        }
+                    },
                 }
             }
-            neighbors
         }
+    }
 
-        fn normalize_edge(_v1: V, _v2: V) -> LabEdge<V, L> {
-            // This method signature doesn't make sense for LabEdge without a label
-            // This is a design issue - we need the label to create a LabEdge
-            // For now, we'll panic to indicate this needs to be fixed
-            panic!("normalize_edge cannot create LabEdge without a label - method signature needs revision")
+} // verus!
+
+    impl<V: HashOrd, L: StT + Hash> Clone for LabUnDirGraphStEph<V, L> {
+        fn clone(&self) -> Self { 
+            LabUnDirGraphStEph { vertices: self.vertices.clone(), labeled_edges: self.labeled_edges.clone() } 
         }
     }
 
@@ -142,11 +352,7 @@ pub mod LabUnDirGraphStEph {
 
     impl<V: HashOrd, L: StT + Hash> Debug for LabUnDirGraphStEph<V, L> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-            write!(
-                f,
-                "LabUnDirGraph {{ vertices: {:?}, labeled_edges: {:?} }}",
-                self.vertices, self.labeled_edges
-            )
+            write!(f, "LabUnDirGraph {{ vertices: {:?}, labeled_edges: {:?} }}", self.vertices, self.labeled_edges)
         }
     }
 
@@ -165,7 +371,7 @@ pub mod LabUnDirGraphStEph {
                     } else {
                         $crate::Types::Types::LabEdge($v2, $v1, $label)
                     };
-                    edges.insert(normalized_edge);
+                    let _ = edges.insert(normalized_edge);
                 )*
                 edges
             };

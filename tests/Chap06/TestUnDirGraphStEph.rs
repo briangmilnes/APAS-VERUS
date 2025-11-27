@@ -1,10 +1,10 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
-use apas_ai::Chap05::SetStEph::SetStEph::*;
-use apas_ai::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
-use apas_ai::SetLit;
-use apas_ai::Types::Types::*;
-use apas_ai::UnDirGraphStEphLit;
+use apas_verus::Chap05::SetStEph::SetStEph::*;
+use apas_verus::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
+use apas_verus::SetLit;
+use apas_verus::Types::Types::*;
+use apas_verus::UnDirGraphStEphLit;
 
 #[test]
 fn test_undirgraphstephlit_macro_functionality() {

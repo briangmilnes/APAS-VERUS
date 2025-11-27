@@ -310,7 +310,7 @@ fn test_dirgraph_selfloop_edge_cases() {
     assert_eq!(ng_0.size(), 1);
     assert!(ng_0.mem(&0));
 
-    assert_eq!(g.Degree(&0), 2); // self-loop: in-degree 1 + out-degree 1 = 2
+    assert_eq!(g.Degree(&0), 1); // Degree = |NG(v)| = 1 (just vertex 0 itself)
     assert_eq!(g.InDegree(&0), 1);
     assert_eq!(g.OutDegree(&0), 1);
 }

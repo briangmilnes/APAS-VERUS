@@ -46,8 +46,7 @@ pub mod experiments {
 }
 
 pub mod vstdplus {
-    pub mod set;
-    pub mod set_with_view;
+    pub mod sigma_pi;
     pub mod set_axioms;
     pub mod seq_set;
     pub mod hash_set_with_view_plus;
@@ -72,18 +71,18 @@ pub mod Chap05 {
 
 pub mod Chap06 {
     pub mod DirGraphStEph;
+    pub mod UnDirGraphStEph;
+    pub mod LabDirGraphStEph;
+    pub mod LabUnDirGraphStEph;
+    pub mod WeightedDirGraphStEphInt;
+    pub mod WeightedUnDirGraphStEphInt;
 //     pub mod DirGraphMtEph;
-//     pub mod UnDirGraphStEph;
 //     pub mod UnDirGraphMtEph;
-//     pub mod LabDirGraphStEph;
 //     pub mod LabDirGraphMtEph;
-//     pub mod LabUnDirGraphStEph;
 //     pub mod LabUnDirGraphMtEph;
-//     pub mod WeightedDirGraphStEphInt;
 //     pub mod WeightedDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
 //     pub mod WeightedDirGraphMtEphInt;
 //     pub mod WeightedDirGraphMtEphFloat;  // OrderedFloat - only PartialEq, no Eq
-//     pub mod WeightedUnDirGraphStEphInt;
 //     pub mod WeightedUnDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
 //     pub mod WeightedUnDirGraphMtEphInt;
 //     pub mod WeightedUnDirGraphMtEphFloat;  // OrderedFloat - only PartialEq, no Eq

@@ -1,11 +1,11 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for WeightedDirGraphStEphInt.
 
-use apas_ai::Chap05::SetStEph::SetStEph::*;
-use apas_ai::Chap06::LabDirGraphStEph::LabDirGraphStEph::*;
-use apas_ai::Chap06::WeightedDirGraphStEphInt::WeightedDirGraphStEphInt::*;
-use apas_ai::Types::Types::*;
-use apas_ai::{SetLit, WeightedDirGraphStEphIntLit};
+use apas_verus::Chap05::SetStEph::SetStEph::*;
+use apas_verus::Chap06::LabDirGraphStEph::LabDirGraphStEph::*;
+use apas_verus::Chap06::WeightedDirGraphStEphInt::WeightedDirGraphStEphInt::*;
+use apas_verus::Types::Types::*;
+use apas_verus::{SetLit, WeightedDirGraphStEphIntLit};
 
 #[test]
 fn test_from_weighted_edges() {

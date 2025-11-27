@@ -1,10 +1,10 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for LabUnDirGraphStEph - ALL trait methods
 
-use apas_ai::Chap05::SetStEph::SetStEph::*;
-use apas_ai::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
-use apas_ai::Types::Types::*;
-use apas_ai::SetLit;
+use apas_verus::Chap05::SetStEph::SetStEph::*;
+use apas_verus::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
+use apas_verus::Types::Types::*;
+use apas_verus::SetLit;
 use std::hash::Hash;
 
 fn set_contains<T: StT + Ord + Hash>(s: &SetStEph<T>, elem: &T) -> bool {
@@ -123,12 +123,13 @@ fn test_neighbors() {
     assert!(set_contains(&neighbors_2, &4));
 }
 
-#[test]
-#[should_panic(expected = "normalize_edge cannot create LabEdge without a label")]
-fn test_normalize_edge() {
-    type TestGraph = LabUnDirGraphStEph<i32, String>;
-    let _ = TestGraph::normalize_edge(1, 2);
-}
+// Removed: normalize_edge method was removed from trait (it always panicked)
+// #[test]
+// #[should_panic(expected = "normalize_edge cannot create LabEdge without a label")]
+// fn test_normalize_edge() {
+//     type TestGraph = LabUnDirGraphStEph<i32, String>;
+//     let _ = TestGraph::normalize_edge(1, 2);
+// }
 
 #[test]
 fn test_clone() {
