@@ -31,7 +31,7 @@ verus! {
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
 
-    broadcast use {vstd::seq_lib::group_seq_properties, vstd::set::group_set_axioms, crate::vstdplus::feq::feq::group_feq_axioms};
+    broadcast use {vstd::seq_lib::group_seq_properties, vstd::set::group_set_axioms, crate::vstdplus::feq::feq::group_feq_axioms, crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms};
 
     pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
         &&& obeys_key_model::<T>() 
@@ -81,9 +81,14 @@ verus! {
 
     pub trait SetStEphTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
 
+        /// A set is finite
+        open spec fn spec_finite(&self) -> bool {
+            self@.finite()
+        }
+
         fn FromVec(v: Vec<T>) -> (s: SetStEph<T>)
             requires valid_key_type::<T>()
-            ensures s@ == v@.map(|i: int, x: T| x@).to_set();
+            ensures s@.finite(), s@ == v@.map(|i: int, x: T| x@).to_set();
 
         fn iter<'a>(&'a self) -> (it: SetStEphIter<'a, T>)
             requires valid_key_type::<T>()
@@ -95,7 +100,7 @@ verus! {
         /// APAS: Work Θ(1), Span Θ(1)
         fn empty()                           -> (empty: Self)
             requires valid_key_type::<T>()
-            ensures empty@ == Set::<<T as View>::V>::empty();
+            ensures empty@.finite(), empty@ == Set::<<T as View>::V>::empty();
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn singleton(x: T)                   -> Self

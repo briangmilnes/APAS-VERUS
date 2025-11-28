@@ -25,7 +25,7 @@ verus! {
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
 
-    broadcast use {vstd::seq_lib::group_seq_properties, vstd::set::group_set_axioms};
+    broadcast use {vstd::seq_lib::group_seq_properties, vstd::set::group_set_axioms, crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms};
 
     #[verifier::reject_recursive_types(A)]
     #[verifier::reject_recursive_types(B)]
@@ -71,21 +71,26 @@ verus! {
     pub trait RelationStEphTrait<X: StT + Hash, Y: StT + Hash> : 
         View<V = Set<(<X as View>::V, <Y as View>::V)>> + Sized {
 
+        /// A relation is finite
+        open spec fn spec_finite(&self) -> bool {
+            self@.finite()
+        }
+
         /// APAS: Work Θ(1), Span Θ(1)
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
             requires valid_key_type_Pair::<X, Y>()
-            ensures empty@ == Set::<(<X as View>::V, <Y as View>::V)>::empty();
+            ensures empty@.finite(), empty@ == Set::<(<X as View>::V, <Y as View>::V)>::empty();
 
         /// APAS: Work Θ(|pairs|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|pairs|), Span Θ(1)
         fn FromSet(pairs: SetStEph<Pair<X, Y>>) -> (relation: Self)
             requires valid_key_type_Pair::<X, Y>()
-            ensures relation@ == pairs@;
+            ensures relation@.finite(), relation@ == pairs@;
 
         fn FromVec(v: Vec<Pair<X, Y>>) -> (relation: Self)
             requires valid_key_type_Pair::<X, Y>()
-            ensures relation@ == v@.map(|i: int, p: Pair<X, Y>| p@).to_set();
+            ensures relation@.finite(), relation@ == v@.map(|i: int, p: Pair<X, Y>| p@).to_set();
 
         /// APAS: Work Θ(1), Span Θ(1)
         /// claude-4-sonet: Work Θ(1), Span Θ(1)

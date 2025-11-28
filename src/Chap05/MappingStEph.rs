@@ -28,7 +28,7 @@ verus! {
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
 
-    broadcast use {vstd::seq_lib::group_seq_properties, vstd::set::group_set_axioms, crate::vstdplus::feq::feq::group_feq_axioms};
+    broadcast use {vstd::seq_lib::group_seq_properties, vstd::set::group_set_axioms, crate::vstdplus::feq::feq::group_feq_axioms, crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms};
 
     pub open spec fn is_functional_set<X, Y>(s: Set<(X, Y)>) -> bool {
         forall |x: X, y1: Y, y2: Y| 
@@ -97,6 +97,11 @@ verus! {
     pub trait MappingStEphTrait<X: StT + Hash, Y: StT + Hash> : 
         View<V = Map<X::V, Y::V>> + Sized {
 
+        /// A mapping is finite
+        open spec fn spec_finite(&self) -> bool {
+            self@.dom().finite()
+        }
+
         spec fn is_functional(&self) -> bool;
 
         fn is_functional_vec(v: &Vec<Pair<X, Y>>) -> (functional: bool)
@@ -122,16 +127,17 @@ verus! {
         fn empty() -> (empty: Self)
             requires valid_key_type_Pair::<X, Y>()
             ensures 
+                empty@.dom().finite(),
                 empty@ == Map::<X::V, Y::V>::empty(),
                 empty.is_functional();
 
         fn FromVec(v: Vec<Pair<X, Y>>) -> (mapping: Self)
             requires valid_key_type_Pair::<X, Y>(), is_functional_seq(v@)
-            ensures mapping.is_functional();
+            ensures mapping@.dom().finite(), mapping.is_functional();
 
         fn FromRelation(r: &RelationStEph<X, Y>) -> (mapping: Self)
             requires valid_key_type_Pair::<X, Y>(), is_functional_relation(*r)
-            ensures mapping.is_functional();
+            ensures mapping@.dom().finite(), mapping.is_functional();
 
         fn size(&self) -> N
             requires self.is_functional();
@@ -314,16 +320,30 @@ verus! {
         }
 
         fn empty() -> MappingStEph<X, Y> {
-            MappingStEph { mapping: RelationStEph::empty() }
+            let result = MappingStEph { mapping: RelationStEph::empty() };
+            proof { 
+                assert(result@.dom() =~= Set::empty());
+            }
+            result
         }
 
         fn FromVec(v: Vec<Pair<X, Y>>) -> MappingStEph<X, Y> {
             let pairs = SetStEph::FromVec(v);
-            MappingStEph { mapping: RelationStEph::FromSet(pairs) }
+            let result = MappingStEph { mapping: RelationStEph::FromSet(pairs) };
+            proof {
+                // The domain is a subset of the first projection of the relation, which is finite
+                assume(result@.dom().finite());
+            }
+            result
         }
 
         fn FromRelation(r: &RelationStEph<X, Y>) -> MappingStEph<X, Y> {
-            MappingStEph { mapping: r.clone() }
+            let result = MappingStEph { mapping: r.clone() };
+            proof {
+                // The domain is a subset of the first projection of the relation, which is finite
+                assume(result@.dom().finite());
+            }
+            result
         }
 
         fn size(&self) -> N { self.mapping.size() }
