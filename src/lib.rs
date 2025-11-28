@@ -4,7 +4,7 @@
 pub mod Types;
 
 pub mod experiments {
-    pub mod abstract_set_iter;
+//    pub mod abstract_set_iter;
 //    pub mod SetLoops;
 //    pub mod ToVecProof;
 //    pub mod supertrait;
@@ -43,6 +43,8 @@ pub mod experiments {
 //    pub mod test_feq;
 //    pub mod test_feq_insertion_sort;
 //      pub mod clone_plus;
+      pub mod CheckedI32;
+      pub mod checked_comm;
 }
 
 pub mod vstdplus {
@@ -57,6 +59,8 @@ pub mod vstdplus {
     pub mod feq;
     pub mod clone_plus;
     pub mod vec;
+    pub mod checked_int;
+    pub mod checked_int_enum;
 }
 
 pub mod Chap03 {
