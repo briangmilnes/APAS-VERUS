@@ -22,6 +22,7 @@ verus! {
         crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_Pair_axioms,
         crate::Types::Types::group_Edge_axioms,
+        crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
     };
 
     #[verifier::reject_recursive_types(V)]
@@ -74,6 +75,11 @@ verus! {
     pub trait DirGraphStEphTrait<V: StT + Hash>:
     View<V = (Set<<V as View>::V>, Set<(<V as View>::V, <V as View>::V)>)> + Sized {
 
+        /// A graph is finite if both its vertex set and arc set are finite
+        open spec fn spec_finite(&self) -> bool {
+            self@.0.finite() && self@.1.finite()
+        }
+
         /// Out-neighbors: vertices w such that (v, w) is an arc
         open spec fn spec_nplus(&self, v: V::V) -> Set<V::V> { Set::new(|w: V::V| self@.1.contains((v, w))) }
 
@@ -105,12 +111,16 @@ verus! {
         fn empty() -> (g: DirGraphStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures
+                g@.0.finite(),
+                g@.1.finite(),
                 g@.0 =~= Set::<<V as View>::V>::empty(),
                 g@.1 =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
 
         /// APAS: Work Θ(|V| + |A|), Span Θ(1)
         fn FromSets(vertices: SetStEph<V>, arcs: SetStEph<Edge<V>>) -> (g: DirGraphStEph<V>)
             ensures
+                g@.0.finite(),
+                g@.1.finite(),
                 g@.0 =~= vertices@,
                 g@.1 =~= arcs@;
 

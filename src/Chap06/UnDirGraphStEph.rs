@@ -20,6 +20,7 @@ verus! {
         crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_Pair_axioms,
         crate::Types::Types::group_Edge_axioms,
+        crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
     };
 
     #[verifier::reject_recursive_types(V)]
@@ -38,6 +39,11 @@ verus! {
 
     pub trait UnDirGraphStEphTrait<V: StT + Hash>:
     View<V = (Set<<V as View>::V>, Set<(<V as View>::V, <V as View>::V)>)> + Sized {
+
+        /// A graph is finite if both its vertex set and edge set are finite
+        open spec fn spec_finite(&self) -> bool {
+            self@.0.finite() && self@.1.finite()
+        }
 
         /// Neighbors of v: vertices adjacent via any edge containing v
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V> { 
@@ -58,12 +64,16 @@ verus! {
             requires valid_key_type_Edge::<V>()
             ensures
                 g@.0 =~= Set::<<V as View>::V>::empty(),
-                g@.1 =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
+                g@.1 =~= Set::<(<V as View>::V, <V as View>::V)>::empty(),
+                g@.0.finite(),
+                g@.1.finite();
 
         fn FromSets(vertices: SetStEph<V>, edges: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>)
             ensures
                 g@.0 =~= vertices@,
-                g@.1 =~= edges@;
+                g@.1 =~= edges@,
+                g@.0.finite(),
+                g@.1.finite();
 
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.0;

@@ -27,6 +27,18 @@ impl<Key: View + Eq + Hash> View for HashSetWithViewPlus<Key> {
     open spec fn view(&self) -> Self::V { self.inner@}
 }
 
+/// A HashSetWithViewPlus is always finite (it's backed by a finite HashSet)
+pub broadcast proof fn axiom_hash_set_with_view_plus_finite<Key: View + Eq + Hash>(s: &HashSetWithViewPlus<Key>)
+    ensures
+        #[trigger] s@.finite(),
+{
+    admit();
+}
+
+pub broadcast group group_hash_set_with_view_plus_axioms {
+    axiom_hash_set_with_view_plus_finite,
+}
+
 impl<Key: View + Eq + Hash + Clone> Clone for HashSetWithViewPlus<Key> {
     #[verifier::external_body]
     fn clone(&self) -> (result: Self)

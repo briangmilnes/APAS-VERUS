@@ -22,6 +22,7 @@ verus! {
         crate::Types::Types::group_Pair_axioms,
         crate::Types::Types::group_Edge_axioms,
         crate::Types::Types::group_LabEdge_axioms,
+        crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
     };
 
     #[verifier::reject_recursive_types(V)]
@@ -42,6 +43,11 @@ verus! {
     pub trait LabDirGraphStEphTrait<V: StT + Hash, L: StT + Hash>:
     View<V = (Set<<V as View>::V>, Set<(<V as View>::V, <V as View>::V, <L as View>::V)>)> + Sized {
 
+        /// A graph is finite if both its vertex set and labeled arc set are finite
+        open spec fn spec_finite(&self) -> bool {
+            self@.0.finite() && self@.1.finite()
+        }
+
         /// Out-neighbors: vertices w such that (v, w, _) is a labeled arc
         open spec fn spec_out_neighbors(&self, v: V::V) -> Set<V::V> { 
             Set::new(|w: V::V| exists |l: L::V| #![auto] self@.1.contains((v, w, l)))
@@ -60,11 +66,15 @@ verus! {
         fn empty() -> (g: LabDirGraphStEph<V, L>)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
+                g@.0.finite(),
+                g@.1.finite(),
                 g@.0 =~= Set::<<V as View>::V>::empty(),
                 g@.1 =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
         fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: LabDirGraphStEph<V, L>)
             ensures
+                g@.0.finite(),
+                g@.1.finite(),
                 g@.0 =~= vertices@,
                 g@.1 =~= labeled_arcs@;
 
