@@ -49,7 +49,7 @@ pub mod set_axioms {
         ensures
             a + b =~= a.insert(x) + b.remove(x),
     {
-        assert forall |e: V| #![auto] (a + b).contains(e) <==> (a.insert(x) + b.remove(x)).contains(e) by {
+        assert forall |e: V| #[trigger] (a + b).contains(e) <==> (a.insert(x) + b.remove(x)).contains(e) by {
             if e == x {
                 assert((a + b).contains(e));
                 assert((a.insert(x) + b.remove(x)).contains(e));

@@ -41,20 +41,20 @@ pub broadcast group group_hash_set_with_view_plus_axioms {
 
 impl<Key: View + Eq + Hash + Clone> Clone for HashSetWithViewPlus<Key> {
     #[verifier::external_body]
-    fn clone(&self) -> (result: Self)
-        ensures result@ == self@
+    fn clone(&self) -> (clone: Self)
+        ensures clone@ == self@
     {
         HashSetWithViewPlus { inner: HashSetWithView { m: self.inner.m.clone() } }
     }
 }
 
 impl<Key: View + Eq + Hash + Clone> HashSetWithViewPlus<Key> {
-    pub fn new() -> (result: Self)
+    pub fn new() -> (hash_set: Self)
         requires
             obeys_key_model::<Key>(),
             obeys_feq_full::<Key>(),
         ensures
-            result@ == Set::<<Key as View>::V>::empty(),
+            hash_set@ == Set::<<Key as View>::V>::empty(),
     { HashSetWithViewPlus { inner: HashSetWithView::new() } }
 
     pub fn len(&self) -> (len: usize)
@@ -88,8 +88,8 @@ pub trait HashSetWithViewPlusTrait<Key: View + Eq + Hash>: View<V = Set<<Key as 
             r@.1.no_duplicates(),
             obeys_key_model::<Key>() ==> {
                 let (index, s) = r@;
-                &&& forall|k: Key| #![auto] s.contains(k) ==> self@.contains(k@)
-                &&& forall|kv: Key::V| #![auto] self@.contains(kv) ==> exists|k: Key| #![auto] s.contains(k) && k@ == kv
+                &&& forall|k: Key| #![trigger s.contains(k)] s.contains(k) ==> self@.contains(k@)
+                &&& forall|kv: Key::V| #![trigger self@.contains(kv)] self@.contains(kv) ==> exists|k: Key| #![trigger s.contains(k)] s.contains(k) && k@ == kv
             };
 }
 

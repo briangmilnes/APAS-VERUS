@@ -41,7 +41,7 @@ verus! {
     }
 
     pub open spec fn is_functional_seq_at<X: View, Y: View>(s: Seq<Pair<X, Y>>, p: (X::V, Y::V)) -> bool {
-        forall |i: int| #![auto]
+        forall |i: int| #![trigger s[i]]
             0 <= i < s.len() && s[i]@.0 == p.0 ==> s[i]@.1 == p.1
     }
 
@@ -50,7 +50,7 @@ verus! {
     }
 
     pub open spec fn is_functional_set_at<X, Y>(s: Set<(X, Y)>, p: (X, Y)) -> bool {
-        forall |q: (X, Y)| #![auto] s.contains(q) && q.0 == p.0 ==> q.1 == p.1
+        forall |q: (X, Y)| #![trigger s.contains(q)] s.contains(q) && q.0 == p.0 ==> q.1 == p.1
     }
 
     #[verifier::reject_recursive_types(A)]
@@ -72,10 +72,10 @@ verus! {
     }
 
     impl<'a, X: StT + Hash, Y: StT + Hash> MappingStEphIter<'a, X, Y> {
-        pub fn next(&mut self) -> (result: Option<&'a Pair<X, Y>>)
+        pub fn next(&mut self) -> (next: Option<&'a Pair<X, Y>>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
-                match result {
+                match next {
                     None => {
                         &&& self@ == old(self)@
                         &&& old_index >= old_seq.len()
@@ -148,7 +148,7 @@ verus! {
 
         fn range(&self) -> (range: SetStEph<Y>)
             requires valid_key_type_Pair::<X, Y>(), self.is_functional()
-            ensures range@ =~= Set::<Y::V>::new(|y: Y::V| exists |x: X::V| #![auto] self@.dom().contains(x) && self@[x] == y);
+            ensures range@ =~= Set::<Y::V>::new(|y: Y::V| exists |x: X::V| #![trigger self@[x]] self@.dom().contains(x) && self@[x] == y);
 
         fn mem(&self, p: &Pair<X, Y>) -> (contains: B)
             requires valid_key_type_Pair::<X, Y>(), self.is_functional()
@@ -193,7 +193,7 @@ verus! {
                 invariant
                     obeys_feq_full_Pair::<X, Y>(),
                     n == v@.len(),
-                    forall |k: int| #![auto] 0 <= k < i && v@[k]@.0 == p@.0 ==> v@[k]@.1 == p@.1,
+                    forall |k: int| #![trigger v@[k]] 0 <= k < i && v@[k]@.0 == p@.0 ==> v@[k]@.1 == p@.1,
             {
                 if feq(&v[i].0, &p.0) {
                     if !feq(&v[i].1, &p.1) {
@@ -210,12 +210,12 @@ verus! {
                 invariant
                     valid_key_type_Pair::<X, Y>(),
                     n == v@.len(),
-                    forall |j: int| #![auto] 0 <= j < i ==> is_functional_seq_at(v@, v@[j]@),
+                    forall |j: int| #![trigger v@[j]] 0 <= j < i ==> is_functional_seq_at(v@, v@[j]@),
             {
                 if !Self::is_functional_vec_at(v, &v[i]) {
                     proof {
                         let pi = v@[i as int]@;
-                        let witness_k = choose |k: int| #![auto] 0 <= k < v@.len() && v@[k]@.0 == pi.0 && v@[k]@.1 != pi.1;
+                        let witness_k = choose |k: int| #![trigger v@[k]] 0 <= k < v@.len() && v@[k]@.0 == pi.0 && v@[k]@.1 != pi.1;
                         let the_seq = v@.map(|idx: int, p: Pair<X, Y>| p@);
                         assert(the_seq[i as int] == pi);
                         assert(the_seq[witness_k] == v@[witness_k]@);
@@ -231,8 +231,8 @@ verus! {
                     #![trigger the_seq.to_set().contains((x, y1)), the_seq.to_set().contains((x, y2))]
                     the_seq.to_set().contains((x, y1)) && the_seq.to_set().contains((x, y2)) implies y1 == y2 by {
                     if the_seq.to_set().contains((x, y1)) && the_seq.to_set().contains((x, y2)) {
-                        let i1 = choose |i: int| #![auto] 0 <= i < the_seq.len() && the_seq[i] == (x, y1);
-                        let i2 = choose |i: int| #![auto] 0 <= i < the_seq.len() && the_seq[i] == (x, y2);
+                        let i1 = choose |i: int| #![trigger the_seq[i]] 0 <= i < the_seq.len() && the_seq[i] == (x, y1);
+                        let i2 = choose |i: int| #![trigger the_seq[i]] 0 <= i < the_seq.len() && the_seq[i] == (x, y2);
                         assert(is_functional_seq_at(v@, v@[i1]@));
                     }
                 }
@@ -250,7 +250,7 @@ verus! {
                     iter@.1 == the_seq,
                     the_seq.map(|i: int, pair: Pair<X,Y>| pair@).to_set() == s@,
                     0 <= iter@.0 <= the_seq.len(),
-                    forall |k: int| #![auto] 0 <= k < iter@.0 && the_seq[k]@.0 == p@.0 ==> the_seq[k]@.1 == p@.1,
+                    forall |k: int| #![trigger the_seq[k]] 0 <= k < iter@.0 && the_seq[k]@.0 == p@.0 ==> the_seq[k]@.1 == p@.1,
                 decreases the_seq.len() - iter@.0,
             {
                 match iter.next() {
@@ -282,7 +282,7 @@ verus! {
                     outer_iter@.1 == the_seq,
                     the_seq.map(|i: int, pair: Pair<X,Y>| pair@).to_set() == s@,
                     0 <= outer_iter@.0 <= the_seq.len(),
-                    forall |k: int| #![auto] 0 <= k < outer_iter@.0 ==> is_functional_set_at(s@, the_seq[k]@),
+                    forall |k: int| #![trigger the_seq[k]] 0 <= k < outer_iter@.0 ==> is_functional_set_at(s@, the_seq[k]@),
                 decreases the_seq.len() - outer_iter@.0,
             {
                 match outer_iter.next() {
@@ -293,7 +293,7 @@ verus! {
                                 s@.contains((x, y1)) && s@.contains((x, y2)) implies y1 == y2 by {
                                 if s@.contains((x, y1)) && s@.contains((x, y2)) {
                                     let mapped = the_seq.map(|i: int, pair: Pair<X,Y>| pair@);
-                                    let i1 = choose |i: int| #![auto] 0 <= i < mapped.len() && mapped[i] == (x, y1);
+                                    let i1 = choose |i: int| #![trigger mapped[i]] 0 <= i < mapped.len() && mapped[i] == (x, y1);
                                     assert(is_functional_set_at(s@, the_seq[i1]@)); // for documentation
                                 }
                             }
@@ -354,7 +354,7 @@ verus! {
             let result = self.mapping.range();
             proof {
                 assert forall |y: Y::V| result@.contains(y) implies 
-                    (exists |x: X::V| #![auto] self@.dom().contains(x) && self@[x] == y) by {
+                    (exists |x: X::V| #![trigger self@[x]] self@.dom().contains(x) && self@[x] == y) by {
                     if result@.contains(y) {
                         let witness_x = choose |x: X::V| self.mapping@.contains((x, y));
                         let chosen_y = choose |y_prime: Y::V| self.mapping@.contains((witness_x, y_prime));

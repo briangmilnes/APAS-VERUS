@@ -57,10 +57,10 @@ verus! {
     }
 
     impl<'a, T: StT + Hash> SetStEphIter<'a, T> {
-        pub fn next(&mut self) -> (result: Option<&'a T>)
+        pub fn next(&mut self) -> (next: Option<&'a T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
-                match result {
+                match next {
                     None => {
                         &&& self@ == old(self)@
                         &&& old_index >= old_seq.len()
@@ -151,12 +151,12 @@ verus! {
             ensures  
                 forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv));
 
-        fn all_nonempty(parts: &SetStEph<SetStEph<T>>) -> (result: bool)
+        fn all_nonempty(parts: &SetStEph<SetStEph<T>>) -> (all_nonempty: bool)
             requires 
                 valid_key_type::<T>(),
                 valid_key_type::<SetStEph<T>>(),
             ensures 
-                result <==> forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0;
+                all_nonempty <==> forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0;
 
         fn partition_on_elt(x: &T, parts: &SetStEph<SetStEph<T>>) -> (partition_on_elt: bool)
             requires 
@@ -424,7 +424,7 @@ verus! {
                     parts_it@.0 <= parts_seq.len(),
                     parts_it@.1 == parts_seq,
                     parts_seq.map(|i: int, k: SetStEph<T>| k@).to_set() == parts_view,
-                    forall |i: int| #![auto] 0 <= i < parts_it@.0 ==> parts_seq[i]@.len() != 0,
+                    forall |i: int| #![trigger parts_seq[i]] 0 <= i < parts_it@.0 ==> parts_seq[i]@.len() != 0,
                 decreases parts_seq.len() - parts_it@.0,
             {
                 let ghost old_pos = parts_it@.0;
@@ -467,7 +467,7 @@ verus! {
                         Some(idx) => 0 <= idx < parts_it@.0 && parts_seq[idx]@.contains(x_view) && count == 1,
                         None => count == 0,
                     },
-                    forall |i: int| #![auto] 0 <= i < parts_it@.0 && parts_seq[i]@.contains(x_view) ==> 
+                    forall |i: int| #![trigger parts_seq[i]] 0 <= i < parts_it@.0 && parts_seq[i]@.contains(x_view) ==> 
                         found_index == Some(i),
                 decreases parts_seq.len() - parts_it@.0,
             {

@@ -43,8 +43,7 @@ pub mod experiments {
 //    pub mod test_feq;
 //    pub mod test_feq_insertion_sort;
 //      pub mod clone_plus;
-      pub mod CheckedI32;
-      pub mod checked_comm;
+//      pub mod CheckedI32;
 }
 
 pub mod vstdplus {
@@ -60,7 +59,7 @@ pub mod vstdplus {
     pub mod clone_plus;
     pub mod vec;
     pub mod checked_int;
-    pub mod checked_int_enum;
+    pub mod checked_nat;
 }
 
 pub mod Chap03 {
@@ -78,16 +77,17 @@ pub mod Chap06 {
     pub mod UnDirGraphStEph;
     pub mod LabDirGraphStEph;
     pub mod LabUnDirGraphStEph;
-    pub mod WeightedDirGraphStEphInt;
-    pub mod WeightedUnDirGraphStEphInt;
+    pub mod WeighedDirGraphStEphInt;
+    pub mod WeighedUnDirGraphStEphInt;
+    pub mod WeighedDirGraphStEphNat;
 //     pub mod DirGraphMtEph;
 //     pub mod UnDirGraphMtEph;
 //     pub mod LabDirGraphMtEph;
 //     pub mod LabUnDirGraphMtEph;
-//     pub mod WeightedDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
-//     pub mod WeightedDirGraphMtEphInt;
-//     pub mod WeightedDirGraphMtEphFloat;  // OrderedFloat - only PartialEq, no Eq
-//     pub mod WeightedUnDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
-//     pub mod WeightedUnDirGraphMtEphInt;
-//     pub mod WeightedUnDirGraphMtEphFloat;  // OrderedFloat - only PartialEq, no Eq
+//     pub mod WeighedDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
+//     pub mod WeighedDirGraphMtEphInt;
+//     pub mod WeighedDirGraphMtEphFloat;  // OrderedFloat - only PartialEq, no Eq
+//     pub mod WeighedUnDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
+//     pub mod WeighedUnDirGraphMtEphInt;
+//     pub mod WeighedUnDirGraphMtEphFloat;  // OrderedFloat - only PartialEq, no Eq
 }

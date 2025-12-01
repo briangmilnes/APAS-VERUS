@@ -100,6 +100,26 @@ When the user requests "N STEP", complete the task in N iterations following thi
 - Other axioms being checked can trigger additional lemmas indirectly.
 - Broadcasting (`#[verifier::proof]` with `broadcast use`) makes lemmas available globally.
 
+### Trigger Development
+- **You may start with `#![auto]`** to let Verus choose a trigger automatically.
+- **But you must resolve it**: Either work out an explicit trigger yourself, or adopt Verus's suggested trigger.
+- **Never ship `#![auto]`** in final code - it generates warnings and the chosen trigger may change between Verus versions.
+- When Verus suggests a trigger in a warning, copy it directly:
+  ```rust
+  // Verus warning: automatically chose trigger: self@.A.contains((v@, p.0, w))
+  // Fix by replacing #![auto] with the suggested trigger:
+  exists |w: i32| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w))
+  ```
+- For `exists` with `||` (OR), you may need separate triggers for each disjunct:
+  ```rust
+  // Bad: combined trigger may not fire correctly
+  exists |w| #![trigger a.contains(w), b.contains(w)] a.contains(w) || b.contains(w)
+  
+  // Good: separate triggers for each disjunct
+  (exists |w| #![trigger a.contains(w)] a.contains(w)) || 
+  (exists |w| #![trigger b.contains(w)] b.contains(w))
+  ```
+
 ### Assertions
 - Use `assert` statements to guide the SMT solver through inductive steps.
 - Place assertions at proof-critical points, not as documentation.
@@ -334,6 +354,7 @@ proof {
 - Terse comments before each assertion/invariant explaining what it does.
 - Avoid "jejune" (obvious) comments that just restate the code.
 - Don't spam with prose that assumes the reader can't read code.
+- Don't use `=*` or `*=` as decorative separators or bullet points in comments - reserve these only for actual assignment (`x = y`) or equality (`x == y`) expressions.
 
 ### Variable Naming
 - Prefer `elt` over `target` for collection elements (standard terminology).

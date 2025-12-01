@@ -46,10 +46,10 @@ verus! {
     }
 
     impl<'a, X: StT + Hash, Y: StT + Hash> RelationStEphIter<'a, X, Y> {
-        pub fn next(&mut self) -> (result: Option<&'a Pair<X, Y>>)
+        pub fn next(&mut self) -> (next: Option<&'a Pair<X, Y>>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
-                match result {
+                match next {
                     None => {
                         &&& self@ == old(self)@
                         &&& old_index >= old_seq.len()
@@ -163,7 +163,7 @@ verus! {
                     it@.1 == pairs_seq,
                     pairs_seq.map(|i: int, p: Pair<X, Y>| p@).to_set() == pairs_view,
                     out@ == Set::<X::V>::new(|x: X::V| 
-                        exists |i: int| #![auto] 0 <= i < it@.0 && pairs_seq[i]@.0 == x),
+                        exists |i: int| #![trigger pairs_seq[i]] 0 <= i < it@.0 && pairs_seq[i]@.0 == x),
                 decreases pairs_seq.len() - it@.0,
             {
                 match it.next() {
@@ -178,7 +178,7 @@ verus! {
                             assert forall |x: X::V| out@.contains(x) implies 
                                 (exists |y: Y::V| self@.contains((x, y))) by {
                                 if out@.contains(x) {
-                                    let i = choose |i: int| #![auto] 0 <= i < pairs_seq.len() && pairs_seq[i]@.0 == x;
+                                    let i = choose |i: int| #![trigger pairs_seq[i]] 0 <= i < pairs_seq.len() && pairs_seq[i]@.0 == x;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(pairs_seq, i);
                                     assert(self@.contains((x, pairs_seq[i]@.1)));
                                 }
@@ -186,7 +186,7 @@ verus! {
                             assert forall |x: X::V| (exists |y: Y::V| self@.contains((x, y))) implies 
                                 out@.contains(x) by {
                                 if exists |y: Y::V| self@.contains((x, y)) {
-                                    let y = choose |y: Y::V| #![auto] self@.contains((x, y));
+                                    let y = choose |y: Y::V| #![trigger self@.contains((x, y))] self@.contains((x, y));
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(pairs_seq, (x, y));
                                 }
                             }
@@ -211,7 +211,7 @@ verus! {
                     it@.1 == pairs_seq,
                     pairs_seq.map(|i: int, p: Pair<X, Y>| p@).to_set() == pairs_view,
                     out@ == Set::<Y::V>::new(|y: Y::V| 
-                        exists |i: int| #![auto] 0 <= i < it@.0 && pairs_seq[i]@.1 == y),
+                        exists |i: int| #![trigger pairs_seq[i]] 0 <= i < it@.0 && pairs_seq[i]@.1 == y),
                 decreases pairs_seq.len() - it@.0,
             {
                 match it.next() {
@@ -225,7 +225,7 @@ verus! {
                             assert forall |y: Y::V| out@.contains(y) implies 
                                 (exists |x: X::V| self@.contains((x, y))) by {
                                 if out@.contains(y) {
-                                    let i = choose |i: int| #![auto] 0 <= i < pairs_seq.len() && pairs_seq[i]@.1 == y;
+                                    let i = choose |i: int| #![trigger pairs_seq[i]] 0 <= i < pairs_seq.len() && pairs_seq[i]@.1 == y;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(pairs_seq, i);
                                     assert(self@.contains((pairs_seq[i]@.0, y)));
                                 }
@@ -233,7 +233,7 @@ verus! {
                             assert forall |y: Y::V| (exists |x: X::V| self@.contains((x, y))) implies 
                                 out@.contains(y) by {
                                 if exists |x: X::V| self@.contains((x, y)) {
-                                    let x = choose |x: X::V| #![auto] self@.contains((x, y));
+                                    let x = choose |x: X::V| #![trigger self@.contains((x, y))] self@.contains((x, y));
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(pairs_seq, (x, y));
                                 }
                             }

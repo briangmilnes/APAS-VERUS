@@ -12,7 +12,7 @@ if ! command -v ctags >/dev/null 2>&1; then
   exit 1
 fi
 
-$TAGS -R ${ROOT_DIR}/src ~/projects/verus-lang/source/vstd
+$TAGS -R ${ROOT_DIR}/src ~/projects/verus-lang/source/builtin ~/projects/verus-lang/source/vstd
 echo "Wrote tags: ${TAGS_FILE}"
 
 

@@ -8,8 +8,8 @@ FILES=(
   src/Chap06/UnDirGraphStEph.rs
   src/Chap06/LabDirGraphStEph.rs
   src/Chap06/LabUnDirGraphStEph.rs
-  src/Chap06/WeightedDirGraphStEphInt.rs
-  src/Chap06/WeightedUnDirGraphStEphInt.rs
+  src/Chap06/WeighedDirGraphStEphInt.rs
+  src/Chap06/WeighedUnDirGraphStEphInt.rs
 )
 
 printf "%-35s %7s %8s %14s %8s\n" "File" "admits" "assumes" "external_body" "ensures"

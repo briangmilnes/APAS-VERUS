@@ -267,7 +267,7 @@ pub proof fn lemma_map_to_set_contains_index<T: View>(seq: Seq<T>, s: T::V)
     requires
         seq.map(|i: int, k: T| k@).to_set().contains(s),
     ensures
-        exists |i: int| #![auto] 0 <= i < seq.len() && s == seq[i]@,
+        exists |i: int| #![trigger seq[i]] 0 <= i < seq.len() && s == seq[i]@,
 {
     broadcast use vstd::seq_lib::group_seq_properties;
     broadcast use vstd::set::group_set_axioms;
@@ -382,6 +382,138 @@ pub proof fn lemma_take_one_more_intersect<T: View>(seq: Seq<T>, s2: Set<T::V>, 
             assert(set_n_plus_1.contains(v));
         }
     }
+}
+
+// Part 1: Nat sum monotonicity - if total sum fits, no intermediate overflow
+
+pub proof fn lemma_nat_partial_sum_monotonic(seq: Seq<nat>, i: int, j: int)
+    requires
+        0 <= i <= j <= seq.len(),
+    ensures
+        nat_sum(seq.take(i)) <= nat_sum(seq.take(j)),
+    decreases j - i,
+{
+    if i == j {
+    } else {
+        lemma_nat_partial_sum_monotonic(seq, i, j - 1);
+        lemma_nat_fold_left_step(seq, j - 1);
+    }
+}
+
+pub proof fn lemma_nat_fold_left_step(seq: Seq<nat>, n: int)
+    requires
+        0 <= n < seq.len(),
+    ensures
+        nat_sum(seq.take(n + 1)) == nat_sum(seq.take(n)) + seq[n],
+{
+    broadcast use vstd::seq_lib::group_seq_properties;
+    
+    let prefix = seq.take(n);
+    let suffix = seq.subrange(n, n + 1);
+    let f = |acc: nat, v: nat| acc + v;
+    
+    // Use lemma_fold_left_split: fold(take(n+1)) = fold(suffix, fold(prefix))
+    seq.take(n + 1).lemma_fold_left_split(0nat, f, n);
+    
+    // take(n+1).subrange(0, n) == take(n)
+    assert(seq.take(n + 1).subrange(0, n) =~= prefix);
+    
+    // take(n+1).subrange(n, n+1) == [seq[n]]
+    assert(seq.take(n + 1).subrange(n, n + 1) =~= Seq::empty().push(seq[n]));
+    
+    // fold([x], acc) = acc + x
+    assert(Seq::empty().push(seq[n]).fold_left(prefix.fold_left(0nat, f), f) 
+        == prefix.fold_left(0nat, f) + seq[n]);
+}
+
+/// The main theorem: If the total sum of nat values fits in MAX, then ALL partial sums fit.
+/// This means no intermediate overflow regardless of ordering!
+pub open spec fn nat_sum(seq: Seq<nat>) -> nat {
+    seq.fold_left(0nat, |acc: nat, v: nat| acc + v)
+}
+
+pub proof fn lemma_nat_sum_no_intermediate_overflow(seq: Seq<nat>, max: nat)
+    requires
+        nat_sum(seq) <= max,
+    ensures
+        forall |i: int| 0 <= i <= seq.len() ==> nat_sum(#[trigger] seq.take(i)) <= max,
+{
+    assert forall |i: int| 0 <= i <= seq.len() implies nat_sum(#[trigger] seq.take(i)) <= max by {
+        lemma_nat_partial_sum_monotonic(seq, i, seq.len() as int);
+        assert(seq.take(seq.len() as int) =~= seq);
+    }
+}
+
+/// Corollary: For any permutation/reordering of a nat sequence, 
+/// if the total sum fits in max, all partial sums of ANY ordering fit.
+/// 
+/// This is the key result: for nat, if total fits, ANY fold order works!
+pub proof fn lemma_nat_any_order_no_overflow(s1: Seq<nat>, s2: Seq<nat>, max: nat)
+    requires
+        s1.to_set() == s2.to_set(),
+        s1.no_duplicates(),
+        s2.no_duplicates(),
+        nat_sum(s1) <= max,
+    ensures
+        nat_sum(s2) <= max,
+        forall |i: int| 0 <= i <= s2.len() ==> nat_sum(#[trigger] s2.take(i)) <= max,
+{
+    lemma_nat_seq_sum_permutation_invariant(s1, s2);
+    lemma_nat_sum_no_intermediate_overflow(s2, max);
+}
+
+pub proof fn lemma_no_dup_same_set_implies_same_multiset<T>(s1: Seq<T>, s2: Seq<T>)
+    requires
+        s1.to_set() == s2.to_set(),
+        s1.no_duplicates(),
+        s2.no_duplicates(),
+    ensures
+        s1.to_multiset() == s2.to_multiset(),
+{
+    broadcast use vstd::seq_lib::group_seq_properties;
+    broadcast use vstd::set::group_set_axioms;
+    
+    // For no_duplicates sequences, to_multiset has count 0 or 1 for each element
+    // If to_set is equal, the elements with count 1 are the same
+    assert forall |x: T| s1.to_multiset().count(x) == s2.to_multiset().count(x) by {
+        if s1.contains(x) {
+            assert(s1.to_set().contains(x));
+            assert(s2.to_set().contains(x));
+            assert(s2.contains(x));
+            // no_duplicates => count == 1
+            s1.lemma_multiset_has_no_duplicates();
+            s2.lemma_multiset_has_no_duplicates();
+        } else {
+            if s2.contains(x) {
+                assert(s2.to_set().contains(x));
+                assert(s1.to_set().contains(x));
+                assert(s1.contains(x));
+                assert(false);
+            }
+        }
+    };
+    assert(s1.to_multiset() =~= s2.to_multiset());
+}
+
+pub proof fn lemma_nat_seq_sum_permutation_invariant(s1: Seq<nat>, s2: Seq<nat>)
+    requires
+        s1.to_set() == s2.to_set(),
+        s1.no_duplicates(),
+        s2.no_duplicates(),
+    ensures
+        nat_sum(s1) == nat_sum(s2),
+{
+    // no_duplicates + same to_set => same to_multiset
+    lemma_no_dup_same_set_implies_same_multiset(s1, s2);
+    
+    // nat addition is commutative for fold_left
+    let f = |acc: nat, v: nat| acc + v;
+    assert(vstd::seq_lib::commutative_foldl(f)) by {
+        assert forall |x: nat, y: nat, v: nat| #[trigger] f(f(v, x), y) == f(f(v, y), x) by {};
+    };
+    
+    // Use vstd's permutation lemma
+    vstd::seq_lib::lemma_fold_left_permutation(s1, s2, f, 0nat);
 }
 
 } // verus!

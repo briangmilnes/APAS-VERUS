@@ -66,12 +66,12 @@
 - **Directed graphs**: Always use `A:` for arcs (directed edges) in macros, documentation, and APIs.
   ```rust
   DirGraphLit!( V: [1, 2, 3], A: [(1, 2), (2, 3)] )
-  WeightedDirGraphLit!( V: ["A", "B"], A: [("A", "B", 42)] )
+  WeighedDirGraphLit!( V: ["A", "B"], A: [("A", "B", 42)] )
   ```
 - **Undirected graphs**: Always use `E:` for edges (undirected edges) in macros, documentation, and APIs.
   ```rust
   UnDirGraphLit!( V: [1, 2, 3], E: [(1, 2), (2, 3)] )
-  WeightedUnDirGraphLit!( V: ["A", "B"], E: [("A", "B", 3.14)] )
+  WeighedUnDirGraphLit!( V: ["A", "B"], E: [("A", "B", 3.14)] )
   ```
 - **Rationale**: While mathematics traditionally uses `(V, E)` for all graphs, APAS distinguishes directed arcs from undirected edges to avoid ambiguity about directedness in APIs and algorithms.
 

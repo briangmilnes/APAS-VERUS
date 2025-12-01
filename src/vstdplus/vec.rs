@@ -18,7 +18,7 @@ pub mod vec {
     pub proof fn lemma_vec_clone_view_eq<V: View<V=V> + Clone + Eq>(v1: &Vec<V>, v2: Vec<V>)
         requires
             v1.len() == v2.len(),
-            forall|i: int| #![auto] 0 <= i < v1.len() ==> cloned(v1@[i], v2@[i]),
+            forall|i: int| #![trigger v1@[i]] 0 <= i < v1.len() ==> cloned(v1@[i], v2@[i]),
             obeys_feq_full::<V>(),
         ensures
             v1@ =~= v2@,

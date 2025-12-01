@@ -55,12 +55,12 @@ name = "TestLabUnDirGraphStEph"
 path = "tests/Chap06/TestLabUnDirGraphStEph.rs"
 
 [[test]]
-name = "TestWeightedDirGraphStEphInt"
-path = "tests/Chap06/TestWeightedDirGraphStEphInt.rs"
+name = "TestWeighedDirGraphStEphInt"
+path = "tests/Chap06/TestWeighedDirGraphStEphInt.rs"
 
 [[test]]
-name = "TestWeightedUnDirGraphStEphInt"
-path = "tests/Chap06/TestWeightedUnDirGraphStEphInt.rs"
+name = "TestWeighedUnDirGraphStEphInt"
+path = "tests/Chap06/TestWeighedUnDirGraphStEphInt.rs"
 
 [[test]]
 name = "TestCheckedU8"

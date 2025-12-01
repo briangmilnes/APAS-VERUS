@@ -8,7 +8,7 @@ pub mod UnDirGraphStEph {
 
     use vstd::prelude::*;
     use crate::Chap05::SetStEph::SetStEph::*;
-    use crate::Types::Types::*;
+    use crate::Types::Types::{*, GraphView};
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::feq::feq::feq;
 
@@ -30,32 +30,28 @@ verus! {
     }
 
     impl<V: StT + Hash> View for UnDirGraphStEph<V> {
-        type V = (Set<<V as View>::V>, Set<(<V as View>::V, <V as View>::V)>);
+        type V = GraphView<<V as View>::V>;
         
         open spec fn view(&self) -> Self::V {
-            (self.V@, self.E@)
+            GraphView { V: self.V@, A: self.E@ }
         }
     }
 
     pub trait UnDirGraphStEphTrait<V: StT + Hash>:
-    View<V = (Set<<V as View>::V>, Set<(<V as View>::V, <V as View>::V)>)> + Sized {
+    View<V = GraphView<<V as View>::V>> + Sized {
 
-        /// A graph is finite if both its vertex set and edge set are finite
         open spec fn spec_finite(&self) -> bool {
-            self@.0.finite() && self@.1.finite()
+            self@.V.finite() && self@.A.finite()
         }
 
-        /// Neighbors of v: vertices adjacent via any edge containing v
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V> { 
-            Set::new(|w: V::V| self@.1.contains((v, w)) || self@.1.contains((w, v)))
+            Set::new(|w: V::V| self@.A.contains((v, w)) || self@.A.contains((w, v)))
         }
 
-        /// Neighbors of a set of vertices
-        open spec fn spec_ng_of_vertices(&self, u_set: Set<V::V>) -> Set<V::V> {
-            Set::new(|w: V::V| exists |u: V::V| #![auto] u_set.contains(u) && self.spec_ng(u).contains(w))
+        open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> {
+            Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
         }
 
-        /// Degree = |NG(v)|
         open spec fn spec_degree(&self, v: V::V) -> nat {
             self.spec_ng(v).len()
         }
@@ -63,43 +59,43 @@ verus! {
         fn empty() -> (g: UnDirGraphStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures
-                g@.0 =~= Set::<<V as View>::V>::empty(),
-                g@.1 =~= Set::<(<V as View>::V, <V as View>::V)>::empty(),
-                g@.0.finite(),
-                g@.1.finite();
+                g@.V =~= Set::<<V as View>::V>::empty(),
+                g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty(),
+                g@.V.finite(),
+                g@.A.finite();
 
         fn FromSets(vertices: SetStEph<V>, edges: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>)
             ensures
-                g@.0 =~= vertices@,
-                g@.1 =~= edges@,
-                g@.0.finite(),
-                g@.1.finite();
+                g@.V =~= vertices@,
+                g@.A =~= edges@,
+                g@.V.finite(),
+                g@.A.finite();
 
         fn vertices(&self) -> (v: &SetStEph<V>)
-            ensures v@ == self@.0;
+            ensures v@ == self@.V;
 
         fn edges(&self) -> (e: &SetStEph<Edge<V>>)
-            ensures e@ =~= self@.1;
+            ensures e@ =~= self@.A;
 
         fn sizeV(&self) -> (n: N)
             requires valid_key_type_Edge::<V>()
-            ensures n == self@.0.len();
+            ensures n == self@.V.len();
 
         fn sizeE(&self) -> (n: N)
             requires valid_key_type_Edge::<V>()
-            ensures n == self@.1.len();
+            ensures n == self@.A.len();
 
         fn Neighbor(&self, u: &V, v: &V) -> (b: B)
             requires valid_key_type_Edge::<V>()
-            ensures b == (self@.1.contains((u@, v@)) || self@.1.contains((v@, u@)));
+            ensures b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)));
 
-        fn NG(&self, v: &V) -> (result: SetStEph<V>)
+        fn NG(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
-            ensures result@ == self.spec_ng(v@);
+            ensures neighbors@ == self.spec_ng(v@);
 
-        fn NGOfVertices(&self, u_set: &SetStEph<V>) -> (result: SetStEph<V>)
+        fn NGOfVertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
-            ensures result@ == self.spec_ng_of_vertices(u_set@);
+            ensures neighbors@ == self.spec_ng_of_vertices(vertices@);
 
         fn Incident(&self, e: &Edge<V>, v: &V) -> (b: B)
             requires valid_key_type_Edge::<V>()
@@ -133,12 +129,12 @@ verus! {
             self.E.mem(&Edge(v.clone_plus(), u.clone_plus()))
         }
 
-        fn NG(&self, v: &V) -> (result: SetStEph<V>) {
+        fn NG(&self, v: &V) -> (neighbors: SetStEph<V>) {
             let mut ng: SetStEph<V> = SetStEph::empty();
             let mut it = self.E.iter();
             let ghost edges_seq = it@.1;
             let ghost v_view = v@;
-            let ghost edges_view = self@.1;
+            let ghost edges_view = self@.A;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
@@ -148,7 +144,7 @@ verus! {
                     it@.1 == edges_seq,
                     edges_seq.map(|i: int, e: Edge<V>| e@).to_set() == edges_view,
                     ng@ == Set::new(|w: V::V| 
-                        exists |i: int| #![auto] 0 <= i < it@.0 && 
+                        exists |i: int| #![trigger edges_seq[i]] 0 <= i < it@.0 && 
                             ((edges_seq[i]@.0 == v_view && edges_seq[i]@.1 == w) ||
                              (edges_seq[i]@.1 == v_view && edges_seq[i]@.0 == w))),
                 decreases edges_seq.len() - it@.0,
@@ -156,16 +152,16 @@ verus! {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |w: V::V| #![auto] ng@.contains(w) implies 
+                            assert forall |w: V::V| #[trigger] ng@.contains(w) implies 
                                 self.spec_ng(v_view).contains(w) by {
                                 if ng@.contains(w) {
-                                    let i = choose |i: int| #![auto] 0 <= i < edges_seq.len() && 
+                                    let i = choose |i: int| #![trigger edges_seq[i]] 0 <= i < edges_seq.len() && 
                                         ((edges_seq[i]@.0 == v_view && edges_seq[i]@.1 == w) ||
                                          (edges_seq[i]@.1 == v_view && edges_seq[i]@.0 == w));
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(edges_seq, i);
                                 }
                             }
-                            assert forall |w: V::V| #![auto] self.spec_ng(v_view).contains(w) implies 
+                            assert forall |w: V::V| #[trigger] self.spec_ng(v_view).contains(w) implies 
                                 ng@.contains(w) by {
                                 if self.spec_ng(v_view).contains(w) {
                                     if edges_view.contains((v_view, w)) {
@@ -191,11 +187,11 @@ verus! {
             }
         }
 
-        fn NGOfVertices(&self, u_set: &SetStEph<V>) -> (result: SetStEph<V>) {
+        fn NGOfVertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
             let mut result: SetStEph<V> = SetStEph::empty();
-            let mut it = u_set.iter();
+            let mut it = vertices.iter();
             let ghost u_seq = it@.1;
-            let ghost u_set_view = u_set@;
+            let ghost vertices_view = vertices@;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
@@ -203,26 +199,26 @@ verus! {
                     valid_key_type_Edge::<V>(),
                     it@.0 <= u_seq.len(),
                     it@.1 == u_seq,
-                    u_seq.map(|i: int, v: V| v@).to_set() == u_set_view,
+                    u_seq.map(|i: int, v: V| v@).to_set() == vertices_view,
                     result@ == Set::new(|w: V::V| 
-                        exists |i: int| #![auto] 0 <= i < it@.0 && self.spec_ng(u_seq[i]@).contains(w)),
+                        exists |i: int| #![trigger u_seq[i]] 0 <= i < it@.0 && self.spec_ng(u_seq[i]@).contains(w)),
                 decreases u_seq.len() - it@.0,
             {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |w: V::V| #![auto] result@.contains(w) implies 
-                                self.spec_ng_of_vertices(u_set_view).contains(w) by {
+                            assert forall |w: V::V| #[trigger] result@.contains(w) implies 
+                                self.spec_ng_of_vertices(vertices_view).contains(w) by {
                                 if result@.contains(w) {
-                                    let i = choose |i: int| #![auto] 0 <= i < u_seq.len() && self.spec_ng(u_seq[i]@).contains(w);
+                                    let i = choose |i: int| #![trigger u_seq[i]] 0 <= i < u_seq.len() && self.spec_ng(u_seq[i]@).contains(w);
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(u_seq, i);
-                                    assert(u_set_view.contains(u_seq[i]@));
+                                    assert(vertices_view.contains(u_seq[i]@));
                                 }
                             }
-                            assert forall |w: V::V| #![auto] self.spec_ng_of_vertices(u_set_view).contains(w) implies 
+                            assert forall |w: V::V| #[trigger] self.spec_ng_of_vertices(vertices_view).contains(w) implies 
                                 result@.contains(w) by {
-                                if self.spec_ng_of_vertices(u_set_view).contains(w) {
-                                    let u = choose |u: V::V| #![auto] u_set_view.contains(u) && self.spec_ng(u).contains(w);
+                                if self.spec_ng_of_vertices(vertices_view).contains(w) {
+                                    let u = choose |u: V::V| #![trigger vertices_view.contains(u)] vertices_view.contains(u) && self.spec_ng(u).contains(w);
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(u_seq, u);
                                 }
                             }

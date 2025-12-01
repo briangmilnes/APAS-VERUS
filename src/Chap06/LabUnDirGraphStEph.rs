@@ -8,7 +8,7 @@ pub mod LabUnDirGraphStEph {
 
     use vstd::prelude::*;
     use crate::Chap05::SetStEph::SetStEph::*;
-    use crate::Types::Types::*;
+    use crate::Types::Types::{*, LabGraphView};
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::feq::feq::feq;
 
@@ -32,85 +32,82 @@ verus! {
     }
 
     impl<V: HashOrd, L: StT + Hash> View for LabUnDirGraphStEph<V, L> {
-        type V = (Set<<V as View>::V>, Set<(<V as View>::V, <V as View>::V, <L as View>::V)>);
+        type V = LabGraphView<<V as View>::V, <L as View>::V>;
         
         open spec fn view(&self) -> Self::V {
-            (self.vertices@, self.labeled_edges@)
+            LabGraphView { V: self.vertices@, A: self.labeled_edges@ }
         }
     }
 
     pub trait LabUnDirGraphStEphTrait<V: HashOrd, L: StT + Hash>:
-    View<V = (Set<<V as View>::V>, Set<(<V as View>::V, <V as View>::V, <L as View>::V)>)> + Sized {
+    View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized {
 
-        /// A graph is finite if both its vertex set and labeled edge set are finite
         open spec fn spec_finite(&self) -> bool {
-            self@.0.finite() && self@.1.finite()
+            self@.V.finite() && self@.A.finite()
         }
 
-        /// Neighbors of v: vertices adjacent via any edge containing v (undirected)
         open spec fn spec_neighbors(&self, v: V::V) -> Set<V::V> { 
-            Set::new(|w: V::V| exists |l: L::V| #![auto] 
-                self@.1.contains((v, w, l)) || self@.1.contains((w, v, l)))
+            Set::new(|w: V::V| exists |l: L::V| 
+                self@.A.contains((v, w, l)) || self@.A.contains((w, v, l)))
         }
 
-        /// Unlabeled edges
         open spec fn spec_edges(&self) -> Set<(V::V, V::V)> {
-            Set::new(|e: (V::V, V::V)| exists |l: L::V| #![auto] self@.1.contains((e.0, e.1, l)))
+            Set::new(|e: (V::V, V::V)| exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l)))
         }
 
         fn empty() -> (g: LabUnDirGraphStEph<V, L>)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
-                g@.0.finite(),
-                g@.1.finite(),
-                g@.0 =~= Set::<<V as View>::V>::empty(),
-                g@.1 =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
+                g@.V.finite(),
+                g@.A.finite(),
+                g@.V =~= Set::<<V as View>::V>::empty(),
+                g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
         fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: LabUnDirGraphStEph<V, L>)
             ensures
-                g@.0.finite(),
-                g@.1.finite(),
-                g@.0 =~= vertices@,
-                g@.1 =~= labeled_edges@;
+                g@.V.finite(),
+                g@.A.finite(),
+                g@.V =~= vertices@,
+                g@.A =~= labeled_edges@;
 
         fn vertices(&self) -> (v: &SetStEph<V>)
-            ensures v@ == self@.0;
+            ensures v@ == self@.V;
 
         fn labeled_edges(&self) -> (e: &SetStEph<LabEdge<V, L>>)
-            ensures e@ =~= self@.1;
+            ensures e@ =~= self@.A;
 
-        fn edges(&self) -> (result: SetStEph<Edge<V>>)
+        fn edges(&self) -> (edges: SetStEph<Edge<V>>)
             requires valid_key_type_LabEdge::<V, L>(), valid_key_type_Edge::<V>()
             ensures 
-                forall |e: (V::V, V::V)| result@.contains(e) == (exists |l: L::V| #![auto] self@.1.contains((e.0, e.1, l)));
+                forall |e: (V::V, V::V)| edges@.contains(e) == (exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l)));
 
         fn add_vertex(&mut self, v: V)
             requires valid_key_type_LabEdge::<V, L>()
-            ensures self@.0 == old(self)@.0.insert(v@), self@.1 == old(self)@.1;
+            ensures self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
 
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L)
             requires valid_key_type_LabEdge::<V, L>()
             ensures 
-                self@.0 == old(self)@.0.insert(v1@).insert(v2@),
-                self@.1 == old(self)@.1.insert((v1@, v2@, label@)) || 
-                self@.1 == old(self)@.1.insert((v2@, v1@, label@));
+                self@.V == old(self)@.V.insert(v1@).insert(v2@),
+                self@.A == old(self)@.A.insert((v1@, v2@, label@)) || 
+                self@.A == old(self)@.A.insert((v2@, v1@, label@));
 
-        fn get_edge_label(&self, v1: &V, v2: &V) -> (result: Option<&L>)
+        fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>)
             requires valid_key_type_LabEdge::<V, L>()
             ensures 
-                result.is_some() == (exists |l: L::V| #![auto] 
-                    self@.1.contains((v1@, v2@, l)) || self@.1.contains((v2@, v1@, l))),
-                result.is_some() ==> (self@.1.contains((v1@, v2@, result.unwrap()@)) || 
-                                      self@.1.contains((v2@, v1@, result.unwrap()@)));
+                label.is_some() == (exists |l: L::V| 
+                    self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l))),
+                label.is_some() ==> (self@.A.contains((v1@, v2@, label.unwrap()@)) || 
+                                      self@.A.contains((v2@, v1@, label.unwrap()@)));
 
         fn has_edge(&self, v1: &V, v2: &V) -> (b: bool)
             requires valid_key_type_LabEdge::<V, L>()
-            ensures b == (exists |l: L::V| #![auto] 
-                self@.1.contains((v1@, v2@, l)) || self@.1.contains((v2@, v1@, l)));
+            ensures b == (exists |l: L::V| 
+                self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l)));
 
-        fn neighbors(&self, v: &V) -> (result: SetStEph<V>)
+        fn neighbors(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires valid_key_type_LabEdge::<V, L>()
-            ensures result@ == self.spec_neighbors(v@);
+            ensures neighbors@ == self.spec_neighbors(v@);
     }
 
     impl<V: HashOrd, L: StT + Hash> LabUnDirGraphStEphTrait<V, L> for LabUnDirGraphStEph<V, L> {
@@ -127,11 +124,11 @@ verus! {
 
         fn labeled_edges(&self) -> (e: &SetStEph<LabEdge<V, L>>) { &self.labeled_edges }
 
-        fn edges(&self) -> (result: SetStEph<Edge<V>>) {
+        fn edges(&self) -> (edges: SetStEph<Edge<V>>) {
             let mut edges: SetStEph<Edge<V>> = SetStEph::empty();
             let mut it = self.labeled_edges.iter();
             let ghost le_seq = it@.1;
-            let ghost le_view = self@.1;
+            let ghost le_view = self@.A;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
@@ -142,23 +139,23 @@ verus! {
                     it@.1 == le_seq,
                     le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
                     forall |e: (V::V, V::V)| edges@.contains(e) == 
-                        (exists |i: int| #![auto] 0 <= i < it@.0 && le_seq[i]@.0 == e.0 && le_seq[i]@.1 == e.1),
+                        (exists |i: int| #![trigger le_seq[i]] 0 <= i < it@.0 && le_seq[i]@.0 == e.0 && le_seq[i]@.1 == e.1),
                 decreases le_seq.len() - it@.0,
             {
                 match it.next() {
                     None => {
                         proof {
                             assert forall |e: (V::V, V::V)| edges@.contains(e) implies 
-                                (exists |l: L::V| #![auto] le_view.contains((e.0, e.1, l))) by {
+                                (exists |l: L::V| #![trigger le_view.contains((e.0, e.1, l))] le_view.contains((e.0, e.1, l))) by {
                                 if edges@.contains(e) {
-                                    let i = choose |i: int| #![auto] 0 <= i < le_seq.len() && le_seq[i]@.0 == e.0 && le_seq[i]@.1 == e.1;
+                                    let i = choose |i: int| #![trigger le_seq[i]] 0 <= i < le_seq.len() && le_seq[i]@.0 == e.0 && le_seq[i]@.1 == e.1;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(le_seq, i);
                                 }
                             }
-                            assert forall |e: (V::V, V::V)| (exists |l: L::V| #![auto] le_view.contains((e.0, e.1, l))) implies 
+                            assert forall |e: (V::V, V::V)| (exists |l: L::V| #![trigger le_view.contains((e.0, e.1, l))] le_view.contains((e.0, e.1, l))) implies 
                                 edges@.contains(e) by {
-                                if exists |l: L::V| #![auto] le_view.contains((e.0, e.1, l)) {
-                                    let l = choose |l: L::V| #![auto] le_view.contains((e.0, e.1, l));
+                                if exists |l: L::V| #![trigger le_view.contains((e.0, e.1, l))] le_view.contains((e.0, e.1, l)) {
+                                    let l = choose |l: L::V| #![trigger le_view.contains((e.0, e.1, l))] le_view.contains((e.0, e.1, l));
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(le_seq, (e.0, e.1, l));
                                 }
                             }
@@ -184,10 +181,10 @@ verus! {
             }
         }
 
-        fn get_edge_label(&self, v1: &V, v2: &V) -> (result: Option<&L>) {
+        fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>) {
             let mut it = self.labeled_edges.iter();
             let ghost le_seq = it@.1;
-            let ghost le_view = self@.1;
+            let ghost le_view = self@.A;
             let ghost v1_view = v1@;
             let ghost v2_view = v2@;
 
@@ -198,7 +195,7 @@ verus! {
                     it@.0 <= le_seq.len(),
                     it@.1 == le_seq,
                     le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
-                    forall |i: int| #![auto] 0 <= i < it@.0 ==> 
+                    forall |i: int| #![trigger le_seq[i]] 0 <= i < it@.0 ==> 
                         !((le_seq[i]@.0 == v1_view && le_seq[i]@.1 == v2_view) ||
                           (le_seq[i]@.0 == v2_view && le_seq[i]@.1 == v1_view)),
                 decreases le_seq.len() - it@.0,
@@ -238,7 +235,7 @@ verus! {
         fn has_edge(&self, v1: &V, v2: &V) -> (b: bool) {
             let mut it = self.labeled_edges.iter();
             let ghost le_seq = it@.1;
-            let ghost le_view = self@.1;
+            let ghost le_view = self@.A;
             let ghost v1_view = v1@;
             let ghost v2_view = v2@;
 
@@ -249,7 +246,7 @@ verus! {
                     it@.0 <= le_seq.len(),
                     it@.1 == le_seq,
                     le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
-                    forall |i: int| #![auto] 0 <= i < it@.0 ==> 
+                    forall |i: int| #![trigger le_seq[i]] 0 <= i < it@.0 ==> 
                         !((le_seq[i]@.0 == v1_view && le_seq[i]@.1 == v2_view) ||
                           (le_seq[i]@.0 == v2_view && le_seq[i]@.1 == v1_view)),
                 decreases le_seq.len() - it@.0,
@@ -287,12 +284,12 @@ verus! {
             }
         }
 
-        fn neighbors(&self, v: &V) -> (result: SetStEph<V>) {
+        fn neighbors(&self, v: &V) -> (neighbors: SetStEph<V>) {
             let mut neighbors: SetStEph<V> = SetStEph::empty();
             let mut it = self.labeled_edges.iter();
             let ghost le_seq = it@.1;
             let ghost v_view = v@;
-            let ghost le_view = self@.1;
+            let ghost le_view = self@.A;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
@@ -302,7 +299,7 @@ verus! {
                     it@.1 == le_seq,
                     le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
                     neighbors@ == Set::new(|w: V::V| 
-                        exists |i: int| #![auto] 0 <= i < it@.0 && 
+                        exists |i: int| #![trigger le_seq[i]] 0 <= i < it@.0 && 
                             ((le_seq[i]@.0 == v_view && le_seq[i]@.1 == w) ||
                              (le_seq[i]@.1 == v_view && le_seq[i]@.0 == w))),
                 decreases le_seq.len() - it@.0,
@@ -310,23 +307,23 @@ verus! {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |w: V::V| #![auto] neighbors@.contains(w) implies 
+                            assert forall |w: V::V| #[trigger] neighbors@.contains(w) implies 
                                 self.spec_neighbors(v_view).contains(w) by {
                                 if neighbors@.contains(w) {
-                                    let i = choose |i: int| #![auto] 0 <= i < le_seq.len() && 
+                                    let i = choose |i: int| #![trigger le_seq[i]] 0 <= i < le_seq.len() && 
                                         ((le_seq[i]@.0 == v_view && le_seq[i]@.1 == w) ||
                                          (le_seq[i]@.1 == v_view && le_seq[i]@.0 == w));
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(le_seq, i);
                                 }
                             }
-                            assert forall |w: V::V| #![auto] self.spec_neighbors(v_view).contains(w) implies 
+                            assert forall |w: V::V| #[trigger] self.spec_neighbors(v_view).contains(w) implies 
                                 neighbors@.contains(w) by {
                                 if self.spec_neighbors(v_view).contains(w) {
-                                    if exists |l: L::V| #![auto] le_view.contains((v_view, w, l)) {
-                                        let l = choose |l: L::V| #![auto] le_view.contains((v_view, w, l));
+                                    if exists |l: L::V| #![trigger le_view.contains((v_view, w, l))] le_view.contains((v_view, w, l)) {
+                                        let l = choose |l: L::V| #![trigger le_view.contains((v_view, w, l))] le_view.contains((v_view, w, l));
                                         crate::vstdplus::seq_set::lemma_map_to_set_contains_index(le_seq, (v_view, w, l));
                                     } else {
-                                        let l = choose |l: L::V| #![auto] le_view.contains((w, v_view, l));
+                                        let l = choose |l: L::V| #![trigger le_view.contains((w, v_view, l))] le_view.contains((w, v_view, l));
                                         crate::vstdplus::seq_set::lemma_map_to_set_contains_index(le_seq, (w, v_view, l));
                                     }
                                 }

@@ -27,6 +27,23 @@ pub mod Types {
 
     verus! {
 
+    // Graph view struct: vertices and arcs/edges as spec sets
+    // Replaces tuple (Set<V>, Set<(V,V)>) for better readability
+    #[verifier::reject_recursive_types(V)]
+    pub ghost struct GraphView<V> {
+        pub V: Set<V>,
+        pub A: Set<(V, V)>,
+    }
+
+    // Labeled graph view struct: vertices and labeled arcs/edges
+    // Replaces tuple (Set<V>, Set<(V,V,L)>) for better readability
+    #[verifier::reject_recursive_types(V)]
+    #[verifier::reject_recursive_types(L)]
+    pub ghost struct LabGraphView<V, L> {
+        pub V: Set<V>,
+        pub A: Set<(V, V, L)>,
+    }
+
     // Triple wrapper for three-element tuples
     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Triple<A, B, C>(pub A, pub B, pub C);
@@ -115,6 +132,21 @@ pub mod Types {
     #[derive(Copy, PartialEq, Eq, Hash, Debug)]
     pub struct LabEdge<V: StT, L: StT + Hash>(pub V, pub V, pub L);
 
+    /// Weighed Edge wrapper to enable edges with weights.
+    /// Structurally identical to LabEdge but semantically distinct.
+    #[verifier::reject_recursive_types(V)]
+    #[verifier::reject_recursive_types(W)]
+    #[derive(Copy, PartialEq, Eq, Hash, Debug)]
+    pub struct WeighedEdge<V: StT, W: StT + Hash>(pub V, pub V, pub W);
+
+    /// Weighed Labelled Edge wrapper for edges with both a label and a weight.
+    /// This is a quadruple: (from, to, label, weight).
+    #[verifier::reject_recursive_types(V)]
+    #[verifier::reject_recursive_types(L)]
+    #[verifier::reject_recursive_types(W)]
+    #[derive(Copy, PartialEq, Eq, Hash, Debug)]
+    pub struct WeighedLabEdge<V: StT, L: StT + Hash, W: StT + Hash>(pub V, pub V, pub L, pub W);
+
     /// Newtype wrapper for key-value pairs with better Display than tuples
     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Pair<K, V>(pub K, pub V);
@@ -135,6 +167,18 @@ pub mod Types {
         type V = (V::V, V::V, L::V);
 
         open spec fn view(&self) -> (V::V, V::V, L::V) {(self.0@, self.1@, self.2@)}
+    }
+
+    impl<V: StT, W: StT + Hash> vstd::prelude::View for WeighedEdge<V, W> {
+        type V = (V::V, V::V, W::V);
+
+        open spec fn view(&self) -> (V::V, V::V, W::V) {(self.0@, self.1@, self.2@)}
+    }
+
+    impl<V: StT, L: StT + Hash, W: StT + Hash> vstd::prelude::View for WeighedLabEdge<V, L, W> {
+        type V = (V::V, V::V, L::V, W::V);
+
+        open spec fn view(&self) -> (V::V, V::V, L::V, W::V) {(self.0@, self.1@, self.2@, self.3@)}
     }
 
     impl<A: vstd::prelude::View, B: vstd::prelude::View, C: vstd::prelude::View> vstd::prelude::View for Triple<A, B, C> {
@@ -242,6 +286,57 @@ pub mod Types {
     pub open spec fn valid_key_type_LabEdge<V: StT + Hash, L: StT + Hash>() -> bool {
         &&& obeys_key_model::<V>() && obeys_key_model::<L>() && obeys_key_model::<LabEdge<V, L>>()
         &&& obeys_feq_full::<V>() && obeys_feq_full::<L>() && obeys_feq_full::<LabEdge<V, L>>()
+    }
+
+    // WeighedEdge axioms
+    pub open spec fn WeighedEdge_feq_trigger<V: StT + Hash, W: StT + Hash>() -> bool { true }
+
+    pub broadcast proof fn axiom_WeighedEdge_feq<V: StT + Hash, W: StT + Hash>()
+        requires #[trigger] WeighedEdge_feq_trigger::<V, W>()
+        ensures obeys_feq_full::<WeighedEdge<V, W>>()
+    { admit(); }
+
+    pub broadcast proof fn axiom_WeighedEdge_key_model<V: StT + Hash, W: StT + Hash>()
+        requires #[trigger] WeighedEdge_feq_trigger::<V, W>()
+        ensures obeys_key_model::<WeighedEdge<V, W>>()
+    { admit(); }
+
+    pub broadcast group group_WeighedEdge_axioms {
+        axiom_WeighedEdge_feq,
+        axiom_WeighedEdge_key_model,
+    }
+
+    pub open spec fn valid_key_type_WeighedEdge<V: StT + Hash, W: StT + Hash>() -> bool {
+        &&& obeys_key_model::<V>() && obeys_key_model::<W>() && obeys_key_model::<WeighedEdge<V, W>>()
+        &&& obeys_feq_full::<V>() && obeys_feq_full::<W>() && obeys_feq_full::<WeighedEdge<V, W>>()
+        // Also require LabEdge since WeighedGraph implementations use LabDirGraph internally
+        &&& obeys_key_model::<LabEdge<V, W>>() && obeys_feq_full::<LabEdge<V, W>>()
+        // Also require Triple and Pair for edge collections and neighbor results
+        &&& obeys_key_model::<Triple<V, V, W>>() && obeys_feq_full::<Triple<V, V, W>>()
+        &&& obeys_key_model::<Pair<V, W>>() && obeys_feq_full::<Pair<V, W>>()
+    }
+
+    // WeighedLabEdge axioms
+    pub open spec fn WeighedLabEdge_feq_trigger<V: StT + Hash, L: StT + Hash, W: StT + Hash>() -> bool { true }
+
+    pub broadcast proof fn axiom_WeighedLabEdge_feq<V: StT + Hash, L: StT + Hash, W: StT + Hash>()
+        requires #[trigger] WeighedLabEdge_feq_trigger::<V, L, W>()
+        ensures obeys_feq_full::<WeighedLabEdge<V, L, W>>()
+    { admit(); }
+
+    pub broadcast proof fn axiom_WeighedLabEdge_key_model<V: StT + Hash, L: StT + Hash, W: StT + Hash>()
+        requires #[trigger] WeighedLabEdge_feq_trigger::<V, L, W>()
+        ensures obeys_key_model::<WeighedLabEdge<V, L, W>>()
+    { admit(); }
+
+    pub broadcast group group_WeighedLabEdge_axioms {
+        axiom_WeighedLabEdge_feq,
+        axiom_WeighedLabEdge_key_model,
+    }
+
+    pub open spec fn valid_key_type_WeighedLabEdge<V: StT + Hash, L: StT + Hash, W: StT + Hash>() -> bool {
+        &&& obeys_key_model::<V>() && obeys_key_model::<L>() && obeys_key_model::<W>() && obeys_key_model::<WeighedLabEdge<V, L, W>>()
+        &&& obeys_feq_full::<V>() && obeys_feq_full::<L>() && obeys_feq_full::<W>() && obeys_feq_full::<WeighedLabEdge<V, L, W>>()
     }
 
     // Triple axioms
@@ -442,6 +537,30 @@ pub mod Types {
         fn from(e: LabEdge<V, L>) -> (V, V, L) { (e.0, e.1, e.2) }
     }
 
+    impl<V: StT, W: StT + Hash> Display for WeighedEdge<V, W> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result { write!(f, "({}, {}, {})", self.0, self.1, self.2) }
+    }
+
+    impl<V: StT, W: StT + Hash> From<(V, V, W)> for WeighedEdge<V, W> {
+        fn from(t: (V, V, W)) -> Self { WeighedEdge(t.0, t.1, t.2) }
+    }
+
+    impl<V: StT, W: StT + Hash> From<WeighedEdge<V, W>> for (V, V, W) {
+        fn from(e: WeighedEdge<V, W>) -> (V, V, W) { (e.0, e.1, e.2) }
+    }
+
+    impl<V: StT, L: StT + Hash, W: StT + Hash> Display for WeighedLabEdge<V, L, W> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result { write!(f, "({}, {}, {}, {})", self.0, self.1, self.2, self.3) }
+    }
+
+    impl<V: StT, L: StT + Hash, W: StT + Hash> From<(V, V, L, W)> for WeighedLabEdge<V, L, W> {
+        fn from(t: (V, V, L, W)) -> Self { WeighedLabEdge(t.0, t.1, t.2, t.3) }
+    }
+
+    impl<V: StT, L: StT + Hash, W: StT + Hash> From<WeighedLabEdge<V, L, W>> for (V, V, L, W) {
+        fn from(e: WeighedLabEdge<V, L, W>) -> (V, V, L, W) { (e.0, e.1, e.2, e.3) }
+    }
+
     // Import OrderedFloat from the ordered-float crate
     // Commented out - Verus doesn't see Cargo dependencies; uncomment when Chap06 is enabled
     // pub use ordered_float::OrderedFloat;
@@ -524,6 +643,18 @@ pub mod Types {
     impl<V: StT, L: StT + Hash> Clone for LabEdge<V, L> {
         fn clone(&self) -> Self {
             LabEdge(self.0.clone(), self.1.clone(), self.2.clone())
+        }
+    }
+
+    impl<V: StT, W: StT + Hash> Clone for WeighedEdge<V, W> {
+        fn clone(&self) -> Self {
+            WeighedEdge(self.0.clone(), self.1.clone(), self.2.clone())
+        }
+    }
+
+    impl<V: StT, L: StT + Hash, W: StT + Hash> Clone for WeighedLabEdge<V, L, W> {
+        fn clone(&self) -> Self {
+            WeighedLabEdge(self.0.clone(), self.1.clone(), self.2.clone(), self.3.clone())
         }
     }
 
