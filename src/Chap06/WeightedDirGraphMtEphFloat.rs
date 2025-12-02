@@ -1,11 +1,11 @@
 // DISABLED: OrderedFloat only provides PartialEq, not Eq - interesting when we get there.
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Chapter 6 Weighed Directed Graph (ephemeral) with floating-point weights - Multi-threaded version.
+//! Chapter 6 Weighted Directed Graph (ephemeral) with floating-point weights - Multi-threaded version.
 //!
 //! Note: NOW uses true parallelism via ParaPair! for weighed neighbor operations.
-//! Weighed arc filtering (out_neighbors_weighed, in_neighbors_weighed) is parallel.
+//! Weighted arc filtering (out_neighbors_weighed, in_neighbors_weighed) is parallel.
 
-pub mod WeighedDirGraphMtEphFloat {
+pub mod WeightedDirGraphMtEphFloat {
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
@@ -15,14 +15,14 @@ pub mod WeighedDirGraphMtEphFloat {
     use crate::ParaPair;
     use crate::Types::Types::*;
 
-    pub type WeighedDirGraphMtEphFloat<V> = LabDirGraphMtEph<V, OrderedF64>;
+    pub type WeightedDirGraphMtEphFloat<V> = LabDirGraphMtEph<V, OrderedF64>;
 
     /// Trait for weighed directed graph operations with floating-point weights (multi-threaded)
-    pub trait WeighedDirGraphMtEphFloatTrait<V: StT + MtT + Hash + 'static> {
+    pub trait WeightedDirGraphMtEphFloatTrait<V: StT + MtT + Hash + 'static> {
         /// Create from vertices and weighed edges
         /// APAS: Work Θ(|V| + |E|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V| + |E|), Parallelism Θ(1) - sequential
-        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<Triple<V, V, OrderedFloat<f64>>>) -> Self;
+        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, OrderedFloat<f64>>>) -> Self;
 
         /// Add a weighed edge to the graph
         /// APAS: Work Θ(1), Span Θ(1)
@@ -37,7 +37,7 @@ pub mod WeighedDirGraphMtEphFloat {
         /// Get all weighed edges as (from, to, weight) tuples
         /// APAS: Work Θ(|A|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential map
-        fn weighed_edges(&self)                                                                        -> SetStEph<Triple<V, V, OrderedFloat<f64>>>;
+        fn weighed_edges(&self)                                                                        -> SetStEph<WeightedEdge<V, OrderedFloat<f64>>>;
 
         /// Get outgoing neighbors with weights
         /// APAS: Work Θ(|A|), Span Θ(1)
@@ -55,15 +55,15 @@ pub mod WeighedDirGraphMtEphFloat {
         fn total_weight(&self)                                                                          -> OrderedFloat<f64>;
     }
 
-    /// Trait implementation for WeighedDirGraphMtEphFloat
-    impl<V: StT + MtT + Hash + 'static> WeighedDirGraphMtEphFloatTrait<V> for WeighedDirGraphMtEphFloat<V> {
+    /// Trait implementation for WeightedDirGraphMtEphFloat
+    impl<V: StT + MtT + Hash + 'static> WeightedDirGraphMtEphFloatTrait<V> for WeightedDirGraphMtEphFloat<V> {
         /// Create from vertices and weighed edges
         /// APAS: Work Θ(|V| + |E|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V| + |E|), Parallelism Θ(1) - sequential
-        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<Triple<V, V, OrderedFloat<f64>>>) -> Self {
+        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, OrderedFloat<f64>>>) -> Self {
             let labeled_edges = edges
                 .iter()
-                .map(|Triple(from, to, weight)| LabEdge(from.clone(), to.clone(), *weight))
+                .map(|WeightedEdge(from, to, weight)| LabEdge(from.clone(), to.clone(), *weight))
                 .collect::<Vec<_>>();
 
             let mut edge_set = SetStEph::empty();
@@ -91,10 +91,10 @@ pub mod WeighedDirGraphMtEphFloat {
         /// Get all weighed edges as (from, to, weight) tuples
         /// APAS: Work Θ(|A|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential map
-        fn weighed_edges(&self) -> SetStEph<Triple<V, V, OrderedFloat<f64>>> {
+        fn weighed_edges(&self) -> SetStEph<WeightedEdge<V, OrderedFloat<f64>>> {
             let mut edges = SetStEph::empty();
             for labeled_edge in self.labeled_arcs().iter() {
-                edges.insert(Triple(
+                edges.insert(WeightedEdge(
                     labeled_edge.0.clone_mt(),
                     labeled_edge.1.clone_mt(),
                     labeled_edge.2,
@@ -202,17 +202,17 @@ pub mod WeighedDirGraphMtEphFloat {
         }
     }
 
-    /// Macro requires explicit Triple wrappers: `A: [Triple(from, to, OrderedFloat(weight)), ...]`
+    /// Macro requires explicit WeightedEdge wrappers: `A: [WeightedEdge(from, to, OrderedFloat(weight)), ...]`
     /// No automatic wrapping - enforces type safety at call site.
     #[macro_export]
-    macro_rules! WeighedDirGraphMtEphFloatLit {
+    macro_rules! WeightedDirGraphMtEphFloatLit {
         () => {{
             $crate::Chap06::LabDirGraphMtEph::LabDirGraphMtEph::LabDirGraphMtEph::empty()
         }};
         ( V: [ $( $v:expr ),* $(,)? ], A: [ $( $arc:expr ),* $(,)? ] ) => {{
             let vertices = $crate::SetLit![ $( $v ),* ];
             let arcs = $crate::SetLit![ $( $arc ),* ];
-            $crate::Chap06::WeighedDirGraphMtEphFloat::WeighedDirGraphMtEphFloat::WeighedDirGraphMtEphFloat::from_weighed_edges(vertices, arcs)
+            $crate::Chap06::WeightedDirGraphMtEphFloat::WeightedDirGraphMtEphFloat::WeightedDirGraphMtEphFloat::from_weighed_edges(vertices, arcs)
         }};
     }
 }

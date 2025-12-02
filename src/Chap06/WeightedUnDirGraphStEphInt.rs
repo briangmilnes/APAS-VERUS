@@ -1,7 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Chapter 6 Weighed Undirected Graph (ephemeral) with integer weights - Single-threaded version.
+//! Chapter 6 Weighted Undirected Graph (ephemeral) with integer weights - Single-threaded version.
 
-pub mod WeighedUnDirGraphStEphInt {
+pub mod WeightedUnDirGraphStEphInt {
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
@@ -20,57 +20,57 @@ verus! {
         vstd::set_lib::group_set_lib_default,
         vstd::set::group_set_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
-        crate::Types::Types::group_WeighedEdge_axioms,
+        crate::Types::Types::group_WeightedEdge_axioms,
     };
 
-    pub type WeighedUnDirGraphStEphInt<V> = LabUnDirGraphStEph<V, i32>;
+    pub type WeightedUnDirGraphStEphInt<V> = LabUnDirGraphStEph<V, i32>;
 
-    pub trait WeighedUnDirGraphStEphIntTrait<V: StT + Hash + Ord>: 
+    pub trait WeightedUnDirGraphStEphIntTrait<V: StT + Hash + Ord>: 
         View<V = LabGraphView<<V as View>::V, i32>> + Sized + LabUnDirGraphStEphTrait<V, i32> {
 
         open spec fn spec_total_weight(&self) -> int {
             self@.A.fold(0int, |acc: int, t: (V::V, V::V, i32)| acc + t.2 as int)
         }
 
-        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<Triple<V, V, i32>>) -> (g: WeighedUnDirGraphStEphInt<V>)
-            requires valid_key_type_WeighedEdge::<V, i32>();
+        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i32>>) -> (g: WeightedUnDirGraphStEphInt<V>)
+            requires valid_key_type_WeightedEdge::<V, i32>();
 
         fn add_weighed_edge(&mut self, v1: V, v2: V, weight: i32)
-            requires valid_key_type_WeighedEdge::<V, i32>();
+            requires valid_key_type_WeightedEdge::<V, i32>();
 
         fn get_edge_weight(&self, v1: &V, v2: &V) -> (weight: Option<i32>)
-            requires valid_key_type_WeighedEdge::<V, i32>()
+            requires valid_key_type_WeightedEdge::<V, i32>()
             ensures 
                 weight.is_some() == (exists |w: i32| self@.A.contains((v1@, v2@, w)) || self@.A.contains((v2@, v1@, w))),
                 weight.is_some() ==> (self@.A.contains((v1@, v2@, weight.unwrap())) || self@.A.contains((v2@, v1@, weight.unwrap())));
 
-        fn weighed_edges(&self) -> (weighed_edges: SetStEph<Triple<V, V, i32>>)
-            requires valid_key_type_WeighedEdge::<V, i32>()
+        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i32>>)
+            requires valid_key_type_WeightedEdge::<V, i32>()
             ensures 
-                forall |t: (V::V, V::V, i32)| weighed_edges@.contains(t) == self@.A.contains(t);
+                forall |t: (V::V, V::V, i32)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);
 
         fn neighbors_weighed(&self, v: &V) -> (neighbors: SetStEph<Pair<V, i32>>)
-            requires valid_key_type_WeighedEdge::<V, i32>()
+            requires valid_key_type_WeightedEdge::<V, i32>()
             ensures 
                 forall |p: (V::V, i32)| neighbors@.contains(p) == 
                     ((exists |w: i32| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w) ||
                      (exists |w: i32| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w));
 
         fn total_weight(&self) -> (total_weight: i32)
-            requires valid_key_type_WeighedEdge::<V, i32>()
+            requires valid_key_type_WeightedEdge::<V, i32>()
             ensures total_weight as int == self.spec_total_weight();
 
         fn vertex_degree(&self, v: &V) -> (degree: usize)
-            requires valid_key_type_WeighedEdge::<V, i32>()
+            requires valid_key_type_WeightedEdge::<V, i32>()
             ensures degree == self.spec_neighbors(v@).len();
 
         fn is_connected(&self) -> (connected: bool)
-            requires valid_key_type_WeighedEdge::<V, i32>();
+            requires valid_key_type_WeightedEdge::<V, i32>();
     }
 
-    impl<V: StT + Hash + Ord> WeighedUnDirGraphStEphIntTrait<V> for WeighedUnDirGraphStEphInt<V> {
+    impl<V: StT + Hash + Ord> WeightedUnDirGraphStEphIntTrait<V> for WeightedUnDirGraphStEphInt<V> {
 
-        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<Triple<V, V, i32>>) -> (g: WeighedUnDirGraphStEphInt<V>) {
+        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i32>>) -> (g: WeightedUnDirGraphStEphInt<V>) {
             let mut edge_set: SetStEph<LabEdge<V, i32>> = SetStEph::empty();
             let mut it = edges.iter();
             let ghost edge_seq = it@.1;
@@ -78,7 +78,7 @@ verus! {
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
-                    valid_key_type_WeighedEdge::<V, i32>(),
+                    valid_key_type_WeightedEdge::<V, i32>(),
                     it@.0 <= edge_seq.len(),
                     it@.1 == edge_seq,
                 decreases edge_seq.len() - it@.0,
@@ -105,8 +105,8 @@ verus! {
             }
         }
 
-        fn weighed_edges(&self) -> (weighed_edges: SetStEph<Triple<V, V, i32>>) {
-            let mut edges: SetStEph<Triple<V, V, i32>> = SetStEph::empty();
+        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i32>>) {
+            let mut edges: SetStEph<WeightedEdge<V, i32>> = SetStEph::empty();
             let mut it = self.labeled_edges().iter();
             let ghost we_seq = it@.1;
             let ghost we_view = self@.A;
@@ -114,7 +114,7 @@ verus! {
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
-                    valid_key_type_WeighedEdge::<V, i32>(),
+                    valid_key_type_WeightedEdge::<V, i32>(),
                     it@.0 <= we_seq.len(),
                     it@.1 == we_seq,
                     we_seq.map(|i: int, e: LabEdge<V, i32>| e@).to_set() == we_view,
@@ -140,7 +140,7 @@ verus! {
                         return edges;
                     },
                     Some(labeled_edge) => {
-                        let _ = edges.insert(Triple(labeled_edge.0.clone_plus(), labeled_edge.1.clone_plus(), labeled_edge.2));
+                        let _ = edges.insert(WeightedEdge(labeled_edge.0.clone_plus(), labeled_edge.1.clone_plus(), labeled_edge.2));
                     },
                 }
             }
@@ -156,7 +156,7 @@ verus! {
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
-                    valid_key_type_WeighedEdge::<V, i32>(),
+                    valid_key_type_WeightedEdge::<V, i32>(),
                     it@.0 <= we_seq.len(),
                     it@.1 == we_seq,
                     we_seq.map(|i: int, e: LabEdge<V, i32>| e@).to_set() == we_view,
@@ -252,14 +252,14 @@ verus! {
 } // verus!
 
     #[macro_export]
-    macro_rules! WeighedUnDirGraphStEphIntLit {
+    macro_rules! WeightedUnDirGraphStEphIntLit {
         () => {{
             $crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::LabUnDirGraphStEph::empty()
         }};
         ( V: [ $( $v:expr ),* $(,)? ], E: [ $( $edge:expr ),* $(,)? ] ) => {{
             let vertices = $crate::SetLit![ $( $v ),* ];
             let edges = $crate::SetLit![ $( $edge ),* ];
-            <$crate::Chap06::WeighedUnDirGraphStEphInt::WeighedUnDirGraphStEphInt::WeighedUnDirGraphStEphInt<_> as $crate::Chap06::WeighedUnDirGraphStEphInt::WeighedUnDirGraphStEphInt::WeighedUnDirGraphStEphIntTrait<_>>::from_weighed_edges(vertices, edges)
+            <$crate::Chap06::WeightedUnDirGraphStEphInt::WeightedUnDirGraphStEphInt::WeightedUnDirGraphStEphInt<_> as $crate::Chap06::WeightedUnDirGraphStEphInt::WeightedUnDirGraphStEphInt::WeightedUnDirGraphStEphIntTrait<_>>::from_weighed_edges(vertices, edges)
         }};
     }
 }

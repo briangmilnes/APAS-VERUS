@@ -1,6 +1,6 @@
 // DISABLED: OrderedFloat only provides PartialEq, not Eq - interesting when we get there.
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Chapter 6 Weighed Directed Graph (ephemeral) with floating-point weights - Single-threaded version.
+//! Chapter 6 Weighted Directed Graph (ephemeral) with floating-point weights - Single-threaded version.
 //!
 //! This module provides weighed directed graphs using `OrderedFloat<f64>` for edge weights,
 //! enabling reliable hashing and ordering of floating-point values including NaN and Infinity.
@@ -8,22 +8,22 @@
 //! # Examples
 //!
 //! ```rust
-//! use apas_ai::Chap06::WeighedDirGraphStEphFloat::WeighedDirGraphStEphFloat::*;
+//! use apas_ai::Chap06::WeightedDirGraphStEphFloat::WeightedDirGraphStEphFloat::*;
 //! use apas_ai::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
 //! use apas_ai::Chap05::SetStEph::SetStEph::*;
-//! use apas_ai::WeighedDirGraphStEphFloatLit;
+//! use apas_ai::WeightedDirGraphStEphFloatLit;
 //! use ordered_float::OrderedFloat;
 //!
 //! // Create graph using API
-//! let mut graph = WeighedDirGraphStEphFloat::empty();
+//! let mut graph = WeightedDirGraphStEphFloat::empty();
 //! graph.add_weighed_edge("A", "B", OrderedFloat(3.14));
 //! graph.add_weighed_edge("B", "C", OrderedFloat(2.71));
 //!
 //! // Create graph using macro with APAS notation (A: for directed arcs)
-//! use apas_ai::Types::Types::Triple;
-//! let graph_macro = WeighedDirGraphStEphFloatLit!(
+//! use apas_ai::Types::Types::WeightedEdge;
+//! let graph_macro = WeightedDirGraphStEphFloatLit!(
 //!     V: ["A", "B", "C"],
-//!     A: [Triple("A", "B", OrderedFloat(3.14)), Triple("B", "C", OrderedFloat(2.71))]
+//!     A: [WeightedEdge("A", "B", OrderedFloat(3.14)), WeightedEdge("B", "C", OrderedFloat(2.71))]
 //! );
 //!
 //! // Query operations
@@ -32,7 +32,7 @@
 //! let heavy_edges = graph.edges_above_weight(OrderedFloat(3.0));
 //! ```
 
-pub mod WeighedDirGraphStEphFloat {
+pub mod WeightedDirGraphStEphFloat {
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
@@ -43,32 +43,32 @@ pub mod WeighedDirGraphStEphFloat {
 
     use ordered_float::OrderedFloat;
 
-    pub type WeighedDirGraphStEphFloat<V> = LabDirGraphStEph<V, OrderedF64>;
+    pub type WeightedDirGraphStEphFloat<V> = LabDirGraphStEph<V, OrderedF64>;
 
     /// Convenience functions for weighed directed graphs with floating-point weights
-    pub trait WeighedDirGraphStEphFloatTrait<V: StT + Hash> {
-        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<Triple<V, V, OrderedFloat<f64>>>) -> Self;
+    pub trait WeightedDirGraphStEphFloatTrait<V: StT + Hash> {
+        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, OrderedFloat<f64>>>) -> Self;
         fn add_weighed_edge(&mut self, from: V, to: V, weight: OrderedFloat<f64>);
         fn get_edge_weight(&self, from: &V, to: &V)                                                     -> Option<OrderedFloat<f64>>;
-        fn weighed_edges(&self)                                                                        -> SetStEph<Triple<V, V, OrderedFloat<f64>>>;
+        fn weighed_edges(&self)                                                                        -> SetStEph<WeightedEdge<V, OrderedFloat<f64>>>;
         fn out_neighbors_weighed(&self, v: &V)                                                         -> SetStEph<Pair<V, OrderedFloat<f64>>>;
         fn in_neighbors_weighed(&self, v: &V)                                                          -> SetStEph<Pair<V, OrderedFloat<f64>>>;
         fn total_weight(&self)                                                                          -> OrderedFloat<f64>;
-        fn edges_above_weight(&self, threshold: OrderedFloat<f64>)                                      -> SetStEph<Triple<V, V, OrderedFloat<f64>>>;
-        fn edges_below_weight(&self, threshold: OrderedFloat<f64>)                                      -> SetStEph<Triple<V, V, OrderedFloat<f64>>>;
-        fn min_weight_edge(&self)                                                                       -> Option<Triple<V, V, OrderedFloat<f64>>>;
-        fn max_weight_edge(&self)                                                                       -> Option<Triple<V, V, OrderedFloat<f64>>>;
+        fn edges_above_weight(&self, threshold: OrderedFloat<f64>)                                      -> SetStEph<WeightedEdge<V, OrderedFloat<f64>>>;
+        fn edges_below_weight(&self, threshold: OrderedFloat<f64>)                                      -> SetStEph<WeightedEdge<V, OrderedFloat<f64>>>;
+        fn min_weight_edge(&self)                                                                       -> Option<WeightedEdge<V, OrderedFloat<f64>>>;
+        fn max_weight_edge(&self)                                                                       -> Option<WeightedEdge<V, OrderedFloat<f64>>>;
         fn scale_weights(&mut self, factor: OrderedFloat<f64>);
     }
 
-    impl<V: StT + Hash> WeighedDirGraphStEphFloatTrait<V> for WeighedDirGraphStEphFloat<V> {
+    impl<V: StT + Hash> WeightedDirGraphStEphFloatTrait<V> for WeightedDirGraphStEphFloat<V> {
         /// Create from vertices and weighed edges
         /// APAS: Work Θ(|V| + |E|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V| + |E|), Parallelism Θ(1) - sequential
-        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<Triple<V, V, OrderedFloat<f64>>>) -> Self {
+        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, OrderedFloat<f64>>>) -> Self {
             let labeled_edges = edges
                 .iter()
-                .map(|Triple(from, to, weight)| LabEdge(from.clone(), to.clone(), *weight))
+                .map(|WeightedEdge(from, to, weight)| LabEdge(from.clone(), to.clone(), *weight))
                 .collect::<Vec<_>>();
 
             let mut edge_set = SetStEph::empty();
@@ -96,10 +96,10 @@ pub mod WeighedDirGraphStEphFloat {
         /// Get all weighed edges as (from, to, weight) tuples
         /// APAS: Work Θ(|A|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential map
-        fn weighed_edges(&self) -> SetStEph<Triple<V, V, OrderedFloat<f64>>> {
+        fn weighed_edges(&self) -> SetStEph<WeightedEdge<V, OrderedFloat<f64>>> {
             let mut edges = SetStEph::empty();
             for labeled_edge in self.labeled_arcs().iter() {
-                edges.insert(Triple(labeled_edge.0.clone(), labeled_edge.1.clone(), labeled_edge.2));
+                edges.insert(WeightedEdge(labeled_edge.0.clone(), labeled_edge.1.clone(), labeled_edge.2));
             }
             edges
         }
@@ -141,41 +141,41 @@ pub mod WeighedDirGraphStEphFloat {
         }
 
         /// Get edges with weight greater than threshold
-        fn edges_above_weight(&self, threshold: OrderedFloat<f64>) -> SetStEph<Triple<V, V, OrderedFloat<f64>>> {
+        fn edges_above_weight(&self, threshold: OrderedFloat<f64>) -> SetStEph<WeightedEdge<V, OrderedFloat<f64>>> {
             let mut edges = SetStEph::empty();
             for labeled_edge in self.labeled_arcs().iter() {
                 if labeled_edge.2 > threshold {
-                    edges.insert(Triple(labeled_edge.0.clone(), labeled_edge.1.clone(), labeled_edge.2));
+                    edges.insert(WeightedEdge(labeled_edge.0.clone(), labeled_edge.1.clone(), labeled_edge.2));
                 }
             }
             edges
         }
 
         /// Get edges with weight less than threshold
-        fn edges_below_weight(&self, threshold: OrderedFloat<f64>) -> SetStEph<Triple<V, V, OrderedFloat<f64>>> {
+        fn edges_below_weight(&self, threshold: OrderedFloat<f64>) -> SetStEph<WeightedEdge<V, OrderedFloat<f64>>> {
             let mut edges = SetStEph::empty();
             for labeled_edge in self.labeled_arcs().iter() {
                 if labeled_edge.2 < threshold {
-                    edges.insert(Triple(labeled_edge.0.clone(), labeled_edge.1.clone(), labeled_edge.2));
+                    edges.insert(WeightedEdge(labeled_edge.0.clone(), labeled_edge.1.clone(), labeled_edge.2));
                 }
             }
             edges
         }
 
         /// Get the minimum weight edge
-        fn min_weight_edge(&self) -> Option<Triple<V, V, OrderedFloat<f64>>> {
+        fn min_weight_edge(&self) -> Option<WeightedEdge<V, OrderedFloat<f64>>> {
             self.labeled_arcs()
                 .iter()
                 .min_by_key(|edge| edge.2)
-                .map(|edge| Triple(edge.0.clone(), edge.1.clone(), edge.2))
+                .map(|edge| WeightedEdge(edge.0.clone(), edge.1.clone(), edge.2))
         }
 
         /// Get the maximum weight edge
-        fn max_weight_edge(&self) -> Option<Triple<V, V, OrderedFloat<f64>>> {
+        fn max_weight_edge(&self) -> Option<WeightedEdge<V, OrderedFloat<f64>>> {
             self.labeled_arcs()
                 .iter()
                 .max_by_key(|edge| edge.2)
-                .map(|edge| Triple(edge.0.clone(), edge.1.clone(), edge.2))
+                .map(|edge| WeightedEdge(edge.0.clone(), edge.1.clone(), edge.2))
         }
 
         /// Scale all weights by a factor
@@ -196,17 +196,17 @@ pub mod WeighedDirGraphStEphFloat {
         }
     }
 
-    /// Macro requires explicit Triple wrappers: `A: [Triple(from, to, OrderedFloat(weight)), ...]`
+    /// Macro requires explicit WeightedEdge wrappers: `A: [WeightedEdge(from, to, OrderedFloat(weight)), ...]`
     /// No automatic wrapping - enforces type safety at call site.
     #[macro_export]
-    macro_rules! WeighedDirGraphStEphFloatLit {
+    macro_rules! WeightedDirGraphStEphFloatLit {
         () => {{
             $crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEph::empty()
         }};
         ( V: [ $( $v:expr ),* $(,)? ], A: [ $( $arc:expr ),* $(,)? ] ) => {{
             let vertices = $crate::SetLit![ $( $v ),* ];
             let arcs = $crate::SetLit![ $( $arc ),* ];
-            $crate::Chap06::WeighedDirGraphStEphFloat::WeighedDirGraphStEphFloat::WeighedDirGraphStEphFloat::from_weighed_edges(vertices, arcs)
+            $crate::Chap06::WeightedDirGraphStEphFloat::WeightedDirGraphStEphFloat::WeightedDirGraphStEphFloat::from_weighed_edges(vertices, arcs)
         }};
     }
 }

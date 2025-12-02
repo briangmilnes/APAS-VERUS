@@ -44,12 +44,18 @@ pub mod experiments {
 //    pub mod test_feq_insertion_sort;
 //      pub mod clone_plus;
 //      pub mod CheckedI32;
+//    pub mod unsigned_int;
+//    pub mod signed_int;
+//    pub mod checked_unsigned_int;
+//    pub mod checked_signed_int;
+//    pub mod checked_u32;
 }
 
 pub mod vstdplus {
     pub mod sigma_pi;
     pub mod set_axioms;
     pub mod seq_set;
+    pub mod seq;
     pub mod hash_set_with_view_plus;
     pub mod hash_set_specs;
     pub mod total_order;
@@ -60,6 +66,7 @@ pub mod vstdplus {
     pub mod vec;
     pub mod checked_int;
     pub mod checked_nat;
+    pub mod HashCheckedU32;
 }
 
 pub mod Chap03 {
@@ -77,17 +84,21 @@ pub mod Chap06 {
     pub mod UnDirGraphStEph;
     pub mod LabDirGraphStEph;
     pub mod LabUnDirGraphStEph;
-    pub mod WeighedDirGraphStEphInt;
-    pub mod WeighedUnDirGraphStEphInt;
-    pub mod WeighedDirGraphStEphNat;
+    pub mod WeightedDirGraphStEphInt;
+    pub mod WeightedUnDirGraphStEphInt;
+    pub mod WeightedDirGraphStEphNat;
+    pub mod WeightedDirGraphStEphCheckedU32;
+    pub mod WeightedDirGraphCheckedU32;
+//     pub mod WeightedDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
+//     pub mod WeightedUnDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
+
+
 //     pub mod DirGraphMtEph;
 //     pub mod UnDirGraphMtEph;
 //     pub mod LabDirGraphMtEph;
 //     pub mod LabUnDirGraphMtEph;
-//     pub mod WeighedDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
-//     pub mod WeighedDirGraphMtEphInt;
-//     pub mod WeighedDirGraphMtEphFloat;  // OrderedFloat - only PartialEq, no Eq
-//     pub mod WeighedUnDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
-//     pub mod WeighedUnDirGraphMtEphInt;
-//     pub mod WeighedUnDirGraphMtEphFloat;  // OrderedFloat - only PartialEq, no Eq
+//     pub mod WeightedDirGraphMtEphInt;
+//     pub mod WeightedDirGraphMtEphFloat;  // OrderedFloat - only PartialEq, no Eq
+//     pub mod WeightedUnDirGraphMtEphInt;
+//     pub mod WeightedUnDirGraphMtEphFloat;  // OrderedFloat - only PartialEq, no Eq
 }

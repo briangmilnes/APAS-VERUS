@@ -1,10 +1,10 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Chapter 6 Weighed Directed Graph (ephemeral) with integer weights - Multi-threaded version.
+//! Chapter 6 Weighted Directed Graph (ephemeral) with integer weights - Multi-threaded version.
 //!
 //! Note: NOW uses true parallelism via ParaPair! for weighed neighbor operations.
-//! Weighed arc filtering (out_neighbors_weighed, in_neighbors_weighed) is parallel.
+//! Weighted arc filtering (out_neighbors_weighed, in_neighbors_weighed) is parallel.
 
-pub mod WeighedDirGraphMtEphInt {
+pub mod WeightedDirGraphMtEphInt {
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
@@ -14,27 +14,27 @@ pub mod WeighedDirGraphMtEphInt {
     use crate::ParaPair;
     use crate::Types::Types::*;
 
-    pub type WeighedDirGraphMtEphInt<V> = LabDirGraphMtEph<V, i32>;
+    pub type WeightedDirGraphMtEphInt<V> = LabDirGraphMtEph<V, i32>;
 
     /// Convenience functions for weighed directed graphs with integer weights (multi-threaded)
-    pub trait WeighedDirGraphMtEphIntTrait<V: StT + MtT + Hash + 'static> {
-        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<Triple<V, V, i32>>) -> Self;
+    pub trait WeightedDirGraphMtEphIntTrait<V: StT + MtT + Hash + 'static> {
+        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i32>>) -> Self;
         fn add_weighed_edge(&mut self, from: V, to: V, weight: i32);
         fn get_edge_weight(&self, from: &V, to: &V)                                       -> Option<i32>;
-        fn weighed_edges(&self)                                                          -> SetStEph<Triple<V, V, i32>>;
+        fn weighed_edges(&self)                                                          -> SetStEph<WeightedEdge<V, i32>>;
         fn out_neighbors_weighed(&self, v: &V)                                           -> SetStEph<Pair<V, i32>>;
         fn in_neighbors_weighed(&self, v: &V)                                            -> SetStEph<Pair<V, i32>>;
         fn total_weight(&self)                                                            -> i32;
     }
 
-    impl<V: StT + MtT + Hash + 'static> WeighedDirGraphMtEphIntTrait<V> for WeighedDirGraphMtEphInt<V> {
+    impl<V: StT + MtT + Hash + 'static> WeightedDirGraphMtEphIntTrait<V> for WeightedDirGraphMtEphInt<V> {
         /// Create from vertices and weighed edges
         /// APAS: Work Θ(|V| + |E|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V| + |E|), Parallelism Θ(1) - sequential
-        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<Triple<V, V, i32>>) -> Self {
+        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i32>>) -> Self {
             let labeled_edges = edges
                 .iter()
-                .map(|Triple(from, to, weight)| LabEdge(from.clone(), to.clone(), *weight))
+                .map(|WeightedEdge(from, to, weight)| LabEdge(from.clone(), to.clone(), *weight))
                 .collect::<Vec<_>>();
 
             let mut edge_set = SetStEph::empty();
@@ -58,10 +58,10 @@ pub mod WeighedDirGraphMtEphInt {
         /// Get all weighed edges as (from, to, weight) tuples
         /// APAS: Work Θ(|A|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential map
-        fn weighed_edges(&self) -> SetStEph<Triple<V, V, i32>> {
+        fn weighed_edges(&self) -> SetStEph<WeightedEdge<V, i32>> {
             let mut edges = SetStEph::empty();
             for labeled_edge in self.labeled_arcs().iter() {
-                edges.insert(Triple(
+                edges.insert(WeightedEdge(
                     labeled_edge.0.clone_mt(),
                     labeled_edge.1.clone_mt(),
                     labeled_edge.2,
@@ -158,17 +158,17 @@ pub mod WeighedDirGraphMtEphInt {
         fn total_weight(&self) -> i32 { self.labeled_arcs().iter().map(|edge| edge.2).sum() }
     }
 
-    /// Macro requires explicit Triple wrappers: `E: [Triple(from, to, weight), ...]`
+    /// Macro requires explicit WeightedEdge wrappers: `E: [WeightedEdge(from, to, weight), ...]`
     /// No automatic wrapping - enforces type safety at call site.
     #[macro_export]
-    macro_rules! WeighedDirGraphMtEphIntLit {
+    macro_rules! WeightedDirGraphMtEphIntLit {
         () => {{
             $crate::Chap06::LabDirGraphMtEph::LabDirGraphMtEph::LabDirGraphMtEph::empty()
         }};
         ( V: [ $( $v:expr ),* $(,)? ], E: [ $( $edge:expr ),* $(,)? ] ) => {{
             let vertices = $crate::SetLit![ $( $v ),* ];
             let edges = $crate::SetLit![ $( $edge ),* ];
-            $crate::Chap06::WeighedDirGraphMtEphInt::WeighedDirGraphMtEphInt::WeighedDirGraphMtEphInt::from_weighed_edges(vertices, edges)
+            $crate::Chap06::WeightedDirGraphMtEphInt::WeightedDirGraphMtEphInt::WeightedDirGraphMtEphInt::from_weighed_edges(vertices, edges)
         }};
     }
 }
