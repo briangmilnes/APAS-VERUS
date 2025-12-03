@@ -49,8 +49,6 @@ verus! {
         ensures spec_sum_u32_seq(s) == spec_sum_u32_seq(s.drop_last()) + s.last() as nat
     {}
 
-    // Exec function: convert a sequence of u32 to CheckedU32 sum
-    // Returns CheckedU32 which tracks overflow
     pub fn seq_u32_to_CheckedU32(s: &Vec<u32>) -> (sum: CheckedU32)
         ensures 
             sum.is_normal() ==> sum@ == spec_sum_u32_seq(s@) as int
@@ -104,6 +102,85 @@ verus! {
         let take_old = s.take(i);
         assert(take_new.drop_last() =~= take_old);
         assert(take_new.last() == s[i]);
+    }
+
+    // Abstract version: sum of int values (for CheckedU32@ which is int)
+    // Spec function: sum of int values in a sequence
+    pub open spec fn spec_sum_int_seq(s: Seq<int>) -> int 
+        decreases s.len()
+    {
+        if s.len() == 0 {
+            0int
+        } else {
+            s.last() + spec_sum_int_seq(s.drop_last())
+        }
+    }
+
+    // Spec function: sum using fold_left
+    pub open spec fn spec_sum_int_fold(s: Seq<int>) -> int {
+        s.fold_left(0int, |acc: int, v: int| acc + v)
+    }
+
+    // Lemma: the two spec functions are equivalent
+    pub proof fn lemma_sum_int_equiv(s: Seq<int>)
+        ensures spec_sum_int_seq(s) == spec_sum_int_fold(s)
+        decreases s.len()
+    {
+        reveal_with_fuel(Seq::fold_left, 1);
+        if s.len() > 0 {
+            lemma_sum_int_equiv(s.drop_last());
+        }
+    }
+
+    // Lemma: sum of s.push(v) = sum(s) + v
+    pub proof fn lemma_sum_int_push(s: Seq<int>, v: int)
+        ensures spec_sum_int_seq(s.push(v)) == spec_sum_int_seq(s) + v
+    {
+        assert(s.push(v).drop_last() =~= s);
+        assert(s.push(v).last() == v);
+    }
+
+    // Lemma: for non-empty s, sum(s) = sum(s.drop_last()) + s.last()
+    pub proof fn lemma_sum_int_unfold(s: Seq<int>)
+        requires s.len() > 0
+        ensures spec_sum_int_seq(s) == spec_sum_int_seq(s.drop_last()) + s.last()
+    {}
+
+    // Lemma: sum(take(i+1)) = sum(take(i)) + s[i]
+    pub proof fn lemma_sum_int_unfold_take(s: Seq<int>, i: int)
+        requires 0 <= i < s.len()
+        ensures spec_sum_int_seq(s.take(i + 1)) == spec_sum_int_seq(s.take(i)) + s[i]
+    {
+        let take_new = s.take(i + 1);
+        let take_old = s.take(i);
+        assert(take_new.drop_last() =~= take_old);
+        assert(take_new.last() == s[i]);
+    }
+
+    // ============================================================
+    // For Seq<CheckedU32>: map to Seq<int> via view, then sum
+    // ============================================================
+
+    // Spec: sum of CheckedU32 views in a sequence
+    pub open spec fn spec_sum_checked_u32_seq(s: Seq<CheckedU32>) -> int {
+        spec_sum_int_seq(s.map(|i: int, c: CheckedU32| c@))
+    }
+
+    // Lemma: sum(take(i+1)) = sum(take(i)) + s[i]@ for CheckedU32 sequences
+    pub proof fn lemma_sum_checked_u32_unfold_take(s: Seq<CheckedU32>, i: int)
+        requires 0 <= i < s.len()
+        ensures spec_sum_checked_u32_seq(s.take(i + 1)) == spec_sum_checked_u32_seq(s.take(i)) + s[i]@
+    {
+        let views = s.map(|j: int, c: CheckedU32| c@);
+        let take_new_views = s.take(i + 1).map(|j: int, c: CheckedU32| c@);
+        let take_old_views = s.take(i).map(|j: int, c: CheckedU32| c@);
+        
+        // Show: s.take(i+1).map(f) == views.take(i+1)
+        assert(take_new_views =~= views.take(i + 1));
+        assert(take_old_views =~= views.take(i));
+        
+        // Now use the int lemma
+        lemma_sum_int_unfold_take(views, i);
     }
 
 } // verus!

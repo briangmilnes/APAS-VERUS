@@ -6,6 +6,11 @@ use vstd::prelude::*;
 
 verus! {
 
+broadcast use {
+    vstd::seq_lib::group_seq_properties,
+    vstd::set::group_set_axioms,
+};
+
 /// If a sequence contains an element at index i, then that element is in the sequence's set view.
 pub proof fn lemma_seq_index_in_to_set<T>(seq: Seq<T>, i: int)
     requires
@@ -384,13 +389,115 @@ pub proof fn lemma_take_one_more_intersect<T: View>(seq: Seq<T>, s2: Set<T::V>, 
     }
 }
 
+// The problem for weighted sum iteration.
+
+pub open spec fn spec_nat_seq_sum(s: Seq<nat>) -> nat { s.fold_left(0nat, |acc: nat, v: nat| (acc + v) as nat) }
+pub open spec fn spec_nat_set_sum(s: Set<nat>) -> nat { s.fold     (0nat, |acc: nat, v: nat| (acc + v) as nat) }
+
+/// Sublemma: prove seq.fold_left == seq.to_set().fold for no-dup nat sequences
+pub proof fn lemma_spec_nat_seq_fold_equals_spec_set_fold(seq: Seq<nat>)
+    requires
+        seq.no_duplicates(),
+    ensures
+        spec_nat_seq_sum(seq) == spec_nat_set_sum(seq.to_set()),
+    decreases seq.len(),
+{
+    let f = |acc: nat, v: nat| (acc + v) as nat;
+    
+    if seq.len() == 0 {
+        assert(seq.to_set() =~= Set::empty());
+        vstd::set::fold::lemma_fold_empty::<nat, nat>(0nat, f);
+    } else {
+        let n = (seq.len() - 1) as int;
+        let prefix = seq.take(n);
+        let last = seq[n];
+        
+        assert(seq =~= prefix.push(last));
+        
+        assert(prefix.no_duplicates()) by {
+            assert forall |i: int, j: int| 
+                0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j
+                implies prefix[i] != prefix[j] by {};
+        };
+        
+        assert(!prefix.contains(last)) by {
+            if prefix.contains(last) {
+                let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last;
+                assert(seq[i] != seq[n]);
+            }
+        };
+        
+        lemma_spec_nat_seq_fold_equals_spec_set_fold(prefix);
+        lemma_nat_fold_left_step(seq, n);
+        lemma_push_not_contains_to_set(prefix, last);
+        assert(vstd::set::fold::is_fun_commutative(f)) by {};
+        assert(!prefix.to_set().contains(last)) by {};
+        vstd::seq_lib::seq_to_set_is_finite(prefix);
+        vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    }
+}
+
+proof fn lemma_to_seq_no_duplicates<T>(s: Set<T>)
+    requires
+        s.finite(),
+    ensures
+        s.to_seq().no_duplicates(),
+    decreases s.len(),
+{
+    broadcast use vstd::set_lib::group_set_lib_default;
+    
+    if s.len() == 0 {
+        assert(s.to_seq() =~= Seq::empty());
+    } else {
+        let x = s.choose();
+        let rest = s.remove(x);
+        lemma_to_seq_no_duplicates(rest);
+        assert(s.to_seq() =~= Seq::empty().push(x) + rest.to_seq());
+        rest.lemma_to_seq_to_set_id();
+        assert(!rest.to_seq().contains(x)) by {
+            if rest.to_seq().contains(x) {
+                assert(rest.to_seq().to_set().contains(x));
+                assert(rest.contains(x));
+            }
+        };
+        
+        let prefix = Seq::empty().push(x);
+        let suffix = rest.to_seq();
+        assert(prefix.no_duplicates());
+        assert(suffix.no_duplicates());
+        
+        // No overlap between prefix and suffix
+        assert forall |i: int, j: int| 
+            0 <= i < prefix.len() && 0 <= j < suffix.len() 
+            implies prefix[i] != suffix[j] by {
+            assert(prefix[i] == x);
+            assert(!suffix.contains(x));
+        };
+        
+        vstd::seq_lib::lemma_no_dup_in_concat(prefix, suffix);
+    }
+}
+
+pub proof fn lemma_spec_nat_seq_sum_is_nat_set_sum(s: Set<nat>)
+    requires
+        s.finite(),
+    ensures
+        spec_nat_seq_sum(s.to_seq()) == spec_nat_set_sum(s),
+{
+    let seq = s.to_seq();
+    lemma_to_seq_no_duplicates(s);
+    s.lemma_to_seq_to_set_id();
+    lemma_spec_nat_seq_fold_equals_spec_set_fold(seq);
+}
+
+
 // Part 1: Nat sum monotonicity - if total sum fits, no intermediate overflow
 
 pub proof fn lemma_nat_partial_sum_monotonic(seq: Seq<nat>, i: int, j: int)
     requires
         0 <= i <= j <= seq.len(),
     ensures
-        nat_sum(seq.take(i)) <= nat_sum(seq.take(j)),
+        spec_nat_seq_sum(seq.take(i)) <= spec_nat_seq_sum(seq.take(j)),
     decreases j - i,
 {
     if i == j {
@@ -404,7 +511,7 @@ pub proof fn lemma_nat_fold_left_step(seq: Seq<nat>, n: int)
     requires
         0 <= n < seq.len(),
     ensures
-        nat_sum(seq.take(n + 1)) == nat_sum(seq.take(n)) + seq[n],
+        spec_nat_seq_sum(seq.take(n + 1)) == spec_nat_seq_sum(seq.take(n)) + seq[n],
 {
     broadcast use vstd::seq_lib::group_seq_properties;
     
@@ -428,17 +535,14 @@ pub proof fn lemma_nat_fold_left_step(seq: Seq<nat>, n: int)
 
 /// The main theorem: If the total sum of nat values fits in MAX, then ALL partial sums fit.
 /// This means no intermediate overflow regardless of ordering!
-pub open spec fn nat_sum(seq: Seq<nat>) -> nat {
-    seq.fold_left(0nat, |acc: nat, v: nat| acc + v)
-}
 
-pub proof fn lemma_nat_sum_no_intermediate_overflow(seq: Seq<nat>, max: nat)
+pub proof fn lemma_spec_nat_seq_sum_no_intermediate_overflow(seq: Seq<nat>, max: nat)
     requires
-        nat_sum(seq) <= max,
+        spec_nat_seq_sum(seq) <= max,
     ensures
-        forall |i: int| 0 <= i <= seq.len() ==> nat_sum(#[trigger] seq.take(i)) <= max,
+        forall |i: int| 0 <= i <= seq.len() ==> spec_nat_seq_sum(#[trigger] seq.take(i)) <= max,
 {
-    assert forall |i: int| 0 <= i <= seq.len() implies nat_sum(#[trigger] seq.take(i)) <= max by {
+    assert forall |i: int| 0 <= i <= seq.len() implies spec_nat_seq_sum(#[trigger] seq.take(i)) <= max by {
         lemma_nat_partial_sum_monotonic(seq, i, seq.len() as int);
         assert(seq.take(seq.len() as int) =~= seq);
     }
@@ -453,13 +557,13 @@ pub proof fn lemma_nat_any_order_no_overflow(s1: Seq<nat>, s2: Seq<nat>, max: na
         s1.to_set() == s2.to_set(),
         s1.no_duplicates(),
         s2.no_duplicates(),
-        nat_sum(s1) <= max,
+        spec_nat_seq_sum(s1) <= max,
     ensures
-        nat_sum(s2) <= max,
-        forall |i: int| 0 <= i <= s2.len() ==> nat_sum(#[trigger] s2.take(i)) <= max,
+        spec_nat_seq_sum(s2) <= max,
+        forall |i: int| 0 <= i <= s2.len() ==> spec_nat_seq_sum(#[trigger] s2.take(i)) <= max,
 {
-    lemma_nat_seq_sum_permutation_invariant(s1, s2);
-    lemma_nat_sum_no_intermediate_overflow(s2, max);
+    lemma_spec_nat_seq_sum_permutation_invariant(s1, s2);
+    lemma_spec_nat_seq_sum_no_intermediate_overflow(s2, max);
 }
 
 pub proof fn lemma_no_dup_same_set_implies_same_multiset<T>(s1: Seq<T>, s2: Seq<T>)
@@ -495,13 +599,13 @@ pub proof fn lemma_no_dup_same_set_implies_same_multiset<T>(s1: Seq<T>, s2: Seq<
     assert(s1.to_multiset() =~= s2.to_multiset());
 }
 
-pub proof fn lemma_nat_seq_sum_permutation_invariant(s1: Seq<nat>, s2: Seq<nat>)
+pub proof fn lemma_spec_nat_seq_sum_permutation_invariant(s1: Seq<nat>, s2: Seq<nat>)
     requires
         s1.to_set() == s2.to_set(),
         s1.no_duplicates(),
         s2.no_duplicates(),
     ensures
-        nat_sum(s1) == nat_sum(s2),
+        spec_nat_seq_sum(s1) == spec_nat_seq_sum(s2),
 {
     // no_duplicates + same to_set => same to_multiset
     lemma_no_dup_same_set_implies_same_multiset(s1, s2);
@@ -516,5 +620,337 @@ pub proof fn lemma_nat_seq_sum_permutation_invariant(s1: Seq<nat>, s2: Seq<nat>)
     vstd::seq_lib::lemma_fold_left_permutation(s1, s2, f, 0nat);
 }
 
-} // verus!
+// =============================================================================
+// Lemmas for u32 view identity and set/seq membership equivalence
+// =============================================================================
 
+/// Lemma: for u32, seq.map(|_i, t| t@) =~= seq (view is identity)
+pub proof fn lemma_u32_view_identity(seq: Seq<u32>)
+    ensures seq.map(|_i: int, t: u32| t@) =~= seq,
+{
+    assert forall |i: int| 0 <= i < seq.len() implies 
+        seq.map(|_i: int, t: u32| t@)[i] == #[trigger] seq[i] by {
+        assert(seq.map(|_i: int, t: u32| t@)[i] == seq[i]@);
+    }
+}
+
+/// Lemma: connects to_seq postcondition to seq.to_set() == s for u32
+pub proof fn lemma_to_seq_gives_same_set(s: Set<u32>, seq: Seq<u32>)
+    requires 
+        seq.no_duplicates(),
+        forall |x: u32| s.contains(x) <==> seq.map(|_i: int, t: u32| t@).contains(x),
+    ensures 
+        seq.to_set() =~= s,
+{
+    lemma_u32_view_identity(seq);
+    let view_seq = seq.map(|_i: int, t: u32| t@);
+    
+    assert forall |x: u32| #![auto] s.contains(x) <==> seq.to_set().contains(x) by {
+        if view_seq.contains(x) {
+            let i = choose |i: int| 0 <= i < view_seq.len() && view_seq[i] == x;
+            assert(seq[i] == x);
+        }
+        if seq.contains(x) {
+            let i = choose |i: int| 0 <= i < seq.len() && seq[i] == x;
+            assert(view_seq[i] == x);
+        }
+    }
+}
+
+/// Lemma: mapping then to_set equals to_set then map for u32 -> nat
+pub proof fn lemma_seq_map_to_set_eq_set_map(seq: Seq<u32>, set: Set<u32>)
+    requires 
+        seq.no_duplicates(),
+        seq.to_set() =~= set,
+    ensures 
+        seq.map(|_i: int, v: u32| v as nat).to_set() =~= set.map(|v: u32| v as nat),
+{
+    let mapped_seq = seq.map(|_i: int, v: u32| v as nat);
+    let mapped_set = set.map(|v: u32| v as nat);
+    
+    assert forall |n: nat| #![auto] mapped_seq.to_set().contains(n) <==> mapped_set.contains(n) by {
+        if mapped_seq.to_set().contains(n) {
+            let i = choose |i: int| 0 <= i < seq.len() && (seq[i] as nat) == n;
+            assert(set.contains(seq[i]));
+        }
+        if mapped_set.contains(n) {
+            let v = choose |v: u32| set.contains(v) && (v as nat) == n;
+            assert(seq.to_set().contains(v));
+            let i = choose |i: int| 0 <= i < seq.len() && seq[i] == v;
+            assert(mapped_seq[i] == n);
+        }
+    }
+}
+
+/// Lemma: for u32, s.to_seq() membership matches s membership via view map.
+pub proof fn lemma_set_contains_iff_to_seq_map_contains(s: Set<u32>)
+    requires 
+        s.finite(),
+    ensures
+        forall |x: u32| s.contains(x) <==> s.to_seq().map(|_i: int, t: u32| t@).contains(x),
+    decreases s.len(),
+{
+    lemma_u32_view_identity(s.to_seq());
+    if s.len() == 0 {
+        assert(s =~= Set::empty());
+        assert(s.to_seq() =~= Seq::empty());
+    } else {
+        let x = s.choose();
+        let smaller = s.remove(x);
+        lemma_set_contains_iff_to_seq_map_contains(smaller);
+        s.lemma_to_seq_to_set_id();
+    }
+}
+
+// =============================================================================
+// Weighted tuple fold lemmas - for summing weights in edge sequences/sets
+// =============================================================================
+
+/// Spec function: sum of third component over a sequence of triples
+pub open spec fn spec_weighted_seq_sum<A, B>(seq: Seq<(A, B, u32)>) -> nat {
+    seq.fold_left(0nat, |acc: nat, t: (A, B, u32)| acc + t.2 as nat)
+}
+
+/// Spec function: sum of third component over a set of triples  
+pub open spec fn spec_weighted_set_sum<A, B>(s: Set<(A, B, u32)>) -> nat {
+    s.fold(0nat, |acc: nat, t: (A, B, u32)| acc + t.2 as nat)
+}
+
+/// Lemma: fold_left step for weighted tuple sequences
+proof fn lemma_weighted_fold_left_step<A, B>(seq: Seq<(A, B, u32)>, n: int)
+    requires
+        0 <= n < seq.len(),
+    ensures
+        spec_weighted_seq_sum(seq.take(n + 1)) == spec_weighted_seq_sum(seq.take(n)) + seq[n].2 as nat,
+{
+    let prefix = seq.take(n);
+    let f = |acc: nat, t: (A, B, u32)| acc + t.2 as nat;
+    
+    seq.take(n + 1).lemma_fold_left_split(0nat, f, n);
+    assert(seq.take(n + 1).subrange(0, n) =~= prefix);
+    assert(seq.take(n + 1).subrange(n, n + 1) =~= Seq::empty().push(seq[n]));
+}
+
+/// Lemma: for no-dup sequences representing a set, seq fold equals set fold for weighted tuples
+pub proof fn lemma_weighted_seq_fold_equals_set_fold<A, B>(seq: Seq<(A, B, u32)>)
+    requires
+        seq.no_duplicates(),
+    ensures
+        spec_weighted_seq_sum(seq) == spec_weighted_set_sum(seq.to_set()),
+    decreases seq.len(),
+{
+    let f = |acc: nat, t: (A, B, u32)| (acc + t.2 as nat) as nat;
+    
+    if seq.len() == 0 {
+        assert(seq.to_set() =~= Set::empty());
+        vstd::set::fold::lemma_fold_empty::<(A, B, u32), nat>(0nat, f);
+    } else {
+        let n = (seq.len() - 1) as int;
+        let prefix = seq.take(n);
+        let last = seq[n];
+        
+        assert(seq =~= prefix.push(last));
+        
+        // prefix has no duplicates (inherited from seq)
+        assert(prefix.no_duplicates()) by {
+            assert forall |i: int, j: int| 
+                0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j
+                implies prefix[i] != prefix[j] by {};
+        };
+        
+        // last is not in prefix (from no_duplicates on seq)
+        assert(!prefix.contains(last)) by {
+            if prefix.contains(last) {
+                let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last;
+                assert(seq[i] != seq[n]);
+            }
+        };
+        
+        lemma_weighted_seq_fold_equals_set_fold(prefix);
+        lemma_weighted_fold_left_step(seq, n);
+        lemma_push_not_contains_to_set(prefix, last);
+        assert(vstd::set::fold::is_fun_commutative(f)) by {};
+        assert(!prefix.to_set().contains(last)) by {};
+        vstd::seq_lib::seq_to_set_is_finite(prefix);
+        vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    }
+}
+
+/// Lemma: weighted seq sum equals weighted set sum for a finite set
+pub proof fn lemma_weighted_seq_sum_is_set_sum<A, B>(s: Set<(A, B, u32)>)
+    requires
+        s.finite(),
+    ensures
+        spec_weighted_seq_sum(s.to_seq()) == spec_weighted_set_sum(s),
+{
+    let seq = s.to_seq();
+    lemma_to_seq_no_duplicates(s);
+    s.lemma_to_seq_to_set_id();
+    lemma_weighted_seq_fold_equals_set_fold(seq);
+}
+
+/// Lemma: int fold equals nat fold as int for weighted sums
+/// Since we're adding non-negative values, the int and nat accumulators stay in sync.
+pub proof fn lemma_int_fold_equals_nat_fold_weighted<T: View<V = (A, B, u32)>, A, B>(seq: Seq<T>)
+    ensures
+        seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat)
+            == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
+    decreases seq.len(),
+{
+    if seq.len() == 0 {
+    } else {
+        let prefix = seq.take((seq.len() - 1) as int);
+        lemma_int_fold_equals_nat_fold_weighted::<T, A, B>(prefix);
+    }
+}
+
+/// Lemma: fold_left adding e@.2 equals spec_weighted_seq_sum of the mapped sequence
+/// This shows that folding over elements extracting weight via View 
+/// equals the weighted sum of the view-mapped sequence.
+pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum<T: View<V = (A, B, u32)>, A, B>(seq: Seq<T>)
+    ensures
+        seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) 
+            == spec_weighted_seq_sum(seq.map(|_i: int, e: T| e@)),
+    decreases seq.len(),
+{
+    let f_orig = |acc: nat, e: T| acc + e@.2 as nat;
+    let f_mapped = |acc: nat, t: (A, B, u32)| acc + t.2 as nat;
+    let view_seq = seq.map(|_i: int, e: T| e@);
+    
+    if seq.len() == 0 {
+        assert(seq =~= Seq::empty());
+        assert(view_seq =~= Seq::empty());
+    } else {
+        let n = (seq.len() - 1) as int;
+        let prefix = seq.take(n);
+        let last = seq[n];
+        
+        assert(seq =~= prefix.push(last));
+        
+        // Inductive hypothesis on prefix
+        lemma_seq_fold_left_plus_is_weighted_seq_sum::<T, A, B>(prefix);
+        
+        // prefix.map(view) == view_seq.take(n)
+        assert(prefix.map(|_i: int, e: T| e@) =~= view_seq.take(n));
+        
+        // Show the fold equality extends with the last element
+        // seq.fold_left(f_orig) = prefix.fold_left(f_orig) + last@.2
+        // view_seq.fold_left(f_mapped) = view_seq.take(n).fold_left(f_mapped) + view_seq[n].2
+        // And last@.2 == view_seq[n].2 since view_seq[n] = last@
+        assert(view_seq[n] == last@);
+    }
+}
+
+/// Lemma: fold_left with int accumulator equals fold_left with nat accumulator cast to int
+/// For functions that only add non-negative values, the results are equal.
+pub proof fn lemma_fold_left_int_equals_nat_as_int<T: View<V = (A, B, u32)>, A, B>(seq: Seq<T>)
+    ensures
+        seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat)
+            == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
+    decreases seq.len(),
+{
+    if seq.len() == 0 {
+        assert(seq =~= Seq::empty());
+    } else {
+        let n = (seq.len() - 1) as int;
+        let prefix = seq.take(n);
+        let last = seq[n];
+        
+        assert(seq =~= prefix.push(last));
+        
+        // Inductive hypothesis
+        lemma_fold_left_int_equals_nat_as_int::<T, A, B>(prefix);
+        
+        // Both folds add the same value (last@.2 as nat) to their previous result
+        // int version: prefix_result_int + last@.2 as nat
+        // nat version: (prefix_result_nat + last@.2 as nat) as int
+        // By IH: prefix_result_int == prefix_result_nat as int
+        // So both add the same value and produce equal results
+    }
+}
+
+// ============================================================================
+// Signed integer weighted sum lemmas (for i8, i16, i32, i64, i128, isize)
+// ============================================================================
+
+/// Spec function: sum of signed weights in a sequence of weighted tuples
+pub open spec fn spec_signed_weighted_seq_sum<A, B>(seq: Seq<(A, B, i32)>) -> int {
+    seq.fold_left(0int, |acc: int, t: (A, B, i32)| acc + t.2 as int)
+}
+
+/// Spec function: sum of signed weights in a set of weighted tuples
+pub open spec fn spec_signed_weighted_set_sum<A, B>(s: Set<(A, B, i32)>) -> int {
+    s.fold(0int, |acc: int, t: (A, B, i32)| acc + t.2 as int)
+}
+
+/// Lemma: fold_left adding e@.2 as int equals spec_signed_weighted_seq_sum
+pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum<T: View<V = (A, B, i32)>, A, B>(seq: Seq<T>)
+    ensures
+        seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int)
+            == spec_signed_weighted_seq_sum(seq.map(|_i: int, e: T| e@)),
+    decreases seq.len(),
+{
+    let f_orig = |acc: int, e: T| acc + e@.2 as int;
+    let f_mapped = |acc: int, t: (A, B, i32)| acc + t.2 as int;
+    let view_seq = seq.map(|_i: int, e: T| e@);
+    
+    if seq.len() == 0 {
+        assert(seq =~= Seq::empty());
+        assert(view_seq =~= Seq::empty());
+    } else {
+        let n = (seq.len() - 1) as int;
+        let prefix = seq.take(n);
+        let last = seq[n];
+        
+        assert(seq =~= prefix.push(last));
+        
+        lemma_signed_seq_fold_left_plus_is_weighted_seq_sum::<T, A, B>(prefix);
+        
+        assert(prefix.map(|_i: int, e: T| e@) =~= view_seq.take(n));
+        assert(view_seq[n] == last@);
+    }
+}
+
+/// Lemma: signed weighted sequence sum equals signed weighted set sum for no-duplicate sequences
+pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold<A, B>(seq: Seq<(A, B, i32)>)
+    requires seq.no_duplicates(),
+    ensures spec_signed_weighted_seq_sum(seq) == spec_signed_weighted_set_sum(seq.to_set()),
+    decreases seq.len(),
+{
+    let f = |acc: int, t: (A, B, i32)| acc + t.2 as int;
+    
+    if seq.len() == 0 {
+        assert(seq.to_set() =~= Set::empty());
+        vstd::set::fold::lemma_fold_empty::<(A, B, i32), int>(0int, f);
+    } else {
+        let n = (seq.len() - 1) as int;
+        let prefix = seq.take(n);
+        let last = seq[n];
+        
+        assert(seq =~= prefix.push(last));
+        
+        // prefix has no duplicates (inherited from seq)
+        assert(prefix.no_duplicates()) by {
+            assert forall |i: int, j: int| 
+                0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j
+                implies prefix[i] != prefix[j] by {};
+        };
+        
+        // last is not in prefix (from no_duplicates on seq)
+        assert(!prefix.contains(last)) by {
+            if prefix.contains(last) {
+                let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last;
+                assert(seq[i] != seq[n]);
+            }
+        };
+        
+        lemma_signed_weighted_seq_fold_equals_set_fold::<A, B>(prefix);
+        lemma_push_not_contains_to_set(prefix, last);
+        assert(vstd::set::fold::is_fun_commutative(f)) by {};
+        assert(!prefix.to_set().contains(last)) by {};
+        vstd::seq_lib::seq_to_set_is_finite(prefix);
+        vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+    }
+}
+
+} // verus!

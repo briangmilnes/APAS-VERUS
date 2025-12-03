@@ -1,8 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Chapter 6 Weighted Directed Graph (ephemeral) with natural (u32) weights - Single-threaded version.
+//! Chapter 6 Weighted Directed Graph (ephemeral) with u32 weights - Single-threaded version.
 //! Uses CheckedU32 for overflow-safe weight summation.
 
-pub mod WeightedDirGraphStEphNat {
+pub mod WeightedDirGraphStEphU32 {
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
@@ -14,6 +14,7 @@ pub mod WeightedDirGraphStEphNat {
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::feq::feq::feq;
     use crate::vstdplus::checked_nat::checked_nat::CheckedU32;
+    use crate::vstdplus::seq_set::*;
 
 verus! {
 
@@ -25,15 +26,15 @@ verus! {
         crate::Types::Types::group_WeightedEdge_axioms,
     };
 
-    pub type WeightedDirGraphStEphNat<V> = LabDirGraphStEph<V, u32>;
+    pub type WeightedDirGraphStEphU32<V> = LabDirGraphStEph<V, u32>;
 
-    pub trait WeightedDirGraphStEphNatTrait<V: StT + Hash>: 
+    pub trait WeightedDirGraphStEphU32Trait<V: StT + Hash>: 
         View<V = LabGraphView<<V as View>::V, u32>> + Sized {
 
         open spec fn spec_total_weight(&self) -> nat 
          { self@.A.fold(0nat, |acc: nat, t: (V::V, V::V, u32)| acc + t.2 as nat) }
 
-        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u32>>) -> (g: WeightedDirGraphStEphNat<V>)
+        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u32>>) -> (g: WeightedDirGraphStEphU32<V>)
             requires valid_key_type_WeightedEdge::<V, u32>();
 
         fn add_weighed_edge(&mut self, from: V, to: V, weight: u32)
@@ -82,9 +83,9 @@ verus! {
                     (self@.A.contains(t) && t.2 < threshold);
     }
 
-    impl<V: StT + Hash> WeightedDirGraphStEphNatTrait<V> for WeightedDirGraphStEphNat<V> {
+    impl<V: StT + Hash> WeightedDirGraphStEphU32Trait<V> for WeightedDirGraphStEphU32<V> {
 
-        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u32>>) -> (g: WeightedDirGraphStEphNat<V>) {
+        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u32>>) -> (g: WeightedDirGraphStEphU32<V>) {
             let mut edge_set: SetStEph<LabEdge<V, u32>> = SetStEph::empty();
             let mut it = edges.iter();
             let ghost edge_seq = it@.1;
@@ -266,34 +267,22 @@ verus! {
                     valid_key_type_WeightedEdge::<V, u32>(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
+                    wa_seq.no_duplicates(),
                     wa_seq.map(|i: int, e: LabEdge<V, u32>| e@).to_set() == wa_view,
-                    sum@ == wa_seq.take(it@.0 as int).fold_left(0int, |acc: int, e: LabEdge<V, u32>| acc + e@.2 as int),
+                    sum@ == wa_seq.take(it@.0 as int).fold_left(0int, |acc: int, e: LabEdge<V, u32>| acc + e@.2 as nat),
                 decreases wa_seq.len() - it@.0,
             {
                 match it.next() {
                     None => {
                         proof {
-                            // Need to show: sum@ == self.spec_total_weight() as int
-                            // The spec uses Set.fold, we use Seq.fold_left
-                            // This gap requires proving that for commutative addition,
-                            // Set.fold and Seq.fold_left over the same elements give the same result
-                            assume(sum@ == self.spec_total_weight() as int);
+                            lemma_seq_fold_left_plus_is_weighted_seq_sum::<LabEdge<V, u32>, V::V, V::V>(wa_seq);
+                            lemma_fold_left_int_equals_nat_as_int::<LabEdge<V, u32>, V::V, V::V>(wa_seq);
+                            lemma_weighted_seq_fold_equals_set_fold(wa_seq.map(|_i: int, e: LabEdge<V, u32>| e@));
                         }
                         return sum;
                     },
                     Some(labeled_edge) => {
-                        proof {
-                            let old_idx = (it@.0 - 1) as int;
-                            let new_idx = it@.0 as int;
-                            let f = |acc: int, e: LabEdge<V, u32>| acc + e@.2 as int;
-                            // Show: take(new_idx).fold_left(0, f) == take(old_idx).fold_left(0, f) + wa_seq[old_idx].@.2
-                            // By definition of fold_left: s.fold_left(b, f) = f(s.drop_last().fold_left(b, f), s.last())
-                            // So take(new_idx).fold_left(0, f) = f(take(new_idx).drop_last().fold_left(0, f), take(new_idx).last())
-                            //                                 = f(take(old_idx).fold_left(0, f), wa_seq[old_idx])
-                            //                                 = take(old_idx).fold_left(0, f) + wa_seq[old_idx].@.2
-                            assert(wa_seq.take(new_idx).drop_last() =~= wa_seq.take(old_idx));
-                            assert(wa_seq.take(new_idx).last() == wa_seq[old_idx]);
-                        }
+                        proof { assert(wa_seq.take(it@.0 as int).drop_last() =~= wa_seq.take((it@.0 - 1) as int)); }
                         sum = sum.add_value(labeled_edge.2);
                     },
                 }
@@ -394,14 +383,14 @@ verus! {
 } // verus!
 
     #[macro_export]
-    macro_rules! WeightedDirGraphStEphNatLit {
+    macro_rules! WeightedDirGraphStEphU32Lit {
         () => {{
             $crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEph::empty()
         }};
         ( V: [ $( $v:expr ),* $(,)? ], E: [ $( $edge:expr ),* $(,)? ] ) => {{
             let vertices = $crate::SetLit![ $( $v ),* ];
             let edges = $crate::SetLit![ $( $edge ),* ];
-            <$crate::Chap06::WeightedDirGraphStEphNat::WeightedDirGraphStEphNat::WeightedDirGraphStEphNat<_> as $crate::Chap06::WeightedDirGraphStEphNat::WeightedDirGraphStEphNat::WeightedDirGraphStEphNatTrait<_>>::from_weighed_edges(vertices, edges)
+            <$crate::Chap06::WeightedDirGraphStEphU32::WeightedDirGraphStEphU32::WeightedDirGraphStEphU32<_> as $crate::Chap06::WeightedDirGraphStEphU32::WeightedDirGraphStEphU32::WeightedDirGraphStEphU32Trait<_>>::from_weighed_edges(vertices, edges)
         }};
     }
 }

@@ -1,5 +1,5 @@
 //! APAS-VERUS library crate
-#![feature(stmt_expr_attributes)]
+#![cfg_attr(verus_keep_ghost, feature(stmt_expr_attributes))]
 
 pub mod Types;
 
@@ -49,6 +49,7 @@ pub mod experiments {
 //    pub mod checked_unsigned_int;
 //    pub mod checked_signed_int;
 //    pub mod checked_u32;
+    pub mod seq_set_exec;
 }
 
 pub mod vstdplus {
@@ -66,7 +67,7 @@ pub mod vstdplus {
     pub mod vec;
     pub mod checked_int;
     pub mod checked_nat;
-    pub mod HashCheckedU32;
+    pub mod hashed_checked_u32;
 }
 
 pub mod Chap03 {
@@ -86,9 +87,8 @@ pub mod Chap06 {
     pub mod LabUnDirGraphStEph;
     pub mod WeightedDirGraphStEphInt;
     pub mod WeightedUnDirGraphStEphInt;
-    pub mod WeightedDirGraphStEphNat;
-    pub mod WeightedDirGraphStEphCheckedU32;
-    pub mod WeightedDirGraphCheckedU32;
+    pub mod WeightedDirGraphStEphU32;
+    pub mod WeightedDirGraphStEphI32;
 //     pub mod WeightedDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
 //     pub mod WeightedUnDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
 

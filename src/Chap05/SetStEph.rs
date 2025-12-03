@@ -97,6 +97,12 @@ verus! {
                 it@.1.map(|i: int, k: T| k@).to_set() == self@,
                 it@.1.no_duplicates();
 
+        fn to_seq(&self) -> (seq: Vec<T>)
+            requires valid_key_type::<T>()
+            ensures
+                seq@.no_duplicates(),
+                forall |x: T::V| self@.contains(x) <==> seq@.map(|_i: int, t: T| t@).contains(x);
+
         /// APAS: Work Θ(1), Span Θ(1)
         fn empty()                           -> (empty: Self)
             requires valid_key_type::<T>()
@@ -236,6 +242,38 @@ verus! {
             let inner = self.elements.iter();
             proof { lemma_seq_map_to_set_equality(inner@.1, self@); }
             SetStEphIter { inner }
+        }
+
+        fn to_seq(&self) -> (seq: Vec<T>) {
+            let mut seq: Vec<T> = Vec::new();
+            let mut it = self.iter();
+            let ghost iter_seq = it@.1;
+            
+            loop
+                invariant
+                    valid_key_type::<T>(),
+                    it@.0 <= iter_seq.len(),
+                    it@.1 == iter_seq,
+                    iter_seq.map(|_i: int, k: T| k@).to_set() == self@,
+                    iter_seq.no_duplicates(),
+                    seq@ == iter_seq.take(it@.0),
+                decreases iter_seq.len() - it@.0,
+            {
+                match it.next() {
+                    Some(x) => {
+                        seq.push(x.clone_plus());
+                    },
+                    None => {
+                        proof {
+                            assert forall |x: T::V| self@.contains(x) <==> seq@.map(|_i: int, t: T| t@).contains(x) by {
+                                assert(iter_seq.map(|_i: int, k: T| k@).to_set() == self@);
+                                assert(seq@ == iter_seq);
+                            };
+                        }
+                        return seq;
+                    }
+                }
+            }
         }
 
         fn empty() -> SetStEph<T> { SetStEph { elements: HashSetWithViewPlus::new() } }
@@ -558,6 +596,17 @@ verus! {
     }
 
     impl<T: StT + Hash> Eq for SetStEph<T> {}
+
+    pub proof fn lemma_to_seq_equals_iter_seq<T: StT + Hash>(s: SetStEph<T>, seq: Seq<T>, it_seq: Seq<T>)
+        requires
+            seq == it_seq,
+            it_seq.map(|_i: int, k: T| k@).to_set() == s@,
+            it_seq.no_duplicates(),
+        ensures
+            seq.no_duplicates(),
+            seq.map(|_i: int, t: T| t@).to_set() == s@,
+            forall |x: T::V| s@.contains(x) <==> seq.map(|_i: int, t: T| t@).contains(x),
+    { }
 
   } // verus!
 

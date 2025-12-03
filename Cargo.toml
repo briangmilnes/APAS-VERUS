@@ -39,6 +39,10 @@ name = "test_feq"
 path = "tests/vstdplus/test_feq.rs"
 
 [[test]]
+name = "test_checked_nat_with_checked_view"
+path = "tests/vstdplus/test_checked_nat_with_checked_view.rs"
+
+[[test]]
 name = "TestDirGraphStEph"
 path = "tests/Chap06/TestDirGraphStEph.rs"
 

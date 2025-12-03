@@ -137,7 +137,7 @@ verus! {
 
  } // verus!
 
-    macro_rules! checked_nat_gen {
+macro_rules! checked_nat_gen {
         ($uty:ty, $cty:ident, $max:expr) => {
 verus! {
 
