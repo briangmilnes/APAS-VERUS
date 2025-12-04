@@ -114,4 +114,5 @@ pub mod Chap06 {
 
 pub mod Chap11 {
     pub mod FibonacciStEph;
+    pub mod FibonacciMtPer;
 }
