@@ -12,49 +12,6 @@ Formally verified implementations of algorithms from "Algorithms Parallel and Se
 - `benches/` - Performance benchmarks using Criterion
 - `attic/` - Old/deprecated implementations
 
-## vstdadditions
-
-This directory contains utilities that extend the Verus standard library (`vstd`) with commonly needed functionality:
-
-### TotalOrdered Trait
-
-The `TotalOrdered` trait (from the [Verus guide BST example](https://verus-lang.github.io/verus/guide/container_bst_generic.html)) connects:
-- **Spec-level ordering**: `spec fn le(self, other: Self) -> bool` with mathematical properties (reflexive, transitive, antisymmetric, total)
-- **Executable comparison**: `fn compare(&self, other: &Self) -> Cmp` with ensures clauses that connect to the spec
-
-This trait enables writing generic verified sorting and ordering algorithms. We provide implementations for all 12 Rust integral types: `u8`, `u16`, `u32`, `u64`, `u128`, `usize`, `i8`, `i16`, `i32`, `i64`, `i128`, `isize`.
-
-**Why not in vstd?** This trait is currently only in tutorial examples. We include it here as a reusable component for any algorithm requiring total orderings.
-
-## experiments
-
-The `src/experiments/` directory contains explorations of Verus verification techniques and proofs of fundamental loop patterns:
-
-### Loop Verification Study
-
-A comprehensive study of how Verus verifies different loop constructs (`while`, `loop`, `for`) with various iterator patterns:
-
-- **`seq_while_basic_proofs.rs`** - Verified `while` loops for basic sequence operations (length, membership, find, count, sum) on arrays and vectors
-- **`seq_loop_basic_proofs.rs`** - Same operations using `loop { ... return }` patterns 
-- **`seq_for_basic_proofs.rs`** - Same operations using `for` loops with range iterators
-- **`verus_wrapped_iter_loops.rs`** - **Manual desugaring of `for` loop auto-invariants**, demonstrating what Verus generates automatically:
-  - Shows the full `Range<usize>` iterator creation and ghost state (`RangeGhostIterator`)
-  - Shows `Vec::into_iter()` with `IntoIterGhostIterator` ghost state
-  - Documents `ForLoopGhostIterator` traits: `exec_invariant`, `ghost_invariant`, `ghost_advance`
-  - Proves that the manual expansion is equivalent to Verus's auto-generated invariants
-
-**Key findings:**
-1. `for` loop auto-invariants manage substantial hidden complexity (Range iterator state, ghost tracking)
-2. Manual invariants must supplement (not replace) auto-invariants for domain-specific properties
-3. The `original_seq == s@` bridge invariant is essential when iterators consume collections
-
-### Documentation
-
-See `docs/` for detailed write-ups:
-- **`VerusStandardLoopProofs.md`** - Top-down view of how Verus proves loops, with verified examples
-- **`VerusStandardIters.md`** - Complete catalog of Verus's `ForLoopGhostIterator` traits and implementations
-- **`VerusRules.md`** - Running notes on Verus syntax, semantics, and proof patterns
-
 ## Verified Data Structures
 
 ### Chapter 05: Sets, Relations, and Mappings - ✅ COMPLETE
@@ -427,6 +384,21 @@ We use Verus to prove:
 - **Resource properties**: Multiset preservation (e.g., sorting doesn't lose/add elements)
 
 For generic algorithms, we use traits like `TotalOrdered` to abstract over ordering relationships while maintaining provability.
+
+## experiments
+
+The `src/experiments/` directory contains explorations of Verus verification techniques and proofs of fundamental loop patterns:
+
+### Loop Verification Study
+
+A comprehensive study of how Verus verifies different loop constructs (`while`, `loop`, `for`) with various iterator patterns:
+
+- **`seq_while_basic_proofs.rs`** - Verified `while` loops for basic sequence operations
+- **`seq_loop_basic_proofs.rs`** - Same operations using `loop { ... return }` patterns 
+- **`seq_for_basic_proofs.rs`** - Same operations using `for` loops with range iterators
+- **`verus_wrapped_iter_loops.rs`** - Manual desugaring of `for` loop auto-invariants
+
+See `docs/` for detailed write-ups on Verus loop proofs and iterator patterns.
 
 ## License
 
