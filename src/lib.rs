@@ -108,3 +108,7 @@ pub mod Chap06 {
 //     pub mod WeightedUnDirGraphMtEphInt;
 //     pub mod WeightedUnDirGraphMtEphFloat;  // OrderedFloat - only PartialEq, no Eq
 }
+
+pub mod Chap11 {
+    pub mod FibonacciStEph;
+}
