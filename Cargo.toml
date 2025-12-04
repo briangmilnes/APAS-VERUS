@@ -8,6 +8,7 @@ verify = true
 
 [dependencies]
 vstd = "0.0.0-2025-08-12-1837"
+verus_state_machines_macros = "0.0.0-2025-11-23-0053"
 ordered-float = "4.5.0"
 
 [lib]
@@ -113,6 +114,10 @@ path = "tests/experiments/TestCheckedI128.rs"
 name = "TestCheckedIsize"
 path = "tests/experiments/TestCheckedIsize.rs"
 
+[[test]]
+name = "TestParaPairs"
+path = "tests/Chap11/TestParaPairs.rs"
+
 [[bench]]
 name = "BenchInsertionSortStEph"
 path = "benches/Chap03/BenchInsertionSortStEph.rs"
@@ -139,6 +144,7 @@ type_complexity = "allow"
 [workspace]
 members = ["."]
 
-# Use local Verus fork for vstd (for rust-analyzer navigation)
+# Use local Verus fork for vstd and state machines (for rust-analyzer navigation)
 [patch.crates-io]
 vstd = { path = "/home/milnes/projects/verus-lang/source/vstd" }
+verus_state_machines_macros = { path = "/home/milnes/projects/verus-lang/source/state_machines_macros" }

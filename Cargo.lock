@@ -29,6 +29,7 @@ version = "0.1.0"
 dependencies = [
  "criterion",
  "ordered-float",
+ "verus_state_machines_macros",
  "vstd",
 ]
 

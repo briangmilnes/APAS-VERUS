@@ -1,0 +1,50 @@
+//! Tests for ParaPairs module - disjoint parallelism.
+
+use apas_verus::Types::Types::Pair;
+use apas_verus::ParaPair;
+
+#[test]
+fn test_para_pair_simple() {
+    let Pair(a, b) = ParaPair!(
+        move || 1 + 1,
+        move || 2 + 2
+    );
+    assert_eq!(a, 2);
+    assert_eq!(b, 4);
+}
+
+#[test]
+fn test_para_pair_strings() {
+    let Pair(a, b) = ParaPair!(
+        move || "hello".to_string(),
+        move || "world".to_string()
+    );
+    assert_eq!(a, "hello");
+    assert_eq!(b, "world");
+}
+
+#[test]
+fn test_para_pair_compute() {
+    // Compute fibonacci(10) and fibonacci(15) in parallel
+    fn fib(n: u64) -> u64 {
+        if n <= 1 { n } else { fib(n - 1) + fib(n - 2) }
+    }
+    
+    let Pair(a, b) = ParaPair!(
+        move || fib(10),
+        move || fib(15)
+    );
+    assert_eq!(a, 55);    // fib(10) = 55
+    assert_eq!(b, 610);   // fib(15) = 610
+}
+
+#[test]
+fn test_para_pair_different_types() {
+    let Pair(num, text) = ParaPair!(
+        move || 42_i32,
+        move || "answer".to_string()
+    );
+    assert_eq!(num, 42);
+    assert_eq!(text, "answer");
+}
+

@@ -2,6 +2,8 @@
 
 Formally verified implementations of algorithms from "Algorithms Parallel and Sequential" by Acar, Blelloch, and Milnes, using the [Verus](https://github.com/verus-lang/verus) verification framework for Rust.
 
+**Verified: 3 algorithms, 8 data structures**
+
 ## Project Structure
 
 - `src/` - Verified algorithm implementations organized by chapter
@@ -123,6 +125,19 @@ Verus LOC (Spec/Proof/Exec)
 | Algorithm | Verified | Tested | Benchmarked | Notes |
 |-----------|----------|--------|-------------|-------|
 | Insertion Sort | ✅ | ✅ | ✅ | Generic over `T: TotalOrdered + Copy`, multiset preservation proven |
+
+### Chapter 11: Fibonacci - ✅ COMPLETE
+
+| Algorithm | Verified | Tested | Benchmarked | Notes |
+|-----------|----------|--------|-------------|-------|
+| Fibonacci (Sequential) | ✅ | ✅ | ⬜ | Iterative and recursive, `spec_fib` with overflow proofs |
+| Fibonacci (Parallel) | ✅ | ✅ | ⬜ | **First verified parallel algorithm!** Uses `ParaPairDisjoint!` macro with closure spec propagation |
+
+**Parallelism Infrastructure:**
+- `ParaPairs.rs` - Disjoint parallel pair abstraction
+- `para_pair_disjoint` - Verified function with `f.requires()`/`f.ensures()` propagation through `spawn`/`join`
+- `ParaPairDisjoint!` - Macro for verified parallel fork-join
+- `ParaPair!` - Unverified macro for non-Verus code
 
 ### Chapter 05: Sequences and Series - ⬜ NOT STARTED
 

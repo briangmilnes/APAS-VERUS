@@ -3,6 +3,7 @@
 
 pub mod Types;
 pub mod Concurrency;
+pub mod ParaPairs;
 
 pub mod experiments {
 //    pub mod abstract_set_iter;

@@ -2,6 +2,18 @@
 //! Concurrency types and traits for multi-threaded code.
 //! Based on Verus counting-to-2 example: https://verus-lang.github.io/verus/state_machines/examples/counting-to-2.html
 
+use vstd::prelude::*;
+
+verus! {
+
+/// Diverges. Use with `assume(false)` in unreachable error branches.
+#[verifier::exec_allows_no_decreases_clause]
+pub fn diverge<A>() -> A {
+    loop { }
+}
+
+} // verus!
+
 pub mod Concurrency {
     use std::sync::Mutex;
     use crate::Types::Types::{StT, Pair, B};
@@ -127,18 +139,5 @@ pub mod Concurrency {
         fn new_mt(inner: Self::Inner) -> Self { inner }
     }
 
-    // ParaPair macro: spawns two threads and joins them
-    // Based on Verus counting-to-2 example
-    #[macro_export]
-    macro_rules! ParaPair {
-        ( $left:expr, $right:expr ) => {{
-            use std::thread::spawn;
-            let handle1 = spawn($left);
-            let handle2 = spawn($right);
-            let left_result = handle1.join().unwrap();
-            let right_result = handle2.join().unwrap();
-            $crate::Types::Types::Pair(left_result, right_result)
-        }};
-    }
 }
 
