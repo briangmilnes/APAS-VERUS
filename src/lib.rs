@@ -68,6 +68,9 @@ pub mod vstdplus {
     pub mod checked_int;
     pub mod checked_nat;
     pub mod hashed_checked_u32;
+    pub mod arithmetic {
+        pub mod power2_plus;
+    }
 }
 
 pub mod Chap03 {

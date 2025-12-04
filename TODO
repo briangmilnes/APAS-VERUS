@@ -1,4 +1,5 @@
 
-  Can we hide the hash_set iter in Set/Relation/Mapping?
+  Can we use decreases_to to get a cannonical ordering of set iterators?
+  
   
 
