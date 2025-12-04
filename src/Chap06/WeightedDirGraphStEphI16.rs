@@ -1,7 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Chapter 6 Weighted Directed Graph (ephemeral) with integer weights - Single-threaded version.
+//! Chapter 6 Weighted Directed Graph (ephemeral) with i16 weights - Single-threaded version.
+//! Uses CheckedI16 for overflow-safe weight summation.
 
-pub mod WeightedDirGraphStEphInt {
+pub mod WeightedDirGraphStEphI16 {
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
@@ -12,6 +13,8 @@ pub mod WeightedDirGraphStEphInt {
     use crate::Types::Types::{*, LabGraphView};
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::feq::feq::feq;
+    use crate::vstdplus::checked_int::checked_int::CheckedI16;
+    use crate::vstdplus::seq_set::*;
 
 verus! {
 
@@ -23,75 +26,74 @@ verus! {
         crate::Types::Types::group_WeightedEdge_axioms,
     };
 
-    pub type WeightedDirGraphStEphInt<V> = LabDirGraphStEph<V, i32>;
+    pub type WeightedDirGraphStEphI16<V> = LabDirGraphStEph<V, i16>;
 
-    pub trait WeightedDirGraphStEphIntTrait<V: StT + Hash>: 
-        View<V = LabGraphView<<V as View>::V, i32>> + Sized {
+    pub trait WeightedDirGraphStEphI16Trait<V: StT + Hash>: 
+        View<V = LabGraphView<<V as View>::V, i16>> + Sized {
 
-        open spec fn spec_total_weight(&self) -> int {
-            self@.A.fold(0int, |acc: int, t: (V::V, V::V, i32)| acc + t.2 as int)
-        }
+        open spec fn spec_total_weight(&self) -> int 
+         { self@.A.fold(0int, |acc: int, t: (V::V, V::V, i16)| acc + t.2 as int) }
 
-        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i32>>) -> (g: WeightedDirGraphStEphInt<V>)
-            requires valid_key_type_WeightedEdge::<V, i32>();
+        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i16>>) -> (g: WeightedDirGraphStEphI16<V>)
+            requires valid_key_type_WeightedEdge::<V, i16>();
 
-        fn add_weighed_edge(&mut self, from: V, to: V, weight: i32)
-            requires valid_key_type_WeightedEdge::<V, i32>()
+        fn add_weighed_edge(&mut self, from: V, to: V, weight: i16)
+            requires valid_key_type_WeightedEdge::<V, i16>()
             ensures 
                 self@.V == old(self)@.V.insert(from@).insert(to@),
                 self@.A == old(self)@.A.insert((from@, to@, weight));
 
-        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i32>)
-            requires valid_key_type_WeightedEdge::<V, i32>()
+        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i16>)
+            requires valid_key_type_WeightedEdge::<V, i16>()
             ensures 
-                weight.is_some() == (exists |w: i32| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),
+                weight.is_some() == (exists |w: i16| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),
                 weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));
 
-        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i32>>)
-            requires valid_key_type_WeightedEdge::<V, i32>()
+        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i16>>)
+            requires valid_key_type_WeightedEdge::<V, i16>()
             ensures 
-                forall |t: (V::V, V::V, i32)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);
+                forall |t: (V::V, V::V, i16)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);
 
-        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i32>>)
-            requires valid_key_type_WeightedEdge::<V, i32>()
+        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i16>>)
+            requires valid_key_type_WeightedEdge::<V, i16>()
             ensures 
-                forall |p: (V::V, i32)| out_neighbors@.contains(p) == 
-                    (exists |w: i32| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);
+                forall |p: (V::V, i16)| out_neighbors@.contains(p) == 
+                    (exists |w: i16| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);
 
-        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i32>>)
-            requires valid_key_type_WeightedEdge::<V, i32>()
+        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i16>>)
+            requires valid_key_type_WeightedEdge::<V, i16>()
             ensures 
-                forall |p: (V::V, i32)| in_neighbors@.contains(p) == 
-                    (exists |w: i32| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);
+                forall |p: (V::V, i16)| in_neighbors@.contains(p) == 
+                    (exists |w: i16| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);
 
-        fn total_weight(&self) -> (total_weight: i32)
-            requires valid_key_type_WeightedEdge::<V, i32>()
-            ensures total_weight as int == self.spec_total_weight();
+        fn total_weight(&self) -> (total_weight: CheckedI16)
+            requires valid_key_type_WeightedEdge::<V, i16>()
+            ensures total_weight@ == self.spec_total_weight();
 
-        fn edges_above_weight(&self, threshold: i32) -> (edges_above: SetStEph<WeightedEdge<V, i32>>)
-            requires valid_key_type_WeightedEdge::<V, i32>()
+        fn edges_above_weight(&self, threshold: i16) -> (edges_above: SetStEph<WeightedEdge<V, i16>>)
+            requires valid_key_type_WeightedEdge::<V, i16>()
             ensures 
-                forall |t: (V::V, V::V, i32)| #[trigger] edges_above@.contains(t) == 
+                forall |t: (V::V, V::V, i16)| #[trigger] edges_above@.contains(t) == 
                     (self@.A.contains(t) && t.2 > threshold);
 
-        fn edges_below_weight(&self, threshold: i32) -> (edges_below: SetStEph<WeightedEdge<V, i32>>)
-            requires valid_key_type_WeightedEdge::<V, i32>()
+        fn edges_below_weight(&self, threshold: i16) -> (edges_below: SetStEph<WeightedEdge<V, i16>>)
+            requires valid_key_type_WeightedEdge::<V, i16>()
             ensures 
-                forall |t: (V::V, V::V, i32)| #[trigger] edges_below@.contains(t) == 
+                forall |t: (V::V, V::V, i16)| #[trigger] edges_below@.contains(t) == 
                     (self@.A.contains(t) && t.2 < threshold);
     }
 
-    impl<V: StT + Hash> WeightedDirGraphStEphIntTrait<V> for WeightedDirGraphStEphInt<V> {
+    impl<V: StT + Hash> WeightedDirGraphStEphI16Trait<V> for WeightedDirGraphStEphI16<V> {
 
-        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i32>>) -> (g: WeightedDirGraphStEphInt<V>) {
-            let mut edge_set: SetStEph<LabEdge<V, i32>> = SetStEph::empty();
+        fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i16>>) -> (g: WeightedDirGraphStEphI16<V>) {
+            let mut edge_set: SetStEph<LabEdge<V, i16>> = SetStEph::empty();
             let mut it = edges.iter();
             let ghost edge_seq = it@.1;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
-                    valid_key_type_WeightedEdge::<V, i32>(),
+                    valid_key_type_WeightedEdge::<V, i16>(),
                     it@.0 <= edge_seq.len(),
                     it@.1 == edge_seq,
                 decreases edge_seq.len() - it@.0,
@@ -107,19 +109,19 @@ verus! {
             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
         }
 
-        fn add_weighed_edge(&mut self, from: V, to: V, weight: i32) { 
+        fn add_weighed_edge(&mut self, from: V, to: V, weight: i16) { 
             self.add_labeled_arc(from, to, weight); 
         }
 
-        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i32>) { 
+        fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i16>) { 
             match self.get_arc_label(from, to) {
                 Some(w) => Some(*w),
                 None => None,
             }
         }
 
-        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i32>>) {
-            let mut edges: SetStEph<WeightedEdge<V, i32>> = SetStEph::empty();
+        fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i16>>) {
+            let mut edges: SetStEph<WeightedEdge<V, i16>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
             let ghost wa_seq = it@.1;
             let ghost wa_view = self@.A;
@@ -127,24 +129,24 @@ verus! {
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
-                    valid_key_type_WeightedEdge::<V, i32>(),
+                    valid_key_type_WeightedEdge::<V, i16>(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
-                    wa_seq.map(|i: int, e: LabEdge<V, i32>| e@).to_set() == wa_view,
-                    forall |t: (V::V, V::V, i32)| edges@.contains(t) == 
+                    wa_seq.map(|i: int, e: LabEdge<V, i16>| e@).to_set() == wa_view,
+                    forall |t: (V::V, V::V, i16)| edges@.contains(t) == 
                         (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@ == t),
                 decreases wa_seq.len() - it@.0,
             {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |t: (V::V, V::V, i32)| #[trigger] edges@.contains(t) implies wa_view.contains(t) by {
+                            assert forall |t: (V::V, V::V, i16)| #[trigger] edges@.contains(t) implies wa_view.contains(t) by {
                                 if edges@.contains(t) {
                                     let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@ == t;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
-                            assert forall |t: (V::V, V::V, i32)| #[trigger] wa_view.contains(t) implies edges@.contains(t) by {
+                            assert forall |t: (V::V, V::V, i16)| #[trigger] wa_view.contains(t) implies edges@.contains(t) by {
                                 if wa_view.contains(t) {
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(wa_seq, t);
                                 }
@@ -159,8 +161,8 @@ verus! {
             }
         }
 
-        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i32>>) {
-            let mut neighbors: SetStEph<Pair<V, i32>> = SetStEph::empty();
+        fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i16>>) {
+            let mut neighbors: SetStEph<Pair<V, i16>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
             let ghost wa_seq = it@.1;
             let ghost v_view = v@;
@@ -169,28 +171,28 @@ verus! {
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
-                    valid_key_type_WeightedEdge::<V, i32>(),
+                    valid_key_type_WeightedEdge::<V, i16>(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
-                    wa_seq.map(|i: int, e: LabEdge<V, i32>| e@).to_set() == wa_view,
-                    forall |p: (V::V, i32)| neighbors@.contains(p) == 
+                    wa_seq.map(|i: int, e: LabEdge<V, i16>| e@).to_set() == wa_view,
+                    forall |p: (V::V, i16)| neighbors@.contains(p) == 
                         (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@.0 == v_view && wa_seq[i]@.1 == p.0 && wa_seq[i]@.2 == p.1),
                 decreases wa_seq.len() - it@.0,
             {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |p: (V::V, i32)| neighbors@.contains(p) implies 
-                                (exists |w: i32| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) by {
+                            assert forall |p: (V::V, i16)| neighbors@.contains(p) implies 
+                                (exists |w: i16| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) by {
                                 if neighbors@.contains(p) {
                                     let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@.0 == v_view && wa_seq[i]@.1 == p.0 && wa_seq[i]@.2 == p.1;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
-                            assert forall |p: (V::V, i32)| (exists |w: i32| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) implies 
+                            assert forall |p: (V::V, i16)| (exists |w: i16| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) implies 
                                 neighbors@.contains(p) by {
-                                if exists |w: i32| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w {
-                                    let w = choose |w: i32| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w;
+                                if exists |w: i16| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w {
+                                    let w = choose |w: i16| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w;
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(wa_seq, (v_view, p.0, w));
                                 }
                             }
@@ -206,8 +208,8 @@ verus! {
             }
         }
 
-        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i32>>) {
-            let mut neighbors: SetStEph<Pair<V, i32>> = SetStEph::empty();
+        fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i16>>) {
+            let mut neighbors: SetStEph<Pair<V, i16>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
             let ghost wa_seq = it@.1;
             let ghost v_view = v@;
@@ -216,28 +218,28 @@ verus! {
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
-                    valid_key_type_WeightedEdge::<V, i32>(),
+                    valid_key_type_WeightedEdge::<V, i16>(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
-                    wa_seq.map(|i: int, e: LabEdge<V, i32>| e@).to_set() == wa_view,
-                    forall |p: (V::V, i32)| neighbors@.contains(p) == 
+                    wa_seq.map(|i: int, e: LabEdge<V, i16>| e@).to_set() == wa_view,
+                    forall |p: (V::V, i16)| neighbors@.contains(p) == 
                         (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@.1 == v_view && wa_seq[i]@.0 == p.0 && wa_seq[i]@.2 == p.1),
                 decreases wa_seq.len() - it@.0,
             {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |p: (V::V, i32)| neighbors@.contains(p) implies 
-                                (exists |w: i32| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w) by {
+                            assert forall |p: (V::V, i16)| neighbors@.contains(p) implies 
+                                (exists |w: i16| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w) by {
                                 if neighbors@.contains(p) {
                                     let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@.1 == v_view && wa_seq[i]@.0 == p.0 && wa_seq[i]@.2 == p.1;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
-                            assert forall |p: (V::V, i32)| (exists |w: i32| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w) implies 
+                            assert forall |p: (V::V, i16)| (exists |w: i16| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w) implies 
                                 neighbors@.contains(p) by {
-                                if exists |w: i32| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w {
-                                    let w = choose |w: i32| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w;
+                                if exists |w: i16| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w {
+                                    let w = choose |w: i16| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w;
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(wa_seq, (p.0, v_view, w));
                                 }
                             }
@@ -253,13 +255,8 @@ verus! {
             }
         }
 
-        #[verifier::external_body]
-        fn total_weight(&self) -> (total_weight: i32) { 
-            self.labeled_arcs().iter().map(|edge| edge.2).sum() 
-        }
-
-        fn edges_above_weight(&self, threshold: i32) -> (edges_above: SetStEph<WeightedEdge<V, i32>>) {
-            let mut edges: SetStEph<WeightedEdge<V, i32>> = SetStEph::empty();
+        fn total_weight(&self) -> (total_weight: CheckedI16) { 
+            let mut sum = CheckedI16::new(0);
             let mut it = self.labeled_arcs().iter();
             let ghost wa_seq = it@.1;
             let ghost wa_view = self@.A;
@@ -267,25 +264,58 @@ verus! {
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
-                    valid_key_type_WeightedEdge::<V, i32>(),
+                    valid_key_type_WeightedEdge::<V, i16>(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
-                    wa_seq.map(|i: int, e: LabEdge<V, i32>| e@).to_set() == wa_view,
-                    forall |t: (V::V, V::V, i32)| edges@.contains(t) == 
+                    wa_seq.no_duplicates(),
+                    wa_seq.map(|i: int, e: LabEdge<V, i16>| e@).to_set() == wa_view,
+                    sum@ == wa_seq.take(it@.0 as int).fold_left(0int, |acc: int, e: LabEdge<V, i16>| acc + e@.2 as int),
+                decreases wa_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i16::<LabEdge<V, i16>, V::V, V::V>(wa_seq);
+                            lemma_signed_weighted_seq_fold_equals_set_fold_i16(wa_seq.map(|_i: int, e: LabEdge<V, i16>| e@));
+                        }
+                        return sum;
+                    },
+                    Some(labeled_edge) => {
+                        proof { assert(wa_seq.take(it@.0 as int).drop_last() =~= wa_seq.take((it@.0 - 1) as int)); }
+                        sum = sum.add_value(labeled_edge.2);
+                    },
+                }
+            }
+        }
+
+        fn edges_above_weight(&self, threshold: i16) -> (edges_above: SetStEph<WeightedEdge<V, i16>>) {
+            let mut edges: SetStEph<WeightedEdge<V, i16>> = SetStEph::empty();
+            let mut it = self.labeled_arcs().iter();
+            let ghost wa_seq = it@.1;
+            let ghost wa_view = self@.A;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_WeightedEdge::<V, i16>(),
+                    it@.0 <= wa_seq.len(),
+                    it@.1 == wa_seq,
+                    wa_seq.map(|i: int, e: LabEdge<V, i16>| e@).to_set() == wa_view,
+                    forall |t: (V::V, V::V, i16)| edges@.contains(t) == 
                         (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@ == t && t.2 > threshold),
                 decreases wa_seq.len() - it@.0,
             {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |t: (V::V, V::V, i32)| #[trigger] edges@.contains(t) implies 
+                            assert forall |t: (V::V, V::V, i16)| #[trigger] edges@.contains(t) implies 
                                 (wa_view.contains(t) && t.2 > threshold) by {
                                 if edges@.contains(t) {
                                     let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@ == t && t.2 > threshold;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
-                            assert forall |t: (V::V, V::V, i32)| #[trigger] wa_view.contains(t) && t.2 > threshold implies 
+                            assert forall |t: (V::V, V::V, i16)| #[trigger] wa_view.contains(t) && t.2 > threshold implies 
                                 edges@.contains(t) by {
                                 if wa_view.contains(t) && t.2 > threshold {
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(wa_seq, t);
@@ -303,8 +333,8 @@ verus! {
             }
         }
 
-        fn edges_below_weight(&self, threshold: i32) -> (edges_below: SetStEph<WeightedEdge<V, i32>>) {
-            let mut edges: SetStEph<WeightedEdge<V, i32>> = SetStEph::empty();
+        fn edges_below_weight(&self, threshold: i16) -> (edges_below: SetStEph<WeightedEdge<V, i16>>) {
+            let mut edges: SetStEph<WeightedEdge<V, i16>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
             let ghost wa_seq = it@.1;
             let ghost wa_view = self@.A;
@@ -312,25 +342,25 @@ verus! {
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
-                    valid_key_type_WeightedEdge::<V, i32>(),
+                    valid_key_type_WeightedEdge::<V, i16>(),
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
-                    wa_seq.map(|i: int, e: LabEdge<V, i32>| e@).to_set() == wa_view,
-                    forall |t: (V::V, V::V, i32)| edges@.contains(t) == 
+                    wa_seq.map(|i: int, e: LabEdge<V, i16>| e@).to_set() == wa_view,
+                    forall |t: (V::V, V::V, i16)| edges@.contains(t) == 
                         (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@ == t && t.2 < threshold),
                 decreases wa_seq.len() - it@.0,
             {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |t: (V::V, V::V, i32)| #[trigger] edges@.contains(t) implies 
+                            assert forall |t: (V::V, V::V, i16)| #[trigger] edges@.contains(t) implies 
                                 (wa_view.contains(t) && t.2 < threshold) by {
                                 if edges@.contains(t) {
                                     let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@ == t && t.2 < threshold;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
-                            assert forall |t: (V::V, V::V, i32)| #[trigger] wa_view.contains(t) && t.2 < threshold implies 
+                            assert forall |t: (V::V, V::V, i16)| #[trigger] wa_view.contains(t) && t.2 < threshold implies 
                                 edges@.contains(t) by {
                                 if wa_view.contains(t) && t.2 < threshold {
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(wa_seq, t);
@@ -352,14 +382,15 @@ verus! {
 } // verus!
 
     #[macro_export]
-    macro_rules! WeightedDirGraphStEphIntLit {
+    macro_rules! WeightedDirGraphStEphI16Lit {
         () => {{
             $crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEph::empty()
         }};
         ( V: [ $( $v:expr ),* $(,)? ], E: [ $( $edge:expr ),* $(,)? ] ) => {{
             let vertices = $crate::SetLit![ $( $v ),* ];
             let edges = $crate::SetLit![ $( $edge ),* ];
-            <$crate::Chap06::WeightedDirGraphStEphInt::WeightedDirGraphStEphInt::WeightedDirGraphStEphInt<_> as $crate::Chap06::WeightedDirGraphStEphInt::WeightedDirGraphStEphInt::WeightedDirGraphStEphIntTrait<_>>::from_weighed_edges(vertices, edges)
+            <$crate::Chap06::WeightedDirGraphStEphI16::WeightedDirGraphStEphI16::WeightedDirGraphStEphI16<_> as $crate::Chap06::WeightedDirGraphStEphI16::WeightedDirGraphStEphI16::WeightedDirGraphStEphI16Trait<_>>::from_weighed_edges(vertices, edges)
         }};
     }
 }
+

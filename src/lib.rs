@@ -85,12 +85,18 @@ pub mod Chap06 {
     pub mod UnDirGraphStEph;
     pub mod LabDirGraphStEph;
     pub mod LabUnDirGraphStEph;
-    pub mod WeightedDirGraphStEphInt;
-    pub mod WeightedUnDirGraphStEphInt;
     pub mod WeightedDirGraphStEphU32;
-    pub mod WeightedDirGraphStEphI32;
-//     pub mod WeightedDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
-//     pub mod WeightedUnDirGraphStEphFloat;  // OrderedFloat - only PartialEq, no Eq
+//    pub mod WeightedDirGraphStEphU8;      // Proven, not compiled by default
+//    pub mod WeightedDirGraphStEphU16;     // Proven, not compiled by default
+//    pub mod WeightedDirGraphStEphU64;     // Proven, not compiled by default
+//    pub mod WeightedDirGraphStEphU128;    // Proven, not compiled by default
+//    pub mod WeightedDirGraphStEphUsize;   // Proven, not compiled by default
+//    pub mod WeightedDirGraphStEphI8;      // Proven, not compiled by default
+//    pub mod WeightedDirGraphStEphI16;     // Proven, not compiled by default
+//    pub mod WeightedDirGraphStEphI32;     // Proven, not compiled by default
+//    pub mod WeightedDirGraphStEphI64;     // Proven, not compiled by default
+//    pub mod WeightedDirGraphStEphI128;    // Proven, not compiled by default
+//    pub mod WeightedDirGraphStEphIsize;   // Proven, not compiled by default
 
 
 //     pub mod DirGraphMtEph;

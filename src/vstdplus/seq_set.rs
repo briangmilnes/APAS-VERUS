@@ -870,55 +870,384 @@ pub proof fn lemma_fold_left_int_equals_nat_as_int<T: View<V = (A, B, u32)>, A, 
 }
 
 // ============================================================================
-// Signed integer weighted sum lemmas (for i8, i16, i32, i64, i128, isize)
+// Unsigned integer weighted sum lemmas (for u8, u16, u64, u128, usize)
 // ============================================================================
 
-/// Spec function: sum of signed weights in a sequence of weighted tuples
-pub open spec fn spec_signed_weighted_seq_sum<A, B>(seq: Seq<(A, B, i32)>) -> int {
-    seq.fold_left(0int, |acc: int, t: (A, B, i32)| acc + t.2 as int)
+// u8
+pub open spec fn spec_weighted_seq_sum_u8<A, B>(seq: Seq<(A, B, u8)>) -> nat {
+    seq.fold_left(0nat, |acc: nat, t: (A, B, u8)| acc + t.2 as nat)
 }
-
-/// Spec function: sum of signed weights in a set of weighted tuples
-pub open spec fn spec_signed_weighted_set_sum<A, B>(s: Set<(A, B, i32)>) -> int {
-    s.fold(0int, |acc: int, t: (A, B, i32)| acc + t.2 as int)
+pub open spec fn spec_weighted_set_sum_u8<A, B>(s: Set<(A, B, u8)>) -> nat {
+    s.fold(0nat, |acc: nat, t: (A, B, u8)| acc + t.2 as nat)
 }
-
-/// Lemma: fold_left adding e@.2 as int equals spec_signed_weighted_seq_sum
-pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum<T: View<V = (A, B, i32)>, A, B>(seq: Seq<T>)
-    ensures
-        seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int)
-            == spec_signed_weighted_seq_sum(seq.map(|_i: int, e: T| e@)),
+pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u8<T: View<V = (A, B, u8)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) == spec_weighted_seq_sum_u8(seq.map(|_i: int, e: T| e@)),
     decreases seq.len(),
 {
-    let f_orig = |acc: int, e: T| acc + e@.2 as int;
-    let f_mapped = |acc: int, t: (A, B, i32)| acc + t.2 as int;
     let view_seq = seq.map(|_i: int, e: T| e@);
-    
+    if seq.len() == 0 { assert(seq =~= Seq::empty()); assert(view_seq =~= Seq::empty()); }
+    else {
+        let n = (seq.len() - 1) as int;
+        lemma_seq_fold_left_plus_is_weighted_seq_sum_u8::<T, A, B>(seq.take(n));
+        assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
+        assert(view_seq[n] == seq[n]@);
+    }
+}
+pub proof fn lemma_fold_left_int_equals_nat_as_int_u8<T: View<V = (A, B, u8)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
+    decreases seq.len(),
+{
+    if seq.len() > 0 { lemma_fold_left_int_equals_nat_as_int_u8::<T, A, B>(seq.take((seq.len() - 1) as int)); }
+}
+pub proof fn lemma_weighted_seq_fold_equals_set_fold_u8<A, B>(seq: Seq<(A, B, u8)>)
+    requires seq.no_duplicates(),
+    ensures spec_weighted_seq_sum_u8(seq) == spec_weighted_set_sum_u8(seq.to_set()),
+    decreases seq.len(),
+{
+    let f = |acc: nat, t: (A, B, u8)| acc + t.2 as nat;
     if seq.len() == 0 {
-        assert(seq =~= Seq::empty());
-        assert(view_seq =~= Seq::empty());
+        assert(seq.to_set() =~= Set::empty());
+        vstd::set::fold::lemma_fold_empty::<(A, B, u8), nat>(0nat, f);
     } else {
         let n = (seq.len() - 1) as int;
         let prefix = seq.take(n);
         let last = seq[n];
-        
         assert(seq =~= prefix.push(last));
-        
-        lemma_signed_seq_fold_left_plus_is_weighted_seq_sum::<T, A, B>(prefix);
-        
-        assert(prefix.map(|_i: int, e: T| e@) =~= view_seq.take(n));
-        assert(view_seq[n] == last@);
+        assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
+        assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
+        lemma_weighted_seq_fold_equals_set_fold_u8::<A, B>(prefix);
+        lemma_push_not_contains_to_set(prefix, last);
+        assert(vstd::set::fold::is_fun_commutative(f)) by {};
+        assert(!prefix.to_set().contains(last)) by {};
+        vstd::seq_lib::seq_to_set_is_finite(prefix);
+        vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
     }
 }
 
-/// Lemma: signed weighted sequence sum equals signed weighted set sum for no-duplicate sequences
+// u16
+pub open spec fn spec_weighted_seq_sum_u16<A, B>(seq: Seq<(A, B, u16)>) -> nat {
+    seq.fold_left(0nat, |acc: nat, t: (A, B, u16)| acc + t.2 as nat)
+}
+pub open spec fn spec_weighted_set_sum_u16<A, B>(s: Set<(A, B, u16)>) -> nat {
+    s.fold(0nat, |acc: nat, t: (A, B, u16)| acc + t.2 as nat)
+}
+pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u16<T: View<V = (A, B, u16)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) == spec_weighted_seq_sum_u16(seq.map(|_i: int, e: T| e@)),
+    decreases seq.len(),
+{
+    let view_seq = seq.map(|_i: int, e: T| e@);
+    if seq.len() == 0 { assert(seq =~= Seq::empty()); assert(view_seq =~= Seq::empty()); }
+    else {
+        let n = (seq.len() - 1) as int;
+        lemma_seq_fold_left_plus_is_weighted_seq_sum_u16::<T, A, B>(seq.take(n));
+        assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
+        assert(view_seq[n] == seq[n]@);
+    }
+}
+pub proof fn lemma_fold_left_int_equals_nat_as_int_u16<T: View<V = (A, B, u16)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
+    decreases seq.len(),
+{
+    if seq.len() > 0 { lemma_fold_left_int_equals_nat_as_int_u16::<T, A, B>(seq.take((seq.len() - 1) as int)); }
+}
+pub proof fn lemma_weighted_seq_fold_equals_set_fold_u16<A, B>(seq: Seq<(A, B, u16)>)
+    requires seq.no_duplicates(),
+    ensures spec_weighted_seq_sum_u16(seq) == spec_weighted_set_sum_u16(seq.to_set()),
+    decreases seq.len(),
+{
+    let f = |acc: nat, t: (A, B, u16)| acc + t.2 as nat;
+    if seq.len() == 0 {
+        assert(seq.to_set() =~= Set::empty());
+        vstd::set::fold::lemma_fold_empty::<(A, B, u16), nat>(0nat, f);
+    } else {
+        let n = (seq.len() - 1) as int;
+        let prefix = seq.take(n);
+        let last = seq[n];
+        assert(seq =~= prefix.push(last));
+        assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
+        assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
+        lemma_weighted_seq_fold_equals_set_fold_u16::<A, B>(prefix);
+        lemma_push_not_contains_to_set(prefix, last);
+        assert(vstd::set::fold::is_fun_commutative(f)) by {};
+        assert(!prefix.to_set().contains(last)) by {};
+        vstd::seq_lib::seq_to_set_is_finite(prefix);
+        vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    }
+}
+
+// u64
+pub open spec fn spec_weighted_seq_sum_u64<A, B>(seq: Seq<(A, B, u64)>) -> nat {
+    seq.fold_left(0nat, |acc: nat, t: (A, B, u64)| acc + t.2 as nat)
+}
+pub open spec fn spec_weighted_set_sum_u64<A, B>(s: Set<(A, B, u64)>) -> nat {
+    s.fold(0nat, |acc: nat, t: (A, B, u64)| acc + t.2 as nat)
+}
+pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u64<T: View<V = (A, B, u64)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) == spec_weighted_seq_sum_u64(seq.map(|_i: int, e: T| e@)),
+    decreases seq.len(),
+{
+    let view_seq = seq.map(|_i: int, e: T| e@);
+    if seq.len() == 0 { assert(seq =~= Seq::empty()); assert(view_seq =~= Seq::empty()); }
+    else {
+        let n = (seq.len() - 1) as int;
+        lemma_seq_fold_left_plus_is_weighted_seq_sum_u64::<T, A, B>(seq.take(n));
+        assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
+        assert(view_seq[n] == seq[n]@);
+    }
+}
+pub proof fn lemma_fold_left_int_equals_nat_as_int_u64<T: View<V = (A, B, u64)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
+    decreases seq.len(),
+{
+    if seq.len() > 0 { lemma_fold_left_int_equals_nat_as_int_u64::<T, A, B>(seq.take((seq.len() - 1) as int)); }
+}
+pub proof fn lemma_weighted_seq_fold_equals_set_fold_u64<A, B>(seq: Seq<(A, B, u64)>)
+    requires seq.no_duplicates(),
+    ensures spec_weighted_seq_sum_u64(seq) == spec_weighted_set_sum_u64(seq.to_set()),
+    decreases seq.len(),
+{
+    let f = |acc: nat, t: (A, B, u64)| acc + t.2 as nat;
+    if seq.len() == 0 {
+        assert(seq.to_set() =~= Set::empty());
+        vstd::set::fold::lemma_fold_empty::<(A, B, u64), nat>(0nat, f);
+    } else {
+        let n = (seq.len() - 1) as int;
+        let prefix = seq.take(n);
+        let last = seq[n];
+        assert(seq =~= prefix.push(last));
+        assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
+        assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
+        lemma_weighted_seq_fold_equals_set_fold_u64::<A, B>(prefix);
+        lemma_push_not_contains_to_set(prefix, last);
+        assert(vstd::set::fold::is_fun_commutative(f)) by {};
+        assert(!prefix.to_set().contains(last)) by {};
+        vstd::seq_lib::seq_to_set_is_finite(prefix);
+        vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    }
+}
+
+// u128
+pub open spec fn spec_weighted_seq_sum_u128<A, B>(seq: Seq<(A, B, u128)>) -> nat {
+    seq.fold_left(0nat, |acc: nat, t: (A, B, u128)| acc + t.2 as nat)
+}
+pub open spec fn spec_weighted_set_sum_u128<A, B>(s: Set<(A, B, u128)>) -> nat {
+    s.fold(0nat, |acc: nat, t: (A, B, u128)| acc + t.2 as nat)
+}
+pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u128<T: View<V = (A, B, u128)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) == spec_weighted_seq_sum_u128(seq.map(|_i: int, e: T| e@)),
+    decreases seq.len(),
+{
+    let view_seq = seq.map(|_i: int, e: T| e@);
+    if seq.len() == 0 { assert(seq =~= Seq::empty()); assert(view_seq =~= Seq::empty()); }
+    else {
+        let n = (seq.len() - 1) as int;
+        lemma_seq_fold_left_plus_is_weighted_seq_sum_u128::<T, A, B>(seq.take(n));
+        assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
+        assert(view_seq[n] == seq[n]@);
+    }
+}
+pub proof fn lemma_fold_left_int_equals_nat_as_int_u128<T: View<V = (A, B, u128)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
+    decreases seq.len(),
+{
+    if seq.len() > 0 { lemma_fold_left_int_equals_nat_as_int_u128::<T, A, B>(seq.take((seq.len() - 1) as int)); }
+}
+pub proof fn lemma_weighted_seq_fold_equals_set_fold_u128<A, B>(seq: Seq<(A, B, u128)>)
+    requires seq.no_duplicates(),
+    ensures spec_weighted_seq_sum_u128(seq) == spec_weighted_set_sum_u128(seq.to_set()),
+    decreases seq.len(),
+{
+    let f = |acc: nat, t: (A, B, u128)| acc + t.2 as nat;
+    if seq.len() == 0 {
+        assert(seq.to_set() =~= Set::empty());
+        vstd::set::fold::lemma_fold_empty::<(A, B, u128), nat>(0nat, f);
+    } else {
+        let n = (seq.len() - 1) as int;
+        let prefix = seq.take(n);
+        let last = seq[n];
+        assert(seq =~= prefix.push(last));
+        assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
+        assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
+        lemma_weighted_seq_fold_equals_set_fold_u128::<A, B>(prefix);
+        lemma_push_not_contains_to_set(prefix, last);
+        assert(vstd::set::fold::is_fun_commutative(f)) by {};
+        assert(!prefix.to_set().contains(last)) by {};
+        vstd::seq_lib::seq_to_set_is_finite(prefix);
+        vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    }
+}
+
+// usize
+pub open spec fn spec_weighted_seq_sum_usize<A, B>(seq: Seq<(A, B, usize)>) -> nat {
+    seq.fold_left(0nat, |acc: nat, t: (A, B, usize)| acc + t.2 as nat)
+}
+pub open spec fn spec_weighted_set_sum_usize<A, B>(s: Set<(A, B, usize)>) -> nat {
+    s.fold(0nat, |acc: nat, t: (A, B, usize)| acc + t.2 as nat)
+}
+pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_usize<T: View<V = (A, B, usize)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) == spec_weighted_seq_sum_usize(seq.map(|_i: int, e: T| e@)),
+    decreases seq.len(),
+{
+    let view_seq = seq.map(|_i: int, e: T| e@);
+    if seq.len() == 0 { assert(seq =~= Seq::empty()); assert(view_seq =~= Seq::empty()); }
+    else {
+        let n = (seq.len() - 1) as int;
+        lemma_seq_fold_left_plus_is_weighted_seq_sum_usize::<T, A, B>(seq.take(n));
+        assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
+        assert(view_seq[n] == seq[n]@);
+    }
+}
+pub proof fn lemma_fold_left_int_equals_nat_as_int_usize<T: View<V = (A, B, usize)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
+    decreases seq.len(),
+{
+    if seq.len() > 0 { lemma_fold_left_int_equals_nat_as_int_usize::<T, A, B>(seq.take((seq.len() - 1) as int)); }
+}
+pub proof fn lemma_weighted_seq_fold_equals_set_fold_usize<A, B>(seq: Seq<(A, B, usize)>)
+    requires seq.no_duplicates(),
+    ensures spec_weighted_seq_sum_usize(seq) == spec_weighted_set_sum_usize(seq.to_set()),
+    decreases seq.len(),
+{
+    let f = |acc: nat, t: (A, B, usize)| acc + t.2 as nat;
+    if seq.len() == 0 {
+        assert(seq.to_set() =~= Set::empty());
+        vstd::set::fold::lemma_fold_empty::<(A, B, usize), nat>(0nat, f);
+    } else {
+        let n = (seq.len() - 1) as int;
+        let prefix = seq.take(n);
+        let last = seq[n];
+        assert(seq =~= prefix.push(last));
+        assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
+        assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
+        lemma_weighted_seq_fold_equals_set_fold_usize::<A, B>(prefix);
+        lemma_push_not_contains_to_set(prefix, last);
+        assert(vstd::set::fold::is_fun_commutative(f)) by {};
+        assert(!prefix.to_set().contains(last)) by {};
+        vstd::seq_lib::seq_to_set_is_finite(prefix);
+        vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    }
+}
+
+// ============================================================================
+// Signed integer weighted sum lemmas (for each signed integer type)
+// ============================================================================
+
+// i8
+pub open spec fn spec_signed_weighted_seq_sum_i8<A, B>(seq: Seq<(A, B, i8)>) -> int {
+    seq.fold_left(0int, |acc: int, t: (A, B, i8)| acc + t.2 as int)
+}
+pub open spec fn spec_signed_weighted_set_sum_i8<A, B>(s: Set<(A, B, i8)>) -> int {
+    s.fold(0int, |acc: int, t: (A, B, i8)| acc + t.2 as int)
+}
+pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i8<T: View<V = (A, B, i8)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum_i8(seq.map(|_i: int, e: T| e@)),
+    decreases seq.len(),
+{
+    let view_seq = seq.map(|_i: int, e: T| e@);
+    if seq.len() == 0 { assert(seq =~= Seq::empty()); assert(view_seq =~= Seq::empty()); }
+    else {
+        let n = (seq.len() - 1) as int;
+        lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i8::<T, A, B>(seq.take(n));
+        assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
+        assert(view_seq[n] == seq[n]@);
+    }
+}
+pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i8<A, B>(seq: Seq<(A, B, i8)>)
+    requires seq.no_duplicates(),
+    ensures spec_signed_weighted_seq_sum_i8(seq) == spec_signed_weighted_set_sum_i8(seq.to_set()),
+    decreases seq.len(),
+{
+    let f = |acc: int, t: (A, B, i8)| acc + t.2 as int;
+    if seq.len() == 0 {
+        assert(seq.to_set() =~= Set::empty());
+        vstd::set::fold::lemma_fold_empty::<(A, B, i8), int>(0int, f);
+    } else {
+        let n = (seq.len() - 1) as int;
+        let prefix = seq.take(n);
+        let last = seq[n];
+        assert(seq =~= prefix.push(last));
+        assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
+        assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
+        lemma_signed_weighted_seq_fold_equals_set_fold_i8::<A, B>(prefix);
+        lemma_push_not_contains_to_set(prefix, last);
+        assert(vstd::set::fold::is_fun_commutative(f)) by {};
+        assert(!prefix.to_set().contains(last)) by {};
+        vstd::seq_lib::seq_to_set_is_finite(prefix);
+        vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+    }
+}
+
+// i16
+pub open spec fn spec_signed_weighted_seq_sum_i16<A, B>(seq: Seq<(A, B, i16)>) -> int {
+    seq.fold_left(0int, |acc: int, t: (A, B, i16)| acc + t.2 as int)
+}
+pub open spec fn spec_signed_weighted_set_sum_i16<A, B>(s: Set<(A, B, i16)>) -> int {
+    s.fold(0int, |acc: int, t: (A, B, i16)| acc + t.2 as int)
+}
+pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i16<T: View<V = (A, B, i16)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum_i16(seq.map(|_i: int, e: T| e@)),
+    decreases seq.len(),
+{
+    let view_seq = seq.map(|_i: int, e: T| e@);
+    if seq.len() == 0 { assert(seq =~= Seq::empty()); assert(view_seq =~= Seq::empty()); }
+    else {
+        let n = (seq.len() - 1) as int;
+        lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i16::<T, A, B>(seq.take(n));
+        assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
+        assert(view_seq[n] == seq[n]@);
+    }
+}
+pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i16<A, B>(seq: Seq<(A, B, i16)>)
+    requires seq.no_duplicates(),
+    ensures spec_signed_weighted_seq_sum_i16(seq) == spec_signed_weighted_set_sum_i16(seq.to_set()),
+    decreases seq.len(),
+{
+    let f = |acc: int, t: (A, B, i16)| acc + t.2 as int;
+    if seq.len() == 0 {
+        assert(seq.to_set() =~= Set::empty());
+        vstd::set::fold::lemma_fold_empty::<(A, B, i16), int>(0int, f);
+    } else {
+        let n = (seq.len() - 1) as int;
+        let prefix = seq.take(n);
+        let last = seq[n];
+        assert(seq =~= prefix.push(last));
+        assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
+        assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
+        lemma_signed_weighted_seq_fold_equals_set_fold_i16::<A, B>(prefix);
+        lemma_push_not_contains_to_set(prefix, last);
+        assert(vstd::set::fold::is_fun_commutative(f)) by {};
+        assert(!prefix.to_set().contains(last)) by {};
+        vstd::seq_lib::seq_to_set_is_finite(prefix);
+        vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+    }
+}
+
+// i32 (original names for backwards compatibility)
+pub open spec fn spec_signed_weighted_seq_sum<A, B>(seq: Seq<(A, B, i32)>) -> int {
+    seq.fold_left(0int, |acc: int, t: (A, B, i32)| acc + t.2 as int)
+}
+pub open spec fn spec_signed_weighted_set_sum<A, B>(s: Set<(A, B, i32)>) -> int {
+    s.fold(0int, |acc: int, t: (A, B, i32)| acc + t.2 as int)
+}
+pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum<T: View<V = (A, B, i32)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum(seq.map(|_i: int, e: T| e@)),
+    decreases seq.len(),
+{
+    let view_seq = seq.map(|_i: int, e: T| e@);
+    if seq.len() == 0 { assert(seq =~= Seq::empty()); assert(view_seq =~= Seq::empty()); }
+    else {
+        let n = (seq.len() - 1) as int;
+        lemma_signed_seq_fold_left_plus_is_weighted_seq_sum::<T, A, B>(seq.take(n));
+        assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
+        assert(view_seq[n] == seq[n]@);
+    }
+}
 pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold<A, B>(seq: Seq<(A, B, i32)>)
     requires seq.no_duplicates(),
     ensures spec_signed_weighted_seq_sum(seq) == spec_signed_weighted_set_sum(seq.to_set()),
     decreases seq.len(),
 {
     let f = |acc: int, t: (A, B, i32)| acc + t.2 as int;
-    
     if seq.len() == 0 {
         assert(seq.to_set() =~= Set::empty());
         vstd::set::fold::lemma_fold_empty::<(A, B, i32), int>(0int, f);
@@ -926,25 +1255,145 @@ pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold<A, B>(seq: Seq<(A, B
         let n = (seq.len() - 1) as int;
         let prefix = seq.take(n);
         let last = seq[n];
-        
         assert(seq =~= prefix.push(last));
-        
-        // prefix has no duplicates (inherited from seq)
-        assert(prefix.no_duplicates()) by {
-            assert forall |i: int, j: int| 
-                0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j
-                implies prefix[i] != prefix[j] by {};
-        };
-        
-        // last is not in prefix (from no_duplicates on seq)
-        assert(!prefix.contains(last)) by {
-            if prefix.contains(last) {
-                let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last;
-                assert(seq[i] != seq[n]);
-            }
-        };
-        
+        assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
+        assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
         lemma_signed_weighted_seq_fold_equals_set_fold::<A, B>(prefix);
+        lemma_push_not_contains_to_set(prefix, last);
+        assert(vstd::set::fold::is_fun_commutative(f)) by {};
+        assert(!prefix.to_set().contains(last)) by {};
+        vstd::seq_lib::seq_to_set_is_finite(prefix);
+        vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+    }
+}
+
+// i64
+pub open spec fn spec_signed_weighted_seq_sum_i64<A, B>(seq: Seq<(A, B, i64)>) -> int {
+    seq.fold_left(0int, |acc: int, t: (A, B, i64)| acc + t.2 as int)
+}
+pub open spec fn spec_signed_weighted_set_sum_i64<A, B>(s: Set<(A, B, i64)>) -> int {
+    s.fold(0int, |acc: int, t: (A, B, i64)| acc + t.2 as int)
+}
+pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i64<T: View<V = (A, B, i64)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum_i64(seq.map(|_i: int, e: T| e@)),
+    decreases seq.len(),
+{
+    let view_seq = seq.map(|_i: int, e: T| e@);
+    if seq.len() == 0 { assert(seq =~= Seq::empty()); assert(view_seq =~= Seq::empty()); }
+    else {
+        let n = (seq.len() - 1) as int;
+        lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i64::<T, A, B>(seq.take(n));
+        assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
+        assert(view_seq[n] == seq[n]@);
+    }
+}
+pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i64<A, B>(seq: Seq<(A, B, i64)>)
+    requires seq.no_duplicates(),
+    ensures spec_signed_weighted_seq_sum_i64(seq) == spec_signed_weighted_set_sum_i64(seq.to_set()),
+    decreases seq.len(),
+{
+    let f = |acc: int, t: (A, B, i64)| acc + t.2 as int;
+    if seq.len() == 0 {
+        assert(seq.to_set() =~= Set::empty());
+        vstd::set::fold::lemma_fold_empty::<(A, B, i64), int>(0int, f);
+    } else {
+        let n = (seq.len() - 1) as int;
+        let prefix = seq.take(n);
+        let last = seq[n];
+        assert(seq =~= prefix.push(last));
+        assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
+        assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
+        lemma_signed_weighted_seq_fold_equals_set_fold_i64::<A, B>(prefix);
+        lemma_push_not_contains_to_set(prefix, last);
+        assert(vstd::set::fold::is_fun_commutative(f)) by {};
+        assert(!prefix.to_set().contains(last)) by {};
+        vstd::seq_lib::seq_to_set_is_finite(prefix);
+        vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+    }
+}
+
+// i128
+pub open spec fn spec_signed_weighted_seq_sum_i128<A, B>(seq: Seq<(A, B, i128)>) -> int {
+    seq.fold_left(0int, |acc: int, t: (A, B, i128)| acc + t.2 as int)
+}
+pub open spec fn spec_signed_weighted_set_sum_i128<A, B>(s: Set<(A, B, i128)>) -> int {
+    s.fold(0int, |acc: int, t: (A, B, i128)| acc + t.2 as int)
+}
+pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i128<T: View<V = (A, B, i128)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum_i128(seq.map(|_i: int, e: T| e@)),
+    decreases seq.len(),
+{
+    let view_seq = seq.map(|_i: int, e: T| e@);
+    if seq.len() == 0 { assert(seq =~= Seq::empty()); assert(view_seq =~= Seq::empty()); }
+    else {
+        let n = (seq.len() - 1) as int;
+        lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i128::<T, A, B>(seq.take(n));
+        assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
+        assert(view_seq[n] == seq[n]@);
+    }
+}
+pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i128<A, B>(seq: Seq<(A, B, i128)>)
+    requires seq.no_duplicates(),
+    ensures spec_signed_weighted_seq_sum_i128(seq) == spec_signed_weighted_set_sum_i128(seq.to_set()),
+    decreases seq.len(),
+{
+    let f = |acc: int, t: (A, B, i128)| acc + t.2 as int;
+    if seq.len() == 0 {
+        assert(seq.to_set() =~= Set::empty());
+        vstd::set::fold::lemma_fold_empty::<(A, B, i128), int>(0int, f);
+    } else {
+        let n = (seq.len() - 1) as int;
+        let prefix = seq.take(n);
+        let last = seq[n];
+        assert(seq =~= prefix.push(last));
+        assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
+        assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
+        lemma_signed_weighted_seq_fold_equals_set_fold_i128::<A, B>(prefix);
+        lemma_push_not_contains_to_set(prefix, last);
+        assert(vstd::set::fold::is_fun_commutative(f)) by {};
+        assert(!prefix.to_set().contains(last)) by {};
+        vstd::seq_lib::seq_to_set_is_finite(prefix);
+        vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+    }
+}
+
+// isize
+pub open spec fn spec_signed_weighted_seq_sum_isize<A, B>(seq: Seq<(A, B, isize)>) -> int {
+    seq.fold_left(0int, |acc: int, t: (A, B, isize)| acc + t.2 as int)
+}
+pub open spec fn spec_signed_weighted_set_sum_isize<A, B>(s: Set<(A, B, isize)>) -> int {
+    s.fold(0int, |acc: int, t: (A, B, isize)| acc + t.2 as int)
+}
+pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_isize<T: View<V = (A, B, isize)>, A, B>(seq: Seq<T>)
+    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum_isize(seq.map(|_i: int, e: T| e@)),
+    decreases seq.len(),
+{
+    let view_seq = seq.map(|_i: int, e: T| e@);
+    if seq.len() == 0 { assert(seq =~= Seq::empty()); assert(view_seq =~= Seq::empty()); }
+    else {
+        let n = (seq.len() - 1) as int;
+        lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_isize::<T, A, B>(seq.take(n));
+        assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
+        assert(view_seq[n] == seq[n]@);
+    }
+}
+pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_isize<A, B>(seq: Seq<(A, B, isize)>)
+    requires seq.no_duplicates(),
+    ensures spec_signed_weighted_seq_sum_isize(seq) == spec_signed_weighted_set_sum_isize(seq.to_set()),
+    decreases seq.len(),
+{
+    let f = |acc: int, t: (A, B, isize)| acc + t.2 as int;
+    if seq.len() == 0 {
+        assert(seq.to_set() =~= Set::empty());
+        vstd::set::fold::lemma_fold_empty::<(A, B, isize), int>(0int, f);
+    } else {
+        let n = (seq.len() - 1) as int;
+        let prefix = seq.take(n);
+        let last = seq[n];
+        assert(seq =~= prefix.push(last));
+        assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
+        assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
+        lemma_signed_weighted_seq_fold_equals_set_fold_isize::<A, B>(prefix);
         lemma_push_not_contains_to_set(prefix, last);
         assert(vstd::set::fold::is_fun_commutative(f)) by {};
         assert(!prefix.to_set().contains(last)) by {};

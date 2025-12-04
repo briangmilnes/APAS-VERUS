@@ -79,6 +79,43 @@ Verus LOC (Spec/Proof/Exec)
 - **Exec code**: 412 lines (executable implementations)
 - **Total**: 630 lines of Verus code (794 including tests/benches/experiments)
 
+## Verified Data Structures
+
+### Chapter 05: Sets, Relations, and Mappings - ✅ COMPLETE
+
+| Data Structure | Verified | Notes |
+|----------------|----------|-------|
+| `SetStEph<T>` | ✅ | Ephemeral set with `to_seq()`, iterator proofs |
+| `RelationStEph<T, U>` | ✅ | Binary relations |
+| `MappingStEph<K, V>` | ✅ | Key-value mappings |
+
+### Chapter 06: Graphs - ✅ COMPLETE
+
+| Data Structure | Verified | Notes |
+|----------------|----------|-------|
+| `DirGraphStEph<V>` | ✅ | Directed graph |
+| `UnDirGraphStEph<V>` | ✅ | Undirected graph |
+| `LabDirGraphStEph<V, L>` | ✅ | Labeled directed graph |
+| `LabUnDirGraphStEph<V, L>` | ✅ | Labeled undirected graph |
+| `WeightedDirGraphStEphU32<V>` | ✅ | Weighted directed graph with `total_weight()` proven |
+
+**Weighted Graph Variants (proven, not compiled by default):**
+- All unsigned: `U8`, `U16`, `U32`, `U64`, `U128`, `Usize`
+- All signed: `I8`, `I16`, `I32`, `I64`, `I128`, `Isize`
+
+### vstdplus Library Extensions
+
+| Module | Description |
+|--------|-------------|
+| `checked_nat` | Overflow-checked unsigned integers (`CheckedU8`..`CheckedU128`) |
+| `checked_int` | Overflow-checked signed integers (`CheckedI8`..`CheckedI128`) |
+| `seq_set` | Lemmas connecting `Seq` and `Set` operations, weighted sums |
+| `hash_set_with_view_plus` | Enhanced `HashSet` with iterator specs |
+| `total_order` | `TotalOrdered` trait for all 12 integer types |
+| `partial_order` | `PartialOrdered` trait |
+| `clone_plus` | `ClonePlus` trait for Verus-compatible cloning |
+| `feq` | Functional equality |
+
 ## Algorithm Status
 
 ### Chapter 03: Sorting - ✅ COMPLETE
