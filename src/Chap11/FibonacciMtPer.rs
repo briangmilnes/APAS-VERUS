@@ -6,7 +6,11 @@
 pub mod FibonacciMtPer {
 
     use vstd::prelude::*;
-    use crate::Chap11::FibonacciStEph::FibonacciStEph::spec_fib;
+    use crate::ParaPair;
+    use crate::Types::Types::*;
+    use crate::Chap11::FibonacciStEph::FibonacciStEph::{
+        spec_fib, lemma_fib_sum_fits_u64
+    };
 
     verus! {
 
@@ -24,9 +28,13 @@ pub mod FibonacciMtPer {
             ensures
                 result == spec_fib(n as nat),
         {
-            // TODO: Parallel implementation with rayon::join
-            // Verus can't see cargo dependencies during verification
-            unimplemented!()
+            if n <= 1 {
+                n
+            } else {
+                let Pair(left, right) = ParaPair!(move || fib(n - 1), move || fib(n - 2));
+                proof { lemma_fib_sum_fits_u64(n as nat); }
+                left + right
+            }
         }
 
     } // verus!

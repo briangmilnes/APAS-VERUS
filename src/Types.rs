@@ -7,7 +7,6 @@ pub mod Types {
     use std::fmt::{Formatter, Debug, Display};
     use std::hash::Hash;
     use std::ops::Add;
-    use std::sync::Mutex;
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::SetIterAdditionalSpecFns;
@@ -64,57 +63,10 @@ pub mod Types {
     pub trait StT: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
 
-    // StTInMtT: St-friendly elements that can be shared across threads (StT + Send + Sync)
-    pub trait StTInMtT: StT + Send + Sync {}
-    impl<T> StTInMtT for T where T: StT + Send + Sync {}
-
-    // MtT: multi-threaded friendly elements; minimal so it can include Mutex<..>
-    // Keep only thread-safety and size requirements.
-    pub trait MtT: Sized + Send + Sync {
-        type Inner: StT;
-        fn clone_mt(&self)            -> Self;
-        fn new_mt(inner: Self::Inner) -> Self;
-    }
-
-    // MtKey: Multi-threaded key type with ordering and static lifetime
-    // Common pattern: StTInMtT + Ord + 'static (appears 15+ times)
-    pub trait MtKey: StTInMtT + Ord + 'static {}
-    impl<T> MtKey for T where T: StTInMtT + Ord + 'static {}
-
-    // MtVal: Multi-threaded value type with static lifetime
-    // Common pattern: StTInMtT + 'static (appears 15+ times)
-    pub trait MtVal: StTInMtT + 'static {}
-    impl<T> MtVal for T where T: StTInMtT + 'static {}
-
-    // MtFn: Multi-threaded function type with common bounds
-    // Common pattern: Fn(...) + Send + Sync + 'static (appears 30+ times)
-    pub trait MtFn<Args, Output>: Fn(Args) -> Output + Send + Sync + 'static {}
-    impl<T, Args, Output> MtFn<Args, Output> for T where T: Fn(Args) -> Output + Send + Sync + 'static {}
-
-    // MtFnClone: Multi-threaded function type with Clone
-    // Common pattern: Fn(...) + Send + Sync + Clone + 'static (appears 20+ times)
-    pub trait MtFnClone<Args, Output>: Fn(Args) -> Output + Send + Sync + Clone + 'static {}
-    impl<T, Args, Output> MtFnClone<Args, Output> for T where T: Fn(Args) -> Output + Send + Sync + Clone + 'static {}
-
-    // MtReduceFn: Multi-threaded reducer function type
-    // Common pattern: Fn(&V, &V) -> V + Clone + Send + Sync + 'static (appears 8+ times)
-    pub trait MtReduceFn<V>: Fn(&V, &V) -> V + Clone + Send + Sync + 'static {}
-    impl<T, V> MtReduceFn<V> for T where T: Fn(&V, &V) -> V + Clone + Send + Sync + 'static {}
-
     // PredSt: Single-threaded predicate function (boolean function)
     // Common pattern: Fn(&T) -> B (for St/Eph code without Send/Sync)
     pub trait PredSt<T>: Fn(&T) -> B {}
     impl<F, T> PredSt<T> for F where F: Fn(&T) -> B {}
-
-    // PredMt: Multi-threaded predicate function (boolean function)
-    // Common pattern: Fn(&T) -> B + Send + Sync + 'static (appears 10+ times)
-    pub trait PredMt<T>: Fn(&T) -> B + Send + Sync + 'static {}
-    impl<F, T> PredMt<T> for F where F: Fn(&T) -> B + Send + Sync + 'static {}
-
-    // PredVal: Multi-threaded predicate function taking values by value
-    // Common pattern: Fn(T) -> B + Send + Sync + 'static (for Copy types like N)
-    pub trait PredVal<T>: Fn(T) -> B + Send + Sync + 'static {}
-    impl<F, T> PredVal<T> for F where F: Fn(T) -> B + Send + Sync + 'static {}
 
     // HashOrd: Type that can be hashed and ordered (for graph vertices)
     // Common pattern: StT + MtT + Hash + Ord (appears in graph modules)
@@ -431,87 +383,6 @@ pub mod Types {
     pub trait ArithmeticT: StT + Add<Output = Self> + Default + Copy {}
     impl<T> ArithmeticT for T where T: StT + Add<Output = T> + Default + Copy {}
 
-    // MtT implementations must be outside verus! block (use Mutex, Clone, etc.)
-    impl<T: StT + Send> MtT for Mutex<T> {
-        type Inner = T;
-        fn clone_mt(&self) -> Self {
-            let inner = self.lock().unwrap().clone();
-            Mutex::new(inner)
-        }
-        fn new_mt(inner: Self::Inner) -> Self { Mutex::new(inner) }
-    }
-
-    impl<A: StT + Send + Sync, B: StT + Send + Sync> MtT for Pair<A, B> {
-        type Inner = Pair<A, B>;
-        fn clone_mt(&self) -> Self { self.clone() }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    // Ad-hoc implementations for specific primitive types to avoid conflicts
-    impl MtT for usize {
-        type Inner = usize;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl MtT for isize {
-        type Inner = isize;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl MtT for i32 {
-        type Inner = i32;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl MtT for u32 {
-        type Inner = u32;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl MtT for i64 {
-        type Inner = i64;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl MtT for u64 {
-        type Inner = u64;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl MtT for bool {
-        type Inner = bool;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl MtT for char {
-        type Inner = char;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    // Special case: ad-hoc implementation for String
-    impl MtT for String {
-        type Inner = String;
-        fn clone_mt(&self) -> Self { self.clone() }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    // Backward compatibility alias (many existing uses) - must be outside verus! block
-    pub use PredMt as Pred;
-
-    // String slice implementation - must be outside verus! block (lifetime issues)
-    impl<'a> MtT for &'a str {
-        type Inner = &'a str;
-        fn clone_mt(&self) -> Self { self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
 
     impl<V: StT> Display for Edge<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result { write!(f, "({}, {})", self.0, self.1) }
@@ -672,14 +543,6 @@ pub mod Types {
     }
 
     // Macros are defined outside verus! blocks to allow importing via `use crate::MacroName;` from other modules.
-    #[macro_export]
-    macro_rules! ParaPair {
-        ( $left:expr, $right:expr ) => {{
-            let (left_result, right_result) = rayon::join($left, $right);
-            $crate::Types::Types::Pair(left_result, right_result)
-        }};
-    }
-
     #[macro_export]
     macro_rules! EdgeLit {
         ($a:expr, $b:expr) => {

@@ -114,7 +114,7 @@ pub mod FibonacciStEph {
         }
 
         /// Sum of adjacent Fibonacci values fits in u64 for n <= 46
-        proof fn lemma_fib_sum_fits_u64(n: nat)
+        pub proof fn lemma_fib_sum_fits_u64(n: nat)
             requires 2 <= n <= 46,
             ensures spec_fib((n-1) as nat) + spec_fib((n-2) as nat) <= u64::MAX as nat,
         {
