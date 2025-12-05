@@ -22,7 +22,9 @@ verus! {
         vstd::std_specs::hash::group_hash_axioms,
         vstd::set_lib::group_set_lib_default,
         vstd::set::group_set_axioms,
+        vstd::seq_lib::group_seq_properties,
         crate::vstdplus::feq::feq::group_feq_axioms,
+        crate::Types::Types::group_LabEdge_axioms,
         crate::Types::Types::group_WeightedEdge_axioms,
     };
 

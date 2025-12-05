@@ -28,7 +28,27 @@ verus! {
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
 
-    broadcast use {vstd::seq_lib::group_seq_properties, vstd::set::group_set_axioms, crate::vstdplus::feq::feq::group_feq_axioms, crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms};
+    broadcast use {
+        // Set groups
+        vstd::set::group_set_axioms,
+        vstd::set_lib::group_set_lib_default,
+        vstd::set_lib::group_set_properties,
+        // Seq groups
+        vstd::seq::group_seq_axioms,
+        vstd::prelude::Seq::group_seq_extra,
+        vstd::prelude::Seq::group_seq_flatten,
+        vstd::seq_lib::group_filter_ensures,
+        vstd::seq_lib::group_seq_lib_default,
+        vstd::seq_lib::group_to_multiset_ensures,
+        vstd::seq_lib::group_seq_properties,
+        // Laws groups
+        vstd::laws_eq::group_laws_eq,
+        vstd::laws_cmp::group_laws_cmp,
+        // Our groups
+        crate::vstdplus::feq::feq::group_feq_axioms, 
+        crate::Types::Types::group_Pair_axioms,
+        crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+    };
 
     pub open spec fn is_functional_set<X, Y>(s: Set<(X, Y)>) -> bool {
         forall |x: X, y1: Y, y2: Y| 
@@ -225,18 +245,7 @@ verus! {
                     return false;
                 }
             }
-            proof {
-                let the_seq = v@.map(|idx: int, p: Pair<X, Y>| p@);
-                assert forall |x: X::V, y1: Y::V, y2: Y::V| 
-                    #![trigger the_seq.to_set().contains((x, y1)), the_seq.to_set().contains((x, y2))]
-                    the_seq.to_set().contains((x, y1)) && the_seq.to_set().contains((x, y2)) implies y1 == y2 by {
-                    if the_seq.to_set().contains((x, y1)) && the_seq.to_set().contains((x, y2)) {
-                        let i1 = choose |i: int| #![trigger the_seq[i]] 0 <= i < the_seq.len() && the_seq[i] == (x, y1);
-                        let i2 = choose |i: int| #![trigger the_seq[i]] 0 <= i < the_seq.len() && the_seq[i] == (x, y2);
-                        assert(is_functional_seq_at(v@, v@[i1]@));
-                    }
-                }
-            }
+            // TRY: removed proof block
             true
         }
 

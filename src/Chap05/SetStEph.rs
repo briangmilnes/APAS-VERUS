@@ -31,7 +31,27 @@ verus! {
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
 
-    broadcast use {vstd::seq_lib::group_seq_properties, vstd::set::group_set_axioms, crate::vstdplus::feq::feq::group_feq_axioms, crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms};
+    broadcast use {
+        // Set groups
+        vstd::set::group_set_axioms,
+        vstd::set_lib::group_set_lib_default,
+        vstd::set_lib::group_set_properties,
+        // Seq groups
+        vstd::seq::group_seq_axioms,
+        vstd::prelude::Seq::group_seq_extra,
+        vstd::prelude::Seq::group_seq_flatten,
+        vstd::seq_lib::group_filter_ensures,
+        vstd::seq_lib::group_seq_lib_default,
+        vstd::seq_lib::group_to_multiset_ensures,
+        vstd::seq_lib::group_seq_properties,
+        // Laws groups
+        vstd::laws_eq::group_laws_eq,
+        vstd::laws_cmp::group_laws_cmp,
+        // Our groups
+        crate::vstdplus::feq::feq::group_feq_axioms, 
+        crate::Types::Types::group_Pair_axioms,
+        crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+    };
 
     pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
         &&& obeys_key_model::<T>() 
@@ -224,7 +244,6 @@ verus! {
                 decreases v.len() - i,
             {
                 if i >= v.len() {
-                    proof { lemma_take_full_to_set_with_view(v_seq); }
                     break;
                 }
                 
@@ -264,12 +283,7 @@ verus! {
                         seq.push(x.clone_plus());
                     },
                     None => {
-                        proof {
-                            assert forall |x: T::V| self@.contains(x) <==> seq@.map(|_i: int, t: T| t@).contains(x) by {
-                                assert(iter_seq.map(|_i: int, k: T| k@).to_set() == self@);
-                                assert(seq@ == iter_seq);
-                            };
-                        }
+                        // TRY: removed intermediate asserts
                         return seq;
                     }
                 }
@@ -321,7 +335,6 @@ verus! {
                         proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, old_index); }
                     },
                     None => {
-                        proof { lemma_take_full_to_set_with_view(s2_seq); }
                         break;
                     }
                 }
@@ -361,7 +374,6 @@ verus! {
                         } 
                     },
                     None => {
-                        proof { lemma_take_full_to_set_with_view(s1_seq); }
                         break;
                     }
                 }
@@ -401,7 +413,6 @@ verus! {
                         proof { lemma_take_one_more_extends_the_seq_set_with_view(s1_seq, old_index); }
                     },
                     None => {
-                        proof { lemma_take_full_to_set_with_view(s1_seq); }
                         break;
                     }
                 }
@@ -439,7 +450,6 @@ verus! {
                         proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, old_index); }
                     },
                     None => {
-                        proof { lemma_take_full_to_set_with_view(s2_seq); }
                         break;
                     }
                 }

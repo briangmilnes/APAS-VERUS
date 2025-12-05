@@ -1,9 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 use apas_verus::Chap05::SetStEph::SetStEph::*;
-use apas_verus::vstdplus::set_with_view::SetWithView::SetWithView;
 use apas_verus::{PairLit, SetLit};
-use apas_verus::Types::Types::*; // macro import
+use apas_verus::Types::Types::*;
 
 #[test]
 fn test_setlit_macro_functionality() {

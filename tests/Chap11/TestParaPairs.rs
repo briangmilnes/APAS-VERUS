@@ -2,6 +2,7 @@
 
 use apas_verus::Types::Types::Pair;
 use apas_verus::ParaPair;
+use apas_verus::Chap11::FibonacciStEph::FibonacciStEph::fib;
 
 #[test]
 fn test_para_pair_simple() {
@@ -25,17 +26,12 @@ fn test_para_pair_strings() {
 
 #[test]
 fn test_para_pair_compute() {
-    // Compute fibonacci(10) and fibonacci(15) in parallel
-    fn fib(n: u64) -> u64 {
-        if n <= 1 { n } else { fib(n - 1) + fib(n - 2) }
-    }
-    
     let Pair(a, b) = ParaPair!(
         move || fib(10),
         move || fib(15)
     );
-    assert_eq!(a, 55);    // fib(10) = 55
-    assert_eq!(b, 610);   // fib(15) = 610
+    assert_eq!(a, 55);
+    assert_eq!(b, 610);
 }
 
 #[test]

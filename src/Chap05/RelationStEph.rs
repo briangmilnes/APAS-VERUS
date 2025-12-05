@@ -25,7 +25,27 @@ verus! {
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
 
-    broadcast use {vstd::seq_lib::group_seq_properties, vstd::set::group_set_axioms, crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms};
+    broadcast use {
+        // Set groups
+        vstd::set::group_set_axioms,
+        vstd::set_lib::group_set_lib_default,
+        vstd::set_lib::group_set_properties,
+        // Seq groups
+        vstd::seq::group_seq_axioms,
+        vstd::prelude::Seq::group_seq_extra,
+        vstd::prelude::Seq::group_seq_flatten,
+        vstd::seq_lib::group_filter_ensures,
+        vstd::seq_lib::group_seq_lib_default,
+        vstd::seq_lib::group_to_multiset_ensures,
+        vstd::seq_lib::group_seq_properties,
+        // Laws groups
+        vstd::laws_eq::group_laws_eq,
+        vstd::laws_cmp::group_laws_cmp,
+        // Our groups
+        crate::vstdplus::feq::feq::group_feq_axioms, 
+        crate::Types::Types::group_Pair_axioms,
+        crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+    };
 
     #[verifier::reject_recursive_types(A)]
     #[verifier::reject_recursive_types(B)]

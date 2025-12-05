@@ -9,7 +9,6 @@ verify = true
 [dependencies]
 vstd = "0.0.0-2025-08-12-1837"
 verus_state_machines_macros = "0.0.0-2025-11-23-0053"
-ordered-float = "4.5.0"
 
 [lib]
 path = "src/lib.rs"
@@ -27,6 +26,10 @@ name = "TestRelationStEph"
 path = "tests/Chap05/TestRelationStEph.rs"
 
 [[test]]
+name = "TestMappingStEph"
+path = "tests/Chap05/TestMappingStEph.rs"
+
+[[test]]
 name = "test_total_order"
 path = "tests/vstdplus/test_total_order.rs"
 
@@ -38,9 +41,7 @@ path = "tests/vstdplus/test_partial_order.rs"
 name = "test_feq"
 path = "tests/vstdplus/test_feq.rs"
 
-[[test]]
-name = "test_checked_nat_with_checked_view"
-path = "tests/vstdplus/test_checked_nat_with_checked_view.rs"
+# Orphaned: test_checked_nat_with_checked_view
 
 [[test]]
 name = "TestDirGraphStEph"
@@ -59,64 +60,16 @@ name = "TestLabUnDirGraphStEph"
 path = "tests/Chap06/TestLabUnDirGraphStEph.rs"
 
 [[test]]
-name = "TestWeighedDirGraphStEphInt"
-path = "tests/Chap06/TestWeighedDirGraphStEphInt.rs"
-
-[[test]]
-name = "TestWeighedUnDirGraphStEphInt"
-path = "tests/Chap06/TestWeighedUnDirGraphStEphInt.rs"
-
-[[test]]
-name = "TestCheckedU8"
-path = "tests/experiments/TestCheckedU8.rs"
-
-[[test]]
-name = "TestCheckedU16"
-path = "tests/experiments/TestCheckedU16.rs"
-
-[[test]]
-name = "TestCheckedU32"
-path = "tests/experiments/TestCheckedU32.rs"
-
-[[test]]
-name = "TestCheckedU64"
-path = "tests/experiments/TestCheckedU64.rs"
-
-[[test]]
-name = "TestCheckedU128"
-path = "tests/experiments/TestCheckedU128.rs"
-
-[[test]]
-name = "TestCheckedUsize"
-path = "tests/experiments/TestCheckedUsize.rs"
-
-[[test]]
-name = "TestCheckedI8"
-path = "tests/experiments/TestCheckedI8.rs"
-
-[[test]]
-name = "TestCheckedI16"
-path = "tests/experiments/TestCheckedI16.rs"
-
-[[test]]
-name = "TestCheckedI32"
-path = "tests/experiments/TestCheckedI32.rs"
-
-[[test]]
-name = "TestCheckedI64"
-path = "tests/experiments/TestCheckedI64.rs"
-
-[[test]]
-name = "TestCheckedI128"
-path = "tests/experiments/TestCheckedI128.rs"
-
-[[test]]
-name = "TestCheckedIsize"
-path = "tests/experiments/TestCheckedIsize.rs"
+name = "TestWeightedDirGraphStEphU32"
+path = "tests/Chap06/TestWeightedDirGraphStEphU32.rs"
 
 [[test]]
 name = "TestParaPairs"
 path = "tests/Chap11/TestParaPairs.rs"
+
+[[test]]
+name = "TestFibonacciMt"
+path = "tests/Chap11/TestFibonacciMt.rs"
 
 [[bench]]
 name = "BenchInsertionSortStEph"

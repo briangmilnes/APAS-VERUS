@@ -1,5 +1,5 @@
 //! APAS-VERUS library crate
-#![cfg_attr(verus_keep_ghost, feature(stmt_expr_attributes))]
+#![cfg_attr(verus_keep_ghost, feature(sized_hierarchy))]
 
 pub mod Types;
 pub mod Concurrency;
@@ -117,5 +117,6 @@ pub mod Chap06 {
 pub mod Chap11 {
     pub mod FibonacciStEph;
     pub mod FibonacciMtPer;
-    pub mod FibonacciMtEph;
+    pub mod FibonacciMtEph2Threads;
+    pub mod FibonacciMtEphRecomputes;
 }
