@@ -129,8 +129,9 @@ verus! {
             ensures empty@.finite(), empty@ == Set::<<T as View>::V>::empty();
 
         /// APAS: Work Θ(1), Span Θ(1)
-        fn singleton(x: T)                   -> Self
-            requires valid_key_type::<T>();
+        fn singleton(x: T)                   -> (s: Self)
+            requires valid_key_type::<T>()
+            ensures s@.finite(), s@ == Set::empty().insert(x@);
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn size(&self)                       -> N;
@@ -151,13 +152,13 @@ verus! {
         fn union(&self, s2: &SetStEph<T>) -> (union: Self)
             requires 
                valid_key_type::<T>(),
-            ensures union@ == self@.union(s2@);
+            ensures union@.finite(), union@ == self@.union(s2@);
 
         /// APAS: Work Θ(|a| + |b|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)
         fn intersection(&self, s2: &SetStEph<T>) -> (intersection: Self)
             requires valid_key_type::<T>()
-            ensures intersection@ == self@.intersect(s2@);
+            ensures intersection@.finite(), intersection@ == self@.intersect(s2@);
 
         fn EltCrossSet<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
             requires 
@@ -165,6 +166,7 @@ verus! {
               valid_key_type::<U>(),
               valid_key_type::<Pair<T, U>>(),
             ensures  
+               product@.finite(),
                forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (av == a@ && s2@.contains(bv));
 
         /// APAS: Work Θ(|a| × |b|), Span Θ(1)
@@ -175,6 +177,7 @@ verus! {
                 valid_key_type::<U>(),
                 valid_key_type::<Pair<T, U>>(),
             ensures  
+                product@.finite(),
                 forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv));
 
         fn all_nonempty(parts: &SetStEph<SetStEph<T>>) -> (all_nonempty: bool)
@@ -223,7 +226,7 @@ verus! {
 
     impl<T: StT + Hash> Clone for SetStEph<T> {
         fn clone(&self) -> (clone: Self)
-            ensures clone@ == self@
+            ensures clone@.finite(), clone@ == self@
         { SetStEph { elements: self.elements.clone() } }
     }
 
@@ -292,7 +295,7 @@ verus! {
 
         fn empty() -> SetStEph<T> { SetStEph { elements: HashSetWithViewPlus::new() } }
 
-        fn singleton(x: T) -> SetStEph<T> {
+        fn singleton(x: T) -> (s: SetStEph<T>) {
             let mut s = HashSetWithViewPlus::new();
             let _ = s.insert(x);
             SetStEph { elements: s }

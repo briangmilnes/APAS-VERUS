@@ -164,11 +164,11 @@ verus! {
 
         fn domain(&self) -> (domain: SetStEph<X>)
             requires valid_key_type_Pair::<X, Y>(), self.is_functional()
-            ensures domain@ == self@.dom();
+            ensures domain@.finite(), domain@ == self@.dom();
 
         fn range(&self) -> (range: SetStEph<Y>)
             requires valid_key_type_Pair::<X, Y>(), self.is_functional()
-            ensures range@ =~= Set::<Y::V>::new(|y: Y::V| exists |x: X::V| #![trigger self@[x]] self@.dom().contains(x) && self@[x] == y);
+            ensures range@.finite(), range@ =~= Set::<Y::V>::new(|y: Y::V| exists |x: X::V| #![trigger self@[x]] self@.dom().contains(x) && self@[x] == y);
 
         fn mem(&self, p: &Pair<X, Y>) -> (contains: B)
             requires valid_key_type_Pair::<X, Y>(), self.is_functional()

@@ -93,22 +93,24 @@ pub proof fn lemma_take_full<T>(seq: Seq<T>)
     assert(seq.take(seq.len() as int) =~= seq);
 }
 
-/// Taking the full length of a sequence and converting to a set yields the same set.
-pub proof fn lemma_take_full_to_set<T>(seq: Seq<T>)
-    ensures
-        seq.take(seq.len() as int).to_set() == seq.to_set(),
-{
-    lemma_take_full(seq);
-}
+// UNUSED: only called in experiments (commented out)
+// /// Taking the full length of a sequence and converting to a set yields the same set.
+// pub proof fn lemma_take_full_to_set<T>(seq: Seq<T>)
+//     ensures
+//         seq.take(seq.len() as int).to_set() == seq.to_set(),
+// {
+//     lemma_take_full(seq);
+// }
 
-/// If two sequences are equal, their set views are equal.
-pub proof fn lemma_seq_equal_to_set_equal<T>(s1: Seq<T>, s2: Seq<T>)
-    requires
-        s1 == s2,
-    ensures
-        s1.to_set() == s2.to_set(),
-{
-}
+// UNUSED: not called anywhere in codebase
+// /// If two sequences are equal, their set views are equal.
+// pub proof fn lemma_seq_equal_to_set_equal<T>(s1: Seq<T>, s2: Seq<T>)
+//     requires
+//         s1 == s2,
+//     ensures
+//         s1.to_set() == s2.to_set(),
+// {
+// }
 
 /// After taking n elements and inserting seq[n], the result is a subset of take(n+1).
 pub proof fn lemma_take_extends_set_subset<T>(seq: Seq<T>, n: int)
@@ -893,6 +895,7 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u8<T: View<V = (A, B, 
         assert(view_seq[n] == seq[n]@);
     }
 }
+// USED: called from WeightedDirGraphStEphU8
 pub proof fn lemma_fold_left_int_equals_nat_as_int_u8<T: View<V = (A, B, u8)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
     decreases seq.len(),
@@ -944,6 +947,7 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u16<T: View<V = (A, B,
         assert(view_seq[n] == seq[n]@);
     }
 }
+// USED: called from WeightedDirGraphStEphU16
 pub proof fn lemma_fold_left_int_equals_nat_as_int_u16<T: View<V = (A, B, u16)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
     decreases seq.len(),
@@ -995,6 +999,7 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u64<T: View<V = (A, B,
         assert(view_seq[n] == seq[n]@);
     }
 }
+// USED: called from WeightedDirGraphStEphU64
 pub proof fn lemma_fold_left_int_equals_nat_as_int_u64<T: View<V = (A, B, u64)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
     decreases seq.len(),
@@ -1046,6 +1051,7 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u128<T: View<V = (A, B
         assert(view_seq[n] == seq[n]@);
     }
 }
+// USED: called from WeightedDirGraphStEphU128
 pub proof fn lemma_fold_left_int_equals_nat_as_int_u128<T: View<V = (A, B, u128)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
     decreases seq.len(),
@@ -1097,6 +1103,7 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_usize<T: View<V = (A, 
         assert(view_seq[n] == seq[n]@);
     }
 }
+// USED: called from WeightedDirGraphStEphUsize
 pub proof fn lemma_fold_left_int_equals_nat_as_int_usize<T: View<V = (A, B, usize)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
     decreases seq.len(),

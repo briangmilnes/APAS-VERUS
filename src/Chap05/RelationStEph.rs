@@ -120,13 +120,13 @@ verus! {
         /// claude-4-sonet: Work Θ(|R|), Span Θ(1)
         fn domain(&self) -> (domain: SetStEph<X>)
             requires valid_key_type_Pair::<X, Y>()
-            ensures domain@ == Set::<X::V>::new(|x: X::V| exists |y: Y::V| self@.contains((x, y)));
+            ensures domain@.finite(), domain@ == Set::<X::V>::new(|x: X::V| exists |y: Y::V| self@.contains((x, y)));
 
         /// APAS: Work Θ(|R|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|R|), Span Θ(1)
         fn range(&self) -> (range: SetStEph<Y>)
             requires valid_key_type_Pair::<X, Y>()
-            ensures range@ == Set::<Y::V>::new(|y: Y::V| exists |x: X::V| self@.contains((x, y)));
+            ensures range@.finite(), range@ == Set::<Y::V>::new(|y: Y::V| exists |x: X::V| self@.contains((x, y)));
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn mem(&self, a: &X, b: &Y) -> (contains: B)
@@ -153,7 +153,7 @@ verus! {
 
     impl<A: StT + Hash, B: StT + Hash> Clone for RelationStEph<A, B> {
         fn clone(&self) -> (clone: Self)
-            ensures clone@ == self@
+            ensures clone@.finite(), clone@ == self@
         { RelationStEph { pairs: self.pairs.clone() } }
     }
 

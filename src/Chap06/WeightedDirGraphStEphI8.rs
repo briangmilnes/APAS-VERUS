@@ -37,7 +37,8 @@ verus! {
          { self@.A.fold(0int, |acc: int, t: (V::V, V::V, i8)| acc + t.2 as int) }
 
         fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i8>>) -> (g: WeightedDirGraphStEphI8<V>)
-            requires valid_key_type_WeightedEdge::<V, i8>();
+            requires valid_key_type_WeightedEdge::<V, i8>()
+            ensures g@.V.finite(), g@.A.finite();
 
         fn add_weighed_edge(&mut self, from: V, to: V, weight: i8)
             requires valid_key_type_WeightedEdge::<V, i8>()

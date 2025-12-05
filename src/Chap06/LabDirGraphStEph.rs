@@ -82,7 +82,7 @@ verus! {
 
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>)
             requires valid_key_type_LabEdge::<V, L>(), valid_key_type_Edge::<V>()
-            ensures arcs@ == self.spec_arcs();
+            ensures arcs@.finite(), arcs@ == self.spec_arcs();
 
         fn add_vertex(&mut self, v: V)
             requires valid_key_type_LabEdge::<V, L>()
@@ -106,11 +106,11 @@ verus! {
 
         fn out_neighbors(&self, v: &V) -> (out_neighbors: SetStEph<V>)
             requires valid_key_type_LabEdge::<V, L>()
-            ensures out_neighbors@ == self.spec_out_neighbors(v@);
+            ensures out_neighbors@.finite(), out_neighbors@ == self.spec_out_neighbors(v@);
 
         fn in_neighbors(&self, v: &V) -> (in_neighbors: SetStEph<V>)
             requires valid_key_type_LabEdge::<V, L>()
-            ensures in_neighbors@ == self.spec_in_neighbors(v@);
+            ensures in_neighbors@.finite(), in_neighbors@ == self.spec_in_neighbors(v@);
     }
 
     impl<V: StT + Hash, L: StT + Hash> LabDirGraphStEphTrait<V, L> for LabDirGraphStEph<V, L> {

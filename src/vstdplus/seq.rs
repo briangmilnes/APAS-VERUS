@@ -43,11 +43,12 @@ verus! {
         assert(s.push(v).last() == v);
     }
 
-    // Lemma: for non-empty s, sum(s) = sum(s.drop_last()) + s.last()
-    pub proof fn lemma_sum_u32_unfold(s: Seq<u32>)
-        requires s.len() > 0
-        ensures spec_sum_u32_seq(s) == spec_sum_u32_seq(s.drop_last()) + s.last() as nat
-    {}
+    // UNUSED: not called anywhere in codebase
+    // // Lemma: for non-empty s, sum(s) = sum(s.drop_last()) + s.last()
+    // pub proof fn lemma_sum_u32_unfold(s: Seq<u32>)
+    //     requires s.len() > 0
+    //     ensures spec_sum_u32_seq(s) == spec_sum_u32_seq(s.drop_last()) + s.last() as nat
+    // {}
 
     pub fn seq_u32_to_CheckedU32(s: &Vec<u32>) -> (sum: CheckedU32)
         ensures 
@@ -140,11 +141,12 @@ verus! {
         assert(s.push(v).last() == v);
     }
 
-    // Lemma: for non-empty s, sum(s) = sum(s.drop_last()) + s.last()
-    pub proof fn lemma_sum_int_unfold(s: Seq<int>)
-        requires s.len() > 0
-        ensures spec_sum_int_seq(s) == spec_sum_int_seq(s.drop_last()) + s.last()
-    {}
+    // UNUSED: not called anywhere in codebase
+    // // Lemma: for non-empty s, sum(s) = sum(s.drop_last()) + s.last()
+    // pub proof fn lemma_sum_int_unfold(s: Seq<int>)
+    //     requires s.len() > 0
+    //     ensures spec_sum_int_seq(s) == spec_sum_int_seq(s.drop_last()) + s.last()
+    // {}
 
     // Lemma: sum(take(i+1)) = sum(take(i)) + s[i]
     pub proof fn lemma_sum_int_unfold_take(s: Seq<int>, i: int)

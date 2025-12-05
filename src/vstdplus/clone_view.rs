@@ -29,6 +29,7 @@ pub mod clone_view {
     ///     assert(x@ == y@);
     /// }
     /// ```
+    // UNUSED: only used in experiments (commented out)
     #[verifier::external_body]
     pub broadcast proof fn lemma_clone_preserves_view<T: Clone + View>(x: &T, y: &T)
         requires
@@ -38,7 +39,7 @@ pub mod clone_view {
     {
     }
 
-    /// Axiom group for clone+view axioms
+    // UNUSED: only used in experiments (commented out)
     pub broadcast group group_clone_view_axioms {
         lemma_clone_preserves_view,
     }

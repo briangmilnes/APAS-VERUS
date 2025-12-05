@@ -6,6 +6,7 @@ pub mod Concurrency;
 pub mod ParaPairs;
 
 pub mod experiments {
+//    pub mod sigma_pi;
 //    pub mod abstract_set_iter;
 //    pub mod SetLoops;
 //    pub mod ToVecProof;
@@ -55,7 +56,6 @@ pub mod experiments {
 }
 
 pub mod vstdplus {
-    pub mod sigma_pi;
     pub mod set_axioms;
     pub mod seq_set;
     pub mod seq;
