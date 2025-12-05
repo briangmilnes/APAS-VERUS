@@ -56,17 +56,17 @@ pub mod experiments {
 }
 
 pub mod vstdplus {
-    pub mod set_axioms;
+    // pub mod set_axioms;  // UNUSED - moved to attic
     pub mod seq_set;
     pub mod seq;
     pub mod hash_set_with_view_plus;
     pub mod hash_set_specs;
     pub mod total_order;
     pub mod partial_order;
-    pub mod clone_view;
+    // pub mod clone_view;  // UNUSED - moved to attic
     pub mod feq;
     pub mod clone_plus;
-    pub mod vec;
+    // pub mod vec;  // UNUSED - moved to attic
     pub mod checked_int;
     pub mod checked_nat;
     pub mod hashed_checked_u32;

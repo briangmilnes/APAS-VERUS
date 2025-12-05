@@ -93,25 +93,6 @@ pub proof fn lemma_take_full<T>(seq: Seq<T>)
     assert(seq.take(seq.len() as int) =~= seq);
 }
 
-// UNUSED: only called in experiments (commented out)
-// /// Taking the full length of a sequence and converting to a set yields the same set.
-// pub proof fn lemma_take_full_to_set<T>(seq: Seq<T>)
-//     ensures
-//         seq.take(seq.len() as int).to_set() == seq.to_set(),
-// {
-//     lemma_take_full(seq);
-// }
-
-// UNUSED: not called anywhere in codebase
-// /// If two sequences are equal, their set views are equal.
-// pub proof fn lemma_seq_equal_to_set_equal<T>(s1: Seq<T>, s2: Seq<T>)
-//     requires
-//         s1 == s2,
-//     ensures
-//         s1.to_set() == s2.to_set(),
-// {
-// }
-
 /// After taking n elements and inserting seq[n], the result is a subset of take(n+1).
 pub proof fn lemma_take_extends_set_subset<T>(seq: Seq<T>, n: int)
     requires
