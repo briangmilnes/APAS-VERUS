@@ -21,7 +21,7 @@ fn test_relationlit_macro_functionality() {
 fn test_relation_domain_range_and_mem() {
     // R subset of A x B
     let pairs = SetLit![PairLit!(1usize, 'a'), PairLit!(2usize, 'b'), PairLit!(1usize, 'b')];
-    let r = RelationStEph::FromSet(pairs);
+    let r = RelationStEph::from_set(pairs);
 
     let d = r.domain();
     let e = SetLit![1usize, 2usize];
@@ -48,11 +48,11 @@ fn test_relation_size() {
     assert_eq!(empty_rel.size(), 0);
 
     let single_pair = SetLit![PairLit!(1, 'a')];
-    let single_rel = RelationStEph::FromSet(single_pair);
+    let single_rel = RelationStEph::from_set(single_pair);
     assert_eq!(single_rel.size(), 1);
 
     let multi_pairs = SetLit![PairLit!(1, 'a'), PairLit!(2, 'b'), PairLit!(3, 'c')];
-    let multi_rel = RelationStEph::FromSet(multi_pairs);
+    let multi_rel = RelationStEph::from_set(multi_pairs);
     assert_eq!(multi_rel.size(), 3);
 }
 
@@ -80,7 +80,7 @@ fn test_relation_mem_empty_edge() {
 #[test]
 fn test_relation_iter() {
     let pairs = SetLit![PairLit!(1, 'a'), PairLit!(2, 'b')];
-    let rel = RelationStEph::FromSet(pairs);
+    let rel = RelationStEph::from_set(pairs);
 
     let collected = rel.iter().cloned().collect::<Vec<_>>();
     assert_eq!(collected.len(), 2);
@@ -91,7 +91,7 @@ fn test_relation_iter() {
 #[test]
 fn test_relation_fromvec() {
     let vec_pairs = vec![PairLit!(1, 'a'), PairLit!(2, 'b'), PairLit!(1, 'c')];
-    let rel = RelationStEph::FromVec(vec_pairs);
+    let rel = RelationStEph::from_vec(vec_pairs);
 
     assert_eq!(rel.size(), 3);
     assert!(rel.mem(&1, &'a'));
@@ -219,7 +219,7 @@ fn test_relation_iterator_boundaries() {
     assert_eq!(collected_all.len(), 5);
 
     // Create new relation from collected elements and verify equality
-    let reconstructed = RelationStEph::FromVec(collected_all);
+    let reconstructed = RelationStEph::from_vec(collected_all);
     assert_eq!(reconstructed.size(), original.size());
     for i in 1..=5 {
         let expected_char = match i {
@@ -240,7 +240,7 @@ fn test_relation_maximum_size_boundary() {
     // to verify graceful handling without causing memory issues
     let large_size = 50_000usize;
     let large_vec = (0..large_size as i32).map(|i| Pair(i, i * 2)).collect::<Vec<Pair<i32, i32>>>();
-    let large_rel = RelationStEph::FromVec(large_vec);
+    let large_rel = RelationStEph::from_vec(large_vec);
 
     // Verify basic operations work on large relation
     assert_eq!(large_rel.size(), large_size);
@@ -278,7 +278,7 @@ fn test_relation_maximum_size_boundary() {
 
     // Test with another large relation (partial overlap)
     let large_vec2 = (25_000..75_000).map(|i| Pair(i, i * 3)).collect::<Vec<Pair<i32, i32>>>();
-    let large_rel2 = RelationStEph::FromVec(large_vec2);
+    let large_rel2 = RelationStEph::from_vec(large_vec2);
 
     // Verify the second relation
     assert_eq!(large_rel2.size(), 50_000);

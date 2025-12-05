@@ -92,13 +92,13 @@ fn test_weighedundirgraphmtephint_incident_operations() {
     let _g = WeighedUnDirGraphMtEphInt::from_vertices_and_labeled_edges(v, a);
 
     // Test incident edges (each edge is incident to both endpoints)
-    // let incident0 = _g.Incident(&0); // TODO: method not available
+    // let incident0 = _g.incident(&0); // TODO: method not available
     // assert_eq!(incident0.size(), 2); // 0-1 and 0-2 // TODO: method not available
 
-    // let incident1 = g.Incident(&1); // TODO: method not available
+    // let incident1 = g.incident(&1); // TODO: method not available
     // assert_eq!(incident1.size(), 2); // 0-1 and 1-2 // TODO: method not available
 
-    // let incident2 = g.Incident(&2); // TODO: method not available
+    // let incident2 = g.incident(&2); // TODO: method not available
     // assert_eq!(incident2.size(), 2); // 1-2 and 0-2 // TODO: method not available
 }
 
@@ -109,7 +109,7 @@ fn test_weighedundirgraphmtephint_ngofvertices() {
     let _g = WeighedUnDirGraphMtEphInt::from_vertices_and_labeled_edges(v, a);
 
     let _vertices_subset: SetStEph<N> = SetLit![0, 1];
-    // let _ng_subset = g.NGOfVertices(&vertices_subset); // TODO: method not available
+    // let _ng_subset = g.ng_of_vertices(&vertices_subset); // TODO: method not available
 
     // Neighbors of {0, 1} should include all vertices connected to 0 or 1
     // assert_eq!(_ng_subset.size(), 3); // TODO: method not available
@@ -132,9 +132,9 @@ fn test_weighedundirgraphmtephint_nplusminusofvertices() {
     let _vertices_subset: SetStEph<N> = SetLit![0, 1];
 
     // In undirected graphs, NPlus and NMinus should be the same as NG
-    // let nplus_subset = g.NPlusOfVertices(&vertices_subset); // TODO: method not available
-    // let nminus_subset = g.NMinusOfVertices(&vertices_subset); // TODO: method not available
-    // let _ng_subset = g.NGOfVertices(&vertices_subset); // TODO: method not available
+    // let nplus_subset = g.n_plus_of_vertices(&vertices_subset); // TODO: method not available
+    // let nminus_subset = g.n_minus_of_vertices(&vertices_subset); // TODO: method not available
+    // let _ng_subset = g.ng_of_vertices(&vertices_subset); // TODO: method not available
 
     // All should be equal in undirected graph
     // assert_eq!(nplus_subset.size(), _ng_subset.size()); // TODO: method not available
@@ -281,8 +281,8 @@ fn test_weighedundirgraphmtephint_concurrent_access() {
             // Perform various read operations concurrently
             let _ = g_clone.has_edge(&i, &(i + 1));
             let _ = g_clone.neighbors(&i);
-            // let _ = g_clone.NPlus(&i); // TODO: method not available
-            // let _ = g_clone.NMinus(&i); // TODO: method not available
+            // let _ = g_clone.n_plus(&i); // TODO: method not available
+            // let _ = g_clone.n_minus(&i); // TODO: method not available
             let _ = g_clone.vertex_degree(&i);
 
             // Verify basic properties

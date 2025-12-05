@@ -64,7 +64,7 @@ verus! {
                 g@.V.finite(),
                 g@.A.finite();
 
-        fn FromSets(vertices: SetStEph<V>, edges: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>)
+        fn from_sets(vertices: SetStEph<V>, edges: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>)
             ensures
                 g@.V =~= vertices@,
                 g@.A =~= edges@,
@@ -85,23 +85,23 @@ verus! {
             requires valid_key_type_Edge::<V>()
             ensures n == self@.A.len();
 
-        fn Neighbor(&self, u: &V, v: &V) -> (b: B)
+        fn neighbor(&self, u: &V, v: &V) -> (b: B)
             requires valid_key_type_Edge::<V>()
             ensures b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)));
 
-        fn NG(&self, v: &V) -> (neighbors: SetStEph<V>)
+        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures neighbors@ == self.spec_ng(v@);
 
-        fn NGOfVertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)
+        fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures neighbors@ == self.spec_ng_of_vertices(vertices@);
 
-        fn Incident(&self, e: &Edge<V>, v: &V) -> (b: B)
+        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B)
             requires valid_key_type_Edge::<V>()
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
-        fn Degree(&self, v: &V) -> (n: N)
+        fn degree(&self, v: &V) -> (n: N)
             requires valid_key_type_Edge::<V>()
             ensures n == self.spec_degree(v@);
     }
@@ -112,7 +112,7 @@ verus! {
             UnDirGraphStEph { V: SetStEph::empty(), E: SetStEph::empty() }
         }
 
-        fn FromSets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>) { 
+        fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>) { 
             UnDirGraphStEph { V, E } 
         }
 
@@ -124,12 +124,12 @@ verus! {
 
         fn sizeE(&self) -> (n: N) { self.E.size() }
 
-        fn Neighbor(&self, u: &V, v: &V) -> (b: B) {
+        fn neighbor(&self, u: &V, v: &V) -> (b: B) {
             self.E.mem(&Edge(u.clone_plus(), v.clone_plus())) || 
             self.E.mem(&Edge(v.clone_plus(), u.clone_plus()))
         }
 
-        fn NG(&self, v: &V) -> (neighbors: SetStEph<V>) {
+        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
             let mut ng: SetStEph<V> = SetStEph::empty();
             let mut it = self.E.iter();
             let ghost edges_seq = it@.1;
@@ -187,7 +187,7 @@ verus! {
             }
         }
 
-        fn NGOfVertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
+        fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
             let mut result: SetStEph<V> = SetStEph::empty();
             let mut it = vertices.iter();
             let ghost u_seq = it@.1;
@@ -226,18 +226,18 @@ verus! {
                         return result;
                     },
                     Some(u) => {
-                        let ng_u = self.NG(u);
+                        let ng_u = self.ng(u);
                         result = result.union(&ng_u);
                     },
                 }
             }
         }
 
-        fn Incident(&self, e: &Edge<V>, v: &V) -> (b: B) { 
+        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) { 
             feq(&e.0, v) || feq(&e.1, v) 
         }
 
-        fn Degree(&self, v: &V) -> (n: N) { self.NG(v).size() }
+        fn degree(&self, v: &V) -> (n: N) { self.ng(v).size() }
     }
 
 } // verus!
@@ -270,7 +270,7 @@ verus! {
         () => {{
             let __V: $crate::Chap05::SetStEph::SetStEph::SetStEph<_> = $crate::SetLit![];
             let __E: $crate::Chap05::SetStEph::SetStEph::SetStEph<$crate::Types::Types::Edge<_>> = $crate::SetLit![];
-            < $crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::UnDirGraphStEph<_> as $crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::UnDirGraphStEphTrait<_> >::FromSets(__V, __E)
+            < $crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::UnDirGraphStEph<_> as $crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::UnDirGraphStEphTrait<_> >::from_sets(__V, __E)
         }};
         ( V: [ $( $v:expr ),* $(,)? ], E: [ $( ( $u:expr , $w:expr ) ),* $(,)? ] ) => {{
             let __V: $crate::Chap05::SetStEph::SetStEph::SetStEph<_> = $crate::SetLit![ $( $v ),* ];
@@ -279,7 +279,7 @@ verus! {
                 $( let _ = __s.insert($crate::Types::Types::Edge($u, $w)); )*
                 __s
             };
-            < $crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::UnDirGraphStEph<_> as $crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::UnDirGraphStEphTrait<_> >::FromSets(__V, __E)
+            < $crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::UnDirGraphStEph<_> as $crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::UnDirGraphStEphTrait<_> >::from_sets(__V, __E)
         }};
     }
 }

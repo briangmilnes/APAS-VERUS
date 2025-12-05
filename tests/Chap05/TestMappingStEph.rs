@@ -53,8 +53,8 @@ fn test_from_vec_duplicate_keys() {
 fn test_from_relation() {
     // Relation with unique keys
     let pairs_set = SetLit![PairLit!(1, "one"), PairLit!(2, "two"), PairLit!(3, "three")];
-    let rel = <RelationStEph<N, &str> as RelationStEphTrait<N, &str>>::FromSet(pairs_set);
-    let m = <MappingStEph<N, &str> as MappingStEphTrait<N, &str>>::FromRelation(&rel);
+    let rel = <RelationStEph<N, &str> as RelationStEphTrait<N, &str>>::from_set(pairs_set);
+    let m = <MappingStEph<N, &str> as MappingStEphTrait<N, &str>>::from_relation(&rel);
 
     assert_eq!(m.size(), 3);
     assert!(m.mem(&Pair(1, "one")));
@@ -121,7 +121,7 @@ fn test_empty_mapping_operations() {
 #[test]
 fn test_from_relation_empty_edge() {
     let empty_rel = RelationStEph::<i32, String>::empty();
-    let m = <MappingStEph<i32, String> as MappingStEphTrait<i32, String>>::FromRelation(&empty_rel);
+    let m = <MappingStEph<i32, String> as MappingStEphTrait<i32, String>>::from_relation(&empty_rel);
 
     assert_eq!(m.size(), 0);
     assert_eq!(m.domain().size(), 0);
@@ -157,7 +157,7 @@ fn test_mapping_extreme_values_graceful() {
 #[test]
 fn test_mapping_large_dataset_stress() {
     let large_pairs = (0..10000).map(|i| Pair(i, format!("value_{i}"))).collect::<Vec<Pair<i32, String>>>();
-    let m = <MappingStEph<i32, String> as MappingStEphTrait<i32, String>>::FromVec(large_pairs);
+    let m = <MappingStEph<i32, String> as MappingStEphTrait<i32, String>>::from_vec(large_pairs);
 
     assert_eq!(m.size(), 10000);
     assert!(m.mem(&Pair(5000, "value_5000".to_string())));

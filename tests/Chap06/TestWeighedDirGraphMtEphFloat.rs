@@ -110,13 +110,13 @@ fn test_weigheddirgraphmtephfloat_incident_operations() {
     let _g = WeighedDirGraphMtEphFloat::from_vertices_and_labeled_arcs(v, a);
 
     // Test incident edges
-    // let incident0 = _g.Incident(&0); // TODO: method not available
+    // let incident0 = _g.incident(&0); // TODO: method not available
     // assert_eq!(incident0.size(), 2); // 0->1 and 0->2 // TODO: method not available
 
-    // let incident1 = g.Incident(&1); // TODO: method not available
+    // let incident1 = g.incident(&1); // TODO: method not available
     // assert_eq!(incident1.size(), 2); // 0->1 (incoming) and 1->2 (outgoing) // TODO: method not available
 
-    // let incident2 = g.Incident(&2); // TODO: method not available
+    // let incident2 = g.incident(&2); // TODO: method not available
     // assert_eq!(incident2.size(), 2); // 1->2 and 0->2 (both incoming) // TODO: method not available
 }
 
@@ -132,7 +132,7 @@ fn test_weigheddirgraphmtephfloat_ngofvertices() {
     let _g = WeighedDirGraphMtEphFloat::from_vertices_and_labeled_arcs(v, a);
 
     let _vertices_subset: SetStEph<N> = SetLit![0, 1];
-    // let ng_subset = _g.NGOfVertices(&_vertices_subset); // TODO: method not available
+    // let ng_subset = _g.ng_of_vertices(&_vertices_subset); // TODO: method not available
 
     // Neighbors of {0, 1} should be {1, 2, 3}
     // assert_eq!(ng_subset.size(), 3); // TODO: method not available
@@ -155,13 +155,13 @@ fn test_weigheddirgraphmtephfloat_nplusminusofvertices() {
     let _vertices_subset: SetStEph<N> = SetLit![0, 1];
 
     // Test NPlusOfVertices (out-neighbors)
-    // let nplus_subset = _g.NPlusOfVertices(&_vertices_subset); // TODO: method not available
+    // let nplus_subset = _g.n_plus_of_vertices(&_vertices_subset); // TODO: method not available
     // assert_eq!(nplus_subset.size(), 2); // TODO: method not available
     // assert_eq!(nplus_subset.mem(&1), true); // 0->1 // TODO: method not available
     // assert_eq!(nplus_subset.mem(&2), true); // 1->2 // TODO: method not available
 
     // Test NMinusOfVertices (in-neighbors)
-    // let nminus_subset = g.NMinusOfVertices(&vertices_subset); // TODO: method not available
+    // let nminus_subset = g.n_minus_of_vertices(&vertices_subset); // TODO: method not available
     // assert_eq!(nminus_subset.size(), 2); // TODO: method not available
     // assert_eq!(nminus_subset.mem(&2), true); // 2->0 // TODO: method not available
     // assert_eq!(nminus_subset.mem(&3), true); // 3->1 // TODO: method not available

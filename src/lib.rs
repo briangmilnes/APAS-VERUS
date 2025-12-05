@@ -116,7 +116,8 @@ pub mod Chap06 {
 
 pub mod Chap11 {
     pub mod FibonacciStEph;
-    pub mod FibonacciMtPer;
+    pub mod FibonacciMtPerAllThreads;
+    pub mod FibonacciMtPerTSM;
     pub mod FibonacciMtEph2Threads;
     pub mod FibonacciMtEphRecomputes;
 }

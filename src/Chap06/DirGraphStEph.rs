@@ -95,7 +95,7 @@ verus! {
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
 
-        fn FromSets(vertices: SetStEph<V>, arcs: SetStEph<Edge<V>>) -> (g: DirGraphStEph<V>)
+        fn from_sets(vertices: SetStEph<V>, arcs: SetStEph<Edge<V>>) -> (g: DirGraphStEph<V>)
             ensures
                 g@.V.finite(), g@.A.finite(),
                 g@.V =~= vertices@,
@@ -115,57 +115,57 @@ verus! {
             requires valid_key_type_Edge::<V>()
             ensures n == self@.A.len();
 
-        fn Neighbor(&self, u: &V, v: &V) -> (b: B)
+        fn neighbor(&self, u: &V, v: &V) -> (b: B)
             requires valid_key_type_Edge::<V>()
             ensures b == self@.A.contains((u@, v@));
 
         /// APAS: Work Θ(|A|), Span Θ(1)
-        fn NG(&self, v: &V)                             -> (neighbors: SetStEph<V>)
+        fn ng(&self, v: &V)                             -> (neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures neighbors@ == self.spec_ng(v@);
 
         /// APAS: Work Θ(|vertices| × |A|), Span Θ(1)
-        fn NGOfVertices(&self, vertices: &SetStEph<V>)     -> (neighbors: SetStEph<V>)
+        fn ng_of_vertices(&self, vertices: &SetStEph<V>)     -> (neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures neighbors@ == self.spec_ng_of_vertices(vertices@);
 
         /// APAS: Work Θ(|A|), Span Θ(1)
-        fn NPlus(&self, v: &V)                          -> (out_neighbors: SetStEph<V>)
+        fn n_plus(&self, v: &V)                          -> (out_neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures out_neighbors@ == self.spec_nplus(v@);
 
         /// APAS: Work Θ(|A|), Span Θ(1)
-        fn NMinus(&self, v: &V)                         -> (in_neighbors: SetStEph<V>)
+        fn n_minus(&self, v: &V)                         -> (in_neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures in_neighbors@ == self.spec_nminus(v@);
 
         /// APAS: Work Θ(|vertices| × |A|), Span Θ(1)
-        fn NPlusOfVertices(&self, vertices: &SetStEph<V>)  -> (out_neighbors: SetStEph<V>)
+        fn n_plus_of_vertices(&self, vertices: &SetStEph<V>)  -> (out_neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures out_neighbors@ == self.spec_nplus_of_vertices(vertices@);
 
         /// APAS: Work Θ(|vertices| × |A|), Span Θ(1)
-        fn NMinusOfVertices(&self, vertices: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)
+        fn n_minus_of_vertices(&self, vertices: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures in_neighbors@ == self.spec_nminus_of_vertices(vertices@);
 
         /// APAS: Work Θ(1), Span Θ(1)
-        fn Incident(&self, e: &Edge<V>, v: &V)          -> (b: B)
+        fn incident(&self, e: &Edge<V>, v: &V)          -> (b: B)
             requires valid_key_type_Edge::<V>()
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
         /// APAS: Work Θ(|A|), Span Θ(1)
-        fn Degree(&self, v: &V)                         -> (n: N)
+        fn degree(&self, v: &V)                         -> (n: N)
             requires valid_key_type_Edge::<V>()
             ensures n == self.spec_degree(v@);
 
         /// APAS: Work Θ(|A|), Span Θ(1)
-        fn InDegree(&self, v: &V)                       -> (n: N)
+        fn in_degree(&self, v: &V)                       -> (n: N)
             requires valid_key_type_Edge::<V>()
             ensures n == self.spec_nminus(v@).len();
 
         /// APAS: Work Θ(|A|), Span Θ(1)
-        fn OutDegree(&self, v: &V)                      -> (n: N)
+        fn out_degree(&self, v: &V)                      -> (n: N)
             requires valid_key_type_Edge::<V>()
             ensures n == self.spec_nplus(v@).len();
     }
@@ -174,7 +174,7 @@ verus! {
 
         fn empty() -> (g: DirGraphStEph<V>) { DirGraphStEph { V: SetStEph::empty(), A: SetStEph::empty() } }
 
-        fn FromSets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (g: DirGraphStEph<V>) { DirGraphStEph { V, A } }
+        fn from_sets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (g: DirGraphStEph<V>) { DirGraphStEph { V, A } }
 
         fn vertices(&self) -> (v: &SetStEph<V>) { &self.V }
 
@@ -184,13 +184,13 @@ verus! {
 
         fn sizeA(&self) -> (n: N) { self.A.size() }
 
-        fn Neighbor(&self, u: &V, v: &V) -> (b: B) { self.A.mem(&Edge(u.clone_plus(), v.clone_plus())) }
+        fn neighbor(&self, u: &V, v: &V) -> (b: B) { self.A.mem(&Edge(u.clone_plus(), v.clone_plus())) }
 
-        fn NG(&self, v: &V) -> (neighbors: SetStEph<V>)
+        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             ensures neighbors@ == self.spec_ng(v@)
-        { self.NPlus(v).union(&self.NMinus(v)) }
+        { self.n_plus(v).union(&self.n_minus(v)) }
 
-        fn NGOfVertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)
+        fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             ensures neighbors@ == self.spec_ng_of_vertices(vertices@)
         {
             let mut result: SetStEph<V> = SetStEph::empty();
@@ -232,14 +232,14 @@ verus! {
                         return result;
                     },
                     Some(u) => {
-                        let ng_u = self.NG(u);
+                        let ng_u = self.ng(u);
                         result = result.union(&ng_u);
                     }
                 }
             }
         }
 
-        fn NPlus(&self, v: &V) -> (out_neighbors: SetStEph<V>)
+        fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)
             ensures out_neighbors@ == self.spec_nplus(v@)
         {
             let mut out: SetStEph<V> = SetStEph::empty();
@@ -292,7 +292,7 @@ verus! {
             }
         }
 
-        fn NMinus(&self, v: &V) -> (in_neighbors: SetStEph<V>)
+        fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)
             ensures in_neighbors@ == self.spec_nminus(v@)
         {
             let mut inn: SetStEph<V> = SetStEph::empty();
@@ -345,7 +345,7 @@ verus! {
             }
         }
 
-        fn NPlusOfVertices(&self, vertices: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)
+        fn n_plus_of_vertices(&self, vertices: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)
             ensures out_neighbors@ == self.spec_nplus_of_vertices(vertices@)
         {
             let mut result: SetStEph<V> = SetStEph::empty();
@@ -387,14 +387,14 @@ verus! {
                         return result;
                     },
                     Some(u) => {
-                        let plus_u = self.NPlus(u);
+                        let plus_u = self.n_plus(u);
                         result = result.union(&plus_u);
                     }
                 }
             }
         }
 
-        fn NMinusOfVertices(&self, vertices: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)
+        fn n_minus_of_vertices(&self, vertices: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)
             ensures in_neighbors@ == self.spec_nminus_of_vertices(vertices@)
         {
             let mut result: SetStEph<V> = SetStEph::empty();
@@ -436,26 +436,26 @@ verus! {
                         return result;
                     },
                     Some(u) => {
-                        let minus_u = self.NMinus(u);
+                        let minus_u = self.n_minus(u);
                         result = result.union(&minus_u);
                     }
                 }
             }
         }
 
-        fn Incident(&self, e: &Edge<V>, v: &V) -> (b: B) { feq(&e.0, v) || feq(&e.1, v) }
+        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) { feq(&e.0, v) || feq(&e.1, v) }
 
-        fn Degree(&self, v: &V) -> (n: N)
+        fn degree(&self, v: &V) -> (n: N)
             ensures n == self.spec_degree(v@)
-        { self.NG(v).size() }
+        { self.ng(v).size() }
 
-        fn InDegree(&self, v: &V) -> (n: N)
+        fn in_degree(&self, v: &V) -> (n: N)
             ensures n == self.spec_nminus(v@).len()
-        { self.NMinus(v).size() }
+        { self.n_minus(v).size() }
 
-        fn OutDegree(&self, v: &V) -> (n: N)
+        fn out_degree(&self, v: &V) -> (n: N)
             ensures n == self.spec_nplus(v@).len()
-        { self.NPlus(v).size() }
+        { self.n_plus(v).size() }
     }
 
  } // verus!
@@ -490,7 +490,7 @@ verus! {
         () => {{
             let __V : $crate::Chap05::SetStEph::SetStEph::SetStEph<_>                             = $crate::SetLit![];
             let __A : $crate::Chap05::SetStEph::SetStEph::SetStEph<$crate::Types::Types::Edge<_>> = $crate::SetLit![];
-            < $crate::Chap06::DirGraphStEph::DirGraphStEph::DirGraphStEph<_> as $crate::Chap06::DirGraphStEph::DirGraphStEph::DirGraphStEphTrait<_> >::FromSets(__V, __A)
+            < $crate::Chap06::DirGraphStEph::DirGraphStEph::DirGraphStEph<_> as $crate::Chap06::DirGraphStEph::DirGraphStEph::DirGraphStEphTrait<_> >::from_sets(__V, __A)
         }};
         ( V: [ $( $v:expr ),* $(,)? ], A: [ $( ( $u:expr , $w:expr ) ),* $(,)? ] ) => {{
             let __V : $crate::Chap05::SetStEph::SetStEph::SetStEph<_> = $crate::SetLit![ $( $v ),* ];
@@ -499,7 +499,7 @@ verus! {
                 $( let _ = __s.insert($crate::Types::Types::Edge($u, $w)); )*
                 __s
             };
-            < $crate::Chap06::DirGraphStEph::DirGraphStEph::DirGraphStEph<_> as $crate::Chap06::DirGraphStEph::DirGraphStEph::DirGraphStEphTrait<_> >::FromSets(__V, __A)
+            < $crate::Chap06::DirGraphStEph::DirGraphStEph::DirGraphStEph<_> as $crate::Chap06::DirGraphStEph::DirGraphStEph::DirGraphStEphTrait<_> >::from_sets(__V, __A)
         }}
     }
 }

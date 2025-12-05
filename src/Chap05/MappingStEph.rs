@@ -151,11 +151,11 @@ verus! {
                 empty@ == Map::<X::V, Y::V>::empty(),
                 empty.is_functional();
 
-        fn FromVec(v: Vec<Pair<X, Y>>) -> (mapping: Self)
+        fn from_vec(v: Vec<Pair<X, Y>>) -> (mapping: Self)
             requires valid_key_type_Pair::<X, Y>(), is_functional_seq(v@)
             ensures mapping@.dom().finite(), mapping.is_functional();
 
-        fn FromRelation(r: &RelationStEph<X, Y>) -> (mapping: Self)
+        fn from_relation(r: &RelationStEph<X, Y>) -> (mapping: Self)
             requires valid_key_type_Pair::<X, Y>(), is_functional_relation(*r)
             ensures mapping@.dom().finite(), mapping.is_functional();
 
@@ -336,9 +336,9 @@ verus! {
             result
         }
 
-        fn FromVec(v: Vec<Pair<X, Y>>) -> MappingStEph<X, Y> {
-            let pairs = SetStEph::FromVec(v);
-            let result = MappingStEph { mapping: RelationStEph::FromSet(pairs) };
+        fn from_vec(v: Vec<Pair<X, Y>>) -> MappingStEph<X, Y> {
+            let pairs = SetStEph::from_vec(v);
+            let result = MappingStEph { mapping: RelationStEph::from_set(pairs) };
             proof {
                 // The domain is a subset of the first projection of the relation, which is finite
                 assume(result@.dom().finite());
@@ -346,7 +346,7 @@ verus! {
             result
         }
 
-        fn FromRelation(r: &RelationStEph<X, Y>) -> MappingStEph<X, Y> {
+        fn from_relation(r: &RelationStEph<X, Y>) -> MappingStEph<X, Y> {
             let result = MappingStEph { mapping: r.clone() };
             proof {
                 // The domain is a subset of the first projection of the relation, which is finite
@@ -402,7 +402,7 @@ verus! {
                     panic!("MappingLit!: duplicate domain element {:?}", key);
                 }
             }
-            < $crate::Chap05::MappingStEph::MappingStEph::MappingStEph<_, _> >::FromVec(__pairs)
+            < $crate::Chap05::MappingStEph::MappingStEph::MappingStEph<_, _> >::from_vec(__pairs)
         }};
     }
 

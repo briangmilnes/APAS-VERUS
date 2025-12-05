@@ -106,7 +106,7 @@ verus! {
             self@.finite()
         }
 
-        fn FromVec(v: Vec<T>) -> (s: SetStEph<T>)
+        fn from_vec(v: Vec<T>) -> (s: SetStEph<T>)
             requires valid_key_type::<T>()
             ensures s@.finite(), s@ == v@.map(|i: int, x: T| x@).to_set();
 
@@ -160,7 +160,7 @@ verus! {
             requires valid_key_type::<T>()
             ensures intersection@.finite(), intersection@ == self@.intersect(s2@);
 
-        fn EltCrossSet<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
+        fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
             requires 
               valid_key_type::<T>(),
               valid_key_type::<U>(),
@@ -171,7 +171,7 @@ verus! {
 
         /// APAS: Work Θ(|a| × |b|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|a| × |b|), Span Θ(1)
-        fn CartesianProduct<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
+        fn cartesian_product<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
             requires 
                 valid_key_type::<T>(),
                 valid_key_type::<U>(),
@@ -232,7 +232,7 @@ verus! {
 
     impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
 
-        fn FromVec(v: Vec<T>) -> SetStEph<T> {
+        fn from_vec(v: Vec<T>) -> SetStEph<T> {
             let mut s = SetStEph::empty();
             let mut i: usize = 0;
             let ghost v_seq = v@;
@@ -385,7 +385,7 @@ verus! {
             intersection
         }
         
-        fn CartesianProduct<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
+        fn cartesian_product<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
         {
             let mut product = SetStEph::empty();
             let s1_iter = self.iter();
@@ -411,7 +411,7 @@ verus! {
                 match it.next() {
                     Some(a) => {
                         let ghost a_view = a@;
-                        let a_cross = Self::EltCrossSet(a, s2);
+                        let a_cross = Self::elt_cross_set(a, s2);
                         product = product.union(&a_cross);
                         proof { lemma_take_one_more_extends_the_seq_set_with_view(s1_seq, old_index); }
                     },
@@ -423,7 +423,7 @@ verus! {
             product
         }
 
-        fn EltCrossSet<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
+        fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
         {
             let mut product = SetStEph::empty();
             let s2_iter = s2.iter();

@@ -2,7 +2,7 @@
 //! Chapter 6.1 Directed Graph (ephemeral) using Set for vertices and arcs - Multi-threaded version.
 //!
 //! Note: NOW uses true parallelism via ParaPair! for neighbor/degree operations.
-//! Arc filtering (NPlus, NMinus) and vertex map-reduce (NGOfVertices, etc.) are parallel.
+//! Arc filtering (n_plus, n_minus) and vertex map-reduce (ng_of_vertices, etc.) are parallel.
 
 pub mod DirGraphMtEph {
 
@@ -25,7 +25,7 @@ pub mod DirGraphMtEph {
         fn empty()                                        -> Self;
         /// APAS: Work Θ(|V| + |A|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|V| + |A|), Span Θ(1)
-        fn FromSets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> Self;
+        fn from_sets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> Self;
         /// APAS: Work Θ(1), Span Θ(1)
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn vertices(&self)                                -> &SetStEph<V>;
@@ -40,37 +40,37 @@ pub mod DirGraphMtEph {
         fn sizeA(&self)                                   -> N;
         /// APAS: Work Θ(1), Span Θ(1)
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn Neighbor(&self, u: &V, v: &V)                  -> B;
+        fn neighbor(&self, u: &V, v: &V)                  -> B;
         /// APAS: Work Θ(|A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|A|), Span Θ(log |A|), Parallelism Θ(|A|/log |A|) - parallel divide-and-conquer in NPlus+NMinus
-        fn NG(&self, v: &V)                               -> SetStEph<V>;
+        /// claude-4-sonet: Work Θ(|A|), Span Θ(log |A|), Parallelism Θ(|A|/log |A|) - parallel divide-and-conquer in n_plus+n_minus
+        fn ng(&self, v: &V)                               -> SetStEph<V>;
         /// APAS: Work Θ(|u_set| × |A|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|), Parallelism Θ((|u_set| × |A|)/(log |u_set| + log |A|)) - parallel map-reduce
-        fn NGOfVertices(&self, u_set: &SetStEph<V>)       -> SetStEph<V>;
-        /// APAS: Work Θ(|A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|A|), Span Θ(log |A|), Parallelism Θ(|A|/log |A|) - parallel divide-and-conquer filter
-        fn NPlus(&self, v: &V)                            -> SetStEph<V>;
+        fn ng_of_vertices(&self, u_set: &SetStEph<V>)       -> SetStEph<V>;
         /// APAS: Work Θ(|A|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|A|), Span Θ(log |A|), Parallelism Θ(|A|/log |A|) - parallel divide-and-conquer filter
-        fn NMinus(&self, v: &V)                           -> SetStEph<V>;
+        fn n_plus(&self, v: &V)                            -> SetStEph<V>;
+        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|A|), Span Θ(log |A|), Parallelism Θ(|A|/log |A|) - parallel divide-and-conquer filter
+        fn n_minus(&self, v: &V)                           -> SetStEph<V>;
         /// APAS: Work Θ(|u_set| × |A|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|), Parallelism Θ((|u_set| × |A|)/(log |u_set| + log |A|)) - parallel map-reduce
-        fn NPlusOfVertices(&self, u_set: &SetStEph<V>)    -> SetStEph<V>;
+        fn n_plus_of_vertices(&self, u_set: &SetStEph<V>)    -> SetStEph<V>;
         /// APAS: Work Θ(|u_set| × |A|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|), Parallelism Θ((|u_set| × |A|)/(log |u_set| + log |A|)) - parallel map-reduce
-        fn NMinusOfVertices(&self, u_set: &SetStEph<V>)   -> SetStEph<V>;
+        fn n_minus_of_vertices(&self, u_set: &SetStEph<V>)   -> SetStEph<V>;
         /// APAS: Work Θ(1), Span Θ(1)
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn Incident(&self, e: &Edge<V>, v: &V)            -> B;
+        fn incident(&self, e: &Edge<V>, v: &V)            -> B;
         /// APAS: Work Θ(|A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|A|), Span Θ(log |A|), Parallelism Θ(|A|/log |A|) - calls parallel InDegree + OutDegree
-        fn Degree(&self, v: &V)                           -> N;
+        /// claude-4-sonet: Work Θ(|A|), Span Θ(log |A|), Parallelism Θ(|A|/log |A|) - calls parallel in_degree + out_degree
+        fn degree(&self, v: &V)                           -> N;
         /// APAS: Work Θ(|A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|A|), Span Θ(log |A|), Parallelism Θ(|A|/log |A|) - calls parallel NMinus
-        fn InDegree(&self, v: &V)                         -> N;
+        /// claude-4-sonet: Work Θ(|A|), Span Θ(log |A|), Parallelism Θ(|A|/log |A|) - calls parallel n_minus
+        fn in_degree(&self, v: &V)                         -> N;
         /// APAS: Work Θ(|A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|A|), Span Θ(log |A|), Parallelism Θ(|A|/log |A|) - calls parallel NPlus
-        fn OutDegree(&self, v: &V)                        -> N;
+        /// claude-4-sonet: Work Θ(|A|), Span Θ(log |A|), Parallelism Θ(|A|/log |A|) - calls parallel n_plus
+        fn out_degree(&self, v: &V)                        -> N;
     }
 
     impl<V: StT + MtT + Hash + 'static> DirGraphMtEphTrait<V> for DirGraphMtEph<V> {
@@ -80,20 +80,20 @@ pub mod DirGraphMtEph {
                 A: SetLit![],
             }
         }
-        fn FromSets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> DirGraphMtEph<V> { DirGraphMtEph { V, A } }
+        fn from_sets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> DirGraphMtEph<V> { DirGraphMtEph { V, A } }
         fn vertices(&self) -> &SetStEph<V> { &self.V }
         fn arcs(&self) -> &SetStEph<Edge<V>> { &self.A }
         fn sizeV(&self) -> N { self.V.size() }
         fn sizeA(&self) -> N { self.A.size() }
 
-        fn Neighbor(&self, u: &V, v: &V) -> B {
+        fn neighbor(&self, u: &V, v: &V) -> B {
             // Adjacent if there is an arc either way
             self.A.mem(&Edge(u.clone_mt(), v.clone_mt()))
         }
 
-        fn NG(&self, v: &V) -> SetStEph<V> { self.NPlus(v).union(&self.NMinus(v)) }
+        fn ng(&self, v: &V) -> SetStEph<V> { self.n_plus(v).union(&self.n_minus(v)) }
 
-        fn NGOfVertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> {
+        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> {
             // PARALLEL: map-reduce over vertices using divide-and-conquer
             let vertices = u_set.iter().cloned().collect::<Vec<V>>();
 
@@ -107,7 +107,7 @@ pub mod DirGraphMtEph {
                     return SetLit![];
                 }
                 if n == 1 {
-                    return graph.NG(&vertices[0]);
+                    return graph.ng(&vertices[0]);
                 }
 
                 let mid = n / 2;
@@ -128,7 +128,7 @@ pub mod DirGraphMtEph {
             parallel_ng_of_vertices(vertices, self.clone())
         }
 
-        fn NPlus(&self, v: &V) -> SetStEph<V> {
+        fn n_plus(&self, v: &V) -> SetStEph<V> {
             // PARALLEL: filter arcs using divide-and-conquer
             let arcs = self.A.iter().cloned().collect::<Vec<Edge<V>>>();
 
@@ -167,7 +167,7 @@ pub mod DirGraphMtEph {
             parallel_nplus(arcs, v.clone_mt())
         }
 
-        fn NMinus(&self, v: &V) -> SetStEph<V> {
+        fn n_minus(&self, v: &V) -> SetStEph<V> {
             // PARALLEL: filter arcs using divide-and-conquer
             let arcs = self.A.iter().cloned().collect::<Vec<Edge<V>>>();
 
@@ -206,7 +206,7 @@ pub mod DirGraphMtEph {
             parallel_nminus(arcs, v.clone_mt())
         }
 
-        fn NPlusOfVertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> {
+        fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> {
             // PARALLEL: map-reduce over vertices using divide-and-conquer
             let vertices = u_set.iter().cloned().collect::<Vec<V>>();
 
@@ -220,7 +220,7 @@ pub mod DirGraphMtEph {
                     return SetLit![];
                 }
                 if n == 1 {
-                    return graph.NPlus(&vertices[0]);
+                    return graph.n_plus(&vertices[0]);
                 }
 
                 let mid = n / 2;
@@ -241,7 +241,7 @@ pub mod DirGraphMtEph {
             parallel_nplus_of_vertices(vertices, self.clone())
         }
 
-        fn NMinusOfVertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> {
+        fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> {
             // PARALLEL: map-reduce over vertices using divide-and-conquer
             let vertices = u_set.iter().cloned().collect::<Vec<V>>();
 
@@ -255,7 +255,7 @@ pub mod DirGraphMtEph {
                     return SetLit![];
                 }
                 if n == 1 {
-                    return graph.NMinus(&vertices[0]);
+                    return graph.n_minus(&vertices[0]);
                 }
 
                 let mid = n / 2;
@@ -276,11 +276,11 @@ pub mod DirGraphMtEph {
             parallel_nminus_of_vertices(vertices, self.clone())
         }
 
-        fn Incident(&self, e: &Edge<V>, v: &V) -> B { &e.0 == v || &e.1 == v }
+        fn incident(&self, e: &Edge<V>, v: &V) -> B { &e.0 == v || &e.1 == v }
 
-        fn Degree(&self, v: &V) -> N { self.InDegree(v) + self.OutDegree(v) }
-        fn InDegree(&self, v: &V) -> N { self.NMinus(v).size() }
-        fn OutDegree(&self, v: &V) -> N { self.NPlus(v).size() }
+        fn degree(&self, v: &V) -> N { self.in_degree(v) + self.out_degree(v) }
+        fn in_degree(&self, v: &V) -> N { self.n_minus(v).size() }
+        fn out_degree(&self, v: &V) -> N { self.n_plus(v).size() }
     }
 
     impl<V: StT + MtT + Hash + 'static> Debug for DirGraphMtEph<V> {
@@ -307,7 +307,7 @@ pub mod DirGraphMtEph {
         () => {{
             let __V: $crate::Chap05::SetStEph::SetStEph::SetStEph<_> = $crate::SetLit![];
             let __A: $crate::Chap05::SetStEph::SetStEph::SetStEph<$crate::Types::Types::Edge<_>> = $crate::SetLit![];
-            < $crate::Chap06::DirGraphMtEph::DirGraphMtEph::DirGraphMtEph<_> as $crate::Chap06::DirGraphMtEph::DirGraphMtEph::DirGraphMtEphTrait<_> >::FromSets(__V, __A)
+            < $crate::Chap06::DirGraphMtEph::DirGraphMtEph::DirGraphMtEph<_> as $crate::Chap06::DirGraphMtEph::DirGraphMtEph::DirGraphMtEphTrait<_> >::from_sets(__V, __A)
         }};
         ( V: [ $( $v:expr ),* $(,)? ], A: [ $( ( $u:expr , $w:expr ) ),* $(,)? ] ) => {{
             let __V: $crate::Chap05::SetStEph::SetStEph::SetStEph<_> = $crate::SetLit![ $( $v ),* ];
@@ -316,6 +316,6 @@ pub mod DirGraphMtEph {
                 $( let _ = __s.insert($crate::Types::Types::Edge($u, $w)); )*
                 __s
             };
-            < $crate::Chap06::DirGraphMtEph::DirGraphMtEph::DirGraphMtEph<_> as $crate::Chap06::DirGraphMtEph::DirGraphMtEph::DirGraphMtEphTrait<_> >::FromSets(__V, __A)
+            < $crate::Chap06::DirGraphMtEph::DirGraphMtEph::DirGraphMtEph<_> as $crate::Chap06::DirGraphMtEph::DirGraphMtEph::DirGraphMtEphTrait<_> >::from_sets(__V, __A)
         }}}
 }

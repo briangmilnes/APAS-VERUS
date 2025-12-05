@@ -5,7 +5,7 @@
 //! This is a FULLY VERIFIED parallel recursive algorithm!
 
 #[cfg(verus_keep_ghost)]
-pub mod FibonacciMtPer {
+pub mod FibonacciMtPerAllThreads {
 
     use vstd::prelude::*;
     use crate::Types::Types::*;

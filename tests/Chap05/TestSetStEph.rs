@@ -45,7 +45,7 @@ fn test_setlit_macro_type_safety() {
 fn test_cartesian_product_example_5_1() {
     let a: SetStEph<N> = SetLit![0, 1, 2, 3];
     let b: SetStEph<char> = SetLit!['a', 'b'];
-    let prod = a.CartesianProduct(&b);
+    let prod = a.cartesian_product(&b);
 
     let expect: SetStEph<Pair<N, char>> = SetLit![
         PairLit!(0, 'a'),
@@ -177,7 +177,7 @@ fn test_set_iter() {
 #[test]
 fn test_set_fromvec() {
     let vec_data = vec![1, 2, 3, 2, 1]; // with duplicates
-    let set = SetStEph::FromVec(vec_data);
+    let set = SetStEph::from_vec(vec_data);
 
     assert_eq!(set.size(), 3);
     assert!(set.mem(&1));
@@ -190,10 +190,10 @@ fn test_cartesian_product_empty_edge() {
     let empty_set = SetStEph::<i32>::empty();
     let normal_set = SetLit![1, 2];
 
-    let prod1 = empty_set.CartesianProduct(&normal_set);
+    let prod1 = empty_set.cartesian_product(&normal_set);
     assert_eq!(prod1.size(), 0);
 
-    let prod2 = normal_set.CartesianProduct(&empty_set);
+    let prod2 = normal_set.cartesian_product(&empty_set);
     assert_eq!(prod2.size(), 0);
 }
 
@@ -244,7 +244,7 @@ fn test_empty_set_intersection() {
 fn test_set_large_operations_stress() {
     // Test with large sets to verify no panics occur
     let large_vec = (0..10000).collect::<Vec<i32>>();
-    let large_set = SetStEph::FromVec(large_vec);
+    let large_set = SetStEph::from_vec(large_vec);
 
     assert_eq!(large_set.size(), 10000);
     assert!(large_set.mem(&5000));
@@ -252,7 +252,7 @@ fn test_set_large_operations_stress() {
 
     // Test union with another large set
     let large_vec2 = (5000..15000).collect::<Vec<i32>>();
-    let large_set2 = SetStEph::FromVec(large_vec2);
+    let large_set2 = SetStEph::from_vec(large_vec2);
 
     let union_result = large_set.union(&large_set2);
     assert_eq!(union_result.size(), 15000); // 0-4999 + 5000-14999 = 15000 unique elements
@@ -306,7 +306,7 @@ fn test_set_single_element_boundary() {
 
     // Cartesian product with single element
     let single_char = SetStEph::singleton('a');
-    let cartesian = single.CartesianProduct(&single_char);
+    let cartesian = single.cartesian_product(&single_char);
     assert_eq!(cartesian.size(), 1);
     assert!(cartesian.mem(&Pair(42, 'a')));
 
@@ -407,7 +407,7 @@ fn test_set_iterator_boundaries() {
     assert_eq!(collected_all.len(), 5);
 
     // Create new set from collected elements and verify equality
-    let reconstructed = SetStEph::FromVec(collected_all);
+    let reconstructed = SetStEph::from_vec(collected_all);
     assert_eq!(reconstructed.size(), original.size());
     for i in 1..=5 {
         assert_eq!(original.mem(&i), reconstructed.mem(&i));
@@ -419,7 +419,7 @@ fn test_set_maximum_size_boundary() {
     // Test large set boundary (reduced from 100k to 20k for faster testing)
     let large_size = 20_000usize;
     let large_vec = (0..large_size as i32).collect::<Vec<i32>>();
-    let large_set = SetStEph::FromVec(large_vec);
+    let large_set = SetStEph::from_vec(large_vec);
 
     // Verify basic operations work on large set
     assert_eq!(large_set.size(), large_size);
@@ -437,7 +437,7 @@ fn test_set_maximum_size_boundary() {
 
     // Test with another large set
     let large_vec2 = (10_000..30_000).collect::<Vec<i32>>();
-    let large_set2 = SetStEph::FromVec(large_vec2);
+    let large_set2 = SetStEph::from_vec(large_vec2);
 
     let union_large = large_set.union(&large_set2);
     assert_eq!(union_large.size(), 30_000); // 0-9999 + 10000-29999 = 30000 unique
@@ -461,7 +461,7 @@ fn test_set_maximum_size_boundary() {
 
     // Test Cartesian product with small set to avoid explosion
     let small_set = SetStEph::singleton('a');
-    let cartesian_large = large_set.CartesianProduct(&small_set);
+    let cartesian_large = large_set.cartesian_product(&small_set);
     assert_eq!(cartesian_large.size(), large_size);
     assert!(cartesian_large.mem(&Pair(0, 'a')));
     assert!(cartesian_large.mem(&Pair((large_size - 1) as i32, 'a')));
@@ -509,7 +509,7 @@ fn test_trait_partition() {
 fn test_trait_cartesian_product() {
     let s1 = SetLit![1, 2];
     let s2 = SetLit!['a', 'b'];
-    let cp = <SetStEph<i32> as SetStEphTrait<i32>>::CartesianProduct(&s1, &s2);
+    let cp = <SetStEph<i32> as SetStEphTrait<i32>>::cartesian_product(&s1, &s2);
     assert_eq!(cp.size(), 4);
 }
 
@@ -522,7 +522,7 @@ fn test_trait_insert() {
 
 #[test]
 fn test_trait_from_vec() {
-    let s = <SetStEph<i32> as SetStEphTrait<i32>>::FromVec(vec![1, 2, 3]);
+    let s = <SetStEph<i32> as SetStEphTrait<i32>>::from_vec(vec![1, 2, 3]);
     assert_eq!(s.size(), 3);
 }
 

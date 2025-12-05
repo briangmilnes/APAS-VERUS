@@ -104,11 +104,11 @@ verus! {
 
         /// APAS: Work Θ(|pairs|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|pairs|), Span Θ(1)
-        fn FromSet(pairs: SetStEph<Pair<X, Y>>) -> (relation: Self)
+        fn from_set(pairs: SetStEph<Pair<X, Y>>) -> (relation: Self)
             requires valid_key_type_Pair::<X, Y>()
             ensures relation@.finite(), relation@ == pairs@;
 
-        fn FromVec(v: Vec<Pair<X, Y>>) -> (relation: Self)
+        fn from_vec(v: Vec<Pair<X, Y>>) -> (relation: Self)
             requires valid_key_type_Pair::<X, Y>()
             ensures relation@.finite(), relation@ == v@.map(|i: int, p: Pair<X, Y>| p@).to_set();
 
@@ -162,10 +162,10 @@ verus! {
 
         fn empty() -> RelationStEph<X, Y> { RelationStEph { pairs: SetStEph::empty() }}
 
-        fn FromSet(pairs: SetStEph<Pair<X, Y>>) -> RelationStEph<X, Y> { RelationStEph { pairs } }
+        fn from_set(pairs: SetStEph<Pair<X, Y>>) -> RelationStEph<X, Y> { RelationStEph { pairs } }
 
-        fn FromVec(v: Vec<Pair<X, Y>>) -> RelationStEph<X, Y> {
-            RelationStEph { pairs: SetStEph::FromVec(v), } }
+        fn from_vec(v: Vec<Pair<X, Y>>) -> RelationStEph<X, Y> {
+            RelationStEph { pairs: SetStEph::from_vec(v), } }
 
         fn size(&self) -> N { self.pairs.size() }
 
@@ -295,7 +295,7 @@ verus! {
         ( $( ($a:expr, $b:expr) ),* $(,)? ) => {{
             let mut __pairs = < $crate::Chap05::SetStEph::SetStEph::SetStEph<_> >::empty();
             $( let _ = __pairs.insert($crate::Types::Types::Pair($a, $b)); )*
-            < $crate::Chap05::RelationStEph::RelationStEph::RelationStEph<_, _> >::FromSet(__pairs)
+            < $crate::Chap05::RelationStEph::RelationStEph::RelationStEph<_, _> >::from_set(__pairs)
         }};
     }
 
