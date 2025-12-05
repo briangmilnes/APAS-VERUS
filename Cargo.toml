@@ -30,6 +30,10 @@ name = "TestMappingStEph"
 path = "tests/Chap05/TestMappingStEph.rs"
 
 [[test]]
+name = "TestSetMtEph"
+path = "tests/Chap05/TestSetMtEph.rs"
+
+[[test]]
 name = "test_total_order"
 path = "tests/vstdplus/test_total_order.rs"
 

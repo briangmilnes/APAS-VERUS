@@ -57,6 +57,14 @@ impl<Key: View + Eq + Hash + Clone> HashSetWithViewPlus<Key> {
             hash_set@ == Set::<<Key as View>::V>::empty(),
     { HashSetWithViewPlus { inner: HashSetWithView::new() } }
 
+    pub fn with_capacity(capacity: usize) -> (hash_set: Self)
+        requires
+            obeys_key_model::<Key>(),
+            obeys_feq_full::<Key>(),
+        ensures
+            hash_set@ == Set::<<Key as View>::V>::empty(),
+    { HashSetWithViewPlus { inner: HashSetWithView::with_capacity(capacity) } }
+
     pub fn len(&self) -> (len: usize)
         ensures
             len == self@.len(),

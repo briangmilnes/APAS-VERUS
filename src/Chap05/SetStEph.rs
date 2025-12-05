@@ -154,6 +154,17 @@ verus! {
                valid_key_type::<T>(),
             ensures union@.finite(), union@ == self@.union(s2@);
 
+        /// Disjoint union: union of two sets known to be disjoint.
+        /// APAS: Work Θ(|a| + |b|), Span Θ(1)
+        fn disjoint_union(&self, s2: &SetStEph<T>) -> (union: Self)
+            requires 
+               valid_key_type::<T>(),
+               self@.disjoint(s2@),
+            ensures 
+               union@.finite(),
+               union@ == self@.union(s2@),
+               union@.len() == self@.len() + s2@.len();
+
         /// APAS: Work Θ(|a| + |b|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)
         fn intersection(&self, s2: &SetStEph<T>) -> (intersection: Self)
@@ -342,6 +353,73 @@ verus! {
                     }
                 }
             }
+            union
+        }
+
+        fn disjoint_union(&self, s2: &SetStEph<T>) -> (union: SetStEph<T>)
+        {
+            // Pre-size to avoid rehashing - we know exact final size
+            // Use saturating add to avoid overflow (capped at usize::MAX)
+            let capacity = self.size().saturating_add(s2.size());
+            let mut union: SetStEph<T> = SetStEph { 
+                elements: HashSetWithViewPlus::with_capacity(capacity) 
+            };
+            
+            // Insert all elements from self
+            let mut it1 = self.iter();
+            let ghost it1_seq = it1@.1;
+            
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type::<T>(),
+                    it1@.0 <= it1_seq.len(),
+                    it1@.1 == it1_seq,
+                    it1_seq.map(|i: int, k: T| k@).to_set() == self@,
+                    union@ == it1_seq.take(it1@.0).map(|i: int, k: T| k@).to_set(),
+                decreases it1_seq.len() - it1@.0,
+            {
+                match it1.next() {
+                    Some(x) => {
+                        let ghost old_index = it1@.0 - 1;
+                        let _ = union.insert(x.clone_plus());
+                        proof { lemma_take_one_more_extends_the_seq_set_with_view(it1_seq, old_index); }
+                    },
+                    None => break,
+                }
+            }
+            
+            // Insert all elements from s2 (guaranteed no duplicates due to disjointness)
+            let mut it2 = s2.iter();
+            let ghost it2_seq = it2@.1;
+            let ghost s1_view = self@;
+            let ghost s2_view = s2@;
+            
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type::<T>(),
+                    it2@.0 <= it2_seq.len(),
+                    it2@.1 == it2_seq,
+                    it2_seq.map(|i: int, k: T| k@).to_set() == s2_view,
+                    s1_view.disjoint(s2_view),
+                    union@ == s1_view.union(it2_seq.take(it2@.0).map(|i: int, k: T| k@).to_set()),
+                decreases it2_seq.len() - it2@.0,
+            {
+                match it2.next() {
+                    Some(x) => {
+                        let ghost old_index = it2@.0 - 1;
+                        let _ = union.insert(x.clone_plus());
+                        proof { lemma_take_one_more_extends_the_seq_set_with_view(it2_seq, old_index); }
+                    },
+                    None => break,
+                }
+            }
+            
+            proof {
+                vstd::set_lib::lemma_set_disjoint_lens(self@, s2@);
+            }
+            
             union
         }
 
