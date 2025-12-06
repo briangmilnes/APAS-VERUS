@@ -28,6 +28,7 @@ impl<Key: View + Eq + Hash> View for HashSetWithViewPlus<Key> {
 }
 
 /// A HashSetWithViewPlus is always finite (it's backed by a finite HashSet)
+// Veracity: USED
 pub broadcast proof fn axiom_hash_set_with_view_plus_finite<Key: View + Eq + Hash>(s: &HashSetWithViewPlus<Key>)
     ensures
         #[trigger] s@.finite(),

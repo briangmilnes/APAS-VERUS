@@ -212,7 +212,7 @@ verus! {
                                 if result@.contains(w) {
                                     let i = choose |i: int| #![trigger u_seq[i]] 0 <= i < u_seq.len() && self.spec_ng(u_seq[i]@).contains(w);
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(u_seq, i);
-                                    assert(vertices_view.contains(u_seq[i]@));
+// Veracity: UNNEEDED assert                                     assert(vertices_view.contains(u_seq[i]@));
                                 }
                             }
                             assert forall |w: V::V| #[trigger] self.spec_ng_of_vertices(vertices_view).contains(w) implies 

@@ -143,13 +143,13 @@ verus! {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |t: (V::V, V::V, i64)| #[trigger] edges@.contains(t) implies wa_view.contains(t) by {
+// Veracity: UNNEEDED assert                             assert forall |t: (V::V, V::V, i64)| #[trigger] edges@.contains(t) implies wa_view.contains(t) by {
                                 if edges@.contains(t) {
                                     let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@ == t;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
-                            assert forall |t: (V::V, V::V, i64)| #[trigger] wa_view.contains(t) implies edges@.contains(t) by {
+// Veracity: UNNEEDED assert                             assert forall |t: (V::V, V::V, i64)| #[trigger] wa_view.contains(t) implies edges@.contains(t) by {
                                 if wa_view.contains(t) {
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(wa_seq, t);
                                 }
@@ -185,14 +185,14 @@ verus! {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |p: (V::V, i64)| neighbors@.contains(p) implies 
+// Veracity: UNNEEDED assert                             assert forall |p: (V::V, i64)| neighbors@.contains(p) implies 
                                 (exists |w: i64| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) by {
                                 if neighbors@.contains(p) {
                                     let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@.0 == v_view && wa_seq[i]@.1 == p.0 && wa_seq[i]@.2 == p.1;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
-                            assert forall |p: (V::V, i64)| (exists |w: i64| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) implies 
+// Veracity: UNNEEDED assert                             assert forall |p: (V::V, i64)| (exists |w: i64| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) implies 
                                 neighbors@.contains(p) by {
                                 if exists |w: i64| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w {
                                     let w = choose |w: i64| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w;
@@ -232,14 +232,14 @@ verus! {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |p: (V::V, i64)| neighbors@.contains(p) implies 
+// Veracity: UNNEEDED assert                             assert forall |p: (V::V, i64)| neighbors@.contains(p) implies 
                                 (exists |w: i64| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w) by {
                                 if neighbors@.contains(p) {
                                     let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@.1 == v_view && wa_seq[i]@.0 == p.0 && wa_seq[i]@.2 == p.1;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
-                            assert forall |p: (V::V, i64)| (exists |w: i64| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w) implies 
+// Veracity: UNNEEDED assert                             assert forall |p: (V::V, i64)| (exists |w: i64| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w) implies 
                                 neighbors@.contains(p) by {
                                 if exists |w: i64| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w {
                                     let w = choose |w: i64| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w;
@@ -284,7 +284,7 @@ verus! {
                         return sum;
                     },
                     Some(labeled_edge) => {
-                        proof { assert(wa_seq.take(it@.0 as int).drop_last() =~= wa_seq.take((it@.0 - 1) as int)); }
+// Veracity: UNNEEDED assert                         proof { assert(wa_seq.take(it@.0 as int).drop_last() =~= wa_seq.take((it@.0 - 1) as int)); }
                         sum = sum.add_value(labeled_edge.2);
                     },
                 }
@@ -311,14 +311,14 @@ verus! {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |t: (V::V, V::V, i64)| #[trigger] edges@.contains(t) implies 
+// Veracity: UNNEEDED assert                             assert forall |t: (V::V, V::V, i64)| #[trigger] edges@.contains(t) implies 
                                 (wa_view.contains(t) && t.2 > threshold) by {
                                 if edges@.contains(t) {
                                     let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@ == t && t.2 > threshold;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
-                            assert forall |t: (V::V, V::V, i64)| #[trigger] wa_view.contains(t) && t.2 > threshold implies 
+// Veracity: UNNEEDED assert                             assert forall |t: (V::V, V::V, i64)| #[trigger] wa_view.contains(t) && t.2 > threshold implies 
                                 edges@.contains(t) by {
                                 if wa_view.contains(t) && t.2 > threshold {
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(wa_seq, t);
@@ -356,14 +356,14 @@ verus! {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |t: (V::V, V::V, i64)| #[trigger] edges@.contains(t) implies 
+// Veracity: UNNEEDED assert                             assert forall |t: (V::V, V::V, i64)| #[trigger] edges@.contains(t) implies 
                                 (wa_view.contains(t) && t.2 < threshold) by {
                                 if edges@.contains(t) {
                                     let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@ == t && t.2 < threshold;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
-                            assert forall |t: (V::V, V::V, i64)| #[trigger] wa_view.contains(t) && t.2 < threshold implies 
+// Veracity: UNNEEDED assert                             assert forall |t: (V::V, V::V, i64)| #[trigger] wa_view.contains(t) && t.2 < threshold implies 
                                 edges@.contains(t) by {
                                 if wa_view.contains(t) && t.2 < threshold {
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(wa_seq, t);

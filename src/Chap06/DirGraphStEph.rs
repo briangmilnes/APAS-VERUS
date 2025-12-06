@@ -218,7 +218,7 @@ verus! {
                                 if result@.contains(w) {
                                     let i = choose |i: int| #![trigger u_seq[i]] 0 <= i < u_seq.len() && self.spec_ng(u_seq[i]@).contains(w);
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(u_seq, i);
-                                    assert(vertices_view.contains(u_seq[i]@));
+// Veracity: UNNEEDED assert                                     assert(vertices_view.contains(u_seq[i]@));
                                 }
                             }
                             assert forall |w: V::V| #[trigger] self.spec_ng_of_vertices(vertices_view).contains(w) implies
@@ -268,13 +268,13 @@ verus! {
                                 if out@.contains(w) {
                                     let i = choose |i: int| #![trigger arcs_seq[i]] 0 <= i < arcs_seq.len() && arcs_seq[i]@.0 == v_view && arcs_seq[i]@.1 == w;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(arcs_seq, i);
-                                    assert(arcs_view.contains((v_view, w)));
+// Veracity: UNNEEDED assert                                     assert(arcs_view.contains((v_view, w)));
                                 }
                             }
                             assert forall |w: V::V| #[trigger] self.spec_nplus(v_view).contains(w) implies
                             out@.contains(w) by {
                                 if self.spec_nplus(v_view).contains(w) {
-                                    assert(arcs_view.contains((v_view, w)));
+// Veracity: UNNEEDED assert                                     assert(arcs_view.contains((v_view, w)));
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(arcs_seq, (v_view, w));
                                 }
                             }
@@ -321,13 +321,13 @@ verus! {
                                 if inn@.contains(u) {
                                     let i = choose |i: int| #![trigger arcs_seq[i]] 0 <= i < arcs_seq.len() && arcs_seq[i]@.1 == v_view && arcs_seq[i]@.0 == u;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(arcs_seq, i);
-                                    assert(arcs_view.contains((u, v_view)));
+// Veracity: UNNEEDED assert                                     assert(arcs_view.contains((u, v_view)));
                                 }
                             }
                             assert forall |u: V::V| #[trigger] self.spec_nminus(v_view).contains(u) implies
                             inn@.contains(u) by {
                                 if self.spec_nminus(v_view).contains(u) {
-                                    assert(arcs_view.contains((u, v_view)));
+// Veracity: UNNEEDED assert                                     assert(arcs_view.contains((u, v_view)));
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(arcs_seq, (u, v_view));
                                 }
                             }
@@ -373,7 +373,7 @@ verus! {
                                 if result@.contains(w) {
                                     let i = choose |i: int| #![trigger u_seq[i]] 0 <= i < u_seq.len() && self.spec_nplus(u_seq[i]@).contains(w);
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(u_seq, i);
-                                    assert(vertices_view.contains(u_seq[i]@));
+// Veracity: UNNEEDED assert                                     assert(vertices_view.contains(u_seq[i]@));
                                 }
                             }
                             assert forall |w: V::V| #[trigger] self.spec_nplus_of_vertices(vertices_view).contains(w) implies
@@ -422,7 +422,7 @@ verus! {
                                 if result@.contains(w) {
                                     let i = choose |i: int| #![trigger u_seq[i]] 0 <= i < u_seq.len() && self.spec_nminus(u_seq[i]@).contains(w);
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(u_seq, i);
-                                    assert(vertices_view.contains(u_seq[i]@));
+// Veracity: UNNEEDED assert                                     assert(vertices_view.contains(u_seq[i]@));
                                 }
                             }
                             assert forall |w: V::V| #[trigger] self.spec_nminus_of_vertices(vertices_view).contains(w) implies

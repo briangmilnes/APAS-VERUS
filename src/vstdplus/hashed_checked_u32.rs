@@ -40,10 +40,12 @@ impl Eq for CheckedU32 {}
 // Axioms for CheckedU32 to work in hash collections
 pub open spec fn CheckedU32_feq_trigger() -> bool { true }
 
+// Veracity: USED
 pub broadcast proof fn axiom_CheckedU32_feq()
     requires #[trigger] CheckedU32_feq_trigger()
     ensures obeys_feq_full::<CheckedU32>()
 { admit(); }
+// Veracity: USED
 
 pub broadcast proof fn axiom_CheckedU32_key_model()
     requires #[trigger] CheckedU32_feq_trigger()

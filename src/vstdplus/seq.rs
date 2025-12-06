@@ -25,23 +25,23 @@ verus! {
     }
 
     // Lemma: the two spec functions are equivalent
-    pub proof fn lemma_sum_u32_equiv(s: Seq<u32>)
-        ensures spec_sum_u32_seq(s) == spec_sum_u32_fold(s)
-        decreases s.len()
-    {
-        reveal_with_fuel(Seq::fold_left, 1);
-        if s.len() > 0 {
-            lemma_sum_u32_equiv(s.drop_last());
-        }
-    }
+// Veracity: UNUSED     pub proof fn lemma_sum_u32_equiv(s: Seq<u32>)
+// Veracity: UNUSED         ensures spec_sum_u32_seq(s) == spec_sum_u32_fold(s)
+// Veracity: UNUSED         decreases s.len()
+// Veracity: UNUSED     {
+// Veracity: UNUSED         reveal_with_fuel(Seq::fold_left, 1);
+// Veracity: UNUSED         if s.len() > 0 {
+// Veracity: UNUSED             lemma_sum_u32_equiv(s.drop_last());
+// Veracity: UNUSED         }
+// Veracity: UNUSED     }
 
     // Lemma: sum of s.push(v) = sum(s) + v
-    pub proof fn lemma_sum_u32_push(s: Seq<u32>, v: u32)
-        ensures spec_sum_u32_seq(s.push(v)) == spec_sum_u32_seq(s) + v as nat
-    {
-        assert(s.push(v).drop_last() =~= s);
-        assert(s.push(v).last() == v);
-    }
+// Veracity: UNUSED     pub proof fn lemma_sum_u32_push(s: Seq<u32>, v: u32)
+// Veracity: UNUSED         ensures spec_sum_u32_seq(s.push(v)) == spec_sum_u32_seq(s) + v as nat
+// Veracity: UNUSED     {
+// Veracity: UNUSED         assert(s.push(v).drop_last() =~= s);
+// Veracity: UNUSED         assert(s.push(v).last() == v);
+// Veracity: UNUSED     }
 
     pub fn seq_u32_to_CheckedU32(s: &Vec<u32>) -> (sum: CheckedU32)
         ensures 
@@ -88,6 +88,7 @@ verus! {
     }
 
     // Helper lemma for the loop invariant
+// Veracity: USED
     proof fn lemma_sum_u32_unfold_take(s: Seq<u32>, i: int)
         requires 0 <= i < s.len()
         ensures spec_sum_u32_seq(s.take(i + 1)) == spec_sum_u32_seq(s.take(i)) + s[i] as nat
@@ -95,7 +96,7 @@ verus! {
         let take_new = s.take(i + 1);
         let take_old = s.take(i);
         assert(take_new.drop_last() =~= take_old);
-        assert(take_new.last() == s[i]);
+// Veracity: UNNEEDED assert         assert(take_new.last() == s[i]);
     }
 
     // Abstract version: sum of int values (for CheckedU32@ which is int)
@@ -115,6 +116,7 @@ verus! {
         s.fold_left(0int, |acc: int, v: int| acc + v)
     }
 
+// Veracity: USED
     // Lemma: the two spec functions are equivalent
     pub proof fn lemma_sum_int_equiv(s: Seq<int>)
         ensures spec_sum_int_seq(s) == spec_sum_int_fold(s)
@@ -125,15 +127,17 @@ verus! {
             lemma_sum_int_equiv(s.drop_last());
         }
     }
+// Veracity: USED
 
     // Lemma: sum of s.push(v) = sum(s) + v
     pub proof fn lemma_sum_int_push(s: Seq<int>, v: int)
         ensures spec_sum_int_seq(s.push(v)) == spec_sum_int_seq(s) + v
     {
         assert(s.push(v).drop_last() =~= s);
-        assert(s.push(v).last() == v);
+// Veracity: UNNEEDED assert         assert(s.push(v).last() == v);
     }
 
+// Veracity: USED
     // Lemma: sum(take(i+1)) = sum(take(i)) + s[i]
     pub proof fn lemma_sum_int_unfold_take(s: Seq<int>, i: int)
         requires 0 <= i < s.len()
@@ -142,7 +146,7 @@ verus! {
         let take_new = s.take(i + 1);
         let take_old = s.take(i);
         assert(take_new.drop_last() =~= take_old);
-        assert(take_new.last() == s[i]);
+// Veracity: UNNEEDED assert         assert(take_new.last() == s[i]);
     }
 
     // ============================================================
@@ -153,6 +157,7 @@ verus! {
     pub open spec fn spec_sum_checked_u32_seq(s: Seq<CheckedU32>) -> int {
         spec_sum_int_seq(s.map(|i: int, c: CheckedU32| c@))
     }
+// Veracity: USED
 
     // Lemma: sum(take(i+1)) = sum(take(i)) + s[i]@ for CheckedU32 sequences
     pub proof fn lemma_sum_checked_u32_unfold_take(s: Seq<CheckedU32>, i: int)

@@ -197,7 +197,7 @@ verus! {
                                 if out@.contains(x) {
                                     let i = choose |i: int| #![trigger pairs_seq[i]] 0 <= i < pairs_seq.len() && pairs_seq[i]@.0 == x;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(pairs_seq, i);
-                                    assert(self@.contains((x, pairs_seq[i]@.1)));
+// Veracity: UNNEEDED assert                                     assert(self@.contains((x, pairs_seq[i]@.1)));
                                 }
                             }
                             assert forall |x: X::V| (exists |y: Y::V| self@.contains((x, y))) implies 
@@ -244,7 +244,7 @@ verus! {
                                 if out@.contains(y) {
                                     let i = choose |i: int| #![trigger pairs_seq[i]] 0 <= i < pairs_seq.len() && pairs_seq[i]@.1 == y;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(pairs_seq, i);
-                                    assert(self@.contains((pairs_seq[i]@.0, y)));
+// Veracity: UNNEEDED assert                                     assert(self@.contains((pairs_seq[i]@.0, y)));
                                 }
                             }
                             assert forall |y: Y::V| (exists |x: X::V| self@.contains((x, y))) implies 

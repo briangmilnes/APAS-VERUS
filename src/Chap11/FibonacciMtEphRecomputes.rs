@@ -72,7 +72,7 @@ tokenized_state_machine!{
             finalize() {
                 require(pre.left_done);
                 require(pre.right_done);
-                assert(pre.expected_left + pre.expected_right == spec_fib(pre.n));
+// Veracity: UNNEEDED assert                 assert(pre.expected_left + pre.expected_right == spec_fib(pre.n));
             }
         }
         

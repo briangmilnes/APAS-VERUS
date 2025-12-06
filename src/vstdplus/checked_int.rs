@@ -40,42 +40,42 @@ pub open spec fn spec_mul_distributes_over_add() -> bool {
 }
 
 // Proofs that these properties hold
-pub proof fn lemma_spec_add_commutative()
-    ensures spec_is_add_commutative()
-{}
+// Veracity: UNUSED pub proof fn lemma_spec_add_commutative()
+// Veracity: UNUSED     ensures spec_is_add_commutative()
+// Veracity: UNUSED {}
 
-pub proof fn lemma_spec_mul_commutative()
-    ensures spec_is_mul_commutative()
-{
-    assert forall |a1: int, a2: int, b: int| #[trigger] spec_mul(spec_mul(b, a2), a1) == spec_mul(spec_mul(b, a1), a2) by {
-        lemma_mul_is_commutative(b, a2);
-        lemma_mul_is_commutative(b, a1);
-        lemma_mul_is_commutative(b * a2, a1);
-        lemma_mul_is_commutative(b * a1, a2);
-        vstd::arithmetic::mul::lemma_mul_is_associative(b, a2, a1);
-        vstd::arithmetic::mul::lemma_mul_is_associative(b, a1, a2);
-    }
-}
+// Veracity: UNUSED pub proof fn lemma_spec_mul_commutative()
+// Veracity: UNUSED     ensures spec_is_mul_commutative()
+// Veracity: UNUSED {
+// Veracity: UNUSED     assert forall |a1: int, a2: int, b: int| #[trigger] spec_mul(spec_mul(b, a2), a1) == spec_mul(spec_mul(b, a1), a2) by {
+// Veracity: UNUSED         lemma_mul_is_commutative(b, a2);
+// Veracity: UNUSED         lemma_mul_is_commutative(b, a1);
+// Veracity: UNUSED         lemma_mul_is_commutative(b * a2, a1);
+// Veracity: UNUSED         lemma_mul_is_commutative(b * a1, a2);
+// Veracity: UNUSED         vstd::arithmetic::mul::lemma_mul_is_associative(b, a2, a1);
+// Veracity: UNUSED         vstd::arithmetic::mul::lemma_mul_is_associative(b, a1, a2);
+// Veracity: UNUSED     }
+// Veracity: UNUSED }
 
-pub proof fn lemma_spec_add_associative()
-    ensures spec_is_add_associative()
-{}
+// Veracity: UNUSED pub proof fn lemma_spec_add_associative()
+// Veracity: UNUSED     ensures spec_is_add_associative()
+// Veracity: UNUSED {}
 
-pub proof fn lemma_spec_mul_associative()
-    ensures spec_is_mul_associative()
-{
-    assert forall |a: int, b: int, c: int| #[trigger] spec_mul(spec_mul(a, b), c) == spec_mul(a, spec_mul(b, c)) by {
-        vstd::arithmetic::mul::lemma_mul_is_associative(a, b, c);
-    }
-}
+// Veracity: UNUSED pub proof fn lemma_spec_mul_associative()
+// Veracity: UNUSED     ensures spec_is_mul_associative()
+// Veracity: UNUSED {
+// Veracity: UNUSED     assert forall |a: int, b: int, c: int| #[trigger] spec_mul(spec_mul(a, b), c) == spec_mul(a, spec_mul(b, c)) by {
+// Veracity: UNUSED         vstd::arithmetic::mul::lemma_mul_is_associative(a, b, c);
+// Veracity: UNUSED     }
+// Veracity: UNUSED }
 
-pub proof fn lemma_spec_mul_distributes_over_add()
-    ensures spec_mul_distributes_over_add()
-{
-    assert forall |a: int, b: int, c: int| #[trigger] spec_mul(a, spec_add(b, c)) == spec_add(spec_mul(a, b), spec_mul(a, c)) by {
-        vstd::arithmetic::mul::lemma_mul_is_distributive_add(a, b, c);
-    }
-}
+// Veracity: UNUSED pub proof fn lemma_spec_mul_distributes_over_add()
+// Veracity: UNUSED     ensures spec_mul_distributes_over_add()
+// Veracity: UNUSED {
+// Veracity: UNUSED     assert forall |a: int, b: int, c: int| #[trigger] spec_mul(a, spec_add(b, c)) == spec_add(spec_mul(a, b), spec_mul(a, c)) by {
+// Veracity: UNUSED         vstd::arithmetic::mul::lemma_mul_is_distributive_add(a, b, c);
+// Veracity: UNUSED     }
+// Veracity: UNUSED }
 
 /// Trait for checked signed integer types that track overflow/underflow.
 /// Weaker guarantees: both overflow AND underflow possible.
@@ -100,27 +100,34 @@ pub trait CheckedIntTrait: View<V = int> + Sized + Clone {
         ensures product@ == self@ * other@;
 
     // Commutativity proofs (on ghost int)
+// Veracity: USED
     proof fn lemma_add_commutative_ghost(a: Self, b: Self)
         ensures a@ + b@ == b@ + a@;
 
+// Veracity: USED
     proof fn lemma_mul_commutative_ghost(a: Self, b: Self)
+// Veracity: USED
         ensures a@ * b@ == b@ * a@;
 
     proof fn lemma_sub_anticommutative_ghost(a: Self, b: Self)
         ensures a@ - b@ == -(b@ - a@);
 
+// Veracity: USED
     // Associativity proofs
     proof fn lemma_add_associative_ghost(a: Self, b: Self, c: Self)
         ensures (a@ + b@) + c@ == a@ + (b@ + c@);
 
+// Veracity: USED
     proof fn lemma_mul_associative_ghost(a: Self, b: Self, c: Self)
         ensures (a@ * b@) * c@ == a@ * (b@ * c@)
+// Veracity: USED
     {
         vstd::arithmetic::mul::lemma_mul_is_associative(a@, b@, c@);
     }
 
     // Distributivity proofs
     proof fn lemma_mul_distributes_over_add_ghost(a: Self, b: Self, c: Self)
+// Veracity: USED
         ensures a@ * (b@ + c@) == a@ * b@ + a@ * c@;
 
     proof fn lemma_mul_distributes_over_sub_ghost(a: Self, b: Self, c: Self)

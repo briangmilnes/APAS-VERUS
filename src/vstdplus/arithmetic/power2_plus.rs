@@ -9,6 +9,7 @@ pub mod power2_plus {
     verus! {
 
         /// pow2 is monotonic: if a <= b then pow2(a) <= pow2(b)
+// Veracity: USED
         pub proof fn lemma_pow2_mono(a: nat, b: nat)
             requires a <= b,
             ensures pow2(a) <= pow2(b),
@@ -20,23 +21,26 @@ pub mod power2_plus {
 
         /// pow2(46) < u64::MAX
         /// This is provable via lemma2_to64_rest which gives pow2(46) == 0x400000000000
+// Veracity: USED
         pub proof fn lemma_pow2_46_lt_u64_max()
             ensures pow2(46) < u64::MAX as nat,
         {
             lemma2_to64_rest();
-            assert(pow2(46) == 0x400000000000);
-            assert(u64::MAX == 0xFFFFFFFFFFFFFFFF);
+// Veracity: UNNEEDED assert             assert(pow2(46) == 0x400000000000);
+// Veracity: UNNEEDED assert             assert(u64::MAX == 0xFFFFFFFFFFFFFFFF);
         }
 
         /// pow2(63) < u64::MAX (since u64::MAX = 2^64 - 1)
+// Veracity: USED
         pub proof fn lemma_pow2_63_lt_u64_max()
             ensures pow2(63) < u64::MAX as nat,
         {
             lemma2_to64_rest();
-            assert(pow2(63) == 0x8000000000000000);
-            assert(u64::MAX == 0xFFFFFFFFFFFFFFFF);
+// Veracity: UNNEEDED assert             assert(pow2(63) == 0x8000000000000000);
+// Veracity: UNNEEDED assert             assert(u64::MAX == 0xFFFFFFFFFFFFFFFF);
         }
 
+// Veracity: USED
         /// pow2(n) < u64::MAX for n < 64
         pub proof fn lemma_pow2_lt_u64_max(n: nat)
             requires n < 64,
@@ -47,17 +51,19 @@ pub mod power2_plus {
                 lemma_pow2_strictly_increases(n, 63);
             }
         }
+// Veracity: USED
 
         /// pow2(31) < u32::MAX
         pub proof fn lemma_pow2_31_lt_u32_max()
             ensures pow2(31) < u32::MAX as nat,
         {
             vstd::arithmetic::power2::lemma2_to64();
-            assert(pow2(31) == 0x80000000);
-            assert(u32::MAX == 0xFFFFFFFF);
+// Veracity: UNNEEDED assert             assert(pow2(31) == 0x80000000);
+// Veracity: UNNEEDED assert             assert(u32::MAX == 0xFFFFFFFF);
         }
 
         /// pow2(n) < u32::MAX for n < 32
+// Veracity: USED
         pub proof fn lemma_pow2_lt_u32_max(n: nat)
             requires n < 32,
             ensures pow2(n) < u32::MAX as nat,

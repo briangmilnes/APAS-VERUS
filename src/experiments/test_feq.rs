@@ -261,7 +261,7 @@ pub mod test_feq {
     fn test_point_reflexive(p: Point)
         requires obeys_feq_full::<Point>()
     {
-        test_generic_reflexive(p);
+// Veracity: TESTING         test_generic_reflexive(p);
     }
 
     fn test_point_symmetric(p1: Point, p2: Point)
@@ -280,7 +280,7 @@ pub mod test_feq {
     fn test_color_reflexive(c: Color)
         requires obeys_feq_full::<Color>()
     {
-        test_generic_reflexive(c);
+// Veracity: TESTING         test_generic_reflexive(c);
     }
 
     fn test_color_symmetric(c1: Color, c2: Color)
@@ -318,7 +318,7 @@ pub mod test_feq {
     fn test_inttree_reflexive(t: IntTree)
         requires obeys_feq_full::<IntTree>()
     {
-        test_generic_reflexive(t);
+// Veracity: TESTING         test_generic_reflexive(t);
     }
 
     fn test_inttree_symmetric(t1: IntTree, t2: IntTree)
@@ -346,7 +346,7 @@ pub mod test_feq {
     fn test_pair_reflexive(p: Pair<u64, u64>)
         requires obeys_feq_full::<Pair<u64, u64>>()
     {
-        test_generic_reflexive(p);
+// Veracity: TESTING         test_generic_reflexive(p);
     }
 
     fn test_pair_symmetric(p1: Pair<u64, u64>, p2: Pair<u64, u64>)

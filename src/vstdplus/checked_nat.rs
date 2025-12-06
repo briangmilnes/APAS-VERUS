@@ -40,42 +40,42 @@ verus! {
     }
 
         // Proofs that these properties hold
-    pub proof fn lemma_spec_add_commutative()
-        ensures spec_is_add_commutative()
-    {}
+// Veracity: UNUSED     pub proof fn lemma_spec_add_commutative()
+// Veracity: UNUSED         ensures spec_is_add_commutative()
+// Veracity: UNUSED     {}
 
-    pub proof fn lemma_spec_mul_commutative()
-        ensures spec_is_mul_commutative()
-    {
-        assert forall |a1: nat, a2: nat, b: nat| #[trigger] spec_mul(spec_mul(b, a2), a1) == spec_mul(spec_mul(b, a1), a2) by {
-            lemma_mul_is_commutative(b as int, a2 as int);
-            lemma_mul_is_commutative(b as int, a1 as int);
-            lemma_mul_is_commutative((b * a2) as int, a1 as int);
-            lemma_mul_is_commutative((b * a1) as int, a2 as int);
-            vstd::arithmetic::mul::lemma_mul_is_associative(b as int, a2 as int, a1 as int);
-            vstd::arithmetic::mul::lemma_mul_is_associative(b as int, a1 as int, a2 as int);
-        }
-    }
+// Veracity: UNUSED     pub proof fn lemma_spec_mul_commutative()
+// Veracity: UNUSED         ensures spec_is_mul_commutative()
+// Veracity: UNUSED     {
+// Veracity: UNUSED         assert forall |a1: nat, a2: nat, b: nat| #[trigger] spec_mul(spec_mul(b, a2), a1) == spec_mul(spec_mul(b, a1), a2) by {
+// Veracity: UNUSED             lemma_mul_is_commutative(b as int, a2 as int);
+// Veracity: UNUSED             lemma_mul_is_commutative(b as int, a1 as int);
+// Veracity: UNUSED             lemma_mul_is_commutative((b * a2) as int, a1 as int);
+// Veracity: UNUSED             lemma_mul_is_commutative((b * a1) as int, a2 as int);
+// Veracity: UNUSED             vstd::arithmetic::mul::lemma_mul_is_associative(b as int, a2 as int, a1 as int);
+// Veracity: UNUSED             vstd::arithmetic::mul::lemma_mul_is_associative(b as int, a1 as int, a2 as int);
+// Veracity: UNUSED         }
+// Veracity: UNUSED     }
 
-    pub proof fn lemma_spec_add_associative()
-        ensures spec_is_add_associative()
-    {}
+// Veracity: UNUSED     pub proof fn lemma_spec_add_associative()
+// Veracity: UNUSED         ensures spec_is_add_associative()
+// Veracity: UNUSED     {}
 
-    pub proof fn lemma_spec_mul_associative()
-        ensures spec_is_mul_associative()
-    {
-        assert forall |a: nat, b: nat, c: nat| #[trigger] spec_mul(spec_mul(a, b), c) == spec_mul(a, spec_mul(b, c)) by {
-            vstd::arithmetic::mul::lemma_mul_is_associative(a as int, b as int, c as int);
-        }
-    }
+// Veracity: UNUSED     pub proof fn lemma_spec_mul_associative()
+// Veracity: UNUSED         ensures spec_is_mul_associative()
+// Veracity: UNUSED     {
+// Veracity: UNUSED         assert forall |a: nat, b: nat, c: nat| #[trigger] spec_mul(spec_mul(a, b), c) == spec_mul(a, spec_mul(b, c)) by {
+// Veracity: UNUSED             vstd::arithmetic::mul::lemma_mul_is_associative(a as int, b as int, c as int);
+// Veracity: UNUSED         }
+// Veracity: UNUSED     }
 
-    pub proof fn lemma_spec_mul_distributes_over_add()
-        ensures spec_mul_distributes_over_add()
-    {
-        assert forall |a: nat, b: nat, c: nat| #[trigger] spec_mul(a, spec_add(b, c)) == spec_add(spec_mul(a, b), spec_mul(a, c)) by {
-            vstd::arithmetic::mul::lemma_mul_is_distributive_add(a as int, b as int, c as int);
-        }
-    }
+// Veracity: UNUSED     pub proof fn lemma_spec_mul_distributes_over_add()
+// Veracity: UNUSED         ensures spec_mul_distributes_over_add()
+// Veracity: UNUSED     {
+// Veracity: UNUSED         assert forall |a: nat, b: nat, c: nat| #[trigger] spec_mul(a, spec_add(b, c)) == spec_add(spec_mul(a, b), spec_mul(a, c)) by {
+// Veracity: UNUSED             vstd::arithmetic::mul::lemma_mul_is_distributive_add(a as int, b as int, c as int);
+// Veracity: UNUSED         }
+// Veracity: UNUSED     }
 
         /// Trait for checked natural (unsigned) integer types.
         /// Stronger guarantees: only overflow possible (no underflow for addition).
@@ -96,25 +96,30 @@ verus! {
             ensures product@ == self@ * other@;
             // Commutativity proofs (on ghost int)
 
+// Veracity: USED
         proof fn lemma_add_commutative_ghost(a: Self, b: Self)
             ensures a@ + b@ == b@ + a@;
+// Veracity: USED
 
         proof fn lemma_mul_commutative_ghost(a: Self, b: Self)
             ensures a@ * b@ == b@ * a@;
 
+// Veracity: USED
             // Associativity proofs
 
+// Veracity: USED
         proof fn lemma_add_associative_ghost(a: Self, b: Self, c: Self)
             ensures (a@ + b@) + c@ == a@ + (b@ + c@);
 
         proof fn lemma_mul_associative_ghost(a: Self, b: Self, c: Self)
             ensures (a@ * b@) * c@ == a@ * (b@ * c@)
+// Veracity: USED
             { vstd::arithmetic::mul::lemma_mul_is_associative(a@, b@, c@); }
 
             // Distributivity
         proof fn lemma_mul_distributes_over_add_ghost(a: Self, b: Self, c: Self)
             ensures a@ * (b@ + c@) == a@ * b@ + a@ * c@;
-
+// Veracity: UNUSED 
             // STRONGER GUARANTEE for unsigned: monotonic sums
             // If all values are non-negative and final sum fits, no intermediate overflow
 
@@ -124,6 +129,7 @@ verus! {
                 b@ >= 0,
             ensures
                 a@ <= a@ + b@,
+// Veracity: USED
                 b@ <= a@ + b@;
 
             // Key lemma: if final sum of non-negatives fits, the sum is in range

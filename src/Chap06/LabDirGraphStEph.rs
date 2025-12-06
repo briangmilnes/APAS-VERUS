@@ -212,7 +212,7 @@ verus! {
                             proof {
                                 let idx = it@.0 - 1;
                                 crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(la_seq, idx);
-                                assert(la_view.contains((from_view, to_view, labeled_arc.2@)));
+// Veracity: UNNEEDED assert                                 assert(la_view.contains((from_view, to_view, labeled_arc.2@)));
                             }
                             return Some(&labeled_arc.2);
                         }
@@ -261,7 +261,7 @@ verus! {
                                 crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(la_seq, idx);
                                 let arc_view = la_seq[idx]@;
                                 let witness_l = arc_view.2;
-                                assert(self@.A.contains((from_view, to_view, witness_l)));
+// Veracity: UNNEEDED assert                                 assert(self@.A.contains((from_view, to_view, witness_l)));
                             }
                             return true;
                         }
