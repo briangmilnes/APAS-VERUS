@@ -36,10 +36,7 @@ verus! {
         // Seq groups
         vstd::seq::group_seq_axioms,
         vstd::prelude::Seq::group_seq_extra,
-        vstd::prelude::Seq::group_seq_flatten,
-        vstd::seq_lib::group_filter_ensures,
         vstd::seq_lib::group_seq_lib_default,
-        vstd::seq_lib::group_to_multiset_ensures,
         vstd::seq_lib::group_seq_properties,
         // Laws groups
         vstd::laws_eq::group_laws_eq,
