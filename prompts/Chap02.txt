@@ -1,0 +1,69 @@
+2.2.1 Scheduling Problem
+An important advantage of the work-span model is that it allows us to design parallel
+algorithms without having to worry about the details of how they are executed on an actual
+parallel machine. In other words, we never have to worry about mapping of the parallel
+computation to processors, i.e., scheduling.
+Scheduling can be challenging, because a parallel algorithm generates independently exe-
+cutable tasks on the fly as it runs, and it can generate a large number of them, typically
+many more than the number of processors.
+92 CHAPTER 15. COST MODELS
+Example 15.9. A parallel algorithm with Θ(n/ lg n) parallelism can easily generate millions
+of parallel subcomptutations or task at the same time, even when running on a multicore
+computer with 10 cores. For example, for n = 108, the algorithm may generate millions of
+independent tasks.
+Definition 15.5 (Scheduler). A scheduling algorithm or a scheduler is an algorithm for
+mapping parallel tasks to available processors. The scheduler works by taking all parallel
+tasks, which are generated dynamically as the algorithm evaluates, and assigning them to
+processors. If only one processor is available, for example, then all tasks will run on that
+one processor. If two processors are available, the task will be divided between the two.
+Schedulers are typically designed to minimize the execution time of a parallel computation,
+but minimizing space usage is also important.
+2.2.2 Greedy Scheduling
+Definition 15.6 (Greedy Scheduler). We say that a scheduler is greedy if whenever there is
+a processor available and a task ready to execute, then it assigns the task to the processor
+and starts running it immediately. Greedy schedulers have an important property that is
+summarized by the greedy scheduling principle.
+Definition 15.7 (Greedy Scheduling Principle). The greedy scheduling principle postulates
+that if a computation is run on P processors using a greedy scheduler, then the total time
+(clock cycles) for running the computation is bounded by
+TP < W
+P + S
+where W is the work of the computation, and S is the span of the computation (both mea-
+sured in units of clock cycles).
+Optimality of Greedy Schedulers. This simple statement is powerful.
+Firstly, the time to execute the computation cannot be less than W
+P clock cycles since we
+have a total of W clock cycles of work to do and the best we can possibly do is divide it
+evenly among the processors.
+Secondly, the time to execute the computation cannot be any less than S clock cycles, be-
+cause S represents the longest chain of sequential dependencies. Therefore we have
+
+Tp ≥ max
+( W
+P , S
+)
+.
+We therefore see that a greedy scheduler does reasonably close to the best possible. In
+particular W
+P + S is never more than twice max ( W
+P , S).
+2. LANGUAGE BASED MODELS 93
+Furthermore, greedy scheduling is particularly good for algorithms with abundant par-
+allellism. To see this, let’s rewrite the inequality of the Greedy Principle in terms of the
+parallelism P = W/S:
+TP < W
+P + S
+= W
+P + W
+P
+= W
+P
+(
+1 + P
+P
+)
+.
+Therefore, if P  P , i.e., the parallelism is much greater than the number of processors,
+then the parallel time TP is close to W/P , the best possible. In this sense, we can view
+parallelism as a measure of the number of processors that can be used effectively.
+

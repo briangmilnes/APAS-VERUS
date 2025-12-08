@@ -1,0 +1,31 @@
+Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
+Verus Search
+============
+
+Pattern: fn remove
+Searching: /home/milnes/projects/verus-lang/source/vstd
+Files: 87, Functions: 2117, Matches: 38
+
+[31m/home/milnes/projects/verus-lang/source/vstd/seq.rs:177: [0m
+#[verifier(external_body)]
+[38;5;22m    pub proof fn tracked_remove(tracked &mut self, i: int) -> (tracked ret: A)[0m
+[38;5;22m        requires[0m
+[38;5;22m            0 <= i < old(self).len(),[0m
+[38;5;22m        ensures[0m
+[38;5;22m            ret === old(self)[i],[0m
+[38;5;22m            self.len() == old(self).len() - 1,[0m
+[38;5;22m            self == old(self).remove(i),[0m
+
+[31m/home/milnes/projects/verus-lang/source/vstd/hash_set.rs:118: [0m
+/// Removes the given value from the set. Returns true if the value was previously in the set, false otherwise.
+///
+/// See Rust's [`HashSet::remove()`](https://doc.rust-lang.org/std/collections/struct.HashSet.html#method.remove) for implementation details.
+#[verifier::external_body]
+[38;5;22m    pub fn remove(&mut self, k: &Key) -> (result: bool)[0m
+[38;5;22m        ensures[0m
+[38;5;22m            self@ == old(self)@.remove(k@) && result == old(self)@.contains(k@),[0m
+
+[31m/home/milnes/projects/verus-lang/source/vstd/hash_set.rs:261: [0m
+/// Removes the given value from the set. Returns true if the value was previously in the set, false otherwise.
+///
+/// See Rust's [`HashSet::remove()`](https://doc.rust-lang.org/std/collections/struct.HashSet.html#method.remove) for implementation details.

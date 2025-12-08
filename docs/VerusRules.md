@@ -1,5 +1,9 @@
 # Verus Rules and Lessons Learned
 
+> **Prove Big or Go Home!**
+>
+> *Try and get a proof for everything.*
+
 ## Verification Command
 
 **Always verify through `lib.rs`, not individual files:**

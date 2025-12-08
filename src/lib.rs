@@ -6,6 +6,7 @@ pub mod Concurrency;
 pub mod ParaPairs;
 
 pub mod experiments {
+//    pub mod pervasives;
 //    pub mod sigma_pi;
 //    pub mod abstract_set_iter;
 //    pub mod SetLoops;
@@ -56,6 +57,8 @@ pub mod experiments {
 }
 
 pub mod vstdplus {
+    pub mod pervasives_plus;
+    pub mod threads_plus;
     // pub mod set_axioms;  // UNUSED - moved to attic
     pub mod seq_set;
     pub mod seq;
@@ -73,6 +76,11 @@ pub mod vstdplus {
     pub mod arithmetic {
         pub mod power2_plus;
     }
+}
+
+pub mod Chap02 {
+    pub mod SchedulerMtEph;
+    pub mod VecQueue;
 }
 
 pub mod Chap03 {

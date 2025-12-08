@@ -71,6 +71,28 @@ pub mod feq {
         &&& obeys_feq_eq::<T>()
     }
 
+    /// Lemma: cloned values have equal views when obeys_feq_full holds
+    pub proof fn lemma_cloned_view_eq<T: Eq + View + Clone + Sized>(x: T, y: T)
+        requires cloned(x, y), obeys_feq_full::<T>(),
+        ensures x@ == y@,
+    {
+        // obeys_feq_clone: cloned(x, y) ==> x.eq_spec(&y)
+        assert(x.eq_spec(&y));
+        // obeys_feq_view: x.eq_spec(&y) ==> x@ == y@
+    }
+
+    /// Lemma: obeys_feq_view_injective implies vstd::relations::injective on view
+    pub proof fn lemma_view_injective<T: Eq + View + Sized>()
+        requires obeys_feq_view_injective::<T>(),
+        ensures vstd::relations::injective(|k: T| k@),
+    {
+        let f = |k: T| k@;
+        assert forall |x: T, y: T| #[trigger] f(x) == #[trigger] f(y) implies x == y by {
+            // obeys_feq_view_injective gives us: x@ == y@ ==> x == y
+            assert(x@ == y@ ==> x == y);
+        }
+    }
+
     // Implementation for bool
     impl FeqSpecImpl for bool {
         open spec fn obeys_feq() -> bool { obeys_feq_properties::<bool>() }
