@@ -44,51 +44,51 @@ Formally verified implementations of algorithms from "Algorithms Parallel and Se
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| InsertionSortStEph | ✅ | ⬜ | ✅ | ✅ | Generic, multiset preservation proven |
+| InsertionSortStEph | ✅ | — | ✅ | ✅ | Generic, multiset preservation proven |
 
 ### Chapter 05: Sets, Relations, Mappings - ✅ COMPLETE
 
 | Data Structure | Verified | Parallel | Tested | Benchmarked | Notes |
 |----------------|----------|----------|--------|-------------|-------|
-| SetStEph | ✅ | ⬜ | ✅ | ⬜ | Ephemeral set with iterator proofs |
+| SetStEph | ✅ | — | ✅ | ⬜ | Ephemeral set with iterator proofs |
 | SetMtEph | ✅ | ✅ | ✅ | ⬜ | Multi-threaded parallel set |
-| RelationStEph | ✅ | ⬜ | ✅ | ⬜ | Binary relations |
-| MappingStEph | ✅ | ⬜ | ✅ | ⬜ | Key-value mappings |
+| RelationStEph | ✅ | — | ✅ | ⬜ | Binary relations |
+| MappingStEph | ✅ | — | ✅ | ⬜ | Key-value mappings |
 
 ### Chapter 06: Graphs - ✅ COMPLETE
 
 | Data Structure | Verified | Parallel | Tested | Benchmarked | Notes |
 |----------------|----------|----------|--------|-------------|-------|
-| DirGraphStEph | ✅ | ⬜ | ✅ | ⬜ | Directed graph |
+| DirGraphStEph | ✅ | — | ✅ | ⬜ | Directed graph |
 | DirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel directed graph |
-| UnDirGraphStEph | ✅ | ⬜ | ✅ | ⬜ | Undirected graph |
+| UnDirGraphStEph | ✅ | — | ✅ | ⬜ | Undirected graph |
 | UnDirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel undirected graph |
-| LabDirGraphStEph | ✅ | ⬜ | ✅ | ⬜ | Labeled directed graph |
+| LabDirGraphStEph | ✅ | — | ✅ | ⬜ | Labeled directed graph |
 | LabDirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel labeled directed |
-| LabUnDirGraphStEph | ✅ | ⬜ | ✅ | ⬜ | Labeled undirected graph |
+| LabUnDirGraphStEph | ✅ | — | ✅ | ⬜ | Labeled undirected graph |
 | LabUnDirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel labeled undirected |
-| WeightedDirGraphStEph | ✅ | ⬜ | ✅ | ⬜ | All 12 integer types |
+| WeightedDirGraphStEph | ✅ | — | ✅ | ⬜ | All 12 integer types |
 | WeightedDirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel weighted directed |
 
 ### Chapter 11: Fibonacci - ✅ COMPLETE
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| FibonacciStEph | ✅ | ⬜ | ✅ | ⬜ | Sequential with overflow proofs |
+| FibonacciStEph | ✅ | — | ✅ | ⬜ | Sequential with overflow proofs |
 | FibonacciMtEph2Threads | ✅ | ✅ | ✅ | ⬜ | 2-thread parallel |
 | FibonacciMtPerAllThreads | ✅ | ✅ | ✅ | ⬜ | ParaPairDisjoint! macro |
 | FibonacciMtEphRecomputes | ✅ | ✅ | ✅ | ⬜ | Recomputation variant |
 | FibonacciMtPerTSM | ✅ | ✅ | ✅ | ⬜ | Tokenized state machine |
 
-### Chapter 12: Concurrency Exercises - 🔄 EXTERNAL_BODY
+### Chapter 12: Concurrency Primitives - 🔄 EXTERNAL_BODY
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Exercise12_1 (SpinLock) | 🔄 | ✅ | ✅ | ⬜ | Ticket lock via fetch-and-add, 6 holes |
-| Exercise12_2 (fetch_add_cas) | 🔄 | ✅ | ✅ | ⬜ | CAS-based fetch-and-add, 1 hole |
-| Exercise12_5 (ConcurrentStack) | 🔄 | ✅ | ✅ | ⬜ | Treiber stack, 11 holes (raw ptrs) |
+| SpinLock | 🔄 | ✅ | ✅ | ⬜ | Ticket lock via fetch-and-add |
+| fetch_add_cas | 🔄 | ✅ | ✅ | ⬜ | CAS-based fetch-and-add |
+| ConcurrentStackMt | 🔄 | ✅ | ✅ | ⬜ | Lock-free Treiber stack |
 
-Note: Concurrency primitives use atomics and raw pointers not supported by Verus.
+18 holes total - atomics and raw pointers not supported by Verus.
 
 ### Chapter 17: MathSeq - ⬜ NOT STARTED
 
