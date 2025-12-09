@@ -88,7 +88,7 @@ Formally verified implementations of algorithms from "Algorithms Parallel and Se
 | Exercise12_2 | ⬜ | ⬜ | ⬜ | ⬜ | |
 | Exercise12_5 | ⬜ | ⬜ | ⬜ | ⬜ | |
 
-### Chapter 17: Shortest Paths - ⬜ NOT STARTED
+### Chapter 17: MathSeq - ⬜ NOT STARTED
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
