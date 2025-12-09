@@ -12,30 +12,6 @@ Formally verified implementations of algorithms from "Algorithms Parallel and Se
 - `benches/` - Performance benchmarks using Criterion
 - `attic/` - Old/deprecated implementations
 
-## Verified Data Structures
-
-### Chapter 05: Sets, Relations, and Mappings - ✅ COMPLETE
-
-| Data Structure | Verified | Notes |
-|----------------|----------|-------|
-| `SetStEph<T>` | ✅ | Ephemeral set with `to_seq()`, iterator proofs |
-| `RelationStEph<T, U>` | ✅ | Binary relations |
-| `MappingStEph<K, V>` | ✅ | Key-value mappings |
-
-### Chapter 06: Graphs - ✅ COMPLETE
-
-| Data Structure | Verified | Notes |
-|----------------|----------|-------|
-| `DirGraphStEph<V>` | ✅ | Directed graph |
-| `UnDirGraphStEph<V>` | ✅ | Undirected graph |
-| `LabDirGraphStEph<V, L>` | ✅ | Labeled directed graph |
-| `LabUnDirGraphStEph<V, L>` | ✅ | Labeled undirected graph |
-| `WeightedDirGraphStEphU32<V>` | ✅ | Weighted directed graph with `total_weight()` proven |
-
-**Weighted Graph Variants (proven, not compiled by default):**
-- All unsigned: `U8`, `U16`, `U32`, `U64`, `U128`, `Usize`
-- All signed: `I8`, `I16`, `I32`, `I64`, `I128`, `Isize`
-
 ### vstdplus Library Extensions
 
 | Module | Description |
