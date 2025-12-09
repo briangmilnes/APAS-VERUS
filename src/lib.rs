@@ -80,6 +80,7 @@ pub mod vstdplus {
 
 pub mod Chap02 {
     pub mod SchedulerMtEph;
+    pub mod ConcurrentScheduler;
     pub mod VecQueue;
     pub mod FibonacciScheduler;
 }
