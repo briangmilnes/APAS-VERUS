@@ -131,3 +131,9 @@ pub mod Chap11 {
     pub mod FibonacciMtEph2Threads;
     pub mod FibonacciMtEphRecomputes;
 }
+
+pub mod Chap12 {
+    pub mod Exercise12_1;
+    pub mod Exercise12_2;
+    pub mod Exercise12_5;
+}

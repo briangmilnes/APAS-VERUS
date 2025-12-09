@@ -80,13 +80,15 @@ Formally verified implementations of algorithms from "Algorithms Parallel and Se
 | FibonacciMtEphRecomputes | ✅ | ✅ | ✅ | ⬜ | Recomputation variant |
 | FibonacciMtPerTSM | ✅ | ✅ | ✅ | ⬜ | Tokenized state machine |
 
-### Chapter 12: Exercises - ⬜ NOT STARTED
+### Chapter 12: Concurrency Exercises - 🔄 EXTERNAL_BODY
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Exercise12_1 | ⬜ | ⬜ | ⬜ | ⬜ | |
-| Exercise12_2 | ⬜ | ⬜ | ⬜ | ⬜ | |
-| Exercise12_5 | ⬜ | ⬜ | ⬜ | ⬜ | |
+| Exercise12_1 (SpinLock) | 🔄 | ✅ | ✅ | ⬜ | Ticket lock via fetch-and-add, 6 holes |
+| Exercise12_2 (fetch_add_cas) | 🔄 | ✅ | ✅ | ⬜ | CAS-based fetch-and-add, 1 hole |
+| Exercise12_5 (ConcurrentStack) | 🔄 | ✅ | ✅ | ⬜ | Treiber stack, 11 holes (raw ptrs) |
+
+Note: Concurrency primitives use atomics and raw pointers not supported by Verus.
 
 ### Chapter 17: MathSeq - ⬜ NOT STARTED
 
