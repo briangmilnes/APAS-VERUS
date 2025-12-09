@@ -2,7 +2,7 @@
 
 Formally verified implementations of algorithms from "Algorithms Parallel and Sequential" by Acar, Blelloch, and Milnes, using the [Verus](https://github.com/verus-lang/verus) verification framework for Rust.
 
-**Verified: 3 algorithms, 8 data structures**
+**Verified: 4 algorithms, 9 data structures**
 
 ## Project Structure
 
@@ -48,8 +48,20 @@ Formally verified implementations of algorithms from "Algorithms Parallel and Se
 | `partial_order` | `PartialOrdered` trait |
 | `clone_plus` | `ClonePlus` trait for Verus-compatible cloning |
 | `feq` | Functional equality |
+| `threads_plus` | Verified thread primitives (`spawn_plus`, `JoinHandlePlus`) |
 
 ## Algorithm Status
+
+### Chapter 02: Scheduling - ✅ COMPLETE
+
+| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
+|-----------|----------|----------|--------|-------------|-------|
+| Work-Stealing Scheduler | ✅ | ✅ | ✅ | ⬜ | `Pool` with bounded parallelism, verified `join` propagates `ensures` |
+
+**Scheduling Infrastructure:**
+- `Pool` - Bounded thread pool with `Pool::new(n)` and `pool.join(fa, fb)`
+- `join` - Verified parallel join, propagates closure `requires`/`ensures` through `spawn_plus`
+- `threads_plus` - Verus-compatible wrappers for `std::thread` (`spawn_plus`, `JoinHandlePlus`)
 
 ### Chapter 03: Sorting - ✅ COMPLETE
 
@@ -61,13 +73,15 @@ Formally verified implementations of algorithms from "Algorithms Parallel and Se
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Fibonacci | ✅ | ✅ | ✅ | ⬜ | Sequential + parallel, `spec_fib` with overflow proofs, `ParaPairDisjoint!` |
+| Fibonacci (Sequential) | ✅ | ⬜ | ✅ | ⬜ | `fib_seq` with overflow proofs via `lemma_fib_sum_fits_u64` |
+| Fibonacci (Pool) | ✅ | ✅ | ✅ | ⬜ | `fib_pool` using `Pool.join`, verified `ensures` propagation |
+| Fibonacci (ParaPair) | ✅ | ✅ | ✅ | ⬜ | `ParaPairDisjoint!` macro for fork-join |
 
 **Parallelism Infrastructure:**
+- `Pool` - Work-stealing scheduler with `pool.join(fa, fb)` (see Chapter 02)
 - `ParaPairs.rs` - Disjoint parallel pair abstraction
-- `para_pair_disjoint` - Verified function with `f.requires()`/`f.ensures()` propagation through `spawn`/`join`
+- `para_pair_disjoint` - Verified function with `f.requires()`/`f.ensures()` propagation
 - `ParaPairDisjoint!` - Macro for verified parallel fork-join
-- `ParaPair!` - Unverified macro for non-Verus code
 
 ### Chapter 05: Sequences and Series - ⬜ NOT STARTED
 

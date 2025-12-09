@@ -902,3 +902,1022 @@ Holes Found: 9 total
    5 × external_body
 
 Completed in 2ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), admit()
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+✓ arithmetic/power2_plus.rs
+   6 clean proof functions
+✓ checked_int.rs
+   7 clean proof functions
+✓ checked_nat.rs
+   7 clean proof functions
+✓ checked_nat_with_checked_view.rs
+❌ clone_plus.rs
+   Holes: 1 total
+      1 × external_body
+❌ feq.rs
+   Holes: 4 total
+      1 × assume()
+      1 × admit()
+      1 × external_trait_specification
+      1 × external_trait_extension
+   Proof functions: 3 total (2 clean, 1 holed)
+✓ hash_set_specs.rs
+❌ hash_set_with_view_plus.rs
+   Holes: 5 total
+      1 × admit()
+      4 × external_body
+   Proof functions: 1 total (0 clean, 1 holed)
+❌ hashed_checked_u32.rs
+   Holes: 4 total
+      2 × admit()
+      2 × external_body
+   Proof functions: 2 total (0 clean, 2 holed)
+❌ partial_order.rs
+   Holes: 8 total
+      6 × admit()
+      2 × external_body
+   Proof functions: 45 total (39 clean, 6 holed)
+✓ pervasives_plus.rs
+❌ seq.rs
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 5 total (5 clean, 0 holed)
+✓ seq_set.rs
+   57 clean proof functions
+❌ threads_plus.rs
+   Holes: 9 total
+      6 × external_body
+      3 × external
+✓ total_order.rs
+   52 clean proof functions
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   8 clean (no holes)
+   7 holed (contains holes)
+   15 total
+
+Proof Functions:
+   175 clean
+   10 holed
+   185 total
+
+Holes Found: 32 total
+   2 × assume()
+   10 × admit()
+   15 × external_body
+   1 × external_trait_specification
+   1 × external_trait_extension
+   3 × external
+
+Completed in 8ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), admit()
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+❌ ConcurrentScheduler.rs
+   Holes: 1 total
+      1 × external_body
+❌ FibonacciScheduler.rs
+   Holes: 2 total
+      2 × assume()
+❌ SchedulerMtEph.rs
+   Holes: 6 total
+      2 × assume(false)
+      4 × external_body
+   Proof functions: 4 total (4 clean, 0 holed)
+✓ VecQueue.rs
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   1 clean (no holes)
+   3 holed (contains holes)
+   4 total
+
+Proof Functions:
+   4 clean
+   0 holed
+   4 total
+
+Holes Found: 9 total
+   2 × assume(false)
+   2 × assume()
+   5 × external_body
+
+Completed in 2ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), admit()
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+✓ arithmetic/power2_plus.rs
+   6 clean proof functions
+✓ checked_int.rs
+   7 clean proof functions
+✓ checked_nat.rs
+   7 clean proof functions
+✓ checked_nat_with_checked_view.rs
+❌ clone_plus.rs
+   Holes: 1 total
+      1 × external_body
+❌ feq.rs
+   Holes: 4 total
+      1 × assume()
+      1 × admit()
+      1 × external_trait_specification
+      1 × external_trait_extension
+   Proof functions: 3 total (2 clean, 1 holed)
+✓ hash_set_specs.rs
+❌ hash_set_with_view_plus.rs
+   Holes: 5 total
+      1 × admit()
+      4 × external_body
+   Proof functions: 1 total (0 clean, 1 holed)
+❌ hashed_checked_u32.rs
+   Holes: 4 total
+      2 × admit()
+      2 × external_body
+   Proof functions: 2 total (0 clean, 2 holed)
+❌ partial_order.rs
+   Holes: 8 total
+      6 × admit()
+      2 × external_body
+   Proof functions: 45 total (39 clean, 6 holed)
+✓ pervasives_plus.rs
+❌ seq.rs
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 5 total (5 clean, 0 holed)
+✓ seq_set.rs
+   57 clean proof functions
+❌ threads_plus.rs
+   Holes: 9 total
+      6 × external_body
+      3 × external
+✓ total_order.rs
+   52 clean proof functions
+❌ src/Chap02/ConcurrentScheduler.rs
+   Holes: 1 total
+      1 × external_body
+❌ src/Chap02/FibonacciScheduler.rs
+   Holes: 2 total
+      2 × assume()
+❌ src/Chap02/SchedulerMtEph.rs
+   Holes: 6 total
+      2 × assume(false)
+      4 × external_body
+   Proof functions: 4 total (4 clean, 0 holed)
+✓ src/Chap02/VecQueue.rs
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   9 clean (no holes)
+   10 holed (contains holes)
+   19 total
+
+Proof Functions:
+   179 clean
+   10 holed
+   189 total
+
+Holes Found: 41 total
+   2 × assume(false)
+   4 × assume()
+   10 × admit()
+   20 × external_body
+   1 × external_trait_specification
+   1 × external_trait_extension
+   3 × external
+
+Completed in 8ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), admit()
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+✓ arithmetic/power2_plus.rs
+   6 clean proof functions
+✓ checked_int.rs
+   7 clean proof functions
+✓ checked_nat.rs
+   7 clean proof functions
+✓ checked_nat_with_checked_view.rs
+❌ clone_plus.rs
+   Holes: 1 total
+      1 × external_body
+❌ feq.rs
+   Holes: 4 total
+      1 × assume()
+      1 × admit()
+      1 × external_trait_specification
+      1 × external_trait_extension
+   Proof functions: 3 total (2 clean, 1 holed)
+✓ hash_set_specs.rs
+❌ hash_set_with_view_plus.rs
+   Holes: 5 total
+      1 × admit()
+      4 × external_body
+   Proof functions: 1 total (0 clean, 1 holed)
+❌ hashed_checked_u32.rs
+   Holes: 4 total
+      2 × admit()
+      2 × external_body
+   Proof functions: 2 total (0 clean, 2 holed)
+❌ partial_order.rs
+   Holes: 8 total
+      6 × admit()
+      2 × external_body
+   Proof functions: 45 total (39 clean, 6 holed)
+✓ pervasives_plus.rs
+❌ seq.rs
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 5 total (5 clean, 0 holed)
+✓ seq_set.rs
+   57 clean proof functions
+❌ threads_plus.rs
+   Holes: 9 total
+      6 × external_body
+      3 × external
+✓ total_order.rs
+   52 clean proof functions
+❌ src/Chap02/ConcurrentScheduler.rs
+   Holes: 1 total
+      1 × external_body
+❌ src/Chap02/FibonacciScheduler.rs
+   Holes: 2 total
+      2 × assume()
+❌ src/Chap02/SchedulerMtEph.rs
+   Holes: 6 total
+      2 × assume(false)
+      4 × external_body
+   Proof functions: 4 total (4 clean, 0 holed)
+✓ src/Chap02/VecQueue.rs
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   9 clean (no holes)
+   10 holed (contains holes)
+   19 total
+
+Proof Functions:
+   179 clean
+   10 holed
+   189 total
+
+Holes Found: 41 total
+   2 × assume(false)
+   4 × assume()
+   10 × admit()
+   20 × external_body
+   1 × external_trait_specification
+   1 × external_trait_extension
+   3 × external
+
+Completed in 8ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), admit()
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+❌ threads_plus.rs
+   Holes: 6 total
+      6 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   1 holed (contains holes)
+   1 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 6 total
+   6 × external_body
+
+Completed in 0ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), admit()
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+❌ WorkStealingSchedulerMtEph.rs
+   Holes: 26 total
+      26 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   1 holed (contains holes)
+   1 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 26 total
+   26 × external_body
+
+Completed in 1ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), admit()
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+❌ WorkStealingSchedulerMtEph.rs
+   Holes: 25 total
+      1 × assume(false)
+      24 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   1 holed (contains holes)
+   1 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 25 total
+   1 × assume(false)
+   24 × external_body
+
+Completed in 0ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), admit()
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+✓ arithmetic/power2_plus.rs
+   6 clean proof functions
+✓ checked_int.rs
+   7 clean proof functions
+✓ checked_nat.rs
+   7 clean proof functions
+✓ checked_nat_with_checked_view.rs
+❌ clone_plus.rs
+   Holes: 1 total
+      1 × external_body
+❌ feq.rs
+   Holes: 4 total
+      1 × assume()
+      1 × admit()
+      1 × external_trait_specification
+      1 × external_trait_extension
+   Proof functions: 3 total (2 clean, 1 holed)
+✓ hash_set_specs.rs
+❌ hash_set_with_view_plus.rs
+   Holes: 5 total
+      1 × admit()
+      4 × external_body
+   Proof functions: 1 total (0 clean, 1 holed)
+❌ hashed_checked_u32.rs
+   Holes: 4 total
+      2 × admit()
+      2 × external_body
+   Proof functions: 2 total (0 clean, 2 holed)
+❌ partial_order.rs
+   Holes: 8 total
+      6 × admit()
+      2 × external_body
+   Proof functions: 45 total (39 clean, 6 holed)
+✓ pervasives_plus.rs
+❌ seq.rs
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 5 total (5 clean, 0 holed)
+✓ seq_set.rs
+   57 clean proof functions
+❌ threads_plus.rs
+   Holes: 6 total
+      6 × external_body
+✓ total_order.rs
+   52 clean proof functions
+❌ src/Chap02/ConcurrentScheduler.rs
+   Holes: 1 total
+      1 × external_body
+❌ src/Chap02/FibonacciScheduler.rs
+   Holes: 2 total
+      2 × assume()
+❌ src/Chap02/SchedulerMtEph.rs
+   Holes: 6 total
+      2 × assume(false)
+      4 × external_body
+   Proof functions: 4 total (4 clean, 0 holed)
+✓ src/Chap02/VecQueue.rs
+❌ src/Chap02/WSSchedulerMtEph.rs
+   Holes: 25 total
+      1 × assume(false)
+      24 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   9 clean (no holes)
+   11 holed (contains holes)
+   20 total
+
+Proof Functions:
+   179 clean
+   10 holed
+   189 total
+
+Holes Found: 63 total
+   3 × assume(false)
+   4 × assume()
+   10 × admit()
+   44 × external_body
+   1 × external_trait_specification
+   1 × external_trait_extension
+
+Completed in 10ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), admit()
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+✓ arithmetic/power2_plus.rs
+   6 clean proof functions
+✓ checked_int.rs
+   7 clean proof functions
+✓ checked_nat.rs
+   7 clean proof functions
+✓ checked_nat_with_checked_view.rs
+❌ clone_plus.rs
+   Holes: 1 total
+      1 × external_body
+❌ feq.rs
+   Holes: 4 total
+      1 × assume()
+      1 × admit()
+      1 × external_trait_specification
+      1 × external_trait_extension
+   Proof functions: 3 total (2 clean, 1 holed)
+✓ hash_set_specs.rs
+❌ hash_set_with_view_plus.rs
+   Holes: 5 total
+      1 × admit()
+      4 × external_body
+   Proof functions: 1 total (0 clean, 1 holed)
+❌ hashed_checked_u32.rs
+   Holes: 4 total
+      2 × admit()
+      2 × external_body
+   Proof functions: 2 total (0 clean, 2 holed)
+❌ partial_order.rs
+   Holes: 8 total
+      6 × admit()
+      2 × external_body
+   Proof functions: 45 total (39 clean, 6 holed)
+✓ pervasives_plus.rs
+❌ seq.rs
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 5 total (5 clean, 0 holed)
+✓ seq_set.rs
+   57 clean proof functions
+❌ threads_plus.rs
+   Holes: 6 total
+      6 × external_body
+✓ total_order.rs
+   52 clean proof functions
+❌ src/Chap02/FibonacciWSScheduler.rs
+   Holes: 3 total
+      1 × assume()
+      2 × external_body
+✓ src/Chap02/VecQueue.rs
+❌ src/Chap02/WSSchedulerMtEph.rs
+   Holes: 25 total
+      1 × assume(false)
+      24 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   9 clean (no holes)
+   9 holed (contains holes)
+   18 total
+
+Proof Functions:
+   175 clean
+   10 holed
+   185 total
+
+Holes Found: 57 total
+   1 × assume(false)
+   3 × assume()
+   10 × admit()
+   41 × external_body
+   1 × external_trait_specification
+   1 × external_trait_extension
+
+Completed in 14ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), admit()
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+✓ VecQueue.rs
+✓ arithmetic/power2_plus.rs
+   6 clean proof functions
+✓ checked_int.rs
+   7 clean proof functions
+✓ checked_nat.rs
+   7 clean proof functions
+✓ checked_nat_with_checked_view.rs
+❌ clone_plus.rs
+   Holes: 1 total
+      1 × external_body
+❌ feq.rs
+   Holes: 4 total
+      1 × assume()
+      1 × admit()
+      1 × external_trait_specification
+      1 × external_trait_extension
+   Proof functions: 3 total (2 clean, 1 holed)
+✓ hash_set_specs.rs
+❌ hash_set_with_view_plus.rs
+   Holes: 5 total
+      1 × admit()
+      4 × external_body
+   Proof functions: 1 total (0 clean, 1 holed)
+❌ hashed_checked_u32.rs
+   Holes: 4 total
+      2 × admit()
+      2 × external_body
+   Proof functions: 2 total (0 clean, 2 holed)
+❌ partial_order.rs
+   Holes: 8 total
+      6 × admit()
+      2 × external_body
+   Proof functions: 45 total (39 clean, 6 holed)
+✓ pervasives_plus.rs
+❌ seq.rs
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 5 total (5 clean, 0 holed)
+✓ seq_set.rs
+   57 clean proof functions
+❌ threads_plus.rs
+   Holes: 6 total
+      6 × external_body
+✓ total_order.rs
+   52 clean proof functions
+❌ src/Chap02/FibonacciWSScheduler.rs
+   Holes: 3 total
+      1 × assume()
+      2 × external_body
+❌ src/Chap02/WSSchedulerMtEph.rs
+   Holes: 25 total
+      1 × assume(false)
+      24 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   9 clean (no holes)
+   9 holed (contains holes)
+   18 total
+
+Proof Functions:
+   175 clean
+   10 holed
+   185 total
+
+Holes Found: 57 total
+   1 × assume(false)
+   3 × assume()
+   10 × admit()
+   41 × external_body
+   1 × external_trait_specification
+   1 × external_trait_extension
+
+Completed in 12ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), Tracked::assume_new(), admit()
+  - unsafe fn, unsafe impl, unsafe {} blocks
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+❌ threads_plus.rs
+   Holes: 9 total
+      1 × Tracked::assume_new()
+      2 × unsafe impl
+      6 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   1 holed (contains holes)
+   1 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 9 total
+   1 × Tracked::assume_new()
+   2 × unsafe impl
+   6 × external_body
+
+Completed in 0ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), Tracked::assume_new(), admit()
+  - unsafe fn, unsafe impl, unsafe {} blocks
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+✓ VecQueue.rs
+✓ arithmetic/power2_plus.rs
+   6 clean proof functions
+✓ checked_int.rs
+   7 clean proof functions
+✓ checked_nat.rs
+   7 clean proof functions
+✓ checked_nat_with_checked_view.rs
+❌ clone_plus.rs
+   Holes: 1 total
+      1 × external_body
+❌ feq.rs
+   Holes: 4 total
+      1 × assume()
+      1 × admit()
+      1 × external_trait_specification
+      1 × external_trait_extension
+   Proof functions: 3 total (2 clean, 1 holed)
+✓ hash_set_specs.rs
+❌ hash_set_with_view_plus.rs
+   Holes: 5 total
+      1 × admit()
+      4 × external_body
+   Proof functions: 1 total (0 clean, 1 holed)
+❌ hashed_checked_u32.rs
+   Holes: 4 total
+      2 × admit()
+      2 × external_body
+   Proof functions: 2 total (0 clean, 2 holed)
+❌ partial_order.rs
+   Holes: 8 total
+      6 × admit()
+      2 × external_body
+   Proof functions: 45 total (39 clean, 6 holed)
+✓ pervasives_plus.rs
+❌ seq.rs
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 5 total (5 clean, 0 holed)
+✓ seq_set.rs
+   57 clean proof functions
+❌ threads_plus.rs
+   Holes: 9 total
+      1 × Tracked::assume_new()
+      2 × unsafe impl
+      6 × external_body
+✓ total_order.rs
+   52 clean proof functions
+❌ src/Chap02/FibonacciWSScheduler.rs
+   Holes: 3 total
+      1 × assume()
+      2 × external_body
+❌ src/Chap02/WSSchedulerMtEph.rs
+   Holes: 25 total
+      1 × assume(false)
+      24 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   9 clean (no holes)
+   9 holed (contains holes)
+   18 total
+
+Proof Functions:
+   175 clean
+   10 holed
+   185 total
+
+Holes Found: 60 total
+   1 × assume(false)
+   3 × assume()
+   1 × Tracked::assume_new()
+   10 × admit()
+   2 × unsafe impl
+   41 × external_body
+   1 × external_trait_specification
+   1 × external_trait_extension
+
+Completed in 12ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), Tracked::assume_new(), admit()
+  - unsafe fn, unsafe impl, unsafe {} blocks
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+✓ FibonacciWSScheduler.rs
+   5 clean proof functions
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   1 clean (no holes)
+   0 holed (contains holes)
+   1 total
+
+Proof Functions:
+   5 clean
+   0 holed
+   5 total
+
+Holes Found: 0 total
+
+🎉 No proof holes found! All proofs are complete.
+
+Completed in 0ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), Tracked::assume_new(), admit()
+  - unsafe fn, unsafe impl, unsafe {} blocks
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+✓ VecQueue.rs
+✓ arithmetic/power2_plus.rs
+   6 clean proof functions
+✓ checked_int.rs
+   7 clean proof functions
+✓ checked_nat.rs
+   7 clean proof functions
+✓ checked_nat_with_checked_view.rs
+❌ clone_plus.rs
+   Holes: 1 total
+      1 × external_body
+❌ feq.rs
+   Holes: 4 total
+      1 × assume()
+      1 × admit()
+      1 × external_trait_specification
+      1 × external_trait_extension
+   Proof functions: 3 total (2 clean, 1 holed)
+✓ hash_set_specs.rs
+❌ hash_set_with_view_plus.rs
+   Holes: 5 total
+      1 × admit()
+      4 × external_body
+   Proof functions: 1 total (0 clean, 1 holed)
+❌ hashed_checked_u32.rs
+   Holes: 4 total
+      2 × admit()
+      2 × external_body
+   Proof functions: 2 total (0 clean, 2 holed)
+❌ partial_order.rs
+   Holes: 8 total
+      6 × admit()
+      2 × external_body
+   Proof functions: 45 total (39 clean, 6 holed)
+✓ pervasives_plus.rs
+❌ seq.rs
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 5 total (5 clean, 0 holed)
+✓ seq_set.rs
+   57 clean proof functions
+❌ threads_plus.rs
+   Holes: 9 total
+      1 × Tracked::assume_new()
+      2 × unsafe impl
+      6 × external_body
+✓ total_order.rs
+   52 clean proof functions
+✓ src/Chap02/FibonacciWSScheduler.rs
+   5 clean proof functions
+❌ src/Chap02/WSSchedulerMtEph.rs
+   Holes: 25 total
+      1 × assume(false)
+      24 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   10 clean (no holes)
+   8 holed (contains holes)
+   18 total
+
+Proof Functions:
+   180 clean
+   10 holed
+   190 total
+
+Holes Found: 57 total
+   1 × assume(false)
+   2 × assume()
+   1 × Tracked::assume_new()
+   10 × admit()
+   2 × unsafe impl
+   39 × external_body
+   1 × external_trait_specification
+   1 × external_trait_extension
+
+Completed in 16ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), Tracked::assume_new(), admit()
+  - unsafe fn, unsafe impl, unsafe {} blocks
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+❌ FibonacciWSScheduler.rs
+   Holes: 2 total
+      2 × external_body
+   Proof functions: 5 total (5 clean, 0 holed)
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   1 holed (contains holes)
+   1 total
+
+Proof Functions:
+   5 clean
+   0 holed
+   5 total
+
+Holes Found: 2 total
+   2 × external_body
+
+Completed in 0ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), Tracked::assume_new(), admit()
+  - unsafe fn, unsafe impl, unsafe {} blocks
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+✓ FibonacciWSScheduler.rs
+   5 clean proof functions
+❌ WSSchedulerMtEph.rs
+   Holes: 5 total
+      1 × assume(false)
+      4 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   1 clean (no holes)
+   1 holed (contains holes)
+   2 total
+
+Proof Functions:
+   5 clean
+   0 holed
+   5 total
+
+Holes Found: 5 total
+   1 × assume(false)
+   4 × external_body
+
+Completed in 1ms

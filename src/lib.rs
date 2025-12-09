@@ -59,6 +59,7 @@ pub mod experiments {
 pub mod vstdplus {
     pub mod pervasives_plus;
     pub mod threads_plus;
+    pub mod VecQueue;
     // pub mod set_axioms;  // UNUSED - moved to attic
     pub mod seq_set;
     pub mod seq;
@@ -79,10 +80,8 @@ pub mod vstdplus {
 }
 
 pub mod Chap02 {
-    pub mod SchedulerMtEph;
-    pub mod ConcurrentScheduler;
-    pub mod VecQueue;
-    pub mod FibonacciScheduler;
+    pub mod WSSchedulerMtEph;
+    pub mod FibonacciWSScheduler;
 }
 
 pub mod Chap03 {

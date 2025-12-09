@@ -2,9 +2,18 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: def Mutex
+Pattern: def Scheduler
 Searching: /home/milnes/projects/verus-lang/source/vstd
-Files: 87
-  Structs: 0, Enums: 0, Types: 0, Traits: 0
-  Matches: 0
+Searching: /home/milnes/projects/VerusCodebases/
+Files: 6453
+  Structs: 0, Enums: 0, Types: 0, Traits: 2
+  Matches: 2
+
+[31m/home/milnes/projects/VerusCodebases/CortenMM-Artifact/cortenmm-rw/ostd/src/task/scheduler/mod.rs:101: [0m
+/// A SMP-aware task scheduler.
+[38;5;22mpub trait Scheduler<T = Task>: Sync + Send[0m
+
+[31m/home/milnes/projects/VerusCodebases/CortenMM-Artifact/cortenmm-adv/ostd/src/task/scheduler/mod.rs:101: [0m
+/// A SMP-aware task scheduler.
+[38;5;22mpub trait Scheduler<T = Task>: Sync + Send[0m
 

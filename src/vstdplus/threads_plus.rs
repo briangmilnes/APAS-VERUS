@@ -17,7 +17,6 @@ verus! {
     impl<Ret> JoinHandlePlus<Ret> {
         pub uninterp spec fn predicate(&self, ret: Ret) -> bool;
 
-
     /// Check if thread finished without blocking. (Addition over vstd::thread.)
         #[verifier::external_body]
         pub fn is_finished(&self) -> (finished: bool) { self.handle.is_finished() }
@@ -26,9 +25,10 @@ verus! {
         pub fn join(self) -> (res: Result<Ret, ()>)
             ensures match res { Result::Ok(r) => self.predicate(r), Result::Err(_) => true }
         {
-            let res = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                match self.handle.join() { Ok(v) => Ok(v), Err(_) => Err(()) }
-            }));
+            let res = std::panic::catch_unwind(std::panic::AssertUnwindSafe(
+                || {
+                    match self.handle.join() { Ok(v) => Ok(v), Err(_) => Err(()) }
+                }));
             match res {
                 Ok(res) => res,
                 Err(_) => { println!("panic on join"); std::process::abort(); }
@@ -42,9 +42,10 @@ verus! {
           Ret: Send + 'static requires f.requires(()) 
         ensures forall|ret: Ret| #[trigger] handle.predicate(ret) ==> f.ensures((), ret)
     {
-        let res = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            JoinHandlePlus { handle: std::thread::spawn(move || f()) }
-        }));
+        let res = std::panic::catch_unwind(std::panic::AssertUnwindSafe(
+            || {
+                JoinHandlePlus { handle: std::thread::spawn(move || f()) }
+            }));
         match res {
             Ok(res) => res,
             Err(_) => { println!("panic on spawn_plus"); std::process::abort(); }
@@ -55,7 +56,6 @@ verus! {
     pub struct ThreadIdPlus { thread_id: std::thread::ThreadId }
 
     #[cfg(verus_keep_ghost)]
-    #[verifier::external_body]
     pub tracked struct IsThreadPlus {}
 
     #[cfg(verus_keep_ghost)]
@@ -65,7 +65,6 @@ verus! {
     impl !Send for IsThreadPlus {}
 
     #[cfg(not(verus_keep_ghost))]
-    #[verifier::external_body]
     pub tracked struct IsThreadPlus { _no_send_sync: core::marker::PhantomData<*const ()> }
 
     impl IsThreadPlus {
@@ -73,15 +72,6 @@ verus! {
 
         pub axiom fn agrees(tracked self, tracked other: IsThreadPlus)
         ensures self@ == other@;
-    }
-
-    #[verifier::external]
-    impl Clone for IsThreadPlus {
-        #[cfg(verus_keep_ghost)]
-        fn clone(&self) -> Self { IsThreadPlus {} }
-
-        #[cfg(not(verus_keep_ghost))]
-        fn clone(&self) -> Self { IsThreadPlus { _no_send_sync: Default::default() } }
     }
 
     impl Copy for IsThreadPlus {}
@@ -96,15 +86,8 @@ verus! {
 
     pub axiom fn ghost_thread_id_plus() -> (tracked res: IsThreadPlus);
 
-    #[verifier::external_body]
     #[verifier::accept_recursive_types(V)]
     tracked struct ThreadShareablePlus<V> { phantom: marker::PhantomData<V> }
-
-    #[verifier::external]
-    unsafe impl<V> Sync for ThreadShareablePlus<V> {}
-
-    #[verifier::external]
-    unsafe impl<V> Send for ThreadShareablePlus<V> {}
 
     impl<V> ThreadShareablePlus<V> {
         pub uninterp spec fn view(&self)                                 -> V;
@@ -129,5 +112,17 @@ verus! {
         ensures *res == self@;
     }
 
- } // verus!
+} // verus!
+
+impl Clone for IsThreadPlus {
+    #[cfg(verus_keep_ghost)]
+    fn clone(&self) -> Self { IsThreadPlus {} }
+
+    #[cfg(not(verus_keep_ghost))]
+    fn clone(&self) -> Self { IsThreadPlus { _no_send_sync: Default::default() } }
+}
+
+unsafe impl<V> Sync for ThreadShareablePlus<V> {}
+unsafe impl<V> Send for ThreadShareablePlus<V> {}
+
 }

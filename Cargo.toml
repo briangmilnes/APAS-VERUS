@@ -80,16 +80,12 @@ name = "test_threads_plus"
 path = "tests/Chap02/test_threads_plus.rs"
 
 [[test]]
-name = "test_scheduler"
-path = "tests/Chap02/test_scheduler.rs"
-
-[[test]]
 name = "test_fibonacci_scheduler"
 path = "tests/Chap02/test_fibonacci_scheduler.rs"
 
 [[test]]
-name = "test_concurrent_scheduler"
-path = "tests/Chap02/test_concurrent_scheduler.rs"
+name = "test_work_stealing_scheduler"
+path = "tests/Chap02/test_work_stealing_scheduler.rs"
 
 [[bench]]
 name = "BenchInsertionSortStEph"
