@@ -2,7 +2,7 @@
 
 Formally verified implementations of algorithms from "Algorithms Parallel and Sequential" by Acar, Blelloch, and Milnes, using the [Verus](https://github.com/verus-lang/verus) verification framework for Rust.
 
-**Verified: 4 algorithms, 9 data structures**
+**Verified: 5 chapters complete (Scheduling, Sorting, Sets/Relations/Mappings, Graphs, Fibonacci)**
 
 ## Project Structure
 
@@ -61,288 +61,179 @@ Formally verified implementations of algorithms from "Algorithms Parallel and Se
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Work-Stealing Scheduler | ✅ | ✅ | ✅ | ⬜ | `Pool` with bounded parallelism, verified `join` propagates `ensures` |
+| Pool | ✅ | ✅ | ✅ | ⬜ | Bounded thread pool, `pool.join(fa, fb)` |
+| FibonacciWSScheduler | ✅ | ✅ | ✅ | ⬜ | `fib_pool` using Pool.join |
 
-**Scheduling Infrastructure:**
-- `Pool` - Bounded thread pool with `Pool::new(n)` and `pool.join(fa, fb)`
-- `join` - Verified parallel join, propagates closure `requires`/`ensures` through `spawn_plus`
-- `threads_plus` - Verus-compatible wrappers for `std::thread` (`spawn_plus`, `JoinHandlePlus`)
-
-### Chapter 03: Sorting - ✅ COMPLETE
+### Chapter 03: Insertion Sort - ✅ COMPLETE
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Insertion Sort | ✅ | ⬜ | ✅ | ✅ | Generic over `T: TotalOrdered + Copy`, multiset preservation proven |
+| InsertionSortStEph | ✅ | ⬜ | ✅ | ✅ | Generic, multiset preservation proven |
+
+### Chapter 05: Sets, Relations, Mappings - ✅ COMPLETE
+
+| Data Structure | Verified | Parallel | Tested | Benchmarked | Notes |
+|----------------|----------|----------|--------|-------------|-------|
+| SetStEph | ✅ | ⬜ | ✅ | ⬜ | Ephemeral set with iterator proofs |
+| SetMtEph | ✅ | ✅ | ✅ | ⬜ | Multi-threaded parallel set |
+| RelationStEph | ✅ | ⬜ | ✅ | ⬜ | Binary relations |
+| MappingStEph | ✅ | ⬜ | ✅ | ⬜ | Key-value mappings |
+
+### Chapter 06: Graphs - ✅ COMPLETE
+
+| Data Structure | Verified | Parallel | Tested | Benchmarked | Notes |
+|----------------|----------|----------|--------|-------------|-------|
+| DirGraphStEph | ✅ | ⬜ | ✅ | ⬜ | Directed graph |
+| DirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel directed graph |
+| UnDirGraphStEph | ✅ | ⬜ | ✅ | ⬜ | Undirected graph |
+| UnDirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel undirected graph |
+| LabDirGraphStEph | ✅ | ⬜ | ✅ | ⬜ | Labeled directed graph |
+| LabDirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel labeled directed |
+| LabUnDirGraphStEph | ✅ | ⬜ | ✅ | ⬜ | Labeled undirected graph |
+| LabUnDirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel labeled undirected |
+| WeightedDirGraphStEph | ✅ | ⬜ | ✅ | ⬜ | All 12 integer types |
+| WeightedDirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel weighted directed |
 
 ### Chapter 11: Fibonacci - ✅ COMPLETE
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Fibonacci (Sequential) | ✅ | ⬜ | ✅ | ⬜ | `fib_seq` with overflow proofs via `lemma_fib_sum_fits_u64` |
-| Fibonacci (Pool) | ✅ | ✅ | ✅ | ⬜ | `fib_pool` using `Pool.join`, verified `ensures` propagation |
-| Fibonacci (ParaPair) | ✅ | ✅ | ✅ | ⬜ | `ParaPairDisjoint!` macro for fork-join |
+| FibonacciStEph | ✅ | ⬜ | ✅ | ⬜ | Sequential with overflow proofs |
+| FibonacciMtEph2Threads | ✅ | ✅ | ✅ | ⬜ | 2-thread parallel |
+| FibonacciMtPerAllThreads | ✅ | ✅ | ✅ | ⬜ | ParaPairDisjoint! macro |
+| FibonacciMtEphRecomputes | ✅ | ✅ | ✅ | ⬜ | Recomputation variant |
+| FibonacciMtPerTSM | ✅ | ✅ | ✅ | ⬜ | Tokenized state machine |
 
-**Parallelism Infrastructure:**
-- `Pool` - Work-stealing scheduler with `pool.join(fa, fb)` (see Chapter 02)
-- `ParaPairs.rs` - Disjoint parallel pair abstraction
-- `para_pair_disjoint` - Verified function with `f.requires()`/`f.ensures()` propagation
-- `ParaPairDisjoint!` - Macro for verified parallel fork-join
-
-### Chapter 05: Sequences and Series - ⬜ NOT STARTED
+### Chapter 12: Exercises - ⬜ NOT STARTED
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Merge | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 06: Quicksort - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Quicksort | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 11: Binary Search - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Binary Search | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 12: Hash Tables - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Hash Tables | ⬜ | ⬜ | ⬜ | ⬜ | |
+| Exercise12_1 | ⬜ | ⬜ | ⬜ | ⬜ | |
+| Exercise12_2 | ⬜ | ⬜ | ⬜ | ⬜ | |
+| Exercise12_5 | ⬜ | ⬜ | ⬜ | ⬜ | |
 
 ### Chapter 17: Shortest Paths - ⬜ NOT STARTED
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Dijkstra's Algorithm | ⬜ | ⬜ | ⬜ | ⬜ | |
+| MathSeq | ⬜ | ⬜ | ⬜ | ⬜ | |
 
-### Chapter 18: Minimum Spanning Trees - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Kruskal's Algorithm | ⬜ | ⬜ | ⬜ | ⬜ | |
-| Prim's Algorithm | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 19: Sequences - ⬜ NOT STARTED
+### Chapter 18: Sequences - ⬜ NOT STARTED
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Array Sequences | ⬜ | ⬜ | ⬜ | ⬜ | |
+| ArraySeq | ⬜ | ⬜ | ⬜ | ⬜ | |
+| ArraySeqStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| ArraySeqMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| LinkedListStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
 
-### Chapter 21: Augmented Trees - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Augmented Trees | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 23: Range Trees - ⬜ NOT STARTED
+### Chapter 19: Sequences (Advanced) - ⬜ NOT STARTED
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Range Trees | ⬜ | ⬜ | ⬜ | ⬜ | |
+| ArraySeqStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| ArraySeqMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+
+### Chapter 21: Trees and Algorithms - ⬜ NOT STARTED
+
+| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
+|-----------|----------|----------|--------|-------------|-------|
+| Algorithm21_1 | ⬜ | ⬜ | ⬜ | ⬜ | |
+| Algorithm21_2 | ⬜ | ⬜ | ⬜ | ⬜ | |
+| Algorithm21_5 | ⬜ | ⬜ | ⬜ | ⬜ | |
+| Algorithm21_6 | ⬜ | ⬜ | ⬜ | ⬜ | |
+
+### Chapter 23: Trees - ⬜ NOT STARTED
+
+| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
+|-----------|----------|----------|--------|-------------|-------|
+| BalBinTreeStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| PrimTreeSeqStPer | ⬜ | ⬜ | ⬜ | ⬜ | |
 
 ### Chapter 26: Divide and Conquer - ⬜ NOT STARTED
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Divide & Conquer Reduce | ⬜ | ⬜ | ⬜ | ⬜ | |
+| DivConReduceStPer | ⬜ | ⬜ | ⬜ | ⬜ | |
+| DivConReduceMtPer | ⬜ | ⬜ | ⬜ | ⬜ | |
+| MergeSortStPer | ⬜ | ⬜ | ⬜ | ⬜ | |
+| MergeSortMtPer | ⬜ | ⬜ | ⬜ | ⬜ | |
 
-### Chapter 27: Parallel Scan and Reduce - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Scan Contract | ⬜ | ⬜ | ⬜ | ⬜ | |
-| Reduce Contract | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 28: Work-Span Analysis - ⬜ NOT STARTED
+### Chapter 27: Scan and Reduce - ⬜ NOT STARTED
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Work-Span Models | ⬜ | ⬜ | ⬜ | ⬜ | |
+| ScanContractStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| ScanContractMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| ReduceContractStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| ReduceContractMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+
+### Chapter 28: Max Contiguous Subsum - ⬜ NOT STARTED
+
+| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
+|-----------|----------|----------|--------|-------------|-------|
+| MaxContigSubSumBruteStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| MaxContigSubSumDivConStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| MaxContigSubSumDivConMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
 
 ### Chapter 35: Order Statistics - ⬜ NOT STARTED
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Order Statistics Select | ⬜ | ⬜ | ⬜ | ⬜ | |
+| OrderStatSelectStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| OrderStatSelectMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
 
-### Chapter 36: Integer Sorting - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Radix Sort | ⬜ | ⬜ | ⬜ | ⬜ | |
-| Counting Sort | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 37: String Sorting - ⬜ NOT STARTED
+### Chapter 36: QuickSort - ⬜ NOT STARTED
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| String Sorting | ⬜ | ⬜ | ⬜ | ⬜ | |
+| QuickSortStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| QuickSortMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+
+### Chapter 37: BST Variants - ⬜ NOT STARTED
+
+| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
+|-----------|----------|----------|--------|-------------|-------|
+| BSTPlainStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| BSTAVLStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| BSTRBStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| BSTSplayStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
 
 ### Chapter 38: Parallel BST - ⬜ NOT STARTED
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| BST Para | ⬜ | ⬜ | ⬜ | ⬜ | |
+| BSTParaStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| BSTParaMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
 
-### Chapter 39: 2-3 Trees - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| 2-3 Trees | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 40: Red-Black Trees - ⬜ NOT STARTED
+### Chapter 39: Treaps - ⬜ NOT STARTED
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Red-Black Trees | ⬜ | ⬜ | ⬜ | ⬜ | |
+| BSTTreapStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| BSTTreapMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
 
-### Chapter 41: AVL Trees - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| AVL Tree Sets | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 42: Hash Tables (Advanced) - ⬜ NOT STARTED
+### Chapter 40: BST Key-Value - ⬜ NOT STARTED
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Advanced Hash Tables | ⬜ | ⬜ | ⬜ | ⬜ | |
+| BSTKeyValueStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| BSTReducedStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| BSTSizeStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
 
-### Chapter 43: Priority Queues - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Binary Heaps | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 44: Disjoint Sets - ⬜ NOT STARTED
+### Chapter 41: Sets - ⬜ NOT STARTED
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| Union-Find | ⬜ | ⬜ | ⬜ | ⬜ | |
+| ArraySetStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| AVLTreeSetStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
 
-### Chapter 45: Suffix Trees - ⬜ NOT STARTED
+### Chapters 42-66: Future Work - ⬜ NOT STARTED
 
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Suffix Trees | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 47: Dynamic Programming - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Dynamic Programming | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 49: Maxflow - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Maxflow Algorithms | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 50: Linear Programming - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Simplex Method | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 51: Fast Fourier Transform - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| FFT | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 52: Convex Hull - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Convex Hull | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 53: Computational Geometry - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Geometry Algorithms | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 54: Delaunay Triangulation - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Delaunay Triangulation | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 55: Graph Algorithms - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| DFS | ⬜ | ⬜ | ⬜ | ⬜ | |
-| Cycle Detection | ⬜ | ⬜ | ⬜ | ⬜ | |
-| Topological Sort | ⬜ | ⬜ | ⬜ | ⬜ | |
-| Strongly Connected Components | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 56: Dynamic Graphs - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Dynamic Connectivity | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 57: Approximation Algorithms - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Approximation Algorithms | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 58: Randomized Algorithms - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Randomized Algorithms | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 59: Streaming Algorithms - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Streaming Algorithms | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 61: Machine Learning Basics - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| ML Basics | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 62: Neural Networks - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Neural Networks | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 63: Cryptographic Algorithms - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Crypto Algorithms | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 64: Compression - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Compression | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 65: Error Correction - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Error Correction | ⬜ | ⬜ | ⬜ | ⬜ | |
-
-### Chapter 66: Quantum Algorithms - ⬜ NOT STARTED
-
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| Quantum Algorithms | ⬜ | ⬜ | ⬜ | ⬜ | |
-
----
-
-**Algorithms to prove before I sleep: 41 chapters, 227 algorithm variants remaining**
+See APAS-AI for unverified implementations of:
+- Chapter 42-45: Hash Tables, Priority Queues, Union-Find, Suffix Trees
+- Chapter 47-59: Dynamic Programming, Maxflow, Linear Programming, FFT, Geometry
+- Chapter 61-66: ML, Neural Networks, Crypto, Compression, Error Correction, Quantum
 
 ---
 
