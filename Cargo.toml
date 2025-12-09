@@ -75,6 +75,18 @@ path = "tests/Chap11/TestParaPairs.rs"
 name = "TestFibonacciMt"
 path = "tests/Chap11/TestFibonacciMt.rs"
 
+[[test]]
+name = "test_threads_plus"
+path = "tests/Chap02/test_threads_plus.rs"
+
+[[test]]
+name = "test_scheduler"
+path = "tests/Chap02/test_scheduler.rs"
+
+[[test]]
+name = "test_fibonacci_scheduler"
+path = "tests/Chap02/test_fibonacci_scheduler.rs"
+
 [[bench]]
 name = "BenchInsertionSortStEph"
 path = "benches/Chap03/BenchInsertionSortStEph.rs"

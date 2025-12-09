@@ -38,7 +38,9 @@ verus! {
 
     #[verifier::external_body]
     pub fn spawn_plus<F, Ret>(f: F) -> (handle: JoinHandlePlus<Ret>)
-    where F: FnOnce() -> Ret + Send + 'static, Ret: Send + 'static requires f.requires(()) ensures forall|ret: Ret| #[trigger] handle.predicate(ret) ==> f.ensures((), ret)
+    where F: FnOnce() -> Ret + Send + 'static, 
+          Ret: Send + 'static requires f.requires(()) 
+        ensures forall|ret: Ret| #[trigger] handle.predicate(ret) ==> f.ensures((), ret)
     {
         let res = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             JoinHandlePlus { handle: std::thread::spawn(move || f()) }
