@@ -40,15 +40,20 @@ Formally verified implementations of algorithms from "Algorithms Parallel and Se
 
 | Module | Description |
 |--------|-------------|
+| `arithmetic/power2_plus` | Power of 2 lemmas (`lemma_pow2_mono`, bounds) |
 | `checked_nat` | Overflow-checked unsigned integers (`CheckedU8`..`CheckedU128`) |
 | `checked_int` | Overflow-checked signed integers (`CheckedI8`..`CheckedI128`) |
-| `seq_set` | Lemmas connecting `Seq` and `Set` operations, weighted sums |
-| `hash_set_with_view_plus` | Enhanced `HashSet` with iterator specs |
-| `total_order` | `TotalOrdered` trait for all 12 integer types |
-| `partial_order` | `PartialOrdered` trait |
 | `clone_plus` | `ClonePlus` trait for Verus-compatible cloning |
 | `feq` | Functional equality |
+| `hash_set_specs` | HashSet specification helpers |
+| `hash_set_with_view_plus` | Enhanced `HashSet` with iterator specs |
+| `partial_order` | `PartialOrdered` trait |
+| `pervasives_plus` | Common utility functions |
+| `seq` | Sequence lemmas |
+| `seq_set` | Lemmas connecting `Seq` and `Set` operations, weighted sums |
 | `threads_plus` | Verified thread primitives (`spawn_plus`, `JoinHandlePlus`) |
+| `total_order` | `TotalOrdered` trait for all 12 integer types |
+| `VecQueue` | Verified queue using `Vec` |
 
 ## Algorithm Status
 
