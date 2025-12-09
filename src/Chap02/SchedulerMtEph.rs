@@ -188,7 +188,6 @@ verus! {
             let task = self.pending.remove(0);
             
             // spawn_task ensures: handle.predicate(ret) ==> (task.post())(ret)
-            // And task.post() == post (from wf before remove)
             let handle = spawn_task(task);
             
             self.running.push(handle);
@@ -289,20 +288,25 @@ verus! {
                     self.pending@.len() + self.running@.len() + self.results@.len() == original_pending,
                     // Boundedness: never exceed max_threads
                     self.running@.len() <= self.max_threads,
-                    decreases self.pending@.len() + self.running@.len(),
+                    // Lexicographic: (total, pending) - poll decreases total, spawn decreases pending
+                    decreases self.pending@.len() + self.running@.len(), self.pending@.len(),
             {
+                // Eager: poll first to harvest finished threads (makes room faster)
+                if self.running.len() > 0 {
+                    let found = self.poll_and_join_one();
+                    if found {
+                        // Harvested one, total decreased
+                        continue;
+                    }
+                }
+
                 // Spawn one if we have room and pending work
                 if self.running.len() < self.max_threads && self.pending.len() > 0 {
                     self.spawn_one();
-                }
-
-                // Poll if any running (must poll to make progress when at capacity)
-                if self.running.len() > 0 {
-                    let found = self.poll_and_join_one();
-                    if !found {
-                        // Liveness: assume a thread eventually finishes
-                        assume(false);
-                    }
+                    // pending decreased (total same, but second component decreased)
+                } else if self.running.len() > 0 {
+                    // At capacity with no finished threads, must wait
+                    assume(false);  // Liveness: a thread eventually finishes
                 }
             }
 

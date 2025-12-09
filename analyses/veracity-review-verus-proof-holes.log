@@ -729,3 +729,44 @@ Holes Found: 35 total
    3 × external
 
 Completed in 9ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), admit()
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+❌ FibonacciScheduler.rs
+   Holes: 2 total
+      2 × assume()
+❌ SchedulerMtEph.rs
+   Holes: 6 total
+      2 × assume(false)
+      4 × external_body
+   Proof functions: 4 total (4 clean, 0 holed)
+✓ VecQueue.rs
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   1 clean (no holes)
+   2 holed (contains holes)
+   3 total
+
+Proof Functions:
+   4 clean
+   0 holed
+   4 total
+
+Holes Found: 8 total
+   2 × assume(false)
+   2 × assume()
+   4 × external_body
+
+Completed in 1ms
