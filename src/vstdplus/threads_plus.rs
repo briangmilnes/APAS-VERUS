@@ -17,6 +17,7 @@ verus! {
     impl<Ret> JoinHandlePlus<Ret> {
         pub uninterp spec fn predicate(&self, ret: Ret) -> bool;
 
+
     /// Check if thread finished without blocking. (Addition over vstd::thread.)
         #[verifier::external_body]
         pub fn is_finished(&self) -> (finished: bool) { self.handle.is_finished() }
