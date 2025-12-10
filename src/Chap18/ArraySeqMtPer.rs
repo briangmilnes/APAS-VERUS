@@ -30,6 +30,57 @@ pub mod ArraySeqMtPer {
         }
     }
 
+    #[verifier::reject_recursive_types(T)]
+    pub struct ArraySeqMtPerIter<T> {
+        pub elements: Vec<T>,
+        pub pos: usize,
+    }
+
+    impl<T> View for ArraySeqMtPerIter<T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) { (self.pos as int, self.elements@) }
+    }
+
+    pub open spec fn iter_invariant<T>(it: &ArraySeqMtPerIter<T>) -> bool { it.pos <= it.elements@.len() }
+
+    // See experiments/simple_seq_iter.rs::assumption_free_next for a version that proves
+    // without assume() by requiring iter_invariant. We can't add requires to Iterator::next in Verus
+    // and Rust iterators have 70 functions on them making this sensible requirement impossible.
+    impl<T: Clone> Iterator for ArraySeqMtPerIter<T> {
+        type Item = T;
+
+        fn next(&mut self) -> (result: Option<T>)
+            ensures
+                self.pos <= self.elements.len(),
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match result {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index == old_seq.len()
+                            &&& self.pos == old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& vstd::pervasive::cloned(old_seq[old_index as int], element)
+                        },
+                    }
+                }),
+        {
+            if self.pos < self.elements.len() {
+                let elem = self.elements[self.pos].clone();
+                self.pos = self.pos + 1;
+                Some(elem)
+            } else {
+                assume(self.pos <= self.elements.len());
+                None
+            }
+        }
+    }
+
     impl<T: View> ArraySeqMtPerS<T> {
         pub fn new(length: usize, init_value: T) -> (result: ArraySeqMtPerS<T>)
             where T: Clone
@@ -269,9 +320,15 @@ pub mod ArraySeqMtPer {
             (ArraySeqMtPerS { seq }, acc)
         }
 
-        #[verifier::external_body]
-        pub fn iter(&self) -> Iter<'_, T> {
-            self.seq.iter()
+        pub fn iter(&self) -> (it: ArraySeqMtPerIter<T>)
+            where T: Clone
+            ensures
+                it.elements@.len() == self.seq@.len(),
+                forall|i: int| 0 <= i < self.seq@.len() ==> cloned(self.seq@[i], #[trigger] it.elements@[i]),
+                it.pos == 0,
+                iter_invariant(&it),
+        {
+            ArraySeqMtPerIter { elements: self.seq.clone(), pos: 0 }
         }
     }
 
@@ -332,6 +389,26 @@ pub mod ArraySeqMtPer {
     }
 
     #[cfg(not(verus_keep_ghost))]
+    pub struct ArraySeqMtPerIter<T> {
+        pub elements: Vec<T>,
+        pub pos: usize,
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    impl<T: Clone> Iterator for ArraySeqMtPerIter<T> {
+        type Item = T;
+        fn next(&mut self) -> Option<T> {
+            if self.pos < self.elements.len() {
+                let elem = self.elements[self.pos].clone();
+                self.pos += 1;
+                Some(elem)
+            } else {
+                None
+            }
+        }
+    }
+
+    #[cfg(not(verus_keep_ghost))]
     impl<T> ArraySeqMtPerS<T> {
         pub fn new(length: usize, init_value: T) -> Self where T: Clone {
             ArraySeqMtPerS { seq: vec![init_value; length] }
@@ -372,7 +449,10 @@ pub mod ArraySeqMtPer {
             let seq: Vec<T> = a.seq.iter().map(|x| { acc = f(&acc, x); acc.clone() }).collect();
             (ArraySeqMtPerS { seq }, acc)
         }
-        pub fn iter(&self) -> Iter<'_, T> { self.seq.iter() }
+        pub fn iter(&self) -> ArraySeqMtPerIter<T> where T: Clone {
+            ArraySeqMtPerIter { elements: self.seq.clone(), pos: 0 }
+        }
+        pub fn iter_std(&self) -> Iter<'_, T> { self.seq.iter() }
     }
 
     #[cfg(not(verus_keep_ghost))]

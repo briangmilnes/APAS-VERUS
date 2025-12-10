@@ -3109,3 +3109,55 @@ Holes Found: 7 total
    2 × external_body
 
 Completed in 11ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), Tracked::assume_new(), admit()
+  - unsafe fn, unsafe impl, unsafe {} blocks
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+❌ ArraySeq.rs
+   Holes: 1 total
+      1 × assume()
+❌ ArraySeqMtEph.rs
+   Holes: 1 total
+      1 × assume()
+❌ ArraySeqMtPer.rs
+   Holes: 1 total
+      1 × assume()
+❌ ArraySeqStEph.rs
+   Holes: 1 total
+      1 × assume()
+❌ ArraySeqStPer.rs
+   Holes: 1 total
+      1 × assume()
+❌ LinkedListStEph.rs
+   Holes: 1 total
+      1 × assume()
+❌ LinkedListStPer.rs
+   Holes: 1 total
+      1 × assume()
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   7 holed (contains holes)
+   7 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 7 total
+   7 × assume()
+
+Completed in 9ms
