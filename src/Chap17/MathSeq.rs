@@ -24,6 +24,7 @@ pub mod MathSeq {
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
     #[cfg(verus_keep_ghost)]
+    #[cfg(verus_keep_ghost)]
     use crate::vstdplus::seq_set::lemma_map_not_contains_implies_all_ne;
     use vstd::slice::slice_subrange;
 
