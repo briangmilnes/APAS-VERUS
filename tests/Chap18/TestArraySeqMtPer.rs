@@ -85,3 +85,21 @@ fn test_filter_par_medium() {
     assert_eq!(multiples_of_7.length(), 37);
 }
 
+#[test]
+fn test_sum_par_i64() {
+    use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::sum_par_i64;
+    let pool = Pool::new(4);
+    let seq = ArraySeqMtPerS::from_vec((1i64..=64).collect());
+    let sum = sum_par_i64(&pool, &seq);
+    assert_eq!(sum, 64 * 65 / 2);
+}
+
+#[test]
+fn test_sum_par_i64_medium() {
+    use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::sum_par_i64;
+    let pool = Pool::new(4);
+    let seq = ArraySeqMtPerS::from_vec((1i64..=256).collect());
+    let sum = sum_par_i64(&pool, &seq);
+    assert_eq!(sum, 256 * 257 / 2);
+}
+
