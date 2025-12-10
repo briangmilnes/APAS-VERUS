@@ -103,6 +103,10 @@ path = "tests/Chap12/test_exercise12_5.rs"
 name = "TestMathSeq"
 path = "tests/Chap17/TestMathSeq.rs"
 
+[[test]]
+name = "TestArraySeq"
+path = "tests/Chap18/TestArraySeq.rs"
+
 [[bench]]
 name = "BenchInsertionSortStEph"
 path = "benches/Chap03/BenchInsertionSortStEph.rs"

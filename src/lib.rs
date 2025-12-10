@@ -141,3 +141,14 @@ pub mod Chap12 {
 pub mod Chap17 {
     pub mod MathSeq;
 }
+
+pub mod Chap18 {
+    pub mod ArraySeq;
+    // Not verusified - left out of lib.rs:
+    // pub mod ArraySeqStEph;
+    // pub mod ArraySeqStPer;
+    // pub mod ArraySeqMtEph;
+    // pub mod ArraySeqMtPer;
+    // pub mod LinkedListStEph;
+    // pub mod LinkedListStPer;
+}
