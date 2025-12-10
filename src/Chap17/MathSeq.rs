@@ -52,11 +52,10 @@ impl<T: StT + Hash> MathSeqS<T> {
         self.spec_len() == 1
     }
 
-    #[verifier::external_body]
     pub fn new(length: N, init_value: T) -> (result: Self)
         ensures
             result.spec_len() == length,
-            forall|i: int| 0 <= i < length ==> result@[i] == init_value@,
+            forall|i: int| #![auto] 0 <= i < length ==> cloned(init_value, result.data@[i]),
     {
         let v = vec![init_value; length];
         MathSeqS { data: v }
@@ -147,7 +146,7 @@ impl<T: StT + Hash> MathSeqS<T> {
     pub fn with_len(length: N, init_value: T) -> (result: Self)
         ensures
             result.spec_len() == length,
-            forall|i: int| 0 <= i < length ==> result@[i] == init_value@,
+            forall|i: int| #![auto] 0 <= i < length ==> cloned(init_value, result.data@[i]),
     {
         Self::new(length, init_value)
     }
@@ -175,11 +174,22 @@ impl<T: StT + Hash> MathSeqS<T> {
         MathSeqS { data: self.data[s..e].to_vec() }
     }
 
-    #[verifier::external_body]
     pub fn domain(&self) -> (result: Vec<N>)
         ensures result@.len() == self.spec_len(),
     {
-        (0..self.data.len()).collect()
+        let mut v = Vec::new();
+        let len = self.data.len();
+        let mut i: usize = 0;
+        while i < len
+            invariant
+                i <= len,
+                v@.len() == i as int,
+            decreases len - i,
+        {
+            v.push(i);
+            i = i + 1;
+        }
+        v
     }
 
     #[verifier::external_body]
