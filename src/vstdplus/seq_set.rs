@@ -286,9 +286,9 @@ pub proof fn lemma_map_not_contains_implies_all_ne<T: View>(seq: Seq<T>, x: T::V
     requires
         !seq.map(|_j: int, t: T| t@).contains(x),
     ensures
-        forall|j: int| #![auto] 0 <= j < seq.len() ==> seq[j]@ != x,
+        forall|j: int| 0 <= j < seq.len() ==> #[trigger] seq[j]@ != x,
 {
-    assert forall|j: int| #![auto] 0 <= j < seq.len() implies seq[j]@ != x by {
+    assert forall|j: int| 0 <= j < seq.len() implies #[trigger] seq[j]@ != x by {
         let mapped = seq.map(|_k: int, t: T| t@);
         assert(mapped[j] == seq[j]@);
         assert(!mapped.contains(x));
