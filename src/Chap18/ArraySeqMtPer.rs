@@ -1,445 +1,403 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Chapter 18 algorithms for ArraySeqMtPer multithreaded.
-//!
-//! Note: Uses unconditional parallelism with ParaPair! for divide-and-conquer operations (map, reduce).
+//! Chapter 18 algorithms for ArraySeqMtPer multithreaded persistent. Verusified.
 
 pub mod ArraySeqMtPer {
 
-    use std::collections::HashSet;
-    use std::fmt::{Display, Formatter};
+    use std::fmt::{Debug, Display, Formatter};
+    use std::fmt::Result as FmtResult;
     use std::slice::Iter;
-    use std::sync::Arc;
-    use std::thread;
     use std::vec::IntoIter;
 
-    use crate::ParaPair;
-    use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::prelude::*;
 
-    #[derive(Debug)]
-    pub struct ArraySeqMtPerS<T: StTInMtT> {
-        data: Box<[T]>,
+    #[cfg(verus_keep_ghost)]
+    verus! {
+
+    use vstd::std_specs::clone::*;
+    broadcast use vstd::std_specs::vec::group_vec_axioms;
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct ArraySeqMtPerS<T> {
+        pub seq: Vec<T>,
     }
 
-    // Base trait: Methods that are not redefined in Chap19
-    pub trait ArraySeqMtPerBaseTrait<T: StTInMtT> {
-        /// APAS: Work Θ(n), Span Θ(1)
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n) - parallel via tabulate
-        fn new(length: N, init_value: T)                                        -> Self;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
-        fn length(&self)                                                        -> N;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
-        fn nth(&self, index: N)                                                 -> &T;
-        /// APAS: Work Θ(len), Span Θ(1)
-        /// claude-4-sonet: Work Θ(len), Span Θ(log len) - parallel via tabulate
-        fn subseq_copy(&self, start: N, length: N)                              -> Self;
-        /// APAS: Work Θ(n), Span Θ(1)
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n) - parallel via tabulate
-        fn set(&self, index: N, item: T)                                        -> Result<ArraySeqMtPerS<T>, &'static str>;
-        /// APAS: Work Θ(|a|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|a|), Span Θ(log|a|) - parallel via tabulate with HashMap
-        fn ninject(a: &ArraySeqMtPerS<T>, updates: &ArraySeqMtPerS<Pair<N, T>>) -> Self;
-        /// APAS: Work Θ(Σ|ss[i]|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(Σ|ss[i]|), Span Θ(Σ|ss[i]|) - sequential (parallel has lifetime issues)
-        fn flatten(ss: &ArraySeqMtPerS<ArraySeqMtPerS<T>>)                      -> Self
-        where
-            T: 'static;
-        /// APAS: Work Θ(|a|²), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|a|²), Span Θ(|a|²), Parallelism Θ(1) - sequential with linear search
-        fn collect<K: StTInMtT + 'static, V: StTInMtT + 'static>(
-            a: &ArraySeqMtPerS<Pair<K, V>>,
-            cmp: fn(&K, &K) -> O,
-        ) -> ArraySeqMtPerS<Pair<K, ArraySeqMtPerS<V>>>;
-        fn inject(a: &ArraySeqMtPerS<T>, updates: &ArraySeqMtPerS<Pair<N, T>>)  -> Self;
-        /// APAS: Work Θ(n), Span Θ(1)
-        /// claude-4-sonet: Work Θ(n), Span Θ(1)
-        fn from_vec(values: Vec<T>)                                             -> Self;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn iter(&self)                                                          -> Iter<'_, T>;
+    impl<T: View> View for ArraySeqMtPerS<T> {
+        type V = Seq<T::V>;
+
+        open spec fn view(&self) -> Seq<T::V> {
+            self.seq@.map(|_i: int, t: T| t@)
+        }
     }
 
-    // Redefinable trait: Methods that Chap19 might redefine
-    pub trait ArraySeqMtPerRedefinableTrait<T: StTInMtT> {
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
-        fn empty()                                               -> Self;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
-        fn singleton(item: T)                                    -> Self;
-        /// APAS: Work Θ(n), Span Θ(1)
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1) - sequential (parallel needs F: 'static)
-        fn tabulate<F: Fn(N) -> T + Send + Sync>(f: &F, n: N) -> ArraySeqMtPerS<T>
-        where
-            T: 'static;
-        /// APAS: Work Θ(|a|), Span Θ(log|a|)
-        /// claude-4-sonet: Work Θ(|a|), Span Θ(|a|), Parallelism Θ(1) when F is cheap, better when F is expensive - asymmetric fork-join recursion
-        fn map<W: StTInMtT + 'static, F: Fn(&T) -> W + Send + Sync + Clone + 'static>(
-            a: &ArraySeqMtPerS<T>,
-            f: F,
-        ) -> ArraySeqMtPerS<W>
-        where
-            T: 'static;
-        /// APAS: Work Θ(|a|+|b|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|a|+|b|), Span Θ(log(|a|+|b|)) - parallel via tabulate
-        fn append(a: &ArraySeqMtPerS<T>, b: &ArraySeqMtPerS<T>)  -> Self;
-        /// APAS: Work Θ(|a|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|a|), Span Θ(|a|) - sequential (parallel needs pred: 'static)
-        fn filter<F: PredMt<T>>(a: &ArraySeqMtPerS<T>, pred: &F) -> Self
-        where
-            T: 'static;
-        /// APAS: Work Θ(n), Span Θ(1)
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n) - parallel via tabulate
-        fn update(a: &ArraySeqMtPerS<T>, item_at: Pair<N, T>)    -> Self;
-        /// APAS: Work Θ(|a|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|a|), Span Θ(|a|), Parallelism Θ(1) - sequential fold
-        fn iterate<A: StTInMtT, F: Fn(&A, &T) -> A + Send + Sync>(a: &ArraySeqMtPerS<T>, f: &F, x: A) -> A;
-        /// APAS: Work Θ(|a|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|a|), Span Θ(|a|), Parallelism Θ(1) - sequential prefix sum
-        fn iteratePrefixes<A: StTInMtT + 'static, F: Fn(&A, &T) -> A + Send + Sync>(
-            a: &ArraySeqMtPerS<T>,
-            f: &F,
-            x: A,
-        ) -> (ArraySeqMtPerS<A>, A);
-        /// APAS: Work Θ(|a|), Span Θ(log|a|)
-        /// claude-4-sonet: Work Θ(|a|), Span Θ(log|a|), Parallelism Θ(|a|/log|a|) - parallel via ParaPair! divide-and-conquer
-        fn reduce<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &ArraySeqMtPerS<T>, f: F, id: T) -> T
-        where
-            T: 'static;
-        /// APAS: Work Θ(|a|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|a|), Span Θ(|a|), Parallelism Θ(1) - sequential prefix sum
-        fn scan<F: Fn(&T, &T) -> T + Send + Sync>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (ArraySeqMtPerS<T>, T);
-        fn isEmpty(&self)                                        -> B;
-        fn isSingleton(&self)                                    -> B;
-    }
-
-    impl<T: StTInMtT + 'static> ArraySeqMtPerBaseTrait<T> for ArraySeqMtPerS<T> {
-        fn new(length: N, init_value: T) -> ArraySeqMtPerS<T> {
-            // Parallel: use parallel tabulate to generate array
-            // Work: Θ(n), Span: Θ(log n)
-            ArraySeqMtPerS::tabulate(&|_| init_value.clone(), length)
-        }
-
-        fn length(&self) -> N { self.data.len() }
-
-        fn nth(&self, index: N) -> &T { &self.data[index] }
-
-        fn subseq_copy(&self, start: N, length: N) -> ArraySeqMtPerS<T> {
-            // Parallel: use tabulate to copy elements in parallel
-            // Work: Θ(length), Span: Θ(log length)
-            let n = self.data.len();
-            let s = start.min(n);
-            let e = start.saturating_add(length).min(n);
-            let actual_length = e - s;
-            ArraySeqMtPerS::tabulate(&|i| self.nth(s + i).clone(), actual_length)
-        }
-
-        fn set(&self, index: N, item: T) -> Result<ArraySeqMtPerS<T>, &'static str> {
-            if index >= self.data.len() {
-                return Err("Index out of bounds");
-            }
-            // Parallel: tabulate to copy with one change
-            let item_clone = item.clone();
-            Ok(ArraySeqMtPerS::tabulate(
-                &|i| if i == index { item_clone.clone() } else { self.nth(i).clone() },
-                self.length(),
-            ))
-        }
-
-        fn ninject(a: &ArraySeqMtPerS<T>, updates: &ArraySeqMtPerS<Pair<N, T>>) -> ArraySeqMtPerS<T> {
-            use std::collections::HashMap;
-            use std::sync::{Arc, Mutex};
-            // Parallel: build update map, then tabulate with lookups
-            let update_map = Arc::new(Mutex::new(HashMap::new()));
-            for i in 0..updates.length() {
-                let Pair(index, value) = updates.nth(i);
-                if *index < a.length() {
-                    update_map.lock().unwrap().insert(*index, value.clone());
-                }
-            }
-            let map_clone = update_map.lock().unwrap().clone();
-            ArraySeqMtPerS::tabulate(
-                &|i| map_clone.get(&i).cloned().unwrap_or_else(|| a.nth(i).clone()),
-                a.length(),
-            )
-        }
-
-        fn flatten(ss: &ArraySeqMtPerS<ArraySeqMtPerS<T>>) -> ArraySeqMtPerS<T>
-        where
-            T: 'static,
+    impl<T: View> ArraySeqMtPerS<T> {
+        pub fn new(length: usize, init_value: T) -> (result: ArraySeqMtPerS<T>)
+            where T: Clone
+            requires length <= usize::MAX
+            ensures result.seq@.len() == length
         {
-            // Sequential for now - parallel version has lifetime issues
-            let mut values = Vec::new();
-            for i in 0..ss.length() {
-                let inner_seq = ss.nth(i);
-                for j in 0..inner_seq.length() {
-                    values.push(inner_seq.nth(j).clone());
-                }
-            }
-            ArraySeqMtPerS::from_vec(values)
+            ArraySeqMtPerS { seq: vec![init_value; length] }
         }
 
-        fn collect<K: StTInMtT + 'static, V: StTInMtT + 'static>(
-            a: &ArraySeqMtPerS<Pair<K, V>>,
-            cmp: fn(&K, &K) -> O,
-        ) -> ArraySeqMtPerS<Pair<K, ArraySeqMtPerS<V>>> {
-            if a.length() == 0 {
-                return ArraySeqMtPerS::from_vec(vec![]);
-            }
-            let mut groups = Vec::<Pair<K, ArraySeqMtPerS<V>>>::new();
-            for i in 0..a.length() {
-                let Pair(key, value) = a.nth(i);
-                let mut found_group = false;
-                for group in &mut groups {
-                    if cmp(key, &group.0) == O::Equal {
-                        let mut values = (0..group.1.length()).map(|j| group.1.nth(j).clone()).collect::<Vec<V>>();
-                        values.push(value.clone());
-                        group.1 = ArraySeqMtPerS::from_vec(values);
-                        found_group = true;
-                        break;
-                    }
-                }
-                if !found_group {
-                    groups.push(Pair(key.clone(), ArraySeqMtPerS::from_vec(vec![value.clone()])));
-                }
-            }
-            ArraySeqMtPerS::from_vec(groups)
-        }
-
-        fn inject(a: &ArraySeqMtPerS<T>, updates: &ArraySeqMtPerS<Pair<N, T>>) -> ArraySeqMtPerS<T> {
-            let mut result = a.clone();
-            let mut updated = HashSet::<N>::new();
-            for i in 0..updates.length() {
-                let Pair(index, value) = updates.nth(i);
-                if *index < result.length() && updated.insert(*index) {
-                    result = result.set(*index, value.clone()).unwrap_or(result);
-                }
-            }
-            result
-        }
-
-        fn from_vec(values: Vec<T>) -> Self {
-            ArraySeqMtPerS {
-                data: values.into_boxed_slice(),
-            }
-        }
-
-        fn iter(&self) -> Iter<'_, T> { self.data.iter() }
-    }
-
-    impl<T: StTInMtT + 'static> ArraySeqMtPerRedefinableTrait<T> for ArraySeqMtPerS<T> {
-        fn empty() -> ArraySeqMtPerS<T> {
-            ArraySeqMtPerS {
-                data: Vec::new().into_boxed_slice(),
-            }
-        }
-
-        fn singleton(item: T) -> ArraySeqMtPerS<T> { ArraySeqMtPerS::from_vec(vec![item]) }
-
-        fn tabulate<F: Fn(N) -> T + Send + Sync>(f: &F, n: N) -> ArraySeqMtPerS<T>
-        where
-            T: 'static,
+        pub fn length(&self) -> (len: usize)
+            ensures len == self.seq@.len()
         {
-            // Sequential for now - parallel version requires F: 'static + Clone
-            let mut values = Vec::with_capacity(n);
-            for i in 0..n {
-                values.push(f(i));
-            }
-            ArraySeqMtPerS::from_vec(values)
+            self.seq.len()
         }
 
-        fn map<W: StTInMtT + 'static, F: Fn(&T) -> W + Send + Sync + Clone + 'static>(
-            a: &ArraySeqMtPerS<T>,
-            f: F,
-        ) -> ArraySeqMtPerS<W>
-        where
-            T: 'static,
+        pub fn nth(&self, index: usize) -> (result: &T)
+            requires index < self.seq@.len()
         {
-            if a.length() == 0 {
-                return ArraySeqMtPerS::from_vec(Vec::new());
-            }
-            if a.length() == 1 {
-                let result = f(a.nth(0));
-                return ArraySeqMtPerS::from_vec(vec![result]);
-            }
-
-            // Parallel via asymmetric fork-join (good when F is expensive)
-            let mid = a.length() / 2;
-            let left = a.subseq_copy(0, mid);
-            let right = a.subseq_copy(mid, a.length() - mid);
-            let f_clone = f.clone();
-            let left_handle = thread::spawn(move || ArraySeqMtPerS::map(&left, f_clone));
-            let right_result = ArraySeqMtPerS::map(&right, f);
-            let left_result = left_handle.join().unwrap();
-            ArraySeqMtPerS::append(&left_result, &right_result)
+            &self.seq[index]
         }
 
-        fn append(a: &ArraySeqMtPerS<T>, b: &ArraySeqMtPerS<T>) -> ArraySeqMtPerS<T> {
-            // Parallel: tabulate over combined length, branch on index
-            // Work: Θ(|a| + |b|), Span: Θ(log(|a| + |b|))
-            let a_len = a.length();
-            let b_len = b.length();
-            ArraySeqMtPerS::tabulate(
-                &|i| {
-                    if i < a_len {
-                        a.nth(i).clone()
-                    } else {
-                        b.nth(i - a_len).clone()
-                    }
-                },
-                a_len + b_len,
-            )
-        }
-
-        fn filter<F: PredMt<T>>(a: &ArraySeqMtPerS<T>, pred: &F) -> ArraySeqMtPerS<T>
-        where
-            T: 'static,
+        pub fn empty() -> (result: ArraySeqMtPerS<T>)
+            ensures result.seq@.len() == 0
         {
-            // Sequential for now - parallel version requires pred: 'static
-            let mut values = Vec::new();
-            for i in 0..a.length() {
-                let item = a.nth(i);
-                if pred(item) {
-                    values.push(item.clone());
+            ArraySeqMtPerS { seq: Vec::new() }
+        }
+
+        pub fn singleton(item: T) -> (result: ArraySeqMtPerS<T>)
+            ensures result.seq@.len() == 1
+        {
+            let mut seq = Vec::with_capacity(1);
+            seq.push(item);
+            ArraySeqMtPerS { seq }
+        }
+
+        pub fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (result: ArraySeqMtPerS<T>)
+            requires 
+                length <= usize::MAX,
+                forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
+            ensures result.seq@.len() == length
+        {
+            let mut seq = Vec::with_capacity(length);
+            let mut i: usize = 0;
+            while i < length
+                invariant
+                    i <= length,
+                    seq@.len() == i as int,
+                    forall|j: usize| j < length ==> #[trigger] f.requires((j,)),
+                decreases length - i,
+            {
+                seq.push(f(i));
+                i += 1;
+            }
+            ArraySeqMtPerS { seq }
+        }
+
+        pub fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqMtPerS<T>, f: &F) -> (result: ArraySeqMtPerS<U>)
+            requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
+            ensures result.seq@.len() == a.seq@.len()
+        {
+            let len = a.seq.len();
+            let mut seq: Vec<U> = Vec::with_capacity(len);
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    seq@.len() == i as int,
+                    forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[j],)),
+                decreases len - i,
+            {
+                seq.push(f(&a.seq[i]));
+                i += 1;
+            }
+            ArraySeqMtPerS { seq }
+        }
+
+        pub fn append(a: &ArraySeqMtPerS<T>, b: &ArraySeqMtPerS<T>) -> (result: ArraySeqMtPerS<T>)
+            where T: Clone
+            requires a.seq@.len() + b.seq@.len() <= usize::MAX
+            ensures result.seq@.len() == a.seq@.len() + b.seq@.len()
+        {
+            let a_len = a.seq.len();
+            let b_len = b.seq.len();
+            let mut seq: Vec<T> = Vec::with_capacity(a_len + b_len);
+            let mut i: usize = 0;
+            while i < a_len
+                invariant
+                    i <= a_len,
+                    a_len == a.seq@.len(),
+                    seq@.len() == i as int,
+                decreases a_len - i,
+            {
+                seq.push(a.seq[i].clone());
+                i += 1;
+            }
+            let mut j: usize = 0;
+            while j < b_len
+                invariant
+                    j <= b_len,
+                    b_len == b.seq@.len(),
+                    seq@.len() == a_len + j,
+                decreases b_len - j,
+            {
+                seq.push(b.seq[j].clone());
+                j += 1;
+            }
+            ArraySeqMtPerS { seq }
+        }
+
+        pub fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F) -> (result: ArraySeqMtPerS<T>)
+            where T: Clone
+            requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
+            ensures result.seq@.len() <= a.seq@.len()
+        {
+            let len = a.seq.len();
+            let mut seq: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    seq@.len() <= i,
+                    forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[j],)),
+                decreases len - i,
+            {
+                if pred(&a.seq[i]) {
+                    seq.push(a.seq[i].clone());
                 }
+                i += 1;
             }
-            ArraySeqMtPerS::from_vec(values)
+            ArraySeqMtPerS { seq }
         }
 
-        fn update(a: &ArraySeqMtPerS<T>, item_at: Pair<N, T>) -> ArraySeqMtPerS<T> {
-            let Pair(index, item) = item_at;
-            if index >= a.length() {
-                return a.clone();
-            }
-            // Parallel: tabulate to copy with one change
-            let item_clone = item.clone();
-            ArraySeqMtPerS::tabulate(
-                &|i| if i == index { item_clone.clone() } else { a.nth(i).clone() },
-                a.length(),
-            )
+        pub fn isEmpty(&self) -> (empty: bool)
+            ensures empty <==> self.seq@.len() == 0
+        {
+            self.seq.len() == 0
         }
 
-        fn iterate<A: StTInMtT, F: Fn(&A, &T) -> A + Send + Sync>(a: &ArraySeqMtPerS<T>, f: &F, x: A) -> A {
-            // Note: iterate is inherently sequential (fold), keep as-is for correctness
-            // True parallel reduction requires associative operation (use reduce() instead)
-            let mut acc = x;
-            for i in 0..a.length() {
-                acc = f(&acc, a.nth(i));
+        pub fn isSingleton(&self) -> (single: bool)
+            ensures single <==> self.seq@.len() == 1
+        {
+            self.seq.len() == 1
+        }
+
+        pub fn from_vec(elts: Vec<T>) -> (result: ArraySeqMtPerS<T>)
+            ensures result.seq@ == elts@
+        {
+            ArraySeqMtPerS { seq: elts }
+        }
+
+        pub fn subseq_copy(&self, start: usize, length: usize) -> (result: ArraySeqMtPerS<T>)
+            where T: Clone
+            requires 
+                start + length <= self.seq@.len(),
+                self.seq@.len() <= usize::MAX as int,
+            ensures result.seq@.len() == length
+        {
+            let end = start + length;
+            let mut seq: Vec<T> = Vec::with_capacity(length);
+            let mut i: usize = start;
+            while i < end
+                invariant
+                    start <= i <= end,
+                    end == start + length,
+                    end <= self.seq@.len(),
+                    seq@.len() == (i - start) as int,
+                decreases end - i,
+            {
+                seq.push(self.seq[i].clone());
+                i += 1;
+            }
+            ArraySeqMtPerS { seq }
+        }
+
+        pub fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (result: T)
+            where T: Clone
+            requires forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+        {
+            let len = a.seq.len();
+            let mut acc = id;
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                decreases len - i,
+            {
+                acc = f(&acc, &a.seq[i]);
+                i += 1;
             }
             acc
         }
 
-        fn iteratePrefixes<A: StTInMtT + 'static, F: Fn(&A, &T) -> A + Send + Sync>(
-            a: &ArraySeqMtPerS<T>,
-            f: &F,
-            x: A,
-        ) -> (ArraySeqMtPerS<A>, A) {
-            let mut acc = x;
-            let mut values = Vec::<A>::with_capacity(a.length());
-            for i in 0..a.length() {
-                acc = f(&acc, a.nth(i));
-                values.push(acc.clone());
-            }
-            (ArraySeqMtPerS::from_vec(values), acc)
-        }
-
-        fn reduce<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &ArraySeqMtPerS<T>, f: F, id: T) -> T
-        where
-            T: 'static,
+        pub fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtPerS<T>, f: &F, seed: A) -> (result: A)
+            requires forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
         {
-            if a.length() == 0 {
-                return id;
+            let len = a.seq.len();
+            let mut acc = seed;
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
+                decreases len - i,
+            {
+                acc = f(&acc, &a.seq[i]);
+                i += 1;
             }
-            if a.length() == 1 {
-                return a.nth(0).clone();
-            }
-
-            // Unconditionally parallel using ParaPair!
-            let mid = a.length() / 2;
-            let left = a.subseq_copy(0, mid);
-            let right = a.subseq_copy(mid, a.length() - mid);
-            let f_clone = f.clone();
-            let f_clone2 = f.clone();
-            let id_clone = id.clone();
-
-            let Pair(l, r) = ParaPair!(
-                move || <ArraySeqMtPerS<T> as ArraySeqMtPerRedefinableTrait<T>>::reduce(&left, f_clone, id_clone),
-                move || <ArraySeqMtPerS<T> as ArraySeqMtPerRedefinableTrait<T>>::reduce(&right, f_clone2, id)
-            );
-            f(&l, &r)
+            acc
         }
 
-        fn scan<F: Fn(&T, &T) -> T + Send + Sync>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (ArraySeqMtPerS<T>, T) {
-            let mut acc = id.clone();
-            let mut values = Vec::<T>::with_capacity(a.length());
-            for i in 0..a.length() {
-                acc = f(&acc, a.nth(i));
-                values.push(acc.clone());
+        pub fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (result: (ArraySeqMtPerS<T>, T))
+            where T: Clone
+            requires forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+            ensures result.0.seq@.len() == a.seq@.len()
+        {
+            let len = a.seq.len();
+            let mut acc = id;
+            let mut seq: Vec<T> = Vec::with_capacity(len);
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    seq@.len() == i as int,
+                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                decreases len - i,
+            {
+                acc = f(&acc, &a.seq[i]);
+                seq.push(acc.clone());
+                i += 1;
             }
-            (ArraySeqMtPerS::from_vec(values), acc)
+            (ArraySeqMtPerS { seq }, acc)
         }
 
-        fn isEmpty(&self) -> B { self.data.is_empty() }
-
-        fn isSingleton(&self) -> B { self.data.len() == 1 }
-    }
-
-    impl<T: StTInMtT + 'static> Clone for ArraySeqMtPerS<T> {
-        fn clone(&self) -> Self {
-            let values: Vec<T> = self.data.to_vec();
-            ArraySeqMtPerS::from_vec(values)
-        }
-    }
-
-    impl<T: StTInMtT> PartialEq for ArraySeqMtPerS<T> {
-        fn eq(&self, other: &Self) -> bool {
-            if self.data.len() != other.data.len() {
-                return false;
-            }
-            for i in 0..self.data.len() {
-                if self.data[i] != other.data[i] {
-                    return false;
-                }
-            }
-            true
+        #[verifier::external_body]
+        pub fn iter(&self) -> Iter<'_, T> {
+            self.seq.iter()
         }
     }
 
-    impl<T: StTInMtT + Eq> Eq for ArraySeqMtPerS<T> {}
+    } // verus!
 
-    impl<'a, T: StTInMtT> IntoIterator for &'a ArraySeqMtPerS<T> {
-        type Item = &'a T;
-        type IntoIter = Iter<'a, T>;
-
-        fn into_iter(self) -> Self::IntoIter { self.data.iter() }
+    // Non-Verus impls
+    #[cfg(verus_keep_ghost)]
+    impl<T: Clone> Clone for ArraySeqMtPerS<T> {
+        fn clone(&self) -> Self { ArraySeqMtPerS { seq: self.seq.clone() } }
     }
 
-    impl<T: StTInMtT> IntoIterator for ArraySeqMtPerS<T> {
-        type Item = T;
-        type IntoIter = IntoIter<T>;
-
-        fn into_iter(self) -> Self::IntoIter { self.data.into_vec().into_iter() }
+    #[cfg(verus_keep_ghost)]
+    impl<T: PartialEq> PartialEq for ArraySeqMtPerS<T> {
+        fn eq(&self, other: &Self) -> bool { self.seq == other.seq }
     }
 
-    impl<T: StTInMtT> Display for ArraySeqMtPerS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(f, "ArraySeqMtPerS[")?;
-            for (i, item) in self.data.iter().enumerate() {
-                if i > 0 {
-                    write!(f, ", ")?;
-                }
+    #[cfg(verus_keep_ghost)]
+    impl<T: Eq> Eq for ArraySeqMtPerS<T> {}
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: Debug> Debug for ArraySeqMtPerS<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            f.debug_list().entries(self.seq.iter()).finish()
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: Display> Display for ArraySeqMtPerS<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "[")?;
+            for (i, item) in self.seq.iter().enumerate() {
+                if i > 0 { write!(f, ", ")?; }
                 write!(f, "{item}")?;
             }
             write!(f, "]")
         }
     }
 
-    #[macro_export]
-    macro_rules! ArrayMtPerSLit {
-        () => { $crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::from_vec(Vec::new()) };
-        ($x:expr; $n:expr) => { $crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::from_vec(vec![$x; $n]) };
-        ($($x:expr),* $(,)?) => { $crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::from_vec(vec![$($x),*]) };
+    #[cfg(verus_keep_ghost)]
+    impl<'a, T> IntoIterator for &'a ArraySeqMtPerS<T> {
+        type Item = &'a T;
+        type IntoIter = Iter<'a, T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<T> IntoIterator for ArraySeqMtPerS<T> {
+        type Item = T;
+        type IntoIter = IntoIter<T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
+    }
+
+    // Non-Verus stub
+    #[cfg(not(verus_keep_ghost))]
+    #[derive(Clone, PartialEq, Eq, Debug)]
+    pub struct ArraySeqMtPerS<T> {
+        pub seq: Vec<T>,
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    impl<T> ArraySeqMtPerS<T> {
+        pub fn new(length: usize, init_value: T) -> Self where T: Clone {
+            ArraySeqMtPerS { seq: vec![init_value; length] }
+        }
+        pub fn length(&self) -> usize { self.seq.len() }
+        pub fn nth(&self, index: usize) -> &T { &self.seq[index] }
+        pub fn empty() -> Self { ArraySeqMtPerS { seq: Vec::new() } }
+        pub fn singleton(item: T) -> Self { ArraySeqMtPerS { seq: vec![item] } }
+        pub fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> Self {
+            ArraySeqMtPerS { seq: (0..length).map(f).collect() }
+        }
+        pub fn map<U, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqMtPerS<U> {
+            ArraySeqMtPerS { seq: a.seq.iter().map(f).collect() }
+        }
+        pub fn append(a: &Self, b: &Self) -> Self where T: Clone {
+            let mut seq = a.seq.clone();
+            seq.extend(b.seq.iter().cloned());
+            ArraySeqMtPerS { seq }
+        }
+        pub fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self where T: Clone {
+            ArraySeqMtPerS { seq: a.seq.iter().filter(|x| pred(x)).cloned().collect() }
+        }
+        pub fn isEmpty(&self) -> bool { self.seq.is_empty() }
+        pub fn isSingleton(&self) -> bool { self.seq.len() == 1 }
+        pub fn from_vec(elts: Vec<T>) -> Self { ArraySeqMtPerS { seq: elts } }
+        pub fn subseq_copy(&self, start: usize, length: usize) -> Self where T: Clone {
+            let end = (start + length).min(self.seq.len());
+            ArraySeqMtPerS { seq: self.seq[start..end].to_vec() }
+        }
+        pub fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T where T: Clone {
+            a.seq.iter().fold(id, |acc, x| f(&acc, x))
+        }
+        pub fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A {
+            a.seq.iter().fold(seed, |acc, x| f(&acc, x))
+        }
+        pub fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (Self, T) where T: Clone {
+            let mut acc = id;
+            let seq: Vec<T> = a.seq.iter().map(|x| { acc = f(&acc, x); acc.clone() }).collect();
+            (ArraySeqMtPerS { seq }, acc)
+        }
+        pub fn iter(&self) -> Iter<'_, T> { self.seq.iter() }
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    impl<T: Display> Display for ArraySeqMtPerS<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "[")?;
+            for (i, item) in self.seq.iter().enumerate() {
+                if i > 0 { write!(f, ", ")?; }
+                write!(f, "{item}")?;
+            }
+            write!(f, "]")
+        }
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    impl<'a, T> IntoIterator for &'a ArraySeqMtPerS<T> {
+        type Item = &'a T;
+        type IntoIter = Iter<'a, T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    impl<T> IntoIterator for ArraySeqMtPerS<T> {
+        type Item = T;
+        type IntoIter = IntoIter<T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 }
-

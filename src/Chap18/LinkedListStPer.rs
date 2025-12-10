@@ -44,7 +44,8 @@ pub mod LinkedListStPer {
     pub open spec fn iter_invariant<T>(it: &LinkedListStPerIter<T>) -> bool { it.pos <= it.elements@.len() }
 
     // See experiments/simple_seq_iter.rs::assumption_free_next for a version that proves
-    // without assume() by requiring iter_invariant. We can't add requires to Iterator::next.
+    // without assume() by requiring iter_invariant. We can't add requires to Iterator::next in Verus.
+    // and Rust iterators have 70 functions on them making this sensible requirement impossible.
     impl<T: Clone> Iterator for LinkedListStPerIter<T> {
         type Item = T;
 
