@@ -2,7 +2,7 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: obeys_key_model
-Searching: /home/milnes/projects/APAS-VERUS/src/vstdplus
-Files: 16, Functions: 566, Matches: 0
+Pattern: struct.*HashMap\|HashMap.*struct
+Searching: /home/milnes/projects/verus-lang/source/vstd
+Files: 87, Functions: 2117, Matches: 0
 
