@@ -396,8 +396,12 @@ impl<T: StT + Hash> MathSeqS<T> {
         {
             let x = order[j].clone();
             let opt_count = counts.get(&x);
-            // HashMap key lookup requires proving x is in counts
-            // vstd HashMap specs are conditional and clone-sensitive - needs assume
+            // Proving this requires:
+            // 1. Invariant: forall idx. order@[idx] in counts@
+            // 2. Clone equality: x == order@[j] (from cloned spec)
+            // 3. HashMap get spec: contains_key(x) ==> get(&x).is_some()
+            // Gap: vstd HashMap specs use contains_borrowed_key which
+            // doesn't directly connect to Map::contains_key for cloned keys
             assume(opt_count.is_some());
             let count = *opt_count.unwrap();
             result.push((count, x));

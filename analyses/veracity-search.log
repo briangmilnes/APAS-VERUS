@@ -2,19 +2,7 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: spec fn cloned
+Pattern: ensures.*None.*contains\|ensures.*contains.*None
 Searching: /home/milnes/projects/verus-lang/source/vstd
-Files: 87, Functions: 2117, Matches: 2
-
-[31m/home/milnes/projects/verus-lang/source/vstd/pervasive.rs:416: [0m
-///
-/// It is usually recommended to use [`cloned`] instead,
-/// which takes the reflexive closure.
-[38;5;22mpub open spec fn strictly_cloned<T: Clone>(a: T, b: T) -> bool[0m
-
-[31m/home/milnes/projects/verus-lang/source/vstd/pervasive.rs:426: [0m
-/// By always considering a value to be a clone of itself, regardless of the definition
-/// of `T::clone`, this definition is useful in places where 'clone' calls might be
-/// optimized to copies. This is particularly common in the Rust stdlib.
-[38;5;22mpub open spec fn cloned<T: Clone>(a: T, b: T) -> bool[0m
+Files: 87, Functions: 2117, Matches: 0
 
