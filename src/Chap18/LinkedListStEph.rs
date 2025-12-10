@@ -14,16 +14,67 @@ pub mod LinkedListStEph {
     #[cfg(verus_keep_ghost)]
     verus! {
 
+    use vstd::std_specs::clone::*;
+    broadcast use vstd::std_specs::vec::group_vec_axioms;
+
     #[verifier::reject_recursive_types(T)]
     pub struct LinkedListStEphS<T> {
-        pub data: Vec<T>,
+        pub seq: Vec<T>,
     }
 
     impl<T: View> View for LinkedListStEphS<T> {
         type V = Seq<T::V>;
 
         open spec fn view(&self) -> Seq<T::V> {
-            self.data@.map(|_i: int, t: T| t@)
+            self.seq@.map(|_i: int, t: T| t@)
+        }
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct LinkedListStEphIter<T> {
+        pub vec: Vec<T>,
+        pub pos: usize,
+    }
+
+    impl<T> View for LinkedListStEphIter<T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) { (self.pos as int, self.vec@) }
+    }
+
+    pub open spec fn iter_invariant<T>(it: &LinkedListStEphIter<T>) -> bool { it.pos <= it.vec@.len() }
+
+    impl<T: Clone> Iterator for LinkedListStEphIter<T> {
+        type Item = T;
+
+        fn next(&mut self) -> (result: Option<T>)
+            ensures
+                self.pos <= self.vec.len(),
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match result {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index == old_seq.len()
+                            &&& self.pos == old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& vstd::pervasive::cloned(old_seq[old_index as int], element)
+                        },
+                    }
+                }),
+        {
+            if self.pos < self.vec.len() {
+                let elem = self.vec[self.pos].clone();
+                self.pos = self.pos + 1;
+                Some(elem)
+            } else {
+                assume(self.pos <= self.vec.len());
+                None
+            }
         }
     }
 
@@ -31,17 +82,17 @@ pub mod LinkedListStEph {
         pub fn new(length: usize, init_value: T) -> (result: LinkedListStEphS<T>)
             where T: Clone
             requires length <= usize::MAX
-            ensures result.data@.len() == length
+            ensures result.seq@.len() == length
         {
-            LinkedListStEphS { data: vec![init_value; length] }
+            LinkedListStEphS { seq: vec![init_value; length] }
         }
 
         pub fn set(&mut self, index: usize, item: T) -> (result: Result<(), &'static str>)
-            requires index < old(self).data@.len()
-            ensures result.is_ok() ==> self.data@.len() == old(self).data@.len()
+            requires index < old(self).seq@.len()
+            ensures result.is_ok() ==> self.seq@.len() == old(self).seq@.len()
         {
-            if index < self.data.len() {
-                self.data.set(index, item);
+            if index < self.seq.len() {
+                self.seq.set(index, item);
                 Ok(())
             } else {
                 Err("Index out of bounds")
@@ -49,186 +100,192 @@ pub mod LinkedListStEph {
         }
 
         pub fn length(&self) -> (len: usize)
-            ensures len == self.data@.len()
+            ensures len == self.seq@.len()
         {
-            self.data.len()
+            self.seq.len()
         }
 
         pub fn nth(&self, index: usize) -> (result: &T)
-            requires index < self.data@.len()
+            requires index < self.seq@.len()
         {
-            &self.data[index]
+            &self.seq[index]
         }
 
         pub fn empty() -> (result: LinkedListStEphS<T>)
-            ensures result.data@.len() == 0
+            ensures result.seq@.len() == 0
         {
-            LinkedListStEphS { data: Vec::new() }
+            LinkedListStEphS { seq: Vec::new() }
         }
 
         pub fn singleton(item: T) -> (result: LinkedListStEphS<T>)
-            ensures result.data@.len() == 1
+            ensures result.seq@.len() == 1
         {
-            let mut data = Vec::with_capacity(1);
-            data.push(item);
-            LinkedListStEphS { data }
+            let mut seq = Vec::with_capacity(1);
+            seq.push(item);
+            LinkedListStEphS { seq }
         }
 
         pub fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> (result: LinkedListStEphS<T>)
             requires 
                 n <= usize::MAX,
                 forall|i: usize| i < n ==> #[trigger] f.requires((i,)),
-            ensures result.data@.len() == n
+            ensures result.seq@.len() == n
         {
-            let mut data = Vec::with_capacity(n);
+            let mut seq = Vec::with_capacity(n);
             let mut i: usize = 0;
             while i < n
                 invariant
                     i <= n,
-                    data@.len() == i as int,
+                    seq@.len() == i as int,
                     forall|j: usize| j < n ==> #[trigger] f.requires((j,)),
                 decreases n - i,
             {
-                data.push(f(i));
+                seq.push(f(i));
                 i += 1;
             }
-            LinkedListStEphS { data }
+            LinkedListStEphS { seq }
         }
 
         pub fn map<U: Clone + View, F: Fn(&T) -> U>(a: &LinkedListStEphS<T>, f: &F) -> (result: LinkedListStEphS<U>)
-            requires forall|i: int| 0 <= i < a.data@.len() ==> #[trigger] f.requires((&a.data@[i],)),
-            ensures result.data@.len() == a.data@.len()
+            requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
+            ensures result.seq@.len() == a.seq@.len()
         {
-            let len = a.data.len();
-            let mut data: Vec<U> = Vec::with_capacity(len);
+            let len = a.seq.len();
+            let mut seq: Vec<U> = Vec::with_capacity(len);
             let mut i: usize = 0;
             while i < len
                 invariant
                     i <= len,
-                    len == a.data@.len(),
-                    data@.len() == i as int,
-                    forall|j: int| 0 <= j < a.data@.len() ==> #[trigger] f.requires((&a.data@[j],)),
+                    len == a.seq@.len(),
+                    seq@.len() == i as int,
+                    forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[j],)),
                 decreases len - i,
             {
-                data.push(f(&a.data[i]));
+                seq.push(f(&a.seq[i]));
                 i += 1;
             }
-            LinkedListStEphS { data }
+            LinkedListStEphS { seq }
         }
 
         pub fn append(a: &LinkedListStEphS<T>, b: &LinkedListStEphS<T>) -> (result: LinkedListStEphS<T>)
             where T: Clone
-            requires a.data@.len() + b.data@.len() <= usize::MAX
-            ensures result.data@.len() == a.data@.len() + b.data@.len()
+            requires a.seq@.len() + b.seq@.len() <= usize::MAX
+            ensures result.seq@.len() == a.seq@.len() + b.seq@.len()
         {
-            let a_len = a.data.len();
-            let b_len = b.data.len();
-            let mut data: Vec<T> = Vec::with_capacity(a_len + b_len);
+            let a_len = a.seq.len();
+            let b_len = b.seq.len();
+            let mut seq: Vec<T> = Vec::with_capacity(a_len + b_len);
             let mut i: usize = 0;
             while i < a_len
-                invariant i <= a_len, a_len == a.data@.len(), data@.len() == i as int,
+                invariant i <= a_len, a_len == a.seq@.len(), seq@.len() == i as int,
                 decreases a_len - i,
             {
-                data.push(a.data[i].clone());
+                seq.push(a.seq[i].clone());
                 i += 1;
             }
             let mut j: usize = 0;
             while j < b_len
-                invariant j <= b_len, b_len == b.data@.len(), data@.len() == a_len + j,
+                invariant j <= b_len, b_len == b.seq@.len(), seq@.len() == a_len + j,
                 decreases b_len - j,
             {
-                data.push(b.data[j].clone());
+                seq.push(b.seq[j].clone());
                 j += 1;
             }
-            LinkedListStEphS { data }
+            LinkedListStEphS { seq }
         }
 
         pub fn filter<F: Fn(&T) -> bool>(a: &LinkedListStEphS<T>, pred: &F) -> (result: LinkedListStEphS<T>)
             where T: Clone
-            requires forall|i: int| 0 <= i < a.data@.len() ==> #[trigger] pred.requires((&a.data@[i],)),
-            ensures result.data@.len() <= a.data@.len()
+            requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
+            ensures result.seq@.len() <= a.seq@.len()
         {
-            let len = a.data.len();
-            let mut data: Vec<T> = Vec::new();
+            let len = a.seq.len();
+            let mut seq: Vec<T> = Vec::new();
             let mut i: usize = 0;
             while i < len
                 invariant
                     i <= len,
-                    len == a.data@.len(),
-                    data@.len() <= i,
-                    forall|j: int| 0 <= j < a.data@.len() ==> #[trigger] pred.requires((&a.data@[j],)),
+                    len == a.seq@.len(),
+                    seq@.len() <= i,
+                    forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[j],)),
                 decreases len - i,
             {
-                if pred(&a.data[i]) {
-                    data.push(a.data[i].clone());
+                if pred(&a.seq[i]) {
+                    seq.push(a.seq[i].clone());
                 }
                 i += 1;
             }
-            LinkedListStEphS { data }
+            LinkedListStEphS { seq }
         }
 
         pub fn isEmpty(&self) -> (empty: bool)
-            ensures empty <==> self.data@.len() == 0
+            ensures empty <==> self.seq@.len() == 0
         {
-            self.data.len() == 0
+            self.seq.len() == 0
         }
 
         pub fn isSingleton(&self) -> (single: bool)
-            ensures single <==> self.data@.len() == 1
+            ensures single <==> self.seq@.len() == 1
         {
-            self.data.len() == 1
+            self.seq.len() == 1
         }
 
         pub fn from_vec(elts: Vec<T>) -> (result: LinkedListStEphS<T>)
-            ensures result.data@ == elts@
+            ensures result.seq@ == elts@
         {
-            LinkedListStEphS { data: elts }
+            LinkedListStEphS { seq: elts }
         }
 
-        #[verifier::external_body]
-        pub fn iter(&self) -> Iter<'_, T> {
-            self.data.iter()
+        pub fn iter(&self) -> (it: LinkedListStEphIter<T>)
+            where T: Clone
+            ensures
+                it.vec@.len() == self.seq@.len(),
+                forall|i: int| 0 <= i < self.seq@.len() ==> cloned(self.seq@[i], #[trigger] it.vec@[i]),
+                it.pos == 0,
+                it.pos <= it.vec.len(),
+        {
+            LinkedListStEphIter { vec: self.seq.clone(), pos: 0 }
         }
 
         pub fn subseq_copy(&self, start: usize, length: usize) -> (result: LinkedListStEphS<T>)
             where T: Clone
             requires 
-                start + length <= self.data@.len(),
-                self.data@.len() <= usize::MAX as int,
-            ensures result.data@.len() == length
+                start + length <= self.seq@.len(),
+                self.seq@.len() <= usize::MAX as int,
+            ensures result.seq@.len() == length
         {
             let end = start + length;
-            let mut data: Vec<T> = Vec::with_capacity(length);
+            let mut seq: Vec<T> = Vec::with_capacity(length);
             let mut i: usize = start;
             while i < end
                 invariant
                     start <= i <= end,
                     end == start + length,
-                    end <= self.data@.len(),
-                    data@.len() == (i - start) as int,
+                    end <= self.seq@.len(),
+                    seq@.len() == (i - start) as int,
                 decreases end - i,
             {
-                data.push(self.data[i].clone());
+                seq.push(self.seq[i].clone());
                 i += 1;
             }
-            LinkedListStEphS { data }
+            LinkedListStEphS { seq }
         }
 
         pub fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, id: T) -> (result: T)
             where T: Clone
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
         {
-            let len = a.data.len();
+            let len = a.seq.len();
             let mut acc = id;
             let mut i: usize = 0;
             while i < len
                 invariant
                     i <= len,
-                    len == a.data@.len(),
+                    len == a.seq@.len(),
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 decreases len - i,
             {
-                acc = f(&acc, &a.data[i]);
+                acc = f(&acc, &a.seq[i]);
                 i += 1;
             }
             acc
@@ -237,17 +294,17 @@ pub mod LinkedListStEph {
         pub fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStEphS<T>, f: &F, seed: A) -> (result: A)
             requires forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
         {
-            let len = a.data.len();
+            let len = a.seq.len();
             let mut acc = seed;
             let mut i: usize = 0;
             while i < len
                 invariant
                     i <= len,
-                    len == a.data@.len(),
+                    len == a.seq@.len(),
                     forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
                 decreases len - i,
             {
-                acc = f(&acc, &a.data[i]);
+                acc = f(&acc, &a.seq[i]);
                 i += 1;
             }
             acc
@@ -259,12 +316,12 @@ pub mod LinkedListStEph {
     // Non-Verus impls
     #[cfg(verus_keep_ghost)]
     impl<T: Clone> Clone for LinkedListStEphS<T> {
-        fn clone(&self) -> Self { LinkedListStEphS { data: self.data.clone() } }
+        fn clone(&self) -> Self { LinkedListStEphS { seq: self.seq.clone() } }
     }
 
     #[cfg(verus_keep_ghost)]
     impl<T: PartialEq> PartialEq for LinkedListStEphS<T> {
-        fn eq(&self, other: &Self) -> bool { self.data == other.data }
+        fn eq(&self, other: &Self) -> bool { self.seq == other.seq }
     }
 
     #[cfg(verus_keep_ghost)]
@@ -273,7 +330,7 @@ pub mod LinkedListStEph {
     #[cfg(verus_keep_ghost)]
     impl<T: Debug> Debug for LinkedListStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            f.debug_list().entries(self.data.iter()).finish()
+            f.debug_list().entries(self.seq.iter()).finish()
         }
     }
 
@@ -281,7 +338,7 @@ pub mod LinkedListStEph {
     impl<T: Display> Display for LinkedListStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(f, "[")?;
-            for (i, item) in self.data.iter().enumerate() {
+            for (i, item) in self.seq.iter().enumerate() {
                 if i > 0 { write!(f, ", ")?; }
                 write!(f, "{item}")?;
             }
@@ -293,70 +350,93 @@ pub mod LinkedListStEph {
     impl<'a, T> IntoIterator for &'a LinkedListStEphS<T> {
         type Item = &'a T;
         type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.data.iter() }
+        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
     }
 
     #[cfg(verus_keep_ghost)]
     impl<T> IntoIterator for LinkedListStEphS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.data.into_iter() }
+        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
     // Non-Verus stub
     #[cfg(not(verus_keep_ghost))]
     #[derive(Clone, PartialEq, Eq)]
     pub struct LinkedListStEphS<T> {
-        pub data: Vec<T>,
+        pub seq: Vec<T>,
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    pub struct LinkedListStEphIter<T> {
+        pub vec: Vec<T>,
+        pub pos: usize,
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    impl<T: Clone> Iterator for LinkedListStEphIter<T> {
+        type Item = T;
+        fn next(&mut self) -> Option<T> {
+            if self.pos < self.vec.len() {
+                let elem = self.vec[self.pos].clone();
+                self.pos += 1;
+                Some(elem)
+            } else {
+                None
+            }
+        }
     }
 
     #[cfg(not(verus_keep_ghost))]
     impl<T> LinkedListStEphS<T> {
         pub fn new(length: usize, init_value: T) -> Self where T: Clone {
-            LinkedListStEphS { data: vec![init_value; length] }
+            LinkedListStEphS { seq: vec![init_value; length] }
         }
         pub fn set(&mut self, index: usize, item: T) -> Result<(), &'static str> {
-            if index < self.data.len() { self.data[index] = item; Ok(()) }
+            if index < self.seq.len() { self.seq[index] = item; Ok(()) }
             else { Err("Index out of bounds") }
         }
-        pub fn length(&self) -> usize { self.data.len() }
-        pub fn nth(&self, index: usize) -> &T { &self.data[index] }
-        pub fn empty() -> Self { LinkedListStEphS { data: Vec::new() } }
-        pub fn singleton(item: T) -> Self { LinkedListStEphS { data: vec![item] } }
+        pub fn length(&self) -> usize { self.seq.len() }
+        pub fn nth(&self, index: usize) -> &T { &self.seq[index] }
+        pub fn empty() -> Self { LinkedListStEphS { seq: Vec::new() } }
+        pub fn singleton(item: T) -> Self { LinkedListStEphS { seq: vec![item] } }
         pub fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> Self {
-            LinkedListStEphS { data: (0..n).map(f).collect() }
+            LinkedListStEphS { seq: (0..n).map(f).collect() }
         }
         pub fn map<U, F: Fn(&T) -> U>(a: &Self, f: &F) -> LinkedListStEphS<U> {
-            LinkedListStEphS { data: a.data.iter().map(f).collect() }
+            LinkedListStEphS { seq: a.seq.iter().map(f).collect() }
         }
         pub fn append(a: &Self, b: &Self) -> Self where T: Clone {
-            let mut data = a.data.clone();
-            data.extend(b.data.iter().cloned());
-            LinkedListStEphS { data }
+            let mut seq = a.seq.clone();
+            seq.extend(b.seq.iter().cloned());
+            LinkedListStEphS { seq }
         }
         pub fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self where T: Clone {
-            LinkedListStEphS { data: a.data.iter().filter(|x| pred(x)).cloned().collect() }
+            LinkedListStEphS { seq: a.seq.iter().filter(|x| pred(x)).cloned().collect() }
         }
-        pub fn isEmpty(&self) -> bool { self.data.is_empty() }
-        pub fn isSingleton(&self) -> bool { self.data.len() == 1 }
-        pub fn from_vec(elts: Vec<T>) -> Self { LinkedListStEphS { data: elts } }
-        pub fn iter(&self) -> Iter<'_, T> { self.data.iter() }
+        pub fn isEmpty(&self) -> bool { self.seq.is_empty() }
+        pub fn isSingleton(&self) -> bool { self.seq.len() == 1 }
+        pub fn from_vec(elts: Vec<T>) -> Self { LinkedListStEphS { seq: elts } }
+        pub fn iter(&self) -> LinkedListStEphIter<T> where T: Clone {
+            LinkedListStEphIter { vec: self.seq.clone(), pos: 0 }
+        }
+        pub fn iter_std(&self) -> Iter<'_, T> { self.seq.iter() }
         pub fn subseq_copy(&self, start: usize, length: usize) -> Self where T: Clone {
-            let end = (start + length).min(self.data.len());
-            LinkedListStEphS { data: self.data[start..end].to_vec() }
+            let end = (start + length).min(self.seq.len());
+            LinkedListStEphS { seq: self.seq[start..end].to_vec() }
         }
         pub fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T where T: Clone {
-            a.data.iter().fold(id, |acc, x| f(&acc, x))
+            a.seq.iter().fold(id, |acc, x| f(&acc, x))
         }
         pub fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A {
-            a.data.iter().fold(seed, |acc, x| f(&acc, x))
+            a.seq.iter().fold(seed, |acc, x| f(&acc, x))
         }
     }
 
     #[cfg(not(verus_keep_ghost))]
     impl<T: Debug> Debug for LinkedListStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            f.debug_list().entries(self.data.iter()).finish()
+            f.debug_list().entries(self.seq.iter()).finish()
         }
     }
 
@@ -364,7 +444,7 @@ pub mod LinkedListStEph {
     impl<T: Display> Display for LinkedListStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(f, "[")?;
-            for (i, item) in self.data.iter().enumerate() {
+            for (i, item) in self.seq.iter().enumerate() {
                 if i > 0 { write!(f, ", ")?; }
                 write!(f, "{item}")?;
             }
@@ -376,13 +456,13 @@ pub mod LinkedListStEph {
     impl<'a, T> IntoIterator for &'a LinkedListStEphS<T> {
         type Item = &'a T;
         type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.data.iter() }
+        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
     }
 
     #[cfg(not(verus_keep_ghost))]
     impl<T> IntoIterator for LinkedListStEphS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.data.into_iter() }
+        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 }

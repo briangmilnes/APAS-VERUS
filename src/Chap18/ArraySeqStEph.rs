@@ -14,16 +14,67 @@ pub mod ArraySeqStEph {
     #[cfg(verus_keep_ghost)]
     verus! {
 
+    use vstd::std_specs::clone::*;
+    broadcast use vstd::std_specs::vec::group_vec_axioms;
+
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqStEphS<T> {
-        pub data: Vec<T>,
+        pub seq: Vec<T>,
     }
 
     impl<T: View> View for ArraySeqStEphS<T> {
         type V = Seq<T::V>;
 
         open spec fn view(&self) -> Seq<T::V> {
-            self.data@.map(|_i: int, t: T| t@)
+            self.seq@.map(|_i: int, t: T| t@)
+        }
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct ArraySeqStEphIter<T> {
+        pub vec: Vec<T>,
+        pub pos: usize,
+    }
+
+    impl<T> View for ArraySeqStEphIter<T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) { (self.pos as int, self.vec@) }
+    }
+
+    pub open spec fn iter_invariant<T>(it: &ArraySeqStEphIter<T>) -> bool { it.pos <= it.vec@.len() }
+
+    impl<T: Clone> Iterator for ArraySeqStEphIter<T> {
+        type Item = T;
+
+        fn next(&mut self) -> (result: Option<T>)
+            ensures
+                self.pos <= self.vec.len(),
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match result {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index == old_seq.len()
+                            &&& self.pos == old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& vstd::pervasive::cloned(old_seq[old_index as int], element)
+                        },
+                    }
+                }),
+        {
+            if self.pos < self.vec.len() {
+                let elem = self.vec[self.pos].clone();
+                self.pos = self.pos + 1;
+                Some(elem)
+            } else {
+                assume(self.pos <= self.vec.len());
+                None
+            }
         }
     }
 
@@ -31,17 +82,17 @@ pub mod ArraySeqStEph {
         pub fn new(length: usize, init_value: T) -> (result: ArraySeqStEphS<T>)
             where T: Clone
             requires length <= usize::MAX
-            ensures result.data@.len() == length
+            ensures result.seq@.len() == length
         {
-            ArraySeqStEphS { data: vec![init_value; length] }
+            ArraySeqStEphS { seq: vec![init_value; length] }
         }
 
         pub fn set(&mut self, index: usize, item: T) -> (result: Result<(), &'static str>)
-            requires index < old(self).data@.len()
-            ensures result.is_ok() ==> self.data@.len() == old(self).data@.len()
+            requires index < old(self).seq@.len()
+            ensures result.is_ok() ==> self.seq@.len() == old(self).seq@.len()
         {
-            if index < self.data.len() {
-                self.data.set(index, item);
+            if index < self.seq.len() {
+                self.seq.set(index, item);
                 Ok(())
             } else {
                 Err("Index out of bounds")
@@ -49,192 +100,198 @@ pub mod ArraySeqStEph {
         }
 
         pub fn length(&self) -> (len: usize)
-            ensures len == self.data@.len()
+            ensures len == self.seq@.len()
         {
-            self.data.len()
+            self.seq.len()
         }
 
         pub fn nth(&self, index: usize) -> (result: &T)
-            requires index < self.data@.len()
+            requires index < self.seq@.len()
         {
-            &self.data[index]
+            &self.seq[index]
         }
 
         pub fn empty() -> (result: ArraySeqStEphS<T>)
-            ensures result.data@.len() == 0
+            ensures result.seq@.len() == 0
         {
-            ArraySeqStEphS { data: Vec::new() }
+            ArraySeqStEphS { seq: Vec::new() }
         }
 
         pub fn singleton(item: T) -> (result: ArraySeqStEphS<T>)
-            ensures result.data@.len() == 1
+            ensures result.seq@.len() == 1
         {
-            let mut data = Vec::with_capacity(1);
-            data.push(item);
-            ArraySeqStEphS { data }
+            let mut seq = Vec::with_capacity(1);
+            seq.push(item);
+            ArraySeqStEphS { seq }
         }
 
         pub fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (result: ArraySeqStEphS<T>)
             requires 
                 length <= usize::MAX,
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
-            ensures result.data@.len() == length
+            ensures result.seq@.len() == length
         {
-            let mut data = Vec::with_capacity(length);
+            let mut seq = Vec::with_capacity(length);
             let mut i: usize = 0;
             while i < length
                 invariant
                     i <= length,
-                    data@.len() == i as int,
+                    seq@.len() == i as int,
                     forall|j: usize| j < length ==> #[trigger] f.requires((j,)),
                 decreases length - i,
             {
-                data.push(f(i));
+                seq.push(f(i));
                 i += 1;
             }
-            ArraySeqStEphS { data }
+            ArraySeqStEphS { seq }
         }
 
         pub fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqStEphS<T>, f: &F) -> (result: ArraySeqStEphS<U>)
-            requires forall|i: int| 0 <= i < a.data@.len() ==> #[trigger] f.requires((&a.data@[i],)),
-            ensures result.data@.len() == a.data@.len()
+            requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
+            ensures result.seq@.len() == a.seq@.len()
         {
-            let len = a.data.len();
-            let mut data: Vec<U> = Vec::with_capacity(len);
+            let len = a.seq.len();
+            let mut seq: Vec<U> = Vec::with_capacity(len);
             let mut i: usize = 0;
             while i < len
                 invariant
                     i <= len,
-                    len == a.data@.len(),
-                    data@.len() == i as int,
-                    forall|j: int| 0 <= j < a.data@.len() ==> #[trigger] f.requires((&a.data@[j],)),
+                    len == a.seq@.len(),
+                    seq@.len() == i as int,
+                    forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[j],)),
                 decreases len - i,
             {
-                data.push(f(&a.data[i]));
+                seq.push(f(&a.seq[i]));
                 i += 1;
             }
-            ArraySeqStEphS { data }
+            ArraySeqStEphS { seq }
         }
 
         pub fn append(&self, b: &ArraySeqStEphS<T>) -> (result: ArraySeqStEphS<T>)
             where T: Clone
-            requires self.data@.len() + b.data@.len() <= usize::MAX
-            ensures result.data@.len() == self.data@.len() + b.data@.len()
+            requires self.seq@.len() + b.seq@.len() <= usize::MAX
+            ensures result.seq@.len() == self.seq@.len() + b.seq@.len()
         {
-            let a_len = self.data.len();
-            let b_len = b.data.len();
-            let mut data: Vec<T> = Vec::with_capacity(a_len + b_len);
+            let a_len = self.seq.len();
+            let b_len = b.seq.len();
+            let mut seq: Vec<T> = Vec::with_capacity(a_len + b_len);
             let mut i: usize = 0;
             while i < a_len
                 invariant
                     i <= a_len,
-                    a_len == self.data@.len(),
-                    data@.len() == i as int,
+                    a_len == self.seq@.len(),
+                    seq@.len() == i as int,
                 decreases a_len - i,
             {
-                data.push(self.data[i].clone());
+                seq.push(self.seq[i].clone());
                 i += 1;
             }
             let mut j: usize = 0;
             while j < b_len
                 invariant
                     j <= b_len,
-                    b_len == b.data@.len(),
-                    data@.len() == a_len + j,
+                    b_len == b.seq@.len(),
+                    seq@.len() == a_len + j,
                 decreases b_len - j,
             {
-                data.push(b.data[j].clone());
+                seq.push(b.seq[j].clone());
                 j += 1;
             }
-            ArraySeqStEphS { data }
+            ArraySeqStEphS { seq }
         }
 
         pub fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStEphS<T>, pred: &F) -> (result: ArraySeqStEphS<T>)
             where T: Clone
-            requires forall|i: int| 0 <= i < a.data@.len() ==> #[trigger] pred.requires((&a.data@[i],)),
-            ensures result.data@.len() <= a.data@.len()
+            requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
+            ensures result.seq@.len() <= a.seq@.len()
         {
-            let len = a.data.len();
-            let mut data: Vec<T> = Vec::new();
+            let len = a.seq.len();
+            let mut seq: Vec<T> = Vec::new();
             let mut i: usize = 0;
             while i < len
                 invariant
                     i <= len,
-                    len == a.data@.len(),
-                    data@.len() <= i,
-                    forall|j: int| 0 <= j < a.data@.len() ==> #[trigger] pred.requires((&a.data@[j],)),
+                    len == a.seq@.len(),
+                    seq@.len() <= i,
+                    forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[j],)),
                 decreases len - i,
             {
-                if pred(&a.data[i]) {
-                    data.push(a.data[i].clone());
+                if pred(&a.seq[i]) {
+                    seq.push(a.seq[i].clone());
                 }
                 i += 1;
             }
-            ArraySeqStEphS { data }
+            ArraySeqStEphS { seq }
         }
 
         pub fn isEmpty(&self) -> (empty: bool)
-            ensures empty <==> self.data@.len() == 0
+            ensures empty <==> self.seq@.len() == 0
         {
-            self.data.len() == 0
+            self.seq.len() == 0
         }
 
         pub fn isSingleton(&self) -> (single: bool)
-            ensures single <==> self.data@.len() == 1
+            ensures single <==> self.seq@.len() == 1
         {
-            self.data.len() == 1
+            self.seq.len() == 1
         }
 
         pub fn from_vec(elts: Vec<T>) -> (result: ArraySeqStEphS<T>)
-            ensures result.data@ == elts@
+            ensures result.seq@ == elts@
         {
-            ArraySeqStEphS { data: elts }
+            ArraySeqStEphS { seq: elts }
         }
 
-        #[verifier::external_body]
-        pub fn iter(&self) -> Iter<'_, T> {
-            self.data.iter()
+        pub fn iter(&self) -> (it: ArraySeqStEphIter<T>)
+            where T: Clone
+            ensures
+                it.vec@.len() == self.seq@.len(),
+                forall|i: int| 0 <= i < self.seq@.len() ==> cloned(self.seq@[i], #[trigger] it.vec@[i]),
+                it.pos == 0,
+                it.pos <= it.vec.len(),
+        {
+            ArraySeqStEphIter { vec: self.seq.clone(), pos: 0 }
         }
 
         pub fn subseq(&self, start: usize, length: usize) -> (result: ArraySeqStEphS<T>)
             where T: Clone
             requires 
-                start + length <= self.data@.len(),
-                self.data@.len() <= usize::MAX as int,
-            ensures result.data@.len() == length
+                start + length <= self.seq@.len(),
+                self.seq@.len() <= usize::MAX as int,
+            ensures result.seq@.len() == length
         {
             let end = start + length;
-            let mut data: Vec<T> = Vec::with_capacity(length);
+            let mut seq: Vec<T> = Vec::with_capacity(length);
             let mut i: usize = start;
             while i < end
                 invariant
                     start <= i <= end,
                     end == start + length,
-                    end <= self.data@.len(),
-                    data@.len() == (i - start) as int,
+                    end <= self.seq@.len(),
+                    seq@.len() == (i - start) as int,
                 decreases end - i,
             {
-                data.push(self.data[i].clone());
+                seq.push(self.seq[i].clone());
                 i += 1;
             }
-            ArraySeqStEphS { data }
+            ArraySeqStEphS { seq }
         }
 
         pub fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStEphS<T>, f: &F, id: T) -> (result: T)
             where T: Clone
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
         {
-            let len = a.data.len();
+            let len = a.seq.len();
             let mut acc = id;
             let mut i: usize = 0;
             while i < len
                 invariant
                     i <= len,
-                    len == a.data@.len(),
+                    len == a.seq@.len(),
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 decreases len - i,
             {
-                acc = f(&acc, &a.data[i]);
+                acc = f(&acc, &a.seq[i]);
                 i += 1;
             }
             acc
@@ -243,17 +300,17 @@ pub mod ArraySeqStEph {
         pub fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStEphS<T>, f: &F, seed: A) -> (result: A)
             requires forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
         {
-            let len = a.data.len();
+            let len = a.seq.len();
             let mut acc = seed;
             let mut i: usize = 0;
             while i < len
                 invariant
                     i <= len,
-                    len == a.data@.len(),
+                    len == a.seq@.len(),
                     forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
                 decreases len - i,
             {
-                acc = f(&acc, &a.data[i]);
+                acc = f(&acc, &a.seq[i]);
                 i += 1;
             }
             acc
@@ -265,12 +322,12 @@ pub mod ArraySeqStEph {
     // Non-Verus impls
     #[cfg(verus_keep_ghost)]
     impl<T: Clone> Clone for ArraySeqStEphS<T> {
-        fn clone(&self) -> Self { ArraySeqStEphS { data: self.data.clone() } }
+        fn clone(&self) -> Self { ArraySeqStEphS { seq: self.seq.clone() } }
     }
 
     #[cfg(verus_keep_ghost)]
     impl<T: PartialEq> PartialEq for ArraySeqStEphS<T> {
-        fn eq(&self, other: &Self) -> bool { self.data == other.data }
+        fn eq(&self, other: &Self) -> bool { self.seq == other.seq }
     }
 
     #[cfg(verus_keep_ghost)]
@@ -279,7 +336,7 @@ pub mod ArraySeqStEph {
     #[cfg(verus_keep_ghost)]
     impl<T: Debug> Debug for ArraySeqStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            f.debug_list().entries(self.data.iter()).finish()
+            f.debug_list().entries(self.seq.iter()).finish()
         }
     }
 
@@ -287,7 +344,7 @@ pub mod ArraySeqStEph {
     impl<T: Display> Display for ArraySeqStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(f, "[")?;
-            for (i, item) in self.data.iter().enumerate() {
+            for (i, item) in self.seq.iter().enumerate() {
                 if i > 0 { write!(f, ", ")?; }
                 write!(f, "{item}")?;
             }
@@ -299,70 +356,93 @@ pub mod ArraySeqStEph {
     impl<'a, T> IntoIterator for &'a ArraySeqStEphS<T> {
         type Item = &'a T;
         type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.data.iter() }
+        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
     }
 
     #[cfg(verus_keep_ghost)]
     impl<T> IntoIterator for ArraySeqStEphS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.data.into_iter() }
+        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
     // Non-Verus stub
     #[cfg(not(verus_keep_ghost))]
     #[derive(Clone, PartialEq, Eq)]
     pub struct ArraySeqStEphS<T> {
-        pub data: Vec<T>,
+        pub seq: Vec<T>,
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    pub struct ArraySeqStEphIter<T> {
+        pub vec: Vec<T>,
+        pub pos: usize,
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    impl<T: Clone> Iterator for ArraySeqStEphIter<T> {
+        type Item = T;
+        fn next(&mut self) -> Option<T> {
+            if self.pos < self.vec.len() {
+                let elem = self.vec[self.pos].clone();
+                self.pos += 1;
+                Some(elem)
+            } else {
+                None
+            }
+        }
     }
 
     #[cfg(not(verus_keep_ghost))]
     impl<T> ArraySeqStEphS<T> {
         pub fn new(length: usize, init_value: T) -> Self where T: Clone {
-            ArraySeqStEphS { data: vec![init_value; length] }
+            ArraySeqStEphS { seq: vec![init_value; length] }
         }
         pub fn set(&mut self, index: usize, item: T) -> Result<(), &'static str> {
-            if index < self.data.len() { self.data[index] = item; Ok(()) }
+            if index < self.seq.len() { self.seq[index] = item; Ok(()) }
             else { Err("Index out of bounds") }
         }
-        pub fn length(&self) -> usize { self.data.len() }
-        pub fn nth(&self, index: usize) -> &T { &self.data[index] }
-        pub fn empty() -> Self { ArraySeqStEphS { data: Vec::new() } }
-        pub fn singleton(item: T) -> Self { ArraySeqStEphS { data: vec![item] } }
+        pub fn length(&self) -> usize { self.seq.len() }
+        pub fn nth(&self, index: usize) -> &T { &self.seq[index] }
+        pub fn empty() -> Self { ArraySeqStEphS { seq: Vec::new() } }
+        pub fn singleton(item: T) -> Self { ArraySeqStEphS { seq: vec![item] } }
         pub fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> Self {
-            ArraySeqStEphS { data: (0..length).map(f).collect() }
+            ArraySeqStEphS { seq: (0..length).map(f).collect() }
         }
         pub fn map<U, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqStEphS<U> {
-            ArraySeqStEphS { data: a.data.iter().map(f).collect() }
+            ArraySeqStEphS { seq: a.seq.iter().map(f).collect() }
         }
         pub fn append(&self, b: &Self) -> Self where T: Clone {
-            let mut data = self.data.clone();
-            data.extend(b.data.iter().cloned());
-            ArraySeqStEphS { data }
+            let mut seq = self.seq.clone();
+            seq.extend(b.seq.iter().cloned());
+            ArraySeqStEphS { seq }
         }
         pub fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self where T: Clone {
-            ArraySeqStEphS { data: a.data.iter().filter(|x| pred(x)).cloned().collect() }
+            ArraySeqStEphS { seq: a.seq.iter().filter(|x| pred(x)).cloned().collect() }
         }
-        pub fn isEmpty(&self) -> bool { self.data.is_empty() }
-        pub fn isSingleton(&self) -> bool { self.data.len() == 1 }
-        pub fn from_vec(elts: Vec<T>) -> Self { ArraySeqStEphS { data: elts } }
-        pub fn iter(&self) -> Iter<'_, T> { self.data.iter() }
+        pub fn isEmpty(&self) -> bool { self.seq.is_empty() }
+        pub fn isSingleton(&self) -> bool { self.seq.len() == 1 }
+        pub fn from_vec(elts: Vec<T>) -> Self { ArraySeqStEphS { seq: elts } }
+        pub fn iter(&self) -> ArraySeqStEphIter<T> where T: Clone {
+            ArraySeqStEphIter { vec: self.seq.clone(), pos: 0 }
+        }
+        pub fn iter_std(&self) -> Iter<'_, T> { self.seq.iter() }
         pub fn subseq(&self, start: usize, length: usize) -> Self where T: Clone {
-            let end = (start + length).min(self.data.len());
-            ArraySeqStEphS { data: self.data[start..end].to_vec() }
+            let end = (start + length).min(self.seq.len());
+            ArraySeqStEphS { seq: self.seq[start..end].to_vec() }
         }
         pub fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T where T: Clone {
-            a.data.iter().fold(id, |acc, x| f(&acc, x))
+            a.seq.iter().fold(id, |acc, x| f(&acc, x))
         }
         pub fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A {
-            a.data.iter().fold(seed, |acc, x| f(&acc, x))
+            a.seq.iter().fold(seed, |acc, x| f(&acc, x))
         }
     }
 
     #[cfg(not(verus_keep_ghost))]
     impl<T: Debug> Debug for ArraySeqStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            f.debug_list().entries(self.data.iter()).finish()
+            f.debug_list().entries(self.seq.iter()).finish()
         }
     }
 
@@ -370,7 +450,7 @@ pub mod ArraySeqStEph {
     impl<T: Display> Display for ArraySeqStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(f, "[")?;
-            for (i, item) in self.data.iter().enumerate() {
+            for (i, item) in self.seq.iter().enumerate() {
                 if i > 0 { write!(f, ", ")?; }
                 write!(f, "{item}")?;
             }
@@ -382,13 +462,13 @@ pub mod ArraySeqStEph {
     impl<'a, T> IntoIterator for &'a ArraySeqStEphS<T> {
         type Item = &'a T;
         type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.data.iter() }
+        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
     }
 
     #[cfg(not(verus_keep_ghost))]
     impl<T> IntoIterator for ArraySeqStEphS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.data.into_iter() }
+        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 }

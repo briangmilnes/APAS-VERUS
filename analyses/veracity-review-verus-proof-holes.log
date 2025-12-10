@@ -2443,3 +2443,99 @@ Holes Found: 0 total
 🎉 No proof holes found! All proofs are complete.
 
 Completed in 2ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), Tracked::assume_new(), admit()
+  - unsafe fn, unsafe impl, unsafe {} blocks
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+❌ ArraySeq.rs
+   Holes: 1 total
+      1 × external_body
+✓ ArraySeqMtEph.rs
+✓ ArraySeqMtPer.rs
+❌ ArraySeqStEph.rs
+   Holes: 1 total
+      1 × external_body
+❌ ArraySeqStPer.rs
+   Holes: 1 total
+      1 × external_body
+❌ LinkedListStEph.rs
+   Holes: 1 total
+      1 × external_body
+❌ LinkedListStPer.rs
+   Holes: 1 total
+      1 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   2 clean (no holes)
+   5 holed (contains holes)
+   7 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 5 total
+   5 × external_body
+
+Completed in 14ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), Tracked::assume_new(), admit()
+  - unsafe fn, unsafe impl, unsafe {} blocks
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+❌ ArraySeq.rs
+   Holes: 1 total
+      1 × assume()
+✓ ArraySeqMtEph.rs
+✓ ArraySeqMtPer.rs
+❌ ArraySeqStEph.rs
+   Holes: 1 total
+      1 × assume()
+❌ ArraySeqStPer.rs
+   Holes: 1 total
+      1 × assume()
+❌ LinkedListStEph.rs
+   Holes: 1 total
+      1 × assume()
+❌ LinkedListStPer.rs
+   Holes: 1 total
+      1 × assume()
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   2 clean (no holes)
+   5 holed (contains holes)
+   7 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 5 total
+   5 × assume()
+
+Completed in 12ms
