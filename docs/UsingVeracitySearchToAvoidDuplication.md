@@ -1,6 +1,5 @@
 # Using veracity-search to Avoid Duplicating vstd
 
-
 Opus-4.5 says:
 When verusifying MathSeq, I initially marked `subseq` and `subseq_copy` as
 `external_body`, assuming vstd lacked specs for slice operations. Only after the user

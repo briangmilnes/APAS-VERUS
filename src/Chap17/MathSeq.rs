@@ -24,7 +24,19 @@ pub mod MathSeq {
 
     verus! {
 
-broadcast use vstd::std_specs::vec::group_vec_axioms;
+broadcast use {
+    // Vec
+    vstd::std_specs::vec::group_vec_axioms,
+    // Set groups
+    vstd::set::group_set_axioms,
+    vstd::set_lib::group_set_lib_default,
+    vstd::set_lib::group_set_properties,
+    // Seq groups
+    vstd::seq::group_seq_axioms,
+    vstd::prelude::Seq::group_seq_extra,
+    vstd::seq_lib::group_seq_lib_default,
+    vstd::seq_lib::group_seq_properties,
+};
 
 pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
     &&& obeys_key_model::<T>()
@@ -218,15 +230,9 @@ impl<T: StT + Hash> MathSeqS<T> {
         requires !out.map(|_j: int, t: T| t@).contains(x@),
         ensures forall|j: int| 0 <= j < out.len() ==> out[j]@ != x@,
     {
-        // map_values is Seq::new(len, |i| f(self[i]))
-        // so map[j] == out[j]@
-        // !contains means forall|j| map[j] != x@
-        // therefore out[j]@ != x@
         assert forall|j: int| 0 <= j < out.len() implies out[j]@ != x@ by {
             let mapped = out.map(|_k: int, t: T| t@);
-            // By definition: mapped[j] == out[j]@
             assert(mapped[j] == out[j]@);
-            // !contains means no index has x@
             assert(!mapped.contains(x@));
         }
     }
