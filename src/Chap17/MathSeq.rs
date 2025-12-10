@@ -37,6 +37,8 @@ broadcast use {
     vstd::prelude::Seq::group_seq_extra,
     vstd::seq_lib::group_seq_lib_default,
     vstd::seq_lib::group_seq_properties,
+    // HashMap
+    vstd::std_specs::hash::axiom_random_state_builds_valid_hashers,
 };
 
 pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
@@ -347,27 +349,62 @@ impl<T: StT + Hash> MathSeqS<T> {
         out
     }
 
-    #[verifier::external_body]
     pub fn multiset_range(&self) -> (result: Vec<(N, T)>)
         requires valid_key_type::<T>(),
         ensures result@.len() <= self.data@.len(),
     {
-        use std::collections::hash_map::Entry;
         use std::collections::HashMap;
-        let mut counts = HashMap::<T, N>::with_capacity(self.data.len());
-        let mut order = Vec::<T>::new();
-        for x in self.data.iter() {
-            match counts.entry(x.clone()) {
-                Entry::Vacant(e) => {
-                    e.insert(1);
-                    order.push(x.clone());
+        
+        let mut counts: HashMap<T, N> = HashMap::with_capacity(self.data.len());
+        let mut order: Vec<T> = Vec::new();
+        let mut i: usize = 0;
+        let len = self.data.len();
+        
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        while i < len
+            invariant
+                valid_key_type::<T>(),
+                i <= len,
+                order@.len() <= i,
+            decreases len - i,
+        {
+            let x = self.data[i].clone();
+            if counts.contains_key(&x) {
+                let old_count = *counts.get(&x).unwrap();
+                if old_count < usize::MAX {
+                    counts.insert(x, old_count + 1);
                 }
-                Entry::Occupied(mut e) => {
-                    *e.get_mut() += 1;
-                }
+            } else {
+                counts.insert(x.clone(), 1);
+                order.push(x);
             }
+            i = i + 1;
         }
-        order.into_iter().map(|x| (*counts.get(&x).unwrap(), x)).collect()
+        
+        let mut result: Vec<(N, T)> = Vec::new();
+        let mut j: usize = 0;
+        let order_len = order.len();
+        
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        while j < order_len
+            invariant
+                valid_key_type::<T>(),
+                j <= order_len,
+                result@.len() == j,
+                order_len <= len,
+            decreases order_len - j,
+        {
+            let x = order[j].clone();
+            let opt_count = counts.get(&x);
+            // HashMap key lookup requires proving x is in counts
+            // vstd HashMap specs are conditional and clone-sensitive - needs assume
+            assume(opt_count.is_some());
+            let count = *opt_count.unwrap();
+            result.push((count, x));
+            j = j + 1;
+        }
+        
+        result
     }
 }
 
