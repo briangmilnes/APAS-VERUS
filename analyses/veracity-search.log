@@ -2,18 +2,7 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: def Scheduler
+Pattern: fn _ ( : &\[T\] ) -> Vec
 Searching: /home/milnes/projects/verus-lang/source/vstd
-Searching: /home/milnes/projects/VerusCodebases/
-Files: 6453
-  Structs: 0, Enums: 0, Types: 0, Traits: 2
-  Matches: 2
-
-[31m/home/milnes/projects/VerusCodebases/CortenMM-Artifact/cortenmm-rw/ostd/src/task/scheduler/mod.rs:101: [0m
-/// A SMP-aware task scheduler.
-[38;5;22mpub trait Scheduler<T = Task>: Sync + Send[0m
-
-[31m/home/milnes/projects/VerusCodebases/CortenMM-Artifact/cortenmm-adv/ostd/src/task/scheduler/mod.rs:101: [0m
-/// A SMP-aware task scheduler.
-[38;5;22mpub trait Scheduler<T = Task>: Sync + Send[0m
+Files: 87, Functions: 2117, Matches: 0
 

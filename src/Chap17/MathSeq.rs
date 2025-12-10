@@ -20,6 +20,7 @@ pub mod MathSeq {
     use crate::vstdplus::feq::feq::obeys_feq_full;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
+    use vstd::slice::slice_subrange;
 
     verus! {
 
@@ -162,14 +163,24 @@ impl<T: StT + Hash> MathSeqS<T> {
         Self::new(length, init_value)
     }
 
-    #[verifier::external_body]
+    pub open spec fn spec_clamp(val: int, max: int) -> int {
+        if val < 0 { 0 } else if val > max { max } else { val }
+    }
+
     pub fn subseq(&self, start: N, length: N) -> (result: &[T])
-        ensures result@.len() <= length,
+        ensures
+            result@.len() <= length,
+            ({
+                let s = Self::spec_clamp(start as int, self.data@.len() as int);
+                let e = Self::spec_clamp((start + length) as int, self.data@.len() as int);
+                result@ == self.data@.subrange(s, e)
+            }),
     {
         let n = self.data.len();
         let s = start.min(n);
         let e = start.saturating_add(length).min(n);
-        &self.data[s..e]
+        let slice: &[T] = self.data.as_slice();
+        slice_subrange(slice, s, e)
     }
 
     #[verifier::external_body]
