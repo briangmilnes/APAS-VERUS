@@ -20,6 +20,7 @@ pub mod MathSeq {
     use crate::vstdplus::feq::feq::obeys_feq_full;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
+    use crate::vstdplus::seq_set::lemma_map_not_contains_implies_all_ne;
     use vstd::slice::slice_subrange;
 
     verus! {
@@ -226,17 +227,6 @@ impl<T: StT + Hash> MathSeqS<T> {
         v
     }
 
-    proof fn lemma_map_not_contains_implies_all_ne(out: Seq<T>, x: T)
-        requires !out.map(|_j: int, t: T| t@).contains(x@),
-        ensures forall|j: int| 0 <= j < out.len() ==> out[j]@ != x@,
-    {
-        assert forall|j: int| 0 <= j < out.len() implies out[j]@ != x@ by {
-            let mapped = out.map(|_k: int, t: T| t@);
-            assert(mapped[j] == out[j]@);
-            assert(!mapped.contains(x@));
-        }
-    }
-
     pub fn range(&self) -> (result: Vec<T>)
         requires valid_key_type::<T>(),
         ensures
@@ -265,7 +255,7 @@ impl<T: StT + Hash> MathSeqS<T> {
                     assert(!out@.map(|_j: int, t: T| t@).contains(x@));
                     
                     // Use lemma to get forall|j| out@[j]@ != x@
-                    Self::lemma_map_not_contains_implies_all_ne(out@, x);
+                    lemma_map_not_contains_implies_all_ne(out@, x@);
                     
                     // By view injectivity, out@[j] != x
                     assert forall|j: int| 0 <= j < out@.len() implies out@[j] != x by {

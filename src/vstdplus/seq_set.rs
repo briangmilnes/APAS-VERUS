@@ -280,6 +280,21 @@ pub proof fn lemma_map_to_set_contains_index<T: View>(seq: Seq<T>, s: T::V)
 // Veracity: UNNEEDED assert     assert(0 <= idx < seq.len());
 }
 
+/// Lemma: If mapped seq doesn't contain a value, then no element's view equals that value.
+/// Useful for proving no_duplicates when building sequences incrementally.
+pub proof fn lemma_map_not_contains_implies_all_ne<T: View>(seq: Seq<T>, x: T::V)
+    requires
+        !seq.map(|_j: int, t: T| t@).contains(x),
+    ensures
+        forall|j: int| 0 <= j < seq.len() ==> seq[j]@ != x,
+{
+    assert forall|j: int| 0 <= j < seq.len() implies seq[j]@ != x by {
+        let mapped = seq.map(|_k: int, t: T| t@);
+        assert(mapped[j] == seq[j]@);
+        assert(!mapped.contains(x));
+    }
+}
+
 /// This lemma bridges the gap between iterator specs and set equality.
 pub proof fn lemma_seq_map_to_set_equality<T: View>(seq: Seq<T>, target: Set<T::V>)
     requires
