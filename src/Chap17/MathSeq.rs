@@ -203,7 +203,23 @@ impl<T: StT + Hash> MathSeqS<T> {
         v
     }
 
-    #[verifier::external_body]
+    proof fn lemma_map_not_contains_implies_all_ne(out: Seq<T>, x: T)
+        requires !out.map(|_j: int, t: T| t@).contains(x@),
+        ensures forall|j: int| 0 <= j < out.len() ==> out[j]@ != x@,
+    {
+        // map_values is Seq::new(len, |i| f(self[i]))
+        // so map[j] == out[j]@
+        // !contains means forall|j| map[j] != x@
+        // therefore out[j]@ != x@
+        assert forall|j: int| 0 <= j < out.len() implies out[j]@ != x@ by {
+            let mapped = out.map(|_k: int, t: T| t@);
+            // By definition: mapped[j] == out[j]@
+            assert(mapped[j] == out[j]@);
+            // !contains means no index has x@
+            assert(!mapped.contains(x@));
+        }
+    }
+
     pub fn range(&self) -> (result: Vec<T>)
         requires valid_key_type::<T>(),
         ensures
@@ -213,11 +229,107 @@ impl<T: StT + Hash> MathSeqS<T> {
         let mut seen: HashSetWithViewPlus<T> = HashSetWithViewPlus::new();
         let mut out: Vec<T> = Vec::new();
         let mut i: usize = 0;
-        while i < self.data.len() {
+        while i < self.data.len()
+            invariant
+                i <= self.data@.len(),
+                out@.len() <= i,
+                out@.no_duplicates(),
+                valid_key_type::<T>(),
+                seen@.finite(),
+                forall|v: T::V| seen@.contains(v) <==> out@.map(|_j: int, t: T| t@).contains(v),
+            decreases self.data.len() - i,
+        {
             let x = self.data[i].clone();
-            if !seen.contains(&x) {
-                seen.insert(x.clone());
+            let not_seen = !seen.contains(&x);
+            if not_seen {
+                proof {
+                    // x@ not in seen@, so not in out@.map(...)
+                    assert(!seen@.contains(x@));
+                    assert(!out@.map(|_j: int, t: T| t@).contains(x@));
+                    
+                    // Use lemma to get forall|j| out@[j]@ != x@
+                    Self::lemma_map_not_contains_implies_all_ne(out@, x);
+                    
+                    // By view injectivity, out@[j] != x
+                    assert forall|j: int| 0 <= j < out@.len() implies out@[j] != x by {
+                        assert(out@[j]@ != x@);
+                    }
+                    
+                    // seq![x].no_duplicates() trivially (length 1)
+                    assert(seq![x].no_duplicates());
+                    
+                    // out and seq![x] are disjoint
+                    assert(out@.disjoint(seq![x]));
+                    
+                    // lemma gives (out@ + seq![x]).no_duplicates()
+                    vstd::seq_lib::lemma_no_dup_in_concat(out@, seq![x]);
+                }
+                let ghost old_seen = seen@;
+                let ghost old_out = out@;
+                let ghost old_out_mapped = old_out.map(|_j: int, t: T| t@);
+                let x_clone = x.clone();
+                proof {
+                    // Clone preserves view under obeys_feq_full
+                    crate::vstdplus::feq::feq::lemma_cloned_view_eq(x, x_clone);
+                    assert(x_clone@ == x@);
+                }
+                seen.insert(x_clone);
                 out.push(x);
+                proof {
+                    // After insert: seen@ == old_seen.insert(x@)
+                    assert(seen@ =~= old_seen.insert(x@));
+                    
+                    // After push: out@ == old_out.push(x)
+                    assert(out@ =~= old_out.push(x));
+                    
+                    // Map commutes with push
+                    let f = |t: T| t@;
+                    old_out.lemma_push_map_commute(f, x);
+                    let new_mapped = out@.map_values(f);
+                    assert(new_mapped =~= old_out_mapped.push(x@));
+                    
+                    // map and map_values are the same for our function
+                    assert(out@.map(|_j: int, t: T| t@) =~= new_mapped);
+                    
+                    // Now prove the invariant
+                    assert forall|v: T::V| seen@.contains(v) <==> out@.map(|_j: int, t: T| t@).contains(v) by {
+                        // new_mapped == old_out_mapped.push(x@)
+                        // contains(v) on a pushed seq: exists in old OR equals pushed element
+                        if v == x@ {
+                            // x@ is at the end of new_mapped
+                            assert(new_mapped.last() == x@);
+                            assert(new_mapped.contains(x@));
+                            assert(seen@.contains(x@));
+                        } else {
+                            // v != x@, so seen@.contains(v) <==> old_seen.contains(v)
+                            assert(seen@.contains(v) <==> old_seen.contains(v));
+                            
+                            // new_mapped == old_out_mapped.push(x@)
+                            // For v != x@: new_mapped.contains(v) <==> old_out_mapped.contains(v)
+                            if old_out_mapped.contains(v) {
+                                // Get witness: some i with old_out_mapped[i] == v
+                                let wit = choose|i: int| 0 <= i < old_out_mapped.len() && old_out_mapped[i] == v;
+                                // new_mapped[wit] == old_out_mapped[wit] == v (since wit < old len)
+                                assert(new_mapped[wit] == v);
+                                assert(new_mapped.contains(v));
+                            }
+                            if new_mapped.contains(v) {
+                                // Get witness: some i with new_mapped[i] == v
+                                let wit = choose|i: int| 0 <= i < new_mapped.len() && new_mapped[i] == v;
+                                // If wit < old_out_mapped.len(), old has it
+                                // If wit == old_out_mapped.len(), new_mapped[wit] == x@ != v
+                                if wit < old_out_mapped.len() {
+                                    assert(old_out_mapped[wit] == v);
+                                    assert(old_out_mapped.contains(v));
+                                } else {
+                                    // wit == old_out_mapped.len(), so new_mapped[wit] == x@
+                                    assert(new_mapped[wit] == x@);
+                                    assert(false); // contradiction: x@ == v but v != x@
+                                }
+                            }
+                        }
+                    }
+                }
             }
             i = i + 1;
         }

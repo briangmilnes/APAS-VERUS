@@ -94,7 +94,7 @@ Formally verified implementations of algorithms from "Algorithms Parallel and Se
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| MathSeqS | ✅ | — | ✅ | ⬜ | Vec-backed dense sequence, 4 external_body |
+| MathSeqS | ✅ | — | ✅ | ⬜ | Vec-backed dense sequence, 3 external_body |
 
 ### Chapter 18: Sequences - ⬜ NOT STARTED
 
