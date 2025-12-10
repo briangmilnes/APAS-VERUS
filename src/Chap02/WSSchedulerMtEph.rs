@@ -15,6 +15,13 @@ verus! {
         budget: Arc<AtomicUsize>,
     }
 
+    impl Clone for Pool {
+        #[verifier::external_body]
+        fn clone(&self) -> Self {
+            Pool { budget: self.budget.clone() }
+        }
+    }
+
     impl Pool {
         pub uninterp spec fn spec_size(&self) -> nat;
 

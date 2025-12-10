@@ -161,6 +161,9 @@ pub mod ArraySeqMtPer {
             ArraySeqMtPerS { seq }
         }
 
+        // external_body: Closures that call named functions (like fib_seq) can have
+        // their specs proven, but here f.clone() loses specs. Using a literal function
+        // name instead of a generic F would allow verification.
         #[verifier::external_body]
         pub fn map_par<U: Clone + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             pool: &Pool,
@@ -170,41 +173,24 @@ pub mod ArraySeqMtPer {
             where T: Clone + Send + Sync + 'static
             ensures result.seq@.len() == a.seq@.len()
         {
-            let result_seq = Self::map_par_rec(pool, a, &f, 0, a.seq.len());
-            ArraySeqMtPerS { seq: result_seq }
-        }
-
-        #[verifier::external_body]
-        fn map_par_rec<U: Clone + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
-            pool: &Pool,
-            a: &ArraySeqMtPerS<T>,
-            f: &F,
-            start: usize,
-            len: usize,
-        ) -> Vec<U>
-            where T: Clone + Send + Sync + 'static
-        {
-            const THRESHOLD: usize = 1024;
+            let len = a.seq.len();
             if len == 0 {
-                Vec::new()
-            } else if len <= THRESHOLD {
-                let mut seq = Vec::with_capacity(len);
-                for i in start..(start + len) {
-                    seq.push(f(&a.seq[i]));
-                }
-                seq
+                ArraySeqMtPerS { seq: Vec::new() }
+            } else if len == 1 {
+                ArraySeqMtPerS { seq: vec![f(&a.seq[0])] }
             } else {
                 let mid = len / 2;
-                let a1 = a.clone();
-                let a2 = a.clone();
+                let left_seq = a.subseq_copy(0, mid);
+                let right_seq = a.subseq_copy(mid, len - mid);
                 let f1 = f.clone();
                 let f2 = f.clone();
-                let (mut left, right) = pool.join(
-                    move || Self::map_par_rec(&Pool::new(1), &a1, &f1, start, mid),
-                    move || Self::map_par_rec(&Pool::new(1), &a2, &f2, start + mid, len - mid),
+                let pool1 = pool.clone();
+                let pool2 = pool.clone();
+                let (left, right) = pool.join(
+                    move || Self::map_par(&pool1, &left_seq, f1),
+                    move || Self::map_par(&pool2, &right_seq, f2),
                 );
-                left.extend(right);
-                left
+                ArraySeqMtPerS::<U>::append(&left, &right)
             }
         }
 
@@ -263,6 +249,41 @@ pub mod ArraySeqMtPer {
                 i += 1;
             }
             ArraySeqMtPerS { seq }
+        }
+
+        // external_body: Same - generic F, no fn ptr support yet.
+        #[verifier::external_body]
+        pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
+            pool: &Pool,
+            a: &ArraySeqMtPerS<T>,
+            pred: F,
+        ) -> (result: ArraySeqMtPerS<T>)
+            where T: Clone + Send + Sync + 'static
+            ensures result.seq@.len() <= a.seq@.len()
+        {
+            let len = a.seq.len();
+            if len == 0 {
+                ArraySeqMtPerS { seq: Vec::new() }
+            } else if len == 1 {
+                if pred(&a.seq[0]) {
+                    ArraySeqMtPerS { seq: vec![a.seq[0].clone()] }
+                } else {
+                    ArraySeqMtPerS { seq: Vec::new() }
+                }
+            } else {
+                let mid = len / 2;
+                let left_seq = a.subseq_copy(0, mid);
+                let right_seq = a.subseq_copy(mid, len - mid);
+                let p1 = pred.clone();
+                let p2 = pred.clone();
+                let pool1 = pool.clone();
+                let pool2 = pool.clone();
+                let (left, right) = pool.join(
+                    move || Self::filter_par(&pool1, &left_seq, p1),
+                    move || Self::filter_par(&pool2, &right_seq, p2),
+                );
+                Self::append(&left, &right)
+            }
         }
 
         pub fn isEmpty(&self) -> (empty: bool)
@@ -327,8 +348,7 @@ pub mod ArraySeqMtPer {
             acc
         }
 
-        /// Parallel reduce using work-stealing Pool.
-        /// Work: O(n), Span: O(log n) with sufficient parallelism.
+        // external_body: Generic F loses specs on clone. Verus doesn't support fn ptrs yet.
         #[verifier::external_body]
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
             pool: &Pool,
@@ -338,40 +358,24 @@ pub mod ArraySeqMtPer {
         ) -> (result: T)
             where T: Clone + Send + Sync + 'static
         {
-            Self::reduce_par_rec(pool, a, &f, id, 0, a.seq.len())
-        }
-
-        #[verifier::external_body]
-        fn reduce_par_rec<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
-            pool: &Pool,
-            a: &ArraySeqMtPerS<T>,
-            f: &F,
-            id: T,
-            start: usize,
-            len: usize,
-        ) -> T
-            where T: Clone + Send + Sync + 'static
-        {
-            const THRESHOLD: usize = 1024;
+            let len = a.seq.len();
             if len == 0 {
                 id
-            } else if len <= THRESHOLD {
-                let mut acc = id;
-                for i in start..(start + len) {
-                    acc = f(&acc, &a.seq[i]);
-                }
-                acc
+            } else if len == 1 {
+                a.seq[0].clone()
             } else {
                 let mid = len / 2;
-                let a1 = a.clone();
-                let a2 = a.clone();
+                let left_seq = a.subseq_copy(0, mid);
+                let right_seq = a.subseq_copy(mid, len - mid);
                 let f1 = f.clone();
                 let f2 = f.clone();
                 let id1 = id.clone();
                 let id2 = id.clone();
+                let pool1 = pool.clone();
+                let pool2 = pool.clone();
                 let (left, right) = pool.join(
-                    move || Self::reduce_par_rec(&Pool::new(1), &a1, &f1, id1, start, mid),
-                    move || Self::reduce_par_rec(&Pool::new(1), &a2, &f2, id2, start + mid, len - mid),
+                    move || Self::reduce_par(&pool1, &left_seq, f1, id1),
+                    move || Self::reduce_par(&pool2, &right_seq, f2, id2),
                 );
                 f(&left, &right)
             }
@@ -529,27 +533,20 @@ pub mod ArraySeqMtPer {
         pub fn map_par<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             pool: &Pool, a: &Self, f: F,
         ) -> ArraySeqMtPerS<U> where T: Clone + Send + Sync + 'static {
-            ArraySeqMtPerS { seq: Self::map_par_rec(pool, a, &f, 0, a.seq.len()) }
-        }
-        fn map_par_rec<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
-            pool: &Pool, a: &Self, f: &F, start: usize, len: usize,
-        ) -> Vec<U> where T: Clone + Send + Sync + 'static {
-            const THRESHOLD: usize = 1024;
-            if len == 0 { Vec::new() }
-            else if len <= THRESHOLD {
-                let mut seq = Vec::with_capacity(len);
-                for i in start..(start + len) { seq.push(f(&a.seq[i])); }
-                seq
-            } else {
+            let len = a.seq.len();
+            if len == 0 { ArraySeqMtPerS { seq: Vec::new() } }
+            else if len == 1 { ArraySeqMtPerS { seq: vec![f(&a.seq[0])] } }
+            else {
                 let mid = len / 2;
-                let (a1, a2) = (a.clone(), a.clone());
+                let left_seq = a.subseq_copy(0, mid);
+                let right_seq = a.subseq_copy(mid, len - mid);
                 let (f1, f2) = (f.clone(), f.clone());
-                let (mut left, right) = pool.join(
-                    move || Self::map_par_rec(&Pool::new(1), &a1, &f1, start, mid),
-                    move || Self::map_par_rec(&Pool::new(1), &a2, &f2, start + mid, len - mid),
+                let (pool1, pool2) = (pool.clone(), pool.clone());
+                let (left, right) = pool.join(
+                    move || Self::map_par(&pool1, &left_seq, f1),
+                    move || Self::map_par(&pool2, &right_seq, f2),
                 );
-                left.extend(right);
-                left
+                ArraySeqMtPerS::<U>::append(&left, &right)
             }
         }
         pub fn append(a: &Self, b: &Self) -> Self where T: Clone {
@@ -559,6 +556,27 @@ pub mod ArraySeqMtPer {
         }
         pub fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self where T: Clone {
             ArraySeqMtPerS { seq: a.seq.iter().filter(|x| pred(x)).cloned().collect() }
+        }
+        pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
+            pool: &Pool, a: &Self, pred: F,
+        ) -> Self where T: Clone + Send + Sync + 'static {
+            let len = a.seq.len();
+            if len == 0 { ArraySeqMtPerS { seq: Vec::new() } }
+            else if len == 1 {
+                if pred(&a.seq[0]) { ArraySeqMtPerS { seq: vec![a.seq[0].clone()] } }
+                else { ArraySeqMtPerS { seq: Vec::new() } }
+            } else {
+                let mid = len / 2;
+                let left_seq = a.subseq_copy(0, mid);
+                let right_seq = a.subseq_copy(mid, len - mid);
+                let (p1, p2) = (pred.clone(), pred.clone());
+                let (pool1, pool2) = (pool.clone(), pool.clone());
+                let (left, right) = pool.join(
+                    move || Self::filter_par(&pool1, &left_seq, p1),
+                    move || Self::filter_par(&pool2, &right_seq, p2),
+                );
+                Self::append(&left, &right)
+            }
         }
         pub fn isEmpty(&self) -> bool { self.seq.is_empty() }
         pub fn isSingleton(&self) -> bool { self.seq.len() == 1 }
@@ -573,25 +591,19 @@ pub mod ArraySeqMtPer {
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
             pool: &Pool, a: &Self, f: F, id: T,
         ) -> T where T: Clone + Send + Sync + 'static {
-            Self::reduce_par_rec(pool, a, &f, id, 0, a.seq.len())
-        }
-        fn reduce_par_rec<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
-            pool: &Pool, a: &Self, f: &F, id: T, start: usize, len: usize,
-        ) -> T where T: Clone + Send + Sync + 'static {
-            const THRESHOLD: usize = 1024;
+            let len = a.seq.len();
             if len == 0 { id }
-            else if len <= THRESHOLD {
-                let mut acc = id;
-                for i in start..(start + len) { acc = f(&acc, &a.seq[i]); }
-                acc
-            } else {
+            else if len == 1 { a.seq[0].clone() }
+            else {
                 let mid = len / 2;
-                let (a1, a2) = (a.clone(), a.clone());
+                let left_seq = a.subseq_copy(0, mid);
+                let right_seq = a.subseq_copy(mid, len - mid);
                 let (f1, f2) = (f.clone(), f.clone());
                 let (id1, id2) = (id.clone(), id.clone());
+                let (pool1, pool2) = (pool.clone(), pool.clone());
                 let (left, right) = pool.join(
-                    move || Self::reduce_par_rec(&Pool::new(1), &a1, &f1, id1, start, mid),
-                    move || Self::reduce_par_rec(&Pool::new(1), &a2, &f2, id2, start + mid, len - mid),
+                    move || Self::reduce_par(&pool1, &left_seq, f1, id1),
+                    move || Self::reduce_par(&pool2, &right_seq, f2, id2),
                 );
                 f(&left, &right)
             }

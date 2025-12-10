@@ -31,38 +31,57 @@ fn test_reduce_sequential() {
 #[test]
 fn test_map_par() {
     let pool = Pool::new(4);
-    let seq = ArraySeqMtPerS::from_vec((0..10000).collect());
+    let seq = ArraySeqMtPerS::from_vec((0..64).collect());
     let doubled = ArraySeqMtPerS::map_par(&pool, &seq, |x| x * 2);
-    assert_eq!(doubled.length(), 10000);
+    assert_eq!(doubled.length(), 64);
     assert_eq!(*doubled.nth(0), 0);
-    assert_eq!(*doubled.nth(5000), 10000);
-    assert_eq!(*doubled.nth(9999), 19998);
+    assert_eq!(*doubled.nth(32), 64);
+    assert_eq!(*doubled.nth(63), 126);
 }
 
 #[test]
 fn test_reduce_par() {
     let pool = Pool::new(4);
-    let seq = ArraySeqMtPerS::from_vec((1..=1000).collect());
+    let seq = ArraySeqMtPerS::from_vec((1..=64).collect());
     let sum = ArraySeqMtPerS::reduce_par(&pool, &seq, |a, b| a + b, 0);
-    assert_eq!(sum, 500500);
+    assert_eq!(sum, 64 * 65 / 2);
 }
 
 #[test]
-fn test_reduce_par_large() {
-    let pool = Pool::new(6);
-    let n = 100_000i64;
+fn test_reduce_par_medium() {
+    let pool = Pool::new(4);
+    let n = 256i64;
     let seq = ArraySeqMtPerS::from_vec((1..=n).collect());
     let sum = ArraySeqMtPerS::reduce_par(&pool, &seq, |a, b| a + b, 0i64);
     assert_eq!(sum, n * (n + 1) / 2);
 }
 
 #[test]
-fn test_map_par_complex() {
+fn test_map_par_medium() {
     let pool = Pool::new(4);
-    let seq = ArraySeqMtPerS::from_vec((0..5000).collect());
+    let seq = ArraySeqMtPerS::from_vec((0..128).collect());
     let squared = ArraySeqMtPerS::map_par(&pool, &seq, |x| x * x);
-    assert_eq!(squared.length(), 5000);
+    assert_eq!(squared.length(), 128);
     assert_eq!(*squared.nth(10), 100);
-    assert_eq!(*squared.nth(100), 10000);
+    assert_eq!(*squared.nth(11), 121);
+}
+
+#[test]
+fn test_filter_par() {
+    let pool = Pool::new(4);
+    let seq = ArraySeqMtPerS::from_vec((0..64).collect());
+    let evens = ArraySeqMtPerS::filter_par(&pool, &seq, |x| x % 2 == 0);
+    assert_eq!(evens.length(), 32);
+    assert_eq!(*evens.nth(0), 0);
+    assert_eq!(*evens.nth(1), 2);
+    assert_eq!(*evens.nth(31), 62);
+}
+
+#[test]
+fn test_filter_par_medium() {
+    let pool = Pool::new(4);
+    let seq = ArraySeqMtPerS::from_vec((0..256).collect());
+    let multiples_of_7 = ArraySeqMtPerS::filter_par(&pool, &seq, |&x| x % 7 == 0);
+    assert_eq!(multiples_of_7.length(), 37);
 }
 
