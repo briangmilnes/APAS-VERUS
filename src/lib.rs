@@ -144,9 +144,9 @@ pub mod Chap17 {
 
 pub mod Chap18 {
     pub mod ArraySeq;
+    pub mod ArraySeqStPer;
+    pub mod ArraySeqStEph;
     // Not verusified - left out of lib.rs:
-    // pub mod ArraySeqStEph;
-    // pub mod ArraySeqStPer;
     // pub mod ArraySeqMtEph;
     // pub mod ArraySeqMtPer;
     // pub mod LinkedListStEph;
