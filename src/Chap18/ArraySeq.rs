@@ -77,20 +77,45 @@ pub mod ArraySeq {
             ArraySeqS { data }
         }
 
-        #[verifier::external_body]
         pub fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (result: ArraySeqS<T>)
-            requires length <= usize::MAX
+            requires 
+                length <= usize::MAX,
+                forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
             ensures result.data@.len() == length
         {
-            let data: Vec<T> = (0..length).map(|i| f(i)).collect();
+            let mut data = Vec::with_capacity(length);
+            let mut i: usize = 0;
+            while i < length
+                invariant
+                    i <= length,
+                    data@.len() == i as int,
+                    forall|j: usize| j < length ==> #[trigger] f.requires((j,)),
+                decreases length - i,
+            {
+                data.push(f(i));
+                i += 1;
+            }
             ArraySeqS { data }
         }
 
-        #[verifier::external_body]
         pub fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqS<T>, f: &F) -> (result: ArraySeqS<U>)
+            requires forall|i: int| 0 <= i < a.data@.len() ==> #[trigger] f.requires((&a.data@[i],)),
             ensures result.data@.len() == a.data@.len()
         {
-            let data: Vec<U> = a.data.iter().map(|t| f(t)).collect();
+            let len = a.data.len();
+            let mut data: Vec<U> = Vec::with_capacity(len);
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.data@.len(),
+                    data@.len() == i as int,
+                    forall|j: int| 0 <= j < a.data@.len() ==> #[trigger] f.requires((&a.data@[j],)),
+                decreases len - i,
+            {
+                data.push(f(&a.data[i]));
+                i += 1;
+            }
             ArraySeqS { data }
         }
 
