@@ -1,5 +1,6 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 18 algorithms for ArraySeqMtPer multithreaded persistent. Verusified.
+//! Uses work-stealing Pool for parallel operations (map_par, reduce_par).
 
 pub mod ArraySeqMtPer {
 
@@ -10,6 +11,8 @@ pub mod ArraySeqMtPer {
 
     #[cfg(verus_keep_ghost)]
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::Pool;
 
     #[cfg(verus_keep_ghost)]
     verus! {
@@ -158,6 +161,53 @@ pub mod ArraySeqMtPer {
             ArraySeqMtPerS { seq }
         }
 
+        #[verifier::external_body]
+        pub fn map_par<U: Clone + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
+            pool: &Pool,
+            a: &ArraySeqMtPerS<T>,
+            f: F,
+        ) -> (result: ArraySeqMtPerS<U>)
+            where T: Clone + Send + Sync + 'static
+            ensures result.seq@.len() == a.seq@.len()
+        {
+            let result_seq = Self::map_par_rec(pool, a, &f, 0, a.seq.len());
+            ArraySeqMtPerS { seq: result_seq }
+        }
+
+        #[verifier::external_body]
+        fn map_par_rec<U: Clone + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
+            pool: &Pool,
+            a: &ArraySeqMtPerS<T>,
+            f: &F,
+            start: usize,
+            len: usize,
+        ) -> Vec<U>
+            where T: Clone + Send + Sync + 'static
+        {
+            const THRESHOLD: usize = 1024;
+            if len == 0 {
+                Vec::new()
+            } else if len <= THRESHOLD {
+                let mut seq = Vec::with_capacity(len);
+                for i in start..(start + len) {
+                    seq.push(f(&a.seq[i]));
+                }
+                seq
+            } else {
+                let mid = len / 2;
+                let a1 = a.clone();
+                let a2 = a.clone();
+                let f1 = f.clone();
+                let f2 = f.clone();
+                let (mut left, right) = pool.join(
+                    move || Self::map_par_rec(&Pool::new(1), &a1, &f1, start, mid),
+                    move || Self::map_par_rec(&Pool::new(1), &a2, &f2, start + mid, len - mid),
+                );
+                left.extend(right);
+                left
+            }
+        }
+
         pub fn append(a: &ArraySeqMtPerS<T>, b: &ArraySeqMtPerS<T>) -> (result: ArraySeqMtPerS<T>)
             where T: Clone
             requires a.seq@.len() + b.seq@.len() <= usize::MAX
@@ -275,6 +325,56 @@ pub mod ArraySeqMtPer {
                 i += 1;
             }
             acc
+        }
+
+        /// Parallel reduce using work-stealing Pool.
+        /// Work: O(n), Span: O(log n) with sufficient parallelism.
+        #[verifier::external_body]
+        pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
+            pool: &Pool,
+            a: &ArraySeqMtPerS<T>,
+            f: F,
+            id: T,
+        ) -> (result: T)
+            where T: Clone + Send + Sync + 'static
+        {
+            Self::reduce_par_rec(pool, a, &f, id, 0, a.seq.len())
+        }
+
+        #[verifier::external_body]
+        fn reduce_par_rec<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
+            pool: &Pool,
+            a: &ArraySeqMtPerS<T>,
+            f: &F,
+            id: T,
+            start: usize,
+            len: usize,
+        ) -> T
+            where T: Clone + Send + Sync + 'static
+        {
+            const THRESHOLD: usize = 1024;
+            if len == 0 {
+                id
+            } else if len <= THRESHOLD {
+                let mut acc = id;
+                for i in start..(start + len) {
+                    acc = f(&acc, &a.seq[i]);
+                }
+                acc
+            } else {
+                let mid = len / 2;
+                let a1 = a.clone();
+                let a2 = a.clone();
+                let f1 = f.clone();
+                let f2 = f.clone();
+                let id1 = id.clone();
+                let id2 = id.clone();
+                let (left, right) = pool.join(
+                    move || Self::reduce_par_rec(&Pool::new(1), &a1, &f1, id1, start, mid),
+                    move || Self::reduce_par_rec(&Pool::new(1), &a2, &f2, id2, start + mid, len - mid),
+                );
+                f(&left, &right)
+            }
         }
 
         pub fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtPerS<T>, f: &F, seed: A) -> (result: A)
@@ -395,6 +495,9 @@ pub mod ArraySeqMtPer {
     }
 
     #[cfg(not(verus_keep_ghost))]
+    pub use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::Pool;
+
+    #[cfg(not(verus_keep_ghost))]
     impl<T: Clone> Iterator for ArraySeqMtPerIter<T> {
         type Item = T;
         fn next(&mut self) -> Option<T> {
@@ -423,6 +526,32 @@ pub mod ArraySeqMtPer {
         pub fn map<U, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqMtPerS<U> {
             ArraySeqMtPerS { seq: a.seq.iter().map(f).collect() }
         }
+        pub fn map_par<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
+            pool: &Pool, a: &Self, f: F,
+        ) -> ArraySeqMtPerS<U> where T: Clone + Send + Sync + 'static {
+            ArraySeqMtPerS { seq: Self::map_par_rec(pool, a, &f, 0, a.seq.len()) }
+        }
+        fn map_par_rec<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
+            pool: &Pool, a: &Self, f: &F, start: usize, len: usize,
+        ) -> Vec<U> where T: Clone + Send + Sync + 'static {
+            const THRESHOLD: usize = 1024;
+            if len == 0 { Vec::new() }
+            else if len <= THRESHOLD {
+                let mut seq = Vec::with_capacity(len);
+                for i in start..(start + len) { seq.push(f(&a.seq[i])); }
+                seq
+            } else {
+                let mid = len / 2;
+                let (a1, a2) = (a.clone(), a.clone());
+                let (f1, f2) = (f.clone(), f.clone());
+                let (mut left, right) = pool.join(
+                    move || Self::map_par_rec(&Pool::new(1), &a1, &f1, start, mid),
+                    move || Self::map_par_rec(&Pool::new(1), &a2, &f2, start + mid, len - mid),
+                );
+                left.extend(right);
+                left
+            }
+        }
         pub fn append(a: &Self, b: &Self) -> Self where T: Clone {
             let mut seq = a.seq.clone();
             seq.extend(b.seq.iter().cloned());
@@ -440,6 +569,32 @@ pub mod ArraySeqMtPer {
         }
         pub fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T where T: Clone {
             a.seq.iter().fold(id, |acc, x| f(&acc, x))
+        }
+        pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
+            pool: &Pool, a: &Self, f: F, id: T,
+        ) -> T where T: Clone + Send + Sync + 'static {
+            Self::reduce_par_rec(pool, a, &f, id, 0, a.seq.len())
+        }
+        fn reduce_par_rec<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
+            pool: &Pool, a: &Self, f: &F, id: T, start: usize, len: usize,
+        ) -> T where T: Clone + Send + Sync + 'static {
+            const THRESHOLD: usize = 1024;
+            if len == 0 { id }
+            else if len <= THRESHOLD {
+                let mut acc = id;
+                for i in start..(start + len) { acc = f(&acc, &a.seq[i]); }
+                acc
+            } else {
+                let mid = len / 2;
+                let (a1, a2) = (a.clone(), a.clone());
+                let (f1, f2) = (f.clone(), f.clone());
+                let (id1, id2) = (id.clone(), id.clone());
+                let (left, right) = pool.join(
+                    move || Self::reduce_par_rec(&Pool::new(1), &a1, &f1, id1, start, mid),
+                    move || Self::reduce_par_rec(&Pool::new(1), &a2, &f2, id2, start + mid, len - mid),
+                );
+                f(&left, &right)
+            }
         }
         pub fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A {
             a.seq.iter().fold(seed, |acc, x| f(&acc, x))

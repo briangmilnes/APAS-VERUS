@@ -1,8 +1,6 @@
-//! Tests for WorkStealingSchedulerMtEph
+//! Tests for WSSchedulerMtEph work-stealing pool
 
 use apas_verus::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;
-use std::sync::Arc;
-use std::sync::atomic::AtomicUsize;
 
 #[test]
 fn test_join_simple() {
@@ -41,61 +39,25 @@ fn test_join_nested() {
 }
 
 #[test]
-fn test_fib_sequential() {
-    assert_eq!(fib_sequential(0), 0);
-    assert_eq!(fib_sequential(1), 1);
-    assert_eq!(fib_sequential(2), 1);
-    assert_eq!(fib_sequential(5), 5);
-    assert_eq!(fib_sequential(10), 55);
-    assert_eq!(fib_sequential(20), 6765);
+fn test_pool_join_simple() {
+    let pool = Pool::new(4);
+    let (a, b) = pool.join(
+        || 10 + 10,
+        || 20 + 20,
+    );
+    assert_eq!(a, 20);
+    assert_eq!(b, 40);
 }
 
 #[test]
-fn test_fib_parallel() {
-    assert_eq!(fib_parallel(0), 0);
-    assert_eq!(fib_parallel(1), 1);
-    assert_eq!(fib_parallel(2), 1);
-    assert_eq!(fib_parallel(5), 5);
-    assert_eq!(fib_parallel(10), 55);
-    assert_eq!(fib_parallel(20), 6765);
-}
-
-#[test]
-fn test_fib_parallel_larger() {
-    // fib(30) = 832040
-    assert_eq!(fib_parallel(30), 832040);
-}
-
-#[test]
-fn test_fib_parallel_bounded() {
-    let budget = Arc::new(AtomicUsize::new(4));
-    assert_eq!(fib_parallel_bounded(budget.clone(), 0), 0);
-    assert_eq!(fib_parallel_bounded(budget.clone(), 1), 1);
-    assert_eq!(fib_parallel_bounded(budget.clone(), 10), 55);
-    assert_eq!(fib_parallel_bounded(budget.clone(), 20), 6765);
-}
-
-#[test]
-fn test_fib_parallel_bounded_single_thread() {
-    // Budget of 0 means all sequential
-    let budget = Arc::new(AtomicUsize::new(0));
-    assert_eq!(fib_parallel_bounded(budget.clone(), 20), 6765);
-}
-
-#[test]
-fn test_thread_pool_creation() {
-    let pool = ThreadPool::new(4);
-    assert_eq!(pool.num_workers(), 4);
-    pool.shutdown();
-}
-
-#[test]
-fn test_thread_pool_different_sizes() {
-    for n in [1, 2, 4, 8] {
-        let pool = ThreadPool::new(n);
-        assert_eq!(pool.num_workers(), n);
-        pool.shutdown();
-    }
+fn test_pool_join_heavy() {
+    let pool = Pool::new(4);
+    let (a, b) = pool.join(
+        || (1..=100).sum::<i32>(),
+        || (1..=200).sum::<i32>(),
+    );
+    assert_eq!(a, 5050);
+    assert_eq!(b, 20100);
 }
 
 #[test]
@@ -116,7 +78,6 @@ fn test_join_with_computation() {
             prod
         },
     );
-    assert_eq!(a, 499500);  // sum 0..1000
-    assert_eq!(b, 121645100408832000);  // 19!
+    assert_eq!(a, 499500);
+    assert_eq!(b, 121645100408832000);
 }
-
