@@ -196,17 +196,21 @@ impl<T: StT + Hash> MathSeqS<T> {
         slice_subrange(slice, s, e)
     }
 
-    #[verifier::external_body]
-    pub fn subseq_copy(&self, start: N, length: N) -> (result: Self)
-        ensures result.spec_len() <= length,
+    pub fn subseq_copy(&self, start: N, length: N) -> (result: Self) where T: Copy
+        requires
+            start as int + length as int <= self.data@.len(),
+        ensures
+            result.spec_len() == length,
+            result.data@ == self.data@.subrange(start as int, (start + length) as int),
     {
-        let n = self.data.len();
-        let s = start.min(n);
-        let e = start.saturating_add(length).min(n);
-        if e <= s {
-            return MathSeqS { data: Vec::new() };
+        let n = self.data.len(); // exec call - n <= usize::MAX
+        proof {
+            assert(start as int + length as int <= n as int);
         }
-        MathSeqS { data: self.data[s..e].to_vec() }
+        let end = start + length;
+        let slice = vstd::slice::slice_subrange(self.data.as_slice(), start, end);
+        let vec = vstd::slice::slice_to_vec(slice);
+        MathSeqS { data: vec }
     }
 
     pub fn domain(&self) -> (result: Vec<N>)
