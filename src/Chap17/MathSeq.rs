@@ -18,6 +18,8 @@ pub mod MathSeq {
     use vstd::std_specs::hash::obeys_key_model;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
     use crate::vstdplus::seq_set::lemma_map_not_contains_implies_all_ne;
@@ -39,6 +41,9 @@ broadcast use {
     vstd::seq_lib::group_seq_properties,
     // HashMap
     vstd::std_specs::hash::axiom_random_state_builds_valid_hashers,
+    vstd::std_specs::hash::axiom_contains_deref_key,
+    // Clone equality
+    crate::vstdplus::feq::feq::axiom_cloned_implies_eq,
 };
 
 pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
@@ -396,12 +401,11 @@ impl<T: StT + Hash> MathSeqS<T> {
         {
             let x = order[j].clone();
             let opt_count = counts.get(&x);
-            // Proving this requires:
-            // 1. Invariant: forall idx. order@[idx] in counts@
-            // 2. Clone equality: x == order@[j] (from cloned spec)
-            // 3. HashMap get spec: contains_key(x) ==> get(&x).is_some()
-            // Gap: vstd HashMap specs use contains_borrowed_key which
-            // doesn't directly connect to Map::contains_key for cloned keys
+            // vstd HashMap specs are conditional and don't connect:
+            // 1. insert postcondition to Map::contains_key
+            // 2. Map::contains_key to get().is_some()
+            // We have axiom_cloned_implies_eq to show x == order[j],
+            // but the HashMap->Map gap remains
             assume(opt_count.is_some());
             let count = *opt_count.unwrap();
             result.push((count, x));
