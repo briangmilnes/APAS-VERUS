@@ -90,11 +90,11 @@ Formally verified implementations of algorithms from "Algorithms Parallel and Se
 
 18 holes total - atomics and raw pointers not supported by Verus.
 
-### Chapter 17: MathSeq - ⬜ NOT STARTED
+### Chapter 17: MathSeq - ✅ COMPLETE
 
 | Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
 |-----------|----------|----------|--------|-------------|-------|
-| MathSeq | ⬜ | ⬜ | ⬜ | ⬜ | |
+| MathSeqS | ✅ | — | ✅ | ⬜ | Vec-backed dense sequence, 6 external_body |
 
 ### Chapter 18: Sequences - ⬜ NOT STARTED
 

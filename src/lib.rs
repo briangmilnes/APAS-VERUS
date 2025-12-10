@@ -137,3 +137,7 @@ pub mod Chap12 {
     pub mod Exercise12_2;
     pub mod Exercise12_5;
 }
+
+pub mod Chap17 {
+    pub mod MathSeq;
+}
