@@ -2539,3 +2539,419 @@ Holes Found: 5 total
    5 × assume()
 
 Completed in 12ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), Tracked::assume_new(), admit()
+  - unsafe fn, unsafe impl, unsafe {} blocks
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+✓ benches/Chap03/BenchInsertionSortStEph.rs
+✓ src/Chap02/FibonacciWSScheduler.rs
+   5 clean proof functions
+❌ src/Chap02/WSSchedulerMtEph.rs
+   Holes: 5 total
+      1 × assume(false)
+      4 × external_body
+✓ src/Chap03/InsertionSortStEph.rs
+❌ src/Chap05/MappingStEph.rs
+   Holes: 2 total
+      2 × assume()
+✓ src/Chap05/RelationStEph.rs
+❌ src/Chap05/SetMtEph.rs
+   Holes: 2 total
+      1 × assume(false)
+      1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+✓ src/Chap05/SetStEph.rs
+   1 clean proof function
+✓ src/Chap06/DirGraphMtEph.rs
+✓ src/Chap06/DirGraphStEph.rs
+✓ src/Chap06/LabDirGraphMtEph.rs
+✓ src/Chap06/LabDirGraphStEph.rs
+✓ src/Chap06/LabUnDirGraphMtEph.rs
+✓ src/Chap06/LabUnDirGraphStEph.rs
+✓ src/Chap06/UnDirGraphMtEph.rs
+✓ src/Chap06/UnDirGraphStEph.rs
+✓ src/Chap06/WeightedDirGraphMtEphInt.rs
+✓ src/Chap06/WeightedDirGraphStEphI128.rs
+✓ src/Chap06/WeightedDirGraphStEphI16.rs
+✓ src/Chap06/WeightedDirGraphStEphI32.rs
+✓ src/Chap06/WeightedDirGraphStEphI64.rs
+✓ src/Chap06/WeightedDirGraphStEphI8.rs
+✓ src/Chap06/WeightedDirGraphStEphIsize.rs
+✓ src/Chap06/WeightedDirGraphStEphU128.rs
+✓ src/Chap06/WeightedDirGraphStEphU16.rs
+✓ src/Chap06/WeightedDirGraphStEphU32.rs
+✓ src/Chap06/WeightedDirGraphStEphU64.rs
+✓ src/Chap06/WeightedDirGraphStEphU8.rs
+✓ src/Chap06/WeightedDirGraphStEphUsize.rs
+✓ src/Chap06/WeightedUnDirGraphMtEphInt.rs
+❌ src/Chap11/FibonacciMtEph2Threads.rs
+   Holes: 2 total
+      2 × assume(false)
+❌ src/Chap11/FibonacciMtEphRecomputes.rs
+   Holes: 2 total
+      2 × assume(false)
+✓ src/Chap11/FibonacciMtPerAllThreads.rs
+❌ src/Chap11/FibonacciMtPerTSM.rs
+   Holes: 2 total
+      2 × assume(false)
+✓ src/Chap11/FibonacciStEph.rs
+   3 clean proof functions
+❌ src/Chap12/Exercise12_1.rs
+   Holes: 6 total
+      6 × external_body
+❌ src/Chap12/Exercise12_2.rs
+   Holes: 1 total
+      1 × external_body
+❌ src/Chap12/Exercise12_5.rs
+   Holes: 11 total
+      4 × unsafe {}
+      6 × external_body
+      1 × external
+✓ src/Chap17/MathSeq.rs
+❌ src/Chap18/ArraySeq.rs
+   Holes: 1 total
+      1 × assume()
+✓ src/Chap18/ArraySeqMtEph.rs
+✓ src/Chap18/ArraySeqMtPer.rs
+❌ src/Chap18/ArraySeqStEph.rs
+   Holes: 1 total
+      1 × assume()
+❌ src/Chap18/ArraySeqStPer.rs
+   Holes: 1 total
+      1 × assume()
+❌ src/Chap18/LinkedListStEph.rs
+   Holes: 1 total
+      1 × assume()
+❌ src/Chap18/LinkedListStPer.rs
+   Holes: 1 total
+      1 × assume()
+✓ src/Concurrency.rs
+❌ src/ParaPairs.rs
+   Holes: 3 total
+      2 × assume(false)
+      1 × external_body
+❌ src/Types.rs
+   Holes: 12 total
+      12 × admit()
+   Proof functions: 12 total (0 clean, 12 holed)
+✓ src/experiments/ArrayVal.rs
+❌ src/experiments/ArrayVecSet.rs
+   Holes: 1 total
+      1 × assume()
+❌ src/experiments/CheckedI32.rs
+   Holes: 6 total
+      6 × external_body
+❌ src/experiments/ForFor.rs
+   Holes: 2 total
+      2 × assume()
+✓ src/experiments/ForLoops.rs
+❌ src/experiments/HashCheckedU32.rs
+   Holes: 4 total
+      2 × admit()
+      2 × external_body
+   Proof functions: 2 total (0 clean, 2 holed)
+✓ src/experiments/SetLoops.rs
+✓ src/experiments/ToVecProof.rs
+❌ src/experiments/VSTDLoopProofs.rs
+   Holes: 2 total
+      2 × external_body
+❌ src/experiments/WhileWhile.rs
+   Holes: 1 total
+      1 × assume()
+✓ src/experiments/abstract_set_iter.rs
+✓ src/experiments/assume_spec_test.rs
+✓ src/experiments/checked_comm.rs
+✓ src/experiments/checked_signed_int.rs
+   6 clean proof functions
+❌ src/experiments/checked_u32.rs
+   Holes: 3 total
+      3 × external_body
+✓ src/experiments/checked_unsigned_int.rs
+   7 clean proof functions
+❌ src/experiments/clone.rs
+   Holes: 6 total
+      6 × external_body
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ src/experiments/clone_plus.rs
+   Holes: 1 total
+      1 × external_body
+❌ src/experiments/eq_rel.rs
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 12 total (11 clean, 1 holed)
+❌ src/experiments/executable_use_of_int.rs
+   Holes: 1 total
+      1 × external_body
+✓ src/experiments/hash_set_iter.rs
+❌ src/experiments/hash_set_with_view_plus_loops.rs
+   Holes: 1 total
+      1 × external_body
+✓ src/experiments/invariant_proof_test.rs
+   1 clean proof function
+✓ src/experiments/minimal_iter.rs
+❌ src/experiments/pervasives.rs
+   Holes: 3 total
+      1 × assume(false)
+      2 × external_body
+   Proof functions: 6 total (5 clean, 1 holed)
+✓ src/experiments/possession.rs
+✓ src/experiments/proof_fn_in_trait.rs
+   4 clean proof functions
+✓ src/experiments/pub_crate_test.rs
+✓ src/experiments/seq_array_equality.rs
+❌ src/experiments/seq_for_basic_proofs.rs
+   Holes: 2 total
+      2 × admit()
+   Proof functions: 2 total (2 clean, 0 holed)
+❌ src/experiments/seq_loop_basic_proofs.rs
+   Holes: 2 total
+      2 × admit()
+   Proof functions: 2 total (2 clean, 0 holed)
+❌ src/experiments/seq_set_exec.rs
+   Holes: 3 total
+      2 × assume()
+      1 × external_body
+   Proof functions: 3 total (3 clean, 0 holed)
+❌ src/experiments/seq_vec_equality.rs
+   Holes: 1 total
+      1 × external_body
+❌ src/experiments/seq_while_basic_proofs.rs
+   Holes: 2 total
+      2 × admit()
+   Proof functions: 2 total (2 clean, 0 holed)
+❌ src/experiments/sigma_pi.rs
+   Holes: 3 total
+      3 × admit()
+   Proof functions: 8 total (5 clean, 3 holed)
+✓ src/experiments/signed_int.rs
+   6 clean proof functions
+❌ src/experiments/simple_hash_set_iter.rs
+   Holes: 2 total
+      2 × assume()
+❌ src/experiments/simple_seq_iter.rs
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ src/experiments/simple_set_iter.rs
+   Holes: 3 total
+      3 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+✓ src/experiments/struct_construction_test.rs
+✓ src/experiments/supertrait.rs
+❌ src/experiments/test_feq.rs
+   Holes: 4 total
+      3 × admit()
+      1 × external_body
+   Proof functions: 3 total (0 clean, 3 holed)
+❌ src/experiments/test_feq_insertion_sort.rs
+   Holes: 7 total
+      7 × assume()
+✓ src/experiments/test_test.rs
+❌ src/experiments/total_ord_gen.rs
+   Holes: 9 total
+      9 × assume()
+   Proof functions: 20 total (1 clean, 19 holed)
+❌ src/experiments/total_ord_gen_axioms.rs
+   Holes: 7 total
+      7 × admit()
+   Proof functions: 7 total (0 clean, 7 holed)
+✓ src/experiments/triangle.rs
+   1 clean proof function
+✓ src/experiments/unsigned_int.rs
+   7 clean proof functions
+✓ src/experiments/vec_if.rs
+   1 clean proof function
+✓ src/experiments/vec_length_while_rust.rs
+✓ src/experiments/vec_length_while_verus.rs
+✓ src/experiments/verus_iterator.rs
+✓ src/experiments/verus_pub_crate_test.rs
+✓ src/experiments/verus_vec_iterator.rs
+✓ src/experiments/verus_vec_iterator_for_basic_proofs.rs
+✓ src/experiments/verus_vec_iterator_loop_basic_proofs.rs
+✓ src/experiments/verus_vec_iterator_while_basic_proofs.rs
+❌ src/experiments/verus_wrapped_iter_loops.rs
+   Holes: 2 total
+      2 × admit()
+   Proof functions: 2 total (0 clean, 2 holed)
+✓ src/lib.rs
+✓ src/vstdplus/VecQueue.rs
+✓ src/vstdplus/arithmetic/power2_plus.rs
+   6 clean proof functions
+✓ src/vstdplus/checked_int.rs
+   7 clean proof functions
+✓ src/vstdplus/checked_nat.rs
+   7 clean proof functions
+✓ src/vstdplus/checked_nat_with_checked_view.rs
+❌ src/vstdplus/clone_plus.rs
+   Holes: 1 total
+      1 × external_body
+❌ src/vstdplus/feq.rs
+   Holes: 4 total
+      1 × assume()
+      1 × admit()
+      1 × external_trait_specification
+      1 × external_trait_extension
+   Proof functions: 3 total (2 clean, 1 holed)
+✓ src/vstdplus/hash_set_specs.rs
+❌ src/vstdplus/hash_set_with_view_plus.rs
+   Holes: 5 total
+      1 × admit()
+      4 × external_body
+   Proof functions: 1 total (0 clean, 1 holed)
+❌ src/vstdplus/hashed_checked_u32.rs
+   Holes: 4 total
+      2 × admit()
+      2 × external_body
+   Proof functions: 2 total (0 clean, 2 holed)
+❌ src/vstdplus/partial_order.rs
+   Holes: 8 total
+      6 × admit()
+      2 × external_body
+   Proof functions: 45 total (39 clean, 6 holed)
+✓ src/vstdplus/pervasives_plus.rs
+❌ src/vstdplus/seq.rs
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 5 total (5 clean, 0 holed)
+✓ src/vstdplus/seq_set.rs
+   58 clean proof functions
+❌ src/vstdplus/threads_plus.rs
+   Holes: 9 total
+      1 × Tracked::assume_new()
+      2 × unsafe impl
+      6 × external_body
+✓ src/vstdplus/total_order.rs
+   52 clean proof functions
+✓ test_fib.rs
+✓ tests/Chap02/test_fibonacci_scheduler.rs
+✓ tests/Chap02/test_threads_plus.rs
+✓ tests/Chap02/test_work_stealing_scheduler.rs
+✓ tests/Chap03/TestInsertionSortStEph.rs
+✓ tests/Chap05/TestMappingStEph.rs
+✓ tests/Chap05/TestRelationStEph.rs
+✓ tests/Chap05/TestSetMtEph.rs
+✓ tests/Chap05/TestSetStEph.rs
+✓ tests/Chap06/TestDirGraphMtEph.rs
+✓ tests/Chap06/TestDirGraphStEph.rs
+✓ tests/Chap06/TestLabDirGraphMtEph.rs
+✓ tests/Chap06/TestLabDirGraphStEph.rs
+✓ tests/Chap06/TestLabUnDirGraphMtEph.rs
+✓ tests/Chap06/TestLabUnDirGraphStEph.rs
+✓ tests/Chap06/TestUnDirGraphMtEph.rs
+✓ tests/Chap06/TestUnDirGraphStEph.rs
+✓ tests/Chap06/TestWeighedDirGraphMtEphFloat.rs
+✓ tests/Chap06/TestWeighedDirGraphMtEphInt.rs
+✓ tests/Chap06/TestWeighedDirGraphStEphFloat.rs
+✓ tests/Chap06/TestWeighedDirGraphStEphInt.rs
+✓ tests/Chap06/TestWeighedUnDirGraphMtEphFloat.rs
+✓ tests/Chap06/TestWeighedUnDirGraphMtEphInt.rs
+✓ tests/Chap06/TestWeighedUnDirGraphStEphFloat.rs
+✓ tests/Chap06/TestWeighedUnDirGraphStEphInt.rs
+✓ tests/Chap06/TestWeightedDirGraphStEphU32.rs
+✓ tests/Chap11/TestFibonacciMt.rs
+✓ tests/Chap11/TestParaPairs.rs
+✓ tests/Chap12/test_exercise12_1.rs
+✓ tests/Chap12/test_exercise12_2.rs
+✓ tests/Chap12/test_exercise12_5.rs
+✓ tests/Chap17/TestMathSeq.rs
+✓ tests/Chap18/TestArraySeq.rs
+✓ tests/experiments/TestCheckedI128.rs
+✓ tests/experiments/TestCheckedI16.rs
+✓ tests/experiments/TestCheckedI32.rs
+✓ tests/experiments/TestCheckedI64.rs
+✓ tests/experiments/TestCheckedI8.rs
+✓ tests/experiments/TestCheckedIsize.rs
+✓ tests/experiments/TestCheckedU128.rs
+✓ tests/experiments/TestCheckedU16.rs
+✓ tests/experiments/TestCheckedU32.rs
+✓ tests/experiments/TestCheckedU64.rs
+✓ tests/experiments/TestCheckedU8.rs
+✓ tests/experiments/TestCheckedUsize.rs
+✓ tests/vstdplus/test_checked_nat_with_checked_view.rs
+✓ tests/vstdplus/test_feq.rs
+✓ tests/vstdplus/test_partial_order.rs
+✓ tests/vstdplus/test_total_order.rs
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   123 clean (no holes)
+   50 holed (contains holes)
+   173 total
+
+Proof Functions:
+   253 clean
+   60 holed
+   313 total
+
+Holes Found: 165 total
+   11 × assume(false)
+   39 × assume()
+   1 × Tracked::assume_new()
+   45 × admit()
+   2 × unsafe impl
+   4 × unsafe {}
+   60 × external_body
+   1 × external_trait_specification
+   1 × external_trait_extension
+   1 × external
+
+Completed in 133ms
+Verus Proof Hole Detection
+Looking for:
+  - assume(false), assume(), Tracked::assume_new(), admit()
+  - unsafe fn, unsafe impl, unsafe {} blocks
+  - axiom fn with holes in body (admit/assume/external_body)
+  - external_body, external_fn_specification, external_trait_specification
+  - external_type_specification, external_trait_extension, external
+  - opaque
+
+Note: Only counting axiom fn declarations that have holes in their bodies.
+      broadcast use statements are not counted (they just import axioms).
+
+❌ ArraySeq.rs
+   Holes: 1 total
+      1 × assume()
+✓ ArraySeqMtEph.rs
+✓ ArraySeqMtPer.rs
+❌ ArraySeqStEph.rs
+   Holes: 1 total
+      1 × assume()
+❌ ArraySeqStPer.rs
+   Holes: 1 total
+      1 × assume()
+❌ LinkedListStEph.rs
+   Holes: 1 total
+      1 × assume()
+❌ LinkedListStPer.rs
+   Holes: 1 total
+      1 × assume()
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   2 clean (no holes)
+   5 holed (contains holes)
+   7 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 5 total
+   5 × assume()
+
+Completed in 17ms

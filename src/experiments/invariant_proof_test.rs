@@ -71,7 +71,7 @@ pub fn next_with_invariant<V: Clone>(it: &mut TestIter<V>) -> (result: Option<V>
         None
     }
 }
-
+o
 // Lemma: If two sequences have same length and element-wise equality, they're equal
 proof fn lemma_iter_lengths<V>(s1: Seq<V>, s2: Seq<V>)
     requires

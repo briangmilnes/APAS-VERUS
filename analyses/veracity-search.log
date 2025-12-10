@@ -2,7 +2,177 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: struct.*HashMap\|HashMap.*struct
-Searching: /home/milnes/projects/verus-lang/source/vstd
-Files: 87, Functions: 2117, Matches: 0
+Pattern: fn .*next.*
+Searching: src
+Files: 123, Functions: 2480, Matches: 36
+
+[31msrc/experiments/verus_iterator.rs:14: [0m
+[38;5;22m    spec fn ghost_peek_next(&self) -> Option<Self::Item>;[0m
+
+[31msrc/experiments/verus_iterator.rs:28: [0m
+[38;5;22m    fn next(it: &mut Self::ExecIterator) -> (result: Option<Self::Item>)[0m
+[38;5;22m        requires[0m
+[38;5;22m            old(it)@.exec_invariant(&old(it)),[0m
+[38;5;22m        ensures[0m
+[38;5;22m            it@.exec_invariant(it),[0m
+[38;5;22m            match result[0m
+
+[31msrc/experiments/simple_seq_iter.rs:82: [0m
+[38;5;22m    fn assumption_free_next<V: Clone>(it: &mut SimpleSeqIter<V>) -> (result: Option<V>)[0m
+[38;5;22m        requires[0m
+[38;5;22m            iter_invariant(&old(it)),  [0m
+[38;5;22m        ensures[0m
+[38;5;22m            iter_invariant(it),[0m
+[38;5;22m            ([0m
+
+[31msrc/experiments/simple_seq_iter.rs:117: [0m
+[38;5;22m        fn next(&mut self) -> (result: Option<V>)[0m
+[38;5;22m            ensures[0m
+[38;5;22m                self.pos <= self.vec.len(),[0m
+[38;5;22m                ([0m
+
+[31msrc/experiments/simple_seq_iter.rs:182: [0m
+[38;5;22m        open spec fn ghost_peek_next(&self) -> Option<V>[0m
+
+[31msrc/experiments/abstract_set_iter.rs:209: [0m
+[38;5;22m        pub fn next(&mut self) -> (result: Option<V>)[0m
+[38;5;22m            requires[0m
+[38;5;22m                old(self).pos <= old(self).vec@.len(),[0m
+[38;5;22m                old(self).vec@.no_duplicates(),[0m
+[38;5;22m                old(self).vec@.len() < usize::MAX,[0m
+[38;5;22m                obeys_feq_full::<V>(),[0m
+[38;5;22m            ensures [0m
+[38;5;22m                self.vec@ =~= old(self).vec@,[0m
+[38;5;22m                self.vec@.no_duplicates(),[0m
+[38;5;22m                self.pos <= self.vec@.len() + 1,[0m
+[38;5;22m                self.pos == old(self).pos + 1,[0m
+[38;5;22m                result.is_none() ==> old(self).pos == old(self).vec@.len(),[0m
+[38;5;22m                result.is_some() ==> old(self).pos < old(self).vec@.len(),[0m
+[38;5;22m                result.is_some() ==> result.unwrap() == old(self).vec@[old(self).pos as int],[0m
+[38;5;22m                // Set-based postconditions[0m
+[38;5;22m                ([0m
+
+[31msrc/experiments/invariant_proof_test.rs:37: [0m
+[38;5;22mpub fn next_with_invariant<V: Clone>(it: &mut TestIter<V>) -> (result: Option<V>)[0m
+[38;5;22m    requires[0m
+[38;5;22m        iter_invariant(&old(it)),  // REQUIRE: invariant on entry[0m
+[38;5;22m    ensures[0m
+[38;5;22m        iter_invariant(it),  // ENSURE: invariant on exit[0m
+[38;5;22m        ([0m
+
+[31msrc/experiments/simple_set_iter.rs:146: [0m
+[38;5;22m    fn assumption_free_next<V: Clone>(it: &mut SimpleSetIter<V>) -> (result: Option<V>)[0m
+[38;5;22m        requires[0m
+[38;5;22m            iter_invariant(&old(it)),  [0m
+[38;5;22m        ensures[0m
+[38;5;22m            iter_invariant(it),[0m
+[38;5;22m            ([0m
+
+[31msrc/experiments/simple_set_iter.rs:181: [0m
+[38;5;22m        fn next(&mut self) -> (result: Option<V>)[0m
+[38;5;22m            ensures[0m
+[38;5;22m                self.pos <= self.vec.len(),[0m
+[38;5;22m                ([0m
+
+[31msrc/experiments/simple_set_iter.rs:246: [0m
+[38;5;22m        open spec fn ghost_peek_next(&self) -> Option<V>[0m
+
+[31msrc/experiments/verus_vec_iterator.rs:42: [0m
+[38;5;22m    open spec fn ghost_peek_next(&self) -> Option<usize>[0m
+
+[31msrc/experiments/verus_vec_iterator.rs:98: [0m
+[38;5;22m    fn next(it: &mut Self::ExecIterator) -> (result: Option<Self::Item>)[0m
+[38;5;22m        ensures[0m
+[38;5;22m            it@.data == old(it)@.data,[0m
+
+[31msrc/experiments/verus_vec_iterator.rs:151: [0m
+[38;5;22m    open spec fn ghost_peek_next(&self) -> Option<usize>[0m
+
+[31msrc/experiments/verus_vec_iterator.rs:171: [0m
+[38;5;22m    fn next(&mut self) -> Option<Self::Item>[0m
+
+[31msrc/experiments/minimal_iter.rs:7: [0m
+[38;5;22m        fn next(&mut self) -> Option<Self::Item>;[0m
+
+[31msrc/experiments/assume_spec_test.rs:51: [0m
+[38;5;22m    fn next(&mut self) -> Option<V>[0m
+
+[31msrc/Types.rs:365: [0m
+[38;5;22m        open spec fn ghost_peek_next(&self) -> Option<&'a Pair<K, V>>[0m
+
+[31msrc/Types.rs:469: [0m
+[38;5;22m        fn next(&mut self) -> Option<Self::Item>[0m
+
+[31msrc/Chap05/MappingStEph.rs:92: [0m
+[38;5;22m        pub fn next(&mut self) -> (next: Option<&'a Pair<X, Y>>)[0m
+[38;5;22m            ensures ([0m
+
+[31msrc/Chap05/MappingStEph.rs:421: [0m
+[38;5;22m        fn next(&mut self) -> Option<Self::Item>[0m
+
+[31msrc/Chap05/SetMtEph.rs:80: [0m
+[38;5;22m        pub fn next(&mut self) -> (next: Option<&'a T>)[0m
+[38;5;22m            ensures ([0m
+
+[31msrc/Chap05/SetMtEph.rs:852: [0m
+[38;5;22m        fn next(&mut self) -> Option<Self::Item>[0m
+
+[31msrc/Chap05/SetStEph.rs:77: [0m
+[38;5;22m        pub fn next(&mut self) -> (next: Option<&'a T>)[0m
+[38;5;22m            ensures ([0m
+
+[31msrc/Chap05/SetStEph.rs:732: [0m
+[38;5;22m        fn next(&mut self) -> Option<Self::Item>[0m
+
+[31msrc/Chap05/RelationStEph.rs:66: [0m
+[38;5;22m        pub fn next(&mut self) -> (next: Option<&'a Pair<X, Y>>)[0m
+[38;5;22m            ensures ([0m
+
+[31msrc/Chap05/RelationStEph.rs:314: [0m
+[38;5;22m        fn next(&mut self) -> Option<Self::Item>[0m
+
+[31msrc/Chap18/ArraySeq.rs:51: [0m
+[38;5;22m        fn next(&mut self) -> (result: Option<T>)[0m
+[38;5;22m            ensures[0m
+[38;5;22m                self.pos <= self.vec.len(),[0m
+[38;5;22m                ([0m
+
+[31msrc/Chap18/ArraySeq.rs:277: [0m
+[38;5;22m        fn next(&mut self) -> Option<T>[0m
+
+[31msrc/Chap18/LinkedListStPer.rs:49: [0m
+[38;5;22m        fn next(&mut self) -> (result: Option<T>)[0m
+[38;5;22m            ensures[0m
+[38;5;22m                self.pos <= self.vec.len(),[0m
+[38;5;22m                ([0m
+
+[31msrc/Chap18/LinkedListStPer.rs:367: [0m
+[38;5;22m        fn next(&mut self) -> Option<T>[0m
+
+[31msrc/Chap18/ArraySeqStEph.rs:49: [0m
+[38;5;22m        fn next(&mut self) -> (result: Option<T>)[0m
+[38;5;22m            ensures[0m
+[38;5;22m                self.pos <= self.vec.len(),[0m
+[38;5;22m                ([0m
+
+[31msrc/Chap18/ArraySeqStEph.rs:385: [0m
+[38;5;22m        fn next(&mut self) -> Option<T>[0m
+
+[31msrc/Chap18/LinkedListStEph.rs:49: [0m
+[38;5;22m        fn next(&mut self) -> (result: Option<T>)[0m
+[38;5;22m            ensures[0m
+[38;5;22m                self.pos <= self.vec.len(),[0m
+[38;5;22m                ([0m
+
+[31msrc/Chap18/LinkedListStEph.rs:379: [0m
+[38;5;22m        fn next(&mut self) -> Option<T>[0m
+
+[31msrc/Chap18/ArraySeqStPer.rs:49: [0m
+[38;5;22m        fn next(&mut self) -> (result: Option<T>)[0m
+[38;5;22m            ensures[0m
+[38;5;22m                self.pos <= self.vec.len(),[0m
+[38;5;22m                ([0m
+
+[31msrc/Chap18/ArraySeqStPer.rs:373: [0m
+[38;5;22m        fn next(&mut self) -> Option<T>[0m
 

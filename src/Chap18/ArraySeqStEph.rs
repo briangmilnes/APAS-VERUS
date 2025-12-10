@@ -32,23 +32,26 @@ pub mod ArraySeqStEph {
 
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqStEphIter<T> {
-        pub vec: Vec<T>,
+        pub elements: Vec<T>,
         pub pos: usize,
     }
 
     impl<T> View for ArraySeqStEphIter<T> {
         type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) { (self.pos as int, self.vec@) }
+        open spec fn view(&self) -> (int, Seq<T>) { (self.pos as int, self.elements@) }
     }
 
-    pub open spec fn iter_invariant<T>(it: &ArraySeqStEphIter<T>) -> bool { it.pos <= it.vec@.len() }
+    pub open spec fn iter_invariant<T>(it: &ArraySeqStEphIter<T>) -> bool { it.pos <= it.elements@.len() }
 
+    // See experiments/simple_seq_iter.rs::assumption_free_next for a version that proves
+    // without assume() by requiring iter_invariant. We can't add requires to Iterator::next in Verus.
+    // and Rust iterators have 70 functions on them making this sensible requirement impossible.
     impl<T: Clone> Iterator for ArraySeqStEphIter<T> {
         type Item = T;
 
         fn next(&mut self) -> (result: Option<T>)
             ensures
-                self.pos <= self.vec.len(),
+                self.pos <= self.elements.len(),
                 ({
                     let (old_index, old_seq) = old(self)@;
                     match result {
@@ -67,12 +70,12 @@ pub mod ArraySeqStEph {
                     }
                 }),
         {
-            if self.pos < self.vec.len() {
-                let elem = self.vec[self.pos].clone();
+            if self.pos < self.elements.len() {
+                let elem = self.elements[self.pos].clone();
                 self.pos = self.pos + 1;
                 Some(elem)
             } else {
-                assume(self.pos <= self.vec.len());
+                assume(self.pos <= self.elements.len());
                 None
             }
         }
@@ -245,12 +248,12 @@ pub mod ArraySeqStEph {
         pub fn iter(&self) -> (it: ArraySeqStEphIter<T>)
             where T: Clone
             ensures
-                it.vec@.len() == self.seq@.len(),
-                forall|i: int| 0 <= i < self.seq@.len() ==> cloned(self.seq@[i], #[trigger] it.vec@[i]),
+                it.elements@.len() == self.seq@.len(),
+                forall|i: int| 0 <= i < self.seq@.len() ==> cloned(self.seq@[i], #[trigger] it.elements@[i]),
                 it.pos == 0,
-                it.pos <= it.vec.len(),
+                iter_invariant(&it),
         {
-            ArraySeqStEphIter { vec: self.seq.clone(), pos: 0 }
+            ArraySeqStEphIter { elements: self.seq.clone(), pos: 0 }
         }
 
         pub fn subseq(&self, start: usize, length: usize) -> (result: ArraySeqStEphS<T>)
@@ -375,7 +378,7 @@ pub mod ArraySeqStEph {
 
     #[cfg(not(verus_keep_ghost))]
     pub struct ArraySeqStEphIter<T> {
-        pub vec: Vec<T>,
+        pub elements: Vec<T>,
         pub pos: usize,
     }
 
@@ -383,8 +386,8 @@ pub mod ArraySeqStEph {
     impl<T: Clone> Iterator for ArraySeqStEphIter<T> {
         type Item = T;
         fn next(&mut self) -> Option<T> {
-            if self.pos < self.vec.len() {
-                let elem = self.vec[self.pos].clone();
+            if self.pos < self.elements.len() {
+                let elem = self.elements[self.pos].clone();
                 self.pos += 1;
                 Some(elem)
             } else {
@@ -424,7 +427,7 @@ pub mod ArraySeqStEph {
         pub fn isSingleton(&self) -> bool { self.seq.len() == 1 }
         pub fn from_vec(elts: Vec<T>) -> Self { ArraySeqStEphS { seq: elts } }
         pub fn iter(&self) -> ArraySeqStEphIter<T> where T: Clone {
-            ArraySeqStEphIter { vec: self.seq.clone(), pos: 0 }
+            ArraySeqStEphIter { elements: self.seq.clone(), pos: 0 }
         }
         pub fn iter_std(&self) -> Iter<'_, T> { self.seq.iter() }
         pub fn subseq(&self, start: usize, length: usize) -> Self where T: Clone {
