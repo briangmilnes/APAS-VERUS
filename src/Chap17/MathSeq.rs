@@ -14,10 +14,21 @@ pub mod MathSeq {
     use vstd::prelude::*;
 
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::obeys_key_model;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full;
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
 
     verus! {
 
 broadcast use vstd::std_specs::vec::group_vec_axioms;
+
+pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
+    &&& obeys_key_model::<T>()
+    &&& obeys_feq_full::<T>()
+}
 
 #[verifier::reject_recursive_types(T)]
 pub struct MathSeqS<T: StT> {
@@ -193,20 +204,31 @@ impl<T: StT + Hash> MathSeqS<T> {
     }
 
     #[verifier::external_body]
-    pub fn range(&self) -> Vec<T> {
-        use std::collections::HashSet;
-        let mut seen = HashSet::<T>::with_capacity(self.data.len());
-        let mut out = Vec::<T>::with_capacity(self.data.len());
-        for x in self.data.iter() {
-            if seen.insert(x.clone()) {
-                out.push(x.clone());
+    pub fn range(&self) -> (result: Vec<T>)
+        requires valid_key_type::<T>(),
+        ensures
+            result@.len() <= self.data@.len(),
+            result@.no_duplicates(),
+    {
+        let mut seen: HashSetWithViewPlus<T> = HashSetWithViewPlus::new();
+        let mut out: Vec<T> = Vec::new();
+        let mut i: usize = 0;
+        while i < self.data.len() {
+            let x = self.data[i].clone();
+            if !seen.contains(&x) {
+                seen.insert(x.clone());
+                out.push(x);
             }
+            i = i + 1;
         }
         out
     }
 
     #[verifier::external_body]
-    pub fn multiset_range(&self) -> Vec<(N, T)> {
+    pub fn multiset_range(&self) -> (result: Vec<(N, T)>)
+        requires valid_key_type::<T>(),
+        ensures result@.len() <= self.data@.len(),
+    {
         use std::collections::hash_map::Entry;
         use std::collections::HashMap;
         let mut counts = HashMap::<T, N>::with_capacity(self.data.len());
