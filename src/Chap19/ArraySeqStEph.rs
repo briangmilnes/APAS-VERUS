@@ -150,10 +150,10 @@ pub mod ArraySeqStEph {
             ArraySeqStEphS::<U>::tabulate(
                 &(|i: usize| -> (r: U)
                     requires
-                        i < a.seq@.len(),
+                        (i as int) < a.spec_len(),
+                        f.requires((&a.nth_spec(i as int),)),
                 {
                     let elem = &a.seq[i];
-                    assume(f.requires((elem,)));
                     f(elem)
                 }),
                 a.seq.len(),
@@ -183,10 +183,11 @@ pub mod ArraySeqStEph {
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStEphS<T>, pred: &F) -> (result: ArraySeqStEphS<T>) {
             let deflated = ArraySeqStEphS::<ArraySeqStEphS<T>>::tabulate(
                 &(|i: usize| -> (r: ArraySeqStEphS<T>)
-                    requires i < a.seq@.len()
+                    requires
+                        (i as int) < a.spec_len(),
+                        pred.requires((&a.nth_spec(i as int),)),
                 {
                     let elem = &a.seq[i];
-                    assume(pred.requires((elem,)));
                     Self::deflate(pred, elem)
                 }),
                 a.seq.len(),

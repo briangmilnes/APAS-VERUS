@@ -110,10 +110,12 @@ pub mod ArraySeqStPer {
         fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> ArraySeqStPerS<U> {
             ArraySeqStPerS::<U>::tabulate(
                 &(|i: usize| -> (r: U)
-                    requires i < a.seq@.len()
+                    requires
+                        (i as int) < a.spec_len(),
+                        f.requires((&a.nth_spec(i as int),)),
                 {
                     let elem = a.nth(i);
-                    assume(f.requires((elem,)));
+                    assume(f.requires((elem,)));  // nth returns &seq[i], nth_spec returns seq@[i]
                     f(elem)
                 }),
                 a.length(),
@@ -146,11 +148,13 @@ pub mod ArraySeqStPer {
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F) -> ArraySeqStPerS<T> {
             let deflated = ArraySeqStPerS::<ArraySeqStPerS<T>>::tabulate(
                 &(|i: usize| -> (r: ArraySeqStPerS<T>)
-                    requires i < a.seq@.len()
+                    requires
+                        (i as int) < a.spec_len(),
+                        pred.requires((&a.nth_spec(i as int),)),
                     ensures r.seq@.len() <= 1
                 {
                     let elem = a.nth(i);
-                    assume(pred.requires((elem,)));
+                    assume(pred.requires((elem,)));  // nth returns &seq[i], nth_spec returns seq@[i]
                     deflate(pred, elem)
                 }),
                 a.length(),
