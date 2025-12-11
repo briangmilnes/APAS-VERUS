@@ -1,6 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 19 algorithms for ArraySeqStPer. Verusified.
 //! Redefines Chap18 methods using tabulate as the core primitive.
+//! Use the trait `ArraySeqStPerTrait` to access these implementations.
 
 pub mod ArraySeqStPer {
 
@@ -16,123 +17,131 @@ pub mod ArraySeqStPer {
     broadcast use vstd::std_specs::vec::group_vec_axioms;
     use vstd::std_specs::clone::*;
 
-    // Chapter 19 implementations - alternative algorithms using tabulate as primitive
-    impl<T: View + Clone> ArraySeqStPerS<T> {
+    // Chapter 19 trait - provides alternative algorithmic implementations
+    // Import and use this trait to get Chapter 19's algorithms
+    pub trait ArraySeqStPerTrait<T: View + Clone>: Sized {
+        spec fn spec_len(&self) -> nat;
+
+        fn empty() -> (result: Self)
+            ensures result.spec_len() == 0;
+
+        fn singleton(item: T) -> (result: Self)
+            ensures result.spec_len() == 1;
+
+        fn map<U: Clone + View, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqStPerS<U>
+            requires
+                a.spec_len() <= usize::MAX as int,
+                forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.nth_spec(i),));
+
+        fn append(a: &Self, b: &Self) -> (result: Self)
+            requires a.spec_len() + b.spec_len() <= usize::MAX as int
+            ensures result.spec_len() == a.spec_len() + b.spec_len();
+
+        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> (result: Self)
+            requires
+                a.spec_len() <= usize::MAX as int,
+                forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.nth_spec(i),))
+            ensures result.spec_len() <= a.spec_len();
+
+        fn update(a: &Self, index: usize, item: T) -> (result: Self)
+            requires
+                index < a.spec_len(),
+                a.spec_len() <= usize::MAX as int,
+            ensures result.spec_len() == a.spec_len();
+
+        fn isEmpty(a: &Self) -> (empty: bool)
+            ensures empty <==> a.spec_len() == 0;
+
+        fn isSingleton(a: &Self) -> (single: bool)
+            ensures single <==> a.spec_len() == 1;
+
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A
+            requires forall|x: &A, y: &T| #[trigger] f.requires((x, y));
+
+        fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T
+            requires
+                a.spec_len() <= usize::MAX as int,
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y));
+
+        fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (result: (Self, T))
+            requires forall|x: &T, y: &T| #[trigger] f.requires((x, y))
+            ensures result.0.spec_len() == a.spec_len();
+
+        fn select<'a>(a: &'a Self, b: &'a Self, i: usize) -> Option<&'a T>;
+
+        fn append_select(a: &Self, b: &Self) -> (result: Self)
+            requires a.spec_len() + b.spec_len() <= usize::MAX as int
+            ensures result.spec_len() == a.spec_len() + b.spec_len();
+
+        spec fn nth_spec(&self, i: int) -> T;
+    }
+
+    impl<T: View + Clone> ArraySeqStPerTrait<T> for ArraySeqStPerS<T> {
+
+        open spec fn spec_len(&self) -> nat {
+            self.seq@.len()
+        }
+
+        open spec fn nth_spec(&self, i: int) -> T {
+            self.seq@[i]
+        }
 
         // Algorithm 19.1: empty = tabulate(lambda i._, 0)
-        pub fn empty_c19() -> (result: ArraySeqStPerS<T>)
-            ensures result.seq@.len() == 0
-        {
-            Self::empty()
+        fn empty() -> ArraySeqStPerS<T> {
+            ArraySeqStPerS::<T>::empty()
         }
 
         // Algorithm 19.2: singleton x = tabulate(lambda i.x, 1)
-        pub fn singleton_c19(item: T) -> (result: ArraySeqStPerS<T>)
-            ensures result.seq@.len() == 1
-        {
-            Self::tabulate(&|_i: usize| item.clone(), 1)
+        fn singleton(item: T) -> ArraySeqStPerS<T> {
+            ArraySeqStPerS::<T>::tabulate(&|_i: usize| item.clone(), 1)
         }
 
         // Algorithm 19.3: map f a = tabulate(lambda i.f(a[i]), |a|)
         #[verifier::external_body]
-        pub fn map_c19<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> (result: ArraySeqStPerS<U>)
-            requires
-                a.seq@.len() <= usize::MAX as int,
-                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
-            ensures result.seq@.len() == a.seq@.len()
-        {
+        fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> ArraySeqStPerS<U> {
             ArraySeqStPerS::<U>::tabulate(&|i: usize| f(a.nth(i)), a.length())
         }
 
         // Algorithm 19.4: append a b = flatten([a, b])
         #[verifier::external_body]
-        pub fn append_c19(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> (result: ArraySeqStPerS<T>)
-            requires a.seq@.len() + b.seq@.len() <= usize::MAX as int
-            ensures result.seq@.len() == a.seq@.len() + b.seq@.len()
-        {
-            Self::flatten_c19(&ArraySeqStPerS::<ArraySeqStPerS<T>>::tabulate(
+        fn append(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> ArraySeqStPerS<T> {
+            flatten(&ArraySeqStPerS::<ArraySeqStPerS<T>>::tabulate(
                 &|i: usize| if i == 0 { a.clone() } else { b.clone() },
                 2,
             ))
         }
 
-        // Helper: flatten
-        #[verifier::external_body]
-        fn flatten_c19(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (result: ArraySeqStPerS<T>) {
-            let mut total_len: usize = 0;
-            let ss_len = ss.seq.len();
-            for i in 0..ss_len {
-                total_len = total_len + ss.seq[i].seq.len();
-            }
-            let mut result: Vec<T> = Vec::with_capacity(total_len);
-            for j in 0..ss_len {
-                let inner = &ss.seq[j];
-                for k in 0..inner.seq.len() {
-                    result.push(inner.seq[k].clone());
-                }
-            }
-            ArraySeqStPerS { seq: result }
-        }
-
         // Algorithm 19.5: filter f a = flatten(map(deflate f, a))
         #[verifier::external_body]
-        pub fn filter_c19<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F) -> (result: ArraySeqStPerS<T>)
-            requires
-                a.seq@.len() <= usize::MAX as int,
-                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
-            ensures result.seq@.len() <= a.seq@.len()
-        {
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F) -> ArraySeqStPerS<T> {
             let deflated = ArraySeqStPerS::<ArraySeqStPerS<T>>::tabulate(
-                &|i: usize| Self::deflate_c19(pred, a.nth(i)),
+                &|i: usize| deflate(pred, a.nth(i)),
                 a.length(),
             );
-            Self::flatten_c19(&deflated)
-        }
-
-        // Helper: deflate for filter
-        fn deflate_c19<F: Fn(&T) -> bool>(pred: &F, x: &T) -> (result: ArraySeqStPerS<T>)
-            requires pred.requires((x,))
-            ensures result.seq@.len() <= 1
-        {
-            if pred(x) {
-                Self::singleton(x.clone())
-            } else {
-                Self::empty()
-            }
+            flatten(&deflated)
         }
 
         // Algorithm 19.6: update a (i, x) = tabulate(lambda j. if i = j then x else a[j], |a|)
         #[verifier::external_body]
-        pub fn update_c19(a: &ArraySeqStPerS<T>, index: usize, item: T) -> (result: ArraySeqStPerS<T>)
-            requires
-                index < a.seq@.len(),
-                a.seq@.len() <= usize::MAX as int,
-            ensures result.seq@.len() == a.seq@.len()
-        {
-            Self::tabulate(
+        fn update(a: &ArraySeqStPerS<T>, index: usize, item: T) -> ArraySeqStPerS<T> {
+            ArraySeqStPerS::<T>::tabulate(
                 &|j: usize| if j == index { item.clone() } else { a.nth(j).clone() },
                 a.length(),
             )
         }
 
         // Algorithm 19.7: isEmpty a = |a| = 0
-        pub fn isEmpty_c19(a: &ArraySeqStPerS<T>) -> (empty: bool)
-            ensures empty <==> a.seq@.len() == 0
-        {
+        fn isEmpty(a: &ArraySeqStPerS<T>) -> bool {
             a.length() == 0
         }
 
         // Algorithm 19.7: isSingleton a = |a| = 1
-        pub fn isSingleton_c19(a: &ArraySeqStPerS<T>) -> (single: bool)
-            ensures single <==> a.seq@.len() == 1
-        {
+        fn isSingleton(a: &ArraySeqStPerS<T>) -> bool {
             a.length() == 1
         }
 
         // Algorithm 19.8: iterate f x a = left-to-right traversal
-        pub fn iterate_c19<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, seed: A) -> (result: A)
-            requires forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
-        {
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, seed: A) -> A {
             let len = a.seq.len();
             let mut acc = seed;
             let mut i: usize = 0;
@@ -150,10 +159,7 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.9: reduce using divide-and-conquer
-        pub fn reduce_c19<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> (result: T)
-            requires
-                a.seq@.len() <= usize::MAX as int,
-                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> T
             decreases a.seq@.len()
         {
             let len = a.length();
@@ -165,17 +171,14 @@ pub mod ArraySeqStPer {
                 let mid = len / 2;
                 let left = a.subseq_copy(0, mid);
                 let right = a.subseq_copy(mid, len - mid);
-                let left_result = Self::reduce_c19(&left, f, id.clone());
-                let right_result = Self::reduce_c19(&right, f, id);
+                let left_result = <ArraySeqStPerS<T> as ArraySeqStPerTrait<T>>::reduce(&left, f, id.clone());
+                let right_result = <ArraySeqStPerS<T> as ArraySeqStPerTrait<T>>::reduce(&right, f, id);
                 f(&left_result, &right_result)
             }
         }
 
         // Algorithm 19.10: scan using contraction (simplified sequential version)
-        pub fn scan_c19<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> (result: (ArraySeqStPerS<T>, T))
-            requires forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-            ensures result.0.seq@.len() == a.seq@.len()
-        {
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> (ArraySeqStPerS<T>, T) {
             let len = a.seq.len();
             let mut acc = id.clone();
             let mut results: Vec<T> = Vec::with_capacity(len);
@@ -196,12 +199,7 @@ pub mod ArraySeqStPer {
         }
 
         // select helper for append_select
-        pub fn select_c19<'a>(a: &'a ArraySeqStPerS<T>, b: &'a ArraySeqStPerS<T>, i: usize) -> (result: Option<&'a T>)
-            ensures
-                i < a.seq@.len() ==> result.is_some(),
-                i >= a.seq@.len() && i < a.seq@.len() + b.seq@.len() ==> result.is_some(),
-                i >= a.seq@.len() + b.seq@.len() ==> result.is_none(),
-        {
+        fn select<'a>(a: &'a ArraySeqStPerS<T>, b: &'a ArraySeqStPerS<T>, i: usize) -> Option<&'a T> {
             let len_a = a.length();
             if i < len_a {
                 Some(a.nth(i))
@@ -218,12 +216,42 @@ pub mod ArraySeqStPer {
 
         // Algorithm 19.4 alternative: append a b = tabulate(select(a,b), |a|+|b|)
         #[verifier::external_body]
-        pub fn append_select_c19(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> (result: ArraySeqStPerS<T>)
-            requires a.seq@.len() + b.seq@.len() <= usize::MAX as int
-            ensures result.seq@.len() == a.seq@.len() + b.seq@.len()
-        {
+        fn append_select(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> ArraySeqStPerS<T> {
             let total = a.length() + b.length();
-            Self::tabulate(&|i: usize| Self::select_c19(a, b, i).unwrap().clone(), total)
+            ArraySeqStPerS::<T>::tabulate(
+                &|i: usize| <ArraySeqStPerS<T> as ArraySeqStPerTrait<T>>::select(a, b, i).unwrap().clone(), 
+                total,
+            )
+        }
+    }
+
+    // Helper: flatten
+    #[verifier::external_body]
+    fn flatten<T: View + Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> ArraySeqStPerS<T> {
+        let mut total_len: usize = 0;
+        let ss_len = ss.seq.len();
+        for i in 0..ss_len {
+            total_len = total_len + ss.seq[i].seq.len();
+        }
+        let mut result: Vec<T> = Vec::with_capacity(total_len);
+        for j in 0..ss_len {
+            let inner = &ss.seq[j];
+            for k in 0..inner.seq.len() {
+                result.push(inner.seq[k].clone());
+            }
+        }
+        ArraySeqStPerS { seq: result }
+    }
+
+    // Helper: deflate for filter
+    fn deflate<T: View + Clone, F: Fn(&T) -> bool>(pred: &F, x: &T) -> (result: ArraySeqStPerS<T>)
+        requires pred.requires((x,))
+        ensures result.seq@.len() <= 1
+    {
+        if pred(x) {
+            ArraySeqStPerS::<T>::singleton(x.clone())
+        } else {
+            ArraySeqStPerS::<T>::empty()
         }
     }
 
@@ -234,60 +262,81 @@ pub mod ArraySeqStPer {
     pub use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS;
 
     #[cfg(not(verus_keep_ghost))]
-    impl<T: Clone> ArraySeqStPerS<T> {
-        pub fn empty_c19() -> Self { Self::from_vec(Vec::new()) }
-        pub fn singleton_c19(item: T) -> Self { Self::from_vec(vec![item]) }
-        pub fn map_c19<U: Clone, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqStPerS<U> {
+    pub trait ArraySeqStPerTrait<T: Clone> {
+        fn empty() -> Self;
+        fn singleton(item: T) -> Self;
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqStPerS<U>;
+        fn append(a: &Self, b: &Self) -> Self;
+        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self;
+        fn update(a: &Self, index: usize, item: T) -> Self;
+        fn isEmpty(a: &Self) -> bool;
+        fn isSingleton(a: &Self) -> bool;
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A;
+        fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T;
+        fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (Self, T) where Self: Sized;
+        fn select<'a>(a: &'a Self, b: &'a Self, i: usize) -> Option<&'a T>;
+        fn append_select(a: &Self, b: &Self) -> Self;
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    impl<T: Clone> ArraySeqStPerTrait<T> for ArraySeqStPerS<T> {
+        fn empty() -> Self { Self::from_vec(Vec::new()) }
+        fn singleton(item: T) -> Self { Self::from_vec(vec![item]) }
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqStPerS<U> {
             ArraySeqStPerS::<U>::tabulate(&|i| f(a.nth(i)), a.length())
         }
-        pub fn append_c19(a: &Self, b: &Self) -> Self {
+        fn append(a: &Self, b: &Self) -> Self {
             let mut seq = a.seq.clone();
             seq.extend(b.seq.iter().cloned());
             Self { seq }
         }
-        fn flatten_c19(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> Self {
-            let mut result = Vec::new();
-            for inner in ss.seq.iter() {
-                result.extend(inner.seq.iter().cloned());
-            }
-            Self { seq: result }
-        }
-        pub fn filter_c19<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self {
+        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self {
             Self { seq: a.seq.iter().filter(|x| pred(x)).cloned().collect() }
         }
-        fn deflate_c19<F: Fn(&T) -> bool>(pred: &F, x: &T) -> Self {
-            if pred(x) { Self::singleton(x.clone()) } else { Self::empty() }
-        }
-        pub fn update_c19(a: &Self, index: usize, item: T) -> Self {
+        fn update(a: &Self, index: usize, item: T) -> Self {
             Self::tabulate(&|j| if j == index { item.clone() } else { a.nth(j).clone() }, a.length())
         }
-        pub fn isEmpty_c19(a: &Self) -> bool { a.length() == 0 }
-        pub fn isSingleton_c19(a: &Self) -> bool { a.length() == 1 }
-        pub fn iterate_c19<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A {
+        fn isEmpty(a: &Self) -> bool { a.length() == 0 }
+        fn isSingleton(a: &Self) -> bool { a.length() == 1 }
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A {
             a.seq.iter().fold(seed, |acc, x| f(&acc, x))
         }
-        pub fn reduce_c19<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T {
+        fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T {
             if a.length() == 0 { id }
             else if a.length() == 1 { a.nth(0).clone() }
             else {
                 let mid = a.length() / 2;
                 let left = a.subseq_copy(0, mid);
                 let right = a.subseq_copy(mid, a.length() - mid);
-                f(&Self::reduce_c19(&left, f, id.clone()), &Self::reduce_c19(&right, f, id))
+                f(&Self::reduce(&left, f, id.clone()), &Self::reduce(&right, f, id))
             }
         }
-        pub fn scan_c19<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (Self, T) {
+        fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (Self, T) {
             let mut acc = id;
             let seq: Vec<T> = a.seq.iter().map(|x| { acc = f(&acc, x); acc.clone() }).collect();
             (Self { seq }, acc)
         }
-        pub fn select_c19<'a>(a: &'a Self, b: &'a Self, i: usize) -> Option<&'a T> {
+        fn select<'a>(a: &'a Self, b: &'a Self, i: usize) -> Option<&'a T> {
             if i < a.length() { Some(a.nth(i)) }
             else if i - a.length() < b.length() { Some(b.nth(i - a.length())) }
             else { None }
         }
-        pub fn append_select_c19(a: &Self, b: &Self) -> Self {
-            Self::tabulate(&|i| Self::select_c19(a, b, i).unwrap().clone(), a.length() + b.length())
+        fn append_select(a: &Self, b: &Self) -> Self {
+            Self::tabulate(&|i| Self::select(a, b, i).unwrap().clone(), a.length() + b.length())
         }
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    fn flatten<T: Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> ArraySeqStPerS<T> {
+        let mut result = Vec::new();
+        for inner in ss.seq.iter() {
+            result.extend(inner.seq.iter().cloned());
+        }
+        ArraySeqStPerS { seq: result }
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    fn deflate<T: Clone, F: Fn(&T) -> bool>(pred: &F, x: &T) -> ArraySeqStPerS<T> {
+        if pred(x) { ArraySeqStPerS::singleton(x.clone()) } else { ArraySeqStPerS::empty() }
     }
 }
