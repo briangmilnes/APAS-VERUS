@@ -15,6 +15,8 @@ pub mod ArraySeqMtPer {
     use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::Pool;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::clone_fn_plus::clone_fn_plus::{clone_fn, clone_fn2, clone_pred};
 
     #[cfg(verus_keep_ghost)]
     verus! {
@@ -163,7 +165,7 @@ pub mod ArraySeqMtPer {
             ArraySeqMtPerS { seq }
         }
 
-        // assume: f.clone() preserves specs (Verus lacks closure clone spec propagation)
+        // assume: f.clone() preserves specs (subseq_copy lacks element specs for full proof)
         pub fn map_par<U: Clone + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             pool: &Pool,
             a: &ArraySeqMtPerS<T>,
@@ -186,7 +188,6 @@ pub mod ArraySeqMtPer {
                 let right_seq = a.subseq_copy(mid, len - mid);
                 let f1 = f.clone();
                 let f2 = f.clone();
-                // assume: clone preserves closure specs
                 assume(forall|i: int| 0 <= i < left_seq.seq@.len() ==> #[trigger] f1.requires((&left_seq.seq@[i],)));
                 assume(forall|i: int| 0 <= i < right_seq.seq@.len() ==> #[trigger] f2.requires((&right_seq.seq@[i],)));
                 let pool1 = pool.clone_plus();
