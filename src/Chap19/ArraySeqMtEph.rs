@@ -182,7 +182,7 @@ pub mod ArraySeqMtEph {
                 let left_seq = subseq_copy(a, 0, mid);
                 let right_seq = subseq_copy(a, mid, a.seq.len() - mid);
 
-                let f1 = f.clone();
+                let f1 = clone_fn(&f);
                 let f2 = f;
                 assume(forall|i: int| 0 <= i < left_seq.seq@.len() ==> #[trigger] f1.requires((&left_seq.seq@[i],)));
                 assume(forall|i: int| 0 <= i < right_seq.seq@.len() ==> #[trigger] f2.requires((&right_seq.seq@[i],)));
@@ -254,7 +254,7 @@ pub mod ArraySeqMtEph {
                 let left_seq = subseq_copy(a, 0, mid);
                 let right_seq = subseq_copy(a, mid, a.seq.len() - mid);
 
-                let p1 = pred.clone();
+                let p1 = clone_pred(&pred);
                 let p2 = pred;
                 assume(forall|i: int| 0 <= i < left_seq.seq@.len() ==> #[trigger] p1.requires((&left_seq.seq@[i],)));
                 assume(forall|i: int| 0 <= i < right_seq.seq@.len() ==> #[trigger] p2.requires((&right_seq.seq@[i],)));
@@ -285,7 +285,7 @@ pub mod ArraySeqMtEph {
                 &(|j: usize| -> (r: T)
                     requires j < a.seq@.len()
                 {
-                    if j == index { item.clone() } else { a.seq[j].clone() }
+                    if j == index { item.clone_plus() } else { a.seq[j].clone_plus() }
                 }),
                 a.seq.len(),
             )
@@ -321,7 +321,7 @@ pub mod ArraySeqMtEph {
             if a.seq.len() == 0 {
                 id
             } else if a.seq.len() == 1 {
-                a.seq[0].clone()
+                a.seq[0].clone_plus()
             } else {
                 let mid = a.seq.len() / 2;
                 let left_seq = subseq_copy(a, 0, mid);
@@ -334,7 +334,7 @@ pub mod ArraySeqMtEph {
                     assert(forall|x: &T, y: &T| #[trigger] f2.requires((x, y)));
                 }
 
-                let id1 = id.clone();
+                let id1 = id.clone_plus();
                 let id2 = id;
 
                 let pool1 = pool.clone_plus();
@@ -361,7 +361,7 @@ pub mod ArraySeqMtEph {
                 return (Self::empty(), id);
             }
             if n == 1 {
-                return (Self::singleton(id), a.seq[0].clone());
+                return (Self::singleton(id), a.seq[0].clone_plus());
             }
 
             // Contract: combine pairs a' = [f(a[0],a[1]), f(a[2],a[3]), ...]
@@ -394,7 +394,7 @@ pub mod ArraySeqMtEph {
                     if 2 * i + 1 < n {
                         f_contract(&a.seq[2 * i], &a.seq[2 * i + 1])
                     } else {
-                        a.seq[2 * i].clone()
+                        a.seq[2 * i].clone_plus()
                     }
                 }),
                 contracted_len,
@@ -403,7 +403,7 @@ pub mod ArraySeqMtEph {
             // Recursive scan on contracted
             let f_recurse = clone_fn2(&f);
             proof { assert(forall|x: &T, y: &T| #[trigger] f_recurse.requires((x, y))); }
-            let (scanned, total) = <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::scan(&contracted, f_recurse, id.clone(), pool);
+            let (scanned, total) = <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::scan(&contracted, f_recurse, id.clone_plus(), pool);
             proof {
                 // scanned length equals contracted length (from scan's ensures on tabulate result)
                 assert(scanned.seq@.len() == contracted_len);
@@ -425,7 +425,7 @@ pub mod ArraySeqMtEph {
                         assert((n - 1) / 2 < (n + 1) / 2);
                     }
                     if i % 2 == 0 {
-                        scanned.seq[i / 2].clone()
+                        scanned.seq[i / 2].clone_plus()
                     } else {
                         // i is odd, so i >= 1
                         proof { assert(i >= 1); }
@@ -440,11 +440,11 @@ pub mod ArraySeqMtEph {
 
         fn select(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>, index: usize) -> (result: Option<T>) {
             if index < a.seq.len() {
-                Some(a.seq[index].clone())
+                Some(a.seq[index].clone_plus())
             } else {
                 let offset = index - a.seq.len();
                 if offset < b.seq.len() {
-                    Some(b.seq[offset].clone())
+                    Some(b.seq[offset].clone_plus())
                 } else {
                     None
                 }
@@ -464,7 +464,7 @@ pub mod ArraySeqMtEph {
 
         fn deflate<F: Fn(&T) -> bool + Send + Sync>(f: &F, x: &T) -> (result: ArraySeqMtEphS<T>) {
             if f(x) {
-                Self::singleton(x.clone())
+                Self::singleton(x.clone_plus())
             } else {
                 Self::empty()
             }
@@ -544,7 +544,7 @@ pub mod ArraySeqMtEph {
                 a_len as int == a.seq@.len(),
             decreases len - i,
         {
-            result.push(a.seq[start + i].clone());
+            result.push(a.seq[start + i].clone_plus());
             i += 1;
         }
         ArraySeqMtEphS { seq: result }
@@ -565,7 +565,7 @@ pub mod ArraySeqMtEph {
         let mut result: Vec<T> = Vec::with_capacity(total_len);
         for i in 0..ss_len {
             for j in 0..ss.seq[i].seq.len() {
-                result.push(ss.seq[i].seq[j].clone());
+                result.push(ss.seq[i].seq[j].clone_plus());
             }
         }
         ArraySeqMtEphS { seq: result }
