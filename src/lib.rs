@@ -156,4 +156,5 @@ pub mod Chap18 {
 pub mod Chap19 {
     pub mod ArraySeqStPer;
     pub mod ArraySeqStEph;
+    pub mod ArraySeqMtEph;
 }

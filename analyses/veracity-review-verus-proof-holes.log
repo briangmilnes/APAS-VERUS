@@ -3838,3 +3838,22 @@ Holes Found: 12 total
    8 × assume()
    2 × assume_specification
    2 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   3 holed (contains holes)
+   3 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 24 total
+   18 × assume()
+   3 × assume_specification
+   3 × external_body
