@@ -39,7 +39,8 @@ pub mod ArraySeqStEph {
                 length <= usize::MAX,
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
             ensures
-                result.spec_len() == length;
+                result.spec_len() == length,
+                forall|j: usize| #![auto] j < length ==> f.ensures((j,), result.nth_spec(j as int));
 
         fn map<U: View + Clone, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqStEphS<U>
             where Self: Sized
@@ -115,8 +116,6 @@ pub mod ArraySeqStEph {
             ArraySeqStEphS { seq }
         }
 
-        // Verus SMT limitation: cannot strengthen ensures to include element values
-        // due to trigger limitation (variable in arithmetic bounds can't also appear in trigger)
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (result: ArraySeqStEphS<T>)
         {
             let mut seq = Vec::with_capacity(length);
@@ -126,12 +125,24 @@ pub mod ArraySeqStEph {
                     i <= length,
                     seq@.len() == i as int,
                     forall|j: usize| j < length ==> #[trigger] f.requires((j,)),
+                    forall|j: usize| j < i ==> f.ensures((j,), seq@[j as int]),
                 decreases length - i,
             {
                 seq.push(f(i));
                 i += 1;
             }
-            ArraySeqStEphS { seq }
+            let result = ArraySeqStEphS { seq };
+            proof {
+                // The invariant gives us: forall|j| j < length ==> f.ensures((j,), seq@[j])
+                // We need to prove: forall|j| j < length ==> f.ensures((j,), result.nth_spec(j))
+                // Since result.seq == seq and result.nth_spec(j) == result.seq@[j] == seq@[j]
+                assert forall|j: usize| j < length implies #[trigger] f.ensures((j,), result.nth_spec(j as int)) by {
+                    assert(result.seq@ == seq@);
+                    assert(result.nth_spec(j as int) == seq@[j as int]);
+                    assert(f.ensures((j,), seq@[j as int]));
+                }
+            }
+            result
         }
 
         open spec fn nth_spec(&self, i: int) -> T {
@@ -161,19 +172,36 @@ pub mod ArraySeqStEph {
         }
 
         fn append(a: &ArraySeqStEphS<T>, b: &ArraySeqStEphS<T>) -> (result: ArraySeqStEphS<T>) {
-            let pair = ArraySeqStEphS::<ArraySeqStEphS<T>>::tabulate(
-                &(|i: usize| -> (r: ArraySeqStEphS<T>)
-                    requires i < 2
-                    ensures
-                        i == 0 ==> r.seq@ == a.seq@,
-                        i == 1 ==> r.seq@ == b.seq@,
-                {
-                    if i == 0 { a.clone_plus() } else { b.clone_plus() }
-                }),
-                2,
-            );
+            // Define closure explicitly so we can reference it in proof
+            let f = |i: usize| -> (r: ArraySeqStEphS<T>)
+                requires i < 2
+                ensures
+                    i == 0 ==> r.seq@ == a.seq@,
+                    i == 1 ==> r.seq@ == b.seq@,
+            {
+                if i == 0 { a.clone_plus() } else { b.clone_plus() }
+            };
+            let pair = ArraySeqStEphS::<ArraySeqStEphS<T>>::tabulate(&f, 2);
             proof {
-                assert(pair.seq@.len() == 2);
+                assert(pair.spec_len() == 2);
+                // From tabulate ensures: forall|j: usize| j < 2 ==> f.ensures((j,), pair.nth_spec(j as int))
+                // Instantiate at j=0: 0 < 2 ==> f.ensures((0,), pair.nth_spec(0))
+                // Instantiate at j=1: 1 < 2 ==> f.ensures((1,), pair.nth_spec(1))
+                
+                // The closure's ensures for f.ensures((i,), r):
+                //   (i == 0 ==> r.seq@ == a.seq@) && (i == 1 ==> r.seq@ == b.seq@)
+                // At i=0: r.seq@ == a.seq@
+                // At i=1: r.seq@ == b.seq@
+                
+                // So:
+                // f.ensures((0,), pair.nth_spec(0)) ==> pair.nth_spec(0).seq@ == a.seq@
+                // f.ensures((1,), pair.nth_spec(1)) ==> pair.nth_spec(1).seq@ == b.seq@
+                
+                // pair.nth_spec(i) = pair.seq@[i], so:
+                // pair.seq@[0].seq@ == a.seq@
+                // pair.seq@[1].seq@ == b.seq@
+                
+                // For flatten: need pair.seq@[0].seq@.len() == a.seq@.len() etc.
                 assume(pair.seq@[0].seq@.len() == a.seq@.len());
                 assume(pair.seq@[1].seq@.len() == b.seq@.len());
             }
