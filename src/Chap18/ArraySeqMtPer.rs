@@ -487,48 +487,6 @@ pub mod ArraySeqMtPer {
         }
     }
 
-    // Named function with explicit specs - can be verified through closures
-    pub fn add_i64(a: &i64, b: &i64) -> (r: i64)
-        requires i64::MIN <= *a + *b <= i64::MAX,
-        ensures r == *a + *b,
-    {
-        *a + *b
-    }
-
-    /// Verified parallel sum using named add_i64 function
-    pub fn sum_par_i64(pool: &Pool, a: &ArraySeqMtPerS<i64>) -> (result: i64)
-        requires
-            a.seq@.len() > 0,
-        decreases a.seq@.len()
-    {
-        let len = a.seq.len();
-        if len == 1 {
-            a.seq[0]
-        } else {
-            let mid = len / 2;
-            let left_seq = a.subseq_copy(0, mid);
-            let right_seq = a.subseq_copy(mid, len - mid);
-            let pool1 = pool.clone_plus();
-            let pool2 = pool.clone_plus();
-
-            let fa = move || -> (r: i64)
-                ensures true,
-            {
-                sum_par_i64(&pool1, &left_seq)
-            };
-
-            let fb = move || -> (r: i64)
-                ensures true,
-            {
-                sum_par_i64(&pool2, &right_seq)
-            };
-
-            let (left, right) = pool.join(fa, fb);
-            assume(i64::MIN <= left + right <= i64::MAX);
-            add_i64(&left, &right)
-        }
-    }
-
     } // verus!
 
     // Non-Verus impls
@@ -739,26 +697,5 @@ pub mod ArraySeqMtPer {
         type Item = T;
         type IntoIter = IntoIter<T>;
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    pub fn add_i64(a: &i64, b: &i64) -> i64 { a + b }
-
-    #[cfg(not(verus_keep_ghost))]
-    pub fn sum_par_i64(pool: &Pool, a: &ArraySeqMtPerS<i64>) -> i64 {
-        let len = a.seq.len();
-        if len == 1 {
-            a.seq[0]
-        } else {
-            let mid = len / 2;
-            let left_seq = a.subseq_copy(0, mid);
-            let right_seq = a.subseq_copy(mid, len - mid);
-            let (pool1, pool2) = (pool.clone(), pool.clone());
-            let (left, right) = pool.join(
-                move || sum_par_i64(&pool1, &left_seq),
-                move || sum_par_i64(&pool2, &right_seq),
-            );
-            add_i64(&left, &right)
-        }
     }
 }
