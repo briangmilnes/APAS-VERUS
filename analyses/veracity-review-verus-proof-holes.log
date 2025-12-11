@@ -3876,3 +3876,106 @@ Holes Found: 18 total
    16 × assume()
    1 × assume_specification
    1 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   120 clean (no holes)
+   59 holed (contains holes)
+   179 total
+
+Proof Functions:
+   253 clean
+   60 holed
+   313 total
+
+Holes Found: 224 total
+   11 × assume(false)
+   84 × assume()
+   1 × Tracked::assume_new()
+   6 × assume_specification
+   45 × admit()
+   2 × unsafe impl
+   4 × unsafe {}
+   68 × external_body
+   1 × external_trait_specification
+   1 × external_trait_extension
+   1 × external
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   3 holed (contains holes)
+   3 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 30 total
+   24 × assume()
+   3 × assume_specification
+   3 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   1 holed (contains holes)
+   1 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 15 total
+   13 × assume()
+   1 × assume_specification
+   1 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   1 holed (contains holes)
+   1 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 10 total
+   8 × assume()
+   1 × assume_specification
+   1 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   1 holed (contains holes)
+   1 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 10 total
+   8 × assume()
+   1 × assume_specification
+   1 × external_body

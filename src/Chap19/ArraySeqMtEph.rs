@@ -19,7 +19,7 @@ pub mod ArraySeqMtEph {
 
     broadcast use vstd::std_specs::vec::group_vec_axioms;
     use vstd::std_specs::clone::*;
-    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::clone_plus::clone_plus::{ClonePlus, clone_fn, clone_fn2, clone_pred};
 
     // Clone spec for ArraySeqMtEphS - defines what cloned() means for this type
     pub assume_specification<T: Clone>
@@ -93,10 +93,12 @@ pub mod ArraySeqMtEph {
             requires
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y));
 
-        fn scan<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &Self, f: F, id: T, pool: &Pool) -> (Self, T)
+        fn scan<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &Self, f: F, id: T, pool: &Pool) -> (result: (Self, T))
             where T: 'static
             requires
-                forall|x: &T, y: &T| #[trigger] f.requires((x, y));
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+            ensures
+                result.0.spec_len() == a.spec_len();
 
         fn select(a: &Self, b: &Self, index: usize) -> (result: Option<T>)
             ensures (index as int) < a.spec_len() + b.spec_len() ==> result.is_some();
@@ -325,10 +327,12 @@ pub mod ArraySeqMtEph {
                 let left_seq = subseq_copy(a, 0, mid);
                 let right_seq = subseq_copy(a, mid, a.seq.len() - mid);
 
-                let f1 = f.clone();
-                let f2 = f.clone();
-                assume(forall|x: &T, y: &T| #[trigger] f1.requires((x, y)));
-                assume(forall|x: &T, y: &T| #[trigger] f2.requires((x, y)));
+                let f1 = clone_fn2(&f);
+                let f2 = clone_fn2(&f);
+                proof {
+                    assert(forall|x: &T, y: &T| #[trigger] f1.requires((x, y)));
+                    assert(forall|x: &T, y: &T| #[trigger] f2.requires((x, y)));
+                }
 
                 let id1 = id.clone();
                 let id2 = id;
@@ -362,13 +366,31 @@ pub mod ArraySeqMtEph {
 
             // Contract: combine pairs a' = [f(a[0],a[1]), f(a[2],a[3]), ...]
             let contracted_len = n / 2 + n % 2;  // ceil(n/2) without overflow
-            let f_contract = f.clone();
-            assume(forall|x: &T, y: &T| #[trigger] f_contract.requires((x, y)));
+            proof {
+                // Prove contracted_len bounds
+                assert(contracted_len == (n + 1) / 2);
+                assert(contracted_len >= 1);  // since n >= 2
+                assert(contracted_len < n);   // since n >= 2
+            }
+            let f_contract = clone_fn2(&f);
+            proof { assert(forall|x: &T, y: &T| #[trigger] f_contract.requires((x, y))); }
             let contracted = Self::tabulate(
                 &(|i: usize| -> (r: T)
-                    requires i < contracted_len
+                    requires
+                        i < contracted_len,
+                        contracted_len == (n + 1) / 2,
+                        n >= 2,
                 {
-                    assume(2 * i < n);
+                    proof {
+                        // Prove 2*i < n from i < ceil(n/2) = (n+1)/2
+                        // Case 1: n even => contracted_len = n/2, i < n/2 => 2i < n
+                        // Case 2: n odd => contracted_len = (n+1)/2, i <= n/2 => 2i <= n
+                        //         but max i = (n-1)/2 so 2i = n-1 < n
+                        assert(i < (n + 1) / 2);
+                        assert(2 * i + 2 <= n + 1);  // 2*(i+1) <= n+1
+                        assert(2 * i <= n - 1);  // since 2*i + 2 <= n + 1 means 2*i <= n - 1
+                        assert(2 * i < n);
+                    }
                     if 2 * i + 1 < n {
                         f_contract(&a.seq[2 * i], &a.seq[2 * i + 1])
                     } else {
@@ -379,22 +401,34 @@ pub mod ArraySeqMtEph {
             );
 
             // Recursive scan on contracted
-            let f_recurse = f.clone();
-            assume(forall|x: &T, y: &T| #[trigger] f_recurse.requires((x, y)));
+            let f_recurse = clone_fn2(&f);
+            proof { assert(forall|x: &T, y: &T| #[trigger] f_recurse.requires((x, y))); }
             let (scanned, total) = <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::scan(&contracted, f_recurse, id.clone(), pool);
+            proof {
+                // scanned length equals contracted length (from scan's ensures on tabulate result)
+                assert(scanned.seq@.len() == contracted_len);
+            }
 
             // Expand: even indices get scanned[i/2], odd indices get f(scanned[i/2], a[i-1])
-            let f_expand = f.clone();
-            assume(forall|x: &T, y: &T| #[trigger] f_expand.requires((x, y)));
+            let f_expand = clone_fn2(&f);
+            proof { assert(forall|x: &T, y: &T| #[trigger] f_expand.requires((x, y))); }
             let expanded = Self::tabulate(
                 &(|i: usize| -> (r: T)
-                    requires i < n
+                    requires
+                        i < n,
+                        n >= 2,
+                        scanned.seq@.len() == (n + 1) / 2,
                 {
-                    assume(i / 2 < scanned.seq@.len());
+                    proof {
+                        // Prove i/2 < scanned.seq@.len() = (n+1)/2
+                        assert(i / 2 <= (n - 1) / 2);
+                        assert((n - 1) / 2 < (n + 1) / 2);
+                    }
                     if i % 2 == 0 {
                         scanned.seq[i / 2].clone()
                     } else {
-                        assume(i >= 1);
+                        // i is odd, so i >= 1
+                        proof { assert(i >= 1); }
                         f_expand(&scanned.seq[i / 2], &a.seq[i - 1])
                     }
                 }),
