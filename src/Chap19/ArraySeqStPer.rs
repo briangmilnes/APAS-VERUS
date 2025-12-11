@@ -56,10 +56,10 @@ pub mod ArraySeqStPer {
                 a.spec_len() <= usize::MAX as int,
             ensures result.spec_len() == a.spec_len();
 
-        fn isEmpty(a: &Self) -> (empty: bool)
+        fn is_empty(a: &Self) -> (empty: bool)
             ensures empty <==> a.spec_len() == 0;
 
-        fn isSingleton(a: &Self) -> (single: bool)
+        fn is_singleton(a: &Self) -> (single: bool)
             ensures single <==> a.spec_len() == 1;
 
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A
@@ -177,13 +177,13 @@ pub mod ArraySeqStPer {
             )
         }
 
-        // Algorithm 19.7: isEmpty a = |a| = 0
-        fn isEmpty(a: &ArraySeqStPerS<T>) -> bool {
+        // Algorithm 19.7: is_empty a = |a| = 0
+        fn is_empty(a: &ArraySeqStPerS<T>) -> bool {
             a.length() == 0
         }
 
-        // Algorithm 19.7: isSingleton a = |a| = 1
-        fn isSingleton(a: &ArraySeqStPerS<T>) -> bool {
+        // Algorithm 19.7: is_singleton a = |a| = 1
+        fn is_singleton(a: &ArraySeqStPerS<T>) -> bool {
             a.length() == 1
         }
 
@@ -284,7 +284,7 @@ pub mod ArraySeqStPer {
             // For 2-element case (append)
             ss.seq@.len() == 2 ==> result.seq@.len() == ss.seq@[0].seq@.len() + ss.seq@[1].seq@.len(),
             // For filter case: result <= sum of inner lengths <= outer length (each inner <= 1)
-            (forall|i: int| 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1)
+            (forall|i: int| #![auto] 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1)
                 ==> result.seq@.len() <= ss.seq@.len(),
     {
         let mut total_len: usize = 0;
@@ -328,8 +328,8 @@ pub mod ArraySeqStPer {
         fn append(a: &Self, b: &Self) -> Self;
         fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self;
         fn update(a: &Self, index: usize, item: T) -> Self;
-        fn isEmpty(a: &Self) -> bool;
-        fn isSingleton(a: &Self) -> bool;
+        fn is_empty(a: &Self) -> bool;
+        fn is_singleton(a: &Self) -> bool;
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A;
         fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T;
         fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (Self, T) where Self: Sized;
@@ -355,8 +355,8 @@ pub mod ArraySeqStPer {
         fn update(a: &Self, index: usize, item: T) -> Self {
             Self::tabulate(&|j| if j == index { item.clone() } else { a.nth(j).clone() }, a.length())
         }
-        fn isEmpty(a: &Self) -> bool { a.length() == 0 }
-        fn isSingleton(a: &Self) -> bool { a.length() == 1 }
+        fn is_empty(a: &Self) -> bool { a.length() == 0 }
+        fn is_singleton(a: &Self) -> bool { a.length() == 1 }
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A {
             a.seq.iter().fold(seed, |acc, x| f(&acc, x))
         }
