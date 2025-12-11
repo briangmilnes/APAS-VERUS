@@ -120,7 +120,10 @@ pub mod ArraySeqStPer {
             requires 
                 length <= usize::MAX,
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
-            ensures result.seq@.len() == length
+            ensures 
+                result.seq@.len() == length,
+                // Verus rejects: "variable in trigger cannot appear in both arithmetic and non-arithmetic positions"
+                // forall|i: int| 0 <= i < length ==> #[trigger] f.ensures((i as usize,), result.seq@[i]),
         {
             let mut seq = Vec::with_capacity(length);
             let mut i: usize = 0;
