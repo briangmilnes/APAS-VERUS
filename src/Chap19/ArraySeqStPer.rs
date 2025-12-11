@@ -16,8 +16,9 @@ pub mod ArraySeqStPer {
 
     broadcast use vstd::std_specs::vec::group_vec_axioms;
     use vstd::std_specs::clone::*;
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
 
-    // Clone spec for ArraySeqStPerS
+    // Clone spec for ArraySeqStPerS - defines what cloned() means for this type
     pub assume_specification<T: Clone>
         [ <ArraySeqStPerS<T> as Clone>::clone ]
         (s: &ArraySeqStPerS<T>) -> (result: ArraySeqStPerS<T>)
@@ -128,7 +129,7 @@ pub mod ArraySeqStPer {
                         i == 0 ==> r.seq@ == a.seq@,
                         i == 1 ==> r.seq@ == b.seq@,
                 {
-                    if i == 0 { a.clone() } else { b.clone() }
+                    if i == 0 { a.clone_plus() } else { b.clone_plus() }
                 }),
                 2,
             );

@@ -3680,3 +3680,104 @@ Holes Found: 7 total
    5 × assume()
    1 × assume_specification
    1 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   1 holed (contains holes)
+   1 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 7 total
+   5 × assume()
+   1 × assume_specification
+   1 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   68 clean (no holes)
+   57 holed (contains holes)
+   125 total
+
+Proof Functions:
+   253 clean
+   60 holed
+   313 total
+
+Holes Found: 201 total
+   11 × assume(false)
+   65 × assume()
+   1 × Tracked::assume_new()
+   4 × assume_specification
+   45 × admit()
+   2 × unsafe impl
+   4 × unsafe {}
+   66 × external_body
+   1 × external_trait_specification
+   1 × external_trait_extension
+   1 × external
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   7 holed (contains holes)
+   7 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 19 total
+   19 × assume()
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   1 holed (contains holes)
+   1 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 7 total
+   5 × assume()
+   1 × assume_specification
+   1 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   1 holed (contains holes)
+   1 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 7 total
+   5 × assume()
+   1 × assume_specification
+   1 × external_body
