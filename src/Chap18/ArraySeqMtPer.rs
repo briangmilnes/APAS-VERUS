@@ -163,9 +163,7 @@ pub mod ArraySeqMtPer {
             ArraySeqMtPerS { seq }
         }
 
-        // external_body: Closures that call named functions (like fib_seq) can have
-        // their specs proven, but here f.clone() loses specs. Using a literal function
-        // name instead of a generic F would allow verification.
+        // external_body: f.clone() loses specs. Would verify if Verus had clone spec propagation.
         #[verifier::external_body]
         pub fn map_par<U: Clone + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             pool: &Pool,
@@ -173,6 +171,8 @@ pub mod ArraySeqMtPer {
             f: F,
         ) -> (result: ArraySeqMtPerS<U>)
             where T: Clone + Send + Sync + 'static
+            requires
+                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
             ensures result.seq@.len() == a.seq@.len()
         {
             let len = a.seq.len();
@@ -186,8 +186,8 @@ pub mod ArraySeqMtPer {
                 let right_seq = a.subseq_copy(mid, len - mid);
                 let f1 = f.clone();
                 let f2 = f.clone();
-                let pool1 = pool.clone();
-                let pool2 = pool.clone();
+                let pool1 = pool.clone_plus();
+                let pool2 = pool.clone_plus();
                 let (left, right) = pool.join(
                     move || Self::map_par(&pool1, &left_seq, f1),
                     move || Self::map_par(&pool2, &right_seq, f2),
@@ -253,7 +253,7 @@ pub mod ArraySeqMtPer {
             ArraySeqMtPerS { seq }
         }
 
-        // external_body: Same - generic F, no fn ptr support yet.
+        // external_body: pred.clone() loses specs.
         #[verifier::external_body]
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
             pool: &Pool,
@@ -261,6 +261,8 @@ pub mod ArraySeqMtPer {
             pred: F,
         ) -> (result: ArraySeqMtPerS<T>)
             where T: Clone + Send + Sync + 'static
+            requires
+                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
             ensures result.seq@.len() <= a.seq@.len()
         {
             let len = a.seq.len();
@@ -278,8 +280,8 @@ pub mod ArraySeqMtPer {
                 let right_seq = a.subseq_copy(mid, len - mid);
                 let p1 = pred.clone();
                 let p2 = pred.clone();
-                let pool1 = pool.clone();
-                let pool2 = pool.clone();
+                let pool1 = pool.clone_plus();
+                let pool2 = pool.clone_plus();
                 let (left, right) = pool.join(
                     move || Self::filter_par(&pool1, &left_seq, p1),
                     move || Self::filter_par(&pool2, &right_seq, p2),
@@ -350,7 +352,7 @@ pub mod ArraySeqMtPer {
             acc
         }
 
-        // external_body: Generic F loses specs on clone. Verus doesn't support fn ptrs yet.
+        // external_body: f.clone() loses specs.
         #[verifier::external_body]
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
             pool: &Pool,
@@ -359,6 +361,8 @@ pub mod ArraySeqMtPer {
             id: T,
         ) -> (result: T)
             where T: Clone + Send + Sync + 'static
+            requires
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
         {
             let len = a.seq.len();
             if len == 0 {
@@ -373,8 +377,8 @@ pub mod ArraySeqMtPer {
                 let f2 = f.clone();
                 let id1 = id.clone();
                 let id2 = id.clone();
-                let pool1 = pool.clone();
-                let pool2 = pool.clone();
+                let pool1 = pool.clone_plus();
+                let pool2 = pool.clone_plus();
                 let (left, right) = pool.join(
                     move || Self::reduce_par(&pool1, &left_seq, f1, id1),
                     move || Self::reduce_par(&pool2, &right_seq, f2, id2),
