@@ -345,27 +345,63 @@ pub mod ArraySeqMtEph {
             }
         }
 
+        // Algorithm 19.10: Scan using contraction (parallel)
+        // Returns (prefix_sums, total) where prefix_sums[i] = f(...f(f(id, a[0]), a[1])..., a[i-1])
+        // (exclusive prefix scan)
         fn scan<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: F, id: T, pool: &Pool) -> (ArraySeqMtEphS<T>, T)
             where T: 'static
+            decreases a.seq@.len()
         {
-            if a.seq.len() == 0 {
+            let n = a.seq.len();
+            if n == 0 {
                 return (Self::empty(), id);
             }
-            let mut acc = id.clone();
-            let mut results: Vec<T> = Vec::with_capacity(a.seq.len());
-            let mut i: usize = 0;
-            while i < a.seq.len()
-                invariant
-                    i <= a.seq@.len(),
-                    results@.len() == i as int,
-                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                decreases a.seq@.len() - i,
-            {
-                acc = f(&acc, &a.seq[i]);
-                results.push(acc.clone());
-                i += 1;
+            if n == 1 {
+                return (Self::singleton(id), a.seq[0].clone());
             }
-            (ArraySeqMtEphS { seq: results }, acc)
+
+            // Contract: combine pairs a' = [f(a[0],a[1]), f(a[2],a[3]), ...]
+            let contracted_len = n / 2 + n % 2;  // ceil(n/2) without overflow
+            let f_contract = f.clone();
+            assume(forall|x: &T, y: &T| #[trigger] f_contract.requires((x, y)));
+            let contracted = Self::tabulate(
+                &(|i: usize| -> (r: T)
+                    requires i < contracted_len
+                {
+                    assume(2 * i < n);
+                    if 2 * i + 1 < n {
+                        f_contract(&a.seq[2 * i], &a.seq[2 * i + 1])
+                    } else {
+                        a.seq[2 * i].clone()
+                    }
+                }),
+                contracted_len,
+            );
+
+            // Recursive scan on contracted
+            let f_recurse = f.clone();
+            assume(forall|x: &T, y: &T| #[trigger] f_recurse.requires((x, y)));
+            let (scanned, total) = <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::scan(&contracted, f_recurse, id.clone(), pool);
+
+            // Expand: even indices get scanned[i/2], odd indices get f(scanned[i/2], a[i-1])
+            let f_expand = f.clone();
+            assume(forall|x: &T, y: &T| #[trigger] f_expand.requires((x, y)));
+            let expanded = Self::tabulate(
+                &(|i: usize| -> (r: T)
+                    requires i < n
+                {
+                    assume(i / 2 < scanned.seq@.len());
+                    if i % 2 == 0 {
+                        scanned.seq[i / 2].clone()
+                    } else {
+                        assume(i >= 1);
+                        f_expand(&scanned.seq[i / 2], &a.seq[i - 1])
+                    }
+                }),
+                n,
+            );
+
+            (expanded, total)
         }
 
         fn select(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>, index: usize) -> (result: Option<T>) {

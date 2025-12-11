@@ -1,0 +1,19 @@
+Algorithm 19.10 (Scan Using Contraction). We will cover scan in more detail in Section 3.
+But for completeness, we present an implementation below. For simplicity, we assume that
+the length of the sequence is a power of two, though this is not difficult to eliminate.
+2. IMPLEMENTING THE PRIMITIVE FUNCTIONS 129
+(* Assumption: |a| is a power of two. *)
+scan f id a =
+case |a|
+| 0 ⇒ (〈 〉 , id)
+| 1 ⇒ (〈 id 〉 , a[0])
+| n ⇒
+let
+a′ = 〈 f (a[2i], a[2i + 1]) : 0 ≤ i < n/2 〉
+(r, t) = scan f id a′
+in
+(〈 pi : 0 ≤ i < n 〉 , t), where pi =
+{
+r[i/2] even(i)
+f (r[i/2], a[i − 1]) otherwise
+end
