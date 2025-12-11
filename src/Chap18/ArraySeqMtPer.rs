@@ -14,9 +14,7 @@ pub mod ArraySeqMtPer {
     #[cfg(verus_keep_ghost)]
     use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::Pool;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
-    #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::clone_fn_plus::clone_fn_plus::{clone_fn, clone_fn2, clone_pred};
+    use crate::vstdplus::clone_plus::clone_plus::{ClonePlus, clone_fn, clone_fn2, clone_pred};
 
     #[cfg(verus_keep_ghost)]
     verus! {

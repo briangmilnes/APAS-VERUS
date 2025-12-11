@@ -71,7 +71,6 @@ pub mod vstdplus {
     // pub mod clone_view;  // UNUSED - moved to attic
     pub mod feq;
     pub mod clone_plus;
-    pub mod clone_fn_plus;
     // pub mod vec;  // UNUSED - moved to attic
     pub mod checked_int;
     pub mod checked_nat;
