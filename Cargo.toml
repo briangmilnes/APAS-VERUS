@@ -111,6 +111,10 @@ path = "tests/Chap18/TestArraySeq.rs"
 name = "TestArraySeqMtPer"
 path = "tests/Chap18/TestArraySeqMtPer.rs"
 
+[[test]]
+name = "TestArraySeqMtEph"
+path = "tests/Chap18/TestArraySeqMtEph.rs"
+
 [[bench]]
 name = "BenchInsertionSortStEph"
 path = "benches/Chap03/BenchInsertionSortStEph.rs"
