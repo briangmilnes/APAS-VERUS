@@ -3606,3 +3606,21 @@ Proof Functions:
 
 Holes Found: 6 total
    6 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   1 holed (contains holes)
+   1 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 6 total
+   5 × assume()
+   1 × external_body

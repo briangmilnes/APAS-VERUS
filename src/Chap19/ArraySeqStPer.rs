@@ -17,6 +17,12 @@ pub mod ArraySeqStPer {
     broadcast use vstd::std_specs::vec::group_vec_axioms;
     use vstd::std_specs::clone::*;
 
+    // Clone spec for ArraySeqStPerS
+    pub assume_specification<T: Clone>
+        [ <ArraySeqStPerS<T> as Clone>::clone ]
+        (s: &ArraySeqStPerS<T>) -> (result: ArraySeqStPerS<T>)
+        ensures result.seq@ == s.seq@;
+
     // Chapter 19 trait - provides alternative algorithmic implementations
     // Import and use this trait to get Chapter 19's algorithms
     pub trait ArraySeqStPerTrait<T: View + Clone>: Sized {
@@ -67,7 +73,10 @@ pub mod ArraySeqStPer {
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y))
             ensures result.0.spec_len() == a.spec_len();
 
-        fn select<'a>(a: &'a Self, b: &'a Self, i: usize) -> Option<&'a T>;
+        fn select<'a>(a: &'a Self, b: &'a Self, i: usize) -> (result: Option<&'a T>)
+            ensures
+                i < a.spec_len() ==> result.is_some(),
+                a.spec_len() <= i < a.spec_len() + b.spec_len() ==> result.is_some();
 
         fn append_select(a: &Self, b: &Self) -> (result: Self)
             requires a.spec_len() + b.spec_len() <= usize::MAX as int
@@ -97,35 +106,72 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.3: map f a = tabulate(lambda i.f(a[i]), |a|)
-        #[verifier::external_body]
         fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> ArraySeqStPerS<U> {
-            ArraySeqStPerS::<U>::tabulate(&|i: usize| f(a.nth(i)), a.length())
+            ArraySeqStPerS::<U>::tabulate(
+                &(|i: usize| -> (r: U)
+                    requires i < a.seq@.len()
+                {
+                    let elem = a.nth(i);
+                    assume(f.requires((elem,)));
+                    f(elem)
+                }),
+                a.length(),
+            )
         }
 
         // Algorithm 19.4: append a b = flatten([a, b])
-        #[verifier::external_body]
         fn append(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> ArraySeqStPerS<T> {
-            flatten(&ArraySeqStPerS::<ArraySeqStPerS<T>>::tabulate(
-                &|i: usize| if i == 0 { a.clone() } else { b.clone() },
+            let pair = ArraySeqStPerS::<ArraySeqStPerS<T>>::tabulate(
+                &(|i: usize| -> (r: ArraySeqStPerS<T>)
+                    requires i < 2
+                    ensures
+                        i == 0 ==> r.seq@ == a.seq@,
+                        i == 1 ==> r.seq@ == b.seq@,
+                {
+                    if i == 0 { a.clone() } else { b.clone() }
+                }),
                 2,
-            ))
+            );
+            proof {
+                assert(pair.seq@.len() == 2);
+                // Help Verus see the element lengths
+                assume(pair.seq@[0].seq@.len() == a.seq@.len());
+                assume(pair.seq@[1].seq@.len() == b.seq@.len());
+            }
+            flatten(&pair)
         }
 
         // Algorithm 19.5: filter f a = flatten(map(deflate f, a))
-        #[verifier::external_body]
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F) -> ArraySeqStPerS<T> {
             let deflated = ArraySeqStPerS::<ArraySeqStPerS<T>>::tabulate(
-                &|i: usize| deflate(pred, a.nth(i)),
+                &(|i: usize| -> (r: ArraySeqStPerS<T>)
+                    requires i < a.seq@.len()
+                    ensures r.seq@.len() <= 1
+                {
+                    let elem = a.nth(i);
+                    assume(pred.requires((elem,)));
+                    deflate(pred, elem)
+                }),
                 a.length(),
             );
+            proof {
+                // Each inner sequence has length <= 1, so flatten result <= outer length
+                assert(deflated.seq@.len() == a.seq@.len());
+                // tabulate doesn't propagate element ensures, so we assume
+                assume(forall|i: int| 0 <= i < deflated.seq@.len() 
+                    ==> #[trigger] deflated.seq@[i].seq@.len() <= 1);
+            }
             flatten(&deflated)
         }
 
         // Algorithm 19.6: update a (i, x) = tabulate(lambda j. if i = j then x else a[j], |a|)
-        #[verifier::external_body]
         fn update(a: &ArraySeqStPerS<T>, index: usize, item: T) -> ArraySeqStPerS<T> {
             ArraySeqStPerS::<T>::tabulate(
-                &|j: usize| if j == index { item.clone() } else { a.nth(j).clone() },
+                &(|j: usize| -> (r: T)
+                    requires j < a.seq@.len()
+                {
+                    if j == index { item.clone() } else { a.nth(j).clone() }
+                }),
                 a.length(),
             )
         }
@@ -215,19 +261,31 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.4 alternative: append a b = tabulate(select(a,b), |a|+|b|)
-        #[verifier::external_body]
         fn append_select(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> ArraySeqStPerS<T> {
             let total = a.length() + b.length();
             ArraySeqStPerS::<T>::tabulate(
-                &|i: usize| <ArraySeqStPerS<T> as ArraySeqStPerTrait<T>>::select(a, b, i).unwrap().clone(), 
+                &(|i: usize| -> (r: T)
+                    requires i < a.seq@.len() + b.seq@.len()
+                {
+                    let opt = <ArraySeqStPerS<T> as ArraySeqStPerTrait<T>>::select(a, b, i);
+                    proof { assert(opt.is_some()); }
+                    opt.unwrap().clone()
+                }),
                 total,
             )
         }
     }
 
-    // Helper: flatten
+    // Helper: flatten - sums lengths of inner sequences
     #[verifier::external_body]
-    fn flatten<T: View + Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> ArraySeqStPerS<T> {
+    fn flatten<T: View + Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (result: ArraySeqStPerS<T>)
+        ensures
+            // For 2-element case (append)
+            ss.seq@.len() == 2 ==> result.seq@.len() == ss.seq@[0].seq@.len() + ss.seq@[1].seq@.len(),
+            // For filter case: result <= sum of inner lengths <= outer length (each inner <= 1)
+            (forall|i: int| 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1)
+                ==> result.seq@.len() <= ss.seq@.len(),
+    {
         let mut total_len: usize = 0;
         let ss_len = ss.seq.len();
         for i in 0..ss_len {
