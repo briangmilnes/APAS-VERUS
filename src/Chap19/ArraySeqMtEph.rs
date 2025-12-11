@@ -504,6 +504,7 @@ pub mod ArraySeqMtEph {
             start as int + len as int <= a.seq@.len(),
         ensures
             result.seq@.len() == len,
+            forall|j: int| 0 <= j < len ==> cloned(#[trigger] a.seq@[start as int + j], result.seq@[j]),
     {
         let a_len = a.seq.len();
         let mut result: Vec<T> = Vec::with_capacity(len);
@@ -514,9 +515,11 @@ pub mod ArraySeqMtEph {
                 result@.len() == i as int,
                 start as int + len as int <= a_len as int,
                 a_len as int == a.seq@.len(),
+                forall|j: int| 0 <= j < i ==> cloned(#[trigger] a.seq@[start as int + j], result@[j]),
             decreases len - i,
         {
-            result.push(a.seq[start + i].clone());
+            let elem = a.seq[start + i].clone_plus();
+            result.push(elem);
             i += 1;
         }
         ArraySeqMtEphS { seq: result }
