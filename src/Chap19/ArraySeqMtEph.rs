@@ -17,9 +17,10 @@ pub mod ArraySeqMtEph {
     #[cfg(verus_keep_ghost)]
     verus! {
 
-    broadcast use vstd::std_specs::vec::group_vec_axioms;
+    broadcast use {vstd::std_specs::vec::group_vec_axioms, crate::vstdplus::feq::feq::axiom_cloned_implies_eq};
     use vstd::std_specs::clone::*;
     use crate::vstdplus::clone_plus::clone_plus::{ClonePlus, clone_fn, clone_fn2, clone_pred};
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
 
     // Clone spec for ArraySeqMtEphS - defines what cloned() means for this type
     pub assume_specification<T: Clone>
@@ -28,7 +29,7 @@ pub mod ArraySeqMtEph {
         ensures result.seq@ == s.seq@;
 
     // Chapter 19 trait - provides parallel algorithmic implementations
-    pub trait ArraySeqMtEphTrait<T: View + Clone + Send + Sync>: Sized {
+    pub trait ArraySeqMtEphTrait<T: View + Clone + Send + Sync + Eq>: Sized {
         spec fn spec_len(&self) -> nat;
 
         fn empty() -> (result: Self)
@@ -47,9 +48,10 @@ pub mod ArraySeqMtEph {
         fn map<U: View + Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: &Self, f: F, pool: &Pool
         ) -> (result: ArraySeqMtEphS<U>)
-            where Self: Sized, T: 'static
+            where Self: Sized, T: 'static + Eq
             requires
                 a.spec_len() <= usize::MAX as int,
+                obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.nth_spec(i),)),
             ensures
                 result.seq@.len() == a.spec_len();
@@ -68,8 +70,9 @@ pub mod ArraySeqMtEph {
             ensures result.spec_len() == a.spec_len() + b.spec_len();
 
         fn filter<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(a: &Self, pred: F, pool: &Pool) -> (result: Self)
-            where T: 'static
+            where T: 'static + Eq
             requires
+                obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.nth_spec(i),)),
             ensures
                 result.spec_len() <= a.spec_len();
@@ -115,7 +118,7 @@ pub mod ArraySeqMtEph {
             where T: 'static;
     }
 
-    impl<T: View + Clone + Send + Sync> ArraySeqMtEphTrait<T> for ArraySeqMtEphS<T> {
+    impl<T: View + Clone + Send + Sync + Eq> ArraySeqMtEphTrait<T> for ArraySeqMtEphS<T> {
         open spec fn spec_len(&self) -> nat {
             self.seq@.len() as nat
         }
@@ -184,8 +187,38 @@ pub mod ArraySeqMtEph {
 
                 let f1 = clone_fn(&f);
                 let f2 = f;
-                assume(forall|i: int| 0 <= i < left_seq.seq@.len() ==> #[trigger] f1.requires((&left_seq.seq@[i],)));
-                assume(forall|i: int| 0 <= i < right_seq.seq@.len() ==> #[trigger] f2.requires((&right_seq.seq@[i],)));
+                proof {
+                    // subseq_copy(a, 0, mid) ensures: forall|j| 0 <= j < mid ==> cloned(a.seq@[0 + j], left_seq.seq@[j])
+                    // axiom_cloned_implies_eq: cloned(*x, y) && obeys_feq_clone::<T>() ==> *x == y
+                    assert forall|i: int| 0 <= i < left_seq.seq@.len() implies #[trigger] f1.requires((&left_seq.seq@[i],)) by {
+                        // Step 1: Get cloned from subseq_copy
+                        assert(cloned(a.seq@[0 as int + i], left_seq.seq@[i]));  // from subseq_copy ensures
+                        assert(cloned(a.seq@[i], left_seq.seq@[i]));
+                        // Step 2: cloned + obeys_feq_clone ==> equality (via broadcast axiom)
+                        // axiom_cloned_implies_eq should fire here
+                        assert(a.seq@[i] == left_seq.seq@[i]);
+                        // Step 3: Original requires
+                        assert(i < a.seq@.len() as int);  // since i < mid < a.len()
+                        assert(f.requires((&a.nth_spec(i),)));  // from map's requires
+                        assert(a.nth_spec(i) == a.seq@[i]);
+                        assert(f.requires((&a.seq@[i],)));
+                        // Step 4: f1 == f from clone_fn
+                        assert(f1.requires((&a.seq@[i],)));  // from clone_fn ensures
+                        // Step 5: Substitute equal elements
+                        assert(f1.requires((&left_seq.seq@[i],)));
+                    }
+                    assert forall|i: int| 0 <= i < right_seq.seq@.len() implies #[trigger] f2.requires((&right_seq.seq@[i],)) by {
+                        let orig_i = mid as int + i;
+                        assert(cloned(a.seq@[mid as int + i], right_seq.seq@[i]));  // from subseq_copy ensures
+                        assert(a.seq@[orig_i] == right_seq.seq@[i]);  // from axiom_cloned_implies_eq
+                        assert(orig_i < a.seq@.len() as int);
+                        // map's requires uses nth_spec which equals seq@[i]
+                        assert(a.nth_spec(orig_i) == a.seq@[orig_i]);
+                        assert(f.requires((&a.nth_spec(orig_i),)));  // from map's requires
+                        assert(f.requires((&a.seq@[orig_i],)));
+                        // f2 == f (f was moved, not cloned)
+                    }
+                }
 
                 let pool1 = pool.clone_plus();
                 let pool2 = pool.clone_plus();
@@ -256,8 +289,29 @@ pub mod ArraySeqMtEph {
 
                 let p1 = clone_pred(&pred);
                 let p2 = pred;
-                assume(forall|i: int| 0 <= i < left_seq.seq@.len() ==> #[trigger] p1.requires((&left_seq.seq@[i],)));
-                assume(forall|i: int| 0 <= i < right_seq.seq@.len() ==> #[trigger] p2.requires((&right_seq.seq@[i],)));
+                proof {
+                    assert forall|i: int| 0 <= i < left_seq.seq@.len() implies #[trigger] p1.requires((&left_seq.seq@[i],)) by {
+                        assert(cloned(a.seq@[0 as int + i], left_seq.seq@[i]));
+                        assert(cloned(a.seq@[i], left_seq.seq@[i]));
+                        assert(a.seq@[i] == left_seq.seq@[i]);
+                        assert(i < a.seq@.len() as int);
+                        assert(a.nth_spec(i) == a.seq@[i]);
+                        assert(pred.requires((&a.nth_spec(i),)));
+                        assert(pred.requires((&a.seq@[i],)));
+                        assert(p1.requires((&a.seq@[i],)));
+                        assert(p1.requires((&left_seq.seq@[i],)));
+                    }
+                    assert forall|i: int| 0 <= i < right_seq.seq@.len() implies #[trigger] p2.requires((&right_seq.seq@[i],)) by {
+                        let orig_i = mid as int + i;
+                        assert(cloned(a.seq@[mid as int + i], right_seq.seq@[i]));
+                        assert(a.seq@[orig_i] == right_seq.seq@[i]);
+                        assert(orig_i < a.seq@.len() as int);
+                        assert(a.nth_spec(orig_i) == a.seq@[orig_i]);
+                        assert(pred.requires((&a.nth_spec(orig_i),)));
+                        assert(pred.requires((&a.seq@[orig_i],)));
+                        // p2 is pred moved, not cloned
+                    }
+                }
 
                 let pool1 = pool.clone_plus();
                 let pool2 = pool.clone_plus();

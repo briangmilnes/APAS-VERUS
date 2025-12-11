@@ -2,7 +2,18 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn .*(: Fn.*Clone)
-Searching: /home/milnes/projects/verus-lang/source/vstd
-Files: 87, Functions: 2117, Matches: 0
+Pattern: cloned ==
+Searching: src/vstdplus
+Files: 16, Functions: 572, Matches: 2
+
+[31msrc/vstdplus/feq.rs:75: [0m
+/// Lemma: cloned values have equal views when obeys_feq_full holds
+[38;5;22m    pub proof fn lemma_cloned_view_eq<T: Eq + View + Clone + Sized>(x: T, y: T)[0m
+[38;5;22m        requires cloned(x, y), obeys_feq_full::<T>(),[0m
+[38;5;22m        ensures x@ == y@,[0m
+
+[31msrc/vstdplus/feq.rs:162: [0m
+[38;5;22m    pub broadcast proof fn axiom_cloned_implies_eq<T: Eq + Clone + Sized>(x: &T, y: T)[0m
+[38;5;22m        requires #[trigger] cloned(*x, y), obeys_feq_clone::<T>()[0m
+[38;5;22m        ensures *x == y[0m
 
