@@ -13,6 +13,8 @@ pub mod ArraySeqMtPer {
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::Pool;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
 
     #[cfg(verus_keep_ghost)]
     verus! {
@@ -457,8 +459,8 @@ pub mod ArraySeqMtPer {
             let mid = len / 2;
             let left_seq = a.subseq_copy(0, mid);
             let right_seq = a.subseq_copy(mid, len - mid);
-            let pool1 = pool.clone();
-            let pool2 = pool.clone();
+            let pool1 = pool.clone_plus();
+            let pool2 = pool.clone_plus();
 
             let fa = move || -> (r: i64)
                 ensures true,

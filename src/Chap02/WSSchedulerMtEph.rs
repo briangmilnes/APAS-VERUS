@@ -4,6 +4,7 @@
 pub mod WSSchedulerMtEph {
     use vstd::prelude::*;
     use crate::vstdplus::threads_plus::threads_plus::{spawn_plus, JoinHandlePlus};
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::Concurrency::diverge;
     use std::sync::Arc;
     use std::sync::atomic::{AtomicUsize, Ordering};
@@ -19,6 +20,15 @@ verus! {
         #[verifier::external_body]
         fn clone(&self) -> Self {
             Pool { budget: self.budget.clone() }
+        }
+    }
+
+    impl Pool {
+        /// Clone with spec: cloned(*self, result)
+        pub fn clone_plus(&self) -> (result: Self)
+            ensures cloned(*self, result),
+        {
+            self.clone()
         }
     }
 
