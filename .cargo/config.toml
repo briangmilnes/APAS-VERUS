@@ -1,0 +1,8 @@
+# Make release builds the default via aliases
+[alias]
+b = "build --release"
+t = "test --release"
+r = "run --release"
+br = "build --release"
+tr = "test --release"
+
