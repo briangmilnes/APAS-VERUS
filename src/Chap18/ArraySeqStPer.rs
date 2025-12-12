@@ -98,6 +98,7 @@ pub mod ArraySeqStPer {
 
         pub fn nth(&self, index: usize) -> (result: &T)
             requires index < self.seq@.len()
+            ensures *result == self.seq@[index as int]
         {
             &self.seq[index]
         }

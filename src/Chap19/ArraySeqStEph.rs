@@ -125,7 +125,7 @@ pub mod ArraySeqStEph {
                     i <= length,
                     seq@.len() == i as int,
                     forall|j: usize| j < length ==> #[trigger] f.requires((j,)),
-                    forall|j: usize| j < i ==> f.ensures((j,), seq@[j as int]),
+                    forall|j: usize| #![auto] j < i ==> f.ensures((j,), seq@[j as int]),
                 decreases length - i,
             {
                 seq.push(f(i));
@@ -172,52 +172,58 @@ pub mod ArraySeqStEph {
         }
 
         fn append(a: &ArraySeqStEphS<T>, b: &ArraySeqStEphS<T>) -> (result: ArraySeqStEphS<T>) {
-            // Define closure explicitly so we can reference it in proof
-            let f = |i: usize| -> (r: ArraySeqStEphS<T>)
-                requires i < 2
-                ensures
-                    i == 0 ==> r.seq@ == a.seq@,
-                    i == 1 ==> r.seq@ == b.seq@,
-            {
-                if i == 0 { a.clone_plus() } else { b.clone_plus() }
-            };
-            let pair = ArraySeqStEphS::<ArraySeqStEphS<T>>::tabulate(&f, 2);
+            // Construct pair manually to avoid opaque f.ensures
+            let a_clone = a.clone_plus();
+            let b_clone = b.clone_plus();
+            proof {
+                assert(a_clone.seq@ =~= a.seq@);
+                assert(b_clone.seq@ =~= b.seq@);
+            }
+            let mut pair_vec: Vec<ArraySeqStEphS<T>> = Vec::with_capacity(2);
+            pair_vec.push(a_clone);
+            pair_vec.push(b_clone);
+            let pair = ArraySeqStEphS::<ArraySeqStEphS<T>> { seq: pair_vec };
             proof {
                 assert(pair.spec_len() == 2);
-                // tabulate ensures f.ensures((j,), pair.nth_spec(j)) but SMT doesn't
-                // connect closure ensures to f.ensures - would need explicit lemma
-                assume(pair.seq@[0].seq@.len() == a.seq@.len());
-                assume(pair.seq@[1].seq@.len() == b.seq@.len());
+                assert(pair.seq@[0].seq@.len() == a.seq@.len());
+                assert(pair.seq@[1].seq@.len() == b.seq@.len());
             }
             flatten(&pair)
         }
 
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStEphS<T>, pred: &F) -> (result: ArraySeqStEphS<T>) {
-            // Inline deflate: if pred(x) then singleton(x) else empty()
-            // singleton ensures spec_len() == 1, empty ensures spec_len() == 0
-            let deflated = ArraySeqStEphS::<ArraySeqStEphS<T>>::tabulate(
-                &(|i: usize| -> (r: ArraySeqStEphS<T>)
-                    requires
-                        (i as int) < a.spec_len(),
-                        pred.requires((&a.nth_spec(i as int),)),
-                    ensures
-                        r.spec_len() <= 1,
-                {
-                    let elem = &a.seq[i];
-                    if pred(elem) {
-                        Self::singleton(elem.clone())
-                    } else {
-                        Self::empty()
-                    }
-                }),
-                a.seq.len(),
-            );
+            // Build deflated array manually to avoid opaque f.ensures
+            let n = a.seq.len();
+            let mut deflated_vec: Vec<ArraySeqStEphS<T>> = Vec::with_capacity(n);
             proof {
-                // tabulate ensures f.ensures((j,), deflated.nth_spec(j)) but SMT doesn't
-                // connect closure ensures to f.ensures - would need explicit lemma
-                assume(forall|i: int| #![auto] 0 <= i < deflated.seq@.len()
-                    ==> deflated.seq@[i].seq@.len() <= 1);
+                // Connect nth_spec to seq@ for invariant
+                assert forall|j: usize| j < n implies #[trigger] pred.requires((&a.seq@[j as int],)) by {
+                    assert(a.nth_spec(j as int) == a.seq@[j as int]);
+                }
             }
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    i <= n,
+                    n == a.seq@.len(),
+                    deflated_vec@.len() == i as int,
+                    forall|j: int| 0 <= j < i as int ==> #[trigger] deflated_vec@[j].seq@.len() <= 1,
+                    forall|j: usize| j < n ==> #[trigger] pred.requires((&a.seq@[j as int],)),
+                decreases n - i,
+            {
+                let elem = &a.seq[i];
+                let deflated_elem = if pred(elem) {
+                    Self::singleton(elem.clone())
+                } else {
+                    Self::empty()
+                };
+                proof {
+                    assert(deflated_elem.seq@.len() <= 1);
+                }
+                deflated_vec.push(deflated_elem);
+                i += 1;
+            }
+            let deflated = ArraySeqStEphS::<ArraySeqStEphS<T>> { seq: deflated_vec };
             flatten(&deflated)
         }
 

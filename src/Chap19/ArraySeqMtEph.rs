@@ -242,21 +242,21 @@ pub mod ArraySeqMtEph {
         }
 
         fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (result: ArraySeqMtEphS<T>) {
-            let pair = ArraySeqMtEphS::<ArraySeqMtEphS<T>>::tabulate(
-                &(|i: usize| -> (r: ArraySeqMtEphS<T>)
-                    requires i < 2
-                    ensures
-                        i == 0 ==> r.seq@ == a.seq@,
-                        i == 1 ==> r.seq@ == b.seq@,
-                {
-                    if i == 0 { a.clone_plus() } else { b.clone_plus() }
-                }),
-                2,
-            );
+            // Construct pair manually to avoid opaque f.ensures
+            let a_clone = a.clone_plus();
+            let b_clone = b.clone_plus();
             proof {
-                assert(pair.seq@.len() == 2);
-                assume(pair.seq@[0].seq@.len() == a.seq@.len());
-                assume(pair.seq@[1].seq@.len() == b.seq@.len());
+                assert(a_clone.seq@ =~= a.seq@);
+                assert(b_clone.seq@ =~= b.seq@);
+            }
+            let mut pair_vec: Vec<ArraySeqMtEphS<T>> = Vec::with_capacity(2);
+            pair_vec.push(a_clone);
+            pair_vec.push(b_clone);
+            let pair = ArraySeqMtEphS::<ArraySeqMtEphS<T>> { seq: pair_vec };
+            proof {
+                assert(pair.spec_len() == 2);
+                assert(pair.seq@[0].seq@.len() == a.seq@.len());
+                assert(pair.seq@[1].seq@.len() == b.seq@.len());
             }
             flatten_seq(&pair)
         }
@@ -266,21 +266,33 @@ pub mod ArraySeqMtEph {
             decreases a.seq@.len()
         {
             if a.seq.len() <= 1 {
-                let deflated = ArraySeqMtEphS::<ArraySeqMtEphS<T>>::tabulate(
-                    &(|i: usize| -> (r: ArraySeqMtEphS<T>)
-                        requires
-                            (i as int) < a.spec_len(),
-                            pred.requires((&a.nth_spec(i as int),)),
-                    {
-                        let elem = &a.seq[i];
-                        Self::deflate(&pred, elem)
-                    }),
-                    a.seq.len(),
-                );
+                // Build deflated array manually to avoid opaque f.ensures
+                let n = a.seq.len();
+                let mut deflated_vec: Vec<ArraySeqMtEphS<T>> = Vec::with_capacity(n);
                 proof {
-                    assume(forall|i: int| #![auto] 0 <= i < deflated.seq@.len()
-                        ==> deflated.seq@[i].seq@.len() <= 1);
+                    assert forall|j: usize| j < n implies #[trigger] pred.requires((&a.seq@[j as int],)) by {
+                        assert(a.nth_spec(j as int) == a.seq@[j as int]);
+                    }
                 }
+                let mut i: usize = 0;
+                while i < n
+                    invariant
+                        i <= n,
+                        n == a.seq@.len(),
+                        deflated_vec@.len() == i as int,
+                        forall|j: int| 0 <= j < i as int ==> #[trigger] deflated_vec@[j].seq@.len() <= 1,
+                        forall|j: usize| j < n ==> #[trigger] pred.requires((&a.seq@[j as int],)),
+                    decreases n - i,
+                {
+                    let elem = &a.seq[i];
+                    let deflated_elem = Self::deflate(&pred, elem);
+                    proof {
+                        assert(deflated_elem.seq@.len() <= 1);
+                    }
+                    deflated_vec.push(deflated_elem);
+                    i += 1;
+                }
+                let deflated = ArraySeqMtEphS::<ArraySeqMtEphS<T>> { seq: deflated_vec };
                 flatten_seq(&deflated)
             } else {
                 let mid = a.seq.len() / 2;

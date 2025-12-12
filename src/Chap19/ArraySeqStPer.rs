@@ -108,64 +108,77 @@ pub mod ArraySeqStPer {
 
         // Algorithm 19.3: map f a = tabulate(lambda i.f(a[i]), |a|)
         fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> ArraySeqStPerS<U> {
+            let n = a.length();
+            proof {
+                // Connect outer requires to closure requires
+                assert forall|i: usize| i < n implies (i as int) < a.spec_len() && #[trigger] f.requires((&a.seq@[i as int],)) by {
+                    assert(a.nth_spec(i as int) == a.seq@[i as int]);
+                }
+            }
             ArraySeqStPerS::<U>::tabulate(
                 &(|i: usize| -> (r: U)
                     requires
                         (i as int) < a.spec_len(),
-                        f.requires((&a.nth_spec(i as int),)),
+                        f.requires((&a.seq@[i as int],)),
                 {
                     let elem = a.nth(i);
-                    assume(f.requires((elem,)));  // nth returns &seq[i], nth_spec returns seq@[i]
                     f(elem)
                 }),
-                a.length(),
+                n,
             )
         }
 
         // Algorithm 19.4: append a b = flatten([a, b])
         fn append(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> ArraySeqStPerS<T> {
-            let pair = ArraySeqStPerS::<ArraySeqStPerS<T>>::tabulate(
-                &(|i: usize| -> (r: ArraySeqStPerS<T>)
-                    requires i < 2
-                    ensures
-                        i == 0 ==> r.seq@ == a.seq@,
-                        i == 1 ==> r.seq@ == b.seq@,
-                {
-                    if i == 0 { a.clone_plus() } else { b.clone_plus() }
-                }),
-                2,
-            );
+            // Construct pair manually to avoid opaque f.ensures
+            let a_clone = a.clone_plus();
+            let b_clone = b.clone_plus();
             proof {
-                assert(pair.seq@.len() == 2);
-                // Help Verus see the element lengths
-                assume(pair.seq@[0].seq@.len() == a.seq@.len());
-                assume(pair.seq@[1].seq@.len() == b.seq@.len());
+                assert(a_clone.seq@ =~= a.seq@);
+                assert(b_clone.seq@ =~= b.seq@);
+            }
+            let mut pair_vec: Vec<ArraySeqStPerS<T>> = Vec::with_capacity(2);
+            pair_vec.push(a_clone);
+            pair_vec.push(b_clone);
+            let pair = ArraySeqStPerS::<ArraySeqStPerS<T>> { seq: pair_vec };
+            proof {
+                assert(pair.spec_len() == 2);
+                assert(pair.seq@[0].seq@.len() == a.seq@.len());
+                assert(pair.seq@[1].seq@.len() == b.seq@.len());
             }
             flatten(&pair)
         }
 
         // Algorithm 19.5: filter f a = flatten(map(deflate f, a))
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F) -> ArraySeqStPerS<T> {
-            let deflated = ArraySeqStPerS::<ArraySeqStPerS<T>>::tabulate(
-                &(|i: usize| -> (r: ArraySeqStPerS<T>)
-                    requires
-                        (i as int) < a.spec_len(),
-                        pred.requires((&a.nth_spec(i as int),)),
-                    ensures r.seq@.len() <= 1
-                {
-                    let elem = a.nth(i);
-                    assume(pred.requires((elem,)));  // nth returns &seq[i], nth_spec returns seq@[i]
-                    deflate(pred, elem)
-                }),
-                a.length(),
-            );
+            // Build deflated array manually to avoid opaque f.ensures
+            let n = a.length();
+            let mut deflated_vec: Vec<ArraySeqStPerS<T>> = Vec::with_capacity(n);
             proof {
-                // Each inner sequence has length <= 1, so flatten result <= outer length
-                assert(deflated.seq@.len() == a.seq@.len());
-                // tabulate doesn't propagate element ensures, so we assume
-                assume(forall|i: int| 0 <= i < deflated.seq@.len() 
-                    ==> #[trigger] deflated.seq@[i].seq@.len() <= 1);
+                // Connect outer requires (nth_spec) to seq@
+                assert forall|j: usize| j < n implies #[trigger] pred.requires((&a.seq@[j as int],)) by {
+                    assert(a.nth_spec(j as int) == a.seq@[j as int]);
+                }
             }
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    i <= n,
+                    n == a.seq@.len(),
+                    deflated_vec@.len() == i as int,
+                    forall|j: int| 0 <= j < i as int ==> #[trigger] deflated_vec@[j].seq@.len() <= 1,
+                    forall|j: usize| j < n ==> #[trigger] pred.requires((&a.seq@[j as int],)),
+                decreases n - i,
+            {
+                let elem = a.nth(i);
+                let deflated_elem = deflate(pred, elem);
+                proof {
+                    assert(deflated_elem.seq@.len() <= 1);
+                }
+                deflated_vec.push(deflated_elem);
+                i += 1;
+            }
+            let deflated = ArraySeqStPerS::<ArraySeqStPerS<T>> { seq: deflated_vec };
             flatten(&deflated)
         }
 
