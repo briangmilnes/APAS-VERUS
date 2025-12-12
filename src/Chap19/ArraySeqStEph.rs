@@ -40,7 +40,7 @@ pub mod ArraySeqStEph {
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
             ensures
                 result.spec_len() == length,
-                forall|j: usize| #![auto] j < length ==> f.ensures((j,), result.nth_spec(j as int));
+                forall|j: usize| j < length ==> f.ensures((j,), #[trigger] result.nth_spec(j as int));
 
         fn map<U: View + Clone, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqStEphS<U>
             where Self: Sized
@@ -184,24 +184,8 @@ pub mod ArraySeqStEph {
             let pair = ArraySeqStEphS::<ArraySeqStEphS<T>>::tabulate(&f, 2);
             proof {
                 assert(pair.spec_len() == 2);
-                // From tabulate ensures: forall|j: usize| j < 2 ==> f.ensures((j,), pair.nth_spec(j as int))
-                // Instantiate at j=0: 0 < 2 ==> f.ensures((0,), pair.nth_spec(0))
-                // Instantiate at j=1: 1 < 2 ==> f.ensures((1,), pair.nth_spec(1))
-                
-                // The closure's ensures for f.ensures((i,), r):
-                //   (i == 0 ==> r.seq@ == a.seq@) && (i == 1 ==> r.seq@ == b.seq@)
-                // At i=0: r.seq@ == a.seq@
-                // At i=1: r.seq@ == b.seq@
-                
-                // So:
-                // f.ensures((0,), pair.nth_spec(0)) ==> pair.nth_spec(0).seq@ == a.seq@
-                // f.ensures((1,), pair.nth_spec(1)) ==> pair.nth_spec(1).seq@ == b.seq@
-                
-                // pair.nth_spec(i) = pair.seq@[i], so:
-                // pair.seq@[0].seq@ == a.seq@
-                // pair.seq@[1].seq@ == b.seq@
-                
-                // For flatten: need pair.seq@[0].seq@.len() == a.seq@.len() etc.
+                // tabulate ensures f.ensures((j,), pair.nth_spec(j)) but SMT doesn't
+                // connect closure ensures to f.ensures - would need explicit lemma
                 assume(pair.seq@[0].seq@.len() == a.seq@.len());
                 assume(pair.seq@[1].seq@.len() == b.seq@.len());
             }
@@ -209,18 +193,28 @@ pub mod ArraySeqStEph {
         }
 
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStEphS<T>, pred: &F) -> (result: ArraySeqStEphS<T>) {
+            // Inline deflate: if pred(x) then singleton(x) else empty()
+            // singleton ensures spec_len() == 1, empty ensures spec_len() == 0
             let deflated = ArraySeqStEphS::<ArraySeqStEphS<T>>::tabulate(
                 &(|i: usize| -> (r: ArraySeqStEphS<T>)
                     requires
                         (i as int) < a.spec_len(),
                         pred.requires((&a.nth_spec(i as int),)),
+                    ensures
+                        r.spec_len() <= 1,
                 {
                     let elem = &a.seq[i];
-                    Self::deflate(pred, elem)
+                    if pred(elem) {
+                        Self::singleton(elem.clone())
+                    } else {
+                        Self::empty()
+                    }
                 }),
                 a.seq.len(),
             );
             proof {
+                // tabulate ensures f.ensures((j,), deflated.nth_spec(j)) but SMT doesn't
+                // connect closure ensures to f.ensures - would need explicit lemma
                 assume(forall|i: int| #![auto] 0 <= i < deflated.seq@.len()
                     ==> deflated.seq@[i].seq@.len() <= 1);
             }
