@@ -29,6 +29,8 @@ This document captures lessons learned from converting APAS (Algorithms Parallel
 
 When verusifying APAS source, **keep the original trait definitions exactly as written in APAS-AI, including all their comments and complexity notes**. Do not split or rename traits unless the APAS source already does so. Treat traits as the stable API surface; only add the verification-specific machinery around them (e.g., `verus!` blocks, views, ghost functions).
 
+Preferred approach: keep the trait surface and comments, then add a `View` plus spec accessors on the concrete type so you can write `requires`/`ensures` that reference the ghost model without altering the trait signature.
+
 ## 2. Trait Bounds and `StT`
 
 The base trait for single-threaded friendly types:
