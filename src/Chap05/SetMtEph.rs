@@ -106,10 +106,12 @@ verus! {
             self@.finite()
         }
 
+        /// APAS: Work Θ(|v|), Span Θ(1)
         fn from_vec(v: Vec<T>) -> (s: SetMtEph<T>)
             requires valid_key_type::<T>()
             ensures s@.finite(), s@ == v@.map(|i: int, x: T| x@).to_set();
 
+        /// APAS: Work Θ(1), Span Θ(1)
         fn iter<'a>(&'a self) -> (it: SetMtEphIter<'a, T>)
             requires valid_key_type::<T>()
             ensures
@@ -149,6 +151,7 @@ verus! {
                 inserted == !old(self)@.contains(x@);
 
         /// APAS: Work Θ(|a| + |b|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)
         fn union(&self, s2: &SetMtEph<T>) -> (union: Self)
             requires 
                valid_key_type::<T>(),
@@ -166,6 +169,7 @@ verus! {
                union@.len() == self@.len() + s2@.len();
 
         /// APAS: Work Θ(|a| + |b|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)
         fn intersection(&self, s2: &SetMtEph<T>) -> (intersection: Self)
             requires valid_key_type::<T>()
             ensures intersection@.finite(), intersection@ == self@.intersect(s2@);
@@ -179,7 +183,8 @@ verus! {
                product@.finite(),
                forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (av == a@ && s2@.contains(bv));
 
-        /// APAS: Work Θ(|a| × |b|), Span Θ(|b|) with |a| threads
+        /// APAS: Work Θ(|a| × |b|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|a| × |b|), Span Θ(1)
         fn cartesian_product<U: StT + Hash + Clone + Send + Sync + 'static>(&self, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)
             where T: Send + Sync + 'static, Pair<T, U>: StT + Hash + View<V = (T::V, U::V)>,
             requires 

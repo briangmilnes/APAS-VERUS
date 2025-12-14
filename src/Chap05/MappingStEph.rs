@@ -121,26 +121,33 @@ verus! {
 
         spec fn is_functional(&self) -> bool;
 
+        /// APAS: Work Θ(|v|), Span Θ(1)
         fn is_functional_vec(v: &Vec<Pair<X, Y>>) -> (functional: bool)
             requires valid_key_type_Pair::<X, Y>()
             ensures functional == is_functional_seq(v@);
 
+        /// APAS: Work Θ(|v|), Span Θ(1)
         fn is_functional_vec_at(v: &Vec<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool)
             requires valid_key_type_Pair::<X, Y>()
             ensures functional == is_functional_seq_at(v@, p@);
 
+        /// APAS: Work Θ(|s|), Span Θ(1)
         fn is_functional_SetStEph_at(s: &SetStEph<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool)
             requires valid_key_type_Pair::<X, Y>()
             ensures functional == is_functional_set_at(s@, p@);
 
+        /// APAS: Work Θ(|s|), Span Θ(1)
         fn is_functional_SetStEph(s: &SetStEph<Pair<X, Y>>) -> (functional: bool)
             requires valid_key_type_Pair::<X, Y>()
             ensures functional == is_functional_set(s@);
 
+        /// APAS: Work Θ(|r|), Span Θ(1)
         fn is_functional_RelationStEph(r: &RelationStEph<X, Y>) -> (functional: bool)
             requires valid_key_type_Pair::<X, Y>()
             ensures functional == is_functional_relation(*r);
 
+        /// APAS: Work Θ(1), Span Θ(1)
+        /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
             requires valid_key_type_Pair::<X, Y>()
             ensures 
@@ -148,29 +155,41 @@ verus! {
                 empty@ == Map::<X::V, Y::V>::empty(),
                 empty.is_functional();
 
+        /// APAS: Work Θ(|v|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|v|), Span Θ(1)
         fn from_vec(v: Vec<Pair<X, Y>>) -> (mapping: Self)
             requires valid_key_type_Pair::<X, Y>(), is_functional_seq(v@)
             ensures mapping@.dom().finite(), mapping.is_functional();
 
+        /// APAS: Work Θ(|r|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|r|), Span Θ(1)
         fn from_relation(r: &RelationStEph<X, Y>) -> (mapping: Self)
             requires valid_key_type_Pair::<X, Y>(), is_functional_relation(*r)
             ensures mapping@.dom().finite(), mapping.is_functional();
 
+        /// APAS: Work Θ(1), Span Θ(1)
+        /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> N
             requires self.is_functional();
 
+        /// APAS: Work Θ(|m|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|m|), Span Θ(1)
         fn domain(&self) -> (domain: SetStEph<X>)
             requires valid_key_type_Pair::<X, Y>(), self.is_functional()
             ensures domain@.finite(), domain@ == self@.dom();
 
+        /// APAS: Work Θ(|m|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|m|), Span Θ(1)
         fn range(&self) -> (range: SetStEph<Y>)
             requires valid_key_type_Pair::<X, Y>(), self.is_functional()
             ensures range@.finite(), range@ =~= Set::<Y::V>::new(|y: Y::V| exists |x: X::V| #![trigger self@[x]] self@.dom().contains(x) && self@[x] == y);
 
+        /// APAS: Work Θ(1), Span Θ(1)
         fn mem(&self, p: &Pair<X, Y>) -> (contains: B)
             requires valid_key_type_Pair::<X, Y>(), self.is_functional()
             ensures contains == (self@.dom().contains(p@.0) && self@[p@.0] == p@.1);
 
+        /// APAS: Work Θ(1), Span Θ(1)
         fn iter<'a>(&'a self) -> (it: MappingStEphIter<'a, X, Y>)
             requires valid_key_type_Pair::<X, Y>(), self.is_functional()
             ensures

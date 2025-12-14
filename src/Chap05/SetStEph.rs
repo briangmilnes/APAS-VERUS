@@ -103,10 +103,12 @@ verus! {
             self@.finite()
         }
 
+        /// APAS: Work Θ(|v|), Span Θ(1)
         fn from_vec(v: Vec<T>) -> (s: SetStEph<T>)
             requires valid_key_type::<T>()
             ensures s@.finite(), s@ == v@.map(|i: int, x: T| x@).to_set();
 
+        /// APAS: Work Θ(1), Span Θ(1)
         fn iter<'a>(&'a self) -> (it: SetStEphIter<'a, T>)
             requires valid_key_type::<T>()
             ensures

@@ -105,6 +105,8 @@ verus! {
             requires valid_key_type_Pair::<X, Y>()
             ensures relation@.finite(), relation@ == pairs@;
 
+        /// APAS: Work Θ(|pairs|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|pairs|), Span Θ(1)
         fn from_vec(v: Vec<Pair<X, Y>>) -> (relation: Self)
             requires valid_key_type_Pair::<X, Y>()
             ensures relation@.finite(), relation@ == v@.map(|i: int, p: Pair<X, Y>| p@).to_set();
@@ -135,6 +137,7 @@ verus! {
             requires valid_key_type_Pair::<X, Y>()
             ensures contains == self@.contains(p@);
 
+        /// APAS: Work Θ(1), Span Θ(1)
         fn iter<'a>(&'a self) -> (it: RelationStEphIter<'a, X, Y>)
             requires valid_key_type_Pair::<X, Y>()
             ensures
