@@ -24,51 +24,87 @@ pub mod ArraySeq {
         pub seq: Vec<T>,
     }
 
-    /// Data Type 18.1: Base trait for array-backed sequences.
-    /// These methods are never redefined in later chapters.
-    pub trait ArraySeqBaseTrait<T>: Sized {
-        /// Work Θ(n), Span Θ(1)
+    /// Data Type 18.1: Generic sequence trait for array-backed sequences.
+    pub trait ArraySeqTrait<T>: Sized {
+        /// Create a new sequence of length `length` with each element initialized to `init_value`.
+        /// Work Θ(length), Span Θ(1).
         fn new(length: usize, init_value: T) -> Self where T: Clone;
-        /// Work Θ(1), Span Θ(1)
-        fn set(&mut self, index: usize, item: T) -> Result<(), &'static str>;
-        /// Work Θ(1), Span Θ(1)
-        fn length(&self) -> usize;
-        /// Work Θ(1), Span Θ(1)
-        fn nth(&self, index: usize) -> &T;
-        /// Work Θ(len), Span Θ(1)
-        fn subseq(a: &ArraySeqS<T>, start: usize, length: usize) -> Self where T: Clone;
-        /// Work Θ(Σ|a[i]|), Span Θ(1)
-        fn flatten(a: &ArraySeqS<ArraySeqS<T>>) -> Self where T: Clone;
-        /// Work Θ(n), Span Θ(1)
-        fn from_vec(elts: Vec<T>) -> Self;
-    }
 
-    /// Redefinable trait - may be overridden with better algorithms in later chapters.
-    pub trait ArraySeqRedefinableTrait<T>: Sized {
-        /// Work Θ(1), Span Θ(1)
+        /// Set the element at `index` to `item` in place.
+        /// Work Θ(1), Span Θ(1).
+        fn set(&mut self, index: usize, item: T) -> Result<(), &'static str>;
+
+        /// Definition 18.1 (length). Return the number of elements.
+        /// Work Θ(1), Span Θ(1).
+        fn length(&self) -> usize;
+
+        /// Algorithm 19.11 (Function nth). Return a reference to the element at `index`.
+        /// Work Θ(1), Span Θ(1).
+        fn nth(&self, index: usize) -> &T;
+
+        /// Definition 18.1 (empty). Construct the empty sequence.
+        /// Work Θ(1), Span Θ(1).
         fn empty() -> Self;
-        /// Work Θ(1), Span Θ(1)
+
+        /// Definition 18.1 (singleton). Construct a singleton sequence containing `item`.
+        /// Work Θ(1), Span Θ(1).
         fn singleton(item: T) -> Self;
-        /// Work Θ(n), Span Θ(1)
+
+        /// Algorithm 18.3 (tabulate). Build a sequence by applying `f` to each index.
+        /// Work Θ(length), Span Θ(1).
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> ArraySeqS<T>;
-        /// Work Θ(|a|), Span Θ(1)
+
+        /// Algorithm 18.4 (map). Transform each element via `f`.
+        /// Work Θ(|a|), Span Θ(1).
         fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqS<T>, f: &F) -> ArraySeqS<U>;
-        /// Work Θ(|a|+|b|), Span Θ(1)
+
+        /// Definition 18.12 (subseq). Extract a contiguous subsequence.
+        /// Work Θ(length), Span Θ(1).
+        fn subseq(a: &ArraySeqS<T>, start: usize, length: usize) -> Self where T: Clone;
+
+        /// Definition 18.13 (append). Concatenate two sequences.
+        /// Work Θ(|a| + |b|), Span Θ(1).
         fn append(a: &ArraySeqS<T>, b: &ArraySeqS<T>) -> Self where T: Clone;
-        /// Work Θ(|a|), Span Θ(1)
+
+        /// Definition 18.14 (filter). Keep elements satisfying `pred`.
+        /// Work Θ(|a|), Span Θ(1).
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqS<T>, pred: &F) -> Self where T: Clone;
-        /// Work Θ(|a|), Span Θ(1)
+
+        /// Definition 18.15 (flatten). Concatenate a sequence of sequences.
+        /// Work Θ(total length), Span Θ(1).
+        fn flatten(a: &ArraySeqS<ArraySeqS<T>>) -> Self where T: Clone;
+
+        /// Definition 18.16 (update). Return a copy with the index replaced by the new value.
+        /// Work Θ(|a|), Span Θ(1).
         fn update(a: &ArraySeqS<T>, index: usize, item: T) -> Self where T: Clone;
-        /// Work Θ(1), Span Θ(1)
+
+        /// Definition 18.5 (isEmpty). true iff the sequence has length zero.
+        /// Work Θ(1), Span Θ(1).
         fn is_empty(&self) -> bool;
-        /// Work Θ(1), Span Θ(1)
+
+        /// Definition 18.5 (isSingleton). true iff the sequence has length one.
+        /// Work Θ(1), Span Θ(1).
         fn is_singleton(&self) -> bool;
-        /// Work Θ(|a|), Span Θ(1)
+
+        /// Definition 18.7 (iterate). Fold with accumulator `seed`.
+        /// Work Θ(|a|), Span Θ(1).
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqS<T>, f: &F, seed: A) -> A;
-        /// Work Θ(|a|), Span Θ(1)
+
+        /// Definition 18.18 (reduce). Combine elements using associative `f` and identity `id`.
+        /// Work Θ(|a|), Span Θ(1).
         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, id: T) -> T where T: Clone;
-        /// Work Θ(|a|), Span Θ(1)
+
+        /// Definition 18.19 (scan). Prefix-reduce returning partial sums and total.
+        /// Work Θ(|a|), Span Θ(1).
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, id: T) -> (ArraySeqS<T>, T) where T: Clone;
+
+        /// Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
+        /// Work Θ(length), Span Θ(1).
+        fn subseq_copy(&self, start: usize, length: usize) -> ArraySeqS<T> where T: Clone;
+
+        /// Create sequence from Vec.
+        /// Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
+        fn from_vec(elts: Vec<T>) -> Self;
     }
 
     impl<T: View> View for ArraySeqS<T> {
