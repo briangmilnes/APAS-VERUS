@@ -18,17 +18,17 @@
 | Module | Trait structure vs APAS | Comments parity | Trait requires/ensures | View bound in trait | Notes |
 | --- | --- | --- | --- | --- | --- |
 | DirGraphStEph | Same single trait | Mostly preserved | Yes (view-based) | Yes (`View<V = GraphView<…>>`) | Matches keep-trait + add-view pattern |
-| LabDirGraphStEph | Same single trait | Mostly preserved | Yes | Yes | Matches pattern |
-| LabUnDirGraphStEph | Same single trait | Mostly preserved | Yes | Yes | Matches pattern |
-| UnDirGraphStEph | Same single trait | Mostly preserved | Yes | Yes | Matches pattern |
-| WeightedDirGraphStEph* (per-type in VERUS) | APAS has int/float variants; VERUS split into many numeric-specific traits | Partially preserved | Yes | Yes | Diverges in type granularity; otherwise follows view/spec pattern |
-| WeightedUnDirGraphStEph* | APAS int/float; VERUS per-type | Partially preserved | Yes | Yes | Same divergence as above |
-| DirGraphMtEph | Same single trait | Mostly preserved | Yes | Yes | Matches pattern |
-| UnDirGraphMtEph | Same single trait | Mostly preserved | Yes | Yes | Matches pattern |
-| LabDirGraphMtEph | Same single trait | Mostly preserved | Yes | Yes | Matches pattern |
-| LabUnDirGraphMtEph | Same single trait | Mostly preserved | Yes | Yes | Matches pattern |
-| WeightedDirGraphMtEphInt | APAS int/float variants; VERUS int only | Partially preserved | Yes | Yes | Diverges in numeric coverage |
-| WeightedUnDirGraphMtEphInt | APAS int/float; VERUS int only | Partially preserved | Yes | Yes | Diverges in numeric coverage |
+| LabDirGraphStEph | Same single trait | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
+| LabUnDirGraphStEph | Same single trait | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
+| UnDirGraphStEph | Same single trait | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
+| WeightedDirGraphStEph* (per-type in VERUS) | APAS has int/float variants; VERUS split into many numeric-specific traits | Partially preserved | Yes | Yes | Diverges in type granularity; otherwise follows keep-trait + add-view pattern |
+| WeightedUnDirGraphStEph* | APAS int/float; VERUS per-type | Partially preserved | Yes | Yes | Same divergence; otherwise keep-trait + add-view pattern |
+| DirGraphMtEph | Same single trait | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
+| UnDirGraphMtEph | Same single trait | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
+| LabDirGraphMtEph | Same single trait | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
+| LabUnDirGraphMtEph | Same single trait | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
+| WeightedDirGraphMtEphInt | APAS int/float variants; VERUS int only | Partially preserved | Yes | Yes | Diverges numeric coverage; otherwise keep-trait + add-view pattern |
+| WeightedUnDirGraphMtEphInt | APAS int/float; VERUS int only | Partially preserved | Yes | Yes | Diverges numeric coverage; otherwise keep-trait + add-view pattern |
 
 ## Chap17 mathseq: APAS vs APAS-VERUS
 - No traits in Chap17 (mathseq) in either codebase; parity not applicable.
@@ -47,8 +47,20 @@
 | Module | Trait structure vs APAS | Comments parity | Trait requires/ensures | View bound in trait | Notes |
 | --- | --- | --- | --- | --- | --- |
 | ArraySeqStPer.rs | Single trait (matches APAS) | Mostly preserved | Yes (view-based `spec_len`/`nth_spec`) | Yes | Matches keep-trait + add-view pattern |
-| ArraySeqStEph.rs | Single trait | Mostly preserved | Yes (view-based) | Yes | Matches pattern |
-| ArraySeqMtEph.rs | Single trait | Mostly preserved | Yes (view-based) | Yes | Matches pattern |
+| ArraySeqStEph.rs | Single trait | Mostly preserved | Yes (view-based) | Yes | Matches keep-trait + add-view pattern |
+| ArraySeqMtEph.rs | Single trait | Mostly preserved | Yes (view-based) | Yes | Matches keep-trait + add-view pattern |
+
+## Chap18 proof-hole status (veracity-review-proof-holes)
+- Command: `~/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap18`
+- Results: 7 holed modules, each with 1 × `assume()` iterator bound check (`self.pos <= self.elements.len()`)
+  - ArraySeq.rs
+  - ArraySeqMtEph.rs
+  - ArraySeqMtPer.rs
+  - ArraySeqStEph.rs
+  - ArraySeqStPer.rs
+  - LinkedListStEph.rs
+  - LinkedListStPer.rs
+
 
 ## Guidance moving forward
 - If closer parity is needed for weighted graphs, consolidate the per-type traits back to the APAS int/float shapes while retaining view/spec contracts.
