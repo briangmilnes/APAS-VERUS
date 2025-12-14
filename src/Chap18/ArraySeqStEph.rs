@@ -22,6 +22,29 @@ pub mod ArraySeqStEph {
         pub seq: Vec<T>,
     }
 
+    /// Trait for single-threaded ephemeral array sequences (Chapter 18).
+    pub trait ArraySeqStEphTrait<T>: Sized {
+        fn new(length: usize, init_value: T) -> Self where T: Clone;
+        fn set(&mut self, index: usize, item: T) -> Result<(), &'static str>;
+        fn length(&self) -> usize;
+        fn nth(&self, index: usize) -> &T;
+        fn empty() -> Self;
+        fn singleton(item: T) -> Self;
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> ArraySeqStEphS<T>;
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqStEphS<T>, f: &F) -> ArraySeqStEphS<U>;
+        fn subseq_copy(&self, start: usize, length: usize) -> Self where T: Clone;
+        fn append(a: &ArraySeqStEphS<T>, b: &ArraySeqStEphS<T>) -> Self where T: Clone;
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStEphS<T>, pred: &F) -> Self where T: Clone;
+        fn flatten(a: &ArraySeqStEphS<ArraySeqStEphS<T>>) -> Self where T: Clone;
+        fn update(a: &ArraySeqStEphS<T>, index: usize, item: T) -> Self where T: Clone;
+        fn is_empty(&self) -> bool;
+        fn is_singleton(&self) -> bool;
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStEphS<T>, f: &F, seed: A) -> A;
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStEphS<T>, f: &F, id: T) -> T where T: Clone;
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStEphS<T>, f: &F, id: T) -> (ArraySeqStEphS<T>, T) where T: Clone;
+        fn from_vec(elts: Vec<T>) -> Self;
+    }
+
     impl<T: View> View for ArraySeqStEphS<T> {
         type V = Seq<T::V>;
 

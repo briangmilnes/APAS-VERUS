@@ -24,6 +24,29 @@ pub mod ArraySeq {
         pub seq: Vec<T>,
     }
 
+    /// Data Type 18.1: Generic sequence trait for array-backed sequences.
+    pub trait ArraySeqTrait<T>: Sized {
+        fn new(length: usize, init_value: T) -> Self where T: Clone;
+        fn set(&mut self, index: usize, item: T) -> Result<(), &'static str>;
+        fn length(&self) -> usize;
+        fn nth(&self, index: usize) -> &T;
+        fn empty() -> Self;
+        fn singleton(item: T) -> Self;
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> ArraySeqS<T>;
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqS<T>, f: &F) -> ArraySeqS<U>;
+        fn subseq(a: &ArraySeqS<T>, start: usize, length: usize) -> Self where T: Clone;
+        fn append(a: &ArraySeqS<T>, b: &ArraySeqS<T>) -> Self where T: Clone;
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqS<T>, pred: &F) -> Self where T: Clone;
+        fn flatten(a: &ArraySeqS<ArraySeqS<T>>) -> Self where T: Clone;
+        fn update(a: &ArraySeqS<T>, index: usize, item: T) -> Self where T: Clone;
+        fn is_empty(&self) -> bool;
+        fn is_singleton(&self) -> bool;
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqS<T>, f: &F, seed: A) -> A;
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, id: T) -> T where T: Clone;
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, id: T) -> (ArraySeqS<T>, T) where T: Clone;
+        fn from_vec(elts: Vec<T>) -> Self;
+    }
+
     impl<T: View> View for ArraySeqS<T> {
         type V = Seq<T::V>;
 

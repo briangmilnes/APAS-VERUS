@@ -28,6 +28,28 @@ pub mod ArraySeqMtPer {
         pub seq: Vec<T>,
     }
 
+    /// Trait for multi-threaded persistent array sequences (Chapter 18).
+    pub trait ArraySeqMtPerTrait<T>: Sized {
+        fn new(length: usize, init_value: T) -> Self where T: Clone;
+        fn length(&self) -> usize;
+        fn nth(&self, index: usize) -> &T;
+        fn empty() -> Self;
+        fn singleton(item: T) -> Self;
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> ArraySeqMtPerS<T>;
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtPerS<T>, f: &F) -> ArraySeqMtPerS<U>;
+        fn subseq_copy(&self, start: usize, length: usize) -> Self where T: Clone;
+        fn append(a: &ArraySeqMtPerS<T>, b: &ArraySeqMtPerS<T>) -> Self where T: Clone;
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F) -> Self where T: Clone;
+        fn flatten(a: &ArraySeqMtPerS<ArraySeqMtPerS<T>>) -> Self where T: Clone;
+        fn update(a: &ArraySeqMtPerS<T>, index: usize, item: T) -> Self where T: Clone;
+        fn is_empty(&self) -> bool;
+        fn is_singleton(&self) -> bool;
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtPerS<T>, f: &F, seed: A) -> A;
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> T where T: Clone;
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (ArraySeqMtPerS<T>, T) where T: Clone;
+        fn from_vec(elts: Vec<T>) -> Self;
+    }
+
     impl<T: View> View for ArraySeqMtPerS<T> {
         type V = Seq<T::V>;
 

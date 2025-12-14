@@ -22,6 +22,29 @@ pub mod LinkedListStEph {
         pub seq: Vec<T>,
     }
 
+    /// Trait for single-threaded ephemeral linked list sequences (Chapter 18).
+    pub trait LinkedListStEphTrait<T>: Sized {
+        fn new(length: usize, init_value: T) -> Self where T: Clone;
+        fn set(&mut self, index: usize, item: T) -> Result<(), &'static str>;
+        fn length(&self) -> usize;
+        fn nth(&self, index: usize) -> &T;
+        fn empty() -> Self;
+        fn singleton(item: T) -> Self;
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> LinkedListStEphS<T>;
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &LinkedListStEphS<T>, f: &F) -> LinkedListStEphS<U>;
+        fn subseq_copy(&self, start: usize, length: usize) -> Self where T: Clone;
+        fn append(a: &LinkedListStEphS<T>, b: &LinkedListStEphS<T>) -> Self where T: Clone;
+        fn filter<F: Fn(&T) -> bool>(a: &LinkedListStEphS<T>, pred: &F) -> Self where T: Clone;
+        fn flatten(a: &LinkedListStEphS<LinkedListStEphS<T>>) -> Self where T: Clone;
+        fn update(a: &LinkedListStEphS<T>, index: usize, item: T) -> Self where T: Clone;
+        fn is_empty(&self) -> bool;
+        fn is_singleton(&self) -> bool;
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStEphS<T>, f: &F, seed: A) -> A;
+        fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, id: T) -> T where T: Clone;
+        fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, id: T) -> (LinkedListStEphS<T>, T) where T: Clone;
+        fn from_vec(elts: Vec<T>) -> Self;
+    }
+
     impl<T: View> View for LinkedListStEphS<T> {
         type V = Seq<T::V>;
 
