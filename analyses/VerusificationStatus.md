@@ -9,7 +9,7 @@
 
 | Module | Trait structure vs APAS (Yes/No) | Comments parity | Trait With View (Yes/No) | Requires and Ensures (Yes/No) | Notes |
 | --- | --- | --- | --- | --- | --- |
-| SetStEph / SetMtEph | YES (same single trait) | Mostly preserved | Yes | Yes (view-based) | Matches keep-trait + add-view pattern |
+| SetStEph / SetMtEph | YES (same single trait) | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern (view-based contracts) |
 | RelationStEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
 | MappingStEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
 
