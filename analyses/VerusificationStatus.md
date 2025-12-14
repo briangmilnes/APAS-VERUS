@@ -9,46 +9,49 @@
 
 | Module | Trait structure vs APAS | Comments parity | Trait requires/ensures | View bound in trait | Notes |
 | --- | --- | --- | --- | --- | --- |
-| SetStEph / SetMtEph | Same single trait | Mostly preserved | Yes (view-based) | Yes (`View<V = Set<…>>`) | Matches keep-trait + add-view pattern |
-| RelationStEph | Same | Mostly preserved | Yes | Yes | Matches pattern |
-| MappingStEph | Same | Mostly preserved | Yes | Yes | Matches pattern |
+| SetStEph / SetMtEph | YES (same single trait) | Mostly preserved | Yes (view-based) | Yes (`View<V = Set<…>>`) | Matches keep-trait + add-view pattern |
+| RelationStEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
+| MappingStEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
 
 ## Chap06 graph traits: APAS vs APAS-VERUS (including per-type weighted)
 
 | Module | Trait structure vs APAS | Comments parity | Trait requires/ensures | View bound in trait | Notes |
 | --- | --- | --- | --- | --- | --- |
-| DirGraphStEph | Same single trait | Mostly preserved | Yes (view-based) | Yes (`View<V = GraphView<…>>`) | Matches keep-trait + add-view pattern |
-| LabDirGraphStEph | Same single trait | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
-| LabUnDirGraphStEph | Same single trait | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
-| UnDirGraphStEph | Same single trait | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
-| WeightedDirGraphStEph* (per-type in VERUS) | APAS has int/float variants; VERUS split into many numeric-specific traits | Partially preserved | Yes | Yes | Diverges in type granularity; otherwise follows keep-trait + add-view pattern |
-| WeightedUnDirGraphStEph* | APAS int/float; VERUS per-type | Partially preserved | Yes | Yes | Same divergence; otherwise keep-trait + add-view pattern |
-| DirGraphMtEph | Same single trait | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
-| UnDirGraphMtEph | Same single trait | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
-| LabDirGraphMtEph | Same single trait | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
-| LabUnDirGraphMtEph | Same single trait | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
-| WeightedDirGraphMtEphInt | APAS int/float variants; VERUS int only | Partially preserved | Yes | Yes | Diverges numeric coverage; otherwise keep-trait + add-view pattern |
-| WeightedUnDirGraphMtEphInt | APAS int/float; VERUS int only | Partially preserved | Yes | Yes | Diverges numeric coverage; otherwise keep-trait + add-view pattern |
+| DirGraphStEph | YES (same single trait) | Mostly preserved | Yes (view-based) | Yes (`View<V = GraphView<…>>`) | Matches keep-trait + add-view pattern |
+| LabDirGraphStEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
+| LabUnDirGraphStEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
+| UnDirGraphStEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
+| WeightedDirGraphStEph* (per-type in VERUS) | NO (split per numeric type; APAS int/float) | Partially preserved | Yes | Yes | Diverges type granularity; otherwise keep-trait + add-view pattern |
+| WeightedUnDirGraphStEph* | NO | Partially preserved | Yes | Yes | Diverges type granularity; otherwise keep-trait + add-view pattern |
+| DirGraphMtEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
+| UnDirGraphMtEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
+| LabDirGraphMtEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
+| LabUnDirGraphMtEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
+| WeightedDirGraphMtEphInt | NO (only int; APAS also float) | Partially preserved | Yes | Yes | Diverges numeric coverage; otherwise keep-trait + add-view pattern |
+| WeightedUnDirGraphMtEphInt | NO (only int; APAS also float) | Partially preserved | Yes | Yes | Diverges numeric coverage; otherwise keep-trait + add-view pattern |
 
 ## Chap17 mathseq: APAS vs APAS-VERUS
-- No traits in Chap17 (mathseq) in either codebase; parity not applicable.
+
+| Module | Trait structure vs APAS | Comments parity | Trait requires/ensures | View bound in trait | Notes |
+| --- | --- | --- | --- | --- | --- |
+| MathSeq (no trait) | N/A | N/A | N/A | N/A | No traits in APAS or VERUS |
 
 ## Chap18 sequences/lists: APAS vs APAS-VERUS
 
-| Module | Trait structure vs APAS | Comments parity | Trait requires/ensures | View bound in trait | Notes |
+| Module | Trait structure vs APAS (Yes/No) | Comments parity | Trait requires/ensures | View bound in trait | Notes |
 | --- | --- | --- | --- | --- | --- |
-| ArraySeq.rs | APAS single trait; VERUS single `ArraySeqTrait` | Partially preserved (some APAS comments kept; analysis notes reduced) | None | No | Specs live on impls; trait lacks view bound/specs |
-| ArraySeqStPer / StEph | APAS single trait; VERUS split Base/Redefinable | Reduced | None | No | Diverges in structure/comments; specs on impls only |
-| ArraySeqMtPer / MtEph | APAS single trait; VERUS split Base/Redefinable | Reduced/altered complexity | None | No | Diverges; specs on impls only |
-| LinkedListStPer / StEph | APAS single trait; VERUS split Base/Redefinable | Reduced | None | No | Diverges; specs on impls only |
+| ArraySeq.rs | YES (single trait) | Partially preserved (some APAS comments kept; analysis notes reduced) | None | No | Specs live on impls; trait lacks view bound/specs |
+| ArraySeqStPer / StEph | NO (split Base/Redefinable) | Reduced | None | No | Diverges; specs on impls only |
+| ArraySeqMtPer / MtEph | NO | Reduced/altered complexity | None | No | Diverges; specs on impls only |
+| LinkedListStPer / StEph | NO | Reduced | None | No | Diverges; specs on impls only |
 
 ## Chap19 sequences: APAS vs APAS-VERUS
 
-| Module | Trait structure vs APAS | Comments parity | Trait requires/ensures | View bound in trait | Notes |
+| Module | Trait structure vs APAS (Yes/No) | Comments parity | Trait requires/ensures | View bound in trait | Notes |
 | --- | --- | --- | --- | --- | --- |
-| ArraySeqStPer.rs | Single trait (matches APAS) | Mostly preserved | Yes (view-based `spec_len`/`nth_spec`) | Yes | Matches keep-trait + add-view pattern |
-| ArraySeqStEph.rs | Single trait | Mostly preserved | Yes (view-based) | Yes | Matches keep-trait + add-view pattern |
-| ArraySeqMtEph.rs | Single trait | Mostly preserved | Yes (view-based) | Yes | Matches keep-trait + add-view pattern |
+| ArraySeqStPer.rs | YES (single trait) | Mostly preserved | Yes (view-based `spec_len`/`nth_spec`) | Yes | Matches keep-trait + add-view pattern |
+| ArraySeqStEph.rs | YES | Mostly preserved | Yes (view-based) | Yes | Matches keep-trait + add-view pattern |
+| ArraySeqMtEph.rs | YES | Mostly preserved | Yes (view-based) | Yes | Matches keep-trait + add-view pattern |
 
 ## Chap18 proof-hole status (veracity-review-proof-holes)
 - Command: `~/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap18`
