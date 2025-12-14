@@ -20,7 +20,8 @@ pub mod ArraySeqMtPer {
     verus! {
 
     use vstd::std_specs::clone::*;
-    broadcast use vstd::std_specs::vec::group_vec_axioms;
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
+    broadcast use {vstd::std_specs::vec::group_vec_axioms, crate::vstdplus::feq::feq::group_feq_axioms};
 
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqMtPerS<T> {
@@ -163,14 +164,14 @@ pub mod ArraySeqMtPer {
             ArraySeqMtPerS { seq }
         }
 
-        // assume: f.clone() preserves specs (subseq_copy lacks element specs for full proof)
         pub fn map_par<U: Clone + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             pool: &Pool,
             a: &ArraySeqMtPerS<T>,
             f: F,
         ) -> (result: ArraySeqMtPerS<U>)
-            where T: Clone + Send + Sync + 'static
+            where T: Clone + Send + Sync + Eq + 'static
             requires
+                obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
             ensures result.seq@.len() == a.seq@.len()
             decreases a.seq@.len()
@@ -184,10 +185,21 @@ pub mod ArraySeqMtPer {
                 let mid = len / 2;
                 let left_seq = a.subseq_copy(0, mid);
                 let right_seq = a.subseq_copy(mid, len - mid);
-                let f1 = f.clone();
-                let f2 = f.clone();
-                assume(forall|i: int| 0 <= i < left_seq.seq@.len() ==> #[trigger] f1.requires((&left_seq.seq@[i],)));
-                assume(forall|i: int| 0 <= i < right_seq.seq@.len() ==> #[trigger] f2.requires((&right_seq.seq@[i],)));
+                let f1 = clone_fn(&f);
+                let f2 = f;
+                proof {
+                    // Prove f1.requires on left_seq elements
+                    assert forall|i: int| 0 <= i < left_seq.seq@.len() implies #[trigger] f1.requires((&left_seq.seq@[i],)) by {
+                        assert(cloned(a.seq@[0 + i], left_seq.seq@[i]));
+                        assert(a.seq@[i] == left_seq.seq@[i]);  // from obeys_feq_clone
+                    }
+                    // Prove f2.requires on right_seq elements
+                    assert forall|i: int| 0 <= i < right_seq.seq@.len() implies #[trigger] f2.requires((&right_seq.seq@[i],)) by {
+                        let orig_i = mid as int + i;
+                        assert(cloned(a.seq@[mid as int + i], right_seq.seq@[i]));
+                        assert(a.seq@[orig_i] == right_seq.seq@[i]);  // from obeys_feq_clone
+                    }
+                }
                 let pool1 = pool.clone_plus();
                 let pool2 = pool.clone_plus();
 
@@ -269,14 +281,14 @@ pub mod ArraySeqMtPer {
             ArraySeqMtPerS { seq }
         }
 
-        // assume: pred.clone() preserves specs
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
             pool: &Pool,
             a: &ArraySeqMtPerS<T>,
             pred: F,
         ) -> (result: ArraySeqMtPerS<T>)
-            where T: Clone + Send + Sync + 'static
+            where T: Clone + Send + Sync + Eq + 'static
             requires
+                obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
             ensures result.seq@.len() <= a.seq@.len()
             decreases a.seq@.len()
@@ -294,10 +306,19 @@ pub mod ArraySeqMtPer {
                 let mid = len / 2;
                 let left_seq = a.subseq_copy(0, mid);
                 let right_seq = a.subseq_copy(mid, len - mid);
-                let p1 = pred.clone();
-                let p2 = pred.clone();
-                assume(forall|i: int| 0 <= i < left_seq.seq@.len() ==> #[trigger] p1.requires((&left_seq.seq@[i],)));
-                assume(forall|i: int| 0 <= i < right_seq.seq@.len() ==> #[trigger] p2.requires((&right_seq.seq@[i],)));
+                let p1 = clone_pred(&pred);
+                let p2 = pred;
+                proof {
+                    assert forall|i: int| 0 <= i < left_seq.seq@.len() implies #[trigger] p1.requires((&left_seq.seq@[i],)) by {
+                        assert(cloned(a.seq@[0 + i], left_seq.seq@[i]));
+                        assert(a.seq@[i] == left_seq.seq@[i]);
+                    }
+                    assert forall|i: int| 0 <= i < right_seq.seq@.len() implies #[trigger] p2.requires((&right_seq.seq@[i],)) by {
+                        let orig_i = mid as int + i;
+                        assert(cloned(a.seq@[mid as int + i], right_seq.seq@[i]));
+                        assert(a.seq@[orig_i] == right_seq.seq@[i]);
+                    }
+                }
                 let pool1 = pool.clone_plus();
                 let pool2 = pool.clone_plus();
 
@@ -343,7 +364,9 @@ pub mod ArraySeqMtPer {
             requires 
                 start + length <= self.seq@.len(),
                 self.seq@.len() <= usize::MAX as int,
-            ensures result.seq@.len() == length
+            ensures 
+                result.seq@.len() == length,
+                forall|j: int| 0 <= j < length ==> cloned(#[trigger] self.seq@[start as int + j], result.seq@[j]),
         {
             let end = start + length;
             let mut seq: Vec<T> = Vec::with_capacity(length);
@@ -354,6 +377,7 @@ pub mod ArraySeqMtPer {
                     end == start + length,
                     end <= self.seq@.len(),
                     seq@.len() == (i - start) as int,
+                    forall|j: int| 0 <= j < (i - start) as int ==> cloned(#[trigger] self.seq@[start as int + j], seq@[j]),
                 decreases end - i,
             {
                 seq.push(self.seq[i].clone());
@@ -382,7 +406,6 @@ pub mod ArraySeqMtPer {
             acc
         }
 
-        // assume: f.clone() preserves specs
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
             pool: &Pool,
             a: &ArraySeqMtPerS<T>,
@@ -402,10 +425,9 @@ pub mod ArraySeqMtPer {
                 let mid = len / 2;
                 let left_seq = a.subseq_copy(0, mid);
                 let right_seq = a.subseq_copy(mid, len - mid);
-                let f1 = f.clone();
-                let f2 = f.clone();
-                assume(forall|x: &T, y: &T| #[trigger] f1.requires((x, y)));
-                assume(forall|x: &T, y: &T| #[trigger] f2.requires((x, y)));
+                let f1 = clone_fn2(&f);
+                let f2 = clone_fn2(&f);
+                // clone_fn2 preserves requires: forall|x, y| f.requires((x,y)) == f1.requires((x,y))
                 let id1 = id.clone();
                 let id2 = id.clone();
                 let pool1 = pool.clone_plus();
