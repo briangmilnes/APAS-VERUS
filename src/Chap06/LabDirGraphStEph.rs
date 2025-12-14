@@ -59,6 +59,8 @@ verus! {
             Set::new(|e: (V::V, V::V)| exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l)))
         }
 
+        /// APAS: Work Θ(1), Span Θ(1)
+        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn empty() -> (g: LabDirGraphStEph<V, L>)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
@@ -67,6 +69,8 @@ verus! {
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
+        /// APAS: Work Θ(|V| + |A|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|V| + |A|), Span Θ(|V| + |A|), Parallelism Θ(1) - sequential
         fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: LabDirGraphStEph<V, L>)
             ensures
                 g@.V.finite(),
@@ -74,40 +78,58 @@ verus! {
                 g@.V =~= vertices@,
                 g@.A =~= labeled_arcs@;
 
+        /// APAS: Work Θ(1), Span Θ(1)
+        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
+        /// APAS: Work Θ(1), Span Θ(1)
+        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn labeled_arcs(&self) -> (a: &SetStEph<LabEdge<V, L>>)
             ensures a@ =~= self@.A;
 
+        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential map
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>)
             requires valid_key_type_LabEdge::<V, L>(), valid_key_type_Edge::<V>()
             ensures arcs@.finite(), arcs@ == self.spec_arcs();
 
+        /// APAS: Work Θ(1), Span Θ(1)
+        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn add_vertex(&mut self, v: V)
             requires valid_key_type_LabEdge::<V, L>()
             ensures self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
 
+        /// APAS: Work Θ(1), Span Θ(1)
+        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn add_labeled_arc(&mut self, from: V, to: V, label: L)
             requires valid_key_type_LabEdge::<V, L>()
             ensures 
                 self@.V == old(self)@.V.insert(from@).insert(to@),
                 self@.A == old(self)@.A.insert((from@, to@, label@));
 
+        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential search
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>)
             requires valid_key_type_LabEdge::<V, L>()
             ensures 
                 label.is_some() == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l))),
                 label.is_some() ==> self@.A.contains((from@, to@, label.unwrap()@));
 
+        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential search
         fn has_arc(&self, from: &V, to: &V) -> (b: bool)
             requires valid_key_type_LabEdge::<V, L>()
             ensures b == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l)));
 
+        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential filter
         fn out_neighbors(&self, v: &V) -> (out_neighbors: SetStEph<V>)
             requires valid_key_type_LabEdge::<V, L>()
             ensures out_neighbors@.finite(), out_neighbors@ == self.spec_out_neighbors(v@);
 
+        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential filter
         fn in_neighbors(&self, v: &V) -> (in_neighbors: SetStEph<V>)
             requires valid_key_type_LabEdge::<V, L>()
             ensures in_neighbors@.finite(), in_neighbors@ == self.spec_in_neighbors(v@);
