@@ -25,6 +25,10 @@ This document captures lessons learned from converting APAS (Algorithms Parallel
 - Macros (must be outside for `use crate::MacroName;` to work)
 - Type aliases like `pub use PredMt as Pred;`
 
+### Keep the original traits (with comments) intact
+
+When verusifying APAS source, **keep the original trait definitions exactly as written in APAS-AI, including all their comments and complexity notes**. Do not split or rename traits unless the APAS source already does so. Treat traits as the stable API surface; only add the verification-specific machinery around them (e.g., `verus!` blocks, views, ghost functions).
+
 ## 2. Trait Bounds and `StT`
 
 The base trait for single-threaded friendly types:
@@ -36,6 +40,23 @@ impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude:
 
 - `View` is required for Verus ghost reasoning
 - Hash collections need `StT + Hash`
+
+## 3.5 Trait specs via views (pattern from `SetStEph`)
+
+To place `requires`/`ensures` on trait methods, first give the struct a `View` and spec accessors, then express the trait method contracts in terms of that view. Example (`SetStEph` pattern):
+
+1. Implement `View` for the concrete type, exposing its ghost model:
+   ```rust
+   impl<T: View> View for SetStEph<T> {
+       type V = Set<T::V>;
+       open spec fn view(&self) -> Set<T::V> { self.s@ }
+   }
+   ```
+2. Add spec helpers on the concrete type if needed (e.g., `spec_contains`, `spec_len`).
+3. In the trait, write `requires`/`ensures` using those spec accessors / `view()` so the contracts are abstract but grounded in the ghost model.
+4. Implement the trait for the concrete type; the impl can refer to `self.view()` (or helper specs) in its own `requires`/`ensures`.
+
+This keeps the trait API identical to APAS-AI while allowing full specifications. Use this pattern when you need trait-level specs; otherwise leave the original trait signatures/comments untouched.
 
 ## 3. Custom Traits for Verified Operations
 
