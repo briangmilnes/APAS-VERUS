@@ -7,17 +7,17 @@
 
 ## Chap05 sets/relations/mappings: APAS vs APAS-VERUS
 
-| Module | Trait structure vs APAS | Comments parity | Trait requires/ensures | View bound in trait | Notes |
+| Module | Trait structure vs APAS (Yes/No) | Comments parity | Trait With View (Yes/No) | Requires and Ensures (Yes/No) | Notes |
 | --- | --- | --- | --- | --- | --- |
-| SetStEph / SetMtEph | YES (same single trait) | Mostly preserved | Yes (view-based) | Yes (`View<V = Set<…>>`) | Matches keep-trait + add-view pattern |
+| SetStEph / SetMtEph | YES (same single trait) | Mostly preserved | Yes | Yes (view-based) | Matches keep-trait + add-view pattern |
 | RelationStEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
 | MappingStEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
 
 ## Chap06 graph traits: APAS vs APAS-VERUS (including per-type weighted)
 
-| Module | Trait structure vs APAS | Comments parity | Trait requires/ensures | View bound in trait | Notes |
+| Module | Trait structure vs APAS (Yes/No) | Comments parity | Trait With View (Yes/No) | Requires and Ensures (Yes/No) | Notes |
 | --- | --- | --- | --- | --- | --- |
-| DirGraphStEph | YES (same single trait) | Mostly preserved | Yes (view-based) | Yes (`View<V = GraphView<…>>`) | Matches keep-trait + add-view pattern |
+| DirGraphStEph | YES (same single trait) | Mostly preserved | Yes | Yes (view-based) | Matches keep-trait + add-view pattern |
 | LabDirGraphStEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
 | LabUnDirGraphStEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
 | UnDirGraphStEph | YES | Mostly preserved | Yes | Yes | Matches keep-trait + add-view pattern |
@@ -32,26 +32,26 @@
 
 ## Chap17 mathseq: APAS vs APAS-VERUS
 
-| Module | Trait structure vs APAS | Comments parity | Trait requires/ensures | View bound in trait | Notes |
+| Module | Trait structure vs APAS (Yes/No) | Comments parity | Trait With View (Yes/No) | Requires and Ensures (Yes/No) | Notes |
 | --- | --- | --- | --- | --- | --- |
 | MathSeq (no trait) | N/A | N/A | N/A | N/A | No traits in APAS or VERUS |
 
 ## Chap18 sequences/lists: APAS vs APAS-VERUS
 
-| Module | Trait structure vs APAS (Yes/No) | Comments parity | Trait requires/ensures | View bound in trait | Notes |
+| Module | Trait structure vs APAS (Yes/No) | Comments parity | Trait With View (Yes/No) | Requires and Ensures (Yes/No) | Notes |
 | --- | --- | --- | --- | --- | --- |
-| ArraySeq.rs | YES (single trait) | Partially preserved (some APAS comments kept; analysis notes reduced) | None | No | Specs live on impls; trait lacks view bound/specs |
-| ArraySeqStPer / StEph | NO (split Base/Redefinable) | Reduced | None | No | Diverges; specs on impls only |
-| ArraySeqMtPer / MtEph | NO | Reduced/altered complexity | None | No | Diverges; specs on impls only |
-| LinkedListStPer / StEph | NO | Reduced | None | No | Diverges; specs on impls only |
+| ArraySeq.rs | YES (single trait) | Partially preserved (some APAS comments kept; analysis notes reduced) | No | No | Specs live on impls; trait lacks view bound/specs |
+| ArraySeqStPer / StEph | NO (split Base/Redefinable) | Reduced | No | No | Diverges; specs on impls only |
+| ArraySeqMtPer / MtEph | NO | Reduced/altered complexity | No | No | Diverges; specs on impls only |
+| LinkedListStPer / StEph | NO | Reduced | No | No | Diverges; specs on impls only |
 
 ## Chap19 sequences: APAS vs APAS-VERUS
 
-| Module | Trait structure vs APAS (Yes/No) | Comments parity | Trait requires/ensures | View bound in trait | Notes |
+| Module | Trait structure vs APAS (Yes/No) | Comments parity | Trait With View (Yes/No) | Requires and Ensures (Yes/No) | Notes |
 | --- | --- | --- | --- | --- | --- |
-| ArraySeqStPer.rs | YES (single trait) | Mostly preserved | Yes (view-based `spec_len`/`nth_spec`) | Yes | Matches keep-trait + add-view pattern |
-| ArraySeqStEph.rs | YES | Mostly preserved | Yes (view-based) | Yes | Matches keep-trait + add-view pattern |
-| ArraySeqMtEph.rs | YES | Mostly preserved | Yes (view-based) | Yes | Matches keep-trait + add-view pattern |
+| ArraySeqStPer.rs | YES (single trait) | Mostly preserved | Yes | Yes (view-based `spec_len`/`nth_spec`) | Matches keep-trait + add-view pattern |
+| ArraySeqStEph.rs | YES | Mostly preserved | Yes | Yes (view-based) | Matches keep-trait + add-view pattern |
+| ArraySeqMtEph.rs | YES | Mostly preserved | Yes | Yes (view-based) | Matches keep-trait + add-view pattern |
 
 ## Chap18 proof-hole status (veracity-review-proof-holes)
 - Command: `~/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap18`
