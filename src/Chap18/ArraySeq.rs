@@ -24,27 +24,51 @@ pub mod ArraySeq {
         pub seq: Vec<T>,
     }
 
-    /// Data Type 18.1: Generic sequence trait for array-backed sequences.
-    pub trait ArraySeqTrait<T>: Sized {
+    /// Data Type 18.1: Base trait for array-backed sequences.
+    /// These methods are never redefined in later chapters.
+    pub trait ArraySeqBaseTrait<T>: Sized {
+        /// Work Θ(n), Span Θ(1)
         fn new(length: usize, init_value: T) -> Self where T: Clone;
+        /// Work Θ(1), Span Θ(1)
         fn set(&mut self, index: usize, item: T) -> Result<(), &'static str>;
+        /// Work Θ(1), Span Θ(1)
         fn length(&self) -> usize;
+        /// Work Θ(1), Span Θ(1)
         fn nth(&self, index: usize) -> &T;
-        fn empty() -> Self;
-        fn singleton(item: T) -> Self;
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> ArraySeqS<T>;
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqS<T>, f: &F) -> ArraySeqS<U>;
+        /// Work Θ(len), Span Θ(1)
         fn subseq(a: &ArraySeqS<T>, start: usize, length: usize) -> Self where T: Clone;
-        fn append(a: &ArraySeqS<T>, b: &ArraySeqS<T>) -> Self where T: Clone;
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqS<T>, pred: &F) -> Self where T: Clone;
+        /// Work Θ(Σ|a[i]|), Span Θ(1)
         fn flatten(a: &ArraySeqS<ArraySeqS<T>>) -> Self where T: Clone;
-        fn update(a: &ArraySeqS<T>, index: usize, item: T) -> Self where T: Clone;
-        fn is_empty(&self) -> bool;
-        fn is_singleton(&self) -> bool;
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqS<T>, f: &F, seed: A) -> A;
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, id: T) -> T where T: Clone;
-        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, id: T) -> (ArraySeqS<T>, T) where T: Clone;
+        /// Work Θ(n), Span Θ(1)
         fn from_vec(elts: Vec<T>) -> Self;
+    }
+
+    /// Redefinable trait - may be overridden with better algorithms in later chapters.
+    pub trait ArraySeqRedefinableTrait<T>: Sized {
+        /// Work Θ(1), Span Θ(1)
+        fn empty() -> Self;
+        /// Work Θ(1), Span Θ(1)
+        fn singleton(item: T) -> Self;
+        /// Work Θ(n), Span Θ(1)
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> ArraySeqS<T>;
+        /// Work Θ(|a|), Span Θ(1)
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqS<T>, f: &F) -> ArraySeqS<U>;
+        /// Work Θ(|a|+|b|), Span Θ(1)
+        fn append(a: &ArraySeqS<T>, b: &ArraySeqS<T>) -> Self where T: Clone;
+        /// Work Θ(|a|), Span Θ(1)
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqS<T>, pred: &F) -> Self where T: Clone;
+        /// Work Θ(|a|), Span Θ(1)
+        fn update(a: &ArraySeqS<T>, index: usize, item: T) -> Self where T: Clone;
+        /// Work Θ(1), Span Θ(1)
+        fn is_empty(&self) -> bool;
+        /// Work Θ(1), Span Θ(1)
+        fn is_singleton(&self) -> bool;
+        /// Work Θ(|a|), Span Θ(1)
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqS<T>, f: &F, seed: A) -> A;
+        /// Work Θ(|a|), Span Θ(1)
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, id: T) -> T where T: Clone;
+        /// Work Θ(|a|), Span Θ(1)
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, id: T) -> (ArraySeqS<T>, T) where T: Clone;
     }
 
     impl<T: View> View for ArraySeqS<T> {

@@ -28,27 +28,50 @@ pub mod ArraySeqMtEph {
         pub seq: Vec<T>,
     }
 
-    /// Trait for multi-threaded ephemeral array sequences (Chapter 18).
-    pub trait ArraySeqMtEphTrait<T>: Sized {
+    /// Base trait for multi-threaded ephemeral array sequences (Chapter 18).
+    pub trait ArraySeqMtEphBaseTrait<T>: Sized {
+        /// Work Θ(n), Span Θ(log n)
         fn new(length: usize, init_value: T) -> Self where T: Clone;
+        /// Work Θ(1), Span Θ(1)
         fn set(&mut self, index: usize, item: T) -> Result<(), &'static str>;
+        /// Work Θ(1), Span Θ(1)
         fn length(&self) -> usize;
+        /// Work Θ(1), Span Θ(1)
         fn nth(&self, index: usize) -> &T;
-        fn empty() -> Self;
-        fn singleton(item: T) -> Self;
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> ArraySeqMtEphS<T>;
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtEphS<T>, f: &F) -> ArraySeqMtEphS<U>;
+        /// Work Θ(len), Span Θ(log len)
         fn subseq_copy(&self, start: usize, length: usize) -> Self where T: Clone;
-        fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> Self where T: Clone;
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtEphS<T>, pred: &F) -> Self where T: Clone;
+        /// Work Θ(Σ|a[i]|), Span Θ(Σ|a[i]|)
         fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> Self where T: Clone;
-        fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> Self where T: Clone;
-        fn is_empty(&self) -> bool;
-        fn is_singleton(&self) -> bool;
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, seed: A) -> A;
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, id: T) -> T where T: Clone;
-        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, id: T) -> (ArraySeqMtEphS<T>, T) where T: Clone;
+        /// Work Θ(n), Span Θ(1)
         fn from_vec(elts: Vec<T>) -> Self;
+    }
+
+    /// Redefinable trait - may be overridden with better algorithms in later chapters.
+    pub trait ArraySeqMtEphRedefinableTrait<T>: Sized {
+        /// Work Θ(1), Span Θ(1)
+        fn empty() -> Self;
+        /// Work Θ(1), Span Θ(1)
+        fn singleton(item: T) -> Self;
+        /// Work Θ(n), Span Θ(n)
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> ArraySeqMtEphS<T>;
+        /// Work Θ(|a|), Span Θ(log|a|)
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtEphS<T>, f: &F) -> ArraySeqMtEphS<U>;
+        /// Work Θ(|a|+|b|), Span Θ(log(|a|+|b|))
+        fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> Self where T: Clone;
+        /// Work Θ(|a|), Span Θ(|a|)
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtEphS<T>, pred: &F) -> Self where T: Clone;
+        /// Work Θ(n), Span Θ(log n)
+        fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> Self where T: Clone;
+        /// Work Θ(1), Span Θ(1)
+        fn is_empty(&self) -> bool;
+        /// Work Θ(1), Span Θ(1)
+        fn is_singleton(&self) -> bool;
+        /// Work Θ(|a|), Span Θ(|a|)
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, seed: A) -> A;
+        /// Work Θ(|a|), Span Θ(log|a|)
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, id: T) -> T where T: Clone;
+        /// Work Θ(|a|), Span Θ(log|a|)
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, id: T) -> (ArraySeqMtEphS<T>, T) where T: Clone;
     }
 
     impl<T: View> View for ArraySeqMtEphS<T> {

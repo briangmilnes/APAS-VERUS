@@ -28,26 +28,48 @@ pub mod ArraySeqMtPer {
         pub seq: Vec<T>,
     }
 
-    /// Trait for multi-threaded persistent array sequences (Chapter 18).
-    pub trait ArraySeqMtPerTrait<T>: Sized {
+    /// Base trait for multi-threaded persistent array sequences (Chapter 18).
+    pub trait ArraySeqMtPerBaseTrait<T>: Sized {
+        /// Work Θ(n), Span Θ(log n)
         fn new(length: usize, init_value: T) -> Self where T: Clone;
+        /// Work Θ(1), Span Θ(1)
         fn length(&self) -> usize;
+        /// Work Θ(1), Span Θ(1)
         fn nth(&self, index: usize) -> &T;
-        fn empty() -> Self;
-        fn singleton(item: T) -> Self;
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> ArraySeqMtPerS<T>;
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtPerS<T>, f: &F) -> ArraySeqMtPerS<U>;
+        /// Work Θ(len), Span Θ(log len)
         fn subseq_copy(&self, start: usize, length: usize) -> Self where T: Clone;
-        fn append(a: &ArraySeqMtPerS<T>, b: &ArraySeqMtPerS<T>) -> Self where T: Clone;
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F) -> Self where T: Clone;
+        /// Work Θ(Σ|a[i]|), Span Θ(Σ|a[i]|)
         fn flatten(a: &ArraySeqMtPerS<ArraySeqMtPerS<T>>) -> Self where T: Clone;
-        fn update(a: &ArraySeqMtPerS<T>, index: usize, item: T) -> Self where T: Clone;
-        fn is_empty(&self) -> bool;
-        fn is_singleton(&self) -> bool;
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtPerS<T>, f: &F, seed: A) -> A;
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> T where T: Clone;
-        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (ArraySeqMtPerS<T>, T) where T: Clone;
+        /// Work Θ(n), Span Θ(1)
         fn from_vec(elts: Vec<T>) -> Self;
+    }
+
+    /// Redefinable trait - may be overridden with better algorithms in later chapters.
+    pub trait ArraySeqMtPerRedefinableTrait<T>: Sized {
+        /// Work Θ(1), Span Θ(1)
+        fn empty() -> Self;
+        /// Work Θ(1), Span Θ(1)
+        fn singleton(item: T) -> Self;
+        /// Work Θ(n), Span Θ(n)
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> ArraySeqMtPerS<T>;
+        /// Work Θ(|a|), Span Θ(log|a|)
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtPerS<T>, f: &F) -> ArraySeqMtPerS<U>;
+        /// Work Θ(|a|+|b|), Span Θ(log(|a|+|b|))
+        fn append(a: &ArraySeqMtPerS<T>, b: &ArraySeqMtPerS<T>) -> Self where T: Clone;
+        /// Work Θ(|a|), Span Θ(|a|)
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F) -> Self where T: Clone;
+        /// Work Θ(n), Span Θ(log n)
+        fn update(a: &ArraySeqMtPerS<T>, index: usize, item: T) -> Self where T: Clone;
+        /// Work Θ(1), Span Θ(1)
+        fn is_empty(&self) -> bool;
+        /// Work Θ(1), Span Θ(1)
+        fn is_singleton(&self) -> bool;
+        /// Work Θ(|a|), Span Θ(|a|)
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtPerS<T>, f: &F, seed: A) -> A;
+        /// Work Θ(|a|), Span Θ(log|a|)
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> T where T: Clone;
+        /// Work Θ(|a|), Span Θ(log|a|)
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (ArraySeqMtPerS<T>, T) where T: Clone;
     }
 
     impl<T: View> View for ArraySeqMtPerS<T> {

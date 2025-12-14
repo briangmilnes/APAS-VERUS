@@ -22,27 +22,50 @@ pub mod LinkedListStEph {
         pub seq: Vec<T>,
     }
 
-    /// Trait for single-threaded ephemeral linked list sequences (Chapter 18).
-    pub trait LinkedListStEphTrait<T>: Sized {
+    /// Base trait for single-threaded ephemeral linked list sequences (Chapter 18).
+    pub trait LinkedListStEphBaseTrait<T>: Sized {
+        /// Work Θ(n), Span Θ(1)
         fn new(length: usize, init_value: T) -> Self where T: Clone;
+        /// Work Θ(n), Span Θ(1) - linked list traversal
         fn set(&mut self, index: usize, item: T) -> Result<(), &'static str>;
+        /// Work Θ(1), Span Θ(1)
         fn length(&self) -> usize;
+        /// Work Θ(n), Span Θ(1) - linked list traversal
         fn nth(&self, index: usize) -> &T;
-        fn empty() -> Self;
-        fn singleton(item: T) -> Self;
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> LinkedListStEphS<T>;
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &LinkedListStEphS<T>, f: &F) -> LinkedListStEphS<U>;
+        /// Work Θ(len), Span Θ(1)
         fn subseq_copy(&self, start: usize, length: usize) -> Self where T: Clone;
-        fn append(a: &LinkedListStEphS<T>, b: &LinkedListStEphS<T>) -> Self where T: Clone;
-        fn filter<F: Fn(&T) -> bool>(a: &LinkedListStEphS<T>, pred: &F) -> Self where T: Clone;
+        /// Work Θ(Σ|a[i]|), Span Θ(1)
         fn flatten(a: &LinkedListStEphS<LinkedListStEphS<T>>) -> Self where T: Clone;
-        fn update(a: &LinkedListStEphS<T>, index: usize, item: T) -> Self where T: Clone;
-        fn is_empty(&self) -> bool;
-        fn is_singleton(&self) -> bool;
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStEphS<T>, f: &F, seed: A) -> A;
-        fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, id: T) -> T where T: Clone;
-        fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, id: T) -> (LinkedListStEphS<T>, T) where T: Clone;
+        /// Work Θ(n), Span Θ(1)
         fn from_vec(elts: Vec<T>) -> Self;
+    }
+
+    /// Redefinable trait - may be overridden with better algorithms in later chapters.
+    pub trait LinkedListStEphRedefinableTrait<T>: Sized {
+        /// Work Θ(1), Span Θ(1)
+        fn empty() -> Self;
+        /// Work Θ(1), Span Θ(1)
+        fn singleton(item: T) -> Self;
+        /// Work Θ(n), Span Θ(1)
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> LinkedListStEphS<T>;
+        /// Work Θ(|a|), Span Θ(1)
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &LinkedListStEphS<T>, f: &F) -> LinkedListStEphS<U>;
+        /// Work Θ(|a|+|b|), Span Θ(1)
+        fn append(a: &LinkedListStEphS<T>, b: &LinkedListStEphS<T>) -> Self where T: Clone;
+        /// Work Θ(|a|), Span Θ(1)
+        fn filter<F: Fn(&T) -> bool>(a: &LinkedListStEphS<T>, pred: &F) -> Self where T: Clone;
+        /// Work Θ(|a|), Span Θ(1)
+        fn update(a: &LinkedListStEphS<T>, index: usize, item: T) -> Self where T: Clone;
+        /// Work Θ(1), Span Θ(1)
+        fn is_empty(&self) -> bool;
+        /// Work Θ(1), Span Θ(1)
+        fn is_singleton(&self) -> bool;
+        /// Work Θ(|a|), Span Θ(1)
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStEphS<T>, f: &F, seed: A) -> A;
+        /// Work Θ(|a|), Span Θ(1)
+        fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, id: T) -> T where T: Clone;
+        /// Work Θ(|a|), Span Θ(1)
+        fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, id: T) -> (LinkedListStEphS<T>, T) where T: Clone;
     }
 
     impl<T: View> View for LinkedListStEphS<T> {
