@@ -4292,3 +4292,131 @@ Proof Functions:
 
 Holes Found: 7 total
    7 × assume()
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   16 clean (no holes)
+   6 holed (contains holes)
+   22 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 49 total
+   49 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   22 clean (no holes)
+   0 holed (contains holes)
+   22 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 0 total
+
+🎉 No proof holes found! All proofs are complete.
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   1 clean (no holes)
+   1 holed (contains holes)
+   2 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 3 total
+   2 × assume(false)
+   1 × external_body
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   1 holed (contains holes)
+   1 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 20 total
+   20 × external
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   1 clean (no holes)
+   0 holed (contains holes)
+   1 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 0 total
+
+🎉 No proof holes found! All proofs are complete.
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   22 clean (no holes)
+   0 holed (contains holes)
+   22 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 0 total
+
+🎉 No proof holes found! All proofs are complete.
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   29 clean (no holes)
+   19 holed (contains holes)
+   48 total
+
+Proof Functions:
+   10 clean
+   0 holed
+   10 total
+
+Holes Found: 48 total
+   8 × assume(false)
+   11 × assume()
+   3 × assume_specification
+   4 × unsafe {}
+   21 × external_body
+   1 × external

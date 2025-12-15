@@ -213,10 +213,7 @@ pub mod MathSeq {
                 result.spec_len() == length,
             result.data@ == self.data@.subrange(start as int, (start + length) as int),
             {
-                let n = self.data.len(); // exec call - n <= usize::MAX
-                proof {
-                    assert(start as int + length as int <= n as int);
-                }
+                let _n = self.data.len(); // exec call bounds start + length <= usize::MAX
                 let end = start + length;
                 let slice = vstd::slice::slice_subrange(self.data.as_slice(), start, end);
                 let vec = vstd::slice::slice_to_vec(slice);

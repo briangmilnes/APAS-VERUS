@@ -195,4 +195,7 @@ pub mod feq {
     pub fn feq<T: Eq>(x: &T, y: &T) -> bool {
         *x == *y
     }
+    
+    /// Stub obeys_feq_clone for non-Verus builds - always true
+    pub fn obeys_feq_clone<T: Eq + Clone>() -> bool { true }
 }

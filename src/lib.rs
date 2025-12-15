@@ -102,27 +102,23 @@ pub mod Chap06 {
     pub mod LabDirGraphStEph;
     pub mod LabUnDirGraphStEph;
     pub mod WeightedDirGraphStEphU32;
-//    pub mod WeightedDirGraphStEphU8;      // Proven, not compiled by default
-//    pub mod WeightedDirGraphStEphU16;     // Proven, not compiled by default
-//    pub mod WeightedDirGraphStEphU64;     // Proven, not compiled by default
-//    pub mod WeightedDirGraphStEphU128;    // Proven, not compiled by default
-//    pub mod WeightedDirGraphStEphUsize;   // Proven, not compiled by default
-//    pub mod WeightedDirGraphStEphI8;      // Proven, not compiled by default
-//    pub mod WeightedDirGraphStEphI16;     // Proven, not compiled by default
-//    pub mod WeightedDirGraphStEphI32;     // Proven, not compiled by default
-//    pub mod WeightedDirGraphStEphI64;     // Proven, not compiled by default
-//    pub mod WeightedDirGraphStEphI128;    // Proven, not compiled by default
-//    pub mod WeightedDirGraphStEphIsize;   // Proven, not compiled by default
-
-
-//     pub mod DirGraphMtEph;
-//     pub mod UnDirGraphMtEph;
-//     pub mod LabDirGraphMtEph;
-//     pub mod LabUnDirGraphMtEph;
-//     pub mod WeightedDirGraphMtEphInt;
-//     pub mod WeightedDirGraphMtEphFloat;  // OrderedFloat - only PartialEq, no Eq
-//     pub mod WeightedUnDirGraphMtEphInt;
-//     pub mod WeightedUnDirGraphMtEphFloat;  // OrderedFloat - only PartialEq, no Eq
+    // MtEph graph modules - to be verusified
+//    pub mod DirGraphMtEph;
+//    pub mod UnDirGraphMtEph;
+//    pub mod LabDirGraphMtEph;
+//    pub mod LabUnDirGraphMtEph;
+    // WeightedDirGraphStEph per-type variants below are proven but not compiled by default
+//    pub mod WeightedDirGraphStEphU8;
+//    pub mod WeightedDirGraphStEphU16;
+//    pub mod WeightedDirGraphStEphU64;
+//    pub mod WeightedDirGraphStEphU128;
+//    pub mod WeightedDirGraphStEphUsize;
+//    pub mod WeightedDirGraphStEphI8;
+//    pub mod WeightedDirGraphStEphI16;
+//    pub mod WeightedDirGraphStEphI32;
+//    pub mod WeightedDirGraphStEphI64;
+//    pub mod WeightedDirGraphStEphI128;
+//    pub mod WeightedDirGraphStEphIsize;
 }
 
 pub mod Chap11 {

@@ -8,12 +8,11 @@ pub mod LinkedListStEph {
     use std::slice::Iter;
     use std::vec::IntoIter;
 
-    #[cfg(verus_keep_ghost)]
     use vstd::prelude::*;
 
-    #[cfg(verus_keep_ghost)]
     verus! {
 
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
     broadcast use vstd::std_specs::vec::group_vec_axioms;
 
@@ -127,7 +126,7 @@ pub mod LinkedListStEph {
         }
     }
 
-    impl<T: View> LinkedListStEphS<T> {
+    impl<T> LinkedListStEphS<T> {
         pub fn new(length: usize, init_value: T) -> (result: LinkedListStEphS<T>)
             where T: Clone
             requires length <= usize::MAX
@@ -363,28 +362,23 @@ pub mod LinkedListStEph {
     } // verus!
 
     // Non-Verus impls
-    #[cfg(verus_keep_ghost)]
-    impl<T: Clone> Clone for LinkedListStEphS<T> {
+        impl<T: Clone> Clone for LinkedListStEphS<T> {
         fn clone(&self) -> Self { LinkedListStEphS { seq: self.seq.clone() } }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: PartialEq> PartialEq for LinkedListStEphS<T> {
+        impl<T: PartialEq> PartialEq for LinkedListStEphS<T> {
         fn eq(&self, other: &Self) -> bool { self.seq == other.seq }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: Eq> Eq for LinkedListStEphS<T> {}
+        impl<T: Eq> Eq for LinkedListStEphS<T> {}
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: Debug> Debug for LinkedListStEphS<T> {
+        impl<T: Debug> Debug for LinkedListStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             f.debug_list().entries(self.seq.iter()).finish()
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: Display> Display for LinkedListStEphS<T> {
+        impl<T: Display> Display for LinkedListStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(f, "[")?;
             for (i, item) in self.seq.iter().enumerate() {
@@ -395,121 +389,13 @@ pub mod LinkedListStEph {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<'a, T> IntoIterator for &'a LinkedListStEphS<T> {
+        impl<'a, T> IntoIterator for &'a LinkedListStEphS<T> {
         type Item = &'a T;
         type IntoIter = Iter<'a, T>;
         fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T> IntoIterator for LinkedListStEphS<T> {
-        type Item = T;
-        type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
-    }
-
-    // Non-Verus stub
-    #[cfg(not(verus_keep_ghost))]
-    #[derive(Clone, PartialEq, Eq)]
-    pub struct LinkedListStEphS<T> {
-        pub seq: Vec<T>,
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    pub struct LinkedListStEphIter<T> {
-        pub elements: Vec<T>,
-        pub pos: usize,
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: Clone> Iterator for LinkedListStEphIter<T> {
-        type Item = T;
-        fn next(&mut self) -> Option<T> {
-            if self.pos < self.elements.len() {
-                let elem = self.elements[self.pos].clone();
-                self.pos += 1;
-                Some(elem)
-            } else {
-                None
-            }
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T> LinkedListStEphS<T> {
-        pub fn new(length: usize, init_value: T) -> Self where T: Clone {
-            LinkedListStEphS { seq: vec![init_value; length] }
-        }
-        pub fn set(&mut self, index: usize, item: T) -> Result<(), &'static str> {
-            if index < self.seq.len() { self.seq[index] = item; Ok(()) }
-            else { Err("Index out of bounds") }
-        }
-        pub fn length(&self) -> usize { self.seq.len() }
-        pub fn nth(&self, index: usize) -> &T { &self.seq[index] }
-        pub fn empty() -> Self { LinkedListStEphS { seq: Vec::new() } }
-        pub fn singleton(item: T) -> Self { LinkedListStEphS { seq: vec![item] } }
-        pub fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> Self {
-            LinkedListStEphS { seq: (0..n).map(f).collect() }
-        }
-        pub fn map<U, F: Fn(&T) -> U>(a: &Self, f: &F) -> LinkedListStEphS<U> {
-            LinkedListStEphS { seq: a.seq.iter().map(f).collect() }
-        }
-        pub fn append(a: &Self, b: &Self) -> Self where T: Clone {
-            let mut seq = a.seq.clone();
-            seq.extend(b.seq.iter().cloned());
-            LinkedListStEphS { seq }
-        }
-        pub fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self where T: Clone {
-            LinkedListStEphS { seq: a.seq.iter().filter(|x| pred(x)).cloned().collect() }
-        }
-        pub fn isEmpty(&self) -> bool { self.seq.is_empty() }
-        pub fn isSingleton(&self) -> bool { self.seq.len() == 1 }
-        pub fn from_vec(elts: Vec<T>) -> Self { LinkedListStEphS { seq: elts } }
-        pub fn iter(&self) -> LinkedListStEphIter<T> where T: Clone {
-            LinkedListStEphIter { elements: self.seq.clone(), pos: 0 }
-        }
-        pub fn iter_std(&self) -> Iter<'_, T> { self.seq.iter() }
-        pub fn subseq_copy(&self, start: usize, length: usize) -> Self where T: Clone {
-            let end = (start + length).min(self.seq.len());
-            LinkedListStEphS { seq: self.seq[start..end].to_vec() }
-        }
-        pub fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T where T: Clone {
-            a.seq.iter().fold(id, |acc, x| f(&acc, x))
-        }
-        pub fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A {
-            a.seq.iter().fold(seed, |acc, x| f(&acc, x))
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: Debug> Debug for LinkedListStEphS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            f.debug_list().entries(self.seq.iter()).finish()
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: Display> Display for LinkedListStEphS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "[")?;
-            for (i, item) in self.seq.iter().enumerate() {
-                if i > 0 { write!(f, ", ")?; }
-                write!(f, "{item}")?;
-            }
-            write!(f, "]")
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<'a, T> IntoIterator for &'a LinkedListStEphS<T> {
-        type Item = &'a T;
-        type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T> IntoIterator for LinkedListStEphS<T> {
+        impl<T> IntoIterator for LinkedListStEphS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }

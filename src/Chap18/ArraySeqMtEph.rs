@@ -2,6 +2,8 @@
 //! Chapter 18 algorithms for ArraySeqMtEph multithreaded ephemeral. Verusified.
 //! Uses work-stealing Pool for parallel operations (map_par, reduce_par, filter_par).
 
+// Verus requires parentheses around closures with ensures clauses in function arguments
+#[allow(unused_parens)]
 pub mod ArraySeqMtEph {
 
     use std::fmt::{Debug, Display, Formatter};

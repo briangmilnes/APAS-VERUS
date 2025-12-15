@@ -2,6 +2,8 @@
 //! Chapter 5.1 — Multi-threaded ephemeral Set built on `std::collections::HashSet`.
 //! Uses vstd::thread::spawn for parallel cartesian_product.
 
+// Verus requires parentheses around closures with ensures clauses in function arguments
+#[allow(unused_parens)]
 pub mod SetMtEph {
 
     use vstd::prelude::*;
@@ -566,7 +568,7 @@ verus! {
             // Process in reverse order since we'll pop from the end
             let mut product: SetMtEph<Pair<T, U>> = SetMtEph::empty();
             let ghost mut joined_views: Set<T::V> = Set::empty();
-            let n = handles.len();
+            let ghost n = handles.len();
             
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
@@ -592,7 +594,7 @@ verus! {
                     break;
                 }
                 
-                let idx = handles.len() - 1;
+                let ghost idx = handles.len() - 1;
                 let ghost a_view = spawned_views[idx as int];
                 let handle: JoinHandle<SetMtEph<Pair<T, U>>> = handles.pop().unwrap();
                 

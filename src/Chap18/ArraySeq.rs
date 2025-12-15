@@ -8,14 +8,15 @@ pub mod ArraySeq {
     use std::slice::{Iter, IterMut};
     use std::vec::IntoIter;
 
-    #[cfg(verus_keep_ghost)]
     use vstd::prelude::*;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::vec::*;
 
-    #[cfg(verus_keep_ghost)]
     verus! {
 
+    #[cfg(verus_keep_ghost)]
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::vec::*;
+    #[cfg(verus_keep_ghost)]
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
     broadcast use vstd::std_specs::vec::group_vec_axioms;
 
@@ -288,30 +289,31 @@ pub mod ArraySeq {
 
     } // verus!
 
-    // Non-Verus impls (Clone, Display, Debug, Iterator)
-    #[cfg(verus_keep_ghost)]
+    // Helper methods outside verus! (use std types Verus doesn't support)
+    impl<T> ArraySeqS<T> {
+        pub fn iter_std(&self) -> Iter<'_, T> { self.seq.iter() }
+        pub fn iter_mut(&mut self) -> IterMut<'_, T> { self.seq.iter_mut() }
+    }
+
+    // Trait impls outside verus! - work in both modes
     impl<T: Clone> Clone for ArraySeqS<T> {
         fn clone(&self) -> Self {
             ArraySeqS { seq: self.seq.clone() }
         }
     }
 
-    #[cfg(verus_keep_ghost)]
     impl<T: PartialEq> PartialEq for ArraySeqS<T> {
         fn eq(&self, other: &Self) -> bool { self.seq == other.seq }
     }
 
-    #[cfg(verus_keep_ghost)]
     impl<T: Eq> Eq for ArraySeqS<T> {}
 
-    #[cfg(verus_keep_ghost)]
     impl<T: Debug> Debug for ArraySeqS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             f.debug_list().entries(self.seq.iter()).finish()
         }
     }
 
-    #[cfg(verus_keep_ghost)]
     impl<T: Display> Display for ArraySeqS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(f, "[")?;
@@ -323,117 +325,18 @@ pub mod ArraySeq {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
     impl<'a, T> IntoIterator for &'a ArraySeqS<T> {
         type Item = &'a T;
         type IntoIter = Iter<'a, T>;
         fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
     }
 
-    #[cfg(verus_keep_ghost)]
     impl<'a, T> IntoIterator for &'a mut ArraySeqS<T> {
         type Item = &'a mut T;
         type IntoIter = IterMut<'a, T>;
         fn into_iter(self) -> Self::IntoIter { self.seq.iter_mut() }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T> IntoIterator for ArraySeqS<T> {
-        type Item = T;
-        type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
-    }
-
-    // Non-Verus stub for cargo compilation
-    #[cfg(not(verus_keep_ghost))]
-    #[derive(Clone, PartialEq, Eq)]
-    pub struct ArraySeqS<T> {
-        pub seq: Vec<T>,
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    pub struct ArraySeqIter<T> {
-        pub elements: Vec<T>,
-        pub pos: usize,
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: Clone> Iterator for ArraySeqIter<T> {
-        type Item = T;
-        fn next(&mut self) -> Option<T> {
-            if self.pos < self.elements.len() {
-                let elem = self.elements[self.pos].clone();
-                self.pos += 1;
-                Some(elem)
-            } else {
-                None
-            }
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T> ArraySeqS<T> {
-        pub fn new(length: usize, init_value: T) -> ArraySeqS<T> where T: Clone {
-            ArraySeqS { seq: vec![init_value; length] }
-        }
-        pub fn set(&mut self, index: usize, item: T) -> Result<(), &'static str> {
-            if index < self.seq.len() { self.seq[index] = item; Ok(()) }
-            else { Err("Index out of bounds") }
-        }
-        pub fn length(&self) -> usize { self.seq.len() }
-        pub fn nth(&self, index: usize) -> &T { &self.seq[index] }
-        pub fn empty() -> ArraySeqS<T> { ArraySeqS { seq: Vec::new() } }
-        pub fn singleton(item: T) -> ArraySeqS<T> { ArraySeqS { seq: vec![item] } }
-        pub fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> ArraySeqS<T> {
-            ArraySeqS { seq: (0..length).map(f).collect() }
-        }
-        pub fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqS<T>, f: &F) -> ArraySeqS<U> {
-            ArraySeqS { seq: a.seq.iter().map(f).collect() }
-        }
-        pub fn isEmpty(&self) -> bool { self.seq.is_empty() }
-        pub fn isSingleton(&self) -> bool { self.seq.len() == 1 }
-        pub fn from_vec(elts: Vec<T>) -> ArraySeqS<T> { ArraySeqS { seq: elts } }
-        pub fn iter(&self) -> ArraySeqIter<T> where T: Clone {
-            ArraySeqIter { elements: self.seq.clone(), pos: 0 }
-        }
-        pub fn iter_std(&self) -> Iter<'_, T> { self.seq.iter() }
-        pub fn iter_mut(&mut self) -> IterMut<'_, T> { self.seq.iter_mut() }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: Debug> Debug for ArraySeqS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            f.debug_list().entries(self.seq.iter()).finish()
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: Display> Display for ArraySeqS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "[")?;
-            for (i, item) in self.seq.iter().enumerate() {
-                if i > 0 { write!(f, ", ")?; }
-                write!(f, "{item}")?;
-            }
-            write!(f, "]")
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<'a, T> IntoIterator for &'a ArraySeqS<T> {
-        type Item = &'a T;
-        type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<'a, T> IntoIterator for &'a mut ArraySeqS<T> {
-        type Item = &'a mut T;
-        type IntoIter = IterMut<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.iter_mut() }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
     impl<T> IntoIterator for ArraySeqS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;

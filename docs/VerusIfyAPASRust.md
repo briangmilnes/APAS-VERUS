@@ -2,34 +2,101 @@
 
 This document captures lessons learned from converting APAS (Algorithms Parallel and Sequential) Rust code to Verus-verified code.
 
-## 1. Code Organization: Inside vs Outside `verus!` Blocks
+## 1. Code Organization: The Correct Pattern
 
-### Inside `verus!` blocks
+**IMPORTANT**: The `verus!` macro handles erasure - it keeps exec code when `verus_keep_ghost` is NOT set. You do NOT need duplicate struct definitions.
 
-- Struct definitions (with `#[verifier::reject_recursive_types(...)]` for generic types)
+### Correct File Structure
+
+```rust
+pub mod MyModule {
+    use vstd::prelude::*;
+    use std::fmt::{Debug, Display, Formatter};
+
+    verus! {
+        // Verus-only imports (guarded)
+        #[cfg(verus_keep_ghost)]
+        use vstd::std_specs::hash::obeys_key_model;
+        
+        // Import feq - full module in Verus, just the fn in cargo
+        #[cfg(verus_keep_ghost)]
+        use crate::vstdplus::feq::feq::*;
+        #[cfg(not(verus_keep_ghost))]
+        use crate::vstdplus::feq::feq::feq;
+        
+        // ClonePlus works unconditionally (has stubs)
+        use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+
+        // ONE struct definition - verus! macro handles erasure
+        #[verifier::reject_recursive_types(T)]
+        pub struct MyStruct<T> {
+            pub data: Vec<T>,
+        }
+
+        impl<T: View> View for MyStruct<T> { ... }
+
+        impl<T: View> MyStruct<T> {
+            pub fn new() -> Self { ... }
+            // ... verified methods
+        }
+    } // verus!
+
+    // Trait impls outside verus! - NO cfg guards needed
+    impl<T: Clone> Clone for MyStruct<T> {
+        fn clone(&self) -> Self { MyStruct { data: self.data.clone() } }
+    }
+
+    impl<T: PartialEq> PartialEq for MyStruct<T> {
+        fn eq(&self, other: &Self) -> bool { self.data == other.data }
+    }
+
+    impl<T: Eq> Eq for MyStruct<T> {}
+
+    impl<T: Debug> Debug for MyStruct<T> { ... }
+    impl<T: Display> Display for MyStruct<T> { ... }
+
+    // Macros outside verus!
+    #[macro_export]
+    macro_rules! MyLit { ... }
+
+    // Helper methods using std types Verus doesn't support
+    impl<T> MyStruct<T> {
+        pub fn iter_mut(&mut self) -> IterMut<'_, T> { self.data.iter_mut() }
+    }
+}
+```
+
+### What Goes Where
+
+**Inside `verus!` blocks:**
+- Struct definitions (ONE copy, with `#[verifier::reject_recursive_types(...)]`)
 - Trait definitions with type bounds
 - Spec functions (`spec fn`)
 - Proof functions (`proof fn`)
 - Exec functions that need verification
 - `View` implementations
-- Ghost iterators (`ForLoopGhostIterator`, `ForLoopGhostIteratorNew`)
+- Ghost iterators
 
-### Outside `verus!` blocks
-
-- `Clone` implementations (Verus has no spec for std `Clone`)
+**Outside `verus!` blocks (NO cfg guards):**
+- `Clone`, `PartialEq`, `Eq` implementations
 - `Display`, `Debug` implementations
 - `From` implementations
 - `Iterator` implementations (std iterator)
-- `Deref`/`DerefMut` implementations
-- Traits using unsupported std types (e.g., `Default`, `Mutex`)
-- Macros (must be outside for `use crate::MacroName;` to work)
-- Type aliases like `pub use PredMt as Pred;`
+- `IntoIterator` implementations
+- Macros
+- Helper methods using std types Verus doesn't support (like `IterMut`)
 
 ### Keep the original traits (with comments) intact
 
-When verusifying APAS source, **keep the original trait definitions exactly as written in APAS-AI, including all their comments and complexity notes**. Do not split or rename traits unless the APAS source already does so. Treat traits as the stable API surface; only add the verification-specific machinery around them (e.g., `verus!` blocks, views, ghost functions).
+When verusifying APAS source, **keep the original trait definitions exactly as written in
+APAS-AI, including all their comments and complexity notes**. Do not split or rename
+traits unless the APAS source already does so. Treat traits as the stable API surface;
+only add the verification-specific machinery around them (e.g., `verus!` blocks, views,
+ghost functions).
 
-Preferred approach: keep the trait surface and comments, then add a `View` plus spec accessors on the concrete type so you can write `requires`/`ensures` that reference the ghost model without altering the trait signature.
+Preferred approach: keep the trait surface and comments, then add a `View` plus spec
+accessors on the concrete type so you can write `requires`/`ensures` that reference the
+ghost model without altering the trait signature.
 
 ## 2. Trait Bounds and `StT`
 
@@ -45,7 +112,9 @@ impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude:
 
 ## 3.5 Trait specs via views (pattern from `SetStEph`)
 
-To place `requires`/`ensures` on trait methods, first give the struct a `View` and spec accessors, then express the trait method contracts in terms of that view. Example (`SetStEph` pattern):
+To place `requires`/`ensures` on trait methods, first give the struct a `View` and spec
+accessors, then express the trait method contracts in terms of that view. Example
+(`SetStEph` pattern):
 
 1. Implement `View` for the concrete type, exposing its ghost model:
    ```rust
@@ -58,7 +127,9 @@ To place `requires`/`ensures` on trait methods, first give the struct a `View` a
 3. In the trait, write `requires`/`ensures` using those spec accessors / `view()` so the contracts are abstract but grounded in the ghost model.
 4. Implement the trait for the concrete type; the impl can refer to `self.view()` (or helper specs) in its own `requires`/`ensures`.
 
-This keeps the trait API identical to APAS-AI while allowing full specifications. Use this pattern when you need trait-level specs; otherwise leave the original trait signatures/comments untouched.
+This keeps the trait API identical to APAS-AI while allowing full specifications. Use this
+pattern when you need trait-level specs; otherwise leave the original trait
+signatures/comments untouched.
 
 ## 3. Custom Traits for Verified Operations
 
@@ -211,7 +282,9 @@ macro_rules! SetLit {
 
 ### `reject_recursive_types`
 
-For generic structs inside `verus!` blocks, Verus needs to know that the type parameter won't create infinite recursion. Use `#[verifier::reject_recursive_types(T)]` for each type parameter:
+For generic structs inside `verus!` blocks, Verus needs to know that the type parameter
+won't create infinite recursion. Use `#[verifier::reject_recursive_types(T)]` for each
+type parameter:
 
 ```rust
 #[verifier::reject_recursive_types(V)]
@@ -260,11 +333,15 @@ fn my_function_with_loop(&self) -> Result {
 }
 ```
 
-This allows the function to verify without proving termination - useful as an intermediate step when verus-ifying code. The `invariant true` is a placeholder that can be strengthened later.
+This allows the function to verify without proving termination - useful as an intermediate
+step when verus-ifying code. The `invariant true` is a placeholder that can be
+strengthened later.
 
 ## 12. Partial Verification: External Body
 
-When a function body uses operations with preconditions you haven't yet proven (e.g., `obeys_key_model`, `obeys_feq_full`), you can temporarily skip verification of the entire body:
+When a function body uses operations with preconditions you haven't yet proven (e.g.,
+`obeys_key_model`, `obeys_feq_full`), you can temporarily skip verification of the entire
+body:
 
 ```rust
 #[verifier::external_body]

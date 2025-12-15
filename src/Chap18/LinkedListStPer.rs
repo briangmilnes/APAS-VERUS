@@ -8,12 +8,11 @@ pub mod LinkedListStPer {
     use std::slice::Iter;
     use std::vec::IntoIter;
 
-    #[cfg(verus_keep_ghost)]
     use vstd::prelude::*;
 
-    #[cfg(verus_keep_ghost)]
     verus! {
 
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
     broadcast use vstd::std_specs::vec::group_vec_axioms;
 
@@ -125,7 +124,7 @@ pub mod LinkedListStPer {
         }
     }
 
-    impl<T: View> LinkedListStPerS<T> {
+    impl<T> LinkedListStPerS<T> {
         pub fn new(length: usize, init_value: T) -> (result: LinkedListStPerS<T>)
             where T: Clone
             requires length <= usize::MAX
@@ -349,28 +348,23 @@ pub mod LinkedListStPer {
     } // verus!
 
     // Non-Verus impls
-    #[cfg(verus_keep_ghost)]
-    impl<T: Clone> Clone for LinkedListStPerS<T> {
+        impl<T: Clone> Clone for LinkedListStPerS<T> {
         fn clone(&self) -> Self { LinkedListStPerS { seq: self.seq.clone() } }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: PartialEq> PartialEq for LinkedListStPerS<T> {
+        impl<T: PartialEq> PartialEq for LinkedListStPerS<T> {
         fn eq(&self, other: &Self) -> bool { self.seq == other.seq }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: Eq> Eq for LinkedListStPerS<T> {}
+        impl<T: Eq> Eq for LinkedListStPerS<T> {}
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: Debug> Debug for LinkedListStPerS<T> {
+        impl<T: Debug> Debug for LinkedListStPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             f.debug_list().entries(self.seq.iter()).finish()
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: Display> Display for LinkedListStPerS<T> {
+        impl<T: Display> Display for LinkedListStPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(f, "[")?;
             for (i, item) in self.seq.iter().enumerate() {
@@ -381,117 +375,13 @@ pub mod LinkedListStPer {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<'a, T> IntoIterator for &'a LinkedListStPerS<T> {
+        impl<'a, T> IntoIterator for &'a LinkedListStPerS<T> {
         type Item = &'a T;
         type IntoIter = Iter<'a, T>;
         fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T> IntoIterator for LinkedListStPerS<T> {
-        type Item = T;
-        type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
-    }
-
-    // Non-Verus stub
-    #[cfg(not(verus_keep_ghost))]
-    #[derive(Clone, PartialEq, Eq)]
-    pub struct LinkedListStPerS<T> {
-        pub seq: Vec<T>,
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    pub struct LinkedListStPerIter<T> {
-        pub elements: Vec<T>,
-        pub pos: usize,
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: Clone> Iterator for LinkedListStPerIter<T> {
-        type Item = T;
-        fn next(&mut self) -> Option<T> {
-            if self.pos < self.elements.len() {
-                let elem = self.elements[self.pos].clone();
-                self.pos += 1;
-                Some(elem)
-            } else {
-                None
-            }
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T> LinkedListStPerS<T> {
-        pub fn new(length: usize, init_value: T) -> Self where T: Clone {
-            LinkedListStPerS { seq: vec![init_value; length] }
-        }
-        pub fn empty() -> Self { LinkedListStPerS { seq: Vec::new() } }
-        pub fn singleton(item: T) -> Self { LinkedListStPerS { seq: vec![item] } }
-        pub fn length(&self) -> usize { self.seq.len() }
-        pub fn nth(&self, index: usize) -> &T { &self.seq[index] }
-        pub fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> Self {
-            LinkedListStPerS { seq: (0..n).map(f).collect() }
-        }
-        pub fn map<U, F: Fn(&T) -> U>(a: &Self, f: &F) -> LinkedListStPerS<U> {
-            LinkedListStPerS { seq: a.seq.iter().map(f).collect() }
-        }
-        pub fn append(a: &Self, b: &Self) -> Self where T: Clone {
-            let mut seq = a.seq.clone();
-            seq.extend(b.seq.iter().cloned());
-            LinkedListStPerS { seq }
-        }
-        pub fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self where T: Clone {
-            LinkedListStPerS { seq: a.seq.iter().filter(|x| pred(x)).cloned().collect() }
-        }
-        pub fn isEmpty(&self) -> bool { self.seq.is_empty() }
-        pub fn isSingleton(&self) -> bool { self.seq.len() == 1 }
-        pub fn from_vec(elts: Vec<T>) -> Self { LinkedListStPerS { seq: elts } }
-        pub fn iter(&self) -> LinkedListStPerIter<T> where T: Clone {
-            LinkedListStPerIter { elements: self.seq.clone(), pos: 0 }
-        }
-        pub fn iter_std(&self) -> Iter<'_, T> { self.seq.iter() }
-        pub fn subseq_copy(&self, start: usize, length: usize) -> Self where T: Clone {
-            let end = (start + length).min(self.seq.len());
-            LinkedListStPerS { seq: self.seq[start..end].to_vec() }
-        }
-        pub fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T where T: Clone {
-            a.seq.iter().fold(id, |acc, x| f(&acc, x))
-        }
-        pub fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A {
-            a.seq.iter().fold(seed, |acc, x| f(&acc, x))
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: Debug> Debug for LinkedListStPerS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            f.debug_list().entries(self.seq.iter()).finish()
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: Display> Display for LinkedListStPerS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "[")?;
-            for (i, item) in self.seq.iter().enumerate() {
-                if i > 0 { write!(f, ", ")?; }
-                write!(f, "{item}")?;
-            }
-            write!(f, "]")
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<'a, T> IntoIterator for &'a LinkedListStPerS<T> {
-        type Item = &'a T;
-        type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T> IntoIterator for LinkedListStPerS<T> {
+        impl<T> IntoIterator for LinkedListStPerS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
