@@ -36,39 +36,46 @@ verus! {
         open spec fn spec_total_weight(&self) -> int 
          { self@.A.fold(0int, |acc: int, t: (V::V, V::V, i128)| acc + t.2 as int) }
 
+        /// APAS: Work Θ(|V| + |E|), Span Θ(1)
         fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i128>>) -> (g: WeightedDirGraphStEphI128<V>)
             requires valid_key_type_WeightedEdge::<V, i128>()
             ensures g@.V.finite(), g@.A.finite();
 
+        /// APAS: Work Θ(1), Span Θ(1)
         fn add_weighed_edge(&mut self, from: V, to: V, weight: i128)
             requires valid_key_type_WeightedEdge::<V, i128>()
             ensures 
                 self@.V == old(self)@.V.insert(from@).insert(to@),
                 self@.A == old(self)@.A.insert((from@, to@, weight));
 
+        /// APAS: Work Θ(|A|), Span Θ(1)
         fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i128>)
             requires valid_key_type_WeightedEdge::<V, i128>()
             ensures 
                 weight.is_some() == (exists |w: i128| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),
                 weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));
 
+        /// APAS: Work Θ(|A|), Span Θ(1)
         fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i128>>)
             requires valid_key_type_WeightedEdge::<V, i128>()
             ensures 
                 forall |t: (V::V, V::V, i128)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);
 
+        /// APAS: Work Θ(|A|), Span Θ(1)
         fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i128>>)
             requires valid_key_type_WeightedEdge::<V, i128>()
             ensures 
                 forall |p: (V::V, i128)| out_neighbors@.contains(p) == 
                     (exists |w: i128| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);
 
+        /// APAS: Work Θ(|A|), Span Θ(1)
         fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i128>>)
             requires valid_key_type_WeightedEdge::<V, i128>()
             ensures 
                 forall |p: (V::V, i128)| in_neighbors@.contains(p) == 
                     (exists |w: i128| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);
 
+        /// APAS: Work Θ(|A|), Span Θ(1)
         fn total_weight(&self) -> (total_weight: CheckedI128)
             requires valid_key_type_WeightedEdge::<V, i128>()
             ensures total_weight@ == self.spec_total_weight();
@@ -88,6 +95,7 @@ verus! {
 
     impl<V: StT + Hash> WeightedDirGraphStEphI128Trait<V> for WeightedDirGraphStEphI128<V> {
 
+        /// APAS: Work Θ(|V| + |E|), Span Θ(1)
         fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, i128>>) -> (g: WeightedDirGraphStEphI128<V>) {
             let mut edge_set: SetStEph<LabEdge<V, i128>> = SetStEph::empty();
             let mut it = edges.iter();
@@ -112,10 +120,12 @@ verus! {
             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
         }
 
+        /// APAS: Work Θ(1), Span Θ(1)
         fn add_weighed_edge(&mut self, from: V, to: V, weight: i128) { 
             self.add_labeled_arc(from, to, weight); 
         }
 
+        /// APAS: Work Θ(|A|), Span Θ(1)
         fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<i128>) { 
             match self.get_arc_label(from, to) {
                 Some(w) => Some(*w),
@@ -123,6 +133,7 @@ verus! {
             }
         }
 
+        /// APAS: Work Θ(|A|), Span Θ(1)
         fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, i128>>) {
             let mut edges: SetStEph<WeightedEdge<V, i128>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
@@ -164,6 +175,7 @@ verus! {
             }
         }
 
+        /// APAS: Work Θ(|A|), Span Θ(1)
         fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, i128>>) {
             let mut neighbors: SetStEph<Pair<V, i128>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
@@ -211,6 +223,7 @@ verus! {
             }
         }
 
+        /// APAS: Work Θ(|A|), Span Θ(1)
         fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, i128>>) {
             let mut neighbors: SetStEph<Pair<V, i128>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
@@ -258,6 +271,7 @@ verus! {
             }
         }
 
+        /// APAS: Work Θ(|A|), Span Θ(1)
         fn total_weight(&self) -> (total_weight: CheckedI128) { 
             let mut sum = CheckedI128::new(0);
             let mut it = self.labeled_arcs().iter();
