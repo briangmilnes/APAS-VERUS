@@ -3,6 +3,8 @@
 //! Based on Verus counting-to-2 example: https://verus-lang.github.io/verus/state_machines/examples/counting-to-2.html
 
 use vstd::prelude::*;
+use std::sync::Mutex;
+use crate::Types::Types::{StT, Pair, B};
 
 verus! {
 
@@ -15,12 +17,15 @@ pub fn diverge<A>() -> A {
 } // verus!
 
 pub mod Concurrency {
+    use vstd::prelude::*;
     use std::sync::Mutex;
     use crate::Types::Types::{StT, Pair, B};
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+
+    verus! {
 
     // StTInMtT: St-friendly elements that can be shared across threads (StT + Send + Sync)
     pub trait StTInMtT: StT + Send + Sync {}
-    impl<T> StTInMtT for T where T: StT + Send + Sync {}
 
     // MtT: multi-threaded friendly elements; minimal so it can include Mutex<..>
     // Keep only thread-safety and size requirements.
@@ -32,49 +37,42 @@ pub mod Concurrency {
 
     // MtKey: Multi-threaded key type with ordering and static lifetime
     pub trait MtKey: StTInMtT + Ord + 'static {}
-    impl<T> MtKey for T where T: StTInMtT + Ord + 'static {}
 
     // MtVal: Multi-threaded value type with static lifetime
     pub trait MtVal: StTInMtT + 'static {}
-    impl<T> MtVal for T where T: StTInMtT + 'static {}
 
     // MtFn: Multi-threaded function type with common bounds
     pub trait MtFn<Args, Output>: Fn(Args) -> Output + Send + Sync + 'static {}
-    impl<T, Args, Output> MtFn<Args, Output> for T where T: Fn(Args) -> Output + Send + Sync + 'static {}
 
     // MtFnClone: Multi-threaded function type with Clone
     pub trait MtFnClone<Args, Output>: Fn(Args) -> Output + Send + Sync + Clone + 'static {}
-    impl<T, Args, Output> MtFnClone<Args, Output> for T where T: Fn(Args) -> Output + Send + Sync + Clone + 'static {}
 
     // MtReduceFn: Multi-threaded reducer function type
     pub trait MtReduceFn<V>: Fn(&V, &V) -> V + Clone + Send + Sync + 'static {}
-    impl<T, V> MtReduceFn<V> for T where T: Fn(&V, &V) -> V + Clone + Send + Sync + 'static {}
 
     // PredMt: Multi-threaded predicate function (boolean function)
     pub trait PredMt<T>: Fn(&T) -> B + Send + Sync + 'static {}
-    impl<F, T> PredMt<T> for F where F: Fn(&T) -> B + Send + Sync + 'static {}
 
     // PredVal: Multi-threaded predicate function taking values by value
     pub trait PredVal<T>: Fn(T) -> B + Send + Sync + 'static {}
-    impl<F, T> PredVal<T> for F where F: Fn(T) -> B + Send + Sync + 'static {}
 
     // Backward compatibility alias
     pub use PredMt as Pred;
 
-    // MtT implementations for Mutex
-    impl<T: StT + Send> MtT for Mutex<T> {
-        type Inner = T;
-        fn clone_mt(&self) -> Self {
-            let inner = self.lock().unwrap().clone();
-            Mutex::new(inner)
-        }
-        fn new_mt(inner: Self::Inner) -> Self { Mutex::new(inner) }
-    }
+    // Blanket impls
+    impl<T> StTInMtT for T where T: StT + Send + Sync {}
+    impl<T> MtKey for T where T: StTInMtT + Ord + 'static {}
+    impl<T> MtVal for T where T: StTInMtT + 'static {}
+    impl<T, Args, Output> MtFn<Args, Output> for T where T: Fn(Args) -> Output + Send + Sync + 'static {}
+    impl<T, Args, Output> MtFnClone<Args, Output> for T where T: Fn(Args) -> Output + Send + Sync + 'static + Clone {}
+    impl<T, V> MtReduceFn<V> for T where T: Fn(&V, &V) -> V + Clone + Send + Sync + 'static {}
+    impl<F, T> PredMt<T> for F where F: Fn(&T) -> B + Send + Sync + 'static {}
+    impl<F, T> PredVal<T> for F where F: Fn(T) -> B + Send + Sync + 'static {}
 
-    // MtT for Pair when components are Send+Sync
-    impl<A: StT + Send + Sync, B: StT + Send + Sync> MtT for Pair<A, B> {
+    // MtT for Pair when components are Send+Sync+Clone
+    impl<A: StT + Send + Sync + Clone, B: StT + Send + Sync + Clone> MtT for Pair<A, B> {
         type Inner = Pair<A, B>;
-        fn clone_mt(&self) -> Self { self.clone() }
+        fn clone_mt(&self) -> Self { Pair(self.0.clone_plus(), self.1.clone_plus()) }
         fn new_mt(inner: Self::Inner) -> Self { inner }
     }
 
@@ -129,7 +127,7 @@ pub mod Concurrency {
 
     impl MtT for String {
         type Inner = String;
-        fn clone_mt(&self) -> Self { self.clone() }
+        fn clone_mt(&self) -> Self { self.clone_plus() }
         fn new_mt(inner: Self::Inner) -> Self { inner }
     }
 
@@ -139,5 +137,15 @@ pub mod Concurrency {
         fn new_mt(inner: Self::Inner) -> Self { inner }
     }
 
-}
+    } // verus!
 
+    // MtT implementations for Mutex - outside verus! because Mutex is not specified
+    impl<T: StT + Send> MtT for Mutex<T> {
+        type Inner = T;
+        fn clone_mt(&self) -> Self {
+            let inner = self.lock().unwrap().clone();
+            Mutex::new(inner)
+        }
+        fn new_mt(inner: Self::Inner) -> Self { Mutex::new(inner) }
+    }
+}

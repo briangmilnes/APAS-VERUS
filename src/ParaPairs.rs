@@ -10,7 +10,8 @@ pub mod ParaPairs {
 
     use crate::Types::Types::Pair;
 
-    /// Unverified parallel pair - no specs.
+    /// Parallel pair with specs - external_body trusts the parallel implementation.
+    /// The specs match para_pair_disjoint for consistency.
     #[verifier::external_body]
     pub fn para_pair<A, B, F1, F2>(f1: F1, f2: F2) -> (result: Pair<A, B>)
         where
@@ -18,6 +19,12 @@ pub mod ParaPairs {
             F2: FnOnce() -> B + Send + 'static,
             A: Send + 'static,
             B: Send + 'static,
+        requires
+            f1.requires(()),
+            f2.requires(()),
+        ensures
+            f1.ensures((), result.0),
+            f2.ensures((), result.1),
     {
         let h1 = spawn(f1);
         let h2 = spawn(f2);
