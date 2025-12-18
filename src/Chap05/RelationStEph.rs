@@ -62,8 +62,10 @@ verus! {
         open spec fn view(&self) -> (int, Seq<Pair<X, Y>>) { self.inner@ }
     }
 
-    impl<'a, X: StT + Hash, Y: StT + Hash> RelationStEphIter<'a, X, Y> {
-        pub fn next(&mut self) -> (next: Option<&'a Pair<X, Y>>)
+    impl<'a, X: StT + Hash, Y: StT + Hash> std::iter::Iterator for RelationStEphIter<'a, X, Y> {
+        type Item = &'a Pair<X, Y>;
+
+        fn next(&mut self) -> (next: Option<&'a Pair<X, Y>>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
                 match next {
@@ -311,11 +313,4 @@ verus! {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { std::fmt::Display::fmt(&self.pairs, f) }
     }
 
-    // Implement std::iter::Iterator for RelationStEphIter to enable standard iteration methods
-    impl<'a, A: StT + Hash, B: StT + Hash> std::iter::Iterator for RelationStEphIter<'a, A, B> {
-        type Item = &'a crate::Types::Types::Pair<A, B>;
-        fn next(&mut self) -> Option<Self::Item> {
-            self.inner.next()
-        }
-    }
 }

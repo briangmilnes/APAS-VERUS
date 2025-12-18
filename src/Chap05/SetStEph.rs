@@ -73,8 +73,10 @@ verus! {
         0 <= it@.0 <= it@.1.len()
     }
 
-    impl<'a, T: StT + Hash> SetStEphIter<'a, T> {
-        pub fn next(&mut self) -> (next: Option<&'a T>)
+    impl<'a, T: StT + Hash> std::iter::Iterator for SetStEphIter<'a, T> {
+        type Item = &'a T;
+
+        fn next(&mut self) -> (next: Option<&'a T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
                 match next {
@@ -728,11 +730,4 @@ verus! {
         }
     }
 
-    // Implement std::iter::Iterator for SetStEphIter to enable standard iteration methods
-    impl<'a, T: crate::Types::Types::StT + std::hash::Hash> std::iter::Iterator for SetStEphIter<'a, T> {
-        type Item = &'a T;
-        fn next(&mut self) -> Option<Self::Item> {
-            self.inner.next()
-        }
-    }
 }

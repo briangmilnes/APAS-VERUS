@@ -56,8 +56,8 @@ pub mod experiments {
 //    pub mod checked_signed_int;
 //    pub mod checked_u32;
 //    pub mod seq_set_exec;
-    pub mod hash_set_modern_pattern;
-    pub mod test_verify_one_file;
+//    pub mod hash_set_modern_pattern;  // WIP - uses vstd::std_specs not available in cargo
+//    pub mod test_verify_one_file;     // WIP - uses rust_verify_test_macros (nightly)
 }
 
 pub mod vstdplus {
