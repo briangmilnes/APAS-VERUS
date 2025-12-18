@@ -70,17 +70,17 @@ verus! {
             self@.V.finite() && self@.A.finite()
         }
 
-        open spec fn spec_nplus(&self, v: V::V)  -> Set<V::V> { Set::new(|w: V::V| self@.A.contains((v, w))) }
-        open spec fn spec_nminus(&self, v: V::V) -> Set<V::V> { Set::new(|u: V::V| self@.A.contains((u, v))) }
-        open spec fn spec_ng(&self, v: V::V)     -> Set<V::V> { self.spec_nplus(v).union(self.spec_nminus(v)) }
+        open spec fn spec_n_plus(&self, v: V::V)  -> Set<V::V> { Set::new(|w: V::V| self@.A.contains((v, w))) }
+        open spec fn spec_n_minus(&self, v: V::V) -> Set<V::V> { Set::new(|u: V::V| self@.A.contains((u, v))) }
+        open spec fn spec_ng(&self, v: V::V)     -> Set<V::V> { self.spec_n_plus(v).union(self.spec_n_minus(v)) }
         open spec fn spec_degree(&self, v: V::V) -> nat       { self.spec_ng(v).len() }
 
-        open spec fn spec_nplus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> {
-            Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_nplus(u).contains(w))
+        open spec fn spec_n_plus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> {
+            Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_plus(u).contains(w))
         }
 
-        open spec fn spec_nminus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> {
-            Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_nminus(u).contains(w))
+        open spec fn spec_n_minus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> {
+            Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_minus(u).contains(w))
         }
 
         open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> {
@@ -149,23 +149,23 @@ verus! {
         /// claude-4-sonet: Work Θ(|A|), Span Θ(1)
         fn n_plus(&self, v: &V)                          -> (out_neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
-            ensures out_neighbors@ == self.spec_nplus(v@);
+            ensures out_neighbors@ == self.spec_n_plus(v@);
 
         /// APAS: Work Θ(|A|), Span Θ(1)
         /// claude-4-sonet: Work Θ(|A|), Span Θ(1)
         fn n_minus(&self, v: &V)                         -> (in_neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
-            ensures in_neighbors@ == self.spec_nminus(v@);
+            ensures in_neighbors@ == self.spec_n_minus(v@);
 
         /// APAS: Work Θ(|vertices| × |A|), Span Θ(1)
         fn n_plus_of_vertices(&self, vertices: &SetStEph<V>)  -> (out_neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
-            ensures out_neighbors@ == self.spec_nplus_of_vertices(vertices@);
+            ensures out_neighbors@ == self.spec_n_plus_of_vertices(vertices@);
 
         /// APAS: Work Θ(|vertices| × |A|), Span Θ(1)
         fn n_minus_of_vertices(&self, vertices: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
-            ensures in_neighbors@ == self.spec_nminus_of_vertices(vertices@);
+            ensures in_neighbors@ == self.spec_n_minus_of_vertices(vertices@);
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn incident(&self, e: &Edge<V>, v: &V)          -> (b: B)
@@ -180,12 +180,12 @@ verus! {
         /// APAS: Work Θ(|A|), Span Θ(1)
         fn in_degree(&self, v: &V)                       -> (n: N)
             requires valid_key_type_Edge::<V>()
-            ensures n == self.spec_nminus(v@).len();
+            ensures n == self.spec_n_minus(v@).len();
 
         /// APAS: Work Θ(|A|), Span Θ(1)
         fn out_degree(&self, v: &V)                      -> (n: N)
             requires valid_key_type_Edge::<V>()
-            ensures n == self.spec_nplus(v@).len();
+            ensures n == self.spec_n_plus(v@).len();
     }
 
     impl<V: StT + Hash> DirGraphStEphTrait<V> for DirGraphStEph<V> {
@@ -258,7 +258,7 @@ verus! {
         }
 
         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)
-            ensures out_neighbors@ == self.spec_nplus(v@)
+            ensures out_neighbors@ == self.spec_n_plus(v@)
         {
             let mut out: SetStEph<V> = SetStEph::empty();
             let mut it = self.A.iter();
@@ -282,16 +282,16 @@ verus! {
                     None => {
                         proof {
                             assert forall |w: V::V| #[trigger] out@.contains(w) implies
-                            self.spec_nplus(v_view).contains(w) by {
+                            self.spec_n_plus(v_view).contains(w) by {
                                 if out@.contains(w) {
                                     let i = choose |i: int| #![trigger arcs_seq[i]] 0 <= i < arcs_seq.len() && arcs_seq[i]@.0 == v_view && arcs_seq[i]@.1 == w;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(arcs_seq, i);
 // Veracity: UNNEEDED assert                                     assert(arcs_view.contains((v_view, w)));
                                 }
                             }
-                            assert forall |w: V::V| #[trigger] self.spec_nplus(v_view).contains(w) implies
+                            assert forall |w: V::V| #[trigger] self.spec_n_plus(v_view).contains(w) implies
                             out@.contains(w) by {
-                                if self.spec_nplus(v_view).contains(w) {
+                                if self.spec_n_plus(v_view).contains(w) {
 // Veracity: UNNEEDED assert                                     assert(arcs_view.contains((v_view, w)));
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(arcs_seq, (v_view, w));
                                 }
@@ -311,7 +311,7 @@ verus! {
         }
 
         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)
-            ensures in_neighbors@ == self.spec_nminus(v@)
+            ensures in_neighbors@ == self.spec_n_minus(v@)
         {
             let mut inn: SetStEph<V> = SetStEph::empty();
             let mut it = self.A.iter();
@@ -335,16 +335,16 @@ verus! {
                     None => {
                         proof {
                             assert forall |u: V::V| #[trigger] inn@.contains(u) implies
-                            self.spec_nminus(v_view).contains(u) by {
+                            self.spec_n_minus(v_view).contains(u) by {
                                 if inn@.contains(u) {
                                     let i = choose |i: int| #![trigger arcs_seq[i]] 0 <= i < arcs_seq.len() && arcs_seq[i]@.1 == v_view && arcs_seq[i]@.0 == u;
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(arcs_seq, i);
 // Veracity: UNNEEDED assert                                     assert(arcs_view.contains((u, v_view)));
                                 }
                             }
-                            assert forall |u: V::V| #[trigger] self.spec_nminus(v_view).contains(u) implies
+                            assert forall |u: V::V| #[trigger] self.spec_n_minus(v_view).contains(u) implies
                             inn@.contains(u) by {
-                                if self.spec_nminus(v_view).contains(u) {
+                                if self.spec_n_minus(v_view).contains(u) {
 // Veracity: UNNEEDED assert                                     assert(arcs_view.contains((u, v_view)));
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(arcs_seq, (u, v_view));
                                 }
@@ -364,7 +364,7 @@ verus! {
         }
 
         fn n_plus_of_vertices(&self, vertices: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)
-            ensures out_neighbors@ == self.spec_nplus_of_vertices(vertices@)
+            ensures out_neighbors@ == self.spec_n_plus_of_vertices(vertices@)
         {
             let mut result: SetStEph<V> = SetStEph::empty();
             let mut it = vertices.iter();
@@ -380,24 +380,24 @@ verus! {
                     u_seq.map(|i: int, v: V| v@).to_set() == vertices_view,
                     result@ == Set::new(|w: V::V| exists |i: int|
                         #![trigger u_seq[i]]
-                        0 <= i < it@.0 && self.spec_nplus(u_seq[i]@).contains(w)),
+                        0 <= i < it@.0 && self.spec_n_plus(u_seq[i]@).contains(w)),
                     decreases u_seq.len() - it@.0,
             {
                 match it.next() {
                     None => {
                         proof {
                             assert forall |w: V::V| #[trigger] result@.contains(w) implies
-                            self.spec_nplus_of_vertices(vertices_view).contains(w) by {
+                            self.spec_n_plus_of_vertices(vertices_view).contains(w) by {
                                 if result@.contains(w) {
-                                    let i = choose |i: int| #![trigger u_seq[i]] 0 <= i < u_seq.len() && self.spec_nplus(u_seq[i]@).contains(w);
+                                    let i = choose |i: int| #![trigger u_seq[i]] 0 <= i < u_seq.len() && self.spec_n_plus(u_seq[i]@).contains(w);
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(u_seq, i);
 // Veracity: UNNEEDED assert                                     assert(vertices_view.contains(u_seq[i]@));
                                 }
                             }
-                            assert forall |w: V::V| #[trigger] self.spec_nplus_of_vertices(vertices_view).contains(w) implies
+                            assert forall |w: V::V| #[trigger] self.spec_n_plus_of_vertices(vertices_view).contains(w) implies
                             result@.contains(w) by {
-                                if self.spec_nplus_of_vertices(vertices_view).contains(w) {
-                                    let u = choose |u: V::V| #![trigger vertices_view.contains(u)] vertices_view.contains(u) && self.spec_nplus(u).contains(w);
+                                if self.spec_n_plus_of_vertices(vertices_view).contains(w) {
+                                    let u = choose |u: V::V| #![trigger vertices_view.contains(u)] vertices_view.contains(u) && self.spec_n_plus(u).contains(w);
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(u_seq, u);
                                 }
                             }
@@ -413,7 +413,7 @@ verus! {
         }
 
         fn n_minus_of_vertices(&self, vertices: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)
-            ensures in_neighbors@ == self.spec_nminus_of_vertices(vertices@)
+            ensures in_neighbors@ == self.spec_n_minus_of_vertices(vertices@)
         {
             let mut result: SetStEph<V> = SetStEph::empty();
             let mut it = vertices.iter();
@@ -429,24 +429,24 @@ verus! {
                     u_seq.map(|i: int, v: V| v@).to_set() == vertices_view,
                     result@ == Set::new(|w: V::V| exists |i: int|
                         #![trigger u_seq[i]]
-                        0 <= i < it@.0 && self.spec_nminus(u_seq[i]@).contains(w)),
+                        0 <= i < it@.0 && self.spec_n_minus(u_seq[i]@).contains(w)),
                     decreases u_seq.len() - it@.0,
             {
                 match it.next() {
                     None => {
                         proof {
                             assert forall |w: V::V| #[trigger] result@.contains(w) implies
-                            self.spec_nminus_of_vertices(vertices_view).contains(w) by {
+                            self.spec_n_minus_of_vertices(vertices_view).contains(w) by {
                                 if result@.contains(w) {
-                                    let i = choose |i: int| #![trigger u_seq[i]] 0 <= i < u_seq.len() && self.spec_nminus(u_seq[i]@).contains(w);
+                                    let i = choose |i: int| #![trigger u_seq[i]] 0 <= i < u_seq.len() && self.spec_n_minus(u_seq[i]@).contains(w);
                                     crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(u_seq, i);
 // Veracity: UNNEEDED assert                                     assert(vertices_view.contains(u_seq[i]@));
                                 }
                             }
-                            assert forall |w: V::V| #[trigger] self.spec_nminus_of_vertices(vertices_view).contains(w) implies
+                            assert forall |w: V::V| #[trigger] self.spec_n_minus_of_vertices(vertices_view).contains(w) implies
                             result@.contains(w) by {
-                                if self.spec_nminus_of_vertices(vertices_view).contains(w) {
-                                    let u = choose |u: V::V| #![trigger vertices_view.contains(u)] vertices_view.contains(u) && self.spec_nminus(u).contains(w);
+                                if self.spec_n_minus_of_vertices(vertices_view).contains(w) {
+                                    let u = choose |u: V::V| #![trigger vertices_view.contains(u)] vertices_view.contains(u) && self.spec_n_minus(u).contains(w);
                                     crate::vstdplus::seq_set::lemma_map_to_set_contains_index(u_seq, u);
                                 }
                             }
@@ -468,11 +468,11 @@ verus! {
         { self.ng(v).size() }
 
         fn in_degree(&self, v: &V) -> (n: N)
-            ensures n == self.spec_nminus(v@).len()
+            ensures n == self.spec_n_minus(v@).len()
         { self.n_minus(v).size() }
 
         fn out_degree(&self, v: &V) -> (n: N)
-            ensures n == self.spec_nplus(v@).len()
+            ensures n == self.spec_n_plus(v@).len()
         { self.n_plus(v).size() }
     }
 

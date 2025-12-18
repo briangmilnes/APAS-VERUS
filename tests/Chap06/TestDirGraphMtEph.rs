@@ -3,10 +3,10 @@
 use std::sync::Arc;
 use std::thread;
 
-use apas_ai::Chap05::SetStEph::SetStEph::*;
-use apas_ai::Chap06::DirGraphMtEph::DirGraphMtEph::*;
-use apas_ai::{DirGraphMtEphLit, SetLit};
-use apas_ai::Types::Types::*;
+use apas_verus::Chap05::SetStEph::SetStEph::*;
+use apas_verus::Chap06::DirGraphMtEph::DirGraphMtEph::*;
+use apas_verus::{DirGraphMtEphLit, SetLit};
+use apas_verus::Types::Types::*;
 
 #[test]
 fn test_dirgraphmtephlit_macro_functionality() {

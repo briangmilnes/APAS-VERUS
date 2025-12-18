@@ -11,7 +11,7 @@ Verified implementations of the Fibonacci function demonstrating parallel recurs
 - Proves overflow safety for n ≤ 46
 
 ### `FibonacciMtPerAllThreads.rs` — Parallel (Macro)
-- Uses `ParaPairDisjoint!` macro for symmetric binary parallelism
+- Uses `ParaPair!` macro for symmetric binary parallelism
 - Spawns threads at every recursive call
 - Work Θ(φⁿ), Span Θ(n)
 

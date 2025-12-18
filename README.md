@@ -76,7 +76,7 @@ Formally verified implementations of algorithms from "Algorithms Parallel and Se
 |-----------|----------|----------|--------|-------------|-------|
 | FibonacciStEph | ✅ | — | ✅ | ⬜ | Sequential with overflow proofs |
 | FibonacciMtEph2Threads | ✅ | ✅ | ✅ | ⬜ | 2-thread parallel |
-| FibonacciMtPerAllThreads | ✅ | ✅ | ✅ | ⬜ | ParaPairDisjoint! macro |
+| FibonacciMtPerAllThreads | ✅ | ✅ | ✅ | ⬜ | ParaPair! macro |
 | FibonacciMtEphRecomputes | ✅ | ✅ | ✅ | ⬜ | Recomputation variant |
 | FibonacciMtPerTSM | ✅ | ✅ | ✅ | ⬜ | Tokenized state machine |
 

@@ -12,7 +12,16 @@ pub mod ArraySeqMtEph {
     pub use crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS;
 
     #[cfg(verus_keep_ghost)]
+    use std::hash::Hash;
+
+    #[cfg(verus_keep_ghost)]
     use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::Pool;
+
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap05::SetStEph::SetStEph::{SetStEph, SetStEphTrait, valid_key_type};
+
+    #[cfg(verus_keep_ghost)]
+    use crate::Types::Types::StT;
 
     #[cfg(verus_keep_ghost)]
     verus! {
@@ -116,6 +125,11 @@ pub mod ArraySeqMtEph {
 
         fn flatten(ss: &ArraySeqMtEphS<ArraySeqMtEphS<T>>, pool: &Pool) -> (result: Self)
             where T: 'static;
+
+        fn from_set(set: &SetStEph<T>) -> (result: Self)
+            where T: StT + Hash
+            requires valid_key_type::<T>()
+            ensures result.spec_len() == set@.len();
     }
 
     impl<T: View + Clone + Send + Sync + Eq> ArraySeqMtEphTrait<T> for ArraySeqMtEphS<T> {
@@ -560,6 +574,19 @@ pub mod ArraySeqMtEph {
                 assume(left.seq@.len() + right.seq@.len() <= usize::MAX as int);
                 Self::append(&left, &right)
             }
+        }
+
+        fn from_set(set: &SetStEph<T>) -> (result: ArraySeqMtEphS<T>)
+            where T: StT + Hash
+        {
+            let seq = set.to_seq();
+            proof {
+                // to_seq ensures: seq@.no_duplicates() && bijection with set@
+                // Since no_duplicates and same elements, lengths must match
+                assert(seq@.no_duplicates());
+                assume(seq@.len() == set@.len()); // TODO: prove via bijection lemma
+            }
+            ArraySeqMtEphS { seq }
         }
     }
 

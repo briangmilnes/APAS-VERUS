@@ -52,6 +52,10 @@ name = "TestDirGraphStEph"
 path = "tests/Chap06/TestDirGraphStEph.rs"
 
 [[test]]
+name = "TestDirGraphMtEph"
+path = "tests/Chap06/TestDirGraphMtEph.rs"
+
+[[test]]
 name = "TestUnDirGraphStEph"
 path = "tests/Chap06/TestUnDirGraphStEph.rs"
 
@@ -115,6 +119,10 @@ path = "tests/Chap18/TestArraySeqMtPer.rs"
 name = "TestArraySeqMtEph"
 path = "tests/Chap18/TestArraySeqMtEph.rs"
 
+[[test]]
+name = "test_verify_harness"
+path = "tests/experiments/test_verify_harness.rs"
+
 [[bench]]
 name = "BenchInsertionSortStEph"
 path = "benches/Chap03/BenchInsertionSortStEph.rs"
@@ -122,6 +130,8 @@ harness = false
 
 [dev-dependencies]
 criterion = { version = "0.5", features = ["html_reports"] }
+rust_verify_test_macros = { path = "/home/milnes/projects/verus/source/rust_verify_test_macros" }
+which = "6"
 
 [profile.release]
 incremental = true

@@ -76,7 +76,7 @@ pub mod LabDirGraphMtEph {
         fn arcs(&self) -> SetStEph<Edge<V>> {
             let mut arcs = SetStEph::empty();
             for labeled_arc in self.labeled_arcs.iter() {
-                arcs.insert(Edge(labeled_arc.0.clone_mt(), labeled_arc.1.clone_mt()));
+                arcs.insert(Edge(labeled_arc.0.clone_plus(), labeled_arc.1.clone_plus()));
             }
             arcs
         }
@@ -84,8 +84,8 @@ pub mod LabDirGraphMtEph {
         fn add_vertex(&mut self, v: V) { self.vertices.insert(v); }
 
         fn add_labeled_arc(&mut self, from: V, to: V, label: L) {
-            self.vertices.insert(from.clone_mt());
-            self.vertices.insert(to.clone_mt());
+            self.vertices.insert(from.clone_plus());
+            self.vertices.insert(to.clone_plus());
             self.labeled_arcs.insert(LabEdge(from, to, label));
         }
 
@@ -123,7 +123,7 @@ pub mod LabDirGraphMtEph {
                 if n == 1 {
                     return if arcs[0].0 == v {
                         let mut s = SetStEph::empty();
-                        s.insert(arcs[0].1.clone_mt());
+                        s.insert(arcs[0].1.clone_plus());
                         s
                     } else {
                         SetStEph::empty()
@@ -134,7 +134,7 @@ pub mod LabDirGraphMtEph {
                 let mut right_arcs = arcs;
                 let left_arcs = right_arcs.split_off(mid);
 
-                let v_left = v.clone_mt();
+                let v_left = v.clone_plus();
                 let v_right = v;
 
                 let Pair(left_result, right_result) =
@@ -145,7 +145,7 @@ pub mod LabDirGraphMtEph {
                 left_result.union(&right_result)
             }
 
-            parallel_out(arcs, v.clone_mt())
+            parallel_out(arcs, v.clone_plus())
         }
 
         fn in_neighbors(&self, v: &V) -> SetStEph<V> {
@@ -164,7 +164,7 @@ pub mod LabDirGraphMtEph {
                 if n == 1 {
                     return if arcs[0].1 == v {
                         let mut s = SetStEph::empty();
-                        s.insert(arcs[0].0.clone_mt());
+                        s.insert(arcs[0].0.clone_plus());
                         s
                     } else {
                         SetStEph::empty()
@@ -175,7 +175,7 @@ pub mod LabDirGraphMtEph {
                 let mut right_arcs = arcs;
                 let left_arcs = right_arcs.split_off(mid);
 
-                let v_left = v.clone_mt();
+                let v_left = v.clone_plus();
                 let v_right = v;
 
                 let Pair(left_result, right_result) =
@@ -186,7 +186,7 @@ pub mod LabDirGraphMtEph {
                 left_result.union(&right_result)
             }
 
-            parallel_in(arcs, v.clone_mt())
+            parallel_in(arcs, v.clone_plus())
         }
     }
 

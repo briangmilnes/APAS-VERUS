@@ -12,6 +12,15 @@ pub mod ArraySeqStEph {
     pub use crate::Chap18::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS;
 
     #[cfg(verus_keep_ghost)]
+    use std::hash::Hash;
+
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap05::SetStEph::SetStEph::{SetStEph, SetStEphTrait, valid_key_type};
+
+    #[cfg(verus_keep_ghost)]
+    use crate::Types::Types::StT;
+
+    #[cfg(verus_keep_ghost)]
     verus! {
 
     broadcast use vstd::std_specs::vec::group_vec_axioms;
@@ -99,6 +108,11 @@ pub mod ArraySeqStEph {
         fn deflate<F: Fn(&T) -> bool>(f: &F, x: &T) -> (result: Self)
             requires f.requires((x,))
             ensures result.spec_len() <= 1;
+
+        fn from_set(set: &SetStEph<T>) -> (result: Self)
+            where T: StT + Hash
+            requires valid_key_type::<T>()
+            ensures result.spec_len() == set@.len();
     }
 
     impl<T: View + Clone> ArraySeqStEphTrait<T> for ArraySeqStEphS<T> {
@@ -327,6 +341,19 @@ pub mod ArraySeqStEph {
             } else {
                 Self::empty()
             }
+        }
+
+        fn from_set(set: &SetStEph<T>) -> (result: ArraySeqStEphS<T>)
+            where T: StT + Hash
+        {
+            let seq = set.to_seq();
+            proof {
+                // to_seq ensures: seq@.no_duplicates() && bijection with set@
+                // Since no_duplicates and same elements, lengths must match
+                assert(seq@.no_duplicates());
+                assume(seq@.len() == set@.len()); // TODO: prove via bijection lemma
+            }
+            ArraySeqStEphS { seq }
         }
     }
 

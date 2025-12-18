@@ -10,35 +10,12 @@ pub mod ParaPairs {
 
     use crate::Types::Types::Pair;
 
-    /// Parallel pair with specs - external_body trusts the parallel implementation.
-    /// The specs match para_pair_disjoint for consistency.
-    #[verifier::external_body]
-    pub fn para_pair<A, B, F1, F2>(f1: F1, f2: F2) -> (result: Pair<A, B>)
-        where
-            F1: FnOnce() -> A + Send + 'static,
-            F2: FnOnce() -> B + Send + 'static,
-            A: Send + 'static,
-            B: Send + 'static,
-        requires
-            f1.requires(()),
-            f2.requires(()),
-        ensures
-            f1.ensures((), result.0),
-            f2.ensures((), result.1),
-    {
-        let h1 = spawn(f1);
-        let h2 = spawn(f2);
-        let a = h1.join().unwrap();
-        let b = h2.join().unwrap();
-        Pair(a, b)
-    }
-
-    /// Verified disjoint parallel pair with closure spec propagation.
+    /// Verified parallel pair with closure spec propagation.
     ///
     /// The closure specs flow through spawn/join:
     /// - spawn requires f.requires(())
     /// - join ensures JoinHandle::predicate(ret) ==> f.ensures((), ret)
-    pub fn para_pair_disjoint<A, B, F1, F2>(f1: F1, f2: F2) -> (result: Pair<A, B>)
+    pub fn para_pair<A, B, F1, F2>(f1: F1, f2: F2) -> (result: Pair<A, B>)
         where
             F1: FnOnce() -> A + Send + 'static,
             F2: FnOnce() -> B + Send + 'static,
@@ -66,10 +43,44 @@ pub mod ParaPairs {
         Pair(a, b)
     }
 
+    /// Verified disjoint parallel pair for Set-viewing types.
+    ///
+    /// Works with any type where View = Set<T> (SetStEph, SetMtEph, etc).
+    /// Caller must prove closures produce disjoint outputs.
+    pub fn para_pair_disjoint<T, A, B, F1, F2>(f1: F1, f2: F2) -> (result: Pair<A, B>)
+        where
+            A: View<V = Set<T>> + Send + 'static,
+            B: View<V = Set<T>> + Send + 'static,
+            F1: FnOnce() -> A + Send + 'static,
+            F2: FnOnce() -> B + Send + 'static,
+        requires
+            f1.requires(()),
+            f2.requires(()),
+            forall |a: A, b: B| f1.ensures((), a) && f2.ensures((), b) ==> a@.disjoint(b@),
+        ensures
+            f1.ensures((), result.0),
+            f2.ensures((), result.1),
+            result.0@.disjoint(result.1@),
+    {
+        let h1 = spawn(f1);
+        let h2 = spawn(f2);
+
+        let a = match h1.join() {
+            Result::Ok(v) => v,
+            _ => { assume(false); diverge() }
+        };
+        let b = match h2.join() {
+            Result::Ok(v) => v,
+            _ => { assume(false); diverge() }
+        };
+
+        Pair(a, b)
+    }
+
     } // verus!
 }
 
-/// Unverified ParaPair macro - calls para_pair function
+/// Verified ParaPair macro - calls para_pair function with spec propagation
 #[macro_export]
 macro_rules! ParaPair {
     ( $f1:expr, $f2:expr ) => {

@@ -79,7 +79,7 @@ pub mod LabUnDirGraphMtEph {
         fn edges(&self) -> SetStEph<Edge<V>> {
             let mut edges = SetStEph::empty();
             for labeled_edge in self.labeled_edges.iter() {
-                edges.insert(Edge(labeled_edge.0.clone_mt(), labeled_edge.1.clone_mt()));
+                edges.insert(Edge(labeled_edge.0.clone_plus(), labeled_edge.1.clone_plus()));
             }
             edges
         }
@@ -87,8 +87,8 @@ pub mod LabUnDirGraphMtEph {
         fn add_vertex(&mut self, v: V) { self.vertices.insert(v); }
 
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) {
-            self.vertices.insert(v1.clone_mt());
-            self.vertices.insert(v2.clone_mt());
+            self.vertices.insert(v1.clone_plus());
+            self.vertices.insert(v2.clone_plus());
             let normalized_edge = if v1 <= v2 {
                 LabEdge(v1, v2, label)
             } else {
@@ -134,11 +134,11 @@ pub mod LabUnDirGraphMtEph {
                 if n == 1 {
                     if edges[0].0 == v {
                         let mut s = SetStEph::empty();
-                        s.insert(edges[0].1.clone_mt());
+                        s.insert(edges[0].1.clone_plus());
                         return s;
                     } else if edges[0].1 == v {
                         let mut s = SetStEph::empty();
-                        s.insert(edges[0].0.clone_mt());
+                        s.insert(edges[0].0.clone_plus());
                         return s;
                     }
                     return SetStEph::empty();
@@ -148,7 +148,7 @@ pub mod LabUnDirGraphMtEph {
                 let mut right_edges = edges;
                 let left_edges = right_edges.split_off(mid);
 
-                let v_left = v.clone_mt();
+                let v_left = v.clone_plus();
                 let v_right = v;
 
                 let Pair(left_result, right_result) =
@@ -159,7 +159,7 @@ pub mod LabUnDirGraphMtEph {
                 left_result.union(&right_result)
             }
 
-            parallel_neighbors(edges, v.clone_mt())
+            parallel_neighbors(edges, v.clone_plus())
         }
 
         fn normalize_edge(_v1: V, _v2: V) -> LabEdge<V, L> {

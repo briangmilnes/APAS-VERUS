@@ -70,7 +70,7 @@ pub mod UnDirGraphMtEph {
 
         fn neighbor(&self, u: &V, v: &V) -> B {
             // Treat edges as unordered: {u,v}
-            self.E.mem(&Edge(u.clone_mt(), v.clone_mt())) || self.E.mem(&Edge(v.clone_mt(), u.clone_mt()))
+            self.E.mem(&Edge(u.clone_plus(), v.clone_plus())) || self.E.mem(&Edge(v.clone_plus(), u.clone_plus()))
         }
 
         fn ng(&self, v: &V) -> SetStEph<V> {
@@ -87,11 +87,11 @@ pub mod UnDirGraphMtEph {
                     let Edge(a, b) = &edges[0];
                     if a == &v {
                         let mut s = SetLit![];
-                        s.insert(b.clone_mt());
+                        s.insert(b.clone_plus());
                         return s;
                     } else if b == &v {
                         let mut s = SetLit![];
-                        s.insert(a.clone_mt());
+                        s.insert(a.clone_plus());
                         return s;
                     }
                     return SetLit![];
@@ -101,7 +101,7 @@ pub mod UnDirGraphMtEph {
                 let mut right_edges = edges;
                 let left_edges = right_edges.split_off(mid);
 
-                let v_left = v.clone_mt();
+                let v_left = v.clone_plus();
                 let v_right = v;
 
                 let Pair(left_result, right_result) =
@@ -113,7 +113,7 @@ pub mod UnDirGraphMtEph {
                 left_result.union(&right_result)
             }
 
-            parallel_ng(edges, v.clone_mt())
+            parallel_ng(edges, v.clone_plus())
         }
 
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> {

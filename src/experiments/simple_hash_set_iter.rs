@@ -26,7 +26,7 @@ pub mod simple_hash_set_iter {
             vstd::seq::group_seq_axioms,
             vstd::set::group_set_axioms,
             vstd::std_specs::hash::group_hash_axioms,
-            crate::vstdplus::clone_view::clone_view::group_clone_view_axioms
+            // crate::vstdplus::clone_view::clone_view::group_clone_view_axioms  // clone_view moved to attic
     };
 
     // SimpleHashSet: thin wrapper around std::collections::HashSet

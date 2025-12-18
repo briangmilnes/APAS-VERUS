@@ -1,0 +1,6 @@
+// source/vstd/hash_set.rs
+
+pub struct HashSetWithView<Key> where Key: View + Eq + Hash {
+-    m: HashSet<Key>,
++    pub m: HashSet<Key>,
+}

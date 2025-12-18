@@ -7,6 +7,7 @@ pub mod ParaPairs;
 
 pub mod experiments {
     pub mod clone_fn;
+//    pub mod tcb_foul;  // TCB foul experiment - Verus blocks unspecified &mut self methods
 //    pub mod pervasives;
 //    pub mod sigma_pi;
 //    pub mod abstract_set_iter;
@@ -54,7 +55,9 @@ pub mod experiments {
 //    pub mod checked_unsigned_int;
 //    pub mod checked_signed_int;
 //    pub mod checked_u32;
-    pub mod seq_set_exec;
+//    pub mod seq_set_exec;
+    pub mod hash_set_modern_pattern;
+    pub mod test_verify_one_file;
 }
 
 pub mod vstdplus {
@@ -103,11 +106,11 @@ pub mod Chap06 {
     pub mod LabUnDirGraphStEph;
     pub mod WeightedDirGraphStEphU32;
     // MtEph graph modules - to be verusified
-//    pub mod DirGraphMtEph;
+    pub mod DirGraphMtEph;
 //    pub mod UnDirGraphMtEph;
 //    pub mod LabDirGraphMtEph;
 //    pub mod LabUnDirGraphMtEph;
-    // WeightedDirGraphStEph per-type variants below are proven but not compiled by default
+    // WeightedDirGraphStEph per-type variants - proven, not compiled by default
 //    pub mod WeightedDirGraphStEphU8;
 //    pub mod WeightedDirGraphStEphU16;
 //    pub mod WeightedDirGraphStEphU64;

@@ -29,8 +29,13 @@ pub mod Concurrency {
 
     // MtT: multi-threaded friendly elements; minimal so it can include Mutex<..>
     // Keep only thread-safety and size requirements.
+    //
+    // NOTE: clone_mt() has no Verus specification. For verified code, use clone_plus()
+    // from ClonePlus trait instead, which has `ensures cloned(*self, res)` postcondition.
+    // All types implementing MtT also implement Clone, so clone_plus() is always available.
     pub trait MtT: Sized + Send + Sync {
         type Inner: StT;
+        /// Deprecated for verified code - use clone_plus() which has specification.
         fn clone_mt(&self) -> Self;
         fn new_mt(inner: Self::Inner) -> Self;
     }

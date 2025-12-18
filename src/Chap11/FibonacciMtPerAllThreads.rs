@@ -9,7 +9,7 @@ pub mod FibonacciMtPerAllThreads {
 
     use vstd::prelude::*;
     use crate::Types::Types::*;
-    use crate::ParaPairDisjoint;
+    use crate::ParaPair;
     use crate::Chap11::FibonacciStEph::FibonacciStEph::{
         spec_fib, lemma_fib_sum_fits_u64
     };
@@ -46,7 +46,7 @@ pub mod FibonacciMtPerAllThreads {
                     ensures r == spec_fib((n - 2) as nat)
                 { fib(n - 2) };
 
-                let Pair(left, right) = ParaPairDisjoint!(f1, f2);
+                let Pair(left, right) = ParaPair!(f1, f2);
 
                 // para_pair ensures propagate the closure postconditions
 // Veracity: UNNEEDED assert                 assert(left == spec_fib((n - 1) as nat));

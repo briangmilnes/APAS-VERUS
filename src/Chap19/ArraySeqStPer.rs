@@ -12,6 +12,15 @@ pub mod ArraySeqStPer {
     pub use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS;
 
     #[cfg(verus_keep_ghost)]
+    use std::hash::Hash;
+
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap05::SetStEph::SetStEph::{SetStEph, SetStEphTrait, valid_key_type};
+
+    #[cfg(verus_keep_ghost)]
+    use crate::Types::Types::StT;
+
+    #[cfg(verus_keep_ghost)]
     verus! {
 
     broadcast use vstd::std_specs::vec::group_vec_axioms;
@@ -84,6 +93,11 @@ pub mod ArraySeqStPer {
             ensures result.spec_len() == a.spec_len() + b.spec_len();
 
         spec fn nth_spec(&self, i: int) -> T;
+
+        fn from_set(set: &SetStEph<T>) -> (result: Self)
+            where T: StT + Hash
+            requires valid_key_type::<T>()
+            ensures result.spec_len() == set@.len();
     }
 
     impl<T: View + Clone> ArraySeqStPerTrait<T> for ArraySeqStPerS<T> {
@@ -292,6 +306,19 @@ pub mod ArraySeqStPer {
                 total,
             )
         }
+
+        fn from_set(set: &SetStEph<T>) -> (result: ArraySeqStPerS<T>)
+            where T: StT + Hash
+        {
+            let seq = set.to_seq();
+            proof {
+                // to_seq ensures: seq@.no_duplicates() && bijection with set@
+                // Since no_duplicates and same elements, lengths must match
+                assert(seq@.no_duplicates());
+                assume(seq@.len() == set@.len()); // TODO: prove via bijection lemma
+            }
+            ArraySeqStPerS { seq }
+        }
     }
 
     // Helper: flatten - sums lengths of inner sequences
@@ -338,6 +365,15 @@ pub mod ArraySeqStPer {
     pub use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS;
 
     #[cfg(not(verus_keep_ghost))]
+    use std::hash::Hash;
+
+    #[cfg(not(verus_keep_ghost))]
+    use crate::Chap05::SetStEph::SetStEph::{SetStEph, SetStEphTrait};
+
+    #[cfg(not(verus_keep_ghost))]
+    use crate::Types::Types::StT;
+
+    #[cfg(not(verus_keep_ghost))]
     pub trait ArraySeqStPerTrait<T: Clone> {
         fn empty() -> Self;
         fn singleton(item: T) -> Self;
@@ -352,6 +388,7 @@ pub mod ArraySeqStPer {
         fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (Self, T) where Self: Sized;
         fn select<'a>(a: &'a Self, b: &'a Self, i: usize) -> Option<&'a T>;
         fn append_select(a: &Self, b: &Self) -> Self;
+        fn from_set(set: &SetStEph<T>) -> Self where T: StT + Hash;
     }
 
     #[cfg(not(verus_keep_ghost))]
@@ -399,6 +436,9 @@ pub mod ArraySeqStPer {
         }
         fn append_select(a: &Self, b: &Self) -> Self {
             Self::tabulate(&|i| Self::select(a, b, i).unwrap().clone(), a.length() + b.length())
+        }
+        fn from_set(set: &SetStEph<T>) -> Self where T: StT + Hash {
+            Self { seq: set.to_seq() }
         }
     }
 
