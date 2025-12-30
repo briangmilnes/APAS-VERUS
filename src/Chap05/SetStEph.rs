@@ -58,6 +58,7 @@ verus! {
     pub struct SetStEph<T: StT + Hash> { pub elements: HashSetWithViewPlus<T> }
 
     // Iterator wrapper to hide std::collections::hash_set::Iter
+    // Note: inner must be pub for open spec fn view() to work
     #[verifier::reject_recursive_types(T)]
     pub struct SetStEphIter<'a, T: StT + Hash> {
         pub inner: std::collections::hash_set::Iter<'a, T>,

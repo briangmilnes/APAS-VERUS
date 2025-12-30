@@ -1,0 +1,10 @@
+# Ask Before Commit
+
+**Always** ask the user for confirmation before running `git commit`.
+
+Before committing:
+1. Show what files changed (`git diff --stat` or similar)
+2. Show the proposed commit message
+3. Ask: "Ready to commit?"
+
+Only proceed with the commit after explicit user approval.

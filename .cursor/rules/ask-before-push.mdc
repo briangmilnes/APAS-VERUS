@@ -1,0 +1,9 @@
+# Ask Before Push
+
+**Always** ask the user for confirmation before running `git push`.
+
+Before pushing:
+1. Show what commits will be pushed (`git log origin/main..HEAD --oneline` or similar)
+2. Ask: "Ready to push?"
+
+Only proceed with the push after explicit user approval.

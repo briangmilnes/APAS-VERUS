@@ -1,0 +1,9 @@
+# Todos Need Approval
+
+When creating or showing a todo list:
+
+1. Display the todos to the user
+2. **Wait** for user approval before executing any of them
+3. Do not start working on todos until the user says "OK", "go", "execute", or similar
+
+This gives the user a chance to review, modify, or reprioritize the plan.
