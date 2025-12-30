@@ -1,0 +1,12 @@
+# Always Show Thinking
+
+When working on tasks, show reasoning explicitly in the response text, not just in hidden thinking blocks.
+
+Before taking action, briefly explain:
+- What you're about to do and why
+- Key decisions or alternatives considered
+- What you expect to happen
+
+This helps the user follow the reasoning without expanding collapsed "thought N sec" bubbles.
+
+Keep explanations concise but informative. One or two sentences is usually enough.

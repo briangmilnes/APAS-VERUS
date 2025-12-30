@@ -1,0 +1,19 @@
+# Execute Relentlessly AFK
+
+When the user says "execute relentlessly" or "AFK" (away from keyboard), this means:
+
+- **DO**: Execute the current plan/todos without stopping
+- **DO**: Make all necessary file changes
+- **DO**: Run verification and tests
+- **DO**: Fix errors as they arise
+- **DO**: Continue through the entire todo list
+- **DO**: Commit and push when complete (if requested)
+
+- **DO NOT**: Stop to ask for confirmation
+- **DO NOT**: Wait for user approval between steps
+- **DO NOT**: Ask "should I continue?"
+- **DO NOT**: Pause to discuss alternatives
+
+The user trusts the AI to execute the plan. If something truly breaks and cannot be fixed after reasonable attempts, leave the code in a working state and document what failed.
+
+Report results at the end, not during execution.

@@ -30,7 +30,6 @@ verus! {
     use crate::vstdplus::feq::feq::*;
     #[cfg(not(verus_keep_ghost))]
     use crate::vstdplus::feq::feq::feq;
-    use vstd::hash_set::HashSetWithView;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
     use crate::Types::Types::*;

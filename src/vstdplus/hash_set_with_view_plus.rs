@@ -1,10 +1,11 @@
-//! HashSetWithViewPlus - wrapper around vstd::hash_set::HashSetWithView
-//! Adds iter() method since HashSetWithView.m is now public
+//! HashSetWithViewPlus - wrapper around std::collections::HashSet
+//! Provides View that gives Set<Key::V> and iter() method.
+//! Bypasses vstd::hash_set::HashSetWithView to avoid pub m dependency.
 
 pub mod hash_set_with_view_plus {
 
 use vstd::prelude::*;
-use vstd::hash_set::HashSetWithView;
+use std::collections::HashSet;
 
 #[cfg(verus_keep_ghost)]
 use vstd::std_specs::hash::obeys_key_model;
@@ -15,20 +16,23 @@ use crate::vstdplus::feq::feq::*;
 
 verus! {
 
-// Step 1: Simple wrapper with View
+// Direct wrapper around std::collections::HashSet
+// View gives Set<Key::V> (mapped view)
 #[verifier::reject_recursive_types(Key)]
 pub struct HashSetWithViewPlus<Key: View + Eq + Hash> {
-    pub inner: HashSetWithView<Key>,
+    pub inner: HashSet<Key>,
 }
 
 impl<Key: View + Eq + Hash> View for HashSetWithViewPlus<Key> {
     type V = Set<<Key as View>::V>;
     
-    open spec fn view(&self) -> Self::V { self.inner@}
+    // Map the raw HashSet view (Set<Key>) to Set<Key::V>
+    open spec fn view(&self) -> Self::V { 
+        self.inner@.map(|k: Key| k@)
+    }
 }
 
 /// A HashSetWithViewPlus is always finite (it's backed by a finite HashSet)
-// Veracity: USED
 pub broadcast proof fn axiom_hash_set_with_view_plus_finite<Key: View + Eq + Hash>(s: &HashSetWithViewPlus<Key>)
     ensures
         #[trigger] s@.finite(),
@@ -45,27 +49,34 @@ impl<Key: View + Eq + Hash + Clone> Clone for HashSetWithViewPlus<Key> {
     fn clone(&self) -> (clone: Self)
         ensures clone@ == self@
     {
-        HashSetWithViewPlus { inner: HashSetWithView { m: self.inner.m.clone() } }
+        HashSetWithViewPlus { inner: self.inner.clone() }
     }
 }
 
 impl<Key: View + Eq + Hash + Clone> HashSetWithViewPlus<Key> {
+    #[verifier::external_body]
     pub fn new() -> (hash_set: Self)
         requires
             obeys_key_model::<Key>(),
             obeys_feq_full::<Key>(),
         ensures
             hash_set@ == Set::<<Key as View>::V>::empty(),
-    { HashSetWithViewPlus { inner: HashSetWithView::new() } }
+    { 
+        HashSetWithViewPlus { inner: HashSet::new() }
+    }
 
+    #[verifier::external_body]
     pub fn with_capacity(capacity: usize) -> (hash_set: Self)
         requires
             obeys_key_model::<Key>(),
             obeys_feq_full::<Key>(),
         ensures
             hash_set@ == Set::<<Key as View>::V>::empty(),
-    { HashSetWithViewPlus { inner: HashSetWithView::with_capacity(capacity) } }
+    { 
+        HashSetWithViewPlus { inner: HashSet::with_capacity(capacity) }
+    }
 
+    #[verifier::external_body]
     pub fn len(&self) -> (len: usize)
         ensures
             len == self@.len(),
@@ -73,13 +84,17 @@ impl<Key: View + Eq + Hash + Clone> HashSetWithViewPlus<Key> {
         self.inner.len()
     }
 
+    #[verifier::external_body]
     pub fn contains(&self, k: &Key) -> (contains: bool)
         requires
             obeys_key_model::<Key>(),
         ensures
             contains == self@.contains(k@),
-    { self.inner.contains(k) }
+    { 
+        self.inner.contains(k) 
+    }
 
+    #[verifier::external_body]
     pub fn insert(&mut self, k: Key) -> (inserted: bool)
         requires
             obeys_key_model::<Key>(),
@@ -87,7 +102,9 @@ impl<Key: View + Eq + Hash + Clone> HashSetWithViewPlus<Key> {
         ensures
             self@ == old(self)@.insert(k@),
             inserted == !old(self)@.contains(k@),
-    { self.inner.insert(k) }
+    { 
+        self.inner.insert(k)
+    }
 }
 
 pub trait HashSetWithViewPlusTrait<Key: View + Eq + Hash>: View<V = Set<<Key as View>::V>> {
@@ -105,13 +122,13 @@ pub trait HashSetWithViewPlusTrait<Key: View + Eq + Hash>: View<V = Set<<Key as 
 impl<Key: View + Eq + Hash> HashSetWithViewPlusTrait<Key> for HashSetWithViewPlus<Key> {
     #[verifier::external_body]
     fn iter(&self) -> (r: std::collections::hash_set::Iter<'_, Key>)
-    { self.inner.m.iter() }
+    { self.inner.iter() }
 }
 
 impl<Key: View + Eq + Hash> std::hash::Hash for HashSetWithViewPlus<Key> {
     #[verifier::external_body]
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        for key in self.inner.m.iter() {
+        for key in self.inner.iter() {
             key.hash(state);
         }
     }
@@ -119,7 +136,7 @@ impl<Key: View + Eq + Hash> std::hash::Hash for HashSetWithViewPlus<Key> {
 
 impl<Key: View + Eq + Hash> PartialEq for HashSetWithViewPlus<Key> {
     #[verifier::external_body]
-    fn eq(&self, other: &Self) -> bool { self.inner.m == other.inner.m }
+    fn eq(&self, other: &Self) -> bool { self.inner == other.inner }
 }
 
 impl<Key: View + Eq + Hash> Eq for HashSetWithViewPlus<Key> {}

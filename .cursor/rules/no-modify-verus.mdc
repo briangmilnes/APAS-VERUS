@@ -1,0 +1,15 @@
+# Do Not Modify Verus Source
+
+**Never** modify files in `~/projects/verus/`.
+
+This includes:
+- `~/projects/verus/source/vstd/` (the verified standard library)
+- `~/projects/verus/source/rust_verify/`
+- Any other files in the Verus repository
+
+If a change to Verus/vstd seems necessary:
+1. Document what change would be needed
+2. Suggest filing an issue or PR upstream
+3. Find a workaround within APAS-VERUS
+
+The user maintains Verus separately and any modifications must go through their own process.
