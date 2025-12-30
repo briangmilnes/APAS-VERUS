@@ -155,5 +155,5 @@ members = ["."]
 
 # Use local Verus fork for vstd and state machines (for rust-analyzer navigation)
 [patch.crates-io]
-vstd = { path = "/home/milnes/projects/verus-lang/source/vstd" }
-verus_state_machines_macros = { path = "/home/milnes/projects/verus-lang/source/state_machines_macros" }
+vstd = { path = "/home/milnes/projects/verus/source/vstd" }
+verus_state_machines_macros = { path = "/home/milnes/projects/verus/source/state_machines_macros" }

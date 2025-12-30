@@ -1,0 +1,11 @@
+---
+description: Handle trigger warnings using Verus automatic proposals
+globs: 
+alwaysApply: true
+---
+
+# Trigger Warnings
+
+Trigger warnings may be generated once during development. When they appear, use the automatic Verus proposal to eliminate them.
+
+Do not leave trigger warnings in the final code.

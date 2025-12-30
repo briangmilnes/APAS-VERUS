@@ -1,5 +1,8 @@
 //! Simple Abstract Set with Iterator using std::collections::HashSet  
 //! Based on simple_set_iter.rs but using HashSet instead of Vec.
+//!
+//! STATUS: Potentially obsolete - investigating removing HashSetWithViewPlus
+//! in favor of using std::collections::HashSet directly with deep_view().
 
 pub mod simple_hash_set_iter {
     use vstd::prelude::*;

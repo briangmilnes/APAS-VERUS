@@ -1,0 +1,32 @@
+---
+description: Where to find vstd and test code in Verus
+globs: 
+alwaysApply: true
+---
+
+# Verus Source Locations
+
+## vstd (Verified Standard Library)
+
+```
+~/projects/verus/source/vstd/
+```
+
+This contains the verified standard library including:
+- `seq.rs`, `set.rs`, `map.rs` - Core collection specs
+- `seq_lib.rs` - Sequence lemmas
+- `hash_set.rs`, `hash_map.rs` - Hash collection wrappers
+- `std_specs/` - Specs for Rust std library
+
+## Verus Test Code
+
+```
+~/projects/verus/source/rust_verify_test/tests/
+```
+
+This contains Verus's own test suite including:
+- `loops.rs` - Loop verification patterns
+- `hash.rs` - HashSet/HashMap tests
+- Pattern examples for many Verus features
+
+Use these as reference when figuring out how to verify something.

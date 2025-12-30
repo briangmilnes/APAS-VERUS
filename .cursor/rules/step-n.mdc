@@ -1,0 +1,18 @@
+---
+description: STEP n limits iterations before stopping
+globs: 
+alwaysApply: true
+---
+
+# STEP n
+
+When the user says "STEP n" (e.g., "STEP 3"), this means:
+
+- **DO**: Perform at most n iterations of file writing / verus verification
+- **DO**: Stop after n iterations, even if problems remain
+- **DO**: Leave the code in its current state with any errors/issues visible
+- **DO NOT**: Continue fixing beyond n iterations
+
+This allows the user to review intermediate states and understand what's happening.
+
+Example: "STEP 2" means make at most 2 edit/verify cycles, then stop and show where things stand.

@@ -1,0 +1,13 @@
+---
+description: Show full on-disk paths when user asks
+globs: 
+alwaysApply: true
+---
+
+# Full Paths
+
+When the user asks for "full paths" or "full path", show the complete on-disk path to all referenced files.
+
+For example:
+- Instead of `src/Chap05/SetStEph.rs`
+- Show `/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs`

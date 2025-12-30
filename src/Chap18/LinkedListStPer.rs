@@ -345,26 +345,38 @@ pub mod LinkedListStPer {
         }
     }
 
+    impl<'a, T> std::iter::IntoIterator for &'a LinkedListStPerS<T> {
+        type Item = &'a T;
+        type IntoIter = Iter<'a, T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
+    }
+
+    impl<T> std::iter::IntoIterator for LinkedListStPerS<T> {
+        type Item = T;
+        type IntoIter = IntoIter<T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
+    }
+
     } // verus!
 
     // Non-Verus impls
-        impl<T: Clone> Clone for LinkedListStPerS<T> {
+    impl<T: Clone> Clone for LinkedListStPerS<T> {
         fn clone(&self) -> Self { LinkedListStPerS { seq: self.seq.clone() } }
     }
 
-        impl<T: PartialEq> PartialEq for LinkedListStPerS<T> {
+    impl<T: PartialEq> PartialEq for LinkedListStPerS<T> {
         fn eq(&self, other: &Self) -> bool { self.seq == other.seq }
     }
 
-        impl<T: Eq> Eq for LinkedListStPerS<T> {}
+    impl<T: Eq> Eq for LinkedListStPerS<T> {}
 
-        impl<T: Debug> Debug for LinkedListStPerS<T> {
+    impl<T: Debug> Debug for LinkedListStPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             f.debug_list().entries(self.seq.iter()).finish()
         }
     }
 
-        impl<T: Display> Display for LinkedListStPerS<T> {
+    impl<T: Display> Display for LinkedListStPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(f, "[")?;
             for (i, item) in self.seq.iter().enumerate() {
@@ -373,17 +385,5 @@ pub mod LinkedListStPer {
             }
             write!(f, "]")
         }
-    }
-
-        impl<'a, T> IntoIterator for &'a LinkedListStPerS<T> {
-        type Item = &'a T;
-        type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
-    }
-
-        impl<T> IntoIterator for LinkedListStPerS<T> {
-        type Item = T;
-        type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 }

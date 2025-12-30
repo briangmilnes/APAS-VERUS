@@ -545,6 +545,18 @@ pub mod ArraySeqMtEph {
         }
     }
 
+    impl<'a, T> std::iter::IntoIterator for &'a ArraySeqMtEphS<T> {
+        type Item = &'a T;
+        type IntoIter = Iter<'a, T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
+    }
+
+    impl<T> std::iter::IntoIterator for ArraySeqMtEphS<T> {
+        type Item = T;
+        type IntoIter = IntoIter<T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
+    }
+
     } // verus!
 
     // Non-Verus impls
@@ -578,20 +590,6 @@ pub mod ArraySeqMtEph {
             }
             write!(f, "]")
         }
-    }
-
-    #[cfg(verus_keep_ghost)]
-    impl<'a, T> IntoIterator for &'a ArraySeqMtEphS<T> {
-        type Item = &'a T;
-        type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
-    }
-
-    #[cfg(verus_keep_ghost)]
-    impl<T> IntoIterator for ArraySeqMtEphS<T> {
-        type Item = T;
-        type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
     // Non-Verus stub

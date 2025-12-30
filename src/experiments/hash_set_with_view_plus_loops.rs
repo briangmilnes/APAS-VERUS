@@ -1,4 +1,7 @@
 //! Testing HashSetWithViewPlus with for loops
+//!
+//! STATUS: Potentially obsolete - investigating removing HashSetWithViewPlus
+//! in favor of using std::collections::HashSet directly with deep_view().
 
 pub mod hash_set_with_view_plus_loops {
 

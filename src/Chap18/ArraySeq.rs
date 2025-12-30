@@ -287,6 +287,18 @@ pub mod ArraySeq {
         }
     }
 
+    impl<'a, T> std::iter::IntoIterator for &'a ArraySeqS<T> {
+        type Item = &'a T;
+        type IntoIter = Iter<'a, T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
+    }
+
+    impl<T> std::iter::IntoIterator for ArraySeqS<T> {
+        type Item = T;
+        type IntoIter = IntoIter<T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
+    }
+
     } // verus!
 
     // Helper methods outside verus! (use std types Verus doesn't support)
@@ -325,21 +337,10 @@ pub mod ArraySeq {
         }
     }
 
-    impl<'a, T> IntoIterator for &'a ArraySeqS<T> {
-        type Item = &'a T;
-        type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
-    }
-
+    // &mut IntoIterator must stay outside verus! (Verus doesn't support &mut types)
     impl<'a, T> IntoIterator for &'a mut ArraySeqS<T> {
         type Item = &'a mut T;
         type IntoIter = IterMut<'a, T>;
         fn into_iter(self) -> Self::IntoIter { self.seq.iter_mut() }
-    }
-
-    impl<T> IntoIterator for ArraySeqS<T> {
-        type Item = T;
-        type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 }

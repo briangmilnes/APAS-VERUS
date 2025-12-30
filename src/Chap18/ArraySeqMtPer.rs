@@ -550,26 +550,38 @@ pub mod ArraySeqMtPer {
         }
     }
 
+    impl<'a, T> std::iter::IntoIterator for &'a ArraySeqMtPerS<T> {
+        type Item = &'a T;
+        type IntoIter = Iter<'a, T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
+    }
+
+    impl<T> std::iter::IntoIterator for ArraySeqMtPerS<T> {
+        type Item = T;
+        type IntoIter = IntoIter<T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
+    }
+
     } // verus!
 
     // Non-Verus impls
-        impl<T: Clone> Clone for ArraySeqMtPerS<T> {
+    impl<T: Clone> Clone for ArraySeqMtPerS<T> {
         fn clone(&self) -> Self { ArraySeqMtPerS { seq: self.seq.clone() } }
     }
 
-        impl<T: PartialEq> PartialEq for ArraySeqMtPerS<T> {
+    impl<T: PartialEq> PartialEq for ArraySeqMtPerS<T> {
         fn eq(&self, other: &Self) -> bool { self.seq == other.seq }
     }
 
-        impl<T: Eq> Eq for ArraySeqMtPerS<T> {}
+    impl<T: Eq> Eq for ArraySeqMtPerS<T> {}
 
-        impl<T: Debug> Debug for ArraySeqMtPerS<T> {
+    impl<T: Debug> Debug for ArraySeqMtPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             f.debug_list().entries(self.seq.iter()).finish()
         }
     }
 
-        impl<T: Display> Display for ArraySeqMtPerS<T> {
+    impl<T: Display> Display for ArraySeqMtPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(f, "[")?;
             for (i, item) in self.seq.iter().enumerate() {
@@ -578,17 +590,5 @@ pub mod ArraySeqMtPer {
             }
             write!(f, "]")
         }
-    }
-
-        impl<'a, T> IntoIterator for &'a ArraySeqMtPerS<T> {
-        type Item = &'a T;
-        type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
-    }
-
-        impl<T> IntoIterator for ArraySeqMtPerS<T> {
-        type Item = T;
-        type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 }

@@ -1,0 +1,25 @@
+---
+description: When AI thinks Verus can't do something, verify with experiments
+globs: 
+alwaysApply: true
+---
+
+# If You Think Verus Can't Do X
+
+When you believe Verus cannot do something (e.g., "Verus doesn't support X", "This pattern won't verify"):
+
+1. **Ask the user** if they want you to search `src/experiments/` for an existing test of this capability
+
+2. **If searching**: Look for existing experiment files that test this pattern
+   ```bash
+   # First, use veracity-search on the codebase
+   veracity-search -C ~/projects/APAS-VERUS --no-vstd 'fn _ types X'
+   
+   # Then grep for specific patterns
+   ls src/experiments/
+   grep -r "pattern" src/experiments/
+   ```
+
+3. **If not found**: Propose a new experiment file at `src/experiments/X.rs` to prove or disprove the case
+
+Do not assume Verus can't do something without evidence. Many "impossible" things turn out to be possible with the right approach.

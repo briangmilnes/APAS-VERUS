@@ -1,0 +1,20 @@
+---
+description: Use mv to rename files, not read/write/delete
+globs: 
+alwaysApply: true
+---
+
+# Rename Files
+
+When renaming a file, use the `mv` command in the terminal:
+
+```bash
+mv old_name.rs new_name.rs
+```
+
+Do NOT:
+- Read the file content
+- Write it to a new file
+- Delete the old file
+
+This preserves file metadata and is more efficient.

@@ -1,0 +1,13 @@
+---
+description: All Verus and Rust warnings and errors must be fixed
+globs: 
+alwaysApply: true
+---
+
+# Fix All Warnings and Errors
+
+All Verus and Rust warnings and errors must be fixed before considering work complete.
+
+- Do not leave warnings in the codebase
+- Do not leave errors unresolved
+- Fix issues as they arise, not later

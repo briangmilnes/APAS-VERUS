@@ -1,0 +1,15 @@
+---
+description: When user says "discuss", only chat - do not modify files
+globs: 
+alwaysApply: true
+---
+
+# Discuss Means Chat Only
+
+When the user says "discuss" (or any variation like "let's discuss", "discuss this", etc.), this means:
+
+- **DO**: Chat about the issue, explain options, analyze tradeoffs, ask clarifying questions
+- **DO NOT**: Make any changes to files on disk
+- **DO NOT**: Use write, search_replace, edit_notebook, or delete_file tools
+
+Only proceed with code changes after the user explicitly approves or requests implementation.

@@ -1,0 +1,29 @@
+---
+description: Index all tables and suggestions for easy reference
+globs: 
+alwaysApply: true
+---
+
+# Indexed Tables and Suggestions
+
+All tables and suggestion lists must include a numeric index in column zero (or as a numbered list) so the user can easily refer to specific items.
+
+## Tables
+
+Always include an `#` or `Index` column as the first column:
+
+| # | Loop Type | Provable? |
+|---|-----------|-----------|
+| 1 | loop-match | Yes |
+| 2 | while | No |
+| 3 | for-in | No |
+
+## Suggestion Lists
+
+Use numbered lists instead of bullets:
+
+1. First suggestion
+2. Second suggestion
+3. Third suggestion
+
+This allows the user to say "do #2" or "explain row 3" without ambiguity.

@@ -1,0 +1,17 @@
+---
+description: APAS-VERUS project goal - prove all algorithms
+globs: 
+alwaysApply: true
+---
+
+# APAS-VERUS Project Goal
+
+The goal of APAS-VERUS is to formally verify all algorithms from "A Practical Approach to Data Structures" using Verus.
+
+When working on implementations or proofs:
+
+- **Primary objective**: Get the code to verify (prove) with Verus
+- Run `verus` verification after making changes
+- Fix verification errors before moving on
+- If verification fails, analyze the error and adjust invariants, preconditions, or proof hints
+- Prefer verified code over unverified code, even if it requires restructuring

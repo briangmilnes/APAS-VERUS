@@ -1,0 +1,52 @@
+---
+description: When AI needs a lemma, search for it using veracity-search
+globs: 
+alwaysApply: true
+---
+
+# Search for the Lemma
+
+When you think you need a lemma to complete a proof, you MUST search for it before assuming it doesn't exist or trying to write it yourself.
+
+## How to Search
+
+Use veracity-search (vstd is searched by default):
+
+```bash
+# Search for proof functions by name pattern
+veracity-search 'proof fn .*len.*'
+
+# Search for functions mentioning specific types
+veracity-search 'fn _ types Seq'
+veracity-search 'fn _ types Set'
+
+# Search for functions with specific ensures clauses
+veracity-search 'fn _ ensures .*no_duplicates.*'
+
+# Combine type patterns
+veracity-search 'fn _ types Seq.*Set'
+
+# Search vstd + APAS-VERUS together
+veracity-search -C ~/projects/APAS-VERUS 'proof fn lemma'
+
+# Search with OR patterns
+veracity-search 'fn \(to_set\|no_duplicates\)'
+```
+
+## When to Search
+
+- Before writing a new lemma
+- When a proof fails and you suspect a missing connection
+- When you need to relate two different views (e.g., Seq to Set)
+- When you need properties about sequence operations (take, push, subrange)
+
+## Example Searches
+
+| Need | Search Query |
+|------|-------------|
+| Sequence with no duplicates → set length | `'proof fn _ ensures .*no_duplicates.*len.*'` |
+| Take + push equals take of next | `'fn _ types Seq ensures .*take.*push.*'` |
+| Seq to Set conversions | `'fn _ types Seq.*Set'` |
+| All lemmas about sets | `'proof fn lemma.*set'` |
+
+Only after searching and finding nothing relevant should you consider writing a new lemma.

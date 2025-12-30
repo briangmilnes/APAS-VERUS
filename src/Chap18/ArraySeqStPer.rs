@@ -355,6 +355,18 @@ pub mod ArraySeqStPer {
         }
     }
 
+    impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStPerS<T> {
+        type Item = &'a T;
+        type IntoIter = Iter<'a, T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
+    }
+
+    impl<T> std::iter::IntoIterator for ArraySeqStPerS<T> {
+        type Item = T;
+        type IntoIter = IntoIter<T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
+    }
+
     } // verus!
 
     // Trait impls outside verus! - work in both modes
@@ -383,18 +395,6 @@ pub mod ArraySeqStPer {
             }
             write!(f, "]")
         }
-    }
-
-    impl<'a, T> IntoIterator for &'a ArraySeqStPerS<T> {
-        type Item = &'a T;
-        type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
-    }
-
-    impl<T> IntoIterator for ArraySeqStPerS<T> {
-        type Item = T;
-        type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
     // Helper methods outside verus! (use std types Verus doesn't support)

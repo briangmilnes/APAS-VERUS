@@ -1,0 +1,15 @@
+---
+description: Keep Cargo.toml in sync with file changes
+globs: 
+alwaysApply: true
+---
+
+# Cargo Sync
+
+When adding, deleting, or renaming a file that is registered in Cargo.toml (e.g., test files, binaries, examples):
+
+- **Add**: Add the corresponding `[[test]]`, `[[bin]]`, or `[[example]]` entry
+- **Delete**: Remove the corresponding entry
+- **Rename**: Update the `name` and `path` in the corresponding entry
+
+Do not leave Cargo.toml out of sync with the file system.

@@ -453,6 +453,22 @@ pub mod MathSeq {
                 result
             }
         }
+
+    impl<'a, T: StT> std::iter::IntoIterator for &'a MathSeqS<T> {
+        type Item = &'a T;
+        type IntoIter = Iter<'a, T>;
+        fn into_iter(self) -> Self::IntoIter {
+            self.data.iter()
+        }
+    }
+
+    impl<T: StT> std::iter::IntoIterator for MathSeqS<T> {
+        type Item = T;
+        type IntoIter = IntoIter<T>;
+        fn into_iter(self) -> Self::IntoIter {
+            self.data.into_iter()
+        }
+    }
         
     } // verus!
     
@@ -473,28 +489,13 @@ pub mod MathSeq {
             self.data.iter_mut()
         }
     }
-    
-    impl<'a, T: StT> IntoIterator for &'a MathSeqS<T> {
-        type Item = &'a T;
-        type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter {
-            self.data.iter()
-        }
-    }
-    
+
+    // &mut IntoIterator must stay outside verus! (Verus doesn't support &mut types)
     impl<'a, T: StT> IntoIterator for &'a mut MathSeqS<T> {
         type Item = &'a mut T;
         type IntoIter = IterMut<'a, T>;
         fn into_iter(self) -> Self::IntoIter {
             self.data.iter_mut()
-        }
-    }
-    
-    impl<T: StT> IntoIterator for MathSeqS<T> {
-        type Item = T;
-        type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter {
-            self.data.into_iter()
         }
     }
     

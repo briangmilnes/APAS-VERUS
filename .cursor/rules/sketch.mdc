@@ -1,0 +1,17 @@
+---
+description: When user says "sketch", show proposed code in a code block - do not modify files
+globs: 
+alwaysApply: true
+---
+
+# Sketch Means Propose in Code Block
+
+When the user says "sketch" (or any variation like "sketch out", "sketch this", etc.), this means:
+
+- **DO**: Show proposed code/proof in a markdown code block
+- **DO**: Explain the approach and key insights
+- **DO**: Wait for feedback before implementing
+- **DO NOT**: Make any changes to files on disk
+- **DO NOT**: Use write, search_replace, edit_notebook, or delete_file tools
+
+A sketch is a proposal for discussion. Only proceed with file modifications after the user explicitly approves or requests implementation.

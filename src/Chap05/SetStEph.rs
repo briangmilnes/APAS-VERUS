@@ -98,6 +98,85 @@ verus! {
         }
     }
 
+    // Ghost iterator for ForLoopGhostIterator support (for-iter, for-borrow patterns)
+    #[verifier::reject_recursive_types(T)]
+    pub struct SetStEphGhostIterator<'a, T: StT + Hash> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
+    impl<'a, T: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for SetStEphIter<'a, T> {
+        type GhostIter = SetStEphGhostIterator<'a, T>;
+
+        open spec fn ghost_iter(&self) -> SetStEphGhostIterator<'a, T> {
+            SetStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, T: StT + Hash> vstd::pervasive::ForLoopGhostIterator for SetStEphGhostIterator<'a, T> {
+        type ExecIter = SetStEphIter<'a, T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &SetStEphIter<'a, T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() {
+                Some(self.elements[self.pos])
+            } else {
+                None
+            }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &SetStEphIter<'a, T>) -> SetStEphGhostIterator<'a, T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: StT + Hash> View for SetStEphGhostIterator<'a, T> {
+        type V = Seq<T>;
+
+        open spec fn view(&self) -> Seq<T> {
+            self.elements.take(self.pos)
+        }
+    }
+
+    // IntoIterator for &SetStEph enables `for x in &set` syntax
+    impl<'a, T: StT + Hash> std::iter::IntoIterator for &'a SetStEph<T> {
+        type Item = &'a T;
+        type IntoIter = SetStEphIter<'a, T>;
+
+        fn into_iter(self) -> (iter: SetStEphIter<'a, T>)
+            requires valid_key_type::<T>()
+            ensures
+                iter@.0 == 0int,
+                iter@.1.map(|i: int, k: T| k@).to_set() == self@,
+                iter@.1.no_duplicates(),
+        {
+            self.iter()
+        }
+    }
+
     pub trait SetStEphTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
 
         /// A set is finite

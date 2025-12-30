@@ -1,0 +1,16 @@
+---
+description: When user says "implement", proceed with code changes
+globs: 
+alwaysApply: true
+---
+
+# Implement Means Make Changes
+
+When the user says "implement" (or any variation like "implement it", "implement this", "go ahead and implement", etc.), this means:
+
+- **DO**: Make the discussed/sketched changes to files on disk
+- **DO**: Use write, search_replace, or other file modification tools
+- **DO**: Verify the changes compile/verify after implementation
+- **DO**: Keep changes focused on the discussed solution
+
+This is the explicit approval to proceed with file modifications after a discussion or sketch.

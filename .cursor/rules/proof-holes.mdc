@@ -1,0 +1,44 @@
+---
+description: After completing a proof, check for proof holes
+globs: 
+alwaysApply: true
+---
+
+# Check for Proof Holes
+
+When you think you have completed a proof, run the proof hole detector to ensure there are no unverified assumptions:
+
+```bash
+~/projects/veracity/target/release/veracity-review-proof-holes -d src/
+```
+
+Or for a specific file:
+
+```bash
+~/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap05/
+```
+
+## What It Detects
+
+| Hole Type | Description |
+|-----------|-------------|
+| `assume(false)` | Assumes a contradiction (proves anything) |
+| `assume(...)` | Assumes arbitrary conditions without proof |
+| `admit()` | Explicitly admits without proof |
+| `#[verifier::external_body]` | Body not verified |
+| `#[verifier::external_fn_specification]` | External function spec |
+| `#[verifier::external]` | Fully external |
+
+## When to Run
+
+- After completing a proof function
+- Before committing proof work
+- When claiming a module is "proven"
+- When the user says "show proof holes" - run the tool and discuss the results
+
+## Understanding Results
+
+- **Clean**: No unverified assumptions - the proof is complete
+- **Holed**: Contains at least one proof hole - more work needed
+
+A proof is not truly complete until it reports as clean.
