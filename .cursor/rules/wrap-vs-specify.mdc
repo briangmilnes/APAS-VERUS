@@ -1,0 +1,71 @@
+# Wrap vs Specify
+
+Two approaches for adding Verus specifications to Rust types:
+
+## SPECIFY (external_type_specification / assume_specification)
+
+Adds specs directly to an existing Rust type WITHOUT creating a new struct.
+
+```rust
+// The std type IS the type you use
+#[verifier::external_type_specification]
+pub struct ExHashSet<K, S>(HashSet<K, S>);
+
+// Users write:
+let s: HashSet<u64> = HashSet::new();
+assert(s@ == Set::empty());  // Specs available on std type
+```
+
+**Characteristics:**
+- No new struct created
+- User uses the original std type directly
+- View type matches the std type's generic params (e.g., `Set<K>` not `Set<K::V>`)
+- Cannot add new methods, only specs to existing methods
+
+## WRAP (new struct containing the std type)
+
+Creates a NEW struct that contains the std type as a field.
+
+```rust
+// New struct wrapping the std type
+pub struct HashSetWithView<K: View + Eq + Hash> {
+    m: HashSet<K>,  // the wrapped std type
+}
+
+// Users write:
+let s: HashSetWithView<MyKey> = HashSetWithView::new();
+assert(s@ == Set::empty());  // View can differ from inner type's view
+```
+
+**Characteristics:**
+- New struct created
+- User uses the wrapper type, not std type directly
+- View type can be transformed (e.g., `Set<K::V>` mapped from keys)
+- Can add new methods beyond what std provides
+- Can enforce additional invariants in preconditions
+
+## When to Use Which
+
+| Situation | Use |
+|-----------|-----|
+| Simple types, no View mapping needed | SPECIFY |
+| Need `K::V` instead of `K` in view | WRAP |
+| Need to add methods std doesn't have | WRAP |
+| Need to enforce coherence properties (e.g., `obeys_feq_full`) | WRAP |
+| Want users to use familiar std types | SPECIFY |
+
+## Examples in vstd
+
+| std Type | SPECIFY | WRAP |
+|----------|---------|------|
+| `Vec<T>` | `ExVec` | — |
+| `HashSet<K>` | `ExHashSet` | `HashSetWithView` |
+| `HashMap<K,V>` | `ExHashMap` | `HashMapWithView` |
+| `hash_set::Iter<K>` | `ExSetIter` | — |
+
+## Examples in vstdplus/APAS
+
+| std Type | SPECIFY | WRAP |
+|----------|---------|------|
+| `HashSet<K>` | — | `HashSetWithViewPlus` (adds `iter()`) |
+| `hash_set::Iter<K>` | — | `SetStEphIter` (closed spec view) |

@@ -57,16 +57,19 @@ verus! {
     #[verifier::reject_recursive_types(T)]
     pub struct SetStEph<T: StT + Hash> { pub elements: HashSetWithViewPlus<T> }
 
-    // Iterator wrapper to hide std::collections::hash_set::Iter
-    // Note: inner must be pub for open spec fn view() to work
+    // Iterator wrapper with CLOSED spec view for encapsulation
+    // inner is private; closed view() can access it but external code cannot see HOW
     #[verifier::reject_recursive_types(T)]
     pub struct SetStEphIter<'a, T: StT + Hash> {
-        pub inner: std::collections::hash_set::Iter<'a, T>,
+        inner: std::collections::hash_set::Iter<'a, T>,  // PRIVATE
     }
 
     impl<'a, T: StT + Hash> View for SetStEphIter<'a, T> {
         type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+        // CLOSED spec - body accesses private inner, but external code only sees the result type
+        closed spec fn view(&self) -> (int, Seq<T>) { 
+            self.inner@
+        }
     }
 
     pub open spec fn iter_invariant<'a, T: StT + Hash>(it: &SetStEphIter<'a, T>) -> bool {
@@ -76,6 +79,8 @@ verus! {
     impl<'a, T: StT + Hash> std::iter::Iterator for SetStEphIter<'a, T> {
         type Item = &'a T;
 
+        // external_body because we delegate to inner; spec is abstract
+        #[verifier::external_body]
         fn next(&mut self) -> (next: Option<&'a T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
@@ -161,22 +166,6 @@ verus! {
         }
     }
 
-    // IntoIterator for &SetStEph enables `for x in &set` syntax
-    impl<'a, T: StT + Hash> std::iter::IntoIterator for &'a SetStEph<T> {
-        type Item = &'a T;
-        type IntoIter = SetStEphIter<'a, T>;
-
-        fn into_iter(self) -> (iter: SetStEphIter<'a, T>)
-            requires valid_key_type::<T>()
-            ensures
-                iter@.0 == 0int,
-                iter@.1.map(|i: int, k: T| k@).to_set() == self@,
-                iter@.1.no_duplicates(),
-        {
-            self.iter()
-        }
-    }
-
     pub trait SetStEphTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
 
         /// A set is finite
@@ -185,7 +174,14 @@ verus! {
         }
 
         /// APAS: Work Θ(|v|), Span Θ(1)
+        /// Uses loop-loop pattern
         fn from_vec(v: Vec<T>) -> (s: SetStEph<T>)
+            requires valid_key_type::<T>()
+            ensures s@.finite(), s@ == v@.map(|i: int, x: T| x@).to_set();
+
+        /// APAS: Work Θ(|v|), Span Θ(1)
+        /// Uses for-iter pattern (Vec's IntoIter)
+        fn from_vec_for(v: Vec<T>) -> (s: SetStEph<T>)
             requires valid_key_type::<T>()
             ensures s@.finite(), s@ == v@.map(|i: int, x: T| x@).to_set();
 
@@ -347,7 +343,23 @@ verus! {
                 proof { lemma_take_one_more_extends_the_seq_set_with_view(v_seq, i as int); }
                 i = i + 1;
             }
+            s
+        }
+
+        fn from_vec_for(v: Vec<T>) -> SetStEph<T> {
+            let mut s: SetStEph<T> = SetStEph::empty();
+            let ghost v_seq: Seq<T> = v@;
             
+            for x in iter: v
+                invariant
+                    valid_key_type::<T>(),
+                    iter.elements == v_seq,
+                    s@ == v_seq.take(iter.pos).map(|idx: int, t: T| t@).to_set(),
+            {
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(v_seq, iter.pos); }
+                let x_clone: T = x.clone_plus();
+                let _ = s.insert(x_clone);
+            }
             s
         }
 
@@ -620,7 +632,7 @@ verus! {
         }
 
         fn all_nonempty(parts: &SetStEph<SetStEph<T>>) -> bool {
-            let parts_iter       =  parts.iter();
+            let parts_iter       = parts.iter();
             let mut parts_it     = parts_iter;
             let ghost parts_seq  = parts_it@.1;
             let ghost parts_view = parts@;

@@ -1,0 +1,35 @@
+# Comment Style
+
+Do not use decorative separator lines in code comments:
+
+**Bad:**
+```rust
+// ============================================================
+// Section Name
+// ============================================================
+```
+
+**Bad:**
+```rust
+// --------------------------------------------------------
+// Another section
+// --------------------------------------------------------
+```
+
+**Good:**
+```rust
+// Section Name
+```
+
+**Good:**
+```rust
+/// Section documentation
+```
+
+Decorative separators are acceptable in:
+- Log output
+- Terminal output
+- Markdown documentation
+- README files
+
+But not in source code comments.

@@ -1,0 +1,7 @@
+# Verus Tests
+
+Verus proof tests are located at:
+
+```
+~/projects/verus/source/rust_verify_test/tests/
+```

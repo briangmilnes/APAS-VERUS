@@ -6,7 +6,8 @@ pub mod Concurrency;
 pub mod ParaPairs;
 
 pub mod experiments {
-    pub mod clone_fn;
+//    pub mod clone_fn;
+//    pub mod baseviewtypes;
 //    pub mod tcb_foul;  // TCB foul experiment - Verus blocks unspecified &mut self methods
 //    pub mod pervasives;
 //    pub mod sigma_pi;
@@ -48,8 +49,8 @@ pub mod experiments {
 //    pub mod total_ord_gen_axioms;
 //    pub mod test_feq;
 //    pub mod test_feq_insertion_sort;
-//      pub mod clone_plus;
-//      pub mod CheckedI32;
+//    pub mod clone_plus;
+//    pub mod CheckedI32;
 //    pub mod unsigned_int;
 //    pub mod signed_int;
 //    pub mod checked_unsigned_int;
@@ -68,6 +69,7 @@ pub mod vstdplus {
     pub mod seq_set;
     pub mod seq;
     pub mod hash_set_with_view_plus;
+    // pub mod hash_set_iter_with_view;  // Not needed - using closed spec approach
     pub mod hash_set_specs;
     pub mod total_order;
     pub mod partial_order;
