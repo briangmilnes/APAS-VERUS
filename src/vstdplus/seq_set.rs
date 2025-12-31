@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Lemmas about the relationship between Seq operations (take, skip, push) and to_set()
 // Note: These are regular proof functions, not broadcast.
 // Broadcast versions caused massive performance issues (30M+ rlimit).
@@ -22,8 +23,8 @@ broadcast use {
 // Veracity: UNUSED     assert(seq.contains(seq[i]));
 // Veracity: UNUSED }
 
-/// If a sequence does not contain an element v, then pushing v onto the sequence
-/// creates a subset of the original set with v inserted.
+/// - If a sequence does not contain an element v, then pushing v onto the sequence
+/// - creates a subset of the original set with v inserted.
 // Veracity: USED
 pub proof fn lemma_push_not_contains_to_set_subset<T>(seq: Seq<T>, v: T)
     requires
@@ -48,8 +49,8 @@ pub proof fn lemma_push_not_contains_to_set_subset<T>(seq: Seq<T>, v: T)
     }
 }
 
-/// If a sequence does not contain an element v, then the original set with v inserted
-/// is a subset of pushing v onto the sequence.
+/// - If a sequence does not contain an element v, then the original set with v inserted
+/// - is a subset of pushing v onto the sequence.
 // Veracity: USED
 pub proof fn lemma_push_not_contains_to_set_superset<T>(seq: Seq<T>, v: T)
     requires
@@ -73,8 +74,8 @@ pub proof fn lemma_push_not_contains_to_set_superset<T>(seq: Seq<T>, v: T)
     }
 }
 
-/// If a sequence does not contain an element v, then pushing v onto the sequence
-/// creates a set equal to the original set with v inserted.
+/// - If a sequence does not contain an element v, then pushing v onto the sequence
+/// - creates a set equal to the original set with v inserted.
 // Veracity: USED
 pub proof fn lemma_push_not_contains_to_set<T>(seq: Seq<T>, v: T)
     requires
@@ -158,8 +159,8 @@ pub proof fn lemma_take_extends_set_superset<T>(seq: Seq<T>, n: int)
     }
 }
 
-/// After taking n elements and then taking n+1 elements (where n < len),
-/// the additional element at index n is in the larger set.
+/// - After taking n elements and then taking n+1 elements (where n < len),
+/// - the additional element at index n is in the larger set.
 pub proof fn lemma_take_one_more_extends_the_seq_set<T>(seq: Seq<T>, n: int)
     requires
         0 <= n < seq.len(),
@@ -186,8 +187,8 @@ pub proof fn lemma_set_contains_insert_idempotent<V>(s: Set<V>, v: V)
 
 // View-aware lemmas for sequences with map operations
 
-/// After taking n elements, mapping through view, and inserting seq[n]@,
-/// the result equals take(n+1) mapped through view and converted to set.
+/// - After taking n elements, mapping through view, and inserting seq[n]@,
+/// - the result equals take(n+1) mapped through view and converted to set.
 pub proof fn lemma_take_one_more_extends_the_seq_set_with_view<T: View>(seq: Seq<T>, n: int)
     requires
         0 <= n < seq.len(),
@@ -233,8 +234,8 @@ pub proof fn lemma_take_one_more_extends_the_seq_set_with_view<T: View>(seq: Seq
     }
 }
 
-/// Taking the full length of a sequence, mapping through view, and converting to set
-/// yields the same set as mapping the full sequence through view and converting to set.
+/// - Taking the full length of a sequence, mapping through view, and converting to set
+/// - yields the same set as mapping the full sequence through view and converting to set.
 pub proof fn lemma_take_full_to_set_with_view<T: View>(seq: Seq<T>)
 // Veracity: USED
     ensures
@@ -244,8 +245,8 @@ pub proof fn lemma_take_full_to_set_with_view<T: View>(seq: Seq<T>)
 // Veracity: UNNEEDED assert     assert(seq.take(seq.len() as int) =~= seq);
 }
 
-/// Proves that a sequence mapped through view equals a target set when bidirectional containment holds.
-/// Lemma: If i is a valid index, then seq.map(...)[i] is in seq.map(...).to_set()
+/// - Proves that a sequence mapped through view equals a target set when bidirectional containment holds.
+/// - Lemma: If i is a valid index, then seq.map(...)[i] is in seq.map(...).to_set()
 pub proof fn lemma_seq_index_in_map_to_set<T: View>(seq: Seq<T>, i: int)
     requires
         0 <= i < seq.len(),
@@ -280,8 +281,8 @@ pub proof fn lemma_map_to_set_contains_index<T: View>(seq: Seq<T>, s: T::V)
 // Veracity: UNNEEDED assert     assert(0 <= idx < seq.len());
 }
 
-/// Lemma: If mapped seq doesn't contain a value, then no element's view equals that value.
-/// Useful for proving no_duplicates when building sequences incrementally.
+/// - Lemma: If mapped seq doesn't contain a value, then no element's view equals that value.
+/// - Useful for proving no_duplicates when building sequences incrementally.
 pub proof fn lemma_map_not_contains_implies_all_ne<T: View>(seq: Seq<T>, x: T::V)
     requires
         !seq.map(|_j: int, t: T| t@).contains(x),
@@ -332,8 +333,8 @@ pub proof fn lemma_seq_map_to_set_equality<T: View>(seq: Seq<T>, target: Set<T::
     }
 }
 
-/// After taking n elements and mapping through view, intersecting with a set s2,
-/// extending to n+1 either adds seq[n]@ (if in s2) or keeps the intersection unchanged.
+/// - After taking n elements and mapping through view, intersecting with a set s2,
+/// - extending to n+1 either adds seq[n]@ (if in s2) or keeps the intersection unchanged.
 pub proof fn lemma_take_one_more_intersect<T: View>(seq: Seq<T>, s2: Set<T::V>, n: int)
     requires
         0 <= n < seq.len(),
@@ -549,8 +550,8 @@ pub proof fn lemma_nat_fold_left_step(seq: Seq<nat>, n: int)
 // Veracity: UNNEEDED assert         == prefix.fold_left(0nat, f) + seq[n]);
 }
 
-/// The main theorem: If the total sum of nat values fits in MAX, then ALL partial sums fit.
-/// This means no intermediate overflow regardless of ordering!
+/// - The main theorem: If the total sum of nat values fits in MAX, then ALL partial sums fit.
+/// - This means no intermediate overflow regardless of ordering!
 // Veracity: USED
 
 pub proof fn lemma_spec_nat_seq_sum_no_intermediate_overflow(seq: Seq<nat>, max: nat)
@@ -642,9 +643,7 @@ pub proof fn lemma_spec_nat_seq_sum_permutation_invariant(s1: Seq<nat>, s2: Seq<
 }
 
 // Veracity: USED
-// =============================================================================
 // Lemmas for u32 view identity and set/seq membership equivalence
-// =============================================================================
 
 /// Lemma: for u32, seq.map(|_i, t| t@) =~= seq (view is identity)
 pub proof fn lemma_u32_view_identity(seq: Seq<u32>)
@@ -726,9 +725,7 @@ pub proof fn lemma_set_contains_iff_to_seq_map_contains(s: Set<u32>)
     }
 }
 
-// =============================================================================
 // Weighted tuple fold lemmas - for summing weights in edge sequences/sets
-// =============================================================================
 
 /// Spec function: sum of third component over a sequence of triples
 pub open spec fn spec_weighted_seq_sum<A, B>(seq: Seq<(A, B, u32)>) -> nat {
@@ -817,8 +814,8 @@ pub proof fn lemma_weighted_seq_sum_is_set_sum<A, B>(s: Set<(A, B, u32)>)
     lemma_weighted_seq_fold_equals_set_fold(seq);
 }
 
-/// Lemma: int fold equals nat fold as int for weighted sums
-/// Since we're adding non-negative values, the int and nat accumulators stay in sync.
+/// - Lemma: int fold equals nat fold as int for weighted sums
+/// - Since we're adding non-negative values, the int and nat accumulators stay in sync.
 pub proof fn lemma_int_fold_equals_nat_fold_weighted<T: View<V = (A, B, u32)>, A, B>(seq: Seq<T>)
     ensures
         seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat)
@@ -833,9 +830,9 @@ pub proof fn lemma_int_fold_equals_nat_fold_weighted<T: View<V = (A, B, u32)>, A
     }
 }
 
-/// Lemma: fold_left adding e@.2 equals spec_weighted_seq_sum of the mapped sequence
-/// This shows that folding over elements extracting weight via View 
-/// equals the weighted sum of the view-mapped sequence.
+/// - Lemma: fold_left adding e@.2 equals spec_weighted_seq_sum of the mapped sequence
+/// - This shows that folding over elements extracting weight via View
+/// - equals the weighted sum of the view-mapped sequence.
 pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum<T: View<V = (A, B, u32)>, A, B>(seq: Seq<T>)
     ensures
         seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) 
@@ -871,8 +868,8 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum<T: View<V = (A, B, u32
     }
 }
 
-/// Lemma: fold_left with int accumulator equals fold_left with nat accumulator cast to int
-/// For functions that only add non-negative values, the results are equal.
+/// - Lemma: fold_left with int accumulator equals fold_left with nat accumulator cast to int
+/// - For functions that only add non-negative values, the results are equal.
 pub proof fn lemma_fold_left_int_equals_nat_as_int<T: View<V = (A, B, u32)>, A, B>(seq: Seq<T>)
     ensures
         seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat)
@@ -900,9 +897,7 @@ pub proof fn lemma_fold_left_int_equals_nat_as_int<T: View<V = (A, B, u32)>, A, 
     }
 }
 
-// ============================================================================
 // Unsigned integer weighted sum lemmas (for u8, u16, u64, u128, usize)
-// ============================================================================
 // Veracity: USED
 
 // u8
@@ -1178,9 +1173,7 @@ pub proof fn lemma_weighted_seq_fold_equals_set_fold_usize<A, B>(seq: Seq<(A, B,
     }
 }
 
-// ============================================================================
 // Signed integer weighted sum lemmas (for each signed integer type)
-// ============================================================================
 
 // i8
 pub open spec fn spec_signed_weighted_seq_sum_i8<A, B>(seq: Seq<(A, B, i8)>) -> int {

@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Abstract Set with Set-based Iterator View (visited, current, remaining)
 //! Based on simple_set_iter but with a set-based ghost model instead of sequence-based.
 

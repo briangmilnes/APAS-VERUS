@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};
@@ -63,4 +63,3 @@ fn fetch_add_cas_wrapping() {
     assert_eq!(fetch_add_cas(&value, 1), usize::MAX);
     assert_eq!(value.load(Ordering::Relaxed), 0);
 }
-

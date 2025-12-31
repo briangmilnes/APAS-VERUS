@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for LabUnDirGraphMtEph - ALL trait methods
 
 use apas_ai::Chap05::SetStEph::SetStEph::*;

@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Experiment: TotalOrdGenAxioms - Using broadcast axioms instead of trait methods
 //!
 //! GOAL: Make axioms fire automatically via broadcast instead of explicit calls
@@ -134,4 +135,3 @@ pub mod total_ord_gen_axioms {
 
     } // verus!
 }
-

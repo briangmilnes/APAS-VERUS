@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 11 — Fibonacci.
 //! Verified specification and implementation of the Fibonacci sequence.
 
@@ -16,8 +16,8 @@ pub mod FibonacciStEph {
 
     verus! {
 
-        /// Specification of Fibonacci sequence.
-        /// fib(0) = 0, fib(1) = 1, fib(n) = fib(n-1) + fib(n-2) for n >= 2
+        /// - Specification of Fibonacci sequence.
+        /// - fib(0) = 0, fib(1) = 1, fib(n) = fib(n-1) + fib(n-2) for n >= 2
         pub open spec fn spec_fib(n: nat) -> nat
             decreases n,
         {
@@ -30,8 +30,8 @@ pub mod FibonacciStEph {
             }
         }
 
-        /// Iterative Fibonacci implementation.
-        /// Work: Θ(n), Space: O(1)
+        /// - Iterative Fibonacci implementation.
+        /// - Work: Θ(n), Space: O(1)
         pub fn fib(n: u64) -> (result: u64)
             requires
                 n <= 46,
@@ -67,9 +67,9 @@ pub mod FibonacciStEph {
             prev1
         }
 
-        /// Recursive Fibonacci implementation (matches APAS structure).
-        /// Work: Θ(φⁿ), Span: Θ(n), where φ ≈ 1.618 (golden ratio)
-        /// Note: Exponential work - for demonstration only.
+        /// - Recursive Fibonacci implementation (matches APAS structure).
+        /// - Work: Θ(φⁿ), Span: Θ(n), where φ ≈ 1.618 (golden ratio)
+        /// - Note: Exponential work - for demonstration only.
         pub fn fib_recursive(n: u64) -> (result: u64)
             requires
                 n <= 46,
@@ -127,4 +127,3 @@ pub mod FibonacciStEph {
 
     } // verus!
 } // mod
-

@@ -1,12 +1,11 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Tests for checked_nat_with_checked_view::CheckedU32
 //! Tests addition, multiplication, and overflow cases
 
 // Use the non-verus version (cfg(not(verus_keep_ghost)))
 use apas_verus::vstdplus::checked_nat_with_checked_view::checked_nat_with_checked_view::CheckedU32;
 
-// ============================================================
 // Addition tests
-// ============================================================
 
 #[test]
 fn test_new() {
@@ -58,9 +57,7 @@ fn test_add_overflow_propagates() {
     assert!(c.is_overflow());
 }
 
-// ============================================================
 // Multiplication tests
-// ============================================================
 
 #[test]
 fn test_mul_value_normal() {
@@ -114,9 +111,7 @@ fn test_mul_overflow_by_zero() {
     assert_eq!(c.unwrap(), 0u32);
 }
 
-// ============================================================
 // Sum sequence tests (simulating total_weight)
-// ============================================================
 
 #[test]
 fn test_sum_sequence_normal() {
@@ -160,9 +155,7 @@ fn test_sum_large_sequence_overflow() {
     assert!(sum.is_overflow());
 }
 
-// ============================================================
 // Edge cases
-// ============================================================
 
 #[test]
 fn test_max_value() {
@@ -209,4 +202,3 @@ fn test_to_option_overflow() {
     let opt = b.to_option();
     assert!(opt.is_none());
 }
-

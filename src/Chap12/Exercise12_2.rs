@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 12 — Exercise 12.2: implement fetch-and-add using compare-and-swap.
 
 pub mod Exercise12_2 {
@@ -38,4 +38,3 @@ impl FetchAddCasTrait for AtomicUsize {
 }
 
 } // mod
-

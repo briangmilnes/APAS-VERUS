@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Experiment: Can we get a simple verified function to run with cargo test?
 //! 
 //! Goal: Figure out which Verus features need conditional compilation for runtime tests.

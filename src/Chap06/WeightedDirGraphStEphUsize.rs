@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 6 Weighted Directed Graph (ephemeral) with usize weights - Single-threaded version.
 //! Uses CheckedUsize for overflow-safe weight summation.
 
@@ -411,4 +411,3 @@ assert forall |t: (V::V, V::V, usize)| #[trigger] wa_view.contains(t) && t.2 < t
         }};
     }
 }
-

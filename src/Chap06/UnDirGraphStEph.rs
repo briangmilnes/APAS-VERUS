@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 6.1 Undirected Graph (ephemeral) using Set for vertices and edges.
 
 pub mod UnDirGraphStEph {
@@ -56,8 +56,8 @@ verus! {
             self.spec_ng(v).len()
         }
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (g: UnDirGraphStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures
@@ -66,8 +66,8 @@ verus! {
                 g@.V.finite(),
                 g@.A.finite();
 
-        /// APAS: Work Θ(|V| + |E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(1)
+        /// - APAS: Work Θ(|V| + |E|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|V| + |E|), Span Θ(1)
         fn from_sets(vertices: SetStEph<V>, edges: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>)
             ensures
                 g@.V =~= vertices@,
@@ -75,54 +75,54 @@ verus! {
                 g@.V.finite(),
                 g@.A.finite();
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn edges(&self) -> (e: &SetStEph<Edge<V>>)
             ensures e@ =~= self@.A;
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn sizeV(&self) -> (n: N)
             requires valid_key_type_Edge::<V>()
             ensures n == self@.V.len();
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn sizeE(&self) -> (n: N)
             requires valid_key_type_Edge::<V>()
             ensures n == self@.A.len();
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: B)
             requires valid_key_type_Edge::<V>()
             ensures b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)));
 
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(1)
+        /// - APAS: Work Θ(|E|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|E|), Span Θ(1)
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures neighbors@ == self.spec_ng(v@);
 
-        /// APAS: Work Θ(|u_set| × |E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|u_set| × |E|), Span Θ(1)
+        /// - APAS: Work Θ(|u_set| × |E|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|u_set| × |E|), Span Θ(1)
         fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures neighbors@ == self.spec_ng_of_vertices(vertices@);
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn incident(&self, e: &Edge<V>, v: &V) -> (b: B)
             requires valid_key_type_Edge::<V>()
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(1)
+        /// - APAS: Work Θ(|E|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|E|), Span Θ(1)
         fn degree(&self, v: &V) -> (n: N)
             requires valid_key_type_Edge::<V>()
             ensures n == self.spec_degree(v@);

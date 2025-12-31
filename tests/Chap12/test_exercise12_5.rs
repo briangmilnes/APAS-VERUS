@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 use std::collections::HashSet;
 use std::sync::{Arc, mpsc};
@@ -127,4 +127,3 @@ fn test_multiple_push_pop_cycles() {
 
     assert!(stack.is_empty());
 }
-

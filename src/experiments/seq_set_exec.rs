@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Executable functions for summing sequences with overflow checking.
 //! Uses the lemmas from seq_set.rs to connect seq.fold_left to set.fold.
 
@@ -43,8 +44,8 @@ proof fn lemma_nat_fold_left_step(seq: Seq<nat>, n: int)
     assert(seq.take(n + 1).subrange(n, n + 1) =~= Seq::empty().push(seq[n]));
 }
 
-/// Sum a Seq<nat> by induction (proof function).
-/// This is the pattern for total_weight with nat values.
+/// - Sum a Seq<nat> by induction (proof function).
+/// - This is the pattern for total_weight with nat values.
 pub proof fn proof_sum_seq_nat(seq: Seq<nat>, i: int) -> (total: nat)
     requires
         0 <= i <= seq.len(),

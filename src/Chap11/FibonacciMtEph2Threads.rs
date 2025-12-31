@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 11 — Parallel Fibonacci using Tokenized State Machine.
 //!
 //! Two threads compute fib(n-1) and fib(n-2), TSM proves correctness.

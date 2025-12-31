@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Tests for WSSchedulerMtEph work-stealing pool
 
 use apas_verus::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;

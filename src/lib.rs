@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! APAS-VERUS library crate
 #![cfg_attr(verus_keep_ghost, feature(sized_hierarchy))]
 

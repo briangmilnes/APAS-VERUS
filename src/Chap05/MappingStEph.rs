@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 5.5 ephemeral Mapping (Function) built on `RelationStEph<A,B>`.
 
 pub mod MappingStEph {
@@ -148,8 +148,8 @@ verus! {
             requires valid_key_type_Pair::<X, Y>()
             ensures functional == is_functional_relation(*r);
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
             requires valid_key_type_Pair::<X, Y>()
             ensures 
@@ -157,31 +157,31 @@ verus! {
                 empty@ == Map::<X::V, Y::V>::empty(),
                 empty.is_functional();
 
-        /// APAS: Work Θ(|v|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|v|), Span Θ(1)
+        /// - APAS: Work Θ(|v|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|v|), Span Θ(1)
         fn from_vec(v: Vec<Pair<X, Y>>) -> (mapping: Self)
             requires valid_key_type_Pair::<X, Y>(), is_functional_seq(v@)
             ensures mapping@.dom().finite(), mapping.is_functional();
 
-        /// APAS: Work Θ(|r|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|r|), Span Θ(1)
+        /// - APAS: Work Θ(|r|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|r|), Span Θ(1)
         fn from_relation(r: &RelationStEph<X, Y>) -> (mapping: Self)
             requires valid_key_type_Pair::<X, Y>(), is_functional_relation(*r)
             ensures mapping@.dom().finite(), mapping.is_functional();
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> N
             requires self.is_functional();
 
-        /// APAS: Work Θ(|m|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|m|), Span Θ(1)
+        /// - APAS: Work Θ(|m|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|m|), Span Θ(1)
         fn domain(&self) -> (domain: SetStEph<X>)
             requires valid_key_type_Pair::<X, Y>(), self.is_functional()
             ensures domain@.finite(), domain@ == self@.dom();
 
-        /// APAS: Work Θ(|m|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|m|), Span Θ(1)
+        /// - APAS: Work Θ(|m|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|m|), Span Θ(1)
         fn range(&self) -> (range: SetStEph<Y>)
             requires valid_key_type_Pair::<X, Y>(), self.is_functional()
             ensures range@.finite(), range@ =~= Set::<Y::V>::new(|y: Y::V| exists |x: X::V| #![trigger self@[x]] self@.dom().contains(x) && self@[x] == y);

@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for WeightedDirGraphStEphU32.
 
 use apas_verus::Chap05::SetStEph::SetStEph::*;
@@ -173,4 +173,3 @@ fn test_weighted_star() {
     let out0 = g.out_neighbors_weighed(&0);
     assert_eq!(out0.size(), 3);
 }
-

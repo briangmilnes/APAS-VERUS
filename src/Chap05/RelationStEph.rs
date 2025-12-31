@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 5.2 ephemeral Relation built on `SetStEph<Pair<A,B>>`.
 
 pub mod RelationStEph {
@@ -95,36 +95,36 @@ verus! {
             self@.finite()
         }
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
             requires valid_key_type_Pair::<X, Y>()
             ensures empty@.finite(), empty@ == Set::<(<X as View>::V, <Y as View>::V)>::empty();
 
-        /// APAS: Work Θ(|pairs|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|pairs|), Span Θ(1)
+        /// - APAS: Work Θ(|pairs|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|pairs|), Span Θ(1)
         fn from_set(pairs: SetStEph<Pair<X, Y>>) -> (relation: Self)
             requires valid_key_type_Pair::<X, Y>()
             ensures relation@.finite(), relation@ == pairs@;
 
-        /// APAS: Work Θ(|pairs|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|pairs|), Span Θ(1)
+        /// - APAS: Work Θ(|pairs|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|pairs|), Span Θ(1)
         fn from_vec(v: Vec<Pair<X, Y>>) -> (relation: Self)
             requires valid_key_type_Pair::<X, Y>()
             ensures relation@.finite(), relation@ == v@.map(|i: int, p: Pair<X, Y>| p@).to_set();
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> N;
 
-        /// APAS: Work Θ(|R|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|R|), Span Θ(1)
+        /// - APAS: Work Θ(|R|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|R|), Span Θ(1)
         fn domain(&self) -> (domain: SetStEph<X>)
             requires valid_key_type_Pair::<X, Y>()
             ensures domain@.finite(), domain@ == Set::<X::V>::new(|x: X::V| exists |y: Y::V| self@.contains((x, y)));
 
-        /// APAS: Work Θ(|R|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|R|), Span Θ(1)
+        /// - APAS: Work Θ(|R|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|R|), Span Θ(1)
         fn range(&self) -> (range: SetStEph<Y>)
             requires valid_key_type_Pair::<X, Y>()
             ensures range@.finite(), range@ == Set::<Y::V>::new(|y: Y::V| exists |x: X::V| self@.contains((x, y)));

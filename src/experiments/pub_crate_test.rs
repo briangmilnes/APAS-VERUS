@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Test Rust's restricted pub visibility modifiers
 
 pub mod inner {
@@ -47,4 +48,3 @@ fn main() {
     outer::test_pub_super();
     println!("\nConclusion: pub(crate) and pub(super) still allow struct literal construction!");
 }
-

@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 #![allow(unused_imports)]
 use vstd::prelude::*;
 
@@ -37,4 +38,3 @@ pub fn vec_int_mem_verifies(s: Vec<int>, elt: int) -> (result: bool)
 }
 
 }
-

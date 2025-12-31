@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 use apas_verus::Chap03::InsertionSortStEph::InsertionSortStEph::*;
 
@@ -51,4 +51,3 @@ fn insertion_sort_large_input_stress_test() {
         assert!(result[i - 1] <= result[i], "Array not properly sorted at index {i}");
     }
 }
-

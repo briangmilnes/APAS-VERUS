@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 use vstd::prelude::*;
 use crate::experiments::verus_iterator::*;
 

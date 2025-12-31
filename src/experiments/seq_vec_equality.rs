@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 #![allow(unused_imports)]
 use vstd::prelude::*;
 

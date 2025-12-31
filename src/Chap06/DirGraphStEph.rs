@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 6.1 Directed Graph (ephemeral) using Set for vertices and arcs.
 
 pub mod DirGraphStEph {
@@ -88,8 +88,8 @@ verus! {
         }
 
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (g: DirGraphStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures
@@ -97,62 +97,62 @@ verus! {
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
 
-        /// APAS: Work Θ(|V| + |A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|V| + |A|), Span Θ(1)
+        /// - APAS: Work Θ(|V| + |A|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|V| + |A|), Span Θ(1)
         fn from_sets(vertices: SetStEph<V>, arcs: SetStEph<Edge<V>>) -> (g: DirGraphStEph<V>)
             ensures
                 g@.V.finite(), g@.A.finite(),
                 g@.V =~= vertices@,
                 g@.A =~= arcs@;
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn arcs(&self) -> (a: &SetStEph<Edge<V>>)
             ensures a@ =~= self@.A;
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn sizeV(&self) -> (n: N)
             requires valid_key_type_Edge::<V>()
             ensures n == self@.V.len();
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn sizeA(&self) -> (n: N)
             requires valid_key_type_Edge::<V>()
             ensures n == self@.A.len();
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: B)
             requires valid_key_type_Edge::<V>()
             ensures b == self@.A.contains((u@, v@));
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|A|), Span Θ(1)
         fn ng(&self, v: &V)                             -> (neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures neighbors@ == self.spec_ng(v@);
 
-        /// APAS: Work Θ(|vertices| × |A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|vertices| × |A|), Span Θ(1)
+        /// - APAS: Work Θ(|vertices| × |A|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|vertices| × |A|), Span Θ(1)
         fn ng_of_vertices(&self, vertices: &SetStEph<V>)     -> (neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures neighbors@ == self.spec_ng_of_vertices(vertices@);
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|A|), Span Θ(1)
         fn n_plus(&self, v: &V)                          -> (out_neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures out_neighbors@ == self.spec_n_plus(v@);
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|A|), Span Θ(1)
         fn n_minus(&self, v: &V)                         -> (in_neighbors: SetStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures in_neighbors@ == self.spec_n_minus(v@);

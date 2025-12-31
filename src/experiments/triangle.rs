@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 use vstd::prelude::*;
 
 verus! {
@@ -77,4 +78,3 @@ fn loop_triangle_with_vec(nums: &Vec<u32>) -> (sum: u32)
 }
 
 }
-

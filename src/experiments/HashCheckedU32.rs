@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Experiment: Add Hash, Eq, Display, Debug to the macro-generated CheckedU32
 //! Also adds the axioms needed for use in hash collections (obeys_key_model, obeys_feq_full)
 

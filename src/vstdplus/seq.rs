@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Sequence utilities for Verus
 //! Includes conversion functions and fold helpers
 
@@ -149,9 +150,7 @@ verus! {
 // Veracity: UNNEEDED assert         assert(take_new.last() == s[i]);
     }
 
-    // ============================================================
     // For Seq<CheckedU32>: map to Seq<int> via view, then sum
-    // ============================================================
 
     // Spec: sum of CheckedU32 views in a sequence
     pub open spec fn spec_sum_checked_u32_seq(s: Seq<CheckedU32>) -> int {
@@ -179,4 +178,3 @@ verus! {
 } // verus!
 
 } // mod seq
-

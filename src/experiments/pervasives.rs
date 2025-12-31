@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Experiment: Can we create assert-like comments that type check but don't prove?
 //! And can such constructs be used to prove false?
 
@@ -6,9 +7,7 @@ pub mod pervasives {
 
     verus! {
 
-    // ============================================================
     // Test vstd::pervasive::unreached
-    // ============================================================
     
     // unreached<A>() has requires false, returns A
     // It's in vstd::prelude so should be available
@@ -39,9 +38,7 @@ pub mod pervasives {
         }
     }
 
-    // ============================================================
     // Approach 1: External body proof function
-    // ============================================================
     
     #[verifier::external_body]
     pub proof fn assert_unchecked(b: bool)
@@ -57,9 +54,7 @@ pub mod pervasives {
         assert_unchecked(false);  // This should make false true!
     }
 
-    // ============================================================
     // Approach 2: external_body on claim_anything
-    // ============================================================
     
     #[verifier::external_body]
     pub proof fn claim_anything<A>(a: A, b: A)
@@ -75,9 +70,7 @@ pub mod pervasives {
         assert(false);               // 1 != 2, contradiction
     }
 
-    // ============================================================
     // Approach 3: spec_comment - doesn't prove, just documents
-    // ============================================================
     
     pub open spec fn spec_comment(description: &str, claim: bool) -> bool {
         true  // Always returns true, ignoring the claim
@@ -88,9 +81,7 @@ pub mod pervasives {
         assert(spec_comment("this claim is false but passes", false));
     }
 
-    // ============================================================
     // Approach 4: assume(false) - the known cheat
-    // ============================================================
     
     pub proof fn using_assume_proves_false()
         ensures false,
@@ -100,4 +91,3 @@ pub mod pervasives {
 
     } // verus!
 }
-

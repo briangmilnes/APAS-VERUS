@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! CheckedU32 implementing CheckedUnsignedInt trait.
 
 #[allow(unused_imports)]
@@ -128,4 +129,3 @@ impl CheckedUnsignedInt for CheckedU32 {
 }
 
 } // verus!
-

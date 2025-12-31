@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 18 persistent sequence implementation for array-backed sequences. Verusified.
 
 pub mod ArraySeqStPer {
@@ -22,8 +22,8 @@ pub mod ArraySeqStPer {
         pub seq: Vec<T>,
     }
 
-    /// Base trait for single-threaded persistent array sequences (Chapter 18).
-    /// These methods are never redefined in later chapters.
+    /// - Base trait for single-threaded persistent array sequences (Chapter 18).
+    /// - These methods are never redefined in later chapters.
     pub trait ArraySeqStPerBaseTrait<T>: Sized {
         /// Work Θ(n), Span Θ(1)
         fn new(length: usize, init_value: T) -> Self where T: Clone;

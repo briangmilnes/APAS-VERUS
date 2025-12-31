@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Experiment: What are the View types of primitives?
 //! Testing whether u64@, i64@, bool@, ()@ give identity or int/bool/unit.
 //!
@@ -77,4 +78,3 @@ proof fn test_cross_type_comparison() {
 }
 
 } // verus!
-

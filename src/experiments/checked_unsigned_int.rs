@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Checked unsigned integer trait with overflow tracking.
 //! Key property: if final sum fits, all partial sums fit (monotonicity).
 

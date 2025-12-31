@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Additional pervasive utilities beyond vstd::pervasive.
 
 pub mod pervasives_plus {
@@ -21,4 +21,3 @@ pub mod pervasives_plus {
 
     } // verus!
 }
-

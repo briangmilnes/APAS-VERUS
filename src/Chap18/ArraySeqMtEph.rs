@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 18 algorithms for ArraySeqMtEph multithreaded ephemeral. Verusified.
 //! Uses work-stealing Pool for parallel operations (map_par, reduce_par, filter_par).
 

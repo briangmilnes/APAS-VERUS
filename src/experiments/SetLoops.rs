@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Explicit demonstration of what Verus auto-generates for for-loop invariants
 //! Based on builtin_macros/src/syntax.rs and vstd/std_specs/hash.rs
 
@@ -217,4 +218,3 @@ fn CartesianProductNoAuto<T: StT + Hash, U: StT + Hash>(
 
 } // verus!
 }
-

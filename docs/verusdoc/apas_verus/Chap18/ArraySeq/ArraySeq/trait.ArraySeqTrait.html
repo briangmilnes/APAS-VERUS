@@ -37,90 +37,130 @@
 </div></details><h2 class="section-header" id="required-methods">Required Methods<a class="anchor" href="#required-methods">§</a></h2><div class="methods"><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.new"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#32">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.new">new</a>(length: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.usize.html">usize</a>, init_value: T) -&gt; Self<div class="where">where
     T: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>,</div></h4></section></summary><div class="docblock">
 
-<p>Create a new sequence of length <code>length</code> with each element initialized to <code>init_value</code>.
-Work Θ(length), Span Θ(1).</p>
+<ul>
+<li>Create a new sequence of length <code>length</code> with each element initialized to <code>init_value</code>.</li>
+<li>Work Θ(length), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.set"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#36">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.set">set</a>(&amp;mut self, index: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.usize.html">usize</a>, item: T) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.91.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.unit.html">()</a>, &amp;'static <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.str.html">str</a>&gt;</h4></section></summary><div class="docblock">
 
-<p>Set the element at <code>index</code> to <code>item</code> in place.
-Work Θ(1), Span Θ(1).</p>
+<ul>
+<li>Set the element at <code>index</code> to <code>item</code> in place.</li>
+<li>Work Θ(1), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.length"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#40">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.length">length</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.usize.html">usize</a></h4></section></summary><div class="docblock">
 
-<p>Definition 18.1 (length). Return the number of elements.
-Work Θ(1), Span Θ(1).</p>
+<ul>
+<li>Definition 18.1 (length). Return the number of elements.</li>
+<li>Work Θ(1), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.nth"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#44">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.nth">nth</a>(&amp;self, index: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.usize.html">usize</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;T</a></h4></section></summary><div class="docblock">
 
-<p>Algorithm 19.11 (Function nth). Return a reference to the element at <code>index</code>.
-Work Θ(1), Span Θ(1).</p>
+<ul>
+<li>Algorithm 19.11 (Function nth). Return a reference to the element at <code>index</code>.</li>
+<li>Work Θ(1), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.empty"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#48">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.empty">empty</a>() -&gt; Self</h4></section></summary><div class="docblock">
 
-<p>Definition 18.1 (empty). Construct the empty sequence.
-Work Θ(1), Span Θ(1).</p>
+<ul>
+<li>Definition 18.1 (empty). Construct the empty sequence.</li>
+<li>Work Θ(1), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.singleton"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#52">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.singleton">singleton</a>(item: T) -&gt; Self</h4></section></summary><div class="docblock">
 
-<p>Definition 18.1 (singleton). Construct a singleton sequence containing <code>item</code>.
-Work Θ(1), Span Θ(1).</p>
+<ul>
+<li>Definition 18.1 (singleton). Construct a singleton sequence containing <code>item</code>.</li>
+<li>Work Θ(1), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.tabulate"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#56">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.tabulate">tabulate</a>&lt;F: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.usize.html">usize</a>) -&gt; T&gt;(f: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;F</a>, length: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.usize.html">usize</a>) -&gt; <a class="struct" href="struct.ArraySeqS.html" title="struct apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqS">ArraySeqS</a>&lt;T&gt;</h4></section></summary><div class="docblock">
 
-<p>Algorithm 18.3 (tabulate). Build a sequence by applying <code>f</code> to each index.
-Work Θ(length), Span Θ(1).</p>
+<ul>
+<li>Algorithm 18.3 (tabulate). Build a sequence by applying <code>f</code> to each index.</li>
+<li>Work Θ(length), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.map"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#60">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.map">map</a>&lt;U: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>, F: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;T</a>) -&gt; U&gt;(a: &amp;<a class="struct" href="struct.ArraySeqS.html" title="struct apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqS">ArraySeqS</a>&lt;T&gt;, f: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;F</a>) -&gt; <a class="struct" href="struct.ArraySeqS.html" title="struct apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqS">ArraySeqS</a>&lt;U&gt;</h4></section></summary><div class="docblock">
 
-<p>Algorithm 18.4 (map). Transform each element via <code>f</code>.
-Work Θ(|a|), Span Θ(1).</p>
+<ul>
+<li>Algorithm 18.4 (map). Transform each element via <code>f</code>.</li>
+<li>Work Θ(|a|), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.subseq"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#64">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.subseq">subseq</a>(a: &amp;<a class="struct" href="struct.ArraySeqS.html" title="struct apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqS">ArraySeqS</a>&lt;T&gt;, start: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.usize.html">usize</a>, length: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.usize.html">usize</a>) -&gt; Self<div class="where">where
     T: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>,</div></h4></section></summary><div class="docblock">
 
-<p>Definition 18.12 (subseq). Extract a contiguous subsequence.
-Work Θ(length), Span Θ(1).</p>
+<ul>
+<li>Definition 18.12 (subseq). Extract a contiguous subsequence.</li>
+<li>Work Θ(length), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.append"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#68">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.append">append</a>(a: &amp;<a class="struct" href="struct.ArraySeqS.html" title="struct apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqS">ArraySeqS</a>&lt;T&gt;, b: &amp;<a class="struct" href="struct.ArraySeqS.html" title="struct apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqS">ArraySeqS</a>&lt;T&gt;) -&gt; Self<div class="where">where
     T: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>,</div></h4></section></summary><div class="docblock">
 
-<p>Definition 18.13 (append). Concatenate two sequences.
-Work Θ(|a| + |b|), Span Θ(1).</p>
+<ul>
+<li>Definition 18.13 (append). Concatenate two sequences.</li>
+<li>Work Θ(|a| + |b|), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.filter"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#72">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.filter">filter</a>&lt;F: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;T</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.bool.html">bool</a>&gt;(a: &amp;<a class="struct" href="struct.ArraySeqS.html" title="struct apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqS">ArraySeqS</a>&lt;T&gt;, pred: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;F</a>) -&gt; Self<div class="where">where
     T: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>,</div></h4></section></summary><div class="docblock">
 
-<p>Definition 18.14 (filter). Keep elements satisfying <code>pred</code>.
-Work Θ(|a|), Span Θ(1).</p>
+<ul>
+<li>Definition 18.14 (filter). Keep elements satisfying <code>pred</code>.</li>
+<li>Work Θ(|a|), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.flatten"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#76">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.flatten">flatten</a>(a: &amp;<a class="struct" href="struct.ArraySeqS.html" title="struct apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqS">ArraySeqS</a>&lt;<a class="struct" href="struct.ArraySeqS.html" title="struct apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqS">ArraySeqS</a>&lt;T&gt;&gt;) -&gt; Self<div class="where">where
     T: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>,</div></h4></section></summary><div class="docblock">
 
-<p>Definition 18.15 (flatten). Concatenate a sequence of sequences.
-Work Θ(total length), Span Θ(1).</p>
+<ul>
+<li>Definition 18.15 (flatten). Concatenate a sequence of sequences.</li>
+<li>Work Θ(total length), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.update"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#80">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.update">update</a>(a: &amp;<a class="struct" href="struct.ArraySeqS.html" title="struct apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqS">ArraySeqS</a>&lt;T&gt;, index: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.usize.html">usize</a>, item: T) -&gt; Self<div class="where">where
     T: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>,</div></h4></section></summary><div class="docblock">
 
-<p>Definition 18.16 (update). Return a copy with the index replaced by the new value.
-Work Θ(|a|), Span Θ(1).</p>
+<ul>
+<li>Definition 18.16 (update). Return a copy with the index replaced by the new value.</li>
+<li>Work Θ(|a|), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.is_empty"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#84">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.is_empty">is_empty</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.bool.html">bool</a></h4></section></summary><div class="docblock">
 
-<p>Definition 18.5 (isEmpty). true iff the sequence has length zero.
-Work Θ(1), Span Θ(1).</p>
+<ul>
+<li>Definition 18.5 (isEmpty). true iff the sequence has length zero.</li>
+<li>Work Θ(1), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.is_singleton"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#88">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.is_singleton">is_singleton</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.bool.html">bool</a></h4></section></summary><div class="docblock">
 
-<p>Definition 18.5 (isSingleton). true iff the sequence has length one.
-Work Θ(1), Span Θ(1).</p>
+<ul>
+<li>Definition 18.5 (isSingleton). true iff the sequence has length one.</li>
+<li>Work Θ(1), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.iterate"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#92">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.iterate">iterate</a>&lt;A, F: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;A</a>, <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;T</a>) -&gt; A&gt;(a: &amp;<a class="struct" href="struct.ArraySeqS.html" title="struct apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqS">ArraySeqS</a>&lt;T&gt;, f: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;F</a>, seed: A) -&gt; A</h4></section></summary><div class="docblock">
 
-<p>Definition 18.7 (iterate). Fold with accumulator <code>seed</code>.
-Work Θ(|a|), Span Θ(1).</p>
+<ul>
+<li>Definition 18.7 (iterate). Fold with accumulator <code>seed</code>.</li>
+<li>Work Θ(|a|), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.reduce"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#96">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.reduce">reduce</a>&lt;F: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;T</a>, <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;T</a>) -&gt; T&gt;(a: &amp;<a class="struct" href="struct.ArraySeqS.html" title="struct apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqS">ArraySeqS</a>&lt;T&gt;, f: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;F</a>, id: T) -&gt; T<div class="where">where
     T: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>,</div></h4></section></summary><div class="docblock">
 
-<p>Definition 18.18 (reduce). Combine elements using associative <code>f</code> and identity <code>id</code>.
-Work Θ(|a|), Span Θ(1).</p>
+<ul>
+<li>Definition 18.18 (reduce). Combine elements using associative <code>f</code> and identity <code>id</code>.</li>
+<li>Work Θ(|a|), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.scan"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#100">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.scan">scan</a>&lt;F: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;T</a>, <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;T</a>) -&gt; T&gt;(a: &amp;<a class="struct" href="struct.ArraySeqS.html" title="struct apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqS">ArraySeqS</a>&lt;T&gt;, f: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;F</a>, id: T) -&gt; (<a class="struct" href="struct.ArraySeqS.html" title="struct apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqS">ArraySeqS</a>&lt;T&gt;, T)<div class="where">where
     T: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>,</div></h4></section></summary><div class="docblock">
 
-<p>Definition 18.19 (scan). Prefix-reduce returning partial sums and total.
-Work Θ(|a|), Span Θ(1).</p>
+<ul>
+<li>Definition 18.19 (scan). Prefix-reduce returning partial sums and total.</li>
+<li>Work Θ(|a|), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.subseq_copy"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#104">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.subseq_copy">subseq_copy</a>(&amp;self, start: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.usize.html">usize</a>, length: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.usize.html">usize</a>) -&gt; <a class="struct" href="struct.ArraySeqS.html" title="struct apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqS">ArraySeqS</a>&lt;T&gt;<div class="where">where
     T: <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>,</div></h4></section></summary><div class="docblock">
 
-<p>Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
-Work Θ(length), Span Θ(1).</p>
+<ul>
+<li>Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.</li>
+<li>Work Θ(length), Span Θ(1).</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.from_vec"><a class="src rightside" href="../../../../src/apas_verus/Chap18/ArraySeq.rs.html#108">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.from_vec">from_vec</a>(elts: <a class="struct" href="https://doc.rust-lang.org/1.91.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;T&gt;) -&gt; Self</h4></section></summary><div class="docblock">
 
-<p>Create sequence from Vec.
-Work Θ(n) worst case, Θ(1) best case, Span Θ(1).</p>
+<ul>
+<li>Create sequence from Vec.</li>
+<li>Work Θ(n) worst case, Θ(1) best case, Span Θ(1).</li>
+</ul>
 </div></details></div><h2 class="section-header" id="dyn-compatibility">Dyn Compatibility<a class="anchor" href="#dyn-compatibility">§</a></h2><div class="dyn-compatibility-info"><p>This trait is <b>not</b> <a href="https://doc.rust-lang.org/1.91.0/reference/items/traits.html#dyn-compatibility">dyn compatible</a>.</p><p><i>In older versions of Rust, dyn compatibility was called "object safety", so this trait is not object safe.</i></p></div><h2 class="section-header" id="implementors">Implementors<a class="anchor" href="#implementors">§</a></h2><div id="implementors-list"></div><script async="" src="../../../../trait.impl/apas_verus/Chap18/ArraySeq/ArraySeq/trait.ArraySeqTrait.js"></script></section></div></main></body></html>

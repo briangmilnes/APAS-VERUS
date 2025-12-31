@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 #![allow(unused_imports)]
 use vstd::prelude::*;
 
@@ -22,4 +23,3 @@ pub fn vec_length_while(s: &Vec<usize>) -> (length: usize)
 }
 
 } // verus!
-

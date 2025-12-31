@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 6 Labeled Directed Graph (ephemeral) using Set for vertices and labeled arcs - Multi-threaded version.
 //!
 //! Note: NOW uses true parallelism via ParaPair! for neighbor operations.
@@ -20,38 +20,38 @@ pub mod LabDirGraphMtEph {
     }
 
     pub trait LabDirGraphMtEphTrait<V: StT + MtT + Hash + 'static, L: StTInMtT + Hash + 'static> {
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn empty()                                                                                      -> Self;
-        /// APAS: Work Θ(|V| + |A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|V| + |A|), Span Θ(|V| + |A|), Parallelism Θ(1) - sequential
+        /// - APAS: Work Θ(|V| + |A|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|V| + |A|), Span Θ(|V| + |A|), Parallelism Θ(1) - sequential
         fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> Self;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn vertices(&self)                                                                              -> &SetStEph<V>;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn labeled_arcs(&self)                                                                          -> &SetStEph<LabEdge<V, L>>;
-        /// APAS: Work Θ(|A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential map
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential map
         fn arcs(&self)                                                                                  -> SetStEph<Edge<V>>;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn add_vertex(&mut self, v: V);
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn add_labeled_arc(&mut self, from: V, to: V, label: L);
-        /// APAS: Work Θ(|A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential search
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential search
         fn get_arc_label(&self, from: &V, to: &V)                                                       -> Option<&L>;
-        /// APAS: Work Θ(|A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential search
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential search
         fn has_arc(&self, from: &V, to: &V)                                                             -> bool;
-        /// APAS: Work Θ(|A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|A|), Span Θ(log |A|), Parallelism Θ(|A|/log |A|) - parallel divide-and-conquer filter
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|A|), Span Θ(log |A|), Parallelism Θ(|A|/log |A|) - parallel divide-and-conquer filter
         fn out_neighbors(&self, v: &V)                                                                  -> SetStEph<V>;
-        /// APAS: Work Θ(|A|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|A|), Span Θ(log |A|), Parallelism Θ(|A|/log |A|) - parallel divide-and-conquer filter
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|A|), Span Θ(log |A|), Parallelism Θ(|A|/log |A|) - parallel divide-and-conquer filter
         fn in_neighbors(&self, v: &V)                                                                   -> SetStEph<V>;
     }
 

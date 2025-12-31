@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! PartialOrder trait connecting executable comparison to spec-level partial ordering.
 //! 
 //! Unlike TotalOrder, PartialOrder allows incomparable elements (e.g., NaN in floats).
@@ -451,4 +452,3 @@ pub mod partial_order {
 
     } // verus!
 }
-

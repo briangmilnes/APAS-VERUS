@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! TCB Foul Experiment
 //!
 //! Demonstrates how the Trusted Computing Base (TCB) can be compromised.
@@ -23,13 +24,11 @@ use vstd::prelude::*;
 
 verus! {
 
-// =============================================================================
 // TCB FOUL via external_body (the only way that works)
-// =============================================================================
 
-/// This function LIES about what it returns.
-/// The spec says it returns 42, but it actually returns 0.
-/// Verus trusts the spec - it cannot see the body.
+/// - This function LIES about what it returns.
+/// - The spec says it returns 42, but it actually returns 0.
+/// - Verus trusts the spec - it cannot see the body.
 #[verifier::external_body]
 pub fn lying_function() -> (result: u64)
     ensures result == 42  // LIE! Actually returns 0
@@ -80,9 +79,7 @@ pub fn tcb_foul_assume() {
     }
 }
 
-// =============================================================================
 // BLOCKED ATTEMPTS (left as documentation)
-// =============================================================================
 
 /*
 // These DON'T compile - Verus blocks unspecified &mut self methods
@@ -103,9 +100,7 @@ pub fn tcb_foul_vec_sort() {
 
 } // verus!
 
-// =============================================================================
 // KEY INSIGHT
-// =============================================================================
 //
 // Verus has good defenses against TCB fouls:
 // 1. Blocks calls to unspecified &mut self methods (the "complex arguments" check)
@@ -120,4 +115,3 @@ pub fn tcb_foul_vec_sort() {
 //
 // Running with --no-cheating disables assume/external_body,
 // but then you can't interface with unverified Rust libraries.
-

@@ -75,8 +75,10 @@
 
 
 
-<p>APAS: Work Θ(|a| + |b|), Span Θ(1)
-claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)</p>
+<ul>
+<li>APAS: Work Θ(|a| + |b|), Span Θ(1)</li>
+<li>claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.disjoint_union"><a class="src rightside" href="../../../../src/apas_verus/Chap05/SetMtEph.rs.html#165-172">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.disjoint_union">disjoint_union</a>(&amp;self, s2: &amp;<a class="struct" href="struct.SetMtEph.html" title="struct apas_verus::Chap05::SetMtEph::SetMtEph::SetMtEph">SetMtEph</a>&lt;T&gt;) -&gt; <span class="verus-ret-name">union : </span>Self</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>valid_key_type::&lt;T&gt;(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>@.disjoint(s2@),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>union@.finite(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>union@ == <span class="self">self</span>@.union(s2@),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>union@.len() == <span class="self">self</span>@.len() + s2@.len(),</code></pre></div>
 
 
@@ -84,15 +86,19 @@ claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)</p>
 
 
 
-<p>Disjoint union: union of two sets known to be disjoint.
-APAS: Work Θ(|a| + |b|), Span Θ(1)</p>
+<ul>
+<li>Disjoint union: union of two sets known to be disjoint.</li>
+<li>APAS: Work Θ(|a| + |b|), Span Θ(1)</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.intersection"><a class="src rightside" href="../../../../src/apas_verus/Chap05/SetMtEph.rs.html#176-178">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.intersection">intersection</a>(&amp;self, s2: &amp;<a class="struct" href="struct.SetMtEph.html" title="struct apas_verus::Chap05::SetMtEph::SetMtEph::SetMtEph">SetMtEph</a>&lt;T&gt;) -&gt; <span class="verus-ret-name">intersection : </span>Self</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>valid_key_type::&lt;T&gt;(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>intersection@.finite(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>intersection@ == <span class="self">self</span>@.intersect(s2@),</code></pre></div>
 
 
 
 
-<p>APAS: Work Θ(|a| + |b|), Span Θ(1)
-claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)</p>
+<ul>
+<li>APAS: Work Θ(|a| + |b|), Span Θ(1)</li>
+<li>claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.elt_cross_set"><a class="src rightside" href="../../../../src/apas_verus/Chap05/SetMtEph.rs.html#180-187">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.elt_cross_set">elt_cross_set</a>&lt;U: <a class="trait" href="../../../Types/Types/trait.StT.html" title="trait apas_verus::Types::Types::StT">StT</a> + <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> + <a class="trait" href="https://doc.rust-lang.org/1.91.0/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>&gt;(
     a: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;T</a>,
     s2: &amp;<a class="struct" href="struct.SetMtEph.html" title="struct apas_verus::Chap05::SetMtEph::SetMtEph::SetMtEph">SetMtEph</a>&lt;U&gt;,
@@ -118,8 +124,10 @@ claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)</p>
 
 
 
-<p>APAS: Work Θ(|a| × |b|), Span Θ(1)
-claude-4-sonet: Work Θ(|a| × |b|), Span Θ(1)</p>
+<ul>
+<li>APAS: Work Θ(|a| × |b|), Span Θ(1)</li>
+<li>claude-4-sonet: Work Θ(|a| × |b|), Span Θ(1)</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.all_nonempty"><a class="src rightside" href="../../../../src/apas_verus/Chap05/SetMtEph.rs.html#201-206">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.all_nonempty">all_nonempty</a>(parts: &amp;<a class="struct" href="struct.SetMtEph.html" title="struct apas_verus::Chap05::SetMtEph::SetMtEph::SetMtEph">SetMtEph</a>&lt;<a class="struct" href="struct.SetMtEph.html" title="struct apas_verus::Chap05::SetMtEph::SetMtEph::SetMtEph">SetMtEph</a>&lt;T&gt;&gt;) -&gt; <span class="verus-ret-name">all_nonempty : </span><a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.bool.html">bool</a></h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>valid_key_type::&lt;T&gt;(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>valid_key_type::&lt;SetMtEph&lt;T&gt;&gt;(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>all_nonempty &lt;==&gt; forall |s: Set&lt;T::V&gt;| parts@.contains(s) ==&gt; s.len() != <span class="number">0</span>,</code></pre></div>
 
 

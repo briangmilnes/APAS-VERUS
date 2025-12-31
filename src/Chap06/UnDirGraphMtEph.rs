@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 6.1 Undirected Graph (ephemeral) using Set for vertices and edges - Multi-threaded version.
 //!
 //! Note: NOW uses true parallelism via ParaPair! for neighbor/degree operations.
@@ -20,38 +20,38 @@ pub mod UnDirGraphMtEph {
     }
 
     pub trait UnDirGraphMtEphTrait<V: StT + MtT + Hash + 'static> {
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty()                                        -> Self;
-        /// APAS: Work Θ(|V| + |E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(1)
+        /// - APAS: Work Θ(|V| + |E|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|V| + |E|), Span Θ(1)
         fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> Self;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn vertices(&self)                                -> &SetStEph<V>;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn edges(&self)                                   -> &SetStEph<Edge<V>>;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn sizeV(&self)                                   -> N;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn sizeE(&self)                                   -> N;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn neighbor(&self, u: &V, v: &V)                  -> B;
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(log |E|), Parallelism Θ(|E|/log |E|) - parallel divide-and-conquer filter
+        /// - APAS: Work Θ(|E|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|E|), Span Θ(log |E|), Parallelism Θ(|E|/log |E|) - parallel divide-and-conquer filter
         fn ng(&self, v: &V)                               -> SetStEph<V>;
-        /// APAS: Work Θ(|u_set| × |E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|u_set| × |E|), Span Θ(log |u_set| + log |E|), Parallelism Θ((|u_set| × |E|)/(log |u_set| + log |E|)) - parallel map-reduce
+        /// - APAS: Work Θ(|u_set| × |E|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|u_set| × |E|), Span Θ(log |u_set| + log |E|), Parallelism Θ((|u_set| × |E|)/(log |u_set| + log |E|)) - parallel map-reduce
         fn ng_of_vertices(&self, u_set: &SetStEph<V>)       -> SetStEph<V>;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn incident(&self, e: &Edge<V>, v: &V)            -> B;
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(log |E|), Parallelism Θ(|E|/log |E|) - calls parallel ng
+        /// - APAS: Work Θ(|E|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|E|), Span Θ(log |E|), Parallelism Θ(|E|/log |E|) - calls parallel ng
         fn degree(&self, v: &V)                           -> N;
     }
 

@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Tests for SetMtEph - parallel set operations.
 
 use apas_verus::Chap05::SetMtEph::SetMtEph::*;

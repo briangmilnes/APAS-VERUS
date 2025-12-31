@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Test if Verus type_invariant works with pub(crate) fields
 
 use vstd::prelude::*;
@@ -29,4 +30,3 @@ pub fn test() {
 }
 
 } // verus!
-

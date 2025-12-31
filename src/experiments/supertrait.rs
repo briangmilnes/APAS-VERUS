@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 pub mod supertrait {
     use vstd::prelude::*;
     verus! {
@@ -26,4 +27,3 @@ pub mod supertrait {
     }
     }
 }
-

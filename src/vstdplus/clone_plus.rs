@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! clone_plus - Add postconditions to Clone::clone for data and closures
 
 #[cfg(verus_keep_ghost)]

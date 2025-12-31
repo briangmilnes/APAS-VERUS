@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Trait for unsigned integer types (u8, u16, u32, u64, u128, usize).
 //! Addition is monotonic (no underflow) so partial sums fit if final sum fits.
 

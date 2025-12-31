@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 use vstd::prelude::*;
 use std::collections::HashSet;
 #[cfg(verus_keep_ghost)]
@@ -40,4 +41,3 @@ fn test_hash_set_iter()
 }
 
 } // verus!
-

@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Tests for CheckedIsize
 
 use apas_verus::vstdplus::checked_int::checked_int::CheckedIsize;

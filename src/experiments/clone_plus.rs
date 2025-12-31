@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Test clone_plus preserves views with and without feq
 
 pub mod clone_plus_test {
@@ -41,4 +42,3 @@ pub mod clone_plus_test {
 
     } // verus!
 }
-

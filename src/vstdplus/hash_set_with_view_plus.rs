@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! HashSetWithViewPlus - wrapper around std::collections::HashSet
 //! Provides View that gives Set<Key::V> and iter() method.
 //! Bypasses vstd::hash_set::HashSetWithView to avoid pub m dependency.
@@ -144,4 +145,3 @@ impl<Key: View + Eq + Hash> Eq for HashSetWithViewPlus<Key> {}
 } // verus!
 
 }
-

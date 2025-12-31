@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 6 Weighted Directed Graph (ephemeral) with i128 weights - Single-threaded version.
 //! Uses CheckedI128 for overflow-safe weight summation.
 
@@ -410,4 +410,3 @@ assert forall |t: (V::V, V::V, i128)| #[trigger] wa_view.contains(t) && t.2 < th
         }};
     }
 }
-

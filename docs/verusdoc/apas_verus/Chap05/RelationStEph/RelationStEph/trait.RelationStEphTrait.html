@@ -17,40 +17,52 @@
 
 
 
-<p>APAS: Work Θ(1), Span Θ(1)
-claude-4-sonet: Work Θ(1), Span Θ(1)</p>
+<ul>
+<li>APAS: Work Θ(1), Span Θ(1)</li>
+<li>claude-4-sonet: Work Θ(1), Span Θ(1)</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.from_set"><a class="src rightside" href="../../../../src/apas_verus/Chap05/RelationStEph.rs.html#106-108">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.from_set">from_set</a>(pairs: <a class="struct" href="../../SetStEph/SetStEph/struct.SetStEph.html" title="struct apas_verus::Chap05::SetStEph::SetStEph::SetStEph">SetStEph</a>&lt;<a class="struct" href="../../../Types/Types/struct.Pair.html" title="struct apas_verus::Types::Types::Pair">Pair</a>&lt;X, Y&gt;&gt;) -&gt; <span class="verus-ret-name">relation : </span>Self</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>valid_key_type_Pair::&lt;X, Y&gt;(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>relation@.finite(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>relation@ == pairs@,</code></pre></div>
 
 
 
 
-<p>APAS: Work Θ(|pairs|), Span Θ(1)
-claude-4-sonet: Work Θ(|pairs|), Span Θ(1)</p>
+<ul>
+<li>APAS: Work Θ(|pairs|), Span Θ(1)</li>
+<li>claude-4-sonet: Work Θ(|pairs|), Span Θ(1)</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.from_vec"><a class="src rightside" href="../../../../src/apas_verus/Chap05/RelationStEph.rs.html#112-114">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.from_vec">from_vec</a>(v: <a class="struct" href="https://doc.rust-lang.org/1.91.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="../../../Types/Types/struct.Pair.html" title="struct apas_verus::Types::Types::Pair">Pair</a>&lt;X, Y&gt;&gt;) -&gt; <span class="verus-ret-name">relation : </span>Self</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>valid_key_type_Pair::&lt;X, Y&gt;(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>relation@.finite(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>relation@ == v@.map(|i: int, p: Pair&lt;X, Y&gt;| p@).to_set(),</code></pre></div>
 
 
 
 
-<p>APAS: Work Θ(|pairs|), Span Θ(1)
-claude-4-sonet: Work Θ(|pairs|), Span Θ(1)</p>
+<ul>
+<li>APAS: Work Θ(|pairs|), Span Θ(1)</li>
+<li>claude-4-sonet: Work Θ(|pairs|), Span Θ(1)</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.size"><a class="src rightside" href="../../../../src/apas_verus/Chap05/RelationStEph.rs.html#118">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.size">size</a>(&amp;self) -&gt; <a class="type" href="../../../Types/Types/type.N.html" title="type apas_verus::Types::Types::N">N</a></h4></section></summary><div class="docblock">
 
-<p>APAS: Work Θ(1), Span Θ(1)
-claude-4-sonet: Work Θ(1), Span Θ(1)</p>
+<ul>
+<li>APAS: Work Θ(1), Span Θ(1)</li>
+<li>claude-4-sonet: Work Θ(1), Span Θ(1)</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.domain"><a class="src rightside" href="../../../../src/apas_verus/Chap05/RelationStEph.rs.html#122-124">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.domain">domain</a>(&amp;self) -&gt; <span class="verus-ret-name">domain : </span><a class="struct" href="../../SetStEph/SetStEph/struct.SetStEph.html" title="struct apas_verus::Chap05::SetStEph::SetStEph::SetStEph">SetStEph</a>&lt;X&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>valid_key_type_Pair::&lt;X, Y&gt;(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>domain@.finite(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>domain@ == Set::&lt;X::V&gt;::new(|x: X::V| exists |y: Y::V| <span class="self">self</span>@.contains((x, y))),</code></pre></div>
 
 
 
 
-<p>APAS: Work Θ(|R|), Span Θ(1)
-claude-4-sonet: Work Θ(|R|), Span Θ(1)</p>
+<ul>
+<li>APAS: Work Θ(|R|), Span Θ(1)</li>
+<li>claude-4-sonet: Work Θ(|R|), Span Θ(1)</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.range"><a class="src rightside" href="../../../../src/apas_verus/Chap05/RelationStEph.rs.html#128-130">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.range">range</a>(&amp;self) -&gt; <span class="verus-ret-name">range : </span><a class="struct" href="../../SetStEph/SetStEph/struct.SetStEph.html" title="struct apas_verus::Chap05::SetStEph::SetStEph::SetStEph">SetStEph</a>&lt;Y&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>valid_key_type_Pair::&lt;X, Y&gt;(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>range@.finite(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>range@ == Set::&lt;Y::V&gt;::new(|y: Y::V| exists |x: X::V| <span class="self">self</span>@.contains((x, y))),</code></pre></div>
 
 
 
 
-<p>APAS: Work Θ(|R|), Span Θ(1)
-claude-4-sonet: Work Θ(|R|), Span Θ(1)</p>
+<ul>
+<li>APAS: Work Θ(|R|), Span Θ(1)</li>
+<li>claude-4-sonet: Work Θ(|R|), Span Θ(1)</li>
+</ul>
 </div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="tymethod.mem"><a class="src rightside" href="../../../../src/apas_verus/Chap05/RelationStEph.rs.html#133-135">Source</a><h4 class="code-header"><span class="verus-sig-keyword">exec </span>fn <a class="fn" href="#tymethod.mem">mem</a>(&amp;self, a: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;X</a>, b: <a class="primitive" href="https://doc.rust-lang.org/1.91.0/std/primitive.reference.html">&amp;Y</a>) -&gt; <span class="verus-ret-name">contains : </span><a class="type" href="../../../Types/Types/type.B.html" title="type apas_verus::Types::Types::B">B</a></h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>valid_key_type_Pair::&lt;X, Y&gt;(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>contains == <span class="self">self</span>@.contains((a@, b@)),</code></pre></div>
 
 

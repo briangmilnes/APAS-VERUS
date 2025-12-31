@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Experiment: Can we use verus's test_verify_one_file! macro in APAS-VERUS?
 //!
 //! The test macros are in rust_verify_test_macros (proc macros).

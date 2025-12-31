@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Proof: Can we prove a ToVec-like function on simpler types?
 
 pub mod ToVecProof {

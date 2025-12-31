@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Checked signed integer trait with overflow/underflow tracking.
 //! No monotonicity guarantee for addition.
 

@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 use apas_verus::vstdplus::total_order::total_order::TotalOrder;
 use core::cmp::Ordering;
 
@@ -28,4 +29,3 @@ fn test_total_order_i64() {
     assert_eq!(TotalOrder::cmp(&i64::MIN, &i64::MAX), Ordering::Less);
     assert_eq!(TotalOrder::cmp(&0i64, &0i64), Ordering::Equal);
 }
-

@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 #![allow(unused_imports)]
 use vstd::prelude::*;
 
@@ -219,4 +220,3 @@ pub fn i64_vec_mem_for_into_iter(s: Vec<i64>, elt: i64) -> (result: bool)
 }
 
 }
-

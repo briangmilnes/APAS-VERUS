@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for MathSeq
 
 use apas_verus::Chap17::MathSeq::MathSeq::*;
@@ -262,4 +262,3 @@ fn test_macro_list() {
     assert_eq!(*seq.nth(0), 1);
     assert_eq!(*seq.nth(4), 5);
 }
-

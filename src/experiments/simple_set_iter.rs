@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Simple Abstract Set with Iterator (based on simple_seq_iter)
 
 pub mod simple_set_iter {

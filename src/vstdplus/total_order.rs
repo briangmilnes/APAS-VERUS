@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! TotalOrder trait connecting executable comparison to spec-level ordering.
 pub mod total_order {
     use core::cmp::Ordering;

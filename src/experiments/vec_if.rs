@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Minimal experiment: Can we bridge Vec exec indexing to spec?
 //!
 //! GOAL: Use a broadcast axiom to avoid reveal(obeys_view_eq) in every function.
@@ -86,4 +87,3 @@ pub mod vec_if {
 
     } // verus!
 }
-

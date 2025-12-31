@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes
+//  Copyright (C) 2025 Acar, Blelloch and Milnes
 //! Extensions to vstd::arithmetic::power2 for powers of 2.
 
 #[cfg(verus_keep_ghost)]
@@ -19,8 +19,8 @@ pub mod power2_plus {
             }
         }
 
-        /// pow2(46) < u64::MAX
-        /// This is provable via lemma2_to64_rest which gives pow2(46) == 0x400000000000
+        /// - pow2(46) < u64::MAX
+        /// - This is provable via lemma2_to64_rest which gives pow2(46) == 0x400000000000
 // Veracity: USED
         pub proof fn lemma_pow2_46_lt_u64_max()
             ensures pow2(46) < u64::MAX as nat,
@@ -76,4 +76,3 @@ pub mod power2_plus {
 
     } // verus!
 } // mod
-

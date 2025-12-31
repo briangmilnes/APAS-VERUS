@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Checked natural (unsigned) integer types that track overflow.
 //! This version has a view that includes overflow state, not just the int value.
 //! Stronger guarantees than signed: if final sum fits, all partial sums fit.
@@ -78,9 +79,9 @@ verus! {
 // Veracity: UNUSED         }
 // Veracity: UNUSED     }
 
-        /// Trait for checked natural (unsigned) integer types with BoundedNat view.
-        /// Stronger guarantees: only overflow possible (no underflow for addition).
-        /// Key property: if final sum <= MAX, all partial sums <= MAX (monotonic).
+        /// - Trait for checked natural (unsigned) integer types with BoundedNat view.
+        /// - Stronger guarantees: only overflow possible (no underflow for addition).
+        /// - Key property: if final sum <= MAX, all partial sums <= MAX (monotonic).
     pub trait CheckedNatWithCheckedViewTrait: Sized + Clone {
         type ViewType;
         

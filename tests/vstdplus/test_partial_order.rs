@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 use apas_verus::vstdplus::partial_order::partial_order::PartialOrder;
 use core::cmp::Ordering;
 
@@ -86,4 +87,3 @@ fn test_partial_order_f64_infinity() {
     assert_eq!(PartialOrder::compare(&f64::NEG_INFINITY, &1.0f64), Some(Ordering::Less));
     assert_eq!(PartialOrder::compare(&f64::INFINITY, &f64::INFINITY), Some(Ordering::Equal));
 }
-

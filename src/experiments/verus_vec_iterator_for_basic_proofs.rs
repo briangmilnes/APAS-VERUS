@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 use vstd::prelude::*;
 use crate::experiments::verus_iterator::*;
 use crate::experiments::verus_vec_iterator::*;
@@ -154,4 +155,3 @@ pub fn test_for_semantics(s: &Vec<usize>) {
 // }
 
 }
-

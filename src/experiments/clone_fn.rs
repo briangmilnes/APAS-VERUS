@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Experiment: Can Verus express clone preserving closure specs?
 
 use vstd::prelude::*;
@@ -69,4 +70,3 @@ pub fn clone_fn_axiom<T, U, F: Fn(&T) -> U + Clone>(f: F) -> (res: F)
 }
 
 } // verus!
-

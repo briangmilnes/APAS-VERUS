@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for base ArraySeq implementation.
 
 use apas_verus::Chap18::ArraySeq::ArraySeq::*;
@@ -189,4 +189,3 @@ fn test_iter_mut() {
     assert_eq!(*seq.nth(1), 4);
     assert_eq!(*seq.nth(2), 6);
 }
-

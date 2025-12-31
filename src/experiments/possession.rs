@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Testing mixed exec/ghost field initialization in traits, i.e., demonic possession of a struct.
 
 pub mod possession {
@@ -59,4 +60,3 @@ pub mod possession {
 
     } // verus!
 }
-

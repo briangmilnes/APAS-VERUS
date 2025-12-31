@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 19 algorithms for ArraySeqStPer. Verusified.
 //! Redefines Chap18 methods using tabulate as the core primitive.
 //! Use the trait `ArraySeqStPerTrait` to access these implementations.

@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Tests for ParaPairs module - disjoint parallelism.
 
 use apas_verus::Types::Types::Pair;
@@ -43,4 +44,3 @@ fn test_para_pair_different_types() {
     assert_eq!(num, 42);
     assert_eq!(text, "answer");
 }
-

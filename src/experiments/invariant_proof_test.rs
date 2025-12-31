@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Test: Can we prove iter() honors invariant and next() works with that invariant as a precondition?
 
 use vstd::prelude::*;
@@ -126,4 +127,3 @@ pub fn test_copy(vec: &Vec<u32>) -> (result: Vec<u32>)
 }
 
 } // verus!
-

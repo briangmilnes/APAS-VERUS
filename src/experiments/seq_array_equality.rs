@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 #![allow(unused_imports)]
 use vstd::prelude::*;
 
@@ -25,4 +26,3 @@ pub fn array_clone_equality<T: Clone>(s: &[T]) -> (result: Vec<T>)
 }
 
 }
-

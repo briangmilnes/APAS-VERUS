@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Trait for signed integer types (i8, i16, i32, i64, i128, isize).
 //! No monotonicity guarantee for addition.
 

@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 pub mod seq_for_basic_proofs {
 
     use vstd::prelude::*;
@@ -533,5 +534,4 @@ verus! {
     }
  }
 }
-
 

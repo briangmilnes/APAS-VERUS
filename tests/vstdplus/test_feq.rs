@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Tests for feq - Full Equality specification
 //!
 //! The feq module provides spec-only functions for Verus verification.

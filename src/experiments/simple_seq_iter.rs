@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Simple Abstract Sequence with Embedded Ghost Iterator
 
 pub mod simple_seq_iter {
@@ -304,4 +305,3 @@ pub mod simple_seq_iter {
 
     } // verus!
 }
-

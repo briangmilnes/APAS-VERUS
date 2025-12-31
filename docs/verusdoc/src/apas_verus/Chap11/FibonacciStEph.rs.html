@@ -1,5 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/Chap11/FibonacciStEph.rs`."><title>FibonacciStEph.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="apas_verus" data-themes="" data-resource-suffix="" data-rustdoc-version="1.91.0 (f8297e351 2025-10-28)" data-channel="1.91.0" data-search-js="search-e256b49e.js" data-stringdex-js="stringdex-c3e638e9.js" data-settings-js="settings-c38705f0.js" ><script src="../../../static.files/storage-e2aeef58.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-6dc2a7f3.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">apas_verus/Chap11/</div>FibonacciStEph.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="doccomment">//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-<a href=#2 id=2 data-nosnippet>2</a>//! Chapter 11 — Fibonacci.
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/Chap11/FibonacciStEph.rs`."><title>FibonacciStEph.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="apas_verus" data-themes="" data-resource-suffix="" data-rustdoc-version="1.91.0 (f8297e351 2025-10-28)" data-channel="1.91.0" data-search-js="search-e256b49e.js" data-stringdex-js="stringdex-c3e638e9.js" data-settings-js="settings-c38705f0.js" ><script src="../../../static.files/storage-e2aeef58.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-6dc2a7f3.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">apas_verus/Chap11/</div>FibonacciStEph.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="comment">//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+<a href=#2 id=2 data-nosnippet>2</a></span><span class="doccomment">//! Chapter 11 — Fibonacci.
 <a href=#3 id=3 data-nosnippet>3</a>//! Verified specification and implementation of the Fibonacci sequence.
 <a href=#4 id=4 data-nosnippet>4</a>
 <a href=#5 id=5 data-nosnippet>5</a></span><span class="kw">pub mod </span>FibonacciStEph {
@@ -16,8 +16,8 @@
 <a href=#16 id=16 data-nosnippet>16</a>
 <a href=#17 id=17 data-nosnippet>17</a>    <span class="macro">verus!</span> {
 <a href=#18 id=18 data-nosnippet>18</a>
-<a href=#19 id=19 data-nosnippet>19</a>        <span class="doccomment">/// Specification of Fibonacci sequence.
-<a href=#20 id=20 data-nosnippet>20</a>        /// fib(0) = 0, fib(1) = 1, fib(n) = fib(n-1) + fib(n-2) for n &gt;= 2
+<a href=#19 id=19 data-nosnippet>19</a>        <span class="doccomment">/// - Specification of Fibonacci sequence.
+<a href=#20 id=20 data-nosnippet>20</a>        /// - fib(0) = 0, fib(1) = 1, fib(n) = fib(n-1) + fib(n-2) for n &gt;= 2
 <a href=#21 id=21 data-nosnippet>21</a>        </span><span class="kw">pub </span>open spec <span class="kw">fn </span>spec_fib(n: nat) -&gt; nat
 <a href=#22 id=22 data-nosnippet>22</a>            decreases n,
 <a href=#23 id=23 data-nosnippet>23</a>        {
@@ -30,8 +30,8 @@
 <a href=#30 id=30 data-nosnippet>30</a>            }
 <a href=#31 id=31 data-nosnippet>31</a>        }
 <a href=#32 id=32 data-nosnippet>32</a>
-<a href=#33 id=33 data-nosnippet>33</a>        <span class="doccomment">/// Iterative Fibonacci implementation.
-<a href=#34 id=34 data-nosnippet>34</a>        /// Work: Θ(n), Space: O(1)
+<a href=#33 id=33 data-nosnippet>33</a>        <span class="doccomment">/// - Iterative Fibonacci implementation.
+<a href=#34 id=34 data-nosnippet>34</a>        /// - Work: Θ(n), Space: O(1)
 <a href=#35 id=35 data-nosnippet>35</a>        </span><span class="kw">pub fn </span>fib(n: u64) -&gt; (result: u64)
 <a href=#36 id=36 data-nosnippet>36</a>            requires
 <a href=#37 id=37 data-nosnippet>37</a>                n &lt;= <span class="number">46</span>,
@@ -67,9 +67,9 @@
 <a href=#67 id=67 data-nosnippet>67</a>            prev1
 <a href=#68 id=68 data-nosnippet>68</a>        }
 <a href=#69 id=69 data-nosnippet>69</a>
-<a href=#70 id=70 data-nosnippet>70</a>        <span class="doccomment">/// Recursive Fibonacci implementation (matches APAS structure).
-<a href=#71 id=71 data-nosnippet>71</a>        /// Work: Θ(φⁿ), Span: Θ(n), where φ ≈ 1.618 (golden ratio)
-<a href=#72 id=72 data-nosnippet>72</a>        /// Note: Exponential work - for demonstration only.
+<a href=#70 id=70 data-nosnippet>70</a>        <span class="doccomment">/// - Recursive Fibonacci implementation (matches APAS structure).
+<a href=#71 id=71 data-nosnippet>71</a>        /// - Work: Θ(φⁿ), Span: Θ(n), where φ ≈ 1.618 (golden ratio)
+<a href=#72 id=72 data-nosnippet>72</a>        /// - Note: Exponential work - for demonstration only.
 <a href=#73 id=73 data-nosnippet>73</a>        </span><span class="kw">pub fn </span>fib_recursive(n: u64) -&gt; (result: u64)
 <a href=#74 id=74 data-nosnippet>74</a>            requires
 <a href=#75 id=75 data-nosnippet>75</a>                n &lt;= <span class="number">46</span>,
@@ -126,5 +126,4 @@
 <a href=#126 id=126 data-nosnippet>126</a>        }
 <a href=#127 id=127 data-nosnippet>127</a>
 <a href=#128 id=128 data-nosnippet>128</a>    } <span class="comment">// verus!
-<a href=#129 id=129 data-nosnippet>129</a></span>} <span class="comment">// mod
-<a href=#130 id=130 data-nosnippet>130</a></span></code></pre></div></section></main></body></html>
+<a href=#129 id=129 data-nosnippet>129</a></span>} <span class="comment">// mod</span></code></pre></div></section></main></body></html>

@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Experiment: TotalOrdGen - A total ordering trait with full Eq specifications
 //!
 //! GOAL: Create a trait that specifies:

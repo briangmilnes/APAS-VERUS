@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 11 — Parallel Fibonacci with TSM at every recursive level.
 //!
 //! Each fib(n) spawns two threads and uses a TSM to track completion.

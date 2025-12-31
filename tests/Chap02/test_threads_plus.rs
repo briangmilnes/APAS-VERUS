@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for threads_plus at the raw thread level.
 
 use apas_verus::vstdplus::threads_plus::threads_plus::{spawn_plus, JoinHandlePlus};
@@ -102,4 +102,3 @@ fn test_many_threads() {
     
     assert_eq!(results, vec![0, 1, 4, 9, 16, 25, 36, 49, 64, 81]);
 }
-

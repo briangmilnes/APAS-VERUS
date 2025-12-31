@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Experiment: Modern HashSet wrapping pattern
 //!
 //! This demonstrates the modern pattern used by vstd for BTreeSet, BTreeMap,

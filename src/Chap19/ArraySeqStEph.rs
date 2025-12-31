@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 19 algorithms for ArraySeqStEph. Verusified.
 //! Redefines Chap18 methods using tabulate as the core primitive.
 //! Use the trait `ArraySeqStEphTrait` to access these implementations.
@@ -409,4 +409,3 @@ pub mod ArraySeqStEph {
     #[cfg(not(verus_keep_ghost))]
     pub use crate::Chap18::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS;
 }
-

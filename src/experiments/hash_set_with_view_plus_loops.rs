@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Testing HashSetWithViewPlus with for loops
 //!
 //! STATUS: Potentially obsolete - investigating removing HashSetWithViewPlus

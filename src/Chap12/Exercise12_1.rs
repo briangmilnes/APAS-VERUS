@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 12 — Exercise 12.1: spin-lock via fetch-and-add tickets.
 
 pub mod Exercise12_1 {
@@ -96,4 +96,3 @@ impl std::fmt::Debug for SpinLock {
 }
 
 } // mod
-

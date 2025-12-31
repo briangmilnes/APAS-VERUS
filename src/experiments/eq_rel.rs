@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Experiment: Trait hierarchy for equality relations
 //!
 //! GOAL: Build a trait hierarchy that guarantees:
@@ -136,4 +137,3 @@ pub mod eq_rel {
 
     } // verus!
 }
-

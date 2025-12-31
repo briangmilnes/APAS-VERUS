@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for ArraySeqMtPer with parallel operations.
 
 use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
@@ -84,4 +84,3 @@ fn test_filter_par_medium() {
     let multiples_of_7 = ArraySeqMtPerS::filter_par(&pool, &seq, |&x| x % 7 == 0);
     assert_eq!(multiples_of_7.length(), 37);
 }
-

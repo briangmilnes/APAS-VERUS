@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 pub mod ArrayVecSet {
 
 use vstd::prelude::*;

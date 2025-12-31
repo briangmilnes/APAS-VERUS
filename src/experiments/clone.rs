@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Experiment: Can we use broadcast axioms to avoid explicit assert(cloned(...)) calls?
 //!
 //! CONCLUSION: We still need explicit assert(cloned(*x, x_clone)) calls.
@@ -153,4 +154,3 @@ pub mod clone {
 
     } // verus!
 }
-

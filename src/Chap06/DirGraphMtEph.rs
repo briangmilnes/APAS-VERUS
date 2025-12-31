@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 6.1 Directed Graph (ephemeral) using Set for vertices and arcs - Multi-threaded version.
 //!
 //! Note: NOW uses true parallelism via ParaPair! for neighbor/degree operations.
@@ -384,4 +384,3 @@ pub mod DirGraphMtEph {
         }}
     }
 }
-

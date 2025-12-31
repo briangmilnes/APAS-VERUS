@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 use vstd::prelude::*;
 use crate::experiments::verus_iterator::*;
 use crate::experiments::verus_vec_iterator::*;
@@ -135,4 +136,3 @@ pub fn usize_vec_count_up_while(s: &Vec<usize>, elt: usize) -> (count: usize)
 }
 
 }
-

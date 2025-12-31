@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Tests for verified Fibonacci implementation.
 
 use apas_verus::Chap11::FibonacciStEph::FibonacciStEph::fib;

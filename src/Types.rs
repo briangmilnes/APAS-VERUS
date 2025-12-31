@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Common types used across the crate.
 //!
 
@@ -13,12 +13,12 @@ pub mod Types {
 
     pub type N = usize;
 
-    /// Data Type 18.1 (Boolean) type used by APAS.
-    /// Using Rust's built-in bool with normal true/false literals
+    /// - Data Type 18.1 (Boolean) type used by APAS.
+    /// - Using Rust's built-in bool with normal true/false literals
     pub type B = bool;
 
-    /// Data Type 18.1 (Ordering) relationships used by APAS, using Rust's as it matches.
-    /// Enumerated values in `std::cmp::Ordering` are named: Less, Equal, Greater.
+    /// - Data Type 18.1 (Ordering) relationships used by APAS, using Rust's as it matches.
+    /// - Enumerated values in `std::cmp::Ordering` are named: Less, Equal, Greater.
     pub use std::cmp::Ordering as O;
 
     // Note: bool already implements Display, Debug, Not, etc.
@@ -84,15 +84,15 @@ pub mod Types {
     #[derive(Copy, PartialEq, Eq, Hash, Debug)]
     pub struct LabEdge<V: StT, L: StT + Hash>(pub V, pub V, pub L);
 
-    /// Weighted Edge wrapper to enable edges with weights.
-    /// Structurally identical to LabEdge but semantically distinct.
+    /// - Weighted Edge wrapper to enable edges with weights.
+    /// - Structurally identical to LabEdge but semantically distinct.
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(W)]
     #[derive(Copy, PartialEq, Eq, Hash, Debug)]
     pub struct WeightedEdge<V: StT, W: StT + Hash>(pub V, pub V, pub W);
 
-    /// Weighted Labelled Edge wrapper for edges with both a label and a weight.
-    /// This is a quadruple: (from, to, label, weight).
+    /// - Weighted Labelled Edge wrapper for edges with both a label and a weight.
+    /// - This is a quadruple: (from, to, label, weight).
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(L)]
     #[verifier::reject_recursive_types(W)]
@@ -151,8 +151,8 @@ pub mod Types {
         open spec fn view(&self) -> (K::V, V::V) {(self.key@, self.val@)}
     }
 
-    /// Axiom that Pair's view is injective (needed for hash collections)
-    /// If two pairs have the same view, they are equal
+    /// - Axiom that Pair's view is injective (needed for hash collections)
+    /// - If two pairs have the same view, they are equal
     pub broadcast proof fn axiom_Pair_view_injective<K: vstd::prelude::View, V: vstd::prelude::View>(p1: Pair<K, V>, p2: Pair<K, V>)
         requires
             #[trigger] p1@ == #[trigger] p2@,

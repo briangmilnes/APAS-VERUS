@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 6 Labeled Undirected Graph (ephemeral) using Set for vertices and labeled edges.
 
 pub mod LabUnDirGraphStEph {

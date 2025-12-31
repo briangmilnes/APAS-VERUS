@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Tests for feq - Full Equality specification
 
 pub mod test_feq {

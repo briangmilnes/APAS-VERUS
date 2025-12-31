@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 pub fn vec_length_while(s: &Vec<usize>) -> usize {
     let mut length: usize = 0;
     let mut i: usize = 0;
@@ -14,4 +15,3 @@ fn main() {
     let len = vec_length_while(&v);
     println!("Length: {}", len);
 }
-

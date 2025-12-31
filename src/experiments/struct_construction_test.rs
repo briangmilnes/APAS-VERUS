@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Test whether public fields allow direct construction from outside the module
 
 pub mod inner {

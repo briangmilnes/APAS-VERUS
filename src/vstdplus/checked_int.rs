@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Checked signed integer types that track overflow and underflow.
 //! Weaker guarantees than unsigned: both overflow and underflow possible.
 
@@ -77,9 +78,9 @@ pub open spec fn spec_mul_distributes_over_add() -> bool {
 // Veracity: UNUSED     }
 // Veracity: UNUSED }
 
-/// Trait for checked signed integer types that track overflow/underflow.
-/// Weaker guarantees: both overflow AND underflow possible.
-/// Cannot guarantee intermediate values stay in range even if final result does.
+/// - Trait for checked signed integer types that track overflow/underflow.
+/// - Weaker guarantees: both overflow AND underflow possible.
+/// - Cannot guarantee intermediate values stay in range even if final result does.
 pub trait CheckedIntTrait: View<V = int> + Sized + Clone {
     spec fn spec_min() -> int;
     spec fn spec_max() -> int;

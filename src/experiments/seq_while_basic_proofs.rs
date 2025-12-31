@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 pub mod seq_while_basic_proofs {
 
     use vstd::prelude::*;
@@ -590,5 +591,4 @@ verus! {
     }
  }
 }
-
 

@@ -1,3 +1,4 @@
+// Copyright (c) 2025 Brian G. Milnes
 //! Specifications for std::collections::HashSet methods not covered by vstd
 
 pub mod hash_set_specs {
@@ -17,4 +18,3 @@ where
 } // verus!
 
 } // mod hash_set_specs
-

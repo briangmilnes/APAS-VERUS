@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 6 Labeled Undirected Graph (ephemeral) using Set for vertices and labeled edges - Multi-threaded version.
 //!
 //! Note: NOW uses true parallelism via ParaPair! for neighbor operations.
@@ -20,38 +20,38 @@ pub mod LabUnDirGraphMtEph {
     }
 
     pub trait LabUnDirGraphMtEphTrait<V: HashOrd + MtT + 'static, L: StTInMtT + Hash + 'static> {
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn empty()                                                                                        -> Self;
-        /// APAS: Work Θ(|V| + |E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V| + |E|), Parallelism Θ(1) - sequential
+        /// - APAS: Work Θ(|V| + |E|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V| + |E|), Parallelism Θ(1) - sequential
         fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> Self;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn vertices(&self)                                                                                -> &SetStEph<V>;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn labeled_edges(&self)                                                                           -> &SetStEph<LabEdge<V, L>>;
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1) - sequential map
+        /// - APAS: Work Θ(|E|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1) - sequential map
         fn edges(&self)                                                                                   -> SetStEph<Edge<V>>;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn add_vertex(&mut self, v: V);
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L);
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1) - sequential search
+        /// - APAS: Work Θ(|E|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1) - sequential search
         fn get_edge_label(&self, v1: &V, v2: &V)                                                          -> Option<&L>;
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1) - sequential search
+        /// - APAS: Work Θ(|E|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1) - sequential search
         fn has_edge(&self, v1: &V, v2: &V)                                                                -> bool;
-        /// APAS: Work Θ(|E|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|E|), Span Θ(log |E|), Parallelism Θ(|E|/log |E|) - parallel divide-and-conquer filter
+        /// - APAS: Work Θ(|E|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|E|), Span Θ(log |E|), Parallelism Θ(|E|/log |E|) - parallel divide-and-conquer filter
         fn neighbors(&self, v: &V)                                                                        -> SetStEph<V>;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1)
         fn normalize_edge(v1: V, v2: V)                                                                   -> LabEdge<V, L>;
     }
 

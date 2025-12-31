@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Commutativity lemmas for checked arithmetic.
 //! NOTE: These proofs are now in vstdplus/checked_int.rs and vstdplus/checked_nat.rs.
 //! This file is kept for reference.
@@ -167,4 +167,3 @@ pub mod isize_comm {
 }
 
 }
-

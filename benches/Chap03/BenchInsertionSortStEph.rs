@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 use std::time::Duration;
 
 use criterion::*;
@@ -32,4 +32,3 @@ fn bench_insertion_sort(c: &mut Criterion) {
 
 criterion_group!(benches, bench_insertion_sort);
 criterion_main!(benches);
-
