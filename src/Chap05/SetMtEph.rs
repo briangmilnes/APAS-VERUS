@@ -102,6 +102,69 @@ verus! {
         }
     }
 
+    // Ghost iterator for ForLoopGhostIterator support (for-iter patterns)
+    #[verifier::reject_recursive_types(T)]
+    pub struct SetMtEphGhostIterator<'a, T: StT + Hash> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
+    impl<'a, T: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for SetMtEphIter<'a, T> {
+        type GhostIter = SetMtEphGhostIterator<'a, T>;
+
+        open spec fn ghost_iter(&self) -> SetMtEphGhostIterator<'a, T> {
+            SetMtEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, T: StT + Hash> vstd::pervasive::ForLoopGhostIterator for SetMtEphGhostIterator<'a, T> {
+        type ExecIter = SetMtEphIter<'a, T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &SetMtEphIter<'a, T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() {
+                Some(self.elements[self.pos])
+            } else {
+                None
+            }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &SetMtEphIter<'a, T>) -> SetMtEphGhostIterator<'a, T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: StT + Hash> View for SetMtEphGhostIterator<'a, T> {
+        type V = Seq<T>;
+
+        open spec fn view(&self) -> Seq<T> {
+            self.elements.take(self.pos)
+        }
+    }
+
     pub trait SetMtEphTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
 
         /// A set is finite
@@ -250,30 +313,19 @@ verus! {
     impl<T: StT + Hash> SetMtEphTrait<T> for SetMtEph<T> {
 
         fn from_vec(v: Vec<T>) -> SetMtEph<T> {
-            let mut s = SetMtEph::empty();
-            let mut i: usize = 0;
-            let ghost v_seq = v@;
-            
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
+            let mut s: SetMtEph<T> = SetMtEph::empty();
+            let ghost v_seq: Seq<T> = v@;
+
+            for x in iter: v
                 invariant
                     valid_key_type::<T>(),
-                    i <= v.len(),
-                    v@ == v_seq,
-                    s@ == v_seq.take(i as int).map(|idx: int, x: T| x@).to_set(),
-                decreases v.len() - i,
+                    iter.elements == v_seq,
+                    s@ == v_seq.take(iter.pos).map(|idx: int, t: T| t@).to_set(),
             {
-                if i >= v.len() {
-                    break;
-                }
-                
-                let x = &v[i];
-                let x_clone = x.clone_plus();
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(v_seq, iter.pos); }
+                let x_clone: T = x.clone_plus();
                 let _ = s.insert(x_clone);
-                proof { lemma_take_one_more_extends_the_seq_set_with_view(v_seq, i as int); }
-                i = i + 1;
             }
-            
             s
         }
 
@@ -285,28 +337,21 @@ verus! {
 
         fn to_seq(&self) -> (seq: Vec<T>) {
             let mut seq: Vec<T> = Vec::new();
-            let mut it = self.iter();
-            let ghost iter_seq = it@.1;
+            let it: SetMtEphIter<T> = self.iter();
+            let ghost iter_seq: Seq<T> = it@.1;
             
-            loop
+            for x in iter: it
                 invariant
                     valid_key_type::<T>(),
-                    it@.0 <= iter_seq.len(),
-                    it@.1 == iter_seq,
+                    iter.elements == iter_seq,
+                    iter.pos <= iter_seq.len(),
                     iter_seq.map(|_i: int, k: T| k@).to_set() == self@,
                     iter_seq.no_duplicates(),
-                    seq@ == iter_seq.take(it@.0),
-                decreases iter_seq.len() - it@.0,
+                    seq@ == iter_seq.take(iter.pos),
             {
-                match it.next() {
-                    Some(x) => {
-                        seq.push(x.clone_plus());
-                    },
-                    None => {
-                        return seq;
-                    }
-                }
+                seq.push(x.clone_plus());
             }
+            seq
         }
 
         fn empty() -> SetMtEph<T> { SetMtEph { elements: HashSetWithViewPlus::new() } }
@@ -328,35 +373,21 @@ verus! {
 
         fn union(&self, s2: &SetMtEph<T>) -> (union: SetMtEph<T>)
         {
-            let mut union = self.clone_plus();
-            let s2_iter = s2.iter();
-            let mut it = s2_iter;
-            let ghost s1_view = self@;
-            let ghost s2_seq = it@.1;
+            let mut union: SetMtEph<T> = self.clone_plus();
+            let it: SetMtEphIter<T> = s2.iter();
+            let ghost s1_view: Set<T::V> = self@;
+            let ghost s2_seq: Seq<T> = it@.1;
 
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop 
+            for x in iter: it
                 invariant
                     valid_key_type::<T>(),
-                    it@.0 <= s2_seq.len(),
-                    it@.1 == s2_seq,
+                    iter.elements == s2_seq,
+                    iter.pos <= s2_seq.len(),
                     s2_seq.map(|i: int, k: T| k@).to_set() == s2@,
-                    union@ == s1_view.union(s2_seq.take(it@.0).map(|i: int, k: T| k@).to_set()),
-               decreases s2_seq.len() - it@.0,
+                    union@ == s1_view.union(s2_seq.take(iter.pos).map(|i: int, k: T| k@).to_set()),
             {
-                let ghost old_index = it@.0;
-                let ghost old_union = union@;
-                
-                match it.next() {
-                    Some(x) => {
-                        let x_clone = x.clone_plus();
-                        let _ = union.insert(x_clone);
-                        proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, old_index); }
-                    },
-                    None => {
-                        break;
-                    }
-                }
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.pos); }
+                let _ = union.insert(x.clone_plus());
             }
             union
         }
@@ -368,53 +399,37 @@ verus! {
                 elements: HashSetWithViewPlus::with_capacity(capacity) 
             };
             
-            let mut it1 = self.iter();
-            let ghost it1_seq = it1@.1;
+            let it1: SetMtEphIter<T> = self.iter();
+            let ghost it1_seq: Seq<T> = it1@.1;
             
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
+            for x in iter1: it1
                 invariant
                     valid_key_type::<T>(),
-                    it1@.0 <= it1_seq.len(),
-                    it1@.1 == it1_seq,
+                    iter1.elements == it1_seq,
+                    iter1.pos <= it1_seq.len(),
                     it1_seq.map(|i: int, k: T| k@).to_set() == self@,
-                    union@ == it1_seq.take(it1@.0).map(|i: int, k: T| k@).to_set(),
-                decreases it1_seq.len() - it1@.0,
+                    union@ == it1_seq.take(iter1.pos).map(|i: int, k: T| k@).to_set(),
             {
-                match it1.next() {
-                    Some(x) => {
-                        let ghost old_index = it1@.0 - 1;
-                        let _ = union.insert(x.clone_plus());
-                        proof { lemma_take_one_more_extends_the_seq_set_with_view(it1_seq, old_index); }
-                    },
-                    None => break,
-                }
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(it1_seq, iter1.pos); }
+                let _ = union.insert(x.clone_plus());
             }
             
-            let mut it2 = s2.iter();
-            let ghost it2_seq = it2@.1;
-            let ghost s1_view = self@;
-            let ghost s2_view = s2@;
+            let it2: SetMtEphIter<T> = s2.iter();
+            let ghost it2_seq: Seq<T> = it2@.1;
+            let ghost s1_view: Set<T::V> = self@;
+            let ghost s2_view: Set<T::V> = s2@;
             
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
+            for x in iter2: it2
                 invariant
                     valid_key_type::<T>(),
-                    it2@.0 <= it2_seq.len(),
-                    it2@.1 == it2_seq,
+                    iter2.elements == it2_seq,
+                    iter2.pos <= it2_seq.len(),
                     it2_seq.map(|i: int, k: T| k@).to_set() == s2_view,
                     s1_view.disjoint(s2_view),
-                    union@ == s1_view.union(it2_seq.take(it2@.0).map(|i: int, k: T| k@).to_set()),
-                decreases it2_seq.len() - it2@.0,
+                    union@ == s1_view.union(it2_seq.take(iter2.pos).map(|i: int, k: T| k@).to_set()),
             {
-                match it2.next() {
-                    Some(x) => {
-                        let ghost old_index = it2@.0 - 1;
-                        let _ = union.insert(x.clone_plus());
-                        proof { lemma_take_one_more_extends_the_seq_set_with_view(it2_seq, old_index); }
-                    },
-                    None => break,
-                }
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(it2_seq, iter2.pos); }
+                let _ = union.insert(x.clone_plus());
             }
             
             proof {
@@ -426,39 +441,26 @@ verus! {
 
         fn intersection(&self, s2: &SetMtEph<T>) -> (intersection: SetMtEph<T>)
         {
-            let mut intersection = SetMtEph::empty();
-            let s1_iter = self.iter();
-            let mut it = s1_iter;
-            let ghost s1_view = self@;
-            let ghost s2_view = s2@;
-            let ghost s1_seq = it@.1;
+            let mut intersection: SetMtEph<T> = SetMtEph::empty();
+            let it: SetMtEphIter<T> = self.iter();
+            let ghost s1_view: Set<T::V> = self@;
+            let ghost s2_view: Set<T::V> = s2@;
+            let ghost s1_seq: Seq<T> = it@.1;
 
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
+            for s1mem in iter: it
                 invariant
                     valid_key_type::<T>(),
-                    it@.0 <= s1_seq.len(),
-                    it@.1 == s1_seq,
+                    iter.elements == s1_seq,
+                    iter.pos <= s1_seq.len(),
                     s1_seq.map(|i: int, k: T| k@).to_set() == s1_view,
-                    intersection@ == s1_seq.take(it@.0).map(|i: int, k: T| k@).to_set().intersect(s2_view),
-                decreases s1_seq.len() - it@.0,
+                    s2_view == s2@,
+                    intersection@ == s1_seq.take(iter.pos).map(|i: int, k: T| k@).to_set().intersect(s2_view),
             {
-                let ghost old_index = it@.0;
-                let ghost old_intersection = intersection@;
+                proof { lemma_take_one_more_intersect(s1_seq, s2_view, iter.pos); }
                 
-                match it.next() {
-                    Some(s1mem) => {
-                        proof { lemma_take_one_more_intersect(s1_seq, s2_view, old_index); }
-                        
-                        if s2.mem(s1mem) {
-                            let s1mem_clone = s1mem.clone_plus();
-                            let _ = intersection.insert(s1mem_clone);
-                        } 
-                    },
-                    None => {
-                        break;
-                    }
-                }
+                if s2.mem(s1mem) {
+                    let _ = intersection.insert(s1mem.clone_plus());
+                } 
             }
             
             intersection
@@ -466,37 +468,27 @@ verus! {
 
         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)
         {
-            let mut product = SetMtEph::empty();
-            let s2_iter = s2.iter();
-            let mut it = s2_iter;
-            let ghost s2_seq = it@.1;
-            let ghost s2_view = s2@;
-            let ghost a_view = a@;
+            let mut product: SetMtEph<Pair<T, U>> = SetMtEph::empty();
+            let it: SetMtEphIter<U> = s2.iter();
+            let ghost s2_seq: Seq<U> = it@.1;
+            let ghost s2_view: Set<U::V> = s2@;
+            let ghost a_view: T::V = a@;
             
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
+            for b in iter: it
                 invariant
-                it@.0 <= s2_seq.len(),
-                it@.1 == s2_seq,
-                s2_seq.map(|i: int, k: U| k@).to_set() == s2_view,
-                forall |av: T::V, bv: U::V| 
-                  #![trigger product@.contains((av, bv))]
-                   product@.contains((av, bv)) <==>
-                   (av == a_view && s2_seq.take(it@.0).map(|i: int, k: U| k@).to_set().contains(bv)),
-            decreases s2_seq.len() - it@.0,
+                    valid_key_type::<T>(),
+                    valid_key_type::<U>(),
+                    valid_key_type::<Pair<T, U>>(),
+                    a_view == a@,
+                    iter.elements == s2_seq,
+                    s2_seq.map(|i: int, k: U| k@).to_set() == s2_view,
+                    forall |av: T::V, bv: U::V| 
+                      #![trigger product@.contains((av, bv))]
+                       product@.contains((av, bv)) <==>
+                       (av == a_view && s2_seq.take(iter.pos).map(|i: int, k: U| k@).to_set().contains(bv)),
             {
-                match it.next() {
-                    Some(b) => {
-                        let ghost old_index = it@.0 - 1;
-                        let a_clone = a.clone_plus();
-                        let b_clone = b.clone_plus();
-                        let _ = product.insert(Pair(a_clone, b_clone));
-                        proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, old_index); }
-                    },
-                    None => {
-                        break;
-                    }
-                }
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.pos); }
+                let _ = product.insert(Pair(a.clone_plus(), b.clone_plus()));
             }
             
             product

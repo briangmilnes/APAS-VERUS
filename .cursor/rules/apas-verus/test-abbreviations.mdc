@@ -1,0 +1,6 @@
+# Test Abbreviations
+
+| Abbreviation | Meaning |
+|--------------|---------|
+| PTT / ptt | Proof Time Tests (Verus verification tests in `rust_verify_test/`) |
+| RTT / rtt | Run Time Tests (Rust cargo tests in `tests/`) |

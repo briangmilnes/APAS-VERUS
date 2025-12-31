@@ -22,6 +22,10 @@ name = "SetStEph"
 path = "tests/Chap05/SetStEph.rs"
 
 [[test]]
+name = "SetMtEph"
+path = "tests/Chap05/SetMtEph.rs"
+
+[[test]]
 name = "RelationStEph"
 path = "tests/Chap05/RelationStEph.rs"
 
