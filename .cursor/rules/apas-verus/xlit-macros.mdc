@@ -1,0 +1,30 @@
+# Use XLit! Macros for Constructing Values
+
+In APAS-VERUS, all data types have a literal macro `XLit!` which should be used to construct values of that type in runtime and proof time testing.
+
+## Available Macros
+
+| # | Data Type | Macro | Example |
+|---|-----------|-------|---------|
+| 1 | SetStEph | `SetLit!` | `SetLit![1, 2, 3]` |
+| 2 | RelationStEph | `RelationLit!` | `RelationLit![(1, 'a'), (2, 'b')]` |
+| 3 | MappingStEph | `MappingLit!` | `MappingLit![(1, 'a'), (2, 'b')]` |
+| 4 | Pair | `PairLit!` | `PairLit!(1, 'a')` |
+
+## Imports
+
+When using macros, import them from `apas_verus`:
+
+```rust
+use apas_verus::{SetLit, RelationLit, MappingLit, PairLit};
+```
+
+For `RelationLit!` and `MappingLit!`, also import `SetStEphTrait`:
+
+```rust
+use apas_verus::Chap05::SetStEph::SetStEph::*;
+```
+
+## Runtime Safety
+
+`MappingLit!` includes a duplicate-key check that panics at runtime if the same key appears twice. This check is skipped in Verus proof mode (the `from_vec` precondition handles verification).

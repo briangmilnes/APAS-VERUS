@@ -21,6 +21,14 @@ rustc_private = true
 name = "SetStEph"
 path = "tests/Chap05/SetStEph.rs"
 
+[[test]]
+name = "RelationStEph"
+path = "tests/Chap05/RelationStEph.rs"
+
+[[test]]
+name = "MappingStEph"
+path = "tests/Chap05/MappingStEph.rs"
+
 # Other test files not yet created:
 # [[test]]
 # name = "SetMtEph_iters"

@@ -813,17 +813,6 @@ verus! {
 
     impl<T: StT + Hash> Eq for SetMtEph<T> {}
 
-    pub proof fn lemma_to_seq_equals_iter_seq<T: StT + Hash>(s: SetMtEph<T>, seq: Seq<T>, it_seq: Seq<T>)
-        requires
-            seq == it_seq,
-            it_seq.map(|_i: int, k: T| k@).to_set() == s@,
-            it_seq.no_duplicates(),
-        ensures
-            seq.no_duplicates(),
-            seq.map(|_i: int, t: T| t@).to_set() == s@,
-            forall |x: T::V| s@.contains(x) <==> seq.map(|_i: int, t: T| t@).contains(x),
-    { }
-
   } // verus!
 
     #[macro_export]

@@ -113,6 +113,70 @@ verus! {
         }
     }
 
+    // Ghost iterator for ForLoopGhostIterator support (for-iter patterns)
+    #[verifier::reject_recursive_types(X)]
+    #[verifier::reject_recursive_types(Y)]
+    pub struct MappingStEphGhostIterator<'a, X: StT + Hash, Y: StT + Hash> {
+        pub pos: int,
+        pub elements: Seq<Pair<X, Y>>,
+        pub phantom: core::marker::PhantomData<&'a Pair<X, Y>>,
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for MappingStEphIter<'a, X, Y> {
+        type GhostIter = MappingStEphGhostIterator<'a, X, Y>;
+
+        open spec fn ghost_iter(&self) -> MappingStEphGhostIterator<'a, X, Y> {
+            MappingStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> vstd::pervasive::ForLoopGhostIterator for MappingStEphGhostIterator<'a, X, Y> {
+        type ExecIter = MappingStEphIter<'a, X, Y>;
+        type Item = Pair<X, Y>;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &MappingStEphIter<'a, X, Y>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<Pair<X, Y>> {
+            if 0 <= self.pos < self.elements.len() {
+                Some(self.elements[self.pos])
+            } else {
+                None
+            }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &MappingStEphIter<'a, X, Y>) -> MappingStEphGhostIterator<'a, X, Y> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> View for MappingStEphGhostIterator<'a, X, Y> {
+        type V = Seq<Pair<X, Y>>;
+
+        open spec fn view(&self) -> Seq<Pair<X, Y>> {
+            self.elements.take(self.pos)
+        }
+    }
+
     pub trait MappingStEphTrait<X: StT + Hash, Y: StT + Hash> : 
         View<V = Map<X::V, Y::V>> + Sized {
 
@@ -412,12 +476,15 @@ verus! {
         }};
         ( $( ($a:expr, $b:expr) ),* $(,)? ) => {{
             let __pairs = vec![ $( $crate::Types::Types::Pair($a, $b) ),* ];
-            // Check for duplicate domain elements
-            let mut __seen_keys = std::collections::HashSet::new();
-            for pair in &__pairs {
-                let key = &pair.0;
-                if !__seen_keys.insert(key) {
-                    panic!("MappingLit!: duplicate domain element {:?}", key);
+            // Check for duplicate domain elements (runtime only, skipped in Verus proof mode)
+            #[cfg(not(verus_keep_ghost))]
+            {
+                let mut __seen_keys = std::collections::HashSet::new();
+                for pair in &__pairs {
+                    let key = &pair.0;
+                    if !__seen_keys.insert(key) {
+                        panic!("MappingLit!: duplicate domain element {:?}", key);
+                    }
                 }
             }
             < $crate::Chap05::MappingStEph::MappingStEph::MappingStEph<_, _> >::from_vec(__pairs)

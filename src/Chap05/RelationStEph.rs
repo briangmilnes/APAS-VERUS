@@ -87,6 +87,70 @@ verus! {
         }
     }
 
+    // Ghost iterator for ForLoopGhostIterator support (for-iter patterns)
+    #[verifier::reject_recursive_types(X)]
+    #[verifier::reject_recursive_types(Y)]
+    pub struct RelationStEphGhostIterator<'a, X: StT + Hash, Y: StT + Hash> {
+        pub pos: int,
+        pub elements: Seq<Pair<X, Y>>,
+        pub phantom: core::marker::PhantomData<&'a Pair<X, Y>>,
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for RelationStEphIter<'a, X, Y> {
+        type GhostIter = RelationStEphGhostIterator<'a, X, Y>;
+
+        open spec fn ghost_iter(&self) -> RelationStEphGhostIterator<'a, X, Y> {
+            RelationStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> vstd::pervasive::ForLoopGhostIterator for RelationStEphGhostIterator<'a, X, Y> {
+        type ExecIter = RelationStEphIter<'a, X, Y>;
+        type Item = Pair<X, Y>;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &RelationStEphIter<'a, X, Y>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<Pair<X, Y>> {
+            if 0 <= self.pos < self.elements.len() {
+                Some(self.elements[self.pos])
+            } else {
+                None
+            }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &RelationStEphIter<'a, X, Y>) -> RelationStEphGhostIterator<'a, X, Y> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> View for RelationStEphGhostIterator<'a, X, Y> {
+        type V = Seq<Pair<X, Y>>;
+
+        open spec fn view(&self) -> Seq<Pair<X, Y>> {
+            self.elements.take(self.pos)
+        }
+    }
+
     pub trait RelationStEphTrait<X: StT + Hash, Y: StT + Hash> : 
         View<V = Set<(<X as View>::V, <Y as View>::V)>> + Sized {
 
@@ -173,97 +237,81 @@ verus! {
 
         fn domain(&self) -> SetStEph<X> {
             let mut out = SetStEph::<X>::empty();
-            let mut it = self.iter();
-            let ghost pairs_seq = it@.1;
-            let ghost pairs_view = self@;
+            let it: RelationStEphIter<X, Y> = self.iter();
+            let ghost pairs_seq: Seq<Pair<X, Y>> = it@.1;
+            let ghost pairs_view: Set<(X::V, Y::V)> = self@;
 
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
+            for pair in iter: it
                 invariant
                     valid_key_type_Pair::<X, Y>(),
-                    it@.0 <= pairs_seq.len(),
-                    it@.1 == pairs_seq,
+                    iter.elements == pairs_seq,
+                    iter.pos <= pairs_seq.len(),
                     pairs_seq.map(|i: int, p: Pair<X, Y>| p@).to_set() == pairs_view,
                     out@ == Set::<X::V>::new(|x: X::V| 
-                        exists |i: int| #![trigger pairs_seq[i]] 0 <= i < it@.0 && pairs_seq[i]@.0 == x),
-                decreases pairs_seq.len() - it@.0,
+                        exists |i: int| #![trigger pairs_seq[i]] 0 <= i < iter.pos && pairs_seq[i]@.0 == x),
             {
-                match it.next() {
-                    Some(pair) => {
-                        let Pair(a, _b) = pair;
-                        let a_clone = a.clone_plus();
-                        let _ = out.insert(a_clone);
-                    },
-                    None => {
-                        proof {
-                            // Connect invariant to postcondition
-                            assert forall |x: X::V| out@.contains(x) implies 
-                                (exists |y: Y::V| self@.contains((x, y))) by {
-                                if out@.contains(x) {
-                                    let i = choose |i: int| #![trigger pairs_seq[i]] 0 <= i < pairs_seq.len() && pairs_seq[i]@.0 == x;
-                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(pairs_seq, i);
-// Veracity: UNNEEDED assert                                     assert(self@.contains((x, pairs_seq[i]@.1)));
-                                }
-                            }
-                            assert forall |x: X::V| (exists |y: Y::V| self@.contains((x, y))) implies 
-                                out@.contains(x) by {
-                                if exists |y: Y::V| self@.contains((x, y)) {
-                                    let y = choose |y: Y::V| #![trigger self@.contains((x, y))] self@.contains((x, y));
-                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(pairs_seq, (x, y));
-                                }
-                            }
-                        }
-                        return out;
+                let Pair(a, _b) = pair;
+                let a_clone = a.clone_plus();
+                let _ = out.insert(a_clone);
+            }
+
+            proof {
+                // Connect invariant to postcondition
+                assert forall |x: X::V| out@.contains(x) implies 
+                    (exists |y: Y::V| self@.contains((x, y))) by {
+                    if out@.contains(x) {
+                        let i = choose |i: int| #![trigger pairs_seq[i]] 0 <= i < pairs_seq.len() && pairs_seq[i]@.0 == x;
+                        crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(pairs_seq, i);
+                    }
+                }
+                assert forall |x: X::V| (exists |y: Y::V| self@.contains((x, y))) implies 
+                    out@.contains(x) by {
+                    if exists |y: Y::V| self@.contains((x, y)) {
+                        let y = choose |y: Y::V| #![trigger self@.contains((x, y))] self@.contains((x, y));
+                        crate::vstdplus::seq_set::lemma_map_to_set_contains_index(pairs_seq, (x, y));
                     }
                 }
             }
+            out
         }
 
         fn range(&self) -> SetStEph<Y> {
             let mut out = SetStEph::<Y>::empty();
-            let mut it = self.iter();
-            let ghost pairs_seq = it@.1;
-            let ghost pairs_view = self@;
+            let it: RelationStEphIter<X, Y> = self.iter();
+            let ghost pairs_seq: Seq<Pair<X, Y>> = it@.1;
+            let ghost pairs_view: Set<(X::V, Y::V)> = self@;
 
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
+            for pair in iter: it
                 invariant
                     valid_key_type_Pair::<X, Y>(),
-                    it@.0 <= pairs_seq.len(),
-                    it@.1 == pairs_seq,
+                    iter.elements == pairs_seq,
+                    iter.pos <= pairs_seq.len(),
                     pairs_seq.map(|i: int, p: Pair<X, Y>| p@).to_set() == pairs_view,
                     out@ == Set::<Y::V>::new(|y: Y::V| 
-                        exists |i: int| #![trigger pairs_seq[i]] 0 <= i < it@.0 && pairs_seq[i]@.1 == y),
-                decreases pairs_seq.len() - it@.0,
+                        exists |i: int| #![trigger pairs_seq[i]] 0 <= i < iter.pos && pairs_seq[i]@.1 == y),
             {
-                match it.next() {
-                    Some(pair) => {
-                        let Pair(_a, b) = pair;
-                        let b_clone = b.clone_plus();
-                        let _ = out.insert(b_clone);
-                    },
-                    None => {
-                        proof {
-                            assert forall |y: Y::V| out@.contains(y) implies 
-                                (exists |x: X::V| self@.contains((x, y))) by {
-                                if out@.contains(y) {
-                                    let i = choose |i: int| #![trigger pairs_seq[i]] 0 <= i < pairs_seq.len() && pairs_seq[i]@.1 == y;
-                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(pairs_seq, i);
-// Veracity: UNNEEDED assert                                     assert(self@.contains((pairs_seq[i]@.0, y)));
-                                }
-                            }
-                            assert forall |y: Y::V| (exists |x: X::V| self@.contains((x, y))) implies 
-                                out@.contains(y) by {
-                                if exists |x: X::V| self@.contains((x, y)) {
-                                    let x = choose |x: X::V| #![trigger self@.contains((x, y))] self@.contains((x, y));
-                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(pairs_seq, (x, y));
-                                }
-                            }
-                        }
-                        return out;
+                let Pair(_a, b) = pair;
+                let b_clone = b.clone_plus();
+                let _ = out.insert(b_clone);
+            }
+
+            proof {
+                assert forall |y: Y::V| out@.contains(y) implies 
+                    (exists |x: X::V| self@.contains((x, y))) by {
+                    if out@.contains(y) {
+                        let i = choose |i: int| #![trigger pairs_seq[i]] 0 <= i < pairs_seq.len() && pairs_seq[i]@.1 == y;
+                        crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(pairs_seq, i);
+                    }
+                }
+                assert forall |y: Y::V| (exists |x: X::V| self@.contains((x, y))) implies 
+                    out@.contains(y) by {
+                    if exists |x: X::V| self@.contains((x, y)) {
+                        let x = choose |x: X::V| #![trigger self@.contains((x, y))] self@.contains((x, y));
+                        crate::vstdplus::seq_set::lemma_map_to_set_contains_index(pairs_seq, (x, y));
                     }
                 }
             }
+            out
         }
 
         fn mem(&self, a: &X, b: &Y) -> B {

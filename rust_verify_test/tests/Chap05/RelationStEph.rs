@@ -1,12 +1,8 @@
-//! Proof tests for SetStEph
+//! Proof tests for RelationStEph
 //!
 //! Loop patterns tested (see docs/APASLoops.md):
 //!   - loop-loop:  `loop { match it.next() { ... } }`
-//!   - for-iter:   `for x in set.iter()`
-//!
-//! Comparing loop-loop vs for-iter:
-//!   - from_vec:     loop-loop on Vec index
-//!   - from_vec_for: for-iter on Vec (uses Vec's IntoIter)
+//!   - for-iter:   `for x in relation.iter()`
 
 #[macro_use]
 #[path = "../common/mod.rs"]
@@ -16,27 +12,26 @@ use common::*;
 // loop-loop: Manual iteration with loop + match/if-let
 // Uses ghost Seq accumulation to prove full coverage
 test_verify_one_file! {
-    #[test] set_st_eph_loop_loop verus_code! {
+    #[test] relation_st_eph_loop_loop verus_code! {
         use vstd::prelude::*;
+        use apas_verus::Chap05::RelationStEph::RelationStEph::*;
         use apas_verus::Chap05::SetStEph::SetStEph::*;
+        use apas_verus::Types::Types::{Pair, valid_key_type_Pair};
+        use apas_verus::RelationLit;
         
         fn test_loop_loop() 
-            requires valid_key_type::<u64>()
+            requires valid_key_type_Pair::<u64, u64>()
         {
-            let mut s: SetStEph<u64> = SetStEph::empty();
-            let _ = s.insert(1);
-            let _ = s.insert(2);
-            let _ = s.insert(3);
+            let r: RelationStEph<u64, u64> = RelationLit![(1u64, 10u64), (2u64, 20u64), (3u64, 30u64)];
             
-            let mut it: SetStEphIter<u64> = s.iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
+            let mut it: RelationStEphIter<u64, u64> = r.iter();
+            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
             
             #[verifier::loop_isolation(false)]
             loop
                 invariant
                     items =~= iter_seq.take(it@.0 as int),
-                    iter_invariant(&it),
                     iter_seq == it@.1,
                     it@.0 <= iter_seq.len(),
                 decreases iter_seq.len() - it@.0,
@@ -57,24 +52,24 @@ test_verify_one_file! {
     } => Ok(())
 }
 
-// for-iter: `for x in set.iter()` using ForLoopGhostIterator
+// for-iter: `for x in relation.iter()` using ForLoopGhostIterator
 // Proves full coverage via ghost Seq accumulation
 test_verify_one_file! {
-    #[test] set_st_eph_for_iter verus_code! {
+    #[test] relation_st_eph_for_iter verus_code! {
         use vstd::prelude::*;
+        use apas_verus::Chap05::RelationStEph::RelationStEph::*;
         use apas_verus::Chap05::SetStEph::SetStEph::*;
+        use apas_verus::Types::Types::{Pair, valid_key_type_Pair};
+        use apas_verus::RelationLit;
 
         fn test_for_iter()
-            requires valid_key_type::<u64>()
+            requires valid_key_type_Pair::<u64, u64>()
         {
-            let mut s: SetStEph<u64> = SetStEph::empty();
-            let _ = s.insert(10);
-            let _ = s.insert(20);
-            let _ = s.insert(30);
+            let r: RelationStEph<u64, u64> = RelationLit![(1u64, 100u64), (2u64, 200u64), (3u64, 300u64)];
             
-            let it: SetStEphIter<u64> = s.iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
+            let it: RelationStEphIter<u64, u64> = r.iter();
+            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
             
             for x in iter: it
                 invariant
@@ -94,22 +89,3 @@ test_verify_one_file! {
         }
     } => Ok(())
 }
-
-// from_vec: Uses for-iter pattern on Vec's IntoIter
-test_verify_one_file! {
-    #[test] set_st_eph_from_vec verus_code! {
-        use vstd::prelude::*;
-        use apas_verus::Chap05::SetStEph::SetStEph::*;
-
-        fn test_from_vec()
-            requires valid_key_type::<u64>()
-        {
-            let v: Vec<u64> = vec![1, 2, 3];
-            let s: SetStEph<u64> = SetStEph::from_vec(v);
-            
-            // from_vec ensures: s@.finite() and correct elements
-            assert(s@.finite());
-        }
-    } => Ok(())
-}
-
