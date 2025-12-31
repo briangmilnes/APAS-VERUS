@@ -4,8 +4,8 @@
 use apas_verus::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;
 
 #[test]
-fn test_join_simple() {
-    let (a, b) = join(
+fn test_spawn_join_simple() {
+    let (a, b) = Pool::spawn_join(
         || 1 + 1,
         || 2 + 2,
     );
@@ -14,8 +14,8 @@ fn test_join_simple() {
 }
 
 #[test]
-fn test_join_different_types() {
-    let (a, b) = join(
+fn test_spawn_join_different_types() {
+    let (a, b) = Pool::spawn_join(
         || "hello".to_string(),
         || 42u64,
     );
@@ -24,14 +24,14 @@ fn test_join_different_types() {
 }
 
 #[test]
-fn test_join_nested() {
-    let (a, b) = join(
+fn test_spawn_join_nested() {
+    let (a, b) = Pool::spawn_join(
         || {
-            let (x, y) = join(|| 1, || 2);
+            let (x, y) = Pool::spawn_join(|| 1, || 2);
             x + y
         },
         || {
-            let (x, y) = join(|| 3, || 4);
+            let (x, y) = Pool::spawn_join(|| 3, || 4);
             x + y
         },
     );
@@ -62,8 +62,8 @@ fn test_pool_join_heavy() {
 }
 
 #[test]
-fn test_join_with_computation() {
-    let (a, b) = join(
+fn test_spawn_join_with_computation() {
+    let (a, b) = Pool::spawn_join(
         || {
             let mut sum = 0u64;
             for i in 0..1000 {

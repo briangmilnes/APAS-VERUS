@@ -16,6 +16,11 @@ yansi = "0.5"
 [package.metadata.rust-analyzer]
 rustc_private = true
 
+# Chap02 proof tests
+[[test]]
+name = "WSSchedulerMtEph"
+path = "tests/Chap02/WSSchedulerMtEph.rs"
+
 # Chap05 proof tests
 [[test]]
 name = "SetStEph"

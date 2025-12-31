@@ -14,7 +14,7 @@ pub mod ArraySeqMtEph {
     #[cfg(verus_keep_ghost)]
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::Pool;
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{Pool, PoolTrait};
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::clone_plus::clone_plus::{ClonePlus, clone_fn, clone_fn2, clone_pred};
 
@@ -594,7 +594,7 @@ pub mod ArraySeqMtEph {
 
     // Non-Verus stub
     #[cfg(not(verus_keep_ghost))]
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::Pool;
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{Pool, PoolTrait};
 
     #[cfg(not(verus_keep_ghost))]
     #[derive(Clone, PartialEq, Eq, Debug)]

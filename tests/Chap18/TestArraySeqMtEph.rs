@@ -2,7 +2,7 @@
 //! Tests for ArraySeqMtEph with parallel operations.
 
 use apas_verus::Chap18::ArraySeqMtEph::ArraySeqMtEph::*;
-use apas_verus::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::Pool;
+use apas_verus::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{Pool, PoolTrait};
 
 #[test]
 fn test_basic_operations() {
