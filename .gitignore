@@ -1,5 +1,6 @@
 # Rust
 /target
+rust_verify_test/target/
 Cargo.lock
 
 # Emacs

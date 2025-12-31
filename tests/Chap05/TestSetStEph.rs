@@ -526,15 +526,7 @@ fn test_trait_from_vec() {
     assert_eq!(s.size(), 3);
 }
 
-#[test]
-fn test_trait_from_vec_for() {
-    // from_vec_for uses for-iter pattern instead of loop-loop
-    let s = <SetStEph<i32> as SetStEphTrait<i32>>::from_vec_for(vec![1, 2, 3]);
-    assert_eq!(s.size(), 3);
-    assert!(s.mem(&1));
-    assert!(s.mem(&2));
-    assert!(s.mem(&3));
-}
+// test_trait_from_vec_for removed - from_vec now uses for-iter pattern
 
 #[test]
 fn test_debug_trait() {
