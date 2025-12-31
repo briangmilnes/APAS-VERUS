@@ -27,9 +27,9 @@ verus! {
 
         fn release(&self);
 
-        /// - Budget-controlled fork-join: spawns fb in a new thread only if budget available.
-        /// - If no budget, runs both closures sequentially in the current thread.
-        /// - Use for bounded parallelism to prevent thread explosion.
+        /// - Help-first fork-join: spawns fb in a new thread only if budget available.
+        /// - If no budget, runs both closures sequentially (help-first strategy).
+        /// - Prevents deadlock from nested joins holding slots while waiting.
         fn join<A, B, FA, FB>(&self, fa: FA, fb: FB) -> (result: (A, B))
         where
             FA: FnOnce() -> A + Send + 'static,
@@ -105,10 +105,15 @@ verus! {
             A: Send + 'static,
             B: Send + 'static,
         {
-            self.acquire();
-            let result = Self::spawn_join(fa, fb);
-            self.release();
-            result
+            if self.try_acquire() {
+                // Got a slot - spawn fb, run fa, wait for fb
+                let result = Self::spawn_join(fa, fb);
+                self.release();
+                result
+            } else {
+                // No slot - help-first: run both sequentially
+                (fa(), fb())
+            }
         }
 
         fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (result: (A, B))
