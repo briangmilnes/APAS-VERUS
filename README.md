@@ -220,6 +220,17 @@ See APAS-AI for unverified implementations of:
 - 🔄 In Progress - Some work done but not complete
 - ⬜ Not Started - No work begun
 
+## Documentation
+
+API documentation with Verus specifications (requires/ensures):
+
+- [Browse docs/verusdoc/apas_verus/](docs/verusdoc/apas_verus/index.html) - Generated with `scripts/verusdoc.sh`
+
+To regenerate:
+```bash
+./scripts/verusdoc.sh
+```
+
 ## Building and Testing
 
 ### Verification

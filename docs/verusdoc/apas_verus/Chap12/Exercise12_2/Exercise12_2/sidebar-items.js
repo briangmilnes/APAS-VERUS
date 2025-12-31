@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["efficiency_note","fetch_add_cas"],"trait":["FetchAddCasTrait"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["axiom_cloned_implies_eq","feq","feq_reflexive","feq_symmetric","feq_transitive","group_feq_axioms","lemma_cloned_view_eq","lemma_view_injective","obeys_feq_clone","obeys_feq_eq","obeys_feq_full","obeys_feq_properties","obeys_feq_view","obeys_feq_view_injective"],"trait":["ExFeq","FeqSpec","FeqSpecImpl"]};

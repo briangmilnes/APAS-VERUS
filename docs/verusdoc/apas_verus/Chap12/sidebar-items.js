@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["Exercise12_1","Exercise12_2","Exercise12_5"]};

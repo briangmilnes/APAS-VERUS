@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["partial_order_ensures"],"trait":["PartialOrder"]};

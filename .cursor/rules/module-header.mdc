@@ -1,0 +1,32 @@
+---
+description: Module header format for source files
+globs: src/**/*.rs
+alwaysApply: false
+---
+
+# Module Header Format
+
+Every source file should have a header in this order:
+
+```rust
+// Copyright 2024-2025 A Conditions of Use, Privacy Policy, and Terms of Use
+// SPDX-License-Identifier: Apache-2.0
+
+//! Brief module description.
+```
+
+## Rules
+
+1. **Copyright**: Use `//` (regular comment) - appears in source, NOT in rustdoc
+2. **Module docs**: Use `//!` (doc comment) - appears in rustdoc
+3. **Multi-line docs**: Use bullet lists to preserve line breaks without blank comment lines
+
+## Example Function Doc
+
+```rust
+/// - Disjoint union: union of two sets known to be disjoint.
+/// - APAS: Work Θ(|a| + |b|), Span Θ(1)
+fn disjoint_union(...) { ... }
+```
+
+Bullet lists preserve each line in rendered docs without requiring blank `///` lines.

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["spec_add","spec_is_add_associative","spec_is_add_commutative","spec_is_mul_associative","spec_is_mul_commutative","spec_mul","spec_mul_distributes_over_add"],"struct":["CheckedU128","CheckedU16","CheckedU32","CheckedU64","CheckedU8","CheckedUsize"],"trait":["CheckedNatTrait"]};

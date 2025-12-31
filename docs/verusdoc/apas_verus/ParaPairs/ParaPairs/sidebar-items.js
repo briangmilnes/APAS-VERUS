@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["para_pair","para_pair_disjoint"]};

@@ -1,5 +1,7 @@
-//! copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Chapter 5.1 ephemeral Set built on `std::collections::HashSet`.
+// Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: Apache-2.0
+
+//! Ephemeral Set built on `std::collections::HashSet` as wrapped by vstd and vstdplus.
 
 pub mod SetStEph {
 
@@ -55,7 +57,143 @@ verus! {
     }
 
     #[verifier::reject_recursive_types(T)]
-    pub struct SetStEph<T: StT + Hash> { pub elements: HashSetWithViewPlus<T> }
+    pub struct SetStEph<T: StT + Hash> { 
+        pub elements: HashSetWithViewPlus<T>  // Public for open spec fn view()
+    }
+
+    pub trait SetStEphTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
+
+        /// A set is finite
+        open spec fn spec_finite(&self) -> bool {
+            self@.finite()
+        }
+
+        /// APAS: Work Θ(|v|), Span Θ(1)
+        fn from_vec(v: Vec<T>) -> (s: SetStEph<T>)
+            requires valid_key_type::<T>()
+            ensures s@.finite(), s@ == v@.map(|i: int, x: T| x@).to_set();
+
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn iter<'a>(&'a self) -> (it: SetStEphIter<'a, T>)
+            requires valid_key_type::<T>()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, k: T| k@).to_set() == self@,
+                it@.1.no_duplicates();
+
+        fn to_seq(&self) -> (seq: Vec<T>)
+            requires valid_key_type::<T>()
+            ensures
+                seq@.no_duplicates(),
+                forall |x: T::V| self@.contains(x) <==> seq@.map(|_i: int, t: T| t@).contains(x);
+
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn empty()                           -> (empty: Self)
+            requires valid_key_type::<T>()
+            ensures empty@.finite(), empty@ == Set::<<T as View>::V>::empty();
+
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn singleton(x: T)                   -> (s: Self)
+            requires valid_key_type::<T>()
+            ensures s@.finite(), s@ == Set::empty().insert(x@);
+
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn size(&self)                       -> N;
+
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn mem(&self, x: &T)                 -> (contains: B)
+            requires valid_key_type::<T>()
+            ensures contains == self@.contains(x@);
+
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn insert(&mut self, x: T)           -> (inserted: bool)
+            requires valid_key_type::<T>()
+            ensures
+                self@ == old(self)@.insert(x@),
+                inserted == !old(self)@.contains(x@);
+
+        /// APAS: Work Θ(|a| + |b|), Span Θ(1)
+        fn union(&self, s2: &SetStEph<T>) -> (union: Self)
+            requires 
+               valid_key_type::<T>(),
+            ensures union@.finite(), union@ == self@.union(s2@);
+
+        /// - Disjoint union: union of two sets known to be disjoint.
+        /// - APAS: Work Θ(|a| + |b|), Span Θ(1)
+        fn disjoint_union(&self, s2: &SetStEph<T>) -> (union: Self)
+            requires 
+               valid_key_type::<T>(),
+               self@.disjoint(s2@),
+            ensures 
+               union@.finite(),
+               union@ == self@.union(s2@),
+               union@.len() == self@.len() + s2@.len();
+
+        /// - APAS: Work Θ(|a| + |b|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)
+        fn intersection(&self, s2: &SetStEph<T>) -> (intersection: Self)
+            requires valid_key_type::<T>()
+            ensures intersection@.finite(), intersection@ == self@.intersect(s2@);
+
+        fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
+            requires 
+              valid_key_type::<T>(),
+              valid_key_type::<U>(),
+              valid_key_type::<Pair<T, U>>(),
+            ensures  
+               product@.finite(),
+               forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (av == a@ && s2@.contains(bv));
+
+        /// - APAS: Work Θ(|a| × |b|), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|a| × |b|), Span Θ(1)
+        fn cartesian_product<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
+            requires 
+                valid_key_type::<T>(),
+                valid_key_type::<U>(),
+                valid_key_type::<Pair<T, U>>(),
+            ensures  
+                product@.finite(),
+                forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv));
+
+        fn all_nonempty(parts: &SetStEph<SetStEph<T>>) -> (all_nonempty: bool)
+            requires 
+                valid_key_type::<T>(),
+                valid_key_type::<SetStEph<T>>(),
+            ensures 
+                all_nonempty <==> forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0;
+
+        fn partition_on_elt(x: &T, parts: &SetStEph<SetStEph<T>>) -> (partition_on_elt: bool)
+            requires 
+                valid_key_type::<T>(),
+                valid_key_type::<SetStEph<T>>(),
+            ensures 
+                partition_on_elt <==> (
+                    (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x@)) &&
+                    (forall |s1: Set<T::V>, s2: Set<T::V>|
+                        #![trigger parts@.contains(s1), parts@.contains(s2)]
+                        parts@.contains(s1) && s1.contains(x@) &&
+                        parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
+                );
+
+        /// - APAS: Work Θ(|parts| × |a|²), Span Θ(1)
+        /// - claude-4-sonet: Work Θ(|parts| × |a|²), Span Θ(1)
+        fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> (partition: bool)
+            requires 
+                valid_key_type::<T>(),
+                valid_key_type::<SetStEph<T>>(),
+            ensures 
+                partition <==> (
+                    (forall |x: T::V| self@.contains(x) ==> (
+                        (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x)) &&
+                        (forall |s1: Set<T::V>, s2: Set<T::V>|
+                            #![trigger parts@.contains(s1), parts@.contains(s2)]
+                            parts@.contains(s1) && s1.contains(x) &&
+                            parts@.contains(s2) && s2.contains(x) ==> s1 == s2)
+                    )) &&
+                    (forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0)
+                );
+    }
+
 
     // Iterator wrapper with CLOSED spec view for encapsulation
     // inner is private; closed view() can access it but external code cannot see HOW
@@ -166,146 +304,6 @@ verus! {
         }
     }
 
-    pub trait SetStEphTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
-
-        /// A set is finite
-        open spec fn spec_finite(&self) -> bool {
-            self@.finite()
-        }
-
-        /// APAS: Work Θ(|v|), Span Θ(1)
-        /// Uses loop-loop pattern
-        fn from_vec(v: Vec<T>) -> (s: SetStEph<T>)
-            requires valid_key_type::<T>()
-            ensures s@.finite(), s@ == v@.map(|i: int, x: T| x@).to_set();
-
-        /// APAS: Work Θ(|v|), Span Θ(1)
-        /// Uses for-iter pattern (Vec's IntoIter)
-        fn from_vec_for(v: Vec<T>) -> (s: SetStEph<T>)
-            requires valid_key_type::<T>()
-            ensures s@.finite(), s@ == v@.map(|i: int, x: T| x@).to_set();
-
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn iter<'a>(&'a self) -> (it: SetStEphIter<'a, T>)
-            requires valid_key_type::<T>()
-            ensures
-                it@.0 == 0int,
-                it@.1.map(|i: int, k: T| k@).to_set() == self@,
-                it@.1.no_duplicates();
-
-        fn to_seq(&self) -> (seq: Vec<T>)
-            requires valid_key_type::<T>()
-            ensures
-                seq@.no_duplicates(),
-                forall |x: T::V| self@.contains(x) <==> seq@.map(|_i: int, t: T| t@).contains(x);
-
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn empty()                           -> (empty: Self)
-            requires valid_key_type::<T>()
-            ensures empty@.finite(), empty@ == Set::<<T as View>::V>::empty();
-
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn singleton(x: T)                   -> (s: Self)
-            requires valid_key_type::<T>()
-            ensures s@.finite(), s@ == Set::empty().insert(x@);
-
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn size(&self)                       -> N;
-
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn mem(&self, x: &T)                 -> (contains: B)
-            requires valid_key_type::<T>()
-            ensures contains == self@.contains(x@);
-
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn insert(&mut self, x: T)           -> (inserted: bool)
-            requires valid_key_type::<T>()
-            ensures
-                self@ == old(self)@.insert(x@),
-                inserted == !old(self)@.contains(x@);
-
-        /// APAS: Work Θ(|a| + |b|), Span Θ(1)
-        fn union(&self, s2: &SetStEph<T>) -> (union: Self)
-            requires 
-               valid_key_type::<T>(),
-            ensures union@.finite(), union@ == self@.union(s2@);
-
-        /// Disjoint union: union of two sets known to be disjoint.
-        /// APAS: Work Θ(|a| + |b|), Span Θ(1)
-        fn disjoint_union(&self, s2: &SetStEph<T>) -> (union: Self)
-            requires 
-               valid_key_type::<T>(),
-               self@.disjoint(s2@),
-            ensures 
-               union@.finite(),
-               union@ == self@.union(s2@),
-               union@.len() == self@.len() + s2@.len();
-
-        /// APAS: Work Θ(|a| + |b|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)
-        fn intersection(&self, s2: &SetStEph<T>) -> (intersection: Self)
-            requires valid_key_type::<T>()
-            ensures intersection@.finite(), intersection@ == self@.intersect(s2@);
-
-        fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
-            requires 
-              valid_key_type::<T>(),
-              valid_key_type::<U>(),
-              valid_key_type::<Pair<T, U>>(),
-            ensures  
-               product@.finite(),
-               forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (av == a@ && s2@.contains(bv));
-
-        /// APAS: Work Θ(|a| × |b|), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|a| × |b|), Span Θ(1)
-        fn cartesian_product<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
-            requires 
-                valid_key_type::<T>(),
-                valid_key_type::<U>(),
-                valid_key_type::<Pair<T, U>>(),
-            ensures  
-                product@.finite(),
-                forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv));
-
-        fn all_nonempty(parts: &SetStEph<SetStEph<T>>) -> (all_nonempty: bool)
-            requires 
-                valid_key_type::<T>(),
-                valid_key_type::<SetStEph<T>>(),
-            ensures 
-                all_nonempty <==> forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0;
-
-        fn partition_on_elt(x: &T, parts: &SetStEph<SetStEph<T>>) -> (partition_on_elt: bool)
-            requires 
-                valid_key_type::<T>(),
-                valid_key_type::<SetStEph<T>>(),
-            ensures 
-                partition_on_elt <==> (
-                    (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x@)) &&
-                    (forall |s1: Set<T::V>, s2: Set<T::V>|
-                        #![trigger parts@.contains(s1), parts@.contains(s2)]
-                        parts@.contains(s1) && s1.contains(x@) &&
-                        parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
-                );
-
-        /// APAS: Work Θ(|parts| × |a|²), Span Θ(1)
-        /// claude-4-sonet: Work Θ(|parts| × |a|²), Span Θ(1)
-        fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> (partition: bool)
-            requires 
-                valid_key_type::<T>(),
-                valid_key_type::<SetStEph<T>>(),
-            ensures 
-                partition <==> (
-                    (forall |x: T::V| self@.contains(x) ==> (
-                        (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x)) &&
-                        (forall |s1: Set<T::V>, s2: Set<T::V>|
-                            #![trigger parts@.contains(s1), parts@.contains(s2)]
-                            parts@.contains(s1) && s1.contains(x) &&
-                            parts@.contains(s2) && s2.contains(x) ==> s1 == s2)
-                    )) &&
-                    (forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0)
-                );
-    }
-
     impl<T: StT + Hash> View for SetStEph<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Self::V { self.elements@ }
@@ -320,33 +318,6 @@ verus! {
     impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
 
         fn from_vec(v: Vec<T>) -> SetStEph<T> {
-            let mut s = SetStEph::empty();
-            let mut i: usize = 0;
-            let ghost v_seq = v@;
-            
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
-                invariant
-                    valid_key_type::<T>(),
-                    i <= v.len(),
-                    v@ == v_seq,
-                    s@ == v_seq.take(i as int).map(|idx: int, x: T| x@).to_set(),
-                decreases v.len() - i,
-            {
-                if i >= v.len() {
-                    break;
-                }
-                
-                let x = &v[i];
-                let x_clone = x.clone_plus();
-                let _ = s.insert(x_clone);
-                proof { lemma_take_one_more_extends_the_seq_set_with_view(v_seq, i as int); }
-                i = i + 1;
-            }
-            s
-        }
-
-        fn from_vec_for(v: Vec<T>) -> SetStEph<T> {
             let mut s: SetStEph<T> = SetStEph::empty();
             let ghost v_seq: Seq<T> = v@;
             
@@ -371,29 +342,20 @@ verus! {
 
         fn to_seq(&self) -> (seq: Vec<T>) {
             let mut seq: Vec<T> = Vec::new();
-            let mut it = self.iter();
+            let it = self.iter();
             let ghost iter_seq = it@.1;
             
-            loop
+            for x in iter: it
                 invariant
                     valid_key_type::<T>(),
-                    it@.0 <= iter_seq.len(),
-                    it@.1 == iter_seq,
+                    iter.elements == iter_seq,
                     iter_seq.map(|_i: int, k: T| k@).to_set() == self@,
                     iter_seq.no_duplicates(),
-                    seq@ == iter_seq.take(it@.0),
-                decreases iter_seq.len() - it@.0,
+                    seq@ == iter_seq.take(iter.pos),
             {
-                match it.next() {
-                    Some(x) => {
-                        seq.push(x.clone_plus());
-                    },
-                    None => {
-                        // TRY: removed intermediate asserts
-                        return seq;
-                    }
-                }
+                seq.push(x.clone_plus());
             }
+            seq
         }
 
         fn empty() -> SetStEph<T> { SetStEph { elements: HashSetWithViewPlus::new() } }
@@ -416,34 +378,20 @@ verus! {
         fn union(&self, s2: &SetStEph<T>) -> (union: SetStEph<T>)
         {
             let mut union = self.clone_plus();
-            let s2_iter = s2.iter();
-            let mut it = s2_iter;
+            let it = s2.iter();
             let ghost s1_view = self@;
             let ghost s2_seq = it@.1;
 
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop 
+            for x in iter: it
                 invariant
                     valid_key_type::<T>(),
-                    it@.0 <= s2_seq.len(),
-                    it@.1 == s2_seq,
+                    iter.elements == s2_seq,
                     s2_seq.map(|i: int, k: T| k@).to_set() == s2@,
-                    union@ == s1_view.union(s2_seq.take(it@.0).map(|i: int, k: T| k@).to_set()),
-               decreases s2_seq.len() - it@.0,
+                    union@ == s1_view.union(s2_seq.take(iter.pos).map(|i: int, k: T| k@).to_set()),
             {
-                let ghost old_index = it@.0;
-                let ghost old_union = union@;
-                
-                match it.next() {
-                    Some(x) => {
-                        let x_clone = x.clone_plus();
-                        let _ = union.insert(x_clone);
-                        proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, old_index); }
-                    },
-                    None => {
-                        break;
-                    }
-                }
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.pos); }
+                let x_clone = x.clone_plus();
+                let _ = union.insert(x_clone);
             }
             union
         }
@@ -451,61 +399,43 @@ verus! {
         fn disjoint_union(&self, s2: &SetStEph<T>) -> (union: SetStEph<T>)
         {
             // Pre-size to avoid rehashing - we know exact final size
-            // Use saturating add to avoid overflow (capped at usize::MAX)
             let capacity = self.size().saturating_add(s2.size());
             let mut union: SetStEph<T> = SetStEph { 
                 elements: HashSetWithViewPlus::with_capacity(capacity) 
             };
             
             // Insert all elements from self
-            let mut it1 = self.iter();
+            let it1 = self.iter();
             let ghost it1_seq = it1@.1;
             
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
+            for x in iter1: it1
                 invariant
                     valid_key_type::<T>(),
-                    it1@.0 <= it1_seq.len(),
-                    it1@.1 == it1_seq,
+                    iter1.elements == it1_seq,
                     it1_seq.map(|i: int, k: T| k@).to_set() == self@,
-                    union@ == it1_seq.take(it1@.0).map(|i: int, k: T| k@).to_set(),
-                decreases it1_seq.len() - it1@.0,
+                    union@ == it1_seq.take(iter1.pos).map(|i: int, k: T| k@).to_set(),
             {
-                match it1.next() {
-                    Some(x) => {
-                        let ghost old_index = it1@.0 - 1;
-                        let _ = union.insert(x.clone_plus());
-                        proof { lemma_take_one_more_extends_the_seq_set_with_view(it1_seq, old_index); }
-                    },
-                    None => break,
-                }
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(it1_seq, iter1.pos); }
+                let _ = union.insert(x.clone_plus());
             }
             
             // Insert all elements from s2 (guaranteed no duplicates due to disjointness)
-            let mut it2 = s2.iter();
+            let it2 = s2.iter();
             let ghost it2_seq = it2@.1;
             let ghost s1_view = self@;
             let ghost s2_view = s2@;
             
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
+            for x in iter2: it2
                 invariant
                     valid_key_type::<T>(),
-                    it2@.0 <= it2_seq.len(),
-                    it2@.1 == it2_seq,
+                    iter2.elements == it2_seq,
                     it2_seq.map(|i: int, k: T| k@).to_set() == s2_view,
                     s1_view.disjoint(s2_view),
-                    union@ == s1_view.union(it2_seq.take(it2@.0).map(|i: int, k: T| k@).to_set()),
-                decreases it2_seq.len() - it2@.0,
+                    s1_view == self@,
+                    union@ == s1_view.union(it2_seq.take(iter2.pos).map(|i: int, k: T| k@).to_set()),
             {
-                match it2.next() {
-                    Some(x) => {
-                        let ghost old_index = it2@.0 - 1;
-                        let _ = union.insert(x.clone_plus());
-                        proof { lemma_take_one_more_extends_the_seq_set_with_view(it2_seq, old_index); }
-                    },
-                    None => break,
-                }
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(it2_seq, iter2.pos); }
+                let _ = union.insert(x.clone_plus());
             }
             
             proof {
@@ -518,38 +448,27 @@ verus! {
         fn intersection(&self, s2: &SetStEph<T>) -> (intersection: SetStEph<T>)
         {
             let mut intersection = SetStEph::empty();
-            let s1_iter = self.iter();
-            let mut it = s1_iter;
+            let it = self.iter();
             let ghost s1_view = self@;
             let ghost s2_view = s2@;
             let ghost s1_seq = it@.1;
 
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
+            for s1mem in iter: it
                 invariant
                     valid_key_type::<T>(),
-                    it@.0 <= s1_seq.len(),
-                    it@.1 == s1_seq,
+                    iter.elements == s1_seq,
                     s1_seq.map(|i: int, k: T| k@).to_set() == s1_view,
-                    intersection@ == s1_seq.take(it@.0).map(|i: int, k: T| k@).to_set().intersect(s2_view),
-                decreases s1_seq.len() - it@.0,
+                    s2_view == s2@,
+                    intersection@ == s1_seq.take(iter.pos).map(|i: int, k: T| k@).to_set().intersect(s2_view),
+                    // Current element identity
+                    iter.pos < iter.elements.len() ==> s1mem == iter.elements[iter.pos as int],
             {
-                let ghost old_index = it@.0;
-                let ghost old_intersection = intersection@;
+                proof { lemma_take_one_more_intersect(s1_seq, s2_view, iter.pos); }
                 
-                match it.next() {
-                    Some(s1mem) => {
-                        proof { lemma_take_one_more_intersect(s1_seq, s2_view, old_index); }
-                        
-                        if s2.mem(s1mem) {
-                            let s1mem_clone = s1mem.clone_plus();
-                            let _ = intersection.insert(s1mem_clone);
-                        } 
-                    },
-                    None => {
-                        break;
-                    }
-                }
+                if s2.mem(s1mem) {
+                    let s1mem_clone = s1mem.clone_plus();
+                    let _ = intersection.insert(s1mem_clone);
+                } 
             }
             
             intersection
@@ -558,37 +477,26 @@ verus! {
         fn cartesian_product<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
         {
             let mut product = SetStEph::empty();
-            let s1_iter = self.iter();
-            let mut it = s1_iter;
+            let it = self.iter();
             let ghost s1_seq = it@.1;
             let ghost s1_view = self@;
             let ghost s2_view = s2@;
             
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
+            for a in iter: it
                 invariant
-                    it@.0 <= s1_seq.len(),
-                    it@.1 == s1_seq,
+                    valid_key_type::<T>(),
+                    valid_key_type::<U>(),
+                    valid_key_type::<Pair<T, U>>(),
+                    iter.elements == s1_seq,
                     s1_seq.map(|i: int, k: T| k@).to_set() == s1_view,
+                    s2_view == s2@,
                     forall |av: T::V, bv: U::V| 
                         product@.contains((av, bv)) <==>
-                            (s1_seq.take(it@.0).map(|i: int, k: T| k@).to_set().contains(av) && s2_view.contains(bv)),
-                decreases s1_seq.len() - it@.0,
+                            (s1_seq.take(iter.pos).map(|i: int, k: T| k@).to_set().contains(av) && s2_view.contains(bv)),
             {
-                let ghost old_index = it@.0;
-                let ghost old_product = product@;
-                
-                match it.next() {
-                    Some(a) => {
-                        let ghost a_view = a@;
-                        let a_cross = Self::elt_cross_set(a, s2);
-                        product = product.union(&a_cross);
-                        proof { lemma_take_one_more_extends_the_seq_set_with_view(s1_seq, old_index); }
-                    },
-                    None => {
-                        break;
-                    }
-                }
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(s1_seq, iter.pos); }
+                let a_cross = Self::elt_cross_set(a, s2);
+                product = product.union(&a_cross);
             }
             product
         }
@@ -596,41 +504,34 @@ verus! {
         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
         {
             let mut product = SetStEph::empty();
-            let s2_iter = s2.iter();
-            let mut it = s2_iter;
+            let it = s2.iter();
             let ghost s2_seq = it@.1;
             let ghost s2_view = s2@;
             let ghost a_view = a@;
             
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
+            for b in iter: it
                 invariant
-                it@.0 <= s2_seq.len(),
-                it@.1 == s2_seq,
-                s2_seq.map(|i: int, k: U| k@).to_set() == s2_view,
-                forall |av: T::V, bv: U::V| 
-                  #![trigger product@.contains((av, bv))]
-                   product@.contains((av, bv)) <==>
-                   (av == a_view && s2_seq.take(it@.0).map(|i: int, k: U| k@).to_set().contains(bv)),
-            decreases s2_seq.len() - it@.0,
+                    valid_key_type::<T>(),
+                    valid_key_type::<U>(),
+                    valid_key_type::<Pair<T, U>>(),
+                    a_view == a@,
+                    iter.elements == s2_seq,
+                    s2_seq.map(|i: int, k: U| k@).to_set() == s2_view,
+                    forall |av: T::V, bv: U::V| 
+                        #![trigger product@.contains((av, bv))]
+                        product@.contains((av, bv)) <==>
+                        (av == a_view && s2_seq.take(iter.pos).map(|i: int, k: U| k@).to_set().contains(bv)),
             {
-                match it.next() {
-                    Some(b) => {
-                        let ghost old_index = it@.0 - 1;
-                        let a_clone = a.clone_plus();
-                        let b_clone = b.clone_plus();
-                        let _ = product.insert(Pair(a_clone, b_clone));
-                        proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, old_index); }
-                    },
-                    None => {
-                        break;
-                    }
-                }
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.pos); }
+                let a_clone = a.clone_plus();
+                let b_clone = b.clone_plus();
+                let _ = product.insert(Pair(a_clone, b_clone));
             }
             
             product
         }
 
+        // NOTE: Kept as loop-loop due to early return + postcondition proving
         fn all_nonempty(parts: &SetStEph<SetStEph<T>>) -> bool {
             let parts_iter       = parts.iter();
             let mut parts_it     = parts_iter;

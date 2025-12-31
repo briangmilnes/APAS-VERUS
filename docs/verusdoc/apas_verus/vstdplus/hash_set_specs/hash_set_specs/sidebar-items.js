@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["_verus_external_fn_specification_0__60__32_std_32__58__58__32_collections_32__58__58__32_HashSet_32__60__32_T_44__32_S_32__62__32_as_32_std_32__58__58__32_clone_32__58__58__32_Clone_32__62__32__58__58__32_clone"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["clone_fn","clone_fn2","clone_pred"],"trait":["ClonePlus"]};

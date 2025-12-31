@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["insertion_sort","is_sorted","sorted_prefix"],"trait":["InsertionSortStTrait"]};
