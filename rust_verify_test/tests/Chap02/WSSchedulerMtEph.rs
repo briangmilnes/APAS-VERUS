@@ -40,3 +40,6 @@ test_verify_one_file! {
         }
     } => Ok(())
 }
+
+// Note: spawn/wait PTT omitted due to PTT framework crate resolution issues.
+// RTTs in test_work_stealing_scheduler.rs test spawn/wait thoroughly.

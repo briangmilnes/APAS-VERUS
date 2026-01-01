@@ -1,0 +1,11 @@
+---
+description: Rust project source and test layout
+globs: ["**/*.rs"]
+alwaysApply: true
+---
+
+# Rust Source Layout
+
+- Source files go in `src/`
+- Test files go in `tests/`
+- Proof time tests go in `rust_verify_test/tests/`

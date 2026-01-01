@@ -1,14 +1,14 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 5.1 — Multi-threaded ephemeral Set built on `std::collections::HashSet`.
-//! Uses vstd::thread::spawn for parallel cartesian_product.
+//! Uses WSSchedulerMtEph for bounded parallel cartesian_product.
 
 // Verus requires parentheses around closures with ensures clauses in function arguments
 #[allow(unused_parens)]
 pub mod SetMtEph {
 
     use vstd::prelude::*;
-    use vstd::thread::*;
     use crate::Concurrency::diverge;
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{Pool, PoolHandle, PoolTrait};
 
 verus! {
 
@@ -500,10 +500,13 @@ verus! {
             let ghost s1_view = self@;
             let ghost s2_view = s2@;
             
-            // Phase 1: Spawn one thread per element in s1
+            // Create pool with budget = number of CPUs (or reasonable default)
+            let pool = Pool::new(8);
+            
+            // Phase 1: Spawn one task per element in s1 using pool
             let mut it = self.iter();
             let ghost it_seq = it@.1;
-            let mut handles: Vec<JoinHandle<SetMtEph<Pair<T, U>>>> = Vec::new();
+            let mut handles: Vec<PoolHandle<SetMtEph<Pair<T, U>>>> = Vec::new();
             let ghost mut spawned_views: Seq<T::V> = Seq::empty();
             
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
@@ -527,7 +530,7 @@ verus! {
                         let ghost a_view = a@;
                         let ghost idx = it@.0 - 1;
                         
-                        // Clone for the thread
+                        // Clone for the task
                         let a_clone = a.clone_plus();
                         let s2_clone = s2.clone();
                         
@@ -536,7 +539,7 @@ verus! {
                             lemma_cloned_view_eq(*a, a_clone);
                         }
                         
-                        let handle = spawn(
+                        let handle = pool.spawn(
                             (move || -> (r: SetMtEph<Pair<T, U>>)
                                 requires
                                     valid_key_type::<T>(),
@@ -557,7 +560,7 @@ verus! {
                 }
             }
             
-            // Phase 2: Join threads and disjoint_union results
+            // Phase 2: Wait for tasks and disjoint_union results
             // Process in reverse order since we'll pop from the end
             let mut product: SetMtEph<Pair<T, U>> = SetMtEph::empty();
             let ghost mut joined_views: Set<T::V> = Set::empty();
@@ -589,12 +592,9 @@ verus! {
                 
                 let ghost idx = handles.len() - 1;
                 let ghost a_view = spawned_views[idx as int];
-                let handle: JoinHandle<SetMtEph<Pair<T, U>>> = handles.pop().unwrap();
+                let handle: PoolHandle<SetMtEph<Pair<T, U>>> = handles.pop().unwrap();
                 
-                let thread_result: SetMtEph<Pair<T, U>> = match handle.join() {
-                    std::result::Result::Ok(r) => r,
-                    std::result::Result::Err(_) => { assume(false); diverge() }
-                };
+                let thread_result: SetMtEph<Pair<T, U>> = Pool::wait(handle);
                 
                 proof {
                     // thread_result satisfies the closure's ensures:

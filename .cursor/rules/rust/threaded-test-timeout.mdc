@@ -1,0 +1,15 @@
+---
+description: Threaded tests need timeouts
+globs: ["tests/**/*.rs", "rust_verify_test/tests/**/*.rs"]
+alwaysApply: true
+---
+
+# Threaded Test Timeout
+
+When creating or modifying a test that uses threads (`std::thread`, `spawn`, `Pool`, etc.):
+
+- Wrap the test with a timeout to prevent hangs from deadlocks
+- Use `timeout` command when running: `timeout 60 cargo nextest run --test test_name`
+- Or use a runtime timeout inside the test itself
+
+Threaded tests can deadlock. A timeout ensures CI doesn't hang forever.

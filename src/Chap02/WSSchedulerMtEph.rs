@@ -1,5 +1,6 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Work-stealing scheduler with bounded parallelism.
+//! Supports binary join and N-way spawn/wait patterns.
 
 pub mod WSSchedulerMtEph {
     use vstd::prelude::*;
@@ -7,11 +8,43 @@ pub mod WSSchedulerMtEph {
     use crate::Concurrency::diverge;
     use std::sync::{Arc, Mutex, Condvar};
 
-verus! {
+    // Implementation detail - outside verus! block
+    enum PoolHandleInner<T> {
+        Spawned { handle: JoinHandlePlus<T>, pool: Pool },
+        Completed { result: Option<T> },
+    }
 
-    #[verifier::external_body]
+    // Pool struct definition outside verus for PoolHandleInner to reference
     pub struct Pool {
         budget: Arc<(Mutex<usize>, Condvar)>,
+    }
+    
+    impl Clone for Pool {
+        fn clone(&self) -> Self {
+            Pool { budget: Arc::clone(&self.budget) }
+        }
+    }
+    
+    /// Handle to a spawned task. Either holds a thread handle (spawned) or a result (help-first).
+    pub struct PoolHandle<T> {
+        inner: PoolHandleInner<T>,
+    }
+
+verus! {
+
+    // Verus sees Pool as external_body
+    #[verifier::external_type_specification]
+    #[verifier::external_body]
+    pub struct ExPool(Pool);
+
+    // Verus sees PoolHandle as external_body
+    #[verifier::external_type_specification]
+    #[verifier::external_body]
+    #[verifier::reject_recursive_types(T)]
+    pub struct ExPoolHandle<T>(PoolHandle<T>);
+
+    impl<T> PoolHandle<T> {
+        pub uninterp spec fn predicate(&self, ret: T) -> bool;
     }
 
     pub trait PoolTrait: Sized {
@@ -58,6 +91,23 @@ verus! {
             ensures
                 fa.ensures((), result.0),
                 fb.ensures((), result.1);
+
+        /// - Help-first spawn: spawns in new thread if budget available.
+        /// - If no budget, runs locally (help-first) and returns completed handle.
+        /// - Never blocks, never deadlocks.
+        fn spawn<T, F>(&self, f: F) -> (handle: PoolHandle<T>)
+        where
+            F: FnOnce() -> T + Send + 'static,
+            T: Send + 'static,
+            requires
+                f.requires(()),
+            ensures
+                forall|ret: T| #[trigger] handle.predicate(ret) ==> f.ensures((), ret);
+
+        /// - Wait for a spawned task to complete. Releases the budget slot.
+        fn wait<T: Send + 'static>(handle: PoolHandle<T>) -> (result: T)
+            ensures
+                handle.predicate(result);
     }
 
     impl PoolTrait for Pool {
@@ -134,12 +184,40 @@ verus! {
             };
             (a, b)
         }
-    }
 
-    impl Clone for Pool {
         #[verifier::external_body]
-        fn clone(&self) -> (result: Self) {
-            Pool { budget: Arc::clone(&self.budget) }
+        fn spawn<T, F>(&self, f: F) -> (handle: PoolHandle<T>)
+        where
+            F: FnOnce() -> T + Send + 'static,
+            T: Send + 'static,
+        {
+            if self.try_acquire() {
+                // Got a slot - spawn in new thread
+                let inner_handle: JoinHandlePlus<T> = spawn_plus(f);
+                PoolHandle { inner: PoolHandleInner::Spawned { handle: inner_handle, pool: self.clone() } }
+            } else {
+                // No slot - help-first: run locally, return completed handle
+                let result = f();
+                PoolHandle { inner: PoolHandleInner::Completed { result: Some(result) } }
+            }
+        }
+
+        #[verifier::external_body]
+        fn wait<T: Send + 'static>(handle: PoolHandle<T>) -> (result: T)
+        {
+            match handle.inner {
+                PoolHandleInner::Spawned { handle: h, pool } => {
+                    let result = match h.join() {
+                        Ok(val) => val,
+                        Err(_) => panic!("Thread panicked"),
+                    };
+                    pool.release();  // Release budget slot
+                    result
+                }
+                PoolHandleInner::Completed { result } => {
+                    result.expect("PoolHandle already consumed")
+                }
+            }
         }
     }
 
