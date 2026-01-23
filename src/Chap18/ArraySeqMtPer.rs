@@ -1,6 +1,6 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 18 algorithms for ArraySeqMtPer multithreaded persistent. Verusified.
-//! Uses work-stealing Pool for parallel operations (map_par, reduce_par).
+//! Uses global work-stealing pool for parallel operations (map_par, reduce_par).
 
 pub mod ArraySeqMtPer {
 
@@ -10,8 +10,8 @@ pub mod ArraySeqMtPer {
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{Pool, PoolTrait};
-    use crate::vstdplus::clone_plus::clone_plus::{ClonePlus, clone_fn, clone_fn2, clone_pred};
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::join;
+    use crate::vstdplus::clone_plus::clone_plus::{clone_fn, clone_fn2, clone_pred};
 
     verus! {
 
@@ -206,7 +206,6 @@ pub mod ArraySeqMtPer {
         }
 
         pub fn map_par<U: Clone + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
-            pool: &Pool,
             a: &ArraySeqMtPerS<T>,
             f: F,
         ) -> (result: ArraySeqMtPerS<U>)
@@ -229,27 +228,23 @@ pub mod ArraySeqMtPer {
                 let f1 = clone_fn(&f);
                 let f2 = f;
                 proof {
-                    // Prove f1.requires on left_seq elements
                     assert forall|i: int| 0 <= i < left_seq.seq@.len() implies #[trigger] f1.requires((&left_seq.seq@[i],)) by {
                         assert(cloned(a.seq@[0 + i], left_seq.seq@[i]));
-                        assert(a.seq@[i] == left_seq.seq@[i]);  // from obeys_feq_clone
+                        assert(a.seq@[i] == left_seq.seq@[i]);
                     }
-                    // Prove f2.requires on right_seq elements
                     assert forall|i: int| 0 <= i < right_seq.seq@.len() implies #[trigger] f2.requires((&right_seq.seq@[i],)) by {
                         let orig_i = mid as int + i;
                         assert(cloned(a.seq@[mid as int + i], right_seq.seq@[i]));
-                        assert(a.seq@[orig_i] == right_seq.seq@[i]);  // from obeys_feq_clone
+                        assert(a.seq@[orig_i] == right_seq.seq@[i]);
                     }
                 }
-                let pool1 = pool.clone_plus();
-                let pool2 = pool.clone_plus();
 
                 let fa = move || -> (r: ArraySeqMtPerS<U>)
                     requires
                         forall|i: int| 0 <= i < left_seq.seq@.len() ==> #[trigger] f1.requires((&left_seq.seq@[i],)),
                     ensures r.seq@.len() == left_seq.seq@.len(),
                 {
-                    Self::map_par(&pool1, &left_seq, f1)
+                    Self::map_par(&left_seq, f1)
                 };
 
                 let fb = move || -> (r: ArraySeqMtPerS<U>)
@@ -257,10 +252,10 @@ pub mod ArraySeqMtPer {
                         forall|i: int| 0 <= i < right_seq.seq@.len() ==> #[trigger] f2.requires((&right_seq.seq@[i],)),
                     ensures r.seq@.len() == right_seq.seq@.len(),
                 {
-                    Self::map_par(&pool2, &right_seq, f2)
+                    Self::map_par(&right_seq, f2)
                 };
 
-                let (left, right) = pool.join(fa, fb);
+                let (left, right) = join(fa, fb);
                 ArraySeqMtPerS::<U>::append(&left, &right)
             }
         }
@@ -323,7 +318,6 @@ pub mod ArraySeqMtPer {
         }
 
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
-            pool: &Pool,
             a: &ArraySeqMtPerS<T>,
             pred: F,
         ) -> (result: ArraySeqMtPerS<T>)
@@ -360,24 +354,22 @@ pub mod ArraySeqMtPer {
                         assert(a.seq@[orig_i] == right_seq.seq@[i]);
                     }
                 }
-                let pool1 = pool.clone_plus();
-                let pool2 = pool.clone_plus();
 
                 let fa = move || -> (r: ArraySeqMtPerS<T>)
                     requires forall|i: int| 0 <= i < left_seq.seq@.len() ==> #[trigger] p1.requires((&left_seq.seq@[i],)),
                     ensures r.seq@.len() <= left_seq.seq@.len(),
                 {
-                    Self::filter_par(&pool1, &left_seq, p1)
+                    Self::filter_par(&left_seq, p1)
                 };
 
                 let fb = move || -> (r: ArraySeqMtPerS<T>)
                     requires forall|i: int| 0 <= i < right_seq.seq@.len() ==> #[trigger] p2.requires((&right_seq.seq@[i],)),
                     ensures r.seq@.len() <= right_seq.seq@.len(),
                 {
-                    Self::filter_par(&pool2, &right_seq, p2)
+                    Self::filter_par(&right_seq, p2)
                 };
 
-                let (left, right) = pool.join(fa, fb);
+                let (left, right) = join(fa, fb);
                 Self::append(&left, &right)
             }
         }
@@ -448,7 +440,6 @@ pub mod ArraySeqMtPer {
         }
 
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
-            pool: &Pool,
             a: &ArraySeqMtPerS<T>,
             f: F,
             id: T,
@@ -468,18 +459,15 @@ pub mod ArraySeqMtPer {
                 let right_seq = a.subseq_copy(mid, len - mid);
                 let f1 = clone_fn2(&f);
                 let f2 = clone_fn2(&f);
-                // clone_fn2 preserves requires: forall|x, y| f.requires((x,y)) == f1.requires((x,y))
                 let id1 = id.clone();
                 let id2 = id.clone();
-                let pool1 = pool.clone_plus();
-                let pool2 = pool.clone_plus();
 
                 let fa = move || -> (r: T)
                     requires
                         left_seq.seq@.len() > 0,
                         forall|x: &T, y: &T| #[trigger] f1.requires((x, y)),
                 {
-                    Self::reduce_par(&pool1, &left_seq, f1, id1)
+                    Self::reduce_par(&left_seq, f1, id1)
                 };
 
                 let fb = move || -> (r: T)
@@ -487,10 +475,10 @@ pub mod ArraySeqMtPer {
                         right_seq.seq@.len() > 0,
                         forall|x: &T, y: &T| #[trigger] f2.requires((x, y)),
                 {
-                    Self::reduce_par(&pool2, &right_seq, f2, id2)
+                    Self::reduce_par(&right_seq, f2, id2)
                 };
 
-                let (left, right) = pool.join(fa, fb);
+                let (left, right) = join(fa, fb);
                 f(&left, &right)
             }
         }

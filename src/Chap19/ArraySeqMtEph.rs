@@ -15,7 +15,7 @@ pub mod ArraySeqMtEph {
     use std::hash::Hash;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{Pool, PoolTrait};
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::join;
 
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::{SetStEph, SetStEphTrait, valid_key_type};

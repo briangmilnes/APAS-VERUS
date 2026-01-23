@@ -1,9 +1,9 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Parallel Fibonacci demonstrating Pool bounded parallelism.
+//! Parallel Fibonacci demonstrating bounded parallelism with global pool.
 
 pub mod FibonacciWSScheduler {
     use vstd::prelude::*;
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{Pool, PoolTrait};
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::join;
 
     #[cfg(verus_keep_ghost)]
     use vstd::arithmetic::power::pow;
@@ -78,7 +78,7 @@ verus! {
         }
     }
 
-    pub fn fib_pool(pool: &Pool, n: u64) -> (result: u64)
+    pub fn fib_par(n: u64) -> (result: u64)
         requires n <= 46,
         ensures result == spec_fib(n as nat),
         decreases n,
@@ -98,7 +98,7 @@ verus! {
                 ensures r == spec_fib((n - 2) as nat),
             { fib_seq(n - 2) };
 
-            let (a, b) = pool.join(f1, f2);
+            let (a, b) = join(f1, f2);
             proof { lemma_fib_sum_fits_u64(n as nat); }
             a + b
         }

@@ -8,7 +8,7 @@ pub mod SetMtEph {
 
     use vstd::prelude::*;
     use crate::Concurrency::diverge;
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{Pool, TaskState, PoolTrait};
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{spawn, wait, TaskState};
 
 verus! {
 
@@ -500,10 +500,7 @@ verus! {
             let ghost s1_view = self@;
             let ghost s2_view = s2@;
             
-            // Create pool with budget = number of CPUs (or reasonable default)
-            let pool = Pool::new(8);
-            
-            // Phase 1: Spawn one task per element in s1 using pool
+            // Phase 1: Spawn one task per element in s1
             let mut it = self.iter();
             let ghost it_seq = it@.1;
             let mut handles: Vec<TaskState<SetMtEph<Pair<T, U>>>> = Vec::new();
@@ -539,7 +536,7 @@ verus! {
                             lemma_cloned_view_eq(*a, a_clone);
                         }
                         
-                        let handle = pool.spawn(
+                        let handle = spawn(
                             (move || -> (r: SetMtEph<Pair<T, U>>)
                                 requires
                                     valid_key_type::<T>(),
@@ -594,7 +591,7 @@ verus! {
                 let ghost a_view = spawned_views[idx as int];
                 let handle: TaskState<SetMtEph<Pair<T, U>>> = handles.pop().unwrap();
                 
-                let thread_result: SetMtEph<Pair<T, U>> = Pool::wait(handle);
+                let thread_result: SetMtEph<Pair<T, U>> = wait(handle);
                 
                 proof {
                     // thread_result satisfies the closure's ensures:

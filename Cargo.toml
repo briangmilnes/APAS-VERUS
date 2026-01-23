@@ -91,9 +91,6 @@ path = "tests/Chap02/test_fibonacci_scheduler.rs"
 name = "test_work_stealing_scheduler"
 path = "tests/Chap02/test_work_stealing_scheduler.rs"
 
-[[test]]
-name = "test_ws_scheduler_limit"
-path = "tests/Chap02/test_ws_scheduler_limit.rs"
 
 [[test]]
 name = "test_exercise12_1"

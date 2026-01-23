@@ -3,14 +3,14 @@
 
 pub mod ParaPairs {
     use vstd::prelude::*;
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{default_pool, PoolTrait};
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::join;
 
     verus! {
 
     use crate::Types::Types::Pair;
 
     /// - Verified parallel pair with closure spec propagation using the global pool.
-    /// - Uses help-first strategy: spawns in parallel if budget available, otherwise sequential.
+    /// - Uses help-first strategy: spawns in parallel if capacity available, otherwise sequential.
     /// - Call set_parallelism() before first use to configure thread count.
     pub fn para_pair<A, B, F1, F2>(f1: F1, f2: F2) -> (result: Pair<A, B>)
         where
@@ -25,8 +25,7 @@ pub mod ParaPairs {
             f1.ensures((), result.0),
             f2.ensures((), result.1),
     {
-        let pool = default_pool();
-        let (a, b) = pool.join(f1, f2);
+        let (a, b) = join(f1, f2);
         Pair(a, b)
     }
 
@@ -48,8 +47,7 @@ pub mod ParaPairs {
             f2.ensures((), result.1),
             result.0@.disjoint(result.1@),
     {
-        let pool = default_pool();
-        let (a, b) = pool.join(f1, f2);
+        let (a, b) = join(f1, f2);
         Pair(a, b)
     }
 

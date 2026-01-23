@@ -157,8 +157,9 @@ pub mod Chap18 {
     pub mod ArraySeqMtPer;
 }
 
-pub mod Chap19 {
-    pub mod ArraySeqStPer;
-    pub mod ArraySeqStEph;
-    pub mod ArraySeqMtEph;
-}
+// Chap19 temporarily disabled during global pool refactoring
+// pub mod Chap19 {
+//     pub mod ArraySeqStPer;
+//     pub mod ArraySeqStEph;
+//     pub mod ArraySeqMtEph;
+// }

@@ -1,7 +1,6 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
-use apas_verus::Chap02::FibonacciWSScheduler::FibonacciWSScheduler::{fib_seq, fib_pool};
-use apas_verus::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{Pool, PoolTrait};
+use apas_verus::Chap02::FibonacciWSScheduler::FibonacciWSScheduler::{fib_seq, fib_par};
 
 fn expected_fib(n: u64) -> u64 {
     match n {
@@ -22,16 +21,14 @@ fn test_fib_seq() {
 }
 
 #[test]
-fn test_fib_pool() {
-    let pool = Pool::new(6);
+fn test_fib_par() {
     for n in 0..=20 {
-        assert_eq!(fib_pool(&pool, n), expected_fib(n));
+        assert_eq!(fib_par(n), expected_fib(n));
     }
 }
 
 #[test]
-fn test_fib_pool_larger() {
-    let pool = Pool::new(6);
-    assert_eq!(fib_pool(&pool, 25), expected_fib(25));
-    assert_eq!(fib_pool(&pool, 30), expected_fib(30));
+fn test_fib_par_larger() {
+    assert_eq!(fib_par(25), expected_fib(25));
+    assert_eq!(fib_par(30), expected_fib(30));
 }

@@ -1,6 +1,6 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 18 algorithms for ArraySeqMtEph multithreaded ephemeral. Verusified.
-//! Uses work-stealing Pool for parallel operations (map_par, reduce_par, filter_par).
+//! Uses global work-stealing pool for parallel operations (map_par, reduce_par, filter_par).
 
 // Verus requires parentheses around closures with ensures clauses in function arguments
 #[allow(unused_parens)]
@@ -14,9 +14,9 @@ pub mod ArraySeqMtEph {
     #[cfg(verus_keep_ghost)]
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{Pool, PoolTrait};
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::join;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::clone_plus::clone_plus::{ClonePlus, clone_fn, clone_fn2, clone_pred};
+    use crate::vstdplus::clone_plus::clone_plus::{clone_fn, clone_fn2, clone_pred};
 
     #[cfg(verus_keep_ghost)]
     verus! {
@@ -401,7 +401,6 @@ pub mod ArraySeqMtEph {
         }
 
         pub fn map_par<U: Clone + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
-            pool: &Pool,
             a: &ArraySeqMtEphS<T>,
             f: F,
         ) -> (result: ArraySeqMtEphS<U>)
@@ -424,8 +423,6 @@ pub mod ArraySeqMtEph {
                 let mid = len / 2;
                 let left_seq = a.subseq_copy(0, mid);
                 let right_seq = a.subseq_copy(mid, len - mid);
-                let pool1 = pool.clone_plus();
-                let pool2 = pool.clone_plus();
                 let f1 = clone_fn(&f);
                 let f2 = f;
                 proof {
@@ -441,20 +438,19 @@ pub mod ArraySeqMtEph {
                 }
                 let left_len = Ghost(left_seq.seq@.len());
                 let right_len = Ghost(right_seq.seq@.len());
-                let (left, right) = pool.join(
+                let (left, right) = join(
                     (move || -> (r: ArraySeqMtEphS<U>)
                         ensures r.seq@.len() == left_len@
-                    { Self::map_par(&pool1, &left_seq, f1) }),
+                    { Self::map_par(&left_seq, f1) }),
                     (move || -> (r: ArraySeqMtEphS<U>)
                         ensures r.seq@.len() == right_len@
-                    { Self::map_par(&pool2, &right_seq, f2) }),
+                    { Self::map_par(&right_seq, f2) }),
                 );
                 ArraySeqMtEphS::<U>::append(&left, &right)
             }
         }
 
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
-            pool: &Pool,
             a: &ArraySeqMtEphS<T>,
             pred: F,
         ) -> (result: ArraySeqMtEphS<T>)
@@ -481,8 +477,6 @@ pub mod ArraySeqMtEph {
                 let mid = len / 2;
                 let left_seq = a.subseq_copy(0, mid);
                 let right_seq = a.subseq_copy(mid, len - mid);
-                let pool1 = pool.clone_plus();
-                let pool2 = pool.clone_plus();
                 let p1 = clone_pred(&pred);
                 let p2 = pred;
                 proof {
@@ -498,20 +492,19 @@ pub mod ArraySeqMtEph {
                 }
                 let left_len = Ghost(left_seq.seq@.len());
                 let right_len = Ghost(right_seq.seq@.len());
-                let (left, right) = pool.join(
+                let (left, right) = join(
                     (move || -> (r: ArraySeqMtEphS<T>)
                         ensures r.seq@.len() <= left_len@
-                    { Self::filter_par(&pool1, &left_seq, p1) }),
+                    { Self::filter_par(&left_seq, p1) }),
                     (move || -> (r: ArraySeqMtEphS<T>)
                         ensures r.seq@.len() <= right_len@
-                    { Self::filter_par(&pool2, &right_seq, p2) }),
+                    { Self::filter_par(&right_seq, p2) }),
                 );
                 Self::append(&left, &right)
             }
         }
 
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
-            pool: &Pool,
             a: &ArraySeqMtEphS<T>,
             f: F,
             id: T,
@@ -529,16 +522,13 @@ pub mod ArraySeqMtEph {
                 let mid = len / 2;
                 let left_seq = a.subseq_copy(0, mid);
                 let right_seq = a.subseq_copy(mid, len - mid);
-                let pool1 = pool.clone_plus();
-                let pool2 = pool.clone_plus();
                 let f1 = clone_fn2(&f);
                 let f2 = clone_fn2(&f);
-                // clone_fn2 preserves requires: forall|x, y| f.requires((x,y)) == f1.requires((x,y))
                 let id1 = id.clone();
                 let id2 = id.clone();
-                let (left, right) = pool.join(
-                    move || Self::reduce_par(&pool1, &left_seq, f1, id1),
-                    move || Self::reduce_par(&pool2, &right_seq, f2, id2),
+                let (left, right) = join(
+                    move || Self::reduce_par(&left_seq, f1, id1),
+                    move || Self::reduce_par(&right_seq, f2, id2),
                 );
                 f(&left, &right)
             }
@@ -594,7 +584,7 @@ pub mod ArraySeqMtEph {
 
     // Non-Verus stub
     #[cfg(not(verus_keep_ghost))]
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{Pool, PoolTrait};
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::join;
 
     #[cfg(not(verus_keep_ghost))]
     #[derive(Clone, PartialEq, Eq, Debug)]
@@ -672,7 +662,7 @@ pub mod ArraySeqMtEph {
         }
         pub fn iter_std(&self) -> Iter<'_, T> { self.seq.iter() }
         pub fn map_par<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
-            pool: &Pool, a: &Self, f: F,
+            a: &Self, f: F,
         ) -> ArraySeqMtEphS<U> where T: Clone + Send + Sync + 'static {
             let len = a.seq.len();
             if len == 0 { ArraySeqMtEphS { seq: Vec::new() } }
@@ -682,16 +672,15 @@ pub mod ArraySeqMtEph {
                 let left_seq = a.subseq_copy(0, mid);
                 let right_seq = a.subseq_copy(mid, len - mid);
                 let (f1, f2) = (f.clone(), f.clone());
-                let (pool1, pool2) = (pool.clone(), pool.clone());
-                let (left, right) = pool.join(
-                    move || Self::map_par(&pool1, &left_seq, f1),
-                    move || Self::map_par(&pool2, &right_seq, f2),
+                let (left, right) = join(
+                    move || Self::map_par(&left_seq, f1),
+                    move || Self::map_par(&right_seq, f2),
                 );
                 ArraySeqMtEphS::<U>::append(&left, &right)
             }
         }
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
-            pool: &Pool, a: &Self, pred: F,
+            a: &Self, pred: F,
         ) -> Self where T: Clone + Send + Sync + 'static {
             let len = a.seq.len();
             if len == 0 { ArraySeqMtEphS { seq: Vec::new() } }
@@ -703,16 +692,15 @@ pub mod ArraySeqMtEph {
                 let left_seq = a.subseq_copy(0, mid);
                 let right_seq = a.subseq_copy(mid, len - mid);
                 let (p1, p2) = (pred.clone(), pred.clone());
-                let (pool1, pool2) = (pool.clone(), pool.clone());
-                let (left, right) = pool.join(
-                    move || Self::filter_par(&pool1, &left_seq, p1),
-                    move || Self::filter_par(&pool2, &right_seq, p2),
+                let (left, right) = join(
+                    move || Self::filter_par(&left_seq, p1),
+                    move || Self::filter_par(&right_seq, p2),
                 );
                 Self::append(&left, &right)
             }
         }
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
-            pool: &Pool, a: &Self, f: F, id: T,
+            a: &Self, f: F, id: T,
         ) -> T where T: Clone + Send + Sync + 'static {
             let len = a.seq.len();
             if len == 0 { id }
@@ -723,10 +711,9 @@ pub mod ArraySeqMtEph {
                 let right_seq = a.subseq_copy(mid, len - mid);
                 let (f1, f2) = (f.clone(), f.clone());
                 let (id1, id2) = (id.clone(), id.clone());
-                let (pool1, pool2) = (pool.clone(), pool.clone());
-                let (left, right) = pool.join(
-                    move || Self::reduce_par(&pool1, &left_seq, f1, id1),
-                    move || Self::reduce_par(&pool2, &right_seq, f2, id2),
+                let (left, right) = join(
+                    move || Self::reduce_par(&left_seq, f1, id1),
+                    move || Self::reduce_par(&right_seq, f2, id2),
                 );
                 f(&left, &right)
             }
