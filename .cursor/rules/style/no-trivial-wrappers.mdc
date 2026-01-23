@@ -1,0 +1,34 @@
+# No Trivial Wrappers
+
+Do not create wrapper functions that merely forward to another function without adding value.
+
+## Bad Example
+
+```rust
+fn n_plus(&self, v: &V) -> SetStEph<V> {
+    parallel_n_plus(self.A.to_seq(), v.clone_plus())
+}
+
+fn n_minus(&self, v: &V) -> SetStEph<V> {
+    parallel_n_minus(self.A.to_seq(), v.clone_plus())
+}
+```
+
+If `parallel_n_plus` can be called directly, the wrapper adds nothing.
+
+## When Wrappers Are Justified
+
+Wrappers are acceptable when they:
+
+1. **Add a spec/contract** that the underlying function lacks
+2. **Adapt the interface** (different parameter order, types, or defaults)
+3. **Hide implementation details** (the inner function is private/internal)
+4. **Provide trait conformance** (implementing a trait method)
+
+## Rule
+
+Before creating `fn2` that calls `fn1`:
+- Can callers just call `fn1` directly?
+- Does `fn2` add specs, adapt types, or satisfy a trait?
+
+If `fn2` adds nothing, eliminate it.

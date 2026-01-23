@@ -1,0 +1,26 @@
+---
+description: Use 'may' vs 'can' correctly in comments and documentation
+globs: *.rs,*.md
+alwaysApply: false
+---
+
+# May vs Can
+
+- **can** = ability (is it physically/technically possible?)
+- **may** = permission or option (is it allowed/permitted?)
+
+## Examples
+
+| Wrong | Right | Why |
+|-------|-------|-----|
+| User can set this before use | User may set this before use | It's an option, not an ability question |
+| You may call `len()` on a `Vec` | You can call `len()` on a `Vec` | It's about capability |
+| This can be `None` | This may be `None` | It's a permitted state |
+| Threads can be reused | Threads may be reused | It's about whether reuse is allowed |
+
+## Quick Test
+
+Ask: "Is this about whether something is *possible* or whether something is *permitted/optional*?"
+
+- Possible → can
+- Permitted/optional → may

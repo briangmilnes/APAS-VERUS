@@ -1,0 +1,13 @@
+# Show Full Command Output
+
+## Rule
+
+When running terminal commands (especially verus verification and cargo test):
+
+- Always show the complete output in the response text
+- Do not just summarize "it passed" or "verification succeeded"
+- Paste the full verbatim output so the user can read it in the chat
+
+## Rationale
+
+The user cannot easily read terminal popups due to vision limitations. All command output must be visible in the response text.

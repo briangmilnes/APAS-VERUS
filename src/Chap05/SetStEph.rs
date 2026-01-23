@@ -194,8 +194,8 @@ verus! {
     }
 
 
-    // Iterator wrapper with CLOSED spec view for encapsulation
-    // inner is private; closed view() can access it but external code cannot see HOW
+    // Iterator wrapper with CLOSED spec view for encapsulation:
+    // inner is private; closed view() can access it but external code cannot see it.
     #[verifier::reject_recursive_types(T)]
     pub struct SetStEphIter<'a, T: StT + Hash> {
         inner: std::collections::hash_set::Iter<'a, T>,  // PRIVATE
@@ -216,7 +216,9 @@ verus! {
     impl<'a, T: StT + Hash> std::iter::Iterator for SetStEphIter<'a, T> {
         type Item = &'a T;
 
-        // external_body because we delegate to inner; spec is abstract
+        // We can't fully prove next the way things are setup in Verus due to
+        // Rust's 70 functions on iterators. For a fully proven version see
+        // src/experiments/simple_set_iter.rs:  fn assumption_free_next.
         #[verifier::external_body]
         fn next(&mut self) -> (next: Option<&'a T>)
             ensures ({

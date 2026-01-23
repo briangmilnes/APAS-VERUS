@@ -76,7 +76,7 @@ verus! {
         pub mapping: RelationStEph<A, B>,
     }
 
-    // Iterator wrapper to hide RelationStEphIter<X, Y>
+    // Iterator wrapper to hide RelationStEphIter<X, Y>.
     #[verifier::reject_recursive_types(X)]
     #[verifier::reject_recursive_types(Y)]
     pub struct MappingStEphIter<'a, X: StT + Hash, Y: StT + Hash> {
@@ -113,7 +113,7 @@ verus! {
         }
     }
 
-    // Ghost iterator for ForLoopGhostIterator support (for-iter patterns)
+    // Ghost iterator for ForLoopGhostIterator support (for-iter patterns).
     #[verifier::reject_recursive_types(X)]
     #[verifier::reject_recursive_types(Y)]
     pub struct MappingStEphGhostIterator<'a, X: StT + Hash, Y: StT + Hash> {
@@ -413,7 +413,7 @@ verus! {
         fn empty() -> MappingStEph<X, Y> {
             let result = MappingStEph { mapping: RelationStEph::empty() };
             proof { 
-                assert(result@.dom() =~= Set::empty());
+               assert(result@.dom() =~= Set::empty());
             }
             result
         }
@@ -422,8 +422,17 @@ verus! {
             let pairs = SetStEph::from_vec(v);
             let result = MappingStEph { mapping: RelationStEph::from_set(pairs) };
             proof {
-                // The domain is a subset of the first projection of the relation, which is finite
-                assume(result@.dom().finite());
+                // The domain of the mapping view equals the first projection of the relation
+                assert(result@.dom() =~= result.mapping@.map(|p: (X::V, Y::V)| p.0)) by {
+                    assert forall |x: X::V| result@.dom().contains(x) <==> 
+                        result.mapping@.map(|p: (X::V, Y::V)| p.0).contains(x) by {
+                        // LHS: exists |y| result.mapping@.contains((x, y))
+                        // RHS: exists |p| result.mapping@.contains(p) && p.0 == x
+                        // These are equivalent by choosing p = (x, y) or y = p.1
+                    }
+                }
+                // Since the relation is finite, and map preserves finiteness
+                result.mapping@.lemma_map_finite(|p: (X::V, Y::V)| p.0);
             }
             result
         }
@@ -431,8 +440,17 @@ verus! {
         fn from_relation(r: &RelationStEph<X, Y>) -> MappingStEph<X, Y> {
             let result = MappingStEph { mapping: r.clone() };
             proof {
-                // The domain is a subset of the first projection of the relation, which is finite
-                assume(result@.dom().finite());
+                // The domain of the mapping view equals the first projection of the relation
+                assert(result@.dom() =~= result.mapping@.map(|p: (X::V, Y::V)| p.0)) by {
+                    assert forall |x: X::V| result@.dom().contains(x) <==> 
+                        result.mapping@.map(|p: (X::V, Y::V)| p.0).contains(x) by {
+                        // LHS: exists |y| result.mapping@.contains((x, y))
+                        // RHS: exists |p| result.mapping@.contains(p) && p.0 == x
+                        // These are equivalent by choosing p = (x, y) or y = p.1
+                    }
+                }
+                // Since the relation is finite, and map preserves finiteness
+                result.mapping@.lemma_map_finite(|p: (X::V, Y::V)| p.0);
             }
             result
         }

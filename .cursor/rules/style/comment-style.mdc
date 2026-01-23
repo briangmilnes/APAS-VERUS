@@ -1,0 +1,38 @@
+# Comment Style
+
+Comments should follow these formatting rules:
+
+## Full Sentences Required
+
+These comment types must be full English sentences with correct punctuation (capital letter, ending period):
+
+| Type | Example |
+|------|---------|
+| `///` doc comments | `/// Returns the size of the set.` |
+| `//!` module docs | `//! This module implements ephemeral sets.` |
+| `//` on own line | `// The domain must be finite for this to work.` |
+
+## Fragments Allowed
+
+Inline comments after code may be sentence fragments:
+
+```rust
+let x = foo();  // temporary for the swap
+result.insert(a);  // already checked membership
+```
+
+## Exceptions
+
+Structured annotations don't need sentence form:
+
+```rust
+/// APAS: Work Θ(|v|), Span Θ(1)
+/// - requires: valid_key_type::<T>()
+/// - ensures: result@.finite()
+```
+
+## Summary
+
+- Own-line comments → full sentences
+- End-of-line comments → fragments OK
+- Structured metadata → special format OK

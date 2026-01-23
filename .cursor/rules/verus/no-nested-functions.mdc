@@ -1,0 +1,30 @@
+# No Nested Functions
+
+Due to Verus proof limitations, do not use nested functions (functions defined inside other functions).
+
+## Bad Example
+
+```rust
+fn n_plus(&self, v: &V) -> SetStEph<V> {
+    fn recursive_filter(arcs: Vec<Edge<V>>, v: V) -> SetStEph<V> {
+        // ...
+    }
+    recursive_filter(self.A.to_seq(), v.clone_plus())
+}
+```
+
+## Good Example
+
+```rust
+fn parallel_n_plus<V>(arcs: Vec<Edge<V>>, v: V) -> SetStEph<V> {
+    // recursive implementation
+}
+
+fn n_plus(&self, v: &V) -> SetStEph<V> {
+    parallel_n_plus(self.A.to_seq(), v.clone_plus())
+}
+```
+
+## Rule
+
+Keep helper functions at module level, placed immediately before the function that calls them.

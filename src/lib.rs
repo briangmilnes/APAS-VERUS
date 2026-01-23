@@ -45,6 +45,8 @@ pub mod experiments {
 //    pub mod vec_if;
 //    pub mod clone;
 //    pub mod proof_fn_in_trait;
+//    pub mod proven_partialeq;
+//    pub mod use_proven_partialeq;
 //    pub mod eq_rel;
 //    pub mod total_ord_gen;
 //    pub mod total_ord_gen_axioms;

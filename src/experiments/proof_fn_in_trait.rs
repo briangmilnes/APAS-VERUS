@@ -2,6 +2,7 @@
 //! Experiment: Can we put proof fn in a trait?
 //!
 //! GOAL: Test if Verus allows proof functions as trait methods
+//! RESULT: Yes.
 
 pub mod proof_fn_in_trait {
     use vstd::prelude::*;

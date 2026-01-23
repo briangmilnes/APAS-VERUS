@@ -159,15 +159,48 @@ pub mod DirGraphMtEph {
             ensures n == self.spec_n_plus(v@).len();
     }
 
-    /// Spec: filter arcs for out-neighbors of v
-    pub open spec fn spec_filter_n_plus<V: View>(arcs: Seq<(V::V, V::V)>, v: V::V) -> Set<V::V> {
-        Set::new(|w: V::V| exists |i: int| #![trigger arcs[i]] 0 <= i < arcs.len() && arcs[i].0 == v && arcs[i].1 == w)
+    // Spec: out-neighbors from a sequence of arcs
+    pub open spec fn spec_n_plus_from_arcs<V: View>(arcs: Seq<(V::V, V::V)>, v: V::V) -> Set<V::V> {
+        Set::new(|w: V::V| arcs.contains((v, w)))
     }
 
+    // Spec: in-neighbors from a sequence of arcs
+    pub open spec fn spec_n_minus_from_arcs<V: View>(arcs: Seq<(V::V, V::V)>, v: V::V) -> Set<V::V> {
+        Set::new(|u: V::V| arcs.contains((u, v)))
+    }
+
+    // Spec: out-neighbors of vertices from a sequence
+    pub open spec fn spec_n_plus_of_vertices_from_seq<V: StT + MtT + Hash + 'static>(
+        vertices: Seq<V>,
+        graph: DirGraphMtEph<V>,
+    ) -> Set<V::V> {
+        Set::new(|w: V::V| exists |i: int| #![trigger vertices[i]] 
+            0 <= i < vertices.len() && graph.spec_n_plus(vertices[i]@).contains(w))
+    }
+
+    // Spec: in-neighbors of vertices from a sequence
+    pub open spec fn spec_n_minus_of_vertices_from_seq<V: StT + MtT + Hash + 'static>(
+        vertices: Seq<V>,
+        graph: DirGraphMtEph<V>,
+    ) -> Set<V::V> {
+        Set::new(|w: V::V| exists |i: int| #![trigger vertices[i]] 
+            0 <= i < vertices.len() && graph.spec_n_minus(vertices[i]@).contains(w))
+    }
+
+    // Spec: all-neighbors of vertices from a sequence
+    pub open spec fn spec_ng_of_vertices_from_seq<V: StT + MtT + Hash + 'static>(
+        vertices: Seq<V>,
+        graph: DirGraphMtEph<V>,
+    ) -> Set<V::V> {
+        Set::new(|w: V::V| exists |i: int| #![trigger vertices[i]] 
+            0 <= i < vertices.len() && graph.spec_ng(vertices[i]@).contains(w))
+    }
+
+    // Parallel arc filtering for out-neighbors
     #[verifier::external_body]
     fn parallel_n_plus<V: StT + MtT + Hash + 'static>(arcs: Vec<Edge<V>>, v: V) -> (result: SetStEph<V>)
         requires valid_key_type::<V>()
-        ensures result@ == spec_filter_n_plus::<V>(arcs@.map(|i, e: Edge<V>| e@), v@)
+        ensures result@ == spec_n_plus_from_arcs::<V>(arcs@.map(|i: int, e: Edge<V>| e@), v@)
     {
         let n = arcs.len();
         if n == 0 { SetStEph::empty() }
@@ -194,8 +227,12 @@ pub mod DirGraphMtEph {
         }
     }
 
+    // Parallel arc filtering for in-neighbors
     #[verifier::external_body]
-    fn parallel_n_minus<V: StT + MtT + Hash + 'static>(arcs: Vec<Edge<V>>, v: V) -> (result: SetStEph<V>) {
+    fn parallel_n_minus<V: StT + MtT + Hash + 'static>(arcs: Vec<Edge<V>>, v: V) -> (result: SetStEph<V>)
+        requires valid_key_type::<V>()
+        ensures result@ == spec_n_minus_from_arcs::<V>(arcs@.map(|i: int, e: Edge<V>| e@), v@)
+    {
         let n = arcs.len();
         if n == 0 { SetStEph::empty() }
         else if n == 1 {
@@ -216,11 +253,15 @@ pub mod DirGraphMtEph {
         }
     }
 
+    // Parallel out-neighbors over a set of vertices
     #[verifier::external_body]
     fn parallel_n_plus_of_vertices<V: StT + MtT + Hash + 'static>(
         vertices: Vec<V>,
         graph: DirGraphMtEph<V>,
-    ) -> (result: SetStEph<V>) {
+    ) -> (result: SetStEph<V>)
+        requires valid_key_type_for_graph::<V>()
+        ensures result@ == spec_n_plus_of_vertices_from_seq(vertices@, graph)
+    {
         let n = vertices.len();
         if n == 0 { SetStEph::empty() }
         else if n == 1 { graph.n_plus(&vertices[0]) }
@@ -237,11 +278,15 @@ pub mod DirGraphMtEph {
         }
     }
 
+    // Parallel in-neighbors over a set of vertices
     #[verifier::external_body]
     fn parallel_n_minus_of_vertices<V: StT + MtT + Hash + 'static>(
         vertices: Vec<V>,
         graph: DirGraphMtEph<V>,
-    ) -> (result: SetStEph<V>) {
+    ) -> (result: SetStEph<V>)
+        requires valid_key_type_for_graph::<V>()
+        ensures result@ == spec_n_minus_of_vertices_from_seq(vertices@, graph)
+    {
         let n = vertices.len();
         if n == 0 { SetStEph::empty() }
         else if n == 1 { graph.n_minus(&vertices[0]) }
@@ -258,11 +303,15 @@ pub mod DirGraphMtEph {
         }
     }
 
+    // Parallel all-neighbors over a set of vertices
     #[verifier::external_body]
     fn parallel_ng_of_vertices<V: StT + MtT + Hash + 'static>(
         vertices: Vec<V>,
         graph: DirGraphMtEph<V>,
-    ) -> (result: SetStEph<V>) {
+    ) -> (result: SetStEph<V>)
+        requires valid_key_type_for_graph::<V>()
+        ensures result@ == spec_ng_of_vertices_from_seq(vertices@, graph)
+    {
         let n = vertices.len();
         if n == 0 { SetStEph::empty() }
         else if n == 1 { graph.ng(&vertices[0]) }
@@ -300,33 +349,38 @@ pub mod DirGraphMtEph {
             self.A.mem(&Edge(u.clone_plus(), v.clone_plus()))
         }
 
-        #[verifier::external_body]
         fn n_plus(&self, v: &V) -> SetStEph<V> {
-            parallel_n_plus(self.A.to_seq(), v.clone_plus())
+            let result = parallel_n_plus(self.A.to_seq(), v.clone_plus());
+            proof { assume(result@ == self.spec_n_plus(v@)); }
+            result
         }
 
-        #[verifier::external_body]
         fn n_minus(&self, v: &V) -> SetStEph<V> {
-            parallel_n_minus(self.A.to_seq(), v.clone_plus())
+            let result = parallel_n_minus(self.A.to_seq(), v.clone_plus());
+            proof { assume(result@ == self.spec_n_minus(v@)); }
+            result
         }
 
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
             self.n_plus(v).union(&self.n_minus(v))
         }
 
-        #[verifier::external_body]
         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> {
-            parallel_n_plus_of_vertices(u_set.to_seq(), self.clone())
+            let result = parallel_n_plus_of_vertices(u_set.to_seq(), self.clone());
+            proof { assume(result@ == self.spec_n_plus_of_vertices(u_set@)); }
+            result
         }
 
-        #[verifier::external_body]
         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> {
-            parallel_n_minus_of_vertices(u_set.to_seq(), self.clone())
+            let result = parallel_n_minus_of_vertices(u_set.to_seq(), self.clone());
+            proof { assume(result@ == self.spec_n_minus_of_vertices(u_set@)); }
+            result
         }
 
-        #[verifier::external_body]
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> {
-            parallel_ng_of_vertices(u_set.to_seq(), self.clone())
+            let result = parallel_ng_of_vertices(u_set.to_seq(), self.clone());
+            proof { assume(result@ == self.spec_ng_of_vertices(u_set@)); }
+            result
         }
 
         fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) { feq(&e.0, v) || feq(&e.1, v) }
@@ -338,14 +392,15 @@ pub mod DirGraphMtEph {
         fn degree(&self, v: &V) -> (n: N) { self.ng(v).size() }
     }
 
-    } // verus!
-
-    // Non-Verus impls
     impl<V: StT + MtT + Hash + 'static> Clone for DirGraphMtEph<V> {
-        fn clone(&self) -> Self {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
             DirGraphMtEph { V: self.V.clone(), A: self.A.clone() }
         }
     }
+
+    } // verus!
 
     impl<V: StT + MtT + Hash + 'static> Debug for DirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {

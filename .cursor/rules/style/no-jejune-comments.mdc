@@ -1,0 +1,39 @@
+# No Jejune Comments
+
+Do not add comments that merely restate what is already clear from the function's name, parameters, and types.
+
+## Bad Examples
+
+```rust
+/// Returns the size of the set.
+fn size(&self) -> N { ... }
+
+/// Checks if the element is in the set.
+fn contains(&self, elem: &T) -> bool { ... }
+
+/// Creates a new empty set.
+fn empty() -> Self { ... }
+```
+
+These comments add no value—the function names already convey the meaning.
+
+## Good Examples
+
+```rust
+/// APAS: Work Θ(|v|), Span Θ(1)
+fn from_vec(v: Vec<T>) -> Self { ... }
+
+/// Uses parallel divide-and-conquer; falls back to sequential for n < 1000.
+fn parallel_filter(items: Vec<T>, pred: F) -> Vec<T> { ... }
+
+/// The result excludes self-loops even if present in the input.
+fn neighbors(&self, v: &V) -> Set<V> { ... }
+```
+
+These comments tell you something non-obvious: complexity, implementation strategy, or edge case behavior.
+
+## Rule
+
+A comment should pass this test: "Does this tell me something I couldn't infer from the signature alone?"
+
+If not, omit it.

@@ -1,20 +1,17 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Parallel pair abstractions for fork-join parallelism.
+//! Parallel pair abstractions for fork-join parallelism using the global work-stealing pool.
 
 pub mod ParaPairs {
     use vstd::prelude::*;
-    use vstd::thread::*;
-    use crate::Concurrency::diverge;
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{default_pool, PoolTrait};
 
     verus! {
 
     use crate::Types::Types::Pair;
 
-    /// Verified parallel pair with closure spec propagation.
-    ///
-    /// The closure specs flow through spawn/join:
-    /// - spawn requires f.requires(())
-    /// - join ensures JoinHandle::predicate(ret) ==> f.ensures((), ret)
+    /// - Verified parallel pair with closure spec propagation using the global pool.
+    /// - Uses help-first strategy: spawns in parallel if budget available, otherwise sequential.
+    /// - Call set_parallelism() before first use to configure thread count.
     pub fn para_pair<A, B, F1, F2>(f1: F1, f2: F2) -> (result: Pair<A, B>)
         where
             F1: FnOnce() -> A + Send + 'static,
@@ -28,25 +25,14 @@ pub mod ParaPairs {
             f1.ensures((), result.0),
             f2.ensures((), result.1),
     {
-        let h1 = spawn(f1);
-        let h2 = spawn(f2);
-
-        let a = match h1.join() {
-            Result::Ok(v) => v,
-            _ => { assume(false); diverge() }
-        };
-        let b = match h2.join() {
-            Result::Ok(v) => v,
-            _ => { assume(false); diverge() }
-        };
-
+        let pool = default_pool();
+        let (a, b) = pool.join(f1, f2);
         Pair(a, b)
     }
 
-    /// Verified disjoint parallel pair for Set-viewing types.
-    ///
-    /// Works with any type where View = Set<T> (SetStEph, SetMtEph, etc).
-    /// Caller must prove closures produce disjoint outputs.
+    /// - Verified disjoint parallel pair for Set-viewing types.
+    /// - Works with any type where View = Set<T> (SetStEph, SetMtEph, etc).
+    /// - Caller must prove closures produce disjoint outputs.
     pub fn para_pair_disjoint<T, A, B, F1, F2>(f1: F1, f2: F2) -> (result: Pair<A, B>)
         where
             A: View<V = Set<T>> + Send + 'static,
@@ -62,25 +48,15 @@ pub mod ParaPairs {
             f2.ensures((), result.1),
             result.0@.disjoint(result.1@),
     {
-        let h1 = spawn(f1);
-        let h2 = spawn(f2);
-
-        let a = match h1.join() {
-            Result::Ok(v) => v,
-            _ => { assume(false); diverge() }
-        };
-        let b = match h2.join() {
-            Result::Ok(v) => v,
-            _ => { assume(false); diverge() }
-        };
-
+        let pool = default_pool();
+        let (a, b) = pool.join(f1, f2);
         Pair(a, b)
     }
 
     } // verus!
 }
 
-/// Verified ParaPair macro - calls para_pair function with spec propagation
+/// Verified ParaPair macro - calls para_pair function with spec propagation.
 #[macro_export]
 macro_rules! ParaPair {
     ( $f1:expr, $f2:expr ) => {
@@ -88,7 +64,7 @@ macro_rules! ParaPair {
     };
 }
 
-/// Verified disjoint ParaPair - calls para_pair_disjoint function
+/// Verified disjoint ParaPair - calls para_pair_disjoint function.
 #[macro_export]
 macro_rules! ParaPairDisjoint {
     ( $f1:expr, $f2:expr ) => {

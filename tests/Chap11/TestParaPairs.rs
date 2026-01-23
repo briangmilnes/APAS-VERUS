@@ -1,9 +1,16 @@
 // Copyright (c) 2025 Brian G. Milnes
-//! Tests for ParaPairs module - disjoint parallelism.
+//! Tests for ParaPairs module - work-stealing parallelism with global pool.
 
 use apas_verus::Types::Types::Pair;
 use apas_verus::ParaPair;
+use apas_verus::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::set_parallelism;
 use apas_verus::Chap11::FibonacciStEph::FibonacciStEph::fib;
+
+#[test]
+fn test_set_parallelism() {
+    // Set parallelism before pool initialization.
+    set_parallelism(4);
+}
 
 #[test]
 fn test_para_pair_simple() {
@@ -43,4 +50,21 @@ fn test_para_pair_different_types() {
     );
     assert_eq!(num, 42);
     assert_eq!(text, "answer");
+}
+
+#[test]
+fn test_para_pair_nested() {
+    // Test nested parallel pairs to exercise help-first strategy.
+    let Pair(ab, cd) = ParaPair!(
+        move || {
+            let Pair(a, b) = ParaPair!(move || 1, move || 2);
+            a + b
+        },
+        move || {
+            let Pair(c, d) = ParaPair!(move || 3, move || 4);
+            c + d
+        }
+    );
+    assert_eq!(ab, 3);
+    assert_eq!(cd, 7);
 }

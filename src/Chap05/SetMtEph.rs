@@ -8,7 +8,7 @@ pub mod SetMtEph {
 
     use vstd::prelude::*;
     use crate::Concurrency::diverge;
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{Pool, PoolHandle, PoolTrait};
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{Pool, TaskState, PoolTrait};
 
 verus! {
 
@@ -102,7 +102,7 @@ verus! {
         }
     }
 
-    // Ghost iterator for ForLoopGhostIterator support (for-iter patterns)
+    // Ghost iterator for ForLoopGhostIterator support (for-iter patterns).
     #[verifier::reject_recursive_types(T)]
     pub struct SetMtEphGhostIterator<'a, T: StT + Hash> {
         pub pos: int,
@@ -506,7 +506,7 @@ verus! {
             // Phase 1: Spawn one task per element in s1 using pool
             let mut it = self.iter();
             let ghost it_seq = it@.1;
-            let mut handles: Vec<PoolHandle<SetMtEph<Pair<T, U>>>> = Vec::new();
+            let mut handles: Vec<TaskState<SetMtEph<Pair<T, U>>>> = Vec::new();
             let ghost mut spawned_views: Seq<T::V> = Seq::empty();
             
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
@@ -592,7 +592,7 @@ verus! {
                 
                 let ghost idx = handles.len() - 1;
                 let ghost a_view = spawned_views[idx as int];
-                let handle: PoolHandle<SetMtEph<Pair<T, U>>> = handles.pop().unwrap();
+                let handle: TaskState<SetMtEph<Pair<T, U>>> = handles.pop().unwrap();
                 
                 let thread_result: SetMtEph<Pair<T, U>> = Pool::wait(handle);
                 
@@ -601,10 +601,11 @@ verus! {
                     // r@.finite() && forall av, bv: r@.contains((av, bv)) <==> (av == a_clone@ && s2_clone@.contains(bv))
                     // where a_clone@ == a_view and s2_clone@ == s2_view
                     assert(thread_result@.finite());
-                    // We need to assume the ensures since we can't directly access handle's predicate
+
+                    // We need to assume the ensures since we can't directly access handle's predicate.
                     assume(forall |av: T::V, bv: U::V| thread_result@.contains((av, bv)) <==> (av == a_view && s2_view.contains(bv)));
                     
-                    // Prove a_view not in joined_views
+                    // Prove a_view is not in the joined_views.
                     assert(!joined_views.contains(a_view)) by {
                         if joined_views.contains(a_view) {
                             // Then exists j in [idx+1, n) with spawned_views[j] == a_view
