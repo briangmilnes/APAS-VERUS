@@ -1,5 +1,4 @@
 // Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-
 //! Ephemeral Set built on `std::collections::HashSet` as wrapped by vstd and vstdplus.
 
 pub mod SetStEph {
@@ -203,7 +202,6 @@ verus! {
 
     impl<'a, T: StT + Hash> View for SetStEphIter<'a, T> {
         type V = (int, Seq<T>);
-        // CLOSED spec - body accesses private inner, but external code only sees the result type
         closed spec fn view(&self) -> (int, Seq<T>) { 
             self.inner@
         }
@@ -399,13 +397,12 @@ verus! {
 
         fn disjoint_union(&self, s2: &SetStEph<T>) -> (union: SetStEph<T>)
         {
-            // Pre-size to avoid rehashing - we know exact final size
             let capacity = self.size().saturating_add(s2.size());
             let mut union: SetStEph<T> = SetStEph { 
                 elements: HashSetWithViewPlus::with_capacity(capacity) 
             };
             
-            // Insert all elements from self
+            // Insert all elements from self.
             let it1 = self.iter();
             let ghost it1_seq = it1@.1;
             
@@ -420,7 +417,7 @@ verus! {
                 let _ = union.insert(x.clone_plus());
             }
             
-            // Insert all elements from s2 (guaranteed no duplicates due to disjointness)
+            // Insert all elements from s2 (guaranteed no duplicates due to disjointness).
             let it2 = s2.iter();
             let ghost it2_seq = it2@.1;
             let ghost s1_view = self@;
@@ -629,7 +626,7 @@ verus! {
         }
 
         fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> bool {
-            // First check if all parts are non-empty
+            // First, check if all parts are non-empty.
             if !Self::all_nonempty(parts) {
                 return false;
             }

@@ -196,14 +196,14 @@ pub mod DirGraphMtEph {
             0 <= i < vertices.len() && graph.spec_ng(vertices[i]@).contains(w))
     }
 
-    // Parallel arc filtering for out-neighbors
-    #[verifier::external_body]
+    /// Parallel arc filtering for out-neighbors.
     fn parallel_n_plus<V: StT + MtT + Hash + 'static>(arcs: Vec<Edge<V>>, v: V) -> (result: SetStEph<V>)
         requires valid_key_type::<V>()
         ensures result@ == spec_n_plus_from_arcs::<V>(arcs@.map(|i: int, e: Edge<V>| e@), v@)
+        decreases arcs.len()
     {
         let n = arcs.len();
-        if n == 0 { SetStEph::empty() }
+        let result = if n == 0 { SetStEph::empty() }
         else if n == 1 {
             let Edge(x, y) = &arcs[0];
             if feq(x, &v) {
@@ -224,17 +224,19 @@ pub mod DirGraphMtEph {
                 ParaPair!(move || parallel_n_plus(left_arcs, v_left),
                           move || parallel_n_plus(right_arcs, v_right));
             left_result.union(&right_result)
-        }
+        };
+        proof { assume(result@ == spec_n_plus_from_arcs::<V>(arcs@.map(|i: int, e: Edge<V>| e@), v@)); }
+        result
     }
 
-    // Parallel arc filtering for in-neighbors
-    #[verifier::external_body]
+    /// Parallel arc filtering for in-neighbors.
     fn parallel_n_minus<V: StT + MtT + Hash + 'static>(arcs: Vec<Edge<V>>, v: V) -> (result: SetStEph<V>)
         requires valid_key_type::<V>()
         ensures result@ == spec_n_minus_from_arcs::<V>(arcs@.map(|i: int, e: Edge<V>| e@), v@)
+        decreases arcs.len()
     {
         let n = arcs.len();
-        if n == 0 { SetStEph::empty() }
+        let result = if n == 0 { SetStEph::empty() }
         else if n == 1 {
             let Edge(x, y) = &arcs[0];
             if feq(y, &v) { SetStEph::singleton(x.clone_plus()) } 
@@ -250,20 +252,22 @@ pub mod DirGraphMtEph {
                 ParaPair!(move || parallel_n_minus(left_arcs, v_left),
                           move || parallel_n_minus(right_arcs, v_right));
             left_result.union(&right_result)
-        }
+        };
+        proof { assume(result@ == spec_n_minus_from_arcs::<V>(arcs@.map(|i: int, e: Edge<V>| e@), v@)); }
+        result
     }
 
-    // Parallel out-neighbors over a set of vertices
-    #[verifier::external_body]
+    /// Parallel out-neighbors over a set of vertices.
     fn parallel_n_plus_of_vertices<V: StT + MtT + Hash + 'static>(
         vertices: Vec<V>,
         graph: DirGraphMtEph<V>,
     ) -> (result: SetStEph<V>)
         requires valid_key_type_for_graph::<V>()
         ensures result@ == spec_n_plus_of_vertices_from_seq(vertices@, graph)
+        decreases vertices.len()
     {
         let n = vertices.len();
-        if n == 0 { SetStEph::empty() }
+        let result = if n == 0 { SetStEph::empty() }
         else if n == 1 { graph.n_plus(&vertices[0]) }
         else {
             let mid = n / 2;
@@ -275,20 +279,22 @@ pub mod DirGraphMtEph {
                 ParaPair!(move || parallel_n_plus_of_vertices(left_verts, graph_left),
                           move || parallel_n_plus_of_vertices(right_verts, graph_right));
             left_result.union(&right_result)
-        }
+        };
+        proof { assume(result@ == spec_n_plus_of_vertices_from_seq(vertices@, graph)); }
+        result
     }
 
-    // Parallel in-neighbors over a set of vertices
-    #[verifier::external_body]
+    /// Parallel in-neighbors over a set of vertices.
     fn parallel_n_minus_of_vertices<V: StT + MtT + Hash + 'static>(
         vertices: Vec<V>,
         graph: DirGraphMtEph<V>,
     ) -> (result: SetStEph<V>)
         requires valid_key_type_for_graph::<V>()
         ensures result@ == spec_n_minus_of_vertices_from_seq(vertices@, graph)
+        decreases vertices.len()
     {
         let n = vertices.len();
-        if n == 0 { SetStEph::empty() }
+        let result = if n == 0 { SetStEph::empty() }
         else if n == 1 { graph.n_minus(&vertices[0]) }
         else {
             let mid = n / 2;
@@ -300,20 +306,22 @@ pub mod DirGraphMtEph {
                 ParaPair!(move || parallel_n_minus_of_vertices(left_verts, graph_left),
                           move || parallel_n_minus_of_vertices(right_verts, graph_right));
             left_result.union(&right_result)
-        }
+        };
+        proof { assume(result@ == spec_n_minus_of_vertices_from_seq(vertices@, graph)); }
+        result
     }
 
-    // Parallel all-neighbors over a set of vertices
-    #[verifier::external_body]
+    /// Parallel all-neighbors over a set of vertices.
     fn parallel_ng_of_vertices<V: StT + MtT + Hash + 'static>(
         vertices: Vec<V>,
         graph: DirGraphMtEph<V>,
     ) -> (result: SetStEph<V>)
         requires valid_key_type_for_graph::<V>()
         ensures result@ == spec_ng_of_vertices_from_seq(vertices@, graph)
+        decreases vertices.len()
     {
         let n = vertices.len();
-        if n == 0 { SetStEph::empty() }
+        let result = if n == 0 { SetStEph::empty() }
         else if n == 1 { graph.ng(&vertices[0]) }
         else {
             let mid = n / 2;
@@ -325,7 +333,9 @@ pub mod DirGraphMtEph {
                 ParaPair!(move || parallel_ng_of_vertices(left_verts, graph_left),
                           move || parallel_ng_of_vertices(right_verts, graph_right));
             left_result.union(&right_result)
-        }
+        };
+        proof { assume(result@ == spec_ng_of_vertices_from_seq(vertices@, graph)); }
+        result
     }
 
     impl<V: StT + MtT + Hash + 'static> DirGraphMtEphTrait<V> for DirGraphMtEph<V> {
