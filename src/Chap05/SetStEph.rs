@@ -194,8 +194,8 @@ verus! {
     }
 
 
-    // Iterator wrapper with CLOSED spec view for encapsulation:
-    // inner is private; closed view() can access it but external code cannot see it.
+    /// - Iterator wrapper with CLOSED spec view for encapsulation.
+    /// - Inner is private; closed view() can access it but external code cannot see it.
     #[verifier::reject_recursive_types(T)]
     pub struct SetStEphIter<'a, T: StT + Hash> {
         inner: std::collections::hash_set::Iter<'a, T>,  // PRIVATE
@@ -242,7 +242,7 @@ verus! {
         }
     }
 
-    // Ghost iterator for ForLoopGhostIterator support (for-iter, for-borrow patterns)
+    /// Ghost iterator for ForLoopGhostIterator support (for-iter, for-borrow patterns).
     #[verifier::reject_recursive_types(T)]
     pub struct SetStEphGhostIterator<'a, T: StT + Hash> {
         pub pos: int,

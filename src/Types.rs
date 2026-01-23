@@ -13,7 +13,7 @@ pub mod Types {
     pub type N = usize;
 
     /// - Data Type 18.1 (Boolean) type used by APAS.
-    /// - Using Rust's built-in bool with normal true/false literals
+    /// - But we have converted to using Rust's built in base bool type.
     pub type B = bool;
 
     /// - Data Type 18.1 (Ordering) relationships used by APAS, using Rust's as it matches.

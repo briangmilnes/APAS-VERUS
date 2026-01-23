@@ -76,7 +76,7 @@ verus! {
         pub mapping: RelationStEph<A, B>,
     }
 
-    // Iterator wrapper to hide RelationStEphIter<X, Y>.
+    /// Iterator wrapper to hide RelationStEphIter<X, Y>.
     #[verifier::reject_recursive_types(X)]
     #[verifier::reject_recursive_types(Y)]
     pub struct MappingStEphIter<'a, X: StT + Hash, Y: StT + Hash> {
@@ -113,7 +113,7 @@ verus! {
         }
     }
 
-    // Ghost iterator for ForLoopGhostIterator support (for-iter patterns).
+    /// Ghost iterator for ForLoopGhostIterator support (for-iter patterns).
     #[verifier::reject_recursive_types(X)]
     #[verifier::reject_recursive_types(Y)]
     pub struct MappingStEphGhostIterator<'a, X: StT + Hash, Y: StT + Hash> {

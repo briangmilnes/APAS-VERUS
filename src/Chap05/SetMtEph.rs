@@ -62,7 +62,7 @@ verus! {
     #[verifier::reject_recursive_types(T)]
     pub struct SetMtEph<T: StT + Hash> { pub elements: HashSetWithViewPlus<T> }
 
-    // Iterator wrapper to hide std::collections::hash_set::Iter
+    /// Iterator wrapper to hide std::collections::hash_set::Iter.
     #[verifier::reject_recursive_types(T)]
     pub struct SetMtEphIter<'a, T: StT + Hash> {
         pub inner: std::collections::hash_set::Iter<'a, T>,
@@ -102,7 +102,7 @@ verus! {
         }
     }
 
-    // Ghost iterator for ForLoopGhostIterator support (for-iter patterns).
+    /// Ghost iterator for ForLoopGhostIterator support (for-iter patterns).
     #[verifier::reject_recursive_types(T)]
     pub struct SetMtEphGhostIterator<'a, T: StT + Hash> {
         pub pos: int,
