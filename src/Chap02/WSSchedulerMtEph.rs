@@ -3,7 +3,8 @@
 //!
 //! - Uses a help-first strategy: if no capacity available, runs sequentially.
 //! - Prevents deadlock from nested joins by not blocking when capacity exhausted.
-//! - Call `set_parallelism()` before first use to configure thread count.
+//! - Call `set_parallelism()` before first use to configure thread limit for a single
+//! parallel pool.
 
 pub mod WSSchedulerMtEph {
     use vstd::prelude::*;
@@ -12,6 +13,8 @@ pub mod WSSchedulerMtEph {
     use std::sync::{Mutex, Condvar, LazyLock, RwLock};
 
     /// - We track the number of available tasks and have a condition variable to signal when task finishes.
+    /// - This is outside of the verus! macro, and thus outside of proof, as we need a Condvar to signal
+    /// that at task has finished, and it Rust it must be protected by a Mutex.
     struct PoolState {
         available_tasks: Mutex<usize>,
         task_freed: Condvar,

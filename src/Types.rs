@@ -1,6 +1,5 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Common types used across the crate.
-//!
 
 pub mod Types {
 
@@ -26,16 +25,14 @@ pub mod Types {
 
     verus! {
 
-    // Graph view struct: vertices and arcs/edges as spec sets
-    // Replaces tuple (Set<V>, Set<(V,V)>) for better readability
+    /// Graph view struct: vertices and arcs/edges as spec sets.
     #[verifier::reject_recursive_types(V)]
     pub ghost struct GraphView<V> {
         pub V: Set<V>,
         pub A: Set<(V, V)>,
     }
 
-    // Labeled graph view struct: vertices and labeled arcs/edges
-    // Replaces tuple (Set<V>, Set<(V,V,L)>) for better readability
+    /// Labeled graph view struct: vertices and labeled arcs/edges.
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(L)]
     pub ghost struct LabGraphView<V, L> {
@@ -43,33 +40,30 @@ pub mod Types {
         pub A: Set<(V, V, L)>,
     }
 
-    // Triple wrapper for three-element tuples
+    /// Triple wrapper for three-element tuples.
     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Triple<A, B, C>(pub A, pub B, pub C);
 
-    // Quadruple wrapper for four-element tuples
+    /// Quadruple wrapper for four-element tuples.
     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Quadruple<A, B, C, D>(pub A, pub B, pub C, pub D);
 
-    // Key-value struct with named fields
+    /// Key-value struct with named fields.
     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct KeyVal<K, V> {
         pub key: K,
         pub val: V,
     }
 
-    // Type bounds shorthands
-    // StT: single-threaded friendly elements: Eq + Clone + Display + Debug + Sized + View (for Verus)
+    /// Single-threaded friendly elements: Eq + Clone + Display + Debug + Sized + View.
     pub trait StT: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
 
-    // PredSt: Single-threaded predicate function (boolean function)
-    // Common pattern: Fn(&T) -> B (for St/Eph code without Send/Sync)
+    /// Single-threaded predicate function (boolean function).
     pub trait PredSt<T>: Fn(&T) -> B {}
     impl<F, T> PredSt<T> for F where F: Fn(&T) -> B {}
 
-    // HashOrd: Type that can be hashed and ordered (for graph vertices)
-    // Common pattern: StT + MtT + Hash + Ord (appears in graph modules)
+    /// Type that can be hashed and ordered (for graph vertices).
     pub trait HashOrd: StT + Hash + Ord {}
     impl<T> HashOrd for T where T: StT + Hash + Ord {}
 
@@ -179,7 +173,7 @@ pub mod Types {
         axiom_Pair_feq,
     }
 
-    // For verus wrapped hash tables we need obeys_key_model and for our use of a full equality we need obeys_feq_full.
+    /// For Verus wrapped hash tables we need obeys_key_model and for full equality we need obeys_feq_full.
     pub open spec fn valid_key_type_Pair<K: Eq + View + Clone + Sized + Hash, V: Eq + View + Clone + Sized + Hash>() -> bool {
         &&& obeys_key_model::<K>() && obeys_key_model::<V>() && obeys_key_model::<Pair<K, V>>()
         &&& obeys_feq_full::<K>() && obeys_feq_full::<V>() && obeys_feq_full::<Pair<K, V>>()
@@ -189,7 +183,6 @@ pub mod Types {
         obeys_feq_full::<K>() && obeys_feq_full::<V>() && obeys_feq_full::<Pair<K, V>>()
     }
 
-    // Edge axioms and predicates
     pub open spec fn Edge_feq_trigger<V>() -> bool { true }
 
     pub broadcast proof fn axiom_Edge_feq<V: StT>()
@@ -207,7 +200,7 @@ pub mod Types {
         axiom_Edge_key_model,
     }
 
-    // For verus wrapped hash tables we need obeys_key_model and for our use of a full equality we need obeys_feq_full.
+    /// For Verus wrapped hash tables we need obeys_key_model and for full equality we need obeys_feq_full.
     pub open spec fn valid_key_type_Edge<V: StT + Hash>() -> bool {
         &&& obeys_key_model::<V>() && obeys_key_model::<Edge<V>>()
         &&& obeys_feq_full::<V>() && obeys_feq_full::<Edge<V>>()
@@ -217,7 +210,6 @@ pub mod Types {
         obeys_feq_full::<V>() && obeys_feq_full::<Edge<V>>()
     }
 
-    // LabEdge axioms
     pub open spec fn LabEdge_feq_trigger<V: StT + Hash, L: StT + Hash>() -> bool { true }
 
     pub broadcast proof fn axiom_LabEdge_feq<V: StT + Hash, L: StT + Hash>()
@@ -240,7 +232,6 @@ pub mod Types {
         &&& obeys_feq_full::<V>() && obeys_feq_full::<L>() && obeys_feq_full::<LabEdge<V, L>>()
     }
 
-    // WeightedEdge axioms
     pub open spec fn WeightedEdge_feq_trigger<V: StT + Hash, W: StT + Hash>() -> bool { true }
 
     pub broadcast proof fn axiom_WeightedEdge_feq<V: StT + Hash, W: StT + Hash>()
@@ -268,7 +259,6 @@ pub mod Types {
         &&& obeys_key_model::<Pair<V, W>>() && obeys_feq_full::<Pair<V, W>>()
     }
 
-    // WeightedLabEdge axioms
     pub open spec fn WeightedLabEdge_feq_trigger<V: StT + Hash, L: StT + Hash, W: StT + Hash>() -> bool { true }
 
     pub broadcast proof fn axiom_WeightedLabEdge_feq<V: StT + Hash, L: StT + Hash, W: StT + Hash>()
@@ -291,7 +281,6 @@ pub mod Types {
         &&& obeys_feq_full::<V>() && obeys_feq_full::<L>() && obeys_feq_full::<W>() && obeys_feq_full::<WeightedLabEdge<V, L, W>>()
     }
 
-    // Triple axioms
     pub open spec fn Triple_feq_trigger<A: StT + Hash, B: StT + Hash, C: StT + Hash>() -> bool { true }
 
     pub broadcast proof fn axiom_Triple_feq<A: StT + Hash, B: StT + Hash, C: StT + Hash>()
@@ -314,12 +303,12 @@ pub mod Types {
         &&& obeys_feq_full::<A>() && obeys_feq_full::<B>() && obeys_feq_full::<C>() && obeys_feq_full::<Triple<A, B, C>>()
     }
 
-    // Newtype wrapper for Pair iterator to implement ForLoopGhostIterator (orphan rule)
-    // Note: Currently unused due to Verus limitation - for loops don't recognize ForLoopGhostIteratorNew
-    // on newtype wrappers. Kept for future use when this is supported.
+    /// - Newtype wrapper for Pair iterator to implement ForLoopGhostIterator (orphan rule).
+    /// - Currently unused due to Verus limitation - for loops don't recognize ForLoopGhostIteratorNew
+    ///   on newtype wrappers. Kept for future use when this is supported.
     pub struct PairIter<'a, K: 'a, V: 'a>(pub std::collections::hash_set::Iter<'a, Pair<K, V>>);
 
-    // Ghost iterator for iterating over Pair<K, V> in hash sets
+    /// Ghost iterator for iterating over Pair<K, V> in hash sets.
     pub struct PairIterGhostIterator<'a, K, V> {
         pub pos: int,
         pub elements: Seq<Pair<K, V>>,
@@ -377,9 +366,7 @@ pub mod Types {
 
     } // verus!
 
-    // ArithmeticT: Type supporting arithmetic operations (for reductions)
-    // Common pattern: StT + Add<Output = T> + Default + Copy
-    // Must be outside verus! block because Default is not supported
+    /// Type supporting arithmetic operations (for reductions). Must be outside verus! block because Default is not supported.
     pub trait ArithmeticT: StT + Add<Output = Self> + Default + Copy {}
     impl<T> ArithmeticT for T where T: StT + Add<Output = T> + Default + Copy {}
 
