@@ -61,9 +61,14 @@ verus! {
 
     pub trait SetStEphTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
 
-        /// A set is finite
+        /// A set is finite.
         open spec fn spec_finite(&self) -> bool {
             self@.finite()
+        }
+
+        /// Spec version of size for use in decreases clauses.
+        open spec fn spec_size(&self) -> N {
+            self@.len() as N
         }
 
         /// APAS: Work Θ(|v|), Span Θ(1)
@@ -96,6 +101,7 @@ verus! {
             ensures s@.finite(), s@ == Set::empty().insert(x@);
 
         /// APAS: Work Θ(1), Span Θ(1)
+        #[verifier::when_used_as_spec(spec_size)]
         fn size(&self)                       -> N;
 
         /// APAS: Work Θ(1), Span Θ(1)
@@ -190,6 +196,22 @@ verus! {
                     )) &&
                     (forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0)
                 );
+
+        /// - Split a set into two parts: the first with n elements, the second with the rest.
+        /// - APAS: Work Θ(|self|), Span Θ(1)
+        fn split(&self, n: usize) -> (n_set_rest_set: (SetStEph<T>, SetStEph<T>))
+            requires 
+                valid_key_type::<T>(),
+                self@.len() >= n,
+            ensures 
+               ({let (n_set, rest_set) = n_set_rest_set;
+                  &&& n_set@.finite()
+                  &&& rest_set@.finite()
+                  &&& n_set@.disjoint(rest_set@)
+                  &&& n_set@.union(rest_set@) == self@
+                  &&& n_set@.len() == n
+                  &&& rest_set@.len() == self@.len() - n
+               });
     }
 
 
@@ -670,6 +692,52 @@ verus! {
                     }
                 }
             }
+        }
+
+        fn split(&self, n: usize) -> (n_set_rest_set: (SetStEph<T>, SetStEph<T>)) {
+            let mut first : SetStEph<T> = SetStEph::empty();
+            let mut second: SetStEph<T> = SetStEph::empty();
+            let it = self.iter();
+            let ghost iter_seq = it@.1;
+            let ghost self_view = self@;
+            
+            for x in iter: it
+                invariant
+                    valid_key_type::<T>(),
+                    iter.elements == iter_seq,
+                    iter_seq.map(|_i: int, k: T| k@).to_set() == self_view,
+                    iter_seq.no_duplicates(),
+                    first@.finite(),
+                    second@.finite(),
+                    first@.disjoint(second@),
+                    first@.union(second@) == iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set(),
+                    first@.len() == if iter.pos <= n { iter.pos } else { n as int },
+                    second@.len() == if iter.pos <= n { 0 } else { iter.pos - n },
+            {
+                proof { 
+                    lemma_take_one_more_extends_the_seq_set_with_view(iter_seq, iter.pos);
+                    assert(!iter_seq.take(iter.pos).contains(*x)) by {
+                        if iter_seq.take(iter.pos).contains(*x) {
+                            let j = choose |j: int| 0 <= j < iter.pos && iter_seq.take(iter.pos)[j] == *x;
+                        }
+                    };
+                    assert(!iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@)) by {
+                        if iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@) {
+                            let mapped = iter_seq.take(iter.pos).map(|_i: int, k: T| k@);
+                            let j = mapped.lemma_contains_to_index(x@);
+                        }
+                    };
+                }
+                
+                let x_clone = x.clone_plus();
+                if first.size() < n {
+                    first.insert(x_clone);
+                } else {
+                    second.insert(x_clone);
+                }
+            }
+            
+            (first, second)
         }
     }
 

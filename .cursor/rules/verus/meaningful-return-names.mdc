@@ -1,0 +1,31 @@
+# Meaningful Return Names
+
+In Verus function signatures, name return values meaningfully rather than using generic names like `result`.
+
+## Good
+
+```rust
+fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)
+fn size(&self) -> (count: N)
+fn empty() -> (graph: Self)
+fn mem(&self, x: &T) -> (contains: B)
+```
+
+## Bad
+
+```rust
+fn n_plus(&self, v: &V) -> (result: SetStEph<V>)
+fn size(&self) -> (result: N)
+fn empty() -> (result: Self)
+fn mem(&self, x: &T) -> (result: B)
+```
+
+## Exception
+
+Files in `src/experiments/` may use `result` - these are throwaway explorations.
+
+## Why
+
+1. Named returns appear in ensures clauses - meaningful names make specs readable
+2. `ensures out_neighbors@ == self.spec_n_plus(v@)` is clearer than `ensures result@ == ...`
+3. The name documents what the function returns without reading the body

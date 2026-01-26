@@ -1,0 +1,20 @@
+# Preserve Sketch Names
+
+When the user sketches a function signature, data type, or partial implementation and asks you to complete it:
+
+- **DO NOT** rename parameters, fields, return values, or type names
+- **DO NOT** "improve" naming without asking
+- **DO**: Use exactly the names the user provided
+
+If you believe a name should be changed, ask first:
+
+> "You named this `n_set_rest_set`. Should I keep that or would you prefer `parts`?"
+
+## Rationale
+
+The user chose those names deliberately. They may:
+- Match existing conventions in the codebase
+- Align with documentation or specifications
+- Have meaning the AI doesn't understand
+
+Changing names without permission breaks the user's mental model and wastes time reverting.
