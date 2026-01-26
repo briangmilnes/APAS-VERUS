@@ -55,18 +55,36 @@ pub mod DirGraphMtEph {
         pub open spec fn spec_arcs(&self) -> Set<(V::V, V::V)> { self.A@ }
     }
 
+    /// A directed graph view is well-formed if vertices and arcs are finite
+    /// and all arc endpoints are vertices.
+    pub open spec fn wf_dir_graph<V>(gv: GraphView<V>) -> bool {
+        &&& gv.V.finite()
+        &&& gv.A.finite()
+        &&& forall |u: V, w: V| 
+                #[trigger] gv.A.contains((u, w)) ==> 
+                    gv.V.contains(u) && gv.V.contains(w)
+    }
+
     pub trait DirGraphMtEphTrait<V: StT + MtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
-        open spec fn spec_finite(&self) -> bool { self@.V.finite() && self@.A.finite() }
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn empty() -> (g: Self)
             requires valid_key_type_for_graph::<V>()
-            ensures g@.V == Set::<<V as View>::V>::empty(), g@.A == Set::<(<V as View>::V, <V as View>::V)>::empty();
+            ensures 
+                wf_dir_graph(g@),
+                g@.V == Set::<<V as View>::V>::empty(), 
+                g@.A == Set::<(<V as View>::V, <V as View>::V)>::empty();
 
         /// APAS: Work Θ(|V| + |A|), Span Θ(1)
         fn from_sets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (g: Self)
-            requires valid_key_type_for_graph::<V>()
-            ensures g@.V == V@, g@.A == A@;
+            requires 
+                valid_key_type_for_graph::<V>(),
+                forall |u: V::V, w: V::V| 
+                    #[trigger] A@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),
+            ensures 
+                wf_dir_graph(g@),
+                g@.V == V@, 
+                g@.A == A@;
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
@@ -86,7 +104,11 @@ pub mod DirGraphMtEph {
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: B)
-            requires valid_key_type_for_graph::<V>()
+            requires 
+                wf_dir_graph(self@),
+                valid_key_type_for_graph::<V>(),
+                self@.V.contains(u@),
+                self@.V.contains(v@),
             ensures b == self@.A.contains((u@, v@));
 
         /// APAS: Work Θ(1), Span Θ(1)
@@ -94,7 +116,9 @@ pub mod DirGraphMtEph {
             requires valid_key_type_for_graph::<V>()
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
-        open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V> { 
+        open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V> 
+            recommends wf_dir_graph(self@), self@.V.contains(v)
+        { 
             Set::new(|w: V::V| self@.A.contains((v, w)))
         }
 
@@ -104,69 +128,127 @@ pub mod DirGraphMtEph {
 
         /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)
-            requires valid_key_type_for_graph::<V>()
-            ensures out_neighbors@ == self.spec_n_plus(v@);
+            requires 
+                wf_dir_graph(self@),
+                valid_key_type_for_graph::<V>(),
+                self@.V.contains(v@),
+            ensures 
+                out_neighbors@ == self.spec_n_plus(v@),
+                out_neighbors@ <= self@.V;
 
         /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
         fn out_degree(&self, v: &V) -> (n: N)
-            requires valid_key_type_for_graph::<V>()
+            requires 
+                wf_dir_graph(self@),
+                valid_key_type_for_graph::<V>(),
+                self@.V.contains(v@),
             ensures n == self.spec_n_plus(v@).len();
 
-        open spec fn spec_n_minus(&self, v: V::V) -> Set<V::V> { Set::new(|u: V::V| self@.A.contains((u, v))) }
+        open spec fn spec_n_minus(&self, v: V::V) -> Set<V::V> 
+            recommends wf_dir_graph(self@), self@.V.contains(v)
+        { 
+            Set::new(|u: V::V| self@.A.contains((u, v))) 
+        }
 
         /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)
-            requires valid_key_type_for_graph::<V>()
-            ensures in_neighbors@ == self.spec_n_minus(v@);
+            requires 
+                wf_dir_graph(self@),
+                valid_key_type_for_graph::<V>(),
+                self@.V.contains(v@),
+            ensures 
+                in_neighbors@ == self.spec_n_minus(v@),
+                in_neighbors@ <= self@.V;
 
         /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
         fn in_degree(&self, v: &V) -> (n: N)
-            requires valid_key_type_for_graph::<V>()
+            requires 
+                wf_dir_graph(self@),
+                valid_key_type_for_graph::<V>(),
+                self@.V.contains(v@),
             ensures n == self.spec_n_minus(v@).len();
 
-        open spec fn spec_ng(&self, v: V::V) -> Set<V::V> { self.spec_n_plus(v).union(self.spec_n_minus(v)) }
+        open spec fn spec_ng(&self, v: V::V) -> Set<V::V> 
+            recommends wf_dir_graph(self@), self@.V.contains(v)
+        { 
+            self.spec_n_plus(v).union(self.spec_n_minus(v)) 
+        }
 
         /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
-            requires valid_key_type_for_graph::<V>()
-            ensures neighbors@ == self.spec_ng(v@);
+            requires 
+                wf_dir_graph(self@),
+                valid_key_type_for_graph::<V>(),
+                self@.V.contains(v@),
+            ensures 
+                neighbors@ == self.spec_ng(v@),
+                neighbors@ <= self@.V;
 
-        open spec fn spec_degree(&self, v: V::V) -> nat { self.spec_ng(v).len() }
+        open spec fn spec_degree(&self, v: V::V) -> nat 
+            recommends wf_dir_graph(self@), self@.V.contains(v)
+        { 
+            self.spec_ng(v).len() 
+        }
 
         /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
         fn degree(&self, v: &V) -> (n: N)
-            requires valid_key_type_for_graph::<V>()
+            requires 
+                wf_dir_graph(self@),
+                valid_key_type_for_graph::<V>(),
+                self@.V.contains(v@),
             ensures n == self.spec_degree(v@);
 
-        open spec fn spec_n_plus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> {
+        open spec fn spec_n_plus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
+            recommends wf_dir_graph(self@), vertices <= self@.V
+        {
             Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_plus(u).contains(w))
         }
 
         /// APAS: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) - parallel
         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)
-            requires valid_key_type_for_graph::<V>()
-            ensures out_neighbors@ == self.spec_n_plus_of_vertices(u_set@);
+            requires 
+                wf_dir_graph(self@),
+                valid_key_type_for_graph::<V>(),
+                u_set@ <= self@.V,
+            ensures 
+                out_neighbors@ == self.spec_n_plus_of_vertices(u_set@),
+                out_neighbors@ <= self@.V;
 
-        open spec fn spec_n_minus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> {
+        open spec fn spec_n_minus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
+            recommends wf_dir_graph(self@), vertices <= self@.V
+        {
             Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_minus(u).contains(w))
         }
 
         /// APAS: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) - parallel
         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)
-            requires valid_key_type_for_graph::<V>()
-            ensures in_neighbors@ == self.spec_n_minus_of_vertices(u_set@);
+            requires 
+                wf_dir_graph(self@),
+                valid_key_type_for_graph::<V>(),
+                u_set@ <= self@.V,
+            ensures 
+                in_neighbors@ == self.spec_n_minus_of_vertices(u_set@),
+                in_neighbors@ <= self@.V;
 
-        open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> {
+        open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
+            recommends wf_dir_graph(self@), vertices <= self@.V
+        {
             Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
         }
 
         /// APAS: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) - parallel
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)
-            requires valid_key_type_for_graph::<V>()
-            ensures neighbors@ == self.spec_ng_of_vertices(u_set@);
+            requires 
+                wf_dir_graph(self@),
+                valid_key_type_for_graph::<V>(),
+                u_set@ <= self@.V,
+            ensures 
+                neighbors@ == self.spec_ng_of_vertices(u_set@),
+                neighbors@ <= self@.V;
     }
 
     /// Parallel arc filtering for out-neighbors using set split.
+    #[verifier::external_body]
     fn n_plus_parallel<V: StT + MtT + Hash + 'static>(
         g: &DirGraphMtEph<V>, 
         v: V, 
