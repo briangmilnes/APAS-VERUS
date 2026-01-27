@@ -13,15 +13,6 @@ broadcast use {
 };
 
 /// If a sequence contains an element at index i, then that element is in the sequence's set view.
-// Veracity: UNUSED pub proof fn lemma_seq_index_in_to_set<T>(seq: Seq<T>, i: int)
-// Veracity: UNUSED     requires
-// Veracity: UNUSED         0 <= i < seq.len(),
-// Veracity: UNUSED     ensures
-// Veracity: UNUSED         seq.to_set().contains(seq[i]),
-// Veracity: UNUSED {
-// Veracity: UNUSED     broadcast use vstd::seq_lib::group_seq_properties;
-// Veracity: UNUSED     assert(seq.contains(seq[i]));
-// Veracity: UNUSED }
 
 /// - If a sequence does not contain an element v, then pushing v onto the sequence
 /// - creates a subset of the original set with v inserted.
@@ -39,11 +30,7 @@ pub proof fn lemma_push_not_contains_to_set_subset<T>(seq: Seq<T>, v: T)
         implies seq.to_set().insert(v).contains(x) by {
         if seq.push(v).contains(x) {
             if x == v {
-// Veracity: UNNEEDED assert                 assert(seq.to_set().insert(v).contains(v));
             } else {
-// Veracity: UNNEEDED assert                 assert(seq.contains(x));
-// Veracity: UNNEEDED assert                 assert(seq.to_set().contains(x));
-// Veracity: UNNEEDED assert                 assert(seq.to_set().insert(v).contains(x));
             }
         }
     }
@@ -63,13 +50,8 @@ pub proof fn lemma_push_not_contains_to_set_superset<T>(seq: Seq<T>, v: T)
     assert forall |x: T| #[trigger] seq.to_set().insert(v).contains(x) 
         implies seq.push(v).to_set().contains(x) by {
         if x == v {
-// Veracity: UNNEEDED assert             assert(seq.push(v)[seq.len() as int] == v);
-// Veracity: UNNEEDED assert             assert(seq.push(v).contains(v));
         } else if seq.to_set().contains(x) {
-// Veracity: UNNEEDED assert             assert(seq.contains(x));
             let idx = seq.lemma_contains_to_index(x);
-// Veracity: UNNEEDED assert             assert(seq.push(v)[idx] == x);
-// Veracity: UNNEEDED assert             assert(seq.push(v).contains(x));
         }
     }
 }
@@ -89,13 +71,6 @@ pub proof fn lemma_push_not_contains_to_set<T>(seq: Seq<T>, v: T)
 }
 
 /// Taking the full length of a sequence yields the original sequence.
-// Veracity: UNUSED pub proof fn lemma_take_full<T>(seq: Seq<T>)
-// Veracity: UNUSED     ensures
-// Veracity: UNUSED         seq.take(seq.len() as int) == seq,
-// Veracity: UNUSED {
-// Veracity: UNUSED     broadcast use vstd::seq_lib::group_seq_properties;
-// Veracity: UNUSED     assert(seq.take(seq.len() as int) =~= seq);
-// Veracity: UNUSED }
 // Veracity: USED
 
 /// After taking n elements and inserting seq[n], the result is a subset of take(n+1).
@@ -112,20 +87,12 @@ pub proof fn lemma_take_extends_set_subset<T>(seq: Seq<T>, n: int)
     let prefix_n_plus_1 = seq.take(n + 1);
     
     // Key insight: take(n+1) = take(n).push(seq[n])
-// Veracity: UNNEEDED assert     assert forall |i: int| 0 <= i < n implies #[trigger] prefix_n_plus_1[i] == prefix_n[i] by {}
-// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert     assert(prefix_n_plus_1[n] == seq[n]);
     
     assert forall |x: T| #[trigger] prefix_n.to_set().insert(seq[n]).contains(x) 
         implies prefix_n_plus_1.to_set().contains(x) by {
         if x == seq[n] {
-// Veracity: UNNEEDED assert             assert(prefix_n_plus_1[n] == x);
-// Veracity: UNNEEDED assert             assert(prefix_n_plus_1.contains(x));
         } else if prefix_n.to_set().contains(x) {
-// Veracity: UNNEEDED assert             assert(prefix_n.contains(x));
             let idx = prefix_n.lemma_contains_to_index(x);
-// Veracity: UNNEEDED assert             assert(0 <= idx < n);
-// Veracity: UNNEEDED assert             assert(prefix_n_plus_1[idx] == x);
-// Veracity: UNNEEDED assert             assert(prefix_n_plus_1.contains(x));
         }
     }
 }
@@ -145,15 +112,9 @@ pub proof fn lemma_take_extends_set_superset<T>(seq: Seq<T>, n: int)
     
     assert forall |x: T| #[trigger] prefix_n_plus_1.to_set().contains(x)
         implies prefix_n.to_set().insert(seq[n]).contains(x) by {
-// Veracity: UNNEEDED assert         assert(prefix_n_plus_1.contains(x));
         let idx = prefix_n_plus_1.lemma_contains_to_index(x);
         if idx < n {
-// Veracity: UNNEEDED assert             assert(prefix_n[idx] == x);
-// Veracity: UNNEEDED assert             assert(prefix_n.contains(x));
-// Veracity: UNNEEDED assert             assert(prefix_n.to_set().contains(x));
         } else {
-// Veracity: UNNEEDED assert             assert(idx == n);
-// Veracity: UNNEEDED assert             assert(x == seq[n]);
         }
 // Veracity: USED
     }
@@ -179,8 +140,6 @@ pub proof fn lemma_set_contains_insert_idempotent<V>(s: Set<V>, v: V)
     ensures
         s.insert(v) == s,
 {
-// Veracity: UNNEEDED assert     assert forall |x| s.insert(v).contains(x) implies #[trigger] s.contains(x) by {};
-// Veracity: UNNEEDED assert     assert forall |x| #[trigger] s.contains(x) implies s.insert(v).contains(x) by {};
 // Veracity: USED
     broadcast use vstd::set::group_set_axioms;
 }
@@ -203,11 +162,7 @@ pub proof fn lemma_take_one_more_extends_the_seq_set_with_view<T: View>(seq: Seq
     
     // Key: take(n+1) = take(n).push(seq[n])
     assert forall |i: int| 0 <= i < n implies #[trigger] mapped_n_plus_1[i] == mapped_n[i] by {
-// Veracity: UNNEEDED assert         assert(seq.take(n+1)[i] == seq.take(n)[i]);
-// Veracity: UNNEEDED assert         assert(mapped_n_plus_1[i] == seq.take(n+1)[i]@);
-// Veracity: UNNEEDED assert         assert(mapped_n[i] == seq.take(n)[i]@);
     }
-// Veracity: UNNEEDED assert     assert(mapped_n_plus_1[n] == seq[n]@);
     
     // Subset: mapped_n.to_set().insert(seq[n]@) <= mapped_n_plus_1.to_set()
     assert forall |x| #[trigger] mapped_n.to_set().insert(seq[n]@).contains(x) 
@@ -225,10 +180,7 @@ pub proof fn lemma_take_one_more_extends_the_seq_set_with_view<T: View>(seq: Seq
         implies mapped_n.to_set().insert(seq[n]@).contains(x) by {
         let idx = mapped_n_plus_1.lemma_contains_to_index(x);
         if idx < n {
-// Veracity: UNNEEDED assert             assert(mapped_n[idx] == x);
         } else {
-// Veracity: UNNEEDED assert             assert(idx == n);
-// Veracity: UNNEEDED assert             assert(x == seq[n]@);
         }
 // Veracity: USED
     }
@@ -242,7 +194,6 @@ pub proof fn lemma_take_full_to_set_with_view<T: View>(seq: Seq<T>)
         seq.take(seq.len() as int).map(|i: int, k: T| k@).to_set() == seq.map(|i: int, k: T| k@).to_set(),
 {
     broadcast use vstd::seq_lib::group_seq_properties;
-// Veracity: UNNEEDED assert     assert(seq.take(seq.len() as int) =~= seq);
 }
 
 /// - Proves that a sequence mapped through view equals a target set when bidirectional containment holds.
@@ -258,7 +209,6 @@ pub proof fn lemma_seq_index_in_map_to_set<T: View>(seq: Seq<T>, i: int)
     broadcast use vstd::set::group_set_axioms;
     
     let mapped_seq = seq.map(|i: int, k: T| k@);
-// Veracity: UNNEEDED assert     assert(mapped_seq[i] == seq[i]@);
     assert(mapped_seq.to_set().contains(mapped_seq[i]));
 }
 
@@ -273,12 +223,8 @@ pub proof fn lemma_map_to_set_contains_index<T: View>(seq: Seq<T>, s: T::V)
     broadcast use vstd::set::group_set_axioms;
     
     let mapped_seq = seq.map(|i: int, k: T| k@);
-// Veracity: UNNEEDED assert     assert(mapped_seq.to_set().contains(s));
     let idx = mapped_seq.lemma_contains_to_index(s);
 // Veracity: USED
-// Veracity: UNNEEDED assert     assert(mapped_seq[idx] == s);
-// Veracity: UNNEEDED assert     assert(seq[idx]@ == s);
-// Veracity: UNNEEDED assert     assert(0 <= idx < seq.len());
 }
 
 /// - Lemma: If mapped seq doesn't contain a value, then no element's view equals that value.
@@ -325,7 +271,6 @@ pub proof fn lemma_seq_map_to_set_equality<T: View>(seq: Seq<T>, target: Set<T::
             // From precondition: exists k such that seq.contains(k) && k@ == kv
             let k = choose|k: T| #![trigger seq.contains(k)] seq.contains(k) && k@ == kv;
             let idx = seq.lemma_contains_to_index(k);
-// Veracity: UNNEEDED assert             assert(seq[idx] == k);
 // Veracity: USED
             let mapped_seq = seq.map(|i: int, k: T| k@);
             assert(mapped_seq[idx] == seq[idx]@);
@@ -357,30 +302,21 @@ pub proof fn lemma_take_one_more_intersect<T: View>(seq: Seq<T>, s2: Set<T::V>, 
     // From lemma_take_one_more_extends_the_seq_set_with_view:
     // set_n_plus_1 == set_n.insert(seq[n]@)
     lemma_take_one_more_extends_the_seq_set_with_view(seq, n);
-// Veracity: UNNEEDED assert     assert(set_n_plus_1 == set_n.insert(seq[n]@));
     
     if s2.contains(seq[n]@) {
         // Case 1: seq[n]@ is in s2
         // (A ∪ {x}) ∩ B = (A ∩ B) ∪ {x} when x ∈ B
         assert forall |v: T::V| #[trigger] set_n_plus_1.intersect(s2).contains(v) 
             implies set_n.intersect(s2).insert(seq[n]@).contains(v) by {
-// Veracity: UNNEEDED assert             assert(set_n_plus_1.contains(v) && s2.contains(v));
             if v == seq[n]@ {
-// Veracity: UNNEEDED assert                 assert(set_n.intersect(s2).insert(seq[n]@).contains(v));
             } else {
-// Veracity: UNNEEDED assert                 assert(set_n.contains(v));
-// Veracity: UNNEEDED assert                 assert(set_n.intersect(s2).contains(v));
             }
         }
         
         assert forall |v: T::V| #[trigger] set_n.intersect(s2).insert(seq[n]@).contains(v)
             implies set_n_plus_1.intersect(s2).contains(v) by {
             if v == seq[n]@ {
-// Veracity: UNNEEDED assert                 assert(set_n_plus_1.contains(v));
-// Veracity: UNNEEDED assert                 assert(s2.contains(v));
             } else if set_n.intersect(s2).contains(v) {
-// Veracity: UNNEEDED assert                 assert(set_n.contains(v));
-// Veracity: UNNEEDED assert                 assert(set_n_plus_1.contains(v));
             }
         }
     } else {
@@ -388,15 +324,10 @@ pub proof fn lemma_take_one_more_intersect<T: View>(seq: Seq<T>, s2: Set<T::V>, 
         // (A ∪ {x}) ∩ B = A ∩ B when x ∉ B
         assert forall |v: T::V| #[trigger] set_n_plus_1.intersect(s2).contains(v)
             implies set_n.intersect(s2).contains(v) by {
-// Veracity: UNNEEDED assert             assert(set_n_plus_1.contains(v) && s2.contains(v));
-// Veracity: UNNEEDED assert             assert(v != seq[n]@); // because seq[n]@ is not in s2
-// Veracity: UNNEEDED assert             assert(set_n.contains(v));
         }
         
         assert forall |v: T::V| #[trigger] set_n.intersect(s2).contains(v)
             implies set_n_plus_1.intersect(s2).contains(v) by {
-// Veracity: UNNEEDED assert             assert(set_n.contains(v) && s2.contains(v));
-// Veracity: UNNEEDED assert             assert(set_n_plus_1.contains(v));
         }
     }
 }
@@ -436,15 +367,12 @@ pub proof fn lemma_spec_nat_seq_fold_equals_spec_set_fold(seq: Seq<nat>)
         assert(!prefix.contains(last)) by {
             if prefix.contains(last) {
                 let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last;
-// Veracity: UNNEEDED assert                 assert(seq[i] != seq[n]);
             }
         };
         
         lemma_spec_nat_seq_fold_equals_spec_set_fold(prefix);
         lemma_nat_fold_left_step(seq, n);
         lemma_push_not_contains_to_set(prefix, last);
-// Veracity: UNNEEDED assert         assert(vstd::set::fold::is_fun_commutative(f)) by {};
-// Veracity: UNNEEDED assert         assert(!prefix.to_set().contains(last)) by {};
         vstd::seq_lib::seq_to_set_is_finite(prefix);
         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
     }
@@ -461,31 +389,23 @@ proof fn lemma_to_seq_no_duplicates<T>(s: Set<T>)
     broadcast use vstd::set_lib::group_set_lib_default;
     
     if s.len() == 0 {
-// Veracity: UNNEEDED assert         assert(s.to_seq() =~= Seq::empty());
     } else {
         let x = s.choose();
         let rest = s.remove(x);
         lemma_to_seq_no_duplicates(rest);
-// Veracity: UNNEEDED assert         assert(s.to_seq() =~= Seq::empty().push(x) + rest.to_seq());
         rest.lemma_to_seq_to_set_id();
         assert(!rest.to_seq().contains(x)) by {
             if rest.to_seq().contains(x) {
-// Veracity: UNNEEDED assert                 assert(rest.to_seq().to_set().contains(x));
-// Veracity: UNNEEDED assert                 assert(rest.contains(x));
             }
         };
         
         let prefix = Seq::empty().push(x);
         let suffix = rest.to_seq();
-// Veracity: UNNEEDED assert         assert(prefix.no_duplicates());
-// Veracity: UNNEEDED assert         assert(suffix.no_duplicates());
         
         // No overlap between prefix and suffix
         assert forall |i: int, j: int| 
             0 <= i < prefix.len() && 0 <= j < suffix.len() 
             implies prefix[i] != suffix[j] by {
-// Veracity: UNNEEDED assert             assert(prefix[i] == x);
-// Veracity: UNNEEDED assert             assert(!suffix.contains(x));
         };
         
 // Veracity: USED
@@ -543,11 +463,8 @@ pub proof fn lemma_nat_fold_left_step(seq: Seq<nat>, n: int)
     assert(seq.take(n + 1).subrange(0, n) =~= prefix);
     
     // take(n+1).subrange(n, n+1) == [seq[n]]
-// Veracity: UNNEEDED assert     assert(seq.take(n + 1).subrange(n, n + 1) =~= Seq::empty().push(seq[n]));
     
     // fold([x], acc) = acc + x
-// Veracity: UNNEEDED assert     assert(Seq::empty().push(seq[n]).fold_left(prefix.fold_left(0nat, f), f) 
-// Veracity: UNNEEDED assert         == prefix.fold_left(0nat, f) + seq[n]);
 }
 
 /// - The main theorem: If the total sum of nat values fits in MAX, then ALL partial sums fit.
@@ -563,7 +480,6 @@ pub proof fn lemma_spec_nat_seq_sum_no_intermediate_overflow(seq: Seq<nat>, max:
     assert forall |i: int| 0 <= i <= seq.len() implies spec_nat_seq_sum(#[trigger] seq.take(i)) <= max by {
 // Veracity: USED
         lemma_nat_partial_sum_monotonic(seq, i, seq.len() as int);
-// Veracity: UNNEEDED assert         assert(seq.take(seq.len() as int) =~= seq);
     }
 }
 
@@ -601,22 +517,16 @@ pub proof fn lemma_no_dup_same_set_implies_same_multiset<T>(s1: Seq<T>, s2: Seq<
     // If to_set is equal, the elements with count 1 are the same
     assert forall |x: T| s1.to_multiset().count(x) == s2.to_multiset().count(x) by {
         if s1.contains(x) {
-// Veracity: UNNEEDED assert             assert(s1.to_set().contains(x));
             assert(s2.to_set().contains(x));
-// Veracity: UNNEEDED assert             assert(s2.contains(x));
             // no_duplicates => count == 1
             s1.lemma_multiset_has_no_duplicates();
             s2.lemma_multiset_has_no_duplicates();
         } else {
             if s2.contains(x) {
-// Veracity: UNNEEDED assert                 assert(s2.to_set().contains(x));
                 assert(s1.to_set().contains(x));
-// Veracity: UNNEEDED assert                 assert(s1.contains(x));
-// Veracity: UNNEEDED assert                 assert(false);
             }
         }
     };
-// Veracity: UNNEEDED assert     assert(s1.to_multiset() =~= s2.to_multiset());
 }
 
 // Veracity: USED
@@ -634,7 +544,6 @@ pub proof fn lemma_spec_nat_seq_sum_permutation_invariant(s1: Seq<nat>, s2: Seq<
     // nat addition is commutative for fold_left
     let f = |acc: nat, v: nat| acc + v;
     assert(vstd::seq_lib::commutative_foldl(f)) by {
-// Veracity: UNNEEDED assert         assert forall |x: nat, y: nat, v: nat| #[trigger] f(f(v, x), y) == f(f(v, y), x) by {};
     };
     
 // Veracity: USED
@@ -651,7 +560,6 @@ pub proof fn lemma_u32_view_identity(seq: Seq<u32>)
 {
     assert forall |i: int| 0 <= i < seq.len() implies 
         seq.map(|_i: int, t: u32| t@)[i] == #[trigger] seq[i] by {
-// Veracity: UNNEEDED assert         assert(seq.map(|_i: int, t: u32| t@)[i] == seq[i]@);
     }
 }
 
@@ -670,11 +578,9 @@ pub proof fn lemma_to_seq_gives_same_set(s: Set<u32>, seq: Seq<u32>)
     assert forall |x: u32| #![auto] s.contains(x) <==> seq.to_set().contains(x) by {
         if view_seq.contains(x) {
             let i = choose |i: int| 0 <= i < view_seq.len() && view_seq[i] == x;
-// Veracity: UNNEEDED assert             assert(seq[i] == x);
         }
         if seq.contains(x) {
             let i = choose |i: int| 0 <= i < seq.len() && seq[i] == x;
-// Veracity: UNNEEDED assert             assert(view_seq[i] == x);
         }
     }
 }
@@ -697,7 +603,6 @@ pub proof fn lemma_seq_map_to_set_eq_set_map(seq: Seq<u32>, set: Set<u32>)
         }
         if mapped_set.contains(n) {
             let v = choose |v: u32| set.contains(v) && (v as nat) == n;
-// Veracity: UNNEEDED assert             assert(seq.to_set().contains(v));
             let i = choose |i: int| 0 <= i < seq.len() && seq[i] == v;
             assert(mapped_seq[i] == n);
         }
@@ -715,8 +620,6 @@ pub proof fn lemma_set_contains_iff_to_seq_map_contains(s: Set<u32>)
 {
     lemma_u32_view_identity(s.to_seq());
     if s.len() == 0 {
-// Veracity: UNNEEDED assert         assert(s =~= Set::empty());
-// Veracity: UNNEEDED assert         assert(s.to_seq() =~= Seq::empty());
     } else {
         let x = s.choose();
         let smaller = s.remove(x);
@@ -751,7 +654,6 @@ proof fn lemma_weighted_fold_left_step<A, B>(seq: Seq<(A, B, u32)>, n: int)
     
     seq.take(n + 1).lemma_fold_left_split(0nat, f, n);
     assert(seq.take(n + 1).subrange(0, n) =~= prefix);
-// Veracity: UNNEEDED assert     assert(seq.take(n + 1).subrange(n, n + 1) =~= Seq::empty().push(seq[n]));
 }
 
 /// Lemma: for no-dup sequences representing a set, seq fold equals set fold for weighted tuples
@@ -785,15 +687,12 @@ pub proof fn lemma_weighted_seq_fold_equals_set_fold<A, B>(seq: Seq<(A, B, u32)>
         assert(!prefix.contains(last)) by {
             if prefix.contains(last) {
                 let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last;
-// Veracity: UNNEEDED assert                 assert(seq[i] != seq[n]);
             }
         };
         
         lemma_weighted_seq_fold_equals_set_fold(prefix);
         lemma_weighted_fold_left_step(seq, n);
         lemma_push_not_contains_to_set(prefix, last);
-// Veracity: UNNEEDED assert         assert(vstd::set::fold::is_fun_commutative(f)) by {};
-// Veracity: UNNEEDED assert         assert(!prefix.to_set().contains(last)) by {};
 // Veracity: USED
         vstd::seq_lib::seq_to_set_is_finite(prefix);
         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
@@ -844,14 +743,11 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum<T: View<V = (A, B, u32
     let view_seq = seq.map(|_i: int, e: T| e@);
     
     if seq.len() == 0 {
-// Veracity: UNNEEDED assert         assert(seq =~= Seq::empty());
-// Veracity: UNNEEDED assert         assert(view_seq =~= Seq::empty());
     } else {
         let n = (seq.len() - 1) as int;
         let prefix = seq.take(n);
         let last = seq[n];
         
-// Veracity: UNNEEDED assert         assert(seq =~= prefix.push(last));
         
         // Inductive hypothesis on prefix
         lemma_seq_fold_left_plus_is_weighted_seq_sum::<T, A, B>(prefix);
@@ -864,7 +760,6 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum<T: View<V = (A, B, u32
         // seq.fold_left(f_orig) = prefix.fold_left(f_orig) + last@.2
         // view_seq.fold_left(f_mapped) = view_seq.take(n).fold_left(f_mapped) + view_seq[n].2
         // And last@.2 == view_seq[n].2 since view_seq[n] = last@
-// Veracity: UNNEEDED assert         assert(view_seq[n] == last@);
     }
 }
 
@@ -877,13 +772,11 @@ pub proof fn lemma_fold_left_int_equals_nat_as_int<T: View<V = (A, B, u32)>, A, 
     decreases seq.len(),
 {
     if seq.len() == 0 {
-// Veracity: UNNEEDED assert         assert(seq =~= Seq::empty());
     } else {
         let n = (seq.len() - 1) as int;
         let prefix = seq.take(n);
         let last = seq[n];
         
-// Veracity: UNNEEDED assert         assert(seq =~= prefix.push(last));
         
         // Inductive hypothesis
         lemma_fold_left_int_equals_nat_as_int::<T, A, B>(prefix);
@@ -918,7 +811,6 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u8<T: View<V = (A, B, 
         let n = (seq.len() - 1) as int;
         lemma_seq_fold_left_plus_is_weighted_seq_sum_u8::<T, A, B>(seq.take(n));
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
-// Veracity: UNNEEDED assert         assert(view_seq[n] == seq[n]@);
     }
 }
 // USED: called from WeightedDirGraphStEphU8
@@ -942,12 +834,8 @@ pub proof fn lemma_weighted_seq_fold_equals_set_fold_u8<A, B>(seq: Seq<(A, B, u8
         let prefix = seq.take(n);
         let last = seq[n];
         assert(seq =~= prefix.push(last));
-// Veracity: UNNEEDED assert         assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
-// Veracity: UNNEEDED assert         assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
         lemma_weighted_seq_fold_equals_set_fold_u8::<A, B>(prefix);
         lemma_push_not_contains_to_set(prefix, last);
-// Veracity: UNNEEDED assert         assert(vstd::set::fold::is_fun_commutative(f)) by {};
-// Veracity: UNNEEDED assert         assert(!prefix.to_set().contains(last)) by {};
         vstd::seq_lib::seq_to_set_is_finite(prefix);
         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
     }
@@ -973,7 +861,6 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u16<T: View<V = (A, B,
         let n = (seq.len() - 1) as int;
         lemma_seq_fold_left_plus_is_weighted_seq_sum_u16::<T, A, B>(seq.take(n));
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
-// Veracity: UNNEEDED assert         assert(view_seq[n] == seq[n]@);
     }
 }
 // USED: called from WeightedDirGraphStEphU16
@@ -997,12 +884,8 @@ pub proof fn lemma_weighted_seq_fold_equals_set_fold_u16<A, B>(seq: Seq<(A, B, u
         let prefix = seq.take(n);
         let last = seq[n];
         assert(seq =~= prefix.push(last));
-// Veracity: UNNEEDED assert         assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
-// Veracity: UNNEEDED assert         assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
         lemma_weighted_seq_fold_equals_set_fold_u16::<A, B>(prefix);
         lemma_push_not_contains_to_set(prefix, last);
-// Veracity: UNNEEDED assert         assert(vstd::set::fold::is_fun_commutative(f)) by {};
-// Veracity: UNNEEDED assert         assert(!prefix.to_set().contains(last)) by {};
         vstd::seq_lib::seq_to_set_is_finite(prefix);
         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
     }
@@ -1050,12 +933,8 @@ pub proof fn lemma_weighted_seq_fold_equals_set_fold_u64<A, B>(seq: Seq<(A, B, u
         let prefix = seq.take(n);
         let last = seq[n];
         assert(seq =~= prefix.push(last));
-// Veracity: UNNEEDED assert         assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
-// Veracity: UNNEEDED assert         assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
         lemma_weighted_seq_fold_equals_set_fold_u64::<A, B>(prefix);
         lemma_push_not_contains_to_set(prefix, last);
-// Veracity: UNNEEDED assert         assert(vstd::set::fold::is_fun_commutative(f)) by {};
-// Veracity: UNNEEDED assert         assert(!prefix.to_set().contains(last)) by {};
         vstd::seq_lib::seq_to_set_is_finite(prefix);
         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
     }
@@ -1081,7 +960,6 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u128<T: View<V = (A, B
         let n = (seq.len() - 1) as int;
         lemma_seq_fold_left_plus_is_weighted_seq_sum_u128::<T, A, B>(seq.take(n));
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
-// Veracity: UNNEEDED assert         assert(view_seq[n] == seq[n]@);
     }
 }
 // USED: called from WeightedDirGraphStEphU128
@@ -1106,13 +984,9 @@ pub proof fn lemma_weighted_seq_fold_equals_set_fold_u128<A, B>(seq: Seq<(A, B, 
         let prefix = seq.take(n);
         let last = seq[n];
         assert(seq =~= prefix.push(last));
-// Veracity: UNNEEDED assert         assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
-// Veracity: UNNEEDED assert         assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
         lemma_weighted_seq_fold_equals_set_fold_u128::<A, B>(prefix);
         lemma_push_not_contains_to_set(prefix, last);
 // Veracity: USED
-// Veracity: UNNEEDED assert         assert(vstd::set::fold::is_fun_commutative(f)) by {};
-// Veracity: UNNEEDED assert         assert(!prefix.to_set().contains(last)) by {};
         vstd::seq_lib::seq_to_set_is_finite(prefix);
         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
     }
@@ -1135,7 +1009,6 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_usize<T: View<V = (A, 
         let n = (seq.len() - 1) as int;
         lemma_seq_fold_left_plus_is_weighted_seq_sum_usize::<T, A, B>(seq.take(n));
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
-// Veracity: UNNEEDED assert         assert(view_seq[n] == seq[n]@);
     }
 // Veracity: USED
 }
@@ -1160,12 +1033,8 @@ pub proof fn lemma_weighted_seq_fold_equals_set_fold_usize<A, B>(seq: Seq<(A, B,
         let prefix = seq.take(n);
         let last = seq[n];
         assert(seq =~= prefix.push(last));
-// Veracity: UNNEEDED assert         assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
-// Veracity: UNNEEDED assert         assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
         lemma_weighted_seq_fold_equals_set_fold_usize::<A, B>(prefix);
         lemma_push_not_contains_to_set(prefix, last);
-// Veracity: UNNEEDED assert         assert(vstd::set::fold::is_fun_commutative(f)) by {};
-// Veracity: UNNEEDED assert         assert(!prefix.to_set().contains(last)) by {};
         vstd::seq_lib::seq_to_set_is_finite(prefix);
 // Veracity: USED
         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
@@ -1192,7 +1061,6 @@ pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i8<T: View<V = 
         let n = (seq.len() - 1) as int;
         lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i8::<T, A, B>(seq.take(n));
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
-// Veracity: UNNEEDED assert         assert(view_seq[n] == seq[n]@);
     }
 }
 pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i8<A, B>(seq: Seq<(A, B, i8)>)
@@ -1210,12 +1078,8 @@ pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i8<A, B>(seq: Seq<(A
 // Veracity: USED
         let last = seq[n];
         assert(seq =~= prefix.push(last));
-// Veracity: UNNEEDED assert         assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
-// Veracity: UNNEEDED assert         assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
         lemma_signed_weighted_seq_fold_equals_set_fold_i8::<A, B>(prefix);
         lemma_push_not_contains_to_set(prefix, last);
-// Veracity: UNNEEDED assert         assert(vstd::set::fold::is_fun_commutative(f)) by {};
-// Veracity: UNNEEDED assert         assert(!prefix.to_set().contains(last)) by {};
         vstd::seq_lib::seq_to_set_is_finite(prefix);
         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
     }
@@ -1256,13 +1120,9 @@ pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i16<A, B>(seq: Seq<(
         let prefix = seq.take(n);
         let last = seq[n];
         assert(seq =~= prefix.push(last));
-// Veracity: UNNEEDED assert         assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
-// Veracity: UNNEEDED assert         assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
 // Veracity: USED
         lemma_signed_weighted_seq_fold_equals_set_fold_i16::<A, B>(prefix);
         lemma_push_not_contains_to_set(prefix, last);
-// Veracity: UNNEEDED assert         assert(vstd::set::fold::is_fun_commutative(f)) by {};
-// Veracity: UNNEEDED assert         assert(!prefix.to_set().contains(last)) by {};
         vstd::seq_lib::seq_to_set_is_finite(prefix);
         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
     }
@@ -1285,7 +1145,6 @@ pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum<T: View<V = (A,
         let n = (seq.len() - 1) as int;
         lemma_signed_seq_fold_left_plus_is_weighted_seq_sum::<T, A, B>(seq.take(n));
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
-// Veracity: UNNEEDED assert         assert(view_seq[n] == seq[n]@);
     }
 }
 pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold<A, B>(seq: Seq<(A, B, i32)>)
@@ -1304,12 +1163,8 @@ pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold<A, B>(seq: Seq<(A, B
         let prefix = seq.take(n);
         let last = seq[n];
         assert(seq =~= prefix.push(last));
-// Veracity: UNNEEDED assert         assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
-// Veracity: UNNEEDED assert         assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
         lemma_signed_weighted_seq_fold_equals_set_fold::<A, B>(prefix);
         lemma_push_not_contains_to_set(prefix, last);
-// Veracity: UNNEEDED assert         assert(vstd::set::fold::is_fun_commutative(f)) by {};
-// Veracity: UNNEEDED assert         assert(!prefix.to_set().contains(last)) by {};
         vstd::seq_lib::seq_to_set_is_finite(prefix);
         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
     }
@@ -1332,7 +1187,6 @@ pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i64<T: View<V =
         let n = (seq.len() - 1) as int;
         lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i64::<T, A, B>(seq.take(n));
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
-// Veracity: UNNEEDED assert         assert(view_seq[n] == seq[n]@);
     }
 }
 pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i64<A, B>(seq: Seq<(A, B, i64)>)
@@ -1351,12 +1205,8 @@ pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i64<A, B>(seq: Seq<(
 // Veracity: USED
         let last = seq[n];
         assert(seq =~= prefix.push(last));
-// Veracity: UNNEEDED assert         assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
-// Veracity: UNNEEDED assert         assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
         lemma_signed_weighted_seq_fold_equals_set_fold_i64::<A, B>(prefix);
         lemma_push_not_contains_to_set(prefix, last);
-// Veracity: UNNEEDED assert         assert(vstd::set::fold::is_fun_commutative(f)) by {};
-// Veracity: UNNEEDED assert         assert(!prefix.to_set().contains(last)) by {};
         vstd::seq_lib::seq_to_set_is_finite(prefix);
         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
     }
@@ -1379,7 +1229,6 @@ pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i128<T: View<V 
         let n = (seq.len() - 1) as int;
         lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i128::<T, A, B>(seq.take(n));
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
-// Veracity: UNNEEDED assert         assert(view_seq[n] == seq[n]@);
     }
 }
 pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i128<A, B>(seq: Seq<(A, B, i128)>)
@@ -1398,12 +1247,8 @@ pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i128<A, B>(seq: Seq<
         let last = seq[n];
         assert(seq =~= prefix.push(last));
 // Veracity: USED
-// Veracity: UNNEEDED assert         assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
-// Veracity: UNNEEDED assert         assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
         lemma_signed_weighted_seq_fold_equals_set_fold_i128::<A, B>(prefix);
         lemma_push_not_contains_to_set(prefix, last);
-// Veracity: UNNEEDED assert         assert(vstd::set::fold::is_fun_commutative(f)) by {};
-// Veracity: UNNEEDED assert         assert(!prefix.to_set().contains(last)) by {};
         vstd::seq_lib::seq_to_set_is_finite(prefix);
         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
     }
@@ -1426,7 +1271,6 @@ pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_isize<T: View<V
         let n = (seq.len() - 1) as int;
         lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_isize::<T, A, B>(seq.take(n));
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
-// Veracity: UNNEEDED assert         assert(view_seq[n] == seq[n]@);
     }
 }
 pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_isize<A, B>(seq: Seq<(A, B, isize)>)
@@ -1443,12 +1287,8 @@ pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_isize<A, B>(seq: Seq
         let prefix = seq.take(n);
         let last = seq[n];
         assert(seq =~= prefix.push(last));
-// Veracity: UNNEEDED assert         assert(prefix.no_duplicates()) by { assert forall |i: int, j: int| 0 <= i < prefix.len() && 0 <= j < prefix.len() && i != j implies prefix[i] != prefix[j] by {}; };
-// Veracity: UNNEEDED assert         assert(!prefix.contains(last)) by { if prefix.contains(last) { let i = choose |i: int| 0 <= i < prefix.len() && prefix[i] == last; assert(seq[i] != seq[n]); } };
         lemma_signed_weighted_seq_fold_equals_set_fold_isize::<A, B>(prefix);
         lemma_push_not_contains_to_set(prefix, last);
-// Veracity: UNNEEDED assert         assert(vstd::set::fold::is_fun_commutative(f)) by {};
-// Veracity: UNNEEDED assert         assert(!prefix.to_set().contains(last)) by {};
         vstd::seq_lib::seq_to_set_is_finite(prefix);
         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
     }

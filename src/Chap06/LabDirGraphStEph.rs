@@ -239,7 +239,6 @@ verus! {
                             proof {
                                 let idx = it@.0 - 1;
                                 lemma_seq_index_in_map_to_set(la_seq, idx);
-// Veracity: UNNEEDED assert                                 assert(la_view.contains((from_view, to_view, labeled_arc.2@)));
                             }
                             return Some(&labeled_arc.2);
                         }

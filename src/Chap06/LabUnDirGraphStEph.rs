@@ -235,8 +235,6 @@ verus! {
                                 let idx = it@.0 - 1;
                                 lemma_seq_index_in_map_to_set(le_seq, idx);
                                 let edge_view = le_seq[idx]@;
-// Veracity: UNNEEDED assert                                 assert(le_view.contains((v1_view, v2_view, labeled_edge.2@)) || 
-// Veracity: UNNEEDED assert                                        le_view.contains((v2_view, v1_view, labeled_edge.2@)));
                             }
                             return Some(&labeled_edge.2);
                         }
@@ -287,8 +285,6 @@ verus! {
                                 lemma_seq_index_in_map_to_set(le_seq, idx);
                                 let arc_view = le_seq[idx]@;
                                 let witness_l = arc_view.2;
-// Veracity: UNNEEDED assert                                 assert(le_view.contains((v1_view, v2_view, witness_l)) || 
-// Veracity: UNNEEDED assert                                        le_view.contains((v2_view, v1_view, witness_l)));
                             }
                             return true;
                         }

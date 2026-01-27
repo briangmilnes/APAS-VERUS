@@ -298,13 +298,11 @@ verus! {
                                 if out@.contains(w) {
                                     let i = choose |i: int| #![trigger arcs_seq[i]] 0 <= i < arcs_seq.len() && arcs_seq[i]@.0 == v_view && arcs_seq[i]@.1 == w;
                                     lemma_seq_index_in_map_to_set(arcs_seq, i);
-// Veracity: UNNEEDED assert                                     assert(arcs_view.contains((v_view, w)));
                                 }
                             }
                             assert forall |w: V::V| #[trigger] self.spec_n_plus(v_view).contains(w) implies
                             out@.contains(w) by {
                                 if self.spec_n_plus(v_view).contains(w) {
-// Veracity: UNNEEDED assert                                     assert(arcs_view.contains((v_view, w)));
                                     lemma_map_to_set_contains_index(arcs_seq, (v_view, w));
                                 }
                             }
@@ -351,13 +349,11 @@ verus! {
                                 if inn@.contains(u) {
                                     let i = choose |i: int| #![trigger arcs_seq[i]] 0 <= i < arcs_seq.len() && arcs_seq[i]@.1 == v_view && arcs_seq[i]@.0 == u;
                                     lemma_seq_index_in_map_to_set(arcs_seq, i);
-// Veracity: UNNEEDED assert                                     assert(arcs_view.contains((u, v_view)));
                                 }
                             }
                             assert forall |u: V::V| #[trigger] self.spec_n_minus(v_view).contains(u) implies
                             inn@.contains(u) by {
                                 if self.spec_n_minus(v_view).contains(u) {
-// Veracity: UNNEEDED assert                                     assert(arcs_view.contains((u, v_view)));
                                     lemma_map_to_set_contains_index(arcs_seq, (u, v_view));
                                 }
                             }

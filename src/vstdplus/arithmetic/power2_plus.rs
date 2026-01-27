@@ -26,8 +26,6 @@ pub mod power2_plus {
             ensures pow2(46) < u64::MAX as nat,
         {
             lemma2_to64_rest();
-// Veracity: UNNEEDED assert             assert(pow2(46) == 0x400000000000);
-// Veracity: UNNEEDED assert             assert(u64::MAX == 0xFFFFFFFFFFFFFFFF);
         }
 
         /// pow2(63) < u64::MAX (since u64::MAX = 2^64 - 1)
@@ -36,8 +34,6 @@ pub mod power2_plus {
             ensures pow2(63) < u64::MAX as nat,
         {
             lemma2_to64_rest();
-// Veracity: UNNEEDED assert             assert(pow2(63) == 0x8000000000000000);
-// Veracity: UNNEEDED assert             assert(u64::MAX == 0xFFFFFFFFFFFFFFFF);
         }
 
 // Veracity: USED
@@ -58,8 +54,6 @@ pub mod power2_plus {
             ensures pow2(31) < u32::MAX as nat,
         {
             vstd::arithmetic::power2::lemma2_to64();
-// Veracity: UNNEEDED assert             assert(pow2(31) == 0x80000000);
-// Veracity: UNNEEDED assert             assert(u32::MAX == 0xFFFFFFFF);
         }
 
         /// pow2(n) < u32::MAX for n < 32

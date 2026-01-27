@@ -351,7 +351,6 @@ verus! {
                             if !feq(&q.1, &p.1) {
                                 proof {
                                     let idx = iter@.0 - 1;
-// Veracity: UNNEEDED assert                                     assert(the_seq[idx] == *q);
                                     let mapped = the_seq.map(|i: int, pair: Pair<X,Y>| pair@);
                                     assert(mapped[idx] == q@);
                                     assert(mapped.to_set().contains(q@));
@@ -385,7 +384,6 @@ verus! {
                                 if s@.contains((x, y1)) && s@.contains((x, y2)) {
                                     let mapped = the_seq.map(|i: int, pair: Pair<X,Y>| pair@);
                                     let i1 = choose |i: int| #![trigger mapped[i]] 0 <= i < mapped.len() && mapped[i] == (x, y1);
-// Veracity: UNNEEDED assert                                     assert(is_functional_set_at(s@, the_seq[i1]@)); // for documentation
                                 }
                             }
                         }

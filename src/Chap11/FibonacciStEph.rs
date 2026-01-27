@@ -95,7 +95,6 @@ pub mod FibonacciStEph {
             reveal(pow);
             reveal(pow2);
             if n == 0 {
-// Veracity: UNNEEDED assert                 assert(pow2(0) == 1) by(compute_only);
             } else if n == 1 {
                 assert(pow2(1) == 2) by(compute_only);
             } else {
@@ -121,7 +120,6 @@ pub mod FibonacciStEph {
             requires 2 <= n <= 46,
             ensures spec_fib((n-1) as nat) + spec_fib((n-2) as nat) <= u64::MAX as nat,
         {
-// Veracity: UNNEEDED assert             assert(spec_fib((n-1) as nat) + spec_fib((n-2) as nat) == spec_fib(n));
             lemma_fib_fits_u64(n);
         }
 
