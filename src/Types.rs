@@ -40,6 +40,24 @@ pub mod Types {
         pub A: Set<(V, V, L)>,
     }
 
+    /// Well-formedness for unlabeled graph views: finite sets and arc endpoints in V.
+    pub open spec fn wf_graph_view<V>(gv: GraphView<V>) -> bool {
+        &&& gv.V.finite()
+        &&& gv.A.finite()
+        &&& forall |u: V, w: V| 
+                #[trigger] gv.A.contains((u, w)) ==> 
+                    gv.V.contains(u) && gv.V.contains(w)
+    }
+
+    /// Well-formedness for labeled graph views: finite sets and arc endpoints in V.
+    pub open spec fn wf_lab_graph_view<V, L>(gv: LabGraphView<V, L>) -> bool {
+        &&& gv.V.finite()
+        &&& gv.A.finite()
+        &&& forall |u: V, w: V, l: L| 
+                #[trigger] gv.A.contains((u, w, l)) ==> 
+                    gv.V.contains(u) && gv.V.contains(w)
+    }
+
     /// Triple wrapper for three-element tuples.
     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Triple<A, B, C>(pub A, pub B, pub C);

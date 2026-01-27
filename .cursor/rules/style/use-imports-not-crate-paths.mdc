@@ -1,0 +1,28 @@
+# Use Imports, Not Verbose Crate Paths
+
+When calling functions from other modules, prefer `use` imports over verbose `crate::...` paths.
+
+## Anti-pattern
+
+```rust
+// Bad: verbose crate path repeated multiple times
+crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(seq, i);
+crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(seq, j);
+```
+
+## Correct Pattern
+
+```rust
+// Good: import the module, use short path
+use crate::vstdplus::seq_set;
+
+seq_set::lemma_seq_index_in_map_to_set(seq, i);
+seq_set::lemma_seq_index_in_map_to_set(seq, j);
+```
+
+## Why
+
+- Reduces visual noise
+- Makes code more readable
+- Easier to refactor if module paths change
+- Follows Rust idioms

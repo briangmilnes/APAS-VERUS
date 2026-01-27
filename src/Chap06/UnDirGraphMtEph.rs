@@ -9,9 +9,10 @@ pub mod UnDirGraphMtEph {
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
 
+    use vstd::prelude::*;
+    use crate::Types::Types::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::{ParaPair, SetLit};
-    use crate::Types::Types::*;
 
     #[derive(Clone)]
     pub struct UnDirGraphMtEph<V: StT + MtT + Hash + 'static> {

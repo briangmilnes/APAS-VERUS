@@ -7,10 +7,11 @@ pub mod LabDirGraphStEph {
     use std::hash::Hash;
 
     use vstd::prelude::*;
+    use crate::Types::Types::*;
     use crate::Chap05::SetStEph::SetStEph::*;
-    use crate::Types::Types::{*, LabGraphView};
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::feq::feq::feq;
+    use crate::vstdplus::seq_set::*;
 
 verus! {
 
@@ -47,11 +48,15 @@ verus! {
             self@.V.finite() && self@.A.finite()
         }
 
-        open spec fn spec_out_neighbors(&self, v: V::V) -> Set<V::V> { 
+        open spec fn spec_out_neighbors(&self, v: V::V) -> Set<V::V> 
+            recommends wf_lab_graph_view(self@), self@.V.contains(v)
+        { 
             Set::new(|w: V::V| exists |l: L::V| #![trigger self@.A.contains((v, w, l))] self@.A.contains((v, w, l)))
         }
 
-        open spec fn spec_in_neighbors(&self, v: V::V) -> Set<V::V> { 
+        open spec fn spec_in_neighbors(&self, v: V::V) -> Set<V::V> 
+            recommends wf_lab_graph_view(self@), self@.V.contains(v)
+        { 
             Set::new(|u: V::V| exists |l: L::V| #![trigger self@.A.contains((u, v, l))] self@.A.contains((u, v, l)))
         }
 
@@ -173,14 +178,14 @@ verus! {
                                 self.spec_arcs().contains(e) by {
                                 if arcs@.contains(e) {
                                     let i = choose |i: int| #![trigger la_seq[i]] 0 <= i < la_seq.len() && la_seq[i]@.0 == e.0 && la_seq[i]@.1 == e.1;
-                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(la_seq, i);
+                                    lemma_seq_index_in_map_to_set(la_seq, i);
                                 }
                             }
                             assert forall |e: (V::V, V::V)| #[trigger] self.spec_arcs().contains(e) implies 
                                 arcs@.contains(e) by {
                                 if self.spec_arcs().contains(e) {
                                     let l = choose |l: L::V| #![trigger la_view.contains((e.0, e.1, l))] la_view.contains((e.0, e.1, l));
-                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(la_seq, (e.0, e.1, l));
+                                    lemma_map_to_set_contains_index(la_seq, (e.0, e.1, l));
                                 }
                             }
                         }
@@ -223,7 +228,7 @@ verus! {
                         proof {
                             assert forall |l: L::V| !la_view.contains((from_view, to_view, l)) by {
                                 if la_view.contains((from_view, to_view, l)) {
-                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
+                                    lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
                                 }
                             }
                         }
@@ -233,7 +238,7 @@ verus! {
                         if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
                             proof {
                                 let idx = it@.0 - 1;
-                                crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(la_seq, idx);
+                                lemma_seq_index_in_map_to_set(la_seq, idx);
 // Veracity: UNNEEDED assert                                 assert(la_view.contains((from_view, to_view, labeled_arc.2@)));
                             }
                             return Some(&labeled_arc.2);
@@ -270,7 +275,7 @@ verus! {
                             // Need to show pred((from_view, to_view)) is false
                             assert forall |l: L::V| !la_view.contains((from_view, to_view, l)) by {
                                 if la_view.contains((from_view, to_view, l)) {
-                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
+                                    lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
                                 }
                             }
                         }
@@ -280,10 +285,9 @@ verus! {
                         if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
                             proof {
                                 let idx = it@.0 - 1;
-                                crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(la_seq, idx);
+                                lemma_seq_index_in_map_to_set(la_seq, idx);
                                 let arc_view = la_seq[idx]@;
                                 let witness_l = arc_view.2;
-// Veracity: UNNEEDED assert                                 assert(self@.A.contains((from_view, to_view, witness_l)));
                             }
                             return true;
                         }
@@ -317,14 +321,14 @@ verus! {
                                 self.spec_out_neighbors(v_view).contains(w) by {
                                 if neighbors@.contains(w) {
                                     let i = choose |i: int| #![trigger la_seq[i]] 0 <= i < la_seq.len() && la_seq[i]@.0 == v_view && la_seq[i]@.1 == w;
-                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(la_seq, i);
+                                    lemma_seq_index_in_map_to_set(la_seq, i);
                                 }
                             }
                             assert forall |w: V::V| #[trigger] self.spec_out_neighbors(v_view).contains(w) implies 
                                 neighbors@.contains(w) by {
                                 if self.spec_out_neighbors(v_view).contains(w) {
                                     let l = choose |l: L::V| #![trigger la_view.contains((v_view, w, l))] la_view.contains((v_view, w, l));
-                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(la_seq, (v_view, w, l));
+                                    lemma_map_to_set_contains_index(la_seq, (v_view, w, l));
                                 }
                             }
                         }
@@ -364,14 +368,14 @@ verus! {
                                 self.spec_in_neighbors(v_view).contains(u) by {
                                 if neighbors@.contains(u) {
                                     let i = choose |i: int| #![trigger la_seq[i]] 0 <= i < la_seq.len() && la_seq[i]@.1 == v_view && la_seq[i]@.0 == u;
-                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(la_seq, i);
+                                    lemma_seq_index_in_map_to_set(la_seq, i);
                                 }
                             }
                             assert forall |u: V::V| #[trigger] self.spec_in_neighbors(v_view).contains(u) implies 
                                 neighbors@.contains(u) by {
                                 if self.spec_in_neighbors(v_view).contains(u) {
                                     let l = choose |l: L::V| #![trigger la_view.contains((u, v_view, l))] la_view.contains((u, v_view, l));
-                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(la_seq, (u, v_view, l));
+                                    lemma_map_to_set_contains_index(la_seq, (u, v_view, l));
                                 }
                             }
                         }

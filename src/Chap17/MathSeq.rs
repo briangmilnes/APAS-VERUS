@@ -18,14 +18,10 @@ pub mod MathSeq {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_full;
-    #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_clone;
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_clone, lemma_cloned_view_eq};
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
-    #[cfg(verus_keep_ghost)]
-    #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::seq_set::lemma_map_not_contains_implies_all_ne;
+    use crate::vstdplus::seq_set::*;
     use vstd::slice::slice_subrange;
 
     verus! {
@@ -288,7 +284,7 @@ pub mod MathSeq {
                         let x_clone = x.clone();
                         proof {
                             // Clone preserves view under obeys_feq_full
-                            crate::vstdplus::feq::feq::lemma_cloned_view_eq(x, x_clone);
+                            lemma_cloned_view_eq(x, x_clone);
                             assert(x_clone@ == x@);
                         }
                         seen.insert(x_clone);

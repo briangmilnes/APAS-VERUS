@@ -676,7 +676,7 @@ verus! {
                     Some(subset) => {
                         if subset.size() == 0 {
                             proof {
-                                crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(parts_seq, old_pos);
+                                lemma_seq_index_in_map_to_set(parts_seq, old_pos);
                             }
                             return false;
                         }
@@ -727,8 +727,8 @@ verus! {
                             if count > 1 {
                                 proof {
                                     let prev_idx = match prev_found_index { Some(i) => i, None => arbitrary() };
-                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(parts_seq, prev_idx);
-                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(parts_seq, old_pos);
+                                    lemma_seq_index_in_map_to_set(parts_seq, prev_idx);
+                                    lemma_seq_index_in_map_to_set(parts_seq, old_pos);
                                 }
                                 return false;
                             }
@@ -740,7 +740,7 @@ verus! {
                         } else {
                           proof {
                                 let idx = match found_index { Some(i) => i, None => arbitrary() };
-                                crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(parts_seq, idx);
+                                lemma_seq_index_in_map_to_set(parts_seq, idx);
                             }
                             return true;
                         }
@@ -784,7 +784,7 @@ verus! {
                     Some(x) => {
                         if !Self::partition_on_elt(x, parts) {
                             proof {
-                                crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(s1_seq, old_pos);
+                                lemma_seq_index_in_map_to_set(s1_seq, old_pos);
                             }
                             return false;
                         }
@@ -821,13 +821,13 @@ verus! {
         fn eq(&self, other: &Self) -> bool { self.elements == other.elements }
     }
 
-    impl<T: crate::Types::Types::StT + std::hash::Hash> std::fmt::Display for SetMtEph<T> {
+    impl<T: StT + Hash> std::fmt::Display for SetMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
             write!(f, "SetMt({})", self.elements.len())
         }
     }
     
-    impl<T: crate::Types::Types::StT + std::hash::Hash> std::fmt::Debug for SetMtEph<T> {
+    impl<T: StT + Hash> std::fmt::Debug for SetMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
             write!(f, "SetMtEph({})", self.elements.len())
         }

@@ -261,14 +261,14 @@ verus! {
                     (exists |y: Y::V| self@.contains((x, y))) by {
                     if out@.contains(x) {
                         let i = choose |i: int| #![trigger pairs_seq[i]] 0 <= i < pairs_seq.len() && pairs_seq[i]@.0 == x;
-                        crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(pairs_seq, i);
+                        lemma_seq_index_in_map_to_set(pairs_seq, i);
                     }
                 }
                 assert forall |x: X::V| (exists |y: Y::V| self@.contains((x, y))) implies 
                     out@.contains(x) by {
                     if exists |y: Y::V| self@.contains((x, y)) {
                         let y = choose |y: Y::V| #![trigger self@.contains((x, y))] self@.contains((x, y));
-                        crate::vstdplus::seq_set::lemma_map_to_set_contains_index(pairs_seq, (x, y));
+                        lemma_map_to_set_contains_index(pairs_seq, (x, y));
                     }
                 }
             }
@@ -300,14 +300,14 @@ verus! {
                     (exists |x: X::V| self@.contains((x, y))) by {
                     if out@.contains(y) {
                         let i = choose |i: int| #![trigger pairs_seq[i]] 0 <= i < pairs_seq.len() && pairs_seq[i]@.1 == y;
-                        crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(pairs_seq, i);
+                        lemma_seq_index_in_map_to_set(pairs_seq, i);
                     }
                 }
                 assert forall |y: Y::V| (exists |x: X::V| self@.contains((x, y))) implies 
                     out@.contains(y) by {
                     if exists |x: X::V| self@.contains((x, y)) {
                         let x = choose |x: X::V| #![trigger self@.contains((x, y))] self@.contains((x, y));
-                        crate::vstdplus::seq_set::lemma_map_to_set_contains_index(pairs_seq, (x, y));
+                        lemma_map_to_set_contains_index(pairs_seq, (x, y));
                     }
                 }
             }

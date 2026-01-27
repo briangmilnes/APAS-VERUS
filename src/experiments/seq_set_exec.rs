@@ -146,7 +146,7 @@ pub fn sum_set_CheckedU32(s: &SetStEph<u32>) -> (sum: CheckedU32)
         if i >= seq.len() {
             proof {
                 assert(mapped_seq.take(seq@.len() as int) =~= mapped_seq);
-                crate::vstdplus::seq_set::lemma_spec_nat_seq_fold_equals_spec_set_fold(mapped_seq);
+                lemma_spec_nat_seq_fold_equals_spec_set_fold(mapped_seq);
             }
             return sum;
         }

@@ -62,6 +62,8 @@ pub mod experiments {
 //    pub mod seq_set_exec;
 //    pub mod hash_set_modern_pattern;  // WIP - uses vstd::std_specs not available in cargo
 //    pub mod test_verify_one_file;     // WIP - uses rust_verify_test_macros (nightly)
+//    pub mod ghost_type_invariant;     // FAILS - type_invariant makes struct opaque
+    pub mod modify_a_ghost_struct;
 }
 
 pub mod vstdplus {

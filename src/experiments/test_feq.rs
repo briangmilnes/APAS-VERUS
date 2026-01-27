@@ -5,7 +5,7 @@ pub mod test_feq {
     use vstd::prelude::*;
     use vstd::std_specs::cmp::PartialEqSpec;
     use crate::vstdplus::feq::feq::*;
-    use crate::Types::Types::Pair;
+    use crate::Types::Types::{Pair, Pair_feq_trigger};
 
     verus! {
 
@@ -371,7 +371,7 @@ pub mod test_feq {
     fn test_pair_with_axiom(p: Pair<u64, u64>) {
         broadcast use crate::Types::Types::group_Pair_axioms;
         proof {
-            assert(crate::Types::Types::Pair_feq_trigger::<u64, u64>()); // Fire the axiom
+            assert(Pair_feq_trigger::<u64, u64>()); // Fire the axiom
             assert(obeys_feq_full::<Pair<u64, u64>>()); // Now this works
             assert(p.eq_spec(&p));
         }

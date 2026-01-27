@@ -7,10 +7,11 @@ pub mod UnDirGraphStEph {
     use std::hash::Hash;
 
     use vstd::prelude::*;
+    use crate::Types::Types::*;
     use crate::Chap05::SetStEph::SetStEph::*;
-    use crate::Types::Types::{*, GraphView};
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::feq::feq::feq;
+    use crate::vstdplus::seq_set::*;
 
 verus! {
 
@@ -37,37 +38,24 @@ verus! {
         }
     }
 
-    /// A graph view is well-formed if vertices and edges are finite
-    /// and all edge endpoints are vertices. We would use a Verus type 
-    /// invariant but its requirement that all fields are private is 
-    /// too restrictive. To allow type invariants to work and yet
-    /// read the values outside of the module a notion of set only
-    /// in the module is needed. 
-    pub open spec fn wf_undir_graph<V>(gv: GraphView<V>) -> bool {
-        &&& gv.V.finite()
-        &&& gv.A.finite()
-        &&& forall |u: V, w: V| 
-                #[trigger] gv.A.contains((u, w)) ==> 
-                    gv.V.contains(u) && gv.V.contains(w)
-    }
 
     pub trait UnDirGraphStEphTrait<V: StT + Hash>:
     View<V = GraphView<<V as View>::V>> + Sized {
 
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V> 
-            recommends wf_undir_graph(self@), self@.V.contains(v)
+            recommends wf_graph_view(self@), self@.V.contains(v)
         { 
             Set::new(|w: V::V| self@.A.contains((v, w)) || self@.A.contains((w, v)))
         }
 
         open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
-            recommends wf_undir_graph(self@), vertices <= self@.V
+            recommends wf_graph_view(self@), vertices <= self@.V
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
         }
 
         open spec fn spec_degree(&self, v: V::V) -> nat 
-            recommends wf_undir_graph(self@), self@.V.contains(v)
+            recommends wf_graph_view(self@), self@.V.contains(v)
         {
             self.spec_ng(v).len()
         }
@@ -76,7 +64,7 @@ verus! {
         fn empty() -> (g: UnDirGraphStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures
-                wf_undir_graph(g@),
+                wf_graph_view(g@),
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
 
@@ -86,7 +74,7 @@ verus! {
                 forall |u: V::V, w: V::V| 
                     #[trigger] edges@.contains((u, w)) ==> vertices@.contains(u) && vertices@.contains(w),
             ensures
-                wf_undir_graph(g@),
+                wf_graph_view(g@),
                 g@.V =~= vertices@,
                 g@.A =~= edges@;
 
@@ -115,7 +103,7 @@ verus! {
         /// APAS: Work Θ(1), Span Θ(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: B)
             requires 
-                wf_undir_graph(self@),
+                wf_graph_view(self@),
                 valid_key_type_Edge::<V>(),
                 self@.V.contains(u@),
                 self@.V.contains(v@),
@@ -124,7 +112,7 @@ verus! {
         /// APAS: Work Θ(|E|), Span Θ(1)
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires 
-                wf_undir_graph(self@),
+                wf_graph_view(self@),
                 valid_key_type_Edge::<V>(),
                 self@.V.contains(v@),
             ensures 
@@ -134,7 +122,7 @@ verus! {
         /// APAS: Work Θ(|u_set| × |E|), Span Θ(1)
         fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires 
-                wf_undir_graph(self@),
+                wf_graph_view(self@),
                 valid_key_type_Edge::<V>(),
                 vertices@ <= self@.V,
             ensures 
@@ -149,7 +137,7 @@ verus! {
         /// APAS: Work Θ(|E|), Span Θ(1)
         fn degree(&self, v: &V) -> (n: N)
             requires 
-                wf_undir_graph(self@),
+                wf_graph_view(self@),
                 valid_key_type_Edge::<V>(),
                 self@.V.contains(v@),
             ensures n == self.spec_degree(v@);
@@ -207,16 +195,16 @@ verus! {
                                     let i = choose |i: int| #![trigger edges_seq[i]] 0 <= i < edges_seq.len() && 
                                         ((edges_seq[i]@.0 == v_view && edges_seq[i]@.1 == w) ||
                                          (edges_seq[i]@.1 == v_view && edges_seq[i]@.0 == w));
-                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(edges_seq, i);
+                                    lemma_seq_index_in_map_to_set(edges_seq, i);
                                 }
                             }
                             assert forall |w: V::V| #[trigger] self.spec_ng(v_view).contains(w) implies 
                                 ng@.contains(w) by {
                                 if self.spec_ng(v_view).contains(w) {
                                     if edges_view.contains((v_view, w)) {
-                                        crate::vstdplus::seq_set::lemma_map_to_set_contains_index(edges_seq, (v_view, w));
+                                        lemma_map_to_set_contains_index(edges_seq, (v_view, w));
                                     } else {
-                                        crate::vstdplus::seq_set::lemma_map_to_set_contains_index(edges_seq, (w, v_view));
+                                        lemma_map_to_set_contains_index(edges_seq, (w, v_view));
                                     }
                                 }
                             }
@@ -260,14 +248,14 @@ verus! {
                                 self.spec_ng_of_vertices(vertices_view).contains(w) by {
                                 if result@.contains(w) {
                                     let i = choose |i: int| #![trigger u_seq[i]] 0 <= i < u_seq.len() && self.spec_ng(u_seq[i]@).contains(w);
-                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(u_seq, i);
+                                    lemma_seq_index_in_map_to_set(u_seq, i);
                                 }
                             }
                             assert forall |w: V::V| #[trigger] self.spec_ng_of_vertices(vertices_view).contains(w) implies 
                                 result@.contains(w) by {
                                 if self.spec_ng_of_vertices(vertices_view).contains(w) {
                                     let u = choose |u: V::V| #![trigger vertices_view.contains(u)] vertices_view.contains(u) && self.spec_ng(u).contains(w);
-                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(u_seq, u);
+                                    lemma_map_to_set_contains_index(u_seq, u);
                                 }
                             }
                         }
@@ -279,7 +267,7 @@ verus! {
                             // u == u_seq[it@.0 - 1], so u@ is in the mapped set
                             let idx = (it@.0 - 1) as int;
                             assert(u_seq[idx] == u);
-                            crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(u_seq, idx);
+                            lemma_seq_index_in_map_to_set(u_seq, idx);
                             assert(vertices_view.contains(u@));
                             // vertices@ <= self@.V, so u@ is in self@.V
                             assert(self@.V.contains(u@));

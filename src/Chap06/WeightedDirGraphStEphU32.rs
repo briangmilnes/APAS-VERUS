@@ -8,9 +8,9 @@ pub mod WeightedDirGraphStEphU32 {
     use std::hash::Hash;
 
     use vstd::prelude::*;
+    use crate::Types::Types::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::*;
-    use crate::Types::Types::{*, LabGraphView};
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::feq::feq::feq;
     use crate::vstdplus::checked_nat::checked_nat::CheckedU32;
@@ -27,6 +27,7 @@ verus! {
         crate::Types::Types::group_LabEdge_axioms,
         crate::Types::Types::group_WeightedEdge_axioms,
     };
+
 
     pub type WeightedDirGraphStEphU32<V> = LabDirGraphStEph<V, u32>;
 
@@ -157,12 +158,12 @@ verus! {
                             assert forall |t: (V::V, V::V, u32)| #[trigger] edges@.contains(t) implies wa_view.contains(t) by {
                                 if edges@.contains(t) {
                                     let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@ == t;
-                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(wa_seq, i);
+                                    lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
                             assert forall |t: (V::V, V::V, u32)| #[trigger] wa_view.contains(t) implies edges@.contains(t) by {
                                 if wa_view.contains(t) {
-                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(wa_seq, t);
+                                    lemma_map_to_set_contains_index(wa_seq, t);
                                 }
                             }
                         }
@@ -201,14 +202,14 @@ verus! {
                                 (exists |w: u32| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) by {
                                 if neighbors@.contains(p) {
                                     let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@.0 == v_view && wa_seq[i]@.1 == p.0 && wa_seq[i]@.2 == p.1;
-                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(wa_seq, i);
+                                    lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
                             assert forall |p: (V::V, u32)| (exists |w: u32| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) implies 
                                 neighbors@.contains(p) by {
                                 if exists |w: u32| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w {
                                     let w = choose |w: u32| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w;
-                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(wa_seq, (v_view, p.0, w));
+                                    lemma_map_to_set_contains_index(wa_seq, (v_view, p.0, w));
                                 }
                             }
                         }
@@ -249,14 +250,14 @@ verus! {
                                 (exists |w: u32| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w) by {
                                 if neighbors@.contains(p) {
                                     let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@.1 == v_view && wa_seq[i]@.0 == p.0 && wa_seq[i]@.2 == p.1;
-                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(wa_seq, i);
+                                    lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
                             assert forall |p: (V::V, u32)| (exists |w: u32| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w) implies 
                                 neighbors@.contains(p) by {
                                 if exists |w: u32| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w {
                                     let w = choose |w: u32| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w;
-                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(wa_seq, (p.0, v_view, w));
+                                    lemma_map_to_set_contains_index(wa_seq, (p.0, v_view, w));
                                 }
                             }
                         }
@@ -330,13 +331,13 @@ verus! {
                                 (wa_view.contains(t) && t.2 > threshold) by {
                                 if edges@.contains(t) {
                                     let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@ == t && t.2 > threshold;
-                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(wa_seq, i);
+                                    lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
                             assert forall |t: (V::V, V::V, u32)| #[trigger] wa_view.contains(t) && t.2 > threshold implies 
                                 edges@.contains(t) by {
                                 if wa_view.contains(t) && t.2 > threshold {
-                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(wa_seq, t);
+                                    lemma_map_to_set_contains_index(wa_seq, t);
                                 }
                             }
                         }
@@ -375,13 +376,13 @@ verus! {
                                 (wa_view.contains(t) && t.2 < threshold) by {
                                 if edges@.contains(t) {
                                     let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@ == t && t.2 < threshold;
-                                    crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(wa_seq, i);
+                                    lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
                             assert forall |t: (V::V, V::V, u32)| #[trigger] wa_view.contains(t) && t.2 < threshold implies 
                                 edges@.contains(t) by {
                                 if wa_view.contains(t) && t.2 < threshold {
-                                    crate::vstdplus::seq_set::lemma_map_to_set_contains_index(wa_seq, t);
+                                    lemma_map_to_set_contains_index(wa_seq, t);
                                 }
                             }
                         }

@@ -10,10 +10,10 @@ pub mod DirGraphMtEph {
     use std::hash::Hash;
 
     use vstd::prelude::*;
+    use crate::Types::Types::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Concurrency::Concurrency::MtT;
     use crate::{ParaPair, ParaPairDisjoint, SetLit};
-    use crate::Types::Types::{*, GraphView};
 
     verus! {
 
@@ -25,6 +25,7 @@ pub mod DirGraphMtEph {
     use crate::vstdplus::feq::feq::feq;
 
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::seq_set::*;
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -55,15 +56,7 @@ pub mod DirGraphMtEph {
         pub open spec fn spec_arcs(&self) -> Set<(V::V, V::V)> { self.A@ }
     }
 
-    /// A directed graph view is well-formed if vertices and arcs are finite
-    /// and all arc endpoints are vertices.
-    pub open spec fn wf_dir_graph<V>(gv: GraphView<V>) -> bool {
-        &&& gv.V.finite()
-        &&& gv.A.finite()
-        &&& forall |u: V, w: V| 
-                #[trigger] gv.A.contains((u, w)) ==> 
-                    gv.V.contains(u) && gv.V.contains(w)
-    }
+    use crate::Types::Types::wf_graph_view;
 
     pub trait DirGraphMtEphTrait<V: StT + MtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
 
@@ -71,7 +64,7 @@ pub mod DirGraphMtEph {
         fn empty() -> (g: Self)
             requires valid_key_type_for_graph::<V>()
             ensures 
-                wf_dir_graph(g@),
+                wf_graph_view(g@),
                 g@.V == Set::<<V as View>::V>::empty(), 
                 g@.A == Set::<(<V as View>::V, <V as View>::V)>::empty();
 
@@ -79,10 +72,12 @@ pub mod DirGraphMtEph {
         fn from_sets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (g: Self)
             requires 
                 valid_key_type_for_graph::<V>(),
+                V@.finite(),
+                A@.finite(),
                 forall |u: V::V, w: V::V| 
                     #[trigger] A@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),
             ensures 
-                wf_dir_graph(g@),
+                wf_graph_view(g@),
                 g@.V == V@, 
                 g@.A == A@;
 
@@ -105,7 +100,7 @@ pub mod DirGraphMtEph {
         /// APAS: Work Θ(1), Span Θ(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: B)
             requires 
-                wf_dir_graph(self@),
+                wf_graph_view(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(u@),
                 self@.V.contains(v@),
@@ -117,7 +112,7 @@ pub mod DirGraphMtEph {
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
         open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V> 
-            recommends wf_dir_graph(self@), self@.V.contains(v)
+            recommends wf_graph_view(self@), self@.V.contains(v)
         { 
             Set::new(|w: V::V| self@.A.contains((v, w)))
         }
@@ -129,7 +124,7 @@ pub mod DirGraphMtEph {
         /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)
             requires 
-                wf_dir_graph(self@),
+                wf_graph_view(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
             ensures 
@@ -139,13 +134,13 @@ pub mod DirGraphMtEph {
         /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
         fn out_degree(&self, v: &V) -> (n: N)
             requires 
-                wf_dir_graph(self@),
+                wf_graph_view(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
             ensures n == self.spec_n_plus(v@).len();
 
         open spec fn spec_n_minus(&self, v: V::V) -> Set<V::V> 
-            recommends wf_dir_graph(self@), self@.V.contains(v)
+            recommends wf_graph_view(self@), self@.V.contains(v)
         { 
             Set::new(|u: V::V| self@.A.contains((u, v))) 
         }
@@ -153,7 +148,7 @@ pub mod DirGraphMtEph {
         /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)
             requires 
-                wf_dir_graph(self@),
+                wf_graph_view(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
             ensures 
@@ -163,13 +158,13 @@ pub mod DirGraphMtEph {
         /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
         fn in_degree(&self, v: &V) -> (n: N)
             requires 
-                wf_dir_graph(self@),
+                wf_graph_view(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
             ensures n == self.spec_n_minus(v@).len();
 
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V> 
-            recommends wf_dir_graph(self@), self@.V.contains(v)
+            recommends wf_graph_view(self@), self@.V.contains(v)
         { 
             self.spec_n_plus(v).union(self.spec_n_minus(v)) 
         }
@@ -177,7 +172,7 @@ pub mod DirGraphMtEph {
         /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires 
-                wf_dir_graph(self@),
+                wf_graph_view(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
             ensures 
@@ -185,7 +180,7 @@ pub mod DirGraphMtEph {
                 neighbors@ <= self@.V;
 
         open spec fn spec_degree(&self, v: V::V) -> nat 
-            recommends wf_dir_graph(self@), self@.V.contains(v)
+            recommends wf_graph_view(self@), self@.V.contains(v)
         { 
             self.spec_ng(v).len() 
         }
@@ -193,13 +188,13 @@ pub mod DirGraphMtEph {
         /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
         fn degree(&self, v: &V) -> (n: N)
             requires 
-                wf_dir_graph(self@),
+                wf_graph_view(self@),
                 valid_key_type_for_graph::<V>(),
                 self@.V.contains(v@),
             ensures n == self.spec_degree(v@);
 
         open spec fn spec_n_plus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
-            recommends wf_dir_graph(self@), vertices <= self@.V
+            recommends wf_graph_view(self@), vertices <= self@.V
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_plus(u).contains(w))
         }
@@ -207,7 +202,7 @@ pub mod DirGraphMtEph {
         /// APAS: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) - parallel
         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)
             requires 
-                wf_dir_graph(self@),
+                wf_graph_view(self@),
                 valid_key_type_for_graph::<V>(),
                 u_set@ <= self@.V,
             ensures 
@@ -215,7 +210,7 @@ pub mod DirGraphMtEph {
                 out_neighbors@ <= self@.V;
 
         open spec fn spec_n_minus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
-            recommends wf_dir_graph(self@), vertices <= self@.V
+            recommends wf_graph_view(self@), vertices <= self@.V
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_minus(u).contains(w))
         }
@@ -223,7 +218,7 @@ pub mod DirGraphMtEph {
         /// APAS: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) - parallel
         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)
             requires 
-                wf_dir_graph(self@),
+                wf_graph_view(self@),
                 valid_key_type_for_graph::<V>(),
                 u_set@ <= self@.V,
             ensures 
@@ -231,7 +226,7 @@ pub mod DirGraphMtEph {
                 in_neighbors@ <= self@.V;
 
         open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
-            recommends wf_dir_graph(self@), vertices <= self@.V
+            recommends wf_graph_view(self@), vertices <= self@.V
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
         }
@@ -239,7 +234,7 @@ pub mod DirGraphMtEph {
         /// APAS: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) - parallel
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires 
-                wf_dir_graph(self@),
+                wf_graph_view(self@),
                 valid_key_type_for_graph::<V>(),
                 u_set@ <= self@.V,
             ensures 
@@ -385,7 +380,10 @@ pub mod DirGraphMtEph {
         graph: &DirGraphMtEph<V>,
         u_set: &SetStEph<V>,
     ) -> (result: SetStEph<V>)
-        requires valid_key_type_for_graph::<V>()
+        requires 
+            wf_graph_view(graph@),
+            valid_key_type_for_graph::<V>(),
+            u_set@ <= graph@.V,
         ensures result@ == graph.spec_n_plus_of_vertices(u_set@)
     {
         let vertices = u_set.to_seq();
@@ -394,13 +392,26 @@ pub mod DirGraphMtEph {
         else if n == 1 { n_plus_parallel(graph, vertices[0].clone_plus(), graph.A.clone()) }
         else {
             let mid = n / 2;
+            let ghost old_vertices = vertices@;
             let mut right_verts = vertices;
             let left_verts = right_verts.split_off(mid);
+            proof {
+                assert forall |i: int| 0 <= i < left_verts@.len() 
+                    implies graph@.V.contains(#[trigger] left_verts@[i]@) by {
+                    assert(left_verts@[i] == old_vertices[mid + i]);
+                    lemma_seq_index_in_map_to_set::<V>(old_vertices, mid + i);
+                }
+                assert forall |i: int| 0 <= i < right_verts@.len() 
+                    implies graph@.V.contains(#[trigger] right_verts@[i]@) by {
+                    assert(right_verts@[i] == old_vertices[i]);
+                    lemma_seq_index_in_map_to_set::<V>(old_vertices, i);
+                }
+            }
             let graph_left = graph.clone();
             let graph_right = graph.clone();
             let Pair(left_result, right_result) =
-                ParaPair!(move || n_plus_of_vertices_seq_parallel(left_verts, graph_left),
-                          move || n_plus_of_vertices_seq_parallel(right_verts, graph_right));
+                ParaPair!(move || n_plus_of_vertices_seq_parallel(graph_left, left_verts),
+                          move || n_plus_of_vertices_seq_parallel(graph_right, right_verts));
             left_result.union(&right_result)
         };
         proof { assume(result@ == graph.spec_n_plus_of_vertices(u_set@)); }
@@ -409,10 +420,13 @@ pub mod DirGraphMtEph {
 
     /// Internal recursive worker for n_plus_of_vertices_parallel.
     fn n_plus_of_vertices_seq_parallel<V: StT + MtT + Hash + 'static>(
-        vertices: Vec<V>,
         graph: DirGraphMtEph<V>,
+        vertices: Vec<V>,
     ) -> (result: SetStEph<V>)
-        requires valid_key_type_for_graph::<V>()
+        requires 
+            wf_graph_view(graph@),
+            valid_key_type_for_graph::<V>(),
+            forall |i: int| 0 <= i < vertices@.len() ==> graph@.V.contains(#[trigger] vertices@[i]@),
         decreases vertices.len()
     {
         let n = vertices.len();
@@ -422,13 +436,24 @@ pub mod DirGraphMtEph {
         }
         else {
             let mid = n / 2;
+            let ghost old_vertices = vertices@;
             let mut right_verts = vertices;
             let left_verts = right_verts.split_off(mid);
+            proof {
+                assert forall |i: int| 0 <= i < left_verts@.len() 
+                    implies graph@.V.contains(#[trigger] left_verts@[i]@) by {
+                    assert(left_verts@[i] == old_vertices[mid + i]);
+                }
+                assert forall |i: int| 0 <= i < right_verts@.len() 
+                    implies graph@.V.contains(#[trigger] right_verts@[i]@) by {
+                    assert(right_verts@[i] == old_vertices[i]);
+                }
+            }
             let graph_left = graph.clone();
             let graph_right = graph;
             let Pair(left_result, right_result) =
-                ParaPair!(move || n_plus_of_vertices_seq_parallel(left_verts, graph_left),
-                          move || n_plus_of_vertices_seq_parallel(right_verts, graph_right));
+                ParaPair!(move || n_plus_of_vertices_seq_parallel(graph_left, left_verts),
+                          move || n_plus_of_vertices_seq_parallel(graph_right, right_verts));
             left_result.union(&right_result)
         }
     }
@@ -438,7 +463,10 @@ pub mod DirGraphMtEph {
         graph: &DirGraphMtEph<V>,
         u_set: &SetStEph<V>,
     ) -> (result: SetStEph<V>)
-        requires valid_key_type_for_graph::<V>()
+        requires 
+            wf_graph_view(graph@),
+            valid_key_type_for_graph::<V>(),
+            u_set@ <= graph@.V,
         ensures result@ == graph.spec_n_minus_of_vertices(u_set@)
     {
         let vertices = u_set.to_seq();
@@ -447,13 +475,26 @@ pub mod DirGraphMtEph {
         else if n == 1 { n_minus_parallel(graph, vertices[0].clone_plus()) }
         else {
             let mid = n / 2;
+            let ghost old_vertices = vertices@;
             let mut right_verts = vertices;
             let left_verts = right_verts.split_off(mid);
+            proof {
+                assert forall |i: int| 0 <= i < left_verts@.len() 
+                    implies graph@.V.contains(#[trigger] left_verts@[i]@) by {
+                    assert(left_verts@[i] == old_vertices[mid + i]);
+                    lemma_seq_index_in_map_to_set::<V>(old_vertices, mid + i);
+                }
+                assert forall |i: int| 0 <= i < right_verts@.len() 
+                    implies graph@.V.contains(#[trigger] right_verts@[i]@) by {
+                    assert(right_verts@[i] == old_vertices[i]);
+                    lemma_seq_index_in_map_to_set::<V>(old_vertices, i);
+                }
+            }
             let graph_left = graph.clone();
             let graph_right = graph.clone();
             let Pair(left_result, right_result) =
-                ParaPair!(move || n_minus_of_vertices_seq_parallel(left_verts, graph_left),
-                          move || n_minus_of_vertices_seq_parallel(right_verts, graph_right));
+                ParaPair!(move || n_minus_of_vertices_seq_parallel(graph_left, left_verts),
+                          move || n_minus_of_vertices_seq_parallel(graph_right, right_verts));
             left_result.union(&right_result)
         };
         proof { assume(result@ == graph.spec_n_minus_of_vertices(u_set@)); }
@@ -462,10 +503,13 @@ pub mod DirGraphMtEph {
 
     /// Internal recursive worker for n_minus_of_vertices_parallel.
     fn n_minus_of_vertices_seq_parallel<V: StT + MtT + Hash + 'static>(
-        vertices: Vec<V>,
         graph: DirGraphMtEph<V>,
+        vertices: Vec<V>,
     ) -> (result: SetStEph<V>)
-        requires valid_key_type_for_graph::<V>()
+        requires 
+            wf_graph_view(graph@),
+            valid_key_type_for_graph::<V>(),
+            forall |i: int| 0 <= i < vertices@.len() ==> graph@.V.contains(#[trigger] vertices@[i]@),
         decreases vertices.len()
     {
         let n = vertices.len();
@@ -473,13 +517,24 @@ pub mod DirGraphMtEph {
         else if n == 1 { n_minus_parallel(&graph, vertices[0].clone_plus()) }
         else {
             let mid = n / 2;
+            let ghost old_vertices = vertices@;
             let mut right_verts = vertices;
             let left_verts = right_verts.split_off(mid);
+            proof {
+                assert forall |i: int| 0 <= i < left_verts@.len() 
+                    implies graph@.V.contains(#[trigger] left_verts@[i]@) by {
+                    assert(left_verts@[i] == old_vertices[mid + i]);
+                }
+                assert forall |i: int| 0 <= i < right_verts@.len() 
+                    implies graph@.V.contains(#[trigger] right_verts@[i]@) by {
+                    assert(right_verts@[i] == old_vertices[i]);
+                }
+            }
             let graph_left = graph.clone();
             let graph_right = graph;
             let Pair(left_result, right_result) =
-                ParaPair!(move || n_minus_of_vertices_seq_parallel(left_verts, graph_left),
-                          move || n_minus_of_vertices_seq_parallel(right_verts, graph_right));
+                ParaPair!(move || n_minus_of_vertices_seq_parallel(graph_left, left_verts),
+                          move || n_minus_of_vertices_seq_parallel(graph_right, right_verts));
             left_result.union(&right_result)
         }
     }
@@ -489,22 +544,44 @@ pub mod DirGraphMtEph {
         graph: &DirGraphMtEph<V>,
         u_set: &SetStEph<V>,
     ) -> (result: SetStEph<V>)
-        requires valid_key_type_for_graph::<V>()
+        requires 
+            wf_graph_view(graph@),
+            valid_key_type_for_graph::<V>(),
+            u_set@ <= graph@.V,
         ensures result@ == graph.spec_ng_of_vertices(u_set@)
     {
         let vertices = u_set.to_seq();
         let n = vertices.len();
         let result = if n == 0 { SetStEph::empty() }
-        else if n == 1 { graph.ng(&vertices[0]) }
+        else if n == 1 { 
+            proof {
+                // vertices[0]@ is in u_set@ which is subset of graph@.V
+                lemma_seq_index_in_map_to_set(vertices@, 0);
+            }
+            graph.ng(&vertices[0]) 
+        }
         else {
             let mid = n / 2;
+            let ghost old_vertices = vertices@;
             let mut right_verts = vertices;
             let left_verts = right_verts.split_off(mid);
+            proof {
+                assert forall |i: int| 0 <= i < left_verts@.len() 
+                    implies graph@.V.contains(#[trigger] left_verts@[i]@) by {
+                    assert(left_verts@[i] == old_vertices[mid + i]);
+                    lemma_seq_index_in_map_to_set::<V>(old_vertices, mid + i);
+                }
+                assert forall |i: int| 0 <= i < right_verts@.len() 
+                    implies graph@.V.contains(#[trigger] right_verts@[i]@) by {
+                    assert(right_verts@[i] == old_vertices[i]);
+                    lemma_seq_index_in_map_to_set::<V>(old_vertices, i);
+                }
+            }
             let graph_left = graph.clone();
             let graph_right = graph.clone();
             let Pair(left_result, right_result) =
-                ParaPair!(move || ng_of_vertices_seq_parallel(left_verts, graph_left),
-                          move || ng_of_vertices_seq_parallel(right_verts, graph_right));
+                ParaPair!(move || ng_of_vertices_seq_parallel(graph_left, left_verts),
+                          move || ng_of_vertices_seq_parallel(graph_right, right_verts));
             left_result.union(&right_result)
         };
         proof { assume(result@ == graph.spec_ng_of_vertices(u_set@)); }
@@ -513,10 +590,13 @@ pub mod DirGraphMtEph {
 
     /// Internal recursive worker for ng_of_vertices_parallel.
     fn ng_of_vertices_seq_parallel<V: StT + MtT + Hash + 'static>(
-        vertices: Vec<V>,
         graph: DirGraphMtEph<V>,
+        vertices: Vec<V>,
     ) -> (result: SetStEph<V>)
-        requires valid_key_type_for_graph::<V>()
+        requires 
+            wf_graph_view(graph@),
+            valid_key_type_for_graph::<V>(),
+            forall |i: int| 0 <= i < vertices@.len() ==> graph@.V.contains(#[trigger] vertices@[i]@),
         decreases vertices.len()
     {
         let n = vertices.len();
@@ -524,13 +604,24 @@ pub mod DirGraphMtEph {
         else if n == 1 { graph.ng(&vertices[0]) }
         else {
             let mid = n / 2;
+            let ghost old_vertices = vertices@;
             let mut right_verts = vertices;
             let left_verts = right_verts.split_off(mid);
+            proof {
+                assert forall |i: int| 0 <= i < left_verts@.len() 
+                    implies graph@.V.contains(#[trigger] left_verts@[i]@) by {
+                    assert(left_verts@[i] == old_vertices[mid + i]);
+                }
+                assert forall |i: int| 0 <= i < right_verts@.len() 
+                    implies graph@.V.contains(#[trigger] right_verts@[i]@) by {
+                    assert(right_verts@[i] == old_vertices[i]);
+                }
+            }
             let graph_left = graph.clone();
             let graph_right = graph;
             let Pair(left_result, right_result) =
-                ParaPair!(move || ng_of_vertices_seq_parallel(left_verts, graph_left),
-                          move || ng_of_vertices_seq_parallel(right_verts, graph_right));
+                ParaPair!(move || ng_of_vertices_seq_parallel(graph_left, left_verts),
+                          move || ng_of_vertices_seq_parallel(graph_right, right_verts));
             left_result.union(&right_result)
         }
     }
