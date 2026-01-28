@@ -151,6 +151,7 @@ pub mod DirGraphMtEph {
             Set::new(|u: V::V| self@.A.contains((u, v))) 
         }
 
+
         /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)
             requires 
@@ -621,10 +622,7 @@ pub mod DirGraphMtEph {
 
         fn n_plus(&self, v: &V) -> SetStEph<V> { 
             let arcs = self.A.clone();
-            let out_neighbors = n_plus_parallel(self, v.clone_plus(), arcs);
-            assume(out_neighbors@ == self.spec_n_plus_from_set(v@, arcs@));
-            assert(out_neighbors@ == self.spec_n_plus(v@));
-            out_neighbors
+            n_plus_parallel(self, v.clone_plus(), arcs)
         }
 
         fn out_degree(&self, v: &V) -> (n: N) { self.n_plus(v).size() }

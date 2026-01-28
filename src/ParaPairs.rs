@@ -12,6 +12,35 @@ pub mod ParaPairs {
     /// - Verified parallel pair with closure spec propagation using the global pool.
     /// - Uses help-first strategy: spawns in parallel if capacity available, otherwise sequential.
     /// - Call set_parallelism() before first use to configure thread count.
+    ///
+    /// The ensures clause states that results satisfy the closures' respective ensures
+    /// predicates. However, Verus does not automatically propagate ensures clauses from
+    /// inner function calls through closure wrappers.
+    ///
+    /// WORKS: Named closures with explicit ensures clauses propagate correctly. The
+    /// move keyword is required because ParaPair requires Send + 'static closures.
+    ///
+    ///     let f1 = move || -> (out: SetStEph<V>)
+    ///         ensures out@ == g_left.spec_n_plus_from_set(v_left@, left_arcs@)
+    ///     { n_plus_parallel(&g_left, v_left, left_arcs) };
+    ///
+    ///     let Pair(a, b) = ParaPair!(f1, f2);
+    ///
+    /// WORKS: Direct function references propagate their ensures clauses.
+    ///
+    ///     fn foo() -> (r: u64) ensures r == 42 { 42 }
+    ///     let Pair(a, b) = ParaPair!(foo, bar);
+    ///
+    /// FAILS: Inline closures wrapping function calls lose the inner ensures.
+    ///
+    ///     let Pair(a, b) = ParaPair!(move || foo(), move || bar());
+    ///     assert(a == 42);  // cannot prove
+    ///
+    /// FAILS: Inline closures with ensures clauses cause a macro parse error.
+    ///
+    ///     ParaPair!(move || -> (out: T) ensures ... { body }, ...)
+    ///
+    /// You must bind annotated closures to a variable first.
     pub fn para_pair<A, B, F1, F2>(f1: F1, f2: F2) -> (result: Pair<A, B>)
         where
             F1: FnOnce() -> A + Send + 'static,
