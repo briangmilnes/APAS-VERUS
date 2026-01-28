@@ -1,0 +1,23 @@
+# Updating Verus
+
+When updating or rebuilding the Verus project at `~/projects/verus`:
+
+1. Read the build instructions first:
+   - `~/projects/verus/INSTALL.md` - overview and binary releases
+   - `~/projects/verus/BUILD.md` - building from source (this is what you need)
+
+2. The standard process is:
+   ```bash
+   cd ~/projects/verus
+   git fetch && git pull
+   cd source
+   source ../tools/activate
+   vargo build --release
+   ```
+
+3. If the Rust toolchain version changed, install it first:
+   ```bash
+   rustup toolchain install
+   ```
+
+Do NOT use `cargo build` directly - Verus requires `vargo` for its custom build process.

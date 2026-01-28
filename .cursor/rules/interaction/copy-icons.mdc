@@ -1,0 +1,10 @@
+# Copy Icons for URLs and Paths
+
+When displaying URLs or file paths in tables or lists, include a copy icon (📋) as a clickable element to make copying easier.
+
+Format examples:
+
+| # | Type | Link |
+|---|------|------|
+| 1 | URL | 📋 `https://example.com/path` |
+| 2 | File | 📋 `/home/user/project/file.rs` |
