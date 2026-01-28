@@ -1,0 +1,30 @@
+---
+description: Leave failed experiments unmodified
+globs:
+  - src/experiments/**
+alwaysApply: false
+---
+
+# Failed Experiments
+
+When an experiment file fails verification:
+
+- **DO NOT** modify it to pass (no adding `assume`, no commenting out failing assertions)
+- **DO** add a `RESULT: FAILS` comment at the top explaining what fails
+- **DO** comment out the module in `lib.rs` so the project validates
+
+Failed experiments are valuable documentation of what Verus cannot (yet) do.
+
+## Example
+
+```rust
+//! Proof time test: Does X work?
+//! RESULT: FAILS - assertion on line 30 cannot be proven
+
+// ... original failing code unchanged ...
+```
+
+In `lib.rs`:
+```rust
+//    pub mod experiment_that_fails;  // FAILS - see file header
+```

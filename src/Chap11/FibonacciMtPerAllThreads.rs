@@ -35,7 +35,7 @@ pub mod FibonacciMtPerAllThreads {
                 n
             } else {
                 // Closures with explicit specs - Verus extracts these via
-                // f.requires() and f.ensures() for para_pair's contract
+                // f.requires() and f.ensures() for para_pair's contract.
                 let f1 = move || -> (r: u64)
                     requires n - 1 <= 46
                     ensures r == spec_fib((n - 1) as nat)

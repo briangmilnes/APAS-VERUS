@@ -63,30 +63,31 @@ pub mod experiments {
 //    pub mod hash_set_modern_pattern;  // WIP - uses vstd::std_specs not available in cargo
 //    pub mod test_verify_one_file;     // WIP - uses rust_verify_test_macros (nightly)
 //    pub mod ghost_type_invariant;     // FAILS - type_invariant makes struct opaque
-    pub mod modify_a_ghost_struct;
+//    pub mod modify_a_ghost_struct;
+//    pub mod parapair_closure_ensures;
+//    pub mod parapair_move_closure_ensures;
+//    pub mod parapair_named_closure;
+//    pub mod parapair_toplevel_closure;
+//    pub mod arc_clone_deref;
 }
 
 pub mod vstdplus {
     pub mod pervasives_plus;
     pub mod threads_plus;
     pub mod VecQueue;
-    // pub mod set_axioms;  // UNUSED - moved to attic
     pub mod seq_set;
     pub mod seq;
     pub mod hash_set_with_view_plus;
-    // pub mod hash_set_iter_with_view;  // Not needed - using closed spec approach
     pub mod hash_set_specs;
     pub mod total_order;
     pub mod partial_order;
-    // pub mod clone_view;  // UNUSED - moved to attic
     pub mod feq;
     pub mod clone_plus;
-    // pub mod vec;  // UNUSED - moved to attic
     pub mod checked_int;
     pub mod checked_nat;
     pub mod hashed_checked_u32;
     pub mod arithmetic {
-        pub mod power2_plus;
+    pub mod power2_plus;
     }
 }
 
@@ -117,18 +118,18 @@ pub mod Chap06 {
 //    pub mod UnDirGraphMtEph;
 //    pub mod LabDirGraphMtEph;
 //    pub mod LabUnDirGraphMtEph;
-    // WeightedDirGraphStEph per-type variants - proven, not compiled by default
-//    pub mod WeightedDirGraphStEphU8;
-//    pub mod WeightedDirGraphStEphU16;
-//    pub mod WeightedDirGraphStEphU64;
-//    pub mod WeightedDirGraphStEphU128;
-//    pub mod WeightedDirGraphStEphUsize;
-//    pub mod WeightedDirGraphStEphI8;
-//    pub mod WeightedDirGraphStEphI16;
-//    pub mod WeightedDirGraphStEphI32;
-//    pub mod WeightedDirGraphStEphI64;
-//    pub mod WeightedDirGraphStEphI128;
-//    pub mod WeightedDirGraphStEphIsize;
+    // WeightedDirGraphStEph per-type variants
+    pub mod WeightedDirGraphStEphU8;
+    pub mod WeightedDirGraphStEphU16;
+    pub mod WeightedDirGraphStEphU64;
+    pub mod WeightedDirGraphStEphU128;
+    pub mod WeightedDirGraphStEphUsize;
+    pub mod WeightedDirGraphStEphI8;
+    pub mod WeightedDirGraphStEphI16;
+    pub mod WeightedDirGraphStEphI32;
+    pub mod WeightedDirGraphStEphI64;
+    pub mod WeightedDirGraphStEphI128;
+    pub mod WeightedDirGraphStEphIsize;
 }
 
 pub mod Chap11 {

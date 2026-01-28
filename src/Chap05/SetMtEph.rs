@@ -297,6 +297,15 @@ verus! {
                     )) &&
                     (forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0)
                 );
+
+        /// Choose an arbitrary element from a non-empty set.
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn choose(&self) -> (element: T)
+            requires 
+                valid_key_type::<T>(),
+                self@.len() > 0,
+            ensures 
+                self@.contains(element@);
     }
 
     impl<T: StT + Hash> View for SetMtEph<T> {
@@ -795,6 +804,27 @@ verus! {
                 }
             }
         }
+
+        #[verifier::external_body]
+        fn choose(&self) -> (element: T) {
+            self.elements.iter().next().unwrap().clone()
+        }
+    }
+
+    /// Singleton choose: if len == 1 and contains(a), then choose() == a.
+    pub broadcast proof fn lemma_singleton_choose<A>(s: Set<A>, a: A)
+        requires
+            s.finite(),
+            s.len() == 1,
+            #[trigger] s.contains(a),
+        ensures
+            s.choose() == a,
+    {
+        Set::lemma_is_singleton(s);
+    }
+
+    pub broadcast group group_set_mt_eph_lemmas {
+        lemma_singleton_choose,
     }
 
     impl<T: StT + Hash> std::hash::Hash for SetMtEph<T> {

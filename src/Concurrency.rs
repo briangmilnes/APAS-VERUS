@@ -20,22 +20,14 @@ pub mod Concurrency {
     use vstd::prelude::*;
     use std::sync::Mutex;
     use crate::Types::Types::{StT, Pair, B};
-    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
 
     verus! {
 
     /// Single-threaded friendly elements that can be shared across threads (StT + Send + Sync).
     pub trait StTInMtT: StT + Send + Sync {}
 
-    /// - Multi-threaded friendly elements; minimal so it can include Mutex<..>.
-    /// - NOTE: clone_mt() has no Verus specification. For verified code, use clone_plus()
-    ///   from ClonePlus trait instead, which has `ensures cloned(*self, res)` postcondition.
-    pub trait MtT: Sized + Send + Sync {
-        type Inner: StT;
-        /// Deprecated for verified code - use clone_plus() which has specification.
-        fn clone_mt(&self) -> Self;
-        fn new_mt(inner: Self::Inner) -> Self;
-    }
+    /// Multi-threaded friendly elements: Sized + Send + Sync.
+    pub trait MtT: Sized + Send + Sync {}
 
     /// Multi-threaded key type with ordering and static lifetime.
     pub trait MtKey: StTInMtT + Ord + 'static {}
@@ -60,7 +52,10 @@ pub mod Concurrency {
 
     /// Backward compatibility alias.
     pub use PredMt as Pred;
+
+    // Blanket implementations
     impl<T> StTInMtT for T where T: StT + Send + Sync {}
+    impl<T> MtT for T where T: Sized + Send + Sync {}
     impl<T> MtKey for T where T: StTInMtT + Ord + 'static {}
     impl<T> MtVal for T where T: StTInMtT + 'static {}
     impl<T, Args, Output> MtFn<Args, Output> for T where T: Fn(Args) -> Output + Send + Sync + 'static {}
@@ -69,83 +64,5 @@ pub mod Concurrency {
     impl<F, T> PredMt<T> for F where F: Fn(&T) -> B + Send + Sync + 'static {}
     impl<F, T> PredVal<T> for F where F: Fn(T) -> B + Send + Sync + 'static {}
 
-    // MtT for Pair when components are Send+Sync+Clone
-    impl<A: StT + Send + Sync + Clone, B: StT + Send + Sync + Clone> MtT for Pair<A, B> {
-        type Inner = Pair<A, B>;
-        fn clone_mt(&self) -> Self { Pair(self.0.clone_plus(), self.1.clone_plus()) }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    // MtT implementations for primitive types
-    impl MtT for usize {
-        type Inner = usize;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl MtT for isize {
-        type Inner = isize;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl MtT for i32 {
-        type Inner = i32;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl MtT for u32 {
-        type Inner = u32;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl MtT for i64 {
-        type Inner = i64;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl MtT for u64 {
-        type Inner = u64;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl MtT for bool {
-        type Inner = bool;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl MtT for char {
-        type Inner = char;
-        fn clone_mt(&self) -> Self { *self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl MtT for String {
-        type Inner = String;
-        fn clone_mt(&self) -> Self { self.clone_plus() }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
-    impl<'a> MtT for &'a str {
-        type Inner = &'a str;
-        fn clone_mt(&self) -> Self { self }
-        fn new_mt(inner: Self::Inner) -> Self { inner }
-    }
-
     } // verus!
-
-    // MtT implementations for Mutex - outside verus! because Mutex is not specified
-    impl<T: StT + Send> MtT for Mutex<T> {
-        type Inner = T;
-        fn clone_mt(&self) -> Self {
-            let inner = self.lock().unwrap().clone();
-            Mutex::new(inner)
-        }
-        fn new_mt(inner: Self::Inner) -> Self { Mutex::new(inner) }
-    }
 }

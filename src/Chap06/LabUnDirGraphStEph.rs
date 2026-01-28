@@ -62,16 +62,18 @@ verus! {
         fn empty() -> (g: LabUnDirGraphStEph<V, L>)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
-                g@.V.finite(),
-                g@.A.finite(),
+                wf_lab_graph_view(g@),
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
         /// APAS: Work Θ(|V| + |E|), Span Θ(1)
         fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: LabUnDirGraphStEph<V, L>)
+            requires
+                forall |u: V::V, w: V::V, l: L::V| 
+                    #[trigger] labeled_edges@.contains((u, w, l)) ==> 
+                        vertices@.contains(u) && vertices@.contains(w),
             ensures
-                g@.V.finite(),
-                g@.A.finite(),
+                wf_lab_graph_view(g@),
                 g@.V =~= vertices@,
                 g@.A =~= labeled_edges@;
 
@@ -104,7 +106,7 @@ verus! {
 
         /// APAS: Work Θ(|E|), Span Θ(1)
         fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>)
-            requires valid_key_type_LabEdge::<V, L>()
+            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
             ensures 
                 label.is_some() == (exists |l: L::V| 
                     self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l))),
@@ -113,13 +115,13 @@ verus! {
 
         /// APAS: Work Θ(|E|), Span Θ(1)
         fn has_edge(&self, v1: &V, v2: &V) -> (b: bool)
-            requires valid_key_type_LabEdge::<V, L>()
+            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
             ensures b == (exists |l: L::V| 
                 self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l)));
 
         /// APAS: Work Θ(|E|), Span Θ(1)
         fn neighbors(&self, v: &V) -> (neighbors: SetStEph<V>)
-            requires valid_key_type_LabEdge::<V, L>()
+            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
             ensures neighbors@ == self.spec_neighbors(v@);
     }
 

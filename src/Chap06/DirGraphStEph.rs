@@ -65,7 +65,7 @@ verus! {
     }
 
     pub trait DirGraphStEphTrait<V: StT + Hash>:
-    View<V = GraphView<<V as View>::V>> + Sized {
+         View<V = GraphView<<V as View>::V>> + Sized {
 
         open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V>
             recommends wf_graph_view(self@), self@.V.contains(v)

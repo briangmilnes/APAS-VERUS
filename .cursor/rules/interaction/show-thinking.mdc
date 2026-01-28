@@ -1,12 +1,16 @@
-# Always Show Thinking
+---
+description: Show AI reasoning in response text
+globs: 
+alwaysApply: true
+---
 
-When working on tasks, show reasoning explicitly in the response text, not just in hidden thinking blocks.
+# Show Thinking
 
-Before taking action, briefly explain:
-- What you're about to do and why
-- Key decisions or alternatives considered
-- What you expect to happen
+Always include your reasoning and analysis directly in your response text, not just in the collapsed thinking bubble.
 
-This helps the user follow the reasoning without expanding collapsed "thought N sec" bubbles.
+Before taking action, explain:
+- What you understand the task to be
+- Your approach/strategy
+- Key decisions and why
 
-Keep explanations concise but informative. One or two sentences is usually enough.
+Format as a brief "**Reasoning:**" section at the start of responses when making non-trivial decisions.

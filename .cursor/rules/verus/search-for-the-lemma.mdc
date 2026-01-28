@@ -50,3 +50,19 @@ veracity-search 'fn \(to_set\|no_duplicates\)'
 | All lemmas about sets | `'proof fn lemma.*set'` |
 
 Only after searching and finding nothing relevant should you consider writing a new lemma.
+
+## Output Display
+
+Always show the full output from veracity-search:
+- **Always echo the output into your response text as a markdown code block** - do not rely on the terminal widget which collapses output
+- Show all matches, not just summaries
+
+Format exactly like verus validation output:
+
+```
+**veracity-search output:**
+
+\`\`\`
+[paste complete terminal output here]
+\`\`\`
+```

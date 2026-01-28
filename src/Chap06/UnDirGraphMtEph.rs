@@ -11,153 +11,253 @@ pub mod UnDirGraphMtEph {
 
     use vstd::prelude::*;
     use crate::Types::Types::*;
+    use crate::Concurrency::Concurrency::StTInMtT;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::{ParaPair, SetLit};
 
+    verus! {
+
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap05::SetStEph::SetStEph::valid_key_type;
+
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    #[cfg(verus_keep_ghost)]
+    use crate::Types::Types::wf_graph_view;
+
+    broadcast use {
+        vstd::set::group_set_axioms,
+        crate::Types::Types::group_Edge_axioms,
+    };
+
+    pub open spec fn valid_key_type_for_graph<V: StTInMtT + Hash>() -> bool {
+        valid_key_type_Edge::<V>()
+    }
+
+    #[verifier::reject_recursive_types(V)]
     #[derive(Clone)]
-    pub struct UnDirGraphMtEph<V: StT + MtT + Hash + 'static> {
+    pub struct UnDirGraphMtEph<V: StTInMtT + Hash + 'static> {
         V: SetStEph<V>,
         E: SetStEph<Edge<V>>,
     }
 
-    pub trait UnDirGraphMtEphTrait<V: StT + MtT + Hash + 'static> {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty()                                        -> Self;
-        /// - APAS: Work Θ(|V| + |E|), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(|V| + |E|), Span Θ(1)
-        fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> Self;
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn vertices(&self)                                -> &SetStEph<V>;
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn edges(&self)                                   -> &SetStEph<Edge<V>>;
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn sizeV(&self)                                   -> N;
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn sizeE(&self)                                   -> N;
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn neighbor(&self, u: &V, v: &V)                  -> B;
-        /// - APAS: Work Θ(|E|), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(|E|), Span Θ(log |E|), Parallelism Θ(|E|/log |E|) - parallel divide-and-conquer filter
-        fn ng(&self, v: &V)                               -> SetStEph<V>;
-        /// - APAS: Work Θ(|u_set| × |E|), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(|u_set| × |E|), Span Θ(log |u_set| + log |E|), Parallelism Θ((|u_set| × |E|)/(log |u_set| + log |E|)) - parallel map-reduce
-        fn ng_of_vertices(&self, u_set: &SetStEph<V>)       -> SetStEph<V>;
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn incident(&self, e: &Edge<V>, v: &V)            -> B;
-        /// - APAS: Work Θ(|E|), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(|E|), Span Θ(log |E|), Parallelism Θ(|E|/log |E|) - calls parallel ng
-        fn degree(&self, v: &V)                           -> N;
+    impl<V: StTInMtT + Hash + 'static> View for UnDirGraphMtEph<V> {
+        type V = GraphView<<V as View>::V>;
+        open spec fn view(&self) -> Self::V {
+            GraphView { V: self.V@, A: self.E@ }
+        }
     }
 
-    impl<V: StT + MtT + Hash + 'static> UnDirGraphMtEphTrait<V> for UnDirGraphMtEph<V> {
-        fn empty() -> UnDirGraphMtEph<V> {
+    impl<V: StTInMtT + Hash + 'static> UnDirGraphMtEph<V> {
+        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.V@ }
+        pub open spec fn spec_edges(&self) -> Set<(V::V, V::V)> { self.E@ }
+    }
+
+    pub trait UnDirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn empty() -> (g: Self)
+            requires valid_key_type_for_graph::<V>()
+            ensures 
+                wf_graph_view(g@),
+                g@.V == Set::<<V as View>::V>::empty(), 
+                g@.A == Set::<(<V as View>::V, <V as View>::V)>::empty();
+
+        /// APAS: Work Θ(|V| + |E|), Span Θ(1)
+        fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: Self)
+            requires 
+                valid_key_type_for_graph::<V>(),
+                V@.finite(),
+                E@.finite(),
+                forall |u: V::V, w: V::V| 
+                    #[trigger] E@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),
+            ensures 
+                wf_graph_view(g@),
+                g@.V == V@, 
+                g@.A == E@;
+
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn vertices(&self) -> (v: &SetStEph<V>)
+            ensures v@ == self@.V;
+
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn edges(&self) -> (e: &SetStEph<Edge<V>>)
+            ensures e@ == self@.A;
+
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn sizeV(&self) -> (n: N)
+            ensures n == self@.V.len();
+
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn sizeE(&self) -> (n: N)
+            ensures n == self@.A.len();
+
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn neighbor(&self, u: &V, v: &V) -> (b: B)
+            requires 
+                wf_graph_view(self@),
+                valid_key_type_for_graph::<V>(),
+                self@.V.contains(u@),
+                self@.V.contains(v@),
+            ensures b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)));
+
+        open spec fn spec_ng(&self, v: V::V) -> Set<V::V> 
+            recommends wf_graph_view(self@), self@.V.contains(v)
+        { 
+            Set::new(|w: V::V| self@.A.contains((v, w)) || self@.A.contains((w, v)))
+        }
+
+        /// APAS: Work Θ(|E|), Span Θ(log |E|) - parallel
+        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
+            requires 
+                wf_graph_view(self@),
+                valid_key_type_for_graph::<V>(),
+                self@.V.contains(v@),
+            ensures 
+                neighbors@ == self.spec_ng(v@),
+                neighbors@ <= self@.V;
+
+        open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
+            recommends wf_graph_view(self@), vertices <= self@.V
+        {
+            Set::new(|w: V::V| exists |u: V::V| vertices.contains(u) && self.spec_ng(u).contains(w))
+        }
+
+        /// APAS: Work Θ(|u_set| × |E|), Span Θ(log |u_set| + log |E|) - parallel
+        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)
+            requires 
+                wf_graph_view(self@),
+                valid_key_type_for_graph::<V>(),
+                u_set@ <= self@.V,
+            ensures 
+                neighbors@ == self.spec_ng_of_vertices(u_set@),
+                neighbors@ <= self@.V;
+
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B)
+            requires valid_key_type_for_graph::<V>()
+            ensures b == (e@.0 == v@ || e@.1 == v@);
+
+        /// APAS: Work Θ(|E|), Span Θ(log |E|) - parallel
+        fn degree(&self, v: &V) -> (n: N)
+            requires 
+                wf_graph_view(self@),
+                valid_key_type_for_graph::<V>(),
+                self@.V.contains(v@),
+            ensures n == self.spec_ng(v@).len();
+    }
+
+    impl<V: StTInMtT + Hash + 'static> UnDirGraphMtEphTrait<V> for UnDirGraphMtEph<V> {
+        fn empty() -> (g: UnDirGraphMtEph<V>) {
             UnDirGraphMtEph {
                 V: SetLit![],
                 E: SetLit![],
             }
         }
-        fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> UnDirGraphMtEph<V> { UnDirGraphMtEph { V, E } }
-        fn vertices(&self) -> &SetStEph<V> { &self.V }
-        fn edges(&self) -> &SetStEph<Edge<V>> { &self.E }
-        fn sizeV(&self) -> N { self.V.size() }
-        fn sizeE(&self) -> N { self.E.size() }
 
-        fn neighbor(&self, u: &V, v: &V) -> B {
-            // Treat edges as unordered: {u,v}
+        fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: UnDirGraphMtEph<V>) { 
+            UnDirGraphMtEph { V, E } 
+        }
+
+        fn vertices(&self) -> (v: &SetStEph<V>) { &self.V }
+
+        fn edges(&self) -> (e: &SetStEph<Edge<V>>) { &self.E }
+
+        fn sizeV(&self) -> (n: N) { self.V.size() }
+
+        fn sizeE(&self) -> (n: N) { self.E.size() }
+
+        #[verifier::external_body]
+        fn neighbor(&self, u: &V, v: &V) -> (b: B) {
             self.E.mem(&Edge(u.clone_plus(), v.clone_plus())) || self.E.mem(&Edge(v.clone_plus(), u.clone_plus()))
         }
 
-        fn ng(&self, v: &V) -> SetStEph<V> {
-            // PARALLEL: filter edges using divide-and-conquer
+        #[verifier::external_body]
+        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
             let edges = self.E.iter().cloned().collect::<Vec<Edge<V>>>();
-
-            // Parallel divide-and-conquer with proper base cases
-            fn parallel_ng<V: StT + MtT + Hash + 'static>(edges: Vec<Edge<V>>, v: V) -> SetStEph<V> {
-                let n = edges.len();
-                if n == 0 {
-                    return SetLit![];
-                }
-                if n == 1 {
-                    let Edge(a, b) = &edges[0];
-                    if a == &v {
-                        let mut s = SetLit![];
-                        s.insert(b.clone_plus());
-                        return s;
-                    } else if b == &v {
-                        let mut s = SetLit![];
-                        s.insert(a.clone_plus());
-                        return s;
-                    }
-                    return SetLit![];
-                }
-
-                let mid = n / 2;
-                let mut right_edges = edges;
-                let left_edges = right_edges.split_off(mid);
-
-                let v_left = v.clone_plus();
-                let v_right = v;
-
-                let Pair(left_result, right_result) =
-                    ParaPair!(move || parallel_ng(left_edges, v_left), move || parallel_ng(
-                        right_edges,
-                        v_right
-                    ));
-
-                left_result.union(&right_result)
-            }
-
-            parallel_ng(edges, v.clone_plus())
+            ng_parallel(edges, v.clone_plus())
         }
 
-        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> {
-            // PARALLEL: map-reduce over vertices using divide-and-conquer
+        #[verifier::external_body]
+        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
             let vertices = u_set.iter().cloned().collect::<Vec<V>>();
-
-            // Parallel map-reduce with proper base cases
-            fn parallel_ng_of_vertices<V: StT + MtT + Hash + 'static>(
-                vertices: Vec<V>,
-                graph: UnDirGraphMtEph<V>,
-            ) -> SetStEph<V> {
-                let n = vertices.len();
-                if n == 0 {
-                    return SetLit![];
-                }
-                if n == 1 {
-                    return graph.ng(&vertices[0]);
-                }
-
-                let mid = n / 2;
-                let mut right_verts = vertices;
-                let left_verts = right_verts.split_off(mid);
-
-                let graph_left = graph.clone();
-                let graph_right = graph;
-
-                let Pair(left_result, right_result) =
-                    ParaPair!(move || parallel_ng_of_vertices(left_verts, graph_left), move || {
-                        parallel_ng_of_vertices(right_verts, graph_right)
-                    });
-
-                left_result.union(&right_result)
-            }
-
-            parallel_ng_of_vertices(vertices, self.clone())
+            ng_of_vertices_parallel(vertices, self.clone())
         }
 
-        fn incident(&self, e: &Edge<V>, v: &V) -> B { &e.0 == v || &e.1 == v }
+        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) { 
+            &e.0 == v || &e.1 == v 
+        }
 
-        fn degree(&self, v: &V) -> N { self.ng(v).size() }
+        #[verifier::external_body]
+        fn degree(&self, v: &V) -> (n: N) { 
+            self.ng(v).size() 
+        }
     }
 
-    impl<V: StT + MtT + Hash + 'static> Debug for UnDirGraphMtEph<V> {
+    } // verus!
+
+    // Parallel helper functions (outside verus! block for closure support)
+    fn ng_parallel<V: StTInMtT + Hash + 'static>(edges: Vec<Edge<V>>, v: V) -> SetStEph<V> {
+        let n = edges.len();
+        if n == 0 {
+            return SetLit![];
+        }
+        if n == 1 {
+            let Edge(a, b) = &edges[0];
+            if a == &v {
+                let mut s = SetLit![];
+                s.insert(b.clone_plus());
+                return s;
+            } else if b == &v {
+                let mut s = SetLit![];
+                s.insert(a.clone_plus());
+                return s;
+            }
+            return SetLit![];
+        }
+
+        let mid = n / 2;
+        let mut right_edges = edges;
+        let left_edges = right_edges.split_off(mid);
+
+        let v_left = v.clone_plus();
+        let v_right = v;
+
+        let Pair(left_result, right_result) =
+            ParaPair!(move || ng_parallel(left_edges, v_left), move || ng_parallel(
+                right_edges,
+                v_right
+            ));
+
+        left_result.union(&right_result)
+    }
+
+    fn ng_of_vertices_parallel<V: StTInMtT + Hash + 'static>(
+        vertices: Vec<V>,
+        graph: UnDirGraphMtEph<V>,
+    ) -> SetStEph<V> {
+        let n = vertices.len();
+        if n == 0 {
+            return SetLit![];
+        }
+        if n == 1 {
+            return graph.ng(&vertices[0]);
+        }
+
+        let mid = n / 2;
+        let mut right_verts = vertices;
+        let left_verts = right_verts.split_off(mid);
+
+        let graph_left = graph.clone();
+        let graph_right = graph;
+
+        let Pair(left_result, right_result) =
+            ParaPair!(move || ng_of_vertices_parallel(left_verts, graph_left), move || {
+                ng_of_vertices_parallel(right_verts, graph_right)
+            });
+
+        left_result.union(&right_result)
+    }
+
+    impl<V: StTInMtT + Hash + 'static> Debug for UnDirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             f.debug_struct("UnDirGraphMtEph")
                 .field("V", &self.V)
@@ -166,14 +266,14 @@ pub mod UnDirGraphMtEph {
         }
     }
 
-    impl<V: StT + MtT + Hash + 'static> Display for UnDirGraphMtEph<V> {
+    impl<V: StTInMtT + Hash + 'static> Display for UnDirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} E={:?}", self.V, self.E) }
     }
 
-    impl<V: StT + MtT + Hash + 'static> PartialEq for UnDirGraphMtEph<V> {
+    impl<V: StTInMtT + Hash + 'static> PartialEq for UnDirGraphMtEph<V> {
         fn eq(&self, other: &Self) -> bool { self.V == other.V && self.E == other.E }
     }
-    impl<V: StT + MtT + Hash + 'static> Eq for UnDirGraphMtEph<V> {}
+    impl<V: StTInMtT + Hash + 'static> Eq for UnDirGraphMtEph<V> {}
 
     #[macro_export]
     macro_rules! UnDirGraphMtEphLit {

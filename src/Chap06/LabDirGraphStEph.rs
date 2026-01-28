@@ -69,17 +69,19 @@ verus! {
         fn empty() -> (g: LabDirGraphStEph<V, L>)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
-                g@.V.finite(),
-                g@.A.finite(),
+                wf_lab_graph_view(g@),
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
         /// - APAS: Work Θ(|V| + |A|), Span Θ(1)
         /// - claude-4-sonet: Work Θ(|V| + |A|), Span Θ(|V| + |A|), Parallelism Θ(1) - sequential
         fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: LabDirGraphStEph<V, L>)
+            requires
+                forall |u: V::V, w: V::V, l: L::V| 
+                    #[trigger] labeled_arcs@.contains((u, w, l)) ==> 
+                        vertices@.contains(u) && vertices@.contains(w),
             ensures
-                g@.V.finite(),
-                g@.A.finite(),
+                wf_lab_graph_view(g@),
                 g@.V =~= vertices@,
                 g@.A =~= labeled_arcs@;
 
@@ -116,7 +118,7 @@ verus! {
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential search
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>)
-            requires valid_key_type_LabEdge::<V, L>()
+            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
             ensures 
                 label.is_some() == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l))),
                 label.is_some() ==> self@.A.contains((from@, to@, label.unwrap()@));
@@ -124,19 +126,19 @@ verus! {
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential search
         fn has_arc(&self, from: &V, to: &V) -> (b: bool)
-            requires valid_key_type_LabEdge::<V, L>()
+            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
             ensures b == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l)));
 
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential filter
         fn out_neighbors(&self, v: &V) -> (out_neighbors: SetStEph<V>)
-            requires valid_key_type_LabEdge::<V, L>()
+            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
             ensures out_neighbors@.finite(), out_neighbors@ == self.spec_out_neighbors(v@);
 
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential filter
         fn in_neighbors(&self, v: &V) -> (in_neighbors: SetStEph<V>)
-            requires valid_key_type_LabEdge::<V, L>()
+            requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
             ensures in_neighbors@.finite(), in_neighbors@ == self.spec_in_neighbors(v@);
     }
 

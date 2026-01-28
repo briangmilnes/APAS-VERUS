@@ -2,7 +2,7 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: proof fn _ ensures .*no_duplicates.*contains
-Searching: /home/milnes/projects/APAS-VERUS
-Files: 197, Functions: 3549, Matches: 0
+Pattern: fn _ types Arc .*clone
+Searching: /home/milnes/projects/verus/source/vstd
+Files: 89, Functions: 2148, Matches: 0
 

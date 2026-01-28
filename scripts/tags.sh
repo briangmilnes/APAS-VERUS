@@ -12,7 +12,11 @@ if ! command -v ctags >/dev/null 2>&1; then
   exit 1
 fi
 
-$TAGS -R ${ROOT_DIR}/src ~/projects/verus/source/builtin ~/projects/verus/source/vstd
+# Find all .rs files excluding attic directories
+FILES=$(find ${ROOT_DIR}/src ~/projects/verus/source/builtin ~/projects/verus/source/vstd \
+    -name '*.rs' -not -path '*/attic/*')
+
+$TAGS $FILES
 echo "Wrote tags: ${TAGS_FILE}"
 
 

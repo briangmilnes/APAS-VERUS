@@ -12,7 +12,7 @@ pub mod DirGraphMtEph {
     use vstd::prelude::*;
     use crate::Types::Types::*;
     use crate::Chap05::SetStEph::SetStEph::*;
-    use crate::Concurrency::Concurrency::MtT;
+    use crate::Concurrency::Concurrency::{MtT, StTInMtT};
     use crate::{ParaPair, ParaPairDisjoint, SetLit};
 
     verus! {
@@ -30,35 +30,37 @@ pub mod DirGraphMtEph {
     broadcast use {
         vstd::set::group_set_axioms,
         crate::Types::Types::group_Edge_axioms,
+        crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
-    pub open spec fn valid_key_type_for_graph<V: StT + MtT + Hash>() -> bool {
+    pub open spec fn valid_key_type_for_graph<V: StTInMtT + Hash>() -> bool {
         valid_key_type_Edge::<V>()
     }
 
     #[verifier::reject_recursive_types(V)]
-    pub struct DirGraphMtEph<V: StT + MtT + Hash + 'static> {
+    pub struct DirGraphMtEph<V: StTInMtT + Hash + 'static> {
         pub V: SetStEph<V>,
         pub A: SetStEph<Edge<V>>,
     }
 
-    impl<V: StT + MtT + Hash + 'static> View for DirGraphMtEph<V> {
+    impl<V: StTInMtT + Hash + 'static> View for DirGraphMtEph<V> {
         type V = GraphView<<V as View>::V>;
         open spec fn view(&self) -> Self::V {
             GraphView { V: self.V@, A: self.A@ }
         }
     }
 
-    impl<V: StT + MtT + Hash + 'static> DirGraphMtEph<V> {
+    impl<V: StTInMtT + Hash + 'static> DirGraphMtEph<V> {
         /// Convenience accessor for vertices view
         pub open spec fn spec_vertices(&self) -> Set<V::V> { self.V@ }
         /// Convenience accessor for arcs view
         pub open spec fn spec_arcs(&self) -> Set<(V::V, V::V)> { self.A@ }
     }
 
+    #[cfg(verus_keep_ghost)]
     use crate::Types::Types::wf_graph_view;
 
-    pub trait DirGraphMtEphTrait<V: StT + MtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
+    pub trait DirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn empty() -> (g: Self)
@@ -117,8 +119,12 @@ pub mod DirGraphMtEph {
             Set::new(|w: V::V| self@.A.contains((v, w)))
         }
 
-        open spec fn spec_n_plus_from_set(&self, arcs: Set<(V::V, V::V)>, v: V::V) -> Set<V::V> {
-            Set::new(|w: V::V| arcs.contains((v, w)))
+        open spec fn spec_n_plus_from_set(&self, v: V::V, subarcs: Set<(V::V, V::V)>) -> Set<V::V> 
+            recommends 
+                wf_graph_view(self@),
+                subarcs <= self@.A,
+        {
+            Set::new(|w: V::V| subarcs.contains((v, w)))
         }
 
         /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
@@ -243,87 +249,54 @@ pub mod DirGraphMtEph {
     }
 
     /// Parallel arc filtering for out-neighbors using set split.
-    #[verifier::external_body]
-    fn n_plus_parallel<V: StT + MtT + Hash + 'static>(
-        g: &DirGraphMtEph<V>, 
-        v: V, 
-        arcs: SetStEph<Edge<V>>
-    ) -> (out_neighbors: SetStEph<V>)
-        requires 
+    fn n_plus_parallel<V: StTInMtT + Hash + 'static>(g: &DirGraphMtEph<V>, v: V, arcs: SetStEph<Edge<V>>) 
+                                                     -> (out_neighbors: SetStEph<V>)
+        requires
             valid_key_type::<V>(),
             valid_key_type::<Edge<V>>(),
+            wf_graph_view(g@),
             arcs@ <= g@.A,
         ensures 
-            out_neighbors@ == g.spec_n_plus_from_set(arcs@,v@),
-            out_neighbors@ <= g.spec_n_plus(v@),
+            out_neighbors@ == g.spec_n_plus_from_set(v@, arcs@),
+            out_neighbors@ <= g.spec_n_plus(v@)
         decreases arcs.size()
     {
         let n = arcs.size();
         if n == 0 {
-            proof {
-                assert(Set::<V::V>::empty() <= g.spec_n_plus(v@));
-            }
-            // TODO We need to apply an empty set lemma here. 
-            let out_neighbors = SetStEph::empty();
-            assert(out_neighbors@ == g.spec_n_plus_from_set(arcs@,v@));
-            out_neighbors
+            SetStEph::empty()
         }
         else if n == 1 {
-            let mut it = arcs.iter();
-            let ghost iter_seq = it@.1;
-            // iter ensures: iter_seq.map(|i, k| k@).to_set() == arcs@
-            match it.next() {
-                None => {
-                    // TODO We need to apply a lemma that a set of size 1 has a Some.
-                    SetStEph::empty()
-                }
-                Some(Edge(x, y)) => {
-                    // next ensures: Edge(x, y) == iter_seq[0] (since old_index was 0)
-                    proof {
-                        // iter_seq[0] maps to (x@, y@) which is in arcs@
-                        let mapped = iter_seq.map(|i: int, k: Edge<V>| k@);
-                        assert(mapped[0] == (x@, y@));
-                        assert(mapped.to_set().contains((x@, y@)));
-                        assert(arcs@.contains((x@, y@)));
-                    }
-                    if feq(x, &v) {
-                        proof {
-                            assert(g@.A.contains((x@, y@)));
-                            assert(g@.A.contains((v@, y@)));
-                            assert(g.spec_n_plus(v@).contains(y@));
-                            assert(Set::empty().insert(y@) <= g.spec_n_plus(v@));
-                        }
-                        SetStEph::singleton(y.clone_plus())
-                    } else {
-                        proof {
-                            assert(Set::<V::V>::empty() <= g.spec_n_plus(v@));
-                        }
-                        SetStEph::empty()
-                    }
-                }
+            let Edge(x, y) = arcs.choose();
+            if feq(&x, &v) {
+                SetStEph::singleton(y.clone_plus())
+            } else {
+                SetStEph::empty()
             }
         }
         else {
             let mid = n / 2;
             let (left_arcs, right_arcs) = arcs.split(mid);
-            let v_left = v.clone_plus();
-            let v_right = v;
-            let g_left = g.clone();
-            let g_right = g.clone();
-            let Pair(left_neighbors, right_neighbors) =
-                ParaPair!(move || n_plus_parallel(&g_left, v_left, left_arcs),
-                          move || n_plus_parallel(&g_right, v_right, right_arcs));
-            let out_neighbors = left_neighbors.union(&right_neighbors);
-            proof {
-                // Both halves are subsets, so union is subset
-                assume(out_neighbors@ <= g.spec_n_plus(v@));
-            }
-            out_neighbors
+            let v_left  = v.clone_plus();
+            let v_right = v.clone_plus();
+            let g_left  = g.clone_plus();
+            let g_right = g.clone_plus();
+            
+            let f1 = move || -> (out: SetStEph<V>)
+                ensures out@ == g_left.spec_n_plus_from_set(v_left@, left_arcs@)
+            { n_plus_parallel(&g_left, v_left, left_arcs) };
+            
+            let f2 = move || -> (out: SetStEph<V>)
+                ensures out@ == g_right.spec_n_plus_from_set(v_right@, right_arcs@)
+            { n_plus_parallel(&g_right, v_right, right_arcs) };
+            
+            let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
+            
+            left_neighbors.union(&right_neighbors)
         }
     }
 
     /// Parallel arc filtering for in-neighbors.
-    fn n_minus_parallel<V: StT + MtT + Hash + 'static>(graph: &DirGraphMtEph<V>, v: V) -> (result: SetStEph<V>)
+    fn n_minus_parallel<V: StTInMtT + Hash + 'static>(graph: &DirGraphMtEph<V>, v: V) -> (result: SetStEph<V>)
         requires valid_key_type_for_graph::<V>()
         ensures result@ == graph.spec_n_minus(v@)
     {
@@ -351,7 +324,7 @@ pub mod DirGraphMtEph {
     }
 
     /// Parallel arc filtering for in-neighbors (internal, works on arc sequence).
-    fn n_minus_arcs_parallel<V: StT + MtT + Hash + 'static>(arcs: Vec<Edge<V>>, v: V) -> (result: SetStEph<V>)
+    fn n_minus_arcs_parallel<V: StTInMtT + Hash + 'static>(arcs: Vec<Edge<V>>, v: V) -> (result: SetStEph<V>)
         requires valid_key_type::<V>()
         decreases arcs.len()
     {
@@ -376,7 +349,7 @@ pub mod DirGraphMtEph {
     }
 
     /// Parallel out-neighbors over a set of vertices.
-    fn n_plus_of_vertices_parallel<V: StT + MtT + Hash + 'static>(
+    fn n_plus_of_vertices_parallel<V: StTInMtT + Hash + 'static>(
         graph: &DirGraphMtEph<V>,
         u_set: &SetStEph<V>,
     ) -> (result: SetStEph<V>)
@@ -419,7 +392,7 @@ pub mod DirGraphMtEph {
     }
 
     /// Internal recursive worker for n_plus_of_vertices_parallel.
-    fn n_plus_of_vertices_seq_parallel<V: StT + MtT + Hash + 'static>(
+    fn n_plus_of_vertices_seq_parallel<V: StTInMtT + Hash + 'static>(
         graph: DirGraphMtEph<V>,
         vertices: Vec<V>,
     ) -> (result: SetStEph<V>)
@@ -459,7 +432,7 @@ pub mod DirGraphMtEph {
     }
 
     /// Parallel in-neighbors over a set of vertices.
-    fn n_minus_of_vertices_parallel<V: StT + MtT + Hash + 'static>(
+    fn n_minus_of_vertices_parallel<V: StTInMtT + Hash + 'static>(
         graph: &DirGraphMtEph<V>,
         u_set: &SetStEph<V>,
     ) -> (result: SetStEph<V>)
@@ -502,7 +475,7 @@ pub mod DirGraphMtEph {
     }
 
     /// Internal recursive worker for n_minus_of_vertices_parallel.
-    fn n_minus_of_vertices_seq_parallel<V: StT + MtT + Hash + 'static>(
+    fn n_minus_of_vertices_seq_parallel<V: StTInMtT + Hash + 'static>(
         graph: DirGraphMtEph<V>,
         vertices: Vec<V>,
     ) -> (result: SetStEph<V>)
@@ -540,7 +513,7 @@ pub mod DirGraphMtEph {
     }
 
     /// Parallel all-neighbors over a set of vertices.
-    fn ng_of_vertices_parallel<V: StT + MtT + Hash + 'static>(
+    fn ng_of_vertices_parallel<V: StTInMtT + Hash + 'static>(
         graph: &DirGraphMtEph<V>,
         u_set: &SetStEph<V>,
     ) -> (result: SetStEph<V>)
@@ -589,7 +562,7 @@ pub mod DirGraphMtEph {
     }
 
     /// Internal recursive worker for ng_of_vertices_parallel.
-    fn ng_of_vertices_seq_parallel<V: StT + MtT + Hash + 'static>(
+    fn ng_of_vertices_seq_parallel<V: StTInMtT + Hash + 'static>(
         graph: DirGraphMtEph<V>,
         vertices: Vec<V>,
     ) -> (result: SetStEph<V>)
@@ -626,7 +599,7 @@ pub mod DirGraphMtEph {
         }
     }
 
-    impl<V: StT + MtT + Hash + 'static> DirGraphMtEphTrait<V> for DirGraphMtEph<V> {
+    impl<V: StTInMtT + Hash + 'static> DirGraphMtEphTrait<V> for DirGraphMtEph<V> {
         fn empty() -> (g: DirGraphMtEph<V>) {
             DirGraphMtEph { V: SetStEph::empty(), A: SetStEph::empty() }
         }
@@ -649,7 +622,7 @@ pub mod DirGraphMtEph {
         fn n_plus(&self, v: &V) -> SetStEph<V> { 
             let arcs = self.A.clone();
             let out_neighbors = n_plus_parallel(self, v.clone_plus(), arcs);
-            assume(out_neighbors@ == self.spec_n_plus_from_set(arcs@, v@));
+            assume(out_neighbors@ == self.spec_n_plus_from_set(v@, arcs@));
             assert(out_neighbors@ == self.spec_n_plus(v@));
             out_neighbors
         }
@@ -667,7 +640,7 @@ pub mod DirGraphMtEph {
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { ng_of_vertices_parallel(self, u_set) }
     }
 
-    impl<V: StT + MtT + Hash + 'static> Clone for DirGraphMtEph<V> {
+    impl<V: StTInMtT + Hash + 'static> Clone for DirGraphMtEph<V> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -677,7 +650,7 @@ pub mod DirGraphMtEph {
 
     } // verus!
 
-    impl<V: StT + MtT + Hash + 'static> Debug for DirGraphMtEph<V> {
+    impl<V: StTInMtT + Hash + 'static> Debug for DirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             f.debug_struct("DirGraphMtEph")
                 .field("V", &self.V)
@@ -686,15 +659,15 @@ pub mod DirGraphMtEph {
         }
     }
 
-    impl<V: StT + MtT + Hash + 'static> Display for DirGraphMtEph<V> {
+    impl<V: StTInMtT + Hash + 'static> Display for DirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} A={:?}", self.V, self.A) }
     }
 
-    impl<V: StT + MtT + Hash + 'static> PartialEq for DirGraphMtEph<V> {
+    impl<V: StTInMtT + Hash + 'static> PartialEq for DirGraphMtEph<V> {
         fn eq(&self, other: &Self) -> bool { self.V == other.V && self.A == other.A }
     }
 
-    impl<V: StT + MtT + Hash + 'static> Eq for DirGraphMtEph<V> {}
+    impl<V: StTInMtT + Hash + 'static> Eq for DirGraphMtEph<V> {}
 
     #[macro_export]
     macro_rules! DirGraphMtEphLit {

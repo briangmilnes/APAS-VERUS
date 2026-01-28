@@ -3,7 +3,7 @@
 
 pub mod ParaPairs {
     use vstd::prelude::*;
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::join;
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;
 
     verus! {
 
