@@ -20,6 +20,8 @@ pub mod LabUnDirGraphMtEph {
     use crate::Chap05::SetStEph::SetStEph::valid_key_type;
 
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::feq::feq::feq;
+    use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::Types::Types::wf_lab_graph_view;
 
@@ -50,6 +52,15 @@ pub mod LabUnDirGraphMtEph {
     impl<V: HashOrd + MtT + 'static, L: StTInMtT + Hash + 'static> LabUnDirGraphMtEph<V, L> {
         pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
         pub open spec fn spec_labeled_edges(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_edges@ }
+
+        /// Spec for neighbors computed from a subset of edges
+        open spec fn spec_neighbors_from_set(&self, v: V::V, subedges: Set<(V::V, V::V, L::V)>) -> Set<V::V> 
+            recommends 
+                wf_lab_graph_view(self@),
+                subedges <= self@.A,
+        {
+            Set::new(|w: V::V| exists |l: L::V| subedges.contains((v, w, l)) || subedges.contains((w, v, l)))
+        }
     }
 
     pub trait LabUnDirGraphMtEphTrait<V: HashOrd + MtT + 'static, L: StTInMtT + Hash + 'static>
@@ -131,9 +142,58 @@ pub mod LabUnDirGraphMtEph {
             ensures
                 neighbors@ == self.spec_neighbors(v@),
                 neighbors@ <= self@.V;
+    }
 
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn normalize_edge(v1: V, v2: V) -> (e: LabEdge<V, L>);
+    /// Parallel edge filtering for neighbors using set split.
+    fn neighbors_parallel<V: HashOrd + MtT + 'static, L: StTInMtT + Hash + 'static>(
+        g: &LabUnDirGraphMtEph<V, L>, 
+        v: V, 
+        edges: SetStEph<LabEdge<V, L>>
+    ) -> (neighbors: SetStEph<V>)
+        requires
+            valid_key_type::<V>(),
+            valid_key_type_LabEdge::<V, L>(),
+            wf_lab_graph_view(g@),
+            edges@ <= g@.A,
+        ensures 
+            neighbors@ == g.spec_neighbors_from_set(v@, edges@),
+            neighbors@ <= g.spec_neighbors(v@)
+        decreases edges.size()
+    {
+        let n = edges.size();
+        if n == 0 {
+            SetStEph::empty()
+        }
+        else if n == 1 {
+            let LabEdge(a, b, _label) = edges.choose();
+            if feq(&a, &v) {
+                SetStEph::singleton(b.clone_plus())
+            } else if feq(&b, &v) {
+                SetStEph::singleton(a.clone_plus())
+            } else {
+                SetStEph::empty()
+            }
+        }
+        else {
+            let mid = n / 2;
+            let (left_edges, right_edges) = edges.split(mid);
+            let v_left  = v.clone_plus();
+            let v_right = v.clone_plus();
+            let g_left  = g.clone_plus();
+            let g_right = g.clone_plus();
+            
+            let f1 = move || -> (out: SetStEph<V>)
+                ensures out@ == g_left.spec_neighbors_from_set(v_left@, left_edges@)
+            { neighbors_parallel(&g_left, v_left, left_edges) };
+            
+            let f2 = move || -> (out: SetStEph<V>)
+                ensures out@ == g_right.spec_neighbors_from_set(v_right@, right_edges@)
+            { neighbors_parallel(&g_right, v_right, right_edges) };
+            
+            let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
+            
+            left_neighbors.union(&right_neighbors)
+        }
     }
 
     impl<V: HashOrd + MtT + 'static, L: StTInMtT + Hash + 'static> LabUnDirGraphMtEphTrait<V, L>
@@ -157,104 +217,166 @@ pub mod LabUnDirGraphMtEph {
 
         fn labeled_edges(&self) -> (e: &SetStEph<LabEdge<V, L>>) { &self.labeled_edges }
 
-        #[verifier::external_body]
         fn edges(&self) -> (edges: SetStEph<Edge<V>>) {
-            let mut edges = SetStEph::empty();
-            for labeled_edge in self.labeled_edges.iter() {
-                edges.insert(Edge(labeled_edge.0.clone_plus(), labeled_edge.1.clone_plus()));
+            let mut edges: SetStEph<Edge<V>> = SetStEph::empty();
+            let mut it = self.labeled_edges.iter();
+            let ghost le_seq = it@.1;
+            let ghost le_view = self@.A;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, L>(),
+                    valid_key_type_Edge::<V>(),
+                    it@.0 <= le_seq.len(),
+                    it@.1 == le_seq,
+                    le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
+                    forall |e: (V::V, V::V)| edges@.contains(e) == 
+                        (exists |i: int| #![trigger le_seq[i]] 0 <= i < it@.0 && le_seq[i]@.0 == e.0 && le_seq[i]@.1 == e.1),
+                decreases le_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            assert forall |e: (V::V, V::V)| edges@.contains(e) implies 
+                                (exists |l: L::V| #![trigger le_view.contains((e.0, e.1, l))] le_view.contains((e.0, e.1, l))) by {
+                                if edges@.contains(e) {
+                                    let i = choose |i: int| #![trigger le_seq[i]] 0 <= i < le_seq.len() && le_seq[i]@.0 == e.0 && le_seq[i]@.1 == e.1;
+                                    lemma_seq_index_in_map_to_set(le_seq, i);
+                                }
+                            }
+                            assert forall |e: (V::V, V::V)| (exists |l: L::V| #![trigger le_view.contains((e.0, e.1, l))] le_view.contains((e.0, e.1, l))) implies 
+                                edges@.contains(e) by {
+                                if exists |l: L::V| #![trigger le_view.contains((e.0, e.1, l))] le_view.contains((e.0, e.1, l)) {
+                                    let l = choose |l: L::V| #![trigger le_view.contains((e.0, e.1, l))] le_view.contains((e.0, e.1, l));
+                                    lemma_map_to_set_contains_index(le_seq, (e.0, e.1, l));
+                                }
+                            }
+                        }
+                        return edges;
+                    },
+                    Some(labeled_edge) => {
+                        let _ = edges.insert(Edge(labeled_edge.0.clone_plus(), labeled_edge.1.clone_plus()));
+                    },
+                }
             }
-            edges
         }
 
-        #[verifier::external_body]
-        fn add_vertex(&mut self, v: V) { 
-            self.vertices.insert(v); 
-        }
+        fn add_vertex(&mut self, v: V) { let _ = self.vertices.insert(v); }
 
-        #[verifier::external_body]
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) {
-            self.vertices.insert(v1.clone_plus());
-            self.vertices.insert(v2.clone_plus());
-            let normalized_edge = if v1 <= v2 {
-                LabEdge(v1, v2, label)
+            let _ = self.vertices.insert(v1.clone_plus());
+            let _ = self.vertices.insert(v2.clone_plus());
+            if v1 <= v2 {
+                let _ = self.labeled_edges.insert(LabEdge(v1, v2, label));
             } else {
-                LabEdge(v2, v1, label)
-            };
-            self.labeled_edges.insert(normalized_edge);
+                let _ = self.labeled_edges.insert(LabEdge(v2, v1, label));
+            }
         }
 
-        #[verifier::external_body]
         fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>) {
-            for labeled_edge in self.labeled_edges.iter() {
-                if (labeled_edge.0 == *v1 && labeled_edge.1 == *v2) || (labeled_edge.0 == *v2 && labeled_edge.1 == *v1)
-                {
-                    return Some(&labeled_edge.2);
+            let mut it = self.labeled_edges.iter();
+            let ghost le_seq = it@.1;
+            let ghost le_view = self@.A;
+            let ghost v1_view = v1@;
+            let ghost v2_view = v2@;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, L>(),
+                    it@.0 <= le_seq.len(),
+                    it@.1 == le_seq,
+                    le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
+                    forall |i: int| #![trigger le_seq[i]] 0 <= i < it@.0 ==> 
+                        !((le_seq[i]@.0 == v1_view && le_seq[i]@.1 == v2_view) ||
+                          (le_seq[i]@.0 == v2_view && le_seq[i]@.1 == v1_view)),
+                decreases le_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            assert forall |l: L::V| 
+                                !(le_view.contains((v1_view, v2_view, l)) || le_view.contains((v2_view, v1_view, l))) by {
+                                if le_view.contains((v1_view, v2_view, l)) {
+                                    lemma_map_to_set_contains_index(le_seq, (v1_view, v2_view, l));
+                                }
+                                if le_view.contains((v2_view, v1_view, l)) {
+                                    lemma_map_to_set_contains_index(le_seq, (v2_view, v1_view, l));
+                                }
+                            }
+                        }
+                        return None;
+                    },
+                    Some(labeled_edge) => {
+                        if (feq(&labeled_edge.0, v1) && feq(&labeled_edge.1, v2)) || 
+                           (feq(&labeled_edge.0, v2) && feq(&labeled_edge.1, v1)) {
+                            proof {
+                                let idx = it@.0 - 1;
+                                lemma_seq_index_in_map_to_set(le_seq, idx);
+                            }
+                            return Some(&labeled_edge.2);
+                        }
+                    },
                 }
             }
-            None
         }
 
-        #[verifier::external_body]
         fn has_edge(&self, v1: &V, v2: &V) -> (b: bool) {
-            for labeled_edge in self.labeled_edges.iter() {
-                if (labeled_edge.0 == *v1 && labeled_edge.1 == *v2) || (labeled_edge.0 == *v2 && labeled_edge.1 == *v1)
-                {
-                    return true;
+            let mut it = self.labeled_edges.iter();
+            let ghost le_seq = it@.1;
+            let ghost le_view = self@.A;
+            let ghost v1_view = v1@;
+            let ghost v2_view = v2@;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, L>(),
+                    it@.0 <= le_seq.len(),
+                    it@.1 == le_seq,
+                    le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
+                    forall |i: int| #![trigger le_seq[i]] 0 <= i < it@.0 ==> 
+                        !((le_seq[i]@.0 == v1_view && le_seq[i]@.1 == v2_view) ||
+                          (le_seq[i]@.0 == v2_view && le_seq[i]@.1 == v1_view)),
+                decreases le_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            assert forall |l: L::V| 
+                                !(le_view.contains((v1_view, v2_view, l)) || le_view.contains((v2_view, v1_view, l))) by {
+                                if le_view.contains((v1_view, v2_view, l)) {
+                                    lemma_map_to_set_contains_index(le_seq, (v1_view, v2_view, l));
+                                }
+                                if le_view.contains((v2_view, v1_view, l)) {
+                                    lemma_map_to_set_contains_index(le_seq, (v2_view, v1_view, l));
+                                }
+                            }
+                        }
+                        return false;
+                    },
+                    Some(labeled_edge) => {
+                        if (feq(&labeled_edge.0, v1) && feq(&labeled_edge.1, v2)) || 
+                           (feq(&labeled_edge.0, v2) && feq(&labeled_edge.1, v1)) {
+                            proof {
+                                let idx = it@.0 - 1;
+                                lemma_seq_index_in_map_to_set(le_seq, idx);
+                            }
+                            return true;
+                        }
+                    },
                 }
             }
-            false
         }
 
-        #[verifier::external_body]
         fn neighbors(&self, v: &V) -> (neighbors: SetStEph<V>) {
-            let edges = self.labeled_edges.iter().cloned().collect::<Vec<LabEdge<V, L>>>();
-            neighbors_parallel(edges, v.clone_plus())
-        }
-
-        #[verifier::external_body]
-        fn normalize_edge(_v1: V, _v2: V) -> (e: LabEdge<V, L>) {
-            panic!("normalize_edge cannot create LabEdge without a label - method signature needs revision")
+            let edges = self.labeled_edges.clone();
+            neighbors_parallel(self, v.clone_plus(), edges)
         }
     }
 
     } // verus!
-
-    // Parallel helper function (outside verus! block for closure support)
-    fn neighbors_parallel<V: HashOrd + MtT + 'static, L: StTInMtT + Hash + 'static>(
-        edges: Vec<LabEdge<V, L>>,
-        v: V,
-    ) -> SetStEph<V> {
-        let n = edges.len();
-        if n == 0 {
-            return SetStEph::empty();
-        }
-        if n == 1 {
-            if edges[0].0 == v {
-                let mut s = SetStEph::empty();
-                s.insert(edges[0].1.clone_plus());
-                return s;
-            } else if edges[0].1 == v {
-                let mut s = SetStEph::empty();
-                s.insert(edges[0].0.clone_plus());
-                return s;
-            }
-            return SetStEph::empty();
-        }
-
-        let mid = n / 2;
-        let mut right_edges = edges;
-        let left_edges = right_edges.split_off(mid);
-
-        let v_left = v.clone_plus();
-        let v_right = v;
-
-        let Pair(left_result, right_result) =
-            ParaPair!(move || neighbors_parallel(left_edges, v_left), move || {
-                neighbors_parallel(right_edges, v_right)
-            });
-
-        left_result.union(&right_result)
-    }
 
     impl<V: HashOrd + MtT, L: StTInMtT + Hash> Display for LabUnDirGraphMtEph<V, L> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {

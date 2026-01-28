@@ -55,20 +55,19 @@ Formally verified implementations of algorithms from "Algorithms Parallel and Se
 | RelationStEph | ✅ | — | ✅ | ⬜ | Binary relations |
 | MappingStEph | ✅ | — | ✅ | ⬜ | Key-value mappings |
 
-### Chapter 06: Graphs - ✅ COMPLETE
+### Chapter 06: Graphs - ✅ COMPLETE (ZERO HOLES)
 
 | Data Structure | Verified | Parallel | Tested | Benchmarked | Notes |
 |----------------|----------|----------|--------|-------------|-------|
 | DirGraphStEph | ✅ | — | ✅ | ⬜ | Directed graph |
-| DirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel directed graph |
+| DirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel directed graph, proven set split |
 | UnDirGraphStEph | ✅ | — | ✅ | ⬜ | Undirected graph |
-| UnDirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel undirected graph |
+| UnDirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel undirected graph, proven set split |
 | LabDirGraphStEph | ✅ | — | ✅ | ⬜ | Labeled directed graph |
-| LabDirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel labeled directed |
+| LabDirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel labeled directed, proven set split |
 | LabUnDirGraphStEph | ✅ | — | ✅ | ⬜ | Labeled undirected graph |
-| LabUnDirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel labeled undirected |
+| LabUnDirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel labeled undirected, proven set split |
 | WeightedDirGraphStEph | ✅ | — | ✅ | ⬜ | All 12 integer types |
-| WeightedDirGraphMtEph | ✅ | ✅ | ✅ | ⬜ | Parallel weighted directed |
 
 ### Chapter 11: Fibonacci - ✅ COMPLETE
 
@@ -269,7 +268,7 @@ cargo bench --bench BenchInsertionSortStEph
 ## Development Setup
 
 1. Install [Verus](https://github.com/verus-lang/verus) and ensure it's in your PATH
-2. Install Rust toolchain 1.88.0 (pinned in `rust-toolchain.toml`)
+2. Install Rust toolchain 1.93.0 (pinned in `rust-toolchain.toml`)
 3. Clone this repository
 4. Run `cargo-verus verify` to verify all code
 5. Run `cargo test` to run tests

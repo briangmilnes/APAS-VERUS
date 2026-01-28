@@ -21,6 +21,8 @@ pub mod LabDirGraphMtEph {
     use crate::Chap05::SetStEph::SetStEph::valid_key_type;
 
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::feq::feq::feq;
+    use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::Types::Types::wf_lab_graph_view;
 
@@ -51,6 +53,24 @@ pub mod LabDirGraphMtEph {
     impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LabDirGraphMtEph<V, L> {
         pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
         pub open spec fn spec_labeled_arcs(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_arcs@ }
+
+        /// Spec for out_neighbors computed from a subset of arcs
+        open spec fn spec_out_neighbors_from_set(&self, v: V::V, subarcs: Set<(V::V, V::V, L::V)>) -> Set<V::V> 
+            recommends 
+                wf_lab_graph_view(self@),
+                subarcs <= self@.A,
+        {
+            Set::new(|w: V::V| exists |l: L::V| subarcs.contains((v, w, l)))
+        }
+
+        /// Spec for in_neighbors computed from a subset of arcs
+        open spec fn spec_in_neighbors_from_set(&self, v: V::V, subarcs: Set<(V::V, V::V, L::V)>) -> Set<V::V> 
+            recommends 
+                wf_lab_graph_view(self@),
+                subarcs <= self@.A,
+        {
+            Set::new(|u: V::V| exists |l: L::V| subarcs.contains((u, v, l)))
+        }
     }
 
     pub trait LabDirGraphMtEphTrait<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> 
@@ -150,6 +170,106 @@ pub mod LabDirGraphMtEph {
                 in_neighbors@ <= self@.V;
     }
 
+    /// Parallel arc filtering for out-neighbors using set split.
+    fn out_neighbors_parallel<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(
+        g: &LabDirGraphMtEph<V, L>, 
+        v: V, 
+        arcs: SetStEph<LabEdge<V, L>>
+    ) -> (out_neighbors: SetStEph<V>)
+        requires
+            valid_key_type::<V>(),
+            valid_key_type_LabEdge::<V, L>(),
+            wf_lab_graph_view(g@),
+            arcs@ <= g@.A,
+        ensures 
+            out_neighbors@ == g.spec_out_neighbors_from_set(v@, arcs@),
+            out_neighbors@ <= g.spec_out_neighbors(v@)
+        decreases arcs.size()
+    {
+        let n = arcs.size();
+        if n == 0 {
+            SetStEph::empty()
+        }
+        else if n == 1 {
+            let LabEdge(from, to, _label) = arcs.choose();
+            if feq(&from, &v) {
+                SetStEph::singleton(to.clone_plus())
+            } else {
+                SetStEph::empty()
+            }
+        }
+        else {
+            let mid = n / 2;
+            let (left_arcs, right_arcs) = arcs.split(mid);
+            let v_left  = v.clone_plus();
+            let v_right = v.clone_plus();
+            let g_left  = g.clone_plus();
+            let g_right = g.clone_plus();
+            
+            let f1 = move || -> (out: SetStEph<V>)
+                ensures out@ == g_left.spec_out_neighbors_from_set(v_left@, left_arcs@)
+            { out_neighbors_parallel(&g_left, v_left, left_arcs) };
+            
+            let f2 = move || -> (out: SetStEph<V>)
+                ensures out@ == g_right.spec_out_neighbors_from_set(v_right@, right_arcs@)
+            { out_neighbors_parallel(&g_right, v_right, right_arcs) };
+            
+            let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
+            
+            left_neighbors.union(&right_neighbors)
+        }
+    }
+
+    /// Parallel arc filtering for in-neighbors using set split.
+    fn in_neighbors_parallel<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(
+        g: &LabDirGraphMtEph<V, L>, 
+        v: V, 
+        arcs: SetStEph<LabEdge<V, L>>
+    ) -> (in_neighbors: SetStEph<V>)
+        requires
+            valid_key_type::<V>(),
+            valid_key_type_LabEdge::<V, L>(),
+            wf_lab_graph_view(g@),
+            arcs@ <= g@.A,
+        ensures 
+            in_neighbors@ == g.spec_in_neighbors_from_set(v@, arcs@),
+            in_neighbors@ <= g.spec_in_neighbors(v@)
+        decreases arcs.size()
+    {
+        let n = arcs.size();
+        if n == 0 {
+            SetStEph::empty()
+        }
+        else if n == 1 {
+            let LabEdge(from, to, _label) = arcs.choose();
+            if feq(&to, &v) {
+                SetStEph::singleton(from.clone_plus())
+            } else {
+                SetStEph::empty()
+            }
+        }
+        else {
+            let mid = n / 2;
+            let (left_arcs, right_arcs) = arcs.split(mid);
+            let v_left  = v.clone_plus();
+            let v_right = v.clone_plus();
+            let g_left  = g.clone_plus();
+            let g_right = g.clone_plus();
+            
+            let f1 = move || -> (out: SetStEph<V>)
+                ensures out@ == g_left.spec_in_neighbors_from_set(v_left@, left_arcs@)
+            { in_neighbors_parallel(&g_left, v_left, left_arcs) };
+            
+            let f2 = move || -> (out: SetStEph<V>)
+                ensures out@ == g_right.spec_in_neighbors_from_set(v_right@, right_arcs@)
+            { in_neighbors_parallel(&g_right, v_right, right_arcs) };
+            
+            let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
+            
+            left_neighbors.union(&right_neighbors)
+        }
+    }
+
     impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LabDirGraphMtEphTrait<V, L>
         for LabDirGraphMtEph<V, L>
     {
@@ -168,128 +288,153 @@ pub mod LabDirGraphMtEph {
 
         fn labeled_arcs(&self) -> (a: &SetStEph<LabEdge<V, L>>) { &self.labeled_arcs }
 
-        #[verifier::external_body]
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>) {
-            let mut arcs = SetStEph::empty();
-            for labeled_arc in self.labeled_arcs.iter() {
-                arcs.insert(Edge(labeled_arc.0.clone_plus(), labeled_arc.1.clone_plus()));
+            let mut arcs: SetStEph<Edge<V>> = SetStEph::empty();
+            let mut it = self.labeled_arcs.iter();
+            let ghost la_seq = it@.1;
+            let ghost la_view = self@.A;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, L>(),
+                    it@.0 <= la_seq.len(),
+                    it@.1 == la_seq,
+                    la_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == la_view,
+                    arcs@ == Set::new(|e: (V::V, V::V)| 
+                        exists |i: int| #![trigger la_seq[i]] 0 <= i < it@.0 && la_seq[i]@.0 == e.0 && la_seq[i]@.1 == e.1),
+                decreases la_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            assert forall |e: (V::V, V::V)| #[trigger] arcs@.contains(e) implies 
+                                (exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l))) by {
+                                if arcs@.contains(e) {
+                                    let i = choose |i: int| #![trigger la_seq[i]] 0 <= i < la_seq.len() && la_seq[i]@.0 == e.0 && la_seq[i]@.1 == e.1;
+                                    lemma_seq_index_in_map_to_set(la_seq, i);
+                                }
+                            }
+                            assert forall |e: (V::V, V::V)| 
+                                (exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l))) implies 
+                                arcs@.contains(e) by {
+                                if exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l)) {
+                                    let l = choose |l: L::V| #![trigger la_view.contains((e.0, e.1, l))] la_view.contains((e.0, e.1, l));
+                                    lemma_map_to_set_contains_index(la_seq, (e.0, e.1, l));
+                                }
+                            }
+                        }
+                        return arcs;
+                    },
+                    Some(labeled_arc) => {
+                        let _ = arcs.insert(Edge(labeled_arc.0.clone_plus(), labeled_arc.1.clone_plus()));
+                    },
+                }
             }
-            arcs
         }
 
-        #[verifier::external_body]
-        fn add_vertex(&mut self, v: V) { 
-            self.vertices.insert(v); 
-        }
+        fn add_vertex(&mut self, v: V) { let _ = self.vertices.insert(v); }
 
-        #[verifier::external_body]
         fn add_labeled_arc(&mut self, from: V, to: V, label: L) {
-            self.vertices.insert(from.clone_plus());
-            self.vertices.insert(to.clone_plus());
-            self.labeled_arcs.insert(LabEdge(from, to, label));
+            let _ = self.vertices.insert(from.clone_plus());
+            let _ = self.vertices.insert(to.clone_plus());
+            let _ = self.labeled_arcs.insert(LabEdge(from, to, label));
         }
 
-        #[verifier::external_body]
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>) {
-            for labeled_arc in self.labeled_arcs.iter() {
-                if labeled_arc.0 == *from && labeled_arc.1 == *to {
-                    return Some(&labeled_arc.2);
+            let mut it = self.labeled_arcs.iter();
+            let ghost la_seq = it@.1;
+            let ghost la_view = self@.A;
+            let ghost from_view = from@;
+            let ghost to_view = to@;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, L>(),
+                    it@.0 <= la_seq.len(),
+                    it@.1 == la_seq,
+                    la_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == la_view,
+                    forall |i: int| #![trigger la_seq[i]] 0 <= i < it@.0 ==> !(la_seq[i]@.0 == from_view && la_seq[i]@.1 == to_view),
+                decreases la_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            assert forall |l: L::V| !la_view.contains((from_view, to_view, l)) by {
+                                if la_view.contains((from_view, to_view, l)) {
+                                    lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
+                                }
+                            }
+                        }
+                        return None;
+                    },
+                    Some(labeled_arc) => {
+                        if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
+                            proof {
+                                let idx = it@.0 - 1;
+                                lemma_seq_index_in_map_to_set(la_seq, idx);
+                            }
+                            return Some(&labeled_arc.2);
+                        }
+                    },
                 }
             }
-            None
         }
 
-        #[verifier::external_body]
         fn has_arc(&self, from: &V, to: &V) -> (b: bool) {
-            for labeled_arc in self.labeled_arcs.iter() {
-                if labeled_arc.0 == *from && labeled_arc.1 == *to {
-                    return true;
+            let mut it = self.labeled_arcs.iter();
+            let ghost la_seq = it@.1;
+            let ghost la_view = self@.A;
+            let ghost from_view = from@;
+            let ghost to_view = to@;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, L>(),
+                    it@.0 <= la_seq.len(),
+                    it@.1 == la_seq,
+                    la_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == la_view,
+                    forall |i: int| #![trigger la_seq[i]] 0 <= i < it@.0 ==> !(la_seq[i]@.0 == from_view && la_seq[i]@.1 == to_view),
+                decreases la_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            assert forall |l: L::V| !la_view.contains((from_view, to_view, l)) by {
+                                if la_view.contains((from_view, to_view, l)) {
+                                    lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
+                                }
+                            }
+                        }
+                        return false;
+                    },
+                    Some(labeled_arc) => {
+                        if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
+                            proof {
+                                let idx = it@.0 - 1;
+                                lemma_seq_index_in_map_to_set(la_seq, idx);
+                            }
+                            return true;
+                        }
+                    },
                 }
             }
-            false
         }
 
-        #[verifier::external_body]
         fn out_neighbors(&self, v: &V) -> (out_neighbors: SetStEph<V>) {
-            let arcs = self.labeled_arcs.iter().cloned().collect::<Vec<LabEdge<V, L>>>();
-            out_neighbors_parallel(arcs, v.clone_plus())
+            let arcs = self.labeled_arcs.clone();
+            out_neighbors_parallel(self, v.clone_plus(), arcs)
         }
 
-        #[verifier::external_body]
         fn in_neighbors(&self, v: &V) -> (in_neighbors: SetStEph<V>) {
-            let arcs = self.labeled_arcs.iter().cloned().collect::<Vec<LabEdge<V, L>>>();
-            in_neighbors_parallel(arcs, v.clone_plus())
+            let arcs = self.labeled_arcs.clone();
+            in_neighbors_parallel(self, v.clone_plus(), arcs)
         }
     }
 
     } // verus!
-
-    // Parallel helper functions (outside verus! block for closure support)
-    fn out_neighbors_parallel<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(
-        arcs: Vec<LabEdge<V, L>>,
-        v: V,
-    ) -> SetStEph<V> {
-        let n = arcs.len();
-        if n == 0 {
-            return SetStEph::empty();
-        }
-        if n == 1 {
-            return if arcs[0].0 == v {
-                let mut s = SetStEph::empty();
-                s.insert(arcs[0].1.clone_plus());
-                s
-            } else {
-                SetStEph::empty()
-            };
-        }
-
-        let mid = n / 2;
-        let mut right_arcs = arcs;
-        let left_arcs = right_arcs.split_off(mid);
-
-        let v_left = v.clone_plus();
-        let v_right = v;
-
-        let Pair(left_result, right_result) =
-            ParaPair!(move || out_neighbors_parallel(left_arcs, v_left), move || out_neighbors_parallel(
-                right_arcs, v_right
-            ));
-
-        left_result.union(&right_result)
-    }
-
-    fn in_neighbors_parallel<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(
-        arcs: Vec<LabEdge<V, L>>,
-        v: V,
-    ) -> SetStEph<V> {
-        let n = arcs.len();
-        if n == 0 {
-            return SetStEph::empty();
-        }
-        if n == 1 {
-            return if arcs[0].1 == v {
-                let mut s = SetStEph::empty();
-                s.insert(arcs[0].0.clone_plus());
-                s
-            } else {
-                SetStEph::empty()
-            };
-        }
-
-        let mid = n / 2;
-        let mut right_arcs = arcs;
-        let left_arcs = right_arcs.split_off(mid);
-
-        let v_left = v.clone_plus();
-        let v_right = v;
-
-        let Pair(left_result, right_result) =
-            ParaPair!(move || in_neighbors_parallel(left_arcs, v_left), move || in_neighbors_parallel(
-                right_arcs, v_right
-            ));
-
-        left_result.union(&right_result)
-    }
 
     impl<V: StTInMtT + Hash, L: StTInMtT + Hash> Display for LabDirGraphMtEph<V, L> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {

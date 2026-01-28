@@ -390,19 +390,6 @@ pub mod DirGraphMtEph {
         else if n == 1 {
             let u = verts.choose();
             let result = n_plus_parallel(g, u, g.A.clone());
-            proof {
-                // verts is a singleton containing exactly u@
-                assert(verts@ =~= Set::empty().insert(u@));
-                // result@ == spec_n_plus_from_set(u@, g.A@) == spec_n_plus(u@)
-                // spec_n_plus_of_vertices_from_set({u@}) == spec_n_plus(u@)
-                assert forall |w: V::V| #![auto] g.spec_n_plus_of_vertices_from_set(verts@).contains(w)
-                    <==> g.spec_n_plus(u@).contains(w) by {
-                    if g.spec_n_plus_of_vertices_from_set(verts@).contains(w) {
-                        let v_wit: V::V = choose |v: V::V| #![auto] verts@.contains(v) && g.spec_n_plus(v).contains(w);
-                        assert(v_wit == u@);
-                    }
-                }
-            }
             result
         }
         else {
@@ -424,17 +411,13 @@ pub mod DirGraphMtEph {
             let result = left_neighbors.union(&right_neighbors);
             proof {
                 // split guarantees: left_verts@ ∪ right_verts@ == verts@
-                assert(verts@ =~= left_verts@.union(right_verts@));
                 // Prove set equality for the union
                 assert forall |w: V::V| #![auto] g.spec_n_plus_of_vertices_from_set(verts@).contains(w)
                     <==> result@.contains(w) by {
                     if g.spec_n_plus_of_vertices_from_set(verts@).contains(w) {
                         let v_wit: V::V = choose |v: V::V| #![auto] verts@.contains(v) && g.spec_n_plus(v).contains(w);
-                        assert(left_verts@.contains(v_wit) || right_verts@.contains(v_wit));
                         if left_verts@.contains(v_wit) {
-                            assert(g.spec_n_plus_of_vertices_from_set(left_verts@).contains(w));
                         } else {
-                            assert(g.spec_n_plus_of_vertices_from_set(right_verts@).contains(w));
                         }
                     }
                     if result@.contains(w) {
@@ -474,19 +457,6 @@ pub mod DirGraphMtEph {
         else if n == 1 {
             let u = verts.choose();
             let result = n_minus_parallel(g, u, g.A.clone());
-            proof {
-                // verts is a singleton containing exactly u@
-                assert(verts@ =~= Set::empty().insert(u@));
-                // result@ == spec_n_minus_from_set(u@, g.A@) == spec_n_minus(u@)
-                // spec_n_minus_of_vertices_from_set({u@}) == spec_n_minus(u@)
-                assert forall |w: V::V| #![auto] g.spec_n_minus_of_vertices_from_set(verts@).contains(w)
-                    <==> g.spec_n_minus(u@).contains(w) by {
-                    if g.spec_n_minus_of_vertices_from_set(verts@).contains(w) {
-                        let v_wit: V::V = choose |v: V::V| #![auto] verts@.contains(v) && g.spec_n_minus(v).contains(w);
-                        assert(v_wit == u@);
-                    }
-                }
-            }
             result
         }
         else {
@@ -508,17 +478,13 @@ pub mod DirGraphMtEph {
             let result = left_neighbors.union(&right_neighbors);
             proof {
                 // split guarantees: left_verts@ ∪ right_verts@ == verts@
-                assert(verts@ =~= left_verts@.union(right_verts@));
                 // Prove set equality for the union
                 assert forall |w: V::V| #![auto] g.spec_n_minus_of_vertices_from_set(verts@).contains(w)
                     <==> result@.contains(w) by {
                     if g.spec_n_minus_of_vertices_from_set(verts@).contains(w) {
                         let v_wit: V::V = choose |v: V::V| #![auto] verts@.contains(v) && g.spec_n_minus(v).contains(w);
-                        assert(left_verts@.contains(v_wit) || right_verts@.contains(v_wit));
                         if left_verts@.contains(v_wit) {
-                            assert(g.spec_n_minus_of_vertices_from_set(left_verts@).contains(w));
                         } else {
-                            assert(g.spec_n_minus_of_vertices_from_set(right_verts@).contains(w));
                         }
                     }
                     if result@.contains(w) {
@@ -558,19 +524,6 @@ pub mod DirGraphMtEph {
         else if n == 1 {
             let u = verts.choose();
             let result = g.ng(&u);
-            proof {
-                // verts is a singleton containing exactly u@
-                assert(verts@ =~= Set::empty().insert(u@));
-                // result@ == spec_ng(u@)
-                // spec_ng_of_vertices_from_set({u@}) == spec_ng(u@)
-                assert forall |w: V::V| #![auto] g.spec_ng_of_vertices_from_set(verts@).contains(w)
-                    <==> g.spec_ng(u@).contains(w) by {
-                    if g.spec_ng_of_vertices_from_set(verts@).contains(w) {
-                        let v_wit: V::V = choose |v: V::V| #![auto] verts@.contains(v) && g.spec_ng(v).contains(w);
-                        assert(v_wit == u@);
-                    }
-                }
-            }
             result
         }
         else {
@@ -592,17 +545,13 @@ pub mod DirGraphMtEph {
             let result = left_neighbors.union(&right_neighbors);
             proof {
                 // split guarantees: left_verts@ ∪ right_verts@ == verts@
-                assert(verts@ =~= left_verts@.union(right_verts@));
                 // Prove set equality for the union
                 assert forall |w: V::V| #![auto] g.spec_ng_of_vertices_from_set(verts@).contains(w)
                     <==> result@.contains(w) by {
                     if g.spec_ng_of_vertices_from_set(verts@).contains(w) {
                         let v_wit: V::V = choose |v: V::V| #![auto] verts@.contains(v) && g.spec_ng(v).contains(w);
-                        assert(left_verts@.contains(v_wit) || right_verts@.contains(v_wit));
                         if left_verts@.contains(v_wit) {
-                            assert(g.spec_ng_of_vertices_from_set(left_verts@).contains(w));
                         } else {
-                            assert(g.spec_ng_of_vertices_from_set(right_verts@).contains(w));
                         }
                     }
                     if result@.contains(w) {

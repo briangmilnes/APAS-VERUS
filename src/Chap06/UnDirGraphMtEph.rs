@@ -21,6 +21,7 @@ pub mod UnDirGraphMtEph {
     use crate::Chap05::SetStEph::SetStEph::valid_key_type;
 
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
     use crate::Types::Types::wf_graph_view;
 
@@ -50,6 +51,22 @@ pub mod UnDirGraphMtEph {
     impl<V: StTInMtT + Hash + 'static> UnDirGraphMtEph<V> {
         pub open spec fn spec_vertices(&self) -> Set<V::V> { self.V@ }
         pub open spec fn spec_edges(&self) -> Set<(V::V, V::V)> { self.E@ }
+
+        /// Spec for ng computed from a subset of edges
+        open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V)>) -> Set<V::V> 
+            recommends 
+                wf_graph_view(self@),
+                subedges <= self@.A,
+        {
+            Set::new(|w: V::V| subedges.contains((v, w)) || subedges.contains((w, v)))
+        }
+
+        /// Spec for ng_of_vertices computed from a subset of vertices
+        open spec fn spec_ng_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V> 
+            recommends wf_graph_view(self@), subverts <= self@.V
+        {
+            Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_ng(u).contains(w))
+        }
     }
 
     pub trait UnDirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
@@ -145,6 +162,134 @@ pub mod UnDirGraphMtEph {
             ensures n == self.spec_ng(v@).len();
     }
 
+    /// Parallel edge filtering for neighbors using set split.
+    fn ng_parallel<V: StTInMtT + Hash + 'static>(g: &UnDirGraphMtEph<V>, v: V, edges: SetStEph<Edge<V>>) 
+                                                  -> (neighbors: SetStEph<V>)
+        requires
+            valid_key_type::<V>(),
+            valid_key_type::<Edge<V>>(),
+            wf_graph_view(g@),
+            edges@ <= g@.A,
+        ensures 
+            neighbors@ == g.spec_ng_from_set(v@, edges@),
+            neighbors@ <= g.spec_ng(v@)
+        decreases edges.size()
+    {
+        let n = edges.size();
+        if n == 0 {
+            SetStEph::empty()
+        }
+        else if n == 1 {
+            let Edge(a, b) = edges.choose();
+            if feq(&a, &v) {
+                SetStEph::singleton(b.clone_plus())
+            } else if feq(&b, &v) {
+                SetStEph::singleton(a.clone_plus())
+            } else {
+                SetStEph::empty()
+            }
+        }
+        else {
+            let mid = n / 2;
+            let (left_edges, right_edges) = edges.split(mid);
+            let v_left  = v.clone_plus();
+            let v_right = v.clone_plus();
+            let g_left  = g.clone_plus();
+            let g_right = g.clone_plus();
+            
+            let f1 = move || -> (out: SetStEph<V>)
+                ensures out@ == g_left.spec_ng_from_set(v_left@, left_edges@)
+            { ng_parallel(&g_left, v_left, left_edges) };
+            
+            let f2 = move || -> (out: SetStEph<V>)
+                ensures out@ == g_right.spec_ng_from_set(v_right@, right_edges@)
+            { ng_parallel(&g_right, v_right, right_edges) };
+            
+            let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
+            
+            left_neighbors.union(&right_neighbors)
+        }
+    }
+
+    /// Parallel neighbors over a set of vertices using set split.
+    fn ng_of_vertices_parallel<V: StTInMtT + Hash + 'static>(
+        g: &UnDirGraphMtEph<V>,
+        verts: SetStEph<V>,
+    ) -> (neighbors: SetStEph<V>)
+        requires 
+            valid_key_type::<V>(),
+            valid_key_type::<Edge<V>>(),
+            wf_graph_view(g@),
+            verts@ <= g@.V,
+        ensures 
+            neighbors@ == g.spec_ng_of_vertices_from_set(verts@),
+            neighbors@ <= g@.V
+        decreases verts.size()
+    {
+        let n = verts.size();
+        if n == 0 {
+            SetStEph::empty()
+        }
+        else if n == 1 {
+            let u = verts.choose();
+            let result = g.ng(&u);
+            proof {
+                assert(verts@ =~= Set::empty().insert(u@));
+                assert forall |w: V::V| #![auto] g.spec_ng_of_vertices_from_set(verts@).contains(w)
+                    <==> g.spec_ng(u@).contains(w) by {
+                    if g.spec_ng_of_vertices_from_set(verts@).contains(w) {
+                        let v_wit: V::V = choose |v: V::V| #![auto] verts@.contains(v) && g.spec_ng(v).contains(w);
+                        assert(v_wit == u@);
+                    }
+                }
+            }
+            result
+        }
+        else {
+            let mid = n / 2;
+            let (left_verts, right_verts) = verts.split(mid);
+            let g_left  = g.clone_plus();
+            let g_right = g.clone_plus();
+            
+            let f1 = move || -> (out: SetStEph<V>)
+                ensures out@ == g_left.spec_ng_of_vertices_from_set(left_verts@)
+            { ng_of_vertices_parallel(&g_left, left_verts) };
+            
+            let f2 = move || -> (out: SetStEph<V>)
+                ensures out@ == g_right.spec_ng_of_vertices_from_set(right_verts@)
+            { ng_of_vertices_parallel(&g_right, right_verts) };
+            
+            let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
+            
+            let result = left_neighbors.union(&right_neighbors);
+            proof {
+                assert(verts@ =~= left_verts@.union(right_verts@));
+                assert forall |w: V::V| #![auto] g.spec_ng_of_vertices_from_set(verts@).contains(w)
+                    <==> result@.contains(w) by {
+                    if g.spec_ng_of_vertices_from_set(verts@).contains(w) {
+                        let v_wit: V::V = choose |v: V::V| #![auto] verts@.contains(v) && g.spec_ng(v).contains(w);
+                        assert(left_verts@.contains(v_wit) || right_verts@.contains(v_wit));
+                        if left_verts@.contains(v_wit) {
+                            assert(g.spec_ng_of_vertices_from_set(left_verts@).contains(w));
+                        } else {
+                            assert(g.spec_ng_of_vertices_from_set(right_verts@).contains(w));
+                        }
+                    }
+                    if result@.contains(w) {
+                        if left_neighbors@.contains(w) {
+                            let v_wit: V::V = choose |v: V::V| #![auto] left_verts@.contains(v) && g.spec_ng(v).contains(w);
+                            assert(verts@.contains(v_wit));
+                        } else {
+                            let v_wit: V::V = choose |v: V::V| #![auto] right_verts@.contains(v) && g.spec_ng(v).contains(w);
+                            assert(verts@.contains(v_wit));
+                        }
+                    }
+                }
+            }
+            result
+        }
+    }
+
     impl<V: StTInMtT + Hash + 'static> UnDirGraphMtEphTrait<V> for UnDirGraphMtEph<V> {
         fn empty() -> (g: UnDirGraphMtEph<V>) {
             UnDirGraphMtEph {
@@ -165,97 +310,29 @@ pub mod UnDirGraphMtEph {
 
         fn sizeE(&self) -> (n: N) { self.E.size() }
 
-        #[verifier::external_body]
         fn neighbor(&self, u: &V, v: &V) -> (b: B) {
             self.E.mem(&Edge(u.clone_plus(), v.clone_plus())) || self.E.mem(&Edge(v.clone_plus(), u.clone_plus()))
         }
 
-        #[verifier::external_body]
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
-            let edges = self.E.iter().cloned().collect::<Vec<Edge<V>>>();
-            ng_parallel(edges, v.clone_plus())
+            let edges = self.E.clone();
+            ng_parallel(self, v.clone_plus(), edges)
         }
 
-        #[verifier::external_body]
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
-            let vertices = u_set.iter().cloned().collect::<Vec<V>>();
-            ng_of_vertices_parallel(vertices, self.clone())
+            ng_of_vertices_parallel(self, u_set.clone())
         }
 
         fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) { 
             &e.0 == v || &e.1 == v 
         }
 
-        #[verifier::external_body]
         fn degree(&self, v: &V) -> (n: N) { 
             self.ng(v).size() 
         }
     }
 
     } // verus!
-
-    // Parallel helper functions (outside verus! block for closure support)
-    fn ng_parallel<V: StTInMtT + Hash + 'static>(edges: Vec<Edge<V>>, v: V) -> SetStEph<V> {
-        let n = edges.len();
-        if n == 0 {
-            return SetLit![];
-        }
-        if n == 1 {
-            let Edge(a, b) = &edges[0];
-            if a == &v {
-                let mut s = SetLit![];
-                s.insert(b.clone_plus());
-                return s;
-            } else if b == &v {
-                let mut s = SetLit![];
-                s.insert(a.clone_plus());
-                return s;
-            }
-            return SetLit![];
-        }
-
-        let mid = n / 2;
-        let mut right_edges = edges;
-        let left_edges = right_edges.split_off(mid);
-
-        let v_left = v.clone_plus();
-        let v_right = v;
-
-        let Pair(left_result, right_result) =
-            ParaPair!(move || ng_parallel(left_edges, v_left), move || ng_parallel(
-                right_edges,
-                v_right
-            ));
-
-        left_result.union(&right_result)
-    }
-
-    fn ng_of_vertices_parallel<V: StTInMtT + Hash + 'static>(
-        vertices: Vec<V>,
-        graph: UnDirGraphMtEph<V>,
-    ) -> SetStEph<V> {
-        let n = vertices.len();
-        if n == 0 {
-            return SetLit![];
-        }
-        if n == 1 {
-            return graph.ng(&vertices[0]);
-        }
-
-        let mid = n / 2;
-        let mut right_verts = vertices;
-        let left_verts = right_verts.split_off(mid);
-
-        let graph_left = graph.clone();
-        let graph_right = graph;
-
-        let Pair(left_result, right_result) =
-            ParaPair!(move || ng_of_vertices_parallel(left_verts, graph_left), move || {
-                ng_of_vertices_parallel(right_verts, graph_right)
-            });
-
-        left_result.union(&right_result)
-    }
 
     impl<V: StTInMtT + Hash + 'static> Debug for UnDirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
