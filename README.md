@@ -2,7 +2,7 @@
 
 Formally verified implementations of algorithms from "Algorithms Parallel and Sequential" by Acar, Blelloch, and Milnes, using the [Verus](https://github.com/verus-lang/verus) verification framework for Rust.
 
-**Verified: 5 chapters complete (Scheduling, Sorting, Sets/Relations/Mappings, Graphs, Fibonacci)**
+**Verified: 6 chapters complete (Scheduling, Sorting, Sets/Relations/Mappings, Graphs, Fibonacci, Sequences)**
 
 ## Project Structure
 
@@ -50,10 +50,10 @@ Formally verified implementations of algorithms from "Algorithms Parallel and Se
 
 | Data Structure | Verified | Parallel | Tested | Benchmarked | Notes |
 |----------------|----------|----------|--------|-------------|-------|
-| SetStEph | ✅ | — | ✅ | ⬜ | Ephemeral set with iterator proofs |
-| SetMtEph | ✅ | ✅ | ✅ | ⬜ | Multi-threaded parallel set |
-| RelationStEph | ✅ | — | ✅ | ⬜ | Binary relations |
-| MappingStEph | ✅ | — | ✅ | ⬜ | Key-value mappings |
+| SetStEph | ✅ | — | ✅ | ⬜ | Ephemeral set, custom iterator + ghost |
+| SetMtEph | ✅ | ✅ | ✅ | ⬜ | Multi-threaded, ZERO HOLES (cartesian_product proven) |
+| RelationStEph | ✅ | — | ✅ | ⬜ | Binary relations, ZERO HOLES |
+| MappingStEph | ✅ | — | ✅ | ⬜ | Key-value mappings, ZERO HOLES |
 
 ### Chapter 06: Graphs - ✅ COMPLETE (ZERO HOLES)
 
@@ -95,14 +95,19 @@ Formally verified implementations of algorithms from "Algorithms Parallel and Se
 |-----------|----------|----------|--------|-------------|-------|
 | MathSeqS | ✅ | — | ✅ | ⬜ | Vec-backed dense sequence, uses `HashMapWithView` |
 
-### Chapter 18: Sequences - ⬜ NOT STARTED
+### Chapter 18: Sequences - ✅ COMPLETE
 
-| Algorithm | Verified | Parallel | Tested | Benchmarked | Notes |
-|-----------|----------|----------|--------|-------------|-------|
-| ArraySeq | ⬜ | ⬜ | ⬜ | ⬜ | |
-| ArraySeqStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| ArraySeqMtEph | ⬜ | ⬜ | ⬜ | ⬜ | |
-| LinkedListStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
+| Data Structure | Verified | Parallel | Tested | PTT | Notes |
+|----------------|----------|----------|--------|-----|-------|
+| ArraySeq | ✅ | — | ✅ | ✅ | Custom iterator + ForLoopGhostIterator |
+| ArraySeqStEph | ✅ | — | ✅ | ✅ | Custom iterator + ForLoopGhostIterator |
+| ArraySeqStPer | ✅ | — | ✅ | ✅ | Custom iterator + ForLoopGhostIterator |
+| ArraySeqMtEph | ✅ | ✅ | ✅ | ✅ | Parallel ops, custom iterator + ghost |
+| ArraySeqMtPer | ✅ | ✅ | ✅ | ✅ | Parallel ops, custom iterator + ghost |
+| LinkedListStEph | ✅ | — | ✅ | ✅ | Custom iterator + ForLoopGhostIterator |
+| LinkedListStPer | ✅ | — | ✅ | ✅ | Custom iterator + ForLoopGhostIterator |
+
+PTT = Proof-time tests (loop-loop + for-iter patterns verified)
 
 ### Chapter 19: Sequences (Advanced) - ⬜ NOT STARTED
 

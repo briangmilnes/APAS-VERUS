@@ -38,49 +38,31 @@ path = "tests/Chap05/RelationStEph.rs"
 name = "MappingStEph"
 path = "tests/Chap05/MappingStEph.rs"
 
-# Other test files not yet created:
-# [[test]]
-# name = "SetMtEph_iters"
-# path = "tests/Chap05/SetMtEph_iters.rs"
-# 
-# [[test]]
-# name = "RelationStEph_iters"
-# path = "tests/Chap05/RelationStEph_iters.rs"
-# 
-# [[test]]
-# name = "MappingStEph_iters"
-# path = "tests/Chap05/MappingStEph_iters.rs"
-# 
-# # Chap17 iterator proof tests
-# [[test]]
-# name = "prove_MathSeq_iters"
-# path = "tests/Chap17/prove_MathSeq_iters.rs"
-# 
-# # Chap18 iterator proof tests
-# [[test]]
-# name = "prove_ArraySeq_iters"
-# path = "tests/Chap18/prove_ArraySeq_iters.rs"
-# 
-# [[test]]
-# name = "prove_ArraySeqStEph_iters"
-# path = "tests/Chap18/prove_ArraySeqStEph_iters.rs"
-# 
-# [[test]]
-# name = "prove_ArraySeqStPer_iters"
-# path = "tests/Chap18/prove_ArraySeqStPer_iters.rs"
-# 
-# [[test]]
-# name = "prove_ArraySeqMtPer_iters"
-# path = "tests/Chap18/prove_ArraySeqMtPer_iters.rs"
-# 
-# [[test]]
-# name = "prove_ArraySeqMtEph_iters"
-# path = "tests/Chap18/prove_ArraySeqMtEph_iters.rs"
-# 
-# [[test]]
-# name = "prove_LinkedListStEph_iters"
-# path = "tests/Chap18/prove_LinkedListStEph_iters.rs"
-# 
-# [[test]]
-# name = "prove_LinkedListStPer_iters"
-# path = "tests/Chap18/prove_LinkedListStPer_iters.rs"
+# Chap18 iterator proof tests
+[[test]]
+name = "prove_ArraySeq_iters"
+path = "tests/Chap18/prove_ArraySeq_iters.rs"
+
+[[test]]
+name = "prove_ArraySeqStEph_iters"
+path = "tests/Chap18/prove_ArraySeqStEph_iters.rs"
+
+[[test]]
+name = "prove_ArraySeqStPer_iters"
+path = "tests/Chap18/prove_ArraySeqStPer_iters.rs"
+
+[[test]]
+name = "prove_ArraySeqMtPer_iters"
+path = "tests/Chap18/prove_ArraySeqMtPer_iters.rs"
+
+[[test]]
+name = "prove_ArraySeqMtEph_iters"
+path = "tests/Chap18/prove_ArraySeqMtEph_iters.rs"
+
+[[test]]
+name = "prove_LinkedListStEph_iters"
+path = "tests/Chap18/prove_LinkedListStEph_iters.rs"
+
+[[test]]
+name = "prove_LinkedListStPer_iters"
+path = "tests/Chap18/prove_LinkedListStPer_iters.rs"

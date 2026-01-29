@@ -1,44 +1,76 @@
 //! Proof tests for ArraySeqStEph iterator
 //!
-//! Tests for loop patterns with ArraySeqStEphIter.
+//! Loop patterns tested (see docs/APASLoops.md):
+//!   - loop-loop:  `loop { match it.next() { ... } }`
+//!   - for-iter:   `for x in iter: it`
 
 #[macro_use]
 #[path = "../common/mod.rs"]
 mod common;
 use common::*;
 
+// loop-loop: Manual iteration with loop + match/if-let
 test_verify_one_file! {
-    #[test] arrayseq_st_eph_iter_basic verus_code! {
+    #[test] arrayseqsteph_loop_loop verus_code! {
         use vstd::prelude::*;
-
-        fn test_basic() {
-            let v: Vec<u64> = vec![5, 10, 15, 20];
-            let mut processed: bool = false;
-            for _x in v
-                invariant true,
-            {
-                processed = true;
-            }
-            assert(processed || !processed);
-        }
-    } => Ok(())
-}
-
-test_verify_one_file! {
-    #[test] arrayseq_st_eph_iter_range verus_code! {
-        use vstd::prelude::*;
-
-        fn test_range_accumulate() {
-            let v: Vec<u64> = vec![1, 2, 3, 4];
-            let len = v.len();
-            for i in iter: 0usize..len
+        use apas_verus::Chap18::ArraySeqStEph::ArraySeqStEph::*;
+        
+        fn test_loop_loop() {
+            let a: ArraySeqStEphS<u64> = ArraySeqStEphS::new(3, 42);
+            
+            let mut it: ArraySeqStEphIter<u64> = a.iter();
+            let ghost iter_seq: Seq<u64> = it@.1;
+            let ghost mut items: Seq<u64> = Seq::empty();
+            
+            #[verifier::loop_isolation(false)]
+            loop
                 invariant
-                    iter.cur <= len,
-                    len == v.len(),
+                    items =~= iter_seq.take(it@.0 as int),
+                    iter_invariant(&it),
+                    iter_seq == it@.1,
+                    it@.0 <= iter_seq.len(),
+                decreases iter_seq.len() - it@.0,
             {
-                let _val = v[i];
+                if let Some(x) = it.next() {
+                    proof {
+                        items = items.push(*x);
+                    }
+                } else {
+                    break;
+                }
             }
+            
+            assert(it@.0 == iter_seq.len());
+            assert(items =~= iter_seq);
         }
     } => Ok(())
 }
 
+// for-iter: `for x in iter: it` using ForLoopGhostIterator
+test_verify_one_file! {
+    #[test] arrayseqsteph_for_iter verus_code! {
+        use vstd::prelude::*;
+        use apas_verus::Chap18::ArraySeqStEph::ArraySeqStEph::*;
+
+        fn test_for_iter() {
+            let a: ArraySeqStEphS<u64> = ArraySeqStEphS::new(3, 99);
+            
+            let it: ArraySeqStEphIter<u64> = a.iter();
+            let ghost iter_seq: Seq<u64> = it@.1;
+            let ghost mut items: Seq<u64> = Seq::empty();
+            
+            for x in iter: it
+                invariant
+                    iter.elements == iter_seq,
+                    items =~= iter_seq.take(iter.pos),
+                    iter.pos <= iter_seq.len(),
+            {
+                proof {
+                    items = items.push(*x);
+                }
+            }
+            
+            assert(items =~= iter_seq);
+        }
+    } => Ok(())
+}

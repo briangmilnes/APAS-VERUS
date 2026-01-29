@@ -750,9 +750,40 @@ verus! {
             (first, second)
         }
 
-        #[verifier::external_body]
         fn choose(&self) -> (element: T) {
-            self.elements.iter().next().unwrap().clone()
+            use crate::vstdplus::feq::feq::lemma_cloned_view_eq;
+            
+            let mut it = self.elements.iter();
+            let ghost s: Seq<T> = it@.1;
+            
+            proof {
+                // s.len() > 0 because self@.len() > 0 and iter ensures bijection
+                assert(s.len() > 0) by {
+                    if s.len() == 0 {
+                        // Contradiction: self@ is non-empty but s is empty
+                    }
+                }
+            }
+            
+            let opt = it.next();
+            let element_ref: &T = opt.unwrap();
+            
+            proof {
+                // next() ensures element_ref == s[0]
+                // Since 0 < s.len(), s.contains(element_ref)
+                assert(s.contains(*element_ref)) by {
+                    assert(s[0] == *element_ref);
+                    assert(0 <= 0 < s.len());
+                }
+                // From iter ensures: s.contains(k) ==> self@.contains(k@)
+                assert(self@.contains(element_ref@));
+            }
+            
+            let result = element_ref.clone_plus();
+            proof {
+                lemma_cloned_view_eq(*element_ref, result);
+            }
+            result
         }
     }
 

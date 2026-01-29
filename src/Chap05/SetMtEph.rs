@@ -529,6 +529,11 @@ verus! {
                     handles@.len() == spawned_views.len(),
                     spawned_views.len() == it@.0,
                     forall |i: int| #![auto] 0 <= i < spawned_views.len() ==> spawned_views[i] == it_seq[i]@,
+                    // Track what each handle's predicate implies (the thread's ensures)
+                    forall |i: int, ret: SetMtEph<Pair<T, U>>| (#[trigger] handles@[i].predicate(ret) && 0 <= i < handles@.len()) ==> (
+                        ret@.finite() &&
+                        forall |av: T::V, bv: U::V| #[trigger] ret@.contains((av, bv)) <==> (av == spawned_views[i] && s2_view.contains(bv))
+                    ),
                 decreases it_seq.len() - it@.0,
             {
                 match it.next() {
@@ -590,6 +595,11 @@ verus! {
                     forall |v: T::V| joined_views.contains(v) ==> 
                         exists |j: int| #![auto] handles@.len() <= j < n && v == spawned_views[j],
                     forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (joined_views.contains(av) && s2_view.contains(bv)),
+                    // Track what each handle's predicate implies (the thread's ensures)
+                    forall |i: int, ret: SetMtEph<Pair<T, U>>| (#[trigger] handles@[i].predicate(ret) && 0 <= i < handles@.len()) ==> (
+                        ret@.finite() &&
+                        forall |av: T::V, bv: U::V| #[trigger] ret@.contains((av, bv)) <==> (av == spawned_views[i] && s2_view.contains(bv))
+                    ),
                 decreases handles@.len(),
             {
                 if handles.len() == 0 {
@@ -603,13 +613,11 @@ verus! {
                 let thread_result: SetMtEph<Pair<T, U>> = wait(handle);
                 
                 proof {
-                    // thread_result satisfies the closure's ensures:
-                    // r@.finite() && forall av, bv: r@.contains((av, bv)) <==> (av == a_clone@ && s2_clone@.contains(bv))
-                    // where a_clone@ == a_view and s2_clone@ == s2_view
+                    // From wait's ensures: handle.predicate(thread_result)
+                    // From spawn loop invariant: handle.predicate(ret) ==> (ret@.finite() && forall av, bv: ...)
+                    // Therefore: thread_result@.finite() && forall av, bv: ret@.contains((av, bv)) <==> ...
                     assert(thread_result@.finite());
-
-                    // We need to assume the ensures since we can't directly access handle's predicate.
-                    assume(forall |av: T::V, bv: U::V| thread_result@.contains((av, bv)) <==> (av == a_view && s2_view.contains(bv)));
+                    assert(forall |av: T::V, bv: U::V| thread_result@.contains((av, bv)) <==> (av == a_view && s2_view.contains(bv)));
                     
                     // Prove a_view is not in the joined_views.
                     assert(!joined_views.contains(a_view)) by {
@@ -805,9 +813,45 @@ verus! {
             }
         }
 
-        #[verifier::external_body]
         fn choose(&self) -> (element: T) {
-            self.elements.iter().next().unwrap().clone()
+            use crate::vstdplus::feq::feq::lemma_cloned_view_eq;
+            
+            let mut it = self.elements.iter();
+            let ghost s: Seq<T> = it@.1;
+            
+            // iter() ensures: s.contains(k) ==> self@.contains(k@)
+            // And self@.len() > 0 implies s.len() > 0 (bijection)
+            proof {
+                // s.len() > 0 because self@.len() > 0 and iter ensures bijection
+                assert(s.len() > 0) by {
+                    // Every element in self@ exists in s (from iter ensures)
+                    // self@ is non-empty, so s must be non-empty
+                    if s.len() == 0 {
+                        // Then forall kv, self@.contains(kv) ==> exists k: s.contains(k) && k@ == kv
+                        // But s is empty, so no such k exists, contradiction with self@.len() > 0
+                    }
+                }
+            }
+            
+            let opt = it.next();
+            let element_ref: &T = opt.unwrap();
+            
+            proof {
+                // next() ensures element_ref == s[0]
+                // Since 0 < s.len(), s.contains(element_ref)
+                assert(s.contains(*element_ref)) by {
+                    assert(s[0] == *element_ref);
+                    assert(0 <= 0 < s.len());
+                }
+                // From iter ensures: s.contains(k) ==> self@.contains(k@)
+                assert(self@.contains(element_ref@));
+            }
+            
+            let result = element_ref.clone_plus();
+            proof {
+                lemma_cloned_view_eq(*element_ref, result);
+            }
+            result
         }
     }
 

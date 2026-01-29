@@ -75,55 +75,95 @@ pub mod ArraySeqStPer {
         }
     }
 
+    /// Iterator wrapper with closed spec view for encapsulation.
     #[verifier::reject_recursive_types(T)]
-    pub struct ArraySeqStPerIter<T> {
-        pub elements: Vec<T>,
-        pub pos: usize,
+    pub struct ArraySeqStPerIter<'a, T> {
+        inner: std::slice::Iter<'a, T>,
     }
 
-    impl<T> View for ArraySeqStPerIter<T> {
+    impl<'a, T> View for ArraySeqStPerIter<'a, T> {
         type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) { (self.pos as int, self.elements@) }
+        closed spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
     }
 
-    pub open spec fn iter_invariant<T>(it: &ArraySeqStPerIter<T>) -> bool { it.pos <= it.elements@.len() }
+    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqStPerIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
 
-    // See experiments/simple_seq_iter.rs::assumption_free_next for a version that proves
-    // without assume() by requiring iter_invariant. We can't add requires to Iterator::next in Verus.
-    // and Rust iterators have 70 functions on them making this sensible requirement impossible.
-    impl<T: Clone> Iterator for ArraySeqStPerIter<T> {
-        type Item = T;
+    impl<'a, T> std::iter::Iterator for ArraySeqStPerIter<'a, T> {
+        type Item = &'a T;
 
-        fn next(&mut self) -> (result: Option<T>)
-            ensures
-                self.pos <= self.elements.len(),
-                ({
-                    let (old_index, old_seq) = old(self)@;
-                    match result {
-                        None => {
-                            &&& self@ == old(self)@
-                            &&& old_index == old_seq.len()
-                            &&& self.pos == old_seq.len()
-                        },
-                        Some(element) => {
-                            let (new_index, new_seq) = self@;
-                            &&& 0 <= old_index < old_seq.len()
-                            &&& new_seq == old_seq
-                            &&& new_index == old_index + 1
-                            &&& vstd::pervasive::cloned(old_seq[old_index as int], element)
-                        },
-                    }
-                }),
+        #[verifier::external_body]
+        fn next(&mut self) -> (next: Option<&'a T>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
         {
-            if self.pos < self.elements.len() {
-                let elem = self.elements[self.pos].clone();
-                self.pos = self.pos + 1;
-                Some(elem)
-            } else {
-                assume(self.pos <= self.elements.len());
-                None
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for ForLoopGhostIterator support.
+    #[verifier::reject_recursive_types(T)]
+    pub struct ArraySeqStPerGhostIterator<'a, T> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
+    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqStPerIter<'a, T> {
+        type GhostIter = ArraySeqStPerGhostIterator<'a, T>;
+        open spec fn ghost_iter(&self) -> ArraySeqStPerGhostIterator<'a, T> {
+            ArraySeqStPerGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ArraySeqStPerGhostIterator<'a, T> {
+        type ExecIter = ArraySeqStPerIter<'a, T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &ArraySeqStPerIter<'a, T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
             }
         }
+
+        open spec fn ghost_ensures(&self) -> bool { self.pos == self.elements.len() }
+        open spec fn ghost_decrease(&self) -> Option<int> { Some(self.elements.len() - self.pos) }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &ArraySeqStPerIter<'a, T>) -> ArraySeqStPerGhostIterator<'a, T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T> View for ArraySeqStPerGhostIterator<'a, T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
     }
 
     impl<T> ArraySeqStPerS<T> {
@@ -280,15 +320,14 @@ pub mod ArraySeqStPer {
             ArraySeqStPerS { seq: elts }
         }
 
-        pub fn iter(&self) -> (it: ArraySeqStPerIter<T>)
-            where T: Clone
+        /// Returns an iterator over the sequence elements.
+        pub fn iter(&self) -> (it: ArraySeqStPerIter<'_, T>)
             ensures
-                it.elements@.len() == self.seq@.len(),
-                forall|i: int| 0 <= i < self.seq@.len() ==> cloned(self.seq@[i], #[trigger] it.elements@[i]),
-                it.pos == 0,
+                it@.0 == 0,
+                it@.1 == self.seq@,
                 iter_invariant(&it),
         {
-            ArraySeqStPerIter { elements: self.seq.clone(), pos: 0 }
+            ArraySeqStPerIter { inner: self.seq.iter() }
         }
 
         pub fn subseq_copy(&self, start: usize, length: usize) -> (result: ArraySeqStPerS<T>)
@@ -357,8 +396,8 @@ pub mod ArraySeqStPer {
 
     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStPerS<T> {
         type Item = &'a T;
-        type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
+        type IntoIter = ArraySeqStPerIter<'a, T>;
+        fn into_iter(self) -> Self::IntoIter { ArraySeqStPerIter { inner: self.seq.iter() } }
     }
 
     impl<T> std::iter::IntoIterator for ArraySeqStPerS<T> {
@@ -397,8 +436,4 @@ pub mod ArraySeqStPer {
         }
     }
 
-    // Helper methods outside verus! (use std types Verus doesn't support)
-    impl<T> ArraySeqStPerS<T> {
-        pub fn iter_std(&self) -> Iter<'_, T> { self.seq.iter() }
-    }
 }
