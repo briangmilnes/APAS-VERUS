@@ -3,18 +3,18 @@ Verus Library Minimizer
 This minimizer is only possible due to the phenomenal speed of verification
 in Verus. Thanks Verus team!
 
-Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-minimize-lib.log
+Logging to: ./analyses/veracity-minimize-lib.log
 
 Arguments:
-  -c, --codebase:     /home/milnes/projects/APAS-VERUS/
-  -l, --library:      /home/milnes/projects/APAS-VERUS/src/vstdplus/
+  -c, --codebase:     .
+  -l, --library:      src/vstdplus
   -n, --dry-run:      false
   -b, --broadcasts:   true
   -L, --lib-broadcasts: true
   -N, --max-lemmas:   all
   -a, --asserts:      true
   -A, --max-asserts:  all
-  -e, --exclude:      experiments
+  -e, --exclude:      (none)
   -f, --fail-fast:    false
   --danger:           false
 
@@ -25,6 +25,6 @@ IMPORTANT: No code will be harmed in the improving of your codebase!
 ✗ Codebase is in git but has uncommitted changes.
 
   Please commit your changes first:
-    cd /home/milnes/projects/APAS-VERUS/ && git add -A && git commit -m 'Before Veracity'
+    cd . && git add -A && git commit -m 'Before Veracity'
 
   Exiting. Use --danger to proceed anyway (not recommended).

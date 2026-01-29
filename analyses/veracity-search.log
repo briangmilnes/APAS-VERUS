@@ -2,12 +2,15 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn iter types slice
+Pattern: spec fn to_seq
 Searching: /home/milnes/projects/verus/source/vstd
 Files: 89, Functions: 2155, Matches: 1
 
-[31m/home/milnes/projects/verus/source/vstd/std_specs/slice.rs:155: [0m
-[38;5;22mpub broadcast proof fn axiom_spec_slice_iter<'a, T>(s: &'a [T])[0m
-[38;5;22m    ensures[0m
-[38;5;22m        (#[trigger] spec_slice_iter(s))@ == (0int, s@),[0m
+[31m/home/milnes/projects/verus/source/vstd/set_lib.rs:34: [0m
+/// Converts a set into a sequence with an arbitrary ordering.
+[38;5;22m    pub open spec fn to_seq(self) -> Seq<A>[0m
+[38;5;22m        recommends[0m
+[38;5;22m            self.finite(),[0m
+[38;5;22m        decreases self.len(),[0m
+[38;5;22m        when self.finite()[0m
 
