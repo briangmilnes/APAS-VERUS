@@ -27,15 +27,8 @@ pub mod ArraySeqMtEph {
     verus! {
 
     broadcast use {vstd::std_specs::vec::group_vec_axioms, crate::vstdplus::feq::feq::axiom_cloned_implies_eq};
-    use vstd::std_specs::clone::*;
     use crate::vstdplus::clone_plus::clone_plus::{ClonePlus, clone_fn, clone_fn2, clone_pred};
     use crate::vstdplus::feq::feq::obeys_feq_clone;
-
-    // Clone spec for ArraySeqMtEphS - defines what cloned() means for this type
-    pub assume_specification<T: Clone>
-        [ <ArraySeqMtEphS<T> as Clone>::clone ]
-        (s: &ArraySeqMtEphS<T>) -> (result: ArraySeqMtEphS<T>)
-        ensures result.seq@ == s.seq@;
 
     // Chapter 19 trait - provides parallel algorithmic implementations
     pub trait ArraySeqMtEphTrait<T: View + Clone + Send + Sync + Eq>: Sized {
@@ -55,7 +48,7 @@ pub mod ArraySeqMtEph {
                 result.spec_len() == length;
 
         fn map<U: View + Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
-            a: &Self, f: F, pool: &Pool
+            a: &Self, f: F
         ) -> (result: ArraySeqMtEphS<U>)
             where Self: Sized, T: 'static + Eq
             requires
@@ -78,7 +71,7 @@ pub mod ArraySeqMtEph {
             requires a.spec_len() + b.spec_len() <= usize::MAX as nat
             ensures result.spec_len() == a.spec_len() + b.spec_len();
 
-        fn filter<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(a: &Self, pred: F, pool: &Pool) -> (result: Self)
+        fn filter<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(a: &Self, pred: F) -> (result: Self)
             where T: 'static + Eq
             requires
                 obeys_feq_clone::<T>(),
@@ -100,12 +93,12 @@ pub mod ArraySeqMtEph {
             requires
                 forall|acc: &A, elem: &T| #[trigger] f.requires((acc, elem));
 
-        fn reduce<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &Self, f: F, id: T, pool: &Pool) -> T
+        fn reduce<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &Self, f: F, id: T) -> T
             where T: 'static
             requires
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y));
 
-        fn scan<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &Self, f: F, id: T, pool: &Pool) -> (result: (Self, T))
+        fn scan<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &Self, f: F, id: T) -> (result: (Self, T))
             where T: 'static
             requires
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
@@ -123,7 +116,7 @@ pub mod ArraySeqMtEph {
             requires f.requires((x,))
             ensures result.spec_len() <= 1;
 
-        fn flatten(ss: &ArraySeqMtEphS<ArraySeqMtEphS<T>>, pool: &Pool) -> (result: Self)
+        fn flatten(ss: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (result: Self)
             where T: 'static;
 
         fn from_set(set: &SetStEph<T>) -> (result: Self)
@@ -177,7 +170,7 @@ pub mod ArraySeqMtEph {
         }
 
         fn map<U: View + Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
-            a: &ArraySeqMtEphS<T>, f: F, pool: &Pool
+            a: &ArraySeqMtEphS<T>, f: F
         ) -> (result: ArraySeqMtEphS<U>)
             where T: 'static
             decreases a.seq@.len()
@@ -234,21 +227,18 @@ pub mod ArraySeqMtEph {
                     }
                 }
 
-                let pool1 = pool.clone_plus();
-                let pool2 = pool.clone_plus();
-
                 let fa = move || -> (r: ArraySeqMtEphS<U>)
                     ensures r.seq@.len() == left_seq.seq@.len()
                 {
-                    <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::map(&left_seq, f1, &pool1)
+                    <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::map(&left_seq, f1)
                 };
                 let fb = move || -> (r: ArraySeqMtEphS<U>)
                     ensures r.seq@.len() == right_seq.seq@.len()
                 {
-                    <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::map(&right_seq, f2, &pool2)
+                    <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::map(&right_seq, f2)
                 };
 
-                let (left, right) = pool.join(fa, fb);
+                let (left, right) = join(fa, fb);
 
                 proof { assert(left.seq@.len() + right.seq@.len() == a.seq@.len() as int); }
                 ArraySeqMtEphS::<U>::append(&left, &right)
@@ -256,13 +246,9 @@ pub mod ArraySeqMtEph {
         }
 
         fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (result: ArraySeqMtEphS<T>) {
-            // Construct pair manually to avoid opaque f.ensures
-            let a_clone = a.clone_plus();
-            let b_clone = b.clone_plus();
-            proof {
-                assert(a_clone.seq@ =~= a.seq@);
-                assert(b_clone.seq@ =~= b.seq@);
-            }
+            // Clone inner Vecs (vstd has clone spec for Vec)
+            let a_clone = ArraySeqMtEphS { seq: a.seq.clone() };
+            let b_clone = ArraySeqMtEphS { seq: b.seq.clone() };
             let mut pair_vec: Vec<ArraySeqMtEphS<T>> = Vec::with_capacity(2);
             pair_vec.push(a_clone);
             pair_vec.push(b_clone);
@@ -275,7 +261,7 @@ pub mod ArraySeqMtEph {
             flatten_seq(&pair)
         }
 
-        fn filter<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, pred: F, pool: &Pool) -> (result: ArraySeqMtEphS<T>)
+        fn filter<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, pred: F) -> (result: ArraySeqMtEphS<T>)
             where T: 'static
             decreases a.seq@.len()
         {
@@ -339,21 +325,18 @@ pub mod ArraySeqMtEph {
                     }
                 }
 
-                let pool1 = pool.clone_plus();
-                let pool2 = pool.clone_plus();
-
                 let fa = move || -> (r: ArraySeqMtEphS<T>)
                     ensures r.seq@.len() <= left_seq.seq@.len()
                 {
-                    <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::filter(&left_seq, p1, &pool1)
+                    <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::filter(&left_seq, p1)
                 };
                 let fb = move || -> (r: ArraySeqMtEphS<T>)
                     ensures r.seq@.len() <= right_seq.seq@.len()
                 {
-                    <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::filter(&right_seq, p2, &pool2)
+                    <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::filter(&right_seq, p2)
                 };
 
-                let (left, right) = pool.join(fa, fb);
+                let (left, right) = join(fa, fb);
 
                 proof { assert(left.seq@.len() + right.seq@.len() <= a.seq@.len() as int); }
                 Self::append(&left, &right)
@@ -394,7 +377,7 @@ pub mod ArraySeqMtEph {
             acc
         }
 
-        fn reduce<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: F, id: T, pool: &Pool) -> T
+        fn reduce<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: F, id: T) -> T
             where T: 'static
             decreases a.seq@.len()
         {
@@ -417,13 +400,10 @@ pub mod ArraySeqMtEph {
                 let id1 = id.clone_plus();
                 let id2 = id;
 
-                let pool1 = pool.clone_plus();
-                let pool2 = pool.clone_plus();
+                let fa = move || <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::reduce(&left_seq, f1, id1);
+                let fb = move || <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::reduce(&right_seq, f2, id2);
 
-                let fa = move || <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::reduce(&left_seq, f1, id1, &pool1);
-                let fb = move || <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::reduce(&right_seq, f2, id2, &pool2);
-
-                let (left_result, right_result) = pool.join(fa, fb);
+                let (left_result, right_result) = join(fa, fb);
 
                 f(&left_result, &right_result)
             }
@@ -432,7 +412,7 @@ pub mod ArraySeqMtEph {
         // Algorithm 19.10: Scan using contraction (parallel)
         // Returns (prefix_sums, total) where prefix_sums[i] = f(...f(f(id, a[0]), a[1])..., a[i-1])
         // (exclusive prefix scan)
-        fn scan<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: F, id: T, pool: &Pool) -> (ArraySeqMtEphS<T>, T)
+        fn scan<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: F, id: T) -> (ArraySeqMtEphS<T>, T)
             where T: 'static
             decreases a.seq@.len()
         {
@@ -483,7 +463,7 @@ pub mod ArraySeqMtEph {
             // Recursive scan on contracted
             let f_recurse = clone_fn2(&f);
             proof { assert(forall|x: &T, y: &T| #[trigger] f_recurse.requires((x, y))); }
-            let (scanned, total) = <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::scan(&contracted, f_recurse, id.clone_plus(), pool);
+            let (scanned, total) = <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::scan(&contracted, f_recurse, id.clone_plus());
             proof {
                 // scanned length equals contracted length (from scan's ensures on tabulate result)
                 assert(scanned.seq@.len() == contracted_len);
@@ -550,7 +530,7 @@ pub mod ArraySeqMtEph {
             }
         }
 
-        fn flatten(ss: &ArraySeqMtEphS<ArraySeqMtEphS<T>>, pool: &Pool) -> (result: ArraySeqMtEphS<T>)
+        fn flatten(ss: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (result: ArraySeqMtEphS<T>)
             where T: 'static
             decreases ss.seq@.len()
         {
@@ -563,13 +543,10 @@ pub mod ArraySeqMtEph {
                 let left_ss = subseq_copy_nested(ss, 0, mid);
                 let right_ss = subseq_copy_nested(ss, mid, ss.seq.len() - mid);
 
-                let pool1 = pool.clone_plus();
-                let pool2 = pool.clone_plus();
+                let fa = move || <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::flatten(&left_ss);
+                let fb = move || <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::flatten(&right_ss);
 
-                let fa = move || <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::flatten(&left_ss, &pool1);
-                let fb = move || <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::flatten(&right_ss, &pool2);
-
-                let (left, right) = pool.join(fa, fb);
+                let (left, right) = join(fa, fb);
 
                 assume(left.seq@.len() + right.seq@.len() <= usize::MAX as int);
                 Self::append(&left, &right)
@@ -582,9 +559,12 @@ pub mod ArraySeqMtEph {
             let seq = set.to_seq();
             proof {
                 // to_seq ensures: seq@.no_duplicates() && bijection with set@
-                // Since no_duplicates and same elements, lengths must match
-                assert(seq@.no_duplicates());
-                assume(seq@.len() == set@.len()); // TODO: prove via bijection lemma
+                // Use unique_seq_to_set: no_duplicates ==> seq.len() == seq.to_set().len()
+                let mapped = seq@.map(|_i: int, t: T| t@);
+                mapped.unique_seq_to_set();
+                // mapped.to_set() == set@ from the bijection ensures
+                assert(mapped.to_set() =~= set@);
+                assert(seq@.len() == set@.len());
             }
             ArraySeqMtEphS { seq }
         }

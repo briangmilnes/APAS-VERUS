@@ -24,14 +24,7 @@ pub mod ArraySeqStEph {
     verus! {
 
     broadcast use vstd::std_specs::vec::group_vec_axioms;
-    use vstd::std_specs::clone::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
-
-    // Clone spec for ArraySeqStEphS - defines what cloned() means for this type
-    pub assume_specification<T: Clone>
-        [ <ArraySeqStEphS<T> as Clone>::clone ]
-        (s: &ArraySeqStEphS<T>) -> (result: ArraySeqStEphS<T>)
-        ensures result.seq@ == s.seq@;
 
     // Chapter 19 trait - provides alternative algorithmic implementations
     pub trait ArraySeqStEphTrait<T: View + Clone>: Sized {
@@ -186,13 +179,9 @@ pub mod ArraySeqStEph {
         }
 
         fn append(a: &ArraySeqStEphS<T>, b: &ArraySeqStEphS<T>) -> (result: ArraySeqStEphS<T>) {
-            // Construct pair manually to avoid opaque f.ensures
-            let a_clone = a.clone_plus();
-            let b_clone = b.clone_plus();
-            proof {
-                assert(a_clone.seq@ =~= a.seq@);
-                assert(b_clone.seq@ =~= b.seq@);
-            }
+            // Clone inner Vecs (vstd has clone spec for Vec)
+            let a_clone = ArraySeqStEphS { seq: a.seq.clone() };
+            let b_clone = ArraySeqStEphS { seq: b.seq.clone() };
             let mut pair_vec: Vec<ArraySeqStEphS<T>> = Vec::with_capacity(2);
             pair_vec.push(a_clone);
             pair_vec.push(b_clone);
@@ -349,15 +338,16 @@ pub mod ArraySeqStEph {
             let seq = set.to_seq();
             proof {
                 // to_seq ensures: seq@.no_duplicates() && bijection with set@
-                // Since no_duplicates and same elements, lengths must match
-                assert(seq@.no_duplicates());
-                assume(seq@.len() == set@.len()); // TODO: prove via bijection lemma
+                // Use unique_seq_to_set: no_duplicates ==> seq.len() == seq.to_set().len()
+                let mapped = seq@.map(|_i: int, t: T| t@);
+                mapped.unique_seq_to_set();
+                // mapped.to_set() == set@ from the bijection ensures
+                assert(mapped.to_set() =~= set@);
+                assert(seq@.len() == set@.len());
             }
             ArraySeqStEphS { seq }
         }
     }
-
-    // Helper functions
 
     fn subseq_copy<T: View + Clone>(a: &ArraySeqStEphS<T>, start: usize, len: usize) -> (result: ArraySeqStEphS<T>)
         requires

@@ -24,14 +24,7 @@ pub mod ArraySeqStPer {
     verus! {
 
     broadcast use vstd::std_specs::vec::group_vec_axioms;
-    use vstd::std_specs::clone::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
-
-    // Clone spec for ArraySeqStPerS - defines what cloned() means for this type
-    pub assume_specification<T: Clone>
-        [ <ArraySeqStPerS<T> as Clone>::clone ]
-        (s: &ArraySeqStPerS<T>) -> (result: ArraySeqStPerS<T>)
-        ensures result.seq@ == s.seq@;
 
     // Chapter 19 trait - provides alternative algorithmic implementations
     // Import and use this trait to get Chapter 19's algorithms
@@ -144,13 +137,9 @@ pub mod ArraySeqStPer {
 
         // Algorithm 19.4: append a b = flatten([a, b])
         fn append(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> ArraySeqStPerS<T> {
-            // Construct pair manually to avoid opaque f.ensures
-            let a_clone = a.clone_plus();
-            let b_clone = b.clone_plus();
-            proof {
-                assert(a_clone.seq@ =~= a.seq@);
-                assert(b_clone.seq@ =~= b.seq@);
-            }
+            // Clone inner Vecs (vstd has clone spec for Vec)
+            let a_clone = ArraySeqStPerS { seq: a.seq.clone() };
+            let b_clone = ArraySeqStPerS { seq: b.seq.clone() };
             let mut pair_vec: Vec<ArraySeqStPerS<T>> = Vec::with_capacity(2);
             pair_vec.push(a_clone);
             pair_vec.push(b_clone);
@@ -313,9 +302,12 @@ pub mod ArraySeqStPer {
             let seq = set.to_seq();
             proof {
                 // to_seq ensures: seq@.no_duplicates() && bijection with set@
-                // Since no_duplicates and same elements, lengths must match
-                assert(seq@.no_duplicates());
-                assume(seq@.len() == set@.len()); // TODO: prove via bijection lemma
+                // Use unique_seq_to_set: no_duplicates ==> seq.len() == seq.to_set().len()
+                let mapped = seq@.map(|_i: int, t: T| t@);
+                mapped.unique_seq_to_set();
+                // mapped.to_set() == set@ from the bijection ensures
+                assert(mapped.to_set() =~= set@);
+                assert(seq@.len() == set@.len());
             }
             ArraySeqStPerS { seq }
         }
