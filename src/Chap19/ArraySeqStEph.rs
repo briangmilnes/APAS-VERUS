@@ -44,11 +44,14 @@ pub mod ArraySeqStEph {
                 result.spec_len() == length,
                 forall|j: usize| j < length ==> f.ensures((j,), #[trigger] result.nth_spec(j as int));
 
-        fn map<U: View + Clone, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqStEphS<U>
+        fn map<U: View + Clone, F: Fn(&T) -> U>(a: &Self, f: &F) -> (result: ArraySeqStEphS<U>)
             where Self: Sized
             requires
                 a.spec_len() <= usize::MAX as int,
-                forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.nth_spec(i),));
+                forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.nth_spec(i),))
+            ensures
+                result.spec_len() == a.spec_len(),
+                forall|i: int| #![auto] 0 <= i < a.spec_len() ==> f.ensures((&a.nth_spec(i),), result.seq@[i]);
 
         spec fn nth_spec(&self, i: int) -> T;
 
@@ -101,7 +104,10 @@ pub mod ArraySeqStEph {
 
         fn deflate<F: Fn(&T) -> bool>(f: &F, x: &T) -> (result: Self)
             requires f.requires((x,))
-            ensures result.spec_len() <= 1;
+            ensures
+                result.spec_len() <= 1,
+                result.spec_len() == 1 ==> f.ensures((x,), true),
+                result.spec_len() == 0 ==> f.ensures((x,), false);
 
         fn from_set(set: &SetStEph<T>) -> (result: Self)
             where T: StT + Hash
@@ -171,9 +177,10 @@ pub mod ArraySeqStEph {
                     requires
                         (i as int) < a.spec_len(),
                         f.requires((&a.nth_spec(i as int),)),
+                    ensures
+                        f.ensures((&a.nth_spec(i as int),), r),
                 {
-                    let elem = &a.seq[i];
-                    f(elem)
+                    f(&a.seq[i])
                 }),
                 a.seq.len(),
             )

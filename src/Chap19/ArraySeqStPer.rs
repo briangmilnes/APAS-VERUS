@@ -37,10 +37,13 @@ pub mod ArraySeqStPer {
         fn singleton(item: T) -> (result: Self)
             ensures result.spec_len() == 1;
 
-        fn map<U: Clone + View, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqStPerS<U>
+        fn map<U: Clone + View, F: Fn(&T) -> U>(a: &Self, f: &F) -> (result: ArraySeqStPerS<U>)
             requires
                 a.spec_len() <= usize::MAX as int,
-                forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.nth_spec(i),));
+                forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.nth_spec(i),))
+            ensures
+                result.spec_len() == a.spec_len(),
+                forall|i: int| #![auto] 0 <= i < a.spec_len() ==> f.ensures((&a.nth_spec(i),), result.seq@[i]);
 
         fn append(a: &Self, b: &Self) -> (result: Self)
             requires a.spec_len() + b.spec_len() <= usize::MAX as int
@@ -51,6 +54,13 @@ pub mod ArraySeqStPer {
                 a.spec_len() <= usize::MAX as int,
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.nth_spec(i),))
             ensures result.spec_len() <= a.spec_len();
+
+        fn deflate<F: Fn(&T) -> bool>(f: &F, x: &T) -> (result: Self)
+            requires f.requires((x,))
+            ensures
+                result.spec_len() <= 1,
+                result.spec_len() == 1 ==> f.ensures((x,), true),
+                result.spec_len() == 0 ==> f.ensures((x,), false);
 
         fn update(a: &Self, index: usize, item: T) -> (result: Self)
             requires
@@ -114,10 +124,9 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.3: map f a = tabulate(lambda i.f(a[i]), |a|)
-        fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> ArraySeqStPerS<U> {
+        fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> (result: ArraySeqStPerS<U>) {
             let n = a.length();
             proof {
-                // Connect outer requires to closure requires
                 assert forall|i: usize| i < n implies (i as int) < a.spec_len() && #[trigger] f.requires((&a.seq@[i as int],)) by {
                     assert(a.nth_spec(i as int) == a.seq@[i as int]);
                 }
@@ -126,10 +135,11 @@ pub mod ArraySeqStPer {
                 &(|i: usize| -> (r: U)
                     requires
                         (i as int) < a.spec_len(),
-                        f.requires((&a.seq@[i as int],)),
+                        f.requires((&a.nth_spec(i as int),)),
+                    ensures
+                        f.ensures((&a.nth_spec(i as int),), r),
                 {
-                    let elem = a.nth(i);
-                    f(elem)
+                    f(a.nth(i))
                 }),
                 n,
             )
@@ -195,6 +205,15 @@ pub mod ArraySeqStPer {
                 lemma_sum_lens_bounded(deflated.seq@, n as int);
             }
             flatten(&deflated)
+        }
+
+        // deflate f x = if f x then singleton x else empty
+        fn deflate<F: Fn(&T) -> bool>(f: &F, x: &T) -> (result: ArraySeqStPerS<T>) {
+            if f(x) {
+                Self::singleton(x.clone())
+            } else {
+                Self::empty()
+            }
         }
 
         // Algorithm 19.6: update a (i, x) = tabulate(lambda j. if i = j then x else a[j], |a|)

@@ -1,5 +1,0 @@
-
-  Can we use decreases_to to get a cannonical ordering of set iterators?
-  Get rid of empty set lemma. - probably done
-  Get rid of the unproven code at the end of proven code for test.
-  

@@ -132,6 +132,7 @@ pub mod ArraySeqMtEph {
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.nth_spec(i),)),
             ensures
                 result.seq@.len() == a.spec_len();
+            // Note: f.ensures not propagated through parallel split/join - same issue as Chap18 map_par
 
         spec fn nth_spec(&self, i: int) -> T;
 
@@ -189,7 +190,10 @@ pub mod ArraySeqMtEph {
 
         fn deflate<F: Fn(&T) -> bool + Send + Sync>(f: &F, x: &T) -> (result: Self)
             requires f.requires((x,))
-            ensures result.spec_len() <= 1;
+            ensures
+                result.spec_len() <= 1,
+                result.spec_len() == 1 ==> f.ensures((x,), true),
+                result.spec_len() == 0 ==> f.ensures((x,), false);
 
         fn flatten(ss: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (result: Self)
             where T: 'static
@@ -261,8 +265,7 @@ pub mod ArraySeqMtEph {
                             (i as int) < a.spec_len(),
                             f.requires((&a.nth_spec(i as int),)),
                     {
-                        let elem = &a.seq[i];
-                        f(elem)
+                        f(&a.seq[i])
                     }),
                     a.seq.len(),
                 )
