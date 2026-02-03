@@ -275,7 +275,7 @@ pub mod DirGraphMtEph {
     }
 
     /// Parallel arc filtering for out-neighbors using set split.
-    fn n_plus_parallel<V: StTInMtT + Hash + 'static>(g: &DirGraphMtEph<V>, v: V, arcs: SetStEph<Edge<V>>) 
+    fn n_plus_par<V: StTInMtT + Hash + 'static>(g: &DirGraphMtEph<V>, v: V, arcs: SetStEph<Edge<V>>) 
                                                      -> (out_neighbors: SetStEph<V>)
         requires
             valid_key_type::<V>(),
@@ -309,11 +309,11 @@ pub mod DirGraphMtEph {
             
             let f1 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_left.spec_n_plus_from_set(v_left@, left_arcs@)
-            { n_plus_parallel(&g_left, v_left, left_arcs) };
+            { n_plus_par(&g_left, v_left, left_arcs) };
             
             let f2 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_right.spec_n_plus_from_set(v_right@, right_arcs@)
-            { n_plus_parallel(&g_right, v_right, right_arcs) };
+            { n_plus_par(&g_right, v_right, right_arcs) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
             
@@ -322,7 +322,7 @@ pub mod DirGraphMtEph {
     }
 
     /// Parallel arc filtering for in-neighbors using set split.
-    fn n_minus_parallel<V: StTInMtT + Hash + 'static>(g: &DirGraphMtEph<V>, v: V, arcs: SetStEph<Edge<V>>) 
+    fn n_minus_par<V: StTInMtT + Hash + 'static>(g: &DirGraphMtEph<V>, v: V, arcs: SetStEph<Edge<V>>) 
                                                       -> (in_neighbors: SetStEph<V>)
         requires
             valid_key_type::<V>(),
@@ -356,11 +356,11 @@ pub mod DirGraphMtEph {
             
             let f1 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_left.spec_n_minus_from_set(v_left@, left_arcs@)
-            { n_minus_parallel(&g_left, v_left, left_arcs) };
+            { n_minus_par(&g_left, v_left, left_arcs) };
             
             let f2 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_right.spec_n_minus_from_set(v_right@, right_arcs@)
-            { n_minus_parallel(&g_right, v_right, right_arcs) };
+            { n_minus_par(&g_right, v_right, right_arcs) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
             
@@ -369,7 +369,7 @@ pub mod DirGraphMtEph {
     }
 
     /// Parallel out-neighbors over a set of vertices using set split.
-    fn n_plus_of_vertices_parallel<V: StTInMtT + Hash + 'static>(
+    fn n_plus_of_vertices_par<V: StTInMtT + Hash + 'static>(
         g: &DirGraphMtEph<V>,
         verts: SetStEph<V>,
     ) -> (out_neighbors: SetStEph<V>)
@@ -389,7 +389,7 @@ pub mod DirGraphMtEph {
         }
         else if n == 1 {
             let u = verts.choose();
-            let result = n_plus_parallel(g, u, g.A.clone());
+            let result = n_plus_par(g, u, g.A.clone());
             result
         }
         else {
@@ -400,11 +400,11 @@ pub mod DirGraphMtEph {
             
             let f1 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_left.spec_n_plus_of_vertices_from_set(left_verts@)
-            { n_plus_of_vertices_parallel(&g_left, left_verts) };
+            { n_plus_of_vertices_par(&g_left, left_verts) };
             
             let f2 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_right.spec_n_plus_of_vertices_from_set(right_verts@)
-            { n_plus_of_vertices_parallel(&g_right, right_verts) };
+            { n_plus_of_vertices_par(&g_right, right_verts) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
             
@@ -436,7 +436,7 @@ pub mod DirGraphMtEph {
     }
 
     /// Parallel in-neighbors over a set of vertices using set split.
-    fn n_minus_of_vertices_parallel<V: StTInMtT + Hash + 'static>(
+    fn n_minus_of_vertices_par<V: StTInMtT + Hash + 'static>(
         g: &DirGraphMtEph<V>,
         verts: SetStEph<V>,
     ) -> (in_neighbors: SetStEph<V>)
@@ -456,7 +456,7 @@ pub mod DirGraphMtEph {
         }
         else if n == 1 {
             let u = verts.choose();
-            let result = n_minus_parallel(g, u, g.A.clone());
+            let result = n_minus_par(g, u, g.A.clone());
             result
         }
         else {
@@ -467,11 +467,11 @@ pub mod DirGraphMtEph {
             
             let f1 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_left.spec_n_minus_of_vertices_from_set(left_verts@)
-            { n_minus_of_vertices_parallel(&g_left, left_verts) };
+            { n_minus_of_vertices_par(&g_left, left_verts) };
             
             let f2 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_right.spec_n_minus_of_vertices_from_set(right_verts@)
-            { n_minus_of_vertices_parallel(&g_right, right_verts) };
+            { n_minus_of_vertices_par(&g_right, right_verts) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
             
@@ -503,7 +503,7 @@ pub mod DirGraphMtEph {
     }
 
     /// Parallel all-neighbors over a set of vertices using set split.
-    fn ng_of_vertices_parallel<V: StTInMtT + Hash + 'static>(
+    fn ng_of_vertices_par<V: StTInMtT + Hash + 'static>(
         g: &DirGraphMtEph<V>,
         verts: SetStEph<V>,
     ) -> (neighbors: SetStEph<V>)
@@ -534,11 +534,11 @@ pub mod DirGraphMtEph {
             
             let f1 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_left.spec_ng_of_vertices_from_set(left_verts@)
-            { ng_of_vertices_parallel(&g_left, left_verts) };
+            { ng_of_vertices_par(&g_left, left_verts) };
             
             let f2 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_right.spec_ng_of_vertices_from_set(right_verts@)
-            { ng_of_vertices_parallel(&g_right, right_verts) };
+            { ng_of_vertices_par(&g_right, right_verts) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
             
@@ -591,23 +591,23 @@ pub mod DirGraphMtEph {
 
         fn n_plus(&self, v: &V) -> SetStEph<V> { 
             let arcs = self.A.clone();
-            n_plus_parallel(self, v.clone_plus(), arcs)
+            n_plus_par(self, v.clone_plus(), arcs)
         }
 
         fn out_degree(&self, v: &V) -> (n: N) { self.n_plus(v).size() }
 
         fn n_minus(&self, v: &V) -> SetStEph<V> { 
             let arcs = self.A.clone();
-            n_minus_parallel(self, v.clone_plus(), arcs)
+            n_minus_par(self, v.clone_plus(), arcs)
         }
         fn in_degree(&self, v: &V) -> (n: N) { self.n_minus(v).size() }
 
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) { self.n_plus(v).union(&self.n_minus(v)) }
         fn degree(&self, v: &V) -> (n: N) { self.ng(v).size() }
 
-        fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { n_plus_of_vertices_parallel(self, u_set.clone()) }
-        fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { n_minus_of_vertices_parallel(self, u_set.clone()) }
-        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { ng_of_vertices_parallel(self, u_set.clone()) }
+        fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { n_plus_of_vertices_par(self, u_set.clone()) }
+        fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { n_minus_of_vertices_par(self, u_set.clone()) }
+        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { ng_of_vertices_par(self, u_set.clone()) }
     }
 
     impl<V: StTInMtT + Hash + 'static> Clone for DirGraphMtEph<V> {

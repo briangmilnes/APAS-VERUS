@@ -145,7 +145,7 @@ pub mod LabUnDirGraphMtEph {
     }
 
     /// Parallel edge filtering for neighbors using set split.
-    fn neighbors_parallel<V: HashOrd + MtT + 'static, L: StTInMtT + Hash + 'static>(
+    fn neighbors_par<V: HashOrd + MtT + 'static, L: StTInMtT + Hash + 'static>(
         g: &LabUnDirGraphMtEph<V, L>, 
         v: V, 
         edges: SetStEph<LabEdge<V, L>>
@@ -184,11 +184,11 @@ pub mod LabUnDirGraphMtEph {
             
             let f1 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_left.spec_neighbors_from_set(v_left@, left_edges@)
-            { neighbors_parallel(&g_left, v_left, left_edges) };
+            { neighbors_par(&g_left, v_left, left_edges) };
             
             let f2 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_right.spec_neighbors_from_set(v_right@, right_edges@)
-            { neighbors_parallel(&g_right, v_right, right_edges) };
+            { neighbors_par(&g_right, v_right, right_edges) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
             
@@ -372,7 +372,7 @@ pub mod LabUnDirGraphMtEph {
 
         fn neighbors(&self, v: &V) -> (neighbors: SetStEph<V>) {
             let edges = self.labeled_edges.clone();
-            neighbors_parallel(self, v.clone_plus(), edges)
+            neighbors_par(self, v.clone_plus(), edges)
         }
     }
 

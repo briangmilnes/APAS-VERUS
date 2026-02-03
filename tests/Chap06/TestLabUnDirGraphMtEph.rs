@@ -7,7 +7,7 @@ use apas_ai::Types::Types::*;
 use apas_ai::SetLit;
 use std::hash::Hash;
 
-// Helper to check if set contains element
+// Checks whether a set contains the given element.
 fn set_contains<T: StT + Ord + Hash>(s: &SetStEph<T>, elem: &T) -> bool {
     s.mem(elem)
 }

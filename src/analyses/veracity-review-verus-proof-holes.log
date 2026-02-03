@@ -1,0 +1,542 @@
+✓ Chap02/FibonacciWSScheduler.rs
+   5 clean proof functions
+❌ Chap02/WSSchedulerMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap02/WSSchedulerMtEph.rs:72: external_type_specification - #[verifier::external_type_specification]
+/home/milnes/projects/APAS-VERUS/src/Chap02/WSSchedulerMtEph.rs:73: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap02/WSSchedulerMtEph.rs:82: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap02/WSSchedulerMtEph.rs:90: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap02/WSSchedulerMtEph.rs:115: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap02/WSSchedulerMtEph.rs:134: assume(false) - assume(false);
+/home/milnes/projects/APAS-VERUS/src/Chap02/WSSchedulerMtEph.rs:144: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap02/WSSchedulerMtEph.rs:164: external_body - #[verifier::external_body]
+   Holes: 8 total
+      1 × assume(false)
+      6 × external_body
+      1 × external_type_specification
+✓ Chap03/InsertionSortStEph.rs
+✓ Chap05/MappingStEph.rs
+✓ Chap05/RelationStEph.rs
+✓ Chap05/SetMtEph.rs
+   1 clean proof function
+❌ Chap05/SetStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:252: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+   Proof functions: 1 total (1 clean, 0 holed)
+✓ Chap06/DirGraphMtEph.rs
+✓ Chap06/DirGraphStEph.rs
+✓ Chap06/LabDirGraphMtEph.rs
+✓ Chap06/LabDirGraphStEph.rs
+✓ Chap06/LabUnDirGraphMtEph.rs
+✓ Chap06/LabUnDirGraphStEph.rs
+✓ Chap06/UnDirGraphMtEph.rs
+✓ Chap06/UnDirGraphStEph.rs
+✓ Chap06/WeightedDirGraphStEphI128.rs
+✓ Chap06/WeightedDirGraphStEphI16.rs
+✓ Chap06/WeightedDirGraphStEphI32.rs
+✓ Chap06/WeightedDirGraphStEphI64.rs
+✓ Chap06/WeightedDirGraphStEphI8.rs
+✓ Chap06/WeightedDirGraphStEphIsize.rs
+✓ Chap06/WeightedDirGraphStEphU128.rs
+✓ Chap06/WeightedDirGraphStEphU16.rs
+✓ Chap06/WeightedDirGraphStEphU32.rs
+✓ Chap06/WeightedDirGraphStEphU64.rs
+✓ Chap06/WeightedDirGraphStEphU8.rs
+✓ Chap06/WeightedDirGraphStEphUsize.rs
+❌ Chap11/FibonacciMtEph2Threads.rs
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:149: assume(false) - Result::Err(_) => { assume(false); diverge() }
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:157: assume(false) - Result::Err(_) => { assume(false); diverge() }
+   Holes: 2 total
+      2 × assume(false)
+❌ Chap11/FibonacciMtEphRecomputes.rs
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:149: assume(false) - Result::Err(_) => { assume(false); diverge() }
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:157: assume(false) - Result::Err(_) => { assume(false); diverge() }
+   Holes: 2 total
+      2 × assume(false)
+✓ Chap11/FibonacciMtPerAllThreads.rs
+❌ Chap11/FibonacciMtPerTSM.rs
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:145: assume(false) - Result::Err(_) => { assume(false); diverge() }
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:153: assume(false) - Result::Err(_) => { assume(false); diverge() }
+   Holes: 2 total
+      2 × assume(false)
+✓ Chap11/FibonacciStEph.rs
+   3 clean proof functions
+❌ Chap12/Exercise12_1.rs
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:13: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:22: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:32: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:42: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:50: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:59: external_body - #[verifier::external_body]
+   Holes: 6 total
+      6 × external_body
+❌ Chap12/Exercise12_2.rs
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_2.rs:10: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+❌ Chap12/Exercise12_5.rs
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:15: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:22: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:29: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:36: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:50: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:65: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:70: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:46: unsafe {} - new_node = unsafe { Box::from_raw(node_ptr) };
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:57: unsafe {} - let next = unsafe { (*head).next };
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:59: unsafe {} - let boxed = unsafe { Box::from_raw(head) };
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:86: unsafe {} - unsafe {
+   Holes: 11 total
+      4 × unsafe {}
+      6 × external_body
+      1 × external
+✓ Chap17/MathSeq.rs
+❌ Chap18/ArraySeq.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:142: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+❌ Chap18/ArraySeqMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:105: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+❌ Chap18/ArraySeqMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:98: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+❌ Chap18/ArraySeqStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:97: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+❌ Chap18/ArraySeqStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:96: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+❌ Chap18/LinkedListStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:96: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+❌ Chap18/LinkedListStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:94: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+✓ Chap19/ArraySeqMtEph.rs
+   7 clean proof functions
+✓ Chap19/ArraySeqStEph.rs
+   2 clean proof functions
+❌ Chap19/ArraySeqStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:328: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+✓ Chap21/Algorithm21_1.rs
+✓ Chap21/Algorithm21_2.rs
+✓ Chap21/Algorithm21_5.rs
+✓ Chap21/Algorithm21_6.rs
+✓ Chap21/Exercise21_5.rs
+✓ Chap21/Exercise21_6.rs
+✓ Chap21/Exercise21_7.rs
+✓ Chap21/Exercise21_8.rs
+✓ Chap21/Exercise21_9.rs
+✓ Chap21/Problem21_1.rs
+✓ Chap21/Problem21_3.rs
+✓ Chap21/Problem21_4.rs
+✓ Concurrency.rs
+✓ ParaPairs.rs
+❌ Types.rs
+/home/milnes/projects/APAS-VERUS/src/Types.rs:193: admit() - admit();
+/home/milnes/projects/APAS-VERUS/src/Types.rs:206: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/Types.rs:228: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/Types.rs:233: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/Types.rs:255: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/Types.rs:260: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/Types.rs:277: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/Types.rs:282: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/Types.rs:304: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/Types.rs:309: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/Types.rs:326: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/Types.rs:331: admit() - { admit(); }
+   Holes: 12 total
+      12 × admit()
+   Proof functions: 14 total (2 clean, 12 holed)
+✓ experiments/ArrayVal.rs
+❌ experiments/ArrayVecSet.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/ArrayVecSet.rs:29: assume() - assume(a.len() == l);
+   Holes: 1 total
+      1 × assume()
+❌ experiments/CheckedI32.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/CheckedI32.rs:130: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/CheckedI32.rs:143: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/CheckedI32.rs:156: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/CheckedI32.rs:169: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/CheckedI32.rs:182: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/CheckedI32.rs:201: external_body - #[verifier::external_body]
+   Holes: 6 total
+      6 × external_body
+❌ experiments/ForFor.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/ForFor.rs:35: assume() - assume(old(a).len() == a.len());
+/home/milnes/projects/APAS-VERUS/src/experiments/ForFor.rs:38: assume() - assume(old(a).len() == a.len());
+   Holes: 2 total
+      2 × assume()
+✓ experiments/ForLoops.rs
+❌ experiments/HashCheckedU32.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/HashCheckedU32.rs:17: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/HashCheckedU32.rs:25: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/HashCheckedU32.rs:39: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/experiments/HashCheckedU32.rs:44: admit() - { admit(); }
+   Holes: 4 total
+      2 × admit()
+      2 × external_body
+   Proof functions: 2 total (0 clean, 2 holed)
+✓ experiments/SetLoops.rs
+✓ experiments/ToVecProof.rs
+❌ experiments/VSTDLoopProofs.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/VSTDLoopProofs.rs:85: external_body - #[verifier::external_body] // The proof fails - break doesn't propagate exit ...
+/home/milnes/projects/APAS-VERUS/src/experiments/VSTDLoopProofs.rs:176: external_body - #[verifier::external_body] // The proof fails so we turn it off here.
+   Holes: 2 total
+      2 × external_body
+❌ experiments/WhileWhile.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/WhileWhile.rs:39: assume() - assume(a.len() == l);
+   Holes: 1 total
+      1 × assume()
+✓ experiments/abstract_set_iter.rs
+✓ experiments/arc_clone_deref.rs
+❌ experiments/assume_spec_test.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/assume_spec_test.rs:26: assume_specification - pub assume_specification<V: Clone>[ TestIter::<V>::next ](it: &mut TestIter<V...
+   Holes: 1 total
+      1 × assume_specification
+✓ experiments/baseviewtypes.rs
+   7 clean proof functions
+✓ experiments/checked_comm.rs
+✓ experiments/checked_signed_int.rs
+   6 clean proof functions
+❌ experiments/checked_u32.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/checked_u32.rs:85: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/checked_u32.rs:99: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/checked_u32.rs:110: external_body - #[verifier::external_body]
+   Holes: 3 total
+      3 × external_body
+✓ experiments/checked_unsigned_int.rs
+   7 clean proof functions
+❌ experiments/clone.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/clone.rs:35: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/clone.rs:46: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/clone.rs:58: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/clone.rs:77: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/clone.rs:96: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/clone.rs:109: external_body - #[verifier::external_body]
+   Holes: 6 total
+      6 × external_body
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ experiments/clone_fn.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:16: assume() - assume(forall|x: &T| #[trigger] res.requires((x,)));
+/home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:29: assume() - assume(forall|x: &T| f.requires((x,)) == res.requires((x,)));
+/home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:30: assume() - assume(forall|x: &T, r: U| f.ensures((x,), r) == res.ensures((x,), r));
+/home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:43: assume() - assume(forall|x: &T, y: &T| f.requires((x, y)) == res.requires((x, y)));
+/home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:44: assume() - assume(forall|x: &T, y: &T, r: T| f.ensures((x, y), r) == res.ensures((x, y),...
+/home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:57: assume() - assume(forall|x: &T| f.requires((x,)) == res.requires((x,)));
+/home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:58: assume() - assume(forall|x: &T, r: bool| f.ensures((x,), r) == res.ensures((x,), r));
+/home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:63: external_body - #[verifier::external_body]
+   Holes: 8 total
+      7 × assume()
+      1 × external_body
+❌ experiments/clone_plus.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/clone_plus.rs:18: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+❌ experiments/eq_rel.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/eq_rel.rs:102: assume() - assume(cloned(*x, *x_clone) ==> *x == *x_clone);
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 12 total (11 clean, 1 holed)
+❌ experiments/executable_use_of_int.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/executable_use_of_int.rs:18: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+✓ experiments/ghost_type_invariant.rs
+   1 clean proof function
+✓ experiments/hash_set_iter.rs
+❌ experiments/hash_set_modern_pattern.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/hash_set_modern_pattern.rs:123: assume() - assume(obeys_key_model::<u64>());
+   Holes: 1 total
+      1 × assume()
+❌ experiments/hash_set_with_view_plus_loops.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/hash_set_with_view_plus_loops.rs:23: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+✓ experiments/invariant_proof_test.rs
+   1 clean proof function
+✓ experiments/minimal_iter.rs
+✓ experiments/modify_a_ghost_struct.rs
+   4 clean proof functions
+✓ experiments/parapair_closure_ensures.rs
+✓ experiments/parapair_move_closure_ensures.rs
+✓ experiments/parapair_named_closure.rs
+✓ experiments/parapair_toplevel_closure.rs
+❌ experiments/pervasives.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/pervasives.rs:43: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/pervasives.rs:59: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/pervasives.rs:89: assume(false) - assume(false);
+   Holes: 3 total
+      1 × assume(false)
+      2 × external_body
+   Proof functions: 6 total (5 clean, 1 holed)
+✓ experiments/possession.rs
+✓ experiments/proof_fn_in_trait.rs
+   4 clean proof functions
+✓ experiments/proven_partialeq.rs
+   9 clean proof functions
+✓ experiments/pub_crate_test.rs
+❌ experiments/seq_array_equality.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/seq_array_equality.rs:7: assume_specification - pub assume_specification<T: Clone> [<[T]>::to_vec] (s: &[T]) -> (result: Vec<T>)
+   Holes: 1 total
+      1 × assume_specification
+❌ experiments/seq_for_basic_proofs.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/seq_for_basic_proofs.rs:374: admit() - admit();
+/home/milnes/projects/APAS-VERUS/src/experiments/seq_for_basic_proofs.rs:408: admit() - admit();
+   Holes: 2 total
+      2 × admit()
+   Proof functions: 2 total (2 clean, 0 holed)
+❌ experiments/seq_loop_basic_proofs.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/seq_loop_basic_proofs.rs:434: admit() - admit();
+/home/milnes/projects/APAS-VERUS/src/experiments/seq_loop_basic_proofs.rs:468: admit() - admit();
+   Holes: 2 total
+      2 × admit()
+   Proof functions: 2 total (2 clean, 0 holed)
+❌ experiments/seq_set_exec.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/seq_set_exec.rs:74: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/seq_set_exec.rs:81: assume() - assume(((sum + seq[i as int]) as int) < u32::MAX); // Does not work.
+/home/milnes/projects/APAS-VERUS/src/experiments/seq_set_exec.rs:122: assume() - assume(forall |x: u32| s@.contains(x) <==> seq@.map(|_i: int, t: u32| t@).con...
+   Holes: 3 total
+      2 × assume()
+      1 × external_body
+   Proof functions: 3 total (3 clean, 0 holed)
+❌ experiments/seq_vec_equality.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/seq_vec_equality.rs:7: external_body - #[verifier::external_body] // The proof fails!
+   Holes: 1 total
+      1 × external_body
+❌ experiments/seq_while_basic_proofs.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/seq_while_basic_proofs.rs:416: admit() - admit();
+/home/milnes/projects/APAS-VERUS/src/experiments/seq_while_basic_proofs.rs:448: admit() - admit();
+   Holes: 2 total
+      2 × admit()
+   Proof functions: 2 total (2 clean, 0 holed)
+❌ experiments/sigma_pi.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/sigma_pi.rs:70: admit() - proof fn lemma_add_commutative() { admit(); }
+/home/milnes/projects/APAS-VERUS/src/experiments/sigma_pi.rs:74: admit() - { admit() }
+/home/milnes/projects/APAS-VERUS/src/experiments/sigma_pi.rs:76: admit() - proof fn lemma_mul_commutative() { admit(); }
+   Holes: 3 total
+      3 × admit()
+   Proof functions: 8 total (5 clean, 3 holed)
+✓ experiments/signed_int.rs
+   6 clean proof functions
+❌ experiments/simple_hash_set_iter.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/simple_hash_set_iter.rs:88: assume() - assume(it@.1.map(|i: int, k: V| k@).to_set() == self@);
+/home/milnes/projects/APAS-VERUS/src/experiments/simple_hash_set_iter.rs:143: assume() - assume(s2@ == s1@);
+   Holes: 2 total
+      2 × assume()
+❌ experiments/simple_seq_iter.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/simple_seq_iter.rs:146: assume() - assume(self.pos <= self.vec.len());
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ experiments/simple_set_iter.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/simple_set_iter.rs:87: assume() - assume(self.elements@[i as int] == *v);
+/home/milnes/projects/APAS-VERUS/src/experiments/simple_set_iter.rs:90: assume() - assume(self.elements@[i as int] != *v);
+/home/milnes/projects/APAS-VERUS/src/experiments/simple_set_iter.rs:210: assume() - assume(self.pos <= self.vec.len());
+   Holes: 3 total
+      3 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+✓ experiments/struct_construction_test.rs
+✓ experiments/supertrait.rs
+❌ experiments/tcb_foul.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/tcb_foul.rs:32: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/tcb_foul.rs:53: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/experiments/tcb_foul.rs:77: assume() - assume(x == 42);  // Just assume a falsehood
+   Holes: 3 total
+      1 × assume()
+      2 × external_body
+❌ experiments/test_feq.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/test_feq.rs:94: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/experiments/test_feq.rs:99: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/experiments/test_feq.rs:104: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/experiments/test_feq.rs:166: external_body - #[verifier::external_body]
+   Holes: 4 total
+      3 × admit()
+      1 × external_body
+   Proof functions: 3 total (0 clean, 3 holed)
+❌ experiments/test_feq_insertion_sort.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/test_feq_insertion_sort.rs:41: assume() - assume(cmp_result == v@[i as int].cmp_spec(&v@[(i + 1) as int]));
+/home/milnes/projects/APAS-VERUS/src/experiments/test_feq_insertion_sort.rs:47: assume() - assume(forall|a: int, b: int| 0 <= a < b <= (i + 1) as int ==> v@[a].cmp_spec...
+/home/milnes/projects/APAS-VERUS/src/experiments/test_feq_insertion_sort.rs:88: assume() - assume(cmp_result == a@[(down - 1) as int].cmp_spec(&a@[down as int]));
+/home/milnes/projects/APAS-VERUS/src/experiments/test_feq_insertion_sort.rs:104: assume() - assume(forall|i: int, j: int| 0 <= i < j < up as int ==> a@[i].cmp_spec(&a@[j...
+/home/milnes/projects/APAS-VERUS/src/experiments/test_feq_insertion_sort.rs:108: assume() - assume(sorted_spec(a@));
+/home/milnes/projects/APAS-VERUS/src/experiments/test_feq_insertion_sort.rs:157: assume() - assume(cmp_result == a@[(down - 1) as int].cmp_spec(&a@[down as int]));
+/home/milnes/projects/APAS-VERUS/src/experiments/test_feq_insertion_sort.rs:174: assume() - assume(forall|i: int, j: int| 0 <= i < j < (up + 1) as int ==> a@[i].cmp_spec...
+   Holes: 7 total
+      7 × assume()
+✓ experiments/test_test.rs
+✓ experiments/test_verify_one_file.rs
+❌ experiments/total_ord_gen.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:45: assume() - proof fn axiom_eq_reflexive(x: &Self) { assume(*x == *x); }
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:46: assume() - proof fn axiom_eq_symmetric(x: &Self, y: &Self) { assume((*x == *y) == (*y ==...
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:47: assume() - proof fn axiom_eq_transitive(x: &Self, y: &Self, z: &Self) { assume(*x == *y ...
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:48: assume() - proof fn axiom_eq_view(x: &Self, y: &Self) { assume(*x == *y ==> x@ == y@); }
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:51: assume() - assume(cloned(*x, *x_clone) ==> *x == *x_clone);
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:60: assume() - proof fn axiom_le_reflexive(x: &Self) { assume(x.le_spec(x)); }
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:61: assume() - proof fn axiom_le_antisymmetric(x: &Self, y: &Self) { assume(x.le_spec(y) && ...
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:63: assume() - { assume(x.le_spec(y) && y.le_spec(z) ==> x.le_spec(z)); }
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:64: assume() - proof fn axiom_le_total(x: &Self, y: &Self) { assume(x.le_spec(y) || y.le_spe...
+   Holes: 9 total
+      9 × assume()
+   Proof functions: 20 total (1 clean, 19 holed)
+❌ experiments/total_ord_gen_axioms.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen_axioms.rs:31: admit() - admit(); // Cannot prove for generic T
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen_axioms.rs:38: admit() - admit(); // Cannot prove for generic T
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen_axioms.rs:46: admit() - admit(); // Cannot prove for generic T
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen_axioms.rs:54: admit() - admit(); // le_spec is admit()
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen_axioms.rs:61: admit() - admit(); // Cannot prove for arbitrary le_spec
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen_axioms.rs:68: admit() - admit(); // Cannot prove for arbitrary le_spec
+/home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen_axioms.rs:75: admit() - admit(); // Cannot prove for arbitrary le_spec
+   Holes: 7 total
+      7 × admit()
+   Proof functions: 7 total (0 clean, 7 holed)
+✓ experiments/triangle.rs
+   1 clean proof function
+✓ experiments/unsigned_int.rs
+   7 clean proof functions
+✓ experiments/use_proven_partialeq.rs
+✓ experiments/vec_if.rs
+   1 clean proof function
+✓ experiments/vec_length_while_rust.rs
+✓ experiments/vec_length_while_verus.rs
+✓ experiments/verus_iterator.rs
+✓ experiments/verus_pub_crate_test.rs
+✓ experiments/verus_vec_iterator.rs
+✓ experiments/verus_vec_iterator_for_basic_proofs.rs
+✓ experiments/verus_vec_iterator_loop_basic_proofs.rs
+✓ experiments/verus_vec_iterator_while_basic_proofs.rs
+❌ experiments/verus_wrapped_iter_loops.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/verus_wrapped_iter_loops.rs:18: admit() - admit();
+/home/milnes/projects/APAS-VERUS/src/experiments/verus_wrapped_iter_loops.rs:27: admit() - admit();
+   Holes: 2 total
+      2 × admit()
+   Proof functions: 2 total (0 clean, 2 holed)
+✓ lib.rs
+✓ vstdplus/VecQueue.rs
+✓ vstdplus/arithmetic/power2_plus.rs
+   6 clean proof functions
+✓ vstdplus/checked_int.rs
+   7 clean proof functions
+✓ vstdplus/checked_nat.rs
+   7 clean proof functions
+✓ vstdplus/checked_nat_with_checked_view.rs
+❌ vstdplus/clone_plus.rs
+/home/milnes/projects/APAS-VERUS/src/vstdplus/clone_plus.rs:18: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/clone_plus.rs:27: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/clone_plus.rs:37: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/clone_plus.rs:47: external_body - #[verifier::external_body]
+   Holes: 4 total
+      4 × external_body
+❌ vstdplus/feq.rs
+/home/milnes/projects/APAS-VERUS/src/vstdplus/feq.rs:18: external_trait_specification - #[verifier::external_trait_specification]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/feq.rs:19: external_trait_extension - #[verifier::external_trait_extension(FeqSpec via FeqSpecImpl)]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/feq.rs:167: admit() - admit();
+/home/milnes/projects/APAS-VERUS/src/vstdplus/feq.rs:180: assume() - assume(result == (x@ == y@));
+   Holes: 4 total
+      1 × assume()
+      1 × admit()
+      1 × external_trait_specification
+      1 × external_trait_extension
+   Proof functions: 3 total (2 clean, 1 holed)
+❌ vstdplus/hash_set_specs.rs
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_specs.rs:12: assume_specification - pub assume_specification<T, S> [<std::collections::HashSet<T, S> as std::clon...
+   Holes: 1 total
+      1 × assume_specification
+❌ vstdplus/hash_set_with_view_plus.rs
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:41: admit() - admit();
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:49: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:58: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:69: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:80: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:88: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:98: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:124: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:130: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:139: external_body - #[verifier::external_body]
+   Holes: 10 total
+      1 × admit()
+      9 × external_body
+   Proof functions: 1 total (0 clean, 1 holed)
+❌ vstdplus/hashed_checked_u32.rs
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:25: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:33: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:48: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:54: admit() - { admit(); }
+   Holes: 4 total
+      2 × admit()
+      2 × external_body
+   Proof functions: 2 total (0 clean, 2 holed)
+❌ vstdplus/partial_order.rs
+/home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:404: admit() - admit();
+/home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:408: admit() - admit();
+/home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:413: admit() - admit();
+/home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:416: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:432: admit() - admit();
+/home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:436: admit() - admit();
+/home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:441: admit() - admit();
+/home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:444: external_body - #[verifier::external_body]
+   Holes: 8 total
+      6 × admit()
+      2 × external_body
+   Proof functions: 45 total (39 clean, 6 holed)
+✓ vstdplus/pervasives_plus.rs
+❌ vstdplus/seq.rs
+/home/milnes/projects/APAS-VERUS/src/vstdplus/seq.rs:67: assume() - assume(sum.is_normal() ==> sum@ == spec_sum_u32_seq(s_spec.take(i as int)) as...
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 5 total (5 clean, 0 holed)
+✓ vstdplus/seq_set.rs
+   60 clean proof functions
+❌ vstdplus/threads_plus.rs
+/home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:13: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:21: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:24: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:39: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:55: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:79: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:84: assume_new() - (id, Tracked::assume_new())
+/home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:125: unsafe impl - unsafe impl<V> Sync for ThreadShareablePlus<V> {}
+/home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:126: unsafe impl - unsafe impl<V> Send for ThreadShareablePlus<V> {}
+   Holes: 9 total
+      1 × Tracked::assume_new()
+      2 × unsafe impl
+      6 × external_body
+✓ vstdplus/total_order.rs
+   52 clean proof functions
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   93 clean (no holes)
+   57 holed (contains holes)
+   150 total
+
+Proof Functions:
+   287 clean
+   60 holed
+   347 total
+
+Holes Found: 188 total
+   8 × assume(false)
+   40 × assume()
+   1 × Tracked::assume_new()
+   3 × assume_specification
+   45 × admit()
+   2 × unsafe impl
+   4 × unsafe {}
+   81 × external_body
+   1 × external_trait_specification
+   1 × external_type_specification
+   1 × external_trait_extension
+   1 × external

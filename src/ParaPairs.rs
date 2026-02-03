@@ -22,7 +22,7 @@ pub mod ParaPairs {
     ///
     ///     let f1 = move || -> (out: SetStEph<V>)
     ///         ensures out@ == g_left.spec_n_plus_from_set(v_left@, left_arcs@)
-    ///     { n_plus_parallel(&g_left, v_left, left_arcs) };
+    ///     { n_plus_par(&g_left, v_left, left_arcs) };
     ///
     ///     let Pair(a, b) = ParaPair!(f1, f2);
     ///

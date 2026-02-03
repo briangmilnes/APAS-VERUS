@@ -137,7 +137,6 @@ pub mod ArraySeqStPer {
 
         // Algorithm 19.4: append a b = flatten([a, b])
         fn append(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> ArraySeqStPerS<T> {
-            // Clone inner Vecs (vstd has clone spec for Vec)
             let a_clone = ArraySeqStPerS { seq: a.seq.clone() };
             let b_clone = ArraySeqStPerS { seq: b.seq.clone() };
             let mut pair_vec: Vec<ArraySeqStPerS<T>> = Vec::with_capacity(2);
@@ -148,13 +147,17 @@ pub mod ArraySeqStPer {
                 assert(pair.spec_len() == 2);
                 assert(pair.seq@[0].seq@.len() == a.seq@.len());
                 assert(pair.seq@[1].seq@.len() == b.seq@.len());
+                // Prove flatten precondition.
+                assert(sum_lens(pair.seq@, 0) == 0);
+                assert(sum_lens(pair.seq@, 1) == a.seq@.len());
+                assert(sum_lens(pair.seq@, 2) == a.seq@.len() + b.seq@.len());
             }
             flatten(&pair)
         }
 
         // Algorithm 19.5: filter f a = flatten(map(deflate f, a))
+        // where deflate f x = if f x then singleton x else empty (inlined below)
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F) -> ArraySeqStPerS<T> {
-            // Build deflated array manually to avoid opaque f.ensures
             let n = a.length();
             let mut deflated_vec: Vec<ArraySeqStPerS<T>> = Vec::with_capacity(n);
             proof {
@@ -174,7 +177,12 @@ pub mod ArraySeqStPer {
                 decreases n - i,
             {
                 let elem = a.nth(i);
-                let deflated_elem = deflate(pred, elem);
+                // Inline deflate: singleton if pred true, empty otherwise
+                let deflated_elem = if pred(elem) {
+                    ArraySeqStPerS::<T>::singleton(elem.clone())
+                } else {
+                    ArraySeqStPerS::<T>::empty()
+                };
                 proof {
                     assert(deflated_elem.seq@.len() <= 1);
                 }
@@ -182,6 +190,10 @@ pub mod ArraySeqStPer {
                 i += 1;
             }
             let deflated = ArraySeqStPerS::<ArraySeqStPerS<T>> { seq: deflated_vec };
+            proof {
+                // Prove flatten precondition: sum_lens <= n <= usize::MAX.
+                lemma_sum_lens_bounded(deflated.seq@, n as int);
+            }
             flatten(&deflated)
         }
 
@@ -265,7 +277,7 @@ pub mod ArraySeqStPer {
             (ArraySeqStPerS { seq: results }, acc)
         }
 
-        // select helper for append_select
+        // Selects an element from concatenated sequences by index.
         fn select<'a>(a: &'a ArraySeqStPerS<T>, b: &'a ArraySeqStPerS<T>, i: usize) -> Option<&'a T> {
             let len_a = a.length();
             if i < len_a {
@@ -313,138 +325,117 @@ pub mod ArraySeqStPer {
         }
     }
 
-    // Helper: flatten - sums lengths of inner sequences
-    #[verifier::external_body]
-    fn flatten<T: View + Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (result: ArraySeqStPerS<T>)
+    // Spec function to sum lengths of first n inner sequences.
+    pub open spec fn sum_lens<T>(ss: Seq<ArraySeqStPerS<T>>, n: int) -> int
+        decreases n
+    {
+        if n <= 0 { 0 }
+        else { sum_lens(ss, n - 1) + ss[n - 1].seq@.len() as int }
+    }
+
+    // If all inner lengths <= 1, then sum_lens(n) <= n.
+    proof fn lemma_sum_lens_bounded<T>(ss: Seq<ArraySeqStPerS<T>>, n: int)
+        requires
+            0 <= n <= ss.len(),
+            forall|i: int| #![auto] 0 <= i < ss.len() ==> ss[i].seq@.len() <= 1,
         ensures
-            // For 2-element case (append)
+            sum_lens(ss, n) <= n,
+        decreases n,
+    {
+        if n <= 0 {
+        } else {
+            lemma_sum_lens_bounded(ss, n - 1);
+        }
+    }
+
+    // sum_lens is monotonically increasing.
+    proof fn lemma_sum_lens_monotonic<T>(ss: Seq<ArraySeqStPerS<T>>, a: int, b: int)
+        requires
+            0 <= a <= b <= ss.len(),
+        ensures
+            sum_lens(ss, a) <= sum_lens(ss, b),
+        decreases b - a,
+    {
+        if a == b {
+        } else {
+            lemma_sum_lens_monotonic(ss, a, b - 1);
+        }
+    }
+
+    // Concatenates all inner sequences into a single flat sequence.
+    pub fn flatten<T: View + Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (result: ArraySeqStPerS<T>)
+        requires
+            sum_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,
+        ensures
+            result.seq@.len() == sum_lens(ss.seq@, ss.seq@.len() as int),
             ss.seq@.len() == 2 ==> result.seq@.len() == ss.seq@[0].seq@.len() + ss.seq@[1].seq@.len(),
-            // For filter case: result <= sum of inner lengths <= outer length (each inner <= 1)
             (forall|i: int| #![auto] 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1)
                 ==> result.seq@.len() <= ss.seq@.len(),
     {
-        let mut total_len: usize = 0;
+        // First pass: compute total length.
         let ss_len = ss.seq.len();
-        for i in 0..ss_len {
-            total_len = total_len + ss.seq[i].seq.len();
+        let mut total_len: usize = 0;
+        let mut i: usize = 0;
+        proof {
+            lemma_sum_lens_monotonic(ss.seq@, 0, ss.seq@.len() as int);
         }
+        while i < ss_len
+            invariant
+                i <= ss_len,
+                ss_len == ss.seq@.len(),
+                total_len as int == sum_lens(ss.seq@, i as int),
+                sum_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,
+                sum_lens(ss.seq@, i as int) <= sum_lens(ss.seq@, ss.seq@.len() as int),
+            decreases ss_len - i,
+        {
+            proof {
+                lemma_sum_lens_monotonic(ss.seq@, (i + 1) as int, ss.seq@.len() as int);
+            }
+            total_len = total_len + ss.seq[i].seq.len();
+            i = i + 1;
+        }
+
+        // Second pass: copy all elements.
         let mut result: Vec<T> = Vec::with_capacity(total_len);
-        for j in 0..ss_len {
+        let mut j: usize = 0;
+        while j < ss_len
+            invariant
+                j <= ss_len,
+                ss_len == ss.seq@.len(),
+                result@.len() == sum_lens(ss.seq@, j as int),
+            decreases ss_len - j,
+        {
             let inner = &ss.seq[j];
-            for k in 0..inner.seq.len() {
+            let inner_len = inner.seq.len();
+            let mut k: usize = 0;
+            while k < inner_len
+                invariant
+                    k <= inner_len,
+                    inner_len == inner.seq@.len(),
+                    j < ss_len,
+                    ss_len == ss.seq@.len(),
+                    result@.len() == sum_lens(ss.seq@, j as int) + k as int,
+                decreases inner_len - k,
+            {
                 result.push(inner.seq[k].clone());
+                k = k + 1;
+            }
+            j = j + 1;
+        }
+
+        proof {
+            if ss.seq@.len() == 2 {
+                assert(sum_lens(ss.seq@, 2) == sum_lens(ss.seq@, 1) + ss.seq@[1].seq@.len() as int);
+                assert(sum_lens(ss.seq@, 1) == sum_lens(ss.seq@, 0) + ss.seq@[0].seq@.len() as int);
+                assert(sum_lens(ss.seq@, 0) == 0int);
+            }
+            if forall|i: int| #![auto] 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1 {
+                lemma_sum_lens_bounded(ss.seq@, ss.seq@.len() as int);
             }
         }
-        ArraySeqStPerS { seq: result }
-    }
 
-    // Helper: deflate for filter
-    fn deflate<T: View + Clone, F: Fn(&T) -> bool>(pred: &F, x: &T) -> (result: ArraySeqStPerS<T>)
-        requires pred.requires((x,))
-        ensures result.seq@.len() <= 1
-    {
-        if pred(x) {
-            ArraySeqStPerS::<T>::singleton(x.clone())
-        } else {
-            ArraySeqStPerS::<T>::empty()
-        }
+        ArraySeqStPerS { seq: result }
     }
 
     } // verus!
-
-    // Non-Verus stub
-    #[cfg(not(verus_keep_ghost))]
-    pub use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS;
-
-    #[cfg(not(verus_keep_ghost))]
-    use std::hash::Hash;
-
-    #[cfg(not(verus_keep_ghost))]
-    use crate::Chap05::SetStEph::SetStEph::{SetStEph, SetStEphTrait};
-
-    #[cfg(not(verus_keep_ghost))]
-    use crate::Types::Types::StT;
-
-    #[cfg(not(verus_keep_ghost))]
-    pub trait ArraySeqStPerTrait<T: Clone> {
-        fn empty() -> Self;
-        fn singleton(item: T) -> Self;
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqStPerS<U>;
-        fn append(a: &Self, b: &Self) -> Self;
-        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self;
-        fn update(a: &Self, index: usize, item: T) -> Self;
-        fn is_empty(a: &Self) -> bool;
-        fn is_singleton(a: &Self) -> bool;
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A;
-        fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T;
-        fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (Self, T) where Self: Sized;
-        fn select<'a>(a: &'a Self, b: &'a Self, i: usize) -> Option<&'a T>;
-        fn append_select(a: &Self, b: &Self) -> Self;
-        fn from_set(set: &SetStEph<T>) -> Self where T: StT + Hash;
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: Clone> ArraySeqStPerTrait<T> for ArraySeqStPerS<T> {
-        fn empty() -> Self { Self::from_vec(Vec::new()) }
-        fn singleton(item: T) -> Self { Self::from_vec(vec![item]) }
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqStPerS<U> {
-            ArraySeqStPerS::<U>::tabulate(&|i| f(a.nth(i)), a.length())
-        }
-        fn append(a: &Self, b: &Self) -> Self {
-            let mut seq = a.seq.clone();
-            seq.extend(b.seq.iter().cloned());
-            Self { seq }
-        }
-        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self {
-            Self { seq: a.seq.iter().filter(|x| pred(x)).cloned().collect() }
-        }
-        fn update(a: &Self, index: usize, item: T) -> Self {
-            Self::tabulate(&|j| if j == index { item.clone() } else { a.nth(j).clone() }, a.length())
-        }
-        fn is_empty(a: &Self) -> bool { a.length() == 0 }
-        fn is_singleton(a: &Self) -> bool { a.length() == 1 }
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A {
-            a.seq.iter().fold(seed, |acc, x| f(&acc, x))
-        }
-        fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T {
-            if a.length() == 0 { id }
-            else if a.length() == 1 { a.nth(0).clone() }
-            else {
-                let mid = a.length() / 2;
-                let left = a.subseq_copy(0, mid);
-                let right = a.subseq_copy(mid, a.length() - mid);
-                f(&Self::reduce(&left, f, id.clone()), &Self::reduce(&right, f, id))
-            }
-        }
-        fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (Self, T) {
-            let mut acc = id;
-            let seq: Vec<T> = a.seq.iter().map(|x| { acc = f(&acc, x); acc.clone() }).collect();
-            (Self { seq }, acc)
-        }
-        fn select<'a>(a: &'a Self, b: &'a Self, i: usize) -> Option<&'a T> {
-            if i < a.length() { Some(a.nth(i)) }
-            else if i - a.length() < b.length() { Some(b.nth(i - a.length())) }
-            else { None }
-        }
-        fn append_select(a: &Self, b: &Self) -> Self {
-            Self::tabulate(&|i| Self::select(a, b, i).unwrap().clone(), a.length() + b.length())
-        }
-        fn from_set(set: &SetStEph<T>) -> Self where T: StT + Hash {
-            Self { seq: set.to_seq() }
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    fn flatten<T: Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> ArraySeqStPerS<T> {
-        let mut result = Vec::new();
-        for inner in ss.seq.iter() {
-            result.extend(inner.seq.iter().cloned());
-        }
-        ArraySeqStPerS { seq: result }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    fn deflate<T: Clone, F: Fn(&T) -> bool>(pred: &F, x: &T) -> ArraySeqStPerS<T> {
-        if pred(x) { ArraySeqStPerS::singleton(x.clone()) } else { ArraySeqStPerS::empty() }
-    }
 }

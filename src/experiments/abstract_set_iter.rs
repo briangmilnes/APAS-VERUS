@@ -186,7 +186,7 @@ pub mod abstract_set_iter {
         }
     }
 
-    // Helper: convert Option<V> to Set<V>
+    // Converts an Option to a singleton Set or empty Set.
     pub open spec fn option_to_set<V>(opt: Option<V>) -> Set<V> {
         match opt {
             None => Set::empty(),

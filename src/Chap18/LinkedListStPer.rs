@@ -23,46 +23,105 @@ pub mod LinkedListStPer {
 
     /// Base trait for single-threaded persistent linked list sequences (Chapter 18).
     pub trait LinkedListStPerBaseTrait<T>: Sized {
+        spec fn spec_len(&self) -> int;
+
         /// Work Θ(n), Span Θ(1)
-        fn new(length: usize, init_value: T) -> Self where T: Clone;
+        fn new(length: usize, init_value: T) -> (result: Self)
+            where T: Clone
+            requires length <= usize::MAX
+            ensures result.spec_len() == length as int;
+
         /// Work Θ(1), Span Θ(1)
-        fn length(&self) -> usize;
+        fn length(&self) -> (len: usize)
+            ensures len as int == self.spec_len();
+
         /// Work Θ(n), Span Θ(1) - linked list traversal
-        fn nth(&self, index: usize) -> &T;
+        fn nth(&self, index: usize) -> (result: &T)
+            requires index < self.spec_len();
+
         /// Work Θ(len), Span Θ(1)
-        fn subseq_copy(&self, start: usize, length: usize) -> Self where T: Clone;
-        /// Work Θ(Σ|a[i]|), Span Θ(1)
-        fn flatten(a: &LinkedListStPerS<LinkedListStPerS<T>>) -> Self where T: Clone;
+        fn subseq_copy(&self, start: usize, length: usize) -> (result: Self)
+            where T: Clone
+            requires start + length <= self.spec_len()
+            ensures result.spec_len() == length as int;
+
         /// Work Θ(n), Span Θ(1)
-        fn from_vec(elts: Vec<T>) -> Self;
+        fn from_vec(elts: Vec<T>) -> (result: Self)
+            ensures result.spec_len() == elts@.len();
     }
 
     /// Redefinable trait - may be overridden with better algorithms in later chapters.
     pub trait LinkedListStPerRedefinableTrait<T>: Sized {
+        spec fn spec_len(&self) -> int;
+
         /// Work Θ(1), Span Θ(1)
-        fn empty() -> Self;
+        fn empty() -> (result: Self)
+            ensures result.spec_len() == 0;
+
         /// Work Θ(1), Span Θ(1)
-        fn singleton(item: T) -> Self;
+        fn singleton(item: T) -> (result: Self)
+            ensures result.spec_len() == 1;
+
         /// Work Θ(n), Span Θ(1)
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> LinkedListStPerS<T>;
+        fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> (result: LinkedListStPerS<T>)
+            requires
+                n <= usize::MAX,
+                forall|i: usize| i < n ==> #[trigger] f.requires((i,)),
+            ensures
+                result.seq@.len() == n,
+                forall|i: int| #![auto] 0 <= i < n ==> f.ensures((i as usize,), result.seq@[i]);
+
         /// Work Θ(|a|), Span Θ(1)
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &LinkedListStPerS<T>, f: &F) -> LinkedListStPerS<U>;
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &LinkedListStPerS<T>, f: &F) -> (result: LinkedListStPerS<U>)
+            requires
+                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
+            ensures
+                result.seq@.len() == a.seq@.len(),
+                forall|i: int| #![auto] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), result.seq@[i]);
+
         /// Work Θ(|a|+|b|), Span Θ(1)
-        fn append(a: &LinkedListStPerS<T>, b: &LinkedListStPerS<T>) -> Self where T: Clone;
+        fn append(a: &LinkedListStPerS<T>, b: &LinkedListStPerS<T>) -> (result: Self)
+            where T: Clone
+            requires a.seq@.len() + b.seq@.len() <= usize::MAX as int
+            ensures result.spec_len() == a.seq@.len() + b.seq@.len();
+
         /// Work Θ(|a|), Span Θ(1)
-        fn filter<F: Fn(&T) -> bool>(a: &LinkedListStPerS<T>, pred: &F) -> Self where T: Clone;
+        fn filter<F: Fn(&T) -> bool>(a: &LinkedListStPerS<T>, pred: &F) -> (result: Self)
+            where T: Clone
+            requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],))
+            ensures result.spec_len() <= a.seq@.len();
+
+        /// Work Θ(Σ|a[i]|), Span Θ(1)
+        fn flatten(a: &LinkedListStPerS<LinkedListStPerS<T>>) -> (result: Self) where T: Clone;
+
         /// Work Θ(|a|), Span Θ(1)
-        fn update(a: &LinkedListStPerS<T>, index: usize, item: T) -> Self where T: Clone;
+        fn update(a: &LinkedListStPerS<T>, index: usize, item: T) -> (result: Self)
+            where T: Clone
+            requires index < a.seq@.len()
+            ensures result.spec_len() == a.seq@.len();
+
         /// Work Θ(1), Span Θ(1)
-        fn is_empty(&self) -> bool;
+        fn is_empty(&self) -> (empty: bool)
+            ensures empty <==> self.spec_len() == 0;
+
         /// Work Θ(1), Span Θ(1)
-        fn is_singleton(&self) -> bool;
+        fn is_singleton(&self) -> (single: bool)
+            ensures single <==> self.spec_len() == 1;
+
         /// Work Θ(|a|), Span Θ(1)
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStPerS<T>, f: &F, seed: A) -> A;
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStPerS<T>, f: &F, seed: A) -> A
+            requires forall|x: &A, y: &T| #[trigger] f.requires((x, y));
+
         /// Work Θ(|a|), Span Θ(1)
-        fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, id: T) -> T where T: Clone;
+        fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, id: T) -> T
+            where T: Clone
+            requires forall|x: &T, y: &T| #[trigger] f.requires((x, y));
+
         /// Work Θ(|a|), Span Θ(1)
-        fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, id: T) -> (LinkedListStPerS<T>, T) where T: Clone;
+        fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, id: T) -> (result: (LinkedListStPerS<T>, T))
+            where T: Clone
+            requires forall|x: &T, y: &T| #[trigger] f.requires((x, y))
+            ensures result.0.seq@.len() == a.seq@.len();
     }
 
     impl<T: View> View for LinkedListStPerS<T> {
@@ -165,6 +224,10 @@ pub mod LinkedListStPer {
     }
 
     impl<T> LinkedListStPerS<T> {
+        pub open spec fn spec_len(&self) -> int {
+            self.seq@.len() as int
+        }
+
         pub fn new(length: usize, init_value: T) -> (result: LinkedListStPerS<T>)
             where T: Clone
             requires length <= usize::MAX
@@ -203,7 +266,9 @@ pub mod LinkedListStPer {
             requires 
                 n <= usize::MAX,
                 forall|i: usize| i < n ==> #[trigger] f.requires((i,)),
-            ensures result.seq@.len() == n
+            ensures
+                result.seq@.len() == n,
+                forall|i: int| #![auto] 0 <= i < n ==> f.ensures((i as usize,), result.seq@[i]),
         {
             let mut seq = Vec::with_capacity(n);
             let mut i: usize = 0;
@@ -212,6 +277,7 @@ pub mod LinkedListStPer {
                     i <= n,
                     seq@.len() == i as int,
                     forall|j: usize| j < n ==> #[trigger] f.requires((j,)),
+                    forall|j: int| #![auto] 0 <= j < i ==> f.ensures((j as usize,), seq@[j]),
                 decreases n - i,
             {
                 seq.push(f(i));
@@ -222,7 +288,9 @@ pub mod LinkedListStPer {
 
         pub fn map<U: Clone + View, F: Fn(&T) -> U>(a: &LinkedListStPerS<T>, f: &F) -> (result: LinkedListStPerS<U>)
             requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
-            ensures result.seq@.len() == a.seq@.len()
+            ensures
+                result.seq@.len() == a.seq@.len(),
+                forall|i: int| #![auto] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), result.seq@[i]),
         {
             let len = a.seq.len();
             let mut seq: Vec<U> = Vec::with_capacity(len);
@@ -233,6 +301,7 @@ pub mod LinkedListStPer {
                     len == a.seq@.len(),
                     seq@.len() == i as int,
                     forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[j],)),
+                    forall|j: int| #![auto] 0 <= j < i ==> f.ensures((&a.seq@[j],), seq@[j]),
                 decreases len - i,
             {
                 seq.push(f(&a.seq[i]));

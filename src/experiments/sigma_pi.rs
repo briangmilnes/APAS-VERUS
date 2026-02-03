@@ -95,7 +95,7 @@ verus! {
         proof fn lemma_mul_commutative() {
             // General commutativity requires no overflow - use u32_mul_commutative_at for specific values
             admit();
-    // Helper proofs for u32 commutativity at specific values
+    // Proves commutativity for u32 operations at specific values.
     pub proof fn u32_add_commutative_at(n1: u32, n2: u32, n3: u32)
         requires n3 + n1 + n2 <= u32::MAX
         ensures <u32 as SigmaPi<u32>>::add(<u32 as SigmaPi<u32>>::add(n3, n2), n1) 

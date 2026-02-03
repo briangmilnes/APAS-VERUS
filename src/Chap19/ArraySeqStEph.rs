@@ -26,7 +26,7 @@ pub mod ArraySeqStEph {
     broadcast use vstd::std_specs::vec::group_vec_axioms;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
 
-    // Chapter 19 trait - provides alternative algorithmic implementations
+    // The chapter 19 trait provides alternative algorithmic implementations of seq a fixed set of primitives.
     pub trait ArraySeqStEphTrait<T: View + Clone>: Sized {
         spec fn spec_len(&self) -> nat;
 
@@ -65,6 +65,7 @@ pub mod ArraySeqStEph {
 
         fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> (result: Self)
             requires
+                a.spec_len() <= usize::MAX as int,
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.nth_spec(i),)),
             ensures
                 result.spec_len() <= a.spec_len();
@@ -190,6 +191,10 @@ pub mod ArraySeqStEph {
                 assert(pair.spec_len() == 2);
                 assert(pair.seq@[0].seq@.len() == a.seq@.len());
                 assert(pair.seq@[1].seq@.len() == b.seq@.len());
+                // Prove flatten precondition
+                assert(sum_lens(pair.seq@, 0) == 0);
+                assert(sum_lens(pair.seq@, 1) == a.seq@.len());
+                assert(sum_lens(pair.seq@, 2) == a.seq@.len() + b.seq@.len());
             }
             flatten(&pair)
         }
@@ -227,6 +232,10 @@ pub mod ArraySeqStEph {
                 i += 1;
             }
             let deflated = ArraySeqStEphS::<ArraySeqStEphS<T>> { seq: deflated_vec };
+            proof {
+                // Prove flatten precondition: sum_lens <= n <= usize::MAX
+                lemma_sum_lens_bounded(deflated.seq@, n as int);
+            }
             flatten(&deflated)
         }
 
@@ -372,24 +381,113 @@ pub mod ArraySeqStEph {
         ArraySeqStEphS { seq: result }
     }
 
-    #[verifier::external_body]
+    // Spec function to sum lengths of first n inner sequences
+    spec fn sum_lens<T>(ss: Seq<ArraySeqStEphS<T>>, n: int) -> int
+        decreases n
+    {
+        if n <= 0 { 0 }
+        else { sum_lens(ss, n - 1) + ss[n - 1].seq@.len() as int }
+    }
+
+    // Lemma: if all inner lengths <= 1, then sum_lens(n) <= n
+    proof fn lemma_sum_lens_bounded<T>(ss: Seq<ArraySeqStEphS<T>>, n: int)
+        requires
+            0 <= n <= ss.len(),
+            forall|i: int| #![auto] 0 <= i < ss.len() ==> ss[i].seq@.len() <= 1,
+        ensures
+            sum_lens(ss, n) <= n,
+        decreases n,
+    {
+        if n <= 0 {
+        } else {
+            lemma_sum_lens_bounded(ss, n - 1);
+        }
+    }
+
+    // Lemma: sum_lens is monotonically increasing
+    proof fn lemma_sum_lens_monotonic<T>(ss: Seq<ArraySeqStEphS<T>>, a: int, b: int)
+        requires
+            0 <= a <= b <= ss.len(),
+        ensures
+            sum_lens(ss, a) <= sum_lens(ss, b),
+        decreases b - a,
+    {
+        if a == b {
+        } else {
+            lemma_sum_lens_monotonic(ss, a, b - 1);
+        }
+    }
+
     fn flatten<T: View + Clone>(ss: &ArraySeqStEphS<ArraySeqStEphS<T>>) -> (result: ArraySeqStEphS<T>)
+        requires
+            sum_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,
         ensures
             ss.seq@.len() == 2 ==> result.seq@.len() == ss.seq@[0].seq@.len() + ss.seq@[1].seq@.len(),
             (forall|i: int| #![auto] 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1)
                 ==> result.seq@.len() <= ss.seq@.len(),
     {
-        let mut total_len: usize = 0;
+        // First pass: compute total length
         let ss_len = ss.seq.len();
-        for i in 0..ss_len {
-            total_len = total_len + ss.seq[i].seq.len();
+        let mut total_len: usize = 0;
+        let mut i: usize = 0;
+        proof {
+            lemma_sum_lens_monotonic(ss.seq@, 0, ss.seq@.len() as int);
         }
+        while i < ss_len
+            invariant
+                i <= ss_len,
+                ss_len == ss.seq@.len(),
+                total_len as int == sum_lens(ss.seq@, i as int),
+                sum_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,
+                sum_lens(ss.seq@, i as int) <= sum_lens(ss.seq@, ss.seq@.len() as int),
+            decreases ss_len - i,
+        {
+            proof {
+                lemma_sum_lens_monotonic(ss.seq@, (i + 1) as int, ss.seq@.len() as int);
+            }
+            total_len = total_len + ss.seq[i].seq.len();
+            i = i + 1;
+        }
+
+        // Second pass: copy all elements
         let mut result: Vec<T> = Vec::with_capacity(total_len);
-        for i in 0..ss_len {
-            for j in 0..ss.seq[i].seq.len() {
-                result.push(ss.seq[i].seq[j].clone());
+        let mut j: usize = 0;
+        while j < ss_len
+            invariant
+                j <= ss_len,
+                ss_len == ss.seq@.len(),
+                result@.len() == sum_lens(ss.seq@, j as int),
+            decreases ss_len - j,
+        {
+            let inner = &ss.seq[j];
+            let inner_len = inner.seq.len();
+            let mut k: usize = 0;
+            while k < inner_len
+                invariant
+                    k <= inner_len,
+                    inner_len == inner.seq@.len(),
+                    j < ss_len,
+                    ss_len == ss.seq@.len(),
+                    result@.len() == sum_lens(ss.seq@, j as int) + k as int,
+                decreases inner_len - k,
+            {
+                result.push(inner.seq[k].clone());
+                k = k + 1;
+            }
+            j = j + 1;
+        }
+
+        proof {
+            if ss.seq@.len() == 2 {
+                assert(sum_lens(ss.seq@, 2) == sum_lens(ss.seq@, 1) + ss.seq@[1].seq@.len() as int);
+                assert(sum_lens(ss.seq@, 1) == sum_lens(ss.seq@, 0) + ss.seq@[0].seq@.len() as int);
+                assert(sum_lens(ss.seq@, 0) == 0int);
+            }
+            if forall|i: int| #![auto] 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1 {
+                lemma_sum_lens_bounded(ss.seq@, ss.seq@.len() as int);
             }
         }
+
         ArraySeqStEphS { seq: result }
     }
 

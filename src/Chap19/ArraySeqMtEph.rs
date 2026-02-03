@@ -30,6 +30,81 @@ pub mod ArraySeqMtEph {
     use crate::vstdplus::clone_plus::clone_plus::{ClonePlus, clone_fn, clone_fn2, clone_pred};
     use crate::vstdplus::feq::feq::obeys_feq_clone;
 
+    /// Sum of all inner array lengths (total flattened length)
+    pub open spec fn total_len<T>(ss: Seq<ArraySeqMtEphS<T>>) -> int
+        decreases ss.len()
+    {
+        if ss.len() == 0 { 0 }
+        else { ss[0].seq@.len() + total_len(ss.skip(1)) }
+    }
+
+    /// Lemma: total_len splits at any index
+    proof fn lemma_total_len_split<T>(ss: Seq<ArraySeqMtEphS<T>>, mid: int)
+        requires 0 <= mid <= ss.len()
+        ensures total_len(ss) == total_len(ss.take(mid)) + total_len(ss.skip(mid))
+        decreases mid
+    {
+        if mid == 0 {
+            assert(ss.take(0) =~= Seq::empty());
+            assert(ss.skip(0) =~= ss);
+        } else {
+            lemma_total_len_split(ss.skip(1), mid - 1);
+            assert(ss.take(mid) =~= Seq::empty().push(ss[0]).add(ss.skip(1).take(mid - 1)));
+            assert(ss.skip(1).skip(mid - 1) =~= ss.skip(mid));
+            lemma_total_len_take_push(ss.skip(1).take(mid - 1), ss[0]);
+        }
+    }
+
+    /// Proves that pushing an element and adding a sequence preserves total length.
+    proof fn lemma_total_len_take_push<T>(rest: Seq<ArraySeqMtEphS<T>>, first: ArraySeqMtEphS<T>)
+        ensures total_len(Seq::empty().push(first).add(rest)) == first.seq@.len() + total_len(rest)
+        decreases rest.len()
+    {
+        let combined = Seq::empty().push(first).add(rest);
+        assert(combined[0] == first);
+        assert(combined.skip(1) =~= rest);
+    }
+
+    /// Lemma: total_len is non-negative
+    proof fn lemma_total_len_nonneg<T>(ss: Seq<ArraySeqMtEphS<T>>)
+        ensures total_len(ss) >= 0
+        decreases ss.len()
+    {
+        if ss.len() > 0 {
+            lemma_total_len_nonneg(ss.skip(1));
+        }
+    }
+
+    /// Lemma: If inner lengths match, total_len matches
+    proof fn lemma_total_len_copy_eq<T>(copy: Seq<ArraySeqMtEphS<T>>, orig: Seq<ArraySeqMtEphS<T>>)
+        requires
+            copy.len() == orig.len(),
+            forall|i: int| 0 <= i < copy.len() ==> #[trigger] copy[i].seq@.len() == orig[i].seq@.len(),
+        ensures
+            total_len(copy) == total_len(orig)
+        decreases copy.len()
+    {
+        if copy.len() > 0 {
+            assert(copy[0].seq@.len() == orig[0].seq@.len());
+            assert(copy.skip(1).len() == orig.skip(1).len());
+            assert forall|i: int| 0 <= i < copy.skip(1).len() implies #[trigger] copy.skip(1)[i].seq@.len() == orig.skip(1)[i].seq@.len() by {
+                assert(copy.skip(1)[i] == copy[i + 1]);
+                assert(orig.skip(1)[i] == orig[i + 1]);
+            }
+            lemma_total_len_copy_eq(copy.skip(1), orig.skip(1));
+        }
+    }
+
+    /// Lemma: total_len of subrange
+    proof fn lemma_total_len_subrange<T>(ss: Seq<ArraySeqMtEphS<T>>, start: int, end: int)
+        requires
+            0 <= start <= end <= ss.len(),
+        ensures
+            total_len(ss.subrange(start, end)) == total_len(ss.skip(start).take(end - start))
+    {
+        assert(ss.subrange(start, end) =~= ss.skip(start).take(end - start));
+    }
+
     // Chapter 19 trait - provides parallel algorithmic implementations
     pub trait ArraySeqMtEphTrait<T: View + Clone + Send + Sync + Eq>: Sized {
         spec fn spec_len(&self) -> nat;
@@ -117,7 +192,11 @@ pub mod ArraySeqMtEph {
             ensures result.spec_len() <= 1;
 
         fn flatten(ss: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (result: Self)
-            where T: 'static;
+            where T: 'static
+            requires
+                total_len(ss.seq@) <= usize::MAX as int,
+                obeys_feq_clone::<ArraySeqMtEphS<T>>(),
+            ensures result.spec_len() == total_len(ss.seq@) as nat;
 
         fn from_set(set: &SetStEph<T>) -> (result: Self)
             where T: StT + Hash
@@ -257,6 +336,10 @@ pub mod ArraySeqMtEph {
                 assert(pair.spec_len() == 2);
                 assert(pair.seq@[0].seq@.len() == a.seq@.len());
                 assert(pair.seq@[1].seq@.len() == b.seq@.len());
+                // Prove flatten_seq precondition
+                assert(sum_lens_seq(pair.seq@, 0) == 0);
+                assert(sum_lens_seq(pair.seq@, 1) == a.seq@.len());
+                assert(sum_lens_seq(pair.seq@, 2) == a.seq@.len() + b.seq@.len());
             }
             flatten_seq(&pair)
         }
@@ -293,6 +376,10 @@ pub mod ArraySeqMtEph {
                     i += 1;
                 }
                 let deflated = ArraySeqMtEphS::<ArraySeqMtEphS<T>> { seq: deflated_vec };
+                proof {
+                    // Prove flatten_seq precondition: sum_lens_seq <= n <= usize::MAX
+                    lemma_sum_lens_seq_bounded(deflated.seq@, n as int);
+                }
                 flatten_seq(&deflated)
             } else {
                 let mid = a.seq.len() / 2;
@@ -535,21 +622,106 @@ pub mod ArraySeqMtEph {
             decreases ss.seq@.len()
         {
             if ss.seq.len() == 0 {
+                proof {
+                    // total_len of empty seq is 0, empty() returns len 0
+                    assert(total_len(ss.seq@) == 0);
+                }
                 Self::empty()
             } else if ss.seq.len() == 1 {
-                ss.seq[0].clone_plus()
+                proof {
+                    // total_len([x]) == x.len() + total_len([]) == x.len() + 0 == x.len()
+                    assert(ss.seq@.skip(1) =~= Seq::<ArraySeqMtEphS<T>>::empty());
+                    assert(total_len(ss.seq@) == ss.seq@[0].seq@.len() + total_len(ss.seq@.skip(1)));
+                    assert(total_len(ss.seq@) == ss.seq@[0].seq@.len());
+                    // clone_plus preserves length (from VstdPlus)
+                }
+                let result = ss.seq[0].clone_plus();
+                proof {
+                    // clone_plus ensures cloned(ss.seq@[0], result)
+                    // axiom_cloned_implies_eq: cloned + obeys_feq_clone ==> equality
+                    assert(cloned(ss.seq@[0], result));
+                    // obeys_feq_clone from precondition, axiom fires: ss.seq@[0] == result
+                    assert(ss.seq@[0] == result);
+                    assert(ss.seq@[0].seq@ =~= result.seq@);
+                }
+                result
             } else {
                 let mid = ss.seq.len() / 2;
+                let ss_len = ss.seq.len();
                 let left_ss = subseq_copy_nested(ss, 0, mid);
-                let right_ss = subseq_copy_nested(ss, mid, ss.seq.len() - mid);
+                let right_ss = subseq_copy_nested(ss, mid, ss_len - mid);
 
-                let fa = move || <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::flatten(&left_ss);
-                let fb = move || <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::flatten(&right_ss);
+                proof {
+                    // Show total_len splits properly
+                    lemma_total_len_split(ss.seq@, mid as int);
+                    // ss.take(mid) corresponds to left_ss, ss.skip(mid) corresponds to right_ss
+
+                    // Prove left_ss has same total_len as ss.take(mid)
+                    assert forall|i: int| 0 <= i < mid implies #[trigger] left_ss.seq@[i].seq@.len() == ss.seq@.take(mid as int)[i].seq@.len() by {
+                        assert(ss.seq@.take(mid as int)[i] == ss.seq@[i]);
+                    }
+                    lemma_total_len_copy_eq(left_ss.seq@, ss.seq@.take(mid as int));
+
+                    // Prove right_ss has same total_len as ss.skip(mid)
+                    assert forall|i: int| 0 <= i < (ss_len - mid) implies #[trigger] right_ss.seq@[i].seq@.len() == ss.seq@.skip(mid as int)[i].seq@.len() by {
+                        assert(ss.seq@.skip(mid as int)[i] == ss.seq@[mid as int + i]);
+                    }
+                    lemma_total_len_copy_eq(right_ss.seq@, ss.seq@.skip(mid as int));
+
+                    // Now: total_len(left_ss) + total_len(right_ss) == total_len(ss) <= usize::MAX
+                    // So both halves satisfy the precondition
+                    lemma_total_len_nonneg(left_ss.seq@);
+                    lemma_total_len_nonneg(right_ss.seq@);
+                }
+
+                // Capture total_lens before closures move the values
+                let ghost left_total = total_len(left_ss.seq@);
+                let ghost right_total = total_len(right_ss.seq@);
+
+                let fa = move || -> (r: ArraySeqMtEphS<T>)
+                    ensures r.spec_len() == left_total as nat
+                {
+                    <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::flatten(&left_ss)
+                };
+                let fb = move || -> (r: ArraySeqMtEphS<T>)
+                    ensures r.spec_len() == right_total as nat
+                {
+                    <ArraySeqMtEphS<T> as ArraySeqMtEphTrait<T>>::flatten(&right_ss)
+                };
 
                 let (left, right) = join(fa, fb);
 
-                assume(left.seq@.len() + right.seq@.len() <= usize::MAX as int);
-                Self::append(&left, &right)
+                proof {
+                    // join ensures: fa.ensures((), left) && fb.ensures((), right)
+                    // So: left.spec_len() == left_total@ and right.spec_len() == right_total@
+                    lemma_total_len_split(ss.seq@, mid as int);
+                    
+                    // Reconnect the proof for left_ss
+                    assert forall|i: int| 0 <= i < mid implies #[trigger] left_ss.seq@[i].seq@.len() == ss.seq@.take(mid as int)[i].seq@.len() by {
+                        assert(ss.seq@.take(mid as int)[i] == ss.seq@[i]);
+                    }
+                    lemma_total_len_copy_eq(left_ss.seq@, ss.seq@.take(mid as int));
+                    
+                    // Reconnect the proof for right_ss
+                    assert forall|i: int| 0 <= i < (ss_len - mid) implies #[trigger] right_ss.seq@[i].seq@.len() == ss.seq@.skip(mid as int)[i].seq@.len() by {
+                        assert(ss.seq@.skip(mid as int)[i] == ss.seq@[mid as int + i]);
+                    }
+                    lemma_total_len_copy_eq(right_ss.seq@, ss.seq@.skip(mid as int));
+
+                    // Chain: left.len() + right.len() == total_len(ss) <= usize::MAX
+                    assert(left_total == total_len(ss.seq@.take(mid as int)));
+                    assert(right_total == total_len(ss.seq@.skip(mid as int)));
+                    // So: left.spec_len() + right.spec_len() == total_len(ss.seq@)
+                    assert(left.spec_len() as int + right.spec_len() as int == total_len(ss.seq@));
+                }
+                let result = Self::append(&left, &right);
+                proof {
+                    // append ensures: result.spec_len() == left.spec_len() + right.spec_len()
+                    // We proved: left.spec_len() + right.spec_len() == total_len(ss.seq@)
+                    // Therefore: result.spec_len() == total_len(ss.seq@)
+                    assert(result.spec_len() == total_len(ss.seq@) as nat);
+                }
+                result
             }
         }
 
@@ -570,7 +742,7 @@ pub mod ArraySeqMtEph {
         }
     }
 
-    // Helper functions
+    // Sequence operations used by parallel algorithms.
 
     fn subseq_copy<T: View + Clone>(a: &ArraySeqMtEphS<T>, start: usize, len: usize) -> (result: ArraySeqMtEphS<T>)
         requires
@@ -598,13 +770,16 @@ pub mod ArraySeqMtEph {
         ArraySeqMtEphS { seq: result }
     }
 
-    fn subseq_copy_nested<T: View + Clone + Send + Sync>(
+    fn subseq_copy_nested<T: View + Clone + Send + Sync + Eq>(
         a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>, start: usize, len: usize
     ) -> (result: ArraySeqMtEphS<ArraySeqMtEphS<T>>)
         requires
             start as int + len as int <= a.seq@.len(),
+            obeys_feq_clone::<ArraySeqMtEphS<T>>(),
         ensures
             result.seq@.len() == len,
+            // Each cloned element has same inner length as original
+            forall|i: int| 0 <= i < len ==> #[trigger] result.seq@[i].seq@.len() == a.seq@[start as int + i].seq@.len(),
     {
         let a_len = a.seq.len();
         let mut result: Vec<ArraySeqMtEphS<T>> = Vec::with_capacity(len);
@@ -615,32 +790,125 @@ pub mod ArraySeqMtEph {
                 result@.len() == i as int,
                 start as int + len as int <= a_len as int,
                 a_len as int == a.seq@.len(),
+                obeys_feq_clone::<ArraySeqMtEphS<T>>(),
+                forall|j: int| 0 <= j < i ==> #[trigger] result@[j].seq@.len() == a.seq@[start as int + j].seq@.len(),
             decreases len - i,
         {
-            result.push(a.seq[start + i].clone_plus());
+            let elem_clone = a.seq[start + i].clone_plus();
+            // clone_plus ensures cloned(a.seq[start+i], elem_clone)
+            // axiom_cloned_implies_eq + obeys_feq_clone ==> equality
+            // Therefore: elem_clone.seq@.len() == a.seq@[start+i].seq@.len()
+            result.push(elem_clone);
             i += 1;
         }
         ArraySeqMtEphS { seq: result }
     }
 
-    #[verifier::external_body]
+    // Spec function for flatten_seq bounds (sum of inner lengths)
+    spec fn sum_lens_seq<T>(ss: Seq<ArraySeqMtEphS<T>>, n: int) -> int
+        decreases n
+    {
+        if n <= 0 { 0 }
+        else { sum_lens_seq(ss, n - 1) + ss[n - 1].seq@.len() as int }
+    }
+
+    // Lemma: if all inner lengths <= 1, then sum_lens_seq(n) <= n
+    proof fn lemma_sum_lens_seq_bounded<T>(ss: Seq<ArraySeqMtEphS<T>>, n: int)
+        requires
+            0 <= n <= ss.len(),
+            forall|i: int| #![auto] 0 <= i < ss.len() ==> ss[i].seq@.len() <= 1,
+        ensures
+            sum_lens_seq(ss, n) <= n,
+        decreases n,
+    {
+        if n > 0 {
+            lemma_sum_lens_seq_bounded(ss, n - 1);
+        }
+    }
+
+    // Lemma: sum_lens_seq is monotonically increasing
+    proof fn lemma_sum_lens_seq_monotonic<T>(ss: Seq<ArraySeqMtEphS<T>>, a: int, b: int)
+        requires
+            0 <= a <= b <= ss.len(),
+        ensures
+            sum_lens_seq(ss, a) <= sum_lens_seq(ss, b),
+        decreases b - a,
+    {
+        if a < b {
+            lemma_sum_lens_seq_monotonic(ss, a, b - 1);
+        }
+    }
+
     fn flatten_seq<T: View + Clone + Send + Sync>(ss: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (result: ArraySeqMtEphS<T>)
+        requires
+            sum_lens_seq(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,
         ensures
             ss.seq@.len() == 2 ==> result.seq@.len() == ss.seq@[0].seq@.len() + ss.seq@[1].seq@.len(),
             (forall|i: int| #![auto] 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1)
                 ==> result.seq@.len() <= ss.seq@.len(),
     {
-        let mut total_len: usize = 0;
+        // First pass: compute total length
         let ss_len = ss.seq.len();
-        for i in 0..ss_len {
-            total_len = total_len + ss.seq[i].seq.len();
+        let mut total_len: usize = 0;
+        let mut i: usize = 0;
+        proof {
+            lemma_sum_lens_seq_monotonic(ss.seq@, 0, ss.seq@.len() as int);
         }
+        while i < ss_len
+            invariant
+                i <= ss_len,
+                ss_len == ss.seq@.len(),
+                total_len as int == sum_lens_seq(ss.seq@, i as int),
+                sum_lens_seq(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,
+                sum_lens_seq(ss.seq@, i as int) <= sum_lens_seq(ss.seq@, ss.seq@.len() as int),
+            decreases ss_len - i,
+        {
+            proof {
+                lemma_sum_lens_seq_monotonic(ss.seq@, (i + 1) as int, ss.seq@.len() as int);
+            }
+            total_len = total_len + ss.seq[i].seq.len();
+            i = i + 1;
+        }
+
+        // Second pass: copy all elements
         let mut result: Vec<T> = Vec::with_capacity(total_len);
-        for i in 0..ss_len {
-            for j in 0..ss.seq[i].seq.len() {
-                result.push(ss.seq[i].seq[j].clone_plus());
+        let mut j: usize = 0;
+        while j < ss_len
+            invariant
+                j <= ss_len,
+                ss_len == ss.seq@.len(),
+                result@.len() == sum_lens_seq(ss.seq@, j as int),
+            decreases ss_len - j,
+        {
+            let inner = &ss.seq[j];
+            let inner_len = inner.seq.len();
+            let mut k: usize = 0;
+            while k < inner_len
+                invariant
+                    k <= inner_len,
+                    inner_len == inner.seq@.len(),
+                    j < ss_len,
+                    ss_len == ss.seq@.len(),
+                    result@.len() == sum_lens_seq(ss.seq@, j as int) + k as int,
+                decreases inner_len - k,
+            {
+                result.push(inner.seq[k].clone_plus());
+                k = k + 1;
+            }
+            j = j + 1;
+        }
+
+        proof {
+            if ss.seq@.len() == 2 {
+                assert(sum_lens_seq(ss.seq@, 2) == sum_lens_seq(ss.seq@, 1) + ss.seq@[1].seq@.len() as int);
+                assert(sum_lens_seq(ss.seq@, 1) == sum_lens_seq(ss.seq@, 0) + ss.seq@[0].seq@.len() as int);
+                assert(sum_lens_seq(ss.seq@, 0) == 0int);
+            }
+            if forall|i: int| #![auto] 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1 {
+                lemma_sum_lens_seq_bounded(ss.seq@, ss.seq@.len() as int);
             }
         }
+
         ArraySeqMtEphS { seq: result }
     }
 

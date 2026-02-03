@@ -163,7 +163,7 @@ pub mod UnDirGraphMtEph {
     }
 
     /// Parallel edge filtering for neighbors using set split.
-    fn ng_parallel<V: StTInMtT + Hash + 'static>(g: &UnDirGraphMtEph<V>, v: V, edges: SetStEph<Edge<V>>) 
+    fn ng_par<V: StTInMtT + Hash + 'static>(g: &UnDirGraphMtEph<V>, v: V, edges: SetStEph<Edge<V>>) 
                                                   -> (neighbors: SetStEph<V>)
         requires
             valid_key_type::<V>(),
@@ -199,11 +199,11 @@ pub mod UnDirGraphMtEph {
             
             let f1 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_left.spec_ng_from_set(v_left@, left_edges@)
-            { ng_parallel(&g_left, v_left, left_edges) };
+            { ng_par(&g_left, v_left, left_edges) };
             
             let f2 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_right.spec_ng_from_set(v_right@, right_edges@)
-            { ng_parallel(&g_right, v_right, right_edges) };
+            { ng_par(&g_right, v_right, right_edges) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
             
@@ -212,7 +212,7 @@ pub mod UnDirGraphMtEph {
     }
 
     /// Parallel neighbors over a set of vertices using set split.
-    fn ng_of_vertices_parallel<V: StTInMtT + Hash + 'static>(
+    fn ng_of_vertices_par<V: StTInMtT + Hash + 'static>(
         g: &UnDirGraphMtEph<V>,
         verts: SetStEph<V>,
     ) -> (neighbors: SetStEph<V>)
@@ -253,11 +253,11 @@ pub mod UnDirGraphMtEph {
             
             let f1 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_left.spec_ng_of_vertices_from_set(left_verts@)
-            { ng_of_vertices_parallel(&g_left, left_verts) };
+            { ng_of_vertices_par(&g_left, left_verts) };
             
             let f2 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_right.spec_ng_of_vertices_from_set(right_verts@)
-            { ng_of_vertices_parallel(&g_right, right_verts) };
+            { ng_of_vertices_par(&g_right, right_verts) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
             
@@ -316,11 +316,11 @@ pub mod UnDirGraphMtEph {
 
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
             let edges = self.E.clone();
-            ng_parallel(self, v.clone_plus(), edges)
+            ng_par(self, v.clone_plus(), edges)
         }
 
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
-            ng_of_vertices_parallel(self, u_set.clone())
+            ng_of_vertices_par(self, u_set.clone())
         }
 
         fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) { 

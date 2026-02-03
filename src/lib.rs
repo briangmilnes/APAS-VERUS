@@ -165,3 +165,18 @@ pub mod Chap19 {
     pub mod ArraySeqStEph;
     pub mod ArraySeqMtEph;
 }
+
+pub mod Chap21 {
+    pub mod Algorithm21_1;
+    // pub mod Algorithm21_2;
+    // pub mod Algorithm21_5;
+    // pub mod Algorithm21_6;
+    // pub mod Exercise21_5;
+    // pub mod Exercise21_6;
+    // pub mod Exercise21_7;
+    // pub mod Exercise21_8;
+    // pub mod Exercise21_9;
+    // pub mod Problem21_1;
+    // pub mod Problem21_3;
+    // pub mod Problem21_4;
+}

@@ -1,6 +1,6 @@
 // Copyright (c) 2025 Brian G. Milnes
-//! Sequence utilities for Verus
-//! Includes conversion functions and fold helpers
+//! Sequence utilities for Verus.
+//! Provides conversion functions and fold operations for sequences.
 
 pub mod seq {
 
@@ -73,7 +73,7 @@ verus! {
         sum
     }
 
-    // Helper lemma for the loop invariant
+    // Proves that taking one more element adds that element's value to the sum.
     proof fn lemma_sum_u32_unfold_take(s: Seq<u32>, i: int)
         requires 0 <= i < s.len()
         ensures spec_sum_u32_seq(s.take(i + 1)) == spec_sum_u32_seq(s.take(i)) + s[i] as nat

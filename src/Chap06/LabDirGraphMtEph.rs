@@ -171,7 +171,7 @@ pub mod LabDirGraphMtEph {
     }
 
     /// Parallel arc filtering for out-neighbors using set split.
-    fn out_neighbors_parallel<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(
+    fn out_neighbors_par<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(
         g: &LabDirGraphMtEph<V, L>, 
         v: V, 
         arcs: SetStEph<LabEdge<V, L>>
@@ -208,11 +208,11 @@ pub mod LabDirGraphMtEph {
             
             let f1 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_left.spec_out_neighbors_from_set(v_left@, left_arcs@)
-            { out_neighbors_parallel(&g_left, v_left, left_arcs) };
+            { out_neighbors_par(&g_left, v_left, left_arcs) };
             
             let f2 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_right.spec_out_neighbors_from_set(v_right@, right_arcs@)
-            { out_neighbors_parallel(&g_right, v_right, right_arcs) };
+            { out_neighbors_par(&g_right, v_right, right_arcs) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
             
@@ -221,7 +221,7 @@ pub mod LabDirGraphMtEph {
     }
 
     /// Parallel arc filtering for in-neighbors using set split.
-    fn in_neighbors_parallel<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(
+    fn in_neighbors_par<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(
         g: &LabDirGraphMtEph<V, L>, 
         v: V, 
         arcs: SetStEph<LabEdge<V, L>>
@@ -258,11 +258,11 @@ pub mod LabDirGraphMtEph {
             
             let f1 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_left.spec_in_neighbors_from_set(v_left@, left_arcs@)
-            { in_neighbors_parallel(&g_left, v_left, left_arcs) };
+            { in_neighbors_par(&g_left, v_left, left_arcs) };
             
             let f2 = move || -> (out: SetStEph<V>)
                 ensures out@ == g_right.spec_in_neighbors_from_set(v_right@, right_arcs@)
-            { in_neighbors_parallel(&g_right, v_right, right_arcs) };
+            { in_neighbors_par(&g_right, v_right, right_arcs) };
             
             let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
             
@@ -425,12 +425,12 @@ pub mod LabDirGraphMtEph {
 
         fn out_neighbors(&self, v: &V) -> (out_neighbors: SetStEph<V>) {
             let arcs = self.labeled_arcs.clone();
-            out_neighbors_parallel(self, v.clone_plus(), arcs)
+            out_neighbors_par(self, v.clone_plus(), arcs)
         }
 
         fn in_neighbors(&self, v: &V) -> (in_neighbors: SetStEph<V>) {
             let arcs = self.labeled_arcs.clone();
-            in_neighbors_parallel(self, v.clone_plus(), arcs)
+            in_neighbors_par(self, v.clone_plus(), arcs)
         }
     }
 
