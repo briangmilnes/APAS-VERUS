@@ -256,9 +256,12 @@ verus! {
                 range@ == self@.values();  // vstd equivalence
 
         /// APAS: Work Θ(1), Span Θ(1)
+        /// Matches vstd Map::contains_pair() from map_lib.
         fn mem(&self, p: &Pair<X, Y>) -> (contains: B)
             requires valid_key_type_Pair::<X, Y>(), self.is_functional()
-            ensures contains == (self@.dom().contains(p@.0) && self@[p@.0] == p@.1);
+            ensures 
+                contains == (self@.dom().contains(p@.0) && self@[p@.0] == p@.1),
+                contains == self@.contains_pair(p@.0, p@.1);  // vstd equivalence
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn iter<'a>(&'a self) -> (it: MappingStEphIter<'a, X, Y>)
