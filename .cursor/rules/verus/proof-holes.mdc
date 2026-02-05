@@ -29,6 +29,10 @@ Or for a specific directory:
 | `#[verifier::external_fn_specification]` | External function spec |
 | `#[verifier::external]` | Fully external |
 
+## STOP: Ask Before Adding Proof Holes
+
+**NEVER add `#[verifier::external_body]`, `admit()`, or `assume(...)` without first asking the user for permission.** These introduce unverified assumptions and must be explicitly approved.
+
 ## When to Run
 
 - When asked to report/show/list/find proof holes (any such query)

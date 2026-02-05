@@ -286,11 +286,15 @@ verus! {
         fn degree(&self, v: &V) -> (n: N) { self.ng(v).size() }
     }
 
-} // verus!
-
     impl<V: StT + Hash> Clone for UnDirGraphStEph<V> {
-        fn clone(&self) -> Self { UnDirGraphStEph { V: self.V.clone(), E: self.E.clone() } }
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            UnDirGraphStEph { V: self.V.clone(), E: self.E.clone() }
+        }
     }
+
+} // verus!
 
     impl<V: StT + Hash> Debug for UnDirGraphStEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {

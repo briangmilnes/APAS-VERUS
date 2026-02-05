@@ -1,0 +1,21 @@
+---
+description: When user says "show me the corpse" or "leave the corpse", keep failing code visible
+globs: 
+alwaysApply: true
+---
+
+# Leave the Corpse
+
+When the user says "show me the corpse" or "leave the corpse", this means:
+
+- **DO**: Leave the failing code in place exactly as written
+- **DO**: Let verification errors remain visible in the output
+- **DO NOT**: Comment out the module in `lib.rs`
+- **DO NOT**: Comment out the failing assertions or functions
+- **DO NOT**: Add `#[verifier::external_body]` to skip verification
+- **DO NOT**: Add `assume(...)` or `admit()` to force it through
+- **DO NOT**: Revert or delete the failing code
+
+The point is to preserve the failure as evidence. The user wants to see exactly what fails and why.
+
+This is related to the `failed-experiments` rule — failed code is valuable documentation.

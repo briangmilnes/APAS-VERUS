@@ -2,17 +2,26 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn lemma_mul_increases
+Pattern: fn _ ensures .*obeys_deep_eq
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 89, Functions: 2155, Matches: 1
+Files: 94, Functions: 2216, Matches: 3
 
-[31m/home/milnes/projects/verus/source/vstd/arithmetic/mul.rs:378: [0m
-/// Proof that since `x` and `y` are both positive, their product is
-/// greater than or equal to `y`.
-[38;5;22mpub broadcast proof fn lemma_mul_increases(x: int, y: int)[0m
+[31m/home/milnes/projects/verus/source/vstd/std_specs/vec.rs:510: [0m
+[38;5;22mpub broadcast proof fn lemma_vec_obeys_deep_eq<T: PartialEq + DeepView>()[0m
 [38;5;22m    requires[0m
-[38;5;22m        0 < x,[0m
-[38;5;22m        0 < y,[0m
+[38;5;22m        super::super::laws_eq::obeys_deep_eq::<T>(),[0m
 [38;5;22m    ensures[0m
-[38;5;22m        y <= #[trigger] (x * y),[0m
+[38;5;22m        #[trigger] super::super::laws_eq::obeys_deep_eq::<Vec<T>>(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/laws_eq.rs:77: [0m
+[38;5;22m            pub broadcast proof fn lemma_obeys_deep_eq()[0m
+[38;5;22m                ensures[0m
+[38;5;22m                    #[trigger] obeys_deep_eq::<$n>(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/laws_eq.rs:149: [0m
+[38;5;22mpub broadcast proof fn lemma_option_obeys_deep_eq<T: PartialEq + DeepView>()[0m
+[38;5;22m    requires[0m
+[38;5;22m        obeys_deep_eq::<T>(),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] obeys_deep_eq::<Option<T>>(),[0m
 

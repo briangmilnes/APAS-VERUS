@@ -11,16 +11,13 @@ pub mod ArraySeqMtEph {
     use std::slice::Iter;
     use std::vec::IntoIter;
 
-    #[cfg(verus_keep_ghost)]
     use vstd::prelude::*;
-    #[cfg(verus_keep_ghost)]
     use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::join;
-    #[cfg(verus_keep_ghost)]
     use crate::vstdplus::clone_plus::clone_plus::{clone_fn, clone_fn2, clone_pred};
 
-    #[cfg(verus_keep_ghost)]
     verus! {
 
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
     use crate::vstdplus::feq::feq::obeys_feq_clone;
     broadcast use {vstd::std_specs::vec::group_vec_axioms, crate::vstdplus::feq::feq::group_feq_axioms};
@@ -691,146 +688,5 @@ pub mod ArraySeqMtEph {
             }
             write!(f, "]")
         }
-    }
-
-    // Non-Verus stub
-    #[cfg(not(verus_keep_ghost))]
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::join;
-
-    #[cfg(not(verus_keep_ghost))]
-    #[derive(Clone, PartialEq, Eq, Debug)]
-    pub struct ArraySeqMtEphS<T> {
-        pub seq: Vec<T>,
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T> ArraySeqMtEphS<T> {
-        pub fn new(length: usize, init_value: T) -> Self where T: Clone {
-            ArraySeqMtEphS { seq: vec![init_value; length] }
-        }
-        pub fn set(&mut self, index: usize, item: T) -> Result<(), &'static str> {
-            if index < self.seq.len() { self.seq[index] = item; Ok(()) }
-            else { Err("Index out of bounds") }
-        }
-        pub fn length(&self) -> usize { self.seq.len() }
-        pub fn nth(&self, index: usize) -> &T { &self.seq[index] }
-        pub fn empty() -> Self { ArraySeqMtEphS { seq: Vec::new() } }
-        pub fn singleton(item: T) -> Self { ArraySeqMtEphS { seq: vec![item] } }
-        pub fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> Self {
-            ArraySeqMtEphS { seq: (0..length).map(f).collect() }
-        }
-        pub fn map<U, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqMtEphS<U> {
-            ArraySeqMtEphS { seq: a.seq.iter().map(f).collect() }
-        }
-        pub fn append(a: &Self, b: &Self) -> Self where T: Clone {
-            let mut seq = a.seq.clone();
-            seq.extend(b.seq.iter().cloned());
-            ArraySeqMtEphS { seq }
-        }
-        pub fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self where T: Clone {
-            ArraySeqMtEphS { seq: a.seq.iter().filter(|x| pred(x)).cloned().collect() }
-        }
-        pub fn is_empty(&self) -> bool { self.seq.is_empty() }
-        pub fn is_singleton(&self) -> bool { self.seq.len() == 1 }
-        pub fn from_vec(elts: Vec<T>) -> Self { ArraySeqMtEphS { seq: elts } }
-        pub fn subseq_copy(&self, start: usize, length: usize) -> Self where T: Clone {
-            let end = (start + length).min(self.seq.len());
-            ArraySeqMtEphS { seq: self.seq[start..end].to_vec() }
-        }
-        pub fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T where T: Clone {
-            a.seq.iter().fold(id, |acc, x| f(&acc, x))
-        }
-        pub fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A {
-            a.seq.iter().fold(seed, |acc, x| f(&acc, x))
-        }
-        pub fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (Self, T) where T: Clone {
-            let mut acc = id;
-            let seq: Vec<T> = a.seq.iter().map(|x| { acc = f(&acc, x); acc.clone() }).collect();
-            (ArraySeqMtEphS { seq }, acc)
-        }
-        pub fn iter(&self) -> std::slice::Iter<'_, T> { self.seq.iter() }
-        pub fn map_par<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
-            a: &Self, f: F,
-        ) -> ArraySeqMtEphS<U> where T: Clone + Send + Sync + 'static {
-            let len = a.seq.len();
-            if len == 0 { ArraySeqMtEphS { seq: Vec::new() } }
-            else if len == 1 { ArraySeqMtEphS { seq: vec![f(&a.seq[0])] } }
-            else {
-                let mid = len / 2;
-                let left_seq = a.subseq_copy(0, mid);
-                let right_seq = a.subseq_copy(mid, len - mid);
-                let (f1, f2) = (f.clone(), f.clone());
-                let (left, right) = join(
-                    move || Self::map_par(&left_seq, f1),
-                    move || Self::map_par(&right_seq, f2),
-                );
-                ArraySeqMtEphS::<U>::append(&left, &right)
-            }
-        }
-        pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
-            a: &Self, pred: F,
-        ) -> Self where T: Clone + Send + Sync + 'static {
-            let len = a.seq.len();
-            if len == 0 { ArraySeqMtEphS { seq: Vec::new() } }
-            else if len == 1 {
-                if pred(&a.seq[0]) { ArraySeqMtEphS { seq: vec![a.seq[0].clone()] } }
-                else { ArraySeqMtEphS { seq: Vec::new() } }
-            } else {
-                let mid = len / 2;
-                let left_seq = a.subseq_copy(0, mid);
-                let right_seq = a.subseq_copy(mid, len - mid);
-                let (p1, p2) = (pred.clone(), pred.clone());
-                let (left, right) = join(
-                    move || Self::filter_par(&left_seq, p1),
-                    move || Self::filter_par(&right_seq, p2),
-                );
-                Self::append(&left, &right)
-            }
-        }
-        pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
-            a: &Self, f: F, id: T,
-        ) -> T where T: Clone + Send + Sync + 'static {
-            let len = a.seq.len();
-            if len == 0 { id }
-            else if len == 1 { a.seq[0].clone() }
-            else {
-                let mid = len / 2;
-                let left_seq = a.subseq_copy(0, mid);
-                let right_seq = a.subseq_copy(mid, len - mid);
-                let (f1, f2) = (f.clone(), f.clone());
-                let (id1, id2) = (id.clone(), id.clone());
-                let (left, right) = join(
-                    move || Self::reduce_par(&left_seq, f1, id1),
-                    move || Self::reduce_par(&right_seq, f2, id2),
-                );
-                f(&left, &right)
-            }
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: Display> Display for ArraySeqMtEphS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "[")?;
-            for (i, item) in self.seq.iter().enumerate() {
-                if i > 0 { write!(f, ", ")?; }
-                write!(f, "{item}")?;
-            }
-            write!(f, "]")
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<'a, T> IntoIterator for &'a ArraySeqMtEphS<T> {
-        type Item = &'a T;
-        type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.iter() }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T> IntoIterator for ArraySeqMtEphS<T> {
-        type Item = T;
-        type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 }

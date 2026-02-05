@@ -1,0 +1,14 @@
+
+ 5 Feb 2026
+
+1) Clean up experiments comments.
+2) Suss out how to get comments up to normal English standards.
+3) Make a TOC standard for the complicated files and see how it
+ turns out in Rust docs (which are pretty painful).
+4) Clean up iteration standard (including rtt and ptt).
+5) Go through everything in docs and see what is up to standard and
+  applied in the whole codebase.
+6) Continue with more chapters.
+7) Chap21.
+8) Clean up types, pair, concurrency.
+9) group_Pair_... should be group_pair.

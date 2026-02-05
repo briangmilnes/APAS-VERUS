@@ -1,0 +1,41 @@
+# In/Out Table
+
+When auditing or documenting what code is inside vs outside `verus!` blocks, use the **In/Out Table** format.
+
+## Format
+
+| Chapter | File | Clone In | Debug Out | Display Out | Eq Out | Macro Out | Other |
+|---------|------|:--------:|:---------:|:-----------:|:------:|:---------:|-------|
+
+## Column Values
+
+- `✅` = correctly placed (Clone inside verus!, others outside as required)
+- `❌` = incorrectly placed (Clone outside verus! when it could be inside)
+- `-` = not implemented
+
+## Columns
+
+- **Chapter**: Module path (e.g., `Chap05`, `vstdplus`, or `—` for root)
+- **File**: File name without `.rs` extension
+- **Clone In**: `impl Clone` INSIDE verus! with `ensures cloned@ == self@`
+- **Debug Out**: `impl Debug` outside verus! (required - Verus doesn't support)
+- **Display Out**: `impl Display` outside verus! (required - Verus doesn't support)
+- **Eq Out**: `impl PartialEq/Eq` outside verus! (required - Verus doesn't support)
+- **Macro Out**: `macro_rules!` outside verus! (required - macros must be outside)
+- **Other**: Any other notable code outside verus! (traits, unsafe impls, cfg stubs, etc.)
+
+## Why Code Lives Outside verus!
+
+Code must be outside `verus!` blocks when:
+- **Standard traits**: `Clone`, `PartialEq`, `Eq`, `Debug`, `Display`, `Default`, `Drop`, `From` — Verus doesn't support these trait impls inside verus!
+- **Unsafe marker traits**: `Sync`, `Send` — must be outside
+- **`macro_rules!`**: Macros are expanded before verification, must be outside
+- **`#[cfg(...)]` stubs**: Compatibility code for non-Verus builds
+
+## Usage
+
+Generate this table when:
+- Auditing module structure
+- Reviewing code organization
+- Checking for consistency across similar modules
+- Planning refactoring to move code in/out of verus!

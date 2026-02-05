@@ -1,0 +1,11 @@
+---
+description: RMF means read the file being worked on before doing anything
+globs: 
+alwaysApply: true
+---
+
+# RMF — Read My File
+
+When the user says "RMF", read the file currently being worked on before taking any other action.
+
+This ensures you have the latest on-disk state and don't operate on stale context or assumptions from earlier in the conversation.

@@ -102,6 +102,13 @@ pub mod ArraySeqStEph {
             requires a.spec_len() + b.spec_len() <= usize::MAX as nat
             ensures result.spec_len() == a.spec_len() + b.spec_len();
 
+        fn flatten(ss: &ArraySeqStEphS<ArraySeqStEphS<T>>) -> (result: Self)
+            requires sum_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int
+            ensures
+                ss.seq@.len() == 2 ==> result.spec_len() == ss.seq@[0].seq@.len() + ss.seq@[1].seq@.len(),
+                (forall|i: int| #![auto] 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1)
+                    ==> result.spec_len() <= ss.seq@.len();
+
         fn deflate<F: Fn(&T) -> bool>(f: &F, x: &T) -> (result: Self)
             requires f.requires((x,))
             ensures
@@ -203,7 +210,7 @@ pub mod ArraySeqStEph {
                 assert(sum_lens(pair.seq@, 1) == a.seq@.len());
                 assert(sum_lens(pair.seq@, 2) == a.seq@.len() + b.seq@.len());
             }
-            flatten(&pair)
+            Self::flatten(&pair)
         }
 
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStEphS<T>, pred: &F) -> (result: ArraySeqStEphS<T>) {
@@ -243,7 +250,7 @@ pub mod ArraySeqStEph {
                 // Prove flatten precondition: sum_lens <= n <= usize::MAX
                 lemma_sum_lens_bounded(deflated.seq@, n as int);
             }
-            flatten(&deflated)
+            Self::flatten(&deflated)
         }
 
         fn update(a: &ArraySeqStEphS<T>, index: usize, item: T) -> (result: ArraySeqStEphS<T>) {
@@ -340,6 +347,73 @@ pub mod ArraySeqStEph {
             )
         }
 
+        // Concatenates all inner sequences into a single flat sequence.
+        fn flatten(ss: &ArraySeqStEphS<ArraySeqStEphS<T>>) -> (result: ArraySeqStEphS<T>) {
+            // First pass: compute total length
+            let ss_len = ss.seq.len();
+            let mut total_len: usize = 0;
+            let mut i: usize = 0;
+            proof {
+                lemma_sum_lens_monotonic(ss.seq@, 0, ss.seq@.len() as int);
+            }
+            while i < ss_len
+                invariant
+                    i <= ss_len,
+                    ss_len == ss.seq@.len(),
+                    total_len as int == sum_lens(ss.seq@, i as int),
+                    sum_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,
+                    sum_lens(ss.seq@, i as int) <= sum_lens(ss.seq@, ss.seq@.len() as int),
+                decreases ss_len - i,
+            {
+                proof {
+                    lemma_sum_lens_monotonic(ss.seq@, (i + 1) as int, ss.seq@.len() as int);
+                }
+                total_len = total_len + ss.seq[i].seq.len();
+                i = i + 1;
+            }
+
+            // Second pass: copy all elements
+            let mut result: Vec<T> = Vec::with_capacity(total_len);
+            let mut j: usize = 0;
+            while j < ss_len
+                invariant
+                    j <= ss_len,
+                    ss_len == ss.seq@.len(),
+                    result@.len() == sum_lens(ss.seq@, j as int),
+                decreases ss_len - j,
+            {
+                let inner = &ss.seq[j];
+                let inner_len = inner.seq.len();
+                let mut k: usize = 0;
+                while k < inner_len
+                    invariant
+                        k <= inner_len,
+                        inner_len == inner.seq@.len(),
+                        j < ss_len,
+                        ss_len == ss.seq@.len(),
+                        result@.len() == sum_lens(ss.seq@, j as int) + k as int,
+                    decreases inner_len - k,
+                {
+                    result.push(inner.seq[k].clone());
+                    k = k + 1;
+                }
+                j = j + 1;
+            }
+
+            proof {
+                if ss.seq@.len() == 2 {
+                    assert(sum_lens(ss.seq@, 2) == sum_lens(ss.seq@, 1) + ss.seq@[1].seq@.len() as int);
+                    assert(sum_lens(ss.seq@, 1) == sum_lens(ss.seq@, 0) + ss.seq@[0].seq@.len() as int);
+                    assert(sum_lens(ss.seq@, 0) == 0int);
+                }
+                if forall|i: int| #![auto] 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1 {
+                    lemma_sum_lens_bounded(ss.seq@, ss.seq@.len() as int);
+                }
+            }
+
+            ArraySeqStEphS { seq: result }
+        }
+
         fn deflate<F: Fn(&T) -> bool>(f: &F, x: &T) -> (result: ArraySeqStEphS<T>) {
             if f(x) {
                 Self::singleton(x.clone())
@@ -389,7 +463,7 @@ pub mod ArraySeqStEph {
     }
 
     // Spec function to sum lengths of first n inner sequences
-    spec fn sum_lens<T>(ss: Seq<ArraySeqStEphS<T>>, n: int) -> int
+    pub open spec fn sum_lens<T>(ss: Seq<ArraySeqStEphS<T>>, n: int) -> int
         decreases n
     {
         if n <= 0 { 0 }
@@ -423,79 +497,6 @@ pub mod ArraySeqStEph {
         } else {
             lemma_sum_lens_monotonic(ss, a, b - 1);
         }
-    }
-
-    fn flatten<T: View + Clone>(ss: &ArraySeqStEphS<ArraySeqStEphS<T>>) -> (result: ArraySeqStEphS<T>)
-        requires
-            sum_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,
-        ensures
-            ss.seq@.len() == 2 ==> result.seq@.len() == ss.seq@[0].seq@.len() + ss.seq@[1].seq@.len(),
-            (forall|i: int| #![auto] 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1)
-                ==> result.seq@.len() <= ss.seq@.len(),
-    {
-        // First pass: compute total length
-        let ss_len = ss.seq.len();
-        let mut total_len: usize = 0;
-        let mut i: usize = 0;
-        proof {
-            lemma_sum_lens_monotonic(ss.seq@, 0, ss.seq@.len() as int);
-        }
-        while i < ss_len
-            invariant
-                i <= ss_len,
-                ss_len == ss.seq@.len(),
-                total_len as int == sum_lens(ss.seq@, i as int),
-                sum_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,
-                sum_lens(ss.seq@, i as int) <= sum_lens(ss.seq@, ss.seq@.len() as int),
-            decreases ss_len - i,
-        {
-            proof {
-                lemma_sum_lens_monotonic(ss.seq@, (i + 1) as int, ss.seq@.len() as int);
-            }
-            total_len = total_len + ss.seq[i].seq.len();
-            i = i + 1;
-        }
-
-        // Second pass: copy all elements
-        let mut result: Vec<T> = Vec::with_capacity(total_len);
-        let mut j: usize = 0;
-        while j < ss_len
-            invariant
-                j <= ss_len,
-                ss_len == ss.seq@.len(),
-                result@.len() == sum_lens(ss.seq@, j as int),
-            decreases ss_len - j,
-        {
-            let inner = &ss.seq[j];
-            let inner_len = inner.seq.len();
-            let mut k: usize = 0;
-            while k < inner_len
-                invariant
-                    k <= inner_len,
-                    inner_len == inner.seq@.len(),
-                    j < ss_len,
-                    ss_len == ss.seq@.len(),
-                    result@.len() == sum_lens(ss.seq@, j as int) + k as int,
-                decreases inner_len - k,
-            {
-                result.push(inner.seq[k].clone());
-                k = k + 1;
-            }
-            j = j + 1;
-        }
-
-        proof {
-            if ss.seq@.len() == 2 {
-                assert(sum_lens(ss.seq@, 2) == sum_lens(ss.seq@, 1) + ss.seq@[1].seq@.len() as int);
-                assert(sum_lens(ss.seq@, 1) == sum_lens(ss.seq@, 0) + ss.seq@[0].seq@.len() as int);
-                assert(sum_lens(ss.seq@, 0) == 0int);
-            }
-            if forall|i: int| #![auto] 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1 {
-                lemma_sum_lens_bounded(ss.seq@, ss.seq@.len() as int);
-            }
-        }
-
-        ArraySeqStEphS { seq: result }
     }
 
     } // verus!

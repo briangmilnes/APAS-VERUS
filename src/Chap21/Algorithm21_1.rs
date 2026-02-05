@@ -58,7 +58,7 @@ pub mod Algorithm21_1 {
             lemma_sum_lens_uniform(outer.seq@, n as int, (n - 1) as int);
         }
 
-        flatten(&outer)
+        <ArraySeqStPerS<Pair<N, N>> as ArraySeqStPerTrait<Pair<N, N>>>::flatten(&outer)
     }
 
     // Proves that if all inner sequences have the same length m, then sum_lens equals k * m.

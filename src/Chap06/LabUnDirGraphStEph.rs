@@ -354,13 +354,15 @@ verus! {
         }
     }
 
-} // verus!
-
     impl<V: HashOrd, L: StT + Hash> Clone for LabUnDirGraphStEph<V, L> {
-        fn clone(&self) -> Self { 
-            LabUnDirGraphStEph { vertices: self.vertices.clone(), labeled_edges: self.labeled_edges.clone() } 
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            LabUnDirGraphStEph { vertices: self.vertices.clone(), labeled_edges: self.labeled_edges.clone() }
         }
     }
+
+} // verus!
 
     impl<V: HashOrd, L: StT + Hash> Display for LabUnDirGraphStEph<V, L> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {

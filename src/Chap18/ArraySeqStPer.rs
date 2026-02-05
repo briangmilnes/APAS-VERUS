@@ -476,7 +476,6 @@ pub mod ArraySeqStPer {
 
     } // verus!
 
-    // Trait impls outside verus! - work in both modes
     impl<T: Clone> Clone for ArraySeqStPerS<T> {
         fn clone(&self) -> Self { ArraySeqStPerS { seq: self.seq.clone() } }
     }

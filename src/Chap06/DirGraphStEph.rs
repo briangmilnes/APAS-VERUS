@@ -496,12 +496,15 @@ verus! {
         { self.n_plus(v).size() }
     }
 
- } // verus!
-
-    // Clone implementation (outside verus! block)
     impl<V: StT + Hash> Clone for DirGraphStEph<V> {
-        fn clone(&self) -> Self { DirGraphStEph { V: self.V.clone(), A: self.A.clone() } }
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            DirGraphStEph { V: self.V.clone(), A: self.A.clone() }
+        }
     }
+
+ } // verus!
 
     impl<V: StT + Hash> Debug for DirGraphStEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {

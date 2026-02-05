@@ -1,6 +1,6 @@
 # No "helper" Function Names
 
-Do not name functions `helper`, `helper1`, `helper2`, `do_it`, `inner`, or similar meaningless names.
+Do not name functions `helper`, `helper1`, `helper2`, `do_it`, `inner`, or use suffixes like `_impl`, or similar meaningless names.
 
 ## Bad Examples
 
@@ -8,6 +8,7 @@ Do not name functions `helper`, `helper1`, `helper2`, `do_it`, `inner`, or simil
 fn helper<V>(arcs: Vec<Edge<V>>, v: V) -> SetStEph<V> { ... }
 fn do_work(x: i32) -> i32 { ... }
 fn inner(s: &str) -> bool { ... }
+fn flatten_impl(ss: &Seq<Seq<T>>) -> Seq<T> { ... }  // all functions "implement" something
 ```
 
 ## Good Examples

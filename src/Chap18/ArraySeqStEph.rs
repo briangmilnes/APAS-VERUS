@@ -492,7 +492,6 @@ pub mod ArraySeqStEph {
 
     } // verus!
 
-    // Non-Verus impls
     impl<T: Clone> Clone for ArraySeqStEphS<T> {
         fn clone(&self) -> Self { ArraySeqStEphS { seq: self.seq.clone() } }
     }

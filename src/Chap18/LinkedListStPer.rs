@@ -467,7 +467,6 @@ pub mod LinkedListStPer {
 
     } // verus!
 
-    // Non-Verus impls
     impl<T: Clone> Clone for LinkedListStPerS<T> {
         fn clone(&self) -> Self { LinkedListStPerS { seq: self.seq.clone() } }
     }

@@ -660,7 +660,6 @@ pub mod ArraySeqMtPer {
 
     } // verus!
 
-    // Non-Verus impls
     impl<T: Clone> Clone for ArraySeqMtPerS<T> {
         fn clone(&self) -> Self { ArraySeqMtPerS { seq: self.seq.clone() } }
     }

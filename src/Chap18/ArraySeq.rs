@@ -410,14 +410,20 @@ pub mod ArraySeq {
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
-    } // verus!
+    #[verifier::external]
+    impl<'a, T> std::iter::IntoIterator for &'a mut ArraySeqS<T> {
+        type Item = &'a mut T;
+        type IntoIter = IterMut<'a, T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.iter_mut() }
+    }
 
-    // Methods using std types that Verus does not support.
-    impl<T> ArraySeqS<T> {
+    #[verifier::external]
+    impl<T: View> ArraySeqS<T> {
         pub fn iter_mut(&mut self) -> IterMut<'_, T> { self.seq.iter_mut() }
     }
 
-    // Trait impls outside verus! - work in both modes
+    } // verus!
+
     impl<T: Clone> Clone for ArraySeqS<T> {
         fn clone(&self) -> Self {
             ArraySeqS { seq: self.seq.clone() }
@@ -445,12 +451,5 @@ pub mod ArraySeq {
             }
             write!(f, "]")
         }
-    }
-
-    // &mut IntoIterator must stay outside verus! (Verus doesn't support &mut types)
-    impl<'a, T> IntoIterator for &'a mut ArraySeqS<T> {
-        type Item = &'a mut T;
-        type IntoIter = IterMut<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.iter_mut() }
     }
 }
