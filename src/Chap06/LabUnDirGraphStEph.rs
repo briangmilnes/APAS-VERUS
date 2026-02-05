@@ -47,7 +47,7 @@ verus! {
             self@.V.finite() && self@.A.finite()
         }
 
-        open spec fn spec_neighbors(&self, v: V::V) -> Set<V::V> 
+        open spec fn spec_ng(&self, v: V::V) -> Set<V::V> 
             recommends wf_lab_graph_view(self@), self@.V.contains(v)
         { 
             Set::new(|w: V::V| exists |l: L::V| 
@@ -120,9 +120,9 @@ verus! {
                 self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l)));
 
         /// APAS: Work Θ(|E|), Span Θ(1)
-        fn neighbors(&self, v: &V) -> (neighbors: SetStEph<V>)
+        fn ng(&self, v: &V) -> (ng: SetStEph<V>)
             requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
-            ensures neighbors@ == self.spec_neighbors(v@);
+            ensures ng@ == self.spec_ng(v@);
     }
 
     impl<V: HashOrd, L: StT + Hash> LabUnDirGraphStEphTrait<V, L> for LabUnDirGraphStEph<V, L> {
@@ -295,8 +295,8 @@ verus! {
             }
         }
 
-        fn neighbors(&self, v: &V) -> (neighbors: SetStEph<V>) {
-            let mut neighbors: SetStEph<V> = SetStEph::empty();
+        fn ng(&self, v: &V) -> (ng: SetStEph<V>) {
+            let mut ng: SetStEph<V> = SetStEph::empty();
             let mut it = self.labeled_edges.iter();
             let ghost le_seq = it@.1;
             let ghost v_view = v@;
@@ -309,7 +309,7 @@ verus! {
                     it@.0 <= le_seq.len(),
                     it@.1 == le_seq,
                     le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
-                    neighbors@ == Set::new(|w: V::V| 
+                    ng@ == Set::new(|w: V::V| 
                         exists |i: int| #![trigger le_seq[i]] 0 <= i < it@.0 && 
                             ((le_seq[i]@.0 == v_view && le_seq[i]@.1 == w) ||
                              (le_seq[i]@.1 == v_view && le_seq[i]@.0 == w))),
@@ -318,18 +318,18 @@ verus! {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |w: V::V| #[trigger] neighbors@.contains(w) implies 
-                                self.spec_neighbors(v_view).contains(w) by {
-                                if neighbors@.contains(w) {
+                            assert forall |w: V::V| #[trigger] ng@.contains(w) implies 
+                                self.spec_ng(v_view).contains(w) by {
+                                if ng@.contains(w) {
                                     let i = choose |i: int| #![trigger le_seq[i]] 0 <= i < le_seq.len() && 
                                         ((le_seq[i]@.0 == v_view && le_seq[i]@.1 == w) ||
                                          (le_seq[i]@.1 == v_view && le_seq[i]@.0 == w));
                                     lemma_seq_index_in_map_to_set(le_seq, i);
                                 }
                             }
-                            assert forall |w: V::V| #[trigger] self.spec_neighbors(v_view).contains(w) implies 
-                                neighbors@.contains(w) by {
-                                if self.spec_neighbors(v_view).contains(w) {
+                            assert forall |w: V::V| #[trigger] self.spec_ng(v_view).contains(w) implies 
+                                ng@.contains(w) by {
+                                if self.spec_ng(v_view).contains(w) {
                                     if exists |l: L::V| #![trigger le_view.contains((v_view, w, l))] le_view.contains((v_view, w, l)) {
                                         let l = choose |l: L::V| #![trigger le_view.contains((v_view, w, l))] le_view.contains((v_view, w, l));
                                         lemma_map_to_set_contains_index(le_seq, (v_view, w, l));
@@ -340,13 +340,13 @@ verus! {
                                 }
                             }
                         }
-                        return neighbors;
+                        return ng;
                     },
                     Some(labeled_edge) => {
                         if feq(&labeled_edge.0, v) {
-                            let _ = neighbors.insert(labeled_edge.1.clone_plus());
+                            let _ = ng.insert(labeled_edge.1.clone_plus());
                         } else if feq(&labeled_edge.1, v) {
-                            let _ = neighbors.insert(labeled_edge.0.clone_plus());
+                            let _ = ng.insert(labeled_edge.0.clone_plus());
                         }
                     },
                 }
