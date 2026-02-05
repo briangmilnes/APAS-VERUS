@@ -16,13 +16,32 @@ verus! {
         turn: AtomicUsize,
     }
 
-    impl SpinLock {
-        pub uninterp spec fn spec_locked(&self) -> bool;
+    pub trait SpinLockTrait: Sized {
+        /// Spec: is the lock currently held?
+        spec fn spec_locked(&self) -> bool;
+
+        /// Create a new unlocked spin lock.
+        fn new() -> (lock: Self)
+            ensures !lock.spec_locked();
+
+        /// Acquire the lock (spins until acquired).
+        fn lock(&self)
+            ensures self.spec_locked();
+
+        /// Release the lock.
+        fn unlock(&self)
+            requires self.spec_locked()
+            ensures !self.spec_locked();
+
+        /// Execute action while holding the lock.
+        fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T;
+    }
+
+    impl SpinLockTrait for SpinLock {
+        uninterp spec fn spec_locked(&self) -> bool;
 
         #[verifier::external_body]
-        pub fn new() -> (lock: Self)
-            ensures !lock.spec_locked()
-        {
+        fn new() -> (lock: Self) {
             SpinLock {
                 ticket: AtomicUsize::new(0),
                 turn: AtomicUsize::new(0),
@@ -30,9 +49,7 @@ verus! {
         }
 
         #[verifier::external_body]
-        pub fn lock(&self)
-            ensures self.spec_locked()
-        {
+        fn lock(&self) {
             let my_ticket = self.ticket.fetch_add(1, Ordering::Relaxed);
             while self.turn.load(Ordering::Acquire) != my_ticket {
                 spin_loop();
@@ -40,15 +57,12 @@ verus! {
         }
 
         #[verifier::external_body]
-        pub fn unlock(&self)
-            requires self.spec_locked()
-            ensures !self.spec_locked()
-        {
+        fn unlock(&self) {
             self.turn.fetch_add(1, Ordering::Release);
         }
 
         #[verifier::external_body]
-        pub fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T {
+        fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T {
             self.lock();
             let result = action();
             self.unlock();
