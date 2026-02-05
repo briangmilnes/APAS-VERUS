@@ -35,10 +35,17 @@ pub mod UnDirGraphMtEph {
     }
 
     #[verifier::reject_recursive_types(V)]
-    #[derive(Clone)]
     pub struct UnDirGraphMtEph<V: StTInMtT + Hash + 'static> {
-        V: SetStEph<V>,
-        E: SetStEph<Edge<V>>,
+        pub V: SetStEph<V>,
+        pub E: SetStEph<Edge<V>>,
+    }
+
+    impl<V: StTInMtT + Hash + 'static> Clone for UnDirGraphMtEph<V> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            UnDirGraphMtEph { V: self.V.clone(), E: self.E.clone() }
+        }
     }
 
     impl<V: StTInMtT + Hash + 'static> View for UnDirGraphMtEph<V> {
@@ -53,7 +60,7 @@ pub mod UnDirGraphMtEph {
         pub open spec fn spec_edges(&self) -> Set<(V::V, V::V)> { self.E@ }
 
         /// Spec for ng computed from a subset of edges
-        open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V)>) -> Set<V::V> 
+        pub open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V)>) -> Set<V::V> 
             recommends 
                 wf_graph_view(self@),
                 subedges <= self@.A,
@@ -62,7 +69,7 @@ pub mod UnDirGraphMtEph {
         }
 
         /// Spec for ng_of_vertices computed from a subset of vertices
-        open spec fn spec_ng_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V> 
+        pub open spec fn spec_ng_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V> 
             recommends wf_graph_view(self@), subverts <= self@.V
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_ng(u).contains(w))
@@ -135,7 +142,7 @@ pub mod UnDirGraphMtEph {
         open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
             recommends wf_graph_view(self@), vertices <= self@.V
         {
-            Set::new(|w: V::V| exists |u: V::V| vertices.contains(u) && self.spec_ng(u).contains(w))
+            Set::new(|w: V::V| exists |u: V::V| #![auto] vertices.contains(u) && self.spec_ng(u).contains(w))
         }
 
         /// APAS: Work Θ(|u_set| × |E|), Span Θ(log |u_set| + log |E|) - parallel
@@ -177,15 +184,63 @@ pub mod UnDirGraphMtEph {
     {
         let n = edges.size();
         if n == 0 {
+            proof {
+                assert forall |w: V::V| !(edges@.contains((v@, w)) || edges@.contains((w, v@))) by {}
+                assert(g.spec_ng_from_set(v@, edges@) =~= Set::empty());
+            }
             SetStEph::empty()
         }
         else if n == 1 {
             let Edge(a, b) = edges.choose();
+            proof {
+                // Establish that edges@ is exactly the singleton {(a@, b@)}
+                assert(edges@.len() == 1);
+                assert(edges@.contains((a@, b@)));
+                // Any element in edges@ must equal (a@, b@) since len == 1
+                assert forall |e: (V::V, V::V)| edges@.contains(e) implies e == (a@, b@) by {
+                    if edges@.contains(e) && e != (a@, b@) {
+                        let s_minus = edges@.remove((a@, b@));
+                        assert(s_minus.contains(e));
+                        assert(edges@.len() == s_minus.len() + 1);
+                    }
+                }
+                assert(edges@ =~= Set::empty().insert((a@, b@)));
+            }
+            // spec_ng_from_set returns {w : (v@,w) in edges@ or (w,v@) in edges@}
+            // With edges@ = {(a@, b@)}: contains(v@, w) iff (v@,w) == (a@,b@), contains(w,v@) iff (w,v@) == (a@,b@)
             if feq(&a, &v) {
+                proof {
+                    // a@ == v@
+                    // (v@, w) == (a@, b@) iff w == b@ (since v@ == a@)
+                    // (w, v@) == (a@, b@) iff w == a@ and v@ == b@, i.e., w == a@ == v@ == b@, which only adds b@ to result
+                    assert forall |w: V::V| g.spec_ng_from_set(v@, edges@).contains(w) <==> w == b@ by {
+                        // Forward: if w is in the result, then (v@, w) or (w, v@) is in edges@
+                        // Since edges@ = {(a@, b@)}:
+                        //   (v@, w) in edges@ iff (v@, w) == (a@, b@) iff v@ == a@ (true) && w == b@
+                        //   (w, v@) in edges@ iff (w, v@) == (a@, b@) iff w == a@ == v@ && v@ == b@
+                        // So w == b@ or (w == v@ && v@ == b@). Second case means w == b@.
+                    }
+                    assert(g.spec_ng_from_set(v@, edges@) =~= Set::empty().insert(b@));
+                }
                 SetStEph::singleton(b.clone_plus())
             } else if feq(&b, &v) {
+                proof {
+                    // a@ != v@ and b@ == v@
+                    // (v@, w) == (a@, b@) iff v@ == a@ (false), so never matches
+                    // (w, v@) == (a@, b@) iff w == a@ and v@ == b@ (true), so w == a@
+                    assert forall |w: V::V| g.spec_ng_from_set(v@, edges@).contains(w) <==> w == a@ by {}
+                    assert(g.spec_ng_from_set(v@, edges@) =~= Set::empty().insert(a@));
+                }
                 SetStEph::singleton(a.clone_plus())
             } else {
+                proof {
+                    // a@ != v@ and b@ != v@
+                    // (v@, w) == (a@, b@) requires v@ == a@ (false)
+                    // (w, v@) == (a@, b@) requires v@ == b@ (false)
+                    // So no w satisfies the condition
+                    assert forall |w: V::V| !g.spec_ng_from_set(v@, edges@).contains(w) by {}
+                    assert(g.spec_ng_from_set(v@, edges@) =~= Set::empty());
+                }
                 SetStEph::empty()
             }
         }
@@ -234,6 +289,21 @@ pub mod UnDirGraphMtEph {
             let u = verts.choose();
             let result = g.ng(&u);
             proof {
+                // When size == 1, verts@ is a singleton containing u@
+                assert(verts@.len() == 1);
+                assert(verts@.contains(u@));
+                // Prove verts@ == {u@} by showing any element in verts@ equals u@
+                assert forall |v_any: V::V| verts@.contains(v_any) implies v_any == u@ by {
+                    // Use finite cardinality: if len == 1 and both u@ and v_any are in the set,
+                    // and they're different, then len >= 2, contradiction
+                    if verts@.contains(v_any) && v_any != u@ {
+                        let s_minus_u = verts@.remove(u@);
+                        assert(s_minus_u.contains(v_any));
+                        assert(verts@.len() == s_minus_u.len() + 1);
+                        // s_minus_u contains v_any, so s_minus_u.len() >= 1
+                        // Therefore verts@.len() >= 2, but we know verts@.len() == 1, contradiction
+                    }
+                }
                 assert(verts@ =~= Set::empty().insert(u@));
                 assert forall |w: V::V| #![auto] g.spec_ng_of_vertices_from_set(verts@).contains(w)
                     <==> g.spec_ng(u@).contains(w) by {
@@ -324,7 +394,7 @@ pub mod UnDirGraphMtEph {
         }
 
         fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) { 
-            &e.0 == v || &e.1 == v 
+            feq(&e.0, v) || feq(&e.1, v)
         }
 
         fn degree(&self, v: &V) -> (n: N) { 

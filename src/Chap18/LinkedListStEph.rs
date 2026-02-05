@@ -155,7 +155,7 @@ pub mod LinkedListStEph {
     impl<'a, T> std::iter::Iterator for LinkedListStEphIter<'a, T> {
         type Item = &'a T;
 
-        #[verifier::external_body]
+        // Relies on vstd's assume_specification for slice::Iter::next.
         fn next(&mut self) -> (next: Option<&'a T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;

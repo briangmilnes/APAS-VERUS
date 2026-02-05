@@ -23,6 +23,8 @@ verus! {
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpec;
+    #[cfg(verus_keep_ghost)]
+    use vstd::map_lib::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::Chap05::RelationStEph::RelationStEph::*;
     use crate::Chap05::SetStEph::SetStEph::*;
@@ -245,10 +247,13 @@ verus! {
             ensures domain@.finite(), domain@ == self@.dom();
 
         /// - APAS: Work Θ(|m|), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(|m|), Span Θ(1)
+        /// - Matches vstd Map::values() from map_lib.
         fn range(&self) -> (range: SetStEph<Y>)
             requires valid_key_type_Pair::<X, Y>(), self.is_functional()
-            ensures range@.finite(), range@ =~= Set::<Y::V>::new(|y: Y::V| exists |x: X::V| #![trigger self@[x]] self@.dom().contains(x) && self@[x] == y);
+            ensures 
+                range@.finite(), 
+                range@ =~= Set::<Y::V>::new(|y: Y::V| exists |x: X::V| #![trigger self@[x]] self@.dom().contains(x) && self@[x] == y),
+                range@ == self@.values();  // vstd equivalence
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn mem(&self, p: &Pair<X, Y>) -> (contains: B)

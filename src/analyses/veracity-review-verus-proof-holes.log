@@ -18,11 +18,8 @@
 ✓ Chap05/RelationStEph.rs
 ✓ Chap05/SetMtEph.rs
    1 clean proof function
-❌ Chap05/SetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:252: external_body - #[verifier::external_body]
-   Holes: 1 total
-      1 × external_body
-   Proof functions: 1 total (1 clean, 0 holed)
+✓ Chap05/SetStEph.rs
+   1 clean proof function
 ✓ Chap06/DirGraphMtEph.rs
 ✓ Chap06/DirGraphStEph.rs
 ✓ Chap06/LabDirGraphMtEph.rs
@@ -91,44 +88,23 @@
       6 × external_body
       1 × external
 ✓ Chap17/MathSeq.rs
-❌ Chap18/ArraySeq.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:142: external_body - #[verifier::external_body]
-   Holes: 1 total
-      1 × external_body
-❌ Chap18/ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:105: external_body - #[verifier::external_body]
-   Holes: 1 total
-      1 × external_body
-❌ Chap18/ArraySeqMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:98: external_body - #[verifier::external_body]
-   Holes: 1 total
-      1 × external_body
-❌ Chap18/ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:97: external_body - #[verifier::external_body]
-   Holes: 1 total
-      1 × external_body
-❌ Chap18/ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:96: external_body - #[verifier::external_body]
-   Holes: 1 total
-      1 × external_body
-❌ Chap18/LinkedListStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:96: external_body - #[verifier::external_body]
-   Holes: 1 total
-      1 × external_body
-❌ Chap18/LinkedListStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:94: external_body - #[verifier::external_body]
-   Holes: 1 total
-      1 × external_body
+✓ Chap18/ArraySeq.rs
+✓ Chap18/ArraySeqMtEph.rs
+✓ Chap18/ArraySeqMtPer.rs
+✓ Chap18/ArraySeqStEph.rs
+✓ Chap18/ArraySeqStPer.rs
+✓ Chap18/LinkedListStEph.rs
+✓ Chap18/LinkedListStPer.rs
 ✓ Chap19/ArraySeqMtEph.rs
    7 clean proof functions
 ✓ Chap19/ArraySeqStEph.rs
    2 clean proof functions
-❌ Chap19/ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:328: external_body - #[verifier::external_body]
-   Holes: 1 total
-      1 × external_body
+✓ Chap19/ArraySeqStPer.rs
+   2 clean proof functions
 ✓ Chap21/Algorithm21_1.rs
+   1 clean proof function
 ✓ Chap21/Algorithm21_2.rs
+   1 clean proof function
 ✓ Chap21/Algorithm21_5.rs
 ✓ Chap21/Algorithm21_6.rs
 ✓ Chap21/Exercise21_5.rs
@@ -518,16 +494,16 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   93 clean (no holes)
-   57 holed (contains holes)
+   102 clean (no holes)
+   48 holed (contains holes)
    150 total
 
 Proof Functions:
-   287 clean
+   291 clean
    60 holed
-   347 total
+   351 total
 
-Holes Found: 188 total
+Holes Found: 179 total
    8 × assume(false)
    40 × assume()
    1 × Tracked::assume_new()
@@ -535,7 +511,7 @@ Holes Found: 188 total
    45 × admit()
    2 × unsafe impl
    4 × unsafe {}
-   81 × external_body
+   72 × external_body
    1 × external_trait_specification
    1 × external_type_specification
    1 × external_trait_extension

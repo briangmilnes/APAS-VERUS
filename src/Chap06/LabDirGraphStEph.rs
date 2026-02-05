@@ -48,13 +48,13 @@ verus! {
             self@.V.finite() && self@.A.finite()
         }
 
-        open spec fn spec_out_neighbors(&self, v: V::V) -> Set<V::V> 
+        open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V> 
             recommends wf_lab_graph_view(self@), self@.V.contains(v)
         { 
             Set::new(|w: V::V| exists |l: L::V| #![trigger self@.A.contains((v, w, l))] self@.A.contains((v, w, l)))
         }
 
-        open spec fn spec_in_neighbors(&self, v: V::V) -> Set<V::V> 
+        open spec fn spec_n_minus(&self, v: V::V) -> Set<V::V> 
             recommends wf_lab_graph_view(self@), self@.V.contains(v)
         { 
             Set::new(|u: V::V| exists |l: L::V| #![trigger self@.A.contains((u, v, l))] self@.A.contains((u, v, l)))
@@ -129,17 +129,19 @@ verus! {
             requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
             ensures b == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l)));
 
+        /// out-neighbors
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential filter
-        fn out_neighbors(&self, v: &V) -> (out_neighbors: SetStEph<V>)
+        fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>)
             requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
-            ensures out_neighbors@.finite(), out_neighbors@ == self.spec_out_neighbors(v@);
+            ensures n_plus@.finite(), n_plus@ == self.spec_n_plus(v@);
 
+        /// in-neighbors
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - claude-4-sonet: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential filter
-        fn in_neighbors(&self, v: &V) -> (in_neighbors: SetStEph<V>)
+        fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)
             requires wf_lab_graph_view(self@), valid_key_type_LabEdge::<V, L>()
-            ensures in_neighbors@.finite(), in_neighbors@ == self.spec_in_neighbors(v@);
+            ensures n_minus@.finite(), n_minus@ == self.spec_n_minus(v@);
     }
 
     impl<V: StT + Hash, L: StT + Hash> LabDirGraphStEphTrait<V, L> for LabDirGraphStEph<V, L> {
@@ -297,7 +299,8 @@ verus! {
             }
         }
 
-        fn out_neighbors(&self, v: &V) -> (out_neighbors: SetStEph<V>) {
+        /// out-neighbors
+        fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
             let mut neighbors: SetStEph<V> = SetStEph::empty();
             let mut it = self.labeled_arcs.iter();
             let ghost la_seq = it@.1;
@@ -319,15 +322,15 @@ verus! {
                     None => {
                         proof {
                             assert forall |w: V::V| #[trigger] neighbors@.contains(w) implies 
-                                self.spec_out_neighbors(v_view).contains(w) by {
+                                self.spec_n_plus(v_view).contains(w) by {
                                 if neighbors@.contains(w) {
                                     let i = choose |i: int| #![trigger la_seq[i]] 0 <= i < la_seq.len() && la_seq[i]@.0 == v_view && la_seq[i]@.1 == w;
                                     lemma_seq_index_in_map_to_set(la_seq, i);
                                 }
                             }
-                            assert forall |w: V::V| #[trigger] self.spec_out_neighbors(v_view).contains(w) implies 
+                            assert forall |w: V::V| #[trigger] self.spec_n_plus(v_view).contains(w) implies 
                                 neighbors@.contains(w) by {
-                                if self.spec_out_neighbors(v_view).contains(w) {
+                                if self.spec_n_plus(v_view).contains(w) {
                                     let l = choose |l: L::V| #![trigger la_view.contains((v_view, w, l))] la_view.contains((v_view, w, l));
                                     lemma_map_to_set_contains_index(la_seq, (v_view, w, l));
                                 }
@@ -344,7 +347,8 @@ verus! {
             }
         }
 
-        fn in_neighbors(&self, v: &V) -> (in_neighbors: SetStEph<V>) {
+        /// in-neighbors
+        fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
             let mut neighbors: SetStEph<V> = SetStEph::empty();
             let mut it = self.labeled_arcs.iter();
             let ghost la_seq = it@.1;
@@ -366,15 +370,15 @@ verus! {
                     None => {
                         proof {
                             assert forall |u: V::V| #[trigger] neighbors@.contains(u) implies 
-                                self.spec_in_neighbors(v_view).contains(u) by {
+                                self.spec_n_minus(v_view).contains(u) by {
                                 if neighbors@.contains(u) {
                                     let i = choose |i: int| #![trigger la_seq[i]] 0 <= i < la_seq.len() && la_seq[i]@.1 == v_view && la_seq[i]@.0 == u;
                                     lemma_seq_index_in_map_to_set(la_seq, i);
                                 }
                             }
-                            assert forall |u: V::V| #[trigger] self.spec_in_neighbors(v_view).contains(u) implies 
+                            assert forall |u: V::V| #[trigger] self.spec_n_minus(v_view).contains(u) implies 
                                 neighbors@.contains(u) by {
-                                if self.spec_in_neighbors(v_view).contains(u) {
+                                if self.spec_n_minus(v_view).contains(u) {
                                     let l = choose |l: L::V| #![trigger la_view.contains((u, v_view, l))] la_view.contains((u, v_view, l));
                                     lemma_map_to_set_contains_index(la_seq, (u, v_view, l));
                                 }

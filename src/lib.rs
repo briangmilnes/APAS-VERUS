@@ -113,23 +113,24 @@ pub mod Chap06 {
     pub mod LabDirGraphStEph;
     pub mod LabUnDirGraphStEph;
     pub mod WeightedDirGraphStEphU32;
-    // MtEph graph modules - to be verusified
+    // MtEph graph modules
     pub mod DirGraphMtEph;
-//    pub mod UnDirGraphMtEph;
-//    pub mod LabDirGraphMtEph;
-//    pub mod LabUnDirGraphMtEph;
-    // WeightedDirGraphStEph per-type variants
+    pub mod UnDirGraphMtEph;
+    pub mod LabDirGraphMtEph;
+    pub mod LabUnDirGraphMtEph;
+    // WeightedDirGraphStEph per-type variants, 
+    // just one being verified but they all work.
     pub mod WeightedDirGraphStEphU8;
-    pub mod WeightedDirGraphStEphU16;
-    pub mod WeightedDirGraphStEphU64;
-    pub mod WeightedDirGraphStEphU128;
-    pub mod WeightedDirGraphStEphUsize;
-    pub mod WeightedDirGraphStEphI8;
-    pub mod WeightedDirGraphStEphI16;
-    pub mod WeightedDirGraphStEphI32;
-    pub mod WeightedDirGraphStEphI64;
-    pub mod WeightedDirGraphStEphI128;
-    pub mod WeightedDirGraphStEphIsize;
+//    pub mod WeightedDirGraphStEphU16;
+//    pub mod WeightedDirGraphStEphU64;
+//    pub mod WeightedDirGraphStEphU128;
+//    pub mod WeightedDirGraphStEphUsize;
+//    pub mod WeightedDirGraphStEphI8;
+//    pub mod WeightedDirGraphStEphI16;
+//    pub mod WeightedDirGraphStEphI32;
+//    pub mod WeightedDirGraphStEphI64;
+//    pub mod WeightedDirGraphStEphI128;
+//    pub mod WeightedDirGraphStEphIsize;
 }
 
 pub mod Chap11 {

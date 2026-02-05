@@ -154,7 +154,7 @@ pub mod ArraySeqMtPer {
     impl<'a, T> std::iter::Iterator for ArraySeqMtPerIter<'a, T> {
         type Item = &'a T;
 
-        #[verifier::external_body]
+        // Relies on vstd's assume_specification for slice::Iter::next.
         fn next(&mut self) -> (next: Option<&'a T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;

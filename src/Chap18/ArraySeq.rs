@@ -182,9 +182,7 @@ pub mod ArraySeq {
     impl<'a, T> std::iter::Iterator for ArraySeqIter<'a, T> {
         type Item = &'a T;
 
-        // We can't fully prove next due to Rust's 70 functions on iterators.
-        // For a fully proven version see src/experiments/simple_seq_iter.rs.
-        #[verifier::external_body]
+        // Relies on vstd's assume_specification for slice::Iter::next.
         fn next(&mut self) -> (next: Option<&'a T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;

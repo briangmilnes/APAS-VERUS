@@ -246,10 +246,8 @@ verus! {
     impl<'a, T: StT + Hash> std::iter::Iterator for SetStEphIter<'a, T> {
         type Item = &'a T;
 
-        // We can't fully prove next the way things are setup in Verus due to
-        // Rust's 70 functions on iterators. For a fully proven version see
-        // src/experiments/simple_set_iter.rs:  fn assumption_free_next.
-        #[verifier::external_body]
+        // Relies on vstd's assume_specification for hash_set::Iter::next
+        // which provides the same postcondition we need here.
         fn next(&mut self) -> (next: Option<&'a T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
