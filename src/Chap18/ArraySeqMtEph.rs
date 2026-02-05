@@ -393,13 +393,13 @@ pub mod ArraySeqMtEph {
             ArraySeqMtEphS { seq }
         }
 
-        pub fn isEmpty(&self) -> (empty: bool)
+        pub fn is_empty(&self) -> (empty: bool)
             ensures empty <==> self.seq@.len() == 0
         {
             self.seq.len() == 0
         }
 
-        pub fn isSingleton(&self) -> (single: bool)
+        pub fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.seq@.len() == 1
         {
             self.seq.len() == 1
@@ -730,8 +730,8 @@ pub mod ArraySeqMtEph {
         pub fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self where T: Clone {
             ArraySeqMtEphS { seq: a.seq.iter().filter(|x| pred(x)).cloned().collect() }
         }
-        pub fn isEmpty(&self) -> bool { self.seq.is_empty() }
-        pub fn isSingleton(&self) -> bool { self.seq.len() == 1 }
+        pub fn is_empty(&self) -> bool { self.seq.is_empty() }
+        pub fn is_singleton(&self) -> bool { self.seq.len() == 1 }
         pub fn from_vec(elts: Vec<T>) -> Self { ArraySeqMtEphS { seq: elts } }
         pub fn subseq_copy(&self, start: usize, length: usize) -> Self where T: Clone {
             let end = (start + length).min(self.seq.len());

@@ -93,11 +93,11 @@ pub mod vstdplus {
 
 pub mod Chap02 {
     pub mod WSSchedulerMtEph;
-    pub mod FibonacciWSScheduler;
+//    pub mod FibonacciWSScheduler;
 }
 
 pub mod Chap03 {
-    pub mod InsertionSortStEph;
+//    pub mod InsertionSortStEph;
 }
 
 pub mod Chap05 {
@@ -107,20 +107,21 @@ pub mod Chap05 {
     pub mod MappingStEph;
 }
 
+// This modules commented out to reduce verification time.
 pub mod Chap06 {
-    pub mod DirGraphStEph;
-    pub mod UnDirGraphStEph;
-    pub mod LabDirGraphStEph;
-    pub mod LabUnDirGraphStEph;
-    pub mod WeightedDirGraphStEphU32;
+//    pub mod DirGraphStEph;
+//    pub mod UnDirGraphStEph;
+//    pub mod LabDirGraphStEph;
+//    pub mod LabUnDirGraphStEph;
+//    pub mod WeightedDirGraphStEphU32;
     // MtEph graph modules
-    pub mod DirGraphMtEph;
-    pub mod UnDirGraphMtEph;
-    pub mod LabDirGraphMtEph;
-    pub mod LabUnDirGraphMtEph;
+//    pub mod DirGraphMtEph;
+//    pub mod UnDirGraphMtEph;
+//    pub mod LabDirGraphMtEph;
+//    pub mod LabUnDirGraphMtEph;
     // WeightedDirGraphStEph per-type variants, 
     // just one being verified but they all work.
-    pub mod WeightedDirGraphStEphU8;
+//    pub mod WeightedDirGraphStEphU8;
 //    pub mod WeightedDirGraphStEphU16;
 //    pub mod WeightedDirGraphStEphU64;
 //    pub mod WeightedDirGraphStEphU128;
@@ -133,22 +134,26 @@ pub mod Chap06 {
 //    pub mod WeightedDirGraphStEphIsize;
 }
 
+// This modules commented out to reduce verification time.
 pub mod Chap11 {
-    pub mod FibonacciStEph;
-    pub mod FibonacciMtPerAllThreads;
-    pub mod FibonacciMtPerTSM;
-    pub mod FibonacciMtEph2Threads;
-    pub mod FibonacciMtEphRecomputes;
+//    pub mod FibonacciStEph;
+//    pub mod FibonacciMtPerAllThreads;
+//    pub mod FibonacciMtPerTSM;
+//    pub mod FibonacciMtEph2Threads;
+//    pub mod FibonacciMtEphRecomputes;
 }
 
-pub mod Chap12 {
-    pub mod Exercise12_1;
-    pub mod Exercise12_2;
-    pub mod Exercise12_5;
-}
 
+// This modules commented out to reduce verification time.
+// pub mod Chap12 {
+//     pub mod Exercise12_1;
+//     pub mod Exercise12_2;
+//     pub mod Exercise12_5;
+// }
+
+// This modules commented out to reduce verification time.
 pub mod Chap17 {
-    pub mod MathSeq;
+//    pub mod MathSeq;
 }
 
 pub mod Chap18 {

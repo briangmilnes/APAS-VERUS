@@ -361,13 +361,13 @@ pub mod LinkedListStPer {
             LinkedListStPerS { seq }
         }
 
-        pub fn isEmpty(&self) -> (empty: bool)
+        pub fn is_empty(&self) -> (empty: bool)
             ensures empty <==> self.seq@.len() == 0
         {
             self.seq.len() == 0
         }
 
-        pub fn isSingleton(&self) -> (single: bool)
+        pub fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.seq@.len() == 1
         {
             self.seq.len() == 1

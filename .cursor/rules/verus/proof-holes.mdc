@@ -1,18 +1,18 @@
 ---
-description: After completing a proof, check for proof holes
+description: Use veracity-review-proof-holes for ANY proof hole query
 globs: 
 alwaysApply: true
 ---
 
 # Check for Proof Holes
 
-When you think you have completed a proof, run the proof hole detector to ensure there are no unverified assumptions:
+ALWAYS use `veracity-review-proof-holes` for any proof hole related query. Do NOT use grep or manual searching.
 
 ```bash
 ~/projects/veracity/target/release/veracity-review-proof-holes -d src/
 ```
 
-Or for a specific file:
+Or for a specific directory:
 
 ```bash
 ~/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap05/
@@ -31,10 +31,10 @@ Or for a specific file:
 
 ## When to Run
 
+- When asked to report/show/list/find proof holes (any such query)
 - After completing a proof function
 - Before committing proof work
 - When claiming a module is "proven"
-- When the user says "show proof holes" - run the tool and discuss the results
 
 ## Understanding Results
 

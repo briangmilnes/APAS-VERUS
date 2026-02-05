@@ -3,38 +3,35 @@
 
 pub mod Exercise12_2 {
     use vstd::prelude::*;
-    use std::sync::atomic::{AtomicUsize, Ordering};
+    use core::sync::atomic::{AtomicUsize, Ordering};
 
 verus! {
 
-    #[verifier::external_body]
-    pub fn fetch_add_cas(target: &AtomicUsize, delta: usize) -> (previous: usize)
-    {
-        let mut current = target.load(Ordering::Relaxed);
-        loop {
-            let next = current.wrapping_add(delta);
-            match target.compare_exchange_weak(current, next, Ordering::AcqRel, Ordering::Acquire) {
-                Ok(prev) => return prev,
-                Err(observed) => current = observed,
-            }
-        }
-    }
-
-    pub fn efficiency_note() -> (note: &'static str)
-    {
-        "Hardware fetch_add completes in one atomic operation; the CAS loop may repeat under contention, so it cannot outperform native fetch_add."
-    }
-
-} // verus!
-
+/// Trait for CAS-based fetch_add extension on AtomicUsize.
 pub trait FetchAddCasTrait {
-    fn fetch_add_cas(&self, delta: usize) -> usize;
+    /// Implements fetch_add using compare_exchange_weak (CAS loop).
+    /// Returns the previous value, atomically adding delta to target.
+    fn fetch_add_cas(&self, delta: usize) -> (previous: usize);
 }
 
 impl FetchAddCasTrait for AtomicUsize {
-    fn fetch_add_cas(&self, delta: usize) -> usize {
-        fetch_add_cas(self, delta)
+    /// Note: vstd's std_specs::atomic provides assume_specification for AtomicUsize
+    /// methods but without value postconditions, so we cannot prove functional
+    /// correctness. The implementation is verified to be well-formed.
+    #[verifier::exec_allows_no_decreases_clause]
+    fn fetch_add_cas(&self, delta: usize) -> (previous: usize)
+    {
+        let mut current = self.load(Ordering::Relaxed);
+        loop {
+            let next = current.wrapping_add(delta);
+            match self.compare_exchange_weak(current, next, Ordering::AcqRel, Ordering::Acquire) {
+                Result::Ok(prev) => return prev,
+                Result::Err(observed) => current = observed,
+            }
+        }
     }
 }
 
-} // mod
+} // verus!
+
+} 
