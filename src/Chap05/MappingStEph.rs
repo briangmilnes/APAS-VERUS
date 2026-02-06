@@ -22,7 +22,7 @@ verus! {
     #[cfg(not(verus_keep_ghost))]
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::cmp::PartialEqSpec;
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     #[cfg(verus_keep_ghost)]
     use vstd::map_lib::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
@@ -490,7 +490,29 @@ verus! {
         fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.mapping.hash(state); }
     }
 
+    impl<A: StT + Hash, B: StT + Hash> PartialEqSpecImpl for MappingStEph<A, B> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
     impl<A: StT + Hash, B: StT + Hash> Eq for MappingStEph<A, B> {}
+
+    impl<A: StT + Hash, B: StT + Hash> PartialEq for MappingStEph<A, B> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let r = self.mapping == other.mapping;
+            proof {
+                if r {
+                    assert(self.mapping@ == other.mapping@);
+                    assert(self@ =~= other@);
+                }
+                // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4. 
+                assume(r == (self@ == other@));
+            }
+            r
+        }
+    }
 
   } // verus!
 
@@ -514,10 +536,6 @@ verus! {
             }
             < $crate::Chap05::MappingStEph::MappingStEph::MappingStEph<_, _> >::from_vec(__pairs)
         }};
-    }
-
-    impl<A: StT + Hash, B: StT + Hash> PartialEq for MappingStEph<A, B> {
-        fn eq(&self, other: &Self) -> bool { self.mapping == other.mapping }
     }
 
     impl<A: StT + Hash, B: StT + Hash> Debug for MappingStEph<A, B> {

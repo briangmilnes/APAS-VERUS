@@ -1,0 +1,63 @@
+---
+description: Verus style review tool and warnings
+globs: 
+alwaysApply: true
+---
+
+# Verus Style Review
+
+Run the style review tool with:
+
+```bash
+cd ~/projects/APAS-VERUS && veracity-review-verus-style -e experiments -e src/Chap21 -e src/Concurrency.rs -e src/Types.rs -e src/vstdplus src/
+```
+
+Grep the output for `warning` to see only issues.
+
+## Current warnings (38 in 15 files)
+
+### [15] PartialEq/Eq/Clone should be inside verus!
+- Chap06: DirGraphStEph, DirGraphMtEph, UnDirGraphStEph, UnDirGraphMtEph (PartialEq + Eq)
+- Chap17: MathSeq (PartialEq + Eq)
+- Chap18: ArraySeq, ArraySeqStEph, ArraySeqStPer, ArraySeqMtEph, ArraySeqMtPer, LinkedListStEph, LinkedListStPer (Clone + PartialEq + Eq)
+
+### [14] Debug/Display must be outside verus!
+- Chap18/ArraySeqMtEph: Debug and Display are inside verus! — move them out
+
+### [13] Trait impls outside verus!
+- Chap12/Exercise12_1: impl Default for SpinLock
+- Chap12/Exercise12_5: impl Drop for ConcurrentStackMt
+- Chap17/MathSeq: impl IntoIterator for MathSeqS
+
+### [17] Iterator impls
+- Chap17/MathSeq: IntoIterator should be inside verus!
+
+### [3] No verus! macro
+- lib.rs (expected — it's the module root)
+
+## Pattern for moving PartialEq inside verus!
+
+When moving `impl PartialEq` inside `verus!`, use this pattern:
+
+```rust
+use vstd::std_specs::cmp::PartialEqSpecImpl;  // #[cfg(verus_keep_ghost)]
+
+impl<T: ...> PartialEqSpecImpl for MyType<T> {
+    open spec fn obeys_eq_spec() -> bool { true }
+    open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+}
+
+impl<T: ...> Eq for MyType<T> {}
+
+impl<T: ...> PartialEq for MyType<T> {
+    fn eq(&self, other: &Self) -> (r: bool)
+        ensures r == (self@ == other@)
+    {
+        let r = self.inner == other.inner;
+        proof { assume(r == (self@ == other@)); }
+        r
+    }
+}
+```
+
+The `assume` is needed because Verus cannot resolve `eq_spec` through the trait extension machinery (attempting `assert(self.eq_spec(other) == ...)` crashes Verus). The trust boundary is at the leaf type (e.g., `HashSetWithViewPlus::eq` is `external_body`). Types built on top of verified-eq types may not need the `assume` if the solver can connect the dots.

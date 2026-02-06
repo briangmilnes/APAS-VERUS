@@ -1,0 +1,13 @@
+Verus Style Review
+==================
+
+Path: src/
+Mode: basic
+Excluding: ["experiments", "src/Chap21", "src/Concurrency.rs", "src/Types.rs", "src/vstdplus"]
+Logging to: src/analyses/veracity-review-verus-style.log
+
+Checking 48 files...
+
+════════════════════════════════════════════════════════════════
+Summary: 557 passed, 38 warnings in 15 files (checked 48 files)
+════════════════════════════════════════════════════════════════

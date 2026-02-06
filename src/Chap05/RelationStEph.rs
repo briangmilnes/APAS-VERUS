@@ -16,6 +16,8 @@ verus! {
     use vstd::std_specs::hash::SetIterAdditionalSpecFns;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -334,7 +336,18 @@ verus! {
         fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.pairs.hash(state); }
     }
 
+    impl<A: StT + Hash, B: StT + Hash> PartialEqSpecImpl for RelationStEph<A, B> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
     impl<A: StT + Hash, B: StT + Hash> Eq for RelationStEph<A, B> {}
+
+    impl<A: StT + Hash, B: StT + Hash> PartialEq for RelationStEph<A, B> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        { self.pairs == other.pairs }
+    }
 
   } // verus!
 
@@ -348,10 +361,6 @@ verus! {
             $( let _ = __pairs.insert($crate::Types::Types::Pair($a, $b)); )*
             < $crate::Chap05::RelationStEph::RelationStEph::RelationStEph<_, _> >::from_set(__pairs)
         }};
-    }
-
-    impl<A: StT + Hash, B: StT + Hash> PartialEq for RelationStEph<A, B> {
-        fn eq(&self, other: &Self) -> bool { self.pairs == other.pairs }
     }
 
     impl<A: StT + Hash, B: StT + Hash> Debug for RelationStEph<A, B> {
