@@ -12,11 +12,11 @@ use vstd::prelude::*;
 use vstd::thread::*;
 use vstd::modes::*;
 use verus_state_machines_macros::tokenized_state_machine;
-use crate::Concurrency::diverge;
+use crate::Concurrency::*;
 
 verus! {
 
-use crate::Chap11::FibonacciStEph::FibonacciStEph::{spec_fib, lemma_fib_sum_fits_u64};
+use crate::Chap11::FibonacciStEph::FibonacciStEph::*;
 
 // TSM for tracking one fork-join pair.
 // No intermediate values - just completion flags.

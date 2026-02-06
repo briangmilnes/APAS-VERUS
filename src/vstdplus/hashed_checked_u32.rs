@@ -7,9 +7,9 @@ pub mod hash_checked_u32 {
 #[cfg(verus_keep_ghost)]
 use vstd::prelude::*;
 #[cfg(verus_keep_ghost)]
-use crate::vstdplus::checked_nat::checked_nat::CheckedU32;
+use crate::vstdplus::checked_nat::checked_nat::*;
 #[cfg(verus_keep_ghost)]
-use crate::vstdplus::feq::feq::obeys_feq_full;
+use crate::vstdplus::feq::feq::*;
 #[cfg(verus_keep_ghost)]
 use vstd::std_specs::hash::obeys_key_model;
 #[cfg(verus_keep_ghost)]
@@ -19,6 +19,8 @@ use std::fmt::{Display, Debug, Formatter};
 
 #[cfg(verus_keep_ghost)]
 verus! {
+
+broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
 // Hash implementation - external_body since Hash trait isn't spec'd
 impl Hash for CheckedU32 {

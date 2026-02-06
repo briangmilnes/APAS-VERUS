@@ -10,9 +10,7 @@ pub mod FibonacciMtPerAllThreads {
     use vstd::prelude::*;
     use crate::Types::Types::*;
     use crate::ParaPair;
-    use crate::Chap11::FibonacciStEph::FibonacciStEph::{
-        spec_fib, lemma_fib_sum_fits_u64
-    };
+    use crate::Chap11::FibonacciStEph::FibonacciStEph::*;
 
     verus! {
 

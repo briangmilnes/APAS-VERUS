@@ -3,7 +3,7 @@
 
 pub mod FibonacciWSScheduler {
     use vstd::prelude::*;
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::join;
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;
 
     #[cfg(verus_keep_ghost)]
     use vstd::arithmetic::power::pow;

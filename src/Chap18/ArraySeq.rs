@@ -422,13 +422,13 @@ pub mod ArraySeq {
         pub fn iter_mut(&mut self) -> IterMut<'_, T> { self.seq.iter_mut() }
     }
 
-    } // verus!
-
     impl<T: Clone> Clone for ArraySeqS<T> {
         fn clone(&self) -> Self {
             ArraySeqS { seq: self.seq.clone() }
         }
     }
+
+    } // verus!
 
     impl<T: PartialEq> PartialEq for ArraySeqS<T> {
         fn eq(&self, other: &Self) -> bool { self.seq == other.seq }

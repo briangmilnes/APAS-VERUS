@@ -11,9 +11,9 @@ pub mod WeightedDirGraphStEphIsize {
     use crate::Types::Types::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::*;
-    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
-    use crate::vstdplus::feq::feq::feq;
-    use crate::vstdplus::checked_int::checked_int::CheckedIsize;
+    use crate::vstdplus::clone_plus::clone_plus::*;
+    use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::checked_int::checked_int::*;
     use crate::vstdplus::seq_set::*;
 
 verus! {
@@ -26,6 +26,7 @@ verus! {
         crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_LabEdge_axioms,
         crate::Types::Types::group_WeightedEdge_axioms,
+        crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
 

@@ -24,11 +24,10 @@ verus! {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     #[cfg(not(verus_keep_ghost))]
-    use crate::vstdplus::feq::feq::feq;
-    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
-    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
+    use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::clone_plus::clone_plus::*;
 
     broadcast use {
         // Set groups
@@ -749,7 +748,7 @@ verus! {
         }
 
         fn choose(&self) -> (element: T) {
-            use crate::vstdplus::feq::feq::lemma_cloned_view_eq;
+            use crate::vstdplus::feq::feq::*;
             
             let mut it = self.elements.iter();
             let ghost s: Seq<T> = it@.1;

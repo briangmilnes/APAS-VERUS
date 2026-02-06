@@ -194,7 +194,7 @@ pub mod Types {
     }
 
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_full;
+    use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
 

@@ -8,8 +8,16 @@
 //
 // RESULT: Tests 1-3, 5 PASS. Test 4 FAILS — obeys_view_eq is opaque,
 // generic equality requires reveal(obeys_view_eq) in the function body.
-// DeepViewClone successfully replaces clone_plus for data cloning.
 // vstd laws_eq works for concrete types; generic needs reveal or a wrapper.
+//
+// RESULT: DeepViewClone CANNOT replace clone_plus in generic code.
+// deep_clone ensures res.deep_view() == self.deep_view(), but existing
+// specs use res@ (i.e., res.view()). For generic V, the SMT solver cannot
+// connect deep_view() to view() — they are two unrelated spec functions.
+// The old clone_plus ensures cloned(*self, res) which implies res == self,
+// giving res@ == self@ trivially. deep_clone only works when View is
+// defined in terms of deep_view (as in TestSeq above), which would require
+// rewriting all existing View impls — not feasible.
 
 pub mod clone_plus_vs_deep_clone {
 

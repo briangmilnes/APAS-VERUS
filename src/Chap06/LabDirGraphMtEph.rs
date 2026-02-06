@@ -11,24 +11,26 @@ pub mod LabDirGraphMtEph {
 
     use vstd::prelude::*;
     use crate::Types::Types::*;
-    use crate::Concurrency::Concurrency::StTInMtT;
+    use crate::Concurrency::Concurrency::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::{ParaPair, SetLit};
 
     verus! {
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap05::SetStEph::SetStEph::valid_key_type;
+    use crate::Chap05::SetStEph::SetStEph::*;
 
-    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
-    use crate::vstdplus::feq::feq::feq;
+    use crate::vstdplus::clone_plus::clone_plus::*;
+    use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::wf_lab_graph_view;
+    use crate::Types::Types::*;
 
     broadcast use {
         vstd::set::group_set_axioms,
+        crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_LabEdge_axioms,
+        crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
     pub open spec fn valid_key_type_for_lab_graph<V: StTInMtT + Hash, L: StTInMtT + Hash>() -> bool {

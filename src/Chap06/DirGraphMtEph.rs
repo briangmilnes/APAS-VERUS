@@ -12,23 +12,24 @@ pub mod DirGraphMtEph {
     use vstd::prelude::*;
     use crate::Types::Types::*;
     use crate::Chap05::SetStEph::SetStEph::*;
-    use crate::Concurrency::Concurrency::{MtT, StTInMtT};
+    use crate::Concurrency::Concurrency::*;
     use crate::{ParaPair, ParaPairDisjoint, SetLit};
 
     verus! {
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap05::SetStEph::SetStEph::valid_key_type;
+    use crate::Chap05::SetStEph::SetStEph::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     #[cfg(not(verus_keep_ghost))]
-    use crate::vstdplus::feq::feq::feq;
+    use crate::vstdplus::feq::feq::*;
 
-    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::seq_set::*;
 
     broadcast use {
         vstd::set::group_set_axioms,
+        crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_Edge_axioms,
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
@@ -58,7 +59,7 @@ pub mod DirGraphMtEph {
     }
 
     #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::wf_graph_view;
+    use crate::Types::Types::*;
 
     pub trait DirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
 

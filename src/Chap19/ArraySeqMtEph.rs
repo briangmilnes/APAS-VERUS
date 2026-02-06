@@ -15,20 +15,24 @@ pub mod ArraySeqMtEph {
     use std::hash::Hash;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::join;
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap05::SetStEph::SetStEph::{SetStEph, SetStEphTrait, valid_key_type};
+    use crate::Chap05::SetStEph::SetStEph::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::StT;
+    use crate::Types::Types::*;
 
     #[cfg(verus_keep_ghost)]
     verus! {
 
-    broadcast use {vstd::std_specs::vec::group_vec_axioms, crate::vstdplus::feq::feq::axiom_cloned_implies_eq};
-    use crate::vstdplus::clone_plus::clone_plus::{ClonePlus, clone_fn, clone_fn2, clone_pred};
-    use crate::vstdplus::feq::feq::obeys_feq_clone;
+    broadcast use {
+        vstd::std_specs::vec::group_vec_axioms,
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
+    };
+    use crate::vstdplus::clone_plus::clone_plus::*;
+    use crate::vstdplus::feq::feq::*;
 
     /// Sum of all inner array lengths (total flattened length)
     pub open spec fn total_len<T>(ss: Seq<ArraySeqMtEphS<T>>) -> int

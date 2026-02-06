@@ -14,11 +14,11 @@ use std::sync::Arc;
 use vstd::atomic_ghost::*;
 use vstd::modes::*;
 use verus_state_machines_macros::tokenized_state_machine;
-use crate::Concurrency::diverge;
+use crate::Concurrency::*;
 
 verus! {
 
-use crate::Chap11::FibonacciStEph::FibonacciStEph::{spec_fib, fib as seq_fib, lemma_fib_sum_fits_u64};
+use crate::Chap11::FibonacciStEph::FibonacciStEph::*;
 
 // TSM for tracking two parallel Fibonacci subtasks
 tokenized_state_machine!{
@@ -118,7 +118,7 @@ pub fn fib_2threads(n: u64) -> (result: u64)
                 out.1@.value() == true,
         {
             let tracked mut token = left_done_token;
-            let val = seq_fib(n - 1);
+            let val = fib(n - 1);
             proof { instance1.complete_left(&mut token); }
             (val, Tracked(token))
         })
@@ -137,7 +137,7 @@ pub fn fib_2threads(n: u64) -> (result: u64)
                 out.1@.value() == true,
         {
             let tracked mut token = right_done_token;
-            let val = seq_fib(n - 2);
+            let val = fib(n - 2);
             proof { instance2.complete_right(&mut token); }
             (val, Tracked(token))
         })

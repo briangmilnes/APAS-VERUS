@@ -8,8 +8,8 @@
 
 pub mod WSSchedulerMtEph {
     use vstd::prelude::*;
-    use crate::vstdplus::threads_plus::threads_plus::{spawn_plus, JoinHandlePlus};
-    use crate::Concurrency::diverge;
+    use crate::vstdplus::threads_plus::threads_plus::*;
+    use crate::Concurrency::*;
     use std::sync::{Mutex, Condvar, LazyLock, RwLock};
 
     /// - We track the number of available tasks and have a condition variable to signal when task finishes.

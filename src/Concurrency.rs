@@ -4,7 +4,7 @@
 
 use vstd::prelude::*;
 use std::sync::Mutex;
-use crate::Types::Types::{StT, Pair, B};
+use crate::Types::Types::*;
 
 verus! {
 
@@ -19,7 +19,7 @@ pub fn diverge<A>() -> A {
 pub mod Concurrency {
     use vstd::prelude::*;
     use std::sync::Mutex;
-    use crate::Types::Types::{StT, Pair, B};
+    use crate::Types::Types::*;
 
     verus! {
 

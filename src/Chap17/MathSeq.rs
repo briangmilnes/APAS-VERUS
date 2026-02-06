@@ -18,9 +18,8 @@ pub mod MathSeq {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_clone, lemma_cloned_view_eq};
-    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
-    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
+    use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::*;
     use crate::vstdplus::seq_set::*;
     use vstd::slice::slice_subrange;
 
@@ -41,8 +40,9 @@ pub mod MathSeq {
             // HashMap
             vstd::std_specs::hash::axiom_random_state_builds_valid_hashers,
             vstd::std_specs::hash::axiom_contains_deref_key,
-            // Clone equality
-            crate::vstdplus::feq::feq::axiom_cloned_implies_eq,
+            // Our groups
+            crate::vstdplus::feq::feq::group_feq_axioms,
+            crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
         };
         
         pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
@@ -465,9 +465,7 @@ pub mod MathSeq {
             self.data.into_iter()
         }
     }
-        
-    } // verus!
-    
+   
     // Clone implementation outside verus! block
     impl<T: StT> Clone for MathSeqS<T> {
         fn clone(&self) -> Self {
@@ -475,6 +473,8 @@ pub mod MathSeq {
         }
     }
     
+    } // verus!
+
     // Iterator methods outside verus! block
     impl<T: StT + Hash> MathSeqS<T> {
         pub fn iter(&self) -> Iter<'_, T> {

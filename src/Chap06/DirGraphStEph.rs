@@ -10,8 +10,8 @@ pub mod DirGraphStEph {
     use crate::Types::Types::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::SetLit;
-    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
-    use crate::vstdplus::feq::feq::feq;
+    use crate::vstdplus::clone_plus::clone_plus::*;
+    use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::seq_set::*;
 
 verus! {
@@ -24,6 +24,7 @@ verus! {
         crate::Types::Types::group_Pair_axioms,
         crate::Types::Types::group_Edge_axioms,
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+        crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
     #[verifier::reject_recursive_types(V)]

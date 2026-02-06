@@ -10,14 +10,14 @@ pub mod ArraySeqMtPer {
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::join;
-    use crate::vstdplus::clone_plus::clone_plus::{clone_fn, clone_fn2, clone_pred};
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;
+    use crate::vstdplus::clone_plus::clone_plus::*;
 
     verus! {
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
-    use crate::vstdplus::feq::feq::obeys_feq_clone;
+    use crate::vstdplus::feq::feq::*;
     broadcast use {vstd::std_specs::vec::group_vec_axioms, crate::vstdplus::feq::feq::group_feq_axioms};
 
     #[verifier::reject_recursive_types(T)]

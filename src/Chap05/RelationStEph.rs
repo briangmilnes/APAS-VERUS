@@ -20,8 +20,8 @@ verus! {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     #[cfg(not(verus_keep_ghost))]
-    use crate::vstdplus::feq::feq::feq;
-    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
 
@@ -42,6 +42,7 @@ verus! {
         crate::vstdplus::feq::feq::group_feq_axioms, 
         crate::Types::Types::group_Pair_axioms,
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+        crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
     #[verifier::reject_recursive_types(A)]

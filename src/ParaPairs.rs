@@ -7,7 +7,7 @@ pub mod ParaPairs {
 
     verus! {
 
-    use crate::Types::Types::Pair;
+    use crate::Types::Types::*;
 
     /// - Verified parallel pair with closure spec propagation using the global pool.
     /// - Uses help-first strategy: spawns in parallel if capacity available, otherwise sequential.

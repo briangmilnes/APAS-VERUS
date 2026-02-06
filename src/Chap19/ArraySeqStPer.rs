@@ -15,16 +15,19 @@ pub mod ArraySeqStPer {
     use std::hash::Hash;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap05::SetStEph::SetStEph::{SetStEph, SetStEphTrait, valid_key_type};
+    use crate::Chap05::SetStEph::SetStEph::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::StT;
+    use crate::Types::Types::*;
 
     #[cfg(verus_keep_ghost)]
     verus! {
 
-    broadcast use vstd::std_specs::vec::group_vec_axioms;
-    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    broadcast use {
+        vstd::std_specs::vec::group_vec_axioms,
+        crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
+    };
+    use crate::vstdplus::clone_plus::clone_plus::*;
 
     // Chapter 19 trait - provides alternative algorithmic implementations
     // Import and use this trait to get Chapter 19's algorithms

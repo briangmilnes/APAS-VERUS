@@ -20,12 +20,12 @@ verus! {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     #[cfg(not(verus_keep_ghost))]
-    use crate::vstdplus::feq::feq::feq;
+    use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpec;
     #[cfg(verus_keep_ghost)]
     use vstd::map_lib::*;
-    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::Chap05::RelationStEph::RelationStEph::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
@@ -47,6 +47,7 @@ verus! {
         crate::vstdplus::feq::feq::group_feq_axioms, 
         crate::Types::Types::group_Pair_axioms,
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+        crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
     pub open spec fn is_functional_set<X, Y>(s: Set<(X, Y)>) -> bool {

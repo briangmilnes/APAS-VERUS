@@ -1,0 +1,23 @@
+---
+description: Full verification mode includes cfg-gated modules
+globs: 
+alwaysApply: true
+---
+
+# Full Verify Mode
+
+When the user says "full_verify" or "full verification", switch to full verification mode. When the user says "not full verify" or "normal verify", switch back.
+
+## In full_verify mode
+
+Run Verus with the `full_verify` feature flag:
+
+```bash
+cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --cfg feature=\"full_verify\" --multiple-errors 20 --expand-errors
+```
+
+This compiles all modules including those behind `#[cfg(feature = "full_verify")]` (e.g., Chap06).
+
+## In normal mode (default)
+
+Run Verus without the feature flag (the standard run-verus command). Modules behind `#[cfg(feature = "full_verify")]` are skipped.
