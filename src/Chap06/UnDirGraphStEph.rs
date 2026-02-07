@@ -290,6 +290,26 @@ verus! {
         fn degree(&self, v: &V) -> (n: N) { self.ng(v).size() }
     }
 
+    impl<V: StT + Hash> UnDirGraphStEph<V> {
+        /// Returns an iterator over the vertices
+        pub fn iter_vertices(&self) -> (it: SetStEphIter<'_, V>)
+            requires valid_key_type_Edge::<V>()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, k: V| k@).to_set() == self@.V,
+                it@.1.no_duplicates(),
+        { self.V.iter() }
+
+        /// Returns an iterator over the edges
+        pub fn iter_edges(&self) -> (it: SetStEphIter<'_, Edge<V>>)
+            requires valid_key_type_Edge::<V>()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, k: Edge<V>| k@).to_set() == self@.A,
+                it@.1.no_duplicates(),
+        { self.E.iter() }
+    }
+
     impl<V: StT + Hash> Clone for UnDirGraphStEph<V> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@

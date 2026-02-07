@@ -65,7 +65,97 @@ pub mod MathSeq {
                 self.data@.map_values(|t: T| t@)
             }
         }
-        
+
+        /// Iterator wrapper with closed spec view for encapsulation.
+        #[verifier::reject_recursive_types(T)]
+        pub struct MathSeqIter<'a, T> {
+            inner: std::slice::Iter<'a, T>,
+        }
+
+        impl<'a, T> View for MathSeqIter<'a, T> {
+            type V = (int, Seq<T>);
+            closed spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+        }
+
+        pub open spec fn iter_invariant<'a, T>(it: &MathSeqIter<'a, T>) -> bool {
+            0 <= it@.0 <= it@.1.len()
+        }
+
+        impl<'a, T> std::iter::Iterator for MathSeqIter<'a, T> {
+            type Item = &'a T;
+
+            fn next(&mut self) -> (next: Option<&'a T>)
+                ensures ({
+                    let (old_index, old_seq) = old(self)@;
+                    match next {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index >= old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& element == old_seq[old_index]
+                        },
+                    }
+                })
+            {
+                self.inner.next()
+            }
+        }
+
+        /// Ghost iterator for ForLoopGhostIterator support.
+        #[verifier::reject_recursive_types(T)]
+        pub struct MathSeqGhostIterator<'a, T> {
+            pub pos: int,
+            pub elements: Seq<T>,
+            pub phantom: core::marker::PhantomData<&'a T>,
+        }
+
+        impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for MathSeqIter<'a, T> {
+            type GhostIter = MathSeqGhostIterator<'a, T>;
+            open spec fn ghost_iter(&self) -> MathSeqGhostIterator<'a, T> {
+                MathSeqGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+            }
+        }
+
+        impl<'a, T> vstd::pervasive::ForLoopGhostIterator for MathSeqGhostIterator<'a, T> {
+            type ExecIter = MathSeqIter<'a, T>;
+            type Item = T;
+            type Decrease = int;
+
+            open spec fn exec_invariant(&self, exec_iter: &MathSeqIter<'a, T>) -> bool {
+                &&& self.pos == exec_iter@.0
+                &&& self.elements == exec_iter@.1
+            }
+
+            open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+                init matches Some(init) ==> {
+                    &&& init.pos == 0
+                    &&& init.elements == self.elements
+                    &&& 0 <= self.pos <= self.elements.len()
+                }
+            }
+
+            open spec fn ghost_ensures(&self) -> bool { self.pos == self.elements.len() }
+            open spec fn ghost_decrease(&self) -> Option<int> { Some(self.elements.len() - self.pos) }
+
+            open spec fn ghost_peek_next(&self) -> Option<T> {
+                if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+            }
+
+            open spec fn ghost_advance(&self, _exec_iter: &MathSeqIter<'a, T>) -> MathSeqGhostIterator<'a, T> {
+                Self { pos: self.pos + 1, ..*self }
+            }
+        }
+
+        impl<'a, T> View for MathSeqGhostIterator<'a, T> {
+            type V = Seq<T>;
+            open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+        }
+
         impl<T: StT + Hash> MathSeqS<T> {
             
             pub open spec fn spec_len(&self) -> nat {
@@ -450,20 +540,38 @@ pub mod MathSeq {
                 
                 range
             }
+
+            pub fn iter(&self) -> (it: MathSeqIter<'_, T>)
+                ensures
+                    it@.0 == 0,
+                    it@.1 == self.data@,
+                    iter_invariant(&it),
+            {
+                MathSeqIter { inner: self.data.iter() }
+            }
         }
 
     impl<'a, T: StT> std::iter::IntoIterator for &'a MathSeqS<T> {
         type Item = &'a T;
-        type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter {
-            self.data.iter()
+        type IntoIter = MathSeqIter<'a, T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.data@,
+                iter_invariant(&it),
+        {
+            MathSeqIter { inner: self.data.iter() }
         }
     }
 
     impl<T: StT> std::iter::IntoIterator for MathSeqS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter {
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.data@,
+        {
             self.data.into_iter()
         }
     }
@@ -494,12 +602,8 @@ pub mod MathSeq {
 
     } // verus!
 
-    // Iterator methods outside verus! block
+    // iter_mut must stay outside verus! (Verus doesn't support &mut types)
     impl<T: StT + Hash> MathSeqS<T> {
-        pub fn iter(&self) -> Iter<'_, T> {
-            self.data.iter()
-        }
-        
         pub fn iter_mut(&mut self) -> IterMut<'_, T> {
             self.data.iter_mut()
         }

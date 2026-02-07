@@ -38,6 +38,44 @@ path = "tests/Chap05/RelationStEph.rs"
 name = "MappingStEph"
 path = "tests/Chap05/MappingStEph.rs"
 
+# Chap06 iterator proof tests
+[[test]]
+name = "ProveDirGraphStEph"
+path = "tests/Chap06/ProveDirGraphStEph.rs"
+
+[[test]]
+name = "ProveDirGraphMtEph"
+path = "tests/Chap06/ProveDirGraphMtEph.rs"
+
+[[test]]
+name = "ProveUnDirGraphStEph"
+path = "tests/Chap06/ProveUnDirGraphStEph.rs"
+
+[[test]]
+name = "ProveUnDirGraphMtEph"
+path = "tests/Chap06/ProveUnDirGraphMtEph.rs"
+
+[[test]]
+name = "ProveLabDirGraphStEph"
+path = "tests/Chap06/ProveLabDirGraphStEph.rs"
+
+[[test]]
+name = "ProveLabDirGraphMtEph"
+path = "tests/Chap06/ProveLabDirGraphMtEph.rs"
+
+[[test]]
+name = "ProveLabUnDirGraphStEph"
+path = "tests/Chap06/ProveLabUnDirGraphStEph.rs"
+
+[[test]]
+name = "ProveLabUnDirGraphMtEph"
+path = "tests/Chap06/ProveLabUnDirGraphMtEph.rs"
+
+# Chap17 iterator proof tests
+[[test]]
+name = "ProveMathSeq"
+path = "tests/Chap17/ProveMathSeq.rs"
+
 # Chap18 iterator proof tests
 [[test]]
 name = "ProveArraySeq"

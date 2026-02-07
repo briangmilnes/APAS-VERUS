@@ -573,6 +573,26 @@ pub mod DirGraphMtEph {
         }
     }
 
+    impl<V: StTInMtT + Hash + 'static> DirGraphMtEph<V> {
+        /// Returns an iterator over the vertices
+        pub fn iter_vertices(&self) -> (it: SetStEphIter<'_, V>)
+            requires valid_key_type_for_graph::<V>()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, k: V| k@).to_set() == self@.V,
+                it@.1.no_duplicates(),
+        { self.V.iter() }
+
+        /// Returns an iterator over the arcs
+        pub fn iter_arcs(&self) -> (it: SetStEphIter<'_, Edge<V>>)
+            requires valid_key_type_for_graph::<V>()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, k: Edge<V>| k@).to_set() == self@.A,
+                it@.1.no_duplicates(),
+        { self.A.iter() }
+    }
+
     impl<V: StTInMtT + Hash + 'static> Clone for DirGraphMtEph<V> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@

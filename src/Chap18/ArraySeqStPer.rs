@@ -467,13 +467,22 @@ pub mod ArraySeqStPer {
     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStPerS<T> {
         type Item = &'a T;
         type IntoIter = ArraySeqStPerIter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { ArraySeqStPerIter { inner: self.seq.iter() } }
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+                iter_invariant(&it),
+        { ArraySeqStPerIter { inner: self.seq.iter() } }
     }
 
     impl<T> std::iter::IntoIterator for ArraySeqStPerS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+        { self.seq.into_iter() }
     }
 
     impl<T: Clone> Clone for ArraySeqStPerS<T> {

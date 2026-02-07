@@ -459,13 +459,22 @@ pub mod LinkedListStPer {
     impl<'a, T> std::iter::IntoIterator for &'a LinkedListStPerS<T> {
         type Item = &'a T;
         type IntoIter = LinkedListStPerIter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { LinkedListStPerIter { inner: self.seq.iter() } }
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+                iter_invariant(&it),
+        { LinkedListStPerIter { inner: self.seq.iter() } }
     }
 
     impl<T> std::iter::IntoIterator for LinkedListStPerS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+        { self.seq.into_iter() }
     }
 
     impl<T: Clone> Clone for LinkedListStPerS<T> {

@@ -91,6 +91,10 @@ verus! {
         open spec fn view(&self) -> (int, Seq<Pair<X, Y>>) { self.inner@ }
     }
 
+    pub open spec fn iter_invariant<'a, X: StT + Hash, Y: StT + Hash>(it: &MappingStEphIter<'a, X, Y>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
     impl<'a, X: StT + Hash, Y: StT + Hash> std::iter::Iterator for MappingStEphIter<'a, X, Y> {
         type Item = &'a Pair<X, Y>;
 

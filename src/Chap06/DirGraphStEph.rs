@@ -35,12 +35,20 @@ verus! {
     impl<V: StT + Hash> DirGraphStEph<V> {
         /// Returns an iterator over the vertices
         pub fn iter_vertices(&self) -> (it: SetStEphIter<'_, V>)
-            requires valid_key_type_Edge::<V>() 
-       { self.V.iter() }
+            requires valid_key_type_Edge::<V>()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, k: V| k@).to_set() == self@.V,
+                it@.1.no_duplicates(),
+        { self.V.iter() }
 
         /// Returns an iterator over the arcs
         pub fn iter_arcs(&self) -> (it: SetStEphIter<'_, Edge<V>>)
             requires valid_key_type_Edge::<V>()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, k: Edge<V>| k@).to_set() == self@.A,
+                it@.1.no_duplicates(),
         { self.A.iter() }
     }
 
