@@ -17,6 +17,12 @@ Use this command when:
 - After making changes to proofs or implementations
 - Before committing changes
 
+## Important
+
+- **Always call `verus` directly** — never use `cargo verus`, `cargo build`, or any cargo-based compilation for verification.
+- Verus includes its own vstd automatically — do not pass `-L dependency`, `--extern vstd`, or any library paths.
+- There is no need for `target/debug/` or `target/release/` directories for verification. Verus manages its own dependencies.
+
 ## Output Display
 
 Always show the full output from verus verification:

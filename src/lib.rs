@@ -180,6 +180,7 @@ pub mod Chap19 {
     pub mod ArraySeqMtEph;
 }
 
+#[cfg(verus_keep_ghost)]
 pub mod Chap21 {
     pub mod Algorithm21_1;
 }

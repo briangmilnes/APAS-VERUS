@@ -13,7 +13,7 @@ When the user says "full_verify" or "full verification", switch to full verifica
 Run Verus with the `full_verify` feature flag:
 
 ```bash
-cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --cfg feature=\"full_verify\" --multiple-errors 20 --expand-errors
+cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg feature=\"full_verify\"
 ```
 
 This compiles all modules including those behind `#[cfg(feature = "full_verify")]` (e.g., Chap06).

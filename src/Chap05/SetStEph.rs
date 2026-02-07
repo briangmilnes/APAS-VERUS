@@ -757,6 +757,7 @@ verus! {
         }
     }
 
+    #[cfg(verus_keep_ghost)]
     impl<T: StT + Hash> PartialEqSpecImpl for SetStEph<T> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }

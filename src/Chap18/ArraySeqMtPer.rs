@@ -171,7 +171,7 @@ pub mod ArraySeqMtPer {
         /// Work Θ(Σ|a[i]|), Span Θ(Σ|a[i]|)
         fn flatten(a: &ArraySeqMtPerS<ArraySeqMtPerS<T>>) -> (flattened: Self)
             where T: Clone
-            ensures a.spec_len() == 0 ==> flattened.spec_len() == 0;
+            ensures a.seq@.len() == 0 ==> flattened.spec_len() == 0;
 
         /// Work Θ(n), Span Θ(log n)
         fn update(a: &ArraySeqMtPerS<T>, index: usize, item: T) -> (updated: Self)
@@ -625,6 +625,7 @@ pub mod ArraySeqMtPer {
         }
     }
 
+    #[cfg(verus_keep_ghost)]
     impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqMtPerS<T> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }

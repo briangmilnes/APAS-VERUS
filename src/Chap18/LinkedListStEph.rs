@@ -172,7 +172,7 @@ pub mod LinkedListStEph {
         /// Work Θ(Σ|a[i]|), Span Θ(1)
         fn flatten(a: &LinkedListStEphS<LinkedListStEphS<T>>) -> (flattened: Self)
             where T: Clone
-            ensures a.spec_len() == 0 ==> flattened.spec_len() == 0;
+            ensures a.seq@.len() == 0 ==> flattened.spec_len() == 0;
 
         /// Work Θ(|a|), Span Θ(1)
         fn update(a: &LinkedListStEphS<T>, index: usize, item: T) -> (updated: Self)
@@ -449,6 +449,7 @@ pub mod LinkedListStEph {
         }
     }
 
+    #[cfg(verus_keep_ghost)]
     impl<T: View + PartialEq> PartialEqSpecImpl for LinkedListStEphS<T> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }

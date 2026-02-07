@@ -178,7 +178,7 @@ pub mod ArraySeqMtEph {
         /// Work Θ(Σ|a[i]|), Span Θ(Σ|a[i]|)
         fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: Self)
             where T: Clone
-            ensures a.spec_len() == 0 ==> flattened.spec_len() == 0;
+            ensures a.seq@.len() == 0 ==> flattened.spec_len() == 0;
 
         /// Work Θ(n), Span Θ(log n)
         fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (updated: Self)
@@ -523,14 +523,14 @@ pub mod ArraySeqMtEph {
                         assert(a.seq@[orig_i] == right_seq.seq@[i]);
                     }
                 }
-                let left_len = Ghost(left_seq.seq@.len());
-                let right_len = Ghost(right_seq.seq@.len());
+                let _left_len = Ghost(left_seq.seq@.len());
+                let _right_len = Ghost(right_seq.seq@.len());
                 let (left, right) = join(
                     (move || -> (r: ArraySeqMtEphS<U>)
-                        ensures r.seq@.len() == left_len@
+                        ensures r.seq@.len() == _left_len@
                     { Self::map_par(&left_seq, f1) }),
                     (move || -> (r: ArraySeqMtEphS<U>)
-                        ensures r.seq@.len() == right_len@
+                        ensures r.seq@.len() == _right_len@
                     { Self::map_par(&right_seq, f2) }),
                 );
                 ArraySeqMtEphS::<U>::append(&left, &right)
@@ -577,14 +577,14 @@ pub mod ArraySeqMtEph {
                         assert(a.seq@[orig_i] == right_seq.seq@[i]);
                     }
                 }
-                let left_len = Ghost(left_seq.seq@.len());
-                let right_len = Ghost(right_seq.seq@.len());
+                let _left_len = Ghost(left_seq.seq@.len());
+                let _right_len = Ghost(right_seq.seq@.len());
                 let (left, right) = join(
                     (move || -> (r: ArraySeqMtEphS<T>)
-                        ensures r.seq@.len() <= left_len@
+                        ensures r.seq@.len() <= _left_len@
                     { Self::filter_par(&left_seq, p1) }),
                     (move || -> (r: ArraySeqMtEphS<T>)
-                        ensures r.seq@.len() <= right_len@
+                        ensures r.seq@.len() <= _right_len@
                     { Self::filter_par(&right_seq, p2) }),
                 );
                 Self::append(&left, &right)
@@ -622,6 +622,7 @@ pub mod ArraySeqMtEph {
         }
     }
 
+    #[cfg(verus_keep_ghost)]
     impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqMtEphS<T> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }

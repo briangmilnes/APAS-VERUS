@@ -372,6 +372,7 @@ pub mod ArraySeq {
         pub fn iter_mut(&mut self) -> IterMut<'_, T> { self.seq.iter_mut() }
     }
 
+    #[cfg(verus_keep_ghost)]
     impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqS<T> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }

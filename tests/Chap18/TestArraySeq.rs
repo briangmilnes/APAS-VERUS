@@ -49,7 +49,7 @@ fn test_nth() {
 fn test_empty() {
     let seq = ArraySeqS::<i32>::empty();
     assert_eq!(seq.length(), 0);
-    assert!(seq.isEmpty());
+    assert!(seq.is_empty());
 }
 
 #[test]
@@ -57,7 +57,7 @@ fn test_singleton() {
     let seq = ArraySeqS::singleton(42);
     assert_eq!(seq.length(), 1);
     assert_eq!(*seq.nth(0), 42);
-    assert!(seq.isSingleton());
+    assert!(seq.is_singleton());
 }
 
 #[test]
@@ -83,24 +83,24 @@ fn test_map() {
 }
 
 #[test]
-fn test_isEmpty() {
+fn test_is_empty() {
     let empty = ArraySeqS::<i32>::empty();
-    assert!(empty.isEmpty());
+    assert!(empty.is_empty());
 
     let not_empty = ArraySeqS::singleton(1);
-    assert!(!not_empty.isEmpty());
+    assert!(!not_empty.is_empty());
 }
 
 #[test]
-fn test_isSingleton() {
+fn test_is_singleton() {
     let single = ArraySeqS::singleton(42);
-    assert!(single.isSingleton());
+    assert!(single.is_singleton());
 
     let empty = ArraySeqS::<i32>::empty();
-    assert!(!empty.isSingleton());
+    assert!(!empty.is_singleton());
 
     let multi = ArraySeqS::from_vec(vec![1, 2]);
-    assert!(!multi.isSingleton());
+    assert!(!multi.is_singleton());
 }
 
 #[test]
@@ -173,9 +173,9 @@ fn test_clone() {
 fn test_iter() {
     let seq = ArraySeqS::from_vec(vec![1, 2, 3]);
     let mut iter = seq.iter();
-    assert_eq!(iter.next(), Some(1));
-    assert_eq!(iter.next(), Some(2));
-    assert_eq!(iter.next(), Some(3));
+    assert_eq!(iter.next(), Some(&1));
+    assert_eq!(iter.next(), Some(&2));
+    assert_eq!(iter.next(), Some(&3));
     assert_eq!(iter.next(), None);
 }
 
