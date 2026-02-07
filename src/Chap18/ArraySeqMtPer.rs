@@ -12,6 +12,8 @@ pub mod ArraySeqMtPer {
     use vstd::prelude::*;
     use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
 
@@ -658,17 +660,28 @@ pub mod ArraySeqMtPer {
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
-    } // verus!
-
     impl<T: Clone> Clone for ArraySeqMtPerS<T> {
         fn clone(&self) -> Self { ArraySeqMtPerS { seq: self.seq.clone() } }
     }
 
-    impl<T: PartialEq> PartialEq for ArraySeqMtPerS<T> {
-        fn eq(&self, other: &Self) -> bool { self.seq == other.seq }
+    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqMtPerS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    impl<T: Eq> Eq for ArraySeqMtPerS<T> {}
+    impl<T: Eq + View> Eq for ArraySeqMtPerS<T> {}
+
+    impl<T: PartialEq + View> PartialEq for ArraySeqMtPerS<T> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let r = self.seq == other.seq;
+            proof { assume(r == (self@ == other@)); }
+            r
+        }
+    }
+
+    } // verus!
 
     impl<T: Debug> Debug for ArraySeqMtPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

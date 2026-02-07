@@ -193,7 +193,7 @@ pub mod LabDirGraphMtEph {
         ensures 
             n_plus@ == g.spec_n_plus_from_set(v@, arcs@),
             n_plus@ <= g.spec_n_plus(v@)
-        decreases arcs.size()
+        decreases arcs@.len()
     {
         let n = arcs.size();
         if n == 0 {
@@ -308,7 +308,7 @@ pub mod LabDirGraphMtEph {
         ensures 
             n_minus@ == g.spec_n_minus_from_set(v@, arcs@),
             n_minus@ <= g.spec_n_minus(v@)
-        decreases arcs.size()
+        decreases arcs@.len()
     {
         let n = arcs.size();
         if n == 0 {

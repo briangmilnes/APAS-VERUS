@@ -67,11 +67,6 @@ verus! {
             self@.finite()
         }
 
-        /// Spec version of size for use in decreases clauses.
-        open spec fn spec_size(&self) -> N {
-            self@.len() as N
-        }
-
         /// APAS: Work Θ(|v|), Span Θ(1)
         fn from_vec(v: Vec<T>) -> (s: SetStEph<T>)
             requires valid_key_type::<T>()
@@ -102,8 +97,8 @@ verus! {
             ensures s@.finite(), s@ == Set::empty().insert(x@);
 
         /// APAS: Work Θ(1), Span Θ(1)
-        #[verifier::when_used_as_spec(spec_size)]
-        fn size(&self)                       -> N;
+        fn size(&self)                       -> (size: N)
+            ensures size == self@.len();
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn mem(&self, x: &T)                 -> (contains: B)

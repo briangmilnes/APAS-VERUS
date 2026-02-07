@@ -203,7 +203,8 @@ verus! {
             ensures s@.finite(), s@ == Set::empty().insert(x@);
 
         /// APAS: Work Θ(1), Span Θ(1)
-        fn size(&self)                       -> N;
+        fn size(&self)                       -> (size: N)
+            ensures size == self@.len();
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn mem(&self, x: &T)                 -> (contains: B)

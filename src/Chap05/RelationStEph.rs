@@ -182,7 +182,9 @@ verus! {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self) -> N;
+        fn size(&self) -> (size: N)
+          ensures 
+           size == self@.len();
 
         /// - APAS: Work Θ(|R|), Span Θ(1)
         /// - claude-4-sonet: Work Θ(|R|), Span Θ(1)

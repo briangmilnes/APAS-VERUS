@@ -169,7 +169,7 @@ pub mod LabUnDirGraphMtEph {
         ensures 
             neighbors@ == g.spec_ng_from_set(v@, edges@),
             neighbors@ <= g.spec_ng(v@)
-        decreases edges.size()
+        decreases edges@.len()
     {
         let n = edges.size();
         if n == 0 {

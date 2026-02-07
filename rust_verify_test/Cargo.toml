@@ -40,29 +40,29 @@ path = "tests/Chap05/MappingStEph.rs"
 
 # Chap18 iterator proof tests
 [[test]]
-name = "prove_ArraySeq_iters"
-path = "tests/Chap18/prove_ArraySeq_iters.rs"
+name = "ProveArraySeq"
+path = "tests/Chap18/ProveArraySeq.rs"
 
 [[test]]
-name = "prove_ArraySeqStEph_iters"
-path = "tests/Chap18/prove_ArraySeqStEph_iters.rs"
+name = "ProveArraySeqStEph"
+path = "tests/Chap18/ProveArraySeqStEph.rs"
 
 [[test]]
-name = "prove_ArraySeqStPer_iters"
-path = "tests/Chap18/prove_ArraySeqStPer_iters.rs"
+name = "ProveArraySeqStPer"
+path = "tests/Chap18/ProveArraySeqStPer.rs"
 
 [[test]]
-name = "prove_ArraySeqMtPer_iters"
-path = "tests/Chap18/prove_ArraySeqMtPer_iters.rs"
+name = "ProveArraySeqMtPer"
+path = "tests/Chap18/ProveArraySeqMtPer.rs"
 
 [[test]]
-name = "prove_ArraySeqMtEph_iters"
-path = "tests/Chap18/prove_ArraySeqMtEph_iters.rs"
+name = "ProveArraySeqMtEph"
+path = "tests/Chap18/ProveArraySeqMtEph.rs"
 
 [[test]]
-name = "prove_LinkedListStEph_iters"
-path = "tests/Chap18/prove_LinkedListStEph_iters.rs"
+name = "ProveLinkedListStEph"
+path = "tests/Chap18/ProveLinkedListStEph.rs"
 
 [[test]]
-name = "prove_LinkedListStPer_iters"
-path = "tests/Chap18/prove_LinkedListStPer_iters.rs"
+name = "ProveLinkedListStPer"
+path = "tests/Chap18/ProveLinkedListStPer.rs"

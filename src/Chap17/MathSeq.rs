@@ -23,6 +23,9 @@ pub mod MathSeq {
     use crate::vstdplus::seq_set::*;
     use vstd::slice::slice_subrange;
 
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
+
     verus! {
 
         broadcast use {
@@ -471,7 +474,24 @@ pub mod MathSeq {
             MathSeqS { data: self.data.clone() }
         }
     }
-    
+
+    impl<T: StT> PartialEqSpecImpl for MathSeqS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<T: StT> Eq for MathSeqS<T> {}
+
+    impl<T: StT> PartialEq for MathSeqS<T> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let r = self.data == other.data;
+            proof { assume(r == (self@ == other@)); }
+            r
+        }
+    }
+
     } // verus!
 
     // Iterator methods outside verus! block
@@ -493,14 +513,6 @@ pub mod MathSeq {
             self.data.iter_mut()
         }
     }
-    
-    impl<T: StT> PartialEq for MathSeqS<T> {
-        fn eq(&self, other: &Self) -> bool {
-            self.data == other.data
-        }
-    }
-    
-    impl<T: StT> Eq for MathSeqS<T> {}
     
     impl<T: StT> Debug for MathSeqS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {

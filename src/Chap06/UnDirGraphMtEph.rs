@@ -15,6 +15,9 @@ pub mod UnDirGraphMtEph {
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::{ParaPair, SetLit};
 
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
+
     verus! {
 
     #[cfg(verus_keep_ghost)]
@@ -182,7 +185,7 @@ pub mod UnDirGraphMtEph {
         ensures 
             neighbors@ == g.spec_ng_from_set(v@, edges@),
             neighbors@ <= g.spec_ng(v@)
-        decreases edges.size()
+        decreases edges@.len()
     {
         let n = edges.size();
         if n == 0 {
@@ -281,7 +284,7 @@ pub mod UnDirGraphMtEph {
         ensures 
             neighbors@ == g.spec_ng_of_vertices_from_set(verts@),
             neighbors@ <= g@.V
-        decreases verts.size()
+        decreases verts@.len()
     {
         let n = verts.size();
         if n == 0 {
@@ -404,6 +407,28 @@ pub mod UnDirGraphMtEph {
         }
     }
 
+    impl<V: StTInMtT + Hash + 'static> PartialEqSpecImpl for UnDirGraphMtEph<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<V: StTInMtT + Hash + 'static> Eq for UnDirGraphMtEph<V> {}
+
+    impl<V: StTInMtT + Hash + 'static> PartialEq for UnDirGraphMtEph<V> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let v_eq = self.V == other.V;
+            let e_eq = self.E == other.E;
+            proof {
+                if v_eq && e_eq {
+                    assert(self@ =~= other@);
+                }
+            }
+            v_eq && e_eq
+        }
+    }
+
     } // verus!
 
     impl<V: StTInMtT + Hash + 'static> Debug for UnDirGraphMtEph<V> {
@@ -418,11 +443,6 @@ pub mod UnDirGraphMtEph {
     impl<V: StTInMtT + Hash + 'static> Display for UnDirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} E={:?}", self.V, self.E) }
     }
-
-    impl<V: StTInMtT + Hash + 'static> PartialEq for UnDirGraphMtEph<V> {
-        fn eq(&self, other: &Self) -> bool { self.V == other.V && self.E == other.E }
-    }
-    impl<V: StTInMtT + Hash + 'static> Eq for UnDirGraphMtEph<V> {}
 
     #[macro_export]
     macro_rules! UnDirGraphMtEphLit {

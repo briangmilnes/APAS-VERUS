@@ -13,6 +13,9 @@ pub mod UnDirGraphStEph {
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::seq_set::*;
 
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
+
 verus! {
 
     broadcast use {
@@ -295,6 +298,28 @@ verus! {
         }
     }
 
+    impl<V: StT + Hash> PartialEqSpecImpl for UnDirGraphStEph<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<V: StT + Hash> Eq for UnDirGraphStEph<V> {}
+
+    impl<V: StT + Hash> PartialEq for UnDirGraphStEph<V> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let v_eq = self.V == other.V;
+            let e_eq = self.E == other.E;
+            proof {
+                if v_eq && e_eq {
+                    assert(self@ =~= other@);
+                }
+            }
+            v_eq && e_eq
+        }
+    }
+
 } // verus!
 
     impl<V: StT + Hash> Debug for UnDirGraphStEph<V> {
@@ -309,12 +334,6 @@ verus! {
     impl<V: StT + Hash> Display for UnDirGraphStEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} E={:?}", self.V, self.E) }
     }
-
-    impl<V: StT + Hash> PartialEq for UnDirGraphStEph<V> {
-        fn eq(&self, other: &Self) -> bool { self.V == other.V && self.E == other.E }
-    }
-
-    impl<V: StT + Hash> Eq for UnDirGraphStEph<V> {}
 
     #[macro_export]
     macro_rules! UnDirGraphStEphLit {

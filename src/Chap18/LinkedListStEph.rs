@@ -9,6 +9,8 @@ pub mod LinkedListStEph {
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
 
@@ -482,17 +484,28 @@ pub mod LinkedListStEph {
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
-    } // verus!
-
     impl<T: Clone> Clone for LinkedListStEphS<T> {
         fn clone(&self) -> Self { LinkedListStEphS { seq: self.seq.clone() } }
     }
 
-    impl<T: PartialEq> PartialEq for LinkedListStEphS<T> {
-        fn eq(&self, other: &Self) -> bool { self.seq == other.seq }
+    impl<T: View + PartialEq> PartialEqSpecImpl for LinkedListStEphS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    impl<T: Eq> Eq for LinkedListStEphS<T> {}
+    impl<T: Eq + View> Eq for LinkedListStEphS<T> {}
+
+    impl<T: PartialEq + View> PartialEq for LinkedListStEphS<T> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let r = self.seq == other.seq;
+            proof { assume(r == (self@ == other@)); }
+            r
+        }
+    }
+
+    } // verus!
 
     impl<T: Debug> Debug for LinkedListStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

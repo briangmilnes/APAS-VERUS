@@ -15,6 +15,9 @@ pub mod DirGraphMtEph {
     use crate::Concurrency::Concurrency::*;
     use crate::{ParaPair, ParaPairDisjoint, SetLit};
 
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
+
     verus! {
 
     #[cfg(verus_keep_ghost)]
@@ -286,7 +289,7 @@ pub mod DirGraphMtEph {
         ensures 
             out_neighbors@ == g.spec_n_plus_from_set(v@, arcs@),
             out_neighbors@ <= g.spec_n_plus(v@)
-        decreases arcs.size()
+        decreases arcs@.len()
     {
         let n = arcs.size();
         if n == 0 {
@@ -333,7 +336,7 @@ pub mod DirGraphMtEph {
         ensures 
             in_neighbors@ == g.spec_n_minus_from_set(v@, arcs@),
             in_neighbors@ <= g.spec_n_minus(v@)
-        decreases arcs.size()
+        decreases arcs@.len()
     {
         let n = arcs.size();
         if n == 0 {
@@ -382,7 +385,7 @@ pub mod DirGraphMtEph {
         ensures 
             out_neighbors@ == g.spec_n_plus_of_vertices_from_set(verts@),
             out_neighbors@ <= g@.V
-        decreases verts.size()
+        decreases verts@.len()
     {
         let n = verts.size();
         if n == 0 {
@@ -449,7 +452,7 @@ pub mod DirGraphMtEph {
         ensures 
             in_neighbors@ == g.spec_n_minus_of_vertices_from_set(verts@),
             in_neighbors@ <= g@.V
-        decreases verts.size()
+        decreases verts@.len()
     {
         let n = verts.size();
         if n == 0 {
@@ -516,7 +519,7 @@ pub mod DirGraphMtEph {
         ensures 
             neighbors@ == g.spec_ng_of_vertices_from_set(verts@),
             neighbors@ <= g@.V
-        decreases verts.size()
+        decreases verts@.len()
     {
         let n = verts.size();
         if n == 0 {
@@ -570,6 +573,14 @@ pub mod DirGraphMtEph {
         }
     }
 
+    impl<V: StTInMtT + Hash + 'static> Clone for DirGraphMtEph<V> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            DirGraphMtEph { V: self.V.clone(), A: self.A.clone() }
+        }
+    }
+
     impl<V: StTInMtT + Hash + 'static> DirGraphMtEphTrait<V> for DirGraphMtEph<V> {
         fn empty() -> (g: DirGraphMtEph<V>) {
             DirGraphMtEph { V: SetStEph::empty(), A: SetStEph::empty() }
@@ -611,11 +622,25 @@ pub mod DirGraphMtEph {
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { ng_of_vertices_par(self, u_set.clone()) }
     }
 
-    impl<V: StTInMtT + Hash + 'static> Clone for DirGraphMtEph<V> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
+    impl<V: StTInMtT + Hash + 'static> PartialEqSpecImpl for DirGraphMtEph<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<V: StTInMtT + Hash + 'static> Eq for DirGraphMtEph<V> {}
+
+    impl<V: StTInMtT + Hash + 'static> PartialEq for DirGraphMtEph<V> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
         {
-            DirGraphMtEph { V: self.V.clone(), A: self.A.clone() }
+            let v_eq = self.V == other.V;
+            let a_eq = self.A == other.A;
+            proof {
+                if v_eq && a_eq {
+                    assert(self@ =~= other@);
+                }
+            }
+            v_eq && a_eq
         }
     }
 
@@ -633,12 +658,6 @@ pub mod DirGraphMtEph {
     impl<V: StTInMtT + Hash + 'static> Display for DirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} A={:?}", self.V, self.A) }
     }
-
-    impl<V: StTInMtT + Hash + 'static> PartialEq for DirGraphMtEph<V> {
-        fn eq(&self, other: &Self) -> bool { self.V == other.V && self.A == other.A }
-    }
-
-    impl<V: StTInMtT + Hash + 'static> Eq for DirGraphMtEph<V> {}
 
     #[macro_export]
     macro_rules! DirGraphMtEphLit {

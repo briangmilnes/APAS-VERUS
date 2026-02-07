@@ -9,6 +9,8 @@ pub mod ArraySeqStEph {
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
 
@@ -481,26 +483,50 @@ pub mod ArraySeqStEph {
     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStEphS<T> {
         type Item = &'a T;
         type IntoIter = ArraySeqStEphIter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { ArraySeqStEphIter { inner: self.seq.iter() } }
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+                iter_invariant(&it),
+        {
+            ArraySeqStEphIter { inner: self.seq.iter() }
+        }
     }
 
     impl<T> std::iter::IntoIterator for ArraySeqStEphS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+        {
+            self.seq.into_iter()
+        }
     }
-
-    } // verus!
 
     impl<T: Clone> Clone for ArraySeqStEphS<T> {
         fn clone(&self) -> Self { ArraySeqStEphS { seq: self.seq.clone() } }
     }
 
-    impl<T: PartialEq> PartialEq for ArraySeqStEphS<T> {
-        fn eq(&self, other: &Self) -> bool { self.seq == other.seq }
+    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqStEphS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    impl<T: Eq> Eq for ArraySeqStEphS<T> {}
+    impl<T: Eq + View> Eq for ArraySeqStEphS<T> {}
+
+    impl<T: PartialEq + View> PartialEq for ArraySeqStEphS<T> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let r = self.seq == other.seq;
+            proof { assume(r == (self@ == other@)); }
+            r
+        }
+    }
+
+    } // verus!
 
     impl<T: Debug> Debug for ArraySeqStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

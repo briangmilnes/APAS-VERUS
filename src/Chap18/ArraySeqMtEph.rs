@@ -14,6 +14,8 @@ pub mod ArraySeqMtEph {
     use vstd::prelude::*;
     use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
 
@@ -655,21 +657,28 @@ pub mod ArraySeqMtEph {
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
-    } // verus!
-
-    // Non-Verus impls
-    #[cfg(verus_keep_ghost)]
     impl<T: Clone> Clone for ArraySeqMtEphS<T> {
         fn clone(&self) -> Self { ArraySeqMtEphS { seq: self.seq.clone() } }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: PartialEq> PartialEq for ArraySeqMtEphS<T> {
-        fn eq(&self, other: &Self) -> bool { self.seq == other.seq }
+    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqMtEphS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: Eq> Eq for ArraySeqMtEphS<T> {}
+    impl<T: Eq + View> Eq for ArraySeqMtEphS<T> {}
+
+    impl<T: PartialEq + View> PartialEq for ArraySeqMtEphS<T> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let r = self.seq == other.seq;
+            proof { assume(r == (self@ == other@)); }
+            r
+        }
+    }
+
+    } // verus!
 
     #[cfg(verus_keep_ghost)]
     impl<T: Debug> Debug for ArraySeqMtEphS<T> {
