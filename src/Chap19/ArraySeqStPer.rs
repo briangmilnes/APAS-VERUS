@@ -142,11 +142,14 @@ pub mod ArraySeqStPer {
                 (forall|i: int| #![auto] 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1)
                     ==> flattened.spec_len() <= ss.seq@.len();
 
-        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> (filtered: Self)
+        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> (filtered: ArraySeqStPerS<T>)
             requires
                 a.spec_len() <= usize::MAX as int,
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.nth_spec(i),))
-            ensures filtered.spec_len() <= a.spec_len();
+            ensures
+                filtered.seq@.len() <= a.spec_len(),
+                // TODO: forall|i: int| #![auto] 0 <= i < filtered.seq@.len() ==> pred.ensures((&filtered.seq@[i],), true),
+                ;
 
         fn deflate<F: Fn(&T) -> bool>(f: &F, x: &T) -> (deflated: Self)
             requires f.requires((x,))

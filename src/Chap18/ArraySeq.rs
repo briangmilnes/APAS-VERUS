@@ -175,10 +175,12 @@ pub mod ArraySeq {
 
         /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
         /// - Work Θ(|a|), Span Θ(1).
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqS<T>, pred: &F) -> (filtered: Self)
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqS<T>, pred: &F) -> (filtered: ArraySeqS<T>)
             where T: Clone
             requires forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.seq@[i],))
-            ensures filtered.spec_len() <= a.spec_len();
+            ensures
+                filtered.seq@.len() <= a.seq@.len(),
+                forall|i: int| #![auto] 0 <= i < filtered.seq@.len() ==> pred.ensures((&filtered.seq@[i],), true);
 
         /// - Definition 18.15 (flatten). Concatenate a sequence of sequences.
         /// - Work Θ(total length), Span Θ(1).

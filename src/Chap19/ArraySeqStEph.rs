@@ -134,12 +134,14 @@ pub mod ArraySeqStEph {
             requires a.spec_len() + b.spec_len() <= usize::MAX as nat
             ensures appended.spec_len() == a.spec_len() + b.spec_len();
 
-        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> (filtered: Self)
+        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> (filtered: ArraySeqStEphS<T>)
             requires
                 a.spec_len() <= usize::MAX as int,
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.nth_spec(i),)),
             ensures
-                filtered.spec_len() <= a.spec_len();
+                filtered.seq@.len() <= a.spec_len(),
+                // TODO: forall|i: int| #![auto] 0 <= i < filtered.seq@.len() ==> pred.ensures((&filtered.seq@[i],), true),
+                ;
 
         fn update(a: &Self, index: usize, item: T) -> (updated: Self)
             requires (index as int) < a.spec_len()

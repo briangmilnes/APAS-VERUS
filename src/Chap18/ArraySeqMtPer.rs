@@ -163,10 +163,12 @@ pub mod ArraySeqMtPer {
             ensures appended.spec_len() == a.seq@.len() + b.seq@.len();
 
         /// Work Θ(|a|), Span Θ(|a|)
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F) -> (filtered: Self)
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F) -> (filtered: ArraySeqMtPerS<T>)
             where T: Clone
             requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],))
-            ensures filtered.spec_len() <= a.seq@.len();
+            ensures
+                filtered.seq@.len() <= a.seq@.len(),
+                forall|i: int| #![auto] 0 <= i < filtered.seq@.len() ==> pred.ensures((&filtered.seq@[i],), true);
 
         /// Work Θ(Σ|a[i]|), Span Θ(Σ|a[i]|)
         fn flatten(a: &ArraySeqMtPerS<ArraySeqMtPerS<T>>) -> (flattened: Self)

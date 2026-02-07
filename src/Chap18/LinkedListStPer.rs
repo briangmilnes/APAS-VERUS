@@ -160,10 +160,12 @@ pub mod LinkedListStPer {
             ensures appended.spec_len() == a.seq@.len() + b.seq@.len();
 
         /// Work Θ(|a|), Span Θ(1)
-        fn filter<F: Fn(&T) -> bool>(a: &LinkedListStPerS<T>, pred: &F) -> (filtered: Self)
+        fn filter<F: Fn(&T) -> bool>(a: &LinkedListStPerS<T>, pred: &F) -> (filtered: LinkedListStPerS<T>)
             where T: Clone
             requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],))
-            ensures filtered.spec_len() <= a.seq@.len();
+            ensures
+                filtered.seq@.len() <= a.seq@.len(),
+                forall|i: int| #![auto] 0 <= i < filtered.seq@.len() ==> pred.ensures((&filtered.seq@[i],), true);
 
         /// Work Θ(Σ|a[i]|), Span Θ(1)
         fn flatten(a: &LinkedListStPerS<LinkedListStPerS<T>>) -> (flattened: Self)
