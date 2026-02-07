@@ -6,25 +6,12 @@ pub mod abstract_set_iter {
     use vstd::prelude::*;
 
     verus! {
-    //!	1. imports
-    //!	2. broadcast use
-    //!	3. type definitions
-    //!	4. view impls
-    //!	5. spec fns
-    //!	7. traits
-    //!	8. impls
-    //!	9. exec fns
-
-    //!		1. imports
 
     use crate::vstdplus::seq_set::*;
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::vec::vec::*;
-
-
-    //!		2. broadcast use
-
+    
     broadcast use {
             vstd::seq_lib::group_seq_properties,
             vstd::seq::group_seq_axioms,
@@ -34,97 +21,19 @@ pub mod abstract_set_iter {
     };
 
 
-    //!		3. type definitions
-
     // AbstractSet backed by Vec (no duplicates maintained by insert).
     #[verifier::reject_recursive_types(V)]
     pub struct AbstractSet<V> {pub elements: Vec<V>, }
-
-    // Iterator: exec state is still vec + position, but ghost view is set-based
-    #[verifier::reject_recursive_types(V)]
-    pub struct AbstractSetIter<V> {
-        pub vec: Vec<V>,   // Exec: backing vector (linearized set)
-        pub pos: usize,    // Exec: current position
-    }
-
-    // Ghost view: visited, current, remaining sets
-    #[verifier::reject_recursive_types(V)]
-    pub struct AbstractSetIterView<V> {
-        pub visited: Set<V>,
-        pub current: Option<V>,
-        pub remaining: Set<V>,
-    }
-
-
-    //!		4. view impls
 
     impl<V> View for AbstractSet<V> {
         type V = Set<V>;
         open spec fn view(&self) -> Set<V> { self.elements@.to_set() }
     }
 
-    // Iterator view is (visited, current, remaining) sets
-    // At pos=0: visited={}, current=None, remaining=all
-    // At pos=k (0<k<=len): visited=take(k-1), current=Some(vec[k-1]), remaining=skip(k)
-    // At pos>len: visited=all, current=None, remaining={}
-    impl<V> View for AbstractSetIter<V> {
-        type V = AbstractSetIterView<V>;
-        
-        open spec fn view(&self) -> AbstractSetIterView<V> {
-            let seq = self.vec@;
-            if self.pos == 0 {
-                AbstractSetIterView {
-                    visited: Set::empty(),
-                    current: None,
-                    remaining: seq.to_set(),
-                }
-            } else if self.pos as int <= seq.len() {
-                AbstractSetIterView {
-                    visited: seq.take(self.pos as int - 1).to_set(),
-                    current: Some(seq[self.pos as int - 1]),
-                    remaining: seq.skip(self.pos as int).to_set(),
-                }
-            } else {
-                // pos > len: exhausted
-                AbstractSetIterView {
-                    visited: seq.to_set(),
-                    current: None,
-                    remaining: Set::empty(),
-                }
-            }
-        }
-    }
-
-
-    //!		5. spec fns
-
     // Set invariant: backing vec has no duplicates and bounded length
     pub open spec fn set_inv<V>(s: &AbstractSet<V>) -> bool {
         s.elements@.no_duplicates() && s.elements@.len() < usize::MAX
     }
-
-    // Converts an Option to a singleton Set or empty Set.
-    pub open spec fn option_to_set<V>(opt: Option<V>) -> Set<V> {
-        match opt {
-            None => Set::empty(),
-            Some(v) => Set::empty().insert(v),
-        }
-    }
-
-    // The iterator invariant
-    pub open spec fn iter_invariant<V>(it: &AbstractSetIter<V>, original: Set<V>) -> bool {
-        let seq = it.vec@;
-        &&& it.pos <= seq.len()
-        &&& seq.to_set() == original
-        &&& seq.no_duplicates()
-        &&& it@.visited.union(option_to_set(it@.current)).union(it@.remaining) == original
-        &&& it@.visited.disjoint(it@.remaining)
-        &&& it@.current.is_some() ==> !it@.visited.contains(it@.current.unwrap())
-        &&& it@.current.is_some() ==> !it@.remaining.contains(it@.current.unwrap())
-    }
-
-
-    //!		7. traits
 
     // V::V = V means the view of an element is itself (like u32, i64, etc.)
     pub trait AbstractSetTrait<V: ClonePlus + View<V=V> + Eq>: Sized + View<V=Set<V>> {
@@ -166,10 +75,7 @@ pub mod abstract_set_iter {
                 it.vec@.no_duplicates(),
                 it.vec@.len() < usize::MAX;
     }
-
-
-    //!		8. impls
-
+    
     impl<V: ClonePlus + Eq + View<V=V>> AbstractSetTrait<V> for AbstractSet<V> {
         open spec fn wf(&self) -> bool {
             self.elements@.no_duplicates() && self.elements@.len() < usize::MAX
@@ -231,6 +137,73 @@ pub mod abstract_set_iter {
             }
             AbstractSetIter { vec: cloned, pos: 0 }
         }
+    }
+
+    // Iterator: exec state is still vec + position, but ghost view is set-based
+    #[verifier::reject_recursive_types(V)]
+    pub struct AbstractSetIter<V> {
+        pub vec: Vec<V>,   // Exec: backing vector (linearized set)
+        pub pos: usize,    // Exec: current position
+    }
+
+    // Ghost view: visited, current, remaining sets
+    #[verifier::reject_recursive_types(V)]
+    pub struct AbstractSetIterView<V> {
+        pub visited: Set<V>,
+        pub current: Option<V>,
+        pub remaining: Set<V>,
+    }
+
+    // Iterator view is (visited, current, remaining) sets
+    // At pos=0: visited={}, current=None, remaining=all
+    // At pos=k (0<k<=len): visited=take(k-1), current=Some(vec[k-1]), remaining=skip(k)
+    // At pos>len: visited=all, current=None, remaining={}
+    impl<V> View for AbstractSetIter<V> {
+        type V = AbstractSetIterView<V>;
+        
+        open spec fn view(&self) -> AbstractSetIterView<V> {
+            let seq = self.vec@;
+            if self.pos == 0 {
+                AbstractSetIterView {
+                    visited: Set::empty(),
+                    current: None,
+                    remaining: seq.to_set(),
+                }
+            } else if self.pos as int <= seq.len() {
+                AbstractSetIterView {
+                    visited: seq.take(self.pos as int - 1).to_set(),
+                    current: Some(seq[self.pos as int - 1]),
+                    remaining: seq.skip(self.pos as int).to_set(),
+                }
+            } else {
+                // pos > len: exhausted
+                AbstractSetIterView {
+                    visited: seq.to_set(),
+                    current: None,
+                    remaining: Set::empty(),
+                }
+            }
+        }
+    }
+
+    // Converts an Option to a singleton Set or empty Set.
+    pub open spec fn option_to_set<V>(opt: Option<V>) -> Set<V> {
+        match opt {
+            None => Set::empty(),
+            Some(v) => Set::empty().insert(v),
+        }
+    }
+
+    // The iterator invariant
+    pub open spec fn iter_invariant<V>(it: &AbstractSetIter<V>, original: Set<V>) -> bool {
+        let seq = it.vec@;
+        &&& it.pos <= seq.len()
+        &&& seq.to_set() == original
+        &&& seq.no_duplicates()
+        &&& it@.visited.union(option_to_set(it@.current)).union(it@.remaining) == original
+        &&& it@.visited.disjoint(it@.remaining)
+        &&& it@.current.is_some() ==> !it@.visited.contains(it@.current.unwrap())
+        &&& it@.current.is_some() ==> !it@.remaining.contains(it@.current.unwrap())
     }
 
     impl<V: ClonePlus + View<V=V> + Eq> AbstractSetIter<V> {
@@ -300,9 +273,6 @@ pub mod abstract_set_iter {
         }
     }
 
-
-    //!		9. exec fns
-
     // Example: Copy a set using loop iteration with set-based invariants
     pub fn abstract_set_copy_loop(s1: &AbstractSet<u32>) -> (s2: AbstractSet<u32>)
         requires s1.wf(), s1@.len() < (usize::MAX - 1) as int
@@ -366,5 +336,5 @@ pub mod abstract_set_iter {
         }
     }
 
-} // verus!
+    } // verus!
 }

@@ -4,35 +4,10 @@ use crate::experiments::verus_iterator::*;
 use crate::experiments::verus_vec_iterator::*;
 
 verus! {
-//!	5. spec fns
-//!	9. exec fns
-
-//!		5. spec fns
 
 pub open spec fn seq_usize_mem(s: Seq<usize>, elt: usize) -> bool {
     exists|i: int| 0 <= i < s.len() && s[i] == elt
 }
-
-pub open spec fn seq_usize_find(s: Seq<usize>, elt: usize) -> Option<int> {
-    if exists|i: int| 0 <= i < s.len() && s[i] == elt {
-        Some(choose|i: int| 0 <= i < s.len() && s[i] == elt && (forall|j: int| 0 <= j < i ==> s[j] != elt))
-    } else {
-        None
-    }
-}
-
-pub open spec fn seq_usize_count_up(s: Seq<usize>, elt: usize) -> nat
-    decreases s.len()
-{
-    if s.len() == 0 {
-        0
-    } else {
-        (if s.last() == elt { 1nat } else { 0nat }) + seq_usize_count_up(s.drop_last(), elt)
-    }
-}
-
-
-//!		9. exec fns
 
 pub fn usize_vec_mem_loop(s: &Vec<usize>, elt: usize) -> (result: bool)
     ensures result == seq_usize_mem(s@, elt)
@@ -60,6 +35,14 @@ pub fn usize_vec_mem_loop(s: &Vec<usize>, elt: usize) -> (result: bool)
             return true;
         }
         VecCollection::next(&mut iter);
+    }
+}
+
+pub open spec fn seq_usize_find(s: Seq<usize>, elt: usize) -> Option<int> {
+    if exists|i: int| 0 <= i < s.len() && s[i] == elt {
+        Some(choose|i: int| 0 <= i < s.len() && s[i] == elt && (forall|j: int| 0 <= j < i ==> s[j] != elt))
+    } else {
+        None
     }
 }
 
@@ -121,6 +104,16 @@ pub fn vec_length_up_loop(s: &Vec<usize>) -> (length: usize)
         }
         let _result = VecCollection::next(&mut iter);
         length += 1;
+    }
+}
+
+pub open spec fn seq_usize_count_up(s: Seq<usize>, elt: usize) -> nat
+    decreases s.len()
+{
+    if s.len() == 0 {
+        0
+    } else {
+        (if s.last() == elt { 1nat } else { 0nat }) + seq_usize_count_up(s.drop_last(), elt)
     }
 }
 

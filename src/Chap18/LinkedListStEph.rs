@@ -13,77 +13,15 @@ pub mod LinkedListStEph {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
-    //!	1. imports
-    //!	2. broadcast use
-    //!	3. type definitions
-    //!	4. view impls
-    //!	5. spec fns
-    //!	7. traits
-    //!	8. impls
-    //!	10. derive impls
-
-    //!		1. imports
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
-
-
-    //!		2. broadcast use
-
     broadcast use vstd::std_specs::vec::group_vec_axioms;
-
-
-    //!		3. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct LinkedListStEphS<T> {
         pub seq: Vec<T>,
     }
-
-    /// Iterator wrapper with closed spec view for encapsulation.
-    #[verifier::reject_recursive_types(T)]
-    pub struct LinkedListStEphIter<'a, T> {
-        inner: std::slice::Iter<'a, T>,
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(T)]
-    pub struct LinkedListStEphGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
-
-    //!		4. view impls
-
-    impl<T: View> View for LinkedListStEphS<T> {
-        type V = Seq<T::V>;
-
-        open spec fn view(&self) -> Seq<T::V> {
-            self.seq@.map(|_i: int, t: T| t@)
-        }
-    }
-
-    impl<'a, T> View for LinkedListStEphIter<'a, T> {
-        type V = (int, Seq<T>);
-        closed spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
-    }
-
-    impl<'a, T> View for LinkedListStEphGhostIterator<'a, T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-
-    //!		5. spec fns
-
-    pub open spec fn iter_invariant<'a, T>(it: &LinkedListStEphIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-
-    //!		7. traits
 
     /// Base trait for single-threaded ephemeral linked list sequences (Chapter 18).
     pub trait LinkedListStEphBaseTrait<T>: Sized {
@@ -193,8 +131,28 @@ pub mod LinkedListStEph {
             ensures scanned.0.seq@.len() == a.seq@.len();
     }
 
+    impl<T: View> View for LinkedListStEphS<T> {
+        type V = Seq<T::V>;
 
-    //!		8. impls
+        open spec fn view(&self) -> Seq<T::V> {
+            self.seq@.map(|_i: int, t: T| t@)
+        }
+    }
+
+    /// Iterator wrapper with closed spec view for encapsulation.
+    #[verifier::reject_recursive_types(T)]
+    pub struct LinkedListStEphIter<'a, T> {
+        inner: std::slice::Iter<'a, T>,
+    }
+
+    impl<'a, T> View for LinkedListStEphIter<'a, T> {
+        type V = (int, Seq<T>);
+        closed spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant<'a, T>(it: &LinkedListStEphIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
 
     impl<'a, T> std::iter::Iterator for LinkedListStEphIter<'a, T> {
         type Item = &'a T;
@@ -220,6 +178,14 @@ pub mod LinkedListStEph {
         {
             self.inner.next()
         }
+    }
+
+    /// Ghost iterator for ForLoopGhostIterator support.
+    #[verifier::reject_recursive_types(T)]
+    pub struct LinkedListStEphGhostIterator<'a, T> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
     }
 
     impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for LinkedListStEphIter<'a, T> {
@@ -257,6 +223,11 @@ pub mod LinkedListStEph {
         open spec fn ghost_advance(&self, _exec_iter: &LinkedListStEphIter<'a, T>) -> LinkedListStEphGhostIterator<'a, T> {
             Self { pos: self.pos + 1, ..*self }
         }
+    }
+
+    impl<'a, T> View for LinkedListStEphGhostIterator<'a, T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
     }
 
     impl<T> LinkedListStEphS<T> {
@@ -513,16 +484,13 @@ pub mod LinkedListStEph {
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
+    impl<T: Clone> Clone for LinkedListStEphS<T> {
+        fn clone(&self) -> Self { LinkedListStEphS { seq: self.seq.clone() } }
+    }
+
     impl<T: View + PartialEq> PartialEqSpecImpl for LinkedListStEphS<T> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
-
-
-    //!		10. derive impls
-
-    impl<T: Clone> Clone for LinkedListStEphS<T> {
-        fn clone(&self) -> Self { LinkedListStEphS { seq: self.seq.clone() } }
     }
 
     impl<T: Eq + View> Eq for LinkedListStEphS<T> {}
@@ -537,7 +505,7 @@ pub mod LinkedListStEph {
         }
     }
 
-} // verus!
+    } // verus!
 
     impl<T: Debug> Debug for LinkedListStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

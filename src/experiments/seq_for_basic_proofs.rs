@@ -4,186 +4,12 @@ pub mod seq_for_basic_proofs {
     use vstd::prelude::*;
 
 verus! {
-    //!	5. spec fns
-    //!	6. proof fns/broadcast groups
-    //!	9. exec fns
-
-    //!		5. spec fns
-
     //  Seq basics
 
     // length on int
     pub open spec fn seq_int_length(s: Seq<int>) -> nat { s.len() }
 
     pub open spec fn seq_i64_length(s: Seq<i64>) -> nat { s.len() }
-
-    // length on usize
-    pub open spec fn seq_usize_length(s: Seq<usize>) -> nat { s.len() }
-
-    // length on T
-    pub open spec fn seq_t_length<T>(s: Seq<T>) -> nat { s.len() }
-
-    // Mem on int
-    pub open spec fn seq_int_mem(s: Seq<int>, elt: int) -> bool {
-        exists|i: int| 0 <= i < s.len() && s[i] == elt
-    }
-
-    pub open spec fn seq_i64_mem(s: Seq<i64>, elt: i64) -> bool {
-        exists|i: int| 0 <= i < s.len() && s[i] == elt
-    }
-
-    // Mem on usize
-    pub open spec fn seq_usize_mem(s: Seq<usize>, elt: usize) -> bool {
-        exists|i: int| 0 <= i < s.len() && s[i] == elt
-    }
-
-    // find 
-    
-    // find on int
-    pub open spec fn seq_int_find(s: Seq<int>, elt: int) -> Option<int> {
-        if exists|i: int| 0 <= i < s.len() && s[i] == elt {
-            Some(choose|i: int| 0 <= i < s.len() && s[i] == elt && (forall|j: int| 0 <= j < i ==> s[j] != elt))
-        } else {
-            None
-        }
-    }
-
-    // find on usize
-    pub open spec fn seq_usize_find(s: Seq<usize>, elt: usize) -> Option<int> {
-        if exists|i: int| 0 <= i < s.len() && s[i] == elt {
-            Some(choose|i: int| 0 <= i < s.len() && s[i] == elt && (forall|j: int| 0 <= j < i ==> s[j] != elt))
-        } else {
-            None
-        }
-    }
-
-    // sum non-negative using up iteration
-    
-    // sum on int
-    pub open spec fn seq_int_sum_up(s: Seq<int>) -> int
-        decreases s.len(),
-    {
-        if s.len() == 0 {
-            0
-        } else {
-            seq_int_sum_up(s.drop_last()) + s[s.len() - 1]
-        }
-    }
-
-    pub open spec fn seq_int_sum_non_negative(s: Seq<int>) -> bool {
-        forall|i: int| 0 <= i <= s.len() ==> seq_int_sum_up(#[trigger] s.take(i)) >= 0
-    }
-
-    // sum on i64
-    pub open spec fn seq_i64_sum_up(s: Seq<i64>) -> int
-        decreases s.len(),
-    {
-        if s.len() == 0 {
-            0
-        } else {
-            seq_i64_sum_up(s.drop_last()) + s.last() as int
-        }
-    }
-
-    pub open spec fn seq_i64_sum_non_negative_up(s: Seq<i64>) -> bool {
-        forall|i: int| 0 <= i <= s.len() ==> seq_i64_sum_up(#[trigger] s.take(i)) >= 0
-    }
-
-    // sum using down iteration
-
-    // sum on int
-    pub open spec fn seq_int_sum_down(s: Seq<int>) -> int
-        decreases s.len(),
-    {
-        if s.len() == 0 {
-            0
-        } else {
-            s[0] + seq_int_sum_down(s.skip(1))
-        }
-    }
-
-    // sum on i64
-    pub open spec fn seq_i64_sum_down(s: Seq<i64>) -> int
-        decreases s.len(),
-    {
-        if s.len() == 0 {
-            0
-        } else {
-            s[0] as int + seq_i64_sum_down(s.drop_first())
-        }
-    }
-
-    pub open spec fn seq_i64_sum_non_negative_down(s: Seq<i64>) -> bool {
-        forall|i: int| 0 <= i <= s.len() ==> seq_i64_sum_down(#[trigger] s.skip(i)) >= 0
-    }
-
-    // count occurrences of elt
-
-    pub open spec fn seq_int_count_up(s: Seq<int>, elt: int) -> nat
-        decreases s.len()
-    {
-        if s.len() == 0 {
-            0nat
-        } else {
-            (if s.last() == elt { 1nat } else { 0nat }) + seq_int_count_up(s.drop_last(), elt)
-        }
-    }
-
-    pub open spec fn seq_int_count_down(s: Seq<int>, elt: int) -> nat
-        decreases s.len()
-    {
-        if s.len() == 0 {
-            0nat
-        } else {
-            (if s[0] == elt { 1nat } else { 0nat }) + seq_int_count_down(s.drop_first(), elt)
-        }
-    }
-
-
-    //!		6. proof fns/broadcast groups
-
-    pub proof fn seq_int_sum_equivalence(s: Seq<int>)
-        ensures seq_int_sum_up(s) == seq_int_sum_down(s)
-        decreases s.len(),
-    {
-        if s.len() == 0 {
-        } else if s.len() == 1 {
-            assert(s.drop_last().len() == 0);
-            assert(s.skip(1).len() == 0);
-            assert(seq_int_sum_up(s.drop_last()) == 0);
-            assert(seq_int_sum_down(s.skip(1)) == 0);
-            assert(s[0] == s.last());
-        } else {
-            seq_int_sum_equivalence(s.drop_last());
-            seq_int_sum_equivalence(s.skip(1));
-            assert(s.drop_last().skip(1) =~= s.skip(1).drop_last());
-            seq_int_sum_equivalence(s.drop_last().skip(1));
-        }
-    }
-
-    pub proof fn seq_i64_sum_equivalence(s: Seq<i64>)
-        ensures seq_i64_sum_up(s) == seq_i64_sum_down(s)
-        decreases s.len(),
-    {
-        if s.len() == 0 {
-        } else if s.len() == 1 {
-            assert(s.drop_last().len() == 0);
-            assert(s.drop_first().len() == 0);
-            assert(seq_i64_sum_up(s.drop_last()) == 0);
-            assert(seq_i64_sum_down(s.drop_first()) == 0);
-            assert(s[0] == s.last());
-        } else {
-            seq_i64_sum_equivalence(s.drop_last());
-            seq_i64_sum_equivalence(s.drop_first());
-            
-            assert(s.drop_last().drop_first() =~= s.drop_first().drop_last());
-            seq_i64_sum_equivalence(s.drop_last().drop_first());
-        }
-    }
-
-
-    //!		9. exec fns
-
     pub fn fixed_length_i64_array(s: [i64; 3]) -> (l: usize)
         ensures l == seq_i64_length(s@)
     { s.len() }
@@ -195,6 +21,9 @@ verus! {
     pub fn length_i64_vec(s: Vec<i64>) -> (l: usize)
         ensures l == seq_i64_length(s@)
     { s.len() }
+
+    // length on usize
+    pub open spec fn seq_usize_length(s: Seq<usize>) -> nat { s.len() }
 
     pub fn fixed_length_usize_array(s: [usize; 3]) -> (l: usize)
         ensures l == seq_usize_length(s@)
@@ -208,6 +37,10 @@ verus! {
         ensures l == seq_usize_length(s@)
     { s.len() }
 
+
+    // length on T
+    pub open spec fn seq_t_length<T>(s: Seq<T>) -> nat { s.len() }
+
     pub fn fixed_length_t_array<T>(s: [T; 3]) -> (l: usize)
         ensures l == seq_t_length(s@)
     { s.len() }
@@ -220,6 +53,15 @@ verus! {
         ensures l == seq_t_length(s@)
     { s.len() }
 
+
+    // Mem on int
+    pub open spec fn seq_int_mem(s: Seq<int>, elt: int) -> bool {
+        exists|i: int| 0 <= i < s.len() && s[i] == elt
+    }
+
+    pub open spec fn seq_i64_mem(s: Seq<i64>, elt: i64) -> bool {
+        exists|i: int| 0 <= i < s.len() && s[i] == elt
+    }
     pub fn i64_array_mem_for(s: &[i64], elt: i64) -> (result: bool)
         ensures result == seq_i64_mem(s@, elt)
     {
@@ -246,6 +88,11 @@ verus! {
             }
         }
         false
+    }
+
+    // Mem on usize
+    pub open spec fn seq_usize_mem(s: Seq<usize>, elt: usize) -> bool {
+        exists|i: int| 0 <= i < s.len() && s[i] == elt
     }
 
     pub fn usize_array_mem_for(s: &[usize], elt: usize) -> (result: bool)
@@ -310,6 +157,17 @@ verus! {
     }
 */
 
+    // find 
+    
+    // find on int
+    pub open spec fn seq_int_find(s: Seq<int>, elt: int) -> Option<int> {
+        if exists|i: int| 0 <= i < s.len() && s[i] == elt {
+            Some(choose|i: int| 0 <= i < s.len() && s[i] == elt && (forall|j: int| 0 <= j < i ==> s[j] != elt))
+        } else {
+            None
+        }
+    }
+
     pub fn i64_array_find_for(s: &[i64], elt: i64) -> (result: Option<usize>)
         ensures
             match result {
@@ -346,6 +204,15 @@ verus! {
         None
     }
 
+    // find on usize
+    pub open spec fn seq_usize_find(s: Seq<usize>, elt: usize) -> Option<int> {
+        if exists|i: int| 0 <= i < s.len() && s[i] == elt {
+            Some(choose|i: int| 0 <= i < s.len() && s[i] == elt && (forall|j: int| 0 <= j < i ==> s[j] != elt))
+        } else {
+            None
+        }
+    }
+
     pub fn usize_array_find_for(s: &[usize], elt: usize) -> (result: Option<usize>)
         ensures
             match result {
@@ -380,6 +247,38 @@ verus! {
             }
         }
         None
+    }
+
+    // sum non-negative using up iteration
+    
+    // sum on int
+    pub open spec fn seq_int_sum_up(s: Seq<int>) -> int
+        decreases s.len(),
+    {
+        if s.len() == 0 {
+            0
+        } else {
+            seq_int_sum_up(s.drop_last()) + s[s.len() - 1]
+        }
+    }
+
+    pub open spec fn seq_int_sum_non_negative(s: Seq<int>) -> bool {
+        forall|i: int| 0 <= i <= s.len() ==> seq_int_sum_up(#[trigger] s.take(i)) >= 0
+    }
+
+    // sum on i64
+    pub open spec fn seq_i64_sum_up(s: Seq<i64>) -> int
+        decreases s.len(),
+    {
+        if s.len() == 0 {
+            0
+        } else {
+            seq_i64_sum_up(s.drop_last()) + s.last() as int
+        }
+    }
+
+    pub open spec fn seq_i64_sum_non_negative_up(s: Seq<i64>) -> bool {
+        forall|i: int| 0 <= i <= s.len() ==> seq_i64_sum_up(#[trigger] s.take(i)) >= 0
     }
 
     pub fn i64_array_sum_non_negative_up_for(s: &[i64]) -> (result: bool)
@@ -420,6 +319,34 @@ verus! {
         true
     }
 
+    // sum using down iteration
+
+    // sum on int
+    pub open spec fn seq_int_sum_down(s: Seq<int>) -> int
+        decreases s.len(),
+    {
+        if s.len() == 0 {
+            0
+        } else {
+            s[0] + seq_int_sum_down(s.skip(1))
+        }
+    }
+
+    // sum on i64
+    pub open spec fn seq_i64_sum_down(s: Seq<i64>) -> int
+        decreases s.len(),
+    {
+        if s.len() == 0 {
+            0
+        } else {
+            s[0] as int + seq_i64_sum_down(s.drop_first())
+        }
+    }
+
+    pub open spec fn seq_i64_sum_non_negative_down(s: Seq<i64>) -> bool {
+        forall|i: int| 0 <= i <= s.len() ==> seq_i64_sum_down(#[trigger] s.skip(i)) >= 0
+    }
+
     pub fn i64_array_sum_non_negative_down_for(s: &[i64]) -> (result: bool)
         ensures result == seq_i64_sum_non_negative_down(s@)
     {
@@ -452,6 +379,7 @@ verus! {
             }
         }
     }
+
 
     pub fn i64_vec_sum_non_negative_down_for(s: Vec<i64>) -> (result: bool)
         ensures result == seq_i64_sum_non_negative_down(s@)
@@ -514,6 +442,28 @@ verus! {
         length
     }
 
+    // count occurrences of elt
+
+    pub open spec fn seq_int_count_up(s: Seq<int>, elt: int) -> nat
+        decreases s.len()
+    {
+        if s.len() == 0 {
+            0nat
+        } else {
+            (if s.last() == elt { 1nat } else { 0nat }) + seq_int_count_up(s.drop_last(), elt)
+        }
+    }
+
+    pub open spec fn seq_int_count_down(s: Seq<int>, elt: int) -> nat
+        decreases s.len()
+    {
+        if s.len() == 0 {
+            0nat
+        } else {
+            (if s[0] == elt { 1nat } else { 0nat }) + seq_int_count_down(s.drop_first(), elt)
+        }
+    }
+
     pub fn i64_array_count_up_for(s: &[i64], elt: i64) -> (count: usize)
         ensures count <= s@.len()
     {
@@ -544,6 +494,44 @@ verus! {
         count
     }
 
-}
+    pub proof fn seq_int_sum_equivalence(s: Seq<int>)
+        ensures seq_int_sum_up(s) == seq_int_sum_down(s)
+        decreases s.len(),
+    {
+        if s.len() == 0 {
+        } else if s.len() == 1 {
+            assert(s.drop_last().len() == 0);
+            assert(s.skip(1).len() == 0);
+            assert(seq_int_sum_up(s.drop_last()) == 0);
+            assert(seq_int_sum_down(s.skip(1)) == 0);
+            assert(s[0] == s.last());
+        } else {
+            seq_int_sum_equivalence(s.drop_last());
+            seq_int_sum_equivalence(s.skip(1));
+            assert(s.drop_last().skip(1) =~= s.skip(1).drop_last());
+            seq_int_sum_equivalence(s.drop_last().skip(1));
+        }
+    }
+
+    pub proof fn seq_i64_sum_equivalence(s: Seq<i64>)
+        ensures seq_i64_sum_up(s) == seq_i64_sum_down(s)
+        decreases s.len(),
+    {
+        if s.len() == 0 {
+        } else if s.len() == 1 {
+            assert(s.drop_last().len() == 0);
+            assert(s.drop_first().len() == 0);
+            assert(seq_i64_sum_up(s.drop_last()) == 0);
+            assert(seq_i64_sum_down(s.drop_first()) == 0);
+            assert(s[0] == s.last());
+        } else {
+            seq_i64_sum_equivalence(s.drop_last());
+            seq_i64_sum_equivalence(s.drop_first());
+            
+            assert(s.drop_last().drop_first() =~= s.drop_first().drop_last());
+            seq_i64_sum_equivalence(s.drop_last().drop_first());
+        }
+    }
+ }
 }
 

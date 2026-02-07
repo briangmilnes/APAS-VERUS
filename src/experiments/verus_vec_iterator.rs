@@ -3,44 +3,12 @@ use vstd::prelude::*;
 use crate::experiments::verus_iterator::*;
 
 verus! {
-//!	3. type definitions
-//!	4. view impls
-//!	8. impls
-
-//!		3. type definitions
 
 pub struct VecGhostIter {
     pub cur: int,
     pub end: int,
     pub data: Seq<usize>,
 }
-
-pub struct VecExecIter {
-    pub data: Vec<usize>,
-    pub cur: usize,
-}
-
-pub struct VecCollection {
-    pub data: Vec<usize>,
-}
-
-
-//!		4. view impls
-
-impl View for VecExecIter {
-    type V = VecGhostIter;
-    
-    open spec fn view(&self) -> VecGhostIter {
-        VecGhostIter {
-            cur: self.cur as int,
-            end: self.data.len() as int,
-            data: self.data@,
-        }
-    }
-}
-
-
-//!		8. impls
 
 impl GhostIteratorTrait for VecGhostIter {
     type Item = usize;
@@ -87,6 +55,27 @@ impl GhostIteratorTrait for VecGhostIter {
             data: self.data,
         }
     }
+}
+
+pub struct VecExecIter {
+    pub data: Vec<usize>,
+    pub cur: usize,
+}
+
+impl View for VecExecIter {
+    type V = VecGhostIter;
+    
+    open spec fn view(&self) -> VecGhostIter {
+        VecGhostIter {
+            cur: self.cur as int,
+            end: self.data.len() as int,
+            data: self.data@,
+        }
+    }
+}
+
+pub struct VecCollection {
+    pub data: Vec<usize>,
 }
 
 impl ExecIteratorTrait for VecCollection {

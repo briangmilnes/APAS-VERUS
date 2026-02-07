@@ -8,16 +8,20 @@ pub mod proof_fn_in_trait {
     use vstd::prelude::*;
 
     verus! {
-    //!	7. traits
-    //!	8. impls
-    //!	9. exec fns
-
-    //!		7. traits
 
     // TEST 1: Simple trait with a proof function
     pub trait SimpleTrait {
         proof fn simple_proof_method(&self)
             ensures true;
+    }
+
+    // TEST 2: Implement it for u64
+    impl SimpleTrait for u64 {
+        proof fn simple_proof_method(&self)
+            ensures true
+        {
+            // Empty proof body
+        }
     }
 
     // TEST 3: Trait with spec fn and proof fn
@@ -27,18 +31,6 @@ pub mod proof_fn_in_trait {
         proof fn lemma_property_holds(&self)
             requires self.some_property()
             ensures self@ == self@;
-    }
-
-
-    //!		8. impls
-
-    // TEST 2: Implement it for u64
-    impl SimpleTrait for u64 {
-        proof fn simple_proof_method(&self)
-            ensures true
-        {
-            // Empty proof body
-        }
     }
 
     // TEST 4: Implement for u64
@@ -54,9 +46,6 @@ pub mod proof_fn_in_trait {
         }
     }
 
-
-    //!		9. exec fns
-
     // TEST 5: Can we call the proof function?
     fn test_call_proof_fn(x: u64) {
         proof {
@@ -65,5 +54,5 @@ pub mod proof_fn_in_trait {
         }
     }
 
-} // verus!
+    } // verus!
 }

@@ -13,13 +13,16 @@ pub mod feq {
     use core::marker::PointeeSized;
 
     verus! {
-    //!	5. spec fns
-    //!	6. proof fns/broadcast groups
-    //!	7. traits
-    //!	8. impls
-    //!	9. exec fns
 
-    //!		5. spec fns
+    // Extend Eq with full equality specs using external_trait_extension
+    #[verifier::external_trait_specification]
+    #[verifier::external_trait_extension(FeqSpec via FeqSpecImpl)]
+    pub trait ExFeq: PartialEq + PointeeSized {
+        type ExternalTraitSpecificationFor: Eq;
+
+        // Whether this type obeys full equality (reflexive, symmetric, transitive)
+        spec fn obeys_feq() -> bool;
+    }
 
     // Spec functions for full equality properties (using eq_spec from PartialEqSpec)
     pub open spec fn feq_reflexive<T: Eq + Sized>() -> bool {
@@ -69,9 +72,6 @@ pub mod feq {
         &&& obeys_feq_eq::<T>()
     }
 
-
-    //!		6. proof fns/broadcast groups
-
     /// Lemma: cloned values have equal views when obeys_feq_full holds
     pub proof fn lemma_cloned_view_eq<T: Eq + View + Clone + Sized>(x: T, y: T)
         requires cloned(x, y), obeys_feq_full::<T>(),
@@ -93,35 +93,6 @@ pub mod feq {
             assert(x@ == y@ ==> x == y);
         }
     }
-
-    // Broadcast proof: cloned values are equal
-// Veracity: USED
-    pub broadcast proof fn axiom_cloned_implies_eq<T: Eq + Clone + Sized>(x: &T, y: T)
-        requires #[trigger] cloned(*x, y), obeys_feq_clone::<T>()
-        ensures *x == y
-    {
-        admit();
-    }
-
-    pub broadcast group group_feq_axioms {
-        axiom_cloned_implies_eq,
-    }
-
-
-    //!		7. traits
-
-    // Extend Eq with full equality specs using external_trait_extension
-    #[verifier::external_trait_specification]
-    #[verifier::external_trait_extension(FeqSpec via FeqSpecImpl)]
-    pub trait ExFeq: PartialEq + PointeeSized {
-        type ExternalTraitSpecificationFor: Eq;
-
-        // Whether this type obeys full equality (reflexive, symmetric, transitive)
-        spec fn obeys_feq() -> bool;
-    }
-
-
-    //!		8. impls
 
     // Implementation for bool
     impl FeqSpecImpl for bool {
@@ -187,8 +158,14 @@ pub mod feq {
         open spec fn obeys_feq() -> bool { obeys_feq_properties::<isize>() }
     }
 
-
-    //!		9. exec fns
+    // Broadcast proof: cloned values are equal
+// Veracity: USED
+    pub broadcast proof fn axiom_cloned_implies_eq<T: Eq + Clone + Sized>(x: &T, y: T)
+        requires #[trigger] cloned(*x, y), obeys_feq_clone::<T>()
+        ensures *x == y
+    {
+        admit();
+    }
 
     // Exec function: test equality and get spec fact
     pub fn feq<T: Eq + View + Clone + Sized>(x: &T, y: &T) -> (eq: bool)
@@ -205,7 +182,11 @@ pub mod feq {
         result
     }
 
-} // verus!
+    pub broadcast group group_feq_axioms {
+        axiom_cloned_implies_eq,
+    }
+
+    } // verus!
 }
 
 // Stub module for non-Verus compilation

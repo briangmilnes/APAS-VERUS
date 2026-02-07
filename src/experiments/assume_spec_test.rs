@@ -4,13 +4,6 @@
 use vstd::prelude::*;
 
 verus! {
-//!	3. type definitions
-//!	4. view impls
-//!	5. spec fns
-//!	8. impls
-//!	9. exec fns
-
-//!		3. type definitions
 
 #[verifier::reject_recursive_types(V)]
 pub struct TestIter<V> {
@@ -18,8 +11,9 @@ pub struct TestIter<V> {
     pub pos: usize,
 }
 
-
-//!		4. view impls
+pub open spec fn iter_invariant<V>(it: &TestIter<V>) -> bool {
+    it.pos <= it.vec@.len()
+}
 
 impl<V> View for TestIter<V> {
     type V = (int, Seq<V>);
@@ -52,16 +46,6 @@ pub assume_specification<V: Clone>[ TestIter::<V>::next ](it: &mut TestIter<V>) 
         }),
 ;
 
-
-//!		5. spec fns
-
-pub open spec fn iter_invariant<V>(it: &TestIter<V>) -> bool {
-    it.pos <= it.vec@.len()
-}
-
-
-//!		8. impls
-
 impl<V: Clone> Iterator for TestIter<V> {
     type Item = V;
 
@@ -76,13 +60,11 @@ impl<V: Clone> Iterator for TestIter<V> {
     }
 }
 
-
-//!		9. exec fns
-
 pub fn test() {
     let mut it = TestIter { vec: vec![1u32, 2, 3], pos: 0 };
     let x = it.next();
     assert(x == Some(1u32));
 }
+
 
 } // verus!

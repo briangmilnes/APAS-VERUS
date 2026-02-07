@@ -9,31 +9,6 @@ pub mod use_proven_partialeq {
     use crate::experiments::proven_partialeq::proven_partialeq::ProvenPartialEq;
 
 verus! {
-    //!	3. type definitions
-    //!	8. impls
-    //!	9. exec fns
-
-    //!		3. type definitions
-
-    // TEST 6: Generic container that requires ProvenPartialEq
-    pub struct EqPair<T: ProvenPartialEq> {
-        pub first: T,
-        pub second: T,
-    }
-
-
-    //!		8. impls
-
-    impl<T: ProvenPartialEq> EqPair<T> {
-        fn are_same(&self) -> (result: bool)
-            ensures result == T::spec_eq(self.first@, self.second@)
-        {
-            self.first.eq(&self.second)
-        }
-    }
-
-
-    //!		9. exec fns
 
     // TEST 1: Function with ProvenPartialEq bound
     fn are_equal<T: ProvenPartialEq>(a: &T, b: &T) -> (result: bool)
@@ -85,6 +60,20 @@ verus! {
         proof {
             i32::proof_reflexivity();
             assert(i32::spec_eq(x@, x@));
+        }
+    }
+
+    // TEST 6: Generic container that requires ProvenPartialEq
+    pub struct EqPair<T: ProvenPartialEq> {
+        pub first: T,
+        pub second: T,
+    }
+
+    impl<T: ProvenPartialEq> EqPair<T> {
+        fn are_same(&self) -> (result: bool)
+            ensures result == T::spec_eq(self.first@, self.second@)
+        {
+            self.first.eq(&self.second)
         }
     }
 

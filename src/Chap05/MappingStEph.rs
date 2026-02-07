@@ -6,19 +6,10 @@ pub mod MappingStEph {
     use vstd::prelude::*;
 
 verus! {
-    //!	1. imports
-    //!	2. broadcast use
-    //!	3. type definitions
-    //!	4. view impls
-    //!	5. spec fns
-    //!	7. traits
-    //!	8. impls
-    //!	10. derive impls
-
-    //!		1. imports
 
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::Hash;
+
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
     #[cfg(verus_keep_ghost)]
@@ -39,9 +30,6 @@ verus! {
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
 
-
-    //!		2. broadcast use
-
     broadcast use {
         // Set groups
         vstd::set::group_set_axioms,
@@ -61,61 +49,6 @@ verus! {
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
-
-
-    //!		3. type definitions
-
-    #[verifier::reject_recursive_types(A)]
-    #[verifier::reject_recursive_types(B)]
-    pub struct MappingStEph<A: StT + Hash, B: StT + Hash> {
-        pub mapping: RelationStEph<A, B>,
-    }
-
-    /// Iterator wrapper to hide RelationStEphIter<X, Y>.
-    #[verifier::reject_recursive_types(X)]
-    #[verifier::reject_recursive_types(Y)]
-    pub struct MappingStEphIter<'a, X: StT + Hash, Y: StT + Hash> {
-        pub inner: RelationStEphIter<'a, X, Y>,
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support (for-iter patterns).
-    #[verifier::reject_recursive_types(X)]
-    #[verifier::reject_recursive_types(Y)]
-    pub struct MappingStEphGhostIterator<'a, X: StT + Hash, Y: StT + Hash> {
-        pub pos: int,
-        pub elements: Seq<Pair<X, Y>>,
-        pub phantom: core::marker::PhantomData<&'a Pair<X, Y>>,
-    }
-
-
-    //!		4. view impls
-
-    impl<'a, X: StT + Hash, Y: StT + Hash> View for MappingStEphIter<'a, X, Y> {
-        type V = (int, Seq<Pair<X, Y>>);
-        open spec fn view(&self) -> (int, Seq<Pair<X, Y>>) { self.inner@ }
-    }
-
-    impl<'a, X: StT + Hash, Y: StT + Hash> View for MappingStEphGhostIterator<'a, X, Y> {
-        type V = Seq<Pair<X, Y>>;
-
-        open spec fn view(&self) -> Seq<Pair<X, Y>> {
-            self.elements.take(self.pos)
-        }
-    }
-
-    impl<A: StT + Hash, B: StT + Hash> View for MappingStEph<A, B> {
-        type V = Map<A::V, B::V>;
-        
-        open spec fn view(&self) -> Self::V {
-            Map::new(
-                |x: A::V| exists |y: B::V| self.mapping@.contains((x, y)),
-                |x: A::V| choose |y: B::V| self.mapping@.contains((x, y))
-            )
-        }
-    }
-
-
-    //!		5. spec fns
 
     pub open spec fn is_functional_set<X, Y>(s: Set<(X, Y)>) -> bool {
         forall |x: X, y1: Y, y2: Y| 
@@ -140,8 +73,112 @@ verus! {
         forall |q: (X, Y)| #![trigger s.contains(q)] s.contains(q) && q.0 == p.0 ==> q.1 == p.1
     }
 
+    #[verifier::reject_recursive_types(A)]
+    #[verifier::reject_recursive_types(B)]
+    pub struct MappingStEph<A: StT + Hash, B: StT + Hash> {
+        pub mapping: RelationStEph<A, B>,
+    }
 
-    //!		7. traits
+    /// Iterator wrapper to hide RelationStEphIter<X, Y>.
+    #[verifier::reject_recursive_types(X)]
+    #[verifier::reject_recursive_types(Y)]
+    pub struct MappingStEphIter<'a, X: StT + Hash, Y: StT + Hash> {
+        pub inner: RelationStEphIter<'a, X, Y>,
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> View for MappingStEphIter<'a, X, Y> {
+        type V = (int, Seq<Pair<X, Y>>);
+        open spec fn view(&self) -> (int, Seq<Pair<X, Y>>) { self.inner@ }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> std::iter::Iterator for MappingStEphIter<'a, X, Y> {
+        type Item = &'a Pair<X, Y>;
+
+        fn next(&mut self) -> (next: Option<&'a Pair<X, Y>>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for ForLoopGhostIterator support (for-iter patterns).
+    #[verifier::reject_recursive_types(X)]
+    #[verifier::reject_recursive_types(Y)]
+    pub struct MappingStEphGhostIterator<'a, X: StT + Hash, Y: StT + Hash> {
+        pub pos: int,
+        pub elements: Seq<Pair<X, Y>>,
+        pub phantom: core::marker::PhantomData<&'a Pair<X, Y>>,
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for MappingStEphIter<'a, X, Y> {
+        type GhostIter = MappingStEphGhostIterator<'a, X, Y>;
+
+        open spec fn ghost_iter(&self) -> MappingStEphGhostIterator<'a, X, Y> {
+            MappingStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> vstd::pervasive::ForLoopGhostIterator for MappingStEphGhostIterator<'a, X, Y> {
+        type ExecIter = MappingStEphIter<'a, X, Y>;
+        type Item = Pair<X, Y>;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &MappingStEphIter<'a, X, Y>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<Pair<X, Y>> {
+            if 0 <= self.pos < self.elements.len() {
+                Some(self.elements[self.pos])
+            } else {
+                None
+            }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &MappingStEphIter<'a, X, Y>) -> MappingStEphGhostIterator<'a, X, Y> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> View for MappingStEphGhostIterator<'a, X, Y> {
+        type V = Seq<Pair<X, Y>>;
+
+        open spec fn view(&self) -> Seq<Pair<X, Y>> {
+            self.elements.take(self.pos)
+        }
+    }
 
     pub trait MappingStEphTrait<X: StT + Hash, Y: StT + Hash> : 
         View<V = Map<X::V, Y::V>> + Sized {
@@ -237,79 +274,21 @@ verus! {
                 it@.1.no_duplicates();
     }
 
-
-    //!		8. impls
-
-    impl<'a, X: StT + Hash, Y: StT + Hash> std::iter::Iterator for MappingStEphIter<'a, X, Y> {
-        type Item = &'a Pair<X, Y>;
-
-        fn next(&mut self) -> (next: Option<&'a Pair<X, Y>>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
+    impl<A: StT + Hash, B: StT + Hash> View for MappingStEph<A, B> {
+        type V = Map<A::V, B::V>;
+        
+        open spec fn view(&self) -> Self::V {
+            Map::new(
+                |x: A::V| exists |y: B::V| self.mapping@.contains((x, y)),
+                |x: A::V| choose |y: B::V| self.mapping@.contains((x, y))
+            )
         }
     }
 
-    impl<'a, X: StT + Hash, Y: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for MappingStEphIter<'a, X, Y> {
-        type GhostIter = MappingStEphGhostIterator<'a, X, Y>;
-
-        open spec fn ghost_iter(&self) -> MappingStEphGhostIterator<'a, X, Y> {
-            MappingStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, X: StT + Hash, Y: StT + Hash> vstd::pervasive::ForLoopGhostIterator for MappingStEphGhostIterator<'a, X, Y> {
-        type ExecIter = MappingStEphIter<'a, X, Y>;
-        type Item = Pair<X, Y>;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &MappingStEphIter<'a, X, Y>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<Pair<X, Y>> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(self.elements[self.pos])
-            } else {
-                None
-            }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &MappingStEphIter<'a, X, Y>) -> MappingStEphGhostIterator<'a, X, Y> {
-            Self { pos: self.pos + 1, ..*self }
-        }
+    impl<A: StT + Hash, B: StT + Hash> Clone for MappingStEph<A, B> {
+        fn clone(&self) -> (clone: Self)
+            ensures clone@ == self@, self.is_functional() ==> clone.is_functional()
+        { MappingStEph { mapping: self.mapping.clone() } }
     }
 
     impl<X: StT + Hash, Y: StT + Hash> 
@@ -507,22 +486,13 @@ verus! {
         }
     }
 
+    impl<A: StT + Hash, B: StT + Hash> std::hash::Hash for MappingStEph<A, B> {
+        fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.mapping.hash(state); }
+    }
+
     impl<A: StT + Hash, B: StT + Hash> PartialEqSpecImpl for MappingStEph<A, B> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
-
-
-    //!		10. derive impls
-
-    impl<A: StT + Hash, B: StT + Hash> Clone for MappingStEph<A, B> {
-        fn clone(&self) -> (clone: Self)
-            ensures clone@ == self@, self.is_functional() ==> clone.is_functional()
-        { MappingStEph { mapping: self.mapping.clone() } }
-    }
-
-    impl<A: StT + Hash, B: StT + Hash> std::hash::Hash for MappingStEph<A, B> {
-        fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.mapping.hash(state); }
     }
 
     impl<A: StT + Hash, B: StT + Hash> Eq for MappingStEph<A, B> {}
@@ -544,7 +514,7 @@ verus! {
         }
     }
 
-} // verus!
+  } // verus!
 
     #[macro_export]
     macro_rules! MappingLit {

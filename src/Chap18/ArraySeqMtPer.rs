@@ -16,78 +16,16 @@ pub mod ArraySeqMtPer {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
-    //!	1. imports
-    //!	2. broadcast use
-    //!	3. type definitions
-    //!	4. view impls
-    //!	5. spec fns
-    //!	7. traits
-    //!	8. impls
-    //!	10. derive impls
-
-    //!		1. imports
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
     use crate::vstdplus::feq::feq::*;
-
-
-    //!		2. broadcast use
-
     broadcast use {vstd::std_specs::vec::group_vec_axioms, crate::vstdplus::feq::feq::group_feq_axioms};
-
-
-    //!		3. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqMtPerS<T> {
         pub seq: Vec<T>,
     }
-
-    /// Iterator wrapper with closed spec view for encapsulation.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ArraySeqMtPerIter<'a, T> {
-        inner: std::slice::Iter<'a, T>,
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ArraySeqMtPerGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
-
-    //!		4. view impls
-
-    impl<T: View> View for ArraySeqMtPerS<T> {
-        type V = Seq<T::V>;
-
-        open spec fn view(&self) -> Seq<T::V> {
-            self.seq@.map(|_i: int, t: T| t@)
-        }
-    }
-
-    impl<'a, T> View for ArraySeqMtPerIter<'a, T> {
-        type V = (int, Seq<T>);
-        closed spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
-    }
-
-    impl<'a, T> View for ArraySeqMtPerGhostIterator<'a, T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-
-    //!		5. spec fns
-
-    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqMtPerIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-
-    //!		7. traits
 
     /// Base trait for multi-threaded persistent array sequences (Chapter 18).
     pub trait ArraySeqMtPerBaseTrait<T>: Sized {
@@ -192,8 +130,28 @@ pub mod ArraySeqMtPer {
             ensures scanned.0.seq@.len() == a.seq@.len();
     }
 
+    impl<T: View> View for ArraySeqMtPerS<T> {
+        type V = Seq<T::V>;
 
-    //!		8. impls
+        open spec fn view(&self) -> Seq<T::V> {
+            self.seq@.map(|_i: int, t: T| t@)
+        }
+    }
+
+    /// Iterator wrapper with closed spec view for encapsulation.
+    #[verifier::reject_recursive_types(T)]
+    pub struct ArraySeqMtPerIter<'a, T> {
+        inner: std::slice::Iter<'a, T>,
+    }
+
+    impl<'a, T> View for ArraySeqMtPerIter<'a, T> {
+        type V = (int, Seq<T>);
+        closed spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqMtPerIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
 
     impl<'a, T> std::iter::Iterator for ArraySeqMtPerIter<'a, T> {
         type Item = &'a T;
@@ -219,6 +177,14 @@ pub mod ArraySeqMtPer {
         {
             self.inner.next()
         }
+    }
+
+    /// Ghost iterator for ForLoopGhostIterator support.
+    #[verifier::reject_recursive_types(T)]
+    pub struct ArraySeqMtPerGhostIterator<'a, T> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
     }
 
     impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqMtPerIter<'a, T> {
@@ -256,6 +222,11 @@ pub mod ArraySeqMtPer {
         open spec fn ghost_advance(&self, _exec_iter: &ArraySeqMtPerIter<'a, T>) -> ArraySeqMtPerGhostIterator<'a, T> {
             Self { pos: self.pos + 1, ..*self }
         }
+    }
+
+    impl<'a, T> View for ArraySeqMtPerGhostIterator<'a, T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
     }
 
     impl<T> ArraySeqMtPerS<T> {
@@ -689,16 +660,13 @@ pub mod ArraySeqMtPer {
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
+    impl<T: Clone> Clone for ArraySeqMtPerS<T> {
+        fn clone(&self) -> Self { ArraySeqMtPerS { seq: self.seq.clone() } }
+    }
+
     impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqMtPerS<T> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
-
-
-    //!		10. derive impls
-
-    impl<T: Clone> Clone for ArraySeqMtPerS<T> {
-        fn clone(&self) -> Self { ArraySeqMtPerS { seq: self.seq.clone() } }
     }
 
     impl<T: Eq + View> Eq for ArraySeqMtPerS<T> {}
@@ -713,7 +681,7 @@ pub mod ArraySeqMtPer {
         }
     }
 
-} // verus!
+    } // verus!
 
     impl<T: Debug> Debug for ArraySeqMtPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

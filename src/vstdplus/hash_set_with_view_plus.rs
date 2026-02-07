@@ -16,14 +16,6 @@ use core::hash::Hash;
 use crate::vstdplus::feq::feq::*;
 
 verus! {
-//!	3. type definitions
-//!	4. view impls
-//!	6. proof fns/broadcast groups
-//!	7. traits
-//!	8. impls
-//!	10. derive impls
-
-//!		3. type definitions
 
 // Direct wrapper around std::collections::HashSet
 // View gives Set<Key::V> (mapped view)
@@ -31,9 +23,6 @@ verus! {
 pub struct HashSetWithViewPlus<Key: View + Eq + Hash> {
     pub inner: HashSet<Key>,
 }
-
-
-//!		4. view impls
 
 impl<Key: View + Eq + Hash> View for HashSetWithViewPlus<Key> {
     type V = Set<<Key as View>::V>;
@@ -43,9 +32,6 @@ impl<Key: View + Eq + Hash> View for HashSetWithViewPlus<Key> {
         self.inner@.map(|k: Key| k@)
     }
 }
-
-
-//!		6. proof fns/broadcast groups
 
 /// A HashSetWithViewPlus is always finite (it's backed by a finite HashSet)
 pub broadcast proof fn axiom_hash_set_with_view_plus_finite<Key: View + Eq + Hash>(s: &HashSetWithViewPlus<Key>)
@@ -59,23 +45,14 @@ pub broadcast group group_hash_set_with_view_plus_axioms {
     axiom_hash_set_with_view_plus_finite,
 }
 
-
-//!		7. traits
-
-pub trait HashSetWithViewPlusTrait<Key: View + Eq + Hash>: View<V = Set<<Key as View>::V>> {
-    fn iter(&self) -> (r: std::collections::hash_set::Iter<'_, Key>)
-        ensures
-            r@.0 == 0,
-            r@.1.no_duplicates(),
-            obeys_key_model::<Key>() ==> {
-                let (index, s) = r@;
-                &&& forall|k: Key| #![trigger s.contains(k)] s.contains(k) ==> self@.contains(k@)
-                &&& forall|kv: Key::V| #![trigger self@.contains(kv)] self@.contains(kv) ==> exists|k: Key| #![trigger s.contains(k)] s.contains(k) && k@ == kv
-            };
+impl<Key: View + Eq + Hash + Clone> Clone for HashSetWithViewPlus<Key> {
+    #[verifier::external_body]
+    fn clone(&self) -> (clone: Self)
+        ensures clone@ == self@
+    {
+        HashSetWithViewPlus { inner: self.inner.clone() }
+    }
 }
-
-
-//!		8. impls
 
 impl<Key: View + Eq + Hash + Clone> HashSetWithViewPlus<Key> {
     #[verifier::external_body]
@@ -131,22 +108,22 @@ impl<Key: View + Eq + Hash + Clone> HashSetWithViewPlus<Key> {
     }
 }
 
+pub trait HashSetWithViewPlusTrait<Key: View + Eq + Hash>: View<V = Set<<Key as View>::V>> {
+    fn iter(&self) -> (r: std::collections::hash_set::Iter<'_, Key>)
+        ensures
+            r@.0 == 0,
+            r@.1.no_duplicates(),
+            obeys_key_model::<Key>() ==> {
+                let (index, s) = r@;
+                &&& forall|k: Key| #![trigger s.contains(k)] s.contains(k) ==> self@.contains(k@)
+                &&& forall|kv: Key::V| #![trigger self@.contains(kv)] self@.contains(kv) ==> exists|k: Key| #![trigger s.contains(k)] s.contains(k) && k@ == kv
+            };
+}
+
 impl<Key: View + Eq + Hash> HashSetWithViewPlusTrait<Key> for HashSetWithViewPlus<Key> {
     #[verifier::external_body]
     fn iter(&self) -> (r: std::collections::hash_set::Iter<'_, Key>)
     { self.inner.iter() }
-}
-
-
-//!		10. derive impls
-
-impl<Key: View + Eq + Hash + Clone> Clone for HashSetWithViewPlus<Key> {
-    #[verifier::external_body]
-    fn clone(&self) -> (clone: Self)
-        ensures clone@ == self@
-    {
-        HashSetWithViewPlus { inner: self.inner.clone() }
-    }
 }
 
 impl<Key: View + Eq + Hash> std::hash::Hash for HashSetWithViewPlus<Key> {

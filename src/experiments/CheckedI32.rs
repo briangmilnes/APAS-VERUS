@@ -8,12 +8,6 @@ use vstd::view::View;
 use vstd::arithmetic::mul::{lemma_mul_by_zero_is_zero, lemma_mul_inequality, lemma_mul_is_commutative};
 
 verus! {
-    //!	3. type definitions
-    //!	4. view impls
-    //!	8. impls
-    //!	10. derive impls
-
-    //!		3. type definitions
 
     /// A checked integer that tracks the true mathematical value.
     /// - `i`: Ghost value representing the true unbounded integer
@@ -23,9 +17,6 @@ verus! {
         v: Option<i32>,
     }
 
-
-    //!		4. view impls
-
     impl View for CheckedI32 {
         type V = int;
 
@@ -34,8 +25,14 @@ verus! {
         }
     }
 
-
-    //!		8. impls
+    impl Clone for CheckedI32 {
+        exec fn clone(&self) -> (result: Self)
+            ensures result@ == self@
+        {
+            proof { use_type_invariant(self); }
+            Self { i: self.i, v: self.v }
+        }
+    }
 
     impl CheckedI32 {
         /// Type invariant: v matches i when in range, v is None when out of range
@@ -214,17 +211,4 @@ verus! {
             }
         }
     }
-
-
-    //!		10. derive impls
-
-    impl Clone for CheckedI32 {
-        exec fn clone(&self) -> (result: Self)
-            ensures result@ == self@
-        {
-            proof { use_type_invariant(self); }
-            Self { i: self.i, v: self.v }
-        }
-    }
-
 }

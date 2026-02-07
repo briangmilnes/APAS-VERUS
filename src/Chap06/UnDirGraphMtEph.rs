@@ -19,27 +19,14 @@ pub mod UnDirGraphMtEph {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
-    //!	1. imports
-    //!	2. broadcast use
-    //!	3. type definitions
-    //!	4. view impls
-    //!	5. spec fns
-    //!	7. traits
-    //!	8. impls
-    //!	9. exec fns
-    //!	10. derive impls
-
-    //!		1. imports
 
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
+
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
     use crate::Types::Types::*;
-
-
-    //!		2. broadcast use
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -48,8 +35,9 @@ pub mod UnDirGraphMtEph {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
-
-    //!		3. type definitions
+    pub open spec fn valid_key_type_for_graph<V: StTInMtT + Hash>() -> bool {
+        valid_key_type_Edge::<V>()
+    }
 
     #[verifier::reject_recursive_types(V)]
     pub struct UnDirGraphMtEph<V: StTInMtT + Hash + 'static> {
@@ -57,8 +45,13 @@ pub mod UnDirGraphMtEph {
         pub E: SetStEph<Edge<V>>,
     }
 
-
-    //!		4. view impls
+    impl<V: StTInMtT + Hash + 'static> Clone for UnDirGraphMtEph<V> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            UnDirGraphMtEph { V: self.V.clone(), E: self.E.clone() }
+        }
+    }
 
     impl<V: StTInMtT + Hash + 'static> View for UnDirGraphMtEph<V> {
         type V = GraphView<<V as View>::V>;
@@ -67,15 +60,26 @@ pub mod UnDirGraphMtEph {
         }
     }
 
+    impl<V: StTInMtT + Hash + 'static> UnDirGraphMtEph<V> {
+        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.V@ }
+        pub open spec fn spec_edges(&self) -> Set<(V::V, V::V)> { self.E@ }
 
-    //!		5. spec fns
+        /// Spec for ng computed from a subset of edges
+        pub open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V)>) -> Set<V::V> 
+            recommends 
+                wf_graph_view(self@),
+                subedges <= self@.A,
+        {
+            Set::new(|w: V::V| subedges.contains((v, w)) || subedges.contains((w, v)))
+        }
 
-    pub open spec fn valid_key_type_for_graph<V: StTInMtT + Hash>() -> bool {
-        valid_key_type_Edge::<V>()
+        /// Spec for ng_of_vertices computed from a subset of vertices
+        pub open spec fn spec_ng_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V> 
+            recommends wf_graph_view(self@), subverts <= self@.V
+        {
+            Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_ng(u).contains(w))
+        }
     }
-
-
-    //!		7. traits
 
     pub trait UnDirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
         /// APAS: Work Θ(1), Span Θ(1)
@@ -169,80 +173,6 @@ pub mod UnDirGraphMtEph {
                 self@.V.contains(v@),
             ensures n == self.spec_ng(v@).len();
     }
-
-
-    //!		8. impls
-
-    impl<V: StTInMtT + Hash + 'static> UnDirGraphMtEph<V> {
-        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.V@ }
-        pub open spec fn spec_edges(&self) -> Set<(V::V, V::V)> { self.E@ }
-
-        /// Spec for ng computed from a subset of edges
-        pub open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V)>) -> Set<V::V> 
-            recommends 
-                wf_graph_view(self@),
-                subedges <= self@.A,
-        {
-            Set::new(|w: V::V| subedges.contains((v, w)) || subedges.contains((w, v)))
-        }
-
-        /// Spec for ng_of_vertices computed from a subset of vertices
-        pub open spec fn spec_ng_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V> 
-            recommends wf_graph_view(self@), subverts <= self@.V
-        {
-            Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_ng(u).contains(w))
-        }
-    }
-
-    impl<V: StTInMtT + Hash + 'static> UnDirGraphMtEphTrait<V> for UnDirGraphMtEph<V> {
-        fn empty() -> (g: UnDirGraphMtEph<V>) {
-            UnDirGraphMtEph {
-                V: SetLit![],
-                E: SetLit![],
-            }
-        }
-
-        fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: UnDirGraphMtEph<V>) { 
-            UnDirGraphMtEph { V, E } 
-        }
-
-        fn vertices(&self) -> (v: &SetStEph<V>) { &self.V }
-
-        fn edges(&self) -> (e: &SetStEph<Edge<V>>) { &self.E }
-
-        fn sizeV(&self) -> (n: N) { self.V.size() }
-
-        fn sizeE(&self) -> (n: N) { self.E.size() }
-
-        fn neighbor(&self, u: &V, v: &V) -> (b: B) {
-            self.E.mem(&Edge(u.clone_plus(), v.clone_plus())) || self.E.mem(&Edge(v.clone_plus(), u.clone_plus()))
-        }
-
-        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
-            let edges = self.E.clone();
-            ng_par(self, v.clone_plus(), edges)
-        }
-
-        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
-            ng_of_vertices_par(self, u_set.clone())
-        }
-
-        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) { 
-            feq(&e.0, v) || feq(&e.1, v)
-        }
-
-        fn degree(&self, v: &V) -> (n: N) { 
-            self.ng(v).size() 
-        }
-    }
-
-    impl<V: StTInMtT + Hash + 'static> PartialEqSpecImpl for UnDirGraphMtEph<V> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
-
-
-    //!		9. exec fns
 
     /// Parallel edge filtering for neighbors using set split.
     fn ng_par<V: StTInMtT + Hash + 'static>(g: &UnDirGraphMtEph<V>, v: V, edges: SetStEph<Edge<V>>) 
@@ -435,15 +365,51 @@ pub mod UnDirGraphMtEph {
         }
     }
 
-
-    //!		10. derive impls
-
-    impl<V: StTInMtT + Hash + 'static> Clone for UnDirGraphMtEph<V> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
-        {
-            UnDirGraphMtEph { V: self.V.clone(), E: self.E.clone() }
+    impl<V: StTInMtT + Hash + 'static> UnDirGraphMtEphTrait<V> for UnDirGraphMtEph<V> {
+        fn empty() -> (g: UnDirGraphMtEph<V>) {
+            UnDirGraphMtEph {
+                V: SetLit![],
+                E: SetLit![],
+            }
         }
+
+        fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: UnDirGraphMtEph<V>) { 
+            UnDirGraphMtEph { V, E } 
+        }
+
+        fn vertices(&self) -> (v: &SetStEph<V>) { &self.V }
+
+        fn edges(&self) -> (e: &SetStEph<Edge<V>>) { &self.E }
+
+        fn sizeV(&self) -> (n: N) { self.V.size() }
+
+        fn sizeE(&self) -> (n: N) { self.E.size() }
+
+        fn neighbor(&self, u: &V, v: &V) -> (b: B) {
+            self.E.mem(&Edge(u.clone_plus(), v.clone_plus())) || self.E.mem(&Edge(v.clone_plus(), u.clone_plus()))
+        }
+
+        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
+            let edges = self.E.clone();
+            ng_par(self, v.clone_plus(), edges)
+        }
+
+        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
+            ng_of_vertices_par(self, u_set.clone())
+        }
+
+        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) { 
+            feq(&e.0, v) || feq(&e.1, v)
+        }
+
+        fn degree(&self, v: &V) -> (n: N) { 
+            self.ng(v).size() 
+        }
+    }
+
+    impl<V: StTInMtT + Hash + 'static> PartialEqSpecImpl for UnDirGraphMtEph<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
     impl<V: StTInMtT + Hash + 'static> Eq for UnDirGraphMtEph<V> {}
@@ -463,7 +429,7 @@ pub mod UnDirGraphMtEph {
         }
     }
 
-} // verus!
+    } // verus!
 
     impl<V: StTInMtT + Hash + 'static> Debug for UnDirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {

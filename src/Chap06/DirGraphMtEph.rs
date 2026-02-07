@@ -19,17 +19,6 @@ pub mod DirGraphMtEph {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
-    //!	1. imports
-    //!	2. broadcast use
-    //!	3. type definitions
-    //!	4. view impls
-    //!	5. spec fns
-    //!	7. traits
-    //!	8. impls
-    //!	9. exec fns
-    //!	10. derive impls
-
-    //!		1. imports
 
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
@@ -37,13 +26,9 @@ pub mod DirGraphMtEph {
     use crate::vstdplus::feq::feq::*;
     #[cfg(not(verus_keep_ghost))]
     use crate::vstdplus::feq::feq::*;
+
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::seq_set::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::*;
-
-
-    //!		2. broadcast use
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -52,17 +37,15 @@ pub mod DirGraphMtEph {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
-
-    //!		3. type definitions
+    pub open spec fn valid_key_type_for_graph<V: StTInMtT + Hash>() -> bool {
+        valid_key_type_Edge::<V>()
+    }
 
     #[verifier::reject_recursive_types(V)]
     pub struct DirGraphMtEph<V: StTInMtT + Hash + 'static> {
         pub V: SetStEph<V>,
         pub A: SetStEph<Edge<V>>,
     }
-
-
-    //!		4. view impls
 
     impl<V: StTInMtT + Hash + 'static> View for DirGraphMtEph<V> {
         type V = GraphView<<V as View>::V>;
@@ -71,15 +54,15 @@ pub mod DirGraphMtEph {
         }
     }
 
-
-    //!		5. spec fns
-
-    pub open spec fn valid_key_type_for_graph<V: StTInMtT + Hash>() -> bool {
-        valid_key_type_Edge::<V>()
+    impl<V: StTInMtT + Hash + 'static> DirGraphMtEph<V> {
+        /// Convenience accessor for vertices view
+        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.V@ }
+        /// Convenience accessor for arcs view
+        pub open spec fn spec_arcs(&self) -> Set<(V::V, V::V)> { self.A@ }
     }
 
-
-    //!		7. traits
+    #[cfg(verus_keep_ghost)]
+    use crate::Types::Types::*;
 
     pub trait DirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
 
@@ -294,65 +277,6 @@ pub mod DirGraphMtEph {
                 neighbors@ == self.spec_ng_of_vertices(u_set@),
                 neighbors@ <= self@.V;
     }
-
-
-    //!		8. impls
-
-    impl<V: StTInMtT + Hash + 'static> DirGraphMtEph<V> {
-        /// Convenience accessor for vertices view
-        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.V@ }
-        /// Convenience accessor for arcs view
-        pub open spec fn spec_arcs(&self) -> Set<(V::V, V::V)> { self.A@ }
-    }
-
-    impl<V: StTInMtT + Hash + 'static> DirGraphMtEphTrait<V> for DirGraphMtEph<V> {
-        fn empty() -> (g: DirGraphMtEph<V>) {
-            DirGraphMtEph { V: SetStEph::empty(), A: SetStEph::empty() }
-        }
-
-        fn from_sets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (g: DirGraphMtEph<V>) {
-            DirGraphMtEph { V, A }
-        }
-
-        fn vertices(&self) -> (v: &SetStEph<V>) { &self.V }
-        fn arcs(&self) -> (a: &SetStEph<Edge<V>>) { &self.A }
-        fn sizeV(&self) -> (n: N) { self.V.size() }
-        fn sizeA(&self) -> (n: N) { self.A.size() }
-
-        fn neighbor(&self, u: &V, v: &V) -> (b: B) {
-            self.A.mem(&Edge(u.clone_plus(), v.clone_plus()))
-        }
-
-        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) { feq(&e.0, v) || feq(&e.1, v) }
-
-        fn n_plus(&self, v: &V) -> SetStEph<V> { 
-            let arcs = self.A.clone();
-            n_plus_par(self, v.clone_plus(), arcs)
-        }
-
-        fn out_degree(&self, v: &V) -> (n: N) { self.n_plus(v).size() }
-
-        fn n_minus(&self, v: &V) -> SetStEph<V> { 
-            let arcs = self.A.clone();
-            n_minus_par(self, v.clone_plus(), arcs)
-        }
-        fn in_degree(&self, v: &V) -> (n: N) { self.n_minus(v).size() }
-
-        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) { self.n_plus(v).union(&self.n_minus(v)) }
-        fn degree(&self, v: &V) -> (n: N) { self.ng(v).size() }
-
-        fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { n_plus_of_vertices_par(self, u_set.clone()) }
-        fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { n_minus_of_vertices_par(self, u_set.clone()) }
-        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { ng_of_vertices_par(self, u_set.clone()) }
-    }
-
-    impl<V: StTInMtT + Hash + 'static> PartialEqSpecImpl for DirGraphMtEph<V> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
-
-
-    //!		9. exec fns
 
     /// Parallel arc filtering for out-neighbors using set split.
     fn n_plus_par<V: StTInMtT + Hash + 'static>(g: &DirGraphMtEph<V>, v: V, arcs: SetStEph<Edge<V>>) 
@@ -649,15 +573,58 @@ pub mod DirGraphMtEph {
         }
     }
 
-
-    //!		10. derive impls
-
     impl<V: StTInMtT + Hash + 'static> Clone for DirGraphMtEph<V> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
             DirGraphMtEph { V: self.V.clone(), A: self.A.clone() }
         }
+    }
+
+    impl<V: StTInMtT + Hash + 'static> DirGraphMtEphTrait<V> for DirGraphMtEph<V> {
+        fn empty() -> (g: DirGraphMtEph<V>) {
+            DirGraphMtEph { V: SetStEph::empty(), A: SetStEph::empty() }
+        }
+
+        fn from_sets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (g: DirGraphMtEph<V>) {
+            DirGraphMtEph { V, A }
+        }
+
+        fn vertices(&self) -> (v: &SetStEph<V>) { &self.V }
+        fn arcs(&self) -> (a: &SetStEph<Edge<V>>) { &self.A }
+        fn sizeV(&self) -> (n: N) { self.V.size() }
+        fn sizeA(&self) -> (n: N) { self.A.size() }
+
+        fn neighbor(&self, u: &V, v: &V) -> (b: B) {
+            self.A.mem(&Edge(u.clone_plus(), v.clone_plus()))
+        }
+
+        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) { feq(&e.0, v) || feq(&e.1, v) }
+
+        fn n_plus(&self, v: &V) -> SetStEph<V> { 
+            let arcs = self.A.clone();
+            n_plus_par(self, v.clone_plus(), arcs)
+        }
+
+        fn out_degree(&self, v: &V) -> (n: N) { self.n_plus(v).size() }
+
+        fn n_minus(&self, v: &V) -> SetStEph<V> { 
+            let arcs = self.A.clone();
+            n_minus_par(self, v.clone_plus(), arcs)
+        }
+        fn in_degree(&self, v: &V) -> (n: N) { self.n_minus(v).size() }
+
+        fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) { self.n_plus(v).union(&self.n_minus(v)) }
+        fn degree(&self, v: &V) -> (n: N) { self.ng(v).size() }
+
+        fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { n_plus_of_vertices_par(self, u_set.clone()) }
+        fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { n_minus_of_vertices_par(self, u_set.clone()) }
+        fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { ng_of_vertices_par(self, u_set.clone()) }
+    }
+
+    impl<V: StTInMtT + Hash + 'static> PartialEqSpecImpl for DirGraphMtEph<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
     impl<V: StTInMtT + Hash + 'static> Eq for DirGraphMtEph<V> {}
@@ -677,7 +644,7 @@ pub mod DirGraphMtEph {
         }
     }
 
-} // verus!
+    } // verus!
 
     impl<V: StTInMtT + Hash + 'static> Debug for DirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {

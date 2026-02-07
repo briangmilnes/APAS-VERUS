@@ -17,14 +17,6 @@ pub mod DirGraphStEph {
     use crate::vstdplus::seq_set::*;
 
 verus! {
-    //!	2. broadcast use
-    //!	3. type definitions
-    //!	4. view impls
-    //!	7. traits
-    //!	8. impls
-    //!	10. derive impls
-
-    //!		2. broadcast use
 
     // Broadcast groups for hash collections, sets, and our custom axioms
     broadcast use {
@@ -37,11 +29,20 @@ verus! {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
-
-    //!		3. type definitions
-
     #[verifier::reject_recursive_types(V)]
     pub struct DirGraphStEph<V: StT + Hash> { pub V: SetStEph<V>, pub A: SetStEph<Edge<V>> }
+
+    impl<V: StT + Hash> DirGraphStEph<V> {
+        /// Returns an iterator over the vertices
+        pub fn iter_vertices(&self) -> (it: SetStEphIter<'_, V>)
+            requires valid_key_type_Edge::<V>() 
+       { self.V.iter() }
+
+        /// Returns an iterator over the arcs
+        pub fn iter_arcs(&self) -> (it: SetStEphIter<'_, Edge<V>>)
+            requires valid_key_type_Edge::<V>()
+        { self.A.iter() }
+    }
 
     // Ghost view for graph vertex iterator: (visited, current, remaining) sets
     #[verifier::reject_recursive_types(V)]
@@ -59,18 +60,12 @@ verus! {
         pub remaining: Set<(V, V)>,
     }
 
-
-    //!		4. view impls
-
     // View implementation: GraphView with named V and A fields
     impl<V: StT + Hash> View for DirGraphStEph<V> {
         type V = GraphView<<V as View>::V>;
 
         open spec fn view(&self) -> Self::V { GraphView { V: self.V@, A: self.A@ } }
     }
-
-
-    //!		7. traits
 
     pub trait DirGraphStEphTrait<V: StT + Hash>:
          View<V = GraphView<<V as View>::V>> + Sized {
@@ -200,21 +195,6 @@ verus! {
         fn out_degree(&self, v: &V) -> (n: N)
             requires wf_graph_view(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures n == self.spec_n_plus(v@).len();
-    }
-
-
-    //!		8. impls
-
-    impl<V: StT + Hash> DirGraphStEph<V> {
-        /// Returns an iterator over the vertices
-        pub fn iter_vertices(&self) -> (it: SetStEphIter<'_, V>)
-            requires valid_key_type_Edge::<V>() 
-       { self.V.iter() }
-
-        /// Returns an iterator over the arcs
-        pub fn iter_arcs(&self) -> (it: SetStEphIter<'_, Edge<V>>)
-            requires valid_key_type_Edge::<V>()
-        { self.A.iter() }
     }
 
     impl<V: StT + Hash> DirGraphStEphTrait<V> for DirGraphStEph<V> {
@@ -519,20 +499,17 @@ verus! {
         { self.n_plus(v).size() }
     }
 
-     impl<V: StT + Hash> PartialEqSpecImpl for DirGraphStEph<V> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
-
-
-    //!		10. derive impls
-
     impl<V: StT + Hash> Clone for DirGraphStEph<V> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
             DirGraphStEph { V: self.V.clone(), A: self.A.clone() }
         }
+    }
+
+     impl<V: StT + Hash> PartialEqSpecImpl for DirGraphStEph<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
     impl<V: StT + Hash> Eq for DirGraphStEph<V> {}

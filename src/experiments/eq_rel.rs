@@ -10,17 +10,6 @@ pub mod eq_rel {
     use vstd::prelude::*;
 
     verus! {
-    //!	3. type definitions
-    //!	7. traits
-    //!	8. impls
-
-    //!		3. type definitions
-
-     // Generic implementation of EqRelTest
-     struct GenericEqRelTest;
-
-
-    //!		7. traits
 
     pub trait EqRel: PartialEq + Eq + Sized {
         proof fn eq_reflexive(x: &Self)           ensures x == x;
@@ -70,9 +59,6 @@ pub mod eq_rel {
         fn test_eq_rel_view(x: T, y: T);
         fn test_eq_rel_clone(x: T);
     }
-
-
-    //!		8. impls
 
     // Implementation of EqRelTest directly for u64
     impl EqRelTest<u64> for u64 {
@@ -124,6 +110,9 @@ pub mod eq_rel {
          }
      }
 
+     // Generic implementation of EqRelTest
+     struct GenericEqRelTest;
+
      impl<T: EqRelWithViewClone> EqRelTest<T> for GenericEqRelTest {
          fn test_eq_rel(x: T, y: T, z: T) {
              proof {
@@ -146,5 +135,5 @@ pub mod eq_rel {
          }
      }
 
-} // verus!
+    } // verus!
 }

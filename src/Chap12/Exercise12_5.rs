@@ -11,11 +11,6 @@ pub mod Exercise12_5 {
     use std::sync::atomic::{AtomicPtr, Ordering};
 
 verus! {
-//!	3. type definitions
-//!	7. traits
-//!	8. impls
-
-//!		3. type definitions
 
 /// Node for the lock-free stack. External due to raw pointer field.
 #[verifier::external]
@@ -23,17 +18,6 @@ struct Node<T> {
     value: T,
     next: *mut Node<T>,
 }
-
-/// Lock-free concurrent stack using AtomicPtr and CAS.
-/// External due to AtomicPtr (no vstd specs) and raw pointers.
-#[verifier::external_body]
-#[verifier::reject_recursive_types(T)]
-pub struct ConcurrentStackMt<T: Send> {
-    head: AtomicPtr<Node<T>>,
-}
-
-
-//!		7. traits
 
 /// Trait for lock-free concurrent stack operations.
 /// 
@@ -69,8 +53,13 @@ pub trait ConcurrentStackMtTrait<T: Send>: Sized {
         requires self.wf();
 }
 
-
-//!		8. impls
+/// Lock-free concurrent stack using AtomicPtr and CAS.
+/// External due to AtomicPtr (no vstd specs) and raw pointers.
+#[verifier::external_body]
+#[verifier::reject_recursive_types(T)]
+pub struct ConcurrentStackMt<T: Send> {
+    head: AtomicPtr<Node<T>>,
+}
 
 impl<T: Send> ConcurrentStackMt<T> {
     /// Spec: the stack is always well-formed after construction.

@@ -8,20 +8,27 @@ pub mod test_feq {
     use crate::Types::Types::{Pair, Pair_feq_trigger};
 
     verus! {
-    //!	3. type definitions
-    //!	4. view impls
-    //!	5. spec fns
-    //!	6. proof fns/broadcast groups
-    //!	9. exec fns
-    //!	10. derive impls
-
-    //!		3. type definitions
 
     // Test struct with manual Clone, PartialEq, Eq
     #[derive(PartialEq, Eq)]
     pub struct Point {
         pub x: u64,
         pub y: u64,
+    }
+
+    impl Clone for Point {
+        fn clone(&self) -> (result: Self)
+            ensures result == *self
+        {
+            Point { x: self.x, y: self.y }
+        }
+    }
+
+    impl View for Point {
+        type V = (int, int);
+        open spec fn view(&self) -> Self::V {
+            (self.x as int, self.y as int)
+        }
     }
 
     // Test enum with manual Clone, PartialEq, Eq
@@ -32,19 +39,15 @@ pub mod test_feq {
         Blue,
     }
 
-    // More complex struct: holds a mutable Vec of ints
-    #[derive(PartialEq, Eq)]
-    pub struct IntTree {
-        pub nodes: Vec<i64>,
-    }
-
-
-    //!		4. view impls
-
-    impl View for Point {
-        type V = (int, int);
-        open spec fn view(&self) -> Self::V {
-            (self.x as int, self.y as int)
+    impl Clone for Color {
+        fn clone(&self) -> (result: Self)
+            ensures result == *self
+        {
+            match self {
+                Color::Red => Color::Red,
+                Color::Green => Color::Green,
+                Color::Blue => Color::Blue,
+            }
         }
     }
 
@@ -59,6 +62,20 @@ pub mod test_feq {
         }
     }
 
+    // More complex struct: holds a mutable Vec of ints
+    #[derive(PartialEq, Eq)]
+    pub struct IntTree {
+        pub nodes: Vec<i64>,
+    }
+
+    impl Clone for IntTree {
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@
+        {
+            IntTree { nodes: self.nodes.clone() }
+        }
+    }
+
     impl View for IntTree {
         type V = Seq<int>;
         open spec fn view(&self) -> Self::V {
@@ -66,19 +83,10 @@ pub mod test_feq {
         }
     }
 
-
-    //!		5. spec fns
-
     // Trigger specs for per-type broadcast axioms
     pub open spec fn point_feq_trigger() -> bool { true }
-
     pub open spec fn color_feq_trigger() -> bool { true }
-
     pub open spec fn inttree_feq_trigger() -> bool { true }
-
-
-    //!		6. proof fns/broadcast groups
-
     // Per-type broadcast axioms for obeys_feq_full
     broadcast proof fn axiom_point_feq()
         requires #[trigger] point_feq_trigger()
@@ -100,9 +108,6 @@ pub mod test_feq {
         axiom_color_feq,
         axiom_inttree_feq,
     }
-
-
-    //!		9. exec fns
 
     // Tests for generic T - requires obeys_feq_full
     fn test_generic_reflexive<T: Eq + View + Clone + Sized>(x: T)
@@ -372,36 +377,5 @@ pub mod test_feq {
         }
     }
 
-
-    //!		10. derive impls
-
-    impl Clone for Point {
-        fn clone(&self) -> (result: Self)
-            ensures result == *self
-        {
-            Point { x: self.x, y: self.y }
-        }
-    }
-
-    impl Clone for Color {
-        fn clone(&self) -> (result: Self)
-            ensures result == *self
-        {
-            match self {
-                Color::Red => Color::Red,
-                Color::Green => Color::Green,
-                Color::Blue => Color::Blue,
-            }
-        }
-    }
-
-    impl Clone for IntTree {
-        fn clone(&self) -> (result: Self)
-            ensures result@ == self@
-        {
-            IntTree { nodes: self.nodes.clone() }
-        }
-    }
-
-} // verus!
+    } // verus!
 }

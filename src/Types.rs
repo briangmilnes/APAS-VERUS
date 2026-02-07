@@ -24,23 +24,6 @@ pub mod Types {
     // No custom implementations needed when B = bool
 
     verus! {
-    //!	1. imports
-    //!	3. type definitions
-    //!	4. view impls
-    //!	5. spec fns
-    //!	6. proof fns/broadcast groups
-    //!	7. traits
-    //!	8. impls
-
-    //!		1. imports
-
-    #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::*;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::hash::obeys_key_model;
-
-
-    //!		3. type definitions
 
     /// Graph view struct: vertices and arcs/edges as spec sets.
     #[verifier::reject_recursive_types(V)]
@@ -49,12 +32,49 @@ pub mod Types {
         pub A: Set<(V, V)>,
     }
 
+    /// Well-formedness for unlabeled graph views: finite sets and arc endpoints in V.
+    pub open spec fn wf_graph_view<V>(gv: GraphView<V>) -> bool {
+        &&& gv.V.finite()
+        &&& gv.A.finite()
+        &&& forall |u: V, w: V| 
+                #[trigger] gv.A.contains((u, w)) ==> 
+                    gv.V.contains(u) && gv.V.contains(w)
+    }
+    /// Well-formedness is preserved when taking a subset of arcs.
+    pub proof fn lemma_wf_graph_view_subset_arcs<V>(gv: GraphView<V>, arcs_subset: Set<(V, V)>)
+        requires
+            wf_graph_view(gv),
+            arcs_subset <= gv.A,
+        ensures
+            wf_graph_view(GraphView { V: gv.V, A: arcs_subset }),
+    {
+    }
+
     /// Labeled graph view struct: vertices and labeled arcs/edges.
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(L)]
     pub ghost struct LabGraphView<V, L> {
         pub V: Set<V>,
         pub A: Set<(V, V, L)>,
+    }
+
+    /// Well-formedness for labeled graph views: finite sets and arc endpoints in V.
+    pub open spec fn wf_lab_graph_view<V, L>(gv: LabGraphView<V, L>) -> bool {
+        &&& gv.V.finite()
+        &&& gv.A.finite()
+        &&& forall |u: V, w: V, l: L| 
+                #[trigger] gv.A.contains((u, w, l)) ==> 
+                    gv.V.contains(u) && gv.V.contains(w)
+    }
+
+    /// Well-formedness is preserved when taking a subset of arcs.
+    pub proof fn lemma_wf_lab_graph_view_subset_arcs<V,L>(gv: LabGraphView<V,L>, arcs_subset: Set<(V, V, L)>)
+        requires
+            wf_lab_graph_view(gv),
+            arcs_subset <= gv.A,
+        ensures
+            wf_lab_graph_view(LabGraphView { V: gv.V, A: arcs_subset }),
+    {
     }
 
     /// Triple wrapper for three-element tuples.
@@ -71,6 +91,18 @@ pub mod Types {
         pub key: K,
         pub val: V,
     }
+
+    /// Single-threaded friendly elements: Eq + Clone + Display + Debug + Sized + View.
+    pub trait StT: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+
+    /// Single-threaded predicate function (boolean function).
+    pub trait PredSt<T>: Fn(&T) -> B {}
+    impl<F, T> PredSt<T> for F where F: Fn(&T) -> B {}
+
+    /// Type that can be hashed and ordered (for graph vertices).
+    pub trait HashOrd: StT + Hash + Ord {}
+    impl<T> HashOrd for T where T: StT + Hash + Ord {}
 
     /// Edge wrapper to enable Display/Debug for pairs (V,V) under baseline bounds.
     #[verifier::reject_recursive_types(V)]
@@ -101,21 +133,6 @@ pub mod Types {
     /// Newtype wrapper for key-value pairs with better Display than tuples
     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Pair<K, V>(pub K, pub V);
-
-    /// - Newtype wrapper for Pair iterator to implement ForLoopGhostIterator (orphan rule).
-    /// - Currently unused due to Verus limitation - for loops don't recognize ForLoopGhostIteratorNew
-    ///   on newtype wrappers. Kept for future use when this is supported.
-    pub struct PairIter<'a, K: 'a, V: 'a>(pub std::collections::hash_set::Iter<'a, Pair<K, V>>);
-
-    /// Ghost iterator for iterating over Pair<K, V> in hash sets.
-    pub struct PairIterGhostIterator<'a, K, V> {
-        pub pos: int,
-        pub elements: Seq<Pair<K, V>>,
-        pub phantom: core::marker::PhantomData<&'a ()>,
-    }
-
-
-    //!		4. view impls
 
     impl<K: vstd::prelude::View, V: vstd::prelude::View> vstd::prelude::View for Pair<K, V> {
         type V = (K::V, V::V);
@@ -165,28 +182,33 @@ pub mod Types {
         open spec fn view(&self) -> (K::V, V::V) {(self.key@, self.val@)}
     }
 
-
-    //!		5. spec fns
-
-    /// Well-formedness for unlabeled graph views: finite sets and arc endpoints in V.
-    pub open spec fn wf_graph_view<V>(gv: GraphView<V>) -> bool {
-        &&& gv.V.finite()
-        &&& gv.A.finite()
-        &&& forall |u: V, w: V| 
-                #[trigger] gv.A.contains((u, w)) ==> 
-                    gv.V.contains(u) && gv.V.contains(w)
+    /// - Axiom that Pair's view is injective (needed for hash collections)
+    /// - If two pairs have the same view, they are equal
+    pub broadcast proof fn axiom_Pair_view_injective<K: vstd::prelude::View, V: vstd::prelude::View>(p1: Pair<K, V>, p2: Pair<K, V>)
+        requires
+            #[trigger] p1@ == #[trigger] p2@,
+        ensures
+            p1 == p2,
+    {
+        admit();
     }
 
-    /// Well-formedness for labeled graph views: finite sets and arc endpoints in V.
-    pub open spec fn wf_lab_graph_view<V, L>(gv: LabGraphView<V, L>) -> bool {
-        &&& gv.V.finite()
-        &&& gv.A.finite()
-        &&& forall |u: V, w: V, l: L| 
-                #[trigger] gv.A.contains((u, w, l)) ==> 
-                    gv.V.contains(u) && gv.V.contains(w)
-    }
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::obeys_key_model;
 
     pub open spec fn Pair_feq_trigger<K, V>() -> bool { true }
+
+    pub broadcast proof fn axiom_Pair_feq<K: Eq + vstd::prelude::View + Clone + Sized, V: Eq + vstd::prelude::View + Clone + Sized>()
+        requires #[trigger] Pair_feq_trigger::<K, V>()
+        ensures obeys_feq_full::<Pair<K, V>>()
+    { admit(); }
+
+    pub broadcast group group_Pair_axioms {
+        axiom_Pair_view_injective,
+        axiom_Pair_feq,
+    }
 
     /// For Verus wrapped hash tables we need obeys_key_model and for full equality we need obeys_feq_full.
     pub open spec fn valid_key_type_Pair<K: Eq + View + Clone + Sized + Hash, V: Eq + View + Clone + Sized + Hash>() -> bool {
@@ -199,93 +221,6 @@ pub mod Types {
     }
 
     pub open spec fn Edge_feq_trigger<V>() -> bool { true }
-
-    /// For Verus wrapped hash tables we need obeys_key_model and for full equality we need obeys_feq_full.
-    pub open spec fn valid_key_type_Edge<V: StT + Hash>() -> bool {
-        &&& obeys_key_model::<V>() && obeys_key_model::<Edge<V>>()
-        &&& obeys_feq_full::<V>() && obeys_feq_full::<Edge<V>>()
-    }
-
-    pub open spec fn obeys_feq_full_Edge<V: StT>() -> bool {
-        obeys_feq_full::<V>() && obeys_feq_full::<Edge<V>>()
-    }
-
-    pub open spec fn LabEdge_feq_trigger<V: StT + Hash, L: StT + Hash>() -> bool { true }
-
-    pub open spec fn valid_key_type_LabEdge<V: StT + Hash, L: StT + Hash>() -> bool {
-        &&& obeys_key_model::<V>() && obeys_key_model::<L>() && obeys_key_model::<LabEdge<V, L>>()
-        &&& obeys_feq_full::<V>() && obeys_feq_full::<L>() && obeys_feq_full::<LabEdge<V, L>>()
-    }
-
-    pub open spec fn WeightedEdge_feq_trigger<V: StT + Hash, W: StT + Hash>() -> bool { true }
-
-    pub open spec fn valid_key_type_WeightedEdge<V: StT + Hash, W: StT + Hash>() -> bool {
-        &&& obeys_key_model::<V>() && obeys_key_model::<W>() && obeys_key_model::<WeightedEdge<V, W>>()
-        &&& obeys_feq_full::<V>() && obeys_feq_full::<W>() && obeys_feq_full::<WeightedEdge<V, W>>()
-        // Also require LabEdge since WeightedGraph implementations use LabDirGraph internally
-        &&& obeys_key_model::<LabEdge<V, W>>() && obeys_feq_full::<LabEdge<V, W>>()
-        // Also require Triple and Pair for edge collections and neighbor results
-        &&& obeys_key_model::<Triple<V, V, W>>() && obeys_feq_full::<Triple<V, V, W>>()
-        &&& obeys_key_model::<Pair<V, W>>() && obeys_feq_full::<Pair<V, W>>()
-    }
-
-    pub open spec fn WeightedLabEdge_feq_trigger<V: StT + Hash, L: StT + Hash, W: StT + Hash>() -> bool { true }
-
-    pub open spec fn valid_key_type_WeightedLabEdge<V: StT + Hash, L: StT + Hash, W: StT + Hash>() -> bool {
-        &&& obeys_key_model::<V>() && obeys_key_model::<L>() && obeys_key_model::<W>() && obeys_key_model::<WeightedLabEdge<V, L, W>>()
-        &&& obeys_feq_full::<V>() && obeys_feq_full::<L>() && obeys_feq_full::<W>() && obeys_feq_full::<WeightedLabEdge<V, L, W>>()
-    }
-
-    pub open spec fn Triple_feq_trigger<A: StT + Hash, B: StT + Hash, C: StT + Hash>() -> bool { true }
-
-    pub open spec fn valid_key_type_Triple<A: StT + Hash, B: StT + Hash, C: StT + Hash>() -> bool {
-        &&& obeys_key_model::<A>() && obeys_key_model::<B>() && obeys_key_model::<C>() && obeys_key_model::<Triple<A, B, C>>()
-        &&& obeys_feq_full::<A>() && obeys_feq_full::<B>() && obeys_feq_full::<C>() && obeys_feq_full::<Triple<A, B, C>>()
-    }
-
-
-    //!		6. proof fns/broadcast groups
-
-    /// Well-formedness is preserved when taking a subset of arcs.
-    pub proof fn lemma_wf_graph_view_subset_arcs<V>(gv: GraphView<V>, arcs_subset: Set<(V, V)>)
-        requires
-            wf_graph_view(gv),
-            arcs_subset <= gv.A,
-        ensures
-            wf_graph_view(GraphView { V: gv.V, A: arcs_subset }),
-    {
-    }
-
-    /// Well-formedness is preserved when taking a subset of arcs.
-    pub proof fn lemma_wf_lab_graph_view_subset_arcs<V,L>(gv: LabGraphView<V,L>, arcs_subset: Set<(V, V, L)>)
-        requires
-            wf_lab_graph_view(gv),
-            arcs_subset <= gv.A,
-        ensures
-            wf_lab_graph_view(LabGraphView { V: gv.V, A: arcs_subset }),
-    {
-    }
-
-    /// - Axiom that Pair's view is injective (needed for hash collections)
-    /// - If two pairs have the same view, they are equal
-    pub broadcast proof fn axiom_Pair_view_injective<K: vstd::prelude::View, V: vstd::prelude::View>(p1: Pair<K, V>, p2: Pair<K, V>)
-        requires
-            #[trigger] p1@ == #[trigger] p2@,
-        ensures
-            p1 == p2,
-    {
-        admit();
-    }
-
-    pub broadcast proof fn axiom_Pair_feq<K: Eq + vstd::prelude::View + Clone + Sized, V: Eq + vstd::prelude::View + Clone + Sized>()
-        requires #[trigger] Pair_feq_trigger::<K, V>()
-        ensures obeys_feq_full::<Pair<K, V>>()
-    { admit(); }
-
-    pub broadcast group group_Pair_axioms {
-        axiom_Pair_view_injective,
-        axiom_Pair_feq,
-    }
 
     pub broadcast proof fn axiom_Edge_feq<V: StT>()
         requires #[trigger] Edge_feq_trigger::<V>()
@@ -302,6 +237,18 @@ pub mod Types {
         axiom_Edge_key_model,
     }
 
+    /// For Verus wrapped hash tables we need obeys_key_model and for full equality we need obeys_feq_full.
+    pub open spec fn valid_key_type_Edge<V: StT + Hash>() -> bool {
+        &&& obeys_key_model::<V>() && obeys_key_model::<Edge<V>>()
+        &&& obeys_feq_full::<V>() && obeys_feq_full::<Edge<V>>()
+    }
+
+    pub open spec fn obeys_feq_full_Edge<V: StT>() -> bool {
+        obeys_feq_full::<V>() && obeys_feq_full::<Edge<V>>()
+    }
+
+    pub open spec fn LabEdge_feq_trigger<V: StT + Hash, L: StT + Hash>() -> bool { true }
+
     pub broadcast proof fn axiom_LabEdge_feq<V: StT + Hash, L: StT + Hash>()
         requires #[trigger] LabEdge_feq_trigger::<V, L>()
         ensures obeys_feq_full::<LabEdge<V, L>>()
@@ -316,6 +263,13 @@ pub mod Types {
         axiom_LabEdge_feq,
         axiom_LabEdge_key_model,
     }
+
+    pub open spec fn valid_key_type_LabEdge<V: StT + Hash, L: StT + Hash>() -> bool {
+        &&& obeys_key_model::<V>() && obeys_key_model::<L>() && obeys_key_model::<LabEdge<V, L>>()
+        &&& obeys_feq_full::<V>() && obeys_feq_full::<L>() && obeys_feq_full::<LabEdge<V, L>>()
+    }
+
+    pub open spec fn WeightedEdge_feq_trigger<V: StT + Hash, W: StT + Hash>() -> bool { true }
 
     pub broadcast proof fn axiom_WeightedEdge_feq<V: StT + Hash, W: StT + Hash>()
         requires #[trigger] WeightedEdge_feq_trigger::<V, W>()
@@ -332,6 +286,18 @@ pub mod Types {
         axiom_WeightedEdge_key_model,
     }
 
+    pub open spec fn valid_key_type_WeightedEdge<V: StT + Hash, W: StT + Hash>() -> bool {
+        &&& obeys_key_model::<V>() && obeys_key_model::<W>() && obeys_key_model::<WeightedEdge<V, W>>()
+        &&& obeys_feq_full::<V>() && obeys_feq_full::<W>() && obeys_feq_full::<WeightedEdge<V, W>>()
+        // Also require LabEdge since WeightedGraph implementations use LabDirGraph internally
+        &&& obeys_key_model::<LabEdge<V, W>>() && obeys_feq_full::<LabEdge<V, W>>()
+        // Also require Triple and Pair for edge collections and neighbor results
+        &&& obeys_key_model::<Triple<V, V, W>>() && obeys_feq_full::<Triple<V, V, W>>()
+        &&& obeys_key_model::<Pair<V, W>>() && obeys_feq_full::<Pair<V, W>>()
+    }
+
+    pub open spec fn WeightedLabEdge_feq_trigger<V: StT + Hash, L: StT + Hash, W: StT + Hash>() -> bool { true }
+
     pub broadcast proof fn axiom_WeightedLabEdge_feq<V: StT + Hash, L: StT + Hash, W: StT + Hash>()
         requires #[trigger] WeightedLabEdge_feq_trigger::<V, L, W>()
         ensures obeys_feq_full::<WeightedLabEdge<V, L, W>>()
@@ -346,6 +312,13 @@ pub mod Types {
         axiom_WeightedLabEdge_feq,
         axiom_WeightedLabEdge_key_model,
     }
+
+    pub open spec fn valid_key_type_WeightedLabEdge<V: StT + Hash, L: StT + Hash, W: StT + Hash>() -> bool {
+        &&& obeys_key_model::<V>() && obeys_key_model::<L>() && obeys_key_model::<W>() && obeys_key_model::<WeightedLabEdge<V, L, W>>()
+        &&& obeys_feq_full::<V>() && obeys_feq_full::<L>() && obeys_feq_full::<W>() && obeys_feq_full::<WeightedLabEdge<V, L, W>>()
+    }
+
+    pub open spec fn Triple_feq_trigger<A: StT + Hash, B: StT + Hash, C: StT + Hash>() -> bool { true }
 
     pub broadcast proof fn axiom_Triple_feq<A: StT + Hash, B: StT + Hash, C: StT + Hash>()
         requires #[trigger] Triple_feq_trigger::<A, B, C>()
@@ -362,26 +335,22 @@ pub mod Types {
         axiom_Triple_key_model,
     }
 
+    pub open spec fn valid_key_type_Triple<A: StT + Hash, B: StT + Hash, C: StT + Hash>() -> bool {
+        &&& obeys_key_model::<A>() && obeys_key_model::<B>() && obeys_key_model::<C>() && obeys_key_model::<Triple<A, B, C>>()
+        &&& obeys_feq_full::<A>() && obeys_feq_full::<B>() && obeys_feq_full::<C>() && obeys_feq_full::<Triple<A, B, C>>()
+    }
 
-    //!		7. traits
+    /// - Newtype wrapper for Pair iterator to implement ForLoopGhostIterator (orphan rule).
+    /// - Currently unused due to Verus limitation - for loops don't recognize ForLoopGhostIteratorNew
+    ///   on newtype wrappers. Kept for future use when this is supported.
+    pub struct PairIter<'a, K: 'a, V: 'a>(pub std::collections::hash_set::Iter<'a, Pair<K, V>>);
 
-    /// Single-threaded friendly elements: Eq + Clone + Display + Debug + Sized + View.
-    pub trait StT: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
-
-    /// Single-threaded predicate function (boolean function).
-    pub trait PredSt<T>: Fn(&T) -> B {}
-
-    /// Type that can be hashed and ordered (for graph vertices).
-    pub trait HashOrd: StT + Hash + Ord {}
-
-
-    //!		8. impls
-
-    impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
-
-    impl<F, T> PredSt<T> for F where F: Fn(&T) -> B {}
-
-    impl<T> HashOrd for T where T: StT + Hash + Ord {}
+    /// Ghost iterator for iterating over Pair<K, V> in hash sets.
+    pub struct PairIterGhostIterator<'a, K, V> {
+        pub pos: int,
+        pub elements: Seq<Pair<K, V>>,
+        pub phantom: core::marker::PhantomData<&'a ()>,
+    }
 
     impl<'a, K: 'a, V: 'a> vstd::pervasive::ForLoopGhostIteratorNew for PairIter<'a, K, V> {
         type GhostIter = PairIterGhostIterator<'a, K, V>;
@@ -432,7 +401,7 @@ pub mod Types {
         }
     }
 
-} // verus!
+    } // verus!
 
     /// Type supporting arithmetic operations (for reductions). Must be outside verus! block because Default is not supported.
     pub trait ArithmeticT: StT + Add<Output = Self> + Default + Copy {}
