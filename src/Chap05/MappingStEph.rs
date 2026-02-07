@@ -289,6 +289,19 @@ verus! {
         }
     }
 
+    impl<'a, X: StT + Hash, Y: StT + Hash> std::iter::IntoIterator for &'a MappingStEph<X, Y> {
+        type Item = &'a Pair<X, Y>;
+        type IntoIter = MappingStEphIter<'a, X, Y>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires valid_key_type_Pair::<X, Y>(), self.is_functional()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, p: Pair<X, Y>| p@).to_set() ==
+                    Set::new(|p: (X::V, Y::V)| self@.dom().contains(p.0) && self@[p.0] == p.1),
+                it@.1.no_duplicates(),
+        { self.iter() }
+    }
+
     impl<A: StT + Hash, B: StT + Hash> Clone for MappingStEph<A, B> {
         fn clone(&self) -> (clone: Self)
             ensures clone@ == self@, self.is_functional() ==> clone.is_functional()

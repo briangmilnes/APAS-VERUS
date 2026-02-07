@@ -315,6 +315,18 @@ verus! {
         open spec fn view(&self) -> Self::V { self.elements@ }
     }
 
+    impl<'a, T: StT + Hash> std::iter::IntoIterator for &'a SetMtEph<T> {
+        type Item = &'a T;
+        type IntoIter = SetMtEphIter<'a, T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires valid_key_type::<T>()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, k: T| k@).to_set() == self@,
+                it@.1.no_duplicates(),
+        { self.iter() }
+    }
+
     impl<T: StT + Hash> Clone for SetMtEph<T> {
         fn clone(&self) -> (clone: Self)
             ensures clone@.finite(), clone@ == self@

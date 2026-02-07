@@ -226,6 +226,18 @@ verus! {
         open spec fn view(&self) -> Self::V { self.pairs@ }
     }
 
+    impl<'a, X: StT + Hash, Y: StT + Hash> std::iter::IntoIterator for &'a RelationStEph<X, Y> {
+        type Item = &'a Pair<X, Y>;
+        type IntoIter = RelationStEphIter<'a, X, Y>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires valid_key_type_Pair::<X, Y>()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, p: Pair<X, Y>| p@).to_set() == self@,
+                it@.1.no_duplicates(),
+        { self.iter() }
+    }
+
     impl<A: StT + Hash, B: StT + Hash> Clone for RelationStEph<A, B> {
         fn clone(&self) -> (clone: Self)
             ensures clone@.finite(), clone@ == self@
