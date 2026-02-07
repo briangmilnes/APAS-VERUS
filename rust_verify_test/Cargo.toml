@@ -38,6 +38,14 @@ path = "tests/Chap05/RelationStEph.rs"
 name = "MappingStEph"
 path = "tests/Chap05/MappingStEph.rs"
 
+[[test]]
+name = "ProveRelationStEph"
+path = "tests/Chap05/ProveRelationStEph.rs"
+
+[[test]]
+name = "ProveMappingStEph"
+path = "tests/Chap05/ProveMappingStEph.rs"
+
 # Chap06 iterator proof tests
 [[test]]
 name = "ProveDirGraphStEph"
@@ -70,6 +78,54 @@ path = "tests/Chap06/ProveLabUnDirGraphStEph.rs"
 [[test]]
 name = "ProveLabUnDirGraphMtEph"
 path = "tests/Chap06/ProveLabUnDirGraphMtEph.rs"
+
+[[test]]
+name = "ProveWeightedDirGraphStEphU8"
+path = "tests/Chap06/ProveWeightedDirGraphStEphU8.rs"
+
+[[test]]
+name = "ProveWeightedDirGraphStEphU16"
+path = "tests/Chap06/ProveWeightedDirGraphStEphU16.rs"
+
+[[test]]
+name = "ProveWeightedDirGraphStEphU32"
+path = "tests/Chap06/ProveWeightedDirGraphStEphU32.rs"
+
+[[test]]
+name = "ProveWeightedDirGraphStEphU64"
+path = "tests/Chap06/ProveWeightedDirGraphStEphU64.rs"
+
+[[test]]
+name = "ProveWeightedDirGraphStEphU128"
+path = "tests/Chap06/ProveWeightedDirGraphStEphU128.rs"
+
+[[test]]
+name = "ProveWeightedDirGraphStEphUsize"
+path = "tests/Chap06/ProveWeightedDirGraphStEphUsize.rs"
+
+[[test]]
+name = "ProveWeightedDirGraphStEphI8"
+path = "tests/Chap06/ProveWeightedDirGraphStEphI8.rs"
+
+[[test]]
+name = "ProveWeightedDirGraphStEphI16"
+path = "tests/Chap06/ProveWeightedDirGraphStEphI16.rs"
+
+[[test]]
+name = "ProveWeightedDirGraphStEphI32"
+path = "tests/Chap06/ProveWeightedDirGraphStEphI32.rs"
+
+[[test]]
+name = "ProveWeightedDirGraphStEphI64"
+path = "tests/Chap06/ProveWeightedDirGraphStEphI64.rs"
+
+[[test]]
+name = "ProveWeightedDirGraphStEphI128"
+path = "tests/Chap06/ProveWeightedDirGraphStEphI128.rs"
+
+[[test]]
+name = "ProveWeightedDirGraphStEphIsize"
+path = "tests/Chap06/ProveWeightedDirGraphStEphIsize.rs"
 
 # Chap17 iterator proof tests
 [[test]]
@@ -104,3 +160,16 @@ path = "tests/Chap18/ProveLinkedListStEph.rs"
 [[test]]
 name = "ProveLinkedListStPer"
 path = "tests/Chap18/ProveLinkedListStPer.rs"
+
+# Chap19 iterator proof tests
+[[test]]
+name = "ProveChap19ArraySeqStEph"
+path = "tests/Chap19/ProveArraySeqStEph.rs"
+
+[[test]]
+name = "ProveChap19ArraySeqStPer"
+path = "tests/Chap19/ProveArraySeqStPer.rs"
+
+[[test]]
+name = "ProveChap19ArraySeqMtEph"
+path = "tests/Chap19/ProveArraySeqMtEph.rs"
