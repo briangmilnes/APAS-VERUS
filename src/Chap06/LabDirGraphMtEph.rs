@@ -16,15 +16,28 @@ pub mod LabDirGraphMtEph {
     use crate::{ParaPair, SetLit};
 
     verus! {
+    //!	1. imports
+    //!	2. broadcast use
+    //!	3. type definitions
+    //!	4. view impls
+    //!	5. spec fns
+    //!	7. traits
+    //!	8. impls
+    //!	9. exec fns
+    //!	10. derive impls
+
+    //!		1. imports
 
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
-
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::Types::Types::*;
+
+
+    //!		2. broadcast use
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -33,9 +46,8 @@ pub mod LabDirGraphMtEph {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
-    pub open spec fn valid_key_type_for_lab_graph<V: StTInMtT + Hash, L: StTInMtT + Hash>() -> bool {
-        valid_key_type_LabEdge::<V, L>()
-    }
+
+    //!		3. type definitions
 
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(L)]
@@ -44,13 +56,8 @@ pub mod LabDirGraphMtEph {
         pub labeled_arcs: SetStEph<LabEdge<V, L>>,
     }
 
-    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> Clone for LabDirGraphMtEph<V, L> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
-        {
-            LabDirGraphMtEph { vertices: self.vertices.clone(), labeled_arcs: self.labeled_arcs.clone() }
-        }
-    }
+
+    //!		4. view impls
 
     impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> View for LabDirGraphMtEph<V, L> {
         type V = LabGraphView<<V as View>::V, <L as View>::V>;
@@ -59,10 +66,15 @@ pub mod LabDirGraphMtEph {
         }
     }
 
-    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LabDirGraphMtEph<V, L> {
-        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
-        pub open spec fn spec_labeled_arcs(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_arcs@ }
+
+    //!		5. spec fns
+
+    pub open spec fn valid_key_type_for_lab_graph<V: StTInMtT + Hash, L: StTInMtT + Hash>() -> bool {
+        valid_key_type_LabEdge::<V, L>()
     }
+
+
+    //!		7. traits
 
     pub trait LabDirGraphMtEphTrait<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> 
         : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized 
@@ -178,6 +190,183 @@ pub mod LabDirGraphMtEph {
                 n_minus@ == self.spec_n_minus(v@),
                 n_minus@ <= self@.V;
     }
+
+
+    //!		8. impls
+
+    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LabDirGraphMtEph<V, L> {
+        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
+        pub open spec fn spec_labeled_arcs(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_arcs@ }
+    }
+
+    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LabDirGraphMtEphTrait<V, L>
+        for LabDirGraphMtEph<V, L>
+    {
+        fn empty() -> (g: Self) {
+            LabDirGraphMtEph {
+                vertices: SetStEph::empty(),
+                labeled_arcs: SetStEph::empty(),
+            }
+        }
+
+        fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: Self) {
+            LabDirGraphMtEph { vertices, labeled_arcs }
+        }
+
+        fn vertices(&self) -> (v: &SetStEph<V>) { &self.vertices }
+
+        fn labeled_arcs(&self) -> (a: &SetStEph<LabEdge<V, L>>) { &self.labeled_arcs }
+
+        fn arcs(&self) -> (arcs: SetStEph<Edge<V>>) {
+            let mut arcs: SetStEph<Edge<V>> = SetStEph::empty();
+            let mut it = self.labeled_arcs.iter();
+            let ghost la_seq = it@.1;
+            let ghost la_view = self@.A;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, L>(),
+                    it@.0 <= la_seq.len(),
+                    it@.1 == la_seq,
+                    la_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == la_view,
+                    arcs@ == Set::new(|e: (V::V, V::V)| 
+                        exists |i: int| #![trigger la_seq[i]] 0 <= i < it@.0 && la_seq[i]@.0 == e.0 && la_seq[i]@.1 == e.1),
+                decreases la_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            assert forall |e: (V::V, V::V)| #[trigger] arcs@.contains(e) implies 
+                                (exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l))) by {
+                                if arcs@.contains(e) {
+                                    let i = choose |i: int| #![trigger la_seq[i]] 0 <= i < la_seq.len() && la_seq[i]@.0 == e.0 && la_seq[i]@.1 == e.1;
+                                    lemma_seq_index_in_map_to_set(la_seq, i);
+                                }
+                            }
+                            assert forall |e: (V::V, V::V)| 
+                                (exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l))) implies 
+                                arcs@.contains(e) by {
+                                if exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l)) {
+                                    let l = choose |l: L::V| #![trigger la_view.contains((e.0, e.1, l))] la_view.contains((e.0, e.1, l));
+                                    lemma_map_to_set_contains_index(la_seq, (e.0, e.1, l));
+                                }
+                            }
+                        }
+                        return arcs;
+                    },
+                    Some(labeled_arc) => {
+                        let _ = arcs.insert(Edge(labeled_arc.0.clone_plus(), labeled_arc.1.clone_plus()));
+                    },
+                }
+            }
+        }
+
+        fn add_vertex(&mut self, v: V) { let _ = self.vertices.insert(v); }
+
+        fn add_labeled_arc(&mut self, from: V, to: V, label: L) {
+            let _ = self.vertices.insert(from.clone_plus());
+            let _ = self.vertices.insert(to.clone_plus());
+            let _ = self.labeled_arcs.insert(LabEdge(from, to, label));
+        }
+
+        fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>) {
+            let mut it = self.labeled_arcs.iter();
+            let ghost la_seq = it@.1;
+            let ghost la_view = self@.A;
+            let ghost from_view = from@;
+            let ghost to_view = to@;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, L>(),
+                    it@.0 <= la_seq.len(),
+                    it@.1 == la_seq,
+                    la_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == la_view,
+                    forall |i: int| #![trigger la_seq[i]] 0 <= i < it@.0 ==> !(la_seq[i]@.0 == from_view && la_seq[i]@.1 == to_view),
+                decreases la_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            assert forall |l: L::V| !la_view.contains((from_view, to_view, l)) by {
+                                if la_view.contains((from_view, to_view, l)) {
+                                    lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
+                                }
+                            }
+                        }
+                        return None;
+                    },
+                    Some(labeled_arc) => {
+                        if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
+                            proof {
+                                let idx = it@.0 - 1;
+                                lemma_seq_index_in_map_to_set(la_seq, idx);
+                            }
+                            return Some(&labeled_arc.2);
+                        }
+                    },
+                }
+            }
+        }
+
+        fn has_arc(&self, from: &V, to: &V) -> (b: bool) {
+            let mut it = self.labeled_arcs.iter();
+            let ghost la_seq = it@.1;
+            let ghost la_view = self@.A;
+            let ghost from_view = from@;
+            let ghost to_view = to@;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            loop
+                invariant
+                    valid_key_type_LabEdge::<V, L>(),
+                    it@.0 <= la_seq.len(),
+                    it@.1 == la_seq,
+                    la_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == la_view,
+                    forall |i: int| #![trigger la_seq[i]] 0 <= i < it@.0 ==> !(la_seq[i]@.0 == from_view && la_seq[i]@.1 == to_view),
+                decreases la_seq.len() - it@.0,
+            {
+                match it.next() {
+                    None => {
+                        proof {
+                            assert forall |l: L::V| !la_view.contains((from_view, to_view, l)) by {
+                                if la_view.contains((from_view, to_view, l)) {
+                                    lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
+                                }
+                            }
+                        }
+                        return false;
+                    },
+                    Some(labeled_arc) => {
+                        if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
+                            proof {
+                                let idx = it@.0 - 1;
+                                lemma_seq_index_in_map_to_set(la_seq, idx);
+                            }
+                            return true;
+                        }
+                    },
+                }
+            }
+        }
+
+        /// out-neighbors
+        fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
+            let arcs = self.labeled_arcs.clone();
+            n_plus_par(self, v.clone_plus(), arcs)
+        }
+
+        /// in-neighbors
+        fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
+            let arcs = self.labeled_arcs.clone();
+            n_minus_par(self, v.clone_plus(), arcs)
+        }
+    }
+
+
+    //!		9. exec fns
 
     /// out-neighbors: Parallel arc filtering using set split.
     fn n_plus_par<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(
@@ -426,173 +615,18 @@ pub mod LabDirGraphMtEph {
         }
     }
 
-    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LabDirGraphMtEphTrait<V, L>
-        for LabDirGraphMtEph<V, L>
-    {
-        fn empty() -> (g: Self) {
-            LabDirGraphMtEph {
-                vertices: SetStEph::empty(),
-                labeled_arcs: SetStEph::empty(),
-            }
-        }
 
-        fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: Self) {
-            LabDirGraphMtEph { vertices, labeled_arcs }
-        }
+    //!		10. derive impls
 
-        fn vertices(&self) -> (v: &SetStEph<V>) { &self.vertices }
-
-        fn labeled_arcs(&self) -> (a: &SetStEph<LabEdge<V, L>>) { &self.labeled_arcs }
-
-        fn arcs(&self) -> (arcs: SetStEph<Edge<V>>) {
-            let mut arcs: SetStEph<Edge<V>> = SetStEph::empty();
-            let mut it = self.labeled_arcs.iter();
-            let ghost la_seq = it@.1;
-            let ghost la_view = self@.A;
-
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
-                invariant
-                    valid_key_type_LabEdge::<V, L>(),
-                    it@.0 <= la_seq.len(),
-                    it@.1 == la_seq,
-                    la_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == la_view,
-                    arcs@ == Set::new(|e: (V::V, V::V)| 
-                        exists |i: int| #![trigger la_seq[i]] 0 <= i < it@.0 && la_seq[i]@.0 == e.0 && la_seq[i]@.1 == e.1),
-                decreases la_seq.len() - it@.0,
-            {
-                match it.next() {
-                    None => {
-                        proof {
-                            assert forall |e: (V::V, V::V)| #[trigger] arcs@.contains(e) implies 
-                                (exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l))) by {
-                                if arcs@.contains(e) {
-                                    let i = choose |i: int| #![trigger la_seq[i]] 0 <= i < la_seq.len() && la_seq[i]@.0 == e.0 && la_seq[i]@.1 == e.1;
-                                    lemma_seq_index_in_map_to_set(la_seq, i);
-                                }
-                            }
-                            assert forall |e: (V::V, V::V)| 
-                                (exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l))) implies 
-                                arcs@.contains(e) by {
-                                if exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l)) {
-                                    let l = choose |l: L::V| #![trigger la_view.contains((e.0, e.1, l))] la_view.contains((e.0, e.1, l));
-                                    lemma_map_to_set_contains_index(la_seq, (e.0, e.1, l));
-                                }
-                            }
-                        }
-                        return arcs;
-                    },
-                    Some(labeled_arc) => {
-                        let _ = arcs.insert(Edge(labeled_arc.0.clone_plus(), labeled_arc.1.clone_plus()));
-                    },
-                }
-            }
-        }
-
-        fn add_vertex(&mut self, v: V) { let _ = self.vertices.insert(v); }
-
-        fn add_labeled_arc(&mut self, from: V, to: V, label: L) {
-            let _ = self.vertices.insert(from.clone_plus());
-            let _ = self.vertices.insert(to.clone_plus());
-            let _ = self.labeled_arcs.insert(LabEdge(from, to, label));
-        }
-
-        fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>) {
-            let mut it = self.labeled_arcs.iter();
-            let ghost la_seq = it@.1;
-            let ghost la_view = self@.A;
-            let ghost from_view = from@;
-            let ghost to_view = to@;
-
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
-                invariant
-                    valid_key_type_LabEdge::<V, L>(),
-                    it@.0 <= la_seq.len(),
-                    it@.1 == la_seq,
-                    la_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == la_view,
-                    forall |i: int| #![trigger la_seq[i]] 0 <= i < it@.0 ==> !(la_seq[i]@.0 == from_view && la_seq[i]@.1 == to_view),
-                decreases la_seq.len() - it@.0,
-            {
-                match it.next() {
-                    None => {
-                        proof {
-                            assert forall |l: L::V| !la_view.contains((from_view, to_view, l)) by {
-                                if la_view.contains((from_view, to_view, l)) {
-                                    lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
-                                }
-                            }
-                        }
-                        return None;
-                    },
-                    Some(labeled_arc) => {
-                        if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
-                            proof {
-                                let idx = it@.0 - 1;
-                                lemma_seq_index_in_map_to_set(la_seq, idx);
-                            }
-                            return Some(&labeled_arc.2);
-                        }
-                    },
-                }
-            }
-        }
-
-        fn has_arc(&self, from: &V, to: &V) -> (b: bool) {
-            let mut it = self.labeled_arcs.iter();
-            let ghost la_seq = it@.1;
-            let ghost la_view = self@.A;
-            let ghost from_view = from@;
-            let ghost to_view = to@;
-
-            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-            loop
-                invariant
-                    valid_key_type_LabEdge::<V, L>(),
-                    it@.0 <= la_seq.len(),
-                    it@.1 == la_seq,
-                    la_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == la_view,
-                    forall |i: int| #![trigger la_seq[i]] 0 <= i < it@.0 ==> !(la_seq[i]@.0 == from_view && la_seq[i]@.1 == to_view),
-                decreases la_seq.len() - it@.0,
-            {
-                match it.next() {
-                    None => {
-                        proof {
-                            assert forall |l: L::V| !la_view.contains((from_view, to_view, l)) by {
-                                if la_view.contains((from_view, to_view, l)) {
-                                    lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
-                                }
-                            }
-                        }
-                        return false;
-                    },
-                    Some(labeled_arc) => {
-                        if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
-                            proof {
-                                let idx = it@.0 - 1;
-                                lemma_seq_index_in_map_to_set(la_seq, idx);
-                            }
-                            return true;
-                        }
-                    },
-                }
-            }
-        }
-
-        /// out-neighbors
-        fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
-            let arcs = self.labeled_arcs.clone();
-            n_plus_par(self, v.clone_plus(), arcs)
-        }
-
-        /// in-neighbors
-        fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
-            let arcs = self.labeled_arcs.clone();
-            n_minus_par(self, v.clone_plus(), arcs)
+    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> Clone for LabDirGraphMtEph<V, L> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            LabDirGraphMtEph { vertices: self.vertices.clone(), labeled_arcs: self.labeled_arcs.clone() }
         }
     }
 
-    } // verus!
+} // verus!
 
     impl<V: StTInMtT + Hash, L: StTInMtT + Hash> Display for LabDirGraphMtEph<V, L> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {

@@ -7,21 +7,19 @@ pub mod total_ord_gen_axioms {
     use vstd::prelude::*;
 
     verus! {
+    //!	5. spec fns
+    //!	6. proof fns/broadcast groups
+    //!	7. traits
+    //!	8. impls
+    //!	9. exec fns
+
+    //!		5. spec fns
 
     // Marker spec to trigger broadcast axioms
     spec fn is_total_ord_gen<T: TotalOrdGenAxioms>() -> bool { true }
 
-    // Trait without axiom methods - just the specs
-    pub trait TotalOrdGenAxioms: PartialEq + Eq + Sized + View + Clone {
-        spec fn le_spec(&self, other: &Self) -> bool;
-    }
 
-    // Generic implementation - just the spec
-    impl<T: PartialEq + Eq + Sized + View + Clone> TotalOrdGenAxioms for T {
-        open spec fn le_spec(&self, other: &Self) -> bool {
-            true
-        }
-    }
+    //!		6. proof fns/broadcast groups
 
     // Broadcast axioms for equality
     broadcast proof fn axiom_eq_transitive<T: TotalOrdGenAxioms>()
@@ -86,6 +84,27 @@ pub mod total_ord_gen_axioms {
         axiom_le_total,
     }
 
+
+    //!		7. traits
+
+    // Trait without axiom methods - just the specs
+    pub trait TotalOrdGenAxioms: PartialEq + Eq + Sized + View + Clone {
+        spec fn le_spec(&self, other: &Self) -> bool;
+    }
+
+
+    //!		8. impls
+
+    // Generic implementation - just the spec
+    impl<T: PartialEq + Eq + Sized + View + Clone> TotalOrdGenAxioms for T {
+        open spec fn le_spec(&self, other: &Self) -> bool {
+            true
+        }
+    }
+
+
+    //!		9. exec fns
+
     // Test functions - no explicit axiom calls needed
     fn test_equality_axioms<T: TotalOrdGenAxioms>(x: T, y: T, z: T) {
         broadcast use group_total_ord_axioms;
@@ -133,5 +152,5 @@ pub mod total_ord_gen_axioms {
         test_ordering_axioms(5u64, 10u64, 15u64);
     }
 
-    } // verus!
+} // verus!
 }

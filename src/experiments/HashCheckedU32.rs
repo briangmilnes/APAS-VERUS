@@ -11,6 +11,40 @@ use std::hash::{Hash, Hasher};
 use std::fmt::{Display, Debug, Formatter};
 
 verus! {
+//!	5. spec fns
+//!	6. proof fns/broadcast groups
+//!	10. derive impls
+
+//!		5. spec fns
+
+// Axioms for CheckedU32 to work in hash collections
+pub open spec fn CheckedU32_feq_trigger() -> bool { true }
+
+pub open spec fn valid_key_type_CheckedU32() -> bool {
+    &&& obeys_key_model::<CheckedU32>()
+    &&& obeys_feq_full::<CheckedU32>()
+}
+
+
+//!		6. proof fns/broadcast groups
+
+pub broadcast proof fn axiom_CheckedU32_feq()
+    requires #[trigger] CheckedU32_feq_trigger()
+    ensures obeys_feq_full::<CheckedU32>()
+{ admit(); }
+
+pub broadcast proof fn axiom_CheckedU32_key_model()
+    requires #[trigger] CheckedU32_feq_trigger()
+    ensures obeys_key_model::<CheckedU32>()
+{ admit(); }
+
+pub broadcast group group_CheckedU32_axioms {
+    axiom_CheckedU32_feq,
+    axiom_CheckedU32_key_model,
+}
+
+
+//!		10. derive impls
 
 // Hash implementation - external_body since Hash trait isn't spec'd
 impl Hash for CheckedU32 {
@@ -29,29 +63,6 @@ impl PartialEq for CheckedU32 {
 }
 
 impl Eq for CheckedU32 {}
-
-// Axioms for CheckedU32 to work in hash collections
-pub open spec fn CheckedU32_feq_trigger() -> bool { true }
-
-pub broadcast proof fn axiom_CheckedU32_feq()
-    requires #[trigger] CheckedU32_feq_trigger()
-    ensures obeys_feq_full::<CheckedU32>()
-{ admit(); }
-
-pub broadcast proof fn axiom_CheckedU32_key_model()
-    requires #[trigger] CheckedU32_feq_trigger()
-    ensures obeys_key_model::<CheckedU32>()
-{ admit(); }
-
-pub broadcast group group_CheckedU32_axioms {
-    axiom_CheckedU32_feq,
-    axiom_CheckedU32_key_model,
-}
-
-pub open spec fn valid_key_type_CheckedU32() -> bool {
-    &&& obeys_key_model::<CheckedU32>()
-    &&& obeys_feq_full::<CheckedU32>()
-}
 
 } // verus!
 

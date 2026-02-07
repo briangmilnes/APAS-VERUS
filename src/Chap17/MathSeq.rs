@@ -27,6 +27,14 @@ pub mod MathSeq {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
+        //!	2. broadcast use
+        //!	3. type definitions
+        //!	4. view impls
+        //!	5. spec fns
+        //!	8. impls
+        //!	10. derive impls
+
+        //!		2. broadcast use
 
         broadcast use {
             // Vec
@@ -47,17 +55,18 @@ pub mod MathSeq {
             crate::vstdplus::feq::feq::group_feq_axioms,
             crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
         };
-        
-        pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
-            &&& obeys_key_model::<T>()
-                &&& obeys_feq_full::<T>()
-        }
-        
+
+
+        //!		3. type definitions
+
         #[verifier::reject_recursive_types(T)]
         pub struct MathSeqS<T: StT> {
             pub data: Vec<T>,
         }
-        
+
+
+        //!		4. view impls
+
         impl<T: StT> View for MathSeqS<T> {
             type V = Seq<T::V>;
             
@@ -65,7 +74,18 @@ pub mod MathSeq {
                 self.data@.map_values(|t: T| t@)
             }
         }
-        
+
+
+        //!		5. spec fns
+
+        pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
+            &&& obeys_key_model::<T>()
+                &&& obeys_feq_full::<T>()
+        }
+
+
+        //!		8. impls
+
         impl<T: StT + Hash> MathSeqS<T> {
             
             pub open spec fn spec_len(&self) -> nat {
@@ -467,17 +487,20 @@ pub mod MathSeq {
             self.data.into_iter()
         }
     }
-   
+
+    impl<T: StT> PartialEqSpecImpl for MathSeqS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+
+        //!		10. derive impls
+
     // Clone implementation outside verus! block
     impl<T: StT> Clone for MathSeqS<T> {
         fn clone(&self) -> Self {
             MathSeqS { data: self.data.clone() }
         }
-    }
-
-    impl<T: StT> PartialEqSpecImpl for MathSeqS<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
     impl<T: StT> Eq for MathSeqS<T> {}
@@ -492,7 +515,7 @@ pub mod MathSeq {
         }
     }
 
-    } // verus!
+} // verus!
 
     // Iterator methods outside verus! block
     impl<T: StT + Hash> MathSeqS<T> {

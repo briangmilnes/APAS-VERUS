@@ -17,6 +17,14 @@ pub mod UnDirGraphStEph {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
 verus! {
+    //!	2. broadcast use
+    //!	3. type definitions
+    //!	4. view impls
+    //!	7. traits
+    //!	8. impls
+    //!	10. derive impls
+
+    //!		2. broadcast use
 
     broadcast use {
         vstd::std_specs::hash::group_hash_axioms,
@@ -28,11 +36,17 @@ verus! {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
+
+    //!		3. type definitions
+
     #[verifier::reject_recursive_types(V)]
     pub struct UnDirGraphStEph<V: StT + Hash> {
         pub V: SetStEph<V>,
         pub E: SetStEph<Edge<V>>,
     }
+
+
+    //!		4. view impls
 
     impl<V: StT + Hash> View for UnDirGraphStEph<V> {
         type V = GraphView<<V as View>::V>;
@@ -42,6 +56,8 @@ verus! {
         }
     }
 
+
+    //!		7. traits
 
     pub trait UnDirGraphStEphTrait<V: StT + Hash>:
     View<V = GraphView<<V as View>::V>> + Sized {
@@ -146,6 +162,9 @@ verus! {
                 self@.V.contains(v@),
             ensures n == self.spec_degree(v@);
     }
+
+
+    //!		8. impls
 
     impl<V: StT + Hash> UnDirGraphStEphTrait<V> for UnDirGraphStEph<V> {
 
@@ -290,17 +309,20 @@ verus! {
         fn degree(&self, v: &V) -> (n: N) { self.ng(v).size() }
     }
 
+    impl<V: StT + Hash> PartialEqSpecImpl for UnDirGraphStEph<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+
+    //!		10. derive impls
+
     impl<V: StT + Hash> Clone for UnDirGraphStEph<V> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
             UnDirGraphStEph { V: self.V.clone(), E: self.E.clone() }
         }
-    }
-
-    impl<V: StT + Hash> PartialEqSpecImpl for UnDirGraphStEph<V> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
     impl<V: StT + Hash> Eq for UnDirGraphStEph<V> {}

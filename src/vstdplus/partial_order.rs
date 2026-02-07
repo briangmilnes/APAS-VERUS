@@ -9,6 +9,22 @@ pub mod partial_order {
     use vstd::prelude::*;
 
     verus! {
+    //!	5. spec fns
+    //!	7. traits
+    //!	8. impls
+
+    //!		5. spec fns
+
+    // Float implementations using uninterpreted specs (following vstd::std_specs::cmp pattern)
+    // Note: We do not assume obeys_partial_cmp_spec() for floats because Rust floating point
+    // operations are not guaranteed to be deterministic (see RFC 3514).
+// Veracity: USED
+    // Instead, we use uninterpreted functions that users can axiomatize.
+
+    pub uninterp spec fn partial_order_ensures<T>(x: T, y: T, o: Option<Ordering>) -> bool;
+
+
+    //!		7. traits
 
     pub trait PartialOrder: Sized {
         spec fn le(self, other: Self) -> bool;
@@ -47,6 +63,9 @@ pub mod partial_order {
                 }),
         ;
     }
+
+
+    //!		8. impls
 
     // Implementations for integer types (they're totally ordered, but we can implement PartialOrder)
     impl PartialOrder for u8 {
@@ -104,6 +123,7 @@ pub mod partial_order {
             }
         }
     }
+
 // Veracity: USED
 
     impl PartialOrder for u32 {
@@ -273,6 +293,7 @@ pub mod partial_order {
             }
         }
     }
+
 // Veracity: USED
 
     impl PartialOrder for i32 {
@@ -386,14 +407,6 @@ pub mod partial_order {
         }
     }
 
-    // Float implementations using uninterpreted specs (following vstd::std_specs::cmp pattern)
-    // Note: We do not assume obeys_partial_cmp_spec() for floats because Rust floating point
-    // operations are not guaranteed to be deterministic (see RFC 3514).
-// Veracity: USED
-    // Instead, we use uninterpreted functions that users can axiomatize.
-
-    pub uninterp spec fn partial_order_ensures<T>(x: T, y: T, o: Option<Ordering>) -> bool;
-
     impl PartialOrder for f32 {
         open spec fn le(self, other: Self) -> bool {
             arbitrary()
@@ -450,5 +463,5 @@ pub mod partial_order {
         }
     }
 
-    } // verus!
+} // verus!
 }

@@ -12,6 +12,27 @@ pub mod proven_partialeq {
     use vstd::prelude::*;
 
 verus! {
+    //!	3. type definitions
+    //!	4. view impls
+    //!	7. traits
+    //!	8. impls
+    //!	9. exec fns
+
+    //!		3. type definitions
+
+    // TEST 4: Implement for a wrapper struct type
+    pub struct MyInt { pub val: i32 }
+
+
+    //!		4. view impls
+
+    impl View for MyInt {
+        type V = i32;
+        open spec fn view(&self) -> i32 { self.val as i32 }
+    }
+
+
+    //!		7. traits
 
     // TEST 1: Trait with explicit axioms.
     pub trait ProvenPartialEq: View + Sized {
@@ -34,6 +55,9 @@ verus! {
             ensures forall |x: Self::V, y: Self::V, z: Self::V|
                 (Self::spec_eq(x, y) && Self::spec_eq(y, z)) ==> Self::spec_eq(x, z);
     }
+
+
+    //!		8. impls
 
     // TEST 2: Implement directly for i32
     impl ProvenPartialEq for i32 {
@@ -60,21 +84,6 @@ verus! {
         }
     }
 
-    // TEST 3: Use i32 impl (disambiguate from std PartialEq)
-    fn test_use_i32(a: i32, b: i32) -> (result: bool)
-        ensures result == (a@ == b@)
-    {
-        ProvenPartialEq::eq(&a, &b)
-    }
-
-    // TEST 4: Implement for a wrapper struct type
-    pub struct MyInt { pub val: i32 }
-    
-    impl View for MyInt {
-        type V = i32;
-        open spec fn view(&self) -> i32 { self.val as i32 }
-    }
-    
     impl ProvenPartialEq for MyInt {
         open spec fn spec_eq(a: i32, b: i32) -> bool { a == b }
         
@@ -97,6 +106,16 @@ verus! {
         proof fn proof_transitivity() {
             // Verus should prove: x == y && y == z ==> x == z
         }
+    }
+
+
+    //!		9. exec fns
+
+    // TEST 3: Use i32 impl (disambiguate from std PartialEq)
+    fn test_use_i32(a: i32, b: i32) -> (result: bool)
+        ensures result == (a@ == b@)
+    {
+        ProvenPartialEq::eq(&a, &b)
     }
 
     // TEST 5: Use MyInt impl

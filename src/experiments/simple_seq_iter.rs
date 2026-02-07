@@ -5,39 +5,33 @@ pub mod simple_seq_iter {
     use vstd::prelude::*;
 
     verus! {
+    //!	1. imports
+    //!	2. broadcast use
+    //!	3. type definitions
+    //!	4. view impls
+    //!	5. spec fns
+    //!	6. proof fns/broadcast groups
+    //!	7. traits
+    //!	8. impls
+    //!	9. exec fns
+
+    //!		1. imports
 
     use vstd::std_specs::clone::*;
+
+
+    //!		2. broadcast use
+
     broadcast use {
             vstd::seq_lib::group_seq_properties,
             crate::vstdplus::clone_view::clone_view::group_clone_view_axioms
     };
 
+
+    //!		3. type definitions
+
     #[verifier::reject_recursive_types(V)]
     pub struct SimpleSeq<V> {pub elements: Vec<V>, }
-
-    impl<V> View for SimpleSeq<V> {
-        type V = Seq<V>;
-        open spec fn view(&self) -> Seq<V> { self.elements@ }
-    }
-
-    pub trait SimpleSeqTrait<V: Clone>: Sized {
-        fn len(&self) -> usize;
-        fn new() -> Self;
-        fn push(&mut self, v: V);
-        fn iter(&self) -> (it: SimpleSeqIter<V>);
-    }
-
-    impl<V: Clone> SimpleSeqTrait<V> for SimpleSeq<V> {
-        fn len(&self) -> usize  { self.elements.len()} 
-        fn new() -> (s: Self)    ensures s@ == Seq::<V>::empty(),     { SimpleSeq { elements: Vec::new() } }
-        fn push(&mut self, v: V) ensures self@ == old(self)@.push(v), { self.elements.push(v); }
-
-        fn iter(&self) -> (it: SimpleSeqIter<V>)
-            ensures
-                it@ == (0int, self.elements@),
-                it.pos <= it.vec.len(),
-        { SimpleSeqIter { vec: self.elements.clone(), pos: 0, } }
-    }
 
     #[verifier::reject_recursive_types(V)]
     pub struct SimpleSeqIter<V> {
@@ -52,6 +46,14 @@ pub mod simple_seq_iter {
     #[verifier::reject_recursive_types(V)]
     pub struct SimpleSeqIterGhost<V> { pub pos: int, pub elements: Seq<V>,}
 
+
+    //!		4. view impls
+
+    impl<V> View for SimpleSeq<V> {
+        type V = Seq<V>;
+        open spec fn view(&self) -> Seq<V> { self.elements@ }
+    }
+
     // Iterator view is (position, full_sequence) tuple, matching vstd slice::Iter
     impl<V> View for SimpleSeqIter<V> {
         type V = (int, Seq<V>);
@@ -64,11 +66,17 @@ pub mod simple_seq_iter {
         open spec fn view(&self) -> Seq<V> { self.elements.take(self.pos) }
     }
 
+
+    //!		5. spec fns
+
     // As we have to have an assume in next, we show a clean next here with the right requires and ensures
     // and show that it proves, e.g., if it has the right requires it maintains our invariant.
 
     // The iterator invariant that should be maintained but we can't add to next's requires.
     pub open spec fn iter_invariant<V>(it: &SimpleSeqIter<V>) -> bool { it.pos <= it.vec@.len() }
+
+
+    //!		6. proof fns/broadcast groups
 
     // Our initial iterator ensures the invariant.
     proof fn lemma_iter_invariant<V: Clone>(s: &SimpleSeq<V>, it: SimpleSeqIter<V>)
@@ -78,40 +86,31 @@ pub mod simple_seq_iter {
             iter_invariant(&it),
     {}
 
-   // So to increase the confidence in our actual next, we prove this version that proves with
-   // the invariant.
-    fn assumption_free_next<V: Clone>(it: &mut SimpleSeqIter<V>) -> (result: Option<V>)
-        requires
-            iter_invariant(&old(it)),  
-        ensures
-            iter_invariant(it),
-            ({
-                let (old_index, old_seq) = old(it)@;
-                match result {
-                    None => {
-                        &&& it@ == old(it)@
-                        &&& old_index == old_seq.len()
-                        &&& it.pos == old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = it@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& vstd::pervasive::cloned(old_seq[old_index], element)
-                    },
-                }
-            }),
-    {
-        if it.pos < it.vec.len() {
-            let elem = it.vec[it.pos].clone();
-            it.pos = it.pos + 1;
-            Some(elem)
-        } else {
-            None
-        }
+
+    //!		7. traits
+
+    pub trait SimpleSeqTrait<V: Clone>: Sized {
+        fn len(&self) -> usize;
+        fn new() -> Self;
+        fn push(&mut self, v: V);
+        fn iter(&self) -> (it: SimpleSeqIter<V>);
     }
-   
+
+
+    //!		8. impls
+
+    impl<V: Clone> SimpleSeqTrait<V> for SimpleSeq<V> {
+        fn len(&self) -> usize  { self.elements.len()} 
+        fn new() -> (s: Self)    ensures s@ == Seq::<V>::empty(),     { SimpleSeq { elements: Vec::new() } }
+        fn push(&mut self, v: V) ensures self@ == old(self)@.push(v), { self.elements.push(v); }
+
+        fn iter(&self) -> (it: SimpleSeqIter<V>)
+            ensures
+                it@ == (0int, self.elements@),
+                it.pos <= it.vec.len(),
+        { SimpleSeqIter { vec: self.elements.clone(), pos: 0, } }
+    }
+
     impl<V: Clone> Iterator for SimpleSeqIter<V> {
         type Item = V;
 
@@ -239,6 +238,43 @@ pub mod simple_seq_iter {
     }
 */
 
+
+    //!		9. exec fns
+
+   // So to increase the confidence in our actual next, we prove this version that proves with
+   // the invariant.
+    fn assumption_free_next<V: Clone>(it: &mut SimpleSeqIter<V>) -> (result: Option<V>)
+        requires
+            iter_invariant(&old(it)),  
+        ensures
+            iter_invariant(it),
+            ({
+                let (old_index, old_seq) = old(it)@;
+                match result {
+                    None => {
+                        &&& it@ == old(it)@
+                        &&& old_index == old_seq.len()
+                        &&& it.pos == old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = it@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& vstd::pervasive::cloned(old_seq[old_index], element)
+                    },
+                }
+            }),
+    {
+        if it.pos < it.vec.len() {
+            let elem = it.vec[it.pos].clone();
+            it.pos = it.pos + 1;
+            Some(elem)
+        } else {
+            None
+        }
+    }
+
     pub fn simple_seq_copy_loop(s1: &SimpleSeq<u32>) -> (s2: SimpleSeq<u32>)
         ensures
             s2@ == s1@,
@@ -303,5 +339,5 @@ pub mod simple_seq_iter {
         s2
     }
 
-    } // verus!
+} // verus!
 }

@@ -6,37 +6,20 @@ pub mod pervasives {
     use vstd::prelude::*;
 
     verus! {
+    //!	5. spec fns
+    //!	6. proof fns/broadcast groups
+    //!	9. exec fns
 
-    // Test vstd::pervasive::unreached
+    //!		5. spec fns
+
+    // Approach 3: spec_comment - doesn't prove, just documents
     
-    // unreached<A>() has requires false, returns A
-    // It's in vstd::prelude so should be available
-    
-    pub fn test_unreached_in_match() -> u32 {
-        let x: Option<u32> = Some(42);
-        match x {
-            Some(v) => v,
-            None => {
-                // This branch is unreachable since x = Some(42)
-                // But Verus doesn't know that without proof
-                // unreached()  // Would need `requires false` to be satisfied
-                0  // Use dummy for now
-            }
-        }
+    pub open spec fn spec_comment(description: &str, claim: bool) -> bool {
+        true  // Always returns true, ignoring the claim
     }
-    
-    // Using unreached properly - must prove the branch is impossible
-    pub fn test_unreached_with_proof(x: u32) -> u32
-        requires x > 0,
-    {
-        if x > 0 {
-            x
-        } else {
-            // This branch is impossible given requires x > 0
-            proof { assert(false); }  // Proves this is unreachable
-            unreached()
-        }
-    }
+
+
+    //!		6. proof fns/broadcast groups
 
     // Approach 1: External body proof function
     
@@ -70,12 +53,6 @@ pub mod pervasives {
         assert(false);               // 1 != 2, contradiction
     }
 
-    // Approach 3: spec_comment - doesn't prove, just documents
-    
-    pub open spec fn spec_comment(description: &str, claim: bool) -> bool {
-        true  // Always returns true, ignoring the claim
-    }
-
     pub proof fn example_with_spec_comments() {
         assert(spec_comment("x should be positive", true));
         assert(spec_comment("this claim is false but passes", false));
@@ -89,5 +66,39 @@ pub mod pervasives {
         assume(false);
     }
 
-    } // verus!
+
+    //!		9. exec fns
+
+    // Test vstd::pervasive::unreached
+    
+    // unreached<A>() has requires false, returns A
+    // It's in vstd::prelude so should be available
+    
+    pub fn test_unreached_in_match() -> u32 {
+        let x: Option<u32> = Some(42);
+        match x {
+            Some(v) => v,
+            None => {
+                // This branch is unreachable since x = Some(42)
+                // But Verus doesn't know that without proof
+                // unreached()  // Would need `requires false` to be satisfied
+                0  // Use dummy for now
+            }
+        }
+    }
+
+    // Using unreached properly - must prove the branch is impossible
+    pub fn test_unreached_with_proof(x: u32) -> u32
+        requires x > 0,
+    {
+        if x > 0 {
+            x
+        } else {
+            // This branch is impossible given requires x > 0
+            proof { assert(false); }  // Proves this is unreachable
+            unreached()
+        }
+    }
+
+} // verus!
 }

@@ -20,6 +20,11 @@ pub mod ghost_type_invariant {
     use vstd::prelude::*;
 
     verus! {
+        //!	3. type definitions
+        //!	6. proof fns/broadcast groups
+        //!	8. impls
+
+        //!		3. type definitions
 
         /// A ghost directed graph with a type invariant enforcing well-formedness.
         #[verifier::reject_recursive_types(V)]
@@ -27,6 +32,18 @@ pub mod ghost_type_invariant {
             vertices: Set<V>,  // Must be private for type_invariant
             arcs: Set<(V, V)>, // Must be private for type_invariant
         }
+
+
+        //!		6. proof fns/broadcast groups
+
+        proof fn test_basic() {
+            let g: GhostDirGraph<int> = GhostDirGraph::empty();
+            let g = g.add_vertex(1).add_vertex(2).add_arc(1, 2);
+            assert(g.V().contains(1));
+        }
+
+
+        //!		8. impls
 
         impl<V> GhostDirGraph<V> {
             /// Well-formedness invariant.
@@ -77,12 +94,6 @@ pub mod ghost_type_invariant {
             }
         }
 
-        proof fn test_basic() {
-            let g: GhostDirGraph<int> = GhostDirGraph::empty();
-            let g = g.add_vertex(1).add_vertex(2).add_arc(1, 2);
-            assert(g.V().contains(1));
-        }
-
-    } // verus!
+} // verus!
 
 } // mod

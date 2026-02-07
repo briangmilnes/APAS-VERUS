@@ -16,15 +16,28 @@ pub mod LabUnDirGraphMtEph {
     use crate::{ParaPair, SetLit};
 
     verus! {
+    //!	1. imports
+    //!	2. broadcast use
+    //!	3. type definitions
+    //!	4. view impls
+    //!	5. spec fns
+    //!	7. traits
+    //!	8. impls
+    //!	9. exec fns
+    //!	10. derive impls
+
+    //!		1. imports
 
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
-
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::Types::Types::*;
+
+
+    //!		2. broadcast use
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -33,9 +46,8 @@ pub mod LabUnDirGraphMtEph {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
-    pub open spec fn valid_key_type_for_lab_graph<V: StTInMtT + Hash + Ord, L: StTInMtT + Hash>() -> bool {
-        valid_key_type_LabEdge::<V, L>()
-    }
+
+    //!		3. type definitions
 
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(L)]
@@ -44,13 +56,8 @@ pub mod LabUnDirGraphMtEph {
         pub labeled_edges: SetStEph<LabEdge<V, L>>,
     }
 
-    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> Clone for LabUnDirGraphMtEph<V, L> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
-        {
-            LabUnDirGraphMtEph { vertices: self.vertices.clone(), labeled_edges: self.labeled_edges.clone() }
-        }
-    }
+
+    //!		4. view impls
 
     impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> View for LabUnDirGraphMtEph<V, L> {
         type V = LabGraphView<<V as View>::V, <L as View>::V>;
@@ -59,19 +66,15 @@ pub mod LabUnDirGraphMtEph {
         }
     }
 
-    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> LabUnDirGraphMtEph<V, L> {
-        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
-        pub open spec fn spec_labeled_edges(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_edges@ }
 
-        /// Spec for neighbors computed from a subset of edges
-        pub open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V, L::V)>) -> Set<V::V> 
-            recommends 
-                wf_lab_graph_view(self@),
-                subedges <= self@.A,
-        {
-            Set::new(|w: V::V| exists |l: L::V| subedges.contains((v, w, l)) || subedges.contains((w, v, l)))
-        }
+    //!		5. spec fns
+
+    pub open spec fn valid_key_type_for_lab_graph<V: StTInMtT + Hash + Ord, L: StTInMtT + Hash>() -> bool {
+        valid_key_type_LabEdge::<V, L>()
     }
+
+
+    //!		7. traits
 
     pub trait LabUnDirGraphMtEphTrait<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static>
         : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized
@@ -155,177 +158,20 @@ pub mod LabUnDirGraphMtEph {
                 ng@ <= self@.V;
     }
 
-    /// Parallel edge filtering for neighbors using set split.
-    fn ng_par<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static>(
-        g: &LabUnDirGraphMtEph<V, L>, 
-        v: V, 
-        edges: SetStEph<LabEdge<V, L>>
-    ) -> (neighbors: SetStEph<V>)
-        requires
-            valid_key_type::<V>(),
-            valid_key_type_LabEdge::<V, L>(),
-            wf_lab_graph_view(g@),
-            edges@ <= g@.A,
-        ensures 
-            neighbors@ == g.spec_ng_from_set(v@, edges@),
-            neighbors@ <= g.spec_ng(v@)
-        decreases edges@.len()
-    {
-        let n = edges.size();
-        if n == 0 {
-            proof {
-                assert(g.spec_ng_from_set(v@, edges@) =~= Set::empty());
-            }
-            SetStEph::empty()
-        }
-        else if n == 1 {
-            let LabEdge(a, b, label) = edges.choose();
-            // edges@ contains (a@, b@, label@)
-            if feq(&a, &v) {
-                proof {
-                    // a@ == v@ by feq correctness
-                    // spec_ng_from_set = {w | exists l. edges@.contains((v@, w, l)) || edges@.contains((w, v@, l))}
-                    // Since edges@ is singleton {(a@, b@, label@)} with a@ == v@:
-                    //   (v@, w, l) in edges@ iff (v@, w, l) == (a@, b@, label@) iff w == b@
-                    //   (w, v@, l) in edges@ iff (w, v@, l) == (a@, b@, label@) iff w == a@ == v@ and v@ == b@
-                    // So the only neighbor is b@ (and possibly v@ if v@ == b@, but that's still just b@)
-                    
-                    assert forall |w: V::V| #![auto] Set::empty().insert(b@).contains(w) implies 
-                        g.spec_ng_from_set(v@, edges@).contains(w) by {
-                        assert(edges@.contains((a@, b@, label@)));
-                    }
-                    assert forall |w: V::V| #![auto] g.spec_ng_from_set(v@, edges@).contains(w) implies
-                        Set::empty().insert(b@).contains(w) by {
-                        let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
-                        assert(edges@.remove((a@, b@, label@)).len() == 0);
-                        if edges@.contains((v@, w, l)) {
-                            if (v@, w, l) != (a@, b@, label@) {
-                                assert(edges@.remove((a@, b@, label@)).contains((v@, w, l)));
-                            }
-                        } else {
-                            if (w, v@, l) != (a@, b@, label@) {
-                                assert(edges@.remove((a@, b@, label@)).contains((w, v@, l)));
-                            }
-                            // (w, v@, l) == (a@, b@, label@) means w == a@ == v@ and v@ == b@
-                            // so w == b@
-                        }
-                    }
-                    assert(Set::empty().insert(b@) =~= g.spec_ng_from_set(v@, edges@));
-                }
-                SetStEph::singleton(b.clone_plus())
-            } else if feq(&b, &v) {
-                proof {
-                    // a@ != v@ and b@ == v@
-                    // (v@, w, l) in edges@ iff (v@, w, l) == (a@, b@, label@) iff v@ == a@ (false)
-                    // (w, v@, l) in edges@ iff (w, v@, l) == (a@, b@, label@) iff w == a@ and v@ == b@ (true)
-                    // So the only neighbor is a@
-                    
-                    assert forall |w: V::V| #![auto] Set::empty().insert(a@).contains(w) implies 
-                        g.spec_ng_from_set(v@, edges@).contains(w) by {
-                        assert(edges@.contains((a@, b@, label@)));
-                    }
-                    assert forall |w: V::V| #![auto] g.spec_ng_from_set(v@, edges@).contains(w) implies
-                        Set::empty().insert(a@).contains(w) by {
-                        let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
-                        assert(edges@.remove((a@, b@, label@)).len() == 0);
-                        if edges@.contains((v@, w, l)) {
-                            if (v@, w, l) != (a@, b@, label@) {
-                                assert(edges@.remove((a@, b@, label@)).contains((v@, w, l)));
-                            }
-                            // (v@, w, l) == (a@, b@, label@) means v@ == a@ which is false
-                        }
-                        if edges@.contains((w, v@, l)) {
-                            if (w, v@, l) != (a@, b@, label@) {
-                                assert(edges@.remove((a@, b@, label@)).contains((w, v@, l)));
-                            }
-                            // (w, v@, l) == (a@, b@, label@) means w == a@
-                        }
-                    }
-                    assert(Set::empty().insert(a@) =~= g.spec_ng_from_set(v@, edges@));
-                }
-                SetStEph::singleton(a.clone_plus())
-            } else {
-                proof {
-                    // a@ != v@ and b@ != v@
-                    // (v@, w, l) in edges@ requires v@ == a@ (false)
-                    // (w, v@, l) in edges@ requires v@ == b@ (false)
-                    // So no w satisfies the condition
-                    
-                    assert forall |w: V::V| #![auto] g.spec_ng_from_set(v@, edges@).contains(w) implies false by {
-                        let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
-                        assert(edges@.remove((a@, b@, label@)).len() == 0);
-                        if edges@.contains((v@, w, l)) {
-                            if (v@, w, l) != (a@, b@, label@) {
-                                assert(edges@.remove((a@, b@, label@)).contains((v@, w, l)));
-                            }
-                        }
-                        if edges@.contains((w, v@, l)) {
-                            if (w, v@, l) != (a@, b@, label@) {
-                                assert(edges@.remove((a@, b@, label@)).contains((w, v@, l)));
-                            }
-                        }
-                    }
-                    assert(g.spec_ng_from_set(v@, edges@) =~= Set::empty());
-                }
-                SetStEph::empty()
-            }
-        }
-        else {
-            let mid = n / 2;
-            let (left_edges, right_edges) = edges.split(mid);
-            let v_left  = v.clone_plus();
-            let v_right = v.clone_plus();
-            let g_left  = g.clone_plus();
-            let g_right = g.clone_plus();
-            
-            let f1 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_left.spec_ng_from_set(v_left@, left_edges@)
-            { ng_par(&g_left, v_left, left_edges) };
-            
-            let f2 = move || -> (out: SetStEph<V>)
-                ensures out@ == g_right.spec_ng_from_set(v_right@, right_edges@)
-            { ng_par(&g_right, v_right, right_edges) };
-            
-            let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
-            
-            proof {
-                // Prove subset in one direction
-                assert forall |w: V::V| #![auto] left_neighbors@.union(right_neighbors@).contains(w) implies
-                    g.spec_ng_from_set(v@, edges@).contains(w) by {
-                    if left_neighbors@.contains(w) {
-                        let l = choose |l: L::V| left_edges@.contains((v@, w, l)) || left_edges@.contains((w, v@, l));
-                        assert(edges@.contains((v@, w, l)) || edges@.contains((w, v@, l)));
-                    } else {
-                        let l = choose |l: L::V| right_edges@.contains((v@, w, l)) || right_edges@.contains((w, v@, l));
-                        assert(edges@.contains((v@, w, l)) || edges@.contains((w, v@, l)));
-                    }
-                }
-                
-                // Prove subset in other direction
-                assert forall |w: V::V| #![auto] g.spec_ng_from_set(v@, edges@).contains(w) implies
-                    left_neighbors@.union(right_neighbors@).contains(w) by {
-                    let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
-                    if edges@.contains((v@, w, l)) {
-                        if left_edges@.contains((v@, w, l)) {
-                            assert(left_neighbors@.contains(w));
-                        } else {
-                            assert(right_edges@.contains((v@, w, l)));
-                            assert(right_neighbors@.contains(w));
-                        }
-                    } else {
-                        if left_edges@.contains((w, v@, l)) {
-                            assert(left_neighbors@.contains(w));
-                        } else {
-                            assert(right_edges@.contains((w, v@, l)));
-                            assert(right_neighbors@.contains(w));
-                        }
-                    }
-                }
-                
-                assert(left_neighbors@.union(right_neighbors@) =~= g.spec_ng_from_set(v@, edges@));
-            }
-            
-            left_neighbors.union(&right_neighbors)
+
+    //!		8. impls
+
+    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> LabUnDirGraphMtEph<V, L> {
+        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
+        pub open spec fn spec_labeled_edges(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_edges@ }
+
+        /// Spec for neighbors computed from a subset of edges
+        pub open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V, L::V)>) -> Set<V::V> 
+            recommends 
+                wf_lab_graph_view(self@),
+                subedges <= self@.A,
+        {
+            Set::new(|w: V::V| exists |l: L::V| subedges.contains((v, w, l)) || subedges.contains((w, v, l)))
         }
     }
 
@@ -510,7 +356,195 @@ pub mod LabUnDirGraphMtEph {
         }
     }
 
-    } // verus!
+
+    //!		9. exec fns
+
+    /// Parallel edge filtering for neighbors using set split.
+    fn ng_par<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static>(
+        g: &LabUnDirGraphMtEph<V, L>, 
+        v: V, 
+        edges: SetStEph<LabEdge<V, L>>
+    ) -> (neighbors: SetStEph<V>)
+        requires
+            valid_key_type::<V>(),
+            valid_key_type_LabEdge::<V, L>(),
+            wf_lab_graph_view(g@),
+            edges@ <= g@.A,
+        ensures 
+            neighbors@ == g.spec_ng_from_set(v@, edges@),
+            neighbors@ <= g.spec_ng(v@)
+        decreases edges@.len()
+    {
+        let n = edges.size();
+        if n == 0 {
+            proof {
+                assert(g.spec_ng_from_set(v@, edges@) =~= Set::empty());
+            }
+            SetStEph::empty()
+        }
+        else if n == 1 {
+            let LabEdge(a, b, label) = edges.choose();
+            // edges@ contains (a@, b@, label@)
+            if feq(&a, &v) {
+                proof {
+                    // a@ == v@ by feq correctness
+                    // spec_ng_from_set = {w | exists l. edges@.contains((v@, w, l)) || edges@.contains((w, v@, l))}
+                    // Since edges@ is singleton {(a@, b@, label@)} with a@ == v@:
+                    //   (v@, w, l) in edges@ iff (v@, w, l) == (a@, b@, label@) iff w == b@
+                    //   (w, v@, l) in edges@ iff (w, v@, l) == (a@, b@, label@) iff w == a@ == v@ and v@ == b@
+                    // So the only neighbor is b@ (and possibly v@ if v@ == b@, but that's still just b@)
+                    
+                    assert forall |w: V::V| #![auto] Set::empty().insert(b@).contains(w) implies 
+                        g.spec_ng_from_set(v@, edges@).contains(w) by {
+                        assert(edges@.contains((a@, b@, label@)));
+                    }
+                    assert forall |w: V::V| #![auto] g.spec_ng_from_set(v@, edges@).contains(w) implies
+                        Set::empty().insert(b@).contains(w) by {
+                        let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
+                        assert(edges@.remove((a@, b@, label@)).len() == 0);
+                        if edges@.contains((v@, w, l)) {
+                            if (v@, w, l) != (a@, b@, label@) {
+                                assert(edges@.remove((a@, b@, label@)).contains((v@, w, l)));
+                            }
+                        } else {
+                            if (w, v@, l) != (a@, b@, label@) {
+                                assert(edges@.remove((a@, b@, label@)).contains((w, v@, l)));
+                            }
+                            // (w, v@, l) == (a@, b@, label@) means w == a@ == v@ and v@ == b@
+                            // so w == b@
+                        }
+                    }
+                    assert(Set::empty().insert(b@) =~= g.spec_ng_from_set(v@, edges@));
+                }
+                SetStEph::singleton(b.clone_plus())
+            } else if feq(&b, &v) {
+                proof {
+                    // a@ != v@ and b@ == v@
+                    // (v@, w, l) in edges@ iff (v@, w, l) == (a@, b@, label@) iff v@ == a@ (false)
+                    // (w, v@, l) in edges@ iff (w, v@, l) == (a@, b@, label@) iff w == a@ and v@ == b@ (true)
+                    // So the only neighbor is a@
+                    
+                    assert forall |w: V::V| #![auto] Set::empty().insert(a@).contains(w) implies 
+                        g.spec_ng_from_set(v@, edges@).contains(w) by {
+                        assert(edges@.contains((a@, b@, label@)));
+                    }
+                    assert forall |w: V::V| #![auto] g.spec_ng_from_set(v@, edges@).contains(w) implies
+                        Set::empty().insert(a@).contains(w) by {
+                        let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
+                        assert(edges@.remove((a@, b@, label@)).len() == 0);
+                        if edges@.contains((v@, w, l)) {
+                            if (v@, w, l) != (a@, b@, label@) {
+                                assert(edges@.remove((a@, b@, label@)).contains((v@, w, l)));
+                            }
+                            // (v@, w, l) == (a@, b@, label@) means v@ == a@ which is false
+                        }
+                        if edges@.contains((w, v@, l)) {
+                            if (w, v@, l) != (a@, b@, label@) {
+                                assert(edges@.remove((a@, b@, label@)).contains((w, v@, l)));
+                            }
+                            // (w, v@, l) == (a@, b@, label@) means w == a@
+                        }
+                    }
+                    assert(Set::empty().insert(a@) =~= g.spec_ng_from_set(v@, edges@));
+                }
+                SetStEph::singleton(a.clone_plus())
+            } else {
+                proof {
+                    // a@ != v@ and b@ != v@
+                    // (v@, w, l) in edges@ requires v@ == a@ (false)
+                    // (w, v@, l) in edges@ requires v@ == b@ (false)
+                    // So no w satisfies the condition
+                    
+                    assert forall |w: V::V| #![auto] g.spec_ng_from_set(v@, edges@).contains(w) implies false by {
+                        let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
+                        assert(edges@.remove((a@, b@, label@)).len() == 0);
+                        if edges@.contains((v@, w, l)) {
+                            if (v@, w, l) != (a@, b@, label@) {
+                                assert(edges@.remove((a@, b@, label@)).contains((v@, w, l)));
+                            }
+                        }
+                        if edges@.contains((w, v@, l)) {
+                            if (w, v@, l) != (a@, b@, label@) {
+                                assert(edges@.remove((a@, b@, label@)).contains((w, v@, l)));
+                            }
+                        }
+                    }
+                    assert(g.spec_ng_from_set(v@, edges@) =~= Set::empty());
+                }
+                SetStEph::empty()
+            }
+        }
+        else {
+            let mid = n / 2;
+            let (left_edges, right_edges) = edges.split(mid);
+            let v_left  = v.clone_plus();
+            let v_right = v.clone_plus();
+            let g_left  = g.clone_plus();
+            let g_right = g.clone_plus();
+            
+            let f1 = move || -> (out: SetStEph<V>)
+                ensures out@ == g_left.spec_ng_from_set(v_left@, left_edges@)
+            { ng_par(&g_left, v_left, left_edges) };
+            
+            let f2 = move || -> (out: SetStEph<V>)
+                ensures out@ == g_right.spec_ng_from_set(v_right@, right_edges@)
+            { ng_par(&g_right, v_right, right_edges) };
+            
+            let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
+            
+            proof {
+                // Prove subset in one direction
+                assert forall |w: V::V| #![auto] left_neighbors@.union(right_neighbors@).contains(w) implies
+                    g.spec_ng_from_set(v@, edges@).contains(w) by {
+                    if left_neighbors@.contains(w) {
+                        let l = choose |l: L::V| left_edges@.contains((v@, w, l)) || left_edges@.contains((w, v@, l));
+                        assert(edges@.contains((v@, w, l)) || edges@.contains((w, v@, l)));
+                    } else {
+                        let l = choose |l: L::V| right_edges@.contains((v@, w, l)) || right_edges@.contains((w, v@, l));
+                        assert(edges@.contains((v@, w, l)) || edges@.contains((w, v@, l)));
+                    }
+                }
+                
+                // Prove subset in other direction
+                assert forall |w: V::V| #![auto] g.spec_ng_from_set(v@, edges@).contains(w) implies
+                    left_neighbors@.union(right_neighbors@).contains(w) by {
+                    let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
+                    if edges@.contains((v@, w, l)) {
+                        if left_edges@.contains((v@, w, l)) {
+                            assert(left_neighbors@.contains(w));
+                        } else {
+                            assert(right_edges@.contains((v@, w, l)));
+                            assert(right_neighbors@.contains(w));
+                        }
+                    } else {
+                        if left_edges@.contains((w, v@, l)) {
+                            assert(left_neighbors@.contains(w));
+                        } else {
+                            assert(right_edges@.contains((w, v@, l)));
+                            assert(right_neighbors@.contains(w));
+                        }
+                    }
+                }
+                
+                assert(left_neighbors@.union(right_neighbors@) =~= g.spec_ng_from_set(v@, edges@));
+            }
+            
+            left_neighbors.union(&right_neighbors)
+        }
+    }
+
+
+    //!		10. derive impls
+
+    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> Clone for LabUnDirGraphMtEph<V, L> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            LabUnDirGraphMtEph { vertices: self.vertices.clone(), labeled_edges: self.labeled_edges.clone() }
+        }
+    }
+
+} // verus!
 
     impl<V: StTInMtT + Hash + Ord, L: StTInMtT + Hash> Display for LabUnDirGraphMtEph<V, L> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {

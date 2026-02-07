@@ -6,10 +6,18 @@ pub mod RelationStEph {
     use vstd::prelude::*;
 
 verus! {
+    //!	1. imports
+    //!	2. broadcast use
+    //!	3. type definitions
+    //!	4. view impls
+    //!	7. traits
+    //!	8. impls
+    //!	10. derive impls
+
+    //!		1. imports
 
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::Hash;
-
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
     #[cfg(verus_keep_ghost)]
@@ -26,6 +34,9 @@ verus! {
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
+
+
+    //!		2. broadcast use
 
     broadcast use {
         // Set groups
@@ -47,6 +58,9 @@ verus! {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
+
+    //!		3. type definitions
+
     #[verifier::reject_recursive_types(A)]
     #[verifier::reject_recursive_types(B)]
     pub struct RelationStEph<A: StT + Hash, B: StT + Hash> {
@@ -60,36 +74,6 @@ verus! {
         pub inner: SetStEphIter<'a, Pair<X, Y>>,
     }
 
-    impl<'a, X: StT + Hash, Y: StT + Hash> View for RelationStEphIter<'a, X, Y> {
-        type V = (int, Seq<Pair<X, Y>>);
-        open spec fn view(&self) -> (int, Seq<Pair<X, Y>>) { self.inner@ }
-    }
-
-    impl<'a, X: StT + Hash, Y: StT + Hash> std::iter::Iterator for RelationStEphIter<'a, X, Y> {
-        type Item = &'a Pair<X, Y>;
-
-        fn next(&mut self) -> (next: Option<&'a Pair<X, Y>>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
     /// Ghost iterator for ForLoopGhostIterator support (for-iter patterns).
     #[verifier::reject_recursive_types(X)]
     #[verifier::reject_recursive_types(Y)]
@@ -99,51 +83,12 @@ verus! {
         pub phantom: core::marker::PhantomData<&'a Pair<X, Y>>,
     }
 
-    impl<'a, X: StT + Hash, Y: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for RelationStEphIter<'a, X, Y> {
-        type GhostIter = RelationStEphGhostIterator<'a, X, Y>;
 
-        open spec fn ghost_iter(&self) -> RelationStEphGhostIterator<'a, X, Y> {
-            RelationStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
+    //!		4. view impls
 
-    impl<'a, X: StT + Hash, Y: StT + Hash> vstd::pervasive::ForLoopGhostIterator for RelationStEphGhostIterator<'a, X, Y> {
-        type ExecIter = RelationStEphIter<'a, X, Y>;
-        type Item = Pair<X, Y>;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &RelationStEphIter<'a, X, Y>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<Pair<X, Y>> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(self.elements[self.pos])
-            } else {
-                None
-            }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &RelationStEphIter<'a, X, Y>) -> RelationStEphGhostIterator<'a, X, Y> {
-            Self { pos: self.pos + 1, ..*self }
-        }
+    impl<'a, X: StT + Hash, Y: StT + Hash> View for RelationStEphIter<'a, X, Y> {
+        type V = (int, Seq<Pair<X, Y>>);
+        open spec fn view(&self) -> (int, Seq<Pair<X, Y>>) { self.inner@ }
     }
 
     impl<'a, X: StT + Hash, Y: StT + Hash> View for RelationStEphGhostIterator<'a, X, Y> {
@@ -153,6 +98,14 @@ verus! {
             self.elements.take(self.pos)
         }
     }
+
+    impl<A: StT + Hash, B: StT + Hash> View for RelationStEph<A, B> {
+        type V = Set<(<A as View>::V, <B as View>::V)>;
+        open spec fn view(&self) -> Self::V { self.pairs@ }
+    }
+
+
+    //!		7. traits
 
     pub trait RelationStEphTrait<X: StT + Hash, Y: StT + Hash> : 
         View<V = Set<(<X as View>::V, <Y as View>::V)>> + Sized {
@@ -217,15 +170,79 @@ verus! {
                 it@.1.no_duplicates();
     }
 
-    impl<A: StT + Hash, B: StT + Hash> View for RelationStEph<A, B> {
-        type V = Set<(<A as View>::V, <B as View>::V)>;
-        open spec fn view(&self) -> Self::V { self.pairs@ }
+
+    //!		8. impls
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> std::iter::Iterator for RelationStEphIter<'a, X, Y> {
+        type Item = &'a Pair<X, Y>;
+
+        fn next(&mut self) -> (next: Option<&'a Pair<X, Y>>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            self.inner.next()
+        }
     }
 
-    impl<A: StT + Hash, B: StT + Hash> Clone for RelationStEph<A, B> {
-        fn clone(&self) -> (clone: Self)
-            ensures clone@.finite(), clone@ == self@
-        { RelationStEph { pairs: self.pairs.clone() } }
+    impl<'a, X: StT + Hash, Y: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for RelationStEphIter<'a, X, Y> {
+        type GhostIter = RelationStEphGhostIterator<'a, X, Y>;
+
+        open spec fn ghost_iter(&self) -> RelationStEphGhostIterator<'a, X, Y> {
+            RelationStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> vstd::pervasive::ForLoopGhostIterator for RelationStEphGhostIterator<'a, X, Y> {
+        type ExecIter = RelationStEphIter<'a, X, Y>;
+        type Item = Pair<X, Y>;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &RelationStEphIter<'a, X, Y>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<Pair<X, Y>> {
+            if 0 <= self.pos < self.elements.len() {
+                Some(self.elements[self.pos])
+            } else {
+                None
+            }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &RelationStEphIter<'a, X, Y>) -> RelationStEphGhostIterator<'a, X, Y> {
+            Self { pos: self.pos + 1, ..*self }
+        }
     }
 
     impl<X: StT + Hash, Y: StT + Hash> 
@@ -334,13 +351,22 @@ verus! {
         }
     }
 
-    impl<A: StT + Hash, B: StT + Hash> std::hash::Hash for RelationStEph<A, B> {
-        fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.pairs.hash(state); }
-    }
-
     impl<A: StT + Hash, B: StT + Hash> PartialEqSpecImpl for RelationStEph<A, B> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+
+    //!		10. derive impls
+
+    impl<A: StT + Hash, B: StT + Hash> Clone for RelationStEph<A, B> {
+        fn clone(&self) -> (clone: Self)
+            ensures clone@.finite(), clone@ == self@
+        { RelationStEph { pairs: self.pairs.clone() } }
+    }
+
+    impl<A: StT + Hash, B: StT + Hash> std::hash::Hash for RelationStEph<A, B> {
+        fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.pairs.hash(state); }
     }
 
     impl<A: StT + Hash, B: StT + Hash> Eq for RelationStEph<A, B> {}
@@ -351,7 +377,7 @@ verus! {
         { self.pairs == other.pairs }
     }
 
-  } // verus!
+} // verus!
 
     #[macro_export]
     macro_rules! RelationLit {

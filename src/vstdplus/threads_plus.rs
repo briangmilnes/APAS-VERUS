@@ -9,10 +9,36 @@ pub mod threads_plus {
     use vstd::prelude::*;
 
 verus! {
+    //!	3. type definitions
+    //!	6. proof fns/broadcast groups
+    //!	8. impls
+    //!	9. exec fns
+
+    //!		3. type definitions
 
     #[verifier::external_body]
     #[verifier::reject_recursive_types(Ret)]
     pub struct JoinHandlePlus<Ret> { handle: std::thread::JoinHandle<Ret> }
+
+    #[verifier::external_body]
+    pub struct ThreadIdPlus { thread_id: std::thread::ThreadId }
+
+    #[cfg(verus_keep_ghost)]
+    pub tracked struct IsThreadPlus {}
+
+    #[cfg(not(verus_keep_ghost))]
+    pub tracked struct IsThreadPlus { _no_send_sync: core::marker::PhantomData<*const ()> }
+
+    #[verifier::accept_recursive_types(V)]
+    tracked struct ThreadShareablePlus<V> { phantom: marker::PhantomData<V> }
+
+
+    //!		6. proof fns/broadcast groups
+
+    pub axiom fn ghost_thread_id_plus() -> (tracked res: IsThreadPlus);
+
+
+    //!		8. impls
 
     impl<Ret> JoinHandlePlus<Ret> {
         pub uninterp spec fn predicate(&self, ret: Ret) -> bool;
@@ -36,36 +62,11 @@ verus! {
         }
     }
 
-    #[verifier::external_body]
-    pub fn spawn_plus<F, Ret>(f: F) -> (handle: JoinHandlePlus<Ret>)
-    where F: FnOnce() -> Ret + Send + 'static, 
-          Ret: Send + 'static requires f.requires(()) 
-        ensures forall|ret: Ret| #[trigger] handle.predicate(ret) ==> f.ensures((), ret)
-    {
-        let res = std::panic::catch_unwind(std::panic::AssertUnwindSafe(
-            || {
-                JoinHandlePlus { handle: std::thread::spawn(move || f()) }
-            }));
-        match res {
-            Ok(res) => res,
-            Err(_) => { println!("panic on spawn_plus"); std::process::abort(); }
-        }
-    }
-
-    #[verifier::external_body]
-    pub struct ThreadIdPlus { thread_id: std::thread::ThreadId }
-
-    #[cfg(verus_keep_ghost)]
-    pub tracked struct IsThreadPlus {}
-
     #[cfg(verus_keep_ghost)]
     impl !Sync for IsThreadPlus {}
 
     #[cfg(verus_keep_ghost)]
     impl !Send for IsThreadPlus {}
-
-    #[cfg(not(verus_keep_ghost))]
-    pub tracked struct IsThreadPlus { _no_send_sync: core::marker::PhantomData<*const ()> }
 
     impl IsThreadPlus {
         pub uninterp spec fn view(&self) -> ThreadIdPlus;
@@ -75,19 +76,6 @@ verus! {
     }
 
     impl Copy for IsThreadPlus {}
-
-    #[verifier::external_body]
-    pub fn thread_id_plus() -> (res: (ThreadIdPlus, Tracked<IsThreadPlus>))
-        ensures res.1@@ == res.0
-    {
-        let id = ThreadIdPlus { thread_id: std::thread::current().id() };
-        (id, Tracked::assume_new())
-    }
-
-    pub axiom fn ghost_thread_id_plus() -> (tracked res: IsThreadPlus);
-
-    #[verifier::accept_recursive_types(V)]
-    tracked struct ThreadShareablePlus<V> { phantom: marker::PhantomData<V> }
 
     impl<V> ThreadShareablePlus<V> {
         pub uninterp spec fn view(&self)                                 -> V;
@@ -110,6 +98,33 @@ verus! {
     impl<V: Sync> ThreadShareablePlus<V> {
         pub axiom fn sync_borrow(tracked &self) -> (tracked res: &V)
         ensures *res == self@;
+    }
+
+
+    //!		9. exec fns
+
+    #[verifier::external_body]
+    pub fn spawn_plus<F, Ret>(f: F) -> (handle: JoinHandlePlus<Ret>)
+    where F: FnOnce() -> Ret + Send + 'static, 
+          Ret: Send + 'static requires f.requires(()) 
+        ensures forall|ret: Ret| #[trigger] handle.predicate(ret) ==> f.ensures((), ret)
+    {
+        let res = std::panic::catch_unwind(std::panic::AssertUnwindSafe(
+            || {
+                JoinHandlePlus { handle: std::thread::spawn(move || f()) }
+            }));
+        match res {
+            Ok(res) => res,
+            Err(_) => { println!("panic on spawn_plus"); std::process::abort(); }
+        }
+    }
+
+    #[verifier::external_body]
+    pub fn thread_id_plus() -> (res: (ThreadIdPlus, Tracked<IsThreadPlus>))
+        ensures res.1@@ == res.0
+    {
+        let id = ThreadIdPlus { thread_id: std::thread::current().id() };
+        (id, Tracked::assume_new())
     }
 
 } // verus!

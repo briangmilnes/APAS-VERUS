@@ -26,8 +26,18 @@ pub mod clone_plus_vs_deep_clone {
     use vstd::contrib::exec_spec::DeepViewClone;
 
     verus! {
+    //!	2. broadcast use
+    //!	3. type definitions
+    //!	4. view impls
+    //!	9. exec fns
+    //!	10. derive impls
+
+    //!		2. broadcast use
 
     broadcast use vstd::std_specs::vec::group_vec_axioms;
+
+
+    //!		3. type definitions
 
     // A Vec-backed sequence with mapped View, like ArraySeqS
     #[verifier::ext_equal]
@@ -35,6 +45,9 @@ pub mod clone_plus_vs_deep_clone {
     pub struct TestSeq<T> {
         pub seq: Vec<T>,
     }
+
+
+    //!		4. view impls
 
     // View defined via deep_view — same result type (Seq<T::V>) as ArraySeqS
     impl<T: DeepView> View for TestSeq<T> {
@@ -45,14 +58,8 @@ pub mod clone_plus_vs_deep_clone {
         }
     }
 
-    // Test 1: Clone impl using deep_clone — no external_body
-    impl<T: DeepViewClone> Clone for TestSeq<T> {
-        fn clone(&self) -> (res: Self)
-            ensures res@ == self@
-        {
-            TestSeq { seq: self.seq.deep_clone() }
-        }
-    }
+
+    //!		9. exec fns
 
     // Test 2: Clone a concrete TestSeq<u64>
     fn test_clone_u64() {
@@ -92,5 +99,17 @@ pub mod clone_plus_vs_deep_clone {
         assert(elem@ == v@[1]@);
     }
 
-    } // verus!
+
+    //!		10. derive impls
+
+    // Test 1: Clone impl using deep_clone — no external_body
+    impl<T: DeepViewClone> Clone for TestSeq<T> {
+        fn clone(&self) -> (res: Self)
+            ensures res@ == self@
+        {
+            TestSeq { seq: self.seq.deep_clone() }
+        }
+    }
+
+} // verus!
 }

@@ -6,8 +6,17 @@ use vstd::prelude::*;
 use crate::experiments::checked_unsigned_int::CheckedUnsignedInt;
 
 verus! {
+//!	3. type definitions
+//!	4. view impls
+//!	8. impls
+//!	10. derive impls
+
+//!		3. type definitions
 
 pub struct CheckedU32 { i: Ghost<int>, v: Option<u32> }
+
+
+//!		4. view impls
 
 impl View for CheckedU32 {
     type V = int;
@@ -15,14 +24,8 @@ impl View for CheckedU32 {
     closed spec fn view(&self) -> int { self.i@ }
 }
 
-impl Clone for CheckedU32 {
-    fn clone(&self) -> (clone: Self)
-        ensures clone@ == self@
-    {
-        proof { use_type_invariant(self); }
-        Self { i: self.i, v: self.v }
-    }
-}
+
+//!		8. impls
 
 impl CheckedU32 {
     #[verifier::type_invariant]
@@ -121,6 +124,18 @@ impl CheckedUnsignedInt for CheckedU32 {
     }
 
     fn clone_checked(&self) -> (clone: Self)
+        ensures clone@ == self@
+    {
+        proof { use_type_invariant(self); }
+        Self { i: self.i, v: self.v }
+    }
+}
+
+
+//!		10. derive impls
+
+impl Clone for CheckedU32 {
+    fn clone(&self) -> (clone: Self)
         ensures clone@ == self@
     {
         proof { use_type_invariant(self); }

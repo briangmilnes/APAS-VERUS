@@ -6,11 +6,152 @@
 use vstd::prelude::*;
 
 verus! {
+//!	2. broadcast use
+//!	5. spec fns
+//!	6. proof fns/broadcast groups
+
+//!		2. broadcast use
 
 broadcast use {
     vstd::seq_lib::group_seq_properties,
     vstd::set::group_set_axioms,
 };
+
+
+//!		5. spec fns
+
+// The problem for weighted sum iteration.
+// Veracity: USED
+
+pub open spec fn spec_nat_seq_sum(s: Seq<nat>) -> nat { s.fold_left(0nat, |acc: nat, v: nat| (acc + v) as nat) }
+
+pub open spec fn spec_nat_set_sum(s: Set<nat>) -> nat { s.fold     (0nat, |acc: nat, v: nat| (acc + v) as nat) }
+
+// Weighted tuple fold lemmas - for summing weights in edge sequences/sets
+
+/// Spec function: sum of third component over a sequence of triples
+pub open spec fn spec_weighted_seq_sum<A, B>(seq: Seq<(A, B, u32)>) -> nat {
+    seq.fold_left(0nat, |acc: nat, t: (A, B, u32)| acc + t.2 as nat)
+}
+
+// Veracity: USED
+
+/// Spec function: sum of third component over a set of triples  
+pub open spec fn spec_weighted_set_sum<A, B>(s: Set<(A, B, u32)>) -> nat {
+    s.fold(0nat, |acc: nat, t: (A, B, u32)| acc + t.2 as nat)
+}
+
+// Unsigned integer weighted sum lemmas (for u8, u16, u64, u128, usize)
+// Veracity: USED
+
+// u8
+pub open spec fn spec_weighted_seq_sum_u8<A, B>(seq: Seq<(A, B, u8)>) -> nat {
+    seq.fold_left(0nat, |acc: nat, t: (A, B, u8)| acc + t.2 as nat)
+}
+
+pub open spec fn spec_weighted_set_sum_u8<A, B>(s: Set<(A, B, u8)>) -> nat {
+    s.fold(0nat, |acc: nat, t: (A, B, u8)| acc + t.2 as nat)
+}
+
+// u16
+// Veracity: USED
+// Veracity: USED
+pub open spec fn spec_weighted_seq_sum_u16<A, B>(seq: Seq<(A, B, u16)>) -> nat {
+    seq.fold_left(0nat, |acc: nat, t: (A, B, u16)| acc + t.2 as nat)
+// Veracity: USED
+}
+
+pub open spec fn spec_weighted_set_sum_u16<A, B>(s: Set<(A, B, u16)>) -> nat {
+    s.fold(0nat, |acc: nat, t: (A, B, u16)| acc + t.2 as nat)
+}
+
+// u64
+pub open spec fn spec_weighted_seq_sum_u64<A, B>(seq: Seq<(A, B, u64)>) -> nat {
+    seq.fold_left(0nat, |acc: nat, t: (A, B, u64)| acc + t.2 as nat)
+}
+
+pub open spec fn spec_weighted_set_sum_u64<A, B>(s: Set<(A, B, u64)>) -> nat {
+    s.fold(0nat, |acc: nat, t: (A, B, u64)| acc + t.2 as nat)
+}
+
+// Veracity: USED
+
+// u128
+pub open spec fn spec_weighted_seq_sum_u128<A, B>(seq: Seq<(A, B, u128)>) -> nat {
+    seq.fold_left(0nat, |acc: nat, t: (A, B, u128)| acc + t.2 as nat)
+}
+
+pub open spec fn spec_weighted_set_sum_u128<A, B>(s: Set<(A, B, u128)>) -> nat {
+    s.fold(0nat, |acc: nat, t: (A, B, u128)| acc + t.2 as nat)
+}
+
+// usize
+pub open spec fn spec_weighted_seq_sum_usize<A, B>(seq: Seq<(A, B, usize)>) -> nat {
+    seq.fold_left(0nat, |acc: nat, t: (A, B, usize)| acc + t.2 as nat)
+}
+
+pub open spec fn spec_weighted_set_sum_usize<A, B>(s: Set<(A, B, usize)>) -> nat {
+    s.fold(0nat, |acc: nat, t: (A, B, usize)| acc + t.2 as nat)
+}
+
+// Signed integer weighted sum lemmas (for each signed integer type)
+
+// i8
+pub open spec fn spec_signed_weighted_seq_sum_i8<A, B>(seq: Seq<(A, B, i8)>) -> int {
+    seq.fold_left(0int, |acc: int, t: (A, B, i8)| acc + t.2 as int)
+}
+
+pub open spec fn spec_signed_weighted_set_sum_i8<A, B>(s: Set<(A, B, i8)>) -> int {
+    s.fold(0int, |acc: int, t: (A, B, i8)| acc + t.2 as int)
+}
+
+// i16
+pub open spec fn spec_signed_weighted_seq_sum_i16<A, B>(seq: Seq<(A, B, i16)>) -> int {
+    seq.fold_left(0int, |acc: int, t: (A, B, i16)| acc + t.2 as int)
+}
+
+pub open spec fn spec_signed_weighted_set_sum_i16<A, B>(s: Set<(A, B, i16)>) -> int {
+    s.fold(0int, |acc: int, t: (A, B, i16)| acc + t.2 as int)
+}
+
+// i32 (original names for backwards compatibility)
+pub open spec fn spec_signed_weighted_seq_sum<A, B>(seq: Seq<(A, B, i32)>) -> int {
+    seq.fold_left(0int, |acc: int, t: (A, B, i32)| acc + t.2 as int)
+}
+
+pub open spec fn spec_signed_weighted_set_sum<A, B>(s: Set<(A, B, i32)>) -> int {
+    s.fold(0int, |acc: int, t: (A, B, i32)| acc + t.2 as int)
+}
+
+// i64
+pub open spec fn spec_signed_weighted_seq_sum_i64<A, B>(seq: Seq<(A, B, i64)>) -> int {
+    seq.fold_left(0int, |acc: int, t: (A, B, i64)| acc + t.2 as int)
+}
+
+pub open spec fn spec_signed_weighted_set_sum_i64<A, B>(s: Set<(A, B, i64)>) -> int {
+    s.fold(0int, |acc: int, t: (A, B, i64)| acc + t.2 as int)
+}
+
+// i128
+pub open spec fn spec_signed_weighted_seq_sum_i128<A, B>(seq: Seq<(A, B, i128)>) -> int {
+    seq.fold_left(0int, |acc: int, t: (A, B, i128)| acc + t.2 as int)
+}
+
+pub open spec fn spec_signed_weighted_set_sum_i128<A, B>(s: Set<(A, B, i128)>) -> int {
+    s.fold(0int, |acc: int, t: (A, B, i128)| acc + t.2 as int)
+}
+
+// isize
+pub open spec fn spec_signed_weighted_seq_sum_isize<A, B>(seq: Seq<(A, B, isize)>) -> int {
+    seq.fold_left(0int, |acc: int, t: (A, B, isize)| acc + t.2 as int)
+}
+
+pub open spec fn spec_signed_weighted_set_sum_isize<A, B>(s: Set<(A, B, isize)>) -> int {
+    s.fold(0int, |acc: int, t: (A, B, isize)| acc + t.2 as int)
+}
+
+
+//!		6. proof fns/broadcast groups
 
 /// If a sequence contains an element at index i, then that element is in the sequence's set view.
 
@@ -332,12 +473,6 @@ pub proof fn lemma_take_one_more_intersect<T: View>(seq: Seq<T>, s2: Set<T::V>, 
     }
 }
 
-// The problem for weighted sum iteration.
-// Veracity: USED
-
-pub open spec fn spec_nat_seq_sum(s: Seq<nat>) -> nat { s.fold_left(0nat, |acc: nat, v: nat| (acc + v) as nat) }
-pub open spec fn spec_nat_set_sum(s: Set<nat>) -> nat { s.fold     (0nat, |acc: nat, v: nat| (acc + v) as nat) }
-
 /// Sublemma: prove seq.fold_left == seq.to_set().fold for no-dup nat sequences
 pub proof fn lemma_spec_nat_seq_fold_equals_spec_set_fold(seq: Seq<nat>)
     requires
@@ -628,18 +763,6 @@ pub proof fn lemma_set_contains_iff_to_seq_map_contains(s: Set<u32>)
     }
 }
 
-// Weighted tuple fold lemmas - for summing weights in edge sequences/sets
-
-/// Spec function: sum of third component over a sequence of triples
-pub open spec fn spec_weighted_seq_sum<A, B>(seq: Seq<(A, B, u32)>) -> nat {
-    seq.fold_left(0nat, |acc: nat, t: (A, B, u32)| acc + t.2 as nat)
-}
-// Veracity: USED
-
-/// Spec function: sum of third component over a set of triples  
-pub open spec fn spec_weighted_set_sum<A, B>(s: Set<(A, B, u32)>) -> nat {
-    s.fold(0nat, |acc: nat, t: (A, B, u32)| acc + t.2 as nat)
-}
 // Veracity: USED
 
 /// Lemma: fold_left step for weighted tuple sequences
@@ -790,16 +913,6 @@ pub proof fn lemma_fold_left_int_equals_nat_as_int<T: View<V = (A, B, u32)>, A, 
     }
 }
 
-// Unsigned integer weighted sum lemmas (for u8, u16, u64, u128, usize)
-// Veracity: USED
-
-// u8
-pub open spec fn spec_weighted_seq_sum_u8<A, B>(seq: Seq<(A, B, u8)>) -> nat {
-    seq.fold_left(0nat, |acc: nat, t: (A, B, u8)| acc + t.2 as nat)
-}
-pub open spec fn spec_weighted_set_sum_u8<A, B>(s: Set<(A, B, u8)>) -> nat {
-    s.fold(0nat, |acc: nat, t: (A, B, u8)| acc + t.2 as nat)
-}
 // Veracity: USED
 pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u8<T: View<V = (A, B, u8)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) == spec_weighted_seq_sum_u8(seq.map(|_i: int, e: T| e@)),
@@ -813,6 +926,7 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u8<T: View<V = (A, B, 
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
     }
 }
+
 // USED: called from WeightedDirGraphStEphU8
 pub proof fn lemma_fold_left_int_equals_nat_as_int_u8<T: View<V = (A, B, u8)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
@@ -820,6 +934,7 @@ pub proof fn lemma_fold_left_int_equals_nat_as_int_u8<T: View<V = (A, B, u8)>, A
 {
     if seq.len() > 0 { lemma_fold_left_int_equals_nat_as_int_u8::<T, A, B>(seq.take((seq.len() - 1) as int)); }
 }
+
 pub proof fn lemma_weighted_seq_fold_equals_set_fold_u8<A, B>(seq: Seq<(A, B, u8)>)
     requires seq.no_duplicates(),
     ensures spec_weighted_seq_sum_u8(seq) == spec_weighted_set_sum_u8(seq.to_set()),
@@ -841,16 +956,6 @@ pub proof fn lemma_weighted_seq_fold_equals_set_fold_u8<A, B>(seq: Seq<(A, B, u8
     }
 }
 
-// u16
-// Veracity: USED
-// Veracity: USED
-pub open spec fn spec_weighted_seq_sum_u16<A, B>(seq: Seq<(A, B, u16)>) -> nat {
-    seq.fold_left(0nat, |acc: nat, t: (A, B, u16)| acc + t.2 as nat)
-// Veracity: USED
-}
-pub open spec fn spec_weighted_set_sum_u16<A, B>(s: Set<(A, B, u16)>) -> nat {
-    s.fold(0nat, |acc: nat, t: (A, B, u16)| acc + t.2 as nat)
-}
 pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u16<T: View<V = (A, B, u16)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) == spec_weighted_seq_sum_u16(seq.map(|_i: int, e: T| e@)),
     decreases seq.len(),
@@ -863,6 +968,7 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u16<T: View<V = (A, B,
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
     }
 }
+
 // USED: called from WeightedDirGraphStEphU16
 pub proof fn lemma_fold_left_int_equals_nat_as_int_u16<T: View<V = (A, B, u16)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
@@ -870,6 +976,7 @@ pub proof fn lemma_fold_left_int_equals_nat_as_int_u16<T: View<V = (A, B, u16)>,
 {
     if seq.len() > 0 { lemma_fold_left_int_equals_nat_as_int_u16::<T, A, B>(seq.take((seq.len() - 1) as int)); }
 }
+
 pub proof fn lemma_weighted_seq_fold_equals_set_fold_u16<A, B>(seq: Seq<(A, B, u16)>)
     requires seq.no_duplicates(),
     ensures spec_weighted_seq_sum_u16(seq) == spec_weighted_set_sum_u16(seq.to_set()),
@@ -892,13 +999,6 @@ pub proof fn lemma_weighted_seq_fold_equals_set_fold_u16<A, B>(seq: Seq<(A, B, u
 // Veracity: USED
 }
 
-// u64
-pub open spec fn spec_weighted_seq_sum_u64<A, B>(seq: Seq<(A, B, u64)>) -> nat {
-    seq.fold_left(0nat, |acc: nat, t: (A, B, u64)| acc + t.2 as nat)
-}
-pub open spec fn spec_weighted_set_sum_u64<A, B>(s: Set<(A, B, u64)>) -> nat {
-    s.fold(0nat, |acc: nat, t: (A, B, u64)| acc + t.2 as nat)
-}
 pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u64<T: View<V = (A, B, u64)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) == spec_weighted_seq_sum_u64(seq.map(|_i: int, e: T| e@)),
     decreases seq.len(),
@@ -912,6 +1012,7 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u64<T: View<V = (A, B,
         assert(view_seq[n] == seq[n]@);
     }
 }
+
 // USED: called from WeightedDirGraphStEphU64
 pub proof fn lemma_fold_left_int_equals_nat_as_int_u64<T: View<V = (A, B, u64)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
@@ -919,6 +1020,7 @@ pub proof fn lemma_fold_left_int_equals_nat_as_int_u64<T: View<V = (A, B, u64)>,
 {
     if seq.len() > 0 { lemma_fold_left_int_equals_nat_as_int_u64::<T, A, B>(seq.take((seq.len() - 1) as int)); }
 }
+
 pub proof fn lemma_weighted_seq_fold_equals_set_fold_u64<A, B>(seq: Seq<(A, B, u64)>)
     requires seq.no_duplicates(),
     ensures spec_weighted_seq_sum_u64(seq) == spec_weighted_set_sum_u64(seq.to_set()),
@@ -940,15 +1042,7 @@ pub proof fn lemma_weighted_seq_fold_equals_set_fold_u64<A, B>(seq: Seq<(A, B, u
     }
 // Veracity: USED
 }
-// Veracity: USED
 
-// u128
-pub open spec fn spec_weighted_seq_sum_u128<A, B>(seq: Seq<(A, B, u128)>) -> nat {
-    seq.fold_left(0nat, |acc: nat, t: (A, B, u128)| acc + t.2 as nat)
-}
-pub open spec fn spec_weighted_set_sum_u128<A, B>(s: Set<(A, B, u128)>) -> nat {
-    s.fold(0nat, |acc: nat, t: (A, B, u128)| acc + t.2 as nat)
-}
 pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u128<T: View<V = (A, B, u128)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) == spec_weighted_seq_sum_u128(seq.map(|_i: int, e: T| e@)),
     decreases seq.len(),
@@ -962,6 +1056,7 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u128<T: View<V = (A, B
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
     }
 }
+
 // USED: called from WeightedDirGraphStEphU128
 pub proof fn lemma_fold_left_int_equals_nat_as_int_u128<T: View<V = (A, B, u128)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
@@ -969,6 +1064,7 @@ pub proof fn lemma_fold_left_int_equals_nat_as_int_u128<T: View<V = (A, B, u128)
 {
     if seq.len() > 0 { lemma_fold_left_int_equals_nat_as_int_u128::<T, A, B>(seq.take((seq.len() - 1) as int)); }
 }
+
 pub proof fn lemma_weighted_seq_fold_equals_set_fold_u128<A, B>(seq: Seq<(A, B, u128)>)
     requires seq.no_duplicates(),
     ensures spec_weighted_seq_sum_u128(seq) == spec_weighted_set_sum_u128(seq.to_set()),
@@ -992,13 +1088,6 @@ pub proof fn lemma_weighted_seq_fold_equals_set_fold_u128<A, B>(seq: Seq<(A, B, 
     }
 }
 
-// usize
-pub open spec fn spec_weighted_seq_sum_usize<A, B>(seq: Seq<(A, B, usize)>) -> nat {
-    seq.fold_left(0nat, |acc: nat, t: (A, B, usize)| acc + t.2 as nat)
-}
-pub open spec fn spec_weighted_set_sum_usize<A, B>(s: Set<(A, B, usize)>) -> nat {
-    s.fold(0nat, |acc: nat, t: (A, B, usize)| acc + t.2 as nat)
-}
 pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_usize<T: View<V = (A, B, usize)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) == spec_weighted_seq_sum_usize(seq.map(|_i: int, e: T| e@)),
     decreases seq.len(),
@@ -1012,6 +1101,7 @@ pub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_usize<T: View<V = (A, 
     }
 // Veracity: USED
 }
+
 // USED: called from WeightedDirGraphStEphUsize
 pub proof fn lemma_fold_left_int_equals_nat_as_int_usize<T: View<V = (A, B, usize)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,
@@ -1019,6 +1109,7 @@ pub proof fn lemma_fold_left_int_equals_nat_as_int_usize<T: View<V = (A, B, usiz
 {
     if seq.len() > 0 { lemma_fold_left_int_equals_nat_as_int_usize::<T, A, B>(seq.take((seq.len() - 1) as int)); }
 }
+
 pub proof fn lemma_weighted_seq_fold_equals_set_fold_usize<A, B>(seq: Seq<(A, B, usize)>)
     requires seq.no_duplicates(),
     ensures spec_weighted_seq_sum_usize(seq) == spec_weighted_set_sum_usize(seq.to_set()),
@@ -1042,15 +1133,6 @@ pub proof fn lemma_weighted_seq_fold_equals_set_fold_usize<A, B>(seq: Seq<(A, B,
     }
 }
 
-// Signed integer weighted sum lemmas (for each signed integer type)
-
-// i8
-pub open spec fn spec_signed_weighted_seq_sum_i8<A, B>(seq: Seq<(A, B, i8)>) -> int {
-    seq.fold_left(0int, |acc: int, t: (A, B, i8)| acc + t.2 as int)
-}
-pub open spec fn spec_signed_weighted_set_sum_i8<A, B>(s: Set<(A, B, i8)>) -> int {
-    s.fold(0int, |acc: int, t: (A, B, i8)| acc + t.2 as int)
-}
 pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i8<T: View<V = (A, B, i8)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum_i8(seq.map(|_i: int, e: T| e@)),
     decreases seq.len(),
@@ -1063,6 +1145,7 @@ pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i8<T: View<V = 
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
     }
 }
+
 pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i8<A, B>(seq: Seq<(A, B, i8)>)
     requires seq.no_duplicates(),
     ensures spec_signed_weighted_seq_sum_i8(seq) == spec_signed_weighted_set_sum_i8(seq.to_set()),
@@ -1085,13 +1168,6 @@ pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i8<A, B>(seq: Seq<(A
     }
 }
 
-// i16
-pub open spec fn spec_signed_weighted_seq_sum_i16<A, B>(seq: Seq<(A, B, i16)>) -> int {
-    seq.fold_left(0int, |acc: int, t: (A, B, i16)| acc + t.2 as int)
-}
-pub open spec fn spec_signed_weighted_set_sum_i16<A, B>(s: Set<(A, B, i16)>) -> int {
-    s.fold(0int, |acc: int, t: (A, B, i16)| acc + t.2 as int)
-}
 pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i16<T: View<V = (A, B, i16)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum_i16(seq.map(|_i: int, e: T| e@)),
     decreases seq.len(),
@@ -1105,6 +1181,7 @@ pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i16<T: View<V =
         assert(view_seq[n] == seq[n]@);
     }
 }
+
 pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i16<A, B>(seq: Seq<(A, B, i16)>)
     requires seq.no_duplicates(),
     ensures spec_signed_weighted_seq_sum_i16(seq) == spec_signed_weighted_set_sum_i16(seq.to_set()),
@@ -1128,13 +1205,6 @@ pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i16<A, B>(seq: Seq<(
     }
 }
 
-// i32 (original names for backwards compatibility)
-pub open spec fn spec_signed_weighted_seq_sum<A, B>(seq: Seq<(A, B, i32)>) -> int {
-    seq.fold_left(0int, |acc: int, t: (A, B, i32)| acc + t.2 as int)
-}
-pub open spec fn spec_signed_weighted_set_sum<A, B>(s: Set<(A, B, i32)>) -> int {
-    s.fold(0int, |acc: int, t: (A, B, i32)| acc + t.2 as int)
-}
 pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum<T: View<V = (A, B, i32)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum(seq.map(|_i: int, e: T| e@)),
     decreases seq.len(),
@@ -1147,6 +1217,7 @@ pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum<T: View<V = (A,
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
     }
 }
+
 pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold<A, B>(seq: Seq<(A, B, i32)>)
 // Veracity: USED
     requires seq.no_duplicates(),
@@ -1170,13 +1241,6 @@ pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold<A, B>(seq: Seq<(A, B
     }
 }
 
-// i64
-pub open spec fn spec_signed_weighted_seq_sum_i64<A, B>(seq: Seq<(A, B, i64)>) -> int {
-    seq.fold_left(0int, |acc: int, t: (A, B, i64)| acc + t.2 as int)
-}
-pub open spec fn spec_signed_weighted_set_sum_i64<A, B>(s: Set<(A, B, i64)>) -> int {
-    s.fold(0int, |acc: int, t: (A, B, i64)| acc + t.2 as int)
-}
 pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i64<T: View<V = (A, B, i64)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum_i64(seq.map(|_i: int, e: T| e@)),
     decreases seq.len(),
@@ -1189,6 +1253,7 @@ pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i64<T: View<V =
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
     }
 }
+
 pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i64<A, B>(seq: Seq<(A, B, i64)>)
     requires seq.no_duplicates(),
 // Veracity: USED
@@ -1212,13 +1277,6 @@ pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i64<A, B>(seq: Seq<(
     }
 }
 
-// i128
-pub open spec fn spec_signed_weighted_seq_sum_i128<A, B>(seq: Seq<(A, B, i128)>) -> int {
-    seq.fold_left(0int, |acc: int, t: (A, B, i128)| acc + t.2 as int)
-}
-pub open spec fn spec_signed_weighted_set_sum_i128<A, B>(s: Set<(A, B, i128)>) -> int {
-    s.fold(0int, |acc: int, t: (A, B, i128)| acc + t.2 as int)
-}
 pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i128<T: View<V = (A, B, i128)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum_i128(seq.map(|_i: int, e: T| e@)),
     decreases seq.len(),
@@ -1231,6 +1289,7 @@ pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i128<T: View<V 
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
     }
 }
+
 pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i128<A, B>(seq: Seq<(A, B, i128)>)
     requires seq.no_duplicates(),
     ensures spec_signed_weighted_seq_sum_i128(seq) == spec_signed_weighted_set_sum_i128(seq.to_set()),
@@ -1254,13 +1313,6 @@ pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_i128<A, B>(seq: Seq<
     }
 }
 
-// isize
-pub open spec fn spec_signed_weighted_seq_sum_isize<A, B>(seq: Seq<(A, B, isize)>) -> int {
-    seq.fold_left(0int, |acc: int, t: (A, B, isize)| acc + t.2 as int)
-}
-pub open spec fn spec_signed_weighted_set_sum_isize<A, B>(s: Set<(A, B, isize)>) -> int {
-    s.fold(0int, |acc: int, t: (A, B, isize)| acc + t.2 as int)
-}
 pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_isize<T: View<V = (A, B, isize)>, A, B>(seq: Seq<T>)
     ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum_isize(seq.map(|_i: int, e: T| e@)),
     decreases seq.len(),
@@ -1273,6 +1325,7 @@ pub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_isize<T: View<V
         assert(seq.take(n).map(|_i: int, e: T| e@) =~= view_seq.take(n));
     }
 }
+
 pub proof fn lemma_signed_weighted_seq_fold_equals_set_fold_isize<A, B>(seq: Seq<(A, B, isize)>)
     requires seq.no_duplicates(),
     ensures spec_signed_weighted_seq_sum_isize(seq) == spec_signed_weighted_set_sum_isize(seq.to_set()),

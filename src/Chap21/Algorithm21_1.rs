@@ -8,8 +8,38 @@ pub mod Algorithm21_1 {
     use vstd::prelude::*;
 
     verus! {
+    //!	3. type definitions
+    //!	6. proof fns/broadcast groups
+    //!	9. exec fns
+
+    //!		3. type definitions
 
     pub type T = N;
+
+
+    //!		6. proof fns/broadcast groups
+
+    // Proves that if all inner sequences have the same length m, then sum_lens equals k * m.
+    proof fn lemma_sum_lens_uniform<T>(ss: Seq<ArraySeqStPerS<T>>, k: int, m: int)
+        requires
+            k >= 0,
+            k <= ss.len(),
+            forall|i: int| #![auto] 0 <= i < k ==> ss[i].seq@.len() == m,
+        ensures
+            sum_lens(ss, k) == k * m,
+        decreases k,
+    {
+        if k == 0 {
+        } else {
+            lemma_sum_lens_uniform(ss, k - 1, m);
+            // Direct calls needed for performance (broadcast group causes rlimit issues).
+            vstd::arithmetic::mul::lemma_mul_is_distributive_add_other_way(m, k - 1, 1);
+            vstd::arithmetic::mul::lemma_mul_basics(m);
+        }
+    }
+
+
+    //!		9. exec fns
 
     /// Algorithm 21.1 (2D Points) using ArraySeqPer: points2D via tabulate + flatten.
     /// Functional form: points2D n = flatten (tabulate (\x. tabulate (\y. (x, y+1)) (n-1)) n)
@@ -61,24 +91,5 @@ pub mod Algorithm21_1 {
         <ArraySeqStPerS<Pair<N, N>> as ArraySeqStPerTrait<Pair<N, N>>>::flatten(&outer)
     }
 
-    // Proves that if all inner sequences have the same length m, then sum_lens equals k * m.
-    proof fn lemma_sum_lens_uniform<T>(ss: Seq<ArraySeqStPerS<T>>, k: int, m: int)
-        requires
-            k >= 0,
-            k <= ss.len(),
-            forall|i: int| #![auto] 0 <= i < k ==> ss[i].seq@.len() == m,
-        ensures
-            sum_lens(ss, k) == k * m,
-        decreases k,
-    {
-        if k == 0 {
-        } else {
-            lemma_sum_lens_uniform(ss, k - 1, m);
-            // Direct calls needed for performance (broadcast group causes rlimit issues).
-            vstd::arithmetic::mul::lemma_mul_is_distributive_add_other_way(m, k - 1, 1);
-            vstd::arithmetic::mul::lemma_mul_basics(m);
-        }
-    }
-
-    } // verus!
+} // verus!
 }

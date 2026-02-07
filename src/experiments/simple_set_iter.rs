@@ -5,17 +5,34 @@ pub mod simple_set_iter {
     use vstd::prelude::*;
 
     verus! {
+    //!	1. imports
+    //!	2. broadcast use
+    //!	3. type definitions
+    //!	4. view impls
+    //!	5. spec fns
+    //!	6. proof fns/broadcast groups
+    //!	7. traits
+    //!	8. impls
+    //!	9. exec fns
+
+    //!		1. imports
 
     use vstd::std_specs::clone::*;
     use vstd::std_specs::vec::vec_index;
     use crate::vstdplus::seq_set::*;
-    
+
+
+    //!		2. broadcast use
+
     broadcast use {
             vstd::seq_lib::group_seq_properties,
             vstd::seq::group_seq_axioms,
             vstd::set::group_set_axioms,
             crate::vstdplus::clone_view::clone_view::group_clone_view_axioms
     };
+
+
+    //!		3. type definitions
 
     // AXIOM ATTEMPT: Bridge exec Vec indexing equality to spec equality for generic types.
     // NOTE: This does not work for generics! Verus only bridges exec == to spec == for
@@ -39,10 +56,54 @@ pub mod simple_set_iter {
     #[verifier::reject_recursive_types(V)]
     pub struct SimpleSet<V> {pub elements: Vec<V>, }
 
+    #[verifier::reject_recursive_types(V)]
+    pub struct SimpleSetIter<V> {
+        pub vec: Vec<V>,   // Exec: backing vector (linearized set)
+        pub pos: usize,    // Exec: current position
+    }
+
+    #[verifier::reject_recursive_types(V)]
+    pub struct SimpleSetIterGhost<V> { pub pos: int, pub elements: Seq<V>,}
+
+
+    //!		4. view impls
+
     impl<V> View for SimpleSet<V> {
         type V = Set<V>;
         open spec fn view(&self) -> Set<V> { self.elements@.to_set() }
     }
+
+    // Iterator view is (position, full_sequence) tuple, matching vstd hash_set::Iter
+    impl<V> View for SimpleSetIter<V> {
+        type V = (int, Seq<V>);
+        open spec fn view(&self) -> (int, Seq<V>) { (self.pos as int, self.vec@) }
+    }
+
+    // Ghost iterator view is elements already iterated (take), matching vstd
+    impl<V> View for SimpleSetIterGhost<V> {
+        type V = Seq<V>;
+        open spec fn view(&self) -> Seq<V> { self.elements.take(self.pos) }
+    }
+
+
+    //!		5. spec fns
+
+    // The iterator invariant that should be maintained but we can't add to next's requires.
+    pub open spec fn iter_invariant<V>(it: &SimpleSetIter<V>) -> bool { it.pos <= it.vec@.len() }
+
+
+    //!		6. proof fns/broadcast groups
+
+    // Our initial iterator ensures the invariant.
+    proof fn lemma_iter_invariant<V: Clone>(s: &SimpleSet<V>, it: SimpleSetIter<V>)
+        requires
+            it@ == (0int, s.elements@),  // Characterizes "it is the result of s.iter()"
+        ensures
+            iter_invariant(&it),
+    {}
+
+
+    //!		7. traits
 
     pub trait SimpleSetTrait<V: Clone>: Sized + View<V=Set<V>> {
         fn len(&self) -> usize;
@@ -69,7 +130,10 @@ pub mod simple_set_iter {
                 it@.0 == 0int,
                 it@.1.to_set() == self@;
     }
-    
+
+
+    //!		8. impls
+
     impl<V: Clone + Eq> SimpleSetTrait<V> for SimpleSet<V> {
         fn len(&self) -> usize { self.elements.len() }
         
@@ -110,72 +174,6 @@ pub mod simple_set_iter {
         { SimpleSetIter { vec: self.elements.clone(), pos: 0, } }
     }
 
-    #[verifier::reject_recursive_types(V)]
-    pub struct SimpleSetIter<V> {
-        pub vec: Vec<V>,   // Exec: backing vector (linearized set)
-        pub pos: usize,    // Exec: current position
-    }
-
-    #[verifier::reject_recursive_types(V)]
-    pub struct SimpleSetIterGhost<V> { pub pos: int, pub elements: Seq<V>,}
-
-    // Iterator view is (position, full_sequence) tuple, matching vstd hash_set::Iter
-    impl<V> View for SimpleSetIter<V> {
-        type V = (int, Seq<V>);
-        open spec fn view(&self) -> (int, Seq<V>) { (self.pos as int, self.vec@) }
-    }
-
-    // Ghost iterator view is elements already iterated (take), matching vstd
-    impl<V> View for SimpleSetIterGhost<V> {
-        type V = Seq<V>;
-        open spec fn view(&self) -> Seq<V> { self.elements.take(self.pos) }
-    }
-
-    // The iterator invariant that should be maintained but we can't add to next's requires.
-    pub open spec fn iter_invariant<V>(it: &SimpleSetIter<V>) -> bool { it.pos <= it.vec@.len() }
-
-    // Our initial iterator ensures the invariant.
-    proof fn lemma_iter_invariant<V: Clone>(s: &SimpleSet<V>, it: SimpleSetIter<V>)
-        requires
-            it@ == (0int, s.elements@),  // Characterizes "it is the result of s.iter()"
-        ensures
-            iter_invariant(&it),
-    {}
-
-    // So to increase the confidence in our actual next, we prove this version that proves with
-    // the invariant.
-    fn assumption_free_next<V: Clone>(it: &mut SimpleSetIter<V>) -> (result: Option<V>)
-        requires
-            iter_invariant(&old(it)),  
-        ensures
-            iter_invariant(it),
-            ({
-                let (old_index, old_seq) = old(it)@;
-                match result {
-                    None => {
-                        &&& it@ == old(it)@
-                        &&& old_index == old_seq.len()
-                        &&& it.pos == old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = it@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& vstd::pervasive::cloned(old_seq[old_index], element)
-                    },
-                }
-            }),
-    {
-        if it.pos < it.vec.len() {
-            let elem = it.vec[it.pos].clone();
-            it.pos = it.pos + 1;
-            Some(elem)
-        } else {
-            None
-        }
-    }
-   
     impl<V: Clone> Iterator for SimpleSetIter<V> {
         type Item = V;
 
@@ -257,6 +255,43 @@ pub mod simple_set_iter {
         }
     }
 
+
+    //!		9. exec fns
+
+    // So to increase the confidence in our actual next, we prove this version that proves with
+    // the invariant.
+    fn assumption_free_next<V: Clone>(it: &mut SimpleSetIter<V>) -> (result: Option<V>)
+        requires
+            iter_invariant(&old(it)),  
+        ensures
+            iter_invariant(it),
+            ({
+                let (old_index, old_seq) = old(it)@;
+                match result {
+                    None => {
+                        &&& it@ == old(it)@
+                        &&& old_index == old_seq.len()
+                        &&& it.pos == old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = it@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& vstd::pervasive::cloned(old_seq[old_index], element)
+                    },
+                }
+            }),
+    {
+        if it.pos < it.vec.len() {
+            let elem = it.vec[it.pos].clone();
+            it.pos = it.pos + 1;
+            Some(elem)
+        } else {
+            None
+        }
+    }
+
     // Example: Copy a set using loop iteration
     pub fn simple_set_copy_loop(s1: &SimpleSet<u32>) -> (s2: SimpleSet<u32>)
         ensures
@@ -335,5 +370,5 @@ pub mod simple_set_iter {
         s2
     }
 
-    } // verus!
+} // verus!
 }
