@@ -1,5 +1,20 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 6.1 Undirected Graph (ephemeral) using Set for vertices and edges.
+
+//  Table of Contents
+//	1. module
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod UnDirGraphStEph {
 
@@ -18,6 +33,8 @@ pub mod UnDirGraphStEph {
 
 verus! {
 
+    //		3. broadcast use
+
     broadcast use {
         vstd::std_specs::hash::group_hash_axioms,
         vstd::set_lib::group_set_lib_default,
@@ -28,11 +45,17 @@ verus! {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
+
+    //		4. type definitions
+
     #[verifier::reject_recursive_types(V)]
     pub struct UnDirGraphStEph<V: StT + Hash> {
         pub V: SetStEph<V>,
         pub E: SetStEph<Edge<V>>,
     }
+
+
+    //		5. view impls
 
     impl<V: StT + Hash> View for UnDirGraphStEph<V> {
         type V = GraphView<<V as View>::V>;
@@ -42,6 +65,8 @@ verus! {
         }
     }
 
+
+    //		8. traits
 
     pub trait UnDirGraphStEphTrait<V: StT + Hash>:
     View<V = GraphView<<V as View>::V>> + Sized {
@@ -146,6 +171,9 @@ verus! {
                 self@.V.contains(v@),
             ensures n == self.spec_degree(v@);
     }
+
+
+    //		9. impls
 
     impl<V: StT + Hash> UnDirGraphStEphTrait<V> for UnDirGraphStEph<V> {
 
@@ -310,6 +338,14 @@ verus! {
         { self.E.iter() }
     }
 
+    impl<V: StT + Hash> PartialEqSpecImpl for UnDirGraphStEph<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+
+    //		11. derive impls in verus!
+
     impl<V: StT + Hash> Clone for UnDirGraphStEph<V> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
@@ -318,16 +354,11 @@ verus! {
         }
     }
 
-    impl<V: StT + Hash> PartialEqSpecImpl for UnDirGraphStEph<V> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
-
     impl<V: StT + Hash> Eq for UnDirGraphStEph<V> {}
 
     impl<V: StT + Hash> PartialEq for UnDirGraphStEph<V> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             let v_eq = self.V == other.V;
             let e_eq = self.E == other.E;
@@ -342,6 +373,9 @@ verus! {
 
 } // verus!
 
+
+    //		13. derive impls outside verus!
+
     impl<V: StT + Hash> Debug for UnDirGraphStEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             f.debug_struct("UnDirGraphStEph")
@@ -354,6 +388,9 @@ verus! {
     impl<V: StT + Hash> Display for UnDirGraphStEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} E={:?}", self.V, self.E) }
     }
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! UnDirGraphStEphLit {

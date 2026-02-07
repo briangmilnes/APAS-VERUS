@@ -1,7 +1,20 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 19 algorithms for ArraySeqMtEph. Verusified.
 //! Redefines Chap18 methods using tabulate as the core primitive with parallel implementations.
 //! Use the trait `ArraySeqMtEphTrait` to access these implementations.
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	6. spec fns
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+
+//		1. module
+
 
 pub mod ArraySeqMtEph {
 
@@ -26,13 +39,22 @@ pub mod ArraySeqMtEph {
     #[cfg(verus_keep_ghost)]
     verus! {
 
+    //		2. imports
+
+    use crate::vstdplus::clone_plus::clone_plus::*;
+    use crate::vstdplus::feq::feq::*;
+
+
+    //		3. broadcast use
+
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
-    use crate::vstdplus::clone_plus::clone_plus::*;
-    use crate::vstdplus::feq::feq::*;
+
+
+    //		6. spec fns
 
     /// Sum of all inner array lengths (total flattened length)
     pub open spec fn total_len<T>(ss: Seq<ArraySeqMtEphS<T>>) -> int
@@ -41,6 +63,17 @@ pub mod ArraySeqMtEph {
         if ss.len() == 0 { 0 }
         else { ss[0].seq@.len() + total_len(ss.skip(1)) }
     }
+
+    // Spec function for flatten_seq bounds (sum of inner lengths)
+    spec fn sum_lens_seq<T>(ss: Seq<ArraySeqMtEphS<T>>, n: int) -> int
+        decreases n
+    {
+        if n <= 0 { 0 }
+        else { sum_lens_seq(ss, n - 1) + ss[n - 1].seq@.len() as int }
+    }
+
+
+    //		7. proof fns/broadcast groups
 
     /// Lemma: total_len splits at any index
     proof fn lemma_total_len_split<T>(ss: Seq<ArraySeqMtEphS<T>>, mid: int)
@@ -108,6 +141,36 @@ pub mod ArraySeqMtEph {
     {
         assert(ss.subrange(start, end) =~= ss.skip(start).take(end - start));
     }
+
+    // Lemma: if all inner lengths <= 1, then sum_lens_seq(n) <= n
+    proof fn lemma_sum_lens_seq_bounded<T>(ss: Seq<ArraySeqMtEphS<T>>, n: int)
+        requires
+            0 <= n <= ss.len(),
+            forall|i: int| #![auto] 0 <= i < ss.len() ==> ss[i].seq@.len() <= 1,
+        ensures
+            sum_lens_seq(ss, n) <= n,
+        decreases n,
+    {
+        if n > 0 {
+            lemma_sum_lens_seq_bounded(ss, n - 1);
+        }
+    }
+
+    // Lemma: sum_lens_seq is monotonically increasing
+    proof fn lemma_sum_lens_seq_monotonic<T>(ss: Seq<ArraySeqMtEphS<T>>, a: int, b: int)
+        requires
+            0 <= a <= b <= ss.len(),
+        ensures
+            sum_lens_seq(ss, a) <= sum_lens_seq(ss, b),
+        decreases b - a,
+    {
+        if a < b {
+            lemma_sum_lens_seq_monotonic(ss, a, b - 1);
+        }
+    }
+
+
+    //		8. traits
 
     // Chapter 19 trait - provides parallel algorithmic implementations
     pub trait ArraySeqMtEphTrait<T: View + Clone + Send + Sync + Eq>: Sized {
@@ -211,6 +274,9 @@ pub mod ArraySeqMtEph {
             requires valid_key_type::<T>()
             ensures seq.spec_len() == set@.len();
     }
+
+
+    //		9. impls
 
     impl<T: View + Clone + Send + Sync + Eq> ArraySeqMtEphTrait<T> for ArraySeqMtEphS<T> {
         open spec fn spec_len(&self) -> nat {
@@ -809,41 +875,6 @@ pub mod ArraySeqMtEph {
             i += 1;
         }
         ArraySeqMtEphS { seq: result }
-    }
-
-    // Spec function for flatten_seq bounds (sum of inner lengths)
-    spec fn sum_lens_seq<T>(ss: Seq<ArraySeqMtEphS<T>>, n: int) -> int
-        decreases n
-    {
-        if n <= 0 { 0 }
-        else { sum_lens_seq(ss, n - 1) + ss[n - 1].seq@.len() as int }
-    }
-
-    // Lemma: if all inner lengths <= 1, then sum_lens_seq(n) <= n
-    proof fn lemma_sum_lens_seq_bounded<T>(ss: Seq<ArraySeqMtEphS<T>>, n: int)
-        requires
-            0 <= n <= ss.len(),
-            forall|i: int| #![auto] 0 <= i < ss.len() ==> ss[i].seq@.len() <= 1,
-        ensures
-            sum_lens_seq(ss, n) <= n,
-        decreases n,
-    {
-        if n > 0 {
-            lemma_sum_lens_seq_bounded(ss, n - 1);
-        }
-    }
-
-    // Lemma: sum_lens_seq is monotonically increasing
-    proof fn lemma_sum_lens_seq_monotonic<T>(ss: Seq<ArraySeqMtEphS<T>>, a: int, b: int)
-        requires
-            0 <= a <= b <= ss.len(),
-        ensures
-            sum_lens_seq(ss, a) <= sum_lens_seq(ss, b),
-        decreases b - a,
-    {
-        if a < b {
-            lemma_sum_lens_seq_monotonic(ss, a, b - 1);
-        }
     }
 
     fn flatten_seq<T: View + Clone + Send + Sync>(ss: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)

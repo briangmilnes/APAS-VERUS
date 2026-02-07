@@ -1,8 +1,25 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 6.1 Directed Graph (ephemeral) using Set for vertices and arcs - Multi-threaded version.
 //!
 //! Note: NOW uses true parallelism via ParaPair! for neighbor/degree operations.
 //! Arc filtering (n_plus, n_minus) and vertex map-reduce (ng_of_vertices, etc.) are parallel.
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod DirGraphMtEph {
 
@@ -20,15 +37,21 @@ pub mod DirGraphMtEph {
 
     verus! {
 
+    //		2. imports
+
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     #[cfg(not(verus_keep_ghost))]
     use crate::vstdplus::feq::feq::*;
-
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::seq_set::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Types::Types::*;
+
+
+    //		3. broadcast use
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -37,15 +60,17 @@ pub mod DirGraphMtEph {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
-    pub open spec fn valid_key_type_for_graph<V: StTInMtT + Hash>() -> bool {
-        valid_key_type_Edge::<V>()
-    }
+
+    //		4. type definitions
 
     #[verifier::reject_recursive_types(V)]
     pub struct DirGraphMtEph<V: StTInMtT + Hash + 'static> {
         pub V: SetStEph<V>,
         pub A: SetStEph<Edge<V>>,
     }
+
+
+    //		5. view impls
 
     impl<V: StTInMtT + Hash + 'static> View for DirGraphMtEph<V> {
         type V = GraphView<<V as View>::V>;
@@ -54,15 +79,15 @@ pub mod DirGraphMtEph {
         }
     }
 
-    impl<V: StTInMtT + Hash + 'static> DirGraphMtEph<V> {
-        /// Convenience accessor for vertices view
-        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.V@ }
-        /// Convenience accessor for arcs view
-        pub open spec fn spec_arcs(&self) -> Set<(V::V, V::V)> { self.A@ }
+
+    //		6. spec fns
+
+    pub open spec fn valid_key_type_for_graph<V: StTInMtT + Hash>() -> bool {
+        valid_key_type_Edge::<V>()
     }
 
-    #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::*;
+
+    //		8. traits
 
     pub trait DirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
 
@@ -276,6 +301,16 @@ pub mod DirGraphMtEph {
             ensures 
                 neighbors@ == self.spec_ng_of_vertices(u_set@),
                 neighbors@ <= self@.V;
+    }
+
+
+    //		9. impls
+
+    impl<V: StTInMtT + Hash + 'static> DirGraphMtEph<V> {
+        /// Convenience accessor for vertices view
+        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.V@ }
+        /// Convenience accessor for arcs view
+        pub open spec fn spec_arcs(&self) -> Set<(V::V, V::V)> { self.A@ }
     }
 
     /// Parallel arc filtering for out-neighbors using set split.
@@ -593,14 +628,6 @@ pub mod DirGraphMtEph {
         { self.A.iter() }
     }
 
-    impl<V: StTInMtT + Hash + 'static> Clone for DirGraphMtEph<V> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
-        {
-            DirGraphMtEph { V: self.V.clone(), A: self.A.clone() }
-        }
-    }
-
     impl<V: StTInMtT + Hash + 'static> DirGraphMtEphTrait<V> for DirGraphMtEph<V> {
         fn empty() -> (g: DirGraphMtEph<V>) {
             DirGraphMtEph { V: SetStEph::empty(), A: SetStEph::empty() }
@@ -647,11 +674,22 @@ pub mod DirGraphMtEph {
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
+
+    //		11. derive impls in verus!
+
+    impl<V: StTInMtT + Hash + 'static> Clone for DirGraphMtEph<V> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            DirGraphMtEph { V: self.V.clone(), A: self.A.clone() }
+        }
+    }
+
     impl<V: StTInMtT + Hash + 'static> Eq for DirGraphMtEph<V> {}
 
     impl<V: StTInMtT + Hash + 'static> PartialEq for DirGraphMtEph<V> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             let v_eq = self.V == other.V;
             let a_eq = self.A == other.A;
@@ -666,6 +704,9 @@ pub mod DirGraphMtEph {
 
     } // verus!
 
+
+    //		13. derive impls outside verus!
+
     impl<V: StTInMtT + Hash + 'static> Debug for DirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             f.debug_struct("DirGraphMtEph")
@@ -678,6 +719,9 @@ pub mod DirGraphMtEph {
     impl<V: StTInMtT + Hash + 'static> Display for DirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} A={:?}", self.V, self.A) }
     }
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! DirGraphMtEphLit {

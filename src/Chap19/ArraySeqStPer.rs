@@ -1,7 +1,20 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 19 algorithms for ArraySeqStPer. Verusified.
 //! Redefines Chap18 methods using tabulate as the core primitive.
 //! Use the trait `ArraySeqStPerTrait` to access these implementations.
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	6. spec fns
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+
+//		1. module
+
 
 pub mod ArraySeqStPer {
 
@@ -23,11 +36,63 @@ pub mod ArraySeqStPer {
     #[cfg(verus_keep_ghost)]
     verus! {
 
+    //		2. imports
+
+    use crate::vstdplus::clone_plus::clone_plus::*;
+
+
+    //		3. broadcast use
+
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
-    use crate::vstdplus::clone_plus::clone_plus::*;
+
+
+    //		6. spec fns
+
+    // Spec function to sum lengths of first n inner sequences.
+    pub open spec fn sum_lens<T>(ss: Seq<ArraySeqStPerS<T>>, n: int) -> int
+        decreases n
+    {
+        if n <= 0 { 0 }
+        else { sum_lens(ss, n - 1) + ss[n - 1].seq@.len() as int }
+    }
+
+
+    //		7. proof fns/broadcast groups
+
+    // If all inner lengths <= 1, then sum_lens(n) <= n.
+    proof fn lemma_sum_lens_bounded<T>(ss: Seq<ArraySeqStPerS<T>>, n: int)
+        requires
+            0 <= n <= ss.len(),
+            forall|i: int| #![auto] 0 <= i < ss.len() ==> ss[i].seq@.len() <= 1,
+        ensures
+            sum_lens(ss, n) <= n,
+        decreases n,
+    {
+        if n <= 0 {
+        } else {
+            lemma_sum_lens_bounded(ss, n - 1);
+        }
+    }
+
+    // sum_lens is monotonically increasing.
+    proof fn lemma_sum_lens_monotonic<T>(ss: Seq<ArraySeqStPerS<T>>, a: int, b: int)
+        requires
+            0 <= a <= b <= ss.len(),
+        ensures
+            sum_lens(ss, a) <= sum_lens(ss, b),
+        decreases b - a,
+    {
+        if a == b {
+        } else {
+            lemma_sum_lens_monotonic(ss, a, b - 1);
+        }
+    }
+
+
+    //		8. traits
 
     // Chapter 19 trait - provides alternative algorithmic implementations
     // Import and use this trait to get Chapter 19's algorithms
@@ -128,6 +193,9 @@ pub mod ArraySeqStPer {
             requires valid_key_type::<T>()
             ensures seq.spec_len() == set@.len();
     }
+
+
+    //		9. impls
 
     impl<T: View + Clone> ArraySeqStPerTrait<T> for ArraySeqStPerS<T> {
 
@@ -446,43 +514,6 @@ pub mod ArraySeqStPer {
                 assert(seq@.len() == set@.len());
             }
             ArraySeqStPerS { seq }
-        }
-    }
-
-    // Spec function to sum lengths of first n inner sequences.
-    pub open spec fn sum_lens<T>(ss: Seq<ArraySeqStPerS<T>>, n: int) -> int
-        decreases n
-    {
-        if n <= 0 { 0 }
-        else { sum_lens(ss, n - 1) + ss[n - 1].seq@.len() as int }
-    }
-
-    // If all inner lengths <= 1, then sum_lens(n) <= n.
-    proof fn lemma_sum_lens_bounded<T>(ss: Seq<ArraySeqStPerS<T>>, n: int)
-        requires
-            0 <= n <= ss.len(),
-            forall|i: int| #![auto] 0 <= i < ss.len() ==> ss[i].seq@.len() <= 1,
-        ensures
-            sum_lens(ss, n) <= n,
-        decreases n,
-    {
-        if n <= 0 {
-        } else {
-            lemma_sum_lens_bounded(ss, n - 1);
-        }
-    }
-
-    // sum_lens is monotonically increasing.
-    proof fn lemma_sum_lens_monotonic<T>(ss: Seq<ArraySeqStPerS<T>>, a: int, b: int)
-        requires
-            0 <= a <= b <= ss.len(),
-        ensures
-            sum_lens(ss, a) <= sum_lens(ss, b),
-        decreases b - a,
-    {
-        if a == b {
-        } else {
-            lemma_sum_lens_monotonic(ss, a, b - 1);
         }
     }
 

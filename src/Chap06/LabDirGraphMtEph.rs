@@ -1,8 +1,25 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 6 Labeled Directed Graph (ephemeral) using Set for vertices and labeled arcs - Multi-threaded version.
 //!
 //! Note: NOW uses true parallelism via ParaPair! for neighbor operations.
 //! Labeled arc filtering (n_plus, n_minus) are parallel.
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod LabDirGraphMtEph {
 
@@ -17,14 +34,18 @@ pub mod LabDirGraphMtEph {
 
     verus! {
 
+    //		2. imports
+
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
-
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::Types::Types::*;
+
+
+    //		3. broadcast use
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -33,9 +54,8 @@ pub mod LabDirGraphMtEph {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
-    pub open spec fn valid_key_type_for_lab_graph<V: StTInMtT + Hash, L: StTInMtT + Hash>() -> bool {
-        valid_key_type_LabEdge::<V, L>()
-    }
+
+    //		4. type definitions
 
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(L)]
@@ -44,13 +64,8 @@ pub mod LabDirGraphMtEph {
         pub labeled_arcs: SetStEph<LabEdge<V, L>>,
     }
 
-    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> Clone for LabDirGraphMtEph<V, L> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
-        {
-            LabDirGraphMtEph { vertices: self.vertices.clone(), labeled_arcs: self.labeled_arcs.clone() }
-        }
-    }
+
+    //		5. view impls
 
     impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> View for LabDirGraphMtEph<V, L> {
         type V = LabGraphView<<V as View>::V, <L as View>::V>;
@@ -59,10 +74,15 @@ pub mod LabDirGraphMtEph {
         }
     }
 
-    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LabDirGraphMtEph<V, L> {
-        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
-        pub open spec fn spec_labeled_arcs(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_arcs@ }
+
+    //		6. spec fns
+
+    pub open spec fn valid_key_type_for_lab_graph<V: StTInMtT + Hash, L: StTInMtT + Hash>() -> bool {
+        valid_key_type_LabEdge::<V, L>()
     }
+
+
+    //		8. traits
 
     pub trait LabDirGraphMtEphTrait<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> 
         : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized 
@@ -177,6 +197,14 @@ pub mod LabDirGraphMtEph {
             ensures 
                 n_minus@ == self.spec_n_minus(v@),
                 n_minus@ <= self@.V;
+    }
+
+
+    //		9. impls
+
+    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LabDirGraphMtEph<V, L> {
+        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
+        pub open spec fn spec_labeled_arcs(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_arcs@ }
     }
 
     /// out-neighbors: Parallel arc filtering using set split.
@@ -612,7 +640,21 @@ pub mod LabDirGraphMtEph {
         { self.labeled_arcs.iter() }
     }
 
+
+    //		11. derive impls in verus!
+
+    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> Clone for LabDirGraphMtEph<V, L> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            LabDirGraphMtEph { vertices: self.vertices.clone(), labeled_arcs: self.labeled_arcs.clone() }
+        }
+    }
+
     } // verus!
+
+
+    //		13. derive impls outside verus!
 
     impl<V: StTInMtT + Hash, L: StTInMtT + Hash> Display for LabDirGraphMtEph<V, L> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
@@ -629,6 +671,9 @@ pub mod LabDirGraphMtEph {
             )
         }
     }
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! LabDirGraphMtEphLit {

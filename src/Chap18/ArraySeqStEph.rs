@@ -1,5 +1,22 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Single-threaded ephemeral array sequence (mutable) implementation. Verusified.
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	8. traits
+//	9. impls
+//	10. iterators
+//	11. derive impls in verus!
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod ArraySeqStEph {
 
@@ -14,14 +31,68 @@ pub mod ArraySeqStEph {
 
     verus! {
 
+    //		2. imports
+
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
+
+
+    //		3. broadcast use
+
     broadcast use vstd::std_specs::vec::group_vec_axioms;
+
+
+    //		4. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqStEphS<T> {
         pub seq: Vec<T>,
     }
+
+    /// Iterator wrapper with closed spec view for encapsulation.
+    #[verifier::reject_recursive_types(T)]
+    pub struct ArraySeqStEphIter<'a, T> {
+        inner: std::slice::Iter<'a, T>,
+    }
+
+    /// Ghost iterator for ForLoopGhostIterator support.
+    #[verifier::reject_recursive_types(T)]
+    pub struct ArraySeqStEphGhostIterator<'a, T> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
+
+    //		5. view impls
+
+    impl<T: View> View for ArraySeqStEphS<T> {
+        type V = Seq<T::V>;
+
+        open spec fn view(&self) -> Seq<T::V> {
+            self.seq@.map(|_i: int, t: T| t@)
+        }
+    }
+
+    impl<'a, T> View for ArraySeqStEphIter<'a, T> {
+        type V = (int, Seq<T>);
+        closed spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    }
+
+    impl<'a, T> View for ArraySeqStEphGhostIterator<'a, T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
+
+    //		6. spec fns
+
+    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqStEphIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+
+    //		8. traits
 
     /// - Base trait for single-threaded ephemeral array sequences (Chapter 18).
     /// - These methods are never redefined in later chapters.
@@ -100,7 +171,9 @@ pub mod ArraySeqStEph {
             ensures filtered.spec_len() <= a.seq@.len();
 
         /// Work Θ(Σ|a[i]|), Span Θ(1)
-        fn flatten(a: &ArraySeqStEphS<ArraySeqStEphS<T>>) -> (flattened: Self) where T: Clone;
+        fn flatten(a: &ArraySeqStEphS<ArraySeqStEphS<T>>) -> (flattened: Self)
+            where T: Clone
+            ensures a.spec_len() == 0 ==> flattened.spec_len() == 0;
 
         /// Work Θ(|a|), Span Θ(1)
         fn update(a: &ArraySeqStEphS<T>, index: usize, item: T) -> (updated: Self)
@@ -132,104 +205,8 @@ pub mod ArraySeqStEph {
             ensures scanned.0.seq@.len() == a.seq@.len();
     }
 
-    impl<T: View> View for ArraySeqStEphS<T> {
-        type V = Seq<T::V>;
 
-        open spec fn view(&self) -> Seq<T::V> {
-            self.seq@.map(|_i: int, t: T| t@)
-        }
-    }
-
-    /// Iterator wrapper with closed spec view for encapsulation.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ArraySeqStEphIter<'a, T> {
-        inner: std::slice::Iter<'a, T>,
-    }
-
-    impl<'a, T> View for ArraySeqStEphIter<'a, T> {
-        type V = (int, Seq<T>);
-        closed spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqStEphIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<'a, T> std::iter::Iterator for ArraySeqStEphIter<'a, T> {
-        type Item = &'a T;
-
-        // Relies on vstd's assume_specification for slice::Iter::next.
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ArraySeqStEphGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqStEphIter<'a, T> {
-        type GhostIter = ArraySeqStEphGhostIterator<'a, T>;
-        open spec fn ghost_iter(&self) -> ArraySeqStEphGhostIterator<'a, T> {
-            ArraySeqStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ArraySeqStEphGhostIterator<'a, T> {
-        type ExecIter = ArraySeqStEphIter<'a, T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &ArraySeqStEphIter<'a, T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool { self.pos == self.elements.len() }
-        open spec fn ghost_decrease(&self) -> Option<int> { Some(self.elements.len() - self.pos) }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &ArraySeqStEphIter<'a, T>) -> ArraySeqStEphGhostIterator<'a, T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    impl<'a, T> View for ArraySeqStEphGhostIterator<'a, T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
+    //		9. impls
 
     impl<T> ArraySeqStEphS<T> {
         pub open spec fn spec_len(&self) -> int {
@@ -480,6 +457,77 @@ pub mod ArraySeqStEph {
         }
     }
 
+    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqStEphS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+
+    //		10. iterators
+
+    impl<'a, T> std::iter::Iterator for ArraySeqStEphIter<'a, T> {
+        type Item = &'a T;
+
+        // Relies on vstd's assume_specification for slice::Iter::next.
+        fn next(&mut self) -> (next: Option<&'a T>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            self.inner.next()
+        }
+    }
+
+    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqStEphIter<'a, T> {
+        type GhostIter = ArraySeqStEphGhostIterator<'a, T>;
+        open spec fn ghost_iter(&self) -> ArraySeqStEphGhostIterator<'a, T> {
+            ArraySeqStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ArraySeqStEphGhostIterator<'a, T> {
+        type ExecIter = ArraySeqStEphIter<'a, T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &ArraySeqStEphIter<'a, T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool { self.pos == self.elements.len() }
+        open spec fn ghost_decrease(&self) -> Option<int> { Some(self.elements.len() - self.pos) }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &ArraySeqStEphIter<'a, T>) -> ArraySeqStEphGhostIterator<'a, T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStEphS<T> {
         type Item = &'a T;
         type IntoIter = ArraySeqStEphIter<'a, T>;
@@ -505,28 +553,29 @@ pub mod ArraySeqStEph {
         }
     }
 
+
+    //		11. derive impls in verus!
+
     impl<T: Clone> Clone for ArraySeqStEphS<T> {
         fn clone(&self) -> Self { ArraySeqStEphS { seq: self.seq.clone() } }
-    }
-
-    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqStEphS<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
     impl<T: Eq + View> Eq for ArraySeqStEphS<T> {}
 
     impl<T: PartialEq + View> PartialEq for ArraySeqStEphS<T> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
-            let r = self.seq == other.seq;
-            proof { assume(r == (self@ == other@)); }
-            r
+            let equal = self.seq == other.seq;
+            proof { assume(equal == (self@ == other@)); }
+            equal
         }
     }
 
     } // verus!
+
+
+    //		13. derive impls outside verus!
 
     impl<T: Debug> Debug for ArraySeqStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

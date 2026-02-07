@@ -1,9 +1,19 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 12 — Exercise 12.5: lock-free concurrent stack using compare-and-swap.
 //!
 //! Note: Concurrent data structures cannot have simple sequential specs because
 //! state changes concurrently. Raw pointers and AtomicPtr require external_body.
 //! Specs here are trusted documentation of linearizable behavior.
+
+//  Table of Contents
+//	1. module
+//	4. type definitions
+//	8. traits
+//	9. impls
+
+//		1. module
+
 
 pub mod Exercise12_5 {
     use vstd::prelude::*;
@@ -12,12 +22,25 @@ pub mod Exercise12_5 {
 
 verus! {
 
+//		4. type definitions
+
 /// Node for the lock-free stack. External due to raw pointer field.
 #[verifier::external]
 struct Node<T> {
     value: T,
     next: *mut Node<T>,
 }
+
+/// Lock-free concurrent stack using AtomicPtr and CAS.
+/// External due to AtomicPtr (no vstd specs) and raw pointers.
+#[verifier::external_body]
+#[verifier::reject_recursive_types(T)]
+pub struct ConcurrentStackMt<T: Send> {
+    head: AtomicPtr<Node<T>>,
+}
+
+
+//		8. traits
 
 /// Trait for lock-free concurrent stack operations.
 /// 
@@ -53,13 +76,8 @@ pub trait ConcurrentStackMtTrait<T: Send>: Sized {
         requires self.wf();
 }
 
-/// Lock-free concurrent stack using AtomicPtr and CAS.
-/// External due to AtomicPtr (no vstd specs) and raw pointers.
-#[verifier::external_body]
-#[verifier::reject_recursive_types(T)]
-pub struct ConcurrentStackMt<T: Send> {
-    head: AtomicPtr<Node<T>>,
-}
+
+//		9. impls
 
 impl<T: Send> ConcurrentStackMt<T> {
     /// Spec: the stack is always well-formed after construction.
