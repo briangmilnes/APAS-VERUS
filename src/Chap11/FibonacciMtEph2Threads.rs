@@ -91,9 +91,9 @@ tokenized_state_machine!{
 }
 
 /// Two-threaded Fibonacci using TSM tokens to prove correctness.
-pub fn fib_2threads(n: u64) -> (result: u64)
+pub fn fib_2threads(n: u64) -> (fibonacci: u64)
     requires n >= 2 && n <= 46
-    ensures result == spec_fib(n as nat)
+    ensures fibonacci == spec_fib(n as nat)
 {
     // Initialize the TSM protocol - get instance and tokens
     let tracked (

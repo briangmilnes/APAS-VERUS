@@ -83,9 +83,9 @@ tokenized_state_machine!{
 ///
 /// Each call spawns two threads and uses a fresh TSM instance
 /// to track their completion. No intermediate values stored.
-pub fn fib(n: u64) -> (result: u64)
+pub fn fib(n: u64) -> (fibonacci: u64)
     requires n <= 46
-    ensures result == spec_fib(n as nat)
+    ensures fibonacci == spec_fib(n as nat)
     decreases n
 {
     if n <= 1 {

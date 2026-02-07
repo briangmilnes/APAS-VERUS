@@ -498,8 +498,8 @@ verus! {
     impl<A: StT + Hash, B: StT + Hash> Eq for MappingStEph<A, B> {}
 
     impl<A: StT + Hash, B: StT + Hash> PartialEq for MappingStEph<A, B> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             let r = self.mapping == other.mapping;
             proof {

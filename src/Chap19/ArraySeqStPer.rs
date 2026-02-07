@@ -36,65 +36,65 @@ pub mod ArraySeqStPer {
 
         spec fn nth_spec(&self, i: int) -> T;
 
-        fn empty() -> (result: Self)
-            ensures result.spec_len() == 0;
+        fn empty() -> (empty_seq: Self)
+            ensures empty_seq.spec_len() == 0;
 
-        fn singleton(item: T) -> (result: Self)
-            ensures result.spec_len() == 1;
+        fn singleton(item: T) -> (singleton: Self)
+            ensures singleton.spec_len() == 1;
 
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (result: Self)
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: Self)
             requires
                 length <= usize::MAX,
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
             ensures
-                result.spec_len() == length,
-                forall|j: usize| j < length ==> f.ensures((j,), #[trigger] result.nth_spec(j as int));
+                tab_seq.spec_len() == length,
+                forall|j: usize| j < length ==> f.ensures((j,), #[trigger] tab_seq.nth_spec(j as int));
 
-        fn length(&self) -> (result: usize)
-            ensures result == self.spec_len();
+        fn length(&self) -> (len: usize)
+            ensures len == self.spec_len();
 
-        fn nth(&self, i: usize) -> (result: &T)
+        fn nth(&self, i: usize) -> (nth_elem: &T)
             requires (i as int) < self.spec_len()
-            ensures *result == self.nth_spec(i as int);
+            ensures *nth_elem == self.nth_spec(i as int);
 
-        fn map<U: Clone + View, F: Fn(&T) -> U>(a: &Self, f: &F) -> (result: ArraySeqStPerS<U>)
+        fn map<U: Clone + View, F: Fn(&T) -> U>(a: &Self, f: &F) -> (mapped: ArraySeqStPerS<U>)
             requires
                 a.spec_len() <= usize::MAX as int,
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.nth_spec(i),))
             ensures
-                result.spec_len() == a.spec_len(),
-                forall|i: int| #![auto] 0 <= i < a.spec_len() ==> f.ensures((&a.nth_spec(i),), result.seq@[i]);
+                mapped.spec_len() == a.spec_len(),
+                forall|i: int| #![auto] 0 <= i < a.spec_len() ==> f.ensures((&a.nth_spec(i),), mapped.seq@[i]);
 
-        fn append(a: &Self, b: &Self) -> (result: Self)
+        fn append(a: &Self, b: &Self) -> (appended: Self)
             requires a.spec_len() + b.spec_len() <= usize::MAX as int
-            ensures result.spec_len() == a.spec_len() + b.spec_len();
+            ensures appended.spec_len() == a.spec_len() + b.spec_len();
 
-        fn flatten(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (result: Self)
+        fn flatten(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (flattened: Self)
             requires sum_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int
             ensures
-                result.spec_len() == sum_lens(ss.seq@, ss.seq@.len() as int),
-                ss.seq@.len() == 2 ==> result.spec_len() == ss.seq@[0].seq@.len() + ss.seq@[1].seq@.len(),
+                flattened.spec_len() == sum_lens(ss.seq@, ss.seq@.len() as int),
+                ss.seq@.len() == 2 ==> flattened.spec_len() == ss.seq@[0].seq@.len() + ss.seq@[1].seq@.len(),
                 (forall|i: int| #![auto] 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1)
-                    ==> result.spec_len() <= ss.seq@.len();
+                    ==> flattened.spec_len() <= ss.seq@.len();
 
-        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> (result: Self)
+        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> (filtered: Self)
             requires
                 a.spec_len() <= usize::MAX as int,
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.nth_spec(i),))
-            ensures result.spec_len() <= a.spec_len();
+            ensures filtered.spec_len() <= a.spec_len();
 
-        fn deflate<F: Fn(&T) -> bool>(f: &F, x: &T) -> (result: Self)
+        fn deflate<F: Fn(&T) -> bool>(f: &F, x: &T) -> (deflated: Self)
             requires f.requires((x,))
             ensures
-                result.spec_len() <= 1,
-                result.spec_len() == 1 ==> f.ensures((x,), true),
-                result.spec_len() == 0 ==> f.ensures((x,), false);
+                deflated.spec_len() <= 1,
+                deflated.spec_len() == 1 ==> f.ensures((x,), true),
+                deflated.spec_len() == 0 ==> f.ensures((x,), false);
 
-        fn update(a: &Self, index: usize, item: T) -> (result: Self)
+        fn update(a: &Self, index: usize, item: T) -> (updated: Self)
             requires
                 index < a.spec_len(),
                 a.spec_len() <= usize::MAX as int,
-            ensures result.spec_len() == a.spec_len();
+            ensures updated.spec_len() == a.spec_len();
 
         fn is_empty(a: &Self) -> (empty: bool)
             ensures empty <==> a.spec_len() == 0;
@@ -110,23 +110,23 @@ pub mod ArraySeqStPer {
                 a.spec_len() <= usize::MAX as int,
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y));
 
-        fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (result: (Self, T))
+        fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (scanned: (Self, T))
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y))
-            ensures result.0.spec_len() == a.spec_len();
+            ensures scanned.0.spec_len() == a.spec_len();
 
-        fn select<'a>(a: &'a Self, b: &'a Self, i: usize) -> (result: Option<&'a T>)
+        fn select<'a>(a: &'a Self, b: &'a Self, i: usize) -> (selected: Option<&'a T>)
             ensures
-                i < a.spec_len() ==> result.is_some(),
-                a.spec_len() <= i < a.spec_len() + b.spec_len() ==> result.is_some();
+                i < a.spec_len() ==> selected.is_some(),
+                a.spec_len() <= i < a.spec_len() + b.spec_len() ==> selected.is_some();
 
-        fn append_select(a: &Self, b: &Self) -> (result: Self)
+        fn append_select(a: &Self, b: &Self) -> (app_sel: Self)
             requires a.spec_len() + b.spec_len() <= usize::MAX as int
-            ensures result.spec_len() == a.spec_len() + b.spec_len();
+            ensures app_sel.spec_len() == a.spec_len() + b.spec_len();
 
-        fn from_set(set: &SetStEph<T>) -> (result: Self)
+        fn from_set(set: &SetStEph<T>) -> (seq: Self)
             where T: StT + Hash
             requires valid_key_type::<T>()
-            ensures result.spec_len() == set@.len();
+            ensures seq.spec_len() == set@.len();
     }
 
     impl<T: View + Clone> ArraySeqStPerTrait<T> for ArraySeqStPerS<T> {
@@ -139,15 +139,15 @@ pub mod ArraySeqStPer {
             self.seq@[i]
         }
 
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (result: ArraySeqStPerS<T>) {
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqStPerS<T>) {
             ArraySeqStPerS::<T>::tabulate(f, length)
         }
 
-        fn length(&self) -> (result: usize) {
+        fn length(&self) -> (len: usize) {
             self.seq.len()
         }
 
-        fn nth(&self, i: usize) -> (result: &T) {
+        fn nth(&self, i: usize) -> (nth_elem: &T) {
             &self.seq[i]
         }
 
@@ -162,7 +162,7 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.3: map f a = tabulate(lambda i.f(a[i]), |a|)
-        fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> (result: ArraySeqStPerS<U>) {
+        fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> (mapped: ArraySeqStPerS<U>) {
             let n = a.length();
             proof {
                 assert forall|i: usize| i < n implies (i as int) < a.spec_len() && #[trigger] f.requires((&a.seq@[i as int],)) by {
@@ -204,7 +204,7 @@ pub mod ArraySeqStPer {
         }
 
         // Concatenates all inner sequences into a single flat sequence.
-        fn flatten(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (result: ArraySeqStPerS<T>) {
+        fn flatten(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (flattened: ArraySeqStPerS<T>) {
             // First pass: compute total length.
             let ss_len = ss.seq.len();
             let mut total_len: usize = 0;
@@ -313,7 +313,7 @@ pub mod ArraySeqStPer {
         }
 
         // deflate f x = if f x then singleton x else empty
-        fn deflate<F: Fn(&T) -> bool>(f: &F, x: &T) -> (result: ArraySeqStPerS<T>) {
+        fn deflate<F: Fn(&T) -> bool>(f: &F, x: &T) -> (deflated: ArraySeqStPerS<T>) {
             if f(x) {
                 Self::singleton(x.clone())
             } else {
@@ -432,7 +432,7 @@ pub mod ArraySeqStPer {
             )
         }
 
-        fn from_set(set: &SetStEph<T>) -> (result: ArraySeqStPerS<T>)
+        fn from_set(set: &SetStEph<T>) -> (seq: ArraySeqStPerS<T>)
             where T: StT + Hash
         {
             let seq = set.to_seq();

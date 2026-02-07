@@ -88,7 +88,7 @@ verus! {
     /// - If no capacity, runs both closures sequentially (help-first strategy).
     /// - Prevents deadlock from nested joins.
     #[verifier::external_body]
-    pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (result: (A, B))
+    pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
     where
         FA: FnOnce() -> A + Send + 'static,
         FB: FnOnce() -> B + Send + 'static,
@@ -98,13 +98,13 @@ verus! {
             fa.requires(()),
             fb.requires(()),
         ensures
-            fa.ensures((), result.0),
-            fb.ensures((), result.1),
+            fa.ensures((), joined_pair.0),
+            fb.ensures((), joined_pair.1),
     {
         if try_acquire() {
-            let result = spawn_join(fa, fb);
+            let joined_pair = spawn_join(fa, fb);
             release();
-            result
+            joined_pair
         } else {
             (fa(), fb())
         }
@@ -113,7 +113,7 @@ verus! {
     /// - Unconditional fork-join: always spawns fb in a new thread.
     /// - Runs fa in the current thread, waits for fb to complete, returns both results.
     #[verifier::external_body]
-    pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (result: (A, B))
+    pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
     where
         FA: FnOnce() -> A + Send + 'static,
         FB: FnOnce() -> B + Send + 'static,
@@ -123,8 +123,8 @@ verus! {
             fa.requires(()),
             fb.requires(()),
         ensures
-            fa.ensures((), result.0),
-            fb.ensures((), result.1),
+            fa.ensures((), joined_pair.0),
+            fb.ensures((), joined_pair.1),
     {
         let handle: JoinHandlePlus<B> = spawn_plus(fb);
         let a = fa();
@@ -155,25 +155,25 @@ verus! {
             let thread_handle: JoinHandlePlus<T> = spawn_plus(f);
             TaskState::Spawned { handle: thread_handle }
         } else {
-            let result = f();
-            TaskState::Completed { result: Some(result) }
+            let joined_pair = f();
+            TaskState::Completed { result: Some(joined_pair) }
         }
     }
 
     /// Wait for a spawned task to complete. Releases capacity.
     #[verifier::external_body]
-    pub fn wait<T: Send + 'static>(task: TaskState<T>) -> (result: T)
+    pub fn wait<T: Send + 'static>(task: TaskState<T>) -> (task_result: T)
         ensures
-            task.predicate(result),
+            task.predicate(task_result),
     {
         match task {
             TaskState::Spawned { handle: h } => {
-                let result = match h.join() {
+                let task_result = match h.join() {
                     Ok(val) => val,
                     Err(_) => panic!("Thread panicked"),
                 };
                 release();
-                result
+                task_result
             }
             TaskState::Completed { result } => {
                 result.expect("TaskState already consumed")

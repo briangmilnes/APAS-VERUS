@@ -7,6 +7,8 @@ pub mod DirGraphStEph {
     use std::hash::Hash;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Types::Types::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::SetLit;
@@ -505,7 +507,29 @@ verus! {
         }
     }
 
- } // verus!
+     impl<V: StT + Hash> PartialEqSpecImpl for DirGraphStEph<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<V: StT + Hash> Eq for DirGraphStEph<V> {}
+
+    impl<V: StT + Hash> PartialEq for DirGraphStEph<V> {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            let v_eq = self.V == other.V;
+            let a_eq = self.A == other.A;
+            proof {
+                if v_eq && a_eq {
+                    assert(self@ =~= other@);
+                }
+            }
+            v_eq && a_eq
+        }
+    }
+
+} // verus!
 
     impl<V: StT + Hash> Debug for DirGraphStEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
@@ -519,12 +543,6 @@ verus! {
     impl<V: StT + Hash> Display for DirGraphStEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} A={:?}", self.V, self.A) }
     }
-
-    impl<V: StT + Hash> PartialEq for DirGraphStEph<V> {
-        fn eq(&self, other: &Self) -> bool { self.V == other.V && self.A == other.A }
-    }
-
-    impl<V: StT + Hash> Eq for DirGraphStEph<V> {}
 
     // Macro defined outside verus! block
     #[macro_export]

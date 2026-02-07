@@ -30,11 +30,11 @@ pub mod FibonacciStEph {
 
         /// - Iterative Fibonacci implementation.
         /// - Work: Θ(n), Space: O(1)
-        pub fn fib(n: u64) -> (result: u64)
+        pub fn fib(n: u64) -> (fibonacci: u64)
             requires
                 n <= 46,
             ensures
-                result == spec_fib(n as nat),
+                fibonacci == spec_fib(n as nat),
         {
             if n == 0 {
                 return 0;
@@ -68,11 +68,11 @@ pub mod FibonacciStEph {
         /// - Recursive Fibonacci implementation (matches APAS structure).
         /// - Work: Θ(φⁿ), Span: Θ(n), where φ ≈ 1.618 (golden ratio)
         /// - Note: Exponential work - for demonstration only.
-        pub fn fib_recursive(n: u64) -> (result: u64)
+        pub fn fib_recursive(n: u64) -> (fibonacci: u64)
             requires
                 n <= 46,
             ensures
-                result == spec_fib(n as nat),
+                fibonacci == spec_fib(n as nat),
             decreases n,
         {
             if n <= 1 {

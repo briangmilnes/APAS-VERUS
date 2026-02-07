@@ -9,12 +9,12 @@ alwaysApply: true
 Run the style review tool with:
 
 ```bash
-cd ~/projects/APAS-VERUS && veracity-review-verus-style -e experiments -e src/Chap21 -e src/Concurrency.rs -e src/Types.rs -e src/vstdplus src/
+cd ~/projects/APAS-VERUS && ~/projects/veracity/target/release/veracity-review-verus-style -c ~/projects/APAS-VERUS -e Chap21 -e vstdplus -e Types.rs -e Concurrency.rs -e experiments -e lib.rs | grep -e warning
 ```
 
 Grep the output for `warning` to see only issues.
 
-## Current warnings (38 in 15 files)
+## Current warnings (37 in 14 files)
 
 ### [15] PartialEq/Eq/Clone should be inside verus!
 - Chap06: DirGraphStEph, DirGraphMtEph, UnDirGraphStEph, UnDirGraphMtEph (PartialEq + Eq)
@@ -32,8 +32,8 @@ Grep the output for `warning` to see only issues.
 ### [17] Iterator impls
 - Chap17/MathSeq: IntoIterator should be inside verus!
 
-### [3] No verus! macro
-- lib.rs (expected — it's the module root)
+### Excluded from review
+- lib.rs (module root, no verus!), Types.rs, Concurrency.rs, Chap21, vstdplus, experiments
 
 ## Pattern for moving PartialEq inside verus!
 

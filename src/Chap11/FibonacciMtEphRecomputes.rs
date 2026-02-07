@@ -87,9 +87,9 @@ tokenized_state_machine!{
 }
 
 /// Fully parallel Fibonacci with TSM at each fork-join level.
-pub fn fib_recomputes(n: u64) -> (result: u64)
+pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
     requires n <= 46
-    ensures result == spec_fib(n as nat)
+    ensures fibonacci == spec_fib(n as nat)
     decreases n
 {
     if n <= 1 {

@@ -12,10 +12,6 @@ pub mod InsertionSortStEph {
 
 broadcast use vstd::seq_lib::group_to_multiset_ensures;
 
-pub trait InsertionSortStTrait<T: TotalOrder> {
-    fn insertion_sort(a: &mut [T]) -> &[T];
-}
-
 pub open spec fn sorted_prefix<T: TotalOrder>(v: &[T], i: int) -> bool {
     forall|k: int, l: int| 0 <= k < l < i ==> T::le(#[trigger] v[k], #[trigger] v[l])
 }
@@ -25,10 +21,10 @@ pub open spec fn is_sorted<T: TotalOrder>(v: &[T]) -> bool {
 }
 
 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-pub fn insertion_sort<T: TotalOrder + Copy>(a: &mut [T]) -> (r: &[T])
-    ensures
-        r.len() == old(a).len(),
-        r@.to_multiset() == old(a)@.to_multiset(),
+pub fn insertion_sort<T: TotalOrder + Copy>(a: &mut [T]) -> (sorted: &[T])
+        ensures
+          sorted.len() == old(a).len(),
+          sorted@.to_multiset() == old(a)@.to_multiset()
 {
     if a.len() <= 1 {
         a

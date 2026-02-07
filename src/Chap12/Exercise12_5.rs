@@ -38,7 +38,7 @@ pub trait ConcurrentStackMtTrait<T: Send>: Sized {
     /// Pop a value from the stack.
     /// Returns Some(v) where v was the top element at the linearization point,
     /// or None if the stack was empty at that point.
-    fn pop(&self) -> (result: Option<T>)
+    fn pop(&self) -> (possible_top: Option<T>)
         requires self.wf();
     
     /// Check if the stack is empty at this instant.
@@ -95,7 +95,7 @@ impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
     }
 
     #[verifier::external_body]
-    fn pop(&self) -> (result: Option<T>) {
+    fn pop(&self) -> (possible_top: Option<T>) {
         loop {
             let head = self.head.load(Ordering::Acquire);
             if head.is_null() {

@@ -344,8 +344,8 @@ verus! {
     impl<A: StT + Hash, B: StT + Hash> Eq for RelationStEph<A, B> {}
 
     impl<A: StT + Hash, B: StT + Hash> PartialEq for RelationStEph<A, B> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         { self.pairs == other.pairs }
     }
 

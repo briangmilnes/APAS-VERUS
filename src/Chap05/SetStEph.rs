@@ -814,13 +814,13 @@ verus! {
     impl<T: StT + Hash> Eq for SetStEph<T> {}
 
     impl<T: StT + Hash> PartialEq for SetStEph<T> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
-            let r = self.elements == other.elements;
+            let equal = self.elements == other.elements;
             // HashSetWithView* eq is external_body so we have to trust it here.
-            proof { assume(r == (self@ == other@)); }
-            r
+            proof { assume(equal == (self@ == other@)); }
+            equal
         }
     }
 

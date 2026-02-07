@@ -83,10 +83,10 @@ pub mod MathSeq {
                 self.spec_len() == 1
             }
             
-            pub fn new(length: N, init_value: T) -> (result: Self)
+            pub fn new(length: N, init_value: T) -> (new_seq: Self)
                 ensures
-                result.spec_len() == length,
-            forall|i: int| #![auto] 0 <= i < length ==> cloned(init_value, result.data@[i]),
+                new_seq.spec_len() == length,
+            forall|i: int| #![auto] 0 <= i < length ==> cloned(init_value, new_seq.data@[i]),
             {
                 let v = vec![init_value; length];
                 MathSeqS { data: v }
@@ -121,16 +121,16 @@ pub mod MathSeq {
                 &self.data[index]
             }
             
-            pub fn empty() -> (result: Self)
-                ensures result.spec_len() == 0,
+            pub fn empty() -> (empty_seq: Self)
+                ensures empty_seq.spec_len() == 0,
             {
                 MathSeqS { data: Vec::new() }
             }
             
-            pub fn singleton(item: T) -> (result: Self)
+            pub fn singleton(item: T) -> (singleton: Self)
                 ensures
-                result.spec_len() == 1,
-            result@[0] == item@,
+                singleton.spec_len() == 1,
+                singleton@[0] == item@,
             {
                 MathSeqS { data: vec![item] }
             }
@@ -144,40 +144,39 @@ pub mod MathSeq {
                 self.data.push(value);
             }
             
-            pub fn delete_last(&mut self) -> (result: Option<T>)
+            pub fn delete_last(&mut self) -> (shortened: Option<T>)
                 ensures
-                old(self).spec_len() == 0 ==> result is None && self@ == old(self)@,
-            old(self).spec_len() > 0 ==>
-                result is Some
-                && result->Some_0@ == old(self)@[old(self).spec_len() - 1]
+                old(self).spec_len() == 0 ==> shortened is None && self@ == old(self)@,
+                old(self).spec_len() > 0  ==> shortened is Some
+                && shortened->Some_0@ == old(self)@[old(self).spec_len() - 1]
                 && self.spec_len() == old(self).spec_len() - 1
                 && forall|i: int| 0 <= i < self.spec_len() ==> self@[i] == old(self)@[i],
             {
                 self.data.pop()
             }
             
-            pub fn is_empty(&self) -> (result: bool)
-                ensures result == self.spec_is_empty(),
+            pub fn is_empty(&self) -> (emptiness: bool)
+                ensures emptiness == self.spec_is_empty(),
             {
                 self.data.len() == 0
             }
             
-            pub fn is_singleton(&self) -> (result: bool)
-                ensures result == self.spec_is_singleton(),
+            pub fn is_singleton(&self) -> (singularity: bool)
+                ensures singularity == self.spec_is_singleton(),
             {
                 self.data.len() == 1
             }
             
-            pub fn from_vec(data: Vec<T>) -> (result: Self)
-                ensures result.data@ == data@,
+            pub fn from_vec(data: Vec<T>) -> (seq: Self)
+                ensures seq.data@ == data@,
             {
                 MathSeqS { data }
             }
             
-            pub fn with_len(length: N, init_value: T) -> (result: Self)
+            pub fn with_len(length: N, init_value: T) -> (seq_of_len_value: Self)
                 ensures
-                result.spec_len() == length,
-            forall|i: int| #![auto] 0 <= i < length ==> cloned(init_value, result.data@[i]),
+                seq_of_len_value.spec_len() == length,
+                forall|i: int| #![auto] 0 <= i < length ==> cloned(init_value, seq_of_len_value.data@[i]),
             {
                 Self::new(length, init_value)
             }
@@ -186,13 +185,13 @@ pub mod MathSeq {
                 if val < 0 { 0 } else if val > max { max } else { val }
             }
             
-            pub fn subseq(&self, start: N, length: N) -> (result: &[T])
+            pub fn subseq(&self, start: N, length: N) -> (subseq: &[T])
                 ensures
-                result@.len() <= length,
+                subseq@.len() <= length,
             ({
                 let s = Self::spec_clamp(start as int, self.data@.len() as int);
                 let e = Self::spec_clamp((start + length) as int, self.data@.len() as int);
-                result@ == self.data@.subrange(s, e)
+                subseq@ == self.data@.subrange(s, e)
             }),
             {
                 let n = self.data.len();
@@ -202,12 +201,12 @@ pub mod MathSeq {
                 slice_subrange(slice, s, e)
             }
             
-            pub fn subseq_copy(&self, start: N, length: N) -> (result: Self) where T: Copy
+            pub fn subseq_copy(&self, start: N, length: N) -> (subseq: Self) where T: Copy
                 requires
-                start as int + length as int <= self.data@.len(),
-            ensures
-                result.spec_len() == length,
-            result.data@ == self.data@.subrange(start as int, (start + length) as int),
+                  start as int + length as int <= self.data@.len(),
+                ensures
+                  subseq.spec_len() == length,
+            subseq.data@ == self.data@.subrange(start as int, (start + length) as int),
             {
                 let _n = self.data.len(); // exec call bounds start + length <= usize::MAX
                 let end = start + length;
@@ -216,8 +215,8 @@ pub mod MathSeq {
                 MathSeqS { data: vec }
             }
             
-            pub fn domain(&self) -> (result: Vec<N>)
-                ensures result@.len() == self.spec_len(),
+            pub fn domain(&self) -> (domain: Vec<N>)
+                ensures domain@.len() == self.spec_len(),
             {
                 let mut v = Vec::new();
                 let len = self.data.len();
@@ -234,11 +233,11 @@ pub mod MathSeq {
                 v
             }
             
-            pub fn range(&self) -> (result: Vec<T>)
+            pub fn range(&self) -> (range: Vec<T>)
                 requires valid_key_type::<T>(),
-            ensures
-                result@.len() <= self.data@.len(),
-            result@.no_duplicates(),
+                ensures
+                  range@.len() <= self.data@.len(),
+                  range@.no_duplicates(),
             {
                 let mut seen: HashSetWithViewPlus<T> = HashSetWithViewPlus::new();
                 let mut out: Vec<T> = Vec::new();
@@ -350,12 +349,12 @@ pub mod MathSeq {
                 out
             }
             
-            pub fn multiset_range(&self) -> (result: Vec<(N, T)>)
+            pub fn multiset_range(&self) -> (range: Vec<(N, T)>)
                 requires
                     valid_key_type::<T>(),
                     forall|k1: T, k2: T| k1@ == k2@ ==> k1 == k2,
                 ensures
-                    result@.len() <= self.data@.len(),
+                    range@.len() <= self.data@.len(),
             {
                 let mut counts: HashMapWithView<T, N> = HashMapWithView::with_capacity(self.data.len());
                 let mut order: Vec<T> = Vec::new();
@@ -414,7 +413,7 @@ pub mod MathSeq {
                 
                 let ghost final_counts = counts@;
                 
-                let mut result: Vec<(N, T)> = Vec::new();
+                let mut range: Vec<(N, T)> = Vec::new();
                 let mut j: usize = 0;
                 let order_len = order.len();
                 
@@ -424,7 +423,7 @@ pub mod MathSeq {
                         valid_key_type::<T>(),
                         forall|k1: T, k2: T| k1@ == k2@ ==> k1 == k2,
                         j <= order_len,
-                        result@.len() == j,
+                        range@.len() == j,
                         order_len <= len,
                         counts@ == final_counts,
                         forall|idx: int| #![auto] 0 <= idx < order@.len() ==> final_counts.contains_key(order@[idx]@),
@@ -442,11 +441,11 @@ pub mod MathSeq {
                     // HashMapWithView::get: is_some <==> contains_key(k@)
                     let opt_count = counts.get(&x);
                     let count = *opt_count.unwrap();
-                    result.push((count, x));
+                    range.push((count, x));
                     j = j + 1;
                 }
                 
-                result
+                range
             }
         }
 

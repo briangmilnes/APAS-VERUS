@@ -33,58 +33,58 @@ pub mod ArraySeqStEph {
     pub trait ArraySeqStEphTrait<T: View + Clone>: Sized {
         spec fn spec_len(&self) -> nat;
 
-        fn empty() -> (result: Self)
-            ensures result.spec_len() == 0;
+        fn empty() -> (empty_seq: Self)
+            ensures empty_seq.spec_len() == 0;
 
-        fn singleton(item: T) -> (result: Self)
-            ensures result.spec_len() == 1;
+        fn singleton(item: T) -> (singleton: Self)
+            ensures singleton.spec_len() == 1;
 
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (result: Self)
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: Self)
             requires
                 length <= usize::MAX,
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
             ensures
-                result.spec_len() == length,
-                forall|j: usize| j < length ==> f.ensures((j,), #[trigger] result.nth_spec(j as int));
+                tab_seq.spec_len() == length,
+                forall|j: usize| j < length ==> f.ensures((j,), #[trigger] tab_seq.nth_spec(j as int));
 
-        fn map<U: View + Clone, F: Fn(&T) -> U>(a: &Self, f: &F) -> (result: ArraySeqStEphS<U>)
+        fn map<U: View + Clone, F: Fn(&T) -> U>(a: &Self, f: &F) -> (mapped: ArraySeqStEphS<U>)
             where Self: Sized
             requires
                 a.spec_len() <= usize::MAX as int,
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.nth_spec(i),))
             ensures
-                result.spec_len() == a.spec_len(),
-                forall|i: int| #![auto] 0 <= i < a.spec_len() ==> f.ensures((&a.nth_spec(i),), result.seq@[i]);
+                mapped.spec_len() == a.spec_len(),
+                forall|i: int| #![auto] 0 <= i < a.spec_len() ==> f.ensures((&a.nth_spec(i),), mapped.seq@[i]);
 
         spec fn nth_spec(&self, i: int) -> T;
 
-        fn nth(&self, i: usize) -> (result: &T)
+        fn nth(&self, i: usize) -> (nth_elem: &T)
             requires (i as int) < self.spec_len()
-            ensures *result == self.nth_spec(i as int);
+            ensures *nth_elem == self.nth_spec(i as int);
 
-        fn length(&self) -> (result: usize)
-            ensures result == self.spec_len();
+        fn length(&self) -> (len: usize)
+            ensures len == self.spec_len();
 
-        fn append(a: &Self, b: &Self) -> (result: Self)
+        fn append(a: &Self, b: &Self) -> (appended: Self)
             requires a.spec_len() + b.spec_len() <= usize::MAX as nat
-            ensures result.spec_len() == a.spec_len() + b.spec_len();
+            ensures appended.spec_len() == a.spec_len() + b.spec_len();
 
-        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> (result: Self)
+        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> (filtered: Self)
             requires
                 a.spec_len() <= usize::MAX as int,
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.nth_spec(i),)),
             ensures
-                result.spec_len() <= a.spec_len();
+                filtered.spec_len() <= a.spec_len();
 
-        fn update(a: &Self, index: usize, item: T) -> (result: Self)
+        fn update(a: &Self, index: usize, item: T) -> (updated: Self)
             requires (index as int) < a.spec_len()
-            ensures result.spec_len() == a.spec_len();
+            ensures updated.spec_len() == a.spec_len();
 
-        fn is_empty(a: &Self) -> (result: bool)
-            ensures result == (a.spec_len() == 0);
+        fn is_empty(a: &Self) -> (empty: bool)
+            ensures empty == (a.spec_len() == 0);
 
-        fn is_singleton(a: &Self) -> (result: bool)
-            ensures result == (a.spec_len() == 1);
+        fn is_singleton(a: &Self) -> (single: bool)
+            ensures single == (a.spec_len() == 1);
 
         fn iterate<A: Clone, F: Fn(&A, &T) -> A>(a: &Self, f: &F, x: A) -> A
             requires
@@ -98,31 +98,31 @@ pub mod ArraySeqStEph {
             requires
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y));
 
-        fn select(a: &Self, b: &Self, index: usize) -> (result: Option<T>)
-            ensures (index as int) < a.spec_len() + b.spec_len() ==> result.is_some();
+        fn select(a: &Self, b: &Self, index: usize) -> (selected: Option<T>)
+            ensures (index as int) < a.spec_len() + b.spec_len() ==> selected.is_some();
 
-        fn append_select(a: &Self, b: &Self) -> (result: Self)
+        fn append_select(a: &Self, b: &Self) -> (app_sel: Self)
             requires a.spec_len() + b.spec_len() <= usize::MAX as nat
-            ensures result.spec_len() == a.spec_len() + b.spec_len();
+            ensures app_sel.spec_len() == a.spec_len() + b.spec_len();
 
-        fn flatten(ss: &ArraySeqStEphS<ArraySeqStEphS<T>>) -> (result: Self)
+        fn flatten(ss: &ArraySeqStEphS<ArraySeqStEphS<T>>) -> (flattened: Self)
             requires sum_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int
             ensures
-                ss.seq@.len() == 2 ==> result.spec_len() == ss.seq@[0].seq@.len() + ss.seq@[1].seq@.len(),
+                ss.seq@.len() == 2 ==> flattened.spec_len() == ss.seq@[0].seq@.len() + ss.seq@[1].seq@.len(),
                 (forall|i: int| #![auto] 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1)
-                    ==> result.spec_len() <= ss.seq@.len();
+                    ==> flattened.spec_len() <= ss.seq@.len();
 
-        fn deflate<F: Fn(&T) -> bool>(f: &F, x: &T) -> (result: Self)
+        fn deflate<F: Fn(&T) -> bool>(f: &F, x: &T) -> (deflated: Self)
             requires f.requires((x,))
             ensures
-                result.spec_len() <= 1,
-                result.spec_len() == 1 ==> f.ensures((x,), true),
-                result.spec_len() == 0 ==> f.ensures((x,), false);
+                deflated.spec_len() <= 1,
+                deflated.spec_len() == 1 ==> f.ensures((x,), true),
+                deflated.spec_len() == 0 ==> f.ensures((x,), false);
 
-        fn from_set(set: &SetStEph<T>) -> (result: Self)
+        fn from_set(set: &SetStEph<T>) -> (seq: Self)
             where T: StT + Hash
             requires valid_key_type::<T>()
-            ensures result.spec_len() == set@.len();
+            ensures seq.spec_len() == set@.len();
     }
 
     impl<T: View + Clone> ArraySeqStEphTrait<T> for ArraySeqStEphS<T> {
@@ -130,17 +130,17 @@ pub mod ArraySeqStEph {
             self.seq@.len() as nat
         }
 
-        fn empty() -> (result: ArraySeqStEphS<T>) {
+        fn empty() -> (empty_seq: ArraySeqStEphS<T>) {
             ArraySeqStEphS { seq: Vec::new() }
         }
 
-        fn singleton(item: T) -> (result: ArraySeqStEphS<T>) {
+        fn singleton(item: T) -> (singleton: ArraySeqStEphS<T>) {
             let mut seq = Vec::with_capacity(1);
             seq.push(item);
             ArraySeqStEphS { seq }
         }
 
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (result: ArraySeqStEphS<T>)
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqStEphS<T>)
         {
             let mut seq = Vec::with_capacity(length);
             let mut i: usize = 0;
@@ -173,15 +173,15 @@ pub mod ArraySeqStEph {
             self.seq@[i]
         }
 
-        fn nth(&self, i: usize) -> (result: &T) {
+        fn nth(&self, i: usize) -> (nth_elem: &T) {
             &self.seq[i]
         }
 
-        fn length(&self) -> (result: usize) {
+        fn length(&self) -> (len: usize) {
             self.seq.len()
         }
 
-        fn map<U: View + Clone, F: Fn(&T) -> U>(a: &ArraySeqStEphS<T>, f: &F) -> (result: ArraySeqStEphS<U>) {
+        fn map<U: View + Clone, F: Fn(&T) -> U>(a: &ArraySeqStEphS<T>, f: &F) -> (mapped: ArraySeqStEphS<U>) {
             ArraySeqStEphS::<U>::tabulate(
                 &(|i: usize| -> (r: U)
                     requires
@@ -196,7 +196,7 @@ pub mod ArraySeqStEph {
             )
         }
 
-        fn append(a: &ArraySeqStEphS<T>, b: &ArraySeqStEphS<T>) -> (result: ArraySeqStEphS<T>) {
+        fn append(a: &ArraySeqStEphS<T>, b: &ArraySeqStEphS<T>) -> (appended: ArraySeqStEphS<T>) {
             // Clone inner Vecs (vstd has clone spec for Vec)
             let a_clone = ArraySeqStEphS { seq: a.seq.clone() };
             let b_clone = ArraySeqStEphS { seq: b.seq.clone() };
@@ -216,7 +216,7 @@ pub mod ArraySeqStEph {
             Self::flatten(&pair)
         }
 
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStEphS<T>, pred: &F) -> (result: ArraySeqStEphS<T>) {
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStEphS<T>, pred: &F) -> (filtered: ArraySeqStEphS<T>) {
             // Build deflated array manually to avoid opaque f.ensures
             let n = a.seq.len();
             let mut deflated_vec: Vec<ArraySeqStEphS<T>> = Vec::with_capacity(n);
@@ -256,7 +256,7 @@ pub mod ArraySeqStEph {
             Self::flatten(&deflated)
         }
 
-        fn update(a: &ArraySeqStEphS<T>, index: usize, item: T) -> (result: ArraySeqStEphS<T>) {
+        fn update(a: &ArraySeqStEphS<T>, index: usize, item: T) -> (updated: ArraySeqStEphS<T>) {
             Self::tabulate(
                 &(|j: usize| -> (r: T)
                     requires j < a.seq@.len()
@@ -267,11 +267,11 @@ pub mod ArraySeqStEph {
             )
         }
 
-        fn is_empty(a: &ArraySeqStEphS<T>) -> (result: bool) {
+        fn is_empty(a: &ArraySeqStEphS<T>) -> (empty: bool) {
             a.seq.len() == 0
         }
 
-        fn is_singleton(a: &ArraySeqStEphS<T>) -> (result: bool) {
+        fn is_singleton(a: &ArraySeqStEphS<T>) -> (single: bool) {
             a.seq.len() == 1
         }
 
@@ -326,7 +326,7 @@ pub mod ArraySeqStEph {
             (ArraySeqStEphS { seq: results }, acc)
         }
 
-        fn select(a: &ArraySeqStEphS<T>, b: &ArraySeqStEphS<T>, index: usize) -> (result: Option<T>) {
+        fn select(a: &ArraySeqStEphS<T>, b: &ArraySeqStEphS<T>, index: usize) -> (selected: Option<T>) {
             if index < a.seq.len() {
                 Some(a.seq[index].clone())
             } else {
@@ -339,7 +339,7 @@ pub mod ArraySeqStEph {
             }
         }
 
-        fn append_select(a: &ArraySeqStEphS<T>, b: &ArraySeqStEphS<T>) -> (result: ArraySeqStEphS<T>) {
+        fn append_select(a: &ArraySeqStEphS<T>, b: &ArraySeqStEphS<T>) -> (app_sel: ArraySeqStEphS<T>) {
             Self::tabulate(
                 &(|i: usize| -> (r: T)
                     requires i < a.seq@.len() + b.seq@.len()
@@ -351,7 +351,7 @@ pub mod ArraySeqStEph {
         }
 
         // Concatenates all inner sequences into a single flat sequence.
-        fn flatten(ss: &ArraySeqStEphS<ArraySeqStEphS<T>>) -> (result: ArraySeqStEphS<T>) {
+        fn flatten(ss: &ArraySeqStEphS<ArraySeqStEphS<T>>) -> (flattened: ArraySeqStEphS<T>) {
             // First pass: compute total length
             let ss_len = ss.seq.len();
             let mut total_len: usize = 0;
@@ -417,7 +417,7 @@ pub mod ArraySeqStEph {
             ArraySeqStEphS { seq: result }
         }
 
-        fn deflate<F: Fn(&T) -> bool>(f: &F, x: &T) -> (result: ArraySeqStEphS<T>) {
+        fn deflate<F: Fn(&T) -> bool>(f: &F, x: &T) -> (deflated: ArraySeqStEphS<T>) {
             if f(x) {
                 Self::singleton(x.clone())
             } else {
@@ -425,7 +425,7 @@ pub mod ArraySeqStEph {
             }
         }
 
-        fn from_set(set: &SetStEph<T>) -> (result: ArraySeqStEphS<T>)
+        fn from_set(set: &SetStEph<T>) -> (seq: ArraySeqStEphS<T>)
             where T: StT + Hash
         {
             let seq = set.to_seq();
@@ -442,11 +442,11 @@ pub mod ArraySeqStEph {
         }
     }
 
-    fn subseq_copy<T: View + Clone>(a: &ArraySeqStEphS<T>, start: usize, len: usize) -> (result: ArraySeqStEphS<T>)
+    fn subseq_copy<T: View + Clone>(a: &ArraySeqStEphS<T>, start: usize, len: usize) -> (subseq: ArraySeqStEphS<T>)
         requires
             start as int + len as int <= a.seq@.len(),
         ensures
-            result.seq@.len() == len,
+            subseq.seq@.len() == len,
     {
         let a_len = a.seq.len();
         let mut result: Vec<T> = Vec::with_capacity(len);

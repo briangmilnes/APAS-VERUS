@@ -31,16 +31,16 @@ pub mod ArraySeq {
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
         /// - Work Θ(length), Span Θ(1).
-        fn new(length: usize, init_value: T) -> (result: Self)
+        fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone
             requires length <= usize::MAX
-            ensures result.spec_len() == length as int;
+            ensures new_seq.spec_len() == length as int;
 
         /// - Set the element at `index` to `item` in place.
         /// - Work Θ(1), Span Θ(1).
-        fn set(&mut self, index: usize, item: T) -> (result: Result<(), &'static str>)
+        fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
-            ensures result.is_ok() ==> self.spec_len() == old(self).spec_len();
+            ensures success.is_ok() ==> self.spec_len() == old(self).spec_len();
 
         /// - Definition 18.1 (length). Return the number of elements.
         /// - Work Θ(1), Span Θ(1).
@@ -49,68 +49,68 @@ pub mod ArraySeq {
 
         /// - Algorithm 19.11 (Function nth). Return a reference to the element at `index`.
         /// - Work Θ(1), Span Θ(1).
-        fn nth(&self, index: usize) -> (result: &T)
+        fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.spec_len();
 
         /// - Definition 18.1 (empty). Construct the empty sequence.
         /// - Work Θ(1), Span Θ(1).
-        fn empty() -> (result: Self)
-            ensures result.spec_len() == 0;
+        fn empty() -> (empty_seq: Self)
+            ensures empty_seq.spec_len() == 0;
 
         /// - Definition 18.1 (singleton). Construct a singleton sequence containing `item`.
         /// - Work Θ(1), Span Θ(1).
-        fn singleton(item: T) -> (result: Self)
-            ensures result.spec_len() == 1;
+        fn singleton(item: T) -> (singleton: Self)
+            ensures singleton.spec_len() == 1;
 
         /// - Algorithm 18.3 (tabulate). Build a sequence by applying `f` to each index.
         /// - Work Θ(length), Span Θ(1).
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (result: ArraySeqS<T>)
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqS<T>)
             requires
                 length <= usize::MAX,
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
             ensures
-                result.spec_len() == length as int,
-                forall|i: int| #![auto] 0 <= i < length ==> f.ensures((i as usize,), result.seq@[i]);
+                tab_seq.spec_len() == length as int,
+                forall|i: int| #![auto] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);
 
         /// - Algorithm 18.4 (map). Transform each element via `f`.
         /// - Work Θ(|a|), Span Θ(1).
-        fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqS<T>, f: &F) -> (result: ArraySeqS<U>)
+        fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqS<T>, f: &F) -> (mapped: ArraySeqS<U>)
             requires forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.seq@[i],))
             ensures
-                result.spec_len() == a.spec_len(),
-                forall|i: int| #![auto] 0 <= i < a.spec_len() ==> f.ensures((&a.seq@[i],), result.seq@[i]);
+                mapped.spec_len() == a.spec_len(),
+                forall|i: int| #![auto] 0 <= i < a.spec_len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);
 
         /// - Definition 18.12 (subseq). Extract a contiguous subsequence.
         /// - Work Θ(length), Span Θ(1).
-        fn subseq(a: &ArraySeqS<T>, start: usize, length: usize) -> (result: Self)
+        fn subseq(a: &ArraySeqS<T>, start: usize, length: usize) -> (subseq: Self)
             where T: Clone
             requires start + length <= a.spec_len()
-            ensures result.spec_len() == length as int;
+            ensures subseq.spec_len() == length as int;
 
         /// - Definition 18.13 (append). Concatenate two sequences.
         /// - Work Θ(|a| + |b|), Span Θ(1).
-        fn append(a: &ArraySeqS<T>, b: &ArraySeqS<T>) -> (result: Self)
+        fn append(a: &ArraySeqS<T>, b: &ArraySeqS<T>) -> (appended: Self)
             where T: Clone
             requires a.spec_len() + b.spec_len() <= usize::MAX as int
-            ensures result.spec_len() == a.spec_len() + b.spec_len();
+            ensures appended.spec_len() == a.spec_len() + b.spec_len();
 
         /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
         /// - Work Θ(|a|), Span Θ(1).
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqS<T>, pred: &F) -> (result: Self)
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqS<T>, pred: &F) -> (filtered: Self)
             where T: Clone
             requires forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.seq@[i],))
-            ensures result.spec_len() <= a.spec_len();
+            ensures filtered.spec_len() <= a.spec_len();
 
         /// - Definition 18.15 (flatten). Concatenate a sequence of sequences.
         /// - Work Θ(total length), Span Θ(1).
-        fn flatten(a: &ArraySeqS<ArraySeqS<T>>) -> (result: Self) where T: Clone;
+        fn flatten(a: &ArraySeqS<ArraySeqS<T>>) -> (flattened: Self) where T: Clone;
 
         /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
         /// - Work Θ(|a|), Span Θ(1).
-        fn update(a: &ArraySeqS<T>, index: usize, item: T) -> (result: Self)
+        fn update(a: &ArraySeqS<T>, index: usize, item: T) -> (updated: Self)
             where T: Clone
             requires index < a.spec_len()
-            ensures result.spec_len() == a.spec_len();
+            ensures updated.spec_len() == a.spec_len();
 
         /// - Definition 18.5 (isEmpty). true iff the sequence has length zero.
         /// - Work Θ(1), Span Θ(1).
@@ -135,22 +135,22 @@ pub mod ArraySeq {
 
         /// - Definition 18.19 (scan). Prefix-reduce returning partial sums and total.
         /// - Work Θ(|a|), Span Θ(1).
-        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, id: T) -> (result: (ArraySeqS<T>, T))
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, id: T) -> (scanned: (ArraySeqS<T>, T))
             where T: Clone
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y))
-            ensures result.0.spec_len() == a.spec_len();
+            ensures scanned.0.spec_len() == a.spec_len();
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
         /// - Work Θ(length), Span Θ(1).
-        fn subseq_copy(&self, start: usize, length: usize) -> (result: ArraySeqS<T>)
+        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: ArraySeqS<T>)
             where T: Clone
             requires start + length <= self.spec_len()
-            ensures result.spec_len() == length as int;
+            ensures subseq.spec_len() == length as int;
 
         /// - Create sequence from Vec.
         /// - Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
-        fn from_vec(elts: Vec<T>) -> (result: Self)
-            ensures result.spec_len() == elts@.len();
+        fn from_vec(elts: Vec<T>) -> (seq: Self)
+            ensures seq.spec_len() == elts@.len();
     }
 
     impl<T: View> View for ArraySeqS<T> {
@@ -273,18 +273,18 @@ pub mod ArraySeq {
             self.seq@.len() as int
         }
 
-        pub fn new(length: usize, init_value: T) -> (result: ArraySeqS<T>)
+        pub fn new(length: usize, init_value: T) -> (new_seq: ArraySeqS<T>)
             where T: Clone
             requires length <= usize::MAX
-            ensures result.spec_len() == length as int
+            ensures new_seq.spec_len() == length as int
         {
             let seq = vec![init_value; length];
             ArraySeqS { seq }
         }
 
-        pub fn set(&mut self, index: usize, item: T) -> (result: Result<(), &'static str>)
+        pub fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
-            ensures result.is_ok() ==> self.spec_len() == old(self).spec_len()
+            ensures success.is_ok() ==> self.spec_len() == old(self).spec_len()
         {
             if index < self.seq.len() {
                 self.seq.set(index, item);
@@ -300,33 +300,33 @@ pub mod ArraySeq {
             self.seq.len()
         }
 
-        pub fn nth(&self, index: usize) -> (result: &T)
+        pub fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.spec_len()
         {
             &self.seq[index]
         }
 
-        pub fn empty() -> (result: ArraySeqS<T>)
-            ensures result.spec_len() == 0
+        pub fn empty() -> (empty_seq: ArraySeqS<T>)
+            ensures empty_seq.spec_len() == 0
         {
             ArraySeqS { seq: Vec::new() }
         }
 
-        pub fn singleton(item: T) -> (result: ArraySeqS<T>)
-            ensures result.spec_len() == 1
+        pub fn singleton(item: T) -> (singleton: ArraySeqS<T>)
+            ensures singleton.spec_len() == 1
         {
             let mut seq = Vec::with_capacity(1);
             seq.push(item);
             ArraySeqS { seq }
         }
 
-        pub fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (result: ArraySeqS<T>)
+        pub fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqS<T>)
             requires 
                 length <= usize::MAX,
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
             ensures
-                result.spec_len() == length as int,
-                forall|i: int| #![auto] 0 <= i < length ==> f.ensures((i as usize,), result.seq@[i]),
+                tab_seq.spec_len() == length as int,
+                forall|i: int| #![auto] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]),
         {
             let mut seq = Vec::with_capacity(length);
             let mut i: usize = 0;
@@ -344,11 +344,11 @@ pub mod ArraySeq {
             ArraySeqS { seq }
         }
 
-        pub fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqS<T>, f: &F) -> (result: ArraySeqS<U>)
+        pub fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqS<T>, f: &F) -> (mapped: ArraySeqS<U>)
             requires forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.seq@[i],))
             ensures
-                result.spec_len() == a.spec_len(),
-                forall|i: int| #![auto] 0 <= i < a.spec_len() ==> f.ensures((&a.seq@[i],), result.seq@[i]),
+                mapped.spec_len() == a.spec_len(),
+                forall|i: int| #![auto] 0 <= i < a.spec_len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]),
         {
             let len = a.seq.len();
             let mut seq: Vec<U> = Vec::with_capacity(len);
@@ -380,8 +380,8 @@ pub mod ArraySeq {
             self.seq.len() == 1
         }
 
-        pub fn from_vec(elts: Vec<T>) -> (result: ArraySeqS<T>)
-            ensures result.spec_len() == elts@.len()
+        pub fn from_vec(elts: Vec<T>) -> (seq: ArraySeqS<T>)
+            ensures seq.spec_len() == elts@.len()
         {
             ArraySeqS { seq: elts }
         }

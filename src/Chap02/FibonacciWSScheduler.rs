@@ -65,9 +65,9 @@ verus! {
         lemma_fib_fits_u64(n);
     }
 
-    pub fn fib_seq(n: u64) -> (result: u64)
+    pub fn fib_seq(n: u64) -> (fibonacci: u64)
         requires n <= 46,
-        ensures result == spec_fib(n as nat),
+        ensures fibonacci == spec_fib(n as nat),
         decreases n,
     {
         if n <= 1 {
@@ -78,9 +78,9 @@ verus! {
         }
     }
 
-    pub fn fib_par(n: u64) -> (result: u64)
+    pub fn fib_par(n: u64) -> (fibonacci: u64)
         requires n <= 46,
-        ensures result == spec_fib(n as nat),
+        ensures fibonacci == spec_fib(n as nat),
         decreases n,
     {
         if n <= 1 {

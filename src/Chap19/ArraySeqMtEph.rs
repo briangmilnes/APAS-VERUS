@@ -113,61 +113,61 @@ pub mod ArraySeqMtEph {
     pub trait ArraySeqMtEphTrait<T: View + Clone + Send + Sync + Eq>: Sized {
         spec fn spec_len(&self) -> nat;
 
-        fn empty() -> (result: Self)
-            ensures result.spec_len() == 0;
+        fn empty() -> (empty_seq: Self)
+            ensures empty_seq.spec_len() == 0;
 
-        fn singleton(item: T) -> (result: Self)
-            ensures result.spec_len() == 1;
+        fn singleton(item: T) -> (singleton: Self)
+            ensures singleton.spec_len() == 1;
 
-        fn tabulate<F: Fn(usize) -> T + Send + Sync>(f: &F, length: usize) -> (result: Self)
+        fn tabulate<F: Fn(usize) -> T + Send + Sync>(f: &F, length: usize) -> (tab_seq: Self)
             requires
                 length <= usize::MAX,
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
             ensures
-                result.spec_len() == length;
+                tab_seq.spec_len() == length;
 
         fn map<U: View + Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: &Self, f: F
-        ) -> (result: ArraySeqMtEphS<U>)
+        ) -> (mapped: ArraySeqMtEphS<U>)
             where Self: Sized, T: 'static + Eq
             requires
                 a.spec_len() <= usize::MAX as int,
                 obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.nth_spec(i),)),
             ensures
-                result.seq@.len() == a.spec_len();
+                mapped.seq@.len() == a.spec_len();
             // Note: f.ensures not propagated through parallel split/join - same issue as Chap18 map_par
 
         spec fn nth_spec(&self, i: int) -> T;
 
-        fn nth(&self, i: usize) -> (result: &T)
+        fn nth(&self, i: usize) -> (nth_elem: &T)
             requires (i as int) < self.spec_len()
-            ensures *result == self.nth_spec(i as int);
+            ensures *nth_elem == self.nth_spec(i as int);
 
-        fn length(&self) -> (result: usize)
-            ensures result == self.spec_len();
+        fn length(&self) -> (len: usize)
+            ensures len == self.spec_len();
 
-        fn append(a: &Self, b: &Self) -> (result: Self)
+        fn append(a: &Self, b: &Self) -> (appended: Self)
             requires a.spec_len() + b.spec_len() <= usize::MAX as nat
-            ensures result.spec_len() == a.spec_len() + b.spec_len();
+            ensures appended.spec_len() == a.spec_len() + b.spec_len();
 
-        fn filter<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(a: &Self, pred: F) -> (result: Self)
+        fn filter<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(a: &Self, pred: F) -> (filtered: Self)
             where T: 'static + Eq
             requires
                 obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.nth_spec(i),)),
             ensures
-                result.spec_len() <= a.spec_len();
+                filtered.spec_len() <= a.spec_len();
 
-        fn update(a: &Self, index: usize, item: T) -> (result: Self)
+        fn update(a: &Self, index: usize, item: T) -> (updated: Self)
             requires (index as int) < a.spec_len()
-            ensures result.spec_len() == a.spec_len();
+            ensures updated.spec_len() == a.spec_len();
 
-        fn is_empty(a: &Self) -> (result: bool)
-            ensures result == (a.spec_len() == 0);
+        fn is_empty(a: &Self) -> (empty: bool)
+            ensures empty == (a.spec_len() == 0);
 
-        fn is_singleton(a: &Self) -> (result: bool)
-            ensures result == (a.spec_len() == 1);
+        fn is_singleton(a: &Self) -> (single: bool)
+            ensures single == (a.spec_len() == 1);
 
         fn iterate<A: Clone, F: Fn(&A, &T) -> A + Send + Sync>(a: &Self, f: &F, x: A) -> A
             requires
@@ -178,38 +178,38 @@ pub mod ArraySeqMtEph {
             requires
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y));
 
-        fn scan<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &Self, f: F, id: T) -> (result: (Self, T))
+        fn scan<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &Self, f: F, id: T) -> (scanned: (Self, T))
             where T: 'static
             requires
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
             ensures
-                result.0.spec_len() == a.spec_len();
+                scanned.0.spec_len() == a.spec_len();
 
-        fn select(a: &Self, b: &Self, index: usize) -> (result: Option<T>)
-            ensures (index as int) < a.spec_len() + b.spec_len() ==> result.is_some();
+        fn select(a: &Self, b: &Self, index: usize) -> (selected: Option<T>)
+            ensures (index as int) < a.spec_len() + b.spec_len() ==> selected.is_some();
 
-        fn append_select(a: &Self, b: &Self) -> (result: Self)
+        fn append_select(a: &Self, b: &Self) -> (app_sel: Self)
             requires a.spec_len() + b.spec_len() <= usize::MAX as nat
-            ensures result.spec_len() == a.spec_len() + b.spec_len();
+            ensures app_sel.spec_len() == a.spec_len() + b.spec_len();
 
-        fn deflate<F: Fn(&T) -> bool + Send + Sync>(f: &F, x: &T) -> (result: Self)
+        fn deflate<F: Fn(&T) -> bool + Send + Sync>(f: &F, x: &T) -> (deflated: Self)
             requires f.requires((x,))
             ensures
-                result.spec_len() <= 1,
-                result.spec_len() == 1 ==> f.ensures((x,), true),
-                result.spec_len() == 0 ==> f.ensures((x,), false);
+                deflated.spec_len() <= 1,
+                deflated.spec_len() == 1 ==> f.ensures((x,), true),
+                deflated.spec_len() == 0 ==> f.ensures((x,), false);
 
-        fn flatten(ss: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (result: Self)
+        fn flatten(ss: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: Self)
             where T: 'static
             requires
                 total_len(ss.seq@) <= usize::MAX as int,
                 obeys_feq_clone::<ArraySeqMtEphS<T>>(),
-            ensures result.spec_len() == total_len(ss.seq@) as nat;
+            ensures flattened.spec_len() == total_len(ss.seq@) as nat;
 
-        fn from_set(set: &SetStEph<T>) -> (result: Self)
+        fn from_set(set: &SetStEph<T>) -> (seq: Self)
             where T: StT + Hash
             requires valid_key_type::<T>()
-            ensures result.spec_len() == set@.len();
+            ensures seq.spec_len() == set@.len();
     }
 
     impl<T: View + Clone + Send + Sync + Eq> ArraySeqMtEphTrait<T> for ArraySeqMtEphS<T> {
@@ -217,17 +217,17 @@ pub mod ArraySeqMtEph {
             self.seq@.len() as nat
         }
 
-        fn empty() -> (result: ArraySeqMtEphS<T>) {
+        fn empty() -> (empty_seq: ArraySeqMtEphS<T>) {
             ArraySeqMtEphS { seq: Vec::new() }
         }
 
-        fn singleton(item: T) -> (result: ArraySeqMtEphS<T>) {
+        fn singleton(item: T) -> (singleton: ArraySeqMtEphS<T>) {
             let mut seq = Vec::with_capacity(1);
             seq.push(item);
             ArraySeqMtEphS { seq }
         }
 
-        fn tabulate<F: Fn(usize) -> T + Send + Sync>(f: &F, length: usize) -> (result: ArraySeqMtEphS<T>)
+        fn tabulate<F: Fn(usize) -> T + Send + Sync>(f: &F, length: usize) -> (tab_seq: ArraySeqMtEphS<T>)
         {
             let mut seq = Vec::with_capacity(length);
             let mut i: usize = 0;
@@ -248,17 +248,17 @@ pub mod ArraySeqMtEph {
             self.seq@[i]
         }
 
-        fn nth(&self, i: usize) -> (result: &T) {
+        fn nth(&self, i: usize) -> (nth_elem: &T) {
             &self.seq[i]
         }
 
-        fn length(&self) -> (result: usize) {
+        fn length(&self) -> (len: usize) {
             self.seq.len()
         }
 
         fn map<U: View + Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>, f: F
-        ) -> (result: ArraySeqMtEphS<U>)
+        ) -> (mapped: ArraySeqMtEphS<U>)
             where T: 'static
             decreases a.seq@.len()
         {
@@ -331,7 +331,7 @@ pub mod ArraySeqMtEph {
             }
         }
 
-        fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (result: ArraySeqMtEphS<T>) {
+        fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (appended: ArraySeqMtEphS<T>) {
             // Clone inner Vecs (vstd has clone spec for Vec)
             let a_clone = ArraySeqMtEphS { seq: a.seq.clone() };
             let b_clone = ArraySeqMtEphS { seq: b.seq.clone() };
@@ -351,7 +351,7 @@ pub mod ArraySeqMtEph {
             flatten_seq(&pair)
         }
 
-        fn filter<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, pred: F) -> (result: ArraySeqMtEphS<T>)
+        fn filter<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, pred: F) -> (filtered: ArraySeqMtEphS<T>)
             where T: 'static
             decreases a.seq@.len()
         {
@@ -437,7 +437,7 @@ pub mod ArraySeqMtEph {
             }
         }
 
-        fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (result: ArraySeqMtEphS<T>) {
+        fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (updated: ArraySeqMtEphS<T>) {
             Self::tabulate(
                 &(|j: usize| -> (r: T)
                     requires j < a.seq@.len()
@@ -448,11 +448,11 @@ pub mod ArraySeqMtEph {
             )
         }
 
-        fn is_empty(a: &ArraySeqMtEphS<T>) -> (result: bool) {
+        fn is_empty(a: &ArraySeqMtEphS<T>) -> (empty: bool) {
             a.seq.len() == 0
         }
 
-        fn is_singleton(a: &ArraySeqMtEphS<T>) -> (result: bool) {
+        fn is_singleton(a: &ArraySeqMtEphS<T>) -> (single: bool) {
             a.seq.len() == 1
         }
 
@@ -592,7 +592,7 @@ pub mod ArraySeqMtEph {
             (expanded, total)
         }
 
-        fn select(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>, index: usize) -> (result: Option<T>) {
+        fn select(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>, index: usize) -> (selected: Option<T>) {
             if index < a.seq.len() {
                 Some(a.seq[index].clone_plus())
             } else {
@@ -605,7 +605,7 @@ pub mod ArraySeqMtEph {
             }
         }
 
-        fn append_select(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (result: ArraySeqMtEphS<T>) {
+        fn append_select(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (app_sel: ArraySeqMtEphS<T>) {
             Self::tabulate(
                 &(|i: usize| -> (r: T)
                     requires i < a.seq@.len() + b.seq@.len()
@@ -616,7 +616,7 @@ pub mod ArraySeqMtEph {
             )
         }
 
-        fn deflate<F: Fn(&T) -> bool + Send + Sync>(f: &F, x: &T) -> (result: ArraySeqMtEphS<T>) {
+        fn deflate<F: Fn(&T) -> bool + Send + Sync>(f: &F, x: &T) -> (deflated: ArraySeqMtEphS<T>) {
             if f(x) {
                 Self::singleton(x.clone_plus())
             } else {
@@ -624,7 +624,7 @@ pub mod ArraySeqMtEph {
             }
         }
 
-        fn flatten(ss: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (result: ArraySeqMtEphS<T>)
+        fn flatten(ss: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
             where T: 'static
             decreases ss.seq@.len()
         {
@@ -732,7 +732,7 @@ pub mod ArraySeqMtEph {
             }
         }
 
-        fn from_set(set: &SetStEph<T>) -> (result: ArraySeqMtEphS<T>)
+        fn from_set(set: &SetStEph<T>) -> (seq: ArraySeqMtEphS<T>)
             where T: StT + Hash
         {
             let seq = set.to_seq();
@@ -751,12 +751,12 @@ pub mod ArraySeqMtEph {
 
     // Sequence operations used by parallel algorithms.
 
-    fn subseq_copy<T: View + Clone>(a: &ArraySeqMtEphS<T>, start: usize, len: usize) -> (result: ArraySeqMtEphS<T>)
+    fn subseq_copy<T: View + Clone>(a: &ArraySeqMtEphS<T>, start: usize, len: usize) -> (subseq: ArraySeqMtEphS<T>)
         requires
             start as int + len as int <= a.seq@.len(),
         ensures
-            result.seq@.len() == len,
-            forall|j: int| 0 <= j < len ==> cloned(#[trigger] a.seq@[start as int + j], result.seq@[j]),
+            subseq.seq@.len() == len,
+            forall|j: int| 0 <= j < len ==> cloned(#[trigger] a.seq@[start as int + j], subseq.seq@[j]),
     {
         let a_len = a.seq.len();
         let mut result: Vec<T> = Vec::with_capacity(len);
@@ -779,14 +779,14 @@ pub mod ArraySeqMtEph {
 
     fn subseq_copy_nested<T: View + Clone + Send + Sync + Eq>(
         a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>, start: usize, len: usize
-    ) -> (result: ArraySeqMtEphS<ArraySeqMtEphS<T>>)
+    ) -> (subseq: ArraySeqMtEphS<ArraySeqMtEphS<T>>)
         requires
             start as int + len as int <= a.seq@.len(),
             obeys_feq_clone::<ArraySeqMtEphS<T>>(),
         ensures
-            result.seq@.len() == len,
+            subseq.seq@.len() == len,
             // Each cloned element has same inner length as original
-            forall|i: int| 0 <= i < len ==> #[trigger] result.seq@[i].seq@.len() == a.seq@[start as int + i].seq@.len(),
+            forall|i: int| 0 <= i < len ==> #[trigger] subseq.seq@[i].seq@.len() == a.seq@[start as int + i].seq@.len(),
     {
         let a_len = a.seq.len();
         let mut result: Vec<ArraySeqMtEphS<T>> = Vec::with_capacity(len);
@@ -846,13 +846,13 @@ pub mod ArraySeqMtEph {
         }
     }
 
-    fn flatten_seq<T: View + Clone + Send + Sync>(ss: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (result: ArraySeqMtEphS<T>)
+    fn flatten_seq<T: View + Clone + Send + Sync>(ss: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
         requires
             sum_lens_seq(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,
         ensures
-            ss.seq@.len() == 2 ==> result.seq@.len() == ss.seq@[0].seq@.len() + ss.seq@[1].seq@.len(),
+            ss.seq@.len() == 2 ==> flattened.seq@.len() == ss.seq@[0].seq@.len() + ss.seq@[1].seq@.len(),
             (forall|i: int| #![auto] 0 <= i < ss.seq@.len() ==> ss.seq@[i].seq@.len() <= 1)
-                ==> result.seq@.len() <= ss.seq@.len(),
+                ==> flattened.seq@.len() <= ss.seq@.len(),
     {
         // First pass: compute total length
         let ss_len = ss.seq.len();

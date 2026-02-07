@@ -71,8 +71,8 @@ verus! {
     }
 
     #[verifier::external_body]
-    pub fn parallel_increment(iterations: usize) -> (result: usize)
-        ensures result == 4 * iterations
+    pub fn parallel_increment(iterations: usize) -> (incremented: usize)
+        ensures incremented == 4 * iterations
     {
         let lock = Arc::new(SpinLock::new());
         let shared = Arc::new(AtomicUsize::new(0));

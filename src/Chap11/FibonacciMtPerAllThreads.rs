@@ -22,11 +22,11 @@ pub mod FibonacciMtPerAllThreads {
         /// Note: Exponential work makes this impractical for large n.
         /// This demonstrates parallel recursion patterns; real implementations
         /// use memoization or iteration.
-        pub fn fib(n: u64) -> (result: u64)
+        pub fn fib(n: u64) -> (fibonacci: u64)
             requires
                 n <= 46,
             ensures
-                result == spec_fib(n as nat),
+                fibonacci == spec_fib(n as nat),
             decreases n,
         {
             if n <= 1 {

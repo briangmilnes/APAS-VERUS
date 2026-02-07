@@ -30,28 +30,28 @@ pub mod ArraySeqMtPer {
         spec fn spec_len(&self) -> int;
 
         /// Work Θ(n), Span Θ(log n)
-        fn new(length: usize, init_value: T) -> (result: Self)
+        fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone
             requires length <= usize::MAX
-            ensures result.spec_len() == length as int;
+            ensures new_seq.spec_len() == length as int;
 
         /// Work Θ(1), Span Θ(1)
         fn length(&self) -> (len: usize)
             ensures len as int == self.spec_len();
 
         /// Work Θ(1), Span Θ(1)
-        fn nth(&self, index: usize) -> (result: &T)
+        fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.spec_len();
 
         /// Work Θ(len), Span Θ(log len)
-        fn subseq_copy(&self, start: usize, length: usize) -> (result: Self)
+        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone
             requires start + length <= self.spec_len()
-            ensures result.spec_len() == length as int;
+            ensures subseq.spec_len() == length as int;
 
         /// Work Θ(n), Span Θ(1)
-        fn from_vec(elts: Vec<T>) -> (result: Self)
-            ensures result.spec_len() == elts@.len();
+        fn from_vec(elts: Vec<T>) -> (seq: Self)
+            ensures seq.spec_len() == elts@.len();
     }
 
     /// Redefinable trait - may be overridden with better algorithms in later chapters.
@@ -59,50 +59,50 @@ pub mod ArraySeqMtPer {
         spec fn spec_len(&self) -> int;
 
         /// Work Θ(1), Span Θ(1)
-        fn empty() -> (result: Self)
-            ensures result.spec_len() == 0;
+        fn empty() -> (empty_seq: Self)
+            ensures empty_seq.spec_len() == 0;
 
         /// Work Θ(1), Span Θ(1)
-        fn singleton(item: T) -> (result: Self)
-            ensures result.spec_len() == 1;
+        fn singleton(item: T) -> (singleton: Self)
+            ensures singleton.spec_len() == 1;
 
         /// Work Θ(n), Span Θ(n)
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (result: ArraySeqMtPerS<T>)
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtPerS<T>)
             requires
                 length <= usize::MAX,
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
             ensures
-                result.seq@.len() == length,
-                forall|i: int| #![auto] 0 <= i < length ==> f.ensures((i as usize,), result.seq@[i]);
+                tab_seq.seq@.len() == length,
+                forall|i: int| #![auto] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);
 
         /// Work Θ(|a|), Span Θ(log|a|)
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtPerS<T>, f: &F) -> (result: ArraySeqMtPerS<U>)
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtPerS<T>, f: &F) -> (mapped: ArraySeqMtPerS<U>)
             requires
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
             ensures
-                result.seq@.len() == a.seq@.len(),
-                forall|i: int| #![auto] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), result.seq@[i]);
+                mapped.seq@.len() == a.seq@.len(),
+                forall|i: int| #![auto] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);
 
         /// Work Θ(|a|+|b|), Span Θ(log(|a|+|b|))
-        fn append(a: &ArraySeqMtPerS<T>, b: &ArraySeqMtPerS<T>) -> (result: Self)
+        fn append(a: &ArraySeqMtPerS<T>, b: &ArraySeqMtPerS<T>) -> (appended: Self)
             where T: Clone
             requires a.seq@.len() + b.seq@.len() <= usize::MAX as int
-            ensures result.spec_len() == a.seq@.len() + b.seq@.len();
+            ensures appended.spec_len() == a.seq@.len() + b.seq@.len();
 
         /// Work Θ(|a|), Span Θ(|a|)
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F) -> (result: Self)
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F) -> (filtered: Self)
             where T: Clone
             requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],))
-            ensures result.spec_len() <= a.seq@.len();
+            ensures filtered.spec_len() <= a.seq@.len();
 
         /// Work Θ(Σ|a[i]|), Span Θ(Σ|a[i]|)
-        fn flatten(a: &ArraySeqMtPerS<ArraySeqMtPerS<T>>) -> (result: Self) where T: Clone;
+        fn flatten(a: &ArraySeqMtPerS<ArraySeqMtPerS<T>>) -> (flattened: Self) where T: Clone;
 
         /// Work Θ(n), Span Θ(log n)
-        fn update(a: &ArraySeqMtPerS<T>, index: usize, item: T) -> (result: Self)
+        fn update(a: &ArraySeqMtPerS<T>, index: usize, item: T) -> (updated: Self)
             where T: Clone
             requires index < a.seq@.len()
-            ensures result.spec_len() == a.seq@.len();
+            ensures updated.spec_len() == a.seq@.len();
 
         /// Work Θ(1), Span Θ(1)
         fn is_empty(&self) -> (empty: bool)
@@ -122,10 +122,10 @@ pub mod ArraySeqMtPer {
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y));
 
         /// Work Θ(|a|), Span Θ(log|a|)
-        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (result: (ArraySeqMtPerS<T>, T))
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (scanned: (ArraySeqMtPerS<T>, T))
             where T: Clone
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y))
-            ensures result.0.seq@.len() == a.seq@.len();
+            ensures scanned.0.seq@.len() == a.seq@.len();
     }
 
     impl<T: View> View for ArraySeqMtPerS<T> {
@@ -232,10 +232,10 @@ pub mod ArraySeqMtPer {
             self.seq@.len() as int
         }
 
-        pub fn new(length: usize, init_value: T) -> (result: ArraySeqMtPerS<T>)
+        pub fn new(length: usize, init_value: T) -> (new_seq: ArraySeqMtPerS<T>)
             where T: Clone
             requires length <= usize::MAX
-            ensures result.seq@.len() == length
+            ensures new_seq.seq@.len() == length
         {
             ArraySeqMtPerS { seq: vec![init_value; length] }
         }
@@ -246,33 +246,33 @@ pub mod ArraySeqMtPer {
             self.seq.len()
         }
 
-        pub fn nth(&self, index: usize) -> (result: &T)
+        pub fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.seq@.len()
         {
             &self.seq[index]
         }
 
-        pub fn empty() -> (result: ArraySeqMtPerS<T>)
-            ensures result.seq@.len() == 0
+        pub fn empty() -> (empty_seq: ArraySeqMtPerS<T>)
+            ensures empty_seq.seq@.len() == 0
         {
             ArraySeqMtPerS { seq: Vec::new() }
         }
 
-        pub fn singleton(item: T) -> (result: ArraySeqMtPerS<T>)
-            ensures result.seq@.len() == 1
+        pub fn singleton(item: T) -> (singleton: ArraySeqMtPerS<T>)
+            ensures singleton.seq@.len() == 1
         {
             let mut seq = Vec::with_capacity(1);
             seq.push(item);
             ArraySeqMtPerS { seq }
         }
 
-        pub fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (result: ArraySeqMtPerS<T>)
+        pub fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtPerS<T>)
             requires 
                 length <= usize::MAX,
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
             ensures
-                result.seq@.len() == length,
-                forall|i: int| #![auto] 0 <= i < length ==> f.ensures((i as usize,), result.seq@[i]),
+                tab_seq.seq@.len() == length,
+                forall|i: int| #![auto] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]),
         {
             let mut seq = Vec::with_capacity(length);
             let mut i: usize = 0;
@@ -290,11 +290,11 @@ pub mod ArraySeqMtPer {
             ArraySeqMtPerS { seq }
         }
 
-        pub fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqMtPerS<T>, f: &F) -> (result: ArraySeqMtPerS<U>)
+        pub fn map<U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqMtPerS<T>, f: &F) -> (mapped: ArraySeqMtPerS<U>)
             requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
             ensures
-                result.seq@.len() == a.seq@.len(),
-                forall|i: int| #![auto] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), result.seq@[i]),
+                mapped.seq@.len() == a.seq@.len(),
+                forall|i: int| #![auto] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]),
         {
             let len = a.seq.len();
             let mut seq: Vec<U> = Vec::with_capacity(len);
@@ -317,12 +317,12 @@ pub mod ArraySeqMtPer {
         pub fn map_par<U: Clone + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtPerS<T>,
             f: F,
-        ) -> (result: ArraySeqMtPerS<U>)
+        ) -> (mapped: ArraySeqMtPerS<U>)
             where T: Clone + Send + Sync + Eq + 'static
             requires
                 obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
-            ensures result.seq@.len() == a.seq@.len()
+            ensures mapped.seq@.len() == a.seq@.len()
             decreases a.seq@.len()
         {
             let len = a.seq.len();
@@ -369,10 +369,10 @@ pub mod ArraySeqMtPer {
             }
         }
 
-        pub fn append(a: &ArraySeqMtPerS<T>, b: &ArraySeqMtPerS<T>) -> (result: ArraySeqMtPerS<T>)
+        pub fn append(a: &ArraySeqMtPerS<T>, b: &ArraySeqMtPerS<T>) -> (appended: ArraySeqMtPerS<T>)
             where T: Clone
             requires a.seq@.len() + b.seq@.len() <= usize::MAX
-            ensures result.seq@.len() == a.seq@.len() + b.seq@.len()
+            ensures appended.seq@.len() == a.seq@.len() + b.seq@.len()
         {
             let a_len = a.seq.len();
             let b_len = b.seq.len();
@@ -402,10 +402,10 @@ pub mod ArraySeqMtPer {
             ArraySeqMtPerS { seq }
         }
 
-        pub fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F) -> (result: ArraySeqMtPerS<T>)
+        pub fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F) -> (filtered: ArraySeqMtPerS<T>)
             where T: Clone
             requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
-            ensures result.seq@.len() <= a.seq@.len()
+            ensures filtered.seq@.len() <= a.seq@.len()
         {
             let len = a.seq.len();
             let mut seq: Vec<T> = Vec::new();
@@ -429,12 +429,12 @@ pub mod ArraySeqMtPer {
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtPerS<T>,
             pred: F,
-        ) -> (result: ArraySeqMtPerS<T>)
+        ) -> (filtered: ArraySeqMtPerS<T>)
             where T: Clone + Send + Sync + Eq + 'static
             requires
                 obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
-            ensures result.seq@.len() <= a.seq@.len()
+            ensures filtered.seq@.len() <= a.seq@.len()
             decreases a.seq@.len()
         {
             let len = a.seq.len();
@@ -495,20 +495,20 @@ pub mod ArraySeqMtPer {
             self.seq.len() == 1
         }
 
-        pub fn from_vec(elts: Vec<T>) -> (result: ArraySeqMtPerS<T>)
-            ensures result.seq@ == elts@
+        pub fn from_vec(elts: Vec<T>) -> (seq: ArraySeqMtPerS<T>)
+            ensures seq.seq@ == elts@
         {
             ArraySeqMtPerS { seq: elts }
         }
 
-        pub fn subseq_copy(&self, start: usize, length: usize) -> (result: ArraySeqMtPerS<T>)
+        pub fn subseq_copy(&self, start: usize, length: usize) -> (subseq: ArraySeqMtPerS<T>)
             where T: Clone
             requires 
                 start + length <= self.seq@.len(),
                 self.seq@.len() <= usize::MAX as int,
             ensures 
-                result.seq@.len() == length,
-                forall|j: int| 0 <= j < length ==> cloned(#[trigger] self.seq@[start as int + j], result.seq@[j]),
+                subseq.seq@.len() == length,
+                forall|j: int| 0 <= j < length ==> cloned(#[trigger] self.seq@[start as int + j], subseq.seq@[j]),
         {
             let end = start + length;
             let mut seq: Vec<T> = Vec::with_capacity(length);
@@ -528,7 +528,7 @@ pub mod ArraySeqMtPer {
             ArraySeqMtPerS { seq }
         }
 
-        pub fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (result: T)
+        pub fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (reduced: T)
             where T: Clone
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
         {
@@ -552,7 +552,7 @@ pub mod ArraySeqMtPer {
             a: &ArraySeqMtPerS<T>,
             f: F,
             id: T,
-        ) -> (result: T)
+        ) -> (reduced: T)
             where T: Clone + Send + Sync + 'static
             requires
                 a.seq@.len() > 0,
@@ -592,7 +592,7 @@ pub mod ArraySeqMtPer {
             }
         }
 
-        pub fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtPerS<T>, f: &F, seed: A) -> (result: A)
+        pub fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtPerS<T>, f: &F, seed: A) -> (acc: A)
             requires forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
         {
             let len = a.seq.len();
@@ -611,10 +611,10 @@ pub mod ArraySeqMtPer {
             acc
         }
 
-        pub fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (result: (ArraySeqMtPerS<T>, T))
+        pub fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (scanned: (ArraySeqMtPerS<T>, T))
             where T: Clone
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-            ensures result.0.seq@.len() == a.seq@.len()
+            ensures scanned.0.seq@.len() == a.seq@.len()
         {
             let len = a.seq.len();
             let mut acc = id;

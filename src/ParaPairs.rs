@@ -41,7 +41,7 @@ pub mod ParaPairs {
     ///     ParaPair!(move || -> (out: T) ensures ... { body }, ...)
     ///
     /// You must bind annotated closures to a variable first.
-    pub fn para_pair<A, B, F1, F2>(f1: F1, f2: F2) -> (result: Pair<A, B>)
+    pub fn para_pair<A, B, F1, F2>(f1: F1, f2: F2) -> (pair: Pair<A, B>)
         where
             F1: FnOnce() -> A + Send + 'static,
             F2: FnOnce() -> B + Send + 'static,
@@ -51,8 +51,8 @@ pub mod ParaPairs {
             f1.requires(()),
             f2.requires(()),
         ensures
-            f1.ensures((), result.0),
-            f2.ensures((), result.1),
+            f1.ensures((), pair.0),
+            f2.ensures((), pair.1),
     {
         let (a, b) = join(f1, f2);
         Pair(a, b)
@@ -61,7 +61,7 @@ pub mod ParaPairs {
     /// - Verified disjoint parallel pair for Set-viewing types.
     /// - Works with any type where View = Set<T> (SetStEph, SetMtEph, etc).
     /// - Caller must prove closures produce disjoint outputs.
-    pub fn para_pair_disjoint<T, A, B, F1, F2>(f1: F1, f2: F2) -> (result: Pair<A, B>)
+    pub fn para_pair_disjoint<T, A, B, F1, F2>(f1: F1, f2: F2) -> (disjoint_pair: Pair<A, B>)
         where
             A: View<V = Set<T>> + Send + 'static,
             B: View<V = Set<T>> + Send + 'static,
@@ -72,9 +72,9 @@ pub mod ParaPairs {
             f2.requires(()),
             forall |a: A, b: B| f1.ensures((), a) && f2.ensures((), b) ==> a@.disjoint(b@),
         ensures
-            f1.ensures((), result.0),
-            f2.ensures((), result.1),
-            result.0@.disjoint(result.1@),
+            f1.ensures((), disjoint_pair.0),
+            f2.ensures((), disjoint_pair.1),
+            disjoint_pair.0@.disjoint(disjoint_pair.1@),
     {
         let (a, b) = join(f1, f2);
         Pair(a, b)

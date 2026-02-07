@@ -884,12 +884,12 @@ verus! {
     impl<T: StT + Hash> Eq for SetMtEph<T> {}
 
     impl<T: StT + Hash> PartialEq for SetMtEph<T> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
-            let r = self.elements == other.elements;
-            proof { assume(r == (self@ == other@)); }
-            r
+            let equal = self.elements == other.elements;
+            proof { assume(equal == (self@ == other@)); }
+            equal
         }
     }
 
