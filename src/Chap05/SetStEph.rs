@@ -1,24 +1,5 @@
 // Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-
 //! Ephemeral Set built on `std::collections::HashSet` as wrapped by vstd and vstdplus.
-
-//  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
-
-//		1. module
-
 
 pub mod SetStEph {
 
@@ -26,10 +7,9 @@ pub mod SetStEph {
 
 verus! {
 
-    //		2. imports
-
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::Hash;
+
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
     #[cfg(verus_keep_ghost)]
@@ -51,9 +31,6 @@ verus! {
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
 
-
-    //		3. broadcast use
-
     broadcast use {
         // Set groups
         vstd::set::group_set_axioms,
@@ -73,85 +50,15 @@ verus! {
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
     };
 
-
-    //		4. type definitions
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct SetStEph<T: StT + Hash> { 
-        pub elements: HashSetWithViewPlus<T>  // Public for open spec fn view()
-    }
-
-    /// - Iterator wrapper with CLOSED spec view for encapsulation.
-    /// - Inner is private; closed view() can access it but external code cannot see it.
-    #[verifier::reject_recursive_types(T)]
-    pub struct SetStEphIter<'a, T: StT + Hash> {
-        inner: std::collections::hash_set::Iter<'a, T>,  // PRIVATE
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support (for-iter, for-borrow patterns).
-    #[verifier::reject_recursive_types(T)]
-    pub struct SetStEphGhostIterator<'a, T: StT + Hash> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
-
-    //		5. view impls
-
-    impl<'a, T: StT + Hash> View for SetStEphIter<'a, T> {
-        type V = (int, Seq<T>);
-        closed spec fn view(&self) -> (int, Seq<T>) { 
-            self.inner@
-        }
-    }
-
-    impl<'a, T: StT + Hash> View for SetStEphGhostIterator<'a, T> {
-        type V = Seq<T>;
-
-        open spec fn view(&self) -> Seq<T> {
-            self.elements.take(self.pos)
-        }
-    }
-
-    impl<T: StT + Hash> View for SetStEph<T> {
-        type V = Set<<T as View>::V>;
-        open spec fn view(&self) -> Self::V { self.elements@ }
-    }
-
-
-    //		6. spec fns
-
     pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
         &&& obeys_key_model::<T>() 
         &&& obeys_feq_full::<T>()
     }
 
-    pub open spec fn iter_invariant<'a, T: StT + Hash>(it: &SetStEphIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
+    #[verifier::reject_recursive_types(T)]
+    pub struct SetStEph<T: StT + Hash> { 
+        pub elements: HashSetWithViewPlus<T>  // Public for open spec fn view()
     }
-
-
-    //		7. proof fns/broadcast groups
-
-    /// Singleton choose: if len == 1 and contains(a), then choose() == a.
-    pub broadcast proof fn lemma_singleton_choose<A>(s: Set<A>, a: A)
-        requires
-            s.finite(),
-            s.len() == 1,
-            #[trigger] s.contains(a),
-        ensures
-            s.choose() == a,
-    {
-        Set::lemma_is_singleton(s);
-    }
-
-    pub broadcast group group_set_st_eph_lemmas {
-        lemma_singleton_choose,
-    }
-
-
-    //		8. traits
 
     pub trait SetStEphTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
 
@@ -314,7 +221,124 @@ verus! {
     }
 
 
-    //		9. impls
+    /// - Iterator wrapper with CLOSED spec view for encapsulation.
+    /// - Inner is private; closed view() can access it but external code cannot see it.
+    #[verifier::reject_recursive_types(T)]
+    pub struct SetStEphIter<'a, T: StT + Hash> {
+        inner: std::collections::hash_set::Iter<'a, T>,  // PRIVATE
+    }
+
+    impl<'a, T: StT + Hash> View for SetStEphIter<'a, T> {
+        type V = (int, Seq<T>);
+        closed spec fn view(&self) -> (int, Seq<T>) { 
+            self.inner@
+        }
+    }
+
+    pub open spec fn iter_invariant<'a, T: StT + Hash>(it: &SetStEphIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<'a, T: StT + Hash> std::iter::Iterator for SetStEphIter<'a, T> {
+        type Item = &'a T;
+
+        // Relies on vstd's assume_specification for hash_set::Iter::next
+        // which provides the same postcondition we need here.
+        fn next(&mut self) -> (next: Option<&'a T>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for ForLoopGhostIterator support (for-iter, for-borrow patterns).
+    #[verifier::reject_recursive_types(T)]
+    pub struct SetStEphGhostIterator<'a, T: StT + Hash> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
+    impl<'a, T: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for SetStEphIter<'a, T> {
+        type GhostIter = SetStEphGhostIterator<'a, T>;
+
+        open spec fn ghost_iter(&self) -> SetStEphGhostIterator<'a, T> {
+            SetStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, T: StT + Hash> vstd::pervasive::ForLoopGhostIterator for SetStEphGhostIterator<'a, T> {
+        type ExecIter = SetStEphIter<'a, T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &SetStEphIter<'a, T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() {
+                Some(self.elements[self.pos])
+            } else {
+                None
+            }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &SetStEphIter<'a, T>) -> SetStEphGhostIterator<'a, T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: StT + Hash> View for SetStEphGhostIterator<'a, T> {
+        type V = Seq<T>;
+
+        open spec fn view(&self) -> Seq<T> {
+            self.elements.take(self.pos)
+        }
+    }
+
+    impl<T: StT + Hash> View for SetStEph<T> {
+        type V = Set<<T as View>::V>;
+        open spec fn view(&self) -> Self::V { self.elements@ }
+    }
+
+    impl<T: StT + Hash> Clone for SetStEph<T> {
+        fn clone(&self) -> (clone: Self)
+            ensures clone@.finite(), clone@ == self@
+        { SetStEph { elements: self.elements.clone() } }
+    }
 
     impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
 
@@ -757,112 +781,29 @@ verus! {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: StT + Hash> PartialEqSpecImpl for SetStEph<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    /// Singleton choose: if len == 1 and contains(a), then choose() == a.
+    pub broadcast proof fn lemma_singleton_choose<A>(s: Set<A>, a: A)
+        requires
+            s.finite(),
+            s.len() == 1,
+            #[trigger] s.contains(a),
+        ensures
+            s.choose() == a,
+    {
+        Set::lemma_is_singleton(s);
     }
 
-
-    //		10. iterators
-
-    impl<'a, T: StT + Hash> std::iter::Iterator for SetStEphIter<'a, T> {
-        type Item = &'a T;
-
-        // Relies on vstd's assume_specification for hash_set::Iter::next
-        // which provides the same postcondition we need here.
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    impl<'a, T: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for SetStEphIter<'a, T> {
-        type GhostIter = SetStEphGhostIterator<'a, T>;
-
-        open spec fn ghost_iter(&self) -> SetStEphGhostIterator<'a, T> {
-            SetStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, T: StT + Hash> vstd::pervasive::ForLoopGhostIterator for SetStEphGhostIterator<'a, T> {
-        type ExecIter = SetStEphIter<'a, T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &SetStEphIter<'a, T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(self.elements[self.pos])
-            } else {
-                None
-            }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &SetStEphIter<'a, T>) -> SetStEphGhostIterator<'a, T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    impl<'a, T: StT + Hash> std::iter::IntoIterator for &'a SetStEph<T> {
-        type Item = &'a T;
-        type IntoIter = SetStEphIter<'a, T>;
-        fn into_iter(self) -> (it: Self::IntoIter)
-            requires valid_key_type::<T>()
-            ensures
-                it@.0 == 0int,
-                it@.1.map(|i: int, k: T| k@).to_set() == self@,
-                it@.1.no_duplicates(),
-        { self.iter() }
-    }
-
-
-    //		11. derive impls in verus!
-
-    impl<T: StT + Hash> Clone for SetStEph<T> {
-        fn clone(&self) -> (clone: Self)
-            ensures clone@.finite(), clone@ == self@
-        { SetStEph { elements: self.elements.clone() } }
+    pub broadcast group group_set_st_eph_lemmas {
+        lemma_singleton_choose,
     }
 
     impl<T: StT + Hash> std::hash::Hash for SetStEph<T> {
         fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.elements.hash(state); }
+    }
+
+    impl<T: StT + Hash> PartialEqSpecImpl for SetStEph<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
     impl<T: StT + Hash> Eq for SetStEph<T> {}
@@ -878,12 +819,10 @@ verus! {
         }
     }
 
+
   } // verus!
 
     
-
-    //		12. macros
-
     #[macro_export]
     macro_rules! SetLit {
         () => {{
@@ -895,9 +834,6 @@ verus! {
             __s
         }};
     }
-
-
-     //		13. derive impls outside verus!
 
      impl<T: StT + Hash> std::fmt::Display for SetStEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {

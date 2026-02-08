@@ -2,26 +2,67 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn _ ensures .*obeys_deep_eq
+Pattern: fold_left
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 94, Functions: 2216, Matches: 3
+Files: 94, Functions: 2216, Matches: 7
 
-[31m/home/milnes/projects/verus/source/vstd/std_specs/vec.rs:510: [0m
-[38;5;22mpub broadcast proof fn lemma_vec_obeys_deep_eq<T: PartialEq + DeepView>()[0m
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:642: [0m
+///
+/// Given a sequence `s = [x0, x1, x2, ..., xn]`, applying this function `s.fold_left(b, f)`
+/// returns `f(...f(f(b, x0), x1), ..., xn)`.
+[38;5;22m    pub open spec fn fold_left<B>(self, b: B, f: spec_fn(B, A) -> B) -> (res: B)[0m
+[38;5;22m        decreases self.len(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:655: [0m
+/// Equivalent to [`Self::fold_left`] but defined by breaking off the leftmost element when
+/// recursing, rather than the rightmost. See [`Self::lemma_fold_left_alt`] that proves
+/// equivalence.
+[38;5;22m    pub open spec fn fold_left_alt<B>(self, b: B, f: spec_fn(B, A) -> B) -> (res: B)[0m
+[38;5;22m        decreases self.len(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:666: [0m
+/// A lemma that proves how [`Self::fold_left`] distributes over splitting a sequence.
+[38;5;22m    pub broadcast proof fn lemma_fold_left_split<B>(self, b: B, f: spec_fn(B, A) -> B, k: int)[0m
+[38;5;22m        requires[0m
+[38;5;22m            0 <= k <= self.len(),[0m
+[38;5;22m        ensures[0m
+[38;5;22m            self.subrange(k, self.len() as int).fold_left([0m
+[38;5;22m                (#[trigger] self.subrange(0, k).fold_left(b, f)),[0m
+[38;5;22m                f,[0m
+[38;5;22m            ) == self.fold_left(b, f),[0m
+[38;5;22m        decreases self.len(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:697: [0m
+/// An auxiliary lemma for proving [`Self::lemma_fold_left_alt`].
+[38;5;22m    proof fn aux_lemma_fold_left_alt<B>(self, b: B, f: spec_fn(B, A) -> B, k: int)[0m
+[38;5;22m        requires[0m
+[38;5;22m            0 < k <= self.len(),[0m
+[38;5;22m        ensures[0m
+[38;5;22m            self.subrange(k, self.len() as int).fold_left_alt([0m
+[38;5;22m                self.subrange(0, k).fold_left_alt(b, f),[0m
+[38;5;22m                f,[0m
+[38;5;22m            ) == self.fold_left_alt(b, f),[0m
+[38;5;22m        decreases k,[0m
+
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:729: [0m
+/// [`Self::fold_left`] and [`Self::fold_left_alt`] are equivalent.
+[38;5;22m    pub proof fn lemma_fold_left_alt<B>(self, b: B, f: spec_fn(B, A) -> B)[0m
+[38;5;22m        ensures[0m
+[38;5;22m            self.fold_left(b, f) == self.fold_left_alt(b, f),[0m
+[38;5;22m        decreases self.len(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:750: [0m
+/// [`Self::fold_left`] on the reversed sequence is equivalent to
+/// [`Self::fold_right`] on the original sequence with corresponding folding operator
+[38;5;22m    pub proof fn lemma_reverse_fold_left<B>(self, v: B, f: spec_fn(B, A) -> B)[0m
+[38;5;22m        ensures[0m
+[38;5;22m            self.reverse().fold_left(v, f) == self.fold_right(|a: A, b: B| f(b, a), v),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:3323: [0m
+[38;5;22mpub proof fn lemma_fold_left_permutation<A, B>(l1: Seq<A>, l2: Seq<A>, f: spec_fn(B, A) -> B, v: B)[0m
 [38;5;22m    requires[0m
-[38;5;22m        super::super::laws_eq::obeys_deep_eq::<T>(),[0m
+[38;5;22m        commutative_foldl(f),[0m
+[38;5;22m        l1.to_multiset() == l2.to_multiset(),[0m
 [38;5;22m    ensures[0m
-[38;5;22m        #[trigger] super::super::laws_eq::obeys_deep_eq::<Vec<T>>(),[0m
-
-[31m/home/milnes/projects/verus/source/vstd/laws_eq.rs:77: [0m
-[38;5;22m            pub broadcast proof fn lemma_obeys_deep_eq()[0m
-[38;5;22m                ensures[0m
-[38;5;22m                    #[trigger] obeys_deep_eq::<$n>(),[0m
-
-[31m/home/milnes/projects/verus/source/vstd/laws_eq.rs:149: [0m
-[38;5;22mpub broadcast proof fn lemma_option_obeys_deep_eq<T: PartialEq + DeepView>()[0m
-[38;5;22m    requires[0m
-[38;5;22m        obeys_deep_eq::<T>(),[0m
-[38;5;22m    ensures[0m
-[38;5;22m        #[trigger] obeys_deep_eq::<Option<T>>(),[0m
+[38;5;22m        l1.fold_left(v, f) == l2.fold_left(v, f),[0m
 

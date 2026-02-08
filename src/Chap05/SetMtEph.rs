@@ -1,48 +1,26 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-
 //! Chapter 5.1 — Multi-threaded ephemeral Set built on `std::collections::HashSet`.
 //! Uses WSSchedulerMtEph for bounded parallel cartesian_product.
-
-//  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
-
-//		1. module
-
 
 // Verus requires parentheses around closures with ensures clauses in function arguments
 #[allow(unused_parens)]
 pub mod SetMtEph {
 
     use vstd::prelude::*;
-    use crate::Concurrency::*;
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;
+    use crate::Concurrency::diverge;
+    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{spawn, wait, TaskState};
 
 verus! {
 
-    //		2. imports
-
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::Hash;
+
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::SetIterAdditionalSpecFns;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::cmp::PartialEqSpecImpl;
     #[cfg(verus_keep_ghost)]
     use vstd::pervasive::strictly_cloned;
     #[cfg(verus_keep_ghost)]
@@ -51,13 +29,11 @@ verus! {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     #[cfg(not(verus_keep_ghost))]
-    use crate::vstdplus::feq::feq::*;
-    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::*;
+    use crate::vstdplus::feq::feq::feq;
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
     use crate::Types::Types::*;
-    use crate::vstdplus::clone_plus::clone_plus::*;
-
-
-    //		3. broadcast use
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
 
     broadcast use {
         // Set groups
@@ -78,8 +54,10 @@ verus! {
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
     };
 
-
-    //		4. type definitions
+    pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
+        &&& obeys_key_model::<T>() 
+        &&& obeys_feq_full::<T>()
+    }
 
     #[verifier::reject_recursive_types(T)]
     pub struct SetMtEph<T: StT + Hash> { pub elements: HashSetWithViewPlus<T> }
@@ -90,6 +68,40 @@ verus! {
         pub inner: std::collections::hash_set::Iter<'a, T>,
     }
 
+    impl<'a, T: StT + Hash> View for SetMtEphIter<'a, T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant<'a, T: StT + Hash>(it: &SetMtEphIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<'a, T: StT + Hash> std::iter::Iterator for SetMtEphIter<'a, T> {
+        type Item = &'a T;
+
+        fn next(&mut self) -> (next: Option<&'a T>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            self.inner.next()
+        }
+    }
+
     /// Ghost iterator for ForLoopGhostIterator support (for-iter patterns).
     #[verifier::reject_recursive_types(T)]
     pub struct SetMtEphGhostIterator<'a, T: StT + Hash> {
@@ -98,12 +110,51 @@ verus! {
         pub phantom: core::marker::PhantomData<&'a T>,
     }
 
+    impl<'a, T: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for SetMtEphIter<'a, T> {
+        type GhostIter = SetMtEphGhostIterator<'a, T>;
 
-    //		5. view impls
+        open spec fn ghost_iter(&self) -> SetMtEphGhostIterator<'a, T> {
+            SetMtEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
 
-    impl<'a, T: StT + Hash> View for SetMtEphIter<'a, T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    impl<'a, T: StT + Hash> vstd::pervasive::ForLoopGhostIterator for SetMtEphGhostIterator<'a, T> {
+        type ExecIter = SetMtEphIter<'a, T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &SetMtEphIter<'a, T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() {
+                Some(self.elements[self.pos])
+            } else {
+                None
+            }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &SetMtEphIter<'a, T>) -> SetMtEphGhostIterator<'a, T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
     }
 
     impl<'a, T: StT + Hash> View for SetMtEphGhostIterator<'a, T> {
@@ -113,45 +164,6 @@ verus! {
             self.elements.take(self.pos)
         }
     }
-
-    impl<T: StT + Hash> View for SetMtEph<T> {
-        type V = Set<<T as View>::V>;
-        open spec fn view(&self) -> Self::V { self.elements@ }
-    }
-
-
-    //		6. spec fns
-
-    pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
-        &&& obeys_key_model::<T>() 
-        &&& obeys_feq_full::<T>()
-    }
-
-    pub open spec fn iter_invariant<'a, T: StT + Hash>(it: &SetMtEphIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-
-    //		7. proof fns/broadcast groups
-
-    /// Singleton choose: if len == 1 and contains(a), then choose() == a.
-    pub broadcast proof fn lemma_singleton_choose<A>(s: Set<A>, a: A)
-        requires
-            s.finite(),
-            s.len() == 1,
-            #[trigger] s.contains(a),
-        ensures
-            s.choose() == a,
-    {
-        Set::lemma_is_singleton(s);
-    }
-
-    pub broadcast group group_set_mt_eph_lemmas {
-        lemma_singleton_choose,
-    }
-
-
-    //		8. traits
 
     pub trait SetMtEphTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
 
@@ -190,8 +202,7 @@ verus! {
             ensures s@.finite(), s@ == Set::empty().insert(x@);
 
         /// APAS: Work Θ(1), Span Θ(1)
-        fn size(&self)                       -> (size: N)
-            ensures size == self@.len();
+        fn size(&self)                       -> N;
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn mem(&self, x: &T)                 -> (contains: B)
@@ -297,8 +308,16 @@ verus! {
                 self@.contains(element@);
     }
 
+    impl<T: StT + Hash> View for SetMtEph<T> {
+        type V = Set<<T as View>::V>;
+        open spec fn view(&self) -> Self::V { self.elements@ }
+    }
 
-    //		9. impls
+    impl<T: StT + Hash> Clone for SetMtEph<T> {
+        fn clone(&self) -> (clone: Self)
+            ensures clone@.finite(), clone@ == self@
+        { SetMtEph { elements: self.elements.clone() } }
+    }
 
     impl<T: StT + Hash> SetMtEphTrait<T> for SetMtEph<T> {
 
@@ -527,7 +546,7 @@ verus! {
                         let s2_clone = s2.clone();
                         
                         proof {
-                            use crate::vstdplus::feq::feq::*;
+                            use crate::vstdplus::feq::feq::lemma_cloned_view_eq;
                             lemma_cloned_view_eq(*a, a_clone);
                         }
                         
@@ -795,7 +814,7 @@ verus! {
         }
 
         fn choose(&self) -> (element: T) {
-            use crate::vstdplus::feq::feq::*;
+            use crate::vstdplus::feq::feq::lemma_cloned_view_eq;
             
             let mut it = self.elements.iter();
             let ghost s: Seq<T> = it@.1;
@@ -836,106 +855,20 @@ verus! {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: StT + Hash> PartialEqSpecImpl for SetMtEph<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    /// Singleton choose: if len == 1 and contains(a), then choose() == a.
+    pub broadcast proof fn lemma_singleton_choose<A>(s: Set<A>, a: A)
+        requires
+            s.finite(),
+            s.len() == 1,
+            #[trigger] s.contains(a),
+        ensures
+            s.choose() == a,
+    {
+        Set::lemma_is_singleton(s);
     }
 
-
-    //		10. iterators
-
-    impl<'a, T: StT + Hash> std::iter::Iterator for SetMtEphIter<'a, T> {
-        type Item = &'a T;
-
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    impl<'a, T: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for SetMtEphIter<'a, T> {
-        type GhostIter = SetMtEphGhostIterator<'a, T>;
-
-        open spec fn ghost_iter(&self) -> SetMtEphGhostIterator<'a, T> {
-            SetMtEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, T: StT + Hash> vstd::pervasive::ForLoopGhostIterator for SetMtEphGhostIterator<'a, T> {
-        type ExecIter = SetMtEphIter<'a, T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &SetMtEphIter<'a, T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(self.elements[self.pos])
-            } else {
-                None
-            }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &SetMtEphIter<'a, T>) -> SetMtEphGhostIterator<'a, T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    impl<'a, T: StT + Hash> std::iter::IntoIterator for &'a SetMtEph<T> {
-        type Item = &'a T;
-        type IntoIter = SetMtEphIter<'a, T>;
-        fn into_iter(self) -> (it: Self::IntoIter)
-            requires valid_key_type::<T>()
-            ensures
-                it@.0 == 0int,
-                it@.1.map(|i: int, k: T| k@).to_set() == self@,
-                it@.1.no_duplicates(),
-        { self.iter() }
-    }
-
-
-    //		11. derive impls in verus!
-
-    impl<T: StT + Hash> Clone for SetMtEph<T> {
-        fn clone(&self) -> (clone: Self)
-            ensures clone@.finite(), clone@ == self@
-        { SetMtEph { elements: self.elements.clone() } }
+    pub broadcast group group_set_mt_eph_lemmas {
+        lemma_singleton_choose,
     }
 
     impl<T: StT + Hash> std::hash::Hash for SetMtEph<T> {
@@ -944,20 +877,7 @@ verus! {
 
     impl<T: StT + Hash> Eq for SetMtEph<T> {}
 
-    impl<T: StT + Hash> PartialEq for SetMtEph<T> {
-        fn eq(&self, other: &Self) -> (equal: bool)
-            ensures equal == (self@ == other@)
-        {
-            let equal = self.elements == other.elements;
-            proof { assume(equal == (self@ == other@)); }
-            equal
-        }
-    }
-
   } // verus!
-
-
-    //		12. macros
 
     #[macro_export]
     macro_rules! SetMtLit {
@@ -971,8 +891,9 @@ verus! {
         }};
     }
 
-
-    //		13. derive impls outside verus!
+    impl<T: StT + Hash> PartialEq for SetMtEph<T> {
+        fn eq(&self, other: &Self) -> bool { self.elements == other.elements }
+    }
 
     impl<T: StT + Hash> std::fmt::Display for SetMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {

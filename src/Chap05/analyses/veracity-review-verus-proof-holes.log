@@ -1,0 +1,31 @@
+❌ MappingStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:528: assume() - assume(r == (self@ == other@));
+   Holes: 1 total
+      1 × assume()
+✓ RelationStEph.rs
+❌ SetMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:904: assume() - proof { assume(equal == (self@ == other@)); }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ SetStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:829: assume() - proof { assume(equal == (self@ == other@)); }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   1 clean (no holes)
+   3 holed (contains holes)
+   4 total
+
+Proof Functions:
+   2 clean
+   0 holed
+   2 total
+
+Holes Found: 3 total

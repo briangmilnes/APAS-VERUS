@@ -1,32 +1,28 @@
-# Use Glob Imports, Not Verbose Crate Paths
+# Use Imports, Not Verbose Crate Paths
 
-When using items from other modules, prefer glob imports (`::*`) over verbose `crate::...` paths or itemized imports.
+When calling functions from other modules, prefer `use` imports over verbose `crate::...` paths.
 
-## Anti-patterns
+## Anti-pattern
 
 ```rust
 // Bad: verbose crate path repeated multiple times
 crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(seq, i);
 crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set(seq, j);
-
-// Bad: itemized imports duplicate what the module already exports
-use crate::Chap19::ArraySeqStPer::ArraySeqStPer::{ArraySeqStPerS, flatten, sum_lens};
 ```
 
 ## Correct Pattern
 
 ```rust
-// Good: glob import brings all public items into scope
-use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+// Good: import the module, use short path
+use crate::vstdplus::seq_set;
 
-flatten(&inner);
-let s = ArraySeqStPerS::from_vec(vec);
+seq_set::lemma_seq_index_in_map_to_set(seq, i);
+seq_set::lemma_seq_index_in_map_to_set(seq, j);
 ```
 
 ## Why
 
 - Reduces visual noise
-- Avoids duplicating what the module already declares as public
 - Makes code more readable
-- Easier to refactor if module exports change
-- The module's `pub` declarations already define the API
+- Easier to refactor if module paths change
+- Follows Rust idioms

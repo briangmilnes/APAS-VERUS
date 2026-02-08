@@ -1,25 +1,8 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-
 //! Chapter 6 Labeled Undirected Graph (ephemeral) using Set for vertices and labeled edges - Multi-threaded version.
 //!
 //! Note: NOW uses true parallelism via ParaPair! for neighbor operations.
 //! Labeled edge filtering (ng) is parallel.
-
-//  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	8. traits
-//	9. impls
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
-
-//		1. module
-
 
 pub mod LabUnDirGraphMtEph {
 
@@ -34,18 +17,14 @@ pub mod LabUnDirGraphMtEph {
 
     verus! {
 
-    //		2. imports
-
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
+
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::Types::Types::*;
-
-
-    //		3. broadcast use
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -54,8 +33,9 @@ pub mod LabUnDirGraphMtEph {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
-
-    //		4. type definitions
+    pub open spec fn valid_key_type_for_lab_graph<V: StTInMtT + Hash + Ord, L: StTInMtT + Hash>() -> bool {
+        valid_key_type_LabEdge::<V, L>()
+    }
 
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(L)]
@@ -64,8 +44,13 @@ pub mod LabUnDirGraphMtEph {
         pub labeled_edges: SetStEph<LabEdge<V, L>>,
     }
 
-
-    //		5. view impls
+    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> Clone for LabUnDirGraphMtEph<V, L> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            LabUnDirGraphMtEph { vertices: self.vertices.clone(), labeled_edges: self.labeled_edges.clone() }
+        }
+    }
 
     impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> View for LabUnDirGraphMtEph<V, L> {
         type V = LabGraphView<<V as View>::V, <L as View>::V>;
@@ -74,15 +59,19 @@ pub mod LabUnDirGraphMtEph {
         }
     }
 
+    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> LabUnDirGraphMtEph<V, L> {
+        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
+        pub open spec fn spec_labeled_edges(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_edges@ }
 
-    //		6. spec fns
-
-    pub open spec fn valid_key_type_for_lab_graph<V: StTInMtT + Hash + Ord, L: StTInMtT + Hash>() -> bool {
-        valid_key_type_LabEdge::<V, L>()
+        /// Spec for neighbors computed from a subset of edges
+        pub open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V, L::V)>) -> Set<V::V> 
+            recommends 
+                wf_lab_graph_view(self@),
+                subedges <= self@.A,
+        {
+            Set::new(|w: V::V| exists |l: L::V| subedges.contains((v, w, l)) || subedges.contains((w, v, l)))
+        }
     }
-
-
-    //		8. traits
 
     pub trait LabUnDirGraphMtEphTrait<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static>
         : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized
@@ -164,23 +153,6 @@ pub mod LabUnDirGraphMtEph {
             ensures
                 ng@ == self.spec_ng(v@),
                 ng@ <= self@.V;
-    }
-
-
-    //		9. impls
-
-    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> LabUnDirGraphMtEph<V, L> {
-        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
-        pub open spec fn spec_labeled_edges(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_edges@ }
-
-        /// Spec for neighbors computed from a subset of edges
-        pub open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V, L::V)>) -> Set<V::V> 
-            recommends 
-                wf_lab_graph_view(self@),
-                subedges <= self@.A,
-        {
-            Set::new(|w: V::V| exists |l: L::V| subedges.contains((v, w, l)) || subedges.contains((w, v, l)))
-        }
     }
 
     /// Parallel edge filtering for neighbors using set split.
@@ -538,41 +510,7 @@ pub mod LabUnDirGraphMtEph {
         }
     }
 
-    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> LabUnDirGraphMtEph<V, L> {
-        /// Returns an iterator over the vertices
-        pub fn iter_vertices(&self) -> (it: SetStEphIter<'_, V>)
-            requires valid_key_type_for_lab_graph::<V, L>()
-            ensures
-                it@.0 == 0int,
-                it@.1.map(|i: int, k: V| k@).to_set() == self@.V,
-                it@.1.no_duplicates(),
-        { self.vertices.iter() }
-
-        /// Returns an iterator over the labeled edges
-        pub fn iter_edges(&self) -> (it: SetStEphIter<'_, LabEdge<V, L>>)
-            requires valid_key_type_for_lab_graph::<V, L>()
-            ensures
-                it@.0 == 0int,
-                it@.1.map(|i: int, k: LabEdge<V, L>| k@).to_set() == self@.A,
-                it@.1.no_duplicates(),
-        { self.labeled_edges.iter() }
-    }
-
-
-    //		11. derive impls in verus!
-
-    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> Clone for LabUnDirGraphMtEph<V, L> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
-        {
-            LabUnDirGraphMtEph { vertices: self.vertices.clone(), labeled_edges: self.labeled_edges.clone() }
-        }
-    }
-
     } // verus!
-
-
-    //		13. derive impls outside verus!
 
     impl<V: StTInMtT + Hash + Ord, L: StTInMtT + Hash> Display for LabUnDirGraphMtEph<V, L> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
@@ -589,9 +527,6 @@ pub mod LabUnDirGraphMtEph {
             )
         }
     }
-
-
-    //		12. macros
 
     #[macro_export]
     macro_rules! LabUnDirGraphMtEphLit {

@@ -1,19 +1,12 @@
 // Copyright (c) 2025 Brian G. Milnes
 //! APAS-VERUS library crate
-//!
-//! Use `--features full_verify` to include all modules (slower verification).
-//! Default build includes only core modules for faster development iteration.
 #![cfg_attr(verus_keep_ghost, feature(sized_hierarchy))]
 
 pub mod Types;
 pub mod Concurrency;
 pub mod ParaPairs;
 
-// The experiments must be uncommented individually as needed. 
-// All should have a statement of their hypothesis and the result in comments.
 pub mod experiments {
-//    pub mod vec_clone_in_verus;  // PARTIAL — Vec::clone can't prove view eq, see deep_clone
-//    pub mod clone_plus_vs_deep_clone;  // PARTIAL — Test 4 fails without reveal(obeys_view_eq)
 //    pub mod clone_fn;
 //    pub mod baseviewtypes;
 //    pub mod tcb_foul;  // TCB foul experiment - Verus blocks unspecified &mut self methods
@@ -43,8 +36,8 @@ pub mod experiments {
 //    pub mod simple_set_iter;
 //    pub mod simple_hash_set_iter;
 //    pub mod invariant_proof_test;
-//    pub mod assume_spec_test;
-//    pub mod struct_construction_test;
+//    pub mod assume_spec_test; 
+//    pub mod struct_construction_test; 
 //    pub mod pub_crate_test;
 //    pub mod verus_pub_crate_test;  // Has type_invariant failure
 //    pub mod hash_set_iter;
@@ -78,8 +71,6 @@ pub mod experiments {
 //    pub mod arc_clone_deref;
 }
 
-//  APAS-VERUS's extensions to vstd code base. When Verus updates, one can run
-// veracity-minimize-lib to see which of these extensions are no longer needed.
 pub mod vstdplus {
     pub mod pervasives_plus;
     pub mod threads_plus;
@@ -96,17 +87,15 @@ pub mod vstdplus {
     pub mod checked_nat;
     pub mod hashed_checked_u32;
     pub mod arithmetic {
-        pub mod power2_plus;
+    pub mod power2_plus;
     }
 }
 
 pub mod Chap02 {
     pub mod WSSchedulerMtEph;
-    #[cfg(feature = "full_verify")]
     pub mod FibonacciWSScheduler;
 }
 
-#[cfg(feature = "full_verify")]
 pub mod Chap03 {
     pub mod InsertionSortStEph;
 }
@@ -118,32 +107,32 @@ pub mod Chap05 {
     pub mod MappingStEph;
 }
 
-#[cfg(feature = "full_verify")]
 pub mod Chap06 {
     pub mod DirGraphStEph;
     pub mod UnDirGraphStEph;
     pub mod LabDirGraphStEph;
     pub mod LabUnDirGraphStEph;
+    pub mod WeightedDirGraphStEphU32;
+    // MtEph graph modules
     pub mod DirGraphMtEph;
     pub mod UnDirGraphMtEph;
     pub mod LabDirGraphMtEph;
     pub mod LabUnDirGraphMtEph;
-    // WeightedDirGraphStEph per-type variants
+    // WeightedDirGraphStEph per-type variants, 
+    // just one being verified but they all work.
     pub mod WeightedDirGraphStEphU8;
-    pub mod WeightedDirGraphStEphU16;
-    pub mod WeightedDirGraphStEphU32;
-    pub mod WeightedDirGraphStEphU64;
-    pub mod WeightedDirGraphStEphU128;
-    pub mod WeightedDirGraphStEphUsize;
-    pub mod WeightedDirGraphStEphI8;
-    pub mod WeightedDirGraphStEphI16;
-    pub mod WeightedDirGraphStEphI32;
-    pub mod WeightedDirGraphStEphI64;
-    pub mod WeightedDirGraphStEphI128;
-    pub mod WeightedDirGraphStEphIsize;
+//    pub mod WeightedDirGraphStEphU16;
+//    pub mod WeightedDirGraphStEphU64;
+//    pub mod WeightedDirGraphStEphU128;
+//    pub mod WeightedDirGraphStEphUsize;
+//    pub mod WeightedDirGraphStEphI8;
+//    pub mod WeightedDirGraphStEphI16;
+//    pub mod WeightedDirGraphStEphI32;
+//    pub mod WeightedDirGraphStEphI64;
+//    pub mod WeightedDirGraphStEphI128;
+//    pub mod WeightedDirGraphStEphIsize;
 }
 
-#[cfg(feature = "full_verify")]
 pub mod Chap11 {
     pub mod FibonacciStEph;
     pub mod FibonacciMtPerAllThreads;
@@ -152,14 +141,12 @@ pub mod Chap11 {
     pub mod FibonacciMtEphRecomputes;
 }
 
-#[cfg(feature = "full_verify")]
 pub mod Chap12 {
     pub mod Exercise12_1;
     pub mod Exercise12_2;
     pub mod Exercise12_5;
 }
 
-#[cfg(feature = "full_verify")]
 pub mod Chap17 {
     pub mod MathSeq;
 }
@@ -180,7 +167,17 @@ pub mod Chap19 {
     pub mod ArraySeqMtEph;
 }
 
-#[cfg(verus_keep_ghost)]
 pub mod Chap21 {
     pub mod Algorithm21_1;
+    // pub mod Algorithm21_2;
+    // pub mod Algorithm21_5;
+    // pub mod Algorithm21_6;
+    // pub mod Exercise21_5;
+    // pub mod Exercise21_6;
+    // pub mod Exercise21_7;
+    // pub mod Exercise21_8;
+    // pub mod Exercise21_9;
+    // pub mod Problem21_1;
+    // pub mod Problem21_3;
+    // pub mod Problem21_4;
 }

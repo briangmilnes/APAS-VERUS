@@ -1,0 +1,49 @@
+❌ ArraySeq.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:415: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:422: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:445: assume() - proof { assume(r == (self@ == other@)); }
+   Holes: 3 total
+      1 × assume()
+      2 × external
+❌ ArraySeqMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:685: assume() - proof { assume(r == (self@ == other@)); }
+   Holes: 1 total
+      1 × assume()
+❌ ArraySeqMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:688: assume() - proof { assume(r == (self@ == other@)); }
+   Holes: 1 total
+      1 × assume()
+❌ ArraySeqStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:524: assume() - proof { assume(r == (self@ == other@)); }
+   Holes: 1 total
+      1 × assume()
+❌ ArraySeqStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:504: assume() - proof { assume(r == (self@ == other@)); }
+   Holes: 1 total
+      1 × assume()
+❌ LinkedListStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:512: assume() - proof { assume(r == (self@ == other@)); }
+   Holes: 1 total
+      1 × assume()
+❌ LinkedListStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:496: assume() - proof { assume(r == (self@ == other@)); }
+   Holes: 1 total
+      1 × assume()
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   7 holed (contains holes)
+   7 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 9 total
+   7 × assume()
+   2 × external

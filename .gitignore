@@ -20,8 +20,3 @@ TAGS
 # Old code
 attic/
 lib.long-type-*.txt
-
-# Ignore nested analyses directories (keep src/analyses/ for top-level reports)
-src/Chap*/analyses/
-src/vstdplus/analyses/
-src/experiments/analyses/
