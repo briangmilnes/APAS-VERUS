@@ -48,6 +48,15 @@ pub mod Algorithm21_1 {
     {
         if k > 0 {
             lemma_sum_inner_lens_uniform(ss, k - 1, m);
+            assert(sum_inner_lens(ss, k - 1) == (k - 1) * m);
+            assert(ss[k - 1].seq@.len() == m);
+            assert(sum_inner_lens(ss, k) == sum_inner_lens(ss, k - 1) + ss[k - 1].seq@.len() as int);
+            assert((k - 1) * m + m == k * m) by (nonlinear_arith)
+                requires k > 0;
+        } else {
+            assert(sum_inner_lens(ss, k) == 0);
+            assert(k * m == 0) by (nonlinear_arith)
+                requires k == 0;
         }
     }
 
