@@ -194,14 +194,6 @@ pub mod ArraySeq {
                 filtered.spec_len() <= a.spec_len(),
                 forall|i: int| #![auto] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
-/* CORPSE: flatten needs concrete type access, can't use &Self yet
-        /// - Definition 18.15 (flatten). Concatenate a sequence of sequences.
-        /// - Work Θ(total length), Span Θ(1).
-        fn flatten(a: &ArraySeqS<ArraySeqS<T>>) -> (flattened: Self)
-            where T: Clone
-            ensures a.spec_len() == 0 ==> flattened.spec_len() == 0;
-*/
-
         /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
         /// - Work Θ(|a|), Span Θ(1).
         fn update(a: &Self, index: usize, item: T) -> (updated: Self)
