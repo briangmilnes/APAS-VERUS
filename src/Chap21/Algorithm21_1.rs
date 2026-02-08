@@ -41,7 +41,7 @@ pub mod Algorithm21_1 {
     proof fn lemma_sum_inner_lens_uniform<T>(ss: Seq<ArraySeqStPerS<T>>, k: int, m: int)
         requires
             0 <= k <= ss.len(),
-            forall|i: int| 0 <= i < k ==> ss[i].seq@.len() == m,
+            forall|i: int| 0 <= i < k ==> (#[trigger] ss[i]).seq@.len() == m,
         ensures
             sum_inner_lens(ss, k) == k * m
         decreases k
@@ -161,7 +161,7 @@ pub mod Algorithm21_1 {
 
         proof {
             // Each inner sequence has length n-1.
-            assert forall|i: int| 0 <= i < n implies inner.seq@[i].seq@.len() == n - 1 by {
+            assert forall|i: int| 0 <= i < n implies (#[trigger] inner.seq@[i]).seq@.len() == n - 1 by {
                 // From tabulate's ensures: result.seq@.len() == length
                 // and the closure ensures row.seq@.len() == n - 1
             }
