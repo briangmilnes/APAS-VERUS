@@ -158,11 +158,20 @@ pub mod feq {
         open spec fn obeys_feq() -> bool { obeys_feq_properties::<isize>() }
     }
 
-    // Broadcast proof: cloned values are equal
+    // Broadcast proof: cloned values are equal (reference version)
 // Veracity: USED
     pub broadcast proof fn axiom_cloned_implies_eq<T: Eq + Clone + Sized>(x: &T, y: T)
         requires #[trigger] cloned(*x, y), obeys_feq_clone::<T>()
         ensures *x == y
+    {
+        admit();
+    }
+
+    // Broadcast proof: cloned values are equal (owned version)
+// Veracity: USED
+    pub broadcast proof fn axiom_cloned_implies_eq_owned<T: Eq + Clone + Sized>(x: T, y: T)
+        requires #[trigger] cloned(x, y), obeys_feq_clone::<T>()
+        ensures x == y
     {
         admit();
     }
@@ -184,6 +193,7 @@ pub mod feq {
 
     pub broadcast group group_feq_axioms {
         axiom_cloned_implies_eq,
+        axiom_cloned_implies_eq_owned,
     }
 
     } // verus!
