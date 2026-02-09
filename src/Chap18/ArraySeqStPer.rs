@@ -11,6 +11,7 @@
 //	8. traits
 //	9. impls
 //	10. iterators
+//	11. derive impls in verus!
 //	13. derive impls outside verus!
 
 //		1. module
@@ -30,7 +31,12 @@ pub mod ArraySeqStPer {
     //		2. imports
 
     #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::vec::*;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
+
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
@@ -73,7 +79,8 @@ pub mod ArraySeqStPer {
         spec fn spec_index(&self, i: int) -> T
             recommends i < self.spec_len();
 
-        /// Work Θ(n), Span Θ(1)
+        /// - Create a new sequence of length `length` with each element initialized to `init_value`.
+        /// - Work Θ(length), Span Θ(1).
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -83,16 +90,19 @@ pub mod ArraySeqStPer {
                 new_seq.spec_len() == length as int,
                 forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
-        /// Work Θ(1), Span Θ(1)
+        /// - Definition 18.1 (length). Return the number of elements.
+        /// - Work Θ(1), Span Θ(1).
         fn length(&self) -> (len: usize)
             ensures len as int == self.spec_len();
 
-        /// Work Θ(1), Span Θ(1)
+        /// - Algorithm 19.11 (Function nth). Return a reference to the element at `index`.
+        /// - Work Θ(1), Span Θ(1).
         fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.spec_len()
             ensures *nth_elem == self.spec_index(index as int);
 
-        /// Work Θ(len), Span Θ(1)
+        /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
+        /// - Work Θ(length), Span Θ(1).
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -103,7 +113,8 @@ pub mod ArraySeqStPer {
                 subseq.spec_len() == length as int,
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
-        /// Work Θ(len), Span Θ(1)
+        /// - Definition 18.12 (subseq). Extract a contiguous subsequence.
+        /// - Work Θ(length), Span Θ(1).
         fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -114,7 +125,8 @@ pub mod ArraySeqStPer {
                 subseq.spec_len() == length as int,
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
 
-        /// Work Θ(n), Span Θ(1)
+        /// - Create sequence from Vec.
+        /// - Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_len() == elts@.len(),
@@ -124,17 +136,20 @@ pub mod ArraySeqStPer {
     /// Redefinable trait - may be overridden with better algorithms in later chapters.
     pub trait ArraySeqStPerRedefinableTrait<T>: ArraySeqStPerBaseTrait<T> {
 
-        /// Work Θ(1), Span Θ(1)
+        /// - Definition 18.1 (empty). Construct the empty sequence.
+        /// - Work Θ(1), Span Θ(1).
         fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_len() == 0;
 
-        /// Work Θ(1), Span Θ(1)
+        /// - Definition 18.1 (singleton). Construct a singleton sequence containing `item`.
+        /// - Work Θ(1), Span Θ(1).
         fn singleton(item: T) -> (singleton: Self)
             ensures
                 singleton.spec_len() == 1,
                 singleton.spec_index(0) == item;
 
-        /// Work Θ(|a|+|b|), Span Θ(1)
+        /// - Definition 18.13 (append). Concatenate two sequences.
+        /// - Work Θ(|a| + |b|), Span Θ(1).
         fn append(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> (appended: Self)
             where T: Clone + Eq
             requires
@@ -145,7 +160,8 @@ pub mod ArraySeqStPer {
                 forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],
                 forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
 
-        /// Work Θ(|a|), Span Θ(1)
+        /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
+        /// - Work Θ(|a|), Span Θ(1).
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F) -> (filtered: Self)
             where T: Clone + Eq
             requires
@@ -155,7 +171,8 @@ pub mod ArraySeqStPer {
                 filtered.spec_len() <= a.seq@.len(),
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
-        /// Work Θ(|a|), Span Θ(1)
+        /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
+        /// - Work Θ(|a|), Span Θ(1).
         fn update(a: &ArraySeqStPerS<T>, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires
@@ -166,24 +183,29 @@ pub mod ArraySeqStPer {
                 updated.spec_index(index as int) == item,
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
 
-        /// Work Θ(1), Span Θ(1)
+        /// - Definition 18.5 (isEmpty). true iff the sequence has length zero.
+        /// - Work Θ(1), Span Θ(1).
         fn is_empty(&self) -> (empty: bool)
             ensures empty <==> self.spec_len() == 0;
 
-        /// Work Θ(1), Span Θ(1)
+        /// - Definition 18.5 (isSingleton). true iff the sequence has length one.
+        /// - Work Θ(1), Span Θ(1).
         fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.spec_len() == 1;
 
-        /// Work Θ(|a|), Span Θ(1)
+        /// - Definition 18.7 (iterate). Fold with accumulator `seed`.
+        /// - Work Θ(|a|), Span Θ(1).
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, seed: A) -> A
             requires forall|x: &A, y: &T| #[trigger] f.requires((x, y));
 
-        /// Work Θ(|a|), Span Θ(1)
+        /// - Definition 18.18 (reduce). Combine elements using associative `f` and identity `id`.
+        /// - Work Θ(|a|), Span Θ(1).
         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> T
             where T: Clone
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y));
 
-        /// Work Θ(|a|), Span Θ(1)
+        /// - Definition 18.19 (scan). Prefix-reduce returning partial sums and total.
+        /// - Work Θ(|a|), Span Θ(1).
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> (scanned: (ArraySeqStPerS<T>, T))
             where T: Clone
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y))
@@ -380,6 +402,7 @@ pub mod ArraySeqStPer {
                     forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> pred.ensures((&seq@[j],), true),
                 decreases len - i,
             {
+                proof { a.lemma_spec_index(i as int); }
                 if pred(&a.seq[i]) {
                     seq.push(a.seq[i].clone());
                     proof {
@@ -606,6 +629,13 @@ pub mod ArraySeqStPer {
         }
     }
 
+    #[cfg(verus_keep_ghost)]
+    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqStPerS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+
     //		10. iterators
 
     /// Iterator wrapper with closed spec view for encapsulation.
@@ -649,12 +679,20 @@ pub mod ArraySeqStPer {
         }
     }
 
-    /// Ghost iterator for ForLoopGhostIterator support.
+    /// Ghost iterator for ForLoopGhostIterator support (for-iter, for-borrow patterns).
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqStPerGhostIterator<'a, T> {
         pub pos: int,
         pub elements: Seq<T>,
         pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
+    impl<'a, T> View for ArraySeqStPerGhostIterator<'a, T> {
+        type V = Seq<T>;
+
+        open spec fn view(&self) -> Seq<T> {
+            self.elements.take(self.pos)
+        }
     }
 
     impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqStPerIter<'a, T> {
@@ -682,8 +720,13 @@ pub mod ArraySeqStPer {
             }
         }
 
-        open spec fn ghost_ensures(&self) -> bool { self.pos == self.elements.len() }
-        open spec fn ghost_decrease(&self) -> Option<int> { Some(self.elements.len() - self.pos) }
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
 
         open spec fn ghost_peek_next(&self) -> Option<T> {
             if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
@@ -692,11 +735,6 @@ pub mod ArraySeqStPer {
         open spec fn ghost_advance(&self, _exec_iter: &ArraySeqStPerIter<'a, T>) -> ArraySeqStPerGhostIterator<'a, T> {
             Self { pos: self.pos + 1, ..*self }
         }
-    }
-
-    impl<'a, T> View for ArraySeqStPerGhostIterator<'a, T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
     }
 
     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStPerS<T> {
@@ -711,20 +749,31 @@ pub mod ArraySeqStPer {
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
+
+    //		11. derive impls in verus!
+
+    impl<T: Clone> Clone for ArraySeqStPerS<T> {
+        fn clone(&self) -> Self {
+            ArraySeqStPerS { seq: self.seq.clone() }
+        }
+    }
+
+    impl<T: Eq + View> Eq for ArraySeqStPerS<T> {}
+
+    impl<T: PartialEq + View> PartialEq for ArraySeqStPerS<T> {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            let equal = self.seq == other.seq;
+            proof { assume(equal == (self@ == other@)); }
+            equal
+        }
+    }
+
     } // verus!
 
 
     //		13. derive impls outside verus!
-
-    impl<T: Clone> Clone for ArraySeqStPerS<T> {
-        fn clone(&self) -> Self { ArraySeqStPerS { seq: self.seq.clone() } }
-    }
-
-    impl<T: PartialEq> PartialEq for ArraySeqStPerS<T> {
-        fn eq(&self, other: &Self) -> bool { self.seq == other.seq }
-    }
-
-    impl<T: Eq> Eq for ArraySeqStPerS<T> {}
 
     impl<T: Debug> Debug for ArraySeqStPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

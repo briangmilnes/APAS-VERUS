@@ -1,13 +1,13 @@
 Verus Style Review
 ==================
 
-Path: src/Chap18/ArraySeq.rs
-Codebase: src/Chap18
+Path: src/Chap19/ArraySeqStPer.rs
+Codebase: src/Chap19
 Mode: basic
-Logging to: src/Chap18/analyses/veracity-review-verus-style.log
+Logging to: src/Chap19/analyses/veracity-review-verus-style.log
 
 Checking 1 files...
 
 ════════════════════════════════════════════════════════════════
-Summary: 16 passed, 0 warnings in 0 files (checked 1 files)
+Summary: 13 passed, 17 warnings in 1 files (checked 1 files)
 ════════════════════════════════════════════════════════════════

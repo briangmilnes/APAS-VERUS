@@ -1,38 +1,49 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 19 algorithms for ArraySeqStPer. Verusified.
 //! Redefines Chap18 methods using tabulate as the core primitive.
 //! Use the trait `ArraySeqStPerTrait` to access these implementations.
 
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	8. traits
+//	9. impls
+
+//		1. module
+
+
 pub mod ArraySeqStPer {
 
-    #[cfg(verus_keep_ghost)]
-    use vstd::prelude::*;
 
-    #[cfg(verus_keep_ghost)]
-    pub use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS;
-
-    #[cfg(verus_keep_ghost)]
     use std::hash::Hash;
 
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap05::SetStEph::SetStEph::{SetStEph, SetStEphTrait, valid_key_type};
+    use vstd::prelude::*;
 
-    #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::StT;
 
     #[cfg(verus_keep_ghost)]
     verus! {
 
-    broadcast use vstd::std_specs::vec::group_vec_axioms;
+    //		2. imports
+
+    use crate::Types::Types::*;
+    use crate::Chap05::SetStEph::SetStEph::{SetStEph, SetStEphTrait, valid_key_type};
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::feq::feq::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::tabulate as chap18_tabulate;
+
+
+    //		3. broadcast use
+
+    broadcast use vstd::std_specs::vec::group_vec_axioms;
+
+
+    //		8. traits
 
     // Chapter 19 trait - provides alternative algorithmic implementations
     // Import and use this trait to get Chapter 19's algorithms
-    pub trait ArraySeqStPerTrait<T: View + Clone>: Sized {
-        spec fn spec_len(&self) -> nat;
-
+    pub trait ArraySeqStPerTrait<T: View + Clone + Eq>: ArraySeqStPerBaseTrait<T> {
         fn empty() -> (result: Self)
             ensures result.spec_len() == 0;
 
@@ -42,7 +53,7 @@ pub mod ArraySeqStPer {
         fn map<U: Clone + View, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqStPerS<U>
             requires
                 a.spec_len() <= usize::MAX as int,
-                forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.nth_spec(i),));
+                forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.spec_index(i),));
 
         fn append(a: &Self, b: &Self) -> (result: Self)
             requires a.spec_len() + b.spec_len() <= usize::MAX as int
@@ -51,7 +62,7 @@ pub mod ArraySeqStPer {
         fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> (result: Self)
             requires
                 a.spec_len() <= usize::MAX as int,
-                forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.nth_spec(i),))
+                forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(i),))
             ensures result.spec_len() <= a.spec_len();
 
         fn update(a: &Self, index: usize, item: T) -> (result: Self)
@@ -78,6 +89,26 @@ pub mod ArraySeqStPer {
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y))
             ensures result.0.spec_len() == a.spec_len();
 
+        // Recursive versions matching textbook algorithms
+        fn iterate_rec<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A
+            requires
+                obeys_feq_clone::<T>(),
+                a.spec_len() <= usize::MAX as int,
+                forall|x: &A, y: &T| #[trigger] f.requires((x, y));
+
+        fn reduce_rec<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T
+            requires
+                obeys_feq_clone::<T>(),
+                a.spec_len() <= usize::MAX as int,
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y));
+
+        fn scan_rec<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (result: (Self, T))
+            requires
+                obeys_feq_clone::<T>(),
+                a.spec_len() <= usize::MAX as int,
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y))
+            ensures result.0.spec_len() == a.spec_len();
+
         fn select<'a>(a: &'a Self, b: &'a Self, i: usize) -> (result: Option<&'a T>)
             ensures
                 i < a.spec_len() ==> result.is_some(),
@@ -87,32 +118,25 @@ pub mod ArraySeqStPer {
             requires a.spec_len() + b.spec_len() <= usize::MAX as int
             ensures result.spec_len() == a.spec_len() + b.spec_len();
 
-        spec fn nth_spec(&self, i: int) -> T;
-
         fn from_set(set: &SetStEph<T>) -> (result: Self)
             where T: StT + Hash
             requires valid_key_type::<T>()
             ensures result.spec_len() == set@.len();
     }
 
-    impl<T: View + Clone> ArraySeqStPerTrait<T> for ArraySeqStPerS<T> {
 
-        open spec fn spec_len(&self) -> nat {
-            self.seq@.len()
-        }
+    //		9. impls
 
-        open spec fn nth_spec(&self, i: int) -> T {
-            self.seq@[i]
-        }
+    impl<T: View + Clone + Eq> ArraySeqStPerTrait<T> for ArraySeqStPerS<T> {
 
         // Algorithm 19.1: empty = tabulate(lambda i._, 0)
         fn empty() -> ArraySeqStPerS<T> {
-            ArraySeqStPerS::<T>::empty()
+            <ArraySeqStPerS<T> as ArraySeqStPerRedefinableTrait<T>>::empty()
         }
 
         // Algorithm 19.2: singleton x = tabulate(lambda i.x, 1)
         fn singleton(item: T) -> ArraySeqStPerS<T> {
-            chap18_tabulate(&|_i: usize| item.clone(), 1)
+            ArraySeqStPerS::tabulate(&|_i: usize| item.clone(), 1)
         }
 
         // Algorithm 19.3: map f a = tabulate(lambda i.f(a[i]), |a|)
@@ -120,14 +144,14 @@ pub mod ArraySeqStPer {
             let n = a.length();
             proof {
                 // Connect outer requires to closure requires
-                assert forall|i: usize| i < n implies (i as int) < a.spec_len() && #[trigger] f.requires((&a.seq@[i as int],)) by {
-                    assert(a.nth_spec(i as int) == a.seq@[i as int]);
+                assert forall|i: usize| i < n implies (i as int) < a.seq@.len() && #[trigger] f.requires((&a.seq@[i as int],)) by {
+                    assert(a.spec_index(i as int) == a.seq@[i as int]);
                 }
             }
-            chap18_tabulate(
+            ArraySeqStPerS::tabulate(
                 &(|i: usize| -> (r: U)
                     requires
-                        (i as int) < a.spec_len(),
+                        (i as int) < a.seq@.len(),
                         f.requires((&a.seq@[i as int],)),
                 {
                     let elem = a.nth(i);
@@ -147,7 +171,7 @@ pub mod ArraySeqStPer {
             pair_vec.push(b_clone);
             let pair = ArraySeqStPerS::<ArraySeqStPerS<T>> { seq: pair_vec };
             proof {
-                assert(pair.spec_len() == 2);
+                assert(pair.seq@.len() == 2);
                 assert(pair.seq@[0].seq@.len() == a.seq@.len());
                 assert(pair.seq@[1].seq@.len() == b.seq@.len());
             }
@@ -160,9 +184,9 @@ pub mod ArraySeqStPer {
             let n = a.length();
             let mut deflated_vec: Vec<ArraySeqStPerS<T>> = Vec::with_capacity(n);
             proof {
-                // Connect outer requires (nth_spec) to seq@
+                // Connect outer requires (spec_index) to seq@
                 assert forall|j: usize| j < n implies #[trigger] pred.requires((&a.seq@[j as int],)) by {
-                    assert(a.nth_spec(j as int) == a.seq@[j as int]);
+                    assert(a.spec_index(j as int) == a.seq@[j as int]);
                 }
             }
             let mut i: usize = 0;
@@ -189,7 +213,7 @@ pub mod ArraySeqStPer {
 
         // Algorithm 19.6: update a (i, x) = tabulate(lambda j. if i = j then x else a[j], |a|)
         fn update(a: &ArraySeqStPerS<T>, index: usize, item: T) -> ArraySeqStPerS<T> {
-            chap18_tabulate(
+            ArraySeqStPerS::tabulate(
                 &(|j: usize| -> (r: T)
                     requires j < a.seq@.len()
                 {
@@ -227,26 +251,25 @@ pub mod ArraySeqStPer {
             acc
         }
 
-        // Algorithm 19.9: reduce using divide-and-conquer
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> T
-            decreases a.seq@.len()
-        {
+        // Algorithm 19.9 (iterative): reduce using left fold
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> T {
             let len = a.length();
-            if len == 0 {
-                id
-            } else if len == 1 {
-                a.nth(0).clone()
-            } else {
-                let mid = len / 2;
-                let left = a.subseq_copy(0, mid);
-                let right = a.subseq_copy(mid, len - mid);
-                let left_result = <ArraySeqStPerS<T> as ArraySeqStPerTrait<T>>::reduce(&left, f, id.clone());
-                let right_result = <ArraySeqStPerS<T> as ArraySeqStPerTrait<T>>::reduce(&right, f, id);
-                f(&left_result, &right_result)
+            let mut acc = id;
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                decreases len - i,
+            {
+                acc = f(&acc, a.nth(i));
+                i += 1;
             }
+            acc
         }
 
-        // Algorithm 19.10: scan using contraction (simplified sequential version)
+        // Algorithm 19.10 (iterative): scan using sequential left-to-right accumulation
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> (ArraySeqStPerS<T>, T) {
             let len = a.seq.len();
             let mut acc = id.clone();
@@ -265,6 +288,63 @@ pub mod ArraySeqStPer {
                 i += 1;
             }
             (ArraySeqStPerS { seq: results }, acc)
+        }
+
+        // Algorithm 19.8 (recursive): iterate f x a = if |a|=0 then x else iterate f (f(x,a[0])) a[1..|a|-1]
+        fn iterate_rec<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, seed: A) -> A
+            decreases a.seq@.len()
+        {
+            let len = a.length();
+            if len == 0 {
+                seed
+            } else if len == 1 {
+                f(&seed, a.nth(0))
+            } else {
+                let new_seed = f(&seed, a.nth(0));
+                let rest = a.subseq_copy(1, len - 1);
+                <ArraySeqStPerS<T> as ArraySeqStPerTrait<T>>::iterate_rec(&rest, f, new_seed)
+            }
+        }
+
+        // Algorithm 19.9 (recursive): reduce using divide-and-conquer
+        fn reduce_rec<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> T
+            decreases a.seq@.len()
+        {
+            let len = a.length();
+            if len == 0 {
+                id
+            } else if len == 1 {
+                a.nth(0).clone()
+            } else {
+                let mid = len / 2;
+                let left = a.subseq_copy(0, mid);
+                let right = a.subseq_copy(mid, len - mid);
+                let left_result = <ArraySeqStPerS<T> as ArraySeqStPerTrait<T>>::reduce_rec(&left, f, id.clone());
+                let right_result = <ArraySeqStPerS<T> as ArraySeqStPerTrait<T>>::reduce_rec(&right, f, id);
+                f(&left_result, &right_result)
+            }
+        }
+
+        // Algorithm 19.10 (recursive): scan using divide-and-conquer
+        fn scan_rec<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> (ArraySeqStPerS<T>, T)
+            decreases a.seq@.len()
+        {
+            let len = a.length();
+            if len == 0 {
+                (<ArraySeqStPerS<T> as ArraySeqStPerTrait<T>>::empty(), id)
+            } else if len == 1 {
+                let total = f(&id, a.nth(0));
+                let singleton = ArraySeqStPerS::tabulate(&|_i: usize| total.clone(), 1);
+                (singleton, total)
+            } else {
+                let mid = len / 2;
+                let left_seq = a.subseq_copy(0, mid);
+                let right_seq = a.subseq_copy(mid, len - mid);
+                let (left_scan, left_total) = <ArraySeqStPerS<T> as ArraySeqStPerTrait<T>>::scan_rec(&left_seq, f, id);
+                let (right_scan, right_total) = <ArraySeqStPerS<T> as ArraySeqStPerTrait<T>>::scan_rec(&right_seq, f, left_total);
+                let combined = <ArraySeqStPerS<T> as ArraySeqStPerTrait<T>>::append(&left_scan, &right_scan);
+                (combined, right_total)
+            }
         }
 
         // select helper for append_select
@@ -286,7 +366,7 @@ pub mod ArraySeqStPer {
         // Algorithm 19.4 alternative: append a b = tabulate(select(a,b), |a|+|b|)
         fn append_select(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> ArraySeqStPerS<T> {
             let total = a.length() + b.length();
-            chap18_tabulate(
+            ArraySeqStPerS::tabulate(
                 &(|i: usize| -> (r: T)
                     requires i < a.seq@.len() + b.seq@.len()
                 {
@@ -341,115 +421,17 @@ pub mod ArraySeqStPer {
     }
 
     // Helper: deflate for filter
-    fn deflate<T: View + Clone, F: Fn(&T) -> bool>(pred: &F, x: &T) -> (result: ArraySeqStPerS<T>)
+    fn deflate<T: View + Clone + Eq, F: Fn(&T) -> bool>(pred: &F, x: &T) -> (result: ArraySeqStPerS<T>)
         requires pred.requires((x,))
         ensures result.seq@.len() <= 1
     {
         if pred(x) {
-            ArraySeqStPerS::<T>::singleton(x.clone())
+            <ArraySeqStPerS<T> as ArraySeqStPerRedefinableTrait<T>>::singleton(x.clone())
         } else {
-            ArraySeqStPerS::<T>::empty()
+            <ArraySeqStPerS<T> as ArraySeqStPerRedefinableTrait<T>>::empty()
         }
     }
 
     } // verus!
 
-    // Non-Verus stub
-    #[cfg(not(verus_keep_ghost))]
-    pub use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS;
-
-    #[cfg(not(verus_keep_ghost))]
-    use std::hash::Hash;
-
-    #[cfg(not(verus_keep_ghost))]
-    use crate::Chap05::SetStEph::SetStEph::{SetStEph, SetStEphTrait};
-
-    #[cfg(not(verus_keep_ghost))]
-    use crate::Types::Types::StT;
-
-    #[cfg(not(verus_keep_ghost))]
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::{ArraySeqStPerBaseTrait, ArraySeqStPerRedefinableTrait, tabulate as chap18_tabulate};
-
-    #[cfg(not(verus_keep_ghost))]
-    pub trait ArraySeqStPerTrait<T: Clone> {
-        fn empty() -> Self;
-        fn singleton(item: T) -> Self;
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqStPerS<U>;
-        fn append(a: &Self, b: &Self) -> Self;
-        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self;
-        fn update(a: &Self, index: usize, item: T) -> Self;
-        fn is_empty(a: &Self) -> bool;
-        fn is_singleton(a: &Self) -> bool;
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A;
-        fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T;
-        fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (Self, T) where Self: Sized;
-        fn select<'a>(a: &'a Self, b: &'a Self, i: usize) -> Option<&'a T>;
-        fn append_select(a: &Self, b: &Self) -> Self;
-        fn from_set(set: &SetStEph<T>) -> Self where T: StT + Hash;
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: Clone> ArraySeqStPerTrait<T> for ArraySeqStPerS<T> {
-        fn empty() -> Self { Self::from_vec(Vec::new()) }
-        fn singleton(item: T) -> Self { Self::from_vec(vec![item]) }
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqStPerS<U> {
-            chap18_tabulate(&|i| f(a.nth(i)), a.length())
-        }
-        fn append(a: &Self, b: &Self) -> Self {
-            let mut seq = a.seq.clone();
-            seq.extend(b.seq.iter().cloned());
-            Self { seq }
-        }
-        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> Self {
-            Self { seq: a.seq.iter().filter(|x| pred(x)).cloned().collect() }
-        }
-        fn update(a: &Self, index: usize, item: T) -> Self {
-            chap18_tabulate(&|j| if j == index { item.clone() } else { a.nth(j).clone() }, a.length())
-        }
-        fn is_empty(a: &Self) -> bool { a.length() == 0 }
-        fn is_singleton(a: &Self) -> bool { a.length() == 1 }
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A {
-            a.seq.iter().fold(seed, |acc, x| f(&acc, x))
-        }
-        fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T {
-            if a.length() == 0 { id }
-            else if a.length() == 1 { a.nth(0).clone() }
-            else {
-                let mid = a.length() / 2;
-                let left = a.subseq_copy(0, mid);
-                let right = a.subseq_copy(mid, a.length() - mid);
-                f(&Self::reduce(&left, f, id.clone()), &Self::reduce(&right, f, id))
-            }
-        }
-        fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (Self, T) {
-            let mut acc = id;
-            let seq: Vec<T> = a.seq.iter().map(|x| { acc = f(&acc, x); acc.clone() }).collect();
-            (Self { seq }, acc)
-        }
-        fn select<'a>(a: &'a Self, b: &'a Self, i: usize) -> Option<&'a T> {
-            if i < a.length() { Some(a.nth(i)) }
-            else if i - a.length() < b.length() { Some(b.nth(i - a.length())) }
-            else { None }
-        }
-        fn append_select(a: &Self, b: &Self) -> Self {
-            chap18_tabulate(&|i| Self::select(a, b, i).unwrap().clone(), a.length() + b.length())
-        }
-        fn from_set(set: &SetStEph<T>) -> Self where T: StT + Hash {
-            Self { seq: set.to_seq() }
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    fn flatten<T: Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> ArraySeqStPerS<T> {
-        let mut result = Vec::new();
-        for inner in ss.seq.iter() {
-            result.extend(inner.seq.iter().cloned());
-        }
-        ArraySeqStPerS { seq: result }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    fn deflate<T: Clone, F: Fn(&T) -> bool>(pred: &F, x: &T) -> ArraySeqStPerS<T> {
-        if pred(x) { ArraySeqStPerS::singleton(x.clone()) } else { ArraySeqStPerS::empty() }
-    }
 }

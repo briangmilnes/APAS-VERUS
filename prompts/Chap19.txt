@@ -1,0 +1,102 @@
+Anything that exists in the base trait should not be redefined if it is not redefined in this prose.
+1 A Parametric Implementation
+The sequence ADT, as we described in ADT Chapter , includes more than a dozen func-
+tions. Although it is possible to present an implementation by considering each function
+independently, it usually suffices to implement directly a smaller subset of the functions,
+which we can think of the primitive functions, and implement the rest of the functions in
+terms of the primitive ones.
+In this section, we briefly describe how such an implementation could proceed based on
+the following primitive functions:
+• nth,
+• length,
+• subseq,
+• tabulate,
+• flatten, and
+• inject and ninject.
+First, we present an implementation of the rest of the interface based on the primitive
+functions. We then describe in Section 1 how the implement the primitive functions.
+126
+Algorithm 19.1 (Function empty). We can implement the empty sequence empty directly
+in terms of tabulate:
+empty = tabulate (lambda i.i) 0.
+Algorithm 19.2 (Function singleton). We can implement the function singleton directly in
+terms of tabulate:
+singleton x = tabulate (lambda i.x) 1.
+Algorithm 19.3 (Function map). The function map is relatively easy to implement in terms
+of tabulate:
+map f a = tabulate (lambda i.f (a[i])) |a|.
+Algorithm 19.4 (Function append ). We can implement append directly in terms of flatten:
+append a b = flatten 〈 a, b 〉 .
+We can also implement append by using tabulate. To this end, we first define a helper
+function:
+select (a, b) i =lambda i. (19.1)
+if i < |a| then a[i] (19.2)
+else b[i − |a|]. (19.3)
+We can now state append as
+append a b = tabulate (select (a, b)) (|a| + |b|).
+Algorithm 19.5 (Function filter ). We can implement filter by a using a combination of map
+and flatten. The basic idea is to map the elements of the sequence for which the condition
+holds to singletons and map the other elements to empty sequences and then flatten.
+We first define a function that “deflates” the elements for which the condition f does not
+hold:
+deflate f x =
+if (f x) then 〈 x 〉
+else 〈 〉 .
+We can now write filter as a relatively simple application of flatten, map, and deflate.
+filter f a =
+let b = map (deflate f ) a
+in flatten b end
+
+deflate should be in the trait.Algorithm 19.6 (Function update). We can implement the function update in terms of tabulate
+as
+update a (i, x) =
+tabulate (lambda j. if i = j then x else a[i])
+|a|
+Algorithm 19.7 (Functions isEmpty and isSingleton). Emptiness and singleton checks are
+simple by using the length function:
+isEmpty a =
+|a| = 0
+isSingleton a =
+|a| = 1
+Algorithm 19.8 (Functions iterate). We can implement iteration by simply iterating over
+the sequence from left to right.
+iterate f x a =
+if |a| = 0 then
+x
+else if |a| = 1 then
+f (x, a[0])
+else
+iterate f (f (x, a[0])) a[1 . . . |a| − 1]
+Algorithm 19.9 (Functions reduce). We can implement reduce by using a divide-and-conquer
+strategy.
+reduce f id a =
+if |a| = 0 then
+id
+else if |a| = 1 then
+a[0]
+else
+let
+mid = f loor(|a|/2)
+(b, c) = (a[0 . . . mid − 1], a[mid . . . |a| − 1])
+(rb, rc) = (reduce f id b) || (reduce f id c)
+in
+f (rb, rc)
+end
+Algorithm 19.10 (Scan Using Contraction). We will cover scan in more detail in Section 3.
+But for completeness, we present an implementation below. For simplicity, we assume that
+the length of the sequence is a power of two, though this is not difficult to eliminate.
+(* Assumption: |a| is a power of two. *)
+scan f id a =
+case |a|
+| 0 ⇒ (〈 〉 , id)
+| 1 ⇒ (〈 id 〉 , a[0])
+| n ⇒
+let
+a′ = 〈 f (a[2i], a[2i + 1]) : 0 ≤ i < n/2 〉
+(r, t) = scan f id a′
+in
+(〈 pi : 0 ≤ i < n 〉 , t), where pi =
+{
+r[i/2] even(i)
+f (r[i/2], a[i − 1]) otherwise
+end

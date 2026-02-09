@@ -8,7 +8,6 @@
 //	3. broadcast use
 //	4. type definitions
 //	5. view impls
-//	6. spec fns
 //	8. traits
 //	9. impls
 //	10. iterators
@@ -16,7 +15,6 @@
 //	13. derive impls outside verus!
 
 //		1. module
-
 
 pub mod ArraySeq {
 
@@ -27,13 +25,12 @@ pub mod ArraySeq {
 
     use vstd::prelude::*;
 
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::cmp::PartialEqSpecImpl;
-
     verus! {
 
     //		2. imports
 
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::vec::*;
     #[cfg(verus_keep_ghost)]
@@ -59,21 +56,6 @@ pub mod ArraySeq {
         pub seq: Vec<T>,
     }
 
-    /// Iterator wrapper with closed spec view for encapsulation.
-    /// Inner is private; closed view() can access it but external code cannot see it.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ArraySeqIter<'a, T> {
-        inner: std::slice::Iter<'a, T>,  // PRIVATE
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support (for-iter, for-borrow patterns).
-    #[verifier::reject_recursive_types(T)]
-    pub struct ArraySeqGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
 
     //		5. view impls
 
@@ -83,28 +65,6 @@ pub mod ArraySeq {
         open spec fn view(&self) -> Seq<T::V> {
             self.seq@.map(|_i: int, t: T| t@)
         }
-    }
-
-    impl<'a, T> View for ArraySeqIter<'a, T> {
-        type V = (int, Seq<T>);
-        closed spec fn view(&self) -> (int, Seq<T>) {
-            self.inner@
-        }
-    }
-
-    impl<'a, T> View for ArraySeqGhostIterator<'a, T> {
-        type V = Seq<T>;
-
-        open spec fn view(&self) -> Seq<T> {
-            self.elements.take(self.pos)
-        }
-    }
-
-
-    //		6. spec fns
-
-    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
     }
 
 
@@ -258,7 +218,6 @@ pub mod ArraySeq {
 
 
     //		9. impls
-
 
     impl<T: View> ArraySeqTrait<T> for ArraySeqS<T> {
         open spec fn spec_len(&self) -> int {
@@ -689,6 +648,41 @@ pub mod ArraySeq {
 
     //		10. iterators
 
+    /// Iterator wrapper with closed spec view for encapsulation.
+    /// Inner is private; closed view() can access it but external code cannot see it.
+    #[verifier::reject_recursive_types(T)]
+    pub struct ArraySeqIter<'a, T> {
+        inner: std::slice::Iter<'a, T>,  // PRIVATE
+    }
+
+    /// Ghost iterator for ForLoopGhostIterator support (for-iter, for-borrow patterns).
+    #[verifier::reject_recursive_types(T)]
+    pub struct ArraySeqGhostIterator<'a, T> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
+    impl<'a, T> View for ArraySeqIter<'a, T> {
+        type V = (int, Seq<T>);
+        closed spec fn view(&self) -> (int, Seq<T>) {
+            self.inner@
+        }
+    }
+
+    impl<'a, T> View for ArraySeqGhostIterator<'a, T> {
+        type V = Seq<T>;
+
+        open spec fn view(&self) -> Seq<T> {
+            self.elements.take(self.pos)
+        }
+    }
+
+
+    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
     impl<'a, T> std::iter::Iterator for ArraySeqIter<'a, T> {
         type Item = &'a T;
 
@@ -803,7 +797,6 @@ pub mod ArraySeq {
     }
 
     } // verus!
-
 
     //		13. derive impls outside verus!
 

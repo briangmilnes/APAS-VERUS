@@ -552,9 +552,9 @@ pub mod LinkedListStPer {
         fn clone(&self) -> Self { LinkedListStPerS { seq: self.seq.clone() } }
     }
 
-    impl<T: View + Eq> Eq for LinkedListStPerS<T> {}
+    impl<T: Eq + View> Eq for LinkedListStPerS<T> {}
 
-    impl<T: View + PartialEq> PartialEq for LinkedListStPerS<T> {
+    impl<T: PartialEq + View> PartialEq for LinkedListStPerS<T> {
         fn eq(&self, other: &Self) -> (r: bool)
             ensures r == (self@ == other@)
         {

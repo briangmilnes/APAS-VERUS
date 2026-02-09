@@ -69,6 +69,7 @@ pub mod experiments {
 //    pub mod parapair_named_closure;
 //    pub mod parapair_toplevel_closure;
 //    pub mod arc_clone_deref;
+//    pub mod spec_loop;  // RESULT: no cycle error in simple case
 }
 
 pub mod vstdplus {
@@ -161,11 +162,11 @@ pub mod Chap18 {
     pub mod ArraySeqMtPer;
 }
 
-// pub mod Chap19 {
-//     pub mod ArraySeqStPer;
-//     pub mod ArraySeqStEph;
-//     pub mod ArraySeqMtEph;
-// }
+pub mod Chap19 {
+    pub mod ArraySeqStPer;
+    // pub mod ArraySeqStEph;
+    // pub mod ArraySeqMtEph;
+}
 
 pub mod Chap21 {
     pub mod Algorithm21_1;
