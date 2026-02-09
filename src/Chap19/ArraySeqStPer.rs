@@ -25,6 +25,8 @@ pub mod ArraySeqStPer {
 
     broadcast use vstd::std_specs::vec::group_vec_axioms;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::tabulate as chap18_tabulate;
 
     // Chapter 19 trait - provides alternative algorithmic implementations
     // Import and use this trait to get Chapter 19's algorithms
@@ -110,7 +112,7 @@ pub mod ArraySeqStPer {
 
         // Algorithm 19.2: singleton x = tabulate(lambda i.x, 1)
         fn singleton(item: T) -> ArraySeqStPerS<T> {
-            ArraySeqStPerS::<T>::tabulate(&|_i: usize| item.clone(), 1)
+            chap18_tabulate(&|_i: usize| item.clone(), 1)
         }
 
         // Algorithm 19.3: map f a = tabulate(lambda i.f(a[i]), |a|)
@@ -122,7 +124,7 @@ pub mod ArraySeqStPer {
                     assert(a.nth_spec(i as int) == a.seq@[i as int]);
                 }
             }
-            ArraySeqStPerS::<U>::tabulate(
+            chap18_tabulate(
                 &(|i: usize| -> (r: U)
                     requires
                         (i as int) < a.spec_len(),
@@ -187,7 +189,7 @@ pub mod ArraySeqStPer {
 
         // Algorithm 19.6: update a (i, x) = tabulate(lambda j. if i = j then x else a[j], |a|)
         fn update(a: &ArraySeqStPerS<T>, index: usize, item: T) -> ArraySeqStPerS<T> {
-            ArraySeqStPerS::<T>::tabulate(
+            chap18_tabulate(
                 &(|j: usize| -> (r: T)
                     requires j < a.seq@.len()
                 {
@@ -284,7 +286,7 @@ pub mod ArraySeqStPer {
         // Algorithm 19.4 alternative: append a b = tabulate(select(a,b), |a|+|b|)
         fn append_select(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> ArraySeqStPerS<T> {
             let total = a.length() + b.length();
-            ArraySeqStPerS::<T>::tabulate(
+            chap18_tabulate(
                 &(|i: usize| -> (r: T)
                     requires i < a.seq@.len() + b.seq@.len()
                 {
@@ -366,6 +368,9 @@ pub mod ArraySeqStPer {
     use crate::Types::Types::StT;
 
     #[cfg(not(verus_keep_ghost))]
+    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::{ArraySeqStPerBaseTrait, ArraySeqStPerRedefinableTrait, tabulate as chap18_tabulate};
+
+    #[cfg(not(verus_keep_ghost))]
     pub trait ArraySeqStPerTrait<T: Clone> {
         fn empty() -> Self;
         fn singleton(item: T) -> Self;
@@ -388,7 +393,7 @@ pub mod ArraySeqStPer {
         fn empty() -> Self { Self::from_vec(Vec::new()) }
         fn singleton(item: T) -> Self { Self::from_vec(vec![item]) }
         fn map<U: Clone, F: Fn(&T) -> U>(a: &Self, f: &F) -> ArraySeqStPerS<U> {
-            ArraySeqStPerS::<U>::tabulate(&|i| f(a.nth(i)), a.length())
+            chap18_tabulate(&|i| f(a.nth(i)), a.length())
         }
         fn append(a: &Self, b: &Self) -> Self {
             let mut seq = a.seq.clone();
@@ -399,7 +404,7 @@ pub mod ArraySeqStPer {
             Self { seq: a.seq.iter().filter(|x| pred(x)).cloned().collect() }
         }
         fn update(a: &Self, index: usize, item: T) -> Self {
-            Self::tabulate(&|j| if j == index { item.clone() } else { a.nth(j).clone() }, a.length())
+            chap18_tabulate(&|j| if j == index { item.clone() } else { a.nth(j).clone() }, a.length())
         }
         fn is_empty(a: &Self) -> bool { a.length() == 0 }
         fn is_singleton(a: &Self) -> bool { a.length() == 1 }
@@ -427,7 +432,7 @@ pub mod ArraySeqStPer {
             else { None }
         }
         fn append_select(a: &Self, b: &Self) -> Self {
-            Self::tabulate(&|i| Self::select(a, b, i).unwrap().clone(), a.length() + b.length())
+            chap18_tabulate(&|i| Self::select(a, b, i).unwrap().clone(), a.length() + b.length())
         }
         fn from_set(set: &SetStEph<T>) -> Self where T: StT + Hash {
             Self { seq: set.to_seq() }

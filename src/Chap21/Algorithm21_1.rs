@@ -17,6 +17,7 @@ pub mod Algorithm21_1 {
     verus! {
 
     broadcast use vstd::std_specs::vec::group_vec_axioms;
+    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::tabulate as chap18_tabulate;
 
     /// Spec function: sum of lengths of first k inner sequences.
     pub open spec fn sum_inner_lens<T>(ss: Seq<ArraySeqStPerS<T>>, k: int) -> int
@@ -134,7 +135,7 @@ pub mod Algorithm21_1 {
 
         // Build the outer sequence: for each x in 0..n, create inner sequence of pairs.
         let inner: ArraySeqStPerS<ArraySeqStPerS<Pair<N, N>>> =
-            ArraySeqStPerS::tabulate(
+            chap18_tabulate(
                 &(|x: usize| -> (row: ArraySeqStPerS<Pair<N, N>>)
                     requires
                         x < n,
@@ -142,7 +143,7 @@ pub mod Algorithm21_1 {
                     ensures
                         row.seq@.len() == n - 1,
                 {
-                    ArraySeqStPerS::tabulate(
+                    chap18_tabulate(
                         &(|y: usize| -> (p: Pair<N, N>)
                             requires
                                 y < n - 1,
@@ -183,13 +184,16 @@ pub mod Algorithm21_1 {
     use crate::Types::Types::{N, Pair};
 
     #[cfg(not(verus_keep_ghost))]
+    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::tabulate as chap18_tabulate;
+
+    #[cfg(not(verus_keep_ghost))]
     pub fn points2d_tab_flat(n: N) -> ArraySeqStPerS<Pair<N, N>> {
         if n == 0 {
             return ArraySeqStPerS { seq: Vec::new() };
         }
         let inner: ArraySeqStPerS<ArraySeqStPerS<Pair<N, N>>> =
-            ArraySeqStPerS::tabulate(
-                &|x| ArraySeqStPerS::tabulate(&|y| Pair(x, y + 1), n - 1),
+            chap18_tabulate(
+                &|x| chap18_tabulate(&|y| Pair(x, y + 1), n - 1),
                 n,
             );
         flatten_inner_non_verus(&inner)

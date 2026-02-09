@@ -161,11 +161,11 @@ pub mod Chap18 {
     pub mod ArraySeqMtPer;
 }
 
-pub mod Chap19 {
-    pub mod ArraySeqStPer;
-    pub mod ArraySeqStEph;
-    pub mod ArraySeqMtEph;
-}
+// pub mod Chap19 {
+//     pub mod ArraySeqStPer;
+//     pub mod ArraySeqStEph;
+//     pub mod ArraySeqMtEph;
+// }
 
 pub mod Chap21 {
     pub mod Algorithm21_1;

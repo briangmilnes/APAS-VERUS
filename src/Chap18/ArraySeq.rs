@@ -303,35 +303,6 @@ pub mod ArraySeq {
             ArraySeqS { seq }
         }
 
-/* CORPSE: old duplicates of methods now in trait impl
-        fn set_old(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>) {
-            if index < self.seq.len() {
-                self.seq.set(index, item);
-                Ok(())
-            } else {
-                Err("Index out of bounds")
-            }
-        }
-
-        fn length(&self) -> (len: usize) {
-            self.seq.len()
-        }
-
-        fn nth(&self, index: usize) -> (nth_elem: &T) {
-            &self.seq[index]
-        }
-
-        fn empty() -> (empty_seq: ArraySeqS<T>) {
-            ArraySeqS { seq: Vec::new() }
-        }
-
-        fn singleton(item: T) -> (singleton: ArraySeqS<T>) {
-            let mut seq = Vec::with_capacity(1);
-            seq.push(item);
-            ArraySeqS { seq }
-        }
-*/
-
         fn subseq(a: &ArraySeqS<T>, start: usize, length: usize) -> (subseq: ArraySeqS<T>)
             where T: Clone + Eq
         {
@@ -435,8 +406,6 @@ pub mod ArraySeq {
             }
             ArraySeqS { seq }
         }
-
-/* CORPSE: flatten was here, moved to module-level function below */
 
         fn update(a: &ArraySeqS<T>, index: usize, item: T) -> (updated: ArraySeqS<T>)
             where T: Clone + Eq

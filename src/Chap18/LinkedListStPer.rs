@@ -17,7 +17,13 @@ pub mod LinkedListStPer {
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
-    broadcast use vstd::std_specs::vec::group_vec_axioms;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::*;
+    broadcast use {
+        vstd::std_specs::vec::group_vec_axioms,
+        vstd::seq::group_seq_axioms,
+        crate::vstdplus::feq::feq::group_feq_axioms,
+    };
 
     #[verifier::reject_recursive_types(T)]
     pub struct LinkedListStPerS<T> {
@@ -27,12 +33,18 @@ pub mod LinkedListStPer {
     /// Base trait for single-threaded persistent linked list sequences (Chapter 18).
     pub trait LinkedListStPerBaseTrait<T>: Sized {
         spec fn spec_len(&self) -> int;
+        spec fn spec_index(&self, i: int) -> T
+            recommends i < self.spec_len();
 
         /// Work Θ(n), Span Θ(1)
         fn new(length: usize, init_value: T) -> (new_seq: Self)
-            where T: Clone
-            requires length <= usize::MAX
-            ensures new_seq.spec_len() == length as int;
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+                length <= usize::MAX,
+            ensures
+                new_seq.spec_len() == length as int,
+                forall|i: int| #![auto] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
         /// Work Θ(1), Span Θ(1)
         fn length(&self) -> (len: usize)
@@ -40,22 +52,29 @@ pub mod LinkedListStPer {
 
         /// Work Θ(n), Span Θ(1) - linked list traversal
         fn nth(&self, index: usize) -> (nth_elem: &T)
-            requires index < self.spec_len();
+            requires index < self.spec_len()
+            ensures *nth_elem == self.spec_index(index as int);
 
         /// Work Θ(len), Span Θ(1)
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
-            where T: Clone
-            requires start + length <= self.spec_len()
-            ensures subseq.spec_len() == length as int;
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+                start + length <= usize::MAX,
+                start + length <= self.spec_len(),
+            ensures
+                subseq.spec_len() == length as int,
+                forall|i: int| #![auto] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
         /// Work Θ(n), Span Θ(1)
         fn from_vec(elts: Vec<T>) -> (seq: Self)
-            ensures seq.spec_len() == elts@.len();
+            ensures
+                seq.spec_len() == elts@.len(),
+                forall|i: int| #![auto] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
     }
 
     /// Redefinable trait - may be overridden with better algorithms in later chapters.
-    pub trait LinkedListStPerRedefinableTrait<T>: Sized {
-        spec fn spec_len(&self) -> int;
+    pub trait LinkedListStPerRedefinableTrait<T>: LinkedListStPerBaseTrait<T> {
 
         /// Work Θ(1), Span Θ(1)
         fn empty() -> (empty_seq: Self)
@@ -63,7 +82,9 @@ pub mod LinkedListStPer {
 
         /// Work Θ(1), Span Θ(1)
         fn singleton(item: T) -> (singleton: Self)
-            ensures singleton.spec_len() == 1;
+            ensures
+                singleton.spec_len() == 1,
+                singleton.spec_index(0) == item;
 
         /// Work Θ(n), Span Θ(1)
         fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> (tab_seq: LinkedListStPerS<T>)
@@ -84,24 +105,38 @@ pub mod LinkedListStPer {
 
         /// Work Θ(|a|+|b|), Span Θ(1)
         fn append(a: &LinkedListStPerS<T>, b: &LinkedListStPerS<T>) -> (appended: Self)
-            where T: Clone
-            requires a.seq@.len() + b.seq@.len() <= usize::MAX as int
-            ensures appended.spec_len() == a.seq@.len() + b.seq@.len();
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+                a.seq@.len() + b.seq@.len() <= usize::MAX as int,
+            ensures
+                appended.spec_len() == a.seq@.len() + b.seq@.len(),
+                forall|i: int| #![auto] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],
+                forall|i: int| #![auto] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
 
         /// Work Θ(|a|), Span Θ(1)
         fn filter<F: Fn(&T) -> bool>(a: &LinkedListStPerS<T>, pred: &F) -> (filtered: Self)
-            where T: Clone
-            requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],))
-            ensures filtered.spec_len() <= a.seq@.len();
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
+            ensures
+                filtered.spec_len() <= a.seq@.len(),
+                forall|i: int| #![auto] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// Work Θ(Σ|a[i]|), Span Θ(1)
         fn flatten(a: &LinkedListStPerS<LinkedListStPerS<T>>) -> (flattened: Self) where T: Clone;
 
         /// Work Θ(|a|), Span Θ(1)
         fn update(a: &LinkedListStPerS<T>, index: usize, item: T) -> (updated: Self)
-            where T: Clone
-            requires index < a.seq@.len()
-            ensures updated.spec_len() == a.seq@.len();
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+                index < a.seq@.len(),
+            ensures
+                updated.spec_len() == a.seq@.len(),
+                updated.spec_index(index as int) == item,
+                forall|i: int| #![auto] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
 
         /// Work Θ(1), Span Θ(1)
         fn is_empty(&self) -> (empty: bool)
