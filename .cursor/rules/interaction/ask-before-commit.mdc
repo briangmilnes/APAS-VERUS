@@ -8,3 +8,10 @@ Before committing:
 3. Ask: "Ready to commit?"
 
 Only proceed with the commit after explicit user approval.
+
+## A commit is `git add -A`
+
+When committing, **always** use `git add -A` to stage everything on disk.
+Never selectively stage individual files with `git add <file>`.
+The committed state must exactly match the on-disk state that was validated.
+If there are files on disk you don't want to commit, discuss with the user first.

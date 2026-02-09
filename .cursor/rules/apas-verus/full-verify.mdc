@@ -1,23 +1,27 @@
 ---
-description: Full verification mode includes cfg-gated modules
+description: Validation commands for Verus verification
 globs: 
 alwaysApply: true
 ---
 
-# Full Verify Mode
+# Validation Modes
 
-When the user says "full_verify" or "full verification", switch to full verification mode. When the user says "not full verify" or "normal verify", switch back.
+## validate (default) — full verification
 
-## In full_verify mode
-
-Run Verus with the `full_verify` feature flag:
+When the user says "validate", run the full verification with all modules:
 
 ```bash
-cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg feature=\"full_verify\"
+cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg 'feature="full_verify"'
 ```
 
 This compiles all modules including those behind `#[cfg(feature = "full_verify")]` (e.g., Chap06).
 
-## In normal mode (default)
+## dev_validate — skip cfg-gated modules
 
-Run Verus without the feature flag (the standard run-verus command). Modules behind `#[cfg(feature = "full_verify")]` are skipped.
+When the user says "dev_validate", run Verus without the feature flag:
+
+```bash
+cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors
+```
+
+This skips modules behind `#[cfg(feature = "full_verify")]` for faster iteration.
