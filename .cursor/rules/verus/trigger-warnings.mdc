@@ -6,6 +6,13 @@ alwaysApply: true
 
 # Trigger Warnings
 
-Trigger warnings may be generated once during development. When they appear, use the automatic Verus proposal to eliminate them.
+## Workflow
 
-Do not leave trigger warnings in the final code.
+1. During initial development, use `#![auto]` on `forall`/`exists` quantifiers to let Verus choose triggers automatically.
+2. Then remove the `#![auto]` and run Verus to see the proposed trigger warnings.
+3. Replace `#![auto]` with the explicit `#[trigger]` that Verus proposes.
+
+## Rules
+
+- Do not leave `#![auto]` in final code — replace with explicit triggers.
+- Do not leave trigger warnings in final code.

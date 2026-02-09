@@ -116,7 +116,7 @@ pub mod ArraySeqStEph {
                 length <= usize::MAX,
             ensures
                 new_seq.spec_len() == length as int,
-                forall|i: int| #![auto] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
+                forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
         /// Work Θ(1), Span Θ(1)
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
@@ -124,7 +124,7 @@ pub mod ArraySeqStEph {
             ensures
                 success.is_ok() ==> self.spec_len() == old(self).spec_len(),
                 success.is_ok() ==> self.spec_index(index as int) == item,
-                success.is_ok() ==> forall|i: int| #![auto] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);
+                success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);
 
         /// Work Θ(1), Span Θ(1)
         fn length(&self) -> (len: usize)
@@ -144,13 +144,13 @@ pub mod ArraySeqStEph {
                 start + length <= self.spec_len(),
             ensures
                 subseq.spec_len() == length as int,
-                forall|i: int| #![auto] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
+                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
         /// Work Θ(n), Span Θ(1)
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_len() == elts@.len(),
-                forall|i: int| #![auto] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
+                forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
     }
 
     /// Redefinable trait - may be overridden with better algorithms in later chapters.
@@ -173,7 +173,7 @@ pub mod ArraySeqStEph {
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
             ensures
                 tab_seq.seq@.len() == length,
-                forall|i: int| #![auto] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);
+                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);
 
         /// Work Θ(|a|), Span Θ(1)
         fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqStEphS<T>, f: &F) -> (mapped: ArraySeqStEphS<U>)
@@ -181,7 +181,7 @@ pub mod ArraySeqStEph {
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
             ensures
                 mapped.seq@.len() == a.seq@.len(),
-                forall|i: int| #![auto] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);
+                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);
 
         /// Work Θ(|a|+|b|), Span Θ(1)
         fn append(a: &ArraySeqStEphS<T>, b: &ArraySeqStEphS<T>) -> (appended: Self)
@@ -191,8 +191,8 @@ pub mod ArraySeqStEph {
                 a.seq@.len() + b.seq@.len() <= usize::MAX as int,
             ensures
                 appended.spec_len() == a.seq@.len() + b.seq@.len(),
-                forall|i: int| #![auto] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],
-                forall|i: int| #![auto] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
+                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],
+                forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
 
         /// Work Θ(|a|), Span Θ(1)
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStEphS<T>, pred: &F) -> (filtered: ArraySeqStEphS<T>)
@@ -202,7 +202,7 @@ pub mod ArraySeqStEph {
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
             ensures
                 filtered.seq@.len() <= a.seq@.len(),
-                forall|i: int| #![auto] 0 <= i < filtered.seq@.len() ==> pred.ensures((&filtered.seq@[i],), true);
+                forall|i: int| #![trigger filtered.seq@[i]] 0 <= i < filtered.seq@.len() ==> pred.ensures((&filtered.seq@[i],), true);
 
         /// Work Θ(Σ|a[i]|), Span Θ(1)
         fn flatten(a: &ArraySeqStEphS<ArraySeqStEphS<T>>) -> (flattened: Self)
@@ -218,7 +218,7 @@ pub mod ArraySeqStEph {
             ensures
                 updated.spec_len() == a.seq@.len(),
                 updated.spec_index(index as int) == item,
-                forall|i: int| #![auto] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
+                forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
 
         /// Work Θ(1), Span Θ(1)
         fn is_empty(&self) -> (empty: bool)
@@ -304,7 +304,7 @@ pub mod ArraySeqStEph {
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
             ensures
                 tab_seq.seq@.len() == length,
-                forall|i: int| #![auto] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]),
+                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]),
         {
             let mut seq = Vec::with_capacity(length);
             let mut i: usize = 0;
@@ -313,7 +313,7 @@ pub mod ArraySeqStEph {
                     i <= length,
                     seq@.len() == i as int,
                     forall|j: usize| j < length ==> #[trigger] f.requires((j,)),
-                    forall|j: int| #![auto] 0 <= j < i ==> f.ensures((j as usize,), seq@[j]),
+                    forall|j: int| #![trigger seq@[j]] 0 <= j < i ==> f.ensures((j as usize,), seq@[j]),
                 decreases length - i,
             {
                 seq.push(f(i));
@@ -326,7 +326,7 @@ pub mod ArraySeqStEph {
             requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
             ensures
                 mapped.seq@.len() == a.seq@.len(),
-                forall|i: int| #![auto] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]),
+                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]),
         {
             let len = a.seq.len();
             let mut seq: Vec<U> = Vec::with_capacity(len);
@@ -337,7 +337,7 @@ pub mod ArraySeqStEph {
                     len == a.seq@.len(),
                     seq@.len() == i as int,
                     forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[j],)),
-                    forall|j: int| #![auto] 0 <= j < i ==> f.ensures((&a.seq@[j],), seq@[j]),
+                    forall|j: int| #![trigger seq@[j]] 0 <= j < i ==> f.ensures((&a.seq@[j],), seq@[j]),
                 decreases len - i,
             {
                 seq.push(f(&a.seq[i]));

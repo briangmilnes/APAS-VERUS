@@ -126,7 +126,7 @@ pub mod ArraySeq {
               length <= usize::MAX,
             ensures 
               new_seq.spec_len() == length as int,
-              forall|i: int| #![auto] 0 <= i < length ==> new_seq.spec_index(i) == init_value; 
+              forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value; 
 
         /// - Set the element at `index` to `item` in place.
         /// - Work Θ(1), Span Θ(1).
@@ -135,7 +135,7 @@ pub mod ArraySeq {
             ensures
                 success.is_ok() ==> self.spec_len() == old(self).spec_len(),
                 success.is_ok() ==> self.spec_index(index as int) == item,
-                success.is_ok() ==> forall|i: int| #![auto] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);
+                success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);
 
         /// - Definition 18.1 (length). Return the number of elements.
         /// - Work Θ(1), Span Θ(1).
@@ -170,7 +170,7 @@ pub mod ArraySeq {
                 start + length <= a.spec_len(),
             ensures
                 subseq.spec_len() == length as int,
-                forall|i: int| #![auto] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
+                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
 
         /// - Definition 18.13 (append). Concatenate two sequences.
         /// - Work Θ(|a| + |b|), Span Θ(1).
@@ -181,8 +181,8 @@ pub mod ArraySeq {
                 a.spec_len() + b.spec_len() <= usize::MAX as int,
             ensures
                 appended.spec_len() == a.spec_len() + b.spec_len(),
-                forall|i: int| #![auto] 0 <= i < a.spec_len() ==> appended.spec_index(i) == a.spec_index(i),
-                forall|i: int| #![auto] 0 <= i < b.spec_len() ==> appended.spec_index(a.spec_len() + i) == b.spec_index(i);
+                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.spec_len() ==> appended.spec_index(i) == a.spec_index(i),
+                forall|i: int| #![trigger b.spec_index(i)] 0 <= i < b.spec_len() ==> appended.spec_index(a.spec_len() + i) == b.spec_index(i);
 
         /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
         /// - Work Θ(|a|), Span Θ(1).
@@ -193,7 +193,7 @@ pub mod ArraySeq {
               forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(i),))
             ensures
                 filtered.spec_len() <= a.spec_len(),
-                forall|i: int| #![auto] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
+                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
         /// - Work Θ(|a|), Span Θ(1).
@@ -205,7 +205,7 @@ pub mod ArraySeq {
             ensures
                 updated.spec_len() == a.spec_len(),
                 updated.spec_index(index as int) == item,
-                forall|i: int| #![auto] 0 <= i < a.spec_len() && i != index as int ==> updated.spec_index(i) == a.spec_index(i);
+                forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.spec_len() && i != index as int ==> updated.spec_index(i) == a.spec_index(i);
 
         /// - Definition 18.5 (isEmpty). true iff the sequence has length zero.
         /// - Work Θ(1), Span Θ(1).
@@ -245,14 +245,14 @@ pub mod ArraySeq {
                 start + length <= self.spec_len(),
             ensures
                 subseq.spec_len() == length as int,
-                forall|i: int| #![auto] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
+                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
         /// - Create sequence from Vec.
         /// - Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_len() == elts@.len(),
-                forall|i: int| #![auto] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
+                forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
 
     }
 
@@ -316,7 +316,7 @@ pub mod ArraySeq {
                     end <= a.seq@.len(),
                     seq@.len() == (i - start) as int,
                     obeys_feq_clone::<T>(),
-                    forall|j: int| #![auto] 0 <= j < seq@.len() ==> seq@[j] == a.seq@[(start + j) as int],
+                    forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> seq@[j] == a.seq@[(start + j) as int],
                 decreases end - i,
             {
                 seq.push(a.seq[i].clone());
@@ -343,7 +343,7 @@ pub mod ArraySeq {
                     a_len == a.seq@.len(),
                     seq@.len() == i as int,
                     obeys_feq_clone::<T>(),
-                    forall|k: int| #![auto] 0 <= k < i ==> seq@[k] == a.seq@[k],
+                    forall|k: int| #![trigger seq@[k]] 0 <= k < i ==> seq@[k] == a.seq@[k],
                 decreases a_len - i,
             {
                 seq.push(a.seq[i].clone());
@@ -362,8 +362,8 @@ pub mod ArraySeq {
                     a_len == a.seq@.len(),
                     seq@.len() == a_len + j,
                     obeys_feq_clone::<T>(),
-                    forall|k: int| #![auto] 0 <= k < a_len ==> seq@[k] == a.seq@[k],
-                    forall|k: int| #![auto] 0 <= k < j ==> seq@[a_len as int + k] == b.seq@[k],
+                    forall|k: int| #![trigger seq@[k]] 0 <= k < a_len ==> seq@[k] == a.seq@[k],
+                    forall|k: int| #![trigger b.seq@[k]] 0 <= k < j ==> seq@[a_len as int + k] == b.seq@[k],
                 decreases b_len - j,
             {
                 seq.push(b.seq[j].clone());
@@ -390,7 +390,7 @@ pub mod ArraySeq {
                     seq@.len() <= i,
                     obeys_feq_clone::<T>(),
                     forall|j: int| 0 <= j < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(j),)),
-                    forall|j: int| #![auto] 0 <= j < seq@.len() ==> pred.ensures((&seq@[j],), true),
+                    forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> pred.ensures((&seq@[j],), true),
                 decreases len - i,
             {
                 proof { a.lemma_spec_index(i as int); }
@@ -420,7 +420,7 @@ pub mod ArraySeq {
                     seq@.len() == i as int,
                     obeys_feq_clone::<T>(),
                     index < len,
-                    forall|k: int| #![auto] 0 <= k < i && k != index as int ==> seq@[k] == a.seq@[k],
+                    forall|k: int| #![trigger seq@[k]] 0 <= k < i && k != index as int ==> seq@[k] == a.seq@[k],
                     i > index ==> seq@[index as int] == item,
                 decreases len - i,
             {
@@ -523,7 +523,7 @@ pub mod ArraySeq {
                     end <= self.seq@.len(),
                     seq@.len() == (i - start) as int,
                     obeys_feq_clone::<T>(),
-                    forall|j: int| #![auto] 0 <= j < seq@.len() ==> seq@[j] == self.seq@[(start + j) as int],
+                    forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> seq@[j] == self.seq@[(start + j) as int],
                 decreases end - i,
             {
                 seq.push(self.seq[i].clone());
@@ -550,7 +550,7 @@ pub mod ArraySeq {
         requires forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.spec_index(i),))
         ensures
             mapped.spec_len() == a.spec_len(),
-            forall|i: int| #![auto] 0 <= i < a.spec_len() ==> f.ensures((&a.spec_index(i),), mapped.spec_index(i)),
+            forall|i: int| #![trigger mapped.spec_index(i)] 0 <= i < a.spec_len() ==> f.ensures((&a.spec_index(i),), mapped.spec_index(i)),
     {
         let len = a.seq.len();
         let mut seq: Vec<U> = Vec::with_capacity(len);
@@ -561,7 +561,7 @@ pub mod ArraySeq {
                 len == a.seq@.len(),
                 seq@.len() == i as int,
                 forall|j: int| 0 <= j < a.spec_len() ==> #[trigger] f.requires((&a.spec_index(j),)),
-                forall|j: int| #![auto] 0 <= j < i ==> f.ensures((&a.spec_index(j),), seq@[j]),
+                forall|j: int| #![trigger seq@[j]] 0 <= j < i ==> f.ensures((&a.spec_index(j),), seq@[j]),
             decreases len - i,
         {
             proof { a.lemma_spec_index(i as int); }
@@ -581,7 +581,7 @@ pub mod ArraySeq {
             forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
         ensures
             tab_seq.spec_len() == length as int,
-            forall|i: int| #![auto] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.spec_index(i)),
+            forall|i: int| #![trigger tab_seq.spec_index(i)] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.spec_index(i)),
     {
         let mut seq = Vec::with_capacity(length);
         let mut i: usize = 0;
@@ -590,7 +590,7 @@ pub mod ArraySeq {
                 i <= length,
                 seq@.len() == i as int,
                 forall|j: usize| j < length ==> #[trigger] f.requires((j,)),
-                forall|j: int| #![auto] 0 <= j < i ==> f.ensures((j as usize,), seq@[j]),
+                forall|j: int| #![trigger seq@[j]] 0 <= j < i ==> f.ensures((j as usize,), seq@[j]),
             decreases length - i,
         {
             seq.push(f(i));

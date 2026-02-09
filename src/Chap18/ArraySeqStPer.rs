@@ -81,7 +81,7 @@ pub mod ArraySeqStPer {
                 length <= usize::MAX,
             ensures
                 new_seq.spec_len() == length as int,
-                forall|i: int| #![auto] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
+                forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
         /// Work Θ(1), Span Θ(1)
         fn length(&self) -> (len: usize)
@@ -101,17 +101,27 @@ pub mod ArraySeqStPer {
                 start + length <= self.spec_len(),
             ensures
                 subseq.spec_len() == length as int,
-                forall|i: int| #![auto] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
+                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
+
+        /// Work Θ(len), Span Θ(1)
+        fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+                start + length <= usize::MAX,
+                start + length <= a.spec_len(),
+            ensures
+                subseq.spec_len() == length as int,
+                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
 
         /// Work Θ(n), Span Θ(1)
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_len() == elts@.len(),
-                forall|i: int| #![auto] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
+                forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
     }
 
     /// Redefinable trait - may be overridden with better algorithms in later chapters.
-    /// map, tabulate, and flatten are module-level functions to avoid Verus cycle errors.
     pub trait ArraySeqStPerRedefinableTrait<T>: ArraySeqStPerBaseTrait<T> {
 
         /// Work Θ(1), Span Θ(1)
@@ -132,8 +142,8 @@ pub mod ArraySeqStPer {
                 a.seq@.len() + b.seq@.len() <= usize::MAX as int,
             ensures
                 appended.spec_len() == a.seq@.len() + b.seq@.len(),
-                forall|i: int| #![auto] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],
-                forall|i: int| #![auto] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
+                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],
+                forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
 
         /// Work Θ(|a|), Span Θ(1)
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F) -> (filtered: Self)
@@ -143,7 +153,7 @@ pub mod ArraySeqStPer {
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
             ensures
                 filtered.spec_len() <= a.seq@.len(),
-                forall|i: int| #![auto] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
+                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// Work Θ(|a|), Span Θ(1)
         fn update(a: &ArraySeqStPerS<T>, index: usize, item: T) -> (updated: Self)
@@ -154,7 +164,7 @@ pub mod ArraySeqStPer {
             ensures
                 updated.spec_len() == a.seq@.len(),
                 updated.spec_index(index as int) == item,
-                forall|i: int| #![auto] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
+                forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
 
         /// Work Θ(1), Span Θ(1)
         fn is_empty(&self) -> (empty: bool)
@@ -178,6 +188,34 @@ pub mod ArraySeqStPer {
             where T: Clone
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y))
             ensures scanned.0.seq@.len() == a.seq@.len();
+
+        /// Algorithm 18.4 (map). Transform each element via `f`.
+        /// Work Θ(|a|), Span Θ(1)
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> (mapped: ArraySeqStPerS<U>)
+            requires
+                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
+            ensures
+                mapped.seq@.len() == a.seq@.len(),
+                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);
+
+        /// Algorithm 18.3 (tabulate). Build a sequence by applying `f` to each index.
+        /// Work Θ(n), Span Θ(1)
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqStPerS<T>)
+            requires
+                length <= usize::MAX,
+                forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
+            ensures
+                tab_seq.seq@.len() == length,
+                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);
+
+        /// Definition 18.15 (flatten). Concatenate a sequence of sequences.
+        /// Work Θ(Σ|a_i|), Span Θ(1)
+        fn flatten(a: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (flattened: ArraySeqStPerS<T>)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+            ensures
+                flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqStPerS<T>| inner.seq@).flatten();
     }
 
 
@@ -220,7 +258,7 @@ pub mod ArraySeqStPer {
                     end <= self.seq@.len(),
                     seq@.len() == (i - start) as int,
                     obeys_feq_clone::<T>(),
-                    forall|j: int| #![auto] 0 <= j < seq@.len() ==> seq@[j] == self.seq@[(start + j) as int],
+                    forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> seq@[j] == self.seq@[(start + j) as int],
                 decreases end - i,
             {
                 seq.push(self.seq[i].clone());
@@ -228,6 +266,33 @@ pub mod ArraySeqStPer {
                     let ghost last = seq@[seq@.len() - 1 as int];
                     assert(cloned(self.seq[i as int], last));
                     axiom_cloned_implies_eq_owned(self.seq[i as int], last);
+                }
+                i += 1;
+            }
+            ArraySeqStPerS { seq }
+        }
+
+        fn subseq(a: &ArraySeqStPerS<T>, start: usize, length: usize) -> (subseq: ArraySeqStPerS<T>)
+            where T: Clone + Eq
+        {
+            let end = start + length;
+            let mut seq: Vec<T> = Vec::with_capacity(length);
+            let mut i: usize = start;
+            while i < end
+                invariant
+                    start <= i <= end,
+                    end == start + length,
+                    end <= a.seq@.len(),
+                    seq@.len() == (i - start) as int,
+                    obeys_feq_clone::<T>(),
+                    forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> seq@[j] == a.seq@[(start + j) as int],
+                decreases end - i,
+            {
+                seq.push(a.seq[i].clone());
+                proof {
+                    let ghost last = seq@[seq@.len() - 1 as int];
+                    assert(cloned(a.seq[i as int], last));
+                    axiom_cloned_implies_eq_owned(a.seq[i as int], last);
                 }
                 i += 1;
             }
@@ -265,7 +330,7 @@ pub mod ArraySeqStPer {
                     a_len == a.seq@.len(),
                     seq@.len() == i as int,
                     obeys_feq_clone::<T>(),
-                    forall|k: int| #![auto] 0 <= k < i ==> seq@[k] == a.seq@[k],
+                    forall|k: int| #![trigger seq@[k]] 0 <= k < i ==> seq@[k] == a.seq@[k],
                 decreases a_len - i,
             {
                 seq.push(a.seq[i].clone());
@@ -284,8 +349,8 @@ pub mod ArraySeqStPer {
                     a_len == a.seq@.len(),
                     seq@.len() == a_len + j,
                     obeys_feq_clone::<T>(),
-                    forall|k: int| #![auto] 0 <= k < a_len ==> seq@[k] == a.seq@[k],
-                    forall|k: int| #![auto] 0 <= k < j ==> seq@[a_len as int + k] == b.seq@[k],
+                    forall|k: int| #![trigger seq@[k]] 0 <= k < a_len ==> seq@[k] == a.seq@[k],
+                    forall|k: int| #![trigger b.seq@[k]] 0 <= k < j ==> seq@[a_len as int + k] == b.seq@[k],
                 decreases b_len - j,
             {
                 seq.push(b.seq[j].clone());
@@ -312,7 +377,7 @@ pub mod ArraySeqStPer {
                     seq@.len() <= i,
                     obeys_feq_clone::<T>(),
                     forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[j],)),
-                    forall|j: int| #![auto] 0 <= j < seq@.len() ==> pred.ensures((&seq@[j],), true),
+                    forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> pred.ensures((&seq@[j],), true),
                 decreases len - i,
             {
                 if pred(&a.seq[i]) {
@@ -341,7 +406,7 @@ pub mod ArraySeqStPer {
                     seq@.len() == i as int,
                     obeys_feq_clone::<T>(),
                     index < len,
-                    forall|k: int| #![auto] 0 <= k < i && k != index as int ==> seq@[k] == a.seq@[k],
+                    forall|k: int| #![trigger seq@[k]] 0 <= k < i && k != index as int ==> seq@[k] == a.seq@[k],
                     i > index ==> seq@[index as int] == item,
                 decreases len - i,
             {
@@ -430,9 +495,99 @@ pub mod ArraySeqStPer {
             }
             (ArraySeqStPerS { seq }, acc)
         }
+
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> (mapped: ArraySeqStPerS<U>)
+        {
+            let len = a.seq.len();
+            let mut seq: Vec<U> = Vec::with_capacity(len);
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    seq@.len() == i as int,
+                    forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[j],)),
+                    forall|j: int| #![trigger seq@[j]] 0 <= j < i ==> f.ensures((&a.seq@[j],), seq@[j]),
+                decreases len - i,
+            {
+                seq.push(f(&a.seq[i]));
+                i += 1;
+            }
+            ArraySeqStPerS { seq }
+        }
+
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqStPerS<T>)
+        {
+            let mut seq = Vec::with_capacity(length);
+            let mut i: usize = 0;
+            while i < length
+                invariant
+                    i <= length,
+                    seq@.len() == i as int,
+                    forall|j: usize| j < length ==> #[trigger] f.requires((j,)),
+                    forall|j: int| #![trigger seq@[j]] 0 <= j < i ==> f.ensures((j as usize,), seq@[j]),
+                decreases length - i,
+            {
+                seq.push(f(i));
+                i += 1;
+            }
+            ArraySeqStPerS { seq }
+        }
+
+        fn flatten(a: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (flattened: ArraySeqStPerS<T>)
+            where T: Clone + Eq
+        {
+            let outer_len = a.seq.len();
+            let mut seq: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < outer_len
+                invariant
+                    i <= outer_len,
+                    outer_len == a.seq@.len(),
+                    obeys_feq_clone::<T>(),
+                    seq@ =~= a.seq@.take(i as int).map_values(|inner: ArraySeqStPerS<T>| inner.seq@).flatten(),
+                decreases outer_len - i,
+            {
+                let inner = &a.seq[i];
+                let inner_len = inner.seq.len();
+                let mut j: usize = 0;
+                while j < inner_len
+                    invariant
+                        j <= inner_len,
+                        inner_len == inner.seq@.len(),
+                        i < outer_len,
+                        outer_len == a.seq@.len(),
+                        obeys_feq_clone::<T>(),
+                        seq@ =~= a.seq@.take(i as int).map_values(|inner: ArraySeqStPerS<T>| inner.seq@).flatten()
+                            + inner.seq@.take(j as int),
+                    decreases inner_len - j,
+                {
+                    seq.push(inner.seq[j].clone());
+                    proof {
+                        let ghost last = seq@[seq@.len() - 1 as int];
+                        assert(cloned(inner.seq[j as int], last));
+                        axiom_cloned_implies_eq_owned(inner.seq[j as int], last);
+                        assert(inner.seq@.take(j as int + 1) =~= inner.seq@.take(j as int).push(inner.seq@[j as int]));
+                    }
+                    j += 1;
+                }
+                proof {
+                    assert(inner.seq@.take(inner_len as int) =~= inner.seq@);
+                    let ghost prefix = a.seq@.take(i as int).map_values(|inner: ArraySeqStPerS<T>| inner.seq@);
+                    assert(a.seq@.take(i as int + 1).map_values(|inner: ArraySeqStPerS<T>| inner.seq@)
+                        =~= prefix.push(a.seq@[i as int].seq@));
+                    prefix.lemma_flatten_push(a.seq@[i as int].seq@);
+                }
+                i += 1;
+            }
+            proof {
+                assert(a.seq@.take(outer_len as int) =~= a.seq@);
+            }
+            ArraySeqStPerS { seq }
+        }
     }
 
-    //		9. bare impl (helpers not in any trait)
+    //		9. bare impl (lemmas and iterators not in any trait)
 
     impl<T> ArraySeqStPerS<T> {
         broadcast proof fn lemma_spec_index(&self, i: int)
@@ -450,119 +605,6 @@ pub mod ArraySeqStPer {
             ArraySeqStPerIter { inner: self.seq.iter() }
         }
     }
-
-    //		9. module-level functions (avoid Verus cycle errors in traits)
-
-    /// Algorithm 18.3 (tabulate). Build a sequence by applying `f` to each index.
-    /// Module-level to avoid Verus cycle errors with spec_len/spec_index in traits.
-    pub fn tabulate<T, F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqStPerS<T>)
-        requires
-            length <= usize::MAX,
-            forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
-        ensures
-            tab_seq.seq@.len() == length,
-            forall|i: int| #![auto] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]),
-    {
-        let mut seq = Vec::with_capacity(length);
-        let mut i: usize = 0;
-        while i < length
-            invariant
-                i <= length,
-                seq@.len() == i as int,
-                forall|j: usize| j < length ==> #[trigger] f.requires((j,)),
-                forall|j: int| #![auto] 0 <= j < i ==> f.ensures((j as usize,), seq@[j]),
-            decreases length - i,
-        {
-            seq.push(f(i));
-            i += 1;
-        }
-        ArraySeqStPerS { seq }
-    }
-
-    /// Algorithm 18.4 (map). Transform each element via `f`.
-    /// Module-level because map returns ArraySeqStPerS<U> (different element type).
-    pub fn map<T, U: Clone, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> (mapped: ArraySeqStPerS<U>)
-        requires
-            forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
-        ensures
-            mapped.seq@.len() == a.seq@.len(),
-            forall|i: int| #![auto] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]),
-    {
-        let len = a.seq.len();
-        let mut seq: Vec<U> = Vec::with_capacity(len);
-        let mut i: usize = 0;
-        while i < len
-            invariant
-                i <= len,
-                len == a.seq@.len(),
-                seq@.len() == i as int,
-                forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[j],)),
-                forall|j: int| #![auto] 0 <= j < i ==> f.ensures((&a.seq@[j],), seq@[j]),
-            decreases len - i,
-        {
-            seq.push(f(&a.seq[i]));
-            i += 1;
-        }
-        ArraySeqStPerS { seq }
-    }
-
-    /// Definition 18.15 (flatten). Concatenate a sequence of sequences.
-    /// Module-level because flatten takes nested concrete types.
-    pub fn flatten<T: Clone + Eq>(a: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (flattened: ArraySeqStPerS<T>)
-        requires
-            obeys_feq_clone::<T>(),
-        ensures
-            flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqStPerS<T>| inner.seq@).flatten(),
-    {
-        let outer_len = a.seq.len();
-        let mut seq: Vec<T> = Vec::new();
-        let mut i: usize = 0;
-        while i < outer_len
-            invariant
-                i <= outer_len,
-                outer_len == a.seq@.len(),
-                obeys_feq_clone::<T>(),
-                seq@ =~= a.seq@.take(i as int).map_values(|inner: ArraySeqStPerS<T>| inner.seq@).flatten(),
-            decreases outer_len - i,
-        {
-            let inner = &a.seq[i];
-            let inner_len = inner.seq.len();
-            let mut j: usize = 0;
-            while j < inner_len
-                invariant
-                    j <= inner_len,
-                    inner_len == inner.seq@.len(),
-                    i < outer_len,
-                    outer_len == a.seq@.len(),
-                    obeys_feq_clone::<T>(),
-                    seq@ =~= a.seq@.take(i as int).map_values(|inner: ArraySeqStPerS<T>| inner.seq@).flatten()
-                        + inner.seq@.take(j as int),
-                decreases inner_len - j,
-            {
-                seq.push(inner.seq[j].clone());
-                proof {
-                    let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(inner.seq[j as int], last));
-                    axiom_cloned_implies_eq_owned(inner.seq[j as int], last);
-                    assert(inner.seq@.take(j as int + 1) =~= inner.seq@.take(j as int).push(inner.seq@[j as int]));
-                }
-                j += 1;
-            }
-            proof {
-                assert(inner.seq@.take(inner_len as int) =~= inner.seq@);
-                let ghost prefix = a.seq@.take(i as int).map_values(|inner: ArraySeqStPerS<T>| inner.seq@);
-                assert(a.seq@.take(i as int + 1).map_values(|inner: ArraySeqStPerS<T>| inner.seq@)
-                    =~= prefix.push(a.seq@[i as int].seq@));
-                prefix.lemma_flatten_push(a.seq@[i as int].seq@);
-            }
-            i += 1;
-        }
-        proof {
-            assert(a.seq@.take(outer_len as int) =~= a.seq@);
-        }
-        ArraySeqStPerS { seq }
-    }
-
 
     //		10. iterators
 
