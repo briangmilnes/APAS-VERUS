@@ -47,6 +47,7 @@ pub mod ArraySeq {
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
+        vstd::seq_lib::group_seq_properties,
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
@@ -435,36 +436,7 @@ pub mod ArraySeq {
             ArraySeqS { seq }
         }
 
-/* CORPSE: flatten impl body (not in trait yet)
-        fn flatten(a: &ArraySeqS<ArraySeqS<T>>) -> (flattened: ArraySeqS<T>)
-            where T: Clone
-        {
-            let outer_len = a.seq.len();
-            let mut seq: Vec<T> = Vec::new();
-            let mut i: usize = 0;
-            while i < outer_len
-                invariant
-                    i <= outer_len,
-                    outer_len == a.seq@.len(),
-                decreases outer_len - i,
-            {
-                let inner = &a.seq[i];
-                let inner_len = inner.seq.len();
-                let mut j: usize = 0;
-                while j < inner_len
-                    invariant
-                        j <= inner_len,
-                        inner_len == inner.seq@.len(),
-                    decreases inner_len - j,
-                {
-                    seq.push(inner.seq[j].clone());
-                    j += 1;
-                }
-                i += 1;
-            }
-            ArraySeqS { seq }
-        }
-*/
+/* CORPSE: flatten was here, moved to module-level function below */
 
         fn update(a: &ArraySeqS<T>, index: usize, item: T) -> (updated: ArraySeqS<T>)
             where T: Clone + Eq
@@ -654,6 +626,64 @@ pub mod ArraySeq {
         {
             seq.push(f(i));
             i += 1;
+        }
+        ArraySeqS { seq }
+    }
+
+    /// Definition 18.15 (flatten). Concatenate a sequence of sequences.
+    /// Module-level function because flatten takes ArraySeqS<ArraySeqS<T>>
+    /// (nested concrete types), which creates Verus cycle issues in traits.
+    pub fn flatten<T: View + Clone + Eq>(a: &ArraySeqS<ArraySeqS<T>>) -> (flattened: ArraySeqS<T>)
+        requires
+            obeys_feq_clone::<T>(),
+        ensures
+            flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqS<T>| inner.seq@).flatten(),
+    {
+        let outer_len = a.seq.len();
+        let mut seq: Vec<T> = Vec::new();
+        let mut i: usize = 0;
+        while i < outer_len
+            invariant
+                i <= outer_len,
+                outer_len == a.seq@.len(),
+                obeys_feq_clone::<T>(),
+                seq@ =~= a.seq@.take(i as int).map_values(|inner: ArraySeqS<T>| inner.seq@).flatten(),
+            decreases outer_len - i,
+        {
+            let inner = &a.seq[i];
+            let inner_len = inner.seq.len();
+            let mut j: usize = 0;
+            while j < inner_len
+                invariant
+                    j <= inner_len,
+                    inner_len == inner.seq@.len(),
+                    i < outer_len,
+                    outer_len == a.seq@.len(),
+                    obeys_feq_clone::<T>(),
+                    seq@ =~= a.seq@.take(i as int).map_values(|inner: ArraySeqS<T>| inner.seq@).flatten()
+                        + inner.seq@.take(j as int),
+                decreases inner_len - j,
+            {
+                seq.push(inner.seq[j].clone());
+                proof {
+                    let ghost last = seq@[seq@.len() - 1 as int];
+                    assert(cloned(inner.seq[j as int], last));
+                    axiom_cloned_implies_eq_owned(inner.seq[j as int], last);
+                    assert(inner.seq@.take(j as int + 1) =~= inner.seq@.take(j as int).push(inner.seq@[j as int]));
+                }
+                j += 1;
+            }
+            proof {
+                assert(inner.seq@.take(inner_len as int) =~= inner.seq@);
+                let ghost prefix = a.seq@.take(i as int).map_values(|inner: ArraySeqS<T>| inner.seq@);
+                assert(a.seq@.take(i as int + 1).map_values(|inner: ArraySeqS<T>| inner.seq@)
+                    =~= prefix.push(a.seq@[i as int].seq@));
+                prefix.lemma_flatten_push(a.seq@[i as int].seq@);
+            }
+            i += 1;
+        }
+        proof {
+            assert(a.seq@.take(outer_len as int) =~= a.seq@);
         }
         ArraySeqS { seq }
     }
