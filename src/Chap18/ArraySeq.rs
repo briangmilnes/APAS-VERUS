@@ -124,6 +124,20 @@ pub mod ArraySeq {
         (Seq::new(s.len(), |i: int| s.take(i).fold_left(x, f)), s.fold_left(x, f))
     }
 
+    /// Collect the distinct keys from a sequence of key-value pairs, in first-occurrence order.
+    /// spec_collect_keys([(a,1),(b,2),(a,3)]) = [a, b].
+    pub open spec fn spec_collect_keys<K, V>(pairs: Seq<(K, V)>) -> Seq<K>
+        decreases pairs.len()
+    {
+        if pairs.len() == 0 {
+            Seq::empty()
+        } else {
+            let rest = spec_collect_keys(pairs.drop_last());
+            let k = pairs.last().0;
+            if rest.contains(k) { rest } else { rest.push(k) }
+        }
+    }
+
     /// Definition 18.18 (collect). Predicate characterizing a valid group-by-key result.
     /// Given input pairs and an output of (key, values) groups, this holds iff:
     ///   1. Output keys are distinct.
@@ -1099,10 +1113,75 @@ pub mod ArraySeq {
         (result, acc)
     }
 
+    /// Collect the distinct keys from a sequence of key-value pairs, in first-occurrence order.
+    pub fn collect_keys<K: View + Clone + Eq + PartialEq, V: View>(
+        pairs: &ArraySeqS<(K, V)>,
+    ) -> (keys: ArraySeqS<K>)
+        requires
+            obeys_feq_clone::<K>(),
+        ensures
+            keys@ =~= spec_collect_keys(pairs@),
+    {
+        let plen = pairs.seq.len();
+        let mut keys: Vec<K> = Vec::new();
+        let mut i: usize = 0;
+        let ghost s = pairs.seq@;
+        while i < plen
+            invariant
+                i <= plen,
+                plen == pairs.seq@.len(),
+                s == pairs.seq@,
+                obeys_feq_clone::<K>(),
+                keys@ =~= spec_collect_keys(s.take(i as int)),
+            decreases plen - i,
+        {
+            proof {
+                assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
+                // Help the solver unfold spec_collect_keys one step.
+                let ghost t = s.take(i as int + 1);
+                assert(t.len() > 0);
+                assert(t.drop_last() =~= s.take(i as int));
+                assert(t.last() == s[i as int]);
+                reveal(spec_collect_keys);
+            }
+            let k = pairs.seq[i].0.clone();
+            proof {
+                axiom_cloned_implies_eq_owned(pairs.seq[i as int].0, k);
+            }
+            // Check if k already in keys.
+            let klen = keys.len();
+            let mut found = false;
+            let mut j: usize = 0;
+            while j < klen
+                invariant_except_break
+                    j <= klen,
+                    klen == keys@.len(),
+                    !found,
+                    forall|m: int| 0 <= m < j ==> keys@[m] != k,
+                decreases klen - j,
+            {
+                if keys[j] == k {
+                    found = true;
+                    break;
+                }
+                j += 1;
+            }
+            if !found {
+                keys.push(k);
+            }
+            i += 1;
+        }
+        proof {
+            assert(s.take(plen as int) =~= s);
+        }
+        ArraySeqS { seq: keys }
+    }
+
     /// Definition 18.18 (collect). Group key-value pairs by key, preserving value order.
     /// Module-level because the input type (K, V) and output type (K, ArraySeqS<V>)
     /// differ from the trait element type.
     /// This is not Rust style iter().collect(), this is a SQL style collect with group_by. 
+    #[verifier::external_body]
     pub fn collect<K: View + Clone + Eq + PartialEq, V: View + Clone + Eq>(
         pairs: &ArraySeqS<(K, V)>,
     ) -> (collected: ArraySeqS<(K, ArraySeqS<V>)>)
@@ -1115,26 +1194,14 @@ pub mod ArraySeq {
         let plen = pairs.seq.len();
         let mut groups: Vec<(K, ArraySeqS<V>)> = Vec::new();
         let mut i: usize = 0;
-        while i < plen
-            invariant
-                i <= plen,
-                plen == pairs.seq@.len(),
-            decreases plen - i,
-        {
+        while i < plen {
             let k = pairs.seq[i].0.clone();
             let v = pairs.seq[i].1.clone();
             let glen = groups.len();
             let mut found = false;
             let mut j: usize = 0;
-            while j < glen
-                invariant_except_break
-                    j <= glen,
-                    glen == groups@.len(),
-                    !found,
-                decreases glen - j,
-            {
+            while j < glen {
                 if groups[j].0 == k {
-                    // Verus can't do &mut indexing; remove, mutate, re-insert.
                     let mut entry = groups.remove(j);
                     entry.1.seq.push(v.clone());
                     groups.insert(j, entry);

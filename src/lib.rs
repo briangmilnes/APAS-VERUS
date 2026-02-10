@@ -3,11 +3,15 @@
 #![cfg_attr(verus_keep_ghost, feature(sized_hierarchy))]
 #![allow(non_snake_case)]
 
+#[cfg(not(feature = "experiments_only"))]
 pub mod Types;
+#[cfg(not(feature = "experiments_only"))]
 pub mod Concurrency;
+#[cfg(not(feature = "experiments_only"))]
 pub mod ParaPairs;
 
 pub mod experiments {
+    pub mod collect;
 //    pub mod clone_fn;
 //    pub mod baseviewtypes;
 //    pub mod tcb_foul;  // TCB foul experiment - Verus blocks unspecified &mut self methods
@@ -74,6 +78,7 @@ pub mod experiments {
 //   pub mod vec_filter;  // RESULT: use Anvil style multiset. 
 }
 
+#[cfg(not(feature = "experiments_only"))]
 pub mod vstdplus {
     pub mod pervasives_plus;
     pub mod threads_plus;
@@ -94,15 +99,18 @@ pub mod vstdplus {
     }
 }
 
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap02 {
     pub mod WSSchedulerMtEph;
     pub mod FibonacciWSScheduler;
 }
 
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap03 {
     pub mod InsertionSortStEph;
 }
 
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap05 {
     pub mod SetStEph;
     pub mod SetMtEph;
@@ -110,6 +118,7 @@ pub mod Chap05 {
     pub mod MappingStEph;
 }
 
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap06 {
     pub mod DirGraphStEph;
     pub mod UnDirGraphStEph;
@@ -136,6 +145,7 @@ pub mod Chap06 {
 //    pub mod WeightedDirGraphStEphIsize;
 }
 
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap11 {
     pub mod FibonacciStEph;
     pub mod FibonacciMtPerAllThreads;
@@ -144,16 +154,19 @@ pub mod Chap11 {
     pub mod FibonacciMtEphRecomputes;
 }
 
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap12 {
     pub mod Exercise12_1;
     pub mod Exercise12_2;
     pub mod Exercise12_5;
 }
 
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap17 {
     pub mod MathSeq;
 }
 
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap18 {
     pub mod ArraySeq;
     pub mod ArraySeqStPer;
@@ -164,12 +177,14 @@ pub mod Chap18 {
     pub mod ArraySeqMtPer;
 }
 
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap19 {
     pub mod ArraySeqStPer;
     // pub mod ArraySeqStEph;
     // pub mod ArraySeqMtEph;
 }
 
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap21 {
     pub mod Algorithm21_1;
     // pub mod Algorithm21_2;
