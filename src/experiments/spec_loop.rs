@@ -37,7 +37,7 @@ pub mod spec_loop {
     // `map`    returns WrapS<U> — causes the cycle.
 
     pub trait WrapTrait<T>: Sized {
-        spec fn spec_len(&self) -> int;
+        spec fn spec_len(&self) -> nat;
 
         fn filter<F: Fn(&T) -> bool>(a: &WrapS<T>, pred: &F) -> (filtered: Self)
             where T: Clone
@@ -56,7 +56,7 @@ pub mod spec_loop {
     }
 
     impl<T> WrapTrait<T> for WrapS<T> {
-        open spec fn spec_len(&self) -> int {
+        open spec fn spec_len(&self) -> nat {
             self.v@.len() as int
         }
 

@@ -71,7 +71,7 @@ pub mod LinkedListStPer {
 
     /// Base trait for single-threaded persistent linked list sequences (Chapter 18).
     pub trait LinkedListStPerBaseTrait<T>: Sized {
-        spec fn spec_len(&self) -> int;
+        spec fn spec_len(&self) -> nat;
         spec fn spec_index(&self, i: int) -> T
             recommends i < self.spec_len();
 
@@ -205,8 +205,8 @@ pub mod LinkedListStPer {
     //		9. impls
 
     impl<T> LinkedListStPerS<T> {
-        pub open spec fn spec_len(&self) -> int {
-            self.seq@.len() as int
+        pub open spec fn spec_len(&self) -> nat {
+            self.seq@.len()
         }
 
         pub fn new(length: usize, init_value: T) -> (new_seq: LinkedListStPerS<T>)

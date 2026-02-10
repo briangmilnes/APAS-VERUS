@@ -1,6 +1,7 @@
 # Comment Style
 
-Do not use decorative separator lines in code comments:
+Do not use decorative separator lines or box-drawing characters in code comments.
+Comments must be full sentences.
 
 **Bad:**
 ```rust
@@ -16,6 +17,11 @@ Do not use decorative separator lines in code comments:
 // --------------------------------------------------------
 ```
 
+**Bad:**
+```rust
+// ── Anvil-style vec_filter: multiset equality postcondition ──────────
+```
+
 **Good:**
 ```rust
 // Section Name
@@ -26,7 +32,12 @@ Do not use decorative separator lines in code comments:
 /// Section documentation
 ```
 
-Decorative separators are acceptable in:
+**Good:**
+```rust
+// Anvil-style vec_filter using a multiset equality postcondition.
+```
+
+Decorative separators and box-drawing characters (─, ═, etc.) are acceptable in:
 - Log output
 - Terminal output
 - Markdown documentation

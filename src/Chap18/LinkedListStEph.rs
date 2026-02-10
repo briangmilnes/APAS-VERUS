@@ -70,7 +70,7 @@ pub mod LinkedListStEph {
 
     /// Base trait for single-threaded ephemeral linked list sequences (Chapter 18).
     pub trait LinkedListStEphBaseTrait<T>: Sized {
-        spec fn spec_len(&self) -> int;
+        spec fn spec_len(&self) -> nat;
         spec fn spec_index(&self, i: int) -> T
             recommends i < self.spec_len();
 
@@ -212,8 +212,8 @@ pub mod LinkedListStEph {
     //		9. impls
 
     impl<T> LinkedListStEphS<T> {
-        pub open spec fn spec_len(&self) -> int {
-            self.seq@.len() as int
+        pub open spec fn spec_len(&self) -> nat {
+            self.seq@.len()
         }
 
         pub fn new(length: usize, init_value: T) -> (new_seq: LinkedListStEphS<T>)

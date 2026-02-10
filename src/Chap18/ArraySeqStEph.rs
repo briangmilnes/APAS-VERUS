@@ -73,7 +73,7 @@ pub mod ArraySeqStEph {
     /// - Base trait for single-threaded ephemeral array sequences (Chapter 18).
     /// - These methods are never redefined in later chapters.
     pub trait ArraySeqStEphBaseTrait<T>: Sized {
-        spec fn spec_len(&self) -> int;
+        spec fn spec_len(&self) -> nat;
 
         spec fn spec_index(&self, i: int) -> T
             recommends i < self.spec_len();
@@ -252,8 +252,8 @@ pub mod ArraySeqStEph {
     //		9. impl BaseTrait for Struct
 
     impl<T> ArraySeqStEphBaseTrait<T> for ArraySeqStEphS<T> {
-        open spec fn spec_len(&self) -> int {
-            self.seq@.len() as int
+        open spec fn spec_len(&self) -> nat {
+            self.seq@.len()
         }
 
         open spec fn spec_index(&self, i: int) -> T {

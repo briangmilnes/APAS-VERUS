@@ -77,7 +77,7 @@ pub mod ArraySeqMtPer {
     /// - Base trait for multi-threaded persistent array sequences (Chapter 18).
     /// - These methods are never redefined in later chapters.
     pub trait ArraySeqMtPerBaseTrait<T>: Sized {
-        spec fn spec_len(&self) -> int;
+        spec fn spec_len(&self) -> nat;
 
         spec fn spec_index(&self, i: int) -> T
             recommends i < self.spec_len();
@@ -247,8 +247,8 @@ pub mod ArraySeqMtPer {
     //		9. impl BaseTrait for Struct
 
     impl<T> ArraySeqMtPerBaseTrait<T> for ArraySeqMtPerS<T> {
-        open spec fn spec_len(&self) -> int {
-            self.seq@.len() as int
+        open spec fn spec_len(&self) -> nat {
+            self.seq@.len()
         }
 
         open spec fn spec_index(&self, i: int) -> T {

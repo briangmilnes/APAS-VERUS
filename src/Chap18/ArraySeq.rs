@@ -8,6 +8,7 @@
 //	3. broadcast use
 //	4. type definitions
 //	5. view impls
+//	6. spec fns
 //	8. traits
 //	9. impls
 //	10. iterators
@@ -45,6 +46,10 @@ pub mod ArraySeq {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
         vstd::seq_lib::group_seq_properties,
+        vstd::multiset::group_multiset_axioms,
+        vstd::multiset::group_multiset_properties,
+        vstd::seq_lib::group_to_multiset_ensures,
+        vstd::seq_lib::group_filter_ensures,
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
@@ -68,11 +73,20 @@ pub mod ArraySeq {
     }
 
 
+    //		6. spec fns
+
+    /// Definition 18.7 (iterate). Left fold over a sequence: applies f to the accumulator
+    /// and each element from left to right.  spec_iterate(s, f, start_x) = f(...f(f(start_x, s[0]), s[1])..., s[n-1]).
+    pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
+        s.fold_left(start_x, f)
+    }
+
+
     //		8. traits
 
     /// Data Type 18.1: Generic sequence trait for array-backed sequences.
     pub trait ArraySeqTrait<T: View>: Sized {
-        spec fn spec_len(&self) -> int;
+        spec fn spec_len(&self) -> nat;
 
         spec fn spec_index(&self, i: int) -> T
             recommends i < self.spec_len();
@@ -146,14 +160,20 @@ pub mod ArraySeq {
 
         /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
         /// - Work Θ(|a|), Span Θ(1).
-        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F) -> (filtered: Self)
+        /// - The multiset postcondition captures predicate satisfaction, provenance,
+        ///   and completeness in a single statement.
+        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
             where T: Clone + Eq
             requires 
               obeys_feq_clone::<T>(),
-              forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(i),))
+              forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(i),)),
+              // The biconditional bridge ties the exec closure to the spec predicate.
+              forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
             ensures
                 filtered.spec_len() <= a.spec_len(),
-                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
+                // The result multiset equals the input multiset filtered by the spec predicate.
+                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+                    =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)).to_multiset().filter(spec_pred);
 
         /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
         /// - Work Θ(|a|), Span Θ(1).
@@ -177,18 +197,30 @@ pub mod ArraySeq {
         fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.spec_len() == 1;
 
-        /// - Definition 18.7 (iterate). Fold with accumulator `seed`.
+        /// - Definition 18.7 (iterate). Left fold with accumulator `start_x`.
+        /// - The Rust equivalent is `Iterator::fold`.
         /// - Work Θ(|a|), Span Θ(1).
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, seed: A) -> A
-            requires forall|x: &A, y: &T| #[trigger] f.requires((x, y));
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (result: A)
+            requires
+                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
+                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
+            ensures
+                result == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, start_x);
 
-        /// - Definition 18.18 (reduce). Combine elements using associative `f` and identity `id`.
+        /// - Definition 18.18 (reduce). Combine elements using associative function and identity `id`.
+        /// - The Rust equivalent is `Iterator::fold` with the accumulator type equal to the element type.
         /// - Work Θ(|a|), Span Θ(1).
-        fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> T
+        fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: T)
             where T: Clone
-            requires forall|x: &T, y: &T| #[trigger] f.requires((x, y));
+            requires
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures
+                result == spec_iterate(
+                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
 
         /// - Definition 18.19 (scan). Prefix-reduce returning partial sums and total.
+        /// - The Rust equivalent is `Iterator::scan`, which produces similar intermediate state.
         /// - Work Θ(|a|), Span Θ(1).
         fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (scanned: (Self, T))
             where T: Clone
@@ -220,8 +252,8 @@ pub mod ArraySeq {
     //		9. impls
 
     impl<T: View> ArraySeqTrait<T> for ArraySeqS<T> {
-        open spec fn spec_len(&self) -> int {
-            self.seq@.len() as int
+        open spec fn spec_len(&self) -> nat {
+            self.seq@.len()
         }
 
         open spec fn spec_index(&self, i: int) -> T {
@@ -336,34 +368,45 @@ pub mod ArraySeq {
             ArraySeqS { seq }
         }
 
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqS<T>, pred: &F) -> (filtered: ArraySeqS<T>)
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: ArraySeqS<T>)
             where T: Clone + Eq
         {
-            let len = a.seq.len();
             let mut seq: Vec<T> = Vec::new();
-            let mut i: usize = 0;
-            while i < len
+
+            for i in 0..a.seq.len()
                 invariant
-                    i <= len,
-                    len == a.seq@.len(),
-                    seq@.len() <= i,
                     obeys_feq_clone::<T>(),
                     forall|j: int| 0 <= j < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(j),)),
-                    forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> pred.ensures((&seq@[j],), true),
-                decreases len - i,
+                    forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
+                    i <= a.seq@.len(),
+                    seq@.len() <= i,
+                    // The result multiset equals the filtered multiset of elements seen so far.
+                    seq@.to_multiset() =~= a.seq@.subrange(0, i as int).to_multiset().filter(spec_pred),
             {
-                proof { a.lemma_spec_index(i as int); }
-                if pred(&a.seq[i]) {
-                    seq.push(a.seq[i].clone());
-                    proof {
-                        let ghost last = seq@[seq@.len() - 1 as int];
-                        assert(cloned(a.seq[i as int], last));
-                        axiom_cloned_implies_eq_owned(a.seq[i as int], last);
-                    }
+                proof {
+                    broadcast use vstd::seq_lib::group_to_multiset_ensures;
+                    a.lemma_spec_index(i as int);
                 }
-                i += 1;
+                // Extending the subrange by one element lets the multiset axioms advance the invariant.
+                assert(a.seq@.subrange(0, i as int + 1) =~= a.seq@.subrange(0, i as int).push(a.seq@[i as int]));
+                if pred(&a.seq[i]) {
+                    let elem = a.seq[i].clone();
+                    proof {
+                        // The clone axiom ensures the cloned value equals the original in spec.
+                        axiom_cloned_implies_eq_owned(a.seq[i as int], elem);
+                    }
+                    seq.push(elem);
+                }
             }
-            ArraySeqS { seq }
+            // The full subrange equals the original sequence.
+            assert(a.seq@.subrange(0, a.seq.len() as int) =~= a.seq@);
+            let filtered = ArraySeqS { seq };
+            proof {
+                // Bridge from the concrete seq@ to the abstract Seq::new(spec_len, spec_index).
+                assert(filtered.seq@ =~= Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)));
+                assert(a.seq@ =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)));
+            }
+            filtered
         }
 
         fn update(a: &ArraySeqS<T>, index: usize, item: T) -> (updated: ArraySeqS<T>)
@@ -411,26 +454,49 @@ pub mod ArraySeq {
             self.seq.len() == 1
         }
 
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqS<T>, f: &F, seed: A) -> (acc: A) {
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (acc: A) {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
-            let mut acc = seed;
+            let mut acc = start_x;
             let mut i: usize = 0;
             while i < len
                 invariant
                     i <= len,
                     len == a.seq@.len(),
                     forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
+                    forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
+                    // The accumulator equals the fold of the first i elements.
+                    s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
+                    acc == s.take(i as int).fold_left(start_x, spec_f),
                 decreases len - i,
             {
+                proof {
+                    a.lemma_spec_index(i as int);
+                    // take(i+1) == take(i).push(s[i]).
+                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
+                }
                 acc = f(&acc, &a.seq[i]);
+                proof {
+                    // Help the solver unfold fold_left on take(i+1).
+                    let ghost t = s.take(i as int + 1);
+                    assert(t.len() > 0);
+                    assert(t.drop_last() =~= s.take(i as int));
+                    assert(t.last() == s[i as int]);
+                    reveal(Seq::fold_left);
+                }
                 i += 1;
+            }
+            proof {
+                // At loop exit, i == len so take(len) == s.
+                assert(s.take(len as int) =~= s);
             }
             acc
         }
 
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, id: T) -> (reduced: T)
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: T)
             where T: Clone
         {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             let mut acc = id;
             let mut i: usize = 0;
@@ -439,10 +505,31 @@ pub mod ArraySeq {
                     i <= len,
                     len == a.seq@.len(),
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                    // The accumulator equals the fold of the first i elements.
+                    s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
+                    acc == s.take(i as int).fold_left(id, spec_f),
                 decreases len - i,
             {
+                proof {
+                    a.lemma_spec_index(i as int);
+                    // take(i+1) == take(i).push(s[i]).
+                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
+                }
                 acc = f(&acc, &a.seq[i]);
+                proof {
+                    // Help the solver unfold fold_left on take(i+1).
+                    let ghost t = s.take(i as int + 1);
+                    assert(t.len() > 0);
+                    assert(t.drop_last() =~= s.take(i as int));
+                    assert(t.last() == s[i as int]);
+                    reveal(Seq::fold_left);
+                }
                 i += 1;
+            }
+            proof {
+                // At loop exit, i == len so take(len) == s.
+                assert(s.take(len as int) =~= s);
             }
             acc
         }
