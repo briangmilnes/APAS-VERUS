@@ -4,8 +4,8 @@
 //!   - loop-loop:  `loop { match it.next() { ... } }`
 //!   - for-iter:   `for x in iter: it`
 //!
-//! Higher-order function tests (spec_fn bridge):
-//!   - iterate, reduce, scan, scan_inclusive, filter, iterate_prefixes
+//! Higher-order function tests (spec_fn bridge / closure ensures):
+//!   - iterate, reduce, scan, scan_inclusive, filter, iterate_prefixes, map, tabulate
 
 #[macro_use]
 #[path = "../common/mod.rs"]
@@ -271,6 +271,50 @@ test_verify_one_file! {
             // The call succeeds, proving the requires (spec_fn bridge + obeys_feq_clone) is satisfiable.
             let ghost _p = prefixes;
             let ghost _t = total;
+        }
+    } => Ok(())
+}
+
+// map: Call with a concrete closure and verify the ensures bridge.
+test_verify_one_file! {
+    #[test] arrayseq_map verus_code! {
+        use vstd::prelude::*;
+        use apas_verus::Chap18::ArraySeq::ArraySeq::*;
+
+        fn test_map() {
+            let a: ArraySeqS<u64> = ArraySeqS::singleton(7);
+
+            // Bitwise NOT each element (total, no overflow).
+            let f = |x: &u64| -> (ret: u64)
+                ensures ret == !*x
+            { !*x };
+
+            let mapped = map(&a, &f);
+
+            // The call succeeds, proving the requires (closure totality) is satisfiable.
+            // The ensures gives: mapped.spec_len() == 1 and f.ensures((&a.spec_index(0),), mapped.spec_index(0)).
+            let ghost _m = mapped;
+        }
+    } => Ok(())
+}
+
+// tabulate: Call with a concrete closure and verify the ensures bridge.
+test_verify_one_file! {
+    #[test] arrayseq_tabulate verus_code! {
+        use vstd::prelude::*;
+        use apas_verus::Chap18::ArraySeq::ArraySeq::*;
+
+        fn test_tabulate() {
+            // Build [0, 1, 2] by applying the identity function to each index.
+            let f = |i: usize| -> (ret: u64)
+                ensures ret == i as u64
+            { i as u64 };
+
+            let tab = tabulate(&f, 3);
+
+            // The call succeeds, proving the requires (closure totality + length bound) is satisfiable.
+            // The ensures gives: tab.spec_len() == 3 and f.ensures((i,), tab.spec_index(i)) for i in 0..3.
+            let ghost _t = tab;
         }
     } => Ok(())
 }
