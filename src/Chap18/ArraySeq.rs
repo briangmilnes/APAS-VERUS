@@ -1103,7 +1103,6 @@ pub mod ArraySeq {
     /// Module-level because the input type (K, V) and output type (K, ArraySeqS<V>)
     /// differ from the trait element type.
     /// This is not Rust style iter().collect(), this is a SQL style collect with group_by. 
-    #[verifier::external_body]
     pub fn collect<K: View + Clone + Eq + PartialEq, V: View + Clone + Eq>(
         pairs: &ArraySeqS<(K, V)>,
     ) -> (collected: ArraySeqS<(K, ArraySeqS<V>)>)
@@ -1113,20 +1112,41 @@ pub mod ArraySeq {
         ensures
             spec_collect(pairs@, collected@)
     {
-        // Placeholder implementation; full proof deferred.
+        let plen = pairs.seq.len();
         let mut groups: Vec<(K, ArraySeqS<V>)> = Vec::new();
-        for (k, v) in pairs.seq.iter() {
+        let mut i: usize = 0;
+        while i < plen
+            invariant
+                i <= plen,
+                plen == pairs.seq@.len(),
+            decreases plen - i,
+        {
+            let k = pairs.seq[i].0.clone();
+            let v = pairs.seq[i].1.clone();
+            let glen = groups.len();
             let mut found = false;
-            for g in groups.iter_mut() {
-                if g.0 == *k {
-                    g.1.seq.push(v.clone());
+            let mut j: usize = 0;
+            while j < glen
+                invariant_except_break
+                    j <= glen,
+                    glen == groups@.len(),
+                    !found,
+                decreases glen - j,
+            {
+                if groups[j].0 == k {
+                    // Verus can't do &mut indexing; remove, mutate, re-insert.
+                    let mut entry = groups.remove(j);
+                    entry.1.seq.push(v.clone());
+                    groups.insert(j, entry);
                     found = true;
                     break;
                 }
+                j += 1;
             }
             if !found {
-                groups.push((k.clone(), ArraySeqS { seq: vec![v.clone()] }));
+                groups.push((k, ArraySeqS { seq: vec![v] }));
             }
+            i += 1;
         }
         ArraySeqS { seq: groups }
     }
