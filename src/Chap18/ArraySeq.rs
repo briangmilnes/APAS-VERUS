@@ -212,7 +212,7 @@ pub mod ArraySeq {
               obeys_feq_clone::<T>(),
               forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(i),)),
               // The biconditional bridge ties the exec closure to the spec predicate.
-              forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
+              forall|v: T, ret: bool| pred.ensures((&v,), ret) ==> spec_pred(v) == ret,
             ensures
                 filtered.spec_len() <= a.spec_len(),
                 // The result multiset equals the input multiset filtered by the spec predicate.
@@ -273,7 +273,7 @@ pub mod ArraySeq {
                 spec_monoid(spec_f, id),
                 obeys_feq_clone::<T>(),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
                 scanned.0.spec_len() == a.spec_len(),
                 // Each element is the fold of the first i+1 input elements (inclusive prefix sum).
@@ -306,7 +306,7 @@ pub mod ArraySeq {
                 spec_monoid(spec_f, id),
                 obeys_feq_clone::<T>(),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
                 result.spec_len() == a.spec_len(),
                 forall|i: int| #![trigger result.spec_index(i)] 0 <= i < a.spec_len() ==>
@@ -462,7 +462,7 @@ pub mod ArraySeq {
                 invariant
                     obeys_feq_clone::<T>(),
                     forall|j: int| 0 <= j < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(j),)),
-                    forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
+                    forall|v: T, ret: bool| pred.ensures((&v,), ret) ==> spec_pred(v) == ret,
                     i <= a.seq@.len(),
                     seq@.len() <= i,
                     // The result multiset equals the filtered multiset of elements seen so far.
@@ -634,7 +634,7 @@ pub mod ArraySeq {
                     seq@.len() == i as int,
                     obeys_feq_clone::<T>(),
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
                     // The accumulator equals the fold of the first i elements.
                     s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
                     acc == s.take(i as int).fold_left(id, spec_f),
@@ -772,7 +772,7 @@ pub mod ArraySeq {
                     seq@.len() == i as int,
                     obeys_feq_clone::<T>(),
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
                     s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
                     acc == s.take(i as int).fold_left(id, spec_f),
                     forall|k: int| #![trigger seq@[k]] 0 <= k < seq@.len() ==>

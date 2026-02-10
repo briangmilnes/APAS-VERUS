@@ -5,7 +5,7 @@
 //!   - for-iter:   `for x in iter: it`
 //!
 //! Higher-order function tests (spec_fn bridge):
-//!   - iterate with concrete spec_fn
+//!   - iterate, reduce, scan, scan_inclusive, filter, iterate_prefixes
 
 #[macro_use]
 #[path = "../common/mod.rs"]
@@ -142,6 +142,135 @@ test_verify_one_file! {
 
             // The call succeeds, proving the requires (spec_fn bridge + monoid) is satisfiable.
             let ghost _r = result;
+        }
+    } => Ok(())
+}
+
+// scan: Call with bitwise OR monoid and verify the spec_fn bridge.
+test_verify_one_file! {
+    #[test] arrayseq_scan verus_code! {
+        use vstd::prelude::*;
+        use apas_verus::Chap18::ArraySeq::ArraySeq::*;
+
+        proof fn bitor_is_monoid()
+            ensures spec_monoid(|a: u64, b: u64| a | b, 0u64),
+        {
+            let spec_f: spec_fn(u64, u64) -> u64 = |a: u64, b: u64| a | b;
+            assert forall|x: u64, y: u64, z: u64| #[trigger] spec_f(spec_f(x, y), z) == spec_f(x, spec_f(y, z)) by {
+                assert((x | y) | z == x | (y | z)) by (bit_vector);
+            }
+            assert forall|x: u64| #[trigger] spec_f(0u64, x) == x by {
+                assert(0u64 | x == x) by (bit_vector);
+            }
+            assert forall|x: u64| #[trigger] spec_f(x, 0u64) == x by {
+                assert(x | 0u64 == x) by (bit_vector);
+            }
+        }
+
+        fn test_scan() {
+            let a: ArraySeqS<u64> = ArraySeqS::singleton(7);
+
+            let f = |acc: &u64, x: &u64| -> (ret: u64)
+                ensures ret == (*acc | *x)
+            { *acc | *x };
+
+            let ghost spec_f: spec_fn(u64, u64) -> u64 = |a: u64, b: u64| a | b;
+
+            proof { bitor_is_monoid(); }
+
+            let (scanned, total) = <ArraySeqS<u64> as ArraySeqTrait<u64>>::scan(&a, &f, Ghost(spec_f), 0u64);
+
+            // The call succeeds, proving the requires (spec_fn bridge + monoid + obeys_feq_clone) is satisfiable.
+            let ghost _s = scanned;
+            let ghost _t = total;
+        }
+    } => Ok(())
+}
+
+// scan_inclusive: Call with bitwise OR monoid and verify the spec_fn bridge.
+test_verify_one_file! {
+    #[test] arrayseq_scan_inclusive verus_code! {
+        use vstd::prelude::*;
+        use apas_verus::Chap18::ArraySeq::ArraySeq::*;
+
+        proof fn bitor_is_monoid()
+            ensures spec_monoid(|a: u64, b: u64| a | b, 0u64),
+        {
+            let spec_f: spec_fn(u64, u64) -> u64 = |a: u64, b: u64| a | b;
+            assert forall|x: u64, y: u64, z: u64| #[trigger] spec_f(spec_f(x, y), z) == spec_f(x, spec_f(y, z)) by {
+                assert((x | y) | z == x | (y | z)) by (bit_vector);
+            }
+            assert forall|x: u64| #[trigger] spec_f(0u64, x) == x by {
+                assert(0u64 | x == x) by (bit_vector);
+            }
+            assert forall|x: u64| #[trigger] spec_f(x, 0u64) == x by {
+                assert(x | 0u64 == x) by (bit_vector);
+            }
+        }
+
+        fn test_scan_inclusive() {
+            let a: ArraySeqS<u64> = ArraySeqS::singleton(7);
+
+            let f = |acc: &u64, x: &u64| -> (ret: u64)
+                ensures ret == (*acc | *x)
+            { *acc | *x };
+
+            let ghost spec_f: spec_fn(u64, u64) -> u64 = |a: u64, b: u64| a | b;
+
+            proof { bitor_is_monoid(); }
+
+            let result = <ArraySeqS<u64> as ArraySeqTrait<u64>>::scan_inclusive(&a, &f, Ghost(spec_f), 0u64);
+
+            // The call succeeds, proving the requires (spec_fn bridge + monoid + obeys_feq_clone) is satisfiable.
+            let ghost _r = result;
+        }
+    } => Ok(())
+}
+
+// filter: Call with a concrete predicate and verify the spec_fn bridge.
+test_verify_one_file! {
+    #[test] arrayseq_filter verus_code! {
+        use vstd::prelude::*;
+        use apas_verus::Chap18::ArraySeq::ArraySeq::*;
+
+        fn test_filter() {
+            let a: ArraySeqS<u64> = ArraySeqS::singleton(7);
+
+            // Keep values > 5.
+            let pred = |x: &u64| -> (ret: bool)
+                ensures ret == (*x > 5)
+            { *x > 5 };
+
+            let ghost spec_pred: spec_fn(u64) -> bool = |x: u64| x > 5;
+
+            let filtered = <ArraySeqS<u64> as ArraySeqTrait<u64>>::filter(&a, &pred, Ghost(spec_pred));
+
+            // The call succeeds, proving the requires (spec_fn bridge + obeys_feq_clone) is satisfiable.
+            let ghost _f = filtered;
+        }
+    } => Ok(())
+}
+
+// iterate_prefixes: Call with bitwise OR and verify the spec_fn bridge.
+test_verify_one_file! {
+    #[test] arrayseq_iterate_prefixes verus_code! {
+        use vstd::prelude::*;
+        use apas_verus::Chap18::ArraySeq::ArraySeq::*;
+
+        fn test_iterate_prefixes() {
+            let a: ArraySeqS<u64> = ArraySeqS::singleton(10);
+
+            let f = |acc: &u64, x: &u64| -> (ret: u64)
+                ensures ret == (*acc | *x)
+            { *acc | *x };
+
+            let ghost spec_f: spec_fn(u64, u64) -> u64 = |a: u64, b: u64| (a | b);
+
+            let (prefixes, total) = iterate_prefixes(&a, &f, Ghost(spec_f), 0u64);
+
+            // The call succeeds, proving the requires (spec_fn bridge + obeys_feq_clone) is satisfiable.
+            let ghost _p = prefixes;
+            let ghost _t = total;
         }
     } => Ok(())
 }
