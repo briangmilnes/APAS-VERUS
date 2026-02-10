@@ -81,6 +81,50 @@ pub mod ArraySeq {
         s.fold_left(start_x, f)
     }
 
+    /// A binary operation f is associative: f(f(x, y), z) == f(x, f(y, z)) for all x, y, z.
+    pub open spec fn spec_associative<T>(f: spec_fn(T, T) -> T) -> bool {
+        forall|x: T, y: T, z: T| #![trigger f(f(x, y), z)] f(f(x, y), z) == f(x, f(y, z))
+    }
+
+    /// The value id is a left identity for f: f(id, x) == x for all x.
+    pub open spec fn spec_left_identity<T>(f: spec_fn(T, T) -> T, id: T) -> bool {
+        forall|x: T| #[trigger] f(id, x) == x
+    }
+
+    /// The value id is a right identity for f: f(x, id) == x for all x.
+    pub open spec fn spec_right_identity<T>(f: spec_fn(T, T) -> T, id: T) -> bool {
+        forall|x: T| #[trigger] f(x, id) == x
+    }
+
+    /// The triple (T, f, id) forms a monoid: f is associative and id is a two-sided identity.
+    pub open spec fn spec_monoid<T>(f: spec_fn(T, T) -> T, id: T) -> bool {
+        spec_associative(f) && spec_left_identity(f, id) && spec_right_identity(f, id)
+    }
+
+    /// Definition 18.16 (inject). Apply position-value updates left to right; the first update
+    /// to each position wins.  Out-of-range positions are ignored.
+    pub open spec fn spec_inject<T>(s: Seq<T>, updates: Seq<(usize, T)>) -> Seq<T>
+        decreases updates.len()
+    {
+        if updates.len() == 0 {
+            s
+        } else {
+            // Process the tail first, then apply the head on top so the
+            // leftmost (first) update to any position overwrites later ones.
+            let rest = spec_inject(s, updates.drop_first());
+            let pos = updates[0].0 as int;
+            let val = updates[0].1;
+            if 0 <= pos < s.len() { rest.update(pos, val) } else { rest }
+        }
+    }
+
+    /// Definition 18.19 (iteratePrefixes). Return the exclusive prefix folds and the total.
+    /// The sequence contains the accumulator state before processing each element:
+    /// prefixes[i] = fold_left(x, f, a[0..i]).  The second component is the final fold.
+    pub open spec fn spec_iterate_prefixes<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, x: A) -> (Seq<A>, A) {
+        (Seq::new(s.len(), |i: int| s.take(i).fold_left(x, f)), s.fold_left(x, f))
+    }
+
 
     //		8. traits
 
@@ -203,7 +247,7 @@ pub mod ArraySeq {
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (result: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
-                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
+                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
             ensures
                 result == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, start_x);
 
@@ -213,19 +257,60 @@ pub mod ArraySeq {
         fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: T)
             where T: Clone
             requires
+                spec_monoid(spec_f, id),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
                 result == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
 
-        /// - Definition 18.19 (scan). Prefix-reduce returning partial sums and total.
+        /// - Definition 18.19 (scan). Prefix-reduce returning inclusive prefix sums and total.
         /// - The Rust equivalent is `Iterator::scan`, which produces similar intermediate state.
         /// - Work Θ(|a|), Span Θ(1).
-        fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, id: T) -> (scanned: (Self, T))
-            where T: Clone
-            requires forall|x: &T, y: &T| #[trigger] f.requires((x, y))
-            ensures scanned.0.spec_len() == a.spec_len();
+        fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (Self, T))
+            where T: Clone + Eq
+            requires
+                spec_monoid(spec_f, id),
+                obeys_feq_clone::<T>(),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures
+                scanned.0.spec_len() == a.spec_len(),
+                // Each element is the fold of the first i+1 input elements (inclusive prefix sum).
+                forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < a.spec_len() ==>
+                    scanned.0.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f),
+                // The total is the fold of the entire sequence.
+                scanned.1 == spec_iterate(
+                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);
+
+        /// - Definition 18.16 (inject). Update multiple positions at once; the first update in
+        ///   the ordering of `updates` takes effect when positions collide.
+        /// - Work Θ(|a| + |updates|), Span Θ(1).
+        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+            ensures
+                injected.spec_len() == a.spec_len(),
+                Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
+                    =~= spec_inject(
+                        Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+                        updates@);
+
+        /// - Definition 18.19 (scanI). Inclusive prefix-reduce: scanI[i] = reduce f id a[0..i].
+        /// - Our `scan` currently computes inclusive prefixes; this function makes the intent explicit.
+        /// - Work Θ(|a|), Span Θ(1).
+        fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: Self)
+            where T: Clone + Eq
+            requires
+                spec_monoid(spec_f, id),
+                obeys_feq_clone::<T>(),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures
+                result.spec_len() == a.spec_len(),
+                forall|i: int| #![trigger result.spec_index(i)] 0 <= i < a.spec_len() ==>
+                    result.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
         /// - Work Θ(length), Span Θ(1).
@@ -464,7 +549,7 @@ pub mod ArraySeq {
                     i <= len,
                     len == a.seq@.len(),
                     forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
-                    forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
+                    forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
                     // The accumulator equals the fold of the first i elements.
                     s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
                     acc == s.take(i as int).fold_left(start_x, spec_f),
@@ -505,7 +590,7 @@ pub mod ArraySeq {
                     i <= len,
                     len == a.seq@.len(),
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
                     // The accumulator equals the fold of the first i elements.
                     s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
                     acc == s.take(i as int).fold_left(id, spec_f),
@@ -534,9 +619,10 @@ pub mod ArraySeq {
             acc
         }
 
-        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, id: T) -> (scanned: (ArraySeqS<T>, T))
-            where T: Clone
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqS<T>, T))
+            where T: Clone + Eq
         {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             let mut acc = id;
             let mut seq: Vec<T> = Vec::with_capacity(len);
@@ -546,14 +632,181 @@ pub mod ArraySeq {
                     i <= len,
                     len == a.seq@.len(),
                     seq@.len() == i as int,
+                    obeys_feq_clone::<T>(),
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                    // The accumulator equals the fold of the first i elements.
+                    s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
+                    acc == s.take(i as int).fold_left(id, spec_f),
+                    // Each element written so far is the fold of the corresponding prefix.
+                    forall|k: int| #![trigger seq@[k]] 0 <= k < seq@.len() ==>
+                        seq@[k] == s.take(k + 1).fold_left(id, spec_f),
                 decreases len - i,
             {
+                proof {
+                    a.lemma_spec_index(i as int);
+                    // take(i+1) == take(i).push(s[i]).
+                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
+                }
                 acc = f(&acc, &a.seq[i]);
-                seq.push(acc.clone());
+                proof {
+                    // Help the solver unfold fold_left on take(i+1).
+                    let ghost t = s.take(i as int + 1);
+                    assert(t.len() > 0);
+                    assert(t.drop_last() =~= s.take(i as int));
+                    assert(t.last() == s[i as int]);
+                    reveal(Seq::fold_left);
+                }
+                let cloned = acc.clone();
+                proof {
+                    // The clone axiom ensures the cloned value equals the original in spec.
+                    axiom_cloned_implies_eq_owned(acc, cloned);
+                }
+                seq.push(cloned);
                 i += 1;
             }
-            (ArraySeqS { seq }, acc)
+            proof {
+                // At loop exit, i == len so take(len) == s.
+                assert(s.take(len as int) =~= s);
+            }
+            let scanned_seq = ArraySeqS { seq };
+            proof {
+                // Bridge from seq@ indices to spec_index for the prefix sum postcondition.
+                assert forall|i: int| #![trigger scanned_seq.spec_index(i)] 0 <= i < a.spec_len() implies
+                    scanned_seq.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
+                by {
+                    assert(scanned_seq.spec_index(i) == seq@[i]);
+                }
+            }
+            (scanned_seq, acc)
+        }
+
+        fn inject(a: &ArraySeqS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqS<T>)
+            where T: Clone + Eq
+        {
+            let ghost s = a.seq@;
+            let ghost u = updates@;
+            let len = a.seq.len();
+            let ulen = updates.len();
+
+            // Build an element-wise copy of a.
+            let mut result_vec: Vec<T> = Vec::with_capacity(len);
+            let mut k: usize = 0;
+            while k < len
+                invariant
+                    k <= len,
+                    len == a.seq@.len(),
+                    s == a.seq@,
+                    result_vec@.len() == k as int,
+                    obeys_feq_clone::<T>(),
+                    forall|j: int| #![trigger result_vec@[j]] 0 <= j < k as int ==> result_vec@[j] == s[j],
+                decreases len - k,
+            {
+                let elem = a.seq[k].clone();
+                proof { axiom_cloned_implies_eq_owned(a.seq@[k as int], elem); }
+                result_vec.push(elem);
+                k += 1;
+            }
+            assert(result_vec@ =~= s);
+
+            // Apply updates in reverse so the first update to each position wins.
+            let mut i: usize = ulen;
+            while i > 0
+                invariant
+                    0 <= i <= ulen,
+                    ulen == u.len(),
+                    len == a.seq@.len(),
+                    result_vec@.len() == s.len(),
+                    s.len() == len,
+                    obeys_feq_clone::<T>(),
+                    s == a.seq@,
+                    u == updates@,
+                    result_vec@ =~= spec_inject(s, u.subrange(i as int, ulen as int)),
+                decreases i,
+            {
+                i -= 1;
+                let pos = updates[i].0;
+                if pos < len {
+                    let val = updates[i].1.clone();
+                    proof {
+                        axiom_cloned_implies_eq_owned(u[i as int].1, val);
+                    }
+                    result_vec.set(pos, val);
+                }
+                proof {
+                    // Help the solver unfold spec_inject one step.
+                    let ghost sub = u.subrange(i as int, ulen as int);
+                    assert(sub.len() > 0);
+                    assert(sub[0] == u[i as int]);
+                    assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
+                    reveal(spec_inject);
+                }
+            }
+
+            proof {
+                assert(u.subrange(0, ulen as int) =~= u);
+            }
+            let injected = ArraySeqS { seq: result_vec };
+            proof {
+                // Bridge result to the abstract ensures form.
+                assert(Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)) =~= result_vec@);
+                assert forall|j: int| 0 <= j < a.spec_len() implies #[trigger] a.spec_index(j) == s[j]
+                by { a.lemma_spec_index(j); }
+                assert(Seq::new(a.spec_len(), |i: int| a.spec_index(i)) =~= s);
+            }
+            injected
+        }
+
+        fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: ArraySeqS<T>)
+            where T: Clone + Eq
+        {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+            let len = a.seq.len();
+            let mut acc = id;
+            let mut seq: Vec<T> = Vec::with_capacity(len);
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    seq@.len() == i as int,
+                    obeys_feq_clone::<T>(),
+                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                    s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
+                    acc == s.take(i as int).fold_left(id, spec_f),
+                    forall|k: int| #![trigger seq@[k]] 0 <= k < seq@.len() ==>
+                        seq@[k] == s.take(k + 1).fold_left(id, spec_f),
+                decreases len - i,
+            {
+                proof {
+                    a.lemma_spec_index(i as int);
+                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
+                }
+                acc = f(&acc, &a.seq[i]);
+                proof {
+                    let ghost t = s.take(i as int + 1);
+                    assert(t.len() > 0);
+                    assert(t.drop_last() =~= s.take(i as int));
+                    assert(t.last() == s[i as int]);
+                    reveal(Seq::fold_left);
+                }
+                let cloned = acc.clone();
+                proof {
+                    axiom_cloned_implies_eq_owned(acc, cloned);
+                }
+                seq.push(cloned);
+                i += 1;
+            }
+            let result = ArraySeqS { seq };
+            proof {
+                assert forall|i: int| #![trigger result.spec_index(i)] 0 <= i < a.spec_len() implies
+                    result.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
+                by {
+                    assert(result.spec_index(i) == seq@[i]);
+                }
+            }
+            result
         }
 
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: ArraySeqS<T>)
@@ -701,6 +954,126 @@ pub mod ArraySeq {
             assert(a.seq@.take(outer_len as int) =~= a.seq@);
         }
         ArraySeqS { seq }
+    }
+
+    /// Definition 18.19 (iteratePrefixes). Return all intermediate accumulator values
+    /// (exclusive prefixes) and the final result.  Module-level because the return type
+    /// ArraySeqS<A> differs from Self when A differs from T.
+    pub fn iterate_prefixes<T: View, A: View + Clone + Eq, F: Fn(&A, &T) -> A>(
+        a: &ArraySeqS<T>, f: &F,
+        Ghost(spec_f): Ghost<spec_fn(A, T) -> A>,
+        start_x: A,
+    ) -> (prefixes: (ArraySeqS<A>, A))
+        requires
+            obeys_feq_clone::<A>(),
+            forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
+            forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
+        ensures
+            prefixes.0.spec_len() == a.spec_len(),
+            forall|i: int| #![trigger prefixes.0.spec_index(i)] 0 <= i < a.spec_len() ==>
+                prefixes.0.spec_index(i) == spec_iterate_prefixes(
+                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, start_x).0[i],
+            prefixes.1 == spec_iterate(
+                Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, start_x),
+    {
+        let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+        let len = a.seq.len();
+        let mut acc = start_x;
+        let mut seq: Vec<A> = Vec::with_capacity(len);
+        let mut i: usize = 0;
+        while i < len
+            invariant
+                i <= len,
+                len == a.seq@.len(),
+                seq@.len() == i as int,
+                obeys_feq_clone::<A>(),
+                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
+                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
+                s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
+                // The accumulator equals the fold of the first i elements.
+                acc == s.take(i as int).fold_left(start_x, spec_f),
+                // Each element written so far is the exclusive prefix fold.
+                forall|k: int| #![trigger seq@[k]] 0 <= k < seq@.len() ==>
+                    seq@[k] == s.take(k).fold_left(start_x, spec_f),
+            decreases len - i,
+        {
+            // Push the current accumulator (exclusive: before processing element i).
+            let cloned = acc.clone();
+            proof {
+                axiom_cloned_implies_eq_owned(acc, cloned);
+            }
+            seq.push(cloned);
+            proof {
+                a.lemma_spec_index(i as int);
+                assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
+            }
+            acc = f(&acc, &a.seq[i]);
+            proof {
+                // Help the solver unfold fold_left on take(i+1).
+                let ghost t = s.take(i as int + 1);
+                assert(t.len() > 0);
+                assert(t.drop_last() =~= s.take(i as int));
+                assert(t.last() == s[i as int]);
+                reveal(Seq::fold_left);
+            }
+            i += 1;
+        }
+        proof {
+            // At loop exit, take(len) == s.
+            assert(s.take(len as int) =~= s);
+        }
+        let result = ArraySeqS { seq };
+        proof {
+            // Bridge seq@ indices to spec_index for the ensures.
+            assert forall|i: int| #![trigger result.spec_index(i)] 0 <= i < a.spec_len() implies
+                result.spec_index(i) == spec_iterate_prefixes(s, spec_f, start_x).0[i]
+            by {
+                assert(result.spec_index(i) == seq@[i]);
+            }
+        }
+        (result, acc)
+    }
+
+    /// Definition 18.18 (collect). Group key-value pairs by key, preserving value order.
+    /// Module-level because the input type (K, V) and output type (K, ArraySeqS<V>)
+    /// differ from the trait element type.
+    #[verifier::external_body]
+    pub fn collect<K: View + Clone + Eq, V: View + Clone + Eq, Cmp: Fn(&K, &K) -> std::cmp::Ordering>(
+        cmp: &Cmp,
+        pairs: &ArraySeqS<(K, V)>,
+    ) -> (collected: ArraySeqS<(K, ArraySeqS<V>)>)
+        requires
+            obeys_feq_clone::<K>(),
+            obeys_feq_clone::<V>(),
+            forall|a: &K, b: &K| #[trigger] cmp.requires((a, b)),
+        ensures
+            // Every key in the output appears at least once as a key in the input.
+            forall|i: int| #![trigger collected.spec_index(i)] 0 <= i < collected.spec_len() ==>
+                exists|j: int| #![trigger pairs.spec_index(j)] 0 <= j < pairs.spec_len()
+                    && collected.spec_index(i).0 == pairs.spec_index(j).0,
+            // Distinct output keys.
+            forall|i: int, j: int|
+                #![trigger collected.spec_index(i), collected.spec_index(j)]
+                0 <= i < j < collected.spec_len()
+                    ==> collected.spec_index(i).0 != collected.spec_index(j).0,
+    {
+        // Placeholder implementation; full proof deferred.
+        let mut keys: Vec<K> = Vec::new();
+        let mut groups: Vec<(K, ArraySeqS<V>)> = Vec::new();
+        for (k, v) in pairs.seq.iter() {
+            let mut found = false;
+            for g in groups.iter_mut() {
+                if cmp(&g.0, k) == std::cmp::Ordering::Equal {
+                    g.1.seq.push(v.clone());
+                    found = true;
+                    break;
+                }
+            }
+            if !found {
+                groups.push((k.clone(), ArraySeqS { seq: vec![v.clone()] }));
+            }
+        }
+        ArraySeqS { seq: groups }
     }
 
     impl<T: View> ArraySeqS<T> {
