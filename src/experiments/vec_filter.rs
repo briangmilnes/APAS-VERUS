@@ -45,12 +45,10 @@ fn vec_filter_predicate_for<V: Clone + Eq>(
 {
     let mut r: Vec<V> = Vec::new();
 
+    #[verifier::loop_isolation(false)]
     for idx in 0..v.len()
         invariant
             r@.len() <= idx,
-            obeys_feq_clone::<V>(),
-            forall|v: V| #[trigger] f.requires((&v,)),
-            forall|v: V, ret: bool| f.ensures((&v,), ret) <==> f_spec(v) == ret,
             forall|k: int| #![trigger r@[k]] 0 <= k < r@.len() ==> f_spec(r@[k]),
     {
         if f(&v[idx]) {
@@ -84,13 +82,10 @@ fn vec_filter_anvil<V: Clone + Eq>(
 {
     let mut r: Vec<V> = Vec::new();
 
+    #[verifier::loop_isolation(false)]
     for i in 0..v.len()
         invariant
-            obeys_feq_clone::<V>(),
-            forall|v: V| #[trigger] f.requires((&v,)),
-            forall|v: V, ret: bool| f.ensures((&v,), ret) ==> f_spec(v) == ret,
             i <= v.len(),
-            // The result multiset equals the filtered multiset of elements seen so far.
             r@.to_multiset() =~= v@.subrange(0, i as int).to_multiset().filter(f_spec),
     {
         proof {
@@ -155,14 +150,7 @@ fn vec_filter_predicate_provenence_completeness_loop<V: Clone + Eq>(
             iter@.0 == idx,
             iter@.1 == original,
             r@.len() <= idx,
-            obeys_feq_clone::<V>(),
-            forall|v: V| #[trigger] f.requires((&v,)),
-            forall|v: V, ret: bool| f.ensures((&v,), ret) <==> f_spec(v) == ret,
-
-            // Every element in r@ satisfies the spec predicate.
             forall|k: int| #![trigger r@[k]] 0 <= k < r@.len() ==> f_spec(r@[k]),
-
-            // Every element in r@ came from original[0..idx].
             forall|k: int| #![trigger r@[k]] 0 <= k < r@.len() ==>
                 exists|j: int| 0 <= j < idx && r@[k] == v@[j],
 /*

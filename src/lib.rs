@@ -75,10 +75,10 @@ pub mod experiments {
 //    pub mod parapair_toplevel_closure;
 //    pub mod arc_clone_deref;
 //    pub mod spec_loop;  // RESULT: no cycle error in simple case
-//   pub mod vec_filter;  // RESULT: use Anvil style multiset. 
+   pub mod vec_filter;  // RESULT: use Anvil style multiset. 
+   pub mod vec_remove_duplicates;
 }
 
-#[cfg(not(feature = "experiments_only"))]
 pub mod vstdplus {
     pub mod pervasives_plus;
     pub mod threads_plus;
