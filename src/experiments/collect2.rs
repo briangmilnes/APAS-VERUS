@@ -1,4 +1,10 @@
 //  Experiment: collect2 (group-by-key, single loop)
+//
+//  HYPOTHESIS: we can do this in a single function dual loop and prove it's
+//  specification and ordering more easily.
+//
+//  RESULT: 
+
 
 pub mod collect2 {
 
@@ -19,42 +25,52 @@ pub mod collect2 {
         forall|x: T, y: T| x.eq_spec(&y) <==> x == y
     }
 
-    pub fn vec_mem<T: Eq + PartialEq>(v: &Vec<T>, needle: &T) -> (found: bool)
-        requires
-            obeys_spec_eq::<T>(),
-            T::obeys_eq_spec(),
-        ensures
-            found == v@.contains(*needle),
+    pub open spec fn deep_view<K, V>(s: Seq<(K, Vec<V>)>) -> Seq<(K, Seq<V>)> {
+        s.map_values(|e: (K, Vec<V>)| (e.0, e.1@))
+    }
+
+    pub open spec fn spec_find_key_index<K, V>(groups: Seq<(K, Seq<V>)>, k: K) -> Option<int>
+        decreases groups.len()
     {
-        let len = v.len();
-        let mut j: usize = 0;
-        #[verifier::loop_isolation(false)]
-        while j < len
-            invariant
-                j <= len,
-                len == v@.len(),
-                forall|m: int| 0 <= m < j ==> v@[m] != *needle,
-            decreases len - j,
-        {
-            if v[j] == *needle {
-                return true;
+        if groups.len() == 0 {
+            None
+        } else if groups[0].0 == k {
+            Some(0)
+        } else {
+            match spec_find_key_index(groups.skip(1), k) {
+                Some(i) => Some(i + 1),
+                None => None,
             }
-            j += 1;
         }
-        false
+    }
+
+    pub open spec fn spec_collect2<K, V>(pairs: Seq<(K, V)>) -> Seq<(K, Seq<V>)>
+        decreases pairs.len()
+    {
+        if pairs.len() == 0 {
+            Seq::empty()
+        } else {
+            let rest = spec_collect2(pairs.drop_last());
+            let k = pairs.last().0;
+            let v = pairs.last().1;
+            match spec_find_key_index(rest, k) {
+                Some(i) => rest.update(i, (k, rest[i].1.push(v))),
+                None => rest.push((k, seq![v])),
+            }
+        }
     }
 
     pub fn vec_find_key<K: Eq + PartialEq, V>(
         collected: &Vec<(K, Vec<V>)>,
         needle: &K,
-    ) -> (result: Option<usize>)
+    ) -> (found: Option<usize>)
         requires
             obeys_spec_eq::<K>(),
             K::obeys_eq_spec(),
         ensures
-            match result {
+            match found {
                 Some(idx) => idx < collected@.len() && collected@[idx as int].0 == *needle,
-                None => forall|m: int| 0 <= m < collected@.len() ==> collected@[m].0 != *needle,
+                None => forall|m: int| #![trigger collected@[m]] 0 <= m < collected@.len() ==> collected@[m].0 != *needle,
             },
     {
         let len = collected.len();
@@ -64,7 +80,7 @@ pub mod collect2 {
             invariant
                 j <= len,
                 len == collected@.len(),
-                forall|m: int| 0 <= m < j ==> collected@[m].0 != *needle,
+                forall|m: int| #![trigger collected@[m]] 0 <= m < j ==> collected@[m].0 != *needle,
             decreases len - j,
         {
             if collected[j].0 == *needle {
@@ -75,8 +91,8 @@ pub mod collect2 {
         None
     }
 
-    // Verus limitation: "index for &mut not supported" prevents collected[idx].1.push(v).
-    // Workaround: remove the entry at idx, mutate it, insert it back at the same index.
+    // The Verus limitation of "index for &mut not supported", as of Version: 0.2026.02.05.80fb5a4,
+    // prevents collected[idx].1.push(v). So we remove the entry at idx, mutate it, insert it back at the same index.
     pub fn collect2<K: Clone + Eq + PartialEq, V: Clone + Eq + PartialEq>(
         pairs: &Vec<(K, V)>,
     ) -> (collected: Vec<(K, Vec<V>)>)
@@ -84,9 +100,10 @@ pub mod collect2 {
             obeys_feq_clone::<K>(),
             obeys_feq_clone::<V>(),
             obeys_spec_eq::<K>(),
-            obeys_spec_eq::<V>(),
             K::obeys_eq_spec(),
-            V::obeys_eq_spec(),
+        ensures
+            deep_view(collected@) =~= spec_collect2(pairs@),
+
     {
         let plen = pairs.len();
         let mut collected: Vec<(K, Vec<V>)> = Vec::new();
@@ -103,9 +120,7 @@ pub mod collect2 {
             match vec_find_key(&collected, &k) {
                 Some(idx) => {
                     let mut entry = collected.remove(idx);
-                    if !vec_mem(&entry.1, &v) {
-                        entry.1.push(v);
-                    }
+                    entry.1.push(v);
                     collected.insert(idx, entry);
                 }
                 None => {

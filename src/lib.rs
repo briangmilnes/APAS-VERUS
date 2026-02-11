@@ -78,6 +78,7 @@ pub mod experiments {
    pub mod vec_filter;  // RESULT: use Anvil style multiset. 
    pub mod vec_remove_duplicates;
    pub mod collect2;
+   pub mod deep_view_2_tuple;
 }
 
 pub mod vstdplus {
