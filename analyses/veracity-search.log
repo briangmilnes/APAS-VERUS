@@ -2,189 +2,61 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn fold.*
+Pattern: deep_view
 Searching: /home/milnes/projects/verus/source/vstd
-Searching: /home/milnes/projects/VerusCodebases
-Files: 10627, Functions: 251344, Matches: 4674
+Files: 94, Functions: 2216, Matches: 25
 
-[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:642: [0m
-///
-/// Given a sequence `s = [x0, x1, x2, ..., xn]`, applying this function `s.fold_left(b, f)`
-/// returns `f(...f(f(b, x0), x1), ..., xn)`.
-[38;5;22m    pub open spec fn fold_left<B>(self, b: B, f: spec_fn(B, A) -> B) -> (res: B)[0m
-[38;5;22m        decreases self.len(),[0m
+[31m/home/milnes/projects/verus/source/vstd/std_specs/hash.rs:680: [0m
+[38;5;22m    open spec fn deep_view(&self) -> Map<Key::V, Value::V>[0m
 
-[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:655: [0m
-/// Equivalent to [`Self::fold_left`] but defined by breaking off the leftmost element when
-/// recursing, rather than the rightmost. See [`Self::lemma_fold_left_alt`] that proves
-/// equivalence.
-[38;5;22m    pub open spec fn fold_left_alt<B>(self, b: B, f: spec_fn(B, A) -> B) -> (res: B)[0m
-[38;5;22m        decreases self.len(),[0m
+[31m/home/milnes/projects/verus/source/vstd/std_specs/hash.rs:691: [0m
+/// This is a separate function since it introduces a lot of quantifiers and revealing an opaque trait
+/// method is not supported. In most cases, it's easier to use one of the lemmas below instead
+/// of revealing this function directly.
+#[verifier::opaque]
+[38;5;22mpub open spec fn hash_map_deep_view_impl<Key: DeepView, Value: DeepView, S>([0m
+[38;5;22m    m: HashMap<Key, Value, S>,[0m
+[38;5;22m) -> Map<Key::V, Value::V>[0m
 
-[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:766: [0m
-///
-/// Given a sequence `s = [x0, x1, x2, ..., xn]`, applying this function `s.fold_right(b, f)`
-/// returns `f(x0, f(x1, f(x2, ..., f(xn, b)...)))`.
-[38;5;22m    pub open spec fn fold_right<B>(self, f: spec_fn(A, B) -> B, b: B) -> (res: B)[0m
-[38;5;22m        decreases self.len(),[0m
+[31m/home/milnes/projects/verus/source/vstd/std_specs/hash.rs:1209: [0m
+[38;5;22m    open spec fn deep_view(&self) -> Set<Key::V>[0m
 
-[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:779: [0m
-/// Equivalent to [`Self::fold_right`] but defined by breaking off the leftmost element when
-/// recursing, rather than the rightmost. See [`Self::lemma_fold_right_alt`] that proves
-/// equivalence.
-[38;5;22m    pub open spec fn fold_right_alt<B>(self, f: spec_fn(A, B) -> B, b: B) -> (res: B)[0m
-[38;5;22m        decreases self.len(),[0m
+[31m/home/milnes/projects/verus/source/vstd/std_specs/borrow.rs:46: [0m
+[38;5;22m    open spec fn deep_view(&self) -> Self::V[0m
 
-[31m/home/milnes/projects/verus/source/vstd/set.rs:274: [0m
-#[verifier(opaque)]
-[38;5;22m    spec fn fold_graph<A, B>(z: B, f: spec_fn(B, A) -> B, s: Set<A>, y: B, d: nat) -> bool[0m
-[38;5;22m        decreases d,[0m
+[31m/home/milnes/projects/verus/source/vstd/std_specs/borrow.rs:71: [0m
+[38;5;22m    open spec fn deep_view(&self) -> Self::V[0m
 
-[31m/home/milnes/projects/verus/source/vstd/set.rs:454: [0m
-///
-/// Given a set `s = {x0, x1, x2, ..., xn}`, applying this function `s.fold(init, f)`
-/// returns `f(...f(f(init, x0), x1), ..., xn)`.
-[38;5;22m        pub closed spec fn fold<B>(self, z: B, f: spec_fn(B, A) -> B) -> B[0m
-[38;5;22m            recommends[0m
-[38;5;22m                self.finite(),[0m
-[38;5;22m                is_fun_commutative(f),[0m
+[31m/home/milnes/projects/verus/source/vstd/std_specs/borrow.rs:95: [0m
+[38;5;22m    open spec fn deep_view(&self) -> Self::V[0m
 
-[31m/home/milnes/projects/VerusCodebases/atmosphere/kernel/verified/kernel/spec.rs:342: [0m
-#[verifier(external_body)]
-[38;5;22m    pub proof fn fold_change_mem_4k_lemma(&self, old: Kernel, mod_c_ptr: ContainerPtr)[0m
-[38;5;22m        requires[0m
-[38;5;22m            self.container_dom() == old.container_dom(),[0m
-[38;5;22m            self.container_dom().contains(mod_c_ptr),[0m
-[38;5;22m            forall|c_ptr: ContainerPtr|[0m
-[38;5;22m                #![auto][0m
-[38;5;22m                self.container_dom().contains(c_ptr) && c_ptr != mod_c_ptr ==> self.get_container([0m
-[38;5;22m                    c_ptr,[0m
-[38;5;22m                ).quota.mem_4k == old.get_container(c_ptr).quota.mem_4k,[0m
-[38;5;22m        ensures[0m
-[38;5;22m            self.container_dom().fold([0m
-[38;5;22m                0,[0m
-[38;5;22m                |e: int, a: ContainerPtr| e + self.get_container(a).quota.mem_4k,[0m
-[38;5;22m            ) == old.container_dom().fold([0m
-[38;5;22m                0,[0m
-[38;5;22m                |e: int, a: ContainerPtr| e + old.get_container(a).quota.mem_4k,[0m
-[38;5;22m            ) - old.get_container(mod_c_ptr).quota.mem_4k + self.get_container([0m
-[38;5;22m                mod_c_ptr,[0m
-[38;5;22m            ).quota.mem_4k,[0m
+[31m/home/milnes/projects/verus/source/vstd/std_specs/vecdeque.rs:30: [0m
+[38;5;22m    open spec fn deep_view(&self) -> Seq<T::V>[0m
 
-[31m/home/milnes/projects/VerusCodebases/atmosphere/kernel/verified/kernel/spec.rs:366: [0m
-#[verifier(external_body)]
-[38;5;22m    pub proof fn fold_mem_4k_lemma(&self)[0m
-[38;5;22m        ensures[0m
-[38;5;22m            forall|c_ptr: ContainerPtr|[0m
-[38;5;22m                #![auto][0m
-[38;5;22m                self.container_dom().contains(c_ptr) ==> self.container_dom().fold([0m
-[38;5;22m                    0,[0m
-[38;5;22m                    |e: int, a: ContainerPtr| e + self.get_container(a).quota.mem_4k,[0m
-[38;5;22m                ) >= self.get_container(c_ptr).quota.mem_4k,[0m
+[31m/home/milnes/projects/verus/source/vstd/std_specs/slice.rs:56: [0m
+[38;5;22m    open spec fn deep_view(&self) -> Self::V[0m
 
-[31m/home/milnes/projects/VerusCodebases/atmosphere/kernel/verified/kernel/spec.rs:379: [0m
-#[verifier(external_body)]
-[38;5;22m    pub proof fn fold_change_pcid_lemma(&self, old: Kernel, mod_c_ptr: ContainerPtr)[0m
-[38;5;22m        requires[0m
-[38;5;22m            self.container_dom() == old.container_dom(),[0m
-[38;5;22m            self.container_dom().contains(mod_c_ptr),[0m
-[38;5;22m            forall|c_ptr: ContainerPtr|[0m
-[38;5;22m                #![auto][0m
-[38;5;22m                self.container_dom().contains(c_ptr) && c_ptr != mod_c_ptr ==> self.get_container([0m
-[38;5;22m                    c_ptr,[0m
-[38;5;22m                ).quota.pcid == old.get_container(c_ptr).quota.pcid,[0m
-[38;5;22m        ensures[0m
-[38;5;22m            self.container_dom().fold([0m
-[38;5;22m                0,[0m
-[38;5;22m                |e: int, a: ContainerPtr| e + self.get_container(a).quota.pcid,[0m
-[38;5;22m            ) == old.container_dom().fold([0m
-[38;5;22m                0,[0m
-[38;5;22m                |e: int, a: ContainerPtr| e + old.get_container(a).quota.pcid,[0m
-[38;5;22m            ) - old.get_container(mod_c_ptr).quota.pcid + self.get_container(mod_c_ptr).quota.pcid,[0m
+[31m/home/milnes/projects/verus/source/vstd/std_specs/vec.rs:279: [0m
+[38;5;22mpub broadcast proof fn vec_clone_deep_view_proof<T: DeepView, A: Allocator>([0m
+[38;5;22m    v1: Vec<T, A>,[0m
+[38;5;22m    v2: Vec<T, A>,[0m
+[38;5;22m)[0m
+[38;5;22m    requires[0m
+[38;5;22m        #[trigger] vec_clone_trigger(v1, v2),[0m
+[38;5;22m        v1.deep_view() =~= v2.deep_view(),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        v1.deep_view() == v2.deep_view(),[0m
 
-[31m/home/milnes/projects/VerusCodebases/atmosphere/kernel/verified/kernel/spec.rs:401: [0m
-#[verifier(external_body)]
-[38;5;22m    pub proof fn fold_pcid_lemma(&self)[0m
-[38;5;22m        ensures[0m
-[38;5;22m            forall|c_ptr: ContainerPtr|[0m
-[38;5;22m                #![auto][0m
-[38;5;22m                self.container_dom().contains(c_ptr) ==> self.container_dom().fold([0m
-[38;5;22m                    0,[0m
-[38;5;22m                    |e: int, a: ContainerPtr| e + self.get_container(a).quota.pcid,[0m
-[38;5;22m                ) >= self.get_container(c_ptr).quota.pcid,[0m
+[31m/home/milnes/projects/verus/source/vstd/string.rs:26: [0m
+[38;5;22m    open spec fn deep_view(&self) -> Seq<char>[0m
 
-[31m/home/milnes/projects/VerusCodebases/atmosphere/kernel/verified/kernel/spec.rs:414: [0m
-#[verifier(external_body)]
-[38;5;22m    pub proof fn fold_change_ioid_lemma(&self, old: Kernel, mod_c_ptr: ContainerPtr)[0m
-[38;5;22m        requires[0m
-[38;5;22m            self.container_dom() == old.container_dom(),[0m
-[38;5;22m            self.container_dom().contains(mod_c_ptr),[0m
-[38;5;22m            forall|c_ptr: ContainerPtr|[0m
-[38;5;22m                #![auto][0m
-[38;5;22m                self.container_dom().contains(c_ptr) && c_ptr != mod_c_ptr ==> self.get_container([0m
-[38;5;22m                    c_ptr,[0m
-[38;5;22m                ).quota.ioid == old.get_container(c_ptr).quota.ioid,[0m
-[38;5;22m        ensures[0m
-[38;5;22m            self.container_dom().fold([0m
-[38;5;22m                0,[0m
-[38;5;22m                |e: int, a: ContainerPtr| e + self.get_container(a).quota.ioid,[0m
-[38;5;22m            ) == old.container_dom().fold([0m
-[38;5;22m                0,[0m
-[38;5;22m                |e: int, a: ContainerPtr| e + old.get_container(a).quota.ioid,[0m
-[38;5;22m            ) - old.get_container(mod_c_ptr).quota.ioid + self.get_container(mod_c_ptr).quota.ioid,[0m
+[31m/home/milnes/projects/verus/source/vstd/string.rs:234: [0m
+[38;5;22m    open spec fn deep_view(&self) -> Seq<char>[0m
 
-[31m/home/milnes/projects/VerusCodebases/atmosphere/kernel/verified/kernel/spec.rs:436: [0m
-#[verifier(external_body)]
-[38;5;22m    pub proof fn fold_ioid_lemma(&self)[0m
-[38;5;22m        ensures[0m
-[38;5;22m            forall|c_ptr: ContainerPtr|[0m
-[38;5;22m                #![auto][0m
-[38;5;22m                self.container_dom().contains(c_ptr) ==> self.container_dom().fold([0m
-[38;5;22m                    0,[0m
-[38;5;22m                    |e: int, a: ContainerPtr| e + self.get_container(a).quota.ioid,[0m
-[38;5;22m                ) >= self.get_container(c_ptr).quota.ioid,[0m
+[31m/home/milnes/projects/verus/source/vstd/string.rs:378: [0m
+[38;5;22m    open spec fn deep_view(&self) -> Self::V[0m
 
-[31m/home/milnes/projects/VerusCodebases/verus-x86-linux/vstd/seq_lib.rs:642: [0m
-///
-/// Given a sequence `s = [x0, x1, x2, ..., xn]`, applying this function `s.fold_left(b, f)`
-/// returns `f(...f(f(b, x0), x1), ..., xn)`.
-[38;5;22m    pub open spec fn fold_left<B>(self, b: B, f: spec_fn(B, A) -> B) -> (res: B)[0m
-[38;5;22m        decreases self.len(),[0m
+[31m/home/milnes/projects/verus/source/vstd/string.rs:475: [0m
+[38;5;22m    open spec fn deep_view(&self) -> Seq<char>[0m
 
-[31m/home/milnes/projects/VerusCodebases/verus-x86-linux/vstd/seq_lib.rs:655: [0m
-/// Equivalent to [`Self::fold_left`] but defined by breaking off the leftmost element when
-/// recursing, rather than the rightmost. See [`Self::lemma_fold_left_alt`] that proves
-/// equivalence.
-[38;5;22m    pub open spec fn fold_left_alt<B>(self, b: B, f: spec_fn(B, A) -> B) -> (res: B)[0m
-[38;5;22m        decreases self.len(),[0m
-
-[31m/home/milnes/projects/VerusCodebases/verus-x86-linux/vstd/seq_lib.rs:766: [0m
-///
-/// Given a sequence `s = [x0, x1, x2, ..., xn]`, applying this function `s.fold_right(b, f)`
-/// returns `f(x0, f(x1, f(x2, ..., f(xn, b)...)))`.
-[38;5;22m    pub open spec fn fold_right<B>(self, f: spec_fn(A, B) -> B, b: B) -> (res: B)[0m
-[38;5;22m        decreases self.len(),[0m
-
-[31m/home/milnes/projects/VerusCodebases/verus-x86-linux/vstd/seq_lib.rs:779: [0m
-/// Equivalent to [`Self::fold_right`] but defined by breaking off the leftmost element when
-/// recursing, rather than the rightmost. See [`Self::lemma_fold_right_alt`] that proves
-/// equivalence.
-[38;5;22m    pub open spec fn fold_right_alt<B>(self, f: spec_fn(A, B) -> B, b: B) -> (res: B)[0m
-[38;5;22m        decreases self.len(),[0m
-
-[31m/home/milnes/projects/VerusCodebases/verus-x86-linux/vstd/set.rs:274: [0m
-#[verifier(opaque)]
-[38;5;22m    spec fn fold_graph<A, B>(z: B, f: spec_fn(B, A) -> B, s: Set<A>, y: B, d: nat) -> bool[0m
-[38;5;22m        decreases d,[0m
-
-[31m/home/milnes/projects/VerusCodebases/verus-x86-linux/vstd/set.rs:454: [0m
-///
-/// Given a set `s = {x0, x1, x2, ..., xn}`, applying this function `s.fold(init, f)`
-/// returns `f(...f(f(init, x0), x1), ..., xn)`.
-[38;5;22m        pub closed spec fn fold<B>(self, z: B, f: spec_fn(B, A) -> B) -> B[0m
-[38;5;22m            recommends[0m
-[38;5;22m                self.finite(),[0m
-[38;5;22m                is_fun_commutative(f),[0m
-
-[31m/home/milnes/projects/VerusCodebases/verified-node-replication/verus/source/rust_verify/src/rust_to_vir_base.rs:270: [0m
-[38;5;22m    fn fold_binder<T: TypeFoldable<TyCtxt<'tcx>>>([0m
+[31m/home/milnes/projects/verus/source/vstd/view.rs:19: [0m
