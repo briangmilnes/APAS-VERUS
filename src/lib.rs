@@ -77,6 +77,7 @@ pub mod experiments {
 //    pub mod spec_loop;  // RESULT: no cycle error in simple case
    pub mod vec_filter;  // RESULT: use Anvil style multiset. 
    pub mod vec_remove_duplicates;
+   pub mod collect2;
 }
 
 pub mod vstdplus {

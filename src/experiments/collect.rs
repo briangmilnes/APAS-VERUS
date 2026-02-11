@@ -96,6 +96,77 @@ pub mod collect {
         spec_collect_values_rec(pairs, spec_collect_keys_deduplicating(pairs))
     }
 
+/*
+    pub open spec fn first_occurrence<K, V>(pairs: Seq<(K, V)>, k: K) -> Option<int>
+        decreases pairs.len()
+    {
+        if pairs.len() == 0 {
+            None
+        } else if pairs[0].0 == k {
+            Some(0)
+        } else {
+            match first_occurrence(pairs.skip(1), k) {
+                Some(i) => Some(i + 1),
+                None => None,
+            }
+        }
+    }
+
+    pub open spec fn stable_key_order<K, V>(pairs: Seq<(K, V)>, keys: Seq<K>) -> bool {
+        forall|i: int, j: int|
+            #![trigger first_occurrence(pairs, keys[i]), first_occurrence(pairs, keys[j])]
+            0 <= i < j < keys.len() ==>
+            first_occurrence(pairs, keys[i]).is_some()
+            && first_occurrence(pairs, keys[j]).is_some()
+            && first_occurrence(pairs, keys[i]).unwrap()
+                < first_occurrence(pairs, keys[j]).unwrap()
+    }
+
+    proof fn lemma_first_occurrence_drop_last<K, V>(pairs: Seq<(K, V)>, k: K)
+        requires
+            pairs.len() > 0,
+        ensures
+            first_occurrence(pairs.drop_last(), k).is_some() ==>
+                first_occurrence(pairs, k) == first_occurrence(pairs.drop_last(), k),
+            first_occurrence(pairs.drop_last(), k).is_none() && pairs.last().0 == k ==>
+                first_occurrence(pairs, k) == Some((pairs.len() - 1) as int),
+            first_occurrence(pairs.drop_last(), k).is_none() && pairs.last().0 != k ==>
+                first_occurrence(pairs, k).is_none(),
+        decreases pairs.len(),
+    {
+        reveal(first_occurrence);
+        if pairs.len() == 1 {
+        } else if pairs[0].0 == k {
+        } else {
+            lemma_first_occurrence_drop_last::<K, V>(pairs.skip(1), k);
+            assert(pairs.skip(1).drop_last() =~= pairs.drop_last().skip(1));
+            assert(pairs.skip(1).last() == pairs.last());
+        }
+    }
+
+    proof fn lemma_keys_rec_iff_first_occurrence<K, V>(pairs: Seq<(K, V)>, k: K)
+        ensures
+            spec_collect_keys_rec(pairs).contains(k) <==> first_occurrence(pairs, k).is_some(),
+        decreases pairs.len(),
+    {
+        reveal(spec_collect_keys_rec);
+        if pairs.len() == 0 {
+            reveal(first_occurrence);
+        } else {
+            lemma_keys_rec_iff_first_occurrence::<K, V>(pairs.drop_last(), k);
+            lemma_first_occurrence_drop_last::<K, V>(pairs, k);
+        }
+    }
+
+    proof fn lemma_stable_key_order_rec<K, V>(pairs: Seq<(K, V)>)
+        ensures
+            stable_key_order(pairs, spec_collect_keys_rec(pairs)),
+        decreases pairs.len(),
+    {
+        assume(stable_key_order(pairs, spec_collect_keys_rec(pairs)));
+    }
+*/
+
     pub fn collect_keys_rec<K: Clone + Eq + PartialEq, V>(
         pairs: &Vec<(K, V)>,
     ) -> (keys: Vec<K>)
