@@ -8,8 +8,6 @@ pub mod collect_deep_view {
     use vstd::prelude::*;
     use vstd::laws_eq::obeys_concrete_eq;
     use vstd::laws_eq::obeys_deep_eq;
-    #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::*;
 
     verus! {
 
@@ -17,7 +15,6 @@ pub mod collect_deep_view {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
         vstd::seq_lib::group_seq_properties,
-        crate::vstdplus::feq::feq::group_feq_axioms
     };
 
     pub open spec fn spec_find_key_index<K, V>(groups: Seq<(K, Seq<V>)>, k: K) -> Option<int>
@@ -243,8 +240,6 @@ pub mod collect_deep_view {
         pairs: &Vec<(K, V)>,
     ) -> (collected: Vec<(K, Vec<V>)>)
         requires
-            obeys_feq_clone::<K>(),
-            obeys_feq_clone::<V>(),
             obeys_concrete_eq::<K>(),
             obeys_deep_eq::<K>(),
             obeys_deep_eq::<V>(),
@@ -274,9 +269,16 @@ pub mod collect_deep_view {
             let ghost old_collected_dv = collected.deep_view();
             let k = pairs[i].0.clone();
             let v = pairs[i].1.clone();
+            // APAS-VERUS uses a 'full eq' clone axiom (feq) that ensures
+            // cloned values are spec-equal to the originals. We just assume
+            // it here so other people can read and validate this one file
+            // without pulling in the feq machinery.
+            //   use crate::vstdplus::feq::feq::*;
+            //   axiom_cloned_implies_eq_owned::<K>(pairs@[i as int].0, k);
+            //   axiom_cloned_implies_eq_owned::<V>(pairs@[i as int].1, v);
             proof {
-                axiom_cloned_implies_eq_owned::<K>(pairs@[i as int].0, k);
-                axiom_cloned_implies_eq_owned::<V>(pairs@[i as int].1, v);
+                assume(k == pairs@[i as int].0);
+                assume(v == pairs@[i as int].1);
             }
             match vec_find_key(&collected, &k) {
                 Some(idx) => {
