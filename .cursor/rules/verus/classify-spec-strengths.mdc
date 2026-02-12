@@ -1,0 +1,80 @@
+---
+description: Classify Verus spec strengths from review-module-fn-impls JSON
+globs:
+alwaysApply: true
+---
+
+# Classify Spec Strengths
+
+## Generate
+
+When the user says "review specs for", "generate spec review for", or provides directories/files
+to analyze, first generate the markdown and JSON:
+
+```bash
+~/projects/veracity/target/release/veracity-review-module-fn-impls -d src/ChapNN
+```
+
+Or for specific files:
+
+```bash
+~/projects/veracity/target/release/veracity-review-module-fn-impls -f src/ChapNN/File.rs
+```
+
+Multiple directories can be combined in one run (`-d src/Chap05 -d src/Chap18`).
+
+Output goes to `analyses/veracity-review-module-fn-impls.md` and `.json`.
+
+## Classify
+
+When the user says "classify spec strengths", "review spec strengths", "classify specs",
+or similar:
+
+### Inputs
+
+- **JSON file**: `analyses/veracity-review-module-fn-impls.json` (or a path the user provides)
+- **Prompt**: `~/projects/veracity/docs/veracity-classify-spec-strengths-prompt.md`
+
+### Procedure
+
+1. Read `~/projects/veracity/docs/veracity-classify-spec-strengths-prompt.md` to understand the classification criteria.
+2. Read the JSON file the user specifies (default: `analyses/veracity-review-module-fn-impls.json` in the current project).
+3. For each entry, examine the `snippet` field and classify `spec_strength` as one of:
+   - **strong** — `requires` and `ensures` fully capture the function's contract.
+   - **partial** — some spec exists but is incomplete or underspecified.
+   - **weak** — spec exists but is trivially true or nearly useless.
+   - **none** — no `requires`/`ensures` at all (empty snippet or signature only).
+4. Write the classifications to `analyses/review-module-fn-impl-spec-strengths.json` in the same directory as the input JSON. Format:
+   ```json
+   [
+     { "id": 1, "spec_strength": "strong" },
+     { "id": 2, "spec_strength": "none" }
+   ]
+   ```
+5. Run the patch command:
+   ```bash
+   veracity-review-module-fn-impls --patch \
+     analyses/veracity-review-module-fn-impls.md \
+     analyses/review-module-fn-impl-spec-strengths.json
+   ```
+6. Print a summary table:
+   | Classification | Count |
+   |---------------|-------|
+   | strong | N |
+   | partial | N |
+   | weak | N |
+   | none | N |
+
+## Classification Guidelines
+
+- A function with **no snippet** or a snippet that is just the signature with no `requires`/`ensures` → **none**.
+- A function with `ensures true` or `ensures self == self` → **weak**.
+- A function whose `ensures` mentions return value and key state but misses edge cases or doesn't constrain all parameters → **partial**.
+- A function whose `requires` + `ensures` together fully describe the input/output contract (preconditions, postconditions, return value, relevant state changes) → **strong**.
+- When in doubt between partial and strong, prefer **partial** — it's better to flag for human review than to miss a gap.
+
+## Do NOT
+
+- Do not modify the source `.rs` files.
+- Do not modify the `.md` file by hand — always use `--patch`.
+- Do not skip entries — every `id` in the input must appear in the output.

@@ -1,0 +1,13 @@
+---
+description: No Python scripts for anything reusable
+globs:
+alwaysApply: true
+---
+
+# No Python
+
+**NEVER write Python scripts** for anything that will be used more than once.
+
+- All reusable tools, scripts, and utilities must be written in **Rust**.
+- In a pinch, a throwaway Python script is acceptable for a true one-off (e.g., quick data inspection), but if there's any chance it will be reused, write it in Rust.
+- When in doubt, write Rust.

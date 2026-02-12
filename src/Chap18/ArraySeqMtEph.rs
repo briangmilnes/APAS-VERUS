@@ -41,6 +41,8 @@ pub mod ArraySeqMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
+    use crate::Chap18::ArraySeq::ArraySeq::{spec_iterate, spec_monoid};
+
 
     //		3. broadcast use
 
@@ -751,21 +753,63 @@ pub mod ArraySeqMtEph {
             }
         }
 
+        /// For a monoid (f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
+        proof fn lemma_monoid_fold_left(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)
+            requires spec_monoid(f, id)
+            ensures f(x, s.fold_left(id, f)) == s.fold_left(x, f)
+            decreases s.len()
+        {
+            if s.len() > 0 {
+                let n = (s.len() - 1) as int;
+                let s1 = s.subrange(0, n);
+                let tail = s.subrange(n, s.len() as int);
+                let a_last = s[n];
+
+                s.lemma_fold_left_split(id, f, n);
+                s.lemma_fold_left_split(x, f, n);
+
+                assert(tail =~= seq![a_last]);
+                reveal_with_fuel(Seq::fold_left, 2);
+
+                let lid = s1.fold_left(id, f);
+                let lx = s1.fold_left(x, f);
+
+                Self::lemma_monoid_fold_left(s1, f, id, x);
+
+                assert(f(x, f(lid, a_last)) == f(f(x, lid), a_last));
+            }
+        }
+
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: F,
+            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
             id: T,
         ) -> (reduced: T)
             where T: Clone + Send + Sync + Eq + 'static
             requires
                 obeys_feq_clone::<T>(),
+                spec_monoid(spec_f, id),
                 a.seq@.len() > 0,
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures
+                reduced == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id),
             decreases a.seq@.len()
         {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             if len == 1 {
-                a.seq[0].clone()
+                let result = a.seq[0].clone();
+                proof {
+                    assert(cloned(a.seq[0 as int], result));
+                    axiom_cloned_implies_eq_owned(a.seq[0 as int], result);
+                    a.lemma_spec_index(0);
+                    assert(s =~= seq![a.spec_index(0)]);
+                    reveal_with_fuel(Seq::fold_left, 2);
+                    assert(spec_f(id, s[0]) == s[0]);  // left identity
+                }
+                result
             } else {
                 let mid = len / 2;
                 let left_seq = a.subseq_copy(0, mid);
@@ -773,12 +817,48 @@ pub mod ArraySeqMtEph {
                 let f1 = clone_fn2(&f);
                 let f2 = clone_fn2(&f);
                 let id1 = id.clone();
+                proof { axiom_cloned_implies_eq_owned(id, id1); }
                 let id2 = id.clone();
-                let (left, right) = join(
-                    move || Self::reduce_par(&left_seq, f1, id1),
-                    move || Self::reduce_par(&right_seq, f2, id2),
-                );
-                f(&left, &right)
+                proof { axiom_cloned_implies_eq_owned(id, id2); }
+
+                let ghost left_s = Seq::new(left_seq.spec_len(), |i: int| left_seq.spec_index(i));
+                let ghost right_s = Seq::new(right_seq.spec_len(), |i: int| right_seq.spec_index(i));
+
+                let fa = move || -> (r: T)
+                    requires
+                        left_seq.seq@.len() > 0,
+                        obeys_feq_clone::<T>(),
+                        spec_monoid(spec_f, id),
+                        forall|x: &T, y: &T| #[trigger] f1.requires((x, y)),
+                        forall|x: T, y: T, ret: T| f1.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                    ensures
+                        r == spec_iterate(left_s, spec_f, id),
+                {
+                    Self::reduce_par(&left_seq, f1, Ghost(spec_f), id1)
+                };
+
+                let fb = move || -> (r: T)
+                    requires
+                        right_seq.seq@.len() > 0,
+                        obeys_feq_clone::<T>(),
+                        spec_monoid(spec_f, id),
+                        forall|x: &T, y: &T| #[trigger] f2.requires((x, y)),
+                        forall|x: T, y: T, ret: T| f2.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                    ensures
+                        r == spec_iterate(right_s, spec_f, id),
+                {
+                    Self::reduce_par(&right_seq, f2, Ghost(spec_f), id2)
+                };
+
+                let (left, right) = join(fa, fb);
+                let result = f(&left, &right);
+                proof {
+                    assert(left_s =~= s.subrange(0, mid as int));
+                    assert(right_s =~= s.subrange(mid as int, len as int));
+                    s.lemma_fold_left_split(id, spec_f, mid as int);
+                    Self::lemma_monoid_fold_left(right_s, spec_f, id, left);
+                }
+                result
             }
         }
     }
