@@ -65,21 +65,21 @@ fn test_labelled_dir_graph_neighbors() {
     g.add_labeled_arc(1, 3, "b");
     g.add_labeled_arc(3, 1, "c");
 
-    let out_neighbors_1 = g.out_neighbors(&1);
-    assert_eq!(out_neighbors_1.size(), 2);
-    assert!(out_neighbors_1.mem(&2));
-    assert!(out_neighbors_1.mem(&3));
+    let n_plus_1 = g.n_plus(&1);
+    assert_eq!(n_plus_1.size(), 2);
+    assert!(n_plus_1.mem(&2));
+    assert!(n_plus_1.mem(&3));
 
-    let in_neighbors_1 = g.in_neighbors(&1);
-    assert_eq!(in_neighbors_1.size(), 1);
-    assert!(in_neighbors_1.mem(&3));
+    let n_minus_1 = g.n_minus(&1);
+    assert_eq!(n_minus_1.size(), 1);
+    assert!(n_minus_1.mem(&3));
 
-    let out_neighbors_2 = g.out_neighbors(&2);
-    assert_eq!(out_neighbors_2.size(), 0);
+    let n_plus_2 = g.n_plus(&2);
+    assert_eq!(n_plus_2.size(), 0);
 
-    let in_neighbors_2 = g.in_neighbors(&2);
-    assert_eq!(in_neighbors_2.size(), 1);
-    assert!(in_neighbors_2.mem(&1));
+    let n_minus_2 = g.n_minus(&2);
+    assert_eq!(n_minus_2.size(), 1);
+    assert!(n_minus_2.mem(&1));
 }
 
 #[test]
@@ -165,11 +165,11 @@ fn test_labelled_dir_graph_self_loop() {
     assert!(g.has_arc(&1, &1));
     assert_eq!(g.get_arc_label(&1, &1), Some(&"self_loop"));
 
-    let out_neighbors = g.out_neighbors(&1);
-    assert_eq!(out_neighbors.size(), 1);
-    assert!(out_neighbors.mem(&1));
+    let n_plus = g.n_plus(&1);
+    assert_eq!(n_plus.size(), 1);
+    assert!(n_plus.mem(&1));
 
-    let in_neighbors = g.in_neighbors(&1);
-    assert_eq!(in_neighbors.size(), 1);
-    assert!(in_neighbors.mem(&1));
+    let n_minus = g.n_minus(&1);
+    assert_eq!(n_minus.size(), 1);
+    assert!(n_minus.mem(&1));
 }

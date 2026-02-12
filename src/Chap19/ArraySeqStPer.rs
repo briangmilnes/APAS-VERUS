@@ -16,12 +16,9 @@
 
 pub mod ArraySeqStPer {
 
-
     use std::hash::Hash;
 
     use vstd::prelude::*;
-
-
     #[cfg(verus_keep_ghost)]
     verus! {
 
@@ -420,7 +417,6 @@ pub mod ArraySeqStPer {
         ArraySeqStPerS { seq: result }
     }
 
-    // Helper: deflate for filter
     fn deflate<T: View + Clone + Eq, F: Fn(&T) -> bool>(pred: &F, x: &T) -> (result: ArraySeqStPerS<T>)
         requires pred.requires((x,))
         ensures result.seq@.len() <= 1

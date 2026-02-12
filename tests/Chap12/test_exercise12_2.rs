@@ -9,17 +9,17 @@ use apas_verus::Chap12::Exercise12_2::Exercise12_2::*;
 #[test]
 fn fetch_add_cas_returns_previous_value() {
     let value = AtomicUsize::new(10);
-    assert_eq!(fetch_add_cas(&value, 5), 10);
+    assert_eq!(value.fetch_add_cas(5), 10);
     assert_eq!(value.load(Ordering::Relaxed), 15);
 }
 
 #[test]
-fn trait_impl_matches_free_function() {
+fn trait_impl_works() {
     let value = AtomicUsize::new(3);
-    let via_trait = value.fetch_add_cas(4);
-    let via_free = fetch_add_cas(&value, 2);
-    assert_eq!(via_trait, 3);
-    assert_eq!(via_free, 7);
+    let prev1 = value.fetch_add_cas(4);
+    let prev2 = value.fetch_add_cas(2);
+    assert_eq!(prev1, 3);
+    assert_eq!(prev2, 7);
     assert_eq!(value.load(Ordering::Relaxed), 9);
 }
 
@@ -45,21 +45,15 @@ fn fetch_add_cas_is_thread_safe() {
 }
 
 #[test]
-fn efficiency_note_exists() {
-    let note = efficiency_note();
-    assert!(note.contains("fetch_add"));
-}
-
-#[test]
 fn fetch_add_cas_zero_delta() {
     let value = AtomicUsize::new(42);
-    assert_eq!(fetch_add_cas(&value, 0), 42);
+    assert_eq!(value.fetch_add_cas(0), 42);
     assert_eq!(value.load(Ordering::Relaxed), 42);
 }
 
 #[test]
 fn fetch_add_cas_wrapping() {
     let value = AtomicUsize::new(usize::MAX);
-    assert_eq!(fetch_add_cas(&value, 1), usize::MAX);
+    assert_eq!(value.fetch_add_cas(1), usize::MAX);
     assert_eq!(value.load(Ordering::Relaxed), 0);
 }

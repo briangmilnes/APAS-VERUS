@@ -475,6 +475,7 @@ pub mod MathSeq {
         }
     }
 
+    #[cfg(verus_keep_ghost)]
     impl<T: StT> PartialEqSpecImpl for MathSeqS<T> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }

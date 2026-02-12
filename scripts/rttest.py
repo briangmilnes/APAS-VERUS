@@ -18,7 +18,7 @@ def main():
     print("=" * 60, flush=True)
     
     process = subprocess.Popen(
-        ["cargo", "nextest", "run", "--no-fail-fast", "-j", "10"],
+        ["cargo", "nextest", "run", "--no-fail-fast", "-j", "10", "--features", "full_verify"],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,

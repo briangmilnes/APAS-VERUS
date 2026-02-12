@@ -2,6 +2,7 @@
 //! Tests for ArraySeqMtPer with parallel operations.
 
 use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
+use vstd::prelude::Ghost;
 
 #[test]
 fn test_basic_operations() {
@@ -49,7 +50,7 @@ fn test_map_par() {
 #[test]
 fn test_reduce_par() {
     let seq = ArraySeqMtPerS::from_vec((1..=64).collect());
-    let sum = ArraySeqMtPerS::reduce_par(&seq, |a, b| a + b, 0);
+    let sum = ArraySeqMtPerS::reduce_par(&seq, |a, b| a + b, Ghost::assume_new(), 0);
     assert_eq!(sum, 64 * 65 / 2);
 }
 
@@ -57,7 +58,7 @@ fn test_reduce_par() {
 fn test_reduce_par_medium() {
     let n = 256i64;
     let seq = ArraySeqMtPerS::from_vec((1..=n).collect());
-    let sum = ArraySeqMtPerS::reduce_par(&seq, |a, b| a + b, 0i64);
+    let sum = ArraySeqMtPerS::reduce_par(&seq, |a, b| a + b, Ghost::assume_new(), 0i64);
     assert_eq!(sum, n * (n + 1) / 2);
 }
 

@@ -112,15 +112,15 @@ fn test_neighbors() {
     g.add_labeled_edge(1, 3, "b".to_string());
     g.add_labeled_edge(2, 4, "c".to_string());
     
-    let neighbors_1 = g.neighbors(&1);
-    assert_eq!(neighbors_1.size(), 2);
-    assert!(set_contains(&neighbors_1, &2));
-    assert!(set_contains(&neighbors_1, &3));
+    let ng_1 = g.ng(&1);
+    assert_eq!(ng_1.size(), 2);
+    assert!(set_contains(&ng_1, &2));
+    assert!(set_contains(&ng_1, &3));
     
-    let neighbors_2 = g.neighbors(&2);
-    assert_eq!(neighbors_2.size(), 2);
-    assert!(set_contains(&neighbors_2, &1));
-    assert!(set_contains(&neighbors_2, &4));
+    let ng_2 = g.ng(&2);
+    assert_eq!(ng_2.size(), 2);
+    assert!(set_contains(&ng_2, &1));
+    assert!(set_contains(&ng_2, &4));
 }
 
 // Removed: normalize_edge method was removed from trait (it always panicked)
@@ -184,7 +184,7 @@ fn test_empty_graph_operations() {
     assert_eq!(g.edges().size(), 0);
     assert!(!g.has_edge(&1, &2));
     assert_eq!(g.get_edge_label(&1, &2), None);
-    assert_eq!(g.neighbors(&1).size(), 0);
+    assert_eq!(g.ng(&1).size(), 0);
 }
 
 #[test]

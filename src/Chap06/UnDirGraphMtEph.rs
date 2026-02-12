@@ -407,6 +407,7 @@ pub mod UnDirGraphMtEph {
         }
     }
 
+    #[cfg(verus_keep_ghost)]
     impl<V: StTInMtT + Hash + 'static> PartialEqSpecImpl for UnDirGraphMtEph<V> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }

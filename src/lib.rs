@@ -80,8 +80,9 @@ pub mod experiments {
 //   pub mod deep_view_2_tuple;
 //    pub mod deep_view_struct;
 
-    pub mod collect2;
-    pub mod collect_deep_view;
+//    pub mod collect2;
+//    pub mod collect_deep_view;
+//    pub mod verus_keep_ghost_and_test;
 }
 
 pub mod vstdplus {

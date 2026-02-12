@@ -40,6 +40,7 @@ pub mod LinkedListStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
+    #[cfg(verus_keep_ghost)]
     use crate::Chap18::ArraySeq::ArraySeq::{spec_iterate, spec_monoid};
 
 

@@ -38,7 +38,9 @@ pub mod ArraySeq {
     use vstd::std_specs::vec::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
+    #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_concrete_eq;
+    #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_deep_eq;
 
     #[cfg(verus_keep_ghost)]
@@ -970,7 +972,7 @@ pub mod ArraySeq {
             proof { reveal(obeys_concrete_eq); }
             let len = groups.seq.len();
             let mut j: usize = 0;
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             while j < len
                 invariant
                 j <= len,
@@ -998,7 +1000,7 @@ pub mod ArraySeq {
             let plen = pairs.seq.len();
             let mut collected: ArraySeqS<(K, ArraySeqS<V>)> = ArraySeqS { seq: Vec::new() };
             let mut i: usize = 0;
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             while i < plen
                 invariant
                 i <= plen,

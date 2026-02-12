@@ -814,6 +814,7 @@ verus! {
         }
 
         fn choose(&self) -> (element: T) {
+            #[cfg(verus_keep_ghost)]
             use crate::vstdplus::feq::feq::lemma_cloned_view_eq;
             
             let mut it = self.elements.iter();

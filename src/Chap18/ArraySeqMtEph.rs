@@ -41,6 +41,7 @@ pub mod ArraySeqMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
+    #[cfg(verus_keep_ghost)]
     use crate::Chap18::ArraySeq::ArraySeq::{spec_iterate, spec_monoid};
 
 
@@ -689,12 +690,12 @@ pub mod ArraySeqMtEph {
                 let left_len = Ghost(left_seq.seq@.len());
                 let right_len = Ghost(right_seq.seq@.len());
                 let (left, right) = join(
-                    (move || -> (r: ArraySeqMtEphS<U>)
+                    move || -> (r: ArraySeqMtEphS<U>)
                         ensures r.seq@.len() == left_len@
-                    { Self::map_par(&left_seq, f1) }),
-                    (move || -> (r: ArraySeqMtEphS<U>)
+                    { Self::map_par(&left_seq, f1) },
+                    move || -> (r: ArraySeqMtEphS<U>)
                         ensures r.seq@.len() == right_len@
-                    { Self::map_par(&right_seq, f2) }),
+                    { Self::map_par(&right_seq, f2) },
                 );
                 ArraySeqMtEphS::<U>::append(&left, &right)
             }
@@ -742,12 +743,12 @@ pub mod ArraySeqMtEph {
                 let left_len = Ghost(left_seq.seq@.len());
                 let right_len = Ghost(right_seq.seq@.len());
                 let (left, right) = join(
-                    (move || -> (r: ArraySeqMtEphS<T>)
+                    move || -> (r: ArraySeqMtEphS<T>)
                         ensures r.seq@.len() <= left_len@
-                    { Self::filter_par(&left_seq, p1) }),
-                    (move || -> (r: ArraySeqMtEphS<T>)
+                    { Self::filter_par(&left_seq, p1) },
+                    move || -> (r: ArraySeqMtEphS<T>)
                         ensures r.seq@.len() <= right_len@
-                    { Self::filter_par(&right_seq, p2) }),
+                    { Self::filter_par(&right_seq, p2) },
                 );
                 Self::append(&left, &right)
             }

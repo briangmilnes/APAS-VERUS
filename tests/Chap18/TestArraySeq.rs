@@ -62,7 +62,7 @@ fn test_singleton() {
 
 #[test]
 fn test_tabulate() {
-    let seq = ArraySeqS::tabulate(&|i| i * 2, 5);
+    let seq = tabulate(&|i| i * 2, 5);
     assert_eq!(seq.length(), 5);
     assert_eq!(*seq.nth(0), 0);
     assert_eq!(*seq.nth(1), 2);
@@ -74,7 +74,7 @@ fn test_tabulate() {
 #[test]
 fn test_map() {
     let seq = ArraySeqS::from_vec(vec![1, 2, 3, 4]);
-    let doubled = ArraySeqS::map(&seq, &|x| x * 2);
+    let doubled = map(&seq, &|x| x * 2);
     assert_eq!(doubled.length(), 4);
     assert_eq!(*doubled.nth(0), 2);
     assert_eq!(*doubled.nth(1), 4);

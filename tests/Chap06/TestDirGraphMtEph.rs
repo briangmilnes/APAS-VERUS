@@ -618,7 +618,7 @@ fn test_deadlock_prevention_concurrent_graph_operations() {
             let start_time = Instant::now();
             let mut operations = 0;
 
-            while start_time.elapsed() < Duration::from_millis(50) {
+            while start_time.elapsed() < Duration::from_millis(200) {
                 if let (Ok(a), Ok(b)) = (graph_a_clone.try_lock(), graph_b_clone.try_lock()) {
                     // Perform read operations on both graphs
                     let _ = a.sizeV();
@@ -647,7 +647,7 @@ fn test_deadlock_prevention_concurrent_graph_operations() {
             let start_time = Instant::now();
             let mut operations = 0;
 
-            while start_time.elapsed() < Duration::from_millis(50) {
+            while start_time.elapsed() < Duration::from_millis(200) {
                 if let (Ok(b), Ok(a)) = (graph_b_clone.try_lock(), graph_a_clone.try_lock()) {
                     // Perform read operations on both graphs
                     let _ = b.in_degree(&4);
@@ -675,7 +675,7 @@ fn test_deadlock_prevention_concurrent_graph_operations() {
             let start_time = Instant::now();
             let mut operations = 0;
 
-            while start_time.elapsed() < Duration::from_millis(50) {
+            while start_time.elapsed() < Duration::from_millis(200) {
                 if let Ok(a) = graph_a_clone.try_lock() {
                     // Perform various operations on graph A
                     let _ = a.n_minus(&2);
@@ -702,7 +702,7 @@ fn test_deadlock_prevention_concurrent_graph_operations() {
             let start_time = Instant::now();
             let mut operations = 0;
 
-            while start_time.elapsed() < Duration::from_millis(50) {
+            while start_time.elapsed() < Duration::from_millis(200) {
                 if let Ok(b) = graph_b_clone.try_lock() {
                     // Perform various operations on graph B
                     let _ = b.n_plus_of_vertices(&SetLit![3, 4]);

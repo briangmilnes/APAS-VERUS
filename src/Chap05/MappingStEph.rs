@@ -490,6 +490,7 @@ verus! {
         fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.mapping.hash(state); }
     }
 
+    #[cfg(verus_keep_ghost)]
     impl<A: StT + Hash, B: StT + Hash> PartialEqSpecImpl for MappingStEph<A, B> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }

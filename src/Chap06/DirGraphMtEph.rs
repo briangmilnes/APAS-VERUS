@@ -622,6 +622,7 @@ pub mod DirGraphMtEph {
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { ng_of_vertices_par(self, u_set.clone()) }
     }
 
+    #[cfg(verus_keep_ghost)]
     impl<V: StTInMtT + Hash + 'static> PartialEqSpecImpl for DirGraphMtEph<V> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
