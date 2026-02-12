@@ -1,6 +1,6 @@
 ❌ collect_deep_view.rs
-/home/milnes/projects/APAS-VERUS/src/experiments/collect_deep_view.rs:142: assume() - assume(spec_find_key_index(s.deep_view(), k.deep_view()) == Some(idx as int));
-/home/milnes/projects/APAS-VERUS/src/experiments/collect_deep_view.rs:157: assume() - assume(spec_find_key_index(s.deep_view(), k.deep_view()) == None::<int>);
+/home/milnes/projects/APAS-VERUS/src/experiments/collect_deep_view.rs:143: assume() - assume(spec_find_key_index(s.deep_view(), k.deep_view()) == Some(idx as int));
+/home/milnes/projects/APAS-VERUS/src/experiments/collect_deep_view.rs:158: assume() - assume(spec_find_key_index(s.deep_view(), k.deep_view()) == None::<int>);
    Holes: 2 total
       2 × assume()
    Proof functions: 7 total (5 clean, 2 holed)

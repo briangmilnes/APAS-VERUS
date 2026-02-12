@@ -7,6 +7,7 @@ pub mod collect_deep_view {
 
     use vstd::prelude::*;
     use vstd::laws_eq::obeys_concrete_eq;
+    use vstd::laws_eq::obeys_deep_eq;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
@@ -192,7 +193,7 @@ pub mod collect_deep_view {
     }
 
     // deep_view is the identity function for this type.
-    pub open spec fn deep_view_is_identity<T: DeepView<V = T>>() -> bool {
+    pub open spec fn obeys_generic_deep_eq<T: DeepView<V = T>>() -> bool {
         forall|x: T| x.deep_view() == x
     }
 
@@ -203,8 +204,10 @@ pub mod collect_deep_view {
             obeys_feq_clone::<K>(),
             obeys_feq_clone::<V>(),
             obeys_concrete_eq::<K>(),
-            deep_view_is_identity::<K>(),
-            deep_view_is_identity::<V>(),
+            obeys_deep_eq::<K>(),
+            obeys_deep_eq::<V>(),
+            obeys_generic_deep_eq::<K>(),
+            obeys_generic_deep_eq::<V>(),
         ensures
             collected.deep_view() =~= spec_collect(pairs@),
     {
