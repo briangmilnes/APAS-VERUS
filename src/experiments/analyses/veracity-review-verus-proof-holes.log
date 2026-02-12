@@ -1,23 +1,20 @@
-❌ collect_deep_view.rs
-/home/milnes/projects/APAS-VERUS/src/experiments/collect_deep_view.rs:143: assume() - assume(spec_find_key_index(s.deep_view(), k.deep_view()) == Some(idx as int));
-/home/milnes/projects/APAS-VERUS/src/experiments/collect_deep_view.rs:158: assume() - assume(spec_find_key_index(s.deep_view(), k.deep_view()) == None::<int>);
-   Holes: 2 total
-      2 × assume()
-   Proof functions: 7 total (5 clean, 2 holed)
+✓ collect_deep_view.rs
+   9 clean proof functions
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   0 clean (no holes)
-   1 holed (contains holes)
+   1 clean (no holes)
+   0 holed (contains holes)
    1 total
 
 Proof Functions:
-   5 clean
-   2 holed
-   7 total
+   9 clean
+   0 holed
+   9 total
 
-Holes Found: 2 total
-   2 × assume()
+Holes Found: 0 total
+
+🎉 No proof holes found! All proofs are complete.

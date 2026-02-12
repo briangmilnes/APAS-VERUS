@@ -126,37 +126,79 @@ pub mod collect_deep_view {
     {
     }
 
-    // When vec_find_key returns Some(idx), spec_find_key_index on deep_view agrees.
-    proof fn lemma_find_key_some<K: DeepView, V: DeepView>(s: &Vec<(K, Vec<V>)>, k: K, idx: usize)
+    // Pure spec: spec_find_key_index returns Some(idx) when element idx matches
+    // and no earlier element does.
+    proof fn lemma_find_key_index_found<K, V>(
+        groups: Seq<(K, Seq<V>)>,
+        k: K,
+        idx: int,
+    )
         requires
+            0 <= idx < groups.len(),
+            groups[idx].0 == k,
+            forall|m: int| #![trigger groups[m]] 0 <= m < idx ==> groups[m].0 != k,
+        ensures
+            spec_find_key_index(groups, k) == Some(idx),
+        decreases groups.len(),
+    {
+        reveal(spec_find_key_index);
+        if groups.len() > 0 && groups[0].0 != k {
+            lemma_find_key_index_found(groups.skip(1), k, idx - 1);
+        }
+    }
+
+    // Pure spec: spec_find_key_index returns None when no element matches.
+    proof fn lemma_find_key_index_not_found<K, V>(
+        groups: Seq<(K, Seq<V>)>,
+        k: K,
+    )
+        requires
+            forall|m: int| #![trigger groups[m]] 0 <= m < groups.len() ==> groups[m].0 != k,
+        ensures
+            spec_find_key_index(groups, k) == None::<int>,
+        decreases groups.len(),
+    {
+        reveal(spec_find_key_index);
+        if groups.len() > 0 {
+            lemma_find_key_index_not_found(groups.skip(1), k);
+        }
+    }
+
+    // When vec_find_key returns Some(idx), spec_find_key_index on deep_view agrees.
+    proof fn lemma_find_key_some<K: DeepView<V = K>, V: DeepView>(s: &Vec<(K, Vec<V>)>, k: K, idx: usize)
+        requires
+            obeys_generic_deep_eq::<K>(),
             idx < s@.len(),
             s@[idx as int].0 == k,
             forall|m: int| #![trigger s@[m]] 0 <= m < idx as int ==> s@[m].0 != k,
         ensures
             spec_find_key_index(s.deep_view(), k.deep_view()) == Some(idx as int),
-        decreases s@.len(),
     {
-        reveal(spec_find_key_index);
-        lemma_deep_view_key::<K, V>(s, 0);
-        if idx == 0 {
-        } else {
-            assume(spec_find_key_index(s.deep_view(), k.deep_view()) == Some(idx as int));
-        }
+        // Establish: s.deep_view()[j].0 == s@[j].0 for all j
+        assert forall|j: int| #![trigger s.deep_view()[j]]
+            0 <= j < s.deep_view().len() implies s.deep_view()[j].0 == s@[j].0
+        by {
+            lemma_deep_view_key::<K, V>(s, j);
+            // deep_view_key: s.deep_view()[j].0 == s@[j].0.deep_view()
+            // obeys_generic_deep_eq: s@[j].0.deep_view() == s@[j].0
+        };
+        lemma_find_key_index_found(s.deep_view(), k.deep_view(), idx as int);
     }
 
     // When vec_find_key returns None, spec_find_key_index on deep_view is None.
-    proof fn lemma_find_key_none<K: DeepView, V: DeepView>(s: &Vec<(K, Vec<V>)>, k: K)
+    proof fn lemma_find_key_none<K: DeepView<V = K>, V: DeepView>(s: &Vec<(K, Vec<V>)>, k: K)
         requires
+            obeys_generic_deep_eq::<K>(),
             forall|m: int| #![trigger s@[m]] 0 <= m < s@.len() ==> s@[m].0 != k,
         ensures
             spec_find_key_index(s.deep_view(), k.deep_view()) == None::<int>,
-        decreases s@.len(),
     {
-        reveal(spec_find_key_index);
-        if s@.len() > 0 {
-            lemma_deep_view_key::<K, V>(s, 0);
-            assume(spec_find_key_index(s.deep_view(), k.deep_view()) == None::<int>);
-        }
+        assert forall|j: int| #![trigger s.deep_view()[j]]
+            0 <= j < s.deep_view().len() implies s.deep_view()[j].0 == s@[j].0
+        by {
+            lemma_deep_view_key::<K, V>(s, j);
+        };
+        lemma_find_key_index_not_found(s.deep_view(), k.deep_view());
     }
 
     pub fn vec_find_key<K: Eq + PartialEq, V>(
