@@ -231,7 +231,7 @@ pub mod collect_deep_view {
         None
     }
 
-    // deep_view is the identity function for this type.
+    // deep_view is the identity function for this type is required due to using a generic type. 
     pub open spec fn obeys_generic_deep_eq<T: DeepView<V = T>>() -> bool {
         forall|x: T| x.deep_view() == x
     }

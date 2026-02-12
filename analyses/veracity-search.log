@@ -2,9 +2,23 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn \(obeys_deep_eq\|deep_view_eq\)
+Pattern: fn \(lemma_vec\|obeys_view_eq\)
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 94, Functions: 2216, Matches: 4
+Files: 94, Functions: 2216, Matches: 6
+
+[31m/home/milnes/projects/verus/source/vstd/std_specs/vec.rs:486: [0m
+[38;5;22mpub broadcast proof fn lemma_vec_obeys_eq_spec<T: PartialEq>()[0m
+[38;5;22m    requires[0m
+[38;5;22m        super::super::laws_eq::obeys_eq_spec::<T>(),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] super::super::laws_eq::obeys_eq_spec::<Vec<T>>(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/std_specs/vec.rs:496: [0m
+[38;5;22mpub broadcast proof fn lemma_vec_obeys_view_eq<T: PartialEq + View>()[0m
+[38;5;22m    requires[0m
+[38;5;22m        super::super::laws_eq::obeys_concrete_eq::<T>(),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] super::super::laws_eq::obeys_view_eq::<Vec<T>>(),[0m
 
 [31m/home/milnes/projects/verus/source/vstd/std_specs/vec.rs:510: [0m
 [38;5;22mpub broadcast proof fn lemma_vec_obeys_deep_eq<T: PartialEq + DeepView>()[0m
@@ -13,19 +27,16 @@ Files: 94, Functions: 2216, Matches: 4
 [38;5;22m    ensures[0m
 [38;5;22m        #[trigger] super::super::laws_eq::obeys_deep_eq::<Vec<T>>(),[0m
 
-[31m/home/milnes/projects/verus/source/vstd/laws_eq.rs:35: [0m
+[31m/home/milnes/projects/verus/source/vstd/laws_eq.rs:29: [0m
 #[verifier::opaque]
-[38;5;22mpub open spec fn obeys_deep_eq<T: PartialEq + DeepView>() -> bool[0m
+[38;5;22mpub open spec fn obeys_view_eq<T: PartialEq + View>() -> bool[0m
 
-[31m/home/milnes/projects/verus/source/vstd/laws_eq.rs:77: [0m
-[38;5;22m            pub broadcast proof fn lemma_obeys_deep_eq()[0m
+[31m/home/milnes/projects/verus/source/vstd/laws_eq.rs:70: [0m
+[38;5;22m            pub broadcast proof fn lemma_obeys_view_eq()[0m
 [38;5;22m                ensures[0m
-[38;5;22m                    #[trigger] obeys_deep_eq::<$n>(),[0m
+[38;5;22m                    #[trigger] obeys_view_eq::<$n>(),[0m
 
-[31m/home/milnes/projects/verus/source/vstd/laws_eq.rs:149: [0m
-[38;5;22mpub broadcast proof fn lemma_option_obeys_deep_eq<T: PartialEq + DeepView>()[0m
+[31m/home/milnes/projects/verus/source/vstd/laws_eq.rs:139: [0m
+[38;5;22mpub broadcast proof fn lemma_option_obeys_view_eq<T: PartialEq + View>()[0m
 [38;5;22m    requires[0m
-[38;5;22m        obeys_deep_eq::<T>(),[0m
-[38;5;22m    ensures[0m
-[38;5;22m        #[trigger] obeys_deep_eq::<Option<T>>(),[0m
-
+[38;5;22m        obeys_concrete_eq::<T>(),[0m

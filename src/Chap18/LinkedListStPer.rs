@@ -34,9 +34,14 @@ pub mod LinkedListStPer {
     //		2. imports
 
     #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::vec::*;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
+
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+
+    use crate::Chap18::ArraySeq::ArraySeq::{spec_iterate, spec_monoid};
 
 
     //		3. broadcast use
@@ -44,6 +49,7 @@ pub mod LinkedListStPer {
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
+        vstd::seq_lib::group_seq_properties,
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
@@ -164,7 +170,12 @@ pub mod LinkedListStPer {
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// Work Θ(Σ|a[i]|), Span Θ(1)
-        fn flatten(a: &LinkedListStPerS<LinkedListStPerS<T>>) -> (flattened: Self) where T: Clone;
+        fn flatten(a: &LinkedListStPerS<LinkedListStPerS<T>>) -> (flattened: LinkedListStPerS<T>)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+            ensures
+                flattened.seq@ =~= a.seq@.map_values(|inner: LinkedListStPerS<T>| inner.seq@).flatten();
 
         /// Work Θ(|a|), Span Θ(1)
         fn update(a: &LinkedListStPerS<T>, index: usize, item: T) -> (updated: Self)
@@ -186,70 +197,113 @@ pub mod LinkedListStPer {
             ensures single <==> self.spec_len() == 1;
 
         /// Work Θ(|a|), Span Θ(1)
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStPerS<T>, f: &F, seed: A) -> A
-            requires forall|x: &A, y: &T| #[trigger] f.requires((x, y));
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (result: A)
+            requires
+                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
+                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
+            ensures
+                result == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);
 
         /// Work Θ(|a|), Span Θ(1)
-        fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, id: T) -> T
+        fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: T)
             where T: Clone
-            requires forall|x: &T, y: &T| #[trigger] f.requires((x, y));
+            requires
+                spec_monoid(spec_f, id),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures
+                result == spec_iterate(
+                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
 
         /// Work Θ(|a|), Span Θ(1)
-        fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, id: T) -> (scanned: (LinkedListStPerS<T>, T))
-            where T: Clone
-            requires forall|x: &T, y: &T| #[trigger] f.requires((x, y))
-            ensures scanned.0.seq@.len() == a.seq@.len();
+        fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (LinkedListStPerS<T>, T))
+            where T: Clone + Eq
+            requires
+                spec_monoid(spec_f, id),
+                obeys_feq_clone::<T>(),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures
+                scanned.0.spec_len() == a.spec_len(),
+                forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < a.spec_len() ==>
+                    scanned.0.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f),
+                scanned.1 == spec_iterate(
+                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);
     }
 
 
-    //		9. impls
+    //		9. impl BaseTrait for Struct
 
-    impl<T> LinkedListStPerS<T> {
-        pub open spec fn spec_len(&self) -> nat {
+    impl<T> LinkedListStPerBaseTrait<T> for LinkedListStPerS<T> {
+        open spec fn spec_len(&self) -> nat {
             self.seq@.len()
         }
 
-        pub fn new(length: usize, init_value: T) -> (new_seq: LinkedListStPerS<T>)
-            where T: Clone
-            requires length <= usize::MAX
-            ensures new_seq.seq@.len() == length
-        {
-            LinkedListStPerS { seq: vec![init_value; length] }
+        open spec fn spec_index(&self, i: int) -> T {
+            self.seq@[i]
         }
 
-        pub fn empty() -> (empty_seq: LinkedListStPerS<T>)
-            ensures empty_seq.seq@.len() == 0
+        fn new(length: usize, init_value: T) -> (new_seq: LinkedListStPerS<T>)
+            where T: Clone + Eq
         {
+            let seq = std::vec::from_elem(init_value, length);
+            LinkedListStPerS { seq }
+        }
+
+        fn length(&self) -> (len: usize) {
+            self.seq.len()
+        }
+
+        fn nth(&self, index: usize) -> (nth_elem: &T) {
+            &self.seq[index]
+        }
+
+        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: LinkedListStPerS<T>)
+            where T: Clone + Eq
+        {
+            let end = start + length;
+            let mut seq: Vec<T> = Vec::with_capacity(length);
+            let mut i: usize = start;
+            while i < end
+                invariant
+                    start <= i <= end,
+                    end == start + length,
+                    end <= self.seq@.len(),
+                    seq@.len() == (i - start) as int,
+                    obeys_feq_clone::<T>(),
+                    forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> seq@[j] == self.seq@[(start + j) as int],
+                decreases end - i,
+            {
+                seq.push(self.seq[i].clone());
+                proof {
+                    let ghost last = seq@[seq@.len() - 1 as int];
+                    assert(cloned(self.seq[i as int], last));
+                    axiom_cloned_implies_eq_owned(self.seq[i as int], last);
+                }
+                i += 1;
+            }
+            LinkedListStPerS { seq }
+        }
+
+        fn from_vec(elts: Vec<T>) -> (seq: LinkedListStPerS<T>) {
+            LinkedListStPerS { seq: elts }
+        }
+    }
+
+    //		9. impl RedefinableTrait for Struct
+
+    impl<T> LinkedListStPerRedefinableTrait<T> for LinkedListStPerS<T> {
+        fn empty() -> (empty_seq: LinkedListStPerS<T>) {
             LinkedListStPerS { seq: Vec::new() }
         }
 
-        pub fn singleton(item: T) -> (singleton: LinkedListStPerS<T>)
-            ensures singleton.seq@.len() == 1
-        {
+        fn singleton(item: T) -> (singleton: LinkedListStPerS<T>) {
             let mut seq = Vec::with_capacity(1);
             seq.push(item);
             LinkedListStPerS { seq }
         }
 
-        pub fn length(&self) -> (len: usize)
-            ensures len == self.seq@.len()
-        {
-            self.seq.len()
-        }
-
-        pub fn nth(&self, index: usize) -> (nth_elem: &T)
-            requires index < self.seq@.len()
-        {
-            &self.seq[index]
-        }
-
-        pub fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> (tab_seq: LinkedListStPerS<T>)
-            requires 
-                n <= usize::MAX,
-                forall|i: usize| i < n ==> #[trigger] f.requires((i,)),
-            ensures
-                tab_seq.seq@.len() == n,
-                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < n ==> f.ensures((i as usize,), tab_seq.seq@[i]),
+        fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> (tab_seq: LinkedListStPerS<T>)
         {
             let mut seq = Vec::with_capacity(n);
             let mut i: usize = 0;
@@ -267,11 +321,7 @@ pub mod LinkedListStPer {
             LinkedListStPerS { seq }
         }
 
-        pub fn map<U: Clone + View, F: Fn(&T) -> U>(a: &LinkedListStPerS<T>, f: &F) -> (mapped: LinkedListStPerS<U>)
-            requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
-            ensures
-                mapped.seq@.len() == a.seq@.len(),
-                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]),
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &LinkedListStPerS<T>, f: &F) -> (mapped: LinkedListStPerS<U>)
         {
             let len = a.seq.len();
             let mut seq: Vec<U> = Vec::with_capacity(len);
@@ -291,37 +341,55 @@ pub mod LinkedListStPer {
             LinkedListStPerS { seq }
         }
 
-        pub fn append(a: &LinkedListStPerS<T>, b: &LinkedListStPerS<T>) -> (appended: LinkedListStPerS<T>)
-            where T: Clone
-            requires a.seq@.len() + b.seq@.len() <= usize::MAX
-            ensures appended.seq@.len() == a.seq@.len() + b.seq@.len()
+        fn append(a: &LinkedListStPerS<T>, b: &LinkedListStPerS<T>) -> (appended: LinkedListStPerS<T>)
+            where T: Clone + Eq
         {
             let a_len = a.seq.len();
             let b_len = b.seq.len();
             let mut seq: Vec<T> = Vec::with_capacity(a_len + b_len);
             let mut i: usize = 0;
             while i < a_len
-                invariant i <= a_len, a_len == a.seq@.len(), seq@.len() == i as int,
+                invariant
+                    i <= a_len,
+                    a_len == a.seq@.len(),
+                    seq@.len() == i as int,
+                    obeys_feq_clone::<T>(),
+                    forall|k: int| #![trigger seq@[k]] 0 <= k < i ==> seq@[k] == a.seq@[k],
                 decreases a_len - i,
             {
                 seq.push(a.seq[i].clone());
+                proof {
+                    let ghost last = seq@[seq@.len() - 1 as int];
+                    assert(cloned(a.seq[i as int], last));
+                    axiom_cloned_implies_eq_owned(a.seq[i as int], last);
+                }
                 i += 1;
             }
             let mut j: usize = 0;
             while j < b_len
-                invariant j <= b_len, b_len == b.seq@.len(), seq@.len() == a_len + j,
+                invariant
+                    j <= b_len,
+                    b_len == b.seq@.len(),
+                    a_len == a.seq@.len(),
+                    seq@.len() == a_len + j,
+                    obeys_feq_clone::<T>(),
+                    forall|k: int| #![trigger seq@[k]] 0 <= k < a_len ==> seq@[k] == a.seq@[k],
+                    forall|k: int| #![trigger b.seq@[k]] 0 <= k < j ==> seq@[a_len as int + k] == b.seq@[k],
                 decreases b_len - j,
             {
                 seq.push(b.seq[j].clone());
+                proof {
+                    let ghost last = seq@[seq@.len() - 1 as int];
+                    assert(cloned(b.seq[j as int], last));
+                    axiom_cloned_implies_eq_owned(b.seq[j as int], last);
+                }
                 j += 1;
             }
             LinkedListStPerS { seq }
         }
 
-        pub fn filter<F: Fn(&T) -> bool>(a: &LinkedListStPerS<T>, pred: &F) -> (filtered: LinkedListStPerS<T>)
-            where T: Clone
-            requires forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
-            ensures filtered.seq@.len() <= a.seq@.len()
+        fn filter<F: Fn(&T) -> bool>(a: &LinkedListStPerS<T>, pred: &F) -> (filtered: LinkedListStPerS<T>)
+            where T: Clone + Eq
         {
             let len = a.seq.len();
             let mut seq: Vec<T> = Vec::new();
@@ -331,34 +399,257 @@ pub mod LinkedListStPer {
                     i <= len,
                     len == a.seq@.len(),
                     seq@.len() <= i,
+                    obeys_feq_clone::<T>(),
                     forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[j],)),
+                    forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> pred.ensures((&seq@[j],), true),
                 decreases len - i,
             {
+                proof { a.lemma_spec_index(i as int); }
                 if pred(&a.seq[i]) {
                     seq.push(a.seq[i].clone());
+                    proof {
+                        let ghost last = seq@[seq@.len() - 1 as int];
+                        assert(cloned(a.seq[i as int], last));
+                        axiom_cloned_implies_eq_owned(a.seq[i as int], last);
+                    }
                 }
                 i += 1;
             }
             LinkedListStPerS { seq }
         }
 
-        pub fn is_empty(&self) -> (empty: bool)
-            ensures empty <==> self.seq@.len() == 0
+        fn flatten(a: &LinkedListStPerS<LinkedListStPerS<T>>) -> (flattened: LinkedListStPerS<T>)
+            where T: Clone + Eq
         {
+            let outer_len = a.seq.len();
+            let mut seq: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < outer_len
+                invariant
+                    i <= outer_len,
+                    outer_len == a.seq@.len(),
+                    obeys_feq_clone::<T>(),
+                    seq@ =~= a.seq@.take(i as int).map_values(|inner: LinkedListStPerS<T>| inner.seq@).flatten(),
+                decreases outer_len - i,
+            {
+                let inner = &a.seq[i];
+                let inner_len = inner.seq.len();
+                let mut j: usize = 0;
+                while j < inner_len
+                    invariant
+                        j <= inner_len,
+                        inner_len == inner.seq@.len(),
+                        i < outer_len,
+                        outer_len == a.seq@.len(),
+                        obeys_feq_clone::<T>(),
+                        seq@ =~= a.seq@.take(i as int).map_values(|inner: LinkedListStPerS<T>| inner.seq@).flatten()
+                            + inner.seq@.take(j as int),
+                    decreases inner_len - j,
+                {
+                    seq.push(inner.seq[j].clone());
+                    proof {
+                        let ghost last = seq@[seq@.len() - 1 as int];
+                        assert(cloned(inner.seq[j as int], last));
+                        axiom_cloned_implies_eq_owned(inner.seq[j as int], last);
+                        assert(inner.seq@.take(j as int + 1) =~= inner.seq@.take(j as int).push(inner.seq@[j as int]));
+                    }
+                    j += 1;
+                }
+                proof {
+                    assert(inner.seq@.take(inner_len as int) =~= inner.seq@);
+                    let ghost prefix = a.seq@.take(i as int).map_values(|inner: LinkedListStPerS<T>| inner.seq@);
+                    assert(a.seq@.take(i as int + 1).map_values(|inner: LinkedListStPerS<T>| inner.seq@)
+                        =~= prefix.push(a.seq@[i as int].seq@));
+                    prefix.lemma_flatten_push(a.seq@[i as int].seq@);
+                }
+                i += 1;
+            }
+            proof {
+                assert(a.seq@.take(outer_len as int) =~= a.seq@);
+            }
+            LinkedListStPerS { seq }
+        }
+
+        fn update(a: &LinkedListStPerS<T>, index: usize, item: T) -> (updated: LinkedListStPerS<T>)
+            where T: Clone + Eq
+        {
+            let len = a.seq.len();
+            let mut seq: Vec<T> = Vec::with_capacity(len);
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    seq@.len() == i as int,
+                    obeys_feq_clone::<T>(),
+                    index < len,
+                    forall|k: int| #![trigger seq@[k]] 0 <= k < i && k != index as int ==> seq@[k] == a.seq@[k],
+                    i > index ==> seq@[index as int] == item,
+                decreases len - i,
+            {
+                if i == index {
+                    seq.push(item.clone());
+                    proof {
+                        let ghost last = seq@[seq@.len() - 1 as int];
+                        assert(cloned(item, last));
+                        axiom_cloned_implies_eq_owned(item, last);
+                    }
+                } else {
+                    seq.push(a.seq[i].clone());
+                    proof {
+                        let ghost last = seq@[seq@.len() - 1 as int];
+                        assert(cloned(a.seq[i as int], last));
+                        axiom_cloned_implies_eq_owned(a.seq[i as int], last);
+                    }
+                }
+                i += 1;
+            }
+            LinkedListStPerS { seq }
+        }
+
+        fn is_empty(&self) -> (empty: bool) {
             self.seq.len() == 0
         }
 
-        pub fn is_singleton(&self) -> (single: bool)
-            ensures single <==> self.seq@.len() == 1
-        {
+        fn is_singleton(&self) -> (single: bool) {
             self.seq.len() == 1
         }
 
-        pub fn from_vec(elts: Vec<T>) -> (seq: LinkedListStPerS<T>)
-            ensures seq.seq@ == elts@
-        {
-            LinkedListStPerS { seq: elts }
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (acc: A) {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+            let len = a.seq.len();
+            let mut acc = seed;
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
+                    forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
+                    s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
+                    acc == s.take(i as int).fold_left(seed, spec_f),
+                decreases len - i,
+            {
+                proof {
+                    a.lemma_spec_index(i as int);
+                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
+                }
+                acc = f(&acc, &a.seq[i]);
+                proof {
+                    let ghost t = s.take(i as int + 1);
+                    assert(t.len() > 0);
+                    assert(t.drop_last() =~= s.take(i as int));
+                    assert(t.last() == s[i as int]);
+                    reveal(Seq::fold_left);
+                }
+                i += 1;
+            }
+            proof {
+                assert(s.take(len as int) =~= s);
+            }
+            acc
         }
+
+        fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: T)
+            where T: Clone
+        {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+            let len = a.seq.len();
+            let mut acc = id;
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                    s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
+                    acc == s.take(i as int).fold_left(id, spec_f),
+                decreases len - i,
+            {
+                proof {
+                    a.lemma_spec_index(i as int);
+                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
+                }
+                acc = f(&acc, &a.seq[i]);
+                proof {
+                    let ghost t = s.take(i as int + 1);
+                    assert(t.len() > 0);
+                    assert(t.drop_last() =~= s.take(i as int));
+                    assert(t.last() == s[i as int]);
+                    reveal(Seq::fold_left);
+                }
+                i += 1;
+            }
+            proof {
+                assert(s.take(len as int) =~= s);
+            }
+            acc
+        }
+
+        fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (LinkedListStPerS<T>, T))
+            where T: Clone + Eq
+        {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+            let len = a.seq.len();
+            let mut acc = id;
+            let mut seq: Vec<T> = Vec::with_capacity(len);
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    seq@.len() == i as int,
+                    obeys_feq_clone::<T>(),
+                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                    s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
+                    acc == s.take(i as int).fold_left(id, spec_f),
+                    forall|k: int| #![trigger seq@[k]] 0 <= k < seq@.len() ==>
+                        seq@[k] == s.take(k + 1).fold_left(id, spec_f),
+                decreases len - i,
+            {
+                proof {
+                    a.lemma_spec_index(i as int);
+                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
+                }
+                acc = f(&acc, &a.seq[i]);
+                proof {
+                    let ghost t = s.take(i as int + 1);
+                    assert(t.len() > 0);
+                    assert(t.drop_last() =~= s.take(i as int));
+                    assert(t.last() == s[i as int]);
+                    reveal(Seq::fold_left);
+                }
+                let cloned = acc.clone();
+                proof {
+                    axiom_cloned_implies_eq_owned(acc, cloned);
+                }
+                seq.push(cloned);
+                i += 1;
+            }
+            proof {
+                assert(s.take(len as int) =~= s);
+            }
+            let scanned_seq = LinkedListStPerS { seq };
+            proof {
+                assert forall|i: int| #![trigger scanned_seq.spec_index(i)] 0 <= i < a.spec_len() implies
+                    scanned_seq.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
+                by {
+                    assert(scanned_seq.spec_index(i) == seq@[i]);
+                }
+            }
+            (scanned_seq, acc)
+        }
+    }
+
+    //		9. bare impl (lemma and iter not in any trait)
+
+    impl<T> LinkedListStPerS<T> {
+        broadcast proof fn lemma_spec_index(&self, i: int)
+            requires 0 <= i < self.spec_len()
+            ensures #[trigger] self.seq@[i] == self.spec_index(i)
+        {}
 
         /// Returns an iterator over the list elements.
         pub fn iter(&self) -> (it: LinkedListStPerIter<'_, T>)
@@ -369,71 +660,9 @@ pub mod LinkedListStPer {
         {
             LinkedListStPerIter { inner: self.seq.iter() }
         }
-
-        pub fn subseq_copy(&self, start: usize, length: usize) -> (subseq: LinkedListStPerS<T>)
-            where T: Clone
-            requires 
-                start + length <= self.seq@.len(),
-                self.seq@.len() <= usize::MAX as int,
-            ensures subseq.seq@.len() == length
-        {
-            let end = start + length;
-            let mut seq: Vec<T> = Vec::with_capacity(length);
-            let mut i: usize = start;
-            while i < end
-                invariant
-                    start <= i <= end,
-                    end == start + length,
-                    end <= self.seq@.len(),
-                    seq@.len() == (i - start) as int,
-                decreases end - i,
-            {
-                seq.push(self.seq[i].clone());
-                i += 1;
-            }
-            LinkedListStPerS { seq }
-        }
-
-        pub fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, id: T) -> (reduced: T)
-            where T: Clone
-            requires forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-        {
-            let len = a.seq.len();
-            let mut acc = id;
-            let mut i: usize = 0;
-            while i < len
-                invariant
-                    i <= len,
-                    len == a.seq@.len(),
-                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                decreases len - i,
-            {
-                acc = f(&acc, &a.seq[i]);
-                i += 1;
-            }
-            acc
-        }
-
-        pub fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStPerS<T>, f: &F, seed: A) -> (acc: A)
-            requires forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
-        {
-            let len = a.seq.len();
-            let mut acc = seed;
-            let mut i: usize = 0;
-            while i < len
-                invariant
-                    i <= len,
-                    len == a.seq@.len(),
-                    forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
-                decreases len - i,
-            {
-                acc = f(&acc, &a.seq[i]);
-                i += 1;
-            }
-            acc
-        }
     }
 
+    #[cfg(verus_keep_ghost)]
     impl<T: View + PartialEq> PartialEqSpecImpl for LinkedListStPerS<T> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
