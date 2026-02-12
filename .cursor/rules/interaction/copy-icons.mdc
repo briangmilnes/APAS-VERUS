@@ -1,3 +1,9 @@
+---
+description: Include copy icons when displaying URLs or file paths in tables
+globs: 
+alwaysApply: true
+---
+
 # Copy Icons for URLs and Paths
 
 When displaying URLs or file paths in tables or lists, include a copy icon (📋) as a clickable element to make copying easier.

@@ -25,3 +25,13 @@ cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus -
 ```
 
 This skips modules behind `#[cfg(feature = "full_verify")]` for faster iteration.
+
+## V1 — validate once with current cfg
+
+When the user says "V1", run a single Verus verification using whatever `--cfg` flag is active in the current session. For example, if working with `experiments_only`:
+
+```bash
+cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg 'feature="experiments_only"'
+```
+
+Do not iterate or fix errors. Just run once, show the full output, and stop.

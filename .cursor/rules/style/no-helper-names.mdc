@@ -1,3 +1,9 @@
+---
+description: Do not name functions helper, inner, do_it, or similar meaningless names
+globs: "**/*.rs"
+alwaysApply: false
+---
+
 # No "helper" Function Names
 
 Do not name functions `helper`, `helper1`, `helper2`, `do_it`, `inner`, or use suffixes like `_impl`, or similar meaningless names.

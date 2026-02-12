@@ -1,3 +1,9 @@
+---
+description: Never modify files in ~/projects/verus/
+globs: 
+alwaysApply: true
+---
+
 # Do Not Modify Verus Source
 
 **Never** modify files in `~/projects/verus/`.

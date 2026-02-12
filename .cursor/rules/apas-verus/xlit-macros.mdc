@@ -1,3 +1,9 @@
+---
+description: Use XLit! macros (SetLit!, RelationLit!, etc.) to construct test values
+globs: "**/*.rs"
+alwaysApply: false
+---
+
 # Use XLit! Macros for Constructing Values
 
 In APAS-VERUS, all data types have a literal macro `XLit!` which should be used to construct values of that type in runtime and proof time testing.

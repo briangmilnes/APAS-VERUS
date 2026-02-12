@@ -1,3 +1,9 @@
+---
+description: PTT = proof time tests, RTT = run time tests
+globs: 
+alwaysApply: true
+---
+
 # Test Abbreviations
 
 | Abbreviation | Meaning |

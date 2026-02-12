@@ -1,8 +1,24 @@
-# Meaningful Return Names
+---
+description: Name return values and variables meaningfully, not generically
+globs: "**/*.rs"
+alwaysApply: false
+---
 
-In Verus function signatures, name return values meaningfully rather than using generic names like `result`.
+# Meaningful Names
 
-## Good
+Name return values and variables meaningfully. Avoid generic names that convey no information about purpose.
+
+## Bad Names
+
+| # | Name | Why it's bad |
+|---|------|-------------|
+| 1 | `result` | Every function returns a result |
+| 2 | `target` | Almost everything is a target of something |
+| 3 | `value` / `val` | Almost everything is a value |
+| 4 | `data` | Almost everything is data |
+| 5 | `temp` / `tmp` | Says nothing about what it holds |
+
+## Good Return Names
 
 ```rust
 fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)
@@ -11,7 +27,7 @@ fn empty() -> (graph: Self)
 fn mem(&self, x: &T) -> (contains: B)
 ```
 
-## Bad
+## Bad Return Names
 
 ```rust
 fn n_plus(&self, v: &V) -> (result: SetStEph<V>)
@@ -22,10 +38,11 @@ fn mem(&self, x: &T) -> (result: B)
 
 ## Exception
 
-Files in `src/experiments/` may use `result` - these are throwaway explorations.
+Files in `src/experiments/` may use generic names - these are throwaway explorations.
 
 ## Why
 
 1. Named returns appear in ensures clauses - meaningful names make specs readable
 2. `ensures out_neighbors@ == self.spec_n_plus(v@)` is clearer than `ensures result@ == ...`
 3. The name documents what the function returns without reading the body
+4. Generic names in ghost variables make proof blocks harder to follow

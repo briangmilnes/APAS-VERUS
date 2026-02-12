@@ -1,3 +1,9 @@
+---
+description: Do not create wrapper functions that merely forward to another function
+globs: "**/*.rs"
+alwaysApply: false
+---
+
 # No Trivial Wrappers
 
 Do not create wrapper functions that merely forward to another function without adding value.

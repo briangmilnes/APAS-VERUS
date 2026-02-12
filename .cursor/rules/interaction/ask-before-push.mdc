@@ -1,3 +1,9 @@
+---
+description: Always ask for confirmation before git push
+globs: 
+alwaysApply: true
+---
+
 # Ask Before Push
 
 **Always** ask the user for confirmation before running `git push`.

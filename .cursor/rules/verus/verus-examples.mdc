@@ -1,3 +1,9 @@
+---
+description: Verus examples at ~/projects/verus/examples/
+globs: 
+alwaysApply: true
+---
+
 # Verus Examples
 
 Verus examples are located at:

@@ -1,3 +1,9 @@
+---
+description: Do not define functions inside other functions; keep helpers at module level
+globs: "**/*.rs"
+alwaysApply: false
+---
+
 # No Nested Functions
 
 Due to Verus proof limitations, do not use nested functions (functions defined inside other functions).

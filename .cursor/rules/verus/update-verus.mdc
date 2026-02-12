@@ -1,3 +1,9 @@
+---
+description: How to update and rebuild Verus; use vargo not cargo
+globs: 
+alwaysApply: true
+---
+
 # Updating Verus
 
 When updating or rebuilding the Verus project at `~/projects/verus`:

@@ -1,3 +1,9 @@
+---
+description: Do not add sequential/parallel threshold checks; this is a textbook
+globs: "**/*.rs"
+alwaysApply: false
+---
+
 # No Thread Threshold Optimization
 
 APAS-VERUS is a textbook implementation. Do not add threshold checks to switch between parallel and sequential execution for small inputs.

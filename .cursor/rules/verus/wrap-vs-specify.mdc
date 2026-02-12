@@ -1,3 +1,9 @@
+---
+description: When to use external_type_specification vs wrapper struct for Verus specs
+globs: "**/*.rs"
+alwaysApply: false
+---
+
 # Wrap vs Specify
 
 Two approaches for adding Verus specifications to Rust types:

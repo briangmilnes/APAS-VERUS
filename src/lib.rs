@@ -11,7 +11,7 @@ pub mod Concurrency;
 pub mod ParaPairs;
 
 pub mod experiments {
-    pub mod collect;
+//    pub mod collect;
 //    pub mod clone_fn;
 //    pub mod baseviewtypes;
 //    pub mod tcb_foul;  // TCB foul experiment - Verus blocks unspecified &mut self methods
@@ -75,10 +75,13 @@ pub mod experiments {
 //    pub mod parapair_toplevel_closure;
 //    pub mod arc_clone_deref;
 //    pub mod spec_loop;  // RESULT: no cycle error in simple case
-   pub mod vec_filter;  // RESULT: use Anvil style multiset. 
-   pub mod vec_remove_duplicates;
-   pub mod collect2;
-   pub mod deep_view_2_tuple;
+//   pub mod vec_filter;  // RESULT: use Anvil style multiset. 
+//   pub mod vec_remove_duplicates;
+//   pub mod deep_view_2_tuple;
+//    pub mod deep_view_struct;
+
+    pub mod collect2;
+    pub mod collect_deep_view;
 }
 
 pub mod vstdplus {

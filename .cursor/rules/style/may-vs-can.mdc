@@ -1,6 +1,6 @@
 ---
 description: Use 'may' vs 'can' correctly in comments and documentation
-globs: *.rs,*.md
+globs: ["**/*.rs", "**/*.md"]
 alwaysApply: false
 ---
 

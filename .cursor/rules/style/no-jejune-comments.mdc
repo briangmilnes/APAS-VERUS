@@ -1,3 +1,9 @@
+---
+description: Do not add comments that merely restate what the function name already says
+globs: "**/*.rs"
+alwaysApply: false
+---
+
 # No Jejune Comments
 
 Do not add comments that merely restate what is already clear from the function's name, parameters, and types.

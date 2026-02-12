@@ -1,3 +1,9 @@
+---
+description: Collection of Verus codebases at ~/projects/VerusCodebases/
+globs: 
+alwaysApply: true
+---
+
 # Verus Codebases
 
 A collection of Verus codebases is located at:

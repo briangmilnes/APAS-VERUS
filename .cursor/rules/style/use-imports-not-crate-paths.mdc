@@ -1,3 +1,9 @@
+---
+description: Prefer use imports over verbose crate:: paths
+globs: "**/*.rs"
+alwaysApply: false
+---
+
 # Use Imports, Not Verbose Crate Paths
 
 When calling functions from other modules, prefer `use` imports over verbose `crate::...` paths.

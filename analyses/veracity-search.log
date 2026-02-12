@@ -2,61 +2,30 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: deep_view
+Pattern: fn \(obeys_deep_eq\|deep_view_eq\)
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 94, Functions: 2216, Matches: 25
+Files: 94, Functions: 2216, Matches: 4
 
-[31m/home/milnes/projects/verus/source/vstd/std_specs/hash.rs:680: [0m
-[38;5;22m    open spec fn deep_view(&self) -> Map<Key::V, Value::V>[0m
-
-[31m/home/milnes/projects/verus/source/vstd/std_specs/hash.rs:691: [0m
-/// This is a separate function since it introduces a lot of quantifiers and revealing an opaque trait
-/// method is not supported. In most cases, it's easier to use one of the lemmas below instead
-/// of revealing this function directly.
-#[verifier::opaque]
-[38;5;22mpub open spec fn hash_map_deep_view_impl<Key: DeepView, Value: DeepView, S>([0m
-[38;5;22m    m: HashMap<Key, Value, S>,[0m
-[38;5;22m) -> Map<Key::V, Value::V>[0m
-
-[31m/home/milnes/projects/verus/source/vstd/std_specs/hash.rs:1209: [0m
-[38;5;22m    open spec fn deep_view(&self) -> Set<Key::V>[0m
-
-[31m/home/milnes/projects/verus/source/vstd/std_specs/borrow.rs:46: [0m
-[38;5;22m    open spec fn deep_view(&self) -> Self::V[0m
-
-[31m/home/milnes/projects/verus/source/vstd/std_specs/borrow.rs:71: [0m
-[38;5;22m    open spec fn deep_view(&self) -> Self::V[0m
-
-[31m/home/milnes/projects/verus/source/vstd/std_specs/borrow.rs:95: [0m
-[38;5;22m    open spec fn deep_view(&self) -> Self::V[0m
-
-[31m/home/milnes/projects/verus/source/vstd/std_specs/vecdeque.rs:30: [0m
-[38;5;22m    open spec fn deep_view(&self) -> Seq<T::V>[0m
-
-[31m/home/milnes/projects/verus/source/vstd/std_specs/slice.rs:56: [0m
-[38;5;22m    open spec fn deep_view(&self) -> Self::V[0m
-
-[31m/home/milnes/projects/verus/source/vstd/std_specs/vec.rs:279: [0m
-[38;5;22mpub broadcast proof fn vec_clone_deep_view_proof<T: DeepView, A: Allocator>([0m
-[38;5;22m    v1: Vec<T, A>,[0m
-[38;5;22m    v2: Vec<T, A>,[0m
-[38;5;22m)[0m
+[31m/home/milnes/projects/verus/source/vstd/std_specs/vec.rs:510: [0m
+[38;5;22mpub broadcast proof fn lemma_vec_obeys_deep_eq<T: PartialEq + DeepView>()[0m
 [38;5;22m    requires[0m
-[38;5;22m        #[trigger] vec_clone_trigger(v1, v2),[0m
-[38;5;22m        v1.deep_view() =~= v2.deep_view(),[0m
+[38;5;22m        super::super::laws_eq::obeys_deep_eq::<T>(),[0m
 [38;5;22m    ensures[0m
-[38;5;22m        v1.deep_view() == v2.deep_view(),[0m
+[38;5;22m        #[trigger] super::super::laws_eq::obeys_deep_eq::<Vec<T>>(),[0m
 
-[31m/home/milnes/projects/verus/source/vstd/string.rs:26: [0m
-[38;5;22m    open spec fn deep_view(&self) -> Seq<char>[0m
+[31m/home/milnes/projects/verus/source/vstd/laws_eq.rs:35: [0m
+#[verifier::opaque]
+[38;5;22mpub open spec fn obeys_deep_eq<T: PartialEq + DeepView>() -> bool[0m
 
-[31m/home/milnes/projects/verus/source/vstd/string.rs:234: [0m
-[38;5;22m    open spec fn deep_view(&self) -> Seq<char>[0m
+[31m/home/milnes/projects/verus/source/vstd/laws_eq.rs:77: [0m
+[38;5;22m            pub broadcast proof fn lemma_obeys_deep_eq()[0m
+[38;5;22m                ensures[0m
+[38;5;22m                    #[trigger] obeys_deep_eq::<$n>(),[0m
 
-[31m/home/milnes/projects/verus/source/vstd/string.rs:378: [0m
-[38;5;22m    open spec fn deep_view(&self) -> Self::V[0m
+[31m/home/milnes/projects/verus/source/vstd/laws_eq.rs:149: [0m
+[38;5;22mpub broadcast proof fn lemma_option_obeys_deep_eq<T: PartialEq + DeepView>()[0m
+[38;5;22m    requires[0m
+[38;5;22m        obeys_deep_eq::<T>(),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] obeys_deep_eq::<Option<T>>(),[0m
 
-[31m/home/milnes/projects/verus/source/vstd/string.rs:475: [0m
-[38;5;22m    open spec fn deep_view(&self) -> Seq<char>[0m
-
-[31m/home/milnes/projects/verus/source/vstd/view.rs:19: [0m

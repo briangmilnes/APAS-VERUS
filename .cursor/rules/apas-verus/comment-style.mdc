@@ -1,3 +1,9 @@
+---
+description: No decorative separator lines or box-drawing characters in code comments
+globs: "**/*.rs"
+alwaysApply: false
+---
+
 # Comment Style
 
 Do not use decorative separator lines or box-drawing characters in code comments.

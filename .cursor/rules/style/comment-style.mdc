@@ -1,3 +1,9 @@
+---
+description: Own-line comments must be full sentences; end-of-line fragments OK
+globs: "**/*.rs"
+alwaysApply: false
+---
+
 # Comment Style
 
 Comments should follow these formatting rules:

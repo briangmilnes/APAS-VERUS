@@ -1,0 +1,7 @@
+---
+description: Assert statements in Verus exec code do not need proof blocks
+globs: ["**/*.rs"]
+alwaysApply: true
+---
+
+In Verus, `assert` statements inside executable (`fn`) code do **not** need to be wrapped in a `proof { }` block. Only proof-mode calls (like lemma invocations, `reveal`, ghost variable bindings with `let ghost`, etc.) require a `proof { }` block. Plain `assert(...)` can appear directly in exec code.

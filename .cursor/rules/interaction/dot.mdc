@@ -1,0 +1,20 @@
+---
+description: DOT = Don't Over Think. Focus on the simple task the user asked for.
+globs: 
+alwaysApply: true
+---
+
+# DOT — Don't Over Think
+
+When the user says "DOT" or the task is straightforward:
+
+- **DO**: Execute exactly what was asked, nothing more.
+- **DO**: Take the simplest path to the goal.
+- **DO**: Make the minimal change that satisfies the request.
+
+- **DO NOT**: Anticipate future problems that weren't asked about.
+- **DO NOT**: Refactor, restructure, or "improve" beyond the request.
+- **DO NOT**: Explore alternatives when the user gave a clear direction.
+- **DO NOT**: Add defensive code, extra assertions, or commentary beyond what's needed.
+
+If the user said to do X, do X. Not X plus Y plus Z.

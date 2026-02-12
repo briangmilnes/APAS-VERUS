@@ -1,3 +1,9 @@
+---
+description: Order use statements as std, vstd, crate types, chapter modules, macros
+globs: "**/*.rs"
+alwaysApply: false
+---
+
 # Use Statement Order
 
 All `use` statements should appear immediately after the module declaration, in this order:

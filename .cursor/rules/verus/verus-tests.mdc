@@ -1,3 +1,9 @@
+---
+description: Verus proof tests at ~/projects/verus/source/rust_verify_test/tests/
+globs: 
+alwaysApply: true
+---
+
 # Verus Tests
 
 Verus proof tests are located at:

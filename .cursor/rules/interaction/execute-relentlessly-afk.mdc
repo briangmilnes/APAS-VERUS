@@ -1,3 +1,9 @@
+---
+description: When user says AFK, execute the full plan without stopping to ask
+globs: 
+alwaysApply: true
+---
+
 # Execute Relentlessly AFK
 
 When the user says "execute relentlessly" or "AFK" (away from keyboard), this means:

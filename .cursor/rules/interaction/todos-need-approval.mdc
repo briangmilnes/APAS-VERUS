@@ -1,3 +1,9 @@
+---
+description: Display todos and wait for user approval before executing them
+globs: 
+alwaysApply: true
+---
+
 # Todos Need Approval
 
 When creating or showing a todo list:

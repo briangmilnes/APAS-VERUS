@@ -9,7 +9,7 @@
 pub mod collect2 {
 
     use vstd::prelude::*;
-    use vstd::std_specs::cmp::PartialEqSpec;
+    use vstd::laws_eq::obeys_concrete_eq;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
@@ -21,10 +21,6 @@ pub mod collect2 {
         vstd::seq_lib::group_seq_properties,
         crate::vstdplus::feq::feq::group_feq_axioms
     };
-
-    pub open spec fn obeys_spec_eq<T: PartialEq>() -> bool {
-        forall|x: T, y: T| x.eq_spec(&y) <==> x == y
-    }
 
     pub open spec fn deep_view<K, V>(s: Seq<(K, Vec<V>)>) -> Seq<(K, Seq<V>)> {
         s.map_values(|e: (K, Vec<V>)| (e.0, e.1@))
@@ -111,8 +107,7 @@ pub mod collect2 {
         needle: &K,
     ) -> (found: Option<usize>)
         requires
-            obeys_spec_eq::<K>(),
-            K::obeys_eq_spec(),
+            obeys_concrete_eq::<K>(),
         ensures
             match found {
                 Some(idx) => idx < collected@.len()
@@ -121,6 +116,7 @@ pub mod collect2 {
                 None => forall|m: int| #![trigger collected@[m]] 0 <= m < collected@.len() ==> collected@[m].0 != *needle,
             },
     {
+        proof { reveal(obeys_concrete_eq); }
         let len = collected.len();
         let mut j: usize = 0;
         #[verifier::loop_isolation(false)]
@@ -147,8 +143,7 @@ pub mod collect2 {
         requires
             obeys_feq_clone::<K>(),
             obeys_feq_clone::<V>(),
-            obeys_spec_eq::<K>(),
-            K::obeys_eq_spec(),
+            obeys_concrete_eq::<K>(),
         ensures
             deep_view(collected@) =~= spec_collect2(pairs@),
 

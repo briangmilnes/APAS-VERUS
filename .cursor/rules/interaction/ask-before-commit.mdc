@@ -1,3 +1,9 @@
+---
+description: Always ask for confirmation before git commit; use git add -A
+globs: 
+alwaysApply: true
+---
+
 # Ask Before Commit
 
 **Always** ask the user for confirmation before running `git commit`.

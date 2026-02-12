@@ -1,3 +1,9 @@
+---
+description: Do not rename parameters or types from user sketches without asking
+globs: 
+alwaysApply: true
+---
+
 # Preserve Sketch Names
 
 When the user sketches a function signature, data type, or partial implementation and asks you to complete it:

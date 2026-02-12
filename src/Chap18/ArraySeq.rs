@@ -33,6 +33,8 @@ pub mod ArraySeq {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpec;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::vec::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
@@ -71,6 +73,15 @@ pub mod ArraySeq {
 
         open spec fn view(&self) -> Seq<T::V> {
             self.seq@.map(|_i: int, t: T| t@)
+        }
+    }
+
+    impl<T: DeepView> DeepView for ArraySeqS<T> {
+        type V = Seq<T::V>;
+
+        open spec fn deep_view(&self) -> Seq<T::V> {
+            let v = self.seq@;
+            Seq::new(v.len(), |i: int| v[i].deep_view())
         }
     }
 
@@ -124,84 +135,43 @@ pub mod ArraySeq {
         (Seq::new(s.len(), |i: int| s.take(i).fold_left(x, f)), s.fold_left(x, f))
     }
 
-    /// Collect the distinct keys from a sequence of key-value pairs, in first-occurrence order.
-    /// spec_collect_keys([(a,1),(b,2),(a,3)]) = [a, b].
-    pub open spec fn spec_collect_keys<K, V>(pairs: Seq<(K, V)>) -> Seq<K>
+    /// Find the index of the first group whose key matches `k`, or None.
+    pub open spec fn spec_find_key_index<K, V>(groups: Seq<(K, Seq<V>)>, k: K) -> Option<int>
+        decreases groups.len()
+    {
+        if groups.len() == 0 {
+            None
+        } else if groups[0].0 == k {
+            Some(0)
+        } else {
+            match spec_find_key_index(groups.skip(1), k) {
+                Some(i) => Some(i + 1),
+                None => None,
+            }
+        }
+    }
+
+    /// Definition 18.18 (collect). Group key-value pairs by key, preserving value order.
+    /// Processes pairs left to right: if the key already has a group, append the value;
+    /// otherwise create a new group. Keys appear in first-occurrence order.
+    pub open spec fn spec_collect<K, V>(pairs: Seq<(K, V)>) -> Seq<(K, Seq<V>)>
         decreases pairs.len()
     {
         if pairs.len() == 0 {
             Seq::empty()
         } else {
-            let rest = spec_collect_keys(pairs.drop_last());
+            let rest = spec_collect(pairs.drop_last());
             let k = pairs.last().0;
-            if rest.contains(k) { rest } else { rest.push(k) }
+            let v = pairs.last().1;
+            match spec_find_key_index(rest, k) {
+                Some(i) => rest.update(i, (k, rest[i].1.push(v))),
+                None => rest.push((k, seq![v])),
+            }
         }
     }
 
-    /// Definition 18.18 (collect). Predicate characterizing a valid group-by-key result.
-    /// Given input pairs and an output of (key, values) groups, this holds iff:
-    ///   1. Output keys are distinct.
-    ///   2. Every output key appears as a key in the input (provenance).
-    ///   3. Every input key appears in some output group (completeness).
-    ///   4. Each value in an output group came from a matching input pair (value provenance).
-    ///   5. Every input pair is accounted for in its key's output group (value completeness).
-    ///   6. Values within each group appear in input order (monotone witness).
-    ///
-    /// Properties 4-6 use nested forall/exists and are known to be hard for SMT solvers.
-    pub open spec fn spec_collect<K, V>(
-        pairs: Seq<(K, V)>,
-        collected: Seq<(K, Seq<V>)>,
-    ) -> bool {
-        // 1. Key uniqueness: no two output groups share a key.
-        &&& (forall|i: int, j: int|
-                #![trigger collected[i], collected[j]]
-                0 <= i < j < collected.len() ==> collected[i].0 != collected[j].0)
-
-/*
-        // 2. Key provenance: every output key appears in the input.
-        &&& (forall|i: int| #![trigger collected[i]] 0 <= i < collected.len() ==>
-                exists|j: int| #![trigger pairs[j]] 0 <= j < pairs.len()
-                    && collected[i].0 == pairs[j].0)
-
-        // 3. Key completeness: every input key has an output group.
-        &&& (forall|j: int| #![trigger pairs[j]] 0 <= j < pairs.len() ==>
-                exists|i: int| #![trigger collected[i]] 0 <= i < collected.len()
-                    && collected[i].0 == pairs[j].0)
-
-        // 4. Value provenance: each value in an output group came from a matching input pair.
-        &&& (forall|i: int, m: int|
-                #![trigger collected[i].1[m]]
-                0 <= i < collected.len() && 0 <= m < collected[i].1.len() ==>
-                exists|p: int| #![trigger pairs[p]]
-                    0 <= p < pairs.len()
-                    && pairs[p].0 == collected[i].0
-                    && pairs[p].1 == collected[i].1[m])
-
-        // 5. Value completeness: every input pair appears in its key's output group.
-        &&& (forall|j: int| #![trigger pairs[j]] 0 <= j < pairs.len() ==>
-                forall|i: int| #![trigger collected[i]] 0 <= i < collected.len()
-                    && collected[i].0 == pairs[j].0 ==>
-                exists|m: int| #![trigger collected[i].1[m]]
-                    0 <= m < collected[i].1.len()
-                    && collected[i].1[m] == pairs[j].1)
-
-        // 6. Order preservation: the witness indices into pairs are strictly monotone.
-        //    For each group, if value m maps to input position p and value m+1 maps to
-        //    position q, then p < q.  (Expressed as: for any two values in a group with
-        //    m1 < m2, their earliest matching input positions are ordered.)
-        &&& (forall|i: int, m1: int, m2: int|
-                #![trigger collected[i].1[m1], collected[i].1[m2]]
-                0 <= i < collected.len()
-                && 0 <= m1 < m2 < collected[i].1.len() ==>
-                // There exist witness positions p1 < p2 in pairs for m1 and m2.
-                exists|p1: int, p2: int|
-                    #![trigger pairs[p1], pairs[p2]]
-                    0 <= p1 < p2 < pairs.len()
-                    && pairs[p1].0 == collected[i].0
-                    && pairs[p1].1 == collected[i].1[m1]
-                    && pairs[p2].0 == collected[i].0
-                    && pairs[p2].1 == collected[i].1[m2])
-*/
+    pub open spec fn obeys_spec_eq<T: PartialEq>() -> bool {
+        forall|x: T, y: T| x.eq_spec(&y) <==> x == y
     }
 
 
@@ -291,7 +261,7 @@ pub mod ArraySeq {
               obeys_feq_clone::<T>(),
               forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(i),)),
               // The biconditional bridge ties the exec closure to the spec predicate.
-              forall|v: T, ret: bool| pred.ensures((&v,), ret) ==> spec_pred(v) == ret,
+              forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
             ensures
                 filtered.spec_len() <= a.spec_len(),
                 // The result multiset equals the input multiset filtered by the spec predicate.
@@ -326,7 +296,7 @@ pub mod ArraySeq {
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (result: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
-                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
+                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
             ensures
                 result == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, start_x);
 
@@ -338,7 +308,7 @@ pub mod ArraySeq {
             requires
                 spec_monoid(spec_f, id),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
             ensures
                 result == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
@@ -352,7 +322,7 @@ pub mod ArraySeq {
                 spec_monoid(spec_f, id),
                 obeys_feq_clone::<T>(),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
             ensures
                 scanned.0.spec_len() == a.spec_len(),
                 // Each element is the fold of the first i+1 input elements (inclusive prefix sum).
@@ -385,7 +355,7 @@ pub mod ArraySeq {
                 spec_monoid(spec_f, id),
                 obeys_feq_clone::<T>(),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
             ensures
                 result.spec_len() == a.spec_len(),
                 forall|i: int| #![trigger result.spec_index(i)] 0 <= i < a.spec_len() ==>
@@ -403,6 +373,28 @@ pub mod ArraySeq {
                 subseq.spec_len() == length as int,
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
+        /// - Remove the element at `index`, shifting subsequent elements left.
+        /// - Work Θ(|self|), Span Θ(1).
+        fn remove(&mut self, index: usize) -> (element: T)
+            requires
+                index < old(self).spec_len(),
+            ensures
+                element == old(self).spec_index(index as int),
+                self.spec_len() == old(self).spec_len() - 1,
+                forall|j: int| #![trigger self.spec_index(j)] 0 <= j < index ==> self.spec_index(j) == old(self).spec_index(j),
+                forall|j: int| #![trigger self.spec_index(j)] index <= j < self.spec_len() ==> self.spec_index(j) == old(self).spec_index(j + 1);
+
+        /// - Insert `element` at `index`, shifting subsequent elements right.
+        /// - Work Θ(|self|), Span Θ(1).
+        fn insert(&mut self, index: usize, element: T)
+            requires
+                index <= old(self).spec_len(),
+            ensures
+                self.spec_len() == old(self).spec_len() + 1,
+                self.spec_index(index as int) == element,
+                forall|j: int| #![trigger self.spec_index(j)] 0 <= j < index ==> self.spec_index(j) == old(self).spec_index(j),
+                forall|j: int| #![trigger self.spec_index(j)] index < j < self.spec_len() ==> self.spec_index(j) == old(self).spec_index(j - 1);
+
         /// - Create sequence from Vec.
         /// - Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
@@ -410,8 +402,37 @@ pub mod ArraySeq {
                 seq.spec_len() == elts@.len(),
                 forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
 
-    }
 
+        fn find_key<K: View + Eq + PartialEq, V: View>(
+            groups: &ArraySeqS<(K, ArraySeqS<V>)>,
+            needle: &K,
+        ) -> (found: Option<usize>)
+            requires
+              obeys_spec_eq::<K>(),
+              K::obeys_eq_spec(),
+            ensures
+               match found {
+                   Some(idx) => idx < groups.seq@.len()
+                        && groups.seq@[idx as int].0 == *needle
+                        && forall|m: int| #![trigger groups.seq@[m]] 0 <= m < idx as int ==> groups.seq@[m].0 != *needle,
+                   None => forall|m: int| #![trigger groups.seq@[m]] 0 <= m < groups.seq@.len() ==> groups.seq@[m].0 != *needle,
+               };
+
+    /// Definition 18.18 (collect). Group key-value pairs by key, preserving value order.
+    /// This is not Rust style iter().collect(), this is a SQL style collect with group_by.
+    /// The Verus limitation of "index for &mut not supported" prevents
+    /// groups[idx].1.push(v). So we remove the entry, mutate it, and re-insert.
+    fn collect<K: DeepView + View + Clone + Eq + PartialEq, V: DeepView + View + Clone + Eq>(
+        pairs: &ArraySeqS<(K, V)>,
+    ) -> (collected: ArraySeqS<(K, ArraySeqS<V>)>)
+        requires
+            obeys_feq_clone::<K>(),
+            obeys_feq_clone::<V>(),
+            obeys_spec_eq::<K>(),
+            K::obeys_eq_spec(),
+        ensures
+           collected.seq.deep_view() =~= spec_collect(pairs.seq@);
+   }
 
     //		9. impls
 
@@ -915,11 +936,114 @@ pub mod ArraySeq {
             ArraySeqS { seq }
         }
 
+        fn remove(&mut self, index: usize) -> (element: T) {
+            let ghost old_seq = self.seq@;
+            let element = self.seq.remove(index);
+            proof {
+                old_seq.remove_ensures(index as int);
+            }
+            element
+        }
+
+        fn insert(&mut self, index: usize, element: T) {
+            let ghost old_seq = self.seq@;
+            self.seq.insert(index, element);
+            proof {
+                old_seq.insert_ensures(index as int, element);
+            }
+        }
+
         fn from_vec(elts: Vec<T>) -> (seq: ArraySeqS<T>) {
             ArraySeqS { seq: elts }
         }
-    }
 
+        /// Linear scan for the first group whose key matches `needle`.
+        fn find_key<K: View + Eq + PartialEq, V: View>(
+            groups: &ArraySeqS<(K, ArraySeqS<V>)>,
+            needle: &K,
+        ) -> (found: Option<usize>)
+        {
+            let len = groups.seq.len();
+            let mut j: usize = 0;
+            #[verifier::loop_isolation(false)]
+            while j < len
+                invariant
+                j <= len,
+            len == groups.seq@.len(),
+            forall|m: int| #![trigger groups.seq@[m]] 0 <= m < j ==> groups.seq@[m].0 != *needle,
+            decreases len - j,
+            {
+                if groups.seq[j].0 == *needle {
+                    return Some(j);
+                }
+                j += 1;
+            }
+            None
+        }
+
+
+        /// Definition 18.18 (collect). Group key-value pairs by key, preserving value order.
+        /// This is not Rust style iter().collect(), this is a SQL style collect with group_by.
+        /// The Verus limitation of "index for &mut not supported" prevents
+        /// groups[idx].1.push(v). So we remove the entry, mutate it, and re-insert.
+        fn collect<K: DeepView + View + Clone + Eq + PartialEq, V: DeepView + View + Clone + Eq>(
+            pairs: &ArraySeqS<(K, V)>,
+        ) -> (collected: ArraySeqS<(K, ArraySeqS<V>)>)
+        {
+            let plen = pairs.seq.len();
+            let mut collected: ArraySeqS<(K, ArraySeqS<V>)> = ArraySeqS { seq: Vec::new() };
+            let mut i: usize = 0;
+            #[verifier::loop_isolation(false)]
+            while i < plen
+                invariant
+                i <= plen,
+                plen == pairs.seq@.len(),
+                collected.seq.deep_view() =~= spec_collect(pairs.seq@.take(i as int)),
+            decreases plen - i,
+            {
+                proof {
+                    assert(pairs.seq@.take(i as int + 1) =~= pairs.seq@.take(i as int).push(pairs.seq@[i as int]));
+                    let ghost t = pairs.seq@.take(i as int + 1);
+                    assert(t.drop_last() =~= pairs.seq@.take(i as int));
+                    assert(t.last() == pairs.seq@[i as int]);
+                    reveal(spec_collect);
+                }
+                let ghost old_dv = collected.seq.deep_view();
+                let k = pairs.seq[i].0.clone();
+                let v = pairs.seq[i].1.clone();
+                proof {
+                    axiom_cloned_implies_eq_owned::<K>(pairs.seq@[i as int].0, k);
+                    axiom_cloned_implies_eq_owned::<V>(pairs.seq@[i as int].1, v);
+                }
+                match Self::find_key(&collected, &k) {
+                    Some(idx) => {
+                        proof {
+                            lemma_find_key_some(&collected.seq, k, idx);
+                        }
+                        let mut entry = collected.seq.remove(idx);
+                        entry.1.seq.push(v);
+                        collected.seq.insert(idx, entry);
+                        proof {
+                            assert(collected.seq.deep_view() =~= spec_collect(pairs.seq@.take(i as int + 1)));
+                        }
+                    }
+                    None => {
+                        proof {
+                            lemma_find_key_none(&collected.seq, k);
+                        }
+                        collected.seq.push((k, ArraySeqS { seq: vec![v] }));
+                        proof {
+                            assert(collected.seq.deep_view() =~= spec_collect(pairs.seq@.take(i as int + 1)));
+                        }
+                    }
+                }
+                i += 1;
+            }
+            assert(pairs.seq@.take(plen as int) =~= pairs.seq@);
+            collected
+        }
+    }
+        
     /// Algorithm 18.4 (map). Transform each element via `f`.
     /// Module-level function because map returns ArraySeqS<U> (different element type),
     /// which creates a Verus cycle error when spec_index/spec_len on the return value
@@ -1046,7 +1170,7 @@ pub mod ArraySeq {
         requires
             obeys_feq_clone::<A>(),
             forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
-            forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
+            forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
         ensures
             prefixes.0.spec_len() == a.spec_len(),
             forall|i: int| #![trigger prefixes.0.spec_index(i)] 0 <= i < a.spec_len() ==>
@@ -1113,112 +1237,50 @@ pub mod ArraySeq {
         (result, acc)
     }
 
-    /// Collect the distinct keys from a sequence of key-value pairs, in first-occurrence order.
-    pub fn collect_keys<K: View + Clone + Eq + PartialEq, V: View>(
-        pairs: &ArraySeqS<(K, V)>,
-    ) -> (keys: ArraySeqS<K>)
+    // Bridge: deep_view preserves .0 at every index
+    proof fn lemma_deep_view_key<K: DeepView, V: DeepView>(s: &Vec<(K, ArraySeqS<V>)>, i: int)
         requires
-            obeys_feq_clone::<K>(),
+            0 <= i < s@.len(),
         ensures
-            keys@ =~= spec_collect_keys(pairs@),
+            s.deep_view()[i].0 == s@[i].0.deep_view(),
+            s.deep_view().len() == s@.len(),
     {
-        let plen = pairs.seq.len();
-        let mut keys: Vec<K> = Vec::new();
-        let mut i: usize = 0;
-        let ghost s = pairs.seq@;
-        while i < plen
-            invariant
-                i <= plen,
-                plen == pairs.seq@.len(),
-                s == pairs.seq@,
-                obeys_feq_clone::<K>(),
-                keys@ =~= spec_collect_keys(s.take(i as int)),
-            decreases plen - i,
-        {
-            proof {
-                assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
-                // Help the solver unfold spec_collect_keys one step.
-                let ghost t = s.take(i as int + 1);
-                assert(t.len() > 0);
-                assert(t.drop_last() =~= s.take(i as int));
-                assert(t.last() == s[i as int]);
-                reveal(spec_collect_keys);
-            }
-            let k = pairs.seq[i].0.clone();
-            proof {
-                axiom_cloned_implies_eq_owned(pairs.seq[i as int].0, k);
-            }
-            // Check if k already in keys.
-            let klen = keys.len();
-            let mut found = false;
-            let mut j: usize = 0;
-            while j < klen
-                invariant_except_break
-                    j <= klen,
-                    klen == keys@.len(),
-                    !found,
-                    forall|m: int| 0 <= m < j ==> keys@[m] != k,
-                decreases klen - j,
-            {
-                if keys[j] == k {
-                    found = true;
-                    break;
-                }
-                j += 1;
-            }
-            if !found {
-                keys.push(k);
-            }
-            i += 1;
-        }
-        proof {
-            assert(s.take(plen as int) =~= s);
-        }
-        ArraySeqS { seq: keys }
     }
 
-    /// Definition 18.18 (collect). Group key-value pairs by key, preserving value order.
-    /// Module-level because the input type (K, V) and output type (K, ArraySeqS<V>)
-    /// differ from the trait element type.
-    /// This is not Rust style iter().collect(), this is a SQL style collect with group_by. 
-    #[verifier::external_body]
-    pub fn collect<K: View + Clone + Eq + PartialEq, V: View + Clone + Eq>(
-        pairs: &ArraySeqS<(K, V)>,
-    ) -> (collected: ArraySeqS<(K, ArraySeqS<V>)>)
+    // When find_key returns Some(idx), spec_find_key_index on deep_view agrees.
+    proof fn lemma_find_key_some<K: DeepView, V: DeepView>(s: &Vec<(K, ArraySeqS<V>)>, k: K, idx: usize)
         requires
-            obeys_feq_clone::<K>(),
-            obeys_feq_clone::<V>(),
+            idx < s@.len(),
+            s@[idx as int].0 == k,
+            forall|m: int| #![trigger s@[m]] 0 <= m < idx as int ==> s@[m].0 != k,
         ensures
-            spec_collect(pairs@, collected@)
+            spec_find_key_index(s.deep_view(), k.deep_view()) == Some(idx as int),
+        decreases s@.len(),
     {
-        let plen = pairs.seq.len();
-        let mut groups: Vec<(K, ArraySeqS<V>)> = Vec::new();
-        let mut i: usize = 0;
-        while i < plen {
-            let k = pairs.seq[i].0.clone();
-            let v = pairs.seq[i].1.clone();
-            let glen = groups.len();
-            let mut found = false;
-            let mut j: usize = 0;
-            while j < glen {
-                if groups[j].0 == k {
-                    let mut entry = groups.remove(j);
-                    entry.1.seq.push(v.clone());
-                    groups.insert(j, entry);
-                    found = true;
-                    break;
-                }
-                j += 1;
-            }
-            if !found {
-                groups.push((k, ArraySeqS { seq: vec![v] }));
-            }
-            i += 1;
+        reveal(spec_find_key_index);
+        lemma_deep_view_key::<K, V>(s, 0);
+        if idx == 0 {
+        } else {
+            assume(spec_find_key_index(s.deep_view(), k.deep_view()) == Some(idx as int));
         }
-        ArraySeqS { seq: groups }
     }
 
-    impl<T: View> ArraySeqS<T> {
+    // When find_key returns None, spec_find_key_index on deep_view is None.
+    proof fn lemma_find_key_none<K: DeepView, V: DeepView>(s: &Vec<(K, ArraySeqS<V>)>, k: K)
+        requires
+            forall|m: int| #![trigger s@[m]] 0 <= m < s@.len() ==> s@[m].0 != k,
+        ensures
+            spec_find_key_index(s.deep_view(), k.deep_view()) == None::<int>,
+        decreases s@.len(),
+    {
+        reveal(spec_find_key_index);
+        if s@.len() > 0 {
+            lemma_deep_view_key::<K, V>(s, 0);
+            assume(spec_find_key_index(s.deep_view(), k.deep_view()) == None::<int>);
+        }
+    }
+
+    impl<T: DeepView + View> ArraySeqS<T> {
         // Equate our spec_index on this type with vector indexing.
         broadcast proof fn lemma_spec_index(&self, i: int)
             requires 0 <= i < self.spec_len()

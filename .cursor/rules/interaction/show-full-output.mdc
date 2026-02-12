@@ -1,3 +1,9 @@
+---
+description: Always show complete terminal output in responses, never just summarize
+globs: 
+alwaysApply: true
+---
+
 # Show Full Command Output
 
 ## Rule

@@ -1,32 +1,39 @@
 ❌ ArraySeq.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:415: external - #[verifier::external]
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:422: external - #[verifier::external]
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:445: assume() - proof { assume(r == (self@ == other@)); }
-   Holes: 3 total
-      1 × assume()
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1147: assume() - assume(spec_find_key_index(groups.deep_view(), k.deep_view()) == Some(idx as ...
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1164: assume() - assume(spec_find_key_index(groups.deep_view(), k.deep_view()) == None::<int>);
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1291: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1425: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1448: assume() - proof { assume(equal == (self@ == other@)); }
+   Holes: 5 total
+      3 × assume()
       2 × external
+   Proof functions: 3 total (1 clean, 2 holed)
 ❌ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:685: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:930: assume() - proof { assume(equal == (self@ == other@)); }
    Holes: 1 total
       1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
 ❌ ArraySeqMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:688: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:935: assume() - proof { assume(equal == (self@ == other@)); }
    Holes: 1 total
       1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
 ❌ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:524: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:793: assume() - proof { assume(equal == (self@ == other@)); }
    Holes: 1 total
       1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
 ❌ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:504: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:768: assume() - proof { assume(equal == (self@ == other@)); }
    Holes: 1 total
       1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
 ❌ LinkedListStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:512: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:581: assume() - proof { assume(r == (self@ == other@)); }
    Holes: 1 total
       1 × assume()
 ❌ LinkedListStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:496: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:562: assume() - proof { assume(r == (self@ == other@)); }
    Holes: 1 total
       1 × assume()
 
@@ -40,10 +47,10 @@ Modules:
    7 total
 
 Proof Functions:
-   0 clean
-   0 holed
-   0 total
+   5 clean
+   2 holed
+   7 total
 
-Holes Found: 9 total
-   7 × assume()
+Holes Found: 11 total
+   9 × assume()
    2 × external

@@ -1,3 +1,9 @@
+---
+description: Use the project work-stealing scheduler, not raw thread::spawn
+globs: "**/*.rs"
+alwaysApply: false
+---
+
 # Use Work-Stealing Scheduler
 
 For parallel scheduling, use the project's work-stealing scheduler:

@@ -1,3 +1,9 @@
+---
+description: Format for auditing code inside vs outside verus! blocks
+globs: "**/*.rs"
+alwaysApply: false
+---
+
 # In/Out Table
 
 When auditing or documenting what code is inside vs outside `verus!` blocks, use the **In/Out Table** format.

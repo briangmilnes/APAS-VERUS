@@ -1,3 +1,9 @@
+---
+description: Official Verus tutorial and reference at verus-lang.github.io
+globs: 
+alwaysApply: true
+---
+
 # Verus Guide
 
 The official Verus tutorial and reference is at:
