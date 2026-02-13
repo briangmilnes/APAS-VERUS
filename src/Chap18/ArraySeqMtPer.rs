@@ -168,13 +168,20 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
         /// - Work Θ(|a|), Span Θ(|a|).
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F) -> (filtered: Self)
+        /// - The multiset postcondition captures predicate satisfaction, provenance,
+        ///   and completeness in a single statement.
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
+                // The biconditional bridge ties the exec closure to the spec predicate.
+                forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
             ensures
                 filtered.spec_len() <= a.seq@.len(),
+                // The result multiset equals the input multiset filtered by the spec predicate.
+                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
@@ -201,21 +208,40 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.7 (iterate). Fold with accumulator `seed`.
         /// - Work Θ(|a|), Span Θ(|a|).
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtPerS<T>, f: &F, seed: A) -> A
-            requires forall|x: &A, y: &T| #[trigger] f.requires((x, y));
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (result: A)
+            requires
+                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
+                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
+            ensures
+                result == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);
 
         /// - Definition 18.18 (reduce). Combine elements using associative `f` and identity `id`.
         /// - Work Θ(|a|), Span Θ(log|a|).
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> T
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: T)
             where T: Clone
-            requires forall|x: &T, y: &T| #[trigger] f.requires((x, y));
+            requires
+                spec_monoid(spec_f, id),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures
+                result == spec_iterate(
+                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
 
-        /// - Definition 18.19 (scan). Prefix-reduce returning partial sums and total.
+        /// - Definition 18.19 (scan). Prefix-reduce returning inclusive prefix sums and total.
         /// - Work Θ(|a|), Span Θ(log|a|).
-        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (scanned: (ArraySeqMtPerS<T>, T))
-            where T: Clone
-            requires forall|x: &T, y: &T| #[trigger] f.requires((x, y))
-            ensures scanned.0.seq@.len() == a.seq@.len();
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtPerS<T>, T))
+            where T: Clone + Eq
+            requires
+                spec_monoid(spec_f, id),
+                obeys_feq_clone::<T>(),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures
+                scanned.0.spec_len() == a.spec_len(),
+                forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < a.spec_len() ==>
+                    scanned.0.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f),
+                scanned.1 == spec_iterate(
+                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);
 
         /// - Algorithm 18.4 (map). Transform each element via `f`.
         /// - Work Θ(|a|), Span Θ(log|a|).
@@ -392,7 +418,7 @@ pub mod ArraySeqMtPer {
             ArraySeqMtPerS { seq }
         }
 
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F) -> (filtered: ArraySeqMtPerS<T>)
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: ArraySeqMtPerS<T>)
             where T: Clone + Eq
         {
             let len = a.seq.len();
@@ -405,21 +431,32 @@ pub mod ArraySeqMtPer {
                     seq@.len() <= i,
                     obeys_feq_clone::<T>(),
                     forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[j],)),
+                    forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
                     forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> pred.ensures((&seq@[j],), true),
+                    seq@.to_multiset() =~= a.seq@.subrange(0, i as int).to_multiset().filter(spec_pred),
                 decreases len - i,
             {
-                proof { a.lemma_spec_index(i as int); }
+                proof {
+                    broadcast use vstd::seq_lib::group_to_multiset_ensures;
+                    a.lemma_spec_index(i as int);
+                }
+                assert(a.seq@.subrange(0, i as int + 1) =~= a.seq@.subrange(0, i as int).push(a.seq@[i as int]));
                 if pred(&a.seq[i]) {
-                    seq.push(a.seq[i].clone());
+                    let elem = a.seq[i].clone();
                     proof {
-                        let ghost last = seq@[seq@.len() - 1 as int];
-                        assert(cloned(a.seq[i as int], last));
-                        axiom_cloned_implies_eq_owned(a.seq[i as int], last);
+                        axiom_cloned_implies_eq_owned(a.seq[i as int], elem);
                     }
+                    seq.push(elem);
                 }
                 i += 1;
             }
-            ArraySeqMtPerS { seq }
+            let filtered = ArraySeqMtPerS { seq };
+            proof {
+                assert(a.seq@.subrange(0, a.seq@.len() as int) =~= a.seq@);
+                assert(filtered.seq@ =~= Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)));
+                assert(a.seq@ =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]));
+            }
+            filtered
         }
 
         fn update(a: &ArraySeqMtPerS<T>, index: usize, item: T) -> (updated: ArraySeqMtPerS<T>)
@@ -467,7 +504,8 @@ pub mod ArraySeqMtPer {
             self.seq.len() == 1
         }
 
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtPerS<T>, f: &F, seed: A) -> (acc: A) {
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (acc: A) {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             let mut acc = seed;
             let mut i: usize = 0;
@@ -476,17 +514,35 @@ pub mod ArraySeqMtPer {
                     i <= len,
                     len == a.seq@.len(),
                     forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
+                    forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
+                    s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
+                    acc == s.take(i as int).fold_left(seed, spec_f),
                 decreases len - i,
             {
+                proof {
+                    a.lemma_spec_index(i as int);
+                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
+                }
                 acc = f(&acc, &a.seq[i]);
+                proof {
+                    let ghost t = s.take(i as int + 1);
+                    assert(t.len() > 0);
+                    assert(t.drop_last() =~= s.take(i as int));
+                    assert(t.last() == s[i as int]);
+                    reveal(Seq::fold_left);
+                }
                 i += 1;
+            }
+            proof {
+                assert(s.take(len as int) =~= s);
             }
             acc
         }
 
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (reduced: T)
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
         {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             let mut acc = id;
             let mut i: usize = 0;
@@ -495,17 +551,35 @@ pub mod ArraySeqMtPer {
                     i <= len,
                     len == a.seq@.len(),
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                    s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
+                    acc == s.take(i as int).fold_left(id, spec_f),
                 decreases len - i,
             {
+                proof {
+                    a.lemma_spec_index(i as int);
+                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
+                }
                 acc = f(&acc, &a.seq[i]);
+                proof {
+                    let ghost t = s.take(i as int + 1);
+                    assert(t.len() > 0);
+                    assert(t.drop_last() =~= s.take(i as int));
+                    assert(t.last() == s[i as int]);
+                    reveal(Seq::fold_left);
+                }
                 i += 1;
+            }
+            proof {
+                assert(s.take(len as int) =~= s);
             }
             acc
         }
 
-        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, id: T) -> (scanned: (ArraySeqMtPerS<T>, T))
-            where T: Clone
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtPerS<T>, T))
+            where T: Clone + Eq
         {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             let mut acc = id;
             let mut seq: Vec<T> = Vec::with_capacity(len);
@@ -515,14 +589,46 @@ pub mod ArraySeqMtPer {
                     i <= len,
                     len == a.seq@.len(),
                     seq@.len() == i as int,
+                    obeys_feq_clone::<T>(),
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                    s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
+                    acc == s.take(i as int).fold_left(id, spec_f),
+                    forall|k: int| #![trigger seq@[k]] 0 <= k < seq@.len() ==>
+                        seq@[k] == s.take(k + 1).fold_left(id, spec_f),
                 decreases len - i,
             {
+                proof {
+                    a.lemma_spec_index(i as int);
+                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
+                }
                 acc = f(&acc, &a.seq[i]);
-                seq.push(acc.clone());
+                proof {
+                    let ghost t = s.take(i as int + 1);
+                    assert(t.len() > 0);
+                    assert(t.drop_last() =~= s.take(i as int));
+                    assert(t.last() == s[i as int]);
+                    reveal(Seq::fold_left);
+                }
+                let cloned = acc.clone();
+                proof {
+                    axiom_cloned_implies_eq_owned(acc, cloned);
+                }
+                seq.push(cloned);
                 i += 1;
             }
-            (ArraySeqMtPerS { seq }, acc)
+            proof {
+                assert(s.take(len as int) =~= s);
+            }
+            let scanned_seq = ArraySeqMtPerS { seq };
+            proof {
+                assert forall|i: int| #![trigger scanned_seq.spec_index(i)] 0 <= i < a.spec_len() implies
+                    scanned_seq.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
+                by {
+                    assert(scanned_seq.spec_index(i) == seq@[i]);
+                }
+            }
+            (scanned_seq, acc)
         }
 
         fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtPerS<T>, f: &F) -> (mapped: ArraySeqMtPerS<U>)

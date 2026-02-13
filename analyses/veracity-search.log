@@ -2,7 +2,110 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: broadcast.*group
+Pattern: fn _ ensures .*filter.*to_multiset.*
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 94, Functions: 2216, Matches: 0
+Searching: /home/milnes/projects/APAS-VERUS
+Files: 351, Functions: 6283, Matches: 9
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:224: [0m
+/// - Definition 18.1 (empty). Construct the empty sequence.
+/// - Work Θ(1), Span Θ(1).
+[38;5;22m        fn empty() -> (empty_seq: Self)[0m
+[38;5;22m            ensures empty_seq.spec_len() == 0;[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:229: [0m
+/// - Definition 18.1 (singleton). Construct a singleton sequence containing `item`.
+/// - Work Θ(1), Span Θ(1).
+[38;5;22m        fn singleton(item: T) -> (singleton: Self)[0m
+[38;5;22m            ensures[0m
+[38;5;22m                singleton.spec_len() == 1,[0m
+[38;5;22m                singleton.spec_index(0) == item;[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:236: [0m
+/// - Definition 18.12 (subseq). Extract a contiguous subsequence.
+/// - Work Θ(length), Span Θ(1).
+[38;5;22m        fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)[0m
+[38;5;22m            where T: Clone + Eq[0m
+[38;5;22m            requires[0m
+[38;5;22m                obeys_feq_clone::<T>(),[0m
+[38;5;22m                start + length <= usize::MAX,[0m
+[38;5;22m                start + length <= a.spec_len(),[0m
+[38;5;22m            ensures[0m
+[38;5;22m                subseq.spec_len() == length as int,[0m
+[38;5;22m                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:248: [0m
+/// - Definition 18.13 (append). Concatenate two sequences.
+/// - Work Θ(|a| + |b|), Span Θ(1).
+[38;5;22m        fn append(a: &Self, b: &Self) -> (appended: Self)[0m
+[38;5;22m            where T: Clone + Eq[0m
+[38;5;22m            requires[0m
+[38;5;22m                obeys_feq_clone::<T>(),[0m
+[38;5;22m                a.spec_len() + b.spec_len() <= usize::MAX as int,[0m
+[38;5;22m            ensures[0m
+[38;5;22m                appended.spec_len() == a.spec_len() + b.spec_len(),[0m
+[38;5;22m                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.spec_len() ==> appended.spec_index(i) == a.spec_index(i),[0m
+[38;5;22m                forall|i: int| #![trigger b.spec_index(i)] 0 <= i < b.spec_len() ==> appended.spec_index(a.spec_len() + i) == b.spec_index(i);[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:262: [0m
+/// - Work Θ(|a|), Span Θ(1).
+/// - The multiset postcondition captures predicate satisfaction, provenance,
+///   and completeness in a single statement.
+[38;5;22m        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)[0m
+[38;5;22m            where T: Clone + Eq[0m
+[38;5;22m            requires [0m
+[38;5;22m              obeys_feq_clone::<T>(),[0m
+[38;5;22m              forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(i),)),[0m
+[38;5;22m              // The biconditional bridge ties the exec closure to the spec predicate.[0m
+[38;5;22m              forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,[0m
+[38;5;22m            ensures[0m
+[38;5;22m                filtered.spec_len() <= a.spec_len(),[0m
+[38;5;22m                // The result multiset equals the input multiset filtered by the spec predicate.[0m
+[38;5;22m                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()[0m
+[38;5;22m                    =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)).to_multiset().filter(spec_pred);[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:141: [0m
+/// - Definition 18.1 (empty). Construct the empty sequence.
+/// - Work Θ(1), Span Θ(1).
+[38;5;22m        fn empty() -> (empty_seq: Self)[0m
+[38;5;22m            ensures empty_seq.spec_len() == 0;[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:146: [0m
+/// - Definition 18.1 (singleton). Construct a singleton sequence containing `item`.
+/// - Work Θ(1), Span Θ(1).
+[38;5;22m        fn singleton(item: T) -> (singleton: Self)[0m
+[38;5;22m            ensures[0m
+[38;5;22m                singleton.spec_len() == 1,[0m
+[38;5;22m                singleton.spec_index(0) == item;[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:153: [0m
+/// - Definition 18.13 (append). Concatenate two sequences.
+/// - Work Θ(|a| + |b|), Span Θ(1).
+[38;5;22m        fn append(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> (appended: Self)[0m
+[38;5;22m            where T: Clone + Eq[0m
+[38;5;22m            requires[0m
+[38;5;22m                obeys_feq_clone::<T>(),[0m
+[38;5;22m                a.seq@.len() + b.seq@.len() <= usize::MAX as int,[0m
+[38;5;22m            ensures[0m
+[38;5;22m                appended.spec_len() == a.seq@.len() + b.seq@.len(),[0m
+[38;5;22m                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],[0m
+[38;5;22m                forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:167: [0m
+/// - Work Θ(|a|), Span Θ(1).
+/// - The multiset postcondition captures predicate satisfaction, provenance,
+///   and completeness in a single statement.
+[38;5;22m        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)[0m
+[38;5;22m            where T: Clone + Eq[0m
+[38;5;22m            requires[0m
+[38;5;22m                obeys_feq_clone::<T>(),[0m
+[38;5;22m                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),[0m
+[38;5;22m                // The bridge ties the exec closure to the spec predicate.[0m
+[38;5;22m                forall|v: T, ret: bool| pred.ensures((&v,), ret) ==> spec_pred(v) == ret,[0m
+[38;5;22m            ensures[0m
+[38;5;22m                filtered.spec_len() <= a.seq@.len(),[0m
+[38;5;22m                // The result multiset equals the input multiset filtered by the spec predicate.[0m
+[38;5;22m                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()[0m
+[38;5;22m                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),[0m
+[38;5;22m                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);[0m
 

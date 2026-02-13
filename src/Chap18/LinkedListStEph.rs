@@ -168,13 +168,20 @@ pub mod LinkedListStEph {
                 forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
 
         /// Work Θ(|a|), Span Θ(1)
-        fn filter<F: Fn(&T) -> bool>(a: &LinkedListStEphS<T>, pred: &F) -> (filtered: Self)
+        /// - The multiset postcondition captures predicate satisfaction, provenance,
+        ///   and completeness in a single statement.
+        fn filter<F: Fn(&T) -> bool>(a: &LinkedListStEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
+                // The biconditional bridge ties the exec closure to the spec predicate.
+                forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
             ensures
                 filtered.spec_len() <= a.seq@.len(),
+                // The result multiset equals the input multiset filtered by the spec predicate.
+                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// Work Θ(Σ|a[i]|), Span Θ(1)
@@ -405,7 +412,7 @@ pub mod LinkedListStEph {
             LinkedListStEphS { seq }
         }
 
-        fn filter<F: Fn(&T) -> bool>(a: &LinkedListStEphS<T>, pred: &F) -> (filtered: LinkedListStEphS<T>)
+        fn filter<F: Fn(&T) -> bool>(a: &LinkedListStEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: LinkedListStEphS<T>)
             where T: Clone + Eq
         {
             let len = a.seq.len();
@@ -418,21 +425,32 @@ pub mod LinkedListStEph {
                     seq@.len() <= i,
                     obeys_feq_clone::<T>(),
                     forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[j],)),
+                    forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
                     forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> pred.ensures((&seq@[j],), true),
+                    seq@.to_multiset() =~= a.seq@.subrange(0, i as int).to_multiset().filter(spec_pred),
                 decreases len - i,
             {
-                proof { a.lemma_spec_index(i as int); }
+                proof {
+                    broadcast use vstd::seq_lib::group_to_multiset_ensures;
+                    a.lemma_spec_index(i as int);
+                }
+                assert(a.seq@.subrange(0, i as int + 1) =~= a.seq@.subrange(0, i as int).push(a.seq@[i as int]));
                 if pred(&a.seq[i]) {
-                    seq.push(a.seq[i].clone());
+                    let elem = a.seq[i].clone();
                     proof {
-                        let ghost last = seq@[seq@.len() - 1 as int];
-                        assert(cloned(a.seq[i as int], last));
-                        axiom_cloned_implies_eq_owned(a.seq[i as int], last);
+                        axiom_cloned_implies_eq_owned(a.seq[i as int], elem);
                     }
+                    seq.push(elem);
                 }
                 i += 1;
             }
-            LinkedListStEphS { seq }
+            let filtered = LinkedListStEphS { seq };
+            proof {
+                assert(a.seq@.subrange(0, a.seq@.len() as int) =~= a.seq@);
+                assert(filtered.seq@ =~= Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)));
+                assert(a.seq@ =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]));
+            }
+            filtered
         }
 
         fn flatten(a: &LinkedListStEphS<LinkedListStEphS<T>>) -> (flattened: LinkedListStEphS<T>)

@@ -119,14 +119,17 @@ pub mod Exercise21_8 {
         );
 
         // Filter: keep only the true values (divisors).
+        // Verus limitation: exec closure ensures are one-directional; the biconditional
+        // bridge required by filter's spec cannot be proven automatically.
+        let pred = |x: &B| -> (keep: bool) ensures keep == *x { *x };
+        let ghost spec_pred = |v: B| v;
+        proof {
+            assume(forall|v: B, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret);
+        }
         let ones: ArraySeqStPerS<B> = ArraySeqStPerS::filter(
             &all,
-            &(|x: &B| -> (keep: bool)
-                ensures keep == *x,
-            {
-                *x
-            }),
-            Ghost(|v: B| v),
+            &pred,
+            Ghost(spec_pred),
         );
 
         let prime = ones.length() == 1;
