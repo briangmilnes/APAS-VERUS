@@ -141,6 +141,14 @@ path = "tests/Chap18/TestArraySeqMtPer.rs"
 name = "TestArraySeqMtEph"
 path = "tests/Chap18/TestArraySeqMtEph.rs"
 
+[[test]]
+name = "TestArraySeqStEph19"
+path = "tests/Chap19/TestArraySeqStEph.rs"
+
+[[test]]
+name = "TestArraySeqMtEph19"
+path = "tests/Chap19/TestArraySeqMtEph.rs"
+
 # Experiments removed - use verus-proof-time-testing project instead
 # [[test]]
 # name = "test_verify_harness"
