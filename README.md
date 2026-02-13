@@ -12,7 +12,7 @@ develop two software engineering tools to clean things up:
 
 **Verified: 8 chapters complete (Scheduling, Sorting, Sets/Relations/Mappings, Graphs, Fibonacci, MathSeq, Sequences, Trees)**
 
-**Proof totals: 1214 verified, 0 errors**
+**Proof totals: 1298 verified, 0 errors**
 
 ## Project Structure
 
@@ -121,9 +121,9 @@ develop two software engineering tools to clean things up:
 
 | Data Structure | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
 |----------------|----------|----------|---------------|-----------------|-------|
-| ArraySeqStEph | ✅ | — | ⬜ | ✅ | |
-| ArraySeqStPer | ✅ | — | ⬜ | ✅ | 1 external_body |
-| ArraySeqMtEph | ✅ | ✅ | ⬜ | ✅ | |
+| ArraySeqStPer | ✅ | — | ⬜ | ✅ | Compositional algorithms (tabulate, flatten, deflate) |
+| ArraySeqStEph | ✅ | — | ⬜ | ✅ | Ephemeral: clone+set update |
+| ArraySeqMtEph | ✅ | ✅ | ⬜ | ✅ | Parallel map/filter/reduce via fork-join |
 
 ### Chapter 21: Trees and Algorithms - ✅ COMPLETE (ZERO HOLES)
 
@@ -243,7 +243,7 @@ See APAS-AI for unverified implementations of:
 
 ## Proof State
 
-Full verification: **1214 verified, 0 errors**
+Full verification: **1298 verified, 0 errors**
 
 | Metric | Count |
 |--------|-------|

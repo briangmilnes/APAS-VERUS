@@ -28,3 +28,5 @@ fn is_valid_identifier(s: &str) -> bool { ... }
 ## Rule
 
 A function's name should describe what it does. Generic names like "helper" provide no information about purpose or behavior.
+
+This applies to documentation too — do not describe a function as a "helper" in comments or doc strings. Say what it does, not that it "helps".

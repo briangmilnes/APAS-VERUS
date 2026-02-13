@@ -1,0 +1,19 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Wide Markdown
+
+When creating markdown files (`.md`), include this `<style>` block at the top so tables and content fill the browser window:
+
+```html
+<style>
+body { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 1em !important; }
+.markdown-body { max-width: 100% !important; width: 100% !important; }
+.container, .container-lg, .container-xl, main, article { max-width: 100% !important; width: 100% !important; }
+table { width: 100% !important; table-layout: fixed; }
+</style>
+```
+
+This overrides GitHub and local markdown viewer width constraints.

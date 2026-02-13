@@ -186,8 +186,8 @@ pub mod Chap18 {
 #[cfg(not(feature = "experiments_only"))]
 pub mod Chap19 {
     pub mod ArraySeqStPer;
-//    pub mod ArraySeqStEph;
-//    pub mod ArraySeqMtEph;
+    pub mod ArraySeqStEph;
+    pub mod ArraySeqMtEph;
 }
 
 #[cfg(not(feature = "experiments_only"))]
