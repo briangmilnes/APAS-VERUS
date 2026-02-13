@@ -2,39 +2,30 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: proof fn lemma.*fold
+Pattern: fn _ ensures .*sqrt.*
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 94, Functions: 2216, Matches: 23
+Searching: /home/milnes/projects/verus
+Files: 1165, Functions: 40013, Matches: 2
 
-[31m/home/milnes/projects/verus/source/vstd/arithmetic/power2.rs:142: [0m
-/// Proof relating 2^e to 2^(e-1).
-[38;5;22mpub broadcast proof fn lemma_pow2_unfold(e: nat)[0m
+[31m/home/milnes/projects/verus/examples/imo_1988_6.rs:38: [0m
+[38;5;22mproof fn is_perfect_square_wlog(a: int, b: int, q: int) -> (sqrt: int)[0m
 [38;5;22m    requires[0m
-[38;5;22m        e > 0,[0m
+[38;5;22m        a >= 0,[0m
+[38;5;22m        b >= 0,[0m
+[38;5;22m        a * a + b * b == (a * b + 1) * q,[0m
+[38;5;22m        q > 2,[0m
+[38;5;22m        a < b,[0m
 [38;5;22m    ensures[0m
-[38;5;22m        #[trigger] pow2(e) == 2 * pow2((e - 1) as nat),[0m
+[38;5;22m        sqrt * sqrt == q,[0m
+[38;5;22m    decreases a + b, 0int,[0m
 
-[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:666: [0m
-/// A lemma that proves how [`Self::fold_left`] distributes over splitting a sequence.
-[38;5;22m    pub broadcast proof fn lemma_fold_left_split<B>(self, b: B, f: spec_fn(B, A) -> B, k: int)[0m
-[38;5;22m        requires[0m
-[38;5;22m            0 <= k <= self.len(),[0m
-[38;5;22m        ensures[0m
-[38;5;22m            self.subrange(k, self.len() as int).fold_left([0m
-[38;5;22m                (#[trigger] self.subrange(0, k).fold_left(b, f)),[0m
-[38;5;22m                f,[0m
-[38;5;22m            ) == self.fold_left(b, f),[0m
-[38;5;22m        decreases self.len(),[0m
+[31m/home/milnes/projects/verus/examples/imo_1988_6.rs:83: [0m
+[38;5;22mproof fn is_perfect_square(a: int, b: int, q: int) -> (sqrt: int)[0m
+[38;5;22m    requires[0m
+[38;5;22m        a >= 0,[0m
+[38;5;22m        b >= 0,[0m
+[38;5;22m        a * a + b * b == (a * b + 1) * q,[0m
+[38;5;22m    ensures[0m
+[38;5;22m        sqrt * sqrt == q,[0m
+[38;5;22m    decreases a + b, 1int,[0m
 
-[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:729: [0m
-/// [`Self::fold_left`] and [`Self::fold_left_alt`] are equivalent.
-[38;5;22m    pub proof fn lemma_fold_left_alt<B>(self, b: B, f: spec_fn(B, A) -> B)[0m
-[38;5;22m        ensures[0m
-[38;5;22m            self.fold_left(b, f) == self.fold_left_alt(b, f),[0m
-[38;5;22m        decreases self.len(),[0m
-
-[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:750: [0m
-/// [`Self::fold_left`] on the reversed sequence is equivalent to
-/// [`Self::fold_right`] on the original sequence with corresponding folding operator
-[38;5;22m    pub proof fn lemma_reverse_fold_left<B>(self, v: B, f: spec_fn(B, A) -> B)[0m
-[38;5;22m        ensures[0m

@@ -1,12 +1,16 @@
 ✓ Algorithm21_1.rs
-   1 clean proof function
+   2 clean proof functions
 ✓ Algorithm21_2.rs
 ✓ Algorithm21_5.rs
 ✓ Algorithm21_6.rs
 ✓ Exercise21_5.rs
 ✓ Exercise21_6.rs
 ✓ Exercise21_7.rs
-✓ Exercise21_8.rs
+❌ Exercise21_8.rs
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:149: assume() - assume(ones.seq@.len() as int == spec_divisor_count(n as int, 1, k as int + 1));
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 3 total (3 clean, 0 holed)
 ✓ Exercise21_9.rs
 ✓ Problem21_1.rs
 ✓ Problem21_3.rs
@@ -17,15 +21,14 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   12 clean (no holes)
-   0 holed (contains holes)
+   11 clean (no holes)
+   1 holed (contains holes)
    12 total
 
 Proof Functions:
-   1 clean
+   5 clean
    0 holed
-   1 total
+   5 total
 
-Holes Found: 0 total
-
-🎉 No proof holes found! All proofs are complete.
+Holes Found: 1 total
+   1 × assume()

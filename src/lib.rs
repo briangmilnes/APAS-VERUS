@@ -100,6 +100,7 @@ pub mod vstdplus {
     pub mod checked_int;
     pub mod checked_nat;
     pub mod hashed_checked_u32;
+    pub mod sqrt;
     pub mod arithmetic {
     pub mod power2_plus;
     }
@@ -199,9 +200,9 @@ pub mod Chap21 {
     // pub mod Exercise21_5;
     // pub mod Exercise21_6;
     // pub mod Exercise21_7;
-    // pub mod Exercise21_8;
+    pub mod Exercise21_8;
     // pub mod Exercise21_9;
-    // pub mod Problem21_1;
+    pub mod Problem21_1;
     // pub mod Problem21_3;
     // pub mod Problem21_4;
 }

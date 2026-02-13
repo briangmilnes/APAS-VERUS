@@ -1,0 +1,292 @@
+Chapter 21
+Examples
+This chapter presents example use of the sequence Chapter . and its cost specification .
+The examples include several solutions to a classic problem in computer science, that of
+computing prime numbers. In addition, we also briefly discuss how we might generalize
+the comprehensions based notation introduced earlier for building sequences to operate
+on multiple domains (or valiables).
+1 Miscellaneous Examples
+Problem 21.1 (Points in 2D). We wish to create a sequence consisting of points in two
+dimensional space (x, y) whose coordinates are natural numbers that satisfy the conditions:
+0 ≤ x < n and 1 ≤ y < n.
+For example, for n = 3, we would like to construct the sequence
+〈 (0, 1), (0, 2), (1, 1), (1, 2), (2, 1), (2, 2) 〉 .
+Give an algorithm that solves this problem and write the algorithm in both plain SPARC
+notation and in notation using comprehensions.
+Algorithm 21.1 (2D Points). The following algorithm generates the desired point sequence:
+points2D n =
+flatten (tabulate (lambda x . tabulate (lambda y . (x, y + 1))
+(n − 1))
+n).
+142
+1. MISCELLANEOUS EXAMPLES 143
+Using the basic sequence comprehension notation Syntax 18.2, we can express the same
+code more succinctly as
+points2D n = flatten 〈 〈 (x, y) : 1 ≤ y < n 〉 : 0 ≤ x < n 〉 .
+By extending the comprehension notation slightly to allow for multiple variables, we ex-
+press the same algorithm as
+points2D n = 〈 (x, y) : 1 ≤ y < n, 0 ≤ x < n 〉 .
+Example 21.1. For a given n, the algorithm first generates a sequence of the form
+〈 〈 (0, 1), (0, 2), . . . , (0, n − 1) 〉 (21.1)
+〈 (1, 1), (1, 2), . . . , (1, n − 1) 〉 (21.2)
+... (21.3)
+〈 (n − 1, 1), (n − 1, 2), . . . , (n − 1, n − 1) 〉 (21.4)
+〉 (21.5)
+and then concatenates the inner sequences by using flatten.
+Important. Note that in the second “multivariate comprehensions” approach used in the
+above algorithm , flatten is hidden. When using such multivariate notation, we therefore
+have to account for the cost of flatten.
+Exercise 21.2 (Analyzing 2D Points). Analyze the cost of the algorithm for generating 2D
+points given above .
+Problem 21.3 (Points in 3D). Building on Problem 21.1, suppose that we wish to generate
+points in 3D and restrict the points to those whose coordinates (x, y, z) are natural numbers
+that satisfy the conditions that
+0 ≤ x ≤ n − 1, 1 ≤ y ≤ n, and 2 ≤ z ≤ n + 1.
+Give an algorithm for solving this problem, using both the plain SPARC notation and se-
+quence comprehensions.
+Algorithm 21.2. Using the basic sequence comprehension notation Syntax 18.2, we can
+write the code for computing the sequence of all such points as
+points3D n =
+flatten 〈 flatten 〈 〈 (x, y, z) : 2 ≤ z ≤ n + 1 〉 : 1 ≤ y ≤ n 〉 : 0 ≤ x ≤ n − 1 〉 .
+We can also write the same algorithm more succinctly as
+points3D n =
+〈 (x, y, z) : 0 ≤ x ≤ n − 1, 1 ≤ y ≤ n, 2 ≤ z ≤ n + 1 〉 .
+As in Algorithm 21.1, the multivariate notation results in a succinct algorithm but reason-
+ing about the cost of the algorithm requires translating the algorithm to the more basic
+notation so that hidden flatten’s can be accounted for.
+144 CHAPTER 21. EXAMPLES
+Problem 21.4 (Cartesian Product). Present an algorithm that returns the Cartesian product
+of two sequences. For example, for the sequences a = 〈 1, 2 〉, and
+b = 〈 3.0, 4.0, 5.0 〉, the algorithm should return the Cartesian product of a and b, which is
+a × b = 〈 (1, 3.0), (1, 4.0), (1, 5.0), (2, 3.0), (2, 4.0), (2, 5.0) 〉 .
+Algorithm 21.3 (Cartesian Product). Using the basic sequence comprehension notation Syn-
+tax 18.2, we can write the algorithm for computing the Cartesian Product of two sequences
+as
+CartesianProduct (a, b) =
+flatten (map (lambda x . map (lambda y . (x, y)) b) a).
+Using the multivariate sequence comprehension notation, we can write the same algorithm
+as
+CartesianProduct (a, b) =
+〈 (x, y) : x ∈ a, y ∈ b 〉 .
+Exercise 21.5 (All contiguous subsequences). Present an algorithm that generates all con-
+tiguous subsequences of a given sequence.
+Solution. The following algorithm finds all contiguous subsequences of sequence a:
+〈 a 〈 i, . . . , j 〉 : 0 ≤ i < |a|, i ≤ j < |a| 〉 .
+The same algorithm can be written more simply as
+〈 a 〈 i, . . . , j 〉 : 0 ≤ i ≤ j < |a| 〉 .
+This is equivalent, in simplified sequence comprehensions notation, to
+flatten 〈 〈 a[i · · · i + j] : i ≤ j < |a| 〉 : 0 ≤ i < |a| 〉
+We can further translate this to
+flatten (tabulate (lambda i . tabulate (lambda j. a[i · · · i + j]) (21.6)
+(|a| − i − 1) (21.7)
+|a|). (21.8)
+Exercise 21.6 (Cost Analysis of All Subsequences). Analyze the cost of your algorithm for
+Exercise 21.5.
+Solution. Consider the algorithm from Solution 1:
+〈 a[i · · · j] : 0 ≤ i < |a|, i ≤ j < |a| 〉 ,
+1. MISCELLANEOUS EXAMPLES 145
+which extracts all contiguous subsequences from the sequence a.
+Recall that the notation is equivalent to a nested tabulate first over the indices i, and then
+inside over the indices j. The results are then flatten’ed. The nesting of tabulate’s allows
+all the calls to a[i · · · j] (i.e., subseq) to run in parallel. Let n = |a|. There are a total of
+n∑
+i=1
+i = n(n + 1)/2 = O(n2)
+contiguous subsequences and hence that many calls to subseq, each of which has constant
+work and span according to the cost specifications. The work of the nested tabulate’s and
+the subseq’s is therefore O(n2). The span of the inner tabulate is maximum over the span
+of the inner subseq’s, which is O (1). The span of the outer tabulate is the maximum over
+the inner tabulate’s, which is again O (1). The flatten at the end requires O(n2) work and
+O(lg n) span, because the total length of all subsequences is n(n+1)
+2 = O(n2), and |a| = n.
+The total work and span are therefore
+W (e) = O(|a|2), and
+S (e) = O(lg |a|).
+Exercise 21.7 (Comprehension with Conditionals). Given sequences a of natural numbers
+and b of letters of the alphabet, we wish to compute the sequence that pairs each even
+element of a with all elements of b that are vowels.
+Solution. We can writes this simply by adding the filtering predicates isEven, which holds
+for even numbers, and isVowel , which holds for vowels.
+〈 (x, y) : x ∈ a, y ∈ b | isEven x, isVowel 〉
+In our more basic notation, this translates to
+flatten 〈 〈 (x, y) : y ∈ b | isVowel y 〉 : x ∈ a | isEven x 〉 .
+Remark (Eliminating flatten). In this section, we considered 2D and 3D geometric exam-
+ples over the space of points whose coordinates are natural numbers. For these specific
+examples, we can eliminate the need for flatten by projecting the multidimensional space
+into a single dimensional space and using arithmetic over natural numbers to recover the
+coordinates of the points. This technique, however, does not generalize. For example, if we
+map over two strings (sequences of characters), then there is no analogous way to project
+efficiently the two strings into a single string that we can map over.
+Remark (Comprehensions). Many programming languages support syntax based on set-
+comprehensions, sometimes directly for sets (e.g., SETL), or for other collections of values
+such as lists, sequences, or mappings (e.g. Python, Haskell and Javascript). The com-
+prehensions syntax, however, is not uniform among the languages. Indeed even among
+mathematical texts on set theory, the syntax for set comprehensions varies. In our usage,
+we try to be self consistent, but we are not always consistent with usage found elsewhere.
+146 CHAPTER 21. EXAMPLES
+2 Computing Primes
+Problem 21.8 (Primes). The primes problem requires finding all prime numbers less than
+a given natural number n.
+Recall that a natural number n is a prime if it has exactly two distinct divisors 1 and itself.
+For example, the number 1 is not prime, but 2, 3, 7, and 9967 are. For simplicity we assume
+in the rest of this section, that n ≥ 2.
+Observation. If a natural number n is not prime, then it has a divisor that is at most √n.
+The observation holds, because for any i × j = n, either i or j is less than or equal to √n.
+Algorithm 21.4 (Brute Force Primality Test).
+isPrime n =
+let
+all = 〈 n mod i : 1 ≤ i ≤ b√n c 〉
+divisors = 〈 x : x ∈ all | x = 0 〉
+in
+|divisors| = 1
+end
+Cost of Brute Force Primality Test. Let’s calculate the work and span of this algorithm
+based on the array sequence cost specification. The algorithm constructs a sequence of
+length b√n c and then filters it. Since the work for computing i mod n and checking that a
+value is zero x = 0 is constant, based on the array-sequence costs, we can write work as
+WisPrime (n) = O
+
+
+1 +
+b√n c∑
+i=1
+O (1)
+
+
+ = O (√n) .
+Similarly we can write span as:
+SisPrime (n) = O
+(
+lg √n + b√n c
+max
+i=1 O (1)
+)
+= O (lg n) .
+The lg √n additive terms come from the cost specification for filter .
+Since parallelism is the ratio of work to span, it is
+O
+( √n
+lg √n
+)
+.
+This is not an abundant amount of parallelism but adequate especially, because work is
+small.
+2. COMPUTING PRIMES 147
+Algorithm 21.5 (Brute Force Solution to the Primes Problem). Now that we can test for
+primality of a number, we can solve the primes problem by testing the numbers up to n.
+We can write the code for such a brute-force algorithm as follows.
+primesBF n =
+let
+all = 〈 i : 1 < i < n 〉
+primes = 〈 x : x ∈ all | isPrime(x) 〉
+in
+primes
+end
+Let’s analyze work and span, again using array sequences. Constructing the sequence all
+using tabulate requires linear work. Filtering through all requires work that is the sum of
+the work of the calls to isPrime; thus we have
+WprimesBF (n) = O
+(n−1∑
+i=2
+1 + WisPrime (i)
+)
+= O
+(n−1∑
+i=2
+1 + √i
+)
+= O
+(
+n3/2)
+.
+Similarly, the span is dominated by the maximum of the span of calls to isPrime and a
+logarithmic additive term.
+SprimesBF (n) = = O
+(
+lg n + n
+max
+i=2 SisPrime (i)
+)
+= O
+(
+lg n + n
+max
+i=2 lg i
+)
+= O (lg n)
+The parallelism is hence
+WprimesBF (n)
+SprimesBF (n) = n3/2
+lg n .
+This is plenty of parallelism but comes at the expense of a large amount of work.
+We can improve the work for the algorithm, because the algorithm does a lot of redundant
+work by repeatedly checking with the divisors. To test whether a number m is prime, the
+algorithm checks its divisors, it then checks essentially the same divisors for multiples of
+m, such as 2m, 3m, . . ., which largely overlap, because if a number divides m, it also divides
+its multiples.
+We eliminate this redundancy by more actively eliminating numbers that are composites,
+i.e., not primes. The basic idea is to create a collection of composite numbers up to n and
+148 CHAPTER 21. EXAMPLES
+use this as a sieve. Generating such a sieve is easy: we just have to include for any number
+i ≤ √n, its multiples of up to n
+i . Having generated the sieve, what remains is to run the
+numbers up to n through the sieve. To do this in parallel, we can use use inject or in
+fact (non-deterministic) ninject, because all updates into the same position injects the same
+value.
+Exercise 21.9. To generate all composite numbers between 2 and n, prove that it suffices to
+consider all i ∈ N 1 ≤ i ≤ √n and all of i’s multiples up to n
+i .
+Solution. By the observation above , any composite number n has a divisor that is at most√n. In therefore sufficies to consider multiples of numbers less or equal to √n.
+Algorithm 21.6 (Prime Sieve). The pseudo-code below presents the prime-sieve algorithm.
+The idea is to do construct the sieve as a length-n sequence of the Boolean value true, and
+then update the sequence by writing false into all positions that correspond to composite
+numbers. The remaining true values indicate the prime numbers.
+primeSieve n =
+let
+(* Composite numbers. *)
+cs = 〈 i ∗ j : 2 ≤ i ≤ b√n c , 2 ≤ j ≤ n/i 〉
+sieve = 〈 (x, false) : x ∈ cs 〉
+all = 〈 true : 0 ≤ i < n 〉
+isPrime = ninject all sieve
+primes = 〈 i : 2 ≤ i < n | isPrime[i] = true 〉
+in
+primes
+end
+Cost of the Sieve Algorithm. For the analysis, we shall consider the phases of the algo-
+rithm and show that the work and span are functions of the total number of composites
+which we denote by m.
+• Generating each composite takes constant work and because it is just a multiplication.
+The work for generating the sequence of composites is linear in the total number of
+composites, m. The span is O(lg n) because of the flatten. Constructing the sieve
+requires linear work in its length, which is m, and constant span.
+• The work of ninject is also proportional to the length of sieve, m, and its span is
+constant.
+• The work for computing primes, using tabulate and filter is proportional to n, and
+the span is O(lg n).
+Therefore the total work is proportional to the number composites m, which is larger than
+n, and the total span is O(lg (n + m)). To calculate m, we can add up the number of multi-
+ples each i from 2 to b√nc have, i.e.,
+2. COMPUTING PRIMES 149
+m =
+b√n c∑
+i=2
+⌈ n
+i
+⌉
+≤ (n + 1)
+b√n c∑
+i=2
+1
+i
+≤ (n + 1)H(⌊√n ⌋)
+≤ (n + 2) ln n1/2
+= n + 2
+2 ln n.
+Here H(n) is the nth harmonic number, which is known to be bounded below by ln n and
+above by ln n + 1. We therefore have
+WprimeSieve (n) = O(n lg n), and
+SprimeSieve (n) = O(lg n).
+We have thus reduced the work from O (n3/2) to something much more reasonable: O (n lg n).
+Remark. The algorithm for computing primes described here dates back to antiquity and
+attributed to Eratosthenes of Cyrene, a Greek mathematician.
+
