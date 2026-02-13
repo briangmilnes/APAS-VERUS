@@ -126,6 +126,7 @@ pub mod Exercise21_8 {
             {
                 *x
             }),
+            Ghost(|v: B| v),
         );
 
         let prime = ones.length() == 1;

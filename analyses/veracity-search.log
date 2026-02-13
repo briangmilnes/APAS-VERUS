@@ -2,30 +2,7 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn _ ensures .*sqrt.*
+Pattern: broadcast.*group
 Searching: /home/milnes/projects/verus/source/vstd
-Searching: /home/milnes/projects/verus
-Files: 1165, Functions: 40013, Matches: 2
-
-[31m/home/milnes/projects/verus/examples/imo_1988_6.rs:38: [0m
-[38;5;22mproof fn is_perfect_square_wlog(a: int, b: int, q: int) -> (sqrt: int)[0m
-[38;5;22m    requires[0m
-[38;5;22m        a >= 0,[0m
-[38;5;22m        b >= 0,[0m
-[38;5;22m        a * a + b * b == (a * b + 1) * q,[0m
-[38;5;22m        q > 2,[0m
-[38;5;22m        a < b,[0m
-[38;5;22m    ensures[0m
-[38;5;22m        sqrt * sqrt == q,[0m
-[38;5;22m    decreases a + b, 0int,[0m
-
-[31m/home/milnes/projects/verus/examples/imo_1988_6.rs:83: [0m
-[38;5;22mproof fn is_perfect_square(a: int, b: int, q: int) -> (sqrt: int)[0m
-[38;5;22m    requires[0m
-[38;5;22m        a >= 0,[0m
-[38;5;22m        b >= 0,[0m
-[38;5;22m        a * a + b * b == (a * b + 1) * q,[0m
-[38;5;22m    ensures[0m
-[38;5;22m        sqrt * sqrt == q,[0m
-[38;5;22m    decreases a + b, 1int,[0m
+Files: 94, Functions: 2216, Matches: 0
 
