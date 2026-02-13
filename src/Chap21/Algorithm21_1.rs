@@ -174,33 +174,4 @@ pub mod Algorithm21_1 {
     }
 
     } // verus!
-
-    // Non-Verus implementation for cargo test compatibility.
-    #[cfg(not(verus_keep_ghost))]
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::{ArraySeqStPerS, ArraySeqStPerRedefinableTrait};
-
-    #[cfg(not(verus_keep_ghost))]
-    use crate::Types::Types::{N, Pair};
-
-    #[cfg(not(verus_keep_ghost))]
-    pub fn points2d_tab_flat(n: N) -> ArraySeqStPerS<Pair<N, N>> {
-        if n == 0 {
-            return ArraySeqStPerS { seq: Vec::new() };
-        }
-        let inner: ArraySeqStPerS<ArraySeqStPerS<Pair<N, N>>> =
-            ArraySeqStPerS::tabulate(
-                &|x| ArraySeqStPerS::tabulate(&|y| Pair(x, y + 1), n - 1),
-                n,
-            );
-        flatten_inner_non_verus(&inner)
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    fn flatten_inner_non_verus<T: Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> ArraySeqStPerS<T> {
-        let mut result = Vec::new();
-        for inner in ss.seq.iter() {
-            result.extend(inner.seq.iter().cloned());
-        }
-        ArraySeqStPerS { seq: result }
-    }
 }

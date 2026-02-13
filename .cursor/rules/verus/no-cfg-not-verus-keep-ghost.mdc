@@ -1,0 +1,25 @@
+---
+description: Do not create cfg(not(verus_keep_ghost)) duplicate implementations
+alwaysApply: true
+---
+
+# No cfg(not(verus_keep_ghost)) Duplicates
+
+**NEVER** create `#[cfg(not(verus_keep_ghost))]` duplicate implementations of functions that already exist inside `verus! {}` blocks.
+
+This is an old antipattern from before the codebase was fully verusified. It duplicated every function — once inside `verus! {}` with specs, and once outside with `#[cfg(not(verus_keep_ghost))]` for cargo test compatibility.
+
+## Why it's wrong
+
+- The duplicate drifts out of sync with the verified version
+- It doubles maintenance burden
+- It's no longer needed — the verusified code compiles and runs under both Verus and cargo
+
+## What to do instead
+
+- Put the implementation inside `verus! {}` with its specs
+- That's it. No duplicate needed.
+
+## If you see it
+
+If you encounter existing `#[cfg(not(verus_keep_ghost))]` blocks that duplicate verusified functions, remove them when working in that file.

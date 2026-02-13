@@ -1,0 +1,29 @@
+---
+description: Strongly prefer using vstd functions, lemmas, and types over defining new ones
+alwaysApply: true
+---
+
+# Prefer vstd Over New Definitions
+
+**Strongly prefer** using existing functions, lemmas, spec functions, and types from `vstd` (the Verus verified standard library) over defining new ones.
+
+## Before defining anything new
+
+1. Search vstd for an existing definition:
+   ```bash
+   veracity-search 'fn _ types Seq' 
+   veracity-search 'proof fn lemma.*flatten'
+   ```
+2. Check `~/projects/verus/source/vstd/` directly if needed
+3. Only define something new if vstd genuinely has no equivalent
+
+## Examples
+
+- Use `vstd::arithmetic::power::pow(n, 3)` instead of defining `spec fn cube(n: int) -> int { n * n * n }`
+- Use `Seq::fold_left` instead of defining a custom recursive accumulator
+- Use `vstd::relations::associative` instead of defining `spec_associative`
+- Use `Seq::flatten` from the trait instead of writing a custom `flatten_inner` helper
+
+## Rationale
+
+vstd definitions are community-reviewed, well-tested, and integrate with existing lemmas and broadcast groups. Custom definitions create proof islands that don't connect to the broader vstd ecosystem.

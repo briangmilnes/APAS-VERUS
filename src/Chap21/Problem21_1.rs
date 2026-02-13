@@ -76,25 +76,4 @@ pub mod Problem21_1 {
     }
 
     } // verus!
-
-    // Non-Verus implementation for cargo test compatibility.
-    #[cfg(not(verus_keep_ghost))]
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS;
-
-    #[cfg(not(verus_keep_ghost))]
-    use crate::Types::Types::{N, Pair};
-
-    #[cfg(not(verus_keep_ghost))]
-    pub fn points2d(n: N) -> ArraySeqStPerS<Pair<N, N>> {
-        if n == 0 {
-            return ArraySeqStPerS { seq: Vec::new() };
-        }
-        let mut v = Vec::<Pair<N, N>>::with_capacity(n * (n - 1));
-        for x in 0..n {
-            for y in 1..n {
-                v.push(Pair(x, y));
-            }
-        }
-        ArraySeqStPerS { seq: v }
-    }
 }

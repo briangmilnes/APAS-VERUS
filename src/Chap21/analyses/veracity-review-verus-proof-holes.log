@@ -7,9 +7,10 @@
 ✓ Exercise21_6.rs
 ✓ Exercise21_7.rs
 ❌ Exercise21_8.rs
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:149: assume() - assume(ones.seq@.len() as int == spec_divisor_count(n as int, 1, k as int + 1));
-   Holes: 1 total
-      1 × assume()
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:127: assume() - assume(forall|v: B, passes: bool| pred.ensures((&v,), passes) <==> spec_pred(...
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:153: assume() - assume(ones.seq@.len() as int == spec_divisor_count(n as int, 1, k as int + 1));
+   Holes: 2 total
+      2 × assume()
    Proof functions: 3 total (3 clean, 0 holed)
 ✓ Exercise21_9.rs
 ✓ Problem21_1.rs
@@ -30,5 +31,5 @@ Proof Functions:
    0 holed
    5 total
 
-Holes Found: 1 total
-   1 × assume()
+Holes Found: 2 total
+   2 × assume()

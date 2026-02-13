@@ -194,9 +194,9 @@ pub mod Chap19 {
 #[cfg(not(feature = "experiments_only"))]
 pub mod Chap21 {
     pub mod Algorithm21_1;
-    // pub mod Algorithm21_2;
-    // pub mod Algorithm21_5;
-    // pub mod Algorithm21_6;
+    pub mod Algorithm21_2;
+    pub mod Algorithm21_5;
+    pub mod Algorithm21_6;
     // pub mod Exercise21_5;
     // pub mod Exercise21_6;
     // pub mod Exercise21_7;

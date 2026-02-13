@@ -124,7 +124,7 @@ pub mod Exercise21_8 {
         let pred = |x: &B| -> (keep: bool) ensures keep == *x { *x };
         let ghost spec_pred = |v: B| v;
         proof {
-            assume(forall|v: B, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret);
+            assume(forall|v: B, passes: bool| pred.ensures((&v,), passes) <==> spec_pred(v) == passes);
         }
         let ones: ArraySeqStPerS<B> = ArraySeqStPerS::filter(
             &all,
@@ -205,23 +205,4 @@ pub mod Exercise21_8 {
     }
 
     } // verus!
-
-    // Non-Verus implementation for cargo test compatibility.
-    #[cfg(not(verus_keep_ghost))]
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::{ArraySeqStPerS, ArraySeqStPerRedefinableTrait};
-
-    #[cfg(not(verus_keep_ghost))]
-    use crate::Types::Types::{N, B};
-
-    #[cfg(not(verus_keep_ghost))]
-    pub fn is_divisible(n: N, i: N) -> B { n % i == 0 }
-
-    #[cfg(not(verus_keep_ghost))]
-    pub fn is_prime(n: N) -> B {
-        if n < 2 { return false; }
-        let k = n.isqrt();
-        let all: ArraySeqStPerS<B> = ArraySeqStPerS::tabulate(&|i| is_divisible(n, i + 1), k);
-        let ones: ArraySeqStPerS<B> = ArraySeqStPerS::filter(&all, &|x| *x);
-        ones.length() == 1
-    }
 }
