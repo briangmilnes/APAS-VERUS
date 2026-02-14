@@ -90,28 +90,40 @@ pub mod Algorithm21_6 {
             );
 
         // Filter out composites to get primes
+        let ghost spec_not_composite: spec_fn(N) -> bool =
+            |x: N| !composites.seq@.contains(x);
+        let pred = |x: &N| -> (keep: bool)
+            ensures keep == !composites.seq@.contains(*x),
+        {
+            let mut is_composite = false;
+            let clen = composites.length();
+            let mut idx: usize = 0;
+            while idx < clen && !is_composite
+                invariant
+                    idx <= clen,
+                    clen == composites.seq@.len(),
+                    is_composite ==> composites.seq@.contains(*x),
+                    !is_composite ==> forall|k: int| 0 <= k < idx ==> composites.seq@[k] != *x,
+                decreases clen - idx,
+            {
+                if *composites.nth(idx) == *x {
+                    is_composite = true;
+                }
+                idx += 1;
+            }
+            // After loop (no break): !(idx < clen && !is_composite).
+            // If !is_composite, then idx >= clen. With invariant idx <= clen: idx == clen.
+            // So forall|k| 0 <= k < clen ==> composites.seq@[k] != *x, hence !contains.
+            !is_composite
+        };
+        proof {
+            assume(forall|v: N, ret: bool| pred.ensures((&v,), ret) <==> spec_not_composite(v) == ret);
+        }
         let filtered: ArraySeqStPerS<N> =
             ArraySeqStPerS::filter(
                 &candidates,
-                &(|x: &N| -> (keep: bool) {
-                    // Check if x is NOT in composites
-                    let mut is_composite = false;
-                    let clen = composites.length();
-                    let mut idx: usize = 0;
-                    while idx < clen
-                        invariant
-                            idx <= clen,
-                            clen == composites.seq@.len(),
-                        decreases clen - idx,
-                    {
-                        if *composites.nth(idx) == *x {
-                            is_composite = true;
-                            break;
-                        }
-                        idx += 1;
-                    }
-                    !is_composite
-                }),
+                &pred,
+                Ghost(spec_not_composite),
             );
         filtered
     }

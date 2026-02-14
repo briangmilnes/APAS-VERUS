@@ -40,6 +40,8 @@ pub mod ArraySeqStPer {
 
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::multiset::multiset::*;
 
 
     //		3. broadcast use
@@ -161,13 +163,16 @@ pub mod ArraySeqStPer {
 
         /// - Algorithm 19.5 (filter). filter f a = flatten (map (deflate f) a).
         /// - Work Θ(|a|), Span Θ(1).
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F) -> (filtered: Self)
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
+                forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
             ensures
                 filtered.spec_len() <= a.seq@.len(),
+                filtered.spec_len() == spec_filter_len(
+                    Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// - Algorithm 19.6 (update). update a (i, x) = tabulate (lambda j. if i=j then x else a[j]) |a|.
@@ -428,7 +433,7 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.5: filter f a = let b = map (deflate f) a in flatten b end.
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F) -> (filtered: ArraySeqStPerS<T>)
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: ArraySeqStPerS<T>)
             where T: Clone + Eq
         {
             // map (deflate pred) a — produces ArraySeqStPerS<ArraySeqStPerS<T>>
@@ -465,6 +470,16 @@ pub mod ArraySeqStPer {
                     assert(deflated.seq@[j].seq@[0] == a.seq@[j]);
                 };
                 lemma_flatten_all_satisfy::<T>(ss, p);
+
+                // Connect flatten length to spec_filter_len via the 0-or-1 lemma.
+                let ghost s_view = Seq::new(a.seq@.len(), |i: int| a.seq@[i]);
+                assert(s_view =~= a.seq@);
+                assert forall|i: int| #![trigger ss[i]] 0 <= i < a.seq@.len()
+                    implies (ss[i].len() == 1 <==> spec_pred(a.seq@[i]))
+                by {
+                    assert(ss[i] =~= deflated.seq@[i].seq@);
+                };
+                lemma_flatten_01_eq_spec_filter_len(a.seq@, ss, spec_pred);
             }
             filtered
         }

@@ -38,6 +38,7 @@ pub mod ArraySeqStEph {
     use vstd::std_specs::clone::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::multiset::multiset::*;
     #[cfg(verus_keep_ghost)]
     use crate::Chap18::ArraySeq::ArraySeq::{spec_iterate, spec_monoid};
 
@@ -183,6 +184,8 @@ pub mod ArraySeqStEph {
                 forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
             ensures
                 filtered.spec_len() <= a.seq@.len(),
+                filtered.spec_len() == spec_filter_len(
+                    Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
                 // The result multiset equals the input multiset filtered by the spec predicate.
                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
@@ -446,6 +449,7 @@ pub mod ArraySeqStEph {
                     forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[j],)),
                     forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
                     forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> pred.ensures((&seq@[j],), true),
+                    seq@.len() == spec_filter_len(a.seq@.subrange(0, i as int), spec_pred),
                     seq@.to_multiset() =~= a.seq@.subrange(0, i as int).to_multiset().filter(spec_pred),
                 decreases len - i,
             {
@@ -454,6 +458,7 @@ pub mod ArraySeqStEph {
                     a.lemma_spec_index(i as int);
                 }
                 assert(a.seq@.subrange(0, i as int + 1) =~= a.seq@.subrange(0, i as int).push(a.seq@[i as int]));
+                assert(a.seq@.subrange(0, i as int + 1).drop_last() =~= a.seq@.subrange(0, i as int));
                 if pred(&a.seq[i]) {
                     let elem = a.seq[i].clone();
                     proof {

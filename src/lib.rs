@@ -101,6 +101,7 @@ pub mod vstdplus {
     pub mod checked_nat;
     pub mod hashed_checked_u32;
     pub mod sqrt;
+    pub mod multiset;
     pub mod arithmetic {
     pub mod power2_plus;
     }

@@ -45,6 +45,7 @@ pub mod ArraySeq {
 
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::multiset::multiset::*;
     #[cfg(verus_keep_ghost)]
     use vstd::relations::associative;
 
@@ -268,6 +269,8 @@ pub mod ArraySeq {
               forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
             ensures
                 filtered.spec_len() <= a.spec_len(),
+                // The result length equals the spec_filter_len count.
+                filtered.spec_len() == spec_filter_len(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_pred),
                 // The result multiset equals the input multiset filtered by the spec predicate.
                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
                     =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)).to_multiset().filter(spec_pred);
@@ -571,6 +574,8 @@ pub mod ArraySeq {
                     forall|v: T, ret: bool| pred.ensures((&v,), ret) ==> spec_pred(v) == ret,
                     i <= a.seq@.len(),
                     seq@.len() <= i,
+                    // The result length equals spec_filter_len over the prefix seen so far.
+                    seq@.len() == spec_filter_len(a.seq@.subrange(0, i as int), spec_pred),
                     // The result multiset equals the filtered multiset of elements seen so far.
                     seq@.to_multiset() =~= a.seq@.subrange(0, i as int).to_multiset().filter(spec_pred),
             {
@@ -580,6 +585,8 @@ pub mod ArraySeq {
                 }
                 // Extending the subrange by one element lets the multiset axioms advance the invariant.
                 assert(a.seq@.subrange(0, i as int + 1) =~= a.seq@.subrange(0, i as int).push(a.seq@[i as int]));
+                // spec_filter_len unfolds via drop_last: subrange(0,i+1).drop_last() == subrange(0,i)
+                assert(a.seq@.subrange(0, i as int + 1).drop_last() =~= a.seq@.subrange(0, i as int));
                 if pred(&a.seq[i]) {
                     let elem = a.seq[i].clone();
                     proof {

@@ -10,10 +10,10 @@ pub mod Exercise21_8 {
     use vstd::prelude::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::{ArraySeqStPerS, ArraySeqStPerBaseTrait, ArraySeqStPerRedefinableTrait};
+    use crate::Chap18::ArraySeqStEph::ArraySeqStEph::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::{N, B};
+    use crate::Types::Types::*;
 
     #[cfg(verus_keep_ghost)]
     verus! {
@@ -105,7 +105,7 @@ pub mod Exercise21_8 {
         let k: N = n.isqrt();
 
         // Tabulate: all[i] = (n % (i+1) == 0) for i in 0..k
-        let all: ArraySeqStPerS<B> = ArraySeqStPerS::tabulate(
+        let all: ArraySeqStEphS<B> = ArraySeqStEphS::tabulate(
             &(|i: usize| -> (d: B)
                 requires
                     i < k,
@@ -126,7 +126,7 @@ pub mod Exercise21_8 {
         proof {
             assume(forall|v: B, passes: bool| pred.ensures((&v,), passes) <==> spec_pred(v) == passes);
         }
-        let ones: ArraySeqStPerS<B> = ArraySeqStPerS::filter(
+        let ones: ArraySeqStEphS<B> = ArraySeqStEphS::filter(
             &all,
             &pred,
             Ghost(spec_pred),
@@ -141,6 +141,9 @@ pub mod Exercise21_8 {
 
             // 1 always divides n (n >= 2 > 0).
             assert(n as int % 1 == 0) by (nonlinear_arith) requires n >= 2;
+            // k >= 1 so 1 < k+1, triggering the recursive case.
+            assert(1 < k as int + 1);
+            assert(n as int % 1 == 0);
 
             // Unfold: spec_divisor_count(n, 1, k+1) = 1 + spec_divisor_count(n, 2, k+1)
             assert(spec_divisor_count(n as int, 1, k as int + 1) ==

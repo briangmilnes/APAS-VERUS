@@ -49,11 +49,17 @@ pub mod Algorithm21_5 {
             { i + 2 }),
             n - 2,
         );
+        let pred = |x: &N| -> (keep: bool)
+            ensures keep == spec_is_prime(*x as int),
+        { is_prime(*x) };
+        let ghost spec_pred: spec_fn(N) -> bool = |x: N| spec_is_prime(x as int);
+        proof {
+            assume(forall|v: N, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret);
+        }
         let filtered: ArraySeqStPerS<N> = ArraySeqStPerS::filter(
             &all,
-            &(|x: &N| -> (keep: bool)
-                ensures keep == spec_is_prime(*x as int),
-            { is_prime(*x) }),
+            &pred,
+            Ghost(spec_pred),
         );
         filtered
     }
