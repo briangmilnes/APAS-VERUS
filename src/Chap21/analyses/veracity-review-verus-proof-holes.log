@@ -1,35 +1,19 @@
-✓ Algorithm21_1.rs
-   2 clean proof functions
-✓ Algorithm21_2.rs
-✓ Algorithm21_5.rs
 ✓ Algorithm21_6.rs
-✓ Exercise21_5.rs
-✓ Exercise21_6.rs
-✓ Exercise21_7.rs
-❌ Exercise21_8.rs
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:127: assume() - assume(forall|v: B, passes: bool| pred.ensures((&v,), passes) <==> spec_pred(...
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:153: assume() - assume(ones.seq@.len() as int == spec_divisor_count(n as int, 1, k as int + 1));
-   Holes: 2 total
-      2 × assume()
-   Proof functions: 3 total (3 clean, 0 holed)
-✓ Exercise21_9.rs
-✓ Problem21_1.rs
-✓ Problem21_3.rs
-✓ Problem21_4.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   11 clean (no holes)
-   1 holed (contains holes)
-   12 total
+   1 clean (no holes)
+   0 holed (contains holes)
+   1 total
 
 Proof Functions:
-   5 clean
+   0 clean
    0 holed
-   5 total
+   0 total
 
-Holes Found: 2 total
-   2 × assume()
+Holes Found: 0 total
+
+🎉 No proof holes found! All proofs are complete.

@@ -24,9 +24,6 @@ pub mod DirGraphMtEph {
     use crate::Chap05::SetStEph::SetStEph::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
-    #[cfg(not(verus_keep_ghost))]
-    use crate::vstdplus::feq::feq::*;
-
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::seq_set::*;
 

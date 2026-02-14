@@ -21,8 +21,6 @@ verus! {
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
-    #[cfg(not(verus_keep_ghost))]
-    use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;

@@ -47,6 +47,18 @@ pub mod Algorithm21_6 {
                     let i = i0 + 2; // i in [2..=root]
                     let limit = if i == 0 { 0 } else { n / i };
                     let len = if limit >= 2 { limit - 1 } else { 0 };
+                    proof {
+                        // For all j0 < len: j0+2 <= limit = n/i, so i*(j0+2) <= i*(n/i) <= n
+                        assert forall|j0: usize| j0 < len implies
+                            #[trigger] (i as int * (j0 as int + 2)) <= n as int by
+                        {
+                            assert(j0 as int + 2 <= limit as int);
+                            assert(i as int * limit as int <= n as int) by (nonlinear_arith)
+                                requires limit == n / i, i >= 2;
+                            assert(i as int * (j0 as int + 2) <= i as int * limit as int) by (nonlinear_arith)
+                                requires j0 as int + 2 <= limit as int, i >= 2;
+                        }
+                    }
                     ArraySeqStPerS::tabulate(
                         &(|j0: usize| -> (c: N)
                             requires
@@ -55,12 +67,9 @@ pub mod Algorithm21_6 {
                                 limit == n / i,
                                 len <= limit,
                                 n > 2,
+                                i as int * (j0 as int + 2) <= n as int,
                             ensures c == i * (j0 + 2),
                         {
-                            proof {
-                                // j0+2 <= limit = n/i, so i*(j0+2) <= i*(n/i) <= n
-                                assume(i as int * (j0 as int + 2) <= usize::MAX as int);
-                            }
                             i * (j0 + 2)
                         }),
                         len,

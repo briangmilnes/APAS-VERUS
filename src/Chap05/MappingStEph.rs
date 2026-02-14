@@ -19,8 +19,6 @@ verus! {
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
-    #[cfg(not(verus_keep_ghost))]
-    use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     #[cfg(verus_keep_ghost)]
