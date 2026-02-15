@@ -73,7 +73,7 @@ verus! {
         sum
     }
 
-    // Helper lemma for the loop invariant
+    // Unfolds sum_u32 by one element at take(i+1) for the loop invariant
     proof fn lemma_sum_u32_unfold_take(s: Seq<u32>, i: int)
         requires 0 <= i < s.len()
         ensures spec_sum_u32_seq(s.take(i + 1)) == spec_sum_u32_seq(s.take(i)) + s[i] as nat

@@ -83,6 +83,7 @@ pub mod experiments {
 //    pub mod collect2;
 //    pub mod collect_deep_view;
 //    pub mod verus_keep_ghost_and_test;
+//    pub mod biconditional_spec_fun;
 }
 
 pub mod vstdplus {
@@ -193,6 +194,22 @@ pub mod Chap19 {
 }
 
 #[cfg(not(feature = "experiments_only"))]
+pub mod Chap23 {
+    pub mod PrimTreeSeqStPer;
+    pub mod BalBinTreeStEph;
+}
+
+#[cfg(not(feature = "experiments_only"))]
+pub mod Chap26 {
+    pub mod DivConReduceStPer;
+    pub mod MergeSortStPer;
+    pub mod ScanDCStPer;
+    pub mod ETSPStPer;
+    pub mod DivConReduceMtPer;
+    pub mod MergeSortMtPer;
+    pub mod ScanDCMtPer;
+}
+
 pub mod Chap21 {
     pub mod Algorithm21_1;
     pub mod Algorithm21_2;

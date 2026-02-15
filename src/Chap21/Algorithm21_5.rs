@@ -32,12 +32,12 @@ pub mod Algorithm21_5 {
     /// Finds all prime numbers less than n using brute force primality testing.
     ///
     /// APAS: Work Θ(n^{3/2}), Span Θ(lg n)
-    pub fn primes_bf(n: N) -> (result: ArraySeqStPerS<N>)
+    pub fn primes_bf(n: N) -> (primes: ArraySeqStPerS<N>)
         ensures
-            n <= 2 ==> result.spec_len() == 0,
-            n > 2  ==> result.spec_len() <= n - 2,
-            forall|i: int| 0 <= i < result.spec_len()
-                ==> spec_is_prime(#[trigger] result.spec_index(i) as int),
+            n <= 2 ==> primes.spec_len() == 0,
+            n > 2  ==> primes.spec_len() <= n - 2,
+            forall|i: int| 0 <= i < primes.spec_len()
+                ==> spec_is_prime(#[trigger] primes.spec_index(i) as int),
     {
         if n <= 2 {
             return ArraySeqStPerS::from_vec(Vec::new());
@@ -53,9 +53,6 @@ pub mod Algorithm21_5 {
             ensures keep == spec_is_prime(*x as int),
         { is_prime(*x) };
         let ghost spec_pred: spec_fn(N) -> bool = |x: N| spec_is_prime(x as int);
-        proof {
-            assume(forall|v: N, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret);
-        }
         let filtered: ArraySeqStPerS<N> = ArraySeqStPerS::filter(
             &all,
             &pred,

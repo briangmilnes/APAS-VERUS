@@ -32,16 +32,16 @@ pub mod ArraySeqStPer {
     //		2. imports
 
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::cmp::PartialEqSpecImpl;
+    use {
+        vstd::std_specs::cmp::PartialEqSpecImpl,
+        vstd::std_specs::vec::*,
+        vstd::std_specs::clone::*,
+    };
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::vec::*;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::clone::*;
-
-    #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::multiset::multiset::*;
+    use {
+        crate::vstdplus::feq::feq::*,
+        crate::vstdplus::multiset::multiset::*,
+    };
 
 
     //		3. broadcast use
@@ -168,11 +168,13 @@ pub mod ArraySeqStPer {
             requires
                 obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
-                forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
+                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
             ensures
                 filtered.spec_len() <= a.seq@.len(),
                 filtered.spec_len() == spec_filter_len(
                     Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
+                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// - Algorithm 19.6 (update). update a (i, x) = tabulate (lambda j. if i=j then x else a[j]) |a|.
@@ -259,7 +261,7 @@ pub mod ArraySeqStPer {
             ensures
                 flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqStPerS<T>| inner.seq@).flatten();
 
-        /// - Algorithm 19.5 helper (deflate). deflate f x = if (f x) then ⟨x⟩ else ⟨⟩.
+        /// - Algorithm 19.5 (deflate). deflate f x = if (f x) then ⟨x⟩ else ⟨⟩.
         /// - Work Θ(1), Span Θ(1).
         fn deflate<F: Fn(&T) -> bool>(pred: &F, x: &T) -> (deflated: Self)
             where T: Clone + Eq
@@ -480,6 +482,18 @@ pub mod ArraySeqStPer {
                     assert(ss[i] =~= deflated.seq@[i].seq@);
                 };
                 lemma_flatten_01_eq_spec_filter_len(a.seq@, ss, spec_pred);
+
+                // Connect flatten multiset to input multiset filtered by spec_pred.
+                assert forall|i: int| #![trigger ss[i]]
+                    0 <= i < a.seq@.len() && ss[i].len() == 1
+                    implies ss[i][0] == a.seq@[i]
+                by {
+                    assert(ss[i] =~= deflated.seq@[i].seq@);
+                };
+                lemma_flatten_01_multiset_eq_filter(a.seq@, ss, spec_pred);
+
+                assert(filtered.seq@ =~= Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)));
+                assert(a.seq@ =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]));
             }
             filtered
         }
@@ -715,7 +729,7 @@ pub mod ArraySeqStPer {
             ArraySeqStPerS { seq }
         }
 
-        // Algorithm 19.5 helper: deflate f x = if (f x) then ⟨x⟩ else ⟨⟩.
+        // Algorithm 19.5 (deflate): deflate f x = if (f x) then ⟨x⟩ else ⟨⟩.
         fn deflate<F: Fn(&T) -> bool>(pred: &F, x: &T) -> (deflated: ArraySeqStPerS<T>)
             where T: Clone + Eq
         {

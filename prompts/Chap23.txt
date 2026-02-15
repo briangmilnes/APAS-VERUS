@@ -1,0 +1,136 @@
+Chapter 23
+Tree Sequences
+In this chapter, we present an overview of an implementation of sequences based on bal-
+anced trees. The implementation is parameterized based on a minimal implementation of
+trees, which basically just allows cutting a tree in two (exposing), and appending two trees
+(joining).
+Important. This is a freshly drafted chapter. It is incomplete and likely has bugs (don’t
+hesitate to point them out). It is currently written at a high level, without going into the
+details. We don’t use tree sequences much in this book, so the reader can safely skip this
+material.
+1 Primitive Tree Sequences
+As with the case of arrays, we build a full tree implementation on top of a minimal inter-
+face. In later chapters we show how to implement this interface efficiently.
+Data Type 23.1 (Primitive Tree Sequences). For any element type α, the α tree sequence
+data type Sα is defined as:
+type Tα = Zero | One of α | Two of Sα × Sα
+length : Sα → N
+expose : Sα → Tα
+join : Tα → Sα
+The expose function takes a tree sequence and returns Zero if it is empty One(x) if it con-
+tains a single element x, and Two(L, R) otherwise. In the third case the results L and R are
+the result of some cut of the sequence into two pieces, consisting of the left side L and the
+right side R, respectively.
+155
+156 CHAPTER 23. TREE SEQUENCES
+From the point of view of a tree, the expose function is telling us whether the tree is empty,
+has a single value, or is a node with two children, L and R.
+The join function can be viewed as the inverse. If given a Zero it will create an empty tree
+sequence. If given One(v) it will create a tree sequence with a single element v. If given
+Two(L, R) it appends the two tree sequences L and R together.
+From the point of view of a tree, the join function is building an empty tree, a single valued
+tree, or it is joining two trees to form a new tree. The third case can be thought of as creating
+a new node with L and R as children. However, the implementation has to be smarter than
+that. In particular the two trees L and R might have very different sizes and heights. In
+this case the join might need to rebalance the tree to keep the result almost balanced.
+Using the primitive tree sequence datatype we can implement all the functionality of the
+sequence datatype. Furthermore, assuming certain cost bounds on the functionality of the
+primitive sequence interface, all the costs will satisfy the cost bounds discussed in Section 3.
+To define costs for our primitive tree sequences we assume that every tree sequence T has
+a integer rank associated with it, which will be denoted as r(T ), and that the ranks satisfy
+the following conditions:
+1. r(T ) ∈ O(log |T |),
+2. for expose(T ) = Two(L, R):
+r(L) + 1 ≤ r(T ) ≤ r(L) + 2 and
+r(R) + 1 ≤ r(T ) ≤ r(R) + 2
+3. r(join(Two(L, R))) ≤ max(r(L), r(R)) + 1
+The rank can intuitively be thought as the height of the tree. The first condition says that
+the rank (“height”) is logarithmic in the size. This indicates that the tree is reasonably
+balanced (all leaves are within order log of the size). The second condition says that the
+parent must have a larger rank than both its children, but not more than two greater than
+either child. This means that the rank must be an upper bound on the height since the rank
+decreases by at least one when going to each child. The third condition says that if you join
+two trees, the resulting tree will have a rank that is at most one more than the larger rank
+of the two. Note that the resulting tree might have a rank that is equal to the larger rank.
+This does not break the second rule since the join might involve rotations that rearrange
+the tree to keep its rank low.
+It turns out that these conditions are true for a variety of balancing schemes including red-
+black trees (rank is height), AVL trees (rank is based on black height), and weight-balanced
+trees (rank is the log of the size using an appropriate base).
+Cost Specification 23.2 (Primitive Tree Sequences). We specify the primitive tree sequence
+
+osts as follows.
+Operation Work and Span
+length a 1
+expose a 1
+join(Zero) or join(One(x)) 1
+join(Two(L, R)) 1 + |r(L) − r(R)|
+Hence the cost of joining two trees is proportional the absolute value of the difference of
+their ranks.
+Note that there is no parallelism in these operations. Parallelism will be used in building
+the sequence functions from them.
+In this chapter we will not describe how to satisfy these bounds, but they can be satisfied
+with a variety of trees including AVL trees, Red-Black trees and Weight Balanced trees.
+Intuitively the bounds should make some sense. Exposing just requires looking at the root
+of the tree and returning the two children if not empty or a singleton. Keeping track of the
+length just requires storing the size of the subtree in each node of the tree and looking it
+up.
+The join(Two(L, R)) is the only particularly interesting case. Intuitively if input trees L and
+R are the same rank, then it should be cheap since we can just create a new node as their
+parent and not require any balancing. The amount of rebalancing required is proportional
+to the difference in rank, and hence the specified cost.
+2 Parametric Implementation of Tree Sequences
+We now describe how to implement most of the sequence ADT interface using primitive
+tree sequences. The implementation is given by the following algorithms.
+158 CHAPTER 23. TREE SEQUENCES
+Algorithm 23.3 (Tree Sequence Functions).
+empty = join(Zero)
+singleton x = join(One(x))
+append (a, b) = join(T wo(a, b))
+nth S i =
+case (expose S) of
+Zero ⇒ error
+| One(x) ⇒ if (i = 0) then x else error
+| Two(L, R) ⇒
+if (i > |L|) then nth R (i − |L|)
+else nth L i
+map f S =
+case (expose S) of
+Zero ⇒ empty
+| One(v) ⇒ singleton(f (x))
+| Two(L, R) ⇒ append (mapf L || mapf R)
+tabulate f n =
+let tab (s, e) =
+if (e ≤ s) then empty
+else if (e = s + 1) then singleton(f (s))
+else append (tab(s, (s + e)/2) || tab((s + e)/2, e))
+in tab(0, n) end
+filter f S =
+case (expose S) of
+Zero ⇒ empty
+| One(x) ⇒ if f (x) then S else empty
+| Two(L, R) ⇒ append (filter f L || filter f R)
+drop S n =
+case (expose S) of
+Zero ⇒ empty
+| One(x) ⇒ if (n = 0) then singleton(x)
+else empty
+| Two(L, R) ⇒
+if (n > |L|) then drop(R, n − |L|)
+else append (drop(L, n), R)
+update S (i, v) =
+case (expose S) of
+Zero ⇒ empty
+| One(x) ⇒ if (i = 0) then singleton(v) else S
+| Two(L, R) ⇒
+if (i > |L|) then append (L, update R (i − |L|, v))
+else append (update L (i, v), R)
+subseq S (a, n) = take(drop(S, a), n)
+f latten S = reduce append empty S
+
+For now we leave it as an exercise to show that these match the tree-sequence cost bounds.
+Some of them such as nth, map and tabulate are relatively straightforward. The functions
+nth, filter and drop are trickier since they involve joins on two trees that are not necessarily
+almost the same size.
+
+

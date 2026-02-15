@@ -149,6 +149,42 @@ path = "tests/Chap19/TestArraySeqStEph.rs"
 name = "TestArraySeqMtEph19"
 path = "tests/Chap19/TestArraySeqMtEph.rs"
 
+[[test]]
+name = "TestBalBinTreeStEph"
+path = "tests/Chap23/TestBalBinTreeStEph.rs"
+
+[[test]]
+name = "TestPrimTreeSeqStPer"
+path = "tests/Chap23/TestPrimTreeSeqStPer.rs"
+
+[[test]]
+name = "TestDivConReduceStPer"
+path = "tests/Chap26/TestDivConReduceStPer.rs"
+
+[[test]]
+name = "TestMergeSortStPer"
+path = "tests/Chap26/TestMergeSortStPer.rs"
+
+[[test]]
+name = "TestDivConReduceMtPer"
+path = "tests/Chap26/TestDivConReduceMtPer.rs"
+
+[[test]]
+name = "TestMergeSortMtPer"
+path = "tests/Chap26/TestMergeSortMtPer.rs"
+
+[[test]]
+name = "TestScanDCStPer"
+path = "tests/Chap26/TestScanDCStPer.rs"
+
+[[test]]
+name = "TestScanDCMtPer"
+path = "tests/Chap26/TestScanDCMtPer.rs"
+
+[[test]]
+name = "TestETSPStPer"
+path = "tests/Chap26/TestETSPStPer.rs"
+
 # Experiments removed - use verus-proof-time-testing project instead
 # [[test]]
 # name = "test_verify_harness"

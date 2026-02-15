@@ -9,9 +9,10 @@ use vstd::prelude::*;
 use std::collections::HashSet;
 
 #[cfg(verus_keep_ghost)]
-use vstd::std_specs::hash::obeys_key_model;
-#[cfg(verus_keep_ghost)]
-use vstd::std_specs::hash::SetIterAdditionalSpecFns;
+use {
+    vstd::std_specs::hash::obeys_key_model,
+    vstd::std_specs::hash::SetIterAdditionalSpecFns,
+};
 use core::hash::Hash;
 use crate::vstdplus::feq::feq::*;
 

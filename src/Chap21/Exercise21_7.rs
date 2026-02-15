@@ -66,10 +66,6 @@ pub mod Exercise21_7 {
         let pred_vowel = |y: &char| -> (r: B) ensures r == spec_is_vowel(*y) { is_vowel(y) };
         let ghost spec_even: spec_fn(N) -> bool = |x: N| spec_is_even(x as int);
         let ghost spec_vowel: spec_fn(char) -> bool = |c: char| spec_is_vowel(c);
-        proof {
-            assume(forall|v: N, ret: bool| pred_even.ensures((&v,), ret) <==> spec_even(v) == ret);
-            assume(forall|v: char, ret: bool| pred_vowel.ensures((&v,), ret) <==> spec_vowel(v) == ret);
-        }
         let filtered_a: ArraySeqStPerS<N> = ArraySeqStPerS::filter(a, &pred_even, Ghost(spec_even));
         let filtered_b: ArraySeqStPerS<char> = ArraySeqStPerS::filter(b, &pred_vowel, Ghost(spec_vowel));
 

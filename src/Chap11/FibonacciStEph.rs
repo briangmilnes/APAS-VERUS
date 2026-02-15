@@ -16,9 +16,10 @@ pub mod FibonacciStEph {
     use vstd::prelude::*;
     
     #[cfg(verus_keep_ghost)]
-    use vstd::arithmetic::power::pow;
-    #[cfg(verus_keep_ghost)]
-    use vstd::arithmetic::power2::{pow2, lemma_pow2_unfold};
+    use {
+        vstd::arithmetic::power::pow,
+        vstd::arithmetic::power2::{pow2, lemma_pow2_unfold},
+    };
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::arithmetic::power2_plus::power2_plus::*;
 

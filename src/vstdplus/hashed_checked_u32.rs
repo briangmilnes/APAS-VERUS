@@ -5,17 +5,20 @@
 pub mod hash_checked_u32 {
 
 #[cfg(verus_keep_ghost)]
-use vstd::prelude::*;
+use {
+    vstd::prelude::*,
+    vstd::std_specs::hash::obeys_key_model,
+};
 #[cfg(verus_keep_ghost)]
-use crate::vstdplus::checked_nat::checked_nat::*;
+use {
+    crate::vstdplus::checked_nat::checked_nat::*,
+    crate::vstdplus::feq::feq::*,
+};
 #[cfg(verus_keep_ghost)]
-use crate::vstdplus::feq::feq::*;
-#[cfg(verus_keep_ghost)]
-use vstd::std_specs::hash::obeys_key_model;
-#[cfg(verus_keep_ghost)]
-use std::hash::{Hash, Hasher};
-#[cfg(verus_keep_ghost)]
-use std::fmt::{Display, Debug, Formatter};
+use {
+    std::hash::{Hash, Hasher},
+    std::fmt::{Display, Debug, Formatter},
+};
 
 #[cfg(verus_keep_ghost)]
 verus! {

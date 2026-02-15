@@ -1,0 +1,315 @@
+Chapter 26
+
+Divide and Conquer
+This chapter describes the divide-and-conquer technique, an important algorithm-design
+technique, and applies it to several problems. Divide and conquer is an effective technique
+for solving a variety of problems, and usually leads to efficient and parallel algorithms.
+1 Divide and Conquer
+A divide-and-conquer algorithm has a distinctive anatomy: it has a base case to handle
+small instances and an inductive step with three distinct phases: “divide”, “recur”, and
+“combine.” The divide phase divides the problem instance into smaller instances; the
+recur phase solves the smaller instances; and the combine phase combines the results for
+the smaller instance to construct the result to the larger instance.
+Definition 26.1 (Divide-And-Conquer Algorithm). A divide-and-conquer algorithm has
+the following structure.
+Base Case: When the instance I of the problem P is sufficiently small, compute the solu-
+tion P (I) perhaps by using a different algorithm.
+Inductive Step:
+1. Divide instance I into some number of smaller instances of the same problem
+P .
+2. Recur on each of the smaller instances and compute their solutions.
+3. Combine the solutions to obtain the solution to the original instance I.
+Example 26.1. The drawing below illustrates the structure of a divide-and-conquer algo-
+rithm that divides the problem instance into three independent subinstances.
+
+Properties of Divide-and-Conquer Algorithms. Divide-and-Conquer has several impor-
+tant properties.
+• It follows the structure of an inductive proof, and therefore usually leads to relatively
+simple proofs of correctness. To prove a divide-and-conquer algorithm correct, we
+first prove that the base case is correct. Then, we assume by strong (or structural) in-
+duction that the recursive solutions are correct, and show that, given correct solutions
+to smaller instances, the combined solution is correct.
+• Divide-and-conquer algorithms can be work efficient. To ensure efficiency, we need
+to make sure that the divide and combine steps are efficient, and that they do not
+create too many sub-instances.
+• The work and span for a divide-and-conquer algorithm can be expressed as a math-
+ematical equation called recurrence , which can be usually be solved without too
+much difficulty.
+• Divide-and-conquer algorithms are naturally parallel, because the sub-instances can
+be solved in parallel. This can lead to significant amount of parallelism, because each
+inductive step can create more independent instances. For example, even if the algo-
+rithm divides the problem instance into two subinstances, each of those subinstances
+could themselves generate two more subinstances, leading to a geometric progres-
+sion, which can quickly produce abundant parallelism.
+
+Analysis of Divide-and-Conquer Algorithms. Consider an algorithm that divides a prob-
+lem instance of size n into k > 1 independent subinstances of sizes n1, n2, . . . nk, recursively
+solves the instances, and combine the solutions to construct the solution to the original in-
+stance.
+We can write the work of such an algorithm using the recurrence then
+W (n) = Wdivide(n) +
+k∑
+i=1
+W (ni) + Wcombine(n) + 1.
+The work recurrence simply adds up the work across all phases of the algorithm (divide,
+recur, and combine).
+To analyze the span, note that after the instance is divided into subinstance, the subin-
+stances can be solved in parallel (because they are independent), and the results can be
+combined. The span can thus be written as the recurrence:
+S(n) = Sdivide(n) + k
+max
+i=1 S(ni) + Scombine(n) + 1.
+Note. The work and span recurrences for a divide-and-conquer algorithm usually follow
+the recursive structure of the algorithm, but is a function of size of the arguments instead
+of the actual values.
+Example 26.2 (Maximal Element). We can find the maximal element in a sequence using
+divide and conquer as follows. If the sequence has only one element, we return that el-
+ement, otherwise, we divide the sequence into two equal halves and recursively and in
+parallel compute the maximal element in each half. We then return the maximal of the
+results from the two recursive calls. For a sequence of length n, we can write the work and
+span for this algorithm as recurrences as follows:
+W (n) =
+{ Θ(1) if n ≤ 1
+2W (n/2) + Θ(1) otherwise
+S(n) =
+{ Θ(1) if n ≤ 1
+S(n/2) + Θ(1) otherwise.
+This recurrences yield
+W (n) = Θ(n) and
+S(n) = Θ(lg n).
+Algorithm 26.2 (Reduce with Divide and Conquer). The reduce primitive performs a com-
+putation that involves applying an associative binary operation op to the elements of a se-
+quence to obtain (reduce the sequence to) a final value. For example, reducing the sequence
+〈 0, 1, 2, 3, 4 〉 with the + operation gives us 0 + 1 + 2 + 3 + 4 = 10. If the operation requires
+constant work (and thus span), then the work and span of a reduction is Θ(n) and Θ(lg n)
+respectively.
+
+We can write the code for the reduce primitive on sequences as follows.
+reduceDC f id a =
+if isEmpty a then
+id
+else if isSingleton a then
+a[0]
+else
+let
+(l, r) = splitMid a
+(a, b) = (reduceDC f id l || reduceDC f id r)
+in
+f (a, b)
+end
+
+170 CHAPTER 26. DIVIDE AND CONQUER
+We can write the code for the reduce primitive on sequences as follows.
+reduceDC f id a =
+if isEmpty a then
+id
+else if isSingleton a then
+a[0]
+else
+let
+(l, r) = splitMid a
+(a, b) = (reduceDC f id l || reduceDC f id r)
+in
+f (a, b)
+end
+2 Merge Sort
+In this section, we consider the comparison sorting problem and the merge-sort algorithm,
+which offers a divide-and-conquer algorithm for it.
+Definition 26.3 (The Comparison-Sorting Problem). Given a sequence a of elements from
+a universe U , with a total ordering given by <, return the same elements in a sequence r in
+sorted order, i.e. r[i] ≤ r[i + 1], 0 < i ≤ |a| − 1.
+Algorithm 26.4 (Merge Sort). Given an input sequence, merge sort divides it into two
+sequences that are approximately half the length, sorts them recursively, and merges the
+sorted sequences. Mergesort can be written as follows.
+mergeSort a =
+if |a| ≤ 1 then
+a
+else
+let
+(l, r) = splitMid a
+(l′, r′) = (mergeSort l || mergeSort r)
+in
+merge(l′, r′)
+end
+Note. In the merge sort algorithm given above the base case is when the sequence is empty
+or contains a single element. In practice, however, instead of using a single element or
+empty sequence as the base case, some implementations use a larger base case consisting
+of perhaps ten to twenty keys.
+
+
+Correctness and Cost. To prove correctness we first note that the base case is correct.
+Then by induction we note that l′ and r′ are sorted versions of l and r. Because l and r
+together contain exactly the same elements as a, we conclude that merge (l′, r′) returns a
+sorted version of a.
+For the work and span analysis, we assume that merging can be done in Θ(n) work and
+Θ(lg n) span, where n is the sum of the lengths of the two sequences. We can thus write the
+work and span for this sorting algorithm as
+W (n) =
+{ Θ(1) if n ≤ 1
+2W (n/2) + Θ(n) otherwise
+S(n) =
+{ Θ(1) if n ≤ 1
+S(n/2) + Θ(lg n) otherwise.
+The recurrences solve to
+W (n) = Θ(n lg n)
+S(n) = Θ(lg2 n).
+Remark (Quick Sort). Another divide-and-conquer algorithm for sorting is the quick-sort
+algorithm. Like merge sort, quick sort requires Θ(n log n) work, which is optimal for
+the comparison sorting problem, but only “in expectation” over random decisions that
+it makes during its execution. While merge sort has a trivial divide step and interesting
+combine step, quick sort has an interesting divide step but trivial combine step. We will
+study quick sort in greater detail.
+
+3 Sequence Scan
+Intuition for Scan with Divide and Conquer. To develop some intuition on how to de-
+sign a divide-and-conquer algorithm for the sequence scan problem, let’s start by dividing
+the sequence in two halves, solving each half, and then putting the results together.
+For example, consider the sequence 〈 2, 1, 3, 2, 2, 5, 4, 1 〉. If we divide in the middle and
+scan over the two resulting sequences we obtain (b, b′) and (c, c′), such that
+(b, b′) = (〈 0, 2, 3, 6 〉 , 8) , and
+(c, c′) = (〈 0, 2, 7, 11 〉 , 12) .
+Note now that b already gives us the first half of the solution. To compute the second half,
+observe that in calculating c in the second half, we started with the identity instead of the
+sum of the first half, b′. Therefore, if we add the sum of the first half, b′, to each element of
+c, we would obtain the desired result.
+
+Algorithm 26.5 (Scan with Divide and Conquer). By refining the intuitive description
+above, we can obtain a divide-and-conquer algorithm for sequences scan, which is given
+below.
+scanDC f id a =
+if |a| = 0 then
+(〈 〉 , id )
+else if |a| = 1 then
+(〈 id 〉 , a[0])
+else
+let
+(b, c) = splitMid a
+((l, b′), (r, c′)) = (scanDC f id b || scanDC f id c)
+r′ = 〈 f (b′, x) : x ∈ r 〉
+in
+(append (l, r′), f (b′, c′))
+end
+Remark. Observe that this algorithm takes advantage of the fact that id is really the identity
+for f , i.e. f (id, x) = x.
+Cost Analysis. We consider the work and span for the algorithm. Note that the combine
+step requires a map to add b′ to each element of c, and then an append. Both these take
+O(n) work and O(1) span, where n = |a|. This leads to the following recurrences for the
+whole algorithm:
+W (n) = 2W (n/2) + O(n) ∈ O(n log n)
+S(n) = S(n/2) + O(1) ∈ O(log n).
+Although this is much better than O(n2) work, we can do better by using another design
+technique called contraction.
+
+4 Euclidean Traveling Salesperson Problem
+We consider a variant of the well-known Traveling Salesperson Problem (TSP) and design
+a divide-and-conquer heuristic for it. This variant, known as the Euclidean Traveling Sales-
+person Problem (eTSP), is NP hard. It requires solving the TSP problem in graphs where
+the vertices (e.g., cities) lie in a Euclidean space and the edge weights (e.g., distance mea-
+sure between cities) is the Euclidean distance. More specifically, we’re interested in the
+planar version of the eTSP problem, defined as follows:
+Definition 26.6 (The Planar Euclidean Traveling Salesperson Problem). Given a set of
+points P in the 2-d plane, the planar Euclidean traveling salesperson (eTSP) problem is
+to find a tour of minimum total distance that visits all points in P exactly once, where the
+distance between points is the Euclidean (i.e. `2) distance.
+
+Example 26.3. Assuming that we could go from one place to another using your personal
+airplane, this is the problem we would want to solve to find a minimum length route visit-
+ing your favorite places in Pittsburgh.
+As with the TSP, eTSP is NP-hard, but it is easier to approximate. Unlike the TSP problem,
+which only has constant approximations, it is known how to approximate this problem to
+an arbitrary but fixed constant accuracy ε in polynomial time (the exponent of n has 1/ε
+dependency). That is, such an algorithm is capable of producing a solution that has length
+at most (1 + ε) times the length of the best tour.
+Note. In Section 2, we cover another approximation algorithm for a metric variant of TSP
+that is based on Minimum Spanning Trees (MST). That approximation algorithm gives a
+constant-approximation guarantee.
+Intuition for a Divide and Conquer Algorithm for eTSP. We can solve an instance of the
+eTPS problem by splitting the points by a cut in the plane, solving the eTSP instances on
+the two parts, and then merging the solutions in some way to construct a solution for the
+original problem.
+For the cut, we can pick a cut that is orthogonal to the coordinate lines. We could for
+example find the dimension along which the points have a larger spread, and then cut just
+below the median point along that dimension.
+This division operation gives us two smaller instances of eTSP, which can then be solved
+independently in parallel, yielding two cycles. To construct the solution for the original
+problem, we can merge the solutions. To merge the solution in the best possible way, we
+can take an edge from each of the two smaller instances, remove them, and then bridge the
+end points across the cut with two new edges. For each such pair of edges, there are two
+possible ways that we can bridge them, because when we are on the one side, we can jump
+to any one of the endpoints of the two bridges. To construct, the best solution, we can try
+out which one of these yields the best solution and take that one.
+
+
+o choose which swap to make, we consider all pairs of edges of the recursive solutions
+consisting of one edge e` = (u`, v`) from the left and one edge er = (ur , vr ) from the right
+174 CHAPTER 26. DIVIDE AND CONQUER
+and determine which pair minimizes the increase in the following cost:
+swapCost((u`, v`), (ur , vr )) = ‖u` − vr ‖ + ‖ur − v`‖ − ‖u` − v`‖ − ‖ur − vr ‖
+where ‖u − v‖ is the Euclidean distance between points u and v.
+Algorithm 26.7 (Divide-and-Conquer eTSP). By refining the intuition describe above, we
+arrive at a divide-and-conquer algorithm for solving eTPS, whose pseudo-code is shown
+below.
+eTSP (P ) =
+if |P | < 2 then
+raise TooSmall
+else if |P | = 2 then
+〈 (P [0], P [1]), (P [1], P [0]) 〉
+else
+let
+(P`, Pr ) = split P along the longest dimension
+(L, R) = (eTSP P`) || (eTSP Pr )
+(c, (e, e′)) = minVal first {(swapCost(e, e′), (e, e′)) : e ∈ L, e′ ∈ R}
+in
+swapEdges (append (L, R), e, e′)
+end
+The function minVal first uses the first value of the pairs to find the minimum, and returns
+the (first) pair with that minimum. The function swapEdges(E, e, e′) finds the edges e and
+e′ in E and swaps the endpoints. As there are two ways to swap, it picks the cheaper one.
+Remark. This heuristic divide-and-conquer algorithm is known to work well in practice.
+Cost Analysis. Let’s analyze the cost of this algorithm in terms of work and span. We
+have
+W (n) = 2W (n/2) + O(n2)
+S(n) = S(n/2) + O(log n)
+We have already seen the recurrence S(n) = S(n/2) + O(log n), which solves to O(log2 n).
+Here we’ll focus on solving the work recurrence.
+To solve the recurrence, we apply a theorem proven earlier , and obtain.
+
+W (n) = O(n2).
+5. DIVIDE AND CONQUER WITH REDUCE 175
+Strengthening. In applications of divide-and-conquer technique that we have consider
+so far in this chapter, we divide a problem instance into instances of the same problem. For
+example, in sorting, we divide the original instance into smaller instances of the sorting
+problem. Sometimes, it is not possible to apply this approach to solve a given problem,
+because solving the same problem on smaller instances does not provide enough informa-
+tion to solve the original problem. Instead, we will need to gather more information when
+solving the smaller instances to solve the original problem. In this case, we can strengthen
+the original problem by requiring information in addition to the information required by
+the original problem. For example, we might strengthen the sorting problem to return to us
+not just the sorted sequence but also a histogram of all the elements that count the number
+of occurrences for each element.
+
+5 Divide and Conquer with Reduce
+Many divide-and-conquer algorithms have the following structure, where emptyVal , base,
+and myCombine span for algorithm specific values.
+myDC a =
+if |a| = 0 then
+emptyVal
+else if |a| = 1 then
+base(a[0])
+else
+let (l, r) = splitMid a in
+(l′, r′) = (myDC l || myDC r)
+in
+myCombine (l′, r′)
+end
+Algorithms that fit this pattern can be implemented in one line using the sequence reduce
+function. Turning a divide-and-conquer algorithm into a reduce-based solution is as simple
+as invoking reduce with the following parameters
+reduce myCombine emptyVal (map base a).
+Important. This pattern does not work in general for divide-and-conquer algorithms. In
+particular, it does not work for algorithms that do more than an simple split that partitions
+their input in two parts in the middle. For example, it cannot be used for implementing
+the quick-sort algorithm, because the divide step partitions the data with respect to a pivot.
+This step requires picking a pivot, and then filtering the data into elements less than, equal,
+and greater than the pivot. It also does not work for divide-and-conquer algorithms that
+split more than two ways, or make more than two recursive calls.

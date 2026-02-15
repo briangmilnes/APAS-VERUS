@@ -1,16 +1,30 @@
 ---
-description: Include copy icons when displaying URLs or file paths in tables
+description: Make paths and URLs easy to copy
 globs: 
 alwaysApply: true
 ---
 
-# Copy Icons for URLs and Paths
+# Copyable Paths and URLs
 
-When displaying URLs or file paths in tables or lists, include a copy icon (📋) as a clickable element to make copying easier.
+## In tables and inline text
 
-Format examples:
+Wrap file paths and URLs in backticks for easy selection:
 
 | # | Type | Link |
 |---|------|------|
-| 1 | URL | 📋 `https://example.com/path` |
-| 2 | File | 📋 `/home/user/project/file.rs` |
+| 1 | URL | `https://example.com/path` |
+| 2 | File | `/home/user/project/file.rs` |
+
+## When a single path or URL needs to be easily copied
+
+Use a fenced code block — this is the **only** element in Cursor chat that renders with a real copy button:
+
+```
+/home/user/project/file.rs
+```
+
+Use this when the user is likely to need to copy the value (e.g., a command to run, a single important path).
+
+## Do NOT use emoji copy icons
+
+The 📋 emoji has no copy functionality — it is purely decorative and adds clutter. Do not use it.

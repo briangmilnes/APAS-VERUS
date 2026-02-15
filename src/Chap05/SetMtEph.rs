@@ -16,15 +16,13 @@ verus! {
     use std::hash::Hash;
 
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::hash::obeys_key_model;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::hash::SetIterAdditionalSpecFns;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::clone::*;
-    #[cfg(verus_keep_ghost)]
-    use vstd::pervasive::strictly_cloned;
-    #[cfg(verus_keep_ghost)]
-    use vstd::laws_eq::*;
+    use {
+        vstd::std_specs::hash::obeys_key_model,
+        vstd::std_specs::hash::SetIterAdditionalSpecFns,
+        vstd::std_specs::clone::*,
+        vstd::pervasive::strictly_cloned,
+        vstd::laws_eq::*,
+    };
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;

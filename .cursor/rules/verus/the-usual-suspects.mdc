@@ -1,0 +1,23 @@
+---
+description: "The Usual Suspects" means search vstd, examples, VerusCodebases, and vstdplus
+globs: 
+alwaysApply: true
+---
+
+# The Usual Suspects
+
+When the user says "the usual suspects" or "TUS", this refers to the following search locations:
+
+1. **vstd** — `~/projects/verus/source/vstd/`
+2. **examples** — `~/projects/verus/examples/`
+3. **VerusCodebases** — `~/projects/VerusCodebases/`
+4. **vstdplus** — `src/vstdplus/` (in the current project)
+
+Use this when searching for patterns, lemmas, or examples. For veracity-search:
+
+```bash
+# vstd is searched by default; add the others explicitly
+veracity-search -C ~/projects/verus/examples -C ~/projects/VerusCodebases -C ~/projects/APAS-VERUS/src/vstdplus 'pattern'
+```
+
+For grep-based searches, search all four locations.

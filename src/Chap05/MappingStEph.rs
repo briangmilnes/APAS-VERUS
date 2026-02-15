@@ -11,18 +11,18 @@ verus! {
     use std::hash::Hash;
 
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::hash::obeys_key_model;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::hash::SetIterAdditionalSpecFns;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::clone::*;
+    use {
+        vstd::std_specs::hash::obeys_key_model,
+        vstd::std_specs::hash::SetIterAdditionalSpecFns,
+        vstd::std_specs::clone::*,
+    };
     use crate::vstdplus::seq_set::*;
-    #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::cmp::PartialEqSpecImpl;
-    #[cfg(verus_keep_ghost)]
-    use vstd::map_lib::*;
+    use {
+        vstd::std_specs::cmp::PartialEqSpecImpl,
+        vstd::map_lib::*,
+    };
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::Chap05::RelationStEph::RelationStEph::*;
     use crate::Chap05::SetStEph::SetStEph::*;

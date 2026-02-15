@@ -2,20 +2,40 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn _ ensures .*count.*filter
-Searching: /home/milnes/projects/verus/source/vstd
+Pattern: fn _ types Tree
 Searching: /home/milnes/projects/VerusCodebases
-Files: 10627, Functions: 251344, Matches: 1
+Files: 10533, Functions: 249128, Matches: 1663
 
-[31m/home/milnes/projects/VerusCodebases/human-eval-verus/tasks/human_eval_146.rs:81: [0m
-[38;5;22mfn special_filter(numbers: &Vec<i32>) -> (count: usize)[0m
-[38;5;22m    ensures[0m
-[38;5;22m        count == special_filter_spec(numbers@),[0m
+[31m/home/milnes/projects/VerusCodebases/atmosphere/kernel/verified/kernel/spec.rs:210: [0m
+[38;5;22m    pub proof fn container_subtree_inv(&self)[0m
+[38;5;22m        requires[0m
+[38;5;22m            self.wf(),[0m
+[38;5;22m        ensures[0m
+[38;5;22m            forall|c_ptr: ContainerPtr|[0m
+[38;5;22m                #![trigger self.container_dom().contains(c_ptr)][0m
+[38;5;22m                #![trigger self.get_container(c_ptr)][0m
+[38;5;22m                self.container_dom().contains(c_ptr) ==> self.get_container([0m
+[38;5;22m                    c_ptr,[0m
+[38;5;22m                ).subtree_set@.subset_of(self.container_dom()) && self.get_container([0m
+[38;5;22m                    c_ptr,[0m
+[38;5;22m                ).subtree_set@.contains(c_ptr) == false,[0m
 
-== 0) == (forall |v: V| !(#[trigger] m.contains(v) && f(v)))[0m
+[31m/home/milnes/projects/VerusCodebases/atmosphere/kernel/verified/kernel/spec.rs:226: [0m
+[38;5;22m    pub proof fn container_subtree_disjoint_inv(&self)[0m
+[38;5;22m        requires[0m
+[38;5;22m            self.wf(),[0m
+[38;5;22m        ensures[0m
+[38;5;22m            forall|c_ptr_i: ContainerPtr, c_ptr_j: ContainerPtr|[0m
+[38;5;22m                #![trigger  self.get_container(c_ptr_i).subtree_set@.insert(c_ptr_i), self.get_container(c_ptr_j).subtree_set@.insert(c_ptr_j)][0m
+[38;5;22m                self.container_dom().contains(c_ptr_i) && self.container_dom().contains(c_ptr_j)[0m
+[38;5;22m                    && c_ptr_i != c_ptr_j && self.get_container(c_ptr_i).depth[0m
+[38;5;22m                    == self.get_container(c_ptr_j).depth ==> self.get_container([0m
+[38;5;22m                    c_ptr_i,[0m
+[38;5;22m                ).subtree_set@.insert(c_ptr_i).disjoint([0m
+[38;5;22m                    self.get_container(c_ptr_j).subtree_set@.insert(c_ptr_j),[0m
+[38;5;22m                ),[0m
 
-[31m/home/milnes/projects/VerusCodebases/anvil/src/vstd_ext/multiset_lib.rs:34: [0m
-[38;5;22mpub proof fn filtered_size_is_one_means_only_one_such_value<V>(m: Multiset<V>, f: spec_fn(V) -> bool)[0m
-[38;5;22m    ensures[0m
-[38;5;22m        (m.filter(f).len() == 1) ==[0m
-
+[31m/home/milnes/projects/VerusCodebases/atmosphere/kernel/verified/kernel/kernel_kill_thread.rs:9: [0m
+[38;5;22m    pub fn kernel_kill_thread(&mut self, thread_ptr: ThreadPtr)[0m
+[38;5;22m        requires[0m
+[38;5;22m            old(self).wf(),[0m

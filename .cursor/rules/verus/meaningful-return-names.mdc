@@ -17,6 +17,7 @@ Name return values and variables meaningfully. Avoid generic names that convey n
 | 3 | `value` / `val` | Almost everything is a value |
 | 4 | `data` | Almost everything is data |
 | 5 | `temp` / `tmp` | Says nothing about what it holds |
+| 6 | `ret` | Just means "return" — as generic as `result` |
 
 ## Good Return Names
 

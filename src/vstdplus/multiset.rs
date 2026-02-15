@@ -11,6 +11,7 @@
 pub mod multiset {
 
 use vstd::prelude::*;
+use vstd::multiset::Multiset;
 
 verus! {
 
@@ -78,6 +79,93 @@ pub proof fn lemma_flatten_01_eq_spec_filter_len<T>(
         assert(ss =~= ss_prefix.push(ss.last()));
         // lemma_flatten_push: ss_prefix.push(ss.last()).flatten() =~= ss_prefix.flatten() + ss.last()
         // So ss.flatten().len() == ss_prefix.flatten().len() + ss.last().len()
+    }
+}
+
+/// m.insert(x).filter(f) when f(x) == m.filter(f).insert(x).
+proof fn lemma_multiset_insert_filter_pos<T>(m: Multiset<T>, x: T, f: spec_fn(T) -> bool)
+    requires f(x),
+    ensures m.insert(x).filter(f) =~= m.filter(f).insert(x),
+{
+    broadcast use vstd::multiset::group_multiset_axioms;
+    assert forall|v: T| m.insert(x).filter(f).count(v) == m.filter(f).insert(x).count(v)
+    by {};
+}
+
+/// m.insert(x).filter(f) when !f(x) == m.filter(f).
+proof fn lemma_multiset_insert_filter_neg<T>(m: Multiset<T>, x: T, f: spec_fn(T) -> bool)
+    requires !f(x),
+    ensures m.insert(x).filter(f) =~= m.filter(f),
+{
+    broadcast use vstd::multiset::group_multiset_axioms;
+    assert forall|v: T| #[trigger] m.insert(x).filter(f).count(v) == m.filter(f).count(v)
+    by {};
+}
+
+/// Connect flatten of 0-or-1 inner seqs to multiset.filter.
+///
+/// If `ss[i] = [s[i]]` when `pred(s[i])` and `ss[i] = []` otherwise,
+/// then `ss.flatten().to_multiset() =~= s.to_multiset().filter(pred)`.
+pub proof fn lemma_flatten_01_multiset_eq_filter<T>(
+    s: Seq<T>,
+    ss: Seq<Seq<T>>,
+    pred: spec_fn(T) -> bool,
+)
+    requires
+        ss.len() == s.len(),
+        forall|i: int| #![trigger ss[i]] 0 <= i < s.len() ==> ss[i].len() <= 1,
+        forall|i: int| #![trigger ss[i]] 0 <= i < s.len() ==> (ss[i].len() == 1 <==> pred(s[i])),
+        forall|i: int| #![trigger ss[i]] 0 <= i < s.len() ==> (ss[i].len() == 1 ==> ss[i][0] == s[i]),
+    ensures
+        ss.flatten().to_multiset() =~= s.to_multiset().filter(pred),
+    decreases s.len(),
+{
+    broadcast use Seq::<_>::group_seq_flatten;
+    broadcast use vstd::seq_lib::group_to_multiset_ensures;
+    broadcast use vstd::multiset::group_multiset_axioms;
+
+    if s.len() == 0 {
+        assert(ss =~= Seq::<Seq<T>>::empty());
+    } else {
+        let ss_prefix = ss.drop_last();
+        let s_prefix = s.drop_last();
+
+        lemma_flatten_01_multiset_eq_filter(s_prefix, ss_prefix, pred);
+
+        assert(ss =~= ss_prefix.push(ss.last()));
+        assert(s =~= s_prefix.push(s.last()));
+
+        let ghost fp = ss_prefix.flatten();
+
+        if pred(s.last()) {
+            assert(ss.last() =~= seq![s.last()]);
+
+            // LHS chain:
+            // ss.flatten() =~= fp + seq![s.last()] =~= fp.push(s.last())
+            assert(fp + seq![s.last()] =~= fp.push(s.last()));
+            // fp.push(x).to_multiset() =~= fp.to_multiset().insert(x)
+            // By IH: fp.to_multiset() =~= s_prefix.to_multiset().filter(pred)
+            // So: ss.flatten().to_multiset() =~= s_prefix.to_multiset().filter(pred).insert(s.last())
+            assert(ss.flatten().to_multiset()
+                =~= s_prefix.to_multiset().filter(pred).insert(s.last()));
+
+            // RHS chain:
+            // s.to_multiset() =~= s_prefix.to_multiset().insert(s.last())
+            lemma_multiset_insert_filter_pos(s_prefix.to_multiset(), s.last(), pred);
+            // s.to_multiset().filter(pred) =~= s_prefix.to_multiset().filter(pred).insert(s.last())
+        } else {
+            assert(ss.last() =~= Seq::<T>::empty());
+
+            // LHS chain:
+            // ss.flatten() =~= fp + Seq::empty() =~= fp
+            assert(fp + Seq::<T>::empty() =~= fp);
+            // By IH: fp.to_multiset() =~= s_prefix.to_multiset().filter(pred)
+            assert(ss.flatten().to_multiset() =~= s_prefix.to_multiset().filter(pred));
+
+            // RHS chain:
+            lemma_multiset_insert_filter_neg(s_prefix.to_multiset(), s.last(), pred);
+            // s.to_multiset().filter(pred) =~= s_prefix.to_multiset().filter(pred)
+        }
     }
 }
 

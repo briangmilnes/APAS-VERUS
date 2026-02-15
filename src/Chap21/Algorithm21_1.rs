@@ -60,7 +60,7 @@ pub mod Algorithm21_1 {
         }
     }
 
-    /// Helper: flatten a sequence of sequences into a single sequence.
+    /// Flatten a sequence of sequences into a single sequence.
     fn flatten_inner<T: View + Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (result: ArraySeqStPerS<T>)
         requires
             sum_inner_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,

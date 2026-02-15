@@ -31,17 +31,14 @@ pub mod ArraySeq {
     //		2. imports
 
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::cmp::PartialEqSpecImpl;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::cmp::PartialEqSpec;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::vec::*;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::clone::*;
-    #[cfg(verus_keep_ghost)]
-    use vstd::laws_eq::obeys_concrete_eq;
-    #[cfg(verus_keep_ghost)]
-    use vstd::laws_eq::obeys_deep_eq;
+    use {
+        vstd::std_specs::cmp::PartialEqSpecImpl,
+        vstd::std_specs::cmp::PartialEqSpec,
+        vstd::std_specs::vec::*,
+        vstd::std_specs::clone::*,
+        vstd::laws_eq::obeys_concrete_eq,
+        vstd::laws_eq::obeys_deep_eq,
+    };
 
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -265,15 +262,17 @@ pub mod ArraySeq {
             requires 
               obeys_feq_clone::<T>(),
               forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(i),)),
-              // The biconditional bridge ties the exec closure to the spec predicate.
-              forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
+              // The forward bridge ties the exec closure to the spec predicate.
+              forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
             ensures
                 filtered.spec_len() <= a.spec_len(),
                 // The result length equals the spec_filter_len count.
                 filtered.spec_len() == spec_filter_len(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_pred),
                 // The result multiset equals the input multiset filtered by the spec predicate.
                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
-                    =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)).to_multiset().filter(spec_pred);
+                    =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)).to_multiset().filter(spec_pred),
+                // Every element of the filtered result satisfies the predicate.
+                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
         /// - Work Θ(|a|), Span Θ(1).
@@ -571,9 +570,10 @@ pub mod ArraySeq {
                 invariant
                     obeys_feq_clone::<T>(),
                     forall|j: int| 0 <= j < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(j),)),
-                    forall|v: T, ret: bool| pred.ensures((&v,), ret) ==> spec_pred(v) == ret,
+                    forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
                     i <= a.seq@.len(),
                     seq@.len() <= i,
+                    forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> pred.ensures((&seq@[j],), true),
                     // The result length equals spec_filter_len over the prefix seen so far.
                     seq@.len() == spec_filter_len(a.seq@.subrange(0, i as int), spec_pred),
                     // The result multiset equals the filtered multiset of elements seen so far.

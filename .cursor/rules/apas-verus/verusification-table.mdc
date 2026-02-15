@@ -1,0 +1,54 @@
+# Verusification Status Table
+
+When the user asks for a "verusification table" or "verusification status" for a chapter, produce a structured review with the following sections.
+
+## 1. Prose Coverage
+
+Map each prose section/algorithm to implementation files. Flag missing algorithms.
+
+| # | Prose Section | Description | File(s) | Status |
+|---|---|---|---|---|
+| 1 | §N Algorithm Name | Brief description | `File.rs` | Implemented / Missing |
+
+## 2. Per-File Verusification Status
+
+For each source file, report structural verusification:
+
+| # | File | verus! block | Spec fns | Trait specs | Impl bodies | Proof holes |
+|---|---|---|---|---|---|---|
+| 1 | `File.rs` | Yes/No | count | count with ensures | verified / external_body | count × type |
+
+## 3. Spec Strength Assessment
+
+Classify every public function's spec strength and proof hole status:
+
+| # | Function | File | Spec | Strength | Holes | Notes |
+|---|---|---|---|---|---|---|
+| 1 | `fn_name` | File.rs | Brief spec summary | strong/partial/weak/none | verified / external_body / assume(N) / admit | Gap description |
+
+The **Holes** column reports the verification status of the function body:
+- **verified** — body fully verified, no holes
+- **external_body** — body not checked by Verus
+- **assume(N)** — N `assume(...)` statements in body
+- **admit** — contains `admit()`
+- A function may have multiple hole types (e.g., `external_body` on one arm, `assume` on another)
+
+Use the standard classification from `classify-spec-strengths.mdc`.
+
+## 4. Summary
+
+| Metric | Value |
+|---|---|
+| Strong specs | N |
+| Partial specs | N |
+| Weak / None specs | N |
+| Fully verified bodies | N |
+| external_body holes | N |
+| assume holes | N |
+| Prose algorithms missing | N |
+
+## When to Produce
+
+- When the user says "verusification table", "verusification status", or "verus status"
+- At the start of work on a new chapter (combined with review-against-prose)
+- Before claiming a chapter is complete

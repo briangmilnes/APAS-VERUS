@@ -31,11 +31,11 @@ pub mod ArraySeqStEph {
     //		2. imports
 
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::cmp::PartialEqSpecImpl;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::vec::*;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::clone::*;
+    use {
+        vstd::std_specs::cmp::PartialEqSpecImpl,
+        vstd::std_specs::vec::*,
+        vstd::std_specs::clone::*,
+    };
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::multiset::multiset::*;
@@ -181,7 +181,7 @@ pub mod ArraySeqStEph {
                 obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
                 // The biconditional bridge ties the exec closure to the spec predicate.
-                forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
+                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
             ensures
                 filtered.spec_len() <= a.seq@.len(),
                 filtered.spec_len() == spec_filter_len(
@@ -447,7 +447,7 @@ pub mod ArraySeqStEph {
                     seq@.len() <= i,
                     obeys_feq_clone::<T>(),
                     forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[j],)),
-                    forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
+                    forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
                     forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> pred.ensures((&seq@[j],), true),
                     seq@.len() == spec_filter_len(a.seq@.subrange(0, i as int), spec_pred),
                     seq@.to_multiset() =~= a.seq@.subrange(0, i as int).to_multiset().filter(spec_pred),

@@ -116,9 +116,6 @@ pub mod Algorithm21_6 {
             // So forall|k| 0 <= k < clen ==> composites.seq@[k] != *x, hence !contains.
             !is_composite
         };
-        proof {
-            assume(forall|v: N, ret: bool| pred.ensures((&v,), ret) <==> spec_not_composite(v) == ret);
-        }
         let filtered: ArraySeqStPerS<N> =
             ArraySeqStPerS::filter(
                 &candidates,

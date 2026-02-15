@@ -1,0 +1,184 @@
+---
+description: How to implement and test iterators on APAS-VERUS collection modules
+globs: "src/**/*.rs,rust_verify_test/**/*.rs"
+alwaysApply: false
+---
+
+# Collection Iterator Standard
+
+Every APAS-VERUS collection module must implement the iterator standard defined in `docs/APAS-VERUSIterators.rs`. The canonical reference implementation is `src/Chap18/ArraySeqStEph.rs`.
+
+## Exemplar
+
+📋 `/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs`
+
+## Required Components (all inside verus!)
+
+All 10 source components go in section `//		10. iterators` of the file.
+
+| # | Component | Purpose |
+|---|-----------|---------|
+| 1 | Custom iterator struct wrapping inner Rust iterator | `CollectionIter<'a, T> { inner: std::slice::Iter<'a, T> }` |
+| 2 | `View` for iterator: `type V = (int, Seq<T>)`, `closed spec fn` delegating to `self.inner@` | Position + full sequence |
+| 3 | `iter_invariant` open spec fn: `0 <= it@.0 <= it@.1.len()` | Bounds the position index |
+| 4 | `Iterator::next` with ensures (None/Some arms, old(self)@ pattern) | Core verified iteration contract |
+| 5 | Ghost iterator struct: `{ pub pos: int, pub elements: Seq<T>, pub phantom: PhantomData<&'a T> }` | Spec-level loop state |
+| 6 | `ForLoopGhostIteratorNew` impl on exec iterator | Creates ghost from exec |
+| 7 | `ForLoopGhostIterator` impl on ghost iterator (6 spec fns) | Full ghost loop protocol |
+| 8 | `View` for ghost iterator: `elements.take(pos)` = items-seen-so-far | For assertions after loop |
+| 9 | `iter(&self)` method with ensures `it@.0 == 0, it@.1 == self.seq@, iter_invariant(&it)` | Entry point |
+| 10 | `IntoIterator for &Self` with same ensures as `iter()` | Enables `for x in &collection` |
+
+Optional but recommended:
+- `IntoIterator for Self` (consuming pattern, yields `T` not `&T`)
+
+## Iterator::next ensures pattern
+
+```rust
+fn next(&mut self) -> (next: Option<&'a T>)
+    ensures ({
+        let (old_index, old_seq) = old(self)@;
+        match next {
+            None => {
+                &&& self@ == old(self)@
+                &&& old_index >= old_seq.len()
+            },
+            Some(element) => {
+                let (new_index, new_seq) = self@;
+                &&& 0 <= old_index < old_seq.len()
+                &&& new_seq == old_seq
+                &&& new_index == old_index + 1
+                &&& element == old_seq[old_index]
+            },
+        }
+    })
+{
+    self.inner.next()
+}
+```
+
+## Proof-Time Test (PTT) Standard
+
+Every collection with an iterator must have a PTT file at:
+
+```
+rust_verify_test/tests/<Chap>/Prove<Collection>.rs
+```
+
+Registered in `rust_verify_test/Cargo.toml`.
+
+### Required test patterns
+
+There are 6 test patterns. Collections that only support borrow iteration need the first 4. Collections that also support consuming iteration need all 6.
+
+| # | Pattern | Creates iterator via | Loop style | Yields |
+|---|---------|---------------------|------------|--------|
+| 1 | loop-borrow-iter | `a.iter()` | `loop { if let Some(x) = it.next() }` | `&T` |
+| 2 | loop-borrow-into | `(&a).into_iter()` | `loop { if let Some(x) = it.next() }` | `&T` |
+| 3 | for-borrow-iter | `a.iter()` | `for x in iter: it` | `&T` |
+| 4 | for-borrow-into | `(&a).into_iter()` | `for x in iter: it` | `&T` |
+| 5 | loop-consume | `a.into_iter()` | `loop { if let Some(x) = it.next() }` | `T` |
+| 6 | for-consume | `a.into_iter()` | `for x in iter: it` | `T` |
+
+### Loop pattern template (borrow)
+
+```rust
+test_verify_one_file! {
+    #[test] collection_loop_borrow_iter verus_code! {
+        use vstd::prelude::*;
+        use apas_verus::<Chap>::<Module>::<Module>::*;
+
+        fn test_loop_borrow_iter() {
+            let a: CollectionS<u64> = /* construct */;
+
+            let mut it: CollectionIter<u64> = a.iter();
+            let ghost iter_seq: Seq<u64> = it@.1;
+            let ghost mut items: Seq<u64> = Seq::empty();
+
+            #[verifier::loop_isolation(false)]
+            loop
+                invariant
+                    items =~= iter_seq.take(it@.0 as int),
+                    iter_invariant(&it),
+                    iter_seq == it@.1,
+                    it@.0 <= iter_seq.len(),
+                decreases iter_seq.len() - it@.0,
+            {
+                if let Some(x) = it.next() {
+                    proof { items = items.push(*x); }
+                } else {
+                    break;
+                }
+            }
+
+            assert(it@.0 == iter_seq.len());
+            assert(items =~= iter_seq);
+        }
+    } => Ok(())
+}
+```
+
+### For pattern template (borrow)
+
+```rust
+test_verify_one_file! {
+    #[test] collection_for_borrow_iter verus_code! {
+        use vstd::prelude::*;
+        use apas_verus::<Chap>::<Module>::<Module>::*;
+
+        fn test_for_borrow_iter() {
+            let a: CollectionS<u64> = /* construct */;
+
+            let it: CollectionIter<u64> = a.iter();
+            let ghost iter_seq: Seq<u64> = it@.1;
+            let ghost mut items: Seq<u64> = Seq::empty();
+
+            for x in iter: it
+                invariant
+                    iter.elements == iter_seq,
+                    items =~= iter_seq.take(iter.pos),
+                    iter.pos <= iter_seq.len(),
+            {
+                proof { items = items.push(*x); }
+            }
+
+            assert(items =~= iter_seq);
+        }
+    } => Ok(())
+}
+```
+
+### Consuming variants
+
+In consuming tests (`loop-consume`, `for-consume`):
+- Use `a.into_iter()` instead of `a.iter()`
+- Push `x` not `*x` (yields owned `T`, not `&T`)
+- No `iter_invariant` needed (vstd's `IntoIter` View handles bounds)
+
+## Key differences: loop vs for
+
+| Aspect | loop pattern | for pattern |
+|--------|-------------|-------------|
+| Syntax | `loop { if let Some(x) = it.next() { ... } else { break; } }` | `for x in iter: it { ... }` |
+| Ghost state | Manual via `it@` | Automatic via `iter.pos`, `iter.elements` |
+| Requires | `Iterator::next` ensures only | + `ForLoopGhostIterator` infrastructure |
+| `loop_isolation` | Needs `#[verifier::loop_isolation(false)]` | Not needed |
+| Termination | Explicit `decreases` clause | Automatic via `ghost_decrease` |
+| Postcondition | `assert` after `break` | Follows from `ghost_ensures` |
+
+## Building the verus library for PTTs
+
+PTTs import `apas_verus` as an extern crate. Before running PTTs, rebuild:
+
+```bash
+cd ~/projects/APAS-VERUS && mkdir -p target/verus && \
+~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs \
+  --compile -o target/verus/libapas_verus.rlib \
+  --export target/verus/apas_verus.vir
+```
+
+Then run PTTs from `rust_verify_test/`:
+
+```bash
+cd ~/projects/APAS-VERUS/rust_verify_test && cargo test --test Prove<Collection>
+```

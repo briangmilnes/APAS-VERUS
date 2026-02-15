@@ -1,0 +1,29 @@
+# Review Against Prose
+
+When working on `src/ChapNN/`, check if `prompts/ChapNN.txt` exists. If it does, read it before making changes or reviewing the code.
+
+## When to Read
+
+- Starting work on a chapter
+- Reviewing specs or spec strength
+- Implementing new algorithms
+- Checking coverage of prose algorithms vs code
+
+## What the File Contains
+
+The `prompts/ChapNN.txt` file is extracted text from the APAS textbook chapter. It contains:
+
+- Data type definitions
+- Algorithm pseudocode
+- Cost specifications (work and span)
+- Correctness arguments
+- Theorems and properties
+
+## How to Use
+
+1. Read `prompts/ChapNN.txt`
+2. Identify all named definitions, algorithms, cost specs, and theorems
+3. Compare against the code in `src/ChapNN/`
+4. Note gaps: algorithms not implemented, specs weaker than what the prose describes, cost mismatches
+
+This is the source of truth for what the code should implement and specify.

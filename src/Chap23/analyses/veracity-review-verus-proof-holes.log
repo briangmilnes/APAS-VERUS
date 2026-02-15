@@ -1,0 +1,25 @@
+✓ BalBinTreeStEph.rs
+❌ PrimTreeSeqStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:801: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:835: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:840: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:844: assume() - proof { assume(self@ != other@); }
+   Holes: 4 total
+      4 × assume()
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   1 clean (no holes)
+   1 holed (contains holes)
+   2 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 4 total
+   4 × assume()

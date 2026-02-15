@@ -6,9 +6,10 @@ pub mod FibonacciWSScheduler {
     use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;
 
     #[cfg(verus_keep_ghost)]
-    use vstd::arithmetic::power::pow;
-    #[cfg(verus_keep_ghost)]
-    use vstd::arithmetic::power2::{pow2, lemma_pow2_unfold, lemma_pow2_strictly_increases, lemma2_to64_rest};
+    use {
+        vstd::arithmetic::power::pow,
+        vstd::arithmetic::power2::{pow2, lemma_pow2_unfold, lemma_pow2_strictly_increases, lemma2_to64_rest},
+    };
 
 verus! {
 

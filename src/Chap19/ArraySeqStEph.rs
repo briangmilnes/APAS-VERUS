@@ -33,16 +33,16 @@ pub mod ArraySeqStEph {
     //		2. imports
 
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::cmp::PartialEqSpecImpl;
+    use {
+        vstd::std_specs::cmp::PartialEqSpecImpl,
+        vstd::std_specs::vec::*,
+        vstd::std_specs::clone::*,
+    };
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::vec::*;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::clone::*;
-
-    #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::multiset::multiset::*;
+    use {
+        crate::vstdplus::feq::feq::*,
+        crate::vstdplus::multiset::multiset::*,
+    };
 
 
     //		3. broadcast use
@@ -179,11 +179,13 @@ pub mod ArraySeqStEph {
             requires
                 obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
-                forall|v: T, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ret,
+                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
             ensures
                 filtered.spec_len() <= a.seq@.len(),
                 filtered.spec_len() == spec_filter_len(
                     Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
+                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// - Algorithm 19.6 (update). Ephemeral: clone then set (O(n) clone + O(1) set).
@@ -501,6 +503,18 @@ pub mod ArraySeqStEph {
                     assert(ss[i] =~= deflated.seq@[i].seq@);
                 };
                 lemma_flatten_01_eq_spec_filter_len(a.seq@, ss, spec_pred);
+
+                // Connect flatten multiset to input multiset filtered by spec_pred.
+                assert forall|i: int| #![trigger ss[i]]
+                    0 <= i < a.seq@.len() && ss[i].len() == 1
+                    implies ss[i][0] == a.seq@[i]
+                by {
+                    assert(ss[i] =~= deflated.seq@[i].seq@);
+                };
+                lemma_flatten_01_multiset_eq_filter(a.seq@, ss, spec_pred);
+
+                assert(filtered.seq@ =~= Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)));
+                assert(a.seq@ =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]));
             }
             filtered
         }
