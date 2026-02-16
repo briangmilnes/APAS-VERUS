@@ -1,0 +1,25 @@
+
+ Implement insertion sort in a src/Chap3 directory,
+ Name it InsertionSortSt.rs
+ Use arrays of a generic type with Ord, not StT.
+ Use slices.
+ Write test code and bench code in
+ tests/Chap3 and benches/Chap3.
+ Show me an estimated time and the to-do list before you
+ execute.
+ 
+
+
+Example 3.1 (Insertion Sort). In this book, we describe algorithms by using the pseudo-
+code notation based on SPARC, the language used in this book. For example, we can
+specify the classic insertion sort algorithm as follows.
+insSort f s =
+if |s| = 0 then
+〈 〉
+else insert f s[0] (insSort f (s[1, ..., n − 1]))
+
+In the algorithm, f is the comparison function and s is the input sequence. The algorithm
+uses a function (insert f x s) that takes the comparison function f , an element x, and a
+sequence s sorted by f , and inserts x in the appropriate place. Inserting into a sorted se-
+quence is itself an algorithmic problem, since we are not specifying how it is implemented,
+but just specifying its functionality.

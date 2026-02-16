@@ -1,0 +1,89 @@
+Propose in a text box  Chap12/Exercise12.1 using the definitions below, but translating them
+   into native rust synchronization. For example, don't build cas, just use
+   the rust.
+Al propose in a text box a test file for it.
+
+First propose a plan and let me see it. 
+Elaborate on the translation to  native rust.
+
+Checklist the source and test file proposals and propose fixes to defects.
+   
+   
+
+Definition 12.3 (Synchronization Instructions). There are many techniques for solving mu-
+tual exclusion problems. Nearly all of these techniques involve synchronizing between the
+threads by using synchronization instructions, which can be broadly divided into three
+categories.
+
+1. Spin locks allow a thread to “busy wait” until the critical section is “clear” of other
+threads.
+
+2. Blocking locks allow a thread to “block” and wait for another thread to exit the criti-
+cal section. When the critical section is clear, then the blocked thread receives a signal,
+allowing it to proceed. The term mutex, short for ”mutual exclusion” is sometimes
+used to refer to a blocking lock.
+
+3. Atomic read-modify-write instructions, can read and modify the contents of a mem-
+ory location atomically, allowing a thread to operate safely on shared data.
+Remark. One example of a mutual exclusion algorithm that does not use synchronization
+operations is Dekker’s algorithm for mutual exclusion. The algorithm works only for two
+threads.
+
+Atomic Read-Modify-Write Instructions. In contrast to conventional instructions, these
+instructions differ in the sense that they can be used to perform atomically a sequence of
+three instructions, i.e.,
+• reading the contents of reference,
+• computing some value based on it, and
+• writing it back into the reference atomically.
+As it turns out, these instructions suffice to implement more complex concurrent opera-
+tions on shared data.
+
+Definition 12.4 (Nonblocking Synchronization). Atomic read-modify-write operations typ-
+ically require special hardware support and are implemented more or less directly in hard-
+ware. Because they don’t block the executing thread, atomic read-modify-write instruc-
+tions are called nonblocking. Nonblocking operations can be used to implement more
+75
+complex concurrent nonblocking data structures, such as concurrent stacks and queues,
+that can guarantee system-wide progress.
+Definition 12.5 (Compare and Swap). Compare-and-swap is an atomic read-modify-write
+instruction that performs a memory read followed by a memory write atomically on a
+machine word. The type signature for the cas instruction is
+cas : word ref → word ∗ word → word.
+
+Given a reference r and expected value exp and a target value tgt, the instruction
+cas r (exp, tgt)
+performs the following atomically:
+1. let old be the contents of r,
+2. compare old with exp,
+3. if they are equal, then write into r the value tgt,
+4. otherwise, leave r unchanged, and
+5. return old
+Definition 12.6 (Fetch and Add). Fetch-and-add is an atomic read-modify-write instruc-
+tion that atomically updates the contents of a memory location and returns the contents
+(before the update). The type signature for the faa instruction is
+faa : word ref → word → word.
+Given a reference r and an “increment” delta, the instruction
+faa r delta
+performs the following update atomically
+let v = !r (12.1)
+r ← !r ⊕ delta (12.2)
+in v end. (12.3)
+Here ⊕ is the addition operation on machine words.
+
+Exercise 12.1. Implement a spin-lock using fetch-and-add 
+
+
+Propose an implemention of Chap12/Exercise12_2 and test code in text
+boxes. 
+Checklist them.
+
+Exercise 12.2. Implement fetch-and-add using compare-and-swap . How does the effi-
+ciency of your implementation compare to that of the fetch-and-add instruction.
+
+
+Exercise 12.5. Using the compare-and-swap instruction for synchronization, design a
+concurrent stack data structure that can be shared by multiple threads. Such a concurrent
+stack data structure can be used to implement a thread scheduler for executing the threads
+in a parallel language such as SPARC or MPL.
+
+ Be sure to use our MtT and StTInMtT types as needed.

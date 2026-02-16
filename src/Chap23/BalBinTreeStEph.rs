@@ -25,7 +25,10 @@ pub mod BalBinTreeStEph {
     //		2. imports
 
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::vec::*;
+    use {
+        vstd::std_specs::vec::*,
+        vstd::std_specs::cmp::PartialEqSpecImpl,
+    };
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -474,9 +477,54 @@ pub mod BalBinTreeStEph {
         }
     }
 
+    //		13. PartialEq / Eq impls
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: PartialEq> PartialEqSpecImpl for BalBinTree<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
+    }
+
+    impl<T: Eq> Eq for BalBinTree<T> {}
+
+    impl<T: PartialEq> PartialEq for BalBinTree<T> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (*self == *other)
+            decreases self,
+        {
+            match (self, other) {
+                (BalBinTree::Leaf, BalBinTree::Leaf) => true,
+                (BalBinTree::Node(a), BalBinTree::Node(b)) => {
+                    let r = a.left == b.left && a.value == b.value && a.right == b.right;
+                    proof { assume(r == (*self == *other)); }
+                    r
+                },
+                _ => false,
+            }
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: PartialEq> PartialEqSpecImpl for BalBinNode<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
+    }
+
+    impl<T: Eq> Eq for BalBinNode<T> {}
+
+    impl<T: PartialEq> PartialEq for BalBinNode<T> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (*self == *other)
+        {
+            let r = self.left == other.left && self.value == other.value && self.right == other.right;
+            proof { assume(r == (*self == *other)); }
+            r
+        }
+    }
+
     } // verus!
 
-    //		13. derive impls outside verus!
+    //		14. Clone impls outside verus!
 
     impl<T: Clone> Clone for BalBinTree<T> {
         fn clone(&self) -> Self {
@@ -492,27 +540,6 @@ pub mod BalBinTreeStEph {
             BalBinNode { left: self.left.clone(), value: self.value.clone(), right: self.right.clone() }
         }
     }
-
-    impl<T: PartialEq> PartialEq for BalBinTree<T> {
-        fn eq(&self, other: &Self) -> bool {
-            match (self, other) {
-                (BalBinTree::Leaf, BalBinTree::Leaf) => true,
-                (BalBinTree::Node(a), BalBinTree::Node(b)) =>
-                    a.left == b.left && a.value == b.value && a.right == b.right,
-                _ => false,
-            }
-        }
-    }
-
-    impl<T: Eq> Eq for BalBinTree<T> {}
-
-    impl<T: PartialEq> PartialEq for BalBinNode<T> {
-        fn eq(&self, other: &Self) -> bool {
-            self.left == other.left && self.value == other.value && self.right == other.right
-        }
-    }
-
-    impl<T: Eq> Eq for BalBinNode<T> {}
 
     impl<T: std::fmt::Debug> std::fmt::Debug for BalBinTree<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

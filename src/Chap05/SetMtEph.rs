@@ -20,6 +20,7 @@ verus! {
         vstd::std_specs::hash::obeys_key_model,
         vstd::std_specs::hash::SetIterAdditionalSpecFns,
         vstd::std_specs::clone::*,
+        vstd::std_specs::cmp::PartialEqSpecImpl,
         vstd::pervasive::strictly_cloned,
         vstd::laws_eq::*,
     };
@@ -872,7 +873,23 @@ verus! {
         fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.elements.hash(state); }
     }
 
+    #[cfg(verus_keep_ghost)]
+    impl<T: StT + Hash> PartialEqSpecImpl for SetMtEph<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
     impl<T: StT + Hash> Eq for SetMtEph<T> {}
+
+    impl<T: StT + Hash> PartialEq for SetMtEph<T> {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let r = self.elements == other.elements;
+            proof { assume(r == (self@ == other@)); }
+            r
+        }
+    }
 
   } // verus!
 
@@ -886,10 +903,6 @@ verus! {
             $( let _ = __s.insert($x); )*
             __s
         }};
-    }
-
-    impl<T: StT + Hash> PartialEq for SetMtEph<T> {
-        fn eq(&self, other: &Self) -> bool { self.elements == other.elements }
     }
 
     impl<T: StT + Hash> std::fmt::Display for SetMtEph<T> {

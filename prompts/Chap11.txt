@@ -1,0 +1,230 @@
+Chapter 11
+Threads, Concurrency, and
+Parallelism
+This chapter presents an important abstraction in computer science, threads, and how they
+can be used to write concurrent and parallel programs.
+1 Threads
+Definition 11.1 (Thread). A thread, short for thread of execution, is a computation that ex-
+ecutes a given piece of code. A program that uses multiple threads is called multithreaded.
+We consider two operations on threads: spawn and sync.
+• The operation spawn takes an expression, creates a thread to execute that expression,
+and returns the thread. Once spawned the thread starts executing concurrently with
+other threads in the program.
+• The operation sync takes a thread and waits until that thread completes its execu-
+tion.
+Example 11.1. The piece of code below spawns two threads and assigns them the task of
+computing the nth and 2nth Fibonacci number. Once spawned the two threads execute
+concurrently.
+let t = spawn (lambda ( ) . fib n)
+u = spawn (lambda ( ) . fib 2n)
+(( ), ( )) = (sync t, sync u)
+in ( ) end
+65
+66 CHAPTER 11. THREADS, CONCURRENCY, AND PARALLELISM
+The function fib may be implemented as
+fib x =
+if x ≤ 1 then x
+else fib (x − 1) + fib (x − 2)
+Example 11.2. In the example above , the threads compute the desired Fibonacci number
+but has no way of communicating the result back. The piece of code below modifies the
+example slightly to report the results back via references. The sync operations ensure that
+the results are computed by waiting for the threads to complete.
+let (r, s) = (ref 0, ref 0)
+t = spawn (lambda ( ) . r ← fib n)
+u = spawn (lambda ( ) . s ← fib 2n)
+(( ), ( )) = (sync t, sync u)
+in (!r, !s)
+end
+Definition 11.2 (Thread Scheduler). Multithreaded programs rely on a thread scheduler
+or scheduler for short, to execute the spawned threads to completion. At a given time,
+a scheduler can execute any subset of the spawned threads that are ready to execute, i.e.,
+they are not waiting other threads.
+Example 11.3 (One-Processor Schedule). Consider executing the multithreaded program
+for computing two Finonacci numbers using one processor. The thread scheduler will
+start by executing the “main thread” that spawns the two threads. After the two threads
+are spawned, the scheduler can choose to execute any one of them for any duration of time.
+If it divides its time evenly between the two threads, then the first one will finish, leaving
+only the second thread to work on. The scheduler will therefore work on the second thread,
+and when it completes, it will return to the main thread and return the computed results.
+Example 11.4 (Two-Processor Schedule). Consider executing the multithreaded program
+for computing two Finonacci numbers using two processors.
+The scheduler could execute the two threads in parallel until the first finishes. This would
+speedup the completion of the program, somewhat, but not dramatically, because one pro-
+cessor will be idle most of the time—this program does not have enough parallelism.
+2 Concurrency and Parallelism
+Definition 11.3 (Concurrency). An algorithmic problem is a concurrency problem if its
+specification involves multiple things happening at the same item.
+Example 11.5 (Scheduling as a Concurrency Problem). The problem of scheduling things
+such as tasks to be completed in a manufacturing facility while respecting the dependencies
+between them, threads, requests in a web server, or jobs in a server farm, all fall into the
+category of “scheduling problems.” These problems are all concurrency problems.
+
+• The problem of designing a thread scheduler is a concurrent problem because it
+involves potentially multiple threads that execute at the same time.
+• Web servers must promptly server many users varying from just a few to thousands
+and even sometimes millions at a time. Scheduling requests arriving at a web server
+is a concurrency problem, because requests could arrive and be processed at the same
+time.
+Example 11.6 (Interactive Systems). Many problems involving interactive systems such as
+operating systems, games, and browser, are all naturally concurrent.
+• To specify the behavior of an operating system, we need to talk about multiple event
+happening at the same time, such as multiple programs executing at once, an event
+such as a network event or a user input happening at the same time, etc.
+• To specify a multiplayer game, we need to talk about multiple users, their actions,
+and how the system (game) reacts to them. Even a simple game such as single-user
+game involves simultaneous events such as the actions of the user and the computa-
+tions performed by the graphics card. Nearly all reasonably sophisticated games are
+therefore naturally concurrent.
+• A modern browser must handle events from the user as well as through the network,
+e.g., a request completing as the user also creates a new tab in their browser.
+Solving Concurrency Problems. Multithreading is usually the technique of choice for
+solving concurrency problems such as those in the example above . Using a thread sched-
+uler , such multithreaded implementations can be made to work on sequential hardware,
+such as a computer with any number of processors.
+Example 11.7. Many OS’s today are designed to exploit multicore chipsets that can provide
+anywhere from 2-8 cores even in small devices such as laptops and mobile phones. Such
+devices also typically include a multicore Graphics-Processing-Units (GPUs) that typically
+include anywhere from a handful to hundreds and even thousands of cores or processors.
+Definition 11.4 (Parallelism). An algorithm is parallel if it performs multiple tasks at the
+same time. Both concurrent and non-concurrent problems typically accept parallel algo-
+rithms (solutions).
+Example 11.8. Parallel implementations are commonly used in solving computationally
+challenging problems.
+• Games with rich graphical interfaces perform many graphics computations (triangu-
+lation, rasterization, shading, etc) in parallel on the GPU.
+• In automotive industry, “self-driving” systems use parallel processors and GPUs to
+perform various image processing and machine learning tasks.
+68 CHAPTER 11. THREADS, CONCURRENCY, AND PARALLELISM
+• Scientific simulations for predicting the outcome of physical phenomena (e.g., weather
+and climate, inter-planetary forces in space, and fluid dynamics) require loads of
+computations. Parallel computers make such computations practically feasible and
+usable by speeding them thousands of times. For example, the European Center for
+Medium-Range Weather Forecasts use supercomputers with more than 10,000 pro-
+cessors.
+Remark (Concurrency versus Parallelism). Concurrency and parallelism are largely orthog-
+onal concepts:
+• concurrency is a property of a “problem”,
+• parallelism is a property of an implementation or a “solution.”
+Concurrency and parallelism can and usually co-exist. Concurrent problems usually accept
+parallel solutions. As we saw in this class, many non-concurrent problem, which can be
+specified as mathematical functions mapping an input to an output, also accept parallel
+solutions.
+Example 11.9 (Parallel Fibonacci). The function fib below computes the xth Fibonacci num-
+ber in parallel.
+fib x dest =
+if x ≤ 1 then
+dest ← x
+else
+let
+(da, db) = (ref 0, ref 0)
+a = spawn (lambda ( ) . fib (x − 1) da)
+b = spawn (lambda ( ) . fib (x − 2) db)
+(( ), ( )) = (sync a, sync b)
+in
+dest ← !da + !db
+end
+Example 11.10 (Parallel Fibonacci in SPARC). Using SPARC, we can write the parallel
+Fibonacci function as
+fib x =
+if x ≤ 1 then
+x
+else
+let (ra, rb) = (fib (x − 1)) || (fib (x − 2)) in
+ra + rb
+end.
+Note. The SPARC code above can be viewed as “syntactic sugar” for the code in parallel
+Fibonacci example . Essentially any realistic implementation of SPARC will translate the
+code into a multithreaded version that uses spawn and sync functions, which will then be
+compiled into a parallel executable.
+
+3 Mutable State and Race Conditions
+Parallel versus Sequential Semantics. We can think of any parallel SPARC program as a
+sequential program by replacing parallel tuples with sequential ones.
+The semantics of these two programs are strongly related: if the original parallel program
+is pure (purely functional), and does not use side effects, then corresponding sequential
+program is “observationally equivalent” to the parallel one.
+This means that the two programs yield the same output on the same inputs.
+Definition 11.5 (Sequential Elision). For any SPARC program, there is a corresponding
+sequential program called its sequential elision, that is obtained by replacing par (or || )
+with simple sequential pairs.
+Example 11.11 (Parallel Fibonacci: Sequential Elision). Using SPARC, we can write the
+parallel Fibonacci function as
+fib x =
+if x ≤ 1 then
+x
+else
+let (ra, rb) = (fib (x − 1)) || (fib (x − 2)) in
+ra + rb
+end.
+The sequential elision of the function fib is:
+fib x =
+if x ≤ 1 then
+x
+else
+let (ra, rb) = (fib (x − 1), fib (x − 2)) in
+ra + rb
+end.
+Convince yourself that these two programs are observationally equivalent.
+Mutable State. The observational equivalence property between SPARC programs and
+their sequential elision breaks in the presence of side effects, or mutable state. In fact, when
+a multithreaded or parallel program uses mutable state, i.e., references and destructive
+updates, reasoning about its correctness and efficiency can become difficult.
+Example 11.12 (Concurrent Writes). Consider executing the following program
+let x = ref 0
+(( ), ( )) = (x ← 1) || (x ← 2)
+in print x end
+70 CHAPTER 11. THREADS, CONCURRENCY, AND PARALLELISM
+The expressions x ← 1 and x ← 2 both update the same variable x. Because the two
+expressions are parallel, they can take effect in any order (even on a single processor) and
+the outcome of the program is non-deterministic. This program can therefore output 1 or 2.
+Example 11.13 (Concurrent Additions). Consider the following program
+let x = ref 0
+(( ), ( )) = (x ← x + 1) || (x ← x + 1)
+in print x end.
+The two instances of the expression x ← x +1 are parallel and they update the same shared
+variable x. It might seems that because both expressions increment the same variable, the
+output of the program will always output 2. But this is not quite correct, because the
+expression x ← x + 1 is not atomic: the two instances can both start by reading x as 0 and
+the update it to 1. The program can therefore output 1 or 2.
+Definition 11.6 (Data Race). We say that a data race occurs if multiple threads access the
+same piece of data and at least one of the threads update or write to the data. Data races
+usually lead to non-deterministic outcome, which is in many cases an error condition. In
+some cases, a data race does not impact adversely the correctness of a program. Such data
+races are called benign.
+Example 11.14. The two examples above— parallel writes and parallel additions — both
+include a data race.
+Note (Determinacy Race). Data races are sometimes called determinacy races because they
+could lead to non-deterministic outcome.
+Why Use Mutable State. Given the complexities of reasoning about concurrent programs
+that use mutable state, we might reasonably ask:
+Why use mutable state at all and why not program purely functionally?
+There are two important reasons.
+• On modern computers, it is impossible to avoid mutable state completely. Even if a
+program is purely functional, it still has to allocate memory and write into it. There-
+fore, at some level of abstraction, we must operate on mutable state, even when it is
+“hiddden” behind the abstraction of purely functional programming.
+• Mutable state enables implementing certain operations including purely functional
+ones more efficiently. For example, updating a single position in an array requires
+copying an array if we are not allowed to mutate it.
+
+Races are Considered Harmful. It is now broadly accepted that data races are harmful
+and should be avoided to the extent possible. The reason for this is that when a program
+contains races, understanding its behavior becomes extremely difficult, because we have
+to reason about an exponentially growing number of possible interactions. For example,
+if we have 100 threads each of which execute 10 instructions that can cause races, then the
+total number of interactions we must consider are 10100 more than the number of atoms in
+the universe.
+Remark. When using strongly typed languages, we can easily avoid races by being judi-
+cious about use of mutable data. For example, if we program in Parallel ML and use only
+the pure functional subset of the language, then we are guaranteed to avoid races. This is
+the reason for why we use a strongly typed language in this class.
+Remark. The history of computer science is full of examples demonstrating the power of
+abstraction. Can you imagine for example, that before “structured programming” lan-
+guagues were accepted, programs were written with “GOTO” statements? Can you imag-
+ine that it was only 20 years ago that pros and cons of garbage collection were passionately
+debated among both researchers and practitioners? Today, hardly anyone would write
+code with “GOTO” statements and hardly anyone would question the benefits of garbage
+collection.
+Teach them [young students], as soon as possible, a decent programming lan-
+guage that exercises their power of abstraction.
+– Edsger Dijkstra

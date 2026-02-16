@@ -1,0 +1,66 @@
+---
+description: PartialEq/Eq specification pattern — must be inside verus!, use assume not external_body
+globs: 
+alwaysApply: true
+---
+
+# PartialEq / Eq Specification Pattern
+
+All `PartialEq` and `Eq` implementations MUST be inside `verus! {}` with specifications. Do NOT use `#[verifier::external_body]` on equality — use `assume` inside the proof body instead.
+
+## Required Components
+
+Every type that implements equality needs three pieces, all inside `verus! {}`:
+
+### 1. `PartialEqSpecImpl` (ghost spec, cfg-gated)
+
+```rust
+#[cfg(verus_keep_ghost)]
+impl<T: View + PartialEq> PartialEqSpecImpl for MyType<T> {
+    open spec fn obeys_eq_spec() -> bool { true }
+    open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+}
+```
+
+### 2. `Eq` marker (empty impl)
+
+```rust
+impl<T: Eq + View> Eq for MyType<T> {}
+```
+
+### 3. `PartialEq` with ensures and assume
+
+```rust
+impl<T: PartialEq + View> PartialEq for MyType<T> {
+    fn eq(&self, other: &Self) -> (r: bool)
+        ensures r == (self@ == other@)
+    {
+        let r = self.inner == other.inner;
+        proof { assume(r == (self@ == other@)); }
+        r
+    }
+}
+```
+
+## Why `assume` and not `external_body`
+
+- `external_body` hides the entire function body from Verus — no verification at all.
+- `assume` only introduces one specific trusted assertion while the rest of the body is still verified.
+- The `assume` is needed because Verus cannot resolve `eq_spec` through the trait extension machinery.
+- The trust boundary is small and explicit: we trust that the underlying `==` on the inner type correctly reflects view equality.
+
+## Do NOT
+
+- Do NOT place `PartialEq` or `Eq` impls outside `verus! {}` — they will have no specification and callers cannot reason about equality results.
+- Do NOT use `#[verifier::external_body]` on `fn eq` — use `assume` inside the body.
+- Do NOT omit `PartialEqSpecImpl` — it connects the Verus spec world to the exec `PartialEq`.
+- Do NOT omit the `ensures` clause — it is the contract callers rely on.
+
+## Import
+
+The `PartialEqSpecImpl` trait requires:
+
+```rust
+#[cfg(verus_keep_ghost)]
+use vstd::std_specs::cmp::PartialEqSpecImpl;
+```
