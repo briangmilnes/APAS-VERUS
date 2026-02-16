@@ -105,11 +105,11 @@ verus! {
         shared.load(Ordering::Relaxed)
     }
 
-} // verus!
-
 impl Default for SpinLock {
     fn default() -> Self { SpinLock::new() }
 }
+
+} // verus!
 
 impl std::fmt::Debug for SpinLock {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

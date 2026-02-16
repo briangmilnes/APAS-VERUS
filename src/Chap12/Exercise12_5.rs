@@ -153,16 +153,17 @@ impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
 }
 
 impl<T: Send> Default for ConcurrentStackMt<T> {
-    #[verifier::external_body]
     fn default() -> Self { 
         ConcurrentStackMt::new() 
     }
 }
 
-} // verus!
-
 impl<T: Send> Drop for ConcurrentStackMt<T> {
-    fn drop(&mut self) {
+    #[verifier::external_body]
+    fn drop(&mut self)
+        opens_invariants none
+        no_unwind
+    {
         let mut current = self.head.load(Ordering::Relaxed);
         while !current.is_null() {
             unsafe {
@@ -172,5 +173,7 @@ impl<T: Send> Drop for ConcurrentStackMt<T> {
         }
     }
 }
+
+} // verus!
 
 } // mod
