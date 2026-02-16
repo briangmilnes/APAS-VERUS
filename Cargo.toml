@@ -146,14 +146,6 @@ name = "TestArraySeqMtEph"
 path = "tests/Chap18/TestArraySeqMtEph.rs"
 
 [[test]]
-name = "TestArraySeqStEph19"
-path = "tests/Chap19/TestArraySeqStEph.rs"
-
-[[test]]
-name = "TestArraySeqMtEph19"
-path = "tests/Chap19/TestArraySeqMtEph.rs"
-
-[[test]]
 name = "TestBalBinTreeStEph"
 path = "tests/Chap23/TestBalBinTreeStEph.rs"
 

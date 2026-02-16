@@ -32,6 +32,7 @@ pub mod MergeSortStPer {
         vstd::multiset::group_multiset_axioms,
     };
 
+    #[cfg(verus_keep_ghost)]
     use vstd::seq_lib::lemma_multiset_commutative;
 
     //		4. spec functions

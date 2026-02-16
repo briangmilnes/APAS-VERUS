@@ -33,7 +33,7 @@ fn test_map_sequential() {
 #[test]
 fn test_reduce_sequential() {
     let seq = ArraySeqMtPerS::from_vec(vec![1, 2, 3, 4, 5]);
-    let sum = ArraySeqMtPerS::reduce(&seq, &|a, b| a + b, 0);
+    let sum = ArraySeqMtPerS::reduce(&seq, &|a, b| a + b, Ghost::assume_new(), 0);
     assert_eq!(sum, 15);
 }
 
