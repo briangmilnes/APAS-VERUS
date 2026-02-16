@@ -55,7 +55,7 @@ Span Theta(n).
 | 1 | fib definition (Ex 11.1) | spec_fib in FibonacciStEph | Strong — standard recursive definition |
 | 2 | Sequential fib | fib() in FibonacciStEph | Strong — iterative, ensures result == spec_fib(n), n <= 46 for u64 |
 | 3 | Recursive fib | fib_recursive() in FibonacciStEph | Strong — matches prose structure exactly |
-| 4 | Ex 11.9: Parallel fib (spawn/sync) | FibonacciMtEph2Threads, FibonacciMtEphRecomputes | Strong — TSM tracks fork-join, ensures result == spec_fib(n) |
+| 4 | Ex 11.9: Parallel fib (spawn/sync) | FibonacciMtEphRecomputes (full), FibonacciMtEph2Threads (top-level only, iterative sub-calls) | Strong for Recomputes; 2Threads uses iterative fib — different algorithm, same span |
 | 5 | Ex 11.10: Parallel fib (SPARC par) | FibonacciMtPerAllThreads | Strong — ParaPair! is the SPARC `\|\|` operator, fully verified |
 | 6 | Def 11.1: spawn/sync | vstd::thread::spawn + JoinHandle::join | Used in TSM variants |
 | 7 | Def 11.2: Thread Scheduler | HFSchedulerMtEph (Chap02) | Not directly referenced by Chap11 code |
@@ -69,11 +69,14 @@ Span Theta(n).
 | 2 | fib_recursive | Work Theta(phi^n), Span Theta(phi^n) | Agrees | Sequential, so span == work |
 | 3 | FibonacciMtPerAllThreads::fib | Work Theta(phi^n), Span Theta(n) | Agrees | ParaPair! provides true parallel recursion at every level |
 | 4 | FibonacciMtPerTSM::fib | Work Theta(phi^n), Span Theta(n) | Agrees | TSM + vstd::thread, recursive parallelism |
-| 5 | FibonacciMtEph2Threads::fib_2threads | Work Theta(phi^n), Span Theta(phi^n) | **Disagrees with Theta(n)** | Top-level split only; each thread calls fib_recursive (sequential). Span == Work. |
+| 5 | FibonacciMtEph2Threads::fib_2threads | Work Theta(n), Span Theta(n) | Agrees (different algorithm) | Top-level split; each thread calls iterative fib (Theta(n)), not recursive. Work and span both Theta(n) — better than Ex 11.10's exponential work. |
 | 6 | FibonacciMtEphRecomputes::fib_recomputes | Work Theta(phi^n), Span Theta(n) | Agrees | TSM at every recursive level, true recursive parallelism |
 
-Row 5 is the same pattern seen in Chap02's `fib_par` — only the top-level
-call is parallel, so the span is not improved.
+Row 5 calls iterative `fib` (Theta(n)) in each thread, not recursive
+`fib_recursive`. Unlike Chap02's `fib_par` (which calls `fib_seq` from
+within a recursive structure), this is purely a 2-thread iterative
+split: Work Theta(n), Span Theta(n). The span agrees with APAS, but
+the algorithm is fundamentally different from Ex 11.10's parallel recursion.
 
 ## Parallelism Review
 
@@ -82,7 +85,7 @@ call is parallel, so the span is not improved.
 | 1 | FibonacciStEph | None | No | Theta(n) iterative / Theta(phi^n) recursive | Sequential baseline |
 | 2 | FibonacciMtPerAllThreads | ParaPair! at every level | Yes — full | Theta(n) | Gold standard: fully verified, no proof holes |
 | 3 | FibonacciMtPerTSM | TSM + vstd::thread at every level | Yes — full | Theta(n) | Fully parallel, 2 assume(false) in join error arms |
-| 4 | FibonacciMtEph2Threads | TSM + vstd::thread, top level only | Partial | Theta(phi^n) | Two threads, each runs sequential fib |
+| 4 | FibonacciMtEph2Threads | TSM + vstd::thread, top level only | Partial | Theta(n) | Two threads, each runs iterative fib — span matches APAS but work is Theta(n) not Theta(phi^n) |
 | 5 | FibonacciMtEphRecomputes | TSM + vstd::thread at every level | Yes — full | Theta(n) | Fully parallel, 2 assume(false) in join error arms |
 
 FibonacciMtPerAllThreads is the cleanest implementation — zero proof holes,
@@ -158,7 +161,7 @@ implementations spanning the spectrum from sequential to fully parallel:
    recursion via ParaPair!, zero proof holes, directly implements Ex 11.10.
 3. **FibonacciMtPerTSM** — parallel recursion using TSM, demonstrates the
    Verus concurrency proof technique at every recursive level.
-4. **FibonacciMtEph2Threads** — top-level parallel split only (span == work).
+4. **FibonacciMtEph2Threads** — 2-thread iterative split: each thread runs iterative fib, Work and Span both Theta(n).
 5. **FibonacciMtEphRecomputes** — full recursive parallelism using TSM.
 
 Key findings:
@@ -167,5 +170,5 @@ Key findings:
 - Three TSM modules have 2 assume(false) each (6 total), all in join error
   arms — a known Verus limitation with thread join.
 - No PTT files exist for Chap11. This is the biggest gap.
-- FibonacciMtEph2Threads has the same span issue as Chap02's fib_par: only
-  top-level parallelism, so Span == Work despite APAS expecting Theta(n).
+- FibonacciMtEph2Threads calls iterative fib in each thread: Work Theta(n),
+  Span Theta(n). A different algorithm from Ex 11.10 but achieves the right span.
