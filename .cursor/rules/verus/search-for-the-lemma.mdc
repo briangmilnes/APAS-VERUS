@@ -40,6 +40,15 @@ veracity-search 'fn \(to_set\|no_duplicates\)'
 - When you need to relate two different views (e.g., Seq to Set)
 - When you need properties about sequence operations (take, push, subrange)
 
+## The Usual Suspects (search in order)
+
+1. **veracity-search** — vstd + APAS-VERUS function index
+2. **vstd source** — `~/projects/verus/source/vstd/`
+3. **Verus test suite** — `~/projects/verus/source/rust_verify_test/tests/`
+4. **Verus examples** — `~/projects/verus/examples/`
+5. **Verus community codebases** — `~/projects/VerusCodebases/`
+6. **Verus Guide** — `https://verus-lang.github.io/verus/guide/`
+
 ## Example Searches
 
 | Need | Search Query |

@@ -54,7 +54,8 @@ pub mod ETSPStPer {
     pub trait ETSPStTrait {
         /// Solve the planar Euclidean TSP using divide-and-conquer heuristic.
         /// Returns a tour as a sequence of directed edges forming a cycle through all points.
-        /// APAS: Algorithm 26.7. Work Θ(n²), Span Θ(log² n)
+        /// - APAS: Work Θ(n²), Span Θ(lg² n) — Algorithm 26.7, D&C eTSP heuristic.
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential implementation, Span = Work.
         fn etsp(points: &Vec<Point>) -> (tour: Vec<Edge>)
             requires points@.len() >= 2,
             ensures tour@.len() == points@.len();
@@ -82,6 +83,9 @@ pub mod ETSPStPer {
     }
 
     impl Point {
+        /// Euclidean distance between two points.
+        /// - APAS: N/A — helper function.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         pub fn distance(&self, other: &Point) -> f64 {
             let dx = self.x - other.x;
             let dy = self.y - other.y;
@@ -90,6 +94,8 @@ pub mod ETSPStPer {
     }
 
     /// Recursive eTSP implementation (outside verus! — uses f64 arithmetic).
+    /// - APAS: N/A — internal recursive helper for Algorithm 26.7.
+    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential; sort O(n lg n) + O(n²) swap search.
     fn etsp_inner(points: &Vec<Point>) -> Vec<Edge> {
         let n = points.len();
         if n == 2 {

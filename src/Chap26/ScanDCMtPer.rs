@@ -42,7 +42,8 @@ pub mod ScanDCMtPer {
     pub trait ScanDCMtTrait {
         /// Exclusive prefix sums via parallel divide-and-conquer scan.
         /// Returns (prefixes, total) where prefixes[i] = sum(a[0], ..., a[i-1]).
-        /// APAS: Algorithm 26.5 (parallel). Work Θ(n log n), Span Θ(log n)
+        /// - APAS: Work Θ(n lg n), Span Θ(lg n) — Algorithm 26.5 with parallel recursive calls.
+        /// - Claude-Opus-4.6: Work Θ(n lg n), Span depends on tabulate/append — Θ(lg n) if parallel O(1), Θ(n) if sequential.
         fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<N>) -> (result: (ArraySeqMtPerS<N>, N))
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -66,6 +67,8 @@ pub mod ScanDCMtPer {
 
     /// Inner recursive function for parallel prefix sums DC.
     /// Outside verus! because it uses thread::scope directly.
+    /// - APAS: N/A — internal recursive helper for Algorithm 26.5 (parallel).
+    /// - Claude-Opus-4.6: Work Θ(n lg n), Span depends on tabulate/append — see prefix_sums_dc_parallel.
     fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<N>) -> (ArraySeqMtPerS<N>, N) {
         let n = a.length();
         if n == 0 {

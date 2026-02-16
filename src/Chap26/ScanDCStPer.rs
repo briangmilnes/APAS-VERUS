@@ -57,7 +57,8 @@ pub mod ScanDCStPer {
     pub trait ScanDCStTrait {
         /// Algorithm 26.5: Exclusive prefix scan via divide and conquer.
         /// Returns (prefixes, total) where prefixes[i] = f(id, a[0], ..., a[i-1]).
-        /// Work Θ(n log n), Span Θ(log n)
+        /// - APAS: Work Θ(n lg n), Span Θ(lg n) — Algorithm 26.5 with parallel recursive calls and O(n)/O(1) combine.
+        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential implementation, Span = Work.
         fn scan_dc<F: Fn(&N, &N) -> N>(a: &ArraySeqStPerS<N>, f: &F, Ghost(spec_f): Ghost<spec_fn(N, N) -> N>, id: N) -> (result: (ArraySeqStPerS<N>, N))
             requires
                 a.spec_len() <= usize::MAX,
@@ -73,6 +74,8 @@ pub mod ScanDCStPer {
 
         /// Exclusive prefix sums via divide-and-conquer scan.
         /// Convenience: scan_dc with (+, 0).
+        /// - APAS: Work Θ(n lg n), Span Θ(lg n) — same as scan_dc.
+        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — delegates to sequential scan_dc.
         fn prefix_sums_dc(a: &ArraySeqStPerS<N>) -> (result: (ArraySeqStPerS<N>, N))
             requires a.spec_len() <= usize::MAX,
             ensures

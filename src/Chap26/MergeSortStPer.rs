@@ -65,7 +65,8 @@ pub mod MergeSortStPer {
 
     pub trait MergeSortStTrait {
         /// Merge two sorted sequences into one sorted sequence.
-        /// APAS: Work Θ(n), Span Θ(n)
+        /// - APAS: Work Θ(n), Span Θ(lg n) — parallel merge assumed for merge sort analysis.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential two-pointer merge, Span = Work.
         fn merge(left: &ArraySeqStPerS<N>, right: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<N>)
             requires
                 spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),
@@ -77,8 +78,9 @@ pub mod MergeSortStPer {
                     Seq::new(right.spec_len(), |i: int| right.spec_index(i)),
                     Seq::new(result.spec_len(), |i: int| result.spec_index(i)));
 
-        /// Sort a sequence using merge sort.
-        /// APAS: Work Θ(n log n), Span Θ(n log n)
+        /// Sort a sequence using merge sort. Algorithm 26.4.
+        /// - APAS: Work Θ(n lg n), Span Θ(lg² n) — with parallel merge and recursive parallelism.
+        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential merge sort, Span = Work.
         fn merge_sort(a: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<N>)
             requires a.spec_len() <= usize::MAX,
             ensures

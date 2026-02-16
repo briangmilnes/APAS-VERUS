@@ -41,7 +41,8 @@ pub mod MergeSortMtPer {
 
     pub trait MergeSortMtTrait {
         /// Merge two sorted sequences in parallel using binary search.
-        /// APAS: Work Θ(n), Span Θ(log n)
+        /// - APAS: Work Θ(n), Span Θ(lg n) — assumed for merge sort Span analysis.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg² n) — binary-search recursive parallel merge; O(lg n) per level × O(lg n) levels.
         fn merge_parallel(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (result: ArraySeqMtPerS<N>)
             requires
                 spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),
@@ -53,8 +54,9 @@ pub mod MergeSortMtPer {
                     Seq::new(right.spec_len(), |i: int| right.spec_index(i)),
                     Seq::new(result.spec_len(), |i: int| result.spec_index(i)));
 
-        /// Sort a sequence using parallel merge sort.
-        /// APAS: Work Θ(n log n), Span Θ(log² n)
+        /// Sort a sequence using parallel merge sort. Algorithm 26.4.
+        /// - APAS: Work Θ(n lg n), Span Θ(lg² n) — with O(lg n)-span merge.
+        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(lg³ n) — merge_parallel has Span Θ(lg² n), adding a log factor.
         fn merge_sort_parallel(a: &ArraySeqMtPerS<N>) -> (result: ArraySeqMtPerS<N>)
             requires a.spec_len() <= usize::MAX,
             ensures

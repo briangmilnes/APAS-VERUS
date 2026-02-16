@@ -1,0 +1,46 @@
+---
+description: Use u64/i64 for element values, reserve usize for indexing only. Stop using the N type alias for arithmetic.
+alwaysApply: true
+---
+
+# Exile on N Street
+
+The legacy type alias `pub type N = usize` in `Types.rs` conflates two roles:
+
+1. **Indexing** — array indices, lengths, capacities → `usize` (correct)
+2. **Element values** — sums, products, data stored in collections → should be `u64` or `i64`
+
+## Rule: New Modules (Chap11+)
+
+- **DO NOT** use `N` as the element type for data values or arithmetic accumulators.
+- **DO**: Use `u64` for unsigned element values, `i64` for signed.
+- **DO**: Use `usize` only for indexing, lengths, and capacities.
+- **DO**: Use concrete types (`u64`, `i64`) directly — not a type alias.
+
+## What This Looks Like
+
+```rust
+// BAD — N is usize, used for arithmetic accumulation
+fn sum(a: &ArraySeqStPerS<N>) -> (result: N)
+
+// GOOD — u64 for element values
+fn sum(a: &ArraySeqStPerS<u64>) -> (result: u64)
+
+// GOOD — usize stays for indexing
+let mut i: usize = 0;
+let len: usize = a.length();
+```
+
+## Spec Functions
+
+```rust
+// BAD — wrapping via `as N` (as usize) hides overflow
+pub open spec fn spec_sum_fn() -> spec_fn(N, N) -> N { |x: N, y: N| (x + y) as N }
+
+// GOOD — u64 with explicit wrapping or nat in spec
+pub open spec fn spec_sum_fn() -> spec_fn(u64, u64) -> u64 { |x: u64, y: u64| (x + y) as u64 }
+```
+
+## Legacy Modules (Chap01–Chap10)
+
+These still use `N = usize`. They will be migrated separately (tracked in TODO). Do not change them unless specifically asked.

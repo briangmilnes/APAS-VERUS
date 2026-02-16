@@ -45,7 +45,8 @@ pub mod DivConReduceStPer {
     pub trait DivConReduceStTrait {
         /// Find maximum element via reduce.
         /// Pattern: reduce max identity
-        /// APAS: Example 26.2. Work Θ(n), Span Θ(n)
+        /// - APAS: Work Θ(n), Span Θ(lg n) — Example 26.2, D&C reduce with constant-time op.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential while loop, Span = Work.
         fn max_element(a: &ArraySeqStPerS<N>) -> (result: Option<N>)
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -60,7 +61,8 @@ pub mod DivConReduceStPer {
 
         /// Sum all elements via reduce.
         /// Pattern: reduce (+) 0 identity
-        /// APAS: Work Θ(n), Span Θ(n)
+        /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
         fn sum(a: &ArraySeqStPerS<N>) -> (result: N)
             requires
                 a.spec_len() <= usize::MAX,
@@ -71,7 +73,8 @@ pub mod DivConReduceStPer {
 
         /// Product of all elements via reduce.
         /// Pattern: reduce (*) 1 identity
-        /// APAS: Work Θ(n), Span Θ(n)
+        /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
         fn product(a: &ArraySeqStPerS<N>) -> (result: N)
             requires
                 a.spec_len() <= usize::MAX,
@@ -82,7 +85,8 @@ pub mod DivConReduceStPer {
 
         /// Logical OR of all elements via reduce.
         /// Pattern: reduce (||) false identity
-        /// APAS: Work Θ(n), Span Θ(n)
+        /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
         fn any(a: &ArraySeqStPerS<B>) -> (result: B)
             requires
                 a.spec_len() <= usize::MAX,
@@ -93,7 +97,8 @@ pub mod DivConReduceStPer {
 
         /// Logical AND of all elements via reduce.
         /// Pattern: reduce (&&) true identity
-        /// APAS: Work Θ(n), Span Θ(n)
+        /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
         fn all(a: &ArraySeqStPerS<B>) -> (result: B)
             requires
                 a.spec_len() <= usize::MAX,
