@@ -101,8 +101,104 @@ pub mod BalBinTreeStEph {
             }
         }
 
+        pub open spec fn spec_post_order(self) -> Seq<T>
+            decreases self,
+        {
+            match self {
+                BalBinTree::Leaf => Seq::empty(),
+                BalBinTree::Node(node) =>
+                    node.left.spec_post_order() + node.right.spec_post_order() + seq![node.value],
+            }
+        }
+
         pub open spec fn spec_is_leaf(self) -> bool {
             self is Leaf
+        }
+    }
+
+    //		6. proof functions
+
+    /// The in-order and pre-order traversals of a tree are permutations of each other.
+    pub proof fn lemma_in_order_pre_order_permutation<T>(tree: BalBinTree<T>)
+        ensures tree.spec_in_order().to_multiset() =~= tree.spec_pre_order().to_multiset()
+        decreases tree,
+    {
+        match tree {
+            BalBinTree::Leaf => {},
+            BalBinTree::Node(node) => {
+                let l_in = node.left.spec_in_order();
+                let r_in = node.right.spec_in_order();
+                let l_pre = node.left.spec_pre_order();
+                let r_pre = node.right.spec_pre_order();
+                let v = seq![node.value];
+
+                lemma_in_order_pre_order_permutation(node.left);
+                lemma_in_order_pre_order_permutation(node.right);
+
+                // in_order  = l_in + v + r_in  = (l_in + v) + r_in
+                // pre_order = v + l_pre + r_pre = (v + l_pre) + r_pre
+
+                // Seq concatenation is associative
+                assert(tree.spec_in_order() =~= (l_in + v) + r_in);
+                assert(tree.spec_pre_order() =~= (v + l_pre) + r_pre);
+
+                // Decompose each concatenation into multiset additions
+                vstd::seq_lib::lemma_multiset_commutative(l_in + v, r_in);
+                vstd::seq_lib::lemma_multiset_commutative(l_in, v);
+                vstd::seq_lib::lemma_multiset_commutative(v + l_pre, r_pre);
+                vstd::seq_lib::lemma_multiset_commutative(v, l_pre);
+
+                // Now use commutativity of Multiset::add
+                assert(tree.spec_in_order().to_multiset()
+                    =~= l_in.to_multiset().add(v.to_multiset()).add(r_in.to_multiset()));
+                assert(tree.spec_pre_order().to_multiset()
+                    =~= v.to_multiset().add(l_pre.to_multiset()).add(r_pre.to_multiset()));
+
+                // By IH + commutativity of add, these are equal
+                assert(l_in.to_multiset().add(v.to_multiset()).add(r_in.to_multiset())
+                    =~= v.to_multiset().add(l_in.to_multiset()).add(r_in.to_multiset()));
+            },
+        }
+    }
+
+    /// The pre-order and post-order traversals of a tree are permutations of each other.
+    pub proof fn lemma_pre_order_post_order_permutation<T>(tree: BalBinTree<T>)
+        ensures tree.spec_pre_order().to_multiset() =~= tree.spec_post_order().to_multiset()
+        decreases tree,
+    {
+        match tree {
+            BalBinTree::Leaf => {},
+            BalBinTree::Node(node) => {
+                let l_pre = node.left.spec_pre_order();
+                let r_pre = node.right.spec_pre_order();
+                let l_post = node.left.spec_post_order();
+                let r_post = node.right.spec_post_order();
+                let v = seq![node.value];
+
+                lemma_pre_order_post_order_permutation(node.left);
+                lemma_pre_order_post_order_permutation(node.right);
+
+                // pre_order  = v + l_pre + r_pre  = (v + l_pre) + r_pre
+                // post_order = l_post + r_post + v = (l_post + r_post) + v
+
+                assert(tree.spec_pre_order() =~= (v + l_pre) + r_pre);
+                assert(tree.spec_post_order() =~= (l_post + r_post) + v);
+
+                vstd::seq_lib::lemma_multiset_commutative(v + l_pre, r_pre);
+                vstd::seq_lib::lemma_multiset_commutative(v, l_pre);
+                vstd::seq_lib::lemma_multiset_commutative(l_post + r_post, v);
+                vstd::seq_lib::lemma_multiset_commutative(l_post, r_post);
+
+                assert(tree.spec_pre_order().to_multiset()
+                    =~= v.to_multiset().add(l_pre.to_multiset()).add(r_pre.to_multiset()));
+                assert(tree.spec_post_order().to_multiset()
+                    =~= l_post.to_multiset().add(r_post.to_multiset()).add(v.to_multiset()));
+
+                // By IH: l_pre.to_multiset() =~= l_post.to_multiset() (and same for right)
+                // Multiset add is commutative and associative
+                assert(l_post.to_multiset().add(r_post.to_multiset()).add(v.to_multiset())
+                    =~= v.to_multiset().add(l_post.to_multiset()).add(r_post.to_multiset()));
+            },
         }
     }
 
@@ -113,13 +209,15 @@ pub mod BalBinTreeStEph {
         spec fn spec_height(self) -> nat;
         spec fn spec_in_order(self) -> Seq<T>;
         spec fn spec_pre_order(self) -> Seq<T>;
+        spec fn spec_post_order(self) -> Seq<T>;
 
         /// APAS: Work Θ(1), Span Θ(1).
         fn leaf() -> (l: Self)
             ensures l.spec_size() == 0,
                     l.spec_height() == 0,
                     l.spec_in_order() == Seq::<T>::empty(),
-                    l.spec_pre_order() == Seq::<T>::empty();
+                    l.spec_pre_order() == Seq::<T>::empty(),
+                    l.spec_post_order() == Seq::<T>::empty();
 
         /// APAS: Work Θ(1), Span Θ(1).
         fn node(left: Self, value: T, right: Self) -> (n: Self)
@@ -127,7 +225,8 @@ pub mod BalBinTreeStEph {
                     n.spec_height() == 1 + if left.spec_height() >= right.spec_height()
                                             { left.spec_height() } else { right.spec_height() },
                     n.spec_in_order() == left.spec_in_order() + seq![value] + right.spec_in_order(),
-                    n.spec_pre_order() == seq![value] + left.spec_pre_order() + right.spec_pre_order();
+                    n.spec_pre_order() == seq![value] + left.spec_pre_order() + right.spec_pre_order(),
+                    n.spec_post_order() == left.spec_post_order() + right.spec_post_order() + seq![value];
 
         /// APAS: Work Θ(1), Span Θ(1).
         fn is_leaf(&self) -> (b: bool)
@@ -158,6 +257,14 @@ pub mod BalBinTreeStEph {
             requires self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),
             ensures traversal@ =~= self.spec_pre_order();
+
+        /// Post-order traversal: left, right, root.
+        /// APAS: Work Θ(n), Span Θ(n).
+        fn post_order(&self) -> (traversal: Vec<T>)
+            where T: Clone + Eq
+            requires self.spec_size() <= usize::MAX,
+                     obeys_feq_clone::<T>(),
+            ensures traversal@ =~= self.spec_post_order();
     }
 
     //		9. impls
@@ -174,6 +281,9 @@ pub mod BalBinTreeStEph {
         }
         open spec fn spec_pre_order(self) -> Seq<T> {
             BalBinTree::spec_pre_order(self)
+        }
+        open spec fn spec_post_order(self) -> Seq<T> {
+            BalBinTree::spec_post_order(self)
         }
 
         fn leaf() -> (l: Self)
@@ -255,6 +365,23 @@ pub mod BalBinTreeStEph {
                 }
             }
         }
+
+        fn post_order(&self) -> (traversal: Vec<T>)
+            where T: Clone + Eq
+            decreases self.spec_size(),
+        {
+            match self {
+                BalBinTree::Leaf => Vec::new(),
+                BalBinTree::Node(node) => {
+                    let mut left = node.left.post_order();
+                    let mut right = node.right.post_order();
+                    left.append(&mut right);
+                    let val = node.value.clone_plus();
+                    left.push(val);
+                    left
+                }
+            }
+        }
     }
 
     //		10. iterators
@@ -271,6 +398,12 @@ pub mod BalBinTreeStEph {
         inner: IntoIter<T>,
     }
 
+    /// Iterator over post-order traversal of a BalBinTree.
+    #[verifier::reject_recursive_types(T)]
+    pub struct PostOrderIter<T> {
+        inner: IntoIter<T>,
+    }
+
     impl<T> View for InOrderIter<T> {
         type V = (int, Seq<T>);
         closed spec fn view(&self) -> (int, Seq<T>) {
@@ -279,6 +412,13 @@ pub mod BalBinTreeStEph {
     }
 
     impl<T> View for PreOrderIter<T> {
+        type V = (int, Seq<T>);
+        closed spec fn view(&self) -> (int, Seq<T>) {
+            self.inner@
+        }
+    }
+
+    impl<T> View for PostOrderIter<T> {
         type V = (int, Seq<T>);
         closed spec fn view(&self) -> (int, Seq<T>) {
             self.inner@
@@ -299,6 +439,13 @@ pub mod BalBinTreeStEph {
         pub elements: Seq<T>,
     }
 
+    /// Ghost iterator for ForLoopGhostIterator support (post-order).
+    #[verifier::reject_recursive_types(T)]
+    pub struct PostOrderGhostIterator<T> {
+        pub pos: int,
+        pub elements: Seq<T>,
+    }
+
     impl<T> View for InOrderGhostIterator<T> {
         type V = Seq<T>;
         open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
@@ -309,11 +456,20 @@ pub mod BalBinTreeStEph {
         open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
     }
 
+    impl<T> View for PostOrderGhostIterator<T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
     pub open spec fn in_order_iter_invariant<T>(it: &InOrderIter<T>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
 
     pub open spec fn pre_order_iter_invariant<T>(it: &PreOrderIter<T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    pub open spec fn post_order_iter_invariant<T>(it: &PostOrderIter<T>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
 
@@ -343,6 +499,31 @@ pub mod BalBinTreeStEph {
     }
 
     impl<T> std::iter::Iterator for PreOrderIter<T> {
+        type Item = T;
+
+        fn next(&mut self) -> (next: Option<T>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            self.inner.next()
+        }
+    }
+
+    impl<T> std::iter::Iterator for PostOrderIter<T> {
         type Item = T;
 
         fn next(&mut self) -> (next: Option<T>)
@@ -451,6 +632,48 @@ pub mod BalBinTreeStEph {
         }
     }
 
+    impl<T> vstd::pervasive::ForLoopGhostIteratorNew for PostOrderIter<T> {
+        type GhostIter = PostOrderGhostIterator<T>;
+        open spec fn ghost_iter(&self) -> PostOrderGhostIterator<T> {
+            PostOrderGhostIterator { pos: self@.0, elements: self@.1 }
+        }
+    }
+
+    impl<T> vstd::pervasive::ForLoopGhostIterator for PostOrderGhostIterator<T> {
+        type ExecIter = PostOrderIter<T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &PostOrderIter<T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &PostOrderIter<T>) -> PostOrderGhostIterator<T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
     impl<T: Clone + Eq> BalBinTree<T> {
         /// Returns an in-order iterator.
         pub fn iter_in_order(&self) -> (it: InOrderIter<T>)
@@ -474,6 +697,18 @@ pub mod BalBinTreeStEph {
                 pre_order_iter_invariant(&it),
         {
             PreOrderIter { inner: self.pre_order().into_iter() }
+        }
+
+        /// Returns a post-order iterator.
+        pub fn iter_post_order(&self) -> (it: PostOrderIter<T>)
+            requires self.spec_size() <= usize::MAX,
+                     obeys_feq_clone::<T>(),
+            ensures
+                it@.0 == 0,
+                it@.1 =~= self.spec_post_order(),
+                post_order_iter_invariant(&it),
+        {
+            PostOrderIter { inner: self.post_order().into_iter() }
         }
     }
 
