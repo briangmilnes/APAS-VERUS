@@ -502,7 +502,6 @@ pub mod MathSeq {
         }
     }
    
-    // Clone implementation outside verus! block
     impl<T: StT> Clone for MathSeqS<T> {
         fn clone(&self) -> Self {
             MathSeqS { data: self.data.clone() }
@@ -529,7 +528,11 @@ pub mod MathSeq {
 
     } // verus!
 
-    // Iterator methods outside verus! block
+    // Mutable iterator methods and &mut IntoIterator stay outside verus!
+    // because Verus does not support &mut in return position or trait impls.
+    // TODO: MathSeq does not implement the full collection iterator standard
+    // (see collection-iterators.mdc). Needs custom iterator struct, View,
+    // iter_invariant, and ghost iterator infrastructure.
     impl<T: StT + Hash> MathSeqS<T> {
         pub fn iter(&self) -> Iter<'_, T> {
             self.data.iter()
@@ -540,7 +543,6 @@ pub mod MathSeq {
         }
     }
 
-    // &mut IntoIterator must stay outside verus! (Verus doesn't support &mut types)
     impl<'a, T: StT> IntoIterator for &'a mut MathSeqS<T> {
         type Item = &'a mut T;
         type IntoIter = IterMut<'a, T>;

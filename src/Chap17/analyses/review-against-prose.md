@@ -130,18 +130,17 @@ Definition 17.1 as a dense Vec-backed sequence.
 
 ## Style Notes
 
-1. **Clone** (line 472) is outside `verus!` without specs — per style rule,
-   should be inside with PartialEq pattern. Low priority since Clone of Vec
-   has no interesting spec.
-2. **iter()** and **iter_mut()** (line 499) are outside `verus!` — the comment
-   says this is intentional for Verus compatibility.
-3. **IntoIterator for &mut** (line 510) is outside `verus!` — comment says
-   "Verus doesn't support &mut types".
-4. **IntoIterator for &** and consuming **IntoIterator** (lines 455, 463) are
-   correctly inside `verus!`.
-5. **PartialEq/Eq/PartialEqSpecImpl** all inside `verus!` — correct.
-6. **Debug/Display** outside `verus!` — correct per style rule.
-7. No cost annotations in source — added in this review.
+1. **Clone** — now inside `verus!`. Correct per style rule.
+2. **PartialEq/Eq/PartialEqSpecImpl** — inside `verus!`. Correct.
+3. **IntoIterator for &** and consuming **IntoIterator** — inside `verus!`. Correct.
+4. **iter()**, **iter_mut()**, **IntoIterator for &mut** — outside `verus!`.
+   Required: Verus does not support `&mut` in return position or trait impls.
+5. **Debug/Display** — outside `verus!`. Correct per style rule.
+6. **Iterator standard:** MathSeq does NOT implement the full collection
+   iterator standard (collection-iterators.mdc). Missing: custom iterator
+   struct, View, iter_invariant, ghost iterator infrastructure. The PTTs
+   reference `MathSeqIter` and `iter_invariant` which don't exist — these
+   tests likely fail. This is the main action item for Chap17.
 
 ## Summary
 
