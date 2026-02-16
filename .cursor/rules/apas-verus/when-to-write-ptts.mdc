@@ -1,0 +1,36 @@
+---
+description: When proof-time tests are needed vs not
+globs: "**/*.rs"
+alwaysApply: false
+---
+
+# When to Write Proof-Time Tests
+
+PTTs (`rust_verify_test/tests/`) are expensive to write and maintain. Only
+create them when there is a real risk that specs are wrong and a downstream
+module will suffer.
+
+## Write a PTT when
+
+1. **The module exposes iterators.** Iteration is the most fragile Verus proof
+   pattern. A PTT should exercise every supported loop form (loop-match,
+   for-iter, for-consuming) to catch invariant regressions.
+2. **The module is a building block for later chapters.** If Chap18 depends on
+   Chap05's SetStEph, a PTT on SetStEph catches spec errors before they
+   propagate. Leaf modules used by no one else are lower priority.
+3. **The spec is non-obvious or has been wrong before.** If a function's
+   `ensures` was corrected during review, a PTT locks in the fix.
+
+## Do NOT write a PTT when
+
+- The module is self-contained and not imported by other modules.
+- The module is purely algorithmic with no iteration (e.g., recursive Fibonacci).
+- The module's specs are trivial (accessors, constructors, delegating calls).
+- A runtime test already exercises the same code path — RTTs catch exec bugs,
+  PTTs catch spec bugs. If the spec is simple and correct, an RTT suffices.
+
+## Priority order
+
+1. Iterable types used by other chapters (highest risk).
+2. ADT modules with complex specs imported by algorithm chapters.
+3. Everything else (skip unless a specific concern arises).

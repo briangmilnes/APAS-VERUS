@@ -128,19 +128,18 @@ implementations.
 
 ## Phase 5: Runtime Test Review
 
-
 Check that every chapter module has a corresponding runtime test file in `tests/ChapNN/`.
 
 For each source module `src/ChapNN/FooStBar.rs`, expect `tests/ChapNN/TestFooStBar.rs`.
 
-### 4a. Coverage check
+### 5a. Coverage check
 
 - List all exec functions in the module (from Phase 1 inventory).
 - List all test functions in the test file.
 - Flag exec functions with no test coverage.
 - Flag test functions that test deleted or renamed functions.
 
-### 4b. Test quality
+### 5b. Test quality
 
 For each test, assess:
 - Does it exercise the happy path (valid inputs, expected outputs)?
@@ -148,7 +147,7 @@ For each test, assess:
 - Does it test the spec-relevant properties (the things `ensures` promises)?
 - For types with `PartialEq`, does it test equality?
 
-### 4c. Missing tests
+### 5c. Missing tests
 
 Propose new tests for uncovered exec functions. Prioritize:
 1. Functions with strong specs — a runtime test validates the spec informally.
@@ -156,7 +155,66 @@ Propose new tests for uncovered exec functions. Prioritize:
    only evidence the implementation is correct.
 3. Functions used as building blocks by other chapters.
 
-## Phase 6: Gap Analysis
+## Phase 6: Proof-Time Test (PTT) Review
+
+Check that every chapter module has corresponding proof-time tests in
+`rust_verify_test/tests/ChapNN/`.
+
+### 6a. Unified test inventory table
+
+Produce a table of source modules against both RTT and PTT files:
+
+| # | Source module | RTT file | PTT file | Status |
+|---|-------------|----------|----------|--------|
+
+Status values: Both exist, Missing RTT, Missing PTT, Missing both.
+
+### 6b. Iterator coverage
+
+For each type that implements iteration (has `iter()`, `IntoIterator`,
+or a `GhostIterator`/`ForLoopGhostIterator` impl), check that the PTT
+exercises iteration. Specifically:
+
+- **loop-match** (`loop { match it.next() { ... } }`) — manual iteration
+  with ghost accumulation. The most explicit form; exercises the raw
+  iterator protocol.
+- **for-iter** (`for x in collection.iter()`) — the standard `for` loop
+  over a borrowed iterator.
+- **for-consuming** (`for x in collection`) — consuming `IntoIterator`,
+  if the type supports it.
+
+Produce a table:
+
+| # | Type | loop-match | for-iter | for-consuming | Notes |
+|---|------|-----------|----------|---------------|-------|
+
+Flag types where no iteration PTT exists at all — these are the highest
+priority gaps.
+
+### 6c. Loop form coverage
+
+Verus verifies each loop form differently. The PTT should exercise all
+loop forms that the source module uses:
+
+- **loop + break** — `loop { ... break; }` with explicit decreases
+- **loop-match** — `loop { match it.next() { Some(x) => ..., None => break } }`
+- **while** — `while condition { ... }` with invariants and decreases
+- **for-range** — `for i in 0..n` with `iter.cur` in invariants
+- **for-iter** — `for x in collection.iter()` with iterator ghost state
+- **for-consuming** — `for x in collection` consuming the collection
+
+For each source module, list which loop forms appear in the implementation,
+then check whether the PTT tests that form. Flag any loop form used in
+source but not tested in PTT.
+
+### 6d. Missing PTTs
+
+Propose new PTTs for modules without any. Prioritize:
+1. Modules with iterators — iteration is the most fragile proof pattern.
+2. Modules with complex loop invariants — the PTT catches invariant regressions.
+3. Modules used as building blocks by later chapters.
+
+## Phase 7: Gap Analysis
 
 Two lists:
 
@@ -180,7 +238,8 @@ Two lists:
   - Implementation fidelity notes (Phase 3b)
   - Spec fidelity notes (Phase 3c)
   - Parallelism audit table if Mt modules exist (Phase 4)
-  - Gap analysis (Phase 6)
+  - PTT review: unified test table, iterator coverage, loop form coverage (Phase 6)
+  - Gap analysis (Phase 7)
   - Proof holes summary
   - Date and reviewer
 

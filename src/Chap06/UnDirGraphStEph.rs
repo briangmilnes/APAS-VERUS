@@ -83,23 +83,23 @@ verus! {
                 g@.A =~= edges@;
 
         /// - APAS: Work Θ(1), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
         /// - APAS: Work Θ(1), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn edges(&self) -> (e: &SetStEph<Edge<V>>)
             ensures e@ =~= self@.A;
 
         /// - APAS: Work Θ(1), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn sizeV(&self) -> (n: N)
             requires valid_key_type_Edge::<V>()
             ensures n == self@.V.len();
 
         /// - APAS: Work Θ(1), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn sizeE(&self) -> (n: N)
             requires valid_key_type_Edge::<V>()
             ensures n == self@.A.len();

@@ -80,9 +80,9 @@ tokenized_state_machine!{
 }
 
 /// Parallel Fibonacci with TSM at each recursive fork-join.
-///
-/// Each call spawns two threads and uses a fresh TSM instance
-/// to track their completion. No intermediate values stored.
+/// Each call spawns two threads and uses a fresh TSM instance to track completion.
+/// - APAS: Work Θ(φⁿ), Span Θ(n) — full recursive parallelism.
+/// - Claude-Opus-4.6: Work Θ(φⁿ), Span Θ(n) — agrees. TSM + vstd::thread at every level.
 pub fn fib(n: u64) -> (fibonacci: u64)
     requires n <= 46
     ensures fibonacci == spec_fib(n as nat)

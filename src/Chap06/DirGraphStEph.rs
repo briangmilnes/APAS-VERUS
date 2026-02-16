@@ -519,9 +519,14 @@ verus! {
         fn eq(&self, other: &Self) -> (r: bool)
             ensures r == (self@ == other@)
         {
-            let r = self.V == other.V && self.A == other.A;
-            proof { assume(r == (self@ == other@)); }
-            r
+            let v_eq = self.V == other.V;
+            let a_eq = self.A == other.A;
+            proof {
+                if v_eq && a_eq {
+                    assert(self@ =~= other@);
+                }
+            }
+            v_eq && a_eq
         }
     }
 
