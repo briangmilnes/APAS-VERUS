@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap02/
+
 ✓ FibonacciWSScheduler.rs
    5 clean proof functions
 ❌ HFSchedulerMtEph.rs
