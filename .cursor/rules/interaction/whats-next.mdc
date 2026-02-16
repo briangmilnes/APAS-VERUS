@@ -1,0 +1,8 @@
+# WN — What's Next
+
+When the user says "WN" or "What's Next":
+
+1. Show the current TODO list status (if any todos exist)
+2. List open work items from the project TODO file
+3. Suggest the most productive next step based on recent work
+4. Wait for the user to choose before starting

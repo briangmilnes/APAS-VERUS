@@ -177,12 +177,17 @@ pub mod PrimTreeSeqStPer {
                     &&& tree@ is Two
                     &&& tree@->Two_0.len() >= 1
                     &&& tree@->Two_1.len() >= 1
+                    &&& tree@->Two_0.len() + tree@->Two_1.len() == self.spec_len()
                     &&& tree@->Two_0 + tree@->Two_1 =~= self@
                 };
 
         /// Reassembles a primitive tree sequence from an exposed tree.
         /// APAS: Data Type 23.1. Work Θ(n), Span Θ(n).
-        fn join(tree: PrimTreeSeqStTree<T>) -> (joined: Self);
+        fn join(tree: PrimTreeSeqStTree<T>) -> (joined: Self)
+            ensures
+                tree@ is Zero ==> joined@ =~= Seq::<T>::empty(),
+                tree@ is One ==> joined@ =~= seq![tree@->One_0],
+                tree@ is Two ==> joined@ =~= tree@->Two_0 + tree@->Two_1;
 
         /// Definition 18.13 (append). Concatenate two sequences.
         /// APAS: Algorithm 23.3. Work Θ(|a| + |b|), Span Θ(1).
@@ -852,15 +857,18 @@ pub mod PrimTreeSeqStPer {
 
     impl<T: Eq + View> Eq for PrimTreeSeqStTree<T> {}
 
-    } // verus!
-
-    //		13. derive impls outside verus!
-
     // Utility methods for runtime test support.
     impl<T> PrimTreeSeqStS<T> {
-        pub fn as_slice(&self) -> &[T] { &self.seq }
-        pub fn into_vec(self) -> Vec<T> { self.seq }
+        pub fn as_slice(&self) -> (result: &[T])
+            ensures result@ =~= self@
+        { &self.seq }
+
+        pub fn into_vec(self) -> (result: Vec<T>)
+            ensures result@ =~= self@
+        { self.seq }
     }
+
+    } // verus!
 
     impl<T: std::fmt::Debug> std::fmt::Debug for PrimTreeSeqStS<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

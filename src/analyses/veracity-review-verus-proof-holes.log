@@ -19,15 +19,21 @@
    Holes: 1 total
       1 × assume()
 ✓ Chap05/RelationStEph.rs
-✓ Chap05/SetMtEph.rs
-   1 clean proof function
+❌ Chap05/SetMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:889: assume() - proof { assume(r == (self@ == other@)); }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap05/SetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:816: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:813: assume() - proof { assume(equal == (self@ == other@)); }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ✓ Chap06/DirGraphMtEph.rs
-✓ Chap06/DirGraphStEph.rs
+❌ Chap06/DirGraphStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:523: assume() - proof { assume(r == (self@ == other@)); }
+   Holes: 1 total
+      1 × assume()
 ✓ Chap06/LabDirGraphMtEph.rs
 ✓ Chap06/LabDirGraphStEph.rs
 ✓ Chap06/LabUnDirGraphMtEph.rs
@@ -96,9 +102,9 @@
    Holes: 1 total
       1 × assume()
 ❌ Chap18/ArraySeq.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1453: external - #[verifier::external]
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1587: external - #[verifier::external]
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1610: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1450: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1584: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1607: assume() - proof { assume(equal == (self@ == other@)); }
    Holes: 3 total
       1 × assume()
       2 × external
@@ -109,7 +115,7 @@
       1 × assume()
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ Chap18/ArraySeqMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1132: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1133: assume() - proof { assume(equal == (self@ == other@)); }
    Holes: 1 total
       1 × assume()
    Proof functions: 2 total (2 clean, 0 holed)
@@ -119,7 +125,7 @@
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap18/ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:881: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:880: assume() - proof { assume(equal == (self@ == other@)); }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
@@ -134,7 +140,7 @@
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap19/ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1161: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1162: assume() - proof { assume(equal == (self@ == other@)); }
    Holes: 1 total
       1 × assume()
    Proof functions: 4 total (4 clean, 0 holed)
@@ -152,32 +158,74 @@
    2 clean proof functions
 ✓ Chap21/Algorithm21_2.rs
    1 clean proof function
-❌ Chap21/Algorithm21_5.rs
-/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:57: assume() - assume(forall|v: N, ret: bool| pred.ensures((&v,), ret) <==> spec_pred(v) == ...
-   Holes: 1 total
-      1 × assume()
-❌ Chap21/Algorithm21_6.rs
-/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:120: assume() - assume(forall|v: N, ret: bool| pred.ensures((&v,), ret) <==> spec_not_composi...
-   Holes: 1 total
-      1 × assume()
+✓ Chap21/Algorithm21_5.rs
+✓ Chap21/Algorithm21_6.rs
 ✓ Chap21/Exercise21_5.rs
 ✓ Chap21/Exercise21_6.rs
-❌ Chap21/Exercise21_7.rs
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:70: assume() - assume(forall|v: N, ret: bool| pred_even.ensures((&v,), ret) <==> spec_even(v...
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:71: assume() - assume(forall|v: char, ret: bool| pred_vowel.ensures((&v,), ret) <==> spec_vo...
-   Holes: 2 total
-      2 × assume()
+✓ Chap21/Exercise21_7.rs
 ❌ Chap21/Exercise21_8.rs
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:127: assume() - assume(forall|v: B, passes: bool| pred.ensures((&v,), passes) <==> spec_pred(...
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:156: assume() - assume(ones.seq@.len() as int == spec_divisor_count(n as int, 1, k as int + 1));
-   Holes: 2 total
-      2 × assume()
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:151: assume() - assume(ones.seq@.len() as int == spec_divisor_count(n as int, 1, k as int + 1));
+   Holes: 1 total
+      1 × assume()
    Proof functions: 3 total (3 clean, 0 holed)
 ✓ Chap21/Exercise21_9.rs
 ✓ Chap21/Problem21_1.rs
 ✓ Chap21/Problem21_3.rs
 ✓ Chap21/Problem21_4.rs
    1 clean proof function
+❌ Chap23/BalBinTreeStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:499: assume() - proof { assume(r == (*self == *other)); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:520: assume() - proof { assume(r == (*self == *other)); }
+   Holes: 2 total
+      2 × assume()
+❌ Chap23/PrimTreeSeqStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:803: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:837: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:842: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:846: assume() - proof { assume(self@ != other@); }
+   Holes: 4 total
+      4 × assume()
+❌ Chap26/DivConReduceMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:107: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:115: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:120: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:125: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:130: external_body - #[verifier::external_body]
+   Holes: 5 total
+      5 × external_body
+❌ Chap26/DivConReduceStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:109: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:117: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:122: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:127: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:132: external_body - #[verifier::external_body]
+   Holes: 5 total
+      5 × external_body
+❌ Chap26/ETSPStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStPer.rs:34: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStPer.rs:41: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStPer.rs:68: external_body - #[verifier::external_body]
+   Holes: 3 total
+      3 × external_body
+❌ Chap26/MergeSortMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:69: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:195: external_body - #[verifier::external_body]
+   Holes: 2 total
+      2 × external_body
+❌ Chap26/MergeSortStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:88: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:145: external_body - #[verifier::external_body]
+   Holes: 2 total
+      2 × external_body
+❌ Chap26/ScanDCMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:58: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+❌ Chap26/ScanDCStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:88: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:118: external_body - #[verifier::external_body]
+   Holes: 2 total
+      2 × external_body
 ✓ Concurrency.rs
 ✓ ParaPairs.rs
 ❌ Types.rs
@@ -244,6 +292,7 @@
       1 × assume_specification
 ✓ experiments/baseviewtypes.rs
    7 clean proof functions
+✓ experiments/biconditional_spec_fun.rs
 ✓ experiments/checked_comm.rs
 ✓ experiments/checked_signed_int.rs
    6 clean proof functions
@@ -518,25 +567,25 @@
    Holes: 1 total
       1 × assume_specification
 ❌ vstdplus/hash_set_with_view_plus.rs
-/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:41: admit() - admit();
-/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:49: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:58: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:69: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:80: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:88: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:98: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:124: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:130: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:139: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:42: admit() - admit();
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:50: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:59: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:70: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:81: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:89: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:99: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:125: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:131: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:140: external_body - #[verifier::external_body]
    Holes: 10 total
       1 × admit()
       9 × external_body
    Proof functions: 1 total (0 clean, 1 holed)
 ❌ vstdplus/hashed_checked_u32.rs
-/home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:27: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:35: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:50: admit() - { admit(); }
-/home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:56: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:30: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:38: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:53: admit() - { admit(); }
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:59: admit() - { admit(); }
    Holes: 4 total
       2 × admit()
       2 × external_body
@@ -595,24 +644,24 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   96 clean (no holes)
-   68 holed (contains holes)
-   164 total
+   98 clean (no holes)
+   76 holed (contains holes)
+   174 total
 
 Proof Functions:
    334 clean
    61 holed
    395 total
 
-Holes Found: 211 total
+Holes Found: 234 total
    8 × assume(false)
-   61 × assume()
+   64 × assume()
    1 × Tracked::assume_new()
    9 × assume_specification
    46 × admit()
    2 × unsafe impl
    4 × unsafe {}
-   74 × external_body
+   94 × external_body
    1 × external_trait_specification
    1 × external_type_specification
    1 × external_trait_extension

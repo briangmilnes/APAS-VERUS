@@ -61,15 +61,21 @@ git merge main -X theirs
 - Stay on `main`. Never checkout or modify `review/prose`.
 - Commit frequently so the reviewer can merge your changes.
 - Write code in `src/`, tests in `tests/` and `rust_verify_test/`.
-- You may read `analyses/` and `docs/` but do not write to them.
+- Running veracity tools (e.g., `veracity-review-proof-holes`) is fine — their logs in `analyses/` and `src/ChapNN/analyses/` are ephemeral and get overwritten each run.
+- Do not write curated analysis or documentation to `analyses/` or `docs/` — that's the reviewer's domain.
 
 ### Reviewer (on `review/prose`)
 
 - Stay on `review/prose`. Never checkout or modify `main`.
 - Commit frequently so the implementer can merge your analyses.
-- Write analysis to `analyses/` and documentation to `docs/`.
+- Write curated analysis to `analyses/` and documentation to `docs/`.
+- Running veracity tools is fine — if both agents run the same tool, the later output wins on merge.
 - You may read `src/`, `tests/`, and `prompts/` but do not write to them.
 - Run `git merge main` before starting a review session to pick up the latest code.
+
+### Shared: Veracity Tool Logs
+
+Both agents may run veracity tools (`veracity-review-proof-holes`, `veracity-review-module-fn-impls`, etc.). These tools write ephemeral logs to `analyses/` and `src/ChapNN/analyses/`. The logs are disposable and regenerated in seconds, so on merge conflicts the later version wins. Use `git merge -X theirs` to resolve automatically.
 
 ## Pushing to Origin
 
