@@ -106,12 +106,32 @@ pub mod DivConReduceStPer {
     //		9. impls
 
     impl DivConReduceStTrait for ArraySeqStPerS<N> {
-        #[verifier::external_body]
         fn max_element(a: &ArraySeqStPerS<N>) -> (result: Option<N>) {
-            if a.length() == 0 {
+            let len = a.length();
+            if len == 0 {
                 return None;
             }
-            Some(ArraySeqStPerS::reduce(a, &|x, y| (*x).max(*y), Ghost(spec_max_fn()), *a.nth(0)))
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+            let mut best: N = *a.nth(0);
+            let mut i: usize = 1;
+            while i < len
+                invariant
+                    1 <= i <= len,
+                    len == a.spec_len(),
+                    s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
+                    forall|j: int| #![trigger a.spec_index(j)]
+                        0 <= j < i as int ==> a.spec_index(j) <= best,
+                    exists|j: int| #![trigger a.spec_index(j)]
+                        0 <= j < i as int && a.spec_index(j) == best,
+                decreases len - i,
+            {
+                let v = *a.nth(i);
+                if v > best {
+                    best = v;
+                }
+                i += 1;
+            }
+            Some(best)
         }
 
         #[verifier::external_body]
@@ -124,14 +144,20 @@ pub mod DivConReduceStPer {
             ArraySeqStPerS::reduce(a, &|x, y| x * y, Ghost(spec_product_fn()), 1)
         }
 
-        #[verifier::external_body]
         fn any(a: &ArraySeqStPerS<B>) -> (result: B) {
-            ArraySeqStPerS::reduce(a, &|x, y| *x || *y, Ghost(spec_or_fn()), false)
+            ArraySeqStPerS::reduce(a,
+                &(|x: &B, y: &B| -> (ret: B)
+                    ensures ret == spec_or_fn()(*x, *y)
+                { *x || *y }),
+                Ghost(spec_or_fn()), false)
         }
 
-        #[verifier::external_body]
         fn all(a: &ArraySeqStPerS<B>) -> (result: B) {
-            ArraySeqStPerS::reduce(a, &|x, y| *x && *y, Ghost(spec_and_fn()), true)
+            ArraySeqStPerS::reduce(a,
+                &(|x: &B, y: &B| -> (ret: B)
+                    ensures ret == spec_and_fn()(*x, *y)
+                { *x && *y }),
+                Ghost(spec_and_fn()), true)
         }
     }
 

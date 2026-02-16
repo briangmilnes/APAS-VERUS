@@ -63,7 +63,7 @@ pub mod ScanDCStPer {
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_f, id),
                 forall|x: &N, y: &N| #[trigger] f.requires((x, y)),
-                forall|x: N, y: N, ret: N| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                forall|x: N, y: N, ret: N| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
                 spec_scan_post(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
@@ -76,41 +76,214 @@ pub mod ScanDCStPer {
         fn prefix_sums_dc(a: &ArraySeqStPerS<N>) -> (result: (ArraySeqStPerS<N>, N))
             requires a.spec_len() <= usize::MAX,
             ensures
-                result.0.spec_len() == a.spec_len(),
-                result.1 == spec_iterate(
+                spec_scan_post(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
-                    |x: N, y: N| (x + y) as N, 0);
+                    |x: N, y: N| (x + y) as N, 0,
+                    Seq::new(result.0.spec_len(), |i: int| result.0.spec_index(i)),
+                    result.1);
     }
 
     //		9. impls
 
+    /// Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f))
+    /// when (f, id) is a monoid.
+    proof fn lemma_fold_left_monoid(s: Seq<N>, x: N, f: spec_fn(N, N) -> N, id: N)
+        requires spec_monoid(f, id),
+        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),
+        decreases s.len(),
+    {
+        reveal(Seq::fold_left);
+        if s.len() == 0 {
+        } else {
+            lemma_fold_left_monoid(s.drop_last(), x, f, id);
+            lemma_fold_left_monoid(s.drop_last(), id, f, id);
+        }
+    }
+
     impl ScanDCStTrait for ArraySeqStPerS<N> {
-        #[verifier::external_body]
-        fn scan_dc<F: Fn(&N, &N) -> N>(a: &ArraySeqStPerS<N>, f: &F, Ghost(spec_f): Ghost<spec_fn(N, N) -> N>, id: N) -> (result: (ArraySeqStPerS<N>, N)) {
+        fn scan_dc<F: Fn(&N, &N) -> N>(a: &ArraySeqStPerS<N>, f: &F, Ghost(spec_f): Ghost<spec_fn(N, N) -> N>, id: N) -> (result: (ArraySeqStPerS<N>, N))
+            decreases a.spec_len(),
+        {
             let n = a.length();
+            let ghost input = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+
             if n == 0 {
+                proof {
+                    reveal(Seq::fold_left);
+                    assert(input =~= Seq::<N>::empty());
+                }
                 return (ArraySeqStPerS::empty(), id);
             }
             if n == 1 {
-                return (ArraySeqStPerS::singleton(id), *a.nth(0));
+                let total = f(&id, a.nth(0));
+                proof {
+                    reveal(Seq::fold_left);
+                    assert(input.len() == 1);
+                    assert(input.drop_last() =~= Seq::<N>::empty());
+                    assert(input.last() == a.spec_index(0));
+                    assert(Seq::<N>::empty().fold_left(id, spec_f) == id);
+                    assert(input.fold_left(id, spec_f) == spec_f(id, a.spec_index(0)));
+                    assert(input.take(0) =~= Seq::<N>::empty());
+                }
+                return (ArraySeqStPerS::singleton(id), total);
             }
-            // Divide: split at midpoint
-            let mid = n / 2;
-            let left = a.subseq_copy(0, mid);
-            let right = a.subseq_copy(mid, n - mid);
 
-            // Recur sequentially
+            let mid = n / 2;
+
+            // Build left half
+            let mut left_vec: Vec<N> = Vec::with_capacity(mid);
+            let mut i: usize = 0;
+            while i < mid
+                invariant
+                    i <= mid, mid <= n, n == a.spec_len(),
+                    left_vec@.len() == i as int,
+                    forall|j: int| #![trigger left_vec@[j]] 0 <= j < i as int ==> left_vec@[j] == a.spec_index(j),
+                decreases mid - i,
+            {
+                left_vec.push(*a.nth(i));
+                i = i + 1;
+            }
+            let left = ArraySeqStPerS { seq: left_vec };
+
+            // Build right half
+            let right_len = n - mid;
+            let mut right_vec: Vec<N> = Vec::with_capacity(right_len);
+            let mut i: usize = 0;
+            while i < right_len
+                invariant
+                    i <= right_len, right_len == n - mid,
+                    mid <= n, n == a.spec_len(),
+                    right_vec@.len() == i as int,
+                    forall|j: int| #![trigger right_vec@[j]] 0 <= j < i as int ==> right_vec@[j] == a.spec_index(mid as int + j),
+                decreases right_len - i,
+            {
+                right_vec.push(*a.nth(mid + i));
+                i = i + 1;
+            }
+            let right = ArraySeqStPerS { seq: right_vec };
+
+            let ghost left_input = Seq::new(left.spec_len(), |i: int| left.spec_index(i));
+            let ghost right_input = Seq::new(right.spec_len(), |i: int| right.spec_index(i));
+
+            proof {
+                assert(left_input =~= input.subrange(0, mid as int));
+                assert(right_input =~= input.subrange(mid as int, n as int));
+                assert(left_input + right_input =~= input);
+            }
+
+            // Recursive calls
             let (l_prefixes, l_total) = Self::scan_dc(&left, f, Ghost(spec_f), id);
             let (r_prefixes, r_total) = Self::scan_dc(&right, f, Ghost(spec_f), id);
 
-            // Combine: r'[i] = f(l_total, r[i])
-            let r_adjusted = ArraySeqStPerS::tabulate(
-                &|i: usize| -> N { f(&l_total, r_prefixes.nth(i)) },
-                r_prefixes.length(),
-            );
+            let ghost l_pref_view = Seq::new(l_prefixes.spec_len(), |i: int| l_prefixes.spec_index(i));
+            let ghost r_pref_view = Seq::new(r_prefixes.spec_len(), |i: int| r_prefixes.spec_index(i));
 
-            let result_prefixes = ArraySeqStPerS::append(&l_prefixes, &r_adjusted);
+            // Adjust right prefixes: r_adjusted[j] = f(l_total, r_prefixes[j])
+            let r_len = r_prefixes.length();
+            let mut adj_vec: Vec<N> = Vec::with_capacity(r_len);
+            let mut i: usize = 0;
+            while i < r_len
+                invariant
+                    i <= r_len,
+                    r_len == r_prefixes.spec_len(),
+                    r_pref_view.len() == r_len as int,
+                    adj_vec@.len() == i as int,
+                    forall|x: &N, y: &N| #[trigger] f.requires((x, y)),
+                    forall|x: N, y: N, ret: N| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                    forall|j: int| #![trigger r_pref_view[j]] 0 <= j < r_len as int
+                        ==> r_pref_view[j] == r_prefixes.spec_index(j),
+                    forall|j: int| #![trigger adj_vec@[j]] 0 <= j < i as int
+                        ==> adj_vec@[j] == spec_f(l_total, r_pref_view[j]),
+                decreases r_len - i,
+            {
+                let r_val = *r_prefixes.nth(i);
+                let v = f(&l_total, &r_val);
+                adj_vec.push(v);
+                i = i + 1;
+            }
+
+            // Concatenate l_prefixes and adjusted right
+            let l_len = l_prefixes.length();
+            let mut result_vec: Vec<N> = Vec::with_capacity(n);
+            let mut i: usize = 0;
+            while i < l_len
+                invariant
+                    i <= l_len,
+                    l_len == l_prefixes.spec_len(),
+                    l_pref_view.len() == l_len as int,
+                    forall|j: int| #![trigger l_pref_view[j]] 0 <= j < l_len as int
+                        ==> l_pref_view[j] == l_prefixes.spec_index(j),
+                    result_vec@.len() == i as int,
+                    forall|j: int| #![trigger result_vec@[j]] 0 <= j < i as int
+                        ==> result_vec@[j] == l_pref_view[j],
+                decreases l_len - i,
+            {
+                result_vec.push(*l_prefixes.nth(i));
+                i = i + 1;
+            }
+            let mut i: usize = 0;
+            while i < r_len
+                invariant
+                    i <= r_len,
+                    r_len == r_prefixes.spec_len(),
+                    r_pref_view.len() == r_len as int,
+                    l_len == l_prefixes.spec_len(),
+                    l_pref_view.len() == l_len as int,
+                    l_len == mid,
+                    adj_vec@.len() == r_len as int,
+                    result_vec@.len() == (l_len + i) as int,
+                    forall|j: int| #![trigger adj_vec@[j]] 0 <= j < r_len as int
+                        ==> adj_vec@[j] == spec_f(l_total, r_pref_view[j]),
+                    forall|j: int| #![trigger result_vec@[j]] 0 <= j < l_len as int
+                        ==> result_vec@[j] == l_pref_view[j],
+                    forall|j: int| #![trigger result_vec@[l_len as int + j]]
+                        0 <= j < i as int
+                        ==> result_vec@[l_len as int + j] == spec_f(l_total, r_pref_view[j]),
+                decreases r_len - i,
+            {
+                result_vec.push(adj_vec[i]);
+                i = i + 1;
+            }
+
             let total = f(&l_total, &r_total);
+
+            let ghost result_view = result_vec@;
+            let result_prefixes = ArraySeqStPerS { seq: result_vec };
+
+            proof {
+                let ghost rp = Seq::new(result_prefixes.spec_len(), |i: int| result_prefixes.spec_index(i));
+                assert(rp =~= result_view);
+                assert(result_view.len() == n as int);
+
+                // Establish subrange equalities for fold_left_split
+                assert(left_input =~= input.subrange(0, mid as int));
+                assert(right_input =~= input.subrange(mid as int, n as int));
+
+                // Prove total == input.fold_left(id, spec_f)
+                // fold_left_split: right_input.fold_left(l_total, spec_f) == input.fold_left(id, spec_f)
+                input.lemma_fold_left_split(id, spec_f, mid as int);
+                // monoid: right_input.fold_left(l_total, spec_f) == spec_f(l_total, r_total)
+                lemma_fold_left_monoid(right_input, l_total, spec_f, id);
+
+                // Prove each prefix position
+                assert forall|i: int| #![trigger result_view[i]]
+                    0 <= i < n as int implies
+                    result_view[i] == spec_scan_at(input, spec_f, id, i)
+                by {
+                    if i < mid as int {
+                        assert(result_view[i] == l_pref_view[i]);
+                        assert(input.take(i) =~= left_input.take(i));
+                    } else {
+                        let j = i - mid as int;
+                        assert(i == l_len as int + j);
+                        assert(result_view[l_len as int + j] == spec_f(l_total, r_pref_view[j]));
+                        lemma_fold_left_monoid(right_input.take(j), l_total, spec_f, id);
+                        assert(input.take(i).subrange(0, mid as int) =~= left_input);
+                        assert(input.take(i).subrange(mid as int, i as int) =~= right_input.take(j));
+                        input.take(i).lemma_fold_left_split(id, spec_f, mid as int);
+                    }
+                }
+            }
 
             (result_prefixes, total)
         }

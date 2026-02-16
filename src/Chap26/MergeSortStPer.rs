@@ -28,7 +28,11 @@ pub mod MergeSortStPer {
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
+        vstd::seq_lib::group_to_multiset_ensures,
+        vstd::multiset::group_multiset_axioms,
     };
+
+    use vstd::seq_lib::lemma_multiset_commutative;
 
     //		4. spec functions
 
@@ -84,84 +88,173 @@ pub mod MergeSortStPer {
 
     //		9. impls
 
+    /// Helper: pushing an element >= all existing elements preserves sorted.
+    proof fn lemma_push_sorted(s: Seq<N>, v: N)
+        requires
+            spec_sorted(s),
+            s.len() > 0 ==> s.last() <= v,
+        ensures
+            spec_sorted(s.push(v)),
+    {
+        assert forall|i: int, j: int|
+            0 <= i < j < s.push(v).len() implies s.push(v)[i] <= s.push(v)[j]
+        by {
+            if j < s.len() as int {
+            } else {
+                // j == s.len(), s.push(v)[j] == v
+                if s.len() > 0 {
+                    // s[i] <= s.last() <= v
+                } else {
+                    // i < 0 < j, impossible since i >= 0
+                }
+            }
+        }
+    }
+
     impl MergeSortStTrait for ArraySeqStPerS<N> {
-        #[verifier::external_body]
         fn merge(left: &ArraySeqStPerS<N>, right: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<N>) {
             let n_left = left.length();
             let n_right = right.length();
             let total = n_left + n_right;
+            let ghost sl = Seq::new(left.spec_len(), |i: int| left.spec_index(i));
+            let ghost sr = Seq::new(right.spec_len(), |i: int| right.spec_index(i));
 
-            if total == 0 {
-                return ArraySeqStPerS::empty();
-            }
-            if n_left == 0 {
-                return right.clone();
-            }
-            if n_right == 0 {
-                return left.clone();
-            }
+            let mut out: Vec<N> = Vec::with_capacity(total);
+            let mut li: usize = 0;
+            let mut ri: usize = 0;
 
-            // Build result using tabulate
-            ArraySeqStPerS::tabulate(
-                &|i| {
-                    // Determine position in left and right sequences
-                    let mut l_idx = 0;
-                    let mut r_idx = 0;
-                    let mut count = 0;
-
-                    // Simulate the merge to find element at position i
-                    while count < i {
-                        if l_idx < n_left && r_idx < n_right {
-                            if left.nth(l_idx) <= right.nth(r_idx) {
-                                l_idx += 1;
-                            } else {
-                                r_idx += 1;
-                            }
-                        } else if l_idx < n_left {
-                            l_idx += 1;
-                        } else {
-                            r_idx += 1;
-                        }
-                        count += 1;
+            while li < n_left || ri < n_right
+                invariant
+                    li <= n_left,
+                    ri <= n_right,
+                    n_left == left.spec_len(),
+                    n_right == right.spec_len(),
+                    total == n_left + n_right,
+                    sl =~= Seq::new(left.spec_len(), |i: int| left.spec_index(i)),
+                    sr =~= Seq::new(right.spec_len(), |i: int| right.spec_index(i)),
+                    spec_sorted(sl),
+                    spec_sorted(sr),
+                    out@.len() == (li + ri) as int,
+                    spec_sorted(out@),
+                    out@.to_multiset() =~= (sl.take(li as int) + sr.take(ri as int)).to_multiset(),
+                    out@.len() > 0 && li < n_left ==> out@.last() <= sl[li as int],
+                    out@.len() > 0 && ri < n_right ==> out@.last() <= sr[ri as int],
+                decreases (n_left - li) + (n_right - ri),
+            {
+                if li < n_left && (ri >= n_right || *left.nth(li) <= *right.nth(ri)) {
+                    let v = *left.nth(li);
+                    proof {
+                        lemma_push_sorted(out@, v);
+                        assert(sl.take(li as int + 1) =~= sl.take(li as int).push(sl[li as int]));
+                        lemma_multiset_commutative(sl.take(li as int + 1), sr.take(ri as int));
+                        lemma_multiset_commutative(sl.take(li as int), sr.take(ri as int));
                     }
-
-                    // Get the element at position i
-                    if l_idx < n_left && r_idx < n_right {
-                        if left.nth(l_idx) <= right.nth(r_idx) {
-                            left.nth(l_idx).clone()
-                        } else {
-                            right.nth(r_idx).clone()
-                        }
-                    } else if l_idx < n_left {
-                        left.nth(l_idx).clone()
-                    } else {
-                        right.nth(r_idx).clone()
+                    out.push(v);
+                    li = li + 1;
+                } else {
+                    let v = *right.nth(ri);
+                    proof {
+                        lemma_push_sorted(out@, v);
+                        assert(sr.take(ri as int + 1) =~= sr.take(ri as int).push(sr[ri as int]));
+                        lemma_multiset_commutative(sl.take(li as int), sr.take(ri as int + 1));
+                        lemma_multiset_commutative(sl.take(li as int), sr.take(ri as int));
                     }
-                },
-                total,
-            )
+                    out.push(v);
+                    ri = ri + 1;
+                }
+            }
+
+            proof {
+                assert(sl.take(n_left as int) =~= sl);
+                assert(sr.take(n_right as int) =~= sr);
+            }
+            let ghost out_view = out@;
+            let merged_result = ArraySeqStPerS { seq: out };
+            proof {
+                assert(Seq::new(merged_result.spec_len(), |i: int| merged_result.spec_index(i)) =~= out_view);
+                assert(out_view.to_multiset() =~= (sl + sr).to_multiset());
+                assert(spec_merge_post(sl, sr, Seq::new(merged_result.spec_len(), |i: int| merged_result.spec_index(i))));
+            }
+            merged_result
         }
 
-        #[verifier::external_body]
-        fn merge_sort(a: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<N>) {
+        fn merge_sort(a: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<N>)
+            decreases a.spec_len(),
+        {
             let n = a.length();
+            let ghost sa = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
 
-            // Base case: sequences of length 0 or 1 are already sorted
-            if n <= 1 {
-                return a.clone();
+            if n == 0 {
+                proof {
+                    assert(sa =~= Seq::<N>::empty());
+                }
+                return ArraySeqStPerS::empty();
+            }
+            if n == 1 {
+                let s = ArraySeqStPerS::singleton(*a.nth(0));
+                proof {
+                    let s_view = Seq::new(s.spec_len(), |i: int| s.spec_index(i));
+                    assert(sa.len() == 1);
+                    assert(s_view.len() == 1);
+                    assert(sa[0] == s_view[0]);
+                    assert(sa =~= s_view);
+                }
+                return s;
             }
 
-            // Divide: split at midpoint
             let mid = n / 2;
-            let left = a.subseq_copy(0, mid);
-            let right = a.subseq_copy(mid, n - mid);
 
-            // Recur: sequential recursive calls
+            // Build left half [0..mid)
+            let mut left_vec: Vec<N> = Vec::with_capacity(mid);
+            let mut i: usize = 0;
+            while i < mid
+                invariant
+                    i <= mid, mid <= n, n == a.spec_len(),
+                    left_vec@.len() == i as int,
+                    forall|j: int| #![trigger left_vec@[j]] 0 <= j < i as int ==> left_vec@[j] == a.spec_index(j),
+                decreases mid - i,
+            {
+                left_vec.push(*a.nth(i));
+                i = i + 1;
+            }
+            let left = ArraySeqStPerS { seq: left_vec };
+
+            // Build right half [mid..n)
+            let right_len = n - mid;
+            let mut right_vec: Vec<N> = Vec::with_capacity(right_len);
+            let mut i: usize = 0;
+            while i < right_len
+                invariant
+                    i <= right_len, right_len == n - mid,
+                    mid <= n, n == a.spec_len(),
+                    right_vec@.len() == i as int,
+                    forall|j: int| #![trigger right_vec@[j]] 0 <= j < i as int ==> right_vec@[j] == a.spec_index(mid as int + j),
+                decreases right_len - i,
+            {
+                right_vec.push(*a.nth(mid + i));
+                i = i + 1;
+            }
+            let right = ArraySeqStPerS { seq: right_vec };
+
+            // Recursive sort
             let sorted_left = Self::merge_sort(&left);
             let sorted_right = Self::merge_sort(&right);
 
-            // Combine: merge the two sorted halves
-            Self::merge(&sorted_left, &sorted_right)
+            // Merge sorted halves
+            let merged = Self::merge(&sorted_left, &sorted_right);
+
+            proof {
+                let ghost sl_view = Seq::new(left.spec_len(), |i: int| left.spec_index(i));
+                let ghost sr_view = Seq::new(right.spec_len(), |i: int| right.spec_index(i));
+                let ghost ssl = Seq::new(sorted_left.spec_len(), |i: int| sorted_left.spec_index(i));
+                let ghost ssr = Seq::new(sorted_right.spec_len(), |i: int| sorted_right.spec_index(i));
+                let ghost sm = Seq::new(merged.spec_len(), |i: int| merged.spec_index(i));
+
+                assert(sl_view + sr_view =~= sa);
+                lemma_multiset_commutative(ssl, ssr);
+                lemma_multiset_commutative(sl_view, sr_view);
+            }
+            merged
         }
     }
 

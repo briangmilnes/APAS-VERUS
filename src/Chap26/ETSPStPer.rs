@@ -31,14 +31,12 @@ pub mod ETSPStPer {
     //		4. type definitions
 
     /// A point in the 2-d plane.
-    #[verifier::external_body]
     pub struct Point {
         pub x: f64,
         pub y: f64,
     }
 
     /// A directed edge between two points.
-    #[verifier::external_body]
     pub struct Edge {
         pub from: Point,
         pub to: Point,

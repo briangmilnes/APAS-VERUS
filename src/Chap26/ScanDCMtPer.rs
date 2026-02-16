@@ -46,10 +46,11 @@ pub mod ScanDCMtPer {
         fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<N>) -> (result: (ArraySeqMtPerS<N>, N))
             requires a.spec_len() <= usize::MAX,
             ensures
-                result.0.spec_len() == a.spec_len(),
-                result.1 == spec_iterate(
+                spec_scan_post(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
-                    |x: N, y: N| (x + y) as N, 0);
+                    |x: N, y: N| (x + y) as N, 0,
+                    Seq::new(result.0.spec_len(), |i: int| result.0.spec_index(i)),
+                    result.1);
     }
 
     //		9. impls

@@ -15,3 +15,4 @@ When working on implementations or proofs:
 - Fix verification errors before moving on
 - If verification fails, analyze the error and adjust invariants, preconditions, or proof hints
 - Prefer verified code over unverified code, even if it requires restructuring
+- **Never sequentialize parallel files**: Mt (multi-threaded) implementations must remain parallel. Do not replace threaded code with sequential loops just to satisfy the verifier. If Verus cannot verify the threading, leave the `external_body` rather than destroying the parallelism.

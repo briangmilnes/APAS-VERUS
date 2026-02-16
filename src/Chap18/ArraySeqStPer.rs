@@ -209,7 +209,7 @@ pub mod ArraySeqStPer {
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (result: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
-                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
+                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
             ensures
                 result == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);
 
@@ -220,7 +220,7 @@ pub mod ArraySeqStPer {
             requires
                 spec_monoid(spec_f, id),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
                 result == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
@@ -233,7 +233,7 @@ pub mod ArraySeqStPer {
                 spec_monoid(spec_f, id),
                 obeys_feq_clone::<T>(),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
                 scanned.0.spec_len() == a.spec_len(),
                 forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < a.spec_len() ==>

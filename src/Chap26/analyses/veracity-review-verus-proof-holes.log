@@ -1,0 +1,47 @@
+❌ DivConReduceMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:135: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:140: external_body - #[verifier::external_body]
+   Holes: 2 total
+      2 × external_body
+❌ DivConReduceStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:137: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:142: external_body - #[verifier::external_body]
+   Holes: 2 total
+      2 × external_body
+❌ ETSPStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStPer.rs:66: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+❌ MergeSortMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:69: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:195: external_body - #[verifier::external_body]
+   Holes: 2 total
+      2 × external_body
+✓ MergeSortStPer.rs
+   1 clean proof function
+❌ ScanDCMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:59: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+❌ ScanDCStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:291: external_body - #[verifier::external_body]
+   Holes: 1 total
+      1 × external_body
+   Proof functions: 1 total (1 clean, 0 holed)
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   1 clean (no holes)
+   6 holed (contains holes)
+   7 total
+
+Proof Functions:
+   2 clean
+   0 holed
+   2 total
+
+Holes Found: 9 total
+   9 × external_body
