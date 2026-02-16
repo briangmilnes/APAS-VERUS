@@ -1,139 +1,78 @@
- Build a plan for this, including test and benchmark
- using PrePlanChecklist.md. 
-
- How many are parallel?
-
- What should be built for Partition and Trees here? It's not so clear.
- Discuss with the user.
-  
- Show it to me and estimate time.
-
- I will tell you when to execute. 
-
- Wait for me to tell you when to fix, build and test.
-
- This goes in Chap06.
-
-
-3 Subgraphs
-
-When working with graphs, we sometimes wish to refer to parts of a graph. To this end,
-we can use the notion of a subgraph, which refers to a graph contained in a larger graph.
-A subgraph can be defined as any subsets of edges and vertices that together constitute a
-well defined graph.
-
-Definition 6.18 (Subgraph). Let G = (V, E) and H = (V ′, E′) be two graphs. H is a
-subgraph of if V ′ ⊆ V and E′ ⊆ E.
-Note. Note that since H is a graph, the vertices defining each edge are in the vertex set V ′,
-i.e., for an undirected graph E′ ⊆ (V ′
-2
-). There are many possible subgraphs of a graph.
-An important class of subgraphs are vertex-induced subgraphs, which are maximal sub-
-graphs defined by a set of vertices. A vertex-induced subgraph is maximal in the sense that
-it contains all the edges that it can possibly contain. In general when an object is said to be
-a maximal “X”, it means that nothing more can be added to the object without violating
-the property “X”.
-
-Definition 6.19 (Vertex-Induced Subgraph). The subgraph of G = (V, E) induced by V ′ ⊆
-V is the graph H = (V ′, E′) where E′ = {{u, v} ∈ E | u ∈ V ′, v ∈ V ′}.
-Example 6.3. Some vertex induced subgraphs:
-
-We can alno define an induced subgraph in terms of a set of edges by including in the
-graph all the vertices incident on the edges.
-Definition 6.20 (Edge-Induced Subgraph). The subgraph of G = (V, E) induced by E′ ⊆ E
-is a graph H = (V ′, E′) where V ′ = ∪e∈E e
-
-38 CHAPTER 6. GRAPH THEORY
-
-Original graph
-Induced by {a, b, c, e, f}
-Induced by {a, b, c, d}
-
-We can alno define an induced subgraph in terms of a set of edges by including in the
-graph all the vertices incident on the edges.
-
-Definition 6.20 (Edge-Induced Subgraph). The subgraph of G = (V, E) induced by E′ ⊆ E
-is a graph H = (V ′, E′) where V ′ = ∪e∈E e.
-
-
-4 Connectivity
-Recall that in a graph (either directed or undirected) a vertex v is reachable from a vertex u
-if there is a path from u to v. Also recall that an undirected graph is connected if all vertices
-are reachable from all other vertices.
-Example 6.4. Two example graphs shown. The first in connected; the second is not.
-5. GRAPH PARTITION 39
-Graph 1
-Graph 2
-An important subgraph of an undirected graph is a connected component of a graph, de-
-fined below.
-Definition 6.21 (Connected Component). Let G = (V, E) be an undirected graph. A sub-
-graph H of G is a connected component of G if it is a maximally connected subgraph of
-G.
-Here, “maximally connected component” means we cannot add any more vertices and
-edges from G to H without disconnecting H. In the graphs shown in the example above,
-the first graph has one connected component (hence it is connected); the second has two
-connected components.
-Note. We can specify a connected component of a graph by simply specifying the vertices
-in the component. For example, the connected components of the second graph in the
-example above can be specified as {a, b, c, d} and {e, f}.
-
-
-5 Graph Partition
-Recall that a partition of a set A is a set P of non-empty subsets of A such that each element
-of A is in exactly one subset, also called block, B ∈ P .
-Definition 6.22 (Graph Partition). A graph partition is a partition of the vertex set of the
-graph. More precisely, given graph G = (V, E), we define a partition of G as a set of graphs
-P = {G1 = (V1, E1) . . . Gk = (Vk, Ek)},
-40 CHAPTER 6. GRAPH THEORY
-where {V1, . . . , Vk} is a (set) partition of V and G1, . . . , Gk are vertex-induced subgraphs of
-G with respect to V1, . . . , Vk respectively. As in set partitions, we use the term part or block to
-refer to each vertex-induced subgraph G1, . . . , Gk.
-Definition 6.23 (Internal and Cut Edges). In a graph partition, we can distinguish between
-two kinds of edges: internal edges and cut edges. Internal edges are edges that are within
-a block; cut edges are edges that are between blocks. One way to partition a graph is
-to make each connected component a block. In such a partition, there are no cut edges
-between the partitions.
-
-6 Trees
-
-Definition 6.24 (Tree). An undirected graph is a tree if it does not have cycles and it is
-connected. A rooted tree is a tree with a distinguished root node that can be used to access
-all other nodes. An example of a rooted tree along with the associated terminology is given
-in below.
-
-Definition 6.25 (Rooted Trees). A rooted tree is a directed graph such that
-1. One of the vertices is the root and it has no in edges.
-2. All other vertices have one in-edge.
-3. There is a path from the root to all other vertices.
-Rooted trees are common structures in computing and have their own dedicated terminol-
-ogy.
-• By convention we use the term node instead of vertex to refer to the vertices of a
-rooted tree.
-• A node is a leaf if it has no out edges, and an internal node otherwise.
-• For each directed edge (u, v), u is the parent of v, and v is a child of u.
-• For each path from u to v (including the empty path with u = v), u is an ancestor of
-v, and v is a descendant of u.
-• For a vertex v, its depth is the length of the path from the root to v and its height is
-the longest path from v to any leaf.
-• The height of a tree is the height of its root.
-• For any node v in a tree, the subtree rooted at v is the rooted tree defined by taking the
-induced subgraph of all vertices reachable from v (i.e. the vertices and the directed
-edges between them), and making v the root.
-
-• As with graphs, an ordered rooted tree is a rooted tree in which the out edges (chil-
-dren) of each node are ordered.
-
-Example 6.5. An example rooted tree follows.
-
-Example 6.5. An example rooted tree follows.
-root : A
-leaves : E, C, F , G, and H
-internal nodes : A, B, and D
-children of A : B, C and D
-parent of E : B
-descendants of A : all nodes, including A itself
-ancestors of F : F , D and A
-depth of F : 2
-height of B : 1
-height of the tree : 2
-subtree rooted at D : the rooted tree consisting of D, F , G and H
+hapter 5
+Sets and Relations
+This chapter presents a review of some basic definitions on sets and relations.
+1 Sets
+A set is a collection of distinct objects. The objects that are contained in a set, are called mem-
+bers or the elements of the set. The elements of a set must be distinct: a set may not contain
+the same element more than once. The set that contains no elements is called the empty
+set and is denoted by {} or ∅.
+Specification of Sets. Sets can be specified intentionally, by mathematically describing
+their members. For example, the set of natural numbers, traditionally written as N, can
+be specified intentionally as the set of all nonnegative integral numbers. Sets can also be
+specified extensionally by listing their members. For example, the set N = {0, 1, 2, . . .}. We
+say that an element x is a member of A, written x ∈ A, if x is in A. More generally, sets can
+be specified using set comprehensions, which offer a compact and precise way to define
+sets by mixing intentional and extensional notation.
+Definition 5.1 (Union and Intersection). For two sets A and B, the union A ∪ B is defined
+as the set containing all the elements of A and B. Symmetrically, their intersection, A ∩ B
+is the defined as the set containing the elements that are member of both A and B. We say
+that A and B are disjoint if their intersection is the empty set, i.e., A ∩ B = ∅.
+Definition 5.2 (Cartesian Product). Consider two sets A and B. The Cartesian product
+A × B is the set of all ordered pairs (a, b) where a ∈ A and b ∈ B, i.e.,
+A × B = {(a, b) : a ∈ A, b ∈ B} .
+30
+1. SETS 31
+Example 5.1. The Cartesian product of A = {0, 1, 2, 3} and B = {a, b} is
+A × B = { (0, a), (0, b), (1, a), (1, b),
+(2, a), (2, b), (3, a), (3, b)
+}.
+Definition 5.3 (Set Partition). Given a set A, a partition of A is a set P of non-empty subsets
+of A such that each element of A is in exactly one subset in P . We refer to each element of
+P as a block or a part and the set P as a partition of A. More precisely, P is a partition of
+A if the following conditions hold:
+• if B ∈ P , then B 6 = ∅,
+• if A = ⋃
+B∈P B, and
+• if B, C ∈ P , then B = C or B ∩ C = ∅.
+Example 5.2. If A = {1, 2, 3, 4, 5, 6} then P = {{1, 3, 5}, {2, 4, 6}} is a partition of A. The set
+{1, 3, 5} is a block.
+The set Q = {{1, 3, 5, 6}, {2, 4, 6}} is a not partition of A, because the element 6 is contained
+multiple blocks.
+Definition 5.4 (Kleene Operators). For any set Σ, its Kleene star Σ∗ is the set of all possible
+strings consisting of members of Σ, including the empty string.
+For any set Σ, its Kleene plus Σ+ is the set of all possible strings consisting of members Σ,
+excluding the empty string.
+Example 5.3. Given Σ = {a, b},
+Σ∗ = { ’ ’,
+’ a ’, ’ b ’,
+’ aa ’, ’ ab ’, ’ ba ’, ’ bb ’,
+’ aaa ’, ’ aab ’, ’ aba ’, ’ abb ’,
+’ baa ’, ’ bab ’, ’ bba ’, ’ bbb ’,
+. . .
+}
+and
+Σ+ = { ’ a ’, ’ b ’,
+’ aa ’, ’ ab ’, ’ ba ’, ’ bb ’,
+’ aaa ’, ’ aab ’, ’ aba ’, ’ abb ’,
+’ baa ’, ’ bab ’, ’ bba ’, ’ bbb ’,
+. . .
+}
+Exercise 5.1. Prove that Kleene star and Kleene plus are closed under string concatenation.
+32 CHAPTER 5. SETS AND RELATIONS
+2 Relations
+Definition 5.5 (Relation). A (binary) relation from a set A to set B is a subset of the
+Cartesian product of A and B. For a relation R ⊆ A × B,
+• the set {a : (a, b) ∈ R} is referred to as the domain of R, and
+• the set {b : (a, b) ∈ R} is referred to as the range of R.
+Definition 5.6 (Function). A mapping or function from A to B is a relation R ⊂ A × B
+such that |R| = |domain(R)|, i.e., for every a in the domain of R there is only one b such
+that (a, b) ∈ R. The range of the function is the range of R. We call the set A the domain
+and the B the co-domain of the function.
+Example 5.4. Consider the sets A = {0, 1, 2, 3} and B = {a, b}.
+The set:
+X = {(0, a), (0, b), (1, b), (3, a)}
+is a relation from A to B since X ⊂ A × B, but not a mapping (function) since 0 is repeated.
+The set
+Y = {(0, a), (1, b), (3, a)}
+is both a relation and a function from A to B since each element only appears once on the
+left.

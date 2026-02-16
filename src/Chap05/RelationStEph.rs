@@ -160,52 +160,55 @@ verus! {
         }
 
         /// - APAS: Work Θ(1), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn empty() -> (empty: Self)
             requires valid_key_type_Pair::<X, Y>()
             ensures empty@.finite(), empty@ == Set::<(<X as View>::V, <Y as View>::V)>::empty();
 
         /// - APAS: Work Θ(|pairs|), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(|pairs|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|pairs|), Span Θ(1)
         fn from_set(pairs: SetStEph<Pair<X, Y>>) -> (relation: Self)
             requires valid_key_type_Pair::<X, Y>()
             ensures relation@.finite(), relation@ == pairs@;
 
         /// - APAS: Work Θ(|pairs|), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(|pairs|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|pairs|), Span Θ(1)
         fn from_vec(v: Vec<Pair<X, Y>>) -> (relation: Self)
             requires valid_key_type_Pair::<X, Y>()
             ensures relation@.finite(), relation@ == v@.map(|i: int, p: Pair<X, Y>| p@).to_set();
 
         /// - APAS: Work Θ(1), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self) -> (size: N)
           ensures 
            size == self@.len();
 
         /// - APAS: Work Θ(|R|), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(|R|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|R|), Span Θ(1)
         fn domain(&self) -> (domain: SetStEph<X>)
             requires valid_key_type_Pair::<X, Y>()
             ensures domain@.finite(), domain@ == Set::<X::V>::new(|x: X::V| exists |y: Y::V| self@.contains((x, y)));
 
         /// - APAS: Work Θ(|R|), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(|R|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|R|), Span Θ(1)
         fn range(&self) -> (range: SetStEph<Y>)
             requires valid_key_type_Pair::<X, Y>()
             ensures range@.finite(), range@ == Set::<Y::V>::new(|y: Y::V| exists |x: X::V| self@.contains((x, y)));
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set contains() on the pair.
         fn mem(&self, a: &X, b: &Y) -> (contains: B)
             requires valid_key_type_Pair::<X, Y>()
             ensures contains == self@.contains((a@, b@));
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Delegates to set mem.
         fn relates(&self, p: &Pair<X, Y>) -> (contains: B)
             requires valid_key_type_Pair::<X, Y>()
             ensures contains == self@.contains(p@);
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Creates iterator handle.
         fn iter<'a>(&'a self) -> (it: RelationStEphIter<'a, X, Y>)
             requires valid_key_type_Pair::<X, Y>()
             ensures

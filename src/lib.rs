@@ -125,6 +125,7 @@ pub mod Chap05 {
     pub mod SetMtEph;
     pub mod RelationStEph;
     pub mod MappingStEph;
+    pub mod KleeneStPer;
 }
 
 #[cfg(not(feature = "experiments_only"))]

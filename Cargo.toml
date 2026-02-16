@@ -38,6 +38,10 @@ name = "TestMappingStEph"
 path = "tests/Chap05/TestMappingStEph.rs"
 
 [[test]]
+name = "TestKleeneStPer"
+path = "tests/Chap05/TestKleeneStPer.rs"
+
+[[test]]
 name = "TestSetMtEph"
 path = "tests/Chap05/TestSetMtEph.rs"
 

@@ -88,7 +88,75 @@ This complements the veracity spec-strength classification — spec strength
 tells you whether a spec exists and how complete it looks structurally;
 spec fidelity tells you whether it matches what the textbook actually claims.
 
-## Phase 4: Gap Analysis
+## Phase 4: Parallelism Review
+
+For every `*Mt*` (multi-threaded) module, check whether each operation is
+genuinely parallel or just thread-safe.
+
+### 4a. Classify each Mt function
+
+For each exec function in a `*Mt*` module, determine:
+
+1. **Parallel** — spawns threads, uses `join`, or calls `WSSchedulerMtEph`
+   spawn/wait. The Span reflects actual parallelism.
+2. **Sequential** — uses a sequential loop (for/while/loop) with no spawning.
+   Thread-safe (Send + Sync bounds) but Span == Work. The APAS Span annotation
+   may be aspirational rather than achieved.
+3. **Delegating** — calls the St (single-threaded) variant or another sequential
+   helper. Same as sequential.
+
+### 4b. Span audit
+
+For each Mt function annotated with `Span Θ(...)`:
+- If the function is parallel, verify the Span matches the parallelism structure
+  (e.g., spawn-per-element gives Span Θ(element-cost), fork-join gives Span
+  Θ(log n × element-cost)).
+- If the function is sequential, the Span equals the Work. Flag any annotation
+  where Span < Work — that Span is aspirational, not achieved.
+- Note: an aspirational Span is not wrong in the APAS line (it's what the
+  textbook *intends*), but the Claude-Opus-4.6 line must state the actual Span.
+
+### 4c. Parallelism gap table
+
+Produce a table:
+
+| Function | APAS Span | Actual | Parallel? | Notes |
+|----------|-----------|--------|-----------|-------|
+
+This makes it immediately visible which Mt operations still need parallel
+implementations.
+
+## Phase 5: Runtime Test Review
+
+
+Check that every chapter module has a corresponding runtime test file in `tests/ChapNN/`.
+
+For each source module `src/ChapNN/FooStBar.rs`, expect `tests/ChapNN/TestFooStBar.rs`.
+
+### 4a. Coverage check
+
+- List all exec functions in the module (from Phase 1 inventory).
+- List all test functions in the test file.
+- Flag exec functions with no test coverage.
+- Flag test functions that test deleted or renamed functions.
+
+### 4b. Test quality
+
+For each test, assess:
+- Does it exercise the happy path (valid inputs, expected outputs)?
+- Does it exercise edge cases (empty inputs, singleton, boundary values)?
+- Does it test the spec-relevant properties (the things `ensures` promises)?
+- For types with `PartialEq`, does it test equality?
+
+### 4c. Missing tests
+
+Propose new tests for uncovered exec functions. Prioritize:
+1. Functions with strong specs — a runtime test validates the spec informally.
+2. Functions with proof holes (`external_body`, `assume`) — a runtime test is the
+   only evidence the implementation is correct.
+3. Functions used as building blocks by other chapters.
+
+## Phase 6: Gap Analysis
 
 Two lists:
 
