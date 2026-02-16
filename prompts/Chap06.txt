@@ -1,27 +1,148 @@
- Build a plan for this, including test and benchmark
- using PrePlanChecklist.md. 
+Chapter 6
+Graph Theory
+This chapter presents an overview of basic graph theory used throughout the book. This
+chapter does not aim to be complete (and is far from it) but tries to cover the most relevant
+material to the course. More details can be found in standard texts.
+1 Basic Definitions
+Definition 6.1 (Directed Graph). A directed graph or ( digraph) is a pair G = (V, A) where
+• V is a set of vertices, and
+• A ⊆ V × V is a set of directed edges or arcs.
+Note. In a digraph, each arc is an ordered pair e = (u, v). A digraph can have self
+loops (u, u).
+Definition 6.2 (Undirected graph). An undirected graph is a pair G = (V, E) where
+• V is a set of vertices (or nodes), and
+• E ⊆ (V
+2
+) is a set of edges.
+Note. Given a set V , a k-combination of V is a subset of k distinct elements of V . The
+notation
+(V
+k
+)
+denotes the set of all k-combinations of the set V .
+33
+34 CHAPTER 6. GRAPH THEORY
+Therefore, in an undirected graph, each edge is an unordered pair e = {u, v} (or equiva-
+lently {v, u}) and there cannot be self loops ({v, v} = {v} 6 ∈ (V
+2
+)).
+Example 6.1. An example directed graph with 4 vertices:
+An undirected graph on 4 vertices, representing the K ¨onigsberg problem. (Picture Source:
+Wikipedia):
+Remark. While directed graphs represent possibly asymmetric relationships, undirected
+graphs represent symmetric relationships. Directed graphs are therefore more general than
+undirected graphs because an undirected graph can be represented by a directed graph by
+replacing an edge with two arcs, one in each direction.
+Graphs come with a lot of terminology, but fortunately most of it is intuitive once we
+understand the concept. In this section, we consider graphs that do not have any data
+associated with edges, such as weights. In the next section, we consider weighted graphs,
+where the weights on edges can represent a distance, a capacity or the strength of the
+connection.
+Definition 6.3 (Neighbors). A vertex u is a neighbor of, or equivalently adjacent to, a
+vertex v in a graph G = (V, E) if there is an edge {u, v} ∈ E. For a directed graph a vertex
+u is an in-neighbor of a vertex v if (u, v) ∈ E and an out-neighbor if (v, u) ∈ E. We also
+say two edges or arcs are neighbors if they share a vertex.
+Definition 6.4 (Neighborhood). For an undirected graph G = (V, E), the neighborhood NG(v)
+of a vertex v ∈ V is its set of all neighbors of v, i.e., NG(v) = {u | {u, v} ∈ E}. For a directed
+1. BASIC DEFINITIONS 35
+graph we use N +
+G (v) to indicate the set of out-neighbors and N −
+G (v) to indicate the set of
+in-neighbors of v. If we use NG(v) for a directed graph, we mean the out neighbors.
+The neighborhood of a set of vertices U ⊆ V is the union of their neighborhoods, e.g.,
+• NG(U ) = ⋃
+u∈U NG(y), or
+• N +
+G (U ) = ⋃
+u∈U N +
+G (u).
+Definition 6.5 (Incidence). We say an edge is incident on a vertex if the vertex is one of its
+endpoints. Similarly we say a vertex is incident on an edge if it is one of the endpoints of
+the edge.
+Definition 6.6 (Degree). The degree dG(v) of a vertex v ∈ V in a graph G = (V, E) is the
+size of the neighborhood |NG(v)|. For directed graphs we use in-degree d−
+G(v) = |N −
+G (v)|
+and out-degree d+
+G(v) = |N +
+G (v)|. We will drop the subscript G when it is clear from the
+context which graph we’re talking about.
+Definition 6.7 (Path). A path in a graph is a sequence of adjacent vertices. More formally
+for a graph G = (V, E), we define the set of all paths in G, written Paths(G) as
+Paths(G) = {P ∈ V + | 1 ≤ i < |P |, (Pi, Pi+1) ∈ E} ,
+where V + indicates all positive length sequences of vertices (allowing for repeats). The
+length of a path is one less than the number of vertices in the path—i.e., it is the number of
+edges in the path. A path in a finite graph can have infinite length. A simple path is a path
+with no repeated vertices. Please see the remark below, however.
+Remark. Some authors use the terms walk for path, and path for simple path. Even in this
+book when it is clear from the context we will sometimes drop the “simple” from simple
+path.
+Definition 6.8 (Reachability and connectivity). In a graph G, a vertex u can reach another
+vertex v if there is a path in G that starts at u and ends at v. If u can reach v, we also say
+that v is reachable from u. We use RG(u) to indicate the set of all vertices reachable from
+u in G. Note that in an undirected graph reachability is symmetric: if u can reach v, then v
+can reach u.
+We say that an undirected graph is connected if all vertices are reachable from all other
+vertices. We say that a directed graph is strongly connected if all vertices are reachable
+from all other vertices.
+Definition 6.9 (Cycles). In a directed graph a cycle is a path that starts and ends at the
+same vertex. A cycle can have length one (i.e. a self loop). A simple cycle is a cycle
+that has no repeated vertices other than the start and end vertices being the same. In an
+undirected graph a simple cycle is a path that starts and ends at the same vertex, has no
+repeated vertices other than the first and last, and has length at least three. In this course
+we will exclusively talk about simple cycles and hence, as with paths, we will often drop
+simple.
+Exercise 6.1. Why is important in a undirected graph to require that a cycle has length at
+least three? Why is important that we do not allow repeated vertices?
+36 CHAPTER 6. GRAPH THEORY
+Definition 6.10 (Trees and forests). An undirected graph with no cycles is a forest. A
+forest that is connected is a tree. A directed graph is a forest (or tree) if when all edges are
+converted to undirected edges it is undirected forest (or tree). A rooted tree is a tree with
+one vertex designated as the root. For a directed graph the edges are typically all directed
+toward the root or away from the root.
+Definition 6.11 (Directed acyclic graphs). A directed graph with no cycles is a directed
+acyclic graph (DAG).
+Definition 6.12 (Distance). The distance δG(u, v) from a vertex u to a vertex v in a graph
+G is the shortest path (minimum number of edges) from u to v. It is also referred to as
+the shortest path length from u to v.
+Definition 6.13 (Diameter). The diameter of a graph G is the maximum shortest path
+length over all pairs of vertices in G, i.e., max {δG(u, v) : u, v ∈ V }.
+Definition 6.14 (Multigraphs). Sometimes graphs allow multiple edges between the same
+pair of vertices, called multi-edges. Graphs with multi-edges are called multi-graphs. We
+will allow multi-edges in a couple algorithms just for convenience.
+Definition 6.15 (Sparse and Dense Graphs). We will use the following conventions:
+n = |V |
+m = |E|
+Note that a directed graph can have at most n2 edges (including self loops) and an undi-
+rected graph at most n(n − 1)/2. We informally say that a graph is sparse if m  n2
+and dense otherwise. In most applications graphs are very sparse, often with only a hand-
+ful of neighbors per vertex when averaged across vertices, although some vertices could
+have high degree. Therefore, the emphasis in the design of graph algorithms, at least for
+this book, is on algorithms that work well for sparse graphs.
+Definition 6.16 (Enumerable graphs). In some cases, it is possible to label the vertices of
+the graphs with natural numbers starting from 0. More precisely, an enumerable graph is
+a graph G = (V, E) where V = {0, 1, . . . , n − 1}. Enumerable graphs can be more efficient
+to represent than general graphs.
+2 Weighted Graphs
+Many applications of graphs require associating weights or other values with the edges of
+a graph.
+Definition 6.17 (Weighted and Edge-Labeled Graphs). An edge-labeled graph or a weighted
+graph is a triple G = (E, V, w) where w : E → L is a function mapping edges or directed
+edges to their labels (weights) , and L is the set of possible labels (weights).
+In a graph, if the data associated with the edges are real numbers, we often use the term
+“weight” to refer to the edge labels, and use the term “weighted graph” to refer to the
 
- How many are parallel?
-
- What should be built for Partition and Trees here? It's not so clear.
- Discuss with the user.
-  
- Show it to me and estimate time.
-
- I will tell you when to execute. 
-
- Wait for me to tell you when to fix, build and test.
-
- This goes in Chap06.
-
-
+graph. In the general case, we use the terms “edge label” and edge-labeled graph. Weights
+or other values on edges could represent many things, such as a distance, or a capacity, or
+the strength of a relationship.
+Example 6.2. An example directed weighted graph.
+Remark. As it may be expected, basic terminology on graphs defined above straightfor-
+wardly extend to weighted graphs.
 3 Subgraphs
-
 When working with graphs, we sometimes wish to refer to parts of a graph. To this end,
 we can use the notion of a subgraph, which refers to a graph contained in a larger graph.
 A subgraph can be defined as any subsets of edges and vertices that together constitute a
 well defined graph.
-
 Definition 6.18 (Subgraph). Let G = (V, E) and H = (V ′, E′) be two graphs. H is a
 subgraph of if V ′ ⊆ V and E′ ⊆ E.
 Note. Note that since H is a graph, the vertices defining each edge are in the vertex set V ′,
@@ -33,34 +154,24 @@ graphs defined by a set of vertices. A vertex-induced subgraph is maximal in the
 it contains all the edges that it can possibly contain. In general when an object is said to be
 a maximal “X”, it means that nothing more can be added to the object without violating
 the property “X”.
-
 Definition 6.19 (Vertex-Induced Subgraph). The subgraph of G = (V, E) induced by V ′ ⊆
 V is the graph H = (V ′, E′) where E′ = {{u, v} ∈ E | u ∈ V ′, v ∈ V ′}.
 Example 6.3. Some vertex induced subgraphs:
 
-We can alno define an induced subgraph in terms of a set of edges by including in the
-graph all the vertices incident on the edges.
-Definition 6.20 (Edge-Induced Subgraph). The subgraph of G = (V, E) induced by E′ ⊆ E
-is a graph H = (V ′, E′) where V ′ = ∪e∈E e
-
 38 CHAPTER 6. GRAPH THEORY
-
 Original graph
 Induced by {a, b, c, e, f}
 Induced by {a, b, c, d}
-
 We can alno define an induced subgraph in terms of a set of edges by including in the
 graph all the vertices incident on the edges.
-
 Definition 6.20 (Edge-Induced Subgraph). The subgraph of G = (V, E) induced by E′ ⊆ E
 is a graph H = (V ′, E′) where V ′ = ∪e∈E e.
-
-
 4 Connectivity
 Recall that in a graph (either directed or undirected) a vertex v is reachable from a vertex u
 if there is a path from u to v. Also recall that an undirected graph is connected if all vertices
 are reachable from all other vertices.
 Example 6.4. Two example graphs shown. The first in connected; the second is not.
+
 5. GRAPH PARTITION 39
 Graph 1
 Graph 2
@@ -76,15 +187,13 @@ connected components.
 Note. We can specify a connected component of a graph by simply specifying the vertices
 in the component. For example, the connected components of the second graph in the
 example above can be specified as {a, b, c, d} and {e, f}.
-
-
 5 Graph Partition
 Recall that a partition of a set A is a set P of non-empty subsets of A such that each element
 of A is in exactly one subset, also called block, B ∈ P .
 Definition 6.22 (Graph Partition). A graph partition is a partition of the vertex set of the
 graph. More precisely, given graph G = (V, E), we define a partition of G as a set of graphs
 P = {G1 = (V1, E1) . . . Gk = (Vk, Ek)},
-40 CHAPTER 6. GRAPH THEORY
+
 where {V1, . . . , Vk} is a (set) partition of V and G1, . . . , Gk are vertex-induced subgraphs of
 G with respect to V1, . . . , Vk respectively. As in set partitions, we use the term part or block to
 refer to each vertex-induced subgraph G1, . . . , Gk.
@@ -93,14 +202,11 @@ two kinds of edges: internal edges and cut edges. Internal edges are edges that 
 a block; cut edges are edges that are between blocks. One way to partition a graph is
 to make each connected component a block. In such a partition, there are no cut edges
 between the partitions.
-
 6 Trees
-
 Definition 6.24 (Tree). An undirected graph is a tree if it does not have cycles and it is
 connected. A rooted tree is a tree with a distinguished root node that can be used to access
 all other nodes. An example of a rooted tree along with the associated terminology is given
 in below.
-
 Definition 6.25 (Rooted Trees). A rooted tree is a directed graph such that
 1. One of the vertices is the root and it has no in edges.
 2. All other vertices have one in-edge.
@@ -122,9 +228,6 @@ edges between them), and making v the root.
 
 • As with graphs, an ordered rooted tree is a rooted tree in which the out edges (chil-
 dren) of each node are ordered.
-
-Example 6.5. An example rooted tree follows.
-
 Example 6.5. An example rooted tree follows.
 root : A
 leaves : E, C, F , G, and H
@@ -137,3 +240,4 @@ depth of F : 2
 height of B : 1
 height of the tree : 2
 subtree rooted at D : the rooted tree consisting of D, F , G and H
+

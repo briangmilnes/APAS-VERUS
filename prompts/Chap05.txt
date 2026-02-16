@@ -1,4 +1,4 @@
-hapter 5
+Chapter 5
 Sets and Relations
 This chapter presents a review of some basic definitions on sets and relations.
 1 Sets

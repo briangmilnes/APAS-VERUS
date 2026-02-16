@@ -3,7 +3,7 @@
 
 use apas_verus::Types::Types::Pair;
 use apas_verus::ParaPair;
-use apas_verus::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::set_parallelism;
+use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::set_parallelism;
 use apas_verus::Chap11::FibonacciStEph::FibonacciStEph::fib;
 
 #[test]

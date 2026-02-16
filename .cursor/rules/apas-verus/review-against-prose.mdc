@@ -97,7 +97,7 @@ genuinely parallel or just thread-safe.
 
 For each exec function in a `*Mt*` module, determine:
 
-1. **Parallel** — spawns threads, uses `join`, or calls `WSSchedulerMtEph`
+1. **Parallel** — spawns threads, uses `join`, or calls `HFSchedulerMtEph`
    spawn/wait. The Span reflects actual parallelism.
 2. **Sequential** — uses a sequential loop (for/while/loop) with no spawning.
    Thread-safe (Send + Sync bounds) but Span == Work. The APAS Span annotation
@@ -173,8 +173,19 @@ Two lists:
 
 - **Cost annotations**: Written directly in source files as doc comments (Phase 3a)
 - **Everything else**: Tool output goes to `analyses/` per the classify-spec-strengths rule
-- **Gap analysis and fidelity notes**: Go in the chat response, not in files,
-  unless the user asks for a markdown writeup
+- **Review summary**: Write `src/ChapNN/analyses/review-against-prose.md` for each
+  reviewed chapter. This is the persistent record of the review. Include:
+  - Prose inventory (Phase 2)
+  - Cost disagreements found (Phase 3a)
+  - Implementation fidelity notes (Phase 3b)
+  - Spec fidelity notes (Phase 3c)
+  - Parallelism audit table if Mt modules exist (Phase 4)
+  - Gap analysis (Phase 6)
+  - Proof holes summary
+  - Date and reviewer
+
+  Use the wide-markdown style header. This file is the single source of truth
+  for what was reviewed and what was found — do not rely on chat history.
 
 ## Do NOT
 

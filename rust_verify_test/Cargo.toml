@@ -18,8 +18,8 @@ rustc_private = true
 
 # Chap02 proof tests
 [[test]]
-name = "WSSchedulerMtEph"
-path = "tests/Chap02/WSSchedulerMtEph.rs"
+name = "HFSchedulerMtEph"
+path = "tests/Chap02/HFSchedulerMtEph.rs"
 
 # Chap05 proof tests
 [[test]]

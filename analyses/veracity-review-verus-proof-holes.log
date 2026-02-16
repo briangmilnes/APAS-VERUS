@@ -1384,7 +1384,7 @@ Note: Only counting axiom fn declarations that have holes in their bodies.
       4 × external_body
    Proof functions: 4 total (4 clean, 0 holed)
 ✓ src/Chap02/VecQueue.rs
-❌ src/Chap02/WSSchedulerMtEph.rs
+❌ src/Chap02/HFSchedulerMtEph.rs
    Holes: 25 total
       1 × assume(false)
       24 × external_body
@@ -1473,7 +1473,7 @@ Note: Only counting axiom fn declarations that have holes in their bodies.
       1 × assume()
       2 × external_body
 ✓ src/Chap02/VecQueue.rs
-❌ src/Chap02/WSSchedulerMtEph.rs
+❌ src/Chap02/HFSchedulerMtEph.rs
    Holes: 25 total
       1 × assume(false)
       24 × external_body
@@ -1562,7 +1562,7 @@ Note: Only counting axiom fn declarations that have holes in their bodies.
    Holes: 3 total
       1 × assume()
       2 × external_body
-❌ src/Chap02/WSSchedulerMtEph.rs
+❌ src/Chap02/HFSchedulerMtEph.rs
    Holes: 25 total
       1 × assume(false)
       24 × external_body
@@ -1692,7 +1692,7 @@ Note: Only counting axiom fn declarations that have holes in their bodies.
    Holes: 3 total
       1 × assume()
       2 × external_body
-❌ src/Chap02/WSSchedulerMtEph.rs
+❌ src/Chap02/HFSchedulerMtEph.rs
    Holes: 25 total
       1 × assume(false)
       24 × external_body
@@ -1818,7 +1818,7 @@ Note: Only counting axiom fn declarations that have holes in their bodies.
    52 clean proof functions
 ✓ src/Chap02/FibonacciWSScheduler.rs
    5 clean proof functions
-❌ src/Chap02/WSSchedulerMtEph.rs
+❌ src/Chap02/HFSchedulerMtEph.rs
    Holes: 25 total
       1 × assume(false)
       24 × external_body
@@ -1897,7 +1897,7 @@ Note: Only counting axiom fn declarations that have holes in their bodies.
 
 ✓ FibonacciWSScheduler.rs
    5 clean proof functions
-❌ WSSchedulerMtEph.rs
+❌ HFSchedulerMtEph.rs
    Holes: 5 total
       1 × assume(false)
       4 × external_body
@@ -2554,7 +2554,7 @@ Note: Only counting axiom fn declarations that have holes in their bodies.
 ✓ benches/Chap03/BenchInsertionSortStEph.rs
 ✓ src/Chap02/FibonacciWSScheduler.rs
    5 clean proof functions
-❌ src/Chap02/WSSchedulerMtEph.rs
+❌ src/Chap02/HFSchedulerMtEph.rs
    Holes: 5 total
       1 × assume(false)
       4 × external_body

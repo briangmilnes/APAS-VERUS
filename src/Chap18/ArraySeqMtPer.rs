@@ -26,7 +26,7 @@ pub mod ArraySeqMtPer {
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;

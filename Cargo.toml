@@ -109,8 +109,8 @@ path = "tests/Chap02/test_fibonacci_scheduler.rs"
 required-features = ["full_verify"]
 
 [[test]]
-name = "test_work_stealing_scheduler"
-path = "tests/Chap02/test_work_stealing_scheduler.rs"
+name = "test_hf_scheduler"
+path = "tests/Chap02/test_hf_scheduler.rs"
 
 
 [[test]]

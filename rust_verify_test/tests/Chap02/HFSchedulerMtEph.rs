@@ -1,4 +1,4 @@
-//! Proof time tests for WSSchedulerMtEph
+//! Proof time tests for HFSchedulerMtEph
 
 #[macro_use]
 #[path = "../common/mod.rs"]
@@ -9,7 +9,7 @@ use common::*;
 test_verify_one_file! {
     #[test] pool_join_preserves_ensures verus_code! {
         use vstd::prelude::*;
-        use apas_verus::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;
+        use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
         
         fn test_pool_join_with_ensures() {
             let pool = Pool::new(4);
@@ -30,7 +30,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] pool_spec_size verus_code! {
         use vstd::prelude::*;
-        use apas_verus::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;
+        use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
         
         fn test_pool_spec_size() {
             let pool = Pool::new(8);

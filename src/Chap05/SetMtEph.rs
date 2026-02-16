@@ -1,6 +1,6 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 5.1 — Multi-threaded ephemeral Set built on `std::collections::HashSet`.
-//! Uses WSSchedulerMtEph for bounded parallel cartesian_product.
+//! Uses HFSchedulerMtEph for bounded parallel cartesian_product.
 
 // Verus requires parentheses around closures with ensures clauses in function arguments
 #[allow(unused_parens)]
@@ -8,7 +8,7 @@ pub mod SetMtEph {
 
     use vstd::prelude::*;
     use crate::Concurrency::diverge;
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{spawn, wait, TaskState};
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::{spawn, wait, TaskState};
 
 verus! {
 
