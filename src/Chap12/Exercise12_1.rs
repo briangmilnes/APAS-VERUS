@@ -21,19 +21,27 @@ verus! {
         spec fn spec_locked(&self) -> bool;
 
         /// Create a new unlocked spin lock.
+        /// - APAS: no cost spec.
+        /// - Claude-Opus-4.6: O(1).
         fn new() -> (lock: Self)
             ensures !lock.spec_locked();
 
         /// Acquire the lock (spins until acquired).
+        /// - APAS: no cost spec.
+        /// - Claude-Opus-4.6: amortized O(1), worst-case unbounded (spin). Ticket lock guarantees FIFO fairness.
         fn lock(&self)
             ensures self.spec_locked();
 
         /// Release the lock.
+        /// - APAS: no cost spec.
+        /// - Claude-Opus-4.6: O(1) — single fetch_add.
         fn unlock(&self)
             requires self.spec_locked()
             ensures !self.spec_locked();
 
         /// Execute action while holding the lock.
+        /// - APAS: no cost spec.
+        /// - Claude-Opus-4.6: O(1) + cost of action.
         fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T;
     }
 

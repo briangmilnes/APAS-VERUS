@@ -51,27 +51,37 @@ pub trait ConcurrentStackMtTrait<T: Send>: Sized {
     spec fn wf(&self) -> bool;
     
     /// Create a new empty stack.
+    /// - APAS: no cost spec.
+    /// - Claude-Opus-4.6: O(1).
     fn new() -> (stack: Self)
         ensures stack.wf();
     
     /// Push a value onto the stack. Always succeeds (may spin under contention).
+    /// - APAS: no cost spec.
+    /// - Claude-Opus-4.6: amortized O(1), worst-case unbounded (CAS retries). Lock-free.
     fn push(&self, value: T)
         requires self.wf();
     
     /// Pop a value from the stack.
     /// Returns Some(v) where v was the top element at the linearization point,
     /// or None if the stack was empty at that point.
+    /// - APAS: no cost spec.
+    /// - Claude-Opus-4.6: amortized O(1), worst-case unbounded (CAS retries). Lock-free.
     fn pop(&self) -> (possible_top: Option<T>)
         requires self.wf();
     
     /// Check if the stack is empty at this instant.
     /// Note: Result may be stale by the time caller acts on it.
+    /// - APAS: no cost spec.
+    /// - Claude-Opus-4.6: O(1) — single atomic load.
     fn is_empty(&self) -> (empty: bool)
         requires self.wf();
     
     /// Drain all elements from the stack into a Vec.
     /// Elements are returned in LIFO order (most recently pushed first).
     /// Note: Concurrent pushes during drain may or may not be included.
+    /// - APAS: no cost spec.
+    /// - Claude-Opus-4.6: O(n) — sequential pop loop.
     fn drain(&self) -> (items: Vec<T>)
         requires self.wf();
 }

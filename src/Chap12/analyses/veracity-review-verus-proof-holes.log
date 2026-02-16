@@ -1,0 +1,87 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap12/
+
+❌ Exercise12_1.rs
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_1.rs:13: external_body - #[verifier::external_body]
+        14 |     pub struct SpinLock {
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_1.rs:43: external_body - #[verifier::external_body]
+        44 |         fn new() -> (lock: Self) {
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_1.rs:51: external_body - #[verifier::external_body]
+        52 |         fn lock(&self) {
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_1.rs:59: external_body - #[verifier::external_body]
+        60 |         fn unlock(&self) {
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_1.rs:64: external_body - #[verifier::external_body]
+        65 |         fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T {
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_1.rs:73: external_body - #[verifier::external_body]
+        74 |     pub fn parallel_increment(iterations: usize) -> (incremented: usize)
+   Holes: 6 total
+      6 × external_body
+✓ Exercise12_2.rs
+❌ Exercise12_5.rs
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_5.rs:28: external - #[verifier::external]
+        29 | struct Node<T> {
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_5.rs:36: external_body - #[verifier::external_body]
+        37 | #[verifier::reject_recursive_types(T)]
+        38 | pub struct ConcurrentStackMt<T: Send> {
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_5.rs:94: external_body - #[verifier::external_body]
+        95 |     fn new() -> (stack: Self) {
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_5.rs:101: external_body - #[verifier::external_body]
+       102 |     fn push(&self, value: T) {
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_5.rs:115: external_body - #[verifier::external_body]
+       116 |     fn pop(&self) -> (possible_top: Option<T>) {
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_5.rs:130: external_body - #[verifier::external_body]
+       131 |     fn is_empty(&self) -> (empty: bool) {
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_5.rs:135: external_body - #[verifier::external_body]
+       136 |     fn drain(&self) -> (items: Vec<T>) {
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_5.rs:146: external_body - #[verifier::external_body]
+       147 |     fn default() -> Self {
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_5.rs:111: unsafe {} - new_node = unsafe { Box::from_raw(node_ptr) };
+       102 |     fn push(&self, value: T) {
+            ...
+       109 |                 break;
+       110 |             }
+       112 |         }
+       113 |     }
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_5.rs:122: unsafe {} - let next = unsafe { (*head).next };
+       116 |     fn pop(&self) -> (possible_top: Option<T>) {
+            ...
+       120 |                 return None;
+       121 |             }
+       123 |             if self.head.compare_exchange_weak(head, next, Ordering::AcqRel, Ordering::Acquire).is_ok() {
+       124 |                 let boxed = unsafe { Box::from_raw(head) };
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_5.rs:124: unsafe {} - let boxed = unsafe { Box::from_raw(head) };
+       116 |     fn pop(&self) -> (possible_top: Option<T>) {
+            ...
+       122 |             let next = unsafe { (*head).next };
+       123 |             if self.head.compare_exchange_weak(head, next, Ordering::AcqRel, Ordering::Acquire).is_ok() {
+       125 |                 return Some(boxed.value);
+       126 |             }
+/home/milnes/projects/APAS-VERUS-review/src/Chap12/Exercise12_5.rs:158: unsafe {} - unsafe {
+       155 |     fn drop(&mut self) {
+            ...
+       156 |         let mut current = self.head.load(Ordering::Relaxed);
+       157 |         while !current.is_null() {
+       159 |                 let node = Box::from_raw(current);
+       160 |                 current = node.next;
+   Holes: 12 total
+      4 × unsafe {}
+      7 × external_body
+      1 × external
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   1 clean (no holes)
+   2 holed (contains holes)
+   3 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 18 total
+   4 × unsafe {}
+   13 × external_body
+   1 × external
