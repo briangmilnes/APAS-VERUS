@@ -86,6 +86,8 @@ pub mod MathSeq {
                 self.spec_len() == 1
             }
             
+            /// - APAS: no cost spec (definitions chapter).
+            /// - Claude-Opus-4.6: O(n) — Vec allocation + clone fill.
             pub fn new(length: N, init_value: T) -> (new_seq: Self)
                 ensures
                 new_seq.spec_len() == length,
@@ -95,6 +97,8 @@ pub mod MathSeq {
                 MathSeqS { data: v }
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — direct index write.
             pub fn set(&mut self, index: N, value: T) -> (success: bool)
                 ensures
                 success ==> index < old(self).spec_len()
@@ -111,12 +115,16 @@ pub mod MathSeq {
                 }
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1).
             pub fn length(&self) -> (len: N)
                 ensures len == self.spec_len(),
             {
                 self.data.len()
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — direct index read.
             pub fn nth(&self, index: N) -> (elem: &T)
                 requires index < self.spec_len(),
             ensures elem@ == self@[index as int],
@@ -124,12 +132,16 @@ pub mod MathSeq {
                 &self.data[index]
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1).
             pub fn empty() -> (empty_seq: Self)
                 ensures empty_seq.spec_len() == 0,
             {
                 MathSeqS { data: Vec::new() }
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1).
             pub fn singleton(item: T) -> (singleton: Self)
                 ensures
                 singleton.spec_len() == 1,
@@ -138,6 +150,8 @@ pub mod MathSeq {
                 MathSeqS { data: vec![item] }
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: amortized O(1) — Vec::push.
             pub fn add_last(&mut self, value: T)
                 ensures
                 self.spec_len() == old(self).spec_len() + 1,
@@ -147,6 +161,8 @@ pub mod MathSeq {
                 self.data.push(value);
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — Vec::pop.
             pub fn delete_last(&mut self) -> (shortened: Option<T>)
                 ensures
                 old(self).spec_len() == 0 ==> shortened is None && self@ == old(self)@,
@@ -158,24 +174,32 @@ pub mod MathSeq {
                 self.data.pop()
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1).
             pub fn is_empty(&self) -> (emptiness: bool)
                 ensures emptiness == self.spec_is_empty(),
             {
                 self.data.len() == 0
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1).
             pub fn is_singleton(&self) -> (singularity: bool)
                 ensures singularity == self.spec_is_singleton(),
             {
                 self.data.len() == 1
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — move, no copy.
             pub fn from_vec(data: Vec<T>) -> (seq: Self)
                 ensures seq.data@ == data@,
             {
                 MathSeqS { data }
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(n) — delegates to new.
             pub fn with_len(length: N, init_value: T) -> (seq_of_len_value: Self)
                 ensures
                 seq_of_len_value.spec_len() == length,
@@ -188,6 +212,8 @@ pub mod MathSeq {
                 if val < 0 { 0 } else if val > max { max } else { val }
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — returns slice reference.
             pub fn subseq(&self, start: N, length: N) -> (subseq: &[T])
                 ensures
                 subseq@.len() <= length,
@@ -204,6 +230,8 @@ pub mod MathSeq {
                 slice_subrange(slice, s, e)
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(length) — copies subrange.
             pub fn subseq_copy(&self, start: N, length: N) -> (subseq: Self) where T: Copy
                 requires
                   start as int + length as int <= self.data@.len(),
@@ -218,6 +246,8 @@ pub mod MathSeq {
                 MathSeqS { data: vec }
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(n) — builds index vector.
             pub fn domain(&self) -> (domain: Vec<N>)
                 ensures domain@.len() == self.spec_len(),
             {
@@ -236,6 +266,8 @@ pub mod MathSeq {
                 v
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(n) expected — hash set dedup.
             pub fn range(&self) -> (range: Vec<T>)
                 requires valid_key_type::<T>(),
                 ensures
@@ -352,6 +384,8 @@ pub mod MathSeq {
                 out
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(n) expected — hash map counting, two passes.
             pub fn multiset_range(&self) -> (range: Vec<(N, T)>)
                 requires
                     valid_key_type::<T>(),
