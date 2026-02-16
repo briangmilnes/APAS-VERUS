@@ -66,6 +66,8 @@ verus! {
         lemma_fib_fits_u64(n);
     }
 
+    /// - APAS: Work Θ(φⁿ), Span Θ(φⁿ)
+    /// - Claude-Opus-4.6: Work Θ(φⁿ), Span Θ(φⁿ) — sequential, work = span. Correct.
     pub fn fib_seq(n: u64) -> (fibonacci: u64)
         requires n <= 46,
         ensures fibonacci == spec_fib(n as nat),
@@ -79,6 +81,8 @@ verus! {
         }
     }
 
+    /// - APAS: Work Θ(φⁿ), Span Θ(n) — both branches recurse in parallel.
+    /// - Claude-Opus-4.6: Work Θ(φⁿ), Span Θ(φⁿ) — closures call fib_seq not fib_par, so only the top-level split is parallel; true Θ(n) span requires recursive self-calls through join.
     pub fn fib_par(n: u64) -> (fibonacci: u64)
         requires n <= 46,
         ensures fibonacci == spec_fib(n as nat),

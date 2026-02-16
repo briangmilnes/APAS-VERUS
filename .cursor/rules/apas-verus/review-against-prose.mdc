@@ -1,29 +1,117 @@
-# Review Against Prose
+# Review Chapter Against Prose
 
-When working on `src/ChapNN/`, check if `prompts/ChapNN.txt` exists. If it does, read it before making changes or reviewing the code.
+When the user says "review ChapNN" or "review against prose":
 
-## When to Read
+## Phase 1: Inventory (tool-generated)
 
-- Starting work on a chapter
-- Reviewing specs or spec strength
-- Implementing new algorithms
-- Checking coverage of prose algorithms vs code
+Run veracity to generate the function inventory and spec strengths:
 
-## What the File Contains
+```bash
+~/projects/veracity/target/release/veracity-review-module-fn-impls -d src/ChapNN
+```
 
-The `prompts/ChapNN.txt` file is extracted text from the APAS textbook chapter. It contains:
+Then classify spec strengths per the `classify-spec-strengths` rule. This gives us:
+- Every function in the chapter
+- Whether it's in a trait, impl, or module-level
+- Whether it's inside `verus!`
+- Spec strength (strong / partial / weak / none)
+- Proof holes
 
-- Data type definitions
-- Algorithm pseudocode
-- Cost specifications (work and span)
-- Correctness arguments
-- Theorems and properties
+This is the mechanical baseline. Don't duplicate what the tool already produces.
 
-## How to Use
+## Phase 2: Prose Inventory (manual)
 
-1. Read `prompts/ChapNN.txt`
-2. Identify all named definitions, algorithms, cost specs, and theorems
-3. Compare against the code in `src/ChapNN/`
-4. Note gaps: algorithms not implemented, specs weaker than what the prose describes, cost mismatches
+Read `prompts/ChapNN.txt`. Extract every named item into categories:
 
-This is the source of truth for what the code should implement and specify.
+- **Definitions**: Named ADTs, type classes, abstract interfaces
+- **Algorithms**: Pseudocode with a name (e.g., "Algorithm 21.1", "insertion sort")
+- **Cost specs**: Every stated Work and Span bound
+- **Theorems/Properties**: Correctness claims, invariants, bounds
+- **Exercises/Problems**: Numbered items that the code may implement
+
+## Phase 3: Algorithmic Analysis (the review)
+
+For each executable function (`fn`, not `spec fn` or `proof fn`):
+
+### 3a. Cost annotations in source
+
+Write two doc comment lines directly before the function:
+
+```rust
+/// - APAS: Work Θ(...), Span Θ(...)
+/// - Claude-Opus-4.6: Work Θ(...), Span Θ(...) — [reason if different]
+```
+
+Rules for the two lines:
+
+**APAS line**: What the textbook says the cost *should* be for this algorithm.
+If the prose doesn't state a cost for this specific function, write:
+```rust
+/// - APAS: (no cost stated)
+```
+If the function has no prose counterpart at all, write:
+```rust
+/// - APAS: N/A — Verus-specific scaffolding.
+```
+
+**Claude-Opus-4.6 line**: What the code *actually* achieves, based on reading the
+implementation. Three outcomes:
+
+1. **Agree**: `/// - Claude-Opus-4.6: Work Θ(...), Span Θ(...) — agrees with APAS.`
+2. **Disagree**: `/// - Claude-Opus-4.6: Work Θ(...), Span Θ(...) — [specific reason for difference]`
+3. **Cannot determine**: `/// - Claude-Opus-4.6: Cost not analyzable — [reason, e.g., external_body]`
+
+The disagreement reason must be concrete. Not "differs from APAS" but
+"closures call fib_seq not fib_par, so only top-level split is parallel"
+or "uses linear scan where APAS assumes O(1) hash lookup."
+
+### 3b. Implementation fidelity
+
+For each function that implements a prose algorithm, note whether the code
+follows the prose algorithm or deviates. Deviations are not necessarily wrong —
+but they must be noted because they can change the cost.
+
+Common deviations:
+- Sequential where APAS says parallel (or vice versa)
+- Different data structure than APAS assumes (e.g., Vec where APAS says array with O(1) slice)
+- Missing recursive parallelism (like fib_par calling fib_seq)
+- Granularity cutoffs not in the prose (acceptable, note them)
+
+### 3c. Spec fidelity
+
+For each function with requires/ensures, compare against the prose:
+- Does `requires` capture the prose's stated preconditions?
+- Does `ensures` capture the prose's stated postconditions?
+- Are there prose properties that the spec doesn't express?
+
+This complements the veracity spec-strength classification — spec strength
+tells you whether a spec exists and how complete it looks structurally;
+spec fidelity tells you whether it matches what the textbook actually claims.
+
+## Phase 4: Gap Analysis
+
+Two lists:
+
+**Prose items with no implementation:**
+- Algorithm X.Y defined in prose but no corresponding function in code
+- Theorem stated but not proved (no lemma)
+- Cost bound stated but not annotated
+
+**Code with no prose counterpart:**
+- Helper functions, Verus scaffolding, overflow lemmas
+- These are expected — just note them so the inventory is complete
+
+## Output
+
+- **Cost annotations**: Written directly in source files as doc comments (Phase 3a)
+- **Everything else**: Tool output goes to `analyses/` per the classify-spec-strengths rule
+- **Gap analysis and fidelity notes**: Go in the chat response, not in files,
+  unless the user asks for a markdown writeup
+
+## Do NOT
+
+- Modify implementation logic, requires/ensures, or function signatures
+- Skip the veracity tool and hand-build function inventories
+- Write APAS cost lines without reading the prose first
+- Write Claude-Opus-4.6 cost lines without reading the implementation
+- Leave a function with an APAS cost line but no Claude-Opus-4.6 line (always pair them)
