@@ -38,6 +38,10 @@ name = "TestMappingStEph"
 path = "tests/Chap05/TestMappingStEph.rs"
 
 [[test]]
+name = "TestKleeneStPer"
+path = "tests/Chap05/TestKleeneStPer.rs"
+
+[[test]]
 name = "TestSetMtEph"
 path = "tests/Chap05/TestSetMtEph.rs"
 
@@ -105,8 +109,8 @@ path = "tests/Chap02/test_fibonacci_scheduler.rs"
 required-features = ["full_verify"]
 
 [[test]]
-name = "test_work_stealing_scheduler"
-path = "tests/Chap02/test_work_stealing_scheduler.rs"
+name = "test_hf_scheduler"
+path = "tests/Chap02/test_hf_scheduler.rs"
 
 
 [[test]]

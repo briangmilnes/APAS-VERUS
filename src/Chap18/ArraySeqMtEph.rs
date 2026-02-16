@@ -36,7 +36,7 @@ pub mod ArraySeqMtEph {
         vstd::std_specs::vec::*,
         vstd::std_specs::clone::*,
     };
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;

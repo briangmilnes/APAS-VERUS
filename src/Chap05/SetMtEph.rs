@@ -1,6 +1,6 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 5.1 — Multi-threaded ephemeral Set built on `std::collections::HashSet`.
-//! Uses WSSchedulerMtEph for bounded parallel cartesian_product.
+//! Uses HFSchedulerMtEph for bounded parallel cartesian_product.
 
 // Verus requires parentheses around closures with ensures clauses in function arguments
 #[allow(unused_parens)]
@@ -8,7 +8,7 @@ pub mod SetMtEph {
 
     use vstd::prelude::*;
     use crate::Concurrency::diverge;
-    use crate::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::{spawn, wait, TaskState};
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::{spawn, wait, TaskState};
 
 verus! {
 
@@ -169,12 +169,14 @@ verus! {
             self@.finite()
         }
 
-        /// APAS: Work Θ(|v|), Span Θ(1)
+        /// - APAS: Work Θ(|v|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|v|), Span Θ(|v|) — sequential loop, not parallel. Span == Work.
         fn from_vec(v: Vec<T>) -> (s: SetMtEph<T>)
             requires valid_key_type::<T>()
             ensures s@.finite(), s@ == v@.map(|i: int, x: T| x@).to_set();
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Creates iterator handle.
         fn iter<'a>(&'a self) -> (it: SetMtEphIter<'a, T>)
             requires valid_key_type::<T>()
             ensures
@@ -182,31 +184,38 @@ verus! {
                 it@.1.map(|i: int, k: T| k@).to_set() == self@,
                 it@.1.no_duplicates();
 
+        /// - APAS: N/A — conversion utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(|self|), Span Θ(|self|) — iterates set, clones each element.
         fn to_seq(&self) -> (seq: Vec<T>)
             requires valid_key_type::<T>()
             ensures
                 seq@.no_duplicates(),
                 forall |x: T::V| self@.contains(x) <==> seq@.map(|_i: int, t: T| t@).contains(x);
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Allocates empty hash set.
         fn empty()                           -> (empty: Self)
             requires valid_key_type::<T>()
             ensures empty@.finite(), empty@ == Set::<<T as View>::V>::empty();
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. One allocation + one insert.
         fn singleton(x: T)                   -> (s: Self)
             requires valid_key_type::<T>()
             ensures s@.finite(), s@ == Set::empty().insert(x@);
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set len().
         fn size(&self)                       -> N;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set contains().
         fn mem(&self, x: &T)                 -> (contains: B)
             requires valid_key_type::<T>()
             ensures contains == self@.contains(x@);
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set insert(), amortized.
         fn insert(&mut self, x: T)           -> (inserted: bool)
             requires valid_key_type::<T>()
             ensures
@@ -214,7 +223,7 @@ verus! {
                 inserted == !old(self)@.contains(x@);
 
         /// - APAS: Work Θ(|a| + |b|), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|a| + |b|), Span Θ(|a| + |b|) — sequential loop, not parallel. Span == Work.
         fn union(&self, s2: &SetMtEph<T>) -> (union: Self)
             requires 
                valid_key_type::<T>(),
@@ -222,6 +231,7 @@ verus! {
 
         /// - Disjoint union: union of two sets known to be disjoint.
         /// - APAS: Work Θ(|a| + |b|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|a| + |b|), Span Θ(|a| + |b|) — sequential loop, not parallel. Span == Work.
         fn disjoint_union(&self, s2: &SetMtEph<T>) -> (union: Self)
             requires 
                valid_key_type::<T>(),
@@ -232,11 +242,13 @@ verus! {
                union@.len() == self@.len() + s2@.len();
 
         /// - APAS: Work Θ(|a| + |b|), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|a| + |b|), Span Θ(|a| + |b|) — sequential loop, not parallel. Span == Work.
         fn intersection(&self, s2: &SetMtEph<T>) -> (intersection: Self)
             requires valid_key_type::<T>()
             ensures intersection@.finite(), intersection@ == self@.intersect(s2@);
 
+        /// - APAS: N/A — internal helper for cartesian_product.
+        /// - Claude-Opus-4.6: Work Θ(|s2|), Span Θ(|s2|) — sequential loop, creates one pair per element.
         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)
             requires 
               valid_key_type::<T>(),
@@ -246,8 +258,8 @@ verus! {
                product@.finite(),
                forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (av == a@ && s2@.contains(bv));
 
-        /// - APAS: Work Θ(|a| × |b|), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(|a| × |b|), Span Θ(1)
+        /// - APAS: Work Θ(|a| × |b|), Span Θ(|b|)
+        /// - Claude-Opus-4.6: Work Θ(|a| × |b|), Span Θ(|a| × |b|) — spawns |a| parallel elt_cross_set tasks (each Θ(|b|)), but join phase is sequential disjoint_union over |a| results of size |b|. Sequential join dominates span.
         fn cartesian_product<U: StT + Hash + Clone + Send + Sync + 'static>(&self, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)
             where T: Send + Sync + 'static, Pair<T, U>: StT + Hash + View<V = (T::V, U::V)>,
             requires 
@@ -258,6 +270,8 @@ verus! {
                 product@.finite(),
                 forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv));
 
+        /// - APAS: N/A — internal helper for partition.
+        /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) size check each.
         fn all_nonempty(parts: &SetMtEph<SetMtEph<T>>) -> (all_nonempty: bool)
             requires 
                 valid_key_type::<T>(),
@@ -265,6 +279,8 @@ verus! {
             ensures 
                 all_nonempty <==> forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0;
 
+        /// - APAS: N/A — internal helper for partition.
+        /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) membership check each.
         fn partition_on_elt(x: &T, parts: &SetMtEph<SetMtEph<T>>) -> (partition_on_elt: bool)
             requires 
                 valid_key_type::<T>(),
@@ -278,7 +294,8 @@ verus! {
                         parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
                 );
 
-        /// APAS: Work Θ(|parts| × |a|²), Span Θ(1)
+        /// - APAS: Work Θ(|a| × |parts|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|a| × |parts|), Span Θ(|a| × |parts|) — sequential loop, not parallel. Span == Work.
         fn partition(&self, parts: &SetMtEph<SetMtEph<T>>) -> (partition: bool)
             requires 
                 valid_key_type::<T>(),
@@ -296,7 +313,8 @@ verus! {
                 );
 
         /// Choose an arbitrary element from a non-empty set.
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Creates iterator, takes first.
         fn choose(&self) -> (element: T)
             requires 
                 valid_key_type::<T>(),

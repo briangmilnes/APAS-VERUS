@@ -1,12 +1,12 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Work-stealing scheduler with bounded parallelism using a global pool.
+//! Help-first scheduler with bounded parallelism using a global pool.
 //!
 //! - Uses a help-first strategy: if no capacity available, runs sequentially.
 //! - Prevents deadlock from nested joins by not blocking when capacity exhausted.
 //! - Call `set_parallelism()` before first use to configure thread limit for a single
 //! parallel pool.
 
-pub mod WSSchedulerMtEph {
+pub mod HFSchedulerMtEph {
     use vstd::prelude::*;
     use crate::vstdplus::threads_plus::threads_plus::*;
     use crate::Concurrency::*;

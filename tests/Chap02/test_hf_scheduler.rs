@@ -1,7 +1,7 @@
 // Copyright (c) 2025 Brian G. Milnes
-//! Tests for WSSchedulerMtEph global work-stealing pool.
+//! Tests for HFSchedulerMtEph global work-stealing pool.
 
-use apas_verus::Chap02::WSSchedulerMtEph::WSSchedulerMtEph::*;
+use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
 use std::time::{Duration, Instant};
 
 #[test]

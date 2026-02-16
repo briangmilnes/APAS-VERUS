@@ -62,12 +62,14 @@ verus! {
             self@.finite()
         }
 
-        /// APAS: Work Θ(|v|), Span Θ(1)
+        /// - APAS: Work Θ(|v|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|v|), Span Θ(1) — agrees. Iterates vec, O(1) hash insert each.
         fn from_vec(v: Vec<T>) -> (s: SetStEph<T>)
             requires valid_key_type::<T>()
             ensures s@.finite(), s@ == v@.map(|i: int, x: T| x@).to_set();
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Creates iterator handle.
         fn iter<'a>(&'a self) -> (it: SetStEphIter<'a, T>)
             requires valid_key_type::<T>()
             ensures
@@ -75,39 +77,47 @@ verus! {
                 it@.1.map(|i: int, k: T| k@).to_set() == self@,
                 it@.1.no_duplicates();
 
+        /// - APAS: N/A — conversion utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(|self|), Span Θ(|self|) — iterates set, clones each element.
         fn to_seq(&self) -> (seq: Vec<T>)
             requires valid_key_type::<T>()
             ensures
                 seq@.no_duplicates(),
                 forall |x: T::V| self@.contains(x) <==> seq@.map(|_i: int, t: T| t@).contains(x);
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Allocates empty hash set.
         fn empty()                           -> (empty: Self)
             requires valid_key_type::<T>()
             ensures empty@.finite(), empty@ == Set::<<T as View>::V>::empty();
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. One allocation + one insert.
         fn singleton(x: T)                   -> (s: Self)
             requires valid_key_type::<T>()
             ensures s@.finite(), s@ == Set::empty().insert(x@);
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set len().
         fn size(&self)                       -> (size: N)
             ensures size == self@.len();
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set contains().
         fn mem(&self, x: &T)                 -> (contains: B)
             requires valid_key_type::<T>()
             ensures contains == self@.contains(x@);
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set insert(), amortized.
         fn insert(&mut self, x: T)           -> (inserted: bool)
             requires valid_key_type::<T>()
             ensures
                 self@ == old(self)@.insert(x@),
                 inserted == !old(self)@.contains(x@);
 
-        /// APAS: Work Θ(|a| + |b|), Span Θ(1)
+        /// - APAS: Work Θ(|a| + |b|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|a| + |b|), Span Θ(1) — agrees. Clone one, iterate other, insert all.
         fn union(&self, s2: &SetStEph<T>) -> (union: Self)
             requires 
                valid_key_type::<T>(),
@@ -115,6 +125,7 @@ verus! {
 
         /// - Disjoint union: union of two sets known to be disjoint.
         /// - APAS: Work Θ(|a| + |b|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|a| + |b|), Span Θ(1) — agrees. Same as union, disjointness is a precondition only.
         fn disjoint_union(&self, s2: &SetStEph<T>) -> (union: Self)
             requires 
                valid_key_type::<T>(),
@@ -125,11 +136,13 @@ verus! {
                union@.len() == self@.len() + s2@.len();
 
         /// - APAS: Work Θ(|a| + |b|), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(|a| + |b|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|a| + |b|), Span Θ(1)
         fn intersection(&self, s2: &SetStEph<T>) -> (intersection: Self)
             requires valid_key_type::<T>()
             ensures intersection@.finite(), intersection@ == self@.intersect(s2@);
 
+        /// - APAS: N/A — internal helper for cartesian_product.
+        /// - Claude-Opus-4.6: Work Θ(|s2|), Span Θ(|s2|) — iterates s2, creates one pair per element.
         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
             requires 
               valid_key_type::<T>(),
@@ -140,7 +153,7 @@ verus! {
                forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (av == a@ && s2@.contains(bv));
 
         /// - APAS: Work Θ(|a| × |b|), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(|a| × |b|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|a| × |b|), Span Θ(1)
         fn cartesian_product<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
             requires 
                 valid_key_type::<T>(),
@@ -150,6 +163,8 @@ verus! {
                 product@.finite(),
                 forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv));
 
+        /// - APAS: N/A — internal helper for partition.
+        /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) size check each.
         fn all_nonempty(parts: &SetStEph<SetStEph<T>>) -> (all_nonempty: bool)
             requires 
                 valid_key_type::<T>(),
@@ -157,6 +172,8 @@ verus! {
             ensures 
                 all_nonempty <==> forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0;
 
+        /// - APAS: N/A — internal helper for partition.
+        /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) membership check each.
         fn partition_on_elt(x: &T, parts: &SetStEph<SetStEph<T>>) -> (partition_on_elt: bool)
             requires 
                 valid_key_type::<T>(),
@@ -170,8 +187,8 @@ verus! {
                         parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
                 );
 
-        /// - APAS: Work Θ(|parts| × |a|²), Span Θ(1)
-        /// - claude-4-sonet: Work Θ(|parts| × |a|²), Span Θ(1)
+        /// - APAS: Work Θ(|a| × |parts|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|a| × |parts|), Span Θ(1) — agrees. Outer loop over |a|, inner partition_on_elt scans |parts| with O(1) hash lookups.
         fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> (partition: bool)
             requires 
                 valid_key_type::<T>(),
@@ -190,6 +207,7 @@ verus! {
 
         /// - Split a set into two parts: the first with n elements, the second with the rest.
         /// - APAS: Work Θ(|self|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|self|), Span Θ(|self|) — agrees on work. Iterates set, O(1) insert each.
         fn split(&self, n: usize) -> (n_set_rest_set: (SetStEph<T>, SetStEph<T>))
             requires 
                 valid_key_type::<T>(),
@@ -207,6 +225,7 @@ verus! {
         /// - Choose an arbitrary element from a non-empty set.
         /// - Matches vstd Set::choose() spec.
         /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Creates iterator, takes first.
         fn choose(&self) -> (element: T)
             requires 
                 valid_key_type::<T>(),

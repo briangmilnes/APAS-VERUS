@@ -1,0 +1,15 @@
+---
+description: Use the project help-first scheduler, not raw thread::spawn
+globs: "**/*.rs"
+alwaysApply: false
+---
+
+# Use Help-First Scheduler
+
+For parallel scheduling, use the project's bounded help-first scheduler:
+
+```
+src/Chap02/HFSchedulerMtEph.rs
+```
+
+Do not use raw `std::thread::spawn` or `vstd::thread::spawn` for fork-join parallelism. Use the help-first scheduler which provides proper task management with bounded parallelism and deadlock prevention.

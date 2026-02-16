@@ -1,15 +1,35 @@
+✓ KleeneStPer.rs
+   9 clean proof functions
 ❌ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:528: assume() - assume(r == (self@ == other@));
+/home/milnes/projects/APAS-VERUS-review/src/Chap05/MappingStEph.rs:518: assume() - assume(r == (self@ == other@));
+       508 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       516 |                 }
+       517 |                 // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
+       519 |             }
+       520 |             r
    Holes: 1 total
       1 × assume()
 ✓ RelationStEph.rs
 ❌ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:904: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS-review/src/Chap05/SetMtEph.rs:907: assume() - proof { assume(r == (self@ == other@)); }
+       903 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       905 |         {
+       906 |             let r = self.elements == other.elements;
+       908 |             r
+       909 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ SetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:829: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS-review/src/Chap05/SetStEph.rs:832: assume() - proof { assume(equal == (self@ == other@)); }
+       827 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       830 |             let equal = self.elements == other.elements;
+       831 |             // HashSetWithView* eq is external_body so we have to trust it here.
+       833 |             equal
+       834 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
@@ -19,13 +39,14 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   1 clean (no holes)
+   2 clean (no holes)
    3 holed (contains holes)
-   4 total
+   5 total
 
 Proof Functions:
-   2 clean
+   11 clean
    0 holed
-   2 total
+   11 total
 
 Holes Found: 3 total
+   3 × assume()

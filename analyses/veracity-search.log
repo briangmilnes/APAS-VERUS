@@ -1,8 +1,26 @@
-Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS-review/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: proof fn _ ensures .*fold_left.*associat
+Pattern: fn sorted_by
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 95, Functions: 2289, Matches: 0
+Files: 95, Functions: 2289, Matches: 2
+
+[31m/home/milnes/projects/verus/source/vstd/relations.rs:95: [0m
+/// This function returns true if the input sequence a is sorted, using the input function
+/// less_than to sort the elements
+[38;5;22mpub open spec fn sorted_by<T>(a: Seq<T>, less_than: spec_fn(T, T) -> bool) -> bool[0m
+
+[31m/home/milnes/projects/verus/source/vstd/relations.rs:125: [0m
+[38;5;22mpub proof fn lemma_new_first_element_still_sorted_by<T>([0m
+[38;5;22m    x: T,[0m
+[38;5;22m    s: Seq<T>,[0m
+[38;5;22m    less_than: spec_fn(T, T) -> bool,[0m
+[38;5;22m)[0m
+[38;5;22m    requires[0m
+[38;5;22m        sorted_by(s, less_than),[0m
+[38;5;22m        s.len() == 0 || less_than(x, s[0]),[0m
+[38;5;22m        total_ordering(less_than),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        sorted_by(seq![x].add(s), less_than),[0m
 

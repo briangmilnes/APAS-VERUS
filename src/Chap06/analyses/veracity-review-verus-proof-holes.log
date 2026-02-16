@@ -1,5 +1,14 @@
 ✓ DirGraphMtEph.rs
-✓ DirGraphStEph.rs
+❌ DirGraphStEph.rs
+/home/milnes/projects/APAS-VERUS-review/src/Chap06/DirGraphStEph.rs:523: assume() - proof { assume(r == (self@ == other@)); }
+       519 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       521 |         {
+       522 |             let r = self.V == other.V && self.A == other.A;
+       524 |             r
+       525 |         }
+   Holes: 1 total
+      1 × assume()
 ✓ LabDirGraphMtEph.rs
 ✓ LabDirGraphStEph.rs
 ✓ LabUnDirGraphMtEph.rs
@@ -24,8 +33,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   20 clean (no holes)
-   0 holed (contains holes)
+   19 clean (no holes)
+   1 holed (contains holes)
    20 total
 
 Proof Functions:
@@ -33,6 +42,5 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 0 total
-
-🎉 No proof holes found! All proofs are complete.
+Holes Found: 1 total
+   1 × assume()
