@@ -1,0 +1,50 @@
+# Merge Worktree
+
+## When to use
+
+When merging changes between the main branch and a worktree branch (e.g., `review/prose`).
+
+## This AI (main worktree) — merging a worktree branch into main
+
+```bash
+# 1. Merge the worktree branch into main
+git merge review/prose
+
+# 2. If conflicts: fix them, then
+git add -A && git merge --continue
+
+# 3. Verify
+cargo check --lib
+cargo nextest run --no-fail-fast
+~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors
+~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg 'feature="dev_only"'
+
+# 4. Push
+git push
+```
+
+## The other AI (worktree) — catching up after merge
+
+```bash
+# 1. Fetch the merged main
+git fetch origin
+
+# 2. Rebase the worktree branch onto main
+git rebase origin/main
+
+# 3. Verify
+cargo check --lib
+cargo nextest run --no-fail-fast
+~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors
+~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg 'feature="dev_only"'
+
+# 4. Force-push rebased branch
+git push origin review/prose --force
+```
+
+## Notes
+
+- No `git fetch` needed on the main side if both branches are local and up to date.
+- The worktree branch DOES need `git fetch origin` because it needs to see the merged main that was pushed.
+- Always run full verification (cargo check, RTTs, PTT full, PTT dev_only) after merge on BOTH sides.
+- Fix conflicts before verifying — do not skip verification even if merge was clean.

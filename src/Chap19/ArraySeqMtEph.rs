@@ -1431,25 +1431,6 @@ pub mod ArraySeqMtEph {
         }
     }
 
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: Debug> Debug for ArraySeqMtEphS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            f.debug_list().entries(self.seq.iter()).finish()
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: Display> Display for ArraySeqMtEphS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "[")?;
-            for (i, item) in self.seq.iter().enumerate() {
-                if i > 0 { write!(f, ", ")?; }
-                write!(f, "{item}")?;
-            }
-            write!(f, "]")
-        }
-    }
-
     /// Literal constructor macro for Chap19 ArraySeqMtEphS.
     #[macro_export]
     macro_rules! ArraySeqMtEphChap19SLit {
