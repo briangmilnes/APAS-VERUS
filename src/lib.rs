@@ -209,6 +209,7 @@ pub mod Chap26 {
     pub mod DivConReduceMtPer;
     pub mod MergeSortMtPer;
     pub mod ScanDCMtPer;
+    pub mod ETSPMtPer;
 }
 
 pub mod Chap21 {

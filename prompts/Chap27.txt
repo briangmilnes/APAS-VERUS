@@ -1,0 +1,194 @@
+Chapter 27
+Contraction
+This chapter describes the contraction technique for algorithm design and applies it to
+several problems.
+1 Contraction Technique
+A contraction algorithm has a distinctive anatomy: it has a base case to handle small in-
+stances and an inductive step with three distinct phases: “contract, “recur”, and “expand.”
+It involves solving recursively smaller instances of the same problem and then expanding
+the solution for the larger instance.
+Definition 27.1 (Contraction). A contraction algorithm for problem P has the following
+structure.
+Base Case: If the problem instance is sufficiently small, then compute and return the solu-
+tion, possibly using another algorithm.
+Inductive Step(s): If the problem instance is sufficiently large, then
+• Apply the following two steps, as many times as needed.
+1. Contract: “contract”, i.e., map the instance of the problem P to a smaller
+instance of P .
+2. Solve: solve the smaller instance recursively.
+• Expand the solutions to smaller instance to solve the original instance.
+Remark. Contraction differs from divide and conquer in that it allows there to be only one
+independent smaller instance to be recursively solved. There could be multiple dependent
+smaller instances to be solved one after another (sequentially).
+176
+2. REDUCE WITH CONTRACTION 177
+Properties of Contraction. Contraction algorithms have several important properties.
+• Due to their inductive structure, we can establish the correctness of a contraction
+algorithm using principles of induction: we first prove correctness for the base case,
+and then prove the general (inductive) case by using strong induction, which allows
+us to assume that the recursive call is correct.
+• The work and span of a contraction algorithm can be expressed as a mathematical
+recurrence that reflects the structure of the algorithm itself. Such recurrences can
+then unually be solved using well-understood techniques, and without significant
+difficulty.
+• Contraction algorithms can be work efficient, if they can reduce the problem size
+geometrically (by a constant factor greater than 1) at each contraction step, and if the
+contraction and the expansions steps are efficient.
+• Contraction algorithms can have a low span (high parallelism), if size of the problem
+instance decreases geometrically, and if contraction and expansion steps have low
+spans.
+Example 27.1 (Maximal Element). We can find the maximal element in a sequence a using
+contraction as follows. If the sequence has only one element, we return that element, oth-
+erwise, we can map the sequence a into a sequence b which is half the length by comparing
+the elements of a at consecutive even-odd positions and writing the larger into b. We then
+find the largest in b and return this as the result.
+For example, we map the sequence 〈 1, 2, 4, 3, 6, 5 〉 to 〈 2, 4, 6 〉. The largest element of this
+sequence, 6 is then the largest element in the input sequence.
+For a sequence of length n, we can write the work and span for this algorithm as recur-
+rences as follows
+W (n) =
+{ Θ(1) if n ≤ 1
+W (n/2) + Θ(n) otherwise
+S(n) =
+{ Θ(1) if n ≤ 1
+S(n/2) + Θ(1) otherwise.
+Using the techniques discussed at the end of this chapter, we can solve the recurrences to
+obtain W (n) = Θ(n) and S(n) = Θ(lg n).
+2 Reduce with Contraction
+The reduce primitive performs a computation that involves applying an associative binary
+operation op to the elements of a sequence to obtain (reduce the sequence to) a final value.
+For example, reducing the sequence 〈 0, 1, 2, 3, 4 〉 with the + operation gives us 0 + 1 + 2 +
+3 + 4 = 10. Recall that the type signature for reduce is as follows.
+reduce (f : α ∗ α → α) (id : α) (a : Sα) : α,
+178 CHAPTER 27. CONTRACTION
+where f is a binary function, a is the sequence, and id is the left identity for f .
+Even though we can define reduce broadly for both associative and non-associative func-
+tions, in this section, we assume that the function f is associative.
+Generalizing the algorithm for computing the maximal element leads us to an implementa-
+tion of an important parallelism primitive called reduce. The crux in using the contraction
+technique is to design an algorithm for reducing an instance of the problem to a geomet-
+rically smaller instance by performing a parallel contraction step. To see how this can be
+done, consider instead applying the function f to consecutive pairs of the input.
+For example if we wish to compute the sum of the input sequence
+〈 2, 1, 3, 2, 2, 5, 4, 1 〉
+by using the addition function, we can contract the sequence to
+〈 3, 5, 7, 5 〉 .
+Note that the contraction step can be performed in parallel, because each pair can be con-
+sidered independently in parallel.
+By using this contraction step, we have reduced the input size by a factor of two. We
+next solve the resulting problem by invoking the same algorithm and apply expansion to
+construct the final result. We note now that by solving the smaller problem, we obtain a
+solution to the original problem, because the sum of the sequence remains the same as that
+of the original. Thus, the expansion step requires no additional work.
+Algorithm 27.2 (Reduce with Contraction). An algorithm for reduce using contraction is
+shown below; for simplicity, we assume that the input size is a power of two.
+(* Assumption: |a| is a power of 2 *)
+reduceContract f id a =
+if |a| = 1 then
+a[0]
+else
+let
+b = 〈 f (a[2i], a[2i + 1]) : 0 ≤ i < b|a|/2c 〉
+in
+reduceContract f id b
+end
+Cost of Reduce with Contraction. Assuming that the function being reduced over per-
+forms constant work, parallel tabulate in the contraction step requires linear work, we can
+thus write the work of this algorithm as
+W (n) = W (n/2) + n.
+3. SCAN WITH CONTRACTION 179
+This recurrence solves to O(n).
+Assuming that the function being reduced over performs constant span, parallel tabulate
+in the contraction step requires constant span; we can thus write the work of this algorithm
+as
+S(n) = S(n/2) + 1.
+This recurrence solves to O(log n).
+3 Scan with Contraction
+We describe how to implement the scan sequence primitive efficiently by using contraction.
+Recall that the scan function has the type signature
+scan (f : α ∗ α → α) (id : α) (a : Sα) : (Sα ∗ α)
+where f is an associative function, a is a sequence, and id is the identity element of f . When
+evaluated with a function and a sequence, scan can be viewed as applying a reduction to
+every prefix of the sequence and returning the results of such reductions as a sequence.
+Example 27.2. Applying scan ‘ + ‘, i.e., “plus scan” on the sequence 〈 2, 1, 3, 2, 2, 5, 4, 1 〉
+returns
+(〈 0, 2, 3, 6, 8, 10, 15, 19 〉 , 20) .
+We will use this as a running example.
+Based on its specification, a direct algorithm for scan is to apply a reduce to all prefixes
+of the input sequence. Unfortunately, this easily requires quadratic work in the size of the
+input sequence.
+We can see that this algorithm is inefficient by noting that it performs lots of redundant
+computations. In fact, two consecutive prefixes overlap significantly but the algorithm
+does not take advantage of such overlaps at all, computing the result for each overlap
+independently.
+By taking advantage of the fact that any two consecutive prefixes differ by just one element,
+it is not difficult to give a linear work algorithm (modulo the cost of the application of the
+argument function) by using iteration.
+Such an algorithm may be expressed as follows
+scan f id a = h (iterate g (〈 〉 , id) a) ,
+where
+g((b, y), x) = ((append 〈 y 〉 b), f (y, x))
+180 CHAPTER 27. CONTRACTION
+and
+h(b, y) = ((reverse b), y)
+where reverse reverses a sequence.
+This algorithm is correct but it almost entirely sequential, leaving no room for parallelism.
+Scan via Contraction, the Intuition. Because scan has to compute some value for each
+prefix of the given sequence, it may appear to be inherently sequential. We might be in-
+clined to believe that any efficient algorithms will have to keep a cumulative “sum,” com-
+puting each output value by relying on the “sum” of the all values before it.
+We will now see that we can implement scan efficiently using contraction. To this end, we
+need to reduce a given problem instance to a geometrically smaller instance by applying a
+contraction step. As a starting point, let’s apply the same idea as we used for implementing
+reduce with contraction .
+Applying the contraction step from the reduce algorithm described above, we would re-
+duce the input sequence
+〈 2, 1, 3, 2, 2, 5, 4, 1 〉
+to the sequence
+〈 3, 5, 7, 5 〉 ,
+which if recursively used as input would give us the result
+(〈 0, 3, 8, 15 〉 , 20).
+Notice that in this sequence, the elements in even numbered positions are consistent with
+the desired result:
+(〈 0, 2, 3, 6, 8, 10, 15, 19 〉 , 20).
+Half of the elements are correct because the contraction step, which pairs up the elements
+and reduces them, does not affect, by associativity of the function being used, the result at
+a position that do not fall in between a pair.
+To compute the missing element of the result, we will use an expansion step and com-
+pute each missing elements by applying the function element-wise to the corresponding
+elements in the input and the results of the recursive call to scan. The drawing below illus-
+trates this expansion step.
+3. SCAN WITH CONTRACTION 181
+Algorithm 27.3 (Scan Using Contraction, for Powers of 2). Based on the intuitive descrip-
+tion above, we can write the pseudo-code for scan as follows. For simplicity, we assume
+that n is a power of two.
+(* Assumption: |a| is a power of two. *)
+scan f id a =
+if |a| = 0 then
+(〈 〉 , id)
+else if |a| = 1 then
+(〈 id 〉 , a[0])
+else
+let
+a′ = 〈 f (a[2i], a[2i + 1]) : 0 ≤ i < n/2 〉
+(r, t) = scan f id a′
+in
+(〈 pi : 0 ≤ i < n 〉 , t), where pi =
+{
+r[i/2] even(i)
+f (r[i/2], a[i − 1]) otherwise
+end
+Cost of Scan with Contraction. Let’s assume for simplicity that the function being ap-
+plied has constant work and constant span. We can write out the work and span for the
+algorithm as a recursive relation as
+W (n) = W (n/2) + n, and
+S(n) = S(n/2) + 1,
+because 1) the contraction step which tabulates the smaller instance of the problem per-
+forms linear work in constant span, and 2) the expansion step that constructs the output
+by tabulating based on the result of the recursive call also performs linear work in constant
+span.
+These recursive relations should look familiar. They are the same as those that we ended
+up with when we analyzed the work and span of our contraction-based implementation of
+reduce and yield
+W (n) = O(n)
+S(n) = O(log n).
