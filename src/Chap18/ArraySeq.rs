@@ -42,6 +42,7 @@ pub mod ArraySeq {
 
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::monoid::monoid::*;
     use crate::vstdplus::multiset::multiset::*;
     #[cfg(verus_keep_ghost)]
     use vstd::relations::associative;
@@ -94,23 +95,6 @@ pub mod ArraySeq {
     /// and each element from left to right.  spec_iterate(s, f, start_x) = f(...f(f(start_x, s[0]), s[1])..., s[n-1]).
     pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
         s.fold_left(start_x, f)
-    }
-
-    // spec_associative: use vstd::relations::associative instead.
-
-    /// The value id is a left identity for f: f(id, x) == x for all x.
-    pub open spec fn spec_left_identity<T>(f: spec_fn(T, T) -> T, id: T) -> bool {
-        forall|x: T| #[trigger] f(id, x) == x
-    }
-
-    /// The value id is a right identity for f: f(x, id) == x for all x.
-    pub open spec fn spec_right_identity<T>(f: spec_fn(T, T) -> T, id: T) -> bool {
-        forall|x: T| #[trigger] f(x, id) == x
-    }
-
-    /// The triple (T, f, id) forms a monoid: f is associative and id is a two-sided identity.
-    pub open spec fn spec_monoid<T>(f: spec_fn(T, T) -> T, id: T) -> bool {
-        associative(f) && spec_left_identity(f, id) && spec_right_identity(f, id)
     }
 
     /// Definition 18.16 (inject). Apply position-value updates left to right; the first update

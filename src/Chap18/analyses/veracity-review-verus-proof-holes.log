@@ -1,84 +1,133 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap18/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-review/src/Chap18/
 
 ❌ ArraySeq.rs
-/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeq.rs:1450: external - #[verifier::external]
-      1451 |     impl<T: View> ArraySeqS<T> {
-/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeq.rs:1584: external - #[verifier::external]
-      1585 |     impl<'a, T> std::iter::IntoIterator for &'a mut ArraySeqS<T> {
-/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeq.rs:1607: assume() - proof { assume(equal == (self@ == other@)); }
-      1603 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeq.rs:1434: external - #[verifier::external]
+      1435 |     impl<T: View> ArraySeqS<T> {
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeq.rs:1568: external - #[verifier::external]
+      1569 |     impl<'a, T> std::iter::IntoIterator for &'a mut ArraySeqS<T> {
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeq.rs:1591: assume() - proof { assume(equal == (self@ == other@)); }
+      1587 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1605 |         {
-      1606 |             let equal = self.seq == other.seq;
-      1608 |             equal
-      1609 |         }
+      1589 |         {
+      1590 |             let equal = self.seq == other.seq;
+      1592 |             equal
+      1593 |         }
    Holes: 3 total
       1 × assume()
       2 × external
    Proof functions: 10 total (10 clean, 0 holed)
 ❌ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeqMtEph.rs:1122: assume() - proof { assume(equal == (self@ == other@)); }
-      1118 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeqMtEph.rs:224: assume() - assume(val == updates@[i as int].1);
+       192 |     fn apply_ninject_updates<T: Clone + Send + Sync + 'static>(
             ...
-      1120 |         {
-      1121 |             let equal = self.seq == other.seq;
-      1123 |             equal
-      1124 |         }
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 2 total (2 clean, 0 holed)
+       222 |                 let val = updates[i].1.clone();
+       223 |                 proof {
+       225 |                 }
+       226 |                 buf.set(pos, val);
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeqMtEph.rs:1292: assume() - proof { assume(buf@ =~= a.seq@); }
+      1275 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            ...
+      1290 |             // Clone source into the result buffer and wrap in Arc<RwLock>.
+      1291 |             let buf = a.seq.clone();
+      1293 |             let lock = Arc::new(RwLock::<Vec<T>, NinjectInv<T>>::new(buf, Ghost(pred)));
+      1294 |             proof { assume(lock.pred() == pred); }
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeqMtEph.rs:1294: assume() - proof { assume(lock.pred() == pred); }
+      1275 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            ...
+      1292 |             proof { assume(buf@ =~= a.seq@); }
+      1293 |             let lock = Arc::new(RwLock::<Vec<T>, NinjectInv<T>>::new(buf, Ghost(pred)));
+      1295 | 
+      1296 |             // Split updates in half.
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeqMtEph.rs:1317: assume() - proof { assume((pos, val) == updates@[k as int]); }
+      1275 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            ...
+      1315 |                 let pos = updates[k].0;
+      1316 |                 let val = updates[k].1.clone();
+      1318 |                 if k < mid {
+      1319 |                     left.push((pos, val));
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeqMtEph.rs:1328: assume() - proof { assume(lock1.pred() == pred); }
+      1275 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            ...
+      1326 |             // Two threads race for the single lock.
+      1327 |             let lock1 = lock.clone();
+      1329 |             let lock2 = lock.clone();
+      1330 |             proof { assume(lock2.pred() == pred); }
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeqMtEph.rs:1330: assume() - proof { assume(lock2.pred() == pred); }
+      1275 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            ...
+      1328 |             proof { assume(lock1.pred() == pred); }
+      1329 |             let lock2 = lock.clone();
+      1331 | 
+      1332 |             let ghost lv = left@;
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeqMtEph.rs:1360: assume() - proof { assume(r@ =~= result_vec@); }
+      1275 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            ...
+      1358 |             }
+      1359 |             let r = result_vec.clone();
+      1361 |             write_handle.release_write(result_vec);
+      1362 | 
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeqMtEph.rs:1515: assume() - proof { assume(equal == (self@ == other@)); }
+      1511 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1513 |         {
+      1514 |             let equal = self.seq == other.seq;
+      1516 |             equal
+      1517 |         }
+   Holes: 8 total
+      8 × assume()
+   Proof functions: 4 total (4 clean, 0 holed)
 ❌ ArraySeqMtPer.rs
-/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeqMtPer.rs:1133: assume() - proof { assume(equal == (self@ == other@)); }
-      1129 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeqMtPer.rs:1141: assume() - proof { assume(equal == (self@ == other@)); }
+      1137 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1131 |         {
-      1132 |             let equal = self.seq == other.seq;
-      1134 |             equal
-      1135 |         }
+      1139 |         {
+      1140 |             let equal = self.seq == other.seq;
+      1142 |             equal
+      1143 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeqStEph.rs:906: assume() - proof { assume(equal == (self@ == other@)); }
-       902 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeqStEph.rs:1015: assume() - proof { assume(equal == (self@ == other@)); }
+      1011 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       904 |         {
-       905 |             let equal = self.seq == other.seq;
-       907 |             equal
-       908 |         }
+      1013 |         {
+      1014 |             let equal = self.seq == other.seq;
+      1016 |             equal
+      1017 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeqStPer.rs:880: assume() - proof { assume(equal == (self@ == other@)); }
-       876 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/ArraySeqStPer.rs:989: assume() - proof { assume(equal == (self@ == other@)); }
+       985 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       878 |         {
-       879 |             let equal = self.seq == other.seq;
-       881 |             equal
-       882 |         }
+       987 |         {
+       988 |             let equal = self.seq == other.seq;
+       990 |             equal
+       991 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ LinkedListStEph.rs
-/home/milnes/projects/APAS-VERUS-review/src/Chap18/LinkedListStEph.rs:831: assume() - proof { assume(r == (self@ == other@)); }
-       827 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/LinkedListStEph.rs:839: assume() - proof { assume(r == (self@ == other@)); }
+       835 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-       829 |         {
-       830 |             let r = self.seq == other.seq;
-       832 |             r
-       833 |         }
+       837 |         {
+       838 |             let r = self.seq == other.seq;
+       840 |             r
+       841 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ LinkedListStPer.rs
-/home/milnes/projects/APAS-VERUS-review/src/Chap18/LinkedListStPer.rs:815: assume() - proof { assume(r == (self@ == other@)); }
-       811 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS-review/src/Chap18/LinkedListStPer.rs:823: assume() - proof { assume(r == (self@ == other@)); }
+       819 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-       813 |         {
-       814 |             let r = self.seq == other.seq;
-       816 |             r
-       817 |         }
+       821 |         {
+       822 |             let r = self.seq == other.seq;
+       824 |             r
+       825 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
@@ -93,10 +142,10 @@ Modules:
    7 total
 
 Proof Functions:
-   18 clean
+   20 clean
    0 holed
-   18 total
+   20 total
 
-Holes Found: 9 total
-   7 × assume()
+Holes Found: 16 total
+   14 × assume()
    2 × external

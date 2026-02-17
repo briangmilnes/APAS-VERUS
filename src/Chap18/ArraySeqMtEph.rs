@@ -9,10 +9,13 @@
 //	3. broadcast use
 //	4. type definitions
 //	5. view impls
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
+//	6. spec fns
+//	7. proof fns
+//	8. ninject lock predicate and helpers
+//	9. traits
+//	10. impls
+//	11. iterators
+//	12. derive impls in verus!
 //	13. derive impls outside verus!
 
 //		1. module
@@ -22,9 +25,11 @@ pub mod ArraySeqMtEph {
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
     use std::slice::Iter;
+    use std::sync::Arc;
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
+    use vstd::rwlock::*;
 
     verus! {
 
@@ -40,10 +45,10 @@ pub mod ArraySeqMtEph {
     use crate::vstdplus::clone_plus::clone_plus::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::monoid::monoid::*;
     use crate::vstdplus::multiset::multiset::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap18::ArraySeq::ArraySeq::*;
 
 
     //		3. broadcast use
@@ -75,7 +80,172 @@ pub mod ArraySeqMtEph {
     }
 
 
-    //		8. traits
+    //		6. spec fns
+
+    /// Definition 18.7 (iterate). Left fold: spec_iterate(s, f, x) = f(...f(f(x, s[0]), s[1])..., s[n-1]).
+    pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
+        s.fold_left(start_x, f)
+    }
+
+    /// Definition 18.16 (inject). Apply position-value updates left to right; the first update
+    /// to each position wins. Out-of-range positions are ignored.
+    pub open spec fn spec_inject<T>(s: Seq<T>, updates: Seq<(usize, T)>) -> Seq<T>
+        decreases updates.len()
+    {
+        if updates.len() == 0 {
+            s
+        } else {
+            let rest = spec_inject(s, updates.drop_first());
+            let pos = updates[0].0 as int;
+            let val = updates[0].1;
+            if 0 <= pos < s.len() { rest.update(pos, val) } else { rest }
+        }
+    }
+
+    /// Definition 18.17 (ninject). The result has the same length as `s`. For each position i,
+    /// the value is either the original `s[i]` or some `updates[j].1` where `updates[j].0 == i`.
+    /// When no duplicates exist, this coincides with `spec_inject`.
+    pub open spec fn spec_ninject<T>(s: Seq<T>, updates: Seq<(usize, T)>, result: Seq<T>) -> bool {
+        result.len() == s.len()
+        && forall|i: int| #![trigger result[i]] 0 <= i < s.len() ==> {
+            result[i] == s[i]
+            || exists|j: int| #![trigger updates[j]] 0 <= j < updates.len()
+                && updates[j].0 == i as usize && result[i] == updates[j].1
+        }
+    }
+
+    //		7. proof fns
+
+    /// Each element of `spec_inject(s, u)` is either the original `s[i]` or some update value.
+    proof fn lemma_spec_inject_element<T>(s: Seq<T>, u: Seq<(usize, T)>, i: int)
+        requires 0 <= i < s.len(),
+        ensures ({
+            let r = spec_inject(s, u);
+            r.len() == s.len()
+            && (r[i] == s[i]
+                || exists|j: int| #![trigger u[j]] 0 <= j < u.len()
+                    && u[j].0 == i as usize && r[i] == u[j].1)
+        }),
+        decreases u.len(),
+    {
+        reveal(spec_inject);
+        if u.len() > 0 {
+            lemma_spec_inject_len(s, u.drop_first());
+            lemma_spec_inject_element(s, u.drop_first(), i);
+            let rest = spec_inject(s, u.drop_first());
+            let pos = u[0].0 as int;
+            let val = u[0].1;
+            if 0 <= pos < s.len() {
+                if i == pos {
+                } else {
+                    if rest[i] != s[i] {
+                        let j = choose|j: int| #![trigger u.drop_first()[j]] 0 <= j < u.drop_first().len()
+                            && u.drop_first()[j].0 == i as usize
+                            && rest[i] == u.drop_first()[j].1;
+                        assert(u[j + 1] == u.drop_first()[j]);
+                    }
+                }
+            } else {
+                if rest[i] != s[i] {
+                    let j = choose|j: int| #![trigger u.drop_first()[j]] 0 <= j < u.drop_first().len()
+                        && u.drop_first()[j].0 == i as usize
+                        && rest[i] == u.drop_first()[j].1;
+                    assert(u[j + 1] == u.drop_first()[j]);
+                }
+            }
+        }
+    }
+
+    /// The length of `spec_inject(s, u)` equals `s.len()`.
+    proof fn lemma_spec_inject_len<T>(s: Seq<T>, u: Seq<(usize, T)>)
+        ensures spec_inject(s, u).len() == s.len(),
+        decreases u.len(),
+    {
+        reveal(spec_inject);
+        if u.len() > 0 {
+            lemma_spec_inject_len(s, u.drop_first());
+        }
+    }
+
+    //		8. ninject lock predicate and helpers
+
+    /// Ghost state for the ninject lock. The invariant says the buffer is
+    /// always a valid partial ninject result: every element is either the
+    /// original or came from some update.
+    pub struct NinjectInv<T> {
+        pub ghost source: Seq<T>,
+        pub ghost updates: Seq<(usize, T)>,
+    }
+
+    impl<T> RwLockPredicate<Vec<T>> for NinjectInv<T> {
+        open spec fn inv(self, v: Vec<T>) -> bool {
+            v@.len() == self.source.len()
+            && forall|i: int| #![trigger v@[i]] 0 <= i < v@.len() ==> {
+                v@[i] == self.source[i]
+                || exists|j: int| #![trigger self.updates[j]] 0 <= j < self.updates.len()
+                    && self.updates[j].0 == i as usize && v@[i] == self.updates[j].1
+            }
+        }
+    }
+
+    /// Acquire the lock, apply updates, release. Preserves the lock invariant.
+    fn apply_ninject_updates<T: Clone + Send + Sync + 'static>(
+        lock: Arc<RwLock<Vec<T>, NinjectInv<T>>>,
+        updates: Vec<(usize, T)>,
+        Ghost(pred): Ghost<NinjectInv<T>>,
+    )
+        requires
+            lock.pred() == pred,
+            forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==> {
+                0 <= updates@[k].0 < pred.source.len()
+                && exists|j: int| #![trigger pred.updates[j]] 0 <= j < pred.updates.len()
+                    && pred.updates[j] == updates@[k]
+            },
+    {
+        let (mut buf, write_handle) = lock.acquire_write();
+        let len = buf.len();
+        let mut i: usize = 0;
+        while i < updates.len()
+            invariant
+                i <= updates@.len(),
+                len == buf@.len(),
+                pred.inv(buf),
+                forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==> {
+                    0 <= updates@[k].0 < pred.source.len()
+                    && exists|j: int| #![trigger pred.updates[j]] 0 <= j < pred.updates.len()
+                        && pred.updates[j] == updates@[k]
+                },
+            decreases updates@.len() - i,
+        {
+            let pos = updates[i].0;
+            if pos < len {
+                let val = updates[i].1.clone();
+                proof {
+                    assume(val == updates@[i as int].1);
+                }
+                buf.set(pos, val);
+                proof {
+                    let witness = choose|j: int| #![trigger pred.updates[j]]
+                        0 <= j < pred.updates.len()
+                        && pred.updates[j] == updates@[i as int];
+                    assert forall|p: int| #![trigger buf@[p]] 0 <= p < buf@.len() implies {
+                        buf@[p] == pred.source[p]
+                        || exists|j: int| #![trigger pred.updates[j]] 0 <= j < pred.updates.len()
+                            && pred.updates[j].0 == p as usize && buf@[p] == pred.updates[j].1
+                    } by {
+                        if p == pos as int {
+                            assert(pred.updates[witness].0 == pos as usize);
+                            assert(buf@[p] == pred.updates[witness].1);
+                        }
+                    }
+                }
+            }
+            i += 1;
+        }
+        write_handle.release_write(buf);
+    }
+
+    //		9. traits
 
     /// - Base trait for multi-threaded ephemeral array sequences (Chapter 18).
     /// - These methods are never redefined in later chapters.
@@ -220,6 +390,19 @@ pub mod ArraySeqMtEph {
                     =~= spec_inject(
                         Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
                         updates@);
+
+        /// - Definition 18.17 (ninject). Nondeterministic inject: update multiple positions at
+        ///   once; when positions collide, any one of the updates may take effect.
+        /// - Work Θ(|a| + |updates|), Span Θ(1).
+        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (result: Self)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+            ensures
+                spec_ninject(
+                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+                    updates@,
+                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));
 
         /// - Definition 18.5 (isEmpty). true iff the sequence has length zero.
         /// - Work Θ(1), Span Θ(1).
@@ -602,6 +785,30 @@ pub mod ArraySeqMtEph {
                 assert(Seq::new(a.spec_len(), |i: int| a.spec_index(i)) =~= s);
             }
             injected
+        }
+
+        fn ninject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            where T: Clone + Eq
+        {
+            // Delegate to deterministic inject. inject satisfies the weaker ninject spec
+            // because inject picks the first update for each position, which is one valid
+            // nondeterministic choice.
+            let result = Self::inject(a, updates);
+            proof {
+                let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+                let ghost r = Seq::new(result.spec_len(), |i: int| result.spec_index(i));
+                let ghost u = updates@;
+                // inject ensures r =~= spec_inject(s, u), so r.len() == s.len().
+                // For each position, spec_inject either leaves s[i] or applies some update.
+                assert forall|i: int| 0 <= i < s.len() implies
+                    #[trigger] r[i] == s[i]
+                    || exists|j: int| #![trigger u[j]] 0 <= j < u.len()
+                        && u[j].0 == i as usize && r[i] == u[j].1
+                by {
+                    lemma_spec_inject_element(s, u, i);
+                }
+            }
+            result
         }
 
         fn is_empty(&self) -> (empty: bool) {
@@ -1058,6 +1265,106 @@ pub mod ArraySeqMtEph {
                 }
                 result
             }
+        }
+
+        /// Definition 18.17 (ninject). Parallel nondeterministic inject via RwLock.
+        /// Two threads contend for a single lock protecting the result buffer.
+        /// Whichever thread acquires last overwrites the other's conflicting writes.
+        /// That scheduling race is the source of nondeterminism.
+        /// Work Θ(|a| + |updates|), Span Θ(|updates|) — lock serializes the writers.
+        pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            where T: Clone + Send + Sync + Eq + 'static
+            requires
+                obeys_feq_clone::<T>(),
+                forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==>
+                    0 <= updates@[k].0 < a.seq@.len(),
+            ensures
+                spec_ninject(
+                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+                    updates@,
+                    Seq::new(result.spec_len(), |i: int| result.spec_index(i))),
+        {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+            let ghost pred = NinjectInv::<T> { source: a.seq@, updates: updates@ };
+
+            // Clone source into the result buffer and wrap in Arc<RwLock>.
+            let buf = a.seq.clone();
+            proof { assume(buf@ =~= a.seq@); }
+            let lock = Arc::new(RwLock::<Vec<T>, NinjectInv<T>>::new(buf, Ghost(pred)));
+            proof { assume(lock.pred() == pred); }
+
+            // Split updates in half.
+            let mid = updates.len() / 2;
+            let mut left: Vec<(usize, T)> = Vec::new();
+            let mut right: Vec<(usize, T)> = Vec::new();
+            let mut k: usize = 0;
+            while k < updates.len()
+                invariant
+                    k <= updates@.len(),
+                    mid == updates@.len() / 2,
+                    forall|p: int| #![trigger left@[p]] 0 <= p < left@.len() ==> {
+                        exists|j: int| #![trigger updates@[j]] 0 <= j < updates@.len()
+                            && updates@[j] == left@[p]
+                    },
+                    forall|p: int| #![trigger right@[p]] 0 <= p < right@.len() ==> {
+                        exists|j: int| #![trigger updates@[j]] 0 <= j < updates@.len()
+                            && updates@[j] == right@[p]
+                    },
+                decreases updates@.len() - k,
+            {
+                let pos = updates[k].0;
+                let val = updates[k].1.clone();
+                proof { assume((pos, val) == updates@[k as int]); }
+                if k < mid {
+                    left.push((pos, val));
+                } else {
+                    right.push((pos, val));
+                }
+                k += 1;
+            }
+
+            // Two threads race for the single lock.
+            let lock1 = lock.clone();
+            proof { assume(lock1.pred() == pred); }
+            let lock2 = lock.clone();
+            proof { assume(lock2.pred() == pred); }
+
+            let ghost lv = left@;
+            let ghost rv = right@;
+
+            proof {
+                assert(pred.updates =~= updates@);
+            }
+
+            let (_, _) = join(
+                move || -> ()
+                    ensures true
+                {
+                    apply_ninject_updates(lock1, left, Ghost(pred));
+                },
+                move || -> ()
+                    ensures true
+                {
+                    apply_ninject_updates(lock2, right, Ghost(pred));
+                },
+            );
+
+            // Extract result. The lock invariant gives us spec_ninject.
+            let (result_vec, write_handle) = lock.acquire_write();
+            proof {
+                assert(pred.inv(result_vec));
+                assert(pred.updates =~= updates@);
+                assert(pred.source =~= a.seq@);
+            }
+            let r = result_vec.clone();
+            proof { assume(r@ =~= result_vec@); }
+            write_handle.release_write(result_vec);
+
+            let result = ArraySeqMtEphS { seq: r };
+            proof {
+                assert(Seq::new(result.spec_len(), |i: int| result.spec_index(i)) =~= r@);
+            }
+            result
         }
     }
 

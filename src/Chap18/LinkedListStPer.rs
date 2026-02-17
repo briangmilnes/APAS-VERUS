@@ -8,6 +8,7 @@
 //	3. broadcast use
 //	4. type definitions
 //	5. view impls
+//	6. spec fns
 //	8. traits
 //	9. impls
 //	10. iterators
@@ -40,10 +41,10 @@ pub mod LinkedListStPer {
     };
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::monoid::monoid::*;
     use crate::vstdplus::multiset::multiset::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap18::ArraySeq::ArraySeq::*;
 
 
     //		3. broadcast use
@@ -74,6 +75,13 @@ pub mod LinkedListStPer {
         }
     }
 
+
+    //		6. spec fns
+
+    /// Definition 18.7 (iterate). Left fold: spec_iterate(s, f, x) = f(...f(f(x, s[0]), s[1])..., s[n-1]).
+    pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
+        s.fold_left(start_x, f)
+    }
 
     //		8. traits
 

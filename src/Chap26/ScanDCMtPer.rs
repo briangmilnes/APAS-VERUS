@@ -24,10 +24,8 @@ pub mod ScanDCMtPer {
 
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     #[cfg(verus_keep_ghost)]
-    use {
-        crate::Chap18::ArraySeq::ArraySeq::{spec_iterate, spec_monoid},
-        crate::Chap26::ScanDCStPer::ScanDCStPer::spec_scan_post,
-    };
+    use crate::Chap26::ScanDCStPer::ScanDCStPer::*;
+    use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
 
     //		3. broadcast use

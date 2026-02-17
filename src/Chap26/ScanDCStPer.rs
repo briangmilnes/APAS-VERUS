@@ -21,8 +21,7 @@ pub mod ScanDCStPer {
     //		2. imports
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap18::ArraySeq::ArraySeq::*;
+    use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
 
     //		3. broadcast use
