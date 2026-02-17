@@ -171,7 +171,8 @@ pub mod ArraySeq {
             recommends i < self.spec_len();
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
-        /// - Work Θ(length), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(1).
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -182,7 +183,8 @@ pub mod ArraySeq {
               forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value; 
 
         /// - Set the element at `index` to `item` in place.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
             ensures
@@ -191,30 +193,35 @@ pub mod ArraySeq {
                 success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);
 
         /// - Definition 18.1 (length). Return the number of elements.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn length(&self) -> (len: usize)
             ensures len as int == self.spec_len();
 
         /// - Algorithm 19.11 (Function nth). Return a reference to the element at `index`.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.spec_len()
             ensures *nth_elem == self.spec_index(index as int);
 
         /// - Definition 18.1 (empty). Construct the empty sequence.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_len() == 0;
 
         /// - Definition 18.1 (singleton). Construct a singleton sequence containing `item`.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn singleton(item: T) -> (singleton: Self)
             ensures
                 singleton.spec_len() == 1,
                 singleton.spec_index(0) == item;
 
         /// - Definition 18.12 (subseq). Extract a contiguous subsequence.
-        /// - Work Θ(length), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(1).
         fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -226,7 +233,8 @@ pub mod ArraySeq {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
 
         /// - Definition 18.13 (append). Concatenate two sequences.
-        /// - Work Θ(|a| + |b|), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a| + |b|), Span Θ(1).
         fn append(a: &Self, b: &Self) -> (appended: Self)
             where T: Clone + Eq
             requires
@@ -238,7 +246,8 @@ pub mod ArraySeq {
                 forall|i: int| #![trigger b.spec_index(i)] 0 <= i < b.spec_len() ==> appended.spec_index(a.spec_len() + i) == b.spec_index(i);
 
         /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
-        /// - Work Θ(|a|), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
         /// - The multiset postcondition captures predicate satisfaction, provenance,
         ///   and completeness in a single statement.
         fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
@@ -259,7 +268,8 @@ pub mod ArraySeq {
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
-        /// - Work Θ(|a|), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
         fn update(a: &Self, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires
@@ -271,18 +281,21 @@ pub mod ArraySeq {
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.spec_len() && i != index as int ==> updated.spec_index(i) == a.spec_index(i);
 
         /// - Definition 18.5 (isEmpty). true iff the sequence has length zero.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn is_empty(&self) -> (empty: bool)
             ensures empty <==> self.spec_len() == 0;
 
         /// - Definition 18.5 (isSingleton). true iff the sequence has length one.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.spec_len() == 1;
 
         /// - Definition 18.7 (iterate). Left fold with accumulator `start_x`.
         /// - The Rust equivalent is `Iterator::fold`.
-        /// - Work Θ(|a|), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (result: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
@@ -292,7 +305,8 @@ pub mod ArraySeq {
 
         /// - Definition 18.18 (reduce). Combine elements using associative function and identity `id`.
         /// - The Rust equivalent is `Iterator::fold` with the accumulator type equal to the element type.
-        /// - Work Θ(|a|), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
         fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: T)
             where T: Clone
             requires
@@ -305,7 +319,8 @@ pub mod ArraySeq {
 
         /// - Definition 18.19 (scan). Prefix-reduce returning inclusive prefix sums and total.
         /// - The Rust equivalent is `Iterator::scan`, which produces similar intermediate state.
-        /// - Work Θ(|a|), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
         fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (Self, T))
             where T: Clone + Eq
             requires
@@ -324,7 +339,8 @@ pub mod ArraySeq {
 
         /// - Definition 18.16 (inject). Update multiple positions at once; the first update in
         ///   the ordering of `updates` takes effect when positions collide.
-        /// - Work Θ(|a| + |updates|), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a| + |updates|), Span Θ(1).
         fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
             where T: Clone + Eq
             requires
@@ -338,7 +354,8 @@ pub mod ArraySeq {
 
         /// - Definition 18.19 (scanI). Inclusive prefix-reduce: scanI[i] = reduce f id a[0..i].
         /// - Our `scan` currently computes inclusive prefixes; this function makes the intent explicit.
-        /// - Work Θ(|a|), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
         fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: Self)
             where T: Clone + Eq
             requires
@@ -352,7 +369,8 @@ pub mod ArraySeq {
                     result.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
-        /// - Work Θ(length), Span Θ(1).
+        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(1).
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -364,7 +382,8 @@ pub mod ArraySeq {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
         /// - Remove the element at `index`, shifting subsequent elements left.
-        /// - Work Θ(|self|), Span Θ(1).
+        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(|self|), Span Θ(1).
         fn remove(&mut self, index: usize) -> (element: T)
             requires
                 index < old(self).spec_len(),
@@ -375,7 +394,8 @@ pub mod ArraySeq {
                 forall|j: int| #![trigger self.spec_index(j)] index <= j < self.spec_len() ==> self.spec_index(j) == old(self).spec_index(j + 1);
 
         /// - Insert `element` at `index`, shifting subsequent elements right.
-        /// - Work Θ(|self|), Span Θ(1).
+        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(|self|), Span Θ(1).
         fn insert(&mut self, index: usize, element: T)
             requires
                 index <= old(self).spec_len(),
@@ -386,7 +406,8 @@ pub mod ArraySeq {
                 forall|j: int| #![trigger self.spec_index(j)] index < j < self.spec_len() ==> self.spec_index(j) == old(self).spec_index(j - 1);
 
         /// - Create sequence from Vec.
-        /// - Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
+        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_len() == elts@.len(),
@@ -1069,6 +1090,8 @@ pub mod ArraySeq {
     }
         
     /// Algorithm 18.4 (map). Transform each element via `f`.
+    /// - APAS: no cost spec (semantics-only chapter).
+    /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
     /// Module-level function because map returns ArraySeqS<U> (different element type),
     /// which creates a Verus cycle error when spec_index/spec_len on the return value
     /// resolve through a concrete impl of the same trait.
@@ -1098,6 +1121,8 @@ pub mod ArraySeq {
     }
 
     /// Algorithm 18.3 (tabulate). Build a sequence by applying `f` to each index.
+    /// - APAS: no cost spec (semantics-only chapter).
+    /// - Claude-Opus-4.6: Work Θ(length), Span Θ(1).
     /// Module-level function for the same reason as map: the return type ArraySeqS<T>
     /// is concrete, and its spec_len/spec_index in ensures creates a Verus cycle
     /// when tabulate is declared inside a trait that also defines spec_len/spec_index.

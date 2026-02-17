@@ -9,6 +9,7 @@
 //	3. broadcast use
 //	4. type definitions
 //	5. view impls
+//	6. spec fns
 //	8. traits
 //	9. impls
 //	10. iterators
@@ -73,6 +74,24 @@ pub mod ArraySeqStPer {
     }
 
 
+    //		6. spec fns
+
+    /// Definition 18.16 (inject). Apply position-value updates left to right; the first update
+    /// to each position wins. Out-of-range positions are ignored.
+    pub open spec fn spec_inject<T>(s: Seq<T>, updates: Seq<(usize, T)>) -> Seq<T>
+        decreases updates.len()
+    {
+        if updates.len() == 0 {
+            s
+        } else {
+            let rest = spec_inject(s, updates.drop_first());
+            let pos = updates[0].0 as int;
+            let val = updates[0].1;
+            if 0 <= pos < s.len() { rest.update(pos, val) } else { rest }
+        }
+    }
+
+
     //		8. traits
 
     /// Chapter 19 single-threaded persistent array sequence trait.
@@ -83,7 +102,8 @@ pub mod ArraySeqStPer {
             recommends i < self.spec_len();
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
-        /// - Work Θ(length), Span Θ(1).
+        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(1).
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -94,18 +114,21 @@ pub mod ArraySeqStPer {
                 forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
         /// - Definition 18.1 (length). Return the number of elements.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: primitive (Section 19.2).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn length(&self) -> (len: usize)
             ensures len as int == self.spec_len();
 
         /// - Algorithm 19.11 (Function nth). Return a reference to the element at `index`.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: primitive (Section 19.2).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.spec_len()
             ensures *nth_elem == self.spec_index(index as int);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
-        /// - Work Θ(length), Span Θ(1).
+        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(1).
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -117,7 +140,8 @@ pub mod ArraySeqStPer {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
         /// - Definition 18.12 (subseq). Extract a contiguous subsequence.
-        /// - Work Θ(length), Span Θ(1).
+        /// - APAS: primitive (Section 19.2).
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(1).
         fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -129,19 +153,22 @@ pub mod ArraySeqStPer {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
 
         /// - Create sequence from Vec.
-        /// - Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
+        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_len() == elts@.len(),
                 forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
 
         /// - Algorithm 19.1 (empty). empty = tabulate (lambda i.i) 0.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: Algorithm 19.1 — empty = tabulate (lambda i.i) 0.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_len() == 0;
 
         /// - Algorithm 19.2 (singleton). singleton x = tabulate (lambda i.x) 1.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: Algorithm 19.2 — singleton x = tabulate (lambda i.x) 1.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn singleton(item: T) -> (singleton: Self)
             where T: Clone + Eq
             requires obeys_feq_clone::<T>()
@@ -150,7 +177,8 @@ pub mod ArraySeqStPer {
                 singleton.spec_index(0) == item;
 
         /// - Algorithm 19.4 (append). append a b = tabulate (select(a,b)) (|a|+|b|).
-        /// - Work Θ(|a| + |b|), Span Θ(1).
+        /// - APAS: Algorithm 19.4 — append a b = tabulate (select(a,b)) (|a|+|b|).
+        /// - Claude-Opus-4.6: Work Θ(|a| + |b|), Span Θ(1).
         fn append(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> (appended: Self)
             where T: Clone + Eq
             requires
@@ -162,7 +190,8 @@ pub mod ArraySeqStPer {
                 forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
 
         /// - Algorithm 19.5 (filter). filter f a = flatten (map (deflate f) a).
-        /// - Work Θ(|a|), Span Θ(1).
+        /// - APAS: Algorithm 19.5 — filter f a = flatten (map (deflate f) a).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
             where T: Clone + Eq
             requires
@@ -178,7 +207,8 @@ pub mod ArraySeqStPer {
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// - Algorithm 19.6 (update). update a (i, x) = tabulate (lambda j. if i=j then x else a[j]) |a|.
-        /// - Work Θ(|a|), Span Θ(1).
+        /// - APAS: Algorithm 19.6 — update a (i, x) = tabulate (lambda j. if i=j then x else a[j]) |a|.
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
         fn update(a: &ArraySeqStPerS<T>, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires
@@ -189,23 +219,42 @@ pub mod ArraySeqStPer {
                 updated.spec_index(index as int) == item,
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
 
+        /// - Definition 18.16 (inject). Update multiple positions at once; the first update in
+        ///   the ordering of `updates` takes effect when positions collide.
+        /// - APAS: primitive (Definition 18.16).
+        /// - Claude-Opus-4.6: Work Θ(|a| + |updates|), Span Θ(1).
+        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+            ensures
+                injected.spec_len() == a.spec_len(),
+                Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
+                    =~= spec_inject(
+                        Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+                        updates@);
+
         /// - Algorithm 19.7 (isEmpty). isEmpty a = (|a| = 0).
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: Algorithm 19.7 — isEmpty a = (|a| = 0).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn is_empty(&self) -> (empty: bool)
             ensures empty <==> self.spec_len() == 0;
 
         /// - Algorithm 19.7 (isSingleton). isSingleton a = (|a| = 1).
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: Algorithm 19.7 — isSingleton a = (|a| = 1).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.spec_len() == 1;
 
         /// - Algorithm 19.8 (iterate). Left fold over the sequence (iterative).
-        /// - Work Θ(|a|), Span Θ(|a|).
+        /// - APAS: Algorithm 19.8 — iterate (iterative form).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
         fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, seed: A) -> A
             requires forall|x: &A, y: &T| #[trigger] f.requires((x, y));
 
         /// - Algorithm 19.8 (iterate). iterate f x a = if |a|=0 then x else iterate f (f(x,a[0])) a[1..|a|-1].
-        /// - Work Θ(|a|), Span Θ(|a|).
+        /// - APAS: Algorithm 19.8 — iterate f x a = if |a|=0 then x else iterate f (f(x,a[0])) a[1..|a|-1].
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, seed: A) -> A
             where T: Clone + Eq
             requires
@@ -213,13 +262,15 @@ pub mod ArraySeqStPer {
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y));
 
         /// - Algorithm 19.9 (reduce). Combine elements (iterative).
-        /// - Work Θ(|a|), Span Θ(|a|).
+        /// - APAS: Algorithm 19.9 — reduce (iterative form).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
         fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> T
             where T: Clone
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y));
 
         /// - Algorithm 19.9 (reduce). reduce f id a = if |a|=0 then id else if |a|=1 then a[0] else f(reduce f id b, reduce f id c).
-        /// - Work Θ(|a|), Span Θ(lg |a|).
+        /// - APAS: Algorithm 19.9 — reduce f id a = if |a|=0 then id else if |a|=1 then a[0] else f(reduce f id b, reduce f id c).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(lg |a|).
         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> T
             where T: Clone + Eq
             requires
@@ -227,14 +278,16 @@ pub mod ArraySeqStPer {
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y));
 
         /// - Algorithm 19.10 (scan). Prefix-reduce returning partial sums and total.
-        /// - Work Θ(|a|), Span Θ(|a|).
+        /// - APAS: Algorithm 19.10 — scan. Prefix-reduce returning partial sums and total.
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, id: T) -> (scanned: (ArraySeqStPerS<T>, T))
             where T: Clone
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y))
             ensures scanned.0.seq@.len() == a.seq@.len();
 
         /// - Algorithm 19.3 (map). map f a = tabulate (lambda i.f(a[i])) |a|.
-        /// - Work Θ(|a|), Span Θ(1).
+        /// - APAS: Algorithm 19.3 — map f a = tabulate (lambda i.f(a[i])) |a|.
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
         fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> (mapped: ArraySeqStPerS<U>)
             requires
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
@@ -243,7 +296,8 @@ pub mod ArraySeqStPer {
                 forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);
 
         /// - Primitive: tabulate. Build a sequence by applying `f` to each index.
-        /// - Work Θ(n), Span Θ(1).
+        /// - APAS: primitive (Section 19.2).
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(1).
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqStPerS<T>)
             requires
                 length <= usize::MAX,
@@ -253,7 +307,8 @@ pub mod ArraySeqStPer {
                 forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);
 
         /// - Primitive: flatten. Concatenate a sequence of sequences.
-        /// - Work Θ(Σ|a_i|), Span Θ(1).
+        /// - APAS: primitive (Section 19.2).
+        /// - Claude-Opus-4.6: Work Θ(Σ|a_i|), Span Θ(1).
         fn flatten(a: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (flattened: ArraySeqStPerS<T>)
             where T: Clone + Eq
             requires
@@ -262,7 +317,8 @@ pub mod ArraySeqStPer {
                 flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqStPerS<T>| inner.seq@).flatten();
 
         /// - Algorithm 19.5 (deflate). deflate f x = if (f x) then ⟨x⟩ else ⟨⟩.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: Algorithm 19.5 — deflate (part of filter). deflate f x = if (f x) then ⟨x⟩ else ⟨⟩.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn deflate<F: Fn(&T) -> bool>(pred: &F, x: &T) -> (deflated: Self)
             where T: Clone + Eq
             requires
@@ -531,6 +587,95 @@ pub mod ArraySeqStPer {
                 }),
                 len,
             )
+        }
+
+        fn inject(a: &ArraySeqStPerS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqStPerS<T>)
+            where T: Clone + Eq
+        {
+            let ghost s = a.seq@;
+            let ghost u = updates@;
+            let len = a.seq.len();
+            let ulen = updates.len();
+
+            let mut result_vec: Vec<T> = Vec::with_capacity(len);
+            let mut k: usize = 0;
+            while k < len
+                invariant
+                    k <= len,
+                    len == a.seq@.len(),
+                    s == a.seq@,
+                    result_vec@.len() == k as int,
+                    obeys_feq_clone::<T>(),
+                    forall|j: int| #![trigger result_vec@[j]] 0 <= j < k as int ==> result_vec@[j] == s[j],
+                decreases len - k,
+            {
+                let elem = a.seq[k].clone();
+                proof { axiom_cloned_implies_eq_owned(a.seq@[k as int], elem); }
+                result_vec.push(elem);
+                k += 1;
+            }
+            assert(result_vec@ =~= s);
+
+            let mut i: usize = ulen;
+            while i > 0
+                invariant
+                    0 <= i <= ulen,
+                    ulen == u.len(),
+                    len == a.seq@.len(),
+                    result_vec@.len() == s.len(),
+                    s.len() == len,
+                    obeys_feq_clone::<T>(),
+                    s == a.seq@,
+                    u == updates@,
+                    result_vec@ =~= spec_inject(s, u.subrange(i as int, ulen as int)),
+                decreases i,
+            {
+                i -= 1;
+                let pos = updates[i].0;
+                if pos < len {
+                    let val = updates[i].1.clone();
+                    proof {
+                        axiom_cloned_implies_eq_owned(u[i as int].1, val);
+                    }
+                    result_vec.set(pos, val);
+                }
+                proof {
+                    let ghost sub = u.subrange(i as int, ulen as int);
+                    assert(sub.len() > 0);
+                    assert(sub[0] == u[i as int]);
+                    assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
+                    reveal(spec_inject);
+                }
+            }
+
+            proof {
+                assert(u.subrange(0, ulen as int) =~= u);
+            }
+            let injected = ArraySeqStPerS { seq: result_vec };
+            proof {
+                assert(Seq::new(a.spec_len(), |i: int| a.spec_index(i)) =~= a.seq@) by {
+                    assert forall|i: int| 0 <= i < a.spec_len() implies
+                        Seq::new(a.spec_len(), |j: int| a.spec_index(j))[i] == a.seq@[i]
+                    by {
+                        a.lemma_spec_index(i);
+                    };
+                }
+                assert(Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)) =~= result_vec@) by {
+                    assert forall|i: int| 0 <= i < injected.spec_len() implies
+                        Seq::new(injected.spec_len(), |j: int| injected.spec_index(j))[i] == result_vec@[i]
+                    by {
+                        injected.lemma_spec_index(i);
+                    };
+                }
+                assert(result_vec@ =~= spec_inject(a.seq@, updates@));
+                assert(spec_inject(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), updates@)
+                    =~= spec_inject(a.seq@, updates@));
+                assert(Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
+                    =~= spec_inject(
+                        Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+                        updates@));
+            }
+            injected
         }
 
         // Algorithm 19.7: isEmpty a = (|a| = 0).
@@ -909,13 +1054,26 @@ pub mod ArraySeqStPer {
     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStPerS<T> {
         type Item = &'a T;
         type IntoIter = ArraySeqStPerIter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { ArraySeqStPerIter { inner: self.seq.iter() } }
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+                iter_invariant(&it),
+        {
+            ArraySeqStPerIter { inner: self.seq.iter() }
+        }
     }
 
     impl<T> std::iter::IntoIterator for ArraySeqStPerS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+        {
+            self.seq.into_iter()
+        }
     }
 
 

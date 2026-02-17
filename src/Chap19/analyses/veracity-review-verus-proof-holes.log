@@ -1,0 +1,64 @@
+❌ ArraySeqMtEph.rs
+/home/milnes/projects/APAS-VERUS-review/src/Chap19/ArraySeqMtEph.rs:1407: assume() - proof { assume(equal == (self@ == other@)); }
+      1403 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1405 |         {
+      1406 |             let equal = self.seq == other.seq;
+      1408 |             equal
+      1409 |         }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 6 total (6 clean, 0 holed)
+❌ ArraySeqStEph.rs
+/home/milnes/projects/APAS-VERUS-review/src/Chap19/ArraySeqStEph.rs:1085: assume() - proof { assume(equal == (self@ == other@)); }
+      1081 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1083 |         {
+      1084 |             let equal = self.seq == other.seq;
+      1086 |             equal
+      1087 |         }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 3 total (3 clean, 0 holed)
+❌ ArraySeqStPer.rs
+/home/milnes/projects/APAS-VERUS-review/src/Chap19/ArraySeqStPer.rs:1095: assume() - proof { assume(equal == (self@ == other@)); }
+      1091 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1093 |         {
+      1094 |             let equal = self.seq == other.seq;
+      1096 |             equal
+      1097 |         }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 3 total (3 clean, 0 holed)
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   3 holed (contains holes)
+   3 total
+
+Proof Functions:
+   12 clean
+   0 holed
+   12 total
+
+Holes Found: 3 total
+   3 × assume()
+��════════
+
+Modules:
+   0 clean (no holes)
+   3 holed (contains holes)
+   3 total
+
+Proof Functions:
+   12 clean
+   0 holed
+   12 total
+
+Holes Found: 3 total
+   3 × assume()

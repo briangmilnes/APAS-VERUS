@@ -189,6 +189,8 @@ pub mod ArraySeqMtEph {
     }
 
     /// Acquire the lock, apply updates, release. Preserves the lock invariant.
+    /// - APAS: N/A — implementation utility, not in prose.
+    /// - Claude-Opus-4.6: Work Θ(|updates|), Span Θ(|updates|).
     fn apply_ninject_updates<T: Clone + Send + Sync + 'static>(
         lock: Arc<RwLock<Vec<T>, NinjectInv<T>>>,
         updates: Vec<(usize, T)>,
@@ -256,7 +258,8 @@ pub mod ArraySeqMtEph {
             recommends i < self.spec_len();
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
-        /// - Work Θ(length), Span Θ(log length).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(log length).
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -267,7 +270,8 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
         /// - Set the element at `index` to `item` in place.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
             ensures
@@ -276,18 +280,21 @@ pub mod ArraySeqMtEph {
                 success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);
 
         /// - Definition 18.1 (length). Return the number of elements.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn length(&self) -> (len: usize)
             ensures len as int == self.spec_len();
 
         /// - Algorithm 19.11 (Function nth). Return a reference to the element at `index`.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.spec_len()
             ensures *nth_elem == self.spec_index(index as int);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
-        /// - Work Θ(length), Span Θ(log length).
+        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(log length).
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -299,7 +306,8 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
         /// - Definition 18.12 (subseq). Extract a contiguous subsequence.
-        /// - Work Θ(length), Span Θ(log length).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(log length).
         fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -311,7 +319,8 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
 
         /// - Create sequence from Vec.
-        /// - Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
+        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_len() == elts@.len(),
@@ -322,19 +331,22 @@ pub mod ArraySeqMtEph {
     pub trait ArraySeqMtEphRedefinableTrait<T>: ArraySeqMtEphBaseTrait<T> {
 
         /// - Definition 18.1 (empty). Construct the empty sequence.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_len() == 0;
 
         /// - Definition 18.1 (singleton). Construct a singleton sequence containing `item`.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn singleton(item: T) -> (singleton: Self)
             ensures
                 singleton.spec_len() == 1,
                 singleton.spec_index(0) == item;
 
         /// - Definition 18.13 (append). Concatenate two sequences.
-        /// - Work Θ(|a| + |b|), Span Θ(log(|a| + |b|)).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a| + |b|), Span Θ(log(|a| + |b|)).
         fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (appended: Self)
             where T: Clone + Eq
             requires
@@ -346,7 +358,8 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
 
         /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
-        /// - Work Θ(|a|), Span Θ(|a|).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
         /// - The multiset postcondition captures predicate satisfaction, provenance,
         ///   and completeness in a single statement.
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
@@ -366,7 +379,8 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
-        /// - Work Θ(n), Span Θ(log n).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(log n).
         fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires
@@ -379,7 +393,8 @@ pub mod ArraySeqMtEph {
 
         /// - Definition 18.16 (inject). Update multiple positions at once; the first update in
         ///   the ordering of `updates` takes effect when positions collide.
-        /// - Work Θ(|a| + |updates|), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a| + |updates|), Span Θ(1).
         fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
             where T: Clone + Eq
             requires
@@ -393,7 +408,8 @@ pub mod ArraySeqMtEph {
 
         /// - Definition 18.17 (ninject). Nondeterministic inject: update multiple positions at
         ///   once; when positions collide, any one of the updates may take effect.
-        /// - Work Θ(|a| + |updates|), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a| + |updates|), Span Θ(1).
         fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (result: Self)
             where T: Clone + Eq
             requires
@@ -405,17 +421,20 @@ pub mod ArraySeqMtEph {
                     Seq::new(result.spec_len(), |i: int| result.spec_index(i)));
 
         /// - Definition 18.5 (isEmpty). true iff the sequence has length zero.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn is_empty(&self) -> (empty: bool)
             ensures empty <==> self.spec_len() == 0;
 
         /// - Definition 18.5 (isSingleton). true iff the sequence has length one.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.spec_len() == 1;
 
         /// - Definition 18.7 (iterate). Fold with accumulator `seed`.
-        /// - Work Θ(|a|), Span Θ(|a|).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (result: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
@@ -424,7 +443,8 @@ pub mod ArraySeqMtEph {
                 result == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);
 
         /// - Definition 18.18 (reduce). Combine elements using associative `f` and identity `id`.
-        /// - Work Θ(|a|), Span Θ(log|a|).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(log|a|).
         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: T)
             where T: Clone
             requires
@@ -436,7 +456,8 @@ pub mod ArraySeqMtEph {
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
 
         /// - Definition 18.19 (scan). Prefix-reduce returning inclusive prefix sums and total.
-        /// - Work Θ(|a|), Span Θ(log|a|).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(log|a|).
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtEphS<T>, T))
             where T: Clone + Eq
             requires
@@ -452,7 +473,8 @@ pub mod ArraySeqMtEph {
                     Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);
 
         /// - Algorithm 18.4 (map). Transform each element via `f`.
-        /// - Work Θ(|a|), Span Θ(log|a|).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(log|a|).
         fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
             requires
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
@@ -461,7 +483,8 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);
 
         /// - Algorithm 18.3 (tabulate). Build a sequence by applying `f` to each index.
-        /// - Work Θ(n), Span Θ(n).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n).
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtEphS<T>)
             requires
                 length <= usize::MAX,
@@ -471,7 +494,8 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);
 
         /// - Definition 18.15 (flatten). Concatenate a sequence of sequences.
-        /// - Work Θ(Σ|a_i|), Span Θ(Σ|a_i|).
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(Σ|a_i|), Span Θ(Σ|a_i|).
         fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
             where T: Clone + Eq
             requires
@@ -1055,6 +1079,8 @@ pub mod ArraySeqMtEph {
             ArraySeqMtEphIter { inner: self.seq.iter() }
         }
 
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(log|a|).
         pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: F,
@@ -1105,6 +1131,8 @@ pub mod ArraySeqMtEph {
             }
         }
 
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(log|a|).
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             pred: F,
@@ -1185,6 +1213,8 @@ pub mod ArraySeqMtEph {
             }
         }
 
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(log|a|).
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: F,
@@ -1271,7 +1301,8 @@ pub mod ArraySeqMtEph {
         /// Two threads contend for a single lock protecting the result buffer.
         /// Whichever thread acquires last overwrites the other's conflicting writes.
         /// That scheduling race is the source of nondeterminism.
-        /// Work Θ(|a| + |updates|), Span Θ(|updates|) — lock serializes the writers.
+        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Claude-Opus-4.6: Work Θ(|a| + |updates|), Span Θ(|updates|) — lock serializes the writers.
         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
             where T: Clone + Send + Sync + Eq + 'static
             requires

@@ -21,8 +21,7 @@ use common::*;
 test_verify_one_file! {
     #[test] chap19_arrayseqsteph_loop_borrow_iter verus_code! {
         use vstd::prelude::*;
-        use apas_verus::Chap18::ArraySeqStEph::ArraySeqStEph::{ArraySeqStEphIter, iter_invariant};
-        use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS;
+        use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::*;
 
         fn test_loop_borrow_iter() {
             let a: ArraySeqStEphS<u64> = ArraySeqStEphS::new(3, 42);
@@ -57,8 +56,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] chap19_arrayseqsteph_loop_borrow_into verus_code! {
         use vstd::prelude::*;
-        use apas_verus::Chap18::ArraySeqStEph::ArraySeqStEph::{ArraySeqStEphIter, iter_invariant};
-        use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS;
+        use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::*;
 
         fn test_loop_borrow_into() {
             let a: ArraySeqStEphS<u64> = ArraySeqStEphS::new(3, 55);
@@ -93,7 +91,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] chap19_arrayseqsteph_loop_consume verus_code! {
         use vstd::prelude::*;
-        use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS;
+        use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::*;
 
         fn test_loop_consume() {
             let a: ArraySeqStEphS<u64> = ArraySeqStEphS::new(3, 33);
@@ -130,8 +128,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] chap19_arrayseqsteph_for_borrow_iter verus_code! {
         use vstd::prelude::*;
-        use apas_verus::Chap18::ArraySeqStEph::ArraySeqStEph::{ArraySeqStEphIter, iter_invariant};
-        use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS;
+        use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::*;
 
         fn test_for_borrow_iter() {
             let a: ArraySeqStEphS<u64> = ArraySeqStEphS::new(3, 99);
@@ -158,8 +155,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] chap19_arrayseqsteph_for_borrow_into verus_code! {
         use vstd::prelude::*;
-        use apas_verus::Chap18::ArraySeqStEph::ArraySeqStEph::{ArraySeqStEphIter, iter_invariant};
-        use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS;
+        use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::*;
 
         fn test_for_borrow_into() {
             let a: ArraySeqStEphS<u64> = ArraySeqStEphS::new(3, 77);
@@ -186,7 +182,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] chap19_arrayseqsteph_for_consume verus_code! {
         use vstd::prelude::*;
-        use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS;
+        use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::*;
 
         fn test_for_consume() {
             let a: ArraySeqStEphS<u64> = ArraySeqStEphS::new(3, 66);

@@ -74,6 +74,19 @@ path = "tests/Chap18/ProveLinkedListStEph.rs"
 name = "ProveLinkedListStPer"
 path = "tests/Chap18/ProveLinkedListStPer.rs"
 
+# Chap19 proof tests
+[[test]]
+name = "ProveChap19ArraySeqStEph"
+path = "tests/Chap19/ProveArraySeqStEph.rs"
+
+[[test]]
+name = "ProveChap19ArraySeqStPer"
+path = "tests/Chap19/ProveArraySeqStPer.rs"
+
+[[test]]
+name = "ProveChap19ArraySeqMtEph"
+path = "tests/Chap19/ProveArraySeqMtEph.rs"
+
 # Chap23 iterator proof tests
 [[test]]
 name = "ProveBalBinTreeStEph"

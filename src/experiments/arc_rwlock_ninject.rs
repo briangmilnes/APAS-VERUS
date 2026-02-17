@@ -14,7 +14,7 @@ use std::sync::Arc;
 
 verus! {
 
-// ── 1. Lock predicate ──────────────────────────────────────────────────
+// 1. Lock predicate
 
 /// Ghost state carried by the lock. The invariant says the buffer is
 /// always a valid partial ninject result: every element is either the
@@ -35,7 +35,7 @@ impl<T> RwLockPredicate<Vec<T>> for NinjectPred<T> {
     }
 }
 
-// ── 2. Single-thread write helper ───────────────────────────────────────
+// 2. Single-thread write helper
 
 /// Acquire the lock, apply updates, release. Preserves the lock invariant.
 fn apply_updates<T: Clone + Send + Sync + 'static>(
@@ -97,7 +97,7 @@ fn apply_updates<T: Clone + Send + Sync + 'static>(
     write_handle.release_write(buf);
 }
 
-// ── 3. Parallel ninject ─────────────────────────────────────────────────
+// 3. Parallel ninject
 
 fn ninject_par<T: Clone + Send + Sync + 'static>(
     source: &Vec<T>,

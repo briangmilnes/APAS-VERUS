@@ -143,6 +143,34 @@ name = "TestArraySeqMtEph"
 path = "tests/Chap18/TestArraySeqMtEph.rs"
 
 [[test]]
+name = "TestArraySeqStEph"
+path = "tests/Chap18/TestArraySeqStEph.rs"
+
+[[test]]
+name = "TestArraySeqStPer"
+path = "tests/Chap18/TestArraySeqStPer.rs"
+
+[[test]]
+name = "TestLinkedListStEph"
+path = "tests/Chap18/TestLinkedListStEph.rs"
+
+[[test]]
+name = "TestLinkedListStPer"
+path = "tests/Chap18/TestLinkedListStPer.rs"
+
+[[test]]
+name = "TestChap19ArraySeqStEph"
+path = "tests/Chap19/TestArraySeqStEph.rs"
+
+[[test]]
+name = "TestChap19ArraySeqStPer"
+path = "tests/Chap19/TestArraySeqStPer.rs"
+
+[[test]]
+name = "TestChap19ArraySeqMtEph"
+path = "tests/Chap19/TestArraySeqMtEph.rs"
+
+[[test]]
 name = "TestBalBinTreeStEph"
 path = "tests/Chap23/TestBalBinTreeStEph.rs"
 
