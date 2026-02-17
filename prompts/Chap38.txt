@@ -1,0 +1,424 @@
+Chapter 38
+Parametric BSTs
+In this chapter we build all the functionality of trees based on a very simple interface in
+which the only interesting function is joinMid . This one function captures all that is needed
+to rebalance trees to maintain the balance criteria.
+1 The Parametric Data Type
+We will describe parallel algorithms that support the full functionality of a BST based on
+the following simple interface, which has only one interesting function, joinMid . The inter-
+face abstracts away from the particular balancing scheme, and captures everything about
+balancing in joinMid . For most balancing schemes it is powerful enough to efficiently im-
+plement all the functionality we want for BSTs. For example it will allow us to design
+algorithms for find , insert and delete that take O(log n) work on a tree of size n. It will also
+allow us to design simple parallel algorithms for various functions.
+In the next chapter we will discuss how to implement this interface with a particular
+balancing scheme called Treaps. The interface also works with other balancing schemes
+such as red-black trees, AVL trees, and weight-balanced trees.
+Data Type 38.1 (Parametric BST).
+type K (* The key type. Must support < *)
+type T (* The abstracted tree type *)
+type E = Leaf (* An exposed tree *)
+| Node of (T × K × T)
+size : T → N
+expose : T → E
+joinMid : E → T (* Join and rebalance *)
+266
+2. ALGORITHMS BASED ON JOINMID 267
+The type K is the key type (from a total order), and the type T is the type of the tree itself.
+The expose function exposes the root of the tree returning whether the tree is a Leaf (i.e.,
+empty) or an internal Node. If it is an internal node, the returned type includes a triple of
+the left subtree, the key at the root, and the right subtree. The actual implementation of the
+balanced tree is likely to include other information in each node, but this is hidden by the
+interface.
+The function joinMid is the inverse of expose. It takes either a Leaf or a Node(L, k, R)
+consisting of a left tree L, a key k, and a right tree R, where L < k < R. If the argument
+is a leaf, it just creates a leaf (i.e., empty tree). Otherwise, conceptually, JoinMid creates a
+new node with a left branch L, a key k, and a right branch R. However, it might have to
+rebalance the tree to maintain the invariants of the balancing scheme. This might require
+some rotations, and the particular rotations required will depend on the balancing scheme.
+It might also have to update other information in the root node.
+The function size(T ) returns the number of keys in T . Its functionality should be clear, but
+to implement it efficiently, i.e., in O(1) work, we need to store in each node of the tree the
+size of its subtree. This is an example of information in the node that is not returned by
+expose, and must be updated by JoinMid .
+The interface we give does not associate values with each key, but it would be easy to add
+values. In particular we could define:
+type α E = Leaf
+| Node of (T × K × α × T)
+where α is the type of the value. This would allow us to implement tables (dictionaries),
+and all the implementations given in the rest of this chapter still work. We stick with simple
+sets (no values), because it is simpler.
+2 Algorithms based on joinMid
+We now discuss algorithms for all the functions in the BST interface given in Section 5
+based on just using joinMid .
+Algorithm 38.2 (Empty, Singleton and JoinM). We start with the following very simple
+definitions.
+empty = joinMid (Leaf )
+singleton k = joinMid (Node(empty, k, empty))
+joinM (L, k, R) = joinMid (Node(L, k, R))
+
+create a leaf).
+Algorithm 38.3 (Split).
+split(T, k) =
+case expose(T ) of
+Leaf ⇒ (empty, false, empty)
+| Node(L, k′, R) ⇒
+case compare(k, k′) of
+Equal ⇒ (L, true, R)
+| Less ⇒
+let (Ll, x, Lr ) = split(L, k)
+in (Ll, x, joinM (Lr , k′, R)) end
+| Greater ⇒
+let (Rl, x, Rr ) = split(R, k)
+in (joinM (L, k′, Rl), x, Rr ) end
+The split(T, k) algorithm works by first exposing the root of T . If it is a leaf, we are done
+and can just return empty for the trees less and greater than k, and false in the middle since
+the key is not in T . If T is a node, then we need to compare k to the key k′ at that node,
+which can have three outcomes:
+1. If k = k′ we have found the key k so we return true in the middle and L and R as the
+lesser and greater trees.
+2. If k < k′ we know k can only appear in the left subtree L, and that all keys in the
+right subtree R are greater than k. We can therefore recurse into L using split(L, k).
+This returns (Ll, x, Lr ). The x tells us whether k appears in L so we can return it as
+the middle value. Similarly Ll contains all the keys less than k, so we can return it
+on the left. This leaves us with Lr , k′ and R, which are all greater than k. We can join
+these with joinM (Lr , k′, R), giving us the tree of greater keys for the right result.
+3. If k > k′, it is symmetric to the above.
+As we will see, the split function is very useful for other algorithms.
+Example 38.1. The split algorithm on a BST and key c, which is not in the BST. The split
+traverses the path 〈 a, e, b, d 〉 turning right at a and b (since c is larger) and turning left at e
+and d (since c is smaller). The pieces are put back together into the two resulting trees on
+the way back up the recursion
+
+2. ALGORITHMS BASED ON JOINMID 269
+Algorithm 38.4 (joinPair).
+minKey (T, k) =
+case expose T of
+Leaf ⇒ k
+| Node(L, k′, ) ⇒ minKey(L, k′)
+joinPair (T1, T2) =
+case expose(T2) of
+Leaf ⇒ T1
+| Node(L, k, R) ⇒
+let km = minKey(L, k)
+( , , T ′
+2) = split(T2, km)
+in joinM (T1, km, T ′
+2) end
+This algorithm works by first finding the minimum key km ∈ T2, then using split to remove
+it from T2, returning T ′
+2, and finally using a joinM (T1, km, T ′
+2) to put the parts together.
+Algorithm 38.5 (Insert and Delete). An Insert(T, k) can be implemented as:
+insert(T, k) =
+let (L, , R) = split T k
+in joinM (L, k, R) end
+It splits the tree T at the key to be inserted, and then joins back together with the key in the
+middle. Note that whether the key appeared in the original tree is irrelevant and ignored.
+A Delete(T, k) can be similarly implemented as:
+delete(T, k) =
+let (L, , R) = split T k
+in joinPair (L, R) end
+270 CHAPTER 38. PARAMETRIC BSTS
+Again, it splits the tree T at the key to be inserted, and then joins the tree back together,
+but now without the key in the middle. Note, again, that whether the key appeared in the
+original tree is irrelevant and ignored.
+3 Parallel Functions
+So far all our algorithms have been sequential, and, as we will show, all take O(log n)
+work. We now look at some functions and corresponding algorithms that take advantage
+of parallelism.
+Algorithm 38.6 (Union). The union algorithm uses divide and conquer.
+union(T1, T2) =
+case (expose T1, expose T2) of
+(Leaf , ) ⇒ T2
+( , Leaf ) ⇒ T1
+| (Node(L1, k1, R1), ) ⇒
+let (L2, , R2) = split(T2, k1)
+(L, R) = (union(L1, L2) || union(R1, R2))
+in joinM (L, k1, R) end
+The idea is to split both trees at some key k, recursively union the two parts with keys
+less than k, and the two parts with keys greater than k and then join them. Note that the
+key k might exists in both trees but will only be placed in the result once, because the split
+operation will not include k in any of the two trees returned.
+Note that we chose the key at the root of the first tree, T1, to split the second, T2. We could
+equally well have done it the other way, choosing the root of T2 to split T1.
+Example 38.2. The union of tree t1 and t2 illustrated
+
+Algorithm 38.7 (Intersect). The intersection algorithm is similar to union.
+intersect(T1, T2) =
+case (expose T1, expose T2) of
+(Leaf , ) ⇒ empty
+( , Leaf ) ⇒ empty
+| (Node(L1, k1, R1), ) ⇒
+let (L2, a, R2) = split(T2, k1)
+(L, R) = (intersect(L1, L2) || intersect(R1, R2))
+in if a then joinM (L, k1, R)
+else joinPair (L, R)
+end
+As with union, the implementation splits both trees by using the key k1 at the root of the
+first tree, and computes intersections recursively. It then computes the result by joining the
+results from the recursive calls and including the key k1 if it is found in both trees. Note
+that since the trees are BSTs, checking for the intersections of the left and right subtrees
+recursively suffices to find all shared keys because the split function places all keys less
+than and greater than the given key to two separate trees.
+Algorithm 38.8 (Difference). And there is little difference with the difference algorithm.
+272 CHAPTER 38. PARAMETRIC BSTS
+difference(T1, T2) =
+case (expose T1, expose T2) of
+(Leaf , ) ⇒ empty
+( , Leaf ) ⇒ T1
+| (Node(L1, k1, R1), ) ⇒
+let (L2, a, R2) = split(T2, k1)
+(L, R) = (difference(L1, L2) || difference(R1, R2))
+in if a then joinPair (L, R)
+else joinM (L, k1, R)
+end
+Exercise 38.1. Prove correct the functions intersection, difference, and union.
+Algorithm 38.9 (Filter).
+filter f T =
+case expose T of
+Leaf ⇒ empty
+| Node(L, k, R) ⇒
+let (L′, R′) = (filter f L) || (filter f R)
+in if f (k) then joinM (L′, k, R′)
+else joinPair (L′, R′)
+end
+Algorithm 38.10 (Reduce).
+reduce f I T =
+case expose T of
+Leaf ⇒ I
+| Node(L, k, R) ⇒
+let (L′, R′) = (reduce f I L) || (reduce f I R)
+in f (L′, f (k, R′)) end
+
+4 Cost Specification
+There are many ways to implement an efficient data structure that matches our BST ADT.
+Many of these implementations more or less match the same cost specification, with the
+main difference being whether the bounds are worst-case, expected case (probabilistic), or
+amortized. These implementations all use balancing techniques to ensure that the depth
+of the BST remains O(lg n), where n is the number of keys in the tree. For the purposes
+specifying the costs, we don’t distinguish between worst-case, amortized, and probabilistic
+bounds, because we can always rely on the existence of an implementation that matches
+the desired cost specification. When using specific data structures that match the specified
+bounds in an amortized or randomized sense, we will try to be careful when specifying the
+bounds.
+4. COST SPECIFICATION 273
+Cost Specification 38.11 (BSTs). The BST cost specification is defined as follows. The vari-
+ables n and m are defined as n = max (|t1|, |t2|) and m = min (|t1|, |t2|) when applicable.
+Here, |t| denotes the size of the tree t, defined as the number of keys in t.
+Work Span
+empty O (1) O (1)
+singleton k O (1) O (1)
+split t k O (lg |t|) O (lg |t|)
+join t1 t2 O (lg (|t1| + |t2|)) O (lg (|t1| + |t2|))
+find t k O (lg |t|) O (lg |t|)
+insert t k O (lg |t|) O (lg |t|)
+delete t k O (lg |t|) O (lg |t|)
+intersect t1 t2 O (m · lg n
+m
+) O (lg n)
+difference t1 t2 O (m · lg n
+m
+) O (lg n)
+union t1 t2 O (m · lg n
+m
+) O (lg n)
+The Cost Specification for BSTs can be realized by several balanced BST data structures
+such as Treaps (in expectation), red-black trees (in the worst case), and splay trees (amor-
+tized).
+In the rest of this section, we justify the cost bounds by assuming the existence of logarith-
+mic time split and join functions, and by using our parametric implementation described
+above.
+Note that the cost of empty and singleton are constant. The work and span costs of find , insert,
+and delete are determined by the split and join functions and are thus logarithmic in the
+size of the tree. The cost bounds for union, intersection, and difference are similar; they are
+also more difficult to see.
+4.1 Cost of Union, Intersection, and Difference
+We analyze the cost for union as implemented by the parametric data structure. Essen-
+tially the same analysis applies to the functions intersection and difference, whose struc-
+tures are the same as union.
+For the analysis, we consider an execution of union on two trees t1 and t2 and define m =
+||t1|| and n = ||t2|| as the number of keys in the trees.
+We first present an analysis under some relatively strong assumptions. We then show that
+these assumptions can be eliminated.
+Balancing Assumptions. Consider now a call to union with parameters t1 and t2. To
+simplify the analysis, we make several assumptions.
+274 CHAPTER 38. PARAMETRIC BSTS
+1. Perfect balance: t1 is perfectly balanced (i.e., the left and right subtrees of the root
+have size at most ||t1||/2).
+2. Perfect splits: each time we split t2 with a key from t1, the resulting trees have exactly
+half the size of t2.
+3. Split the larger tree: ||t1|| < ||t2||.
+4.1.1 Analysis with Balancing Assumptions
+The Recurrence. Under the balancing assumptions, we can write the following recur-
+rence for the work of union:
+Wunion (m, n) = 2Wunion (m/2, n/2) + Wsplit (n) + Wjoin ( m + n
+2 , m + n
+2 ) + O(1)
+By assumption, we know that
+• Wsplit (n) = O(lg n), and
+• Wjoin ( m+n
+2 , m+n
+2 ) = O(lg n), because m ≤ n.
+We can therefore write the recurrence as
+Wunion (m, n) =
+{ 2Wunion (m/2, n/2) + lg n if m > 0
+1 otherwise
+Recurrence Tree. We can draw the recurrence tree showing the work of union as shown
+below. In the illustration, we omit the leaves of the recurrence, which correspond to the
+case when the first argument t1 is empty (Leaf ). The leaves of the recurrence tree thus
+correspond to calls to union where t1 consists of a single key.
+4. COST SPECIFICATION 275
+Solving the Recurrence: Brick Method. To solve the recurrence, we start by analyzing
+the structure of the recursion tree shown above.
+Let’s find the number of leaves in the tree. Notice that the tree bottoms out when m = 1
+and before that, m is always split in half (by assumption t1 is perfectly balanced). The
+tree t2 does not affect the shape of the recursion tree or the stopping condition. Thus, there
+are exactly m leaves in the tree. Notice also that the leaves are at depth lg m.
+Let’s now determine the size of the argument t2 at the leaves. We have m keys in t1 to start
+with, and by assumption they split t2 evenly at each recursive call. Thus, the leaves have
+all the same size of n
+m . The cost of the leaves is thus O(lg n
+m ). Since there are m leaves, the
+whole bottom level costs
+O(m lg n
+m ).
+We now show that the cost of the leaves dominates the total cost. First observe that the total
+work at any internal level i in the tree is 2i lg n/2i. Thus the ratio of the work at adjacent
+276 CHAPTER 38. PARAMETRIC BSTS
+levels is
+2i−1 lg n/2i−1
+2i lg n/2i = 1
+2
+lg n − i + 1
+lg n − i ,
+where i < lg m ≤ lg n. Observe that for all i < lg n − 1, this ratio is less than 1. This means
+that for all levels except for the last, the total work at each level decreases by a constant
+fraction less that 1.
+Observe now that at the final level in the tree, we have i = lg m − 1 ≤ lg n − 1. For this
+level, we can bound the fraction from above by taking i = lg n − 1:
+1
+2
+lg n − i + 1
+lg n − i ≤ 1
+2
+lg n − lg n + 1 + 1
+lg n − lg n + 1 = 1.
+Thus the total work is asymptotically dominated by the total work of the leaves, which
+is O (m lg n
+m
+).
+Solving the Recurrence: Direct Derivation. We can establish the same fact more pre-
+cisely. We start by writing the total cost by summing over all levels, omitting for simplicity
+the constant factors, and assuming that n = 2a and m = 2b,
+W (n, m) =
+b∑
+i=0
+2i lg n
+2i .
+We can rewrite this sum as
+b∑
+i=0
+2i lg n
+2i = lg n
+b∑
+i=0
+2i −
+b∑
+i=0
+i 2i. = a
+b∑
+i=0
+2i −
+b∑
+i=0
+i 2i.
+Focus now on the second term. Note that
+b∑
+i=0
+i 2i =
+b∑
+i=0
+b∑
+j=i
+2j =
+b∑
+i=0
+
+
+b∑
+j=0
+2j −
+i−1∑
+k=0
+2k
+
+ .
+Substituting the closed form for each inner summation and simplifying leads to
+= ∑b
+i=0
+((2b+1 − 1) − (2i − 1)).
+= (b + 1)(2b+1 − 1) − ∑b
+i=0 (2i − 1)
+= (b + 1)(2b+1 − 1) − (2b+1 − 1 − (b + 1))
+= b 2b+1 + 1.
+4. COST SPECIFICATION 277
+Now go back and plug this into the original work bound and simplify
+W (n, m) = ∑b
+i=0 2i lg n
+2i
+= a ∑b
+i=0 2i − ∑b
+i=0 i 2i
+= a (2b+1 − 1) − (b 2b+1 + 1)
+= a 2b+1 − a − b 2b+1 − 1 = 2m(a − b) − a − 1
+= 2m(lg n − lg m) − a − 1 = 2m lg n
+m − a − 1
+= O (m lg n
+m
+) .
+While the direct method may seem complicated, it is more robust than the brick method,
+because it can be applied to analyze essentially any algorithm, whereas the Brick method
+requires establishing a geometric relationship between the cost terms at the levels of the
+tree.
+Span Analysis. For the span bound note that the tree has exactly O(lg m) levels and the
+cost for each level is O(lg n) The total span is therefore O(lg m lg n). It turns out, though
+we will not describe here, it is possible to change the algorithm slightly to reduce the span
+to O(lg n). We will therefore specify the span of union as O(lg n).
+4.1.2 Removing the Balancing Assumptions
+The assumptions that we made for the analysis may seem unrealistic. In this section, we
+describe how to remove these assumptions.
+First Assumption. Let’s consider the first assumption, which require t1 to be perfectly
+balanced (4.1). This assumption is perhaps the easiest to remove. The balance of the tree t1
+does not impact the work bound, because the work cost is leaf-dominated. But, we do need
+the tree to have logarithmic depth for the span bound. This means that the tree only needs
+to approximately balanced.
+Removing the Second Assumption. Let’s now remove the second assumption (4.1). This
+assumption requires the keys in t1 to split subtrees of t2 in half every time. This is obvi-
+ously not realistic but any unevenness in the splitting only helps reduce the work—i.e.,
+the perfect split is the worst case. The fundamental reason for this is that logarithm is a
+concave function.
+To see this consider the cost at some level i. There are k = 2i nodes in the recursion tree and
+let us say the sizes of second tree at these nodes are n1, . . . , nk, where ∑
+j nj = n. Then, the
+278 CHAPTER 38. PARAMETRIC BSTS
+total cost for the level is
+c ·
+k∑
+j=1
+lg(nj ).
+Because logarithm is a concave function, we know that
+c · ∑k
+j=1 lg(nj ). ≤ c · ∑k
+j=1 lg(n/k)
+= c · 2i · lg(n/2i).
+This means that our assumption results in the highest cost and therefore represents the
+worst case.
+Note (Jensen’s Inequality). The inequality that we used in the argument above is an in-
+stance of Jensen’s inequality, named after Johan Jensen, a Danish mathematician.
+Removing the Third Assumption. Our final assumption requires t1 to be smaller than t2
+(4.1).
+This is relatively easy to enforce: if t1 is larger, then we can reverse the order of arguments.
+If they are the same size, we need to be a bit more precise in our handling of the base case
+in our summation but that is all.
+

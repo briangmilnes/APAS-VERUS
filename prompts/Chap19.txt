@@ -1,5 +1,3 @@
-Anything that exists in the base trait should not be redefined if it is not redefined in this prose.
-
 1 A Parametric Implementation
 The sequence ADT, as we described in ADT Chapter , includes more than a dozen func-
 tions. Although it is possible to present an implementation by considering each function

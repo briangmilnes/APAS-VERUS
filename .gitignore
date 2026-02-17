@@ -20,3 +20,4 @@ TAGS
 # Old code
 attic/
 lib.long-type-*.txt
+.verus-log/
