@@ -2,7 +2,170 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn _ requires .*usize::MAX
-Searching: /home/milnes/projects/verus/source/vstd
-Files: 95, Functions: 2289, Matches: 0
+Pattern: proof fn _ types Seq ensures .*fold_left.*
+Searching: /home/milnes/projects/APAS-VERUS
+Files: 291, Functions: 4492, Matches: 26
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:112: [0m
+/// Helper: establish fold_left one-step decomposition via lemma_fold_left_split.
+[38;5;22m    proof fn lemma_fold_left_step(s: Seq<N>, acc: N)[0m
+[38;5;22m        requires s.len() > 0,[0m
+[38;5;22m        ensures s.fold_left(acc, spec_max_fn())[0m
+[38;5;22m            == s.subrange(1, s.len() as int).fold_left([0m
+[38;5;22m                spec_max_fn()(acc, s[0]), spec_max_fn()),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:125: [0m
+/// fold_left(s, acc, max) >= acc and every s[i] <= fold_left result.
+[38;5;22m    proof fn lemma_max_fold_left_bound(s: Seq<N>, acc: N)[0m
+[38;5;22m        ensures[0m
+[38;5;22m            s.fold_left(acc, spec_max_fn()) >= acc,[0m
+[38;5;22m            forall|i: int| #![trigger s[i]] 0 <= i < s.len()[0m
+[38;5;22m                ==> s[i] <= s.fold_left(acc, spec_max_fn()),[0m
+[38;5;22m        decreases s.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:150: [0m
+/// fold_left(s, acc, max) is either acc itself or some element of s.
+[38;5;22m    proof fn lemma_max_fold_left_achievable(s: Seq<N>, acc: N)[0m
+[38;5;22m        ensures[0m
+[38;5;22m            s.fold_left(acc, spec_max_fn()) == acc[0m
+[38;5;22m            || exists|i: int| #![trigger s[i]] 0 <= i < s.len()[0m
+[38;5;22m                && s[i] == s.fold_left(acc, spec_max_fn()),[0m
+[38;5;22m        decreases s.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:93: [0m
+/// Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f))
+/// when (f, id) is a monoid.
+[38;5;22m    proof fn lemma_fold_left_monoid(s: Seq<N>, x: N, f: spec_fn(N, N) -> N, id: N)[0m
+[38;5;22m        requires spec_monoid(f, id),[0m
+[38;5;22m        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),[0m
+[38;5;22m        decreases s.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:906: [0m
+/// For a monoid (f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
+[38;5;22m        proof fn lemma_monoid_fold_left(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)[0m
+[38;5;22m            requires spec_monoid(f, id)[0m
+[38;5;22m            ensures f(x, s.fold_left(id, f)) == s.fold_left(x, f)[0m
+[38;5;22m            decreases s.len()[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:718: [0m
+/// - Lemma: int fold equals nat fold as int for weighted sums
+/// - Since we're adding non-negative values, the int and nat accumulators stay in sync.
+[38;5;22mpub proof fn lemma_int_fold_equals_nat_fold_weighted<T: View<V = (A, B, u32)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures[0m
+[38;5;22m        seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat)[0m
+[38;5;22m            == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:735: [0m
+/// - Lemma: fold_left adding e@.2 equals spec_weighted_seq_sum of the mapped sequence
+/// - This shows that folding over elements extracting weight via View
+/// - equals the weighted sum of the view-mapped sequence.
+[38;5;22mpub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum<T: View<V = (A, B, u32)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures[0m
+[38;5;22m        seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) [0m
+[38;5;22m            == spec_weighted_seq_sum(seq.map(|_i: int, e: T| e@)),[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:768: [0m
+/// - Lemma: fold_left with int accumulator equals fold_left with nat accumulator cast to int
+/// - For functions that only add non-negative values, the results are equal.
+[38;5;22mpub proof fn lemma_fold_left_int_equals_nat_as_int<T: View<V = (A, B, u32)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures[0m
+[38;5;22m        seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat)[0m
+[38;5;22m            == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:804: [0m
+[38;5;22mpub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u8<T: View<V = (A, B, u8)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) == spec_weighted_seq_sum_u8(seq.map(|_i: int, e: T| e@)),[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:817: [0m
+[38;5;22mpub proof fn lemma_fold_left_int_equals_nat_as_int_u8<T: View<V = (A, B, u8)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:854: [0m
+[38;5;22mpub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u16<T: View<V = (A, B, u16)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) == spec_weighted_seq_sum_u16(seq.map(|_i: int, e: T| e@)),[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:867: [0m
+[38;5;22mpub proof fn lemma_fold_left_int_equals_nat_as_int_u16<T: View<V = (A, B, u16)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:902: [0m
+[38;5;22mpub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u64<T: View<V = (A, B, u64)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) == spec_weighted_seq_sum_u64(seq.map(|_i: int, e: T| e@)),[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:916: [0m
+[38;5;22mpub proof fn lemma_fold_left_int_equals_nat_as_int_u64<T: View<V = (A, B, u64)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:952: [0m
+[38;5;22mpub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_u128<T: View<V = (A, B, u128)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) == spec_weighted_seq_sum_u128(seq.map(|_i: int, e: T| e@)),[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:966: [0m
+[38;5;22mpub proof fn lemma_fold_left_int_equals_nat_as_int_u128<T: View<V = (A, B, u128)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:1002: [0m
+[38;5;22mpub proof fn lemma_seq_fold_left_plus_is_weighted_seq_sum_usize<T: View<V = (A, B, usize)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) == spec_weighted_seq_sum_usize(seq.map(|_i: int, e: T| e@)),[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:1016: [0m
+[38;5;22mpub proof fn lemma_fold_left_int_equals_nat_as_int_usize<T: View<V = (A, B, usize)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as nat) == seq.fold_left(0nat, |acc: nat, e: T| acc + e@.2 as nat) as int,[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:1054: [0m
+[38;5;22mpub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i8<T: View<V = (A, B, i8)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum_i8(seq.map(|_i: int, e: T| e@)),[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:1095: [0m
+[38;5;22mpub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i16<T: View<V = (A, B, i16)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum_i16(seq.map(|_i: int, e: T| e@)),[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:1138: [0m
+[38;5;22mpub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum<T: View<V = (A, B, i32)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum(seq.map(|_i: int, e: T| e@)),[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:1180: [0m
+[38;5;22mpub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i64<T: View<V = (A, B, i64)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum_i64(seq.map(|_i: int, e: T| e@)),[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:1222: [0m
+[38;5;22mpub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i128<T: View<V = (A, B, i128)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum_i128(seq.map(|_i: int, e: T| e@)),[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/seq_set.rs:1264: [0m
+[38;5;22mpub proof fn lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_isize<T: View<V = (A, B, isize)>, A, B>(seq: Seq<T>)[0m
+[38;5;22m    ensures seq.fold_left(0int, |acc: int, e: T| acc + e@.2 as int) == spec_signed_weighted_seq_sum_isize(seq.map(|_i: int, e: T| e@)),[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:861: [0m
+/// For a monoid (f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
+[38;5;22m        proof fn lemma_monoid_fold_left(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)[0m
+[38;5;22m            requires spec_monoid(f, id)[0m
+[38;5;22m            ensures f(x, s.fold_left(id, f)) == s.fold_left(x, f)[0m
+[38;5;22m            decreases s.len()[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:869: [0m
+/// For a monoid (f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
+[38;5;22m        proof fn lemma_monoid_fold_left(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)[0m
+[38;5;22m            requires spec_monoid(f, id)[0m
+[38;5;22m            ensures f(x, s.fold_left(id, f)) == s.fold_left(x, f)[0m
+[38;5;22m            decreases s.len()[0m
 

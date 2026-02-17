@@ -185,6 +185,22 @@ path = "tests/Chap26/TestETSPStPer.rs"
 name = "TestETSPMtPer"
 path = "tests/Chap26/TestETSPMtPer.rs"
 
+[[test]]
+name = "TestReduceContractStEph"
+path = "tests/Chap27/TestReduceContractStEph.rs"
+
+[[test]]
+name = "TestReduceContractMtEph"
+path = "tests/Chap27/TestReduceContractMtEph.rs"
+
+[[test]]
+name = "TestScanContractStEph"
+path = "tests/Chap27/TestScanContractStEph.rs"
+
+[[test]]
+name = "TestScanContractMtEph"
+path = "tests/Chap27/TestScanContractMtEph.rs"
+
 # Experiments removed - use verus-proof-time-testing project instead
 # [[test]]
 # name = "test_verify_harness"

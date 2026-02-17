@@ -212,6 +212,14 @@ pub mod Chap26 {
     pub mod ETSPMtPer;
 }
 
+#[cfg(not(feature = "experiments_only"))]
+pub mod Chap27 {
+    pub mod ReduceContractStEph;
+    pub mod ReduceContractMtEph;
+    pub mod ScanContractStEph;
+    pub mod ScanContractMtEph;
+}
+
 pub mod Chap21 {
     pub mod Algorithm21_1;
     pub mod Algorithm21_2;
