@@ -154,24 +154,9 @@ pub mod Chap06 {
 //    pub mod WeightedDirGraphStEphI64;
 //    pub mod WeightedDirGraphStEphI128;
 //    pub mod WeightedDirGraphStEphIsize;
-    // Int/Float aggregate graph modules (from APAS-AI, not yet adapted)
-    // Int variants: compile under cargo, hidden from Verus (not Verusified)
-    #[cfg(not(verus_keep_ghost))]
-    pub mod WeightedDirGraphStEphInt;
-    #[cfg(feature = "all_chapters")]
-    pub mod WeightedDirGraphStEphFloat;
-    #[cfg(not(verus_keep_ghost))]
-    pub mod WeightedDirGraphMtEphInt;
-    #[cfg(feature = "all_chapters")]
-    pub mod WeightedDirGraphMtEphFloat;
-    #[cfg(not(verus_keep_ghost))]
-    pub mod WeightedUnDirGraphStEphInt;
-    #[cfg(feature = "all_chapters")]
-    pub mod WeightedUnDirGraphStEphFloat;
-    #[cfg(not(verus_keep_ghost))]
-    pub mod WeightedUnDirGraphMtEphInt;
-    #[cfg(feature = "all_chapters")]
-    pub mod WeightedUnDirGraphMtEphFloat;
+    // Int/Float aggregate graph modules removed: Rust lacks disjunctive typing
+    // (no `impl Trait for i8 | i16 | i32 | ...`), so these can't be expressed cleanly.
+    // Use per-type variants above instead.
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
