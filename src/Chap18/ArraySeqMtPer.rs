@@ -1164,4 +1164,19 @@ pub mod ArraySeqMtPer {
             write!(f, "]")
         }
     }
+
+    /// Literal constructor macro for ArraySeqMtPerS.
+    #[macro_export]
+    macro_rules! ArraySeqMtPerSLit {
+        () => { $crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::from_vec(Vec::new()) };
+        ($x:expr; $n:expr) => { $crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::from_vec(vec![$x; $n]) };
+        ($($x:expr),* $(,)?) => { $crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::from_vec(vec![$($x),*]) };
+    }
+
+    #[macro_export]
+    macro_rules! ArrayMtPerSLit {
+        () => { $crate::ArraySeqMtPerSLit![] };
+        ($x:expr; $n:expr) => { $crate::ArraySeqMtPerSLit![$x; $n] };
+        ($($x:expr),* $(,)?) => { $crate::ArraySeqMtPerSLit![$($x),*] };
+    }
 }

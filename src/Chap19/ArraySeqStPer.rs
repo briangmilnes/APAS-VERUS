@@ -961,4 +961,12 @@ pub mod ArraySeqStPer {
         }
     }
 
+    /// Literal constructor macro for ArraySeqStPerS.
+    #[macro_export]
+    macro_rules! ArraySeqStPerSLit {
+        () => { $crate::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS::from_vec(Vec::new()) };
+        ($x:expr; $n:expr) => { $crate::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS::from_vec(vec![$x; $n]) };
+        ($($x:expr),* $(,)?) => { $crate::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS::from_vec(vec![$($x),*]) };
+    }
+
 }

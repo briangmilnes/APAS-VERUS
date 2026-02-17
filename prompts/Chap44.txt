@@ -1,0 +1,131 @@
+ Build a plan for this, including test and benchmark
+ using PrePlanChecklist.md. 
+
+ Show it to me and estimate time.
+
+ I will tell you when to execute. 
+
+ Wait for me to tell you when to fix, build and test.
+
+ This goes in Chap44.
+
+ Chapter 44
+Example: Indexing and Searching
+As an application of the sets and tables ADTs, we consider the problem of indexing a set of
+documents to provide fast and efficient search functions on documents.
+Suppose that you are given a collection of documents where each document has a unique
+identifier assumed to be a string and a contents, which is again a string and you want to
+support a range of functions including
+• word search: find the documents that contain a given word,
+• logical-and search: find the documents that contain a given word and another,
+• logical-or search: find the documents that contain a given word or another,
+• logical-and-not search: find the documents that contain a given word but not an-
+other.
+This interface roughly corresponds to that offered by search engines on the web, e.g., those
+from Google and Microsoft. When searching the web, we can think of the url of a page on
+the web as its identifier and its contents, as the text (source) of the page. When your search
+term is two words such as ”parallel algorithms”, the term is treated as a logical-and search.
+This is the common search from but search-engines allow you to specify other kinds of
+queries described above (typically in a separate interface).
+Example 44.1. As a simple document collection, consider the following posts made by
+your friends yesterday.
+
+T = 〈 (’ jack ’, ’ chess is fun ’),
+(’ mary ’, ’ I had fun in dance club today ’),
+(’ nick ’, ’ food at the cafeteria sucks ’),
+(’ josefa ’, ’ rock climbing was a blast ’),
+(’ peter ’, ’ I had fun at the party, food was great ’)〉
+where the identifiers are the names, and the contents is the tweet.
+On this set of documents, searching for ’ fun ’ would return
+{’ jack ’, ’ mary ’, ’ peter ’} .
+Searching for ’ club ’ would return {’ mary ’}.
+We can solve the search problem by employing a brute-force algorithm that traverses the
+document collection to answer a search query. Such an algorithm would require at least
+linear work in the number of the documents, which is unacceptable for large collections,
+especially when interactive searches are desirable. Since in this problem, we are only inter-
+ested in querying a static or unchanging collection of documents, we can stage the algo-
+rithm: first, we organize the documents into an index and then we use the index to answer
+search queries. Since, we build the index only once, we can afford to perform significant
+work to do so. Based on this observation, we can adopt the following ADT for indexing
+and searching our document collection.
+Data Type 44.1 (Document Index).
+type word = string
+type id = string
+type contents = string
+type docs
+type index
+makeIndex : (id × contents sequence) → index
+find : index → word → docs
+queryAnd : (docs × docs) → docs
+queryOr : (docs × docs) → docs
+queryAndNot : (docs × docs) → docs
+size : docs → N
+toSeq : docs → id sequence
+Example 44.2. For our collection of tweets in the previous example, we can use makeIndex
+to make an index of these tweets and define a function to find a word in this index as
+follows.
+fw : word → docs = find (makeIndex T )
+We build the index and then partially apply find on the index. This way, we have staged
+the computation so that the index is built only once; the subsequent searches will use the
+index.
+
+309
+For example, the code,
+toSeq (queryAnd ((fw ’ fun ’), queryOr ((fw ’ food ’), (fw ’ chess ’)))
+returns all the documents (tweets) that contain ’ fun ’ and either ’ food ’ or ’ chess ’, which
+are 〈 ’ jack ’, ’ peter ’ 〉. The code,
+size (queryAndNot ((fw ’ fun ’), (fw ’ chess ’)))
+returns the number of documents that contain ’ fun ’ and not ’ chess ’, which is 2.
+We can implement this interface using sets and tables. The makeIndex function can be
+implemented as follows.
+Algorithm 44.2 (Make Index).
+makeIndex docs =
+let
+tagWords(i, d) = 〈 (w, i) : w ∈ tokens(d) 〉
+pairs = flatten 〈 tagWords(i, d) | (i, d) ∈ docs 〉
+words = Table.collect pairs
+in
+〈 w 7 → Set.fromSeq d | (w 7 → d) ∈ words 〉
+end
+The function tokens(d) : string → string sequence takes a string and splits it up into a
+sequence of words.
+The tagWords function takes a document as a pair consisting of the document identifier and
+contents, breaks the document into tokens (words) and tags each token with the identifier
+returning a sequence of these pairs. Using this function, we construct a sequence of word-
+identifier pairs. We then use Table.collect to construct a table that maps each word to a
+sequence of identifiers. Finally, for each table entry, we convert the sequence to a set so
+that we can perform set functions on them.
+Example 44.3. Here is an example of how makeIndex works. We start by tagging the words
+with their document identifier, using tagWords.
+tagWords (’ jack ’, ’ chess is fun ’)
+returns
+〈 (’ chess ’, ’ jack ’), (’ is ’, ’ jack ’), (’ fun ’, ’ jack ’) 〉
+To build the index, we apply tagWords to all documents, and flatten the result to a single
+sequence. Using Table.collect, we then collect the entries by word creating a sequence of
+
+matching documents. In our example, the resulting table has the form:
+words = {(’ a ’ 7 → 〈 ’ melissa ’ 〉),
+(’ at ’ 7 → 〈 ’ nick ’, ’ peter ’),
+. . .
+(’ fun ’ 7 → 〈 ’ jack ’, ’ mary ’, ’ peter ’ 〉),
+. . .}
+Finally, for each word the sequences of document identifiers is converted to a set.
+The rest of the interface can be implemented as follows:
+Algorithm 44.3 (Index Functions).
+find T v = Table.find T v
+queryAnd A B = Set.intersection A B
+queryOr A B = Set.union A B
+queryAndNot A B = Set.difference A B
+size A = Set.size A
+toSeq A = Set.toSeq A
+Costs. Assuming that all tokens have a length upper bounded by a constant, the cost of
+makeIndex is dominated by the collect, which is basically a sort. The work is therefore
+O(n log n) and the span is O(log2 n).
+For an index I with n words, the cost of find I w is O(log n) work and span since it just
+involves a find in the table. The cost of queryAnd , queryOr and queryAndNot are the
+same as for intersection, union and difference on tables—i.e., O (m log (1 + n
+m
+)) work and
+O(log n + log m) span for inputs of size n and m, m < n.
+
+

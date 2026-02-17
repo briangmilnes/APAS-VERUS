@@ -1,0 +1,163 @@
+ Build a plan for this, including test and benchmark
+ using PrePlanChecklist.md. 
+
+ Show it to me and estimate time.
+
+ I will tell you when to execute. 
+
+ Wait for me to tell you when to fix, build and test.
+
+ This goes in Chap47.
+
+2.2 Linear Probing
+Definition 47.7 (Linear Probing). Linear probing is a flat table implementation, where the
+probe sequence is defined by m hash function of the form
+hi(k) = (h(k) + i) mod m.
+Each position in the table determines a single probe sequence, so there are only m possible
+probe sequences.
+344 CHAPTER 47. HASH TABLES
+Primary Clustering. The problem with linear probing is that keys tend to cluster. It suf-
+fers from primary clustering: Any key that hashes to any position in a cluster (not just
+collisions), must probe beyond the cluster and adds to the cluster size. Worse yet, primary
+clustering not only makes the probe sequence longer, it also makes it more likely that it will
+be lengthen further.
+What is the impact of clustering for an unsuccessful search? Let’s consider two extreme
+examples when the table is half full, α = 1/2 (or equivalently, m = 2n). Clustering is mini-
+mized when every other location in the table is empty. In this case, the average number of
+probes needed to insert a new key k is 3/2: One probe to check cell h(k), and with prob-
+ability 1/2 that cell is full and it needs to look at the next location which, by construction,
+must be empty. In the worst case, all the keys are clustered, let’s say at the end of the table.
+If k hashes to any of the first n locations, only one probe is needed. But hashing to the
+nth location would require probing all n full locations before finally wrapping around to
+find an empty location. Similarly, hashing to the second full cell, requires probing (n − 1)
+full cells plus the first empty cell, and so forth. Thus, under uniform hashing the average
+number of probes needed to insert a key would be
+1 + [n + (n − 1) + (n − 2) + .... + 1]/m = 1 + n(n + 1)/2m ≈ n/4
+
+344 CHAPTER 47. HASH TABLES
+Primary Clustering. The problem with linear probing is that keys tend to cluster. It suf-
+fers from primary clustering: Any key that hashes to any position in a cluster (not just
+collisions), must probe beyond the cluster and adds to the cluster size. Worse yet, primary
+clustering not only makes the probe sequence longer, it also makes it more likely that it will
+be lengthen further.
+What is the impact of clustering for an unsuccessful search? Let’s consider two extreme
+examples when the table is half full, α = 1/2 (or equivalently, m = 2n). Clustering is mini-
+mized when every other location in the table is empty. In this case, the average number of
+probes needed to insert a new key k is 3/2: One probe to check cell h(k), and with prob-
+ability 1/2 that cell is full and it needs to look at the next location which, by construction,
+must be empty. In the worst case, all the keys are clustered, let’s say at the end of the table.
+If k hashes to any of the first n locations, only one probe is needed. But hashing to the
+nth location would require probing all n full locations before finally wrapping around to
+find an empty location. Similarly, hashing to the second full cell, requires probing (n − 1)
+full cells plus the first empty cell, and so forth. Thus, under uniform hashing the average
+number of probes needed to insert a key would be
+1 + [n + (n − 1) + (n − 2) + .... + 1]/m = 1 + n(n + 1)/2m ≈ n/4
+Even though the average cluster length is 2, the cost for an unsuccessful search is n/4. In
+general, each cluster j of length nj contributes nj (nj + 1)/2 towards the total number of
+probes for all keys. Its contribution to the average is proportional the square of the length
+of the cluster, making long cluster costly.
+Remark. Although it can perform poorly in the worst case, linear probing is known to be
+quite competitive, when the load factors are in the range 30-70% as clusters tend to stay
+small. In addition, a few extra probes is mitigated when sequential access is much faster
+than random access, as in the case of caching. Because of primary clustering, though, it is
+sensitive to quality of the hash function or the particular mix of keys that result in many
+collisions or clumping. Therefore, it may not be a good choice for general purpose hash
+tables.
+2.3 Quadratic Probing
+Definition 47.8 (Quadratic Probing). Quadratic probing is a flat-table implementation,
+where the probe sequence cause probes to move away from clusters, by making increasing
+larger jumps. The probe sequence is defined by functions
+hi(k) = (h(k) + i2) mod m.
+Definition 47.9 (Secondary Clustering). Although, quadratic probing avoids primary clus-
+tering, it still has secondary clustering: when two keys hash to the same location, they have
+the same probe sequence. Since there are only m locations in the table, there are only m
+possible probe sequences.
+
+One problem with quadratic probing is that probe sequences do not probe all locations in
+the table. But since there are (p+1)/2 quadratic residues when p is prime, we can guarantee
+that an empty cell can be found unless the table is crowded.
+Lemma 47.1. If m is prime and the table is at least half empty, then quadratic probing will
+always find an empty location. Furthermore, no locations are checked twice.
+Proof. Consider two probe locations h(k) + i2 and h(k) + j2, 0 ≤ i, j < dm/2e. Suppose the
+locations are the same but i 6 = j. Then
+h(k) + i2 ≡ (h(k) + j2) mod m
+i2 ≡ j2 mod m
+i2 − j2 ≡ 0 mod m
+(i − j)(i + j) ≡ 0 mod m
+Therefore, since m is prime either i − j or i + j are divisible by m. But since both i − j and
+i + j are less than m, they cannot be divisible by m. This is a contradiction.
+Thus the first dm/2e probes are distinct and guaranteed to find an empty location.
+Linear versus Quadratic Probing. Compared to linear probing, computing the next probe
+in quadratic probing is only slightly more expensive, because it can be computed without
+using multiplication:
+hi − hi−1 ≡ (i2 − (i − 1)2) mod m
+hi ≡ (hi−1 + 2i − 1) mod m.
+Unfortunately, requiring that the table remains less than half full makes quadratic probing
+space inefficient.
+
+2. FLAT TABLES OR OPEN ADDRESSING 345
+One problem with quadratic probing is that probe sequences do not probe all locations in
+the table. But since there are (p+1)/2 quadratic residues when p is prime, we can guarantee
+that an empty cell can be found unless the table is crowded.
+Lemma 47.1. If m is prime and the table is at least half empty, then quadratic probing will
+always find an empty location. Furthermore, no locations are checked twice.
+Proof. Consider two probe locations h(k) + i2 and h(k) + j2, 0 ≤ i, j < dm/2e. Suppose the
+locations are the same but i 6 = j. Then
+h(k) + i2 ≡ (h(k) + j2) mod m
+i2 ≡ j2 mod m
+i2 − j2 ≡ 0 mod m
+(i − j)(i + j) ≡ 0 mod m
+Therefore, since m is prime either i − j or i + j are divisible by m. But since both i − j and
+i + j are less than m, they cannot be divisible by m. This is a contradiction.
+Thus the first dm/2e probes are distinct and guaranteed to find an empty location.
+Linear versus Quadratic Probing. Compared to linear probing, computing the next probe
+in quadratic probing is only slightly more expensive, because it can be computed without
+using multiplication:
+hi − hi−1 ≡ (i2 − (i − 1)2) mod m
+hi ≡ (hi−1 + 2i − 1) mod m.
+Unfortunately, requiring that the table remains less than half full makes quadratic probing
+space inefficient.
+2.4 Double Hashing
+Definition 47.10. Double hashing is a flat-table implementation that uses two hash func-
+tions h(·) and hh(·), one to find the initial location to place the key and a second to deter-
+mine the size of the jumps in the probe sequence. The probe sequence is defined by hash
+functions of the form
+hi(k) = (h(k) + i · hh(k)) mod m.
+Keys that hash to the same location, are likely to hash to a different jump size, and so
+will have different probe sequences. Thus, double hashing avoids secondary clustering by
+providing as many as m2 probe sequences.
+How do we ensure every location is checked? Since each successive probe is offset by
+hh(k), every cell is probed if hh(k) is relatively prime to m. Two possible ways to ensure
+346 CHAPTER 47. HASH TABLES
+hh(k) is relatively prime to m are, either make m = 2k and design hh(k) so it is always odd,
+or make m prime and ensure hh(k) < m. Of course, hh(k) cannot equal zero.
+The main advantage with double hashing is that it allows for smaller tables (higher load
+factors) than linear or quadratic probing, but at the expense of higher costs to compute the
+next probe. The higher cost of computing the next probe may be preferable to longer probe
+sequences, especially when testing two keys equal is expensive.
+
+
+
+3 Concluding Remarks
+Hash functions are a very important technique in computer science that is used in a very
+broad array of applications. Although their development was intertwined with that of
+hash tables in the initial years of computer science, recent developments in hash functions
+are primarily driven by security, privacy, and error detection and correction.
+Hash tables are classic data structures that are broadly employed in many real-world sys-
+tems. They are a classic example of a space-time tradeoff: increase the space so table oper-
+ations are faster; decrease the space but table operations are slower.
+Of the different methods for implementing hash table, nested tables and separate chaining
+are perhaps the simplest and are less sensitive to the quality of the hash function or load
+factors. They are therefore usually the choice when it is unknown how many and how
+frequently keys may be inserted or deleted from the hash table.
+Flat tables and open addressing can be more space efficient than nested tables, though the
+space efficiency of nested tables can also improved by using blocking techniques. Linear
+probing has the advantage that it has small constants and works well with modern ar-
+chitectures due to better locality (the memory locations accessed are typically on the same
+cache line). But it suffers from primary clustering , which means its performance is sensi-
+tive to collisions and to high load factors.
+Quadratic probing , on the other hand, avoids primary clustering, but still suffers from
+secondary clustering , and requires rehashing as soon as the load factor reaches 50%.
+Double hashing reduces clustering and thus makes high load factors feasible, but find-
+ing suitable pairs of hash functions is somewhat more difficult and increases the cost of a
+probe.

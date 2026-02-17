@@ -1,0 +1,156 @@
+Chap63
+
+ Which modules should we implement for Chap63?
+ Which lower number modules can you use?
+ How many modules are going to have parallelism and in which functions/methods?
+ Which algorithms, problems and exercises?
+ Which exercises are text proofs?
+ Build only the Eph versions.
+ Discuss with the user.
+ Do we need any single threaded implementations?
+
+ Build a plan for fixing this, including test and benchmark
+ using PrePlanChecklist.md. 
+
+ Show it to me and estimate time.
+
+ This goes in Chap63.
+
+
+ 
+Chapter 63
+Graph Connectivity
+This chapter presents a parallel graph connectivity algorithm that uses graph contraction
+(more specifically star contraction).
+1 Preliminaries
+Definition 63.1 (The Graph Connectivity Problem). Given an undirected graph G = (V, E),
+the graph-connectivity problem requires finding all of the connected components of G by
+specifying the set of vertices in each component.
+Assumption (Graph Representation). Throughout this chapter, we use an edge-set repre-
+sentation for graphs, where every edge is represented as a pair of vertices, in both orders.
+This is effectively equivalent to a directed graph representation of undirected graphs with
+two arcs per edge. As usual we use n and m to denote the number of vertices and edges
+respectively.
+
+Example 63.1. The edge-set representation of an undirected graph is shown below.
+
+
+V = {a, b, c, d, e, f}
+E = {(a, b), (b, a), (b, d), (b, e), (e, b), (d, b), (d, f), (a, c),
+(c, a), (c, d), (d, c), (d, f), (f, d), (e, f), (f, e)}
+2 Algorithms for Connectivity
+Sequential Algorithms for Connectivity. The graph connectivity problem can be solved
+by using graph search as follows.
+• Start at any vertex and find, using DFS or BFS, all vertices reachable from that vertex
+and mark them visited. This creates the first connected component.
+• Select another vertex, and if it has not already been visited, then search from that
+vertex to create the second component. Repeat until all the vertices are considered.
+This approach leads to perfectly sensible sequential algorithms for graph connectivity, but
+the resulting algorithms have large span and are therefore poor parallel algorithms.
+DFS is a purely sequential algorithm and has span Ω(m). BFS can yield some parallelism
+but still the span of BFS is lower bounded by the diameter of a component, which can be
+as large as n − 1, e.g., a “chain” of n vertices has diameter n − 1. Even when the diameter of
+the graph is small, the span can be high, because we have to iterate over the components
+sequentially. The span is lower bounded by the number of components, which can be
+large.
+Algorithm 63.2 (Component Count). The pseudo-code below shows a graph-contraction
+based algorithm for determining the number of connected components in a graph. The call
+to starPartition (Algorithm 62.3) on Line 6 returns the set of (centers) super-vertices V ′ and
+a table P mapping every v ∈ V to a v′ ∈ V ′.
+The set V ′ defines the super-vertices of the quotient graph. Line 7 completes the computa-
+tion of the quotient graph.
+• It computes the edges of the quotient graph by routing the end points of each edge
+to the corresponding super-vertices in V ′, which is specified by the table P ;
+• It removes all self edges via the filter P [u] 6 = P [v].
+The algorithm then recursively computes the number of connected components in the quo-
+tient graph. Recursion bottoms out when the graph contains no edges, where the number
+of components is equal to the number of vertices.
+
+
+2. ALGORITHMS FOR CONNECTIVITY 473
+1 countComponents (G = (V, E)) =
+2 if |E| = 0 then
+3 |V |
+4 else
+5 let
+6 (V ′, P ) = starPartition (V, E)
+7 E′ = {(P [u], P [v]) : (u, v) ∈ E | P [u] 6 = P [v]}
+8 R = countComponents (V ′, E′)
+9 in
+10 R
+11 end
+Example 63.2. Consider an execution of countComponents that contracts the graph as fol-
+lows.
+The values of V ′, P , and E′ after each round of the contraction is shown below.
+V ′ = {a, d, e}
+Round 1 P ′ = {a 7 → a, b 7 → a, c 7 → a, d 7 → d, e 7 → e, f 7 → e}
+E′ = {(a, e), (e, a), (a, d), (d, a), (d, e), (e, d)}
+V ′ = {a, e}
+Round 2 P ′ = {a 7 → a, d 7 → a, e 7 → e}
+E′ = {(a, e), (e, a)}
+V ′ = {a}
+Round 3 P ′ = {a 7 → a, e 7 → a}
+E′ = {}
+Exercise 63.1. Express countComponents in terms of higher order function starContract
+(Algorithm 62.5) by specifying the functions base and expand.
+
+Computing Components. We can modify algorithm for counting components to com-
+pute the components themselves. The idea is to construct recursively a mapping from
+vertices to their components. The algorithm below implements this idea.
+Algorithm 63.3 (Graph Connectivity). The algorithm below computes the connected com-
+ponents of the input graph G and returns a tuple consisting of 1) a representative for each
+component, and 2) a mapping from the vertices in the graph to the representative of their
+component.
+1 connectedComponents (G = (V, E)) =
+2 if |E| = 0 then
+3 (V, {v 7 → v : v ∈ V })
+4 else
+5 let
+6 (V ′, P ) = starPartition (V, E)
+7 E′ = {(P [u], P [v]) : (u, v) ∈ E | P [u] 6 = P [v]}
+8 (V ′′, C) = connectedComponents (V ′, E′)
+9 in
+10 (V ′′, {u 7 → C[v] : (u 7 → v) ∈ P })
+11 end
+Example 63.3. Applying connectedComponents to the following graph
+might return:
+({a} , {a 7 → a, b 7 → a, c 7 → a, d 7 → a, e 7 → a, f 7 → a})
+This is because there is a single component and all vertices will map to that component
+label. In this case a was picked as the representative, but any of the initial vertices is a
+valid representative, in which case all vertices would map to it.
+
+Example 63.4. Consider the following graph.
+
+Suppose that starPartition returns:
+V ′ = {a, d, e}
+P = {a 7 → a, b 7 → a, c 7 → a, d 7 → d, e 7 → e, f 7 → e} .
+This pairing corresponds to the case where a, d and e are chosen an centers.
+Because the graph is connected, the recursive call to connectedComponents (V ′, E′) will
+map all vertices in V ′ to the same vertex. Let’s say this vertex is a giving:
+V ′′ = {a}
+P ′ = {a 7 → a, d 7 → a, e 7 → a} .
+Now {u 7 → P ′[v] : (u 7 → v) ∈ P } will for each vertex-super-vertex pair in P , look up what
+that super-vertex got mapped to in the recursive call. For example, vertex f maps to vertex
+e in P so we look up e in P ′, which gives us a so we know that f is in the component a.
+Overall the result is:
+{a 7 → a, b 7 → a, c 7 → a, d 7 → a, e 7 → a, f 7 → a} .
+Note. The only differences between the algorithm for counting components and the al-
+gorithm for computing the components is the base case, and “expansion step” (Defini-
+tion 60.4) on Line 10 of Algorithm 63.3.
+In the base case instead of returning the size of V returns all vertices in V along with a
+mapping from each one to itself. This is a valid answer since if there are no edges each
+vertex is its own component. In the inductive case, before returning from the recursion,
+Line 10 constructs the mapping C from vertices to their components by mapping each
+vertex to the component that its super-vertex (given by P ) belongs to. This involves looking
+up C[v] for every (u 7 → v) ∈ P . If we view a mapping as a function, then the expansion
+step is equivalent to function composition, i.e., C ◦ P .
+Exercise 63.2. Express countComponents in terms of higher order function starContract
+(Algorithm 62.5) by specifying the functions base and expand.
+Exercise 63.3. What is the work and span of the algorithm for counting components ?
+Explain your choice of the representation for the graph. What happens if you choose a
+different representation?
+Exercise 63.4. What is the work and span of the algorithm for computing the components
+? Explain your choice of the representation for the graph. What happens if you choose a
+different representation?
+
+

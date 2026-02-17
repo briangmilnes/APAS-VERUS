@@ -1,0 +1,279 @@
+ Build a plan for this, including test and benchmark
+ using PrePlanChecklist.md. 
+
+ Identify all the algorithms specified here and implement
+ them for directed graphs. You may be able to use some of
+ our representations for graphs, you may have to make
+ novel ones. Definitely make a separate stack module.
+
+ You may have to allow negative weights if our graphs don't.
+ Do not try and represent anything with a negative infinity.
+
+ How many are parallel?
+
+ Show it to me and estimate time.
+
+ I will tell you when to execute. 
+
+ Wait for me to tell you when to fix, build and test.
+
+ This goes in Chap58.
+
+Chapter 58
+Bellman-Ford’s Algorithm
+Bellman-Ford’s algorithm solves the single source shortest path problem with arbitrary
+edge weights, and with significant parallelism.
+1 Graphs with Negative Edge Weights
+Negative edge weights might appear to be unnatural. For example, in a “map” graph,
+which represents intersections and the roads between them, quantities of interest such as
+the travel time, or the length of the road between two vertices are non-negative. Nega-
+tive weights, do however, arise when we consider more complex properties and when we
+reduce other problems to shortest paths.
+Example 58.1 (Reducing Currency Exchange to Shortest Paths). Consider the following cur-
+rency exchange problem: given a set of currencies and a set of exchange rates between
+them, find the sequence of exchanges to get from currency u to currency v that gives the
+maximum yield. Here is an example:
+
+The best sequence of exchanges from euros to Japanese yen, is through US dollars and
+Chinese renminbi.
+We now reduce this to the shortest paths problem. Given a unit in currency u, a path of
+exchanges from u to v with rates r0, · · · , rl will yields r0 × · · · × rl units is currency v. This
+is a product, but we can use the logarithm function to it to a sum. The idea is for each
+exchange rate r(u, v) to include an edge (u, v) with weight w(u, v) = − lg(r(u, v)). The
+weights can be negative. Now we have that for a path P with weights w0, . . . , wl
+w(P ) = w0 + · · · + wl
+= −(lg(r0) + · · · + lg(rl))
+= − lg(r0 × · · · × rl)
+Hence by finding the shortest path we will find the path that has the greatest yield, and
+furthermore the yield will be 2−w(P ).
+Exercise 58.1. In the currency exchange example, what does a negative weight cycle imply?
+Impact of Negative Weights on Shortest Paths. Consider a graph with negative edge
+weights. Are shortest paths on this graph always well defined?
+To answer this question, consider two cases.
+• First, assume that the graph does not have any cycles with total negative weight, i.e.,
+for any cycle the sum of the weights of the edges on that cycle is not less than zero.
+In this case, we can conclude that there is a shortest path between any two vertices
+that is simple, i.e., contains no cycles.
+• Second, assume that the graph has a cycle with total negative weight. In this case, any
+shortest simple path that passes through a vertex in this cycle can be made shorter
+by extending the path with the cycle. Furthermore, this process can be repeated,
+ultimately allowing us to prove that the shortest path is −∞.
+Based on this analysis, we expect a shortest path algorithm to alert us when it encounters
+a negative-weight cycle. In other words, if there is a relevant negative-weight cycle, then
+the algorithm should terminate and indicate the presence of such a cycle, otherwise, the
+algorithm should compute the shortest paths as desired.
+Exercise 58.2. Prove that if a graph has no negative-weight cycles, then there is a shortest
+path between any two vertices that is simple.
+Dijkstra with Negative Weights. Recall that Dijkstra’s assumes non-negative (edge) weights.
+This assumption allows the algorithm to consider simple paths (with no cycles) only and
+to construct longer shortest paths from shorter ones iteratively. The absence of negative
+weights is crucial to this approach and the Dijkstra’s property , which underpins the ap-
+proach does not hold in the presence of negative weights.
+
+
+
+2. BELLMAN-FORD’S ALGORITHM 439
+Example 58.2. To see where Dijkstra’s property fails with negative edge weights consider
+the following example.
+Dijkstra’s algorithm would visit b then a and leave b with a distance of 2 instead of the
+correct distance 1. The problem is that when Dijkstra’s algorithm visits b, it fails to consider
+the possibility of there being a shorter path from a to b (which is impossible with non-
+negative edge weights).
+2 Bellman-Ford’s Algorithm
+Intuition behind Bellman-Ford. To develop some intuition for finding shortest paths in
+graphs with negative edge weights, let’s recall the sub-path property of shortest paths.
+This property states that any sub-path of a shortest path is a shortest path (between its end
+vertices). The sub-paths property holds regardless of the edge weights.
+Dijkstra’s algorithm exploits this property by building longer paths from shorter ones, i.e.,
+by building shortest paths in non-decreasing order. With negative edge weights this does
+not work anymore, because paths can get shorter as we add edges.
+There is another way to exploit the same property: building paths that contain more and
+more edges. To see how, suppose that we have found the shortest paths from a source to
+all vertices with k or fewer edges or “hops”. We can compute the shortest path with (k + 1)
+or fewer hops from k or fewer hops extending all paths by one edge if doing so leads to
+a shorter path and leaving them unchanged otherwise. If the graph does not have any
+negative-weight cycles, then all shortest paths are simple and thus contain |V | − 1 or fewer
+edges. Thus we only have to repeat this process as many times as the number of vertices.
+This the basic idea behind Bellman-Ford’s algorithm , the details of which are worked out
+in the rest of this chapter.
+Definition 58.1 (k-hop Distance). For a graph G, the k-hop distance, written δk
+G(u, v), is
+the shortest path from u to v considering only paths with at most k ≥ 0 edges. If no such
+path with k or fewer edges exists, then δk
+G(u, v) = ∞.
+
+Computing k-hop distances. Given G = (V, E), suppose now that we have calculated
+the k-hop distances, δk
+G(s, v), to all vertices v ∈ V . To find the (k + 1)-hop distance to v, we
+consider the incoming edges of v and pick the shortest path to that vertex that arrives at an
+in-neighbor u using k edges, i.e., δk
+G(s, u), and then takes the edge (u, v), i.e.,
+δk+1(v) = min(δk(v), min
+x∈N −(v)
+(δk(x) + w(x, v)) ).
+Recall that N −(v) indicates the in-neighbors of vertex v.
+Example 58.3. In the following graph G, suppose that we have found the shortest paths
+from the source s to vertices using k or fewer edges. Each vertex u is labeled with its k-
+distance to s, written δk
+G(s, u). The weight of the shortest path to v using k + 1 or fewer
+edges is
+min
+( δk
+G(s, v),
+min (δk
+G(s, a) + 3, δk
+G(s, b) − 6, δk
+G(s, c) + 5)
+)
+The shortest path with at most k + 1 edges has weight −2 and goes through vertex b.
+Computing Shortest Paths Iteratively. Now that we know how to construct shortest
+paths with more hops , we can iterate the approach to obtain an algorithm for computing
+shortest paths in G = (V, E) from a source s ∈ V as follows.
+• Start by determining δ0
+G(s, v) for all v ∈ V . Since no vertex other than the source is
+reachable with a path of length 0, we have:
+– δ0
+G(s, s) = 0, and
+– δ0
+G(s, v) = ∞ for all v 6 = s.
+• Next, iteratively for each round k > 0, compute for each vertex in parallel δk+1
+G (s, v)
+using δk
+G(s, ·)’s as described above.
+
+
+The only question left is when to stop the iteration. Note that because the (k + 1)-hop
+distance for a vertex is calculated in terms of the k-hop distances, if the (k+1)-hop distances
+of all vertices remain unchanged relative to the k-hop distances, then the k+2-hop distances
+will also be the same. Therefore we can stop when an iteration produces no change in the
+distances of vertices.
+But, are we guaranteed to stop? Not, if we have negative-weight cycles reachable from the
+source, because such a cycle will decrease distances of some vertices on every iteration.
+But, we can detect negative cycles by checking that the distances have not converged after
+|V | iterations, because a simple (acyclic) path in a graph can include at most |V | − 1 edges
+and, in the absence of negative-weight cycles, there always exist a simple shortest path.
+Algorithm 58.2 (Bellman Ford Algorithm). The pseudo-code below shows the Bellman-
+Ford algorithm for computing shortest paths in weighted graphs, where edge weights can
+be negative. The algorithm terminates and returns either the weight of the shortest paths
+for all vertices reachable from the source s or it indicates that the graph has a negative-
+weight cycle.
+The algorithm runs until convergence or until |V | iterations have been performed. If af-
+ter |V | iterations, and the distances does not converge, then the algorithm concludes that
+there is a negative-weight cycle that is reachable from the source vertex and returns None
+(Line 9).
+1 BellmanFord (G = (V, E)) s =
+2 let
+3 BF D k =
+4 let
+5 Din(v) = minu∈N −
+G (v)(D[u] + w(u, v)) (* Min in distance. *)
+6 D′ = {v 7 → min(D[v], Din(v)) : v ∈ V } (* New distances. *)
+7 in
+8 if (k = |V |) then None (* Negative cycle, quit. *)
+9 else if (all {D[v] = D′[v] : v ∈ V }) then
+10 Some D (* No change so return distances. *)
+11 else BF D′ (k + 1) (* Repeat. *)
+12 end
+13 D0 = {v 7 → ∞ : v ∈ V \ {s}} ∪ {s 7 → 0} (* Initial distances. *)
+14 in BF D0 0 end
+Example 58.4. Several steps of the Bellman Ford algorithm are shown below. The numbers
+with squares indicate the current distances and highlight those that has changed on each
+step.
+
+Theorem 58.1 (Correctness of Bellman-Ford). Given a directed weighted graph G = (V, E, w),
+w : E → R, and a source s, the BellmanFord algorithm returns either δG(s, v) for all vertices
+reachable from s, or indicates that there is a negative weight-cycle in G that is reachable
+from s.
+Proof. By induction on the number of edges k in a path. The base case is correct since
+Ds = 0. For all v ∈ V \ s, on each step a shortest (s, v) path with up to k + 1 edges must
+consist of a shortest (s, u) path of up to k edges followed by a single edge (u, v). Therefore
+if we take the minimum of these we get the overall shortest path with up to k + 1 edges.
+For the source the self edge will maintain Ds = 0. The algorithm can only proceed to n
+rounds if there is a reachable negative-weight cycle. Otherwise a shortest path to every v
+is simple and can consist of at most n vertices and hence n − 1 edges.
+3 Cost Analysis
+Data Structures. To analyze the cost Bellman-Ford, we first determine the representations
+
+or each structure in the algorithm. For the distance structure D, we use a table mapping
+vertices to their distances. For graphs, we consider two different representations, one with
+tables and another with sequences. In each case, we represent the graph as a mapping
+from each vertex v to another inner mapping from each in-neighbor u to w(u, v). In turn,
+we represent the mapping with a table or with a sequence.
+Cost with Tables. Consider the cost of one round of the Bellman-Ford’s algorithm , i.e.,
+a call to BF excluding recursive calls. The only nontrivial computations are on Lines 5,
+6 and 9.
+Lines 5 and 6 tabulate over the vertices. As the cost specification for tables with BSTs
+show, the cost of tabulate over the vertices is the sum of the work for each vertex, and the
+maximum of the spans plus O(lg n).
+Now consider Line 5.
+• First, the algorithm finds the neighbors in the graph, using a find G v. This requires
+O(lg |V |) work and span.
+• Second, the algorithm performs a map over the in-neighbors. Each position of the
+map requires a find in the distance table for D[u], a find in the weight table for w(u, v),
+and an add. The find operations take O(lg |V |) work and span.
+• Third, the algorithm reduces over the in-neighbors to determine the shortest path
+through an in-neighbor. This requires O(1 + |NG(v)|) work and O(lg |N −G(v)|) span.
+Line 6 performs a tabulate by taking for each vertex the minimum of D[v] and Din(v),
+which requires constant work for each vertex. Using n = |V | and m = |E|, we can write
+the work for Lines 5 and 6 as
+WBF (n, m) = O
+(∑
+v∈V
+(
+lg n + |N −
+G (v)| + ∑
+u∈N −
+G (v)(1 + lg n)
+))
+= O ((n + m) lg n) .
+The first term is for looking up the current distance, the second term is for reduce, and the
+third term is the cost for mapping over the neighbors.
+Similarly, we can write the span by replacing the sums over vertices with maximums:
+SBF (n, m) = O
+(
+maxv∈V
+(
+lg n + lg |N −
+G (v)| + maxu∈N −
+G (v)(1 + lg n)
+))
+= O(lg n).
+Line 9 performs a tabulate and a reduce and thus requires O(n lg n) work and O(lg n) span.
+Because the number of rounds (calls to BF ) is bounded by n, and because the rounds
+are sequential, we multiply the work and span for each round by the number of calls to
+
+compute the total work and span, which, assuming m ≥ n, are
+WBF (n, m) = O(nm lg n)
+SBF (n, m) = O(n lg n).
+Cost with Sequences. If we assume that the graphs is enumerable, then the vertices are
+identified by the integers {0, 1, . . . , |V | − 1} and we can use sequences to represent the
+graph. We can therefore use sequences instead of tables to represent the three mappings
+used by the algorithm. In particular, we can use an adjacency sequence for the graphs
+and the in-neighbors, and an array sequence for the distances. This improves the work
+for looking up in-neighbors or distances from O(log n) to O(1). Retracing the steps of the
+previous analysis and using the improved costs we obtain:
+WBF (n, m) = O
+(∑
+v∈V
+(
+1 + |N −
+G (v)| + ∑
+u∈N −
+G (v) 1
+))
+= O(n + m)
+SBF (n, m) = O
+(
+maxv∈V
+(
+1 + lg |N −
+G (v)| + maxu∈N −
+G (v) 1
+))
+= O(lg n).
+Hence the overall complexity for BellmanFord with sequences, assuming m ≥ n, is
+W (n, m) = O(nm)
+S(n, m) = O(n lg n)
+Using array sequences thus reduces the work by a O(lg n) factor.
+
+

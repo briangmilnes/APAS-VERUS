@@ -20,6 +20,7 @@ pub mod ScanContractStEph {
     //		2. imports
 
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
+    use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
 
     //		3. broadcast use
@@ -34,15 +35,23 @@ pub mod ScanContractStEph {
     pub trait ScanContractStEphTrait<T: StT> {
         /// Exclusive scan using contraction: contract→solve→expand.
         /// APAS Algorithm 27.3: Work Θ(n), Span Θ(n) (sequential).
+        /// Returns prefixes where result[i] = fold_left(input[0..i], id, spec_f).
         fn scan_contract<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             f: &F,
+            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
             id: T,
         ) -> (result: ArraySeqStEphS<T>)
             requires
-                forall|x: &T, y: &T| #[trigger] f.requires((x, y))
+                a.spec_len() <= usize::MAX,
+                spec_monoid(spec_f, id),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
-                result.spec_len() == a.spec_len();
+                result.spec_len() == a.spec_len(),
+                forall|i: int| #![trigger result.spec_index(i)]
+                    0 <= i < a.spec_len() ==>
+                        result.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i).fold_left(id, spec_f);
     }
 
     //		9. impls
@@ -52,6 +61,7 @@ pub mod ScanContractStEph {
         fn scan_contract<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             f: &F,
+            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
             id: T,
         ) -> (result: ArraySeqStEphS<T>) {
             scan_contract_inner(a, f, id)

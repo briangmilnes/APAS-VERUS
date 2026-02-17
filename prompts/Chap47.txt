@@ -1,0 +1,315 @@
+ Build a plan for this, including test and benchmark
+ using PrePlanChecklist.md. 
+
+ Show it to me and estimate time.
+
+ I will tell you when to execute. 
+
+ Wait for me to tell you when to fix, build and test.
+
+ This goes in src/Chap47clean/
+
+Chapter 47
+
+Hash Tables
+
+This chapter presents a key data structure in computer science, hash tables, and several
+different ways of implementing them by using hash functions .
+Definition 47.1 (Hash Tables). A hash table is an abstract data type that supports the fol-
+lowing operations on key-value pairs, where keys are drawn from a universe (e.g., integers,
+strings, records) and accept an equality test (function).
+• The createTable function takes as argument an equality function on keys, a hash func-
+tion generator that returns a hash function given a natural number that specifies the
+size of its range, and an initial size and creates an empty hash table of that given size.
+• The insert function takes as argument a hash table and a key-value pair and inserts
+the pair into the table.
+• The lookup function takes a hash table and a key and returns the value for the key
+stored in the hash table if any, or indicates that the key is not found.
+• The loadAndSize function takes a hash table and returns the number of key-value
+pairs stored in the table and the size of the table.
+• The resize function takes a hash table and a new size, usually double or half the
+current size, and returns a new hash table that contains the same key-value pairs as
+in the original paper, nothing less and nothing more.
+Hash tables enable us to maintain a dynamically changing mapping from keys to values.
+In this sense, they are a special case of table data type that we have seen in the past. They
+differ from tables in several ways.
+• Hash tables don’t require the keys to be totally ordered and don’t demand a compar-
+ison function on keys. Instead they require the keys to be hashable.
+
+• They support a narrower set of operations that revolve around insertions and dele-
+tions.
+Design of Hash Tables: Nested and Flat. The main challenge in designing hash tables is
+resolving collisions, where two keys hash to the same hash code. There are several well-
+studied collision resolution strategies.
+• Nested tables: use an outer table to map each hash code to an inner table that con-
+tains the key-value pairs that map to that hash code. The inner table can be repre-
+sented in several different ways, including as a lists, or as another hash table. If the
+inner table is a list, the technique is called “separate chaining.”
+• Flat Tables or Open Addressing: Use a single, flat table mapping keys to entries.
+Between the two possibilities, the nested tables are more flexible and more amenable to
+analysis. The analysis of hash tables typically depends on how “crowded” the table is,
+which is quantified by the “load factor.”
+Definition 47.2 (Load Factor). For a hash table of size m with n key-value pairs stored in
+the table, the load factor, written as α, is defined as
+α = n
+m .
+1 Nested Tables
+1.1 A Parametric Design
+The basic structure of a nested table is naturally recursive: keep an outer table that maps
+each key to an inner table, which can be structures as desired. Given a key, we use an outer
+hash function to determine the inner table that the key maps to. We then use the inner
+table to resolve the collisions. Because the outer hash function maps keys to a prefix of the
+natural numbers, the domain of the outer table is natural numbers less than the current
+size m. We can thus use an array to represent the outer table and locate the inner table
+efficiently with constant work.
+Example 47.1. Consider the following table mapping keys to values.
+{’ aa ’ 7 → ’ a ’, ’ bb ’ 7 → ’ b ’, ’ cc ’ 7 → ’ b ’, ’ dd ’ 7 → ’ d ’, ’ ee ’ 7 → ’ e ’,
+’ ff ’ 7 → ’ f ’, ’ gg ’ 7 → ’ g ’, ’ hh ’ 7 → ’ h ’, ’ ii ’ 7 → ’ i ’, ’ jj ’ 7 → ’ j ’}
+
+1. NESTED TABLES 335
+Let
+h(x) =
+(∑ pos(x[i])
+)
+mod m
+be a hash function that maps each string to a hash code by summing up the positions of its
+characters in the alphabet (counting from zero) modulo the table size m = 5.
+We can use the following nested hash table for our key-value pairs.
+{0 7 → {’ aa ’ 7 → ’ a ’, ’ ff ’ 7 → ’ f ’},
+1 7 → {’ dd ’ 7 → ’ d ’, ’ ii ’ 7 → ’ i ’},
+2 7 → {’ bb ’ 7 → ’ b ’, ’ gg ’ 7 → ’ g ’},
+3 7 → {’ ee ’ 7 → ’ e ’, ’ jj ’ 7 → ’ j ’},
+4 7 → {’ cc ’ 7 → ’ c ’, ’ hh ’ 7 → ’ h ’},
+}.
+Bounding the Size Inner Tables. The key quantity of interest in understanding the effi-
+ciency of nested tables is the size of an inner table. Since any inner table stores the key-value
+pairs that collide with each other, we can bound the their size in terms of conflicts.
+Conflicts can be very high in general but not so if we use universal hash functions. Recall
+that we bounded the expected number of conflicts for any key x in terms of the
+E [Cx] ≤ n
+m = α.
+This means that the size of an inner table in O(1 + α) in expectation.
+Thus, if we ensure that the load factor of the table remains a constant by making sure for
+example that n ≤ cm, for some constant c, then we know that the size of each inner table is
+constant in expectation.
+Keeping the Load Factor Small. Because the size of the table m is fixed and n changes,
+the load factor can increase as a result of insertions. To keep the load factor from growing,
+we can resize the table, by for example doubling it every time the load factor exceeds the
+desired bound. The cost of the resize operation can be amortized because doubling ensures
+that the new keys pay for the old ones.
+
+Exercise 47.1. Describe how you can implement the hash table interface specified above
+by using nested tables. For the inner tables use the Table ADT that you have learned about
+earlier but leave out the implementation and thus the costs unspecified. (text file)
+
+Exercise 47.2. Does it make sense to reduce the size of the hash table? If so, then under
+what conditions and how? (text file)
+
+336 CHAPTER 47. HASH TABLES
+1.2 Separate Chaining
+Definition 47.3 (Separate Chaining). The parametric implementation uses an array to
+represent the outer table but does not specify how to implement the inner table.
+Perhaps the simplest way to implement the inner table is to use a list representation that
+stores at each node one a key-value pairs. Such an implementations is called separate
+chaining or simply as chaining.
+In separate chaining, insertion proceeds by first locating the inner table, a list, and then
+inserting the key-value pair at the head of the list; this requires constant work. Lookups
+could proceed by first looking up the list using the hash code of the key being searched,
+and then searching for the key from the head of the list using the key equality function;
+this requires work linear in the length of the list. Deletions could proceed by first looking
+up the key and then deleting it, again requiring work linear in the length of the list.
+Example 47.2. Recall the example, where we are given the following table mapping keys
+to values.
+{’ aa ’ 7 → ’ a ’, ’ bb ’ 7 → ’ b ’, ’ cc ’ 7 → ’ b ’, ’ dd ’ 7 → ’ d ’, ’ ee ’ 7 → ’ e ’,
+’ ff ’ 7 → ’ f ’, ’ gg ’ 7 → ’ g ’, ’ hh ’ 7 → ’ h ’, ’ ii ’ 7 → ’ i ’, ’ jj ’ 7 → ’ j ’}.
+Let
+h(x) =
+(∑ pos(x[i])
+)
+mod m
+be a hash function that maps each string to a hash code by summing up the positions of its
+characters in the alphabet (counting from zero) modulo the table size m = 5.
+Using chaining, we represent this table as
+{0 7 → [(’ aa ’, ’ a ’), (’ ff ’, ’ f ’)],
+1 7 → [(’ dd ’, ’ d ’), (’ ii ’, ’ i ’)],
+2 7 → [(’ bb ’, ’ b ’), (’ gg ’, ’ g ’)],
+3 7 → [(’ ee ’, ’ e ’), (’ jj ’, ’ j ’)],
+4 7 → [(’ cc ’, ’ c ’), (’ hh ’, ’ h ’)]
+}.
+Cost Analysis of Separate Chaining. As described, insert, delete, and lookup operations
+all spend O(1 + α) work traversing the chain. Because the hash function takes constant
+work, total expected work for these operations is is O(1 + α). Thus assuming that α is a
+constant, the total expected work for these operations is is O(1).
+
+Exercise 47.3. Describe how to implement the resize operation and bound its cost.
+Actually implement this.
+
+2 Flat Tables or Open Addressing
+When using flat tables, we store all key-value pairs in a single table that maps keys to key-
+value pairs. We minimize the impact of collisions by keeping the load factor of the table
+low. Because the table is flat, however, keys that map to the same hash-code can interact
+in interesting ways, e.g., when two keys collide and map to the same hash code, only one
+could be mapped by the hash code. We therefore have to be careful about dealing with
+collisions.
+The basic idea behind flat hash tables is to perform a sequence of “probes” until a suitable
+position in the hash table is found. More precisely, consider a hash table of size m. To insert
+a key-value pair into the table, we repeatedly probe the table in different position until we
+find an available position and claim that position. We refer to the sequence of probes as
+a probe sequence, and for correctness require it to try out all positions in the table. As we
+shall see, probe sequences can be generated in several different ways.
+Definition 47.5 (Probe Sequence). For a hash table of with m entries, a probe sequence is a
+permutation of N< m = {0, 1, . . . , m − 1}.
+2.1 A Parametric Implementation of Flat Tables
+Data Structure 47.6 (Parametric Flat Hash Tables). We present an implementation of open
+addressing by assuming that for the current hash function of size m, we have m hash
+function
+ho(x), h1(x), . . . , hm−1(x)
+that generate the probe sequence for any key x.
+To specify the implementation, we assume that we are given the types for keys and values,
+key and value respectively. We also assume the existence of a function eqKey for checking
+that two keys are equal.
+We define the type of a hash table as
+type entry = Empty
+| Dead
+| Live of key × value
+type hashTable = entry array
+The first variant Empty of entry indicates an empty entry, the second Dead indicates that
+the entry has been deleted, and the third indicates that the entry is live and has the given
+key and value.
+Keeping track of deleted entries enables the implementation to find a key when its probe
+sequence interleaves with the probe sequence of another key, which may later be deleted.
+
+2. FLAT TABLES OR OPEN ADDRESSING 341
+1 lookup (T, k) =
+2 let
+3 lookup′ i =
+4 case T [hi(k)] of
+5 Empty ⇒ None
+6 | Dead ⇒ lookup′ (i + 1)
+7 | Live(k′, v′) ⇒
+8 if keyEqual (k, k′) then Some v
+9 else lookup′ (i + 1)
+10 in lookup′ 0 end
+The insert function is very similar to lookup but it updates the table with the given key-
+value pair. For simplicity, we assume that key is not in the table, which can be checked by
+using a lookup first.
+1 insert (T, k, v) =
+2 let
+3 insert′ i =
+4 case T [hi(k)] of
+5 Empty ⇒ update(T, hi(k), Live(k, v))
+6 | Dead ⇒ update(T, hi(k), Live(k, v))
+7 | Live(k′, v′) ⇒
+8 if keyEqual (k, k′) then ()
+9 else insert′ (i + 1)
+10 in insert′ 0 end
+The delete function is similar. For simplicity, we assume that the key is indeed in the table;
+this can be checked by performing a lookup first.
+1 delete (T, k) =
+2 let
+3 delete′ i =
+4 case T [hi(k)] of
+5 Empty ⇒ ()
+6 | Dead ⇒ delete(i + 1)
+7 | Live(k′, v′) ⇒
+8 if keyEqual (k, k′) then update (T, k, Dead )
+9 else delete′ (i + 1)
+10 in delete′ 0 end
+Example 47.4. Let T be the following table
+0 1 2 3 4 5 6 7
+B D E A F
+
+if key E has the probe sequence
+〈 7, 4, 2, · · · 〉 ,
+lookup(T, E) would first visit position 7, which is full, and then position 4 where it finds E.
+Example 47.5. Let T be the following table, where * indicates a deleted entry.
+0 1 2 3 4 5 6 7
+B D * A F
+if key D has the probe sequence
+〈 7, 4, 3, · · · 〉 ,
+lookup(T, E) would first visit position 7, which is full, and then position 4, which is deleted,
+and then position 3, where it finds D.
+Example 47.6. Suppose the hash table has the following keys:
+0 1 2 3 4 5 6 7
+B E A F
+Now if for a key D we had the probe sequence 〈 1, 5, 3, · · · 〉, then we would find position 1
+and 5 full (with B and E) and place D in position 3 giving:
+0 1 2 3 4 5 6 7
+B D E A F
+Cost Analysis of Flat Tables. The cost analysis of flat tables becomes tricky because of
+the impact of deleted keys and the interaction between keys that collide. Here we present
+an informal analysis for a table of size m with n stored key-value pairs, where n ≤ m, and
+thus the load factor α ≤ 1. We make several assumptions.
+• We assume that the probe sequence executed by an operation is a uniformly ran-
+domly chosen permutation of 0, . . . , m − 1.
+• We assume simple uniform hashing, which postulates that each key is given a uni-
+formly randomly chosen hash-code independently of all the others.
+• We assume that there are no deletions, and thus the table entries are either empty or
+occupied but not marked deleted or dead.
+Under these assumptions, let’s first bound the number of probes needed until we find an
+empty cell in the hash table. This is a Bernoulli trial with a success probability of 1 − α.
+Therefore, the expected number of trials is 1
+1−α .
+
+This means that an insertion and an unsuccessful lookup will require 1
+1−α work in expec-
+tation.
+For a successful lookup, consider some key x that is the ith key to be inserted into the
+table. To insert the key, we first find an empty cell, which requires 1
+1−i/m = m
+m−i , because
+the load factor for the table is i/m. Now, observe that the probe sequence for a key is
+always deterministic. Thus a successful search will repeat the same probe sequence as the
+insertion and find the key. Thus, we the successful search for the ith key requires m
+m−i work
+in expectation.
+We can write the average expected cost over all keys as
+1
+n
+n∑
+i=0
+m
+m − i .
+This is bounded by
+1
+α
+(
+ln 1
+1 − α
+)
+because
+1
+n
+∑n
+i=0 m
+m−i = m
+n
+(∑m
+i=0 1
+i − ∑m−n
+i=0 1
+i
+)
+= m
+n (Hm − Hm−n)
+≤ m
+n
+(
+ln m
+m−n
+)
+≤ 1
+α
+(
+ln 1
+1−α
+)
+.
+(The bound on Hm − Hm−n can be obtained by using integration.)
+Exercise 47.6. Show that the parametric implementation of the flat hash table above can
+be implemented by using just a single higher-order function, which in turn can be used to
+implement lookup, insert, and delete.
+Exercise 47.7. Complete the implementation of the parametric flat hash table by describing
+the algorithms and writing the pseudo-code for the remaining operations, e.g., resize.
+
+

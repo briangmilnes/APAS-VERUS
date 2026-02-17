@@ -1,0 +1,27 @@
+Example 53.1: Web Crawling
+
+An example of graph search are web crawlers that try to find all pages available on the web,
+or at least those reachable from some source(s).
+
+They start with the URL of some source page, probably one with lots of links. The crawler
+visits the source page, and adds all the URLs on the page to the frontier. It then picks
+some number of URLs from the frontier and visits them, possibly in parallel, adding the
+un-visited URLs within each to the frontier.
+
+When repeated, this process is a graph search and will therefore reveal all web pages
+reachable from the source URL.
+
+In practice, the crawl might start with many sources instead of just one. It might also be
+sloppy on immediately adding visited pages to the visited set, allowing for more asynchronous
+parallelism at the cost of possibly visiting pages more than once.
+
+Implementation notes:
+- Vertices: URLs (web pages)
+- Edges: Hyperlinks from one page to another
+- Source: A seed URL or set of seed URLs (e.g., popular pages)
+- Frontier: URLs discovered but not yet visited
+- Visited set: URLs already crawled to avoid revisiting
+
+The graph search guarantees that all reachable pages (those with a path of hyperlinks from
+the source) will eventually be discovered, making at most |V| rounds where V is the set of
+all reachable pages.

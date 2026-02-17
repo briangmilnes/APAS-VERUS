@@ -1,0 +1,244 @@
+ Build a plan for Chap49 below, including test and benchmark using PrePlanChecklist.md.
+
+ How many are parallel?
+
+ Show it to me and estimate time.
+
+ I will tell you when to execute. 
+
+ Wait for me to tell you when to fix, build and test.
+
+ This goes in Chap49.
+
+Two Problems
+In this chapter we cover two problems that are well suited for dynamic programming so-
+lutions: subsets sums, and minimum edit distance.
+1 Subset Sums
+The first problem we cover in this chapter is a decision problem, the subset sum problem.
+It takes as input a multiset of numbers, i.e. a set that allows duplicate elements, and sees if
+any subset sums to a target value. More formally:
+Definition 49.1 (Subset Sum (SS) Problem). The subset sum (SS) problem is, given a multiset
+of positive integers S and a positive integer value k, determine if there is any X ⊆ S such
+that ∑
+x∈X x = k.
+Example 49.1. SS ({1, 4, 2, 9}, 8) returns false since there is no subset of 1, 4, 2, and 9 that
+adds up to 8. However, SS ({1, 4, 2, 9}, 12) returns true since 1 + 2 + 9 = 12.
+Hardness of the SS Problem. In the general case when k is unconstrained, then SS prob-
+lem is a classic NP-hard problem. However, our goal here is more modest. We are going
+to consider the case where we include the value of k in the work bounds as a variable.
+We show that as long as k is polynomial in |S| then the work is also polynomial in |S|.
+Solutions of this form are often called pseudo-polynomial work (or time) solutions.
+The SS problem can be solved using brute force by simply considering all possible subsets.
+This takes exponential work since there are an 2|S| subsets. For a more efficient solution,
+one should consider an inductive solution to the problem. As greedy algorithms tend to
+be efficient, you should first consider some form of greedy method that greedily takes
+elements from S. Unfortunately the greedy method does not work. The problem is that
+
+
+The recursive algorithm for the SS problem leads to a binary recursion tree that might be
+n = |S| deep. In this tree, there are 2n leaves and each path from root to the leaf represent a
+subset. This implies that the work of the algorithm could be O(2n), which is large. We can
+improve work by observing that there is a large amount of sharing of subproblems.
+Example 49.2. Consider SS ({1, 1, 1} , 3). This clearly should return true because 1 + 1 + 1 =
+3. The recursion tree is as follows
+
+There are many calls to SS in this tree with the same arguments. In the bottom row, for
+example there are three calls each to SS (∅, 1) and SS (∅, 2). If we coalesce the common calls
+we get the following DAG
+
+Improving Work by Sharing. The question is how do we calculate how much sharing
+there is, or more specifically how many distinct subproblems are there in. For an initial
+instance ss(S, k) there are only |S| distinct lists that are ever used (each suffix of S). Fur-
+thermore, the value of the second argument in the recursive calls only decreases and never
+goes below 0, so it can take on at most k + 1 values. Therefore the total number of possible
+instances of SS (vertices in the DAG) is |S|(k + 1) = O(k|S|).
+To calculate the overall work we need to sum the work over all the vertices of the DAG.
+However, each vertex only needs to do some constant number of operations (a comparison,
+a subtract, a logical or, and a few branches). Therefore each node does constant work and
+we have that the overall work is:
+W (SS (S, k)) = O(k|S|)
+To calculate the span we need know the heaviest path in the DAG. Again the span of each
+vertex is constant, so we only need to count the number of nodes in a path. The length
+of the longest path is at most |S| since on each level we remove one element from the set.
+Therefore we have:
+S(SS (S, k)) = O(|S|)
+and together this tells us that the parallelism is O(W/S) = O(k).
+
+t this point we have not fully specified the algorithm since we have not explained how to
+take advantage of the sharing—certainly the recursive code we wrote would not. We will
+get back to this after one more example. Again we want to emphasize that the first two
+orders of business are to figure out the inductive structure and figure out what instances
+can be shared.
+To make it easier to determine an upper bound on the number of subproblems in a DP DAG
+it can be convenient to replace any sequences (or lists) in the argument to the recursive
+function with an integer indicating our current position in the input sequence(s). For the
+subset sum problem this leads to the following variant of our previous algorithm:
+Algorithm 49.3 (Recursive Subset Sum (Indexed)).
+SS (S, k) =
+let SS ′(i, j) =
+case (i, j) of
+( , 0) ⇒ true
+| (0, ) ⇒ false
+| ⇒
+if (S[i − 1] > j) then SS ′(i − 1, j)
+else (SS ′(i − 1, j − S[i − 1]) or SS ′(i − 1, j))
+in SS ′(|S|, k) end
+In the algorithm the i − 1 represents the element we are currently considering. We start
+with i = |S| and when i = 0 we are done (the algorithm reaches the base case). As we
+will see later this has a second important advantage—it makes it easier for a program to
+recognize when arguments are equal so they can be reused.
+Remark. Why do we say the SS algorithm we described is pseudo-polynomial? The size of
+the subset sum problem is defined to be the number of bits needed to represent the input.
+Therefore, the input size of k is log k. But the work is O(2log k|S|), which is exponential
+in the input size. That is, the complexity of the algorithm is measured with respect to the
+length of the input (in terms of bits) and not on the numeric value of the input. If the value
+of k, however, is constrained to be a polynomial in |S| (i.e., k ≤ |S|c for some constant c)
+then the work is O(k|S|) = O(|S|c+1) on input of size c log |S| + |S|, and the algorithm is
+polynomial in the length of the input.
+
+ Minimum Edit Distance
+The second problem we consider is a optimization problem, the minimum edit distance
+problem.
+Definition 49.4 (Minimum Edit Distance (MED) Problem). The minimum edit distance
+problem or MED problem for short is, given a character set Σ and two sequences of char-
+acters S = Σ∗ and T = Σ∗, determine the minimum number of insertions and deletions of
+single characters required to transform S to T .
+358 CHAPTER 49. TWO PROBLEMS
+Example 49.3. Consider the sequence
+S = 〈 A, B, C, A, D, A 〉
+we could transform it to
+T = 〈 A, B, A, D, C 〉
+with 3 edits (delete the C in the middle, delete the last A, and insert a C at the end). This is
+the best that can be done so we have that MED(S, T ) = 3.
+Applications of MED. Finding the minimum edit distance is an important problem that
+has many applications. For example in version control systems such as git or svn when
+you update a file and commit it, the system does not store the new version but instead
+only stores the “differences” from the previous version. (Alternatively it might store the
+new version, but use the differences to encode the old version.) Storing the differences
+can be quite space efficient since often the user is only making small changes and it would
+be wasteful to store the whole file. Variants of the minimum edit distance problem are
+use to find this difference. Edit distance can also be used to reduce communication costs
+by only communicating the differences from a previous version. It turns out that edit-
+distance is also closely related to approximate matching of genome sequences. In many of
+these applications it useful to know in addition to the minimum number of edits, the actual
+edits. It is easy to extend the approach in this section for this purpose, but we leave it as an
+exercise.
+Remark. The algorithm used in the Unix “diff” utility was invented and implemented by
+Eugene Myers, who also was o
+
+ Minimum Edit Distance
+The second problem we consider is a optimization problem, the minimum edit distance
+problem.
+Definition 49.4 (Minimum Edit Distance (MED) Problem). The minimum edit distance
+problem or MED problem for short is, given a character set Σ and two sequences of char-
+acters S = Σ∗ and T = Σ∗, determine the minimum number of insertions and deletions of
+single characters required to transform S to T .
+358 CHAPTER 49. TWO PROBLEMS
+Example 49.3. Consider the sequence
+S = 〈 A, B, C, A, D, A 〉
+we could transform it to
+T = 〈 A, B, A, D, C 〉
+with 3 edits (delete the C in the middle, delete the last A, and insert a C at the end). This is
+the best that can be done so we have that MED(S, T ) = 3.
+Applications of MED. Finding the minimum edit distance is an important problem that
+has many applications. For example in version control systems such as git or svn when
+you update a file and commit it, the system does not store the new version but instead
+only stores the “differences” from the previous version. (Alternatively it might store the
+new version, but use the differences to encode the old version.) Storing the differences
+can be quite space efficient since often the user is only making small changes and it would
+be wasteful to store the whole file. Variants of the minimum edit distance problem are
+use to find this difference. Edit distance can also be used to reduce communication costs
+by only communicating the differences from a previous version. It turns out that edit-
+distance is also closely related to approximate matching of genome sequences. In many of
+these applications it useful to know in addition to the minimum number of edits, the actual
+edits. It is easy to extend the approach in this section for this purpose, but we leave it as an
+exercise.
+Remark. The algorithm used in the Unix “diff” utility was invented and implemented by
+Eugene Myers, who also was one of the key people involved in the decoding of the human
+genome at Celera.
+Greedy Algorithm. To solve the MED problem we might consider trying a greedy method
+that scans the sequences finding the first difference, fixing it and then moving on. Unfor-
+tunately no simple greedy method is known to work. The difficulty is that there are two
+ways to fix the error—we can either delete the offending character, or insert a new one. If
+we greedily pick the wrong edit, we might not end up with an optimal solution. Note that
+this is similar to the subset sum problem where we did not know whether to include an
+element or not.
+Example 49.4. Consider the sequences
+S = 〈 A, B, C, A, D, A 〉
+and
+T = 〈 A, B, A, D, C 〉 .
+We can match the initial characters A − A and B − B but when we come to C − A in S
+and T , we have two choices for editing C, delete C or insert A. However, we do not know
+which leads to an optimal solution because we don’t know the rest of the sequences. In the
+example, if we insert an A, then a suboptimal number of edits will be required.
+
+As with the subset sum problem, since we cannot decide which choice to make (in this
+case deleting or inserting), why not try both. This again leads to a recursive solution. In
+the solution we can start at either end of the string, and go along matching characters, and
+whenever two characters do not match, we try both a deletion and an insertion, recurse on
+the rest of the string, and pick the best of the two choices. This idea leads to the following
+algorithm (S and T are given as lists, and we start from the front).
+Algorithm 49.5 (Recursive MED).
+MED(S, T ) =
+case (S, T ) of
+( , N il) ⇒ |S|
+| (N il, ) ⇒ |T |
+| (Cons(s, S′), Cons(t, T ′)) ⇒
+if (s = t) then MED(S′, T ′)
+else 1 + min(MED(S, T ′), MED(S′, T ))
+In the first base case where T is empty we need to delete all of S to generate an empty
+string requiring |S| deletions. In the second base case where S is empty we need to insert
+all of T , requiring |T | insertions. If neither is empty we compare the first character of each
+string, s and t. If these characters are equal we can just skip them and make a recursive
+call on the rest of the sequences. If they are different then we need to consider the two
+cases. The first case (MED(S, T ′)) corresponds to inserting the value t. We pay one edit
+for the insertion and then need to match up S (which all remains) with the tail of T (we
+have already matched up the head t with the character we inserted). The second case
+(MED(S′, T )) corresponds to deleting the value s. We pay one edit for the deletion and
+then need to match up the tail of S (the head has been deleted) with all of T .
+The recursive algorithm for MED performs exponential work. In particular the recursion
+tree is a full binary tree (each internal node has two children) and has a depth that is linear
+in the size of S and T . Observe, however, that there are many calls to MED with the same
+arguments. We thus view the computation as a DAG in which each vertex corresponds to
+call to MED with distinct arguments. An edge is placed from u to v if the call v uses u.
+
+Example 49.5. An example MED instance with sharing.
+360 CHAPTER 49. TWO PROBLEMS
+The call to MED(〈 B, C 〉 , 〈 D, B, C 〉), for example, makes recursive calls to MED(〈 C 〉 , 〈 D, B, C 〉)
+(corresponding to the deletion of B from the first string) and MED(〈 B, C 〉 , 〈 B, C 〉) (cor-
+responding to the insertion of D into the second string). One of the calls is shared with the
+call to MED(〈 A, B, C 〉 , 〈 B, C >)
+
+Work and Span. To determine the work we need to know how many vertices there are in
+the DAG. We can place an upper bound on the number of vertices by bounding the number
+of distinct arguments. There can be at most |S| + 1 possible values of the first argument
+since in recursive calls we only use suffixes of the original S and there are only |S| + 1
+such suffixes (including the empty and complete suffixes). Similarly there can be at most
+|T | + 1 possible values for the second argument. Therefore the total number of possible
+distinct arguments to MED on original strings S and T is (|T | + 1)(|S| + 1) = O(|S||T |).
+Furthermore the depth of the DAG (heaviest path) is O(|S| + |T |) since each recursive call
+either removes an element from S or T so after |S| + |T | calls there cannot be any element
+left. Finally we note that assuming we have constant work operations for removing the
+head of a sequence (e.g. using a list) then each vertex of the DAG takes constant work and
+span.
+All together this gives us
+W (MED(S, T )) = O(|S||T |)
+and
+S(MED(S, T )) = O(|S| + |T |).
+As in subset sum we can again replace the lists used in MED with integer indices pointing
+to where in the sequence we are currently at. This gives the following variant of the MED
+algorithm:
+
+Algorithm 49.6 (Recursive MED (Indexed)).
+MED(S, T ) =
+let MED′(i, j) =
+case (i, j) of
+(i, 0) ⇒ i
+| (0, j) ⇒ j
+| (i, j) ⇒ if (S[i − 1] = T [i − 1]) then MED′(i − 1, j − 1)
+else 1 + min(MED′(i, j − 1), MED′(i − 1, j))
+in MED′(|S|, |T |) end
+This variant starts at the end of the sequence instead of the start, but is otherwise equivalent
+our previous version. This form makes it more clear that there are only |S| × |T | distinct
+arguments, and will make it easier to implement efficiently, as we discuss next.
+

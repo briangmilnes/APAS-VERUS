@@ -403,9 +403,17 @@ pub mod Types {
 
     } // verus!
 
+    // View impl for OrderedFloat removed — orphan rule prevents impl for external type.
+    // Chapters using OrderedFloat (56–66) remain gated when they have too many errors.
+
     /// Type supporting arithmetic operations (for reductions). Must be outside verus! block because Default is not supported.
     pub trait ArithmeticT: StT + Add<Output = Self> + Default + Copy {}
     impl<T> ArithmeticT for T where T: StT + Add<Output = T> + Default + Copy {}
+
+    // Re-export MT traits from Concurrency (canonical definitions)
+    pub use crate::Concurrency::Concurrency::{
+        StTInMtT, MtT, MtKey, MtVal, MtFn, MtFnClone, MtReduceFn, PredMt, Pred, PredVal,
+    };
 
 
     impl<V: StT> Display for Edge<V> {
@@ -456,13 +464,14 @@ pub mod Types {
         fn from(e: WeightedLabEdge<V, L, W>) -> (V, V, L, W) { (e.0, e.1, e.2, e.3) }
     }
 
-    // Import OrderedFloat from the ordered-float crate
-    // Commented out - Verus doesn't see Cargo dependencies; uncomment when Chap06 is enabled
-    // pub use ordered_float::OrderedFloat;
+    // Import OrderedFloat from the ordered-float crate (not available during Verus compilation)
+    #[cfg(not(verus_keep_ghost))]
+    pub use ordered_float::OrderedFloat;
+    #[cfg(not(verus_keep_ghost))]
+    pub type OrderedF32 = OrderedFloat<f32>;
+    #[cfg(not(verus_keep_ghost))]
+    pub type OrderedF64 = OrderedFloat<f64>;
 
-    // Convenience type aliases for common float types
-    // pub type OrderedF32 = OrderedFloat<f32>;
-    // pub type OrderedF64 = OrderedFloat<f64>;
 
     impl<A, B> From<(A, B)> for Pair<A, B> {
         fn from(t: (A, B)) -> Self { Pair(t.0, t.1) }

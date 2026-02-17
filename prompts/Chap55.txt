@@ -1,0 +1,541 @@
+ Which modules should we implement for Chap55?
+ Which lower number modules can you use?
+ How many modules are going to have parallelism and in which functions/methods?
+ Which algorithms, problems and exercises?
+ Which exercises are text proofs?
+ Discuss with the user.
+
+ Build a plan for fixing this, including test and benchmark
+ using PrePlanChecklist.md. 
+
+ Show it to me and then make todos and estimate time.
+
+ This goes in Chap55.
+ 
+Chapter 55
+
+Depth-First Search
+The Depth-First Search (DFS) algorithm is a special case of the generic graph-search algo-
+rithm, where each round visits the frontier vertex that is most recently discovered. DFS has
+many applications. For example, it can be used to solve the reachability problem, to find
+cycles in a graph, to topologically sort a directed acyclic graph, to find strongly connected
+components of a directed graph, and to test whether a graph is biconnected or not. Unlike
+BFS, DFS is inherently sequential, because it only visits one vertex at a time.
+
+1 DFS Reachability
+Recall that in graph search, in each round, we can choose any (non-empty) subset of the
+vertices in the frontier and visit them. We say a vertex is discovered when it is added to
+the frontier. The DFS algorithm is a specific graph search that in each round picks the most
+recently discovered vertex in the frontier and visits it.
+Because DFS only visits one vertex in each round, the unvisited (out) neighbors of that
+vertex will be discovered in the round, and will be the most recent. To break ties among
+the out-neighbors, we assume the out-edges of each vertex are ordered. We allow any order
+of the out-neighbors.
+Algorithm 55.1 (DFS with a Stack). We can implement DFS by representing the frontier
+with a stack. In each round we pop the top (first) vertex off the stack and visit it. We then
+push the out-neighbors discovered in the round onto the stack in their out-neighbor order.
+In the pseudo-code below we use a sequence for the stack, the nth F 0 removes the first
+element in the frontier and the sequence append (@) pushes the out-neighbors onto the
+frontier. As with other graph searches X is the set of visited vertices, and the algorithm
+returns all vertices reachable from s in G.
+
+
+1 DFSStack (G, s) =
+2 let
+3 explore X F =
+4 if (|F | = 0) then X
+5 else
+6 let
+7 u = nth F 0
+8 visit u
+9 X = X ∪ {u}
+10 F = 〈 v : v ∈ N +
+G (u) | v 6 ∈ X 〉 @ F [1 . . . |F | − 1]
+11 in explore X F end
+12 in explore {} 〈 s 〉 end
+Algorithm 55.2 (DFS, Recursively). We can implement DFS more simply via recursion. As
+usual, X is the set of visited vertices, which the algorithm returns. In the recursive DFS ,
+immediately after a vertex v is visited (i.e., added to the set X), the algorithm iterates over
+all its neighbors trying to visit them. Therefore the next vertex the algorithm will visit is
+the first unvisited out-neighbor of v, if any.
+DFSReach (G, s) =
+let DFS (X, v) =
+if v ?
+∈ X then X
+else
+let X′ = X ∪ {v} in
+iterate DFS X′ N +
+G (v)
+end
+in DFS ({} , s) end
+Note. The notation v ?
+∈ X stands for checking that v is in set X. It returns true if v is in X
+and false otherwise.
+Note. Unlike the generic search algorithm and BFS, the algorithm does not maintain the
+frontier explicitly. Instead, the frontier is implicitly represented in the recursion—i.e., when
+we return from DFS , its caller will continue to iterate over vertices in the frontier.
+Example 55.1. Below is an example of DFS on a graph where edges are ordered counter-
+clockwise, starting from the left. Each row of the table corresponds to the arguments to
+one call to DFS (X, v) in the order they are called. In the last four rows the vertices have
+already been visited, so the call returns immediately without revisiting the vertices since
+they appear in X.
+
+2. DFS TREES 405
+v X visit
+s {} X
+a {s} X
+c {s, a} X
+e {s, a, c} X
+f {s, a, c, e} X
+b {s, a, c, e, f } X
+d {s, a, c, e, f, b} X
+c {s, a, c, e, f, b, d} 7
+f {s, a, c, e, f, b, d} 7
+s {s, a, c, e, f, b, d} 7
+b {s, a, c, e, f, b, d} 7
+2 DFS Trees
+Definition 55.3 (Tree and Non-Tree Edges in DFS). Consider performing DFS on a graph
+G = (V, E) with some source s. We call an edge (u, v) ∈ E a tree edge if the vertex v is
+discovered during the visit to u. The tree edges T define the DFS tree rooted at s.
+We classify the non-tree edges further into back edges, forward edges, and cross edges.
+• A non-tree edge (u, v) is a back edge if v is an ancestor of u in the DFS tree.
+• A non-tree edge (u, v) is a forward edge if v is a descendant of u in the DFS tree.
+• A non-tree edge (u, v) is a cross edge if v is neither an ancestor nor a descendant of u
+in the DFS tree.
+
+Example 55.2. Tree edges (black), and non-tree edges (red, dashed) illustrated with the
+original graph and drawn as a tree.
+
+Algorithm 55.4 (Generic DFS). The generic DFS algorithm takes a graph, a source, and
+an application-specific state or structure Σ and threads Σ through the computation along
+with the visited set X. The three application-specific functions visit, finish, and revisit
+manipulate the state. The algorithm returns the final state with the visited vertices.
+
+1 DFSGeneric G ((Σ, X), v) =
+2 if (v ?
+∈ X) then (revisit Σ v, X)
+3 else let
+4 Σ′ = visit Σ v
+5 X′ = X ∪ {v}
+6 (Σ′′, X′′) = iterate (DFSGeneric G) (Σ′, X′) (N +
+G (v))
+7 in (finish Σ′′ v, X′′) end
+Note. The generic algorithm starts takes in as an argument a visited set X (instead of start-
+ing with the empty set). This allows performing DFS multiple times over the same graph
+possibly with different sources without revisiting previously visited vertices.
+Algorithm 55.5 (Generic DFSAll). The DFSAll algorithm runs DFS over all vertices of a
+graph, visiting each once.
+DFSAll (G = (V, E)) Σ =
+iterate (DFSGeneric G) (Σ, {}) V
+
+3 DFS Numbers
+Definition 55.6 (DFS Numbers). In DFS, we can assign two timestamps to each vertex: the
+time at which a vertex runs visit (when first visited) and the time it runs finish (when done
+visiting its out-neighbors). These are respectively called the visit time and the finish time.
+We refer to the timestamps as DFS numbers.
+Example 55.3. A graph and its DFS numbers are shown below; t1/t2 denotes the times-
+tamps showing when the vertex is visited and finished respectively. Note that vertex a
+gets a finish time of 12 since it does not finish until all vertices reachable from its two out
+neighbors, c and b, have been fully explored. Vertices d, e and f have no un-visited out
+neighbors, and hence their finish time is one more than their visit time.
+
+Generating DFS Numbers. We can generate the visit and finish times by using the generic
+DFS algorithm with the following definitions:
+Σ0 = (0, {} , {})
+visit (i, TV , TF ) v = (i + 1, TV ∪ {v 7 → i}, TF )
+finish (i, TV , TF ) v = (i + 1, TV , TF ∪ {v 7 → i})
+revisit Σ v = Σ.
+The state Σ is a triple representing the time i, a table TV mapping vertices to their visit
+times, and a table TF mapping vertices to their finish time. The time starts at 0 and the
+tables start empty. Each visit tags v in TV with the current time, and each finish tags v in
+TF with the current time. They both increment the time. The revisit function does nothing.
+When called as
+DFSAll G Σ0
+the resulting tables will include visit and finish times for all vertices in G.
+
+Lemma 55.1 (DFS Numbers). The visit and finish times can be used to determine which
+edges are cross edges, forward edges, and back edges. In particular for all non-tree edges
+(u, v) ∈ E \ T we have
+(u, v) =
+
+
+
+cross if TV (u) > TV (v) and TF (u) > TF (v)
+forward if TV (u) < TV (v) and TF (u) > TF (v)
+back if TV (u) > TV (v) and TF (u) < TF (v)
+Example 55.4. An example DFS from source s, its tree and non-tree edges, and its DFS
+numbers are illustrated below.
+
+Exercise 55.3. Prove the DFS Numbers Lemma .
+Exercise 55.4. Consider a DFS on a graph and define for each vertex v,its exploration
+interval as the time interval [TV (v), TF (v)]. Restate the DFS Numbers Lemma in terms of
+exploration intervals and their overlaps.
+
+4 Cost of DFS
+
+We analyze the cost of DFS, specifically the DFSAll function, which applies DFS to all
+vertices in the graph. Because DFSAll is generic, the cost depends on the state Σ and the
+function visit, revisit, and finish. We therefore present a bound in terms of the number of
+calls to these functions.
+
+Lemma 55.2 (Bound on DFS calls). For a graph G = (V, E) with m edges, and n vertices,
+and for any state Σ, the call DFSAll G Σ makes n + m calls to DFS , n calls to visit and
+finish, and m calls to revisit.
+Proof. Because each vertex is added to X, when it is first visited, every vertex will only be
+visited (and finished) once. The revisit function gets called every time DFS is called but
+the vertex is not visited, i.e., for a total of m + n − n = m times. Because each vertex is
+visited exactly once, every out-edge is also traversed once, invoking a call to DFS . There
+are also n calls to DFS directly from DFSAll G Σ. Total number of calls to DFS is therefore
+n + m.
+Cost of Graph Operations. Each call to DFS performs one find operation to check v ?
+∈ X.
+Every time the algorithm visits a vertex, it performs one insertion of v into X (X ∪ {v}). In
+total, the algorithm therefore performs at most n insertion and m + n find operations. To
+iterate over the out-neighbors of a vertex, the algorithm also have to lookup the neighbors
+of each vertex once
+
+For a tree-based implementation of sets and an adjacency table representation of graphs all
+operations take O(lg n) work.
+For enumerable graphs with V = {0, . . . , n − 1} we can implement DFS more efficiently
+using an ephemeral array sequences for X, and adjacency sequences for the graphs giving
+O(1) work per operation.
+Algorithm 55.7 (DFS with Array Sequences). The following version of DFS uses adjacency
+sequences for representing the graph and array sequences for keeping track of the visited
+vertices.
+DFSSeq : (int seq) seq → α × int → bool seq
+1 DFSseq G (Σ, s) =
+2 let DFS ((Σ, X), v) =
+3 if X[v] then (revisit Σ v, X)
+4 else let
+5 Σ′ = visit Σ v
+6 X′ = Seq.update X (v, true)
+7 (Σ′′, X′′) = iterate DFS (Σ′, X′) (G[v])
+8 in (finish Σ′′ v, X′′) end
+10 in DFS ((Σ, X0), s) end
+Cost Specification 55.8 (DFS). Consider the DFS algorithm on a graph with m out edges,
+and n vertices.
+For adjacency table representation of graphs, and the tree-based cost specification for sets
+and tables, DFS runs in O((m + n) lg n) work and span (assuming visit, finish, and revisit,
+all take O(log n) work).
+For enumerable graphs using adjacency sequences (array based), and ephemeral sequences
+for X, DFS runs in O(m + n) work and span (assuming visit, finish, and revisit, all take
+constant work).
+
+410 CHAPTER 55. DEPTH-FIRST SEARCH
+For a tree-based implementation of sets and an adjacency table representation of graphs all
+operations take O(lg n) work.
+For enumerable graphs with V = {0, . . . , n − 1} we can implement DFS more efficiently
+using an ephemeral array sequences for X, and adjacency sequences for the graphs giving
+O(1) work per operation.
+Algorithm 55.7 (DFS with Array Sequences). The following version of DFS uses adjacency
+sequences for representing the graph and array sequences for keeping track of the visited
+vertices.
+DFSSeq : (int seq) seq → α × int → bool seq
+1 DFSseq G (Σ, s) =
+2 let DFS ((Σ, X), v) =
+3 if X[v] then (revisit Σ v, X)
+4 else let
+5 Σ′ = visit Σ v
+6 X′ = Seq.update X (v, true)
+7 (Σ′′, X′′) = iterate DFS (Σ′, X′) (G[v])
+8 in (finish Σ′′ v, X′′) end
+10 in DFS ((Σ, X0), s) end
+Cost Specification 55.8 (DFS). Consider the DFS algorithm on a graph with m out edges,
+and n vertices.
+For adjacency table representation of graphs, and the tree-based cost specification for sets
+and tables, DFS runs in O((m + n) lg n) work and span (assuming visit, finish, and revisit,
+all take O(log n) work).
+For enumerable graphs using adjacency sequences (array based), and ephemeral sequences
+for X, DFS runs in O(m + n) work and span (assuming visit, finish, and revisit, all take
+constant work).
+4.1 Parallel DFS
+Difficulty of Parallel DFS. At first sight, we might think that DFS can be parallelized
+by searching the out edges in parallel. This will work if the searches on each out edge
+never “meet up”, which is the case for a tree. However, in general when portions of the
+graph reachable through the outgoing edges are shared, visiting them in parallel creates
+complications. This is because it is important that each vertex is only visited once, and in
+DFS it is also important that the earlier out-edge visits any shared vertices, not the later
+one. This makes it very difficult to parallelize.
+
+Example 55.5. Consider the example graph drawn below.
+
+f we search the out-edges of s in parallel, we would visit the vertices a, c and e in parallel
+with b, d and f . This is not the DFS order because in the DFS order b and d will be visited
+after a. In fact, it is BFS ordering. Furthermore the two parallel searches would have to
+synchronize to avoid visiting vertices, such as b, twice.
+Remark (DFS is P-Complete). Depth-first search is known to be P-complete, a class of com-
+putations that can be done in polynomial work but are widely believed not to admit a poly-
+logarithmic span algorithm. A detailed discussion of this topic is beyond the scope of this
+book, but it provides evidence that DFS is unlikely to be highly parallel.
+5 Cycle Detection
+Definition 55.9 (Cycle-Detection Problem). The cycle-detection problem requires deter-
+mining whether there is a cycle in a graph.
+We can use DFS to detect cycles in a directed graph. To see this, consider the different
+kinds of non-tree edges in a DFS. Forward edges don’t create cycles because they go from
+ancestors to descendants, and thus create an alternative path between vertices but in the
+same direction as the tree edges. Cross edges don’t create cycles because they create a
+unidirectional path from one set of vertices to another. Back edges do create cycles by
+making an ancestor reachable from a descendant (which is reachable from a descendant).
+Theorem 55.3 (Back Edges Imply Cycles). A directed graph G = (V, E) has a cycle if and
+only if a DFSAll on G has a back edge.
+Proof. To prove the theorem we consider both directions of the implication.
+If a graph has a back edge (u, v), then there is a path from v to u in the DFS tree, followed
+by the edge (u, v), forming thus a cycle.
+
+
+
+Consider a graph with a cycle and perform DFS on the graph. Consider the first vertex
+v at which the DFS enters the cycle and let u be the vertex before v in the cycle, i.e., the
+edge (u, v) in on the cycle. The DFS will next visit all the vertices in the cycle, because each
+vertex is reachable from v, and revisit v through the edge (u, v). Because v is an ancestor of
+u in the DFS tree, (u, v) is a back edge.
+By the theorem above we can check for cycles in a directed graph by generating the DFS
+numbers and checking that there is no back edge. Alternatively, we can check for cycles
+directly with DFS by maintaining a set of ancestors and checking that there is no edge that
+leads to an ancestor.
+Algorithm 55.10 (Directed Cycle Detection). Define the state Σ is a pair containing a boolean
+flag indicating whether a cycle has been found and a set ancestors containing all ancestors
+of the current vertex. Define the initial state Σ0 and the functions visit, finish, and revisit as
+follows.
+Σ0 = (false, {})
+visit (flag, ancestors) v = (flag, ancestors ∪ {v})
+finish (flag, ancestors v = (flag, ancestors \ {v})
+revisit (flag, ancestors) v = (flag ∨ (v ?
+∈ ancestors), ancestors)
+The function cycleDetect defined as
+cycleDetect G = first (DFSAll G Σ0)
+returns true if and only if there are any directed cycles in G.
+To maintain ancestors , we add a vertex to the set when we first visit it and remove it when
+we finish it. On a revisit to a vertex v we simply check if v is in ancestors and if it is, then
+there is a cycle.
+Cycle Detection in Undirected Graphs. We can try to apply the cycle-detection algo-
+rithm to undirected graphs by representing an undirected edge as two directed edges, one
+in each direction. Unfortunately this does not work, because it will find that every edge
+{u, v} forms a cycle of length two, from u to v and back to u.
+
+Exercise 55.5. Design a cycle finding algorithm for undirected graphs.
+
+
+
+6 Topological Sort
+Definition 55.11 (Directed Acyclic Graph (DAG)). A directed acyclic graph, or a DAG, is
+a directed graph with no cycles.
+6. TOPOLOGICAL SORT 413
+DAGs and Partial Orders. A partial order ≤p over a set of elements is a binary relation
+that satisfies
+• transitivity (a ≤p b and b ≤p c implies a ≤p c), and
+• antisymmetry (for distinct a and b, a ≤p b and b ≤p a cannot both be true).
+A partial order allows elements to be unordered—i.e., neither a ≤p b nor b ≤p a—hence,
+the term “partial”.
+In a graph, if we interpret a ≤p b as b is reachable from a then transitivity is true for all
+graphs, and antisymmetry is true if there are no cycles in the graph. If two vertices cannot
+reach each other, they are unordered. Reachability in a DAG therefore defines a partial
+order over the vertices. In the rest of this section, we associate with DAGs a partial order
+relation that corresponds to reachability.
+Given a DAG, it is sometimes useful to put the vertices in a total order that is consistent
+with the partial order. That is to say that if a ≤p b in the partial ordering then a is before
+b in the total ordering. This is always possible, and is called a topological sort. The term
+“topological” comes from the fact that if we order the vertices in a line from left to right, all
+edges in the graph would go from left to right.
+Example 55.6 (Dependency Graphs). Topological sort is often useful for dependency graphs,
+which are directed graphs where vertices represent tasks to be performed and edges rep-
+resent the dependencies between them. Accomplishing nearly anything that is reasonably
+complex requires performing a number of tasks some of which depend on each other. For
+example, on a cold winter morning, we would put our socks first and then our shoes. Like-
+wise, we would put on our pullover before our coat. If we organize these tasks as a graph, a
+topological sort of the graph tells us how we can dress without breaking the dependencies.
+Note that dependency graphs should not have cycles, because otherwise it would be im-
+possible to satisfy the dependencies. Dependency graphs are therefore DAGs.
+Definition 55.12 (Topological Sort of a DAG). The topological sort (or topological ordering)
+of a DAG (V, E) is a total ordering, v1 < v2 . . . < vn of the vertices in V such that for any
+directed edge (vi, vj ) ∈ E, i < j holds. Equivalently if vi can reach vj then i ≤ j.
+Example 55.7 (Climbers Sort). As an example, consider what a rock climber must do before
+starting a climb to protect herself in case of a fall. For simplicity, we only consider the tasks
+of wearing a harness and tying into the rope. The example is illustrative of many situations
+which require a set of actions or tasks with dependencies among them.
+The graph below presents a subset of the tasks that a rock climber must follow before they
+start climbing, along with the dependencies between the tasks. The graph is a directed
+graph with the vertices being the tasks, and the directed edges being the dependences be-
+tween tasks. Performing each task and observing the dependencies in this graph is crucial
+for the safety of the climber—any mistake puts the climber as well as her belayer and other
+climbers into serious danger. While instructions are clear, errors in following them abound.
+
+The following property of DFS numbers allows us to use them to solve topological sorting
+using DFS.
+Lemma 55.4 (DAG Finish Order). For DFSAll on a DAG G, if a vertex u is reachable from
+v then u will finish before v.
+Proof. We consider two cases.
+1. u is visited before v. In this case u must finish before v is visited otherwise there
+would be a path from u to v and hence a cycle.
+2. v is visited before u. In this case since u is reachable from v it must be visited while
+searching from v and therefore finish before v finishes.
+This lemma implies that if we order the vertices by finishing time (latest first), then all
+vertices reachable from a vertex v will appear after v in the ordering. This is exactly the
+property we require from a topological sort. We could therefore simply generate the DFS
+numbers and sort by decreasing finish time. We can also calculate the ordering directly as
+follows.
+Algorithm 55.13 (Topological Sort). Define the state Σ as a sequence of vertices represent-
+ing a topological sort of the vertices finished thus far. Define the initial state Σ0 and the
+functions visit, finish, and revisit as follows.
+Σ0 = 〈 〉
+visit Σ v = Σ
+finish Σ v = 〈 v 〉 @ Σ
+revisit Σ v = Σ
+The function decreasingFinish defined as
+decreasingFinish G = first (DFSAll G Σ0)
+returns a topological order for all the vertices of the DAG G.
+This specialization of DFS adds a vertex to the front of the sequence Σ each time a vertex
+finishes. This effectively ensures that vertices are inserted in decreasing order of their finish
+time (the last vertex to finish will be the first). The visit and revisit functions do nothing.
+
+Exercise 55.6. Prove that for enumerable graphs, the work and span of the topological sort
+algorithm can be bounded by O(|V | + |E|).
+Hint. You will need to represent sequences in a way that ensures that all of visit, revisit
+and finish requires constant work.
+
+
+7 Strongly Connected Components (SCC)
+Definition 55.14 (Strongly Connected Graph). A directed graph G = (V, E) is strongly
+connected if all vertices can reach each other.
+Definition 55.15 (Strongly Connected Components). For a directed graph G = (V, E), a
+subgraph H of G is a strongly connected component if H is strongly connected and is
+maximal, i.e., adding more vertices and edges from G into H, breaks strong connectivitiy.
+Definition 55.16 (Component DAG). Contracting each strongly connected component in
+a graph into a vertex and eliminating duplicate edges between components yields a com-
+ponent DAG, where each component is represented by a single vertex.
+Example 55.8. The graph illustrated below on the left has three strongly connected com-
+ponents. The component DAG on the right shows the graph that remains after we contract
+each component to a single vertex.
+
+Definition 55.17 (SCC Problem). The Strongly Connected Components (SCC) problem re-
+quires finding the strongly connected components of a graph and returning them in topo-
+logical order.
+Example 55.9. For the graph
+7. STRONGLY CONNECTED COMPONENTS (SCC) 417
+the strongly connected components in topological order are:
+〈 {c, f, d} , {a} , {e, b} 〉
+Intuition for an Algorithm. To develop some intuition towards an algorithm for the SCC
+problem, suppose that we find one representative vertex for each component and we topo-
+logically sort the representatives according to the components DAG. We know that if we
+run a DFS from a representative vertex u, we will find all the vertices in the connected
+component of u, but also possibly more, because vertices in another component can be
+reachable, leading to an undesirable “overflow.” Notice now that if we reach a vertex v
+that is not within u’s component, then v’s component “comes after” u’s in the topological
+sort of the DAG of components, because all edges between components flow from “left to
+right” in the topological order.
+We can prevent this “overflow” by flipping the direction of each edge in the graph—this
+is called transposing the graph. This does not change the reachability relation within a
+connected component but the edges between components now flow from “right to left”
+with respect to the topological sort of the component DAG. This means that if we search
+out of a representative of a component, we will reach the vertices in the component and
+the (non-component) vertices that are in earlier components.
+Recall that we assumed that our representatives are topologically sorted. Imagine now
+starting with the first representative and performing a DFS, we know that there will be no
+overflow. Let’s mark these vertices visited and move on to the second representative and
+perform a DFS. We may now reach vertices from the first component, but this is easy to
+detect, because we have already marked them visited, and there will be no overflow. In
+this way, we can find all the connected components with a forward sweep through our
+representatives, while doing DFS in the transposed graph.
+
+
+Our algorithm will effectively follow this intuition but with a twist: we cannot topologi-
+cally sort an arbitrary graph, specifically graphs that have cycles. We will therefore con-
+sider relaxation and sort the vertices of the graph in decreasing finish time by using the
+function decreasingFinish from Algorithm 55.13. This suffices because it will correctly or-
+der vertices in different components.
+Lemma 55.5 (First Visited). For a directed graph G = (V, E) if u ∈ V is the first vertex
+visited by a DFS in its component, then for all v reachable from u, TF (u) > TF (v). Recall
+that TF (x) is the finish time of x.
+Proof. Since u is the first visited in its component, and it can reach all other vertices in its
+component, it will visit and finish all of them before finishing. Therefore if v is in the same
+component, v will finish first. If v is in a different component there are two cases:
+1. v is visited before u. Since u is not reachable from v, v must have finished before u is
+even visited.
+2. u visited before v. In this case u is an ancestor of v and therefore must finish after v
+finishes.
+Note these two cases are effectively the same as in Lemma 55.4.
+Algorithm 55.18 (Strongly Connected Components). The algorithm SCC starts by sorting
+the vertices of the graph in decreasing of their finish time by using the function decreasingFinish
+from Algorithm 55.13. The function DFSReach returns the set of all vertices reachable from
+v that have not already been visited as indicated by X, as well as an updated X including
+the vertices that it visits. The iterate goes over the vertices in F in order. The if (|A| = 0)
+skips over empty sets, which arises when the vertex v has already been visited.
+SCC (G = (V, E) =
+let
+F = decreasingFinish G
+GT = transpose G
+SCCOne ((X, comps), v) =
+let (X′, comp) = DFSReach GT (X, v) in
+if |comp| = 0 then
+(X′, comps)
+else
+(X′, 〈 comp 〉 @ comps)
+end
+in
+iterate SCCOne ({} , 〈 〉) F
+end
+
+xample 55.10. Consider the SCC algorithm on the following graph G:
+If decreasingFinish processes the vertices in alphabetical order, then we have that:
+F = 〈 c, f, d, a, e, b 〉 .
+In particular when a is visited, 〈 a, e, b 〉 will be added and when c is visited 〈 c, f, d 〉 will be
+added. The transpose graph GT is:
+The iterate of DFS on GT for each vertex in F , gives for each step:
+DFSReach GT ({} , c) → {c, d, f }
+DFSReach GT ({c, d, f } , f ) → {}
+DFSReach GT ({c, d, f } , d) → {}
+DFSReach GT ({c, d, f } , a) → {a}
+DFSReach GT ({a, c, d, f } , e) → {b, e}
+DFSReach GT ({a, b, c, d, e, f } , b) → {}
+All the empty sets are dropped, so the final output is:
+〈 {c, d, f } , {a} , {b, e} 〉 .
+Theorem 55.6 (SCC Correctness). Algorithm 55.18 solves the SCC problem.
+Proof. Summary: Running DFSReach on the first vertex x of a SC component X will visit
+exactly the vertices in X since the other components that it can reach in GT (can reach it in
+G) have already been visited (first from each is earlier in F ), and no other components can
+be reached from x in GT . This leaves just X, which is reachable and unvisited.
+Full proof: Because of Lemma 55.5, the first vertex from each SC component in F appears
+before all other vertices it can reach. Thus when the iterate hits the first vertex x in a
+component X, the following conditions are true:
+
+420 CHAPTER 55. DEPTH-FIRST SEARCH
+1. No vertex in X has been visited since we are working on the transpose of the graph,
+and all reachable vertices from x come after x in F .
+2. All vertices in X are reachable from x in the transpose graph since transposing does
+not affect reachability within a component.
+3. All other components that can reach X have previously been visited since their first
+element appears before x in F , and all other vertices of the component are reachable
+from the first.
+4. All other components that cannot reach X in G cannot be reached from X in the
+transpose GT —edges are reversed.
+Therefore when running DFSReach on x we will visit exactly the vertices in X—they have
+not been visited (1) and are reachable (2), and all other components have either been vis-
+ited (3), or are unreachable (4). Running DFSReach on any vertex that is not first in its
+component will return the empty set since its component has already been visited.
+Finally the components are returned in topological order since in F the first vertex in each
+component are in topological order, and hence will be visited in that order.
+Exercise 55.7. Give the algorithm for DFSReach used in the SCC algorithm in terms of
+the generic DFS algorithm .
+Exercise 55.8. What is the work and span of the SCC algorithm ? Work out the repre-
+sentation that you use for the graphs as well as other data structures such as the visited
+set.
+8 Discussions
+Compared to BFS DFS has the disadvantage of being sequential. If we don’t insist on visit-
+ing vertices in DFS order, then it is possible to parallelize DFS; such parallel unordered DFS
+algorithms are beyond the scope of this book. Given that BFS exposes plenty of parallelism,
+one might ask why do we need DFS at all. There are several reasons why.
+• BFS and DFS can have very different space requirements. For most practical graphs,
+the frontier in BFS will be significantly larger than the frontier in DFS, because most
+graphs have small diameters. In some cases, keeping in memory the frontier of BFS
+could be a challenge.
+• In some applications, the graph is so large that it cannot possibly be represented di-
+rectly but must be “discovered” as we traverse it. In such graphs, computing the
+frontier of BFS could be infeasible. Many graphs representing large search spaces
+have this property, e.g., a game search tree or the configuration space in (robot) mo-
+tion planning. Because DFS “drills down” to the “goal”, it performs much better.
+8. DISCUSSIONS 421
+• In same applications DFS exhibits better “data locality” compared to BFS. For exam-
+ple, many garbage collection algorithms benefit from DFS rather than BFS, because
+DFS traversal order corresponds more closely with data layout.
+
+

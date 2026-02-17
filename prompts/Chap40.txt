@@ -1,0 +1,142 @@
+
+ Implement Chap40.
+
+ Use the Chap39 *Treaps* style.
+
+ Write test and bench code.
+
+ Show me a plan with to-dos first before you execute.
+
+From APAS:
+Chapter 40
+
+Augmenting Binary Search Trees
+
+In our discussions of BSTs thus far, we only stored the left and right children, the key,
+and some balance information (the priority for treaps) within each node. In many cases,
+we wish to augment tree nodes with more information. In this chapter, we describe how
+we might augment BST nodes with such additional information, e.g., additional values,
+subtree sizes, and other aggregate values of the subtree, such as the sum of the keys.
+1 Augmenting with Values
+Perhaps the simplest form of augmentation involves storing a value along with each key in
+the BST. This allows us to represent a mapping from each key to an associated value. Such
+mappings are sometimes called dictionaries, tables, or key-value stores.
+Implementing BSTs augmented with values is straightforward. Firstly we store the value
+in each node along with its key. We often refer to these as a key-value pair. Many of our
+functions will then use the key-value pair as an argument. In some cases, we might need
+to change the types of functions. For example, find and split will now likely return an
+optional value instead of a boolean.
+A complete interface for tables is given in Tables Chapter .
+2 Augmenting with Size
+As a more complex augmentation, we might want to associate with each node in the tree a
+size field that tells us how many keys there are in the subtree rooted at that node is
+
+Size in O(1) Work. To implement a size-augmented tree, we can keep a size field at each
+node and compute the size of the nodes as they are created. To support this field in our
+tree data structure, such as treaps, we can make sure each tree node has a size field. For
+example, for treaps a node could be defined as
+type T = TLeaf
+| TNode of (T × K × Z × Z × T)
+where the TNode type consists of a 5 tuple (L, k, p, n, R), with L as the left child, k as the
+key, p as the priority, n as the size, and R as the right child. We could then read the size in
+O(1) work, as in:
+size T =
+case T of
+TLeaf ⇒ 0
+| TNode( , , , n, ) ⇒ n
+Whenever we create a new node we can calculate its size by summing the sizes of the two
+subtree and adding one more for the node itself. For treaps we could define
+makeNode (L, k, p, R) =
+TNode(L, k, p, size(L) + size(R) + 1, R)
+
+286 CHAPTER 40. AUGMENTING BINARY SEARCH TREES
+Then in the join algorithm for Treaps , we could replace the three occurrences TNode(·, ·, ·, ·)
+with makeNode. That is the only change that needs to be made.
+2.1 Example: Rank and Select in BSTs
+Suppose that we wish to extend the BST ADT with the following additional functions.
+• Function rank T k returns the rank of the key k in the tree, i.e., the number of keys
+in t that are less than or equal to k.
+• Function select T i returns the key with the rank i in t.
+Such functions arise in many applications.
+Algorithm 40.1 (Rank and Select). If we have a way to count the number of nodes in a
+subtree, then we can easily implement the rank and select functions. The algorithms below
+give implementations by using a size operation for computing the size of a tree, written |T |
+for tree T .
+1 rank T k =
+2 case expose T of
+3 Leaf ⇒ 0
+4 | Node (L, k′, R) ⇒
+5 case compare (k, k′) of
+6 Less ⇒ rank L k
+7 | Equal ⇒ |L| + 1
+8 | Greater ⇒ |L| + 1 + (rank R k)
+1 select T i =
+2 case expose T of
+3 Leaf ⇒ raise exception OutOfRange
+4 | Node (L, k, R) ⇒
+5 case compare (i, |L| + 1) of
+6 Less ⇒ select L i
+7 | Equal ⇒ k
+8 | Greater ⇒ select R (i − |L| − 1)
+
+Cost of rank and select. With balanced trees such as Treaps, the rank and select functions
+require logarithmic span but linear work, because computing the size of a subtree takes
+linear time in the size of the subtree. If, however, we augment the tree so that at each
+node, we store the size of the subtree rooted at that node, then work becomes logarithmic,
+because we can find the size of a subtree in constant work.
+
+Exercise 40.1. Consider the function splitRank (t, i), which splits the tree t into two and
+returns the trees t1 and t2 such that t1 contains all keys with rank less than i and t2 contains
+all keys with rank is greater or equal to i. Such a function can be used for example to write
+divide-and-conquer algorithms on imperfectly balanced trees. Describe how to implement
+the algorithm splitRank by writing its pseudo-code and analyze its work and span
+(but write actual rust code).
+
+3. AUGMENTING WITH REDUCED VALUES 287
+Example 40.2. An example BST, where keys are ordered lexicographically and the nodes
+are augmented with the sizes of subtrees. The path explored by rank (T, n) and select (T, 4)
+is highlighted.
+Exercise 40.1. Consider the function splitRank (t, i), which splits the tree t into two and
+returns the trees t1 and t2 such that t1 contains all keys with rank less than i and t2 contains
+all keys with rank is greater or equal to i. Such a function can be used for example to write
+divide-and-conquer algorithms on imperfectly balanced trees. Describe how to implement
+the algorithm splitRank by writing its pseudo-code and analyze its work and span.
+3 Augmenting with Reduced Values
+To compute rank-based properties of keys in a BST, we augmented the BST so that each
+node stores the size of its subtree. More generally, we might want to associate with each
+node a reduced value that is computed by reducing over the subtree rooted at the node
+by a user specified associative function f . In general, there is no restriction on how the
+reduced values may be computed, they can be based on keys or additional values that the
+tree is augmented with. To compute reduced values, we simply store with every node u of
+a binary search tree, the reduced value of its subtree (i.e. the sum of all the reduced values
+that are descendants of u, possibly also the value at u itself)
+
+The changes to the Treap structure (or any other balanced tree structure) would be very
+similar to what we did to augment with sizes. In particular we would change the type
+of a TNode to include the reduced value. We would then add a function for extracting it.
+This would return the identity I for f if the tree is empty. Finally we would modify our
+makeNode function to apply f . Note that for reduced values to make sense we need to
+store both a value at each node, and the reduced value of all such values in the subtree.
+Assuming values have type val , we could change the tree nodes to:
+type T = TLeaf
+| TNode of (T × K × Z × Z × val × val × T)
+where the TNode type now consists of a 7 tuple (L, k, p, n, v, r, R), with L as the left child,
+k as the key, p as the priority, n as the size, v as the value, r as the reduced value, and R as
+the right child. The changes to the code are then simply:
+reducedVal T =
+case T of
+TLeaf ⇒ I
+| TNode( , , , , , r, ) ⇒ r
+makeNode (L, k, v, p, R) =
+let r = f (reducedVal (L), f (v, reducedVal (R))
+s = size(L) + 1 + size(R)
+in TNode(L, k, p, s, v, r, R) end
+3. AUGMENTING WITH REDUCED VALUES 289
+Note. This idea can be used with any binary search tree, not just Treaps. We only need to
+replace the function for creating a node so that as it creates the node, it also computes a
+reduced value for the node by summing the reduced values of the children and the value
+of the node itself.
+Remark. In an imperative implementation of binary search trees, when a child node is (de-
+structively) updated, the reduced values for the nodes on the path from the modified node
+to the root must be recomputed.
+

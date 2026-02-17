@@ -1,23 +1,20 @@
 $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap27/
 
 ❌ ReduceContractMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:49: external_body - #[verifier::external_body]
-        50 |         fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:58: external_body - #[verifier::external_body]
+        59 |         fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
    Holes: 1 total
       1 × external_body
-❌ ReduceContractStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractStEph.rs:49: external_body - #[verifier::external_body]
-        50 |         fn reduce_contract<F: Fn(&T, &T) -> T>(
-   Holes: 1 total
-      1 × external_body
+✓ ReduceContractStEph.rs
+   4 clean proof functions
 ❌ ScanContractMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:51: external_body - #[verifier::external_body]
-        52 |         fn scan_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:62: external_body - #[verifier::external_body]
+        63 |         fn scan_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
    Holes: 1 total
       1 × external_body
 ❌ ScanContractStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:51: external_body - #[verifier::external_body]
-        52 |         fn scan_contract<F: Fn(&T, &T) -> T>(
+/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:60: external_body - #[verifier::external_body]
+        61 |         fn scan_contract<F: Fn(&T, &T) -> T>(
    Holes: 1 total
       1 × external_body
 
@@ -26,14 +23,14 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   0 clean (no holes)
-   4 holed (contains holes)
+   1 clean (no holes)
+   3 holed (contains holes)
    4 total
 
 Proof Functions:
-   0 clean
+   4 clean
    0 holed
-   0 total
+   4 total
 
-Holes Found: 4 total
-   4 × external_body
+Holes Found: 3 total
+   3 × external_body

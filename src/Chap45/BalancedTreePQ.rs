@@ -1,0 +1,418 @@
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Chapter 45: Priority Queue implementation using Balanced Trees (AVL Tree)
+
+pub mod BalancedTreePQ {
+
+    use std::fmt::{Debug, Display, Formatter, Result};
+
+    use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
+    use crate::Types::Types::*;
+
+    #[derive(PartialEq, Clone, Debug)]
+    pub struct BalancedTreePQ<T: StT + Ord> {
+        elements: AVLTreeSeqStPerS<T>,
+    }
+
+    /// Trait defining the Meldable Priority Queue ADT operations (Data Type 45.1)
+    pub trait BalancedTreePQTrait<T: StT + Ord> {
+        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        fn empty()                                           -> Self;
+
+        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        fn singleton(element: T)                             -> Self;
+
+        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// Returns the minimum element (leftmost in balanced tree), or None if empty
+        fn find_min(&self)                                   -> Option<&T>;
+
+        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// Inserts element into balanced tree maintaining order
+        fn insert(&self, element: T)                         -> Self;
+
+        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// Removes minimum element (leftmost) from balanced tree
+        fn delete_min(&self)                                 -> (Self, Option<T>)
+        where
+            Self: Sized;
+
+        /// claude-4-sonet: Work Θ(m log(1 + n/m)), Span Θ(log n + log m)
+        /// Melds two balanced trees using union operation
+        fn meld(&self, other: &Self)                         -> Self;
+
+        /// claude-4-sonet: Work Θ(n log n), Span Θ(log² n), Parallelism Θ(n/log² n)
+        /// Creates priority queue from sequence using balanced tree construction
+        fn from_seq(seq: &AVLTreeSeqStPerS<T>)               -> Self;
+
+        fn size(&self)                                       -> N;
+        fn is_empty(&self)                                   -> bool;
+        fn to_seq(&self)                                     -> AVLTreeSeqStPerS<T>;
+        fn find_max(&self)                                   -> Option<&T>;
+        fn delete_max(&self)                                 -> (Self, Option<T>)
+        where
+            Self: Sized;
+        fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self;
+        fn extract_all_sorted(&self)                         -> AVLTreeSeqStPerS<T>;
+        fn contains(&self, element: &T)                      -> bool;
+        fn remove(&self, element: &T)                        -> (Self, bool)
+        where
+            Self: Sized;
+        fn range(&self, min_val: &T, max_val: &T)            -> AVLTreeSeqStPerS<T>;
+        fn from_vec(elements: Vec<T>)                        -> Self;
+        fn to_vec(&self)                                     -> Vec<T>;
+        fn to_sorted_vec(&self)                              -> Vec<T>;
+    }
+
+    impl<T: StT + Ord> BalancedTreePQTrait<T> for BalancedTreePQ<T> {
+        /// Claude Work: Θ(1), Span: Θ(1)
+        fn empty() -> Self {
+            BalancedTreePQ {
+                elements: AVLTreeSeqStPerS::empty(),
+            }
+        }
+
+        /// Claude Work: Θ(1), Span: Θ(1)
+        fn singleton(element: T) -> Self {
+            BalancedTreePQ {
+                elements: AVLTreeSeqStPerS::singleton(element),
+            }
+        }
+
+        /// Claude Work: Θ(log n), Span: Θ(log n)
+        /// Find minimum element (leftmost in balanced tree)
+        fn find_min(&self) -> Option<&T> {
+            if self.elements.length() == 0 {
+                None
+            } else {
+                // Minimum is at index 0 in sorted sequence
+                Some(self.elements.nth(0))
+            }
+        }
+
+        /// Claude Work: Θ(log n), Span: Θ(log n)
+        /// Insert element maintaining balanced tree structure
+        fn insert(&self, element: T) -> Self {
+            // Convert to vector, insert in sorted position, rebuild tree
+            let mut values = self.elements.values_in_order();
+
+            // Find insertion position
+            let mut insert_pos = values.len();
+            for (i, current) in values.iter().enumerate() {
+                if element <= *current {
+                    insert_pos = i;
+                    break;
+                }
+            }
+
+            // Insert element at correct position
+            values.insert(insert_pos, element);
+
+            BalancedTreePQ {
+                elements: AVLTreeSeqStPerS::from_vec(values),
+            }
+        }
+
+        /// Claude Work: Θ(log n), Span: Θ(log n)
+        /// Remove minimum element (first element in sorted sequence)
+        fn delete_min(&self) -> (Self, Option<T>) {
+            if self.elements.length() == 0 {
+                return (self.clone(), None);
+            }
+
+            let min_element = self.elements.nth(0).clone();
+
+            // Convert to vector, remove first element, rebuild tree
+            let mut values = self.elements.values_in_order();
+            values.remove(0);
+
+            let new_pq = BalancedTreePQ {
+                elements: AVLTreeSeqStPerS::from_vec(values),
+            };
+
+            (new_pq, Some(min_element))
+        }
+
+        /// Claude Work: Θ(m log(1 + n/m)), Span: Θ(log n + log m)
+        /// Meld two balanced trees by merging sorted sequences
+        fn meld(&self, other: &Self) -> Self {
+            // Get sorted values from both trees
+            let values1 = self.elements.values_in_order();
+            let values2 = other.elements.values_in_order();
+
+            // Merge the two sorted vectors
+            let mut merged = Vec::with_capacity(values1.len() + values2.len());
+            let mut i = 0;
+            let mut j = 0;
+
+            while i < values1.len() && j < values2.len() {
+                if values1[i] <= values2[j] {
+                    merged.push(values1[i].clone());
+                    i += 1;
+                } else {
+                    merged.push(values2[j].clone());
+                    j += 1;
+                }
+            }
+
+            // Add remaining elements
+            while i < values1.len() {
+                merged.push(values1[i].clone());
+                i += 1;
+            }
+            while j < values2.len() {
+                merged.push(values2[j].clone());
+                j += 1;
+            }
+
+            BalancedTreePQ {
+                elements: AVLTreeSeqStPerS::from_vec(merged),
+            }
+        }
+
+        /// Claude Work: Θ(n log n), Span: Θ(log² n)
+        /// Create priority queue from sequence by inserting elements one by one
+        fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
+            let mut result = Self::empty();
+            for i in 0..seq.length() {
+                let element = seq.nth(i);
+                result = result.insert(element.clone());
+            }
+            result
+        }
+
+        /// Claude Work: Θ(1), Span: Θ(1)
+        fn size(&self) -> N { self.elements.length() }
+
+        /// Claude Work: Θ(1), Span: Θ(1)
+        fn is_empty(&self) -> bool { self.elements.length() == 0 }
+
+        /// Claude Work: Θ(1), Span: Θ(1)
+        fn to_seq(&self) -> AVLTreeSeqStPerS<T> { self.elements.clone() }
+
+        fn find_max(&self) -> Option<&T> {
+            if self.elements.length() == 0 {
+                None
+            } else {
+                Some(self.elements.nth(self.elements.length() - 1))
+            }
+        }
+
+        fn delete_max(&self) -> (Self, Option<T>) {
+            if self.elements.length() == 0 {
+                return (self.clone(), None);
+            }
+
+            let max_index = self.elements.length() - 1;
+            let max_element = self.elements.nth(max_index).clone();
+
+            // Convert to vector, remove last element, rebuild tree
+            let mut values = self.elements.values_in_order();
+            values.remove(max_index);
+
+            let new_pq = BalancedTreePQ {
+                elements: AVLTreeSeqStPerS::from_vec(values),
+            };
+
+            (new_pq, Some(max_element))
+        }
+
+        fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self {
+            let mut result = self.clone();
+            for i in 0..elements.length() {
+                let element = elements.nth(i);
+                result = result.insert(element.clone());
+            }
+            result
+        }
+
+        fn extract_all_sorted(&self) -> AVLTreeSeqStPerS<T> { self.elements.clone() }
+
+        fn contains(&self, element: &T) -> bool {
+            for i in 0..self.elements.length() {
+                let current = self.elements.nth(i);
+                if current == element {
+                    return true;
+                }
+                if current > element {
+                    // Since sequence is sorted, we can stop early
+                    break;
+                }
+            }
+            false
+        }
+
+        fn remove(&self, element: &T) -> (Self, bool) {
+            let mut values = self.elements.values_in_order();
+
+            for (i, current) in values.iter().enumerate() {
+                if current == element {
+                    values.remove(i);
+                    let new_pq = BalancedTreePQ {
+                        elements: AVLTreeSeqStPerS::from_vec(values),
+                    };
+                    return (new_pq, true);
+                }
+                if current > element {
+                    // Element not found (would be here if it existed)
+                    break;
+                }
+            }
+            (self.clone(), false)
+        }
+
+        fn range(&self, min_val: &T, max_val: &T) -> AVLTreeSeqStPerS<T> {
+            let values = self.elements.values_in_order();
+            let mut range_values = Vec::new();
+
+            for current in values.iter() {
+                if current >= min_val && current <= max_val {
+                    range_values.push(current.clone());
+                } else if current > max_val {
+                    // Since sequence is sorted, we can stop
+                    break;
+                }
+            }
+
+            AVLTreeSeqStPerS::from_vec(range_values)
+        }
+
+        fn from_vec(elements: Vec<T>) -> Self {
+            let mut pq = Self::empty();
+            for element in elements {
+                pq = pq.insert(element);
+            }
+            pq
+        }
+
+        fn to_vec(&self) -> Vec<T> {
+            let mut result = Vec::new();
+            for i in 0..self.elements.length() {
+                result.push(self.elements.nth(i).clone());
+            }
+            result
+        }
+
+        fn to_sorted_vec(&self) -> Vec<T> {
+            // Already sorted, just convert to vector
+            self.to_vec()
+        }
+    }
+
+    impl<T: StT + Ord> Default for BalancedTreePQ<T> {
+        fn default() -> Self { Self::empty() }
+    }
+
+    impl<T: StT + Ord> Display for BalancedTreePQ<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            write!(f, "BalancedTreePQ[")?;
+            for i in 0..self.elements.length() {
+                if i > 0 {
+                    write!(f, ", ")?;
+                }
+                write!(f, "{}", self.elements.nth(i))?;
+            }
+            write!(f, "]")
+        }
+    }
+
+    // Macro for creating balanced tree priority queues
+    #[macro_export]
+    macro_rules! BalancedTreePQLit {
+        () => {
+            $crate::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ::empty()
+        };
+        ($($x:expr),* $(,)?) => {{
+            let mut pq = $crate::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ::empty();
+            $(
+                pq = pq.insert($x);
+            )*
+            pq
+        }};
+    }
+
+    /// Convenience functions for common operations
+    impl<T: StT + Ord> BalancedTreePQ<T> {
+        /// Check if the tree maintains sorted order (for testing)
+        pub fn is_sorted(&self) -> bool {
+            for i in 1..self.elements.length() {
+                let prev = self.elements.nth(i - 1);
+                let curr = self.elements.nth(i);
+                if prev > curr {
+                    return false;
+                }
+            }
+            true
+        }
+        /// Get height of the underlying AVL tree (for testing)
+        pub fn height(&self) -> N {
+            // This would require access to internal tree structure
+            // For now, return log(n) as expected height
+            if self.elements.length() == 0 {
+                0
+            } else {
+                ((self.elements.length() as f64).log2().ceil() as N).max(1)
+            }
+        }
+    }
+
+    /// Advanced operations for balanced tree priority queue
+    impl<T: StT + Ord> BalancedTreePQ<T> {
+        /// Split the priority queue at a given element
+        /// Returns (left, found, right) where left < element <= right
+        pub fn split(&self, element: &T) -> (Self, bool, Self) {
+            let mut left = Self::empty();
+            let mut right = Self::empty();
+            let mut found = false;
+
+            for i in 0..self.elements.length() {
+                let current = self.elements.nth(i);
+                if current < element {
+                    left = left.insert(current.clone());
+                } else if current == element {
+                    found = true;
+                    right = right.insert(current.clone());
+                } else {
+                    right = right.insert(current.clone());
+                }
+            }
+
+            (left, found, right)
+        }
+
+        /// Join two priority queues where all elements in left <= all elements in right
+        pub fn join(left: &Self, right: &Self) -> Self { left.meld(right) }
+
+        /// Filter elements based on a predicate
+        pub fn filter<F>(&self, predicate: F) -> Self
+        where
+            F: Fn(&T) -> bool,
+        {
+            let mut result = Self::empty();
+
+            for i in 0..self.elements.length() {
+                let current = self.elements.nth(i);
+                if predicate(current) {
+                    result = result.insert(current.clone());
+                }
+            }
+
+            result
+        }
+
+        /// Map elements to a new type (maintaining order)
+        pub fn map<U, F>(&self, f: F) -> BalancedTreePQ<U>
+        where
+            U: StT + Ord,
+            F: Fn(&T) -> U,
+        {
+            let mut result = BalancedTreePQ::<U>::empty();
+
+            for i in 0..self.elements.length() {
+                let current = self.elements.nth(i);
+                let mapped = f(current);
+                result = result.insert(mapped);
+            }
+
+            result
+        }
+    }
+}

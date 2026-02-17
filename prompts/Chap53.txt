@@ -1,0 +1,174 @@
+ Build a plan for this, including test and benchmark
+ using PrePlanChecklist.md. 
+
+ Identify all the algorithms specified here and implement
+ them for directed graphs. You may be able to use some of
+ our representations for graphs, you may have to make
+ novel ones.
+
+ How many are parallel?
+
+ Implement the algorithms (of course) and the examples.
+ Some of the examples require only a txt file explanation.
+
+ Show it to me and estimate time.
+
+ I will tell you when to execute. 
+
+ Wait for me to tell you when to fix, build and test.
+
+ This goes in Chap53.
+
+Chapter 53
+Graph Search
+The terms graph search and graph traversal refer to a class of algorithms that systemat-
+ically explore the vertices and edges of a graph. Graph-search can be used to solve many
+interesting problems on (directed or undirected) graphs and is indeed at the heart of many
+graph algorithms. In this chapter, we introduce the concept of a graph search, and develop
+a generic graph-search algorithm. We then consider further specializations of this generic
+algorithm, including the priority-first search (PFS) algorithms, breadth-first search (BFS)
+, and depth-first search (DFS) .
+Assumption (Directed and Undirected Graphs). Because undirected graphs can be repre-
+sented as directed graphs where each edge is replaced with two edges in opposite direc-
+tions, we consider in this chapter directed graphs only.
+1 Generic Graph Search
+Definition 53.1 (Source). A graph search usually starts at a specific source vertex s ∈ V or
+a set of vertices sources. Graph search then searches out from the source(s) and iteratively
+visits the unvisited neighbors of vertices that have already been visited.
+Definition 53.2 (Visited Vertices). Graph search algorithms keep track of the visited ver-
+tices, which have already been visited, and avoid re-visiting them. We typically denote the
+set of visited vertices with the variable X.
+Definition 53.3 (Frontier and Discovered Vertices). For a graph G = (V, E) and a visited
+set X ⊂ V , the frontier set or simply the frontier is the set of un-visited out-neighbors of
+X, i.e., the set N +
+G (X) \ X. We often denote the frontier set with the variable F . We refer to
+each vertex in the frontier as a discovered vertex.
+Reminder. Recall that N +
+G (v) are the out-neighbors of the vertex v in the graph G, and N +
+G (U ) =⋃
+v∈U N +
+G (v) (i.e., the union of all out-neighbors of U ).
+
+
+
+Algorithm 53.4 (Graph Search (Single Source)). The generic graph-search algorithm that
+starts at a single source vertex s is given below.
+1 graphSearch(G, s) =
+2 let
+3 explore X F =
+4 if (|F | = 0) then X
+5 else
+6 let
+7 choose U ⊆ F such that |U | ≥ 1
+8 visit U
+9 X = X ∪ U
+10 F = N +
+G (X) \ X
+11 in explore X F end
+12 in
+13 explore {} {s}
+14 end
+The algorithm starts by initializing the visited set of vertices X with the empty set and the
+frontier with the source s. It then proceeds in a number of rounds, each corresponding to
+a recursive call of explore. At each round, the algorithm selects a subset U of vertices in the
+frontier (possibly all), visits them, and updates the visited and the frontier sets. If multiple
+vertices are selected in U , they can usually be visited in parallel. The algorithm terminates
+when the frontier is empty.
+Note. The generic graph search algorithm as presented only keeps track of the visited set X.
+Many real applications keep track of additional information.
+
+
+
+Graph Search is Generic. Since the function graphSearch is not specific about the set
+of vertices to be visited next, it can be used to describe many different graph-search algo-
+rithms. In the rest of the book, we consider three methods for selecting the subset, each
+leading to a specific graph-search algorithm.
+• Selecting all of the vertices in the frontier leads to breadth-first search (BFS).
+• Selecting the single most recent vertex added to the frontier leads to depth-first
+search (DFS).
+• Selecting the highest-priority vertex (or vertices) in the frontier, by some definition of
+priority, leads to priority-first search (PFS).
+
+As we will see, breadth-first search is parallel because it can visit many vertices at once
+(the whole frontier). In contrast, depth-first-search is sequential, because it only visits one
+vertex at a time.
+
+2 Reachability
+It is sometimes useful to find all vertices that can be reached in a graph from a source.
+Graph search can solve this problem for any choice of U on each round.
+Definition 53.5 (Reachability). We say that a vertex v is reachable from u in the graph G
+(directed or undirected) if there is a path from u to v in G.
+Problem 53.2 (The Graph Reachability Problem). For a graph G = (V, E) and a vertex v ∈
+V , return all vertices U ⊆ V that are reachable from v.
+Theorem 53.1 (Graph Search Solves Reachability). The function graphSearch (G =
+(V, E)) s returns exactly the set of vertices that are reachable in G from s ∈ V , and does so
+in at most |V | rounds, and for any selection of U on each round.
+Proof. The algorithm finishes in at most |V | rounds since it visits at least one vertex on each
+round.
+It returns only reachable vertices by induction on the round number. In particular if all
+vertices Xi on round i are reachable from s, then all vertices added on round i + 1 are
+reachable. This is because by the definition of frontier there is a path through Xi and
+extending by one to all Xi+1 \ Xi.
+We prove that it returns all reachable vertices by contradiction. Let’s say that a vertex
+v is reachable from s and is not in the set R returned by graphSearch G s. Consider
+any simple path from s to v. This must exist since v is reachable from s. Let u be the
+vertex immediately before v on the path. It cannot be in R because if it were then v would
+have been in the frontier on the final termination round and the algorithm would not have
+finished. Similarly the item before u on the path could not be in R, and this repeats all the
+way back to the source s. This is a contradiction since s must be in R.
+Example 53.1 (Web Crawling). An example of graph search are web crawlers that try to
+find all pages available on the web, or at least those reachable from some source(s). They
+start with the URL of some source page, probably one with lots of links. The crawler visits
+the source page, and adds all the URLs on the page to the frontier. It then picks some
+number of URLs from the frontier and visits them, possibly in parallel, adding the un-
+visited URLs within each to the frontier. When repeated this process is a graph search and
+will therefore reveal all web pages reachable from the source URL.
+
+3. GRAPH-SEARCH TREE 389
+In practice the crawl might start with many sources instead of just one. It might also be
+sloppy on immediately adding visited pages to the visited set, allowing for more asyn-
+chronous parallelism at the cost of possibly visiting pages more than once.
+Connected Components. When a graph is undirected then the reachability problem from
+s is the same as finding the connected component that contains s. If we go through all
+the vertices, then we can identify all the connected components in the graph. This method,
+however, is sequential. In later chapters we will see how to find connected components in
+polylogarithmic span using graph contraction.
+Exercise 53.3 (Multi-Source Search). Present a multi-source version of the single-source
+graph search algorithm.
+
+3 Graph-Search Tree
+Consider the time at which a vertex v is visited. We can “blame” the visit of v to an in-
+neighbor u of v that has already been visited. Because each vertex is visited at most once,
+we can define a “search tree” by including in the tree the visited vertices and their blamed
+vertices.
+Definition 53.6 (Graph-Search Tree). Let G = (V, E) be a graph. A graph-search tree for
+an execution of the graph search algorithm of G is a rooted tree over the visited vertices
+X ⊆ V and the edges E′ ⊆ E such that every vertex v ∈ X \ {s} has a parent u that is in X
+when v is visited and the (u, v) ∈ E. The source s is the root of the tree (and has no parent).
+Note. The definition allows the parent of a vertex v to be any in-neighbor of v, which is in
+X at the time that v is visited. In many specific graph-search algorithms, there is usually a
+specific parent (and a specific edge) that can be “blamed” for the discovery of v.
+
+4 Priority-First Search (PFS)
+Many graph-search algorithms can be viewed as visiting vertices in some priority order.
+The idea is to assign a priority to all vertices in the frontier, allowing the priority of a
+vertex to change whenever an in-neighbor of that vertex is visited. When picking the set of
+vertices U to visit, we have several options:
+• the highest priority vertex, breaking ties arbitrarily,
+• all highest priority vertices, or
+• all vertices close to being the highest priority, perhaps the top k.
+
+This specialization of generic graph search is called Priority-First Search or PFS for short.
+In this book we only consider instances of PFS that follow the first two cases above. The
+third case, where we select the k highest priority vertices, is sometimes called beam search.
+Note. PFS is a relatively common form of graph search. We will use it in Breadth-First
+Search , Dijkstra’s algorithm and Prim’s algorithm.
+Priority-first search is a greedy technique, because it greedily selects among the choices
+available (the vertices in the frontier) based on some “cost function” (the priorities) and
+never backs up. Algorithms based on PFS are hence often referred to as greedy algorithms.
+Sometimes, especially in the artificial intelligence literature, PFS is called best-first search.
+In this context the search explores a set of vertices, often called nodes, representing states
+or possible solutions of a problem. The importance of each node can be evaluated based
+on some application-specific heuristic. Picking the nodes carefully can significantly reduce
+the number of nodes needed to reach a satisfactory node (state or solution).
+

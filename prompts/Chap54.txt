@@ -1,0 +1,162 @@
+ Which modules should we implement for Chap54?
+
+ Which lower number modules can you use?
+ How many modules are going to have parallelism and in which functions/methods?
+ Which algorithms, problems and exercises?
+ Which exercises are text proofs?
+ Discuss with the user.
+
+ Build a plan for fixing this, including test and benchmark
+ using PrePlanChecklist.md. 
+
+ Show it to me and estimate time.
+
+ This goes in Chap54.
+
+Chapter 54
+Breadth-First Search
+The breadth-first search or BFS algorithm is a special case of the generic graph-search
+algorithm . The BFS algorithm visits vertices in the graph in the order of their distances
+from the source. In addition to solving the reachability problem, BFS can be used to find
+the shortest (unweighted) path from a source vertex to all other vertices, determining if a
+graph is bipartite, bounding the diameter of an undirected graph, partitioning graphs, and
+as a subroutine for finding the maximum flow in a flow network (using Ford-Fulkerson’s
+algorithm). As with the other graph searches, BFS can be applied to both directed and
+undirected graphs. BFS is inherently parallel, at least if the diameter of the graph is mod-
+est.
+1 BFS and Distances
+Definition 54.1 (Distance of a Vertex). To understand how BFS operates, consider a graph
+G = (V, E) and a source vertex s ∈ V . For a given source vertex s, define the distance of a
+vertex v ∈ V from s as the shortest distance from s to v, that is the number of edges on the
+shortest path connecting s to v in G, denoted as δG(s, v).
+Definition 54.2 (Breadth First Search). Breadth First Search (BFS) is a graph search that
+explores a given graph “outward” in all directions in increasing order of distances. More
+precisely, for all distances i < j in the graph, a vertex at distance i is visited before a vertex
+at distance j.
+Example 54.1. An example graph and the distances of its vertices to the source vertex 0
+are illustrated below. We can imagine the vertices at each distance to form a layer in the
+graph. BFS visits the vertices on layers 0, 1, 2, and 3 in that order. For example, because f
+is on layer 3, we have that δ(s, f ) = 3. In fact there are three shortest paths of equal length:
+〈 s, a, c, f 〉, 〈 s, a, d, f 〉 and 〈 s, b, d, f 〉.
+
+
+
+Note. BFS does not specify the order in which the vertices at a given distance should be
+visited: they can be visited in arbitrary order one by one, or they can all be visited at the
+same time in parallel. We first present a sequential algorithm for BFS that visits the vertices
+at a distance one by one. We then present a parallel algorithm that visits the vertices at
+each distance all at once.
+Reminder (Representing Enumerable Graphs). Consider an enumerable graph G = (V, E)
+where V = {0, 1, . . . , n − 1}. As discussed earlier in adjacency sequence representations
+we can represent enumerable graphs as an adjacency sequence—that is, a sequence of se-
+quences, where the ith inner sequence contains the out-neighbors of vertex i. This repre-
+sentation allows for finding the out-neighbors of a vertex in constant-work (and span).
+Example 54.2. The enumerable graph below can be represented as
+〈 〈 1, 2 〉 , 〈 2, 3, 4 〉 , 〈 4 〉 , 〈 5, 6 〉 , 〈 0, 4, 6 〉 , 〈 〉 , 〈 〉 〉 .
+
+2 Sequential BFS
+We present a sequential BFS algorithm that visits the vertices at a distance one by one and
+2. SEQUENTIAL BFS 393
+present an implementation that achieves linear work and span in the size of the graph (total
+number of vertices and edges).
+Algorithm 54.3 (Sequential BFS: Reachability). The sequential breadth first search (BFS)
+algorithm is a specialization of graph search where a frontier vertex with the closest dis-
+tance is visited in each round. Because in general there can be many vertices at the same
+distance, any one of the vertices can be selected, breaking ties arbitrarily. The code for the
+algorithm is shown below. As in generic graph search , the algorithm revolves around
+a frontier F and a visited set X. To ensure that vertices are visited in distance order, the
+frontier keeps the distance for each vertex. The algorithm returns the set of vertices X
+reachable from s in G, and the maximum over all vertices v ∈ X of δG(s, v).
+1 BFSReach (G = (V, E)) s =
+2 let explore X F i =
+3 if (|F | = 0) then (X, i)
+4 else let
+5 (u, j) = argmin(v,k)∈F (k)
+6 X = X ∪ {u}
+7 F = F \ {(u, j)}
+8 F = F ∪ {(v, j + 1) : v ∈ N +
+G (u) | v 6 ∈ X ∧ (v, ) 6 ∈ F )}
+9 in explore X F j end
+10 in explore {} {(s, 0)} 0 end
+Exercise 54.1. The computation of the new F is not quite defined in the same way as in
+the generic graph search . Prove that the technique used here is consistent with that of the
+generic algorithm.
+Exercise 54.2. Prove that the algorithm is correct, i.e., visits all reachable vertices from the
+source in the order of their distances to the source.
+
+2.1 Cost of Sequential BFS
+Sequential BFS accepts a simple and efficient implementation. To streamline the presenta-
+tion and analysis, we consider here a version of the algorithm for enumerable graphs.
+To start with, note that the algorithm uses the visited set X and the frontier F in a linear
+fashion. That is, the algorithm only uses the most version of X and F . This allows using
+ephemeral data structures to represent the visited set and the frontier.
+Representation of the Visited Set. We can use a boolean sequence of size |V | to represent
+the visited set. The value in the ith position indicates whether the vertex i is visited or not.
+We initialize the sequence with all false’s, indicating that none of the vertices are visited.
+When we visit a vertex, we update the corresponding element to true. Because the visited
+set is used linearly, we can represent it with an ephemeral array, where update and sub
+(lookup) operations require constant work and span.
+
+2.1 Cost of Sequential BFS
+Sequential BFS accepts a simple and efficient implementation. To streamline the presenta-
+tion and analysis, we consider here a version of the algorithm for enumerable graphs.
+To start with, note that the algorithm uses the visited set X and the frontier F in a linear
+fashion. That is, the algorithm only uses the most version of X and F . This allows using
+ephemeral data structures to represent the visited set and the frontier.
+Representation of the Visited Set. We can use a boolean sequence of size |V | to represent
+the visited set. The value in the ith position indicates whether the vertex i is visited or not.
+We initialize the sequence with all false’s, indicating that none of the vertices are visited.
+When we visit a vertex, we update the corresponding element to true. Because the visited
+set is used linearly, we can represent it with an ephemeral array, where update and sub
+(lookup) operations require constant work and span.
+
+
+
+394 CHAPTER 54. BREADTH-FIRST SEARCH
+Representation of the Frontier. The frontier needs support several operations, including
+1. checking that a vertex is not in the frontier,
+2. removing the vertex with the smallest distance, and
+3. adding the neighbors of a vertex into the frontier.
+To check that a vertex is in the frontier, we can maintain an array of indicators, indicating
+whether that vertex is in the frontier or not. This is very similar to the representation of
+the visited set X described above . Because a vertex cannot be in the visited set and in the
+frontier at the same time, we can merge these two representations and keep in X a value
+indicating, whether a vertex is visited, or in the frontier, remains to be unexplored. Intu-
+itively, we can think of these three different values as three distinct colors, typically called,
+white (unexplored), in the frontier (gray), and visited (black). This “color abstraction” is
+due to Dijkstra.
+To represent the frontier, we can use a standard priority queue data structure, which sup-
+port insert and remove operations in logarithmic work and span. Because BFS visits the
+vertices only in increasing order of their distances, we only insert into the frontier vertices
+whose distances are no smaller than those in the frontier. In other words, the priorities
+increase monotonically as the algorithm proceeds.
+Based on this observation, we can use simpler priority queue data structure, i.e., just a
+simple ephemeral queue. Such a data structure requires constant work and span to push to
+the tail of the queue and to pop from the head of the queue. In each round, we simply pop
+the vertex u at the head of the queue and visit u by marking the visited sequence. After
+the visit, we take all of u’s out-neighbors and check for each if they are visited. We push
+each unvisited out-neighbor into the tail of the queue. This implementation maintains the
+invariant that if a vertex has distance smaller than another, then it is closer to the head of
+the queue.
+Note. Dijkstra was well-known for his meticulous attention to use of color. During his
+tenure at University of Texas at Austin, he would consistently question visiting faculty
+about their choice of color in their presentations. For example, he would ask “why is that
+red and not blue?”
+Analysis. For per-round costs, consider a round, i.e., recursive invocation of the function
+explore. The work includes checking whether the frontier (queue) is empty or not, which
+is constant work. If not empty, then we pop a vertex in constant work, and then mark
+it visited, also in constant work. We then find all the out-neighbors of the vertex, which
+requires constant work by using the array-sequence based representation. We then check
+for each neighbor whether it is visited and if not, push it to the tail of the queue, which
+requires constant work per out-neighbor.
+Thus the only non-constant work in a round involves the handling of out-neighbors. To
+bound this cost, observe that each vertex is pushed onto the queue at most once. Thus the
+
+otal number of push operations is bounded by the number of vertices and their work cost
+is O (|V |). To bound the cost checking that each neighbor is visited, note that each such
+check corresponds exactly to one edge in the graph, and thus their number is bounded by
+m, and the their total work cost is O (|E|).
+Because creating the initial sequence keeping track of visited vertices requires Θ(|V |) work,
+the total work of sequential BFS is O (|V | + |E|).
+
+Exercise 54.3. Prove that the queue based implementation of sequential BFS is correct (text).

@@ -1,0 +1,66 @@
+
+ Build a plan for this, including test and benchmark
+ using PrePlanChecklist.md.
+
+ Show it to me and estimate time.
+
+ I will tell you when to execute. 
+
+ Wait for me to tell you when to fix, build and test.
+
+ This goes in Chap43Claude, just add them 
+
+3 Interface: Augmented Ordered Tables
+
+An interesting extension to ordered tables (and perhaps tables more generally) is to aug-
+ment the table with a reducer function. We shall see some applications of such augmented
+tables but let’s first describe the interface and its cost specification.
+Definition 43.3 (Reducer-Augmented Ordered Table ADT). For a specified reducer, i.e., an
+associative function on values f : V×V → V and identity element If , a reducer-augmented
+ordered table supports all operations on ordered tables and the following operation
+
+reduceVal : T → V
+reduceVal A = Table.reduce f If A
+
+The reduceVal A function just returns the sum of all values in A using the associative oper-
+ator f that is part of the data type. It might seem redundant to support this function since
+it can be implemented by the existing reduce function. But, by augmenting the table with
+a reducer, we can do reductions much more efficiently. In particular, by using augmented
+binary search trees, we can implement reduceVal in O(1) work and span.
+Example 43.2 (Analyzing Profits at TRAMLAW). Let’s say that based on your expertise in
+algorithms you are hired as a consultant by the giant retailer TRAMLAW. Tramlaw sells
+over 10 billion items per year across its 8000+ stores. As with all major retailers, it keeps
+track of every sale it makes and analyzes these sales regularly to make business and mar-
+keting decisions. The sale record consists of a timestamp when the sale was made, the
+amount of the sale and various other information associated with the sale.
+
+Tramlaw wants to be able to quickly determine the total amount of sales within any range
+of time, e.g. between 5pm and 10pm last Friday, or during the whole month of September,
+or during the halftime break of the last Steeler’s football game. It uses this sort of informa-
+tion, for example, to decide on staffing levels or marketing strategy. It needs to maintain
+the database so that it can be updated quickly, including not just adding new sales to the
+end, but merging in information from all its stores, and possibly modifying old data (e.g.
+if some item is returned or a record is found to be in error).
+How would you do this? Well after thinking a few minutes you remember ordered tables
+with reduced values from 210. You realize that if you keep the sales information keyed
+based on timestamps, and maintain the sum of sales amounts as the reduced values then
+all the operations required are cheap. In particular the function f is simply addition. Now
+the following will restrict the sum in any range:
+reduceVal (getRange (T, t1, t2))
+This will take O(lg n) work, which is much cheaper than O(n). Now let’s say Tramlaw
+wanted to do a somewhat more complicated query where they want to know the total sales
+between 5 and 7 pm on every day over the past year. You could do this by applying the
+query above once for each day. These can all be done in parallel and summed in parallel.
+The total work will be 365 × O(lg n), which is still much cheaper than looking at all data
+over the past year.
+Example 43.3 (A Jig with QADSAN). Now in your next consulting job QADSAN hires you
+to more efficiently support queries on their stock exchange data. For each stock they keep
+track of the time and amount of every trade. This data is updated as new trades are made.
+As with Tramlaw, tables might also need to be unioned since they might come from dif-
+ferent sources : e.g. the Tokyo stock exchange and the New York stock exchange. Qasdan
+wants to efficiently support queries that return the maximum price of a trade during any
+time range (t1, t2) .
+
+You tell them that they can use an ordered table with reduced values using max as the
+combining function f . The query will be exactly the same as with your consulting gig with
+Tramlaw, getRange followed by reduceVal , and it will similarly run in O(lg n) work.

@@ -1,0 +1,73 @@
+
+First, write 
+ArraySeqMtEphChap18.rs
+ArraySeqMtEphChap19.rs
+ArraySeqMtEph.rs
+and test and benchmark code.
+Be sure to use the set equality as Mt operations
+may produce different orders. 
+
+These should Mutex around the ArraySeq members.
+
+Write a quicksort both single threaded and multithreaded.
+Name the algorithms by quick_sort_{St,Mt}_PIVOT where
+they each use a different pivot from below.
+
+Use ArraySeqStEph for Chapter36St and ArraySeqMtEph for Chapter36Mt.
+
+Algorithm 36.1 (Generic Quicksort). The code below show the quicksort algorithm, where
+the pivot-choosing step is intentionally left under-specified. Quicksort exposes plenty of
+parallelism:
+• the two recursive recursive calls are parallel, and
+• the filters for selecting elements greater, equal, and less than the pivot are also inter-
+nally parallel
+
+quicksort a =
+2 if |a| = 0 then a
+3 else
+4 let
+5 p = pick a pivot from a
+6 a1 = 〈 x ∈ a | x < p 〉
+7 a2 = 〈 x ∈ a | x = p 〉
+8 a3 = 〈 x ∈ a | x > p 〉
+9 (s1, s3) = (quicksort a1) || (quicksort a3)
+10 in
+11 s1++a2++s3
+12 end
+
+You're going to build the following three versions that change
+the underspecified pick a pivot line: 
+
+Impact of Pivot Selection on Work and Span. Because the chosen pivots determine ex-
+actly how balanced the pivot tree is, they can have a significant impact on the work and
+span of the quicksort algorithm. Let us consider several alternatives and their impact on
+work and span.
+
+• Always pick the first element as pivot: In this case, inputs that are sorted or nearly
+sorted can lead to high work and span. For example, if the input sequence is sorted
+in increasing order, then the smallest element in the input is chosen as the pivot.
+This leads to an unbalanced, lopsided pivot tree of depth n. The total work is Θ(n2),
+because n−i keys will remain at level i and the total work is ∑n−1
+i=0 (n−i−1). Similarly,
+if the sequence is sorted in decreasing order, we will end up with a pivot tree that is
+lopsided in the other direction. In practice, it is not uncommon for inputs to quicksort,
+or any sort, to be sorted or nearly sorted.
+
+• Pick the median of three elements as the pivot: Another strategy is to take the first,
+middle, and the last elements and pick the median of them. For sorted inputs, this
+strategy leads to an even partition of the input, and the depth of the tree is Θ(lg n). In
+the worst case, however, this strategy is no better than the first strategy. Nevertheless,
+this is the strategy used quite broadly in practice.
+
+• Pick a random element as the pivot: In this strategy, the algorithm selects one of
+the elements, uniformly randomly from its input as the pivot. It is not immediately
+clear what the work and span of this strategy is, but intuitively, when we choose a
+random pivot, the size of each side is not far from n/2 in expectation. This doesn’t
+give us a proof but it gives us some reason to expect that this strategy could result in
+a tree of depth Θ(lg n) in expectation or with high probability. Indeed, in the analysis
+section , we prove that selecting a random pivot gives us expected Θ(n lg n) work and
+a recursion tree of depth Θ(lg n) leading to Θ(lg2 n) span since each recursive call has
+Θ(lg n) span.
+
+
+Show me the to-dos and I'll review them and tell you if I like them.

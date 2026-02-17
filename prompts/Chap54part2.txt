@@ -1,0 +1,263 @@
+ Build a plan for this, including test and benchmark
+ using PrePlanChecklist.md. 
+
+ Identify all the algorithms specified here and implement
+ them for directed graphs. You may be able to use some of
+ our representations for graphs, you may have to make
+ novel ones.
+
+ Implement the algorithms (of course) and the examples.
+ Some of the examples require only a txt file explanation.
+
+ Show it to me and estimate time.
+
+ I will tell you when to execute. 
+
+ Wait for me to tell you when to fix, build and test.
+
+ This goes in Chap54.
+
+3 Parallel BFS
+The sequential BFS algorithm visits one vertex in each round. But a moments reflection
+should convince us that the vertices in the same round are already in the frontier and could
+all be visited at the same time. In this section, we present a parallel BFS algorithm that does
+exactly that.
+Algorithm 54.4 (Parallel BFS: Reachability). The parallel BFS algorithm is an instance of
+Algorithm 53.4 where all frontier vertices are visited in each round. The code for the al-
+gorithm is shown below. The algorithm searches the graph outward, starting at distance 0
+(just the source s), and visiting the vertices at a distance on each round. It maintains the dis-
+tance i, which it is currently visiting. The algorithms returns the set of vertices X reachable
+from s in G, and the maximum over all vertices v ∈ X of δG(s, v).
+1 BFSReach (G = (V, E), s) =
+2 let explore X F i =
+3 if (|F | = 0) then (X, i − 1)
+4 else let
+5 X = X ∪ F
+6 F = N +
+G (F ) \ X
+7 in explore X F (i + 1) end
+8 in explore {} {s} 0 end
+Parallel BFS and Distances. The Parallel BFS algorithm maintains an important invari-
+ant on the distance of the vertices and their visit order. To see this invariant, let Xi denote
+the vertices visited before distance (round) i. At round i, the algorithm visits vertices at a
+distance i, and because the algorithm visits distances in increasing order, the vertices in Xi
+are exactly those with distance less than i from the source. The following lemma establishes
+this invariant.
+Lemma 54.1 (Parallel BFS and Distances). In BFSReach (G = (V, E)) s, at the beginning
+of every invocation of explore) (line 3), we have
+X = Xi = {v ∈ V | δG(s, v) < i} , and
+F = Fi = {v ∈ V | δG(s, v) = i}
+
+
+Proof. We prove the lemma by induction on the distance i.
+In the base case, i = 0, and we have X0 = {} and F0 = {s}. This is true, because no vertex
+has distance less than 0 from s and only s has distance 0 from s.
+For the inductive step, we assume the properties are correct for i and want to show they
+are correct for i + 1. For Xi+1, the algorithm takes the union of all vertices at distance less
+than i (Xi) and all vertices at distance exactly i (Fi). So Xi+1 is exactly the vertices at a
+distance less than i + 1.
+The algorithm computes Fi+1, as all neighbors of Fi minus the set Xi+1. By induction
+hypothesis, all vertices Fi have distance i from s and therefore any neighbor v of F has
+δG(s, v) ≤ i + 1. Furthermore, any vertex at distance i + 1 is reachable from a vertex
+at distance i and therefore, the out-neighbors of Fi contain all vertices at distance i + 1.
+Removing Xi+1, we are therefore left with exactly those vertices at distance i + 1.
+Example 54.3. The figure below illustrates the BFS visit order by using overlapping circles
+from smaller to larger. Initially, X0 is empty and F0 is the single source vertex s, as it is the
+only vertex that is a distance 0 from s. X1 is all the vertices that have distance less than 1
+from s (just s), and F1 contains those vertices that are on the middle ring, a distance exactly
+1 from s (a and b). The outer ring contains vertices in F2, which are a distance 2 from s (c
+and d). Notice that vertices in a frontier can share the same neighbors (e.g., a and b share d).
+NG(F ) is defined as the union of neighbors of the vertices in F to avoid duplicate vertices.
+
+Exercise 54.4. In general, from which frontiers could the vertices in NG(Fi) come when the
+graph is undirected? What if the graph is directed?
+
+3.1 Cost of Parallel BFS
+We analyze the cost the BFS variant for reachability from source. For the analysis, we rep-
+resent the main data structures by using tree-based sets and tables. This approach applies
+
+3. PARALLEL BFS 397
+to graphs whose vertices accept a comparison (total-order) operation. For a graph with m
+edges and n vertices, we show that the algorithm requires O(m lg n) work O (d lg2 n) span
+where d the largest distance d of any reachable vertex from the source.
+
+
+
+Bounding Cost using Aggregation. When analyzing the cost of BFS, a natural method is
+to sum the work and span over the rounds of the algorithm, each of which visits vertices
+at a specific distance. In contrast with recurrence based analysis, this approach makes the
+cost somewhat more concrete but can be made complicated by the fact that the cost per
+round depends on the structure of the graph. We bound the cost by observing that BFS
+visits each vertex at most once, and since the algorithm only looks at a vertices out-edges
+when visiting it, the algorithm also only uses every edge at most once.
+Let’s first analyze the cost per round. In each round, the only non-trivial work consists
+of the union X ∪ F , the calculation of neighbors N = N +
+G (F ), and the set difference to
+calculate the new frontier F = N \ X. The cost of these operations depends on the number
+of out-edges of the vertices in the frontier. Let’s use |F | to denote the number of out-edges
+for a frontier plus the size of the frontier, i.e., |F | = ∑
+v∈F (1 + d+
+G(v)). We show that the
+costs for each round and the total are:
+Work Span
+X ∪ F O(|F | lg n) O(lg n)
+N +
+G (F ) O(|F | lg n) O(lg2 n)
+N \ X O(|F | lg n) O(lg n)
+Total over d rounds O(m lg n) O(d lg2 n)
+The first and last lines fall directly out of the tree-based cost specification for the set ADT.
+Note that |N | ≤ |F |. The second line is a bit more involved. The union of out-neighbors is
+implemented as
+N +
+G (F ) = Table.reduce Set.Union
+{}
+(Table.restrict G F )
+Let GF = Table.restrict G F . The work to find GF is O(|F | lg n). For the cost of the union,
+note that the set union results in a set whose size is no more than the sum of the sizes of
+the sets unioned. Furthermore recall that the cost of set union on sets of size k and l (k ≤ l)
+is bounded by O(k log(1 + l/k)) ⊂ O(k + l). The O(k + l) follows from the fact that for
+x ≥ 0, log x < x. The total work per level of reduce is therefore no more than |F |. Since
+there are O(lg n) such levels, the work is bounded by
+W (reduce union {} GF )
+= O
+(
+lg |GF | ∑
+(v7 →N (v))∈GF (1 + |N (v)|)
+)
+= O (lg n · |F |) .
+
+The span is bounded by
+S (reduce union {} GF ) = O(lg2 n),
+because each union has span O(lg n) and the reduction tree is bounded by lg n depth.
+Focusing on a single round, we can see that the cost per vertex and edge visited in that
+round is O(lg n). Furthermore we know that every reachable vertex only appears in the
+frontier exactly once. Therefore, all the out-edges of a reachable vertex are also processed
+only once. Thus the cost per edge We and per vertex Wv over the algorithm is the same
+as the cost per round. We thus conclude that Wv = We = O(lg n). Since the total work is
+W = Wv n + Wem (recall that n = |V | and m = |E|), we thus conclude that
+WBF S (n, m, d) = O(n lg n + m lg n)
+= O(m lg n), and
+SBF S (n, m, d) = O(d lg2 n).
+We drop the n lg n term in the work since for BFS we cannot reach any more vertices than
+there are edges.
+Notice that span depends on d. In the worst case d ∈ Ω(n) and BFS is sequential. Many real-
+world graphs, however, have low diameter; for such graphs BFS has good parallelism
+
+4 Shortest Paths and Shortest-Path Trees
+As established in Lemma 54.1, the Parallel BFS algorithm effectively calculates the dis-
+tance to each of the reachable vertices. In this section, we extend parallel BFS to compute
+distances.
+Algorithm 54.5 (Unweighted Shortest Paths). The following variant of the Parallel BFS
+algorithm takes a graph and a source and returns a table mapping every reachable vertex v
+to δG(s, v). The algorithm uses the table X both to keep track of the visited vertices and for
+each of these vertices to keep its distance from s. When visiting the vertices in the frontier
+the algorithm adds them to X with distance i.
+1 BFSDistance(G = (V, E), s) =
+2 let explore X F i =
+3 if (|F | = 0) then (X, i − 1)
+4 else let
+5 X = X ∪ {v 7 → i : v ∈ F }
+6 F = N +
+G (F ) \ domain(X)
+7 in explore X F (i + 1) end
+8 in explore {} {s} 0 end
+
+Shortest Paths. In addition to computing distances, we can also use BFS to compute a
+shortest path from the source to each reachable vertex. The basic idea is to use the graph-
+search tree for BFS. Recall that the search tree is over the visited vertices, and the parent of
+each vertex v is an in-neighbor of v that was already visited when v is visited.
+Theorem 54.2 (BFS Tree Gives Shortest Paths). Given a graph-search tree for BFS, the path
+from any vertex v to the source s in the tree when reversed is a shortest path from s to v in
+G.
+Proof. The proof is by induction on the distance of the vertex. For the distance-0 vertex, we
+only have the source and the lemma holds trivially. Suppose that the lemma holds for all
+distances up to but excluding distance i. Consider a vertex v visited at distance i. We know
+that all in-neighbors already visited when v is visited are at distance i − 1, because other-
+wise, by Lemma 54.1, the algorithm would visit v earlier. Note that if the in-neighbors are
+at a larger distance, then, by Lemma 54.1, they would not have been visited. By induction,
+the property holds for all in-neighbors of v. Because a shortest path to v goes through one
+of the in-neighbors, the property also holds for v.
+Shortest-path Tree. Because of this property we refer to a graph-search tree generated
+by BFS as a (unweighted) shortest-path tree. Given such a shortest-path tree, we can then
+compute the shortest path to a particular vertex v by following the path in the tree from s
+to v.
+We can generate a shortest-path tree in two ways. One way is to change BFS slightly to
+keep track of parents. We do this later in Algorithm 54.6. Another is to post process the
+result of Algorithm 54.5. In particular each vertex can pick as its parent any one of its
+in-neighbors that has a distance that is closer than its own distance. If X is a mapping of
+vertices to their distances from s in G (as returned by BFSDistance), then the shortest path
+tree can be computed as:
+T = {v 7 → u : (u, v) ∈ E | X[u] < X[v]}.
+In T each visited vertex, other than s, will map to its parent in the shortest path tree. For a
+given v there can be multiple edges that satisfy X(u) < X(v), and the construction of the
+table, and corresponding tree, will pick one of them.
+
+Example 54.4. A directed graph (left) and two possible BFS trees with distances from s
+(middle and right). Non-tree edges, which are edges of the graph that are not on a shortest
+paths are indicated by dashed lines.
+
+Single-Source Shortest Paths. The problem of finding the shortest path from a source to
+all other vertices (unreachable vertices are assumed to have infinite distance), is called the
+single-source shortest path problem. Here we are measuring the length of a path as the
+number of edges along the path. In later chapters we consider shortest paths where each
+edge has a weight (length), and the shortest paths are the ones for which the sums of the
+weights are minimized. Breadth-first search does not work for the weighted case.
+BFS Tree with Sequences. Assume performing parallel BFS on an enumerable graph,
+which can be represented using sequences also see the reminder above .
+Notice that in BFS the visited set is used linearly and thus we can represent it with an
+ephemeral data structure. Because the vertices are enumerable, we can use a sequence,
+specifically an ephemeral or a single-threaded array sequence . To mark the visited vertices
+we use inject, which requires constant work per vertex. For marking vertices, we can use
+either a Boolean flag to indicate its status, or the label of the parent vertex (if any). The
+latter representation can help up construct a BFS tree.
+Algorithm 54.6 (BFS Tree with Sequences). We present a variant of BFS that computes the
+shortest-path tree from the source by using sequence-based data structures. The algorithm
+returns a shortest-paths tree as a sequence mapping each vertex (position) to its parent in
+the shortest-paths tree. The source points to itself and unvisited vertices contain None.
+The algorithm is similar to the generic graph search algorithm with one important dif-
+ference: the visited sequence X contains the parents for both the visited and the frontier
+
+vertices, instead of just for the visited vertices. This approach streamlines the computation
+of the shortest path tree. The frontier F is represented using a sequence of vertices.
+Each round starts by visiting the vertices in the frontier. Next, it computes the sequence
+N of the unvisited neighbors of vertices in the frontier, each paired with Some(v) for the
+vertex v ∈ F it came from. It does this by calculating for each vertex v ∈ F its unvisited
+neighbors (the function f (v)) and then flattening the results.
+The algorithm uses inject to write each of the frontier vertices into X. Any given vertex in
+N can appear multiple times with different source vertices, but inject will select one parent
+for each, breaking ties arbitrarily. The iteration completes by having each vertex in N check
+if it was selected and keeping those that were selected as the next frontier. This removes
+any duplicates from N so every new frontier vertex will appear exactly once.
+1 BFSTree (G, s) =
+2 let
+3 explore(X, F ) =
+4 if (|F | = 0) then X
+5 else let
+6 (* Visit F *)
+7 f (v) = 〈 (u, Some v) : u ∈ G[v] | X[u] = None 〉
+8 N = Seq.flatten 〈 f (v) : v ∈ F 〉
+9 X = Seq.inject X N
+10 F = 〈 u : (u, v) ∈ N | X[u] = v 〉
+11 in explore(X, F ) end
+12 X = 〈 None : v ∈ 〈 0, . . . , |G| − 1 〉 〉
+13 X = Seq.update X (s, Some s)
+14 in explore(X, {s}) end
+
+4.1 Cost with Sequences
+We analyze the work and span of the variant of BFS that returns a shortest-paths tree .
+Because the algorithm uses visited-set linearly, i.e., once the visited vertices X is updated,
+it is never used again. We can use ephemeral sequences or single-threaded sequences to
+represent X. In such a representation all update and inject operations take constant work
+per position updated. Initialization requires Θ(n) work and constant span.
+Cost Analysis. The cost of the algorithm is dominated by flatten, inject, and by the con-
+struction of the next frontier F in Lines 8, 9, and 10. The following table gives costs for each
+round, and then the total across rounds including also the Θ(n) initialization cost.
+402 CHAPTER 54. BREADTH-FIRST SEARCH
+Line Work Span
+8 (f (v) and flatten) O (|Fi|) O (lg n)
+9 (inject) O (|Fi|) O (1)
+10 (the new F ) O (|Fi|) O (lg n)
+Total over d rounds O (n + m) O (d lg n)
+As before, d is the length of the longest reachable path from the root.
+
+

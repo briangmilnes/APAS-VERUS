@@ -23,6 +23,7 @@ pub mod ScanContractMtEph {
 
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Concurrency::Concurrency::StTInMtT;
+    use crate::vstdplus::monoid::monoid::*;
 
     //		3. broadcast use
 
@@ -36,13 +37,23 @@ pub mod ScanContractMtEph {
     pub trait ScanContractMtEphTrait<T: StTInMtT> {
         /// Exclusive scan using parallel contraction: contract→solve→expand.
         /// APAS Algorithm 27.3: Work Θ(n), Span Θ(log n).
+        /// Returns prefixes where result[i] = fold_left(input[0..i], id, spec_f).
         fn scan_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: Arc<F>,
+            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
             id: T,
         ) -> (result: ArraySeqMtEphS<T>)
+            requires
+                a.spec_len() <= usize::MAX,
+                spec_monoid(spec_f, id),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
-                result.spec_len() == a.spec_len();
+                result.spec_len() == a.spec_len(),
+                forall|i: int| #![trigger result.spec_index(i)]
+                    0 <= i < a.spec_len() ==>
+                        result.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i).fold_left(id, spec_f);
     }
 
     //		9. impls
@@ -52,6 +63,7 @@ pub mod ScanContractMtEph {
         fn scan_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: Arc<F>,
+            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
             id: T,
         ) -> (result: ArraySeqMtEphS<T>) {
             scan_contract_parallel_inner(a, f, id)

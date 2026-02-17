@@ -1,0 +1,166 @@
+ Build a plan for this, including test and benchmark
+ using PrePlanChecklist.md. 
+
+ How many are parallel?
+
+ Show it to me and estimate time.
+
+ I will tell you when to execute. 
+
+ Wait for me to tell you when to fix, build and test.
+
+ This goes in Chap50.
+
+Chapter 50
+Optimal Binary Search Trees
+We consider the problem of finding the optimally balanced tree that minimizes the ex-
+pected cost of searches for a given probability distribution on the search queries.
+Background. As we saw in an earlier chapter Binary Search Trees can be used to store
+a dynamically changing set of keys and perform search queries on them efficiently. The
+cost of searching for a key is linear in the depth of the key in the tree, or equivalently in
+the length of the path from the root to the key. In a balanced BST with n keys the average
+depth of each key is approximately log n.
+Optimizing for a Query Distribution. Balanced search trees minimize the worst-case
+cost of an access by making sure that all keys are as close to the root as possible. This
+“pessimistic” perspective is not always necessary, because we sometimes have more infor-
+mation about the query pattern for the keys, and specifically the frequency of queries for
+each key. In such an application, it would be better to place frequently queried keys closer
+to the root even if this causes to other, less frequently queried keys, being further away
+from the root. More precisely, suppose that for a query we have a probability density func-
+tion that maps each key to its probability of being queried. We may then want to come up
+with a binary search tree that minimizes the expected cost of a query under that probability
+distribution.
+Example 50.1. Suppose that we have a dictionary for the English language that we would
+like to use to answer queries from students learning English as a foreign language. We
+could use a binary search tree to store the entries in the dictionary. In such an applica-
+tion, certain words will be more frequently queried than others, e.g., queries for the word
+“lamp” will appear more than the word “epistemology”. We can take advantage of this by
+placing such words closer to the root even if this causes less frequently accessed words to
+be further away from the root.
+
+Definition 50.1 (Optimal Binary Search Tree (OBST) Problem). The optimal binary search tree
+(OBST) problem is given an ordered set of keys S and a probability function p : S → [0 : 1]:
+min
+T ∈Trees(S)
+(∑
+s∈S
+d(s, T ) · p(s)
+)
+where Trees(S) is the set of all BSTs on S, and d(s, T ) is the depth of the key s in the tree T
+(the root has depth 1).
+Example 50.2. For example we might have the following keys and associated probabilities
+key k1 k2 k3 k4 k5 k6
+p(key) 1/8 1/32 1/16 1/32 1/4 1/2
+Then the tree below has cost 31/16, which is optimal. Creating a tree with these two solu-
+tions as the left and right children of Si, respectively, leads to the optimal solution given Si
+as a root.
+Exercise 50.1. Find another tree with equal cost.
+Brute Force. The brute force solution would be to generate every possible binary search
+tree, compute their cost, and pick the one with the lowest costs. But the number of such
+trees is O(4n) which is prohibitive.
+Exercise 50.2. Write a recurrence for the total number of distinct binary search trees with n
+keys (text answer).
+
+Optimal Substructure Property. Consider an optimal binary search tree for a sequence of
+unique keys S and probability law P and let r be the root of the tree. Observe now that each
+subtree of the root is an optimal binary search tree, because otherwise, we could replace
+them with a binary search tree that improves the expected cost of queries for the subtree,
+which in turn would improve the grant total. This common property of optimization prob-
+lems is sometimes called the optimal substructure property. This property is sometimes a
+clue that either a greedy or dynamic programming algorithm might apply.
+
+364 CHAPTER 50. OPTIMAL BINARY SEARCH TREES
+Exercise 50.3. Can we solve the optimal binary search tree problem by using the greedy
+technique?
+Solution. A greedy approach might be to pick the key k with highest probability and make
+it the root of the binary search tree. We may then construct the two subtrees recursively on
+the two sets less and greater than k. This does not necessarily give us the optimal binary
+search tree, because for example the key with the highest property might be largest key
+and increase the path length of all other keys. (Try to construct such an example.)
+A Recursive Solution. Let S be all the keys placed in sorted order. Observe that any
+subtree of a BST on S contains the keys of a contiguous subsequence of S. We can therefore
+define subproblems in terms of a contiguous subsequence of S. We will use Si,j to indicate
+the subsequence starting at the key with rank i and going to key with rank j (inclusive of
+both). We will then use the pair (i, j) to be the surrogate for Si,j .
+For subproblem Si,j , suppose that we pick key Sr (i ≤ r ≤ j) as a the root. We can now
+solve the OSBT problem on the prefix Si,r−1 and suffix Sr+1,i. Let T be the tree on the keys
+Si,j with root Sr , and TL, TR be its left and right subtrees. We can write the expected cost
+as follows.
+Cost(T ) = ∑
+s∈T
+d(s, T ) · p(s)
+= p(Sr ) + ∑
+s∈TL
+(d(s, TL) + 1) · p(s) + ∑
+s∈TR
+(d(s, TR) + 1) · p(s)
+= ∑
+s∈T
+p(s) + ∑
+s∈TL
+d(s, TL) · p(s) + ∑
+s∈TR
+d(s, TR) · p(s)
+= ∑
+s∈T
+p(s) + Cost(TL) + Cost(TR)
+That is, the cost of a subtree T is the probability of accessing the root (i.e., the total prob-
+ability of accessing the keys in the subtree) plus the cost of searching its left subtree and
+the cost of searching its right subtree. When we add the base case this leads to a recursive
+algorithm.
+Exercise 50.4. When computing the cost for the tree, one thought would have been to
+compute the cost for each subtree of the root and add these two costs and the cost of the root
+(p(Sr )) to get the cost of this solution. Would this simpler approach would have worked?
+Solution. This does not work, because it does not take into account the increase in the cost
+of the keys in the subtrees by being one edge below the root.
+Algorithm 50.2 (Recursive Optimal Binary Search Tree).
+OBST S =
+if |S| = 0 then 0
+else ∑
+s∈S p(s) + mini∈〈 1...|S| 〉
+(OBST (S1,i−1) + OBST (Si+1,|S|))
+Exercise 50.5. How would you return the optimal tree in addition to the cost of the tree?
+Sharing. Without sharing, the recursive solution requires exponential work. To reduce
+the cost, we can take advantage of sharing among the calls to OBST and represent the com-
+putation with a DAG. To bound the number of vertices in the DAG, we count the number
+of possible arguments to OBST . Because each argument is a contiguous subsequence from
+the original sequence S, we can count the total number of contiguous subsequences as
+n−1∑
+i=0
+(i + 1) = n(n + 1)/2.
+The idea is that for each element with rank i, there are i + 1 distinct starting positions 0 . . . i
+and summing over all gives us te bound. The number vertices in the DAG is therefore
+O(n2). Furthermore the longest path of vertices in the DAG is bounded by O(n), because
+each call to OBST removes one key, causing the to stop after n calls.
+Total Work and Span. The cost of each vertex in the DAG (each recursive in our code not
+including the subcalls) is O(|S|) = O(n), because we need to consider each position and
+sum up the probabilities of all the keys. The span is O(log n), because we can compute the
+minimum by using a reduction.
+Now multiplying the number of vertices by the work of each gives us the upper bound of
+O(n3) on the work. For the span, we multiply the span each vertex with length of the path
+to obtain the upper bound O(n log n).
+Algorithm 50.3 (Recursive Optimal Binary Search Tree (indexed)). We present a stream-
+lined algorithm that uses integer indexes to identify subproblems. In particular we specify
+a subsequence of the original sorted sequence of keys S by its offset from the start (i) and
+its length l. We then get the following recursive routine.
+OBST S =
+let
+(* Determine OBST S[i, . . . , i + l − 1] *)
+OBST ′ (i, l) =
+if l = 0 then 0
+else ∑l−1
+k=0 p(S[i + k]) + minl−1
+k=0 (OBST ′(i, k) + OBST ′(i + k + 1, l − k − 1))
+in OBST (0, |S|) end
+Similar Problems. This example of the optimal BST is one of several applications of dy-
+namic programming which effectively based on trying all binary trees and determining an
+optimal tree given some cost criteria. Another such problem is the matrix chain product
+problem. In this problem one is given a chain of matrices to be multiplied (A1 ×A2 ×· · · An)
+and wants to determine the cheapest order to execute the multiplies. For example given
+the sequence of matrices A×B ×C it can either be ordered as (A×B)×C or as A×(B ×C).
+If the matrices have sizes 2 × 10, 10 × 2, and 2 × 10, respectively, it is much cheaper to cal-
+culate (A × B) × C than a × (B × C). Since × is a binary operation any way to evaluate
+
+our product corresponds to a tree, and hence our goal is to pick the optimal tree. The ma-
+trix chain product problem can therefore be solved in a very similar structure as the OBST
+algorithm and with the same cost bounds.

@@ -23,6 +23,7 @@ pub mod ReduceContractMtEph {
 
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Concurrency::Concurrency::StTInMtT;
+    use crate::vstdplus::monoid::monoid::*;
 
     //		3. broadcast use
 
@@ -39,8 +40,16 @@ pub mod ReduceContractMtEph {
         fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: Arc<F>,
+            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
             id: T,
-        ) -> (result: T);
+        ) -> (result: T)
+            requires
+                a.spec_len() <= usize::MAX,
+                spec_monoid(spec_f, id),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+            ensures
+                result == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f);
     }
 
     //		9. impls
@@ -50,6 +59,7 @@ pub mod ReduceContractMtEph {
         fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: Arc<F>,
+            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
             id: T,
         ) -> (result: T) {
             reduce_contract_parallel_inner(a, f, id)

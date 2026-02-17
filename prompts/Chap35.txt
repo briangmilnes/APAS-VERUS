@@ -1,0 +1,100 @@
+ Which modules should we implement for Chap35
+ Which lower number modules can you use?
+ How many modules are going to have parallelism and in which functions/methods?
+ Which algorithms, problems and exercises?
+ Which exercises are text proofs?
+ Do you have enough information for the exercises? 
+
+ Discuss with the user.
+
+ Build a plan for fixing this, including test and benchmark
+ using PrePlanChecklist.md. 
+
+ Show it to me and estimate time.
+
+ This goes in Chap35.
+
+Chapter 35
+Order Statistics
+This chapter presents the problem of computing the order statistics of a sequence and a
+randomized algorithm for this problem.
+1 The Order Statistics Problem
+Definition 35.1 (Order Statistics Problem). Given a sequence, an integer k where 0 ≤ k <
+|a|, and a comparison operation < that defines a total order over the elements of the se-
+quence, find the kth order statistics, i.e., kth smallest element (counting from zero) in the
+sequence.
+Reduction to Sorting. We can solve this problem by reducing it to sorting: we first sort
+the input and then select the kth element. Assuming that comparisons require constant
+work, the resulting algorithm requires O(n lg n) work, but we wish to do better: in partic-
+ular we would like to achieve linear work and O(lg2 n) span.
+2 Randomized Algorithm for Order Statistics
+This section presents a randomized algorithm for computing order statistics that uses the
+contraction technique: it solves a given problem instance by reducing it a problem instance
+whose size is geometrically smaller in expectation.
+Algorithm 35.2 (Contraction-Based Select). For the purposes of simplicity, let’s assume
+that sequences consist of unique elements and consider the following algorithm that uses
+randomization to contract the problem to a smaller instance. The algorithm divides the
+
+2. RANDOMIZED ALGORITHM FOR ORDER STATISTICS 235
+input into left and right sequences, ` and r, and figures out the side kth smallest must be in,
+and explores that side recursively. When exploring the right side, r, the algorithm adjusts
+the parameter k because the elements less or equal to the pivot p are being thrown out
+(there are |a| − |r| such elements).
+1 select a k =
+2 let
+3 p = pick a uniformly random element from a
+4 ` = 〈 x ∈ a | x < p 〉
+5 r = 〈 x ∈ a | x > p 〉
+6 in
+7 if (k < |`|) then select ` k
+8 else if (k < |a| − |r|) then p
+9 else select r (k − (|a| − |r|))
+10 end
+Example 35.1. Example runs of select illustrated by a pivot tree. For illustrative pur-
+poses, we show all possible recursive calls being explored down to singleton sequences. In
+reality, the algorithm explores only one path.
+• The path highlighted with red is the path of recursive calls taken by select when
+searching for the first-order statistics, k = 0.
+• The path highlighted with brown is the path of recursive calls taken by select when
+searching for the fifth-order statistics, k = 4.
+• The path highlighted with green is the path of recursive calls taken by select when
+searching for the eight-order statistics, k = 7.
+
+3 Analysis
+We analyze the work and span of the randomized algorithm for order statistics and show
+that the select algorithm on input of size n performs O(n) work in expectation and has
+O(lg2 n) span with high probability.
+3.1 Analysis with the Dart Game
+We present an analysis of the select algorithm by applying the dart game method .
+Darts and Probabilities. Recall the rank of an element in a sequence is the position of the
+element in the corresponding sorted sequence. Consider the rank of the pivot selected at
+a call to select. If the selected pivot has rank greater than n/4 and less than 3n/4, then
+the size of the input passed to the next recursive call is at most 3n/4. Because all elements
+are equally likely to be selected as a pivot the probability that the selected pivot has rank
+greater than n/4 and less than 3n/4 is 3n/4−n/4
+n = 1/2. The figure below illustrates this.
+Thus, the instance size decreases by 3/4 with probability 1/2 at every recursive call. We
+can thus model each recursive call to the algorithm as throwing a dart in the dart game,
+where r = 3/4 and p = 1/2. We set the penalty to O(n) because the algorith takes O(n)
+work in the worst case.
+Number of Recursive Calls. By application of dart game, we know that after O(lg n) dart
+throws (recursive calls), the algorithm completes with probability 1 − 1
+n .
+Work and Span. To analyze the work and span, note that at each recursive call (dart
+throw) work is linear and span is logarithmic. The expected instance size at round i is
+bounded by 0.875i, because 1−p+pr = 0.875, and thus we can essentially the same analysis
+as in the dart game for calculating expected work and expected span . We conclude that
+the expected work is O(n) and expected span is O(lg2 n).
+
+4 Exercises
+
+Exercise 35.1. When bounding the expected work , we have used the fact that the input
+size decreases at least one in each round and bounded the total number of recursive calls
+by n. Redo the analysis, without using this fact.
+
+Exercise 35.2. In establishing the expected span, we upper bounded the expected span
+by O(n lg n). Another way is to bound the expected span by expected work. Redo the
+expected span analysis by using expected span instead of work.
+
+Exercise 35.3. Prove that the pivot tree has O(lg n) height, and is therefore balanced, with
+high probability.

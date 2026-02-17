@@ -12,10 +12,15 @@ default = []
 experiments_only = []
 # Dev mode: skip chapters gated with dev_only (edit lib.rs to control which)
 dev_only = []
+# Include all APAS-AI chapters (not yet fully adapted for APAS-VERUS)
+all_chapters = []
 
 [dependencies]
 vstd = "0.0.0-2025-08-12-1837"
 verus_state_machines_macros = "0.0.0-2025-11-23-0053"
+rand = "0.10.0"
+ordered-float = "5.1.0"
+bitvec = "1.0.1"
 
 [lib]
 path = "src/lib.rs"
@@ -237,3 +242,719 @@ members = ["."]
 [patch.crates-io]
 vstd = { path = "/home/milnes/projects/verus/source/vstd" }
 verus_state_machines_macros = { path = "/home/milnes/projects/verus/source/state_machines_macros" }
+[[test]]
+name = "TestMaxContigSubSumBruteStEph"
+path = "tests/Chap28/TestMaxContigSubSumBruteStEph.rs"
+
+[[test]]
+name = "TestMaxContigSubSumDivConMtEph"
+path = "tests/Chap28/TestMaxContigSubSumDivConMtEph.rs"
+
+[[test]]
+name = "TestMaxContigSubSumDivConOptMtEph"
+path = "tests/Chap28/TestMaxContigSubSumDivConOptMtEph.rs"
+
+[[test]]
+name = "TestMaxContigSubSumDivConOptStEph"
+path = "tests/Chap28/TestMaxContigSubSumDivConOptStEph.rs"
+
+[[test]]
+name = "TestMaxContigSubSumDivConStEph"
+path = "tests/Chap28/TestMaxContigSubSumDivConStEph.rs"
+
+[[test]]
+name = "TestMaxContigSubSumOptMtEph"
+path = "tests/Chap28/TestMaxContigSubSumOptMtEph.rs"
+
+[[test]]
+name = "TestMaxContigSubSumOptStEph"
+path = "tests/Chap28/TestMaxContigSubSumOptStEph.rs"
+
+[[test]]
+name = "TestMaxContigSubSumReducedStEph"
+path = "tests/Chap28/TestMaxContigSubSumReducedStEph.rs"
+
+[[test]]
+name = "TestOrderStatSelectMtEph"
+path = "tests/Chap35/TestOrderStatSelectMtEph.rs"
+
+[[test]]
+name = "TestOrderStatSelectMtPer"
+path = "tests/Chap35/TestOrderStatSelectMtPer.rs"
+
+[[test]]
+name = "TestOrderStatSelectStEph"
+path = "tests/Chap35/TestOrderStatSelectStEph.rs"
+
+[[test]]
+name = "TestOrderStatSelectStPer"
+path = "tests/Chap35/TestOrderStatSelectStPer.rs"
+
+[[test]]
+name = "TestQuickSortMtEph"
+path = "tests/Chap36/TestQuickSortMtEph.rs"
+
+[[test]]
+name = "TestQuickSortMtEphSlice"
+path = "tests/Chap36/TestQuickSortMtEphSlice.rs"
+
+[[test]]
+name = "TestQuickSortStEph"
+path = "tests/Chap36/TestQuickSortStEph.rs"
+
+[[test]]
+name = "TestAVLTreeSeqMtPer"
+path = "tests/Chap37/TestAVLTreeSeqMtPer.rs"
+
+[[test]]
+name = "TestAVLTreeSeq"
+path = "tests/Chap37/TestAVLTreeSeq.rs"
+
+[[test]]
+name = "TestAVLTreeSeqStEph18"
+path = "tests/Chap37/TestAVLTreeSeqStEph18.rs"
+
+[[test]]
+name = "TestAVLTreeSeqStEphChap37"
+path = "tests/Chap37/TestAVLTreeSeqStEphChap37.rs"
+
+[[test]]
+name = "TestAVLTreeSeqStEph"
+path = "tests/Chap37/TestAVLTreeSeqStEph.rs"
+
+[[test]]
+name = "TestAVLTreeSeqStPer18"
+path = "tests/Chap37/TestAVLTreeSeqStPer18.rs"
+
+[[test]]
+name = "TestAVLTreeSeqStPer19"
+path = "tests/Chap37/TestAVLTreeSeqStPer19.rs"
+
+[[test]]
+name = "TestAVLTreeSeqStPer"
+path = "tests/Chap37/TestAVLTreeSeqStPer.rs"
+
+[[test]]
+name = "TestBSTAVLMtEph"
+path = "tests/Chap37/TestBSTAVLMtEph.rs"
+
+[[test]]
+name = "TestBSTAVLStEph"
+path = "tests/Chap37/TestBSTAVLStEph.rs"
+
+[[test]]
+name = "TestBSTBBAlphaMtEph"
+path = "tests/Chap37/TestBSTBBAlphaMtEph.rs"
+
+[[test]]
+name = "TestBSTBBAlphaStEph"
+path = "tests/Chap37/TestBSTBBAlphaStEph.rs"
+
+[[test]]
+name = "TestBSTMtEph"
+path = "tests/Chap37/TestBSTMtEph.rs"
+
+[[test]]
+name = "TestBSTPlainMtEph"
+path = "tests/Chap37/TestBSTPlainMtEph.rs"
+
+[[test]]
+name = "TestBSTPlainStEph"
+path = "tests/Chap37/TestBSTPlainStEph.rs"
+
+[[test]]
+name = "TestBSTRBMtEph"
+path = "tests/Chap37/TestBSTRBMtEph.rs"
+
+[[test]]
+name = "TestBSTRBStEph"
+path = "tests/Chap37/TestBSTRBStEph.rs"
+
+[[test]]
+name = "TestBSTSetAVLMtEph"
+path = "tests/Chap37/TestBSTSetAVLMtEph.rs"
+
+[[test]]
+name = "TestBSTSetBBAlphaMtEph"
+path = "tests/Chap37/TestBSTSetBBAlphaMtEph.rs"
+
+[[test]]
+name = "TestBSTSetPlainMtEph"
+path = "tests/Chap37/TestBSTSetPlainMtEph.rs"
+
+[[test]]
+name = "TestBSTSetRBMtEph"
+path = "tests/Chap37/TestBSTSetRBMtEph.rs"
+
+[[test]]
+name = "TestBSTSetSplayMtEph"
+path = "tests/Chap37/TestBSTSetSplayMtEph.rs"
+
+[[test]]
+name = "TestBSTSplayMtEph"
+path = "tests/Chap37/TestBSTSplayMtEph.rs"
+
+[[test]]
+name = "TestBSTSplayStEph"
+path = "tests/Chap37/TestBSTSplayStEph.rs"
+
+[[test]]
+name = "TestBSTParaMtEph"
+path = "tests/Chap38/TestBSTParaMtEph.rs"
+
+[[test]]
+name = "TestBSTParaStEph"
+path = "tests/Chap38/TestBSTParaStEph.rs"
+
+[[test]]
+name = "TestBSTParaTreapMtEph"
+path = "tests/Chap39/TestBSTParaTreapMtEph.rs"
+
+[[test]]
+name = "TestBSTSetTreapMtEph"
+path = "tests/Chap39/TestBSTSetTreapMtEph.rs"
+
+[[test]]
+name = "TestBSTTreapStEph"
+path = "tests/Chap39/TestBSTTreapStEph.rs"
+
+[[test]]
+name = "TestBSTKeyValueStEph"
+path = "tests/Chap40/TestBSTKeyValueStEph.rs"
+
+[[test]]
+name = "TestBSTReducedStEph"
+path = "tests/Chap40/TestBSTReducedStEph.rs"
+
+[[test]]
+name = "TestBSTSizeStEph"
+path = "tests/Chap40/TestBSTSizeStEph.rs"
+
+[[test]]
+name = "TestArraySetEnumMtEph"
+path = "tests/Chap41/TestArraySetEnumMtEph.rs"
+
+[[test]]
+name = "TestArraySetStEph"
+path = "tests/Chap41/TestArraySetStEph.rs"
+
+[[test]]
+name = "TestAVLTreeSetMtEph"
+path = "tests/Chap41/TestAVLTreeSetMtEph.rs"
+
+[[test]]
+name = "TestAVLTreeSetMtPer"
+path = "tests/Chap41/TestAVLTreeSetMtPer.rs"
+
+[[test]]
+name = "TestAVLTreeSetStEph"
+path = "tests/Chap41/TestAVLTreeSetStEph.rs"
+
+[[test]]
+name = "TestAVLTreeSetStPer"
+path = "tests/Chap41/TestAVLTreeSetStPer.rs"
+
+[[test]]
+name = "TestExample41_3"
+path = "tests/Chap41/TestExample41_3.rs"
+
+[[test]]
+name = "TestExample42_1"
+path = "tests/Chap42/TestExample42_1.rs"
+
+[[test]]
+name = "TestTableMtEph"
+path = "tests/Chap42/TestTableMtEph.rs"
+
+[[test]]
+name = "TestTableStEph"
+path = "tests/Chap42/TestTableStEph.rs"
+
+[[test]]
+name = "TestTableStPer"
+path = "tests/Chap42/TestTableStPer.rs"
+
+[[test]]
+name = "TestAugOrderedTableMtEph"
+path = "tests/Chap43/TestAugOrderedTableMtEph.rs"
+
+[[test]]
+name = "TestAugOrderedTableStEph"
+path = "tests/Chap43/TestAugOrderedTableStEph.rs"
+
+[[test]]
+name = "TestAugOrderedTableStPer"
+path = "tests/Chap43/TestAugOrderedTableStPer.rs"
+
+[[test]]
+name = "TestExample43_1"
+path = "tests/Chap43/TestExample43_1.rs"
+
+[[test]]
+name = "TestOrderedSetMtEph"
+path = "tests/Chap43/TestOrderedSetMtEph.rs"
+
+[[test]]
+name = "TestOrderedSetStEph"
+path = "tests/Chap43/TestOrderedSetStEph.rs"
+
+[[test]]
+name = "TestOrderedSetStPer"
+path = "tests/Chap43/TestOrderedSetStPer.rs"
+
+[[test]]
+name = "TestOrderedTableMtEph"
+path = "tests/Chap43/TestOrderedTableMtEph.rs"
+
+[[test]]
+name = "TestOrderedTableMtPer"
+path = "tests/Chap43/TestOrderedTableMtPer.rs"
+
+[[test]]
+name = "TestOrderedTableStEph"
+path = "tests/Chap43/TestOrderedTableStEph.rs"
+
+[[test]]
+name = "TestOrderedTableStPer"
+path = "tests/Chap43/TestOrderedTableStPer.rs"
+
+[[test]]
+name = "TestDocumentIndex"
+path = "tests/Chap44/TestDocumentIndex.rs"
+
+[[test]]
+name = "TestExample44_1"
+path = "tests/Chap44/TestExample44_1.rs"
+
+[[test]]
+name = "TestBalancedTreePQ"
+path = "tests/Chap45/TestBalancedTreePQ.rs"
+
+[[test]]
+name = "TestBinaryHeapPQ"
+path = "tests/Chap45/TestBinaryHeapPQ.rs"
+
+[[test]]
+name = "TestExample45_2"
+path = "tests/Chap45/TestExample45_2.rs"
+
+[[test]]
+name = "TestHeapsortExample"
+path = "tests/Chap45/TestHeapsortExample.rs"
+
+[[test]]
+name = "TestLeftistHeapPQ"
+path = "tests/Chap45/TestLeftistHeapPQ.rs"
+
+[[test]]
+name = "TestSortedListPQ"
+path = "tests/Chap45/TestSortedListPQ.rs"
+
+[[test]]
+name = "TestUnsortedListPQ"
+path = "tests/Chap45/TestUnsortedListPQ.rs"
+
+[[test]]
+name = "TestDoubleHashFlatHashTable"
+path = "tests/Chap47/TestDoubleHashFlatHashTable.rs"
+
+[[test]]
+name = "TestLinkedListChainedHashTable"
+path = "tests/Chap47/TestLinkedListChainedHashTable.rs"
+
+[[test]]
+name = "TestLinProbFlatHashTable"
+path = "tests/Chap47/TestLinProbFlatHashTable.rs"
+
+[[test]]
+name = "TestParaHashTableStEph"
+path = "tests/Chap47/TestParaHashTableStEph.rs"
+
+[[test]]
+name = "TestQuadProbFlatHashTable"
+path = "tests/Chap47/TestQuadProbFlatHashTable.rs"
+
+[[test]]
+name = "TestStructChainedHashTable"
+path = "tests/Chap47/TestStructChainedHashTable.rs"
+
+[[test]]
+name = "TestVecChainedHashTable"
+path = "tests/Chap47/TestVecChainedHashTable.rs"
+
+[[test]]
+name = "TestMinEditDistMtEph"
+path = "tests/Chap49/TestMinEditDistMtEph.rs"
+
+[[test]]
+name = "TestMinEditDistMtPer"
+path = "tests/Chap49/TestMinEditDistMtPer.rs"
+
+[[test]]
+name = "TestMinEditDistStEph"
+path = "tests/Chap49/TestMinEditDistStEph.rs"
+
+[[test]]
+name = "TestMinEditDistStPer"
+path = "tests/Chap49/TestMinEditDistStPer.rs"
+
+[[test]]
+name = "TestSubsetSumMtEph"
+path = "tests/Chap49/TestSubsetSumMtEph.rs"
+
+[[test]]
+name = "TestSubsetSumMtPer"
+path = "tests/Chap49/TestSubsetSumMtPer.rs"
+
+[[test]]
+name = "TestSubsetSumStEph"
+path = "tests/Chap49/TestSubsetSumStEph.rs"
+
+[[test]]
+name = "TestSubsetSumStPer"
+path = "tests/Chap49/TestSubsetSumStPer.rs"
+
+[[test]]
+name = "TestMatrixChainMtEph"
+path = "tests/Chap50/TestMatrixChainMtEph.rs"
+
+[[test]]
+name = "TestMatrixChainMtPer"
+path = "tests/Chap50/TestMatrixChainMtPer.rs"
+
+[[test]]
+name = "TestMatrixChainStEph"
+path = "tests/Chap50/TestMatrixChainStEph.rs"
+
+[[test]]
+name = "TestMatrixChainStPer"
+path = "tests/Chap50/TestMatrixChainStPer.rs"
+
+[[test]]
+name = "TestOBSTMtEph"
+path = "tests/Chap50/TestOBSTMtEph.rs"
+
+[[test]]
+name = "TestOBSTMtPer"
+path = "tests/Chap50/TestOBSTMtPer.rs"
+
+[[test]]
+name = "TestOptBinSearchTreeStEph"
+path = "tests/Chap50/TestOptBinSearchTreeStEph.rs"
+
+[[test]]
+name = "TestOptBinSearchTreeStPer"
+path = "tests/Chap50/TestOptBinSearchTreeStPer.rs"
+
+[[test]]
+name = "TestProbability"
+path = "tests/Chap50/TestProbability.rs"
+
+[[test]]
+name = "TestBottomUpDPMtEph"
+path = "tests/Chap51/TestBottomUpDPMtEph.rs"
+
+[[test]]
+name = "TestBottomUpDPMtPer"
+path = "tests/Chap51/TestBottomUpDPMtPer.rs"
+
+[[test]]
+name = "TestBottomUpDPStEph"
+path = "tests/Chap51/TestBottomUpDPStEph.rs"
+
+[[test]]
+name = "TestBottomUpDPStPer"
+path = "tests/Chap51/TestBottomUpDPStPer.rs"
+
+[[test]]
+name = "TestTopDownDPMtEph"
+path = "tests/Chap51/TestTopDownDPMtEph.rs"
+
+[[test]]
+name = "TestTopDownDPMtPer"
+path = "tests/Chap51/TestTopDownDPMtPer.rs"
+
+[[test]]
+name = "TestTopDownDPStEph"
+path = "tests/Chap51/TestTopDownDPStEph.rs"
+
+[[test]]
+name = "TestTopDownDPStPer"
+path = "tests/Chap51/TestTopDownDPStPer.rs"
+
+[[test]]
+name = "TestAdjMatrixGraphMtPer"
+path = "tests/Chap52/TestAdjMatrixGraphMtPer.rs"
+
+[[test]]
+name = "TestAdjMatrixGraphStEph"
+path = "tests/Chap52/TestAdjMatrixGraphStEph.rs"
+
+[[test]]
+name = "TestAdjMatrixGraphStPer"
+path = "tests/Chap52/TestAdjMatrixGraphStPer.rs"
+
+[[test]]
+name = "TestAdjSeqGraphMtPer"
+path = "tests/Chap52/TestAdjSeqGraphMtPer.rs"
+
+[[test]]
+name = "TestAdjSeqGraphStEph"
+path = "tests/Chap52/TestAdjSeqGraphStEph.rs"
+
+[[test]]
+name = "TestAdjSeqGraphStPer"
+path = "tests/Chap52/TestAdjSeqGraphStPer.rs"
+
+[[test]]
+name = "TestAdjTableGraphMtPer"
+path = "tests/Chap52/TestAdjTableGraphMtPer.rs"
+
+[[test]]
+name = "TestAdjTableGraphStEph"
+path = "tests/Chap52/TestAdjTableGraphStEph.rs"
+
+[[test]]
+name = "TestAdjTableGraphStPer"
+path = "tests/Chap52/TestAdjTableGraphStPer.rs"
+
+[[test]]
+name = "TestEdgeSetGraphMtEph"
+path = "tests/Chap52/TestEdgeSetGraphMtEph.rs"
+
+[[test]]
+name = "TestEdgeSetGraphMtPer"
+path = "tests/Chap52/TestEdgeSetGraphMtPer.rs"
+
+[[test]]
+name = "TestEdgeSetGraphStEph"
+path = "tests/Chap52/TestEdgeSetGraphStEph.rs"
+
+[[test]]
+name = "TestEdgeSetGraphStPer"
+path = "tests/Chap52/TestEdgeSetGraphStPer.rs"
+
+[[test]]
+name = "TestGraphSearchMtPer"
+path = "tests/Chap53/TestGraphSearchMtPer.rs"
+
+[[test]]
+name = "TestGraphSearchStEph"
+path = "tests/Chap53/TestGraphSearchStEph.rs"
+
+[[test]]
+name = "TestGraphSearchStPer"
+path = "tests/Chap53/TestGraphSearchStPer.rs"
+
+[[test]]
+name = "TestPQMinStEph"
+path = "tests/Chap53/TestPQMinStEph.rs"
+
+[[test]]
+name = "TestPQMinStPer"
+path = "tests/Chap53/TestPQMinStPer.rs"
+
+[[test]]
+name = "TestBFSMtEph"
+path = "tests/Chap54/TestBFSMtEph.rs"
+
+[[test]]
+name = "TestBFSMtPer"
+path = "tests/Chap54/TestBFSMtPer.rs"
+
+[[test]]
+name = "TestBFSStEph"
+path = "tests/Chap54/TestBFSStEph.rs"
+
+[[test]]
+name = "TestBFSStPer"
+path = "tests/Chap54/TestBFSStPer.rs"
+
+[[test]]
+name = "TestCycleDetectStEph"
+path = "tests/Chap55/TestCycleDetectStEph.rs"
+
+[[test]]
+name = "TestCycleDetectStPer"
+path = "tests/Chap55/TestCycleDetectStPer.rs"
+
+[[test]]
+name = "TestDFSStEph"
+path = "tests/Chap55/TestDFSStEph.rs"
+
+[[test]]
+name = "TestDFSStPer"
+path = "tests/Chap55/TestDFSStPer.rs"
+
+[[test]]
+name = "TestSCCStEph"
+path = "tests/Chap55/TestSCCStEph.rs"
+
+[[test]]
+name = "TestSCCStPer"
+path = "tests/Chap55/TestSCCStPer.rs"
+
+[[test]]
+name = "TestTopoSortStEph"
+path = "tests/Chap55/TestTopoSortStEph.rs"
+
+[[test]]
+name = "TestTopoSortStPer"
+path = "tests/Chap55/TestTopoSortStPer.rs"
+
+[[test]]
+name = "TestAllPairsResultStEphFloat"
+path = "tests/Chap56/TestAllPairsResultStEphFloat.rs"
+
+[[test]]
+name = "TestAllPairsResultStEphInt"
+path = "tests/Chap56/TestAllPairsResultStEphInt.rs"
+
+[[test]]
+name = "TestAllPairsResultStPerFloat"
+path = "tests/Chap56/TestAllPairsResultStPerFloat.rs"
+
+[[test]]
+name = "TestAllPairsResultStPerInt"
+path = "tests/Chap56/TestAllPairsResultStPerInt.rs"
+
+[[test]]
+name = "TestExample56_1"
+path = "tests/Chap56/TestExample56_1.rs"
+
+[[test]]
+name = "TestExample56_3"
+path = "tests/Chap56/TestExample56_3.rs"
+
+[[test]]
+name = "TestPathWeightUtilsStEph"
+path = "tests/Chap56/TestPathWeightUtilsStEph.rs"
+
+[[test]]
+name = "TestPathWeightUtilsStPer"
+path = "tests/Chap56/TestPathWeightUtilsStPer.rs"
+
+[[test]]
+name = "TestSSSPResultStEphFloat"
+path = "tests/Chap56/TestSSSPResultStEphFloat.rs"
+
+[[test]]
+name = "TestSSSPResultStEphInt"
+path = "tests/Chap56/TestSSSPResultStEphInt.rs"
+
+[[test]]
+name = "TestSSSPResultStPerFloat"
+path = "tests/Chap56/TestSSSPResultStPerFloat.rs"
+
+[[test]]
+name = "TestSSSPResultStPerInt"
+path = "tests/Chap56/TestSSSPResultStPerInt.rs"
+
+[[test]]
+name = "TestDijkstraStEphFloat"
+path = "tests/Chap57/TestDijkstraStEphFloat.rs"
+
+[[test]]
+name = "TestDijkstraStEphInt"
+path = "tests/Chap57/TestDijkstraStEphInt.rs"
+
+[[test]]
+name = "TestStackStEph"
+path = "tests/Chap57/TestStackStEph.rs"
+
+[[test]]
+name = "TestBellmanFordStEphFloat"
+path = "tests/Chap58/TestBellmanFordStEphFloat.rs"
+
+[[test]]
+name = "TestBellmanFordStEphInt"
+path = "tests/Chap58/TestBellmanFordStEphInt.rs"
+
+[[test]]
+name = "TestJohnsonMtEphFloat"
+path = "tests/Chap59/TestJohnsonMtEphFloat.rs"
+
+[[test]]
+name = "TestJohnsonMtEphInt"
+path = "tests/Chap59/TestJohnsonMtEphInt.rs"
+
+[[test]]
+name = "TestJohnsonStEphFloat"
+path = "tests/Chap59/TestJohnsonStEphFloat.rs"
+
+[[test]]
+name = "TestJohnsonStEphInt"
+path = "tests/Chap59/TestJohnsonStEphInt.rs"
+
+[[test]]
+name = "TestEdgeContractionMtEph"
+path = "tests/Chap61/TestEdgeContractionMtEph.rs"
+
+[[test]]
+name = "TestEdgeContractionStEph"
+path = "tests/Chap61/TestEdgeContractionStEph.rs"
+
+[[test]]
+name = "TestVertexMatchingMtEph"
+path = "tests/Chap61/TestVertexMatchingMtEph.rs"
+
+[[test]]
+name = "TestVertexMatchingStEph"
+path = "tests/Chap61/TestVertexMatchingStEph.rs"
+
+[[test]]
+name = "TestStarContractionMtEph"
+path = "tests/Chap62/TestStarContractionMtEph.rs"
+
+[[test]]
+name = "TestStarContractionStEph"
+path = "tests/Chap62/TestStarContractionStEph.rs"
+
+[[test]]
+name = "TestStarPartitionMtEph"
+path = "tests/Chap62/TestStarPartitionMtEph.rs"
+
+[[test]]
+name = "TestStarPartitionStEph"
+path = "tests/Chap62/TestStarPartitionStEph.rs"
+
+[[test]]
+name = "TestConnectivityMtEph"
+path = "tests/Chap63/TestConnectivityMtEph.rs"
+
+[[test]]
+name = "TestConnectivityStEph"
+path = "tests/Chap63/TestConnectivityStEph.rs"
+
+[[test]]
+name = "TestSpanTreeMtEph"
+path = "tests/Chap64/TestSpanTreeMtEph.rs"
+
+[[test]]
+name = "TestSpanTreeStEph"
+path = "tests/Chap64/TestSpanTreeStEph.rs"
+
+[[test]]
+name = "TestTSPApproxStEph"
+path = "tests/Chap64/TestTSPApproxStEph.rs"
+
+[[test]]
+name = "TestKruskalStEph"
+path = "tests/Chap65/TestKruskalStEph.rs"
+
+[[test]]
+name = "TestPrimStEph"
+path = "tests/Chap65/TestPrimStEph.rs"
+
+[[test]]
+name = "TestUnionFindStEph"
+path = "tests/Chap65/TestUnionFindStEph.rs"
+
+[[test]]
+name = "TestBoruvkaMtEph"
+path = "tests/Chap66/TestBoruvkaMtEph.rs"
+
+[[test]]
+name = "TestBoruvkaStEph"
+path = "tests/Chap66/TestBoruvkaStEph.rs"
+

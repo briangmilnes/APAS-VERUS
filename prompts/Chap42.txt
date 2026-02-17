@@ -1,0 +1,183 @@
+
+
+ Make a plan to implement this according to PrePlanChecklist.md.
+
+ After planning list all of the elements of the plan against the
+ PrePlanChecklist and modify any that are not fulfilled. Discuss
+ with the user.
+
+ Show it to the user and wait for an execute relentlessly to execute it.
+
+ This goes in {src,tests,benchmarks}Chap42Claude.
+
+
+Chapter 42
+Tables
+
+In this chapter we describe an interface and cost model for tables (also called maps or
+dictionaries). In addition to traditional functions such as insertion, deletion and search, we
+consider bulk functions that are better suited for parallelism.
+
+1 Interface
+The ability to map keys to associated values is crucial as a component of many algorithms
+and applications. Mathematically this corresponds to a map or function. In programming
+languages, data types to support such functionality are variously called maps, dictionar-
+ies, tables, key-value stores, and associative arrays. In this book we use the term table.
+Traditionally the focus has been on supporting insertion, deletion and search. In this book
+we are interested in parallelism so, as with sets, it is useful to have bulk functions, such as
+intersection and map.
+Data Type 42.1 (Tables). For a universe of keys K supporting equality, and a universe of
+values V, the TABLE abstract data type is a type T representing the power set of K × V
+
+restricted so that each key appears at most once. The data type supports the following:
+size : T → N
+empty : T
+singleton : K × V → T
+domain : T → S
+tabulate : (K → V) → S → T
+map : (V → V) → T → T
+filter : (K × V → B) → T → T
+intersection : (V × V → V) → T → T → T
+union : (V × V → V) → T → T → T
+difference : T → T → T
+find : T → K → (V ∪ ⊥)
+delete : T → K → T
+insert : (V × V → V) → T → (K × V) → T
+restrict : T → S → T
+subtract : T → S → T
+Throughout the set S denotes the powerset of the keys K, N are the natural numbers (non-
+negative integers), and B = {true, false}.
+Syntax 42.2 (Table Notation). In the book we will write
+{k1 7 → v1, k2 7 → v2, . . .}
+for a table that maps ki to vi.
+The function size returns the size of the table, defined as the number of key-value pairs,
+i.e.,
+size (a : T) : N = |a|.
+The function empty generates an empty table, i.e.,
+empty : T = ∅.
+The function singleton generates a table consisting of a single key-value pair, i.e.,
+singleton (k : K, v : V) : T = {k 7 → v} .
+The function domain(a) returns the set of all keys in the table a.
+Larger tables can be created by using the tabulate function, which takes a function and a
+set of key and creates a table by applying the function to each element of the set, i.e.,
+tabulate (f : K → V) (a : S) : T = {k 7 → f (k) : k ∈ a} .
+The function map creates a table from another by mapping each key-value pair in a table to
+another by applying the specified function to the value while keeping the keys the same:
+map (f : V → V) (a : T) : T = {k 7 → f (v) : (k 7 → v) ∈ a} .
+
+The function filter selects the key-value pairs in a table that satisfy a given function:
+filter (f : K × V → B) (a : T) : T = {(k 7 → v) ∈ a | f (k, v)} .
+The function intersection takes the intersection of two tables to generate another table.
+To handle the case for when the key is already present in the table, the function takes
+a combining function f of type V × V → V as an argument. The combining function
+f is applied to the two values with the same key to generate a new value. We specify
+intersection as
+intersection (f : V × V → V) (a : T) (b : T) : T
+= {k 7 → f (find a k, find b k) : k ∈ (domain(a) ∩ domain(b))} .
+The function difference subtracts one table from another by throwing away all entries in
+the first table whose key appears in the second.
+difference (a : T) (b : T) : T
+= {(k 7 → v) ∈ a | k 6 ∈ domain(b)} .
+The function union unions the key value pairs in two tables into a single table. As with
+intersection, the function takes a combining function to determine the ultimate value of a
+key that appears is both tables. We specify union in terms of the intersection and difference
+functions.
+union (f : V × V → V) (a : T) (b : T) : T
+= (intersection f a b) ∪ (difference a b) ∪ (difference b a)
+The function find returns the value associated with the key k. As it may not find the key in
+the table, its result may be bottom (⊥).
+find (a : T) (k : K) : B =
+{ v if (k 7 → v) ∈ a
+⊥ otherwise
+Given a table, the function delete deletes a key-value pair for a specified key from the table:
+delete (a : T) (k : K) = {(k′ 7 → v′) ∈ a | k 6 = k′} .
+The function insert inserts a key-value pair into a given table. It can be thought as a single-
+ton version of union and specified as such:
+insert (f : V ∗ V → V) (a : T) (k : K, v : V) : T
+= union f a (singleton (k, v)).
+
+1. INTERFACE 301
+The function restrict restricts the domain of the table to a given set:
+restrict (a : T) (b : set) : T = {k 7 → v ∈ a | k ∈ b} .
+It is similar to intersection, and in fact we have the equivalence:
+intersection first a b = restrict a (domain b)
+where first(x, y) = x. It can also be viewed as a bulk version of find since it finds all the
+keys of b that appear in a.
+The function subtract deletes from a table the entries that belong a specified set:
+subtract (a : T) (b : set) : T
+= {(k 7 → v) ∈ a | k 6 ∈ b} .
+It is similar to difference, and in fact we can define
+difference a b = subtract a (domain b)
+It can also be viewed as a bulk version of delete since it deletes all the keys of b from a.
+In addition to these functions, we can also provide a collect function that takes a sequence a
+of key-value pairs and produces a table that maps every key in a to all the values associated
+with it in a, gathering all the values with the same key together in a sequence. Such a
+function can be implemented in several ways. For example, we can use the collect function
+and then use tabulate to make a table out of this sequence. We can also implement it more
+directly using reduce as follows.
+Algorithm 42.3 (collect on Tables).
+collect a = Sequence.reduce
+(Table.union Sequence.append )
+{}
+〈 {k 7 → 〈 v 〉} : (k, v) ∈ a 〉
+Syntax 42.4 (Tables (continued)). We will also use the following shorthands:
+a[k] ≡ find A k
+{k 7 → f (x) : (k 7 → x) ∈ a} ≡ map f a
+{k 7 → f (x) : k ∈ a} ≡ tabulate f a
+{(k 7 → v) ∈ a | p(k, v)} ≡ filter p a
+a \ m ≡ subtract a m
+a ∪ b ≡ union second a b
+where second (a, b) = b.
+Example 42.1. Define tables a and b and set S as follows.
+a = {’ a ’ 7 → 4, ’ b ’ 7 → 11, ’ c ’ 7 → 2}
+b = {’ b ’ 7 → 3, ’ d ’ 7 → 5}
+c = {3, 5, 7} .
+
+302 CHAPTER 42. TABLES
+The examples below show some functions, also using our syntax.
+find : a[’ b ’] = 11
+filter : {k 7 → x ∈ a | x < 7} = {’ a ’ 7 → 4, ’ c ’ 7 → 2}
+map : {k 7 → 3 × v : k 7 → v ∈ b} = {’ b ’ 7 → 9, ’ d ’ 7 → 15}
+tabulate : {k 7 → k2 : k ∈ c} = {3 7 → 9, 5 7 → 25, 9 7 → 81}
+union : a ∪ b = {’ a ’ 7 → 4, ’ b ’ 7 → 3, ’ c ’ 7 → 2, ’ d ’ 7 → 5}
+union : union + (a, b) = {’ a ’ 7 → 4, ’ b ’ 7 → 14, ’ c ’ 7 → 2, ’ d ’ 7 → 5}
+subtract : a \ {’ b ’, ’ d ’, ’ e ’} = {’ a ’ 7 → 4, ’ c ’ 7 → 2
+
+2 Cost Specification for Tables
+The costs of the table functions are very similar to those for sets. As with sets there is a
+symmetry between the three functions restrict, union, and subtract, and the three functions
+find , insert, and delete, respectively, where the prior three are effectively “parallel” versions
+of the earlier three.
+Cost Specification 42.5 (Tables).
+Operation Work Span
+size a 1 1
+singleton (k, v) 1 1
+domain a |a| lg |a|
+filter p a ∑
+(k7 →v)∈a
+W (p(k, v)) lg |a| + max
+(k7 →v)∈a
+S(f (k, v))
+map f a ∑
+(k7 →v)∈a
+W (f (v)) lg |a| + max
+(k7 →v)∈a S(f (v))
+find a k lg |a| lg |a|
+delete a k ′′ ′′
+insert f a (k, v) ′′ ′′
+intersection f a b m lg(1 + n
+m ) lg(n + m)
+difference a b ′′ ′′
+union f a b ′′ ′′
+restrict a c ′′ ′′
+subtract a c ′′ ′′
+where n = max(|a|, |b|) and m = min(|a|, |b|) or n = max(|a|, |c|) and m = min(|a|, |c|) as applicable.
+For insert, union and intersection, we assume that W (f (·, ·)) = S(f (·, ·)) = O(1).
+Remark. Abstract data types that support mappings of some form are referred to by various
+names including mappings, maps, tables, dictionaries, and associative arrays. They are
+perhaps the most studied of any data type. Most programming languages have some form
+of mappings either built in (e.g. dictionaries in Python, Perl, and Ruby), or have libraries
+to support them (e.g. map in the C++ STL library and the Java collections framework).
+Remark. Tables are similar to sets: they extend sets so that each key now carries a value.
+Their cost specification and implementations are also similar.
+

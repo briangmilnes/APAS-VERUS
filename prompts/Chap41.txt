@@ -1,0 +1,275 @@
+ Build Chap41Codex sets.
+
+ Do it two ways: ArraySet{St,Mt}Eph using ArraySetMtEph.rs should be called
+ArraySetEnumMtEph.rs and it representions an array of bools up to u - 1 in new. Initial
+values all false.  If it's boolean is false at i, i not in the set, if it's true i is in
+the set.  And only filter is parallel, fork a thread for each test (as if f was expensive)
+and each gets f(i) if it's boolean is true.
+
+
+ And again on AVLTreeSet{St,Mt} modeled on Chap37/AVLTreeSeqStEph.rs Chap37/AVLTreeSeqStPer.rs.
+
+
+ And Example41_3 as below. 
+
+ Be sure not to put in the delegation anti-pattern or vecs except where
+ absolutely needed.
+
+ Write test code and benchmark code for both.
+
+ As you write each file, cargo build, cargo nextest just that file,
+ and cargo bench just that file.
+
+ Estimate the time, show me a to-do list and I will tell you when to execute.
+
+APAS:
+
+2 Sets ADT
+Data Type 41.1 (Sets). For a universe of elements U that support equality (e.g. the integers
+or strings), the SET abstract data type is a type S representing the power set of U (i.e., all
+subsets of U) limited to sets of finite size, along with the functions below.
+size : S → N
+toSeq A : S → Seq
+empty : S
+singleton : U → S
+fromSeq : Seq → S
+filter : ((U → B) → S) → S
+intersection : S → S → S
+difference : S → S → S
+union : S → S → S
+find : S → U → B
+delete : S → U → S
+insert : S → U → S
+Where N is the natural numbers (non-negative integers) and B = {true, false}
+
+The objects that are contained in a set are called members or the elements of the set. Recall
+that a set is a collection of distinct objects. This requires that the universe U they come from
+support equality. It might seem that all universes support equality, but consider functions.
+When are two functions equal? It is not even decidable whether two functions are equal.
+From a practical matter, there is no way to implement sets without an equality function
+
+2. SETS ADT 293
+over potential elements. In fact efficient implementations additionally require either a hash
+function over the elements of U and/or a total ordering.
+The Set ADT consists of basic functions on sets. The function size takes a set and returns
+the number of elements in the set. The function toSeq converts a set to a sequence by
+ordering the elements of the set in an unspecified way. Since elements of a set do not
+necessarily have a total ordering, the resulting order is arbitrary. This means that toSeq
+is could return different orderings in different implementations. We, however, assume it
+always returns the same ordering for the same set when using the same implementation—
+i.e., it is a function.. We specify toSeq as follows
+toSeq ({x0, x1, . . . , xn} : S) : seq = 〈 x0, x1, . . . , xn 〉
+where the xi are an arbitrary ordering.
+Several functions enable constructing sets. The function empty returns an empty set:
+empty : S = ∅
+
+The function singleton constructs a singleton set from a given element.
+singleton(x : U) : S = {x}
+
+The function fromSeq takes a sequence and returns a set consisting of the distinct elements
+of the sequence, eliminating duplicate elements. We can specify fromSeq as returning the
+range of the sequence A (recall that a sequence is a partial function mapping from natural
+numbers to elements of the sequence).
+fromSeq (a : seq) : S = range a
+
+Several functions operate on sets to produce new sets. The function filter selects the ele-
+ments of a sequence that satisfy a given Boolean function, i.e.,
+filter (f : U → B) (a : S) : S = {x ∈ a | f (x)}.
+The functions intersection, difference, and union perform the corresponding set operation. 
+
+2. SETS ADT 293
+over potential elements. In fact efficient implementations additionally require either a hash
+function over the elements of U and/or a total ordering.
+The Set ADT consists of basic functions on sets. The function size takes a set and returns
+the number of elements in the set. The function toSeq converts a set to a sequence by
+ordering the elements of the set in an unspecified way. Since elements of a set do not
+necessarily have a total ordering, the resulting order is arbitrary. This means that toSeq
+is could return different orderings in different implementations. We, however, assume it
+always returns the same ordering for the same set when using the same implementation—
+i.e., it is a function.. We specify toSeq as follows
+toSeq ({x0, x1, . . . , xn} : S) : seq = 〈 x0, x1, . . . , xn 〉
+where the xi are an arbitrary ordering.
+Several functions enable constructing sets. The function empty returns an empty set:
+empty : S = ∅
+The function singleton constructs a singleton set from a given element.
+singleton(x : U) : S = {x}
+The function fromSeq takes a sequence and returns a set consisting of the distinct elements
+of the sequence, eliminating duplicate elements. We can specify fromSeq as returning the
+range of the sequence A (recall that a sequence is a partial function mapping from natural
+numbers to elements of the sequence).
+fromSeq (a : seq) : S = range a
+Several functions operate on sets to produce new sets. The function filter selects the ele-
+ments of a sequence that satisfy a given Boolean function, i.e.,
+filter (f : U → B) (a : S) : S = {x ∈ a | f (x)}.
+The functions intersection, difference, and union perform the corresponding set operation
+on their arguments:
+intersection (a : S) (b : S) : S = a ∩ b
+difference (a : S) (b : S) : S = a \ b
+union (a : S) (b : S) : S = a ∪ b
+We refer to the functions intersection, difference, and union as bulk updates, because they
+allow updating with a large set of elements “in bulk.”
+The functions find , insert, and delete are singular versions of the bulk functions intersection,
+union, and difference respectively. The find function checks whether an element is in a set—
+it is the basic membership test for sets.
+f ind (a : S) (x : U) : B =
+{ true if x ∈ A
+false otherwise
+
+
+We can also specify the find function is in terms of set intersection:
+f ind (a : S) (x : U) : B = |a ∩ {x}| = 1.
+The functions delete and insert delete an existing element from a set, and insert a new
+element into a set, respectively:
+delete (a : S) (x : U) : S = a \ {x} .
+insert (a : S) (x : U) : S = a ∪ {x}
+Iteration and reduction over sets can be easily defined by converting them to sequences, as
+in
+iterate f x a = Sequence.iterate f (toSeq a)
+reduce f x a = Sequence.reduce f (toSeq a)
+Notice that in the Set ADT although the universe U is potentially infinite (e.g. the integers),
+S only consists of finite sized subsets. Unfortunately this restriction means that the interface
+is not as powerful as general set theory, but it makes computation on sets feasible. A
+consequence of this requirement is that the interface does not include a function that takes
+the complement of a set—such a function would generate an infinite sized set from a finite
+sized set (assuming the size of U is infinite).
+
+
+Test at least these cases:
+
+Example 41.1. Some functions on sets:
+| {a, b, c} | = 3
+{x ∈ {4, 11, 2, 6} | x < 7} = {4, 2, 6}
+find {6, 2, 9, 11, 8} 4 = false
+{2, 7, 8, 11} ∪ {7, 9, 11, 14, 17} = {2, 7, 8, 9, 11, 14, 17}
+toSeq {2, 7, 8, 11} = 〈 8, 11, 2, 7 〉
+fromSeq 〈 2, 7, 2, 8, 11, 2 〉 = {8, 2, 11, 7}
+Remark. You may notice that the interface does not contain a map function. If we interpret
+map, as in sequences, to take in a collection, apply some function to each element and
+return a collection of the same size, then it does not make sense for sets. Consider a function
+that always returns 0. Mapping this over a set would return all zeros, which would then
+be collapsed into a singleton set, containing exactly 0. Therefore, such a map would allow
+reducing the set of arbitrary size to a singleton.
+Remark. Most programming languages either support sets directly (e.g., Python and Ruby)
+or have libraries that support them (e.g., in the C++ STL library and Java collections frame-
+work). They sometimes have more than one implementation of sets. For example, Java has
+sets based on hash tables and balanced trees. Unsurprisingly, the set interface in different
+libraries and languages differ in subtle ways. So, when using one of these interfaces you
+should always read the documentation carefully.
+
+
+
+3 Cost of Sets
+Sets can be implemented in several ways. If the elements of a set are drawn from natu-
+ral numbers, it is sometimes possible and effective to represent the set as an array-based
+sequence. If the elements accept a hash function, then hash-tables can be used to store
+the elements in a sequence. This approach is commonly used in practice and is quite effi-
+cient in terms of work and space. Finally, if the elements don’t accept a hash function but
+accept a comparison operator that can totally order all elements, then sets can be repre-
+sented by using binary search trees. All of these approaches assume an equality function
+on the elements (with natural numbers, the equality coincides with the equality on natural
+numbers).
+Cost Specification 41.3 (Arrays for Enumerable Sets). Let the universe U be defined as the
+set {0, 1, . . . , u − 1} for some u ∈ N. We can represent enumerable sets of the form S ⊆ U
+by using a boolean sequence of length |U | that indicates for each i ∈ U whether i ∈ S or
+not. Using array sequences, operations on enumerable sets can be implemented according
+to the following cost specification.
+Operation Work Span
+size a u 1
+singleton x u 1
+toSeq a u 1
+filter f a u + ∑
+x∈a
+W (f (x)) 1 + max
+x∈a S(f (x))
+intersection a1 a2 u 1
+union a1 a2 u 1
+difference a1 a2 u 1
+find a e 1 1
+insert a x u 1
+delete a x u 1
+
+With some simple optimization these bounds can be improved. For example we could
+include the size or the set along with the sequence boolean sequence, which would reduce
+the cost of size to O(1). Also, since words of memory can contain multiple bits, we could
+also pack multiple bits into each word. If words have b bits, this would covert each O(u)
+bound to O(u/b).
+Tree Representation for Sets. If the elements in the universe U accept a comparison func-
+tion that defines a total order over U, then we can use a balanced binary search tree to rep-
+resent sets. This representation allows us to implement the Sets ADT reasonably efficiently
+
+For the specification specified below , we assume that the comparison function requires
+constant work and span.
+Cost Specification 41.4 (Tree Sets). The cost specification for tree-based implementation of
+sets follow.
+Operation Work Span
+size a 1 1
+singleton x 1 1
+toSeq a |a| lg |a|
+filter f a ∑
+x∈a
+W (f (x)) lg |a| + max
+x∈a S(f (x))
+intersection a b m · lg(1 + n
+m ) lg(n)
+union a b ′′ ′′
+difference a b ′′ ′′
+find a e lg |a| lg |a|
+insert a x ′′ ′′
+delete a x ′′ ′′
+where n = max(|a|, |b|) and m = min(|a|, |b|), and assuming comparison of elements takes
+constant work.
+Let’s consider these cost specifications in some more detail. The cost for filter is effectively
+the same as for sequences, and therefore should not be surprising. It assumes the function
+f is applied to the elements of the set in parallel. The cost for the functions find , insert, and
+delete are what one might expect from a balanced binary tree implementation. Basically
+the tree will have O(lg n) depth and each function will require searching the tree from the
+root to some node. We cover such an implementation in this chapter.
+
+The work bounds for the bulk functions (intersection, difference, and union) may seem
+confusing, especially because of the expression inside the logarithm. To shed some light
+on the cost, it is helpful to consider two cases, the first is when one of the sets is a single
+element and the other when both sets are equal length. In the first case the bulk functions
+are doing the same thing as the single element functions find , insert, and delete. Indeed if
+we implement the single element functions on a set A using the bulk ones, then we would
+like it to be the case that we get the same asymptotic performance. This is indeed the case
+since we have that m = 1 and n = |A|, giving:
+W (n) ∈ O
+(
+lg
+(
+1 + n
+1
+))
+= O(lg n) .
+Now let’s consider the second case when both sets have equal length, say n. In this case
+we have m = n giving
+W (n) ∈ O
+(
+n · lg
+(
+1 + n
+n
+))
+= O(n)
+
+
+We can implement find , delete, and insert in terms of the functions intersection, difference,
+and union (respectively) by making a singleton set out of the element that we are interested
+in. Such an implementation would be asymptotically efficient, giving us the work and span
+as the direct implementations.
+Conversely, we can also implement the bulk functions in terms of the singleton ones by
+iteration. Because it uses iteration the resulting algorithms are sequential and also work
+inefficient. For example, if we implement union by inserting n elements into a second
+set of n elements, the cost would be O(n lg n). We would obtain a similar bound when
+implementing difference with delete, and intersection with find and insert. For this reason,
+we prefer to use the bulk functions intersection, difference, and union instead of find , delete,
+and insert when possible.
+
+Implement an Example_41_3.
+
+Example 41.3. We can convert a sequence to a set by inserting the elements one by one as
+follows
+fromseq a = Seq.iterate Set.insert ∅ a.
+This implementation is work efficient but sequential. We can write a work efficient and
+parallel function as follows
+fromSeq a = Seq.reduce Set.union ∅ 〈 {x} : x ∈ a 〉

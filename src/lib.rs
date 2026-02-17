@@ -154,6 +154,24 @@ pub mod Chap06 {
 //    pub mod WeightedDirGraphStEphI64;
 //    pub mod WeightedDirGraphStEphI128;
 //    pub mod WeightedDirGraphStEphIsize;
+    // Int/Float aggregate graph modules (from APAS-AI, not yet adapted)
+    // Int variants: compile under cargo, hidden from Verus (not Verusified)
+    #[cfg(not(verus_keep_ghost))]
+    pub mod WeightedDirGraphStEphInt;
+    #[cfg(feature = "all_chapters")]
+    pub mod WeightedDirGraphStEphFloat;
+    #[cfg(not(verus_keep_ghost))]
+    pub mod WeightedDirGraphMtEphInt;
+    #[cfg(feature = "all_chapters")]
+    pub mod WeightedDirGraphMtEphFloat;
+    #[cfg(not(verus_keep_ghost))]
+    pub mod WeightedUnDirGraphStEphInt;
+    #[cfg(feature = "all_chapters")]
+    pub mod WeightedUnDirGraphStEphFloat;
+    #[cfg(not(verus_keep_ghost))]
+    pub mod WeightedUnDirGraphMtEphInt;
+    #[cfg(feature = "all_chapters")]
+    pub mod WeightedUnDirGraphMtEphFloat;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
@@ -193,6 +211,8 @@ pub mod Chap19 {
     pub mod ArraySeqStPer;
     pub mod ArraySeqStEph;
     pub mod ArraySeqMtEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod ArraySeqMtEphSlice;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
@@ -235,4 +255,324 @@ pub mod Chap27 {
     pub mod ReduceContractMtEph;
     pub mod ScanContractStEph;
     pub mod ScanContractMtEph;
+}
+
+// Chapters brought over from APAS-AI — not yet verusified
+// Gate behind "all_chapters" feature (not set by default) until API compatibility is fixed
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap28 {
+    pub mod MaxContigSubSumBruteStEph;
+    pub mod MaxContigSubSumDivConStEph;
+    pub mod MaxContigSubSumDivConOptStEph;
+    pub mod MaxContigSubSumOptStEph;
+    pub mod MaxContigSubSumReducedStEph;
+    // MtEph variants need scan() which isn't in APAS-VERUS ArraySeqMtEphBaseTrait yet
+    #[cfg(feature = "all_chapters")]
+    pub mod MaxContigSubSumDivConMtEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod MaxContigSubSumDivConOptMtEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod MaxContigSubSumOptMtEph;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap35 {
+    pub mod OrderStatSelectStEph;
+    pub mod OrderStatSelectStPer;
+    pub mod OrderStatSelectMtEph;
+    pub mod OrderStatSelectMtPer;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap36 {
+    pub mod QuickSortStEph;
+    pub mod QuickSortMtEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod QuickSortMtEphSlice;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap37 {
+    pub mod AVLTreeSeq;
+    pub mod AVLTreeSeqStEph;
+    pub mod AVLTreeSeqStPer;
+    #[cfg(feature = "all_chapters")]
+    pub mod AVLTreeSeqMtPer;
+    pub mod BSTPlainStEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod BSTPlainMtEph;
+    pub mod BSTAVLStEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod BSTAVLMtEph;
+    pub mod BSTRBStEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod BSTRBMtEph;
+    pub mod BSTSplayStEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod BSTSplayMtEph;
+    pub mod BSTBBAlphaStEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod BSTBBAlphaMtEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod BSTSetPlainMtEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod BSTSetAVLMtEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod BSTSetRBMtEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod BSTSetSplayMtEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod BSTSetBBAlphaMtEph;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap38 {
+    pub mod BSTParaStEph;
+    pub mod BSTParaMtEph;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap39 {
+    pub mod BSTTreapStEph;
+    pub mod BSTTreapMtEph;
+    pub mod BSTParaTreapMtEph;
+    pub mod BSTSetTreapMtEph;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap40 {
+    pub mod BSTKeyValueStEph;
+    pub mod BSTSizeStEph;
+    pub mod BSTReducedStEph;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap41 {
+    pub mod ArraySetStEph;
+    pub mod ArraySetEnumMtEph;
+    pub mod AVLTreeSetStEph;
+    pub mod AVLTreeSetStPer;
+    pub mod AVLTreeSetMtEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod AVLTreeSetMtPer;
+    pub mod Example41_3;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap42 {
+    pub mod TableStEph;
+    pub mod TableStPer;
+    pub mod TableMtEph;
+    pub mod Example42_1;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap43 {
+    pub mod OrderedSetStEph;
+    pub mod OrderedSetStPer;
+    pub mod OrderedSetMtEph;
+    pub mod OrderedTableStEph;
+    pub mod OrderedTableStPer;
+    pub mod OrderedTableMtEph;
+    pub mod OrderedTableMtPer;
+    pub mod AugOrderedTableStEph;
+    pub mod AugOrderedTableStPer;
+    pub mod AugOrderedTableMtEph;
+    pub mod Example43_1;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap44 {
+    pub mod DocumentIndex;
+    pub mod Example44_1;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap45 {
+    pub mod UnsortedListPQ;
+    pub mod SortedListPQ;
+    pub mod BinaryHeapPQ;
+    pub mod BalancedTreePQ;
+    pub mod LeftistHeapPQ;
+    pub mod HeapsortExample;
+    pub mod Example45_2;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap47 {
+    pub mod ChainedHashTable;
+    pub mod StructChainedHashTable;
+    pub mod VecChainedHashTableStEph;
+    pub mod LinkedListChainedHashTableStEph;
+    pub mod FlatHashTable;
+    pub mod LinProbFlatHashTableStEph;
+    pub mod QuadProbFlatHashTableStEph;
+    pub mod DoubleHashFlatHashTableStEph;
+    pub mod ParaHashTableStEph;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap49 {
+    pub mod SubsetSumStEph;
+    pub mod SubsetSumStPer;
+    pub mod SubsetSumMtEph;
+    pub mod SubsetSumMtPer;
+    pub mod MinEditDistStEph;
+    pub mod MinEditDistStPer;
+    pub mod MinEditDistMtEph;
+    pub mod MinEditDistMtPer;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap50 {
+    pub mod Probability;
+    pub mod MatrixChainStEph;
+    pub mod MatrixChainStPer;
+    pub mod MatrixChainMtEph;
+    pub mod MatrixChainMtPer;
+    pub mod OptBinSearchTreeStEph;
+    pub mod OptBinSearchTreeStPer;
+    pub mod OptBinSearchTreeMtEph;
+    pub mod OptBinSearchTreeMtPer;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap51 {
+    pub mod BottomUpDPStEph;
+    pub mod BottomUpDPStPer;
+    pub mod BottomUpDPMtEph;
+    pub mod BottomUpDPMtPer;
+    pub mod TopDownDPStEph;
+    pub mod TopDownDPStPer;
+    pub mod TopDownDPMtEph;
+    pub mod TopDownDPMtPer;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap52 {
+    pub mod AdjSeqGraphStEph;
+    pub mod AdjSeqGraphStPer;
+    pub mod AdjSeqGraphMtEph;
+    pub mod AdjSeqGraphMtPer;
+    pub mod AdjTableGraphStEph;
+    pub mod AdjTableGraphStPer;
+    #[cfg(feature = "all_chapters")]
+    pub mod AdjTableGraphMtPer;
+    pub mod AdjMatrixGraphStEph;
+    pub mod AdjMatrixGraphStPer;
+    pub mod AdjMatrixGraphMtEph;
+    pub mod AdjMatrixGraphMtPer;
+    pub mod EdgeSetGraphStEph;
+    pub mod EdgeSetGraphStPer;
+    #[cfg(feature = "all_chapters")]
+    pub mod EdgeSetGraphMtPer;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap53 {
+    pub mod PQMinStEph;
+    pub mod PQMinStPer;
+    pub mod GraphSearchStEph;
+    pub mod GraphSearchStPer;
+    #[cfg(feature = "all_chapters")]
+    pub mod GraphSearchMtPer;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap54 {
+    pub mod BFSStEph;
+    pub mod BFSStPer;
+    pub mod BFSMtEph;
+    pub mod BFSMtPer;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap55 {
+    pub mod DFSStEph;
+    pub mod DFSStPer;
+    pub mod TopoSortStEph;
+    pub mod TopoSortStPer;
+    pub mod CycleDetectStEph;
+    pub mod CycleDetectStPer;
+    pub mod SCCStEph;
+    pub mod SCCStPer;
+}
+
+#[cfg(feature = "all_chapters")]
+pub mod Chap56 {
+    pub mod PathWeightUtilsStEph;
+    pub mod PathWeightUtilsStPer;
+    pub mod SSSPResultStEphInt;
+    pub mod SSSPResultStEphFloat;
+    pub mod SSSPResultStPerInt;
+    pub mod SSSPResultStPerFloat;
+    pub mod AllPairsResultStEphInt;
+    pub mod AllPairsResultStEphFloat;
+    pub mod AllPairsResultStPerInt;
+    pub mod AllPairsResultStPerFloat;
+    pub mod Example56_1;
+    pub mod Example56_3;
+}
+
+#[cfg(feature = "all_chapters")]
+pub mod Chap57 {
+    pub mod StackStEph;
+    pub mod DijkstraStEphInt;
+    pub mod DijkstraStEphFloat;
+}
+
+#[cfg(feature = "all_chapters")]
+pub mod Chap58 {
+    pub mod BellmanFordStEphInt;
+    pub mod BellmanFordStEphFloat;
+}
+
+#[cfg(feature = "all_chapters")]
+pub mod Chap59 {
+    pub mod JohnsonStEphInt;
+    pub mod JohnsonStEphFloat;
+    pub mod JohnsonMtEphInt;
+    pub mod JohnsonMtEphFloat;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap61 {
+    pub mod EdgeContractionStEph;
+    pub mod EdgeContractionMtEph;
+    pub mod VertexMatchingStEph;
+    pub mod VertexMatchingMtEph;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap62 {
+    pub mod StarPartitionStEph;
+    pub mod StarPartitionMtEph;
+    pub mod StarContractionStEph;
+    pub mod StarContractionMtEph;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+pub mod Chap63 {
+    pub mod ConnectivityStEph;
+    pub mod ConnectivityMtEph;
+}
+
+#[cfg(feature = "all_chapters")]
+pub mod Chap64 {
+    pub mod SpanTreeStEph;
+    pub mod SpanTreeMtEph;
+    pub mod TSPApproxStEph;
+}
+
+#[cfg(feature = "all_chapters")]
+pub mod Chap65 {
+    pub mod UnionFindStEph;
+    pub mod KruskalStEph;
+    pub mod PrimStEph;
+}
+
+#[cfg(feature = "all_chapters")]
+pub mod Chap66 {
+    pub mod BoruvkaStEph;
+    pub mod BoruvkaMtEph;
 }

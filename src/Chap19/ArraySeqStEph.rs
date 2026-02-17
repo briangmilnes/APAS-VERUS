@@ -957,4 +957,12 @@ pub mod ArraySeqStEph {
         }
     }
 
+    /// Literal constructor macro for ArraySeqStEphS.
+    #[macro_export]
+    macro_rules! ArraySeqStEphSLit {
+        () => { $crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS::from_vec(Vec::new()) };
+        ($x:expr; $n:expr) => { $crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS::from_vec(vec![$x; $n]) };
+        ($($x:expr),* $(,)?) => { $crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS::from_vec(vec![$($x),*]) };
+    }
+
 }

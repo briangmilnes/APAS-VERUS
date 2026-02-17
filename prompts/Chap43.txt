@@ -1,0 +1,94 @@
+ Build a plan for this, including test and benchmark
+ using PrePlanChecklist.md. 
+
+ Show it to me and estimate time.
+
+ I will tell you when to execute. 
+
+ Wait for me to tell you when to fix, build and test.
+
+ This goes in Chap43.
+
+
+
+Chapter 43
+Ordering and Augmentation
+Ordered sets and tables assume the keys belong to a total ordering and support operations
+based on this ordering. This chapter also describes augmented tables.
+The set and table interfaces described so far do not include any operations that use the
+ordering of the elements or keys. This allows the interfaces to be defined on types that don’t
+have a natural ordering, which makes the interfaces well-suited for an implementation
+based on hash tables. In many applications, however, it is useful to order the keys and
+use various ordering operations. For example in a database one might want to find all the
+customers who spent between 50 and 100 dollars, all emails in the week of August 22, or
+the last stock transaction before noon on October 11th.
+For these purposes we can extend the operations on sets and tables with some additional
+operations that take advantage of ordering. ADT 43.1 defines the operations supported by
+ordered sets, which simply extend the operations on sets. The operations on ordered tables
+are completely analogous: they extend the operations on tables in a similar way. Note that
+split and join are essentially the same as the operations we defined for binary search trees
+.
+1 Ordered Sets Interface
+Data Type 43.1 (Ordered Sets). For a totally ordered universe of elements (U, <) (e.g. the
+integers or strings), the Ordered Set abstract data type is a type S representing the powerset
+of U (i.e., all subsets of U). It supports the following functions.
+All functions from the set ADT (ADT 41.1) plus the following.
+
+304 CHAPTER 43. ORDERING AND AUGMENTATION
+first : S → (U ∪ {⊥})
+first(A) = min [|A|]
+last : S → (U ∪ {⊥})
+last(A) = max [|A|]
+previous : (S × U) → (U ∪ {⊥})
+previous (A, k) = max {k′ ∈ [|A|] | k′ < k}
+next : (S × U) → (U ∪ {⊥})
+next (A, k) = min {k′ ∈ [|A|] | k′ > k}
+split : (S × U) → S × B × S
+split (A, k) =
+(
+{k′ ∈ [|A|] | k′ < k} , k ?
+∈ S, {k′ ∈ [|A|] | k′ > k}
+)
+join : (S × S) → S
+join (A1, A2) = [|A1|] ∪ [|A2|] assuming (max [|A1|]) < (min [|A2|])
+getRange : S → U × U → S
+getRange A (k1, k2) = {k ∈ [|A|] | k1 ≤ k ≤ k2}
+rank : (S × U) → N
+rank (A, k) = | {k′ ∈ [|A|] | k′ < k} |
+select : (S × N) → (U ∪ {⊥})
+select (A, i) = k ∈ [|A|] such that rank (A, k) = i
+or ⊥ if there is no such k
+splitRank : (S × N) → S × S
+splitRank (A, i) = ({k ∈ [|A|] | k < select(S, i)} ,
+{k ∈ [|A|] | k ≥ select(S, i)})
+where N is the natural numbers (non-negative integers) and B = {true, false}. For A of
+type S, [|A|] denotes the mathematical set of keys from A. We assume max or min of the
+empty set returns the special element ⊥.
+Example 43.1. Consider the following sequence ordered lexicographically:
+A = {’ artie ’, ’ burt ’, ’ finn ’, ’ mike ’, ’ rachel ’, ’ sam ’, ’ tina ’}
+• first A → ’ artie ’.
+• next (A, ’ quinn ’) → ’ rachel ’.
+• next (A, ’ mike ’) → ’ rachel ’.
+• getRange A (’ burt ’, ’ mike ’) → {’ burt ’, ’ finn ’, ’ mike ’}.
+• rank (A, ’ rachel ’) → 4.
+• rank (A, ’ quinn ’) → 4.
+• select (A, 5) → ’ sam ’.
+• splitRank (A, 3) → ({’ artie ’, ’ burt ’, ’ finn ’} ,
+{’ mike ’, ’ rachel ’, ’ sam ’, ’ tina ’})
+
+2 Cost specification: Ordered Sets
+We can implement ordered sets and tables using binary search trees. Implementing first is
+straightforward since it only requires traversing the tree down the left branches until a left
+branch is empty. Similarly last need only to traverse right branches.
+Exercise 43.1. Describe how to implement previous and next using the other ordered set
+functions.
+To implement split and join, we can use the same operations as supplied by binary search
+trees. The getRange operation can easily be implemented with two calls to split. To imple-
+ment efficiently rank , select and splitRank , we can augment the underlying binary search
+tree implementation with sizes as described in another Chapter .
+Cost Specification 43.2 (Tree-based ordered sets and tables). The cost for the ordered set
+and ordered table functions is the same as for tree-based sets (Cost Specification 41.4) and
+tables (Cost Specification 42.5) for the operations supported by sets and tables. The work
+and span for all the operations in ADT 43.1 is O(lg n), where n is the size of the input set
+or table, or in the case of join it is the sum of the sizes of the two inputs.
+

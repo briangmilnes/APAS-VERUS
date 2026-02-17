@@ -1540,4 +1540,12 @@ pub mod ArraySeqMtEph {
             write!(f, "]")
         }
     }
+
+    /// Literal constructor macro for ArraySeqMtEphS.
+    #[macro_export]
+    macro_rules! ArraySeqMtEphSLit {
+        () => { $crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(Vec::new()) };
+        ($x:expr; $n:expr) => { $crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(vec![$x; $n]) };
+        ($($x:expr),* $(,)?) => { $crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(vec![$($x),*]) };
+    }
 }

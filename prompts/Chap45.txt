@@ -1,0 +1,192 @@
+ Build a plan for this, including test and benchmark
+ using PrePlanChecklist.md. 
+
+ Show it to me and estimate time.
+
+ I will tell you when to execute. 
+
+ Wait for me to tell you when to fix, build and test.
+
+ Build the priority queue on each of these data
+ structures:
+Unsorted List
+Sorted List
+Balanced Trees (AVL tree ./src/Chap37/AVLTreeSeq.rs)
+Binary Heaps and
+Leftist Heap
+
+ This goes in Chap45.
+ 
+Chapter 45
+Priority Queues
+A priority queue maintains a set of elements from a total ordering, allowing at least inser-
+tion of a new element and deleting and returning the minimum element. We used priority
+queues in priority-first graph search , in Dijkstra’s algorithm , and in Prim’s algorithm
+for minimum spanning trees.
+In this chapter we focus on meldable priority queues which support a meld function that
+can meld (or merge) two priority queues into one.
+Data Type 45.1 (Meldable Priority Queue). Given a totally ordered set S, a Meldable Pri-
+ority Queue (MPQ) is a type T representing subsets of S, along with the following values
+and functions:
+empty : T
+singleton : S → T
+findMin : T → (S ∪ {⊥})
+insert : T × S → T
+deleteMin : T → T × (S ∪ {⊥})
+meld : T × T → T
+fromSeq : S seq → T
+The function singleton(e) creates a priority queue with just the element e. The function
+findMin(Q) returns the minimum element, or ⊥ (or None) if the queue is empty. The func-
+tion deleteMin(Q) removes the minimum value and returs the new queue along with the
+value. If the queue is empty it returns ⊥ (or None). The meld (Q1, Q2) creates a priority
+queue with the union of the elements in Q1 and Q2.
+Algorithm 45.2 (Heapsort). A priority queue can also be used to implement a version of
+selection sort, often referred to as heapsort. The sort can be implemented by inserting all
+keys into a priority queue, and then removing them one by one, as follows
+
+1. IMPLEMENTING PRIORITY QUEUES 313
+sort S =
+let q0 = Sequence.iter PQ.insert PQ.empty S
+hsort q =
+case PQ.deleteMin q of
+( , None) ⇒ 〈 〉
+| (q′, Some (v)) ⇒ Seq.append 〈 v 〉 (hsort q′)
+in hsort q0 end
+The heapsort algorithm is completely sequential, but given O(log n) work implemations
+of insert and deleteMin, and using lists or tree sequences (so the append is cheap) does
+optimal O(n log n) work.
+Priority queues have many applications beyond heapsort and priority first search in graphs,
+including:
+• Huffman codes,
+• clustering algorithms,
+• event simulation, and
+• kinetic algorithms for motion simulation.
+Another function that is sometimes useful is decreaseKey that decreases the value of a key.
+1 Implementing Priority Queues
+Priority queues can be implemented by using a variety of data structures.
+Linked lists or Arrays. Perhaps the simplest implementation would be to use a sorted or
+unsorted linked list or an array. In such implementations, one of deleteMin and insert is
+fast and the other is slow, perhaps unacceptably so as it can take as much as Ω(n) work and
+span, where n is the size of the priority queue.
+Balanced Trees. Another implementation is to use balanced binary search trees (e.g.,
+treaps, or red-black trees). With balanced binary trees a deleteMin has to find the leftmost
+key and delete it. This can easily be implemented with O(log n) work and span. An insert
+is just a tree insert, and again takes O(lg n) work and span. However doing a meld on two
+heaps requires running a union on two trees, which can require O(n) work if both heaps
+have size n.
+
+Heaps. 
+
+Many implementations of priority queues are based on the idea of a heap. As
+min-heap is a rooted tree such that the key stored at every node is less than or equal to the
+keys of all its descendants. Similarly a max-heap is one in which the key at a node is greater
+or equal to all its descendants. Compared to binary search trees, which need to maintain
+a total order over the search keys, heaps need only maintain a partial ordering over the
+keys. There are several kinds of heaps including complete binary heaps (briefly described
+below), leftist heaps (described in the next section), binomial heaps, pairing heaps, and
+Fibonacci heaps.
+
+Example 45.1. An example min-heap illustrated.
+Binary Heaps. A (complete) binary heap is a particular implementation of a heap that
+maintains two invariants:
+• Shape property: A complete binary tree (all the levels of the tree are completely filled
+except the bottom level, which is filled from the left).
+• Heap property.
+Because of the shape property, a binary heap can be maintained in a sequence with the root
+in position 0 and the following simple functions for determining the left child, right child
+and parent of the node at location i:
+left i = 2 × i + 1
+right i = 2 × i + 2
+parent i = di/2e − 1
+If the resulting index is out of range, then there is no left child, right child, or parent,
+respectively.
+Insertion can be implemented by adding the new key to the end of the sequence, and
+then traversing from that leaf to the root swapping with the parent if less than the parent.
+Deletion can be implemented by removing the root and replacing with the last key in the
+sequence, and then moving down the tree if either child of the node is less than the key at
+the node. Binary heaps have the same asymptotic bounds as balanced binary search trees,
+but are likely faster in practice if the maximum size of the priority queue is known ahead
+of time. If the maximum size is not known, then some form of dynamically sized array is
+needed.
+
+Cost Summary. The table below summarizes the costs of different implementations of
+priority queues, including leftist heaps covered later in this chapter, and their costs on
+the four key functions. Note that, a big win for leftist heaps is in the super fast meld
+operation—logarithmic as opposed to roughly linear in other data structures.
+insert deleteMin meld fromSeq
+
+Unsorted List O(1) O(n) O(m + n) O(n)
+Sorted List O(n) O(1) O(m + n) O(n log n)
+Balanced Trees O(log n) O(log n) O(m log(1 + n
+m )) O(n log n)
+Binary Heaps O(log n) O(log n) O(m + n) O(n)
+Leftist Heap O(log n) O(log n) O(log m + log n) O(n)
+
+
+2 Meldable Priority Queues
+This section presents an implementation of a meldable priority queue that has the same
+work and span costs as binary search trees or binary heaps for insertion and deleting the
+minimum, but also has an efficient meld . In particular the meld function takes O(log n +
+log m) work and span, where n and m are the sizes of the two priority queues to be merged.
+The structure we consider is called a “leftist heap”, which is a binary tree that maintains
+the heap property, but unlike binary heaps, it does not maintain the complete binary tree
+property.
+There are two important properties of a min-heap:
+1. The minimum is always at the root.
+2. The heap only maintains a partial order on the keys (unlike a BST that maintains the
+keys in a total order).
+The first property allows us to access the minimum quickly, and it is the second that gives
+us more flexibility than available in a BST.
+Let us consider how to implement the three operations deleteMin, insert, and fromSeq on
+a heap. Like join for binary search trees, the meld operation, makes the other operations
+easy to implement.
+To implement deleteMin we can simply remove the root and meld the two subtrees rooted
+at the children of the root.
+To implement insert(Q, v), we can just create a singleton node with the value v and then
+meld it with the heap for Q
+
+With meld , implementing fromSeq in parallel is easy using reduce:
+fromSeq S =
+Seq.reduce Q.meld Q.empty (Seq.map Q.singleton S)
+This is parallel, and assuming meld takes logarithmic work in the input sizes, this requires
+only O(n) work and O(log2 n) span.
+Implementing Meld. The only operation we need to care about, therefore, is the meld
+operation. Suppose that we are given twe heaps to meld. By inspecting the the roots of
+the heaps, we can determine that the smaller one will be the root of the new melded heap.
+Thus, all we have to do now is construct the left and the right subtrees of the root. At
+this point, we have three trees to consider—the left-subtree and the right-subtree of the
+chosen root, and the other tree. Let us keep the left subtree in its place—as the left-subtree
+of the new root—and construct the right subtree by melding the two remaining trees. We
+can then construct the right subtree by a recursive application of the algorithm, until we
+encounter trivial trees such as an empty tree. In summary, to meld two heaps, we choose
+the heap with the smaller root and meld the other heap with its right subtree.
+This idea leads to the following algorithm.
+Data Structure 45.3 (Na¨ıve Meldable Binary Heap).
+datatype P Q = Leaf
+| Node of (key × P Q × P Q)
+meld (A, B) =
+case(A, B)
+( , Leaf ) ⇒ A
+| (Leaf , ) ⇒ B
+| (Node(ka, La, Ra), Node(kb, Lb, Rb)) ⇒
+if ka < kb
+then Node(ka, La, meld (Ra, B))
+else Node(kb, Lb, meld (A, Rb))
+empty = Leaf
+singleton(k) = Node(k, Leaf , Leaf )
+insert(k, Q) = meld (singleton k, Q)
+deleteMin(Q) =
+case Q of
+Leaf ⇒ (Q, None)
+| Node(k, L, R) ⇒ (meld (L, R), Some k)
+fromSeq S =
+Seq.reduce meld empty (Seq.map singleton S)
+
+Cost of Na¨ıve Meld. The meld algorithm traverses the right spine of each tree (recall that
+the right spine of a binary tree is the path from the root to the rightmost node). The problem
+is that the tree could be very imbalanced, and in general, we can not put any useful bound
+on the length of these spines—in the worst case all nodes could be on the right spine. In
+this case the meld function could take Θ(|A| + |B|) work.
+
+
+

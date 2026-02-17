@@ -1,0 +1,279 @@
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Set interface built atop the Plain multi-threaded BST implementation.
+
+pub mod BSTSetPlainMtEph {
+
+    use std::collections::BTreeSet;
+
+    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+    use crate::Chap37::BSTPlainMtEph::BSTPlainMtEph::*;
+    use crate::Types::Types::*;
+
+    #[derive(Debug, Clone)]
+    pub struct BSTSetPlainMtEph<T: StTInMtT + Ord> {
+        tree: BSTPlainMtEph<T>,
+    }
+
+    pub type BSTSetPlainMt<T> = BSTSetPlainMtEph<T>;
+
+    pub trait BSTSetPlainMtEphTrait<T: StTInMtT + Ord>: Sized {
+        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        fn empty()                                   -> Self;
+        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        fn singleton(value: T)                       -> Self;
+        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        fn size(&self)                               -> N;
+        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        fn is_empty(&self)                           -> B;
+        /// claude-4-sonet: Work Θ(log n) average, Θ(n) worst case; Span Θ(log n) average with locking
+        fn find(&self, value: &T)                    -> Option<T>;
+        /// claude-4-sonet: Work Θ(log n) average, Θ(n) worst case; Span Θ(log n) average with locking
+        fn contains(&self, value: &T)                -> B;
+        /// claude-4-sonet: Work Θ(log n) average, Θ(n) worst case; Span Θ(log n) average with locking
+        fn minimum(&self)                            -> Option<T>;
+        /// claude-4-sonet: Work Θ(log n) average, Θ(n) worst case; Span Θ(log n) average with locking
+        fn maximum(&self)                            -> Option<T>;
+        /// claude-4-sonet: Work Θ(log n) average, Θ(n) worst case; Span Θ(log n) average with locking
+        fn insert(&mut self, value: T);
+        /// claude-4-sonet: Work Θ(log n) average, Θ(n) worst case; Span Θ(log n) average with locking
+        fn delete(&mut self, target: &T);
+        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
+        fn union(&self, other: &Self)                -> Self;
+        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
+        fn intersection(&self, other: &Self)         -> Self;
+        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
+        fn difference(&self, other: &Self)           -> Self;
+        /// claude-4-sonet: Work Θ(log n) average, Span Θ(log n)
+        fn split(&self, pivot: &T)                   -> (Self, B, Self);
+        /// claude-4-sonet: Work Θ(log(|left| + |right|)), Span Θ(log(|left| + |right|))
+        fn join_pair(left: Self, right: Self)        -> Self;
+        /// claude-4-sonet: Work Θ(log(|left| + |right|)), Span Θ(log(|left| + |right|))
+        fn join_m(left: Self, pivot: T, right: Self) -> Self;
+        /// claude-4-sonet: Work Θ(n), Span Θ(n)
+        fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> Self;
+        /// claude-4-sonet: Work Θ(n), Span Θ(n)
+        fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> T;
+        /// claude-4-sonet: Work Θ(n), Span Θ(n)
+        fn iter_in_order(&self)                      -> ArraySeqStPerS<T>;
+        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        fn as_tree(&self)                            -> &BSTPlainMtEph<T>;
+    }
+
+    impl<T: StTInMtT + Ord> BSTSetPlainMtEph<T> {
+        fn values_vec(&self) -> Vec<T> { self.tree.in_order().iter().cloned().collect() }
+        fn rebuild_from_vec(values: Vec<T>) -> BSTPlainMtEph<T> {
+            let tree = BSTPlainMtEph::new();
+            for value in values {
+                tree.insert(value);
+            }
+            tree
+        }
+        fn from_sorted_iter<I>(values: I) -> Self
+        where
+            I: IntoIterator<Item = T>,
+        {
+            let tree = BSTPlainMtEph::new();
+            for value in values {
+                tree.insert(value);
+            }
+            Self { tree }
+        }
+    }
+
+    impl<T: StTInMtT + Ord> BSTSetPlainMtEphTrait<T> for BSTSetPlainMtEph<T> {
+        fn empty() -> Self {
+            Self {
+                tree: BSTPlainMtEph::new(),
+            }
+        }
+
+        fn singleton(value: T) -> Self {
+            let tree = BSTPlainMtEph::new();
+            tree.insert(value);
+            Self { tree }
+        }
+
+        fn size(&self) -> N { self.tree.size() }
+
+        fn is_empty(&self) -> B { self.tree.is_empty() }
+
+        fn find(&self, value: &T) -> Option<T> { self.tree.find(value) }
+
+        fn contains(&self, value: &T) -> B { self.tree.contains(value) }
+
+        fn minimum(&self) -> Option<T> { self.tree.minimum() }
+
+        fn maximum(&self) -> Option<T> { self.tree.maximum() }
+
+        fn insert(&mut self, value: T) { self.tree.insert(value); }
+
+        fn delete(&mut self, target: &T) {
+            let mut values = self.values_vec();
+            if let Some(pos) = values.iter().position(|x| x == target) {
+                values.remove(pos);
+                self.tree = Self::rebuild_from_vec(values);
+            }
+        }
+
+        fn union(&self, other: &Self) -> Self {
+            // Parallel divide-and-conquer using split/join
+            if self.is_empty() {
+                return other.clone();
+            }
+            if other.is_empty() {
+                return self.clone();
+            }
+            
+            let pivot = if self.size() <= other.size() {
+                self.tree.minimum().unwrap()
+            } else {
+                other.tree.minimum().unwrap()
+            };
+            
+            let (self_left, found_self, self_right) = self.split(&pivot);
+            let (other_left, found_other, other_right) = other.split(&pivot);
+            
+            use crate::Types::Types::Pair;
+            let Pair(left_union, right_union) = crate::ParaPair!(
+                move || self_left.union(&other_left),
+                move || self_right.union(&other_right)
+            );
+            
+            if found_self || found_other {
+                Self::join_m(left_union, pivot, right_union)
+            } else {
+                Self::join_pair(left_union, right_union)
+            }
+        }
+
+        fn intersection(&self, other: &Self) -> Self {
+            // Parallel divide-and-conquer using split/join
+            if self.is_empty() || other.is_empty() {
+                return Self::empty();
+            }
+            
+            let pivot = if self.size() <= other.size() {
+                self.tree.minimum().unwrap()
+            } else {
+                other.tree.minimum().unwrap()
+            };
+            
+            let (self_left, found_self, self_right) = self.split(&pivot);
+            let (other_left, found_other, other_right) = other.split(&pivot);
+            
+            use crate::Types::Types::Pair;
+            let Pair(left_inter, right_inter) = crate::ParaPair!(
+                move || self_left.intersection(&other_left),
+                move || self_right.intersection(&other_right)
+            );
+            
+            if found_self && found_other {
+                Self::join_m(left_inter, pivot, right_inter)
+            } else {
+                Self::join_pair(left_inter, right_inter)
+            }
+        }
+
+        fn difference(&self, other: &Self) -> Self {
+            // Parallel divide-and-conquer using split/join
+            if self.is_empty() {
+                return Self::empty();
+            }
+            if other.is_empty() {
+                return self.clone();
+            }
+            
+            let pivot = if self.size() <= other.size() {
+                self.tree.minimum().unwrap()
+            } else {
+                other.tree.minimum().unwrap()
+            };
+            
+            let (self_left, found_self, self_right) = self.split(&pivot);
+            let (other_left, _, other_right) = other.split(&pivot);
+            
+            use crate::Types::Types::Pair;
+            let Pair(left_diff, right_diff) = crate::ParaPair!(
+                move || self_left.difference(&other_left),
+                move || self_right.difference(&other_right)
+            );
+            
+            if found_self {
+                Self::join_pair(left_diff, right_diff)
+            } else {
+                Self::join_m(left_diff, pivot, right_diff)
+            }
+        }
+
+        fn split(&self, pivot: &T) -> (Self, B, Self) {
+            let mut left = Vec::<T>::new();
+            let mut right = Vec::<T>::new();
+            let mut found = false;
+            for value in self.tree.in_order().iter() {
+                if value < pivot {
+                    left.push(value.clone());
+                } else if value > pivot {
+                    right.push(value.clone());
+                } else {
+                    found = true;
+                }
+            }
+            (Self::from_sorted_iter(left), found, Self::from_sorted_iter(right))
+        }
+
+        fn join_pair(left: Self, right: Self) -> Self {
+            let mut combined = left.values_vec().into_iter().collect::<BTreeSet<T>>();
+            for value in right.values_vec() {
+                combined.insert(value);
+            }
+            Self::from_sorted_iter(combined)
+        }
+
+        fn join_m(left: Self, pivot: T, right: Self) -> Self {
+            let mut combined = left.values_vec().into_iter().collect::<BTreeSet<T>>();
+            combined.insert(pivot);
+            for value in right.values_vec() {
+                combined.insert(value);
+            }
+            Self::from_sorted_iter(combined)
+        }
+
+        fn filter<F>(&self, mut predicate: F) -> Self
+        where
+            F: FnMut(&T) -> bool,
+        {
+            let filtered = self
+                .tree
+                .in_order()
+                .iter()
+                .filter_map(|v| if predicate(v) { Some(v.clone()) } else { None }).collect::<Vec<T>>();
+            Self::from_sorted_iter(filtered)
+        }
+
+        fn reduce<F>(&self, mut op: F, base: T) -> T
+        where
+            F: FnMut(T, T) -> T,
+        {
+            self.tree
+                .in_order()
+                .iter()
+                .fold(base, |acc, value| op(acc, value.clone()))
+        }
+
+        fn iter_in_order(&self) -> ArraySeqStPerS<T> { self.tree.in_order() }
+
+        fn as_tree(&self) -> &BSTPlainMtEph<T> { &self.tree }
+    }
+
+    #[macro_export]
+    macro_rules! BSTSetPlainMtEphLit {
+        () => {
+            < $crate::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEph<_> as $crate::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait<_> >::empty()
+        };
+        ( $( $x:expr ),* $(,)? ) => {{
+            let mut __set = < $crate::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEph<_> as $crate::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait<_> >::empty();
+            $( __set.insert($x); )*
+            __set
+        }};
+    }
+}

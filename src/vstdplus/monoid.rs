@@ -7,6 +7,7 @@ pub mod monoid {
 
     verus! {
 
+    #[cfg(verus_keep_ghost)]
     use vstd::relations::associative;
 
     /// The value id is a left identity for f: f(id, x) == x for all x.
