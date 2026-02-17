@@ -1,4 +1,3 @@
-#![cfg(feature = "all_chapters")]
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //!
 //! Test suite for AllPairsResultStEphInt.

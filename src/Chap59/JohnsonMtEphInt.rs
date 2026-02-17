@@ -16,21 +16,19 @@ pub mod JohnsonMtEphInt {
     use std::thread;
 
     use crate::Chap05::SetStEph::SetStEph::*;
-    use crate::Chap06::LabDirGraphMtEph::LabDirGraphMtEph::LabDirGraphMtEphTrait;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::*;
-    use crate::Chap06::WeightedDirGraphMtEphInt::WeightedDirGraphMtEphInt::*;
-    use crate::Chap06::WeightedDirGraphStEphInt::WeightedDirGraphStEphInt::*;
+    use crate::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap56::AllPairsResultStEphInt::AllPairsResultStEphInt::AllPairsResultStEphInt;
     use crate::Chap57::DijkstraStEphInt::DijkstraStEphInt::dijkstra;
     use crate::Chap58::BellmanFordStEphInt::BellmanFordStEphInt::bellman_ford;
     use crate::Types::Types::*;
-    pub type T = WeightedDirGraphMtEphInt<usize>;
+    pub type T = WeightedDirGraphStEphI128<usize>;
 
     pub trait JohnsonMtEphIntTrait {
         /// Parallel Johnson's all-pairs shortest path algorithm
         /// APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|
-        fn johnson_apsp(graph: &WeightedDirGraphMtEphInt<usize>) -> AllPairsResultStEphInt;
+        fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphInt;
     }
 
     /// Algorithm 59.1: Johnson's All-Pairs Shortest Paths (Parallel)
@@ -56,11 +54,11 @@ pub mod JohnsonMtEphInt {
     ///
     /// # Returns
     /// `AllPairsResultStEphInt` containing n×n distance matrix and predecessor matrix
-    pub fn johnson_apsp(graph: &WeightedDirGraphMtEphInt<usize>) -> AllPairsResultStEphInt {
+    pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphInt {
         let n = graph.vertices().size();
 
         // Phase 1: Add dummy source and run Bellman-Ford
-        let (graph_with_dummy, dummy_idx) = add_dummy_source(graph, n);
+        let (graph_with_dummy, dummy_idx) = add_dummy_source(&graph, n);
 
         let bellman_ford_result = match bellman_ford(&graph_with_dummy, dummy_idx) {
             | Ok(res) => res,
@@ -74,7 +72,7 @@ pub mod JohnsonMtEphInt {
         let potentials = ArraySeqStEphS::tabulate(&|i| bellman_ford_result.get_distance(i), n);
 
         // Phase 2: Reweight edges to eliminate negative weights
-        let reweighted_graph = reweight_graph(graph, &potentials, n);
+        let reweighted_graph = reweight_graph(&graph, &potentials, n);
 
         // Phase 3: Run Dijkstra from each vertex IN PARALLEL and adjust distances
         // Unconditionally parallel using recursive divide-and-conquer with ParaPair!
@@ -90,7 +88,7 @@ pub mod JohnsonMtEphInt {
     /// Parallel Dijkstra execution using recursive divide-and-conquer with ParaPair!
     /// Returns sequences of distance and predecessor rows
     fn parallel_dijkstra_all(
-        graph: &WeightedDirGraphStEphInt<usize>,
+        graph: &WeightedDirGraphStEphI128<usize>,
         potentials: &ArraySeqStEphS<i64>,
         start: usize,
         end: usize,
@@ -151,8 +149,7 @@ pub mod JohnsonMtEphInt {
     }
 
     /// Add dummy source with zero-weight edges to all vertices
-    fn add_dummy_source(graph: &WeightedDirGraphMtEphInt<usize>, n: usize) -> (WeightedDirGraphStEphInt<usize>, usize) {
-        // Convert MtEph graph to StEph for Bellman-Ford
+    fn add_dummy_source(graph: &WeightedDirGraphStEphI128<usize>, n: usize) -> (WeightedDirGraphStEphI128<usize>, usize) {
         let mut vertices = SetStEph::empty();
         for i in 0..n {
             vertices.insert(i);
@@ -164,44 +161,38 @@ pub mod JohnsonMtEphInt {
         let mut edges = SetStEph::empty();
 
         // Copy all original edges
-        for u in 0..n {
-            for v_w in graph.out_neighbors_weighted(&u).iter() {
-                let Pair(v, w) = v_w;
-                edges.insert(Triple(u, *v, *w));
-            }
+        for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {
+            edges.insert(WeightedEdge(*from, *to, *weight));
         }
 
         // Add edges from dummy source to all original vertices
         for v in 0..n {
-            edges.insert(Triple(n, v, 0));
+            edges.insert(WeightedEdge(n, v, 0i128));
         }
 
-        (WeightedDirGraphStEphInt::from_weighted_edges(vertices, edges), n)
+        (WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges), n)
     }
 
     /// Reweight edges: w'(u,v) = w(u,v) + p(u) - p(v)
     fn reweight_graph(
-        graph: &WeightedDirGraphMtEphInt<usize>,
+        graph: &WeightedDirGraphStEphI128<usize>,
         potentials: &ArraySeqStEphS<i64>,
         n: usize,
-    ) -> WeightedDirGraphStEphInt<usize> {
+    ) -> WeightedDirGraphStEphI128<usize> {
         let mut vertices = SetStEph::empty();
         for i in 0..n {
             vertices.insert(i);
         }
 
         let mut reweighted_edges = SetStEph::empty();
-        for u in 0..n {
-            let p_u = *potentials.nth(u);
-            for v_w in graph.out_neighbors_weighted(&u).iter() {
-                let Pair(v, w) = v_w;
-                let p_v = *potentials.nth(*v);
-                let w_prime = (*w as i64) + p_u - p_v;
-                reweighted_edges.insert(Triple(u, *v, w_prime as i32));
-            }
+        for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {
+            let p_from = *potentials.nth(*from) as i128;
+            let p_to = *potentials.nth(*to) as i128;
+            let w_prime: i128 = *weight + p_from - p_to;
+            reweighted_edges.insert(WeightedEdge(*from, *to, w_prime));
         }
 
-        WeightedDirGraphStEphInt::from_weighted_edges(vertices, reweighted_edges)
+        WeightedDirGraphStEphI128::from_weighed_edges(vertices, reweighted_edges)
     }
 
     /// Create result for negative cycle case

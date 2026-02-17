@@ -15,15 +15,15 @@ pub mod BellmanFordStEphInt {
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
-    use crate::Chap06::WeightedDirGraphStEphInt::WeightedDirGraphStEphInt::*;
+    use crate::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
     use crate::Chap56::SSSPResultStEphInt::SSSPResultStEphInt::SSSPResultStEphInt;
     use crate::Types::Types::*;
-    pub type T = WeightedDirGraphStEphInt<usize>;
+    pub type T = WeightedDirGraphStEphI128<usize>;
 
     pub trait BellmanFordStEphIntTrait {
         /// Bellman-Ford single source shortest path algorithm
         /// APAS: Work O(nm), Span O(n lg n) where n = |V|, m = |E|
-        fn bellman_ford(graph: &WeightedDirGraphStEphInt<usize>, source: usize) -> Result<SSSPResultStEphInt, String>;
+        fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> Result<SSSPResultStEphInt, String>;
     }
 
     /// Runs Bellman-Ford algorithm on a weighted directed graph
@@ -49,7 +49,7 @@ pub mod BellmanFordStEphInt {
     ///      - Update d'[v] = min(d[v], Din(v))
     ///    - If no distances changed, return (converged)
     /// 3. If |V| rounds completed without convergence, negative cycle exists
-    pub fn bellman_ford(graph: &WeightedDirGraphStEphInt<usize>, source: usize) -> Result<SSSPResultStEphInt, String> {
+    pub fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> Result<SSSPResultStEphInt, String> {
         let n = graph.vertices().size();
 
         // Initialize distances: source = 0, others = infinity
@@ -69,7 +69,7 @@ pub mod BellmanFordStEphInt {
                 let mut min_dist = current_dist;
 
                 // Compute Din(v) = min over u in N⁻(v) of (d[u] + w(u,v))
-                let in_neighbors = graph.in_neighbors_weighted(&v);
+                let in_neighbors = graph.in_neighbors_weighed(&v);
                 for Pair(u, weight) in in_neighbors.iter() {
                     let u_dist = *distances.get(u).unwrap_or(&i64::MAX);
                     if u_dist != i64::MAX {
@@ -119,7 +119,7 @@ pub mod BellmanFordStEphInt {
     /// Reconstruct predecessor tree from final distances
     /// For each vertex v, find the in-neighbor u that achieves the shortest path
     fn reconstruct_predecessors(
-        graph: &WeightedDirGraphStEphInt<usize>,
+        graph: &WeightedDirGraphStEphI128<usize>,
         distances: &HashMap<usize, i64>,
         result: &mut SSSPResultStEphInt,
         source: usize,
@@ -136,7 +136,7 @@ pub mod BellmanFordStEphInt {
             }
 
             // Find which in-neighbor u gave us the shortest path
-            let in_neighbors = graph.in_neighbors_weighted(&v);
+            let in_neighbors = graph.in_neighbors_weighed(&v);
             for Pair(u, weight) in in_neighbors.iter() {
                 let u_dist = *distances.get(u).unwrap_or(&i64::MAX);
                 if u_dist != i64::MAX {

@@ -18,7 +18,7 @@ pub mod DijkstraStEphInt {
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
-    use crate::Chap06::WeightedDirGraphStEphInt::WeightedDirGraphStEphInt::*;
+    use crate::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
     use crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::*;
     use crate::Chap56::SSSPResultStEphInt::SSSPResultStEphInt::SSSPResultStEphInt;
     use crate::Types::Types::*;
@@ -27,7 +27,7 @@ pub mod DijkstraStEphInt {
     pub trait DijkstraStEphIntTrait {
         /// Dijkstra's single source shortest path algorithm
         /// APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
-        fn dijkstra(graph: &WeightedDirGraphStEphInt<usize>, source: usize) -> SSSPResultStEphInt;
+        fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphInt;
     }
 
     /// Priority queue entry: (distance, vertex)
@@ -70,7 +70,7 @@ pub mod DijkstraStEphInt {
     ///
     /// # Returns
     /// SSSPResultStEphInt with distances and predecessors
-    pub fn dijkstra(graph: &WeightedDirGraphStEphInt<usize>, source: usize) -> SSSPResultStEphInt {
+    pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphInt {
         let n = graph.vertices().size();
 
         // Initialize result with all distances = infinity except source = 0
@@ -103,7 +103,7 @@ pub mod DijkstraStEphInt {
                 result.set_distance(v, dist);
 
                 // Relax all out-neighbors: add PQEntry(d + w, u) to PQ
-                let neighbors = graph.out_neighbors_weighted(&v);
+                let neighbors = graph.out_neighbors_weighed(&v);
                 for neighbor in neighbors.iter() {
                     let Pair(u, weight) = neighbor;
                     let u_idx = *u;

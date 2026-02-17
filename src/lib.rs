@@ -152,7 +152,7 @@ pub mod Chap06 {
 //    pub mod WeightedDirGraphStEphI16;
 //    pub mod WeightedDirGraphStEphI32;
 //    pub mod WeightedDirGraphStEphI64;
-//    pub mod WeightedDirGraphStEphI128;
+    pub mod WeightedDirGraphStEphI128;
 //    pub mod WeightedDirGraphStEphIsize;
     // Int/Float aggregate graph modules removed: Rust lacks disjunctive typing
     // (no `impl Trait for i8 | i16 | i32 | ...`), so these can't be expressed cleanly.
@@ -483,40 +483,52 @@ pub mod Chap55 {
     pub mod SCCStPer;
 }
 
-#[cfg(feature = "all_chapters")]
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
 pub mod Chap56 {
-    pub mod PathWeightUtilsStEph;
-    pub mod PathWeightUtilsStPer;
     pub mod SSSPResultStEphInt;
-    pub mod SSSPResultStEphFloat;
     pub mod SSSPResultStPerInt;
-    pub mod SSSPResultStPerFloat;
     pub mod AllPairsResultStEphInt;
-    pub mod AllPairsResultStEphFloat;
     pub mod AllPairsResultStPerInt;
+    #[cfg(feature = "all_chapters")]
+    pub mod PathWeightUtilsStEph;
+    #[cfg(feature = "all_chapters")]
+    pub mod PathWeightUtilsStPer;
+    #[cfg(feature = "all_chapters")]
+    pub mod SSSPResultStEphFloat;
+    #[cfg(feature = "all_chapters")]
+    pub mod SSSPResultStPerFloat;
+    #[cfg(feature = "all_chapters")]
+    pub mod AllPairsResultStEphFloat;
+    #[cfg(feature = "all_chapters")]
     pub mod AllPairsResultStPerFloat;
+    #[cfg(feature = "all_chapters")]
     pub mod Example56_1;
+    #[cfg(feature = "all_chapters")]
     pub mod Example56_3;
 }
 
-#[cfg(feature = "all_chapters")]
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
 pub mod Chap57 {
     pub mod StackStEph;
     pub mod DijkstraStEphInt;
+    #[cfg(feature = "all_chapters")]
     pub mod DijkstraStEphFloat;
 }
 
-#[cfg(feature = "all_chapters")]
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
 pub mod Chap58 {
     pub mod BellmanFordStEphInt;
+    #[cfg(feature = "all_chapters")]
     pub mod BellmanFordStEphFloat;
 }
 
-#[cfg(feature = "all_chapters")]
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
 pub mod Chap59 {
     pub mod JohnsonStEphInt;
-    pub mod JohnsonStEphFloat;
     pub mod JohnsonMtEphInt;
+    #[cfg(feature = "all_chapters")]
+    pub mod JohnsonStEphFloat;
+    #[cfg(feature = "all_chapters")]
     pub mod JohnsonMtEphFloat;
 }
 

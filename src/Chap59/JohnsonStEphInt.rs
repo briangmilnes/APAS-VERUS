@@ -14,18 +14,18 @@ pub mod JohnsonStEphInt {
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::*;
-    use crate::Chap06::WeightedDirGraphStEphInt::WeightedDirGraphStEphInt::*;
+    use crate::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap56::AllPairsResultStEphInt::AllPairsResultStEphInt::AllPairsResultStEphInt;
     use crate::Chap57::DijkstraStEphInt::DijkstraStEphInt::dijkstra;
     use crate::Chap58::BellmanFordStEphInt::BellmanFordStEphInt::bellman_ford;
     use crate::Types::Types::*;
-    pub type T = WeightedDirGraphStEphInt<usize>;
+    pub type T = WeightedDirGraphStEphI128<usize>;
 
     pub trait JohnsonStEphIntTrait {
         /// Johnson's all-pairs shortest path algorithm
         /// APAS: Work O(mn log n), Span O(mn log n) where n = |V|, m = |E|
-        fn johnson_apsp(graph: &WeightedDirGraphStEphInt<usize>) -> AllPairsResultStEphInt;
+        fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphInt;
     }
 
     /// Algorithm 59.1: Johnson's All-Pairs Shortest Paths
@@ -46,7 +46,7 @@ pub mod JohnsonStEphInt {
     ///
     /// # Returns
     /// `AllPairsResultStEphInt` containing n×n distance matrix and predecessor matrix
-    pub fn johnson_apsp(graph: &WeightedDirGraphStEphInt<usize>) -> AllPairsResultStEphInt {
+    pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphInt {
         let n = graph.vertices().size();
 
         // Phase 1: Add dummy source and run Bellman-Ford
@@ -103,7 +103,7 @@ pub mod JohnsonStEphInt {
     }
 
     /// Add dummy source with zero-weight edges to all vertices
-    fn add_dummy_source(graph: &WeightedDirGraphStEphInt<usize>, n: usize) -> (WeightedDirGraphStEphInt<usize>, usize) {
+    fn add_dummy_source(graph: &WeightedDirGraphStEphI128<usize>, n: usize) -> (WeightedDirGraphStEphI128<usize>, usize) {
         let dummy_idx = n;
 
         // Create vertices including dummy
@@ -115,26 +115,26 @@ pub mod JohnsonStEphInt {
         // Copy all original edges
         let mut edges = SetStEph::empty();
         for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {
-            edges.insert(Triple(*from, *to, *weight));
+            edges.insert(WeightedEdge(*from, *to, *weight));
         }
 
         // Add zero-weight edges from dummy to all original vertices
         for i in 0..n {
-            edges.insert(Triple(dummy_idx, i, 0));
+            edges.insert(WeightedEdge(dummy_idx, i, 0i128));
         }
 
         (
-            WeightedDirGraphStEphInt::from_weighted_edges(vertices, edges),
+            WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges),
             dummy_idx,
         )
     }
 
     /// Reweight edges: w'(u,v) = w(u,v) + p(u) - p(v)
     fn reweight_graph(
-        graph: &WeightedDirGraphStEphInt<usize>,
+        graph: &WeightedDirGraphStEphI128<usize>,
         potentials: &ArraySeqStEphS<i64>,
         n: usize,
-    ) -> WeightedDirGraphStEphInt<usize> {
+    ) -> WeightedDirGraphStEphI128<usize> {
         let mut vertices = SetStEph::empty();
         for i in 0..n {
             vertices.insert(i);
@@ -142,13 +142,13 @@ pub mod JohnsonStEphInt {
 
         let mut edges = SetStEph::empty();
         for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {
-            let p_from = *potentials.nth(*from);
-            let p_to = *potentials.nth(*to);
-            let new_weight = (*weight as i64 + p_from - p_to) as i32;
-            edges.insert(Triple(*from, *to, new_weight));
+            let p_from = *potentials.nth(*from) as i128;
+            let p_to = *potentials.nth(*to) as i128;
+            let new_weight: i128 = *weight + p_from - p_to;
+            edges.insert(WeightedEdge(*from, *to, new_weight));
         }
 
-        WeightedDirGraphStEphInt::from_weighted_edges(vertices, edges)
+        WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges)
     }
 
     /// Create result for negative cycle case
