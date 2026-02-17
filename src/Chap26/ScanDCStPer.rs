@@ -22,9 +22,8 @@ pub mod ScanDCStPer {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     #[cfg(verus_keep_ghost)]
-    use crate::Chap18::ArraySeq::ArraySeq::*;
-    #[cfg(verus_keep_ghost)]
     use crate::Chap26::DivConReduceStPer::DivConReduceStPer::{spec_sum_fn, spec_wrapping_add};
+    use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
 
     //		3. broadcast use

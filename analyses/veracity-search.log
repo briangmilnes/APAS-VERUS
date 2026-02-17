@@ -1,8 +1,23 @@
-Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS-review/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn wrapping_add
+Pattern: spec fn \(associative\|commutative\|identity\|monoid\)
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 95, Functions: 2289, Matches: 0
+Files: 95, Functions: 2289, Matches: 5
+
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:3273: [0m
+[38;5;22mpub open spec fn commutative_foldr<A, B>(f: spec_fn(A, B) -> B) -> bool[0m
+
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:3278: [0m
+[38;5;22mpub open spec fn commutative_foldl<A, B>(f: spec_fn(B, A) -> B) -> bool[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set.rs:267: [0m
+[38;5;22m    pub open spec fn is_fun_commutative<A, B>(f: spec_fn(B, A) -> B) -> bool[0m
+
+[31m/home/milnes/projects/verus/source/vstd/relations.rs:22: [0m
+[38;5;22mpub open spec fn commutative<T, U>(r: spec_fn(T, T) -> U) -> bool[0m
+
+[31m/home/milnes/projects/verus/source/vstd/relations.rs:26: [0m
+[38;5;22mpub open spec fn associative<T>(r: spec_fn(T, T) -> T) -> bool[0m
 

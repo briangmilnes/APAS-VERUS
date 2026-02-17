@@ -8,6 +8,7 @@
 //	3. broadcast use
 //	4. type definitions
 //	5. view impls
+//	6. spec fns
 //	8. traits
 //	9. impls
 //	10. iterators
@@ -38,9 +39,9 @@ pub mod ArraySeqStEph {
     };
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::monoid::monoid::*;
     use crate::vstdplus::multiset::multiset::*;
     #[cfg(verus_keep_ghost)]
-    use crate::Chap18::ArraySeq::ArraySeq::*;
 
     //		3. broadcast use
 
@@ -70,6 +71,28 @@ pub mod ArraySeqStEph {
         }
     }
 
+
+    //		6. spec fns
+
+    /// Definition 18.7 (iterate). Left fold: spec_iterate(s, f, x) = f(...f(f(x, s[0]), s[1])..., s[n-1]).
+    pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
+        s.fold_left(start_x, f)
+    }
+
+    /// Definition 18.16 (inject). Apply position-value updates left to right; the first update
+    /// to each position wins. Out-of-range positions are ignored.
+    pub open spec fn spec_inject<T>(s: Seq<T>, updates: Seq<(usize, T)>) -> Seq<T>
+        decreases updates.len()
+    {
+        if updates.len() == 0 {
+            s
+        } else {
+            let rest = spec_inject(s, updates.drop_first());
+            let pos = updates[0].0 as int;
+            let val = updates[0].1;
+            if 0 <= pos < s.len() { rest.update(pos, val) } else { rest }
+        }
+    }
 
     //		8. traits
 

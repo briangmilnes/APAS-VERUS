@@ -23,13 +23,8 @@ pub mod DivConReduceMtPer {
 
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     #[cfg(verus_keep_ghost)]
-    use {
-        crate::Chap18::ArraySeq::ArraySeq::{spec_iterate, spec_monoid},
-        crate::Chap26::DivConReduceStPer::DivConReduceStPer::{
-            spec_sum_fn, spec_product_fn, spec_or_fn, spec_and_fn, spec_max_fn,
-            spec_wrapping_add, spec_wrapping_mul,
-        },
-    };
+    use crate::Chap26::DivConReduceStPer::DivConReduceStPer::*;
+    use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
 
     //		3. broadcast use

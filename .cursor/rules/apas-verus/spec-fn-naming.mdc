@@ -1,0 +1,31 @@
+---
+description: Spec function naming conventions
+globs: "**/*.rs"
+alwaysApply: true
+---
+
+# Spec Function Naming
+
+## No `_post` suffix
+
+Name spec functions after the operation they specify, not as postconditions:
+
+```rust
+// Bad: _post suffix
+pub open spec fn spec_ninject_post<T>(...) -> bool { ... }
+
+// Good: named after the operation
+pub open spec fn spec_ninject<T>(...) -> bool { ... }
+```
+
+The `spec_` prefix already signals this is a specification. Adding `_post` is redundant and inconsistent with the rest of the codebase (`spec_inject`, `spec_iterate`, `spec_monoid`, etc.).
+
+## Pattern
+
+| Operation | Spec function |
+|---|---|
+| inject | `spec_inject` |
+| ninject | `spec_ninject` |
+| iterate | `spec_iterate` |
+| monoid | `spec_monoid` |
+| filter_len | `spec_filter_len` |

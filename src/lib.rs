@@ -83,6 +83,7 @@ pub mod experiments {
 //    pub mod collect_deep_view;
 //    pub mod verus_keep_ghost_and_test;
 //    pub mod biconditional_spec_fun;
+    pub mod arc_rwlock_ninject;
 }
 
 pub mod vstdplus {
@@ -101,6 +102,7 @@ pub mod vstdplus {
     pub mod checked_nat;
     pub mod hashed_checked_u32;
     pub mod sqrt;
+    pub mod monoid;
     pub mod multiset;
     pub mod arithmetic {
     pub mod power2_plus;
