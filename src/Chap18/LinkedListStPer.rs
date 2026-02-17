@@ -43,7 +43,7 @@ pub mod LinkedListStPer {
     use crate::vstdplus::multiset::multiset::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap18::ArraySeq::ArraySeq::{spec_iterate, spec_monoid};
+    use crate::Chap18::ArraySeq::ArraySeq::*;
 
 
     //		3. broadcast use

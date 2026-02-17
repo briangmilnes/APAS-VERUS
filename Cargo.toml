@@ -8,8 +8,6 @@ verify = true
 
 [features]
 default = []
-# Enable all modules for full verification (slower)
-full_verify = []
 # Build only experiments (skip chapter modules)
 experiments_only = []
 
@@ -23,7 +21,6 @@ path = "src/lib.rs"
 [[test]]
 name = "TestInsertionSortStEph"
 path = "tests/Chap03/TestInsertionSortStEph.rs"
-required-features = ["full_verify"]
 
 [[test]]
 name = "TestSetStEph"
@@ -62,42 +59,41 @@ path = "tests/vstdplus/test_feq.rs"
 [[test]]
 name = "TestDirGraphStEph"
 path = "tests/Chap06/TestDirGraphStEph.rs"
-required-features = ["full_verify"]
 
 [[test]]
 name = "TestDirGraphMtEph"
 path = "tests/Chap06/TestDirGraphMtEph.rs"
-required-features = ["full_verify"]
 
 [[test]]
 name = "TestUnDirGraphStEph"
 path = "tests/Chap06/TestUnDirGraphStEph.rs"
-required-features = ["full_verify"]
 
 [[test]]
 name = "TestLabDirGraphStEph"
 path = "tests/Chap06/TestLabDirGraphStEph.rs"
-required-features = ["full_verify"]
 
 [[test]]
 name = "TestLabUnDirGraphStEph"
 path = "tests/Chap06/TestLabUnDirGraphStEph.rs"
-required-features = ["full_verify"]
+
+[[test]]
+name = "TestUnDirGraphMtEph"
+path = "tests/Chap06/TestUnDirGraphMtEph.rs"
+
+# TestLabDirGraphMtEph and TestLabUnDirGraphMtEph exist on disk but are stale
+# (reference methods no longer in the Mt API). Need rework.
 
 [[test]]
 name = "TestWeightedDirGraphStEphU32"
 path = "tests/Chap06/TestWeightedDirGraphStEphU32.rs"
-required-features = ["full_verify"]
 
 [[test]]
 name = "TestParaPairs"
 path = "tests/Chap11/TestParaPairs.rs"
-required-features = ["full_verify"]
 
 [[test]]
 name = "TestFibonacciMt"
 path = "tests/Chap11/TestFibonacciMt.rs"
-required-features = ["full_verify"]
 
 [[test]]
 name = "test_threads_plus"
@@ -106,32 +102,26 @@ path = "tests/Chap02/test_threads_plus.rs"
 [[test]]
 name = "test_fibonacci_scheduler"
 path = "tests/Chap02/test_fibonacci_scheduler.rs"
-required-features = ["full_verify"]
 
 [[test]]
 name = "test_hf_scheduler"
 path = "tests/Chap02/test_hf_scheduler.rs"
 
-
 [[test]]
 name = "test_exercise12_1"
 path = "tests/Chap12/test_exercise12_1.rs"
-required-features = ["full_verify"]
 
 [[test]]
 name = "test_exercise12_2"
 path = "tests/Chap12/test_exercise12_2.rs"
-required-features = ["full_verify"]
 
 [[test]]
 name = "test_exercise12_5"
 path = "tests/Chap12/test_exercise12_5.rs"
-required-features = ["full_verify"]
 
 [[test]]
 name = "TestMathSeq"
 path = "tests/Chap17/TestMathSeq.rs"
-required-features = ["full_verify"]
 
 [[test]]
 name = "TestArraySeq"

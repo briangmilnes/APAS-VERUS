@@ -227,6 +227,25 @@ Two lists:
 - Helper functions, Verus scaffolding, overflow lemmas
 - These are expected — just note them so the inventory is complete
 
+## Phase 8: Table of Contents Review
+
+Audit each source file against the table-of-contents standard
+(`table-of-contents-standard.mdc`). Check:
+
+1. **TOC present** — does the file have a `//  Table of Contents` block?
+2. **Section ordering** — are sections in the standard order (1-13)?
+3. **In/out placement** — are sections 1-11 inside `verus!` and 12-13 outside?
+4. **Section headers** — does each section have its numbered comment header?
+
+Produce the in/out table per the `in-out-table` rule:
+
+| # | File | Clone | PartialEq/Eq | Default | Drop | Iterator | Debug | Display | Macro | Other |
+|---|------|:-----:|:------------:|:-------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
+
+Values: `✅ in`, `✅ out`, `❌ in`, `❌ out`, `-`
+
+Flag any `❌` items or missing TOCs as action items in the review summary.
+
 ## Output
 
 - **Cost annotations**: Written directly in source files as doc comments (Phase 3a)
@@ -240,6 +259,7 @@ Two lists:
   - Parallelism audit table if Mt modules exist (Phase 4)
   - PTT review: unified test table, iterator coverage, loop form coverage (Phase 6)
   - Gap analysis (Phase 7)
+  - Table of contents / in-out table (Phase 8)
   - Proof holes summary
   - Date and reviewer
 

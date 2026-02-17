@@ -1,10 +1,10 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for LabUnDirGraphMtEph - ALL trait methods
 
-use apas_ai::Chap05::SetStEph::SetStEph::*;
-use apas_ai::Chap06::LabUnDirGraphMtEph::LabUnDirGraphMtEph::*;
-use apas_ai::Types::Types::*;
-use apas_ai::SetLit;
+use apas_verus::Chap05::SetStEph::SetStEph::*;
+use apas_verus::Chap06::LabUnDirGraphMtEph::LabUnDirGraphMtEph::*;
+use apas_verus::Types::Types::*;
+use apas_verus::SetLit;
 use std::hash::Hash;
 
 // Check if set contains element

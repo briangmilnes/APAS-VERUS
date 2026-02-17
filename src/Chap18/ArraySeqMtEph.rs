@@ -43,7 +43,7 @@ pub mod ArraySeqMtEph {
     use crate::vstdplus::multiset::multiset::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap18::ArraySeq::ArraySeq::{spec_iterate, spec_monoid};
+    use crate::Chap18::ArraySeq::ArraySeq::*;
 
 
     //		3. broadcast use
@@ -206,6 +206,20 @@ pub mod ArraySeqMtEph {
                 updated.spec_len() == a.seq@.len(),
                 updated.spec_index(index as int) == item,
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
+
+        /// - Definition 18.16 (inject). Update multiple positions at once; the first update in
+        ///   the ordering of `updates` takes effect when positions collide.
+        /// - Work Θ(|a| + |updates|), Span Θ(1).
+        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+            ensures
+                injected.spec_len() == a.spec_len(),
+                Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
+                    =~= spec_inject(
+                        Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+                        updates@);
 
         /// - Definition 18.5 (isEmpty). true iff the sequence has length zero.
         /// - Work Θ(1), Span Θ(1).
@@ -516,6 +530,78 @@ pub mod ArraySeqMtEph {
                 i += 1;
             }
             ArraySeqMtEphS { seq }
+        }
+
+        fn inject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
+            where T: Clone + Eq
+        {
+            let ghost s = a.seq@;
+            let ghost u = updates@;
+            let len = a.seq.len();
+            let ulen = updates.len();
+
+            let mut result_vec: Vec<T> = Vec::with_capacity(len);
+            let mut k: usize = 0;
+            while k < len
+                invariant
+                    k <= len,
+                    len == a.seq@.len(),
+                    s == a.seq@,
+                    result_vec@.len() == k as int,
+                    obeys_feq_clone::<T>(),
+                    forall|j: int| #![trigger result_vec@[j]] 0 <= j < k as int ==> result_vec@[j] == s[j],
+                decreases len - k,
+            {
+                let elem = a.seq[k].clone();
+                proof { axiom_cloned_implies_eq_owned(a.seq@[k as int], elem); }
+                result_vec.push(elem);
+                k += 1;
+            }
+            assert(result_vec@ =~= s);
+
+            let mut i: usize = ulen;
+            while i > 0
+                invariant
+                    0 <= i <= ulen,
+                    ulen == u.len(),
+                    len == a.seq@.len(),
+                    result_vec@.len() == s.len(),
+                    s.len() == len,
+                    obeys_feq_clone::<T>(),
+                    s == a.seq@,
+                    u == updates@,
+                    result_vec@ =~= spec_inject(s, u.subrange(i as int, ulen as int)),
+                decreases i,
+            {
+                i -= 1;
+                let pos = updates[i].0;
+                if pos < len {
+                    let val = updates[i].1.clone();
+                    proof {
+                        axiom_cloned_implies_eq_owned(u[i as int].1, val);
+                    }
+                    result_vec.set(pos, val);
+                }
+                proof {
+                    let ghost sub = u.subrange(i as int, ulen as int);
+                    assert(sub.len() > 0);
+                    assert(sub[0] == u[i as int]);
+                    assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
+                    reveal(spec_inject);
+                }
+            }
+
+            proof {
+                assert(u.subrange(0, ulen as int) =~= u);
+            }
+            let injected = ArraySeqMtEphS { seq: result_vec };
+            proof {
+                assert(Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)) =~= result_vec@);
+                assert forall|j: int| 0 <= j < a.spec_len() implies #[trigger] a.spec_index(j) == s[j]
+                by { a.lemma_spec_index(j); }
+                assert(Seq::new(a.spec_len(), |i: int| a.spec_index(i)) =~= s);
+            }
+            injected
         }
 
         fn is_empty(&self) -> (empty: bool) {

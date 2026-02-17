@@ -94,11 +94,10 @@ ProveMathSeq.rs tests 6 loop forms:
 prove_MathSeq_iters.rs tests 3 additional patterns:
 - consuming for loop, range-based for, nested for loops
 
-**Issue:** ProveMathSeq.rs references `MathSeqIter<T>` type and
-`iter_invariant()` function which are not defined in `MathSeq.rs`. These
-may be defined in a Chap18 module (ArraySeq exports iter infrastructure).
-The PTTs are not registered in Cargo.toml (they use Verus's
-`rust_verify_test` infrastructure). Needs verification that they still pass.
+All PTTs pass. `MathSeqIter<T>`, `iter_invariant`, and ghost iterator
+infrastructure are now defined in `MathSeq.rs`, implementing the full
+collection iterator standard (collection-iterators.mdc). PTTs registered
+in `rust_verify_test/Cargo.toml`.
 
 ## Gap Analysis
 
@@ -117,7 +116,7 @@ Definition 17.1 as a dense Vec-backed sequence.
 - `range()` — returns unique elements (set of values)
 - `multiset_range()` — returns elements with counts
 - `domain()` — returns index vector (trivially {0..n-1} for Vec)
-- Iterator implementations (Iter, IntoIter, IterMut)
+- Iterator implementations (MathSeqIter, IntoIter, IterMut, ghost iter infrastructure)
 - Clone, PartialEq, Eq, Display, Debug
 - MathSeqSLit! macro
 - `spec_clamp` helper
@@ -133,14 +132,14 @@ Definition 17.1 as a dense Vec-backed sequence.
 1. **Clone** — now inside `verus!`. Correct per style rule.
 2. **PartialEq/Eq/PartialEqSpecImpl** — inside `verus!`. Correct.
 3. **IntoIterator for &** and consuming **IntoIterator** — inside `verus!`. Correct.
-4. **iter()**, **iter_mut()**, **IntoIterator for &mut** — outside `verus!`.
+4. **iter()** — inside `verus!` with ensures clause. Returns `MathSeqIter`.
+5. **iter_mut()**, **IntoIterator for &mut** — outside `verus!`.
    Required: Verus does not support `&mut` in return position or trait impls.
-5. **Debug/Display** — outside `verus!`. Correct per style rule.
-6. **Iterator standard:** MathSeq does NOT implement the full collection
-   iterator standard (collection-iterators.mdc). Missing: custom iterator
-   struct, View, iter_invariant, ghost iterator infrastructure. The PTTs
-   reference `MathSeqIter` and `iter_invariant` which don't exist — these
-   tests likely fail. This is the main action item for Chap17.
+6. **Debug/Display** — outside `verus!`. Correct per style rule.
+7. **Iterator standard:** MathSeq now implements the full collection iterator
+   standard (collection-iterators.mdc): `MathSeqIter` custom struct, `View`,
+   `iter_invariant`, `Iterator::next` with ensures, `MathSeqGhostIter`,
+   `ForLoopGhostIteratorNew`, `ForLoopGhostIterator` — all inside `verus!`.
 
 ## Summary
 
@@ -149,8 +148,8 @@ Vec-backed implementation with strong specs on all operations:
 
 - **MathSeqS<T>** — 15+ operations with ensures/requires, View maps to Seq<T::V>
 - Excellent RTT coverage (26 tests) including iterators, macros, traits
-- PTT coverage exists (9 tests across 2 files) but `MathSeqIter` type reference
-  needs verification
+- PTT coverage: 9 tests across 2 files, all passing
+- Full collection iterator standard implemented (MathSeqIter, ghost iter, etc.)
 - Single proof hole: `assume()` in PartialEq — standard leaf-type pattern
 - No APAS cost specs to compare against (definitions-only chapter)
 

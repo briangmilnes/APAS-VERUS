@@ -8,10 +8,10 @@ pub mod Exercise21_7 {
     use vstd::prelude::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap19::ArraySeqStPer::ArraySeqStPer::{ArraySeqStPerS, ArraySeqStPerTrait};
+    use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::{N, B, Pair, Pair_feq_trigger};
+    use crate::Types::Types::*;
 
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;

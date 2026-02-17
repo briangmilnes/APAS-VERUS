@@ -8,10 +8,10 @@ pub mod Problem21_3 {
     use vstd::prelude::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS;
+    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::{N, Pair};
+    use crate::Types::Types::*;
 
     #[cfg(verus_keep_ghost)]
     verus! {

@@ -1,7 +1,7 @@
 ---
 description: Order use statements as std, vstd, crate types, chapter modules, macros
 globs: "**/*.rs"
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Use Statement Order

@@ -1,47 +1,42 @@
 ---
 description: Format for auditing code inside vs outside verus! blocks
 globs: "**/*.rs"
-alwaysApply: false
+alwaysApply: true
 ---
 
 # In/Out Table
 
-When auditing or documenting what code is inside vs outside `verus!` blocks, use the **In/Out Table** format.
+When the user says "in-out table" or "in/out table", audit what code is inside vs outside `verus!` blocks and produce the table below.
 
 ## Format
 
-| Chapter | File | Clone In | Debug Out | Display Out | Eq Out | Macro Out | Other |
-|---------|------|:--------:|:---------:|:-----------:|:------:|:---------:|-------|
+| # | Chapter | File | Clone | PartialEq/Eq | Default | Drop | Iterator | Debug | Display | Macro | Other |
+|---|---------|------|:-----:|:------------:|:-------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
 
 ## Column Values
 
-- `✅` = correctly placed (Clone inside verus!, others outside as required)
-- `❌` = incorrectly placed (Clone outside verus! when it could be inside)
+- `✅ in` = correctly inside `verus!`
+- `✅ out` = correctly outside `verus!` (required — Verus limitation)
+- `❌ in` = incorrectly inside (should be outside)
+- `❌ out` = incorrectly outside (should be inside)
 - `-` = not implemented
 
-## Columns
+## What Goes Inside verus!
 
-- **Chapter**: Module path (e.g., `Chap05`, `vstdplus`, or `—` for root)
-- **File**: File name without `.rs` extension
-- **Clone In**: `impl Clone` INSIDE verus! with `ensures cloned@ == self@`
-- **Debug Out**: `impl Debug` outside verus! (required - Verus doesn't support)
-- **Display Out**: `impl Display` outside verus! (required - Verus doesn't support)
-- **Eq Out**: `impl PartialEq/Eq` outside verus! (required - Verus doesn't support)
-- **Macro Out**: `macro_rules!` outside verus! (required - macros must be outside)
-- **Other**: Any other notable code outside verus! (traits, unsafe impls, cfg stubs, etc.)
+These trait impls CAN and SHOULD be inside `verus!` with specifications:
 
-## Why Code Lives Outside verus!
+- **Clone** — with `ensures cloned@ == self@` if possible
+- **PartialEq / Eq** — per `partialeq-eq-pattern.mdc` (PartialEqSpecImpl + ensures + assume)
+- **Default** — delegates to `new()`, no `external_body` needed
+- **Drop** — requires `#[verifier::external_body]`, `opens_invariants none`, `no_unwind`
+- **Iterator infrastructure** — custom iter struct, View, iter_invariant, Iterator::next,
+  ghost iter struct, ForLoopGhostIteratorNew, ForLoopGhostIterator, IntoIterator for &Self,
+  IntoIterator for Self, iter() method
 
-Code must be outside `verus!` blocks when:
-- **Standard traits**: `Clone`, `PartialEq`, `Eq`, `Debug`, `Display`, `Default`, `Drop`, `From` — Verus doesn't support these trait impls inside verus!
-- **Unsafe marker traits**: `Sync`, `Send` — must be outside
-- **`macro_rules!`**: Macros are expanded before verification, must be outside
-- **`#[cfg(...)]` stubs**: Compatibility code for non-Verus builds
+## What Must Stay Outside verus!
 
-## Usage
-
-Generate this table when:
-- Auditing module structure
-- Reviewing code organization
-- Checking for consistency across similar modules
-- Planning refactoring to move code in/out of verus!
+- **Debug / Display** — Verus does not support fmt traits
+- **`macro_rules!`** — macros are expanded before verification
+- **Unsafe marker traits** — `Sync`, `Send`
+- **`&mut`-returning methods** — `iter_mut()`, `IntoIterator for &mut Self`
+- **`#[cfg(...)]` stubs** — compatibility code for non-Verus builds

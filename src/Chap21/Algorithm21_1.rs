@@ -8,10 +8,10 @@ pub mod Algorithm21_1 {
     use vstd::prelude::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::{ArraySeqStPerS, ArraySeqStPerRedefinableTrait};
+    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::{N, Pair};
+    use crate::Types::Types::*;
 
     #[cfg(verus_keep_ghost)]
     verus! {

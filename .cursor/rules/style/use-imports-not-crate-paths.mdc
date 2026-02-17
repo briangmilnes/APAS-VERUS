@@ -1,7 +1,7 @@
 ---
 description: Prefer use imports over verbose crate:: paths
 globs: "**/*.rs"
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Use Imports, Not Verbose Crate Paths
