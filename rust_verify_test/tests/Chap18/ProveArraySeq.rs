@@ -108,6 +108,7 @@ test_verify_one_file! {
     #[test] arrayseq_reduce verus_code! {
         use vstd::prelude::*;
         use apas_verus::Chap18::ArraySeq::ArraySeq::*;
+        use apas_verus::vstdplus::monoid::monoid::*;
 
         // Bitwise OR on u64: associative, 0 is left and right identity, no overflow.
         proof fn bitor_is_monoid()
@@ -151,6 +152,7 @@ test_verify_one_file! {
     #[test] arrayseq_scan verus_code! {
         use vstd::prelude::*;
         use apas_verus::Chap18::ArraySeq::ArraySeq::*;
+        use apas_verus::vstdplus::monoid::monoid::*;
 
         proof fn bitor_is_monoid()
             ensures spec_monoid(|a: u64, b: u64| a | b, 0u64),
@@ -192,6 +194,7 @@ test_verify_one_file! {
     #[test] arrayseq_scan_inclusive verus_code! {
         use vstd::prelude::*;
         use apas_verus::Chap18::ArraySeq::ArraySeq::*;
+        use apas_verus::vstdplus::monoid::monoid::*;
 
         proof fn bitor_is_monoid()
             ensures spec_monoid(|a: u64, b: u64| a | b, 0u64),

@@ -12,6 +12,7 @@
 //	4. type definitions
 //	5. view impls
 //	6. spec fns
+//	7. proof fns
 //	8. traits
 //	9. impls
 //	10. iterators
@@ -87,6 +88,88 @@ pub mod ArraySeqMtEph {
         s.fold_left(start_x, f)
     }
 
+    /// Definition 18.16 (inject). Apply position-value updates left to right; the first update
+    /// to each position wins. Out-of-range positions are ignored.
+    pub open spec fn spec_inject<T>(s: Seq<T>, updates: Seq<(usize, T)>) -> Seq<T>
+        decreases updates.len()
+    {
+        if updates.len() == 0 {
+            s
+        } else {
+            let rest = spec_inject(s, updates.drop_first());
+            let pos = updates[0].0 as int;
+            let val = updates[0].1;
+            if 0 <= pos < s.len() { rest.update(pos, val) } else { rest }
+        }
+    }
+
+    /// Definition 18.17 (ninject). Non-deterministic inject: each position in the result
+    /// holds either the original value or a value from some update. The choice of which
+    /// update "wins" is unspecified.
+    pub open spec fn spec_ninject<T>(s: Seq<T>, updates: Seq<(usize, T)>, result: Seq<T>) -> bool {
+        result.len() == s.len()
+        && forall|i: int| #![trigger result[i]] 0 <= i < s.len() ==> {
+            result[i] == s[i]
+            || exists|j: int| #![trigger updates[j]] 0 <= j < updates.len()
+                && updates[j].0 == i as usize && result[i] == updates[j].1
+        }
+    }
+
+
+    //		7. proof fns
+
+    /// Each element of `spec_inject(s, u)` is either the original `s[i]` or some update value.
+    proof fn lemma_spec_inject_element<T>(s: Seq<T>, u: Seq<(usize, T)>, i: int)
+        requires 0 <= i < s.len(),
+        ensures ({
+            let r = spec_inject(s, u);
+            r.len() == s.len()
+            && (r[i] == s[i]
+                || exists|j: int| #![trigger u[j]] 0 <= j < u.len()
+                    && u[j].0 == i as usize && r[i] == u[j].1)
+        }),
+        decreases u.len(),
+    {
+        reveal(spec_inject);
+        if u.len() > 0 {
+            lemma_spec_inject_len(s, u.drop_first());
+            lemma_spec_inject_element(s, u.drop_first(), i);
+            let rest = spec_inject(s, u.drop_first());
+            let pos = u[0].0 as int;
+            let val = u[0].1;
+            if 0 <= pos < s.len() {
+                if i == pos {
+                } else {
+                    if rest[i] != s[i] {
+                        let j = choose|j: int| #![trigger u.drop_first()[j]] 0 <= j < u.drop_first().len()
+                            && u.drop_first()[j].0 == i as usize
+                            && rest[i] == u.drop_first()[j].1;
+                        assert(u[j + 1] == u.drop_first()[j]);
+                    }
+                }
+            } else {
+                if rest[i] != s[i] {
+                    let j = choose|j: int| #![trigger u.drop_first()[j]] 0 <= j < u.drop_first().len()
+                        && u.drop_first()[j].0 == i as usize
+                        && rest[i] == u.drop_first()[j].1;
+                    assert(u[j + 1] == u.drop_first()[j]);
+                }
+            }
+        }
+    }
+
+    /// The length of `spec_inject(s, u)` equals `s.len()`.
+    proof fn lemma_spec_inject_len<T>(s: Seq<T>, u: Seq<(usize, T)>)
+        ensures spec_inject(s, u).len() == s.len(),
+        decreases u.len(),
+    {
+        reveal(spec_inject);
+        if u.len() > 0 {
+            lemma_spec_inject_len(s, u.drop_first());
+        }
+    }
+
+
     //		8. traits
 
     /// Chapter 19 multi-threaded ephemeral array sequence trait.
@@ -98,7 +181,8 @@ pub mod ArraySeqMtEph {
             recommends i < self.spec_len();
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
-        /// - Work Θ(length), Span Θ(log length).
+        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(log length).
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -109,7 +193,8 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
         /// - Set the element at `index` to `item` in place (ephemeral mutation).
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
             ensures
@@ -118,18 +203,21 @@ pub mod ArraySeqMtEph {
                 success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);
 
         /// - Definition 18.1 (length). Return the number of elements.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: primitive (Section 19.2).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn length(&self) -> (len: usize)
             ensures len as int == self.spec_len();
 
         /// - Algorithm 19.11 (Function nth). Return a reference to the element at `index`.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: primitive (Section 19.2).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.spec_len()
             ensures *nth_elem == self.spec_index(index as int);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
-        /// - Work Θ(length), Span Θ(log length).
+        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(log length).
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -141,7 +229,8 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
         /// - Definition 18.12 (subseq). Extract a contiguous subsequence.
-        /// - Work Θ(length), Span Θ(log length).
+        /// - APAS: primitive (Section 19.2).
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(log length).
         fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -153,19 +242,22 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
 
         /// - Create sequence from Vec.
-        /// - Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
+        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_len() == elts@.len(),
                 forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
 
         /// - Algorithm 19.1 (empty). empty = tabulate (lambda i.i) 0.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: Algorithm 19.1 — empty.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_len() == 0;
 
         /// - Algorithm 19.2 (singleton). singleton x = tabulate (lambda i.x) 1.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: Algorithm 19.2 — singleton.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn singleton(item: T) -> (singleton: Self)
             where T: Clone + Eq
             requires obeys_feq_clone::<T>()
@@ -174,7 +266,8 @@ pub mod ArraySeqMtEph {
                 singleton.spec_index(0) == item;
 
         /// - Algorithm 19.4 (append). append a b = tabulate (select(a,b)) (|a|+|b|).
-        /// - Work Θ(|a| + |b|), Span Θ(log(|a| + |b|)).
+        /// - APAS: Algorithm 19.4 — append.
+        /// - Claude-Opus-4.6: Work Θ(|a| + |b|), Span Θ(log(|a| + |b|)).
         fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (appended: Self)
             where T: Clone + Eq
             requires
@@ -186,7 +279,8 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
 
         /// - Algorithm 19.5 (filter). filter f a = flatten (map (deflate f) a).
-        /// - Work Θ(|a|), Span Θ(|a|).
+        /// - APAS: Algorithm 19.5 — filter.
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
             where T: Clone + Eq
             requires
@@ -202,7 +296,8 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// - Algorithm 19.6 (update). Ephemeral: clone then set (O(n) clone + O(1) set).
-        /// - Work Θ(|a|), Span Θ(1).
+        /// - APAS: Algorithm 19.6 — update.
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
         fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires
@@ -213,23 +308,56 @@ pub mod ArraySeqMtEph {
                 updated.spec_index(index as int) == item,
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
 
+        /// - Definition 18.16 (inject). Update multiple positions at once; the first update in
+        ///   the ordering of `updates` takes effect when positions collide.
+        /// - APAS: primitive (Definition 18.16).
+        /// - Claude-Opus-4.6: Work Θ(|a| + |updates|), Span Θ(1).
+        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+            ensures
+                injected.spec_len() == a.spec_len(),
+                Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
+                    =~= spec_inject(
+                        Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+                        updates@);
+
+        /// - Definition 18.17 (ninject). Non-deterministic inject: each position in the result
+        ///   holds either the original value or a value from some update.
+        /// - APAS: primitive (Definition 18.17).
+        /// - Claude-Opus-4.6: Work Θ(|a| + |updates|), Span Θ(1).
+        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (result: Self)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+            ensures
+                spec_ninject(
+                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+                    updates@,
+                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));
+
         /// - Algorithm 19.7 (isEmpty). isEmpty a = (|a| = 0).
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: Algorithm 19.7 — isEmpty.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn is_empty(&self) -> (empty: bool)
             ensures empty <==> self.spec_len() == 0;
 
         /// - Algorithm 19.7 (isSingleton). isSingleton a = (|a| = 1).
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: Algorithm 19.7 — isSingleton.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.spec_len() == 1;
 
         /// - Algorithm 19.8 (iterate). Left fold over the sequence (iterative).
-        /// - Work Θ(|a|), Span Θ(|a|).
+        /// - APAS: Algorithm 19.8 — iterate (iterative).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
         fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, seed: A) -> A
             requires forall|x: &A, y: &T| #[trigger] f.requires((x, y));
 
         /// - Algorithm 19.8 (iterate). iterate f x a = if |a|=0 then x else iterate f (f(x,a[0])) a[1..|a|-1].
-        /// - Work Θ(|a|), Span Θ(|a|).
+        /// - APAS: Algorithm 19.8 — iterate.
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, seed: A) -> A
             where T: Clone + Eq
             requires
@@ -237,13 +365,15 @@ pub mod ArraySeqMtEph {
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y));
 
         /// - Algorithm 19.9 (reduce). Combine elements (iterative).
-        /// - Work Θ(|a|), Span Θ(|a|).
+        /// - APAS: Algorithm 19.9 — reduce (iterative).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
         fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, id: T) -> T
             where T: Clone
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y));
 
         /// - Algorithm 19.9 (reduce). reduce f id a = if |a|=0 then id else if |a|=1 then a[0] else f(reduce f id b, reduce f id c).
-        /// - Work Θ(|a|), Span Θ(lg |a|).
+        /// - APAS: Algorithm 19.9 — reduce.
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(lg |a|).
         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, id: T) -> T
             where T: Clone + Eq
             requires
@@ -251,14 +381,16 @@ pub mod ArraySeqMtEph {
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y));
 
         /// - Algorithm 19.10 (scan). Prefix-reduce returning partial sums and total.
-        /// - Work Θ(|a|), Span Θ(|a|).
+        /// - APAS: Algorithm 19.10 — scan.
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, id: T) -> (scanned: (ArraySeqMtEphS<T>, T))
             where T: Clone
             requires forall|x: &T, y: &T| #[trigger] f.requires((x, y))
             ensures scanned.0.seq@.len() == a.seq@.len();
 
         /// - Algorithm 19.3 (map). map f a = tabulate (lambda i.f(a[i])) |a|.
-        /// - Work Θ(|a|), Span Θ(1).
+        /// - APAS: Algorithm 19.3 — map.
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
         fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
             requires
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
@@ -267,7 +399,8 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);
 
         /// - Primitive: tabulate. Build a sequence by applying `f` to each index.
-        /// - Work Θ(n), Span Θ(n).
+        /// - APAS: primitive (Section 19.2).
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n).
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtEphS<T>)
             requires
                 length <= usize::MAX,
@@ -277,7 +410,8 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);
 
         /// - Primitive: flatten. Concatenate a sequence of sequences.
-        /// - Work Θ(Σ|a_i|), Span Θ(Σ|a_i|).
+        /// - APAS: primitive (Section 19.2).
+        /// - Claude-Opus-4.6: Work Θ(Σ|a_i|), Span Θ(Σ|a_i|).
         fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
             where T: Clone + Eq
             requires
@@ -286,7 +420,8 @@ pub mod ArraySeqMtEph {
                 flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqMtEphS<T>| inner.seq@).flatten();
 
         /// - Algorithm 19.5 (deflate). deflate f x = if (f x) then ⟨x⟩ else ⟨⟩.
-        /// - Work Θ(1), Span Θ(1).
+        /// - APAS: Algorithm 19.5 — deflate (part of filter).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn deflate<F: Fn(&T) -> bool>(pred: &F, x: &T) -> (deflated: Self)
             where T: Clone + Eq
             requires
@@ -538,6 +673,103 @@ pub mod ArraySeqMtEph {
             let mut seq = a.seq.clone();
             seq.set(index, item);
             ArraySeqMtEphS { seq }
+        }
+
+        fn inject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
+            where T: Clone + Eq
+        {
+            let ghost s = a.seq@;
+            let ghost u = updates@;
+            let len = a.seq.len();
+            let ulen = updates.len();
+
+            let mut result_vec: Vec<T> = Vec::with_capacity(len);
+            let mut k: usize = 0;
+            while k < len
+                invariant
+                    k <= len,
+                    len == a.seq@.len(),
+                    s == a.seq@,
+                    result_vec@.len() == k as int,
+                    obeys_feq_clone::<T>(),
+                    forall|j: int| #![trigger result_vec@[j]] 0 <= j < k as int ==> result_vec@[j] == s[j],
+                decreases len - k,
+            {
+                let elem = a.seq[k].clone();
+                proof { axiom_cloned_implies_eq_owned(a.seq@[k as int], elem); }
+                result_vec.push(elem);
+                k += 1;
+            }
+            assert(result_vec@ =~= s);
+
+            let mut i: usize = ulen;
+            while i > 0
+                invariant
+                    0 <= i <= ulen,
+                    ulen == u.len(),
+                    len == a.seq@.len(),
+                    result_vec@.len() == s.len(),
+                    s.len() == len,
+                    obeys_feq_clone::<T>(),
+                    s == a.seq@,
+                    u == updates@,
+                    result_vec@ =~= spec_inject(s, u.subrange(i as int, ulen as int)),
+                decreases i,
+            {
+                i -= 1;
+                let pos = updates[i].0;
+                if pos < len {
+                    let val = updates[i].1.clone();
+                    proof {
+                        axiom_cloned_implies_eq_owned(u[i as int].1, val);
+                    }
+                    result_vec.set(pos, val);
+                }
+                proof {
+                    let ghost sub = u.subrange(i as int, ulen as int);
+                    assert(sub.len() > 0);
+                    assert(sub[0] == u[i as int]);
+                    assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
+                    reveal(spec_inject);
+                }
+            }
+
+            proof {
+                assert(u.subrange(0, ulen as int) =~= u);
+                assert(result_vec@ =~= spec_inject(s, u));
+                assert(s =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)));
+                assert(result_vec@ =~= spec_inject(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), updates@));
+            }
+            let injected = ArraySeqMtEphS { seq: result_vec };
+            proof {
+                assert(Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)) =~= result_vec@);
+                assert(Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
+                    =~= spec_inject(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), updates@));
+            }
+            injected
+        }
+
+        // Definition 18.17 (ninject): delegates to inject. inject is a valid ninject because
+        // every element of spec_inject(s, u) is either the original or came from some update.
+        fn ninject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            where T: Clone + Eq
+        {
+            let result = Self::inject(a, updates);
+            proof {
+                let s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+                let r = Seq::new(result.spec_len(), |i: int| result.spec_index(i));
+                let u = updates@;
+                assert(r =~= spec_inject(s, u));
+                lemma_spec_inject_len(s, u);
+                assert forall|i: int| 0 <= i < s.len() implies {
+                    r[i] == s[i]
+                    || exists|j: int| #![trigger u[j]] 0 <= j < u.len()
+                        && u[j].0 == i as usize && r[i] == u[j].1
+                } by {
+                    lemma_spec_inject_element(s, u, i);
+                }
+            }
+            result
         }
 
         // Algorithm 19.7: isEmpty a = (|a| = 0).
@@ -805,6 +1037,8 @@ pub mod ArraySeqMtEph {
         }
 
         /// Parallel map via D&C fork-join.
+        /// - APAS: parallel variant of Algorithm 19.3 — map.
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(lg |a|).
         pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: F,
@@ -856,6 +1090,8 @@ pub mod ArraySeqMtEph {
         }
 
         /// Parallel filter via D&C fork-join.
+        /// - APAS: parallel variant of Algorithm 19.5 — filter.
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(lg² |a|).
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             pred: F,
@@ -937,6 +1173,8 @@ pub mod ArraySeqMtEph {
         }
 
         /// Parallel reduce via D&C fork-join (requires monoid).
+        /// - APAS: parallel variant of Algorithm 19.9 — reduce.
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(lg |a|).
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: F,
@@ -1176,14 +1414,12 @@ pub mod ArraySeqMtEph {
 
     //		13. derive impls outside verus!
 
-    #[cfg(verus_keep_ghost)]
     impl<T: Debug> Debug for ArraySeqMtEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             f.debug_list().entries(self.seq.iter()).finish()
         }
     }
 
-    #[cfg(verus_keep_ghost)]
     impl<T: Display> Display for ArraySeqMtEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(f, "[")?;
