@@ -13,13 +13,28 @@ git merge review/prose
 # 2. If conflicts: fix them, then
 git add -A && git merge --continue
 
-# 3. Verify
+# 3. Verify: compilation
 cargo check --lib
+
+# 4. Verify: RTTs
 cargo nextest run --no-fail-fast
+
+# 5. Verify: validate (full)
 ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors
+
+# 6. Verify: validate (dev_only)
 ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg 'feature="dev_only"'
 
-# 4. Push
+# 7. Verify: compile_ptt (build .rlib + .vir for proof-time tests)
+~/projects/verus/source/target-verus/release/verus \
+  --compile --crate-type=lib --crate-name apas_verus src/lib.rs \
+  -o target/verus/libapas_verus.rlib \
+  --export /home/milnes/projects/APAS-VERUS/target/verus/apas_verus.vir
+
+# 8. Verify: PTTs
+cd rust_verify_test && cargo nextest run --no-fail-fast && cd ..
+
+# 9. Push
 git push
 ```
 
@@ -32,13 +47,28 @@ git fetch origin
 # 2. Rebase the worktree branch onto main
 git rebase origin/main
 
-# 3. Verify
+# 3. Verify: compilation
 cargo check --lib
+
+# 4. Verify: RTTs
 cargo nextest run --no-fail-fast
+
+# 5. Verify: validate (full)
 ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors
+
+# 6. Verify: validate (dev_only)
 ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg 'feature="dev_only"'
 
-# 4. Force-push rebased branch
+# 7. Verify: compile_ptt
+~/projects/verus/source/target-verus/release/verus \
+  --compile --crate-type=lib --crate-name apas_verus src/lib.rs \
+  -o target/verus/libapas_verus.rlib \
+  --export /home/milnes/projects/APAS-VERUS/target/verus/apas_verus.vir
+
+# 8. Verify: PTTs
+cd rust_verify_test && cargo nextest run --no-fail-fast && cd ..
+
+# 9. Force-push rebased branch
 git push origin review/prose --force
 ```
 
