@@ -38,6 +38,15 @@ path = "tests/Chap05/RelationStEph.rs"
 name = "MappingStEph"
 path = "tests/Chap05/MappingStEph.rs"
 
+# Chap17 iterator proof tests
+[[test]]
+name = "ProveMathSeq"
+path = "tests/Chap17/ProveMathSeq.rs"
+
+[[test]]
+name = "prove_MathSeq_iters"
+path = "tests/Chap17/prove_MathSeq_iters.rs"
+
 # Chap18 iterator proof tests
 [[test]]
 name = "ProveArraySeq"

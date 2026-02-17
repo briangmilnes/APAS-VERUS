@@ -25,9 +25,7 @@ pub mod MergeSortMtPer {
 
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     #[cfg(verus_keep_ghost)]
-    use crate::Chap26::MergeSortStPer::MergeSortStPer::{
-        spec_sorted, spec_is_permutation, spec_merge_post, spec_sort_post,
-    };
+    use crate::Chap26::MergeSortStPer::MergeSortStPer::*;
     use crate::Types::Types::*;
 
     //		3. broadcast use

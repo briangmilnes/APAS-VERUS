@@ -111,7 +111,7 @@ pub mod vstdplus {
 #[cfg(not(feature = "experiments_only"))]
 pub mod Chap02 {
     pub mod HFSchedulerMtEph;
-    pub mod FibonacciWSScheduler;
+    pub mod FibonacciHFScheduler;
 }
 
 #[cfg(not(feature = "experiments_only"))]

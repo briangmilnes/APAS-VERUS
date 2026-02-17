@@ -3,10 +3,10 @@
 use std::sync::{Arc, Barrier};
 use std::thread;
 
-use apas_ai::Chap05::SetStEph::SetStEph::*;
-use apas_ai::Chap06::LabDirGraphMtEph::LabDirGraphMtEph::*;
-use apas_ai::{LabDirGraphMtEphLit, SetLit};
-use apas_ai::Types::Types::*;
+use apas_verus::Chap05::SetStEph::SetStEph::*;
+use apas_verus::Chap06::LabDirGraphMtEph::LabDirGraphMtEph::*;
+use apas_verus::{LabDirGraphMtEphLit, SetLit};
+use apas_verus::Types::Types::*;
 
 #[test]
 fn test_labdirgraphmtephlit_macro_functionality() {

@@ -1,0 +1,83 @@
+---
+description: Standard section ordering and TOC format for Verus source files
+globs: "**/*.rs"
+alwaysApply: true
+---
+
+# Table of Contents Standard
+
+Every Verus source file should follow this section ordering. Place a TOC comment
+near the top of the file (after the copyright and module doc), and use section
+headers to mark each section that is present.
+
+## TOC format
+
+```rust
+//  Table of Contents
+//  1. module
+//  2. imports
+//  3. broadcast use
+//  4. type definitions
+//  5. view impls
+//  6. spec fns
+//  7. proof fns/broadcast groups
+//  8. traits
+//  9. impls
+//  10. iterators
+//  11. derive impls in verus!
+//  12. macros
+//  13. derive impls outside verus!
+```
+
+## Section headers
+
+Mark each section with a numbered comment:
+
+```rust
+//  8. traits
+```
+
+## Section contents
+
+| # | Section | What goes here |
+|---|---------|----------------|
+| 1 | module | `pub mod ModName {` |
+| 2 | imports | `use` statements, `#[cfg(verus_keep_ghost)] use` |
+| 3 | broadcast use | `broadcast use` groups |
+| 4 | type definitions | `struct`, `enum`, `type` aliases |
+| 5 | view impls | `impl View for ...` |
+| 6 | spec fns | `spec fn`, `open spec fn`, `closed spec fn` |
+| 7 | proof fns/broadcast groups | `proof fn`, `broadcast group` |
+| 8 | traits | Trait definitions (`trait Foo { ... }`) |
+| 9 | impls | `impl` blocks for the main type (exec functions) |
+| 10 | iterators | Custom iter struct, View, iter_invariant, Iterator::next, ghost iter, ForLoopGhostIteratorNew, ForLoopGhostIterator, IntoIterator, iter() method |
+| 11 | derive impls in verus! | Clone, PartialEq, Eq, Default, Drop — inside `verus!` with specs |
+| 12 | macros | `macro_rules!` — outside `verus!` |
+| 13 | derive impls outside verus! | Debug, Display, iter_mut, IntoIterator for &mut — outside `verus!` |
+
+## Tooling
+
+Use `veracity-review-verus-style` to reorder a file and insert the TOC automatically:
+
+```bash
+veracity-review-verus-style -r -c ~/projects/APAS-VERUS -d src/ChapNN/File.rs
+```
+
+Flags:
+- `-r` / `--reorder` — reorder items inside `verus!{}` to match the standard and insert the TOC
+- `-c` — project root (paths are relative to this)
+- `-d` — the file to process
+- `-n` — dry-run: preview changes without writing to disk
+
+Example (dry-run):
+
+```bash
+veracity-review-verus-style -r -n -c ~/projects/APAS-VERUS -d src/Chap17/MathSeq.rs
+```
+
+## Rules
+
+- Omit sections that don't apply. A file with no iterators skips section 10.
+- The TOC lists all sections present in the file, not the full 13.
+- Section headers are plain numbered comments. No dividers, no box-drawing, no `---` or `===`.
+- Sections 1-11 are inside `verus!`. Sections 12-13 are outside.

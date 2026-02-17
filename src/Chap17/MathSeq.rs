@@ -86,6 +86,8 @@ pub mod MathSeq {
                 self.spec_len() == 1
             }
             
+            /// - APAS: no cost spec (definitions chapter).
+            /// - Claude-Opus-4.6: O(n) — Vec allocation + clone fill.
             pub fn new(length: N, init_value: T) -> (new_seq: Self)
                 ensures
                 new_seq.spec_len() == length,
@@ -95,6 +97,8 @@ pub mod MathSeq {
                 MathSeqS { data: v }
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — direct index write.
             pub fn set(&mut self, index: N, value: T) -> (success: bool)
                 ensures
                 success ==> index < old(self).spec_len()
@@ -111,12 +115,16 @@ pub mod MathSeq {
                 }
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1).
             pub fn length(&self) -> (len: N)
                 ensures len == self.spec_len(),
             {
                 self.data.len()
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — direct index read.
             pub fn nth(&self, index: N) -> (elem: &T)
                 requires index < self.spec_len(),
             ensures elem@ == self@[index as int],
@@ -124,12 +132,16 @@ pub mod MathSeq {
                 &self.data[index]
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1).
             pub fn empty() -> (empty_seq: Self)
                 ensures empty_seq.spec_len() == 0,
             {
                 MathSeqS { data: Vec::new() }
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1).
             pub fn singleton(item: T) -> (singleton: Self)
                 ensures
                 singleton.spec_len() == 1,
@@ -138,6 +150,8 @@ pub mod MathSeq {
                 MathSeqS { data: vec![item] }
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: amortized O(1) — Vec::push.
             pub fn add_last(&mut self, value: T)
                 ensures
                 self.spec_len() == old(self).spec_len() + 1,
@@ -147,6 +161,8 @@ pub mod MathSeq {
                 self.data.push(value);
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — Vec::pop.
             pub fn delete_last(&mut self) -> (shortened: Option<T>)
                 ensures
                 old(self).spec_len() == 0 ==> shortened is None && self@ == old(self)@,
@@ -158,24 +174,32 @@ pub mod MathSeq {
                 self.data.pop()
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1).
             pub fn is_empty(&self) -> (emptiness: bool)
                 ensures emptiness == self.spec_is_empty(),
             {
                 self.data.len() == 0
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1).
             pub fn is_singleton(&self) -> (singularity: bool)
                 ensures singularity == self.spec_is_singleton(),
             {
                 self.data.len() == 1
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — move, no copy.
             pub fn from_vec(data: Vec<T>) -> (seq: Self)
                 ensures seq.data@ == data@,
             {
                 MathSeqS { data }
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(n) — delegates to new.
             pub fn with_len(length: N, init_value: T) -> (seq_of_len_value: Self)
                 ensures
                 seq_of_len_value.spec_len() == length,
@@ -188,6 +212,8 @@ pub mod MathSeq {
                 if val < 0 { 0 } else if val > max { max } else { val }
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — returns slice reference.
             pub fn subseq(&self, start: N, length: N) -> (subseq: &[T])
                 ensures
                 subseq@.len() <= length,
@@ -204,6 +230,8 @@ pub mod MathSeq {
                 slice_subrange(slice, s, e)
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(length) — copies subrange.
             pub fn subseq_copy(&self, start: N, length: N) -> (subseq: Self) where T: Copy
                 requires
                   start as int + length as int <= self.data@.len(),
@@ -218,6 +246,8 @@ pub mod MathSeq {
                 MathSeqS { data: vec }
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(n) — builds index vector.
             pub fn domain(&self) -> (domain: Vec<N>)
                 ensures domain@.len() == self.spec_len(),
             {
@@ -236,6 +266,8 @@ pub mod MathSeq {
                 v
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(n) expected — hash set dedup.
             pub fn range(&self) -> (range: Vec<T>)
                 requires valid_key_type::<T>(),
                 ensures
@@ -352,6 +384,8 @@ pub mod MathSeq {
                 out
             }
             
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(n) expected — hash map counting, two passes.
             pub fn multiset_range(&self) -> (range: Vec<(N, T)>)
                 requires
                     valid_key_type::<T>(),
@@ -450,25 +484,142 @@ pub mod MathSeq {
                 
                 range
             }
+
+            /// Borrow iterator over the sequence elements.
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — returns iterator wrapper.
+            pub fn iter(&self) -> (it: MathSeqIter<'_, T>)
+                ensures
+                    it@.0 == 0,
+                    it@.1 == self.data@,
+                    iter_invariant(&it),
+            {
+                MathSeqIter { inner: self.data.iter() }
+            }
         }
+
+    // ── 10. iterators ────────────────────────────────────────────
+
+    /// Borrow iterator wrapper with closed spec view.
+    #[verifier::reject_recursive_types(T)]
+    pub struct MathSeqIter<'a, T> {
+        inner: std::slice::Iter<'a, T>,
+    }
+
+    impl<'a, T> View for MathSeqIter<'a, T> {
+        type V = (int, Seq<T>);
+        closed spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    }
+
+    /// Ghost iterator for ForLoopGhostIterator support.
+    #[verifier::reject_recursive_types(T)]
+    pub struct MathSeqGhostIter<'a, T> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
+    impl<'a, T> View for MathSeqGhostIter<'a, T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
+    pub open spec fn iter_invariant<'a, T>(it: &MathSeqIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<'a, T> std::iter::Iterator for MathSeqIter<'a, T> {
+        type Item = &'a T;
+
+        fn next(&mut self) -> (next: Option<&'a T>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            self.inner.next()
+        }
+    }
+
+    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for MathSeqIter<'a, T> {
+        type GhostIter = MathSeqGhostIter<'a, T>;
+        open spec fn ghost_iter(&self) -> MathSeqGhostIter<'a, T> {
+            MathSeqGhostIter { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for MathSeqGhostIter<'a, T> {
+        type ExecIter = MathSeqIter<'a, T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &MathSeqIter<'a, T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &MathSeqIter<'a, T>) -> MathSeqGhostIter<'a, T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
 
     impl<'a, T: StT> std::iter::IntoIterator for &'a MathSeqS<T> {
         type Item = &'a T;
-        type IntoIter = Iter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter {
-            self.data.iter()
+        type IntoIter = MathSeqIter<'a, T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.data@,
+                iter_invariant(&it),
+        {
+            MathSeqIter { inner: self.data.iter() }
         }
     }
 
     impl<T: StT> std::iter::IntoIterator for MathSeqS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter {
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.data@,
+        {
             self.data.into_iter()
         }
     }
-   
-    // Clone implementation outside verus! block
+
     impl<T: StT> Clone for MathSeqS<T> {
         fn clone(&self) -> Self {
             MathSeqS { data: self.data.clone() }
@@ -495,18 +646,14 @@ pub mod MathSeq {
 
     } // verus!
 
-    // Iterator methods outside verus! block
+    // Mutable iteration stays outside verus! — Verus does not support &mut
+    // in return position or trait impls.
     impl<T: StT + Hash> MathSeqS<T> {
-        pub fn iter(&self) -> Iter<'_, T> {
-            self.data.iter()
-        }
-        
         pub fn iter_mut(&mut self) -> IterMut<'_, T> {
             self.data.iter_mut()
         }
     }
 
-    // &mut IntoIterator must stay outside verus! (Verus doesn't support &mut types)
     impl<'a, T: StT> IntoIterator for &'a mut MathSeqS<T> {
         type Item = &'a mut T;
         type IntoIter = IterMut<'a, T>;

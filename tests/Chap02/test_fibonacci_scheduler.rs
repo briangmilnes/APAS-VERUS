@@ -1,6 +1,6 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
-use apas_verus::Chap02::FibonacciWSScheduler::FibonacciWSScheduler::{fib_seq, fib_par};
+use apas_verus::Chap02::FibonacciHFScheduler::FibonacciHFScheduler::{fib_seq, fib_par};
 
 fn expected_fib(n: u64) -> u64 {
     match n {

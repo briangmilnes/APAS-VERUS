@@ -1,0 +1,21 @@
+---
+description: No horizontal dividers in code comments
+globs: "**/*.rs"
+alwaysApply: true
+---
+
+# No Dividers in Comments
+
+Do not use `---`, `===`, `───`, or any other horizontal rule/divider syntax in code comments. No ASCII dividers, no Unicode box-drawing dividers.
+
+Section headers in comments are just words:
+
+```rust
+// BAD:
+// ---
+// === Section ===
+// ── Section ──────────────────────────────────────────────
+
+// GOOD:
+// Section
+```

@@ -1,5 +1,13 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap17/
+
 ❌ MathSeq.rs
-/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:598: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS-review/src/Chap17/MathSeq.rs:491: assume() - proof { assume(r == (self@ == other@)); }
+       487 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       489 |         {
+       490 |             let r = self.data == other.data;
+       492 |             r
+       493 |         }
    Holes: 1 total
       1 × assume()
 

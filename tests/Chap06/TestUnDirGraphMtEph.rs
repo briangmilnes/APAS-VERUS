@@ -3,12 +3,11 @@
 use std::sync::{Arc, Barrier};
 use std::thread;
 
-use apas_ai::Chap05::SetStEph::SetStEph::*;
-use apas_ai::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
-use apas_ai::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
-use apas_ai::SetLit;
-use apas_ai::Types::Types::*;
-use apas_ai::UnDirGraphMtEphLit;
+use apas_verus::Chap05::SetStEph::SetStEph::*;
+use apas_verus::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
+use apas_verus::SetLit;
+use apas_verus::Types::Types::*;
+use apas_verus::UnDirGraphMtEphLit;
 
 #[test]
 fn test_undirgraphmtephlit_macro_functionality() {

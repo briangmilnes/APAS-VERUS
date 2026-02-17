@@ -11,6 +11,8 @@ verus! {
 pub trait FetchAddCasTrait {
     /// Implements fetch_add using compare_exchange_weak (CAS loop).
     /// Returns the previous value, atomically adding delta to target.
+    /// - APAS: no cost spec. Notes CAS-based FAA is less efficient than hardware FAA under contention.
+    /// - Claude-Opus-4.6: amortized O(1), worst-case unbounded (CAS retries under contention).
     fn fetch_add_cas(&self, delta: usize) -> (previous: usize);
 }
 

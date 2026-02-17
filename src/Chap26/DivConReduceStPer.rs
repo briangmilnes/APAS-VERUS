@@ -22,7 +22,7 @@ pub mod DivConReduceStPer {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     #[cfg(verus_keep_ghost)]
-    use crate::Chap18::ArraySeq::ArraySeq::{spec_iterate, spec_monoid};
+    use crate::Chap18::ArraySeq::ArraySeq::*;
     use crate::Types::Types::*;
 
     //		3. broadcast use

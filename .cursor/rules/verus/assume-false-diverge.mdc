@@ -1,0 +1,49 @@
+---
+description: assume(false); diverge() is valid idiom for unreachable thread join errors
+globs: "**/*.rs"
+alwaysApply: true
+---
+
+# assume(false); diverge() in Thread Join
+
+The pattern `assume(false); diverge()` in a `JoinHandle::join()` error arm
+is a **valid and unavoidable Verus idiom**, not a proof hole to fix.
+
+## Why it exists
+
+`thread::join()` returns `Result<T, Box<dyn Any>>` where `Err` means the
+spawned thread panicked. Verus cannot prove that a thread will not panic —
+that would require verifying the absence of all panics in the spawned
+closure's entire transitive call graph, which is beyond Verus's current
+scope.
+
+## The pattern
+
+```rust
+let result = match join_handle.join() {
+    Result::Ok(out) => out,
+    Result::Err(_) => { assume(false); diverge() }
+};
+```
+
+`assume(false)` tells Verus "this branch is unreachable." `diverge()` is
+a Verus built-in that satisfies any return type (it has postcondition
+`ensures false`). Together they say: "if the thread panicked, we assume
+that cannot happen."
+
+## When to use
+
+- In any `JoinHandle::join()` error arm.
+- In any `Result::Err` arm from a thread operation that cannot fail if
+  the spawned code is verified.
+
+## When NOT to use
+
+- Do not use `assume(false)` anywhere else without asking the user.
+- Do not use it to suppress verification failures in non-threading code.
+
+## Avoiding it
+
+The `ParaPair!` macro encapsulates spawn/join and handles the error arms
+internally, so callers never see the `assume(false)`. Prefer `ParaPair!`
+over raw `spawn`/`join` when the fork-join structure is symmetric.

@@ -10,7 +10,7 @@ table { width: 100% !important; table-layout: fixed; }
 **Reviewer:** Claude-Opus-4.6
 **Date:** 2026-02-15
 **Prose file:** `prompts/Chap02.txt`
-**Source files:** `FibonacciWSScheduler.rs`, `HFSchedulerMtEph.rs` (renamed from `WSSchedulerMtEph.rs` — "HF" = help-first, reflecting the actual scheduling policy)
+**Source files:** `FibonacciHFScheduler.rs`, `HFSchedulerMtEph.rs` (renamed from `WSSchedulerMtEph.rs` — "HF" = help-first, reflecting the actual scheduling policy)
 
 ## Prose Inventory
 
@@ -31,7 +31,7 @@ background for the work-span model.
 
 | # | File | Lines | Functions | Proof holes |
 |---|------|-------|-----------|-------------|
-| 1 | FibonacciWSScheduler.rs | ~100 | 2 exec (fib_seq, fib_par), 5 proof fns | 0 — clean |
+| 1 | FibonacciHFScheduler.rs | ~100 | 2 exec (fib_seq, fib_par), 5 proof fns | 0 — clean |
 | 2 | HFSchedulerMtEph.rs | ~170 | spawn, wait, TaskState | 8 — external_body/assume(false) |
 
 ## Cost Disagreements
@@ -136,7 +136,7 @@ ensures and the returned value.
 | 2 | HFSchedulerMtEph.rs | external_type_specification | 1 | JoinHandle type spec |
 | 3 | HFSchedulerMtEph.rs | assume(false) | 1 | Drop impl — unsound but pragmatic |
 
-FibonacciWSScheduler.rs is clean — no proof holes.
+FibonacciHFScheduler.rs is clean — no proof holes.
 
 ## Summary
 

@@ -1,5 +1,11 @@
 // Copyright (c) 2025 Brian G. Milnes
-//! Tests for verified Fibonacci implementation.
+//! Tests for Chap11 Fibonacci implementations.
+//!
+//! Only FibonacciStEph is testable at runtime. The four Mt variants
+//! (MtPerAllThreads, MtPerTSM, MtEph2Threads, MtEphRecomputes) are gated
+//! behind `#![cfg(verus_keep_ghost)]` because they use TSM tokens and
+//! Tracked types — they exist only under Verus compilation and are
+//! verified at proof time, not tested at runtime.
 
 use apas_verus::Chap11::FibonacciStEph::FibonacciStEph::fib;
 

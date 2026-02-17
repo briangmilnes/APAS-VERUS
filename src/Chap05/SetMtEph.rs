@@ -8,7 +8,7 @@ pub mod SetMtEph {
 
     use vstd::prelude::*;
     use crate::Concurrency::diverge;
-    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::{spawn, wait, TaskState};
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
 
 verus! {
 
