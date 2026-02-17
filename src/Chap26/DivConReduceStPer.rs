@@ -34,8 +34,22 @@ pub mod DivConReduceStPer {
 
     //		4. spec functions
 
-    pub open spec fn spec_sum_fn() -> spec_fn(N, N) -> N { |x: N, y: N| (x + y) as N }
-    pub open spec fn spec_product_fn() -> spec_fn(N, N) -> N { |x: N, y: N| (x * y) as N }
+    /// Wrapping addition for usize — matches vstd wrapping_add spec with in-range casts.
+    pub open spec fn spec_wrapping_add(x: N, y: N) -> N {
+        if x + y > usize::MAX as int {
+            ((x + y) - (usize::MAX as int + 1)) as N
+        } else {
+            (x + y) as N
+        }
+    }
+
+    /// Wrapping multiplication for usize — matches vstd wrapping_mul spec with in-range casts.
+    pub open spec fn spec_wrapping_mul(x: N, y: N) -> N {
+        ((x as nat * y as nat) % (usize::MAX as nat + 1)) as N
+    }
+
+    pub open spec fn spec_sum_fn() -> spec_fn(N, N) -> N { |x: N, y: N| spec_wrapping_add(x, y) }
+    pub open spec fn spec_product_fn() -> spec_fn(N, N) -> N { |x: N, y: N| spec_wrapping_mul(x, y) }
     pub open spec fn spec_or_fn() -> spec_fn(B, B) -> B { |x: B, y: B| x || y }
     pub open spec fn spec_and_fn() -> spec_fn(B, B) -> B { |x: B, y: B| x && y }
     pub open spec fn spec_max_fn() -> spec_fn(N, N) -> N { |x: N, y: N| if x >= y { x } else { y } }
@@ -139,14 +153,20 @@ pub mod DivConReduceStPer {
             Some(best)
         }
 
-        #[verifier::external_body]
         fn sum(a: &ArraySeqStPerS<N>) -> (result: N) {
-            ArraySeqStPerS::reduce(a, &|x, y| x + y, Ghost(spec_sum_fn()), 0)
+            ArraySeqStPerS::reduce(a,
+                &(|x: &N, y: &N| -> (ret: N)
+                    ensures ret == spec_wrapping_add(*x, *y)
+                { (*x).wrapping_add(*y) }),
+                Ghost(spec_sum_fn()), 0)
         }
 
-        #[verifier::external_body]
         fn product(a: &ArraySeqStPerS<N>) -> (result: N) {
-            ArraySeqStPerS::reduce(a, &|x, y| x * y, Ghost(spec_product_fn()), 1)
+            ArraySeqStPerS::reduce(a,
+                &(|x: &N, y: &N| -> (ret: N)
+                    ensures ret == spec_wrapping_mul(*x, *y)
+                { (*x).wrapping_mul(*y) }),
+                Ghost(spec_product_fn()), 1)
         }
 
         fn any(a: &ArraySeqStPerS<B>) -> (result: B) {

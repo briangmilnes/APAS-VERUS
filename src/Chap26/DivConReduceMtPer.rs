@@ -27,6 +27,7 @@ pub mod DivConReduceMtPer {
         crate::Chap18::ArraySeq::ArraySeq::{spec_iterate, spec_monoid},
         crate::Chap26::DivConReduceStPer::DivConReduceStPer::{
             spec_sum_fn, spec_product_fn, spec_or_fn, spec_and_fn, spec_max_fn,
+            spec_wrapping_add, spec_wrapping_mul,
         },
     };
     use crate::Types::Types::*;
@@ -210,14 +211,20 @@ pub mod DivConReduceMtPer {
             Some(max_val)
         }
 
-        #[verifier::external_body]
         fn sum_parallel(a: &ArraySeqMtPerS<N>) -> (result: N) {
-            ArraySeqMtPerS::reduce(a, &|x: &N, y: &N| *x + *y, Ghost(spec_sum_fn()), 0)
+            ArraySeqMtPerS::reduce(a,
+                &(|x: &N, y: &N| -> (ret: N)
+                    ensures ret == spec_wrapping_add(*x, *y)
+                { (*x).wrapping_add(*y) }),
+                Ghost(spec_sum_fn()), 0)
         }
 
-        #[verifier::external_body]
         fn product_parallel(a: &ArraySeqMtPerS<N>) -> (result: N) {
-            ArraySeqMtPerS::reduce(a, &|x: &N, y: &N| *x * *y, Ghost(spec_product_fn()), 1)
+            ArraySeqMtPerS::reduce(a,
+                &(|x: &N, y: &N| -> (ret: N)
+                    ensures ret == spec_wrapping_mul(*x, *y)
+                { (*x).wrapping_mul(*y) }),
+                Ghost(spec_product_fn()), 1)
         }
 
         fn any_parallel(a: &ArraySeqMtPerS<B>) -> (result: B) {

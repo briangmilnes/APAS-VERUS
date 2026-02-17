@@ -302,7 +302,7 @@ pub mod ArraySeq {
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (result: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
-                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
+                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
             ensures
                 result == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, start_x);
 
@@ -314,7 +314,7 @@ pub mod ArraySeq {
             requires
                 spec_monoid(spec_f, id),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
                 result == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
@@ -328,7 +328,7 @@ pub mod ArraySeq {
                 spec_monoid(spec_f, id),
                 obeys_feq_clone::<T>(),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
                 scanned.0.spec_len() == a.spec_len(),
                 // Each element is the fold of the first i+1 input elements (inclusive prefix sum).
@@ -361,7 +361,7 @@ pub mod ArraySeq {
                 spec_monoid(spec_f, id),
                 obeys_feq_clone::<T>(),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
                 result.spec_len() == a.spec_len(),
                 forall|i: int| #![trigger result.spec_index(i)] 0 <= i < a.spec_len() ==>
@@ -1210,7 +1210,7 @@ pub mod ArraySeq {
         requires
             obeys_feq_clone::<A>(),
             forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
-            forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
+            forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
         ensures
             prefixes.0.spec_len() == a.spec_len(),
             forall|i: int| #![trigger prefixes.0.spec_index(i)] 0 <= i < a.spec_len() ==>

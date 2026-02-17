@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Run runtime tests (RTT) using cargo nextest from CWD."""
+"""Run runtime tests (RTTs) with cargo nextest."""
 
 import subprocess
 import sys
 import re
+
+PROJECT = "/home/milnes/projects/APAS-VERUS"
 
 
 def strip_ansi_codes(text):
@@ -14,23 +16,23 @@ def strip_ansi_codes(text):
 
 
 def main():
-    print("Running RTT (runtime tests) with cargo nextest...", flush=True)
+    print("Running RTTs with cargo nextest...", flush=True)
     print("=" * 60, flush=True)
-    
+
     process = subprocess.Popen(
-        ["cargo", "nextest", "run", "--no-fail-fast", "-j", "10", "--features", "full_verify"],
+        ["timeout", "120", "cargo", "nextest", "run", "--no-fail-fast"],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
-        bufsize=1
+        bufsize=1,
+        cwd=PROJECT,
     )
-    
+
     for line in process.stdout:
         print(strip_ansi_codes(line), end='', flush=True)
-    
+
     return process.wait()
 
 
 if __name__ == "__main__":
     sys.exit(main())
-

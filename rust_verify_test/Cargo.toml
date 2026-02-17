@@ -16,10 +16,8 @@ yansi = "0.5"
 [package.metadata.rust-analyzer]
 rustc_private = true
 
-# Chap02 proof tests
-[[test]]
-name = "HFSchedulerMtEph"
-path = "tests/Chap02/HFSchedulerMtEph.rs"
+# Chap02 proof tests — removed: HFScheduler uses global static POOL, not testable in PTT framework.
+# RTTs in test_hf_scheduler.rs cover the scheduler.
 
 # Chap05 proof tests
 [[test]]

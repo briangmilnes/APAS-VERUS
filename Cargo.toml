@@ -10,6 +10,8 @@ verify = true
 default = []
 # Build only experiments (skip chapter modules)
 experiments_only = []
+# Dev mode: skip chapters gated with dev_only (edit lib.rs to control which)
+dev_only = []
 
 [dependencies]
 vstd = "0.0.0-2025-08-12-1837"

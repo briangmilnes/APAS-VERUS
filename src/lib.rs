@@ -3,9 +3,8 @@
 #![cfg_attr(verus_keep_ghost, feature(sized_hierarchy))]
 #![allow(non_snake_case)]
 
-#[cfg(not(feature = "experiments_only"))]
+// Foundation modules — always included unless experiments_only
 pub mod Types;
-#[cfg(not(feature = "experiments_only"))]
 pub mod Concurrency;
 #[cfg(not(feature = "experiments_only"))]
 pub mod ParaPairs;
@@ -114,12 +113,12 @@ pub mod Chap02 {
     pub mod FibonacciHFScheduler;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap03 {
     pub mod InsertionSortStEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap05 {
     pub mod SetStEph;
     pub mod SetMtEph;
@@ -128,7 +127,7 @@ pub mod Chap05 {
     pub mod KleeneStPer;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap06 {
     pub mod DirGraphStEph;
     pub mod UnDirGraphStEph;
@@ -155,7 +154,7 @@ pub mod Chap06 {
 //    pub mod WeightedDirGraphStEphIsize;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap11 {
     pub mod FibonacciStEph;
     pub mod FibonacciMtPerAllThreads;
@@ -164,14 +163,14 @@ pub mod Chap11 {
     pub mod FibonacciMtEphRecomputes;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap12 {
     pub mod Exercise12_1;
     pub mod Exercise12_2;
     pub mod Exercise12_5;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap17 {
     pub mod MathSeq;
 }
@@ -194,32 +193,7 @@ pub mod Chap19 {
     pub mod ArraySeqMtEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
-pub mod Chap23 {
-    pub mod PrimTreeSeqStPer;
-    pub mod BalBinTreeStEph;
-}
-
-#[cfg(not(feature = "experiments_only"))]
-pub mod Chap26 {
-    pub mod DivConReduceStPer;
-    pub mod MergeSortStPer;
-    pub mod ScanDCStPer;
-    pub mod ETSPStPer;
-    pub mod DivConReduceMtPer;
-    pub mod MergeSortMtPer;
-    pub mod ScanDCMtPer;
-    pub mod ETSPMtPer;
-}
-
-#[cfg(not(feature = "experiments_only"))]
-pub mod Chap27 {
-    pub mod ReduceContractStEph;
-    pub mod ReduceContractMtEph;
-    pub mod ScanContractStEph;
-    pub mod ScanContractMtEph;
-}
-
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap21 {
     pub mod Algorithm21_1;
     pub mod Algorithm21_2;
@@ -233,4 +207,30 @@ pub mod Chap21 {
     pub mod Problem21_1;
 //    pub mod Problem21_3;
     pub mod Problem21_4;
+}
+
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+pub mod Chap23 {
+    pub mod PrimTreeSeqStPer;
+    pub mod BalBinTreeStEph;
+}
+
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+pub mod Chap26 {
+    pub mod DivConReduceStPer;
+    pub mod MergeSortStPer;
+    pub mod ScanDCStPer;
+    pub mod ETSPStPer;
+    pub mod DivConReduceMtPer;
+    pub mod MergeSortMtPer;
+    pub mod ScanDCMtPer;
+    pub mod ETSPMtPer;
+}
+
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+pub mod Chap27 {
+    pub mod ReduceContractStEph;
+    pub mod ReduceContractMtEph;
+    pub mod ScanContractStEph;
+    pub mod ScanContractMtEph;
 }

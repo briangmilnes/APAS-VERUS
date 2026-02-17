@@ -1,0 +1,51 @@
+---
+description: Validation commands for Verus verification
+globs: 
+alwaysApply: true
+---
+
+# Validation Modes
+
+## validate (default) — full verification
+
+When the user says "validate", run the full verification with all modules:
+
+```bash
+cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors
+```
+
+Or: `python3 scripts/validate.py`
+
+## dev_only_validate — foundation modules only
+
+When the user says "dev_only_validate" or "dov", run with the dev_only feature.
+This skips all chapters and verifies only foundation (Types, Concurrency, vstdplus):
+
+```bash
+cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg 'feature="dev_only"'
+```
+
+Or: `python3 scripts/dev_only_validate.py`
+
+To include specific chapters in dev_only mode, edit `src/lib.rs` and change their cfg from:
+```rust
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+```
+to:
+```rust
+#[cfg(not(feature = "experiments_only"))]
+```
+
+Remember to include transitive dependencies (see dependency table in lib.rs comments).
+
+## V1 — validate once
+
+When the user says "V1", run a single Verus verification. If working with `experiments_only`:
+
+```bash
+cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg 'feature="experiments_only"'
+```
+
+Or: `python3 scripts/exponlyverify.py`
+
+Otherwise, same as validate. Do not iterate or fix errors. Just run once, show the full output, and stop.

@@ -23,6 +23,8 @@ pub mod ScanDCStPer {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     #[cfg(verus_keep_ghost)]
     use crate::Chap18::ArraySeq::ArraySeq::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap26::DivConReduceStPer::DivConReduceStPer::{spec_sum_fn, spec_wrapping_add};
     use crate::Types::Types::*;
 
     //		3. broadcast use
@@ -81,7 +83,7 @@ pub mod ScanDCStPer {
             ensures
                 spec_scan_post(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
-                    |x: N, y: N| (x + y) as N, 0,
+                    spec_sum_fn(), 0,
                     Seq::new(result.0.spec_len(), |i: int| result.0.spec_index(i)),
                     result.1);
     }
@@ -291,9 +293,12 @@ pub mod ScanDCStPer {
             (result_prefixes, total)
         }
 
-        #[verifier::external_body]
         fn prefix_sums_dc(a: &ArraySeqStPerS<N>) -> (result: (ArraySeqStPerS<N>, N)) {
-            Self::scan_dc(a, &|x: &N, y: &N| x + y, Ghost(|x: N, y: N| (x + y) as N), 0)
+            Self::scan_dc(a,
+                &(|x: &N, y: &N| -> (ret: N)
+                    ensures ret == spec_wrapping_add(*x, *y)
+                { (*x).wrapping_add(*y) }),
+                Ghost(spec_sum_fn()), 0)
         }
     }
 
