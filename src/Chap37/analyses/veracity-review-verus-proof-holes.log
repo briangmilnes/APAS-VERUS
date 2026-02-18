@@ -1,21 +1,93 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBStEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/
 
+✓ AVLTreeSeq.rs
+✓ AVLTreeSeqMtPer.rs
+✓ AVLTreeSeqStEph.rs
+✓ AVLTreeSeqStPer.rs
+❌ BSTAVLMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:390: external_body - #[verifier::external_body]
+       391 |         pub fn insert(&self, value: T)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:398: external_body - #[verifier::external_body]
+       399 |         pub fn contains(&self, target: &T) -> (result: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:405: external_body - #[verifier::external_body]
+       406 |         pub fn size(&self) -> (n: usize)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:412: external_body - #[verifier::external_body]
+       413 |         pub fn is_empty(&self) -> (b: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:419: external_body - #[verifier::external_body]
+       420 |         pub fn height(&self) -> (h: usize)
+   Holes: 5 total
+      5 × external_body
+   Proof functions: 1 total (1 clean, 0 holed)
+✓ BSTAVLStEph.rs
+   1 clean proof function
+❌ BSTBBAlphaMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:220: external_body - #[verifier::external_body]
+       221 |         pub fn insert(&self, value: T)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:228: external_body - #[verifier::external_body]
+       229 |         pub fn contains(&self, target: &T) -> (result: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:235: external_body - #[verifier::external_body]
+       236 |         pub fn size(&self) -> (n: usize)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:242: external_body - #[verifier::external_body]
+       243 |         pub fn is_empty(&self) -> (b: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:249: external_body - #[verifier::external_body]
+       250 |         pub fn height(&self) -> (h: usize)
+   Holes: 5 total
+      5 × external_body
+✓ BSTBBAlphaStEph.rs
+❌ BSTPlainMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:28: external_type_specification - #[verifier::external_type_specification]
+        29 |     #[verifier::external_body]
+        30 |     #[verifier::reject_recursive_types(T)]
+        31 |     pub struct ExRwLock<T: ?Sized>(RwLock<T>);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:29: external_body - #[verifier::external_body]
+        30 |     #[verifier::reject_recursive_types(T)]
+        31 |     pub struct ExRwLock<T: ?Sized>(RwLock<T>);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:33: assume_specification - pub assume_specification<T>[ RwLock::<T>::new ](t: T) -> (v: RwLock<T>);
+        31 |     pub struct ExRwLock<T: ?Sized>(RwLock<T>);
+        32 | 
+        34 | 
+        35 |     // 6. spec fns
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:255: external_body - #[verifier::external_body]
+       256 |         pub fn insert(&self, value: T)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:263: external_body - #[verifier::external_body]
+       264 |         pub fn contains(&self, target: &T) -> (result: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:270: external_body - #[verifier::external_body]
+       271 |         pub fn size(&self) -> (n: usize)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:277: external_body - #[verifier::external_body]
+       278 |         pub fn is_empty(&self) -> (b: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:284: external_body - #[verifier::external_body]
+       285 |         pub fn height(&self) -> (h: usize)
+   Holes: 8 total
+      1 × assume_specification
+      6 × external_body
+      1 × external_type_specification
+✓ BSTPlainStEph.rs
+✓ BSTRBMtEph.rs
 ✓ BSTRBStEph.rs
+   1 clean proof function
+✓ BSTSetAVLMtEph.rs
+✓ BSTSetBBAlphaMtEph.rs
+✓ BSTSetPlainMtEph.rs
+✓ BSTSetRBMtEph.rs
+✓ BSTSetSplayMtEph.rs
+✓ BSTSplayMtEph.rs
+✓ BSTSplayStEph.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   1 clean (no holes)
-   0 holed (contains holes)
-   1 total
+   16 clean (no holes)
+   3 holed (contains holes)
+   19 total
 
 Proof Functions:
-   0 clean
+   3 clean
    0 holed
-   0 total
+   3 total
 
-Holes Found: 0 total
-
-🎉 No proof holes found! All proofs are complete.
+Holes Found: 18 total
+   1 × assume_specification
+   16 × external_body
+   1 × external_type_specification

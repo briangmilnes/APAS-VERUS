@@ -297,6 +297,9 @@ pub mod Chap37 {
     pub mod BSTAVLStEph;
     pub mod BSTBBAlphaStEph;
     pub mod BSTRBStEph;
+    pub mod BSTPlainMtEph;
+    pub mod BSTAVLMtEph;
+    pub mod BSTBBAlphaMtEph;
 }
 
 #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]

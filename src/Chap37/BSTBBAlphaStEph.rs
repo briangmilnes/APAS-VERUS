@@ -1,8 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Ephemeral weight-balanced (BB[alpha]) binary search tree.
-//! Verusified: functional-style BST with BST invariant specs.
-//! Weight-balance property is specified but rebalancing is not included
-//! (it preserves elements and BST ordering, which is what the specs prove).
+//! Ephemeral weight-balanced (BB[α]) binary search tree.
+//! Verusified: functional-style BB[α] with BST ordering invariant.
+//! Weight-balance (α = 3/4) modeled as a spec; rebuild omitted from verified core.
 
 // Table of Contents
 // 1. module
@@ -24,6 +23,30 @@ pub mod BSTBBAlphaStEph {
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{tree_contains, tree_is_bst};
     use crate::vstdplus::total_order::total_order::TotalOrder;
+
+    // 6. spec fns
+
+    /// Weight-balance at every node: neither child exceeds 3/4 of total size.
+    /// Models ALPHA = 0.75 with integer arithmetic to avoid f64.
+    pub open spec fn weight_balanced<T>(tree: BalBinTree<T>) -> bool
+        decreases tree.spec_size(),
+    {
+        match tree {
+            BalBinTree::Leaf => true,
+            BalBinTree::Node(node) => {
+                let total = 1 + node.left.spec_size() + node.right.spec_size();
+                weight_balanced(node.left)
+                && weight_balanced(node.right)
+                && 4 * node.left.spec_size() <= 3 * total
+                && 4 * node.right.spec_size() <= 3 * total
+            }
+        }
+    }
+
+    /// Combined BB[α] tree invariant: BST ordering + weight balance.
+    pub open spec fn tree_is_bb<T: TotalOrder>(tree: BalBinTree<T>) -> bool {
+        tree_is_bst(tree) && weight_balanced(tree)
+    }
 
     // 9. impls
 

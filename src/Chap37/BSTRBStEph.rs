@@ -1,12 +1,13 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Ephemeral Red-Black balanced binary search tree.
-//! Verusified: functional-style BST with BST invariant specs.
-//! Red-black color property is not modeled because BalBinTree<T> has no color field;
-//! the verified specs prove BST ordering and element containment.
+//! Verusified: functional-style RB with BST ordering invariant + rotation proofs.
+//! Color invariant requires extending BalBinTree with a color field (future work).
 
 // Table of Contents
 // 1. module
 // 2. imports
+// 6. spec fns
+// 7. proof fns
 // 9. impls
 // 12. macros
 
@@ -22,13 +23,257 @@ pub mod BSTRBStEph {
 
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{tree_contains, tree_is_bst};
+    use crate::Chap37::BSTAVLStEph::BSTAVLStEph::avl_balanced;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+
+    // 6. spec fns
+
+    // The RB color invariant cannot be expressed on BalBinTree since it lacks a color
+    // field. The BST ordering invariant and rotation correctness are fully verified.
+    // To model colors, BalBinTree would need a per-node color tag or a ghost color map.
+
+    // 7. proof fns
+
+    /// Decomposes tree_is_bst two levels deep. Reused from BSTAVLStEph pattern.
+    proof fn lemma_bst_deep<T: TotalOrder>(tree: BalBinTree<T>)
+        requires tree_is_bst::<T>(tree),
+        ensures
+            match tree {
+                BalBinTree::Leaf => true,
+                BalBinTree::Node(node) =>
+                    tree_is_bst::<T>(node.left)
+                    && tree_is_bst::<T>(node.right)
+                    && (forall|x: T| #![auto] tree_contains(node.left, x) ==>
+                        T::le(x, node.value) && x != node.value)
+                    && (forall|x: T| #![auto] tree_contains(node.right, x) ==>
+                        T::le(node.value, x) && x != node.value)
+                    && match node.left {
+                        BalBinTree::Leaf => true,
+                        BalBinTree::Node(lnode) =>
+                            tree_is_bst::<T>(lnode.left)
+                            && tree_is_bst::<T>(lnode.right)
+                            && (forall|x: T| #![auto] tree_contains(lnode.left, x) ==>
+                                T::le(x, lnode.value) && x != lnode.value)
+                            && (forall|x: T| #![auto] tree_contains(lnode.right, x) ==>
+                                T::le(lnode.value, x) && x != lnode.value)
+                    }
+                    && match node.right {
+                        BalBinTree::Leaf => true,
+                        BalBinTree::Node(rnode) =>
+                            tree_is_bst::<T>(rnode.left)
+                            && tree_is_bst::<T>(rnode.right)
+                            && (forall|x: T| #![auto] tree_contains(rnode.left, x) ==>
+                                T::le(x, rnode.value) && x != rnode.value)
+                            && (forall|x: T| #![auto] tree_contains(rnode.right, x) ==>
+                                T::le(rnode.value, x) && x != rnode.value)
+                    }
+            }
+    {
+        reveal_with_fuel(tree_is_bst, 3);
+        reveal_with_fuel(tree_contains, 3);
+    }
 
     // 9. impls
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTRBStEph<T> {
         pub root: BalBinTree<T>,
+    }
+
+    /// Right rotation preserving BST ordering and containment.
+    fn rotate_right<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+        requires
+            tree_is_bst::<T>(tree),
+            !(tree is Leaf),
+        ensures
+            tree_is_bst::<T>(result),
+            forall|x: T| #![auto] tree_contains(result, x) == tree_contains(tree, x),
+    {
+        let ghost tree_ghost = tree;
+        match tree {
+            BalBinTree::Node(y_box) => {
+                let BalBinNode { left: left_tree, value: y_val, right: r } = *y_box;
+                let ghost old_left = left_tree;
+                let ghost old_r = r;
+
+                match left_tree {
+                    BalBinTree::Node(x_box) => {
+                        let BalBinNode { left: ll, value: x_val, right: lr } = *x_box;
+                        let ghost old_ll = ll;
+                        let ghost old_lr = lr;
+
+                        let right_sub = BalBinTree::Node(Box::new(BalBinNode {
+                            left: lr,
+                            value: y_val,
+                            right: r,
+                        }));
+
+                        let r = BalBinTree::Node(Box::new(BalBinNode {
+                            left: ll,
+                            value: x_val,
+                            right: right_sub,
+                        }));
+
+                        proof {
+                            lemma_bst_deep::<T>(tree_ghost);
+
+                            assert forall|z: T| tree_contains(old_lr, z) implies
+                                T::le(z, y_val) && z != y_val
+                            by {
+                                assert(tree_contains(old_left, z));
+                            };
+
+                            assert(tree_contains(old_left, x_val));
+                            assert(x_val != y_val);
+
+                            assert(tree_is_bst::<T>(right_sub));
+
+                            assert forall|z: T| tree_contains(right_sub, z) implies
+                                T::le(x_val, z) && z != x_val
+                            by {
+                                if tree_contains(old_lr, z) {
+                                } else if z == y_val {
+                                    assert(x_val != y_val);
+                                } else if tree_contains(old_r, z) {
+                                    T::transitive(x_val, y_val, z);
+                                    if z == x_val {
+                                        T::antisymmetric(x_val, y_val);
+                                    }
+                                }
+                            };
+
+                            assert forall|z: T| tree_contains(r, z) ==
+                                tree_contains(tree_ghost, z)
+                            by {
+                                assert(tree_contains(r, z) ==
+                                    (x_val == z
+                                    || tree_contains(old_ll, z)
+                                    || tree_contains(right_sub, z)));
+                                assert(tree_contains(right_sub, z) ==
+                                    (y_val == z
+                                    || tree_contains(old_lr, z)
+                                    || tree_contains(old_r, z)));
+                                assert(tree_contains(tree_ghost, z) ==
+                                    (y_val == z
+                                    || tree_contains(old_left, z)
+                                    || tree_contains(old_r, z)));
+                                assert(tree_contains(old_left, z) ==
+                                    (x_val == z
+                                    || tree_contains(old_ll, z)
+                                    || tree_contains(old_lr, z)));
+                            };
+                        }
+                        r
+                    }
+                    BalBinTree::Leaf => {
+                        BalBinTree::Node(Box::new(BalBinNode {
+                            left: BalBinTree::Leaf,
+                            value: y_val,
+                            right: r,
+                        }))
+                    }
+                }
+            }
+            BalBinTree::Leaf => { proof { assert(false); } BalBinTree::Leaf }
+        }
+    }
+
+    /// Left rotation preserving BST ordering and containment.
+    fn rotate_left<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+        requires
+            tree_is_bst::<T>(tree),
+            !(tree is Leaf),
+        ensures
+            tree_is_bst::<T>(result),
+            forall|x: T| #![auto] tree_contains(result, x) == tree_contains(tree, x),
+    {
+        let ghost tree_ghost = tree;
+        match tree {
+            BalBinTree::Node(x_box) => {
+                let BalBinNode { left: l, value: x_val, right: right_tree } = *x_box;
+                let ghost old_right = right_tree;
+                let ghost old_l = l;
+
+                match right_tree {
+                    BalBinTree::Node(y_box) => {
+                        let BalBinNode { left: rl, value: y_val, right: rr } = *y_box;
+                        let ghost old_rl = rl;
+                        let ghost old_rr = rr;
+
+                        let left_sub = BalBinTree::Node(Box::new(BalBinNode {
+                            left: l,
+                            value: x_val,
+                            right: rl,
+                        }));
+
+                        let r = BalBinTree::Node(Box::new(BalBinNode {
+                            left: left_sub,
+                            value: y_val,
+                            right: rr,
+                        }));
+
+                        proof {
+                            lemma_bst_deep::<T>(tree_ghost);
+
+                            assert forall|z: T| tree_contains(old_rl, z) implies
+                                T::le(x_val, z) && z != x_val
+                            by {
+                                assert(tree_contains(old_right, z));
+                            };
+
+                            assert(tree_contains(old_right, y_val));
+                            assert(x_val != y_val);
+
+                            assert(tree_is_bst::<T>(left_sub));
+
+                            assert forall|z: T| tree_contains(left_sub, z) implies
+                                T::le(z, y_val) && z != y_val
+                            by {
+                                if tree_contains(old_l, z) {
+                                    T::transitive(z, x_val, y_val);
+                                    if z == y_val {
+                                        T::antisymmetric(x_val, y_val);
+                                    }
+                                } else if z == x_val {
+                                    assert(x_val != y_val);
+                                } else if tree_contains(old_rl, z) {
+                                }
+                            };
+
+                            assert forall|z: T| tree_contains(r, z) ==
+                                tree_contains(tree_ghost, z)
+                            by {
+                                assert(tree_contains(r, z) ==
+                                    (y_val == z
+                                    || tree_contains(left_sub, z)
+                                    || tree_contains(old_rr, z)));
+                                assert(tree_contains(left_sub, z) ==
+                                    (x_val == z
+                                    || tree_contains(old_l, z)
+                                    || tree_contains(old_rl, z)));
+                                assert(tree_contains(tree_ghost, z) ==
+                                    (x_val == z
+                                    || tree_contains(old_l, z)
+                                    || tree_contains(old_right, z)));
+                                assert(tree_contains(old_right, z) ==
+                                    (y_val == z
+                                    || tree_contains(old_rl, z)
+                                    || tree_contains(old_rr, z)));
+                            };
+                        }
+                        r
+                    }
+                    BalBinTree::Leaf => {
+                        BalBinTree::Node(Box::new(BalBinNode {
+                            left: l,
+                            value: x_val,
+                            right: BalBinTree::Leaf,
+                        }))
+                    }
+                }
+            }
+            BalBinTree::Leaf => { proof { assert(false); } BalBinTree::Leaf }
+        }
     }
 
     fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (result: BalBinTree<T>)
