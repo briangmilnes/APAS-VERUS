@@ -49,8 +49,8 @@ pub mod TSPApproxStEph {
     /// Performs DFS traversal that visits each edge twice (once in each direction).
     /// Returns a sequence of vertices visited.
     ///
-    /// APAS: Work O(n), Span O(n)
-    /// claude-4-sonet: Work O(n), Span O(n) [DFS is inherently sequential]
+    /// - APAS: Work O(n), Span O(n)
+    /// - Claude-Opus-4.6: Work O(n), Span O(n) — DFS is inherently sequential.
     ///
     /// Arguments:
     /// - graph: Undirected graph (should be a tree)
@@ -72,6 +72,9 @@ pub mod TSPApproxStEph {
         tour
     }
 
+    /// - APAS: N/A — internal helper for euler_tour.
+    /// - Claude-Opus-4.6: Work O(n * m_tree), Span O(n * m_tree) — for each vertex,
+    ///   scans neighbors (O(m)) and tree_edges (O(m_tree)) to find matching edges.
     fn euler_tour_dfs<V: StT + Hash + Ord>(
         graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
         current: &V,
@@ -126,8 +129,8 @@ pub mod TSPApproxStEph {
     /// Removes duplicate vertex visits from Euler tour using triangle inequality.
     /// Result is a Hamiltonian cycle (visits each vertex exactly once).
     ///
-    /// APAS: Work O(n), Span O(n)
-    /// claude-4-sonet: Work O(n), Span O(n)
+    /// - APAS: Work O(n), Span O(n)
+    /// - Claude-Opus-4.6: Work O(n), Span O(n) — agrees with APAS.
     ///
     /// Arguments:
     /// - euler_tour: Euler tour with possible duplicate visits
@@ -161,8 +164,8 @@ pub mod TSPApproxStEph {
     ///
     /// Sums the weights of edges in the tour.
     ///
-    /// APAS: Work O(n), Span O(n)
-    /// claude-4-sonet: Work O(n), Span O(n)
+    /// - APAS: Work O(n), Span O(n)
+    /// - Claude-Opus-4.6: Work O(n), Span O(n) — agrees with APAS.
     pub fn tour_weight<V: StT + Hash + Ord>(
         graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
         tour: &[V],
@@ -182,6 +185,8 @@ pub mod TSPApproxStEph {
         total
     }
 
+    /// - APAS: N/A — internal helper, no prose counterpart.
+    /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges.
     fn get_neighbors<V: StT + Hash + Ord>(graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>, v: &V) -> SetStEph<V> {
         let mut neighbors = SetLit![];
         for edge in graph.labeled_edges().iter() {
@@ -195,6 +200,8 @@ pub mod TSPApproxStEph {
         neighbors
     }
 
+    /// - APAS: N/A — internal helper, no prose counterpart.
+    /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges.
     fn get_edge_weight<V: StT + Hash + Ord>(
         graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
         u: &V,
@@ -217,8 +224,8 @@ pub mod TSPApproxStEph {
     /// 3. Apply shortcuts using triangle inequality
     /// 4. Result has weight ≤ 2 × w(T)
     ///
-    /// APAS: Work O(n+m), Span O(n+m)
-    /// claude-4-sonet: Work O(n+m), Span O(n+m)
+    /// - APAS: Work O(n+m), Span O(n+m)
+    /// - Claude-Opus-4.6: Work O(n+m), Span O(n+m) — agrees with APAS.
     ///
     /// Arguments:
     /// - graph: Complete weighted undirected graph (metric: satisfies triangle inequality)

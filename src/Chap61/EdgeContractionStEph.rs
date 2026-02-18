@@ -37,8 +37,8 @@ pub mod EdgeContractionStEph {
     /// Each edge in the matching forms a block of two vertices.
     /// Unmatched vertices form singleton blocks.
     ///
-    /// APAS: Work Θ(|V| + |E|), Span Θ(|V| + |E|)
-    /// Claude: Work Θ(|V| + |E|), Span Θ(|V| + |E|), Parallelism Θ(1) - sequential
+    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — agrees with APAS
     ///
     /// Arguments:
     /// - graph: The undirected graph
@@ -102,7 +102,8 @@ pub mod EdgeContractionStEph {
     ///
     /// Computes a greedy matching and contracts it.
     ///
-    /// Work Θ(|V| + |E|), Span Θ(|V| + |E|), Parallelism Θ(1)
+    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — agrees with APAS
     ///
     /// Arguments:
     /// - graph: The undirected graph

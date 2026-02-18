@@ -23,6 +23,8 @@ pub mod BFSMtEph {
     /// Performs parallel BFS from source vertex s on adjacency list graph G.
     /// Graph is represented as sequence of sequences (adjacency list).
     /// Returns array where result[v] = distance if reachable, UNREACHABLE otherwise.
+    /// - APAS: Work O(|V| + |E|), Span O(d·lg n) where d is diameter
+    /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — sequential within layers; no thread::spawn, so Span == Work despite Mt module name.
     pub fn bfs(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>, source: N) -> ArraySeqMtEphS<N> {
         let n = graph.length();
         if source >= n {

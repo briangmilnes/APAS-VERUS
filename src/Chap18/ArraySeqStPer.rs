@@ -994,7 +994,12 @@ pub mod ArraySeqStPer {
     //		11. derive impls in verus!
 
     impl<T: Clone> Clone for ArraySeqStPerS<T> {
-        fn clone(&self) -> Self {
+        fn clone(&self) -> (res: Self)
+            ensures
+                res.seq@.len() == self.seq@.len(),
+                forall|i: int| #![trigger res.seq@[i]]
+                    0 <= i < self.seq@.len() ==> cloned::<T>(self.seq@[i], res.seq@[i]),
+        {
             ArraySeqStPerS { seq: self.seq.clone() }
         }
     }

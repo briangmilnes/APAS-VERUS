@@ -64,18 +64,23 @@ pub mod TableStPer {
         fn find(&self, key: &K)                     -> Option<V>;
 
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
+        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn delete(&self, key: &K)                   -> Self;
 
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
+        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> Self;
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
+        /// claude-4-sonet: Work Θ(m + n), Span Θ(m + n), Parallelism Θ(1)
         fn restrict(&self, keys: &ArraySetStEph<K>) -> Self;
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
+        /// claude-4-sonet: Work Θ(m + n), Span Θ(m + n), Parallelism Θ(1)
         fn subtract(&self, keys: &ArraySetStEph<K>) -> Self;
 
         /// APAS: Work Θ(|a|), Span Θ(lg |a|)
+        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn collect(&self)                           -> ArraySeqStPerS<Pair<K, V>>;
     }
 

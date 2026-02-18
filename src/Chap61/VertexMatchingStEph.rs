@@ -30,8 +30,8 @@ pub mod VertexMatchingStEph {
     /// Iterates over edges sequentially, adding each edge to the matching
     /// if neither endpoint is already matched.
     ///
-    /// APAS: Work Θ(|E|), Span Θ(|E|)
-    /// Claude: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1) - inherently sequential
+    /// - APAS: Work Θ(|E|), Span Θ(|E|)
+    /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — agrees with APAS
     ///
     /// Arguments:
     /// - graph: The undirected graph
@@ -64,8 +64,8 @@ pub mod VertexMatchingStEph {
     /// - The coin is heads (probability 1/2)
     /// - All adjacent edges are tails
     ///
-    /// APAS: Work Θ(|E| × avg_degree), Span Θ(|E| × avg_degree)
-    /// Claude: Work Θ(|E| × avg_degree), Span Θ(|E| × avg_degree), Parallelism Θ(1) - sequential baseline
+    /// - APAS: (no cost stated — sequential baseline of Algorithm 61.4)
+    /// - Claude-Opus-4.6: Work Θ(|E|²), Span Θ(|E|²) — for each edge, scans all edges for adjacency check
     ///
     /// Arguments:
     /// - graph: The undirected graph

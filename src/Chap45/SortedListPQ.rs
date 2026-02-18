@@ -59,22 +59,24 @@ pub mod SortedListPQ {
     }
 
     impl<T: StT + Ord> SortedListPQTrait<T> for SortedListPQ<T> {
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn empty() -> Self {
             SortedListPQ {
                 elements: ArraySeqStPerS::empty(),
             }
         }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn singleton(element: T) -> Self {
             SortedListPQ {
                 elements: ArraySeqStPerS::singleton(element),
             }
         }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
-        /// Minimum is always at the front of sorted list
+        /// - APAS: (no cost stated — implied Θ(1) from sorted-list structure)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — head of sorted list.
         fn find_min(&self) -> Option<&T> {
             if self.elements.length() == 0 {
                 None
@@ -83,8 +85,8 @@ pub mod SortedListPQ {
             }
         }
 
-        /// Claude Work: Θ(n), Span: Θ(n)
-        /// Find correct position and insert to maintain sorted order
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — agrees with APAS.
         fn insert(&self, element: T) -> Self {
             // Find insertion position using binary search approach
             let mut insert_pos = 0;
@@ -120,8 +122,8 @@ pub mod SortedListPQ {
             SortedListPQ { elements: new_elements }
         }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
-        /// Remove first element (minimum) from sorted list
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — rebuilds array without first element; O(n) copy.
         fn delete_min(&self) -> (Self, Option<T>) {
             if self.elements.length() == 0 {
                 return (self.clone(), None);
@@ -142,8 +144,8 @@ pub mod SortedListPQ {
             (new_pq, Some(min_element))
         }
 
-        /// Claude Work: Θ(m + n), Span: Θ(m + n)
-        /// Merge two sorted lists maintaining sorted order
+        /// - APAS: Work Θ(m + n), Span Θ(m + n)
+        /// - Claude-Opus-4.6: Work Θ(m + n), Span Θ(m + n) — agrees with APAS.
         fn meld(&self, other: &Self) -> Self {
             let mut result = ArraySeqStPerS::empty();
             let mut i = 0;
@@ -184,8 +186,8 @@ pub mod SortedListPQ {
             SortedListPQ { elements: result }
         }
 
-        /// Claude Work: Θ(n log n), Span: Θ(n log n)
-        /// Create priority queue from sequence by insertion sort
+        /// - APAS: Work Θ(n log n), Span Θ(n log n)
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — repeated O(n) insert, not O(n log n) sort.
         fn from_seq(seq: &ArraySeqStPerS<T>) -> Self {
             let mut result = Self::empty();
             for i in 0..seq.length() {
@@ -195,13 +197,16 @@ pub mod SortedListPQ {
             result
         }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: N/A — utility function not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn size(&self) -> N { self.elements.length() }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: N/A — utility function not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn is_empty(&self) -> bool { self.elements.length() == 0 }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: N/A — utility function not in prose.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone is O(n).
         fn to_seq(&self) -> ArraySeqStPerS<T> { self.elements.clone() }
 
         fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self {

@@ -63,22 +63,24 @@ pub mod BalancedTreePQ {
     }
 
     impl<T: StT + Ord> BalancedTreePQTrait<T> for BalancedTreePQ<T> {
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn empty() -> Self {
             BalancedTreePQ {
                 elements: AVLTreeSeqStPerS::empty(),
             }
         }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn singleton(element: T) -> Self {
             BalancedTreePQ {
                 elements: AVLTreeSeqStPerS::singleton(element),
             }
         }
 
-        /// Claude Work: Θ(log n), Span: Θ(log n)
-        /// Find minimum element (leftmost in balanced tree)
+        /// - APAS: (no cost stated — implied Θ(log n) for balanced tree find-leftmost)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — indexed access to nth(0), not tree traversal.
         fn find_min(&self) -> Option<&T> {
             if self.elements.length() == 0 {
                 None
@@ -88,8 +90,8 @@ pub mod BalancedTreePQ {
             }
         }
 
-        /// Claude Work: Θ(log n), Span: Θ(log n)
-        /// Insert element maintaining balanced tree structure
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — converts to Vec, linear scan, rebuilds from Vec.
         fn insert(&self, element: T) -> Self {
             // Convert to vector, insert in sorted position, rebuild tree
             let mut values = self.elements.values_in_order();
@@ -111,8 +113,8 @@ pub mod BalancedTreePQ {
             }
         }
 
-        /// Claude Work: Θ(log n), Span: Θ(log n)
-        /// Remove minimum element (first element in sorted sequence)
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — converts to Vec, removes index 0, rebuilds from Vec.
         fn delete_min(&self) -> (Self, Option<T>) {
             if self.elements.length() == 0 {
                 return (self.clone(), None);
@@ -131,8 +133,8 @@ pub mod BalancedTreePQ {
             (new_pq, Some(min_element))
         }
 
-        /// Claude Work: Θ(m log(1 + n/m)), Span: Θ(log n + log m)
-        /// Meld two balanced trees by merging sorted sequences
+        /// - APAS: Work Θ(m log(1 + n/m)), Span Θ(log n + log m)
+        /// - Claude-Opus-4.6: Work Θ(m + n), Span Θ(m + n) — flattens both to Vec, merges, rebuilds.
         fn meld(&self, other: &Self) -> Self {
             // Get sorted values from both trees
             let values1 = self.elements.values_in_order();
@@ -168,8 +170,8 @@ pub mod BalancedTreePQ {
             }
         }
 
-        /// Claude Work: Θ(n log n), Span: Θ(log² n)
-        /// Create priority queue from sequence by inserting elements one by one
+        /// - APAS: Work Θ(n log n), Span Θ(log² n)
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — repeated O(n) insert (Vec conversion each time).
         fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
             let mut result = Self::empty();
             for i in 0..seq.length() {
@@ -179,13 +181,16 @@ pub mod BalancedTreePQ {
             result
         }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: N/A — utility function not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn size(&self) -> N { self.elements.length() }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: N/A — utility function not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn is_empty(&self) -> bool { self.elements.length() == 0 }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: N/A — utility function not in prose.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone is O(n).
         fn to_seq(&self) -> AVLTreeSeqStPerS<T> { self.elements.clone() }
 
         fn find_max(&self) -> Option<&T> {

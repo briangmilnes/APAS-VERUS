@@ -38,8 +38,10 @@ pub mod SpanTreeStEph {
     /// 5. Recursively compute spanning tree of quotient
     /// 6. Map quotient tree edges back to original edges
     ///
-    /// APAS: Work O((n+m) lg n), Span O((n+m) lg n)
-    /// claude-4-sonet: Work O((n+m) lg n), Span O((n+m) lg n)
+    /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n)
+    /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS.
+    ///   Expand closure scans original edges per quotient edge (O(E_q * E) per round),
+    ///   but total across O(lg n) rounds stays within APAS bound since edges shrink.
     ///
     /// Arguments:
     /// - graph: The undirected graph
@@ -103,6 +105,9 @@ pub mod SpanTreeStEph {
     /// 1. All vertices are included
     /// 2. Exactly |V| - 1 edges
     /// 3. All edges are from original graph
+    ///
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work O(|V| + |E_tree|), Span O(|V| + |E_tree|) — linear scan of tree edges.
     ///
     /// Returns true if valid spanning tree
     pub fn verify_spanning_tree<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>, tree_edges: &SetStEph<Edge<V>>) -> B {

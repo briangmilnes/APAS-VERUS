@@ -1,0 +1,84 @@
+# Anti-Pattern: "Closures Can't Capture Data with Specs"
+
+## The Wrong Assumption
+
+When implementing parallel (Mt) algorithms in Verus, do NOT assume:
+
+- "Closures can't capture `ArraySeqMtEphS<T>` with specs"
+- "Arc<F> prevents verification because Verus can't deref it"
+- "`Send + 'static` closures can't reference ghost variables like `spec_f`"
+- "The only way to verify this is to make it sequential"
+
+These are FALSE. The pattern below solves all of them.
+
+## The Pattern: Factor Verification Away from Concurrency
+
+### Problem
+
+`join` closures need `Send + 'static`. The verified algorithm needs `f: &F` (for direct Fn trait spec access). `Arc<F>` is opaque to Verus — you can't deref it with spec guarantees.
+
+### Solution
+
+1. **Factor the verified algorithm** into a helper that takes `f: &F`:
+
+   ```rust
+   fn reduce_contract_verified<T, F>(a: &ArraySeqMtEphS<T>, f: &F, ...) -> (result: T)
+       requires f.requires(...), ...
+       ensures result == ...
+       decreases a.spec_len(),
+   { /* Full proof here — identical to StEph version */ }
+   ```
+
+2. **The trait impl delegates** through Arc deref:
+
+   ```rust
+   fn reduce_contract_parallel(a, f: Arc<F>, ...) -> (result: T) {
+       reduce_contract_verified(a, &*f, Ghost(spec_f), id)
+   }
+   ```
+
+3. **Small external_body helpers** for Arc-specific operations:
+
+   ```rust
+   #[verifier::external_body]
+   pub fn call_f<T, F>(f: &Arc<F>, a: &T, b: &T) -> (result: T)
+       requires f.requires((a, b)),
+       ensures f.ensures((a, b), result),
+   { (**f)(a, b) }
+   ```
+
+4. **Parallel primitives** as external_body with strong specs:
+
+   ```rust
+   #[verifier::external_body]
+   pub fn contract_parallel<T, F>(a, f: &Arc<F>, Ghost(spec_f), half) -> (b: ArraySeqMtEphS<T>)
+       ensures b.spec_index(j) == spec_f(a.spec_index(2*j), a.spec_index(2*j+1)),
+   { /* Uses join internally */ }
+   ```
+
+### Trust Boundaries
+
+| Helper | Trust | Obviousness |
+|---|---|---|
+| `call_f` | Arc deref preserves function | Trivially correct |
+| `contract_parallel` | Parallel loop computes pairs | Auditable in 10 lines |
+
+The algorithm proof (base cases, recursion, contraction lemma, expansion) is **fully verified**.
+
+## Key Insights
+
+- `&*f` converts `Arc<F>` → `&F` at the call site — Verus handles this
+- `f.requires(...)` auto-derefs through `&Arc<F>` in Verus specs
+- Ghost variables like `spec_f` are accessible in external_body function specs via `Ghost(spec_f)` parameters
+- The recursive helper takes `f: &Arc<F>` (reference, not owned), so no Arc cloning needed for recursion
+- Parallel helpers clone the Arc internally (outside verification) for fork-join closures
+
+## When You Think Mt Is Impossible
+
+Before concluding that an Mt algorithm can't be verified:
+
+1. Write the StEph (sequential) verified version first
+2. Factor the proof into a helper taking `&F` or `&Arc<F>`
+3. Add small external_body helpers for Arc operations
+4. Replace the sequential contraction/expansion with parallel helpers
+5. The proof transfers with minimal changes

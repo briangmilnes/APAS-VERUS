@@ -16,3 +16,4 @@ When working on implementations or proofs:
 - If verification fails, analyze the error and adjust invariants, preconditions, or proof hints
 - Prefer verified code over unverified code, even if it requires restructuring
 - **Never sequentialize parallel files**: Mt (multi-threaded) implementations must remain parallel. Do not replace threaded code with sequential loops just to satisfy the verifier. If Verus cannot verify the threading, leave the `external_body` rather than destroying the parallelism.
+- **Never propose serializing Mt algorithms** without first exhausting all options for verified parallelism (e.g., HF Scheduler `join`, closure specs) AND getting explicit user approval. The default answer to "should we make this Mt code sequential?" is **no**.

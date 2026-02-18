@@ -34,6 +34,8 @@ pub mod AdjMatrixGraphMtEph {
     }
 
     impl AdjMatrixGraphMtEphTrait for AdjMatrixGraphMtEph {
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential creation of n×n false matrix.
         fn new(n: N) -> Self {
             let false_row = ArraySeqMtEphS::from_vec(vec![false; n]);
             let mut matrix_rows = Vec::with_capacity(n);
@@ -46,8 +48,12 @@ pub mod AdjMatrixGraphMtEph {
             }
         }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — stored field.
         fn num_vertices(&self) -> N { self.n }
 
+        /// - APAS: Work Θ(n²), Span Θ(1) [Cost Spec 52.6]
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential double loop; span not parallel despite Mt type.
         fn num_edges(&self) -> N {
             let mut count = 0;
             for i in 0..self.n {
@@ -61,6 +67,8 @@ pub mod AdjMatrixGraphMtEph {
             count
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.6]
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn has_edge(&self, u: N, v: N) -> B {
             if u >= self.n || v >= self.n {
                 return false;
@@ -68,6 +76,8 @@ pub mod AdjMatrixGraphMtEph {
             *self.matrix.nth(u).nth(v)
         }
 
+        /// - APAS: Work Θ(n), Span Θ(1) [Cost Spec 52.6]
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential row scan; span not parallel despite Mt type.
         fn out_neighbors(&self, u: N) -> ArraySeqMtEphS<N> {
             if u >= self.n {
                 return ArraySeqMtEphS::empty();
@@ -82,6 +92,8 @@ pub mod AdjMatrixGraphMtEph {
             ArraySeqMtEphS::from_vec(neighbors)
         }
 
+        /// - APAS: Work Θ(n), Span Θ(lg n) [Cost Spec 52.6]
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential row count; span not logarithmic despite Mt type.
         fn out_degree(&self, u: N) -> N {
             if u >= self.n {
                 return 0;
@@ -96,6 +108,8 @@ pub mod AdjMatrixGraphMtEph {
             count
         }
 
+        /// - APAS: Work Θ(n), Span Θ(1) [Cost Spec 52.6]
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — ephemeral in-place array set; better than APAS persistent bound.
         fn set_edge(&mut self, u: N, v: N, exists: B) {
             if u >= self.n || v >= self.n {
                 return;
@@ -105,6 +119,8 @@ pub mod AdjMatrixGraphMtEph {
             let _ = self.matrix.set(u, row);
         }
 
+        /// - APAS: Work Θ(n²), Span Θ(1) [Exercise 52.6]
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential double loop; span not parallel despite Mt type.
         fn complement(&self) -> Self {
             let mut new_matrix_vec = Vec::with_capacity(self.n);
             for i in 0..self.n {

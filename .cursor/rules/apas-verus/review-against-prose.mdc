@@ -157,7 +157,13 @@ Propose new tests for uncovered exec functions. Prioritize:
 
 ## Phase 6: Proof-Time Test (PTT) Review
 
-Check that every chapter module has corresponding proof-time tests in
+PTTs exist to exercise Verus-verified iteration and loop forms. If a chapter
+has **no iterators and no verified loops** (i.e., no types with `iter()`,
+`IntoIterator`, `GhostIterator`, or `ForLoopGhostIterator`, and no `while`/
+`for`/`loop` inside `verus!`), then **no PTTs are needed** — note this in
+the review and skip the rest of Phase 6.
+
+Otherwise, check that every chapter module has corresponding proof-time tests in
 `rust_verify_test/tests/ChapNN/`.
 
 ### 6a. Unified test inventory table

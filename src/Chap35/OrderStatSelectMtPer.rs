@@ -13,7 +13,8 @@ pub mod OrderStatSelectMtPer {
     pub type T<T> = ArraySeqMtPerS<T>;
 
     pub trait OrderStatSelectMtPerTrait<T: StTInMtT + Ord + 'static> {
-        /// claude-4-sonet: Work Θ(n) expected, Θ(n²) worst case; Span Θ(log² n) expected (with parallel filter), Parallelism Θ(n/log² n) expected
+        /// - APAS: Work O(n) expected, Span O(lg² n) expected
+        /// - Claude-Opus-4.6: Work O(n) expected, Span O(lg n) expected — spawns n threads per level with mutex-based partition; O(n) work per level, O(lg n) span per level due to lock contention
         fn select(&self, k: N) -> Option<T>;
     }
 

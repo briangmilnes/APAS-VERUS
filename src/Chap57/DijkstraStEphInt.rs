@@ -26,7 +26,8 @@ pub mod DijkstraStEphInt {
 
     pub trait DijkstraStEphIntTrait {
         /// Dijkstra's single source shortest path algorithm
-        /// APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
+        /// - APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
+        /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — agrees with APAS.
         fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphInt;
     }
 
@@ -39,9 +40,13 @@ pub mod DijkstraStEphInt {
     }
 
     /// Module-level function to create a new PQEntry
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — trivial constructor.
     fn pq_entry_new(dist: i64, vertex: usize) -> PQEntry { PQEntry { dist, vertex } }
 
     impl Ord for PQEntry {
+        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — integer comparison.
         fn cmp(&self, other: &Self) -> Ordering {
             // Min-heap: smaller distance has higher priority
             self.dist.cmp(&other.dist)
@@ -49,6 +54,8 @@ pub mod DijkstraStEphInt {
     }
 
     impl PartialOrd for PQEntry {
+        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to cmp.
         fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
     }
 
@@ -56,20 +63,14 @@ pub mod DijkstraStEphInt {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "({}, {})", self.dist, self.vertex) }
     }
 
-    /// Runs Dijkstra's algorithm on a weighted directed graph
-    /// Computes single-source shortest paths for non-negative edge weights
+    /// Runs Dijkstra's algorithm on a weighted directed graph.
+    /// Computes single-source shortest paths for non-negative edge weights.
     ///
     /// **Algorithm 57.2**: Priority-First Search using Priority Queue
     ///
-    /// Work: O(m log n), Span: O(m log n)
-    /// where n = number of vertices, m = number of edges
-    ///
-    /// # Arguments
-    /// * `graph` - Weighted directed graph with non-negative integer weights (usize vertices)
-    /// * `source` - Source vertex (0-indexed)
-    ///
-    /// # Returns
-    /// SSSPResultStEphInt with distances and predecessors
+    /// - APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
+    /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — agrees with APAS. Sequential
+    ///   implementation with BinaryHeapPQ insert/deleteMin at O(log m) each, m edge relaxations.
     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphInt {
         let n = graph.vertices().size();
 

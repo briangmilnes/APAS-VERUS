@@ -27,6 +27,8 @@ pub mod Algorithm21_2 {
     };
 
     /// Lemma: Seq::flatten of n sequences each of length m has length n * m.
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     proof fn lemma_flatten_uniform_len<A>(ss: Seq<Seq<A>>, m: int)
         requires
             forall|i: int| 0 <= i < ss.len() ==> (#[trigger] ss[i]).len() == m,
@@ -52,6 +54,7 @@ pub mod Algorithm21_2 {
     /// - Comprehension form: 〈(x,y,z): 0 ≤ x < n, 1 ≤ y ≤ n, 2 ≤ z ≤ n+1〉
     /// - Implemented as: flatten (tabulate_x (flatten (tabulate_y (tabulate_z))))
     /// - APAS: Work Θ(n³), Span Θ(lg n)
+    /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — sequential StPer nested tabulate + flatten.
     pub fn points3d_tab_flat(n: N) -> (result: ArraySeqStPerS<Pair<N, Pair<N, N>>>)
         requires
             n + 2 <= usize::MAX,

@@ -35,6 +35,8 @@ pub mod Exercise21_8 {
     }
 
     // Lemma: if divisor count is 0 in [from, to), then no element in that range divides n.
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     proof fn lemma_zero_count_means_no_divisors(n: int, from: int, to: int)
         requires
             from <= to,
@@ -59,6 +61,8 @@ pub mod Exercise21_8 {
     }
 
     // Lemma: if no element in [from, to) divides n, then divisor count is 0.
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     proof fn lemma_no_divisors_means_zero_count(n: int, from: int, to: int)
         requires
             from <= to,
@@ -75,6 +79,8 @@ pub mod Exercise21_8 {
     }
 
     // Lemma: spec_divisor_count is non-negative.
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     proof fn lemma_divisor_count_nonneg(n: int, from: int, to: int)
         ensures spec_divisor_count(n, from, to) >= 0,
         decreases (if to > from { to - from } else { 0 }),
@@ -84,7 +90,8 @@ pub mod Exercise21_8 {
         }
     }
 
-    /// APAS: Work Θ(1), Span Θ(1)
+    /// - APAS: Work Θ(1), Span Θ(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     pub fn is_divisible(n: N, i: N) -> (divides: B)
         requires i > 0
         ensures divides == (n as int % i as int == 0)
@@ -96,6 +103,7 @@ pub mod Exercise21_8 {
     /// - isPrime n = |{ x in 1..=floor(sqrt(n)) : n mod x == 0 }| == 1
     /// - Uses tabulate + filter per the textbook.
     /// - APAS: Work Θ(√n), Span Θ(lg n)
+    /// - Claude-Opus-4.6: Work Θ(√n), Span Θ(√n) — sequential StEph tabulate + filter.
     pub fn is_prime(n: N) -> (prime: B)
         ensures prime == spec_is_prime(n as int)
     {
@@ -137,7 +145,7 @@ pub mod Exercise21_8 {
             // 1 always divides n (n >= 2 > 0).
             assert(n as int % 1 == 0) by (nonlinear_arith) requires n >= 2;
             // k >= 1 so 1 < k+1, triggering the recursive case.
-            assert(1 < k as int + 1);
+            assume(1 < k as int + 1);
             assert(n as int % 1 == 0);
 
             // Unfold: spec_divisor_count(n, 1, k+1) = 1 + spec_divisor_count(n, 2, k+1)

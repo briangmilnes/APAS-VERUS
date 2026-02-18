@@ -35,8 +35,8 @@ pub mod MatrixChainStPer {
         /// Create from dimension pairs (rows, cols)
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> Self;
 
-        /// Compute optimal matrix chain multiplication cost using dynamic programming
-        /// claude-4-sonet: Work Θ(n³), Span Θ(n²), Parallelism Θ(1)
+        /// APAS: Work Θ(n³), Span Θ(n²)
+        /// Claude-Opus-4.6: Work O(n³), Span O(n²)
         fn optimal_cost(&self)                                -> usize;
 
         /// Get the matrix dimensions
@@ -59,9 +59,9 @@ pub mod MatrixChainStPer {
             left_rows * split_cols * right_cols
         }
 
-        /// Internal recursive matrix chain with memoization
-        /// Claude Work: O(n³) - O(n²) subproblems, each O(n) work
-        /// Claude Span: O(n²) - maximum recursion depth O(n), each level O(n) work
+        /// APAS: Work Θ(n³), Span Θ(n²)
+        /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
+        /// Claude-Opus-4.6 Span: O(n²) - recursion depth O(n), each level O(n) work
         fn matrix_chain_rec(&mut self, i: usize, j: usize) -> usize {
             // Check memo first
             if let Some(&result) = self.memo.get(&(i, j)) {

@@ -28,8 +28,8 @@ pub mod SubsetSumMtEph {
         /// Create from multiset
         fn from_multiset(multiset: ArraySeqMtEphS<T>) -> Self;
 
-        /// claude-4-sonet: Work Θ(k×|S|), Span Θ(|S|), Parallelism Θ(k)
-        /// Solve subset sum problem with parallel DP where k=target, |S|=multiset size
+        /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
+        /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — agrees with APAS; thread::spawn on both branches
         fn subset_sum(&mut self, target: i32)         -> bool
         where
             T: Into<i32> + Copy + Send + Sync + 'static;
@@ -50,9 +50,8 @@ pub mod SubsetSumMtEph {
         fn memo_size(&self)                           -> usize;
     }
 
-    /// Internal parallel recursive subset sum with shared memoization
-    /// Claude Work: O(k*|S|) - each subproblem computed once across all threads
-    /// Claude Span: O(|S|) - maximum recursion depth, parallelism O(k)
+    /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
+    /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — parallel fork on include/exclude branches
     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
         table: &SubsetSumMtEphS<T>,
         i: usize,

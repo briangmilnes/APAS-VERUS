@@ -24,7 +24,8 @@ pub mod Algorithm21_6 {
     /// Algorithm 21.6 (Prime Sieve) using ArraySeqPer - simplified version.
     /// Construct primes using a sieve: generate composites, then filter candidates.
     ///
-    /// APAS: Work Θ(n lg n), Span Θ(lg n)
+    /// - APAS: Work Θ(n lg n), Span Θ(lg n)
+    /// - Claude-Opus-4.6: Work Θ(n² lg n), Span Θ(n² lg n) — filter uses O(m) linear scan per candidate instead of ninject sieve.
     pub fn prime_sieve(n: N) -> (result: ArraySeqStPerS<N>)
         ensures
             n <= 2 ==> result.spec_len() == 0,

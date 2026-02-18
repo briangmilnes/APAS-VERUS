@@ -28,6 +28,8 @@ pub mod Example56_1 {
     }
 
     /// Example demonstrating path weight computation with integer weights.
+    /// - APAS: N/A — demonstration code.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
     pub fn example_path_weight_int() {
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![0, 5, 10, i64::MAX]),
@@ -44,6 +46,8 @@ pub mod Example56_1 {
     }
 
     /// Example demonstrating path weight computation with floating-point weights.
+    /// - APAS: N/A — demonstration code.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
     pub fn example_path_weight_float() {
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![
@@ -80,6 +84,8 @@ pub mod Example56_1 {
     }
 
     /// Example with negative edge weights.
+    /// - APAS: N/A — demonstration code.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
     pub fn example_negative_weights() {
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![0, 10, i64::MAX]),

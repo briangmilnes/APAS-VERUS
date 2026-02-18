@@ -46,6 +46,8 @@ pub mod EdgeSetGraphMtPer {
     }
 
     impl<V: StTInMtT + Ord + 'static> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — creates two empty AVL sets.
         fn empty() -> Self {
             EdgeSetGraphMtPer {
                 vertices: AVLTreeSetMtPer::empty(),
@@ -53,22 +55,34 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps existing sets.
         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> Self {
             EdgeSetGraphMtPer { vertices: v, edges: e }
         }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to AVL tree size.
         fn num_vertices(&self) -> N { self.vertices.size() }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to AVL tree size.
         fn num_edges(&self) -> N { self.edges.size() }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — returns reference.
         fn vertices(&self) -> &AVLTreeSetMtPer<V> { &self.vertices }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — returns reference.
         fn edges(&self) -> &AVLTreeSetMtPer<Pair<V, V>> { &self.edges }
 
-        // Work: Θ(log |E|), Span: Θ(log |E|)
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Θ(lg m), Span Θ(lg m) — agrees with APAS.
         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
 
-        // PARALLEL: Work: Θ(|E|), Span: Θ(log |E|) - TRUE parallel filter
+        /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — filter may be parallel but insert loop is sequential.
         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
             let u_clone = u.clone();
             let filtered = self.edges.filter(move |edge| edge.0 == u_clone);
@@ -81,10 +95,12 @@ pub mod EdgeSetGraphMtPer {
             neighbors
         }
 
-        // Work: Θ(|E|), Span: Θ(log |E|)
+        /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to out_neighbors.
         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
 
-        // Work: Θ(log |V|), Span: Θ(log |V|)
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn insert_vertex(&self, v: V) -> Self {
             EdgeSetGraphMtPer {
                 vertices: self.vertices.insert(v),
@@ -92,7 +108,8 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
-        // PARALLEL: Work: Θ(|E| log |E|), Span: Θ(log² |E|) - TRUE parallel filter
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1, isolated vertex]
+        /// - Claude-Opus-4.6: Work Θ(m), Span Θ(lg m) — parallel filter over edges; APAS assumes isolated.
         fn delete_vertex(&self, v: &V) -> Self {
             let v_clone = v.clone();
             let new_vertices = self.vertices.delete(&v_clone);
@@ -107,7 +124,8 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
-        // Work: Θ(log |V| + log |E|), Span: Θ(log |V| + log |E|)
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn insert_edge(&self, u: V, v: V) -> Self {
             let new_vertices = self.vertices.insert(u.clone()).insert(v.clone());
             let new_edges = self.edges.insert(Pair(u, v));
@@ -117,7 +135,8 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
-        // Work: Θ(log |E|), Span: Θ(log |E|)
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn delete_edge(&self, u: &V, v: &V) -> Self {
             EdgeSetGraphMtPer {
                 vertices: self.vertices.clone(),

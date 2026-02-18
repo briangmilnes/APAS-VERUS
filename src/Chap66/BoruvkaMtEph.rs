@@ -63,21 +63,13 @@ pub mod BoruvkaMtEph {
         }
     }
 
-    /// Parallel vertex bridges using divide-and-conquer reduce
+    /// Parallel vertex bridges using divide-and-conquer reduce.
     ///
     /// For each vertex, find the minimum weight edge incident on it.
-    /// Uses parallel reduce over edges.
+    /// Uses parallel reduce over edges via ParaPair!.
     ///
-    /// APAS: Work O(m), Span O(log m)
-    /// claude-4-sonet: Work O(m), Span O(log m) [parallel reduce with ParaPair!]
-    ///
-    /// Arguments:
-    /// - edges: Arc-wrapped vector of labeled edges
-    /// - start: Start index in edges
-    /// - end: End index in edges
-    ///
-    /// Returns:
-    /// - HashMap mapping vertex → (neighbor, weight, label) for minimum edge
+    /// - APAS: Work O(m), Span O(log m)
+    /// - Claude-Opus-4.6: Work O(m), Span O(log m) — agrees with APAS; parallel divide-and-conquer via ParaPair!.
     pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
         start: usize,
@@ -126,21 +118,13 @@ pub mod BoruvkaMtEph {
         merged
     }
 
-    /// Parallel bridge star partition
+    /// Parallel bridge star partition.
     ///
     /// Performs star contraction along vertex bridges using randomized coin flips.
-    /// Parallelizes coin flips and edge filtering.
+    /// Parallelizes edge filtering via ParaPair!, but coin flips are sequential for RNG consistency.
     ///
-    /// APAS: Work O(n + m), Span O(log n)
-    /// claude-4-sonet: Work O(n + m), Span O(log n) [parallel iteration with ParaPair!]
-    ///
-    /// Arguments:
-    /// - vertices_vec: Vector of vertices (for parallel iteration)
-    /// - bridges: Vertex bridges (from vertex_bridges_mt)
-    /// - rng: Random number generator for coin flips
-    ///
-    /// Returns:
-    /// - (remaining_vertices, partition_map) where partition_map: tail → (head, weight, label)
+    /// - APAS: Work O(n), Span O(log n)
+    /// - Claude-Opus-4.6: Work O(n), Span O(n) — coin flips are sequential O(n); filter is parallel O(log n); remaining vertices computed sequentially O(n). Bottleneck is sequential loops.
     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices_vec: Vec<V>,
         bridges: HashMap<V, (V, OrderedFloat<f64>, usize)>,
@@ -170,7 +154,10 @@ pub mod BoruvkaMtEph {
         (remaining, partition)
     }
 
-    /// Parallel filter: find edges from Tail→Head
+    /// Parallel filter: find edges from Tail→Head.
+    ///
+    /// - APAS: N/A — internal helper, not in prose.
+    /// - Claude-Opus-4.6: Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.
     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices: Arc<Vec<V>>,
         bridges: Arc<HashMap<V, (V, OrderedFloat<f64>, usize)>>,
@@ -219,22 +206,13 @@ pub mod BoruvkaMtEph {
         merged
     }
 
-    /// Parallel Borůvka's MST
+    /// Parallel Borůvka's MST.
     ///
     /// Computes the Minimum Spanning Tree using recursive bridge-based contraction.
-    /// Parallelizes vertex bridge computation and edge routing.
+    /// Parallelizes vertex bridge computation and edge routing via ParaPair!.
     ///
-    /// APAS: Work O(m log n), Span O(log² n)
-    /// claude-4-sonet: Work O(m log n), Span O(log² n) [O(log n) rounds × O(log n) span per round]
-    ///
-    /// Arguments:
-    /// - vertices_vec: Vector of vertices
-    /// - edges_vec: Vector of labeled edges
-    /// - mst_labels: Accumulated MST edge labels
-    /// - rng: Random number generator
-    ///
-    /// Returns:
-    /// - Set of edge labels in the MST
+    /// - APAS: Work O(m log n), Span O(log² n)
+    /// - Claude-Opus-4.6: Work O(m log n), Span O(n log n) — vertex_bridges_mt is O(log m) span, but bridge_star_partition_mt has O(n) span due to sequential coin flips and remaining-vertex computation. Over O(log n) rounds, span is O(n log n), not O(log² n).
     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices_vec: Vec<V>,
         edges_vec: Vec<LabeledEdge<V>>,
@@ -278,7 +256,10 @@ pub mod BoruvkaMtEph {
         boruvka_mst_mt(remaining_vec, new_edges, new_mst_labels, rng)
     }
 
-    /// Parallel edge re-routing: map edges to new endpoints and remove self-edges
+    /// Parallel edge re-routing: map edges to new endpoints and remove self-edges.
+    ///
+    /// - APAS: N/A — internal helper, not in prose.
+    /// - Claude-Opus-4.6: Work O(m), Span O(log m) — parallel divide-and-conquer via ParaPair!.
     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
         partition: Arc<HashMap<V, V>>,
@@ -319,18 +300,11 @@ pub mod BoruvkaMtEph {
         left_result
     }
 
-    /// Create Borůvka MST with a specific seed
+    /// Create Borůvka MST with a specific seed.
+    /// Wrapper that initializes RNG, converts sets to vecs, and delegates to `boruvka_mst_mt`.
     ///
-    ///
-    /// Arguments:
-    /// - vertices: Set of vertices
-    /// - edges: Set of labeled edges
-    /// - seed: Random seed for reproducibility
-    ///
-    /// Returns:
-    /// - Set of edge labels in the MST
-    ///   APAS: Work O(m log n), Span O(log² n)
-    ///   claude-4-sonet: Work O(m log n), Span O(log² n)
+    /// - APAS: Work O(m log n), Span O(log² n)
+    /// - Claude-Opus-4.6: Work O(m log n), Span O(n log n) — delegates to boruvka_mst_mt which has O(n) span per round.
     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
         vertices: &SetStEph<V>,
         edges: &SetStEph<LabeledEdge<V>>,
@@ -342,10 +316,10 @@ pub mod BoruvkaMtEph {
         boruvka_mst_mt(vertices_vec, edges_vec, SetLit![], &mut rng)
     }
 
-    /// Compute MST weight from edge labels
+    /// Compute MST weight from edge labels.
     ///
-    /// APAS: Work O(m), Span O(m)
-    /// claude-4-sonet: Work O(m), Span O(m)
+    /// - APAS: N/A — utility function, not in prose.
+    /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential scan of edges.
     pub fn mst_weight<V: StT + Hash>(
         edges: &SetStEph<LabeledEdge<V>>,
         mst_labels: &SetStEph<usize>,

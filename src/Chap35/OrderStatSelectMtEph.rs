@@ -12,9 +12,9 @@ pub mod OrderStatSelectMtEph {
     pub type T<T> = ArraySeqMtEphS<T>;
 
     pub trait OrderStatSelectMtEphTrait<T: StTInMtT + Ord> {
-        /// Algorithm 35.2: Contraction-Based Select with parallel filter operations
-        /// APAS: Work O(n) expected, Span O(lg² n) with high probability
-        /// claude-4-sonet: Work Θ(n) expected, Θ(n²) worst case; Span Θ(log² n) expected, Parallelism Θ(n/log² n) expected
+        /// - Algorithm 35.2: Contraction-Based Select with parallel filter operations.
+        /// - APAS: Work O(n) expected, Span O(lg² n) expected
+        /// - Claude-Opus-4.6: Work O(n) expected, Span O(lg² n) expected — uses filter_par for O(n) work parallel partition
         fn select(&self, k: N) -> Option<T>;
     }
 

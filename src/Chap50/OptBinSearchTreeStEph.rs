@@ -38,8 +38,8 @@ pub mod OptBinSearchTreeStEph {
         /// Create from key-probability pairs
         fn from_key_probs(key_probs: Vec<KeyProb<T>>)             -> Self;
 
-        /// claude-4-sonet: Work Θ(n³), Span Θ(n²), Parallelism Θ(1)
-        /// Compute optimal BST cost where n=number of keys
+        /// APAS: Work Θ(n³), Span Θ(n²)
+        /// Claude-Opus-4.6: Work O(n³), Span O(n²)
         fn optimal_cost(&mut self)                                -> Probability;
 
         /// Get the keys with probabilities
@@ -65,9 +65,9 @@ pub mod OptBinSearchTreeStEph {
     }
 
     impl<T: StT> OBSTStEphS<T> {
-        /// Internal recursive optimal BST with memoization
-        /// Claude Work: O(n³) - O(n²) subproblems, each O(n) work
-        /// Claude Span: O(n²) - maximum recursion depth O(n), each level O(n) work
+        /// APAS: Work Θ(n³), Span Θ(n²)
+        /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
+        /// Claude-Opus-4.6 Span: O(n²) - recursion depth O(n), each level O(n) work
         fn obst_rec(&mut self, i: usize, l: usize) -> Probability {
             // Check memo first
             if let Some(&result) = self.memo.get(&(i, l)) {

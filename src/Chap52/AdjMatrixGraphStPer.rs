@@ -35,7 +35,8 @@ pub mod AdjMatrixGraphStPer {
     }
 
     impl AdjMatrixGraphStPerTrait for AdjMatrixGraphStPer {
-        // Work: Θ(n²), Span: Θ(n²) - create n×n matrix of false
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential creation of n×n false matrix.
         fn new(n: N) -> Self {
             let false_row = ArraySeqStPerS::from_vec(vec![false; n]);
             let mut matrix_rows = Vec::with_capacity(n);
@@ -48,15 +49,19 @@ pub mod AdjMatrixGraphStPer {
             }
         }
 
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps existing matrix.
         fn from_matrix(matrix: ArraySeqStPerS<ArraySeqStPerS<bool>>) -> Self {
             let n = matrix.length();
             AdjMatrixGraphStPer { matrix, n }
         }
 
-        // Work: Θ(1), Span: Θ(1)
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — stored field.
         fn num_vertices(&self) -> N { self.n }
 
-        // Work: Θ(n²), Span: Θ(n²) - count all true entries
+        /// - APAS: Work Θ(n²), Span Θ(1) [Cost Spec 52.6, map over edges]
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential double loop; span not parallel.
         fn num_edges(&self) -> N {
             let mut count = 0;
             for i in 0..self.n {
@@ -70,7 +75,8 @@ pub mod AdjMatrixGraphStPer {
             count
         }
 
-        // Work: Θ(1), Span: Θ(1) - direct array access
+        /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.6]
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn has_edge(&self, u: N, v: N) -> B {
             if u >= self.n || v >= self.n {
                 return false;
@@ -78,7 +84,8 @@ pub mod AdjMatrixGraphStPer {
             *self.matrix.nth(u).nth(v)
         }
 
-        // Work: Θ(n), Span: Θ(n) - scan row for true entries
+        /// - APAS: Work Θ(n), Span Θ(1) [Cost Spec 52.6]
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential row scan; span not parallel.
         fn out_neighbors(&self, u: N) -> ArraySeqStPerS<N> {
             if u >= self.n {
                 return ArraySeqStPerS::empty();
@@ -93,7 +100,8 @@ pub mod AdjMatrixGraphStPer {
             ArraySeqStPerS::from_vec(neighbors)
         }
 
-        // Work: Θ(n), Span: Θ(n)
+        /// - APAS: Work Θ(n), Span Θ(lg n) [Cost Spec 52.6]
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential row count; span not logarithmic.
         fn out_degree(&self, u: N) -> N {
             if u >= self.n {
                 return 0;
@@ -108,7 +116,8 @@ pub mod AdjMatrixGraphStPer {
             count
         }
 
-        // Work: Θ(n), Span: Θ(n) - copy row and update
+        /// - APAS: Work Θ(n), Span Θ(1) [Cost Spec 52.6, insert/delete edge]
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential copy of row + outer seq; span not parallel.
         fn set_edge(&self, u: N, v: N, exists: B) -> Self {
             if u >= self.n || v >= self.n {
                 return self.clone();
@@ -138,7 +147,8 @@ pub mod AdjMatrixGraphStPer {
             }
         }
 
-        // Work: Θ(n²), Span: Θ(1) with parallel - Exercise 52.6
+        /// - APAS: Work Θ(n²), Span Θ(1) [Exercise 52.6]
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential double loop; span not parallel.
         fn complement(&self) -> Self {
             let mut new_matrix_vec = Vec::with_capacity(self.n);
             for i in 0..self.n {

@@ -24,6 +24,8 @@ pub mod Example56_3 {
 
     /// Example demonstrating a negative weight cycle.
     /// Graph: 0 -> 1 -> 2 -> 1 (cycle with negative total weight).
+    /// - APAS: N/A — demonstration code.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
     pub fn example_negative_cycle() {
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![0, 1, i64::MAX]),
@@ -55,6 +57,8 @@ pub mod Example56_3 {
     }
 
     /// Example showing that shortest paths are undefined in presence of negative cycles.
+    /// - APAS: N/A — demonstration code.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
     pub fn example_undefined_shortest_path() {
         let _weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![0, 1, i64::MAX, i64::MAX]),

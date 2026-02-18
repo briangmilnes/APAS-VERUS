@@ -25,7 +25,8 @@ pub mod Exercise21_5 {
     };
 
     /// Exercise 21.5: Generate all contiguous subsequences using nested tabulate + flatten.
-    /// APAS: Work Θ(n²), Span Θ(lg n)
+    /// - APAS: Work Θ(n²), Span Θ(lg n)
+    /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — sequential StPer; subseq_copy is O(k) not O(1).
     pub fn all_contiguous_subseqs(a: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<ArraySeqStPerS<N>>)
          requires obeys_feq_clone::<ArraySeqStPerS<N>>()
     {

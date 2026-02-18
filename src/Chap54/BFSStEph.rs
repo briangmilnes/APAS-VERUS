@@ -22,6 +22,8 @@ pub mod BFSStEph {
     /// Performs BFS from source vertex s on adjacency list graph G.
     /// Graph is represented as sequence of sequences (adjacency list).
     /// Returns array where result[v] = distance if reachable, UNREACHABLE otherwise.
+    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
     pub fn bfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> ArraySeqStEphS<N> {
         let n = graph.length();
         if source >= n {

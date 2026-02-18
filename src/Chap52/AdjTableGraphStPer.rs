@@ -43,18 +43,24 @@ pub mod AdjTableGraphStPer {
     }
 
     impl<V: StT + Ord> AdjTableGraphStPerTrait<V> for AdjTableGraphStPer<V> {
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — creates empty table.
         fn empty() -> Self {
             AdjTableGraphStPer {
                 adj: OrderedTableStPer::empty(),
             }
         }
 
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps existing table.
         fn from_table(table: OrderedTableStPer<V, AVLTreeSetStPer<V>>) -> Self { AdjTableGraphStPer { adj: table } }
 
-        // Work: Θ(1), Span: Θ(1) - table size
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to table size.
         fn num_vertices(&self) -> N { self.adj.size() }
 
-        // Work: Θ(n), Span: Θ(log n) - sum all neighbor set sizes
+        /// - APAS: (no cost stated, implied by map over edges: Work Θ(m), Span Θ(lg n))
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential iteration over domain + neighbor sizes.
         fn num_edges(&self) -> N {
             let domain = self.adj.domain();
             let seq = domain.to_seq();
@@ -68,6 +74,8 @@ pub mod AdjTableGraphStPer {
             count
         }
 
+        /// - APAS: Work Θ(n), Span Θ(lg n) [Cost Spec 52.3, map over vertices]
+        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential iteration with AVL inserts.
         fn vertices(&self) -> AVLTreeSetStPer<V> {
             let domain_set = self.adj.domain();
             let seq = domain_set.to_seq();
@@ -78,7 +86,8 @@ pub mod AdjTableGraphStPer {
             vertices
         }
 
-        // Work: Θ(log n), Span: Θ(log n) - table lookup + set membership
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn has_edge(&self, u: &V, v: &V) -> B {
             match self.adj.find(u) {
                 | Some(neighbors) => neighbors.find(v),
@@ -86,7 +95,8 @@ pub mod AdjTableGraphStPer {
             }
         }
 
-        // Work: Θ(log n), Span: Θ(log n) - table lookup
+        /// - APAS: Work Θ(lg n + d(v)), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — table lookup + clone; agrees with APAS.
         fn out_neighbors(&self, u: &V) -> AVLTreeSetStPer<V> {
             match self.adj.find(u) {
                 | Some(neighbors) => neighbors.clone(),
@@ -94,16 +104,19 @@ pub mod AdjTableGraphStPer {
             }
         }
 
-        // Work: Θ(log n), Span: Θ(log n) - lookup + size
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
 
-        // Work: Θ(log n), Span: Θ(log n) - insert empty neighbor set
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn insert_vertex(&self, v: V) -> Self {
             let new_adj = self.adj.insert(v, AVLTreeSetStPer::empty());
             AdjTableGraphStPer { adj: new_adj }
         }
 
-        // Work: Θ(n log n), Span: Θ(log² n) - remove vertex and all incident edges
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3, isolated vertex]
+        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — iterates all vertices to remove from neighbor sets; APAS assumes isolated.
         fn delete_vertex(&self, v: &V) -> Self {
             let v_clone = v.clone();
             let new_adj = self.adj.delete(&v_clone);
@@ -121,7 +134,8 @@ pub mod AdjTableGraphStPer {
             AdjTableGraphStPer { adj: result_adj }
         }
 
-        // Work: Θ(log n), Span: Θ(log n) - update neighbor set
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn insert_edge(&self, u: V, v: V) -> Self {
             let neighbors = match self.adj.find(&u) {
                 | Some(ns) => ns.insert(v.clone()),
@@ -137,7 +151,8 @@ pub mod AdjTableGraphStPer {
             AdjTableGraphStPer { adj: final_adj }
         }
 
-        // Work: Θ(log n), Span: Θ(log n)
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn delete_edge(&self, u: &V, v: &V) -> Self {
             match self.adj.find(u) {
                 | Some(neighbors) => {

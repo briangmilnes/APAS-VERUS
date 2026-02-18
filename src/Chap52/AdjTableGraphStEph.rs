@@ -43,16 +43,24 @@ pub mod AdjTableGraphStEph {
     }
 
     impl<V: StT + Ord> AdjTableGraphStEphTrait<V> for AdjTableGraphStEph<V> {
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — creates empty table.
         fn empty() -> Self {
             AdjTableGraphStEph {
                 adj: OrderedTableStEph::empty(),
             }
         }
 
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps existing table.
         fn from_table(table: OrderedTableStEph<V, AVLTreeSetStEph<V>>) -> Self { AdjTableGraphStEph { adj: table } }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to table size.
         fn num_vertices(&self) -> N { self.adj.size() }
 
+        /// - APAS: (no cost stated, implied by map over edges)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential iteration over domain + neighbor sizes.
         fn num_edges(&self) -> N {
             let domain = self.adj.domain();
             let mut count = 0;
@@ -69,6 +77,8 @@ pub mod AdjTableGraphStEph {
             count
         }
 
+        /// - APAS: Work Θ(n), Span Θ(lg n) [Cost Spec 52.3, map over vertices]
+        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential iteration with AVL inserts.
         fn vertices(&self) -> AVLTreeSetStEph<V> {
             let domain = self.adj.domain();
             let seq = domain.to_seq();
@@ -79,6 +89,8 @@ pub mod AdjTableGraphStEph {
             result
         }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn has_edge(&self, u: &V, v: &V) -> B {
             match self.adj.find(u) {
                 | Some(neighbors) => neighbors.find(v),
@@ -86,6 +98,8 @@ pub mod AdjTableGraphStEph {
             }
         }
 
+        /// - APAS: Work Θ(lg n + d(v)), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn out_neighbors(&self, u: &V) -> AVLTreeSetStEph<V> {
             match self.adj.find(u) {
                 | Some(neighbors) => neighbors.clone(),
@@ -93,10 +107,16 @@ pub mod AdjTableGraphStEph {
             }
         }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn insert_vertex(&mut self, v: V) { self.adj.insert(v, AVLTreeSetStEph::empty(), |_, new| new.clone()); }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3, isolated vertex]
+        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — iterates all vertices to remove from neighbor sets; APAS assumes isolated.
         fn delete_vertex(&mut self, v: &V) {
             let v_clone = v.clone();
             // Get all vertices before deleting
@@ -115,6 +135,8 @@ pub mod AdjTableGraphStEph {
             }
         }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn insert_edge(&mut self, u: V, v: V) {
             let neighbors = match self.adj.find(&u) {
                 | Some(ns) => {
@@ -131,6 +153,8 @@ pub mod AdjTableGraphStEph {
             }
         }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn delete_edge(&mut self, u: &V, v: &V) {
             if let Some(neighbors) = self.adj.find(u) {
                 let mut neighbors = neighbors.clone();

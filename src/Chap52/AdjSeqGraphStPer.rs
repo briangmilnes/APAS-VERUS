@@ -34,7 +34,8 @@ pub mod AdjSeqGraphStPer {
     }
 
     impl AdjSeqGraphStPerTrait for AdjSeqGraphStPer {
-        // Work: Θ(n), Span: Θ(n) - create n empty neighbor lists
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop creating n empty neighbor lists.
         fn new(n: N) -> Self {
             let empty_list = ArraySeqStPerS::empty();
             let mut adj_lists = Vec::with_capacity(n);
@@ -46,12 +47,16 @@ pub mod AdjSeqGraphStPer {
             }
         }
 
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps existing sequence.
         fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<N>>) -> Self { AdjSeqGraphStPer { adj } }
 
-        // Work: Θ(1), Span: Θ(1)
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — sequence length.
         fn num_vertices(&self) -> N { self.adj.length() }
 
-        // Work: Θ(n), Span: Θ(n) - sum all neighbor list lengths
+        /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential loop; span not parallel.
         fn num_edges(&self) -> N {
             let n = self.adj.length();
             let mut count = 0;
@@ -61,7 +66,8 @@ pub mod AdjSeqGraphStPer {
             count
         }
 
-        // Work: Θ(d(u)), Span: Θ(d(u)) - linear search in neighbor list
+        /// - APAS: Work Θ(d(u)), Span Θ(lg d(u)) [Cost Spec 52.5]
+        /// - Claude-Opus-4.6: Work Θ(d(u)), Span Θ(d(u)) — sequential linear scan; span not logarithmic.
         fn has_edge(&self, u: N, v: N) -> B {
             if u >= self.adj.length() {
                 return false;
@@ -75,13 +81,16 @@ pub mod AdjSeqGraphStPer {
             false
         }
 
-        // Work: Θ(1), Span: Θ(1) - direct access
+        /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5, out-neighbors]
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn out_neighbors(&self, u: N) -> &ArraySeqStPerS<N> { self.adj.nth(u) }
 
-        // Work: Θ(1), Span: Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5]
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn out_degree(&self, u: N) -> N { self.adj.nth(u).length() }
 
-        // Work: Θ(n), Span: Θ(n) - must copy entire sequence to update
+        /// - APAS: Work Θ(n), Span Θ(1) [Cost Spec 52.5, insert edge]
+        /// - Claude-Opus-4.6: Work Θ(n + d(u)), Span Θ(n + d(u)) — sequential copy of outer seq + linear scan for duplicates; span not parallel.
         fn insert_edge(&self, u: N, v: N) -> Self {
             if u >= self.adj.length() || v >= self.adj.length() {
                 return self.clone();
@@ -115,7 +124,8 @@ pub mod AdjSeqGraphStPer {
             }
         }
 
-        // Work: Θ(n), Span: Θ(n)
+        /// - APAS: Work Θ(n), Span Θ(1) [Cost Spec 52.5, delete edge]
+        /// - Claude-Opus-4.6: Work Θ(n + d(u)), Span Θ(n + d(u)) — sequential copy of outer seq + linear scan; span not parallel.
         fn delete_edge(&self, u: N, v: N) -> Self {
             if u >= self.adj.length() {
                 return self.clone();

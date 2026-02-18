@@ -160,22 +160,24 @@ pub mod BinaryHeapPQ {
     }
 
     impl<T: StT + Ord> BinaryHeapPQTrait<T> for BinaryHeapPQ<T> {
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn empty() -> Self {
             BinaryHeapPQ {
                 elements: ArraySeqStPerS::empty(),
             }
         }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn singleton(element: T) -> Self {
             BinaryHeapPQ {
                 elements: ArraySeqStPerS::singleton(element),
             }
         }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
-        /// Minimum is always at the root (index 0)
+        /// - APAS: (no cost stated — implied Θ(1) from heap-root access)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — index-0 access.
         fn find_min(&self) -> Option<&T> {
             if self.elements.length() == 0 {
                 None
@@ -184,8 +186,8 @@ pub mod BinaryHeapPQ {
             }
         }
 
-        /// Claude Work: Θ(log n), Span: Θ(log n)
-        /// Add element at end and bubble up to maintain heap property
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) — each swap rebuilds array O(n), O(log n) swaps.
         fn insert(&self, element: T) -> Self {
             // Add element at the end
             let single_seq = ArraySeqStPerS::singleton(element);
@@ -199,8 +201,8 @@ pub mod BinaryHeapPQ {
             BinaryHeapPQ { elements: heapified }
         }
 
-        /// Claude Work: Θ(log n), Span: Θ(log n)
-        /// Replace root with last element and bubble down
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) — each swap rebuilds array O(n), O(log n) swaps.
         fn delete_min(&self) -> (Self, Option<T>) {
             if self.elements.length() == 0 {
                 return (self.clone(), None);
@@ -230,8 +232,8 @@ pub mod BinaryHeapPQ {
             (new_pq, Some(min_element))
         }
 
-        /// Claude Work: Θ(m + n), Span: Θ(m + n)
-        /// Concatenate arrays and re-heapify
+        /// - APAS: Work Θ(m + n), Span Θ(m + n)
+        /// - Claude-Opus-4.6: Work Θ((m+n) log(m+n)), Span Θ((m+n) log(m+n)) — heapify does O(n) bubble_downs, each O(n) from swap.
         fn meld(&self, other: &Self) -> Self {
             let merged = ArraySeqStPerS::append(&self.elements, &other.elements);
             let heapified = self.heapify(&merged);
@@ -239,8 +241,8 @@ pub mod BinaryHeapPQ {
             BinaryHeapPQ { elements: heapified }
         }
 
-        /// Claude Work: Θ(n), Span: Θ(n)
-        /// Build heap using bottom-up heapify (more efficient than repeated insertion)
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n² log n), Span Θ(n² log n) — heapify: O(n) bubble_downs, each O(n) swap cost.
         fn from_seq(seq: &ArraySeqStPerS<T>) -> Self {
             let heap = Self::empty();
             let heapified = heap.heapify(seq);
@@ -248,13 +250,16 @@ pub mod BinaryHeapPQ {
             BinaryHeapPQ { elements: heapified }
         }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: N/A — utility function not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn size(&self) -> N { self.elements.length() }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: N/A — utility function not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn is_empty(&self) -> bool { self.elements.length() == 0 }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: N/A — utility function not in prose.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone is O(n).
         fn to_seq(&self) -> ArraySeqStPerS<T> { self.elements.clone() }
     }
 

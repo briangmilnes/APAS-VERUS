@@ -1,0 +1,28 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap51/
+
+✓ BottomUpDPMtEph.rs
+✓ BottomUpDPMtPer.rs
+✓ BottomUpDPStEph.rs
+✓ BottomUpDPStPer.rs
+✓ TopDownDPMtEph.rs
+✓ TopDownDPMtPer.rs
+✓ TopDownDPStEph.rs
+✓ TopDownDPStPer.rs
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   8 clean (no holes)
+   0 holed (contains holes)
+   8 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 0 total
+
+🎉 No proof holes found! All proofs are complete.

@@ -54,22 +54,24 @@ pub mod UnsortedListPQ {
     }
 
     impl<T: StT + Ord> UnsortedListPQTrait<T> for UnsortedListPQ<T> {
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn empty() -> Self {
             UnsortedListPQ {
                 elements: ArraySeqStPerS::empty(),
             }
         }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn singleton(element: T) -> Self {
             UnsortedListPQ {
                 elements: ArraySeqStPerS::singleton(element),
             }
         }
 
-        /// Claude Work: Θ(n), Span: Θ(n)
-        /// Linear scan to find minimum element
+        /// - APAS: (no cost stated — implied Θ(n) from table context)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — linear scan over unsorted list.
         fn find_min(&self) -> Option<&T> {
             if self.elements.length() == 0 {
                 return None;
@@ -85,8 +87,8 @@ pub mod UnsortedListPQ {
             Some(min_element)
         }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
-        /// Simply append to end of unsorted list
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — ArraySeqStPerS::append copies entire sequence.
         fn insert(&self, element: T) -> Self {
             let single_seq = ArraySeqStPerS::singleton(element);
             UnsortedListPQ {
@@ -94,8 +96,8 @@ pub mod UnsortedListPQ {
             }
         }
 
-        /// Claude Work: Θ(n), Span: Θ(n)
-        /// Find minimum and remove it, creating new list without that element
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — agrees with APAS.
         fn delete_min(&self) -> (Self, Option<T>) {
             if self.elements.length() == 0 {
                 return (self.clone(), None);
@@ -128,25 +130,28 @@ pub mod UnsortedListPQ {
             (new_pq, Some(min_element.clone()))
         }
 
-        /// Claude Work: Θ(m + n), Span: Θ(m + n)
-        /// Concatenate the two unsorted lists
+        /// - APAS: Work Θ(m + n), Span Θ(m + n)
+        /// - Claude-Opus-4.6: Work Θ(m + n), Span Θ(m + n) — agrees with APAS.
         fn meld(&self, other: &Self) -> Self {
             UnsortedListPQ {
                 elements: ArraySeqStPerS::append(&self.elements, &other.elements),
             }
         }
 
-        /// Claude Work: Θ(n), Span: Θ(n)
-        /// Create priority queue from existing sequence
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — agrees with APAS (clone is O(n)).
         fn from_seq(seq: &ArraySeqStPerS<T>) -> Self { UnsortedListPQ { elements: seq.clone() } }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: N/A — utility function not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn size(&self) -> N { self.elements.length() }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: N/A — utility function not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn is_empty(&self) -> bool { self.elements.length() == 0 }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: N/A — utility function not in prose.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone is O(n).
         fn to_seq(&self) -> ArraySeqStPerS<T> { self.elements.clone() }
 
         fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self {

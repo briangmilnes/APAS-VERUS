@@ -64,14 +64,8 @@ pub mod BoruvkaStEph {
     /// For each vertex, find the minimum weight edge incident on it.
     /// Returns a table mapping each vertex to (neighbor, weight, label).
     ///
-    /// APAS: Work O(m), Span O(m)
-    /// claude-4-sonet: Work O(m), Span O(m) [sequential iteration]
-    ///
-    /// Arguments:
-    /// - edges: Set of labeled edges
-    ///
-    /// Returns:
-    /// - HashMap mapping vertex → (neighbor, weight, label) for minimum edge
+    /// - APAS: Work O(m), Span O(log m)
+    /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential iteration over edges.
     pub fn vertex_bridges<V: StT + Hash + Ord>(
         edges: &SetStEph<LabeledEdge<V>>,
     ) -> HashMap<V, (V, OrderedFloat<f64>, usize)> {
@@ -113,16 +107,8 @@ pub mod BoruvkaStEph {
     /// Performs star contraction along vertex bridges using randomized coin flips.
     /// Each vertex flips a coin (Heads/Tails). Edges from Tail→Head are contracted.
     ///
-    /// APAS: Work O(n), Span O(n)
-    /// claude-4-sonet: Work O(n), Span O(n) [sequential]
-    ///
-    /// Arguments:
-    /// - vertices: Set of vertices
-    /// - bridges: Vertex bridges (from vertex_bridges)
-    /// - rng: Random number generator for coin flips
-    ///
-    /// Returns:
-    /// - (remaining_vertices, partition_map) where partition_map: tail → (head, weight, label)
+    /// - APAS: Work O(n), Span O(log n)
+    /// - Claude-Opus-4.6: Work O(n), Span O(n) — sequential iteration over vertices.
     pub fn bridge_star_partition<V: StT + Hash + Ord>(
         vertices: &SetStEph<V>,
         bridges: &HashMap<V, (V, OrderedFloat<f64>, usize)>,
@@ -163,17 +149,8 @@ pub mod BoruvkaStEph {
     /// Computes the Minimum Spanning Tree using recursive bridge-based contraction.
     /// Returns the set of edge labels in the MST.
     ///
-    /// APAS: Work O(m log n), Span O(m log n)
-    /// claude-4-sonet: Work O(m log n), Span O(m log n) [sequential, expected O(log n) rounds]
-    ///
-    /// Arguments:
-    /// - vertices: Set of vertices
-    /// - edges: Set of labeled edges
-    /// - mst_labels: Accumulated MST edge labels
-    /// - rng: Random number generator
-    ///
-    /// Returns:
-    /// - Set of edge labels in the MST
+    /// - APAS: Work O(m log n), Span O(log² n)
+    /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — sequential; O(log n) rounds each doing O(m) work sequentially.
     pub fn boruvka_mst<V: StT + Hash + Ord>(
         vertices: &SetStEph<V>,
         edges: &SetStEph<LabeledEdge<V>>,
@@ -222,18 +199,11 @@ pub mod BoruvkaStEph {
         boruvka_mst(&remaining_vertices, &new_edges, new_mst_labels, rng)
     }
 
-    /// Create Borůvka MST with a specific seed
+    /// Create Borůvka MST with a specific seed.
+    /// Wrapper that initializes RNG and delegates to `boruvka_mst`.
     ///
-    /// APAS: Work O(m log n), Span O(m log n)
-    /// claude-4-sonet: Work O(m log n), Span O(m log n)
-    ///
-    /// Arguments:
-    /// - vertices: Set of vertices
-    /// - edges: Set of labeled edges
-    /// - seed: Random seed for reproducibility
-    ///
-    /// Returns:
-    /// - Set of edge labels in the MST
+    /// - APAS: Work O(m log n), Span O(log² n)
+    /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — delegates to sequential boruvka_mst.
     pub fn boruvka_mst_with_seed<V: StT + Hash + Ord>(
         vertices: &SetStEph<V>,
         edges: &SetStEph<LabeledEdge<V>>,
@@ -243,10 +213,10 @@ pub mod BoruvkaStEph {
         boruvka_mst(vertices, edges, SetLit![], &mut rng)
     }
 
-    /// Compute MST weight from edge labels
+    /// Compute MST weight from edge labels.
     ///
-    /// APAS: Work O(m), Span O(m)
-    /// claude-4-sonet: Work O(m), Span O(m)
+    /// - APAS: N/A — utility function, not in prose.
+    /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential scan of edges.
     pub fn mst_weight<V: StT + Hash>(
         edges: &SetStEph<LabeledEdge<V>>,
         mst_labels: &SetStEph<usize>,

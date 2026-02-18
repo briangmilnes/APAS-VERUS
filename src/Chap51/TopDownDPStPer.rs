@@ -14,12 +14,12 @@ pub mod TopDownDPStPer {
 
     /// Trait for top-down dynamic programming operations
     pub trait TopDownDPStPerTrait<T: StT> {
-        /// Create new top-down DP solver
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn new()                     -> Self;
 
-        /// Solve DP problem with memoization
-        /// APAS: Work O(n²), Span O(n²)
+        /// - APAS: Work O(|S|×|T|), Span O(|S|×|T|) — inherently sequential (memo threading).
+        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — agrees with APAS.
         fn solve(&self, input: &[T]) -> T;
     }
 
@@ -34,7 +34,8 @@ pub mod TopDownDPStPer {
     }
 
     impl TopDownDPStPerS {
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         pub fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> Self {
             TopDownDPStPerS {
                 seq_s: s,
@@ -43,8 +44,9 @@ pub mod TopDownDPStPer {
             }
         }
 
-        /// Compute minimum edit distance using top-down memoization
-        /// claude-4-sonet: Work Θ(|S|×|T|), Span Θ(|S|+|T|), Parallelism Θ(1)
+        /// Compute minimum edit distance using top-down memoization (Algorithm 51.4).
+        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — inherently sequential (memo threading).
+        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — agrees with APAS.
         pub fn med_memoized(&self) -> usize {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -55,7 +57,9 @@ pub mod TopDownDPStPer {
             self.med_recursive(s_len, t_len, &mut memo)
         }
 
-        /// claude-4-sonet: Work Θ(1) amortized per call, Θ(|S|×|T|) total; Span Θ(|S|+|T|)
+        /// Recursive MED with memoization (medOne from Algorithm 51.4).
+        /// - APAS: Work Θ(1) amortized per call, Θ(|S|×|T|) total; Span Θ(|S|×|T|).
+        /// - Claude-Opus-4.6: Work Θ(1) amortized, Span Θ(|S|×|T|) — agrees with APAS. Includes substitute branch not in APAS.
         fn med_recursive(&self, i: usize, j: usize, memo: &mut HashMap<(usize, usize), usize>) -> usize {
             // Check memo table first
             if let Some(&cached_result) = memo.get(&(i, j)) {
@@ -89,9 +93,8 @@ pub mod TopDownDPStPer {
             result
         }
 
-        /// Create new instance with updated memoization table
-        /// Claude Work: O(1) - constant time update
-        /// Claude Span: O(1) - constant time update
+        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         pub fn with_memo_table(self, memo: HashMap<(usize, usize), usize>) -> Self {
             TopDownDPStPerS {
                 seq_s: self.seq_s,
@@ -100,39 +103,32 @@ pub mod TopDownDPStPer {
             }
         }
 
-        /// Get current memoization table size
-        /// Claude Work: O(1) - constant time access
-        /// Claude Span: O(1) - constant time access
+        /// - APAS: N/A — accessor.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         pub fn memo_size(&self) -> usize { self.memo_table.len() }
 
-        /// Check if subproblem is memoized
-        /// Claude Work: O(1) - constant time lookup
-        /// Claude Span: O(1) - constant time lookup
+        /// - APAS: N/A — accessor.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         pub fn is_memoized(&self, i: usize, j: usize) -> bool { self.memo_table.contains_key(&(i, j)) }
 
-        /// Get memoized result if available
-        /// Claude Work: O(1) - constant time lookup
-        /// Claude Span: O(1) - constant time lookup
+        /// - APAS: N/A — accessor.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         pub fn get_memoized(&self, i: usize, j: usize) -> Option<usize> { self.memo_table.get(&(i, j)).copied() }
 
-        /// Get the length of sequence S
-        /// Claude Work: O(1) - constant time access
-        /// Claude Span: O(1) - constant time access
+        /// - APAS: N/A — accessor.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         pub fn s_length(&self) -> usize { self.seq_s.length() }
 
-        /// Get the length of sequence T
-        /// Claude Work: O(1) - constant time access
-        /// Claude Span: O(1) - constant time access
+        /// - APAS: N/A — accessor.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         pub fn t_length(&self) -> usize { self.seq_t.length() }
 
-        /// Check if sequences are empty
-        /// Claude Work: O(1) - constant time check
-        /// Claude Span: O(1) - constant time check
+        /// - APAS: N/A — accessor.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         pub fn is_empty(&self) -> bool { self.seq_s.length() == 0usize && self.seq_t.length() == 0usize }
 
-        /// Clear memoization table
-        /// Claude Work: O(1) - constant time clear
-        /// Claude Span: O(1) - constant time clear
+        /// - APAS: N/A — mutator.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         pub fn clear_memo(self) -> Self {
             TopDownDPStPerS {
                 seq_s: self.seq_s,

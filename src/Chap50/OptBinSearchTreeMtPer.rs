@@ -38,8 +38,8 @@ pub mod OptBinSearchTreeMtPer {
         /// Create from key-probability pairs
         fn from_key_probs(key_probs: Vec<KeyProb<T>>)             -> Self;
 
-        /// claude-4-sonet: Work Θ(n³), Span Θ(n log n), Parallelism Θ(n²/log n)
-        /// Compute optimal BST cost where n=number of keys
+        /// APAS: Work Θ(n³), Span Θ(n log n)
+        /// Claude-Opus-4.6: Work O(n³), Span O(n log n)
         fn optimal_cost(&self)                                    -> Probability
         where
             T: Send + Sync + 'static;
@@ -54,9 +54,9 @@ pub mod OptBinSearchTreeMtPer {
         fn memo_size(&self)                                       -> usize;
     }
 
-    /// Parallel reduction to find minimum cost among root choices
-    /// Claude Work: O(n) - n comparisons
-    /// Claude Span: O(log n) - parallel reduction tree
+    /// APAS: Work Θ(n), Span Θ(log n)
+    /// Claude-Opus-4.6 Work: O(n) - n comparisons
+    /// Claude-Opus-4.6 Span: O(log n) - parallel reduction tree
     fn parallel_min_reduction<T: MtVal>(table: &OBSTMtPerS<T>, costs: Vec<Probability>) -> Probability {
         if costs.is_empty() {
             return Probability::infinity();
@@ -82,9 +82,9 @@ pub mod OptBinSearchTreeMtPer {
         std::cmp::min(left_min, right_min)
     }
 
-    /// Internal recursive optimal BST with memoization and parallel reduction
-    /// Claude Work: O(n³) - O(n²) subproblems, each O(n) work
-    /// Claude Span: O(n log n) - maximum recursion depth O(n), each level O(log n) parallel reduction
+    /// APAS: Work Θ(n³), Span Θ(n log n)
+    /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
+    /// Claude-Opus-4.6 Span: O(n log n) - recursion depth O(n), each level O(log n) parallel reduction
     fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtPerS<T>, i: usize, l: usize) -> Probability {
         // Check memo first (thread-safe)
         {

@@ -12,6 +12,8 @@ pub mod MaxContigSubSumDivConStEph {
     use crate::Types::Types::*;
     pub type T = ArraySeqStEphS<i32>;
 
+    /// - APAS: Work Θ(1), Span Θ(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> Option<i32> {
         match (a, b) {
             | (None, None) => None,
@@ -21,7 +23,9 @@ pub mod MaxContigSubSumDivConStEph {
         }
     }
 
-    /// find max suffix sum (MCSSE problem).
+    /// Find max suffix sum (MCSSE problem, Algorithm 28.12).
+    /// - APAS: Work Θ(n), Span Θ(log n)
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop
     fn max_suffix_sum(a: &ArraySeqStEphS<i32>) -> i32 {
         if a.length() == 0 {
             return i32::MIN / 2; // treat as -∞
@@ -39,7 +43,9 @@ pub mod MaxContigSubSumDivConStEph {
         total - min_prefix
     }
 
-    /// find max prefix sum (MCSSS problem).
+    /// Find max prefix sum (MCSSS problem, Algorithm 28.11).
+    /// - APAS: Work Θ(n), Span Θ(log n)
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop
     fn max_prefix_sum(a: &ArraySeqStEphS<i32>) -> i32 {
         if a.length() == 0 {
             return i32::MIN / 2; // treat as -∞

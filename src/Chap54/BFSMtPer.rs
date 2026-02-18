@@ -24,10 +24,8 @@ pub mod BFSMtPer {
     /// Performs parallel BFS from source vertex s on adjacency list graph G.
     /// Graph is represented as sequence of sequences (adjacency list).
     /// Returns array where result[v] = distance if reachable, UNREACHABLE otherwise.
-    /// 
-    /// Parallel version: Work O(|V| + |E|), Span O(d·lg n) where d is diameter
-    /// - O(d) sequential layers (unavoidable in BFS)
-    /// - O(lg n) parallel processing per layer using thread::spawn
+    /// - APAS: Work O(|V| + |E|), Span O(d·lg n) where d is diameter
+    /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(d·lg |F_i|) — thread::spawn parallelism within layers via process_layer_parallel, but distance updates applied sequentially after each layer.
     pub fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> ArraySeqMtPerS<N> {
         let n = graph.length();
         if source >= n {
@@ -58,8 +56,10 @@ pub mod BFSMtPer {
         distances
     }
 
-    /// Process a BFS layer in parallel
+    /// Process a BFS layer in parallel.
     /// Returns: (next_layer_vertices, distance_updates)
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work O(|F_i|), Span O(lg |F_i|) — fork-join divide-and-conquer over layer vertices.
     fn process_layer_parallel(
         graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>,
         distances: &ArraySeqMtPerS<N>,

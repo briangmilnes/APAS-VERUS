@@ -31,6 +31,8 @@ pub mod BSTParaTreapMtEph {
         root: Arc<RwLock<Option<Box<NodeInner<T>>>>>,
     }
 
+    /// - APAS: Work Θ(1), Span Θ(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn priority_for<T: MtKey>(key: &T) -> i64 {
         let mut hasher = std::collections::hash_map::DefaultHasher::new();
         let mut buf = String::new();
@@ -39,16 +41,22 @@ pub mod BSTParaTreapMtEph {
         hasher.finish() as i64
     }
 
+    /// - APAS: Work Θ(1), Span Θ(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn tree_priority<T: MtKey>(tree: &ParamTreap<T>) -> i64 {
         let guard = tree.root.read().unwrap();
         guard.as_ref().map_or(i64::MIN, |node| node.priority)
     }
 
+    /// - APAS: Work Θ(1), Span Θ(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn tree_size<T: MtKey>(tree: &ParamTreap<T>) -> N {
         let guard = tree.root.read().unwrap();
         guard.as_ref().map_or(0, |node| node.size)
     }
 
+    /// - APAS: Work Θ(1), Span Θ(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn make_node<T: MtKey>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> ParamTreap<T> {
         let size = 1 + tree_size(&left) + tree_size(&right);
         ParamTreap {
@@ -63,61 +71,61 @@ pub mod BSTParaTreapMtEph {
     }
 
     pub trait ParamTreapTrait<T: MtKey + 'static>: Sized {
-        /// APAS: Work O(1), Span O(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn new()                                   -> Self;
-        /// APAS: Work O(1), Span O(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn expose(&self)                           -> Exposed<T>;
-        /// APAS: Work O(1), Span O(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))
+        /// - Claude-Opus-4.6: Work O(log(|left| + |right|)), Span O(log(|left| + |right|)) — delegates to join_with_priority
         fn join_mid(exposed: Exposed<T>)           -> Self;
-        /// APAS: Work O(1), Span O(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self)                             -> N;
-        /// APAS: Work O(1), Span O(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn is_empty(&self)                         -> B;
-        // APAS - work O(lg |t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         fn insert(&self, key: T);
-        // APAS - work O(lg |t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         fn delete(&self, key: &T);
-        // APAS - work O(lg |t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         fn find(&self, key: &T)                    -> Option<T>;
-        // APAS - work O(lg |t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         fn split(&self, key: &T)                   -> (Self, B, Self);
-        // APAS - work O(lg (|t_1| + |t_2|)), span O(lg (|t_1| + |t_2|))
-        // gpt-5-codex-medium: work O(lg (|t_1| + |t_2|)), span O(lg (|t_1| + |t_2|))
+        /// - APAS: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
+        /// - Claude-Opus-4.6: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         fn join_pair(&self, other: Self)           -> Self;
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
         fn union(&self, other: &Self)              -> Self;
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
         fn intersect(&self, other: &Self)          -> Self;
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
         fn difference(&self, other: &Self)         -> Self;
-        // APAS - work O(|t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+        /// - APAS: Work O(|t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
         fn filter<F: Pred<T>>(&self, predicate: F) -> Self;
-        // APAS - work O(|t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+        /// - APAS: Work O(|t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
         fn reduce<F>(&self, op: F, base: T)        -> T
         where
             F: Fn(T, T) -> T + Send + Sync + 'static;
-        // APAS - work O(|t|), span O(|t|)
-        // gpt-5-codex-medium: work O(|t|), span O(|t|)
+        /// - APAS: Work O(|t|), Span O(|t|)
+        /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|)
         fn in_order(&self)                         -> ArraySeqStPerS<T>;
     }
 
     impl<T: MtKey + 'static> ParamTreap<T> {
-        // APAS - work O(1), span O(1)
-        // gpt-5-codex-medium: work O(1), span O(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn expose_internal(&self) -> Exposed<T> {
             let guard = self.root.read().unwrap();
             match &*guard {
@@ -126,8 +134,8 @@ pub mod BSTParaTreapMtEph {
             }
         }
 
-        // APAS - work O(1), span O(1)
-        // gpt-5-codex-medium: work O(1), span O(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         pub fn expose_with_priority(&self) -> Option<(ParamTreap<T>, T, i64, ParamTreap<T>)> {
             let guard = self.root.read().unwrap();
             guard
@@ -135,8 +143,8 @@ pub mod BSTParaTreapMtEph {
                 .map(|node| (node.left.clone(), node.key.clone(), node.priority, node.right.clone()))
         }
 
-        // APAS - work O(lg (|left| + |right|)), span O(lg (|left| + |right|))
-        // gpt-5-codex-medium: work O(lg (|left| + |right|)), span O(lg (|left| + |right|))
+        /// - APAS: Work O(lg(|left| + |right|)), Span O(lg(|left| + |right|))
+        /// - Claude-Opus-4.6: Work O(lg(|left| + |right|)), Span O(lg(|left| + |right|))
         fn join_with_priority(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> ParamTreap<T> {
             let left_priority = tree_priority(&left);
             let right_priority = tree_priority(&right);
@@ -158,11 +166,8 @@ pub mod BSTParaTreapMtEph {
             }
         }
 
-        // APAS - work O(1), span O(1)
-        // gpt-5-codex-medium: work O(1), span O(1)
-
-        // APAS - work O(lg |t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         fn split_inner(tree: &Self, key: &T) -> (Self, B, Self) {
             match tree.expose_with_priority() {
                 | None => (ParamTreap::new(), false, ParamTreap::new()),
@@ -182,8 +187,8 @@ pub mod BSTParaTreapMtEph {
             }
         }
 
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
         fn join_pair_inner(left: Self, right: Self) -> Self {
             match right.expose_with_priority() {
                 | None => left,
@@ -196,8 +201,8 @@ pub mod BSTParaTreapMtEph {
             }
         }
 
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
         fn union_inner(a: &Self, b: &Self) -> Self {
             match a.expose_with_priority() {
                 | None => b.clone(),
@@ -212,8 +217,8 @@ pub mod BSTParaTreapMtEph {
             }
         }
 
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
         fn intersect_inner(a: &Self, b: &Self) -> Self {
             match a.expose_with_priority() {
                 | None => ParamTreap::new(),
@@ -232,8 +237,8 @@ pub mod BSTParaTreapMtEph {
             }
         }
 
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
         fn difference_inner(a: &Self, b: &Self) -> Self {
             match a.expose_with_priority() {
                 | None => ParamTreap::new(),
@@ -252,8 +257,8 @@ pub mod BSTParaTreapMtEph {
             }
         }
 
-        // APAS - work O(|t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+        /// - APAS: Work O(|t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
         fn filter_inner<F: Pred<T>>(tree: &Self, predicate: &Arc<F>) -> Self {
             match tree.expose_with_priority() {
                 | None => ParamTreap::new(),
@@ -273,15 +278,15 @@ pub mod BSTParaTreapMtEph {
             }
         }
 
-        // APAS - work O(|t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+        /// - APAS: Work O(|t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
         fn filter_parallel<F: Pred<T>>(tree: &Self, predicate: F) -> Self {
             let predicate = Arc::new(predicate);
             ParamTreap::filter_inner(tree, &predicate)
         }
 
-        // APAS - work O(|t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+        /// - APAS: Work O(|t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
         fn reduce_inner<F>(tree: &Self, op: &Arc<F>, identity: T) -> T
         where
             F: Fn(T, T) -> T + Send + Sync + 'static,
@@ -304,8 +309,8 @@ pub mod BSTParaTreapMtEph {
             }
         }
 
-        // APAS - work O(|t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+        /// - APAS: Work O(|t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
         fn reduce_parallel<F>(tree: &Self, op: F, base: T) -> T
         where
             F: Fn(T, T) -> T + Send + Sync + 'static,
@@ -314,8 +319,8 @@ pub mod BSTParaTreapMtEph {
             ParamTreap::reduce_inner(tree, &op, base)
         }
 
-        // APAS - work O(|t|), span O(|t|)
-        // gpt-5-codex-medium: work O(|t|), span O(|t|)
+        /// - APAS: Work O(|t|), Span O(|t|)
+        /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|)
         fn collect_in_order(tree: &Self, out: &mut Vec<T>) {
             match tree.expose_internal() {
                 | Exposed::Leaf => {}
@@ -329,20 +334,20 @@ pub mod BSTParaTreapMtEph {
     }
 
     impl<T: MtKey + 'static> ParamTreapTrait<T> for ParamTreap<T> {
-        // APAS - work O(1), span O(1)
-        // gpt-5-codex-medium: work O(1), span O(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn new() -> Self {
             ParamTreap {
                 root: Arc::new(RwLock::new(None)),
             }
         }
 
-        // APAS - work O(1), span O(1)
-        // gpt-5-codex-medium: work O(1), span O(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn expose(&self) -> Exposed<T> { self.expose_internal() }
 
-        // APAS - work O(1), span O(1)
-        // gpt-5-codex-medium: work O(1), span O(1)
+        /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))
+        /// - Claude-Opus-4.6: Work O(log(|left| + |right|)), Span O(log(|left| + |right|)) — delegates to join_with_priority
         fn join_mid(exposed: Exposed<T>) -> Self {
             match exposed {
                 | Exposed::Leaf => ParamTreap::new(),
@@ -353,16 +358,16 @@ pub mod BSTParaTreapMtEph {
             }
         }
 
-        // APAS - work O(1), span O(1)
-        // gpt-5-codex-medium: work O(1), span O(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self) -> N { tree_size(self) }
 
-        // APAS - work O(1), span O(1)
-        // gpt-5-codex-medium: work O(1), span O(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn is_empty(&self) -> B { self.size() == 0 }
 
-        // APAS - work O(lg |t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         fn insert(&self, key: T) {
             let (left, _, right) = ParamTreap::split_inner(self, &key);
             let priority = priority_for(&key);
@@ -372,8 +377,8 @@ pub mod BSTParaTreapMtEph {
             *guard = new_state;
         }
 
-        // APAS - work O(lg |t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         fn delete(&self, key: &T) {
             let (left, _, right) = ParamTreap::split_inner(self, key);
             let merged = ParamTreap::join_pair_inner(left, right);
@@ -382,8 +387,8 @@ pub mod BSTParaTreapMtEph {
             *guard = new_state;
         }
 
-        // APAS - work O(lg |t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         fn find(&self, key: &T) -> Option<T> {
             match self.expose_internal() {
                 | Exposed::Leaf => None,
@@ -395,32 +400,32 @@ pub mod BSTParaTreapMtEph {
             }
         }
 
-        // APAS - work O(lg |t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         fn split(&self, key: &T) -> (Self, B, Self) { ParamTreap::split_inner(self, key) }
 
-        // APAS - work O(lg (|t_1| + |t_2|)), span O(lg (|t_1| + |t_2|))
-        // gpt-5-codex-medium: work O(lg (|t_1| + |t_2|)), span O(lg (|t_1| + |t_2|))
+        /// - APAS: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
+        /// - Claude-Opus-4.6: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         fn join_pair(&self, other: Self) -> Self { ParamTreap::join_pair_inner(self.clone(), other) }
 
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
         fn union(&self, other: &Self) -> Self { ParamTreap::union_inner(self, other) }
 
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
         fn intersect(&self, other: &Self) -> Self { ParamTreap::intersect_inner(self, other) }
 
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
         fn difference(&self, other: &Self) -> Self { ParamTreap::difference_inner(self, other) }
 
-        // APAS - work O(|t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+        /// - APAS: Work O(|t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
         fn filter<F: Pred<T>>(&self, predicate: F) -> Self { ParamTreap::filter_parallel(self, predicate) }
 
-        // APAS - work O(|t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+        /// - APAS: Work O(|t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
         fn reduce<F>(&self, op: F, base: T) -> T
         where
             F: Fn(T, T) -> T + Send + Sync + 'static,
@@ -428,8 +433,8 @@ pub mod BSTParaTreapMtEph {
             ParamTreap::reduce_parallel(self, op, base)
         }
 
-        // APAS - work O(|t|), span O(|t|)
-        // gpt-5-codex-medium: work O(|t|), span O(|t|)
+        /// - APAS: Work O(|t|), Span O(|t|)
+        /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|)
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
             ParamTreap::collect_in_order(self, &mut out);

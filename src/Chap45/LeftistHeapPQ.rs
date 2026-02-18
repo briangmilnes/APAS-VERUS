@@ -221,14 +221,16 @@ pub mod LeftistHeapPQ {
     }
 
     impl<T: StT + Ord> LeftistHeapPQTrait<T> for LeftistHeapPQ<T> {
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn empty() -> Self {
             LeftistHeapPQ {
                 root: LeftistHeapNode::Leaf,
             }
         }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn singleton(element: T) -> Self {
             LeftistHeapPQ {
                 root: LeftistHeapNode::Node {
@@ -240,8 +242,8 @@ pub mod LeftistHeapPQ {
             }
         }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
-        /// Minimum is always at the root
+        /// - APAS: (no cost stated — implied Θ(1) from heap-root access)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — root access.
         fn find_min(&self) -> Option<&T> {
             match &self.root {
                 | LeftistHeapNode::Leaf => None,
@@ -249,15 +251,15 @@ pub mod LeftistHeapPQ {
             }
         }
 
-        /// Claude Work: Θ(log n), Span: Θ(log n)
-        /// Create singleton and meld with existing heap
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — meld clones entire tree O(n) before recursion.
         fn insert(&self, element: T) -> Self {
             let singleton = Self::singleton(element);
             self.meld(&singleton)
         }
 
-        /// Claude Work: Θ(log n), Span: Θ(log n)
-        /// Remove root and meld left and right subtrees
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clones subtrees O(n) before meld.
         fn delete_min(&self) -> (Self, Option<T>) {
             match &self.root {
                 | LeftistHeapNode::Leaf => (self.clone(), None),
@@ -270,17 +272,16 @@ pub mod LeftistHeapPQ {
             }
         }
 
-        /// Claude Work: Θ(log m + log n), Span: Θ(log m + log n)
-        /// ⭐ THE STAR OPERATION: Efficient meld following right spines!
-        /// This is what makes leftist heaps superior for applications requiring frequent melding
+        /// - APAS: Work Θ(log m + log n), Span Θ(log m + log n)
+        /// - Claude-Opus-4.6: Work Θ(m + n), Span Θ(m + n) — clones entire trees O(m+n) before recursive meld.
         fn meld(&self, other: &Self) -> Self {
             LeftistHeapPQ {
                 root: LeftistHeapNode::meld_nodes(self.root.clone(), other.root.clone()),
             }
         }
 
-        /// Claude Work: Θ(n), Span: Θ(n)
-        /// Build heap using parallel reduce with meld operations
+        /// - APAS: Work Θ(n), Span Θ(log² n)
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential reduce; each meld clones O(n).
         fn from_seq(seq: &[T]) -> Self {
             if seq.is_empty() {
                 return Self::empty();
@@ -308,10 +309,12 @@ pub mod LeftistHeapPQ {
             heaps.into_iter().next().unwrap_or_else(Self::empty)
         }
 
-        /// Claude Work: Θ(n), Span: Θ(n)
+        /// - APAS: N/A — utility function not in prose.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — recursive tree traversal.
         fn size(&self) -> N { self.root.size() }
 
-        /// Claude Work: Θ(1), Span: Θ(1)
+        /// - APAS: N/A — utility function not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn is_empty(&self) -> bool { matches!(self.root, LeftistHeapNode::Leaf) }
 
         fn extract_all_sorted(&self) -> Vec<T> {

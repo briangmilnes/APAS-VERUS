@@ -49,6 +49,8 @@ pub mod AllPairsResultStEphInt {
     impl AllPairsResultStEphInt {
         /// Creates a new all-pairs result structure initialized for n vertices.
         /// All distances are set to UNREACHABLE except diagonal (0), all predecessors to NO_PREDECESSOR.
+        /// - APAS: Work Θ(n²), Span Θ(n²)
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS.
         pub fn new(n: usize) -> Self {
             let mut dist_matrix = Vec::with_capacity(n);
             for i in 0..n {
@@ -68,6 +70,8 @@ pub mod AllPairsResultStEphInt {
         }
 
         /// Returns the distance from vertex u to vertex v.
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         pub fn get_distance(&self, u: usize, v: usize) -> i64 {
             if u >= self.n || v >= self.n {
                 return UNREACHABLE;
@@ -76,6 +80,8 @@ pub mod AllPairsResultStEphInt {
         }
 
         /// Sets the distance from vertex u to vertex v.
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clones row before in-place update.
         pub fn set_distance(&mut self, u: usize, v: usize, dist: i64) {
             if u < self.n && v < self.n {
                 let mut row = self.distances.nth(u).clone();
@@ -85,6 +91,8 @@ pub mod AllPairsResultStEphInt {
         }
 
         /// Returns the predecessor of vertex v in the shortest path from u.
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — nested array lookup.
         pub fn get_predecessor(&self, u: usize, v: usize) -> Option<usize> {
             if u >= self.n || v >= self.n {
                 return None;
@@ -94,6 +102,8 @@ pub mod AllPairsResultStEphInt {
         }
 
         /// Sets the predecessor of vertex v in the shortest path from u.
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clones row before in-place update.
         pub fn set_predecessor(&mut self, u: usize, v: usize, pred: usize) {
             if u < self.n && v < self.n {
                 let mut row = self.predecessors.nth(u).clone();
@@ -103,10 +113,14 @@ pub mod AllPairsResultStEphInt {
         }
 
         /// Checks if vertex v is reachable from vertex u.
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         pub fn is_reachable(&self, u: usize, v: usize) -> bool { self.get_distance(u, v) != UNREACHABLE }
 
         /// Extracts the shortest path from u to v by following predecessors.
         /// Returns None if v is unreachable from u, otherwise returns the path as a sequence.
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — follows k predecessor links.
         pub fn extract_path(&self, u: usize, v: usize) -> Option<ArraySeqStPerS<usize>> {
             if u == v {
                 return Some(ArraySeqStPerS::from_vec(vec![u]));

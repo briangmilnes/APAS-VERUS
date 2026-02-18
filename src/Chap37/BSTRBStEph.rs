@@ -24,6 +24,8 @@ pub mod BSTRBStEph {
         right: Link<T>,
     }
 
+    /// - APAS: Work Θ(1), Span Θ(1).
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
     fn new_node<T: StT + Ord>(key: T) -> Node<T> {
         Node {
             key,
@@ -34,12 +36,20 @@ pub mod BSTRBStEph {
         }
     }
 
+    /// - APAS: Work Θ(1), Span Θ(1).
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
     fn is_red<T: StT + Ord>(link: &Link<T>) -> bool { matches!(link, Some(node) if node.color == Color::Red) }
 
+    /// - APAS: Work Θ(1), Span Θ(1).
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
     fn size_link<T: StT + Ord>(link: &Link<T>) -> N { link.as_ref().map_or(0, |n| n.size) }
 
+    /// - APAS: Work Θ(1), Span Θ(1).
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
     fn update<T: StT + Ord>(node: &mut Node<T>) { node.size = 1 + size_link(&node.left) + size_link(&node.right); }
 
+    /// - APAS: Work Θ(1), Span Θ(1).
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
     fn rotate_left<T: StT + Ord>(link: &mut Link<T>) {
         if let Some(mut h) = link.take() {
             if let Some(mut x) = h.right.take() {
@@ -57,6 +67,8 @@ pub mod BSTRBStEph {
         }
     }
 
+    /// - APAS: Work Θ(1), Span Θ(1).
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
     fn rotate_right<T: StT + Ord>(link: &mut Link<T>) {
         if let Some(mut h) = link.take() {
             if let Some(mut x) = h.left.take() {
@@ -74,6 +86,8 @@ pub mod BSTRBStEph {
         }
     }
 
+    /// - APAS: Work Θ(1), Span Θ(1).
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
     fn flip_colors<T: StT + Ord>(link: &mut Link<T>) {
         if let Some(node) = link.as_mut() {
             node.color = match node.color {
@@ -95,6 +109,8 @@ pub mod BSTRBStEph {
         }
     }
 
+    /// - APAS: Work Θ(1), Span Θ(1).
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
     fn fix_up<T: StT + Ord>(link: &mut Link<T>) {
         if is_red(&link.as_ref().unwrap().right) && !is_red(&link.as_ref().unwrap().left) {
             rotate_left(link);
@@ -110,6 +126,8 @@ pub mod BSTRBStEph {
         }
     }
 
+    /// - APAS: Work O(h(T)), Span O(h(T)).
+    /// - Claude-Opus-4.6: Work O(log n), Span O(log n) — RB guarantees h = O(log n).
     fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T) {
         if let Some(node) = link.as_mut() {
             if value < node.key {
@@ -126,6 +144,8 @@ pub mod BSTRBStEph {
         fix_up(link);
     }
 
+    /// - APAS: Work O(h(T)), Span O(h(T)).
+    /// - Claude-Opus-4.6: Work O(log n), Span O(log n).
     fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T> {
         match link {
             | None => None,
@@ -141,6 +161,8 @@ pub mod BSTRBStEph {
         }
     }
 
+    /// - APAS: Work O(h(T)), Span O(h(T)).
+    /// - Claude-Opus-4.6: Work O(log n), Span O(log n).
     fn min_link<T: StT + Ord>(link: &Link<T>) -> Option<&T> {
         match link {
             | None => None,
@@ -151,6 +173,8 @@ pub mod BSTRBStEph {
         }
     }
 
+    /// - APAS: Work O(h(T)), Span O(h(T)).
+    /// - Claude-Opus-4.6: Work O(log n), Span O(log n).
     fn max_link<T: StT + Ord>(link: &Link<T>) -> Option<&T> {
         match link {
             | None => None,
@@ -161,6 +185,8 @@ pub mod BSTRBStEph {
         }
     }
 
+    /// - APAS: Work Θ(n), Span Θ(n).
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n).
     fn in_order_collect<T: StT + Ord>(link: &Link<T>, out: &mut Vec<T>) {
         if let Some(node) = link {
             in_order_collect(&node.left, out);
@@ -169,6 +195,8 @@ pub mod BSTRBStEph {
         }
     }
 
+    /// - APAS: Work Θ(n), Span Θ(n).
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n).
     fn pre_order_collect<T: StT + Ord>(link: &Link<T>, out: &mut Vec<T>) {
         if let Some(node) = link {
             out.push(node.key.clone());

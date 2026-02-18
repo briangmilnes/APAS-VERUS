@@ -25,8 +25,12 @@ pub mod StructChainedHashTable {
     }
 
     impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for ChainList<Key, Value> {
+        /// - APAS: Work O(1), Span O(1).
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty list construction.
         fn new() -> Self { ChainList { head: None } }
 
+        /// - APAS: Work O(1+α) expected, Span O(1+α).
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan for duplicate key, then head insert, n = chain length.
         fn insert(&mut self, key: Key, value: Value) {
             // Search for existing key and update
             let mut current = &mut self.head;
@@ -46,6 +50,8 @@ pub mod StructChainedHashTable {
             self.head = Some(new_node);
         }
 
+        /// - APAS: Work O(1+α) expected, Span O(1+α).
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan of linked list, n = chain length.
         fn lookup(&self, key: &Key) -> Option<Value> {
             let mut current = &self.head;
             while let Some(node) = current {
@@ -57,6 +63,8 @@ pub mod StructChainedHashTable {
             None
         }
 
+        /// - APAS: Work O(1+α) expected, Span O(1+α).
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan + pointer surgery, n = chain length.
         fn delete(&mut self, key: &Key) -> B {
             let mut current = &mut self.head;
             loop {
@@ -75,6 +83,8 @@ pub mod StructChainedHashTable {
     }
 
     impl<Key, Value> Default for ChainList<Key, Value> {
+        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty list construction.
         fn default() -> Self { ChainList { head: None } }
     }
 
@@ -84,18 +94,26 @@ pub mod StructChainedHashTable {
     impl<Key: StT, Value: StT, Metrics: Default> ParaHashTableStEphTrait<Key, Value, ChainList<Key, Value>, Metrics>
         for StructChainedHashTableStEph
     {
+        /// - APAS: Work O(1+α) expected, Span O(1+α).
+        /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — delegates to insert_chained.
         fn insert(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics>, key: Key, value: Value) {
             Self::insert_chained(table, key, value);
         }
 
+        /// - APAS: Work O(1+α) expected, Span O(1+α).
+        /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — delegates to lookup_chained.
         fn lookup(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics>, key: &Key) -> Option<Value> {
             Self::lookup_chained(table, key)
         }
 
+        /// - APAS: Work O(1+α) expected, Span O(1+α).
+        /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — delegates to delete_chained.
         fn delete(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics>, key: &Key) -> B {
             Self::delete_chained(table, key)
         }
 
+        /// - APAS: Work O(n + m + m'), Span O(n + m + m').
+        /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — traverses all chains, creates m' lists, reinserts.
         fn resize(
             table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics>,
             new_size: N,
@@ -136,6 +154,8 @@ pub mod StructChainedHashTable {
     impl<Key: StT, Value: StT, Metrics: Default> ChainedHashTable<Key, Value, ChainList<Key, Value>, Metrics>
         for StructChainedHashTableStEph
     {
+        /// - APAS: Work O(1), Span O(1).
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — placeholder always returns 0; should use actual hash function.
         fn hash_index(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics>, _key: &Key) -> N {
             // Simple modulo hash - implementers can provide better hash function
             let hash_val = 0; // Placeholder: would use actual hash function

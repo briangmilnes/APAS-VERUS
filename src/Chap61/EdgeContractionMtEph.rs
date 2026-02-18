@@ -40,13 +40,13 @@ pub mod EdgeContractionMtEph {
     /// Each edge in the matching forms a block of two vertices.
     /// Unmatched vertices form singleton blocks.
     ///
-    /// APAS: Work Θ(|V| + |E|), Span Θ(log |V| + log |E|)
-    /// Claude: Work Θ(|V| + |E|), Span Θ(log |V| + log |E|),
-    ///         Parallelism Θ(|V| + |E|) / log(|V| + |E|)
+    /// - APAS: Work O(|V| + |E|), Span O(lg |V|)
+    /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — Phases 1-2 are sequential loops;
+    ///   only Phase 3 (build_edges_parallel) is parallel
     ///
-    /// Phase 1: Build vertex-to-block mapping - Θ(|V|) parallelism
-    /// Phase 2: Build new vertex set - Θ(|V|) parallelism
-    /// Phase 3: Build new edge set - Θ(|E|) parallelism
+    /// Phase 1: Build vertex-to-block mapping — sequential
+    /// Phase 2: Build new vertex set — sequential
+    /// Phase 3: Build new edge set — parallel via divide-and-conquer
     ///
     /// Arguments:
     /// - graph: The undirected graph
@@ -103,7 +103,8 @@ pub mod EdgeContractionMtEph {
 
     /// Build new edge set in parallel using divide-and-conquer
     ///
-    /// Work Θ(|E|), Span Θ(log |E|), Parallelism Θ(|E| / log |E|)
+    /// - APAS: N/A — Verus-specific scaffolding (parallel edge routing helper)
+    /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(lg |E|) — genuine divide-and-conquer parallelism
     fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
         vertex_map: Arc<HashMap<V, V>>,
@@ -161,7 +162,9 @@ pub mod EdgeContractionMtEph {
     ///
     /// Computes a parallel matching and contracts it.
     ///
-    /// Work Θ(|V| + |E| × avg_degree), Span Θ(log |V| + log |E| + avg_degree)
+    /// - APAS: Work O(|V| + |E|), Span O(lg |V|)
+    /// - Claude-Opus-4.6: Work Θ(|E|²), Span Θ(|E|) — dominated by parallel_matching_mt's
+    ///   should_select_edge scanning all edges
     ///
     /// Arguments:
     /// - graph: The undirected graph

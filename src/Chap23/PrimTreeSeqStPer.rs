@@ -114,6 +114,8 @@ pub mod PrimTreeSeqStPer {
         }
 
         /// Returns a borrow iterator over the sequence elements.
+        /// - APAS: N/A — Verus-specific iterator scaffolding.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps slice::Iter.
         pub fn iter(&self) -> (it: PrimTreeSeqStIter<'_, T>)
             ensures
                 it@.0 == 0,
@@ -131,37 +133,43 @@ pub mod PrimTreeSeqStPer {
         spec fn spec_index(&self, i: int) -> T;
 
         /// Creates an empty sequence.
-        /// APAS: Algorithm 23.3. Work Θ(1), Span Θ(1).
+        /// - APAS: Algorithm 23.3. Work Θ(1), Span Θ(1).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_len() == 0;
 
         /// Builds a sequence containing a single element.
-        /// APAS: Algorithm 23.3. Work Θ(1), Span Θ(1).
+        /// - APAS: Algorithm 23.3. Work Θ(1), Span Θ(1).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn singleton(value: T) -> (single: Self)
             ensures
                 single.spec_len() == 1,
                 single.spec_index(0) == value;
 
         /// Constructs a sequence from the provided vector.
-        /// APAS: Work Θ(1), Span Θ(1).
+        /// - APAS: N/A — not in prose, Vec-specific constructor.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps existing Vec.
         fn from_vec(vec: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_len() == vec@.len(),
                 forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < vec@.len() ==> seq.spec_index(i) == vec@[i];
 
         /// Returns the number of elements in the sequence.
-        /// APAS: Work Θ(1), Span Θ(1).
+        /// - APAS: Cost Spec 23.2. Work Θ(1), Span Θ(1).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn length(&self) -> (len: usize)
             ensures len == self.spec_len();
 
-        /// Algorithm 19.11 (nth). Return a reference to the element at `index`.
-        /// APAS: Work Θ(1), Span Θ(1).
+        /// Algorithm 23.3 (nth). Return a reference to the element at `index`.
+        /// - APAS: Algorithm 23.3. Work Θ(log n), Span Θ(log n) — tree-based recursive.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec-backed direct index.
         fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.spec_len()
             ensures *nth_elem == self.spec_index(index as int);
 
         /// Exposes the internal structure as Zero, One, or Two parts.
-        /// APAS: Data Type 23.1. Work Θ(n), Span Θ(n).
+        /// - APAS: Cost Spec 23.2. Work Θ(1), Span Θ(1) — tree-based, just look at root.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — Vec-backed, clones elements into two halves.
         fn expose(&self) -> (tree: PrimTreeSeqStTree<T>)
             where T: Clone + Eq
             requires
@@ -182,7 +190,8 @@ pub mod PrimTreeSeqStPer {
                 };
 
         /// Reassembles a primitive tree sequence from an exposed tree.
-        /// APAS: Data Type 23.1. Work Θ(n), Span Θ(n).
+        /// - APAS: Cost Spec 23.2. Work Θ(1 + |r(L) − r(R)|), Span Θ(1 + |r(L) − r(R)|) for Two; Θ(1) for Zero/One.
+        /// - Claude-Opus-4.6: Work Θ(|L| + |R|), Span Θ(|L| + |R|) for Two; Θ(1) for Zero/One — Vec append.
         fn join(tree: PrimTreeSeqStTree<T>) -> (joined: Self)
             ensures
                 tree@ is Zero ==> joined@ =~= Seq::<T>::empty(),
@@ -190,7 +199,8 @@ pub mod PrimTreeSeqStPer {
                 tree@ is Two ==> joined@ =~= tree@->Two_0 + tree@->Two_1;
 
         /// Definition 18.13 (append). Concatenate two sequences.
-        /// APAS: Algorithm 23.3. Work Θ(|a| + |b|), Span Θ(1).
+        /// - APAS: Algorithm 23.3. append = join(Two(a,b)). Work Θ(1 + |r(a) − r(b)|), Span same.
+        /// - Claude-Opus-4.6: Work Θ(|a| + |b|), Span Θ(|a| + |b|) — sequential clone loops.
         fn append(a: &Self, b: &Self) -> (appended: Self)
             where T: Clone + Eq
             requires
@@ -202,7 +212,8 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger b.spec_index(i)] 0 <= i < b.spec_len() ==> appended.spec_index(a.spec_len() as int + i) == b.spec_index(i);
 
         /// Definition 18.12 (subseq). Extract a contiguous subsequence.
-        /// APAS: Algorithm 23.3. Work Θ(length), Span Θ(1).
+        /// - APAS: Algorithm 23.3. subseq = take(drop(S,a), n). Tree cost depends on drop+take.
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(length) — sequential clone loop.
         fn subseq(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -214,7 +225,8 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
         /// Definition 18.16 (update). Return a copy with the element at `index` replaced.
-        /// APAS: Algorithm 23.3. Work Θ(|a|), Span Θ(1).
+        /// - APAS: Algorithm 23.3. Tree-based Work Θ(log² n), Span Θ(log² n).
+        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|) — copies entire Vec.
         fn update(a: &Self, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires
@@ -226,7 +238,8 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.spec_len() && i != index as int ==> updated.spec_index(i) == a.spec_index(i);
 
         /// Algorithm 23.3 (map). Transform each element via `f`.
-        /// Work Θ(|a|), Span Θ(1).
+        /// - APAS: Algorithm 23.3. Work Θ(n), Span Θ(log n) — parallel tree-based.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop.
         fn map<U: Clone, F: Fn(&T) -> U>(a: &PrimTreeSeqStS<T>, f: &F) -> (mapped: PrimTreeSeqStS<U>)
             requires
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.spec_index(i),)),
@@ -235,7 +248,8 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger mapped.spec_index(i)] 0 <= i < a.spec_len() ==> f.ensures((&a.spec_index(i),), mapped.spec_index(i));
 
         /// Algorithm 23.3 (tabulate). Build a sequence by applying `f` to each index.
-        /// Work Θ(n), Span Θ(1).
+        /// - APAS: Algorithm 23.3. Work Θ(n), Span Θ(log n) — parallel tree-based.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop.
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: Self)
             requires
                 length <= usize::MAX,
@@ -245,7 +259,8 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger tab_seq.spec_index(i)] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.spec_index(i));
 
         /// Algorithm 23.3 (filter). Keep elements satisfying the predicate.
-        /// Work Θ(|a|), Span Θ(1).
+        /// - APAS: Algorithm 23.3. Work Θ(n), Span Θ(log² n) — parallel tree-based with rebalancing.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop.
         fn filter<F: Fn(&T) -> bool>(a: &PrimTreeSeqStS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: PrimTreeSeqStS<T>)
             where T: Clone + Eq
             requires
@@ -261,7 +276,8 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// Algorithm 23.3 (drop). Drop the first `n` elements.
-        /// Work Θ(|a| - n), Span Θ(1).
+        /// - APAS: Algorithm 23.3. Tree-based Work Θ(log² n), Span Θ(log² n).
+        /// - Claude-Opus-4.6: Work Θ(|a| − n), Span Θ(|a| − n) — delegates to subseq.
         fn drop(&self, n: usize) -> (dropped: Self)
             where T: Clone + Eq
             requires
@@ -273,7 +289,8 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger dropped.spec_index(i)] 0 <= i < dropped.spec_len() ==> dropped.spec_index(i) == self.spec_index(n as int + i);
 
         /// Algorithm 23.3 (flatten). Concatenate a sequence of sequences.
-        /// Work Θ(Σ|a_i|), Span Θ(1).
+        /// - APAS: Algorithm 23.3. flatten = reduce append empty. Tree-based cost depends on reduce+append.
+        /// - Claude-Opus-4.6: Work Θ(Σ|a_i|), Span Θ(Σ|a_i|) — nested sequential loops.
         fn flatten(a: &PrimTreeSeqStS<PrimTreeSeqStS<T>>) -> (flattened: PrimTreeSeqStS<T>)
             where T: Clone + Eq
             requires
@@ -859,10 +876,14 @@ pub mod PrimTreeSeqStPer {
 
     // Utility methods for runtime test support.
     impl<T> PrimTreeSeqStS<T> {
+        /// - APAS: N/A — utility method, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — borrows inner slice.
         pub fn as_slice(&self) -> (result: &[T])
             ensures result@ =~= self@
         { &self.seq }
 
+        /// - APAS: N/A — utility method, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — unwraps inner Vec.
         pub fn into_vec(self) -> (result: Vec<T>)
             ensures result@ =~= self@
         { self.seq }

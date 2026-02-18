@@ -18,6 +18,8 @@ pub mod DFSStPer {
 
     /// Performs DFS from source vertex s on adjacency list graph G.
     /// Returns the set of all vertices reachable from s.
+    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Claude-Opus-4.6: Work O((|V| + |E|) log |V|), Span O((|V| + |E|) log |V|) — AVLTreeSetStPer find/insert are O(log n)
     pub fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> AVLTreeSetStPer<N> {
         let n = graph.length();
         if source >= n {
@@ -26,6 +28,8 @@ pub mod DFSStPer {
         dfs_recursive(graph, AVLTreeSetStPer::empty(), source)
     }
 
+    /// - APAS: (no cost stated — internal helper of DFS)
+    /// - Claude-Opus-4.6: Work O(log |V|) per call for find/insert — O((|V| + |E|) log |V|) total
     fn dfs_recursive(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: AVLTreeSetStPer<N>,

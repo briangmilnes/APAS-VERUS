@@ -100,9 +100,17 @@ pub mod BSTReducedStEph {
         fn keys(&self)                            -> ArraySeqStPerS<K>;
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn values(&self)                          -> ArraySeqStPerS<V>;
+        /// - APAS: Work Θ(log n) expected, Span Θ(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn minimum_key(&self)                     -> Option<&K>;
+        /// - APAS: Work Θ(log n) expected, Span Θ(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn maximum_key(&self)                     -> Option<&K>;
+        /// - APAS: Work Θ(1), Span Θ(1) — reads augmented field at root.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn reduced_value(&self)                   -> R;
+        /// - APAS: Work Θ(log n), Span Θ(log n) — range query on augmented BST.
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn range_reduce(&self, low: &K, high: &K) -> R;
     }
 
@@ -111,13 +119,19 @@ pub mod BSTReducedStEph {
     }
 
     impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> BSTReducedStEph<K, V, R, Op> {
+        /// - APAS: Work Θ(1), Span Θ(1) — O(1) via augmented size field.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size_link(link: &Link<K, V, R>) -> N { link.as_ref().map_or(0, |n| n.size) }
 
+        /// - APAS: Work Θ(1), Span Θ(1) — reads augmented reduced value.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn reduced_value_link(link: &Link<K, V, R>) -> R {
             link.as_ref()
                 .map_or_else(|| Op::identity(), |n| n.reduced_value.clone())
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1) — recomputes size and reduced value from children.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn update_node(node: &mut Node<K, V, R>) {
             node.size = 1 + Self::size_link(&node.left) + Self::size_link(&node.right);
 
@@ -129,6 +143,8 @@ pub mod BSTReducedStEph {
             node.reduced_value = Op::combine(left_reduced, Op::combine(node_reduced, right_reduced));
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1) — corresponds to APAS makeNode with reduced values.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn make_node(key: K, value: V, priority: u64, left: Link<K, V, R>, right: Link<K, V, R>) -> Link<K, V, R> {
             let node_reduced = Op::lift(&value);
             let mut node = Node::new(key, value, priority, node_reduced);
@@ -138,6 +154,8 @@ pub mod BSTReducedStEph {
             Some(Box::new(node))
         }
 
+        /// - APAS: N/A — internal treap rotation (updates sizes and reduced values).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn rotate_left(link: &mut Link<K, V, R>) {
             if let Some(mut x) = link.take() {
                 if let Some(mut y) = x.right.take() {
@@ -152,6 +170,8 @@ pub mod BSTReducedStEph {
             }
         }
 
+        /// - APAS: N/A — internal treap rotation (updates sizes and reduced values).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn rotate_right(link: &mut Link<K, V, R>) {
             if let Some(mut x) = link.take() {
                 if let Some(mut y) = x.left.take() {
@@ -166,6 +186,8 @@ pub mod BSTReducedStEph {
             }
         }
 
+        /// - APAS: N/A — internal recursive insert helper.
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn insert_link(link: &mut Link<K, V, R>, key: K, value: V, rng: &mut impl Rng) {
             if let Some(node) = link.as_mut() {
                 if key < node.key {
@@ -191,6 +213,8 @@ pub mod BSTReducedStEph {
             }
         }
 
+        /// - APAS: N/A — internal recursive find helper.
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn find_link<'a>(link: &'a Link<K, V, R>, key: &K) -> Option<&'a V> {
             match link {
                 | None => None,
@@ -206,6 +230,8 @@ pub mod BSTReducedStEph {
             }
         }
 
+        /// - APAS: N/A — internal recursive min-key helper.
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn min_key_link(link: &Link<K, V, R>) -> Option<&K> {
             match link {
                 | None => None,
@@ -216,6 +242,8 @@ pub mod BSTReducedStEph {
             }
         }
 
+        /// - APAS: N/A — internal recursive max-key helper.
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn max_key_link(link: &Link<K, V, R>) -> Option<&K> {
             match link {
                 | None => None,
@@ -226,6 +254,8 @@ pub mod BSTReducedStEph {
             }
         }
 
+        /// - APAS: N/A — internal recursive key collection helper.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn collect_keys(link: &Link<K, V, R>, out: &mut Vec<K>) {
             if let Some(node) = link {
                 Self::collect_keys(&node.left, out);
@@ -234,6 +264,8 @@ pub mod BSTReducedStEph {
             }
         }
 
+        /// - APAS: N/A — internal recursive value collection helper.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn collect_values(link: &Link<K, V, R>, out: &mut Vec<V>) {
             if let Some(node) = link {
                 Self::collect_values(&node.left, out);
@@ -242,6 +274,8 @@ pub mod BSTReducedStEph {
             }
         }
 
+        /// - APAS: Work Θ(log n), Span Θ(log n) — range query on augmented BST.
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn range_reduce_link(link: &Link<K, V, R>, low: &K, high: &K) -> R {
             match link {
                 | None => Op::identity(),

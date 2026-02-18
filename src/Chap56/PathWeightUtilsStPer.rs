@@ -52,6 +52,8 @@ pub mod PathWeightUtilsStPer {
     /// Path is a sequence of vertices [v0, v1, ..., vk].
     /// Weights is an adjacency matrix where weights.nth(i).nth(j) is the weight of edge (i,j).
     /// Returns the sum of weights along the path, or None if path is invalid.
+    /// - APAS: Work Θ(k), Span Θ(k) — implied by Def 56.1 (sum of k-1 edge weights).
+    /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — agrees with APAS.
     pub fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>) -> Option<i64> {
         let k = path.length();
         if k < 2 {
@@ -72,6 +74,8 @@ pub mod PathWeightUtilsStPer {
     }
 
     /// Computes the total weight of a path with floating-point weights.
+    /// - APAS: Work Θ(k), Span Θ(k) — implied by Def 56.1.
+    /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — agrees with APAS.
     pub fn path_weight_float(
         path: &ArraySeqStPerS<usize>,
         weights: &ArraySeqStPerS<ArraySeqStPerS<OrderedF64>>,
@@ -97,6 +101,8 @@ pub mod PathWeightUtilsStPer {
     /// Validates the sub-paths property: every sub-path of a shortest path is itself a shortest path.
     /// Given a path and distances for all vertices from source, check if all sub-paths are optimal.
     /// This is a validation utility, not used in actual shortest path algorithms.
+    /// - APAS: (no cost stated) — Def 56.4 states the property but not a validation algorithm.
+    /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — checks k-1 consecutive edges; module header overstates as O(k²).
     pub fn validate_subpath_property_int(
         path: &ArraySeqStPerS<usize>,
         distances: &ArraySeqStPerS<i64>,
@@ -125,6 +131,8 @@ pub mod PathWeightUtilsStPer {
     }
 
     /// Validates the sub-paths property for floating-point weights.
+    /// - APAS: (no cost stated) — Def 56.4 states the property but not a validation algorithm.
+    /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — checks k-1 consecutive edges; module header overstates as O(k²).
     pub fn validate_subpath_property_float(
         path: &ArraySeqStPerS<usize>,
         distances: &ArraySeqStPerS<OrderedF64>,

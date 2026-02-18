@@ -33,6 +33,8 @@ pub mod AdjSeqGraphStEph {
     }
 
     impl AdjSeqGraphStEphTrait for AdjSeqGraphStEph {
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop creating n empty neighbor lists.
         fn new(n: N) -> Self {
             let empty_list = ArraySeqStEphS::empty();
             let mut adj_lists = Vec::with_capacity(n);
@@ -44,10 +46,16 @@ pub mod AdjSeqGraphStEph {
             }
         }
 
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps existing sequence.
         fn from_seq(adj: ArraySeqStEphS<ArraySeqStEphS<N>>) -> Self { AdjSeqGraphStEph { adj } }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — sequence length.
         fn num_vertices(&self) -> N { self.adj.length() }
 
+        /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential loop; span not parallel.
         fn num_edges(&self) -> N {
             let n = self.adj.length();
             let mut count = 0;
@@ -57,6 +65,8 @@ pub mod AdjSeqGraphStEph {
             count
         }
 
+        /// - APAS: Work Θ(d(u)), Span Θ(lg d(u)) [Cost Spec 52.5]
+        /// - Claude-Opus-4.6: Work Θ(d(u)), Span Θ(d(u)) — sequential linear scan; span not logarithmic.
         fn has_edge(&self, u: N, v: N) -> B {
             if u >= self.adj.length() {
                 return false;
@@ -70,16 +80,24 @@ pub mod AdjSeqGraphStEph {
             false
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5]
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS (clone is O(1) for persistent backing).
         fn out_neighbors(&self, u: N) -> ArraySeqStEphS<N> { self.adj.nth(u).clone() }
 
+        /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5]
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn out_degree(&self, u: N) -> N { self.adj.nth(u).length() }
 
+        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — single array set.
         fn set_neighbors(&mut self, v: N, neighbors: ArraySeqStEphS<N>) {
             if v < self.adj.length() {
                 let _ = self.adj.set(v, neighbors);
             }
         }
 
+        /// - APAS: Work Θ(n), Span Θ(1) [Cost Spec 52.5, insert/delete edge]
+        /// - Claude-Opus-4.6: Work Θ(d(u)), Span Θ(d(u)) — linear scan + rebuild of neighbor list; O(1) array set.
         fn set_edge(&mut self, u: N, v: N, exists: B) {
             if u >= self.adj.length() || v >= self.adj.length() {
                 return;

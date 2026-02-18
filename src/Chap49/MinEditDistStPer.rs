@@ -28,8 +28,8 @@ pub mod MinEditDistStPer {
         /// Create from source and target sequences
         fn from_sequences(source: ArraySeqStPerS<T>, target: ArraySeqStPerS<T>) -> Self;
 
-        /// Compute minimum edit distance between sequences
-        /// claude-4-sonet: Work Θ(|S|×|T|), Span Θ(|S|+|T|), Parallelism Θ(1)
+        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
+        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential, span equals work
         fn min_edit_distance(&self)                                             -> usize;
 
         /// Get the source sequence
@@ -42,9 +42,8 @@ pub mod MinEditDistStPer {
         fn memo_size(&self)                                                     -> usize;
     }
 
-    /// Internal recursive minimum edit distance with memoization
-    /// Claude Work: O(|S|*|T|) - each subproblem computed once
-    /// Claude Span: O(|S|+|T|) - maximum recursion depth
+    /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
+    /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential memoized recursion
     fn min_edit_distance_rec<T: StT>(table: &mut MinEditDistStPerS<T>, i: usize, j: usize) -> usize {
         // Check memo first
         if let Some(&result) = table.memo.get(&(i, j)) {

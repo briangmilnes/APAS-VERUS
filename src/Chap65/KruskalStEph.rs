@@ -44,17 +44,11 @@ pub mod KruskalStEph {
     /// Algorithm:
     /// 1. Sort edges by weight
     /// 2. For each edge (u,v) in sorted order:
-    ///    - If find(u) ≠ find(v): add edge to MST, union(u,v)
+    ///    - If find(u) != find(v): add edge to MST, union(u,v)
     ///    - Else: skip (would create cycle)
     ///
-    /// APAS: Work O(m lg n), Span O(m lg n)
-    /// claude-4-sonet: Work O(m lg n), Span O(m lg n) [sequential]
-    ///
-    /// Arguments:
-    /// - graph: Weighted undirected graph
-    ///
-    /// Returns:
-    /// - Set of edges forming the MST
+    /// - APAS: Work O(m lg n), Span O(m lg n)
+    /// - Claude-Opus-4.6: Work O(m lg m), Span O(m lg m) — sorting dominates; sequential
     pub fn kruskal_mst<V: StT + Hash + Ord>(
         graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
     ) -> SetStEph<LabEdge<V, OrderedFloat<f64>>> {
@@ -91,10 +85,9 @@ pub mod KruskalStEph {
         mst_edges
     }
 
-    /// Compute total MST weight
-    ///
-    /// APAS: Work O(|MST|), Span O(|MST|)
-    /// claude-4-sonet: Work O(|MST|), Span O(|MST|)
+    /// Compute total MST weight.
+    /// - APAS: (no cost stated) — utility function
+    /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, OrderedFloat<f64>>>) -> OrderedFloat<f64> {
         let mut total = OrderedFloat(0.0);
         for edge in mst_edges.iter() {
@@ -104,9 +97,10 @@ pub mod KruskalStEph {
         total
     }
 
-    /// Verify MST has correct number of edges
-    ///
+    /// Verify MST has correct number of edges.
     /// A valid MST of n vertices should have n-1 edges.
+    /// - APAS: (no cost stated) — validation utility
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     pub fn verify_mst_size<V: StT + Hash + Ord>(
         n_vertices: N,
         mst_edges: &SetStEph<LabEdge<V, OrderedFloat<f64>>>,

@@ -30,18 +30,22 @@ pub mod GraphSearchMtPer {
     pub struct SelectOne;
 
     pub trait GraphSearchMtPerTrait<V: StTInMtT + Ord + 'static> {
-        /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V| × log |V|), Parallelism Θ(|E|/|V|)
-        /// Graph search using thread-safe persistent sets with parallel set operations.
+        /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds; BFS rounds parallelizable)
+        /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — neighbor loop is sequential despite parallel set ops.
         fn graph_search<G, S>(graph: &G, source: V, strategy: &S)                         -> SearchResult<V>
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>,
             S: SelectionStrategy<V>;
 
+        /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
+        /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — neighbor loop is sequential despite parallel set ops.
         fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetMtPer<V>, strategy: &S) -> SearchResult<V>
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>,
             S: SelectionStrategy<V>;
 
+        /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
+        /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential control flow; uses SelectAll (BFS).
         fn reachable<G>(graph: &G, source: V)                                             -> AVLTreeSetMtPer<V>
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>;
@@ -59,9 +63,9 @@ pub mod GraphSearchMtPer {
         }
     }
 
-    /// Generic graph search starting from single source.
-    /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V| × log |V|), Parallelism Θ(|E|/|V|)
-    /// Graph search using thread-safe persistent sets with parallel set operations.
+    /// Generic graph search starting from single source (Algorithm 53.4).
+    /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds; BFS rounds parallelizable)
+    /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search_multi; neighbor loop sequential.
     pub fn graph_search<V: StTInMtT + Ord + 'static, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,
@@ -71,8 +75,9 @@ pub mod GraphSearchMtPer {
         graph_search_multi(graph, sources, strategy)
     }
 
-    /// Generic graph search starting from multiple sources.
-    /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V| × log |V|), Parallelism Θ(|E|/|V|)
+    /// Generic graph search starting from multiple sources (Exercise 53.3).
+    /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds; BFS rounds parallelizable)
+    /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — neighbor loop is sequential despite parallel set ops.
     pub fn graph_search_multi<V: StTInMtT + Ord + 'static, G, S>(
         graph: &G,
         sources: AVLTreeSetMtPer<V>,
@@ -121,8 +126,9 @@ pub mod GraphSearchMtPer {
         SearchResult { visited, parent: None }
     }
 
-    /// Find all vertices reachable from source using breadth-first search.
-    /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V| × log |V|), Parallelism Θ(|E|/|V|)
+    /// Find all vertices reachable from source (Problem 53.2) using SelectAll (BFS).
+    /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
+    /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
     pub fn reachable<V: StTInMtT + Ord + 'static, G>(graph: &G, source: V) -> AVLTreeSetMtPer<V>
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,

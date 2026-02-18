@@ -35,8 +35,8 @@ pub mod StarPartitionMtEph {
     /// 3. Use Seq.inject to map satellites to centers
     /// 4. Remaining vertices become singleton centers
     ///
-    /// APAS: Work O(n + m), Span O(lg n)
-    /// claude-4-sonet: Work O(n + m), Span O(lg n), Parallelism Θ((n+m)/lg n)
+    /// - APAS: Work O(n + m), Span O(lg n)
+    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — all loops are sequential; no parallelism implemented.
     ///
     /// Arguments:
     /// - graph: The undirected graph to partition

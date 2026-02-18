@@ -28,7 +28,9 @@ pub mod Exercise21_7 {
     /// Spec: x is even.
     pub open spec fn spec_is_even(x: int) -> bool { x % 2 == 0 }
 
-    /// Check if a number is even. Work Θ(1), Span Θ(1).
+    /// Check if a number is even.
+    /// - APAS: Work Θ(1), Span Θ(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     pub fn is_even(x: &N) -> (r: B)
         ensures r == spec_is_even(*x as int)
     { *x % 2 == 0 }
@@ -39,7 +41,9 @@ pub mod Exercise21_7 {
         || c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U'
     }
 
-    /// Check if a character is a vowel (case-insensitive). Work Θ(1), Span Θ(1).
+    /// Check if a character is a vowel (case-insensitive).
+    /// - APAS: Work Θ(1), Span Θ(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     pub fn is_vowel(c: &char) -> (r: B)
         ensures r == spec_is_vowel(*c)
     {
@@ -53,7 +57,8 @@ pub mod Exercise21_7 {
     /// flatten 〈 〈 (x, y) : y ∈ b | isVowel y 〉 : x ∈ a | isEven x 〉
     ///
     /// Pairs even elements of a with vowels of b.
-    /// APAS: Work Θ(|a|·|b|), Span Θ(lg |a|)
+    /// - APAS: Work Θ(|a|·|b|), Span Θ(lg |a|)
+    /// - Claude-Opus-4.6: Work Θ(|a|·|b|), Span Θ(|a|·|b|) — sequential StPer filter + tabulate + flatten.
     pub fn pair_even_with_vowels(
         a: &ArraySeqStPerS<N>,
         b: &ArraySeqStPerS<char>,

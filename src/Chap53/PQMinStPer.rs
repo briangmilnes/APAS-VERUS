@@ -32,14 +32,15 @@ pub mod PQMinStPer {
     }
 
     pub trait PQMinStPerTrait<V: StT + Ord, P: StT + Ord> {
-        /// claude-4-sonet: Work Θ((|V| + |E|) log |V|), Span Θ(|V| log |V|), Parallelism Θ(1)
-        /// Priority Queue Search from a single source.
+        /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
+        /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
         fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF)                         -> PQMinResult<V, P>
         where
             G: Fn(&V) -> AVLTreeSetStPer<V>,
             PF: PriorityFn<V, P>;
 
-        /// Priority Queue Search from multiple sources.
+        /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
+        /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
         fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStPer<V>, priority_fn: &PF) -> PQMinResult<V, P>
         where
             G: Fn(&V) -> AVLTreeSetStPer<V>,
@@ -63,8 +64,9 @@ pub mod PQMinStPer {
         fn priority(&self, v: &V) -> P { (self.f)(v) }
     }
 
-    /// Priority queue minimum search starting from single source.
-    /// claude-4-sonet: Work Θ(|V| log |V| + |E|), Span Θ(|V| log |V|), Parallelism Θ(1)
+    /// Priority-first search from single source (Section 53.4).
+    /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
+    /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — delegates to pq_min_multi.
     pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF) -> PQMinResult<V, P>
     where
         G: Fn(&V) -> AVLTreeSetStPer<V>,
@@ -74,8 +76,9 @@ pub mod PQMinStPer {
         pq_min_multi(graph, sources, priority_fn)
     }
 
-    /// Priority queue minimum search starting from multiple sources.
-    /// claude-4-sonet: Work Θ(|V| log |V| + |E|), Span Θ(|V| log |V|), Parallelism Θ(1)
+    /// Priority-first search from multiple sources (Section 53.4).
+    /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
+    /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round; sequential.
     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
         graph: &G,
         sources: AVLTreeSetStPer<V>,

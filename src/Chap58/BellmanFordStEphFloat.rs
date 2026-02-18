@@ -22,7 +22,8 @@ pub mod BellmanFordStEphFloat {
 
     pub trait BellmanFordStEphFloatTrait {
         /// Bellman-Ford single source shortest path algorithm
-        /// APAS: Work O(nm), Span O(n lg n) where n = |V|, m = |E|
+        /// - APAS: Work O(nm), Span O(n lg n) where n = |V|, m = |E|
+        /// - Claude-Opus-4.6: Work O(nm), Span O(nm) — sequential implementation; inner vertex loop not parallelized
         fn bellman_ford(graph: &WeightedDirGraphStEphFloat<usize>, source: usize) -> SSSPResultStEphFloat;
     }
 
@@ -31,7 +32,8 @@ pub mod BellmanFordStEphFloat {
     ///
     /// **Algorithm 58.2**: Iterative k-hop distance computation
     ///
-    /// Work: O(nm), Span: O(n lg n) where n = |V|, m = |E|
+    /// - APAS: Work O(nm), Span O(n lg n) where n = |V|, m = |E|
+    /// - Claude-Opus-4.6: Work O(nm), Span O(nm) — sequential implementation; inner vertex loop not parallelized
     ///
     /// # Arguments
     /// * `graph` - Weighted directed graph with float weights (can be negative)
@@ -127,6 +129,8 @@ pub mod BellmanFordStEphFloat {
 
     /// Reconstruct predecessor tree from final distances
     /// For each vertex v, find the in-neighbor u that achieves the shortest path
+    /// - APAS: N/A — Verus-specific scaffolding
+    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — sequential scan over vertices and in-neighbors
     fn reconstruct_predecessors(
         graph: &WeightedDirGraphStEphFloat<usize>,
         distances: &HashMap<usize, OrderedF64>,

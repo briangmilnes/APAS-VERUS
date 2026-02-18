@@ -11,23 +11,23 @@ pub mod Chapter36St {
     pub type T<T> = ArraySeqStEphS<T>;
 
     pub trait Chapter36StTrait<T: StT + Ord> {
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1) - constant time pivot selection
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn pivot_st_first(&self, lo: N, hi: N)   -> T;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1) - constant time median-of-3
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn pivot_st_median3(&self, lo: N, hi: N) -> T;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1) - constant time random selection
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn pivot_st_random(&self, lo: N, hi: N)  -> T;
-        /// APAS: Work Θ(n log n) expected, Θ(n²) worst, Span Θ(n log n) expected, Θ(n²) worst
-        /// claude-4-sonet: Work Θ(n log n) expected, Θ(n²) worst, Span Θ(n log n) expected, Θ(n²) worst, Parallelism Θ(1) - sequential divide-and-conquer
+        /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(n log n) expected / Θ(n²) worst
+        /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span = Work — sequential, no parallelism.
         fn quick_sort_st_first(&mut self);
-        /// APAS: Work Θ(n log n) expected, Θ(n²) worst, Span Θ(n log n) expected, Θ(n²) worst
-        /// claude-4-sonet: Work Θ(n log n) expected, Θ(n²) worst, Span Θ(n log n) expected, Θ(n²) worst, Parallelism Θ(1) - sequential divide-and-conquer with median-of-3 pivot
+        /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(n log n) expected / Θ(n²) worst
+        /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span = Work — sequential, no parallelism.
         fn quick_sort_st_median3(&mut self);
-        /// APAS: Work Θ(n log n) expected, Θ(n²) worst, Span Θ(n log n) expected, Θ(n²) worst
-        /// claude-4-sonet: Work Θ(n log n) expected, Θ(n²) worst, Span Θ(n log n) expected, Θ(n²) worst, Parallelism Θ(1) - sequential divide-and-conquer with random pivot
+        /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(n log n) expected / Θ(n²) worst
+        /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span = Work — sequential, no parallelism.
         fn quick_sort_st_random(&mut self);
     }
 
@@ -53,6 +53,8 @@ pub mod Chapter36St {
         }
 
         fn quick_sort_st_first(&mut self) {
+            /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span = Work
+            /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span = Work — sequential inner sort with first-element pivot.
             fn sort<T: StT + Ord>(a: &mut ArraySeqStEphS<T>, lo: N, hi: N) {
                 if hi <= lo + 1 {
                     return;
@@ -88,6 +90,8 @@ pub mod Chapter36St {
         }
 
         fn quick_sort_st_median3(&mut self) {
+            /// - APAS: Work Θ(1), Span Θ(1)
+            /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
             fn median3<T: StT + Ord>(a: &ArraySeqStEphS<T>, lo: N, hi: N) -> T {
                 let mid = lo + (hi - lo) / 2;
                 let x0 = a.nth(lo).clone();
@@ -101,6 +105,8 @@ pub mod Chapter36St {
                     xl
                 }
             }
+            /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span = Work
+            /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span = Work — sequential inner sort with median-of-3 pivot.
             fn sort<T: StT + Ord>(a: &mut ArraySeqStEphS<T>, lo: N, hi: N) {
                 if hi <= lo + 1 {
                     return;
@@ -136,6 +142,8 @@ pub mod Chapter36St {
         }
 
         fn quick_sort_st_random(&mut self) {
+            /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span = Work
+            /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span = Work — sequential inner sort with random pivot.
             fn sort<T: StT + Ord>(a: &mut ArraySeqStEphS<T>, lo: N, hi: N) {
                 if hi <= lo + 1 {
                     return;

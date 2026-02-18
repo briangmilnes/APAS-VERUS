@@ -29,58 +29,58 @@ pub mod BSTParaMtEph {
     }
 
     pub trait ParamBSTTrait<T: MtKey + 'static>: Sized {
-        /// APAS: Work O(1), Span O(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn new()                           -> Self;
-        /// APAS: Work O(1), Span O(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn expose(&self)                   -> Exposed<T>;
-        /// APAS: Work O(1), Span O(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn join_mid(exposed: Exposed<T>)   -> Self;
-        /// APAS: Work O(1), Span O(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self)                     -> N;
-        /// APAS: Work O(1), Span O(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn is_empty(&self)                 -> B;
-        /// APAS: Work O(lg |t|), Span O(lg |t|)
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n) with locking
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn insert(&self, key: T);
-        /// APAS: Work O(lg |t|), Span O(lg |t|)
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n) with locking
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn delete(&self, key: &T);
-        // APAS - work O(lg |t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn find(&self, key: &T)            -> Option<T>;
-        // APAS - work O(lg |t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn split(&self, key: &T)           -> (Self, B, Self);
-        // APAS - work O(lg (|t_1| + |t_2|)), span O(lg (|t_1| + |t_2|))
-        // gpt-5-codex-medium: work O(lg (|t_1| + |t_2|)), span O(lg (|t_1| + |t_2|))
+        /// - APAS: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|))
+        /// - Claude-Opus-4.6: Work Θ(log(|t1| + |t2|)), Span Θ(log(|t1| + |t2|))
         fn join_pair(&self, other: Self)   -> Self;
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
         fn union(&self, other: &Self)      -> Self;
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
         fn intersect(&self, other: &Self)  -> Self;
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
         fn difference(&self, other: &Self) -> Self;
-        // APAS - work O(|t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+        /// - APAS: Work O(|t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(&self, predicate: F) -> Self;
-        // APAS - work O(|t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+        /// - APAS: Work O(|t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T;
-        // APAS - work O(|t|), span O(|t|)
-        // gpt-5-codex-medium: work O(|t|), span O(|t|)
+        /// - APAS: Work O(|t|), Span O(|t|)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn in_order(&self)                 -> ArraySeqStPerS<T>;
     }
 
-    // APAS - work O(1), span O(1)
-    // gpt-5-codex-medium: work O(1), span O(1)
+    /// - APAS: Work O(1), Span O(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> Exposed<T> {
         let guard = tree.root.read().unwrap();
         match &*guard {
@@ -89,8 +89,8 @@ pub mod BSTParaMtEph {
         }
     }
 
-    // APAS - work O(1), span O(1)
-    // gpt-5-codex-medium: work O(1), span O(1)
+    /// - APAS: Work O(1), Span O(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn join_mid<T: MtKey + 'static>(exposed: Exposed<T>) -> ParamBST<T> {
         match exposed {
             | Exposed::Leaf => ParamBST {
@@ -105,8 +105,8 @@ pub mod BSTParaMtEph {
         }
     }
 
-    // APAS - work O(lg |t|), span O(lg |t|)
-    // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+    /// - APAS: Work O(lg |t|), Span O(lg |t|)
+    /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
     fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (ParamBST<T>, B, ParamBST<T>) {
         match expose_internal(tree) {
             | Exposed::Leaf => (
@@ -134,14 +134,14 @@ pub mod BSTParaMtEph {
         }
     }
 
-    // APAS - work O(1), span O(1)
-    // gpt-5-codex-medium: work O(1), span O(1)
+    /// - APAS: Work O(1), Span O(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn join_m<T: MtKey + 'static>(left: ParamBST<T>, key: T, right: ParamBST<T>) -> ParamBST<T> {
         join_mid(Exposed::Node(left, key, right))
     }
 
-    // APAS - work O(lg |t|), span O(lg |t|)
-    // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+    /// - APAS: Work O(lg |t|), Span O(lg |t|)
+    /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
     fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> Option<T> {
         match expose_internal(tree) {
             | Exposed::Leaf => None,
@@ -152,8 +152,8 @@ pub mod BSTParaMtEph {
         }
     }
 
-    // APAS - work O(lg (|left| + |right|)), span O(lg (|left| + |right|))
-    // gpt-5-codex-medium: work O(lg (|left| + |right|)), span O(lg (|left| + |right|))
+    /// - APAS: Work O(lg(|left| + |right|)), Span O(lg(|left| + |right|))
+    /// - Claude-Opus-4.6: Work Θ(log(|left| + |right|)), Span Θ(log(|left| + |right|))
     fn join_pair_inner<T: MtKey + 'static>(left: ParamBST<T>, right: ParamBST<T>) -> ParamBST<T> {
         match expose_internal(&right) {
             | Exposed::Leaf => left,
@@ -165,8 +165,8 @@ pub mod BSTParaMtEph {
         }
     }
 
-    // APAS - work O(m · lg (n / m)), span O(lg n)
-    // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+    /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+    /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
     fn union_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
         match expose_internal(a) {
             | Exposed::Leaf => b.clone(),
@@ -179,8 +179,8 @@ pub mod BSTParaMtEph {
         }
     }
 
-    // APAS - work O(m · lg (n / m)), span O(lg n)
-    // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+    /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+    /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
     fn intersect_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
         match (expose_internal(a), expose_internal(b)) {
             | (Exposed::Leaf, _) | (_, Exposed::Leaf) => ParamBST {
@@ -199,8 +199,8 @@ pub mod BSTParaMtEph {
         }
     }
 
-    // APAS - work O(m · lg (n / m)), span O(lg n)
-    // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+    /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+    /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
     fn difference_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
         match (expose_internal(a), expose_internal(b)) {
             | (Exposed::Leaf, _) => ParamBST {
@@ -221,8 +221,8 @@ pub mod BSTParaMtEph {
         }
     }
 
-    // APAS - work O(|t|), span O(lg |t|)
-    // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+    /// - APAS: Work O(|t|), Span O(lg |t|)
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
     fn filter_inner<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         predicate: &Arc<F>,
@@ -247,8 +247,8 @@ pub mod BSTParaMtEph {
         }
     }
 
-    // APAS - work O(|t|), span O(lg |t|)
-    // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+    /// - APAS: Work O(|t|), Span O(lg |t|)
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
     fn filter_parallel<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         predicate: F,
@@ -257,8 +257,8 @@ pub mod BSTParaMtEph {
         filter_inner(tree, &predicate)
     }
 
-    // APAS - work O(|t|), span O(lg |t|)
-    // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+    /// - APAS: Work O(|t|), Span O(lg |t|)
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
     fn reduce_inner<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         op: &Arc<F>,
@@ -282,8 +282,8 @@ pub mod BSTParaMtEph {
         }
     }
 
-    // APAS - work O(|t|), span O(lg |t|)
-    // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+    /// - APAS: Work O(|t|), Span O(lg |t|)
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
     fn reduce_parallel<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         op: F,
@@ -293,8 +293,8 @@ pub mod BSTParaMtEph {
         reduce_inner(tree, &op, base)
     }
 
-    // APAS - work O(|t|), span O(|t|)
-    // gpt-5-codex-medium: work O(|t|), span O(|t|)
+    /// - APAS: Work O(|t|), Span O(|t|)
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
     fn collect_in_order<T: MtKey + 'static>(tree: &ParamBST<T>, out: &mut Vec<T>) {
         match expose_internal(tree) {
             | Exposed::Leaf => {}
@@ -307,35 +307,35 @@ pub mod BSTParaMtEph {
     }
 
     impl<T: MtKey + 'static> ParamBSTTrait<T> for ParamBST<T> {
-        // APAS - work O(1), span O(1)
-        // gpt-5-codex-medium: work O(1), span O(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn new() -> Self {
             ParamBST {
                 root: Arc::new(RwLock::new(None)),
             }
         }
 
-        // APAS - work O(1), span O(1)
-        // gpt-5-codex-medium: work O(1), span O(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn expose(&self) -> Exposed<T> { expose_internal(self) }
 
-        // APAS - work O(1), span O(1)
-        // gpt-5-codex-medium: work O(1), span O(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn join_mid(exposed: Exposed<T>) -> Self { join_mid(exposed) }
 
-        // APAS - work O(1), span O(1)
-        // gpt-5-codex-medium: work O(1), span O(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self) -> N {
             let guard = self.root.read().unwrap();
             guard.as_ref().map_or(0, |node| node.size)
         }
 
-        // APAS - work O(1), span O(1)
-        // gpt-5-codex-medium: work O(1), span O(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn is_empty(&self) -> B { self.size() == 0 }
 
-        // APAS - work O(lg |t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn insert(&self, key: T) {
             let (left, _, right) = split_inner(self, &key);
             let rebuilt = join_m(left, key, right);
@@ -344,8 +344,8 @@ pub mod BSTParaMtEph {
             *guard = new_state;
         }
 
-        // APAS - work O(lg |t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn delete(&self, key: &T) {
             let (left, _, right) = split_inner(self, key);
             let merged = join_pair_inner(left, right);
@@ -354,8 +354,8 @@ pub mod BSTParaMtEph {
             *guard = new_state;
         }
 
-        // APAS - work O(lg |t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn find(&self, key: &T) -> Option<T> {
             match expose_internal(self) {
                 | Exposed::Leaf => None,
@@ -367,40 +367,40 @@ pub mod BSTParaMtEph {
             }
         }
 
-        // APAS - work O(lg |t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(lg |t|), span O(lg |t|)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn split(&self, key: &T) -> (Self, B, Self) { split_inner(self, key) }
 
-        // APAS - work O(lg (|t_1| + |t_2|)), span O(lg (|t_1| + |t_2|))
-        // gpt-5-codex-medium: work O(lg (|t_1| + |t_2|)), span O(lg (|t_1| + |t_2|))
+        /// - APAS: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|))
+        /// - Claude-Opus-4.6: Work Θ(log(|t1| + |t2|)), Span Θ(log(|t1| + |t2|))
         fn join_pair(&self, other: Self) -> Self { join_pair_inner(self.clone(), other) }
 
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
         fn union(&self, other: &Self) -> Self { union_inner(self, other) }
 
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
         fn intersect(&self, other: &Self) -> Self { intersect_inner(self, other) }
 
-        // APAS - work O(m · lg (n / m)), span O(lg n)
-        // gpt-5-codex-medium: work O(m · lg (n / m)), span O(lg n)
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
         fn difference(&self, other: &Self) -> Self { difference_inner(self, other) }
 
-        // APAS - work O(|t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+        /// - APAS: Work O(|t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(&self, predicate: F) -> Self {
             filter_parallel(self, predicate)
         }
 
-        // APAS - work O(|t|), span O(lg |t|)
-        // gpt-5-codex-medium: work O(|t|), span O(lg |t|)
+        /// - APAS: Work O(|t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T {
             reduce_parallel(self, op, base)
         }
 
-        // APAS - work O(|t|), span O(|t|)
-        // gpt-5-codex-medium: work O(|t|), span O(|t|)
+        /// - APAS: Work O(|t|), Span O(|t|)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
             collect_in_order(self, &mut out);

@@ -49,6 +49,8 @@ pub mod SSSPResultStEphInt {
     impl SSSPResultStEphInt {
         /// Creates a new SSSP result structure initialized for n vertices from given source.
         /// All distances are set to UNREACHABLE, all predecessors to NO_PREDECESSOR.
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — agrees with APAS.
         pub fn new(n: usize, source: usize) -> Self {
             let mut dist_vec = vec![UNREACHABLE; n];
             dist_vec[source] = 0;
@@ -62,6 +64,8 @@ pub mod SSSPResultStEphInt {
         }
 
         /// Returns the distance from source to vertex v.
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         pub fn get_distance(&self, v: usize) -> i64 {
             if v >= self.distances.length() {
                 return UNREACHABLE;
@@ -70,6 +74,8 @@ pub mod SSSPResultStEphInt {
         }
 
         /// Sets the distance from source to vertex v.
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — in-place array update.
         pub fn set_distance(&mut self, v: usize, dist: i64) {
             if v < self.distances.length() {
                 let _ = self.distances.set(v, dist);
@@ -77,6 +83,8 @@ pub mod SSSPResultStEphInt {
         }
 
         /// Returns the predecessor of vertex v in the shortest path from source.
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — array lookup.
         pub fn get_predecessor(&self, v: usize) -> Option<usize> {
             if v >= self.predecessors.length() {
                 return None;
@@ -86,6 +94,8 @@ pub mod SSSPResultStEphInt {
         }
 
         /// Sets the predecessor of vertex v in the shortest path from source.
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — in-place array update.
         pub fn set_predecessor(&mut self, v: usize, pred: usize) {
             if v < self.predecessors.length() {
                 let _ = self.predecessors.set(v, pred);
@@ -93,10 +103,14 @@ pub mod SSSPResultStEphInt {
         }
 
         /// Checks if vertex v is reachable from source.
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         pub fn is_reachable(&self, v: usize) -> bool { self.get_distance(v) != UNREACHABLE }
 
         /// Extracts the shortest path from source to vertex v by following predecessors.
         /// Returns None if v is unreachable, otherwise returns the path as a sequence.
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — follows k predecessor links.
         pub fn extract_path(&self, v: usize) -> Option<ArraySeqStPerS<usize>> {
             if !self.is_reachable(v) {
                 return None;

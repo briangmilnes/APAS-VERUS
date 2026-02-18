@@ -1,0 +1,34 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap52/
+
+✓ AdjMatrixGraphMtEph.rs
+✓ AdjMatrixGraphMtPer.rs
+✓ AdjMatrixGraphStEph.rs
+✓ AdjMatrixGraphStPer.rs
+✓ AdjSeqGraphMtEph.rs
+✓ AdjSeqGraphMtPer.rs
+✓ AdjSeqGraphStEph.rs
+✓ AdjSeqGraphStPer.rs
+✓ AdjTableGraphMtPer.rs
+✓ AdjTableGraphStEph.rs
+✓ AdjTableGraphStPer.rs
+✓ EdgeSetGraphMtPer.rs
+✓ EdgeSetGraphStEph.rs
+✓ EdgeSetGraphStPer.rs
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   14 clean (no holes)
+   0 holed (contains holes)
+   14 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 0 total
+
+🎉 No proof holes found! All proofs are complete.

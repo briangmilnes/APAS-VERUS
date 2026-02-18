@@ -17,6 +17,8 @@ pub mod DoubleHashFlatHashTableStEph {
     impl DoubleHashFlatHashTableStEph {
         /// Compute second hash value for double hashing.
         /// APAS: hh(k) must be relatively prime to m.
+        /// - APAS: Work O(1), Span O(1).
+        /// - Claude-Opus-4.6: Work O(sizeof(Key)), Span O(sizeof(Key)) — iterates over key bytes with FNV-1a.
         /// Strategy: Always return an odd number (works for power-of-2 sizes),
         /// and for prime sizes, ensure < m and non-zero.
         pub fn second_hash<Key: StT>(key: &Key, table_size: N) -> N {
@@ -57,6 +59,8 @@ pub mod DoubleHashFlatHashTableStEph {
     impl<Key: StT, Value: StT, Metrics: Default> ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics>
         for DoubleHashFlatHashTableStEph
     {
+        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash find_slot then O(1) write.
         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: Key, value: Value) {
             let slot = Self::find_slot(table, &key);
             match &table.table[slot] {
@@ -74,6 +78,8 @@ pub mod DoubleHashFlatHashTableStEph {
             }
         }
 
+        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash probe until found or empty.
         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> Option<Value> {
             let mut attempt = 0;
             while attempt < table.current_size {
@@ -89,6 +95,8 @@ pub mod DoubleHashFlatHashTableStEph {
             None
         }
 
+        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash probe until found or empty, then tombstone.
         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> B {
             let mut attempt = 0;
             while attempt < table.current_size {
@@ -108,6 +116,8 @@ pub mod DoubleHashFlatHashTableStEph {
             false
         }
 
+        /// - APAS: Work O(n + m + m'), Span O(n + m + m').
+        /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' slots, reinserts.
         fn resize(
             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>,
             new_size: N,
@@ -146,6 +156,8 @@ pub mod DoubleHashFlatHashTableStEph {
     impl<Key: StT, Value: StT, Metrics: Default> FlatHashTable<Key, Value, FlatEntry<Key, Value>, Metrics>
         for DoubleHashFlatHashTableStEph
     {
+        /// - APAS: Work O(1), Span O(1).
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — two hash values + arithmetic + modulo.
         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key, attempt: N) -> N {
             let hash1 = (table.hash_fn)(key);
             let step = Self::second_hash(key, table.current_size);
@@ -154,6 +166,8 @@ pub mod DoubleHashFlatHashTableStEph {
             (hash1 + (attempt * step)) % table.current_size
         }
 
+        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash probe until empty/deleted/matching.
         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> N {
             let mut attempt = 0;
             while attempt < table.current_size {

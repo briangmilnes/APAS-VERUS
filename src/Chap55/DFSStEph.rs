@@ -18,6 +18,8 @@ pub mod DFSStEph {
 
     /// Performs DFS from source vertex s on adjacency list graph G.
     /// Returns the set of all vertices reachable from s.
+    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Claude-Opus-4.6: Work O((|V| + |E|) log |V|), Span O((|V| + |E|) log |V|) — AVLTreeSetStEph insert is O(log n), not O(1)
     pub fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> AVLTreeSetStEph<N> {
         let n = graph.length();
         if source >= n {
@@ -30,6 +32,8 @@ pub mod DFSStEph {
         result
     }
 
+    /// - APAS: (no cost stated — internal helper of DFS)
+    /// - Claude-Opus-4.6: Work O(|V| + |E|) amortized over all calls, Span same — visited array O(1), result insert O(log n)
     fn dfs_recursive(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,

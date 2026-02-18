@@ -13,6 +13,8 @@ pub mod MaxContigSubSumDivConMtEph {
     use crate::Types::Types::*;
     pub type T = ArraySeqMtEphS<i32>;
 
+    /// - APAS: Work Θ(1), Span Θ(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> Option<i32> {
         match (a, b) {
             | (None, None) => None,
@@ -22,8 +24,10 @@ pub mod MaxContigSubSumDivConMtEph {
         }
     }
 
-    /// Algorithm 28.12 (MCSSE): find max suffix sum using scan
+    /// Algorithm 28.12 (MCSSE): find max suffix sum using scan.
     /// MCSSEOpt a j = let (b, v) = scan '+' 0 a[0..j]; w = reduce min ∞ b; in v - w
+    /// - APAS: Work Θ(n), Span Θ(log n)
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(log n) — parallel scan + reduce
     fn max_suffix_sum(a: &ArraySeqMtEphS<i32>) -> i32 {
         if a.length() == 0 {
             return i32::MIN / 2; // treat as -∞
@@ -40,8 +44,10 @@ pub mod MaxContigSubSumDivConMtEph {
         total - min_prefix
     }
 
-    /// Algorithm 28.11 (MCSSS): find max prefix sum using scan
+    /// Algorithm 28.11 (MCSSS): find max prefix sum using scan.
     /// MCSSSOpt a i = let b = scanI '+' 0 a[i..|a|]; in reduce max −∞ b
+    /// - APAS: Work Θ(n), Span Θ(log n)
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(log n) — parallel scan + reduce
     fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> i32 {
         if a.length() == 0 {
             return i32::MIN / 2; // treat as -∞

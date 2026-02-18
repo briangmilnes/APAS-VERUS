@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Brian G. Milnes
 //! APAS-VERUS library crate
 #![cfg_attr(verus_keep_ghost, feature(sized_hierarchy))]
+#![cfg_attr(verus_keep_ghost, feature(allocator_api))]
 #![allow(non_snake_case)]
 
 // Foundation modules — always included unless experiments_only
@@ -98,6 +99,7 @@ pub mod vstdplus {
     pub mod partial_order;
     pub mod feq;
     pub mod clone_plus;
+    pub mod smart_ptrs;
     pub mod checked_int;
     pub mod checked_nat;
     pub mod hashed_checked_u32;

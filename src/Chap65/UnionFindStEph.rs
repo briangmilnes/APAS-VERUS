@@ -43,6 +43,8 @@ pub mod UnionFindStEph {
     }
 
     impl<V: StT + Hash> UnionFindStEphTrait<V> for UnionFindStEph<V> {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS
         fn new() -> Self {
             UnionFindStEph {
                 parent: HashMap::new(),
@@ -50,6 +52,8 @@ pub mod UnionFindStEph {
             }
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS
         fn insert(&mut self, v: V) {
             if !self.parent.contains_key(&v) {
                 let _ = self.parent.insert(v.clone(), v.clone());
@@ -57,6 +61,8 @@ pub mod UnionFindStEph {
             }
         }
 
+        /// - APAS: Work O(α(n)), Span O(α(n)) amortized
+        /// - Claude-Opus-4.6: Work O(α(n)), Span O(α(n)) amortized — agrees with APAS; path compression implemented
         fn find(&mut self, v: &V) -> V {
             let parent_v = self.parent.get(v).unwrap().clone();
 
@@ -69,6 +75,8 @@ pub mod UnionFindStEph {
             }
         }
 
+        /// - APAS: Work O(α(n)), Span O(α(n)) amortized
+        /// - Claude-Opus-4.6: Work O(α(n)), Span O(α(n)) amortized — agrees with APAS; union by rank implemented
         fn union(&mut self, u: &V, v: &V) {
             let root_u = self.find(u);
             let root_v = self.find(v);
@@ -90,8 +98,12 @@ pub mod UnionFindStEph {
             }
         }
 
+        /// - APAS: Work O(α(n)), Span O(α(n)) amortized
+        /// - Claude-Opus-4.6: Work O(α(n)), Span O(α(n)) amortized — agrees with APAS; two find calls
         fn equals(&mut self, u: &V, v: &V) -> B { self.find(u) == self.find(v) }
 
+        /// - APAS: Work O(n α(n)), Span O(n α(n))
+        /// - Claude-Opus-4.6: Work O(n α(n)), Span O(n α(n)) — agrees with APAS; finds root for every element
         fn num_sets(&mut self) -> usize {
             let mut roots = std::collections::HashSet::new();
             let keys = self.parent.keys().cloned().collect::<Vec<V>>();
@@ -104,6 +116,8 @@ pub mod UnionFindStEph {
     }
 
     impl<V: StT + Hash> Default for UnionFindStEph<V> {
+        /// - APAS: N/A — Rust trait boilerplate.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to new()
         fn default() -> Self { Self::new() }
     }
 }

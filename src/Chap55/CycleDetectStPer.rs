@@ -18,6 +18,8 @@ pub mod CycleDetectStPer {
 
     /// Detects if a directed graph contains a cycle.
     /// Returns true if a cycle exists, false otherwise.
+    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Claude-Opus-4.6: Work O((|V| + |E|) log |V|), Span same — AVLTreeSetStPer find/insert/delete are O(log n)
     pub fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> B {
         let n = graph.length();
         let mut visited = AVLTreeSetStPer::empty();
@@ -34,6 +36,8 @@ pub mod CycleDetectStPer {
         false
     }
 
+    /// - APAS: (no cost stated — internal helper of cycle detection)
+    /// - Claude-Opus-4.6: Work O(log |V|) per call — O((|V| + |E|) log |V|) total; ancestors clone is O(|V|) worst case
     fn dfs_check_cycle(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: AVLTreeSetStPer<N>,

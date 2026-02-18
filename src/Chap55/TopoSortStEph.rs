@@ -18,6 +18,8 @@ pub mod TopoSortStEph {
 
     /// Computes topological sort of a DAG.
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
+    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Claude-Opus-4.6: Work O(|V|^2 + |E|), Span same — Vec::insert(0, ..) is O(|V|) per call, dominates
     pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> Option<AVLTreeSeqStEphS<N>> {
         let n = graph.length();
         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
@@ -36,6 +38,8 @@ pub mod TopoSortStEph {
 
     /// Computes topological sort of a DAG.
     /// Returns sequence of vertices in topological order (respecting edge directions).
+    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Claude-Opus-4.6: Work O(|V|^2 + |E|), Span same — Vec::insert(0, ..) is O(|V|) per finish
     pub fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N> {
         let n = graph.length();
         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
@@ -49,6 +53,8 @@ pub mod TopoSortStEph {
         AVLTreeSeqStEphS::from_vec(result)
     }
 
+    /// - APAS: (no cost stated — internal helper)
+    /// - Claude-Opus-4.6: Work O(|V|) per finish due to Vec::insert(0, ..)
     fn dfs_finish_order_cycle_detect(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
@@ -79,6 +85,8 @@ pub mod TopoSortStEph {
         true
     }
 
+    /// - APAS: (no cost stated — internal helper)
+    /// - Claude-Opus-4.6: Work O(|V|) per finish due to Vec::insert(0, ..)
     fn dfs_finish_order(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,

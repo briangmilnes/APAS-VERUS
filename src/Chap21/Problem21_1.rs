@@ -20,7 +20,8 @@ pub mod Problem21_1 {
     /// Problem 21.1 (Points in 2D) - Imperative approach using nested loops.
     /// Construct the sequence of 2D points (x, y) with 0 ≤ x < n and 1 ≤ y < n,
     /// ordered by x major, then y.
-    /// APAS: Work Θ(n²), Span Θ(n²) (sequential due to imperative loops)
+    /// - APAS: Work Θ(n²), Span Θ(n²) (sequential due to imperative loops)
+    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²)
     pub fn points2d(n: N) -> (points: ArraySeqStPerS<Pair<N, N>>)
         requires
             n as int * (n as int - 1) <= usize::MAX as int,

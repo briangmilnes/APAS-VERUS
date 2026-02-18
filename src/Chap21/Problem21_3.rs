@@ -22,7 +22,8 @@ pub mod Problem21_3 {
 
     /// Problem 21.3 (Points in 3D) using imperative triple loop.
     /// Generate points (x, y, z) with 0 ≤ x < n, 1 ≤ y ≤ n, 2 ≤ z ≤ n+1.
-    /// APAS: Work Θ(n³), Span Θ(n³)
+    /// - APAS: Work Θ(n³), Span Θ(n³)
+    /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³)
     pub fn points3d_loops(n: N) -> (result: ArraySeqStPerS<Pair<N, Pair<N, N>>>)
         requires
             n + 2 <= usize::MAX,

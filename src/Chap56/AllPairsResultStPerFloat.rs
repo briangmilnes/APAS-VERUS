@@ -51,6 +51,8 @@ pub mod AllPairsResultStPerFloat {
     impl AllPairsResultStPerFloat {
         /// Creates a new all-pairs result structure initialized for n vertices.
         /// All distances are set to UNREACHABLE except diagonal (0.0), all predecessors to NO_PREDECESSOR.
+        /// - APAS: Work Θ(n²), Span Θ(n²)
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS.
         pub fn new(n: usize) -> Self {
             let distances = ArraySeqStPerS::tabulate(
                 &|i| ArraySeqStPerS::tabulate(&|j| if i == j { OrderedFloat(0.0) } else { UNREACHABLE }, n),
@@ -65,6 +67,8 @@ pub mod AllPairsResultStPerFloat {
         }
 
         /// Returns the distance from vertex u to vertex v.
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         pub fn get_distance(&self, u: usize, v: usize) -> OrderedF64 {
             if u >= self.n || v >= self.n {
                 return UNREACHABLE;
@@ -73,6 +77,8 @@ pub mod AllPairsResultStPerFloat {
         }
 
         /// Sets the distance from vertex u to vertex v, returning a new structure.
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — persistent row update plus outer array update.
         pub fn set_distance(self, u: usize, v: usize, dist: OrderedF64) -> Self {
             if u >= self.n || v >= self.n {
                 return self;
@@ -86,6 +92,8 @@ pub mod AllPairsResultStPerFloat {
         }
 
         /// Returns the predecessor of vertex v in the shortest path from u.
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — nested array lookup.
         pub fn get_predecessor(&self, u: usize, v: usize) -> Option<usize> {
             if u >= self.n || v >= self.n {
                 return None;
@@ -95,6 +103,8 @@ pub mod AllPairsResultStPerFloat {
         }
 
         /// Sets the predecessor of vertex v in the shortest path from u, returning a new structure.
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — persistent row update plus outer array update.
         pub fn set_predecessor(self, u: usize, v: usize, pred: usize) -> Self {
             if u >= self.n || v >= self.n {
                 return self;
@@ -108,10 +118,14 @@ pub mod AllPairsResultStPerFloat {
         }
 
         /// Checks if vertex v is reachable from vertex u.
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         pub fn is_reachable(&self, u: usize, v: usize) -> bool { self.get_distance(u, v).is_finite() }
 
         /// Extracts the shortest path from u to v by following predecessors.
         /// Returns None if v is unreachable from u, otherwise returns the path as a sequence.
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — follows k predecessor links.
         pub fn extract_path(&self, u: usize, v: usize) -> Option<ArraySeqStPerS<usize>> {
             if u == v {
                 return Some(ArraySeqStPerS::from_vec(vec![u]));

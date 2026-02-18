@@ -19,6 +19,8 @@ pub mod SCCStPer {
 
     /// Finds strongly connected components in a directed graph.
     /// Returns sequence of components, each component is a set of vertices.
+    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Claude-Opus-4.6: Work O(|V|^2 + (|V| + |E|) log |V|), Span same — Vec::insert(0, ..) O(|V|), AVL ops O(log |V|), union O(|comp|)
     pub fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>> {
         let finish_order = compute_finish_order(graph);
         let transposed = transpose_graph(graph);
@@ -41,6 +43,8 @@ pub mod SCCStPer {
         components
     }
 
+    /// - APAS: (no cost stated — internal helper, corresponds to decreasingFinish)
+    /// - Claude-Opus-4.6: Work O(|V|^2 + (|V| + |E|) log |V|), Span same — Vec::insert(0, ..) + AVL ops
     fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N> {
         let n = graph.length();
         let mut visited = AVLTreeSetStPer::empty();
@@ -56,6 +60,8 @@ pub mod SCCStPer {
         AVLTreeSeqStPerS::from_vec(result)
     }
 
+    /// - APAS: (no cost stated — internal helper)
+    /// - Claude-Opus-4.6: Work O(|V| + log |V|) per call — Vec::insert(0, ..) + AVL ops
     fn dfs_finish_order(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: AVLTreeSetStPer<N>,
@@ -81,6 +87,8 @@ pub mod SCCStPer {
         (visited, result)
     }
 
+    /// - APAS: (no cost stated — transpose is standard O(|V| + |E|))
+    /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with expected cost
     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> ArraySeqStPerS<ArraySeqStPerS<N>> {
         let n = graph.length();
         let mut adj_vecs: Vec<Vec<N>> = vec![Vec::new(); n];
@@ -96,6 +104,8 @@ pub mod SCCStPer {
         ArraySeqStPerS::tabulate(&|i| ArraySeqStPerS::from_vec(adj_vecs[i].clone()), n)
     }
 
+    /// - APAS: (no cost stated — internal helper, corresponds to DFSReach)
+    /// - Claude-Opus-4.6: Work O(deg(v) log |V| + |comp| log |comp|) per call — AVL insert + union
     fn dfs_reach(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: AVLTreeSetStPer<N>,

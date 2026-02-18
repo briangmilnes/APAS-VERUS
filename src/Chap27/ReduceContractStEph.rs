@@ -35,6 +35,8 @@ pub mod ReduceContractStEph {
 
     /// Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f))
     /// when (f, id) is a monoid.
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     proof fn lemma_fold_left_monoid<T>(s: Seq<T>, x: T, f: spec_fn(T, T) -> T, id: T)
         requires spec_monoid(f, id),
         ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),
@@ -49,6 +51,8 @@ pub mod ReduceContractStEph {
     }
 
     /// Helper: fold_left of a 2-element sequence equals f(a, b) under a monoid.
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     proof fn lemma_fold_left_pair<T>(a: T, b: T, f: spec_fn(T, T) -> T, id: T)
         requires spec_monoid(f, id),
         ensures seq![a, b].fold_left(id, f) == f(a, b),
@@ -63,6 +67,8 @@ pub mod ReduceContractStEph {
     }
 
     /// Helper: fold_left of a 1-element sequence equals f(id, a) = a.
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     proof fn lemma_fold_left_singleton<T>(a: T, f: spec_fn(T, T) -> T, id: T)
         requires spec_monoid(f, id),
         ensures seq![a].fold_left(id, f) == a,
@@ -73,7 +79,9 @@ pub mod ReduceContractStEph {
 
     /// Contraction lemma: for an even-length sequence, folding the original equals
     /// folding the contracted (pairwise-combined) sequence under a monoid.
-    proof fn lemma_contraction_even<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T)
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
+    pub proof fn lemma_contraction_even<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T)
         requires
             spec_monoid(f, id),
             s.len() >= 2,
@@ -150,7 +158,8 @@ pub mod ReduceContractStEph {
 
     pub trait ReduceContractStEphTrait<T: StT> {
         /// Reduce a sequence using contraction: contract→solve→expand.
-        /// APAS Algorithm 27.2: Work Θ(n), Span Θ(n) (sequential).
+        /// - APAS: Work Θ(n), Span Θ(log n) — Algorithm 27.2.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential implementation, no parallelism.
         fn reduce_contract<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             f: &F,

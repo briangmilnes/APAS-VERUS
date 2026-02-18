@@ -1,0 +1,37 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap47/
+
+✓ ChainedHashTable.rs
+❌ DoubleHashFlatHashTableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:35: unsafe {} - unsafe {
+        22 |         pub fn second_hash<Key: StT>(key: &Key, table_size: N) -> N {
+            ...
+        33 |             let mut hash: u64 = 0xcbf29ce484222325; // FNV offset basis
+        34 | 
+        36 |                 for i in 0..key_size {
+        37 |                     let byte = *key_ptr.add(i);
+   Holes: 1 total
+      1 × unsafe {}
+✓ FlatHashTable.rs
+✓ LinProbFlatHashTableStEph.rs
+✓ LinkedListChainedHashTableStEph.rs
+✓ ParaHashTableStEph.rs
+✓ QuadProbFlatHashTableStEph.rs
+✓ StructChainedHashTable.rs
+✓ VecChainedHashTableStEph.rs
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   8 clean (no holes)
+   1 holed (contains holes)
+   9 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 1 total
+   1 × unsafe {}

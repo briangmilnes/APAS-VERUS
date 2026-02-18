@@ -36,8 +36,8 @@ pub mod StarContractionStEph {
     /// - Base case: No edges, call base function on vertices
     /// - Recursive case: Partition graph, build quotient graph, recur, then expand
     ///
-    /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
-    /// claude-4-sonet: Work O((n + m) lg n), Span O((n + m) lg n)
+    /// - APAS: Work O((n + m) lg n), Span O((n + m) lg n)
+    /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — agrees with APAS.
     ///
     /// Arguments:
     /// - graph: The undirected graph to contract
@@ -75,8 +75,8 @@ pub mod StarContractionStEph {
     ///
     /// Routes edges through partition map, removing self-loops.
     ///
-    /// APAS: Work O(m), Span O(m)
-    /// claude-4-sonet: Work O(m), Span O(m)
+    /// - APAS: (no cost stated) — helper not in prose.
+    /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential loop over all edges.
     fn build_quotient_graph<V: StT + Hash + Ord>(
         graph: &UnDirGraphStEph<V>,
         centers: &SetStEph<V>,
@@ -110,8 +110,8 @@ pub mod StarContractionStEph {
     ///
     /// Convenience wrapper that performs contraction with identity base/expand.
     ///
-    /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
-    /// claude-4-sonet: Work O((n + m) lg n), Span O((n + m) lg n)
+    /// - APAS: Work O((n + m) lg n), Span O((n + m) lg n)
+    /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — agrees with APAS.
     pub fn contract_to_vertices<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<V> {
         star_contract(
             graph,

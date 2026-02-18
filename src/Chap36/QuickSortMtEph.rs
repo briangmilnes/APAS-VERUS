@@ -13,23 +13,23 @@ pub mod Chapter36Mt {
     pub type T<T> = ArraySeqMtEphS<T>;
 
     pub trait Chapter36MtTrait<T: StTInMtT + Ord> {
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1) - constant time pivot selection
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn pivot_mt_first(&self, lo: N, hi: N)   -> T;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1) - constant time median-of-3
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn pivot_mt_median3(&self, lo: N, hi: N) -> T;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1), Parallelism Θ(1) - constant time random selection
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn pivot_mt_random(&self, lo: N, hi: N)  -> T;
-        /// APAS: Work Θ(n log n) expected, Θ(n²) worst, Span Θ(log² n) expected, Θ(n) worst
-        /// claude-4-sonet: Work Θ(n log n) expected, Θ(n²) worst, Span Θ(log² n) expected, Θ(n) worst, Parallelism Θ(n/log n) expected - parallel divide-and-conquer with unconditional thread spawning
+        /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst
+        /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst — parallel recursive calls via thread::scope; partition is sequential Θ(n).
         fn quick_sort_mt_first(&mut self);
-        /// APAS: Work Θ(n log n) expected, Θ(n²) worst, Span Θ(log² n) expected, Θ(n) worst
-        /// claude-4-sonet: Work Θ(n log n) expected, Θ(n²) worst, Span Θ(log² n) expected, Θ(n) worst, Parallelism Θ(n/log n) expected - parallel divide-and-conquer with median-of-3 pivot
+        /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst
+        /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst — parallel recursive calls via thread::scope; partition is sequential Θ(n).
         fn quick_sort_mt_median3(&mut self);
-        /// APAS: Work Θ(n log n) expected, Θ(n²) worst, Span Θ(log² n) expected, Θ(n) worst
-        /// claude-4-sonet: Work Θ(n log n) expected, Θ(n²) worst, Span Θ(log² n) expected, Θ(n) worst, Parallelism Θ(n/log n) expected - parallel divide-and-conquer with random pivot
+        /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst
+        /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst — parallel recursive calls via thread::scope; partition is sequential Θ(n).
         fn quick_sort_mt_random(&mut self);
     }
 
@@ -59,6 +59,8 @@ pub mod Chapter36Mt {
                 return;
             }
 
+            /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst
+            /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst — parallel via thread::scope with first-element pivot.
             fn quick_sort<T: StTInMtT + Ord>(data: &mut [T]) {
                 let len = data.len();
                 if len <= 1 {
@@ -98,6 +100,8 @@ pub mod Chapter36Mt {
                 return;
             }
 
+            /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst
+            /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst — parallel via thread::scope with median-of-3 pivot.
             fn quick_sort<T: StTInMtT + Ord>(data: &mut [T]) {
                 let len = data.len();
                 if len <= 1 {
@@ -149,6 +153,8 @@ pub mod Chapter36Mt {
                 return;
             }
 
+            /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst
+            /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst — parallel via thread::scope with random pivot.
             fn quick_sort<T: StTInMtT + Ord>(data: &mut [T]) {
                 let len = data.len();
                 if len <= 1 {

@@ -23,7 +23,8 @@ pub mod Problem21_4 {
     };
 
     /// Problem 21.4 (Cartesian Product) - Imperative approach using explicit loops.
-    /// APAS: Work Θ(|a|·|b|), Span Θ(|a|·|b|)
+    /// - APAS: Work Θ(|a|·|b|), Span Θ(|a|·|b|)
+    /// - Claude-Opus-4.6: Work Θ(|a|·|b|), Span Θ(|a|·|b|)
     pub fn cartesian_loops(
         a: &ArraySeqStPerS<N>,
         b: &ArraySeqStPerS<N>,
@@ -73,6 +74,8 @@ pub mod Problem21_4 {
     }
 
     /// Lemma: Seq::flatten of k sequences each of length m has length k * m.
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     proof fn lemma_flatten_uniform_len<A>(ss: Seq<Seq<A>>, m: int)
         requires
             forall|i: int| 0 <= i < ss.len() ==> (#[trigger] ss[i]).len() == m,
@@ -96,7 +99,8 @@ pub mod Problem21_4 {
 
     /// Problem 21.4 (Cartesian Product) - Functional approach using tabulate + flatten.
     /// flatten(tabulate(λi. tabulate(λj. (a[i], b[j])) |b|) |a|)
-    /// APAS: Work Θ(|a|·|b|), Span Θ(lg |a|)
+    /// - APAS: Work Θ(|a|·|b|), Span Θ(lg |a|)
+    /// - Claude-Opus-4.6: Work Θ(|a|·|b|), Span Θ(|a|·|b|) — sequential StPer tabulate + flatten.
     pub fn cartesian_tab_flat(
         a: &ArraySeqStPerS<N>,
         b: &ArraySeqStPerS<N>,

@@ -26,8 +26,8 @@ pub mod SubsetSumStPer {
         /// Create from multiset
         fn from_multiset(multiset: ArraySeqStPerS<T>) -> Self;
 
-        /// Solve subset sum problem
-        /// claude-4-sonet: Work Θ(k×|S|), Span Θ(|S|), Parallelism Θ(1)
+        /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
+        /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(k×|S|) — sequential, span equals work
         fn subset_sum(&self, target: i32)             -> bool
         where
             T: Into<i32> + Copy;
@@ -39,9 +39,8 @@ pub mod SubsetSumStPer {
         fn memo_size(&self)                           -> usize;
     }
 
-    /// Internal recursive subset sum with memoization
-    /// Claude Work: O(k*|S|) - each subproblem computed once
-    /// Claude Span: O(|S|) - maximum recursion depth
+    /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
+    /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(k×|S|) — sequential memoized recursion
     fn subset_sum_rec<T: StT + Into<i32> + Copy>(table: &mut SubsetSumStPerS<T>, i: usize, j: i32) -> bool {
         // Check memo first
         if let Some(&result) = table.memo.get(&(i, j)) {

@@ -37,50 +37,74 @@ pub mod BSTSetTreapMtEph {
     pub type BSTSetTreapMt<T> = BSTSetTreapMtEph<T>;
 
     pub trait BSTSetTreapMtEphTrait<T: StTInMtT + Ord>: Sized {
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn empty()                                   -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected; Span Θ(log n) expected — singleton inserts one element
         fn singleton(value: T)                       -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self)                               -> N;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn is_empty(&self)                           -> B;
-        /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected with locking
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn find(&self, value: &T)                    -> Option<T>;
-        /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected with locking
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn contains(&self, value: &T)                -> B;
-        /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected with locking
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn minimum(&self)                            -> Option<T>;
-        /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected with locking
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn maximum(&self)                            -> Option<T>;
-        /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected with locking
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn insert(&mut self, value: T);
-        /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected with locking
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — rebuild-based; not O(log n)
         fn delete(&mut self, target: &T);
-        /// NOTE: Sequential implementation - Span Θ(n), not parallel
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential BTreeSet rebuild, not parallel
         fn union(&self, other: &Self)                -> Self;
-        /// NOTE: Sequential implementation - Span Θ(n), not parallel
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential filter + rebuild, not parallel
         fn intersection(&self, other: &Self)         -> Self;
-        /// NOTE: Sequential implementation - Span Θ(n), not parallel
+        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential filter + rebuild, not parallel
         fn difference(&self, other: &Self)           -> Self;
-        /// claude-4-sonet: Work Θ(log n) expected, Span Θ(log n)
+        /// - APAS: Work O(log n), Span O(log n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential scan + rebuild, not O(log n)
         fn split(&self, pivot: &T)                   -> (Self, B, Self);
-        /// claude-4-sonet: Work Θ(log(|left| + |right|)), Span Θ(log(|left| + |right|))
+        /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — BTreeSet rebuild, not O(log n)
         fn join_pair(left: Self, right: Self)        -> Self;
-        /// claude-4-sonet: Work Θ(log(|left| + |right|)), Span Θ(log(|left| + |right|))
+        /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — BTreeSet rebuild, not O(log n)
         fn join_m(left: Self, pivot: T, right: Self) -> Self;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n)
+        /// - APAS: Work Θ(n), Span O(lg n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential filter + rebuild
         fn filter<F: FnMut(&T) -> bool>(&self, predicate: F) -> Self;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n)
+        /// - APAS: Work Θ(n), Span O(lg n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential fold
         fn reduce<F: FnMut(T, T) -> T>(&self, op: F, base: T) -> T;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n)
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn iter_in_order(&self)                      -> ArraySeqStPerS<T>;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn as_tree(&self)                            -> &BSTTreapMtEph<T>;
     }
 
     impl<T: StTInMtT + Ord> BSTSetTreapMtEph<T> {
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn values_vec(&self) -> Vec<T> { self.tree.in_order().iter().cloned().collect() }
+        /// - APAS: Work Θ(n log n) expected, Span Θ(n log n) expected
+        /// - Claude-Opus-4.6: Work Θ(n log n) expected, Span Θ(n log n) expected — sequential n inserts
         fn rebuild_from_vec(values: Vec<T>) -> BSTTreapMtEph<T> {
             let tree = BSTTreapMtEph::new();
             for value in values {
@@ -88,6 +112,8 @@ pub mod BSTSetTreapMtEph {
             }
             tree
         }
+        /// - APAS: Work Θ(n log n) expected, Span Θ(n log n) expected
+        /// - Claude-Opus-4.6: Work Θ(n log n) expected, Span Θ(n log n) expected — sequential n inserts
         fn from_sorted_iter<I>(values: I) -> Self
         where
             I: IntoIterator<Item = T>,

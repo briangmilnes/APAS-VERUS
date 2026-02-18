@@ -44,8 +44,8 @@ pub mod ConnectivityStEph {
     /// Base case: No edges means each vertex is its own component.
     /// Inductive case: Partition, build quotient graph, recurse.
     ///
-    /// APAS: Work O((n+m) lg n), Span O((n+m) lg n)
-    /// claude-4-sonet: Work O((n+m) lg n), Span O((n+m) lg n)
+    /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — Exercise 63.3 (edge-set representation)
+    /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS
     ///
     /// Arguments:
     /// - graph: The undirected graph
@@ -74,8 +74,8 @@ pub mod ConnectivityStEph {
     /// Computes all connected components and returns a mapping from each vertex
     /// to a representative of its component.
     ///
-    /// APAS: Work O((n+m) lg n), Span O((n+m) lg n)
-    /// claude-4-sonet: Work O((n+m) lg n), Span O((n+m) lg n)
+    /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — Exercise 63.4 (edge-set representation)
+    /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS
     ///
     /// Arguments:
     /// - graph: The undirected graph
@@ -113,9 +113,11 @@ pub mod ConnectivityStEph {
         (representatives, component_map)
     }
 
-    /// Build quotient graph edges by routing through partition map
+    /// Build quotient graph edges by routing through partition map.
     /// Filters out self-edges (where both endpoints map to same super-vertex).
-    /// Work O(m), Span O(m)
+    ///
+    /// - APAS: N/A — helper function implicit in Algorithm 63.2/63.3 Line 7.
+    /// - Claude-Opus-4.6: Work O(m), Span O(m) — single pass over edges
     fn build_quotient_edges<V: StT + Hash + Ord>(
         graph: &UnDirGraphStEph<V>,
         partition_map: &HashMap<V, V>,
@@ -145,8 +147,8 @@ pub mod ConnectivityStEph {
     ///
     /// Expresses countComponents in terms of starContract (Algorithm 62.5).
     ///
-    /// APAS: Work O((n+m) lg n), Span O((n+m) lg n)
-    /// claude-4-sonet: Work O((n+m) lg n), Span O((n+m) lg n)
+    /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.2
+    /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
     pub fn count_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N {
         // Base: when no edges, return number of vertices
         let base = |vertices: &SetStEph<V>| vertices.size();
@@ -161,8 +163,8 @@ pub mod ConnectivityStEph {
     ///
     /// Expresses connectedComponents in terms of starContract (Algorithm 62.5).
     ///
-    /// APAS: Work O((n+m) lg n), Span O((n+m) lg n)
-    /// claude-4-sonet: Work O((n+m) lg n), Span O((n+m) lg n)
+    /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.3
+    /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
     pub fn connected_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
         // Base: when no edges, each vertex maps to itself
         let base = |vertices: &SetStEph<V>| {

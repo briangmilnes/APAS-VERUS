@@ -37,8 +37,8 @@ pub mod MatrixChainMtPer {
         /// Create from dimension pairs (rows, cols)
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> Self;
 
-        /// claude-4-sonet: Work Θ(n³), Span Θ(n log n), Parallelism Θ(n²/log n)
-        /// Compute optimal matrix chain multiplication cost where n=number of matrices
+        /// APAS: Work Θ(n³), Span Θ(n log n)
+        /// Claude-Opus-4.6: Work O(n³), Span O(n log n)
         fn optimal_cost(&self)                                -> usize;
 
         /// Get the matrix dimensions
@@ -61,9 +61,9 @@ pub mod MatrixChainMtPer {
             left_rows * split_cols * right_cols
         }
 
-        /// Parallel reduction to find minimum cost among split choices
-        /// Claude Work: O(n) - n comparisons
-        /// Claude Span: O(log n) - parallel reduction tree
+        /// APAS: Work Θ(n), Span Θ(log n)
+        /// Claude-Opus-4.6 Work: O(n) - n comparisons
+        /// Claude-Opus-4.6 Span: O(log n) - parallel reduction tree
         fn parallel_min_reduction(&self, costs: Vec<usize>) -> usize {
             if costs.is_empty() {
                 return 0;
@@ -89,9 +89,9 @@ pub mod MatrixChainMtPer {
             left_min.min(right_min)
         }
 
-        /// Internal recursive matrix chain with memoization and parallel reduction
-        /// Claude Work: O(n³) - O(n²) subproblems, each O(n) work
-        /// Claude Span: O(n log n) - maximum recursion depth O(n), each level O(log n) parallel reduction
+        /// APAS: Work Θ(n³), Span Θ(n log n)
+        /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
+        /// Claude-Opus-4.6 Span: O(n log n) - recursion depth O(n), each level O(log n) parallel reduction
         fn matrix_chain_rec(&self, i: usize, j: usize) -> usize {
             // Check memo first (thread-safe)
             {

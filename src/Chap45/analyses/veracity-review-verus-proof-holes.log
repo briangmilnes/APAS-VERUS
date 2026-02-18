@@ -1,0 +1,27 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap45/
+
+✓ BalancedTreePQ.rs
+✓ BinaryHeapPQ.rs
+✓ Example45_2.rs
+✓ HeapsortExample.rs
+✓ LeftistHeapPQ.rs
+✓ SortedListPQ.rs
+✓ UnsortedListPQ.rs
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   7 clean (no holes)
+   0 holed (contains holes)
+   7 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 0 total
+
+🎉 No proof holes found! All proofs are complete.

@@ -47,14 +47,20 @@ pub mod AdjTableGraphMtPer {
     }
 
     impl<V: StTInMtT + Ord + 'static> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — creates empty table.
         fn empty() -> Self {
             AdjTableGraphMtPer {
                 adj: OrderedTableMtPer::empty(),
             }
         }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to table size.
         fn num_vertices(&self) -> N { self.adj.size() }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential iteration over domain; not parallel despite Mt type.
         fn num_edges(&self) -> N {
             let domain = self.adj.domain();
             let domain_seq = domain.to_seq();
@@ -68,14 +74,22 @@ pub mod AdjTableGraphMtPer {
             count
         }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn has_edge(&self, u: &V, v: &V) -> B { self.adj.find(u).is_some_and(|neighbors| neighbors.find(v)) }
 
+        /// - APAS: Work Θ(lg n + d(v)), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
             self.adj.find(u).unwrap_or_else(|| AVLTreeSetMtPer::empty())
         }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn insert_vertex(&self, v: V) -> Self {
             if self.adj.find(&v).is_some() {
                 return self.clone();
@@ -85,6 +99,8 @@ pub mod AdjTableGraphMtPer {
             }
         }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3, isolated vertex]
+        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential iteration over all vertices; TODO note says to parallelize.
         fn delete_vertex(&self, v: &V) -> Self {
             let v_clone = v.clone();
             let new_adj = self.adj.delete(&v_clone);
@@ -108,6 +124,8 @@ pub mod AdjTableGraphMtPer {
             AdjTableGraphMtPer { adj: result_adj }
         }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn insert_edge(&self, u: V, v: V) -> Self {
             let mut new_adj = self.adj.clone();
             // Ensure both vertices exist
@@ -125,6 +143,8 @@ pub mod AdjTableGraphMtPer {
             }
         }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn delete_edge(&self, u: &V, v: &V) -> Self {
             if let Some(u_neighbors) = self.adj.find(u) {
                 let new_u_neighbors = u_neighbors.delete(v);

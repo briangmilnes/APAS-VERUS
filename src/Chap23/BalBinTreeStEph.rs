@@ -119,6 +119,8 @@ pub mod BalBinTreeStEph {
     //		6. proof functions
 
     /// The in-order and pre-order traversals of a tree are permutations of each other.
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     pub proof fn lemma_in_order_pre_order_permutation<T>(tree: BalBinTree<T>)
         ensures tree.spec_in_order().to_multiset() =~= tree.spec_pre_order().to_multiset()
         decreases tree,
@@ -162,6 +164,8 @@ pub mod BalBinTreeStEph {
     }
 
     /// The pre-order and post-order traversals of a tree are permutations of each other.
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     pub proof fn lemma_pre_order_post_order_permutation<T>(tree: BalBinTree<T>)
         ensures tree.spec_pre_order().to_multiset() =~= tree.spec_post_order().to_multiset()
         decreases tree,
@@ -211,7 +215,8 @@ pub mod BalBinTreeStEph {
         spec fn spec_pre_order(self) -> Seq<T>;
         spec fn spec_post_order(self) -> Seq<T>;
 
-        /// APAS: Work Θ(1), Span Θ(1).
+        /// - APAS: Work Θ(1), Span Θ(1).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn leaf() -> (l: Self)
             ensures l.spec_size() == 0,
                     l.spec_height() == 0,
@@ -219,7 +224,8 @@ pub mod BalBinTreeStEph {
                     l.spec_pre_order() == Seq::<T>::empty(),
                     l.spec_post_order() == Seq::<T>::empty();
 
-        /// APAS: Work Θ(1), Span Θ(1).
+        /// - APAS: Work Θ(1), Span Θ(1).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn node(left: Self, value: T, right: Self) -> (n: Self)
             ensures n.spec_size() == 1 + left.spec_size() + right.spec_size(),
                     n.spec_height() == 1 + if left.spec_height() >= right.spec_height()
@@ -228,22 +234,26 @@ pub mod BalBinTreeStEph {
                     n.spec_pre_order() == seq![value] + left.spec_pre_order() + right.spec_pre_order(),
                     n.spec_post_order() == left.spec_post_order() + right.spec_post_order() + seq![value];
 
-        /// APAS: Work Θ(1), Span Θ(1).
+        /// - APAS: Work Θ(1), Span Θ(1).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn is_leaf(&self) -> (b: bool)
             ensures b == (self.spec_size() == 0);
 
-        /// APAS: Work Θ(n), Span Θ(n).
+        /// - APAS: Work Θ(n), Span Θ(n).
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential recursive traversal, no stored size.
         fn size(&self) -> (count: usize)
             requires self.spec_size() <= usize::MAX,
             ensures count == self.spec_size();
 
-        /// APAS: Work Θ(n), Span Θ(n).
+        /// - APAS: Work Θ(n), Span Θ(n).
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential recursive traversal.
         fn height(&self) -> (h: usize)
             requires self.spec_height() <= usize::MAX,
             ensures h == self.spec_height();
 
         /// In-order traversal: left, root, right.
-        /// APAS: Work Θ(n), Span Θ(n).
+        /// - APAS: Work Θ(n), Span Θ(n).
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential recursive traversal with Vec building.
         fn in_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
             requires self.spec_size() <= usize::MAX,
@@ -251,7 +261,8 @@ pub mod BalBinTreeStEph {
             ensures traversal@ =~= self.spec_in_order();
 
         /// Pre-order traversal: root, left, right.
-        /// APAS: Work Θ(n), Span Θ(n).
+        /// - APAS: Work Θ(n), Span Θ(n).
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential recursive traversal with Vec building.
         fn pre_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
             requires self.spec_size() <= usize::MAX,
@@ -259,7 +270,8 @@ pub mod BalBinTreeStEph {
             ensures traversal@ =~= self.spec_pre_order();
 
         /// Post-order traversal: left, right, root.
-        /// APAS: Work Θ(n), Span Θ(n).
+        /// - APAS: Work Θ(n), Span Θ(n).
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential recursive traversal with Vec building.
         fn post_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
             requires self.spec_size() <= usize::MAX,
@@ -676,6 +688,8 @@ pub mod BalBinTreeStEph {
 
     impl<T: Clone + Eq> BalBinTree<T> {
         /// Returns an in-order iterator.
+        /// - APAS: Work Θ(n), Span Θ(n) — dominated by in_order traversal.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — calls in_order() then wraps in iterator.
         pub fn iter_in_order(&self) -> (it: InOrderIter<T>)
             requires self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),
@@ -688,6 +702,8 @@ pub mod BalBinTreeStEph {
         }
 
         /// Returns a pre-order iterator.
+        /// - APAS: Work Θ(n), Span Θ(n) — dominated by pre_order traversal.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — calls pre_order() then wraps in iterator.
         pub fn iter_pre_order(&self) -> (it: PreOrderIter<T>)
             requires self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),
@@ -700,6 +716,8 @@ pub mod BalBinTreeStEph {
         }
 
         /// Returns a post-order iterator.
+        /// - APAS: Work Θ(n), Span Θ(n) — dominated by post_order traversal.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — calls post_order() then wraps in iterator.
         pub fn iter_post_order(&self) -> (it: PostOrderIter<T>)
             requires self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),

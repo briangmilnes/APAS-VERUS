@@ -41,8 +41,8 @@ pub mod HeapsortExample {
         fn compare_all_heapsorts<T: StT + Ord>(sequence: &[T])  -> HeapsortComparison<T>;
     }
 
-    /// Heapsort using UnsortedListPQ
-    /// Claude Work: Θ(n²), Span: Θ(n²) - inefficient due to O(n) deleteMin
+    /// - APAS: Work Θ(n²), Span Θ(n²) — n × O(n) deleteMin dominates.
+    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS.
     pub fn heapsort_unsorted_list<T: StT + Ord>(sequence: &[T]) -> Vec<T> {
         let mut pq = UnsortedListPQ::empty();
         for element in sequence {
@@ -59,8 +59,8 @@ pub mod HeapsortExample {
         result
     }
 
-    /// Heapsort using SortedListPQ  
-    /// Claude Work: Θ(n²), Span: Θ(n²) - inefficient due to O(n) insert
+    /// - APAS: Work Θ(n²), Span Θ(n²) — n × O(n) insert dominates.
+    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS.
     pub fn heapsort_sorted_list<T: StT + Ord>(sequence: &[T]) -> Vec<T> {
         let mut pq = SortedListPQ::empty();
         for element in sequence {
@@ -77,8 +77,8 @@ pub mod HeapsortExample {
         result
     }
 
-    /// Heapsort using BalancedTreePQ
-    /// Claude Work: Θ(n log n), Span: Θ(n log n) - optimal complexity
+    /// - APAS: Work Θ(n log n), Span Θ(n log n)
+    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — insert is O(n) due to Vec conversion, not O(log n).
     pub fn heapsort_balanced_tree<T: StT + Ord>(sequence: &[T]) -> Vec<T> {
         let mut pq = BalancedTreePQ::empty();
         for element in sequence {
@@ -95,8 +95,8 @@ pub mod HeapsortExample {
         result
     }
 
-    /// Heapsort using BinaryHeapPQ
-    /// Claude Work: Θ(n log n), Span: Θ(n log n) - optimal complexity
+    /// - APAS: Work Θ(n log n), Span Θ(n log n)
+    /// - Claude-Opus-4.6: Work Θ(n² log n), Span Θ(n² log n) — each insert/delete is O(n log n) due to array swaps.
     pub fn heapsort_binary_heap<T: StT + Ord>(sequence: &[T]) -> Vec<T> {
         let mut pq = BinaryHeapPQ::empty();
         for element in sequence {
@@ -113,8 +113,8 @@ pub mod HeapsortExample {
         result
     }
 
-    /// Heapsort using LeftistHeapPQ
-    /// Claude Work: Θ(n log n), Span: Θ(n log n) - optimal complexity with superior meld
+    /// - APAS: Work Θ(n log n), Span Θ(n log n)
+    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — each insert/delete clones tree O(n).
     pub fn heapsort_leftist_heap<T: StT + Ord>(sequence: &[T]) -> Vec<T> {
         let mut pq = LeftistHeapPQ::empty();
         for element in sequence {

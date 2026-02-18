@@ -71,6 +71,8 @@ pub mod BSTPlainStEph {
         }
     }
 
+    /// - APAS: Work O(h(T)), Span O(h(T)).
+    /// - Claude-Opus-4.6: Work O(n) worst case, Span O(n) — unbalanced plain BST.
     fn insert_node<T: StT + Ord>(node: &mut BalBinTree<T>, value: T) {
         match node {
             | BalBinTree::Leaf => {
@@ -86,6 +88,8 @@ pub mod BSTPlainStEph {
         }
     }
 
+    /// - APAS: Work O(h(T)), Span O(h(T)).
+    /// - Claude-Opus-4.6: Work O(n) worst case, Span O(n) — unbalanced plain BST.
     fn contains_node<T: StT + Ord>(node: &BalBinTree<T>, target: &T) -> B {
         match node {
             | BalBinTree::Leaf => false,
@@ -101,6 +105,8 @@ pub mod BSTPlainStEph {
         }
     }
 
+    /// - APAS: Work O(h(T)), Span O(h(T)).
+    /// - Claude-Opus-4.6: Work O(n) worst case, Span O(n) — unbalanced plain BST.
     fn find_node<'a, T: StT + Ord>(node: &'a BalBinTree<T>, target: &T) -> Option<&'a T> {
         match node {
             | BalBinTree::Leaf => None,
@@ -116,6 +122,8 @@ pub mod BSTPlainStEph {
         }
     }
 
+    /// - APAS: Work O(h(T)), Span O(h(T)).
+    /// - Claude-Opus-4.6: Work O(n) worst case, Span O(n).
     fn min_node<T: StT + Ord>(node: &BalBinTree<T>) -> Option<&T> {
         match node {
             | BalBinTree::Leaf => None,
@@ -126,6 +134,8 @@ pub mod BSTPlainStEph {
         }
     }
 
+    /// - APAS: Work O(h(T)), Span O(h(T)).
+    /// - Claude-Opus-4.6: Work O(n) worst case, Span O(n).
     fn max_node<T: StT + Ord>(node: &BalBinTree<T>) -> Option<&T> {
         match node {
             | BalBinTree::Leaf => None,

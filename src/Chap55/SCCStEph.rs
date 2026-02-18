@@ -19,6 +19,8 @@ pub mod SCCStEph {
 
     /// Finds strongly connected components in a directed graph.
     /// Returns sequence of components, each component is a set of vertices.
+    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Claude-Opus-4.6: Work O(|V|^2 + (|V| + |E|) log |V|), Span same — Vec::insert(0, ..) O(|V|), AVL set ops O(log |V|), component rebuild O(|V|)
     pub fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>> {
         let finish_order = compute_finish_order(graph);
         let transposed = transpose_graph(graph);
@@ -45,6 +47,8 @@ pub mod SCCStEph {
         components
     }
 
+    /// - APAS: (no cost stated — internal helper, corresponds to decreasingFinish)
+    /// - Claude-Opus-4.6: Work O(|V|^2 + |E|), Span same — Vec::insert(0, ..) is O(|V|) per finish
     fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N> {
         let n = graph.length();
         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
@@ -58,6 +62,8 @@ pub mod SCCStEph {
         AVLTreeSeqStEphS::from_vec(result)
     }
 
+    /// - APAS: (no cost stated — internal helper)
+    /// - Claude-Opus-4.6: Work O(|V|) per finish due to Vec::insert(0, ..)
     fn dfs_finish_order(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
@@ -79,6 +85,8 @@ pub mod SCCStEph {
         result.insert(0, vertex);
     }
 
+    /// - APAS: (no cost stated — transpose is standard O(|V| + |E|))
+    /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with expected cost
     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> ArraySeqStEphS<ArraySeqStEphS<N>> {
         let n = graph.length();
         let mut adj_vecs: Vec<Vec<N>> = vec![Vec::new(); n];
@@ -94,6 +102,8 @@ pub mod SCCStEph {
         ArraySeqStEphS::tabulate(&|i| ArraySeqStEphS::from_vec(adj_vecs[i].clone()), n)
     }
 
+    /// - APAS: (no cost stated — internal helper, corresponds to DFSReach)
+    /// - Claude-Opus-4.6: Work O(deg(v) + log |V|) per call — AVL insert O(log |V|), visited array O(1)
     fn dfs_reach(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,

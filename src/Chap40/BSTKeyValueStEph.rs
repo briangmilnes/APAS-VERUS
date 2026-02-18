@@ -19,6 +19,8 @@ pub mod BSTKeyValueStEph {
         right: Link<K, V>,
     }
 
+    /// - APAS: N/A — internal node constructor.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn new_node<K: StT + Ord, V: StT>(key: K, value: V, priority: u64) -> Node<K, V> {
         Node {
             key,
@@ -58,10 +60,16 @@ pub mod BSTKeyValueStEph {
         fn keys(&self)              -> ArraySeqStPerS<K>;
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn values(&self)            -> ArraySeqStPerS<V>;
+        /// - APAS: Work Θ(log n) expected, Span Θ(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn minimum_key(&self)       -> Option<&K>;
+        /// - APAS: Work Θ(log n) expected, Span Θ(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn maximum_key(&self)       -> Option<&K>;
     }
 
+    /// - APAS: N/A — internal treap rotation.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn rotate_left<K: StT + Ord, V: StT>(link: &mut Link<K, V>) {
         if let Some(mut x) = link.take() {
             if let Some(mut y) = x.right.take() {
@@ -74,6 +82,8 @@ pub mod BSTKeyValueStEph {
         }
     }
 
+    /// - APAS: N/A — internal treap rotation.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn rotate_right<K: StT + Ord, V: StT>(link: &mut Link<K, V>) {
         if let Some(mut x) = link.take() {
             if let Some(mut y) = x.left.take() {
@@ -86,6 +96,8 @@ pub mod BSTKeyValueStEph {
         }
     }
 
+    /// - APAS: N/A — internal recursive insert helper.
+    /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
     fn insert_link<K: StT + Ord, V: StT>(link: &mut Link<K, V>, key: K, value: V, rng: &mut impl Rng) -> bool {
         if let Some(node) = link.as_mut() {
             if key < node.key {
@@ -111,6 +123,8 @@ pub mod BSTKeyValueStEph {
         }
     }
 
+    /// - APAS: N/A — internal recursive find helper.
+    /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
     fn find_link<'a, K: StT + Ord, V: StT>(link: &'a Link<K, V>, key: &K) -> Option<&'a V> {
         match link {
             | None => None,
@@ -126,6 +140,8 @@ pub mod BSTKeyValueStEph {
         }
     }
 
+    /// - APAS: N/A — internal recursive min-key helper.
+    /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
     fn min_key_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Option<&K> {
         match link {
             | None => None,
@@ -136,6 +152,8 @@ pub mod BSTKeyValueStEph {
         }
     }
 
+    /// - APAS: N/A — internal recursive max-key helper.
+    /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
     fn max_key_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Option<&K> {
         match link {
             | None => None,
@@ -146,6 +164,8 @@ pub mod BSTKeyValueStEph {
         }
     }
 
+    /// - APAS: N/A — internal recursive key collection helper.
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
     fn collect_keys<K: StT + Ord, V: StT>(link: &Link<K, V>, out: &mut Vec<K>) {
         if let Some(node) = link {
             collect_keys(&node.left, out);
@@ -154,6 +174,8 @@ pub mod BSTKeyValueStEph {
         }
     }
 
+    /// - APAS: N/A — internal recursive value collection helper.
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
     fn collect_values<K: StT + Ord, V: StT>(link: &Link<K, V>, out: &mut Vec<V>) {
         if let Some(node) = link {
             collect_values(&node.left, out);

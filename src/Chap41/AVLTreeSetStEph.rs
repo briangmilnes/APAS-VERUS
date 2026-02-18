@@ -18,29 +18,40 @@ pub mod AVLTreeSetStEph {
     pub type AVLTreeSetS<T> = AVLTreeSetStEph<T>;
 
     pub trait AVLTreeSetStEphTrait<T: StT + Ord> {
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS Cost Spec 41.4: Work 1, Span 1
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self)                        -> N;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
+        /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
+        /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn to_seq(&self)                      -> AVLTreeSeqStEphS<T>;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS Cost Spec 41.4: Work 1, Span 1
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty()                            -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS Cost Spec 41.4: Work 1, Span 1
+        /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T)                    -> Self;
-        /// claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
+        /// - claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> Self;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
+        /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
+        /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn filter<F: PredSt<T>>(&self, f: F)  -> Self;
-        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
+        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
+        /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn intersection(&self, other: &Self)  -> Self;
-        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
+        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
+        /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn difference(&self, other: &Self)    -> Self;
-        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
+        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
+        /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn union(&self, other: &Self)         -> Self;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
+        /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T)                 -> B;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
+        /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn delete(&mut self, x: &T);
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
+        /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&mut self, x: T);
     }
 

@@ -12,6 +12,8 @@ pub mod MaxContigSubSumDivConOptMtEph {
     use crate::Types::Types::*;
     pub type T = ArraySeqMtEphS<i32>;
 
+    /// - APAS: Work Θ(1), Span Θ(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> Option<i32> {
         match (a, b) {
             | (None, None) => None,
@@ -24,7 +26,9 @@ pub mod MaxContigSubSumDivConOptMtEph {
     /// Strengthened return type: (max_sum, max_prefix, max_suffix, total).
     type StrengthResult = (Option<i32>, i32, i32, i32);
 
-    /// Auxiliary function that returns strengthened result, using parallel recursion.
+    /// Auxiliary function that returns strengthened result, using parallel recursion (Algorithm 28.19 MCSSDCAux).
+    /// - APAS: Work Θ(n), Span Θ(log² n) — W(n)=2W(n/2)+O(log n) with O(1) combine
+    /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n) — subseq_copy adds O(n) per level
     fn max_contig_sub_sum_aux_mt(a: &ArraySeqMtEphS<i32>) -> StrengthResult {
         let n = a.length();
 

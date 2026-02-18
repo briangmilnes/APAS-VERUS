@@ -29,8 +29,8 @@ pub mod MinEditDistMtEph {
         /// Create from source and target sequences
         fn from_sequences(source: ArraySeqMtEphS<T>, target: ArraySeqMtEphS<T>) -> Self;
 
-        /// claude-4-sonet: Work Θ(|S|×|T|), Span Θ(|S|+|T|), Parallelism Θ(min(|S|,|T|))
-        /// Compute minimum edit distance with parallel DP where |S|=source length, |T|=target length
+        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
+        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — agrees with APAS; thread::spawn on delete/insert
         fn min_edit_distance(&mut self)                                         -> usize
         where
             T: Send + Sync + 'static;
@@ -61,9 +61,8 @@ pub mod MinEditDistMtEph {
     }
 
     impl<T: MtVal> MinEditDistMtEphS<T> {
-        /// Internal parallel recursive minimum edit distance with shared memoization
-        /// Claude Work: O(|S|*|T|) - each subproblem computed once across all threads
-        /// Claude Span: O(|S|+|T|) - maximum recursion depth, parallelism O(min(|S|,|T|))
+        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
+        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — parallel fork on delete/insert branches
         fn min_edit_distance_rec(&self, i: usize, j: usize) -> usize
         where
             T: Send + Sync + 'static,

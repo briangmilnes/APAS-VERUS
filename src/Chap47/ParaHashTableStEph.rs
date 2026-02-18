@@ -41,9 +41,17 @@ pub mod ParaHashTableStEph {
     /// Trait for parametric nested hash tables.
     /// Entry type must implement this trait to define how Key and Value are stored.
     pub trait EntryTrait<Key, Value> {
+        /// - APAS: N/A — inner table interface, cost depends on implementation.
+        /// - Claude-Opus-4.6: N/A — abstract trait method.
         fn new()                        -> Self;
+        /// - APAS: N/A — inner table interface, cost depends on implementation.
+        /// - Claude-Opus-4.6: N/A — abstract trait method.
         fn insert(&mut self, key: Key, value: Value);
+        /// - APAS: N/A — inner table interface, cost depends on implementation.
+        /// - Claude-Opus-4.6: N/A — abstract trait method.
         fn lookup(&self, key: &Key)     -> Option<Value>;
+        /// - APAS: N/A — inner table interface, cost depends on implementation.
+        /// - Claude-Opus-4.6: N/A — abstract trait method.
         fn delete(&mut self, key: &Key) -> B;
     }
 
@@ -51,7 +59,8 @@ pub mod ParaHashTableStEph {
     pub trait ParaHashTableStEphTrait<Key: StT, Value: StT, Entry: EntryTrait<Key, Value>, Metrics: Default> {
         /// Creates an empty hash table with the given initial size.
         /// Takes a hash function generator that produces hash functions for different table sizes.
-        /// APAS: Work O(m), Span O(m) where m is initial size.
+        /// - APAS: Work O(m), Span O(m) where m is initial size.
+        /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
         fn createTable(hash_fn_gen: HashFunGen<Key>, initial_size: N)           -> HashTable<Key, Value, Entry, Metrics> {
             let table = (0..initial_size).map(|_| Entry::new()).collect();
             let hash_fn = hash_fn_gen(initial_size);
@@ -68,23 +77,29 @@ pub mod ParaHashTableStEph {
         }
 
         /// Inserts a key-value pair into the hash table.
-        /// APAS: Work O(1) expected, Span O(1).
+        /// - APAS: Work O(1) expected, Span O(1).
+        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
         fn insert(table: &mut HashTable<Key, Value, Entry, Metrics>, key: Key, value: Value);
 
         /// Looks up a key in the hash table, returning its value if found.
-        /// APAS: Work O(1) expected, Span O(1).
+        /// - APAS: Work O(1) expected, Span O(1).
+        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
         fn lookup(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key)     -> Option<Value>;
 
         /// Deletes a key from the hash table if it exists.
-        /// APAS: Work O(1) expected, Span O(1).
+        /// - APAS: Work O(1) expected, Span O(1).
+        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics>, key: &Key) -> B;
 
         /// Accessor for metrics field.
+        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
         fn metrics(table: &HashTable<Key, Value, Entry, Metrics>)               -> &Metrics { &table.metrics }
 
         /// Returns the load (number of entries) and size (table capacity).
-        /// APAS: Work O(1), Span O(1).
         /// Load factor α = load/size = num_elements/size
+        /// - APAS: Work O(1), Span O(1).
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads and one division.
         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics>)           -> LoadAndSize {
             let load_factor = if table.current_size == 0 {
                 0.0
@@ -99,8 +114,9 @@ pub mod ParaHashTableStEph {
 
         /// Resizes the hash table to a new size and rehashes all entries.
         /// Uses the stored hash function generator to create a new hash function for the new size.
-        /// APAS: Work O(n + m + m'), Span O(n + m + m') where n is number of elements,
-        /// m is old size, m' is new size.
+        /// - APAS: Work O(n + m + m'), Span O(n + m + m') where n is number of elements,
+        ///   m is old size, m' is new size.
+        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
         fn resize(table: &HashTable<Key, Value, Entry, Metrics>, new_size: N)   -> HashTable<Key, Value, Entry, Metrics>;
     }
 }

@@ -36,6 +36,8 @@ pub mod AdjMatrixGraphMtPer {
     }
 
     impl AdjMatrixGraphMtPerTrait for AdjMatrixGraphMtPer {
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential creation of n×n false matrix.
         fn new(n: N) -> Self {
             let false_row = ArraySeqMtPerS::from_vec(vec![false; n]);
             let mut matrix_rows = Vec::with_capacity(n);
@@ -48,14 +50,18 @@ pub mod AdjMatrixGraphMtPer {
             }
         }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — stored field.
         fn num_vertices(&self) -> N { self.n }
 
+        /// - APAS: Work Θ(n²), Span Θ(1) [Cost Spec 52.6, map over edges]
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(lg n) — parallel divide-and-conquer over rows and columns.
         fn num_edges(&self) -> N {
-            // Parallel: divide-and-conquer over rows
-            // Work: Θ(n²), Span: Θ(log n)
             count_edges_parallel(&self.matrix)
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.6]
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn has_edge(&self, u: N, v: N) -> B {
             if u >= self.n || v >= self.n {
                 return false;
@@ -63,28 +69,28 @@ pub mod AdjMatrixGraphMtPer {
             *self.matrix.nth(u).nth(v)
         }
 
+        /// - APAS: Work Θ(n), Span Θ(1) [Cost Spec 52.6]
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer over columns.
         fn out_neighbors(&self, u: N) -> ArraySeqMtPerS<N> {
             if u >= self.n {
                 return ArraySeqMtPerS::empty();
             }
-            // Parallel: divide-and-conquer over columns
-            // Work: Θ(n), Span: Θ(log n)
             let row = self.matrix.nth(u);
             collect_neighbors_parallel(row, 0, self.n)
         }
 
+        /// - APAS: Work Θ(n), Span Θ(lg n) [Cost Spec 52.6]
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer; agrees with APAS.
         fn out_degree(&self, u: N) -> N {
             if u >= self.n {
                 return 0;
             }
-            // Parallel: divide-and-conquer over row
-            // Work: Θ(n), Span: Θ(log n)
             let row = self.matrix.nth(u);
             count_row_parallel(row)
         }
 
-        // Exercise 52.6: Parallel complement with Θ(log n) span
-        // Work: Θ(n²), Span: Θ(log n) 
+        /// - APAS: Work Θ(n²), Span Θ(1) [Exercise 52.6]
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(lg n) — parallel divide-and-conquer over rows and columns.
         fn complement(&self) -> Self
         where
             bool: 'static,
@@ -98,12 +104,8 @@ pub mod AdjMatrixGraphMtPer {
         }
     }
 
-    // ============================================================================
-    // Parallel Helper Functions (using thread::spawn/join, no generic closures)
-    // ============================================================================
-
-    /// Count total edges in matrix (parallel divide-and-conquer over rows)
-    /// Work: Θ(n²), Span: Θ(log n)
+    /// - APAS: N/A — parallel helper not in cost table.
+    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(lg n) — parallel divide-and-conquer over rows.
     fn count_edges_parallel(matrix: &ArraySeqMtPerS<ArraySeqMtPerS<bool>>) -> N {
         let n = matrix.length();
         if n == 0 {
@@ -126,8 +128,8 @@ pub mod AdjMatrixGraphMtPer {
         left_count + right_count
     }
 
-    /// Count true values in a single row (parallel divide-and-conquer)
-    /// Work: Θ(n), Span: Θ(log n)
+    /// - APAS: N/A — parallel helper not in cost table.
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer over columns.
     fn count_row_parallel(row: &ArraySeqMtPerS<bool>) -> N {
         let n = row.length();
         if n == 0 {
@@ -149,8 +151,8 @@ pub mod AdjMatrixGraphMtPer {
         left_count + right_count
     }
 
-    /// Collect neighbor indices where row[i] == true (parallel)
-    /// Work: Θ(n), Span: Θ(log n)
+    /// - APAS: N/A — parallel helper not in cost table.
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer + append.
     fn collect_neighbors_parallel(
         row: &ArraySeqMtPerS<bool>,
         start: N,
@@ -180,8 +182,8 @@ pub mod AdjMatrixGraphMtPer {
         ArraySeqMtPerS::append(&left_result, &right_result)
     }
 
-    /// Complement entire matrix (parallel over rows and columns)
-    /// Work: Θ(n²), Span: Θ(log n)
+    /// - APAS: N/A — parallel helper not in cost table.
+    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(lg n) — parallel divide-and-conquer over rows and columns.
     fn complement_matrix_parallel(
         matrix: &ArraySeqMtPerS<ArraySeqMtPerS<bool>>,
         n: N,
@@ -189,7 +191,8 @@ pub mod AdjMatrixGraphMtPer {
         complement_rows_parallel(matrix, 0, n, n)
     }
 
-    /// Complement a range of rows (parallel divide-and-conquer)
+    /// - APAS: N/A — parallel helper not in cost table.
+    /// - Claude-Opus-4.6: Work Θ(k × n), Span Θ(lg k × n) — parallel over row range k.
     fn complement_rows_parallel(
         matrix: &ArraySeqMtPerS<ArraySeqMtPerS<bool>>,
         start_row: N,
@@ -219,12 +222,14 @@ pub mod AdjMatrixGraphMtPer {
         ArraySeqMtPerS::append(&left_result, &right_result)
     }
 
-    /// Complement a single row (parallel over columns)
+    /// - APAS: N/A — parallel helper not in cost table.
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to parallel column complementing.
     fn complement_row_parallel(row: &ArraySeqMtPerS<bool>, row_idx: N, n: N) -> ArraySeqMtPerS<bool> {
         complement_columns_parallel(row, row_idx, 0, n)
     }
 
-    /// Complement a range of columns in a row (parallel divide-and-conquer)
+    /// - APAS: N/A — parallel helper not in cost table.
+    /// - Claude-Opus-4.6: Work Θ(k), Span Θ(lg k) — parallel divide-and-conquer over column range k.
     fn complement_columns_parallel(
         row: &ArraySeqMtPerS<bool>,
         row_idx: N,

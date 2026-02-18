@@ -40,8 +40,8 @@ pub mod StarContractionMtEph {
     /// - Base case: No edges, call base function on vertices
     /// - Recursive case: Parallel partition, parallel quotient construction, recur, then expand
     ///
-    /// APAS: Work O((n + m) lg n), Span O(lg² n)
-    /// claude-4-sonet: Work O((n + m) lg n), Span O(lg² n), Parallelism Θ((n+m)/lg² n)
+    /// - APAS: Work O((n + m) lg n), Span O(lg² n)
+    /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — star_partition is sequential (all loops); quotient build uses ParaPair but partition dominates span.
     ///
     /// Arguments:
     /// - graph: The undirected graph to contract
@@ -80,8 +80,8 @@ pub mod StarContractionMtEph {
     ///
     /// Routes edges through partition map using divide-and-conquer parallelism.
     ///
-    /// APAS: Work O(m), Span O(lg m)
-    /// claude-4-sonet: Work O(m), Span O(lg m), Parallelism Θ(m/lg m)
+    /// - APAS: (no cost stated) — helper not in prose.
+    /// - Claude-Opus-4.6: Work O(m), Span O(lg m) — delegates to route_edges_parallel which uses ParaPair fork-join.
     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         centers: &SetStEph<V>,
@@ -103,7 +103,8 @@ pub mod StarContractionMtEph {
 
     /// Parallel edge routing using divide-and-conquer
     ///
-    /// Work O(k), Span O(lg k), where k = end - start
+    /// - APAS: (no cost stated) — helper not in prose.
+    /// - Claude-Opus-4.6: Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.
     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
         partition_map: Arc<HashMap<V, V>>,
@@ -159,8 +160,8 @@ pub mod StarContractionMtEph {
     ///
     /// Convenience wrapper that performs contraction with identity base/expand.
     ///
-    /// APAS: Work O((n + m) lg n), Span O(lg² n)
-    /// claude-4-sonet: Work O((n + m) lg n), Span O(lg² n), Parallelism Θ((n+m)/lg² n)
+    /// - APAS: Work O((n + m) lg n), Span O(lg² n)
+    /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — delegates to star_contract_mt which has sequential partition.
     pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,

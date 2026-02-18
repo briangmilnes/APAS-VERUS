@@ -1,31 +1,42 @@
-Logging to: /home/milnes/projects/APAS-VERUS-review/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn _ Seq::new
-Searching: /home/milnes/projects/verus/source/vstd
-Searching: /home/milnes/projects/APAS-VERUS-review
-Files: 394
-  Functions: 6937, Traits: 210, Impls: 909
-  Matches: 8056
+Pattern: fn \(append\|extend\|concat_vec\)
+Searching: /home/milnes/projects/APAS-VERUS
+Files: 658, Functions: 11004, Matches: 37
 
-[31m/home/milnes/projects/verus/source/vstd/seq.rs:38: [0m
-/// An empty sequence (i.e., a sequence of length 0).
-#[rustc_diagnostic_item = "verus::vstd::seq::Seq::empty"]
-[38;5;22m    pub uninterp spec fn empty() -> Seq<A>;[0m
+[31m/home/milnes/projects/APAS-VERUS/tests/Chap19/TestArraySeqStEph.rs:45: [0m
+#[test]
+[38;5;22mfn test_append()[0m
 
-[31m/home/milnes/projects/verus/source/vstd/seq.rs:42: [0m
-/// Construct a sequence `s` of length `len` where entry `s[i]` is given by `f(i)`.
-#[rustc_diagnostic_item = "verus::vstd::seq::Seq::new"]
-[38;5;22m    pub uninterp spec fn new(len: nat, f: impl Fn(int) -> A) -> Seq<A>;[0m
+[31m/home/milnes/projects/APAS-VERUS/tests/Chap19/TestArraySeqStPer.rs:38: [0m
+#[test]
+[38;5;22mfn test_append()[0m
 
-[31m/home/milnes/projects/verus/source/vstd/seq.rs:46: [0m
-/// The length of a sequence.
-#[rustc_diagnostic_item = "verus::vstd::seq::Seq::len"]
-[38;5;22m    pub uninterp spec fn len(self) -> nat;[0m
+[31m/home/milnes/projects/APAS-VERUS/tests/Chap19/TestArraySeqMtEph.rs:46: [0m
+#[test]
+[38;5;22mfn test_append()[0m
 
-[31m/home/milnes/projects/verus/source/vstd/seq.rs:53: [0m
-///
-/// If `i` is not in the range `[0, self.len())`, then the resulting value
-/// is meaningless and arbitrary.
-#[rustc_diagnostic_item = "verus::vstd::seq::Seq::index"]
+[31m/home/milnes/projects/APAS-VERUS/tests/Chap18/TestLinkedListStPer.rs:39: [0m
+#[test]
+[38;5;22mfn test_append()[0m
+
+[31m/home/milnes/projects/APAS-VERUS/tests/Chap18/TestArraySeqStEph.rs:46: [0m
+#[test]
+[38;5;22mfn test_append()[0m
+
+[31m/home/milnes/projects/APAS-VERUS/tests/Chap18/TestLinkedListStEph.rs:46: [0m
+#[test]
+[38;5;22mfn test_append()[0m
+
+[31m/home/milnes/projects/APAS-VERUS/tests/Chap18/TestArraySeqStPer.rs:39: [0m
+#[test]
+[38;5;22mfn test_append()[0m
+
+[31m/home/milnes/projects/APAS-VERUS/tests/Chap37/TestAVLTreeSeqStEph18.rs:25: [0m
+#[test]
+[38;5;22mfn test_append_union()[0m
+
+[31m/home/milnes/projects/APAS-VERUS/tests/Chap37/TestAVLTreeSeqStEphChap37.rs:400: [0m
+#[test]

@@ -34,18 +34,8 @@ pub mod JohnsonStEphInt {
     /// 1. Bellman-Ford to compute potentials and eliminate negative weights
     /// 2. Dijkstra from each vertex on reweighted graph
     ///
-    /// **APAS Analysis:** Work O(mn log n), Span O(m log n)
-    /// **Claude Analysis:**
-    /// - Phase 1: Bellman-Ford on G' (n+1 vertices, m+n edges): Work O((n+1)(m+n)) = O(nm), Span O(nm)
-    /// - Phase 2: Reweight m edges: Work O(m), Span O(m)
-    /// - Phase 3: n sequential Dijkstra runs: Work O(n * m log n) = O(mn log n), Span O(mn log n)
-    /// - Total: Work O(mn log n), Span O(mn log n)
-    ///
-    /// # Arguments
-    /// * `graph` - Weighted directed graph with integer weights (can be negative, no negative cycles)
-    ///
-    /// # Returns
-    /// `AllPairsResultStEphInt` containing n×n distance matrix and predecessor matrix
+    /// - APAS: Work O(mn log n), Span O(m log n)
+    /// - Claude-Opus-4.6: Work O(mn log n), Span O(mn log n) — sequential loop over n Dijkstra runs makes Span = Work for Phase 3
     pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphInt {
         let n = graph.vertices().size();
 
@@ -102,7 +92,10 @@ pub mod JohnsonStEphInt {
         }
     }
 
-    /// Add dummy source with zero-weight edges to all vertices
+    /// Add dummy source vertex s with zero-weight edges to all vertices in G.
+    ///
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — iterates over vertices and edges
     fn add_dummy_source(graph: &WeightedDirGraphStEphI128<usize>, n: usize) -> (WeightedDirGraphStEphI128<usize>, usize) {
         let dummy_idx = n;
 
@@ -130,6 +123,9 @@ pub mod JohnsonStEphInt {
     }
 
     /// Reweight edges: w'(u,v) = w(u,v) + p(u) - p(v)
+    ///
+    /// - APAS: Work O(m), Span O(m)
+    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — rebuilds vertex set O(n) plus iterates edges O(m)
     fn reweight_graph(
         graph: &WeightedDirGraphStEphI128<usize>,
         potentials: &ArraySeqStEphS<i64>,
@@ -151,7 +147,10 @@ pub mod JohnsonStEphInt {
         WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges)
     }
 
-    /// Create result for negative cycle case
+    /// Create result for negative cycle case.
+    ///
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — builds n×n distance and predecessor matrices
     fn create_negative_cycle_result(n: usize) -> AllPairsResultStEphInt {
         let distances = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| i64::MAX, n), n);
         let predecessors = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| 0, n), n);

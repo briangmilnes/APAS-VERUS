@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap21/
+
 ✓ Algorithm21_1.rs
    2 clean proof functions
 ✓ Algorithm21_2.rs
@@ -8,9 +10,22 @@
 ✓ Exercise21_6.rs
 ✓ Exercise21_7.rs
 ❌ Exercise21_8.rs
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:140: assume() - assume(1 < k as int + 1);
+        99 |     pub fn is_prime(n: N) -> (prime: B)
+            ...
+       138 |             assert(n as int % 1 == 0) by (nonlinear_arith) requires n >= 2;
+       139 |             // k >= 1 so 1 < k+1, triggering the recursive case.
+       141 |             assert(n as int % 1 == 0);
+       142 | 
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:151: assume() - assume(ones.seq@.len() as int == spec_divisor_count(n as int, 1, k as int + 1));
-   Holes: 1 total
-      1 × assume()
+        99 |     pub fn is_prime(n: N) -> (prime: B)
+            ...
+       149 |             // Bridge: the filter count equals the ghost divisor count.
+       150 |             // This is the proof hole — filter's spec doesn't give us the exact count.
+       152 | 
+       153 |             // Now prove: prime <==> spec_is_prime(n as int).
+   Holes: 2 total
+      2 × assume()
    Proof functions: 3 total (3 clean, 0 holed)
 ✓ Exercise21_9.rs
 ✓ Problem21_1.rs
@@ -32,5 +47,5 @@ Proof Functions:
    0 holed
    7 total
 
-Holes Found: 1 total
-   1 × assume()
+Holes Found: 2 total
+   2 × assume()

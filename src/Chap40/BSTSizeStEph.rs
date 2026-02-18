@@ -61,17 +61,27 @@ pub mod BSTSizeStEph {
         fn in_order(&self)             -> ArraySeqStPerS<T>;
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn rank(&self, key: &T)        -> N;
+        /// - APAS: Work Θ(log n) with size augmentation, Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn select(&self, rank: N)      -> Option<&T>;
+        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn split_rank(&self, rank: N)  -> (BSTSizeStEph<T>, BSTSizeStEph<T>);
     }
 
     impl<T: StT + Ord> BSTSizeStEph<T> {
+        /// - APAS: Work Θ(1), Span Θ(1) — O(1) size access via augmented field.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size_link(link: &Link<T>) -> N { link.as_ref().map_or(0, |n| n.size) }
 
+        /// - APAS: Work Θ(1), Span Θ(1) — recomputes subtree size from children.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn update_size(node: &mut Node<T>) {
             node.size = 1 + Self::size_link(&node.left) + Self::size_link(&node.right);
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1) — corresponds to APAS makeNode.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn make_node(key: T, priority: u64, left: Link<T>, right: Link<T>) -> Link<T> {
             let mut node = Node::new(key, priority);
             node.left = left;
@@ -80,6 +90,8 @@ pub mod BSTSizeStEph {
             Some(Box::new(node))
         }
 
+        /// - APAS: N/A — internal treap rotation (updates sizes).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn rotate_left(link: &mut Link<T>) {
             if let Some(mut x) = link.take() {
                 if let Some(mut y) = x.right.take() {
@@ -94,6 +106,8 @@ pub mod BSTSizeStEph {
             }
         }
 
+        /// - APAS: N/A — internal treap rotation (updates sizes).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn rotate_right(link: &mut Link<T>) {
             if let Some(mut x) = link.take() {
                 if let Some(mut y) = x.left.take() {
@@ -108,6 +122,8 @@ pub mod BSTSizeStEph {
             }
         }
 
+        /// - APAS: N/A — internal recursive insert helper.
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn insert_link(link: &mut Link<T>, value: T, rng: &mut impl Rng) {
             if let Some(node) = link.as_mut() {
                 if value < node.key {
@@ -129,6 +145,8 @@ pub mod BSTSizeStEph {
             }
         }
 
+        /// - APAS: N/A — internal recursive find helper.
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> Option<&'a T> {
             match link {
                 | None => None,
@@ -144,6 +162,8 @@ pub mod BSTSizeStEph {
             }
         }
 
+        /// - APAS: N/A — internal recursive minimum helper.
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn min_link(link: &Link<T>) -> Option<&T> {
             match link {
                 | None => None,
@@ -154,6 +174,8 @@ pub mod BSTSizeStEph {
             }
         }
 
+        /// - APAS: N/A — internal recursive maximum helper.
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn max_link(link: &Link<T>) -> Option<&T> {
             match link {
                 | None => None,
@@ -164,6 +186,8 @@ pub mod BSTSizeStEph {
             }
         }
 
+        /// - APAS: N/A — internal recursive in-order traversal helper.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn in_order_collect(link: &Link<T>, out: &mut Vec<T>) {
             if let Some(node) = link {
                 Self::in_order_collect(&node.left, out);
@@ -172,6 +196,8 @@ pub mod BSTSizeStEph {
             }
         }
 
+        /// - APAS: Work Θ(log n) with size augmentation, Span Θ(log n) — Algorithm 40.1.
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn rank_link(link: &Link<T>, key: &T) -> N {
             match link {
                 | None => 0,
@@ -188,6 +214,8 @@ pub mod BSTSizeStEph {
             }
         }
 
+        /// - APAS: Work Θ(log n) with size augmentation, Span Θ(log n) — Algorithm 40.1.
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn select_link(link: &Link<T>, rank: N) -> Option<&T> {
             match link {
                 | None => None,
@@ -204,6 +232,8 @@ pub mod BSTSizeStEph {
             }
         }
 
+        /// - APAS: Work Θ(log n), Span Θ(log n) — Exercise 40.1.
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn split_rank_link(link: &Link<T>, rank: N) -> (Link<T>, Link<T>) {
             match link {
                 | None => (None, None),

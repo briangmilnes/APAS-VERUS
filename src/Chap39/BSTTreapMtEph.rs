@@ -41,34 +41,53 @@ pub mod BSTTreapMtEph {
     pub type BSTreeTreap<T> = BSTTreapMtEph<T>;
 
     pub trait BSTTreapMtEphTrait<T: StTInMtT + Ord>: Sized {
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn new()                       -> Self;
-        /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected with locking
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn insert(&self, value: T);
-        /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected with locking
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn find(&self, target: &T)     -> Option<T>;
-        /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected with locking
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn contains(&self, target: &T) -> B;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self)                 -> N;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn is_empty(&self)             -> B;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n)
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn height(&self)               -> N;
-        /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected with locking
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn minimum(&self)              -> Option<T>;
-        /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected with locking
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn maximum(&self)              -> Option<T>;
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn in_order(&self)             -> ArraySeqStPerS<T>;
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn pre_order(&self)            -> ArraySeqStPerS<T>;
     }
 
 
     impl<T: StTInMtT + Ord> BSTTreapMtEph<T> {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size_link(link: &Link<T>) -> N { link.as_ref().map_or(0, |n| n.size) }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn update(node: &mut Node<T>) { node.size = 1 + Self::size_link(&node.left) + Self::size_link(&node.right); }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn rotate_left(link: &mut Link<T>) {
             if let Some(mut x) = link.take() {
                 if let Some(mut y) = x.right.take() {
@@ -83,6 +102,8 @@ pub mod BSTTreapMtEph {
             }
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn rotate_right(link: &mut Link<T>) {
             if let Some(mut x) = link.take() {
                 if let Some(mut y) = x.left.take() {
@@ -97,6 +118,8 @@ pub mod BSTTreapMtEph {
             }
         }
 
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn insert_link(link: &mut Link<T>, value: T, rng: &mut impl Rng) {
             if let Some(node) = link.as_mut() {
                 if value < node.key {
@@ -118,6 +141,8 @@ pub mod BSTTreapMtEph {
             }
         }
 
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> Option<&'a T> {
             match link {
                 | None => None,
@@ -133,6 +158,8 @@ pub mod BSTTreapMtEph {
             }
         }
 
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn min_link(link: &Link<T>) -> Option<&T> {
             match link {
                 | None => None,
@@ -143,6 +170,8 @@ pub mod BSTTreapMtEph {
             }
         }
 
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn max_link(link: &Link<T>) -> Option<&T> {
             match link {
                 | None => None,
@@ -153,6 +182,8 @@ pub mod BSTTreapMtEph {
             }
         }
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn in_order_collect(link: &Link<T>, out: &mut Vec<T>) {
             if let Some(node) = link {
                 Self::in_order_collect(&node.left, out);
@@ -161,6 +192,8 @@ pub mod BSTTreapMtEph {
             }
         }
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn pre_order_collect(link: &Link<T>, out: &mut Vec<T>) {
             if let Some(node) = link {
                 out.push(node.key.clone());

@@ -1,0 +1,31 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap43/
+
+✓ AugOrderedTableMtEph.rs
+✓ AugOrderedTableStEph.rs
+✓ AugOrderedTableStPer.rs
+✓ Example43_1.rs
+✓ OrderedSetMtEph.rs
+✓ OrderedSetStEph.rs
+✓ OrderedSetStPer.rs
+✓ OrderedTableMtEph.rs
+✓ OrderedTableMtPer.rs
+✓ OrderedTableStEph.rs
+✓ OrderedTableStPer.rs
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   11 clean (no holes)
+   0 holed (contains holes)
+   11 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 0 total
+
+🎉 No proof holes found! All proofs are complete.

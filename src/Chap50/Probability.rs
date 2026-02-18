@@ -29,28 +29,24 @@ pub mod Probability {
     pub struct Probability(pub f64);
 
     impl Probability {
-        /// Create a new probability value
-        /// Claude Work: O(1) - constant time construction
-        /// Claude Span: O(1) - constant time construction
+        /// Claude-Opus-4.6 Work: O(1) - constant time construction
+        /// Claude-Opus-4.6 Span: O(1) - constant time construction
         pub fn new(value: f64) -> Self {
             debug_assert!(value >= 0.0, "Probability must be non-negative");
             // Allow values > 1.0 for costs in dynamic programming
             Probability(value)
         }
 
-        /// Get the inner f64 value
-        /// Claude Work: O(1) - constant time access
-        /// Claude Span: O(1) - constant time access
+        /// Claude-Opus-4.6 Work: O(1) - constant time access
+        /// Claude-Opus-4.6 Span: O(1) - constant time access
         pub fn value(&self) -> f64 { self.0 }
 
-        /// Create infinity value for fold operations
-        /// Claude Work: O(1) - constant time construction
-        /// Claude Span: O(1) - constant time construction
+        /// Claude-Opus-4.6 Work: O(1) - constant time construction
+        /// Claude-Opus-4.6 Span: O(1) - constant time construction
         pub fn infinity() -> Self { Probability(f64::INFINITY) }
 
-        /// Create zero probability
-        /// Claude Work: O(1) - constant time construction
-        /// Claude Span: O(1) - constant time construction
+        /// Claude-Opus-4.6 Work: O(1) - constant time construction
+        /// Claude-Opus-4.6 Span: O(1) - constant time construction
         pub fn zero() -> Self { Probability(0.0) }
     }
 

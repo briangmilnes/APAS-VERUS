@@ -1,36 +1,26 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap27/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap27/
 
-❌ ReduceContractMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:58: external_body - #[verifier::external_body]
-        59 |         fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
-   Holes: 1 total
-      1 × external_body
+✓ ReduceContractMtEph.rs
 ✓ ReduceContractStEph.rs
    4 clean proof functions
-❌ ScanContractMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractMtEph.rs:62: external_body - #[verifier::external_body]
-        63 |         fn scan_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
-   Holes: 1 total
-      1 × external_body
-❌ ScanContractStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:60: external_body - #[verifier::external_body]
-        61 |         fn scan_contract<F: Fn(&T, &T) -> T>(
-   Holes: 1 total
-      1 × external_body
+✓ ScanContractMtEph.rs
+✓ ScanContractStEph.rs
+   1 clean proof function
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   1 clean (no holes)
-   3 holed (contains holes)
+   4 clean (no holes)
+   0 holed (contains holes)
    4 total
 
 Proof Functions:
-   4 clean
+   5 clean
    0 holed
-   4 total
+   5 total
 
-Holes Found: 3 total
-   3 × external_body
+Holes Found: 0 total
+
+🎉 No proof holes found! All proofs are complete.

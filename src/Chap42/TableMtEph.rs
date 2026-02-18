@@ -29,34 +29,49 @@ pub mod TableMtEph {
 
     /// Trait defining the Table ADT operations from Chapter 42
     pub trait TableMtEphTrait<K: MtKey, V: MtVal> {
+        /// APAS: Work Θ(1), Span Θ(1)
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self)                 -> N;
+        /// APAS: Work Θ(1), Span Θ(1)
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty()                     -> Self;
+        /// APAS: Work Θ(1), Span Θ(1)
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(key: K, value: V) -> Self;
+        /// APAS: Work Θ(|a|), Span Θ(lg |a|)
         /// claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)
         fn domain(&self)               -> ArraySetStEph<K>;
+        /// APAS: Work Θ(|s| * W(f)), Span Θ(lg |s| + S(f))
         /// claude-4-sonet: Work Θ(|keys| × W(f)), Span Θ(log |keys| + S(f)), Parallelism Θ(|keys|/(log |keys| + S(f)))
         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> Self;
+        /// APAS: Work Θ(Σ W(f(v))), Span Θ(lg |a| + max S(f(v)))
         /// claude-4-sonet: Work Θ(n × W(f)), Span Θ(log n + S(f)), Parallelism Θ(n/(log n + S(f)))
         fn map<F: Fn(&V) -> V + Send + Sync + 'static>(&mut self, f: F);
+        /// APAS: Work Θ(Σ W(p(k,v))), Span Θ(lg |a| + max S(p(k,v)))
         /// claude-4-sonet: Work Θ(n × W(f)), Span Θ(log n + S(f)), Parallelism Θ(n/(log n + S(f)))
         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&mut self, f: F);
+        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, combine: F);
+        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, combine: F);
+        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn difference(&mut self, other: &Self);
+        /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, key: &K)        -> Option<V>;
+        /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
         fn delete(&mut self, key: &K);
+        /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, key: K, value: V, combine: F);
+        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn restrict(&mut self, keys: &ArraySetStEph<K>);
+        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
         /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn subtract(&mut self, keys: &ArraySetStEph<K>);
 

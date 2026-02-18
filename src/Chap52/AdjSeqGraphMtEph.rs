@@ -31,6 +31,8 @@ pub mod AdjSeqGraphMtEph {
     }
 
     impl AdjSeqGraphMtEphTrait for AdjSeqGraphMtEph {
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop creating n empty neighbor lists.
         fn new(n: N) -> Self {
             let empty_list = ArraySeqMtEphS::empty();
             let mut adj_lists = Vec::with_capacity(n);
@@ -42,8 +44,12 @@ pub mod AdjSeqGraphMtEph {
             }
         }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — sequence length.
         fn num_vertices(&self) -> N { self.adj.length() }
 
+        /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential loop; span not parallel despite Mt type.
         fn num_edges(&self) -> N {
             let n = self.adj.length();
             let mut count = 0;
@@ -54,6 +60,8 @@ pub mod AdjSeqGraphMtEph {
             count
         }
 
+        /// - APAS: Work Θ(d(u)), Span Θ(lg d(u)) [Cost Spec 52.5]
+        /// - Claude-Opus-4.6: Work Θ(d(u)), Span Θ(d(u)) — sequential linear scan.
         fn has_edge(&self, u: N, v: N) -> B {
             if u >= self.adj.length() {
                 return false;
@@ -67,10 +75,16 @@ pub mod AdjSeqGraphMtEph {
             false
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5]
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn out_neighbors(&self, u: N) -> ArraySeqMtEphS<N> { self.adj.nth(u).clone() }
 
+        /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5]
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn out_degree(&self, u: N) -> N { self.adj.nth(u).length().clone() }
 
+        /// - APAS: Work Θ(n), Span Θ(1) [Cost Spec 52.5, insert/delete edge]
+        /// - Claude-Opus-4.6: Work Θ(d(u)), Span Θ(d(u)) — linear scan + rebuild of neighbor list; O(1) array set.
         fn set_edge(&mut self, u: N, v: N, exists: B) {
             if u >= self.adj.length() || v >= self.adj.length() {
                 return;

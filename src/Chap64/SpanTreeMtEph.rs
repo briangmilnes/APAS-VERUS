@@ -34,8 +34,11 @@ pub mod SpanTreeMtEph {
     ///
     /// Computes a spanning tree using parallel star contraction.
     ///
-    /// APAS: Work O((n+m) lg n), Span O(lg² n)
-    /// claude-4-sonet: Work O((n+m) lg n), Span O(lg² n), Parallelism Θ((n+m)/lg² n)
+    /// - APAS: Work O((n+m) lg n), Span O(lg² n)
+    /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — expand closure
+    ///   uses 2-way thread::spawn splits (not full divide-and-conquer), and inner
+    ///   loop scanning original_edges for each quotient edge is sequential O(E).
+    ///   Span does not achieve polylog; it equals Work.
     ///
     /// Arguments:
     /// - graph: The undirected graph
@@ -157,7 +160,10 @@ pub mod SpanTreeMtEph {
     }
 
     /// Verify that result is a valid spanning tree
-    /// Parallel version: Work O(|V| + |E|), Span O(lg |V|)
+    ///
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work O(|V| + |E_tree|), Span O(|E_tree|) — 2-way split
+    ///   halves work but span is O(E_tree/2), not O(lg V).
     pub fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(
         graph: &UnDirGraphMtEph<V>,
         tree_edges: &SetStEph<Edge<V>>,

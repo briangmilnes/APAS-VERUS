@@ -19,6 +19,8 @@ pub mod TopoSortStPer {
 
     /// Computes topological sort of a DAG.
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
+    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Claude-Opus-4.6: Work O(|V|^2 + (|V| + |E|) log |V|), Span same — Vec::insert(0, ..) O(|V|) + AVL ops O(log |V|)
     pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> Option<AVLTreeSeqStPerS<N>> {
         let n = graph.length();
         let mut visited = AVLTreeSetStPer::empty();
@@ -42,6 +44,8 @@ pub mod TopoSortStPer {
 
     /// Computes topological sort of a DAG.
     /// Returns sequence of vertices in topological order (respecting edge directions).
+    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Claude-Opus-4.6: Work O(|V|^2 + (|V| + |E|) log |V|), Span same — Vec::insert(0, ..) O(|V|) + AVL ops O(log |V|)
     pub fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N> {
         let n = graph.length();
         let mut visited = AVLTreeSetStPer::empty();
@@ -57,6 +61,8 @@ pub mod TopoSortStPer {
         AVLTreeSeqStPerS::from_vec(result)
     }
 
+    /// - APAS: (no cost stated — internal helper)
+    /// - Claude-Opus-4.6: Work O(|V| + log |V|) per call — Vec::insert(0, ..) + AVL find/insert
     fn dfs_finish_order_cycle_detect(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: AVLTreeSetStPer<N>,
@@ -94,6 +100,8 @@ pub mod TopoSortStPer {
         Some((visited, rec_stack, result))
     }
 
+    /// - APAS: (no cost stated — internal helper)
+    /// - Claude-Opus-4.6: Work O(|V| + log |V|) per call — Vec::insert(0, ..) + AVL find/insert
     fn dfs_finish_order(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: AVLTreeSetStPer<N>,

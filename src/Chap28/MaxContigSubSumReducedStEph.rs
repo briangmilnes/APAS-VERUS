@@ -8,6 +8,8 @@ pub mod MaxContigSubSumReducedStEph {
     use crate::Types::Types::*;
     pub type T = ArraySeqStEphS<i32>;
 
+    /// - APAS: Work Θ(1), Span Θ(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> Option<i32> {
         match (a, b) {
             | (None, None) => None,

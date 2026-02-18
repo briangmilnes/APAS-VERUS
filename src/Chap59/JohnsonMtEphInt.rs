@@ -38,22 +38,8 @@ pub mod JohnsonMtEphInt {
     /// 2. Reweight edges (sequential)
     /// 3. Parallel Dijkstra from each vertex using ParaPair! divide-and-conquer
     ///
-    /// **APAS Analysis:** Work O(mn log n), Span O(m log n), Parallelism Θ(n)
-    /// **Claude Analysis:**
-    /// - Phase 1: Bellman-Ford: Work O(nm), Span O(nm) - sequential
-    /// - Phase 2: Reweighting: Work O(m), Span O(m) - sequential
-    /// - Phase 3: n Dijkstras via ParaPair! recursion:
-    ///   * Work O(n * m log n) = O(mn log n)
-    ///   * Span O(log n) recursion depth × O(m log n) per Dijkstra = O(m log² n)
-    ///   * However, since all n Dijkstras can run in parallel, effective Span O(m log n)
-    ///   * Parallelism Θ(n * m log n) / Θ(m log n) = Θ(n)
-    /// - Total: Work O(mn log n), Span O(m log n), Parallelism Θ(n)
-    ///
-    /// # Arguments
-    /// * `graph` - Weighted directed graph with integer weights (can be negative, no negative cycles)
-    ///
-    /// # Returns
-    /// `AllPairsResultStEphInt` containing n×n distance matrix and predecessor matrix
+    /// - APAS: Work O(mn log n), Span O(m log n), Parallelism Θ(n)
+    /// - Claude-Opus-4.6: Work O(mn log n), Span O(m log n) — agrees with APAS; ParaPair! recursion achieves Θ(n) parallelism in Phase 3
     pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphInt {
         let n = graph.vertices().size();
 
@@ -86,7 +72,9 @@ pub mod JohnsonMtEphInt {
     }
 
     /// Parallel Dijkstra execution using recursive divide-and-conquer with ParaPair!
-    /// Returns sequences of distance and predecessor rows
+    ///
+    /// - APAS: N/A — internal helper, not named in prose.
+    /// - Claude-Opus-4.6: Work O(k * m log n), Span O(m log n) where k = end - start — binary split with ParaPair! gives log k depth, each leaf runs Dijkstra O(m log n)
     fn parallel_dijkstra_all(
         graph: &WeightedDirGraphStEphI128<usize>,
         potentials: &ArraySeqStEphS<i64>,
@@ -148,7 +136,10 @@ pub mod JohnsonMtEphInt {
         (combined_dist, combined_pred)
     }
 
-    /// Add dummy source with zero-weight edges to all vertices
+    /// Add dummy source vertex s with zero-weight edges to all vertices in G.
+    ///
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — iterates over vertices and edges
     fn add_dummy_source(graph: &WeightedDirGraphStEphI128<usize>, n: usize) -> (WeightedDirGraphStEphI128<usize>, usize) {
         let mut vertices = SetStEph::empty();
         for i in 0..n {
@@ -174,6 +165,9 @@ pub mod JohnsonMtEphInt {
     }
 
     /// Reweight edges: w'(u,v) = w(u,v) + p(u) - p(v)
+    ///
+    /// - APAS: Work O(m), Span O(m)
+    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — rebuilds vertex set O(n) plus iterates edges O(m)
     fn reweight_graph(
         graph: &WeightedDirGraphStEphI128<usize>,
         potentials: &ArraySeqStEphS<i64>,
@@ -195,7 +189,10 @@ pub mod JohnsonMtEphInt {
         WeightedDirGraphStEphI128::from_weighed_edges(vertices, reweighted_edges)
     }
 
-    /// Create result for negative cycle case
+    /// Create result for negative cycle case.
+    ///
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — builds n×n distance and predecessor matrices
     fn create_negative_cycle_result(n: usize) -> AllPairsResultStEphInt {
         let distances = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| i64::MAX, n), n);
         let predecessors = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| 0, n), n);

@@ -43,6 +43,8 @@ pub mod EdgeSetGraphStEph {
     }
 
     impl<V: StT + Ord> EdgeSetGraphStEphTrait<V> for EdgeSetGraphStEph<V> {
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — creates two empty AVL sets.
         fn empty() -> Self {
             EdgeSetGraphStEph {
                 vertices: AVLTreeSetStEph::empty(),
@@ -50,20 +52,34 @@ pub mod EdgeSetGraphStEph {
             }
         }
 
+        /// - APAS: N/A — constructor not in cost table.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps existing sets.
         fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> Self {
             EdgeSetGraphStEph { vertices: v, edges: e }
         }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to AVL tree size.
         fn num_vertices(&self) -> N { self.vertices.size() }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to AVL tree size.
         fn num_edges(&self) -> N { self.edges.size() }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — returns reference.
         fn vertices(&self) -> &AVLTreeSetStEph<V> { &self.vertices }
 
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — returns reference.
         fn edges(&self) -> &AVLTreeSetStEph<Pair<V, V>> { &self.edges }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Θ(lg m), Span Θ(lg m) — agrees with APAS.
         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
 
+        /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1, mapping over neighbors]
+        /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — sequential filter + insert loop; span not parallel.
         fn out_neighbors(&self, u: &V) -> AVLTreeSetStEph<V> {
             let u_clone = u.clone();
             let filtered = self.edges.filter(|edge| edge.0 == u_clone);
@@ -76,10 +92,16 @@ pub mod EdgeSetGraphStEph {
             neighbors
         }
 
+        /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to out_neighbors which is sequential.
         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn insert_vertex(&mut self, v: V) { self.vertices.insert(v); }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1, isolated vertex deletion]
+        /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — iterates all edges; APAS assumes isolated vertex.
         fn delete_vertex(&mut self, v: &V) {
             let v_clone = v.clone();
             self.vertices.delete(&v_clone);
@@ -100,12 +122,16 @@ pub mod EdgeSetGraphStEph {
             }
         }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn insert_edge(&mut self, u: V, v: V) {
             self.vertices.insert(u.clone());
             self.vertices.insert(v.clone());
             self.edges.insert(Pair(u, v));
         }
 
+        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
         fn delete_edge(&mut self, u: &V, v: &V) { self.edges.delete(&Pair(u.clone(), v.clone())); }
     }
 }

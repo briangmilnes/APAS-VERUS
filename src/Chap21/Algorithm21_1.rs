@@ -27,6 +27,8 @@ pub mod Algorithm21_1 {
     }
 
     /// Lemma: sum_inner_lens is monotonically increasing.
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     proof fn lemma_sum_inner_lens_mono<T>(ss: Seq<ArraySeqStPerS<T>>, a: int, b: int)
         requires 0 <= a <= b <= ss.len()
         ensures sum_inner_lens(ss, a) <= sum_inner_lens(ss, b)
@@ -38,6 +40,8 @@ pub mod Algorithm21_1 {
     }
 
     /// Lemma: if all inner sequences have the same length m, then sum = k * m.
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     proof fn lemma_sum_inner_lens_uniform<T>(ss: Seq<ArraySeqStPerS<T>>, k: int, m: int)
         requires
             0 <= k <= ss.len(),
@@ -61,6 +65,8 @@ pub mod Algorithm21_1 {
     }
 
     /// Flatten a sequence of sequences into a single sequence.
+    /// - APAS: Work Θ(m), Span Θ(lg k) where m = total elements, k = number of inner sequences.
+    /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — sequential two-pass implementation.
     fn flatten_inner<T: View + Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (result: ArraySeqStPerS<T>)
         requires
             sum_inner_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,
@@ -120,6 +126,7 @@ pub mod Algorithm21_1 {
     /// - Functional form: points2D n = flatten (tabulate (\x. tabulate (\y. (x, y+1)) (n-1)) n)
     /// - Generates all 2D points (x, y) where 0 ≤ x < n and 1 ≤ y < n.
     /// - APAS: Work Θ(n²), Span Θ(lg n)
+    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential StPer tabulate + flatten.
     pub fn points2d_tab_flat(n: N) -> (result: ArraySeqStPerS<Pair<N, N>>)
         requires
             n <= usize::MAX,

@@ -30,8 +30,8 @@ pub mod StarPartitionStEph {
     /// 3. Remove v and its satellites from consideration
     /// 4. Repeat until all vertices are processed
     ///
-    /// APAS: Work Θ(n + m), Span Θ(n + m)
-    /// claude-4-sonet: Work Θ(n + m), Span Θ(n + m)
+    /// - APAS: Work Θ(n + m), Span Θ(n + m)
+    /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — agrees with APAS.
     ///
     /// Arguments:
     /// - graph: The undirected graph to partition

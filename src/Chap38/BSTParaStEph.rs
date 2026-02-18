@@ -31,32 +31,46 @@ pub mod BSTParaStEph {
     }
 
     pub trait ParamBSTTrait<T: StT + Ord>: Sized {
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn new()                         -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn expose(&self)                 -> Exposed<T>;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn join_mid(exposed: Exposed<T>) -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self)                   -> N;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn is_empty(&self)               -> B;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn insert(&self, key: T);
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn delete(&self, key: &T);
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn find(&self, key: &T)          -> Option<T>;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn split(&self, key: &T)         -> (Self, B, Self);
-        /// claude-4-sonet: Work Θ(log(|self| + |other|)), Span Θ(log(|self| + |other|)), Parallelism Θ(1)
+        /// - APAS: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|))
+        /// - Claude-Opus-4.6: Work Θ(log(|t1| + |t2|)), Span Θ(log(|t1| + |t2|))
         fn join_pair(&self, other: Self) -> Self;
-        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
+        /// - APAS: Work O(m · lg(n/m)), Span O(m · lg(n/m)) — sequential, no parallelism
+        /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(m · lg(n/m)) — sequential variant
         fn union(&self, other: &Self)    -> Self;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
+        /// - APAS: Work O(|t|), Span O(|t|)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn in_order(&self)               -> ArraySeqStPerS<T>;
     }
 
+    /// - APAS: Work O(1), Span O(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn expose_internal<T: StT + Ord>(tree: &ParamBST<T>) -> Exposed<T> {
         let guard = tree.root.borrow();
         match &*guard {
@@ -65,6 +79,8 @@ pub mod BSTParaStEph {
         }
     }
 
+    /// - APAS: Work O(1), Span O(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn join_mid<T: StT + Ord>(exposed: Exposed<T>) -> ParamBST<T> {
         match exposed {
             | Exposed::Leaf => ParamBST {
@@ -79,6 +95,8 @@ pub mod BSTParaStEph {
         }
     }
 
+    /// - APAS: Work O(lg |t|), Span O(lg |t|)
+    /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
     fn split_inner<T: StT + Ord>(tree: &ParamBST<T>, key: &T) -> (ParamBST<T>, B, ParamBST<T>) {
         match expose_internal(tree) {
             | Exposed::Leaf => (
@@ -106,10 +124,14 @@ pub mod BSTParaStEph {
         }
     }
 
+    /// - APAS: Work O(1), Span O(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn join_m<T: StT + Ord>(left: ParamBST<T>, key: T, right: ParamBST<T>) -> ParamBST<T> {
         join_mid(Exposed::Node(left, key, right))
     }
 
+    /// - APAS: Work O(lg |t|), Span O(lg |t|)
+    /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
     fn min_key<T: StT + Ord>(tree: &ParamBST<T>) -> Option<T> {
         match expose_internal(tree) {
             | Exposed::Leaf => None,
@@ -120,6 +142,8 @@ pub mod BSTParaStEph {
         }
     }
 
+    /// - APAS: Work O(lg(|left| + |right|)), Span O(lg(|left| + |right|))
+    /// - Claude-Opus-4.6: Work Θ(log(|left| + |right|)), Span Θ(log(|left| + |right|))
     fn join_pair_inner<T: StT + Ord>(left: ParamBST<T>, right: ParamBST<T>) -> ParamBST<T> {
         match expose_internal(&right) {
             | Exposed::Leaf => left,
@@ -131,6 +155,8 @@ pub mod BSTParaStEph {
         }
     }
 
+    /// - APAS: Work O(m · lg(n/m)), Span O(m · lg(n/m)) — sequential, no parallelism
+    /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(m · lg(n/m)) — sequential variant
     fn union_inner<T: StT + Ord>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
         match expose_internal(a) {
             | Exposed::Leaf => b.clone(),
@@ -143,6 +169,8 @@ pub mod BSTParaStEph {
         }
     }
 
+    /// - APAS: Work O(|t|), Span O(|t|)
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
     fn collect_in_order<T: StT + Ord>(tree: &ParamBST<T>, out: &mut Vec<T>) {
         match expose_internal(tree) {
             | Exposed::Leaf => {}

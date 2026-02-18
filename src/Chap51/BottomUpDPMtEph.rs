@@ -16,12 +16,12 @@ pub mod BottomUpDPMtEph {
 
     /// Trait for bottom-up dynamic programming operations
     pub trait BottomUpDPMtEphTrait<T: MtVal> {
-        /// Create new bottom-up DP solver
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn new()                     -> Self;
 
-        /// Solve DP problem
-        /// APAS: Work O(n³), Span O(n)
+        /// - APAS: Work O(|S|×|T|), Span O(|S|+|T|) — diagonal parallelism.
+        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — agrees with APAS; diagonals processed in parallel.
         fn solve(&self, input: &[T]) -> T;
     }
 
@@ -34,11 +34,13 @@ pub mod BottomUpDPMtEph {
     }
 
     impl BottomUpDPMtEphS {
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         pub fn new(s: ArraySeqMtEphS<char>, t: ArraySeqMtEphS<char>) -> Self { BottomUpDPMtEphS { seq_s: s, seq_t: t } }
 
-        /// Compute minimum edit distance using parallel bottom-up diagonal pebbling
-        /// claude-4-sonet: Work Θ(|S|×|T|), Span Θ(|S|+|T|), Parallelism Θ(min(|S|,|T|))
+        /// Compute minimum edit distance using parallel bottom-up diagonal pebbling (Algorithm 51.1).
+        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — diagonal parallelism.
+        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — parallel: thread::spawn per diagonal element.
         pub fn med_bottom_up_parallel(&mut self) -> usize {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -56,8 +58,9 @@ pub mod BottomUpDPMtEph {
             final_table[s_len][t_len]
         }
 
-        /// Initialize base cases for DP table
-        /// claude-4-sonet: Work Θ(|S|+|T|), Span Θ(|S|+|T|)
+        /// Initialize base cases for DP table.
+        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work Θ(|S|+|T|), Span Θ(|S|+|T|)
         fn initialize_base_cases(&self) -> Vec<Vec<usize>> {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -76,8 +79,9 @@ pub mod BottomUpDPMtEph {
             table
         }
 
-        /// Compute one diagonal of the DP table in parallel
-        /// claude-4-sonet: Work Θ(min(|S|,|T|)), Span Θ(1), Parallelism Θ(min(|S|,|T|))
+        /// Compute one diagonal of the DP table in parallel.
+        /// - APAS: Work Θ(diagonal length), Span Θ(1) — each element computed in parallel.
+        /// - Claude-Opus-4.6: Work Θ(min(|S|,|T|)), Span Θ(1) — agrees with APAS; thread::spawn per element.
         fn compute_diagonal_parallel(&self, table: Arc<Mutex<Vec<Vec<usize>>>>, k: usize) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -116,9 +120,9 @@ pub mod BottomUpDPMtEph {
             }
         }
 
-        /// Static method to compute value for a single DP table cell
-        /// Claude Work: O(1) - constant time per cell
-        /// Claude Span: O(1) - constant time per cell
+        /// Compute value for a single DP table cell (medOne from Algorithm 51.1).
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn compute_cell_value_static(
             seq_s: &ArraySeqMtEphS<char>,
             seq_t: &ArraySeqMtEphS<char>,
@@ -143,29 +147,24 @@ pub mod BottomUpDPMtEph {
             }
         }
 
-        /// Get the length of sequence S
-        /// Claude Work: O(1) - constant time access
-        /// Claude Span: O(1) - constant time access
+        /// - APAS: N/A — accessor.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         pub fn s_length(&self) -> usize { self.seq_s.length() }
 
-        /// Get the length of sequence T
-        /// Claude Work: O(1) - constant time access
-        /// Claude Span: O(1) - constant time access
+        /// - APAS: N/A — accessor.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         pub fn t_length(&self) -> usize { self.seq_t.length() }
 
-        /// Check if sequences are empty
-        /// Claude Work: O(1) - constant time check
-        /// Claude Span: O(1) - constant time check
+        /// - APAS: N/A — accessor.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         pub fn is_empty(&self) -> bool { self.seq_s.length() == 0usize && self.seq_t.length() == 0usize }
 
-        /// Mutably update sequence S
-        /// Claude Work: O(1) - constant time update
-        /// Claude Span: O(1) - constant time update
+        /// - APAS: N/A — mutator.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         pub fn set_s(&mut self, s: ArraySeqMtEphS<char>) { self.seq_s = s; }
 
-        /// Mutably update sequence T
-        /// Claude Work: O(1) - constant time update
-        /// Claude Span: O(1) - constant time update
+        /// - APAS: N/A — mutator.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         pub fn set_t(&mut self, t: ArraySeqMtEphS<char>) { self.seq_t = t; }
     }
 

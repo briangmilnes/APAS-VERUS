@@ -11,8 +11,12 @@ pub mod VecChainedHashTableStEph {
     use crate::Types::Types::*;
 
     impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for Vec<(Key, Value)> {
+        /// - APAS: Work O(1), Span O(1).
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty Vec construction.
         fn new() -> Self { Vec::new() }
 
+        /// - APAS: Work O(1+α) expected, Span O(1+α).
+        /// - Claude-Opus-4.6: Work O(n) worst case, Span O(n) — linear scan for duplicate key, n = chain length.
         fn insert(&mut self, key: Key, value: Value) {
             // Update if key exists, otherwise append
             for (k, v) in self.iter_mut() {
@@ -24,6 +28,8 @@ pub mod VecChainedHashTableStEph {
             self.push((key, value));
         }
 
+        /// - APAS: Work O(1+α) expected, Span O(1+α).
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan of chain, n = chain length.
         fn lookup(&self, key: &Key) -> Option<Value> {
             for (k, v) in self.iter() {
                 if k == key {
@@ -33,6 +39,8 @@ pub mod VecChainedHashTableStEph {
             None
         }
 
+        /// - APAS: Work O(1+α) expected, Span O(1+α).
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan + Vec::remove (shifts elements), n = chain length.
         fn delete(&mut self, key: &Key) -> B {
             if let Some(pos) = self.iter().position(|(k, _)| k == key) {
                 self.remove(pos);
@@ -49,18 +57,26 @@ pub mod VecChainedHashTableStEph {
     impl<Key: StT, Value: StT, Metrics: Default> ParaHashTableStEphTrait<Key, Value, Vec<(Key, Value)>, Metrics>
         for VecChainedHashTableStEph
     {
+        /// - APAS: Work O(1+α) expected, Span O(1+α).
+        /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — delegates to insert_chained.
         fn insert(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics>, key: Key, value: Value) {
             Self::insert_chained(table, key, value);
         }
 
+        /// - APAS: Work O(1+α) expected, Span O(1+α).
+        /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — delegates to lookup_chained.
         fn lookup(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics>, key: &Key) -> Option<Value> {
             Self::lookup_chained(table, key)
         }
 
+        /// - APAS: Work O(1+α) expected, Span O(1+α).
+        /// - Claude-Opus-4.6: Work O(1+α) expected, Span O(1+α) — delegates to delete_chained.
         fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics>, key: &Key) -> B {
             Self::delete_chained(table, key)
         }
 
+        /// - APAS: Work O(n + m + m'), Span O(n + m + m').
+        /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' chains, reinserts.
         fn resize(
             table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics>,
             new_size: N,
@@ -99,6 +115,8 @@ pub mod VecChainedHashTableStEph {
     impl<Key: StT, Value: StT, Metrics: Default> ChainedHashTable<Key, Value, Vec<(Key, Value)>, Metrics>
         for VecChainedHashTableStEph
     {
+        /// - APAS: Work O(1), Span O(1).
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — placeholder always returns 0; should use actual hash function.
         fn hash_index(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics>, _key: &Key) -> N {
             // Simple modulo hash - implementers can provide better hash function
             let hash_val = 0; // Placeholder: would use actual hash function

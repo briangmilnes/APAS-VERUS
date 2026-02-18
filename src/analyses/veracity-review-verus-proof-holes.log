@@ -1,39 +1,74 @@
-✓ Chap02/FibonacciWSScheduler.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/
+
+✓ Chap02/FibonacciHFScheduler.rs
    5 clean proof functions
 ❌ Chap02/HFSchedulerMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:72: external_type_specification - #[verifier::external_type_specification]
+        73 |     #[verifier::external_body]
+        74 |     #[verifier::reject_recursive_types(T)]
+        75 |     pub struct ExTaskState<T>(TaskState<T>);
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:73: external_body - #[verifier::external_body]
+        74 |     #[verifier::reject_recursive_types(T)]
+        75 |     pub struct ExTaskState<T>(TaskState<T>);
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:82: external_body - #[verifier::external_body]
+        83 |     pub fn set_parallelism(n: usize) {
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:90: external_body - #[verifier::external_body]
+        91 |     pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:115: external_body - #[verifier::external_body]
+       116 |     pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:134: assume(false) - assume(false);
+       116 |     pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
+            ...
+       132 |             Ok(val) => val,
+       133 |             Err(_) => {
+       135 |                 diverge()
+       136 |             }
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:144: external_body - #[verifier::external_body]
+       145 |     pub fn spawn<T, F>(f: F) -> (task: TaskState<T>)
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:164: external_body - #[verifier::external_body]
+       165 |     pub fn wait<T: Send + 'static>(task: TaskState<T>) -> (task_result: T)
    Holes: 8 total
       1 × assume(false)
       6 × external_body
       1 × external_type_specification
 ✓ Chap03/InsertionSortStEph.rs
+✓ Chap05/KleeneStPer.rs
+   9 clean proof functions
 ❌ Chap05/MappingStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:510: assume() - assume(r == (self@ == other@));
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:518: assume() - assume(r == (self@ == other@));
+       508 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       516 |                 }
+       517 |                 // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
+       519 |             }
+       520 |             r
    Holes: 1 total
       1 × assume()
 ✓ Chap05/RelationStEph.rs
 ❌ Chap05/SetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:889: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:907: assume() - proof { assume(r == (self@ == other@)); }
+       903 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       905 |         {
+       906 |             let r = self.elements == other.elements;
+       908 |             r
+       909 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap05/SetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:813: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:832: assume() - proof { assume(equal == (self@ == other@)); }
+       827 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       830 |             let equal = self.elements == other.elements;
+       831 |             // HashSetWithView* eq is external_body so we have to trust it here.
+       833 |             equal
+       834 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ✓ Chap06/DirGraphMtEph.rs
-❌ Chap06/DirGraphStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphStEph.rs:523: assume() - proof { assume(r == (self@ == other@)); }
-   Holes: 1 total
-      1 × assume()
+✓ Chap06/DirGraphStEph.rs
 ✓ Chap06/LabDirGraphMtEph.rs
 ✓ Chap06/LabDirGraphStEph.rs
 ✓ Chap06/LabUnDirGraphMtEph.rs
@@ -53,104 +88,313 @@
 ✓ Chap06/WeightedDirGraphStEphU8.rs
 ✓ Chap06/WeightedDirGraphStEphUsize.rs
 ❌ Chap11/FibonacciMtEph2Threads.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:149: assume(false) - Result::Err(_) => { assume(false); diverge() }
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:157: assume(false) - Result::Err(_) => { assume(false); diverge() }
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:155: assume(false) - Result::Err(_) => { assume(false); diverge() }
+       100 | pub fn fib_2threads(n: u64) -> (fibonacci: u64)
+            ...
+       153 |     let left_out = match join_handle1.join() {
+       154 |         Result::Ok(out) => out,
+       156 |     };
+       157 |     let left_val = left_out.0;
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:163: assume(false) - Result::Err(_) => { assume(false); diverge() }
+       100 | pub fn fib_2threads(n: u64) -> (fibonacci: u64)
+            ...
+       161 |     let right_out = match join_handle2.join() {
+       162 |         Result::Ok(out) => out,
+       164 |     };
+       165 |     let right_val = right_out.0;
    Holes: 2 total
       2 × assume(false)
 ❌ Chap11/FibonacciMtEphRecomputes.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:149: assume(false) - Result::Err(_) => { assume(false); diverge() }
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:157: assume(false) - Result::Err(_) => { assume(false); diverge() }
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:151: assume(false) - Result::Err(_) => { assume(false); diverge() }
+        92 | pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
+            ...
+       149 |         let left_out = match left_handle.join() {
+       150 |             Result::Ok(out) => out,
+       152 |         };
+       153 |         let left_val = left_out.0;
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:159: assume(false) - Result::Err(_) => { assume(false); diverge() }
+        92 | pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
+            ...
+       157 |         let right_out = match right_handle.join() {
+       158 |             Result::Ok(out) => out,
+       160 |         };
+       161 |         let right_val = right_out.0;
    Holes: 2 total
       2 × assume(false)
 ✓ Chap11/FibonacciMtPerAllThreads.rs
 ❌ Chap11/FibonacciMtPerTSM.rs
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:145: assume(false) - Result::Err(_) => { assume(false); diverge() }
+        86 | pub fn fib(n: u64) -> (fibonacci: u64)
+            ...
+       143 |         let left_out = match left_handle.join() {
+       144 |             Result::Ok(out) => out,
+       146 |         };
+       147 |         let left_val = left_out.0;
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:153: assume(false) - Result::Err(_) => { assume(false); diverge() }
+        86 | pub fn fib(n: u64) -> (fibonacci: u64)
+            ...
+       151 |         let right_out = match right_handle.join() {
+       152 |             Result::Ok(out) => out,
+       154 |         };
+       155 |         let right_val = right_out.0;
    Holes: 2 total
       2 × assume(false)
 ✓ Chap11/FibonacciStEph.rs
    3 clean proof functions
 ❌ Chap12/Exercise12_1.rs
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:13: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:43: external_body - #[verifier::external_body]
+        14 |     pub struct SpinLock {
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:51: external_body - #[verifier::external_body]
+        52 |         fn new() -> (lock: Self) {
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:59: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:64: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:73: external_body - #[verifier::external_body]
+        60 |         fn lock(&self) {
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:67: external_body - #[verifier::external_body]
+        68 |         fn unlock(&self) {
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:72: external_body - #[verifier::external_body]
+        73 |         fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T {
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:81: external_body - #[verifier::external_body]
+        82 |     pub fn parallel_increment(iterations: usize) -> (incremented: usize)
    Holes: 6 total
       6 × external_body
 ✓ Chap12/Exercise12_2.rs
 ❌ Chap12/Exercise12_5.rs
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:28: external - #[verifier::external]
+        29 | struct Node<T> {
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:36: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:94: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:101: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:115: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:130: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:135: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:146: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:111: unsafe {} - new_node = unsafe { Box::from_raw(node_ptr) };
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:122: unsafe {} - let next = unsafe { (*head).next };
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:124: unsafe {} - let boxed = unsafe { Box::from_raw(head) };
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:158: unsafe {} - unsafe {
+        37 | #[verifier::reject_recursive_types(T)]
+        38 | pub struct ConcurrentStackMt<T: Send> {
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:104: external_body - #[verifier::external_body]
+       105 |     fn new() -> (stack: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:111: external_body - #[verifier::external_body]
+       112 |     fn push(&self, value: T) {
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:125: external_body - #[verifier::external_body]
+       126 |     fn pop(&self) -> (possible_top: Option<T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:140: external_body - #[verifier::external_body]
+       141 |     fn is_empty(&self) -> (empty: bool) {
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:145: external_body - #[verifier::external_body]
+       146 |     fn drain(&self) -> (items: Vec<T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:162: external_body - #[verifier::external_body]
+       163 |     fn drop(&mut self)
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:121: unsafe {} - new_node = unsafe { Box::from_raw(node_ptr) };
+       112 |     fn push(&self, value: T) {
+            ...
+       119 |                 break;
+       120 |             }
+       122 |         }
+       123 |     }
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:132: unsafe {} - let next = unsafe { (*head).next };
+       126 |     fn pop(&self) -> (possible_top: Option<T>) {
+            ...
+       130 |                 return None;
+       131 |             }
+       133 |             if self.head.compare_exchange_weak(head, next, Ordering::AcqRel, Ordering::Acquire).is_ok() {
+       134 |                 let boxed = unsafe { Box::from_raw(head) };
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:134: unsafe {} - let boxed = unsafe { Box::from_raw(head) };
+       126 |     fn pop(&self) -> (possible_top: Option<T>) {
+            ...
+       132 |             let next = unsafe { (*head).next };
+       133 |             if self.head.compare_exchange_weak(head, next, Ordering::AcqRel, Ordering::Acquire).is_ok() {
+       135 |                 return Some(boxed.value);
+       136 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:169: unsafe {} - unsafe {
+       163 |     fn drop(&mut self)
+            ...
+       167 |         let mut current = self.head.load(Ordering::Relaxed);
+       168 |         while !current.is_null() {
+       170 |                 let node = Box::from_raw(current);
+       171 |                 current = node.next;
    Holes: 12 total
       4 × unsafe {}
       7 × external_body
       1 × external
 ❌ Chap17/MathSeq.rs
-/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:491: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:642: assume() - proof { assume(r == (self@ == other@)); }
+       638 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       640 |         {
+       641 |             let r = self.data == other.data;
+       643 |             r
+       644 |         }
    Holes: 1 total
       1 × assume()
 ❌ Chap18/ArraySeq.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1450: external - #[verifier::external]
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1584: external - #[verifier::external]
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1607: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1459: external - #[verifier::external]
+      1460 |     impl<T: View> ArraySeqS<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1593: external - #[verifier::external]
+      1594 |     impl<'a, T> std::iter::IntoIterator for &'a mut ArraySeqS<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1616: assume() - proof { assume(equal == (self@ == other@)); }
+      1612 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1614 |         {
+      1615 |             let equal = self.seq == other.seq;
+      1617 |             equal
+      1618 |         }
    Holes: 3 total
       1 × assume()
       2 × external
    Proof functions: 10 total (10 clean, 0 holed)
 ❌ Chap18/ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1122: assume() - proof { assume(equal == (self@ == other@)); }
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 2 total (2 clean, 0 holed)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:226: assume() - assume(val == updates@[i as int].1);
+       194 |     fn apply_ninject_updates<T: Clone + Send + Sync + 'static>(
+            ...
+       224 |                 let val = updates[i].1.clone();
+       225 |                 proof {
+       227 |                 }
+       228 |                 buf.set(pos, val);
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1323: assume() - proof { assume(buf@ =~= a.seq@); }
+      1306 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            ...
+      1321 |             // Clone source into the result buffer and wrap in Arc<RwLock>.
+      1322 |             let buf = a.seq.clone();
+      1324 |             let lock = Arc::new(RwLock::<Vec<T>, NinjectInv<T>>::new(buf, Ghost(pred)));
+      1325 |             proof { assume(lock.pred() == pred); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1325: assume() - proof { assume(lock.pred() == pred); }
+      1306 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            ...
+      1323 |             proof { assume(buf@ =~= a.seq@); }
+      1324 |             let lock = Arc::new(RwLock::<Vec<T>, NinjectInv<T>>::new(buf, Ghost(pred)));
+      1326 | 
+      1327 |             // Split updates in half.
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1348: assume() - proof { assume((pos, val) == updates@[k as int]); }
+      1306 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            ...
+      1346 |                 let pos = updates[k].0;
+      1347 |                 let val = updates[k].1.clone();
+      1349 |                 if k < mid {
+      1350 |                     left.push((pos, val));
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1359: assume() - proof { assume(lock1.pred() == pred); }
+      1306 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            ...
+      1357 |             // Two threads race for the single lock.
+      1358 |             let lock1 = lock.clone();
+      1360 |             let lock2 = lock.clone();
+      1361 |             proof { assume(lock2.pred() == pred); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1361: assume() - proof { assume(lock2.pred() == pred); }
+      1306 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            ...
+      1359 |             proof { assume(lock1.pred() == pred); }
+      1360 |             let lock2 = lock.clone();
+      1362 | 
+      1363 |             let ghost lv = left@;
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1391: assume() - proof { assume(r@ =~= result_vec@); }
+      1306 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            ...
+      1389 |             }
+      1390 |             let r = result_vec.clone();
+      1392 |             write_handle.release_write(result_vec);
+      1393 | 
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1546: assume() - proof { assume(equal == (self@ == other@)); }
+      1542 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1544 |         {
+      1545 |             let equal = self.seq == other.seq;
+      1547 |             equal
+      1548 |         }
+   Holes: 8 total
+      8 × assume()
+   Proof functions: 4 total (4 clean, 0 holed)
 ❌ Chap18/ArraySeqMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1133: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1169: assume() - proof { assume(equal == (self@ == other@)); }
+      1165 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1167 |         {
+      1168 |             let equal = self.seq == other.seq;
+      1170 |             equal
+      1171 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ Chap18/ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:906: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1036: assume() - proof { assume(equal == (self@ == other@)); }
+      1032 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1034 |         {
+      1035 |             let equal = self.seq == other.seq;
+      1037 |             equal
+      1038 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap18/ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:880: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1009: assume() - proof { assume(equal == (self@ == other@)); }
+      1005 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1007 |         {
+      1008 |             let equal = self.seq == other.seq;
+      1010 |             equal
+      1011 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap18/LinkedListStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:831: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:872: assume() - proof { assume(r == (self@ == other@)); }
+       868 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       870 |         {
+       871 |             let r = self.seq == other.seq;
+       873 |             r
+       874 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap18/LinkedListStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:815: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:855: assume() - proof { assume(r == (self@ == other@)); }
+       851 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       853 |         {
+       854 |             let r = self.seq == other.seq;
+       856 |             r
+       857 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap19/ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1162: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1407: assume() - proof { assume(equal == (self@ == other@)); }
+      1403 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1405 |         {
+      1406 |             let equal = self.seq == other.seq;
+      1408 |             equal
+      1409 |         }
    Holes: 1 total
       1 × assume()
-   Proof functions: 4 total (4 clean, 0 holed)
+   Proof functions: 6 total (6 clean, 0 holed)
+❌ Chap19/ArraySeqMtEphSlice.rs
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEphSlice.rs:356: unsafe {} - let aa = Arc::new(unsafe { aa_uninit.assume_init() });
+       323 |             fn atomic_write_leftmost<T: StTInMtT>(
+            ...
+       354 |                 aa_uninit[i].write(Mutex::new((a.nth_cloned(i), n)));
+       355 |             }
+       357 | 
+       358 |             // Inject all updates in parallel using atomicWrite - leftmost wins
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEphSlice.rs:414: unsafe {} - let aa = Arc::new(unsafe { aa_uninit.assume_init() });
+       381 |             fn atomic_write_rightmost<T: StTInMtT>(
+            ...
+       412 |                 aa_uninit[i].write(Mutex::new((a.nth_cloned(i), 0)));
+       413 |             }
+       415 | 
+       416 |             // Inject all updates in parallel using atomicWrite - rightmost wins
+   Holes: 2 total
+      2 × unsafe {}
 ❌ Chap19/ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:933: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1085: assume() - proof { assume(equal == (self@ == other@)); }
+      1081 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1083 |         {
+      1084 |             let equal = self.seq == other.seq;
+      1086 |             equal
+      1087 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 3 total (3 clean, 0 holed)
 ❌ Chap19/ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:937: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:1095: assume() - proof { assume(equal == (self@ == other@)); }
+      1091 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1093 |         {
+      1094 |             let equal = self.seq == other.seq;
+      1096 |             equal
+      1097 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 3 total (3 clean, 0 holed)
@@ -164,9 +408,22 @@
 ✓ Chap21/Exercise21_6.rs
 ✓ Chap21/Exercise21_7.rs
 ❌ Chap21/Exercise21_8.rs
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:140: assume() - assume(1 < k as int + 1);
+        99 |     pub fn is_prime(n: N) -> (prime: B)
+            ...
+       138 |             assert(n as int % 1 == 0) by (nonlinear_arith) requires n >= 2;
+       139 |             // k >= 1 so 1 < k+1, triggering the recursive case.
+       141 |             assert(n as int % 1 == 0);
+       142 | 
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:151: assume() - assume(ones.seq@.len() as int == spec_divisor_count(n as int, 1, k as int + 1));
-   Holes: 1 total
-      1 × assume()
+        99 |     pub fn is_prime(n: N) -> (prime: B)
+            ...
+       149 |             // Bridge: the filter count equals the ghost divisor count.
+       150 |             // This is the proof hole — filter's spec doesn't give us the exact count.
+       152 | 
+       153 |             // Now prove: prime <==> spec_is_prime(n as int).
+   Holes: 2 total
+      2 × assume()
    Proof functions: 3 total (3 clean, 0 holed)
 ✓ Chap21/Exercise21_9.rs
 ✓ Chap21/Problem21_1.rs
@@ -174,101 +431,435 @@
 ✓ Chap21/Problem21_4.rs
    1 clean proof function
 ❌ Chap23/BalBinTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:499: assume() - proof { assume(r == (*self == *other)); }
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:520: assume() - proof { assume(r == (*self == *other)); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:734: assume() - proof { assume(r == (*self == *other)); }
+       726 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       732 |                 (BalBinTree::Node(a), BalBinTree::Node(b)) => {
+       733 |                     let r = a.left == b.left && a.value == b.value && a.right == b.right;
+       735 |                     r
+       736 |                 },
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:755: assume() - proof { assume(r == (*self == *other)); }
+       751 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       753 |         {
+       754 |             let r = self.left == other.left && self.value == other.value && self.right == other.right;
+       756 |             r
+       757 |         }
    Holes: 2 total
       2 × assume()
+   Proof functions: 2 total (2 clean, 0 holed)
 ❌ Chap23/PrimTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:803: assume() - proof { assume(r == (self@ == other@)); }
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:837: assume() - proof { assume(r == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:808: assume() - proof { assume(r == (self@ == other@)); }
+       804 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       806 |         {
+       807 |             let r = self.seq == other.seq;
+       809 |             r
+       810 |         }
 /home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:842: assume() - proof { assume(r == (self@ == other@)); }
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:846: assume() - proof { assume(self@ != other@); }
+       832 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       840 |                 (PrimTreeSeqStTree::One(a), PrimTreeSeqStTree::One(b)) => {
+       841 |                     let r = *a == *b;
+       843 |                     r
+       844 |                 },
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:847: assume() - proof { assume(r == (self@ == other@)); }
+       832 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       845 |                 (PrimTreeSeqStTree::Two(l1, r1), PrimTreeSeqStTree::Two(l2, r2)) => {
+       846 |                     let r = *l1 == *l2 && *r1 == *r2;
+       848 |                     r
+       849 |                 },
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:851: assume() - proof { assume(self@ != other@); }
+       832 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       849 |                 },
+       850 |                 _ => {
+       852 |                     false
+       853 |                 },
    Holes: 4 total
       4 × assume()
-❌ Chap26/DivConReduceMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:107: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:115: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:120: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:125: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceMtPer.rs:130: external_body - #[verifier::external_body]
-   Holes: 5 total
-      5 × external_body
-❌ Chap26/DivConReduceStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:109: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:117: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:122: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:127: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap26/DivConReduceStPer.rs:132: external_body - #[verifier::external_body]
-   Holes: 5 total
-      5 × external_body
-❌ Chap26/ETSPStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStPer.rs:34: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStPer.rs:41: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStPer.rs:68: external_body - #[verifier::external_body]
-   Holes: 3 total
-      3 × external_body
-❌ Chap26/MergeSortMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:69: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:195: external_body - #[verifier::external_body]
-   Holes: 2 total
-      2 × external_body
-❌ Chap26/MergeSortStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:88: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortStPer.rs:145: external_body - #[verifier::external_body]
-   Holes: 2 total
-      2 × external_body
-❌ Chap26/ScanDCMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:58: external_body - #[verifier::external_body]
+✓ Chap26/DivConReduceMtPer.rs
+   3 clean proof functions
+✓ Chap26/DivConReduceStPer.rs
+❌ Chap26/ETSPMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtPer.rs:53: external_body - #[verifier::external_body]
+        54 |         fn etsp_parallel(points: &Vec<Point>) -> (tour: Vec<Edge>) {
    Holes: 1 total
       1 × external_body
-❌ Chap26/ScanDCStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:88: external_body - #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCStPer.rs:118: external_body - #[verifier::external_body]
+❌ Chap26/ETSPStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStPer.rs:67: external_body - #[verifier::external_body]
+        68 |         fn etsp(points: &Vec<Point>) -> (tour: Vec<Edge>) {
+   Holes: 1 total
+      1 × external_body
+❌ Chap26/MergeSortMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:69: external_body - #[verifier::external_body]
+        70 |         fn merge_parallel(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (result: ArraySeqMtPerS<N>) {
+/home/milnes/projects/APAS-VERUS/src/Chap26/MergeSortMtPer.rs:195: external_body - #[verifier::external_body]
+       196 |         fn merge_sort_parallel(a: &ArraySeqMtPerS<N>) -> (result: ArraySeqMtPerS<N>) {
    Holes: 2 total
       2 × external_body
+✓ Chap26/MergeSortStPer.rs
+   1 clean proof function
+❌ Chap26/ScanDCMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/ScanDCMtPer.rs:58: external_body - #[verifier::external_body]
+        59 |         fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<N>) -> (result: (ArraySeqMtPerS<N>, N)) {
+   Holes: 1 total
+      1 × external_body
+✓ Chap26/ScanDCStPer.rs
+   1 clean proof function
+❌ Chap27/ReduceContractMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:42: external_body - #[verifier::external_body]
+        43 |     pub fn call_f<T: StTInMtT, F: Fn(&T, &T) -> T + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap27/ReduceContractMtEph.rs:57: external_body - #[verifier::external_body]
+        58 |     pub fn contract_parallel<T: StTInMtT + Clone + 'static, F: Fn(&T, &T) -> T + Send + Sync + 'static>(
+   Holes: 2 total
+      2 × external_body
+✓ Chap27/ReduceContractStEph.rs
+   4 clean proof functions
+✓ Chap27/ScanContractMtEph.rs
+✓ Chap27/ScanContractStEph.rs
+   1 clean proof function
+✓ Chap28/MaxContigSubSumBruteStEph.rs
+✓ Chap28/MaxContigSubSumDivConMtEph.rs
+✓ Chap28/MaxContigSubSumDivConOptMtEph.rs
+✓ Chap28/MaxContigSubSumDivConOptStEph.rs
+✓ Chap28/MaxContigSubSumDivConStEph.rs
+✓ Chap28/MaxContigSubSumOptMtEph.rs
+✓ Chap28/MaxContigSubSumOptStEph.rs
+✓ Chap28/MaxContigSubSumReducedStEph.rs
+✓ Chap35/OrderStatSelectMtEph.rs
+✓ Chap35/OrderStatSelectMtPer.rs
+✓ Chap35/OrderStatSelectStEph.rs
+✓ Chap35/OrderStatSelectStPer.rs
+✓ Chap36/QuickSortMtEph.rs
+✓ Chap36/QuickSortMtEphSlice.rs
+✓ Chap36/QuickSortStEph.rs
+✓ Chap37/AVLTreeSeq.rs
+✓ Chap37/AVLTreeSeqMtPer.rs
+✓ Chap37/AVLTreeSeqStEph.rs
+✓ Chap37/AVLTreeSeqStPer.rs
+✓ Chap37/BSTAVLMtEph.rs
+✓ Chap37/BSTAVLStEph.rs
+✓ Chap37/BSTBBAlphaMtEph.rs
+✓ Chap37/BSTBBAlphaStEph.rs
+✓ Chap37/BSTPlainMtEph.rs
+✓ Chap37/BSTPlainStEph.rs
+✓ Chap37/BSTRBMtEph.rs
+✓ Chap37/BSTRBStEph.rs
+✓ Chap37/BSTSetAVLMtEph.rs
+✓ Chap37/BSTSetBBAlphaMtEph.rs
+✓ Chap37/BSTSetPlainMtEph.rs
+✓ Chap37/BSTSetRBMtEph.rs
+✓ Chap37/BSTSetSplayMtEph.rs
+✓ Chap37/BSTSplayMtEph.rs
+✓ Chap37/BSTSplayStEph.rs
+✓ Chap38/BSTParaMtEph.rs
+✓ Chap38/BSTParaStEph.rs
+✓ Chap39/BSTParaTreapMtEph.rs
+✓ Chap39/BSTSetTreapMtEph.rs
+✓ Chap39/BSTTreapMtEph.rs
+✓ Chap39/BSTTreapStEph.rs
+✓ Chap40/BSTKeyValueStEph.rs
+✓ Chap40/BSTReducedStEph.rs
+✓ Chap40/BSTSizeStEph.rs
+✓ Chap41/AVLTreeSetMtEph.rs
+✓ Chap41/AVLTreeSetMtPer.rs
+✓ Chap41/AVLTreeSetStEph.rs
+✓ Chap41/AVLTreeSetStPer.rs
+✓ Chap41/ArraySetEnumMtEph.rs
+✓ Chap41/ArraySetStEph.rs
+✓ Chap41/Example41_3.rs
+✓ Chap42/Example42_1.rs
+✓ Chap42/TableMtEph.rs
+✓ Chap42/TableStEph.rs
+✓ Chap42/TableStPer.rs
+✓ Chap43/AugOrderedTableMtEph.rs
+✓ Chap43/AugOrderedTableStEph.rs
+✓ Chap43/AugOrderedTableStPer.rs
+✓ Chap43/Example43_1.rs
+✓ Chap43/OrderedSetMtEph.rs
+✓ Chap43/OrderedSetStEph.rs
+✓ Chap43/OrderedSetStPer.rs
+✓ Chap43/OrderedTableMtEph.rs
+✓ Chap43/OrderedTableMtPer.rs
+✓ Chap43/OrderedTableStEph.rs
+✓ Chap43/OrderedTableStPer.rs
+✓ Chap44/DocumentIndex.rs
+✓ Chap44/Example44_1.rs
+✓ Chap45/BalancedTreePQ.rs
+✓ Chap45/BinaryHeapPQ.rs
+✓ Chap45/Example45_2.rs
+✓ Chap45/HeapsortExample.rs
+✓ Chap45/LeftistHeapPQ.rs
+✓ Chap45/SortedListPQ.rs
+✓ Chap45/UnsortedListPQ.rs
+✓ Chap47/ChainedHashTable.rs
+❌ Chap47/DoubleHashFlatHashTableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:35: unsafe {} - unsafe {
+        22 |         pub fn second_hash<Key: StT>(key: &Key, table_size: N) -> N {
+            ...
+        33 |             let mut hash: u64 = 0xcbf29ce484222325; // FNV offset basis
+        34 | 
+        36 |                 for i in 0..key_size {
+        37 |                     let byte = *key_ptr.add(i);
+   Holes: 1 total
+      1 × unsafe {}
+✓ Chap47/FlatHashTable.rs
+✓ Chap47/LinProbFlatHashTableStEph.rs
+✓ Chap47/LinkedListChainedHashTableStEph.rs
+✓ Chap47/ParaHashTableStEph.rs
+✓ Chap47/QuadProbFlatHashTableStEph.rs
+✓ Chap47/StructChainedHashTable.rs
+✓ Chap47/VecChainedHashTableStEph.rs
+✓ Chap49/MinEditDistMtEph.rs
+✓ Chap49/MinEditDistMtPer.rs
+✓ Chap49/MinEditDistStEph.rs
+✓ Chap49/MinEditDistStPer.rs
+✓ Chap49/SubsetSumMtEph.rs
+✓ Chap49/SubsetSumMtPer.rs
+✓ Chap49/SubsetSumStEph.rs
+✓ Chap49/SubsetSumStPer.rs
+✓ Chap50/MatrixChainMtEph.rs
+✓ Chap50/MatrixChainMtPer.rs
+✓ Chap50/MatrixChainStEph.rs
+✓ Chap50/MatrixChainStPer.rs
+✓ Chap50/OptBinSearchTreeMtEph.rs
+✓ Chap50/OptBinSearchTreeMtPer.rs
+✓ Chap50/OptBinSearchTreeStEph.rs
+✓ Chap50/OptBinSearchTreeStPer.rs
+✓ Chap50/Probability.rs
+✓ Chap51/BottomUpDPMtEph.rs
+✓ Chap51/BottomUpDPMtPer.rs
+✓ Chap51/BottomUpDPStEph.rs
+✓ Chap51/BottomUpDPStPer.rs
+✓ Chap51/TopDownDPMtEph.rs
+✓ Chap51/TopDownDPMtPer.rs
+✓ Chap51/TopDownDPStEph.rs
+✓ Chap51/TopDownDPStPer.rs
+✓ Chap52/AdjMatrixGraphMtEph.rs
+✓ Chap52/AdjMatrixGraphMtPer.rs
+✓ Chap52/AdjMatrixGraphStEph.rs
+✓ Chap52/AdjMatrixGraphStPer.rs
+✓ Chap52/AdjSeqGraphMtEph.rs
+✓ Chap52/AdjSeqGraphMtPer.rs
+✓ Chap52/AdjSeqGraphStEph.rs
+✓ Chap52/AdjSeqGraphStPer.rs
+✓ Chap52/AdjTableGraphMtPer.rs
+✓ Chap52/AdjTableGraphStEph.rs
+✓ Chap52/AdjTableGraphStPer.rs
+✓ Chap52/EdgeSetGraphMtPer.rs
+✓ Chap52/EdgeSetGraphStEph.rs
+✓ Chap52/EdgeSetGraphStPer.rs
+✓ Chap53/GraphSearchMtPer.rs
+✓ Chap53/GraphSearchStEph.rs
+✓ Chap53/GraphSearchStPer.rs
+✓ Chap53/PQMinStEph.rs
+✓ Chap53/PQMinStPer.rs
+✓ Chap54/BFSMtEph.rs
+✓ Chap54/BFSMtPer.rs
+✓ Chap54/BFSStEph.rs
+✓ Chap54/BFSStPer.rs
+✓ Chap55/CycleDetectStEph.rs
+✓ Chap55/CycleDetectStPer.rs
+✓ Chap55/DFSStEph.rs
+✓ Chap55/DFSStPer.rs
+✓ Chap55/SCCStEph.rs
+✓ Chap55/SCCStPer.rs
+✓ Chap55/TopoSortStEph.rs
+✓ Chap55/TopoSortStPer.rs
+✓ Chap56/AllPairsResultStEphFloat.rs
+✓ Chap56/AllPairsResultStEphInt.rs
+✓ Chap56/AllPairsResultStPerFloat.rs
+✓ Chap56/AllPairsResultStPerInt.rs
+✓ Chap56/Example56_1.rs
+✓ Chap56/Example56_3.rs
+✓ Chap56/PathWeightUtilsStEph.rs
+✓ Chap56/PathWeightUtilsStPer.rs
+✓ Chap56/SSSPResultStEphFloat.rs
+✓ Chap56/SSSPResultStEphInt.rs
+✓ Chap56/SSSPResultStPerFloat.rs
+✓ Chap56/SSSPResultStPerInt.rs
+✓ Chap57/DijkstraStEphFloat.rs
+✓ Chap57/DijkstraStEphInt.rs
+✓ Chap57/StackStEph.rs
+✓ Chap58/BellmanFordStEphFloat.rs
+✓ Chap58/BellmanFordStEphInt.rs
+✓ Chap59/JohnsonMtEphFloat.rs
+✓ Chap59/JohnsonMtEphInt.rs
+✓ Chap59/JohnsonStEphFloat.rs
+✓ Chap59/JohnsonStEphInt.rs
+✓ Chap61/EdgeContractionMtEph.rs
+✓ Chap61/EdgeContractionStEph.rs
+✓ Chap61/VertexMatchingMtEph.rs
+✓ Chap61/VertexMatchingStEph.rs
+✓ Chap62/StarContractionMtEph.rs
+✓ Chap62/StarContractionStEph.rs
+✓ Chap62/StarPartitionMtEph.rs
+✓ Chap62/StarPartitionStEph.rs
+✓ Chap63/ConnectivityMtEph.rs
+✓ Chap63/ConnectivityStEph.rs
+✓ Chap64/SpanTreeMtEph.rs
+✓ Chap64/SpanTreeStEph.rs
+✓ Chap64/TSPApproxStEph.rs
+✓ Chap65/KruskalStEph.rs
+✓ Chap65/PrimStEph.rs
+✓ Chap65/UnionFindStEph.rs
+✓ Chap66/BoruvkaMtEph.rs
+✓ Chap66/BoruvkaStEph.rs
 ✓ Concurrency.rs
 ✓ ParaPairs.rs
 ❌ Types.rs
 /home/milnes/projects/APAS-VERUS/src/Types.rs:193: admit() - admit();
+       187 |     pub broadcast proof fn axiom_Pair_view_injective<K: vstd::prelude::View, V: vstd::prelude::View>(p1: Pair<K, V>, p2: Pair<K, V>)
+            ...
+       191 |             p1 == p2,
+       192 |     {
+       194 |     }
+       195 | 
 /home/milnes/projects/APAS-VERUS/src/Types.rs:206: admit() - { admit(); }
+       203 |     pub broadcast proof fn axiom_Pair_feq<K: Eq + vstd::prelude::View + Clone + Sized, V: Eq + vstd::prelude::View + Clone + Sized>()
+            ...
+       204 |         requires #[trigger] Pair_feq_trigger::<K, V>()
+       205 |         ensures obeys_feq_full::<Pair<K, V>>()
+       207 | 
+       208 |     pub broadcast group group_Pair_axioms {
 /home/milnes/projects/APAS-VERUS/src/Types.rs:228: admit() - { admit(); }
+       225 |     pub broadcast proof fn axiom_Edge_feq<V: StT>()
+            ...
+       226 |         requires #[trigger] Edge_feq_trigger::<V>()
+       227 |         ensures obeys_feq_full::<Edge<V>>()
+       229 | 
+       230 |     pub broadcast proof fn axiom_Edge_key_model<V: StT + Hash>()
 /home/milnes/projects/APAS-VERUS/src/Types.rs:233: admit() - { admit(); }
+       230 |     pub broadcast proof fn axiom_Edge_key_model<V: StT + Hash>()
+            ...
+       231 |         requires #[trigger] Edge_feq_trigger::<V>()
+       232 |         ensures obeys_key_model::<Edge<V>>()
+       234 | 
+       235 |     pub broadcast group group_Edge_axioms {
 /home/milnes/projects/APAS-VERUS/src/Types.rs:255: admit() - { admit(); }
+       252 |     pub broadcast proof fn axiom_LabEdge_feq<V: StT + Hash, L: StT + Hash>()
+            ...
+       253 |         requires #[trigger] LabEdge_feq_trigger::<V, L>()
+       254 |         ensures obeys_feq_full::<LabEdge<V, L>>()
+       256 | 
+       257 |     pub broadcast proof fn axiom_LabEdge_key_model<V: StT + Hash, L: StT + Hash>()
 /home/milnes/projects/APAS-VERUS/src/Types.rs:260: admit() - { admit(); }
+       257 |     pub broadcast proof fn axiom_LabEdge_key_model<V: StT + Hash, L: StT + Hash>()
+            ...
+       258 |         requires #[trigger] LabEdge_feq_trigger::<V, L>()
+       259 |         ensures obeys_key_model::<LabEdge<V, L>>()
+       261 | 
+       262 |     pub broadcast group group_LabEdge_axioms {
 /home/milnes/projects/APAS-VERUS/src/Types.rs:277: admit() - { admit(); }
+       274 |     pub broadcast proof fn axiom_WeightedEdge_feq<V: StT + Hash, W: StT + Hash>()
+            ...
+       275 |         requires #[trigger] WeightedEdge_feq_trigger::<V, W>()
+       276 |         ensures obeys_feq_full::<WeightedEdge<V, W>>()
+       278 | 
+       279 |     pub broadcast proof fn axiom_WeightedEdge_key_model<V: StT + Hash, W: StT + Hash>()
 /home/milnes/projects/APAS-VERUS/src/Types.rs:282: admit() - { admit(); }
+       279 |     pub broadcast proof fn axiom_WeightedEdge_key_model<V: StT + Hash, W: StT + Hash>()
+            ...
+       280 |         requires #[trigger] WeightedEdge_feq_trigger::<V, W>()
+       281 |         ensures obeys_key_model::<WeightedEdge<V, W>>()
+       283 | 
+       284 |     pub broadcast group group_WeightedEdge_axioms {
 /home/milnes/projects/APAS-VERUS/src/Types.rs:304: admit() - { admit(); }
+       301 |     pub broadcast proof fn axiom_WeightedLabEdge_feq<V: StT + Hash, L: StT + Hash, W: StT + Hash>()
+            ...
+       302 |         requires #[trigger] WeightedLabEdge_feq_trigger::<V, L, W>()
+       303 |         ensures obeys_feq_full::<WeightedLabEdge<V, L, W>>()
+       305 | 
+       306 |     pub broadcast proof fn axiom_WeightedLabEdge_key_model<V: StT + Hash, L: StT + Hash, W: StT + Hash>()
 /home/milnes/projects/APAS-VERUS/src/Types.rs:309: admit() - { admit(); }
+       306 |     pub broadcast proof fn axiom_WeightedLabEdge_key_model<V: StT + Hash, L: StT + Hash, W: StT + Hash>()
+            ...
+       307 |         requires #[trigger] WeightedLabEdge_feq_trigger::<V, L, W>()
+       308 |         ensures obeys_key_model::<WeightedLabEdge<V, L, W>>()
+       310 | 
+       311 |     pub broadcast group group_WeightedLabEdge_axioms {
 /home/milnes/projects/APAS-VERUS/src/Types.rs:326: admit() - { admit(); }
+       323 |     pub broadcast proof fn axiom_Triple_feq<A: StT + Hash, B: StT + Hash, C: StT + Hash>()
+            ...
+       324 |         requires #[trigger] Triple_feq_trigger::<A, B, C>()
+       325 |         ensures obeys_feq_full::<Triple<A, B, C>>()
+       327 | 
+       328 |     pub broadcast proof fn axiom_Triple_key_model<A: StT + Hash, B: StT + Hash, C: StT + Hash>()
 /home/milnes/projects/APAS-VERUS/src/Types.rs:331: admit() - { admit(); }
+       328 |     pub broadcast proof fn axiom_Triple_key_model<A: StT + Hash, B: StT + Hash, C: StT + Hash>()
+            ...
+       329 |         requires #[trigger] Triple_feq_trigger::<A, B, C>()
+       330 |         ensures obeys_key_model::<Triple<A, B, C>>()
+       332 | 
+       333 |     pub broadcast group group_Triple_axioms {
    Holes: 12 total
       12 × admit()
    Proof functions: 14 total (2 clean, 12 holed)
 ✓ experiments/ArrayVal.rs
 ❌ experiments/ArrayVecSet.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/ArrayVecSet.rs:29: assume() - assume(a.len() == l);
+        19 |     fn for_on_array_with_sum(a: &mut [usize]) -> ()
+            ...
+        27 |             for i in iter: 0..l
+        28 |             {
+        30 |                 assert(i < a.len());
+        31 |                 a[i] = i;
    Holes: 1 total
       1 × assume()
 ❌ experiments/CheckedI32.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/CheckedI32.rs:130: external_body - #[verifier::external_body]
+       131 |         pub exec fn add_value(&self, v2: i32) -> (result: Self)
 /home/milnes/projects/APAS-VERUS/src/experiments/CheckedI32.rs:143: external_body - #[verifier::external_body]
+       144 |         pub exec fn add_checked(&self, v2: &CheckedI32) -> (result: Self)
 /home/milnes/projects/APAS-VERUS/src/experiments/CheckedI32.rs:156: external_body - #[verifier::external_body]
+       157 |         pub exec fn sub_value(&self, v2: i32) -> (result: Self)
 /home/milnes/projects/APAS-VERUS/src/experiments/CheckedI32.rs:169: external_body - #[verifier::external_body]
+       170 |         pub exec fn sub_checked(&self, v2: &CheckedI32) -> (result: Self)
 /home/milnes/projects/APAS-VERUS/src/experiments/CheckedI32.rs:182: external_body - #[verifier::external_body]
+       183 |         pub exec fn mul_value(&self, v2: i32) -> (result: Self)
 /home/milnes/projects/APAS-VERUS/src/experiments/CheckedI32.rs:201: external_body - #[verifier::external_body]
+       202 |         pub exec fn mul_checked(&self, v2: &CheckedI32) -> (result: Self)
    Holes: 6 total
       6 × external_body
 ❌ experiments/ForFor.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/ForFor.rs:35: assume() - assume(old(a).len() == a.len());
+        26 |       fn unprovable_array_for(a: &mut [u64]) -> (r: &[u64])
+            ...
+        33 |               {
+        34 | //                 assert(old(a).len() == a.len());  // unprovable
+        36 |                    a[i] = a[i];
+        37 | //                 assert(old(a).len() == a.len());  // unprovable
 /home/milnes/projects/APAS-VERUS/src/experiments/ForFor.rs:38: assume() - assume(old(a).len() == a.len());
+        26 |       fn unprovable_array_for(a: &mut [u64]) -> (r: &[u64])
+            ...
+        36 |                    a[i] = a[i];
+        37 | //                 assert(old(a).len() == a.len());  // unprovable
+        39 |               }
+        40 |               a
    Holes: 2 total
       2 × assume()
 ✓ experiments/ForLoops.rs
 ❌ experiments/HashCheckedU32.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/HashCheckedU32.rs:17: external_body - #[verifier::external_body]
+        18 |     fn hash<H: Hasher>(&self, state: &mut H) {
 /home/milnes/projects/APAS-VERUS/src/experiments/HashCheckedU32.rs:25: external_body - #[verifier::external_body]
+        26 |     fn eq(&self, other: &Self) -> bool {
 /home/milnes/projects/APAS-VERUS/src/experiments/HashCheckedU32.rs:39: admit() - { admit(); }
+        36 | pub broadcast proof fn axiom_CheckedU32_feq()
+            ...
+        37 |     requires #[trigger] CheckedU32_feq_trigger()
+        38 |     ensures obeys_feq_full::<CheckedU32>()
+        40 | 
+        41 | pub broadcast proof fn axiom_CheckedU32_key_model()
 /home/milnes/projects/APAS-VERUS/src/experiments/HashCheckedU32.rs:44: admit() - { admit(); }
+        41 | pub broadcast proof fn axiom_CheckedU32_key_model()
+            ...
+        42 |     requires #[trigger] CheckedU32_feq_trigger()
+        43 |     ensures obeys_key_model::<CheckedU32>()
+        45 | 
+        46 | pub broadcast group group_CheckedU32_axioms {
    Holes: 4 total
       2 × admit()
       2 × external_body
@@ -277,17 +868,83 @@
 ✓ experiments/ToVecProof.rs
 ❌ experiments/VSTDLoopProofs.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/VSTDLoopProofs.rs:85: external_body - #[verifier::external_body] // The proof fails - break doesn't propagate exit ...
+        86 | pub fn vec_length_loop_break(s: &Vec<u64>) -> (length: usize)
 /home/milnes/projects/APAS-VERUS/src/experiments/VSTDLoopProofs.rs:176: external_body - #[verifier::external_body] // The proof fails so we turn it off here.
+       177 | pub fn vec_mem_for_vec(v: Vec<u64>, elt: u64) -> (result: bool)
    Holes: 2 total
       2 × external_body
 ❌ experiments/WhileWhile.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/WhileWhile.rs:39: assume() - assume(a.len() == l);
+        28 |       fn unprovable_array_while(a: &mut [u64]) -> (r: &[u64])
+            ...
+        37 |               {
+        38 | //                  assert(a.len() == l); // unprovable
+        40 |                   a[i] = a[i];
+        41 | //                  assert(a.len() == l); // unprovable wo the assume
    Holes: 1 total
       1 × assume()
 ✓ experiments/abstract_set_iter.rs
 ✓ experiments/arc_clone_deref.rs
+❌ experiments/arc_rwlock_ninject.rs
+/home/milnes/projects/APAS-VERUS/src/experiments/arc_rwlock_ninject.rs:74: assume() - assume(val == updates@[i as int].1); // clone preserves value
+        41 | fn apply_updates<T: Clone + Send + Sync + 'static>(
+            ...
+        72 |             let val = updates[i].1.clone();
+        73 |             proof {
+        75 |             }
+        76 |             buf.set(pos, val);
+/home/milnes/projects/APAS-VERUS/src/experiments/arc_rwlock_ninject.rs:121: assume() - proof { assume(buf@ =~= source@); } // clone preserves view
+       102 | fn ninject_par<T: Clone + Send + Sync + 'static>(
+            ...
+       119 |     // Clone source into the result buffer.
+       120 |     let buf = source.clone();
+       122 | 
+       123 |     let lock = Arc::new(RwLock::<Vec<T>, NinjectPred<T>>::new(buf, Ghost(pred)));
+/home/milnes/projects/APAS-VERUS/src/experiments/arc_rwlock_ninject.rs:124: assume() - proof { assume(lock.pred() == pred); } // Arc::new preserves pred
+       102 | fn ninject_par<T: Clone + Send + Sync + 'static>(
+            ...
+       122 | 
+       123 |     let lock = Arc::new(RwLock::<Vec<T>, NinjectPred<T>>::new(buf, Ghost(pred)));
+       125 | 
+       126 |     // Split updates in half, cloning each entry.
+/home/milnes/projects/APAS-VERUS/src/experiments/arc_rwlock_ninject.rs:149: assume() - proof { assume((pos, val) == updates@[k as int]); } // clone preserves value
+       102 | fn ninject_par<T: Clone + Send + Sync + 'static>(
+            ...
+       147 |         let pos = updates[k].0;
+       148 |         let val = updates[k].1.clone();
+       150 |         if k < mid {
+       151 |             left.push((pos, val));
+/home/milnes/projects/APAS-VERUS/src/experiments/arc_rwlock_ninject.rs:160: assume() - proof { assume(lock1.pred() == pred); } // Arc::clone preserves pred
+       102 | fn ninject_par<T: Clone + Send + Sync + 'static>(
+            ...
+       158 |     // Spawn two threads that race for the lock.
+       159 |     let lock1 = lock.clone();
+       161 |     let lock2 = lock.clone();
+       162 |     proof { assume(lock2.pred() == pred); }
+/home/milnes/projects/APAS-VERUS/src/experiments/arc_rwlock_ninject.rs:162: assume() - proof { assume(lock2.pred() == pred); }
+       102 | fn ninject_par<T: Clone + Send + Sync + 'static>(
+            ...
+       160 |     proof { assume(lock1.pred() == pred); } // Arc::clone preserves pred
+       161 |     let lock2 = lock.clone();
+       163 | 
+       164 |     // Snapshot ghost views of left/right for closure requires.
+/home/milnes/projects/APAS-VERUS/src/experiments/arc_rwlock_ninject.rs:215: assume() - proof { assume(r@ =~= result@); } // clone preserves view
+       102 | fn ninject_par<T: Clone + Send + Sync + 'static>(
+            ...
+       213 |     }
+       214 |     let r = result.clone();
+       216 |     write_handle.release_write(result);
+       217 |     r
+   Holes: 7 total
+      7 × assume()
 ❌ experiments/assume_spec_test.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/assume_spec_test.rs:26: assume_specification - pub assume_specification<V: Clone>[ TestIter::<V>::next ](it: &mut TestIter<V...
+        20 |     open spec fn view(&self) -> (int, Seq<V>) {
+            ...
+        24 | 
+        25 | // Try to use assume_specification with requires on our own type
+        27 |     requires
+        28 |         iter_invariant(&old(it)),  // Try adding requires!
    Holes: 1 total
       1 × assume_specification
 ✓ experiments/baseviewtypes.rs
@@ -298,36 +955,89 @@
    6 clean proof functions
 ❌ experiments/checked_u32.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/checked_u32.rs:85: external_body - #[verifier::external_body]
+        86 |     fn from_int(i: Ghost<int>) -> (checked: Self)
 /home/milnes/projects/APAS-VERUS/src/experiments/checked_u32.rs:99: external_body - #[verifier::external_body]
+       100 |     fn add_checked(&self, other: &Self) -> (sum: Self)
 /home/milnes/projects/APAS-VERUS/src/experiments/checked_u32.rs:110: external_body - #[verifier::external_body]
+       111 |     fn mul_checked(&self, other: &Self) -> (product: Self)
    Holes: 3 total
       3 × external_body
 ✓ experiments/checked_unsigned_int.rs
    7 clean proof functions
 ❌ experiments/clone.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/clone.rs:35: external_body - #[verifier::external_body]
+        36 |     fn test_clone_no_assert_return_eq<T: Clone + View + PartialEq>(x: &T) -> (x_clone: T)
 /home/milnes/projects/APAS-VERUS/src/experiments/clone.rs:46: external_body - #[verifier::external_body]
+        47 |     fn test_clone_no_assert_return_eq_view<T: Clone + View + PartialEq>(x: &T) -> (x_clone: T)
 /home/milnes/projects/APAS-VERUS/src/experiments/clone.rs:58: external_body - #[verifier::external_body]
+        59 |     fn test_clone_assert_return<T: Clone + View + PartialEq>(x: T) -> (eq_x_clone: (bool,T))
 /home/milnes/projects/APAS-VERUS/src/experiments/clone.rs:77: external_body - #[verifier::external_body]
+        78 |     fn test_clone_with_assert<T: Clone + View + PartialEq>(x: &T)
 /home/milnes/projects/APAS-VERUS/src/experiments/clone.rs:96: external_body - #[verifier::external_body]
+        97 |     fn test_2_concrete_eq<T: Clone + View + Eq>(x: &T)
 /home/milnes/projects/APAS-VERUS/src/experiments/clone.rs:109: external_body - #[verifier::external_body]
+       110 |     fn test_3_extensional_equality<T: Clone + View>(x: &T)
    Holes: 6 total
       6 × external_body
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ experiments/clone_fn.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:16: assume() - assume(forall|x: &T| #[trigger] res.requires((x,)));
+         9 | pub fn clone_fn1<T, U, F: Fn(&T) -> U + Clone>(f: F) -> (res: F)
+            ...
+        14 | {
+        15 |     let res = f.clone();
+        17 |     res
+        18 | }
 /home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:29: assume() - assume(forall|x: &T| f.requires((x,)) == res.requires((x,)));
+        21 | pub fn clone_fn2<T, U, F: Fn(&T) -> U + Clone>(f: F) -> (res: F)
+            ...
+        27 | {
+        28 |     let res = f.clone();
+        30 |     assume(forall|x: &T, r: U| f.ensures((x,), r) == res.ensures((x,), r));
+        31 |     res
 /home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:30: assume() - assume(forall|x: &T, r: U| f.ensures((x,), r) == res.ensures((x,), r));
+        21 | pub fn clone_fn2<T, U, F: Fn(&T) -> U + Clone>(f: F) -> (res: F)
+            ...
+        28 |     let res = f.clone();
+        29 |     assume(forall|x: &T| f.requires((x,)) == res.requires((x,)));
+        31 |     res
+        32 | }
 /home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:43: assume() - assume(forall|x: &T, y: &T| f.requires((x, y)) == res.requires((x, y)));
+        35 | pub fn clone_fn_binary<T, F: Fn(&T, &T) -> T + Clone>(f: F) -> (res: F)
+            ...
+        41 | {
+        42 |     let res = f.clone();
+        44 |     assume(forall|x: &T, y: &T, r: T| f.ensures((x, y), r) == res.ensures((x, y), r));
+        45 |     res
 /home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:44: assume() - assume(forall|x: &T, y: &T, r: T| f.ensures((x, y), r) == res.ensures((x, y),...
+        35 | pub fn clone_fn_binary<T, F: Fn(&T, &T) -> T + Clone>(f: F) -> (res: F)
+            ...
+        42 |     let res = f.clone();
+        43 |     assume(forall|x: &T, y: &T| f.requires((x, y)) == res.requires((x, y)));
+        45 |     res
+        46 | }
 /home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:57: assume() - assume(forall|x: &T| f.requires((x,)) == res.requires((x,)));
+        49 | pub fn clone_predicate<T, F: Fn(&T) -> bool + Clone>(f: F) -> (res: F)
+            ...
+        55 | {
+        56 |     let res = f.clone();
+        58 |     assume(forall|x: &T, r: bool| f.ensures((x,), r) == res.ensures((x,), r));
+        59 |     res
 /home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:58: assume() - assume(forall|x: &T, r: bool| f.ensures((x,), r) == res.ensures((x,), r));
+        49 | pub fn clone_predicate<T, F: Fn(&T) -> bool + Clone>(f: F) -> (res: F)
+            ...
+        56 |     let res = f.clone();
+        57 |     assume(forall|x: &T| f.requires((x,)) == res.requires((x,)));
+        59 |     res
+        60 | }
 /home/milnes/projects/APAS-VERUS/src/experiments/clone_fn.rs:63: external_body - #[verifier::external_body]
+        64 | pub fn clone_fn_axiom<T, U, F: Fn(&T) -> U + Clone>(f: F) -> (res: F)
    Holes: 8 total
       7 × assume()
       1 × external_body
 ❌ experiments/clone_plus.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/clone_plus.rs:18: external_body - #[verifier::external_body]
+        19 |     fn test_clone_view_no_feq<T: Clone + View>(x: &T) {
    Holes: 1 total
       1 × external_body
 ✓ experiments/clone_plus_vs_deep_clone.rs
@@ -336,7 +1046,19 @@
    3 clean proof functions
 ❌ experiments/collect_deep_view.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/collect_deep_view.rs:280: assume() - assume(k == pairs@[i as int].0);
+       239 |     pub fn collect<K: DeepView<V = K> + Clone + Eq + PartialEq, V: DeepView<V = V> + Clone + Eq + PartialEq>(
+            ...
+       278 |             //   axiom_cloned_implies_eq_owned::<V>(pairs@[i as int].1, v);
+       279 |             proof {
+       281 |                 assume(v == pairs@[i as int].1);
+       282 |             }
 /home/milnes/projects/APAS-VERUS/src/experiments/collect_deep_view.rs:281: assume() - assume(v == pairs@[i as int].1);
+       239 |     pub fn collect<K: DeepView<V = K> + Clone + Eq + PartialEq, V: DeepView<V = V> + Clone + Eq + PartialEq>(
+            ...
+       279 |             proof {
+       280 |                 assume(k == pairs@[i as int].0);
+       282 |             }
+       283 |             match vec_find_key(&collected, &k) {
    Holes: 2 total
       2 × assume()
    Proof functions: 9 total (9 clean, 0 holed)
@@ -345,11 +1067,16 @@
 ✓ experiments/deep_view_struct.rs
 ❌ experiments/eq_rel.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/eq_rel.rs:102: assume() - assume(cloned(*x, *x_clone) ==> *x == *x_clone);
+       100 |          proof fn axiom_cloned_implies_eq(x: &Self, x_clone: &Self) {
+       101 |              // This is an AXIOM for generic T - we assume it
+       103 |          }
+       104 | 
    Holes: 1 total
       1 × assume()
    Proof functions: 12 total (11 clean, 1 holed)
 ❌ experiments/executable_use_of_int.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/executable_use_of_int.rs:18: external_body - #[verifier::external_body]
+        19 | pub fn vec_int_succeeds(s: Vec<int>) -> (result: usize)
    Holes: 1 total
       1 × external_body
 ✓ experiments/ghost_type_invariant.rs
@@ -357,10 +1084,17 @@
 ✓ experiments/hash_set_iter.rs
 ❌ experiments/hash_set_modern_pattern.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/hash_set_modern_pattern.rs:123: assume() - assume(obeys_key_model::<u64>());
+       119 | fn test_hashset_with_view_comparison() {
+            ...
+       121 |     use vstd::std_specs::hash::obeys_key_model;
+       122 | 
+       124 | 
+       125 |     let mut set: HashSetWithView<u64> = HashSetWithView::new();
    Holes: 1 total
       1 × assume()
 ❌ experiments/hash_set_with_view_plus_loops.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/hash_set_with_view_plus_loops.rs:23: external_body - #[verifier::external_body]
+        24 | fn vec_to_vec_copy_fails(source: &Vec<u32>) -> (dest: Vec<u32>)
    Holes: 1 total
       1 × external_body
 ✓ experiments/invariant_proof_test.rs
@@ -374,8 +1108,16 @@
 ✓ experiments/parapair_toplevel_closure.rs
 ❌ experiments/pervasives.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/pervasives.rs:43: external_body - #[verifier::external_body]
+        44 |     pub proof fn assert_unchecked(b: bool)
 /home/milnes/projects/APAS-VERUS/src/experiments/pervasives.rs:59: external_body - #[verifier::external_body]
+        60 |     pub proof fn claim_anything<A>(a: A, b: A)
 /home/milnes/projects/APAS-VERUS/src/experiments/pervasives.rs:89: assume(false) - assume(false);
+        86 |     pub proof fn using_assume_proves_false()
+            ...
+        87 |         ensures false,
+        88 |     {
+        90 |     }
+        91 | 
    Holes: 3 total
       1 × assume(false)
       2 × external_body
@@ -388,42 +1130,112 @@
 ✓ experiments/pub_crate_test.rs
 ❌ experiments/seq_array_equality.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/seq_array_equality.rs:7: assume_specification - pub assume_specification<T: Clone> [<[T]>::to_vec] (s: &[T]) -> (result: Vec<T>)
+         5 | verus! {
+         6 | 
+         8 |     ensures
+         9 |         result@ == s@,
    Holes: 1 total
       1 × assume_specification
 ❌ experiments/seq_for_basic_proofs.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/seq_for_basic_proofs.rs:374: admit() - admit();
+       350 |     pub fn i64_array_sum_non_negative_down_for(s: &[i64]) -> (result: bool)
+            ...
+       372 |             assert(s@[i as int] as int + seq_i64_sum_down(s@.skip((i + 1) as int))
+       373 |                    == seq_i64_sum_down(s@.skip(i as int))) by {
+       375 |             };
+       376 |             sum = s[i] as i128 + sum;
 /home/milnes/projects/APAS-VERUS/src/experiments/seq_for_basic_proofs.rs:408: admit() - admit();
+       384 |     pub fn i64_vec_sum_non_negative_down_for(s: Vec<i64>) -> (result: bool)
+            ...
+       406 |             assert(s@[i as int] as int + seq_i64_sum_down(s@.skip((i + 1) as int))
+       407 |                    == seq_i64_sum_down(s@.skip(i as int))) by {
+       409 |             };
+       410 |             sum = s[i] as i128 + sum;
    Holes: 2 total
       2 × admit()
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ experiments/seq_loop_basic_proofs.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/seq_loop_basic_proofs.rs:434: admit() - admit();
+       410 |     pub fn i64_array_sum_non_negative_down_loop(s: &[i64]) -> (result: bool)
+            ...
+       432 |             assert(s@[i as int] as int + seq_i64_sum_down(s@.skip((i + 1) as int))
+       433 |                    == seq_i64_sum_down(s@.skip(i as int))) by {
+       435 |             };
+       436 |             sum = s[i] as i128 + sum;
 /home/milnes/projects/APAS-VERUS/src/experiments/seq_loop_basic_proofs.rs:468: admit() - admit();
+       444 |     pub fn i64_vec_sum_non_negative_down_loop(s: Vec<i64>) -> (result: bool)
+            ...
+       466 |             assert(s@[i as int] as int + seq_i64_sum_down(s@.skip((i + 1) as int))
+       467 |                    == seq_i64_sum_down(s@.skip(i as int))) by {
+       469 |             };
+       470 |             sum = s[i] as i128 + sum;
    Holes: 2 total
       2 × admit()
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ experiments/seq_set_exec.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/seq_set_exec.rs:74: external_body - #[verifier::external_body]
+        75 | pub fn sum_seq_u32_no_overflow(seq: &Vec<u32>) -> (sum: u32)
 /home/milnes/projects/APAS-VERUS/src/experiments/seq_set_exec.rs:81: assume() - assume(((sum + seq[i as int]) as int) < u32::MAX); // Does not work.
+        75 | pub fn sum_seq_u32_no_overflow(seq: &Vec<u32>) -> (sum: u32)
+            ...
+        79 |     let mut sum = 0;
+        80 |     for i in 0..seq.len() {
+        82 |         sum = sum + seq[i];
+        83 |     }
 /home/milnes/projects/APAS-VERUS/src/experiments/seq_set_exec.rs:122: assume() - assume(forall |x: u32| s@.contains(x) <==> seq@.map(|_i: int, t: u32| t@).con...
+       113 | pub fn sum_set_CheckedU32(s: &SetStEph<u32>) -> (sum: CheckedU32)
+            ...
+       120 |     let seq = s.to_seq();
+       121 |     assert(seq@.no_duplicates());
+       123 | 
+       124 |     let ghost mapped_seq = seq@.map(|_i: int, v: u32| v as nat);
    Holes: 3 total
       2 × assume()
       1 × external_body
    Proof functions: 3 total (3 clean, 0 holed)
 ❌ experiments/seq_vec_equality.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/seq_vec_equality.rs:7: external_body - #[verifier::external_body] // The proof fails!
+         8 | pub fn vec_copy_generic_equality<T: Copy>(s: &Vec<T>) -> (result: Vec<T>)
    Holes: 1 total
       1 × external_body
 ❌ experiments/seq_while_basic_proofs.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/seq_while_basic_proofs.rs:416: admit() - admit();
+       395 |     pub fn i64_array_sum_non_negative_down_while(s: &[i64]) -> (result: bool)
+            ...
+       414 |             assert(s@[i as int] as int + seq_i64_sum_down(s@.skip((i + 1) as int))
+       415 |                    == seq_i64_sum_down(s@.skip(i as int))) by {
+       417 |             };
+       418 |             sum = s[i] as i128 + sum;
 /home/milnes/projects/APAS-VERUS/src/experiments/seq_while_basic_proofs.rs:448: admit() - admit();
+       427 |     pub fn i64_vec_sum_non_negative_down_while(s: Vec<i64>) -> (result: bool)
+            ...
+       446 |             assert(s@[i as int] as int + seq_i64_sum_down(s@.skip((i + 1) as int))
+       447 |                    == seq_i64_sum_down(s@.skip(i as int))) by {
+       449 |             };
+       450 |             sum = s[i] as i128 + sum;
    Holes: 2 total
       2 × admit()
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ experiments/sigma_pi.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/sigma_pi.rs:70: admit() - proof fn lemma_add_commutative() { admit(); }
+        66 |         proof fn add_commutative_at(n1: i32, n2: i32, n3: i32)
+            ...
+        68 |         {}
+        69 | 
+        71 | 
+        72 |         proof fn mul_commutative_at(n1: i32, n2: i32, n3: i32)
 /home/milnes/projects/APAS-VERUS/src/experiments/sigma_pi.rs:74: admit() - { admit() }
+        72 |         proof fn mul_commutative_at(n1: i32, n2: i32, n3: i32)
+        73 |             ensures Self::mul(Self::mul(n3, n2), n1) == Self::mul(Self::mul(n3, n1), n2)
+        75 | 
+        76 |         proof fn lemma_mul_commutative() { admit(); }
 /home/milnes/projects/APAS-VERUS/src/experiments/sigma_pi.rs:76: admit() - proof fn lemma_mul_commutative() { admit(); }
+        72 |         proof fn mul_commutative_at(n1: i32, n2: i32, n3: i32)
+            ...
+        74 |         { admit() }
+        75 | 
+        77 |     }
+        78 | 
    Holes: 3 total
       3 × admit()
    Proof functions: 8 total (5 clean, 3 holed)
@@ -431,23 +1243,60 @@
    6 clean proof functions
 ❌ experiments/simple_hash_set_iter.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/simple_hash_set_iter.rs:88: assume() - assume(it@.1.map(|i: int, k: V| k@).to_set() == self@);
+        83 |         fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, V>)
+            ...
+        86 |             // HashSetWithViewPlusTrait provides it@.0 == 0 and it@.1.no_duplicates() unconditionally
+        87 |             // The mapping property still needs to be assumed
+        89 |             it
+        90 |         }
 /home/milnes/projects/APAS-VERUS/src/experiments/simple_hash_set_iter.rs:143: assume() - assume(s2@ == s1@);
+        94 |     pub fn simple_hash_set_copy_loop<V: Clone + View + std::cmp::Eq + std::hash::Hash>(s1: &SimpleHashSet<V>) -> (s2: SimpleHashSet<V>)
+            ...
+       141 |                         assert(s1_seq.take(s1_seq.len() as int).map(|i: int, k: V| k@).to_set() ==
+       142 |                                s1_seq.map(|i: int, k: V| k@).to_set());
+       144 |                     }
+       145 |                     return s2;
    Holes: 2 total
       2 × assume()
 ❌ experiments/simple_seq_iter.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/simple_seq_iter.rs:146: assume() - assume(self.pos <= self.vec.len());
+       118 |         fn next(&mut self) -> (result: Option<V>)
+            ...
+       144 |             } else {
+       145 |                 // Without a requires on next
+       147 |                 None
+       148 |             }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ experiments/simple_set_iter.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/simple_set_iter.rs:87: assume() - assume(self.elements@[i as int] == *v);
+        78 |         fn mem(&self, v: &V) -> (result: bool)
+            ...
+        85 |             {
+        86 |                 if self.elements[i] == *v {
+        88 |                     return true;
+        89 |                 }
 /home/milnes/projects/APAS-VERUS/src/experiments/simple_set_iter.rs:90: assume() - assume(self.elements@[i as int] != *v);
+        78 |         fn mem(&self, v: &V) -> (result: bool)
+            ...
+        88 |                     return true;
+        89 |                 }
+        91 |             }
+        92 |             false
 /home/milnes/projects/APAS-VERUS/src/experiments/simple_set_iter.rs:210: assume() - assume(self.pos <= self.vec.len());
+       182 |         fn next(&mut self) -> (result: Option<V>)
+            ...
+       208 |             } else {
+       209 |                 // Without a requires on next this is required, see assumption_free_next.
+       211 |                 None
+       212 |             }
    Holes: 3 total
       3 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ experiments/spec_fun_argument.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/spec_fun_argument.rs:28: external_body - #[verifier::external_body]
+        29 | fn vec_filter_predicate_provenence_completeness_loop<V: Clone + Eq>(
    Holes: 1 total
       1 × external_body
 ✓ experiments/spec_loop.rs
@@ -455,53 +1304,202 @@
 ✓ experiments/supertrait.rs
 ❌ experiments/tcb_foul.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/tcb_foul.rs:32: external_body - #[verifier::external_body]
+        33 | pub fn lying_function() -> (result: u64)
 /home/milnes/projects/APAS-VERUS/src/experiments/tcb_foul.rs:53: external_body - #[verifier::external_body]
+        54 | pub fn lying_increment(x: &mut u64)
 /home/milnes/projects/APAS-VERUS/src/experiments/tcb_foul.rs:77: assume() - assume(x == 42);  // Just assume a falsehood
+        73 | pub fn tcb_foul_assume() {
+            ...
+        75 | 
+        76 |     proof {
+        78 |         assert(x == 42);  // Now we can "prove" it
+        79 |     }
    Holes: 3 total
       1 × assume()
       2 × external_body
 ❌ experiments/test_feq.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/test_feq.rs:94: admit() - { admit(); }
+        91 |     broadcast proof fn axiom_point_feq()
+            ...
+        92 |         requires #[trigger] point_feq_trigger()
+        93 |         ensures obeys_feq_full::<Point>()
+        95 | 
+        96 |     broadcast proof fn axiom_color_feq()
 /home/milnes/projects/APAS-VERUS/src/experiments/test_feq.rs:99: admit() - { admit(); }
+        96 |     broadcast proof fn axiom_color_feq()
+            ...
+        97 |         requires #[trigger] color_feq_trigger()
+        98 |         ensures obeys_feq_full::<Color>()
+       100 | 
+       101 |     broadcast proof fn axiom_inttree_feq()
 /home/milnes/projects/APAS-VERUS/src/experiments/test_feq.rs:104: admit() - { admit(); }
+       101 |     broadcast proof fn axiom_inttree_feq()
+            ...
+       102 |         requires #[trigger] inttree_feq_trigger()
+       103 |         ensures obeys_feq_full::<IntTree>()
+       105 | 
+       106 |     broadcast group group_feq_axioms {
 /home/milnes/projects/APAS-VERUS/src/experiments/test_feq.rs:166: external_body - #[verifier::external_body]
+       167 |     fn test_exec_eq_implies_view_eq<T: Eq + View + Clone + Sized>(x: &T, y: &T)
    Holes: 4 total
       3 × admit()
       1 × external_body
    Proof functions: 3 total (0 clean, 3 holed)
 ❌ experiments/test_feq_insertion_sort.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/test_feq_insertion_sort.rs:41: assume() - assume(cmp_result == v@[i as int].cmp_spec(&v@[(i + 1) as int]));
+        20 |     pub fn is_sorted<T: Ord + Clone + Sized>(v: &Vec<T>) -> (sorted: bool)
+            ...
+        39 |             let cmp_result = v[i].cmp(&v[i + 1]);
+        40 |             proof {
+        42 |             }
+        43 |             if matches!(cmp_result, Ordering::Greater) {
 /home/milnes/projects/APAS-VERUS/src/experiments/test_feq_insertion_sort.rs:47: assume() - assume(forall|a: int, b: int| 0 <= a < b <= (i + 1) as int ==> v@[a].cmp_spec...
+        20 |     pub fn is_sorted<T: Ord + Clone + Sized>(v: &Vec<T>) -> (sorted: bool)
+            ...
+        45 |             }
+        46 |             proof {
+        48 |             }
+        49 |             i = i + 1;
 /home/milnes/projects/APAS-VERUS/src/experiments/test_feq_insertion_sort.rs:88: assume() - assume(cmp_result == a@[(down - 1) as int].cmp_spec(&a@[down as int]));
+        54 |     pub fn insertion_sort_while<T: Ord + Copy + Sized>(a: &mut Vec<T>)
+            ...
+        86 |                 let cmp_result = a[down - 1].cmp(&a[down]);
+        87 |                 proof {
+        89 |                 }
+        90 |                 match cmp_result {
 /home/milnes/projects/APAS-VERUS/src/experiments/test_feq_insertion_sort.rs:104: assume() - assume(forall|i: int, j: int| 0 <= i < j < up as int ==> a@[i].cmp_spec(&a@[j...
+        54 |     pub fn insertion_sort_while<T: Ord + Copy + Sized>(a: &mut Vec<T>)
+            ...
+       102 |             up = up + 1;
+       103 |             proof {
+       105 |             }
+       106 |         }
 /home/milnes/projects/APAS-VERUS/src/experiments/test_feq_insertion_sort.rs:108: assume() - assume(sorted_spec(a@));
+        54 |     pub fn insertion_sort_while<T: Ord + Copy + Sized>(a: &mut Vec<T>)
+            ...
+       106 |         }
+       107 |         proof {
+       109 |         }
+       110 |     }
 /home/milnes/projects/APAS-VERUS/src/experiments/test_feq_insertion_sort.rs:157: assume() - assume(cmp_result == a@[(down - 1) as int].cmp_spec(&a@[down as int]));
+       113 |     pub fn insertion_sort_loop<T: Ord + Copy + Sized>(a: &mut Vec<T>)
+            ...
+       155 |                 let cmp_result = a[down - 1].cmp(&a[down]);
+       156 |                 proof {
+       158 |                 }
+       159 | 
 /home/milnes/projects/APAS-VERUS/src/experiments/test_feq_insertion_sort.rs:174: assume() - assume(forall|i: int, j: int| 0 <= i < j < (up + 1) as int ==> a@[i].cmp_spec...
+       113 |     pub fn insertion_sort_loop<T: Ord + Copy + Sized>(a: &mut Vec<T>)
+            ...
+       172 | 
+       173 |             proof {
+       175 |             }
+       176 | 
    Holes: 7 total
       7 × assume()
 ✓ experiments/test_test.rs
 ✓ experiments/test_verify_one_file.rs
 ❌ experiments/total_ord_gen.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:45: assume() - proof fn axiom_eq_reflexive(x: &Self) { assume(*x == *x); }
+        40 |         proof fn axiom_le_total(x: &Self, y: &Self) ensures x.le_spec(y) || y.le_spec(x);
+            ...
+        43 | // Generic implementation - axioms are assumed.
+        44 |         impl<T: PartialEq + Eq + Sized + View + Clone> TotalOrdGen for T {
+        46 |             proof fn axiom_eq_symmetric(x: &Self, y: &Self) { assume((*x == *y) == (*y == *x)); }
+        47 |             proof fn axiom_eq_transitive(x: &Self, y: &Self, z: &Self) { assume(*x == *y && *y == *z ==> *x == *z); }
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:46: assume() - proof fn axiom_eq_symmetric(x: &Self, y: &Self) { assume((*x == *y) == (*y ==...
+        44 |         impl<T: PartialEq + Eq + Sized + View + Clone> TotalOrdGen for T {
+        45 |             proof fn axiom_eq_reflexive(x: &Self) { assume(*x == *x); }
+        47 |             proof fn axiom_eq_transitive(x: &Self, y: &Self, z: &Self) { assume(*x == *y && *y == *z ==> *x == *z); }
+        48 |             proof fn axiom_eq_view(x: &Self, y: &Self) { assume(*x == *y ==> x@ == y@); }
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:47: assume() - proof fn axiom_eq_transitive(x: &Self, y: &Self, z: &Self) { assume(*x == *y ...
+        45 |             proof fn axiom_eq_reflexive(x: &Self) { assume(*x == *x); }
+        46 |             proof fn axiom_eq_symmetric(x: &Self, y: &Self) { assume((*x == *y) == (*y == *x)); }
+        48 |             proof fn axiom_eq_view(x: &Self, y: &Self) { assume(*x == *y ==> x@ == y@); }
+        49 | 
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:48: assume() - proof fn axiom_eq_view(x: &Self, y: &Self) { assume(*x == *y ==> x@ == y@); }
+        46 |             proof fn axiom_eq_symmetric(x: &Self, y: &Self) { assume((*x == *y) == (*y == *x)); }
+        47 |             proof fn axiom_eq_transitive(x: &Self, y: &Self, z: &Self) { assume(*x == *y && *y == *z ==> *x == *z); }
+        49 | 
+        50 |             proof fn axiom_cloned_implies_eq(x: &Self, x_clone: &Self) {
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:51: assume() - assume(cloned(*x, *x_clone) ==> *x == *x_clone);
+        49 | 
+        50 |             proof fn axiom_cloned_implies_eq(x: &Self, x_clone: &Self) {
+        52 |             }
+        53 | 
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:60: assume() - proof fn axiom_le_reflexive(x: &Self) { assume(x.le_spec(x)); }
+        58 | 
+        59 |             open spec fn le_spec(&self, other: &Self) -> bool { arbitrary() }
+        61 |             proof fn axiom_le_antisymmetric(x: &Self, y: &Self) { assume(x.le_spec(y) && y.le_spec(x) ==> *x == *y); }
+        62 |             proof fn axiom_le_transitive(x: &Self, y: &Self, z: &Self)
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:61: assume() - proof fn axiom_le_antisymmetric(x: &Self, y: &Self) { assume(x.le_spec(y) && ...
+        59 |             open spec fn le_spec(&self, other: &Self) -> bool { arbitrary() }
+        60 |             proof fn axiom_le_reflexive(x: &Self) { assume(x.le_spec(x)); }
+        62 |             proof fn axiom_le_transitive(x: &Self, y: &Self, z: &Self)
+        63 |              { assume(x.le_spec(y) && y.le_spec(z) ==> x.le_spec(z)); }
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:63: assume() - { assume(x.le_spec(y) && y.le_spec(z) ==> x.le_spec(z)); }
+        61 |             proof fn axiom_le_antisymmetric(x: &Self, y: &Self) { assume(x.le_spec(y) && y.le_spec(x) ==> *x == *y); }
+        62 |             proof fn axiom_le_transitive(x: &Self, y: &Self, z: &Self)
+        64 |             proof fn axiom_le_total(x: &Self, y: &Self) { assume(x.le_spec(y) || y.le_spec(x)); }
+        65 |         }
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen.rs:64: assume() - proof fn axiom_le_total(x: &Self, y: &Self) { assume(x.le_spec(y) || y.le_spe...
+        62 |             proof fn axiom_le_transitive(x: &Self, y: &Self, z: &Self)
+        63 |              { assume(x.le_spec(y) && y.le_spec(z) ==> x.le_spec(z)); }
+        65 |         }
+        66 | 
    Holes: 9 total
       9 × assume()
    Proof functions: 20 total (1 clean, 19 holed)
 ❌ experiments/total_ord_gen_axioms.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen_axioms.rs:31: admit() - admit(); // Cannot prove for generic T
+        27 |     broadcast proof fn axiom_eq_transitive<T: TotalOrdGenAxioms>()
+            ...
+        29 |         ensures forall|x: T, y: T, z: T| x == y && y == z ==> #[trigger] (x == z)
+        30 |     {
+        32 |     }
+        33 | 
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen_axioms.rs:38: admit() - admit(); // Cannot prove for generic T
+        34 |     broadcast proof fn axiom_eq_view<T: TotalOrdGenAxioms>()
+            ...
+        36 |         ensures forall|x: T, y: T| x == y ==> #[trigger] (x@ == y@)
+        37 |     {
+        39 |     }
+        40 | 
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen_axioms.rs:46: admit() - admit(); // Cannot prove for generic T
+        42 |     broadcast proof fn axiom_cloned_implies_eq<T: TotalOrdGenAxioms>()
+            ...
+        44 |         ensures forall|x: T, x_clone: T| cloned(x, x_clone) ==> #[trigger] (x == x_clone)
+        45 |     {
+        47 |     }
+        48 | 
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen_axioms.rs:54: admit() - admit(); // le_spec is admit()
+        50 |     broadcast proof fn axiom_le_reflexive<T: TotalOrdGenAxioms>()
+            ...
+        52 |         ensures forall|x: T| #[trigger] x.le_spec(&x)
+        53 |     {
+        55 |     }
+        56 | 
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen_axioms.rs:61: admit() - admit(); // Cannot prove for arbitrary le_spec
+        57 |     broadcast proof fn axiom_le_antisymmetric<T: TotalOrdGenAxioms>()
+            ...
+        59 |         ensures forall|x: T, y: T| x.le_spec(&y) && y.le_spec(&x) ==> #[trigger] (x == y)
+        60 |     {
+        62 |     }
+        63 | 
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen_axioms.rs:68: admit() - admit(); // Cannot prove for arbitrary le_spec
+        64 |     broadcast proof fn axiom_le_transitive<T: TotalOrdGenAxioms>()
+            ...
+        66 |         ensures forall|x: T, y: T, z: T| x.le_spec(&y) && #[trigger] y.le_spec(&z) ==> x.le_spec(&z)
+        67 |     {
+        69 |     }
+        70 | 
 /home/milnes/projects/APAS-VERUS/src/experiments/total_ord_gen_axioms.rs:75: admit() - admit(); // Cannot prove for arbitrary le_spec
+        71 |     broadcast proof fn axiom_le_total<T: TotalOrdGenAxioms>()
+            ...
+        73 |         ensures forall|x: T, y: T| #[trigger] x.le_spec(&y) || y.le_spec(&x)
+        74 |     {
+        76 |     }
+        77 | 
    Holes: 7 total
       7 × admit()
    Proof functions: 7 total (0 clean, 7 holed)
@@ -513,6 +1511,7 @@
 ✓ experiments/vec_clone_in_verus.rs
 ❌ experiments/vec_filter.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/vec_filter.rs:113: external_body - #[verifier::external_body]
+       114 | fn vec_filter_predicate_provenence_completeness_loop<V: Clone + Eq>(
    Holes: 1 total
       1 × external_body
 ✓ experiments/vec_if.rs
@@ -530,7 +1529,19 @@
 ✓ experiments/verus_vec_iterator_while_basic_proofs.rs
 ❌ experiments/verus_wrapped_iter_loops.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/verus_wrapped_iter_loops.rs:18: admit() - admit();
+        11 | proof fn lemma_found_at_pos(original_seq: Seq<i64>, elt: i64, pos: int)
+            ...
+        16 |         seq_i64_mem(original_seq, elt) == true,
+        17 | {
+        19 | }
+        20 | 
 /home/milnes/projects/APAS-VERUS/src/experiments/verus_wrapped_iter_loops.rs:27: admit() - admit();
+        21 | proof fn lemma_not_found(original_seq: Seq<i64>, elt: i64)
+            ...
+        25 |         seq_i64_mem(original_seq, elt) == false,
+        26 | {
+        28 | }
+        29 | 
    Holes: 2 total
       2 × admit()
    Proof functions: 2 total (0 clean, 2 holed)
@@ -545,17 +1556,42 @@
 ✓ vstdplus/checked_nat_with_checked_view.rs
 ❌ vstdplus/clone_plus.rs
 /home/milnes/projects/APAS-VERUS/src/vstdplus/clone_plus.rs:18: external_body - #[verifier::external_body]
+        19 |         fn clone_plus(&self) -> (res: Self) {
 /home/milnes/projects/APAS-VERUS/src/vstdplus/clone_plus.rs:27: external_body - #[verifier::external_body]
+        28 |     pub fn clone_fn<T, U, F: Fn(&T) -> U + Clone>(f: &F) -> (res: F)
 /home/milnes/projects/APAS-VERUS/src/vstdplus/clone_plus.rs:37: external_body - #[verifier::external_body]
+        38 |     pub fn clone_fn2<T, F: Fn(&T, &T) -> T + Clone>(f: &F) -> (res: F)
 /home/milnes/projects/APAS-VERUS/src/vstdplus/clone_plus.rs:47: external_body - #[verifier::external_body]
+        48 |     pub fn clone_pred<T, F: Fn(&T) -> bool + Clone>(f: &F) -> (res: F)
    Holes: 4 total
       4 × external_body
 ❌ vstdplus/feq.rs
 /home/milnes/projects/APAS-VERUS/src/vstdplus/feq.rs:18: external_trait_specification - #[verifier::external_trait_specification]
+        19 |     #[verifier::external_trait_extension(FeqSpec via FeqSpecImpl)]
+        20 |     pub trait ExFeq: PartialEq + PointeeSized {
 /home/milnes/projects/APAS-VERUS/src/vstdplus/feq.rs:19: external_trait_extension - #[verifier::external_trait_extension(FeqSpec via FeqSpecImpl)]
+        20 |     pub trait ExFeq: PartialEq + PointeeSized {
 /home/milnes/projects/APAS-VERUS/src/vstdplus/feq.rs:167: admit() - admit();
+       163 |     pub broadcast proof fn axiom_cloned_implies_eq<T: Eq + Clone + Sized>(x: &T, y: T)
+            ...
+       165 |         ensures *x == y
+       166 |     {
+       168 |     }
+       169 | 
 /home/milnes/projects/APAS-VERUS/src/vstdplus/feq.rs:176: admit() - admit();
+       172 |     pub broadcast proof fn axiom_cloned_implies_eq_owned<T: Eq + Clone + Sized>(x: T, y: T)
+            ...
+       174 |         ensures x == y
+       175 |     {
+       177 |     }
+       178 | 
 /home/milnes/projects/APAS-VERUS/src/vstdplus/feq.rs:189: assume() - assume(result == (x@ == y@));
+       180 |     pub fn feq<T: Eq + View + Clone + Sized>(x: &T, y: &T) -> (eq: bool)
+            ...
+       187 |             // obeys_feq_view: x.eq_spec(&y) ==> x@ == y@
+       188 |             // obeys_feq_view_injective: x@ == y@ ==> x == y
+       190 |         }
+       191 |         result
    Holes: 5 total
       1 × assume()
       2 × admit()
@@ -564,43 +1600,103 @@
    Proof functions: 4 total (2 clean, 2 holed)
 ❌ vstdplus/hash_set_specs.rs
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_specs.rs:12: assume_specification - pub assume_specification<T, S> [<std::collections::HashSet<T, S> as std::clon...
+        10 | verus! {
+        11 | 
+        13 | where
+        14 |     S: std::clone::Clone,
    Holes: 1 total
       1 × assume_specification
 ❌ vstdplus/hash_set_with_view_plus.rs
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:42: admit() - admit();
+        38 | pub broadcast proof fn axiom_hash_set_with_view_plus_finite<Key: View + Eq + Hash>(s: &HashSetWithViewPlus<Key>)
+            ...
+        40 |         #[trigger] s@.finite(),
+        41 | {
+        43 | }
+        44 | 
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:50: external_body - #[verifier::external_body]
+        51 |     fn clone(&self) -> (clone: Self)
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:59: external_body - #[verifier::external_body]
+        60 |     pub fn new() -> (hash_set: Self)
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:70: external_body - #[verifier::external_body]
+        71 |     pub fn with_capacity(capacity: usize) -> (hash_set: Self)
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:81: external_body - #[verifier::external_body]
+        82 |     pub fn len(&self) -> (len: usize)
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:89: external_body - #[verifier::external_body]
+        90 |     pub fn contains(&self, k: &Key) -> (contains: bool)
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:99: external_body - #[verifier::external_body]
+       100 |     pub fn insert(&mut self, k: Key) -> (inserted: bool)
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:125: external_body - #[verifier::external_body]
+       126 |     fn iter(&self) -> (r: std::collections::hash_set::Iter<'_, Key>)
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:131: external_body - #[verifier::external_body]
+       132 |     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:140: external_body - #[verifier::external_body]
+       141 |     fn eq(&self, other: &Self) -> bool { self.inner == other.inner }
    Holes: 10 total
       1 × admit()
       9 × external_body
    Proof functions: 1 total (0 clean, 1 holed)
 ❌ vstdplus/hashed_checked_u32.rs
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:30: external_body - #[verifier::external_body]
+        31 |     fn hash<H: Hasher>(&self, state: &mut H) {
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:38: external_body - #[verifier::external_body]
+        39 |     fn eq(&self, other: &Self) -> bool {
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:53: admit() - { admit(); }
+        50 | pub broadcast proof fn axiom_CheckedU32_feq()
+            ...
+        51 |     requires #[trigger] CheckedU32_feq_trigger()
+        52 |     ensures obeys_feq_full::<CheckedU32>()
+        54 | // Veracity: USED
+        55 | 
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:59: admit() - { admit(); }
+        56 | pub broadcast proof fn axiom_CheckedU32_key_model()
+            ...
+        57 |     requires #[trigger] CheckedU32_feq_trigger()
+        58 |     ensures obeys_key_model::<CheckedU32>()
+        60 | 
+        61 | pub broadcast group group_CheckedU32_axioms {
    Holes: 4 total
       2 × admit()
       2 × external_body
    Proof functions: 2 total (0 clean, 2 holed)
+✓ vstdplus/monoid.rs
 ✓ vstdplus/multiset.rs
    6 clean proof functions
 ❌ vstdplus/partial_order.rs
 /home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:404: admit() - admit();
+       402 | 
+       403 |         proof fn reflexive(x: Self) {
+       405 |         }
+       406 | 
 /home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:408: admit() - admit();
+       406 | 
+       407 |         proof fn transitive(x: Self, y: Self, z: Self) {
+       409 |         }
+       410 | 
 /home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:413: admit() - admit();
+       411 | // Veracity: USED
+       412 |         proof fn antisymmetric(x: Self, y: Self) {
+       414 |         }
+       415 | 
 /home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:416: external_body - #[verifier::external_body]
+       417 |         fn compare(&self, other: &Self) -> (c: Option<Ordering>)
 /home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:432: admit() - admit();
+       430 | 
+       431 |         proof fn reflexive(x: Self) {
+       433 |         }
+       434 | 
 /home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:436: admit() - admit();
+       434 | 
+       435 |         proof fn transitive(x: Self, y: Self, z: Self) {
+       437 |         }
+       438 | 
 /home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:441: admit() - admit();
+       439 | // Veracity: USED
+       440 |         proof fn antisymmetric(x: Self, y: Self) {
+       442 |         }
+       443 | 
 /home/milnes/projects/APAS-VERUS/src/vstdplus/partial_order.rs:444: external_body - #[verifier::external_body]
+       445 |         fn compare(&self, other: &Self) -> (c: Option<Ordering>)
    Holes: 8 total
       6 × admit()
       2 × external_body
@@ -608,6 +1704,12 @@
 ✓ vstdplus/pervasives_plus.rs
 ❌ vstdplus/seq.rs
 /home/milnes/projects/APAS-VERUS/src/vstdplus/seq.rs:67: assume() - assume(sum.is_normal() ==> sum@ == spec_sum_u32_seq(s_spec.take(i as int)) as...
+        32 |     pub fn seq_u32_to_CheckedU32(s: &Vec<u32>) -> (sum: CheckedU32)
+            ...
+        65 | 
+        66 |                 // FIXME: SMT has trouble connecting recursive spec function unfolding
+        68 |             }
+        69 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 5 total (5 clean, 0 holed)
@@ -615,23 +1717,63 @@
    60 clean proof functions
 ❌ vstdplus/sqrt.rs
 /home/milnes/projects/APAS-VERUS/src/vstdplus/sqrt.rs:12: assume_specification - pub assume_specification [<usize>::isqrt] (n: usize) -> (root: usize)
+        10 | verus! {
+        11 | 
+        13 |     ensures
+        14 |         root as int * root as int <= n as int,
 /home/milnes/projects/APAS-VERUS/src/vstdplus/sqrt.rs:17: assume_specification - pub assume_specification [<u64>::isqrt] (n: u64) -> (root: u64)
+        15 |         (root as int + 1) * (root as int + 1) > n as int;
+        16 | 
+        18 |     ensures
+        19 |         root as int * root as int <= n as int,
 /home/milnes/projects/APAS-VERUS/src/vstdplus/sqrt.rs:22: assume_specification - pub assume_specification [<u32>::isqrt] (n: u32) -> (root: u32)
+        20 |         (root as int + 1) * (root as int + 1) > n as int;
+        21 | 
+        23 |     ensures
+        24 |         root as int * root as int <= n as int,
 /home/milnes/projects/APAS-VERUS/src/vstdplus/sqrt.rs:27: assume_specification - pub assume_specification [<u16>::isqrt] (n: u16) -> (root: u16)
+        25 |         (root as int + 1) * (root as int + 1) > n as int;
+        26 | 
+        28 |     ensures
+        29 |         root as int * root as int <= n as int,
 /home/milnes/projects/APAS-VERUS/src/vstdplus/sqrt.rs:32: assume_specification - pub assume_specification [<u8>::isqrt] (n: u8) -> (root: u8)
+        30 |         (root as int + 1) * (root as int + 1) > n as int;
+        31 | 
+        33 |     ensures
+        34 |         root as int * root as int <= n as int,
 /home/milnes/projects/APAS-VERUS/src/vstdplus/sqrt.rs:37: assume_specification - pub assume_specification [<u128>::isqrt] (n: u128) -> (root: u128)
+        35 |         (root as int + 1) * (root as int + 1) > n as int;
+        36 | 
+        38 |     ensures
+        39 |         root as int * root as int <= n as int,
    Holes: 6 total
       6 × assume_specification
 ❌ vstdplus/threads_plus.rs
 /home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:13: external_body - #[verifier::external_body]
+        14 |     #[verifier::reject_recursive_types(Ret)]
+        15 |     pub struct JoinHandlePlus<Ret> { handle: std::thread::JoinHandle<Ret> }
 /home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:21: external_body - #[verifier::external_body]
+        22 |         pub fn is_finished(&self) -> (finished: bool) { self.handle.is_finished() }
 /home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:24: external_body - #[verifier::external_body]
+        25 |         pub fn join(self) -> (res: Result<Ret, ()>)
 /home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:39: external_body - #[verifier::external_body]
+        40 |     pub fn spawn_plus<F, Ret>(f: F) -> (handle: JoinHandlePlus<Ret>)
 /home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:55: external_body - #[verifier::external_body]
+        56 |     pub struct ThreadIdPlus { thread_id: std::thread::ThreadId }
 /home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:79: external_body - #[verifier::external_body]
+        80 |     pub fn thread_id_plus() -> (res: (ThreadIdPlus, Tracked<IsThreadPlus>))
 /home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:84: assume_new() - (id, Tracked::assume_new())
+        80 |     pub fn thread_id_plus() -> (res: (ThreadIdPlus, Tracked<IsThreadPlus>))
+            ...
+        82 |     {
+        83 |         let id = ThreadIdPlus { thread_id: std::thread::current().id() };
+        85 |     }
+        86 | 
 /home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:125: unsafe impl - unsafe impl<V> Sync for ThreadShareablePlus<V> {}
+       126 | unsafe impl<V> Send for ThreadShareablePlus<V> {}
 /home/milnes/projects/APAS-VERUS/src/vstdplus/threads_plus.rs:126: unsafe impl - unsafe impl<V> Send for ThreadShareablePlus<V> {}
+       127 | 
+       128 | }
    Holes: 9 total
       1 × Tracked::assume_new()
       2 × unsafe impl
@@ -644,24 +1786,24 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   98 clean (no holes)
+   285 clean (no holes)
    76 holed (contains holes)
-   174 total
+   361 total
 
 Proof Functions:
-   334 clean
+   359 clean
    61 holed
-   395 total
+   420 total
 
-Holes Found: 234 total
+Holes Found: 238 total
    8 × assume(false)
-   64 × assume()
+   78 × assume()
    1 × Tracked::assume_new()
    9 × assume_specification
    46 × admit()
    2 × unsafe impl
-   4 × unsafe {}
-   94 × external_body
+   7 × unsafe {}
+   81 × external_body
    1 × external_trait_specification
    1 × external_type_specification
    1 × external_trait_extension

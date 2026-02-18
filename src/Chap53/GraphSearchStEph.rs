@@ -25,19 +25,22 @@ pub mod GraphSearchStEph {
     pub struct SelectOne;
 
     pub trait GraphSearchStEphTrait<V: StT + Ord> {
-        /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V|), Parallelism Θ(1)
+        /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
+        /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; AVL set ops add log factor.
         fn graph_search<G, S>(graph: &G, source: V, strategy: &S)                         -> SearchResult<V>
         where
             G: Fn(&V) -> AVLTreeSetStEph<V>,
             S: SelectionStrategy<V>;
 
-        /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V|), Parallelism Θ(1)
+        /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
+        /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; AVL set ops add log factor.
         fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStEph<V>, strategy: &S) -> SearchResult<V>
         where
             G: Fn(&V) -> AVLTreeSetStEph<V>,
             S: SelectionStrategy<V>;
 
-        /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V|), Parallelism Θ(1)
+        /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
+        /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; uses SelectAll (BFS).
         fn reachable<G>(graph: &G, source: V)                                             -> AVLTreeSetStEph<V>
         where
             G: Fn(&V) -> AVLTreeSetStEph<V>;
@@ -56,7 +59,8 @@ pub mod GraphSearchStEph {
     }
 
     /// Generic graph search starting from single source.
-    /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V|), Parallelism Θ(1)
+    /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
+    /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search_multi.
     pub fn graph_search<V: StT + Ord, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
     where
         G: Fn(&V) -> AVLTreeSetStEph<V>,
@@ -66,8 +70,9 @@ pub mod GraphSearchStEph {
         graph_search_multi(graph, sources, strategy)
     }
 
-    /// Generic graph search starting from multiple sources.
-    /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V|), Parallelism Θ(1)
+    /// Generic graph search starting from multiple sources (Exercise 53.3).
+    /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
+    /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; AVL set ops add log factor.
     pub fn graph_search_multi<V: StT + Ord, G, S>(
         graph: &G,
         sources: AVLTreeSetStEph<V>,
@@ -112,8 +117,9 @@ pub mod GraphSearchStEph {
         SearchResult { visited, parent: None }
     }
 
-    /// Find all vertices reachable from source using breadth-first search.
-    /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(|V|), Parallelism Θ(1)
+    /// Find all vertices reachable from source (Problem 53.2) using SelectAll (BFS).
+    /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
+    /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
     pub fn reachable<V: StT + Ord, G>(graph: &G, source: V) -> AVLTreeSetStEph<V>
     where
         G: Fn(&V) -> AVLTreeSetStEph<V>,

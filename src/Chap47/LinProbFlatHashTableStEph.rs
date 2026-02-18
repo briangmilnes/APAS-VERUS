@@ -15,6 +15,8 @@ pub mod LinProbFlatHashTableStEph {
     impl<Key: StT, Value: StT, Metrics: Default> ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics>
         for LinProbFlatHashTableStEph
     {
+        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe find_slot then O(1) write.
         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: Key, value: Value) {
             let slot = Self::find_slot(table, &key);
             match &table.table[slot] {
@@ -35,6 +37,8 @@ pub mod LinProbFlatHashTableStEph {
             }
         }
 
+        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe sequence until found or empty.
         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> Option<Value> {
             let mut attempt = 0;
             while attempt < table.current_size {
@@ -51,6 +55,8 @@ pub mod LinProbFlatHashTableStEph {
             None
         }
 
+        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe until found or empty, then tombstone.
         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> B {
             let mut attempt = 0;
             while attempt < table.current_size {
@@ -72,6 +78,8 @@ pub mod LinProbFlatHashTableStEph {
             false
         }
 
+        /// - APAS: Work O(n + m + m'), Span O(n + m + m').
+        /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs from m slots, creates m' new slots, reinserts n pairs.
         fn resize(
             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>,
             new_size: N,
@@ -110,6 +118,8 @@ pub mod LinProbFlatHashTableStEph {
     impl<Key: StT, Value: StT, Metrics: Default> FlatHashTable<Key, Value, FlatEntry<Key, Value>, Metrics>
         for LinProbFlatHashTableStEph
     {
+        /// - APAS: Work O(1), Span O(1).
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — hash + addition + modulo.
         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key, attempt: N) -> N {
             let hash_val = (table.hash_fn)(key);
 
@@ -117,6 +127,8 @@ pub mod LinProbFlatHashTableStEph {
             (hash_val + attempt) % table.current_size
         }
 
+        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe until empty/deleted/matching slot.
         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> N {
             // Find first Empty or Deleted slot (can reuse Deleted slots for insertion)
             let mut attempt = 0;

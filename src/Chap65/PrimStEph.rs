@@ -43,7 +43,9 @@ pub mod PrimStEph {
         parent: Option<V>,
     }
 
-    /// Module-level function to create a new PQEntry
+    /// Module-level function to create a new PQEntry.
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn pq_entry_new<V: StT + Hash + Ord>(priority: OrderedFloat<f64>, vertex: V, parent: Option<V>) -> PQEntry<V> {
         PQEntry {
             priority,
@@ -53,10 +55,14 @@ pub mod PrimStEph {
     }
 
     impl<V: StT + Hash + Ord> Ord for PQEntry<V> {
+        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn cmp(&self, other: &Self) -> Ordering { self.priority.cmp(&other.priority) }
     }
 
     impl<V: StT + Hash + Ord> PartialOrd for PQEntry<V> {
+        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
     }
 
@@ -71,15 +77,8 @@ pub mod PrimStEph {
     ///
     /// Priority: p(v) = min_{x∈X} w(x,v)
     ///
-    /// APAS: Work O(m lg n), Span O(m lg n)
-    /// claude-4-sonet: Work O(m lg n), Span O(m lg n) [sequential]
-    ///
-    /// Arguments:
-    /// - graph: Weighted undirected graph
-    /// - start: Starting vertex (arbitrary choice)
-    ///
-    /// Returns:
-    /// - Set of edges forming the MST
+    /// - APAS: Work O(m lg n), Span O(m lg n)
+    /// - Claude-Opus-4.6: Work O(m lg n), Span O(m lg n) — agrees with APAS; sequential, uses BinaryHeapPQ
     pub fn prim_mst<V: StT + Hash + Ord + Display>(
         graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
         start: &V,
@@ -135,6 +134,8 @@ pub mod PrimStEph {
         mst_edges
     }
 
+    /// - APAS: (no cost stated) — implicit in priority-first search
+    /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges
     fn get_neighbors<V: StT + Hash + Ord>(graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>, v: &V) -> SetStEph<V> {
         let mut neighbors = SetLit![];
         for edge in graph.labeled_edges().iter() {
@@ -148,6 +149,8 @@ pub mod PrimStEph {
         neighbors
     }
 
+    /// - APAS: (no cost stated) — implicit in priority-first search
+    /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges
     fn get_edge_weight<V: StT + Hash + Ord>(
         graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
         u: &V,
@@ -162,10 +165,9 @@ pub mod PrimStEph {
         None
     }
 
-    /// Compute total MST weight
-    ///
-    /// APAS: Work O(|MST|), Span O(|MST|)
-    /// claude-4-sonet: Work O(|MST|), Span O(|MST|)
+    /// Compute total MST weight.
+    /// - APAS: (no cost stated) — utility function
+    /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, OrderedFloat<f64>>>) -> OrderedFloat<f64> {
         let mut total = OrderedFloat(0.0);
         for edge in mst_edges.iter() {

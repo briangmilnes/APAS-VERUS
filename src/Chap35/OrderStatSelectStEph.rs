@@ -13,7 +13,8 @@ pub mod OrderStatSelectStEph {
     pub type T<T> = ArraySeqStEphS<T>;
 
     pub trait OrderStatSelectStEphTrait<T: StT + Ord> {
-        /// claude-4-sonet: Work Θ(n) expected, Θ(n²) worst case; Span Θ(n) (sequential), Parallelism Θ(1)
+        /// - APAS: Work O(n) expected, Span O(lg² n) expected
+        /// - Claude-Opus-4.6: Work O(n²) expected per level (tabulate uses O(n) scan per element), Span O(n) (sequential) — partition via tabulate is O(n²) not O(n) filter
         fn select(&self, k: N) -> Option<T>;
     }
 
