@@ -10,20 +10,20 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ Exercise21_6.rs
 ✓ Exercise21_7.rs
 ❌ Exercise21_8.rs
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:140: assume() - assume(1 < k as int + 1);
-        99 |     pub fn is_prime(n: N) -> (prime: B)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap21/Exercise21_8.rs:148: assume() - assume(1 < k as int + 1);
+       107 |     pub fn is_prime(n: N) -> (prime: B)
             ...
-       138 |             assert(n as int % 1 == 0) by (nonlinear_arith) requires n >= 2;
-       139 |             // k >= 1 so 1 < k+1, triggering the recursive case.
-       141 |             assert(n as int % 1 == 0);
-       142 | 
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:151: assume() - assume(ones.seq@.len() as int == spec_divisor_count(n as int, 1, k as int + 1));
-        99 |     pub fn is_prime(n: N) -> (prime: B)
+       146 |             assert(n as int % 1 == 0) by (nonlinear_arith) requires n >= 2;
+       147 |             // k >= 1 so 1 < k+1, triggering the recursive case.
+       149 |             assert(n as int % 1 == 0);
+       150 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap21/Exercise21_8.rs:159: assume() - assume(ones.seq@.len() as int == spec_divisor_count(n as int, 1, k as int + 1));
+       107 |     pub fn is_prime(n: N) -> (prime: B)
             ...
-       149 |             // Bridge: the filter count equals the ghost divisor count.
-       150 |             // This is the proof hole — filter's spec doesn't give us the exact count.
-       152 | 
-       153 |             // Now prove: prime <==> spec_is_prime(n as int).
+       157 |             // Bridge: the filter count equals the ghost divisor count.
+       158 |             // This is the proof hole — filter's spec doesn't give us the exact count.
+       160 | 
+       161 |             // Now prove: prime <==> spec_is_prime(n as int).
    Holes: 2 total
       2 × assume()
    Proof functions: 3 total (3 clean, 0 holed)

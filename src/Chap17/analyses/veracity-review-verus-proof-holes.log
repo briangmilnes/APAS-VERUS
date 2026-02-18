@@ -1,15 +1,26 @@
 $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap17/
 
 ❌ MathSeq.rs
-/home/milnes/projects/APAS-VERUS-review/src/Chap17/MathSeq.rs:491: assume() - proof { assume(r == (self@ == other@)); }
-       487 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:670: assume() - proof { assume(cloned@ == self@); }
+       666 |         fn clone(&self) -> (cloned: Self)
             ...
-       489 |         {
-       490 |             let r = self.data == other.data;
-       492 |             r
-       493 |         }
-   Holes: 1 total
-      1 × assume()
+       668 |         {
+       669 |             let cloned = MathSeqS { data: self.data.clone() };
+       671 |             cloned
+       672 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:688: assume() - proof { assume(r == (self@ == other@)); }
+       684 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       686 |         {
+       687 |             let r = self.data == other.data;
+       689 |             r
+       690 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:697: error: bare_impl - impl<T: StT + Hash> MathSeqS<T> { — `impl MathSeqS` without trait; file defines [MathSeqSTrait]
+       698 |         pub fn iter_mut(&mut self) -> IterMut<'_, T> {
+       699 |             self.data.iter_mut()
+   Holes: 2 total
+      2 × assume()
+   Errors: 1 bare impl(s) in file with trait definition
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -25,5 +36,7 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 1 total
-   1 × assume()
+Holes Found: 2 total
+   2 × assume()
+
+Errors: 1 bare impl(s) in files with trait definitions

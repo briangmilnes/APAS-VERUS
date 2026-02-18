@@ -8,6 +8,17 @@ alwaysApply: true
 
 Full documentation: `docs/ProofTimeTest.md`
 
+## When to write PTTs
+
+Only create PTTs for two cases:
+
+1. **Iterator verification** — confirm that a module's iterators prove correctly
+   (loop-match, for-iter, for-consuming, etc.).
+2. **Complicated callability** — when a function's `requires` clause is complex
+   and you're not confident callers can satisfy it, write a PTT exercising the call.
+
+Do not create PTTs speculatively or for simple functions with straightforward specs.
+
 ## compile_ptt — compile library for PTTs
 
 Before running PTTs, compile the library with exported specs. **Both -o and --export are required.**

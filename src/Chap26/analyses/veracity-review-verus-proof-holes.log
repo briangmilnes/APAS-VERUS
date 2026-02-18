@@ -1,26 +1,64 @@
-$ ~/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap26/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap26/
 
 ✓ DivConReduceMtPer.rs
    3 clean proof functions
 ✓ DivConReduceStPer.rs
 ❌ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:320: external_body - #[verifier::external_body]
-       321 |     pub fn sort_and_split(points: &Vec<Point>) -> (result: (Vec<Point>, Vec<Point>))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:338: external_body - #[verifier::external_body]
-       339 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
-   Holes: 2 total
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:210: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from));
+       163 |     proof fn lemma_combined_cycle(
+            ...
+       208 |                 assert(spec_point_eq(lt[li].to, lt[((li + 1) % ln_i)].from));
+       209 |                 // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
+       211 |             } else if i == ln_i - 1 {
+       212 |                 assert(combined[i].to == er_to);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:227: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from));
+       163 |     proof fn lemma_combined_cycle(
+            ...
+       225 |                 assert(spec_point_eq(rt[ri].to, rt[((ri + 1) % rn_i)].from));
+       226 |                 // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
+       228 |             } else {
+       229 |                 assert(i == ln_i + rn_i - 1);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:446: external_body - #[verifier::external_body]
+       447 |     pub fn sort_and_split(points: &Vec<Point>) -> (result: (Vec<Point>, Vec<Point>))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:464: external_body - #[verifier::external_body]
+       465 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:480: error: bare_impl - impl Point { — `impl Point` without trait; file defines [ETSPMtTrait]
+       481 |         /// Euclidean distance between two points.
+       482 |         pub fn distance(&self, other: &Point) -> f64 {
+   Holes: 4 total
+      2 × assume()
       2 × external_body
-   Proof functions: 2 total (2 clean, 0 holed)
+   Errors: 1 bare impl(s) in file with trait definition
+   Proof functions: 4 total (4 clean, 0 holed)
 ❌ ETSPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:304: external_body - #[verifier::external_body]
-       305 |     pub fn sort_and_split(points: &Vec<Point>) -> (result: (Vec<Point>, Vec<Point>))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:322: external_body - #[verifier::external_body]
-       323 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
-   Holes: 2 total
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:197: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from));
+       147 |     proof fn lemma_combined_cycle(
+            ...
+       195 | 
+       196 |                 // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
+       198 |             } else if i == ln_i - 1 {
+       199 |                 // Bridge: left -> right.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:217: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from));
+       147 |     proof fn lemma_combined_cycle(
+            ...
+       215 | 
+       216 |                 // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
+       218 |             } else {
+       219 |                 // Bridge: right -> left (wraps to index 0).
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:424: external_body - #[verifier::external_body]
+       425 |     pub fn sort_and_split(points: &Vec<Point>) -> (result: (Vec<Point>, Vec<Point>))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:442: external_body - #[verifier::external_body]
+       443 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:458: error: bare_impl - impl Point { — `impl Point` without trait; file defines [ETSPStTrait]
+       459 |         /// Euclidean distance between two points.
+       460 |         /// - APAS: N/A — helper function.
+   Holes: 4 total
+      2 × assume()
       2 × external_body
-   Proof functions: 2 total (2 clean, 0 holed)
+   Errors: 1 bare impl(s) in file with trait definition
+   Proof functions: 3 total (3 clean, 0 holed)
 ✓ MergeSortMtPer.rs
-   1 clean proof function
+   4 clean proof functions
 ✓ MergeSortStPer.rs
    1 clean proof function
 ✓ ScanDCMtPer.rs
@@ -38,9 +76,12 @@ Modules:
    8 total
 
 Proof Functions:
-   11 clean
+   17 clean
    0 holed
-   11 total
+   17 total
 
-Holes Found: 4 total
+Holes Found: 8 total
+   4 × assume()
    4 × external_body
+
+Errors: 2 bare impl(s) in files with trait definitions

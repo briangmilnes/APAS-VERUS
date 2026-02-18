@@ -10,7 +10,10 @@ pub mod InsertionSortStEph {
 
     verus! {
 
-broadcast use vstd::seq_lib::group_to_multiset_ensures;
+broadcast use {
+    vstd::seq_lib::group_to_multiset_ensures,
+    vstd::seq::group_seq_axioms,
+};
 
 pub open spec fn sorted_prefix<T: TotalOrder>(v: &[T], i: int) -> bool {
     forall|k: int, l: int| 0 <= k < l < i ==> T::le(#[trigger] v[k], #[trigger] v[l])

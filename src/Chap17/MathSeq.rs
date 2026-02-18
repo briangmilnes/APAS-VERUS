@@ -28,6 +28,20 @@ pub mod MathSeq {
 
     verus! {
 
+        // Table of Contents
+        // 1. module
+        // 2. imports
+        // 3. broadcast use
+        // 4. type definitions
+        // 5. view impls
+        // 6. spec fns
+        // 8. traits
+        // 9. impls
+        // 10. iterators
+        // 11. derive impls in verus!
+
+        // 3. broadcast use
+
         broadcast use {
             // Vec
             vstd::std_specs::vec::group_vec_axioms,
@@ -47,7 +61,9 @@ pub mod MathSeq {
             crate::vstdplus::feq::feq::group_feq_axioms,
             crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
         };
-        
+
+        // 4. type definitions
+
         pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
             &&& obeys_key_model::<T>()
                 &&& obeys_feq_full::<T>()
@@ -57,6 +73,8 @@ pub mod MathSeq {
         pub struct MathSeqS<T: StT> {
             pub data: Vec<T>,
         }
+
+        // 5. view impls
         
         impl<T: StT> View for MathSeqS<T> {
             type V = Seq<T::V>;
@@ -65,47 +83,191 @@ pub mod MathSeq {
                 self.data@.map_values(|t: T| t@)
             }
         }
-        
-        impl<T: StT + Hash> MathSeqS<T> {
-            
-            pub open spec fn spec_len(&self) -> nat {
-                self@.len()
-            }
-            
-            pub open spec fn spec_nth(&self, i: int) -> T::V
-                recommends 0 <= i < self.spec_len(),
-            {
-                self@[i]
-            }
-            
-            pub open spec fn spec_is_empty(&self) -> bool {
-                self.spec_len() == 0
-            }
-            
-            pub open spec fn spec_is_singleton(&self) -> bool {
-                self.spec_len() == 1
-            }
-            
+
+        // 6. spec fns
+
+        pub open spec fn spec_clamp(val: int, max: int) -> int {
+            if val < 0 { 0 } else if val > max { max } else { val }
+        }
+
+        // 8. traits
+
+        pub trait MathSeqSTrait<T: StT>: Sized + View<V = Seq<T::V>> {
+            spec fn spec_len(&self) -> nat;
+
+            spec fn spec_nth(&self, i: int) -> T::V
+                recommends 0 <= i < self.spec_len();
+
+            spec fn spec_is_empty(&self) -> bool;
+
+            spec fn spec_is_singleton(&self) -> bool;
+
+            /// Raw data access for clone-level reasoning.
+            spec fn spec_seq(&self) -> Seq<T>;
+
             /// - APAS: no cost spec (definitions chapter).
             /// - Claude-Opus-4.6: O(n) — Vec allocation + clone fill.
-            pub fn new(length: N, init_value: T) -> (new_seq: Self)
+            fn new(length: N, init_value: T) -> (new_seq: Self)
                 ensures
-                new_seq.spec_len() == length,
-            forall|i: int| #![auto] 0 <= i < length ==> cloned(init_value, new_seq.data@[i]),
+                    new_seq.spec_len() == length,
+                    forall|i: int| #![auto] 0 <= i < length ==> cloned(init_value, new_seq.spec_seq()[i]);
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — direct index write.
+            fn set(&mut self, index: N, value: T) -> (success: bool)
+                ensures
+                    success ==> index < old(self).spec_len()
+                        && self.spec_len() == old(self).spec_len()
+                        && self@[index as int] == value@
+                        && forall|i: int| 0 <= i < self.spec_len() && i != index as int ==> self@[i] == old(self)@[i],
+                    !success ==> index >= old(self).spec_len() && self@ == old(self)@;
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1).
+            fn length(&self) -> (len: N)
+                ensures len == self.spec_len();
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — direct index read.
+            fn nth(&self, index: N) -> (elem: &T)
+                requires index < self.spec_len()
+                ensures elem@ == self@[index as int];
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1).
+            fn empty() -> (empty_seq: Self)
+                ensures empty_seq.spec_len() == 0;
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1).
+            fn singleton(item: T) -> (singleton: Self)
+                ensures
+                    singleton.spec_len() == 1,
+                    singleton@[0] == item@;
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: amortized O(1) — Vec::push.
+            fn add_last(&mut self, value: T)
+                ensures
+                    self.spec_len() == old(self).spec_len() + 1,
+                    self@[self.spec_len() - 1] == value@,
+                    forall|i: int| 0 <= i < old(self).spec_len() ==> self@[i] == old(self)@[i];
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — Vec::pop.
+            fn delete_last(&mut self) -> (shortened: Option<T>)
+                ensures
+                    old(self).spec_len() == 0 ==> shortened is None && self@ == old(self)@,
+                    old(self).spec_len() > 0  ==> shortened is Some
+                        && shortened->Some_0@ == old(self)@[old(self).spec_len() - 1]
+                        && self.spec_len() == old(self).spec_len() - 1
+                        && forall|i: int| 0 <= i < self.spec_len() ==> self@[i] == old(self)@[i];
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1).
+            fn is_empty(&self) -> (emptiness: bool)
+                ensures emptiness == self.spec_is_empty();
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1).
+            fn is_singleton(&self) -> (singularity: bool)
+                ensures singularity == self.spec_is_singleton();
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — move, no copy.
+            fn from_vec(data: Vec<T>) -> (seq: Self)
+                ensures seq.spec_seq() == data@;
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(n) — delegates to new.
+            fn with_len(length: N, init_value: T) -> (seq_of_len_value: Self)
+                ensures
+                    seq_of_len_value.spec_len() == length,
+                    forall|i: int| #![auto] 0 <= i < length ==> cloned(init_value, seq_of_len_value.spec_seq()[i]);
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — returns slice reference.
+            fn subseq(&self, start: N, length: N) -> (subseq: &[T])
+                ensures
+                    subseq@.len() <= length,
+                ({
+                    let s = spec_clamp(start as int, self.spec_seq().len() as int);
+                    let e = spec_clamp((start + length) as int, self.spec_seq().len() as int);
+                    subseq@ == self.spec_seq().subrange(s, e)
+                });
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(length) — copies subrange.
+            fn subseq_copy(&self, start: N, length: N) -> (subseq: Self) where T: Copy
+                requires
+                    start as int + length as int <= self.spec_seq().len(),
+                ensures
+                    subseq.spec_len() == length,
+                    subseq.spec_seq() == self.spec_seq().subrange(start as int, (start + length) as int);
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(n) — builds index vector.
+            fn domain(&self) -> (domain: Vec<N>)
+                ensures domain@.len() == self.spec_len();
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(n) expected — hash set dedup.
+            fn range(&self) -> (range: Vec<T>)
+                requires valid_key_type::<T>()
+                ensures
+                    range@.len() <= self.spec_seq().len(),
+                    range@.no_duplicates();
+
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(n) expected — hash map counting, two passes.
+            fn multiset_range(&self) -> (range: Vec<(N, T)>)
+                requires
+                    valid_key_type::<T>(),
+                    forall|k1: T, k2: T| k1@ == k2@ ==> k1 == k2,
+                ensures
+                    range@.len() <= self.spec_seq().len();
+
+            /// Borrow iterator over the sequence elements.
+            /// - APAS: no cost spec.
+            /// - Claude-Opus-4.6: O(1) — returns iterator wrapper.
+            fn iter(&self) -> (it: MathSeqIter<'_, T>)
+                ensures
+                    it@.0 == 0,
+                    it@.1 == self.spec_seq(),
+                    iter_invariant(&it);
+        }
+
+        // 9. impls
+
+        impl<T: StT + Hash> MathSeqSTrait<T> for MathSeqS<T> {
+
+            open spec fn spec_len(&self) -> nat {
+                self@.len()
+            }
+
+            open spec fn spec_nth(&self, i: int) -> T::V {
+                self@[i]
+            }
+
+            open spec fn spec_is_empty(&self) -> bool {
+                self.spec_len() == 0
+            }
+
+            open spec fn spec_is_singleton(&self) -> bool {
+                self.spec_len() == 1
+            }
+
+            open spec fn spec_seq(&self) -> Seq<T> {
+                self.data@
+            }
+
+            fn new(length: N, init_value: T) -> (new_seq: Self)
             {
                 let v = vec![init_value; length];
                 MathSeqS { data: v }
             }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1) — direct index write.
-            pub fn set(&mut self, index: N, value: T) -> (success: bool)
-                ensures
-                success ==> index < old(self).spec_len()
-                && self.spec_len() == old(self).spec_len()
-                && self@[index as int] == value@
-                && forall|i: int| 0 <= i < self.spec_len() && i != index as int ==> self@[i] == old(self)@[i],
-            !success ==> index >= old(self).spec_len() && self@ == old(self)@,
+
+            fn set(&mut self, index: N, value: T) -> (success: bool)
             {
                 if index < self.data.len() {
                     self.data.set(index, value);
@@ -114,114 +276,58 @@ pub mod MathSeq {
                     false
                 }
             }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1).
-            pub fn length(&self) -> (len: N)
-                ensures len == self.spec_len(),
+
+            fn length(&self) -> (len: N)
             {
                 self.data.len()
             }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1) — direct index read.
-            pub fn nth(&self, index: N) -> (elem: &T)
-                requires index < self.spec_len(),
-            ensures elem@ == self@[index as int],
+
+            fn nth(&self, index: N) -> (elem: &T)
             {
                 &self.data[index]
             }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1).
-            pub fn empty() -> (empty_seq: Self)
-                ensures empty_seq.spec_len() == 0,
+
+            fn empty() -> (empty_seq: Self)
             {
                 MathSeqS { data: Vec::new() }
             }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1).
-            pub fn singleton(item: T) -> (singleton: Self)
-                ensures
-                singleton.spec_len() == 1,
-                singleton@[0] == item@,
+
+            fn singleton(item: T) -> (singleton: Self)
             {
                 MathSeqS { data: vec![item] }
             }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: amortized O(1) — Vec::push.
-            pub fn add_last(&mut self, value: T)
-                ensures
-                self.spec_len() == old(self).spec_len() + 1,
-            self@[self.spec_len() - 1] == value@,
-            forall|i: int| 0 <= i < old(self).spec_len() ==> self@[i] == old(self)@[i],
+
+            fn add_last(&mut self, value: T)
             {
                 self.data.push(value);
             }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1) — Vec::pop.
-            pub fn delete_last(&mut self) -> (shortened: Option<T>)
-                ensures
-                old(self).spec_len() == 0 ==> shortened is None && self@ == old(self)@,
-                old(self).spec_len() > 0  ==> shortened is Some
-                && shortened->Some_0@ == old(self)@[old(self).spec_len() - 1]
-                && self.spec_len() == old(self).spec_len() - 1
-                && forall|i: int| 0 <= i < self.spec_len() ==> self@[i] == old(self)@[i],
+
+            fn delete_last(&mut self) -> (shortened: Option<T>)
             {
                 self.data.pop()
             }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1).
-            pub fn is_empty(&self) -> (emptiness: bool)
-                ensures emptiness == self.spec_is_empty(),
+
+            fn is_empty(&self) -> (emptiness: bool)
             {
                 self.data.len() == 0
             }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1).
-            pub fn is_singleton(&self) -> (singularity: bool)
-                ensures singularity == self.spec_is_singleton(),
+
+            fn is_singleton(&self) -> (singularity: bool)
             {
                 self.data.len() == 1
             }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1) — move, no copy.
-            pub fn from_vec(data: Vec<T>) -> (seq: Self)
-                ensures seq.data@ == data@,
+
+            fn from_vec(data: Vec<T>) -> (seq: Self)
             {
                 MathSeqS { data }
             }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(n) — delegates to new.
-            pub fn with_len(length: N, init_value: T) -> (seq_of_len_value: Self)
-                ensures
-                seq_of_len_value.spec_len() == length,
-                forall|i: int| #![auto] 0 <= i < length ==> cloned(init_value, seq_of_len_value.data@[i]),
+
+            fn with_len(length: N, init_value: T) -> (seq_of_len_value: Self)
             {
                 Self::new(length, init_value)
             }
-            
-            pub open spec fn spec_clamp(val: int, max: int) -> int {
-                if val < 0 { 0 } else if val > max { max } else { val }
-            }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1) — returns slice reference.
-            pub fn subseq(&self, start: N, length: N) -> (subseq: &[T])
-                ensures
-                subseq@.len() <= length,
-            ({
-                let s = Self::spec_clamp(start as int, self.data@.len() as int);
-                let e = Self::spec_clamp((start + length) as int, self.data@.len() as int);
-                subseq@ == self.data@.subrange(s, e)
-            }),
+
+            fn subseq(&self, start: N, length: N) -> (subseq: &[T])
             {
                 let n = self.data.len();
                 let s = start.min(n);
@@ -229,27 +335,17 @@ pub mod MathSeq {
                 let slice: &[T] = self.data.as_slice();
                 slice_subrange(slice, s, e)
             }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(length) — copies subrange.
-            pub fn subseq_copy(&self, start: N, length: N) -> (subseq: Self) where T: Copy
-                requires
-                  start as int + length as int <= self.data@.len(),
-                ensures
-                  subseq.spec_len() == length,
-            subseq.data@ == self.data@.subrange(start as int, (start + length) as int),
+
+            fn subseq_copy(&self, start: N, length: N) -> (subseq: Self) where T: Copy
             {
-                let _n = self.data.len(); // exec call bounds start + length <= usize::MAX
+                let _n = self.data.len();
                 let end = start + length;
                 let slice = vstd::slice::slice_subrange(self.data.as_slice(), start, end);
                 let vec = vstd::slice::slice_to_vec(slice);
                 MathSeqS { data: vec }
             }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(n) — builds index vector.
-            pub fn domain(&self) -> (domain: Vec<N>)
-                ensures domain@.len() == self.spec_len(),
+
+            fn domain(&self) -> (domain: Vec<N>)
             {
                 let mut v = Vec::new();
                 let len = self.data.len();
@@ -257,22 +353,16 @@ pub mod MathSeq {
                 while i < len
                     invariant
                     i <= len,
-                v@.len() == i as int,
-                decreases len - i,
+                    v@.len() == i as int,
+                    decreases len - i,
                 {
                     v.push(i);
                     i = i + 1;
                 }
                 v
             }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(n) expected — hash set dedup.
-            pub fn range(&self) -> (range: Vec<T>)
-                requires valid_key_type::<T>(),
-                ensures
-                  range@.len() <= self.data@.len(),
-                  range@.no_duplicates(),
+
+            fn range(&self) -> (range: Vec<T>)
             {
                 let mut seen: HashSetWithViewPlus<T> = HashSetWithViewPlus::new();
                 let mut out: Vec<T> = Vec::new();
@@ -280,36 +370,28 @@ pub mod MathSeq {
                 while i < self.data.len()
                     invariant
                     i <= self.data@.len(),
-                out@.len() <= i,
-                out@.no_duplicates(),
-                valid_key_type::<T>(),
-                seen@.finite(),
-                forall|v: T::V| seen@.contains(v) <==> out@.map(|_j: int, t: T| t@).contains(v),
-                decreases self.data.len() - i,
+                    out@.len() <= i,
+                    out@.no_duplicates(),
+                    valid_key_type::<T>(),
+                    seen@.finite(),
+                    forall|v: T::V| seen@.contains(v) <==> out@.map(|_j: int, t: T| t@).contains(v),
+                    decreases self.data.len() - i,
                 {
                     let x = self.data[i].clone();
                     let not_seen = !seen.contains(&x);
                     if not_seen {
                         proof {
-                            // x@ not in seen@, so not in out@.map(...)
                             assert(!seen@.contains(x@));
                             assert(!out@.map(|_j: int, t: T| t@).contains(x@));
-                            
-                            // Use lemma to get forall|j| out@[j]@ != x@
+
                             lemma_map_not_contains_implies_all_ne(out@, x@);
-                            
-                            // By view injectivity, out@[j] != x
+
                             assert forall|j: int| 0 <= j < out@.len() implies out@[j] != x by {
                                 assert(out@[j]@ != x@);
                             }
-                            
-                            // seq![x].no_duplicates() trivially (length 1)
+
                             assert(seq![x].no_duplicates());
-                            
-                            // out and seq![x] are disjoint
                             assert(out@.disjoint(seq![x]));
-                            
-                            // lemma gives (out@ + seq![x]).no_duplicates()
                             vstd::seq_lib::lemma_no_dup_in_concat(out@, seq![x]);
                         }
                         let ghost old_seen = seen@;
@@ -317,62 +399,41 @@ pub mod MathSeq {
                         let ghost old_out_mapped = old_out.map(|_j: int, t: T| t@);
                         let x_clone = x.clone();
                         proof {
-                            // Clone preserves view under obeys_feq_full
                             lemma_cloned_view_eq(x, x_clone);
                             assert(x_clone@ == x@);
                         }
                         seen.insert(x_clone);
                         out.push(x);
                         proof {
-                            // After insert: seen@ == old_seen.insert(x@)
                             assert(seen@ =~= old_seen.insert(x@));
-                            
-                            // After push: out@ == old_out.push(x)
                             assert(out@ =~= old_out.push(x));
-                            
-                            // Map commutes with push
+
                             let f = |t: T| t@;
                             old_out.lemma_push_map_commute(f, x);
                             let new_mapped = out@.map_values(f);
                             assert(new_mapped =~= old_out_mapped.push(x@));
-                            
-                            // map and map_values are the same for our function
                             assert(out@.map(|_j: int, t: T| t@) =~= new_mapped);
-                            
-                            // Now prove the invariant
+
                             assert forall|v: T::V| seen@.contains(v) <==> out@.map(|_j: int, t: T| t@).contains(v) by {
-                                // new_mapped == old_out_mapped.push(x@)
-                                // contains(v) on a pushed seq: exists in old OR equals pushed element
                                 if v == x@ {
-                                    // x@ is at the end of new_mapped
                                     assert(new_mapped.last() == x@);
                                     assert(new_mapped.contains(x@));
                                     assert(seen@.contains(x@));
                                 } else {
-                                    // v != x@, so seen@.contains(v) <==> old_seen.contains(v)
                                     assert(seen@.contains(v) <==> old_seen.contains(v));
-                                    
-                                    // new_mapped == old_out_mapped.push(x@)
-                                    // For v != x@: new_mapped.contains(v) <==> old_out_mapped.contains(v)
                                     if old_out_mapped.contains(v) {
-                                        // Get witness: some i with old_out_mapped[i] == v
                                         let wit = choose|i: int| 0 <= i < old_out_mapped.len() && old_out_mapped[i] == v;
-                                        // new_mapped[wit] == old_out_mapped[wit] == v (since wit < old len)
                                         assert(new_mapped[wit] == v);
                                         assert(new_mapped.contains(v));
                                     }
                                     if new_mapped.contains(v) {
-                                        // Get witness: some i with new_mapped[i] == v
                                         let wit = choose|i: int| 0 <= i < new_mapped.len() && new_mapped[i] == v;
-                                        // If wit < old_out_mapped.len(), old has it
-                                        // If wit == old_out_mapped.len(), new_mapped[wit] == x@ != v
                                         if wit < old_out_mapped.len() {
                                             assert(old_out_mapped[wit] == v);
                                             assert(old_out_mapped.contains(v));
                                         } else {
-                                            // wit == old_out_mapped.len(), so new_mapped[wit] == x@
                                             assert(new_mapped[wit] == x@);
-                                            assert(false); // contradiction: x@ == v but v != x@
+                                            assert(false);
                                         }
                                     }
                                 }
@@ -383,21 +444,14 @@ pub mod MathSeq {
                 }
                 out
             }
-            
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(n) expected — hash map counting, two passes.
-            pub fn multiset_range(&self) -> (range: Vec<(N, T)>)
-                requires
-                    valid_key_type::<T>(),
-                    forall|k1: T, k2: T| k1@ == k2@ ==> k1 == k2,
-                ensures
-                    range@.len() <= self.data@.len(),
+
+            fn multiset_range(&self) -> (range: Vec<(N, T)>)
             {
                 let mut counts: HashMapWithView<T, N> = HashMapWithView::with_capacity(self.data.len());
                 let mut order: Vec<T> = Vec::new();
                 let mut i: usize = 0;
                 let len = self.data.len();
-                
+
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 while i < len
                     invariant
@@ -411,13 +465,12 @@ pub mod MathSeq {
                     let x = self.data[i].clone();
                     let ghost old_counts = counts@;
                     let ghost old_order = order@;
-                    
+
                     if counts.contains_key(&x) {
                         let old_count = *counts.get(&x).unwrap();
                         if old_count < usize::MAX {
                             counts.insert(x, old_count + 1);
                             proof {
-                                // insert preserves existing keys, order unchanged
                                 assert forall|idx: int| #![auto] 0 <= idx < order@.len()
                                     implies counts@.contains_key(order@[idx]@) by {
                                     assert(old_counts.contains_key(order@[idx]@));
@@ -427,13 +480,11 @@ pub mod MathSeq {
                     } else {
                         let x2 = x.clone();
                         proof {
-                            // cloned(x, x2), so x == x2, so x@ == x2@
                             assert(cloned(x, x2));
                         }
                         counts.insert(x2, 1);
                         order.push(x);
                         proof {
-                            // counts@ == old_counts.insert(x2@, 1) == old_counts.insert(x@, 1)
                             assert(counts@.contains_key(x@));
                             assert(order@ =~= old_order.push(x));
                             assert forall|idx: int| #![auto] 0 <= idx < order@.len()
@@ -447,13 +498,13 @@ pub mod MathSeq {
                     }
                     i = i + 1;
                 }
-                
+
                 let ghost final_counts = counts@;
-                
+
                 let mut range: Vec<(N, T)> = Vec::new();
                 let mut j: usize = 0;
                 let order_len = order.len();
-                
+
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 while j < order_len
                     invariant
@@ -468,37 +519,26 @@ pub mod MathSeq {
                 {
                     let x = order[j].clone();
                     proof {
-                        // We have: final_counts.contains_key(order[j]@)
                         assert(final_counts.contains_key(order@[j as int]@));
-                        // Clone gives cloned(order[j], x), by axiom: order[j] == x
                         assert(cloned(order@[j as int], x));
-                        // Therefore x@ == order[j]@ and counts@.contains_key(x@)
                         assert(counts@.contains_key(x@));
                     }
-                    // HashMapWithView::get: is_some <==> contains_key(k@)
                     let opt_count = counts.get(&x);
                     let count = *opt_count.unwrap();
                     range.push((count, x));
                     j = j + 1;
                 }
-                
+
                 range
             }
 
-            /// Borrow iterator over the sequence elements.
-            /// - APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1) — returns iterator wrapper.
-            pub fn iter(&self) -> (it: MathSeqIter<'_, T>)
-                ensures
-                    it@.0 == 0,
-                    it@.1 == self.data@,
-                    iter_invariant(&it),
+            fn iter(&self) -> (it: MathSeqIter<'_, T>)
             {
                 MathSeqIter { inner: self.data.iter() }
             }
         }
 
-    // ── 10. iterators ────────────────────────────────────────────
+    // 10. iterators
 
     /// Borrow iterator wrapper with closed spec view.
     #[verifier::reject_recursive_types(T)]
@@ -620,9 +660,15 @@ pub mod MathSeq {
         }
     }
 
+    // 11. derive impls in verus!
+
     impl<T: StT> Clone for MathSeqS<T> {
-        fn clone(&self) -> Self {
-            MathSeqS { data: self.data.clone() }
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            let cloned = MathSeqS { data: self.data.clone() };
+            proof { assume(cloned@ == self@); }
+            cloned
         }
     }
 
@@ -646,8 +692,8 @@ pub mod MathSeq {
 
     } // verus!
 
-    // Mutable iteration stays outside verus! — Verus does not support &mut
-    // in return position or trait impls.
+    // 13. derive impls outside verus!
+
     impl<T: StT + Hash> MathSeqS<T> {
         pub fn iter_mut(&mut self) -> IterMut<'_, T> {
             self.data.iter_mut()
@@ -684,6 +730,8 @@ pub mod MathSeq {
         }
     }
     
+    // 12. macros
+
     #[macro_export]
     macro_rules! MathSeqSLit {
         () => {

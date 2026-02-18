@@ -58,63 +58,8 @@ pub mod BalBinTreeStEph {
 
     //		5. spec functions
 
-    impl<T> BalBinTree<T> {
-        pub open spec fn spec_size(self) -> nat
-            decreases self,
-        {
-            match self {
-                BalBinTree::Leaf => 0,
-                BalBinTree::Node(node) => 1 + node.left.spec_size() + node.right.spec_size(),
-            }
-        }
-
-        pub open spec fn spec_height(self) -> nat
-            decreases self,
-        {
-            match self {
-                BalBinTree::Leaf => 0,
-                BalBinTree::Node(node) => {
-                    let lh = node.left.spec_height();
-                    let rh = node.right.spec_height();
-                    1 + if lh >= rh { lh } else { rh }
-                }
-            }
-        }
-
-        pub open spec fn spec_in_order(self) -> Seq<T>
-            decreases self,
-        {
-            match self {
-                BalBinTree::Leaf => Seq::empty(),
-                BalBinTree::Node(node) =>
-                    node.left.spec_in_order() + seq![node.value] + node.right.spec_in_order(),
-            }
-        }
-
-        pub open spec fn spec_pre_order(self) -> Seq<T>
-            decreases self,
-        {
-            match self {
-                BalBinTree::Leaf => Seq::empty(),
-                BalBinTree::Node(node) =>
-                    seq![node.value] + node.left.spec_pre_order() + node.right.spec_pre_order(),
-            }
-        }
-
-        pub open spec fn spec_post_order(self) -> Seq<T>
-            decreases self,
-        {
-            match self {
-                BalBinTree::Leaf => Seq::empty(),
-                BalBinTree::Node(node) =>
-                    node.left.spec_post_order() + node.right.spec_post_order() + seq![node.value],
-            }
-        }
-
-        pub open spec fn spec_is_leaf(self) -> bool {
-            self is Leaf
-        }
-    }
+    // spec_size, spec_height, spec_in_order, spec_pre_order, spec_post_order
+    // are defined in impl BalBinTreeTrait for BalBinTree below.
 
     //		6. proof functions
 
@@ -214,6 +159,7 @@ pub mod BalBinTreeStEph {
         spec fn spec_in_order(self) -> Seq<T>;
         spec fn spec_pre_order(self) -> Seq<T>;
         spec fn spec_post_order(self) -> Seq<T>;
+        spec fn spec_is_leaf(self) -> bool;
 
         /// - APAS: Work Θ(1), Span Θ(1).
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
@@ -282,20 +228,60 @@ pub mod BalBinTreeStEph {
     //		9. impls
 
     impl<T> BalBinTreeTrait<T> for BalBinTree<T> {
-        open spec fn spec_size(self) -> nat {
-            BalBinTree::spec_size(self)
+        open spec fn spec_size(self) -> nat
+            decreases self,
+        {
+            match self {
+                BalBinTree::Leaf => 0,
+                BalBinTree::Node(node) => 1 + node.left.spec_size() + node.right.spec_size(),
+            }
         }
-        open spec fn spec_height(self) -> nat {
-            BalBinTree::spec_height(self)
+
+        open spec fn spec_height(self) -> nat
+            decreases self,
+        {
+            match self {
+                BalBinTree::Leaf => 0,
+                BalBinTree::Node(node) => {
+                    let lh = node.left.spec_height();
+                    let rh = node.right.spec_height();
+                    1 + if lh >= rh { lh } else { rh }
+                }
+            }
         }
-        open spec fn spec_in_order(self) -> Seq<T> {
-            BalBinTree::spec_in_order(self)
+
+        open spec fn spec_in_order(self) -> Seq<T>
+            decreases self,
+        {
+            match self {
+                BalBinTree::Leaf => Seq::empty(),
+                BalBinTree::Node(node) =>
+                    node.left.spec_in_order() + seq![node.value] + node.right.spec_in_order(),
+            }
         }
-        open spec fn spec_pre_order(self) -> Seq<T> {
-            BalBinTree::spec_pre_order(self)
+
+        open spec fn spec_pre_order(self) -> Seq<T>
+            decreases self,
+        {
+            match self {
+                BalBinTree::Leaf => Seq::empty(),
+                BalBinTree::Node(node) =>
+                    seq![node.value] + node.left.spec_pre_order() + node.right.spec_pre_order(),
+            }
         }
-        open spec fn spec_post_order(self) -> Seq<T> {
-            BalBinTree::spec_post_order(self)
+
+        open spec fn spec_post_order(self) -> Seq<T>
+            decreases self,
+        {
+            match self {
+                BalBinTree::Leaf => Seq::empty(),
+                BalBinTree::Node(node) =>
+                    node.left.spec_post_order() + node.right.spec_post_order() + seq![node.value],
+            }
+        }
+
+        open spec fn spec_is_leaf(self) -> bool {
+            self is Leaf
         }
 
         fn leaf() -> (l: Self)
@@ -775,12 +761,13 @@ pub mod BalBinTreeStEph {
         }
     }
 
-    } // verus!
-
-    //		14. Clone impls outside verus!
+    // 11. derive impls in verus!
 
     impl<T: Clone> Clone for BalBinTree<T> {
-        fn clone(&self) -> Self {
+        #[verifier::external_body]
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned == *self
+        {
             match self {
                 BalBinTree::Leaf => BalBinTree::Leaf,
                 BalBinTree::Node(node) => BalBinTree::Node(node.clone()),
@@ -789,10 +776,15 @@ pub mod BalBinTreeStEph {
     }
 
     impl<T: Clone> Clone for BalBinNode<T> {
-        fn clone(&self) -> Self {
+        #[verifier::external_body]
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned == *self
+        {
             BalBinNode { left: self.left.clone(), value: self.value.clone(), right: self.right.clone() }
         }
     }
+
+    } // verus!
 
     impl<T: std::fmt::Debug> std::fmt::Debug for BalBinTree<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

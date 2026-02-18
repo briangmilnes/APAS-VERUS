@@ -82,7 +82,7 @@ verus! {
     }
 
     /// - APAS: Work Θ(φⁿ), Span Θ(n) — both branches recurse in parallel.
-    /// - Claude-Opus-4.6: Work Θ(φⁿ), Span Θ(φⁿ) — closures call fib_seq not fib_par, so only the top-level split is parallel; true Θ(n) span requires recursive self-calls through join.
+    /// - Claude-Opus-4.6: Work Θ(φⁿ), Span Θ(n) — recursive fib_par through join(); S(n) = S(n-1) + O(1) = Θ(n).
     pub fn fib_par(n: u64) -> (fibonacci: u64)
         requires n <= 46,
         ensures fibonacci == spec_fib(n as nat),
@@ -96,12 +96,12 @@ verus! {
             let f1 = move || -> (r: u64)
                 requires n >= 2, n <= 46,
                 ensures r == spec_fib((n - 1) as nat),
-            { fib_seq(n - 1) };
+            { fib_par(n - 1) };
 
             let f2 = move || -> (r: u64)
                 requires n >= 2, n <= 46,
                 ensures r == spec_fib((n - 2) as nat),
-            { fib_seq(n - 2) };
+            { fib_par(n - 2) };
 
             let (a, b) = join(f1, f2);
             proof { lemma_fib_sum_fits_u64(n as nat); }

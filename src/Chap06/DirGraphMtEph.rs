@@ -50,17 +50,13 @@ pub mod DirGraphMtEph {
         }
     }
 
-    impl<V: StTInMtT + Hash + 'static> DirGraphMtEph<V> {
-        /// Convenience accessor for vertices view
-        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.V@ }
-        /// Convenience accessor for arcs view
-        pub open spec fn spec_arcs(&self) -> Set<(V::V, V::V)> { self.A@ }
-    }
-
     #[cfg(verus_keep_ghost)]
     use crate::Types::Types::*;
 
     pub trait DirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
+
+        open spec fn spec_vertices(&self) -> Set<V::V> { self@.V }
+        open spec fn spec_arcs(&self) -> Set<(V::V, V::V)> { self@.A }
 
         /// APAS: Work Θ(1), Span Θ(1)
         fn empty() -> (g: Self)

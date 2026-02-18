@@ -1,6 +1,16 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 21 — Problem 21.4: Cartesian Product using different approaches.
 //! Verusified.
+
+//  Table of Contents
+//	1. module
+//	3. broadcast use
+//	7. proof fns/broadcast groups
+//	9. impls
+
+//		1. module
+
 
 pub mod Problem21_4 {
 
@@ -16,11 +26,43 @@ pub mod Problem21_4 {
     #[cfg(verus_keep_ghost)]
     verus! {
 
+    //		3. broadcast use
+
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_Pair_axioms,
     };
+
+
+    //		7. proof fns/broadcast groups
+
+    /// Lemma: Seq::flatten of k sequences each of length m has length k * m.
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
+    proof fn lemma_flatten_uniform_len<A>(ss: Seq<Seq<A>>, m: int)
+        requires
+            forall|i: int| 0 <= i < ss.len() ==> (#[trigger] ss[i]).len() == m,
+        ensures
+            ss.flatten().len() == ss.len() * m,
+        decreases ss.len()
+    {
+        if ss.len() == 0 {
+            assert(ss.len() * m == 0) by (nonlinear_arith) requires ss.len() == 0;
+        } else {
+            assert forall|i: int| 0 <= i < ss.drop_first().len() implies
+                (#[trigger] ss.drop_first()[i]).len() == m by {
+                assert(ss.drop_first()[i] == ss[i + 1]);
+            }
+            lemma_flatten_uniform_len(ss.drop_first(), m);
+            assert(ss.first().len() == m);
+            assert(m + (ss.len() - 1) * m == ss.len() * m) by (nonlinear_arith)
+                requires ss.len() > 0;
+        }
+    }
+
+
+    //		9. impls
 
     /// Problem 21.4 (Cartesian Product) - Imperative approach using explicit loops.
     /// - APAS: Work Θ(|a|·|b|), Span Θ(|a|·|b|)
@@ -71,30 +113,6 @@ pub mod Problem21_4 {
             i = i + 1;
         }
         ArraySeqStPerS::from_vec(v)
-    }
-
-    /// Lemma: Seq::flatten of k sequences each of length m has length k * m.
-    /// - APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
-    proof fn lemma_flatten_uniform_len<A>(ss: Seq<Seq<A>>, m: int)
-        requires
-            forall|i: int| 0 <= i < ss.len() ==> (#[trigger] ss[i]).len() == m,
-        ensures
-            ss.flatten().len() == ss.len() * m,
-        decreases ss.len()
-    {
-        if ss.len() == 0 {
-            assert(ss.len() * m == 0) by (nonlinear_arith) requires ss.len() == 0;
-        } else {
-            assert forall|i: int| 0 <= i < ss.drop_first().len() implies
-                (#[trigger] ss.drop_first()[i]).len() == m by {
-                assert(ss.drop_first()[i] == ss[i + 1]);
-            }
-            lemma_flatten_uniform_len(ss.drop_first(), m);
-            assert(ss.first().len() == m);
-            assert(m + (ss.len() - 1) * m == ss.len() * m) by (nonlinear_arith)
-                requires ss.len() > 0;
-        }
     }
 
     /// Problem 21.4 (Cartesian Product) - Functional approach using tabulate + flatten.

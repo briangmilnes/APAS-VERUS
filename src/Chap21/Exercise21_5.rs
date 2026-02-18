@@ -29,6 +29,8 @@ pub mod Exercise21_5 {
     /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — sequential StPer; subseq_copy is O(k) not O(1).
     pub fn all_contiguous_subseqs(a: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<ArraySeqStPerS<N>>)
          requires obeys_feq_clone::<ArraySeqStPerS<N>>()
+         ensures
+            a.spec_len() == 0 ==> result.spec_len() == 0,
     {
         let n = a.length();
         let nested: ArraySeqStPerS<ArraySeqStPerS<ArraySeqStPerS<N>>> =

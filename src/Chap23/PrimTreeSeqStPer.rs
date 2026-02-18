@@ -808,7 +808,13 @@ pub mod PrimTreeSeqStPer {
     //		11. derive impls in verus!
 
     impl<T: Clone> Clone for PrimTreeSeqStS<T> {
-        fn clone(&self) -> Self { PrimTreeSeqStS { seq: self.seq.clone() } }
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            let cloned = PrimTreeSeqStS { seq: self.seq.clone() };
+            proof { assume(cloned@ == self@); }
+            cloned
+        }
     }
 
     #[cfg(verus_keep_ghost)]
@@ -830,12 +836,16 @@ pub mod PrimTreeSeqStPer {
     impl<T: Eq + View> Eq for PrimTreeSeqStS<T> {}
 
     impl<T: Clone> Clone for PrimTreeSeqStTree<T> {
-        fn clone(&self) -> Self {
-            match self {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            let cloned = match self {
                 PrimTreeSeqStTree::Zero => PrimTreeSeqStTree::Zero,
                 PrimTreeSeqStTree::One(v) => PrimTreeSeqStTree::One(v.clone()),
                 PrimTreeSeqStTree::Two(l, r) => PrimTreeSeqStTree::Two(l.clone(), r.clone()),
-            }
+            };
+            proof { assume(cloned@ == self@); }
+            cloned
         }
     }
 

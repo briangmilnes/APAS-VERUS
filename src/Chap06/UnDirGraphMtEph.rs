@@ -60,12 +60,12 @@ pub mod UnDirGraphMtEph {
         }
     }
 
-    impl<V: StTInMtT + Hash + 'static> UnDirGraphMtEph<V> {
-        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.V@ }
-        pub open spec fn spec_edges(&self) -> Set<(V::V, V::V)> { self.E@ }
+    pub trait UnDirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
 
-        /// Spec for ng computed from a subset of edges
-        pub open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V)>) -> Set<V::V> 
+        open spec fn spec_vertices(&self) -> Set<V::V> { self@.V }
+        open spec fn spec_edges(&self) -> Set<(V::V, V::V)> { self@.A }
+
+        open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V)>) -> Set<V::V> 
             recommends 
                 wf_graph_view(self@),
                 subedges <= self@.A,
@@ -73,15 +73,11 @@ pub mod UnDirGraphMtEph {
             Set::new(|w: V::V| subedges.contains((v, w)) || subedges.contains((w, v)))
         }
 
-        /// Spec for ng_of_vertices computed from a subset of vertices
-        pub open spec fn spec_ng_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V> 
+        open spec fn spec_ng_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V> 
             recommends wf_graph_view(self@), subverts <= self@.V
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_ng(u).contains(w))
         }
-    }
-
-    pub trait UnDirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
         /// APAS: Work Θ(1), Span Θ(1)
         fn empty() -> (g: Self)
             requires valid_key_type_for_graph::<V>()

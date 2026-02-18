@@ -2,6 +2,7 @@
 
 use apas_verus::Chap23::PrimTreeSeqStPer::PrimTreeSeqStPer::*;
 use apas_verus::Types::Types::*;
+use vstd::prelude::Ghost;
 
 #[test]
 fn expose_zero_returns_zero() {
@@ -345,6 +346,122 @@ fn test_trait_join_two() {
     let joined = <PrimTreeSeqStS<i32> as PrimTreeSeqStTrait<i32>>::join(PrimTreeSeqStTree::Two(left, right));
     assert_eq!(joined.length(), 5);
     assert_eq!(joined.as_slice(), &[1, 2, 3, 4, 5]);
+}
+
+// append, subseq, update, map, tabulate, filter
+
+#[test]
+fn test_append() {
+    let a = PrimTreeSeqStS::from_vec(vec![1, 2, 3]);
+    let b = PrimTreeSeqStS::from_vec(vec![4, 5]);
+    let ab = PrimTreeSeqStS::append(&a, &b);
+    assert_eq!(ab.as_slice(), &[1, 2, 3, 4, 5]);
+    assert_eq!(ab.length(), 5);
+}
+
+#[test]
+fn test_append_empty_left() {
+    let a = PrimTreeSeqStS::<i32>::empty();
+    let b = PrimTreeSeqStS::from_vec(vec![1, 2]);
+    let ab = PrimTreeSeqStS::append(&a, &b);
+    assert_eq!(ab.as_slice(), &[1, 2]);
+}
+
+#[test]
+fn test_append_empty_right() {
+    let a = PrimTreeSeqStS::from_vec(vec![1, 2]);
+    let b = PrimTreeSeqStS::<i32>::empty();
+    let ab = PrimTreeSeqStS::append(&a, &b);
+    assert_eq!(ab.as_slice(), &[1, 2]);
+}
+
+#[test]
+fn test_subseq() {
+    let seq = PrimTreeSeqStS::from_vec(vec![10, 20, 30, 40, 50]);
+    let sub = seq.subseq(1, 3);
+    assert_eq!(sub.as_slice(), &[20, 30, 40]);
+}
+
+#[test]
+fn test_subseq_full() {
+    let seq = PrimTreeSeqStS::from_vec(vec![1, 2, 3]);
+    let sub = seq.subseq(0, 3);
+    assert_eq!(sub.as_slice(), &[1, 2, 3]);
+}
+
+#[test]
+fn test_subseq_empty() {
+    let seq = PrimTreeSeqStS::from_vec(vec![1, 2, 3]);
+    let sub = seq.subseq(1, 0);
+    assert_eq!(sub.length(), 0);
+}
+
+#[test]
+fn test_update() {
+    let seq = PrimTreeSeqStS::from_vec(vec![1, 2, 3]);
+    let updated = PrimTreeSeqStS::update(&seq, 1, 99);
+    assert_eq!(updated.as_slice(), &[1, 99, 3]);
+}
+
+#[test]
+fn test_update_first() {
+    let seq = PrimTreeSeqStS::from_vec(vec![10, 20, 30]);
+    let updated = PrimTreeSeqStS::update(&seq, 0, 42);
+    assert_eq!(updated.as_slice(), &[42, 20, 30]);
+}
+
+#[test]
+fn test_update_last() {
+    let seq = PrimTreeSeqStS::from_vec(vec![10, 20, 30]);
+    let updated = PrimTreeSeqStS::update(&seq, 2, 42);
+    assert_eq!(updated.as_slice(), &[10, 20, 42]);
+}
+
+#[test]
+fn test_map() {
+    let seq = PrimTreeSeqStS::from_vec(vec![1, 2, 3]);
+    let doubled = PrimTreeSeqStS::map(&seq, &|x: &i32| x * 2);
+    assert_eq!(doubled.as_slice(), &[2, 4, 6]);
+}
+
+#[test]
+fn test_map_to_string() {
+    let seq = PrimTreeSeqStS::from_vec(vec![1, 2, 3]);
+    let strings = PrimTreeSeqStS::map(&seq, &|x: &i32| format!("{x}"));
+    assert_eq!(strings.as_slice(), &["1", "2", "3"]);
+}
+
+#[test]
+fn test_tabulate() {
+    let seq = PrimTreeSeqStS::tabulate(&|i: usize| i * i, 5);
+    assert_eq!(seq.as_slice(), &[0, 1, 4, 9, 16]);
+}
+
+#[test]
+fn test_tabulate_empty() {
+    let seq = PrimTreeSeqStS::<i32>::tabulate(&|_: usize| 0, 0);
+    assert_eq!(seq.length(), 0);
+}
+
+#[test]
+fn test_filter() {
+    let seq = PrimTreeSeqStS::from_vec(vec![1, 2, 3, 4, 5, 6]);
+    let evens = PrimTreeSeqStS::filter(&seq, &|x: &i32| x % 2 == 0, Ghost::assume_new());
+    assert_eq!(evens.as_slice(), &[2, 4, 6]);
+}
+
+#[test]
+fn test_filter_all() {
+    let seq = PrimTreeSeqStS::from_vec(vec![2, 4, 6]);
+    let evens = PrimTreeSeqStS::filter(&seq, &|x: &i32| x % 2 == 0, Ghost::assume_new());
+    assert_eq!(evens.as_slice(), &[2, 4, 6]);
+}
+
+#[test]
+fn test_filter_none() {
+    let seq = PrimTreeSeqStS::from_vec(vec![1, 3, 5]);
+    let evens = PrimTreeSeqStS::filter(&seq, &|x: &i32| x % 2 == 0, Ghost::assume_new());
+    assert_eq!(evens.length(), 0);
 }
 
 fn generic_length<T: StT, S: PrimTreeSeqStTrait<T>>(seq: &S) -> N { seq.length() }

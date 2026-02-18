@@ -59,14 +59,12 @@ pub mod LabDirGraphMtEph {
         }
     }
 
-    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LabDirGraphMtEph<V, L> {
-        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
-        pub open spec fn spec_labeled_arcs(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_arcs@ }
-    }
-
     pub trait LabDirGraphMtEphTrait<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> 
         : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized 
     {
+        open spec fn spec_vertices(&self) -> Set<V::V> { self@.V }
+        open spec fn spec_labeled_arcs(&self) -> Set<(V::V, V::V, L::V)> { self@.A }
+
         /// APAS: Work Θ(1), Span Θ(1)
         fn empty() -> (g: Self)
             requires valid_key_type_for_lab_graph::<V, L>()
