@@ -183,6 +183,7 @@ verus! {
 
         /// Construct from an alphabet Σ.
         /// - APAS: (no cost stated — Chapter 5 is purely definitional)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — stores alphabet, O(1).
         fn new(alphabet: SetStEph<T>) -> (result: Self)
             requires valid_key_type::<T>()
             ensures result@ == alphabet@;
@@ -202,6 +203,8 @@ verus! {
             ensures result == in_plus(self@, viewed(s@));
 
         /// Read-only access to the underlying alphabet.
+        /// - APAS: (no cost stated — Chapter 5 is purely definitional)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reference return, O(1).
         fn alphabet(&self) -> (result: &SetStEph<T>)
             ensures result@ == self@;
     }

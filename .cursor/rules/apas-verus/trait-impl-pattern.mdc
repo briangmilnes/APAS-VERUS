@@ -31,18 +31,111 @@ If the hole detector reports `bare_impl`, that means functions are on a direct `
 block instead of `impl Trait for Type`. This must be fixed by moving the functions into the
 trait and the trait impl.
 
-## Exceptions
+## Exception: Recursive Spec Functions on Enums
+
+Verus cannot unfold `open spec fn` through trait dispatch. When a recursive spec fn
+(e.g., `spec_size`, `spec_in_order`) is defined directly inside `impl Trait for Type`,
+the solver treats it as opaque at the call site — it cannot prove termination or
+unfold the body, causing postcondition and recursive-call failures.
+
+The workaround: define recursive spec fns as **inherent** methods on the type, with
+`decreases self`, and have the trait impl delegate to them.
+
+### The Pattern
+
+```rust
+// Trait: abstract declarations, no bodies, no decreases.
+pub trait TreeTrait<T>: Sized {
+    spec fn spec_size(self) -> nat;
+    spec fn spec_height(self) -> nat;
+
+    fn size(&self) -> (count: usize)
+        requires self.spec_size() <= usize::MAX,
+        ensures count == self.spec_size();
+}
+
+// Inherent impl: recursive bodies with decreases.
+impl<T> Tree<T> {
+    pub open spec fn spec_size(self) -> nat
+        decreases self,
+    {
+        match self {
+            Tree::Leaf => 0,
+            Tree::Node(node) => 1 + node.left.spec_size() + node.right.spec_size(),
+        }
+    }
+
+    pub open spec fn spec_height(self) -> nat
+        decreases self,
+    {
+        match self {
+            Tree::Leaf => 0,
+            Tree::Node(node) => {
+                let lh = node.left.spec_height();
+                let rh = node.right.spec_height();
+                1 + if lh >= rh { lh } else { rh }
+            }
+        }
+    }
+}
+
+// Trait impl: one-line delegation to inherent methods.
+impl<T> TreeTrait<T> for Tree<T> {
+    open spec fn spec_size(self) -> nat { Tree::spec_size(self) }
+    open spec fn spec_height(self) -> nat { Tree::spec_height(self) }
+
+    fn size(&self) -> (count: usize)
+        decreases self.spec_size(),
+    {
+        match self {
+            Tree::Leaf => 0,
+            Tree::Node(node) => 1 + node.left.size() + node.right.size(),
+        }
+    }
+}
+```
+
+### When to Use This Pattern
+
+- The type is a recursive enum (tree, list, expression).
+- The spec fn recurses on `self` and needs `decreases self`.
+- The fn is part of a trait that other types may also implement.
+
+### When NOT to Use
+
+- Non-recursive spec fns (e.g., `spec_is_leaf`) can go directly in the trait impl.
+- Types that are not recursive enums do not need this pattern.
+
+### Why the Delegation Works
+
+The inherent `Tree::spec_size(self)` has `decreases self` and Verus can unfold it
+because there is no trait dispatch indirection. The trait impl's one-liner
+`{ Tree::spec_size(self) }` is a trivial wrapper the solver can see through. Exec
+functions like `size` reference `self.spec_size()` which resolves through the trait
+to the inherent method, giving the solver the recursive structure it needs.
+
+### Evidence
+
+See `src/experiments/trait_decreases.rs` for a minimal reproduction. Test 2 (bodies
+directly in the trait impl) fails. Test 3 (delegation to inherent) succeeds.
+
+## Other Exceptions
 
 - **Example/Exercise/Algorithm files** (`Ex*`, `Pr*`, `Alg*`) that have not been given a
   trait are exempt. These are standalone demonstrations, not reusable ADT modules.
 - **Module-level functions** whose return type cannot be named in the trait signature
   (e.g., closures, complex generic returns) may remain as free functions outside the trait.
   These should be rare.
+- **`&mut`-returning methods** like `iter_mut()` cannot be verified by Verus and must
+  remain outside `verus!`, so they belong in a bare `impl Type` block.
 
 ## What This Means for the Bare Impl Detector
 
-A `bare_impl` error from `veracity-review-proof-holes` means the file violates this rule.
-Fix it by:
+A `bare_impl` report from `veracity-review-proof-holes` means functions are on a direct
+`impl Type` block instead of `impl Trait for Type`. This is usually a violation, but check
+whether the bare impl contains recursive spec fns or `&mut` methods before moving them.
+
+To fix a genuine violation:
 1. Adding the missing functions to the trait definition.
 2. Moving the function bodies from `impl Type` into `impl Trait for Type`.
 3. Removing the bare `impl Type` block.

@@ -8,11 +8,18 @@ table { width: 100% !important; table-layout: fixed; }
 # Chap02 Review Against Prose
 
 **Reviewer:** Claude-Opus-4.6
-**Date:** 2026-02-15
+**Date:** 2026-02-17
 **Prose file:** `prompts/Chap02.txt`
 **Source files:** `FibonacciHFScheduler.rs`, `HFSchedulerMtEph.rs` (renamed from `WSSchedulerMtEph.rs` — "HF" = help-first, reflecting the actual scheduling policy)
 
-## Prose Inventory
+## Phase 1: Code Inventory
+
+| # | File | Lines | Functions | Proof holes |
+|---|------|-------|-----------|-------------|
+| 1 | FibonacciHFScheduler.rs | ~115 | 2 exec (fib_seq, fib_par), 5 proof fns | 0 — clean |
+| 2 | HFSchedulerMtEph.rs | ~190 | set_parallelism, join, spawn_join, spawn, wait | 7 — external_body/external_type_specification |
+
+## Phase 2: Prose Inventory
 
 The prose covers sections 2.2.1-2.2.2 of APAS (scheduling theory):
 
@@ -27,86 +34,44 @@ The prose covers sections 2.2.1-2.2.2 of APAS (scheduling theory):
 No algorithms or pseudocode. No cost tables. The prose is theoretical
 background for the work-span model.
 
-## Code Inventory
+## Phase 3: Algorithmic Analysis (Cost Annotations)
 
-| # | File | Lines | Functions | Proof holes |
-|---|------|-------|-----------|-------------|
-| 1 | FibonacciHFScheduler.rs | ~100 | 2 exec (fib_seq, fib_par), 5 proof fns | 0 — clean |
-| 2 | HFSchedulerMtEph.rs | ~170 | spawn, wait, TaskState | 8 — external_body/assume(false) |
+All exec functions have APAS and Claude-Opus-4.6 cost annotations:
 
-## Cost Disagreements
+| # | Function | APAS | Claude-Opus-4.6 |
+|---|----------|------|-----------------|
+| 1 | fib_seq | Work Θ(φⁿ), Span Θ(φⁿ) | Work Θ(φⁿ), Span Θ(φⁿ) — sequential, work = span |
+| 2 | fib_par | Work Θ(φⁿ), Span Θ(n) | Work Θ(φⁿ), Span Θ(n) — recursive fib_par through join() |
+| 3 | set_parallelism | N/A (scheduler config) | Work Θ(1), Span Θ(1) |
+| 4 | join | N/A (scheduler primitive) | Work Θ(W_fa + W_fb), Span Θ(max(S_fa, S_fb)) when parallel |
+| 5 | spawn_join | N/A (scheduler primitive) | Work Θ(W_fa + W_fb), Span Θ(max(S_fa, S_fb)) |
+| 6 | spawn | N/A (scheduler primitive) | Work Θ(W_f), Span Θ(S_f) |
+| 7 | wait | N/A (scheduler primitive) | Work Θ(1), Span Θ(S_task) |
 
-| # | Function | APAS | Claude-Opus-4.6 | Issue |
-|---|----------|------|-----------------|-------|
-| 1 | fib_par | Work Theta(phi^n), Span Theta(n) | Work Theta(phi^n), Span Theta(phi^n) | Closures call fib_seq not fib_par. Only the top-level split is parallel. True Theta(n) span requires recursive self-calls through join. |
+No cost disagreements. fib_par correctly recurses through fib_par in closures.
 
-fib_seq agrees with APAS: Work Theta(phi^n), Span Theta(phi^n) — sequential, work = span.
+## Phase 4: Parallelism Review (Mt Modules)
 
-## Implementation Fidelity
-
-**fib_seq:** Faithful sequential Fibonacci. Matches the standard recursive
-definition. No deviation.
-
-**fib_par:** Deviates from APAS intent. The function spawns two closures via
-HFSchedulerMtEph, but each closure calls `fib_seq` (the sequential variant)
-rather than recursing through `fib_par`. This means:
-- The top-level call forks two threads.
-- Each thread computes fib(n-1) and fib(n-2) fully sequentially.
-- No recursive parallelism — the call tree is 1 level of parallelism deep.
-
-APAS expects the parallel Fibonacci to recurse in parallel at every level,
-giving Span Theta(n) (the longest chain is the n recursive calls on the
-larger branch). The current code achieves Span Theta(phi^n) — same as
-sequential.
-
-**HFSchedulerMtEph:** APAS defines what a scheduler is (Def 15.5) and states
-the greedy scheduling principle (Def 15.7), but gives very little detail on
-how to actually implement one. The code implements a bounded help-first
-scheduler using `std::thread::spawn`, `Mutex`, `Condvar`, and `JoinHandle`.
-"Help-first" means the caller executes a task locally when no pool capacity
-is available, rather than blocking — a form of work stealing where the caller
-steals its own work. This required:
-
-- Deep knowledge of Verus closure proofs — the `spawn` function takes a
-  closure with `requires`/`ensures`, and the returned `TaskState` handle
-  must carry the closure's postcondition as a predicate so that `wait` can
-  recover it. Getting the type-level predicate threading right is non-trivial.
-- External bodies for `std::thread` operations — Verus cannot verify thread
-  spawn/join internals, so `spawn`, `wait`, and the `TaskState` wrapper are
-  all `external_body` with trusted specs.
-- Help-first scheduling policy — the scheduler manages a bounded thread pool
-  with capacity tracking via `Mutex`/`Condvar`. When pool capacity is
-  exhausted, the caller runs the task inline rather than blocking. This
-  prevents deadlocks in nested joins and provides graceful degradation.
-- An `assume(false)` in the `Drop` impl — unsound but pragmatically needed
-  because Verus requires all code paths to satisfy the proof, including drop,
-  and there is no clean way to express "this handle was already consumed by
-  `wait`" in Verus's current type system.
-
-This is a significant engineering effort that APAS's prose does not hint at.
-
-## Spec Fidelity
-
-| # | Function | Spec strength | Notes |
-|---|----------|--------------|-------|
-| 1 | fib_seq | Strong | ensures result == spec_fib(n), plus overflow bounds |
-| 2 | fib_par | Strong | ensures result == spec_fib(n), same as fib_seq |
-| 3 | spawn | Strong (external_body) | Postcondition on TaskState handle |
-| 4 | wait | Strong (external_body) | Returns value satisfying spawned predicate |
-
-The specs correctly state the functional behavior. The Fibonacci spec
-functions (spec_fib) match the standard mathematical definition. The
-scheduler's spawn/wait specs establish the connection between the closure's
-ensures and the returned value.
-
-## Parallelism Audit
+HFSchedulerMtEph is the only Mt module. It provides fork-join primitives (join, spawn_join, spawn, wait) used by fib_par and other parallel algorithms.
 
 | # | Function | APAS Span | Actual Span | Parallel? | Notes |
 |---|----------|-----------|-------------|-----------|-------|
-| 1 | fib_seq | Theta(phi^n) | Theta(phi^n) | No | Sequential by design |
-| 2 | fib_par | Theta(n) | Theta(phi^n) | Top-level only | Closures call fib_seq, not fib_par |
+| 1 | fib_seq | Θ(φⁿ) | Θ(φⁿ) | No | Sequential by design |
+| 2 | fib_par | Θ(n) | Θ(n) | Yes | Recurses through fib_par; both branches run in parallel via join() |
 
-## Gap Analysis
+## Phase 5: RTT Review
+
+| # | Test file | Tests |
+|---|-----------|-------|
+| 1 | test_fibonacci_scheduler.rs | fib_seq, fib_par correctness (n 0..20, 25, 30) |
+| 2 | test_hf_scheduler.rs | spawn_join, join, spawn, wait; nested joins; parallel timing |
+| 3 | test_threads_plus.rs | threads_plus (spawn_plus, JoinHandlePlus) — vstdplus infrastructure |
+
+## Phase 6: PTT Review
+
+No PTTs for Chap02. Cargo.toml notes: "HFScheduler uses global static POOL, not testable in PTT framework. RTTs in test_hf_scheduler.rs cover the scheduler." No iterators or verified loops requiring PTTs.
+
+## Phase 7: Gap Analysis
 
 **Prose items with no implementation:**
 - The greedy scheduling principle (TP < W/P + S) is not formally proved.
@@ -117,32 +82,67 @@ ensures and the returned value.
 **Code with no prose counterpart:**
 - HFSchedulerMtEph — the scheduler implementation itself. The prose defines
   what a scheduler is but gives no pseudocode for one.
-- spec_fib, lemma_fib_seq_*, overflow lemmas — Verus-specific proof
+- spec_fib, lemma_fib_*, overflow lemmas — Verus-specific proof
   infrastructure.
 
-## Runtime Tests
+## Phase 8: TOC Review
 
-| # | Test file | Tests |
-|---|-----------|-------|
-| 1 | test_fibonacci_scheduler.rs | fib_seq and fib_par correctness |
-| 2 | test_threads_plus.rs | Thread infrastructure |
-| 3 | test_work_stealing_scheduler.rs | Scheduler spawn/wait |
+FibonacciHFScheduler.rs and HFSchedulerMtEph.rs follow the standard TOC ordering (module, imports, types, spec fns, proof fns, impls).
+
+## Implementation Fidelity
+
+**fib_seq:** Faithful sequential Fibonacci. Matches the standard recursive
+definition. No deviation.
+
+**fib_par:** Faithful to APAS. Closures call `fib_par` recursively; both
+branches run in parallel via `join()`. Span Θ(n) as expected.
+
+**HFSchedulerMtEph:** APAS defines what a scheduler is (Def 15.5) and states
+the greedy scheduling principle (Def 15.7), but gives very little detail on
+how to actually implement one. The code implements a bounded help-first
+scheduler using `std::thread::spawn`, `Mutex`, `Condvar`, and `JoinHandle`.
+"Help-first" means the caller executes a task locally when no pool capacity
+is available, rather than blocking. This required:
+
+- Deep knowledge of Verus closure proofs — the `spawn` function takes a
+  closure with `requires`/`ensures`, and the returned `TaskState` handle
+  must carry the closure's postcondition as a predicate so that `wait` can
+  recover it.
+- External bodies for `std::thread` operations — Verus cannot verify thread
+  spawn/join internals, so `spawn`, `wait`, `join`, `spawn_join`, and the
+  `ExTaskState` wrapper are all `external_body` with trusted specs.
+- Help-first scheduling policy — when pool capacity is exhausted, the caller
+  runs the task inline rather than blocking. This prevents deadlocks in
+  nested joins.
+- `assume(false); diverge()` in spawn_join Err arm — valid idiom for thread
+  panic (per assume-false-diverge rule).
+
+## Spec Fidelity
+
+| # | Function | Spec strength | Notes |
+|---|----------|--------------|-------|
+| 1 | fib_seq | Strong | ensures result == spec_fib(n), plus overflow bounds |
+| 2 | fib_par | Strong | ensures result == spec_fib(n), same as fib_seq |
+| 3 | spawn | Strong (external_body) | Postcondition on TaskState handle |
+| 4 | wait | Strong (external_body) | Returns value satisfying spawned predicate |
+| 5 | join, spawn_join | Strong (external_body) | Both results satisfy closure ensures |
 
 ## Proof Holes
 
 | # | File | Hole | Count | Justification |
 |---|------|------|-------|---------------|
 | 1 | HFSchedulerMtEph.rs | external_body | 6 | std::thread internals unverifiable |
-| 2 | HFSchedulerMtEph.rs | external_type_specification | 1 | JoinHandle type spec |
-| 3 | HFSchedulerMtEph.rs | assume(false) | 1 | Drop impl — unsound but pragmatic |
+| 2 | HFSchedulerMtEph.rs | external_type_specification | 1 | ExTaskState type spec |
 
 FibonacciHFScheduler.rs is clean — no proof holes.
 
+The `assume(false); diverge()` in spawn_join's Err arm is a valid idiom for
+thread panic (per assume-false-diverge rule), not a proof hole.
+
 ## Summary
 
-Chap02 is a small chapter with two files. The main finding is the fib_par
-span discrepancy: the code only parallelizes at the top level instead of
-recursing through fib_par, making the span exponential instead of linear.
-The scheduler infrastructure is necessarily external_body due to Verus's
+Chap02 is a small chapter with two files. fib_par correctly recurses through
+fib_par in closures, achieving Span Θ(n) per APAS. The scheduler
+infrastructure (HFSchedulerMtEph) is necessarily external_body due to Verus's
 concurrency limitations. The prose is theoretical background with no
 algorithms to implement directly.

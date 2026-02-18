@@ -1,0 +1,13 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap03/InsertionSortStEph.rs
+Codebase: /home/milnes/projects/APAS-VERUS-agent1
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap03/analyses/veracity-review-verus-style.log
+
+Checking 1 files...
+
+════════════════════════════════════════════════════════════════
+Summary: 16 passed, 0 warnings in 0 files (checked 1 files)
+════════════════════════════════════════════════════════════════
