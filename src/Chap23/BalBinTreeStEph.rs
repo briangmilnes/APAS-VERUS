@@ -227,8 +227,11 @@ pub mod BalBinTreeStEph {
 
     //		9. impls
 
-    impl<T> BalBinTreeTrait<T> for BalBinTree<T> {
-        open spec fn spec_size(self) -> nat
+    // Inherent impl: recursive spec fn bodies with `decreases self`.
+    // Verus cannot unfold `open spec fn` through trait dispatch, so these
+    // must live here; the trait impl delegates to them with one-liners.
+    impl<T> BalBinTree<T> {
+        pub open spec fn spec_size(self) -> nat
             decreases self,
         {
             match self {
@@ -237,7 +240,7 @@ pub mod BalBinTreeStEph {
             }
         }
 
-        open spec fn spec_height(self) -> nat
+        pub open spec fn spec_height(self) -> nat
             decreases self,
         {
             match self {
@@ -250,7 +253,7 @@ pub mod BalBinTreeStEph {
             }
         }
 
-        open spec fn spec_in_order(self) -> Seq<T>
+        pub open spec fn spec_in_order(self) -> Seq<T>
             decreases self,
         {
             match self {
@@ -260,7 +263,7 @@ pub mod BalBinTreeStEph {
             }
         }
 
-        open spec fn spec_pre_order(self) -> Seq<T>
+        pub open spec fn spec_pre_order(self) -> Seq<T>
             decreases self,
         {
             match self {
@@ -270,7 +273,7 @@ pub mod BalBinTreeStEph {
             }
         }
 
-        open spec fn spec_post_order(self) -> Seq<T>
+        pub open spec fn spec_post_order(self) -> Seq<T>
             decreases self,
         {
             match self {
@@ -279,6 +282,15 @@ pub mod BalBinTreeStEph {
                     node.left.spec_post_order() + node.right.spec_post_order() + seq![node.value],
             }
         }
+    }
+
+    // Trait impl: delegates recursive specs to inherent methods.
+    impl<T> BalBinTreeTrait<T> for BalBinTree<T> {
+        open spec fn spec_size(self) -> nat { BalBinTree::spec_size(self) }
+        open spec fn spec_height(self) -> nat { BalBinTree::spec_height(self) }
+        open spec fn spec_in_order(self) -> Seq<T> { BalBinTree::spec_in_order(self) }
+        open spec fn spec_pre_order(self) -> Seq<T> { BalBinTree::spec_pre_order(self) }
+        open spec fn spec_post_order(self) -> Seq<T> { BalBinTree::spec_post_order(self) }
 
         open spec fn spec_is_leaf(self) -> bool {
             self is Leaf
