@@ -79,6 +79,8 @@ verus! {
     }
 
     /// Set parallelism level. Must be called before any parallel operations.
+    /// - APAS: N/A (scheduler config)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     #[verifier::external_body]
     pub fn set_parallelism(n: usize) {
         *PARALLELISM.write().unwrap() = Some(n);
@@ -87,6 +89,8 @@ verus! {
     /// - Help-first fork-join: spawns fb in a new thread only if capacity available.
     /// - If no capacity, runs both closures sequentially (help-first strategy).
     /// - Prevents deadlock from nested joins.
+    /// - APAS: N/A (scheduler primitive; cost = closure cost)
+    /// - Claude-Opus-4.6: Work Θ(W_fa + W_fb), Span Θ(max(S_fa, S_fb)) when parallel; else Θ(W_fa + W_fb)
     #[verifier::external_body]
     pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
     where
@@ -112,6 +116,8 @@ verus! {
 
     /// - Unconditional fork-join: always spawns fb in a new thread.
     /// - Runs fa in the current thread, waits for fb to complete, returns both results.
+    /// - APAS: N/A (scheduler primitive; cost = closure cost)
+    /// - Claude-Opus-4.6: Work Θ(W_fa + W_fb), Span Θ(max(S_fa, S_fb))
     #[verifier::external_body]
     pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
     where
@@ -141,6 +147,8 @@ verus! {
     /// - Help-first spawn: spawns in new thread if capacity available.
     /// - If no capacity, runs locally (help-first) and returns completed state.
     /// - Never blocks, never deadlocks.
+    /// - APAS: N/A (scheduler primitive; cost = closure cost)
+    /// - Claude-Opus-4.6: Work Θ(W_f), Span Θ(S_f)
     #[verifier::external_body]
     pub fn spawn<T, F>(f: F) -> (task: TaskState<T>)
     where
@@ -161,6 +169,8 @@ verus! {
     }
 
     /// Wait for a spawned task to complete. Releases capacity.
+    /// - APAS: N/A (scheduler primitive)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(S_task) — blocks until task completes
     #[verifier::external_body]
     pub fn wait<T: Send + 'static>(task: TaskState<T>) -> (task_result: T)
         ensures

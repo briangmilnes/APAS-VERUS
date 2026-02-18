@@ -8,11 +8,21 @@ table { width: 100% !important; table-layout: fixed; }
 # Chap05 Review Against Prose
 
 **Reviewer:** Claude-Opus-4.6
-**Date:** 2026-02-15
+**Date:** 2026-02-17
 **Prose file:** `prompts/Chap05.txt`
 **Source files:** `SetStEph.rs`, `SetMtEph.rs`, `RelationStEph.rs`, `MappingStEph.rs`, `KleeneStPer.rs`
 
-## Prose Inventory
+## Phase 1: Inventory
+
+| # | File | Lines | Type | Exec fns | Proof holes |
+|---|------|-------|------|----------|-------------|
+| 1 | SetStEph.rs | 865 | St | 16 | 1 (PartialEq assume) |
+| 2 | SetMtEph.rs | 992 | Mt | ~16 | 1 (PartialEq assume) |
+| 3 | RelationStEph.rs | 377 | St | 6 | 0 — clean |
+| 4 | MappingStEph.rs | 556 | St | 12 | 1 (PartialEq assume) |
+| 5 | KleeneStPer.rs | 265 | St | 3 exec, 2 lemmas, 7 PTTs | 0 — clean |
+
+## Phase 2: Prose Inventory (from prompts/Chap05.txt)
 
 Chapter 5 is purely definitional — no algorithms, no pseudocode, no cost specs.
 
@@ -27,15 +37,76 @@ Chapter 5 is purely definitional — no algorithms, no pseudocode, no cost specs
 | 7 | Def 5.5: Binary relation, domain, range | Definition |
 | 8 | Def 5.6: Function/mapping — relation where each domain element maps to one range element | Definition |
 
-## Code Inventory
+## Phase 3: Algorithmic Analysis — Cost Annotations
 
-| # | File | Lines | Type | Exec fns | Proof holes |
-|---|------|-------|------|----------|-------------|
-| 1 | SetStEph.rs | 847 | St | 16 | 1 (PartialEq assume) |
-| 2 | SetMtEph.rs | 932 | Mt | ~16 | 1 (PartialEq assume) |
-| 3 | RelationStEph.rs | 375 | St | 6 | 0 — clean |
-| 4 | MappingStEph.rs | 549 | St | 12 | 1 (PartialEq assume) |
-| 5 | KleeneStPer.rs | 195 | St | 3 exec, 2 lemmas, 7 PTTs | 0 — clean |
+All exec functions have cost annotations in the required format:
+
+```
+/// - APAS: Work Θ(...), Span Θ(...)
+/// - Claude-Opus-4.6: Work Θ(...), Span Θ(...) — [reason if different]
+```
+
+**Added during this review:** `KleeneStPer::new()` and `KleeneStPer::alphabet()` — both now have full APAS + Claude-Opus annotations.
+
+## Phase 4: Parallelism Review (SetMtEph)
+
+| # | Function | APAS Span | Actual Span | Parallel? | Notes |
+|---|----------|-----------|-------------|-----------|-------|
+| 1 | from_vec | Theta(1) | Theta(v) | No | Sequential loop |
+| 2 | union | Theta(1) | Theta(a+b) | No | Sequential loop |
+| 3 | disjoint_union | Theta(1) | Theta(a+b) | No | Sequential loop |
+| 4 | intersection | Theta(1) | Theta(a+b) | No | Sequential loop |
+| 5 | partition | Theta(1) | Theta(a * parts) | No | Sequential loop |
+| 6 | cartesian_product | Theta(b) | Theta(a * b) | Partially | Spawns a tasks but sequential join dominates |
+
+Only cartesian_product uses spawn/wait. All other Mt operations are sequential loops — thread-safe but not parallel. See `docs/WhatIsTheAPASThreadingModelCosts.md` for the open question on PRAM vs fork-join cost models.
+
+## Phase 5: RTT Review
+
+| # | Test file | Coverage |
+|---|-----------|----------|
+| 1 | TestSetStEph.rs | Comprehensive: macros, cartesian product, partition, equality |
+| 2 | TestSetMtEph.rs | Mirrors StEph tests for Mt variant |
+| 3 | TestRelationStEph.rs | Relation construction, domain, range, membership |
+| 4 | TestMappingStEph.rs | Mapping construction, functional checks, domain, range |
+| 5 | TestKleeneStPer.rs | 10 tests: star/plus membership, empty/singleton/multi, integer alphabet |
+
+## Phase 6: PTT Review
+
+| # | PTT file | Module | Purpose |
+|---|----------|--------|---------|
+| 1 | SetStEph.rs | SetStEph | Iterator verification, callability |
+| 2 | SetMtEph.rs | SetMtEph | Iterator verification, callability |
+| 3 | RelationStEph.rs | RelationStEph | Iterator verification, callability |
+| 4 | MappingStEph.rs | MappingStEph | Iterator verification, callability |
+| 5 | ProveRelationStEph.rs | RelationStEph | Additional proof tests |
+| 6 | ProveMappingStEph.rs | MappingStEph | Additional proof tests |
+
+**KleeneStPer:** No standalone PTT file in rust_verify_test. The module contains 7 inline PTT proof functions: `ptt_star_contains_empty`, `ptt_plus_rejects_empty`, `ptt_singleton_in_star_and_plus`, `ptt_plus_subset_of_star`, `ptt_star_property_transfer`, `ptt_star_concat_plus_is_plus`, `ptt_plus_concat_star_is_plus`.
+
+## Phase 7: Gap Analysis
+
+**Prose items with no implementation:**
+- Kleene operators: Sigma-star, Sigma-plus — IMPLEMENTED (KleeneStPer.rs).
+- Exercise 5.1: closure under concatenation — PROVED.
+
+**Code with no prose counterpart:**
+- singleton, from_vec, insert, size, split, choose, iter, to_seq, clone
+- elt_cross_set, all_nonempty, partition_on_elt (internal helpers)
+- Iterator infrastructure (SetStEphIter, GhostIterator, ForLoopGhostIterator)
+- PartialEq/Eq implementations
+- SetMtEph (parallel variant — same interface, different impl)
+- Hash, Debug, Display implementations and macros
+
+## Phase 8: TOC Review
+
+| # | File | Has TOC | Notes |
+|---|------|---------|-------|
+| 1 | SetStEph.rs | No | — |
+| 2 | SetMtEph.rs | Yes | Full 13-section TOC |
+| 3 | RelationStEph.rs | No | — |
+| 4 | MappingStEph.rs | No | — |
+| 5 | KleeneStPer.rs | Yes | 9-section TOC |
 
 ## Prose-to-Code Mapping
 
@@ -58,8 +129,7 @@ Chapter 5 is purely definitional — no algorithms, no pseudocode, no cost specs
 
 ## Cost Disagreements
 
-The prose has no cost specs (Chapter 5 is purely definitional). Cost
-annotations in the code come from ADT interface chapters elsewhere in APAS.
+The prose has no cost specs (Chapter 5 is purely definitional). Cost annotations in the code come from ADT interface chapters elsewhere in APAS.
 
 | # | Function | APAS annotation | Claude-Opus-4.6 | Issue |
 |---|----------|----------------|-----------------|-------|
@@ -68,51 +138,66 @@ annotations in the code come from ADT interface chapters elsewhere in APAS.
 | 3 | is_functional_SetStEph | Theta(s) | Theta(s^2) | Iterates set, calls O(s) check per element |
 | 4 | is_functional_RelationStEph | Theta(r) | Theta(r^2) | Delegates to is_functional_SetStEph |
 
-Items 1-2 were corrected in the source. Items 3-4 are annotated as
-disagreements in the source.
-
-## Parallelism Audit (SetMtEph)
-
-| # | Function | APAS Span | Actual Span | Parallel? | Notes |
-|---|----------|-----------|-------------|-----------|-------|
-| 1 | from_vec | Theta(1) | Theta(v) | No | Sequential loop |
-| 2 | union | Theta(1) | Theta(a+b) | No | Sequential loop |
-| 3 | disjoint_union | Theta(1) | Theta(a+b) | No | Sequential loop |
-| 4 | intersection | Theta(1) | Theta(a+b) | No | Sequential loop |
-| 5 | partition | Theta(1) | Theta(a * parts) | No | Sequential loop |
-| 6 | cartesian_product | Theta(b) | Theta(a * b) | Partially | Spawns a tasks but sequential join dominates |
-
-Only cartesian_product uses spawn/wait. All other Mt operations are
-sequential loops — thread-safe but not parallel. See
-`docs/WhatIsTheAPASThreadingModelCosts.md` for the open question on
-PRAM vs fork-join cost models.
-
-## Gap Analysis
-
-**Prose items with no implementation:**
-- Kleene operators: Sigma-star, Sigma-plus — IMPLEMENTED during this review
-  as KleeneStPer.rs.
-- Exercise 5.1: closure under concatenation — PROVED during this review.
-
-**Code with no prose counterpart:**
-- singleton, from_vec, insert, size, split, choose, iter, to_seq, clone
-- elt_cross_set, all_nonempty, partition_on_elt (internal helpers)
-- Iterator infrastructure (SetStEphIter, GhostIterator, ForLoopGhostIterator)
-- PartialEq/Eq implementations
-- SetMtEph (parallel variant — same interface, different impl)
-- Hash, Debug, Display implementations and macros
-
-## Runtime Tests
-
-| # | Test file | Coverage |
-|---|-----------|----------|
-| 1 | TestSetStEph.rs | Comprehensive: macros, cartesian product, partition, equality |
-| 2 | TestSetMtEph.rs | Mirrors StEph tests for Mt variant |
-| 3 | TestRelationStEph.rs | Relation construction, domain, range, membership |
-| 4 | TestMappingStEph.rs | Mapping construction, functional checks, domain, range |
-| 5 | TestKleeneStPer.rs | 10 tests: star/plus membership, empty/singleton/multi, integer alphabet |
+Items 1-2 were corrected in the source. Items 3-4 are annotated as disagreements in the source.
 
 ## Proof Holes
+
+```
+✓ KleeneStPer.rs
+   9 clean proof functions
+❌ MappingStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:518: assume() - assume(r == (self@ == other@));
+       508 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       516 |                 }
+       517 |                 // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
+       519 |             }
+       520 |             r
+   Holes: 1 total
+      1 × assume()
+✓ RelationStEph.rs
+❌ SetMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:955: assume() - proof { assume(r == (self@ == other@)); }
+       951 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       953 |         {
+       954 |             let r = self.elements == other.elements;
+       955 |             r
+       956 |         }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ SetStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:832: assume() - proof { assume(equal == (self@ == other@)); }
+       827 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       830 |             let equal = self.elements == other.elements;
+       831 |             // HashSetWithView* eq is external_body so we have to trust it here.
+       833 |             equal
+       834 |         }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   2 clean (no holes)
+   3 holed (contains holes)
+   5 total
+
+Proof Functions:
+   11 clean
+   0 holed
+   11 total
+
+Holes Found: 3 total
+   3 × assume()
+```
+
+## Proof Holes Justification
 
 | # | File | Hole | Justification |
 |---|------|------|---------------|
@@ -120,15 +205,16 @@ PRAM vs fork-join cost models.
 | 2 | SetMtEph.rs | assume() in PartialEq::eq | Same pattern |
 | 3 | MappingStEph.rs | assume() in PartialEq::eq | Same pattern |
 
-All three are the approved PartialEq pattern from the `partialeq-eq-pattern` rule.
-RelationStEph and KleeneStPer are fully clean.
+All three are the approved PartialEq pattern from the `partialeq-eq-pattern` rule. RelationStEph and KleeneStPer are fully clean.
 
 ## Summary
 
-Chap05 is the foundation ADT chapter. All 8 prose definitions are
-implemented with strong specs that faithfully capture the mathematical
-definitions. KleeneStPer and Exercise 5.1 were added during this review.
-The partition cost annotation was corrected from quadratic to linear.
-Two is_functional functions have quadratic cost disagreements. The Mt
-variant has minimal actual parallelism — only cartesian_product spawns
-threads, and its sequential join negates the span benefit.
+Chap05 is the foundation ADT chapter. All 8 prose definitions are implemented with strong specs that faithfully capture the mathematical definitions. KleeneStPer and Exercise 5.1 were added in a prior review. The partition cost annotation was corrected from quadratic to linear. Two is_functional functions have quadratic cost disagreements. The Mt variant has minimal actual parallelism — only cartesian_product spawns threads, and its sequential join negates the span benefit.
+
+**Changes in this review (2026-02-17):**
+- Added cost annotations for `KleeneStPer::new()` and `KleeneStPer::alphabet()`.
+- Restructured review into 8 phases (Inventory, Prose Inventory, Algorithmic Analysis, Parallelism, RTT, PTT, Gap Analysis, TOC).
+- Updated date and proof-holes output.
+- Corrected line counts (SetStEph 865, SetMtEph 992, RelationStEph 377, MappingStEph 556, KleeneStPer 265).
+- Documented PTT structure: 4 standalone files + 2 Prove* files; KleeneStPer has 7 inline PTT proof functions.
+- Documented TOC status: SetMtEph and KleeneStPer have TOC; others do not.

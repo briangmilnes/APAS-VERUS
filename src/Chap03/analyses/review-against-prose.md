@@ -8,11 +8,25 @@ table { width: 100% !important; table-layout: fixed; }
 # Chap03 Review Against Prose
 
 **Reviewer:** Claude-Opus-4.6
-**Date:** 2026-02-15
+**Date:** 2026-02-17
 **Prose file:** `prompts/Chap03.txt`
 **Source files:** `InsertionSortStEph.rs`
 
-## Prose Inventory
+## Phase 1: Inventory
+
+From `analyses/veracity-review-module-fn-impls.json` (Chap03 scope):
+
+| # | File | Lines | Functions | Proof holes |
+|---|------|-------|-----------|-------------|
+| 1 | InsertionSortStEph.rs | 110 | 1 exec (insertion_sort), spec fns (sorted_prefix, cross_sorted, is_sorted) | 0 — clean |
+
+| # | Function | Trait | ML | V! | SpecStr |
+|---|----------|:-----:|:--:|:--:|---------|
+| 1 | insertion_sort |  | Y | Y | strong |
+
+## Phase 2: Prose Inventory
+
+From `prompts/Chap03.txt`:
 
 | # | Item | Type |
 |---|------|------|
@@ -24,15 +38,50 @@ The prose gives a recursive functional insertion sort. No cost bounds are
 explicitly stated in the provided excerpt, but insertion sort is classically
 Work Theta(n^2), Span Theta(n^2) (sequential).
 
-## Code Inventory
+## Phase 3: Algorithmic Analysis (Cost Annotations)
 
-| # | File | Lines | Functions | Proof holes |
-|---|------|-------|-----------|-------------|
-| 1 | InsertionSortStEph.rs | ~120 | 1 exec (insertion_sort), spec fns (cross_sorted, is_sorted) | 0 — clean |
+| # | Function | APAS | Claude-Opus-4.6 | Status |
+|---|----------|------|-----------------|--------|
+| 1 | insertion_sort | Work Θ(n²), Span Θ(n²) | Work Θ(n²), Span Θ(n²) — agrees | ✅ Present |
 
-## Cost Disagreements
+All exec functions have cost annotations. No disagreements.
 
-None. APAS and implementation agree: Work Theta(n^2), Span Theta(n^2).
+## Phase 4: Parallelism Review
+
+N/A — no Mt modules in Chap03.
+
+## Phase 5: RTT Review
+
+| # | Test file | Tests | Notes |
+|---|-----------|-------|-------|
+| 1 | tests/Chap03/TestInsertionSortStEph.rs | 7 | empty, single, sorted, reverse, duplicates, random, large (10k) |
+
+Chap03 is included when `full_verify` is enabled (default for validate). Good coverage.
+
+## Phase 6: PTT Review
+
+No PTTs for Chap03. No iterators or ForLoopGhostIterator; no complicated callability.
+**Verdict:** No PTTs needed.
+
+## Phase 7: Gap Analysis
+
+**Prose items with no implementation:**
+- The `insert f x s` sub-function is not a separate function. The code
+  inlines insertion into the inner loop of `insertion_sort`. This is the
+  standard approach for the iterative variant.
+
+**Code with no prose counterpart:**
+- `sorted_prefix` spec function — proof helper.
+- `cross_sorted` spec function — proof helper for bridging the inner loop
+  invariant to the outer loop invariant.
+- `is_sorted` — uses `TotalOrder::le`.
+- `TotalOrder` trait and its laws — in `src/vstdplus/total_order.rs`.
+
+## Phase 8: TOC Review
+
+`veracity-review-verus-style -r -n` reports: definition order correct, 0 files would be reordered.
+File is small (110 lines) with minimal structure (broadcast use, spec fns, 1 exec fn). No TOC
+comment present; style tool passes. No action needed.
 
 ## Implementation Fidelity
 
@@ -62,7 +111,7 @@ The spec captures both correctness properties:
    output is a permutation of the input.
 2. **Sortedness**: `is_sorted(sorted)` — the output is sorted.
 
-The sortedness proof was added during this review. It uses:
+The sortedness proof uses:
 - `cross_sorted` spec function for the inner loop invariant.
 - Explicit transitivity proofs via `TotalOrder::transitive`.
 - Lexicographic decreases for the inner loop (`down, if swapped { 1 } else { 0 }`).
@@ -73,28 +122,24 @@ antisymmetry, transitivity, and totality. This is strictly stronger than
 an arbitrary comparison function — it guarantees a total order, which the
 prose also assumes but doesn't formalize.
 
-## Gap Analysis
-
-**Prose items with no implementation:**
-- The `insert f x s` sub-function is not a separate function. The code
-  inlines insertion into the inner loop of `insertion_sort`. This is the
-  standard approach for the iterative variant.
-
-**Code with no prose counterpart:**
-- `cross_sorted` spec function — proof helper for bridging the inner loop
-  invariant to the outer loop invariant.
-- `is_sorted` — uses `vstd::relations::sorted_by` and `TotalOrder::le`.
-- `TotalOrder` trait and its laws — in `src/vstdplus/total_order.rs`.
-
-## Runtime Tests
-
-| # | Test file | Notes |
-|---|-----------|-------|
-| 1 | TestInsertionSortStEph.rs | Required full_verify feature |
-
 ## Proof Holes
 
-None. Module is fully verified with no admits, assumes, or external_body.
+```
+✓ InsertionSortStEph.rs
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   1 clean (no holes)
+   0 holed (contains holes)
+   1 total
+
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
+```
 
 ## Summary
 
@@ -102,4 +147,4 @@ Chap03 is a single-file chapter implementing insertion sort. The code is
 fully verified with strong specs (permutation + sortedness). The main
 deviation from prose is iterative in-place vs recursive functional, which
 is standard for imperative verification. No cost disagreements. No proof
-holes. The sortedness proof was completed during this review session.
+holes. All 8 phases verified.
