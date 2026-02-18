@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chap27 — Review Against Prose
 
-**Date**: 2026-02-13  
+**Date**: 2026-02-17 (updated)  
 **Reviewer**: Claude-Opus-4.6  
 **Verification**: 1513 verified, 0 errors  
 **Proof holes (Chap27)**: 0
@@ -147,29 +147,29 @@ Note: The expansion loop in `scan_contract_verified` is sequential (Θ(n) work),
 
 | # | Source Module | RTT File | Tests | Coverage |
 |---|-------------|----------|:-----:|:--------:|
-| 1 | ReduceContractStEph.rs | TestReduceContractStEph.rs | 8 | ✓ |
-| 2 | ReduceContractMtEph.rs | TestReduceContractMtEph.rs | 8 | ✓ |
-| 3 | ScanContractStEph.rs | TestScanContractStEph.rs | 7 | ✓ |
-| 4 | ScanContractMtEph.rs | TestScanContractMtEph.rs | 7 | ✓ |
+| 1 | ReduceContractStEph.rs | TestReduceContractStEph.rs | 10 | ✓ |
+| 2 | ReduceContractMtEph.rs | TestReduceContractMtEph.rs | 10 | ✓ |
+| 3 | ScanContractStEph.rs | TestScanContractStEph.rs | 9 | ✓ |
+| 4 | ScanContractMtEph.rs | TestScanContractMtEph.rs | 9 | ✓ |
 
-All 4 modules have corresponding test files with 30 total tests.
+All 4 modules have corresponding test files with 38 total tests.
 
 ### 5b. Test quality
 
 Each test file covers:
 - ✓ Empty sequence (edge case)
 - ✓ Single element (base case)
+- ✓ Two-element sequences (minimal contraction step)
 - ✓ Even-length sequences (no odd expansion)
 - ✓ Odd-length sequences (exercises odd expansion path)
+- ✓ Power-of-2 inputs (16, 32) matching prose assumption
 - ✓ Large inputs (1000 for reduce, 100 for scan)
 - ✓ Multiple operations (sum, product, max for reduce; sum, product for scan)
 - ✓ Scan verifies prefix values match expected
 
 ### 5c. Missing tests
 
-No critical gaps. Minor suggestion:
-1. Power-of-2 inputs (e.g., 16, 32) explicitly to match prose assumption
-2. Two-element sequences to test the minimal contraction step
+No gaps.
 
 ---
 
@@ -189,7 +189,7 @@ However, note that the StEph implementations do contain `while` loops inside `ve
 
 | # | Prose Item | Status |
 |---|-----------|--------|
-| 1 | Example 27.1 (Maximal Element) | Not implemented — reduce with max achieves the same; no separate module needed |
+| 1 | Example 27.1 (Maximal Element) | Subsumed — `reduce_contract` with max and 0 identity achieves the same; documented in trait doc comments on both StEph and MtEph |
 
 ### Code with no prose counterpart
 
@@ -264,9 +264,10 @@ The only trust boundary is `assume_specification` for `Arc::clone` in `vstdplus/
 
 Chap27 is **complete**:
 - All prose algorithms (27.2, 27.3) implemented in both St and Mt variants
+- Example 27.1 (Maximal Element) subsumed by generic reduce; documented in trait doc comments
 - All specs are strong — full ensures capturing fold_left / prefix fold_left semantics
 - Zero proof holes in chapter code
 - Both Mt variants are genuinely parallel via `HFSchedulerMtEph::join`
-- 30 runtime tests cover all edge cases
+- 38 runtime tests cover all edge cases including two-element and power-of-2 inputs
 - No PTTs needed (no iterators)
 - Cost annotations agree with APAS for all parallel variants

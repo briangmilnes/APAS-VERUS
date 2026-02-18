@@ -1,39 +1,36 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap37/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs
 
-✓ AVLTreeSeq.rs
-✓ AVLTreeSeqMtPer.rs
-✓ AVLTreeSeqStEph.rs
-✓ AVLTreeSeqStPer.rs
-✓ BSTAVLMtEph.rs
-✓ BSTAVLStEph.rs
-✓ BSTBBAlphaMtEph.rs
-✓ BSTBBAlphaStEph.rs
-✓ BSTPlainMtEph.rs
-✓ BSTPlainStEph.rs
-✓ BSTRBMtEph.rs
-✓ BSTRBStEph.rs
-✓ BSTSetAVLMtEph.rs
-✓ BSTSetBBAlphaMtEph.rs
-✓ BSTSetPlainMtEph.rs
-✓ BSTSetRBMtEph.rs
-✓ BSTSetSplayMtEph.rs
-✓ BSTSplayMtEph.rs
-✓ BSTSplayStEph.rs
+❌ BSTPlainMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:263: assume() - assume(tree_ref.spec_size() <= usize::MAX);
+       259 |         pub fn size(&self) -> (n: usize)
+            ...
+       261 |             let read_handle = self.root.acquire_read();
+       262 |             let tree_ref = read_handle.borrow();
+       264 |             let n = tree_ref.size();
+       265 |             read_handle.release_read();
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:273: assume() - assume(tree_ref.spec_height() <= usize::MAX);
+       269 |         pub fn height(&self) -> (h: usize)
+            ...
+       271 |             let read_handle = self.root.acquire_read();
+       272 |             let tree_ref = read_handle.borrow();
+       274 |             let h = tree_ref.height();
+       275 |             read_handle.release_read();
+   Holes: 2 total
+      2 × assume()
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   19 clean (no holes)
-   0 holed (contains holes)
-   19 total
+   0 clean (no holes)
+   1 holed (contains holes)
+   1 total
 
 Proof Functions:
    0 clean
    0 holed
    0 total
 
-Holes Found: 0 total
-
-🎉 No proof holes found! All proofs are complete.
+Holes Found: 2 total
+   2 × assume()

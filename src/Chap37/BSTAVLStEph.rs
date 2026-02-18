@@ -1,276 +1,583 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Ephemeral AVL-balanced binary search tree with `find` support and public traversal.
+//! Ephemeral AVL-balanced binary search tree.
+//! Verusified: functional-style AVL with BST invariant + balance specs.
+
+// Table of Contents
+// 1. module
+// 2. imports
+// 6. spec fns
+// 9. impls
+// 12. macros
+
+// 1. module
 
 pub mod BSTAVLStEph {
 
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
-    use crate::Types::Types::*;
+    use vstd::prelude::*;
 
-    type Link<T> = Option<Box<Node<T>>>;
+    verus! {
 
-    #[derive(Clone, Debug)]
-    struct Node<T: StT + Ord> {
-        key: T,
-        height: i32,
-        size: N,
-        left: Link<T>,
-        right: Link<T>,
-    }
+    // 2. imports
 
-    /// - APAS: Work Θ(1), Span Θ(1).
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
-    fn new_node<T: StT + Ord>(key: T) -> Node<T> {
-        Node {
-            key,
-            height: 1,
-            size: 1,
-            left: None,
-            right: None,
+    use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
+    use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{tree_contains, tree_is_bst};
+    use crate::vstdplus::total_order::total_order::TotalOrder;
+
+    // 6. spec fns
+
+    /// AVL balance: for every node, |height(left) - height(right)| <= 1.
+    pub open spec fn avl_balanced<T>(tree: BalBinTree<T>) -> bool
+        decreases tree.spec_size(),
+    {
+        match tree {
+            BalBinTree::Leaf => true,
+            BalBinTree::Node(node) =>
+                avl_balanced(node.left)
+                && avl_balanced(node.right)
+                && {
+                    let lh = node.left.spec_height() as int;
+                    let rh = node.right.spec_height() as int;
+                    -1 <= lh - rh && lh - rh <= 1
+                }
         }
     }
 
-    /// - APAS: Work Θ(1), Span Θ(1).
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
-    fn height_link<T: StT + Ord>(link: &Link<T>) -> i32 { link.as_ref().map_or(0, |n| n.height) }
-
-    /// - APAS: Work Θ(1), Span Θ(1).
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
-    fn size_link<T: StT + Ord>(link: &Link<T>) -> N { link.as_ref().map_or(0, |n| n.size) }
-
-    /// - APAS: Work Θ(1), Span Θ(1).
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
-    fn update<T: StT + Ord>(node: &mut Node<T>) {
-        node.height = 1 + height_link(&node.left).max(height_link(&node.right));
-        node.size = 1 + size_link(&node.left) + size_link(&node.right);
+    /// Combined AVL tree invariant: BST ordering + AVL balance.
+    pub open spec fn tree_is_avl<T: TotalOrder>(tree: BalBinTree<T>) -> bool {
+        tree_is_bst(tree) && avl_balanced(tree)
     }
 
-    /// - APAS: Work Θ(1), Span Θ(1).
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
-    fn rotate_right<T: StT + Ord>(link: &mut Link<T>) {
-        if let Some(mut y) = link.take() {
-            if let Some(mut x) = y.left.take() {
-                y.left = x.right.take();
-                update(&mut y);
-                update(&mut x);
-                x.right = Some(y);
-                *link = Some(x);
-            } else {
-                *link = Some(y);
+    // 7. proof fns
+
+    /// Decomposes tree_is_bst two levels deep, exposing children and grandchildren BST
+    /// facts plus all ordering quantifiers. Used by rotation proofs.
+    proof fn lemma_bst_deep<T: TotalOrder>(tree: BalBinTree<T>)
+        requires tree_is_bst::<T>(tree),
+        ensures
+            match tree {
+                BalBinTree::Leaf => true,
+                BalBinTree::Node(node) =>
+                    tree_is_bst::<T>(node.left)
+                    && tree_is_bst::<T>(node.right)
+                    && (forall|x: T| #![auto] tree_contains(node.left, x) ==>
+                        T::le(x, node.value) && x != node.value)
+                    && (forall|x: T| #![auto] tree_contains(node.right, x) ==>
+                        T::le(node.value, x) && x != node.value)
+                    && match node.left {
+                        BalBinTree::Leaf => true,
+                        BalBinTree::Node(lnode) =>
+                            tree_is_bst::<T>(lnode.left)
+                            && tree_is_bst::<T>(lnode.right)
+                            && (forall|x: T| #![auto] tree_contains(lnode.left, x) ==>
+                                T::le(x, lnode.value) && x != lnode.value)
+                            && (forall|x: T| #![auto] tree_contains(lnode.right, x) ==>
+                                T::le(lnode.value, x) && x != lnode.value)
+                    }
+                    && match node.right {
+                        BalBinTree::Leaf => true,
+                        BalBinTree::Node(rnode) =>
+                            tree_is_bst::<T>(rnode.left)
+                            && tree_is_bst::<T>(rnode.right)
+                            && (forall|x: T| #![auto] tree_contains(rnode.left, x) ==>
+                                T::le(x, rnode.value) && x != rnode.value)
+                            && (forall|x: T| #![auto] tree_contains(rnode.right, x) ==>
+                                T::le(rnode.value, x) && x != rnode.value)
+                    }
             }
-        }
+    {
+        reveal_with_fuel(tree_is_bst, 3);
+        reveal_with_fuel(tree_contains, 3);
     }
 
-    /// - APAS: Work Θ(1), Span Θ(1).
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
-    fn rotate_left<T: StT + Ord>(link: &mut Link<T>) {
-        if let Some(mut x) = link.take() {
-            if let Some(mut y) = x.right.take() {
-                x.right = y.left.take();
-                update(&mut x);
-                update(&mut y);
-                y.left = Some(x);
-                *link = Some(y);
-            } else {
-                *link = Some(x);
-            }
-        }
+    // 9. impls
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTAVLStEph<T> {
+        pub root: BalBinTree<T>,
     }
 
-    /// - APAS: Work Θ(1), Span Θ(1).
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
-    fn rebalance<T: StT + Ord>(link: &mut Link<T>) {
-        if let Some(node) = link.as_mut() {
-            update(node);
-            let bf = height_link(&node.left) - height_link(&node.right);
-            if bf > 1 {
-                if let Some(left) = node.left.as_mut() {
-                    if height_link(&left.right) > height_link(&left.left) {
-                        rotate_left(&mut node.left);
+    fn rotate_right<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+        requires
+            tree_is_bst::<T>(tree),
+            !(tree is Leaf),
+        ensures
+            tree_is_bst::<T>(result),
+            forall|x: T| #![auto] tree_contains(result, x) == tree_contains(tree, x),
+    {
+        let ghost tree_ghost = tree;
+        match tree {
+            BalBinTree::Node(y_box) => {
+                let BalBinNode { left: left_tree, value: y_val, right: r } = *y_box;
+                let ghost old_left = left_tree;
+                let ghost old_r = r;
+
+                match left_tree {
+                    BalBinTree::Node(x_box) => {
+                        let BalBinNode { left: ll, value: x_val, right: lr } = *x_box;
+                        let ghost old_ll = ll;
+                        let ghost old_lr = lr;
+
+                        let right_sub = BalBinTree::Node(Box::new(BalBinNode {
+                            left: lr,
+                            value: y_val,
+                            right: r,
+                        }));
+
+                        let r = BalBinTree::Node(Box::new(BalBinNode {
+                            left: ll,
+                            value: x_val,
+                            right: right_sub,
+                        }));
+
+                        proof {
+                            lemma_bst_deep::<T>(tree_ghost);
+
+                            assert forall|z: T| tree_contains(old_lr, z) implies
+                                T::le(z, y_val) && z != y_val
+                            by {
+                                assert(tree_contains(old_left, z));
+                            };
+
+                            assert(tree_contains(old_left, x_val));
+                            assert(x_val != y_val);
+
+                            assert(tree_is_bst::<T>(right_sub));
+
+                            assert forall|z: T| tree_contains(right_sub, z) implies
+                                T::le(x_val, z) && z != x_val
+                            by {
+                                if tree_contains(old_lr, z) {
+                                } else if z == y_val {
+                                    assert(x_val != y_val);
+                                } else if tree_contains(old_r, z) {
+                                    T::transitive(x_val, y_val, z);
+                                    if z == x_val {
+                                        T::antisymmetric(x_val, y_val);
+                                    }
+                                }
+                            };
+
+                            assert forall|z: T| tree_contains(r, z) ==
+                                tree_contains(tree_ghost, z)
+                            by {
+                                assert(tree_contains(r, z) ==
+                                    (x_val == z
+                                    || tree_contains(old_ll, z)
+                                    || tree_contains(right_sub, z)));
+                                assert(tree_contains(right_sub, z) ==
+                                    (y_val == z
+                                    || tree_contains(old_lr, z)
+                                    || tree_contains(old_r, z)));
+                                assert(tree_contains(tree_ghost, z) ==
+                                    (y_val == z
+                                    || tree_contains(old_left, z)
+                                    || tree_contains(old_r, z)));
+                                assert(tree_contains(old_left, z) ==
+                                    (x_val == z
+                                    || tree_contains(old_ll, z)
+                                    || tree_contains(old_lr, z)));
+                            };
+                        }
+                        r
+                    }
+                    BalBinTree::Leaf => {
+                        BalBinTree::Node(Box::new(BalBinNode {
+                            left: BalBinTree::Leaf,
+                            value: y_val,
+                            right: r,
+                        }))
                     }
                 }
-                rotate_right(link);
-            } else if bf < -1 {
-                if let Some(right) = node.right.as_mut() {
-                    if height_link(&right.left) > height_link(&right.right) {
-                        rotate_right(&mut node.right);
+            }
+            BalBinTree::Leaf => { proof { assert(false); } BalBinTree::Leaf }
+        }
+    }
+
+    fn rotate_left<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+        requires
+            tree_is_bst::<T>(tree),
+            !(tree is Leaf),
+        ensures
+            tree_is_bst::<T>(result),
+            forall|x: T| #![auto] tree_contains(result, x) == tree_contains(tree, x),
+    {
+        let ghost tree_ghost = tree;
+        match tree {
+            BalBinTree::Node(x_box) => {
+                let BalBinNode { left: l, value: x_val, right: right_tree } = *x_box;
+                let ghost old_right = right_tree;
+                let ghost old_l = l;
+
+                match right_tree {
+                    BalBinTree::Node(y_box) => {
+                        let BalBinNode { left: rl, value: y_val, right: rr } = *y_box;
+                        let ghost old_rl = rl;
+                        let ghost old_rr = rr;
+
+                        let left_sub = BalBinTree::Node(Box::new(BalBinNode {
+                            left: l,
+                            value: x_val,
+                            right: rl,
+                        }));
+
+                        let r = BalBinTree::Node(Box::new(BalBinNode {
+                            left: left_sub,
+                            value: y_val,
+                            right: rr,
+                        }));
+
+                        proof {
+                            lemma_bst_deep::<T>(tree_ghost);
+
+                            assert forall|z: T| tree_contains(old_rl, z) implies
+                                T::le(x_val, z) && z != x_val
+                            by {
+                                assert(tree_contains(old_right, z));
+                            };
+
+                            assert(tree_contains(old_right, y_val));
+                            assert(x_val != y_val);
+
+                            assert(tree_is_bst::<T>(left_sub));
+
+                            assert forall|z: T| tree_contains(left_sub, z) implies
+                                T::le(z, y_val) && z != y_val
+                            by {
+                                if tree_contains(old_l, z) {
+                                    T::transitive(z, x_val, y_val);
+                                    if z == y_val {
+                                        T::antisymmetric(x_val, y_val);
+                                    }
+                                } else if z == x_val {
+                                    assert(x_val != y_val);
+                                } else if tree_contains(old_rl, z) {
+                                }
+                            };
+
+                            assert forall|z: T| tree_contains(r, z) ==
+                                tree_contains(tree_ghost, z)
+                            by {
+                                assert(tree_contains(r, z) ==
+                                    (y_val == z
+                                    || tree_contains(left_sub, z)
+                                    || tree_contains(old_rr, z)));
+                                assert(tree_contains(left_sub, z) ==
+                                    (x_val == z
+                                    || tree_contains(old_l, z)
+                                    || tree_contains(old_rl, z)));
+                                assert(tree_contains(tree_ghost, z) ==
+                                    (x_val == z
+                                    || tree_contains(old_l, z)
+                                    || tree_contains(old_right, z)));
+                                assert(tree_contains(old_right, z) ==
+                                    (y_val == z
+                                    || tree_contains(old_rl, z)
+                                    || tree_contains(old_rr, z)));
+                            };
+                        }
+                        r
+                    }
+                    BalBinTree::Leaf => {
+                        BalBinTree::Node(Box::new(BalBinNode {
+                            left: l,
+                            value: x_val,
+                            right: BalBinTree::Leaf,
+                        }))
                     }
                 }
-                rotate_left(link);
             }
-        }
-        if let Some(node) = link.as_mut() {
-            update(node);
+            BalBinTree::Leaf => { proof { assert(false); } BalBinTree::Leaf }
         }
     }
 
-    /// - APAS: Work O(h(T)), Span O(h(T)).
-    /// - Claude-Opus-4.6: Work O(log n), Span O(log n) — AVL guarantees h = O(log n).
-    fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T) {
-        match link {
-            | Some(node) => {
-                if value < node.key {
-                    insert_link(&mut node.left, value);
-                } else if value > node.key {
-                    insert_link(&mut node.right, value);
+    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (result: BalBinTree<T>)
+        requires tree_is_bst::<T>(node),
+        ensures
+            tree_is_bst::<T>(result),
+            tree_contains(result, value),
+            forall|x: T| #![auto] tree_contains(result, x) <==>
+                (tree_contains(node, x) || x == value),
+        decreases node.spec_size(),
+    {
+        match node {
+            BalBinTree::Leaf => {
+                BalBinTree::Node(Box::new(BalBinNode {
+                    left: BalBinTree::Leaf,
+                    value: value,
+                    right: BalBinTree::Leaf,
+                }))
+            }
+            BalBinTree::Node(inner) => {
+                let BalBinNode { left, value: node_val, right } = *inner;
+                let ghost old_left = left;
+                let ghost old_right = right;
+
+                match TotalOrder::cmp(&value, &node_val) {
+                    core::cmp::Ordering::Less => {
+                        let new_left = insert_node(left, value);
+                        let r = BalBinTree::Node(Box::new(BalBinNode {
+                            left: new_left,
+                            value: node_val,
+                            right: right,
+                        }));
+                        proof {
+                            assert(tree_is_bst::<T>(new_left));
+                            assert(tree_is_bst::<T>(old_right));
+
+                            assert forall|x: T| tree_contains(new_left, x) implies
+                                T::le(x, node_val) && x != node_val
+                            by {
+                                if tree_contains(old_left, x) {
+                                } else {
+                                    assert(x == value);
+                                }
+                            };
+
+                            assert forall|x: T| tree_contains(old_right, x) implies
+                                T::le(node_val, x) && x != node_val
+                            by {};
+
+                            assert forall|x: T| tree_contains(r, x) ==
+                                (tree_contains(node, x) || x == value)
+                            by {
+                                assert(tree_contains(r, x) ==
+                                    (node_val == x
+                                    || tree_contains(new_left, x)
+                                    || tree_contains(old_right, x)));
+                                assert(tree_contains(node, x) ==
+                                    (node_val == x
+                                    || tree_contains(old_left, x)
+                                    || tree_contains(old_right, x)));
+                            };
+                        }
+                        r
+                    }
+                    core::cmp::Ordering::Greater => {
+                        let new_right = insert_node(right, value);
+                        let r = BalBinTree::Node(Box::new(BalBinNode {
+                            left: left,
+                            value: node_val,
+                            right: new_right,
+                        }));
+                        proof {
+                            assert(tree_is_bst::<T>(old_left));
+                            assert(tree_is_bst::<T>(new_right));
+
+                            assert forall|x: T| tree_contains(old_left, x) implies
+                                T::le(x, node_val) && x != node_val
+                            by {};
+
+                            assert forall|x: T| tree_contains(new_right, x) implies
+                                T::le(node_val, x) && x != node_val
+                            by {
+                                if tree_contains(old_right, x) {
+                                } else {
+                                    assert(x == value);
+                                }
+                            };
+
+                            assert forall|x: T| tree_contains(r, x) ==
+                                (tree_contains(node, x) || x == value)
+                            by {
+                                assert(tree_contains(r, x) ==
+                                    (node_val == x
+                                    || tree_contains(old_left, x)
+                                    || tree_contains(new_right, x)));
+                                assert(tree_contains(node, x) ==
+                                    (node_val == x
+                                    || tree_contains(old_left, x)
+                                    || tree_contains(old_right, x)));
+                            };
+                        }
+                        r
+                    }
+                    core::cmp::Ordering::Equal => {
+                        let r = BalBinTree::Node(Box::new(BalBinNode {
+                            left: left,
+                            value: node_val,
+                            right: right,
+                        }));
+                        proof {
+                            assert forall|x: T| tree_contains(r, x) ==
+                                (tree_contains(node, x) || x == value)
+                            by {
+                                assert(tree_contains(r, x) ==
+                                    (node_val == x
+                                    || tree_contains(old_left, x)
+                                    || tree_contains(old_right, x)));
+                                assert(tree_contains(node, x) ==
+                                    (node_val == x
+                                    || tree_contains(old_left, x)
+                                    || tree_contains(old_right, x)));
+                                assert(value == node_val);
+                            };
+                        }
+                        r
+                    }
+                }
+            }
+        }
+    }
+
+    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (result: bool)
+        requires tree_is_bst::<T>(*node),
+        ensures result == tree_contains(*node, *target),
+        decreases node.spec_size(),
+    {
+        match node {
+            BalBinTree::Leaf => false,
+            BalBinTree::Node(inner) => {
+                match TotalOrder::cmp(target, &inner.value) {
+                    core::cmp::Ordering::Equal => true,
+                    core::cmp::Ordering::Less => {
+                        let r = contains_node(&inner.left, target);
+                        proof {
+                            if tree_contains(inner.right, *target) {
+                                T::antisymmetric(*target, inner.value);
+                            }
+                        }
+                        r
+                    }
+                    core::cmp::Ordering::Greater => {
+                        let r = contains_node(&inner.right, target);
+                        proof {
+                            if tree_contains(inner.left, *target) {
+                                T::antisymmetric(*target, inner.value);
+                            }
+                        }
+                        r
+                    }
+                }
+            }
+        }
+    }
+
+    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (result: Option<&'a T>)
+        requires tree_is_bst::<T>(*node),
+        ensures
+            result.is_some() == tree_contains(*node, *target),
+            result.is_some() ==> *result.unwrap() == *target,
+        decreases node.spec_size(),
+    {
+        match node {
+            BalBinTree::Leaf => None,
+            BalBinTree::Node(inner) => {
+                match TotalOrder::cmp(target, &inner.value) {
+                    core::cmp::Ordering::Equal => Some(&inner.value),
+                    core::cmp::Ordering::Less => {
+                        let r = find_node(&inner.left, target);
+                        proof {
+                            if tree_contains(inner.right, *target) {
+                                T::antisymmetric(*target, inner.value);
+                            }
+                        }
+                        r
+                    }
+                    core::cmp::Ordering::Greater => {
+                        let r = find_node(&inner.right, target);
+                        proof {
+                            if tree_contains(inner.left, *target) {
+                                T::antisymmetric(*target, inner.value);
+                            }
+                        }
+                        r
+                    }
+                }
+            }
+        }
+    }
+
+    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (result: Option<&T>)
+        decreases node.spec_size(),
+    {
+        match node {
+            BalBinTree::Leaf => None,
+            BalBinTree::Node(inner) => {
+                if inner.left.is_leaf() {
+                    Some(&inner.value)
                 } else {
-                    return;
+                    min_node(&inner.left)
                 }
             }
-            | None => {
-                *link = Some(Box::new(new_node(value)));
-                return;
-            }
         }
-        rebalance(link);
     }
 
-    /// - APAS: Work O(h(T)), Span O(h(T)).
-    /// - Claude-Opus-4.6: Work O(log n), Span O(log n) — AVL guarantees h = O(log n).
-    fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T> {
-        match link {
-            | None => None,
-            | Some(node) => {
-                if target == &node.key {
-                    Some(&node.key)
-                } else if target < &node.key {
-                    find_link(&node.left, target)
+    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (result: Option<&T>)
+        decreases node.spec_size(),
+    {
+        match node {
+            BalBinTree::Leaf => None,
+            BalBinTree::Node(inner) => {
+                if inner.right.is_leaf() {
+                    Some(&inner.value)
                 } else {
-                    find_link(&node.right, target)
+                    max_node(&inner.right)
                 }
             }
         }
     }
 
-    /// - APAS: Work O(h(T)), Span O(h(T)).
-    /// - Claude-Opus-4.6: Work O(log n), Span O(log n).
-    fn min_link<T: StT + Ord>(link: &Link<T>) -> Option<&T> {
-        match link {
-            | None => None,
-            | Some(node) => match node.left {
-                | None => Some(&node.key),
-                | Some(_) => min_link(&node.left),
-            },
-        }
+    pub fn avl_new<T: TotalOrder>() -> (tree: BSTAVLStEph<T>)
+        ensures
+            tree_is_avl::<T>(tree.root),
+            forall|x: T| !tree_contains(tree.root, x),
+    {
+        BSTAVLStEph { root: BalBinTree::Leaf }
     }
 
-    /// - APAS: Work O(h(T)), Span O(h(T)).
-    /// - Claude-Opus-4.6: Work O(log n), Span O(log n).
-    fn max_link<T: StT + Ord>(link: &Link<T>) -> Option<&T> {
-        match link {
-            | None => None,
-            | Some(node) => match node.right {
-                | None => Some(&node.key),
-                | Some(_) => max_link(&node.right),
-            },
-        }
+    pub fn avl_size<T: TotalOrder>(tree: &BSTAVLStEph<T>) -> (n: usize)
+        requires tree.root.spec_size() <= usize::MAX,
+        ensures n == tree.root.spec_size(),
+    {
+        tree.root.size()
     }
 
-    /// - APAS: Work Θ(n), Span Θ(n).
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n).
-    fn in_order_collect<T: StT + Ord>(link: &Link<T>, out: &mut Vec<T>) {
-        if let Some(node) = link {
-            in_order_collect(&node.left, out);
-            out.push(node.key.clone());
-            in_order_collect(&node.right, out);
-        }
+    pub fn avl_is_empty<T: TotalOrder>(tree: &BSTAVLStEph<T>) -> (b: bool)
+        ensures b == (tree.root.spec_size() == 0),
+    {
+        tree.root.is_leaf()
     }
 
-    /// - APAS: Work Θ(n), Span Θ(n).
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n).
-    fn pre_order_collect<T: StT + Ord>(link: &Link<T>, out: &mut Vec<T>) {
-        if let Some(node) = link {
-            out.push(node.key.clone());
-            pre_order_collect(&node.left, out);
-            pre_order_collect(&node.right, out);
-        }
+    pub fn avl_height<T: TotalOrder>(tree: &BSTAVLStEph<T>) -> (h: usize)
+        requires tree.root.spec_height() <= usize::MAX,
+        ensures h == tree.root.spec_height(),
+    {
+        tree.root.height()
     }
 
-    #[derive(Debug, Clone)]
-    pub struct BSTAVLStEph<T: StT + Ord> {
-        root: Link<T>,
+    pub fn avl_insert<T: TotalOrder>(tree: BSTAVLStEph<T>, value: T) -> (result: BSTAVLStEph<T>)
+        requires tree_is_bst::<T>(tree.root),
+        ensures
+            tree_is_bst::<T>(result.root),
+            tree_contains(result.root, value),
+            forall|x: T| #![auto] tree_contains(result.root, x) <==>
+                (tree_contains(tree.root, x) || x == value),
+    {
+        BSTAVLStEph { root: insert_node(tree.root, value) }
     }
 
-    pub type BSTreeAVL<T> = BSTAVLStEph<T>;
-
-    pub trait BSTAVLStEphTrait<T: StT + Ord> {
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn new()                       -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)                 -> N;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)             -> B;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n)
-        fn height(&self)               -> N;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn insert(&mut self, value: T);
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn find(&self, target: &T)     -> Option<&T>;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn contains(&self, target: &T) -> B;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn minimum(&self)              -> Option<&T>;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn maximum(&self)              -> Option<&T>;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn in_order(&self)             -> ArraySeqStPerS<T>;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn pre_order(&self)            -> ArraySeqStPerS<T>;
+    pub fn avl_contains<T: TotalOrder>(tree: &BSTAVLStEph<T>, target: &T) -> (result: bool)
+        requires tree_is_bst::<T>(tree.root),
+        ensures result == tree_contains(tree.root, *target),
+    {
+        contains_node(&tree.root, target)
     }
 
-    impl<T: StT + Ord> BSTAVLStEphTrait<T> for BSTAVLStEph<T> {
-        fn new() -> Self { BSTAVLStEph { root: None } }
-
-        fn size(&self) -> N { size_link(&self.root) }
-
-        fn is_empty(&self) -> B { self.size() == 0 }
-
-        fn height(&self) -> N {
-            fn height_rec<T: StT + Ord>(link: &Link<T>) -> N {
-                match link {
-                    | None => 0,
-                    | Some(node) => 1 + height_rec(&node.left).max(height_rec(&node.right)),
-                }
-            }
-            height_rec(&self.root)
-        }
-
-        fn insert(&mut self, value: T) { insert_link(&mut self.root, value); }
-
-        fn find(&self, target: &T) -> Option<&T> { find_link(&self.root, target) }
-
-        fn contains(&self, target: &T) -> B { self.find(target).is_some() }
-
-        fn minimum(&self) -> Option<&T> { min_link(&self.root) }
-
-        fn maximum(&self) -> Option<&T> { max_link(&self.root) }
-
-        fn in_order(&self) -> ArraySeqStPerS<T> {
-            let mut out = Vec::with_capacity(self.size());
-            in_order_collect(&self.root, &mut out);
-            ArraySeqStPerS::from_vec(out)
-        }
-
-        fn pre_order(&self) -> ArraySeqStPerS<T> {
-            let mut out = Vec::with_capacity(self.size());
-            pre_order_collect(&self.root, &mut out);
-            ArraySeqStPerS::from_vec(out)
-        }
+    pub fn avl_find<'a, T: TotalOrder>(tree: &'a BSTAVLStEph<T>, target: &T) -> (result: Option<&'a T>)
+        requires tree_is_bst::<T>(tree.root),
+        ensures
+            result.is_some() == tree_contains(tree.root, *target),
+            result.is_some() ==> *result.unwrap() == *target,
+    {
+        find_node(&tree.root, target)
     }
 
-    impl<T: StT + Ord> Default for BSTAVLStEph<T> {
-        fn default() -> Self { Self::new() }
-    }
+    } // verus!
+
+    // 12. macros
 
     #[macro_export]
     macro_rules! BSTAVLStEphLit {
-        () => {
-            < $crate::Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEph<_> as $crate::Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait<_> >::new()
-        };
-        ( $( $x:expr ),* $(,)? ) => {{
-            let mut __tree = < $crate::Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEph<_> as $crate::Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait<_> >::new();
-            $( __tree.insert($x); )*
-            __tree
-        }};
+        () => { $crate::Chap37::BSTAVLStEph::BSTAVLStEph::avl_new() };
     }
-}
+} // mod

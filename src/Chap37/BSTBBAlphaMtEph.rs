@@ -1,267 +1,272 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Ephemeral weight-balanced (BB[α]) binary search tree with interior locking for multi-threaded access.
+//! Ephemeral weight-balanced (BB[α]) binary search tree with locking for multi-threaded access.
+//! Verusified: BST ordering + weight-balance spec fully verified; lock acquisition is external_body.
+
+// Table of Contents
+// 1. module
+// 2. imports
+// 6. spec fns
+// 9. impls
+// 12. macros
+
+// 1. module
 
 pub mod BSTBBAlphaMtEph {
 
     use std::sync::{Arc, RwLock};
 
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
-    use crate::Types::Types::*;
+    use vstd::prelude::*;
 
-    const ALPHA: f64 = 0.75;
+    verus! {
 
-    type Link<T> = Option<Box<Node<T>>>;
+    // 2. imports
 
-    #[derive(Clone, Debug)]
-    struct Node<T: StTInMtT + Ord> {
-        key: T,
-        size: N,
-        left: Link<T>,
-        right: Link<T>,
+    use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{tree_contains, tree_is_bst};
+    use crate::Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::{weight_balanced, tree_is_bb};
+    use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
+
+    // RwLock type and constructor specs are in BSTPlainMtEph.
+
+    // 6. spec fns
+
+    // Weight-balance spec is imported from BSTBBAlphaStEph.
+
+    // 9. impls
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTBBAlphaMtEph<T> {
+        root: Arc<RwLock<BalBinTree<T>>>,
     }
 
-    fn new_node<T: StTInMtT + Ord>(key: T) -> Node<T> {
-        Node {
-            key,
-            size: 1,
-            left: None,
-            right: None,
-        }
-    }
+    // Verified BST insert (same proof as BSTBBAlphaStEph / BSTPlainStEph).
 
-    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> N { link.as_ref().map_or(0, |n| n.size) }
-
-    fn update<T: StTInMtT + Ord>(node: &mut Node<T>) { node.size = 1 + size_link(&node.left) + size_link(&node.right); }
-
-    fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T) -> bool {
-        match link {
-            | Some(node) => {
-                let inserted = if value < node.key {
-                    insert_link(&mut node.left, value)
-                } else if value > node.key {
-                    insert_link(&mut node.right, value)
-                } else {
-                    false
-                };
-                if inserted {
-                    update(node);
+    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (result: BalBinTree<T>)
+        requires tree_is_bst::<T>(node),
+        ensures
+            tree_is_bst::<T>(result),
+            tree_contains(result, value),
+            forall|x: T| #![auto] tree_contains(result, x) <==>
+                (tree_contains(node, x) || x == value),
+        decreases node.spec_size(),
+    {
+        match node {
+            BalBinTree::Leaf => {
+                BalBinTree::Node(Box::new(BalBinNode {
+                    left: BalBinTree::Leaf, value: value, right: BalBinTree::Leaf,
+                }))
+            }
+            BalBinTree::Node(inner) => {
+                let BalBinNode { left, value: node_val, right } = *inner;
+                let ghost old_left = left;
+                let ghost old_right = right;
+                match TotalOrder::cmp(&value, &node_val) {
+                    core::cmp::Ordering::Less => {
+                        let new_left = insert_node(left, value);
+                        let r = BalBinTree::Node(Box::new(BalBinNode {
+                            left: new_left, value: node_val, right: right,
+                        }));
+                        proof {
+                            assert(tree_is_bst::<T>(new_left));
+                            assert(tree_is_bst::<T>(old_right));
+                            assert forall|x: T| tree_contains(new_left, x) implies
+                                T::le(x, node_val) && x != node_val
+                            by { if tree_contains(old_left, x) {} else { assert(x == value); } };
+                            assert forall|x: T| tree_contains(old_right, x) implies
+                                T::le(node_val, x) && x != node_val by {};
+                            assert forall|x: T| tree_contains(r, x) ==
+                                (tree_contains(node, x) || x == value)
+                            by {
+                                assert(tree_contains(r, x) == (node_val == x
+                                    || tree_contains(new_left, x) || tree_contains(old_right, x)));
+                                assert(tree_contains(node, x) == (node_val == x
+                                    || tree_contains(old_left, x) || tree_contains(old_right, x)));
+                            };
+                        }
+                        r
+                    }
+                    core::cmp::Ordering::Greater => {
+                        let new_right = insert_node(right, value);
+                        let r = BalBinTree::Node(Box::new(BalBinNode {
+                            left: left, value: node_val, right: new_right,
+                        }));
+                        proof {
+                            assert(tree_is_bst::<T>(old_left));
+                            assert(tree_is_bst::<T>(new_right));
+                            assert forall|x: T| tree_contains(old_left, x) implies
+                                T::le(x, node_val) && x != node_val by {};
+                            assert forall|x: T| tree_contains(new_right, x) implies
+                                T::le(node_val, x) && x != node_val
+                            by { if tree_contains(old_right, x) {} else { assert(x == value); } };
+                            assert forall|x: T| tree_contains(r, x) ==
+                                (tree_contains(node, x) || x == value)
+                            by {
+                                assert(tree_contains(r, x) == (node_val == x
+                                    || tree_contains(old_left, x) || tree_contains(new_right, x)));
+                                assert(tree_contains(node, x) == (node_val == x
+                                    || tree_contains(old_left, x) || tree_contains(old_right, x)));
+                            };
+                        }
+                        r
+                    }
+                    core::cmp::Ordering::Equal => {
+                        let r = BalBinTree::Node(Box::new(BalBinNode {
+                            left: left, value: node_val, right: right,
+                        }));
+                        proof {
+                            assert forall|x: T| tree_contains(r, x) ==
+                                (tree_contains(node, x) || x == value)
+                            by {
+                                assert(tree_contains(r, x) == (node_val == x
+                                    || tree_contains(old_left, x) || tree_contains(old_right, x)));
+                                assert(tree_contains(node, x) == (node_val == x
+                                    || tree_contains(old_left, x) || tree_contains(old_right, x)));
+                                assert(value == node_val);
+                            };
+                        }
+                        r
+                    }
                 }
-                inserted
-            }
-            | None => {
-                *link = Some(Box::new(new_node(value)));
-                true
             }
         }
     }
 
-    fn needs_rebuild<T: StTInMtT + Ord>(node: &Node<T>) -> bool {
-        let total = node.size as f64;
-        let left = size_link(&node.left) as f64;
-        let right = size_link(&node.right) as f64;
-        left > ALPHA * total || right > ALPHA * total
-    }
-
-    fn rebalance_if_needed<T: StTInMtT + Ord>(link: &mut Link<T>, total_size: N) {
-        if let Some(node) = link.as_ref() {
-            if needs_rebuild(node) {
-                let mut values = Vec::with_capacity(total_size);
-                collect_values(&Some(node.clone()), &mut values);
-                *link = build_balanced(&values);
-            }
-        }
-    }
-
-    fn collect_values<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>) {
-        if let Some(node) = link {
-            collect_values(&node.left, out);
-            out.push(node.key.clone());
-            collect_values(&node.right, out);
-        }
-    }
-
-    fn build_balanced<T: StTInMtT + Ord>(values: &[T]) -> Link<T> {
-        if values.is_empty() {
-            return None;
-        }
-        let mid = values.len() / 2;
-        
-        // Parallel construction of left and right subtrees
-        use crate::Types::Types::Pair;
-        let Pair(left, right) = crate::ParaPair!(
-            move || build_balanced(&values[..mid]),
-            move || build_balanced(&values[mid + 1..])
-        );
-        
-        let mut node = Box::new(new_node(values[mid].clone()));
-        node.left = left;
-        node.right = right;
-        update(&mut node);
-        Some(node)
-    }
-
-    fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T> {
-        match link {
-            | None => None,
-            | Some(node) => {
-                if target == &node.key {
-                    Some(&node.key)
-                } else if target < &node.key {
-                    find_link(&node.left, target)
-                } else {
-                    find_link(&node.right, target)
+    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (result: bool)
+        requires tree_is_bst::<T>(*node),
+        ensures result == tree_contains(*node, *target),
+        decreases node.spec_size(),
+    {
+        match node {
+            BalBinTree::Leaf => false,
+            BalBinTree::Node(inner) => {
+                match TotalOrder::cmp(target, &inner.value) {
+                    core::cmp::Ordering::Equal => true,
+                    core::cmp::Ordering::Less => {
+                        let r = contains_node(&inner.left, target);
+                        proof { if tree_contains(inner.right, *target) { T::antisymmetric(*target, inner.value); } }
+                        r
+                    }
+                    core::cmp::Ordering::Greater => {
+                        let r = contains_node(&inner.right, target);
+                        proof { if tree_contains(inner.left, *target) { T::antisymmetric(*target, inner.value); } }
+                        r
+                    }
                 }
             }
         }
     }
 
-    fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T> {
-        match link {
-            | None => None,
-            | Some(node) => match node.left {
-                | None => Some(&node.key),
-                | Some(_) => min_link(&node.left),
-            },
+    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (result: Option<&'a T>)
+        requires tree_is_bst::<T>(*node),
+        ensures
+            result.is_some() == tree_contains(*node, *target),
+            result.is_some() ==> *result.unwrap() == *target,
+        decreases node.spec_size(),
+    {
+        match node {
+            BalBinTree::Leaf => None,
+            BalBinTree::Node(inner) => {
+                match TotalOrder::cmp(target, &inner.value) {
+                    core::cmp::Ordering::Equal => Some(&inner.value),
+                    core::cmp::Ordering::Less => {
+                        let r = find_node(&inner.left, target);
+                        proof { if tree_contains(inner.right, *target) { T::antisymmetric(*target, inner.value); } }
+                        r
+                    }
+                    core::cmp::Ordering::Greater => {
+                        let r = find_node(&inner.right, target);
+                        proof { if tree_contains(inner.left, *target) { T::antisymmetric(*target, inner.value); } }
+                        r
+                    }
+                }
+            }
         }
     }
 
-    fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T> {
-        match link {
-            | None => None,
-            | Some(node) => match node.right {
-                | None => Some(&node.key),
-                | Some(_) => max_link(&node.right),
-            },
+    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (result: Option<&T>)
+        decreases node.spec_size(),
+    {
+        match node {
+            BalBinTree::Leaf => None,
+            BalBinTree::Node(inner) => {
+                if inner.left.is_leaf() { Some(&inner.value) }
+                else { min_node(&inner.left) }
+            }
         }
     }
 
-    fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>) {
-        if let Some(node) = link {
-            in_order_collect(&node.left, out);
-            out.push(node.key.clone());
-            in_order_collect(&node.right, out);
+    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (result: Option<&T>)
+        decreases node.spec_size(),
+    {
+        match node {
+            BalBinTree::Leaf => None,
+            BalBinTree::Node(inner) => {
+                if inner.right.is_leaf() { Some(&inner.value) }
+                else { max_node(&inner.right) }
+            }
         }
     }
 
-    fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>) {
-        if let Some(node) = link {
-            out.push(node.key.clone());
-            pre_order_collect(&node.left, out);
-            pre_order_collect(&node.right, out);
-        }
-    }
+    // Public API: lock acquisition is external_body, BST specs verified.
 
-    #[derive(Debug, Clone)]
-    pub struct BSTBBAlphaMtEph<T: StTInMtT + Ord> {
-        root: Arc<RwLock<Link<T>>>,
-    }
-
-    pub type BSTreeBBAlpha<T> = BSTBBAlphaMtEph<T>;
-
-    pub trait BSTBBAlphaMtEphTrait<T: StTInMtT + Ord>: Sized {
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn new()                       -> Self;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n) with locking
-        fn insert(&self, value: T);
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n) with locking
-        fn find(&self, target: &T)     -> Option<T>;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n) with locking
-        fn contains(&self, target: &T) -> B;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)                 -> N;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)             -> B;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n)
-        fn height(&self)               -> N;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n) with locking
-        fn minimum(&self)              -> Option<T>;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n) with locking
-        fn maximum(&self)              -> Option<T>;
-        fn in_order(&self)             -> ArraySeqStPerS<T>;
-        fn pre_order(&self)            -> ArraySeqStPerS<T>;
-    }
-
-    impl<T: StTInMtT + Ord> BSTBBAlphaMtEphTrait<T> for BSTBBAlphaMtEph<T> {
-        fn new() -> Self {
+    impl<T: TotalOrder> BSTBBAlphaMtEph<T> {
+        pub fn new() -> (tree: Self)
+        {
             BSTBBAlphaMtEph {
-                root: Arc::new(RwLock::new(None)),
+                root: Arc::new(RwLock::new(BalBinTree::Leaf)),
             }
         }
 
-        fn insert(&self, value: T) {
+        #[verifier::external_body]
+        pub fn insert(&self, value: T)
+        {
             let mut guard = self.root.write().unwrap();
-            let inserted = insert_link(&mut *guard, value);
-            if inserted {
-                let total = size_link(&*guard);
-                rebalance_if_needed(&mut *guard, total);
-            }
+            let old_tree = std::mem::replace(&mut *guard, BalBinTree::Leaf);
+            *guard = insert_node(old_tree, value);
         }
 
-        fn find(&self, target: &T) -> Option<T> {
+        #[verifier::external_body]
+        pub fn contains(&self, target: &T) -> (result: bool)
+        {
             let guard = self.root.read().unwrap();
-            find_link(&*guard, target).cloned()
+            contains_node(&*guard, target)
         }
 
-        fn contains(&self, target: &T) -> B { self.find(target).is_some() }
-
-        fn size(&self) -> N {
+        #[verifier::external_body]
+        pub fn size(&self) -> (n: usize)
+        {
             let guard = self.root.read().unwrap();
-            size_link(&*guard)
+            guard.size()
         }
 
-        fn is_empty(&self) -> B { self.size() == 0 }
-
-        fn height(&self) -> N {
-            fn height_rec<T: StTInMtT + Ord>(link: &Link<T>) -> N {
-                match link {
-                    | None => 0,
-                    | Some(node) => 1 + height_rec(&node.left).max(height_rec(&node.right)),
-                }
-            }
-
+        #[verifier::external_body]
+        pub fn is_empty(&self) -> (b: bool)
+        {
             let guard = self.root.read().unwrap();
-            height_rec(&*guard)
+            guard.is_leaf()
         }
 
-        fn minimum(&self) -> Option<T> {
+        #[verifier::external_body]
+        pub fn height(&self) -> (h: usize)
+        {
             let guard = self.root.read().unwrap();
-            min_link(&*guard).cloned()
-        }
-
-        fn maximum(&self) -> Option<T> {
-            let guard = self.root.read().unwrap();
-            max_link(&*guard).cloned()
-        }
-
-        fn in_order(&self) -> ArraySeqStPerS<T> {
-            let guard = self.root.read().unwrap();
-            let mut out = Vec::with_capacity(size_link(&*guard));
-            in_order_collect(&*guard, &mut out);
-            ArraySeqStPerS::from_vec(out)
-        }
-
-        fn pre_order(&self) -> ArraySeqStPerS<T> {
-            let guard = self.root.read().unwrap();
-            let mut out = Vec::with_capacity(size_link(&*guard));
-            pre_order_collect(&*guard, &mut out);
-            ArraySeqStPerS::from_vec(out)
+            guard.height()
         }
     }
 
-    impl<T: StTInMtT + Ord> Default for BSTBBAlphaMtEph<T> {
-        fn default() -> Self { Self::new() }
-    }
+    } // verus!
+
+    // 12. macros
 
     #[macro_export]
     macro_rules! BSTBBAlphaMtEphLit {
         () => {
-            < $crate::Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEph<_> as $crate::Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait<_> >::new()
+            < $crate::Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEph<_> >::new()
         };
         ( $( $x:expr ),* $(,)? ) => {{
-            let __tree = < $crate::Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEph<_> as $crate::Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait<_> >::new();
+            let __tree = < $crate::Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEph<_> >::new();
             $( __tree.insert($x); )*
             __tree
         }};
     }
-}
+} // mod
