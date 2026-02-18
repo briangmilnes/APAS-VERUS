@@ -1,11 +1,11 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //!
-//! Tests for DijkstraStEphInt
+//! Tests for DijkstraStEphI64
 
 use apas_verus::Chap05::SetStEph::SetStEph::*;
 use apas_verus::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
 use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
-use apas_verus::Chap57::DijkstraStEphInt::DijkstraStEphInt::*;
+use apas_verus::Chap57::DijkstraStEphI64::DijkstraStEphI64::*;
 use apas_verus::Types::Types::*;
 
 #[test]

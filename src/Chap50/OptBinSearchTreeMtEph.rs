@@ -1,5 +1,9 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Multi-threaded ephemeral optimal binary search tree implementation using Vec and Arc<Mutex<Vec>> for mutable thread safety.
+//!
+//! This module is outside verus! because it uses std::collections::HashMap for
+//! memoization (via Arc<Mutex<HashMap>>), which Verus does not support. Full
+//! verification would require replacing HashMap with a verified equivalent.
 
 pub mod OptBinSearchTreeMtEph {
 
@@ -14,9 +18,6 @@ pub mod OptBinSearchTreeMtEph {
     use crate::Chap50::Probability::Probability::Probability;
     use crate::Types::Types::*;
 
-    verus! {
-    } // verus!
-
     // 4. type definitions
     #[derive(Clone, Debug)]
     pub struct KeyProb<T: MtVal> {
@@ -24,6 +25,7 @@ pub mod OptBinSearchTreeMtEph {
         pub prob: Probability,
     }
 
+    // Struct contains Arc<Mutex<HashMap>> for memoization — cannot be inside verus!.
     /// Ephemeral multi-threaded optimal binary search tree solver using parallel dynamic programming
     #[derive(Clone, Debug)]
     pub struct OBSTMtEphS<T: MtVal> {

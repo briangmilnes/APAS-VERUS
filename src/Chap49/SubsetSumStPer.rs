@@ -1,5 +1,9 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 49: Subset Sum - persistent, single-threaded.
+//!
+//! This module is outside verus! because it uses std::collections::HashMap for
+//! memoization, which Verus does not support. Full verification would require
+//! replacing HashMap with a verified equivalent.
 
 pub mod SubsetSumStPer {
 
@@ -13,10 +17,8 @@ pub mod SubsetSumStPer {
     use crate::Types::Types::*;
     use crate::ArraySeqStPerSLit;
 
-    verus! {
-    } // verus!
-
     // 4. type definitions
+    // Struct contains HashMap for memoization — cannot be inside verus!.
 
     #[derive(Clone, PartialEq, Eq)]
     pub struct SubsetSumStPerS<T: StT> {

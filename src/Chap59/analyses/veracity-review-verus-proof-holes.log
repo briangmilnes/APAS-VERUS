@@ -1,9 +1,9 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap59/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap59/
 
 ✓ JohnsonMtEphFloat.rs
-✓ JohnsonMtEphInt.rs
+✓ JohnsonMtEphI64.rs
 ✓ JohnsonStEphFloat.rs
-✓ JohnsonStEphInt.rs
+✓ JohnsonStEphI64.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -21,4 +21,4 @@ Proof Functions:
 
 Holes Found: 0 total
 
-🎉 No proof holes found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.

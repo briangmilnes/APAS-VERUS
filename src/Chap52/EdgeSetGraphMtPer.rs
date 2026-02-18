@@ -8,10 +8,14 @@
 
 pub mod EdgeSetGraphMtPer {
 
+    use std::thread;
+
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerTrait;
     use crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::*;
     use crate::Types::Types::*;
+
+    const SEQUENTIAL_CUTOFF: N = 64;
 
     verus! {
 
@@ -116,18 +120,38 @@ pub mod EdgeSetGraphMtPer {
         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
 
         /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1]
-        /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — filter may be parallel but insert loop is sequential.
+        /// - Claude-Opus-4.6: Work Θ(m), Span Θ(lg m) — parallel filter + parallel neighbor set build via union.
         #[verifier::external_body]
         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
             let u_clone = u.clone();
             let filtered = self.edges.filter(move |edge| edge.0 == u_clone);
-            let mut neighbors = AVLTreeSetMtPer::empty();
             let seq = filtered.to_seq();
-            for i in 0..seq.length() {
-                let Pair(_, v) = seq.nth(i);
-                neighbors = neighbors.insert(v.clone());
+            let len = seq.length();
+            if len <= SEQUENTIAL_CUTOFF {
+                let mut neighbors = AVLTreeSetMtPer::empty();
+                for i in 0..len {
+                    let Pair(_, v) = seq.nth(i);
+                    neighbors = neighbors.insert(v.clone());
+                }
+                return neighbors;
             }
-            neighbors
+            let mid = len / 2;
+            let seq_clone = seq.clone();
+            let left_handle = thread::spawn(move || {
+                let mut neighbors = AVLTreeSetMtPer::empty();
+                for i in 0..mid {
+                    let Pair(_, v) = seq_clone.nth(i);
+                    neighbors = neighbors.insert(v.clone());
+                }
+                neighbors
+            });
+            let mut right_neighbors = AVLTreeSetMtPer::empty();
+            for i in mid..len {
+                let Pair(_, v) = seq.nth(i);
+                right_neighbors = right_neighbors.insert(v.clone());
+            }
+            let left_neighbors = left_handle.join().unwrap();
+            left_neighbors.union(&right_neighbors)
         }
 
         /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1]

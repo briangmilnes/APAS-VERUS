@@ -1,0 +1,50 @@
+---
+description: Strategy for verifying Float graph algorithm files using vstdplus/float.rs axioms
+alwaysApply: true
+---
+
+# Float Axiom Fixes
+
+## Context
+
+Chap56-59 have duplicated Float/I64 file pairs for graph algorithms (SSSP results, Dijkstra,
+Bellman-Ford, Johnson). The Float files are entirely `external_body` or outside `verus!` — no
+verification at all. The I64 files are partly or fully verified.
+
+## vstdplus/float.rs Provides
+
+- `FloatTotalOrder` trait for f64/f32: reflexive, antisymmetric, transitive, totality
+- `float_wf(x)` = `is_finite_spec()` (excludes NaN and infinity)
+- `le(self, other)` via uninterpreted `le_ensures`
+- Exec `float_cmp` returning `Ordering`
+- Broadcast group `group_float_finite_total_order`
+
+## What It Does NOT Provide
+
+- No arithmetic axioms (no `a + b` reasoning for f64)
+- No axioms for `OrderedFloat<f64>` (external crate wrapper)
+
+## Strategy: Easiest First
+
+1. **SSSPResultStEphFloat.rs** — No float arithmetic, just stores/retrieves OrderedF64 values.
+   The I64 version is already verified. Main challenge: bridging `OrderedFloat<f64>` to f64 axioms.
+2. **SSSPResultStPerFloat.rs** — Same pattern, persistent variant.
+3. **AllPairsResult*Float.rs** — Same pattern, matrix of distances.
+4. **DijkstraStEphFloat.rs** — Needs float addition axioms (dist + weight).
+5. **BellmanFordStEphFloat.rs** — Needs float addition axioms.
+6. **Johnson*Float.rs** — Depends on Dijkstra + BellmanFord.
+
+## Key Challenge: OrderedFloat<f64>
+
+The Float files use `OrderedFloat<f64>` from the `ordered_float` crate for `Eq + Ord + Hash`.
+Options to bridge to Verus:
+- (a) Switch stored type to raw `f64`, use `FloatTotalOrder::float_cmp` for comparisons
+- (b) Write `#[verifier::external_type_specification]` for `OrderedFloat<f64>`
+
+## Algorithm Files Need New Axioms
+
+Dijkstra, Bellman-Ford, Johnson all do `dist.0 + weight.0` — float addition.
+This requires axioms not yet in vstdplus/float.rs:
+- Finite + finite = finite (when no overflow)
+- Monotonicity: a <= b ==> a + c <= b + c (for finite values)
+- Identity: a + 0.0 = a

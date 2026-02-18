@@ -57,10 +57,10 @@ fn test_ordered_table_mt_per_map() {
         table = table.insert(i, format!("val_{i}"));
     }
 
-    // map is actually a filter (predicate), not a transformation
-    // Keep only entries where key < 5
-    let mapped = table.map(|pair: &Pair<i32, String>| pair.0 < 5);
-    assert_eq!(mapped.size(), 5);
+    // map transforms values: append "_mapped" to each value
+    let mapped = table.map(|_k: &i32, v: &String| format!("{v}_mapped"));
+    assert_eq!(mapped.size(), 10);
+    assert_eq!(mapped.find(&3), Some("val_3_mapped".to_string()));
 }
 
 #[test]

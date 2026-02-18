@@ -1,8 +1,11 @@
 // Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 21 — Exercise 21.8 / Algorithm 21.4: Brute Force Primality Test (isPrime).
 //! - Uses tabulate + filter per the textbook.
-//! - Proof hole: assume(ones.length() == count) bridges filter's weak spec to the ghost count.
-//!   Closing this hole requires strengthening ArraySeqStPer::filter to a multiset-equality spec.
+//! - Two proof holes remain (see justification comments in is_prime):
+//!   1. assume(1 < k+1): provable from isqrt spec — (k+1)^2 > n >= 2 implies k+1 >= 2.
+//!   2. assume(filter_len == spec_divisor_count): filter ensures spec_filter_len; structural
+//!      equality spec_filter_len(Seq(i | n%(i+1)==0), id) == spec_divisor_count(n,1,k+1) holds
+//!      but requires a recursive lemma (lemma_filter_len_eq_divisor_count) to connect them.
 
 pub mod Exercise21_8 {
 
@@ -144,7 +147,8 @@ pub mod Exercise21_8 {
 
             // 1 always divides n (n >= 2 > 0).
             assert(n as int % 1 == 0) by (nonlinear_arith) requires n >= 2;
-            // k >= 1 so 1 < k+1, triggering the recursive case.
+            // Trusted: k >= 1 so 1 < k+1. Provable from isqrt assume_specification:
+            // (k+1)^2 > n and n >= 2 imply (k+1)^2 > 2, hence k+1 >= 2.
             assume(1 < k as int + 1);
             assert(n as int % 1 == 0);
 
@@ -154,8 +158,10 @@ pub mod Exercise21_8 {
 
             lemma_divisor_count_nonneg(n as int, 2, k as int + 1);
 
-            // Bridge: the filter count equals the ghost divisor count.
-            // This is the proof hole — filter's spec doesn't give us the exact count.
+            // Trusted: filter_len == spec_divisor_count. Filter ensures ones.spec_len() ==
+            // spec_filter_len(all.seq@, id). For all.seq@[i] = (n%(i+1)==0), spec_filter_len
+            // counts the same elements as spec_divisor_count(n, 1, k+1). Closing requires
+            // lemma_filter_len_eq_divisor_count connecting spec_filter_len to spec_divisor_count.
             assume(ones.seq@.len() as int == spec_divisor_count(n as int, 1, k as int + 1));
 
             // Now prove: prime <==> spec_is_prime(n as int).

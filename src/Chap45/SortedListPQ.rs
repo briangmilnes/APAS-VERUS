@@ -187,14 +187,12 @@ pub mod SortedListPQ {
         }
 
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
-        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — repeated O(n) insert, not O(n log n) sort.
+        /// - Sort input once, then build sorted list directly.
         fn from_seq(seq: &ArraySeqStPerS<T>) -> Self {
-            let mut result = Self::empty();
-            for i in 0..seq.length() {
-                let element = seq.nth(i);
-                result = result.insert(element.clone());
-            }
-            result
+            let mut vec: Vec<T> = (0..seq.length()).map(|i| seq.nth(i).clone()).collect();
+            vec.sort();
+            let sorted = ArraySeqStPerS::from_vec(vec);
+            SortedListPQ { elements: sorted }
         }
 
         /// - APAS: N/A — utility function not in prose.
@@ -210,12 +208,7 @@ pub mod SortedListPQ {
         fn to_seq(&self) -> ArraySeqStPerS<T> { self.elements.clone() }
 
         fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self {
-            let mut result = self.clone();
-            for i in 0..elements.length() {
-                let element = elements.nth(i);
-                result = result.insert(element.clone());
-            }
-            result
+            self.meld(&Self::from_seq(elements))
         }
 
         fn extract_all_sorted(&self) -> ArraySeqStPerS<T> { self.elements.clone() }
@@ -249,11 +242,10 @@ pub mod SortedListPQ {
         }
 
         fn from_vec(vec: Vec<T>) -> Self {
-            let mut pq = Self::empty();
-            for element in vec {
-                pq = pq.insert(element);
-            }
-            pq
+            let mut v = vec;
+            v.sort();
+            let seq = ArraySeqStPerS::from_vec(v);
+            SortedListPQ { elements: seq }
         }
 
         fn to_vec(&self) -> Vec<T> {

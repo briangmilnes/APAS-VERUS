@@ -1,7 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 36 (Single-threaded): Quicksort over `ArraySeqStEph`.
 //! Verusified: sort functions are proven via partition-sort-concat decomposition.
-//! All three pivot variants use first-element pivot (correctness is pivot-independent).
+//! Pivot variants: first-element (verified); median3 and random use first-element (TODO).
+//! TODO: Implement actual median-of-three and random pivot strategies.
 
 // Table of Contents
 // 1. module
@@ -39,8 +40,7 @@ pub mod Chapter36St {
 
     // 9. impls
 
-    /// Recursive non-mutating quicksort. Partitions into left/right/equals Vecs,
-    /// recursively sorts left and right, concatenates sorted_left ++ equals ++ sorted_right.
+    /// Recursive non-mutating quicksort with first-element pivot.
     fn sort_vec<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>) -> (result: Vec<T>)
         requires a.spec_len() <= usize::MAX,
         ensures result@ =~= a.seq@.sort_by(spec_leq::<T>())
@@ -363,8 +363,7 @@ pub mod Chapter36St {
         a.seq = result;
     }
 
-    /// Quicksort with median-of-three pivot (same correctness proof; pivot strategy is a
-    /// performance optimization that does not affect the postcondition).
+    /// Quicksort with median-of-three pivot. Currently uses first-element pivot (TODO).
     pub fn quick_sort_median3<T: TotalOrder + Copy>(a: &mut ArraySeqStEphS<T>)
         requires old(a).spec_len() <= usize::MAX,
         ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>())
@@ -373,8 +372,7 @@ pub mod Chapter36St {
         a.seq = result;
     }
 
-    /// Quicksort with random pivot (same correctness proof; pivot strategy is a
-    /// performance optimization that does not affect the postcondition).
+    /// Quicksort with random pivot. Currently uses first-element pivot (TODO).
     pub fn quick_sort_random<T: TotalOrder + Copy>(a: &mut ArraySeqStEphS<T>)
         requires old(a).spec_len() <= usize::MAX,
         ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>())

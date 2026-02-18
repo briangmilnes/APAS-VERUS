@@ -168,9 +168,10 @@ pub mod BSTParaMtEph {
     /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
     /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
     fn union_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
-        match expose_internal(a) {
-            | Exposed::Leaf => b.clone(),
-            | Exposed::Node(al, ak, ar) => {
+        match (expose_internal(a), expose_internal(b)) {
+            | (Exposed::Leaf, _) => b.clone(),
+            | (_, Exposed::Leaf) => a.clone(),
+            | (Exposed::Node(al, ak, ar), _) => {
                 let (bl, _, br) = split_inner(b, &ak);
                 let Pair(left_union, right_union) =
                     crate::ParaPair!(move || union_inner(&al, &bl), move || union_inner(&ar, &br));

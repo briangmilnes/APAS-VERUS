@@ -155,12 +155,7 @@ pub mod UnsortedListPQ {
         fn to_seq(&self) -> ArraySeqStPerS<T> { self.elements.clone() }
 
         fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self {
-            let mut result = self.clone();
-            for i in 0..elements.length() {
-                let element = elements.nth(i);
-                result = result.insert(element.clone());
-            }
-            result
+            self.meld(&Self::from_seq(elements))
         }
 
         fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
@@ -180,11 +175,8 @@ pub mod UnsortedListPQ {
         }
 
         fn from_vec(vec: Vec<T>) -> Self {
-            let mut pq = Self::empty();
-            for element in vec {
-                pq = pq.insert(element);
-            }
-            pq
+            let seq = ArraySeqStPerS::from_vec(vec);
+            Self::from_seq(&seq)
         }
 
         fn to_vec(&self) -> Vec<T> {

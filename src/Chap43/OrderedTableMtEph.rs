@@ -218,7 +218,7 @@ pub mod OrderedTableMtEph {
 
         /// Claude Work: O(n), Span: O(log n)
         fn collect(&self) -> AVLTreeSeqStPerS<Pair<K, V>> {
-            let array_seq = self.base_table.collect();
+            let array_seq = self.base_table.entries();
             // Convert ArraySeqMtEphS to AVLTreeSeqStPerS
             let len = array_seq.length();
             let mut elements = Vec::new();

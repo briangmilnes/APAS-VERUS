@@ -2,6 +2,11 @@
 //! Order Statistics - Parallel Ephemeral (Chapter 35, Algorithm 35.2).
 //! Randomized contraction-based selection for finding kth order statistic.
 //! Verusified: select and select_inner are proven; rand is external_body in vstdplus.
+//!
+//! TODO(parallelism): The partition loop is sequential. APAS expects Span O(lg^2 n)
+//! via parallel filter-partition, but the multiset loop invariant makes this hard to
+//! parallelize inside verus!. Needs a parallel filter lemma or an external_body
+//! partition wrapper that delegates to two verified sequential partitions.
 
 // Table of Contents
 // 1. module

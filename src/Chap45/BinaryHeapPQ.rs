@@ -266,12 +266,7 @@ pub mod BinaryHeapPQ {
     impl<T: StT + Ord> BinaryHeapPQ<T> {
         /// Insert multiple elements from a sequence
         pub fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self {
-            let mut result = self.clone();
-            for i in 0..elements.length() {
-                let element = elements.nth(i);
-                result = result.insert(element.clone());
-            }
-            result
+            self.meld(&Self::from_seq(elements))
         }
 
         /// Extract all elements in sorted order (heapsort)
@@ -357,11 +352,7 @@ pub mod BinaryHeapPQ {
     impl<T: StT + Ord> BinaryHeapPQ<T> {
         /// Create priority queue from vector (for testing)
         pub fn from_vec(vec: Vec<T>) -> Self {
-            let mut seq = ArraySeqStPerS::empty();
-            for element in vec {
-                let single_seq = ArraySeqStPerS::singleton(element);
-                seq = ArraySeqStPerS::append(&seq, &single_seq);
-            }
+            let seq = ArraySeqStPerS::from_vec(vec);
             Self::from_seq(&seq)
         }
 

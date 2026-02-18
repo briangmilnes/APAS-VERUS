@@ -1,10 +1,12 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //!
-//! Single-Source Shortest Path Result Structure - Sequential Persistent (Integer Weights)
+//! Single-Source Shortest Path Result Structure - Sequential Ephemeral (Integer Weights)
 
-pub mod SSSPResultStPerInt {
+pub mod SSSPResultStEphI64 {
 
     use vstd::prelude::*;
+    use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
+    #[cfg(not(verus_keep_ghost))]
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
@@ -13,18 +15,37 @@ pub mod SSSPResultStPerInt {
     pub const UNREACHABLE: i64 = i64::MAX;
     pub const NO_PREDECESSOR: usize = usize::MAX;
 
-    pub struct SSSPResultStPerInt {
-        pub distances: ArraySeqStPerS<i64>,
-        pub predecessors: ArraySeqStPerS<usize>,
+    pub struct SSSPResultStEphI64 {
+        pub distances: ArraySeqStEphS<i64>,
+        pub predecessors: ArraySeqStEphS<usize>,
         pub source: usize,
     }
 
-    impl SSSPResultStPerInt {
+    impl SSSPResultStEphI64 {
+        pub fn new(n: usize, source: usize) -> (result: Self)
+            requires source < n,
+        {
+            let mut dist_seq = ArraySeqStEphS::<i64>::new(n, UNREACHABLE);
+            let _ = dist_seq.set(source, 0i64);
+            let pred_seq = ArraySeqStEphS::<usize>::new(n, NO_PREDECESSOR);
+            SSSPResultStEphI64 {
+                distances: dist_seq,
+                predecessors: pred_seq,
+                source,
+            }
+        }
+
         pub fn get_distance(&self, v: usize) -> (dist: i64) {
             if v >= self.distances.length() {
                 return UNREACHABLE;
             }
             *self.distances.nth(v)
+        }
+
+        pub fn set_distance(&mut self, v: usize, dist: i64) {
+            if v < self.distances.length() {
+                let _ = self.distances.set(v, dist);
+            }
         }
 
         pub fn get_predecessor(&self, v: usize) -> (pred: Option<usize>) {
@@ -35,6 +56,12 @@ pub mod SSSPResultStPerInt {
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
+        pub fn set_predecessor(&mut self, v: usize, pred: usize) {
+            if v < self.predecessors.length() {
+                let _ = self.predecessors.set(v, pred);
+            }
+        }
+
         pub fn is_reachable(&self, v: usize) -> (b: bool) {
             self.get_distance(v) != UNREACHABLE
         }
@@ -43,33 +70,11 @@ pub mod SSSPResultStPerInt {
     } // verus!
 
     #[cfg(not(verus_keep_ghost))]
-    impl SSSPResultStPerInt {
-        pub fn new(n: usize, source: usize) -> Self {
-            let distances = ArraySeqStPerS::tabulate(&|i| if i == source { 0 } else { UNREACHABLE }, n);
-            let predecessors = ArraySeqStPerS::tabulate(&|_| NO_PREDECESSOR, n);
-            SSSPResultStPerInt { distances, predecessors, source }
-        }
-
-        pub fn set_distance(self, v: usize, dist: i64) -> Self {
-            if v >= self.distances.length() { return self; }
-            SSSPResultStPerInt {
-                distances: ArraySeqStPerS::update(&self.distances, v, dist),
-                predecessors: self.predecessors,
-                source: self.source,
-            }
-        }
-
-        pub fn set_predecessor(self, v: usize, pred: usize) -> Self {
-            if v >= self.predecessors.length() { return self; }
-            SSSPResultStPerInt {
-                distances: self.distances,
-                predecessors: ArraySeqStPerS::update(&self.predecessors, v, pred),
-                source: self.source,
-            }
-        }
-
+    impl SSSPResultStEphI64 {
         pub fn extract_path(&self, v: usize) -> Option<ArraySeqStPerS<usize>> {
-            if !self.is_reachable(v) { return None; }
+            if !self.is_reachable(v) {
+                return None;
+            }
             let mut path = Vec::new();
             let mut current = v;
             path.push(current);

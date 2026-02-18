@@ -1,26 +1,42 @@
-$ ~/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap26/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap26/
 
 ✓ DivConReduceMtPer.rs
    3 clean proof functions
 ✓ DivConReduceStPer.rs
 ❌ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:320: external_body - #[verifier::external_body]
-       321 |     pub fn sort_and_split(points: &Vec<Point>) -> (result: (Vec<Point>, Vec<Point>))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:338: external_body - #[verifier::external_body]
-       339 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
-   Holes: 2 total
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:195: assume() - assume(spec_edges_form_cycle(combined));
+       169 |     proof fn lemma_combined_cycle(
+            ...
+       193 |             spec_edges_form_cycle(combined),
+       194 |     {
+       196 |     }
+       197 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:401: external_body - #[verifier::external_body]
+       402 |     pub fn sort_and_split(points: &Vec<Point>) -> (result: (Vec<Point>, Vec<Point>))
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:419: external_body - #[verifier::external_body]
+       420 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
+   Holes: 3 total
+      1 × assume()
       2 × external_body
-   Proof functions: 2 total (2 clean, 0 holed)
+   Proof functions: 4 total (4 clean, 0 holed)
 ❌ ETSPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:304: external_body - #[verifier::external_body]
-       305 |     pub fn sort_and_split(points: &Vec<Point>) -> (result: (Vec<Point>, Vec<Point>))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:322: external_body - #[verifier::external_body]
-       323 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
-   Holes: 2 total
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:183: assume() - assume(spec_edges_form_cycle(combined));
+       157 |     proof fn lemma_combined_cycle(
+            ...
+       181 |             spec_edges_form_cycle(combined),
+       182 |     {
+       184 |     }
+       185 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:376: external_body - #[verifier::external_body]
+       377 |     pub fn sort_and_split(points: &Vec<Point>) -> (result: (Vec<Point>, Vec<Point>))
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPStEph.rs:394: external_body - #[verifier::external_body]
+       395 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
+   Holes: 3 total
+      1 × assume()
       2 × external_body
-   Proof functions: 2 total (2 clean, 0 holed)
+   Proof functions: 3 total (3 clean, 0 holed)
 ✓ MergeSortMtPer.rs
-   1 clean proof function
+   4 clean proof functions
 ✓ MergeSortStPer.rs
    1 clean proof function
 ✓ ScanDCMtPer.rs
@@ -38,9 +54,10 @@ Modules:
    8 total
 
 Proof Functions:
-   11 clean
+   17 clean
    0 holed
-   11 total
+   17 total
 
-Holes Found: 4 total
+Holes Found: 6 total
+   2 × assume()
    4 × external_body

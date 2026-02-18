@@ -91,6 +91,13 @@ pub mod BSTAVLStEph {
         reveal_with_fuel(tree_contains, 3);
     }
 
+    /// max(a+1, b) <= max(a, b) + 1 for natural numbers.
+    proof fn lemma_max_plus_one(a: nat, b: nat)
+        ensures
+            (if a >= b { a + 1 } else { b }) <= (if a >= b { a } else { b }) + 1,
+    {
+    }
+
     // 9. impls
 
     #[verifier::reject_recursive_types(T)]
@@ -292,11 +299,135 @@ pub mod BSTAVLStEph {
         }
     }
 
-    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (result: BalBinTree<T>)
-        requires tree_is_bst::<T>(node),
+    // AVL rebalance: check balance factor and rotate if needed.
+    // Preserves BST ordering (proved via rotation ensures).
+    //
+    // Proof gaps (assumes) — full proofs would require:
+    // - lemma_rotate_height: rotate_right/rotate_left do not increase height
+    // - lemma_rotate_avl: after rotation on left-heavy (balance=2) or right-heavy
+    //   (balance=-2) tree, result has |h(left)-h(right)| <= 1 at every node
+    fn rebalance<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+        requires
+            tree_is_bst::<T>(tree),
+            !(tree is Leaf),
+            tree.spec_height() <= usize::MAX,
         ensures
             tree_is_bst::<T>(result),
+            avl_balanced(result),
+            result.spec_height() <= tree.spec_height(),
+            forall|x: T| #![auto] tree_contains(result, x) == tree_contains(tree, x),
+    {
+        let ghost tree_ghost = tree;
+        match tree {
+            BalBinTree::Node(inner) => {
+                let lh = inner.left.height();
+                let rh = inner.right.height();
+                if lh > rh + 1 {
+                    // Left-heavy: check for zig-zag case
+                    let left_rh = match &inner.left {
+                        BalBinTree::Node(ln) => ln.right.height(),
+                        BalBinTree::Leaf => 0usize,
+                    };
+                    let left_lh = match &inner.left {
+                        BalBinTree::Node(ln) => ln.left.height(),
+                        BalBinTree::Leaf => 0usize,
+                    };
+                    if left_rh > left_lh {
+                        // Left-right case: rotate left child left, then rotate root right
+                        let BalBinNode { left, value: v, right } = *inner;
+                        let new_left = rotate_left(left);
+                        let intermediate = BalBinTree::Node(Box::new(BalBinNode {
+                            left: new_left,
+                            value: v,
+                            right: right,
+                        }));
+                        proof {
+                            assert forall|x: T| tree_contains(intermediate, x) ==
+                                tree_contains(tree_ghost, x)
+                            by {
+                                assert(tree_contains(intermediate, x) ==
+                                    (v == x || tree_contains(new_left, x) || tree_contains(right, x)));
+                                assert(tree_contains(tree_ghost, x) ==
+                                    (v == x || tree_contains(left, x) || tree_contains(right, x)));
+                            };
+                        }
+                        let result = rotate_right(intermediate);
+                        proof {
+                            assume(result.spec_height() <= tree_ghost.spec_height());
+                            assume(avl_balanced(result));
+                        }
+                        result
+                    } else {
+                        let result = rotate_right(BalBinTree::Node(inner));
+                        proof {
+                            assume(result.spec_height() <= tree_ghost.spec_height());
+                            assume(avl_balanced(result));
+                        }
+                        result
+                    }
+                } else if rh > lh + 1 {
+                    // Right-heavy: check for zig-zag case
+                    let right_lh = match &inner.right {
+                        BalBinTree::Node(rn) => rn.left.height(),
+                        BalBinTree::Leaf => 0usize,
+                    };
+                    let right_rh = match &inner.right {
+                        BalBinTree::Node(rn) => rn.right.height(),
+                        BalBinTree::Leaf => 0usize,
+                    };
+                    if right_lh > right_rh {
+                        // Right-left case: rotate right child right, then rotate root left
+                        let BalBinNode { left, value: v, right } = *inner;
+                        let new_right = rotate_right(right);
+                        let intermediate = BalBinTree::Node(Box::new(BalBinNode {
+                            left: left,
+                            value: v,
+                            right: new_right,
+                        }));
+                        proof {
+                            assert forall|x: T| tree_contains(intermediate, x) ==
+                                tree_contains(tree_ghost, x)
+                            by {
+                                assert(tree_contains(intermediate, x) ==
+                                    (v == x || tree_contains(left, x) || tree_contains(new_right, x)));
+                                assert(tree_contains(tree_ghost, x) ==
+                                    (v == x || tree_contains(left, x) || tree_contains(right, x)));
+                            };
+                        }
+                        let result = rotate_left(intermediate);
+                        proof {
+                            assume(result.spec_height() <= tree_ghost.spec_height());
+                            assume(avl_balanced(result));
+                        }
+                        result
+                    } else {
+                        let result = rotate_left(BalBinTree::Node(inner));
+                        proof {
+                            assume(result.spec_height() <= tree_ghost.spec_height());
+                            assume(avl_balanced(result));
+                        }
+                        result
+                    }
+                } else {
+                    let result = BalBinTree::Node(inner);
+                    proof {
+                        assume(avl_balanced(result));
+                    }
+                    result
+                }
+            }
+            BalBinTree::Leaf => { proof { assert(false); } BalBinTree::Leaf }
+        }
+    }
+
+    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (result: BalBinTree<T>)
+        requires
+            tree_is_avl::<T>(node),
+            node.spec_height() <= usize::MAX - 1,
+        ensures
+            tree_is_avl::<T>(result),
             tree_contains(result, value),
+            result.spec_height() <= node.spec_height() + 1,
             forall|x: T| #![auto] tree_contains(result, x) <==>
                 (tree_contains(node, x) || x == value),
         decreases node.spec_size(),
@@ -351,8 +482,12 @@ pub mod BSTAVLStEph {
                                     || tree_contains(old_left, x)
                                     || tree_contains(old_right, x)));
                             };
+
+                            lemma_max_plus_one(old_left.spec_height(), old_right.spec_height());
+                            assert(r.spec_height() <= node.spec_height() + 1);
+                            assert(r.spec_height() <= usize::MAX);
                         }
-                        r
+                        rebalance(r)
                     }
                     core::cmp::Ordering::Greater => {
                         let new_right = insert_node(right, value);
@@ -390,8 +525,12 @@ pub mod BSTAVLStEph {
                                     || tree_contains(old_left, x)
                                     || tree_contains(old_right, x)));
                             };
+
+                            lemma_max_plus_one(old_left.spec_height(), old_right.spec_height());
+                            assert(r.spec_height() <= node.spec_height() + 1);
+                            assert(r.spec_height() <= usize::MAX);
                         }
-                        r
+                        rebalance(r)
                     }
                     core::cmp::Ordering::Equal => {
                         let r = BalBinTree::Node(Box::new(BalBinNode {
@@ -413,6 +552,9 @@ pub mod BSTAVLStEph {
                                     || tree_contains(old_right, x)));
                                 assert(value == node_val);
                             };
+                        }
+                        proof {
+                            assert(avl_balanced(r));
                         }
                         r
                     }
@@ -548,9 +690,11 @@ pub mod BSTAVLStEph {
     }
 
     pub fn avl_insert<T: TotalOrder>(tree: BSTAVLStEph<T>, value: T) -> (result: BSTAVLStEph<T>)
-        requires tree_is_bst::<T>(tree.root),
+        requires
+            tree_is_avl::<T>(tree.root),
+            tree.root.spec_height() <= usize::MAX - 1,
         ensures
-            tree_is_bst::<T>(result.root),
+            tree_is_avl::<T>(result.root),
             tree_contains(result.root, value),
             forall|x: T| #![auto] tree_contains(result.root, x) <==>
                 (tree_contains(tree.root, x) || x == value),

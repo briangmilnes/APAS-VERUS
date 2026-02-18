@@ -3,9 +3,13 @@
 
 pub mod AdjSeqGraphMtEph {
 
+    use std::thread;
+
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::*;
+
+    const SEQUENTIAL_CUTOFF: N = 64;
 
     verus! {
 
@@ -77,16 +81,10 @@ pub mod AdjSeqGraphMtEph {
         fn num_vertices(&self) -> N { self.adj.length() }
 
         /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
-        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential loop; span not parallel despite Mt type.
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(lg n) — parallel divide-and-conquer over vertex range.
         #[verifier::external_body]
         fn num_edges(&self) -> N {
-            let n = self.adj.length();
-            let mut count = 0;
-            for i in 0..n {
-                let adj_list = self.adj.nth(i);
-                count += adj_list.length();
-            }
-            count
+            count_edges_parallel(&self.adj)
         }
 
         /// - APAS: Work Θ(d(u)), Span Θ(lg d(u)) [Cost Spec 52.5]
@@ -150,6 +148,30 @@ pub mod AdjSeqGraphMtEph {
                 let _ = self.adj.set(u, ArraySeqMtEphS::from_vec(new_neighbors_vec));
             }
         }
+    }
+
+    /// - APAS: N/A — parallel helper.
+    /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(lg n) — parallel divide-and-conquer over vertex range.
+    #[verifier::external_body]
+    fn count_edges_parallel(adj: &ArraySeqMtEphS<ArraySeqMtEphS<N>>) -> (result: N) {
+        let n = adj.length();
+        if n == 0 {
+            return 0;
+        }
+        if n <= SEQUENTIAL_CUTOFF {
+            let mut count = 0;
+            for i in 0..n {
+                count += adj.nth(i).length();
+            }
+            return count;
+        }
+        let mid = n / 2;
+        let left_adj = adj.subseq_copy(0, mid);
+        let right_adj = adj.subseq_copy(mid, n - mid);
+        let left_handle = thread::spawn(move || count_edges_parallel(&left_adj));
+        let right_count = count_edges_parallel(&right_adj);
+        let left_count = left_handle.join().unwrap();
+        left_count + right_count
     }
 
     } // verus!

@@ -1,8 +1,9 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 50: Probability wrapper type for OBST algorithms.
 //!
-//! Note: Provides a probability wrapper that implements Eq/Ord for f64 values
-//! while maintaining compatibility with APAS MtVal trait requirements.
+//! This module is outside verus! because it uses f64 for probability values,
+//! which Verus does not support. Full verification would require a verified
+//! representation.
 
 pub mod Probability {
 
@@ -16,10 +17,8 @@ pub mod Probability {
 
     use crate::Types::Types::*;
 
-    verus! {
-    } // verus!
-
     // 4. type definitions
+    // Struct wraps f64 — cannot be inside verus!.
     #[derive(Clone, Copy)]
     pub struct Probability(pub f64);
 

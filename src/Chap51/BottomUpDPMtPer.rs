@@ -176,6 +176,12 @@ pub mod BottomUpDPMtPer {
         pub fn is_empty(&self) -> bool { self.seq_s.length() == 0usize && self.seq_t.length() == 0usize }
     }
 
+    impl BottomUpDPMtPerTrait<usize> for BottomUpDPMtPerS {
+        fn new() -> Self { Self::default() }
+
+        fn solve(&self, _input: &[usize]) -> usize { self.med_bottom_up_parallel() }
+    }
+
     // 11. derive impls
     impl Default for BottomUpDPMtPerS {
         /// - APAS: N/A — infrastructure.

@@ -4,9 +4,13 @@
 
 pub mod AdjSeqGraphMtPer {
 
+    use std::thread;
+
     use vstd::prelude::*;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
+
+    const SEQUENTIAL_CUTOFF: N = 64;
 
     verus! {
 
@@ -76,15 +80,10 @@ pub mod AdjSeqGraphMtPer {
         fn num_vertices(&self) -> N { self.adj.length() }
 
         /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
-        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential loop; span not parallel despite Mt type.
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(lg n) — parallel divide-and-conquer over vertex range.
         #[verifier::external_body]
         fn num_edges(&self) -> N {
-            let n = self.adj.length();
-            let mut count = 0;
-            for i in 0..n {
-                count += self.adj.nth(i).length();
-            }
-            count
+            count_edges_parallel(&self.adj)
         }
 
         /// - APAS: Work Θ(d(u)), Span Θ(lg d(u)) [Cost Spec 52.5]
@@ -114,30 +113,90 @@ pub mod AdjSeqGraphMtPer {
         fn out_degree(&self, u: N) -> N { self.adj.nth(u).length() }
     }
 
+    /// - APAS: N/A — parallel helper.
+    /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(lg n) — parallel divide-and-conquer over vertex range.
+    #[verifier::external_body]
+    fn count_edges_parallel(adj: &ArraySeqMtPerS<ArraySeqMtPerS<N>>) -> (result: N) {
+        let n = adj.length();
+        if n == 0 {
+            return 0;
+        }
+        if n <= SEQUENTIAL_CUTOFF {
+            let mut count = 0;
+            for i in 0..n {
+                count += adj.nth(i).length();
+            }
+            return count;
+        }
+        let mid = n / 2;
+        let left_adj = adj.subseq_copy(0, mid);
+        let right_adj = adj.subseq_copy(mid, n - mid);
+        let left_handle = thread::spawn(move || count_edges_parallel(&left_adj));
+        let right_count = count_edges_parallel(&right_adj);
+        let left_count = left_handle.join().unwrap();
+        left_count + right_count
+    }
+
     } // verus!
 
     // 13. derive impls outside verus!
 
     impl AdjSeqGraphMtPer {
         /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
-        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential double loop; span not parallel despite Mt type.
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(lg n) — parallel divide-and-conquer over vertex range.
         pub fn map_vertices<F: Fn(N) -> N + Send + Sync + Clone + 'static>(&self, f: F) -> Self
         where
             N: 'static,
         {
             let n = self.adj.length();
-            let mut new_adj_vec = Vec::with_capacity(n);
-            for i in 0..n {
-                let neighbors = self.adj.nth(i);
+            if n <= SEQUENTIAL_CUTOFF {
+                let mut new_adj_vec = Vec::with_capacity(n);
+                for i in 0..n {
+                    let neighbors = self.adj.nth(i);
+                    let len = neighbors.length();
+                    let mut new_neighbors_vec = Vec::with_capacity(len);
+                    for j in 0..len {
+                        new_neighbors_vec.push(f(*neighbors.nth(j)));
+                    }
+                    new_adj_vec.push(ArraySeqMtPerS::from_vec(new_neighbors_vec));
+                }
+                return AdjSeqGraphMtPer {
+                    adj: ArraySeqMtPerS::from_vec(new_adj_vec),
+                };
+            }
+            let mid = n / 2;
+            let adj = &self.adj;
+            let left_adj = adj.subseq_copy(0, mid);
+            let right_adj = adj.subseq_copy(mid, n - mid);
+            let f_left = f.clone();
+            let f_right = f;
+            let left_handle = thread::spawn(move || {
+                let mut new_adj_vec = Vec::with_capacity(mid);
+                for i in 0..mid {
+                    let neighbors = left_adj.nth(i);
+                    let len = neighbors.length();
+                    let mut new_neighbors_vec = Vec::with_capacity(len);
+                    for j in 0..len {
+                        new_neighbors_vec.push(f_left(*neighbors.nth(j)));
+                    }
+                    new_adj_vec.push(ArraySeqMtPerS::from_vec(new_neighbors_vec));
+                }
+                ArraySeqMtPerS::from_vec(new_adj_vec)
+            });
+            let mut right_adj_vec = Vec::with_capacity(n - mid);
+            for i in 0..(n - mid) {
+                let neighbors = right_adj.nth(i);
                 let len = neighbors.length();
                 let mut new_neighbors_vec = Vec::with_capacity(len);
                 for j in 0..len {
-                    new_neighbors_vec.push(f(*neighbors.nth(j)));
+                    new_neighbors_vec.push(f_right(*neighbors.nth(j)));
                 }
-                new_adj_vec.push(ArraySeqMtPerS::from_vec(new_neighbors_vec));
+                right_adj_vec.push(ArraySeqMtPerS::from_vec(new_neighbors_vec));
             }
+            let right_result = ArraySeqMtPerS::from_vec(right_adj_vec);
+            let left_result = left_handle.join().unwrap();
             AdjSeqGraphMtPer {
-                adj: ArraySeqMtPerS::from_vec(new_adj_vec),
+                adj: ArraySeqMtPerS::append(&left_result, &right_result),
             }
         }
     }

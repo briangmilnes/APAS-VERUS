@@ -2,24 +2,16 @@
 //!
 //! Single-Source Shortest Path Result Structure - Sequential Ephemeral (Float Weights)
 //!
-//! Data structure for storing the result of single-source shortest path algorithms
-//! with floating-point edge weights. Stores distance and predecessor arrays for path reconstruction.
-//!
-//! Uses ephemeral array sequences for efficient in-place updates.
-//! Uses `OrderedF64` (OrderedFloat<f64>) for weights to ensure Eq/Hash traits.
-//!
-//! **Algorithmic Analysis:**
-//! - `new`: Work O(n), Span O(n) for n vertices
-//! - `get_distance`: Work O(1), Span O(1)
-//! - `extract_path`: Work O(k), Span O(k) where k is path length
+//! Uses a `F64Dist` newtype around f64 with a View impl so that Verus can reason about
+//! the distance array. At runtime, callers convert to/from `OrderedF64` at the boundary.
 
 pub mod SSSPResultStEphFloat {
 
-    use ordered_float::OrderedFloat;
-
     use vstd::prelude::*;
+    use vstd::float::FloatBitsProperties;
 
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
+    #[cfg(not(verus_keep_ghost))]
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
@@ -27,97 +19,120 @@ pub mod SSSPResultStEphFloat {
 
     // Table of Contents
     // 4. type definitions
-    // 5. view impls
-    // 8. traits
+    // 6. spec fns
     // 9. impls
 
     // 4. type definitions
 
-    const UNREACHABLE: OrderedF64 = OrderedFloat(f64::INFINITY);
-    const NO_PREDECESSOR: usize = usize::MAX;
+    pub const NO_PREDECESSOR: usize = usize::MAX;
 
-    /// Result structure for single-source shortest paths with floating-point weights.
-    pub struct SSSPResultStEphFloat {
-        /// Distance from source to each vertex (OrderedFloat(f64::INFINITY) for unreachable).
-        pub distances: ArraySeqStEphS<OrderedF64>,
-        /// Predecessor of each vertex in shortest path tree (usize::MAX for source/unreachable).
-        pub predecessors: ArraySeqStEphS<usize>,
-        /// Source vertex.
-        pub source: usize,
+    // Newtype wrapper for f64 distances, giving Verus a View impl.
+    // OrderedFloat<f64> is not available during verification (cfg-gated out),
+    // and f64 has no View impl in vstd.
+    #[derive(Clone, Copy)]
+    pub struct F64Dist {
+        pub val: f64,
     }
 
-    // 5. view impls
+    impl View for F64Dist {
+        type V = f64;
+        open spec fn view(&self) -> f64 { self.val }
+    }
 
-    impl View for SSSPResultStEphFloat {
-        type V = Seq<int>;
-        open spec fn view(&self) -> Self::V {
-            self.predecessors@.map(|_i: int, v: usize| v as int)
+    impl F64Dist {
+        pub open spec fn spec_is_finite(&self) -> bool {
+            self.val.is_finite_spec()
+        }
+
+        #[verifier::external_body]
+        pub fn is_finite(&self) -> (b: bool)
+            ensures b == self.spec_is_finite()
+        {
+            self.val.is_finite()
+        }
+
+        #[verifier::external_body]
+        pub fn eq(&self, other: &Self) -> (b: bool)
+            ensures b == (self@ == other@)
+        {
+            self.val == other.val
         }
     }
 
-    // 8. traits
+    pub uninterp spec fn UNREACHABLE_SPEC() -> f64;
 
-    /// Trait for single-source shortest path result operations
-    pub trait SSSPResultStEphFloatTrait: Sized {
-        /// Create new SSSP result
-        /// APAS: Work Θ(n), Span Θ(n)
-        fn new(n: N, source: N)      -> Self;
+    #[verifier::external_body]
+    pub broadcast proof fn axiom_unreachable_not_finite()
+        ensures #[trigger] UNREACHABLE_SPEC().is_finite_spec() == false
+    {}
 
-        /// Get distance to vertex
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn distance(&self, v: N)     -> Option<OrderedF64>;
+    #[verifier::external_body]
+    pub fn unreachable_dist() -> (d: F64Dist)
+        ensures d@ == UNREACHABLE_SPEC(),
+                !d.spec_is_finite(),
+    {
+        F64Dist { val: f64::INFINITY }
+    }
 
-        /// Check if vertex is reachable
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn is_reachable(&self, v: N) -> B;
+    #[verifier::external_body]
+    pub fn zero_dist() -> (d: F64Dist)
+        ensures d.spec_is_finite(),
+    {
+        F64Dist { val: 0.0 }
+    }
+
+    // 6. spec fns
+
+    /// Result structure for single-source shortest paths with floating-point weights.
+    pub struct SSSPResultStEphFloat {
+        pub distances: ArraySeqStEphS<F64Dist>,
+        pub predecessors: ArraySeqStEphS<usize>,
+        pub source: usize,
     }
 
     // 9. impls
 
     impl SSSPResultStEphFloat {
-        /// Creates a new SSSP result structure initialized for n vertices from given source.
-        /// All distances are set to UNREACHABLE, all predecessors to NO_PREDECESSOR.
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — agrees with APAS.
-        #[verifier::external_body]
-        pub fn new(n: usize, source: usize) -> Self {
-            let mut dist_vec = vec![UNREACHABLE; n];
-            dist_vec[source] = OrderedFloat(0.0);
-            let distances = ArraySeqStEphS::from_vec(dist_vec);
-            let predecessors = ArraySeqStEphS::new(n, NO_PREDECESSOR);
-            SSSPResultStEphFloat {
-                distances,
-                predecessors,
-                source,
+        pub fn new(n: usize, source: usize) -> (result: Self)
+            requires source < n,
+        {
+            let unreach = unreachable_dist();
+            let zero = zero_dist();
+            let mut dist_vec: Vec<F64Dist> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    i <= n,
+                    dist_vec@.len() == i as int,
+                    n <= usize::MAX,
+                decreases n - i,
+            {
+                if i == source {
+                    dist_vec.push(zero);
+                } else {
+                    dist_vec.push(unreach);
+                }
+                i = i + 1;
             }
+            let distances = ArraySeqStEphS::from_vec(dist_vec);
+            let predecessors = ArraySeqStEphS::<usize>::new(n, NO_PREDECESSOR);
+            SSSPResultStEphFloat { distances, predecessors, source }
         }
 
-        /// Returns the distance from source to vertex v.
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        #[verifier::external_body]
-        pub fn get_distance(&self, v: usize) -> OrderedF64 {
+        pub fn get_distance(&self, v: usize) -> (dist: F64Dist) {
             if v >= self.distances.length() {
-                return UNREACHABLE;
+                return unreachable_dist();
             }
             *self.distances.nth(v)
         }
 
-        /// Sets the distance from source to vertex v.
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — in-place array update.
-        #[verifier::external_body]
-        pub fn set_distance(&mut self, v: usize, dist: OrderedF64) {
+        pub fn set_distance(&mut self, v: usize, dist: F64Dist) {
             if v < self.distances.length() {
                 let _ = self.distances.set(v, dist);
             }
         }
 
-        /// Returns the predecessor of vertex v in the shortest path from source.
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — array lookup.
-        #[verifier::external_body]
-        pub fn get_predecessor(&self, v: usize) -> Option<usize> {
+        pub fn get_predecessor(&self, v: usize) -> (pred: Option<usize>) {
             if v >= self.predecessors.length() {
                 return None;
             }
@@ -125,49 +140,46 @@ pub mod SSSPResultStEphFloat {
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
-        /// Sets the predecessor of vertex v in the shortest path from source.
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — in-place array update.
-        #[verifier::external_body]
         pub fn set_predecessor(&mut self, v: usize, pred: usize) {
             if v < self.predecessors.length() {
                 let _ = self.predecessors.set(v, pred);
             }
         }
 
-        /// Checks if vertex v is reachable from source.
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        #[verifier::external_body]
-        pub fn is_reachable(&self, v: usize) -> bool { self.get_distance(v).is_finite() }
-
-        /// Extracts the shortest path from source to vertex v by following predecessors.
-        /// Returns None if v is unreachable, otherwise returns the path as a sequence.
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — follows k predecessor links.
-        #[verifier::external_body]
-        pub fn extract_path(&self, v: usize) -> Option<ArraySeqStPerS<usize>> {
-            if !self.is_reachable(v) {
-                return None;
-            }
-
-            let mut path = Vec::new();
-            let mut current = v;
-            path.push(current);
-
-            while current != self.source {
-                let pred = *self.predecessors.nth(current);
-                if pred == NO_PREDECESSOR {
-                    return None;
-                }
-                path.push(pred);
-                current = pred;
-            }
-
-            path.reverse();
-            Some(ArraySeqStPerS::from_vec(path))
+        pub fn is_reachable(&self, v: usize) -> (b: bool) {
+            self.get_distance(v).is_finite()
         }
     }
 
     } // verus!
+
+    impl std::fmt::Debug for F64Dist {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "F64Dist({})", self.val)
+        }
+    }
+
+    impl PartialEq for F64Dist {
+        fn eq(&self, other: &Self) -> bool { self.val == other.val }
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    impl SSSPResultStEphFloat {
+        pub fn extract_path(&self, v: usize) -> Option<ArraySeqStPerS<usize>> {
+            if !self.is_reachable(v) {
+                return None;
+            }
+            let mut path = Vec::new();
+            let mut current = v;
+            path.push(current);
+            while current != self.source {
+                let pred = *self.predecessors.nth(current);
+                if pred == NO_PREDECESSOR { return None; }
+                path.push(pred);
+                current = pred;
+            }
+            path.reverse();
+            Some(ArraySeqStPerS::from_vec(path))
+        }
+    }
 }

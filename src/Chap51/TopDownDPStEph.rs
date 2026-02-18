@@ -154,6 +154,15 @@ pub mod TopDownDPStEph {
         }
     }
 
+    impl TopDownDPStEphTrait<usize> for TopDownDPStEphS {
+        fn new() -> Self { Self::default() }
+
+        fn solve(&self, _input: &[usize]) -> usize {
+            let mut clone = self.clone();
+            clone.med_memoized()
+        }
+    }
+
     // 11. derive impls
     impl Default for TopDownDPStEphS {
         /// - APAS: N/A — infrastructure.

@@ -843,16 +843,16 @@ name = "TestAllPairsResultStEphFloat"
 path = "tests/Chap56/TestAllPairsResultStEphFloat.rs"
 
 [[test]]
-name = "TestAllPairsResultStEphInt"
-path = "tests/Chap56/TestAllPairsResultStEphInt.rs"
+name = "TestAllPairsResultStEphI64"
+path = "tests/Chap56/TestAllPairsResultStEphI64.rs"
 
 [[test]]
 name = "TestAllPairsResultStPerFloat"
 path = "tests/Chap56/TestAllPairsResultStPerFloat.rs"
 
 [[test]]
-name = "TestAllPairsResultStPerInt"
-path = "tests/Chap56/TestAllPairsResultStPerInt.rs"
+name = "TestAllPairsResultStPerI64"
+path = "tests/Chap56/TestAllPairsResultStPerI64.rs"
 
 [[test]]
 name = "TestExample56_1"
@@ -875,24 +875,24 @@ name = "TestSSSPResultStEphFloat"
 path = "tests/Chap56/TestSSSPResultStEphFloat.rs"
 
 [[test]]
-name = "TestSSSPResultStEphInt"
-path = "tests/Chap56/TestSSSPResultStEphInt.rs"
+name = "TestSSSPResultStEphI64"
+path = "tests/Chap56/TestSSSPResultStEphI64.rs"
 
 [[test]]
 name = "TestSSSPResultStPerFloat"
 path = "tests/Chap56/TestSSSPResultStPerFloat.rs"
 
 [[test]]
-name = "TestSSSPResultStPerInt"
-path = "tests/Chap56/TestSSSPResultStPerInt.rs"
+name = "TestSSSPResultStPerI64"
+path = "tests/Chap56/TestSSSPResultStPerI64.rs"
 
 [[test]]
 name = "TestDijkstraStEphFloat"
 path = "tests/Chap57/TestDijkstraStEphFloat.rs"
 
 [[test]]
-name = "TestDijkstraStEphInt"
-path = "tests/Chap57/TestDijkstraStEphInt.rs"
+name = "TestDijkstraStEphI64"
+path = "tests/Chap57/TestDijkstraStEphI64.rs"
 
 [[test]]
 name = "TestStackStEph"
@@ -903,24 +903,24 @@ name = "TestBellmanFordStEphFloat"
 path = "tests/Chap58/TestBellmanFordStEphFloat.rs"
 
 [[test]]
-name = "TestBellmanFordStEphInt"
-path = "tests/Chap58/TestBellmanFordStEphInt.rs"
+name = "TestBellmanFordStEphI64"
+path = "tests/Chap58/TestBellmanFordStEphI64.rs"
 
 [[test]]
 name = "TestJohnsonMtEphFloat"
 path = "tests/Chap59/TestJohnsonMtEphFloat.rs"
 
 [[test]]
-name = "TestJohnsonMtEphInt"
-path = "tests/Chap59/TestJohnsonMtEphInt.rs"
+name = "TestJohnsonMtEphI64"
+path = "tests/Chap59/TestJohnsonMtEphI64.rs"
 
 [[test]]
 name = "TestJohnsonStEphFloat"
 path = "tests/Chap59/TestJohnsonStEphFloat.rs"
 
 [[test]]
-name = "TestJohnsonStEphInt"
-path = "tests/Chap59/TestJohnsonStEphInt.rs"
+name = "TestJohnsonStEphI64"
+path = "tests/Chap59/TestJohnsonStEphI64.rs"
 
 [[test]]
 name = "TestEdgeContractionMtEph"

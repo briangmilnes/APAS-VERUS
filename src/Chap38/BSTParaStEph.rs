@@ -158,9 +158,10 @@ pub mod BSTParaStEph {
     /// - APAS: Work O(m · lg(n/m)), Span O(m · lg(n/m)) — sequential, no parallelism
     /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(m · lg(n/m)) — sequential variant
     fn union_inner<T: StT + Ord>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
-        match expose_internal(a) {
-            | Exposed::Leaf => b.clone(),
-            | Exposed::Node(al, ak, ar) => {
+        match (expose_internal(a), expose_internal(b)) {
+            | (Exposed::Leaf, _) => b.clone(),
+            | (_, Exposed::Leaf) => a.clone(),
+            | (Exposed::Node(al, ak, ar), _) => {
                 let (bl, _, br) = split_inner(b, &ak);
                 let left_union = union_inner(&al, &bl);
                 let right_union = union_inner(&ar, &br);

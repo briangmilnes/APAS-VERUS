@@ -1,5 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Single-threaded persistent set implementation using AVLTreeSeqStPer as backing store.
+//!
+//! Limitation: AVLTreeSeqStPer has no value-based insert/delete. find uses binary search
+//! on the sorted logical sequence (O(log n) via nth). insert/delete use filter-and-rebuild.
 
 pub mod AVLTreeSetStPer {
 
@@ -152,47 +155,91 @@ pub mod AVLTreeSetStPer {
         }
 
         fn find(&self, x: &T) -> B {
-            for i in 0..self.elements.length() {
-                if self.elements.nth(i) == x {
+            // Binary search on sorted sequence: O(log n) via nth(i)
+            let n = self.elements.length();
+            let mut lo = 0usize;
+            let mut hi = n;
+            while lo < hi {
+                let mid = lo + (hi - lo) / 2;
+                let elem = self.elements.nth(mid);
+                if elem == x {
                     return true;
+                }
+                if elem < x {
+                    lo = mid + 1;
+                } else {
+                    hi = mid;
                 }
             }
             false
         }
 
         fn delete(&self, x: &T) -> Self {
-            let mut result = Self::empty();
-            for i in 0..self.elements.length() {
-                let elem = self.elements.nth(i);
-                if elem != x {
-                    result = result.insert(elem.clone());
+            // Binary search for index, then rebuild without that element
+            let n = self.elements.length();
+            let mut lo = 0usize;
+            let mut hi = n;
+            let mut found_idx: Option<usize> = None;
+            while lo < hi {
+                let mid = lo + (hi - lo) / 2;
+                let elem = self.elements.nth(mid);
+                if elem == x {
+                    found_idx = Some(mid);
+                    break;
+                }
+                if elem < x {
+                    lo = mid + 1;
+                } else {
+                    hi = mid;
                 }
             }
-            result
+            match found_idx {
+                None => Self {
+                    elements: self.elements.clone(),
+                },
+                Some(idx) => {
+                    let mut vec_elements = Vec::with_capacity(n - 1);
+                    for i in 0..idx {
+                        vec_elements.push(self.elements.nth(i).clone());
+                    }
+                    for i in (idx + 1)..n {
+                        vec_elements.push(self.elements.nth(i).clone());
+                    }
+                    AVLTreeSetStPer {
+                        elements: AVLTreeSeqStPerS::from_vec(vec_elements),
+                    }
+                }
+            }
         }
 
         fn insert(&self, x: T) -> Self {
             if self.find(&x) {
-                // Element already exists, return unchanged
-                let size = self.elements.length();
-                let mut vec_elements = Vec::with_capacity(size);
-                for i in 0..size {
-                    vec_elements.push(self.elements.nth(i).clone());
+                return Self {
+                    elements: self.elements.clone(),
+                };
+            }
+            // Binary search for insertion point, then rebuild
+            let n = self.elements.length();
+            let mut lo = 0usize;
+            let mut hi = n;
+            while lo < hi {
+                let mid = lo + (hi - lo) / 2;
+                if self.elements.nth(mid) < &x {
+                    lo = mid + 1;
+                } else {
+                    hi = mid;
                 }
-                AVLTreeSetStPer {
-                    elements: AVLTreeSeqStPerS::from_vec(vec_elements),
-                }
-            } else {
-                let size = self.elements.length();
-                let mut vec_elements = Vec::with_capacity(size + 1);
-                for i in 0..size {
-                    vec_elements.push(self.elements.nth(i).clone());
-                }
-                vec_elements.push(x);
-                vec_elements.sort();
-                AVLTreeSetStPer {
-                    elements: AVLTreeSeqStPerS::from_vec(vec_elements),
-                }
+            }
+            let mut vec_elements = Vec::with_capacity(n + 1);
+            for i in 0..lo {
+                vec_elements.push(self.elements.nth(i).clone());
+            }
+            vec_elements.push(x);
+            for i in lo..n {
+                vec_elements.push(self.elements.nth(i).clone());
+            }
+            AVLTreeSetStPer {
+                elements: AVLTreeSeqStPerS::from_vec(vec_elements),
             }
         }
     }

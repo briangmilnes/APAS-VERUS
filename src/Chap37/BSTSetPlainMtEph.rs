@@ -108,11 +108,17 @@ pub mod BSTSetPlainMtEph {
         fn insert(&mut self, value: T) { self.tree.insert(value); }
 
         fn delete(&mut self, target: &T) {
-            let mut values = self.values_vec();
-            if let Some(pos) = values.iter().position(|x| x == target) {
-                values.remove(pos);
-                self.tree = Self::rebuild_from_vec(values);
+            if !self.contains(target) {
+                return;
             }
+            let filtered: Vec<T> = self
+                .tree
+                .in_order()
+                .iter()
+                .filter(|x| x != target)
+                .cloned()
+                .collect();
+            self.tree = Self::rebuild_from_vec(filtered);
         }
 
         fn union(&self, other: &Self) -> Self {

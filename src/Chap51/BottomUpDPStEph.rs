@@ -153,6 +153,15 @@ pub mod BottomUpDPStEph {
         pub fn set_t(&mut self, t: ArraySeqStEphS<char>) { self.seq_t = t; }
     }
 
+    impl BottomUpDPStEphTrait<usize> for BottomUpDPStEphS {
+        fn new() -> Self { Self::default() }
+
+        fn solve(&self, _input: &[usize]) -> usize {
+            let mut clone = self.clone();
+            clone.med_bottom_up()
+        }
+    }
+
     // 11. derive impls
     impl Default for BottomUpDPStEphS {
         /// - APAS: N/A — infrastructure.

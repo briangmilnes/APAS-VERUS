@@ -6,9 +6,6 @@
 
 pub mod ArraySetEnumMtEph {
 
-    use std::sync::Arc;
-    use std::thread;
-
     use bitvec::prelude::*;
 
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
@@ -104,19 +101,13 @@ pub mod ArraySetEnumMtEph {
         }
 
         fn filter<F: PredVal<N> + Clone>(&self, f: F) -> Self {
-            // Parallel filter: spawn thread per element (as if f is expensive)
-            let f = Arc::new(f);
+            // Sequential filter: collect elements, apply predicate, build result.
+            // Honest about being sequential for small inputs; avoids spawn-per-element overhead.
             let mut new_bits = bitbox![0; self.universe_size];
 
-            // Process each element directly without intermediate collection
             for i in 0..self.universe_size {
-                if self.bits[i] {
-                    let f_clone = Arc::clone(&f);
-                    let handle = thread::spawn(move || (i, f_clone(i)));
-                    let (elem_i, keep) = handle.join().unwrap();
-                    if keep {
-                        new_bits.set(elem_i, true);
-                    }
+                if self.bits[i] && f(i) {
+                    new_bits.set(i, true);
                 }
             }
 

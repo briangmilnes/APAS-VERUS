@@ -50,6 +50,8 @@ pub mod BSTKeyValueStEph {
         fn height(&self)            -> N;
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
         fn insert(&mut self, key: K, value: V);
+        /// claude-4-sonet: Work Θ(n), Span Θ(n) — in-order filter + rebuild
+        fn delete(&mut self, key: &K);
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
         fn find(&self, key: &K)     -> Option<&V>;
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
@@ -184,6 +186,39 @@ pub mod BSTKeyValueStEph {
         }
     }
 
+    /// - APAS: N/A — in-order collect (key, value, priority) for rebuild.
+    fn collect_in_order_kvp<K: StT + Ord, V: StT>(link: &Link<K, V>, out: &mut Vec<(K, V, u64)>) {
+        if let Some(node) = link {
+            collect_in_order_kvp(&node.left, out);
+            out.push((node.key.clone(), node.value.clone(), node.priority));
+            collect_in_order_kvp(&node.right, out);
+        }
+    }
+
+    /// - APAS: N/A — build treap from sorted (key, value, priority) sequence.
+    fn build_treap_from_sorted<K: StT + Ord, V: StT>(
+        seq: &[(K, V, u64)],
+    ) -> Link<K, V> {
+        if seq.is_empty() {
+            return None;
+        }
+        let min_idx = seq
+            .iter()
+            .enumerate()
+            .min_by(|(_, a), (_, b)| a.2.cmp(&b.2))
+            .map(|(i, _)| i)
+            .unwrap();
+        let (key, value, priority) = seq[min_idx].clone();
+        let left_seq = &seq[..min_idx];
+        let right_seq = &seq[min_idx + 1..];
+        let left = build_treap_from_sorted(left_seq);
+        let right = build_treap_from_sorted(right_seq);
+        let mut node = new_node(key, value, priority);
+        node.left = left;
+        node.right = right;
+        Some(Box::new(node))
+    }
+
     impl<K: StT + Ord, V: StT> BSTKeyValueStEphTrait<K, V> for BSTKeyValueStEph<K, V> {
         fn new() -> Self { BSTKeyValueStEph { root: None, size: 0 } }
 
@@ -207,6 +242,14 @@ pub mod BSTKeyValueStEph {
             if inserted {
                 self.size += 1;
             }
+        }
+
+        fn delete(&mut self, key: &K) {
+            let mut in_order: Vec<(K, V, u64)> = Vec::new();
+            collect_in_order_kvp(&self.root, &mut in_order);
+            let filtered: Vec<(K, V, u64)> = in_order.into_iter().filter(|(k, _, _)| k != key).collect();
+            self.root = build_treap_from_sorted(&filtered);
+            self.size = filtered.len();
         }
 
         fn find(&self, key: &K) -> Option<&V> { find_link(&self.root, key) }

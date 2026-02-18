@@ -6,6 +6,8 @@
 
 pub mod AdjTableGraphMtPer {
 
+    use std::thread;
+
     use vstd::prelude::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
@@ -134,26 +136,58 @@ pub mod AdjTableGraphMtPer {
         }
 
         /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3, isolated vertex]
-        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential iteration over all vertices; TODO note says to parallelize.
+        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(lg² n) — parallel computation of new neighbor sets, sequential table rebuild.
         #[verifier::external_body]
         fn delete_vertex(&self, v: &V) -> Self {
+            const SEQUENTIAL_CUTOFF: usize = 64;
+
             let v_clone = v.clone();
             let new_adj = self.adj.delete(&v_clone);
-
-            // TODO: Make this parallel by adding map_values operation to OrderedTableMtPer
-            // Current approach: Sequential iteration over domain
-            // Parallel approach: table.map_values(|neighbors| neighbors.delete(&v_clone))
-            // This would use the parallel filter operation on the underlying Treap
-
             let domain = new_adj.domain();
             let seq = domain.to_seq();
-            let mut result_adj = new_adj;
-            for i in 0..seq.length() {
-                let u = seq.nth(i);
-                if let Some(neighbors) = result_adj.find(u) {
-                    let new_neighbors = neighbors.delete(&v_clone);
-                    result_adj = result_adj.insert(u.clone(), new_neighbors);
+            let len = seq.length();
+
+            if len <= SEQUENTIAL_CUTOFF {
+                let mut result_adj = new_adj;
+                for i in 0..len {
+                    let u = seq.nth(i);
+                    if let Some(neighbors) = result_adj.find(u) {
+                        let new_neighbors = neighbors.delete(&v_clone);
+                        result_adj = result_adj.insert(u.clone(), new_neighbors);
+                    }
                 }
+                return AdjTableGraphMtPer { adj: result_adj };
+            }
+
+            let mid = len / 2;
+            let new_adj_left = new_adj.clone();
+            let new_adj_right = new_adj.clone();
+            let seq_clone = seq.clone();
+            let v_clone_left = v_clone.clone();
+
+            let left_handle = thread::spawn(move || {
+                let mut updates = Vec::with_capacity(mid);
+                for i in 0..mid {
+                    let u = seq_clone.nth(i);
+                    if let Some(neighbors) = new_adj_left.find(u) {
+                        updates.push((u.clone(), neighbors.delete(&v_clone_left)));
+                    }
+                }
+                updates
+            });
+
+            let mut right_updates = Vec::with_capacity(len - mid);
+            for i in mid..len {
+                let u = seq.nth(i);
+                if let Some(neighbors) = new_adj_right.find(u) {
+                    right_updates.push((u.clone(), neighbors.delete(&v_clone)));
+                }
+            }
+
+            let left_updates = left_handle.join().unwrap();
+            let mut result_adj = new_adj;
+            for (u, new_neighbors) in left_updates.into_iter().chain(right_updates.into_iter()) {
+                result_adj = result_adj.insert(u, new_neighbors);
             }
             AdjTableGraphMtPer { adj: result_adj }
         }

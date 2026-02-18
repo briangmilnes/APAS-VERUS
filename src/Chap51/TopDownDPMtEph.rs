@@ -241,6 +241,15 @@ pub mod TopDownDPMtEph {
         }
     }
 
+    impl TopDownDPMtEphTrait<usize> for TopDownDPMtEphS {
+        fn new() -> Self { Self::default() }
+
+        fn solve(&self, _input: &[usize]) -> usize {
+            let mut clone = self.clone();
+            clone.med_memoized_concurrent()
+        }
+    }
+
     // 11. derive impls
     impl PartialEq for TopDownDPMtEphS {
         /// - APAS: N/A — infrastructure.

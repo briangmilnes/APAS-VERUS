@@ -6,7 +6,6 @@ pub mod BSTSplayMtEph {
     use std::sync::{Arc, RwLock};
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
     type Link<T> = Option<Box<Node<T>>>;
@@ -32,19 +31,130 @@ pub mod BSTSplayMtEph {
 
     fn update<T: StTInMtT + Ord>(node: &mut Node<T>) { node.size = 1 + size_link(&node.left) + size_link(&node.right); }
 
-    fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T) -> bool {
+    fn splay<T: StTInMtT + Ord>(root: Box<Node<T>>, target: &T) -> Box<Node<T>> {
+        let mut root = root;
+        match target.cmp(&root.key) {
+            std::cmp::Ordering::Equal => root,
+            std::cmp::Ordering::Less => {
+                let Some(mut left) = root.left.take() else { return root };
+                match target.cmp(&left.key) {
+                    std::cmp::Ordering::Equal => {
+                        root.left = left.right.take();
+                        update(&mut root);
+                        left.right = Some(root);
+                        update(&mut left);
+                        left
+                    }
+                    std::cmp::Ordering::Less => {
+                        if let Some(ll) = left.left.take() {
+                            left.left = Some(splay(ll, target));
+                        }
+                        root.left = left.right.take();
+                        update(&mut root);
+                        left.right = Some(root);
+                        update(&mut left);
+                        if let Some(mut ll) = left.left.take() {
+                            left.left = ll.right.take();
+                            update(&mut left);
+                            ll.right = Some(left);
+                            update(&mut ll);
+                            ll
+                        } else {
+                            left
+                        }
+                    }
+                    std::cmp::Ordering::Greater => {
+                        if let Some(lr) = left.right.take() {
+                            left.right = Some(splay(lr, target));
+                        }
+                        if left.right.is_some() {
+                            let mut lr = left.right.take().unwrap();
+                            left.right = lr.left.take();
+                            update(&mut left);
+                            lr.left = Some(left);
+                            update(&mut lr);
+                            root.left = lr.right.take();
+                            update(&mut root);
+                            lr.right = Some(root);
+                            update(&mut lr);
+                            lr
+                        } else {
+                            root.left = left.right.take();
+                            update(&mut root);
+                            left.right = Some(root);
+                            update(&mut left);
+                            left
+                        }
+                    }
+                }
+            }
+            std::cmp::Ordering::Greater => {
+                let Some(mut right) = root.right.take() else { return root };
+                match target.cmp(&right.key) {
+                    std::cmp::Ordering::Equal => {
+                        root.right = right.left.take();
+                        update(&mut root);
+                        right.left = Some(root);
+                        update(&mut right);
+                        right
+                    }
+                    std::cmp::Ordering::Greater => {
+                        if let Some(rr) = right.right.take() {
+                            right.right = Some(splay(rr, target));
+                        }
+                        root.right = right.left.take();
+                        update(&mut root);
+                        right.left = Some(root);
+                        update(&mut right);
+                        if let Some(mut rr) = right.right.take() {
+                            right.right = rr.left.take();
+                            update(&mut right);
+                            rr.left = Some(right);
+                            update(&mut rr);
+                            rr
+                        } else {
+                            right
+                        }
+                    }
+                    std::cmp::Ordering::Less => {
+                        if let Some(rl) = right.left.take() {
+                            right.left = Some(splay(rl, target));
+                        }
+                        if right.left.is_some() {
+                            let mut rl = right.left.take().unwrap();
+                            right.left = rl.right.take();
+                            update(&mut right);
+                            rl.right = Some(right);
+                            update(&mut rl);
+                            root.right = rl.left.take();
+                            update(&mut root);
+                            rl.left = Some(root);
+                            update(&mut rl);
+                            rl
+                        } else {
+                            root.right = right.left.take();
+                            update(&mut root);
+                            right.left = Some(root);
+                            update(&mut right);
+                            right
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fn bst_insert<T: StTInMtT + Ord>(link: &mut Link<T>, value: T) -> bool {
         match link {
             | Some(node) => {
                 let inserted = if value < node.key {
-                    insert_link(&mut node.left, value)
+                    bst_insert(&mut node.left, value)
                 } else if value > node.key {
-                    insert_link(&mut node.right, value)
+                    bst_insert(&mut node.right, value)
                 } else {
                     false
                 };
-                if inserted {
-                    update(node);
-                }
+                if inserted { update(node); }
                 inserted
             }
             | None => {
@@ -52,6 +162,17 @@ pub mod BSTSplayMtEph {
                 true
             }
         }
+    }
+
+    fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T) -> bool {
+        let v = value.clone();
+        let inserted = bst_insert(link, value);
+        if inserted {
+            if let Some(root) = link.take() {
+                *link = Some(splay(root, &v));
+            }
+        }
+        inserted
     }
 
     fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T> {
