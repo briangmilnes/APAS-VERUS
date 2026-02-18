@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 57 — Dijkstra's Algorithm: Review Against Prose
 
-**Date:** 2026-02-18 (updated from 2026-02-17)
+**Date:** 2026-02-18
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 1: Inventory
@@ -15,18 +15,19 @@ table { width: 100% !important; table-layout: fixed; }
 | # | File | exec fns | external_body | spec fns | proof fns | View | verus! | Trait Wired |
 |---|------|:--------:|:-------------:|:--------:|:---------:|:----:|:------:|:-----------:|
 | 1 | StackStEph.rs | 7 | 8 | 0 | 0 | Yes | Yes | Yes |
-| 2 | DijkstraStEphI64.rs | 4 | 4 | 0 | 0 | Yes | Yes | N/A (free fns) |
-| 3 | DijkstraStEphFloat.rs | 4 | 4 | 0 | 0 | Yes | Yes | N/A (free fns) |
+| 2 | DijkstraStEphI64.rs | 4 | 4 | 0 | 0 | Yes | Yes | Yes (cfg-gated impl) |
+| 3 | DijkstraStEphFloat.rs | 4 | 4 | 0 | 0 | Yes | Yes | Yes (cfg-gated impl) |
 | | **Total** | **15** | **16** | **0** | **0** | | | |
 
-**Changes since 2026-02-17:**
+**Changes since last review:**
 - `DijkstraStEphInt.rs` renamed to `DijkstraStEphI64.rs` (agent2 merge).
-- `StackStEph`: `impl StackStEph` changed to `impl StackStEphTrait for StackStEph` (trait wired). `peek` and `size` added to trait. Default impl remains outside trait (Rust scaffolding). 8 external_body counts include a duplicate on `new` (trait + impl both annotated).
+- `DijkstraStEphI64` / `DijkstraStEphFloat`: trait inside `verus!`, impl cfg-gated (pending Chap45/Chap23 fix).
+- `StackStEph`: trait with 7 functions, all `external_body`. 8 external_body counts include duplicate on `new` (trait + impl both annotated).
 
 **Gating:**
-- `StackStEph.rs`: `#[cfg(not(feature = "experiments_only"))]` — compiles normally.
-- `DijkstraStEphI64.rs`: additionally `#[cfg(not(verus_keep_ghost))]` — skipped during Verus verification due to Chap45 (BinaryHeapPQ) dependency.
-- `DijkstraStEphFloat.rs`: additionally `#[cfg(all(feature = "all_chapters", not(verus_keep_ghost)))]`.
+- Chap57 module: `#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]` — excluded during Verus verification.
+- `StackStEph`: compiles when Chap57 is included (cargo build).
+- `DijkstraStEphI64` / `DijkstraStEphFloat`: commented out in `lib.rs` (pending Chap45/Chap23 fix). Not in cargo build.
 
 ## Phase 2: Prose Inventory
 
@@ -79,10 +80,10 @@ All 15 exec functions have APAS/Claude-Opus-4.6 cost annotation pairs.
 
 | # | Function | File | APAS Cost | Claude-Opus-4.6 Cost | Agreement |
 |---|----------|------|-----------|---------------------|-----------|
-| 1 | `dijkstra` | DijkstraStEphInt | Work O(m log n), Span O(m log n) | Work O(m log n), Span O(m log n) | **Agree** |
-| 2 | `pq_entry_new` | DijkstraStEphInt | N/A — scaffolding | Work Θ(1), Span Θ(1) | N/A |
-| 3 | `Ord::cmp` | DijkstraStEphInt | N/A — scaffolding | Work Θ(1), Span Θ(1) | N/A |
-| 4 | `PartialOrd::partial_cmp` | DijkstraStEphInt | N/A — scaffolding | Work Θ(1), Span Θ(1) | N/A |
+| 1 | `dijkstra` | DijkstraStEphI64 | Work O(m log n), Span O(m log n) | Work O(m log n), Span O(m log n) | **Agree** |
+| 2 | `pq_entry_new` | DijkstraStEphI64 | N/A — scaffolding | Work Θ(1), Span Θ(1) | N/A |
+| 3 | `Ord::cmp` | DijkstraStEphI64 | N/A — scaffolding | Work Θ(1), Span Θ(1) | N/A |
+| 4 | `PartialOrd::partial_cmp` | DijkstraStEphI64 | N/A — scaffolding | Work Θ(1), Span Θ(1) | N/A |
 | 5 | `dijkstra` | DijkstraStEphFloat | Work O(m log n), Span O(m log n) | Work O(m log n), Span O(m log n) | **Agree** |
 | 6 | `pq_entry_new` | DijkstraStEphFloat | N/A — scaffolding | Work Θ(1), Span Θ(1) | N/A |
 | 7 | `Ord::cmp` | DijkstraStEphFloat | N/A — scaffolding | Work Θ(1), Span Θ(1) | N/A |
@@ -99,7 +100,7 @@ All 15 exec functions have APAS/Claude-Opus-4.6 cost annotation pairs.
 
 ### 3b. Implementation Fidelity
 
-#### DijkstraStEphInt / DijkstraStEphFloat
+#### DijkstraStEphI64 / DijkstraStEphFloat
 
 Faithful implementation of **Algorithm 57.2**:
 
@@ -135,15 +136,15 @@ Key specs that should exist:
 
 ## Phase 5: Runtime Test Review
 
-**No runtime test files exist** for Chapter 57.
+**Runtime tests exist** for all three modules.
 
 | # | Source Module | RTT File | Status |
 |---|-------------|----------|--------|
-| 1 | DijkstraStEphInt | — | **Missing** |
-| 2 | DijkstraStEphFloat | — | **Missing** |
-| 3 | StackStEph | — | **Missing** |
+| 1 | DijkstraStEphI64 | tests/Chap57/TestDijkstraStEphI64.rs | **Present** |
+| 2 | DijkstraStEphFloat | tests/Chap57/TestDijkstraStEphFloat.rs | **Present** |
+| 3 | StackStEph | tests/Chap57/TestStackStEph.rs | **Present** |
 
-Priority: (1) DijkstraStEphInt — single vertex, linear chain, diamond graph, disconnected, zero-weight, Example 57.3 trace. (2) DijkstraStEphFloat — same scenarios with float weights. (3) StackStEph — push/pop/peek, empty pop returns None.
+Note: DijkstraStEphI64 and DijkstraStEphFloat are commented out in `lib.rs`; tests may require enabling those modules or using `#[path]` / feature flags to run.
 
 ## Phase 6: Proof-Time Test (PTT) Review
 
@@ -182,7 +183,7 @@ No verified loops or iterators. Only trivial `View` impls for `PQEntry` and `Sta
 | # | File | TOC | Section Headers |
 |---|------|:---:|:---------------:|
 | 1 | StackStEph.rs | Yes | Yes (4, 5, 8, 9, 11, 13) |
-| 2 | DijkstraStEphInt.rs | Yes | Yes (4, 5, 8, 9, 13) |
+| 2 | DijkstraStEphI64.rs | Yes | Yes (4, 5, 8, 9, 13) |
 | 3 | DijkstraStEphFloat.rs | Yes | Yes (4, 5, 8, 9, 13) |
 
 All files have TOC comment blocks and numbered section headers.
@@ -192,12 +193,12 @@ All files have TOC comment blocks and numbered section headers.
 | # | File | Clone | PartialEq/Eq | Default | Drop | Iterator | Debug | Display | Macro | Other |
 |---|------|:-----:|:------------:|:-------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
 | 1 | StackStEph.rs | `✅ in` (derive) | - | `✅ in` | - | - | `✅ out` | - | - | - |
-| 2 | DijkstraStEphInt.rs | `❌ in` (derive, no spec) | `❌ in` (derive, no spec) | - | - | - | `✅ out` | `✅ out` | - | Ord/PartialOrd `❌ in` (external_body, no ensures) |
+| 2 | DijkstraStEphI64.rs | `❌ in` (derive, no spec) | `❌ in` (derive, no spec) | - | - | - | `✅ out` | `✅ out` | - | Ord/PartialOrd `❌ in` (external_body, no ensures) |
 | 3 | DijkstraStEphFloat.rs | `❌ in` (derive, no spec) | `❌ in` (derive, no spec) | - | - | - | `✅ out` | `✅ out` | - | Ord/PartialOrd `❌ in` (external_body, no ensures) |
 
 **Notes:**
 - `StackStEph`: Clone (derive inside verus! — correct), Default (inside verus! — correct), Debug (outside — correct).
-- `DijkstraStEph{Int,Float}`: `#[derive(Clone, Eq, PartialEq)]` on `PQEntry` is inside `verus!` but uses derive macros without specs — should use the `PartialEqSpecImpl` pattern. `Ord`/`PartialOrd` are `external_body` inside `verus!` but lack `ensures` — should specify ordering contract.
+- `DijkstraStEph{I64,Float}`: `#[derive(Clone, Eq, PartialEq)]` on `PQEntry` is inside `verus!` but uses derive macros without specs — should use the `PartialEqSpecImpl` pattern. `Ord`/`PartialOrd` are `external_body` inside `verus!` but lack `ensures` — should specify ordering contract.
 - `Debug`/`Display` correctly outside `verus!`.
 
 ## Proof Holes Summary
@@ -217,11 +218,11 @@ DijkstraStEphFloat.rs:    4 × external_body
 |---|--------|----------|
 | 1 | Fix duplicate `#[verifier::external_body]` on StackStEph::new (trait and impl both annotated) | High |
 | 2 | Remove `external_body` from StackStEph and add `requires`/`ensures` | High |
-| 3 | Add runtime tests for DijkstraStEphI64 (no tests, no specs) | High |
+| 3 | Uncomment DijkstraStEphI64/DijkstraStEphFloat in lib.rs (pending Chap45/Chap23 fix) | High |
 | 4 | Move PQEntry `Clone`/`PartialEq`/`Eq` to `PartialEqSpecImpl` pattern | Medium |
 | 5 | Add `ensures` to `Ord`/`PartialOrd` impls | Medium |
 | 6 | Replace `HashMap` with verified table for visited set in Dijkstra | Medium |
-| 7 | Add runtime tests for DijkstraStEphFloat and StackStEph | Medium |
+| 7 | Verify runtime tests run (Dijkstra modules commented out may block) | Medium |
 | 8 | Consider removing unused StackStEph or documenting its intended use | Low |
 | 9 | Implement Exercise 57.1 (decreaseKey variant) | Low |
 | 10 | Add Example 57.3 as runtime test | Low |
