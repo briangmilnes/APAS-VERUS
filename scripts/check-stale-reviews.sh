@@ -7,21 +7,11 @@ set -euo pipefail
 # Usage:
 #   scripts/check-stale-reviews.sh              # check all chapters
 #   scripts/check-stale-reviews.sh 56 57 59     # check specific chapters
-#   scripts/check-stale-reviews.sh --touch-ok   # touch up-to-date reviews (prevents false positives after git checkout)
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
-TOUCH_OK=false
-CHAPTERS=()
-
-for arg in "$@"; do
-    if [ "$arg" = "--touch-ok" ]; then
-        TOUCH_OK=true
-    else
-        CHAPTERS+=("$arg")
-    fi
-done
+CHAPTERS=("$@")
 
 if [ ${#CHAPTERS[@]} -eq 0 ]; then
     CHAPTERS=($(ls -d src/Chap*/analyses/review-against-prose.md 2>/dev/null | sed 's|src/Chap\([0-9]*\)/.*|\1|' | sort -n))
@@ -56,9 +46,6 @@ for ch in "${CHAPTERS[@]}"; do
         echo "$changed" | sed 's/^/  /'
         stale=$((stale + 1))
     else
-        if [ "$TOUCH_OK" = true ]; then
-            touch "$review"
-        fi
         ok=$((ok + 1))
     fi
 done
