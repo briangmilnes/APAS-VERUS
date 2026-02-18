@@ -11,6 +11,7 @@
 
 // 1. module
 
+#[allow(non_shorthand_field_patterns)]
 pub mod BSTPlainStEph {
 
     use vstd::prelude::*;
@@ -349,5 +350,10 @@ pub mod BSTPlainStEph {
     #[macro_export]
     macro_rules! BSTPlainStEphLit {
         () => { $crate::Chap37::BSTPlainStEph::BSTPlainStEph::bst_new() };
+        ($($val:expr),+ $(,)?) => {{
+            let mut tree = $crate::Chap37::BSTPlainStEph::BSTPlainStEph::bst_new();
+            $(tree = $crate::Chap37::BSTPlainStEph::BSTPlainStEph::bst_insert(tree, $val);)+
+            tree
+        }};
     }
 } // mod

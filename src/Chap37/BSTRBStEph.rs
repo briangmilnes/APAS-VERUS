@@ -13,6 +13,7 @@
 
 // 1. module
 
+#[allow(non_shorthand_field_patterns)]
 pub mod BSTRBStEph {
 
     use vstd::prelude::*;
@@ -22,7 +23,9 @@ pub mod BSTRBStEph {
     // 2. imports
 
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
+    #[cfg(verus_keep_ghost)]
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{tree_contains, tree_is_bst};
+    #[cfg(verus_keep_ghost)]
     use crate::Chap37::BSTAVLStEph::BSTAVLStEph::avl_balanced;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
@@ -565,5 +568,10 @@ pub mod BSTRBStEph {
     #[macro_export]
     macro_rules! BSTRBStEphLit {
         () => { $crate::Chap37::BSTRBStEph::BSTRBStEph::rb_new() };
+        ($($val:expr),+ $(,)?) => {{
+            let mut tree = $crate::Chap37::BSTRBStEph::BSTRBStEph::rb_new();
+            $(tree = $crate::Chap37::BSTRBStEph::BSTRBStEph::rb_insert(tree, $val);)+
+            tree
+        }};
     }
 } // mod
