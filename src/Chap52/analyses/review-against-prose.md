@@ -274,16 +274,18 @@ All 14 files include a Table of Contents comment near the top of the `verus!` bl
 | 11 | P3 | Update trait declaration annotations from old `/// claude-4-sonet:` to standard two-line format | Low |
 | 12 | P3 | Add PartialEq/Eq to remaining types (MtPer, MtEph, StEph variants) | Low |
 
-## Proof Holes Summary
+## Proof Holes Summary (updated 2026-02-18)
 
 | Hole Type | Count | Files |
 |---|---|---|
-| `#[verifier::external_body]` | 146 | All 14 source files |
+| `#[verifier::external_body]` | 148 | All 14 source files |
 | `assume(...)` | 0 | — |
 | `admit()` | 0 | — |
 | `#[verifier::external]` | 0 | — |
 | `#[verifier::external_fn_specification]` | 0 | — |
-| **Total** | **146** | — |
+| **Total** | **148** | — |
+
+**Errors:** 1 bare impl in file with trait definition (AdjSeqGraphMtPer.rs)
 
 ### external_body Distribution
 
@@ -297,10 +299,12 @@ All 14 files include a Table of Contents comment near the top of the `verus!` bl
 | 6 | AdjTableGraphMtPer | 11 |
 | 7 | AdjSeqGraphStEph | 9 |
 | 8 | AdjSeqGraphStPer | 9 |
-| 9 | AdjSeqGraphMtEph | 7 |
-| 10 | AdjSeqGraphMtPer | 6 |
+| 9 | AdjSeqGraphMtEph | 8 |
+| 10 | AdjSeqGraphMtPer | 8 |
 | 11 | AdjMatrixGraphStEph | 9 |
 | 12 | AdjMatrixGraphStPer | 9 |
 | 13 | AdjMatrixGraphMtEph | 8 |
 | 14 | AdjMatrixGraphMtPer | 14 |
-| | **Total** | **146** |
+| | **Total** | **148** |
+
+**Note:** Count increased from 146 to 148 due to agent2 adding `count_edges_parallel` helper functions in AdjSeqGraphMtEph.rs and AdjSeqGraphMtPer.rs.

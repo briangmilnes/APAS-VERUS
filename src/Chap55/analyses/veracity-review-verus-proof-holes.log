@@ -1,5 +1,3 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap55/
-
 ❌ CycleDetectStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:27: external_body - #[verifier::external_body]
         28 |     pub fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> B {
@@ -80,6 +78,20 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   8 holed (contains holes)
+   8 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 26 total
+   26 × external_body
+═══════
 
 Modules:
    0 clean (no holes)

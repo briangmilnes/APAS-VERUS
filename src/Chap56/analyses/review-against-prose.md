@@ -7,30 +7,35 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 56 — Shortest Paths (Introduction): Review Against Prose
 
-**Date:** 2026-02-17
+**Date:** 2026-02-18 (updated from 2026-02-17)
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 1: Inventory
 
-| # | File | exec fns | external_body | spec fns | proof fns | View | verus! |
-|---|------|:--------:|:-------------:|:--------:|:---------:|:----:|:------:|
-| 1 | SSSPResultStEphInt.rs | 7 | 7 | 0 | 0 | Yes | Yes |
-| 2 | SSSPResultStPerInt.rs | 7 | 7 | 0 | 0 | Yes | Yes |
-| 3 | SSSPResultStEphFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes |
-| 4 | SSSPResultStPerFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes |
-| 5 | AllPairsResultStEphInt.rs | 7 | 7 | 0 | 0 | Yes | Yes |
-| 6 | AllPairsResultStPerInt.rs | 7 | 7 | 0 | 0 | Yes | Yes |
-| 7 | AllPairsResultStEphFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes |
-| 8 | AllPairsResultStPerFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes |
-| 9 | PathWeightUtilsStEph.rs | 4 | 4 | 0 | 0 | No | Yes |
-| 10 | PathWeightUtilsStPer.rs | 4 | 4 | 0 | 0 | No | Yes |
-| 11 | Example56_1.rs | 3 | 3 | 0 | 0 | No | Yes |
-| 12 | Example56_3.rs | 2 | 2 | 0 | 0 | No | Yes |
-| | **Total** | **69** | **69** | **0** | **0** | | |
+| # | File | exec fns | external_body | spec fns | proof fns | View | verus! | Trait Wired |
+|---|------|:--------:|:-------------:|:--------:|:---------:|:----:|:------:|:-----------:|
+| 1 | SSSPResultStEphI64.rs | 7 | 4 | 0 | 0 | Yes | Yes | Yes |
+| 2 | SSSPResultStPerI64.rs | 7 | 3 | 0 | 0 | Yes | Yes | Yes |
+| 3 | SSSPResultStEphFloat.rs | 7 | 5 | 0 | 1 | Yes | Yes | No (agent2 rewrite) |
+| 4 | SSSPResultStPerFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes | Yes |
+| 5 | AllPairsResultStEphI64.rs | 7 | 2 | 0 | 0 | Yes | Yes | Yes |
+| 6 | AllPairsResultStPerI64.rs | 7 | 4 | 0 | 0 | Yes | Yes | Yes |
+| 7 | AllPairsResultStEphFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes | Yes |
+| 8 | AllPairsResultStPerFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes | Yes |
+| 9 | PathWeightUtilsStEph.rs | 4 | 4 | 0 | 0 | No | Yes | N/A (free fns) |
+| 10 | PathWeightUtilsStPer.rs | 4 | 4 | 0 | 0 | No | Yes | N/A (free fns) |
+| 11 | Example56_1.rs | 3 | 3 | 0 | 0 | No | Yes | N/A |
+| 12 | Example56_3.rs | 2 | 2 | 0 | 0 | No | Yes | N/A |
+| | **Total** | **69** | **52** | **0** | **1** | | | |
 
-All 12 files are inside `verus!{}` blocks. All 69 exec functions have `#[verifier::external_body]`. 8 files have `View` implementations. No `requires`/`ensures` on any exec function. TOC headers and section markers present in all files.
+**Changes since 2026-02-17:**
+- Files renamed: `*Int.rs` → `*I64.rs` (agent2 merge).
+- All 8 result files now use `impl Trait for Type` (trait wiring complete). No bare_impl errors remain.
+- `SSSPResultStEphFloat.rs` rewritten by agent2: replaces `OrderedF64` with custom `F64Dist` type, adds axioms (`axiom_unreachable_not_finite`), verifies `new()` with loop invariant. 1 clean proof function. Trait wiring not yet applied to this file.
+- I64 result files: `new()`, `get_distance`, `get_predecessor`, `is_reachable` now verified (no external_body) — `set_distance`, `set_predecessor`, `extract_path` remain external_body.
+- Total external_body reduced from 69 to 52.
 
-**Gating:** Chap56 module itself: `#[cfg(not(feature = "experiments_only"))]`. The 4 core modules (SSSPResultStEphInt, SSSPResultStPerInt, AllPairsResultStEphInt, AllPairsResultStPerInt) compile normally. The remaining 8 modules (Float variants, PathWeightUtils, Examples) are additionally gated behind `#[cfg(feature = "all_chapters")]`.
+**Gating:** Chap56 module itself: `#[cfg(not(feature = "experiments_only"))]`. The 4 core modules (SSSPResultStEphI64, SSSPResultStPerI64, AllPairsResultStEphI64, AllPairsResultStPerI64) compile normally. The remaining 8 modules (Float variants, PathWeightUtils, Examples) are additionally gated behind `#[cfg(feature = "all_chapters")]`.
 
 ## Phase 2: Prose Inventory
 
@@ -216,14 +221,15 @@ No derive trait impls in any file. No `❌` items.
 
 ```
 Modules: 0 clean, 12 holed
-Holes Found: 69 total (all external_body)
+Proof Functions: 1 clean, 0 holed
+Holes Found: 52 total (all external_body)
 
-SSSPResultStEphInt.rs:         7 × external_body
-SSSPResultStPerInt.rs:         7 × external_body
-SSSPResultStEphFloat.rs:       7 × external_body
+SSSPResultStEphI64.rs:         4 × external_body  (was 7)
+SSSPResultStPerI64.rs:         3 × external_body  (was 7)
+SSSPResultStEphFloat.rs:       5 × external_body  (was 7; F64Dist axioms + verified new)
 SSSPResultStPerFloat.rs:       7 × external_body
-AllPairsResultStEphInt.rs:     7 × external_body
-AllPairsResultStPerInt.rs:     7 × external_body
+AllPairsResultStEphI64.rs:     2 × external_body  (was 7)
+AllPairsResultStPerI64.rs:     4 × external_body  (was 7)
 AllPairsResultStEphFloat.rs:   7 × external_body
 AllPairsResultStPerFloat.rs:   7 × external_body
 PathWeightUtilsStEph.rs:       4 × external_body
@@ -236,9 +242,11 @@ Example56_3.rs:                2 × external_body
 
 | # | Action | Priority |
 |---|--------|----------|
-| 1 | Remove `external_body` from SSSPResult*/AllPairsResult* and add `requires`/`ensures` | High |
-| 2 | Add runtime tests (SSSPResultStEphInt first, then AllPairsResultStEphInt) | High |
-| 3 | Add `spec fn spec_distance` for δ_G(u,v) | Medium |
-| 4 | Remove `external_body` from PathWeightUtils* and verify | Medium |
-| 5 | Fix module header cost for `validate_subpath_property` (O(k²) → O(k)) | Low |
-| 6 | Remove `external_body` from Example fns (demonstration code) | Low |
+| 1 | Wire trait for SSSPResultStEphFloat (agent2 rewrote file; trait wiring not yet applied) | High |
+| 2 | Remove remaining `external_body` from I64 result files (set_distance, set_predecessor, extract_path) | High |
+| 3 | Add runtime tests (SSSPResultStEphI64 first, then AllPairsResultStEphI64) | High |
+| 4 | Add `spec fn spec_distance` for δ_G(u,v) | Medium |
+| 5 | Remove `external_body` from Float result files and verify | Medium |
+| 6 | Remove `external_body` from PathWeightUtils* and verify | Medium |
+| 7 | Fix module header cost for `validate_subpath_property` (O(k²) → O(k)) | Low |
+| 8 | Remove `external_body` from Example fns (demonstration code) | Low |

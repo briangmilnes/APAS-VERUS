@@ -7,23 +7,25 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 57 — Dijkstra's Algorithm: Review Against Prose
 
-**Date:** 2026-02-17
+**Date:** 2026-02-18 (updated from 2026-02-17)
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 1: Inventory
 
-| # | File | exec fns | external_body | spec fns | proof fns | View | verus! |
-|---|------|:--------:|:-------------:|:--------:|:---------:|:----:|:------:|
-| 1 | StackStEph.rs | 7 | 7 | 0 | 0 | Yes | Yes |
-| 2 | DijkstraStEphInt.rs | 4 | 4 | 0 | 0 | Yes | Yes |
-| 3 | DijkstraStEphFloat.rs | 4 | 4 | 0 | 0 | Yes | Yes |
-| | **Total** | **15** | **15** | **0** | **0** | | |
+| # | File | exec fns | external_body | spec fns | proof fns | View | verus! | Trait Wired |
+|---|------|:--------:|:-------------:|:--------:|:---------:|:----:|:------:|:-----------:|
+| 1 | StackStEph.rs | 7 | 8 | 0 | 0 | Yes | Yes | Yes |
+| 2 | DijkstraStEphI64.rs | 4 | 4 | 0 | 0 | Yes | Yes | N/A (free fns) |
+| 3 | DijkstraStEphFloat.rs | 4 | 4 | 0 | 0 | Yes | Yes | N/A (free fns) |
+| | **Total** | **15** | **16** | **0** | **0** | | | |
 
-All 3 files are inside `verus!{}` blocks with type definitions, View impls, traits, and impls. All 15 exec functions have `#[verifier::external_body]`. No `requires`/`ensures` on any exec function.
+**Changes since 2026-02-17:**
+- `DijkstraStEphInt.rs` renamed to `DijkstraStEphI64.rs` (agent2 merge).
+- `StackStEph`: `impl StackStEph` changed to `impl StackStEphTrait for StackStEph` (trait wired). `peek` and `size` added to trait. Default impl remains outside trait (Rust scaffolding). 8 external_body counts include a duplicate on `new` (trait + impl both annotated).
 
 **Gating:**
 - `StackStEph.rs`: `#[cfg(not(feature = "experiments_only"))]` — compiles normally.
-- `DijkstraStEphInt.rs`: additionally `#[cfg(not(verus_keep_ghost))]` — skipped during Verus verification due to Chap45 (BinaryHeapPQ) dependency.
+- `DijkstraStEphI64.rs`: additionally `#[cfg(not(verus_keep_ghost))]` — skipped during Verus verification due to Chap45 (BinaryHeapPQ) dependency.
 - `DijkstraStEphFloat.rs`: additionally `#[cfg(all(feature = "all_chapters", not(verus_keep_ghost)))]`.
 
 ## Phase 2: Prose Inventory
@@ -202,23 +204,24 @@ All files have TOC comment blocks and numbered section headers.
 
 ```
 Modules: 0 clean, 3 holed
-Holes Found: 15 total (all external_body)
+Holes Found: 16 total (all external_body)
 
-StackStEph.rs:          7 × external_body
-DijkstraStEphInt.rs:    4 × external_body
-DijkstraStEphFloat.rs:  4 × external_body
+StackStEph.rs:            8 × external_body (includes dup on new: trait + impl)
+DijkstraStEphI64.rs:      4 × external_body
+DijkstraStEphFloat.rs:    4 × external_body
 ```
 
 ## Action Items
 
 | # | Action | Priority |
 |---|--------|----------|
-| 1 | Add runtime tests for DijkstraStEphInt (no tests, no specs) | High |
+| 1 | Fix duplicate `#[verifier::external_body]` on StackStEph::new (trait and impl both annotated) | High |
 | 2 | Remove `external_body` from StackStEph and add `requires`/`ensures` | High |
-| 3 | Move PQEntry `Clone`/`PartialEq`/`Eq` to `PartialEqSpecImpl` pattern | Medium |
-| 4 | Add `ensures` to `Ord`/`PartialOrd` impls | Medium |
-| 5 | Replace `HashMap` with verified table for visited set in Dijkstra | Medium |
-| 6 | Add runtime tests for DijkstraStEphFloat and StackStEph | Medium |
-| 7 | Consider removing unused StackStEph or documenting its intended use | Low |
-| 8 | Implement Exercise 57.1 (decreaseKey variant) | Low |
-| 9 | Add Example 57.3 as runtime test | Low |
+| 3 | Add runtime tests for DijkstraStEphI64 (no tests, no specs) | High |
+| 4 | Move PQEntry `Clone`/`PartialEq`/`Eq` to `PartialEqSpecImpl` pattern | Medium |
+| 5 | Add `ensures` to `Ord`/`PartialOrd` impls | Medium |
+| 6 | Replace `HashMap` with verified table for visited set in Dijkstra | Medium |
+| 7 | Add runtime tests for DijkstraStEphFloat and StackStEph | Medium |
+| 8 | Consider removing unused StackStEph or documenting its intended use | Low |
+| 9 | Implement Exercise 57.1 (decreaseKey variant) | Low |
+| 10 | Add Example 57.3 as runtime test | Low |

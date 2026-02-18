@@ -1,5 +1,3 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap51/
-
 ❌ BottomUpDPMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:91: error: bare_impl - // 9. impls (complex methods outside verus — they use Arc<Mutex<Vec<Vec<usi... — `impl BottomUpDPMtEphS` without trait; file defines [BottomUpDPMtEphTrait]
         92 |     impl BottomUpDPMtEphS {
@@ -58,6 +56,21 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
+   8 clean (no holes)
+   0 holed (contains holes)
+   8 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 0 total
+
+Errors: 12 bare impl(s) in files with trait definitions
+
+🎉 No proof holes found! All proofs are complete.
+:
    8 clean (no holes)
    0 holed (contains holes)
    8 total

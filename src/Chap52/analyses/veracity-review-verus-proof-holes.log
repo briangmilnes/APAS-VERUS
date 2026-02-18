@@ -1,5 +1,3 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap52/
-
 ❌ AdjMatrixGraphMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:61: external_body - #[verifier::external_body]
         62 |         fn new(n: N) -> Self {
@@ -93,40 +91,44 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Holes: 9 total
       9 × external_body
 ❌ AdjSeqGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:62: external_body - #[verifier::external_body]
-        63 |         fn new(n: N) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:76: external_body - #[verifier::external_body]
-        77 |         fn num_vertices(&self) -> N { self.adj.length() }
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:81: external_body - #[verifier::external_body]
-        82 |         fn num_edges(&self) -> N {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:94: external_body - #[verifier::external_body]
-        95 |         fn has_edge(&self, u: N, v: N) -> B {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:110: external_body - #[verifier::external_body]
-       111 |         fn out_neighbors(&self, u: N) -> ArraySeqMtEphS<N> { self.adj.nth(u).clone() }
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:115: external_body - #[verifier::external_body]
-       116 |         fn out_degree(&self, u: N) -> N { self.adj.nth(u).length().clone() }
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:120: external_body - #[verifier::external_body]
-       121 |         fn set_edge(&mut self, u: N, v: N, exists: B) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:66: external_body - #[verifier::external_body]
+        67 |         fn new(n: N) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:80: external_body - #[verifier::external_body]
+        81 |         fn num_vertices(&self) -> N { self.adj.length() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:85: external_body - #[verifier::external_body]
+        86 |         fn num_edges(&self) -> N {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:92: external_body - #[verifier::external_body]
+        93 |         fn has_edge(&self, u: N, v: N) -> B {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:108: external_body - #[verifier::external_body]
+       109 |         fn out_neighbors(&self, u: N) -> ArraySeqMtEphS<N> { self.adj.nth(u).clone() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:113: external_body - #[verifier::external_body]
+       114 |         fn out_degree(&self, u: N) -> N { self.adj.nth(u).length().clone() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:118: external_body - #[verifier::external_body]
+       119 |         fn set_edge(&mut self, u: N, v: N, exists: B) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtEph.rs:155: external_body - #[verifier::external_body]
+       156 |     fn count_edges_parallel(adj: &ArraySeqMtEphS<ArraySeqMtEphS<N>>) -> (result: N) {
+   Holes: 8 total
+      8 × external_body
+❌ AdjSeqGraphMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:65: external_body - #[verifier::external_body]
+        66 |         fn new(n: N) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:79: external_body - #[verifier::external_body]
+        80 |         fn num_vertices(&self) -> N { self.adj.length() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:84: external_body - #[verifier::external_body]
+        85 |         fn num_edges(&self) -> N {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:91: external_body - #[verifier::external_body]
+        92 |         fn has_edge(&self, u: N, v: N) -> B {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:107: external_body - #[verifier::external_body]
+       108 |         fn out_neighbors(&self, u: N) -> ArraySeqMtPerS<N> { self.adj.nth(u).clone() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:112: external_body - #[verifier::external_body]
+       113 |         fn out_degree(&self, u: N) -> N { self.adj.nth(u).length() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:118: external_body - #[verifier::external_body]
+       119 |     fn count_edges_parallel(adj: &ArraySeqMtPerS<ArraySeqMtPerS<N>>) -> (result: N) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:144: error: bare_impl - impl AdjSeqGraphMtPer { — `impl AdjSeqGraphMtPer` without trait; file defines [AdjSeqGraphMtPerTrait]
+       145 |         /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
+       146 |         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(lg n) — parallel divide-and-conquer over vertex range.
    Holes: 7 total
       7 × external_body
-❌ AdjSeqGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:73: external_body - #[verifier::external_body]
-        74 |         fn new(n: N) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:91: external_body - #[verifier::external_body]
-        92 |         fn num_vertices(&self) -> (result: N)
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:98: external_body - #[verifier::external_body]
-        99 |         fn num_edges(&self) -> (result: N) {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:110: external_body - #[verifier::external_body]
-       111 |         fn has_edge(&self, u: N, v: N) -> (result: B)
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:128: external_body - #[verifier::external_body]
-       129 |         fn out_neighbors(&self, u: N) -> (result: ArraySeqMtPerS<N>)
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:135: external_body - #[verifier::external_body]
-       136 |         fn out_degree(&self, u: N) -> (result: N)
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:145: error: bare_impl - impl AdjSeqGraphMtPer { — `impl AdjSeqGraphMtPer` without trait; file defines [AdjSeqGraphMtPerTrait]
-       146 |         /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
-       147 |         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential double loop; span not parallel despite Mt type.
-   Holes: 6 total
-      6 × external_body
    Errors: 1 bare impl(s) in file with trait definition
 ❌ AdjSeqGraphStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:66: external_body - #[verifier::external_body]
@@ -171,28 +173,28 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Holes: 9 total
       9 × external_body
 ❌ AdjTableGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:79: external_body - #[verifier::external_body]
-        80 |         fn empty() -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:88: external_body - #[verifier::external_body]
-        89 |         fn num_vertices(&self) -> N { self.adj.size() }
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:93: external_body - #[verifier::external_body]
-        94 |         fn num_edges(&self) -> N {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:109: external_body - #[verifier::external_body]
-       110 |         fn has_edge(&self, u: &V, v: &V) -> B { self.adj.find(u).is_some_and(|neighbors| neighbors.find(v)) }
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:114: external_body - #[verifier::external_body]
-       115 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:121: external_body - #[verifier::external_body]
-       122 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:126: external_body - #[verifier::external_body]
-       127 |         fn insert_vertex(&self, v: V) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:138: external_body - #[verifier::external_body]
-       139 |         fn delete_vertex(&self, v: &V) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:163: external_body - #[verifier::external_body]
-       164 |         fn insert_edge(&self, u: V, v: V) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:181: external_body - #[verifier::external_body]
-       182 |         fn delete_edge(&self, u: &V, v: &V) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:199: external_body - #[verifier::external_body]
-       200 |         fn default() -> Self { Self::empty() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:81: external_body - #[verifier::external_body]
+        82 |         fn empty() -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:90: external_body - #[verifier::external_body]
+        91 |         fn num_vertices(&self) -> N { self.adj.size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:95: external_body - #[verifier::external_body]
+        96 |         fn num_edges(&self) -> N {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:111: external_body - #[verifier::external_body]
+       112 |         fn has_edge(&self, u: &V, v: &V) -> B { self.adj.find(u).is_some_and(|neighbors| neighbors.find(v)) }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:116: external_body - #[verifier::external_body]
+       117 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:123: external_body - #[verifier::external_body]
+       124 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:128: external_body - #[verifier::external_body]
+       129 |         fn insert_vertex(&self, v: V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:140: external_body - #[verifier::external_body]
+       141 |         fn delete_vertex(&self, v: &V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:197: external_body - #[verifier::external_body]
+       198 |         fn insert_edge(&self, u: V, v: V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:215: external_body - #[verifier::external_body]
+       216 |         fn delete_edge(&self, u: &V, v: &V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:233: external_body - #[verifier::external_body]
+       234 |         fn default() -> Self { Self::empty() }
    Holes: 11 total
       11 × external_body
 ❌ AdjTableGraphStEph.rs
@@ -250,34 +252,34 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Holes: 12 total
       12 × external_body
 ❌ EdgeSetGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:78: external_body - #[verifier::external_body]
-        79 |         fn empty() -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:88: external_body - #[verifier::external_body]
-        89 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:95: external_body - #[verifier::external_body]
-        96 |         fn num_vertices(&self) -> N { self.vertices.size() }
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:100: external_body - #[verifier::external_body]
-       101 |         fn num_edges(&self) -> N { self.edges.size() }
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:105: external_body - #[verifier::external_body]
-       106 |         fn vertices(&self) -> &AVLTreeSetMtPer<V> { &self.vertices }
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:110: external_body - #[verifier::external_body]
-       111 |         fn edges(&self) -> &AVLTreeSetMtPer<Pair<V, V>> { &self.edges }
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:115: external_body - #[verifier::external_body]
-       116 |         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:120: external_body - #[verifier::external_body]
-       121 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:135: external_body - #[verifier::external_body]
-       136 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:140: external_body - #[verifier::external_body]
-       141 |         fn insert_vertex(&self, v: V) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:150: external_body - #[verifier::external_body]
-       151 |         fn delete_vertex(&self, v: &V) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:167: external_body - #[verifier::external_body]
-       168 |         fn insert_edge(&self, u: V, v: V) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:179: external_body - #[verifier::external_body]
-       180 |         fn delete_edge(&self, u: &V, v: &V) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:193: external_body - #[verifier::external_body]
-       194 |         fn default() -> Self { Self::empty() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:82: external_body - #[verifier::external_body]
+        83 |         fn empty() -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:92: external_body - #[verifier::external_body]
+        93 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:99: external_body - #[verifier::external_body]
+       100 |         fn num_vertices(&self) -> N { self.vertices.size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:104: external_body - #[verifier::external_body]
+       105 |         fn num_edges(&self) -> N { self.edges.size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:109: external_body - #[verifier::external_body]
+       110 |         fn vertices(&self) -> &AVLTreeSetMtPer<V> { &self.vertices }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:114: external_body - #[verifier::external_body]
+       115 |         fn edges(&self) -> &AVLTreeSetMtPer<Pair<V, V>> { &self.edges }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:119: external_body - #[verifier::external_body]
+       120 |         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:124: external_body - #[verifier::external_body]
+       125 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:159: external_body - #[verifier::external_body]
+       160 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:164: external_body - #[verifier::external_body]
+       165 |         fn insert_vertex(&self, v: V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:174: external_body - #[verifier::external_body]
+       175 |         fn delete_vertex(&self, v: &V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:191: external_body - #[verifier::external_body]
+       192 |         fn insert_edge(&self, u: V, v: V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:203: external_body - #[verifier::external_body]
+       204 |         fn delete_edge(&self, u: &V, v: &V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:217: external_body - #[verifier::external_body]
+       218 |         fn default() -> Self { Self::empty() }
    Holes: 14 total
       14 × external_body
 ❌ EdgeSetGraphStEph.rs
@@ -353,7 +355,19 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 146 total
-   146 × external_body
+Holes Found: 148 total
+   148 × external_body
+
+Errors: 1 bare impl(s) in files with trait definitions
+4 holed (contains holes)
+   14 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 148 total
+   148 × external_body
 
 Errors: 1 bare impl(s) in files with trait definitions
