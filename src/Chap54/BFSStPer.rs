@@ -7,23 +7,37 @@ pub mod BFSStPer {
 
     use std::collections::VecDeque;
 
-    use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+    use vstd::prelude::*;
     use crate::Types::Types::*;
+    use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+
+    verus! {
+
+    // Table of Contents
+    // 4. type definitions
+    // 8. traits
+    // 9. impls
+
+    // 4. type definitions
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
 
+    const UNREACHABLE: N = N::MAX;
+
+    // 8. traits
     pub trait BFSStPerTrait {
         /// Performs BFS from source vertex s on adjacency list graph G
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         fn bfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> ArraySeqStPerS<N>;
     }
 
-    const UNREACHABLE: N = N::MAX;
+    // 9. impls
 
     /// Performs BFS from source vertex s on adjacency list graph G.
     /// Graph is represented as sequence of sequences (adjacency list).
     /// Returns array where result[v] = distance if reachable, UNREACHABLE otherwise.
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
+    #[verifier::external_body]
     pub fn bfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> ArraySeqStPerS<N> {
         let n = graph.length();
         if source >= n {
@@ -52,4 +66,6 @@ pub mod BFSStPer {
 
         distances
     }
+
+    } // verus!
 }

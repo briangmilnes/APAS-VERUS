@@ -4,15 +4,31 @@
 
 pub mod QuadProbFlatHashTableStEph {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions (inside verus!)
+    // 9. impls (outside verus! — reference HashTable which contains dyn Fn types)
+
+    // 2. imports
     use std::marker::PhantomData;
 
+    use vstd::prelude::*;
     use crate::Chap47::FlatHashTable::FlatHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
 
+    verus! {
+
+    // 4. type definitions
+
     /// Quadratic Probing Flat Hash Table implementation.
     /// Probe sequence: h_i(k) = (h(k) + i²) mod m
     pub struct QuadProbFlatHashTableStEph;
+
+    } // verus!
+
+    // 9. impls (outside verus! — these reference HashTable which contains dyn Fn types)
 
     impl<Key: StT, Value: StT, Metrics: Default> ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics>
         for QuadProbFlatHashTableStEph
@@ -23,11 +39,9 @@ pub mod QuadProbFlatHashTableStEph {
             let slot = Self::find_slot(table, &key);
             match &table.table[slot] {
                 | FlatEntry::Occupied(k, _) if k == &key => {
-                    // Update existing
                     table.table[slot] = FlatEntry::Occupied(key, value);
                 }
                 | FlatEntry::Empty | FlatEntry::Deleted => {
-                    // Insert new
                     table.table[slot] = FlatEntry::Occupied(key, value);
                     table.num_elements += 1;
                 }
@@ -42,7 +56,7 @@ pub mod QuadProbFlatHashTableStEph {
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe up to ⌈m/2⌉ attempts (Lemma 47.1).
         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> Option<Value> {
             let mut attempt = 0;
-            let max_attempts = table.current_size.div_ceil(2); // APAS Lemma 47.1: first ⌈m/2⌉ probes are distinct
+            let max_attempts = table.current_size.div_ceil(2);
             while attempt < max_attempts {
                 let slot = Self::probe(table, key, attempt);
                 match &table.table[slot] {
@@ -60,7 +74,7 @@ pub mod QuadProbFlatHashTableStEph {
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe until found or empty, then tombstone.
         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> B {
             let mut attempt = 0;
-            let max_attempts = table.current_size.div_ceil(2); // APAS Lemma 47.1: first ⌈m/2⌉ probes are distinct
+            let max_attempts = table.current_size.div_ceil(2);
             while attempt < max_attempts {
                 let slot = Self::probe(table, key, attempt);
                 match &table.table[slot] {
@@ -84,7 +98,6 @@ pub mod QuadProbFlatHashTableStEph {
             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>,
             new_size: N,
         ) -> HashTable<Key, Value, FlatEntry<Key, Value>, Metrics> {
-            // Collect all key-value pairs from old table
             let mut pairs = Vec::new();
             for entry in &table.table {
                 if let FlatEntry::Occupied(k, v) = entry {
@@ -92,7 +105,6 @@ pub mod QuadProbFlatHashTableStEph {
                 }
             }
 
-            // Create new table with new size using the stored generator
             let new_table_vec = (0..new_size).map(|_| FlatEntry::new()).collect();
             let new_hash_fn = (table.hash_fn_gen)(new_size);
             let mut new_table = HashTable {
@@ -106,7 +118,6 @@ pub mod QuadProbFlatHashTableStEph {
                 _phantom: PhantomData,
             };
 
-            // Reinsert all pairs into new table
             for (key, value) in pairs {
                 Self::insert(&mut new_table, key, value);
             }
@@ -122,8 +133,6 @@ pub mod QuadProbFlatHashTableStEph {
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — hash + i² + modulo.
         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key, attempt: N) -> N {
             let hash_val = (table.hash_fn)(key);
-
-            // Quadratic probing: (hash(key) + i²) mod size
             (hash_val + (attempt * attempt)) % table.current_size
         }
 
@@ -131,7 +140,7 @@ pub mod QuadProbFlatHashTableStEph {
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe up to ⌈m/2⌉ (Lemma 47.1).
         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> N {
             let mut attempt = 0;
-            let max_attempts = table.current_size.div_ceil(2); // APAS Lemma 47.1: first ⌈m/2⌉ probes are distinct
+            let max_attempts = table.current_size.div_ceil(2);
             while attempt < max_attempts {
                 let slot = Self::probe(table, key, attempt);
                 match &table.table[slot] {

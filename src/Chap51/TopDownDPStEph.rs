@@ -6,14 +6,40 @@
 
 pub mod TopDownDPStEph {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions
+    // 8. traits
+    // 9. impls
+    // 11. derive impls
+    // 13. derive impls outside verus!
+
+    // 2. imports
     use std::collections::HashMap;
     use std::fmt::{Formatter, Debug, Display};
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
 
+    verus! {
+    } // verus!
+
+    // 4. type definitions
+    #[derive(Clone, PartialEq, Eq)]
+    pub struct TopDownDPStEphS {
+        /// Input sequence S
+        pub seq_s: ArraySeqStEphS<char>,
+        /// Input sequence T
+        pub seq_t: ArraySeqStEphS<char>,
+        /// Memoization table for subproblem results
+        pub memo_table: HashMap<(usize, usize), usize>,
+    }
+
+    // 8. traits
     /// Trait for top-down dynamic programming operations
-    pub trait TopDownDPStEphTrait<T: StT> {
+    pub trait TopDownDPStEphTrait<T: StT> : Sized {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn new()                     -> Self;
@@ -23,16 +49,7 @@ pub mod TopDownDPStEph {
         fn solve(&self, input: &[T]) -> T;
     }
 
-    #[derive(Clone, Debug, PartialEq, Eq)]
-    pub struct TopDownDPStEphS {
-        /// Input sequence S
-        seq_s: ArraySeqStEphS<char>,
-        /// Input sequence T  
-        seq_t: ArraySeqStEphS<char>,
-        /// Memoization table for subproblem results
-        memo_table: HashMap<(usize, usize), usize>,
-    }
-
+    // 9. impls
     impl TopDownDPStEphS {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
@@ -137,11 +154,23 @@ pub mod TopDownDPStEph {
         }
     }
 
+    // 11. derive impls
     impl Default for TopDownDPStEphS {
         fn default() -> Self {
             let empty_s = ArraySeqStEphS::new(0, ' ');
             let empty_t = ArraySeqStEphS::new(0, ' ');
             Self::new(empty_s, empty_t)
+        }
+    }
+
+    // 13. derive impls outside verus!
+    impl Debug for TopDownDPStEphS {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("TopDownDPStEphS")
+                .field("seq_s", &self.seq_s)
+                .field("seq_t", &self.seq_t)
+                .field("memo_table", &self.memo_table)
+                .finish()
         }
     }
 

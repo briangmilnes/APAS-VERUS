@@ -83,11 +83,13 @@ pub mod ETSPStEph {
             spec_point_in_seq(tour[i].to, points)
     }
 
-    /// Bundle: the tour has the right length and every edge endpoint is an input point.
+    /// Bundle: the tour has the right length, every edge endpoint is an input point,
+    /// and the edges form a cycle.
     pub open spec fn spec_etsp(tour: Seq<Edge>, points: Seq<Point>) -> bool {
         tour.len() == points.len()
         && spec_sources_valid(tour, points)
         && spec_targets_valid(tour, points)
+        && spec_edges_form_cycle(tour)
     }
 
     /// Every element of combined so far has from/to in points.
@@ -95,6 +97,13 @@ pub mod ETSPStEph {
         forall|k: int| #![trigger edges[k]] 0 <= k < edges.len() ==>
             spec_point_in_seq(edges[k].from, points)
             && spec_point_in_seq(edges[k].to, points)
+    }
+
+    /// Edges form a Hamiltonian cycle: each edge's destination is the next edge's source.
+    pub open spec fn spec_edges_form_cycle(tour: Seq<Edge>) -> bool {
+        tour.len() > 0 ==>
+        forall|i: int| #![trigger tour[i]] 0 <= i < tour.len() ==>
+            spec_point_eq(tour[i].to, tour[((i + 1) % (tour.len() as int))].from)
     }
 
     //		7. proof fns
@@ -132,6 +141,36 @@ pub mod ETSPStEph {
     {
         lemma_point_in_seq_transitive(edge.from, sub_points, points);
         lemma_point_in_seq_transitive(edge.to, sub_points, points);
+    }
+
+    // TODO: Prove cycle connectivity for the combined tour (same as Mt version).
+    proof fn lemma_combined_cycle(
+        combined: Seq<Edge>, lt: Seq<Edge>, rt: Seq<Edge>,
+        ln_i: int, rn_i: int, best_li: int, best_ri: int,
+        el_from: Point, el_to: Point, er_from: Point, er_to: Point,
+    )
+        requires
+            combined.len() == ln_i + rn_i,
+            ln_i >= 2, rn_i >= 2,
+            0 <= best_li < ln_i,
+            0 <= best_ri < rn_i,
+            lt.len() == ln_i, rt.len() == rn_i,
+            spec_edges_form_cycle(lt),
+            spec_edges_form_cycle(rt),
+            el_from == lt[best_li].from,
+            el_to == lt[best_li].to,
+            er_from == rt[best_ri].from,
+            er_to == rt[best_ri].to,
+            forall|k: int| #![trigger combined[k]] 0 <= k < ln_i - 1 ==>
+                combined[k] == lt[((best_li + 1 + k) % ln_i)],
+            combined[ln_i - 1] == (Edge { from: el_from, to: er_to }),
+            forall|m: int| #![trigger combined[(ln_i + m)]] 0 <= m < rn_i - 1 ==>
+                combined[(ln_i + m)] == rt[((best_ri + 1 + m) % rn_i)],
+            combined[ln_i + rn_i - 1] == (Edge { from: er_from, to: el_to }),
+        ensures
+            spec_edges_form_cycle(combined),
+    {
+        admit();
     }
 
     //		8. traits
@@ -172,6 +211,8 @@ pub mod ETSPStEph {
                 assert(spec_point_eq(tour@[0].to, points@[1]));
                 assert(spec_point_eq(tour@[1].from, points@[1]));
                 assert(spec_point_eq(tour@[1].to, points@[0]));
+                assert(spec_point_eq(tour@[0].to, tour@[1].from));
+                assert(spec_point_eq(tour@[1].to, tour@[0].from));
             }
             return tour;
         }
@@ -189,6 +230,9 @@ pub mod ETSPStEph {
                 assert(spec_point_eq(tour@[1].to, points@[2]));
                 assert(spec_point_eq(tour@[2].from, points@[2]));
                 assert(spec_point_eq(tour@[2].to, points@[0]));
+                assert(spec_point_eq(tour@[0].to, tour@[1].from));
+                assert(spec_point_eq(tour@[1].to, tour@[2].from));
+                assert(spec_point_eq(tour@[2].to, tour@[0].from));
             }
             return tour;
         }
@@ -225,6 +269,8 @@ pub mod ETSPStEph {
                 forall|k: int| #![trigger left_points@[k]] 0 <= k < left_points@.len() ==>
                     spec_point_in_seq(left_points@[k], points@),
                 spec_edges_valid(combined@, points@),
+                forall|k: int| #![trigger combined@[k]] 0 <= k < (i - 1) as int ==>
+                    combined@[k] == left_tour@[((best_li as int + 1 + k) % ln as int)],
             decreases ln - i,
         {
             let idx = (best_li + i) % ln;
@@ -256,12 +302,23 @@ pub mod ETSPStEph {
                 rn == right_tour@.len(),
                 ln + rn == points@.len(),
                 points@.len() < usize::MAX / 2,
+                (best_li as int) < ln as int,
                 (best_ri as int) < rn as int,
                 combined@.len() == (ln as int - 1 + 1 + (j as int - 1)),
+                spec_etsp(left_tour@, left_points@),
                 spec_etsp(right_tour@, right_points@),
                 forall|k: int| #![trigger right_points@[k]] 0 <= k < right_points@.len() ==>
                     spec_point_in_seq(right_points@[k], points@),
                 spec_edges_valid(combined@, points@),
+                forall|k: int| #![trigger combined@[k]] 0 <= k < (ln - 1) as int ==>
+                    combined@[k] == left_tour@[((best_li as int + 1 + k) % ln as int)],
+                combined@[(ln - 1) as int] == (Edge { from: el_from, to: er_to }),
+                el_from == left_tour@[best_li as int].from,
+                er_to == right_tour@[best_ri as int].to,
+                el_to == left_tour@[best_li as int].to,
+                er_from == right_tour@[best_ri as int].from,
+                forall|m: int| #![trigger combined@[(ln as int + m)]] 0 <= m < (j - 1) as int ==>
+                    combined@[(ln as int + m)] == right_tour@[((best_ri as int + 1 + m) % rn as int)],
             decreases rn - j,
         {
             let idx = (best_ri + j) % rn;
@@ -286,6 +343,11 @@ pub mod ETSPStEph {
 
         proof {
             assert(combined@.len() == (ln + rn) as int);
+            lemma_combined_cycle(
+                combined@, left_tour@, right_tour@,
+                ln as int, rn as int, best_li as int, best_ri as int,
+                el_from, el_to, er_from, er_to,
+            );
         }
 
         combined

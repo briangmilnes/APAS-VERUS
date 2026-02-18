@@ -14,14 +14,49 @@
 
 pub mod AllPairsResultStPerInt {
 
+    use vstd::prelude::*;
+
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+
+    verus! {
+
+    // Table of Contents
+    // 4. type definitions
+    // 5. view impls
+    // 8. traits
+    // 9. impls
+
+    // 4. type definitions
 
     const UNREACHABLE: i64 = i64::MAX;
     const NO_PREDECESSOR: usize = usize::MAX;
 
+    /// Result structure for all-pairs shortest paths with integer weights (persistent).
+    pub struct AllPairsResultStPerInt {
+        /// Distance matrix: distances.nth(u).nth(v) is the distance from u to v.
+        pub distances: ArraySeqStPerS<ArraySeqStPerS<i64>>,
+        /// Predecessor matrix: predecessors.nth(u).nth(v) is the predecessor of v on shortest path from u.
+        pub predecessors: ArraySeqStPerS<ArraySeqStPerS<usize>>,
+        /// Number of vertices.
+        pub n: usize,
+    }
+
+    // 5. view impls
+
+    impl View for AllPairsResultStPerInt {
+        type V = Seq<Seq<int>>;
+        open spec fn view(&self) -> Self::V {
+            self.distances@.map(|_i: int, row: Seq<i64>|
+                row.map(|_j: int, v: i64| v as int)
+            )
+        }
+    }
+
+    // 8. traits
+
     /// Trait for all-pairs shortest path result operations
-    pub trait AllPairsResultStPerIntTrait {
+    pub trait AllPairsResultStPerIntTrait: Sized {
         /// Create new all-pairs result
         /// APAS: Work Θ(n²), Span Θ(n²)
         fn new(n: N)                   -> Self;
@@ -35,21 +70,14 @@ pub mod AllPairsResultStPerInt {
         fn has_path(&self, u: N, v: N) -> B;
     }
 
-    /// Result structure for all-pairs shortest paths with integer weights (persistent).
-    pub struct AllPairsResultStPerInt {
-        /// Distance matrix: distances.nth(u).nth(v) is the distance from u to v.
-        pub distances: ArraySeqStPerS<ArraySeqStPerS<i64>>,
-        /// Predecessor matrix: predecessors.nth(u).nth(v) is the predecessor of v on shortest path from u.
-        pub predecessors: ArraySeqStPerS<ArraySeqStPerS<usize>>,
-        /// Number of vertices.
-        pub n: usize,
-    }
+    // 9. impls
 
     impl AllPairsResultStPerInt {
         /// Creates a new all-pairs result structure initialized for n vertices.
         /// All distances are set to UNREACHABLE except diagonal (0), all predecessors to NO_PREDECESSOR.
         /// - APAS: Work Θ(n²), Span Θ(n²)
         /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS.
+        #[verifier::external_body]
         pub fn new(n: usize) -> Self {
             let distances = ArraySeqStPerS::tabulate(
                 &|i| ArraySeqStPerS::tabulate(&|j| if i == j { 0 } else { UNREACHABLE }, n),
@@ -66,6 +94,7 @@ pub mod AllPairsResultStPerInt {
         /// Returns the distance from vertex u to vertex v.
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+        #[verifier::external_body]
         pub fn get_distance(&self, u: usize, v: usize) -> i64 {
             if u >= self.n || v >= self.n {
                 return UNREACHABLE;
@@ -76,6 +105,7 @@ pub mod AllPairsResultStPerInt {
         /// Sets the distance from vertex u to vertex v, returning a new structure.
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — persistent row update plus outer array update.
+        #[verifier::external_body]
         pub fn set_distance(self, u: usize, v: usize, dist: i64) -> Self {
             if u >= self.n || v >= self.n {
                 return self;
@@ -91,6 +121,7 @@ pub mod AllPairsResultStPerInt {
         /// Returns the predecessor of vertex v in the shortest path from u.
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — nested array lookup.
+        #[verifier::external_body]
         pub fn get_predecessor(&self, u: usize, v: usize) -> Option<usize> {
             if u >= self.n || v >= self.n {
                 return None;
@@ -102,6 +133,7 @@ pub mod AllPairsResultStPerInt {
         /// Sets the predecessor of vertex v in the shortest path from u, returning a new structure.
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — persistent row update plus outer array update.
+        #[verifier::external_body]
         pub fn set_predecessor(self, u: usize, v: usize, pred: usize) -> Self {
             if u >= self.n || v >= self.n {
                 return self;
@@ -117,12 +149,14 @@ pub mod AllPairsResultStPerInt {
         /// Checks if vertex v is reachable from vertex u.
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+        #[verifier::external_body]
         pub fn is_reachable(&self, u: usize, v: usize) -> bool { self.get_distance(u, v) != UNREACHABLE }
 
         /// Extracts the shortest path from u to v by following predecessors.
         /// Returns None if v is unreachable from u, otherwise returns the path as a sequence.
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — follows k predecessor links.
+        #[verifier::external_body]
         pub fn extract_path(&self, u: usize, v: usize) -> Option<ArraySeqStPerS<usize>> {
             if u == v {
                 return Some(ArraySeqStPerS::from_vec(vec![u]));
@@ -148,4 +182,6 @@ pub mod AllPairsResultStPerInt {
             Some(ArraySeqStPerS::from_vec(path))
         }
     }
+
+    } // verus!
 }

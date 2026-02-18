@@ -3,26 +3,27 @@
 
 pub mod GraphSearchStEph {
 
+    use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
 
-    #[derive(Clone, Debug)]
+    verus! {
+
+    // 4. type definitions
+    #[derive(Clone)]
     pub struct SearchResult<V: StT + Ord> {
         pub visited: AVLTreeSetStEph<V>,
         pub parent: Option<AVLTreeSetStEph<Pair<V, V>>>,
     }
 
+    pub struct SelectAll;
+    pub struct SelectOne;
+
+    // 8. traits
     pub trait SelectionStrategy<V: StT + Ord> {
         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (AVLTreeSetStEph<V>, B);
     }
-
-    pub struct SelectAll;
-    impl<V: StT + Ord> SelectionStrategy<V> for SelectAll {
-        fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (AVLTreeSetStEph<V>, B) { (frontier.clone(), false) }
-    }
-
-    pub struct SelectOne;
 
     pub trait GraphSearchStEphTrait<V: StT + Ord> {
         /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
@@ -46,7 +47,14 @@ pub mod GraphSearchStEph {
             G: Fn(&V) -> AVLTreeSetStEph<V>;
     }
 
+    // 9. impls
+    impl<V: StT + Ord> SelectionStrategy<V> for SelectAll {
+        #[verifier::external_body]
+        fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (AVLTreeSetStEph<V>, B) { (frontier.clone(), false) }
+    }
+
     impl<V: StT + Ord> SelectionStrategy<V> for SelectOne {
+        #[verifier::external_body]
         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (AVLTreeSetStEph<V>, B) {
             if frontier.size() == 0 {
                 (AVLTreeSetStEph::empty(), false)
@@ -61,6 +69,7 @@ pub mod GraphSearchStEph {
     /// Generic graph search starting from single source.
     /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search_multi.
+    #[verifier::external_body]
     pub fn graph_search<V: StT + Ord, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
     where
         G: Fn(&V) -> AVLTreeSetStEph<V>,
@@ -73,6 +82,7 @@ pub mod GraphSearchStEph {
     /// Generic graph search starting from multiple sources (Exercise 53.3).
     /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; AVL set ops add log factor.
+    #[verifier::external_body]
     pub fn graph_search_multi<V: StT + Ord, G, S>(
         graph: &G,
         sources: AVLTreeSetStEph<V>,
@@ -120,11 +130,25 @@ pub mod GraphSearchStEph {
     /// Find all vertices reachable from source (Problem 53.2) using SelectAll (BFS).
     /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
+    #[verifier::external_body]
     pub fn reachable<V: StT + Ord, G>(graph: &G, source: V) -> AVLTreeSetStEph<V>
     where
         G: Fn(&V) -> AVLTreeSetStEph<V>,
     {
         let result = graph_search(graph, source, &SelectAll);
         result.visited
+    }
+
+    } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl<V: StT + Ord> std::fmt::Debug for SearchResult<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("SearchResult")
+                .field("visited", &self.visited)
+                .field("parent", &self.parent)
+                .finish()
+        }
     }
 }

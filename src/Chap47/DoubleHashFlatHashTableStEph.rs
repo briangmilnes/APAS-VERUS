@@ -4,15 +4,30 @@
 
 pub mod DoubleHashFlatHashTableStEph {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions (inside verus!)
+    // 9. impls (outside verus! — reference HashTable which contains dyn Fn types)
+
+    // 2. imports
+    use std::marker::PhantomData;
+
+    use vstd::prelude::*;
     use crate::Chap47::FlatHashTable::FlatHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
-    use std::marker::PhantomData;
+
+    verus! {
+
+    // 4. type definitions
 
     /// Double Hashing Flat Hash Table implementation.
     /// Probe sequence: h_i(k) = (h(k) + i·hh(k)) mod m
     /// Uses two hash functions to avoid both primary and secondary clustering.
     pub struct DoubleHashFlatHashTableStEph;
+
+    // 9. impls (inside verus! — second_hash does not reference dyn Fn types)
 
     impl DoubleHashFlatHashTableStEph {
         /// Compute second hash value for double hashing.
@@ -21,15 +36,12 @@ pub mod DoubleHashFlatHashTableStEph {
         /// - Claude-Opus-4.6: Work O(sizeof(Key)), Span O(sizeof(Key)) — iterates over key bytes with FNV-1a.
         /// Strategy: Always return an odd number (works for power-of-2 sizes),
         /// and for prime sizes, ensure < m and non-zero.
+        #[verifier::external_body]
         pub fn second_hash<Key: StT>(key: &Key, table_size: N) -> N {
-            // APAS: hh(k) must be non-zero and coprime to m
-            // Use key bytes directly instead of memory address
-
             if table_size <= 2 {
                 return 1;
             }
 
-            // Compute hash from key bytes using FNV-1a algorithm
             let key_ptr = key as *const Key as *const u8;
             let key_size = std::mem::size_of::<Key>();
             let mut hash: u64 = 0xcbf29ce484222325; // FNV offset basis
@@ -42,12 +54,9 @@ pub mod DoubleHashFlatHashTableStEph {
                 }
             }
 
-            // For prime table sizes, use: step = 1 + (hash % (m-1))
-            // This ensures 1 <= step < m and step != 0
             let base = (table_size - 1) as u64;
             let mut step = ((hash % base) + 1) as N;
 
-            // Ensure odd for power-of-2 coprimality
             if step % 2 == 0 && step < table_size - 1 {
                 step += 1;
             }
@@ -55,6 +64,10 @@ pub mod DoubleHashFlatHashTableStEph {
             step
         }
     }
+
+    } // verus!
+
+    // 9. impls (outside verus! — these reference HashTable which contains dyn Fn types)
 
     impl<Key: StT, Value: StT, Metrics: Default> ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics>
         for DoubleHashFlatHashTableStEph
@@ -122,7 +135,6 @@ pub mod DoubleHashFlatHashTableStEph {
             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>,
             new_size: N,
         ) -> HashTable<Key, Value, FlatEntry<Key, Value>, Metrics> {
-            // Collect all key-value pairs from old table
             let mut pairs = Vec::new();
             for entry in &table.table {
                 if let FlatEntry::Occupied(k, v) = entry {
@@ -130,7 +142,6 @@ pub mod DoubleHashFlatHashTableStEph {
                 }
             }
 
-            // Create new table with new size using the stored generator
             let new_table_vec = (0..new_size).map(|_| FlatEntry::new()).collect();
             let new_hash_fn = (table.hash_fn_gen)(new_size);
             let mut new_table = HashTable {
@@ -144,7 +155,6 @@ pub mod DoubleHashFlatHashTableStEph {
                 _phantom: PhantomData,
             };
 
-            // Reinsert all pairs into new table
             for (key, value) in pairs {
                 Self::insert(&mut new_table, key, value);
             }
@@ -161,8 +171,6 @@ pub mod DoubleHashFlatHashTableStEph {
         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key, attempt: N) -> N {
             let hash1 = (table.hash_fn)(key);
             let step = Self::second_hash(key, table.current_size);
-
-            // Double hashing: (h1(key) + i·h2(key)) mod size
             (hash1 + (attempt * step)) % table.current_size
         }
 

@@ -4,13 +4,30 @@
 
 pub mod LinProbFlatHashTableStEph {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions (inside verus!)
+    // 9. impls (outside verus! — reference HashTable which contains dyn Fn types)
+
+    // 2. imports
+    use std::marker::PhantomData;
+
+    use vstd::prelude::*;
     use crate::Chap47::FlatHashTable::FlatHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
-    use std::marker::PhantomData;
+
+    verus! {
+
+    // 4. type definitions
 
     /// Linear Probing Flat Hash Table implementation.
     pub struct LinProbFlatHashTableStEph;
+
+    } // verus!
+
+    // 9. impls (outside verus! — these reference HashTable which contains dyn Fn types)
 
     impl<Key: StT, Value: StT, Metrics: Default> ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics>
         for LinProbFlatHashTableStEph
@@ -21,16 +38,13 @@ pub mod LinProbFlatHashTableStEph {
             let slot = Self::find_slot(table, &key);
             match &table.table[slot] {
                 | FlatEntry::Occupied(k, _) if k == &key => {
-                    // Update existing
                     table.table[slot] = FlatEntry::Occupied(key, value);
                 }
                 | FlatEntry::Empty | FlatEntry::Deleted => {
-                    // Insert new
                     table.table[slot] = FlatEntry::Occupied(key, value);
                     table.num_elements += 1;
                 }
                 | _ => {
-                    // This shouldn't happen if find_slot works correctly
                     table.table[slot] = FlatEntry::Occupied(key, value);
                     table.num_elements += 1;
                 }
@@ -45,9 +59,8 @@ pub mod LinProbFlatHashTableStEph {
                 let slot = Self::probe(table, key, attempt);
                 match &table.table[slot] {
                     | FlatEntry::Occupied(k, v) if k == key => return Some(v.clone()),
-                    | FlatEntry::Empty => return None, // Stop at Empty - key not in table
+                    | FlatEntry::Empty => return None,
                     | FlatEntry::Deleted | FlatEntry::Occupied(_, _) => {
-                        // Continue probing past Deleted or non-matching Occupied
                         attempt += 1;
                     }
                 }
@@ -63,14 +76,12 @@ pub mod LinProbFlatHashTableStEph {
                 let slot = Self::probe(table, key, attempt);
                 match &table.table[slot] {
                     | FlatEntry::Occupied(k, _) if k == key => {
-                        // Mark as Deleted (tombstone) to maintain probe chain integrity
                         table.table[slot] = FlatEntry::Deleted;
                         table.num_elements -= 1;
                         return true;
                     }
-                    | FlatEntry::Empty => return false, // Key not found, stop at Empty
+                    | FlatEntry::Empty => return false,
                     | FlatEntry::Deleted | FlatEntry::Occupied(_, _) => {
-                        // Continue probing
                         attempt += 1;
                     }
                 }
@@ -84,7 +95,6 @@ pub mod LinProbFlatHashTableStEph {
             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>,
             new_size: N,
         ) -> HashTable<Key, Value, FlatEntry<Key, Value>, Metrics> {
-            // Collect all key-value pairs from old table
             let mut pairs = Vec::new();
             for entry in &table.table {
                 if let FlatEntry::Occupied(k, v) = entry {
@@ -92,7 +102,6 @@ pub mod LinProbFlatHashTableStEph {
                 }
             }
 
-            // Create new table with new size using the stored generator
             let new_table_vec = (0..new_size).map(|_| FlatEntry::new()).collect();
             let new_hash_fn = (table.hash_fn_gen)(new_size);
             let mut new_table = HashTable {
@@ -106,7 +115,6 @@ pub mod LinProbFlatHashTableStEph {
                 _phantom: PhantomData,
             };
 
-            // Reinsert all pairs into new table
             for (key, value) in pairs {
                 Self::insert(&mut new_table, key, value);
             }
@@ -122,25 +130,21 @@ pub mod LinProbFlatHashTableStEph {
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — hash + addition + modulo.
         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key, attempt: N) -> N {
             let hash_val = (table.hash_fn)(key);
-
-            // Linear probing: (hash(key) + attempt) mod size
             (hash_val + attempt) % table.current_size
         }
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe until empty/deleted/matching slot.
         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> N {
-            // Find first Empty or Deleted slot (can reuse Deleted slots for insertion)
             let mut attempt = 0;
             while attempt < table.current_size {
                 let slot = Self::probe(table, key, attempt);
                 match &table.table[slot] {
                     | FlatEntry::Empty | FlatEntry::Deleted => return slot,
-                    | FlatEntry::Occupied(k, _) if k == key => return slot, // Update existing key
+                    | FlatEntry::Occupied(k, _) if k == key => return slot,
                     | _ => attempt += 1,
                 }
             }
-            // Table full - return first slot as fallback (shouldn't happen with proper load factor)
             Self::probe(table, key, 0)
         }
     }

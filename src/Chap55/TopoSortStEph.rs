@@ -5,9 +5,13 @@
 
 pub mod TopoSortStEph {
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
     use crate::Types::Types::*;
+
+    verus! {
+
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
 
     pub trait TopoSortStEphTrait {
@@ -20,6 +24,7 @@ pub mod TopoSortStEph {
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Claude-Opus-4.6: Work O(|V|^2 + |E|), Span same — Vec::insert(0, ..) is O(|V|) per call, dominates
+    #[verifier::external_body]
     pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> Option<AVLTreeSeqStEphS<N>> {
         let n = graph.length();
         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
@@ -30,7 +35,7 @@ pub mod TopoSortStEph {
             if !*visited.nth(start)
                 && !dfs_finish_order_cycle_detect(graph, &mut visited, &mut rec_stack, &mut result, start)
             {
-                return None; // Cycle detected
+                return None;
             }
         }
         Some(AVLTreeSeqStEphS::from_vec(result))
@@ -40,6 +45,7 @@ pub mod TopoSortStEph {
     /// Returns sequence of vertices in topological order (respecting edge directions).
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Claude-Opus-4.6: Work O(|V|^2 + |E|), Span same — Vec::insert(0, ..) is O(|V|) per finish
+    #[verifier::external_body]
     pub fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N> {
         let n = graph.length();
         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
@@ -55,6 +61,7 @@ pub mod TopoSortStEph {
 
     /// - APAS: (no cost stated — internal helper)
     /// - Claude-Opus-4.6: Work O(|V|) per finish due to Vec::insert(0, ..)
+    #[verifier::external_body]
     fn dfs_finish_order_cycle_detect(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
@@ -63,7 +70,7 @@ pub mod TopoSortStEph {
         vertex: N,
     ) -> bool {
         if *rec_stack.nth(vertex) {
-            return false; // Cycle detected
+            return false;
         }
         if *visited.nth(vertex) {
             return true;
@@ -76,7 +83,7 @@ pub mod TopoSortStEph {
         for i in 0..neighbors.length() {
             let neighbor = *neighbors.nth(i);
             if !dfs_finish_order_cycle_detect(graph, visited, rec_stack, result, neighbor) {
-                return false; // Cycle detected
+                return false;
             }
         }
 
@@ -87,6 +94,7 @@ pub mod TopoSortStEph {
 
     /// - APAS: (no cost stated — internal helper)
     /// - Claude-Opus-4.6: Work O(|V|) per finish due to Vec::insert(0, ..)
+    #[verifier::external_body]
     fn dfs_finish_order(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
@@ -107,4 +115,6 @@ pub mod TopoSortStEph {
 
         result.insert(0, vertex);
     }
+
+    } // verus!
 }

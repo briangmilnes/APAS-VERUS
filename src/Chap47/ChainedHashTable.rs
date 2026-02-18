@@ -4,18 +4,31 @@
 
 pub mod ChainedHashTable {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions (inside verus!)
+    // 8. traits (outside verus! — references HashTable which contains dyn Fn types)
+    // 13. derive impls outside verus!
+
+    // 2. imports
     use std::marker::PhantomData;
 
+    use vstd::prelude::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
 
+    // 4. type definitions
+
     /// Parametric entry type for chained hash tables.
     /// Container type is abstract - can be Vec, LinkedList, Seq, etc.
-    #[derive(Clone, Debug, PartialEq)]
+    #[derive(Clone, PartialEq)]
     pub struct ChainEntry<Key, Value, Container> {
         pub chain: Container,
         pub _phantom: PhantomData<(Key, Value)>,
     }
+
+    // 8. traits (outside verus! — references HashTable which contains dyn Fn types)
 
     /// Chained Hash Table trait - extends ParaHashTableStEphTrait.
     /// Uses separate chaining (linked lists or sequences) for collision resolution.
@@ -60,6 +73,18 @@ pub mod ChainedHashTable {
             } else {
                 false
             }
+        }
+    }
+
+    // 13. derive impls outside verus!
+
+    impl<Key: std::fmt::Debug, Value: std::fmt::Debug, Container: std::fmt::Debug> std::fmt::Debug
+        for ChainEntry<Key, Value, Container>
+    {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("ChainEntry")
+                .field("chain", &self.chain)
+                .finish()
         }
     }
 }

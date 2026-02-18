@@ -4,19 +4,40 @@
 
 pub mod AdjMatrixGraphMtPer {
 
-    use std::sync::Arc;
     use std::thread;
 
+    use vstd::prelude::*;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
 
+    verus! {
+
+    // Table of Contents
+    // 4. type definitions
+    // 5. view impls
+    // 8. traits
+    // 9. impls
+
+    // 4. type definitions
+
     #[derive(Clone)]
     pub struct AdjMatrixGraphMtPer {
-        matrix: ArraySeqMtPerS<ArraySeqMtPerS<bool>>,
-        n: N,
+        pub matrix: ArraySeqMtPerS<ArraySeqMtPerS<bool>>,
+        pub n: N,
     }
 
-    pub trait AdjMatrixGraphMtPerTrait {
+    // 5. view impls
+
+    impl View for AdjMatrixGraphMtPer {
+        type V = Seq<Seq<bool>>;
+        open spec fn view(&self) -> Self::V {
+            self.matrix@
+        }
+    }
+
+    // 8. traits
+
+    pub trait AdjMatrixGraphMtPerTrait: Sized {
         /// claude-4-sonet: Work Θ(n²), Span Θ(log n), Parallelism Θ(n²/log n)
         fn new(n: N)                   -> Self;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
@@ -35,9 +56,12 @@ pub mod AdjMatrixGraphMtPer {
             bool: 'static;
     }
 
+    // 9. impls
+
     impl AdjMatrixGraphMtPerTrait for AdjMatrixGraphMtPer {
         /// - APAS: N/A — constructor not in cost table.
         /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential creation of n×n false matrix.
+        #[verifier::external_body]
         fn new(n: N) -> Self {
             let false_row = ArraySeqMtPerS::from_vec(vec![false; n]);
             let mut matrix_rows = Vec::with_capacity(n);
@@ -52,16 +76,19 @@ pub mod AdjMatrixGraphMtPer {
 
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — stored field.
+        #[verifier::external_body]
         fn num_vertices(&self) -> N { self.n }
 
         /// - APAS: Work Θ(n²), Span Θ(1) [Cost Spec 52.6, map over edges]
         /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(lg n) — parallel divide-and-conquer over rows and columns.
+        #[verifier::external_body]
         fn num_edges(&self) -> N {
             count_edges_parallel(&self.matrix)
         }
 
         /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.6]
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+        #[verifier::external_body]
         fn has_edge(&self, u: N, v: N) -> B {
             if u >= self.n || v >= self.n {
                 return false;
@@ -71,6 +98,7 @@ pub mod AdjMatrixGraphMtPer {
 
         /// - APAS: Work Θ(n), Span Θ(1) [Cost Spec 52.6]
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer over columns.
+        #[verifier::external_body]
         fn out_neighbors(&self, u: N) -> ArraySeqMtPerS<N> {
             if u >= self.n {
                 return ArraySeqMtPerS::empty();
@@ -81,6 +109,7 @@ pub mod AdjMatrixGraphMtPer {
 
         /// - APAS: Work Θ(n), Span Θ(lg n) [Cost Spec 52.6]
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer; agrees with APAS.
+        #[verifier::external_body]
         fn out_degree(&self, u: N) -> N {
             if u >= self.n {
                 return 0;
@@ -91,6 +120,7 @@ pub mod AdjMatrixGraphMtPer {
 
         /// - APAS: Work Θ(n²), Span Θ(1) [Exercise 52.6]
         /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(lg n) — parallel divide-and-conquer over rows and columns.
+        #[verifier::external_body]
         fn complement(&self) -> Self
         where
             bool: 'static,
@@ -106,17 +136,16 @@ pub mod AdjMatrixGraphMtPer {
 
     /// - APAS: N/A — parallel helper not in cost table.
     /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(lg n) — parallel divide-and-conquer over rows.
-    fn count_edges_parallel(matrix: &ArraySeqMtPerS<ArraySeqMtPerS<bool>>) -> N {
+    #[verifier::external_body]
+    fn count_edges_parallel(matrix: &ArraySeqMtPerS<ArraySeqMtPerS<bool>>) -> (result: N) {
         let n = matrix.length();
         if n == 0 {
             return 0;
         }
         if n == 1 {
-            // Base case: count true values in single row
             return count_row_parallel(matrix.nth(0));
         }
 
-        // Divide-and-conquer: split rows in half
         let mid = n / 2;
         let left_matrix = matrix.subseq_copy(0, mid);
         let right_matrix = matrix.subseq_copy(mid, n - mid);
@@ -130,7 +159,8 @@ pub mod AdjMatrixGraphMtPer {
 
     /// - APAS: N/A — parallel helper not in cost table.
     /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer over columns.
-    fn count_row_parallel(row: &ArraySeqMtPerS<bool>) -> N {
+    #[verifier::external_body]
+    fn count_row_parallel(row: &ArraySeqMtPerS<bool>) -> (result: N) {
         let n = row.length();
         if n == 0 {
             return 0;
@@ -139,7 +169,6 @@ pub mod AdjMatrixGraphMtPer {
             return if *row.nth(0) { 1 } else { 0 };
         }
 
-        // Divide columns in half
         let mid = n / 2;
         let left_row = row.subseq_copy(0, mid);
         let right_row = row.subseq_copy(mid, n - mid);
@@ -153,16 +182,16 @@ pub mod AdjMatrixGraphMtPer {
 
     /// - APAS: N/A — parallel helper not in cost table.
     /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer + append.
+    #[verifier::external_body]
     fn collect_neighbors_parallel(
         row: &ArraySeqMtPerS<bool>,
         start: N,
         end: N,
-    ) -> ArraySeqMtPerS<N> {
+    ) -> (result: ArraySeqMtPerS<N>) {
         if start >= end {
             return ArraySeqMtPerS::empty();
         }
         if end - start == 1 {
-            // Base case: single column
             return if *row.nth(start) {
                 ArraySeqMtPerS::from_vec(vec![start])
             } else {
@@ -170,7 +199,6 @@ pub mod AdjMatrixGraphMtPer {
             };
         }
 
-        // Divide columns in half
         let mid = (start + end) / 2;
         let row_clone = row.clone();
 
@@ -184,33 +212,33 @@ pub mod AdjMatrixGraphMtPer {
 
     /// - APAS: N/A — parallel helper not in cost table.
     /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(lg n) — parallel divide-and-conquer over rows and columns.
+    #[verifier::external_body]
     fn complement_matrix_parallel(
         matrix: &ArraySeqMtPerS<ArraySeqMtPerS<bool>>,
         n: N,
-    ) -> ArraySeqMtPerS<ArraySeqMtPerS<bool>> {
+    ) -> (result: ArraySeqMtPerS<ArraySeqMtPerS<bool>>) {
         complement_rows_parallel(matrix, 0, n, n)
     }
 
     /// - APAS: N/A — parallel helper not in cost table.
     /// - Claude-Opus-4.6: Work Θ(k × n), Span Θ(lg k × n) — parallel over row range k.
+    #[verifier::external_body]
     fn complement_rows_parallel(
         matrix: &ArraySeqMtPerS<ArraySeqMtPerS<bool>>,
         start_row: N,
         end_row: N,
         n: N,
-    ) -> ArraySeqMtPerS<ArraySeqMtPerS<bool>> {
+    ) -> (result: ArraySeqMtPerS<ArraySeqMtPerS<bool>>) {
         if start_row >= end_row {
             return ArraySeqMtPerS::empty();
         }
         if end_row - start_row == 1 {
-            // Base case: complement single row
             let i = start_row;
             let row = matrix.nth(i);
             let comp_row = complement_row_parallel(row, i, n);
             return ArraySeqMtPerS::from_vec(vec![comp_row]);
         }
 
-        // Divide rows in half
         let mid = (start_row + end_row) / 2;
         let matrix_clone = matrix.clone();
 
@@ -224,33 +252,33 @@ pub mod AdjMatrixGraphMtPer {
 
     /// - APAS: N/A — parallel helper not in cost table.
     /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to parallel column complementing.
-    fn complement_row_parallel(row: &ArraySeqMtPerS<bool>, row_idx: N, n: N) -> ArraySeqMtPerS<bool> {
+    #[verifier::external_body]
+    fn complement_row_parallel(row: &ArraySeqMtPerS<bool>, row_idx: N, n: N) -> (result: ArraySeqMtPerS<bool>) {
         complement_columns_parallel(row, row_idx, 0, n)
     }
 
     /// - APAS: N/A — parallel helper not in cost table.
     /// - Claude-Opus-4.6: Work Θ(k), Span Θ(lg k) — parallel divide-and-conquer over column range k.
+    #[verifier::external_body]
     fn complement_columns_parallel(
         row: &ArraySeqMtPerS<bool>,
         row_idx: N,
         start: N,
         end: N,
-    ) -> ArraySeqMtPerS<bool> {
+    ) -> (result: ArraySeqMtPerS<bool>) {
         if start >= end {
             return ArraySeqMtPerS::empty();
         }
         if end - start == 1 {
-            // Base case: single column
             let j = start;
             let val = if row_idx == j {
-                false // No self-loops
+                false
             } else {
-                !*row.nth(j) // Complement the edge
+                !*row.nth(j)
             };
             return ArraySeqMtPerS::from_vec(vec![val]);
         }
 
-        // Divide columns in half
         let mid = (start + end) / 2;
         let row_clone = row.clone();
 
@@ -261,4 +289,6 @@ pub mod AdjMatrixGraphMtPer {
 
         ArraySeqMtPerS::append(&left_result, &right_result)
     }
+
+    } // verus!
 }

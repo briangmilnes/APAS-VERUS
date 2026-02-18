@@ -11,9 +11,15 @@ pub mod OptBinSearchTreeMtPer {
     use std::thread;
     use std::vec::IntoIter;
 
+    use vstd::prelude::*;
+
     use crate::Chap50::Probability::Probability::Probability;
     use crate::Types::Types::*;
 
+    verus! {
+    } // verus!
+
+    // 4. type definitions
     #[derive(Clone, Debug)]
     pub struct KeyProb<T: MtVal> {
         pub key: T,
@@ -23,12 +29,13 @@ pub mod OptBinSearchTreeMtPer {
     /// Persistent multi-threaded optimal binary search tree solver using parallel dynamic programming
     #[derive(Clone, Debug)]
     pub struct OBSTMtPerS<T: MtVal> {
-        keys: Arc<Vec<KeyProb<T>>>,
-        memo: Arc<Mutex<HashMap<(usize, usize), Probability>>>,
+        pub keys: Arc<Vec<KeyProb<T>>>,
+        pub memo: Arc<Mutex<HashMap<(usize, usize), Probability>>>,
     }
 
+    // 8. traits
     /// Trait for parallel optimal BST operations
-    pub trait OBSTMtPerTrait<T: MtVal> {
+    pub trait OBSTMtPerTrait<T: MtVal>: Sized {
         /// Create new optimal BST solver
         fn new()                                                  -> Self;
 
@@ -54,6 +61,7 @@ pub mod OptBinSearchTreeMtPer {
         fn memo_size(&self)                                       -> usize;
     }
 
+    // 9. impls
     /// APAS: Work Θ(n), Span Θ(log n)
     /// Claude-Opus-4.6 Work: O(n) - n comparisons
     /// Claude-Opus-4.6 Span: O(log n) - parallel reduction tree
@@ -86,7 +94,6 @@ pub mod OptBinSearchTreeMtPer {
     /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
     /// Claude-Opus-4.6 Span: O(n log n) - recursion depth O(n), each level O(log n) parallel reduction
     fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtPerS<T>, i: usize, l: usize) -> Probability {
-        // Check memo first (thread-safe)
         {
             let memo_guard = table.memo.lock().unwrap();
             if let Some(&result) = memo_guard.get(&(i, l)) {
@@ -95,14 +102,12 @@ pub mod OptBinSearchTreeMtPer {
         }
 
         let result = if l == 0 {
-            Probability::zero() // Base case: empty subsequence
+            Probability::zero()
         } else {
-            // Sum probabilities for this subsequence
             let prob_sum = (0..l)
                 .map(|k| table.keys[i + k].prob)
                 .fold(Probability::zero(), |acc, p| acc + p);
 
-            // Compute costs for each possible root in parallel
             let costs = (0..l)
                 .map(|k| {
                     let left_cost = obst_rec(table, i, k);
@@ -110,13 +115,11 @@ pub mod OptBinSearchTreeMtPer {
                     left_cost + right_cost
                 }).collect::<Vec<Probability>>();
 
-            // Use parallel reduction to find minimum
             let min_cost = parallel_min_reduction(table, costs);
 
             prob_sum + min_cost
         };
 
-        // Memoize result (thread-safe)
         {
             let mut memo_guard = table.memo.lock().unwrap();
             memo_guard.insert((i, l), result);
@@ -160,7 +163,6 @@ pub mod OptBinSearchTreeMtPer {
                 return Probability::zero();
             }
 
-            // Clear memo for fresh computation
             {
                 let mut memo_guard = self.memo.lock().unwrap();
                 memo_guard.clear();
@@ -180,12 +182,22 @@ pub mod OptBinSearchTreeMtPer {
         }
     }
 
+    // 11. derive impls
     impl<T: MtVal> PartialEq for OBSTMtPerS<T> {
         fn eq(&self, other: &Self) -> bool { self.keys == other.keys }
     }
 
     impl<T: MtVal> Eq for OBSTMtPerS<T> {}
 
+    impl<T: MtVal + PartialEq> PartialEq for KeyProb<T> {
+        fn eq(&self, other: &Self) -> bool {
+            self.key == other.key && (self.prob.value() - other.prob.value()).abs() < f64::EPSILON
+        }
+    }
+
+    impl<T: MtVal> Eq for KeyProb<T> {}
+
+    // 13. derive impls outside verus!
     impl<T: MtVal> Display for OBSTMtPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             let memo_size = {
@@ -201,7 +213,6 @@ pub mod OptBinSearchTreeMtPer {
         type IntoIter = IntoIter<KeyProb<T>>;
 
         fn into_iter(self) -> Self::IntoIter {
-            // Extract Vec from Arc - this consumes the Arc
             match Arc::try_unwrap(self.keys) {
                 | Ok(vec) => vec.into_iter(),
                 | Err(arc) => (*arc).clone().into_iter(),
@@ -215,14 +226,6 @@ pub mod OptBinSearchTreeMtPer {
 
         fn into_iter(self) -> Self::IntoIter { self.keys.iter().cloned() }
     }
-
-    impl<T: MtVal + PartialEq> PartialEq for KeyProb<T> {
-        fn eq(&self, other: &Self) -> bool {
-            self.key == other.key && (self.prob.value() - other.prob.value()).abs() < f64::EPSILON
-        }
-    }
-
-    impl<T: MtVal> Eq for KeyProb<T> {}
 
     impl<T: MtVal + Display> Display for KeyProb<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }

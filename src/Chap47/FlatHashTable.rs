@@ -4,12 +4,26 @@
 
 pub mod FlatHashTable {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions (inside verus!)
+    // 9. impls (inside verus!: EntryTrait for FlatEntry)
+    // 8. traits (outside verus! — references HashTable which contains dyn Fn types)
+    // 13. derive impls outside verus!
+
+    // 2. imports
+    use vstd::prelude::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
 
+    verus! {
+
+    // 4. type definitions
+
     /// Entry type for flat hash tables using open addressing.
     /// Represents the three states a slot can be in.
-    #[derive(Clone, Debug, PartialEq)]
+    #[derive(Clone, PartialEq)]
     pub enum FlatEntry<Key, Value> {
         /// Empty slot - never occupied
         Empty,
@@ -19,16 +33,22 @@ pub mod FlatHashTable {
         Deleted,
     }
 
+    // 9. impls
+
     impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for FlatEntry<Key, Value> {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time enum construction.
+        #[verifier::external_body]
         fn new() -> Self { FlatEntry::Empty }
+
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time enum assignment.
+        #[verifier::external_body]
         fn insert(&mut self, key: Key, value: Value) { *self = FlatEntry::Occupied(key, value); }
 
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — single match + key comparison.
+        #[verifier::external_body]
         fn lookup(&self, key: &Key) -> Option<Value> {
             match self {
                 | FlatEntry::Occupied(k, v) if k == key => Some(v.clone()),
@@ -38,6 +58,7 @@ pub mod FlatHashTable {
 
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — single match + enum assignment.
+        #[verifier::external_body]
         fn delete(&mut self, key: &Key) -> B {
             match self {
                 | FlatEntry::Occupied(k, _) if k == key => {
@@ -48,6 +69,10 @@ pub mod FlatHashTable {
             }
         }
     }
+
+    } // verus!
+
+    // 8. traits (outside verus! — references HashTable which contains dyn Fn types)
 
     /// Flat Hash Table trait - extends ParaHashTableStEphTrait.
     /// Uses open addressing (linear probing, quadratic probing, double hashing).
@@ -88,6 +113,18 @@ pub mod FlatHashTable {
                 }
             }
             None
+        }
+    }
+
+    // 13. derive impls outside verus!
+
+    impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Debug for FlatEntry<Key, Value> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            match self {
+                FlatEntry::Empty => write!(f, "Empty"),
+                FlatEntry::Occupied(k, v) => f.debug_tuple("Occupied").field(k).field(v).finish(),
+                FlatEntry::Deleted => write!(f, "Deleted"),
+            }
         }
     }
 }

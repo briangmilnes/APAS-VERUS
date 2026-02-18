@@ -397,7 +397,7 @@ pub mod Chap45 {
     pub mod Example45_2;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap47 {
     pub mod ChainedHashTable;
     pub mod StructChainedHashTable;
@@ -410,7 +410,7 @@ pub mod Chap47 {
     pub mod ParaHashTableStEph;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap49 {
     pub mod SubsetSumStEph;
     pub mod SubsetSumStPer;
@@ -422,7 +422,7 @@ pub mod Chap49 {
     pub mod MinEditDistMtPer;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap50 {
     pub mod Probability;
     pub mod MatrixChainStEph;
@@ -435,7 +435,7 @@ pub mod Chap50 {
     pub mod OptBinSearchTreeMtPer;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap51 {
     pub mod BottomUpDPStEph;
     pub mod BottomUpDPStPer;
@@ -447,23 +447,27 @@ pub mod Chap51 {
     pub mod TopDownDPMtPer;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap52 {
     pub mod AdjSeqGraphStEph;
     pub mod AdjSeqGraphStPer;
     pub mod AdjSeqGraphMtEph;
     pub mod AdjSeqGraphMtPer;
-    pub mod AdjTableGraphStEph;
-    pub mod AdjTableGraphStPer;
-    #[cfg(feature = "all_chapters")]
-    pub mod AdjTableGraphMtPer;
     pub mod AdjMatrixGraphStEph;
     pub mod AdjMatrixGraphStPer;
     pub mod AdjMatrixGraphMtEph;
     pub mod AdjMatrixGraphMtPer;
+    #[cfg(not(verus_keep_ghost))]
+    pub mod AdjTableGraphStEph;
+    #[cfg(not(verus_keep_ghost))]
+    pub mod AdjTableGraphStPer;
+    #[cfg(all(feature = "all_chapters", not(verus_keep_ghost)))]
+    pub mod AdjTableGraphMtPer;
+    #[cfg(not(verus_keep_ghost))]
     pub mod EdgeSetGraphStEph;
+    #[cfg(not(verus_keep_ghost))]
     pub mod EdgeSetGraphStPer;
-    #[cfg(feature = "all_chapters")]
+    #[cfg(all(feature = "all_chapters", not(verus_keep_ghost)))]
     pub mod EdgeSetGraphMtPer;
 }
 
@@ -477,7 +481,7 @@ pub mod Chap53 {
     pub mod GraphSearchMtPer;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap54 {
     pub mod BFSStEph;
     pub mod BFSStPer;
@@ -497,7 +501,7 @@ pub mod Chap55 {
     pub mod SCCStPer;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap56 {
     pub mod SSSPResultStEphInt;
     pub mod SSSPResultStPerInt;
@@ -521,11 +525,12 @@ pub mod Chap56 {
     pub mod Example56_3;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap57 {
     pub mod StackStEph;
+    #[cfg(not(verus_keep_ghost))]
     pub mod DijkstraStEphInt;
-    #[cfg(feature = "all_chapters")]
+    #[cfg(all(feature = "all_chapters", not(verus_keep_ghost)))]
     pub mod DijkstraStEphFloat;
 }
 

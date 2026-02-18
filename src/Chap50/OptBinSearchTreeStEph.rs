@@ -10,10 +10,16 @@ pub mod OptBinSearchTreeStEph {
     use std::slice::Iter;
     use std::vec::IntoIter;
 
+    use vstd::prelude::*;
+
     use crate::Chap50::Probability::Probability::Probability;
     use crate::Types::Types::*;
     use crate::prob;
 
+    verus! {
+    } // verus!
+
+    // 4. type definitions
     #[derive(Clone, Debug, PartialEq)]
     pub struct KeyProb<T: StT> {
         pub key: T,
@@ -23,12 +29,13 @@ pub mod OptBinSearchTreeStEph {
     /// Ephemeral single-threaded optimal binary search tree solver using dynamic programming
     #[derive(Clone, Debug, PartialEq)]
     pub struct OBSTStEphS<T: StT> {
-        keys: Vec<KeyProb<T>>,
-        memo: HashMap<(usize, usize), Probability>,
+        pub keys: Vec<KeyProb<T>>,
+        pub memo: HashMap<(usize, usize), Probability>,
     }
 
+    // 8. traits
     /// Trait for optimal BST operations
-    pub trait OBSTStEphTrait<T: StT> {
+    pub trait OBSTStEphTrait<T: StT>: Sized {
         /// Create new optimal BST solver
         fn new()                                                  -> Self;
 
@@ -64,25 +71,23 @@ pub mod OptBinSearchTreeStEph {
         fn memo_size(&self)                                       -> usize;
     }
 
+    // 9. impls
     impl<T: StT> OBSTStEphS<T> {
         /// APAS: Work Θ(n³), Span Θ(n²)
         /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
         /// Claude-Opus-4.6 Span: O(n²) - recursion depth O(n), each level O(n) work
         fn obst_rec(&mut self, i: usize, l: usize) -> Probability {
-            // Check memo first
             if let Some(&result) = self.memo.get(&(i, l)) {
                 return result;
             }
 
             let result = if l == 0 {
-                Probability::zero() // Base case: empty subsequence
+                Probability::zero()
             } else {
-                // Sum probabilities for this subsequence
                 let prob_sum = (0..l)
                     .map(|k| self.keys[i + k].prob)
                     .fold(Probability::zero(), |acc, p| acc + p);
 
-                // Try each key as root and find minimum cost
                 let min_cost = (0..l)
                     .map(|k| {
                         let left_cost = self.obst_rec(i, k);
@@ -94,7 +99,6 @@ pub mod OptBinSearchTreeStEph {
                 prob_sum + min_cost
             };
 
-            // Memoize result
             self.memo.insert((i, l), result);
             result
         }
@@ -133,7 +137,6 @@ pub mod OptBinSearchTreeStEph {
                 return Probability::zero();
             }
 
-            // Clear memo for fresh computation
             self.memo.clear();
 
             let n = self.keys.len();
@@ -148,7 +151,6 @@ pub mod OptBinSearchTreeStEph {
             if index < self.keys.len() {
                 self.keys[index] = key_prob;
             }
-            // Clear memo since keys changed
             self.memo.clear();
         }
 
@@ -156,7 +158,6 @@ pub mod OptBinSearchTreeStEph {
             if index < self.keys.len() {
                 self.keys[index].prob = prob;
             }
-            // Clear memo since probabilities changed
             self.memo.clear();
         }
 
@@ -167,6 +168,10 @@ pub mod OptBinSearchTreeStEph {
         fn memo_size(&self) -> usize { self.memo.len() }
     }
 
+    // 11. derive impls
+    impl<T: StT> Eq for KeyProb<T> {}
+
+    // 13. derive impls outside verus!
     impl<T: StT> Display for OBSTStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(
@@ -202,8 +207,6 @@ pub mod OptBinSearchTreeStEph {
     impl<T: StT> Display for KeyProb<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }
     }
-
-    impl<T: StT> Eq for KeyProb<T> {}
 }
 
 #[macro_export]

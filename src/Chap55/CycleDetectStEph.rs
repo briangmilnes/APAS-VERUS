@@ -5,9 +5,13 @@
 
 pub mod CycleDetectStEph {
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
+
+    verus! {
+
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
 
     pub trait CycleDetectStEphTrait {
@@ -20,6 +24,7 @@ pub mod CycleDetectStEph {
     /// Returns true if a cycle exists, false otherwise.
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Claude-Opus-4.6: Work O((|V| + |E|) log |V|), Span same — ancestors AVLTreeSetStEph find/insert/delete are O(log n)
+    #[verifier::external_body]
     pub fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> B {
         let n = graph.length();
         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
@@ -37,6 +42,7 @@ pub mod CycleDetectStEph {
 
     /// - APAS: (no cost stated — internal helper of cycle detection)
     /// - Claude-Opus-4.6: Work O(log |V|) per call for ancestor ops — O((|V| + |E|) log |V|) total
+    #[verifier::external_body]
     fn dfs_check_cycle(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
@@ -66,4 +72,6 @@ pub mod CycleDetectStEph {
         ancestors.delete(&vertex);
         false
     }
+
+    } // verus!
 }

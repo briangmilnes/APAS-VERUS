@@ -23,7 +23,37 @@ pub mod DijkstraStEphFloat {
     use crate::Chap56::SSSPResultStEphFloat::SSSPResultStEphFloat::SSSPResultStEphFloat;
     use crate::Types::Types::*;
 
+    verus! {
+
+    // Table of Contents
+    // 1. module (DijkstraStEphFloat)
+    // 2. imports
+    // 4. type definitions
+    // 5. view impls
+    // 8. traits
+    // 9. impls
+    // 13. derive impls outside verus!
+
+    // 4. type definitions
+
     pub type T = PQEntry;
+
+    /// Priority queue entry: (distance, vertex)
+    /// Ordered by distance (min-heap)
+    #[derive(Clone, Eq, PartialEq)]
+    pub struct PQEntry {
+        pub dist: OrderedF64,
+        pub vertex: usize,
+    }
+
+    // 5. view impls
+
+    impl View for PQEntry {
+        type V = Self;
+        open spec fn view(&self) -> Self { *self }
+    }
+
+    // 8. traits
 
     pub trait DijkstraStEphFloatTrait {
         /// Dijkstra's single source shortest path algorithm
@@ -32,23 +62,19 @@ pub mod DijkstraStEphFloat {
         fn dijkstra(graph: &WeightedDirGraphStEphFloat<usize>, source: usize) -> SSSPResultStEphFloat;
     }
 
-    /// Priority queue entry: (distance, vertex)
-    /// Ordered by distance (min-heap)
-    #[derive(Clone, Eq, PartialEq, Debug)]
-    pub struct PQEntry {
-        dist: OrderedF64,
-        vertex: usize,
-    }
+    // 9. impls
 
     /// Module-level function to create a new PQEntry
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — trivial constructor.
+    #[verifier::external_body]
     fn pq_entry_new(dist: OrderedF64, vertex: usize) -> PQEntry { PQEntry { dist, vertex } }
 
     impl Ord for PQEntry {
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — float comparison.
-        fn cmp(&self, other: &Self) -> Ordering {
+        #[verifier::external_body]
+        fn cmp(&self, other: &Self) -> (r: Ordering) {
             // Min-heap: smaller distance has higher priority
             self.dist.cmp(&other.dist)
         }
@@ -57,11 +83,8 @@ pub mod DijkstraStEphFloat {
     impl PartialOrd for PQEntry {
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to cmp.
-        fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
-    }
-
-    impl Display for PQEntry {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "({}, {})", self.dist, self.vertex) }
+        #[verifier::external_body]
+        fn partial_cmp(&self, other: &Self) -> (r: Option<Ordering>) { Some(self.cmp(other)) }
     }
 
     /// Runs Dijkstra's algorithm on a weighted directed graph.
@@ -72,6 +95,7 @@ pub mod DijkstraStEphFloat {
     /// - APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
     /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — agrees with APAS. Sequential
     ///   implementation with BinaryHeapPQ insert/deleteMin at O(log m) each, m edge relaxations.
+    #[verifier::external_body]
     pub fn dijkstra(graph: &WeightedDirGraphStEphFloat<usize>, source: usize) -> SSSPResultStEphFloat {
         let n = graph.vertices().size();
 
@@ -130,10 +154,20 @@ pub mod DijkstraStEphFloat {
         result
     }
 
-    verus! {
-        impl View for PQEntry {
-            type V = Self;
-            open spec fn view(&self) -> Self { *self }
+    } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl Debug for PQEntry {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            f.debug_struct("PQEntry")
+                .field("dist", &self.dist)
+                .field("vertex", &self.vertex)
+                .finish()
         }
+    }
+
+    impl Display for PQEntry {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "({}, {})", self.dist, self.vertex) }
     }
 }

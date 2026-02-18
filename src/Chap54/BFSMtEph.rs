@@ -7,24 +7,38 @@ pub mod BFSMtEph {
 
     use std::collections::VecDeque;
 
+    use vstd::prelude::*;
+    use crate::Types::Types::*;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::ParaPair;
-    use crate::Types::Types::*;
+
+    verus! {
+
+    // Table of Contents
+    // 4. type definitions
+    // 8. traits
+    // 9. impls
+
+    // 4. type definitions
     pub type T<N> = ArraySeqMtEphS<ArraySeqMtEphS<N>>;
 
+    const UNREACHABLE: N = N::MAX;
+
+    // 8. traits
     pub trait BFSMtEphTrait {
         /// Performs parallel BFS from source vertex s on adjacency list graph G
         /// APAS: Work O(|V| + |E|), Span O(d·lg n) where d is diameter
         fn bfs(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>, source: N) -> ArraySeqMtEphS<N>;
     }
 
-    const UNREACHABLE: N = N::MAX;
+    // 9. impls
 
     /// Performs parallel BFS from source vertex s on adjacency list graph G.
     /// Graph is represented as sequence of sequences (adjacency list).
     /// Returns array where result[v] = distance if reachable, UNREACHABLE otherwise.
     /// - APAS: Work O(|V| + |E|), Span O(d·lg n) where d is diameter
     /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — sequential within layers; no thread::spawn, so Span == Work despite Mt module name.
+    #[verifier::external_body]
     pub fn bfs(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>, source: N) -> ArraySeqMtEphS<N> {
         let n = graph.length();
         if source >= n {
@@ -61,4 +75,6 @@ pub mod BFSMtEph {
 
         distances
     }
+
+    } // verus!
 }

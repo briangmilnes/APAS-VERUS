@@ -8,24 +8,38 @@ pub mod BFSMtPer {
     use std::sync::{Arc, Mutex};
     use std::thread;
 
+    use vstd::prelude::*;
+    use crate::Types::Types::*;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::ParaPair;
-    use crate::Types::Types::*;
+
+    verus! {
+
+    // Table of Contents
+    // 4. type definitions
+    // 8. traits
+    // 9. impls
+
+    // 4. type definitions
     pub type T<N> = ArraySeqMtPerS<ArraySeqMtPerS<N>>;
 
+    const UNREACHABLE: N = N::MAX;
+
+    // 8. traits
     pub trait BFSMtPerTrait {
         /// Performs parallel BFS from source vertex s on adjacency list graph G
         /// APAS: Work O(|V| + |E|), Span O(d·lg n) where d is diameter
         fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> ArraySeqMtPerS<N>;
     }
 
-    const UNREACHABLE: N = N::MAX;
+    // 9. impls
 
     /// Performs parallel BFS from source vertex s on adjacency list graph G.
     /// Graph is represented as sequence of sequences (adjacency list).
     /// Returns array where result[v] = distance if reachable, UNREACHABLE otherwise.
     /// - APAS: Work O(|V| + |E|), Span O(d·lg n) where d is diameter
     /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(d·lg |F_i|) — thread::spawn parallelism within layers via process_layer_parallel, but distance updates applied sequentially after each layer.
+    #[verifier::external_body]
     pub fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> ArraySeqMtPerS<N> {
         let n = graph.length();
         if source >= n {
@@ -39,12 +53,9 @@ pub mod BFSMtPer {
         let mut current_dist = 0;
 
         while !current_layer.is_empty() {
-            // Parallel processing of current layer
-            // Each thread processes a chunk of vertices, collecting neighbors and updates
-            let (next_vertices, distance_updates) = 
+            let (next_vertices, distance_updates) =
                 process_layer_parallel(graph, &distances, &current_layer, current_dist + 1);
 
-            // Apply distance updates (ArraySeqMtPer has no ninject; sequential updates)
             for Pair(v, d) in distance_updates {
                 distances = ArraySeqMtPerS::update(&distances, v, d);
             }
@@ -60,6 +71,7 @@ pub mod BFSMtPer {
     /// Returns: (next_layer_vertices, distance_updates)
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(|F_i|), Span O(lg |F_i|) — fork-join divide-and-conquer over layer vertices.
+    #[verifier::external_body]
     fn process_layer_parallel(
         graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>,
         distances: &ArraySeqMtPerS<N>,
@@ -71,7 +83,6 @@ pub mod BFSMtPer {
         }
 
         if current_layer.len() == 1 {
-            // Base case: single vertex, process sequentially
             let u = current_layer[0];
             let neighbors = graph.nth(u);
             let mut next_verts = Vec::new();
@@ -88,7 +99,6 @@ pub mod BFSMtPer {
             return (next_verts, updates);
         }
 
-        // Parallel case: split layer in half and process in parallel
         let mid = current_layer.len() / 2;
         let left_layer = current_layer[..mid].to_vec();
         let right_layer = current_layer[mid..].to_vec();
@@ -100,12 +110,11 @@ pub mod BFSMtPer {
             process_layer_parallel(&graph_clone, &distances_clone, &left_layer, next_dist)
         });
 
-        let (right_verts, right_updates) = 
+        let (right_verts, right_updates) =
             process_layer_parallel(graph, distances, &right_layer, next_dist);
 
         let (left_verts, left_updates) = handle.join().unwrap();
 
-        // Merge results
         let mut all_verts = left_verts;
         all_verts.extend(right_verts);
 
@@ -114,4 +123,6 @@ pub mod BFSMtPer {
 
         (all_verts, all_updates)
     }
+
+    } // verus!
 }

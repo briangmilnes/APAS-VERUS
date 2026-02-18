@@ -8,9 +8,19 @@
 
 pub mod Example56_3 {
 
+    use vstd::prelude::*;
+
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap56::PathWeightUtilsStEph::PathWeightUtilsStEph::path_weight_int;
+
+    verus! {
+
+    // Table of Contents
+    // 8. traits
+    // 9. impls
+
+    // 8. traits
 
     pub trait Example56_3Trait {
         /// Example demonstrating a negative weight cycle
@@ -22,10 +32,13 @@ pub mod Example56_3 {
         fn example_undefined_shortest_path();
     }
 
+    // 9. impls
+
     /// Example demonstrating a negative weight cycle.
     /// Graph: 0 -> 1 -> 2 -> 1 (cycle with negative total weight).
     /// - APAS: N/A — demonstration code.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
+    #[verifier::external_body]
     pub fn example_negative_cycle() {
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![0, 1, i64::MAX]),
@@ -59,6 +72,7 @@ pub mod Example56_3 {
     /// Example showing that shortest paths are undefined in presence of negative cycles.
     /// - APAS: N/A — demonstration code.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
+    #[verifier::external_body]
     pub fn example_undefined_shortest_path() {
         let _weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![0, 1, i64::MAX, i64::MAX]),
@@ -71,4 +85,6 @@ pub mod Example56_3 {
         println!("  Shortest path from 0 to 1 is undefined (can traverse cycle repeatedly)");
         println!("  Shortest path from 0 to 3 through 1 is also undefined");
     }
+
+    } // verus!
 }

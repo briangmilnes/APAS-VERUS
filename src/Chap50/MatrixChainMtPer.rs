@@ -11,8 +11,14 @@ pub mod MatrixChainMtPer {
     use std::thread;
     use std::vec::IntoIter;
 
+    use vstd::prelude::*;
+
     use crate::Types::Types::*;
 
+    verus! {
+    } // verus!
+
+    // 4. type definitions
     #[derive(Clone, Debug, PartialEq, Eq)]
     pub struct MatrixDim {
         pub rows: usize,
@@ -22,12 +28,13 @@ pub mod MatrixChainMtPer {
     /// Persistent multi-threaded matrix chain multiplication solver using parallel dynamic programming
     #[derive(Clone, Debug)]
     pub struct MatrixChainMtPerS {
-        dimensions: Arc<Vec<MatrixDim>>,
-        memo: Arc<Mutex<HashMap<(usize, usize), usize>>>,
+        pub dimensions: Arc<Vec<MatrixDim>>,
+        pub memo: Arc<Mutex<HashMap<(usize, usize), usize>>>,
     }
 
+    // 8. traits
     /// Trait for parallel matrix chain multiplication operations
-    pub trait MatrixChainMtPerTrait {
+    pub trait MatrixChainMtPerTrait: Sized {
         /// Create new matrix chain solver
         fn new()                                              -> Self;
 
@@ -51,6 +58,7 @@ pub mod MatrixChainMtPer {
         fn memo_size(&self)                                   -> usize;
     }
 
+    // 9. impls
     impl MatrixChainMtPerS {
         /// Calculate cost of multiplying matrices from i to j with split at k
         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
@@ -93,7 +101,6 @@ pub mod MatrixChainMtPer {
         /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
         /// Claude-Opus-4.6 Span: O(n log n) - recursion depth O(n), each level O(log n) parallel reduction
         fn matrix_chain_rec(&self, i: usize, j: usize) -> usize {
-            // Check memo first (thread-safe)
             {
                 let memo_guard = self.memo.lock().unwrap();
                 if let Some(&result) = memo_guard.get(&(i, j)) {
@@ -102,9 +109,8 @@ pub mod MatrixChainMtPer {
             }
 
             let result = if i == j {
-                0 // Base case: single matrix, no multiplication needed
+                0
             } else {
-                // Compute costs for each possible split in parallel
                 let costs = (i..j)
                     .map(|k| {
                         let left_cost = self.matrix_chain_rec(i, k);
@@ -113,11 +119,9 @@ pub mod MatrixChainMtPer {
                         left_cost + right_cost + split_cost
                     }).collect::<Vec<usize>>();
 
-                // Use parallel reduction to find minimum
                 self.parallel_min_reduction(costs)
             };
 
-            // Memoize result (thread-safe)
             {
                 let mut memo_guard = self.memo.lock().unwrap();
                 memo_guard.insert((i, j), result);
@@ -161,7 +165,6 @@ pub mod MatrixChainMtPer {
                 return 0;
             }
 
-            // Clear memo for fresh computation
             {
                 let mut memo_guard = self.memo.lock().unwrap();
                 memo_guard.clear();
@@ -181,12 +184,14 @@ pub mod MatrixChainMtPer {
         }
     }
 
+    // 11. derive impls
     impl PartialEq for MatrixChainMtPerS {
         fn eq(&self, other: &Self) -> bool { self.dimensions == other.dimensions }
     }
 
     impl Eq for MatrixChainMtPerS {}
 
+    // 13. derive impls outside verus!
     impl Display for MatrixChainMtPerS {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             let memo_size = {
@@ -207,7 +212,6 @@ pub mod MatrixChainMtPer {
         type IntoIter = IntoIter<MatrixDim>;
 
         fn into_iter(self) -> Self::IntoIter {
-            // Extract Vec from Arc - this consumes the Arc
             match Arc::try_unwrap(self.dimensions) {
                 | Ok(vec) => vec.into_iter(),
                 | Err(arc) => (*arc).clone().into_iter(),
@@ -226,6 +230,7 @@ pub mod MatrixChainMtPer {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
     }
 
+    // 12. macros
     #[macro_export]
     macro_rules! MatrixChainMtPerLit {
         (dims: [$(($r:expr, $c:expr)),* $(,)?]) => {

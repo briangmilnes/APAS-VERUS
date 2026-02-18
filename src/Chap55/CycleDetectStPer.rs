@@ -5,9 +5,13 @@
 
 pub mod CycleDetectStPer {
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Types::Types::*;
+
+    verus! {
+
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
 
     pub trait CycleDetectStPerTrait {
@@ -20,6 +24,7 @@ pub mod CycleDetectStPer {
     /// Returns true if a cycle exists, false otherwise.
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Claude-Opus-4.6: Work O((|V| + |E|) log |V|), Span same — AVLTreeSetStPer find/insert/delete are O(log n)
+    #[verifier::external_body]
     pub fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> B {
         let n = graph.length();
         let mut visited = AVLTreeSetStPer::empty();
@@ -38,6 +43,7 @@ pub mod CycleDetectStPer {
 
     /// - APAS: (no cost stated — internal helper of cycle detection)
     /// - Claude-Opus-4.6: Work O(log |V|) per call — O((|V| + |E|) log |V|) total; ancestors clone is O(|V|) worst case
+    #[verifier::external_body]
     fn dfs_check_cycle(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: AVLTreeSetStPer<N>,
@@ -68,4 +74,6 @@ pub mod CycleDetectStPer {
 
         (false, visited)
     }
+
+    } // verus!
 }

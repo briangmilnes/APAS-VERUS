@@ -9,8 +9,14 @@ pub mod MatrixChainMtEph {
     use std::thread;
     use std::vec::IntoIter;
 
+    use vstd::prelude::*;
+
     use crate::Types::Types::*;
 
+    verus! {
+    } // verus!
+
+    // 4. type definitions
     #[derive(Clone, Debug, PartialEq, Eq)]
     pub struct MatrixDim {
         pub rows: usize,
@@ -20,12 +26,13 @@ pub mod MatrixChainMtEph {
     /// Ephemeral multi-threaded matrix chain multiplication solver using parallel dynamic programming
     #[derive(Clone, Debug)]
     pub struct MatrixChainMtEphS {
-        dimensions: Arc<Mutex<Vec<MatrixDim>>>,
-        memo: Arc<Mutex<HashMap<(usize, usize), usize>>>,
+        pub dimensions: Arc<Mutex<Vec<MatrixDim>>>,
+        pub memo: Arc<Mutex<HashMap<(usize, usize), usize>>>,
     }
 
+    // 8. traits
     /// Trait for parallel matrix chain multiplication operations
-    pub trait MatrixChainMtEphTrait {
+    pub trait MatrixChainMtEphTrait: Sized {
         /// Create new matrix chain solver
         fn new()                                              -> Self;
 
@@ -58,6 +65,7 @@ pub mod MatrixChainMtEph {
         fn memo_size(&self)                                   -> usize;
     }
 
+    // 9. impls
     impl MatrixChainMtEphS {
         /// Calculate cost of multiplying matrices from i to j with split at k
         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
@@ -101,7 +109,6 @@ pub mod MatrixChainMtEph {
         /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
         /// Claude-Opus-4.6 Span: O(n log n) - recursion depth O(n), each level O(log n) parallel reduction
         fn matrix_chain_rec(&self, i: usize, j: usize) -> usize {
-            // Check memo first (thread-safe)
             {
                 let memo_guard = self.memo.lock().unwrap();
                 if let Some(&result) = memo_guard.get(&(i, j)) {
@@ -110,9 +117,8 @@ pub mod MatrixChainMtEph {
             }
 
             let result = if i == j {
-                0 // Base case: single matrix, no multiplication needed
+                0
             } else {
-                // Compute costs for each possible split in parallel
                 let costs = (i..j)
                     .map(|k| {
                         let left_cost = self.matrix_chain_rec(i, k);
@@ -121,11 +127,9 @@ pub mod MatrixChainMtEph {
                         left_cost + right_cost + split_cost
                     }).collect::<Vec<usize>>();
 
-                // Use parallel reduction to find minimum
                 self.parallel_min_reduction(costs)
             };
 
-            // Memoize result (thread-safe)
             {
                 let mut memo_guard = self.memo.lock().unwrap();
                 memo_guard.insert((i, j), result);
@@ -174,7 +178,6 @@ pub mod MatrixChainMtEph {
                 return 0;
             }
 
-            // Clear memo for fresh computation
             {
                 let mut memo_guard = self.memo.lock().unwrap();
                 memo_guard.clear();
@@ -193,7 +196,6 @@ pub mod MatrixChainMtEph {
                 let mut dimensions_guard = self.dimensions.lock().unwrap();
                 dimensions_guard[index] = dim;
             }
-            // Clear memo since dimensions changed
             let mut memo_guard = self.memo.lock().unwrap();
             memo_guard.clear();
         }
@@ -204,7 +206,6 @@ pub mod MatrixChainMtEph {
                 let mut dimensions_guard = self.dimensions.lock().unwrap();
                 dimensions_guard[index] = dim;
             }
-            // Clear memo since dimensions changed
             let mut memo_guard = self.memo.lock().unwrap();
             memo_guard.clear();
         }
@@ -225,9 +226,9 @@ pub mod MatrixChainMtEph {
         }
     }
 
+    // 11. derive impls
     impl PartialEq for MatrixChainMtEphS {
         fn eq(&self, other: &Self) -> bool {
-            // Compare the contents of the Arc<Mutex<Vec>>
             let self_dims = self.dimensions.lock().unwrap();
             let other_dims = other.dimensions.lock().unwrap();
             *self_dims == *other_dims
@@ -236,6 +237,7 @@ pub mod MatrixChainMtEph {
 
     impl Eq for MatrixChainMtEphS {}
 
+    // 13. derive impls outside verus!
     impl Display for MatrixChainMtEphS {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             let memo_size = {
@@ -258,7 +260,6 @@ pub mod MatrixChainMtEph {
         type IntoIter = IntoIter<MatrixDim>;
 
         fn into_iter(self) -> Self::IntoIter {
-            // Extract Vec from Arc<Mutex<Vec>> - this consumes the Arc
             match Arc::try_unwrap(self.dimensions) {
                 | Ok(mutex) => mutex.into_inner().unwrap().into_iter(),
                 | Err(arc) => {
@@ -293,6 +294,7 @@ pub mod MatrixChainMtEph {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
     }
 
+    // 12. macros
     #[macro_export]
     macro_rules! MatrixChainMtEphLit {
         (dims: [$(($r:expr, $c:expr)),* $(,)?]) => {

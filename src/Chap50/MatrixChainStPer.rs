@@ -9,8 +9,14 @@ pub mod MatrixChainStPer {
     use std::slice::Iter;
     use std::vec::IntoIter;
 
+    use vstd::prelude::*;
+
     use crate::Types::Types::*;
 
+    verus! {
+    } // verus!
+
+    // 4. type definitions
     #[derive(Clone, Debug, PartialEq, Eq)]
     pub struct MatrixDim {
         pub rows: usize,
@@ -20,12 +26,13 @@ pub mod MatrixChainStPer {
     /// Persistent single-threaded matrix chain multiplication solver using dynamic programming
     #[derive(Clone, Debug, PartialEq, Eq)]
     pub struct MatrixChainStPerS {
-        dimensions: Vec<MatrixDim>,
-        memo: HashMap<(usize, usize), usize>,
+        pub dimensions: Vec<MatrixDim>,
+        pub memo: HashMap<(usize, usize), usize>,
     }
 
+    // 8. traits
     /// Trait for matrix chain multiplication operations
-    pub trait MatrixChainStPerTrait {
+    pub trait MatrixChainStPerTrait: Sized {
         /// Create new matrix chain solver
         fn new()                                              -> Self;
 
@@ -49,6 +56,7 @@ pub mod MatrixChainStPer {
         fn memo_size(&self)                                   -> usize;
     }
 
+    // 9. impls
     impl MatrixChainStPerS {
         /// Calculate cost of multiplying matrices from i to j with split at k
         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
@@ -63,15 +71,13 @@ pub mod MatrixChainStPer {
         /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
         /// Claude-Opus-4.6 Span: O(n²) - recursion depth O(n), each level O(n) work
         fn matrix_chain_rec(&mut self, i: usize, j: usize) -> usize {
-            // Check memo first
             if let Some(&result) = self.memo.get(&(i, j)) {
                 return result;
             }
 
             let result = if i == j {
-                0 // Base case: single matrix, no multiplication needed
+                0
             } else {
-                // Try each possible split point and find minimum cost
                 (i..j)
                     .map(|k| {
                         let left_cost = self.matrix_chain_rec(i, k);
@@ -83,7 +89,6 @@ pub mod MatrixChainStPer {
                     .unwrap_or(0)
             };
 
-            // Memoize result
             self.memo.insert((i, j), result);
             result
         }
@@ -124,9 +129,8 @@ pub mod MatrixChainStPer {
                 return 0;
             }
 
-            // Create mutable copy for memoization
             let mut solver = self.clone();
-            solver.memo.clear(); // Fresh memo for each query
+            solver.memo.clear();
 
             let n = solver.dimensions.len();
             solver.matrix_chain_rec(0, n - 1)
@@ -139,6 +143,7 @@ pub mod MatrixChainStPer {
         fn memo_size(&self) -> usize { self.memo.len() }
     }
 
+    // 13. derive impls outside verus!
     impl Display for MatrixChainStPerS {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(

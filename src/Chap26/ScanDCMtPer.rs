@@ -7,6 +7,8 @@
 //	1. module
 //	2. imports
 //	3. broadcast use
+//	4. spec fns
+//	7. proof fns
 //	8. traits
 //	9. impls
 
@@ -22,10 +24,6 @@ pub mod ScanDCMtPer {
 
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap26::ScanDCStPer::ScanDCStPer::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap26::DivConReduceStPer::DivConReduceStPer::{spec_sum_fn, spec_wrapping_add};
     use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
 
@@ -36,8 +34,40 @@ pub mod ScanDCMtPer {
         vstd::seq::group_seq_axioms,
     };
 
+    //		4. spec fns
+
+    /// Wrapping addition for usize — matches vstd wrapping_add spec with in-range casts.
+    pub open spec fn spec_wrapping_add(x: N, y: N) -> N {
+        if x + y > usize::MAX as int {
+            ((x + y) - (usize::MAX as int + 1)) as N
+        } else {
+            (x + y) as N
+        }
+    }
+
+    pub open spec fn spec_sum_fn() -> spec_fn(N, N) -> N { |x: N, y: N| spec_wrapping_add(x, y) }
+
+    /// Spec function: exclusive prefix scan result at position i is the fold of elements [0..i).
+    pub open spec fn spec_scan_at(s: Seq<N>, spec_f: spec_fn(N, N) -> N, id: N, i: int) -> N
+        recommends 0 <= i <= s.len(),
+    {
+        s.take(i).fold_left(id, spec_f)
+    }
+
+    /// Spec function: full exclusive scan postcondition.
+    pub open spec fn spec_scan_post(
+        input: Seq<N>, spec_f: spec_fn(N, N) -> N, id: N,
+        prefixes: Seq<N>, total: N,
+    ) -> bool {
+        &&& prefixes.len() == input.len()
+        &&& forall|i: int| #![trigger prefixes[i]]
+                0 <= i < input.len() ==> prefixes[i] == spec_scan_at(input, spec_f, id, i)
+        &&& total == spec_iterate(input, spec_f, id)
+    }
+
+    //		7. proof fns
+
     // Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f)) for monoids.
-    // Duplicated from ScanDCStPer since we operate on MtPer types and need it locally.
     proof fn lemma_fold_left_monoid(s: Seq<N>, x: N, f: spec_fn(N, N) -> N, id: N)
         requires spec_monoid(f, id),
         ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),
@@ -57,7 +87,7 @@ pub mod ScanDCMtPer {
         /// Exclusive prefix sums via parallel divide-and-conquer scan.
         /// Returns (prefixes, total) where prefixes[i] = sum(a[0], ..., a[i-1]).
         /// - APAS: Work Θ(n lg n), Span Θ(lg n) — Algorithm 26.5 with parallel recursive calls.
-        /// - Claude-Opus-4.6: Work Θ(n lg n), Span depends on tabulate/append — Θ(lg n) if parallel O(1), Θ(n) if sequential.
+        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n) — parallel recursion via join(), sequential Θ(n) combine: S(n) = S(n/2) + Θ(n) = Θ(n).
         fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<N>) -> (result: (ArraySeqMtPerS<N>, N))
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -165,60 +195,78 @@ pub mod ScanDCMtPer {
         let ghost l_pref_view = Seq::new(l_prefixes.spec_len(), |i: int| l_prefixes.spec_index(i));
         let ghost r_pref_view = Seq::new(r_prefixes.spec_len(), |i: int| r_prefixes.spec_index(i));
 
-        // Adjust right prefixes: r_adjusted[j] = l_total + r_prefixes[j].
-        let r_len = r_prefixes.length();
-        let mut adj_vec: Vec<N> = Vec::with_capacity(r_len);
-        let mut i: usize = 0;
-        while i < r_len
-            invariant
-                i <= r_len,
-                r_len == r_prefixes.spec_len(),
-                r_pref_view.len() == r_len as int,
-                adj_vec@.len() == i as int,
-                forall|j: int| #![trigger r_pref_view[j]] 0 <= j < r_len as int
-                    ==> r_pref_view[j] == r_prefixes.spec_index(j),
-                forall|j: int| #![trigger adj_vec@[j]] 0 <= j < i as int
-                    ==> adj_vec@[j] == spec_wrapping_add(l_total, r_pref_view[j]),
-            decreases r_len - i,
-        {
-            let r_val = *r_prefixes.nth(i);
-            let v = l_total.wrapping_add(r_val);
-            adj_vec.push(v);
-            i = i + 1;
-        }
-
-        // Concatenate l_prefixes and adjusted right.
+        // Parallel combine: copy left prefixes and adjust right prefixes via join().
         let l_len = l_prefixes.length();
-        let mut result_vec: Vec<N> = Vec::with_capacity(n);
-        let mut i: usize = 0;
-        while i < l_len
-            invariant
-                i <= l_len,
-                l_len == l_prefixes.spec_len(),
-                l_pref_view.len() == l_len as int,
-                forall|j: int| #![trigger l_pref_view[j]] 0 <= j < l_len as int
-                    ==> l_pref_view[j] == l_prefixes.spec_index(j),
-                result_vec@.len() == i as int,
-                forall|j: int| #![trigger result_vec@[j]] 0 <= j < i as int
-                    ==> result_vec@[j] == l_pref_view[j],
-            decreases l_len - i,
+        let r_len = r_prefixes.length();
+
+        let ghost l_pv = l_pref_view;
+        let ghost r_pv = r_pref_view;
+        let lt = l_total;
+
+        let copy_left = move || -> (r: Vec<N>)
+            ensures
+                r@.len() == l_pv.len(),
+                forall|j: int| #![trigger r@[j]] 0 <= j < r@.len() ==> r@[j] == l_pv[j],
         {
-            result_vec.push(*l_prefixes.nth(i));
-            i = i + 1;
-        }
+            let ll = l_prefixes.length();
+            let mut v: Vec<N> = Vec::with_capacity(ll);
+            let mut i: usize = 0;
+            while i < ll
+                invariant
+                    i <= ll, ll == l_prefixes.spec_len(),
+                    l_pv.len() == ll as int,
+                    v@.len() == i as int,
+                    forall|j: int| #![trigger l_pv[j]] 0 <= j < ll as int
+                        ==> l_pv[j] == l_prefixes.spec_index(j),
+                    forall|j: int| #![trigger v@[j]] 0 <= j < i as int
+                        ==> v@[j] == l_pv[j],
+                decreases ll - i,
+            { v.push(*l_prefixes.nth(i)); i += 1; }
+            v
+        };
+
+        let adjust_right = move || -> (r: Vec<N>)
+            ensures
+                r@.len() == r_pv.len(),
+                forall|j: int| #![trigger r@[j]] 0 <= j < r@.len()
+                    ==> r@[j] == spec_wrapping_add(l_total, r_pv[j]),
+        {
+            let rl = r_prefixes.length();
+            let mut v: Vec<N> = Vec::with_capacity(rl);
+            let mut i: usize = 0;
+            while i < rl
+                invariant
+                    i <= rl, rl == r_prefixes.spec_len(),
+                    r_pv.len() == rl as int,
+                    v@.len() == i as int,
+                    forall|j: int| #![trigger r_pv[j]] 0 <= j < rl as int
+                        ==> r_pv[j] == r_prefixes.spec_index(j),
+                    forall|j: int| #![trigger v@[j]] 0 <= j < i as int
+                        ==> v@[j] == spec_wrapping_add(lt, r_pv[j]),
+                decreases rl - i,
+            {
+                let val = lt.wrapping_add(*r_prefixes.nth(i));
+                v.push(val);
+                i += 1;
+            }
+            v
+        };
+
+        let (left_part, right_part) = join(copy_left, adjust_right);
+
+        // Sequential concatenation of the two halves.
+        let mut result_vec: Vec<N> = left_part;
         let mut i: usize = 0;
         while i < r_len
             invariant
                 i <= r_len,
-                r_len == r_prefixes.spec_len(),
-                r_pref_view.len() == r_len as int,
-                l_len == l_prefixes.spec_len(),
-                l_pref_view.len() == l_len as int,
+                r_len == r_pref_view.len(),
+                l_len == l_pref_view.len(),
                 l_len == mid,
-                adj_vec@.len() == r_len as int,
+                right_part@.len() == r_len as int,
                 result_vec@.len() == (l_len + i) as int,
-                forall|j: int| #![trigger adj_vec@[j]] 0 <= j < r_len as int
-                    ==> adj_vec@[j] == spec_wrapping_add(l_total, r_pref_view[j]),
+                forall|j: int| #![trigger right_part@[j]] 0 <= j < r_len as int
+                    ==> right_part@[j] == spec_wrapping_add(l_total, r_pref_view[j]),
                 forall|j: int| #![trigger result_vec@[j]] 0 <= j < l_len as int
                     ==> result_vec@[j] == l_pref_view[j],
                 forall|j: int| #![trigger result_vec@[l_len as int + j]]
@@ -226,7 +274,7 @@ pub mod ScanDCMtPer {
                     ==> result_vec@[l_len as int + j] == spec_wrapping_add(l_total, r_pref_view[j]),
             decreases r_len - i,
         {
-            result_vec.push(adj_vec[i]);
+            result_vec.push(right_part[i]);
             i = i + 1;
         }
 

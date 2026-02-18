@@ -5,9 +5,13 @@
 
 pub mod DFSStEph {
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
+
+    verus! {
+
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
 
     pub trait DFSStEphTrait {
@@ -20,6 +24,7 @@ pub mod DFSStEph {
     /// Returns the set of all vertices reachable from s.
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Claude-Opus-4.6: Work O((|V| + |E|) log |V|), Span O((|V| + |E|) log |V|) — AVLTreeSetStEph insert is O(log n), not O(1)
+    #[verifier::external_body]
     pub fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> AVLTreeSetStEph<N> {
         let n = graph.length();
         if source >= n {
@@ -34,6 +39,7 @@ pub mod DFSStEph {
 
     /// - APAS: (no cost stated — internal helper of DFS)
     /// - Claude-Opus-4.6: Work O(|V| + |E|) amortized over all calls, Span same — visited array O(1), result insert O(log n)
+    #[verifier::external_body]
     fn dfs_recursive(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
@@ -53,4 +59,6 @@ pub mod DFSStEph {
             dfs_recursive(graph, visited, result, neighbor);
         }
     }
+
+    } // verus!
 }

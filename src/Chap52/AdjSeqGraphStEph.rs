@@ -3,15 +3,41 @@
 
 pub mod AdjSeqGraphStEph {
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
 
+    verus! {
+
+    // Table of Contents
+    // 4. type definitions
+    // 5. view impls
+    // 8. traits
+    // 9. impls
+
+    // 4. type definitions
+
     #[derive(Clone)]
     pub struct AdjSeqGraphStEph {
-        adj: ArraySeqStEphS<ArraySeqStEphS<N>>,
+        pub adj: ArraySeqStEphS<ArraySeqStEphS<N>>,
     }
 
-    pub trait AdjSeqGraphStEphTrait {
+    // 5. view impls
+
+    impl View for AdjSeqGraphStEph {
+        type V = Seq<Seq<int>>;
+        open spec fn view(&self) -> Self::V {
+            Seq::new(self.adj.spec_len(), |i: int|
+                Seq::new(self.adj.spec_index(i).spec_len(), |j: int|
+                    self.adj.spec_index(i).spec_index(j) as int
+                )
+            )
+        }
+    }
+
+    // 8. traits
+
+    pub trait AdjSeqGraphStEphTrait: Sized {
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn new(n: N)                                        -> Self;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
@@ -32,9 +58,12 @@ pub mod AdjSeqGraphStEph {
         fn set_edge(&mut self, u: N, v: N, exists: B);
     }
 
+    // 9. impls
+
     impl AdjSeqGraphStEphTrait for AdjSeqGraphStEph {
         /// - APAS: N/A — constructor not in cost table.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop creating n empty neighbor lists.
+        #[verifier::external_body]
         fn new(n: N) -> Self {
             let empty_list = ArraySeqStEphS::empty();
             let mut adj_lists = Vec::with_capacity(n);
@@ -48,14 +77,17 @@ pub mod AdjSeqGraphStEph {
 
         /// - APAS: N/A — constructor not in cost table.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps existing sequence.
+        #[verifier::external_body]
         fn from_seq(adj: ArraySeqStEphS<ArraySeqStEphS<N>>) -> Self { AdjSeqGraphStEph { adj } }
 
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — sequence length.
+        #[verifier::external_body]
         fn num_vertices(&self) -> N { self.adj.length() }
 
         /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential loop; span not parallel.
+        #[verifier::external_body]
         fn num_edges(&self) -> N {
             let n = self.adj.length();
             let mut count = 0;
@@ -67,6 +99,7 @@ pub mod AdjSeqGraphStEph {
 
         /// - APAS: Work Θ(d(u)), Span Θ(lg d(u)) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Θ(d(u)), Span Θ(d(u)) — sequential linear scan; span not logarithmic.
+        #[verifier::external_body]
         fn has_edge(&self, u: N, v: N) -> B {
             if u >= self.adj.length() {
                 return false;
@@ -82,14 +115,17 @@ pub mod AdjSeqGraphStEph {
 
         /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS (clone is O(1) for persistent backing).
+        #[verifier::external_body]
         fn out_neighbors(&self, u: N) -> ArraySeqStEphS<N> { self.adj.nth(u).clone() }
 
         /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+        #[verifier::external_body]
         fn out_degree(&self, u: N) -> N { self.adj.nth(u).length() }
 
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — single array set.
+        #[verifier::external_body]
         fn set_neighbors(&mut self, v: N, neighbors: ArraySeqStEphS<N>) {
             if v < self.adj.length() {
                 let _ = self.adj.set(v, neighbors);
@@ -98,13 +134,13 @@ pub mod AdjSeqGraphStEph {
 
         /// - APAS: Work Θ(n), Span Θ(1) [Cost Spec 52.5, insert/delete edge]
         /// - Claude-Opus-4.6: Work Θ(d(u)), Span Θ(d(u)) — linear scan + rebuild of neighbor list; O(1) array set.
+        #[verifier::external_body]
         fn set_edge(&mut self, u: N, v: N, exists: B) {
             if u >= self.adj.length() || v >= self.adj.length() {
                 return;
             }
             let old_neighbors = self.adj.nth(u);
             if exists {
-                // Add edge if not present
                 let mut found = false;
                 for i in 0..old_neighbors.length() {
                     if *old_neighbors.nth(i) == v {
@@ -121,7 +157,6 @@ pub mod AdjSeqGraphStEph {
                     let _ = self.adj.set(u, ArraySeqStEphS::from_vec(new_neighbors_vec));
                 }
             } else {
-                // Remove edge if present
                 let mut new_neighbors_vec = Vec::<N>::new();
                 for i in 0..old_neighbors.length() {
                     let neighbor = *old_neighbors.nth(i);
@@ -133,4 +168,6 @@ pub mod AdjSeqGraphStEph {
             }
         }
     }
+
+    } // verus!
 }

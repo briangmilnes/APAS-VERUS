@@ -5,10 +5,14 @@
 
 pub mod SCCStPer {
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::{AVLTreeSeqStPerS, AVLTreeSeqStPerTrait};
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Types::Types::*;
+
+    verus! {
+
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
 
     pub trait SCCStPerTrait {
@@ -21,6 +25,7 @@ pub mod SCCStPer {
     /// Returns sequence of components, each component is a set of vertices.
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Claude-Opus-4.6: Work O(|V|^2 + (|V| + |E|) log |V|), Span same — Vec::insert(0, ..) O(|V|), AVL ops O(log |V|), union O(|comp|)
+    #[verifier::external_body]
     pub fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>> {
         let finish_order = compute_finish_order(graph);
         let transposed = transpose_graph(graph);
@@ -45,6 +50,7 @@ pub mod SCCStPer {
 
     /// - APAS: (no cost stated — internal helper, corresponds to decreasingFinish)
     /// - Claude-Opus-4.6: Work O(|V|^2 + (|V| + |E|) log |V|), Span same — Vec::insert(0, ..) + AVL ops
+    #[verifier::external_body]
     fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N> {
         let n = graph.length();
         let mut visited = AVLTreeSetStPer::empty();
@@ -62,6 +68,7 @@ pub mod SCCStPer {
 
     /// - APAS: (no cost stated — internal helper)
     /// - Claude-Opus-4.6: Work O(|V| + log |V|) per call — Vec::insert(0, ..) + AVL ops
+    #[verifier::external_body]
     fn dfs_finish_order(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: AVLTreeSetStPer<N>,
@@ -89,6 +96,7 @@ pub mod SCCStPer {
 
     /// - APAS: (no cost stated — transpose is standard O(|V| + |E|))
     /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with expected cost
+    #[verifier::external_body]
     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> ArraySeqStPerS<ArraySeqStPerS<N>> {
         let n = graph.length();
         let mut adj_vecs: Vec<Vec<N>> = vec![Vec::new(); n];
@@ -106,6 +114,7 @@ pub mod SCCStPer {
 
     /// - APAS: (no cost stated — internal helper, corresponds to DFSReach)
     /// - Claude-Opus-4.6: Work O(deg(v) log |V| + |comp| log |comp|) per call — AVL insert + union
+    #[verifier::external_body]
     fn dfs_reach(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: AVLTreeSetStPer<N>,
@@ -129,4 +138,6 @@ pub mod SCCStPer {
 
         (visited, component)
     }
+
+    } // verus!
 }

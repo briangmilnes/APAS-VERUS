@@ -9,9 +9,19 @@ pub mod Example56_1 {
 
     use ordered_float::OrderedFloat;
 
+    use vstd::prelude::*;
+
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap56::PathWeightUtilsStEph::PathWeightUtilsStEph::*;
+
+    verus! {
+
+    // Table of Contents
+    // 8. traits
+    // 9. impls
+
+    // 8. traits
 
     pub trait Example56_1Trait {
         /// Claude Work: O(1), Span: O(1)
@@ -27,9 +37,12 @@ pub mod Example56_1 {
         fn example_negative_weights();
     }
 
+    // 9. impls
+
     /// Example demonstrating path weight computation with integer weights.
     /// - APAS: N/A — demonstration code.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
+    #[verifier::external_body]
     pub fn example_path_weight_int() {
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![0, 5, 10, i64::MAX]),
@@ -48,6 +61,7 @@ pub mod Example56_1 {
     /// Example demonstrating path weight computation with floating-point weights.
     /// - APAS: N/A — demonstration code.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
+    #[verifier::external_body]
     pub fn example_path_weight_float() {
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![
@@ -86,6 +100,7 @@ pub mod Example56_1 {
     /// Example with negative edge weights.
     /// - APAS: N/A — demonstration code.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
+    #[verifier::external_body]
     pub fn example_negative_weights() {
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![0, 10, i64::MAX]),
@@ -99,4 +114,6 @@ pub mod Example56_1 {
             | None => println!("Invalid path"),
         }
     }
+
+    } // verus!
 }

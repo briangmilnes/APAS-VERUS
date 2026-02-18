@@ -4,22 +4,32 @@
 pub mod MinEditDistStEph {
 
     use std::collections::HashMap;
-    use std::fmt::{Debug, Display, Formatter, Result};
+    use std::fmt::{Debug, Display, Formatter};
+    use std::fmt::Result as FmtResult;
     use std::iter::{Map, Zip};
 
-    use crate::ArraySeqStEphSLit;
+    use vstd::prelude::*;
+
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
+    use crate::ArraySeqStEphSLit;
 
-    #[derive(Clone, Debug, PartialEq, Eq)]
+    verus! {
+    } // verus!
+
+    // 4. type definitions
+
+    #[derive(Clone, PartialEq, Eq)]
     pub struct MinEditDistStEphS<T: StT> {
-        source: ArraySeqStEphS<T>,
-        target: ArraySeqStEphS<T>,
-        memo: HashMap<(usize, usize), usize>,
+        pub source: ArraySeqStEphS<T>,
+        pub target: ArraySeqStEphS<T>,
+        pub memo: HashMap<(usize, usize), usize>,
     }
 
+    // 8. traits
+
     /// Trait for minimum edit distance operations
-    pub trait MinEditDistStEphTrait<T: StT> {
+    pub trait MinEditDistStEphTrait<T: StT>: Sized {
         /// Create new minimum edit distance solver
         fn new()                                                                -> Self
         where
@@ -57,26 +67,25 @@ pub mod MinEditDistStEph {
         fn memo_size(&self)                                                     -> usize;
     }
 
+    // 9. impls
+
     /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
     /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential memoized recursion
     fn min_edit_distance_rec<T: StT>(table: &mut MinEditDistStEphS<T>, i: usize, j: usize) -> usize {
-        // Check memo first
         if let Some(&result) = table.memo.get(&(i, j)) {
             return result;
         }
 
         let result = match (i, j) {
-            | (i, 0) => i, // Base case: need i deletions
-            | (0, j) => j, // Base case: need j insertions
+            | (i, 0) => i,
+            | (0, j) => j,
             | (i, j) => {
                 let source_char = table.source.nth(i - 1);
                 let target_char = table.target.nth(j - 1);
 
                 if source_char == target_char {
-                    // Characters match, no edit needed
                     min_edit_distance_rec(table, i - 1, j - 1)
                 } else {
-                    // Characters don't match, try both operations
                     let delete_cost = min_edit_distance_rec(table, i - 1, j);
                     let insert_cost = min_edit_distance_rec(table, i, j - 1);
 
@@ -85,7 +94,6 @@ pub mod MinEditDistStEph {
             }
         };
 
-        // Memoize result
         table.memo.insert((i, j), result);
         result
     }
@@ -111,7 +119,6 @@ pub mod MinEditDistStEph {
         }
 
         fn min_edit_distance(&mut self) -> usize {
-            // Clear memo for fresh computation
             self.memo.clear();
 
             let source_len = self.source.length();
@@ -130,13 +137,11 @@ pub mod MinEditDistStEph {
 
         fn set_source(&mut self, index: usize, value: T) {
             let _ = self.source.set(index, value);
-            // Clear memo since source changed
             self.memo.clear();
         }
 
         fn set_target(&mut self, index: usize, value: T) {
             let _ = self.target.set(index, value);
-            // Clear memo since target changed
             self.memo.clear();
         }
 
@@ -145,8 +150,20 @@ pub mod MinEditDistStEph {
         fn memo_size(&self) -> usize { self.memo.len() }
     }
 
+    // 13. derive impls outside verus!
+
+    impl<T: StT> Debug for MinEditDistStEphS<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            f.debug_struct("MinEditDistStEphS")
+                .field("source", &self.source)
+                .field("target", &self.target)
+                .field("memo", &self.memo)
+                .finish()
+        }
+    }
+
     impl<T: StT> Display for MinEditDistStEphS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(
                 f,
                 "MinEditDistStEph(source: {}, target: {}, memo_entries: {})",

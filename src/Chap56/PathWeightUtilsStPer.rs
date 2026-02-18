@@ -15,9 +15,23 @@ pub mod PathWeightUtilsStPer {
 
     use ordered_float::OrderedFloat;
 
+    use vstd::prelude::*;
+
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+
+    verus! {
+
+    // Table of Contents
+    // 4. type definitions
+    // 8. traits
+    // 9. impls
+
+    // 4. type definitions
+
     pub type T = ArraySeqStPerS<usize>;
+
+    // 8. traits
 
     pub trait PathWeightUtilsStPerTrait {
         /// Claude Work: O(k), Span: O(k) where k is path length
@@ -48,12 +62,15 @@ pub mod PathWeightUtilsStPer {
         ) -> bool;
     }
 
+    // 9. impls
+
     /// Computes the total weight of a path given edge weights (integer version).
     /// Path is a sequence of vertices [v0, v1, ..., vk].
     /// Weights is an adjacency matrix where weights.nth(i).nth(j) is the weight of edge (i,j).
     /// Returns the sum of weights along the path, or None if path is invalid.
     /// - APAS: Work Θ(k), Span Θ(k) — implied by Def 56.1 (sum of k-1 edge weights).
     /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — agrees with APAS.
+    #[verifier::external_body]
     pub fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>) -> Option<i64> {
         let k = path.length();
         if k < 2 {
@@ -76,6 +93,7 @@ pub mod PathWeightUtilsStPer {
     /// Computes the total weight of a path with floating-point weights.
     /// - APAS: Work Θ(k), Span Θ(k) — implied by Def 56.1.
     /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — agrees with APAS.
+    #[verifier::external_body]
     pub fn path_weight_float(
         path: &ArraySeqStPerS<usize>,
         weights: &ArraySeqStPerS<ArraySeqStPerS<OrderedF64>>,
@@ -103,6 +121,7 @@ pub mod PathWeightUtilsStPer {
     /// This is a validation utility, not used in actual shortest path algorithms.
     /// - APAS: (no cost stated) — Def 56.4 states the property but not a validation algorithm.
     /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — checks k-1 consecutive edges; module header overstates as O(k²).
+    #[verifier::external_body]
     pub fn validate_subpath_property_int(
         path: &ArraySeqStPerS<usize>,
         distances: &ArraySeqStPerS<i64>,
@@ -133,6 +152,7 @@ pub mod PathWeightUtilsStPer {
     /// Validates the sub-paths property for floating-point weights.
     /// - APAS: (no cost stated) — Def 56.4 states the property but not a validation algorithm.
     /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — checks k-1 consecutive edges; module header overstates as O(k²).
+    #[verifier::external_body]
     pub fn validate_subpath_property_float(
         path: &ArraySeqStPerS<usize>,
         distances: &ArraySeqStPerS<OrderedF64>,
@@ -160,4 +180,6 @@ pub mod PathWeightUtilsStPer {
         }
         true
     }
+
+    } // verus!
 }

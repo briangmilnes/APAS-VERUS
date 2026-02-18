@@ -4,20 +4,30 @@
 pub mod SubsetSumStEph {
 
     use std::collections::HashMap;
-    use std::fmt::{Debug, Display, Formatter, Result};
+    use std::fmt::{Debug, Display, Formatter};
+    use std::fmt::Result as FmtResult;
 
-    use crate::ArraySeqStEphSLit;
+    use vstd::prelude::*;
+
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
+    use crate::ArraySeqStEphSLit;
 
-    #[derive(Clone, Debug, PartialEq, Eq)]
+    verus! {
+    } // verus!
+
+    // 4. type definitions
+
+    #[derive(Clone, PartialEq, Eq)]
     pub struct SubsetSumStEphS<T: StT> {
-        multiset: ArraySeqStEphS<T>,
-        memo: HashMap<(usize, i32), bool>,
+        pub multiset: ArraySeqStEphS<T>,
+        pub memo: HashMap<(usize, i32), bool>,
     }
 
+    // 8. traits
+
     /// Trait for subset sum operations
-    pub trait SubsetSumStEphTrait<T: StT> {
+    pub trait SubsetSumStEphTrait<T: StT>: Sized {
         /// Create new subset sum solver
         fn new()                                      -> Self
         where
@@ -48,30 +58,28 @@ pub mod SubsetSumStEph {
         fn memo_size(&self)                           -> usize;
     }
 
+    // 9. impls
+
     /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
     /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(k×|S|) — sequential memoized recursion
     fn subset_sum_rec<T: StT + Into<i32> + Copy>(table: &mut SubsetSumStEphS<T>, i: usize, j: i32) -> bool {
-        // Check memo first
         if let Some(&result) = table.memo.get(&(i, j)) {
             return result;
         }
 
         let result = match (i, j) {
-            | (_, 0) => true,  // Base case: target sum is 0
-            | (0, _) => false, // Base case: no elements left, target > 0
+            | (_, 0) => true,
+            | (0, _) => false,
             | (i, j) => {
                 let element_value: i32 = (*table.multiset.nth(i - 1)).into();
                 if element_value > j {
-                    // Element too large, skip it
                     subset_sum_rec(table, i - 1, j)
                 } else {
-                    // Try both including and excluding the element
                     subset_sum_rec(table, i - 1, j - element_value) || subset_sum_rec(table, i - 1, j)
                 }
             }
         };
 
-        // Memoize result
         table.memo.insert((i, j), result);
         result
     }
@@ -102,7 +110,6 @@ pub mod SubsetSumStEph {
                 return false;
             }
 
-            // Clear memo for fresh computation
             self.memo.clear();
 
             let n = self.multiset.length();
@@ -115,7 +122,6 @@ pub mod SubsetSumStEph {
 
         fn set(&mut self, index: usize, value: T) {
             let _ = self.multiset.set(index, value);
-            // Clear memo since multiset changed
             self.memo.clear();
         }
 
@@ -124,8 +130,19 @@ pub mod SubsetSumStEph {
         fn memo_size(&self) -> usize { self.memo.len() }
     }
 
+    // 13. derive impls outside verus!
+
+    impl<T: StT> Debug for SubsetSumStEphS<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            f.debug_struct("SubsetSumStEphS")
+                .field("multiset", &self.multiset)
+                .field("memo", &self.memo)
+                .finish()
+        }
+    }
+
     impl<T: StT> Display for SubsetSumStEphS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(
                 f,
                 "SubsetSumStEph(multiset: {}, memo_entries: {})",

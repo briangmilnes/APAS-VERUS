@@ -12,28 +12,35 @@ pub mod Probability {
     use std::hash::{Hash, Hasher};
     use std::ops::{Add, Div, Mul, Sub};
 
+    use vstd::prelude::*;
+
     use crate::Types::Types::*;
 
+    verus! {
+    } // verus!
+
+    // 4. type definitions
+    #[derive(Clone, Copy)]
+    pub struct Probability(pub f64);
+
+    // 8. traits
     /// Trait for probability operations
-    pub trait ProbabilityTrait {
+    pub trait ProbabilityTrait: Sized {
         /// Create new probability from f64
         /// APAS: Work Θ(1), Span Θ(1)
         fn new(value: f64) -> Self;
 
         /// Get the underlying f64 value
         /// APAS: Work Θ(1), Span Θ(1)
-        fn value(&self)    -> f64;
+        fn value(&self) -> f64;
     }
 
-    #[derive(Clone, Copy)]
-    pub struct Probability(pub f64);
-
+    // 9. impls
     impl Probability {
         /// Claude-Opus-4.6 Work: O(1) - constant time construction
         /// Claude-Opus-4.6 Span: O(1) - constant time construction
         pub fn new(value: f64) -> Self {
             debug_assert!(value >= 0.0, "Probability must be non-negative");
-            // Allow values > 1.0 for costs in dynamic programming
             Probability(value)
         }
 
@@ -50,13 +57,13 @@ pub mod Probability {
         pub fn zero() -> Self { Probability(0.0) }
     }
 
+    // 11. derive impls
     impl Default for Probability {
         fn default() -> Self { Probability::zero() }
     }
 
     impl PartialEq for Probability {
         fn eq(&self, other: &Self) -> bool {
-            // Use bit-level comparison for exact equality
             self.0.to_bits() == other.0.to_bits()
         }
     }
@@ -69,11 +76,10 @@ pub mod Probability {
 
     impl Ord for Probability {
         fn cmp(&self, other: &Self) -> Ordering {
-            // Handle NaN and infinity cases properly
             match (self.0.is_nan(), other.0.is_nan()) {
                 | (true, true) => Ordering::Equal,
-                | (true, false) => Ordering::Greater, // NaN > everything
-                | (false, true) => Ordering::Less,    // everything < NaN
+                | (true, false) => Ordering::Greater,
+                | (false, true) => Ordering::Less,
                 | (false, false) => {
                     if self.0 < other.0 {
                         Ordering::Less
@@ -91,14 +97,6 @@ pub mod Probability {
         fn hash<H: Hasher>(&self, state: &mut H) { self.0.to_bits().hash(state); }
     }
 
-    impl Debug for Probability {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "Probability({})", self.0) }
-    }
-
-    impl Display for Probability {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "{}", self.0) }
-    }
-
     impl From<f64> for Probability {
         fn from(value: f64) -> Self { Probability(value) }
     }
@@ -107,7 +105,6 @@ pub mod Probability {
         fn from(prob: Probability) -> Self { prob.0 }
     }
 
-    // Arithmetic operations
     impl Add for Probability {
         type Output = Self;
 
@@ -137,7 +134,16 @@ pub mod Probability {
     // Probability implements StT + Send + Sync, so it gets StTInMtT automatically
     // Probability implements StTInMtT + 'static, so it gets MtVal automatically
 
-    // Convenience macro for creating probability literals
+    // 13. derive impls outside verus!
+    impl Debug for Probability {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "Probability({})", self.0) }
+    }
+
+    impl Display for Probability {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "{}", self.0) }
+    }
+
+    // 12. macros
     #[macro_export]
     macro_rules! prob {
         ($value:expr) => {

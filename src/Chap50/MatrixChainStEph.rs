@@ -9,8 +9,14 @@ pub mod MatrixChainStEph {
     use std::slice::Iter;
     use std::vec::IntoIter;
 
+    use vstd::prelude::*;
+
     use crate::Types::Types::*;
 
+    verus! {
+    } // verus!
+
+    // 4. type definitions
     #[derive(Clone, Debug, PartialEq, Eq)]
     pub struct MatrixDim {
         pub rows: usize,
@@ -20,12 +26,13 @@ pub mod MatrixChainStEph {
     /// Ephemeral single-threaded matrix chain multiplication solver using dynamic programming
     #[derive(Clone, Debug, PartialEq, Eq)]
     pub struct MatrixChainStEphS {
-        dimensions: Vec<MatrixDim>,
-        memo: HashMap<(usize, usize), usize>,
+        pub dimensions: Vec<MatrixDim>,
+        pub memo: HashMap<(usize, usize), usize>,
     }
 
+    // 8. traits
     /// Trait for matrix chain multiplication operations
-    pub trait MatrixChainStEphTrait {
+    pub trait MatrixChainStEphTrait: Sized {
         /// Create new matrix chain solver
         fn new()                                              -> Self;
 
@@ -61,6 +68,7 @@ pub mod MatrixChainStEph {
         fn memo_size(&self)                                   -> usize;
     }
 
+    // 9. impls
     impl MatrixChainStEphS {
         /// Calculate cost of multiplying matrices from i to j with split at k
         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
@@ -75,15 +83,13 @@ pub mod MatrixChainStEph {
         /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
         /// Claude-Opus-4.6 Span: O(n²) - recursion depth O(n), each level O(n) work
         fn matrix_chain_rec(&mut self, i: usize, j: usize) -> usize {
-            // Check memo first
             if let Some(&result) = self.memo.get(&(i, j)) {
                 return result;
             }
 
             let result = if i == j {
-                0 // Base case: single matrix, no multiplication needed
+                0
             } else {
-                // Try each possible split point and find minimum cost
                 (i..j)
                     .map(|k| {
                         let left_cost = self.matrix_chain_rec(i, k);
@@ -95,7 +101,6 @@ pub mod MatrixChainStEph {
                     .unwrap_or(0)
             };
 
-            // Memoize result
             self.memo.insert((i, j), result);
             result
         }
@@ -136,7 +141,6 @@ pub mod MatrixChainStEph {
                 return 0;
             }
 
-            // Clear memo for fresh computation
             self.memo.clear();
 
             let n = self.dimensions.len();
@@ -151,7 +155,6 @@ pub mod MatrixChainStEph {
             if index < self.dimensions.len() {
                 self.dimensions[index] = dim;
             }
-            // Clear memo since dimensions changed
             self.memo.clear();
         }
 
@@ -160,7 +163,6 @@ pub mod MatrixChainStEph {
             if index < self.dimensions.len() {
                 self.dimensions[index] = dim;
             }
-            // Clear memo since dimensions changed
             self.memo.clear();
         }
 
@@ -171,6 +173,7 @@ pub mod MatrixChainStEph {
         fn memo_size(&self) -> usize { self.memo.len() }
     }
 
+    // 13. derive impls outside verus!
     impl Display for MatrixChainStEphS {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(
@@ -207,6 +210,7 @@ pub mod MatrixChainStEph {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
     }
 
+    // 12. macros
     #[macro_export]
     macro_rules! MatrixChainStEphLit {
         (dims: [$(($r:expr, $c:expr)),* $(,)?]) => {

@@ -4,14 +4,26 @@
 
 pub mod StructChainedHashTable {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions (inside verus!)
+    // 9. impls (inside verus!: EntryTrait for ChainList; outside verus!: ParaHashTableStEphTrait, ChainedHashTable)
+    // 11. derive impls in verus!
+    // 13. derive impls outside verus!
+
+    // 2. imports
     use std::marker::PhantomData;
 
+    use vstd::prelude::*;
     use crate::Chap47::ChainedHashTable::ChainedHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
 
+    // 4. type definitions
+
     /// Custom linked list node.
-    #[derive(Clone, Debug, PartialEq)]
+    #[derive(Clone, PartialEq)]
     pub struct Node<Key, Value> {
         pub key: Key,
         pub value: Value,
@@ -19,7 +31,7 @@ pub mod StructChainedHashTable {
     }
 
     /// Custom linked list for chained hash table.
-    #[derive(Clone, Debug, PartialEq)]
+    #[derive(Clone, PartialEq)]
     pub struct ChainList<Key, Value> {
         pub head: Option<Box<Node<Key, Value>>>,
     }
@@ -32,7 +44,6 @@ pub mod StructChainedHashTable {
         /// - APAS: Work O(1+α) expected, Span O(1+α).
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan for duplicate key, then head insert, n = chain length.
         fn insert(&mut self, key: Key, value: Value) {
-            // Search for existing key and update
             let mut current = &mut self.head;
             while let Some(node) = current {
                 if node.key == key {
@@ -41,7 +52,6 @@ pub mod StructChainedHashTable {
                 }
                 current = &mut node.next;
             }
-            // Key not found, insert at head
             let new_node = Box::new(Node {
                 key,
                 value,
@@ -91,6 +101,8 @@ pub mod StructChainedHashTable {
     /// Struct Chained Hash Table implementation.
     pub struct StructChainedHashTableStEph;
 
+    // 9. impls (outside verus! — these reference HashTable which contains dyn Fn types)
+
     impl<Key: StT, Value: StT, Metrics: Default> ParaHashTableStEphTrait<Key, Value, ChainList<Key, Value>, Metrics>
         for StructChainedHashTableStEph
     {
@@ -118,7 +130,6 @@ pub mod StructChainedHashTable {
             table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics>,
             new_size: N,
         ) -> HashTable<Key, Value, ChainList<Key, Value>, Metrics> {
-            // Collect all key-value pairs from all chains
             let mut pairs = Vec::new();
             for chain in &table.table {
                 let mut current = &chain.head;
@@ -128,7 +139,6 @@ pub mod StructChainedHashTable {
                 }
             }
 
-            // Create new table with new size using the stored generator
             let new_table_vec = (0..new_size).map(|_| ChainList::new()).collect();
             let new_hash_fn = (table.hash_fn_gen)(new_size);
             let mut new_table = HashTable {
@@ -142,7 +152,6 @@ pub mod StructChainedHashTable {
                 _phantom: PhantomData,
             };
 
-            // Reinsert all pairs into new table
             for (key, value) in pairs {
                 Self::insert(&mut new_table, key, value);
             }
@@ -157,9 +166,28 @@ pub mod StructChainedHashTable {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — placeholder always returns 0; should use actual hash function.
         fn hash_index(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics>, _key: &Key) -> N {
-            // Simple modulo hash - implementers can provide better hash function
             let hash_val = 0; // Placeholder: would use actual hash function
             hash_val % table.current_size
+        }
+    }
+
+    // 13. derive impls outside verus!
+
+    impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Debug for Node<Key, Value> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("Node")
+                .field("key", &self.key)
+                .field("value", &self.value)
+                .field("next", &self.next)
+                .finish()
+        }
+    }
+
+    impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Debug for ChainList<Key, Value> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("ChainList")
+                .field("head", &self.head)
+                .finish()
         }
     }
 }
