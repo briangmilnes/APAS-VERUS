@@ -61,28 +61,29 @@ pub mod AllPairsResultStEphFloat {
 
     /// Trait for all-pairs shortest path result operations
     pub trait AllPairsResultStEphFloatTrait: Sized {
-        /// Create new all-pairs result
-        /// APAS: Work Θ(n²), Span Θ(n²)
-        fn new(n: N)                   -> Self;
+        fn new(n: usize) -> (result: Self);
 
-        /// Get distance between vertices
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn distance(&self, u: N, v: N) -> Option<OrderedF64>;
+        fn get_distance(&self, u: usize, v: usize) -> (dist: OrderedF64);
 
-        /// Check if path exists
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn has_path(&self, u: N, v: N) -> B;
+        fn set_distance(&mut self, u: usize, v: usize, dist: OrderedF64);
+
+        fn get_predecessor(&self, u: usize, v: usize) -> (result: Option<usize>);
+
+        fn set_predecessor(&mut self, u: usize, v: usize, pred: usize);
+
+        fn is_reachable(&self, u: usize, v: usize) -> (result: bool);
+
+        fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);
     }
 
     // 9. impls
 
-    impl AllPairsResultStEphFloat {
-        /// Creates a new all-pairs result structure initialized for n vertices.
-        /// All distances are set to UNREACHABLE except diagonal (0.0), all predecessors to NO_PREDECESSOR.
-        /// - APAS: Work Θ(n²), Span Θ(n²)
-        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS.
+    impl AllPairsResultStEphFloatTrait for AllPairsResultStEphFloat {
         #[verifier::external_body]
-        pub fn new(n: usize) -> Self {
+        fn new(n: usize) -> (result: Self)
+            ensures
+                result.n == n,
+        {
             let mut dist_matrix = Vec::with_capacity(n);
             for i in 0..n {
                 let mut row = vec![UNREACHABLE; n];
@@ -100,22 +101,24 @@ pub mod AllPairsResultStEphFloat {
             }
         }
 
-        /// Returns the distance from vertex u to vertex v.
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         #[verifier::external_body]
-        pub fn get_distance(&self, u: usize, v: usize) -> OrderedF64 {
+        fn get_distance(&self, u: usize, v: usize) -> (dist: OrderedF64)
+            ensures
+                u < self.n && v < self.n ==> dist == self.distances@[u as int]@[v as int],
+                (u >= self.n || v >= self.n) ==> dist == UNREACHABLE,
+        {
             if u >= self.n || v >= self.n {
                 return UNREACHABLE;
             }
             *self.distances.nth(u).nth(v)
         }
 
-        /// Sets the distance from vertex u to vertex v.
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clones row before in-place update.
         #[verifier::external_body]
-        pub fn set_distance(&mut self, u: usize, v: usize, dist: OrderedF64) {
+        fn set_distance(&mut self, u: usize, v: usize, dist: OrderedF64)
+            ensures
+                self.n == old(self).n,
+                self.predecessors@ == old(self).predecessors@,
+        {
             if u < self.n && v < self.n {
                 let mut row = self.distances.nth(u).clone();
                 let _ = row.set(v, dist);
@@ -123,11 +126,13 @@ pub mod AllPairsResultStEphFloat {
             }
         }
 
-        /// Returns the predecessor of vertex v in the shortest path from u.
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — nested array lookup.
         #[verifier::external_body]
-        pub fn get_predecessor(&self, u: usize, v: usize) -> Option<usize> {
+        fn get_predecessor(&self, u: usize, v: usize) -> (result: Option<usize>)
+            ensures
+                (u >= self.n || v >= self.n) ==> result.is_none(),
+                u < self.n && v < self.n && self.predecessors@[u as int]@[v as int] == NO_PREDECESSOR ==> result.is_none(),
+                u < self.n && v < self.n && self.predecessors@[u as int]@[v as int] != NO_PREDECESSOR ==> result == Some(self.predecessors@[u as int]@[v as int]),
+        {
             if u >= self.n || v >= self.n {
                 return None;
             }
@@ -135,11 +140,12 @@ pub mod AllPairsResultStEphFloat {
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
-        /// Sets the predecessor of vertex v in the shortest path from u.
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clones row before in-place update.
         #[verifier::external_body]
-        pub fn set_predecessor(&mut self, u: usize, v: usize, pred: usize) {
+        fn set_predecessor(&mut self, u: usize, v: usize, pred: usize)
+            ensures
+                self.n == old(self).n,
+                self.distances@ == old(self).distances@,
+        {
             if u < self.n && v < self.n {
                 let mut row = self.predecessors.nth(u).clone();
                 let _ = row.set(v, pred);
@@ -147,18 +153,11 @@ pub mod AllPairsResultStEphFloat {
             }
         }
 
-        /// Checks if vertex v is reachable from vertex u.
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         #[verifier::external_body]
-        pub fn is_reachable(&self, u: usize, v: usize) -> bool { self.get_distance(u, v).is_finite() }
+        fn is_reachable(&self, u: usize, v: usize) -> (result: bool) { self.get_distance(u, v).is_finite() }
 
-        /// Extracts the shortest path from u to v by following predecessors.
-        /// Returns None if v is unreachable from u, otherwise returns the path as a sequence.
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — follows k predecessor links.
         #[verifier::external_body]
-        pub fn extract_path(&self, u: usize, v: usize) -> Option<ArraySeqStPerS<usize>> {
+        fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
             if u == v {
                 return Some(ArraySeqStPerS::from_vec(vec![u]));
             }

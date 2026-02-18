@@ -16,7 +16,7 @@ pub mod BellmanFordStEphFloat {
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
     use crate::Chap06::WeightedDirGraphStEphFloat::WeightedDirGraphStEphFloat::*;
-    use crate::Chap56::SSSPResultStEphFloat::SSSPResultStEphFloat::SSSPResultStEphFloat;
+    use crate::Chap56::SSSPResultStEphFloat::SSSPResultStEphFloat::*;
     use crate::Types::Types::*;
     pub type T = WeightedDirGraphStEphFloat<usize>;
 
@@ -24,7 +24,7 @@ pub mod BellmanFordStEphFloat {
         /// Bellman-Ford single source shortest path algorithm
         /// - APAS: Work O(nm), Span O(n lg n) where n = |V|, m = |E|
         /// - Claude-Opus-4.6: Work O(nm), Span O(nm) — sequential implementation; inner vertex loop not parallelized
-        fn bellman_ford(graph: &WeightedDirGraphStEphFloat<usize>, source: usize) -> SSSPResultStEphFloat;
+        fn bellman_ford(graph: &WeightedDirGraphStEphFloat<usize>, source: usize) -> Result<SSSPResultStEphFloat, String>;
     }
 
     /// Runs Bellman-Ford algorithm on a weighted directed graph

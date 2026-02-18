@@ -12,7 +12,6 @@ pub mod StarPartitionMtEph {
     use crate::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
     use crate::Types::Types::*;
 
-    #[cfg(not(verus_keep_ghost))]
     use std::collections::HashMap;
     use std::hash::Hash;
     #[cfg(not(verus_keep_ghost))]
@@ -26,7 +25,8 @@ pub mod StarPartitionMtEph {
             /// APAS: Work O(|V| + |E|), Span O(lg |V|)
             fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(
                 graph: &UnDirGraphMtEph<V>,
-            ) -> SetStEph<SetStEph<V>>;
+                seed: u64,
+            ) -> (SetStEph<V>, HashMap<V, V>);
         }
     } // verus!
 

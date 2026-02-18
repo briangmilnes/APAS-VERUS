@@ -1,13 +1,57 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap51
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap51/
 
-✓ BottomUpDPMtEph.rs
-✓ BottomUpDPMtPer.rs
-✓ BottomUpDPStEph.rs
-✓ BottomUpDPStPer.rs
-✓ TopDownDPMtEph.rs
-✓ TopDownDPMtPer.rs
-✓ TopDownDPStEph.rs
-✓ TopDownDPStPer.rs
+❌ BottomUpDPMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:91: error: bare_impl - // 9. impls (complex methods outside verus — they use Arc<Mutex<Vec<Vec<usi... — `impl BottomUpDPMtEphS` without trait; file defines [BottomUpDPMtEphTrait]
+        92 |     impl BottomUpDPMtEphS {
+        93 |         /// Compute minimum edit distance using parallel bottom-up diagonal pebbling (Algorithm 51.1).
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:39: error: bare_impl - impl BottomUpDPMtEphS { — `impl BottomUpDPMtEphS` without trait; file defines [BottomUpDPMtEphTrait]
+        40 |         /// - APAS: Work Θ(1), Span Θ(1)
+        41 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+   Errors: 2 bare impl(s) in file with trait definition
+❌ BottomUpDPMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:79: error: bare_impl - // 9. impls (complex methods outside verus — they use Arc<Mutex<Vec<Vec<usi... — `impl BottomUpDPMtPerS` without trait; file defines [BottomUpDPMtPerTrait]
+        80 |     impl BottomUpDPMtPerS {
+        81 |         /// Compute minimum edit distance using parallel bottom-up diagonal pebbling (Algorithm 51.1).
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:39: error: bare_impl - impl BottomUpDPMtPerS { — `impl BottomUpDPMtPerS` without trait; file defines [BottomUpDPMtPerTrait]
+        40 |         /// - APAS: Work Θ(1), Span Θ(1)
+        41 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+   Errors: 2 bare impl(s) in file with trait definition
+❌ BottomUpDPStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:91: error: bare_impl - // 9. impls (complex methods outside verus — they use Vec<Vec<usize>>) — `impl BottomUpDPStEphS` without trait; file defines [BottomUpDPStEphTrait]
+        92 |     impl BottomUpDPStEphS {
+        93 |         /// Compute minimum edit distance using bottom-up diagonal pebbling (Algorithm 51.1).
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:37: error: bare_impl - impl BottomUpDPStEphS { — `impl BottomUpDPStEphS` without trait; file defines [BottomUpDPStEphTrait]
+        38 |         /// - APAS: Work Θ(1), Span Θ(1)
+        39 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+   Errors: 2 bare impl(s) in file with trait definition
+❌ BottomUpDPStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:77: error: bare_impl - // 9. impls (complex methods outside verus — they use Vec<Vec<usize>>) — `impl BottomUpDPStPerS` without trait; file defines [BottomUpDPStPerTrait]
+        78 |     impl BottomUpDPStPerS {
+        79 |         /// Compute minimum edit distance using bottom-up diagonal pebbling (Algorithm 51.1).
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:37: error: bare_impl - impl BottomUpDPStPerS { — `impl BottomUpDPStPerS` without trait; file defines [BottomUpDPStPerTrait]
+        38 |         /// - APAS: Work Θ(1), Span Θ(1)
+        39 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+   Errors: 2 bare impl(s) in file with trait definition
+❌ TopDownDPMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:54: error: bare_impl - // 9. impls — `impl TopDownDPMtEphS` without trait; file defines [TopDownDPMtEphTrait]
+        55 |     impl TopDownDPMtEphS {
+        56 |         /// - APAS: Work Θ(1), Span Θ(1)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ TopDownDPMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:54: error: bare_impl - // 9. impls — `impl TopDownDPMtPerS` without trait; file defines [TopDownDPMtPerTrait]
+        55 |     impl TopDownDPMtPerS {
+        56 |         /// - APAS: Work Θ(1), Span Θ(1)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ TopDownDPStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:52: error: bare_impl - // 9. impls — `impl TopDownDPStEphS` without trait; file defines [TopDownDPStEphTrait]
+        53 |     impl TopDownDPStEphS {
+        54 |         /// - APAS: Work Θ(1), Span Θ(1)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ TopDownDPStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:52: error: bare_impl - // 9. impls — `impl TopDownDPStPerS` without trait; file defines [TopDownDPStPerTrait]
+        53 |     impl TopDownDPStPerS {
+        54 |         /// - APAS: Work Θ(1), Span Θ(1)
+   Errors: 1 bare impl(s) in file with trait definition
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -24,5 +68,7 @@ Proof Functions:
    0 total
 
 Holes Found: 0 total
+
+Errors: 12 bare impl(s) in files with trait definitions
 
 🎉 No proof holes found! All proofs are complete.

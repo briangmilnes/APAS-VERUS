@@ -23,7 +23,7 @@ pub mod TopoSortStEph {
     /// Computes topological sort of a DAG.
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-    /// - Claude-Opus-4.6: Work O(|V|^2 + |E|), Span same — Vec::insert(0, ..) is O(|V|) per call, dominates
+    /// - Claude-Opus-4.6: Work O(|V| + |E|), Span same
     #[verifier::external_body]
     pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> Option<AVLTreeSeqStEphS<N>> {
         let n = graph.length();
@@ -38,13 +38,14 @@ pub mod TopoSortStEph {
                 return None;
             }
         }
+        result.reverse();
         Some(AVLTreeSeqStEphS::from_vec(result))
     }
 
     /// Computes topological sort of a DAG.
     /// Returns sequence of vertices in topological order (respecting edge directions).
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-    /// - Claude-Opus-4.6: Work O(|V|^2 + |E|), Span same — Vec::insert(0, ..) is O(|V|) per finish
+    /// - Claude-Opus-4.6: Work O(|V| + |E|), Span same
     #[verifier::external_body]
     pub fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N> {
         let n = graph.length();
@@ -56,11 +57,12 @@ pub mod TopoSortStEph {
                 dfs_finish_order(graph, &mut visited, &mut result, start);
             }
         }
+        result.reverse();
         AVLTreeSeqStEphS::from_vec(result)
     }
 
     /// - APAS: (no cost stated — internal helper)
-    /// - Claude-Opus-4.6: Work O(|V|) per finish due to Vec::insert(0, ..)
+    /// - Claude-Opus-4.6: Work O(degree(v)) per call
     #[verifier::external_body]
     fn dfs_finish_order_cycle_detect(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
@@ -88,12 +90,12 @@ pub mod TopoSortStEph {
         }
 
         let _ = rec_stack.set(vertex, false);
-        result.insert(0, vertex);
+        result.push(vertex);
         true
     }
 
     /// - APAS: (no cost stated — internal helper)
-    /// - Claude-Opus-4.6: Work O(|V|) per finish due to Vec::insert(0, ..)
+    /// - Claude-Opus-4.6: Work O(degree(v)) per call
     #[verifier::external_body]
     fn dfs_finish_order(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
@@ -113,7 +115,7 @@ pub mod TopoSortStEph {
             dfs_finish_order(graph, visited, result, neighbor);
         }
 
-        result.insert(0, vertex);
+        result.push(vertex);
     }
 
     } // verus!

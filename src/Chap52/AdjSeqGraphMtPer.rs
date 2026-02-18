@@ -38,19 +38,31 @@ pub mod AdjSeqGraphMtPer {
 
     // 8. traits
 
-    pub trait AdjSeqGraphMtPerTrait: Sized {
+    pub trait AdjSeqGraphMtPerTrait: View<V = Seq<Seq<int>>> + Sized {
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn new(n: N)                   -> Self;
+        fn new(n: N) -> (result: Self)
+            ensures
+                result@.len() == n,
+                forall|i: int| 0 <= i < (n as int) ==> #[trigger] result@[i].len() == 0;
+
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn num_vertices(&self)         -> N;
+        fn num_vertices(&self) -> (result: N)
+            ensures result == self@.len();
+
         /// claude-4-sonet: Work Θ(Σ deg(v)), Span Θ(log n), Parallelism Θ(|E|/log n)
-        fn num_edges(&self)            -> N;
+        fn num_edges(&self) -> (result: N);
+
         /// claude-4-sonet: Work Θ(deg(u)), Span Θ(log(deg(u))), Parallelism Θ(deg(u)/log(deg(u)))
-        fn has_edge(&self, u: N, v: N) -> B;
+        fn has_edge(&self, u: N, v: N) -> (result: B)
+            ensures u >= self@.len() ==> !result;
+
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn out_neighbors(&self, u: N)  -> ArraySeqMtPerS<N>;
+        fn out_neighbors(&self, u: N) -> (result: ArraySeqMtPerS<N>)
+            ensures u < self@.len() ==> result.spec_len() == self@[u as int].len();
+
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn out_degree(&self, u: N)     -> N;
+        fn out_degree(&self, u: N) -> (result: N)
+            ensures u < self@.len() ==> result == self@[u as int].len();
     }
 
     // 9. impls
@@ -59,7 +71,11 @@ pub mod AdjSeqGraphMtPer {
         /// - APAS: N/A — constructor not in cost table.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop creating n empty neighbor lists.
         #[verifier::external_body]
-        fn new(n: N) -> Self {
+        fn new(n: N) -> (result: Self)
+            ensures
+                result@.len() == n,
+                forall|i: int| 0 <= i < (n as int) ==> #[trigger] result@[i].len() == 0,
+        {
             let empty_list = ArraySeqMtPerS::empty();
             let mut adj_lists = Vec::with_capacity(n);
             for _ in 0..n {
@@ -73,12 +89,14 @@ pub mod AdjSeqGraphMtPer {
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — sequence length.
         #[verifier::external_body]
-        fn num_vertices(&self) -> N { self.adj.length() }
+        fn num_vertices(&self) -> (result: N)
+            ensures result == self@.len()
+        { self.adj.length() }
 
         /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential loop; span not parallel despite Mt type.
         #[verifier::external_body]
-        fn num_edges(&self) -> N {
+        fn num_edges(&self) -> (result: N) {
             let n = self.adj.length();
             let mut count = 0;
             for i in 0..n {
@@ -90,7 +108,9 @@ pub mod AdjSeqGraphMtPer {
         /// - APAS: Work Θ(d(u)), Span Θ(lg d(u)) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Θ(d(u)), Span Θ(d(u)) — sequential linear scan; span not logarithmic.
         #[verifier::external_body]
-        fn has_edge(&self, u: N, v: N) -> B {
+        fn has_edge(&self, u: N, v: N) -> (result: B)
+            ensures u >= self@.len() ==> !result
+        {
             if u >= self.adj.length() {
                 return false;
             }
@@ -106,12 +126,16 @@ pub mod AdjSeqGraphMtPer {
         /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         #[verifier::external_body]
-        fn out_neighbors(&self, u: N) -> ArraySeqMtPerS<N> { self.adj.nth(u).clone() }
+        fn out_neighbors(&self, u: N) -> (result: ArraySeqMtPerS<N>)
+            ensures u < self@.len() ==> result.spec_len() == self@[u as int].len()
+        { self.adj.nth(u).clone() }
 
         /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         #[verifier::external_body]
-        fn out_degree(&self, u: N) -> N { self.adj.nth(u).length() }
+        fn out_degree(&self, u: N) -> (result: N)
+            ensures u < self@.len() ==> result == self@[u as int].len()
+        { self.adj.nth(u).length() }
     }
 
     } // verus!

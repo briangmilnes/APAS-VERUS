@@ -33,7 +33,6 @@ pub mod StackStEph {
 
     #[derive(Clone)]
     pub struct StackStEph<T: StT> {
-        /// Backing storage using Vec for efficient push/pop
         pub elements: Vec<T>,
     }
 
@@ -48,78 +47,66 @@ pub mod StackStEph {
 
     // 8. traits
 
-    /// Trait for stack operations
     pub trait StackStEphTrait<T: StT>: Sized {
-        /// Create new empty stack
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        fn new() -> Self;
+        fn new() -> (result: Self);
 
-        /// Push element onto stack
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1) amortized, Span Θ(1) amortized — Vec::push amortized.
         fn push(&mut self, item: T);
 
-        /// Pop element from stack
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1) amortized, Span Θ(1) amortized — Vec::pop amortized.
-        fn pop(&mut self) -> Option<T>;
+        fn pop(&mut self) -> (result: Option<T>);
 
-        /// Check if stack is empty
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        fn is_empty(&self) -> B;
+        fn peek(&self) -> (result: Option<&T>);
+
+        fn is_empty(&self) -> (result: bool);
+
+        fn size(&self) -> (result: N);
     }
 
     // 9. impls
 
-    impl<T: StT> StackStEph<T> {
-        /// Creates a new empty stack.
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+    impl<T: StT> StackStEphTrait<T> for StackStEph<T> {
         #[verifier::external_body]
-        pub fn new() -> Self { StackStEph { elements: Vec::new() } }
+        #[verifier::external_body]
+        fn new() -> (result: Self)
+            ensures result@ == Seq::<T>::empty(),
+        { StackStEph { elements: Vec::new() } }
 
-        /// Pushes an item onto the stack.
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1) amortized, Span Θ(1) amortized — Vec::push amortized.
         #[verifier::external_body]
-        pub fn push(&mut self, item: T) { self.elements.push(item); }
+        fn push(&mut self, item: T)
+            ensures self@ == old(self)@.push(item),
+        { self.elements.push(item); }
 
-        /// Pops and returns the top item from the stack.
-        /// Returns None if the stack is empty.
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1) amortized, Span Θ(1) amortized — Vec::pop amortized.
         #[verifier::external_body]
-        pub fn pop(&mut self) -> Option<T> { self.elements.pop() }
+        fn pop(&mut self) -> (result: Option<T>)
+            ensures
+                old(self)@.len() > 0 ==> result == Some(old(self)@.last()) && self@ == old(self)@.drop_last(),
+                old(self)@.len() == 0 ==> result.is_None() && self@ == old(self)@,
+        { self.elements.pop() }
 
-        /// Returns a reference to the top item without removing it.
-        /// Returns None if the stack is empty.
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::last.
         #[verifier::external_body]
-        pub fn peek(&self) -> Option<&T> { self.elements.last() }
+        fn peek(&self) -> (result: Option<&T>)
+            ensures
+                self@.len() > 0 ==> result.is_Some(),
+                self@.len() == 0 ==> result.is_None(),
+        { self.elements.last() }
 
-        /// Checks if the stack is empty.
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         #[verifier::external_body]
-        pub fn is_empty(&self) -> bool { self.elements.is_empty() }
+        fn is_empty(&self) -> (result: bool)
+            ensures result == (self@.len() == 0),
+        { self.elements.is_empty() }
 
-        /// Returns the number of elements in the stack.
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len.
         #[verifier::external_body]
-        pub fn size(&self) -> N { self.elements.len() }
+        fn size(&self) -> (result: N)
+            ensures result == self@.len(),
+        { self.elements.len() }
     }
 
     // 11. derive impls in verus!
 
     impl<T: StT> Default for StackStEph<T> {
-        /// - APAS: N/A — Rust Default trait scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to new().
         #[verifier::external_body]
-        fn default() -> Self { Self::new() }
+        fn default() -> (result: Self)
+            ensures result@ == Seq::<T>::empty(),
+        { Self::new() }
     }
 
     } // verus!

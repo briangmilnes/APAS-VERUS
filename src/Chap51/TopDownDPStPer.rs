@@ -76,7 +76,7 @@ pub mod TopDownDPStPer {
 
         /// Recursive MED with memoization (medOne from Algorithm 51.4).
         /// - APAS: Work Θ(1) amortized per call, Θ(|S|×|T|) total; Span Θ(|S|×|T|).
-        /// - Claude-Opus-4.6: Work Θ(1) amortized, Span Θ(|S|×|T|) — agrees with APAS. Includes substitute branch not in APAS.
+        /// - Claude-Opus-4.6: Work Θ(1) amortized, Span Θ(|S|×|T|) — agrees with APAS.
         fn med_recursive(&self, i: usize, j: usize, memo: &mut HashMap<(usize, usize), usize>) -> usize {
             // Check memo table first
             if let Some(&cached_result) = memo.get(&(i, j)) {
@@ -95,12 +95,11 @@ pub mod TopDownDPStPer {
                         // Characters match: no edit needed
                         self.med_recursive(i - 1, j - 1, memo)
                     } else {
-                        // Characters don't match: try insert, delete, or substitute
+                        // Characters don't match: insert or delete (APAS Algorithm 51.4)
                         let insert_cost = 1 + self.med_recursive(i, j - 1, memo);
                         let delete_cost = 1 + self.med_recursive(i - 1, j, memo);
-                        let substitute_cost = 1 + self.med_recursive(i - 1, j - 1, memo);
 
-                        insert_cost.min(delete_cost).min(substitute_cost)
+                        insert_cost.min(delete_cost)
                     }
                 }
             };

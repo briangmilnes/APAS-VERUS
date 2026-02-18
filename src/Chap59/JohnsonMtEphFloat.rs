@@ -21,7 +21,8 @@ pub mod JohnsonMtEphFloat {
     use crate::Chap06::WeightedDirGraphMtEphFloat::WeightedDirGraphMtEphFloat::*;
     use crate::Chap06::WeightedDirGraphStEphFloat::WeightedDirGraphStEphFloat::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
-    use crate::Chap56::AllPairsResultStEphFloat::AllPairsResultStEphFloat::AllPairsResultStEphFloat;
+    use crate::Chap56::AllPairsResultStEphFloat::AllPairsResultStEphFloat::*;
+    use crate::Chap56::SSSPResultStEphFloat::SSSPResultStEphFloat::*;
     use crate::Chap57::DijkstraStEphFloat::DijkstraStEphFloat::dijkstra;
     use crate::Chap58::BellmanFordStEphFloat::BellmanFordStEphFloat::bellman_ford;
     use crate::Types::Types::*;
@@ -141,7 +142,7 @@ pub mod JohnsonMtEphFloat {
     /// Add dummy source vertex s with zero-weight edges to all vertices in G.
     ///
     /// - APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work O(nm), Span O(nm) — iterates n vertices, each with up to m neighbors
+    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — iterates n vertices + their out-neighbors. TODO: use labeled_arcs() for flat O(m) iteration when available
     fn add_dummy_source(
         graph: &WeightedDirGraphMtEphFloat<usize>,
         n: usize,
@@ -176,7 +177,7 @@ pub mod JohnsonMtEphFloat {
     /// Reweight edges: w'(u,v) = w(u,v) + p(u) - p(v)
     ///
     /// - APAS: Work O(m), Span O(m)
-    /// - Claude-Opus-4.6: Work O(nm), Span O(nm) — iterates n vertices, each with up to m neighbors via out_neighbors_weighted
+    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — iterates n vertices + their out-neighbors. TODO: use labeled_arcs() for flat O(m) iteration when available
     fn reweight_graph(
         graph: &WeightedDirGraphMtEphFloat<usize>,
         potentials: &ArraySeqStEphS<OrderedF64>,

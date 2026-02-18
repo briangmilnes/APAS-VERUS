@@ -20,7 +20,7 @@ pub mod DijkstraStEphFloat {
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
     use crate::Chap06::WeightedDirGraphStEphFloat::WeightedDirGraphStEphFloat::*;
     use crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::*;
-    use crate::Chap56::SSSPResultStEphFloat::SSSPResultStEphFloat::SSSPResultStEphFloat;
+    use crate::Chap56::SSSPResultStEphFloat::SSSPResultStEphFloat::*;
     use crate::Types::Types::*;
 
     verus! {

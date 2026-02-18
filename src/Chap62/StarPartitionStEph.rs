@@ -13,7 +13,6 @@ pub mod StarPartitionStEph {
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
     use crate::Types::Types::*;
 
-    #[cfg(not(verus_keep_ghost))]
     use std::collections::HashMap;
     use std::hash::Hash;
     #[cfg(not(verus_keep_ghost))]
@@ -23,7 +22,7 @@ pub mod StarPartitionStEph {
         pub trait StarPartitionStEphTrait {
             /// Sequential star partition using greedy selection
             /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-            fn sequential_star_partition<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<SetStEph<V>>;
+            fn sequential_star_partition<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>);
         }
     } // verus!
 

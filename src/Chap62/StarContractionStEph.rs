@@ -12,7 +12,6 @@ pub mod StarContractionStEph {
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
     use crate::Types::Types::*;
 
-    #[cfg(not(verus_keep_ghost))]
     use std::collections::HashMap;
     use std::hash::Hash;
     #[cfg(not(verus_keep_ghost))]
@@ -24,11 +23,11 @@ pub mod StarContractionStEph {
         pub trait StarContractionStEphTrait {
             /// Sequential star contraction higher-order function
             /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
-            fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: F, expand: G) -> R
+            fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R
             where
                 V: StT + Hash + Ord,
                 F: Fn(&SetStEph<V>) -> R,
-                G: Fn(&SetStEph<V>, &R) -> R;
+                G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R;
 
             /// Contract graph to just vertices (no edges)
             /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)

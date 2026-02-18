@@ -16,21 +16,15 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
         91 |     pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:115: external_body - #[verifier::external_body]
        116 |     pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:134: assume(false) - assume(false);
-       116 |     pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
-            ...
-       132 |             Ok(val) => val,
-       133 |             Err(_) => {
-       135 |                 diverge()
-       136 |             }
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:144: external_body - #[verifier::external_body]
        145 |     pub fn spawn<T, F>(f: F) -> (task: TaskState<T>)
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:164: external_body - #[verifier::external_body]
        165 |     pub fn wait<T: Send + 'static>(task: TaskState<T>) -> (task_result: T)
-   Holes: 8 total
-      1 × assume(false)
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:134: info: assume(false); diverge() - assume(false); — valid non-termination idiom
+   Holes: 7 total
       6 × external_body
       1 × external_type_specification
+   Info: 1 assume(false); diverge() idiom(s)
 ✓ Chap03/InsertionSortStEph.rs
 ✓ Chap05/KleeneStPer.rs
    9 clean proof functions
@@ -67,13 +61,29 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
-✓ Chap06/DirGraphMtEph.rs
+❌ Chap06/DirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:53: error: bare_impl - impl<V: StTInMtT + Hash + 'static> DirGraphMtEph<V> { — `impl DirGraphMtEph` without trait; file defines [DirGraphMtEphTrait]
+        54 |         /// Convenience accessor for vertices view
+        55 |         pub open spec fn spec_vertices(&self) -> Set<V::V> { self.V@ }
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ Chap06/DirGraphStEph.rs
-✓ Chap06/LabDirGraphMtEph.rs
+❌ Chap06/LabDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:62: error: bare_impl - impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LabDirGraphM... — `impl LabDirGraphMtEph` without trait; file defines [LabDirGraphMtEphTrait]
+        63 |         pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
+        64 |         pub open spec fn spec_labeled_arcs(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_arcs@ }
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ Chap06/LabDirGraphStEph.rs
-✓ Chap06/LabUnDirGraphMtEph.rs
+❌ Chap06/LabUnDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:62: error: bare_impl - impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> LabUnD... — `impl LabUnDirGraphMtEph` without trait; file defines [LabUnDirGraphMtEphTrait]
+        63 |         pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
+        64 |         pub open spec fn spec_labeled_edges(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_edges@ }
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ Chap06/LabUnDirGraphStEph.rs
-✓ Chap06/UnDirGraphMtEph.rs
+❌ Chap06/UnDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:63: error: bare_impl - impl<V: StTInMtT + Hash + 'static> UnDirGraphMtEph<V> { — `impl UnDirGraphMtEph` without trait; file defines [UnDirGraphMtEphTrait]
+        64 |         pub open spec fn spec_vertices(&self) -> Set<V::V> { self.V@ }
+        65 |         pub open spec fn spec_edges(&self) -> Set<(V::V, V::V)> { self.E@ }
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ Chap06/UnDirGraphStEph.rs
 ✓ Chap06/WeightedDirGraphStEphI128.rs
 ✓ Chap06/WeightedDirGraphStEphI16.rs
@@ -87,58 +97,19 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ Chap06/WeightedDirGraphStEphU64.rs
 ✓ Chap06/WeightedDirGraphStEphU8.rs
 ✓ Chap06/WeightedDirGraphStEphUsize.rs
-❌ Chap11/FibonacciMtEph2Threads.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:155: assume(false) - Result::Err(_) => { assume(false); diverge() }
-       100 | pub fn fib_2threads(n: u64) -> (fibonacci: u64)
-            ...
-       153 |     let left_out = match join_handle1.join() {
-       154 |         Result::Ok(out) => out,
-       156 |     };
-       157 |     let left_val = left_out.0;
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:163: assume(false) - Result::Err(_) => { assume(false); diverge() }
-       100 | pub fn fib_2threads(n: u64) -> (fibonacci: u64)
-            ...
-       161 |     let right_out = match join_handle2.join() {
-       162 |         Result::Ok(out) => out,
-       164 |     };
-       165 |     let right_val = right_out.0;
-   Holes: 2 total
-      2 × assume(false)
-❌ Chap11/FibonacciMtEphRecomputes.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:151: assume(false) - Result::Err(_) => { assume(false); diverge() }
-        92 | pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
-            ...
-       149 |         let left_out = match left_handle.join() {
-       150 |             Result::Ok(out) => out,
-       152 |         };
-       153 |         let left_val = left_out.0;
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:159: assume(false) - Result::Err(_) => { assume(false); diverge() }
-        92 | pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
-            ...
-       157 |         let right_out = match right_handle.join() {
-       158 |             Result::Ok(out) => out,
-       160 |         };
-       161 |         let right_val = right_out.0;
-   Holes: 2 total
-      2 × assume(false)
+ℹ Chap11/FibonacciMtEph2Threads.rs
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:155: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:163: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+   Info: 2 assume(false); diverge() idiom(s)
+ℹ Chap11/FibonacciMtEphRecomputes.rs
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:151: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:159: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+   Info: 2 assume(false); diverge() idiom(s)
 ✓ Chap11/FibonacciMtPerAllThreads.rs
-❌ Chap11/FibonacciMtPerTSM.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:145: assume(false) - Result::Err(_) => { assume(false); diverge() }
-        86 | pub fn fib(n: u64) -> (fibonacci: u64)
-            ...
-       143 |         let left_out = match left_handle.join() {
-       144 |             Result::Ok(out) => out,
-       146 |         };
-       147 |         let left_val = left_out.0;
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:153: assume(false) - Result::Err(_) => { assume(false); diverge() }
-        86 | pub fn fib(n: u64) -> (fibonacci: u64)
-            ...
-       151 |         let right_out = match right_handle.join() {
-       152 |             Result::Ok(out) => out,
-       154 |         };
-       155 |         let right_val = right_out.0;
-   Holes: 2 total
-      2 × assume(false)
+ℹ Chap11/FibonacciMtPerTSM.rs
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:145: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:153: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+   Info: 2 assume(false); diverge() idiom(s)
 ✓ Chap11/FibonacciStEph.rs
    3 clean proof functions
 ❌ Chap12/Exercise12_1.rs
@@ -203,10 +174,14 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
        168 |         while !current.is_null() {
        170 |                 let node = Box::from_raw(current);
        171 |                 current = node.next;
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:92: error: bare_impl - impl<T: Send> ConcurrentStackMt<T> { — `impl ConcurrentStackMt` without trait; file defines [ConcurrentStackMtTrait]
+        93 |     /// Spec: the stack is always well-formed after construction.
+        94 |     pub closed spec fn wf(&self) -> bool {
    Holes: 12 total
       4 × unsafe {}
       7 × external_body
       1 × external
+   Errors: 1 bare impl(s) in file with trait definition
 ❌ Chap17/MathSeq.rs
 /home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:642: assume() - proof { assume(r == (self@ == other@)); }
        638 |         fn eq(&self, other: &Self) -> (r: bool)
@@ -359,7 +334,14 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Holes: 1 total
       1 × assume()
    Proof functions: 6 total (6 clean, 0 holed)
-✓ Chap19/ArraySeqMtEphSlice.rs
+❌ Chap19/ArraySeqMtEphSlice.rs
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEphSlice.rs:200: error: bare_impl - #[cfg(not(verus_keep_ghost))] — `impl Inner` without trait; file defines [ArraySeqMtEphSliceTrait]
+       201 |     impl<T: StTInMtT> Inner<T> {
+       202 |         fn new(data: Box<[T]>) -> Self { Inner { data: Mutex::new(data) } }
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEphSlice.rs:322: error: bare_impl - #[cfg(not(verus_keep_ghost))] — `impl ArraySeqMtEphSliceS` without trait; file defines [ArraySeqMtEphSliceTrait]
+       323 |     impl<T: StTInMtT + 'static> ArraySeqMtEphSliceS<T> {
+       324 |         pub fn to_vec(&self) -> Vec<T> {
+   Errors: 2 bare impl(s) in file with trait definition
 ❌ Chap19/ArraySeqStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1090: assume() - proof { assume(equal == (self@ == other@)); }
       1086 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -429,8 +411,12 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
        772 |             let r = self.left == other.left && self.value == other.value && self.right == other.right;
        774 |             r
        775 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:61: error: bare_impl - impl<T> BalBinTree<T> { — `impl BalBinTree` without trait; file defines [BalBinTreeTrait]
+        62 |         pub open spec fn spec_size(self) -> nat
+        63 |             decreases self,
    Holes: 2 total
       2 × assume()
+   Errors: 1 bare impl(s) in file with trait definition
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ Chap23/PrimTreeSeqStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:825: assume() - proof { assume(r == (self@ == other@)); }
@@ -461,8 +447,12 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
        867 |                 _ => {
        869 |                     false
        870 |                 },
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:878: error: bare_impl - impl<T> PrimTreeSeqStS<T> { — `impl PrimTreeSeqStS` without trait; file defines [PrimTreeSeqStTrait]
+       879 |         /// - APAS: N/A — utility method, not in prose.
+       880 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — borrows inner slice.
    Holes: 4 total
       4 × assume()
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ Chap26/DivConReduceMtPer.rs
    3 clean proof functions
 ✓ Chap26/DivConReduceStPer.rs
@@ -478,9 +468,13 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
        396 |     pub fn sort_and_split(points: &Vec<Point>) -> (result: (Vec<Point>, Vec<Point>))
 /home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:413: external_body - #[verifier::external_body]
        414 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:429: error: bare_impl - impl Point { — `impl Point` without trait; file defines [ETSPMtTrait]
+       430 |         /// Euclidean distance between two points.
+       431 |         pub fn distance(&self, other: &Point) -> f64 {
    Holes: 3 total
       1 × admit()
       2 × external_body
+   Errors: 1 bare impl(s) in file with trait definition
    Proof functions: 4 total (4 clean, 0 holed)
 ❌ Chap26/ETSPStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:173: admit() - admit();
@@ -494,9 +488,13 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
        367 |     pub fn sort_and_split(points: &Vec<Point>) -> (result: (Vec<Point>, Vec<Point>))
 /home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:384: external_body - #[verifier::external_body]
        385 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:400: error: bare_impl - impl Point { — `impl Point` without trait; file defines [ETSPStTrait]
+       401 |         /// Euclidean distance between two points.
+       402 |         /// - APAS: N/A — helper function.
    Holes: 3 total
       1 × admit()
       2 × external_body
+   Errors: 1 bare impl(s) in file with trait definition
    Proof functions: 3 total (3 clean, 0 holed)
 ✓ Chap26/MergeSortMtPer.rs
    4 clean proof functions
@@ -536,10 +534,28 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ Chap36/QuickSortMtEph.rs
 ✓ Chap36/QuickSortMtEphSlice.rs
 ✓ Chap36/QuickSortStEph.rs
-✓ Chap37/AVLTreeSeq.rs
+❌ Chap37/AVLTreeSeq.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:29: error: bare_impl - impl<T: StT> AVLTreeNode<T> { — `impl AVLTreeNode` without trait; file defines [AVLTreeSeq]
+        30 |         fn new(value: T, index: N) -> Self {
+        31 |             AVLTreeNode {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:307: error: bare_impl - impl<'a, T: StT> AVLTreeSeqIter<'a, T> { — `impl AVLTreeSeqIter` without trait; file defines [AVLTreeSeq]
+       308 |         fn new(root: &'a Link<T>) -> Self {
+       309 |             let mut it = AVLTreeSeqIter {
+   Errors: 2 bare impl(s) in file with trait definition
 ✓ Chap37/AVLTreeSeqMtPer.rs
-✓ Chap37/AVLTreeSeqStEph.rs
-✓ Chap37/AVLTreeSeqStPer.rs
+❌ Chap37/AVLTreeSeqStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:24: error: bare_impl - impl<T: StT> AVLTreeNode<T> { — `impl AVLTreeNode` without trait; file defines [AVLTreeSeqStEphTrait]
+        25 |         fn new(value: T, index: N) -> Self {
+        26 |             AVLTreeNode {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:200: error: bare_impl - impl<'a, T: StT> AVLTreeSeqIterStEph<'a, T> { — `impl AVLTreeSeqIterStEph` without trait; file defines [AVLTreeSeqStEphTrait]
+       201 |         fn new(root: &'a Link<T>) -> Self {
+       202 |             let mut it = AVLTreeSeqIterStEph {
+   Errors: 2 bare impl(s) in file with trait definition
+❌ Chap37/AVLTreeSeqStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:257: error: bare_impl - impl<'a, T: StT> AVLTreeSeqStPerIter<'a, T> { — `impl AVLTreeSeqStPerIter` without trait; file defines [AVLTreeSeqStPerTrait]
+       258 |         fn push_left(&mut self, mut cur: Option<&'a Node<T>>) {
+       259 |             while let Some(n) = cur {
+   Errors: 1 bare impl(s) in file with trait definition
 ❌ Chap37/BSTAVLMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:31: external_type_specification - #[verifier::external_type_specification]
         32 |     #[verifier::external_body]
@@ -606,21 +622,66 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ Chap37/BSTRBStEph.rs
    1 clean proof function
 ✓ Chap37/BSTSetAVLMtEph.rs
-✓ Chap37/BSTSetBBAlphaMtEph.rs
-✓ Chap37/BSTSetPlainMtEph.rs
-✓ Chap37/BSTSetRBMtEph.rs
-✓ Chap37/BSTSetSplayMtEph.rs
+❌ Chap37/BSTSetBBAlphaMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:62: error: bare_impl - impl<T: StTInMtT + Ord> BSTSetBBAlphaMtEph<T> { — `impl BSTSetBBAlphaMtEph` without trait; file defines [BSTSetBBAlphaMtEphTrait]
+        63 |         fn values_vec(&self) -> Vec<T> { self.tree.in_order().iter().cloned().collect() }
+        64 |         fn rebuild_from_vec(values: Vec<T>) -> BSTBBAlphaMtEph<T> {
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap37/BSTSetPlainMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:62: error: bare_impl - impl<T: StTInMtT + Ord> BSTSetPlainMtEph<T> { — `impl BSTSetPlainMtEph` without trait; file defines [BSTSetPlainMtEphTrait]
+        63 |         fn values_vec(&self) -> Vec<T> { self.tree.in_order().iter().cloned().collect() }
+        64 |         fn rebuild_from_vec(values: Vec<T>) -> BSTPlainMtEph<T> {
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap37/BSTSetRBMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:62: error: bare_impl - impl<T: StTInMtT + Ord> BSTSetRBMtEph<T> { — `impl BSTSetRBMtEph` without trait; file defines [BSTSetRBMtEphTrait]
+        63 |         fn values_vec(&self) -> Vec<T> { self.tree.in_order().iter().cloned().collect() }
+        64 |         fn rebuild_from_vec(values: Vec<T>) -> BSTRBMtEph<T> {
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap37/BSTSetSplayMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:62: error: bare_impl - impl<T: StTInMtT + Ord> BSTSetSplayMtEph<T> { — `impl BSTSetSplayMtEph` without trait; file defines [BSTSetSplayMtEphTrait]
+        63 |         fn values_vec(&self) -> Vec<T> { self.tree.in_order().iter().cloned().collect() }
+        64 |         fn rebuild_from_vec(values: Vec<T>) -> BSTSplayMtEph<T> {
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ Chap37/BSTSplayMtEph.rs
 ✓ Chap37/BSTSplayStEph.rs
 ✓ Chap38/BSTParaMtEph.rs
 ✓ Chap38/BSTParaStEph.rs
-✓ Chap39/BSTParaTreapMtEph.rs
-✓ Chap39/BSTSetTreapMtEph.rs
-✓ Chap39/BSTTreapMtEph.rs
+❌ Chap39/BSTParaTreapMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:126: error: bare_impl - impl<T: MtKey + 'static> ParamTreap<T> { — `impl ParamTreap` without trait; file defines [ParamTreapTrait]
+       127 |         /// - APAS: Work O(1), Span O(1)
+       128 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap39/BSTSetTreapMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:102: error: bare_impl - impl<T: StTInMtT + Ord> BSTSetTreapMtEph<T> { — `impl BSTSetTreapMtEph` without trait; file defines [BSTSetTreapMtEphTrait]
+       103 |         /// - APAS: Work Θ(n), Span Θ(n)
+       104 |         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap39/BSTTreapMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:24: error: bare_impl - impl<T: StTInMtT + Ord> Node<T> { — `impl Node` without trait; file defines [BSTTreapMtEphTrait]
+        25 |         fn new(key: T, priority: u64) -> Self {
+        26 |             Node {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:80: error: bare_impl - impl<T: StTInMtT + Ord> BSTTreapMtEph<T> { — `impl BSTTreapMtEph` without trait; file defines [BSTTreapMtEphTrait]
+        81 |         /// - APAS: Work Θ(1), Span Θ(1)
+        82 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+   Errors: 2 bare impl(s) in file with trait definition
 ✓ Chap39/BSTTreapStEph.rs
 ✓ Chap40/BSTKeyValueStEph.rs
-✓ Chap40/BSTReducedStEph.rs
-✓ Chap40/BSTSizeStEph.rs
+❌ Chap40/BSTReducedStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:36: error: bare_impl - impl<K: StT + Ord, V: StT, R: StT> Node<K, V, R> { — `impl Node` without trait; file defines [ReduceOp, BSTReducedStEphTrait]
+        37 |         fn new(key: K, value: V, priority: u64, reduced_value: R) -> Self {
+        38 |             Node {
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:121: error: bare_impl - impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> BSTReducedStEph<K, V, ... — `impl BSTReducedStEph` without trait; file defines [ReduceOp, BSTReducedStEphTrait]
+       122 |         /// - APAS: Work Θ(1), Span Θ(1) — O(1) via augmented size field.
+       123 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+   Errors: 2 bare impl(s) in file with trait definition
+❌ Chap40/BSTSizeStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:22: error: bare_impl - impl<T: StT + Ord> Node<T> { — `impl Node` without trait; file defines [BSTSizeStEphTrait]
+        23 |         fn new(key: T, priority: u64) -> Self {
+        24 |             Node {
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:72: error: bare_impl - impl<T: StT + Ord> BSTSizeStEph<T> { — `impl BSTSizeStEph` without trait; file defines [BSTSizeStEphTrait]
+        73 |         /// - APAS: Work Θ(1), Span Θ(1) — O(1) size access via augmented field.
+        74 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+   Errors: 2 bare impl(s) in file with trait definition
 ✓ Chap41/AVLTreeSetMtEph.rs
 ✓ Chap41/AVLTreeSetMtPer.rs
 ✓ Chap41/AVLTreeSetStEph.rs
@@ -633,8 +694,16 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ Chap42/TableStEph.rs
 ✓ Chap42/TableStPer.rs
 ✓ Chap43/AugOrderedTableMtEph.rs
-✓ Chap43/AugOrderedTableStEph.rs
-✓ Chap43/AugOrderedTableStPer.rs
+❌ Chap43/AugOrderedTableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:324: error: bare_impl - impl<K: StT + Ord, V: StT, F> AugOrderedTableStEph<K, V, F> — `impl AugOrderedTableStEph` without trait; file defines [AugOrderedTableStEphTrait]
+       325 |     where
+       326 |         F: Fn(&V, &V) -> V + Clone,
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap43/AugOrderedTableStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStPer.rs:359: error: bare_impl - impl<K: StT + Ord, V: StT, F> AugOrderedTableStPer<K, V, F> — `impl AugOrderedTableStPer` without trait; file defines [AugOrderedTableStPerTrait]
+       360 |     where
+       361 |         F: Fn(&V, &V) -> V + Clone,
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ Chap43/Example43_1.rs
 ✓ Chap43/OrderedSetMtEph.rs
 ✓ Chap43/OrderedSetStEph.rs
@@ -645,11 +714,36 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ Chap43/OrderedTableStPer.rs
 ✓ Chap44/DocumentIndex.rs
 ✓ Chap44/Example44_1.rs
-✓ Chap45/BalancedTreePQ.rs
-✓ Chap45/BinaryHeapPQ.rs
+❌ Chap45/BalancedTreePQ.rs
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:337: error: bare_impl - /// Convenience functions for common operations — `impl BalancedTreePQ` without trait; file defines [BalancedTreePQTrait]
+       338 |     impl<T: StT + Ord> BalancedTreePQ<T> {
+       339 |         /// Check if the tree maintains sorted order (for testing)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:362: error: bare_impl - /// Advanced operations for balanced tree priority queue — `impl BalancedTreePQ` without trait; file defines [BalancedTreePQTrait]
+       363 |     impl<T: StT + Ord> BalancedTreePQ<T> {
+       364 |         /// Split the priority queue at a given element
+   Errors: 2 bare impl(s) in file with trait definition
+❌ Chap45/BinaryHeapPQ.rs
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:51: error: bare_impl - impl<T: StT + Ord> BinaryHeapPQ<T> { — `impl BinaryHeapPQ` without trait; file defines [BinaryHeapPQTrait]
+        52 |         fn left_child(i: N) -> N { 2 * i + 1 }
+        53 |         fn right_child(i: N) -> N { 2 * i + 2 }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:266: error: bare_impl - impl<T: StT + Ord> BinaryHeapPQ<T> { — `impl BinaryHeapPQ` without trait; file defines [BinaryHeapPQTrait]
+       267 |         /// Insert multiple elements from a sequence
+       268 |         pub fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:356: error: bare_impl - /// Convenience functions for common operations — `impl BinaryHeapPQ` without trait; file defines [BinaryHeapPQTrait]
+       357 |     impl<T: StT + Ord> BinaryHeapPQ<T> {
+       358 |         /// Create priority queue from vector (for testing)
+   Errors: 3 bare impl(s) in file with trait definition
 ✓ Chap45/Example45_2.rs
-✓ Chap45/HeapsortExample.rs
-✓ Chap45/LeftistHeapPQ.rs
+❌ Chap45/HeapsortExample.rs
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:194: error: bare_impl - impl<T: StT + Ord> HeapsortComparison<T> { — `impl HeapsortComparison` without trait; file defines [HeapsortTrait, HeapsortExamplesTrait, HeapsortAnalysisTrait, SequenceUtilsTrait]
+       195 |         /// Verify that all implementations produce the same sorted result
+       196 |         pub fn all_results_match(&self) -> bool {
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap45/LeftistHeapPQ.rs
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:83: error: bare_impl - impl<T: StT + Ord> LeftistHeapNode<T> { — `impl LeftistHeapNode` without trait; file defines [LeftistHeapPQTrait, LeftistHeapDemoTrait]
+        84 |         /// Get the rank (distance to nearest leaf) of a node
+        85 |         fn rank(&self) -> N {
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ Chap45/SortedListPQ.rs
 ✓ Chap45/UnsortedListPQ.rs
 ✓ Chap47/ChainedHashTable.rs
@@ -693,7 +787,11 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
         59 |         fn delete(&mut self, key: &Key) -> B {
    Holes: 4 total
       4 × external_body
-✓ Chap49/MinEditDistMtEph.rs
+❌ Chap49/MinEditDistMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:95: error: bare_impl - impl<T: MtVal> MinEditDistMtEphS<T> { — `impl MinEditDistMtEphS` without trait; file defines [MinEditDistMtEphTrait]
+        96 |         /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
+        97 |         /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — parallel fork on delete/insert branches; outside verus!, not verified
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ Chap49/MinEditDistMtPer.rs
 ✓ Chap49/MinEditDistStEph.rs
 ✓ Chap49/MinEditDistStPer.rs
@@ -701,23 +799,95 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ Chap49/SubsetSumMtPer.rs
 ✓ Chap49/SubsetSumStEph.rs
 ✓ Chap49/SubsetSumStPer.rs
-✓ Chap50/MatrixChainMtEph.rs
-✓ Chap50/MatrixChainMtPer.rs
-✓ Chap50/MatrixChainStEph.rs
-✓ Chap50/MatrixChainStPer.rs
+❌ Chap50/MatrixChainMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:77: error: bare_impl - // 9. impls — `impl MatrixChainMtEphS` without trait; file defines [MatrixChainMtEphTrait]
+        78 |     impl MatrixChainMtEphS {
+        79 |         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap50/MatrixChainMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:67: error: bare_impl - // 9. impls — `impl MatrixChainMtPerS` without trait; file defines [MatrixChainMtPerTrait]
+        68 |     impl MatrixChainMtPerS {
+        69 |         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap50/MatrixChainStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:81: error: bare_impl - // 9. impls — `impl MatrixChainStEphS` without trait; file defines [MatrixChainStEphTrait]
+        82 |     impl MatrixChainStEphS {
+        83 |         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap50/MatrixChainStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:65: error: bare_impl - // 9. impls — `impl MatrixChainStPerS` without trait; file defines [MatrixChainStPerTrait]
+        66 |     impl MatrixChainStPerS {
+        67 |         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ Chap50/OptBinSearchTreeMtEph.rs
 ✓ Chap50/OptBinSearchTreeMtPer.rs
-✓ Chap50/OptBinSearchTreeStEph.rs
-✓ Chap50/OptBinSearchTreeStPer.rs
-✓ Chap50/Probability.rs
-✓ Chap51/BottomUpDPMtEph.rs
-✓ Chap51/BottomUpDPMtPer.rs
-✓ Chap51/BottomUpDPStEph.rs
-✓ Chap51/BottomUpDPStPer.rs
-✓ Chap51/TopDownDPMtEph.rs
-✓ Chap51/TopDownDPMtPer.rs
-✓ Chap51/TopDownDPStEph.rs
-✓ Chap51/TopDownDPStPer.rs
+❌ Chap50/OptBinSearchTreeStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:84: error: bare_impl - // 9. impls — `impl OBSTStEphS` without trait; file defines [OBSTStEphTrait]
+        85 |     impl<T: StT> OBSTStEphS<T> {
+        86 |         /// - APAS: Work Θ(n³), Span Θ(n³)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap50/OptBinSearchTreeStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:68: error: bare_impl - // 9. impls — `impl OBSTStPerS` without trait; file defines [OBSTStPerTrait]
+        69 |     impl<T: StT> OBSTStPerS<T> {
+        70 |         /// - APAS: Work Θ(n³), Span Θ(n³)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap50/Probability.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:38: error: bare_impl - // 9. impls — `impl Probability` without trait; file defines [ProbabilityTrait]
+        39 |     impl Probability {
+        40 |         /// - APAS: Work Θ(1), Span Θ(1)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap51/BottomUpDPMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:91: error: bare_impl - // 9. impls (complex methods outside verus — they use Arc<Mutex<Vec<Vec<usi... — `impl BottomUpDPMtEphS` without trait; file defines [BottomUpDPMtEphTrait]
+        92 |     impl BottomUpDPMtEphS {
+        93 |         /// Compute minimum edit distance using parallel bottom-up diagonal pebbling (Algorithm 51.1).
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:39: error: bare_impl - impl BottomUpDPMtEphS { — `impl BottomUpDPMtEphS` without trait; file defines [BottomUpDPMtEphTrait]
+        40 |         /// - APAS: Work Θ(1), Span Θ(1)
+        41 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+   Errors: 2 bare impl(s) in file with trait definition
+❌ Chap51/BottomUpDPMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:79: error: bare_impl - // 9. impls (complex methods outside verus — they use Arc<Mutex<Vec<Vec<usi... — `impl BottomUpDPMtPerS` without trait; file defines [BottomUpDPMtPerTrait]
+        80 |     impl BottomUpDPMtPerS {
+        81 |         /// Compute minimum edit distance using parallel bottom-up diagonal pebbling (Algorithm 51.1).
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:39: error: bare_impl - impl BottomUpDPMtPerS { — `impl BottomUpDPMtPerS` without trait; file defines [BottomUpDPMtPerTrait]
+        40 |         /// - APAS: Work Θ(1), Span Θ(1)
+        41 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+   Errors: 2 bare impl(s) in file with trait definition
+❌ Chap51/BottomUpDPStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:91: error: bare_impl - // 9. impls (complex methods outside verus — they use Vec<Vec<usize>>) — `impl BottomUpDPStEphS` without trait; file defines [BottomUpDPStEphTrait]
+        92 |     impl BottomUpDPStEphS {
+        93 |         /// Compute minimum edit distance using bottom-up diagonal pebbling (Algorithm 51.1).
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:37: error: bare_impl - impl BottomUpDPStEphS { — `impl BottomUpDPStEphS` without trait; file defines [BottomUpDPStEphTrait]
+        38 |         /// - APAS: Work Θ(1), Span Θ(1)
+        39 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+   Errors: 2 bare impl(s) in file with trait definition
+❌ Chap51/BottomUpDPStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:77: error: bare_impl - // 9. impls (complex methods outside verus — they use Vec<Vec<usize>>) — `impl BottomUpDPStPerS` without trait; file defines [BottomUpDPStPerTrait]
+        78 |     impl BottomUpDPStPerS {
+        79 |         /// Compute minimum edit distance using bottom-up diagonal pebbling (Algorithm 51.1).
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:37: error: bare_impl - impl BottomUpDPStPerS { — `impl BottomUpDPStPerS` without trait; file defines [BottomUpDPStPerTrait]
+        38 |         /// - APAS: Work Θ(1), Span Θ(1)
+        39 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+   Errors: 2 bare impl(s) in file with trait definition
+❌ Chap51/TopDownDPMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:54: error: bare_impl - // 9. impls — `impl TopDownDPMtEphS` without trait; file defines [TopDownDPMtEphTrait]
+        55 |     impl TopDownDPMtEphS {
+        56 |         /// - APAS: Work Θ(1), Span Θ(1)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap51/TopDownDPMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:54: error: bare_impl - // 9. impls — `impl TopDownDPMtPerS` without trait; file defines [TopDownDPMtPerTrait]
+        55 |     impl TopDownDPMtPerS {
+        56 |         /// - APAS: Work Θ(1), Span Θ(1)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap51/TopDownDPStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:52: error: bare_impl - // 9. impls — `impl TopDownDPStEphS` without trait; file defines [TopDownDPStEphTrait]
+        53 |     impl TopDownDPStEphS {
+        54 |         /// - APAS: Work Θ(1), Span Θ(1)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Chap51/TopDownDPStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:52: error: bare_impl - // 9. impls — `impl TopDownDPStPerS` without trait; file defines [TopDownDPStPerTrait]
+        53 |     impl TopDownDPStPerS {
+        54 |         /// - APAS: Work Θ(1), Span Θ(1)
+   Errors: 1 bare impl(s) in file with trait definition
 ❌ Chap52/AdjMatrixGraphMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:61: external_body - #[verifier::external_body]
         62 |         fn new(n: N) -> Self {
@@ -828,20 +998,24 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Holes: 7 total
       7 × external_body
 ❌ Chap52/AdjSeqGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:61: external_body - #[verifier::external_body]
-        62 |         fn new(n: N) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:75: external_body - #[verifier::external_body]
-        76 |         fn num_vertices(&self) -> N { self.adj.length() }
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:80: external_body - #[verifier::external_body]
-        81 |         fn num_edges(&self) -> N {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:92: external_body - #[verifier::external_body]
-        93 |         fn has_edge(&self, u: N, v: N) -> B {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:108: external_body - #[verifier::external_body]
-       109 |         fn out_neighbors(&self, u: N) -> ArraySeqMtPerS<N> { self.adj.nth(u).clone() }
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:113: external_body - #[verifier::external_body]
-       114 |         fn out_degree(&self, u: N) -> N { self.adj.nth(u).length() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:73: external_body - #[verifier::external_body]
+        74 |         fn new(n: N) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:91: external_body - #[verifier::external_body]
+        92 |         fn num_vertices(&self) -> (result: N)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:98: external_body - #[verifier::external_body]
+        99 |         fn num_edges(&self) -> (result: N) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:110: external_body - #[verifier::external_body]
+       111 |         fn has_edge(&self, u: N, v: N) -> (result: B)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:128: external_body - #[verifier::external_body]
+       129 |         fn out_neighbors(&self, u: N) -> (result: ArraySeqMtPerS<N>)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:135: external_body - #[verifier::external_body]
+       136 |         fn out_degree(&self, u: N) -> (result: N)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphMtPer.rs:145: error: bare_impl - impl AdjSeqGraphMtPer { — `impl AdjSeqGraphMtPer` without trait; file defines [AdjSeqGraphMtPerTrait]
+       146 |         /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
+       147 |         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential double loop; span not parallel despite Mt type.
    Holes: 6 total
       6 × external_body
+   Errors: 1 bare impl(s) in file with trait definition
 ❌ Chap52/AdjSeqGraphStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStEph.rs:66: external_body - #[verifier::external_body]
         67 |         fn new(n: N) -> Self {
@@ -1168,12 +1342,12 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
         29 |     pub fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>> {
 /home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:57: external_body - #[verifier::external_body]
         58 |     fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:73: external_body - #[verifier::external_body]
-        74 |     fn dfs_finish_order(
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:97: external_body - #[verifier::external_body]
-        98 |     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> ArraySeqStEphS<ArraySeqStEphS<N>> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:115: external_body - #[verifier::external_body]
-       116 |     fn dfs_reach(
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:74: external_body - #[verifier::external_body]
+        75 |     fn dfs_finish_order(
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:98: external_body - #[verifier::external_body]
+        99 |     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> ArraySeqStEphS<ArraySeqStEphS<N>> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:116: external_body - #[verifier::external_body]
+       117 |     fn dfs_reach(
    Holes: 5 total
       5 × external_body
 ❌ Chap55/SCCStPer.rs
@@ -1181,72 +1355,88 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
         29 |     pub fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>> {
 /home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:53: external_body - #[verifier::external_body]
         54 |     fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:71: external_body - #[verifier::external_body]
-        72 |     fn dfs_finish_order(
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:99: external_body - #[verifier::external_body]
-       100 |     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> ArraySeqStPerS<ArraySeqStPerS<N>> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:117: external_body - #[verifier::external_body]
-       118 |     fn dfs_reach(
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:72: external_body - #[verifier::external_body]
+        73 |     fn dfs_finish_order(
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:100: external_body - #[verifier::external_body]
+       101 |     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> ArraySeqStPerS<ArraySeqStPerS<N>> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:118: external_body - #[verifier::external_body]
+       119 |     fn dfs_reach(
    Holes: 5 total
       5 × external_body
 ❌ Chap55/TopoSortStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:27: external_body - #[verifier::external_body]
         28 |     pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> Option<AVLTreeSeqStEphS<N>> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:48: external_body - #[verifier::external_body]
-        49 |     pub fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:64: external_body - #[verifier::external_body]
-        65 |     fn dfs_finish_order_cycle_detect(
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:97: external_body - #[verifier::external_body]
-        98 |     fn dfs_finish_order(
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:49: external_body - #[verifier::external_body]
+        50 |     pub fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:66: external_body - #[verifier::external_body]
+        67 |     fn dfs_finish_order_cycle_detect(
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:99: external_body - #[verifier::external_body]
+       100 |     fn dfs_finish_order(
    Holes: 4 total
       4 × external_body
 ❌ Chap55/TopoSortStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:28: external_body - #[verifier::external_body]
         29 |     pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> Option<AVLTreeSeqStPerS<N>> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:54: external_body - #[verifier::external_body]
-        55 |     pub fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:72: external_body - #[verifier::external_body]
-        73 |     fn dfs_finish_order_cycle_detect(
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:112: external_body - #[verifier::external_body]
-       113 |     fn dfs_finish_order(
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:55: external_body - #[verifier::external_body]
+        56 |     pub fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:74: external_body - #[verifier::external_body]
+        75 |     fn dfs_finish_order_cycle_detect(
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:114: external_body - #[verifier::external_body]
+       115 |     fn dfs_finish_order(
    Holes: 4 total
       4 × external_body
 ❌ Chap56/AllPairsResultStEphFloat.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:84: external_body - #[verifier::external_body]
-        85 |         pub fn new(n: usize) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:106: external_body - #[verifier::external_body]
-       107 |         pub fn get_distance(&self, u: usize, v: usize) -> OrderedF64 {
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:117: external_body - #[verifier::external_body]
-       118 |         pub fn set_distance(&mut self, u: usize, v: usize, dist: OrderedF64) {
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:129: external_body - #[verifier::external_body]
-       130 |         pub fn get_predecessor(&self, u: usize, v: usize) -> Option<usize> {
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:141: external_body - #[verifier::external_body]
-       142 |         pub fn set_predecessor(&mut self, u: usize, v: usize, pred: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:153: external_body - #[verifier::external_body]
-       154 |         pub fn is_reachable(&self, u: usize, v: usize) -> bool { self.get_distance(u, v).is_finite() }
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:160: external_body - #[verifier::external_body]
-       161 |         pub fn extract_path(&self, u: usize, v: usize) -> Option<ArraySeqStPerS<usize>> {
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:86: external_body - #[verifier::external_body]
+        87 |         fn new(n: usize) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:111: external_body - #[verifier::external_body]
+       112 |         fn get_distance(&self, u: usize, v: usize) -> (dist: OrderedF64)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:126: external_body - #[verifier::external_body]
+       127 |         fn set_distance(&mut self, u: usize, v: usize, dist: OrderedF64)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:142: external_body - #[verifier::external_body]
+       143 |         fn get_predecessor(&self, u: usize, v: usize) -> (result: Option<usize>)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:159: external_body - #[verifier::external_body]
+       160 |         fn set_predecessor(&mut self, u: usize, v: usize, pred: usize)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:175: external_body - #[verifier::external_body]
+       176 |         fn is_reachable(&self, u: usize, v: usize) -> (result: bool) { self.get_distance(u, v).is_finite() }
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:178: external_body - #[verifier::external_body]
+       179 |         fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
    Holes: 7 total
       7 × external_body
-✓ Chap56/AllPairsResultStEphInt.rs
+❌ Chap56/AllPairsResultStEphInt.rs
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphInt.rs:44: external_body - #[verifier::external_body]
+        45 |         fn new(n: usize) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphInt.rs:128: external_body - #[verifier::external_body]
+       129 |         fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
+   Holes: 2 total
+      2 × external_body
 ❌ Chap56/AllPairsResultStPerFloat.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:83: external_body - #[verifier::external_body]
-        84 |         pub fn new(n: usize) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:100: external_body - #[verifier::external_body]
-       101 |         pub fn get_distance(&self, u: usize, v: usize) -> OrderedF64 {
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:111: external_body - #[verifier::external_body]
-       112 |         pub fn set_distance(self, u: usize, v: usize, dist: OrderedF64) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:127: external_body - #[verifier::external_body]
-       128 |         pub fn get_predecessor(&self, u: usize, v: usize) -> Option<usize> {
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:139: external_body - #[verifier::external_body]
-       140 |         pub fn set_predecessor(self, u: usize, v: usize, pred: usize) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:155: external_body - #[verifier::external_body]
-       156 |         pub fn is_reachable(&self, u: usize, v: usize) -> bool { self.get_distance(u, v).is_finite() }
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:162: external_body - #[verifier::external_body]
-       163 |         pub fn extract_path(&self, u: usize, v: usize) -> Option<ArraySeqStPerS<usize>> {
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:85: external_body - #[verifier::external_body]
+        86 |         fn new(n: usize) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:105: external_body - #[verifier::external_body]
+       106 |         fn get_distance(&self, u: usize, v: usize) -> (dist: OrderedF64)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:120: external_body - #[verifier::external_body]
+       121 |         fn set_distance(self, u: usize, v: usize, dist: OrderedF64) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:140: external_body - #[verifier::external_body]
+       141 |         fn get_predecessor(&self, u: usize, v: usize) -> (result: Option<usize>)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:157: external_body - #[verifier::external_body]
+       158 |         fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:177: external_body - #[verifier::external_body]
+       178 |         fn is_reachable(&self, u: usize, v: usize) -> (result: bool) { self.get_distance(u, v).is_finite() }
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:180: external_body - #[verifier::external_body]
+       181 |         fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
    Holes: 7 total
       7 × external_body
-✓ Chap56/AllPairsResultStPerInt.rs
+❌ Chap56/AllPairsResultStPerInt.rs
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerInt.rs:43: external_body - #[verifier::external_body]
+        44 |         fn new(n: usize) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerInt.rs:71: external_body - #[verifier::external_body]
+        72 |         fn set_distance(self, u: usize, v: usize, dist: i64) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerInt.rs:104: external_body - #[verifier::external_body]
+       105 |         fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerInt.rs:123: external_body - #[verifier::external_body]
+       124 |         fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
+   Holes: 4 total
+      4 × external_body
 ❌ Chap56/Example56_1.rs
 /home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:45: external_body - #[verifier::external_body]
         46 |     pub fn example_path_weight_int() {
@@ -1286,41 +1476,59 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Holes: 4 total
       4 × external_body
 ❌ Chap56/SSSPResultStEphFloat.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:82: external_body - #[verifier::external_body]
-        83 |         pub fn new(n: usize, source: usize) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:98: external_body - #[verifier::external_body]
-        99 |         pub fn get_distance(&self, v: usize) -> OrderedF64 {
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:109: external_body - #[verifier::external_body]
-       110 |         pub fn set_distance(&mut self, v: usize, dist: OrderedF64) {
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:119: external_body - #[verifier::external_body]
-       120 |         pub fn get_predecessor(&self, v: usize) -> Option<usize> {
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:131: external_body - #[verifier::external_body]
-       132 |         pub fn set_predecessor(&mut self, v: usize, pred: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:141: external_body - #[verifier::external_body]
-       142 |         pub fn is_reachable(&self, v: usize) -> bool { self.get_distance(v).is_finite() }
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:148: external_body - #[verifier::external_body]
-       149 |         pub fn extract_path(&self, v: usize) -> Option<ArraySeqStPerS<usize>> {
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:85: external_body - #[verifier::external_body]
+        86 |         fn new(n: usize, source: usize) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:106: external_body - #[verifier::external_body]
+       107 |         fn get_distance(&self, v: usize) -> (dist: OrderedF64)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:121: external_body - #[verifier::external_body]
+       122 |         fn set_distance(&mut self, v: usize, dist: OrderedF64)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:137: external_body - #[verifier::external_body]
+       138 |         fn get_predecessor(&self, v: usize) -> (result: Option<usize>)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:154: external_body - #[verifier::external_body]
+       155 |         fn set_predecessor(&mut self, v: usize, pred: usize)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:170: external_body - #[verifier::external_body]
+       171 |         fn is_reachable(&self, v: usize) -> (result: bool) { self.get_distance(v).is_finite() }
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:173: external_body - #[verifier::external_body]
+       174 |         fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
    Holes: 7 total
       7 × external_body
-✓ Chap56/SSSPResultStEphInt.rs
+❌ Chap56/SSSPResultStEphInt.rs
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphInt.rs:45: external_body - #[verifier::external_body]
+        46 |         fn new(n: usize, source: usize) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphInt.rs:70: external_body - #[verifier::external_body]
+        71 |         fn set_distance(&mut self, v: usize, dist: i64)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphInt.rs:91: external_body - #[verifier::external_body]
+        92 |         fn set_predecessor(&mut self, v: usize, pred: usize)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphInt.rs:108: external_body - #[verifier::external_body]
+       109 |         fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
+   Holes: 4 total
+      4 × external_body
 ❌ Chap56/SSSPResultStPerFloat.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:81: external_body - #[verifier::external_body]
-        82 |         pub fn new(n: usize, source: usize) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:95: external_body - #[verifier::external_body]
-        96 |         pub fn get_distance(&self, v: usize) -> OrderedF64 {
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:106: external_body - #[verifier::external_body]
-       107 |         pub fn set_distance(self, v: usize, dist: OrderedF64) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:121: external_body - #[verifier::external_body]
-       122 |         pub fn get_predecessor(&self, v: usize) -> Option<usize> {
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:133: external_body - #[verifier::external_body]
-       134 |         pub fn set_predecessor(self, v: usize, pred: usize) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:148: external_body - #[verifier::external_body]
-       149 |         pub fn is_reachable(&self, v: usize) -> bool { self.get_distance(v).is_finite() }
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:155: external_body - #[verifier::external_body]
-       156 |         pub fn extract_path(&self, v: usize) -> Option<ArraySeqStPerS<usize>> {
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:84: external_body - #[verifier::external_body]
+        85 |         fn new(n: usize, source: usize) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:103: external_body - #[verifier::external_body]
+       104 |         fn get_distance(&self, v: usize) -> (dist: OrderedF64)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:118: external_body - #[verifier::external_body]
+       119 |         fn set_distance(self, v: usize, dist: OrderedF64) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:139: external_body - #[verifier::external_body]
+       140 |         fn get_predecessor(&self, v: usize) -> (result: Option<usize>)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:156: external_body - #[verifier::external_body]
+       157 |         fn set_predecessor(self, v: usize, pred: usize) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:177: external_body - #[verifier::external_body]
+       178 |         fn is_reachable(&self, v: usize) -> (result: bool) { self.get_distance(v).is_finite() }
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:180: external_body - #[verifier::external_body]
+       181 |         fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
    Holes: 7 total
       7 × external_body
-✓ Chap56/SSSPResultStPerInt.rs
+❌ Chap56/SSSPResultStPerInt.rs
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerInt.rs:78: external_body - #[verifier::external_body]
+        79 |         fn set_distance(self, v: usize, dist: i64) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerInt.rs:102: external_body - #[verifier::external_body]
+       103 |         fn set_predecessor(self, v: usize, pred: usize) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerInt.rs:122: external_body - #[verifier::external_body]
+       123 |         fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
+   Holes: 3 total
+      3 × external_body
 ❌ Chap57/DijkstraStEphFloat.rs
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphFloat.rs:70: external_body - #[verifier::external_body]
         71 |     fn pq_entry_new(dist: OrderedF64, vertex: usize) -> PQEntry { PQEntry { dist, vertex } }
@@ -1345,21 +1553,25 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
       4 × external_body
 ❌ Chap57/StackStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:80: external_body - #[verifier::external_body]
-        81 |         pub fn new() -> Self { StackStEph { elements: Vec::new() } }
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:86: external_body - #[verifier::external_body]
-        87 |         pub fn push(&mut self, item: T) { self.elements.push(item); }
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:93: external_body - #[verifier::external_body]
-        94 |         pub fn pop(&mut self) -> Option<T> { self.elements.pop() }
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:100: external_body - #[verifier::external_body]
-       101 |         pub fn peek(&self) -> Option<&T> { self.elements.last() }
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:106: external_body - #[verifier::external_body]
-       107 |         pub fn is_empty(&self) -> bool { self.elements.is_empty() }
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:112: external_body - #[verifier::external_body]
-       113 |         pub fn size(&self) -> N { self.elements.len() }
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:121: external_body - #[verifier::external_body]
-       122 |         fn default() -> Self { Self::new() }
+        81 |         pub fn new() -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:88: external_body - #[verifier::external_body]
+        89 |         pub fn push(&mut self, item: T)
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:97: external_body - #[verifier::external_body]
+        98 |         pub fn pop(&mut self) -> (result: Option<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:108: external_body - #[verifier::external_body]
+       109 |         pub fn peek(&self) -> (result: Option<&T>)
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:118: external_body - #[verifier::external_body]
+       119 |         pub fn is_empty(&self) -> (result: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:126: external_body - #[verifier::external_body]
+       127 |         pub fn size(&self) -> (result: N)
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:137: external_body - #[verifier::external_body]
+       138 |         fn default() -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:76: error: bare_impl - impl<T: StT> StackStEph<T> { — `impl StackStEph` without trait; file defines [StackStEphTrait]
+        77 |         /// Creates a new empty stack.
+        78 |         /// - APAS: Work Θ(1), Span Θ(1)
    Holes: 7 total
       7 × external_body
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ Chap58/BellmanFordStEphFloat.rs
 ✓ Chap58/BellmanFordStEphInt.rs
 ✓ Chap59/JohnsonMtEphFloat.rs
@@ -1889,7 +2101,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
         44 |     pub proof fn assert_unchecked(b: bool)
 /home/milnes/projects/APAS-VERUS/src/experiments/pervasives.rs:59: external_body - #[verifier::external_body]
         60 |     pub proof fn claim_anything<A>(a: A, b: A)
-/home/milnes/projects/APAS-VERUS/src/experiments/pervasives.rs:89: assume(false) - assume(false);
+/home/milnes/projects/APAS-VERUS/src/experiments/pervasives.rs:89: assume(false) - assume(false); — needs diverge(); use `assume(false); diverge()`
         86 |     pub proof fn using_assume_proves_false()
             ...
         87 |         ensures false,
@@ -2418,9 +2630,13 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
        132 |     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:140: external_body - #[verifier::external_body]
        141 |     fn eq(&self, other: &Self) -> bool { self.inner == other.inner }
+/home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_with_view_plus.rs:58: error: bare_impl - impl<Key: View + Eq + Hash + Clone> HashSetWithViewPlus<Key> { — `impl HashSetWithViewPlus` without trait; file defines [HashSetWithViewPlusTrait]
+        59 |     #[verifier::external_body]
+        60 |     pub fn new() -> (hash_set: Self)
    Holes: 10 total
       1 × admit()
       9 × external_body
+   Errors: 1 bare impl(s) in file with trait definition
    Proof functions: 1 total (0 clean, 1 holed)
 ❌ vstdplus/hashed_checked_u32.rs
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hashed_checked_u32.rs:30: external_body - #[verifier::external_body]
@@ -2585,8 +2801,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   245 clean (no holes)
-   125 holed (contains holes)
+   244 clean (no holes)
+   126 holed (contains holes)
    370 total
 
 Proof Functions:
@@ -2594,19 +2810,23 @@ Proof Functions:
    63 holed
    466 total
 
-Holes Found: 533 total
-   8 × assume(false)
+Holes Found: 539 total
+   1 × assume(false)
    92 × assume()
    1 × Tracked::assume_new()
    11 × assume_specification
    48 × admit()
    2 × unsafe impl
    5 × unsafe {}
-   359 × external_body
+   372 × external_body
    1 × external_trait_specification
    2 × external_type_specification
    1 × external_trait_extension
    3 × external
+
+Errors: 60 bare impl(s) in files with trait definitions
+
+Info: 7 assume(false); diverge() idiom(s) (valid non-termination)
 
 Trusted Axioms (with holes): 5 total
    5 × axiom fn with holes in body

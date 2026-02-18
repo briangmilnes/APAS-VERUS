@@ -97,12 +97,11 @@ pub mod TopDownDPMtPer {
                         // Characters match: no edit needed
                         self.med_recursive_concurrent(i - 1, j - 1)
                     } else {
-                        // Characters don't match: try insert, delete, or substitute
+                        // Characters don't match: insert or delete (APAS Algorithm 51.4)
                         let insert_cost = 1 + self.med_recursive_concurrent(i, j - 1);
                         let delete_cost = 1 + self.med_recursive_concurrent(i - 1, j);
-                        let substitute_cost = 1 + self.med_recursive_concurrent(i - 1, j - 1);
 
-                        insert_cost.min(delete_cost).min(substitute_cost)
+                        insert_cost.min(delete_cost)
                     }
                 }
             };
@@ -150,22 +149,18 @@ pub mod TopDownDPMtPer {
                         // Characters match: no edit needed
                         self.med_recursive_parallel(i - 1, j - 1)
                     } else {
-                        // Characters don't match: explore branches in parallel
+                        // Characters don't match: insert or delete in parallel (APAS Algorithm 51.4)
                         let self_clone1 = self.clone();
                         let self_clone2 = self.clone();
-                        let self_clone3 = self.clone();
 
                         let handle1 = thread::spawn(move || 1 + self_clone1.med_recursive_parallel(i, j - 1));
 
                         let handle2 = thread::spawn(move || 1 + self_clone2.med_recursive_parallel(i - 1, j));
 
-                        let handle3 = thread::spawn(move || 1 + self_clone3.med_recursive_parallel(i - 1, j - 1));
-
                         let insert_cost = handle1.join().unwrap();
                         let delete_cost = handle2.join().unwrap();
-                        let substitute_cost = handle3.join().unwrap();
 
-                        insert_cost.min(delete_cost).min(substitute_cost)
+                        insert_cost.min(delete_cost)
                     }
                 }
             };

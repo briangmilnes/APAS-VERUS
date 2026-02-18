@@ -16,7 +16,6 @@ pub mod ConnectivityMtEph {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
 
-    #[cfg(not(verus_keep_ghost))]
     use std::collections::HashMap;
     use std::hash::Hash;
     #[cfg(not(verus_keep_ghost))]
@@ -34,23 +33,25 @@ pub mod ConnectivityMtEph {
         pub trait ConnectivityMtEphTrait {
             /// Count connected components using parallel star contraction
             /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
-            fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>) -> N;
+            fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N;
 
             /// Find connected components using parallel star contraction
             /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
             fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
                 graph: &UnDirGraphMtEph<V>,
-            ) -> SetStEph<SetStEph<V>>;
+                seed: u64,
+            ) -> (SetStEph<V>, HashMap<V, V>);
 
             /// Count components using higher-order function approach
             /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
-            fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>) -> N;
+            fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N;
 
             /// Find components using higher-order function approach
             /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
             fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
                 graph: &UnDirGraphMtEph<V>,
-            ) -> SetStEph<SetStEph<V>>;
+                seed: u64,
+            ) -> (SetStEph<V>, HashMap<V, V>);
         }
     } // verus!
 

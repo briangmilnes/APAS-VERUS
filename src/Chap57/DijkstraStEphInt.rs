@@ -20,7 +20,7 @@ pub mod DijkstraStEphInt {
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
     use crate::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
     use crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::*;
-    use crate::Chap56::SSSPResultStEphInt::SSSPResultStEphInt::SSSPResultStEphInt;
+    use crate::Chap56::SSSPResultStEphInt::SSSPResultStEphInt::*;
     use crate::Types::Types::*;
 
     verus! {

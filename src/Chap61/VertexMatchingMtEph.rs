@@ -27,7 +27,7 @@ pub mod VertexMatchingMtEph {
         pub trait VertexMatchingMtEphTrait {
             /// Parallel vertex matching using randomized symmetry breaking
             /// APAS: Work O(|E|), Span O(lg |V|)
-            fn parallel_matching_mt<V: StT + MtT + Hash + 'static>(graph: &UnDirGraphMtEph<V>) -> SetStEph<Edge<V>>;
+            fn parallel_matching_mt<V: StT + MtT + Hash + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<Edge<V>>;
         }
     } // verus!
 

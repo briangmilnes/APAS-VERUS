@@ -58,28 +58,32 @@ pub mod SSSPResultStPerFloat {
 
     /// Trait for single-source shortest path result operations
     pub trait SSSPResultStPerFloatTrait: Sized {
-        /// Create new SSSP result
-        /// APAS: Work Θ(n), Span Θ(n)
-        fn new(n: N, source: N)      -> Self;
+        fn new(n: usize, source: usize) -> (result: Self)
+            requires source < n;
 
-        /// Get distance to vertex
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn distance(&self, v: N)     -> Option<OrderedF64>;
+        fn get_distance(&self, v: usize) -> (dist: OrderedF64);
 
-        /// Check if vertex is reachable
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn is_reachable(&self, v: N) -> B;
+        fn set_distance(self, v: usize, dist: OrderedF64) -> (result: Self);
+
+        fn get_predecessor(&self, v: usize) -> (result: Option<usize>);
+
+        fn set_predecessor(self, v: usize, pred: usize) -> (result: Self);
+
+        fn is_reachable(&self, v: usize) -> (result: bool);
+
+        fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);
     }
 
     // 9. impls
 
-    impl SSSPResultStPerFloat {
-        /// Creates a new SSSP result structure initialized for n vertices from given source.
-        /// All distances are set to UNREACHABLE, all predecessors to NO_PREDECESSOR.
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — agrees with APAS.
+    impl SSSPResultStPerFloatTrait for SSSPResultStPerFloat {
         #[verifier::external_body]
-        pub fn new(n: usize, source: usize) -> Self {
+        fn new(n: usize, source: usize) -> (result: Self)
+            ensures
+                result.distances@.len() == n,
+                result.predecessors@.len() == n,
+                result.source == source,
+        {
             let distances = ArraySeqStPerS::tabulate(&|i| if i == source { OrderedFloat(0.0) } else { UNREACHABLE }, n);
             let predecessors = ArraySeqStPerS::tabulate(&|_| NO_PREDECESSOR, n);
             SSSPResultStPerFloat {
@@ -89,22 +93,26 @@ pub mod SSSPResultStPerFloat {
             }
         }
 
-        /// Returns the distance from source to vertex v.
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         #[verifier::external_body]
-        pub fn get_distance(&self, v: usize) -> OrderedF64 {
+        fn get_distance(&self, v: usize) -> (dist: OrderedF64)
+            ensures
+                v < self.distances@.len() ==> dist == self.distances@[v as int],
+                v >= self.distances@.len() ==> dist == UNREACHABLE,
+        {
             if v >= self.distances.length() {
                 return UNREACHABLE;
             }
             *self.distances.nth(v)
         }
 
-        /// Sets the distance from source to vertex v, returning a new structure.
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — persistent array update copies path to root.
         #[verifier::external_body]
-        pub fn set_distance(self, v: usize, dist: OrderedF64) -> Self {
+        fn set_distance(self, v: usize, dist: OrderedF64) -> (result: Self)
+            ensures
+                v < self.distances@.len() ==> result.distances@ == self.distances@.update(v as int, dist),
+                v >= self.distances@.len() ==> result.distances@ == self.distances@,
+                result.predecessors@ == self.predecessors@,
+                result.source == self.source,
+        {
             if v >= self.distances.length() {
                 return self;
             }
@@ -115,11 +123,13 @@ pub mod SSSPResultStPerFloat {
             }
         }
 
-        /// Returns the predecessor of vertex v in the shortest path from source.
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — array lookup.
         #[verifier::external_body]
-        pub fn get_predecessor(&self, v: usize) -> Option<usize> {
+        fn get_predecessor(&self, v: usize) -> (result: Option<usize>)
+            ensures
+                v >= self.predecessors@.len() ==> result.is_none(),
+                v < self.predecessors@.len() && self.predecessors@[v as int] == NO_PREDECESSOR ==> result.is_none(),
+                v < self.predecessors@.len() && self.predecessors@[v as int] != NO_PREDECESSOR ==> result == Some(self.predecessors@[v as int]),
+        {
             if v >= self.predecessors.length() {
                 return None;
             }
@@ -127,11 +137,14 @@ pub mod SSSPResultStPerFloat {
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
-        /// Sets the predecessor of vertex v, returning a new structure.
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — persistent array update copies path to root.
         #[verifier::external_body]
-        pub fn set_predecessor(self, v: usize, pred: usize) -> Self {
+        fn set_predecessor(self, v: usize, pred: usize) -> (result: Self)
+            ensures
+                v < self.predecessors@.len() ==> result.predecessors@ == self.predecessors@.update(v as int, pred),
+                v >= self.predecessors@.len() ==> result.predecessors@ == self.predecessors@,
+                result.distances@ == self.distances@,
+                result.source == self.source,
+        {
             if v >= self.predecessors.length() {
                 return self;
             }
@@ -142,18 +155,11 @@ pub mod SSSPResultStPerFloat {
             }
         }
 
-        /// Checks if vertex v is reachable from source.
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         #[verifier::external_body]
-        pub fn is_reachable(&self, v: usize) -> bool { self.get_distance(v).is_finite() }
+        fn is_reachable(&self, v: usize) -> (result: bool) { self.get_distance(v).is_finite() }
 
-        /// Extracts the shortest path from source to vertex v by following predecessors.
-        /// Returns None if v is unreachable, otherwise returns the path as a sequence.
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — follows k predecessor links.
         #[verifier::external_body]
-        pub fn extract_path(&self, v: usize) -> Option<ArraySeqStPerS<usize>> {
+        fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
             if !self.is_reachable(v) {
                 return None;
             }

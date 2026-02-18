@@ -19,38 +19,69 @@ pub mod SSSPResultStPerInt {
         pub source: usize,
     }
 
-    impl SSSPResultStPerInt {
-        pub fn get_distance(&self, v: usize) -> (dist: i64) {
+    // 8. traits
+
+    pub trait SSSPResultStPerIntTrait: Sized {
+        fn new(n: usize, source: usize) -> (result: Self)
+            requires source < n;
+
+        fn get_distance(&self, v: usize) -> (dist: i64);
+
+        fn set_distance(self, v: usize, dist: i64) -> (result: Self);
+
+        fn get_predecessor(&self, v: usize) -> (pred: Option<usize>);
+
+        fn set_predecessor(self, v: usize, pred: usize) -> (result: Self);
+
+        fn is_reachable(&self, v: usize) -> (b: bool);
+
+        fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);
+    }
+
+    // 9. impls
+
+    impl SSSPResultStPerIntTrait for SSSPResultStPerInt {
+        fn new(n: usize, source: usize) -> (result: Self)
+            ensures
+                result.distances@.len() == n as int,
+                result.predecessors@.len() == n as int,
+                result.source == source,
+        {
+            let distances = ArraySeqStPerS::tabulate(
+                &(|i: usize| -> (r: i64)
+                    requires i < n
+                    ensures r == (if i == source { 0i64 } else { UNREACHABLE })
+                {
+                    if i == source { 0i64 } else { UNREACHABLE }
+                }),
+                n,
+            );
+            let predecessors = ArraySeqStPerS::tabulate(
+                &(|_i: usize| -> (r: usize)
+                    ensures r == NO_PREDECESSOR
+                {
+                    NO_PREDECESSOR
+                }),
+                n,
+            );
+            SSSPResultStPerInt { distances, predecessors, source }
+        }
+
+        fn get_distance(&self, v: usize) -> (dist: i64) {
             if v >= self.distances.length() {
                 return UNREACHABLE;
             }
             *self.distances.nth(v)
         }
 
-        pub fn get_predecessor(&self, v: usize) -> (pred: Option<usize>) {
-            if v >= self.predecessors.length() {
-                return None;
-            }
-            let pred = *self.predecessors.nth(v);
-            if pred == NO_PREDECESSOR { None } else { Some(pred) }
-        }
-
-        pub fn is_reachable(&self, v: usize) -> (b: bool) {
-            self.get_distance(v) != UNREACHABLE
-        }
-    }
-
-    } // verus!
-
-    #[cfg(not(verus_keep_ghost))]
-    impl SSSPResultStPerInt {
-        pub fn new(n: usize, source: usize) -> Self {
-            let distances = ArraySeqStPerS::tabulate(&|i| if i == source { 0 } else { UNREACHABLE }, n);
-            let predecessors = ArraySeqStPerS::tabulate(&|_| NO_PREDECESSOR, n);
-            SSSPResultStPerInt { distances, predecessors, source }
-        }
-
-        pub fn set_distance(self, v: usize, dist: i64) -> Self {
+        #[verifier::external_body]
+        fn set_distance(self, v: usize, dist: i64) -> (result: Self)
+            ensures
+                v < self.distances@.len() ==> result.distances@ == self.distances@.update(v as int, dist),
+                v >= self.distances@.len() ==> result.distances@ == self.distances@,
+                result.predecessors@ == self.predecessors@,
+                result.source == self.source,
+        {
             if v >= self.distances.length() { return self; }
             SSSPResultStPerInt {
                 distances: ArraySeqStPerS::update(&self.distances, v, dist),
@@ -59,7 +90,22 @@ pub mod SSSPResultStPerInt {
             }
         }
 
-        pub fn set_predecessor(self, v: usize, pred: usize) -> Self {
+        fn get_predecessor(&self, v: usize) -> (pred: Option<usize>) {
+            if v >= self.predecessors.length() {
+                return None;
+            }
+            let pred = *self.predecessors.nth(v);
+            if pred == NO_PREDECESSOR { None } else { Some(pred) }
+        }
+
+        #[verifier::external_body]
+        fn set_predecessor(self, v: usize, pred: usize) -> (result: Self)
+            ensures
+                v < self.predecessors@.len() ==> result.predecessors@ == self.predecessors@.update(v as int, pred),
+                v >= self.predecessors@.len() ==> result.predecessors@ == self.predecessors@,
+                result.distances@ == self.distances@,
+                result.source == self.source,
+        {
             if v >= self.predecessors.length() { return self; }
             SSSPResultStPerInt {
                 distances: self.distances,
@@ -68,7 +114,12 @@ pub mod SSSPResultStPerInt {
             }
         }
 
-        pub fn extract_path(&self, v: usize) -> Option<ArraySeqStPerS<usize>> {
+        fn is_reachable(&self, v: usize) -> (b: bool) {
+            self.get_distance(v) != UNREACHABLE
+        }
+
+        #[verifier::external_body]
+        fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
             if !self.is_reachable(v) { return None; }
             let mut path = Vec::new();
             let mut current = v;
@@ -83,4 +134,6 @@ pub mod SSSPResultStPerInt {
             Some(ArraySeqStPerS::from_vec(path))
         }
     }
+
+    } // verus!
 }

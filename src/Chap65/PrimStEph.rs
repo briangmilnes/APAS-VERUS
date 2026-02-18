@@ -15,7 +15,7 @@ pub mod PrimStEph {
     #[cfg(not(verus_keep_ghost))]
     use std::cmp::Ordering;
     #[cfg(not(verus_keep_ghost))]
-    use std::collections::{HashMap, HashSet};
+    use std::collections::HashSet;
     #[cfg(not(verus_keep_ghost))]
     use std::fmt::{Display, Formatter};
     #[cfg(not(verus_keep_ghost))]
@@ -95,7 +95,11 @@ pub mod PrimStEph {
     /// Priority: p(v) = min_{x∈X} w(x,v)
     ///
     /// - APAS: Work O(m lg n), Span O(m lg n)
-    /// - Claude-Opus-4.6: Work O(m lg n), Span O(m lg n) — agrees with APAS; sequential, uses BinaryHeapPQ
+    /// - Claude-Opus-4.6: Work O(m² lg n), Span O(m² lg n) — the APAS bound assumes
+    ///   O(degree) adjacency-list lookups, but LabUnDirGraphStEph stores edges in a flat
+    ///   set, so ng() and get_edge_label() each cost O(m) per call. Total neighbor/weight
+    ///   work across all vertices is O(nm) = O(m²) in a dense graph. With an adjacency-list
+    ///   graph representation this would be O(m lg n) as textbook states.
     #[cfg(not(verus_keep_ghost))]
     pub fn prim_mst<V: StT + Hash + Ord + Display>(
         graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
@@ -104,11 +108,9 @@ pub mod PrimStEph {
         let mut mst_edges = SetLit![];
         let mut visited = HashSet::<V>::new();
 
-        // Priority queue
         let mut pq = BinaryHeapPQ::<PQEntry<V>>::singleton(pq_entry_new(OrderedFloat(0.0), start.clone(), None));
 
         while !pq.is_empty() {
-            // Extract minimum priority vertex
             let (new_pq, entry_opt) = pq.delete_min();
             pq = new_pq;
 
@@ -126,63 +128,28 @@ pub mod PrimStEph {
 
             let _ = visited.insert(u.clone());
 
-            // Add edge to MST (except for start vertex)
             if let Some(parent_v) = parent_u {
-                if let Some(weight) = get_edge_weight(graph, &parent_v, &u) {
+                if let Some(weight) = graph.get_edge_label(&parent_v, &u) {
                     let edge = if parent_v < u {
-                        LabEdge(parent_v, u.clone(), weight)
+                        LabEdge(parent_v, u.clone(), *weight)
                     } else {
-                        LabEdge(u.clone(), parent_v, weight)
+                        LabEdge(u.clone(), parent_v, *weight)
                     };
                     let _ = mst_edges.insert(edge);
                 }
             }
 
-            // Update priorities of neighbors
-            let neighbors = get_neighbors(graph, &u);
+            let neighbors = graph.ng(&u);
             for v in neighbors.iter() {
                 if !visited.contains(v) {
-                    if let Some(weight) = get_edge_weight(graph, &u, v) {
-                        pq = pq.insert(pq_entry_new(weight, v.clone(), Some(u.clone())));
+                    if let Some(weight) = graph.get_edge_label(&u, v) {
+                        pq = pq.insert(pq_entry_new(*weight, v.clone(), Some(u.clone())));
                     }
                 }
             }
         }
 
         mst_edges
-    }
-
-    /// - APAS: (no cost stated) — implicit in priority-first search
-    /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges
-    #[cfg(not(verus_keep_ghost))]
-    fn get_neighbors<V: StT + Hash + Ord>(graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>, v: &V) -> SetStEph<V> {
-        let mut neighbors = SetLit![];
-        for edge in graph.labeled_edges().iter() {
-            let LabEdge(a, b, _) = edge;
-            if a == v {
-                let _ = neighbors.insert(b.clone());
-            } else if b == v {
-                let _ = neighbors.insert(a.clone());
-            }
-        }
-        neighbors
-    }
-
-    /// - APAS: (no cost stated) — implicit in priority-first search
-    /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges
-    #[cfg(not(verus_keep_ghost))]
-    fn get_edge_weight<V: StT + Hash + Ord>(
-        graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
-        u: &V,
-        v: &V,
-    ) -> Option<OrderedFloat<f64>> {
-        for edge in graph.labeled_edges().iter() {
-            let LabEdge(a, b, w) = edge;
-            if (a == u && b == v) || (a == v && b == u) {
-                return Some(*w);
-            }
-        }
-        None
     }
 
     /// Compute total MST weight.

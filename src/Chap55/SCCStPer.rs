@@ -49,7 +49,7 @@ pub mod SCCStPer {
     }
 
     /// - APAS: (no cost stated — internal helper, corresponds to decreasingFinish)
-    /// - Claude-Opus-4.6: Work O(|V|^2 + (|V| + |E|) log |V|), Span same — Vec::insert(0, ..) + AVL ops
+    /// - Claude-Opus-4.6: Work O((|V| + |E|) log |V|), Span same
     #[verifier::external_body]
     fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N> {
         let n = graph.length();
@@ -63,11 +63,12 @@ pub mod SCCStPer {
                 result = new_result;
             }
         }
+        result.reverse();
         AVLTreeSeqStPerS::from_vec(result)
     }
 
     /// - APAS: (no cost stated — internal helper)
-    /// - Claude-Opus-4.6: Work O(|V| + log |V|) per call — Vec::insert(0, ..) + AVL ops
+    /// - Claude-Opus-4.6: Work O(degree(v) + log |V|) per call
     #[verifier::external_body]
     fn dfs_finish_order(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
@@ -90,7 +91,7 @@ pub mod SCCStPer {
             result = new_result;
         }
 
-        result.insert(0, vertex);
+        result.push(vertex);
         (visited, result)
     }
 

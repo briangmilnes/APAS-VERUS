@@ -36,7 +36,7 @@ fn test_med_memoized_parallel() {
     let t = ArraySeqMtPerS::from_vec(vec!['x', 'y', 'z']);
     let dp = TopDownDPMtPerS::new(s, t);
     let result = dp.med_memoized_parallel();
-    assert_eq!(result, 3);
+    assert_eq!(result, 6); // APAS MED: insert/delete only, no substitute
 }
 
 #[test]

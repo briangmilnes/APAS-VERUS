@@ -10,8 +10,8 @@ pub mod BottomUpDPMtPer {
     // 1. module
     // 2. imports
     // 4. type definitions
-    // 8. traits
     // 9. impls
+    // 8. traits
     // 11. derive impls
     // 13. derive impls outside verus!
 
@@ -26,16 +26,43 @@ pub mod BottomUpDPMtPer {
     use crate::Types::Types::*;
 
     verus! {
-    } // verus!
 
     // 4. type definitions
-    #[derive(Clone, PartialEq, Eq)]
     pub struct BottomUpDPMtPerS {
         /// Input sequence S
         pub seq_s: ArraySeqMtPerS<char>,
         /// Input sequence T
         pub seq_t: ArraySeqMtPerS<char>,
     }
+
+    // 9. impls
+    impl BottomUpDPMtPerS {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+        pub fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> (result: Self)
+            ensures result.seq_s == s, result.seq_t == t
+        { BottomUpDPMtPerS { seq_s: s, seq_t: t } }
+
+        /// - APAS: N/A — accessor.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        pub fn s_length(&self) -> (result: usize)
+            ensures result as int == self.seq_s.spec_len()
+        { self.seq_s.length() }
+
+        /// - APAS: N/A — accessor.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        pub fn t_length(&self) -> (result: usize)
+            ensures result as int == self.seq_t.spec_len()
+        { self.seq_t.length() }
+
+        /// - APAS: N/A — accessor.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        pub fn is_empty(&self) -> (result: bool)
+            ensures result == (self.seq_s.spec_len() == 0 && self.seq_t.spec_len() == 0)
+        { self.seq_s.length() == 0usize && self.seq_t.length() == 0usize }
+    }
+
+    } // verus!
 
     // 8. traits
     /// Trait for bottom-up dynamic programming operations
@@ -49,12 +76,8 @@ pub mod BottomUpDPMtPer {
         fn solve(&self, input: &[T]) -> T;
     }
 
-    // 9. impls
+    // 9. impls (complex methods outside verus — they use Arc<Mutex<Vec<Vec<usize>>>>)
     impl BottomUpDPMtPerS {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        pub fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> Self { BottomUpDPMtPerS { seq_s: s, seq_t: t } }
-
         /// Compute minimum edit distance using parallel bottom-up diagonal pebbling (Algorithm 51.1).
         /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — diagonal parallelism.
         /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — parallel: thread::spawn per diagonal element.
@@ -62,15 +85,12 @@ pub mod BottomUpDPMtPer {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
 
-            // Create shared DP table for parallel computation
             let table = Arc::new(Mutex::new(self.initialize_base_cases()));
 
-            // Process diagonals with parallel computation within each diagonal
             for k in 1..=(s_len + t_len) {
                 self.compute_diagonal_parallel(Arc::clone(&table), k);
             }
 
-            // Extract result from bottom-right corner
             let final_table = table.lock().unwrap();
             final_table[s_len][t_len]
         }
@@ -82,10 +102,8 @@ pub mod BottomUpDPMtPer {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
 
-            // Initialize with zeros - using Vec for 2D table as Mt sequences lack method-call API
             let mut table = vec![vec![0usize; t_len + 1]; s_len + 1];
 
-            // Set base cases: empty string transformations
             for (i, row) in table.iter_mut().enumerate().take(s_len + 1) {
                 row[0] = i;
             }
@@ -106,14 +124,12 @@ pub mod BottomUpDPMtPer {
             let start = max(1, k.saturating_sub(t_len));
             let end = min(k, s_len);
 
-            // Collect diagonal positions
             let positions = (start..=end)
                 .filter_map(|i| {
                     let j = k - i;
                     if j > 0 && j <= t_len { Some((i, j)) } else { None }
                 }).collect::<Vec<(usize, usize)>>();
 
-            // Process diagonal elements in parallel
             let handles = positions
                 .into_iter()
                 .map(|(i, j)| {
@@ -127,10 +143,8 @@ pub mod BottomUpDPMtPer {
                     })
                 }).collect::<Vec<_>>();
 
-            // Collect results from all threads FIRST (without holding lock)
             let results = handles.into_iter().map(|handle| handle.join().unwrap()).collect::<Vec<(usize, usize, usize)>>();
 
-            // Then acquire lock once and write all results
             let mut table_guard = table.lock().unwrap();
             for (i, j, new_value) in results {
                 table_guard[i][j] = new_value;
@@ -153,33 +167,31 @@ pub mod BottomUpDPMtPer {
             let table_guard = table.lock().unwrap();
 
             if s_char == t_char {
-                // Characters match: take diagonal value
                 table_guard[i - 1][j - 1]
             } else {
-                // Characters don't match: take minimum of insert/delete + 1
                 let delete_cost = table_guard[i - 1][j];
                 let insert_cost = table_guard[i][j - 1];
                 1 + min(delete_cost, insert_cost)
             }
         }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn s_length(&self) -> usize { self.seq_s.length() }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn t_length(&self) -> usize { self.seq_t.length() }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn is_empty(&self) -> bool { self.seq_s.length() == 0usize && self.seq_t.length() == 0usize }
     }
 
     // 11. derive impls
+    impl Clone for BottomUpDPMtPerS {
+        fn clone(&self) -> Self {
+            BottomUpDPMtPerS { seq_s: self.seq_s.clone(), seq_t: self.seq_t.clone() }
+        }
+    }
+
+    impl PartialEq for BottomUpDPMtPerS {
+        fn eq(&self, other: &Self) -> bool {
+            self.seq_s == other.seq_s && self.seq_t == other.seq_t
+        }
+    }
+
+    impl Eq for BottomUpDPMtPerS {}
+
     impl Default for BottomUpDPMtPerS {
-        /// - APAS: N/A — infrastructure.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn default() -> Self {
             let empty_s = ArraySeqMtPerS::new(0, ' ');
             let empty_t = ArraySeqMtPerS::new(0, ' ');
@@ -189,8 +201,6 @@ pub mod BottomUpDPMtPer {
 
     // 13. derive impls outside verus!
     impl Debug for BottomUpDPMtPerS {
-        /// - APAS: N/A — infrastructure.
-        /// - Claude-Opus-4.6: Work Θ(|S|+|T|), Span Θ(|S|+|T|)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BottomUpDPMtPerS")
                 .field("seq_s", &self.seq_s)
@@ -200,8 +210,6 @@ pub mod BottomUpDPMtPer {
     }
 
     impl Display for BottomUpDPMtPerS {
-        /// - APAS: N/A — infrastructure.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(
                 f,

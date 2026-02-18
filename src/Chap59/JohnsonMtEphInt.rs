@@ -19,7 +19,8 @@ pub mod JohnsonMtEphInt {
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::*;
     use crate::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
-    use crate::Chap56::AllPairsResultStEphInt::AllPairsResultStEphInt::AllPairsResultStEphInt;
+    use crate::Chap56::AllPairsResultStEphInt::AllPairsResultStEphInt::*;
+    use crate::Chap56::SSSPResultStEphInt::SSSPResultStEphInt::*;
     use crate::Types::Types::*;
 
     #[cfg(not(verus_keep_ghost))]

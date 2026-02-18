@@ -30,7 +30,7 @@ pub mod EdgeContractionStEph {
             fn edge_contract<V: StT + Hash + Ord>(
                 graph: &UnDirGraphStEph<V>,
                 matching: &SetStEph<Edge<V>>,
-            ) -> UnDirGraphStEph<SetStEph<V>>;
+            ) -> UnDirGraphStEph<V>;
 
             /// Single round of sequential edge contraction
             /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)

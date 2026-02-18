@@ -53,7 +53,7 @@ pub mod SCCStEph {
     }
 
     /// - APAS: (no cost stated — internal helper, corresponds to decreasingFinish)
-    /// - Claude-Opus-4.6: Work O(|V|^2 + |E|), Span same — Vec::insert(0, ..) is O(|V|) per finish
+    /// - Claude-Opus-4.6: Work O(|V| + |E|), Span same
     #[verifier::external_body]
     fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N> {
         let n = graph.length();
@@ -65,11 +65,12 @@ pub mod SCCStEph {
                 dfs_finish_order(graph, &mut visited, &mut result, start);
             }
         }
+        result.reverse();
         AVLTreeSeqStEphS::from_vec(result)
     }
 
     /// - APAS: (no cost stated — internal helper)
-    /// - Claude-Opus-4.6: Work O(|V|) per finish due to Vec::insert(0, ..)
+    /// - Claude-Opus-4.6: Work O(degree(v)) per call
     #[verifier::external_body]
     fn dfs_finish_order(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
@@ -89,7 +90,7 @@ pub mod SCCStEph {
             dfs_finish_order(graph, visited, result, neighbor);
         }
 
-        result.insert(0, vertex);
+        result.push(vertex);
     }
 
     /// - APAS: (no cost stated — transpose is standard O(|V| + |E|))

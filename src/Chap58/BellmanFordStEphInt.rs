@@ -11,7 +11,7 @@ pub mod BellmanFordStEphInt {
     use std::collections::HashMap;
 
     use crate::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
-    use crate::Chap56::SSSPResultStEphInt::SSSPResultStEphInt::SSSPResultStEphInt;
+    use crate::Chap56::SSSPResultStEphInt::SSSPResultStEphInt::*;
 
     #[cfg(not(verus_keep_ghost))]
     use crate::Chap05::SetStEph::SetStEph::*;

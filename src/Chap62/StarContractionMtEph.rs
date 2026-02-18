@@ -13,7 +13,6 @@ pub mod StarContractionMtEph {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
 
-    #[cfg(not(verus_keep_ghost))]
     use std::collections::HashMap;
     use std::hash::Hash;
     #[cfg(not(verus_keep_ghost))]
@@ -29,16 +28,15 @@ pub mod StarContractionMtEph {
         pub trait StarContractionMtEphTrait {
             /// Parallel star contraction higher-order function
             /// APAS: Work O((n + m) lg n), Span O(lg² n)
-            fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, base: F, expand: G) -> R
+            fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R
             where
                 V: StT + MtT + Hash + Ord + 'static,
-                R: StT + MtT + 'static,
-                F: Fn(&SetStEph<V>) -> R + 'static,
-                G: Fn(&SetStEph<V>, &R) -> R + 'static;
+                F: Fn(&SetStEph<V>) -> R,
+                G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R;
 
             /// Contract graph to just vertices (no edges)
             /// APAS: Work O((n + m) lg n), Span O(lg² n)
-            fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>) -> SetStEph<V>;
+            fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<V>;
         }
     } // verus!
 

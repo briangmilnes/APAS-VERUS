@@ -27,7 +27,7 @@ pub mod VertexMatchingStEph {
 
             /// Sequential version of parallel matching
             /// APAS: Work Θ(|E|), Span Θ(|E|)
-            fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>;
+            fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>>;
         }
     } // verus!
 

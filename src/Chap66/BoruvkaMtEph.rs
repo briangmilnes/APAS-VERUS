@@ -34,32 +34,42 @@ pub mod BoruvkaMtEph {
             /// Find vertex bridges for parallel Borůvka's algorithm
             /// APAS: Work O(|E|), Span O(lg |E|)
             fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
-                edges: &SetStEph<LabeledEdge<V>>,
-            ) -> SetStEph<(V, LabeledEdge<V>)>;
+                edges: Arc<Vec<LabeledEdge<V>>>,
+                start: usize,
+                end: usize,
+            ) -> HashMap<V, (V, OrderedFloat<f64>, usize)>;
 
             /// Parallel bridge-based star partition
             /// APAS: Work O(|V| + |E|), Span O(lg |V|)
             fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
-                vertices: &SetStEph<V>,
-                bridges: &SetStEph<(V, LabeledEdge<V>)>,
-            ) -> SetStEph<SetStEph<V>>;
+                vertices_vec: Vec<V>,
+                bridges: HashMap<V, (V, OrderedFloat<f64>, usize)>,
+                rng: &mut StdRng,
+            ) -> (SetStEph<V>, HashMap<V, (V, OrderedFloat<f64>, usize)>);
 
             /// Parallel Borůvka's MST algorithm
             /// APAS: Work O(m log n), Span O(log² n)
             fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(
-                edges: &SetStEph<LabeledEdge<V>>,
-            ) -> SetStEph<LabeledEdge<V>>;
+                vertices_vec: Vec<V>,
+                edges_vec: Vec<LabeledEdge<V>>,
+                mst_labels: SetStEph<usize>,
+                rng: &mut StdRng,
+            ) -> SetStEph<usize>;
 
             /// Parallel Borůvka's MST with random seed
             /// APAS: Work O(m log n), Span O(log² n)
             fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
+                vertices: &SetStEph<V>,
                 edges: &SetStEph<LabeledEdge<V>>,
                 seed: u64,
-            ) -> SetStEph<LabeledEdge<V>>;
+            ) -> SetStEph<usize>;
 
             /// Compute total weight of MST
             /// APAS: Work O(m), Span O(1)
-            fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabeledEdge<V>>) -> OrderedFloat<f64>;
+            fn mst_weight<V: StT + Hash>(
+                edges: &SetStEph<LabeledEdge<V>>,
+                mst_labels: &SetStEph<usize>,
+            ) -> OrderedFloat<f64>;
         }
 
         impl<V: StTInMtT + Ord + 'static> View for LabeledEdge<V> {

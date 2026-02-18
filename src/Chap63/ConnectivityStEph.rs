@@ -15,7 +15,6 @@ pub mod ConnectivityStEph {
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
     use crate::Types::Types::*;
 
-    #[cfg(not(verus_keep_ghost))]
     use std::collections::HashMap;
     use std::hash::Hash;
     #[cfg(not(verus_keep_ghost))]
@@ -33,7 +32,7 @@ pub mod ConnectivityStEph {
 
             /// Find connected components using star contraction
             /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-            fn connected_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<SetStEph<V>>;
+            fn connected_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>);
 
             /// Count components using higher-order function approach
             /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
@@ -41,7 +40,7 @@ pub mod ConnectivityStEph {
 
             /// Find components using higher-order function approach
             /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-            fn connected_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<SetStEph<V>>;
+            fn connected_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>);
         }
     } // verus!
 
