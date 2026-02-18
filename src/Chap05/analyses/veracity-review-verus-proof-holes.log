@@ -1,29 +1,7 @@
-✓ KleeneStPer.rs
-   9 clean proof functions
-❌ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS-review/src/Chap05/MappingStEph.rs:518: assume() - assume(r == (self@ == other@));
-       508 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       516 |                 }
-       517 |                 // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
-       519 |             }
-       520 |             r
-   Holes: 1 total
-      1 × assume()
-✓ RelationStEph.rs
-❌ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS-review/src/Chap05/SetMtEph.rs:907: assume() - proof { assume(r == (self@ == other@)); }
-       903 |         fn eq(&self, other: &Self) -> (r: bool)
-            ...
-       905 |         {
-       906 |             let r = self.elements == other.elements;
-       908 |             r
-       909 |         }
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 1 total (1 clean, 0 holed)
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap05/SetStEph.rs
+
 ❌ SetStEph.rs
-/home/milnes/projects/APAS-VERUS-review/src/Chap05/SetStEph.rs:832: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:832: assume() - proof { assume(equal == (self@ == other@)); }
        827 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        830 |             let equal = self.elements == other.elements;
@@ -39,14 +17,14 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   2 clean (no holes)
-   3 holed (contains holes)
-   5 total
+   0 clean (no holes)
+   1 holed (contains holes)
+   1 total
 
 Proof Functions:
-   11 clean
+   1 clean
    0 holed
-   11 total
+   1 total
 
-Holes Found: 3 total
-   3 × assume()
+Holes Found: 1 total
+   1 × assume()

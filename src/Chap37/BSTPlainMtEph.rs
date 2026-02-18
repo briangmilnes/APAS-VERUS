@@ -12,6 +12,7 @@
 
 // 1. module
 
+#[allow(non_shorthand_field_patterns)]
 pub mod BSTPlainMtEph {
 
     use vstd::prelude::*;

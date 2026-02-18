@@ -5,7 +5,7 @@ body { max-width: 100% !important; width: 100% !important; margin: 0 !important;
 table { width: 100% !important; table-layout: fixed; }
 </style>
 
-# Merge Agent Worktrees Into Main
+# Working With Multiple Agents In Worktrees
 
 Procedure for merging agent branches into `main` and syncing all worktrees.
 
@@ -16,6 +16,21 @@ Procedure for merging agent branches into `main` and syncing all worktrees.
 | 1 | main | `~/projects/APAS-VERUS` | `main` |
 | 2 | agent1 | `~/projects/APAS-VERUS-agent1` | `agent1/ready` (or `agent1/<topic>`) |
 | 3 | agent2 | `~/projects/APAS-VERUS-agent2` | `agent2/ready` (or `agent2/<topic>`) |
+
+## Scripts
+
+All scripts live in `scripts/` and auto-detect the worktree root. They strip ANSI for Emacs.
+
+| # | Script | Usage | Purpose |
+|---|--------|-------|---------|
+| 1 | `scripts/validate.sh` | `validate.sh [full\|dev\|exp] [--time]` | Verus verification |
+| 2 | `scripts/check.sh` | `check.sh` | `cargo check --lib` |
+| 3 | `scripts/rtt.sh` | `rtt.sh [filter]` | Runtime tests (`-j 6`, 120s timeout) |
+| 4 | `scripts/ptt.sh` | `ptt.sh [filter]` | Compile PTT lib + proof time tests (`-j 6`) |
+| 5 | `scripts/holes.sh` | `holes.sh [dir-or-file]` | Proof hole detection |
+| 6 | `scripts/validate-check-rtt-ptt.sh` | `validate-check-rtt-ptt.sh` | Full pipeline: validate + check + RTT + PTT |
+| 7 | `scripts/merge-agent.sh` | `merge-agent.sh <branch>` | Merge an agent branch + validate |
+| 8 | `scripts/reset-agent-to-main.sh` | `reset-agent-to-main.sh` | Reset agent branch to `origin/main` + force push |
 
 ## Critical Rules
 
@@ -37,6 +52,10 @@ Procedure for merging agent branches into `main` and syncing all worktrees.
 ## Phase 1: Main Validates, Commits, and Pushes
 
 ### Step 1: Validate main
+
+> **Script:** `cd ~/projects/APAS-VERUS && scripts/validate-check-rtt-ptt.sh`
+
+Full commands:
 
 ```bash
 cd ~/projects/APAS-VERUS
@@ -61,8 +80,6 @@ cargo nextest run -j 6 --no-fail-fast
 cd ~/projects/APAS-VERUS/rust_verify_test && cargo nextest run -j 6 --no-fail-fast
 ```
 
-**Both RTTs and PTTs require `-j 6`.** Never run either without the parallelism cap.
-
 ### Step 2: Commit and push main
 
 ```bash
@@ -75,6 +92,10 @@ git push origin main
 ## Phase 2: Agent1 Validates, Commits, and Pushes
 
 ### Step 3: Validate agent1
+
+> **Script:** `cd ~/projects/APAS-VERUS-agent1 && scripts/validate-check-rtt-ptt.sh`
+
+Full commands:
 
 ```bash
 cd ~/projects/APAS-VERUS-agent1
@@ -99,8 +120,6 @@ cargo nextest run -j 6 --no-fail-fast
 cd ~/projects/APAS-VERUS-agent1/rust_verify_test && cargo nextest run -j 6 --no-fail-fast
 ```
 
-**Both RTTs and PTTs require `-j 6`.** Never run either without the parallelism cap.
-
 ### Step 4: Commit and push agent1
 
 ```bash
@@ -113,6 +132,10 @@ git push origin agent1/ready
 ## Phase 3: Agent2 Validates, Commits, and Pushes
 
 ### Step 5: Validate agent2
+
+> **Script:** `cd ~/projects/APAS-VERUS-agent2 && scripts/validate-check-rtt-ptt.sh`
+
+Full commands:
 
 ```bash
 cd ~/projects/APAS-VERUS-agent2
@@ -137,8 +160,6 @@ cargo nextest run -j 6 --no-fail-fast
 cd ~/projects/APAS-VERUS-agent2/rust_verify_test && cargo nextest run -j 6 --no-fail-fast
 ```
 
-**Both RTTs and PTTs require `-j 6`.** Never run either without the parallelism cap.
-
 ### Step 6: Commit and push agent2
 
 ```bash
@@ -151,6 +172,12 @@ git push origin agent2/ready
 ## Phase 4: Merge Agent1 Into Main
 
 ### Step 7: Fetch and merge
+
+> **Script:** `cd ~/projects/APAS-VERUS && scripts/merge-agent.sh agent1/ready`
+>
+> (Auto-validates after merge. If conflicts, stops for manual resolution.)
+
+Full commands:
 
 ```bash
 cd ~/projects/APAS-VERUS
@@ -187,6 +214,10 @@ git commit --no-edit
 
 ### Step 9: Validate after agent1 merge
 
+> **Script:** `cd ~/projects/APAS-VERUS && scripts/validate-check-rtt-ptt.sh`
+
+Full commands:
+
 ```bash
 cd ~/projects/APAS-VERUS
 
@@ -210,8 +241,6 @@ cargo nextest run -j 6 --no-fail-fast
 cd ~/projects/APAS-VERUS/rust_verify_test && cargo nextest run -j 6 --no-fail-fast
 ```
 
-**Both RTTs and PTTs require `-j 6`.** Never run either without the parallelism cap.
-
 ### Step 10: Commit and push main
 
 ```bash
@@ -224,6 +253,10 @@ git push origin main
 ## Phase 5: Merge Agent2 Into Main
 
 ### Step 11: Fetch and merge
+
+> **Script:** `cd ~/projects/APAS-VERUS && scripts/merge-agent.sh agent2/ready`
+
+Full commands:
 
 ```bash
 cd ~/projects/APAS-VERUS
@@ -260,6 +293,10 @@ git commit --no-edit
 
 ### Step 13: Validate after agent2 merge
 
+> **Script:** `cd ~/projects/APAS-VERUS && scripts/validate-check-rtt-ptt.sh`
+
+Full commands:
+
 ```bash
 cd ~/projects/APAS-VERUS
 
@@ -283,8 +320,6 @@ cargo nextest run -j 6 --no-fail-fast
 cd ~/projects/APAS-VERUS/rust_verify_test && cargo nextest run -j 6 --no-fail-fast
 ```
 
-**Both RTTs and PTTs require `-j 6`.** Never run either without the parallelism cap.
-
 ### Step 14: Commit and push main
 
 ```bash
@@ -302,6 +337,10 @@ work is already in main.
 
 ### Step 15: Reset agent1 and push
 
+> **Script:** `cd ~/projects/APAS-VERUS-agent1 && scripts/reset-agent-to-main.sh`
+
+Full commands:
+
 ```bash
 cd ~/projects/APAS-VERUS-agent1
 git fetch origin
@@ -312,6 +351,10 @@ git push origin agent1/ready --force
 ## Phase 7: Reset Agent2 to Main
 
 ### Step 16: Reset agent2 and push
+
+> **Script:** `cd ~/projects/APAS-VERUS-agent2 && scripts/reset-agent-to-main.sh`
+
+Full commands:
 
 ```bash
 cd ~/projects/APAS-VERUS-agent2

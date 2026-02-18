@@ -281,46 +281,82 @@ To regenerate:
 
 ## Building and Testing
 
+All scripts live in `scripts/`, auto-detect the worktree root, and strip ANSI escape codes for Emacs `M-x compile`.
+
+### Scripts
+
+| # | Script | Usage | Purpose |
+|---|--------|-------|---------|
+| 1 | `scripts/validate.sh` | `validate.sh [full\|dev\|exp] [--time]` | Verus verification |
+| 2 | `scripts/check.sh` | `check.sh` | `cargo check --lib` |
+| 3 | `scripts/rtt.sh` | `rtt.sh [filter]` | Runtime tests (`-j 6`, 120s timeout) |
+| 4 | `scripts/ptt.sh` | `ptt.sh [filter]` | Compile PTT lib + proof time tests (`-j 6`) |
+| 5 | `scripts/holes.sh` | `holes.sh [dir-or-file]` | Proof hole detection |
+| 6 | `scripts/validate-check-rtt-ptt.sh` | `validate-check-rtt-ptt.sh` | Full pipeline (stops on first failure) |
+| 7 | `scripts/merge-agent.sh` | `merge-agent.sh <branch>` | Merge an agent branch + validate |
+| 8 | `scripts/reset-agent-to-main.sh` | `reset-agent-to-main.sh` | Reset agent branch to `origin/main` + force push |
+
 ### Verification
 
 ```bash
-# Verify all code with cargo-verus (uses incremental caching)
-cargo-verus verify
-
-# Verify with timing breakdown
-cargo-verus verify -- --time-expanded
-
-# Verify only a specific module
-verus src/lib.rs --crate-type=lib --verify-only-module Chap03::InsertionSortStEph::InsertionSortStEph
+scripts/validate.sh dev            # dev mode (skip cfg-gated modules)
+scripts/validate.sh full --time    # full verification with timing breakdown
+scripts/validate.sh exp            # experiments only
 ```
 
-### Testing
+### Compilation Check
 
 ```bash
-# Run all tests
-cargo test
+scripts/check.sh                   # cargo check --lib
+```
 
-# Run specific test
-cargo test --test TestInsertionSortStEph
+### Runtime Tests (RTTs)
+
+```bash
+scripts/rtt.sh                     # all tests
+scripts/rtt.sh bst                 # case-insensitive filter on test names
+```
+
+### Proof Time Tests (PTTs)
+
+```bash
+scripts/ptt.sh                     # compile lib + all PTTs
+scripts/ptt.sh Chap05              # compile lib + filtered PTTs
+```
+
+### Proof Holes
+
+```bash
+scripts/holes.sh                   # all of src/
+scripts/holes.sh src/Chap05/       # one chapter
+scripts/holes.sh src/Chap05/SetStEph.rs  # one file
+```
+
+### Full Pipeline
+
+```bash
+scripts/validate-check-rtt-ptt.sh  # validate (dev) → check → RTT → PTT
 ```
 
 ### Benchmarking
 
 ```bash
-# Run all benchmarks
-cargo bench
-
-# Run specific benchmark
-cargo bench --bench BenchInsertionSortStEph
+cargo bench                        # all benchmarks
+cargo bench --bench BenchInsertionSortStEph  # specific benchmark
 ```
+
+## Further Documentation
+
+- [docs/Scripts.md](docs/Scripts.md) — detailed reference for every script in `scripts/`
+- [docs/WorkingWithMultipleAgentsInWorktrees.md](docs/WorkingWithMultipleAgentsInWorktrees.md) — merge procedure, conflict resolution, and agent reset workflow
 
 ## Development Setup
 
-1. Install [Verus](https://github.com/verus-lang/verus) and ensure it's in your PATH
-2. Install Rust toolchain 1.93.0 (pinned in `rust-toolchain.toml`)
+1. Install [Verus](https://github.com/verus-lang/verus) (see `~/projects/verus/BUILD.md`)
+2. Install Rust toolchain (pinned in `rust-toolchain.toml`)
 3. Clone this repository
-4. Run `cargo-verus verify` to verify all code
-5. Run `cargo test` to run tests
+4. Run `scripts/validate.sh dev` to verify
+5. Run `scripts/rtt.sh` to run tests
 
 ## Verification Approach
 

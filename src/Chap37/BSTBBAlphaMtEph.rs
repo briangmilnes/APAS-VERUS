@@ -11,6 +11,7 @@
 
 // 1. module
 
+#[allow(non_shorthand_field_patterns)]
 pub mod BSTBBAlphaMtEph {
 
     use std::sync::{Arc, RwLock};
