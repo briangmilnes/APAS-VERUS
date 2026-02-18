@@ -283,6 +283,14 @@ name = "TestMaxContigSubSumDivConOptMtEph"
 path = "tests/Chap28/TestMaxContigSubSumDivConOptMtEph.rs"
 
 [[test]]
+name = "TestMaxContigSubSumIterStEph"
+path = "tests/Chap28/TestMaxContigSubSumIterStEph.rs"
+
+[[test]]
+name = "TestMaxContigSubSumReducedMcsseStEph"
+path = "tests/Chap28/TestMaxContigSubSumReducedMcsseStEph.rs"
+
+[[test]]
 name = "TestMaxContigSubSumDivConOptStEph"
 path = "tests/Chap28/TestMaxContigSubSumDivConOptStEph.rs"
 

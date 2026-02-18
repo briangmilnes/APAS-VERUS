@@ -1,12 +1,20 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap28/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap28/
 
+✓ MCSSSpec.rs
+   10 clean proof functions
 ✓ MaxContigSubSumBruteStEph.rs
 ✓ MaxContigSubSumDivConMtEph.rs
 ✓ MaxContigSubSumDivConOptMtEph.rs
 ✓ MaxContigSubSumDivConOptStEph.rs
+   1 clean proof function
 ✓ MaxContigSubSumDivConStEph.rs
+   1 clean proof function
+✓ MaxContigSubSumIterStEph.rs
+   2 clean proof functions
 ✓ MaxContigSubSumOptMtEph.rs
 ✓ MaxContigSubSumOptStEph.rs
+   1 clean proof function
+✓ MaxContigSubSumReducedMcsseStEph.rs
 ✓ MaxContigSubSumReducedStEph.rs
 
 ═══════════════════════════════════════════════════════════════
@@ -14,14 +22,14 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   8 clean (no holes)
+   11 clean (no holes)
    0 holed (contains holes)
-   8 total
+   11 total
 
 Proof Functions:
-   0 clean
+   15 clean
    0 holed
-   0 total
+   15 total
 
 Holes Found: 0 total
 

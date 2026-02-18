@@ -1,0 +1,35 @@
+---
+description: Keep Ghost parameter calls in sync with trait signatures
+alwaysApply: true
+---
+
+# Ghost Parameter Sync
+
+When a trait method signature includes a `Ghost(...)` parameter (e.g., `Ghost(spec_f): Ghost<spec_fn(T, T) -> T>`) and a call site in a later chapter omits it, **update the call site** to pass the Ghost argument.
+
+## Detection
+
+If compilation fails with "cannot find method" or argument-count mismatch on a trait method that exists, check whether the trait added a `Ghost(...)` parameter that the caller doesn't supply.
+
+## Fix
+
+Add the missing `Ghost(...)` argument at the call site. Example:
+
+```rust
+// ❌ Old call (before Ghost was added to trait)
+<ArraySeqMtEphS<i32> as ArraySeqMtEphBaseTrait<i32>>::scan(a, &|x, y| x + y, 0)
+
+// ✅ Updated call (matches current trait signature)
+<ArraySeqMtEphS<i32> as ArraySeqMtEphBaseTrait<i32>>::scan(
+    a,
+    &|x, y| x + y,
+    Ghost(|x: i32, y: i32| -> i32 { (x + y) as i32 }),
+    0,
+)
+```
+
+## Rule
+
+- The trait signature is the source of truth.
+- Never remove or skip the Ghost parameter in the trait to accommodate old callers.
+- Always update the caller to match the trait.

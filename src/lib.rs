@@ -256,22 +256,19 @@ pub mod Chap27 {
     pub mod ScanContractMtEph;
 }
 
-// Chapters brought over from APAS-AI — not yet verusified
-// Gate behind "all_chapters" feature (not set by default) until API compatibility is fixed
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap28 {
+    pub mod MCSSSpec;
     pub mod MaxContigSubSumBruteStEph;
-    pub mod MaxContigSubSumDivConStEph;
-    pub mod MaxContigSubSumDivConOptStEph;
-    pub mod MaxContigSubSumOptStEph;
     pub mod MaxContigSubSumReducedStEph;
-    // MtEph variants need scan() which isn't in APAS-VERUS ArraySeqMtEphBaseTrait yet
-    #[cfg(feature = "all_chapters")]
-    pub mod MaxContigSubSumDivConMtEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod MaxContigSubSumDivConOptMtEph;
-    #[cfg(feature = "all_chapters")]
+    pub mod MaxContigSubSumOptStEph;
+    pub mod MaxContigSubSumDivConStEph;
+    pub mod MaxContigSubSumIterStEph;
+    pub mod MaxContigSubSumReducedMcsseStEph;
+    pub mod MaxContigSubSumDivConOptStEph;
     pub mod MaxContigSubSumOptMtEph;
+    pub mod MaxContigSubSumDivConMtEph;
+    pub mod MaxContigSubSumDivConOptMtEph;
 }
 
 #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]

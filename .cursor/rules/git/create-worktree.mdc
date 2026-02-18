@@ -1,0 +1,50 @@
+# Create Agent Worktree
+
+## Naming convention
+
+| Worktree | Directory | Branch prefix |
+|---|---|---|
+| main | `~/projects/APAS-VERUS` | `main` |
+| agent1 | `~/projects/APAS-VERUS-agent1` | `agent1/` |
+| agent2 | `~/projects/APAS-VERUS-agent2` | `agent2/` |
+
+Branch names follow the pattern `agent1/<topic>` (e.g., `agent1/verusify-chap37`).
+
+## Creating a worktree
+
+```bash
+# From the main worktree
+cd ~/projects/APAS-VERUS
+
+# Create agent1 worktree with a topic branch
+git worktree add -b agent1/<topic> ~/projects/APAS-VERUS-agent1 main
+
+# Create agent2 worktree with a topic branch
+git worktree add -b agent2/<topic> ~/projects/APAS-VERUS-agent2 main
+```
+
+## Switching an agent's topic
+
+When an agent finishes a topic and starts a new one, rename the branch — don't recreate the worktree:
+
+```bash
+# In the agent worktree (e.g., ~/projects/APAS-VERUS-agent1)
+git checkout main
+git pull origin main
+git checkout -b agent1/<new-topic>
+```
+
+## Removing a worktree
+
+```bash
+cd ~/projects/APAS-VERUS
+git worktree remove ~/projects/APAS-VERUS-agent1
+git branch -d agent1/<topic>
+```
+
+## Rules
+
+- Each agent works ONLY in its own worktree directory. Never `cd` into another agent's worktree.
+- Main is the integrator. Agents do not push to main directly.
+- Agents push their own branches: `git push origin agent1/<topic>`.
+- Main merges agent branches one at a time (see merge-worktree rule).

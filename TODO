@@ -1,19 +1,16 @@
 
- 5 Feb 2026
+ 17 Feb 2026
 
-1) Redo the algorithmic analyses.
+Chapter
+ main   - Chap28
+ agent1 - Chap35
+ agent2 - Chap26 
+ 
+Done
+  Chap27
+
+
 2) Suss out how to get comments up to normal English standards.
-5) Go through everything in docs and see what is up to standard and
-  applied in the whole codebase.
-6) Continue with more chapters.
-7) Chap21.
 8) Clean up types, pair, concurrency.
-9) What about tree sequences in Chap20? Where do I really have them?
-10) Test review
-11) Proof time test review
-12) Do we really need pair and tripple anymore?
-13) Run a parallel review against the prose on all chapters.
 14) Check my total order and partial orders against updates to vstd.
 15) Deep_view review.
-16) Exile type N.
-17) Euler tour vs APAS.
