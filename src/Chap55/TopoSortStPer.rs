@@ -5,10 +5,14 @@
 
 pub mod TopoSortStPer {
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::{AVLTreeSeqStPerS, AVLTreeSeqStPerTrait};
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Types::Types::*;
+
+    verus! {
+
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
 
     pub trait TopoSortStPerTrait {
@@ -21,6 +25,7 @@ pub mod TopoSortStPer {
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Claude-Opus-4.6: Work O(|V|^2 + (|V| + |E|) log |V|), Span same — Vec::insert(0, ..) O(|V|) + AVL ops O(log |V|)
+    #[verifier::external_body]
     pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> Option<AVLTreeSeqStPerS<N>> {
         let n = graph.length();
         let mut visited = AVLTreeSetStPer::empty();
@@ -35,7 +40,7 @@ pub mod TopoSortStPer {
                         rec_stack = new_rec_stack;
                         result = new_result;
                     }
-                    | None => return None, // Cycle detected
+                    | None => return None,
                 }
             }
         }
@@ -46,6 +51,7 @@ pub mod TopoSortStPer {
     /// Returns sequence of vertices in topological order (respecting edge directions).
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Claude-Opus-4.6: Work O(|V|^2 + (|V| + |E|) log |V|), Span same — Vec::insert(0, ..) O(|V|) + AVL ops O(log |V|)
+    #[verifier::external_body]
     pub fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N> {
         let n = graph.length();
         let mut visited = AVLTreeSetStPer::empty();
@@ -63,6 +69,7 @@ pub mod TopoSortStPer {
 
     /// - APAS: (no cost stated — internal helper)
     /// - Claude-Opus-4.6: Work O(|V| + log |V|) per call — Vec::insert(0, ..) + AVL find/insert
+    #[verifier::external_body]
     fn dfs_finish_order_cycle_detect(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: AVLTreeSetStPer<N>,
@@ -71,7 +78,7 @@ pub mod TopoSortStPer {
         vertex: N,
     ) -> Option<(AVLTreeSetStPer<N>, AVLTreeSetStPer<N>, Vec<N>)> {
         if rec_stack.find(&vertex) {
-            return None; // Cycle detected
+            return None;
         }
         if visited.find(&vertex) {
             return Some((visited, rec_stack, result));
@@ -91,7 +98,7 @@ pub mod TopoSortStPer {
                     rec_stack = new_rec_stack;
                     result = new_result;
                 }
-                | None => return None, // Cycle detected
+                | None => return None,
             }
         }
 
@@ -102,6 +109,7 @@ pub mod TopoSortStPer {
 
     /// - APAS: (no cost stated — internal helper)
     /// - Claude-Opus-4.6: Work O(|V| + log |V|) per call — Vec::insert(0, ..) + AVL find/insert
+    #[verifier::external_body]
     fn dfs_finish_order(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: AVLTreeSetStPer<N>,
@@ -126,4 +134,6 @@ pub mod TopoSortStPer {
         result.insert(0, vertex);
         (visited, result)
     }
+
+    } // verus!
 }

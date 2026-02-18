@@ -9,8 +9,14 @@ pub mod MatrixChainStEph {
     use std::slice::Iter;
     use std::vec::IntoIter;
 
+    use vstd::prelude::*;
+
     use crate::Types::Types::*;
 
+    verus! {
+    } // verus!
+
+    // 4. type definitions
     #[derive(Clone, Debug, PartialEq, Eq)]
     pub struct MatrixDim {
         pub rows: usize,
@@ -20,50 +26,63 @@ pub mod MatrixChainStEph {
     /// Ephemeral single-threaded matrix chain multiplication solver using dynamic programming
     #[derive(Clone, Debug, PartialEq, Eq)]
     pub struct MatrixChainStEphS {
-        dimensions: Vec<MatrixDim>,
-        memo: HashMap<(usize, usize), usize>,
+        pub dimensions: Vec<MatrixDim>,
+        pub memo: HashMap<(usize, usize), usize>,
     }
 
+    // 8. traits
     /// Trait for matrix chain multiplication operations
-    pub trait MatrixChainStEphTrait {
-        /// Create new matrix chain solver
+    pub trait MatrixChainStEphTrait: Sized {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate empty collections
         fn new()                                              -> Self;
 
-        /// Create from matrix dimensions
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — move ownership of Vec
         fn from_dimensions(dimensions: Vec<MatrixDim>)        -> Self;
 
-        /// Create from dimension pairs (rows, cols)
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — map n pairs to MatrixDim
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> Self;
 
-        /// APAS: Work Θ(n³), Span Θ(n²)
-        /// Claude-Opus-4.6: Work O(n³), Span O(n²)
+        /// - APAS: Work Θ(n³), Span Θ(n³)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — memoized DP, n² subproblems × O(n) each, sequential
         fn optimal_cost(&mut self)                            -> usize;
 
-        /// Get the matrix dimensions
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reference access
         fn dimensions(&self)                                  -> &Vec<MatrixDim>;
 
-        /// Get mutable dimensions (ephemeral allows mutation)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — mutable reference access
         fn dimensions_mut(&mut self)                          -> &mut Vec<MatrixDim>;
 
-        /// Set matrix dimension at index
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — array write plus memo clear
         fn set_dimension(&mut self, index: usize, dim: MatrixDim);
 
-        /// Update matrix dimensions
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — array write plus memo clear
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize);
 
-        /// Get number of matrices
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len
         fn num_matrices(&self)                                -> usize;
 
-        /// Clear memoization table
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::clear
         fn clear_memo(&mut self);
 
-        /// Get memoization table size
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len
         fn memo_size(&self)                                   -> usize;
     }
 
+    // 9. impls
     impl MatrixChainStEphS {
-        /// Calculate cost of multiplying matrices from i to j with split at k
         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — three lookups, two multiplications
         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> usize {
             let left_rows = self.dimensions[i].rows;
             let split_cols = self.dimensions[k].cols;
@@ -71,19 +90,16 @@ pub mod MatrixChainStEph {
             left_rows * split_cols * right_cols
         }
 
-        /// APAS: Work Θ(n³), Span Θ(n²)
-        /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
-        /// Claude-Opus-4.6 Span: O(n²) - recursion depth O(n), each level O(n) work
+        /// - APAS: Work Θ(n³), Span Θ(n³)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — memoized DP, n² subproblems × O(n) each, sequential
         fn matrix_chain_rec(&mut self, i: usize, j: usize) -> usize {
-            // Check memo first
             if let Some(&result) = self.memo.get(&(i, j)) {
                 return result;
             }
 
             let result = if i == j {
-                0 // Base case: single matrix, no multiplication needed
+                0
             } else {
-                // Try each possible split point and find minimum cost
                 (i..j)
                     .map(|k| {
                         let left_cost = self.matrix_chain_rec(i, k);
@@ -95,13 +111,14 @@ pub mod MatrixChainStEph {
                     .unwrap_or(0)
             };
 
-            // Memoize result
             self.memo.insert((i, j), result);
             result
         }
     }
 
     impl MatrixChainStEphTrait for MatrixChainStEphS {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate empty Vec and HashMap
         fn new() -> Self {
             Self {
                 dimensions: Vec::new(),
@@ -109,6 +126,8 @@ pub mod MatrixChainStEph {
             }
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — move ownership of dimensions Vec
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> Self {
             Self {
                 dimensions,
@@ -116,6 +135,8 @@ pub mod MatrixChainStEph {
             }
         }
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — map n Pair values to MatrixDim structs
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> Self {
             let dimensions = dim_pairs
                 .into_iter()
@@ -131,47 +152,63 @@ pub mod MatrixChainStEph {
             }
         }
 
+        /// - APAS: Work Θ(n³), Span Θ(n³)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — invokes matrix_chain_rec on full range
         fn optimal_cost(&mut self) -> usize {
             if self.dimensions.len() <= 1 {
                 return 0;
             }
 
-            // Clear memo for fresh computation
             self.memo.clear();
 
             let n = self.dimensions.len();
             self.matrix_chain_rec(0, n - 1)
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reference access
         fn dimensions(&self) -> &Vec<MatrixDim> { &self.dimensions }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — mutable reference access
         fn dimensions_mut(&mut self) -> &mut Vec<MatrixDim> { &mut self.dimensions }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — array write plus memo clear
         fn set_dimension(&mut self, index: usize, dim: MatrixDim) {
             if index < self.dimensions.len() {
                 self.dimensions[index] = dim;
             }
-            // Clear memo since dimensions changed
             self.memo.clear();
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — array write plus memo clear
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize) {
             let dim = MatrixDim { rows, cols };
             if index < self.dimensions.len() {
                 self.dimensions[index] = dim;
             }
-            // Clear memo since dimensions changed
             self.memo.clear();
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len
         fn num_matrices(&self) -> usize { self.dimensions.len() }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::clear
         fn clear_memo(&mut self) { self.memo.clear(); }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len
         fn memo_size(&self) -> usize { self.memo.len() }
     }
 
+    // 13. derive impls outside verus!
     impl Display for MatrixChainStEphS {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format two integers
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(
                 f,
@@ -186,6 +223,8 @@ pub mod MatrixChainStEph {
         type Item = MatrixDim;
         type IntoIter = IntoIter<MatrixDim>;
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — move Vec into iterator
         fn into_iter(self) -> Self::IntoIter { self.dimensions.into_iter() }
     }
 
@@ -193,6 +232,8 @@ pub mod MatrixChainStEph {
         type Item = MatrixDim;
         type IntoIter = Cloned<Iter<'a, MatrixDim>>;
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — create cloned iterator adapter
         fn into_iter(self) -> Self::IntoIter { self.dimensions.iter().cloned() }
     }
 
@@ -200,13 +241,18 @@ pub mod MatrixChainStEph {
         type Item = MatrixDim;
         type IntoIter = Cloned<Iter<'a, MatrixDim>>;
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — create cloned iterator adapter
         fn into_iter(self) -> Self::IntoIter { self.dimensions.iter().cloned() }
     }
 
     impl Display for MatrixDim {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format two integers
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
     }
 
+    // 12. macros
     #[macro_export]
     macro_rules! MatrixChainStEphLit {
         (dims: [$(($r:expr, $c:expr)),* $(,)?]) => {

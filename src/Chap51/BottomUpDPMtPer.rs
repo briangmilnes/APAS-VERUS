@@ -6,16 +6,40 @@
 
 pub mod BottomUpDPMtPer {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions
+    // 8. traits
+    // 9. impls
+    // 11. derive impls
+    // 13. derive impls outside verus!
+
+    // 2. imports
     use std::cmp::{max, min};
     use std::fmt::{Formatter, Debug, Display};
     use std::sync::{Arc, Mutex};
     use std::thread;
 
+    use vstd::prelude::*;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
 
+    verus! {
+    } // verus!
+
+    // 4. type definitions
+    #[derive(Clone, PartialEq, Eq)]
+    pub struct BottomUpDPMtPerS {
+        /// Input sequence S
+        pub seq_s: ArraySeqMtPerS<char>,
+        /// Input sequence T
+        pub seq_t: ArraySeqMtPerS<char>,
+    }
+
+    // 8. traits
     /// Trait for bottom-up dynamic programming operations
-    pub trait BottomUpDPMtPerTrait<T: MtVal> {
+    pub trait BottomUpDPMtPerTrait<T: MtVal> : Sized {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn new()                     -> Self;
@@ -25,14 +49,7 @@ pub mod BottomUpDPMtPer {
         fn solve(&self, input: &[T]) -> T;
     }
 
-    #[derive(Clone, Debug, PartialEq, Eq)]
-    pub struct BottomUpDPMtPerS {
-        /// Input sequence S
-        seq_s: ArraySeqMtPerS<char>,
-        /// Input sequence T  
-        seq_t: ArraySeqMtPerS<char>,
-    }
-
+    // 9. impls
     impl BottomUpDPMtPerS {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
@@ -159,7 +176,10 @@ pub mod BottomUpDPMtPer {
         pub fn is_empty(&self) -> bool { self.seq_s.length() == 0usize && self.seq_t.length() == 0usize }
     }
 
+    // 11. derive impls
     impl Default for BottomUpDPMtPerS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn default() -> Self {
             let empty_s = ArraySeqMtPerS::new(0, ' ');
             let empty_t = ArraySeqMtPerS::new(0, ' ');
@@ -167,7 +187,21 @@ pub mod BottomUpDPMtPer {
         }
     }
 
+    // 13. derive impls outside verus!
+    impl Debug for BottomUpDPMtPerS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(|S|+|T|), Span Θ(|S|+|T|)
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BottomUpDPMtPerS")
+                .field("seq_s", &self.seq_s)
+                .field("seq_t", &self.seq_t)
+                .finish()
+        }
+    }
+
     impl Display for BottomUpDPMtPerS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(
                 f,

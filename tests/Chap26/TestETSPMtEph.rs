@@ -2,7 +2,6 @@
 //! Tests for parallel divide-and-conquer eTSP heuristic (Chapter 26).
 
 use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::set_parallelism;
-use apas_verus::Chap26::ETSPStEph::ETSPStEph::*;
 use apas_verus::Chap26::ETSPMtEph::ETSPMtEph::*;
 
 #[test]

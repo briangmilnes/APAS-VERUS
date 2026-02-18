@@ -6,14 +6,38 @@
 
 pub mod BottomUpDPStEph {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions
+    // 8. traits
+    // 9. impls
+    // 11. derive impls
+    // 13. derive impls outside verus!
+
+    // 2. imports
     use std::cmp::{max, min};
     use std::fmt::{Formatter, Debug, Display};
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
 
+    verus! {
+    } // verus!
+
+    // 4. type definitions
+    #[derive(Clone, PartialEq, Eq)]
+    pub struct BottomUpDPStEphS {
+        /// Input sequence S
+        pub seq_s: ArraySeqStEphS<char>,
+        /// Input sequence T
+        pub seq_t: ArraySeqStEphS<char>,
+    }
+
+    // 8. traits
     /// Trait for bottom-up dynamic programming operations
-    pub trait BottomUpDPStEphTrait<T: StT> {
+    pub trait BottomUpDPStEphTrait<T: StT> : Sized {
         /// Create new bottom-up DP solver
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
@@ -25,14 +49,7 @@ pub mod BottomUpDPStEph {
         fn solve(&self, input: &[T]) -> T;
     }
 
-    #[derive(Clone, Debug, PartialEq, Eq)]
-    pub struct BottomUpDPStEphS {
-        /// Input sequence S
-        seq_s: ArraySeqStEphS<char>,
-        /// Input sequence T  
-        seq_t: ArraySeqStEphS<char>,
-    }
-
+    // 9. impls
     impl BottomUpDPStEphS {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
@@ -136,7 +153,10 @@ pub mod BottomUpDPStEph {
         pub fn set_t(&mut self, t: ArraySeqStEphS<char>) { self.seq_t = t; }
     }
 
+    // 11. derive impls
     impl Default for BottomUpDPStEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn default() -> Self {
             let empty_s = ArraySeqStEphS::new(0, ' ');
             let empty_t = ArraySeqStEphS::new(0, ' ');
@@ -144,7 +164,21 @@ pub mod BottomUpDPStEph {
         }
     }
 
+    // 13. derive impls outside verus!
+    impl Debug for BottomUpDPStEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(|S|+|T|), Span Θ(|S|+|T|)
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BottomUpDPStEphS")
+                .field("seq_s", &self.seq_s)
+                .field("seq_t", &self.seq_t)
+                .finish()
+        }
+    }
+
     impl Display for BottomUpDPStEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(
                 f,

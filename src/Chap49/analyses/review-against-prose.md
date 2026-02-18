@@ -5,300 +5,237 @@ body { max-width: 100% !important; width: 100% !important; margin: 0 !important;
 table { width: 100% !important; table-layout: fixed; }
 </style>
 
-# Chapter 49 — Review Against Prose
+# Chapter 49: DP — SubsetSum, MinEditDist — Review Against Prose
 
-**Date:** 2026-02-17
-**Reviewer:** Claude-Opus-4.6
-**Chapter:** Two Problems (Subset Sums and Minimum Edit Distance)
+| Field | Value |
+|---|---|
+| Date | 2026-02-17 |
+| Reviewer | Claude-Opus-4.6 |
+| Chapter | 49 — Two Problems (Subset Sums, Minimum Edit Distance) |
+| Files | 8 source, 8 test, 0 PTT |
+| Prose Source | `prompts/Chap49.txt` |
 
----
+## Phase 1: File Inventory
 
-## Phase 2: Prose Inventory
+| # | File | Variant | Algorithm | Lines | verus! Content |
+|---|---|---|---|---|---|
+| 1 | `SubsetSumStEph.rs` | St/Eph | Subset Sum (top-down memo) | 202 | empty |
+| 2 | `SubsetSumStPer.rs` | St/Per | Subset Sum (top-down memo) | 177 | empty |
+| 3 | `SubsetSumMtEph.rs` | Mt/Eph | Subset Sum (parallel memo) | 224 | empty |
+| 4 | `SubsetSumMtPer.rs` | Mt/Per | Subset Sum (parallel memo) | 201 | empty |
+| 5 | `MinEditDistStEph.rs` | St/Eph | Min Edit Distance (top-down memo) | 248 | empty |
+| 6 | `MinEditDistStPer.rs` | St/Per | Min Edit Distance (top-down memo) | 199 | empty |
+| 7 | `MinEditDistMtEph.rs` | Mt/Eph | Min Edit Distance (parallel memo) | 251 | empty |
+| 8 | `MinEditDistMtPer.rs` | Mt/Per | Min Edit Distance (parallel memo) | 211 | empty |
 
-Source: `prompts/Chap49.txt`
+All 8 `verus! {}` blocks are empty. 100% of executable code is outside verus!.
 
-### Definitions
+## Phase 2: Prose Alignment
 
-| # | Name | Description |
-|---|------|-------------|
-| 1 | Definition 49.1 — Subset Sum (SS) Problem | Given multiset S of positive integers and positive integer k, determine if any X ⊆ S sums to k |
-| 2 | Definition 49.4 — Minimum Edit Distance (MED) Problem | Given character set Σ and two sequences S, T ∈ Σ\*, determine minimum number of insertions and deletions to transform S to T |
+### SubsetSum — Algorithm 49.3 (Recursive SS, Indexed)
 
-### Algorithms
+**Textbook algorithm:**
+```
+SS'(i, j) =
+  case (i, j) of
+    (_, 0) => true
+  | (0, _) => false
+  | _ => if (S[i-1] > j) then SS'(i-1, j)
+         else (SS'(i-1, j - S[i-1]) or SS'(i-1, j))
+in SS'(|S|, k)
+```
 
-| # | Name | Description | Implemented? |
-|---|------|-------------|:---:|
-| 1 | Algorithm 49.3 — Recursive Subset Sum (Indexed) | SS'(i,j): indexed DP recurrence over suffix index i and remaining target j | Yes — all 4 SS variants |
-| 2 | Algorithm 49.5 — Recursive MED (List-based) | MED(S,T): list-based recursive formulation with insert/delete branching | Subsumed by 49.6 |
-| 3 | Algorithm 49.6 — Recursive MED (Indexed) | MED'(i,j): indexed DP recurrence over positions from end of sequences | Yes — all 4 MED variants |
+**Implementation (`subset_sum_rec`):** Matches exactly. The base cases, recursive structure, and element-value check all align with Algorithm 49.3. Memoization via HashMap corresponds to the prose's discussion of sharing in the recursion DAG (§49, "Improving Work by Sharing").
 
-### Cost Specs
+| # | Prose Element | Implementation | Match? |
+|---|---|---|---|
+| 1 | Base case (_, 0) => true | `(_, 0) => true` | Yes |
+| 2 | Base case (0, _) => false | `(0, _) => false` | Yes |
+| 3 | Guard S[i-1] > j | `element_value > j` | Yes |
+| 4 | Recursive exclude: SS'(i-1, j) | `subset_sum_rec(table, i-1, j)` | Yes |
+| 5 | Recursive include: SS'(i-1, j-S[i-1]) | `subset_sum_rec(table, i-1, j-element_value)` | Yes |
+| 6 | Combine with OR | `\|\| operator` | Yes |
+| 7 | Initial call SS'(\|S\|, k) | `subset_sum_rec(self, n, target)` | Yes |
+| 8 | Memoization (DAG sharing) | HashMap<(usize, i32), bool> | Yes |
 
-| # | Algorithm | Work | Span | Source |
-|---|-----------|------|------|--------|
-| 1 | SS(S, k) | O(k×\|S\|) | O(\|S\|) | Prose §1, p.357 |
-| 2 | MED(S, T) | O(\|S\|×\|T\|) | O(\|S\|+\|T\|) | Prose §2, p.360 |
+### MinEditDist — Algorithm 49.6 (Recursive MED, Indexed)
 
-### Theorems / Properties
+**Textbook algorithm:**
+```
+MED'(i, j) =
+  case (i, j) of
+    (i, 0) => i
+  | (0, j) => j
+  | (i, j) => if (S[i-1] = T[j-1]) then MED'(i-1, j-1)
+              else 1 + min(MED'(i, j-1), MED'(i-1, j))
+in MED'(|S|, |T|)
+```
 
-| # | Property | Description |
-|---|----------|-------------|
-| 1 | SS subproblem count | At most \|S\|×(k+1) distinct subproblems |
-| 2 | SS pseudo-polynomial | Work is O(k×\|S\|), polynomial when k ≤ \|S\|^c |
-| 3 | MED subproblem count | At most (\|S\|+1)×(\|T\|+1) distinct subproblems |
-| 4 | MED DAG depth | O(\|S\|+\|T\|) — each recursive call removes an element from S or T |
+**Implementation (`min_edit_distance_rec`):** Matches Algorithm 49.6. The base cases return i and j respectively (number of remaining deletions/insertions). The recursive case checks character equality and branches on delete vs. insert.
 
-### Examples in Prose
+| # | Prose Element | Implementation | Match? |
+|---|---|---|---|
+| 1 | Base case (i, 0) => i | `(i, 0) => i` | Yes |
+| 2 | Base case (0, j) => j | `(0, j) => j` | Yes |
+| 3 | Character match: skip | `if source_char == target_char` → recurse (i-1, j-1) | Yes |
+| 4 | Delete: MED'(i-1, j) | `min_edit_distance_rec(table, i-1, j)` | Yes |
+| 5 | Insert: MED'(i, j-1) | `min_edit_distance_rec(table, i, j-1)` | Yes |
+| 6 | Combine: 1 + min(...) | `1 + std::cmp::min(delete_cost, insert_cost)` | Yes |
+| 7 | Initial call MED'(\|S\|, \|T\|) | `min_edit_distance_rec(self, source_len, target_len)` | Yes |
+| 8 | Memoization (DAG sharing) | HashMap<(usize, usize), usize> | Yes |
 
-| # | Example | Expected Result | Tested? |
-|---|---------|-----------------|:-------:|
-| 1 | Example 49.1: SS({1,4,2,9}, 8) | false | Yes — all 4 SS variants |
-| 2 | Example 49.1: SS({1,4,2,9}, 12) | true | Yes — all 4 SS variants |
-| 3 | Example 49.2: SS({1,1,1}, 3) | true | Yes — StPer, MtPer |
-| 4 | Example 49.3: MED(⟨A,B,C,A,D,A⟩, ⟨A,B,A,D,C⟩) | 3 | Yes — StPer, MtPer |
+**Note:** The textbook's Algorithm 49.5 starts from the front of the sequences (using Cons/Nil lists), while Algorithm 49.6 (indexed) starts from the end. The implementation follows Algorithm 49.6.
 
----
+## Phase 3: Cost Analysis
 
-## Phase 3: Algorithmic Analysis
+### SubsetSum
 
-### Phase 3a: Cost Annotations
+| # | Variant | APAS Work | APAS Span | Impl Work | Impl Span | Match? |
+|---|---|---|---|---|---|---|
+| 1 | St (Eph/Per) | Θ(k×\|S\|) | Θ(\|S\|) | Θ(k×\|S\|) | Θ(k×\|S\|) | Work: Yes, Span: No (St is sequential) |
+| 2 | Mt (Eph/Per) | Θ(k×\|S\|) | Θ(\|S\|) | Θ(k×\|S\|) | Θ(\|S\|) | Yes |
 
-All 16 core exec functions (8 trait-level + 8 internal rec functions) carry the standard APAS/Claude-Opus-4.6 two-line cost annotation format.
+The APAS span of Θ(|S|) assumes parallel execution. The St variants are sequential, so their span equals their work: Θ(k×|S|). This is expected — the textbook's span analysis applies to the parallel (Mt) variants.
 
-**Cost disagreements (St variants only):**
+The Mt variants fork both branches with `thread::spawn`, achieving Θ(|S|) span because the recursion depth is |S| (each level removes one element from S) and both branches at each level execute concurrently.
 
-| # | Function | File | APAS | Claude-Opus-4.6 | Reason |
-|---|----------|------|------|------------------|--------|
-| 1 | `subset_sum` | SubsetSumStEph.rs | Work Θ(k×\|S\|), Span Θ(\|S\|) | Work Θ(k×\|S\|), Span Θ(k×\|S\|) | Sequential — span equals work |
-| 2 | `subset_sum` | SubsetSumStPer.rs | Work Θ(k×\|S\|), Span Θ(\|S\|) | Work Θ(k×\|S\|), Span Θ(k×\|S\|) | Sequential — span equals work |
-| 3 | `min_edit_distance` | MinEditDistStEph.rs | Work Θ(\|S\|×\|T\|), Span Θ(\|S\|+\|T\|) | Work Θ(\|S\|×\|T\|), Span Θ(\|S\|×\|T\|) | Sequential — span equals work |
-| 4 | `min_edit_distance` | MinEditDistStPer.rs | Work Θ(\|S\|×\|T\|), Span Θ(\|S\|+\|T\|) | Work Θ(\|S\|×\|T\|), Span Θ(\|S\|×\|T\|) | Sequential — span equals work |
+### MinEditDist
 
-Mt variants agree with APAS — both branches are spawned with `thread::spawn`.
+| # | Variant | APAS Work | APAS Span | Impl Work | Impl Span | Match? |
+|---|---|---|---|---|---|---|
+| 1 | St (Eph/Per) | Θ(\|S\|×\|T\|) | Θ(\|S\|+\|T\|) | Θ(\|S\|×\|T\|) | Θ(\|S\|×\|T\|) | Work: Yes, Span: No (St is sequential) |
+| 2 | Mt (Eph/Per) | Θ(\|S\|×\|T\|) | Θ(\|S\|+\|T\|) | Θ(\|S\|×\|T\|) | Θ(\|S\|+\|T\|) | Yes |
 
-### Phase 3b: Implementation Fidelity
+Same pattern: the APAS span assumes parallelism. St variants are sequential (span = work). Mt variants achieve Θ(|S|+|T|) span because each recursive call either decrements i or j, so the longest path has at most |S|+|T| steps.
 
-| # | File | Prose Algorithm | Fidelity | Notes |
-|---|------|----------------|----------|-------|
-| 1 | SubsetSumStEph.rs | Alg 49.3 | Faithful | Indexed DP with HashMap memoization. Base cases `(_, 0)→true`, `(0, _)→false` match prose. Recursive case with `element_value > j` guard matches prose's `S[i−1] > j`. |
-| 2 | SubsetSumStPer.rs | Alg 49.3 | Faithful | Same algorithm. Persistent variant clones self for memoization (clone overhead). |
-| 3 | SubsetSumMtEph.rs | Alg 49.3 | Faithful | Parallel: `thread::spawn` for include/exclude branches. Shared `Arc<Mutex<HashMap>>` memoization. |
-| 4 | SubsetSumMtPer.rs | Alg 49.3 | Faithful | Same as MtEph with persistent data structure. |
-| 5 | MinEditDistStEph.rs | Alg 49.6 | Faithful | Indexed DP with HashMap memoization. Base cases `(i, 0)→i`, `(0, j)→j` match prose. Character match skips; mismatch tries delete `(i−1, j)` and insert `(i, j−1)`. |
-| 6 | MinEditDistStPer.rs | Alg 49.6 | Faithful | Same algorithm. Persistent variant clones self. |
-| 7 | MinEditDistMtEph.rs | Alg 49.6 | Faithful | Parallel: `thread::spawn` for delete/insert branches. Shared `Arc<Mutex<HashMap>>` memoization. |
-| 8 | MinEditDistMtPer.rs | Alg 49.6 | Faithful | Same as MtEph with persistent data structure. |
+## Phase 4: Parallelism Review (Mt Variants)
 
-**Deviations:**
+### SubsetSumMtEph / SubsetSumMtPer
 
-| # | Deviation | Impact |
-|---|-----------|--------|
-| 1 | All implementations use `HashMap` for memoization rather than a 2D array | No asymptotic change (O(1) amortized lookup/insert), higher constant factors |
-| 2 | Mt variants use `thread::spawn` + `Arc<Mutex<HashMap>>` with no granularity cutoff | Thread explosion on non-trivial inputs; lock contention degrades practical span |
-| 3 | Persistent variants clone the entire solver for memoization | Defeats persistence semantics — a persistent HashMap would be more appropriate |
-| 4 | MinEditDistMtEph uses a method on `impl MinEditDistMtEphS<T>` for `min_edit_distance_rec` instead of a free function | Inconsistent with the other 7 files which use free functions; no correctness impact |
+**Parallelism mechanism:** `thread::spawn` on both branches of the recursion (include/exclude element).
 
-**Prose typo noted:** Algorithm 49.6 line `if (S[i − 1] = T[i − 1])` should be `T[j − 1]`. The code correctly uses `table.target.nth(j - 1)`.
+**Shared state:** `Arc<Mutex<HashMap<(usize, i32), bool>>>` — shared memoization table.
 
-**Edit operations:** The prose defines MED using only insertions and deletions (no substitutions). All implementations correctly follow this — when characters mismatch, the code tries delete `(i−1, j)` and insert `(i, j−1)`, never substitution `(i−1, j−1)` on mismatch. This means MED(⟨A⟩, ⟨B⟩) = 2 (delete A + insert B), not 1.
+| # | Aspect | Assessment |
+|---|---|---|
+| 1 | Fork structure | Correct: forks on both SS'(i-1, j-S[i-1]) and SS'(i-1, j) |
+| 2 | Memoization thread-safety | Mutex-protected HashMap — correct but coarse-grained |
+| 3 | Thread granularity | Spawns OS threads per fork — excessive for deep recursion |
+| 4 | Span achievability | Theoretical Θ(\|S\|), practical span degraded by lock contention |
+| 5 | Short-circuit optimization | Missing: `result1 \|\| result2` evaluates both even if result1 is true |
 
-### Phase 3c: Spec Fidelity
+### MinEditDistMtEph / MinEditDistMtPer
 
-**N/A** — No `requires`/`ensures` specifications exist. All functions have spec strength `none`. The entire chapter is unverified Rust with no Verus blocks.
+**Parallelism mechanism:** `thread::spawn` on both branches (delete/insert) when characters mismatch.
 
----
+**Shared state:** `Arc<Mutex<HashMap<(usize, usize), usize>>>` — shared memoization table.
 
-## Phase 4: Parallelism Review
+| # | Aspect | Assessment |
+|---|---|---|
+| 1 | Fork structure | Correct: forks on MED'(i-1, j) and MED'(i, j-1) |
+| 2 | Memoization thread-safety | Mutex-protected HashMap — correct but coarse-grained |
+| 3 | Thread granularity | Spawns OS threads per fork — excessive for deep recursion |
+| 4 | Span achievability | Theoretical Θ(\|S\|+\|T\|), practical span degraded by lock contention |
+| 5 | Character match path | Serial (no fork needed) — correct optimization |
 
-### Phase 4a: Mt Function Classification
+### Practical Parallelism Concerns
 
-| # | Function | File | Classification | Mechanism |
-|---|----------|------|:-------------:|-----------|
-| 1 | `subset_sum` | SubsetSumMtEph.rs | Parallel | Delegates to `subset_sum_rec` |
-| 2 | `subset_sum_rec` | SubsetSumMtEph.rs | Parallel | `thread::spawn` for include/exclude branches |
-| 3 | `subset_sum` | SubsetSumMtPer.rs | Parallel | Delegates to `subset_sum_rec` |
-| 4 | `subset_sum_rec` | SubsetSumMtPer.rs | Parallel | `thread::spawn` for include/exclude branches |
-| 5 | `min_edit_distance` | MinEditDistMtEph.rs | Parallel | Delegates to `min_edit_distance_rec` |
-| 6 | `min_edit_distance_rec` | MinEditDistMtEph.rs | Parallel | `thread::spawn` for delete/insert branches |
-| 7 | `min_edit_distance` | MinEditDistMtPer.rs | Parallel | Delegates to `min_edit_distance_rec` |
-| 8 | `min_edit_distance_rec` | MinEditDistMtPer.rs | Parallel | `thread::spawn` for delete/insert branches |
+The Mt variants spawn an OS-level `thread::spawn` for every recursive branch. The textbook's analysis assumes O(1) fork/join cost (work-stealing scheduler), but actual `thread::spawn` has ~μs overhead. For inputs of size n, this could create O(n×k) or O(n×m) thread spawns, which will thrash the system.
 
-All other Mt functions (new, from\_multiset, from\_sequences, multiset, source, target, set, clear\_memo, memo\_size, eq) are **Sequential** — simple accessors/constructors.
+A production-quality implementation would use:
+1. A work-stealing thread pool (e.g., Rayon) instead of raw `thread::spawn`
+2. A granularity cutoff: recurse sequentially below a threshold depth
+3. Fine-grained locking or lock-free memo tables (e.g., DashMap)
 
-### Phase 4b: Span Audit
+These are engineering concerns, not algorithmic ones. The theoretical cost analysis remains correct.
 
-| # | Function | APAS Span | Actual Span | Match? | Notes |
-|---|----------|-----------|-------------|:------:|-------|
-| 1 | `subset_sum` (MtEph) | Θ(\|S\|) | Θ(\|S\|) | Yes | Both branches spawned; DAG depth is \|S\| |
-| 2 | `subset_sum` (MtPer) | Θ(\|S\|) | Θ(\|S\|) | Yes | Same as MtEph |
-| 3 | `min_edit_distance` (MtEph) | Θ(\|S\|+\|T\|) | Θ(\|S\|+\|T\|) | Yes | Both branches spawned; DAG depth is \|S\|+\|T\| |
-| 4 | `min_edit_distance` (MtPer) | Θ(\|S\|+\|T\|) | Θ(\|S\|+\|T\|) | Yes | Same as MtEph |
+## Phase 5: RTT (Runtime Tests)
 
-Caveat: Theoretical span bounds assume ideal parallel scheduling. The `Arc<Mutex<HashMap>>` serializes memo access across all threads, potentially degrading practical span.
+| # | Test File | Tests | Status |
+|---|---|---|---|
+| 1 | `TestSubsetSumStEph.rs` | 24 | Present |
+| 2 | `TestSubsetSumStPer.rs` | 16 | Present |
+| 3 | `TestSubsetSumMtEph.rs` | 12 | Present |
+| 4 | `TestSubsetSumMtPer.rs` | 10 | Present |
+| 5 | `TestMinEditDistStEph.rs` | 20 | Present |
+| 6 | `TestMinEditDistStPer.rs` | 19 | Present |
+| 7 | `TestMinEditDistMtEph.rs` | 22 | Present |
+| 8 | `TestMinEditDistMtPer.rs` | 13 | Present |
+| | **Total** | **136** | |
 
-### Phase 4c: Parallelism Gap Table
+Tests cover: basic algorithm correctness (textbook Example 49.1, 49.3), edge cases (empty inputs, single elements, negative targets), mutation (Eph variants), memoization behavior, Display/Debug, Clone, PartialEq, IntoIterator, and macro constructors.
 
-| # | Function | APAS Span | Actual | Parallel? | Notes |
-|---|----------|-----------|--------|:---------:|-------|
-| 1 | `subset_sum` (MtEph) | Θ(\|S\|) | Θ(\|S\|) | Yes | Both branches spawned |
-| 2 | `subset_sum` (MtPer) | Θ(\|S\|) | Θ(\|S\|) | Yes | Both branches spawned |
-| 3 | `min_edit_distance` (MtEph) | Θ(\|S\|+\|T\|) | Θ(\|S\|+\|T\|) | Yes | Both branches spawned |
-| 4 | `min_edit_distance` (MtPer) | Θ(\|S\|+\|T\|) | Θ(\|S\|+\|T\|) | Yes | Both branches spawned |
+## Phase 6: PTT (Proof Time Tests)
 
-No parallelism gaps — all Mt operations that should be parallel are parallel.
+**No PTTs exist for Chapter 49.** This is expected — there is nothing inside `verus!` to test.
 
-**Practical concern:** The `thread::spawn`-per-recursive-call pattern creates an enormous number of OS threads for non-trivial inputs. There is no granularity cutoff to fall back to sequential execution for small subproblems. Production use would require a work-stealing thread pool and a granularity threshold.
-
----
-
-## Phase 5: Runtime Test Review
-
-### Phase 5a: Coverage Check
-
-| # | Source Module | RTT File | Test Count | Status |
-|---|-------------|----------|:----------:|:------:|
-| 1 | SubsetSumStEph.rs | `tests/Chap49/TestSubsetSumStEph.rs` | 24 | Covered |
-| 2 | SubsetSumStPer.rs | `tests/Chap49/TestSubsetSumStPer.rs` | 16 | Covered |
-| 3 | SubsetSumMtEph.rs | `tests/Chap49/TestSubsetSumMtEph.rs` | 12 | Covered |
-| 4 | SubsetSumMtPer.rs | `tests/Chap49/TestSubsetSumMtPer.rs` | 10 | Covered |
-| 5 | MinEditDistStEph.rs | `tests/Chap49/TestMinEditDistStEph.rs` | 20 | Covered |
-| 6 | MinEditDistStPer.rs | `tests/Chap49/TestMinEditDistStPer.rs` | 19 | Covered |
-| 7 | MinEditDistMtEph.rs | `tests/Chap49/TestMinEditDistMtEph.rs` | 22 | Covered |
-| 8 | MinEditDistMtPer.rs | `tests/Chap49/TestMinEditDistMtPer.rs` | 13 | Covered |
-
-**Total: 136 runtime tests across 8 test files.** All source modules have corresponding test files.
-
-### Phase 5b: Test Quality
-
-**Prose example coverage:**
-
-| # | Prose Example | Tested In | Exact Value Checked? |
-|---|---------------|-----------|:--------------------:|
-| 1 | Ex 49.1: SS({1,4,2,9}, 8)→false | StEph, StPer, MtEph, MtPer | Yes |
-| 2 | Ex 49.1: SS({1,4,2,9}, 12)→true | StEph, StPer, MtEph, MtPer | Yes |
-| 3 | Ex 49.2: SS({1,1,1}, 3)→true | StPer (example\_49\_2), MtPer (example) | Yes |
-| 4 | Ex 49.3: MED(⟨A,B,C,A,D,A⟩, ⟨A,B,A,D,C⟩)=3 | StPer (example\_49\_3), MtPer (basic) | Yes |
-
-**Base case coverage:**
-
-| # | Base Case | SS Tests | MED Tests |
-|---|-----------|:--------:|:---------:|
-| 1 | Empty input, zero target/both empty | StEph, StPer, MtEph, MtPer | StEph, StPer, MtEph, MtPer |
-| 2 | Empty input, non-zero target / one side empty | StEph, StPer, MtEph, MtPer | StEph, StPer, MtEph, MtPer |
-| 3 | Single element | StEph, StPer, MtPer | MtPer |
-| 4 | Negative target (SS) | StEph, StPer | N/A |
-| 5 | Identical sequences (MED) | N/A | StEph, StPer, MtEph, MtPer |
-
-**Scaffolding coverage:** All test files cover constructors (`new`, `from_multiset`/`from_sequences`), getters, Display, memoization management, and macros.
-
-**Assertion quality issues:**
-
-| # | Test File | Issue | Severity |
-|---|-----------|-------|:--------:|
-| 1 | TestMinEditDistMtEph `test_completely_different` | Asserts `dist > 0` instead of `== 6` | Medium |
-| 2 | TestMinEditDistMtEph `test_single_insert` | Asserts `dist > 0` instead of `== 1` | Medium |
-| 3 | TestMinEditDistMtEph `test_single_delete` | Asserts `dist > 0` instead of `== 1` | Medium |
-| 4 | TestMinEditDistMtEph `test_single_substitute` | Asserts `dist > 0` instead of `== 2` (delete+insert, no substitution) | Medium |
-| 5 | TestMinEditDistMtEph `test_kitten_to_sitting` | Asserts `dist > 0 && dist < 10` instead of `== 5` | Medium |
-| 6 | TestMinEditDistMtEph `test_with_integers` | Asserts `dist > 0` instead of `== 2` | Medium |
-| 7 | TestMinEditDistMtEph `test_prefix_match` | Asserts `dist > 0` instead of `== 3` | Medium |
-| 8 | TestMinEditDistMtEph `test_suffix_match` | Asserts `dist > 0` instead of `== 3` | Medium |
-| 9 | TestMinEditDistStEph `test_longer_sequences` | Comment says "3 edits" for kitten→sitting but asserts 5 (5 is correct for insert/delete-only) | Low — comment-only bug |
-
-The MtEph MED test file has systematically weak assertions — it checks sign/range rather than exact edit distances. All other test files use exact value assertions.
-
-### Phase 5c: Missing Tests
-
-| # | Missing Test | Priority | Rationale |
-|---|-------------|:--------:|-----------|
-| 1 | Cross-variant consistency (same input → same output for all 4 variants) | High | Ensures algorithm equivalence across St/Mt × Eph/Per |
-| 2 | Example 49.3 in StEph and MtEph MED tests | Medium | Prose example not tested in 2 of 4 variants |
-| 3 | Example 49.2 in StEph and MtEph SS tests | Low | Covered in StPer/MtPer; StEph tests `{1,1,1}` with mutation |
-| 4 | Strengthen MtEph MED assertions to exact values | Medium | 8 tests use weak inequality assertions |
-
----
-
-## Phase 6: Proof-Time Test (PTT) Review
-
-**No PTTs needed.** Chapter 49 has no `verus!` blocks, no iterators with `GhostIterator`/`ForLoopGhostIterator`, and no verified loops. The entire chapter is unverified Rust.
-
-### Phase 6a: Unified Test Inventory
-
-| # | Source Module | RTT File | PTT File | Status |
-|---|-------------|----------|----------|:------:|
-| 1 | SubsetSumStEph.rs | TestSubsetSumStEph.rs (24) | — | RTT complete |
-| 2 | SubsetSumStPer.rs | TestSubsetSumStPer.rs (16) | — | RTT complete |
-| 3 | SubsetSumMtEph.rs | TestSubsetSumMtEph.rs (12) | — | RTT complete |
-| 4 | SubsetSumMtPer.rs | TestSubsetSumMtPer.rs (10) | — | RTT complete |
-| 5 | MinEditDistStEph.rs | TestMinEditDistStEph.rs (20) | — | RTT complete |
-| 6 | MinEditDistStPer.rs | TestMinEditDistStPer.rs (19) | — | RTT complete |
-| 7 | MinEditDistMtEph.rs | TestMinEditDistMtEph.rs (22) | — | RTT complete, weak assertions |
-| 8 | MinEditDistMtPer.rs | TestMinEditDistMtPer.rs (13) | — | RTT complete |
-
----
+| # | PTT File | Tests |
+|---|---|---|
+| | (none) | 0 |
 
 ## Phase 7: Gap Analysis
 
-### Prose Items With No Implementation
+### Critical Gaps
 
-None — all algorithms from the prose (49.3, 49.5/49.6) are implemented. Algorithm 49.5 (list-based MED) is subsumed by the indexed variant (Algorithm 49.6), which is the natural translation to array-based Rust.
+| # | Gap | Severity | Description |
+|---|---|---|---|
+| 1 | Empty verus! blocks | Critical | All 8 files have empty `verus! {}` blocks. No specifications, no verification. |
+| 2 | No spec functions | Critical | No `spec fn` definitions for the DP recurrences. |
+| 3 | No requires/ensures | Critical | No pre/postcondition contracts on any function. |
+| 4 | No View impls | Critical | No abstract views for the solver structs. |
+| 5 | No proof functions | Critical | No proofs connecting implementation to specification. |
 
-### Code With No Prose Counterpart
+### Structural Gaps
 
-| # | Item | Files | Purpose |
-|---|------|-------|---------|
-| 1 | `new()` constructor | All 8 | Rust scaffolding — empty solver |
-| 2 | `from_multiset()` / `from_sequences()` | All 8 | Constructor from input data |
-| 3 | `multiset()` / `source()` / `target()` | All 8 | Read accessors |
-| 4 | `multiset_mut()` / `source_mut()` / `target_mut()` | Eph files | Mutable accessors — ephemeral pattern |
-| 5 | `set()` / `set_source()` / `set_target()` | Eph files | Mutation — ephemeral pattern |
-| 6 | `clear_memo()` / `memo_size()` | All 8 | Memo management — implementation detail |
-| 7 | `PartialEq::eq()` | Mt files (manual), St files (derive) | Equality comparison |
-| 8 | `Display::fmt()` | All 8 | Display formatting |
-| 9 | `IntoIterator` impls | St files | Iterator support — Rust idiom |
-| 10 | Macros (`SubsetSumStEphLit!`, etc.) | All 8 | Literal construction — test convenience |
+| # | Gap | Severity | Description |
+|---|---|---|---|
+| 6 | No bottom-up DP variant | Medium | The textbook implies both top-down (memo) and bottom-up (tabulation) approaches. Only top-down is implemented. |
+| 7 | No PTTs | Low | Expected since verus! is empty — PTTs would have nothing to test. |
+| 8 | Thread granularity | Low | Mt variants spawn OS threads for every fork — impractical for real workloads. |
+| 9 | i32 target type for SS | Low | SubsetSum target is `i32`, limiting to 2^31-1. The textbook uses unbounded integers. |
 
-All are expected Rust scaffolding — no prose counterparts needed.
+### Style Gaps
 
-### Structural Observations
+| # | Gap | Severity | Description |
+|---|---|---|---|
+| 10 | Copyright uses `//!` | Minor | Module header rule requires `//` for copyright, `//!` for module doc. All files use `//!` for both. |
+| 11 | Missing SPDX line | Minor | Module header rule requires `// SPDX-License-Identifier: Apache-2.0`. |
+| 12 | No PartialEqSpecImpl | Minor | St variants use `#[derive(PartialEq)]` outside verus! — no spec connection. Mt variants have manual `PartialEq` without `PartialEqSpecImpl`. |
+| 13 | Missing TOC entries | Minor | Files have partial TOC comments (sections 4, 8, 9, 11, 13) but no full TOC block at the top. |
 
-| # | Observation | Files Affected |
-|---|-------------|----------------|
-| 1 | MtEph/MtPer memo uses `Arc<Mutex<HashMap>>` (shared lock) while St uses plain `HashMap` (no lock) — correct for thread safety | Mt files |
-| 2 | StPer variants clone self to create a mutable copy, defeating persistent semantics for the memo table | SubsetSumStPer, MinEditDistStPer |
-| 3 | Copyright header uses `//!` (doc comment) for both copyright and module doc; should use `//` for copyright per module-header rule | All 8 files |
-| 4 | No TOC comment blocks in any file | All 8 files |
-| 5 | MinEditDistMtEph uses `impl` method for `min_edit_distance_rec` instead of free function — inconsistent with other 7 files | MinEditDistMtEph.rs |
-
----
-
-## Phase 8: Table of Contents Review
-
-### TOC Presence
-
-No file in Chapter 49 has a Table of Contents comment block. None of the files contain `verus!` blocks, so the standard TOC sections 1–11 (inside verus!) do not apply. Once Verus verification is added, TOC headers should be introduced.
+## Phase 8: TOC / In-Out Table
 
 ### In/Out Table
 
-| # | File | Clone | PartialEq/Eq | Default | Drop | Iterator | Debug | Display | Macro | Other |
-|---|------|:-----:|:------------:|:-------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
-| 1 | SubsetSumStEph.rs | ✅ out | ✅ out | - | - | ✅ out | ✅ out | ✅ out | ✅ out | - |
-| 2 | SubsetSumStPer.rs | ✅ out | ✅ out | - | - | ✅ out | ✅ out | ✅ out | ✅ out | - |
-| 3 | SubsetSumMtEph.rs | ✅ out | ✅ out | - | - | - | ✅ out | ✅ out | ✅ out | - |
-| 4 | SubsetSumMtPer.rs | ✅ out | ✅ out | - | - | - | ✅ out | ✅ out | ✅ out | - |
-| 5 | MinEditDistStEph.rs | ✅ out | ✅ out | - | - | ✅ out | ✅ out | ✅ out | ✅ out | - |
-| 6 | MinEditDistStPer.rs | ✅ out | ✅ out | - | - | ✅ out | ✅ out | ✅ out | ✅ out | - |
-| 7 | MinEditDistMtEph.rs | ✅ out | ✅ out | - | - | - | ✅ out | ✅ out | ✅ out | - |
-| 8 | MinEditDistMtPer.rs | ✅ out | ✅ out | - | - | - | ✅ out | ✅ out | ✅ out | - |
+All code is outside `verus!` — every item is marked accordingly.
 
-All derive impls are outside `verus!` because there are no `verus!` blocks. Once Verus verification is added, Clone, PartialEq/Eq should move inside per project standards.
+| # | File | Struct | Clone | PartialEq/Eq | Default | Drop | Iterator | Debug | Display | Trait | Impl |
+|---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 1 | SubsetSumStEph | SubsetSumStEphS | ❌ out | ❌ out | - | - | ❌ out | ✅ out | ✅ out | ❌ out | ❌ out |
+| 2 | SubsetSumStPer | SubsetSumStPerS | ❌ out | ❌ out | - | - | ❌ out | ✅ out | ✅ out | ❌ out | ❌ out |
+| 3 | SubsetSumMtEph | SubsetSumMtEphS | ❌ out | ❌ out | - | - | - | ✅ out | ✅ out | ❌ out | ❌ out |
+| 4 | SubsetSumMtPer | SubsetSumMtPerS | ❌ out | ❌ out | - | - | - | ✅ out | ✅ out | ❌ out | ❌ out |
+| 5 | MinEditDistStEph | MinEditDistStEphS | ❌ out | ❌ out | - | - | ❌ out | ✅ out | ✅ out | ❌ out | ❌ out |
+| 6 | MinEditDistStPer | MinEditDistStPerS | ❌ out | ❌ out | - | - | ❌ out | ✅ out | ✅ out | ❌ out | ❌ out |
+| 7 | MinEditDistMtEph | MinEditDistMtEphS | ❌ out | ❌ out | - | - | - | ✅ out | ✅ out | ❌ out | ❌ out |
+| 8 | MinEditDistMtPer | MinEditDistMtPerS | ❌ out | ❌ out | - | - | - | ✅ out | ✅ out | ❌ out | ❌ out |
 
----
+**Legend:** ✅ out = correctly outside verus! (Debug/Display must be outside). ❌ out = incorrectly outside verus! (should be inside with specs). `-` = not implemented.
 
-## Proof Holes Summary
+**Key finding:** Clone, PartialEq/Eq, traits, and impl blocks are all outside verus! — they should be inside with specifications. Only Debug and Display are correctly outside.
+
+### Why Everything Is Outside verus!
+
+Two Verus limitations forced all code outside verus!:
+
+1. **`&mut self` return types on trait methods:** Verus does not support `&mut T` return types inside `verus!`. The ephemeral traits return `&mut ArraySeq*` from methods like `multiset_mut()`, `source_mut()`, `target_mut()`.
+
+2. **`HashMap`:** Verus does not verify `std::collections::HashMap`. The memoization table is central to both algorithms. Since the struct contains a HashMap (or `Arc<Mutex<HashMap>>`), everything touching it must be outside verus!.
+
+## Proof Holes
 
 ```
-veracity-review-proof-holes -d src/Chap49/
+$ veracity-review-proof-holes -d src/Chap49
 
 ✓ MinEditDistMtEph.rs
 ✓ MinEditDistMtPer.rs
@@ -313,21 +250,27 @@ Modules: 8 clean, 0 holed
 Holes Found: 0 total
 ```
 
-No proof holes — vacuously clean since there is no Verus code.
+0 proof holes — but this is vacuously true since all code is outside `verus!`. There is nothing for Verus to verify.
 
----
+## Action Items
 
-## Review TODOs
+| # | Priority | Action | Description |
+|---|---|---|---|
+| 1 | P0 | Move algorithmic code into verus! | Requires restructuring to avoid HashMap and `&mut` return types in traits. Consider separating the spec/proof layer from the exec layer. |
+| 2 | P0 | Add spec functions for DP recurrences | Define `spec fn spec_subset_sum(s: Seq<int>, k: int) -> bool` and `spec fn spec_min_edit_dist(s: Seq<T>, t: Seq<T>) -> nat` matching the textbook recurrences. |
+| 3 | P0 | Add requires/ensures to main algorithms | At minimum, `ensures result == spec_subset_sum(self@, target)` and similar. |
+| 4 | P1 | Add View impls | Define abstract views for solver structs so specs can reason about them. |
+| 5 | P1 | Add PartialEqSpecImpl | Move PartialEq inside verus! with the standard pattern. |
+| 6 | P1 | Fix module headers | Use `//` for copyright (not `//!`), add SPDX line. |
+| 7 | P2 | Add bottom-up DP variants | The textbook discusses tabulation; only top-down memoization is implemented. |
+| 8 | P2 | Add granularity cutoff to Mt variants | Avoid spawning OS threads for small subproblems. |
+| 9 | P2 | Add PTTs | Once specs exist inside verus!, add proof-time tests. |
+| 10 | P3 | Add full TOC blocks | Add standard TOC comment at top of each file. |
 
-| # | Action | Priority | Category |
-|---|--------|:--------:|----------|
-| 1 | Strengthen MtEph MED test assertions to exact values (8 tests use weak inequalities) | High | Tests |
-| 2 | Add cross-variant consistency tests (same input → same output across all 4 variants) | High | Tests |
-| 3 | Add Example 49.3 MED test to StEph and MtEph test files | Medium | Tests |
-| 4 | Fix comment in TestMinEditDistStEph `test_longer_sequences` — says "3 edits" but correct answer is 5 (insert/delete only, no substitution) | Low | Tests |
-| 5 | Add Verus verification with `requires`/`ensures` for core functions | High | Verification |
-| 6 | Add TOC headers to all 8 source files (once verusified) | Medium | Style |
-| 7 | Fix copyright header format: use `//` for copyright, `//!` for module doc | Low | Style |
-| 8 | Make `min_edit_distance_rec` in MinEditDistMtEph a free function for consistency with other 7 files | Low | Style |
-| 9 | Add granularity cutoff to Mt variants to prevent thread explosion | Medium | Performance |
-| 10 | Consider persistent HashMap for StPer/MtPer memo tables | Low | Semantics |
+## Summary
+
+Chapter 49 implements the SubsetSum and MinEditDist algorithms faithfully according to the APAS textbook. Both algorithms match their respective prose descriptions (Algorithm 49.3 for SS, Algorithm 49.6 for MED). The Mt variants correctly parallelize the recursive branches using `thread::spawn`. All 136 runtime tests pass.
+
+However, the chapter has **zero Verus verification**. All 8 `verus!` blocks are empty. This was forced by two Verus limitations: `HashMap` (used for memoization) and `&mut` return types on trait methods. The 0 proof holes finding is vacuously true — there is nothing to verify.
+
+To bring this chapter to the verification standard of earlier chapters, a significant restructuring is needed: separate the verified spec/proof layer from the unverified exec layer, use alternative data structures for memoization (e.g., Vec-based tables for bottom-up DP), and remove `&mut` returns from trait methods.

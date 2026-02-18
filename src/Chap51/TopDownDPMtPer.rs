@@ -6,16 +6,42 @@
 
 pub mod TopDownDPMtPer {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions
+    // 8. traits
+    // 9. impls
+    // 11. derive impls
+    // 13. derive impls outside verus!
+
+    // 2. imports
     use std::collections::HashMap;
     use std::fmt::{Formatter, Debug, Display};
     use std::sync::{Arc, Mutex};
     use std::thread;
 
+    use vstd::prelude::*;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
 
+    verus! {
+    } // verus!
+
+    // 4. type definitions
+    #[derive(Clone)]
+    pub struct TopDownDPMtPerS {
+        /// Input sequence S
+        pub seq_s: ArraySeqMtPerS<char>,
+        /// Input sequence T
+        pub seq_t: ArraySeqMtPerS<char>,
+        /// Concurrent memoization table for subproblem results
+        pub memo_table: Arc<Mutex<HashMap<(usize, usize), usize>>>,
+    }
+
+    // 8. traits
     /// Trait for top-down dynamic programming operations
-    pub trait TopDownDPMtPerTrait<T: MtVal> {
+    pub trait TopDownDPMtPerTrait<T: MtVal> : Sized {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn new()                     -> Self;
@@ -25,16 +51,7 @@ pub mod TopDownDPMtPer {
         fn solve(&self, input: &[T]) -> T;
     }
 
-    #[derive(Clone, Debug)]
-    pub struct TopDownDPMtPerS {
-        /// Input sequence S
-        seq_s: ArraySeqMtPerS<char>,
-        /// Input sequence T  
-        seq_t: ArraySeqMtPerS<char>,
-        /// Concurrent memoization table for subproblem results
-        memo_table: Arc<Mutex<HashMap<(usize, usize), usize>>>,
-    }
-
+    // 9. impls
     impl TopDownDPMtPerS {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
@@ -81,8 +98,6 @@ pub mod TopDownDPMtPer {
                         self.med_recursive_concurrent(i - 1, j - 1)
                     } else {
                         // Characters don't match: try insert, delete, or substitute
-                        // For better parallelism, we could spawn threads for each branch
-                        // but dependencies limit effectiveness
                         let insert_cost = 1 + self.med_recursive_concurrent(i, j - 1);
                         let delete_cost = 1 + self.med_recursive_concurrent(i - 1, j);
                         let substitute_cost = 1 + self.med_recursive_concurrent(i - 1, j - 1);
@@ -218,7 +233,10 @@ pub mod TopDownDPMtPer {
         }
     }
 
+    // 11. derive impls
     impl PartialEq for TopDownDPMtPerS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(|S|+|T|+|memo|), Span Θ(|S|+|T|+|memo|)
         fn eq(&self, other: &Self) -> bool {
             let self_memo = self.memo_table.lock().unwrap();
             let other_memo = other.memo_table.lock().unwrap();
@@ -227,6 +245,8 @@ pub mod TopDownDPMtPer {
     }
 
     impl Default for TopDownDPMtPerS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn default() -> Self {
             let empty_s = ArraySeqMtPerS::new(0, ' ');
             let empty_t = ArraySeqMtPerS::new(0, ' ');
@@ -234,7 +254,22 @@ pub mod TopDownDPMtPer {
         }
     }
 
+    // 13. derive impls outside verus!
+    impl Debug for TopDownDPMtPerS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(|S|+|T|+|memo|), Span Θ(|S|+|T|+|memo|)
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("TopDownDPMtPerS")
+                .field("seq_s", &self.seq_s)
+                .field("seq_t", &self.seq_t)
+                .field("memo_table", &self.memo_table)
+                .finish()
+        }
+    }
+
     impl Display for TopDownDPMtPerS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(
                 f,

@@ -4,60 +4,85 @@
 pub mod SubsetSumMtEph {
 
     use std::collections::HashMap;
-    use std::fmt::{Debug, Display, Formatter, Result};
+    use std::fmt::{Debug, Display, Formatter};
+    use std::fmt::Result as FmtResult;
     use std::sync::{Arc, Mutex};
     use std::thread;
 
-    use crate::ArraySeqMtEphChap19SLit;
+    use vstd::prelude::*;
+
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::*;
+    use crate::ArraySeqMtEphChap19SLit;
 
-    #[derive(Clone, Debug)]
+    verus! {
+    } // verus!
+
+    // 4. type definitions
+
+    #[derive(Clone)]
     pub struct SubsetSumMtEphS<T: MtVal> {
-        multiset: ArraySeqMtEphS<T>,
-        memo: Arc<Mutex<HashMap<(usize, i32), bool>>>,
+        pub multiset: ArraySeqMtEphS<T>,
+        pub memo: Arc<Mutex<HashMap<(usize, i32), bool>>>,
     }
 
+    // 8. traits
+
     /// Trait for parallel subset sum operations
-    pub trait SubsetSumMtEphTrait<T: MtVal> {
+    pub trait SubsetSumMtEphTrait<T: MtVal>: Sized {
         /// Create new subset sum solver
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn new()                                      -> Self
         where
             T: Default;
 
         /// Create from multiset
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn from_multiset(multiset: ArraySeqMtEphS<T>) -> Self;
 
         /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
-        /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — agrees with APAS; thread::spawn on both branches
+        /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — agrees with APAS; thread::spawn on both branches; outside verus!, not verified
         fn subset_sum(&mut self, target: i32)         -> bool
         where
             T: Into<i32> + Copy + Send + Sync + 'static;
 
         /// Get the multiset
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn multiset(&self)                            -> &ArraySeqMtEphS<T>;
 
         /// Get mutable multiset (ephemeral allows mutation)
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn multiset_mut(&mut self)                    -> &mut ArraySeqMtEphS<T>;
 
         /// Set element at index (ephemeral mutation)
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn set(&mut self, index: usize, value: T);
 
         /// Clear memoization table
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn clear_memo(&mut self);
 
         /// Get memoization table size
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn memo_size(&self)                           -> usize;
     }
 
+    // 9. impls
+
     /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
-    /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — parallel fork on include/exclude branches
+    /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — parallel fork on include/exclude branches; outside verus!, not verified
     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
         table: &SubsetSumMtEphS<T>,
         i: usize,
         j: i32,
     ) -> bool {
-        // Check memo first (thread-safe)
         {
             let memo_guard = table.memo.lock().unwrap();
             if let Some(&result) = memo_guard.get(&(i, j)) {
@@ -66,20 +91,17 @@ pub mod SubsetSumMtEph {
         }
 
         let result = match (i, j) {
-            | (_, 0) => true,  // Base case: target sum is 0
-            | (0, _) => false, // Base case: no elements left, target > 0
+            | (_, 0) => true,
+            | (0, _) => false,
             | (i, j) => {
                 let element_value: i32 = (*table.multiset.nth(i - 1)).clone().into();
                 if element_value > j {
-                    // Element too large, skip it
                     subset_sum_rec(table, i - 1, j)
                 } else {
-                    // Parallel evaluation of both branches
                     let table_clone1 = table.clone();
                     let table_clone2 = table.clone();
 
                     let handle1 = thread::spawn(move || subset_sum_rec(&table_clone1, i - 1, j - element_value));
-
                     let handle2 = thread::spawn(move || subset_sum_rec(&table_clone2, i - 1, j));
 
                     let result1 = handle1.join().unwrap();
@@ -90,7 +112,6 @@ pub mod SubsetSumMtEph {
             }
         };
 
-        // Memoize result (thread-safe)
         {
             let mut memo_guard = table.memo.lock().unwrap();
             memo_guard.insert((i, j), result);
@@ -125,7 +146,6 @@ pub mod SubsetSumMtEph {
                 return false;
             }
 
-            // Clear memo for fresh computation
             {
                 let mut memo_guard = self.memo.lock().unwrap();
                 memo_guard.clear();
@@ -141,7 +161,6 @@ pub mod SubsetSumMtEph {
 
         fn set(&mut self, index: usize, value: T) {
             let _ = self.multiset.set(index, value);
-            // Clear memo since multiset changed
             let mut memo_guard = self.memo.lock().unwrap();
             memo_guard.clear();
         }
@@ -157,14 +176,26 @@ pub mod SubsetSumMtEph {
         }
     }
 
+    // 11. derive impls
+
     impl<T: MtVal> PartialEq for SubsetSumMtEphS<T> {
         fn eq(&self, other: &Self) -> bool { self.multiset == other.multiset }
     }
 
     impl<T: MtVal> Eq for SubsetSumMtEphS<T> {}
 
+    // 13. derive impls outside verus!
+
+    impl<T: MtVal> Debug for SubsetSumMtEphS<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            f.debug_struct("SubsetSumMtEphS")
+                .field("multiset", &self.multiset)
+                .finish()
+        }
+    }
+
     impl<T: MtVal> Display for SubsetSumMtEphS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             let memo_size = {
                 let memo_guard = self.memo.lock().unwrap();
                 memo_guard.len()

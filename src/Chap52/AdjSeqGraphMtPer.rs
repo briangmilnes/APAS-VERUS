@@ -4,17 +4,41 @@
 
 pub mod AdjSeqGraphMtPer {
 
-    use std::sync::Arc;
-
+    use vstd::prelude::*;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
 
+    verus! {
+
+    // Table of Contents
+    // 4. type definitions
+    // 5. view impls
+    // 8. traits
+    // 9. impls
+
+    // 4. type definitions
+
     #[derive(Clone)]
     pub struct AdjSeqGraphMtPer {
-        adj: ArraySeqMtPerS<ArraySeqMtPerS<N>>,
+        pub adj: ArraySeqMtPerS<ArraySeqMtPerS<N>>,
     }
 
-    pub trait AdjSeqGraphMtPerTrait {
+    // 5. view impls
+
+    impl View for AdjSeqGraphMtPer {
+        type V = Seq<Seq<int>>;
+        open spec fn view(&self) -> Self::V {
+            Seq::new(self.adj.spec_len(), |i: int|
+                Seq::new(self.adj.spec_index(i).spec_len(), |j: int|
+                    self.adj.spec_index(i).spec_index(j) as int
+                )
+            )
+        }
+    }
+
+    // 8. traits
+
+    pub trait AdjSeqGraphMtPerTrait: Sized {
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
         fn new(n: N)                   -> Self;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
@@ -27,15 +51,14 @@ pub mod AdjSeqGraphMtPer {
         fn out_neighbors(&self, u: N)  -> ArraySeqMtPerS<N>;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn out_degree(&self, u: N)     -> N;
-        /// claude-4-sonet: Work Θ(n + |E|), Span Θ(log n), Parallelism Θ((n + |E|)/log n)
-        fn map_vertices<F: Fn(N) -> N + Send + Sync + Clone + 'static>(&self, f: F) -> Self
-        where
-            N: 'static;
     }
+
+    // 9. impls
 
     impl AdjSeqGraphMtPerTrait for AdjSeqGraphMtPer {
         /// - APAS: N/A — constructor not in cost table.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop creating n empty neighbor lists.
+        #[verifier::external_body]
         fn new(n: N) -> Self {
             let empty_list = ArraySeqMtPerS::empty();
             let mut adj_lists = Vec::with_capacity(n);
@@ -49,10 +72,12 @@ pub mod AdjSeqGraphMtPer {
 
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — sequence length.
+        #[verifier::external_body]
         fn num_vertices(&self) -> N { self.adj.length() }
 
         /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential loop; span not parallel despite Mt type.
+        #[verifier::external_body]
         fn num_edges(&self) -> N {
             let n = self.adj.length();
             let mut count = 0;
@@ -64,6 +89,7 @@ pub mod AdjSeqGraphMtPer {
 
         /// - APAS: Work Θ(d(u)), Span Θ(lg d(u)) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Θ(d(u)), Span Θ(d(u)) — sequential linear scan; span not logarithmic.
+        #[verifier::external_body]
         fn has_edge(&self, u: N, v: N) -> B {
             if u >= self.adj.length() {
                 return false;
@@ -79,15 +105,23 @@ pub mod AdjSeqGraphMtPer {
 
         /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+        #[verifier::external_body]
         fn out_neighbors(&self, u: N) -> ArraySeqMtPerS<N> { self.adj.nth(u).clone() }
 
         /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
+        #[verifier::external_body]
         fn out_degree(&self, u: N) -> N { self.adj.nth(u).length() }
+    }
 
+    } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl AdjSeqGraphMtPer {
         /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential double loop; span not parallel despite Mt type.
-        fn map_vertices<F: Fn(N) -> N + Send + Sync + Clone + 'static>(&self, f: F) -> Self
+        pub fn map_vertices<F: Fn(N) -> N + Send + Sync + Clone + 'static>(&self, f: F) -> Self
         where
             N: 'static,
         {

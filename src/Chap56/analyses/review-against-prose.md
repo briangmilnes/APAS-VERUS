@@ -5,179 +5,151 @@ body { max-width: 100% !important; width: 100% !important; margin: 0 !important;
 table { width: 100% !important; table-layout: fixed; }
 </style>
 
-# Chapter 56 — Shortest Paths: Review Against Prose
+# Chapter 56 — Shortest Paths (Introduction): Review Against Prose
 
-- **Date:** 2026-02-13
-- **Reviewer:** Claude-Opus-4.6
-- **Prose source:** `prompts/Chap56.txt`
-- **Source files:** 12 files in `src/Chap56/`
+**Date:** 2026-02-17
+**Reviewer:** Claude-Opus-4.6
 
-## Phase 1: Inventory (Tool-Generated)
+## Phase 1: Inventory
 
-Tool: `veracity-review-module-fn-impls -d src/Chap56`
+| # | File | exec fns | external_body | spec fns | proof fns | View | verus! |
+|---|------|:--------:|:-------------:|:--------:|:---------:|:----:|:------:|
+| 1 | SSSPResultStEphInt.rs | 7 | 7 | 0 | 0 | Yes | Yes |
+| 2 | SSSPResultStPerInt.rs | 7 | 7 | 0 | 0 | Yes | Yes |
+| 3 | SSSPResultStEphFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes |
+| 4 | SSSPResultStPerFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes |
+| 5 | AllPairsResultStEphInt.rs | 7 | 7 | 0 | 0 | Yes | Yes |
+| 6 | AllPairsResultStPerInt.rs | 7 | 7 | 0 | 0 | Yes | Yes |
+| 7 | AllPairsResultStEphFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes |
+| 8 | AllPairsResultStPerFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes |
+| 9 | PathWeightUtilsStEph.rs | 4 | 4 | 0 | 0 | No | Yes |
+| 10 | PathWeightUtilsStPer.rs | 4 | 4 | 0 | 0 | No | Yes |
+| 11 | Example56_1.rs | 3 | 3 | 0 | 0 | No | Yes |
+| 12 | Example56_3.rs | 2 | 2 | 0 | 0 | No | Yes |
+| | **Total** | **69** | **69** | **0** | **0** | | |
 
-- **81 functions** across 12 files
-- **0 inside `verus!`** — entire chapter is plain Rust, no verification
-- **0 specs** (no `requires`/`ensures`)
-- **0 proof holes**
-- **0 proof functions**
+All 12 files are inside `verus!{}` blocks. All 69 exec functions have `#[verifier::external_body]`. 8 files have `View` implementations. No `requires`/`ensures` on any exec function. TOC headers and section markers present in all files.
 
-See `analyses/veracity-review-module-fn-impls.md` for the full function-by-function detail.
+**Gating:** Chap56 module itself: `#[cfg(not(feature = "experiments_only"))]`. The 4 core modules (SSSPResultStEphInt, SSSPResultStPerInt, AllPairsResultStEphInt, AllPairsResultStPerInt) compile normally. The remaining 8 modules (Float variants, PathWeightUtils, Examples) are additionally gated behind `#[cfg(feature = "all_chapters")]`.
 
 ## Phase 2: Prose Inventory
+
+Source: `prompts/Chap56.txt` (Chapter 56 — Introduction to Shortest Paths)
 
 ### Definitions
 
 | # | Item | Description |
 |---|------|-------------|
-| 1 | Definition 56.1 — Path Weight | Weight of a path = sum of edge weights along the path |
-| 2 | Definition 56.2 — Shortest Path and Distance | Shortest path = path with minimal weight; δ_G(u,v) = weight of shortest path |
-| 3 | Definition 56.3 — Sub-Path | A sub-path is a path contained within another path |
-| 4 | Definition 56.4 — Sub-Paths Property | Any sub-path of a shortest path is itself a shortest path |
-
-### Algorithms
-
-None. Chapter 56 is introductory — it defines concepts and problems. Algorithms are in Chapters 57 (Dijkstra), 58 (Bellman-Ford), and 59 (Johnson).
-
-### Cost Specs
-
-None explicitly stated. The chapter defines problems (SSSP, SSSP+, All-Pairs) but defers algorithmic cost analysis to later chapters.
+| 1 | Definition 56.1 — Path Weight | Weight of path = sum of edge weights along the path. |
+| 2 | Definition 56.2 — Shortest Path and Distance | Shortest path = minimal-weight path; δ_G(u,v) = weight of shortest path. |
+| 3 | Definition 56.3 — Sub-Path | A sub-path of a path is itself a path contained within the path. |
+| 4 | Definition 56.4 — Sub-Paths Property | Any sub-path of a shortest path is itself a shortest path. |
 
 ### Problems
 
 | # | Item | Description |
 |---|------|-------------|
-| 1 | Problem 56.1 — Single-Pair Shortest Paths | Find shortest path from s to t |
-| 2 | Problem 56.2 — SSSP | Find shortest paths from s to all vertices |
-| 3 | Problem 56.3 — All-Pairs Shortest Paths | Find shortest paths between all pairs |
-| 4 | Problem 56.4 — SSSP+ | SSSP restricted to non-negative weights |
+| 1 | Problem 56.1 — Single-Pair Shortest Paths | Find shortest path from s to t. |
+| 2 | Problem 56.2 — SSSP | Find shortest paths from s to all vertices. |
+| 3 | Problem 56.3 — All-Pairs Shortest Paths | Find shortest paths between all pairs. |
+| 4 | Problem 56.4 — SSSP+ | SSSP restricted to non-negative weights. |
 
 ### Examples
 
 | # | Item | Description |
 |---|------|-------------|
-| 1 | Example 56.1 | Path weight computation: path ⟨s,a,b,e⟩ = 6, ⟨s,a,b,s⟩ = 10 |
-| 2 | Example 56.3 | Negative weight cycle: cycle ⟨s,a,b,s⟩ = −4, shortest path to e = −∞ |
-| 3 | Example 56.4 | Sub-paths property illustration |
-| 4 | Example 56.5 | Pittsburgh-to-San-Francisco sub-paths property illustration |
+| 1 | Example 56.1 | Path weight: ⟨s,a,b,e⟩ = 6, ⟨s,a,b,s⟩ = 10. |
+| 2 | Example 56.3 | Negative weight cycle: cycle ⟨s,a,b,s⟩ = −4, distance to e = −∞. |
+| 3 | Example 56.4 | Sub-path enumeration (conceptual). |
+| 4 | Example 56.5 | Pittsburgh-to-SF sub-paths property (conceptual). |
 
-### Theorems/Properties
+### Cost Specs
 
-| # | Item | Description |
-|---|------|-------------|
-| 1 | Sub-Paths Property (Def 56.4) | Any sub-path of a shortest path is itself a shortest path |
-
-### Exercises/Problems
-
-None. Chapter 56 contains no exercises.
+None. Chapter 56 is definitional — algorithms and costs are in Chapters 57-59.
 
 ## Phase 3: Algorithmic Analysis
 
-### 3a. Cost Disagreements
+### 3a. Cost Annotations
 
-| # | File | Function | Issue |
-|---|------|----------|-------|
-| 1 | PathWeightUtilsStPer.rs | `validate_subpath_property_int` | Module header states O(k²) but implementation is O(k) — only checks consecutive edges, not all subpath pairs |
-| 2 | PathWeightUtilsStPer.rs | `validate_subpath_property_float` | Same as above |
-| 3 | PathWeightUtilsStEph.rs | `validate_subpath_property_int` | Same as above |
-| 4 | PathWeightUtilsStEph.rs | `validate_subpath_property_float` | Same as above |
+All 69 exec functions have APAS/Claude-Opus-4.6 cost annotation pairs.
 
-Note: The O(k) implementation IS correct and sufficient — checking that dist[v] = dist[u] + w(u,v) for each consecutive pair implies all sub-paths are optimal by induction. The module header cost annotation is simply an overestimate, not a correctness issue.
+| # | Function Group | APAS Cost | Claude-Opus-4.6 Cost | Agreement |
+|---|---------------|-----------|---------------------|-----------|
+| 1 | `SSSP*.new` | Work Θ(n), Span Θ(n) | Work Θ(n), Span Θ(n) | Agree |
+| 2 | `SSSP*.get_distance` | Work Θ(1), Span Θ(1) | Work Θ(1), Span Θ(1) | Agree |
+| 3 | `SSSP*.set_distance` (Eph) | (no cost stated) | Work Θ(1), Span Θ(1) | N/A |
+| 4 | `SSSP*.set_distance` (Per) | (no cost stated) | Work Θ(n), Span Θ(n) | N/A — persistent copy |
+| 5 | `SSSP*.get_predecessor` | (no cost stated) | Work Θ(1), Span Θ(1) | N/A |
+| 6 | `SSSP*.set_predecessor` (Eph) | (no cost stated) | Work Θ(1), Span Θ(1) | N/A |
+| 7 | `SSSP*.set_predecessor` (Per) | (no cost stated) | Work Θ(n), Span Θ(n) | N/A — persistent copy |
+| 8 | `SSSP*.is_reachable` | Work Θ(1), Span Θ(1) | Work Θ(1), Span Θ(1) | Agree |
+| 9 | `SSSP*.extract_path` | (no cost stated) | Work Θ(k), Span Θ(k) | N/A |
+| 10 | `AllPairs*.new` | Work Θ(n²), Span Θ(n²) | Work Θ(n²), Span Θ(n²) | Agree |
+| 11 | `AllPairs*.get_distance` | Work Θ(1), Span Θ(1) | Work Θ(1), Span Θ(1) | Agree |
+| 12 | `AllPairs*.set_distance` (Eph) | (no cost stated) | Work Θ(n), Span Θ(n) | N/A — clones row |
+| 13 | `AllPairs*.set_distance` (Per) | (no cost stated) | Work Θ(n), Span Θ(n) | N/A — persistent update |
+| 14 | `AllPairs*.is_reachable` | Work Θ(1), Span Θ(1) | Work Θ(1), Span Θ(1) | Agree |
+| 15 | `AllPairs*.extract_path` | (no cost stated) | Work Θ(k), Span Θ(k) | N/A |
+| 16 | `path_weight_int` / `_float` | Work Θ(k), Span Θ(k) | Work Θ(k), Span Θ(k) | Agree |
+| 17 | `validate_subpath_property_*` | (no cost stated) | Work Θ(k), Span Θ(k) | N/A |
+| 18 | Example fns | N/A — demonstration | Work Θ(1), Span Θ(1) | N/A — constant-sized |
+
+**Cost disagreements:**
+- Module headers for `PathWeightUtils*.rs` state `validate_subpath_property` as O(k²), but the implementation is O(k) — it checks k-1 consecutive edges, not all pairs. The O(k) annotation on the functions themselves is correct; the module-level header overstates.
 
 ### 3b. Implementation Fidelity
 
-Chapter 56 defines concepts, not algorithms. The code implements **data structures** for storing shortest path results (SSSPResult, AllPairsResult) and **utility functions** for computing path weights and validating the sub-paths property. These are scaffolding for Chapters 57-59, not implementations of prose algorithms.
+Chapter 56 defines concepts, not algorithms. The code implements **data structures** for shortest path results and **utility functions** for path weights.
 
 | # | Code Module | Prose Counterpart | Fidelity |
 |---|-------------|-------------------|----------|
-| 1 | `PathWeightUtils{StEph,StPer}` | Def 56.1 (Path Weight) | Faithful — sums edge weights along a vertex path |
-| 2 | `PathWeightUtils{StEph,StPer}::validate_subpath_property_*` | Def 56.4 (Sub-Paths Property) | Faithful — validates the relaxation condition on consecutive edges |
-| 3 | `Example56_1` | Example 56.1 | Faithful — demonstrates path weight with positive/negative weights |
-| 4 | `Example56_3` | Example 56.3 | Faithful — demonstrates negative weight cycles |
-| 5 | `SSSPResult{StEph,StPer}{Int,Float}` | Problem 56.2 (SSSP) | Scaffolding — data structure for SSSP results, not an algorithm |
-| 6 | `AllPairsResult{StEph,StPer}{Int,Float}` | Problem 56.3 (All-Pairs) | Scaffolding — data structure for all-pairs results, not an algorithm |
+| 1 | `PathWeightUtils*.path_weight_*` | Def 56.1 (Path Weight) | **High** — sums edge weights along vertex path. |
+| 2 | `PathWeightUtils*.validate_subpath_property_*` | Def 56.4 (Sub-Paths Property) | **High** — validates relaxation on consecutive edges. |
+| 3 | `Example56_1` | Example 56.1 | **High** — demonstrates path weight computation. |
+| 4 | `Example56_3` | Example 56.3 | **High** — demonstrates negative weight cycles. |
+| 5 | `SSSPResult*` | Problem 56.2 (SSSP) | **Scaffolding** — data structure for Chap57-58. |
+| 6 | `AllPairsResult*` | Problem 56.3 (All-Pairs) | **Scaffolding** — data structure for Chap59. |
 
-**Deviations:**
-- None significant. The code is infrastructure, and it correctly models the prose's conceptual framework.
+No significant deviations. The code is infrastructure for Chapters 57-59.
 
 ### 3c. Spec Fidelity
 
-**No specs exist.** All 81 functions are outside `verus!{}` with no `requires`/`ensures`. The entire chapter is unverified plain Rust.
+No `requires`/`ensures` on any function. Spec fidelity: **N/A**.
 
-Key properties that SHOULD be specified when verusified:
+Key specs that should exist when verusified:
 - `path_weight`: result equals sum of edge weights (Def 56.1)
 - `extract_path`: returned path starts at source and ends at target
-- `set_distance` / `set_predecessor`: returned structure differs from input only at the updated index
+- `set_distance`/`set_predecessor`: returned structure differs only at updated index
 - `is_reachable`: equivalent to `distance != UNREACHABLE/INFINITY`
-- `validate_subpath_property`: returns true iff the relaxation condition holds on all consecutive edges
 
 ## Phase 4: Parallelism Review
 
-**No Mt modules exist.** All 12 files are St (sequential). Chapter 56 is purely definitional — no algorithms to parallelize.
-
-Not applicable.
+**No Mt modules exist.** All 12 files are St (sequential). Chapter 56 is definitional — no algorithms to parallelize. Not applicable.
 
 ## Phase 5: Runtime Test Review
 
-### 5a. Coverage
-
-**No runtime test files exist** for Chapter 56. Zero coverage.
+**No runtime test files exist** for Chapter 56.
 
 | # | Source Module | RTT File | Status |
 |---|-------------|----------|--------|
-| 1 | AllPairsResultStEphFloat | — | Missing |
-| 2 | AllPairsResultStEphInt | — | Missing |
-| 3 | AllPairsResultStPerFloat | — | Missing |
-| 4 | AllPairsResultStPerInt | — | Missing |
-| 5 | Example56_1 | — | Missing |
-| 6 | Example56_3 | — | Missing |
-| 7 | PathWeightUtilsStEph | — | Missing |
-| 8 | PathWeightUtilsStPer | — | Missing |
-| 9 | SSSPResultStEphFloat | — | Missing |
-| 10 | SSSPResultStEphInt | — | Missing |
-| 11 | SSSPResultStPerFloat | — | Missing |
-| 12 | SSSPResultStPerInt | — | Missing |
+| 1 | SSSPResultStEphInt | — | Missing |
+| 2 | SSSPResultStPerInt | — | Missing |
+| 3 | SSSPResultStEphFloat | — | Missing |
+| 4 | SSSPResultStPerFloat | — | Missing |
+| 5 | AllPairsResultStEphInt | — | Missing |
+| 6 | AllPairsResultStPerInt | — | Missing |
+| 7 | AllPairsResultStEphFloat | — | Missing |
+| 8 | AllPairsResultStPerFloat | — | Missing |
+| 9 | PathWeightUtilsStEph | — | Missing |
+| 10 | PathWeightUtilsStPer | — | Missing |
+| 11 | Example56_1 | — | Missing |
+| 12 | Example56_3 | — | Missing |
 
-### 5b. Test Quality
-
-N/A — no tests exist.
-
-### 5c. Missing Tests (Priority)
-
-| # | Module | Priority | Rationale |
-|---|--------|----------|-----------|
-| 1 | SSSPResultStEphInt | High | Used by Chap57-58 Dijkstra/Bellman-Ford; exercises new/set/get/extract_path |
-| 2 | AllPairsResultStEphInt | High | Used by Chap59 Johnson's; exercises matrix operations |
-| 3 | PathWeightUtilsStEph | High | Core utility; test path_weight with known graphs, validate_subpath on computed shortest paths |
-| 4 | Example56_1 | Medium | Run examples and verify expected output values (path weight = 6, 10, 5) |
-| 5 | Example56_3 | Medium | Run negative cycle examples and verify expected values |
-| 6 | Float variants | Lower | Same logic as Int; test that OrderedFloat comparison works correctly |
-| 7 | StPer variants | Lower | Same logic as StEph but with persistent data structures |
+Proposed priority: (1) SSSPResultStEphInt (used by Chap57-58), (2) AllPairsResultStEphInt (used by Chap59), (3) PathWeightUtilsStEph (core utility), (4) Examples.
 
 ## Phase 6: Proof-Time Test (PTT) Review
 
-**No PTTs exist** for Chapter 56. Since all code is outside `verus!{}`, there are no iterators, no verified loops, and no ghost state to test. **No PTTs are needed** until the chapter is verusified.
-
-### 6a. Unified Test Inventory
-
-| # | Source Module | RTT File | PTT File | Status |
-|---|-------------|----------|----------|--------|
-| 1 | AllPairsResultStEphFloat | — | — | Missing both |
-| 2 | AllPairsResultStEphInt | — | — | Missing both |
-| 3 | AllPairsResultStPerFloat | — | — | Missing both |
-| 4 | AllPairsResultStPerInt | — | — | Missing both |
-| 5 | Example56_1 | — | — | Missing both |
-| 6 | Example56_3 | — | — | Missing both |
-| 7 | PathWeightUtilsStEph | — | — | Missing both |
-| 8 | PathWeightUtilsStPer | — | — | Missing both |
-| 9 | SSSPResultStEphFloat | — | — | Missing both |
-| 10 | SSSPResultStEphInt | — | — | Missing both |
-| 11 | SSSPResultStPerFloat | — | — | Missing both |
-| 12 | SSSPResultStPerInt | — | — | Missing both |
-
-### 6b-6d. Iterator/Loop Coverage
-
-N/A — no verified iterators or loops.
+No verified loops or iterators. No PTTs needed until verusified.
 
 ## Phase 7: Gap Analysis
 
@@ -185,109 +157,88 @@ N/A — no verified iterators or loops.
 
 | # | Prose Item | Status |
 |---|-----------|--------|
-| 1 | Definition 56.2 — formal spec of δ_G(u,v) | No spec fn defining shortest-path distance |
-| 2 | Example 56.4 — sub-path enumeration | Not implemented (conceptual) |
-| 3 | Example 56.5 — Pittsburgh-to-SF | Not implemented (conceptual) |
-| 4 | Problem 56.1 — Single-Pair | No dedicated single-pair result type (extract_path partially covers this) |
+| 1 | Definition 56.2 — formal spec of δ_G(u,v) | No spec fn defining shortest-path distance. |
+| 2 | Example 56.4 — sub-path enumeration | Not implemented (conceptual). |
+| 3 | Example 56.5 — Pittsburgh-to-SF | Not implemented (conceptual). |
+| 4 | Problem 56.1 — Single-Pair | No dedicated single-pair type (extract_path partially covers). |
 
 ### Code With No Prose Counterpart
 
 | # | Code Item | Purpose |
 |---|----------|---------|
-| 1 | `set_distance` / `set_predecessor` | Mutable scaffolding for algorithms in Chap57-59 |
-| 2 | `get_predecessor` | Path reconstruction helper |
-| 3 | `extract_path` | Path reconstruction from predecessor array — implied by SSSP but not explicitly defined in prose |
-| 4 | Float variants of all types | Prose uses real numbers; code splits into i64 and OrderedFloat<f64> |
-| 5 | Eph/Per variants | Prose doesn't distinguish persistence; code provides both styles |
+| 1 | `set_distance` / `set_predecessor` | Mutable scaffolding for algorithms in Chap57-59. |
+| 2 | `get_predecessor` | Path reconstruction helper. |
+| 3 | `extract_path` | Reconstruct path from predecessor array — implied by SSSP but not explicitly in prose. |
+| 4 | Float variants | Prose uses real numbers; code splits into i64 and OrderedFloat<f64>. |
+| 5 | Eph/Per variants | Prose doesn't distinguish persistence; code provides both. |
 
-## Phase 8: Table of Contents Review
+## Phase 8: TOC and In/Out Table
 
-### TOC Status
+### TOC Presence
 
-| # | File | TOC Present | Section Headers | In/Out Correct |
-|---|------|:-----------:|:---------------:|:--------------:|
-| 1 | AllPairsResultStEphFloat.rs | No | No | N/A (all outside verus!) |
-| 2 | AllPairsResultStEphInt.rs | No | No | N/A |
-| 3 | AllPairsResultStPerFloat.rs | No | No | N/A |
-| 4 | AllPairsResultStPerInt.rs | No | No | N/A |
-| 5 | Example56_1.rs | No | No | N/A |
-| 6 | Example56_3.rs | No | No | N/A |
-| 7 | PathWeightUtilsStEph.rs | No | No | N/A |
-| 8 | PathWeightUtilsStPer.rs | No | No | N/A |
-| 9 | SSSPResultStEphFloat.rs | No | No | N/A |
-| 10 | SSSPResultStEphInt.rs | No | No | N/A |
-| 11 | SSSPResultStPerFloat.rs | No | No | N/A |
-| 12 | SSSPResultStPerInt.rs | No | No | N/A |
+| # | File | TOC | Section Headers |
+|---|------|:---:|:---------------:|
+| 1 | SSSPResultStEphInt.rs | Yes | Yes (4, 5, 8, 9) |
+| 2 | SSSPResultStPerInt.rs | Yes | Yes (4, 5, 8, 9) |
+| 3 | SSSPResultStEphFloat.rs | Yes | Yes (4, 5, 8, 9) |
+| 4 | SSSPResultStPerFloat.rs | Yes | Yes (4, 5, 8, 9) |
+| 5 | AllPairsResultStEphInt.rs | Yes | Yes (4, 5, 8, 9) |
+| 6 | AllPairsResultStPerInt.rs | Yes | Yes (4, 5, 8, 9) |
+| 7 | AllPairsResultStEphFloat.rs | Yes | Yes (4, 5, 8, 9) |
+| 8 | AllPairsResultStPerFloat.rs | Yes | Yes (4, 5, 8, 9) |
+| 9 | PathWeightUtilsStEph.rs | Yes | Yes (4, 8, 9) |
+| 10 | PathWeightUtilsStPer.rs | Yes | Yes (4, 8, 9) |
+| 11 | Example56_1.rs | Yes | Yes (8, 9) |
+| 12 | Example56_3.rs | Yes | Yes (8, 9) |
 
-Since no files use `verus!{}`, the TOC standard does not strictly apply (it governs section ordering inside/outside `verus!`). TOC headers should be added when the chapter is verusified.
+All files have TOC comment blocks and section headers.
 
 ### In/Out Table
 
 | # | File | Clone | PartialEq/Eq | Default | Drop | Iterator | Debug | Display | Macro | Other |
 |---|------|:-----:|:------------:|:-------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
-| 1 | AllPairsResultStEphFloat | - | - | - | - | - | - | - | - | — |
-| 2 | AllPairsResultStEphInt | - | - | - | - | - | - | - | - | — |
-| 3 | AllPairsResultStPerFloat | - | - | - | - | - | - | - | - | — |
-| 4 | AllPairsResultStPerInt | - | - | - | - | - | - | - | - | — |
-| 5 | Example56_1 | - | - | - | - | - | - | - | - | — |
-| 6 | Example56_3 | - | - | - | - | - | - | - | - | — |
-| 7 | PathWeightUtilsStEph | - | - | - | - | - | - | - | - | — |
-| 8 | PathWeightUtilsStPer | - | - | - | - | - | - | - | - | — |
-| 9 | SSSPResultStEphFloat | - | - | - | - | - | - | - | - | — |
-| 10 | SSSPResultStEphInt | - | - | - | - | - | - | - | - | — |
-| 11 | SSSPResultStPerFloat | - | - | - | - | - | - | - | - | — |
-| 12 | SSSPResultStPerInt | - | - | - | - | - | - | - | - | — |
+| 1 | SSSPResultStEphInt | - | - | - | - | - | - | - | - | - |
+| 2 | SSSPResultStPerInt | - | - | - | - | - | - | - | - | - |
+| 3 | SSSPResultStEphFloat | - | - | - | - | - | - | - | - | - |
+| 4 | SSSPResultStPerFloat | - | - | - | - | - | - | - | - | - |
+| 5 | AllPairsResultStEphInt | - | - | - | - | - | - | - | - | - |
+| 6 | AllPairsResultStPerInt | - | - | - | - | - | - | - | - | - |
+| 7 | AllPairsResultStEphFloat | - | - | - | - | - | - | - | - | - |
+| 8 | AllPairsResultStPerFloat | - | - | - | - | - | - | - | - | - |
+| 9 | PathWeightUtilsStEph | - | - | - | - | - | - | - | - | - |
+| 10 | PathWeightUtilsStPer | - | - | - | - | - | - | - | - | - |
+| 11 | Example56_1 | - | - | - | - | - | - | - | - | - |
+| 12 | Example56_3 | - | - | - | - | - | - | - | - | - |
 
 No derive trait impls in any file. No `❌` items.
 
 ## Proof Holes Summary
 
 ```
-veracity-review-proof-holes -d src/Chap56/
+Modules: 0 clean, 12 holed
+Holes Found: 69 total (all external_body)
 
-12 clean (no holes)
-0 holed
-12 total
-
-🎉 No proof holes found! All proofs are complete.
+SSSPResultStEphInt.rs:         7 × external_body
+SSSPResultStPerInt.rs:         7 × external_body
+SSSPResultStEphFloat.rs:       7 × external_body
+SSSPResultStPerFloat.rs:       7 × external_body
+AllPairsResultStEphInt.rs:     7 × external_body
+AllPairsResultStPerInt.rs:     7 × external_body
+AllPairsResultStEphFloat.rs:   7 × external_body
+AllPairsResultStPerFloat.rs:   7 × external_body
+PathWeightUtilsStEph.rs:       4 × external_body
+PathWeightUtilsStPer.rs:       4 × external_body
+Example56_1.rs:                3 × external_body
+Example56_3.rs:                2 × external_body
 ```
 
-(Trivially clean — no code is inside `verus!{}` so there are no proofs to have holes in.)
-
-## Spec Strength Summary
-
-| Classification | Count |
-|----------------|-------|
-| strong | 0 |
-| partial | 0 |
-| weak | 0 |
-| none | 81 |
-
-All 81 functions have **no spec** — the entire chapter is plain Rust outside `verus!{}`.
-
-## Overall Assessment
-
-Chapter 56 is an **introductory/definitional chapter** that establishes the concepts of path weight, shortest paths, distance, and the sub-paths property. It defines four problem variants (single-pair, SSSP, SSSP+, all-pairs) but provides no algorithms — those are deferred to Chapters 57-59.
-
-**Implementation quality:** The code faithfully implements the prose concepts as data structures and utility functions. The type structure (SSSP vs AllPairs, Eph vs Per, Int vs Float) provides a clean interface for the algorithm chapters to consume.
-
-**Key findings:**
-
-| # | Finding | Severity |
-|---|---------|----------|
-| 1 | No `verus!{}` blocks — entire chapter unverified | Major |
-| 2 | No `requires`/`ensures` on any function | Major |
-| 3 | No runtime tests | Moderate |
-| 4 | Module headers overstate `validate_subpath_property` cost as O(k²); actual impl is O(k) | Minor |
-| 5 | No TOC headers (expected given no verus!) | Minor |
-| 6 | AllPairsResultStEph `set_distance`/`set_predecessor` clone entire rows — O(n) per update where O(1) is possible with interior mutability | Design note |
-
-**Recommended actions:**
+## Action Items
 
 | # | Action | Priority |
 |---|--------|----------|
-| 1 | Verusify all modules (wrap in `verus!{}`, add `requires`/`ensures`) | High |
-| 2 | Add runtime tests for SSSPResult, AllPairsResult, PathWeightUtils | High |
-| 3 | Fix module header cost annotations for `validate_subpath_property` (O(k²) → O(k)) | Low |
-| 4 | Add TOC headers when verusifying | Low |
-| 5 | Consider adding a `spec fn spec_distance` for δ_G(u,v) when verusifying | Medium |
+| 1 | Remove `external_body` from SSSPResult*/AllPairsResult* and add `requires`/`ensures` | High |
+| 2 | Add runtime tests (SSSPResultStEphInt first, then AllPairsResultStEphInt) | High |
+| 3 | Add `spec fn spec_distance` for δ_G(u,v) | Medium |
+| 4 | Remove `external_body` from PathWeightUtils* and verify | Medium |
+| 5 | Fix module header cost for `validate_subpath_property` (O(k²) → O(k)) | Low |
+| 6 | Remove `external_body` from Example fns (demonstration code) | Low |

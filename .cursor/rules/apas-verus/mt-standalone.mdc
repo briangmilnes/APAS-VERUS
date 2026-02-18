@@ -1,0 +1,42 @@
+---
+description: Mt files must be standalone — no imports from St counterparts
+globs: "**/*Mt*.rs"
+alwaysApply: true
+---
+
+# Mt Files Are Standalone
+
+Mt (multi-threaded) source files **must not** import from their St (single-threaded) counterparts.
+
+## Rule
+
+`XMt*.rs` may not `use` anything from `XSt*.rs` (or any other St file in the same chapter). Each Mt file must be self-contained with its own copies of shared items like spec functions, proof lemmas, type definitions, and external_body helpers.
+
+## Why
+
+This is a textbook teaching codebase. Each file should be readable on its own without chasing cross-file dependencies. A student reading `MergeSortMtPer.rs` should see `spec_sorted` defined right there, not have to open `MergeSortStPer.rs` to find it.
+
+## What to duplicate
+
+- Spec functions (`spec fn`)
+- Proof lemmas (`proof fn`) used in the Mt module
+- Type definitions (`struct`, `enum`) specific to the algorithm
+- External-body helpers that the Mt module calls directly
+
+## What is NOT duplicated
+
+- Imports from `vstdplus`, `Types`, `Concurrency`, `Chap02` (HF scheduler), or `Chap18` (ArraySeq) — these are shared infrastructure, not St counterparts.
+- Imports from other Mt modules are fine.
+
+## Example
+
+```rust
+// BAD — Mt importing from St
+#[cfg(verus_keep_ghost)]
+use crate::Chap26::MergeSortStPer::MergeSortStPer::*;
+
+// GOOD — Mt defines its own copy
+pub open spec fn spec_sorted(s: Seq<N>) -> bool {
+    forall|i: int, j: int| 0 <= i < j < s.len() ==> s[i] <= s[j]
+}
+```

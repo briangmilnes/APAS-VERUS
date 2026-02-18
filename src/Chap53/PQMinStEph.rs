@@ -5,24 +5,29 @@ pub mod PQMinStEph {
 
     use std::marker::PhantomData;
 
+    use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
 
-    #[derive(Clone, Debug)]
+    verus! {
+
+    // 4. type definitions
+    #[derive(Clone)]
     pub struct PQMinResult<V: StT + Ord, P: StT + Ord> {
         pub visited: AVLTreeSetStEph<V>,
         pub priorities: AVLTreeSetStEph<Pair<V, P>>,
         pub parent: Option<AVLTreeSetStEph<Pair<V, V>>>,
     }
 
-    pub trait PriorityFn<V: StT + Ord, P: StT + Ord> {
-        fn priority(&self, v: &V) -> P;
-    }
-
     pub struct ClosurePriority<V: StT + Ord, P: StT + Ord, F: Fn(&V) -> P> {
         f: F,
         _phantom: PhantomData<(V, P)>,
+    }
+
+    // 8. traits
+    pub trait PriorityFn<V: StT + Ord, P: StT + Ord> {
+        fn priority(&self, v: &V) -> P;
     }
 
     pub trait PQMinStEphTrait<V: StT + Ord, P: StT + Ord> {
@@ -41,11 +46,13 @@ pub mod PQMinStEph {
             PF: PriorityFn<V, P>;
     }
 
-    pub trait ClosurePriorityTrait<V: StT + Ord, P: StT + Ord, F: Fn(&V) -> P> {
+    pub trait ClosurePriorityTrait<V: StT + Ord, P: StT + Ord, F: Fn(&V) -> P> : Sized {
         fn new(f: F) -> Self;
     }
 
+    // 9. impls
     impl<V: StT + Ord, P: StT + Ord, F: Fn(&V) -> P> ClosurePriorityTrait<V, P, F> for ClosurePriority<V, P, F> {
+        #[verifier::external_body]
         fn new(f: F) -> Self {
             Self {
                 f,
@@ -55,12 +62,14 @@ pub mod PQMinStEph {
     }
 
     impl<V: StT + Ord, P: StT + Ord, F: Fn(&V) -> P> PriorityFn<V, P> for ClosurePriority<V, P, F> {
+        #[verifier::external_body]
         fn priority(&self, v: &V) -> P { (self.f)(v) }
     }
 
     /// Priority-first search from single source (Section 53.4).
     /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
     /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — delegates to pq_min_multi.
+    #[verifier::external_body]
     pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF) -> PQMinResult<V, P>
     where
         G: Fn(&V) -> AVLTreeSetStEph<V>,
@@ -73,6 +82,7 @@ pub mod PQMinStEph {
     /// Priority-first search from multiple sources (Section 53.4).
     /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
     /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round; sequential.
+    #[verifier::external_body]
     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
         graph: &G,
         sources: AVLTreeSetStEph<V>,
@@ -151,6 +161,20 @@ pub mod PQMinStEph {
             visited,
             priorities,
             parent: None,
+        }
+    }
+
+    } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl<V: StT + Ord, P: StT + Ord> std::fmt::Debug for PQMinResult<V, P> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("PQMinResult")
+                .field("visited", &self.visited)
+                .field("priorities", &self.priorities)
+                .field("parent", &self.parent)
+                .finish()
         }
     }
 }

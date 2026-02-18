@@ -6,16 +6,42 @@
 
 pub mod TopDownDPMtEph {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions
+    // 8. traits
+    // 9. impls
+    // 11. derive impls
+    // 13. derive impls outside verus!
+
+    // 2. imports
     use std::collections::HashMap;
     use std::fmt::{Formatter, Debug, Display};
     use std::sync::{Arc, Mutex};
     use std::thread;
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::*;
 
+    verus! {
+    } // verus!
+
+    // 4. type definitions
+    #[derive(Clone)]
+    pub struct TopDownDPMtEphS {
+        /// Input sequence S
+        pub seq_s: ArraySeqMtEphS<char>,
+        /// Input sequence T
+        pub seq_t: ArraySeqMtEphS<char>,
+        /// Concurrent memoization table for subproblem results
+        pub memo_table: Arc<Mutex<HashMap<(usize, usize), usize>>>,
+    }
+
+    // 8. traits
     /// Trait for top-down dynamic programming operations
-    pub trait TopDownDPMtEphTrait<T: MtVal> {
+    pub trait TopDownDPMtEphTrait<T: MtVal> : Sized {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn new()                     -> Self;
@@ -25,16 +51,7 @@ pub mod TopDownDPMtEph {
         fn solve(&self, input: &[T]) -> T;
     }
 
-    #[derive(Clone, Debug)]
-    pub struct TopDownDPMtEphS {
-        /// Input sequence S
-        seq_s: ArraySeqMtEphS<char>,
-        /// Input sequence T  
-        seq_t: ArraySeqMtEphS<char>,
-        /// Concurrent memoization table for subproblem results
-        memo_table: Arc<Mutex<HashMap<(usize, usize), usize>>>,
-    }
-
+    // 9. impls
     impl TopDownDPMtEphS {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
@@ -224,7 +241,10 @@ pub mod TopDownDPMtEph {
         }
     }
 
+    // 11. derive impls
     impl PartialEq for TopDownDPMtEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(|S|+|T|+|memo|), Span Θ(|S|+|T|+|memo|)
         fn eq(&self, other: &Self) -> bool {
             let self_memo = self.memo_table.lock().unwrap();
             let other_memo = other.memo_table.lock().unwrap();
@@ -233,6 +253,8 @@ pub mod TopDownDPMtEph {
     }
 
     impl Default for TopDownDPMtEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn default() -> Self {
             let empty_s = ArraySeqMtEphS::new(0, ' ');
             let empty_t = ArraySeqMtEphS::new(0, ' ');
@@ -240,7 +262,22 @@ pub mod TopDownDPMtEph {
         }
     }
 
+    // 13. derive impls outside verus!
+    impl Debug for TopDownDPMtEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(|S|+|T|+|memo|), Span Θ(|S|+|T|+|memo|)
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("TopDownDPMtEphS")
+                .field("seq_s", &self.seq_s)
+                .field("seq_t", &self.seq_t)
+                .field("memo_table", &self.memo_table)
+                .finish()
+        }
+    }
+
     impl Display for TopDownDPMtEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(
                 f,

@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap49/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap49
 
 ✓ MinEditDistMtEph.rs
 ✓ MinEditDistMtPer.rs

@@ -6,10 +6,19 @@
 
 pub mod ParaHashTableStEph {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions (inside verus!: LoadAndSize; outside verus!: HashFunGen, HashFun, HashTable)
+    // 8. traits (inside verus!: EntryTrait; outside verus!: ParaHashTableStEphTrait)
+    // 13. derive impls outside verus!
+
+    // 2. imports
     use std::fmt::Display;
     use std::marker::PhantomData;
     use std::rc::Rc;
 
+    use vstd::prelude::*;
     use crate::Types::Types::*;
 
     /// Hash function generator: takes table size, returns hash function for that size.
@@ -20,27 +29,21 @@ pub mod ParaHashTableStEph {
     /// Hash function: takes a key, returns hash code.
     pub type HashFun<K> = Box<dyn Fn(&K) -> N>;
 
-    #[derive(Clone, Copy, Debug, PartialEq)]
+    verus! {
+
+    // 4. type definitions
+
+    #[derive(Clone, Copy, PartialEq)]
     pub struct LoadAndSize {
         pub load: f64,
         pub size: N,
     }
 
-    /// Parametric nested hash table structure.
-    pub struct HashTable<Key, Value, Entry, Metrics> {
-        pub table: Vec<Entry>,
-        pub hash_fn_gen: HashFunGen<Key>,
-        pub hash_fn: HashFun<Key>,
-        pub initial_size: N,
-        pub current_size: N,
-        pub num_elements: N,
-        pub metrics: Metrics,
-        pub _phantom: PhantomData<(Key, Value)>,
-    }
+    // 8. traits
 
     /// Trait for parametric nested hash tables.
     /// Entry type must implement this trait to define how Key and Value are stored.
-    pub trait EntryTrait<Key, Value> {
+    pub trait EntryTrait<Key, Value> : Sized {
         /// - APAS: N/A — inner table interface, cost depends on implementation.
         /// - Claude-Opus-4.6: N/A — abstract trait method.
         fn new()                        -> Self;
@@ -54,6 +57,24 @@ pub mod ParaHashTableStEph {
         /// - Claude-Opus-4.6: N/A — abstract trait method.
         fn delete(&mut self, key: &Key) -> B;
     }
+
+    } // verus!
+
+    // 4. type definitions (outside verus! — HashTable contains Rc<dyn Fn> and Box<dyn Fn>)
+
+    /// Parametric nested hash table structure.
+    pub struct HashTable<Key, Value, Entry, Metrics> {
+        pub table: Vec<Entry>,
+        pub hash_fn_gen: HashFunGen<Key>,
+        pub hash_fn: HashFun<Key>,
+        pub initial_size: N,
+        pub current_size: N,
+        pub num_elements: N,
+        pub metrics: Metrics,
+        pub _phantom: PhantomData<(Key, Value)>,
+    }
+
+    // 8. traits (outside verus! — methods reference HashTable which contains dyn Fn types)
 
     /// Trait for parametric nested hash tables.
     pub trait ParaHashTableStEphTrait<Key: StT, Value: StT, Entry: EntryTrait<Key, Value>, Metrics: Default> {
@@ -118,5 +139,16 @@ pub mod ParaHashTableStEph {
         ///   m is old size, m' is new size.
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
         fn resize(table: &HashTable<Key, Value, Entry, Metrics>, new_size: N)   -> HashTable<Key, Value, Entry, Metrics>;
+    }
+
+    // 13. derive impls outside verus!
+
+    impl std::fmt::Debug for LoadAndSize {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("LoadAndSize")
+                .field("load", &self.load)
+                .field("size", &self.size)
+                .finish()
+        }
     }
 }

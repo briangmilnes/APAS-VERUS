@@ -4,64 +4,83 @@
 pub mod MinEditDistStPer {
 
     use std::collections::HashMap;
-    use std::fmt::{Debug, Display, Formatter, Result};
+    use std::fmt::{Debug, Display, Formatter};
+    use std::fmt::Result as FmtResult;
     use std::iter::{Map, Zip};
 
-    use crate::ArraySeqStPerSLit;
+    use vstd::prelude::*;
+
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::ArraySeqStPerSLit;
 
-    #[derive(Clone, Debug, PartialEq, Eq)]
+    verus! {
+    } // verus!
+
+    // 4. type definitions
+
+    #[derive(Clone, PartialEq, Eq)]
     pub struct MinEditDistStPerS<T: StT> {
-        source: ArraySeqStPerS<T>,
-        target: ArraySeqStPerS<T>,
-        memo: HashMap<(usize, usize), usize>,
+        pub source: ArraySeqStPerS<T>,
+        pub target: ArraySeqStPerS<T>,
+        pub memo: HashMap<(usize, usize), usize>,
     }
 
+    // 8. traits
+
     /// Trait for minimum edit distance operations
-    pub trait MinEditDistStPerTrait<T: StT> {
+    pub trait MinEditDistStPerTrait<T: StT>: Sized {
         /// Create new minimum edit distance solver
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn new()                                                                -> Self
         where
             T: Default;
 
         /// Create from source and target sequences
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn from_sequences(source: ArraySeqStPerS<T>, target: ArraySeqStPerS<T>) -> Self;
 
         /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
-        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential, span equals work
+        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential, span equals work; outside verus!, not verified
         fn min_edit_distance(&self)                                             -> usize;
 
         /// Get the source sequence
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn source(&self)                                                        -> &ArraySeqStPerS<T>;
 
         /// Get the target sequence
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn target(&self)                                                        -> &ArraySeqStPerS<T>;
 
         /// Get memoization table size
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn memo_size(&self)                                                     -> usize;
     }
 
+    // 9. impls
+
     /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
-    /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential memoized recursion
+    /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential memoized recursion; outside verus!, not verified
     fn min_edit_distance_rec<T: StT>(table: &mut MinEditDistStPerS<T>, i: usize, j: usize) -> usize {
-        // Check memo first
         if let Some(&result) = table.memo.get(&(i, j)) {
             return result;
         }
 
         let result = match (i, j) {
-            | (i, 0) => i, // Base case: need i deletions
-            | (0, j) => j, // Base case: need j insertions
+            | (i, 0) => i,
+            | (0, j) => j,
             | (i, j) => {
                 let source_char = table.source.nth(i - 1);
                 let target_char = table.target.nth(j - 1);
 
                 if source_char == target_char {
-                    // Characters match, no edit needed
                     min_edit_distance_rec(table, i - 1, j - 1)
                 } else {
-                    // Characters don't match, try both operations
                     let delete_cost = min_edit_distance_rec(table, i - 1, j);
                     let insert_cost = min_edit_distance_rec(table, i, j - 1);
 
@@ -70,7 +89,6 @@ pub mod MinEditDistStPer {
             }
         };
 
-        // Memoize result
         table.memo.insert((i, j), result);
         result
     }
@@ -96,9 +114,8 @@ pub mod MinEditDistStPer {
         }
 
         fn min_edit_distance(&self) -> usize {
-            // Create mutable copy for memoization
             let mut solver = self.clone();
-            solver.memo.clear(); // Fresh memo for each query
+            solver.memo.clear();
 
             let source_len = solver.source.length();
             let target_len = solver.target.length();
@@ -113,8 +130,20 @@ pub mod MinEditDistStPer {
         fn memo_size(&self) -> usize { self.memo.len() }
     }
 
+    // 13. derive impls outside verus!
+
+    impl<T: StT> Debug for MinEditDistStPerS<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            f.debug_struct("MinEditDistStPerS")
+                .field("source", &self.source)
+                .field("target", &self.target)
+                .field("memo", &self.memo)
+                .finish()
+        }
+    }
+
     impl<T: StT> Display for MinEditDistStPerS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(
                 f,
                 "MinEditDistStPer(source: {}, target: {}, memo_entries: {})",

@@ -6,16 +6,40 @@
 
 pub mod BottomUpDPMtEph {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions
+    // 8. traits
+    // 9. impls
+    // 11. derive impls
+    // 13. derive impls outside verus!
+
+    // 2. imports
     use std::cmp::{max, min};
     use std::fmt::{Formatter, Debug, Display};
     use std::sync::{Arc, Mutex};
     use std::thread;
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::*;
 
+    verus! {
+    } // verus!
+
+    // 4. type definitions
+    #[derive(Clone, PartialEq, Eq)]
+    pub struct BottomUpDPMtEphS {
+        /// Input sequence S
+        pub seq_s: ArraySeqMtEphS<char>,
+        /// Input sequence T
+        pub seq_t: ArraySeqMtEphS<char>,
+    }
+
+    // 8. traits
     /// Trait for bottom-up dynamic programming operations
-    pub trait BottomUpDPMtEphTrait<T: MtVal> {
+    pub trait BottomUpDPMtEphTrait<T: MtVal> : Sized {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn new()                     -> Self;
@@ -25,14 +49,7 @@ pub mod BottomUpDPMtEph {
         fn solve(&self, input: &[T]) -> T;
     }
 
-    #[derive(Clone, Debug, PartialEq, Eq)]
-    pub struct BottomUpDPMtEphS {
-        /// Input sequence S
-        seq_s: ArraySeqMtEphS<char>,
-        /// Input sequence T  
-        seq_t: ArraySeqMtEphS<char>,
-    }
-
+    // 9. impls
     impl BottomUpDPMtEphS {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
@@ -168,7 +185,10 @@ pub mod BottomUpDPMtEph {
         pub fn set_t(&mut self, t: ArraySeqMtEphS<char>) { self.seq_t = t; }
     }
 
+    // 11. derive impls
     impl Default for BottomUpDPMtEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn default() -> Self {
             let empty_s = ArraySeqMtEphS::new(0, ' ');
             let empty_t = ArraySeqMtEphS::new(0, ' ');
@@ -176,7 +196,21 @@ pub mod BottomUpDPMtEph {
         }
     }
 
+    // 13. derive impls outside verus!
+    impl Debug for BottomUpDPMtEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(|S|+|T|), Span Θ(|S|+|T|)
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BottomUpDPMtEphS")
+                .field("seq_s", &self.seq_s)
+                .field("seq_t", &self.seq_t)
+                .finish()
+        }
+    }
+
     impl Display for BottomUpDPMtEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(
                 f,

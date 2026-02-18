@@ -1,16 +1,52 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap57/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap57
 
-✓ DijkstraStEphFloat.rs
-✓ DijkstraStEphInt.rs
-✓ StackStEph.rs
+❌ DijkstraStEphFloat.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphFloat.rs:70: external_body - #[verifier::external_body]
+        71 |     fn pq_entry_new(dist: OrderedF64, vertex: usize) -> PQEntry { PQEntry { dist, vertex } }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphFloat.rs:76: external_body - #[verifier::external_body]
+        77 |         fn cmp(&self, other: &Self) -> (r: Ordering) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphFloat.rs:86: external_body - #[verifier::external_body]
+        87 |         fn partial_cmp(&self, other: &Self) -> (r: Option<Ordering>) { Some(self.cmp(other)) }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphFloat.rs:98: external_body - #[verifier::external_body]
+        99 |     pub fn dijkstra(graph: &WeightedDirGraphStEphFloat<usize>, source: usize) -> SSSPResultStEphFloat {
+   Holes: 4 total
+      4 × external_body
+❌ DijkstraStEphInt.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphInt.rs:70: external_body - #[verifier::external_body]
+        71 |     fn pq_entry_new(dist: i64, vertex: usize) -> PQEntry { PQEntry { dist, vertex } }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphInt.rs:76: external_body - #[verifier::external_body]
+        77 |         fn cmp(&self, other: &Self) -> (r: Ordering) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphInt.rs:86: external_body - #[verifier::external_body]
+        87 |         fn partial_cmp(&self, other: &Self) -> (r: Option<Ordering>) { Some(self.cmp(other)) }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphInt.rs:98: external_body - #[verifier::external_body]
+        99 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphInt {
+   Holes: 4 total
+      4 × external_body
+❌ StackStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/StackStEph.rs:80: external_body - #[verifier::external_body]
+        81 |         pub fn new() -> Self { StackStEph { elements: Vec::new() } }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/StackStEph.rs:86: external_body - #[verifier::external_body]
+        87 |         pub fn push(&mut self, item: T) { self.elements.push(item); }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/StackStEph.rs:93: external_body - #[verifier::external_body]
+        94 |         pub fn pop(&mut self) -> Option<T> { self.elements.pop() }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/StackStEph.rs:100: external_body - #[verifier::external_body]
+       101 |         pub fn peek(&self) -> Option<&T> { self.elements.last() }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/StackStEph.rs:106: external_body - #[verifier::external_body]
+       107 |         pub fn is_empty(&self) -> bool { self.elements.is_empty() }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/StackStEph.rs:112: external_body - #[verifier::external_body]
+       113 |         pub fn size(&self) -> N { self.elements.len() }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/StackStEph.rs:121: external_body - #[verifier::external_body]
+       122 |         fn default() -> Self { Self::new() }
+   Holes: 7 total
+      7 × external_body
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   3 clean (no holes)
-   0 holed (contains holes)
+   0 clean (no holes)
+   3 holed (contains holes)
    3 total
 
 Proof Functions:
@@ -18,6 +54,5 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 0 total
-
-🎉 No proof holes found! All proofs are complete.
+Holes Found: 15 total
+   15 × external_body

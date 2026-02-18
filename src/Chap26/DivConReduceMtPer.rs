@@ -7,7 +7,8 @@
 //	1. module
 //	2. imports
 //	3. broadcast use
-//	4. spec functions
+//	4. spec fns
+//	7. proof fns
 //	8. traits
 //	9. impls
 
@@ -22,8 +23,6 @@ pub mod DivConReduceMtPer {
     //		2. imports
 
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap26::DivConReduceStPer::DivConReduceStPer::*;
     use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
 
@@ -34,7 +33,29 @@ pub mod DivConReduceMtPer {
         vstd::seq::group_seq_axioms,
     };
 
-    //		8. traits
+    //		4. spec fns
+
+    /// Wrapping addition for usize — matches vstd wrapping_add spec with in-range casts.
+    pub open spec fn spec_wrapping_add(x: N, y: N) -> N {
+        if x + y > usize::MAX as int {
+            ((x + y) - (usize::MAX as int + 1)) as N
+        } else {
+            (x + y) as N
+        }
+    }
+
+    /// Wrapping multiplication for usize — matches vstd wrapping_mul spec with in-range casts.
+    pub open spec fn spec_wrapping_mul(x: N, y: N) -> N {
+        ((x as nat * y as nat) % (usize::MAX as nat + 1)) as N
+    }
+
+    pub open spec fn spec_sum_fn() -> spec_fn(N, N) -> N { |x: N, y: N| spec_wrapping_add(x, y) }
+    pub open spec fn spec_product_fn() -> spec_fn(N, N) -> N { |x: N, y: N| spec_wrapping_mul(x, y) }
+    pub open spec fn spec_or_fn() -> spec_fn(B, B) -> B { |x: B, y: B| x || y }
+    pub open spec fn spec_and_fn() -> spec_fn(B, B) -> B { |x: B, y: B| x && y }
+    pub open spec fn spec_max_fn() -> spec_fn(N, N) -> N { |x: N, y: N| if x >= y { x } else { y } }
+
+    //		7. proof fns
 
     pub trait DivConReduceMtTrait {
         /// Find maximum element via parallel reduce.
