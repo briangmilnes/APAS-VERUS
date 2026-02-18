@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 64: Minimum Spanning Trees — Review Against Prose
 
-**Date:** 2026-02-13
+**Date:** 2026-02-13 (updated 2026-02-18: verusification — traits inside verus!, impls cfg-gated)
 **Reviewer:** Claude-Opus-4.6
 **Source:** `prompts/Chap64.txt` (APAS Part XVII, Chapter 64)
 
@@ -17,14 +17,17 @@ Run: `veracity-review-module-fn-impls -d src/Chap64`
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap64 | SpanTreeMtEph | 2 | 0 | 0 | 2 | 0 | 2 | 0 | 0 | 2 |
-| 2 | Chap64 | SpanTreeStEph | 2 | 0 | 0 | 2 | 0 | 2 | 0 | 0 | 2 |
+| 1 | Chap64 | SpanTreeMtEph | 2 | 0 | 0 | 2 | 2 | 0 | 0 | 0 | 2 |
+| 2 | Chap64 | SpanTreeStEph | 2 | 0 | 0 | 2 | 2 | 0 | 0 | 0 | 2 |
 | 3 | Chap64 | TSPApproxStEph | 4 | 0 | 0 | 7 | 0 | 7 | 0 | 0 | 7 |
 
-**Key observations:**
-- All 11 functions are outside `verus!` — zero formal verification.
-- All 11 functions have no `requires`/`ensures` (spec strength: none).
-- Zero proof holes (trivially — nothing is inside `verus!`).
+**Verusification status (2026-02-18):**
+- **SpanTreeStEph:** Fully structured inside `verus!`. Trait definition (2 fns) is inside `verus!{}`. Both impl functions are cfg-gated behind `#[cfg(not(verus_keep_ghost))]`. V!=2, -V!=0.
+- **SpanTreeMtEph:** Same structure. Trait definition (2 fns) is inside `verus!{}`. Both impl functions are cfg-gated. V!=2, -V!=0.
+- **TSPApproxStEph:** The entire trait definition and all impl functions are behind `#[cfg(not(verus_keep_ghost))]` because the trait methods reference `HashMap` (a runtime-only type that Verus cannot parse in trait signatures). Only `use vstd::prelude::*;` is ungated. V!=0, -V!=7.
+- All 11 functions still have no `requires`/`ensures` (spec strength: none).
+- Zero proof holes (trivially — no proof obligations exist).
+- `lib.rs` gate: Chap64 remains behind `#[cfg(feature = "all_chapters")]` (no change).
 
 ## Phase 2: Prose Inventory
 
@@ -111,7 +114,11 @@ All exec functions now have paired APAS / Claude-Opus-4.6 cost annotations. Summ
 
 ### 3c. Spec Fidelity
 
-No functions have `requires`/`ensures`. Spec fidelity cannot be assessed — the prose's correctness claims (spanning tree validity, 2-approximation guarantee) are entirely untested at the specification level.
+**2026-02-18 update:** Trait definitions for `SpanTreeStEphTrait` and `SpanTreeMtEphTrait` are now inside `verus!{}` blocks. However, the trait method signatures still have **no `requires`/`ensures` clauses** — they are bare signatures with doc comments only. All impl functions remain outside `verus!` behind `#[cfg(not(verus_keep_ghost))]`.
+
+**TSPApproxStEph special case:** The entire `TSPApproxStEphTrait` trait definition and all impl functions are behind `#[cfg(not(verus_keep_ghost))]` because the trait methods reference `HashMap` (a runtime type that Verus cannot parse in trait method signatures). Only `use vstd::prelude::*;` is ungated. This module has zero `verus!` content.
+
+Spec fidelity cannot be assessed — the prose's correctness claims (spanning tree validity, 2-approximation guarantee) are entirely untested at the specification level.
 
 The prose states:
 - A spanning tree has |V|-1 edges (Exercise 64.1) — checked at runtime in `verify_spanning_tree` but not formally specified.
@@ -170,7 +177,7 @@ No tests to assess.
 
 ## Phase 6: Proof-Time Test (PTT) Review
 
-Chapter 64 has **no `verus!` blocks**, no iterators with ghost state, and no verified loops. **No PTTs are needed.**
+Chapter 64 has **no verified proof obligations** — the `verus!` blocks contain only trait definitions with no `requires`/`ensures`. **No PTTs are needed.**
 
 ### 6a. Unified Test Inventory Table
 
@@ -211,19 +218,17 @@ Chapter 64 has **no `verus!` blocks**, no iterators with ghost state, and no ver
 
 | # | File | TOC Present? | Section Headers? | Notes |
 |---|------|:------------:|:----------------:|-------|
-| 1 | `SpanTreeStEph.rs` | No | No | No `verus!` block, so TOC standard does not strictly apply |
-| 2 | `SpanTreeMtEph.rs` | No | No | No `verus!` block |
-| 3 | `TSPApproxStEph.rs` | No | No | No `verus!` block |
-
-Since none of the files contain `verus!` blocks, the TOC standard (which organizes sections inside/outside `verus!`) is not applicable. The files follow a consistent informal structure: module header, imports, trait declaration, public functions, private helpers.
+| 1 | `SpanTreeStEph.rs` | No | No | Has `verus!` block with trait; TOC standard applies minimally |
+| 2 | `SpanTreeMtEph.rs` | No | No | Has `verus!` block with trait; TOC standard applies minimally |
+| 3 | `TSPApproxStEph.rs` | No | No | No `verus!` block (all code cfg-gated); TOC standard not applicable |
 
 ### In/Out Table
 
 | # | File | Clone | PartialEq/Eq | Default | Drop | Iterator | Debug | Display | Macro | Other |
 |---|------|:-----:|:------------:|:-------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
-| 1 | `SpanTreeStEph.rs` | - | - | - | - | - | - | - | - | — |
-| 2 | `SpanTreeMtEph.rs` | - | - | - | - | - | - | - | - | — |
-| 3 | `TSPApproxStEph.rs` | - | - | - | - | - | - | - | - | — |
+| 1 | `SpanTreeStEph.rs` | - | - | - | - | - | - | - | - | Trait in verus!, 2 impls cfg-gated |
+| 2 | `SpanTreeMtEph.rs` | - | - | - | - | - | - | - | - | Trait in verus!, 2 impls cfg-gated |
+| 3 | `TSPApproxStEph.rs` | - | - | - | - | - | - | - | - | Entire trait + 7 impls cfg-gated (HashMap in trait sigs) |
 
 No derive impls in any Chap64 file. No action items.
 
@@ -236,7 +241,7 @@ Modules: 3 clean, 0 holed
 Holes Found: 0
 ```
 
-**0 proof holes** — trivially clean because no code is inside `verus!`.
+**0 proof holes** — trivially clean because no proof obligations exist. The `verus!` blocks contain only trait definitions.
 
 ## Spec Strength Summary
 
@@ -247,7 +252,7 @@ Holes Found: 0
 | weak | 0 |
 | none | 11 |
 
-**All 11 functions have no formal specification** (no `requires`/`ensures`). The entire chapter is unverified Rust — no `verus!` blocks exist in any file.
+**All 11 functions have no formal specification** (no `requires`/`ensures`). The SpanTree trait signatures inside `verus!` are bare (no contracts). The TSPApprox trait is entirely outside `verus!`.
 
 ## Overall Assessment
 
@@ -256,20 +261,30 @@ Chapter 64 implements the two main algorithms from the prose:
 1. **Spanning tree via star contraction** (Exercise 64.2) — both sequential and parallel variants, delegating to Chap62's `star_contract` / `star_contract_mt`.
 2. **TSP 2-approximation via MST** (Section 4) — Euler tour, shortcut, and weight computation.
 
+**Verusification status (2026-02-18):** Partially verusified. SpanTree modules have trait definitions inside `verus!{}` blocks (V!=2, -V!=0 for both St and Mt). TSPApproxStEph remains entirely outside `verus!` because its trait methods reference `HashMap` (V!=0, -V!=7). All impl functions across all three modules are cfg-gated behind `#[cfg(not(verus_keep_ghost))]`.
+
 **Strengths:**
 - Both prose algorithms are implemented and structurally faithful.
 - Cost annotations are complete and paired (APAS + Claude-Opus-4.6).
 - No proof holes.
+- SpanTree traits are now inside `verus!`, establishing the foundation for future spec work.
 
 **Weaknesses:**
-- **Zero formal verification.** No `verus!` blocks, no specs, no proofs. This is the most significant gap.
-- **Zero runtime tests.** No RTT files exist for any module. The implementations have no testing evidence at all.
-- **Parallelism is shallow.** The Mt spanning tree uses 2-way `thread::spawn` splits rather than recursive fork-join, so span equals work rather than achieving polylog.
-- **Helper functions use linear scans** (`get_neighbors`, `get_edge_weight`) where adjacency-list lookups would be more efficient, causing `euler_tour_dfs` to be O(n^2) rather than the prose's O(n).
-- **Five lemmas/exercises from the prose are unimplemented** (Lemmas 64.1-64.3, Exercises 64.3-64.4). These are mathematical properties, not algorithms, but the chapter's formal foundation is incomplete without them.
+
+| # | Severity | Issue |
+|---|:--------:|-------|
+| 1 | High | **No formal specs.** Trait signatures inside `verus!` have no `requires`/`ensures`. Zero contracts. |
+| 2 | High | **No runtime tests.** No RTT files exist for any module. |
+| 3 | High | **TSPApprox entirely outside verus!.** The `HashMap` dependency in trait signatures prevents verusification without type refactoring. |
+| 4 | Medium | **All impl code outside verus!.** The 11 exec functions are behind `#[cfg(not(verus_keep_ghost))]` — they compile and run but are not verified. |
+| 5 | Medium | **Parallelism is shallow.** The Mt spanning tree uses 2-way `thread::spawn` splits rather than recursive fork-join, so span equals work rather than achieving polylog. |
+| 6 | Medium | **Helper functions use linear scans** (`get_neighbors`, `get_edge_weight`) where adjacency-list lookups would be more efficient, causing `euler_tour_dfs` to be O(n^2) rather than the prose's O(n). |
+| 7 | Low | **Five lemmas/exercises from the prose are unimplemented** (Lemmas 64.1-64.3, Exercises 64.3-64.4). |
+| 8 | Low | **No TOC headers** in any file. |
 
 **Priority action items:**
 1. Add runtime tests (RTTs) for all three modules — highest priority since there is zero test coverage.
-2. Consider verusifying the core algorithms (spanning tree properties, TSP approximation bound).
-3. Improve Mt parallelism in `SpanTreeMtEph` — replace 2-way splits with recursive parallel reduce.
-4. Replace linear-scan helpers with adjacency-list based lookups to match prose cost bounds.
+2. Add `requires`/`ensures` specs to SpanTree trait methods inside `verus!`.
+3. Consider refactoring TSPApprox trait to avoid `HashMap` in signatures, enabling verusification.
+4. Improve Mt parallelism in `SpanTreeMtEph` — replace 2-way splits with recursive parallel reduce.
+5. Replace linear-scan helpers with adjacency-list based lookups to match prose cost bounds.

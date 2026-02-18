@@ -1,186 +1,762 @@
 [
   {
     "id": 1,
-    "function": "max_element_parallel",
-    "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "47-51",
-    "spec_strength": "unknown",
-    "snippet": "        fn max_element_parallel(a: &ArraySeqMtPerS<N>) -> (result: Option<N>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                a.spec_len() == 0 ==> result is None,\n                a.spec_len() > 0 ==> {"
+    "function": "bellman_ford",
+    "file": "Chap58/BellmanFordStEphFloat.rs",
+    "lines": "24-27",
+    "spec_strength": "",
+    "snippet": "        /// Bellman-Ford single source shortest path algorithm\n        /// - APAS: Work O(nm), Span O(n lg n) where n = |V|, m = |E|\n        /// - Claude-Opus-4.6: Work O(nm), Span O(nm) — sequential implementation; inner vertex loop not parallelized\n        fn bellman_ford(graph: &WeightedDirGraphStEphFloat<usize>, source: usize) -> SSSPResultStEphFloat;"
   },
   {
     "id": 2,
-    "function": "sum_parallel",
-    "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "62-68",
-    "spec_strength": "hole",
-    "snippet": "        fn sum_parallel(a: &ArraySeqMtPerS<N>) -> (result: N)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_sum_fn(), 0),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_sum_fn(), 0);"
+    "function": "reconstruct_predecessors",
+    "file": "Chap58/BellmanFordStEphFloat.rs",
+    "lines": "130-164",
+    "spec_strength": "",
+    "snippet": "    /// Reconstruct predecessor tree from final distances\n    /// For each vertex v, find the in-neighbor u that achieves the shortest path\n    /// - APAS: N/A — Verus-specific scaffolding\n    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — sequential scan over vertices and in-neighbors\n    fn reconstruct_predecessors(\n        graph: &WeightedDirGraphStEphFloat<usize>,\n        distances: &HashMap<usize, OrderedF64>,\n        result: &mut SSSPResultStEphFloat,\n        source: usize,\n    ) {\n        let n = graph.vertices().size();\n        for v in 0..n {\n            if v == source {\n                continue;\n            }\n\n            let v_dist = *distances.get(&v).unwrap_or(&OrderedF64::from(f64::INFINITY));\n            if v_dist.0 == f64::INFINITY {\n                continue; // Unreachable\n            }\n\n            // Find which in-neighbor u gave us the shortest path\n            let in_neighbors = graph.in_neighbors_weighted(&v);\n            for Pair(u, weight) in in_neighbors.iter() {\n                let u_dist = *distances.get(u).unwrap_or(&OrderedF64::from(f64::INFINITY));\n                if u_dist.0 != f64::INFINITY {\n                    let path_dist = OrderedF64::from(u_dist.0 + weight.0);\n                    if path_dist == v_dist {\n                        result.set_predecessor(v, *u);\n                        break; // Found the predecessor\n                    }\n                }\n            }\n        }\n    }"
   },
   {
     "id": 3,
-    "function": "product_parallel",
-    "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "73-79",
-    "spec_strength": "hole",
-    "snippet": "        fn product_parallel(a: &ArraySeqMtPerS<N>) -> (result: N)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_product_fn(), 1),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_product_fn(), 1);"
+    "function": "bellman_ford",
+    "file": "Chap58/BellmanFordStEphInt.rs",
+    "lines": "26-27",
+    "spec_strength": "",
+    "snippet": "        fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize)\n            -> (result: Result<SSSPResultStEphInt, String>);"
   },
   {
     "id": 4,
-    "function": "any_parallel",
-    "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "84-90",
-    "spec_strength": "unknown",
-    "snippet": "        fn any_parallel(a: &ArraySeqMtPerS<B>) -> (result: B)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_or_fn(), false),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_or_fn(), false);"
+    "function": "reconstruct_predecessors",
+    "file": "Chap58/BellmanFordStEphInt.rs",
+    "lines": "71-92",
+    "spec_strength": "",
+    "snippet": "    #[cfg(not(verus_keep_ghost))]\n    fn reconstruct_predecessors(\n        graph: &WeightedDirGraphStEphI128<usize>,\n        distances: &HashMap<usize, i64>,\n        result: &mut SSSPResultStEphInt,\n        source: usize,\n    ) {\n        let n = graph.vertices().size();\n        for v in 0..n {\n            if v == source { continue; }\n            let v_dist = *distances.get(&v).unwrap_or(&i64::MAX);\n            if v_dist == i64::MAX { continue; }\n            let in_neighbors = graph.in_neighbors_weighed(&v);\n            for Pair(u, weight) in in_neighbors.iter() {\n                let u_dist = *distances.get(u).unwrap_or(&i64::MAX);\n                if u_dist != i64::MAX {\n                    let path_dist = u_dist.saturating_add(*weight as i64);\n                    if path_dist == v_dist { result.set_predecessor(v, *u); break; }\n                }\n            }\n        }\n    }"
   },
   {
     "id": 5,
-    "function": "all_parallel",
-    "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "95-101",
-    "spec_strength": "unknown",
-    "snippet": "        fn all_parallel(a: &ArraySeqMtPerS<B>) -> (result: B)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_and_fn(), true),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true);"
+    "function": "johnson_apsp",
+    "file": "Chap59/JohnsonMtEphFloat.rs",
+    "lines": "31-33",
+    "spec_strength": "",
+    "snippet": "        /// Parallel Johnson's all-pairs shortest path algorithm\n        /// APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|\n        fn johnson_apsp(graph: &WeightedDirGraphMtEphFloat<usize>) -> AllPairsResultStEphFloat;"
   },
   {
     "id": 6,
-    "function": "max_element",
-    "file": "Chap26/DivConReduceStPer.rs",
-    "lines": "49-53",
-    "spec_strength": "unknown",
-    "snippet": "        fn max_element(a: &ArraySeqStPerS<N>) -> (result: Option<N>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                a.spec_len() == 0 ==> result is None,\n                a.spec_len() > 0 ==> {"
+    "function": "parallel_dijkstra_all",
+    "file": "Chap59/JohnsonMtEphFloat.rs",
+    "lines": "76-139",
+    "spec_strength": "",
+    "snippet": "    /// Parallel Dijkstra execution using recursive divide-and-conquer with ParaPair!\n    ///\n    /// - APAS: N/A — internal helper, not named in prose.\n    /// - Claude-Opus-4.6: Work O(k * m log n), Span O(m log n) where k = end - start — binary split with ParaPair! gives log k depth, each leaf runs Dijkstra O(m log n)\n    fn parallel_dijkstra_all(\n        graph: &WeightedDirGraphStEphFloat<usize>,\n        potentials: &ArraySeqStEphS<OrderedF64>,\n        start: usize,\n        end: usize,\n        n: usize,\n    ) -> (\n        ArraySeqStEphS<ArraySeqStEphS<OrderedF64>>,\n        ArraySeqStEphS<ArraySeqStEphS<usize>>,\n    ) {\n        let range_size = end - start;\n\n        // Base case: empty range\n        if range_size == 0 {\n            return (ArraySeqStEphS::empty(), ArraySeqStEphS::empty());\n        }\n\n        // Base case: single vertex\n        if range_size == 1 {\n            let u = start;\n            let dijkstra_result = dijkstra(graph, u);\n\n            // Adjust distances: δG(u,v) = δG'(u,v) - p(u) + p(v)\n            let p_u = *potentials.nth(u);\n            let adjusted_row = ArraySeqStEphS::tabulate(\n                &|v| {\n                    let d_prime = dijkstra_result.get_distance(v);\n                    if d_prime == OrderedF64::from(f64::INFINITY) {\n                        OrderedF64::from(f64::INFINITY)\n                    } else {\n                        let p_v = *potentials.nth(v);\n                        OrderedF64::from(d_prime.0 - p_u.0 + p_v.0)\n                    }\n                },\n                n,\n            );\n\n            let dist_seq = ArraySeqStEphS::singleton(adjusted_row);\n            let pred_seq = ArraySeqStEphS::singleton(dijkstra_result.predecessors.clone());\n            return (dist_seq, pred_seq);\n        }\n\n        // Recursive case: split in half and use ParaPair! for unconditional parallelism\n        let mid = start + range_size / 2;\n        let graph_left = graph.clone();\n        let graph_right = graph.clone();\n        let potentials_left = potentials.clone();\n        let potentials_right = potentials.clone();\n\n        let Pair((left_dist, left_pred), (right_dist, right_pred)) = crate::ParaPair!(\n            move || parallel_dijkstra_all(&graph_left, &potentials_left, start, mid, n),\n            move || parallel_dijkstra_all(&graph_right, &potentials_right, mid, end, n)\n        );\n\n        // Combine results\n        let combined_dist = ArraySeqStEphS::append(&left_dist, &right_dist);\n        let combined_pred = ArraySeqStEphS::append(&left_pred, &right_pred);\n\n        (combined_dist, combined_pred)\n    }"
   },
   {
     "id": 7,
-    "function": "sum",
-    "file": "Chap26/DivConReduceStPer.rs",
-    "lines": "64-70",
-    "spec_strength": "hole",
-    "snippet": "        fn sum(a: &ArraySeqStPerS<N>) -> (result: N)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_sum_fn(), 0),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_sum_fn(), 0);"
+    "function": "add_dummy_source",
+    "file": "Chap59/JohnsonMtEphFloat.rs",
+    "lines": "141-174",
+    "spec_strength": "",
+    "snippet": "    /// Add dummy source vertex s with zero-weight edges to all vertices in G.\n    ///\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work O(nm), Span O(nm) — iterates n vertices, each with up to m neighbors\n    fn add_dummy_source(\n        graph: &WeightedDirGraphMtEphFloat<usize>,\n        n: usize,\n    ) -> (WeightedDirGraphStEphFloat<usize>, usize) {\n        // Convert MtEph graph to StEph for Bellman-Ford\n        let mut vertices = SetStEph::empty();\n        for i in 0..n {\n            vertices.insert(i);\n        }\n\n        // Add dummy vertex\n        vertices.insert(n);\n\n        let mut edges = SetStEph::empty();\n\n        // Copy all original edges\n        for u in 0..n {\n            for v_w in graph.out_neighbors_weighted(&u).iter() {\n                let Pair(v, w) = v_w;\n                edges.insert(Triple(u, *v, *w));\n            }\n        }\n\n        // Add edges from dummy source to all original vertices\n        for v in 0..n {\n            edges.insert(Triple(n, v, OrderedF64::from(0.0)));\n        }\n\n        (WeightedDirGraphStEphFloat::from_weighted_edges(vertices, edges), n)\n    }"
   },
   {
     "id": 8,
-    "function": "product",
-    "file": "Chap26/DivConReduceStPer.rs",
-    "lines": "75-81",
-    "spec_strength": "hole",
-    "snippet": "        fn product(a: &ArraySeqStPerS<N>) -> (result: N)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_product_fn(), 1),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_product_fn(), 1);"
+    "function": "reweight_graph",
+    "file": "Chap59/JohnsonMtEphFloat.rs",
+    "lines": "176-202",
+    "spec_strength": "",
+    "snippet": "    /// Reweight edges: w'(u,v) = w(u,v) + p(u) - p(v)\n    ///\n    /// - APAS: Work O(m), Span O(m)\n    /// - Claude-Opus-4.6: Work O(nm), Span O(nm) — iterates n vertices, each with up to m neighbors via out_neighbors_weighted\n    fn reweight_graph(\n        graph: &WeightedDirGraphMtEphFloat<usize>,\n        potentials: &ArraySeqStEphS<OrderedF64>,\n        n: usize,\n    ) -> WeightedDirGraphStEphFloat<usize> {\n        let mut vertices = SetStEph::empty();\n        for i in 0..n {\n            vertices.insert(i);\n        }\n\n        let mut reweighted_edges = SetStEph::empty();\n        for u in 0..n {\n            let p_u = *potentials.nth(u);\n            for v_w in graph.out_neighbors_weighted(&u).iter() {\n                let Pair(v, w) = v_w;\n                let p_v = *potentials.nth(*v);\n                let w_prime = OrderedF64::from(w.0 + p_u.0 - p_v.0);\n                reweighted_edges.insert(Triple(u, *v, w_prime));\n            }\n        }\n\n        WeightedDirGraphStEphFloat::from_weighted_edges(vertices, reweighted_edges)\n    }"
   },
   {
     "id": 9,
-    "function": "any",
-    "file": "Chap26/DivConReduceStPer.rs",
-    "lines": "86-92",
-    "spec_strength": "unknown",
-    "snippet": "        fn any(a: &ArraySeqStPerS<B>) -> (result: B)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_or_fn(), false),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_or_fn(), false);"
+    "function": "create_negative_cycle_result",
+    "file": "Chap59/JohnsonMtEphFloat.rs",
+    "lines": "204-219",
+    "spec_strength": "",
+    "snippet": "    /// Create result for negative cycle case.\n    ///\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — builds n×n distance and predecessor matrices\n    fn create_negative_cycle_result(n: usize) -> AllPairsResultStEphFloat {\n        let distances = ArraySeqStEphS::tabulate(\n            &|_| ArraySeqStEphS::tabulate(&|_| OrderedF64::from(f64::INFINITY), n),\n            n,\n        );\n        let predecessors = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| 0, n), n);\n        AllPairsResultStEphFloat {\n            distances,\n            predecessors,\n            n,\n        }\n    }"
   },
   {
     "id": 10,
-    "function": "all",
-    "file": "Chap26/DivConReduceStPer.rs",
-    "lines": "97-103",
-    "spec_strength": "unknown",
-    "snippet": "        fn all(a: &ArraySeqStPerS<B>) -> (result: B)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_and_fn(), true),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true);"
+    "function": "johnson_apsp",
+    "file": "Chap59/JohnsonMtEphInt.rs",
+    "lines": "36",
+    "spec_strength": "",
+    "snippet": "            fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphInt;"
   },
   {
     "id": 11,
-    "function": "etsp",
-    "file": "Chap26/ETSPStEph.rs",
-    "lines": "58-60",
-    "spec_strength": "hole",
-    "snippet": "        fn etsp(points: &Vec<Point>) -> (tour: Vec<Edge>)\n            requires points@.len() >= 2,\n            ensures tour@.len() == points@.len();"
+    "function": "parallel_dijkstra_all",
+    "file": "Chap59/JohnsonMtEphInt.rs",
+    "lines": "78-137",
+    "spec_strength": "",
+    "snippet": "    /// Parallel Dijkstra execution using recursive divide-and-conquer with ParaPair!\n    ///\n    /// - APAS: N/A — internal helper, not named in prose.\n    /// - Claude-Opus-4.6: Work O(k * m log n), Span O(m log n) where k = end - start — binary split with ParaPair! gives log k depth, each leaf runs Dijkstra O(m log n)\n    #[cfg(not(verus_keep_ghost))]\n    fn parallel_dijkstra_all(\n        graph: &WeightedDirGraphStEphI128<usize>,\n        potentials: &ArraySeqStEphS<i64>,\n        start: usize,\n        end: usize,\n        n: usize,\n    ) -> (\n        ArraySeqStEphS<ArraySeqStEphS<i64>>,\n        ArraySeqStEphS<ArraySeqStEphS<usize>>,\n    ) {\n        let range_size = end - start;\n\n        if range_size == 0 {\n            return (ArraySeqStEphS::empty(), ArraySeqStEphS::empty());\n        }\n\n        if range_size == 1 {\n            let u = start;\n            let dijkstra_result = dijkstra(graph, u);\n\n            let p_u = *potentials.nth(u);\n            let adjusted_row = ArraySeqStEphS::tabulate(\n                &|v| {\n                    let d_prime = dijkstra_result.get_distance(v);\n                    if d_prime == i64::MAX {\n                        i64::MAX\n                    } else {\n                        let p_v = *potentials.nth(v);\n                        d_prime - p_u + p_v\n                    }\n                },\n                n,\n            );\n\n            let dist_seq = ArraySeqStEphS::singleton(adjusted_row);\n            let pred_seq = ArraySeqStEphS::singleton(dijkstra_result.predecessors.clone());\n            return (dist_seq, pred_seq);\n        }\n\n        let mid = start + range_size / 2;\n        let graph_left = graph.clone();\n        let graph_right = graph.clone();\n        let potentials_left = potentials.clone();\n        let potentials_right = potentials.clone();\n\n        let Pair((left_dist, left_pred), (right_dist, right_pred)) = crate::ParaPair!(\n            move || parallel_dijkstra_all(&graph_left, &potentials_left, start, mid, n),\n            move || parallel_dijkstra_all(&graph_right, &potentials_right, mid, end, n)\n        );\n\n        let combined_dist = ArraySeqStEphS::append(&left_dist, &right_dist);\n        let combined_pred = ArraySeqStEphS::append(&left_pred, &right_pred);\n\n        (combined_dist, combined_pred)\n    }"
   },
   {
     "id": 12,
-    "function": "distance",
-    "file": "Chap26/ETSPStEph.rs",
-    "lines": "85-89",
+    "function": "add_dummy_source",
+    "file": "Chap59/JohnsonMtEphInt.rs",
+    "lines": "139-163",
     "spec_strength": "",
-    "snippet": "        pub fn distance(&self, other: &Point) -> f64 {\n            let dx = self.x - other.x;\n            let dy = self.y - other.y;\n            (dx * dx + dy * dy).sqrt()\n        }"
+    "snippet": "    /// Add dummy source vertex s with zero-weight edges to all vertices in G.\n    ///\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — iterates over vertices and edges\n    #[cfg(not(verus_keep_ghost))]\n    fn add_dummy_source(graph: &WeightedDirGraphStEphI128<usize>, n: usize) -> (WeightedDirGraphStEphI128<usize>, usize) {\n        let mut vertices = SetStEph::empty();\n        for i in 0..n {\n            vertices.insert(i);\n        }\n\n        vertices.insert(n);\n\n        let mut edges = SetStEph::empty();\n\n        for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {\n            edges.insert(WeightedEdge(*from, *to, *weight));\n        }\n\n        for v in 0..n {\n            edges.insert(WeightedEdge(n, v, 0i128));\n        }\n\n        (WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges), n)\n    }"
   },
   {
     "id": 13,
-    "function": "etsp_inner",
-    "file": "Chap26/ETSPStEph.rs",
-    "lines": "92-186",
+    "function": "reweight_graph",
+    "file": "Chap59/JohnsonMtEphInt.rs",
+    "lines": "165-189",
     "spec_strength": "",
-    "snippet": "    /// Recursive eTSP implementation (outside verus! — uses f64 arithmetic).\n    fn etsp_inner(points: &Vec<Point>) -> Vec<Edge> {\n        let n = points.len();\n        if n == 2 {\n            // Base case: two points form a simple cycle\n            return vec![\n                Edge { from: points[0].clone(), to: points[1].clone() },\n                Edge { from: points[1].clone(), to: points[0].clone() },\n            ];\n        }\n        if n == 3 {\n            // Base case: three points — find the cheapest Hamiltonian cycle (3! / 2 = 3 orderings)\n            // Just use the greedy nearest neighbor from point 0\n            let (a, b, c) = (&points[0], &points[1], &points[2]);\n            return vec![\n                Edge { from: a.clone(), to: b.clone() },\n                Edge { from: b.clone(), to: c.clone() },\n                Edge { from: c.clone(), to: a.clone() },\n            ];\n        }\n\n        // Find the dimension with the largest spread\n        let (mut min_x, mut max_x, mut min_y, mut max_y) =\n            (points[0].x, points[0].x, points[0].y, points[0].y);\n        for i in 1..n {\n            if points[i].x < min_x { min_x = points[i].x; }\n            if points[i].x > max_x { max_x = points[i].x; }\n            if points[i].y < min_y { min_y = points[i].y; }\n            if points[i].y > max_y { max_y = points[i].y; }\n        }\n        let split_on_x = (max_x - min_x) >= (max_y - min_y);\n\n        // Sort points by the chosen dimension and split at median\n        let mut sorted_points = points.clone();\n        if split_on_x {\n            sorted_points.sort_by(|a, b| a.x.partial_cmp(&b.x).unwrap_or(std::cmp::Ordering::Equal));\n        } else {\n            sorted_points.sort_by(|a, b| a.y.partial_cmp(&b.y).unwrap_or(std::cmp::Ordering::Equal));\n        }\n\n        // Split at median, ensuring both halves have at least 2 points\n        let mid = (n / 2).max(2);\n        let left_points: Vec<Point> = sorted_points[..mid].to_vec();\n        let right_points: Vec<Point> = sorted_points[mid..].to_vec();\n\n        // Recur on each half\n        let left_tour = etsp_inner(&left_points);\n        let right_tour = etsp_inner(&right_points);\n\n        // Find best swap: try all pairs of edges (one from each tour)\n        let mut best_cost = f64::MAX;\n        let mut best_li = 0usize;\n        let mut best_ri = 0usize;\n\n        for li in 0..left_tour.len() {\n            for ri in 0..right_tour.len() {\n                let el = &left_tour[li];\n                let er = &right_tour[ri];\n                // swapCost = d(u_l, v_r) + d(u_r, v_l) - d(u_l, v_l) - d(u_r, v_r)\n                let cost = el.from.distance(&er.to) + er.from.distance(&el.to)\n                         - el.from.distance(&el.to) - er.from.distance(&er.to);\n                if cost < best_cost {\n                    best_cost = cost;\n                    best_li = li;\n                    best_ri = ri;\n                }\n            }\n        }\n\n        // Combine tours by swapping the best pair of edges\n        let el = &left_tour[best_li];\n        let er = &right_tour[best_ri];\n        let ln = left_tour.len();\n        let rn = right_tour.len();\n\n        let mut combined: Vec<Edge> = Vec::with_capacity(ln + rn);\n\n        // Left side: edges after best_li (wrapping), up to but not including best_li\n        for i in 1..ln {\n            combined.push(left_tour[(best_li + i) % ln].clone());\n        }\n\n        // Bridge from left to right: el.from -> er.to\n        combined.push(Edge { from: el.from.clone(), to: er.to.clone() });\n\n        // Right side: edges after best_ri (wrapping)\n        for i in 1..rn {\n            combined.push(right_tour[(best_ri + i) % rn].clone());\n        }\n\n        // Bridge from right to left: er.from -> el.to\n        combined.push(Edge { from: er.from.clone(), to: el.to.clone() });\n\n        combined\n    }"
+    "snippet": "    /// Reweight edges: w'(u,v) = w(u,v) + p(u) - p(v)\n    ///\n    /// - APAS: Work O(m), Span O(m)\n    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — rebuilds vertex set O(n) plus iterates edges O(m)\n    #[cfg(not(verus_keep_ghost))]\n    fn reweight_graph(\n        graph: &WeightedDirGraphStEphI128<usize>,\n        potentials: &ArraySeqStEphS<i64>,\n        n: usize,\n    ) -> WeightedDirGraphStEphI128<usize> {\n        let mut vertices = SetStEph::empty();\n        for i in 0..n {\n            vertices.insert(i);\n        }\n\n        let mut reweighted_edges = SetStEph::empty();\n        for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {\n            let p_from = *potentials.nth(*from) as i128;\n            let p_to = *potentials.nth(*to) as i128;\n            let w_prime: i128 = *weight + p_from - p_to;\n            reweighted_edges.insert(WeightedEdge(*from, *to, w_prime));\n        }\n\n        WeightedDirGraphStEphI128::from_weighed_edges(vertices, reweighted_edges)\n    }"
   },
   {
     "id": 14,
-    "function": "merge_parallel",
-    "file": "Chap26/MergeSortMtPer.rs",
-    "lines": "45-54",
-    "spec_strength": "hole",
-    "snippet": "        fn merge_parallel(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (result: ArraySeqMtPerS<N>)\n            requires\n                spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),\n                spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),\n                left.spec_len() + right.spec_len() <= usize::MAX,\n            ensures\n                spec_merge_post(\n                    Seq::new(left.spec_len(), |i: int| left.spec_index(i)),\n                    Seq::new(right.spec_len(), |i: int| right.spec_index(i)),\n                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));"
+    "function": "create_negative_cycle_result",
+    "file": "Chap59/JohnsonMtEphInt.rs",
+    "lines": "191-204",
+    "spec_strength": "",
+    "snippet": "    /// Create result for negative cycle case.\n    ///\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — builds n×n distance and predecessor matrices\n    #[cfg(not(verus_keep_ghost))]\n    fn create_negative_cycle_result(n: usize) -> AllPairsResultStEphInt {\n        let distances = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| i64::MAX, n), n);\n        let predecessors = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| 0, n), n);\n        AllPairsResultStEphInt {\n            distances,\n            predecessors,\n            n,\n        }\n    }"
   },
   {
     "id": 15,
-    "function": "merge_sort_parallel",
-    "file": "Chap26/MergeSortMtPer.rs",
-    "lines": "58-63",
-    "spec_strength": "hole",
-    "snippet": "        fn merge_sort_parallel(a: &ArraySeqMtPerS<N>) -> (result: ArraySeqMtPerS<N>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_sort_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));"
+    "function": "johnson_apsp",
+    "file": "Chap59/JohnsonStEphFloat.rs",
+    "lines": "28-30",
+    "spec_strength": "",
+    "snippet": "        /// Johnson's all-pairs shortest path algorithm\n        /// APAS: Work O(mn log n), Span O(mn log n) where n = |V|, m = |E|\n        fn johnson_apsp(graph: &WeightedDirGraphStEphFloat<usize>) -> AllPairsResultStEphFloat;"
   },
   {
     "id": 16,
-    "function": "merge",
-    "file": "Chap26/MergeSortStPer.rs",
-    "lines": "69-78",
-    "spec_strength": "unknown",
-    "snippet": "        fn merge(left: &ArraySeqStPerS<N>, right: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<N>)\n            requires\n                spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),\n                spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),\n                left.spec_len() + right.spec_len() <= usize::MAX,\n            ensures\n                spec_merge_post(\n                    Seq::new(left.spec_len(), |i: int| left.spec_index(i)),\n                    Seq::new(right.spec_len(), |i: int| right.spec_index(i)),\n                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));"
+    "function": "add_dummy_source",
+    "file": "Chap59/JohnsonStEphFloat.rs",
+    "lines": "87-111",
+    "spec_strength": "",
+    "snippet": "    /// Add dummy source vertex s with zero-weight edges to all vertices in G.\n    ///\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — iterates over vertices and edges\n    fn add_dummy_source(\n        graph: &WeightedDirGraphStEphFloat<usize>,\n        n: usize,\n    ) -> (WeightedDirGraphStEphFloat<usize>, usize) {\n        let dummy_idx = n;\n        let mut vertices = SetStEph::empty();\n        for i in 0..=n {\n            vertices.insert(i);\n        }\n        let mut edges = SetStEph::empty();\n        for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {\n            edges.insert(Triple(*from, *to, *weight));\n        }\n        for i in 0..n {\n            edges.insert(Triple(dummy_idx, i, OrderedFloat(0.0)));\n        }\n        (\n            WeightedDirGraphStEphFloat::from_weighted_edges(vertices, edges),\n            dummy_idx,\n        )\n    }"
   },
   {
     "id": 17,
-    "function": "merge_sort",
-    "file": "Chap26/MergeSortStPer.rs",
-    "lines": "82-87",
-    "spec_strength": "unknown",
-    "snippet": "        fn merge_sort(a: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<N>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_sort_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));"
+    "function": "reweight_graph",
+    "file": "Chap59/JohnsonStEphFloat.rs",
+    "lines": "113-134",
+    "spec_strength": "",
+    "snippet": "    /// Reweight edges: w'(u,v) = w(u,v) + p(u) - p(v)\n    ///\n    /// - APAS: Work O(m), Span O(m)\n    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — rebuilds vertex set O(n) plus iterates edges O(m)\n    fn reweight_graph(\n        graph: &WeightedDirGraphStEphFloat<usize>,\n        potentials: &ArraySeqStEphS<OrderedF64>,\n        n: usize,\n    ) -> WeightedDirGraphStEphFloat<usize> {\n        let mut vertices = SetStEph::empty();\n        for i in 0..n {\n            vertices.insert(i);\n        }\n        let mut edges = SetStEph::empty();\n        for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {\n            let p_from = *potentials.nth(*from);\n            let p_to = *potentials.nth(*to);\n            let new_weight = OrderedFloat(weight.0 + p_from.0 - p_to.0);\n            edges.insert(Triple(*from, *to, new_weight));\n        }\n        WeightedDirGraphStEphFloat::from_weighted_edges(vertices, edges)\n    }"
   },
   {
     "id": 18,
-    "function": "lemma_push_sorted",
-    "file": "Chap26/MergeSortStPer.rs",
-    "lines": "93-98",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_push_sorted(s: Seq<N>, v: N)\n        requires\n            spec_sorted(s),\n            s.len() > 0 ==> s.last() <= v,\n        ensures\n            spec_sorted(s.push(v)),"
+    "function": "create_negative_cycle_result",
+    "file": "Chap59/JohnsonStEphFloat.rs",
+    "lines": "136-148",
+    "spec_strength": "",
+    "snippet": "    /// Create result for negative cycle case.\n    ///\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — builds n×n distance and predecessor matrices\n    fn create_negative_cycle_result(n: usize) -> AllPairsResultStEphFloat {\n        let distances = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| OrderedFloat(f64::INFINITY), n), n);\n        let predecessors = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| 0, n), n);\n        AllPairsResultStEphFloat {\n            distances,\n            predecessors,\n            n,\n        }\n    }"
   },
   {
     "id": 19,
-    "function": "prefix_sums_dc_parallel",
-    "file": "Chap26/ScanDCMtPer.rs",
-    "lines": "46-53",
-    "spec_strength": "hole",
-    "snippet": "        fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<N>) -> (result: (ArraySeqMtPerS<N>, N))\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_scan_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    |x: N, y: N| (x + y) as N, 0,\n                    Seq::new(result.0.spec_len(), |i: int| result.0.spec_index(i)),\n                    result.1);"
+    "function": "johnson_apsp",
+    "file": "Chap59/JohnsonStEphInt.rs",
+    "lines": "33",
+    "spec_strength": "",
+    "snippet": "            fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphInt;"
   },
   {
     "id": 20,
-    "function": "prefix_sums_dc_inner",
-    "file": "Chap26/ScanDCMtPer.rs",
-    "lines": "67-106",
+    "function": "add_dummy_source",
+    "file": "Chap59/JohnsonStEphInt.rs",
+    "lines": "99-125",
     "spec_strength": "",
-    "snippet": "    /// Inner recursive function for parallel prefix sums DC.\n    /// Outside verus! because it uses thread::scope directly.\n    fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<N>) -> (ArraySeqMtPerS<N>, N) {\n        let n = a.length();\n        if n == 0 {\n            return (ArraySeqMtPerS::empty(), 0);\n        }\n        if n == 1 {\n            return (ArraySeqMtPerS::singleton(0), *a.nth(0));\n        }\n        let mid = n / 2;\n        let left = a.subseq_copy(0, mid);\n        let right = a.subseq_copy(mid, n - mid);\n\n        let left_arc = Arc::new(left);\n        let right_arc = Arc::new(right);\n\n        let ((l_prefixes, l_total), (r_prefixes, r_total)) = thread::scope(|s| {\n            let la = left_arc.clone();\n            let handle = s.spawn(move || prefix_sums_dc_inner(&*la));\n\n            let ra = right_arc.clone();\n            let right_result = prefix_sums_dc_inner(&*ra);\n\n            let left_result = handle.join().unwrap();\n            (left_result, right_result)\n        });\n\n        // Combine: r'[i] = l_total + r[i]\n        let captured_l_total = l_total;\n        let r_adjusted = ArraySeqMtPerS::tabulate(\n            &|i: usize| -> N { captured_l_total + *r_prefixes.nth(i) },\n            r_prefixes.length(),\n        );\n\n        let result_prefixes = ArraySeqMtPerS::append(&l_prefixes, &r_adjusted);\n        let total = l_total + r_total;\n\n        (result_prefixes, total)\n    }"
+    "snippet": "    /// Add dummy source vertex s with zero-weight edges to all vertices in G.\n    ///\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — iterates over vertices and edges\n    #[cfg(not(verus_keep_ghost))]\n    fn add_dummy_source(graph: &WeightedDirGraphStEphI128<usize>, n: usize) -> (WeightedDirGraphStEphI128<usize>, usize) {\n        let dummy_idx = n;\n\n        let mut vertices = SetStEph::empty();\n        for i in 0..=n {\n            vertices.insert(i);\n        }\n\n        let mut edges = SetStEph::empty();\n        for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {\n            edges.insert(WeightedEdge(*from, *to, *weight));\n        }\n\n        for i in 0..n {\n            edges.insert(WeightedEdge(dummy_idx, i, 0i128));\n        }\n\n        (\n            WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges),\n            dummy_idx,\n        )\n    }"
   },
   {
     "id": 21,
-    "function": "scan_dc",
-    "file": "Chap26/ScanDCStPer.rs",
-    "lines": "61-72",
-    "spec_strength": "unknown",
-    "snippet": "        fn scan_dc<F: Fn(&N, &N) -> N>(a: &ArraySeqStPerS<N>, f: &F, Ghost(spec_f): Ghost<spec_fn(N, N) -> N>, id: N) -> (result: (ArraySeqStPerS<N>, N))\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_f, id),\n                forall|x: &N, y: &N| #[trigger] f.requires((x, y)),\n                forall|x: N, y: N, ret: N| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                spec_scan_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    spec_f, id,\n                    Seq::new(result.0.spec_len(), |i: int| result.0.spec_index(i)),\n                    result.1);"
+    "function": "reweight_graph",
+    "file": "Chap59/JohnsonStEphInt.rs",
+    "lines": "127-151",
+    "spec_strength": "",
+    "snippet": "    /// Reweight edges: w'(u,v) = w(u,v) + p(u) - p(v)\n    ///\n    /// - APAS: Work O(m), Span O(m)\n    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — rebuilds vertex set O(n) plus iterates edges O(m)\n    #[cfg(not(verus_keep_ghost))]\n    fn reweight_graph(\n        graph: &WeightedDirGraphStEphI128<usize>,\n        potentials: &ArraySeqStEphS<i64>,\n        n: usize,\n    ) -> WeightedDirGraphStEphI128<usize> {\n        let mut vertices = SetStEph::empty();\n        for i in 0..n {\n            vertices.insert(i);\n        }\n\n        let mut edges = SetStEph::empty();\n        for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {\n            let p_from = *potentials.nth(*from) as i128;\n            let p_to = *potentials.nth(*to) as i128;\n            let new_weight: i128 = *weight + p_from - p_to;\n            edges.insert(WeightedEdge(*from, *to, new_weight));\n        }\n\n        WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges)\n    }"
   },
   {
     "id": 22,
-    "function": "prefix_sums_dc",
-    "file": "Chap26/ScanDCStPer.rs",
-    "lines": "76-83",
-    "spec_strength": "hole",
-    "snippet": "        fn prefix_sums_dc(a: &ArraySeqStPerS<N>) -> (result: (ArraySeqStPerS<N>, N))\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_scan_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    |x: N, y: N| (x + y) as N, 0,\n                    Seq::new(result.0.spec_len(), |i: int| result.0.spec_index(i)),\n                    result.1);"
+    "function": "create_negative_cycle_result",
+    "file": "Chap59/JohnsonStEphInt.rs",
+    "lines": "153-166",
+    "spec_strength": "",
+    "snippet": "    /// Create result for negative cycle case.\n    ///\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — builds n×n distance and predecessor matrices\n    #[cfg(not(verus_keep_ghost))]\n    fn create_negative_cycle_result(n: usize) -> AllPairsResultStEphInt {\n        let distances = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| i64::MAX, n), n);\n        let predecessors = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| 0, n), n);\n        AllPairsResultStEphInt {\n            distances,\n            predecessors,\n            n,\n        }\n    }"
   },
   {
     "id": 23,
-    "function": "lemma_fold_left_monoid",
-    "file": "Chap26/ScanDCStPer.rs",
-    "lines": "90-93",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_monoid(s: Seq<N>, x: N, f: spec_fn(N, N) -> N, id: N)\n        requires spec_monoid(f, id),\n        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),\n        decreases s.len(),"
+    "function": "edge_contract_mt",
+    "file": "Chap61/EdgeContractionMtEph.rs",
+    "lines": "32-35",
+    "spec_strength": "",
+    "snippet": "            fn edge_contract_mt<V: StT + MtT + Hash + Ord + 'static>(\n                graph: &UnDirGraphMtEph<V>,\n                matching: &SetStEph<Edge<V>>,\n            ) -> UnDirGraphMtEph<V>;"
+  },
+  {
+    "id": 24,
+    "function": "contract_round_mt",
+    "file": "Chap61/EdgeContractionMtEph.rs",
+    "lines": "39-42",
+    "spec_strength": "",
+    "snippet": "            fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(\n                graph: &UnDirGraphMtEph<V>,\n                seed: u64,\n            ) -> UnDirGraphMtEph<V>;"
+  },
+  {
+    "id": 25,
+    "function": "build_edges_parallel",
+    "file": "Chap61/EdgeContractionMtEph.rs",
+    "lines": "109-162",
+    "spec_strength": "",
+    "snippet": "    /// Build new edge set in parallel using divide-and-conquer\n    ///\n    /// - APAS: N/A — Verus-specific scaffolding (parallel edge routing helper)\n    /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(lg |E|) — genuine divide-and-conquer parallelism\n    #[cfg(not(verus_keep_ghost))]\n    fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(\n        edges: Arc<ArraySeqStEphS<Edge<V>>>,\n        vertex_map: Arc<HashMap<V, V>>,\n        start: usize,\n        end: usize,\n    ) -> SetStEph<Edge<V>> {\n        let size = end - start;\n\n        if size == 0 {\n            return SetLit![];\n        }\n\n        if size == 1 {\n            let edge = edges.nth(start as N);\n            let Edge(u, v) = edge;\n            let block_u = vertex_map.get(u).unwrap().clone();\n            let block_v = vertex_map.get(v).unwrap().clone();\n\n            if block_u != block_v {\n                let new_edge = if block_u < block_v {\n                    Edge(block_u, block_v)\n                } else {\n                    Edge(block_v, block_u)\n                };\n                let mut result: SetStEph<Edge<V>> = SetLit![];\n                let _ = result.insert(new_edge);\n                return result;\n            } else {\n                return SetLit![];\n            }\n        }\n\n        let mid = start + size / 2;\n\n        let edges1 = edges.clone();\n        let map1 = vertex_map.clone();\n        let edges2 = edges;\n        let map2 = vertex_map;\n\n        let pair = ParaPair!(move || build_edges_parallel(edges1, map1, start, mid), move || {\n            build_edges_parallel(edges2, map2, mid, end)\n        });\n\n        let mut result = pair.0;\n        for edge in pair.1.iter() {\n            let _ = result.insert(edge.clone());\n        }\n        result\n    }"
+  },
+  {
+    "id": 26,
+    "function": "edge_contract",
+    "file": "Chap61/EdgeContractionStEph.rs",
+    "lines": "30-33",
+    "spec_strength": "",
+    "snippet": "            fn edge_contract<V: StT + Hash + Ord>(\n                graph: &UnDirGraphStEph<V>,\n                matching: &SetStEph<Edge<V>>,\n            ) -> UnDirGraphStEph<SetStEph<V>>;"
+  },
+  {
+    "id": 27,
+    "function": "contract_round",
+    "file": "Chap61/EdgeContractionStEph.rs",
+    "lines": "37",
+    "spec_strength": "",
+    "snippet": "            fn contract_round<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V>;"
+  },
+  {
+    "id": 28,
+    "function": "parallel_matching_mt",
+    "file": "Chap61/VertexMatchingMtEph.rs",
+    "lines": "30",
+    "spec_strength": "",
+    "snippet": "            fn parallel_matching_mt<V: StT + MtT + Hash + 'static>(graph: &UnDirGraphMtEph<V>) -> SetStEph<Edge<V>>;"
+  },
+  {
+    "id": 29,
+    "function": "flip_coins_parallel",
+    "file": "Chap61/VertexMatchingMtEph.rs",
+    "lines": "78-100",
+    "spec_strength": "",
+    "snippet": "    /// Phase 1: Flip coins for all edges\n    ///\n    /// - APAS: Work Θ(|E|), Span Θ(1) — each coin is independent\n    /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — RNG is sequential, no actual parallelism\n    #[cfg(not(verus_keep_ghost))]\n    fn flip_coins_parallel<V: StT + MtT + 'static>(\n        edges: &ArraySeqStEphS<Edge<V>>,\n        rng: &mut rand::rngs::StdRng,\n    ) -> ArraySeqStEphS<B> {\n        use rand::{Rng, RngExt};\n\n        let n = edges.length();\n        if n == 0 {\n            return ArraySeqStEphS::empty();\n        }\n\n        let mut coins_vec = Vec::with_capacity(n);\n        for _ in 0..n {\n            coins_vec.push(rng.random());\n        }\n\n        ArraySeqStEphS::from_vec(coins_vec)\n    }"
+  },
+  {
+    "id": 30,
+    "function": "select_edges_parallel",
+    "file": "Chap61/VertexMatchingMtEph.rs",
+    "lines": "102-133",
+    "spec_strength": "",
+    "snippet": "    /// Phase 2: Select edges in parallel where coin is heads and adjacent edges are tails\n    ///\n    /// - APAS: Work O(|E|), Span O(lg |V|) — each edge checks only incident edges\n    /// - Claude-Opus-4.6: Work Θ(|E|²), Span Θ(lg |E| + |E|) — should_select_edge scans all |E| edges\n    #[cfg(not(verus_keep_ghost))]\n    fn select_edges_parallel<V: StT + MtT + Hash + 'static>(\n        graph: &UnDirGraphMtEph<V>,\n        edges: &ArraySeqStEphS<Edge<V>>,\n        coins: &ArraySeqStEphS<B>,\n    ) -> SetStEph<Edge<V>> {\n        use std::sync::Arc;\n        pub type T<V> = UnDirGraphMtEph<V>;\n\n        let n = edges.length();\n        if n == 0 {\n            return SetLit![];\n        }\n\n        let edge_coin_map = edges.iter().zip(coins.iter()).map(|(e, c)| (e.clone(), *c)).collect::<HashMap<Edge<V>, bool>>();\n\n        let graph_arc = Arc::new(graph.clone());\n        let edges_arc = Arc::new(edges.clone());\n        let map_arc = Arc::new(edge_coin_map);\n\n        let selected = select_edges_recursive(graph_arc, edges_arc, map_arc, 0, n);\n\n        let mut result: SetStEph<Edge<V>> = SetLit![];\n        for edge in selected.iter() {\n            let _ = result.insert(edge.clone());\n        }\n        result\n    }"
+  },
+  {
+    "id": 31,
+    "function": "select_edges_recursive",
+    "file": "Chap61/VertexMatchingMtEph.rs",
+    "lines": "135-178",
+    "spec_strength": "",
+    "snippet": "    /// - APAS: N/A — Verus-specific scaffolding (parallel recursion helper)\n    /// - Claude-Opus-4.6: Work Θ(k × |E|), Span Θ(lg k + |E|) — each base case calls should_select_edge which is Θ(|E|)\n    #[cfg(not(verus_keep_ghost))]\n    fn select_edges_recursive<V: StT + MtT + Hash + 'static>(\n        graph: Arc<UnDirGraphMtEph<V>>,\n        edges: Arc<ArraySeqStEphS<Edge<V>>>,\n        edge_coins: Arc<HashMap<Edge<V>, bool>>,\n        start: usize,\n        end: usize,\n    ) -> ArraySeqStEphS<Edge<V>> {\n        let size = end - start;\n\n        if size == 0 {\n            return ArraySeqStEphS::empty();\n        }\n\n        if size == 1 {\n            let edge = edges.nth(start as N);\n            if should_select_edge(&graph, edge, &edge_coins) {\n                return ArraySeqStEphS::from_vec(std::vec![edge.clone()]);\n            } else {\n                return ArraySeqStEphS::empty();\n            }\n        }\n\n        let mid = start + size / 2;\n\n        let graph1 = graph.clone();\n        let edges1 = edges.clone();\n        let coins1 = edge_coins.clone();\n        let graph2 = graph;\n        let edges2 = edges;\n        let coins2 = edge_coins;\n\n        let pair = ParaPair!(\n            move || select_edges_recursive(graph1, edges1, coins1, start, mid),\n            move || select_edges_recursive(graph2, edges2, coins2, mid, end)\n        );\n\n        let mut left_vec = pair.0.iter().cloned().collect::<Vec<Edge<V>>>();\n        let right_vec = pair.1.iter().cloned().collect::<Vec<Edge<V>>>();\n        left_vec.extend(right_vec);\n        ArraySeqStEphS::from_vec(left_vec)\n    }"
+  },
+  {
+    "id": 32,
+    "function": "should_select_edge",
+    "file": "Chap61/VertexMatchingMtEph.rs",
+    "lines": "180-211",
+    "spec_strength": "",
+    "snippet": "    /// Check if an edge should be selected\n    ///\n    /// Edge is selected if its coin is heads and all adjacent edges have tails\n    ///\n    /// - APAS: Work O(degree(u) + degree(v)), Span O(degree(u) + degree(v)) — checks only incident edges\n    /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — iterates all edges, not just incident ones\n    #[cfg(not(verus_keep_ghost))]\n    fn should_select_edge<V: StT + MtT + Hash + 'static>(\n        graph: &UnDirGraphMtEph<V>,\n        edge: &Edge<V>,\n        edge_coins: &HashMap<Edge<V>, bool>,\n    ) -> bool {\n        let Edge(u, v) = edge;\n\n        if !edge_coins.get(edge).copied().unwrap_or(false) {\n            return false;\n        }\n\n        for adj_edge in graph.edges().iter() {\n            if adj_edge == edge {\n                continue;\n            }\n\n            if (graph.incident(adj_edge, u) || graph.incident(adj_edge, v))\n                && edge_coins.get(adj_edge).copied().unwrap_or(false)\n            {\n                return false;\n            }\n        }\n\n        true\n    }"
+  },
+  {
+    "id": 33,
+    "function": "greedy_matching",
+    "file": "Chap61/VertexMatchingStEph.rs",
+    "lines": "26",
+    "spec_strength": "",
+    "snippet": "            fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>;"
+  },
+  {
+    "id": 34,
+    "function": "parallel_matching_st",
+    "file": "Chap61/VertexMatchingStEph.rs",
+    "lines": "30",
+    "spec_strength": "",
+    "snippet": "            fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>;"
+  },
+  {
+    "id": 35,
+    "function": "star_contract_mt",
+    "file": "Chap62/StarContractionMtEph.rs",
+    "lines": "32-37",
+    "spec_strength": "",
+    "snippet": "            fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, base: F, expand: G) -> R\n            where\n                V: StT + MtT + Hash + Ord + 'static,\n                R: StT + MtT + 'static,\n                F: Fn(&SetStEph<V>) -> R + 'static,\n                G: Fn(&SetStEph<V>, &R) -> R + 'static;"
+  },
+  {
+    "id": 36,
+    "function": "contract_to_vertices_mt",
+    "file": "Chap62/StarContractionMtEph.rs",
+    "lines": "41",
+    "spec_strength": "",
+    "snippet": "            fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>) -> SetStEph<V>;"
+  },
+  {
+    "id": 37,
+    "function": "build_quotient_graph_parallel",
+    "file": "Chap62/StarContractionMtEph.rs",
+    "lines": "85-106",
+    "spec_strength": "",
+    "snippet": "    /// Build quotient graph from partition (parallel version)\n    ///\n    /// Routes edges through partition map using divide-and-conquer parallelism.\n    ///\n    /// - APAS: (no cost stated) — helper not in prose.\n    /// - Claude-Opus-4.6: Work O(m), Span O(lg m) — delegates to route_edges_parallel which uses ParaPair fork-join.\n    #[cfg(not(verus_keep_ghost))]\n    fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + 'static>(\n        graph: &UnDirGraphMtEph<V>,\n        centers: &SetStEph<V>,\n        partition_map: &HashMap<V, V>,\n    ) -> UnDirGraphMtEph<V> {\n        let edges_vec = graph.edges().iter().cloned().collect::<Vec<Edge<V>>>();\n        let edges_seq = ArraySeqStEphS::from_vec(edges_vec);\n        let n_edges = edges_seq.length();\n\n        let part_map_arc = Arc::new(partition_map.clone());\n\n        let quotient_edges = route_edges_parallel(&edges_seq, part_map_arc, 0, n_edges);\n\n        <UnDirGraphMtEph<V> as UnDirGraphMtEphTrait<V>>::from_sets(centers.clone(), quotient_edges)\n    }"
+  },
+  {
+    "id": 38,
+    "function": "route_edges_parallel",
+    "file": "Chap62/StarContractionMtEph.rs",
+    "lines": "108-158",
+    "spec_strength": "",
+    "snippet": "    /// Parallel edge routing using divide-and-conquer\n    ///\n    /// - APAS: (no cost stated) — helper not in prose.\n    /// - Claude-Opus-4.6: Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.\n    #[cfg(not(verus_keep_ghost))]\n    fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(\n        edges: &ArraySeqStEphS<Edge<V>>,\n        partition_map: Arc<HashMap<V, V>>,\n        start: usize,\n        end: usize,\n    ) -> SetStEph<Edge<V>> {\n        let size = end - start;\n\n        if size == 0 {\n            return SetLit![];\n        }\n\n        if size == 1 {\n            let edge = edges.nth(start as N);\n            let Edge(u, v) = edge;\n            let u_center = partition_map.get(u).unwrap_or(u);\n            let v_center = partition_map.get(v).unwrap_or(v);\n\n            if u_center != v_center {\n                let new_edge = if u_center < v_center {\n                    Edge(u_center.clone(), v_center.clone())\n                } else {\n                    Edge(v_center.clone(), u_center.clone())\n                };\n                return SetLit![new_edge];\n            }\n            return SetLit![];\n        }\n\n        let mid = start + size / 2;\n\n        let edges1 = edges.clone();\n        let map1 = partition_map.clone();\n        let edges2 = edges.clone();\n        let map2 = partition_map;\n\n        let pair = ParaPair!(move || route_edges_parallel(&edges1, map1, start, mid), move || {\n            route_edges_parallel(&edges2, map2, mid, end)\n        });\n\n        let mut result = pair.0;\n        for edge in pair.1.iter() {\n            let _ = result.insert(edge.clone());\n        }\n        result\n    }"
+  },
+  {
+    "id": 39,
+    "function": "star_contract",
+    "file": "Chap62/StarContractionStEph.rs",
+    "lines": "27-31",
+    "spec_strength": "",
+    "snippet": "            fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: F, expand: G) -> R\n            where\n                V: StT + Hash + Ord,\n                F: Fn(&SetStEph<V>) -> R,\n                G: Fn(&SetStEph<V>, &R) -> R;"
+  },
+  {
+    "id": 40,
+    "function": "contract_to_vertices",
+    "file": "Chap62/StarContractionStEph.rs",
+    "lines": "35",
+    "spec_strength": "",
+    "snippet": "            fn contract_to_vertices<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<V>;"
+  },
+  {
+    "id": 41,
+    "function": "build_quotient_graph",
+    "file": "Chap62/StarContractionStEph.rs",
+    "lines": "78-109",
+    "spec_strength": "",
+    "snippet": "    /// Build quotient graph from partition\n    ///\n    /// Routes edges through partition map, removing self-loops.\n    ///\n    /// - APAS: (no cost stated) — helper not in prose.\n    /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential loop over all edges.\n    #[cfg(not(verus_keep_ghost))]\n    fn build_quotient_graph<V: StT + Hash + Ord>(\n        graph: &UnDirGraphStEph<V>,\n        centers: &SetStEph<V>,\n        partition_map: &HashMap<V, V>,\n    ) -> UnDirGraphStEph<V> {\n        let mut quotient_edges: SetStEph<Edge<V>> = SetLit![];\n\n        for edge in graph.edges().iter() {\n            let Edge(u, v) = edge;\n\n            let u_center = partition_map.get(u).unwrap_or(u);\n            let v_center = partition_map.get(v).unwrap_or(v);\n\n            if u_center != v_center {\n                let new_edge = if u_center < v_center {\n                    Edge(u_center.clone(), v_center.clone())\n                } else {\n                    Edge(v_center.clone(), u_center.clone())\n                };\n                let _ = quotient_edges.insert(new_edge);\n            }\n        }\n\n        <UnDirGraphStEph<V> as UnDirGraphStEphTrait<V>>::from_sets(centers.clone(), quotient_edges)\n    }"
+  },
+  {
+    "id": 42,
+    "function": "parallel_star_partition",
+    "file": "Chap62/StarPartitionMtEph.rs",
+    "lines": "27-29",
+    "spec_strength": "",
+    "snippet": "            fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(\n                graph: &UnDirGraphMtEph<V>,\n            ) -> SetStEph<SetStEph<V>>;"
+  },
+  {
+    "id": 43,
+    "function": "sequential_star_partition",
+    "file": "Chap62/StarPartitionStEph.rs",
+    "lines": "26",
+    "spec_strength": "",
+    "snippet": "            fn sequential_star_partition<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<SetStEph<V>>;"
+  },
+  {
+    "id": 44,
+    "function": "count_components_mt",
+    "file": "Chap63/ConnectivityMtEph.rs",
+    "lines": "37",
+    "spec_strength": "",
+    "snippet": "            fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>) -> N;"
+  },
+  {
+    "id": 45,
+    "function": "connected_components_mt",
+    "file": "Chap63/ConnectivityMtEph.rs",
+    "lines": "41-43",
+    "spec_strength": "",
+    "snippet": "            fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(\n                graph: &UnDirGraphMtEph<V>,\n            ) -> SetStEph<SetStEph<V>>;"
+  },
+  {
+    "id": 46,
+    "function": "count_components_hof",
+    "file": "Chap63/ConnectivityMtEph.rs",
+    "lines": "47",
+    "spec_strength": "",
+    "snippet": "            fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>) -> N;"
+  },
+  {
+    "id": 47,
+    "function": "connected_components_hof",
+    "file": "Chap63/ConnectivityMtEph.rs",
+    "lines": "51-53",
+    "spec_strength": "",
+    "snippet": "            fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(\n                graph: &UnDirGraphMtEph<V>,\n            ) -> SetStEph<SetStEph<V>>;"
+  },
+  {
+    "id": 48,
+    "function": "build_quotient_edges_parallel",
+    "file": "Chap63/ConnectivityMtEph.rs",
+    "lines": "126-142",
+    "spec_strength": "",
+    "snippet": "    /// Build quotient graph edges in parallel.\n    ///\n    /// - APAS: N/A — helper function implicit in Algorithm 63.2/63.3 Line 7.\n    /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to route_edges_parallel whose merge is sequential\n    #[cfg(not(verus_keep_ghost))]\n    fn build_quotient_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(\n        graph: &UnDirGraphMtEph<V>,\n        partition_map: &HashMap<V, V>,\n    ) -> SetStEph<Edge<V>> {\n        let edges_vec = graph.edges().iter().cloned().collect::<Vec<Edge<V>>>();\n        let edges_seq = ArraySeqStEphS::from_vec(edges_vec);\n        let n_edges = edges_seq.length();\n\n        let part_map_arc = Arc::new(partition_map.clone());\n\n        route_edges_parallel(&edges_seq, part_map_arc, 0, n_edges)\n    }"
+  },
+  {
+    "id": 49,
+    "function": "route_edges_parallel",
+    "file": "Chap63/ConnectivityMtEph.rs",
+    "lines": "144-194",
+    "spec_strength": "",
+    "snippet": "    /// Parallel edge routing using divide-and-conquer.\n    ///\n    /// - APAS: N/A — helper function, not in prose.\n    /// - Claude-Opus-4.6: Work O(k), Span O(k) — sequential set union after ParaPair! makes span O(k) not O(lg k)\n    #[cfg(not(verus_keep_ghost))]\n    fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(\n        edges: &ArraySeqStEphS<Edge<V>>,\n        partition_map: Arc<HashMap<V, V>>,\n        start: usize,\n        end: usize,\n    ) -> SetStEph<Edge<V>> {\n        let size = end - start;\n\n        if size == 0 {\n            return SetLit![];\n        }\n\n        if size == 1 {\n            let edge = edges.nth(start as N);\n            let Edge(u, v) = edge;\n            let u_center = partition_map.get(u).unwrap_or(u);\n            let v_center = partition_map.get(v).unwrap_or(v);\n\n            if u_center != v_center {\n                let new_edge = if u_center < v_center {\n                    Edge(u_center.clone(), v_center.clone())\n                } else {\n                    Edge(v_center.clone(), u_center.clone())\n                };\n                return SetLit![new_edge];\n            }\n            return SetLit![];\n        }\n\n        let mid = start + size / 2;\n\n        let edges1 = edges.clone();\n        let map1 = partition_map.clone();\n        let edges2 = edges.clone();\n        let map2 = partition_map;\n\n        let pair = ParaPair!(move || route_edges_parallel(&edges1, map1, start, mid), move || {\n            route_edges_parallel(&edges2, map2, mid, end)\n        });\n\n        let mut result = pair.0;\n        for edge in pair.1.iter() {\n            let _ = result.insert(edge.clone());\n        }\n        result\n    }"
+  },
+  {
+    "id": 50,
+    "function": "compose_maps_parallel",
+    "file": "Chap63/ConnectivityMtEph.rs",
+    "lines": "196-211",
+    "spec_strength": "",
+    "snippet": "    /// Compose maps (P ∘ C): for each (u → v) in P, output (u → C[v]).\n    ///\n    /// - APAS: N/A — helper function, Line 10 of Algorithm 63.3.\n    /// - Claude-Opus-4.6: Work O(|P|), Span O(|P|) — currently sequential despite \"parallel\" name\n    #[cfg(not(verus_keep_ghost))]\n    fn compose_maps_parallel<V: StT + MtT + Hash + Ord + 'static>(\n        partition_map: &HashMap<V, V>,\n        component_map: &HashMap<V, V>,\n    ) -> HashMap<V, V> {\n        let mut result = HashMap::new();\n        for (u, v) in partition_map.iter() {\n            let component = component_map.get(v).unwrap_or(v);\n            let _ = result.insert(u.clone(), component.clone());\n        }\n        result\n    }"
+  },
+  {
+    "id": 51,
+    "function": "count_components",
+    "file": "Chap63/ConnectivityStEph.rs",
+    "lines": "32",
+    "spec_strength": "",
+    "snippet": "            fn count_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N;"
+  },
+  {
+    "id": 52,
+    "function": "connected_components",
+    "file": "Chap63/ConnectivityStEph.rs",
+    "lines": "36",
+    "spec_strength": "",
+    "snippet": "            fn connected_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<SetStEph<V>>;"
+  },
+  {
+    "id": 53,
+    "function": "count_components_hof",
+    "file": "Chap63/ConnectivityStEph.rs",
+    "lines": "40",
+    "spec_strength": "",
+    "snippet": "            fn count_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N;"
+  },
+  {
+    "id": 54,
+    "function": "connected_components_hof",
+    "file": "Chap63/ConnectivityStEph.rs",
+    "lines": "44",
+    "spec_strength": "",
+    "snippet": "            fn connected_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<SetStEph<V>>;"
+  },
+  {
+    "id": 55,
+    "function": "build_quotient_edges",
+    "file": "Chap63/ConnectivityStEph.rs",
+    "lines": "119-147",
+    "spec_strength": "",
+    "snippet": "    /// Build quotient graph edges by routing through partition map.\n    /// Filters out self-edges (where both endpoints map to same super-vertex).\n    ///\n    /// - APAS: N/A — helper function implicit in Algorithm 63.2/63.3 Line 7.\n    /// - Claude-Opus-4.6: Work O(m), Span O(m) — single pass over edges\n    #[cfg(not(verus_keep_ghost))]\n    fn build_quotient_edges<V: StT + Hash + Ord>(\n        graph: &UnDirGraphStEph<V>,\n        partition_map: &HashMap<V, V>,\n    ) -> SetStEph<Edge<V>> {\n        let mut quotient_edges: SetStEph<Edge<V>> = SetLit![];\n\n        for edge in graph.edges().iter() {\n            let Edge(u, v) = edge;\n            let u_center = partition_map.get(u).unwrap_or(u);\n            let v_center = partition_map.get(v).unwrap_or(v);\n\n            if u_center != v_center {\n                let new_edge = if u_center < v_center {\n                    Edge(u_center.clone(), v_center.clone())\n                } else {\n                    Edge(v_center.clone(), u_center.clone())\n                };\n                let _ = quotient_edges.insert(new_edge);\n            }\n        }\n\n        quotient_edges\n    }"
+  },
+  {
+    "id": 56,
+    "function": "spanning_tree_star_contraction_mt",
+    "file": "Chap64/SpanTreeMtEph.rs",
+    "lines": "33-35",
+    "spec_strength": "",
+    "snippet": "            fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(\n                graph: &UnDirGraphMtEph<V>,\n            ) -> SetStEph<Edge<V>>;"
+  },
+  {
+    "id": 57,
+    "function": "verify_spanning_tree",
+    "file": "Chap64/SpanTreeMtEph.rs",
+    "lines": "39",
+    "spec_strength": "",
+    "snippet": "            fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(graph: &UnDirGraphMtEph<V>, tree: &SetStEph<Edge<V>>) -> B;"
+  },
+  {
+    "id": 58,
+    "function": "spanning_tree_star_contraction",
+    "file": "Chap64/SpanTreeStEph.rs",
+    "lines": "27",
+    "spec_strength": "",
+    "snippet": "            fn spanning_tree_star_contraction<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>;"
+  },
+  {
+    "id": 59,
+    "function": "verify_spanning_tree",
+    "file": "Chap64/SpanTreeStEph.rs",
+    "lines": "31",
+    "spec_strength": "",
+    "snippet": "            fn verify_spanning_tree<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>, tree: &SetStEph<Edge<V>>) -> B;"
+  },
+  {
+    "id": 60,
+    "function": "euler_tour",
+    "file": "Chap64/TSPApproxStEph.rs",
+    "lines": "34-36",
+    "spec_strength": "",
+    "snippet": "        /// Compute Euler tour of a tree\n        /// APAS: Work O(|V|), Span O(|V|)\n        fn euler_tour<V: StT + Hash + Ord>(tree: &LabUnDirGraphStEph<V, OrderedFloat<f64>>, start: V) -> Vec<V>;"
+  },
+  {
+    "id": 61,
+    "function": "shortcut_tour",
+    "file": "Chap64/TSPApproxStEph.rs",
+    "lines": "38-40",
+    "spec_strength": "",
+    "snippet": "        /// Shortcut Euler tour to avoid revisiting vertices\n        /// APAS: Work O(|V|), Span O(|V|)\n        fn shortcut_tour<V: StT + Hash + Ord>(euler_tour: &[V]) -> Vec<V>;"
+  },
+  {
+    "id": 62,
+    "function": "tour_weight",
+    "file": "Chap64/TSPApproxStEph.rs",
+    "lines": "42-47",
+    "spec_strength": "",
+    "snippet": "        /// Compute total weight of a tour\n        /// APAS: Work O(|V|), Span O(|V|)\n        fn tour_weight<V: StT + Hash + Ord>(\n            tour: &[V],\n            distances: &HashMap<(V, V), OrderedFloat<f64>>,\n        ) -> OrderedFloat<f64>;"
+  },
+  {
+    "id": 63,
+    "function": "approx_metric_tsp",
+    "file": "Chap64/TSPApproxStEph.rs",
+    "lines": "49-54",
+    "spec_strength": "",
+    "snippet": "        /// 2-approximation algorithm for metric TSP\n        /// APAS: Work O(|V|² log |V|), Span O(|V|² log |V|)\n        fn approx_metric_tsp<V: StT + Hash + Ord>(\n            distances: &HashMap<(V, V), OrderedFloat<f64>>,\n            vertices: &SetStEph<V>,\n        ) -> Vec<V>;"
+  },
+  {
+    "id": 64,
+    "function": "euler_tour_dfs",
+    "file": "Chap64/TSPApproxStEph.rs",
+    "lines": "86-137",
+    "spec_strength": "",
+    "snippet": "    /// - APAS: N/A — internal helper for euler_tour.\n    /// - Claude-Opus-4.6: Work O(n * m_tree), Span O(n * m_tree) — for each vertex,\n    ///   scans neighbors (O(m)) and tree_edges (O(m_tree)) to find matching edges.\n    #[cfg(not(verus_keep_ghost))]\n    fn euler_tour_dfs<V: StT + Hash + Ord>(\n        graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,\n        current: &V,\n        parent: Option<&V>,\n        tree_edges: &SetStEph<LabEdge<V, OrderedFloat<f64>>>,\n        tour: &mut Vec<V>,\n        visited_edges: &mut HashSet<(V, V)>,\n    ) {\n        tour.push(current.clone());\n\n        // Visit all neighbors connected by tree edges\n        let neighbors = get_neighbors(graph, current);\n        for neighbor in neighbors.iter() {\n            // Skip parent to avoid immediate backtrack\n            if let Some(p) = parent {\n                if neighbor == p {\n                    continue;\n                }\n            }\n\n            // Check if edge is in tree and not yet traversed\n            let edge_key = if current < neighbor {\n                (current.clone(), neighbor.clone())\n            } else {\n                (neighbor.clone(), current.clone())\n            };\n\n            if visited_edges.contains(&edge_key) {\n                continue;\n            }\n\n            // Check if edge exists in tree_edges\n            let mut edge_found = false;\n            for edge in tree_edges.iter() {\n                let LabEdge(u, v, _) = edge;\n                if (u == current && v == neighbor) || (u == neighbor && v == current) {\n                    edge_found = true;\n                    break;\n                }\n            }\n\n            if edge_found {\n                visited_edges.insert(edge_key);\n                euler_tour_dfs(graph, neighbor, Some(current), tree_edges, tour, visited_edges);\n                tour.push(current.clone());\n            }\n        }\n    }"
+  },
+  {
+    "id": 65,
+    "function": "get_neighbors",
+    "file": "Chap64/TSPApproxStEph.rs",
+    "lines": "202-216",
+    "spec_strength": "",
+    "snippet": "    /// - APAS: N/A — internal helper, no prose counterpart.\n    /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges.\n    #[cfg(not(verus_keep_ghost))]\n    fn get_neighbors<V: StT + Hash + Ord>(graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>, v: &V) -> SetStEph<V> {\n        let mut neighbors = SetLit![];\n        for edge in graph.labeled_edges().iter() {\n            let LabEdge(a, b, _) = edge;\n            if a == v {\n                let _ = neighbors.insert(b.clone());\n            } else if b == v {\n                let _ = neighbors.insert(a.clone());\n            }\n        }\n        neighbors\n    }"
+  },
+  {
+    "id": 66,
+    "function": "get_edge_weight",
+    "file": "Chap64/TSPApproxStEph.rs",
+    "lines": "218-233",
+    "spec_strength": "",
+    "snippet": "    /// - APAS: N/A — internal helper, no prose counterpart.\n    /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges.\n    #[cfg(not(verus_keep_ghost))]\n    fn get_edge_weight<V: StT + Hash + Ord>(\n        graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,\n        u: &V,\n        v: &V,\n    ) -> Option<OrderedFloat<f64>> {\n        for edge in graph.labeled_edges().iter() {\n            let LabEdge(a, b, w) = edge;\n            if (a == u && b == v) || (a == v && b == u) {\n                return Some(*w);\n            }\n        }\n        None\n    }"
+  },
+  {
+    "id": 67,
+    "function": "kruskal_mst",
+    "file": "Chap65/KruskalStEph.rs",
+    "lines": "26-28",
+    "spec_strength": "",
+    "snippet": "            fn kruskal_mst<V: StT + Hash + Ord>(\n                graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,\n            ) -> SetStEph<LabEdge<V, OrderedFloat<f64>>>;"
+  },
+  {
+    "id": 68,
+    "function": "mst_weight",
+    "file": "Chap65/KruskalStEph.rs",
+    "lines": "32",
+    "spec_strength": "",
+    "snippet": "            fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, OrderedFloat<f64>>>) -> OrderedFloat<f64>;"
+  },
+  {
+    "id": 69,
+    "function": "verify_mst_size",
+    "file": "Chap65/KruskalStEph.rs",
+    "lines": "36-39",
+    "spec_strength": "",
+    "snippet": "            fn verify_mst_size<V: StT + Hash + Ord>(\n                graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,\n                mst: &SetStEph<LabEdge<V, OrderedFloat<f64>>>,\n            ) -> B;"
+  },
+  {
+    "id": 70,
+    "function": "prim_mst",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "43-46",
+    "spec_strength": "",
+    "snippet": "            fn prim_mst<V: StT + Hash + Ord>(\n                graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,\n                start: V,\n            ) -> SetStEph<LabEdge<V, OrderedFloat<f64>>>;"
+  },
+  {
+    "id": 71,
+    "function": "mst_weight",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "50",
+    "spec_strength": "",
+    "snippet": "            fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, OrderedFloat<f64>>>) -> OrderedFloat<f64>;"
+  },
+  {
+    "id": 72,
+    "function": "pq_entry_new",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "59-69",
+    "spec_strength": "",
+    "snippet": "    /// Module-level function to create a new PQEntry.\n    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n    #[cfg(not(verus_keep_ghost))]\n    fn pq_entry_new<V: StT + Hash + Ord>(priority: OrderedFloat<f64>, vertex: V, parent: Option<V>) -> PQEntry<V> {\n        PQEntry {\n            priority,\n            vertex,\n            parent,\n        }\n    }"
+  },
+  {
+    "id": 73,
+    "function": "cmp",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "73-75",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn cmp(&self, other: &Self) -> Ordering { self.priority.cmp(&other.priority) }"
+  },
+  {
+    "id": 74,
+    "function": "partial_cmp",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "80-82",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }"
+  },
+  {
+    "id": 75,
+    "function": "get_neighbors",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "155-169",
+    "spec_strength": "",
+    "snippet": "    /// - APAS: (no cost stated) — implicit in priority-first search\n    /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges\n    #[cfg(not(verus_keep_ghost))]\n    fn get_neighbors<V: StT + Hash + Ord>(graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>, v: &V) -> SetStEph<V> {\n        let mut neighbors = SetLit![];\n        for edge in graph.labeled_edges().iter() {\n            let LabEdge(a, b, _) = edge;\n            if a == v {\n                let _ = neighbors.insert(b.clone());\n            } else if b == v {\n                let _ = neighbors.insert(a.clone());\n            }\n        }\n        neighbors\n    }"
+  },
+  {
+    "id": 76,
+    "function": "get_edge_weight",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "171-186",
+    "spec_strength": "",
+    "snippet": "    /// - APAS: (no cost stated) — implicit in priority-first search\n    /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges\n    #[cfg(not(verus_keep_ghost))]\n    fn get_edge_weight<V: StT + Hash + Ord>(\n        graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,\n        u: &V,\n        v: &V,\n    ) -> Option<OrderedFloat<f64>> {\n        for edge in graph.labeled_edges().iter() {\n            let LabEdge(a, b, w) = edge;\n            if (a == u && b == v) || (a == v && b == u) {\n                return Some(*w);\n            }\n        }\n        None\n    }"
+  },
+  {
+    "id": 77,
+    "function": "new",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "20",
+    "spec_strength": "",
+    "snippet": "            fn new() -> Self;"
+  },
+  {
+    "id": 78,
+    "function": "insert",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "24",
+    "spec_strength": "",
+    "snippet": "            fn insert(&mut self, v: V);"
+  },
+  {
+    "id": 79,
+    "function": "find",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "28",
+    "spec_strength": "",
+    "snippet": "            fn find(&mut self, v: &V) -> V;"
+  },
+  {
+    "id": 80,
+    "function": "union",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "32",
+    "spec_strength": "",
+    "snippet": "            fn union(&mut self, u: &V, v: &V);"
+  },
+  {
+    "id": 81,
+    "function": "equals",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "36",
+    "spec_strength": "",
+    "snippet": "            fn equals(&mut self, u: &V, v: &V) -> B;"
+  },
+  {
+    "id": 82,
+    "function": "num_sets",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "40",
+    "spec_strength": "",
+    "snippet": "            fn num_sets(&mut self) -> usize;"
+  },
+  {
+    "id": 83,
+    "function": "default",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "126-128",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — Rust trait boilerplate.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to new()\n        fn default() -> Self { Self::new() }"
+  },
+  {
+    "id": 84,
+    "function": "vertex_bridges_mt",
+    "file": "Chap66/BoruvkaMtEph.rs",
+    "lines": "36-38",
+    "spec_strength": "",
+    "snippet": "            fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(\n                edges: &SetStEph<LabeledEdge<V>>,\n            ) -> SetStEph<(V, LabeledEdge<V>)>;"
+  },
+  {
+    "id": 85,
+    "function": "bridge_star_partition_mt",
+    "file": "Chap66/BoruvkaMtEph.rs",
+    "lines": "42-45",
+    "spec_strength": "",
+    "snippet": "            fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(\n                vertices: &SetStEph<V>,\n                bridges: &SetStEph<(V, LabeledEdge<V>)>,\n            ) -> SetStEph<SetStEph<V>>;"
+  },
+  {
+    "id": 86,
+    "function": "boruvka_mst_mt",
+    "file": "Chap66/BoruvkaMtEph.rs",
+    "lines": "49-51",
+    "spec_strength": "",
+    "snippet": "            fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(\n                edges: &SetStEph<LabeledEdge<V>>,\n            ) -> SetStEph<LabeledEdge<V>>;"
+  },
+  {
+    "id": 87,
+    "function": "boruvka_mst_mt_with_seed",
+    "file": "Chap66/BoruvkaMtEph.rs",
+    "lines": "55-58",
+    "spec_strength": "",
+    "snippet": "            fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(\n                edges: &SetStEph<LabeledEdge<V>>,\n                seed: u64,\n            ) -> SetStEph<LabeledEdge<V>>;"
+  },
+  {
+    "id": 88,
+    "function": "mst_weight",
+    "file": "Chap66/BoruvkaMtEph.rs",
+    "lines": "62",
+    "spec_strength": "",
+    "snippet": "            fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabeledEdge<V>>) -> OrderedFloat<f64>;"
+  },
+  {
+    "id": 89,
+    "function": "filter_tail_to_head_mt",
+    "file": "Chap66/BoruvkaMtEph.rs",
+    "lines": "171-222",
+    "spec_strength": "",
+    "snippet": "    /// Parallel filter: find edges from Tail→Head.\n    ///\n    /// - APAS: N/A — internal helper, not in prose.\n    /// - Claude-Opus-4.6: Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        bridges: Arc<HashMap<V, (V, OrderedFloat<f64>, usize)>>,\n        coin_flips: Arc<HashMap<V, bool>>,\n        start: usize,\n        end: usize,\n    ) -> HashMap<V, (V, OrderedFloat<f64>, usize)> {\n        let size = end - start;\n        if size == 0 {\n            return HashMap::new();\n        }\n\n        if size == 1 {\n            // Base case: check single vertex\n            let u = &vertices[start];\n            if let Some((v, w, label)) = bridges.get(u) {\n                let u_heads = coin_flips.get(u).copied().unwrap_or(false);\n                let v_heads = coin_flips.get(v).copied().unwrap_or(false);\n\n                if !u_heads && v_heads {\n                    let mut result = HashMap::new();\n                    let _ = result.insert(u.clone(), (v.clone(), *w, *label));\n                    return result;\n                }\n            }\n            return HashMap::new();\n        }\n\n        // Divide and conquer\n        let mid = start + size / 2;\n        let verts1 = vertices.clone();\n        let bridges1 = bridges.clone();\n        let flips1 = coin_flips.clone();\n        let verts2 = vertices;\n        let bridges2 = bridges;\n        let flips2 = coin_flips;\n\n        let pair = ParaPair!(\n            move || filter_tail_to_head_mt(verts1, bridges1, flips1, start, mid),\n            move || filter_tail_to_head_mt(verts2, bridges2, flips2, mid, end)\n        );\n\n        // Merge\n        let mut merged = pair.0;\n        merged.extend(pair.1);\n        merged\n    }"
+  },
+  {
+    "id": 90,
+    "function": "reroute_edges_mt",
+    "file": "Chap66/BoruvkaMtEph.rs",
+    "lines": "275-318",
+    "spec_strength": "",
+    "snippet": "    /// Parallel edge re-routing: map edges to new endpoints and remove self-edges.\n    ///\n    /// - APAS: N/A — internal helper, not in prose.\n    /// - Claude-Opus-4.6: Work O(m), Span O(log m) — parallel divide-and-conquer via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(\n        edges: Arc<Vec<LabeledEdge<V>>>,\n        partition: Arc<HashMap<V, V>>,\n        start: usize,\n        end: usize,\n    ) -> Vec<LabeledEdge<V>> {\n        let size = end - start;\n        if size == 0 {\n            return Vec::new();\n        }\n\n        if size == 1 {\n            let LabeledEdge(u, v, w, label) = &edges[start];\n            let new_u = partition.get(u).cloned().unwrap_or_else(|| u.clone());\n            let new_v = partition.get(v).cloned().unwrap_or_else(|| v.clone());\n\n            if new_u != new_v {\n                return vec![LabeledEdge(new_u, new_v, *w, *label)];\n            }\n            return Vec::new();\n        }\n\n        // Divide and conquer\n        let mid = start + size / 2;\n        let edges1 = edges.clone();\n        let part1 = partition.clone();\n        let edges2 = edges;\n        let part2 = partition;\n\n        let pair = ParaPair!(move || reroute_edges_mt(edges1, part1, start, mid), move || {\n            reroute_edges_mt(edges2, part2, mid, end)\n        });\n\n        // Merge\n        let mut left_result = pair.0;\n        let mut right_result = pair.1;\n        left_result.append(&mut right_result);\n        left_result\n    }"
+  },
+  {
+    "id": 91,
+    "function": "vertex_bridges",
+    "file": "Chap66/BoruvkaStEph.rs",
+    "lines": "35",
+    "spec_strength": "",
+    "snippet": "            fn vertex_bridges<V: StT + Hash + Ord>(edges: &SetStEph<LabeledEdge<V>>) -> SetStEph<(V, LabeledEdge<V>)>;"
+  },
+  {
+    "id": 92,
+    "function": "bridge_star_partition",
+    "file": "Chap66/BoruvkaStEph.rs",
+    "lines": "39-42",
+    "spec_strength": "",
+    "snippet": "            fn bridge_star_partition<V: StT + Hash + Ord>(\n                vertices: &SetStEph<V>,\n                bridges: &SetStEph<(V, LabeledEdge<V>)>,\n            ) -> SetStEph<SetStEph<V>>;"
+  },
+  {
+    "id": 93,
+    "function": "boruvka_mst",
+    "file": "Chap66/BoruvkaStEph.rs",
+    "lines": "46",
+    "spec_strength": "",
+    "snippet": "            fn boruvka_mst<V: StT + Hash + Ord>(edges: &SetStEph<LabeledEdge<V>>) -> SetStEph<LabeledEdge<V>>;"
+  },
+  {
+    "id": 94,
+    "function": "boruvka_mst_with_seed",
+    "file": "Chap66/BoruvkaStEph.rs",
+    "lines": "50-53",
+    "spec_strength": "",
+    "snippet": "            fn boruvka_mst_with_seed<V: StT + Hash + Ord>(\n                edges: &SetStEph<LabeledEdge<V>>,\n                seed: u64,\n            ) -> SetStEph<LabeledEdge<V>>;"
+  },
+  {
+    "id": 95,
+    "function": "mst_weight",
+    "file": "Chap66/BoruvkaStEph.rs",
+    "lines": "57",
+    "spec_strength": "",
+    "snippet": "            fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabeledEdge<V>>) -> OrderedFloat<f64>;"
   }
 ]

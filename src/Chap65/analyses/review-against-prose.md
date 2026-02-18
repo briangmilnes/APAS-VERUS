@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 65 — Sequential MST Algorithms: Review Against Prose
 
-**Date:** 2026-02-13
+**Date:** 2026-02-13 (updated 2026-02-18: verusification — traits inside verus!, impls cfg-gated)
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 1: Inventory (tool-generated)
@@ -16,11 +16,11 @@ Generated via `veracity-review-module-fn-impls -d src/Chap65`.
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap65 | KruskalStEph | 3 | 0 | 0 | 3 | 0 | 3 | 0 | 0 | 3 |
-| 2 | Chap65 | PrimStEph | 2 | 2 | 0 | 5 | 0 | 7 | 0 | 0 | 7 |
-| 3 | Chap65 | UnionFindStEph | 6 | 7 | 0 | 0 | 0 | 7 | 0 | 0 | 7 |
+| 1 | Chap65 | KruskalStEph | 3 | 0 | 0 | 3 | 3 | 0 | 0 | 0 | 3 |
+| 2 | Chap65 | PrimStEph | 2 | 2 | 0 | 5 | 2 | 5 | 0 | 0 | 7 |
+| 3 | Chap65 | UnionFindStEph | 6 | 7 | 0 | 0 | 6 | 1 | 0 | 0 | 7 |
 
-**Key observation:** All 17 functions are outside `verus!` and have no `requires`/`ensures`. The only `verus!` block in the chapter is the `View` impl for `PQEntry` in `PrimStEph.rs`.
+**Key observation:** Trait definitions are now inside `verus!` blocks: `KruskalStEphTrait` (3 methods, V!=3, -V!=0 — all inside), `PrimStEphTrait` (2 methods inside verus!, plus a pre-existing `View` impl for `PQEntry`), and `UnionFindStEphTrait` (6 methods inside verus!). All implementations remain outside `verus!` behind `#[cfg(not(verus_keep_ghost))]`. No function has `requires`/`ensures` — the trait signatures are type-checked by Verus but no functional properties are proven. The `View` impl for `PQEntry` in `PrimStEph.rs` predates this verusification batch.
 
 ## Phase 2: Prose Inventory
 
@@ -114,7 +114,7 @@ The implementation follows the priority-first search pattern:
 
 ### 3c. Spec Fidelity
 
-No functions have `requires`/`ensures` clauses, so there is no spec to compare against prose. All 17 functions are unverified.
+Trait definitions are now inside `verus!` blocks, so trait method signatures are type-checked by Verus. However, no function has `requires`/`ensures` clauses — the trait signatures declare parameter and return types only. All 17 functions remain without functional specs.
 
 **Missing specs of note:**
 - `kruskal_mst`: Should ensure result is a subset of input edges, result has n-1 edges (for connected graph), result forms a tree, result has minimum total weight.
@@ -148,7 +148,7 @@ No functions have `requires`/`ensures` clauses, so there is no spec to compare a
 
 ## Phase 6: Proof-Time Test (PTT) Review
 
-**No iterators and no verified loops** in Chapter 65. All code is outside `verus!`. No PTTs are needed or expected.
+**No verified loops or iterators** in Chapter 65. Trait definitions inside `verus!` have no bodies. Implementations are behind `#[cfg(not(verus_keep_ghost))]`. No PTTs are needed or expected.
 
 ### 6a. Unified Test Inventory
 
@@ -188,23 +188,24 @@ No functions have `requires`/`ensures` clauses, so there is no spec to compare a
 
 | # | File | TOC Present | Section Headers | Notes |
 |---|------|:-----------:|:---------------:|-------|
-| 1 | KruskalStEph.rs | No | No | No `verus!` block at all |
-| 2 | PrimStEph.rs | No | No | Minimal `verus!` block (View impl only) |
-| 3 | UnionFindStEph.rs | No | No | No `verus!` block at all |
+| 1 | KruskalStEph.rs | No | No | Has `verus!` block with trait definition only |
+| 2 | PrimStEph.rs | No | No | Has `verus!` block with trait definition + View impl |
+| 3 | UnionFindStEph.rs | No | No | Has `verus!` block with trait definition only |
 
 ### In/Out Table
 
 | # | File | Clone | PartialEq/Eq | Default | Drop | Iterator | Debug | Display | Macro | Other |
 |---|------|:-----:|:------------:|:-------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
-| 1 | KruskalStEph.rs | - | - | - | - | - | - | - | - | - |
-| 2 | PrimStEph.rs | out | out | - | - | - | out | out | - | Ord/PartialOrd out |
-| 3 | UnionFindStEph.rs | - | - | out | - | - | - | - | - | - |
+| 1 | KruskalStEph.rs | - | - | - | - | - | - | - | - | Trait in `verus!` |
+| 2 | PrimStEph.rs | out | out | - | - | - | out | out | - | Trait + View in `verus!`; Ord/PartialOrd out |
+| 3 | UnionFindStEph.rs | - | - | out | - | - | - | - | - | Trait in `verus!` |
 
 **Issues:**
 - PrimStEph.rs: `PQEntry` derives Clone, Eq, PartialEq, Debug outside `verus!`. Clone and PartialEq/Eq should be inside `verus!` with specs. Debug should stay outside.
 - PrimStEph.rs: `Display` impl for `PQEntry` is outside `verus!` — correct placement.
-- PrimStEph.rs: `Ord` and `PartialOrd` impls for `PQEntry` are outside `verus!` — these could benefit from specs inside `verus!`.
-- UnionFindStEph.rs: `Default` impl is outside `verus!` — should be inside with `ensures` connecting to `new()`.
+- PrimStEph.rs: `Ord` and `PartialOrd` impls for `PQEntry` are outside `verus!` behind `#[cfg(not(verus_keep_ghost))]` — these could benefit from specs inside `verus!`.
+- UnionFindStEph.rs: `Default` impl is outside `verus!` behind `#[cfg(not(verus_keep_ghost))]` — should be inside with `ensures` connecting to `new()`.
+- PrimStEph.rs: `View` impl for `PQEntry` was already inside `verus!` before this verusification batch. The trait definition was added in this batch.
 
 ## Proof Holes Summary
 
@@ -215,7 +216,7 @@ Modules: 3 clean, 0 holed
 Holes Found: 0 total
 ```
 
-**All clean.** No `assume`, `admit`, or `external_body` in any Chap65 file. However, this is because the code is entirely unverified (outside `verus!`), not because the proofs are complete.
+**All clean.** No `assume`, `admit`, or `external_body` in any Chap65 file. However, this is because the implementations are behind `#[cfg(not(verus_keep_ghost))]` and not verified, not because the proofs are complete.
 
 ## Spec Strength Summary
 
@@ -226,21 +227,22 @@ Holes Found: 0 total
 | weak | 0 |
 | none | 17 |
 
-**All 17 functions have no spec.** The chapter is entirely unverified — no `requires`, no `ensures`, no functions inside `verus!` (except the trivial `View` impl).
+**All 17 functions have no spec.** Trait definitions are inside `verus!` but declare only type signatures — no `requires`/`ensures`. Implementations are behind `#[cfg(not(verus_keep_ghost))]` and invisible to Verus.
 
 ## Overall Assessment
 
-Chapter 65 is a **functionally correct but entirely unverified** implementation of two classical sequential MST algorithms (Prim's and Kruskal's) plus their supporting Union-Find data structure.
+Chapter 65 is a **partially verusified** implementation of two classical sequential MST algorithms (Prim's and Kruskal's) plus their supporting Union-Find data structure. Trait definitions have been moved inside `verus!` blocks and implementations cfg-gated behind `#[cfg(not(verus_keep_ghost))]`, but no functional specs have been added.
 
 ### Strengths
 
 1. **Algorithmic fidelity**: Kruskal's algorithm closely follows Algorithm 65.2. Union-Find implements both path compression and union by rank.
 2. **Zero proof holes**: No `assume`, `admit`, or `external_body` anywhere.
 3. **Cost annotations**: All 17 exec functions have paired APAS/Claude-Opus-4.6 cost comments.
+4. **Partial verusification**: Trait definitions (`KruskalStEphTrait`, `PrimStEphTrait`, `UnionFindStEphTrait`) are inside `verus!` blocks. `PQEntry`'s `View` impl was already inside `verus!` prior to this batch. Implementations are cleanly separated behind `#[cfg(not(verus_keep_ghost))]`.
 
 ### Weaknesses
 
-1. **No verification**: All code is outside `verus!`. No `requires`/`ensures` on any function. Spec strength is `none` across the board.
+1. **No functional verification**: All code behind `#[cfg(not(verus_keep_ghost))]` is invisible to Verus. No `requires`/`ensures` on any function. Spec strength is `none` across the board.
 2. **No tests**: No RTT or PTT files exist. Zero test coverage.
 3. **No TOC headers**: None of the three files follow the table-of-contents standard.
 4. **Prim's cost inflation**: `get_neighbors` and `get_edge_weight` use O(m) linear scans instead of O(degree) adjacency list lookups, inflating Prim's actual cost to O(nm) vs the prose's O(m lg n).
@@ -250,7 +252,7 @@ Chapter 65 is a **functionally correct but entirely unverified** implementation 
 ### Priority Actions
 
 1. Add runtime tests for all three modules.
-2. Move code inside `verus!` and add specs to key functions (kruskal_mst, prim_mst, find, union, equals).
+2. Add `requires`/`ensures` specs to trait method signatures (kruskal_mst, prim_mst, find, union, equals).
 3. Fix trait/impl signature mismatches.
 4. Refactor `get_neighbors`/`get_edge_weight` in PrimStEph to use proper adjacency structure or document the cost inflation.
 5. Extract shared `mst_weight` to avoid duplication.

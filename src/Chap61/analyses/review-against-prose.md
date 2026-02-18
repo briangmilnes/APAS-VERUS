@@ -7,24 +7,27 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 61: Edge Contraction — Review Against Prose
 
-- **Date**: 2026-02-13
+- **Date**: 2026-02-13 (updated 2026-02-18: verusification — traits inside verus!, impls cfg-gated)
 - **Reviewer**: Claude-Opus-4.6
 - **Source files**: 4 (`EdgeContractionMtEph.rs`, `EdgeContractionStEph.rs`, `VertexMatchingMtEph.rs`, `VertexMatchingStEph.rs`)
 - **Runtime tests**: 0
 - **Proof-time tests**: 0
 - **Proof holes**: 0
-- **Verus coverage**: None — all code is outside `verus!`
+- **Verus coverage**: Partial — trait definitions inside `verus!`, implementations `#[cfg(not(verus_keep_ghost))]`
+- **lib.rs gate**: No longer behind `#[cfg(not(verus_keep_ghost))]` — Verus sees the trait declarations
 
 ## Phase 1: Inventory (Tool-Generated)
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec | SpecStr |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|:-------:|
-| 1 | Chap61 | EdgeContractionMtEph | 2 | 0 | 0 | 3 | 0 | 3 | 0 | 0 | 3 | none |
-| 2 | Chap61 | EdgeContractionStEph | 2 | 0 | 0 | 2 | 0 | 2 | 0 | 0 | 2 | none |
-| 3 | Chap61 | VertexMatchingMtEph | 1 | 0 | 0 | 5 | 0 | 5 | 0 | 0 | 5 | none |
-| 4 | Chap61 | VertexMatchingStEph | 2 | 0 | 0 | 2 | 0 | 2 | 0 | 0 | 2 | none |
+| 1 | Chap61 | EdgeContractionMtEph | 2 | 0 | 0 | 3 | 2 | 1 | 0 | 0 | 3 | none |
+| 2 | Chap61 | EdgeContractionStEph | 2 | 0 | 0 | 2 | 2 | 0 | 0 | 0 | 2 | none |
+| 3 | Chap61 | VertexMatchingMtEph | 1 | 0 | 0 | 5 | 1 | 4 | 0 | 0 | 5 | none |
+| 4 | Chap61 | VertexMatchingStEph | 2 | 0 | 0 | 2 | 2 | 0 | 0 | 0 | 2 | none |
 
-12 exec functions total. All outside `verus!`, all have no spec (no `requires`/`ensures`).
+12 exec functions total. 7 trait method declarations inside `verus!` (type-checked by Verus), 5 implementation functions outside `verus!` with `#[cfg(not(verus_keep_ghost))]`. All 12 have no functional spec (no `requires`/`ensures`).
+
+**Fully inside verus!**: EdgeContractionStEph (V!=2, -V!=0), VertexMatchingStEph (V!=2, -V!=0) — all trait method declarations are inside `verus!` with no remaining outside functions.
 
 ## Phase 2: Prose Inventory
 
@@ -111,7 +114,9 @@ table { width: 100% !important; table-layout: fixed; }
 
 ### 3c. Spec Fidelity
 
-All 12 functions have **no specification** (no `requires`/`ensures`). The code is entirely outside `verus!` blocks, so no formal verification is present. None of the prose's correctness properties (valid matching, factor-2 approximation, contraction ratio) are formally specified.
+All 12 functions have **no functional specification** (no `requires`/`ensures`). Trait definitions are now inside `verus!` blocks, so Verus type-checks the trait method signatures. However, the trait methods declare no `requires` or `ensures` clauses — the signatures are purely structural (parameter types and return types) with no functional contracts.
+
+None of the prose's correctness properties (valid matching, factor-2 approximation, contraction ratio) are formally specified. The implementation functions remain outside `verus!` behind `#[cfg(not(verus_keep_ghost))]`, so their bodies are not verified.
 
 ## Phase 4: Parallelism Review
 
@@ -187,7 +192,7 @@ N/A — no tests exist.
 
 ## Phase 6: Proof-Time Test (PTT) Review
 
-Chapter 61 has **no iterators, no verified loops, and no `verus!` blocks**. All code is plain Rust outside `verus!`. Therefore **no PTTs are needed**.
+Chapter 61 has **no verified loops, no iterators, and no `requires`/`ensures` clauses**. Trait definitions are inside `verus!` blocks and are type-checked, but since they declare no functional specs, there is nothing to test at proof time. **No PTTs are needed** until functional specs are added to the trait methods.
 
 ### 6a. Unified Test Inventory
 
@@ -231,23 +236,23 @@ Chapter 61 has **no iterators, no verified loops, and no `verus!` blocks**. All 
 
 | # | File | TOC Present? | Notes |
 |---|------|:------------:|-------|
-| 1 | EdgeContractionMtEph.rs | **No** | No TOC comment block |
-| 2 | EdgeContractionStEph.rs | **No** | No TOC comment block |
-| 3 | VertexMatchingMtEph.rs | **No** | No TOC comment block |
-| 4 | VertexMatchingStEph.rs | **No** | No TOC comment block |
+| 1 | EdgeContractionMtEph.rs | **No** | Trait inside `verus!`, impls outside — no TOC yet |
+| 2 | EdgeContractionStEph.rs | **No** | Trait inside `verus!`, impls outside — no TOC yet |
+| 3 | VertexMatchingMtEph.rs | **No** | Trait inside `verus!`, impls outside — no TOC yet |
+| 4 | VertexMatchingStEph.rs | **No** | Trait inside `verus!`, impls outside — no TOC yet |
 
-None of the files have a Table of Contents. Since all code is outside `verus!`, the TOC standard is not strictly applicable (TOC assumes verus! section ordering). However, if these files are later moved into `verus!`, TOCs should be added.
+All four files now have `verus!` blocks containing trait definitions. The TOC standard applies but is not yet implemented. TOCs should be added when more code moves inside `verus!`.
 
 ### In/Out Table
 
 | # | File | Clone | PartialEq/Eq | Default | Drop | Iterator | Debug | Display | Macro | Other |
 |---|------|:-----:|:------------:|:-------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
-| 1 | EdgeContractionMtEph.rs | - | - | - | - | - | - | - | - | - |
-| 2 | EdgeContractionStEph.rs | - | - | - | - | - | - | - | - | - |
-| 3 | VertexMatchingMtEph.rs | - | - | - | - | - | - | - | - | - |
-| 4 | VertexMatchingStEph.rs | - | - | - | - | - | - | - | - | - |
+| 1 | EdgeContractionMtEph.rs | - | - | - | - | - | - | - | - | trait defs ✅ in |
+| 2 | EdgeContractionStEph.rs | - | - | - | - | - | - | - | - | trait defs ✅ in |
+| 3 | VertexMatchingMtEph.rs | - | - | - | - | - | - | - | - | trait defs ✅ in |
+| 4 | VertexMatchingStEph.rs | - | - | - | - | - | - | - | - | trait defs ✅ in |
 
-No derive impls in any file. All files contain only trait definitions and free functions.
+No derive impls in any file. Trait definitions are correctly inside `verus!` blocks. Implementation functions are outside `verus!` behind `#[cfg(not(verus_keep_ghost))]` — this is the expected pattern for partially verusified modules where the impl bodies use features Verus cannot yet handle (RNG, ParaPair!, HashMap, etc.).
 
 ## Proof Holes Summary
 
@@ -261,7 +266,7 @@ Modules: 4 clean, 0 holed
 Holes Found: 0
 ```
 
-No proof holes — but also no proofs. All code is outside `verus!`, so there is nothing to verify.
+No proof holes. The trait definitions inside `verus!` contain no `assume`, `admit`, or `external_body`. The cfg-gated implementations are invisible to Verus.
 
 ## Spec Strength Summary
 
@@ -272,13 +277,15 @@ No proof holes — but also no proofs. All code is outside `verus!`, so there is
 | weak | 0 |
 | none | **12** |
 
-All 12 functions have **no specification**. The entire chapter is unverified plain Rust.
+All 12 functions have **no functional specification**. The trait method declarations inside `verus!` have no `requires`/`ensures` — they are type-checked but not functionally specified.
 
 ## Overall Assessment
 
-### Status: Unverified Implementation
+### Status: Partially Verusified — Trait Definitions Inside verus!
 
-Chapter 61 provides working implementations of the three main algorithms from the prose:
+Chapter 61 has been partially verusified: trait definitions have been moved inside `verus!` blocks and the chapter is no longer gated behind `#[cfg(not(verus_keep_ghost))]` in `lib.rs`. Verus now type-checks the trait method signatures. Implementation functions remain outside `verus!` behind `#[cfg(not(verus_keep_ghost))]`.
+
+The three main algorithms from the prose are implemented:
 - Algorithm 61.3 (Greedy Vertex Matching) — faithfully implemented
 - Algorithm 61.4 (Parallel Vertex Matching) — implemented with significant cost deviations
 - Algorithm 61.6 (Parallel Edge Contraction) — implemented with partial parallelism
@@ -287,8 +294,8 @@ Chapter 61 provides working implementations of the three main algorithms from th
 
 | # | Severity | Issue |
 |---|:--------:|-------|
-| 1 | **High** | All code outside `verus!` — zero formal verification |
-| 2 | **High** | All 12 functions have no spec (no `requires`/`ensures`) |
+| 1 | **High** | All 12 functions have no spec (no `requires`/`ensures`) — trait signatures are type-checked but not functionally specified |
+| 2 | **High** | Implementation bodies remain outside `verus!` — no formal verification of algorithm logic |
 | 3 | **High** | No runtime tests at all — no informal validation either |
 | 4 | **High** | `should_select_edge` scans all edges O(\|E\|) instead of O(degree) — inflates Mt algorithm from O(\|E\|) work to O(\|E\|²) |
 | 5 | **Medium** | `flip_coins_parallel` is actually sequential — RNG is inherently sequential, name is misleading |
@@ -296,11 +303,18 @@ Chapter 61 provides working implementations of the three main algorithms from th
 | 7 | **Low** | No TOC headers in any file |
 | 8 | **Low** | Return type mismatch: trait `edge_contract` returns `UnDirGraphStEph<SetStEph<V>>` but impl returns `UnDirGraphStEph<V>` |
 
-### Recommendations
+### What Verusification Achieved
 
-1. **Add `verus!` blocks and specifications** — at minimum, `greedy_matching` and `edge_contract` should have `ensures` stating the result is a valid matching / valid contracted graph.
-2. **Fix `should_select_edge`** to use per-vertex adjacency information instead of scanning all edges, bringing the cost in line with APAS.
-3. **Add runtime tests** — at least 6 tests covering basic graph shapes (triangle, path, cycle, star).
-4. **Rename `flip_coins_parallel`** to `flip_coins` since it is actually sequential.
-5. **Parallelize Phases 1-2 of `edge_contract_mt`** — both vertex mapping and vertex set construction can be done in parallel with divide-and-conquer.
-6. **Fix return type mismatch** in `EdgeContractionStEphTrait::edge_contract` — the trait says `UnDirGraphStEph<SetStEph<V>>` but the implementation returns `UnDirGraphStEph<V>`.
+1. **Trait definitions inside `verus!`** — Verus type-checks method signatures, ensuring type consistency.
+2. **Chapter visible to Verus** — no longer gated behind `#[cfg(not(verus_keep_ghost))]` in `lib.rs`.
+3. **Foundation for specs** — trait methods can now receive `requires`/`ensures` clauses incrementally.
+
+### What Remains
+
+1. **Add functional specs** — at minimum, `greedy_matching` and `edge_contract` should have `ensures` stating the result is a valid matching / valid contracted graph.
+2. **Move implementation bodies inside `verus!`** where feasible (sequential functions that don't use RNG or ParaPair!).
+3. **Fix `should_select_edge`** to use per-vertex adjacency information instead of scanning all edges.
+4. **Add runtime tests** — at least 6 tests covering basic graph shapes (triangle, path, cycle, star).
+5. **Rename `flip_coins_parallel`** to `flip_coins` since it is actually sequential.
+6. **Parallelize Phases 1-2 of `edge_contract_mt`** — both vertex mapping and vertex set construction can be done in parallel with divide-and-conquer.
+7. **Fix return type mismatch** in `EdgeContractionStEphTrait::edge_contract`.

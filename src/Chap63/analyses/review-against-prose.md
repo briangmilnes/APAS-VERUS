@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 63: Graph Connectivity — Review Against Prose
 
-**Date:** 2026-02-13
+**Date:** 2026-02-13 (updated 2026-02-18: verusification — traits inside verus!, impls cfg-gated)
 **Reviewer:** Claude-Opus-4.6
 **Source:** `prompts/Chap63.txt`, `src/Chap63/ConnectivityStEph.rs`, `src/Chap63/ConnectivityMtEph.rs`
 
@@ -17,10 +17,16 @@ Generated via `veracity-review-module-fn-impls -d src/Chap63`.
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap63 | ConnectivityMtEph | 4 | 0 | 0 | 7 | 0 | 7 | 0 | 0 | 7 |
-| 2 | Chap63 | ConnectivityStEph | 4 | 0 | 0 | 5 | 0 | 5 | 0 | 0 | 5 |
+| 1 | Chap63 | ConnectivityMtEph | 4 | 0 | 0 | 7 | 4 | 3 | 0 | 0 | 7 |
+| 2 | Chap63 | ConnectivityStEph | 4 | 0 | 0 | 5 | 4 | 1 | 0 | 0 | 5 |
 
-All 12 functions are outside `verus!` with no specifications.
+**Verusification status (2026-02-18):**
+- Both modules now have `verus!{}` blocks containing their trait definitions (4 trait fns each).
+- ConnectivityStEph: 4 trait fns inside `verus!`, 1 helper (`build_quotient_edges`) outside behind `#[cfg(not(verus_keep_ghost))]`.
+- ConnectivityMtEph: 4 trait fns inside `verus!`, 3 helpers (`build_quotient_edges_parallel`, `route_edges_parallel`, `compose_maps_parallel`) outside behind `#[cfg(not(verus_keep_ghost))]`.
+- All 4 public impl functions per module are cfg-gated behind `#[cfg(not(verus_keep_ghost))]`.
+- The trait method signatures have no `requires`/`ensures` — they are unspecified placeholders.
+- `lib.rs` gate: Chap63 is now behind `#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]` (standard chapter gate, no longer excluded from Verus verification).
 
 ## Phase 2: Prose Inventory
 
@@ -76,7 +82,7 @@ All exec functions now have APAS/Claude-Opus-4.6 cost comment pairs.
 | 2 | `connected_components_mt` | ConnectivityMtEph.rs | O(lg^2 n) | O(n lg n) | `compose_maps_parallel` is entirely sequential O(n) per round times O(lg n) rounds |
 | 3 | `build_quotient_edges_parallel` | ConnectivityMtEph.rs | N/A | O(m) | Delegates to `route_edges_parallel` with sequential merge |
 | 4 | `route_edges_parallel` | ConnectivityMtEph.rs | N/A | O(k) not O(lg k) | Sequential `for` loop merges two halves after `ParaPair!` |
-| 5 | `compose_maps_parallel` | ConnectivityMtEph.rs | N/A | O(\|P\|) span = work | Named "parallel" but implementation is sequential |
+| 5 | `compose_maps_parallel` | ConnectivityMtEph.rs | N/A | O(|P|) span = work | Named "parallel" but implementation is sequential |
 | 6 | `count_components_hof` (Mt) | ConnectivityMtEph.rs | O(lg^2 n) | O(m) | Inherits merge bottleneck from star_contract_mt |
 | 7 | `connected_components_hof` (Mt) | ConnectivityMtEph.rs | O(lg^2 n) | O(n lg n) | Inherits compose bottleneck from star_contract_mt |
 
@@ -100,7 +106,9 @@ No cost disagreements in `ConnectivityStEph.rs` — all sequential implementatio
 
 ### Phase 3c: Spec Fidelity
 
-No functions have `requires`/`ensures` (all outside `verus!`). There is nothing to compare against the prose. This is the primary gap in this chapter — the code is unverified.
+**2026-02-18 update:** Trait definitions for both `ConnectivityStEphTrait` and `ConnectivityMtEphTrait` are now inside `verus!{}` blocks. However, the trait method signatures still have **no `requires`/`ensures` clauses** — they are bare signatures with doc comments only. All impl functions remain outside `verus!` behind `#[cfg(not(verus_keep_ghost))]`.
+
+There is nothing to compare against the prose at the specification level. The code remains functionally unverified — the `verus!` blocks establish the trait structure but carry no formal contracts.
 
 ## Phase 4: Parallelism Review
 
@@ -129,7 +137,7 @@ No functions have `requires`/`ensures` (all outside `verus!`). There is nothing 
 | 2 | `connected_components_mt` | O(lg^2 n) | O(n lg n) | Partial | Map composition is sequential |
 | 3 | `build_quotient_edges_parallel` | — | O(m) | Partial | Sequential merge bottleneck |
 | 4 | `route_edges_parallel` | — | O(k) | Partial | ParaPair! but sequential set union |
-| 5 | `compose_maps_parallel` | — | O(\|P\|) | No | Entirely sequential loop |
+| 5 | `compose_maps_parallel` | — | O(|P|) | No | Entirely sequential loop |
 | 6 | `count_components_hof` | O(lg^2 n) | O(m) | Partial | Inherits from star_contract_mt |
 | 7 | `connected_components_hof` | O(lg^2 n) | O(n lg n) | Partial | Inherits from star_contract_mt |
 
@@ -165,7 +173,7 @@ All 12 exec functions lack runtime test coverage. Recommended tests:
 
 ## Phase 6: Proof-Time Test (PTT) Review
 
-**No PTTs needed.** Chapter 63 has no iterators, no verified loops (all code is outside `verus!`), and no types with `iter()`, `IntoIterator`, `GhostIterator`, or `ForLoopGhostIterator`.
+**No PTTs needed.** Chapter 63 has no iterators, no verified loops, and no types with `iter()`, `IntoIterator`, `GhostIterator`, or `ForLoopGhostIterator`. The `verus!` blocks contain only trait definitions with no proof obligations.
 
 No PTT files were found matching `rust_verify_test/tests/*Chap63*`.
 
@@ -197,16 +205,16 @@ These are expected helper functions — the prose describes the operations inlin
 
 ### TOC Presence
 
-Neither source file has a `// Table of Contents` block. Both files are outside `verus!` entirely, so the TOC standard (which assumes sections inside `verus!`) does not directly apply, but a minimal TOC would still improve navigation.
+Both files now have `verus!{}` blocks containing trait definitions but lack `// Table of Contents` headers. The TOC standard applies minimally since only trait definitions are inside `verus!`.
 
 ### In/Out Table
 
 | # | File | Clone | PartialEq/Eq | Default | Drop | Iterator | Debug | Display | Macro | Other |
 |---|------|:-----:|:------------:|:-------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
-| 1 | ConnectivityStEph.rs | - | - | - | - | - | - | - | - | All code outside verus! |
-| 2 | ConnectivityMtEph.rs | - | - | - | - | - | - | - | - | All code outside verus! |
+| 1 | ConnectivityStEph.rs | - | - | - | - | - | - | - | - | Trait in verus!, 1 helper + 4 impls cfg-gated |
+| 2 | ConnectivityMtEph.rs | - | - | - | - | - | - | - | - | Trait in verus!, 3 helpers + 4 impls cfg-gated |
 
-No derive impls exist. No `verus!` blocks exist. The files are pure Rust with no formal verification.
+No derive impls exist. The `verus!` blocks contain only trait definitions (no exec functions, no proof functions). All exec code is outside `verus!` behind `#[cfg(not(verus_keep_ghost))]`.
 
 ## Proof Holes Summary
 
@@ -218,7 +226,7 @@ Proof Functions: 0 total
 Holes Found: 0 total
 ```
 
-This is vacuously true — there are no proofs because no code is inside `verus!`.
+This is vacuously true — the `verus!` blocks contain only trait definitions with no proof obligations.
 
 ## Spec Strength Summary
 
@@ -229,7 +237,7 @@ This is vacuously true — there are no proofs because no code is inside `verus!
 | weak | 0 |
 | none | 12 |
 
-All 12 functions have spec strength **none** — no `requires`/`ensures` exist anywhere in the chapter.
+All 12 functions have spec strength **none** — no `requires`/`ensures` exist anywhere in the chapter. The trait signatures inside `verus!` are bare (no contracts).
 
 ## Overall Assessment
 
@@ -239,13 +247,16 @@ Chapter 63 implements all named algorithms and exercises from the prose:
 - Exercise 63.1 (`countComponents` via starContract HOF) — both St and Mt variants
 - Exercise 63.2 (`connectedComponents` via starContract HOF) — both St and Mt variants
 
+**Verusification status (2026-02-18):** Partially verusified. Trait definitions are inside `verus!{}` blocks, establishing the module structure for future verification. All implementation functions are cfg-gated behind `#[cfg(not(verus_keep_ghost))]`. Chap63 is now included in standard Verus verification runs (no longer behind `not(verus_keep_ghost)` gate in `lib.rs`).
+
 **Key Issues:**
 
 | # | Severity | Issue |
 |---|:--------:|-------|
-| 1 | High | **No formal verification.** All code is outside `verus!`. Zero specs, zero proofs. |
+| 1 | High | **No formal specs.** Trait signatures inside `verus!` have no `requires`/`ensures`. Zero contracts. |
 | 2 | High | **No runtime tests.** No RTT files exist for either module. |
-| 3 | Medium | **Mt parallelism gaps.** `route_edges_parallel` has O(k) span (not O(lg k)) due to sequential set merge. `compose_maps_parallel` is entirely sequential. |
-| 4 | Medium | **Trait/implementation mismatch.** Trait declares `connected_components` returning `SetStEph<SetStEph<V>>` but implementation returns `(SetStEph<V>, HashMap<V, V>)`. Mt trait methods lack the `seed` parameter. |
-| 5 | Low | **Trait cost annotations incorrect.** Traits claim O(\|V\| + \|E\|) work but the recursive algorithms are O((n+m) lg n). |
-| 6 | Low | **No TOC headers** in either file. |
+| 3 | Medium | **All impl code outside verus!.** The 12 exec functions are behind `#[cfg(not(verus_keep_ghost))]` — they compile and run but are not verified. |
+| 4 | Medium | **Mt parallelism gaps.** `route_edges_parallel` has O(k) span (not O(lg k)) due to sequential set merge. `compose_maps_parallel` is entirely sequential. |
+| 5 | Medium | **Trait/implementation mismatch.** Trait declares `connected_components` returning `SetStEph<SetStEph<V>>` but implementation returns `(SetStEph<V>, HashMap<V, V>)`. Mt trait methods lack the `seed` parameter. |
+| 6 | Low | **Trait cost annotations incorrect.** Traits claim O(|V| + |E|) work but the recursive algorithms are O((n+m) lg n). |
+| 7 | Low | **No TOC headers** in either file. |
