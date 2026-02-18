@@ -1,5 +1,11 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 12 — Exercise 12.1: spin-lock via fetch-and-add tickets.
+//!
+//! The external_body annotations here are permanent. AtomicUsize operations
+//! (fetch_add, load) have no vstd specs, and spin-lock correctness depends on
+//! hardware memory ordering guarantees that are outside Verus's model. Adding
+//! meaningful requires/ensures would require a concurrency logic (e.g., TSM)
+//! that is disproportionate for a ticket-lock exercise.
 
 pub mod Exercise12_1 {
     use vstd::prelude::*;

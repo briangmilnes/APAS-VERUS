@@ -191,12 +191,13 @@ pub mod ArraySeqMtEph {
     /// Acquire the lock, apply updates, release. Preserves the lock invariant.
     /// - APAS: N/A — implementation utility, not in prose.
     /// - Claude-Opus-4.6: Work Θ(|updates|), Span Θ(|updates|).
-    fn apply_ninject_updates<T: Clone + Send + Sync + 'static>(
+    fn apply_ninject_updates<T: Clone + Eq + Send + Sync + 'static>(
         lock: Arc<RwLock<Vec<T>, NinjectInv<T>>>,
         updates: Vec<(usize, T)>,
         Ghost(pred): Ghost<NinjectInv<T>>,
     )
         requires
+            obeys_feq_clone::<T>(),
             lock.pred() == pred,
             forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==> {
                 0 <= updates@[k].0 < pred.source.len()
@@ -212,6 +213,7 @@ pub mod ArraySeqMtEph {
                 i <= updates@.len(),
                 len == buf@.len(),
                 pred.inv(buf),
+                obeys_feq_clone::<T>(),
                 forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==> {
                     0 <= updates@[k].0 < pred.source.len()
                     && exists|j: int| #![trigger pred.updates[j]] 0 <= j < pred.updates.len()
@@ -223,7 +225,7 @@ pub mod ArraySeqMtEph {
             if pos < len {
                 let val = updates[i].1.clone();
                 proof {
-                    assume(val == updates@[i as int].1);
+                    axiom_cloned_implies_eq_owned::<T>(updates@[i as int].1, val);
                 }
                 buf.set(pos, val);
                 proof {
@@ -1318,11 +1320,16 @@ pub mod ArraySeqMtEph {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let ghost pred = NinjectInv::<T> { source: a.seq@, updates: updates@ };
 
-            // Clone source into the result buffer and wrap in Arc<RwLock>.
             let buf = a.seq.clone();
-            proof { assume(buf@ =~= a.seq@); }
+            proof {
+                broadcast use group_feq_axioms;
+                assert forall|i: int| 0 <= i < a.seq@.len() implies #[trigger] buf@[i] == a.seq@[i]
+                by {
+                    assert(cloned(a.seq@[i], buf@[i]));
+                }
+                assert(buf@ =~= a.seq@);
+            }
             let lock = Arc::new(RwLock::<Vec<T>, NinjectInv<T>>::new(buf, Ghost(pred)));
-            proof { assume(lock.pred() == pred); }
 
             // Split updates in half.
             let mid = updates.len() / 2;
@@ -1333,6 +1340,7 @@ pub mod ArraySeqMtEph {
                 invariant
                     k <= updates@.len(),
                     mid == updates@.len() / 2,
+                    obeys_feq_clone::<T>(),
                     forall|p: int| #![trigger left@[p]] 0 <= p < left@.len() ==> {
                         exists|j: int| #![trigger updates@[j]] 0 <= j < updates@.len()
                             && updates@[j] == left@[p]
@@ -1345,7 +1353,9 @@ pub mod ArraySeqMtEph {
             {
                 let pos = updates[k].0;
                 let val = updates[k].1.clone();
-                proof { assume((pos, val) == updates@[k as int]); }
+                proof {
+                    axiom_cloned_implies_eq_owned::<T>(updates@[k as int].1, val);
+                }
                 if k < mid {
                     left.push((pos, val));
                 } else {
@@ -1355,6 +1365,7 @@ pub mod ArraySeqMtEph {
             }
 
             // Two threads race for the single lock.
+            // No Arc::clone spec in vstd — can't prove pred is preserved through Arc refcount bump.
             let lock1 = lock.clone();
             proof { assume(lock1.pred() == pred); }
             let lock2 = lock.clone();
@@ -1388,7 +1399,14 @@ pub mod ArraySeqMtEph {
                 assert(pred.source =~= a.seq@);
             }
             let r = result_vec.clone();
-            proof { assume(r@ =~= result_vec@); }
+            proof {
+                broadcast use group_feq_axioms;
+                assert forall|i: int| 0 <= i < result_vec@.len() implies #[trigger] r@[i] == result_vec@[i]
+                by {
+                    assert(cloned(result_vec@[i], r@[i]));
+                }
+                assert(r@ =~= result_vec@);
+            }
             write_handle.release_write(result_vec);
 
             let result = ArraySeqMtEphS { seq: r };

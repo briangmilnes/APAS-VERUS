@@ -59,23 +59,20 @@ pub mod LabUnDirGraphMtEph {
         }
     }
 
-    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> LabUnDirGraphMtEph<V, L> {
-        pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
-        pub open spec fn spec_labeled_edges(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_edges@ }
+    pub trait LabUnDirGraphMtEphTrait<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static>
+        : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized
+    {
+        open spec fn spec_vertices(&self) -> Set<V::V> { self@.V }
+        open spec fn spec_labeled_edges(&self) -> Set<(V::V, V::V, L::V)> { self@.A }
 
-        /// Spec for neighbors computed from a subset of edges
-        pub open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V, L::V)>) -> Set<V::V> 
+        open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V, L::V)>) -> Set<V::V> 
             recommends 
                 wf_lab_graph_view(self@),
                 subedges <= self@.A,
         {
             Set::new(|w: V::V| exists |l: L::V| subedges.contains((v, w, l)) || subedges.contains((w, v, l)))
         }
-    }
 
-    pub trait LabUnDirGraphMtEphTrait<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static>
-        : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized
-    {
         /// APAS: Work Θ(1), Span Θ(1)
         fn empty() -> (g: Self)
             requires valid_key_type_for_lab_graph::<V, L>()

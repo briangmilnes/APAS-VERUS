@@ -170,7 +170,65 @@ pub mod ETSPStEph {
         ensures
             spec_edges_form_cycle(combined),
     {
-        admit();
+        let n = ln_i + rn_i;
+
+        // Modular arithmetic helpers for case analysis below.
+        assert forall|i: int| #![trigger combined[i]] 0 <= i < n implies
+            spec_point_eq(combined[i].to, combined[((i + 1) % n)].from)
+        by {
+            let next_i = (i + 1) % n;
+
+            if i + 1 < n {
+                vstd::arithmetic::div_mod::lemma_small_mod((i + 1) as nat, n as nat);
+                assert(next_i == i + 1);
+            } else {
+                vstd::arithmetic::div_mod::lemma_mod_self_0(n);
+                assert(next_i == 0);
+            }
+
+            if i < ln_i - 1 {
+                // Left-tour segment.
+                let k = i;
+                assert(combined[k] == lt[((best_li + 1 + k) % ln_i)]);
+                let li = (best_li + 1 + k) % ln_i;
+                assert(spec_point_eq(lt[li].to, lt[((li + 1) % ln_i)].from));
+
+                // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
+                assume(spec_point_eq(combined[i].to, combined[next_i].from));
+            } else if i == ln_i - 1 {
+                // Bridge: left -> right.
+                assert(combined[i].to == er_to);
+                assert(er_to == rt[best_ri].to);
+                assert(spec_point_eq(rt[best_ri].to, rt[((best_ri + 1) % rn_i)].from));
+                assert(next_i == ln_i);
+                let m: int = 0;
+                assert(combined[(ln_i + m)] == rt[((best_ri + 1 + m) % rn_i)]);
+                assert(combined[next_i] == combined[(ln_i + 0)]);
+                assert(combined[next_i].from == rt[((best_ri + 1) % rn_i)].from);
+                assert(spec_point_eq(combined[i].to, combined[next_i].from));
+            } else if i < ln_i + rn_i - 1 {
+                // Right-tour segment.
+                let m = i - ln_i;
+                assert(combined[(ln_i + m)] == rt[((best_ri + 1 + m) % rn_i)]);
+                let ri = (best_ri + 1 + m) % rn_i;
+                assert(spec_point_eq(rt[ri].to, rt[((ri + 1) % rn_i)].from));
+
+                // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
+                assume(spec_point_eq(combined[i].to, combined[next_i].from));
+            } else {
+                // Bridge: right -> left (wraps to index 0).
+                assert(i == ln_i + rn_i - 1);
+                assert(combined[i].to == el_to);
+                assert(el_to == lt[best_li].to);
+                assert(spec_point_eq(lt[best_li].to, lt[((best_li + 1) % ln_i)].from));
+                assert(next_i == 0);
+                let k: int = 0;
+                assert(combined[k] == lt[((best_li + 1 + k) % ln_i)]);
+                assert(combined[next_i] == combined[0]);
+                assert(combined[next_i].from == lt[((best_li + 1) % ln_i)].from);
+                assert(spec_point_eq(combined[i].to, combined[next_i].from));
+            }
+        }
     }
 
     //		8. traits

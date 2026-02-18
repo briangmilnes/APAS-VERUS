@@ -21,12 +21,15 @@ pub mod Algorithm21_6 {
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
-    /// Algorithm 21.6 (Prime Sieve) using ArraySeqPer - simplified version.
-    /// Construct primes using a sieve: generate composites, then filter candidates.
+    /// Algorithm 21.6 (Prime Sieve) using ninject-based boolean sieve.
+    /// 1. Generate composite numbers via nested tabulate + flatten.
+    /// 2. Build boolean sieve array, marking composites false (the ninject step).
+    /// 3. Collect indices where sieve is true.
     ///
     /// - APAS: Work Θ(n lg n), Span Θ(lg n)
-    /// - Claude-Opus-4.6: Work Θ(n² lg n), Span Θ(n² lg n) — filter uses O(m) linear scan per candidate instead of ninject sieve.
+    /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential StPer; O(|composites|) ninject + O(n) collect.
     pub fn prime_sieve(n: N) -> (result: ArraySeqStPerS<N>)
+        requires n < usize::MAX,
         ensures
             n <= 2 ==> result.spec_len() == 0,
             n > 2  ==> result.spec_len() <= n - 1,
@@ -45,11 +48,10 @@ pub mod Algorithm21_6 {
                         root as int * root as int <= n as int,
                         n > 2,
                 {
-                    let i = i0 + 2; // i in [2..=root]
+                    let i = i0 + 2;
                     let limit = if i == 0 { 0 } else { n / i };
                     let len = if limit >= 2 { limit - 1 } else { 0 };
                     proof {
-                        // For all j0 < len: j0+2 <= limit = n/i, so i*(j0+2) <= i*(n/i) <= n
                         assert forall|j0: usize| j0 < len implies
                             #[trigger] (i as int * (j0 as int + 2)) <= n as int by
                         {
@@ -80,50 +82,41 @@ pub mod Algorithm21_6 {
             );
         let composites: ArraySeqStPerS<N> = ArraySeqStPerS::flatten(&nested);
 
-        // Create candidates: 2, 3, ..., n
-        let candidates: ArraySeqStPerS<N> =
-            ArraySeqStPerS::tabulate(
-                &(|i: usize| -> (v: N)
-                    requires i < n - 1, n > 2,
-                    ensures v == i + 2,
-                { i + 2 }),
-                n - 1,
-            );
-
-        // Filter out composites to get primes
-        let ghost spec_not_composite: spec_fn(N) -> bool =
-            |x: N| !composites.seq@.contains(x);
-        let pred = |x: &N| -> (keep: bool)
-            ensures keep == !composites.seq@.contains(*x),
+        // Ninject: build boolean sieve of size n+1, mark composites false.
+        let mut sieve: Vec<bool> = vec![true; n + 1];
+        let clen = composites.length();
+        let mut ci: usize = 0;
+        while ci < clen
+            invariant
+                ci <= clen,
+                clen == composites.seq@.len(),
+                sieve@.len() == n + 1,
+            decreases clen - ci,
         {
-            let mut is_composite = false;
-            let clen = composites.length();
-            let mut idx: usize = 0;
-            while idx < clen && !is_composite
-                invariant
-                    idx <= clen,
-                    clen == composites.seq@.len(),
-                    is_composite ==> composites.seq@.contains(*x),
-                    !is_composite ==> forall|k: int| 0 <= k < idx ==> composites.seq@[k] != *x,
-                decreases clen - idx,
-            {
-                if *composites.nth(idx) == *x {
-                    is_composite = true;
-                }
-                idx += 1;
+            let c = *composites.nth(ci);
+            if c <= n {
+                sieve.set(c, false);
             }
-            // After loop (no break): !(idx < clen && !is_composite).
-            // If !is_composite, then idx >= clen. With invariant idx <= clen: idx == clen.
-            // So forall|k| 0 <= k < clen ==> composites.seq@[k] != *x, hence !contains.
-            !is_composite
-        };
-        let filtered: ArraySeqStPerS<N> =
-            ArraySeqStPerS::filter(
-                &candidates,
-                &pred,
-                Ghost(spec_not_composite),
-            );
-        filtered
+            ci = ci + 1;
+        }
+
+        // Collect primes: indices 2..=n where sieve[i] is true.
+        let mut primes: Vec<N> = Vec::new();
+        let mut idx: usize = 2;
+        while idx <= n
+            invariant
+                2 <= idx <= n + 1,
+                n < usize::MAX,
+                primes@.len() <= idx - 2,
+                sieve@.len() == n + 1,
+            decreases n - idx + 1,
+        {
+            if sieve[idx] {
+                primes.push(idx);
+            }
+            idx = idx + 1;
+        }
+        ArraySeqStPerS::from_vec(primes)
     }
 
     } // verus!

@@ -2,9 +2,11 @@
 
 //! Chapter 12 — Exercise 12.5: lock-free concurrent stack using compare-and-swap.
 //!
-//! Note: Concurrent data structures cannot have simple sequential specs because
-//! state changes concurrently. Raw pointers and AtomicPtr require external_body.
-//! Specs here are trusted documentation of linearizable behavior.
+//! The external_body and external annotations here are permanent. This stack
+//! uses AtomicPtr and raw pointers for a lock-free Treiber stack — none of
+//! which have vstd specs. Meaningful verification would require a tokenized
+//! state machine (TSM) to model the linearizability argument, which is
+//! disproportionate for a CAS exercise. The RTTs validate runtime behavior.
 
 //  Table of Contents
 //	1. module
@@ -47,8 +49,8 @@ pub struct ConcurrentStackMt<T: Send> {
 /// Specs describe linearizable behavior: each operation appears to take effect
 /// atomically at some point between its invocation and response.
 pub trait ConcurrentStackMtTrait<T: Send>: Sized {
-    /// Spec: is this stack instance well-formed?
-    spec fn wf(&self) -> bool;
+    /// Spec: the stack is always well-formed after construction.
+    open spec fn wf(&self) -> bool { true }
     
     /// Create a new empty stack.
     /// - APAS: no cost spec.
@@ -89,17 +91,7 @@ pub trait ConcurrentStackMtTrait<T: Send>: Sized {
 
 //		9. impls
 
-impl<T: Send> ConcurrentStackMt<T> {
-    /// Spec: the stack is always well-formed after construction.
-    pub closed spec fn wf(&self) -> bool {
-        true  // Opaque - trusted to be correct
-    }
-}
-
 impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
-    open spec fn wf(&self) -> bool {
-        ConcurrentStackMt::wf(self)
-    }
 
     #[verifier::external_body]
     fn new() -> (stack: Self) {

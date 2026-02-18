@@ -1,5 +1,20 @@
 // Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Persistent Kleene Star and Plus over a finite alphabet (Definition 5.4, Exercise 5.1).
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+
+//		1. module
+
 
 pub mod KleeneStPer {
 
@@ -7,14 +22,38 @@ pub mod KleeneStPer {
 
 verus! {
 
+    //		2. imports
+
     use std::hash::Hash;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
+
+
+    //		3. broadcast use
 
     broadcast use {
         vstd::set::group_set_axioms,
         vstd::seq::group_seq_axioms,
     };
+
+
+    //		4. type definitions
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct KleeneStPer<T: StT + Hash> {
+        pub alphabet: SetStEph<T>,
+    }
+
+
+    //		5. view impls
+
+    impl<T: StT + Hash> View for KleeneStPer<T> {
+        type V = Set<<T as View>::V>;
+        open spec fn view(&self) -> Self::V { self.alphabet@ }
+    }
+
+
+    //		6. spec fns
 
     /// Membership in Σ*: every element of s belongs to the alphabet.
     /// The empty sequence is always in Σ*.
@@ -32,90 +71,8 @@ verus! {
         s.map(|_i: int, t: T| t@)
     }
 
-    pub trait KleeneStPerTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
 
-        /// Construct from an alphabet Σ.
-        /// - APAS: (no cost stated — Chapter 5 is purely definitional)
-        fn new(alphabet: SetStEph<T>) -> (result: Self)
-            requires valid_key_type::<T>()
-            ensures result@ == alphabet@;
-
-        /// Membership in Σ*: is every element of s in the alphabet?
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(|s|), Span Θ(|s|) — linear scan, sequential.
-        fn mem_star(&self, s: &[T]) -> (result: bool)
-            requires valid_key_type::<T>()
-            ensures result == in_star(self@, viewed(s@));
-
-        /// Membership in Σ+: non-empty and every element in the alphabet?
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(|s|), Span Θ(|s|) — length check + linear scan.
-        fn mem_plus(&self, s: &[T]) -> (result: bool)
-            requires valid_key_type::<T>()
-            ensures result == in_plus(self@, viewed(s@));
-
-        /// Read-only access to the underlying alphabet.
-        fn alphabet(&self) -> (result: &SetStEph<T>)
-            ensures result@ == self@;
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct KleeneStPer<T: StT + Hash> {
-        pub alphabet: SetStEph<T>,
-    }
-
-    impl<T: StT + Hash> View for KleeneStPer<T> {
-        type V = Set<<T as View>::V>;
-        open spec fn view(&self) -> Self::V { self.alphabet@ }
-    }
-
-    impl<T: StT + Hash> KleeneStPerTrait<T> for KleeneStPer<T> {
-
-        fn new(alphabet: SetStEph<T>) -> (result: Self) {
-            KleeneStPer { alphabet }
-        }
-
-        fn mem_star(&self, s: &[T]) -> (result: bool) {
-            let mut i: usize = 0;
-            while i < s.len()
-                invariant
-                    valid_key_type::<T>(),
-                    0 <= i <= s.len(),
-                    forall|j: int| 0 <= j < i as int
-                        ==> self.alphabet@.contains(#[trigger] s@[j]@),
-                decreases s.len() - i,
-            {
-                if !self.alphabet.mem(&s[i]) {
-                    assert(!self.alphabet@.contains(s@[i as int]@));
-                    assert(viewed::<T>(s@)[i as int] == s@[i as int]@);
-                    return false;
-                }
-                i += 1;
-            }
-            proof {
-                assert forall|j: int| 0 <= j < viewed::<T>(s@).len()
-                    implies self@.contains(#[trigger] viewed::<T>(s@)[j]) by {
-                    assert(viewed::<T>(s@)[j] == s@[j]@);
-                };
-            }
-            true
-        }
-
-        fn mem_plus(&self, s: &[T]) -> (result: bool) {
-            if s.len() == 0 {
-                proof { assert(viewed::<T>(s@).len() == 0); }
-                false
-            } else {
-                let r = self.mem_star(s);
-                proof { assert(viewed::<T>(s@).len() > 0); }
-                r
-            }
-        }
-
-        fn alphabet(&self) -> (result: &SetStEph<T>) {
-            &self.alphabet
-        }
-    }
+    //		7. proof fns/broadcast groups
 
     /// Exercise 5.1: Σ* is closed under string concatenation.
     pub proof fn lemma_star_closed_under_concat<V>(alphabet: Set<V>, s1: Seq<V>, s2: Seq<V>)
@@ -217,6 +174,87 @@ verus! {
         assert(s1.add(s2).len() > 0) by {
             assert(s1.len() > 0);
         };
+    }
+
+
+    //		8. traits
+
+    pub trait KleeneStPerTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
+
+        /// Construct from an alphabet Σ.
+        /// - APAS: (no cost stated — Chapter 5 is purely definitional)
+        fn new(alphabet: SetStEph<T>) -> (result: Self)
+            requires valid_key_type::<T>()
+            ensures result@ == alphabet@;
+
+        /// Membership in Σ*: is every element of s in the alphabet?
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(|s|), Span Θ(|s|) — linear scan, sequential.
+        fn mem_star(&self, s: &[T]) -> (result: bool)
+            requires valid_key_type::<T>()
+            ensures result == in_star(self@, viewed(s@));
+
+        /// Membership in Σ+: non-empty and every element in the alphabet?
+        /// - APAS: (no cost stated)
+        /// - Claude-Opus-4.6: Work Θ(|s|), Span Θ(|s|) — length check + linear scan.
+        fn mem_plus(&self, s: &[T]) -> (result: bool)
+            requires valid_key_type::<T>()
+            ensures result == in_plus(self@, viewed(s@));
+
+        /// Read-only access to the underlying alphabet.
+        fn alphabet(&self) -> (result: &SetStEph<T>)
+            ensures result@ == self@;
+    }
+
+
+    //		9. impls
+
+    impl<T: StT + Hash> KleeneStPerTrait<T> for KleeneStPer<T> {
+
+        fn new(alphabet: SetStEph<T>) -> (result: Self) {
+            KleeneStPer { alphabet }
+        }
+
+        fn mem_star(&self, s: &[T]) -> (result: bool) {
+            let mut i: usize = 0;
+            while i < s.len()
+                invariant
+                    valid_key_type::<T>(),
+                    0 <= i <= s.len(),
+                    forall|j: int| 0 <= j < i as int
+                        ==> self.alphabet@.contains(#[trigger] s@[j]@),
+                decreases s.len() - i,
+            {
+                if !self.alphabet.mem(&s[i]) {
+                    assert(!self.alphabet@.contains(s@[i as int]@));
+                    assert(viewed::<T>(s@)[i as int] == s@[i as int]@);
+                    return false;
+                }
+                i += 1;
+            }
+            proof {
+                assert forall|j: int| 0 <= j < viewed::<T>(s@).len()
+                    implies self@.contains(#[trigger] viewed::<T>(s@)[j]) by {
+                    assert(viewed::<T>(s@)[j] == s@[j]@);
+                };
+            }
+            true
+        }
+
+        fn mem_plus(&self, s: &[T]) -> (result: bool) {
+            if s.len() == 0 {
+                proof { assert(viewed::<T>(s@).len() == 0); }
+                false
+            } else {
+                let r = self.mem_star(s);
+                proof { assert(viewed::<T>(s@).len() > 0); }
+                r
+            }
+        }
+
+        fn alphabet(&self) -> (result: &SetStEph<T>) {
+            &self.alphabet
+        }
     }
 
 } // verus!

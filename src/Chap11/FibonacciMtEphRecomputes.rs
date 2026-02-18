@@ -156,7 +156,7 @@ pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
         // Join right
         let right_out = match right_handle.join() {
             Result::Ok(out) => out,
-            Result::Err(_) => { assume(false); diverge() }
+            Result::Err(_) => { assume(false); diverge()} 
         };
         let right_val = right_out.0;
         let tracked right_token = right_out.1.get();

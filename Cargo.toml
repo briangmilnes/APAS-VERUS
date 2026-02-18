@@ -95,6 +95,10 @@ name = "TestWeightedDirGraphStEphU32"
 path = "tests/Chap06/TestWeightedDirGraphStEphU32.rs"
 
 [[test]]
+name = "TestWeightedDirGraphStEphU8"
+path = "tests/Chap06/TestWeightedDirGraphStEphU8.rs"
+
+[[test]]
 name = "TestParaPairs"
 path = "tests/Chap11/TestParaPairs.rs"
 

@@ -837,10 +837,16 @@ pub mod LinkedListStPer {
 
     //		11. derive impls in verus!
 
-    impl<T: Clone> Clone for LinkedListStPerS<T> {
+    impl<T: Clone + View> Clone for LinkedListStPerS<T> {
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(|self|), Span Θ(1).
-        fn clone(&self) -> Self { LinkedListStPerS { seq: self.seq.clone() } }
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            let cloned = LinkedListStPerS { seq: self.seq.clone() };
+            proof { assume(cloned@ == self@); }
+            cloned
+        }
     }
 
     impl<T: Eq + View> Eq for LinkedListStPerS<T> {}

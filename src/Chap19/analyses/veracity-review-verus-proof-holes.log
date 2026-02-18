@@ -1,33 +1,43 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap19/
+
 ❌ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-review/src/Chap19/ArraySeqMtEph.rs:1407: assume() - proof { assume(equal == (self@ == other@)); }
-      1403 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1412: assume() - proof { assume(equal == (self@ == other@)); }
+      1408 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1405 |         {
-      1406 |             let equal = self.seq == other.seq;
-      1408 |             equal
-      1409 |         }
+      1410 |         {
+      1411 |             let equal = self.seq == other.seq;
+      1413 |             equal
+      1414 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 6 total (6 clean, 0 holed)
+❌ ArraySeqMtEphSlice.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEphSlice.rs:200: error: bare_impl - #[cfg(not(verus_keep_ghost))] — `impl Inner` without trait; file defines [ArraySeqMtEphSliceTrait]
+       201 |     impl<T: StTInMtT> Inner<T> {
+       202 |         fn new(data: Box<[T]>) -> Self { Inner { data: Mutex::new(data) } }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEphSlice.rs:322: error: bare_impl - #[cfg(not(verus_keep_ghost))] — `impl ArraySeqMtEphSliceS` without trait; file defines [ArraySeqMtEphSliceTrait]
+       323 |     impl<T: StTInMtT + 'static> ArraySeqMtEphSliceS<T> {
+       324 |         pub fn to_vec(&self) -> Vec<T> {
+   Errors: 2 bare impl(s) in file with trait definition
 ❌ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-review/src/Chap19/ArraySeqStEph.rs:1085: assume() - proof { assume(equal == (self@ == other@)); }
-      1081 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:1090: assume() - proof { assume(equal == (self@ == other@)); }
+      1086 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1083 |         {
-      1084 |             let equal = self.seq == other.seq;
-      1086 |             equal
-      1087 |         }
+      1088 |         {
+      1089 |             let equal = self.seq == other.seq;
+      1091 |             equal
+      1092 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 3 total (3 clean, 0 holed)
 ❌ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS-review/src/Chap19/ArraySeqStPer.rs:1095: assume() - proof { assume(equal == (self@ == other@)); }
-      1091 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs:1100: assume() - proof { assume(equal == (self@ == other@)); }
+      1096 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1093 |         {
-      1094 |             let equal = self.seq == other.seq;
-      1096 |             equal
-      1097 |         }
+      1098 |         {
+      1099 |             let equal = self.seq == other.seq;
+      1101 |             equal
+      1102 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 3 total (3 clean, 0 holed)
@@ -37,9 +47,9 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   0 clean (no holes)
+   1 clean (no holes)
    3 holed (contains holes)
-   3 total
+   4 total
 
 Proof Functions:
    12 clean
@@ -48,17 +58,5 @@ Proof Functions:
 
 Holes Found: 3 total
    3 × assume()
-��════════
 
-Modules:
-   0 clean (no holes)
-   3 holed (contains holes)
-   3 total
-
-Proof Functions:
-   12 clean
-   0 holed
-   12 total
-
-Holes Found: 3 total
-   3 × assume()
+Errors: 2 bare impl(s) in files with trait definitions

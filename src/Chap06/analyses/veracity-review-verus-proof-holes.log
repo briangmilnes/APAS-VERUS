@@ -1,10 +1,28 @@
-✓ DirGraphMtEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap06/
+
+❌ DirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:53: error: bare_impl - impl<V: StTInMtT + Hash + 'static> DirGraphMtEph<V> { — `impl DirGraphMtEph` without trait; file defines [DirGraphMtEphTrait]
+        54 |         /// Convenience accessor for vertices view
+        55 |         pub open spec fn spec_vertices(&self) -> Set<V::V> { self.V@ }
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ DirGraphStEph.rs
-✓ LabDirGraphMtEph.rs
+❌ LabDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabDirGraphMtEph.rs:62: error: bare_impl - impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LabDirGraphM... — `impl LabDirGraphMtEph` without trait; file defines [LabDirGraphMtEphTrait]
+        63 |         pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
+        64 |         pub open spec fn spec_labeled_arcs(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_arcs@ }
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ LabDirGraphStEph.rs
-✓ LabUnDirGraphMtEph.rs
+❌ LabUnDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs:62: error: bare_impl - impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> LabUnD... — `impl LabUnDirGraphMtEph` without trait; file defines [LabUnDirGraphMtEphTrait]
+        63 |         pub open spec fn spec_vertices(&self) -> Set<V::V> { self.vertices@ }
+        64 |         pub open spec fn spec_labeled_edges(&self) -> Set<(V::V, V::V, L::V)> { self.labeled_edges@ }
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ LabUnDirGraphStEph.rs
-✓ UnDirGraphMtEph.rs
+❌ UnDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs:63: error: bare_impl - impl<V: StTInMtT + Hash + 'static> UnDirGraphMtEph<V> { — `impl UnDirGraphMtEph` without trait; file defines [UnDirGraphMtEphTrait]
+        64 |         pub open spec fn spec_vertices(&self) -> Set<V::V> { self.V@ }
+        65 |         pub open spec fn spec_edges(&self) -> Set<(V::V, V::V)> { self.E@ }
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ UnDirGraphStEph.rs
 ✓ WeightedDirGraphStEphI128.rs
 ✓ WeightedDirGraphStEphI16.rs
@@ -35,5 +53,6 @@ Proof Functions:
 
 Holes Found: 0 total
 
-🎉 No proof holes found! All proofs are complete.
+Errors: 4 bare impl(s) in files with trait definitions
+
 🎉 No proof holes found! All proofs are complete.
