@@ -16,6 +16,7 @@ pub mod float {
     use core::cmp::Ordering;
     use vstd::prelude::*;
     use vstd::float::FloatBitsProperties;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::le_ensures;
 
     verus! {
