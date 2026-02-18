@@ -36,34 +36,39 @@ pub mod OptBinSearchTreeStPer {
     // 8. traits
     /// Trait for optimal BST operations
     pub trait OBSTStPerTrait<T: StT>: Sized {
-        /// Create new optimal BST solver
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate empty collections
         fn new()                                                  -> Self;
 
-        /// Create from keys and probabilities
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — zip and map n keys with probabilities
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> Self;
 
-        /// Create from key-probability pairs
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — move ownership of Vec
         fn from_key_probs(key_probs: Vec<KeyProb<T>>)             -> Self;
 
-        /// APAS: Work Θ(n³), Span Θ(n²)
-        /// Claude-Opus-4.6: Work O(n³), Span O(n²)
+        /// - APAS: Work Θ(n³), Span Θ(n³)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — clones self then invokes memoized DP, sequential
         fn optimal_cost(&self)                                    -> Probability;
 
-        /// Get the keys with probabilities
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reference access
         fn keys(&self)                                            -> &Vec<KeyProb<T>>;
 
-        /// Get number of keys
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len
         fn num_keys(&self)                                        -> usize;
 
-        /// Get memoization table size
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len
         fn memo_size(&self)                                       -> usize;
     }
 
     // 9. impls
     impl<T: StT> OBSTStPerS<T> {
-        /// APAS: Work Θ(n³), Span Θ(n²)
-        /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
-        /// Claude-Opus-4.6 Span: O(n²) - recursion depth O(n), each level O(n) work
+        /// - APAS: Work Θ(n³), Span Θ(n³)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — memoized DP per Algorithm 50.3, sequential
         fn obst_rec(&mut self, i: usize, l: usize) -> Probability {
             if let Some(&result) = self.memo.get(&(i, l)) {
                 return result;
@@ -93,6 +98,8 @@ pub mod OptBinSearchTreeStPer {
     }
 
     impl<T: StT> OBSTStPerTrait<T> for OBSTStPerS<T> {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate empty Vec and HashMap
         fn new() -> Self {
             Self {
                 keys: Vec::new(),
@@ -100,6 +107,8 @@ pub mod OptBinSearchTreeStPer {
             }
         }
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — zip and map n keys with probabilities
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> Self {
             let key_probs = keys
                 .into_iter()
@@ -113,6 +122,8 @@ pub mod OptBinSearchTreeStPer {
             }
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — move ownership of key_probs Vec
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> Self {
             Self {
                 keys: key_probs,
@@ -120,6 +131,8 @@ pub mod OptBinSearchTreeStPer {
             }
         }
 
+        /// - APAS: Work Θ(n³), Span Θ(n³)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — clones self, clears memo, invokes obst_rec(0, n)
         fn optimal_cost(&self) -> Probability {
             if self.keys.is_empty() {
                 return Probability::zero();
@@ -132,10 +145,16 @@ pub mod OptBinSearchTreeStPer {
             solver.obst_rec(0, n)
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reference access
         fn keys(&self) -> &Vec<KeyProb<T>> { &self.keys }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len
         fn num_keys(&self) -> usize { self.keys.len() }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len
         fn memo_size(&self) -> usize { self.memo.len() }
     }
 
@@ -144,6 +163,8 @@ pub mod OptBinSearchTreeStPer {
 
     // 13. derive impls outside verus!
     impl<T: StT> Display for OBSTStPerS<T> {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format two integers
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(
                 f,
@@ -158,6 +179,8 @@ pub mod OptBinSearchTreeStPer {
         type Item = KeyProb<T>;
         type IntoIter = IntoIter<KeyProb<T>>;
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — move Vec into iterator
         fn into_iter(self) -> Self::IntoIter { self.keys.into_iter() }
     }
 
@@ -165,10 +188,14 @@ pub mod OptBinSearchTreeStPer {
         type Item = KeyProb<T>;
         type IntoIter = Cloned<Iter<'a, KeyProb<T>>>;
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — create cloned iterator adapter
         fn into_iter(self) -> Self::IntoIter { self.keys.iter().cloned() }
     }
 
     impl<T: StT> Display for KeyProb<T> {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format key and probability
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }
     }
 }

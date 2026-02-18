@@ -243,6 +243,8 @@ pub mod TopDownDPMtEph {
 
     // 11. derive impls
     impl PartialEq for TopDownDPMtEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(|S|+|T|+|memo|), Span Θ(|S|+|T|+|memo|)
         fn eq(&self, other: &Self) -> bool {
             let self_memo = self.memo_table.lock().unwrap();
             let other_memo = other.memo_table.lock().unwrap();
@@ -251,6 +253,8 @@ pub mod TopDownDPMtEph {
     }
 
     impl Default for TopDownDPMtEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn default() -> Self {
             let empty_s = ArraySeqMtEphS::new(0, ' ');
             let empty_t = ArraySeqMtEphS::new(0, ' ');
@@ -260,6 +264,8 @@ pub mod TopDownDPMtEph {
 
     // 13. derive impls outside verus!
     impl Debug for TopDownDPMtEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(|S|+|T|+|memo|), Span Θ(|S|+|T|+|memo|)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("TopDownDPMtEphS")
                 .field("seq_s", &self.seq_s)
@@ -270,6 +276,8 @@ pub mod TopDownDPMtEph {
     }
 
     impl Display for TopDownDPMtEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(
                 f,

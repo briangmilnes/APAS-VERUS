@@ -31,33 +31,43 @@ pub mod MinEditDistMtPer {
     /// Trait for parallel minimum edit distance operations
     pub trait MinEditDistMtPerTrait<T: MtVal>: Sized {
         /// Create new minimum edit distance solver
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn new()                                                                -> Self
         where
             T: Default;
 
         /// Create from source and target sequences
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn from_sequences(source: ArraySeqMtPerS<T>, target: ArraySeqMtPerS<T>) -> Self;
 
         /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
-        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — agrees with APAS; thread::spawn on delete/insert
+        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — agrees with APAS; thread::spawn on delete/insert; outside verus!, not verified
         fn min_edit_distance(&self)                                             -> usize
         where
             T: Send + Sync + 'static;
 
         /// Get the source sequence
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn source(&self)                                                        -> &ArraySeqMtPerS<T>;
 
         /// Get the target sequence
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn target(&self)                                                        -> &ArraySeqMtPerS<T>;
 
         /// Get memoization table size
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn memo_size(&self)                                                     -> usize;
     }
 
     // 9. impls
 
     /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
-    /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — parallel fork on delete/insert branches
+    /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — parallel fork on delete/insert branches; outside verus!, not verified
     fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
         table: &MinEditDistMtPerS<T>,
         i: usize,

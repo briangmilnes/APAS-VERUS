@@ -5,32 +5,33 @@ body { max-width: 100% !important; width: 100% !important; margin: 0 !important;
 table { width: 100% !important; table-layout: fixed; }
 </style>
 
-# Chapter 55: Depth-First Search — Review Against Prose
+# Chapter 55 — Depth-First Search: Review Against Prose
 
-- **Date**: 2026-02-13
-- **Reviewer**: Claude-Opus-4.6
-- **Chapter**: 55 — Depth-First Search
-- **Files reviewed**: 8
-- **Verification status**: Not verusified (plain Rust, no `verus!` blocks)
+**Date:** 2026-02-17
+**Reviewer:** Claude-Opus-4.6
 
-## Phase 1: Inventory (Tool-Generated)
+## Phase 1: Inventory Summary
 
-Generated via `veracity-review-module-fn-impls -d src/Chap55`.
+| # | File | Functions | external_body | verus! | Notes |
+|---|------|:---------:|:-------------:|:------:|-------|
+| 1 | DFSStEph.rs | 2 | 2 | Yes | dfs, dfs_recursive |
+| 2 | DFSStPer.rs | 2 | 2 | Yes | dfs, dfs_recursive |
+| 3 | TopoSortStEph.rs | 4 | 4 | Yes | topological_sort_opt, topo_sort, dfs_finish_order_cycle_detect, dfs_finish_order |
+| 4 | TopoSortStPer.rs | 4 | 4 | Yes | topological_sort_opt, topo_sort, dfs_finish_order_cycle_detect, dfs_finish_order |
+| 5 | CycleDetectStEph.rs | 2 | 2 | Yes | has_cycle, dfs_check_cycle |
+| 6 | CycleDetectStPer.rs | 2 | 2 | Yes | has_cycle, dfs_check_cycle |
+| 7 | SCCStEph.rs | 5 | 5 | Yes | scc, compute_finish_order, dfs_finish_order, transpose_graph, dfs_reach |
+| 8 | SCCStPer.rs | 5 | 5 | Yes | scc, compute_finish_order, dfs_finish_order, transpose_graph, dfs_reach |
 
-| # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
-|---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap55 | CycleDetectStEph | 1 | 0 | 0 | 2 | 0 | 2 | 0 | 0 | 2 |
-| 2 | Chap55 | CycleDetectStPer | 1 | 0 | 0 | 2 | 0 | 2 | 0 | 0 | 2 |
-| 3 | Chap55 | DFSStEph | 1 | 0 | 0 | 2 | 0 | 2 | 0 | 0 | 2 |
-| 4 | Chap55 | DFSStPer | 1 | 0 | 0 | 2 | 0 | 2 | 0 | 0 | 2 |
-| 5 | Chap55 | SCCStEph | 1 | 0 | 0 | 5 | 0 | 5 | 0 | 0 | 5 |
-| 6 | Chap55 | SCCStPer | 1 | 0 | 0 | 5 | 0 | 5 | 0 | 0 | 5 |
-| 7 | Chap55 | TopoSortStEph | 1 | 0 | 0 | 4 | 0 | 4 | 0 | 0 | 4 |
-| 8 | Chap55 | TopoSortStPer | 1 | 0 | 0 | 4 | 0 | 4 | 0 | 0 | 4 |
+**Totals:** 8 files, 26 exec functions, 26 `#[verifier::external_body]` holes, 0 verified functions.
 
-**Key observation**: All 26 functions are outside `verus!`, all have NoSpec. Zero functions have requires/ensures.
+All files are inside `verus! {}` blocks. All exec functions are `#[verifier::external_body]`. No specs (`requires`/`ensures`) on any function.
+
+**Cfg gating:** Chap55 is gated with `#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]` in `lib.rs`. The `not(verus_keep_ghost)` means Chap55 is excluded from Verus compilation because it depends on unverified chapters: Chap37 (AVLTreeSeq) and Chap41 (AVLTreeSet).
 
 ## Phase 2: Prose Inventory
+
+Source: `prompts/Chap55.txt`.
 
 ### Definitions
 
@@ -51,19 +52,19 @@ Generated via `veracity-review-module-fn-impls -d src/Chap55`.
 | # | Item | Description | Implemented? |
 |---|------|-------------|:------------:|
 | 1 | Alg 55.1 | DFS with a Stack | No |
-| 2 | Alg 55.2 | DFS, Recursively (DFSReach) | Yes — `DFSStEph::dfs`, `DFSStPer::dfs` |
-| 3 | Alg 55.4 | Generic DFS (with visit/finish/revisit callbacks) | No — not directly; specialized versions exist |
-| 4 | Alg 55.5 | Generic DFSAll | No — not directly; specialized in TopoSort and SCC |
-| 5 | Alg 55.7 | DFS with Array Sequences | Partially — `DFSStEph` uses array for visited but AVL set for result |
-| 6 | Alg 55.10 | Directed Cycle Detection | Yes — `CycleDetectStEph::has_cycle`, `CycleDetectStPer::has_cycle` |
-| 7 | Alg 55.13 | Topological Sort | Yes — `TopoSortStEph::topo_sort`, `TopoSortStPer::topo_sort` |
-| 8 | Alg 55.18 | Strongly Connected Components | Yes — `SCCStEph::scc`, `SCCStPer::scc` |
+| 2 | Alg 55.2 | DFS, Recursively (DFSReach) | Yes — DFSStEph::dfs, DFSStPer::dfs |
+| 3 | Alg 55.4 | Generic DFS (visit/finish/revisit callbacks) | No directly; specialized versions exist |
+| 4 | Alg 55.5 | Generic DFSAll | No directly; specialized in TopoSort and SCC |
+| 5 | Alg 55.7 | DFS with Array Sequences | Partially — DFSStEph uses array for visited but AVL set for result |
+| 6 | Alg 55.10 | Directed Cycle Detection | Yes — CycleDetectStEph::has_cycle, CycleDetectStPer::has_cycle |
+| 7 | Alg 55.13 | Topological Sort | Yes — TopoSortStEph::topo_sort, TopoSortStPer::topo_sort |
+| 8 | Alg 55.18 | Strongly Connected Components | Yes — SCCStEph::scc, SCCStPer::scc |
 
 ### Cost Specifications
 
 | # | Item | Description |
 |---|------|-------------|
-| 1 | Cost 55.8 | DFS: O((m+n) log n) for tree-based sets / adj tables; O(m+n) for array sequences |
+| 1 | Cost 55.8 | DFS: O((m+n) log n) for tree-based sets/adj tables; O(m+n) for array sequences |
 
 ### Theorems/Lemmas
 
@@ -78,66 +79,101 @@ Generated via `veracity-review-module-fn-impls -d src/Chap55`.
 
 ### Exercises
 
-| # | Item | Description | Implemented? |
-|---|------|-------------|:------------:|
-| 1 | Ex 55.3 | Prove the DFS Numbers Lemma | No |
-| 2 | Ex 55.4 | Restate DFS Numbers Lemma in terms of exploration intervals | No |
-| 3 | Ex 55.5 | Design cycle finding for undirected graphs | No |
-| 4 | Ex 55.6 | Prove topo sort Work/Span O(|V| + |E|) for enumerable graphs | No |
-| 5 | Ex 55.7 | Give DFSReach for SCC in terms of generic DFS | No |
-| 6 | Ex 55.8 | Work/Span of SCC algorithm | No |
+| # | Item | Description | Text proof? | Implemented? |
+|---|------|-------------|:-----------:|:------------:|
+| 1 | Ex 55.3 | Prove the DFS Numbers Lemma | Yes | No |
+| 2 | Ex 55.4 | Restate DFS Numbers Lemma in terms of exploration intervals | Yes | No |
+| 3 | Ex 55.5 | Design cycle finding for undirected graphs | No | No |
+| 4 | Ex 55.6 | Prove topo sort Work/Span O(\|V\| + \|E\|) for enumerable graphs | Yes | No |
+| 5 | Ex 55.7 | Give DFSReach for SCC in terms of generic DFS | No | No |
+| 6 | Ex 55.8 | Work/Span of SCC algorithm | No | No |
 
 ## Phase 3: Algorithmic Analysis
 
 ### 3a. Cost Annotations
 
-Cost annotations have been added to all 26 exec functions. Key findings:
+All 26 exec functions have APAS and Claude-Opus-4.6 cost annotations.
 
-| # | Function | APAS Cost | Actual Cost | Deviation Reason |
-|---|----------|-----------|-------------|------------------|
-| 1 | `DFSStEph::dfs` | O(|V| + |E|) | O((|V| + |E|) log |V|) | AVLTreeSetStEph insert is O(log n), not O(1) |
-| 2 | `DFSStPer::dfs` | O(|V| + |E|) | O((|V| + |E|) log |V|) | AVLTreeSetStPer find/insert O(log n) |
-| 3 | `CycleDetectStEph::has_cycle` | O(|V| + |E|) | O((|V| + |E|) log |V|) | Ancestors set uses AVL O(log n) ops |
-| 4 | `CycleDetectStPer::has_cycle` | O(|V| + |E|) | O((|V| + |E|) log |V|) | AVL ops O(log n); ancestors clone O(|V|) worst case |
-| 5 | `TopoSortStEph::topo_sort` | O(|V| + |E|) | O(|V|^2 + |E|) | `Vec::insert(0, ..)` is O(|V|) per finish |
-| 6 | `TopoSortStPer::topo_sort` | O(|V| + |E|) | O(|V|^2 + (|V|+|E|) log |V|) | Vec::insert(0, ..) + AVL ops |
-| 7 | `SCCStEph::scc` | O(|V| + |E|) | O(|V|^2 + (|V|+|E|) log |V|) | Vec::insert(0, ..) + AVL ops + component rebuild |
-| 8 | `SCCStPer::scc` | O(|V| + |E|) | O(|V|^2 + (|V|+|E|) log |V|) | Vec::insert(0, ..) + AVL ops + union |
+#### DFS
+
+| # | File | Function | APAS Cost | Claude-Opus-4.6 Cost | Agreement |
+|---|------|----------|-----------|----------------------|:---------:|
+| 1 | DFSStEph.rs | `dfs` | W O(\|V\|+\|E\|), S O(\|V\|+\|E\|) | W O((\|V\|+\|E\|) log \|V\|), S same | ❌ AVL insert O(log n) |
+| 2 | DFSStEph.rs | `dfs_recursive` | (internal helper) | W O(\|V\|+\|E\|) amort., S same | N/A |
+| 3 | DFSStPer.rs | `dfs` | W O(\|V\|+\|E\|), S O(\|V\|+\|E\|) | W O((\|V\|+\|E\|) log \|V\|), S same | ❌ AVL find/insert O(log n) |
+| 4 | DFSStPer.rs | `dfs_recursive` | (internal helper) | W O(log \|V\|) per call | N/A |
+
+#### Topological Sort
+
+| # | File | Function | APAS Cost | Claude-Opus-4.6 Cost | Agreement |
+|---|------|----------|-----------|----------------------|:---------:|
+| 5 | TopoSortStEph.rs | `topological_sort_opt` | W O(\|V\|+\|E\|), S same | W O(\|V\|²+\|E\|), S same | ❌ Vec::insert(0,..) |
+| 6 | TopoSortStEph.rs | `topo_sort` | W O(\|V\|+\|E\|), S same | W O(\|V\|²+\|E\|), S same | ❌ Vec::insert(0,..) |
+| 7 | TopoSortStEph.rs | `dfs_finish_order_cycle_detect` | (internal helper) | W O(\|V\|) per finish | N/A |
+| 8 | TopoSortStEph.rs | `dfs_finish_order` | (internal helper) | W O(\|V\|) per finish | N/A |
+| 9 | TopoSortStPer.rs | `topological_sort_opt` | W O(\|V\|+\|E\|), S same | W O(\|V\|²+(\|V\|+\|E\|) log \|V\|), S same | ❌ Vec::insert + AVL |
+| 10 | TopoSortStPer.rs | `topo_sort` | W O(\|V\|+\|E\|), S same | W O(\|V\|²+(\|V\|+\|E\|) log \|V\|), S same | ❌ Vec::insert + AVL |
+| 11 | TopoSortStPer.rs | `dfs_finish_order_cycle_detect` | (internal helper) | W O(\|V\|+log \|V\|) per call | N/A |
+| 12 | TopoSortStPer.rs | `dfs_finish_order` | (internal helper) | W O(\|V\|+log \|V\|) per call | N/A |
+
+#### Cycle Detection
+
+| # | File | Function | APAS Cost | Claude-Opus-4.6 Cost | Agreement |
+|---|------|----------|-----------|----------------------|:---------:|
+| 13 | CycleDetectStEph.rs | `has_cycle` | W O(\|V\|+\|E\|), S same | W O((\|V\|+\|E\|) log \|V\|), S same | ❌ AVL ops O(log n) |
+| 14 | CycleDetectStEph.rs | `dfs_check_cycle` | (internal helper) | W O(log \|V\|) per call | N/A |
+| 15 | CycleDetectStPer.rs | `has_cycle` | W O(\|V\|+\|E\|), S same | W O((\|V\|+\|E\|) log \|V\|), S same | ❌ AVL ops O(log n) |
+| 16 | CycleDetectStPer.rs | `dfs_check_cycle` | (internal helper) | W O(log \|V\|) per call + clone | N/A |
+
+#### Strongly Connected Components
+
+| # | File | Function | APAS Cost | Claude-Opus-4.6 Cost | Agreement |
+|---|------|----------|-----------|----------------------|:---------:|
+| 17 | SCCStEph.rs | `scc` | W O(\|V\|+\|E\|), S same | W O(\|V\|²+(\|V\|+\|E\|) log \|V\|), S same | ❌ Vec::insert + AVL + rebuild |
+| 18 | SCCStEph.rs | `compute_finish_order` | (internal helper) | W O(\|V\|²+\|E\|), S same | N/A |
+| 19 | SCCStEph.rs | `dfs_finish_order` | (internal helper) | W O(\|V\|) per finish | N/A |
+| 20 | SCCStEph.rs | `transpose_graph` | (internal helper) | W O(\|V\|+\|E\|), S same | N/A |
+| 21 | SCCStEph.rs | `dfs_reach` | (internal helper) | W O(deg(v)+log \|V\|) per call | N/A |
+| 22 | SCCStPer.rs | `scc` | W O(\|V\|+\|E\|), S same | W O(\|V\|²+(\|V\|+\|E\|) log \|V\|), S same | ❌ Vec::insert + AVL + union |
+| 23 | SCCStPer.rs | `compute_finish_order` | (internal helper) | W O(\|V\|²+(\|V\|+\|E\|) log \|V\|), S same | N/A |
+| 24 | SCCStPer.rs | `dfs_finish_order` | (internal helper) | W O(\|V\|+log \|V\|) per call | N/A |
+| 25 | SCCStPer.rs | `transpose_graph` | (internal helper) | W O(\|V\|+\|E\|), S same | N/A |
+| 26 | SCCStPer.rs | `dfs_reach` | (internal helper) | W O(deg(v) log \|V\|+\|comp\| log \|comp\|) per call | N/A |
 
 **Root cause of cost disagreements:**
 
-1. **`Vec::insert(0, vertex)`**: Every finish operation prepends to a Vec, which is O(n). APAS Algorithm 55.13 uses sequence prepend `<v> @ Sigma` which is O(1) for a linked-list-backed sequence. The code uses `Vec` which has O(n) prepend. This inflates topo sort and SCC from O(|V| + |E|) to O(|V|^2 + |E|).
+1. **`Vec::insert(0, vertex)`**: Every finish operation prepends to a Vec, which is O(n). APAS Algorithm 55.13 uses sequence prepend `<v> @ Σ` which is O(1) for a linked-list-backed sequence. Fix: use `push` + `reverse` at the end, giving O(1) amortized per insert.
 
-2. **AVL tree sets for visited/ancestors/result**: APAS Algorithm 55.7 uses array sequences (boolean arrays) for visited tracking, giving O(1) per operation. The `StEph` variants correctly use `ArraySeqStEphS<B>` for visited but then collect results into `AVLTreeSetStEph` which adds O(log n) per insert. The `StPer` variants use `AVLTreeSetStPer` for everything, giving O(log n) per operation.
+2. **AVL tree sets for visited/ancestors/result**: APAS Algorithm 55.7 uses array sequences (boolean arrays) for visited tracking, giving O(1) per operation. The StEph variants correctly use `ArraySeqStEphS<B>` for visited but collect results into `AVLTreeSetStEph` which adds O(log n) per insert. The StPer variants use `AVLTreeSetStPer` for everything, giving O(log n) per operation.
 
-3. **Component accumulation in SCC**: `SCCStEph::scc` rebuilds the entire components sequence each time a new component is found (copies all previous components into a new Vec), which is O(|V|) per component.
+3. **Component accumulation in SCC**: SCCStEph::scc rebuilds the entire components sequence each time a new component is found (copies all previous components into a new Vec), which is O(|V|) per component.
 
 ### 3b. Implementation Fidelity
 
 | # | Function | Prose Algorithm | Fidelity | Notes |
 |---|----------|-----------------|:--------:|-------|
-| 1 | `DFSStEph::dfs` | Alg 55.2 + 55.7 | Partial | Uses array for visited (55.7) but AVL set for result (not in prose); result set is extra — prose just returns visited |
-| 2 | `DFSStPer::dfs` | Alg 55.2 | Partial | Uses AVL set instead of functional set; returns visited set directly (matches prose) |
-| 3 | `CycleDetectStEph::has_cycle` | Alg 55.10 | Good | Matches prose: maintains ancestors set, checks on revisit. Uses DFSAll loop over all vertices |
-| 4 | `CycleDetectStPer::has_cycle` | Alg 55.10 | Good | Same structure as StEph but persistent. `ancestors.clone()` on each recursive call is correct for persistence |
-| 5 | `TopoSortStEph::topo_sort` | Alg 55.13 | Good | Matches prose: DFSAll with finish prepending vertex to result. Separate `topological_sort_opt` adds cycle detection (beyond prose) |
-| 6 | `TopoSortStPer::topo_sort` | Alg 55.13 | Good | Same as StEph but persistent |
-| 7 | `SCCStEph::scc` | Alg 55.18 | Good | Matches prose: compute finish order, transpose, DFSReach on transposed graph |
-| 8 | `SCCStPer::scc` | Alg 55.18 | Good | Same structure as StEph but persistent |
+| 1 | DFSStEph::dfs | Alg 55.2 + 55.7 | ⚠️ Partial | Array for visited (55.7) but AVL set for result (not in prose) |
+| 2 | DFSStPer::dfs | Alg 55.2 | ⚠️ Partial | AVL set instead of functional set; returns visited set directly |
+| 3 | CycleDetectStEph::has_cycle | Alg 55.10 | ✅ Good | Maintains ancestors set, checks on revisit. Uses DFSAll loop. |
+| 4 | CycleDetectStPer::has_cycle | Alg 55.10 | ✅ Good | Same as StEph, persistent. `ancestors.clone()` is correct. |
+| 5 | TopoSortStEph::topo_sort | Alg 55.13 | ✅ Good | DFSAll with finish prepending vertex to result. |
+| 6 | TopoSortStPer::topo_sort | Alg 55.13 | ✅ Good | Same as StEph, persistent. |
+| 7 | SCCStEph::scc | Alg 55.18 | ✅ Good | Compute finish order, transpose, DFSReach on transposed graph. |
+| 8 | SCCStPer::scc | Alg 55.18 | ✅ Good | Same structure as StEph, persistent. |
 
 **Notable deviations:**
 
-1. **DFS returns different type**: The prose `DFSReach` returns the visited set X. `DFSStEph::dfs` maintains both a boolean array (`visited`) for O(1) checking and an `AVLTreeSetStEph` for the result. This is redundant — the boolean array alone would suffice with a final conversion, or the AVL set alone could serve both purposes.
+1. **DFS returns different type**: Prose `DFSReach` returns visited set X. DFSStEph maintains both a boolean array and an AVLTreeSetStEph — redundant. The boolean array alone suffices with a final conversion.
 
-2. **No generic DFS**: The prose defines a generic DFS (Alg 55.4) with `visit`/`finish`/`revisit` callbacks, then specializes it. The code implements each specialization directly without a shared generic framework. This is pragmatic but means the cycle-detection, topo-sort, and SCC modules each have their own DFS recursive function.
+2. **No generic DFS**: The prose defines generic DFS (Alg 55.4) with visit/finish/revisit callbacks, then specializes. The code implements each specialization directly — pragmatic but means each module has its own DFS recursive function.
 
-3. **Stack-based DFS (Alg 55.1)**: Not implemented at all. Only the recursive variant exists.
+3. **Stack-based DFS (Alg 55.1)**: Not implemented. Only the recursive variant exists.
 
-4. **`topological_sort_opt`**: This function is not in the prose. It combines topological sort with cycle detection. A useful extension but not from APAS.
+4. **`topological_sort_opt`**: Combines topological sort with cycle detection. Not in the prose but a useful extension.
 
 ### 3c. Spec Fidelity
 
-No Verus specifications exist in any Chap55 file. All functions are plain Rust with zero `requires`/`ensures`. There is nothing to compare against the prose's stated properties.
+No Verus specifications exist in any Chap55 file. All functions are `#[verifier::external_body]` with zero `requires`/`ensures`.
 
 **Expected specs (if verusified):**
 
@@ -150,169 +186,154 @@ No Verus specifications exist in any Chap55 file. All functions are plain Rust w
 
 ## Phase 4: Parallelism Review
 
-**No Mt (multi-threaded) modules exist in Chap55.** This is correct per the prose: "Unlike BFS, DFS is inherently sequential, because it only visits one vertex at a time" and "DFS is P-complete" (Remark in Section 4.1).
+**No Mt (multi-threaded) modules exist in Chap55.** This is correct per the prose: "Unlike BFS, DFS is inherently sequential, because it only visits one vertex at a time" and "DFS is P-complete" (Remark in Section 4.1). No parallelism audit needed.
 
-No parallelism audit table is needed.
-
-## Phase 5: Runtime Test Review
-
-**No test files exist for Chap55.** The glob `tests/*Chap55*` returned zero results.
+## Phase 5: RTT Review
 
 ### 5a. Coverage Check
 
-| # | Module | Test File | Status |
-|---|--------|-----------|--------|
-| 1 | `DFSStEph` | (none) | Missing |
-| 2 | `DFSStPer` | (none) | Missing |
-| 3 | `CycleDetectStEph` | (none) | Missing |
-| 4 | `CycleDetectStPer` | (none) | Missing |
-| 5 | `TopoSortStEph` | (none) | Missing |
-| 6 | `TopoSortStPer` | (none) | Missing |
-| 7 | `SCCStEph` | (none) | Missing |
-| 8 | `SCCStPer` | (none) | Missing |
+| # | Source Module | Test File | Tests | Status |
+|---|-------------|----------|:-----:|--------|
+| 1 | DFSStEph | `tests/Chap55/TestDFSStEph.rs` | 6 | ✅ Present |
+| 2 | DFSStPer | `tests/Chap55/TestDFSStPer.rs` | 7 | ✅ Present |
+| 3 | TopoSortStEph | `tests/Chap55/TestTopoSortStEph.rs` | 11 | ✅ Present |
+| 4 | TopoSortStPer | `tests/Chap55/TestTopoSortStPer.rs` | 11 | ✅ Present |
+| 5 | CycleDetectStEph | `tests/Chap55/TestCycleDetectStEph.rs` | 7 | ✅ Present |
+| 6 | CycleDetectStPer | `tests/Chap55/TestCycleDetectStPer.rs` | 7 | ✅ Present |
+| 7 | SCCStEph | `tests/Chap55/TestSCCStEph.rs` | 7 | ✅ Present |
+| 8 | SCCStPer | `tests/Chap55/TestSCCStPer.rs` | 7 | ✅ Present |
+
+**Total: 63 tests across 8 files.**
 
 ### 5b. Test Quality
 
-N/A — no tests exist.
+**DFS tests** cover: empty graph, single vertex, line graph, DAG, cycle, disconnected graph. DFSStPer also tests invalid source.
 
-### 5c. Missing Tests (Priority)
+**CycleDetect tests** cover: empty graph, single node, linear chain (no cycle), simple cycle, self-loop, DAG (no cycle), DAG with back edge (cycle).
 
-All 8 modules need runtime tests. Since there are no Verus specs, runtime tests are the **only** evidence of correctness. Priority:
+**TopoSort tests** cover: single node, linear DAG, branching DAG, cycle (returns None), self-loop (returns None), disconnected components, empty graph. Both `topological_sort_opt` and `topo_sort` are tested.
 
-| # | Module | Priority | Reason |
-|---|--------|:--------:|--------|
-| 1 | `DFSStEph` | High | Foundation for cycle detect, topo sort, SCC |
-| 2 | `DFSStPer` | High | Same |
-| 3 | `CycleDetectStEph` | High | Core algorithm, no formal verification |
-| 4 | `CycleDetectStPer` | Medium | Same algorithm, persistent variant |
-| 5 | `TopoSortStEph` | High | Important application, includes `topological_sort_opt` |
-| 6 | `TopoSortStPer` | Medium | Same algorithm, persistent variant |
-| 7 | `SCCStEph` | High | Most complex algorithm in chapter, combines multiple sub-algorithms |
-| 8 | `SCCStPer` | Medium | Same algorithm, persistent variant |
+**SCC tests** cover: single node, two nodes no edges, simple cycle, two separate SCCs, linear DAG (each vertex is its own SCC), self-loop, complex graph with multiple SCCs.
 
-**Recommended test cases:**
+Good coverage. Tests exercise the prose examples and edge cases.
 
-- DFS: empty graph, single vertex, linear chain, complete graph, disconnected graph, Example 55.1 from prose
-- Cycle detection: DAG (no cycle), simple cycle, self-loop, complex graph with cycle, Example 55.5
-- Topo sort: linear chain, diamond DAG, wide DAG, Example 55.6 (dressing dependency graph)
-- SCC: single component, all singletons, Example 55.10 from prose, verify topological ordering of components
+### 5c. Missing Test Cases
 
-## Phase 6: Proof-Time Test (PTT) Review
+| # | Missing Case | Priority | Notes |
+|---|-------------|:--------:|-------|
+| 1 | Prose Example 55.1 (named vertices s,a,b,c,d,e,f) | Low | Similar graphs are tested |
+| 2 | Prose Example 55.10 (SCC worked example) | Medium | Would verify exact SCC output against prose |
+| 3 | Topo sort output validation | Medium | Tests check length but not edge-order invariant |
+| 4 | SCC topological order validation | Medium | Tests check count but not ordering property |
 
-No PTTs exist for Chap55. No iterators or verified loops exist (no `verus!` blocks at all). **No PTTs are needed** until the modules are verusified.
+## Phase 6: PTT Review
 
-### 6a. Unified Test Inventory Table
-
-| # | Source Module | RTT File | PTT File | Status |
-|---|-------------|----------|----------|--------|
-| 1 | `DFSStEph` | (none) | (none) | Missing RTT |
-| 2 | `DFSStPer` | (none) | (none) | Missing RTT |
-| 3 | `CycleDetectStEph` | (none) | (none) | Missing RTT |
-| 4 | `CycleDetectStPer` | (none) | (none) | Missing RTT |
-| 5 | `TopoSortStEph` | (none) | (none) | Missing RTT |
-| 6 | `TopoSortStPer` | (none) | (none) | Missing RTT |
-| 7 | `SCCStEph` | (none) | (none) | Missing RTT |
-| 8 | `SCCStPer` | (none) | (none) | Missing RTT |
+**No PTTs needed.** All exec functions are `#[verifier::external_body]`. Additionally, Chap55 is gated with `not(verus_keep_ghost)` so it cannot be compiled under Verus at all. PTTs become relevant only when dependencies (Chap37, Chap41) are verified and the gate is removed.
 
 ## Phase 7: Gap Analysis
 
-### Prose Items With No Implementation
+### Prose Items with No Implementation
 
-| # | Item | Description |
-|---|------|-------------|
-| 1 | Alg 55.1 | DFS with a Stack — not implemented |
-| 2 | Alg 55.4 | Generic DFS (callback-based visit/finish/revisit) — not implemented as generic; specialized versions exist |
-| 3 | Alg 55.5 | Generic DFSAll — not implemented as generic |
-| 4 | Def 55.6 / DFS Numbers | DFS number generation (visit time / finish time tables) — not implemented as a standalone module |
-| 5 | Lemma 55.1 | DFS Numbers edge classification — not proved |
-| 6 | Lemma 55.2 | Bound on DFS calls — not proved |
-| 7 | Thm 55.3 | Back edges iff cycles — not proved |
-| 8 | Lemma 55.4 | DAG Finish Order — not proved |
-| 9 | Lemma 55.5 | First Visited — not proved |
-| 10 | Thm 55.6 | SCC Correctness — not proved |
-| 11 | Ex 55.3-55.8 | All 6 exercises — none implemented |
+| # | Prose Item | Type | Notes |
+|---|-----------|------|-------|
+| 1 | Alg 55.1 — DFS with a Stack | Algorithm | Only recursive DFS exists |
+| 2 | Alg 55.4 — Generic DFS (callbacks) | Algorithm | Specialized versions exist instead |
+| 3 | Alg 55.5 — Generic DFSAll | Algorithm | Specialized versions exist instead |
+| 4 | Def 55.6 — DFS Numbers | Module | Visit/finish time tables not implemented standalone |
+| 5 | Lemma 55.1 — DFS Numbers edge classification | Theorem | Not proved |
+| 6 | Lemma 55.2 — Bound on DFS calls | Theorem | Not proved |
+| 7 | Thm 55.3 — Back edges iff cycles | Theorem | Not proved |
+| 8 | Lemma 55.4 — DAG Finish Order | Theorem | Not proved |
+| 9 | Lemma 55.5 — First Visited | Theorem | Not proved |
+| 10 | Thm 55.6 — SCC Correctness | Theorem | Not proved |
+| 11 | Ex 55.3–55.8 | Exercises | None implemented |
 
-### Code With No Prose Counterpart
+### Code with No Prose Counterpart
 
-| # | Function | Notes |
-|---|----------|-------|
-| 1 | `topological_sort_opt` (both Eph/Per) | Combines topo sort with cycle detection; not in prose but useful extension |
-| 2 | `dfs_finish_order_cycle_detect` (both Eph/Per) | Helper for `topological_sort_opt`; not in prose |
+| # | Module | Function | Notes |
+|---|--------|----------|-------|
+| 1 | TopoSortStEph/StPer | `topological_sort_opt` | Combines topo sort with cycle detection; useful extension |
+| 2 | TopoSortStEph/StPer | `dfs_finish_order_cycle_detect` | Helper for `topological_sort_opt` |
 
-## Phase 8: Table of Contents Review
+## Phase 8: TOC / In-Out Table
 
-**No file has a TOC block.** None of the 8 files have `// Table of Contents` or numbered section headers. All files are simple module structures without `verus!` blocks, so the TOC standard from `table-of-contents-standard.mdc` does not strictly apply (sections 1-11 are inside `verus!`). However, if these modules are verusified in the future, TOCs should be added.
+### TOC Presence
+
+| # | File | TOC Present? | Notes |
+|---|------|:------------:|-------|
+| 1 | DFSStEph.rs | ❌ No | Missing TOC comment block |
+| 2 | DFSStPer.rs | ❌ No | Missing TOC comment block |
+| 3 | TopoSortStEph.rs | ❌ No | Missing TOC comment block |
+| 4 | TopoSortStPer.rs | ❌ No | Missing TOC comment block |
+| 5 | CycleDetectStEph.rs | ❌ No | Missing TOC comment block |
+| 6 | CycleDetectStPer.rs | ❌ No | Missing TOC comment block |
+| 7 | SCCStEph.rs | ❌ No | Missing TOC comment block |
+| 8 | SCCStPer.rs | ❌ No | Missing TOC comment block |
+
+All 8 Chap55 files are missing TOC headers (unlike Chap54 which has them).
 
 ### In/Out Table
 
 | # | File | Clone | PartialEq/Eq | Default | Drop | Iterator | Debug | Display | Macro | Other |
 |---|------|:-----:|:------------:|:-------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
-| 1 | `CycleDetectStEph.rs` | - | - | - | - | - | - | - | - | - |
-| 2 | `CycleDetectStPer.rs` | - | - | - | - | - | - | - | - | - |
-| 3 | `DFSStEph.rs` | - | - | - | - | - | - | - | - | - |
-| 4 | `DFSStPer.rs` | - | - | - | - | - | - | - | - | - |
-| 5 | `SCCStEph.rs` | - | - | - | - | - | - | - | - | - |
-| 6 | `SCCStPer.rs` | - | - | - | - | - | - | - | - | - |
-| 7 | `TopoSortStEph.rs` | - | - | - | - | - | - | - | - | - |
-| 8 | `TopoSortStPer.rs` | - | - | - | - | - | - | - | - | - |
+| 1 | DFSStEph.rs | - | - | - | - | - | - | - | - | - |
+| 2 | DFSStPer.rs | - | - | - | - | - | - | - | - | - |
+| 3 | TopoSortStEph.rs | - | - | - | - | - | - | - | - | - |
+| 4 | TopoSortStPer.rs | - | - | - | - | - | - | - | - | - |
+| 5 | CycleDetectStEph.rs | - | - | - | - | - | - | - | - | - |
+| 6 | CycleDetectStPer.rs | - | - | - | - | - | - | - | - | - |
+| 7 | SCCStEph.rs | - | - | - | - | - | - | - | - | - |
+| 8 | SCCStPer.rs | - | - | - | - | - | - | - | - | - |
 
-No derive impls exist. These are algorithm modules (free functions), not data type modules.
+No derive impls. These are algorithm modules (free functions), not data type modules.
+
+## Action Items
+
+| # | Priority | Action | Notes |
+|---|:--------:|--------|-------|
+| 1 | High | Add TOC comment blocks to all 8 Chap55 files | Chap54 files have them; Chap55 does not |
+| 2 | High | Fix `Vec::insert(0, ..)` → `push` + `reverse` in topo sort and SCC | Fixes O(\|V\|²) → O(\|V\|+\|E\|) cost |
+| 3 | High | Remove `not(verus_keep_ghost)` gate when Chap37/Chap41 are verified | Prerequisite for Verus compilation |
+| 4 | Medium | Replace AVLTreeSet with array-based visited in DFSStPer and CycleDetectStPer | Matches APAS Alg 55.7 O(1) per op |
+| 5 | Medium | Remove redundant AVLTreeSetStEph result set in DFSStEph | Boolean array alone suffices |
+| 6 | Medium | Fix SCCStEph component accumulation (rebuilds Vec every iteration) | O(\|V\|) per component → O(1) with push |
+| 7 | Medium | Add `requires`/`ensures` to all 26 functions | Currently no specs at all |
+| 8 | Low | Implement generic DFS framework (Alg 55.4/55.5) | Reduces code duplication across 4 modules |
+| 9 | Low | Implement stack-based DFS (Alg 55.1) | Completeness with prose |
+| 10 | Low | Implement DFS Numbers module (Def 55.6) | Standalone visit/finish time computation |
+| 11 | Low | Validate topo sort output order and SCC topological order in tests | Tests currently check counts not ordering |
 
 ## Proof Holes Summary
 
-```
-✓ CycleDetectStEph.rs
-✓ CycleDetectStPer.rs
-✓ DFSStEph.rs
-✓ DFSStPer.rs
-✓ SCCStEph.rs
-✓ SCCStPer.rs
-✓ TopoSortStEph.rs
-✓ TopoSortStPer.rs
+| # | File | Function | Hole Type |
+|---|------|----------|-----------|
+| 1 | DFSStEph.rs | `dfs` | `external_body` |
+| 2 | DFSStEph.rs | `dfs_recursive` | `external_body` |
+| 3 | DFSStPer.rs | `dfs` | `external_body` |
+| 4 | DFSStPer.rs | `dfs_recursive` | `external_body` |
+| 5 | TopoSortStEph.rs | `topological_sort_opt` | `external_body` |
+| 6 | TopoSortStEph.rs | `topo_sort` | `external_body` |
+| 7 | TopoSortStEph.rs | `dfs_finish_order_cycle_detect` | `external_body` |
+| 8 | TopoSortStEph.rs | `dfs_finish_order` | `external_body` |
+| 9 | TopoSortStPer.rs | `topological_sort_opt` | `external_body` |
+| 10 | TopoSortStPer.rs | `topo_sort` | `external_body` |
+| 11 | TopoSortStPer.rs | `dfs_finish_order_cycle_detect` | `external_body` |
+| 12 | TopoSortStPer.rs | `dfs_finish_order` | `external_body` |
+| 13 | CycleDetectStEph.rs | `has_cycle` | `external_body` |
+| 14 | CycleDetectStEph.rs | `dfs_check_cycle` | `external_body` |
+| 15 | CycleDetectStPer.rs | `has_cycle` | `external_body` |
+| 16 | CycleDetectStPer.rs | `dfs_check_cycle` | `external_body` |
+| 17 | SCCStEph.rs | `scc` | `external_body` |
+| 18 | SCCStEph.rs | `compute_finish_order` | `external_body` |
+| 19 | SCCStEph.rs | `dfs_finish_order` | `external_body` |
+| 20 | SCCStEph.rs | `transpose_graph` | `external_body` |
+| 21 | SCCStEph.rs | `dfs_reach` | `external_body` |
+| 22 | SCCStPer.rs | `scc` | `external_body` |
+| 23 | SCCStPer.rs | `compute_finish_order` | `external_body` |
+| 24 | SCCStPer.rs | `dfs_finish_order` | `external_body` |
+| 25 | SCCStPer.rs | `transpose_graph` | `external_body` |
+| 26 | SCCStPer.rs | `dfs_reach` | `external_body` |
 
-Modules: 8 clean, 0 holed
-Proof Functions: 0 total
-Holes Found: 0
-```
+**Modules:** 8 files, 26 `external_body` holes, 0 verified functions.
 
-No proof holes — but this is trivially true since there are no `verus!` blocks and no proof functions at all.
-
-## Spec Strength Summary
-
-| Classification | Count |
-|----------------|:-----:|
-| strong | 0 |
-| partial | 0 |
-| weak | 0 |
-| none | 26 |
-
-All 26 functions have **no spec** (no `requires`/`ensures`). The entire chapter is unverified plain Rust.
-
-## Overall Assessment
-
-Chapter 55 implements the four core DFS applications from the prose (reachability, cycle detection, topological sort, SCC) in both ephemeral and persistent variants. The implementations are algorithmically correct in structure and follow the prose algorithms reasonably closely.
-
-**Strengths:**
-1. All four major algorithms are implemented (DFS, cycle detection, topo sort, SCC)
-2. Both StEph and StPer variants exist for each
-3. `topological_sort_opt` adds a useful cycle-detection extension beyond the prose
-4. No proof holes (trivially, since no Verus code exists)
-5. Code is clean, readable, and well-structured
-
-**Weaknesses:**
-1. **Zero Verus verification**: No `verus!` blocks, no specs, no proofs. This is the largest gap.
-2. **Zero runtime tests**: No test files exist at all. There is no evidence of correctness beyond code review.
-3. **Cost deviations**: `Vec::insert(0, ..)` inflates topo sort and SCC from O(|V| + |E|) to O(|V|^2 + |E|). This could be fixed by using `push` + reverse, or a linked-list-backed sequence.
-4. **No generic DFS framework**: Alg 55.4 (generic DFS with callbacks) is not implemented. Each algorithm has its own copy of the DFS recursive function.
-5. **Missing Alg 55.1**: Stack-based DFS is not implemented.
-6. **No DFS numbers module**: Def 55.6 (visit/finish times) is not implemented as a standalone algorithm.
-7. **No theorems/lemmas proved**: All 6 stated lemmas/theorems are unproved.
-8. **No exercises implemented**: All 6 exercises are missing.
-
-**Recommended next steps (priority order):**
-1. Add runtime tests for all 8 modules
-2. Fix `Vec::insert(0, ..)` cost issue in topo sort and SCC
-3. Implement generic DFS framework (Alg 55.4/55.5) to reduce code duplication
-4. Begin verusification starting with `DFSStEph` (simplest, foundation for others)
-5. Add DFS numbers module
-6. Implement stack-based DFS (Alg 55.1)
+All holes are from batch-verusification. None can be removed until the `not(verus_keep_ghost)` gate is lifted (requires Chap37 and Chap41 to be verified first).

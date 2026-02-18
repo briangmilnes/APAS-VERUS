@@ -33,33 +33,40 @@ pub mod MatrixChainStPer {
     // 8. traits
     /// Trait for matrix chain multiplication operations
     pub trait MatrixChainStPerTrait: Sized {
-        /// Create new matrix chain solver
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate empty collections
         fn new()                                              -> Self;
 
-        /// Create from matrix dimensions
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — move ownership of Vec
         fn from_dimensions(dimensions: Vec<MatrixDim>)        -> Self;
 
-        /// Create from dimension pairs (rows, cols)
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — map n pairs to MatrixDim
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> Self;
 
-        /// APAS: Work Θ(n³), Span Θ(n²)
-        /// Claude-Opus-4.6: Work O(n³), Span O(n²)
+        /// - APAS: Work Θ(n³), Span Θ(n³)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — clones self then invokes memoized DP, sequential
         fn optimal_cost(&self)                                -> usize;
 
-        /// Get the matrix dimensions
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reference access
         fn dimensions(&self)                                  -> &Vec<MatrixDim>;
 
-        /// Get number of matrices
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len
         fn num_matrices(&self)                                -> usize;
 
-        /// Get memoization table size
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len
         fn memo_size(&self)                                   -> usize;
     }
 
     // 9. impls
     impl MatrixChainStPerS {
-        /// Calculate cost of multiplying matrices from i to j with split at k
         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — three lookups, two multiplications
         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> usize {
             let left_rows = self.dimensions[i].rows;
             let split_cols = self.dimensions[k].cols;
@@ -67,9 +74,8 @@ pub mod MatrixChainStPer {
             left_rows * split_cols * right_cols
         }
 
-        /// APAS: Work Θ(n³), Span Θ(n²)
-        /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
-        /// Claude-Opus-4.6 Span: O(n²) - recursion depth O(n), each level O(n) work
+        /// - APAS: Work Θ(n³), Span Θ(n³)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — memoized DP, n² subproblems × O(n) each, sequential
         fn matrix_chain_rec(&mut self, i: usize, j: usize) -> usize {
             if let Some(&result) = self.memo.get(&(i, j)) {
                 return result;
@@ -95,6 +101,8 @@ pub mod MatrixChainStPer {
     }
 
     impl MatrixChainStPerTrait for MatrixChainStPerS {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate empty Vec and HashMap
         fn new() -> Self {
             Self {
                 dimensions: Vec::new(),
@@ -102,6 +110,8 @@ pub mod MatrixChainStPer {
             }
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — move ownership of dimensions Vec
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> Self {
             Self {
                 dimensions,
@@ -109,6 +119,8 @@ pub mod MatrixChainStPer {
             }
         }
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — map n Pair values to MatrixDim structs
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> Self {
             let dimensions = dim_pairs
                 .into_iter()
@@ -124,6 +136,8 @@ pub mod MatrixChainStPer {
             }
         }
 
+        /// - APAS: Work Θ(n³), Span Θ(n³)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — clones self, clears memo, invokes matrix_chain_rec
         fn optimal_cost(&self) -> usize {
             if self.dimensions.len() <= 1 {
                 return 0;
@@ -136,15 +150,23 @@ pub mod MatrixChainStPer {
             solver.matrix_chain_rec(0, n - 1)
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reference access
         fn dimensions(&self) -> &Vec<MatrixDim> { &self.dimensions }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len
         fn num_matrices(&self) -> usize { self.dimensions.len() }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len
         fn memo_size(&self) -> usize { self.memo.len() }
     }
 
     // 13. derive impls outside verus!
     impl Display for MatrixChainStPerS {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format two integers
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(
                 f,
@@ -159,6 +181,8 @@ pub mod MatrixChainStPer {
         type Item = MatrixDim;
         type IntoIter = IntoIter<MatrixDim>;
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — move Vec into iterator
         fn into_iter(self) -> Self::IntoIter { self.dimensions.into_iter() }
     }
 
@@ -166,10 +190,14 @@ pub mod MatrixChainStPer {
         type Item = MatrixDim;
         type IntoIter = Cloned<Iter<'a, MatrixDim>>;
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — create cloned iterator adapter
         fn into_iter(self) -> Self::IntoIter { self.dimensions.iter().cloned() }
     }
 
     impl Display for MatrixDim {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format two integers
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
     }
 }

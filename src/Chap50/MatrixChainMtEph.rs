@@ -33,42 +33,52 @@ pub mod MatrixChainMtEph {
     // 8. traits
     /// Trait for parallel matrix chain multiplication operations
     pub trait MatrixChainMtEphTrait: Sized {
-        /// Create new matrix chain solver
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate Arc<Mutex> wrappers
         fn new()                                              -> Self;
 
-        /// Create from matrix dimensions
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wrap Vec in Arc<Mutex>
         fn from_dimensions(dimensions: Vec<MatrixDim>)        -> Self;
 
-        /// Create from dimension pairs (rows, cols)
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — map n pairs then wrap in Arc<Mutex>
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> Self;
 
-        /// APAS: Work Θ(n³), Span Θ(n log n)
-        /// Claude-Opus-4.6: Work O(n³), Span O(n log n)
+        /// - APAS: Work Θ(n³), Span Θ(n² lg n)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — memoized DP with parallel min reduction
         fn optimal_cost(&mut self)                            -> usize;
 
-        /// Get a copy of the matrix dimensions (thread-safe)
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone Vec under lock
         fn dimensions(&self)                                  -> Vec<MatrixDim>;
 
-        /// Set matrix dimension at index
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — write under lock plus memo clear
         fn set_dimension(&mut self, index: usize, dim: MatrixDim);
 
-        /// Update matrix dimensions
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — write under lock plus memo clear
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize);
 
-        /// Get number of matrices
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len under lock
         fn num_matrices(&self)                                -> usize;
 
-        /// Clear memoization table
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::clear under lock
         fn clear_memo(&mut self);
 
-        /// Get memoization table size
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under lock
         fn memo_size(&self)                                   -> usize;
     }
 
     // 9. impls
     impl MatrixChainMtEphS {
-        /// Calculate cost of multiplying matrices from i to j with split at k
         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — three lookups under lock, two multiplications
         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> usize {
             let dimensions_guard = self.dimensions.lock().unwrap();
             let left_rows = dimensions_guard[i].rows;
@@ -77,9 +87,8 @@ pub mod MatrixChainMtEph {
             left_rows * split_cols * right_cols
         }
 
-        /// APAS: Work Θ(n), Span Θ(log n)
-        /// Claude-Opus-4.6 Work: O(n) - n comparisons
-        /// Claude-Opus-4.6 Span: O(log n) - parallel reduction tree
+        /// - APAS: Work Θ(n), Span Θ(lg n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer min reduction
         fn parallel_min_reduction(&self, costs: Vec<usize>) -> usize {
             if costs.is_empty() {
                 return 0;
@@ -105,9 +114,8 @@ pub mod MatrixChainMtEph {
             left_min.min(right_min)
         }
 
-        /// APAS: Work Θ(n³), Span Θ(n log n)
-        /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
-        /// Claude-Opus-4.6 Span: O(n log n) - recursion depth O(n), each level O(log n) parallel reduction
+        /// - APAS: Work Θ(n³), Span Θ(n² lg n)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — memoized DP, n² subproblems, parallel min reduction per subproblem
         fn matrix_chain_rec(&self, i: usize, j: usize) -> usize {
             {
                 let memo_guard = self.memo.lock().unwrap();
@@ -140,6 +148,8 @@ pub mod MatrixChainMtEph {
     }
 
     impl MatrixChainMtEphTrait for MatrixChainMtEphS {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate Arc<Mutex> wrappers
         fn new() -> Self {
             Self {
                 dimensions: Arc::new(Mutex::new(Vec::new())),
@@ -147,6 +157,8 @@ pub mod MatrixChainMtEph {
             }
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wrap Vec in Arc<Mutex>
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> Self {
             Self {
                 dimensions: Arc::new(Mutex::new(dimensions)),
@@ -154,6 +166,8 @@ pub mod MatrixChainMtEph {
             }
         }
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — map n Pair values then wrap in Arc<Mutex>
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> Self {
             let dimensions = dim_pairs
                 .into_iter()
@@ -168,6 +182,8 @@ pub mod MatrixChainMtEph {
             }
         }
 
+        /// - APAS: Work Θ(n³), Span Θ(n² lg n)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — invokes matrix_chain_rec on full range
         fn optimal_cost(&mut self) -> usize {
             let dimensions_len = {
                 let dimensions_guard = self.dimensions.lock().unwrap();
@@ -186,11 +202,15 @@ pub mod MatrixChainMtEph {
             self.matrix_chain_rec(0, dimensions_len - 1)
         }
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone Vec under lock
         fn dimensions(&self) -> Vec<MatrixDim> {
             let dimensions_guard = self.dimensions.lock().unwrap();
             dimensions_guard.clone()
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — write under lock plus memo clear
         fn set_dimension(&mut self, index: usize, dim: MatrixDim) {
             {
                 let mut dimensions_guard = self.dimensions.lock().unwrap();
@@ -200,6 +220,8 @@ pub mod MatrixChainMtEph {
             memo_guard.clear();
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — write under lock plus memo clear
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize) {
             let dim = MatrixDim { rows, cols };
             {
@@ -210,16 +232,22 @@ pub mod MatrixChainMtEph {
             memo_guard.clear();
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len under lock
         fn num_matrices(&self) -> usize {
             let dimensions_guard = self.dimensions.lock().unwrap();
             dimensions_guard.len()
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::clear under lock
         fn clear_memo(&mut self) {
             let mut memo_guard = self.memo.lock().unwrap();
             memo_guard.clear();
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under lock
         fn memo_size(&self) -> usize {
             let memo_guard = self.memo.lock().unwrap();
             memo_guard.len()
@@ -228,6 +256,8 @@ pub mod MatrixChainMtEph {
 
     // 11. derive impls
     impl PartialEq for MatrixChainMtEphS {
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — compare Vec contents under lock
         fn eq(&self, other: &Self) -> bool {
             let self_dims = self.dimensions.lock().unwrap();
             let other_dims = other.dimensions.lock().unwrap();
@@ -239,6 +269,8 @@ pub mod MatrixChainMtEph {
 
     // 13. derive impls outside verus!
     impl Display for MatrixChainMtEphS {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format two integers under locks
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             let memo_size = {
                 let memo_guard = self.memo.lock().unwrap();
@@ -259,6 +291,8 @@ pub mod MatrixChainMtEph {
         type Item = MatrixDim;
         type IntoIter = IntoIter<MatrixDim>;
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — unwrap or clone Vec from Arc<Mutex>
         fn into_iter(self) -> Self::IntoIter {
             match Arc::try_unwrap(self.dimensions) {
                 | Ok(mutex) => mutex.into_inner().unwrap().into_iter(),
@@ -274,6 +308,8 @@ pub mod MatrixChainMtEph {
         type Item = MatrixDim;
         type IntoIter = IntoIter<MatrixDim>;
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone Vec under lock
         fn into_iter(self) -> Self::IntoIter {
             let dimensions_guard = self.dimensions.lock().unwrap();
             dimensions_guard.clone().into_iter()
@@ -284,6 +320,8 @@ pub mod MatrixChainMtEph {
         type Item = MatrixDim;
         type IntoIter = IntoIter<MatrixDim>;
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone Vec under lock
         fn into_iter(self) -> Self::IntoIter {
             let dimensions_guard = self.dimensions.lock().unwrap();
             dimensions_guard.clone().into_iter()
@@ -291,6 +329,8 @@ pub mod MatrixChainMtEph {
     }
 
     impl Display for MatrixDim {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format two integers
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
     }
 

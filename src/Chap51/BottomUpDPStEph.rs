@@ -155,6 +155,8 @@ pub mod BottomUpDPStEph {
 
     // 11. derive impls
     impl Default for BottomUpDPStEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn default() -> Self {
             let empty_s = ArraySeqStEphS::new(0, ' ');
             let empty_t = ArraySeqStEphS::new(0, ' ');
@@ -164,6 +166,8 @@ pub mod BottomUpDPStEph {
 
     // 13. derive impls outside verus!
     impl Debug for BottomUpDPStEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(|S|+|T|), Span Θ(|S|+|T|)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BottomUpDPStEphS")
                 .field("seq_s", &self.seq_s)
@@ -173,6 +177,8 @@ pub mod BottomUpDPStEph {
     }
 
     impl Display for BottomUpDPStEphS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(
                 f,

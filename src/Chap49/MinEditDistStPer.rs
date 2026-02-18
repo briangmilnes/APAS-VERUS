@@ -31,31 +31,41 @@ pub mod MinEditDistStPer {
     /// Trait for minimum edit distance operations
     pub trait MinEditDistStPerTrait<T: StT>: Sized {
         /// Create new minimum edit distance solver
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn new()                                                                -> Self
         where
             T: Default;
 
         /// Create from source and target sequences
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn from_sequences(source: ArraySeqStPerS<T>, target: ArraySeqStPerS<T>) -> Self;
 
         /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
-        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential, span equals work
+        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential, span equals work; outside verus!, not verified
         fn min_edit_distance(&self)                                             -> usize;
 
         /// Get the source sequence
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn source(&self)                                                        -> &ArraySeqStPerS<T>;
 
         /// Get the target sequence
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn target(&self)                                                        -> &ArraySeqStPerS<T>;
 
         /// Get memoization table size
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn memo_size(&self)                                                     -> usize;
     }
 
     // 9. impls
 
     /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
-    /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential memoized recursion
+    /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential memoized recursion; outside verus!, not verified
     fn min_edit_distance_rec<T: StT>(table: &mut MinEditDistStPerS<T>, i: usize, j: usize) -> usize {
         if let Some(&result) = table.memo.get(&(i, j)) {
             return result;

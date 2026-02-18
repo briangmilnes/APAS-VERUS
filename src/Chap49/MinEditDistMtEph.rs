@@ -32,41 +32,61 @@ pub mod MinEditDistMtEph {
     /// Trait for parallel minimum edit distance operations
     pub trait MinEditDistMtEphTrait<T: MtVal>: Sized {
         /// Create new minimum edit distance solver
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn new()                                                                -> Self
         where
             T: Default;
 
         /// Create from source and target sequences
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn from_sequences(source: ArraySeqMtEphS<T>, target: ArraySeqMtEphS<T>) -> Self;
 
         /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
-        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — agrees with APAS; thread::spawn on delete/insert
+        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — agrees with APAS; thread::spawn on delete/insert; outside verus!, not verified
         fn min_edit_distance(&mut self)                                         -> usize
         where
             T: Send + Sync + 'static;
 
         /// Get the source sequence
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn source(&self)                                                        -> &ArraySeqMtEphS<T>;
 
         /// Get the target sequence
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn target(&self)                                                        -> &ArraySeqMtEphS<T>;
 
         /// Get mutable source sequence (ephemeral allows mutation)
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn source_mut(&mut self)                                                -> &mut ArraySeqMtEphS<T>;
 
         /// Get mutable target sequence (ephemeral allows mutation)
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn target_mut(&mut self)                                                -> &mut ArraySeqMtEphS<T>;
 
         /// Set element in source sequence
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn set_source(&mut self, index: usize, value: T);
 
         /// Set element in target sequence
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn set_target(&mut self, index: usize, value: T);
 
         /// Clear memoization table
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn clear_memo(&mut self);
 
         /// Get memoization table size
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn memo_size(&self)                                                     -> usize;
     }
 
@@ -74,7 +94,7 @@ pub mod MinEditDistMtEph {
 
     impl<T: MtVal> MinEditDistMtEphS<T> {
         /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
-        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — parallel fork on delete/insert branches
+        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — parallel fork on delete/insert branches; outside verus!, not verified
         fn min_edit_distance_rec(&self, i: usize, j: usize) -> usize
         where
             T: Send + Sync + 'static,

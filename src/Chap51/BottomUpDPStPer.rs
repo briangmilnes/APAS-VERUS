@@ -147,6 +147,8 @@ pub mod BottomUpDPStPer {
 
     // 11. derive impls
     impl Default for BottomUpDPStPerS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn default() -> Self {
             let empty_s = ArraySeqStPerS::new(0, ' ');
             let empty_t = ArraySeqStPerS::new(0, ' ');
@@ -156,6 +158,8 @@ pub mod BottomUpDPStPer {
 
     // 13. derive impls outside verus!
     impl Debug for BottomUpDPStPerS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(|S|+|T|), Span Θ(|S|+|T|)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BottomUpDPStPerS")
                 .field("seq_s", &self.seq_s)
@@ -165,6 +169,8 @@ pub mod BottomUpDPStPer {
     }
 
     impl Display for BottomUpDPStPerS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(
                 f,

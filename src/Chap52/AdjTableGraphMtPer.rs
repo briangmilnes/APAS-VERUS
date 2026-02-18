@@ -194,6 +194,8 @@ pub mod AdjTableGraphMtPer {
     // 11. derive impls in verus!
 
     impl<V: StTInMtT + Ord + 'static> Default for AdjTableGraphMtPer<V> {
+        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to empty(); external_body, not verified.
         #[verifier::external_body]
         fn default() -> Self { Self::empty() }
     }

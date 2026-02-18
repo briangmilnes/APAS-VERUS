@@ -34,44 +34,52 @@ pub mod OptBinSearchTreeMtEph {
     // 8. traits
     /// Trait for parallel optimal BST operations
     pub trait OBSTMtEphTrait<T: MtVal>: Sized {
-        /// Create new optimal BST solver
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate Arc<Mutex> wrappers
         fn new()                                                  -> Self;
 
-        /// Create from keys and probabilities
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — zip n keys with probabilities then wrap in Arc<Mutex>
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> Self;
 
-        /// Create from key-probability pairs
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wrap Vec in Arc<Mutex>
         fn from_key_probs(key_probs: Vec<KeyProb<T>>)             -> Self;
 
-        /// APAS: Work Θ(n³), Span Θ(n log n)
-        /// Claude-Opus-4.6: Work O(n³), Span O(n log n)
+        /// - APAS: Work Θ(n³), Span Θ(n² lg n)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — memoized DP with parallel min reduction
         fn optimal_cost(&mut self)                                -> Probability
         where
             T: Send + Sync + 'static;
 
-        /// Get a copy of the keys with probabilities (thread-safe)
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone Vec under lock
         fn keys(&self)                                            -> Vec<KeyProb<T>>;
 
-        /// Set key-probability pair at index
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — write under lock plus memo clear
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>);
 
-        /// Update probability for key at index
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — field write under lock plus memo clear
         fn update_prob(&mut self, index: usize, prob: Probability);
 
-        /// Get number of keys
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len under lock
         fn num_keys(&self)                                        -> usize;
 
-        /// Clear memoization table
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::clear under lock
         fn clear_memo(&mut self);
 
-        /// Get memoization table size
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under lock
         fn memo_size(&self)                                       -> usize;
     }
 
     // 9. impls
-    /// APAS: Work Θ(n), Span Θ(log n)
-    /// Claude-Opus-4.6 Work: O(n) - n comparisons
-    /// Claude-Opus-4.6 Span: O(log n) - parallel reduction tree
+    /// - APAS: Work Θ(n), Span Θ(lg n)
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer min reduction
     fn parallel_min_reduction<T: MtVal>(table: &OBSTMtEphS<T>, costs: Vec<Probability>) -> Probability {
         if costs.is_empty() {
             return Probability::infinity();
@@ -97,9 +105,8 @@ pub mod OptBinSearchTreeMtEph {
         std::cmp::min(left_min, right_min)
     }
 
-    /// APAS: Work Θ(n³), Span Θ(n log n)
-    /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
-    /// Claude-Opus-4.6 Span: O(n log n) - recursion depth O(n), each level O(log n) parallel reduction
+    /// - APAS: Work Θ(n³), Span Θ(n² lg n)
+    /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — memoized DP per Algorithm 50.3, parallel min reduction per subproblem
     fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> Probability {
         {
             let memo_guard = table.memo.lock().unwrap();
@@ -139,6 +146,8 @@ pub mod OptBinSearchTreeMtEph {
     }
 
     impl<T: MtVal> OBSTMtEphTrait<T> for OBSTMtEphS<T> {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate Arc<Mutex> wrappers
         fn new() -> Self {
             Self {
                 keys: Arc::new(Mutex::new(Vec::new())),
@@ -146,6 +155,8 @@ pub mod OptBinSearchTreeMtEph {
             }
         }
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — zip n keys then wrap in Arc<Mutex>
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> Self {
             let key_probs = keys
                 .into_iter()
@@ -158,6 +169,8 @@ pub mod OptBinSearchTreeMtEph {
             }
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wrap Vec in Arc<Mutex>
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> Self {
             Self {
                 keys: Arc::new(Mutex::new(key_probs)),
@@ -165,6 +178,8 @@ pub mod OptBinSearchTreeMtEph {
             }
         }
 
+        /// - APAS: Work Θ(n³), Span Θ(n² lg n)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — clears memo, invokes obst_rec(0, n)
         fn optimal_cost(&mut self) -> Probability
         where
             T: Send + Sync + 'static,
@@ -186,11 +201,15 @@ pub mod OptBinSearchTreeMtEph {
             obst_rec(self, 0, keys_len)
         }
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone Vec under lock
         fn keys(&self) -> Vec<KeyProb<T>> {
             let keys_guard = self.keys.lock().unwrap();
             keys_guard.clone()
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — write under lock plus memo clear
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>) {
             {
                 let mut keys_guard = self.keys.lock().unwrap();
@@ -200,6 +219,8 @@ pub mod OptBinSearchTreeMtEph {
             memo_guard.clear();
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — field write under lock plus memo clear
         fn update_prob(&mut self, index: usize, prob: Probability) {
             {
                 let mut keys_guard = self.keys.lock().unwrap();
@@ -209,16 +230,22 @@ pub mod OptBinSearchTreeMtEph {
             memo_guard.clear();
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len under lock
         fn num_keys(&self) -> usize {
             let keys_guard = self.keys.lock().unwrap();
             keys_guard.len()
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::clear under lock
         fn clear_memo(&mut self) {
             let mut memo_guard = self.memo.lock().unwrap();
             memo_guard.clear();
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under lock
         fn memo_size(&self) -> usize {
             let memo_guard = self.memo.lock().unwrap();
             memo_guard.len()
@@ -227,6 +254,8 @@ pub mod OptBinSearchTreeMtEph {
 
     // 11. derive impls
     impl<T: MtVal> PartialEq for OBSTMtEphS<T> {
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — compare Vec contents under locks
         fn eq(&self, other: &Self) -> bool {
             let self_keys = self.keys.lock().unwrap();
             let other_keys = other.keys.lock().unwrap();
@@ -237,6 +266,8 @@ pub mod OptBinSearchTreeMtEph {
     impl<T: MtVal> Eq for OBSTMtEphS<T> {}
 
     impl<T: MtVal + PartialEq> PartialEq for KeyProb<T> {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — compare key and probability
         fn eq(&self, other: &Self) -> bool {
             self.key == other.key && (self.prob.value() - other.prob.value()).abs() < f64::EPSILON
         }
@@ -246,6 +277,8 @@ pub mod OptBinSearchTreeMtEph {
 
     // 13. derive impls outside verus!
     impl<T: MtVal> Display for OBSTMtEphS<T> {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format two integers under locks
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             let memo_size = {
                 let memo_guard = self.memo.lock().unwrap();
@@ -263,6 +296,8 @@ pub mod OptBinSearchTreeMtEph {
         type Item = KeyProb<T>;
         type IntoIter = IntoIter<KeyProb<T>>;
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — unwrap or clone Vec from Arc<Mutex>
         fn into_iter(self) -> Self::IntoIter {
             match Arc::try_unwrap(self.keys) {
                 | Ok(mutex) => mutex.into_inner().unwrap().into_iter(),
@@ -278,6 +313,8 @@ pub mod OptBinSearchTreeMtEph {
         type Item = KeyProb<T>;
         type IntoIter = IntoIter<KeyProb<T>>;
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone Vec under lock
         fn into_iter(self) -> Self::IntoIter {
             let keys_guard = self.keys.lock().unwrap();
             keys_guard.clone().into_iter()
@@ -288,6 +325,8 @@ pub mod OptBinSearchTreeMtEph {
         type Item = KeyProb<T>;
         type IntoIter = IntoIter<KeyProb<T>>;
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone Vec under lock
         fn into_iter(self) -> Self::IntoIter {
             let keys_guard = self.keys.lock().unwrap();
             keys_guard.clone().into_iter()
@@ -295,6 +334,8 @@ pub mod OptBinSearchTreeMtEph {
     }
 
     impl<T: MtVal + Display> Display for KeyProb<T> {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format key and probability
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }
     }
 

@@ -30,30 +30,38 @@ pub mod SubsetSumMtPer {
     /// Trait for parallel subset sum operations
     pub trait SubsetSumMtPerTrait<T: MtVal>: Sized {
         /// Create new subset sum solver
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn new()                                      -> Self
         where
             T: Default;
 
         /// Create from multiset
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn from_multiset(multiset: ArraySeqMtPerS<T>) -> Self;
 
         /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
-        /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — agrees with APAS; thread::spawn on both branches
+        /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — agrees with APAS; thread::spawn on both branches; outside verus!, not verified
         fn subset_sum(&self, target: i32)             -> bool
         where
             T: Into<i32> + Copy + Send + Sync + 'static;
 
         /// Get the multiset
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn multiset(&self)                            -> &ArraySeqMtPerS<T>;
 
         /// Get memoization table size
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn memo_size(&self)                           -> usize;
     }
 
     // 9. impls
 
     /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
-    /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — parallel fork on include/exclude branches
+    /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(|S|) — parallel fork on include/exclude branches; outside verus!, not verified
     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
         table: &SubsetSumMtPerS<T>,
         i: usize,

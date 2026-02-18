@@ -35,33 +35,40 @@ pub mod MatrixChainMtPer {
     // 8. traits
     /// Trait for parallel matrix chain multiplication operations
     pub trait MatrixChainMtPerTrait: Sized {
-        /// Create new matrix chain solver
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate Arc wrappers
         fn new()                                              -> Self;
 
-        /// Create from matrix dimensions
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wrap Vec in Arc
         fn from_dimensions(dimensions: Vec<MatrixDim>)        -> Self;
 
-        /// Create from dimension pairs (rows, cols)
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — map n pairs then wrap in Arc
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> Self;
 
-        /// APAS: Work Θ(n³), Span Θ(n log n)
-        /// Claude-Opus-4.6: Work O(n³), Span O(n log n)
+        /// - APAS: Work Θ(n³), Span Θ(n² lg n)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — memoized DP with parallel min reduction
         fn optimal_cost(&self)                                -> usize;
 
-        /// Get the matrix dimensions
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Arc reference access
         fn dimensions(&self)                                  -> &Arc<Vec<MatrixDim>>;
 
-        /// Get number of matrices
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len through Arc
         fn num_matrices(&self)                                -> usize;
 
-        /// Get memoization table size
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under lock
         fn memo_size(&self)                                   -> usize;
     }
 
     // 9. impls
     impl MatrixChainMtPerS {
-        /// Calculate cost of multiplying matrices from i to j with split at k
         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — three lookups through Arc, two multiplications
         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> usize {
             let left_rows = self.dimensions[i].rows;
             let split_cols = self.dimensions[k].cols;
@@ -69,9 +76,8 @@ pub mod MatrixChainMtPer {
             left_rows * split_cols * right_cols
         }
 
-        /// APAS: Work Θ(n), Span Θ(log n)
-        /// Claude-Opus-4.6 Work: O(n) - n comparisons
-        /// Claude-Opus-4.6 Span: O(log n) - parallel reduction tree
+        /// - APAS: Work Θ(n), Span Θ(lg n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer min reduction
         fn parallel_min_reduction(&self, costs: Vec<usize>) -> usize {
             if costs.is_empty() {
                 return 0;
@@ -97,9 +103,8 @@ pub mod MatrixChainMtPer {
             left_min.min(right_min)
         }
 
-        /// APAS: Work Θ(n³), Span Θ(n log n)
-        /// Claude-Opus-4.6 Work: O(n³) - O(n²) subproblems, each O(n) work
-        /// Claude-Opus-4.6 Span: O(n log n) - recursion depth O(n), each level O(log n) parallel reduction
+        /// - APAS: Work Θ(n³), Span Θ(n² lg n)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — memoized DP, n² subproblems, parallel min reduction per subproblem
         fn matrix_chain_rec(&self, i: usize, j: usize) -> usize {
             {
                 let memo_guard = self.memo.lock().unwrap();
@@ -132,6 +137,8 @@ pub mod MatrixChainMtPer {
     }
 
     impl MatrixChainMtPerTrait for MatrixChainMtPerS {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate Arc wrappers
         fn new() -> Self {
             Self {
                 dimensions: Arc::new(Vec::new()),
@@ -139,6 +146,8 @@ pub mod MatrixChainMtPer {
             }
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wrap Vec in Arc
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> Self {
             Self {
                 dimensions: Arc::new(dimensions),
@@ -146,6 +155,8 @@ pub mod MatrixChainMtPer {
             }
         }
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — map n Pair values then wrap in Arc
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> Self {
             let dimensions = dim_pairs
                 .into_iter()
@@ -160,6 +171,8 @@ pub mod MatrixChainMtPer {
             }
         }
 
+        /// - APAS: Work Θ(n³), Span Θ(n² lg n)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — clears memo, invokes matrix_chain_rec
         fn optimal_cost(&self) -> usize {
             if self.dimensions.len() <= 1 {
                 return 0;
@@ -174,10 +187,16 @@ pub mod MatrixChainMtPer {
             self.matrix_chain_rec(0, n - 1)
         }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Arc reference access
         fn dimensions(&self) -> &Arc<Vec<MatrixDim>> { &self.dimensions }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len through Arc
         fn num_matrices(&self) -> usize { self.dimensions.len() }
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under lock
         fn memo_size(&self) -> usize {
             let memo_guard = self.memo.lock().unwrap();
             memo_guard.len()
@@ -186,6 +205,8 @@ pub mod MatrixChainMtPer {
 
     // 11. derive impls
     impl PartialEq for MatrixChainMtPerS {
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — compare Arc<Vec> contents
         fn eq(&self, other: &Self) -> bool { self.dimensions == other.dimensions }
     }
 
@@ -193,6 +214,8 @@ pub mod MatrixChainMtPer {
 
     // 13. derive impls outside verus!
     impl Display for MatrixChainMtPerS {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format two integers
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             let memo_size = {
                 let memo_guard = self.memo.lock().unwrap();
@@ -211,6 +234,8 @@ pub mod MatrixChainMtPer {
         type Item = MatrixDim;
         type IntoIter = IntoIter<MatrixDim>;
 
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — unwrap or clone Vec from Arc
         fn into_iter(self) -> Self::IntoIter {
             match Arc::try_unwrap(self.dimensions) {
                 | Ok(vec) => vec.into_iter(),
@@ -223,10 +248,14 @@ pub mod MatrixChainMtPer {
         type Item = MatrixDim;
         type IntoIter = Cloned<Iter<'a, MatrixDim>>;
 
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — create cloned iterator adapter over Arc<Vec>
         fn into_iter(self) -> Self::IntoIter { self.dimensions.iter().cloned() }
     }
 
     impl Display for MatrixDim {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format two integers
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
     }
 

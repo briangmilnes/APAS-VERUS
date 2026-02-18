@@ -7,239 +7,146 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 51: Implementing Dynamic Programming — Review Against Prose
 
-- **Date**: 2026-02-13
-- **Reviewer**: Claude-Opus-4.6
-- **Source**: `prompts/Chap51.txt`
-- **Files**: 8 source files in `src/Chap51/`
+**Date:** 2026-02-17
+**Reviewer:** Claude-Opus-4.6 (automated)
+**Project:** APAS-VERUS-agent2
+**Prose source:** `prompts/Chap51.txt` (Chapter 51 of APAS textbook)
 
-## Phase 1: Inventory (Tool-Generated)
+## Phase 1: Prose Summary
 
-106 functions extracted across 8 modules. All functions are outside `verus!` (plain Rust). No Verus verification. No specs (`requires`/`ensures`). No proof holes.
+Chapter 51 presents two techniques for implementing sharing in recursive solutions to achieve polynomial work:
 
-| # | Module | Functions | V! | -V! | Specs | Holes |
-|---|--------|:---------:|:--:|:---:|:-----:|:-----:|
-| 1 | BottomUpDPMtEph | 12 | 0 | 12 | 0 | 0 |
-| 2 | BottomUpDPMtPer | 10 | 0 | 10 | 0 | 0 |
-| 3 | BottomUpDPStEph | 12 | 0 | 12 | 0 | 0 |
-| 4 | BottomUpDPStPer | 10 | 0 | 10 | 0 | 0 |
-| 5 | TopDownDPMtEph | 18 | 0 | 18 | 0 | 0 |
-| 6 | TopDownDPMtPer | 16 | 0 | 16 | 0 | 0 |
-| 7 | TopDownDPStEph | 15 | 0 | 15 | 0 | 0 |
-| 8 | TopDownDPStPer | 13 | 0 | 13 | 0 | 0 |
+1. **Bottom-Up (Section 1):** Constructing the DAG bottom-up by "pebbling" vertices whose in-neighbors are already computed. The chapter uses Minimum Edit Distance (MED) as the running example. Algorithm 51.1 pebbles the DAG diagonally, enabling within-diagonal parallelism. The `medOne` function computes a cell as: base cases `(i,0)→i`, `(0,j)→j`; match → `M[i-1,j-1]`; mismatch → `1 + min(M[i,j-1], M[i-1,j])`. No substitute operation.
 
-## Phase 2: Prose Inventory
+2. **Top-Down / Memoization (Section 2):** Running the recursive code as-is but storing results in a memo table (Algorithm 51.3: the `memo` function, Algorithm 51.4: memoized MED). The memo table is threaded through the computation, making it inherently sequential. The prose explicitly states this limitation and mentions "advanced techniques" (hidden state, concurrent hash tables, synchronization variables) that are "beyond the scope of this book."
 
-### Definitions
-| # | Item | Description |
-|---|------|-------------|
-| 1 | Bottom-up method | DAG pebbling from leaves to root; compute vertices whose in-neighbors are already pebbled |
-| 2 | Memoization / Memo table | Top-down approach: store argument-result pairs, look up before recomputing |
+**Key observation from prose:** The APAS MED uses only insert and delete operations (no substitution). When characters match, the cost is `M[i-1,j-1]` (free diagonal). When they don't match, the cost is `1 + min(insert, delete)`. Substitution (replacing one character with another) is NOT an operation in this formulation.
 
-### Algorithms
-| # | Algorithm | Description |
-|---|-----------|-------------|
-| 1 | Algorithm 51.1 | Bottom-up MED: diagonal pebbling, stores results in table M indexed by (i,j) |
-| 2 | Algorithm 51.3 | The memo function: generic memoization wrapper `memo f M a` |
-| 3 | Algorithm 51.4 | Memoized MED: top-down with memo table threading |
+## Phase 2: File Inventory
 
-### Cost Specs
-| # | Algorithm | APAS Work | APAS Span | Notes |
-|---|-----------|-----------|-----------|-------|
-| 1 | Algorithm 51.1 (bottom-up MED) | Θ(\|S\|×\|T\|) | Θ(\|S\|+\|T\|) | Diagonal parallelism: each diagonal position can be pebbled in parallel |
-| 2 | Algorithm 51.4 (memoized MED) | Θ(\|S\|×\|T\|) | Θ(\|S\|×\|T\|) | Inherently sequential: memo table threading forces total ordering |
+| # | File | Algorithm | Variant | Lines | verus! content |
+|---|---|---|---|---|---|
+| 1 | `TopDownDPStEph.rs` | Algo 51.4 (Memoized MED) | St/Eph | 193 | Empty |
+| 2 | `TopDownDPStPer.rs` | Algo 51.4 (Memoized MED) | St/Per | 194 | Empty |
+| 3 | `TopDownDPMtEph.rs` | Algo 51.4 (Memoized MED) + parallel | Mt/Eph | 291 | Empty |
+| 4 | `TopDownDPMtPer.rs` | Algo 51.4 (Memoized MED) + parallel | Mt/Per | 283 | Empty |
+| 5 | `BottomUpDPStEph.rs` | Algo 51.1 (Bottom-Up MED) | St/Eph | 190 | Empty |
+| 6 | `BottomUpDPStPer.rs` | Algo 51.1 (Bottom-Up MED) | St/Per | 181 | Empty |
+| 7 | `BottomUpDPMtEph.rs` | Algo 51.1 (Bottom-Up MED) + parallel diag | Mt/Eph | 221 | Empty |
+| 8 | `BottomUpDPMtPer.rs` | Algo 51.1 (Bottom-Up MED) + parallel diag | Mt/Per | 212 | Empty |
 
-### Theorems/Properties
-| # | Property | Description |
-|---|----------|-------------|
-| 1 | Limitation of top-down | Top-down with threaded memo table is inherently sequential |
-| 2 | Parallelism of bottom-up | Bottom-up diagonal pebbling allows parallel computation within each diagonal |
+All 8 files have corresponding test files in `tests/Chap51/`.
 
-### Exercises/Problems
-None explicitly numbered in the prose.
+## Phase 3: Algorithmic Fidelity
 
-### Examples
-| # | Example | Description |
-|---|---------|-------------|
-| 1 | Example 51.1 | MED for S="tcat", T="atc" — DAG structure with down/horizontal/diagonal edges |
-| 2 | Example 51.2 | Illustration of diagonals pebbled by Algorithm 51.1 |
-| 3 | Example 51.3 | Integer-valued surrogate arguments for Subset Sum, MED, Optimal BST |
+### BottomUp (Algorithm 51.1) — Faithful
 
-## Phase 3: Algorithmic Analysis
+All 4 BottomUp files correctly implement Algorithm 51.1:
+- Base cases: `(i, 0) → i`, `(0, j) → j`
+- Match: `table[i-1][j-1]` (free diagonal)
+- Mismatch: `1 + min(table[i-1][j], table[i][j-1])` (delete, insert)
+- No substitute operation
+- Diagonal pebbling order with `k` from `1` to `|S|+|T|`
+- Index calculations using `max(1, k - |T|)` and `min(k, |S|)` match prose
 
-### 3a. Cost Annotations
+### TopDown (Algorithm 51.4) — DEVIATION: Extra Substitute Branch
 
-All 8 source files have been updated with APAS/Claude-Opus-4.6 cost comment pairs.
+All 4 TopDown files add a `substitute_cost = 1 + med_recursive(i-1, j-1)` branch when characters don't match. The APAS pseudocode has only insert and delete in the mismatch case:
 
-**Cost disagreements found:**
+**APAS Algorithm 51.4 (mismatch):**
+```
+let (M2, v1) = memo medOne M (i, j − 1)      -- insert
+    (M3, v2) = memo medOne M2 (i − 1, j)      -- delete
+in (M3, 1 + min(v1, v2))
+```
 
-| # | File | Function | APAS Span | Claude Span | Reason |
-|---|------|----------|-----------|-------------|--------|
-| 1 | BottomUpDPStEph | `med_bottom_up` | Θ(\|S\|+\|T\|) | Θ(\|S\|×\|T\|) | Sequential St variant: no parallelism within diagonals |
-| 2 | BottomUpDPStPer | `med_bottom_up` | Θ(\|S\|+\|T\|) | Θ(\|S\|×\|T\|) | Sequential St variant: no parallelism within diagonals |
-| 3 | BottomUpDPStEph | `compute_diagonal` | Θ(1) | Θ(min(\|S\|,\|T\|)) | Sequential loop over diagonal elements |
-| 4 | BottomUpDPStPer | `compute_diagonal` | Θ(1) | Θ(min(\|S\|,\|T\|)) | Sequential loop over diagonal elements |
+**Implementation (mismatch):**
+```rust
+let insert_cost = 1 + self.med_recursive(i, j - 1);
+let delete_cost = 1 + self.med_recursive(i - 1, j);
+let substitute_cost = 1 + self.med_recursive(i - 1, j - 1);  // NOT IN APAS
+insert_cost.min(delete_cost).min(substitute_cost)
+```
 
-The Mt (multi-threaded) variants agree with APAS on the main MED functions because they use `thread::spawn` per diagonal element.
+**Impact:** The TopDown and BottomUp implementations compute DIFFERENT edit distances. For the textbook example ("tcat" → "atc"), both give 3, so the tests pass. But for inputs like "a" → "b":
+- BottomUp (APAS): `2` (delete 'a' + insert 'b')
+- TopDown (with substitute): `1` (substitute 'a' → 'b')
 
-### 3b. Implementation Fidelity
+This is a **semantic inconsistency** across the two algorithm families.
 
-| # | Prose Item | Implementation | Fidelity | Notes |
-|---|------------|---------------|----------|-------|
-| 1 | Algorithm 51.1 (bottom-up) | `BottomUpDP*::med_bottom_up*` | High | Follows prose closely: diagonal pebbling with table M. Index calculations match. Uses `Vec<Vec<usize>>` instead of abstract array — acceptable deviation. |
-| 2 | `medOne` function | `compute_cell_value` / `compute_cell_value_static` | High | Matches prose exactly: checks `S[i-1] == T[j-1]`, takes diagonal if match, else 1 + min(left, above). |
-| 3 | Algorithm 51.3 (memo) | Implicit in `med_recursive` | Medium | No explicit `memo` function; memoization is inlined into the recursive function. Same effect, but the abstract pattern is not reusable. |
-| 4 | Algorithm 51.4 (memoized MED) | `TopDownDP*::med_memoized*` | Medium | **Deviation**: Code includes a substitution branch (`1 + med(i-1, j-1)`) when characters don't match; APAS Algorithm 51.4 only has insert and delete (no substitute). This makes the code compute Levenshtein distance rather than the simpler MED from the textbook. |
+### Mt Parallel TopDown — Beyond Prose
 
-**Key deviation**: The top-down implementations include a substitution cost (`1 + self.med_recursive(i-1, j-1)`) in the mismatch case. The APAS prose Algorithm 51.4 only considers:
-- `memo medOne M (i, j-1)` (insert/left)  
-- `memo medOne M (i-1, j)` (delete/above)
+The prose explicitly states that top-down memoization is "inherently sequential" and that parallel techniques are "beyond the scope of this book." The Mt files provide both:
+- `med_memoized_concurrent()` — sequential recursion with `Arc<Mutex<HashMap>>` (faithful to prose spirit)
+- `med_memoized_parallel()` — `thread::spawn` per recursive branch (goes beyond prose)
 
-The substitution branch makes this the standard Levenshtein edit distance rather than the APAS version which only counts insertions and deletions (with diagonal shortcut on character match). This changes the actual MED values but does not change the asymptotic cost.
+This is a reasonable engineering extension, properly documented as beyond APAS.
 
-### 3c. Spec Fidelity
+### Mt Parallel BottomUp — Faithful
 
-No Verus specifications exist. All 106 functions have spec strength **none**. There are no `requires`/`ensures` clauses to compare against prose properties.
+The Mt BottomUp files use `thread::spawn` per diagonal element, which directly implements the "within-diagonal parallelism" the prose describes. This is faithful to the textbook.
 
-The prose does not state formal preconditions or postconditions beyond the algorithmic description.
+## Phase 4: Cost Analysis
 
-## Phase 4: Parallelism Review
+### BottomUp Costs
 
-### 4a. Mt Function Classification
+| # | Function | APAS | Implementation | Match? |
+|---|---|---|---|---|
+| 1 | `med_bottom_up` (St) | W: Θ(mn), S: Θ(m+n) | W: Θ(mn), S: Θ(mn) | **No** — St has no parallelism, so span = work |
+| 2 | `med_bottom_up_parallel` (Mt) | W: Θ(mn), S: Θ(m+n) | W: Θ(mn), S: Θ(m+n) | Yes |
+| 3 | `compute_diagonal` (St) | W: Θ(diag len), S: Θ(1) | W: Θ(min(m,n)), S: Θ(min(m,n)) | **No** — St loop is sequential |
+| 4 | `compute_diagonal_parallel` (Mt) | W: Θ(diag len), S: Θ(1) | W: Θ(min(m,n)), S: Θ(1) | Yes |
+| 5 | `compute_cell_value` / `_static` | W: Θ(1), S: Θ(1) | W: Θ(1), S: Θ(1) | Yes |
+| 6 | `initialize_base_cases` | N/A (scaffolding) | W: Θ(m+n), S: Θ(m+n) | N/A |
 
-| # | File | Function | Classification | Evidence |
-|---|------|----------|---------------|----------|
-| 1 | BottomUpDPMtEph | `med_bottom_up_parallel` | **Parallel** | `thread::spawn` per diagonal element in `compute_diagonal_parallel` |
-| 2 | BottomUpDPMtEph | `compute_diagonal_parallel` | **Parallel** | `thread::spawn` per `(i,j)` position |
-| 3 | BottomUpDPMtEph | `compute_cell_value_static` | Sequential | Single cell computation, no spawning |
-| 4 | BottomUpDPMtPer | `med_bottom_up_parallel` | **Parallel** | Same structure as MtEph variant |
-| 5 | BottomUpDPMtPer | `compute_diagonal_parallel` | **Parallel** | `thread::spawn` per position |
-| 6 | BottomUpDPMtPer | `compute_cell_value_static` | Sequential | Single cell computation |
-| 7 | TopDownDPMtEph | `med_memoized_concurrent` | Sequential | Sequential recursive calls with concurrent memo table |
-| 8 | TopDownDPMtEph | `med_memoized_parallel` | **Parallel** | `thread::spawn` for each recursive branch (insert/delete/substitute) |
-| 9 | TopDownDPMtPer | `med_memoized_concurrent` | Sequential | Sequential recursive calls with concurrent memo table |
-| 10 | TopDownDPMtPer | `med_memoized_parallel` | **Parallel** | `thread::spawn` for each recursive branch |
+Where m = |S|, n = |T|.
 
-### 4b. Span Audit
+### TopDown Costs
 
-| # | Function | APAS Span | Actual Span | Match? | Notes |
-|---|----------|-----------|-------------|--------|-------|
-| 1 | `BottomUpDPMtEph::med_bottom_up_parallel` | Θ(\|S\|+\|T\|) | Θ(\|S\|+\|T\|) | Yes | Parallel diagonals achieve the APAS span |
-| 2 | `BottomUpDPMtPer::med_bottom_up_parallel` | Θ(\|S\|+\|T\|) | Θ(\|S\|+\|T\|) | Yes | Same parallel structure |
-| 3 | `TopDownDPMtEph::med_memoized_concurrent` | Θ(\|S\|×\|T\|) | Θ(\|S\|×\|T\|) | Yes | Sequential — Span == Work |
-| 4 | `TopDownDPMtEph::med_memoized_parallel` | N/A | Θ(\|S\|+\|T\|) | N/A | Extends beyond prose; parallel branch exploration |
-| 5 | `TopDownDPMtPer::med_memoized_concurrent` | Θ(\|S\|×\|T\|) | Θ(\|S\|×\|T\|) | Yes | Sequential — Span == Work |
-| 6 | `TopDownDPMtPer::med_memoized_parallel` | N/A | Θ(\|S\|+\|T\|) | N/A | Extends beyond prose; parallel branch exploration |
+| # | Function | APAS | Implementation | Match? |
+|---|---|---|---|---|
+| 1 | `med_memoized` (St) | W: Θ(mn), S: Θ(mn) | W: Θ(mn), S: Θ(mn) | Yes |
+| 2 | `med_memoized_concurrent` (Mt) | W: Θ(mn), S: Θ(mn) | W: Θ(mn), S: Θ(mn) | Yes |
+| 3 | `med_memoized_parallel` (Mt) | N/A (beyond prose) | W: Θ(mn), S: Θ(m+n) | N/A |
+| 4 | `med_recursive` (per call) | W: Θ(1) amort | W: Θ(1) amort | Yes |
 
-### 4c. Parallelism Gap Table
+## Phase 5: Specification Strength
 
-| # | Function | APAS Span | Actual | Parallel? | Notes |
-|---|----------|-----------|--------|-----------|-------|
-| 1 | BU MtEph `med_bottom_up_parallel` | Θ(\|S\|+\|T\|) | Θ(\|S\|+\|T\|) | Yes | thread::spawn per diagonal element |
-| 2 | BU MtPer `med_bottom_up_parallel` | Θ(\|S\|+\|T\|) | Θ(\|S\|+\|T\|) | Yes | thread::spawn per diagonal element |
-| 3 | TD MtEph `med_memoized_concurrent` | Θ(\|S\|×\|T\|) | Θ(\|S\|×\|T\|) | No | Sequential recursive calls; concurrent memo is thread-safe but not parallel |
-| 4 | TD MtEph `med_memoized_parallel` | N/A | Θ(\|S\|+\|T\|) | Yes | thread::spawn per branch — goes beyond APAS |
-| 5 | TD MtPer `med_memoized_concurrent` | Θ(\|S\|×\|T\|) | Θ(\|S\|×\|T\|) | No | Sequential recursive calls |
-| 6 | TD MtPer `med_memoized_parallel` | N/A | Θ(\|S\|+\|T\|) | Yes | thread::spawn per branch — goes beyond APAS |
+| # | File | Spec Functions | Proof Functions | requires/ensures | Strength |
+|---|---|---|---|---|---|
+| 1 | TopDownDPStEph.rs | 0 | 0 | 0 | **none** |
+| 2 | TopDownDPStPer.rs | 0 | 0 | 0 | **none** |
+| 3 | TopDownDPMtEph.rs | 0 | 0 | 0 | **none** |
+| 4 | TopDownDPMtPer.rs | 0 | 0 | 0 | **none** |
+| 5 | BottomUpDPStEph.rs | 0 | 0 | 0 | **none** |
+| 6 | BottomUpDPStPer.rs | 0 | 0 | 0 | **none** |
+| 7 | BottomUpDPMtEph.rs | 0 | 0 | 0 | **none** |
+| 8 | BottomUpDPMtPer.rs | 0 | 0 | 0 | **none** |
 
-The `med_memoized_concurrent` functions in both Mt files are thread-safe (Arc<Mutex>) but not parallel — they make sequential recursive calls. The APAS prose explicitly notes this: "the top-down approach as described is inherently sequential." The `med_memoized_parallel` functions go beyond the prose by using techniques the prose mentions as "advanced techniques beyond the scope of this book."
+**Reason:** All code resides outside `verus!` blocks due to Verus limitations with `Arc<Mutex<HashMap>>`, `Arc<Mutex<Vec<Vec<usize>>>>`, and `std::thread`. The `verus!` blocks in all 8 files are empty.
 
-## Phase 5: Runtime Test Review
+## Phase 6: In/Out Table
 
-**No runtime tests exist for Chapter 51.** No files matching `tests/*Chap51*` were found.
+Since all code is outside `verus!`, every trait impl is "out":
 
-### 5a. Coverage Check
+| # | File | Clone | PartialEq/Eq | Default | Debug | Display | Notes |
+|---|---|:---:|:---:|:---:|:---:|:---:|---|
+| 1 | TopDownDPStEph | ✅ out (derive) | ✅ out (derive) | ✅ out | ✅ out | ✅ out | All outside verus! |
+| 2 | TopDownDPStPer | ✅ out (derive) | ✅ out (derive) | ✅ out | ✅ out | ✅ out | All outside verus! |
+| 3 | TopDownDPMtEph | ✅ out (derive) | ✅ out (manual) | ✅ out | ✅ out | ✅ out | PartialEq manual (Mutex) |
+| 4 | TopDownDPMtPer | ✅ out (derive) | ✅ out (manual) | ✅ out | ✅ out | ✅ out | PartialEq manual (Mutex) |
+| 5 | BottomUpDPStEph | ✅ out (derive) | ✅ out (derive) | ✅ out | ✅ out | ✅ out | All outside verus! |
+| 6 | BottomUpDPStPer | ✅ out (derive) | ✅ out (derive) | ✅ out | ✅ out | ✅ out | All outside verus! |
+| 7 | BottomUpDPMtEph | ✅ out (derive) | ✅ out (derive) | ✅ out | ✅ out | ✅ out | All outside verus! |
+| 8 | BottomUpDPMtPer | ✅ out (derive) | ✅ out (derive) | ✅ out | ✅ out | ✅ out | All outside verus! |
 
-All 106 exec functions have zero test coverage.
+**Note:** "✅ out" here means correctly placed outside verus! — but the IDEAL would be inside verus! with specs if Verus supported the required types. The placement is forced by Verus limitations, not by design choice.
 
-### 5b. Missing Tests (Proposed)
-
-| # | Priority | Test | Rationale |
-|---|----------|------|-----------|
-| 1 | High | Test `med_bottom_up` for "tcat"/"atc" (Example 51.1) | Validates core algorithm against prose example |
-| 2 | High | Test `med_memoized` for "tcat"/"atc" | Cross-validates top-down against bottom-up |
-| 3 | High | Test empty strings: med("", "") = 0, med("abc", "") = 3 | Base case validation |
-| 4 | Medium | Test equal strings: med("abc", "abc") = 0 | Diagonal-only path |
-| 5 | Medium | Test `med_memoized_parallel` against `med_memoized_concurrent` | Parallel correctness |
-| 6 | Medium | Test all 8 variants produce same result | Cross-variant consistency |
-| 7 | Low | Test memo table size after computation | Verifies memoization is working |
-| 8 | Low | Test `set_s`/`set_t` clears memo | Verifies invariant maintenance |
-
-## Phase 6: Proof-Time Test (PTT) Review
-
-**No PTTs needed.** Chapter 51 has no iterators, no verified loops, and no `verus!` blocks. All code is plain Rust.
-
-### 6a. Unified Test Inventory
-
-| # | Source Module | RTT File | PTT File | Status |
-|---|-------------|----------|----------|--------|
-| 1 | BottomUpDPStEph | — | — | Missing both |
-| 2 | BottomUpDPStPer | — | — | Missing both |
-| 3 | BottomUpDPMtEph | — | — | Missing both |
-| 4 | BottomUpDPMtPer | — | — | Missing both |
-| 5 | TopDownDPStEph | — | — | Missing both |
-| 6 | TopDownDPStPer | — | — | Missing both |
-| 7 | TopDownDPMtEph | — | — | Missing both |
-| 8 | TopDownDPMtPer | — | — | Missing both |
-
-## Phase 7: Gap Analysis
-
-### Prose Items With No Implementation
-
-| # | Prose Item | Status | Notes |
-|---|------------|--------|-------|
-| 1 | Algorithm 51.3 (generic `memo` function) | Not implemented as reusable function | Memoization is inlined into each `med_recursive`; no abstract `memo f M a` function |
-
-### Code With No Prose Counterpart
-
-| # | Function | Category | Notes |
-|---|----------|----------|-------|
-| 1 | `new` (all variants) | Constructor | Standard Rust scaffolding |
-| 2 | `s_length`, `t_length`, `is_empty` | Accessors | Convenience methods |
-| 3 | `set_s`, `set_t` (Eph variants) | Mutators | Ephemeral mutation support |
-| 4 | `with_memo_table` (Per variants) | Persistent builder | Functional update pattern |
-| 5 | `memo_size`, `is_memoized`, `get_memoized` | Memo table accessors | Testing/debugging support |
-| 6 | `insert_memo` (Eph variants) | Memo mutator | Direct memo table manipulation |
-| 7 | `clear_memo` | Memo reset | Reuse support |
-| 8 | `initialize_base_cases` | Helper | Factored out from main algorithm |
-| 9 | `compute_diagonal` / `compute_diagonal_parallel` | Helper | Factored out from main algorithm |
-| 10 | `med_memoized_parallel`, `med_recursive_parallel` (Mt variants) | Parallel top-down | Goes beyond prose; prose says this is "beyond the scope of this book" |
-| 11 | Trait definitions (`BottomUpDP*Trait`, `TopDownDP*Trait`) | Trait scaffolding | Standard APAS-VERUS pattern |
-| 12 | `Default`, `Display`, `PartialEq`, `Eq`, `Clone`, `Debug` impls | Derive impls | Standard Rust trait implementations |
-
-### Algorithmic Deviation: Substitution Cost
-
-The top-down implementations include a substitution branch that APAS Algorithm 51.4 does not have. The APAS version only considers:
-- Character match → diagonal (cost 0)
-- Character mismatch → min(left, above) + 1
-
-The code implements the full Levenshtein distance:
-- Character match → diagonal (cost 0)
-- Character mismatch → min(left, above, diagonal) + 1
-
-This is arguably more standard but deviates from the textbook.
-
-## Phase 8: Table of Contents Review
-
-**No TOC headers present in any file.** None of the 8 source files contain a `// Table of Contents` block or numbered section headers. This is expected since none use `verus!` blocks — the TOC standard primarily applies to verusified modules.
-
-### In/Out Table
-
-| # | File | Clone | PartialEq/Eq | Default | Drop | Iterator | Debug | Display | Macro | Other |
-|---|------|:-----:|:------------:|:-------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
-| 1 | BottomUpDPStEph | ❌ out | ❌ out | ❌ out | - | - | ❌ out | ❌ out | - | - |
-| 2 | BottomUpDPStPer | ❌ out | ❌ out | ❌ out | - | - | ❌ out | ❌ out | - | - |
-| 3 | BottomUpDPMtEph | ❌ out | ❌ out | ❌ out | - | - | ❌ out | ❌ out | - | - |
-| 4 | BottomUpDPMtPer | ❌ out | ❌ out | ❌ out | - | - | ❌ out | ❌ out | - | - |
-| 5 | TopDownDPStEph | ❌ out | ❌ out | ❌ out | - | - | ❌ out | ❌ out | - | - |
-| 6 | TopDownDPStPer | ❌ out | ❌ out | ❌ out | - | - | ❌ out | ❌ out | - | - |
-| 7 | TopDownDPMtEph | ❌ out | ❌ out | ❌ out | - | - | ❌ out | ❌ out | - | - |
-| 8 | TopDownDPMtPer | ❌ out | ❌ out | ❌ out | - | - | ❌ out | ❌ out | - | - |
-
-All derive impls are outside `verus!` because there are no `verus!` blocks. Once verusified, Clone/PartialEq/Eq/Default should move inside `verus!` with specs; Debug/Display must remain outside.
-
-## Proof Holes Summary
+## Phase 7: Proof Holes
 
 ```
+veracity-review-proof-holes output:
+
 ✓ BottomUpDPMtEph.rs
 ✓ BottomUpDPMtPer.rs
 ✓ BottomUpDPStEph.rs
@@ -249,44 +156,48 @@ All derive impls are outside `verus!` because there are no `verus!` blocks. Once
 ✓ TopDownDPStEph.rs
 ✓ TopDownDPStPer.rs
 
-Modules: 8 clean, 0 holed
+Proof Functions: 0 total
 Holes Found: 0 total
 ```
 
-No proof holes found because there is no Verus verification code. This is trivially clean — there are no proofs at all.
+Zero proof holes. This is technically correct but vacuously so — there are no proof functions, spec functions, or requires/ensures clauses to have holes in.
 
-## Spec Strength Summary
+## Phase 8: Test Coverage
 
-| Classification | Count |
-|---------------|:-----:|
-| strong | 0 |
-| partial | 0 |
-| weak | 0 |
-| none | 106 |
+| # | Test File | Tests | Key Tests |
+|---|---|---|---|
+| 1 | TestTopDownDPStEph.rs | 17 | textbook MED, identical strings, memo ops, insert/overwrite |
+| 2 | TestTopDownDPStPer.rs | 14 | textbook MED, identical strings, with_memo_table, clear_memo |
+| 3 | TestTopDownDPMtEph.rs | 17 | concurrent MED, parallel MED, memo ops, insert/overwrite |
+| 4 | TestTopDownDPMtPer.rs | 14 | concurrent MED, parallel MED, clear_memo |
+| 5 | TestBottomUpDPStEph.rs | 13 | textbook MED, identical strings, set_s/set_t |
+| 6 | TestBottomUpDPStPer.rs | 15 | textbook MED, one-empty, single-char same/different, PartialEq true/false |
+| 7 | TestBottomUpDPMtEph.rs | 11 | parallel textbook MED, parallel identical |
+| 8 | TestBottomUpDPMtPer.rs | 11 | parallel textbook MED, parallel one-empty |
 
-All 106 functions have spec strength **none** — no `requires`/`ensures` clauses exist in any file. The entire chapter is unverified plain Rust.
+**Total: 112 tests across 8 files.**
 
-## Overall Assessment
+All files test the textbook example: MED("tcat", "atc") = 3.
 
-### Status: Unverified Plain Rust
+### Test Gap
 
-Chapter 51 implements the two core dynamic programming techniques from the APAS textbook — bottom-up diagonal pebbling and top-down memoization — applied to Minimum Edit Distance. The code is well-structured across the standard 4-variant matrix (St/Mt × Eph/Per), but it has not been verusified.
+No test exercises an input where TopDown (with substitute) and BottomUp (without substitute) give different results. For example, MED("a", "b") = 1 (TopDown) vs 2 (BottomUp). This inconsistency is masked by the textbook example.
 
-### Strengths
-1. **Correct algorithmic structure**: Bottom-up diagonal pebbling matches the prose closely.
-2. **Genuine parallelism in Mt variants**: The Mt bottom-up variants use `thread::spawn` per diagonal element, achieving the APAS span of Θ(|S|+|T|).
-3. **The Mt top-down variants include both sequential and parallel versions**, with the parallel version going beyond what the prose covers.
-4. **Clean proof holes**: No unverified assumptions (trivially, since there's no Verus code).
+## Action Items
 
-### Issues
-1. **No Verus verification**: Zero specs, zero proofs. The chapter is entirely unverified.
-2. **No runtime tests**: No test files exist for any of the 8 modules.
-3. **Substitution deviation**: Top-down implementations include a substitution cost not present in APAS Algorithm 51.4. This computes Levenshtein distance rather than the simpler insert/delete-only MED from the textbook.
-4. **No generic memo function**: APAS Algorithm 51.3 defines a reusable `memo f M a` pattern; the implementations inline memoization directly.
-5. **No TOC headers**: Expected to be added when files are verusified.
-6. **Mt `med_memoized_concurrent` is sequential**: Despite being in Mt modules with concurrent data structures, the concurrent memoized variants make sequential recursive calls. The APAS prose acknowledges this limitation.
+| # | Priority | Item | Files Affected |
+|---|---|---|---|
+| 1 | **HIGH** | Remove substitute branch from TopDown `med_recursive` / `med_recursive_concurrent` / `med_recursive_parallel` to match APAS Algorithm 51.4 | TopDownDPStEph, TopDownDPStPer, TopDownDPMtEph, TopDownDPMtPer |
+| 2 | **HIGH** | Add cross-variant test: verify MED("a", "b") gives same result from TopDown and BottomUp | All test files |
+| 3 | **MEDIUM** | Unused traits: `TopDownDPStEphTrait`, `BottomUpDPStEphTrait`, etc. are defined but never implemented. Remove or implement them. | All 8 files |
+| 4 | **LOW** | Consider moving base-case-only code inside `verus!` (struct definitions, spec functions for MED correctness) even if the main algorithm stays outside | All 8 files |
+| 5 | **LOW** | TopDownDPStPer.rs `med_memoized()` clones the memo table on every call — this defeats persistence semantics. Consider returning updated self. | TopDownDPStPer.rs |
+| 6 | **INFO** | BottomUpDPMtEph/MtPer spawn one thread per diagonal element — for small diagonals this is pure overhead. Consider a threshold. | BottomUpDPMtEph, BottomUpDPMtPer |
 
-### Priority Actions
-1. Add runtime tests (at minimum: "tcat"/"atc" example, empty strings, equal strings, cross-variant consistency).
-2. Fix the substitution deviation in top-down to match APAS prose, or document the intentional deviation.
-3. Verusify the chapter when ready — this will require `verus!` blocks, specs, and proof work.
+## Summary
+
+Chapter 51 is a batch-verusified implementation of two DP techniques (bottom-up tabulation, top-down memoization) applied to Minimum Edit Distance. All 8 files compile and run correctly with 112 passing tests and 0 proof holes.
+
+The primary finding is a **semantic deviation** in all 4 TopDown files: they include a substitute operation not present in the APAS pseudocode, causing them to compute standard Levenshtein distance rather than the APAS edit distance. This goes undetected because the textbook test case happens to produce the same result under both formulations.
+
+All code resides outside `verus!` due to Verus limitations with concurrent data structures (`Arc<Mutex<HashMap>>`, `Arc<Mutex<Vec<Vec<usize>>>>`). This means there are zero specifications, zero proof functions, and zero verified properties. The "0 proof holes" result is vacuously true.

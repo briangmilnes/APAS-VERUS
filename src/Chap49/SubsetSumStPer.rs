@@ -29,30 +29,38 @@ pub mod SubsetSumStPer {
     /// Trait for subset sum operations
     pub trait SubsetSumStPerTrait<T: StT>: Sized {
         /// Create new subset sum solver
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn new()                                      -> Self
         where
             T: Default;
 
         /// Create from multiset
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn from_multiset(multiset: ArraySeqStPerS<T>) -> Self;
 
         /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
-        /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(k×|S|) — sequential, span equals work
+        /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(k×|S|) — sequential, span equals work; outside verus!, not verified
         fn subset_sum(&self, target: i32)             -> bool
         where
             T: Into<i32> + Copy;
 
         /// Get the multiset
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn multiset(&self)                            -> &ArraySeqStPerS<T>;
 
         /// Get memoization table size
+        /// - APAS: not specified
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — outside verus!, not verified
         fn memo_size(&self)                           -> usize;
     }
 
     // 9. impls
 
     /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
-    /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(k×|S|) — sequential memoized recursion
+    /// - Claude-Opus-4.6: Work Θ(k×|S|), Span Θ(k×|S|) — sequential memoized recursion; outside verus!, not verified
     fn subset_sum_rec<T: StT + Into<i32> + Copy>(table: &mut SubsetSumStPerS<T>, i: usize, j: i32) -> bool {
         if let Some(&result) = table.memo.get(&(i, j)) {
             return result;

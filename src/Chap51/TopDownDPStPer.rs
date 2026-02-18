@@ -157,6 +157,8 @@ pub mod TopDownDPStPer {
 
     // 11. derive impls
     impl Default for TopDownDPStPerS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn default() -> Self {
             let empty_s = ArraySeqStPerS::new(0, ' ');
             let empty_t = ArraySeqStPerS::new(0, ' ');
@@ -166,6 +168,8 @@ pub mod TopDownDPStPer {
 
     // 13. derive impls outside verus!
     impl Debug for TopDownDPStPerS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(|S|+|T|+|memo|), Span Θ(|S|+|T|+|memo|)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("TopDownDPStPerS")
                 .field("seq_s", &self.seq_s)
@@ -176,6 +180,8 @@ pub mod TopDownDPStPer {
     }
 
     impl Display for TopDownDPStPerS {
+        /// - APAS: N/A — infrastructure.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(
                 f,

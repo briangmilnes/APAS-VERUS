@@ -196,6 +196,8 @@ pub mod AdjSeqGraphStPer {
     // 13. derive impls outside verus!
 
     impl Debug for AdjSeqGraphStPer {
+        /// - APAS: N/A — Rust Debug trait, not in textbook.
+        /// - Claude-Opus-4.6: Work depends on graph size — outside verus!, not verified.
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("AdjSeqGraphStPer").field("adj", &self.adj).finish()
         }

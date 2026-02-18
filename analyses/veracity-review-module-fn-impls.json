@@ -1,186 +1,122 @@
 [
   {
     "id": 1,
-    "function": "max_element_parallel",
-    "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "47-51",
-    "spec_strength": "unknown",
-    "snippet": "        fn max_element_parallel(a: &ArraySeqMtPerS<N>) -> (result: Option<N>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                a.spec_len() == 0 ==> result is None,\n                a.spec_len() > 0 ==> {"
+    "function": "dijkstra",
+    "file": "Chap57/DijkstraStEphFloat.rs",
+    "lines": "62",
+    "spec_strength": "hole",
+    "snippet": "        fn dijkstra(graph: &WeightedDirGraphStEphFloat<usize>, source: usize) -> SSSPResultStEphFloat;"
   },
   {
     "id": 2,
-    "function": "sum_parallel",
-    "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "62-68",
+    "function": "pq_entry_new",
+    "file": "Chap57/DijkstraStEphFloat.rs",
+    "lines": "71",
     "spec_strength": "hole",
-    "snippet": "        fn sum_parallel(a: &ArraySeqMtPerS<N>) -> (result: N)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_sum_fn(), 0),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_sum_fn(), 0);"
+    "snippet": "    fn pq_entry_new(dist: OrderedF64, vertex: usize) -> PQEntry { PQEntry { dist, vertex } }"
   },
   {
     "id": 3,
-    "function": "product_parallel",
-    "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "73-79",
+    "function": "cmp",
+    "file": "Chap57/DijkstraStEphFloat.rs",
+    "lines": "77",
     "spec_strength": "hole",
-    "snippet": "        fn product_parallel(a: &ArraySeqMtPerS<N>) -> (result: N)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_product_fn(), 1),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_product_fn(), 1);"
+    "snippet": "        fn cmp(&self, other: &Self) -> (r: Ordering) {"
   },
   {
     "id": 4,
-    "function": "any_parallel",
-    "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "84-90",
-    "spec_strength": "unknown",
-    "snippet": "        fn any_parallel(a: &ArraySeqMtPerS<B>) -> (result: B)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_or_fn(), false),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_or_fn(), false);"
+    "function": "partial_cmp",
+    "file": "Chap57/DijkstraStEphFloat.rs",
+    "lines": "87",
+    "spec_strength": "hole",
+    "snippet": "        fn partial_cmp(&self, other: &Self) -> (r: Option<Ordering>) { Some(self.cmp(other)) }"
   },
   {
     "id": 5,
-    "function": "all_parallel",
-    "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "95-101",
-    "spec_strength": "unknown",
-    "snippet": "        fn all_parallel(a: &ArraySeqMtPerS<B>) -> (result: B)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_and_fn(), true),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true);"
+    "function": "dijkstra",
+    "file": "Chap57/DijkstraStEphInt.rs",
+    "lines": "62",
+    "spec_strength": "hole",
+    "snippet": "        fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphInt;"
   },
   {
     "id": 6,
-    "function": "max_element",
-    "file": "Chap26/DivConReduceStPer.rs",
-    "lines": "49-53",
-    "spec_strength": "unknown",
-    "snippet": "        fn max_element(a: &ArraySeqStPerS<N>) -> (result: Option<N>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                a.spec_len() == 0 ==> result is None,\n                a.spec_len() > 0 ==> {"
+    "function": "pq_entry_new",
+    "file": "Chap57/DijkstraStEphInt.rs",
+    "lines": "71",
+    "spec_strength": "hole",
+    "snippet": "    fn pq_entry_new(dist: i64, vertex: usize) -> PQEntry { PQEntry { dist, vertex } }"
   },
   {
     "id": 7,
-    "function": "sum",
-    "file": "Chap26/DivConReduceStPer.rs",
-    "lines": "64-70",
+    "function": "cmp",
+    "file": "Chap57/DijkstraStEphInt.rs",
+    "lines": "77",
     "spec_strength": "hole",
-    "snippet": "        fn sum(a: &ArraySeqStPerS<N>) -> (result: N)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_sum_fn(), 0),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_sum_fn(), 0);"
+    "snippet": "        fn cmp(&self, other: &Self) -> (r: Ordering) {"
   },
   {
     "id": 8,
-    "function": "product",
-    "file": "Chap26/DivConReduceStPer.rs",
-    "lines": "75-81",
+    "function": "partial_cmp",
+    "file": "Chap57/DijkstraStEphInt.rs",
+    "lines": "87",
     "spec_strength": "hole",
-    "snippet": "        fn product(a: &ArraySeqStPerS<N>) -> (result: N)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_product_fn(), 1),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_product_fn(), 1);"
+    "snippet": "        fn partial_cmp(&self, other: &Self) -> (r: Option<Ordering>) { Some(self.cmp(other)) }"
   },
   {
     "id": 9,
-    "function": "any",
-    "file": "Chap26/DivConReduceStPer.rs",
-    "lines": "86-92",
-    "spec_strength": "unknown",
-    "snippet": "        fn any(a: &ArraySeqStPerS<B>) -> (result: B)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_or_fn(), false),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_or_fn(), false);"
+    "function": "new",
+    "file": "Chap57/StackStEph.rs",
+    "lines": "56",
+    "spec_strength": "hole",
+    "snippet": "        fn new() -> Self;"
   },
   {
     "id": 10,
-    "function": "all",
-    "file": "Chap26/DivConReduceStPer.rs",
-    "lines": "97-103",
-    "spec_strength": "unknown",
-    "snippet": "        fn all(a: &ArraySeqStPerS<B>) -> (result: B)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_and_fn(), true),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true);"
+    "function": "push",
+    "file": "Chap57/StackStEph.rs",
+    "lines": "61",
+    "spec_strength": "hole",
+    "snippet": "        fn push(&mut self, item: T);"
   },
   {
     "id": 11,
-    "function": "etsp",
-    "file": "Chap26/ETSPStEph.rs",
-    "lines": "58-60",
+    "function": "pop",
+    "file": "Chap57/StackStEph.rs",
+    "lines": "66",
     "spec_strength": "hole",
-    "snippet": "        fn etsp(points: &Vec<Point>) -> (tour: Vec<Edge>)\n            requires points@.len() >= 2,\n            ensures tour@.len() == points@.len();"
+    "snippet": "        fn pop(&mut self) -> Option<T>;"
   },
   {
     "id": 12,
-    "function": "distance",
-    "file": "Chap26/ETSPStEph.rs",
-    "lines": "85-89",
-    "spec_strength": "",
-    "snippet": "        pub fn distance(&self, other: &Point) -> f64 {\n            let dx = self.x - other.x;\n            let dy = self.y - other.y;\n            (dx * dx + dy * dy).sqrt()\n        }"
+    "function": "is_empty",
+    "file": "Chap57/StackStEph.rs",
+    "lines": "71",
+    "spec_strength": "hole",
+    "snippet": "        fn is_empty(&self) -> B;"
   },
   {
     "id": 13,
-    "function": "etsp_inner",
-    "file": "Chap26/ETSPStEph.rs",
-    "lines": "92-186",
-    "spec_strength": "",
-    "snippet": "    /// Recursive eTSP implementation (outside verus! — uses f64 arithmetic).\n    fn etsp_inner(points: &Vec<Point>) -> Vec<Edge> {\n        let n = points.len();\n        if n == 2 {\n            // Base case: two points form a simple cycle\n            return vec![\n                Edge { from: points[0].clone(), to: points[1].clone() },\n                Edge { from: points[1].clone(), to: points[0].clone() },\n            ];\n        }\n        if n == 3 {\n            // Base case: three points — find the cheapest Hamiltonian cycle (3! / 2 = 3 orderings)\n            // Just use the greedy nearest neighbor from point 0\n            let (a, b, c) = (&points[0], &points[1], &points[2]);\n            return vec![\n                Edge { from: a.clone(), to: b.clone() },\n                Edge { from: b.clone(), to: c.clone() },\n                Edge { from: c.clone(), to: a.clone() },\n            ];\n        }\n\n        // Find the dimension with the largest spread\n        let (mut min_x, mut max_x, mut min_y, mut max_y) =\n            (points[0].x, points[0].x, points[0].y, points[0].y);\n        for i in 1..n {\n            if points[i].x < min_x { min_x = points[i].x; }\n            if points[i].x > max_x { max_x = points[i].x; }\n            if points[i].y < min_y { min_y = points[i].y; }\n            if points[i].y > max_y { max_y = points[i].y; }\n        }\n        let split_on_x = (max_x - min_x) >= (max_y - min_y);\n\n        // Sort points by the chosen dimension and split at median\n        let mut sorted_points = points.clone();\n        if split_on_x {\n            sorted_points.sort_by(|a, b| a.x.partial_cmp(&b.x).unwrap_or(std::cmp::Ordering::Equal));\n        } else {\n            sorted_points.sort_by(|a, b| a.y.partial_cmp(&b.y).unwrap_or(std::cmp::Ordering::Equal));\n        }\n\n        // Split at median, ensuring both halves have at least 2 points\n        let mid = (n / 2).max(2);\n        let left_points: Vec<Point> = sorted_points[..mid].to_vec();\n        let right_points: Vec<Point> = sorted_points[mid..].to_vec();\n\n        // Recur on each half\n        let left_tour = etsp_inner(&left_points);\n        let right_tour = etsp_inner(&right_points);\n\n        // Find best swap: try all pairs of edges (one from each tour)\n        let mut best_cost = f64::MAX;\n        let mut best_li = 0usize;\n        let mut best_ri = 0usize;\n\n        for li in 0..left_tour.len() {\n            for ri in 0..right_tour.len() {\n                let el = &left_tour[li];\n                let er = &right_tour[ri];\n                // swapCost = d(u_l, v_r) + d(u_r, v_l) - d(u_l, v_l) - d(u_r, v_r)\n                let cost = el.from.distance(&er.to) + er.from.distance(&el.to)\n                         - el.from.distance(&el.to) - er.from.distance(&er.to);\n                if cost < best_cost {\n                    best_cost = cost;\n                    best_li = li;\n                    best_ri = ri;\n                }\n            }\n        }\n\n        // Combine tours by swapping the best pair of edges\n        let el = &left_tour[best_li];\n        let er = &right_tour[best_ri];\n        let ln = left_tour.len();\n        let rn = right_tour.len();\n\n        let mut combined: Vec<Edge> = Vec::with_capacity(ln + rn);\n\n        // Left side: edges after best_li (wrapping), up to but not including best_li\n        for i in 1..ln {\n            combined.push(left_tour[(best_li + i) % ln].clone());\n        }\n\n        // Bridge from left to right: el.from -> er.to\n        combined.push(Edge { from: el.from.clone(), to: er.to.clone() });\n\n        // Right side: edges after best_ri (wrapping)\n        for i in 1..rn {\n            combined.push(right_tour[(best_ri + i) % rn].clone());\n        }\n\n        // Bridge from right to left: er.from -> el.to\n        combined.push(Edge { from: er.from.clone(), to: el.to.clone() });\n\n        combined\n    }"
+    "function": "peek",
+    "file": "Chap57/StackStEph.rs",
+    "lines": "101",
+    "spec_strength": "hole",
+    "snippet": "        pub fn peek(&self) -> Option<&T> { self.elements.last() }"
   },
   {
     "id": 14,
-    "function": "merge_parallel",
-    "file": "Chap26/MergeSortMtPer.rs",
-    "lines": "45-54",
+    "function": "size",
+    "file": "Chap57/StackStEph.rs",
+    "lines": "113",
     "spec_strength": "hole",
-    "snippet": "        fn merge_parallel(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (result: ArraySeqMtPerS<N>)\n            requires\n                spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),\n                spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),\n                left.spec_len() + right.spec_len() <= usize::MAX,\n            ensures\n                spec_merge_post(\n                    Seq::new(left.spec_len(), |i: int| left.spec_index(i)),\n                    Seq::new(right.spec_len(), |i: int| right.spec_index(i)),\n                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));"
+    "snippet": "        pub fn size(&self) -> N { self.elements.len() }"
   },
   {
     "id": 15,
-    "function": "merge_sort_parallel",
-    "file": "Chap26/MergeSortMtPer.rs",
-    "lines": "58-63",
+    "function": "default",
+    "file": "Chap57/StackStEph.rs",
+    "lines": "122",
     "spec_strength": "hole",
-    "snippet": "        fn merge_sort_parallel(a: &ArraySeqMtPerS<N>) -> (result: ArraySeqMtPerS<N>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_sort_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));"
-  },
-  {
-    "id": 16,
-    "function": "merge",
-    "file": "Chap26/MergeSortStPer.rs",
-    "lines": "69-78",
-    "spec_strength": "unknown",
-    "snippet": "        fn merge(left: &ArraySeqStPerS<N>, right: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<N>)\n            requires\n                spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),\n                spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),\n                left.spec_len() + right.spec_len() <= usize::MAX,\n            ensures\n                spec_merge_post(\n                    Seq::new(left.spec_len(), |i: int| left.spec_index(i)),\n                    Seq::new(right.spec_len(), |i: int| right.spec_index(i)),\n                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));"
-  },
-  {
-    "id": 17,
-    "function": "merge_sort",
-    "file": "Chap26/MergeSortStPer.rs",
-    "lines": "82-87",
-    "spec_strength": "unknown",
-    "snippet": "        fn merge_sort(a: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<N>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_sort_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));"
-  },
-  {
-    "id": 18,
-    "function": "lemma_push_sorted",
-    "file": "Chap26/MergeSortStPer.rs",
-    "lines": "93-98",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_push_sorted(s: Seq<N>, v: N)\n        requires\n            spec_sorted(s),\n            s.len() > 0 ==> s.last() <= v,\n        ensures\n            spec_sorted(s.push(v)),"
-  },
-  {
-    "id": 19,
-    "function": "prefix_sums_dc_parallel",
-    "file": "Chap26/ScanDCMtPer.rs",
-    "lines": "46-53",
-    "spec_strength": "hole",
-    "snippet": "        fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<N>) -> (result: (ArraySeqMtPerS<N>, N))\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_scan_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    |x: N, y: N| (x + y) as N, 0,\n                    Seq::new(result.0.spec_len(), |i: int| result.0.spec_index(i)),\n                    result.1);"
-  },
-  {
-    "id": 20,
-    "function": "prefix_sums_dc_inner",
-    "file": "Chap26/ScanDCMtPer.rs",
-    "lines": "67-106",
-    "spec_strength": "",
-    "snippet": "    /// Inner recursive function for parallel prefix sums DC.\n    /// Outside verus! because it uses thread::scope directly.\n    fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<N>) -> (ArraySeqMtPerS<N>, N) {\n        let n = a.length();\n        if n == 0 {\n            return (ArraySeqMtPerS::empty(), 0);\n        }\n        if n == 1 {\n            return (ArraySeqMtPerS::singleton(0), *a.nth(0));\n        }\n        let mid = n / 2;\n        let left = a.subseq_copy(0, mid);\n        let right = a.subseq_copy(mid, n - mid);\n\n        let left_arc = Arc::new(left);\n        let right_arc = Arc::new(right);\n\n        let ((l_prefixes, l_total), (r_prefixes, r_total)) = thread::scope(|s| {\n            let la = left_arc.clone();\n            let handle = s.spawn(move || prefix_sums_dc_inner(&*la));\n\n            let ra = right_arc.clone();\n            let right_result = prefix_sums_dc_inner(&*ra);\n\n            let left_result = handle.join().unwrap();\n            (left_result, right_result)\n        });\n\n        // Combine: r'[i] = l_total + r[i]\n        let captured_l_total = l_total;\n        let r_adjusted = ArraySeqMtPerS::tabulate(\n            &|i: usize| -> N { captured_l_total + *r_prefixes.nth(i) },\n            r_prefixes.length(),\n        );\n\n        let result_prefixes = ArraySeqMtPerS::append(&l_prefixes, &r_adjusted);\n        let total = l_total + r_total;\n\n        (result_prefixes, total)\n    }"
-  },
-  {
-    "id": 21,
-    "function": "scan_dc",
-    "file": "Chap26/ScanDCStPer.rs",
-    "lines": "61-72",
-    "spec_strength": "unknown",
-    "snippet": "        fn scan_dc<F: Fn(&N, &N) -> N>(a: &ArraySeqStPerS<N>, f: &F, Ghost(spec_f): Ghost<spec_fn(N, N) -> N>, id: N) -> (result: (ArraySeqStPerS<N>, N))\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_f, id),\n                forall|x: &N, y: &N| #[trigger] f.requires((x, y)),\n                forall|x: N, y: N, ret: N| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                spec_scan_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    spec_f, id,\n                    Seq::new(result.0.spec_len(), |i: int| result.0.spec_index(i)),\n                    result.1);"
-  },
-  {
-    "id": 22,
-    "function": "prefix_sums_dc",
-    "file": "Chap26/ScanDCStPer.rs",
-    "lines": "76-83",
-    "spec_strength": "hole",
-    "snippet": "        fn prefix_sums_dc(a: &ArraySeqStPerS<N>) -> (result: (ArraySeqStPerS<N>, N))\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_scan_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    |x: N, y: N| (x + y) as N, 0,\n                    Seq::new(result.0.spec_len(), |i: int| result.0.spec_index(i)),\n                    result.1);"
-  },
-  {
-    "id": 23,
-    "function": "lemma_fold_left_monoid",
-    "file": "Chap26/ScanDCStPer.rs",
-    "lines": "90-93",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_monoid(s: Seq<N>, x: N, f: spec_fn(N, N) -> N, id: N)\n        requires spec_monoid(f, id),\n        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),\n        decreases s.len(),"
+    "snippet": "        fn default() -> Self { Self::new() }"
   }
 ]

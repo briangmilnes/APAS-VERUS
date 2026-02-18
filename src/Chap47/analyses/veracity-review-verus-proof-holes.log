@@ -1,31 +1,54 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap47/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap47
 
 ✓ ChainedHashTable.rs
 ❌ DoubleHashFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:35: unsafe {} - unsafe {
-        22 |         pub fn second_hash<Key: StT>(key: &Key, table_size: N) -> N {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/DoubleHashFlatHashTableStEph.rs:39: external_body - #[verifier::external_body]
+        40 |         pub fn second_hash<Key: StT>(key: &Key, table_size: N) -> N {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/DoubleHashFlatHashTableStEph.rs:49: unsafe {} - unsafe {
+        40 |         pub fn second_hash<Key: StT>(key: &Key, table_size: N) -> N {
             ...
-        33 |             let mut hash: u64 = 0xcbf29ce484222325; // FNV offset basis
-        34 | 
-        36 |                 for i in 0..key_size {
-        37 |                     let byte = *key_ptr.add(i);
-   Holes: 1 total
+        47 |             let mut hash: u64 = 0xcbf29ce484222325; // FNV offset basis
+        48 | 
+        50 |                 for i in 0..key_size {
+        51 |                     let byte = *key_ptr.add(i);
+   Holes: 2 total
       1 × unsafe {}
-✓ FlatHashTable.rs
+      1 × external_body
+❌ FlatHashTable.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/FlatHashTable.rs:41: external_body - #[verifier::external_body]
+        42 |         fn new() -> Self { FlatEntry::Empty }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/FlatHashTable.rs:46: external_body - #[verifier::external_body]
+        47 |         fn insert(&mut self, key: Key, value: Value) { *self = FlatEntry::Occupied(key, value); }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/FlatHashTable.rs:51: external_body - #[verifier::external_body]
+        52 |         fn lookup(&self, key: &Key) -> Option<Value> {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/FlatHashTable.rs:61: external_body - #[verifier::external_body]
+        62 |         fn delete(&mut self, key: &Key) -> B {
+   Holes: 4 total
+      4 × external_body
 ✓ LinProbFlatHashTableStEph.rs
 ✓ LinkedListChainedHashTableStEph.rs
 ✓ ParaHashTableStEph.rs
 ✓ QuadProbFlatHashTableStEph.rs
 ✓ StructChainedHashTable.rs
-✓ VecChainedHashTableStEph.rs
+❌ VecChainedHashTableStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/VecChainedHashTableStEph.rs:28: external_body - #[verifier::external_body]
+        29 |         fn new() -> Self { Vec::new() }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/VecChainedHashTableStEph.rs:33: external_body - #[verifier::external_body]
+        34 |         fn insert(&mut self, key: Key, value: Value) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/VecChainedHashTableStEph.rs:46: external_body - #[verifier::external_body]
+        47 |         fn lookup(&self, key: &Key) -> Option<Value> {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/VecChainedHashTableStEph.rs:58: external_body - #[verifier::external_body]
+        59 |         fn delete(&mut self, key: &Key) -> B {
+   Holes: 4 total
+      4 × external_body
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   8 clean (no holes)
-   1 holed (contains holes)
+   6 clean (no holes)
+   3 holed (contains holes)
    9 total
 
 Proof Functions:
@@ -33,5 +56,6 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 1 total
+Holes Found: 10 total
    1 × unsafe {}
+   9 × external_body
