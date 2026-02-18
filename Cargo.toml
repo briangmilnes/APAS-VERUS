@@ -203,12 +203,12 @@ name = "TestScanDCMtPer"
 path = "tests/Chap26/TestScanDCMtPer.rs"
 
 [[test]]
-name = "TestETSPStPer"
-path = "tests/Chap26/TestETSPStPer.rs"
+name = "TestETSPStEph"
+path = "tests/Chap26/TestETSPStEph.rs"
 
 [[test]]
-name = "TestETSPMtPer"
-path = "tests/Chap26/TestETSPMtPer.rs"
+name = "TestETSPMtEph"
+path = "tests/Chap26/TestETSPMtEph.rs"
 
 [[test]]
 name = "TestReduceContractStEph"

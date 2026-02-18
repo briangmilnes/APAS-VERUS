@@ -24,7 +24,7 @@
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
 | 1 | Chap26 | DivConReduceMtPer | 5 | 5 | 0 | 0 | 5 | 0 | 3 | 2 | 0 |
 | 2 | Chap26 | DivConReduceStPer | 5 | 5 | 0 | 0 | 5 | 0 | 3 | 2 | 0 |
-| 3 | Chap26 | ETSPStPer | 1 | 1 | 1 | 1 | 1 | 2 | 0 | 1 | 2 |
+| 3 | Chap26 | ETSPStEph | 1 | 1 | 1 | 1 | 1 | 2 | 0 | 1 | 2 |
 | 4 | Chap26 | MergeSortMtPer | 2 | 2 | 0 | 0 | 2 | 0 | 0 | 2 | 0 |
 | 5 | Chap26 | MergeSortStPer | 2 | 2 | 0 | 1 | 3 | 0 | 3 | 0 | 0 |
 | 6 | Chap26 | ScanDCMtPer | 1 | 1 | 0 | 1 | 1 | 1 | 0 | 1 | 1 |
@@ -52,7 +52,7 @@
 | 9 | `any` | Y | Y |  |  | Y |  |  | strong | 86&#8209;92 |
 | 10 | `all` | Y | Y |  |  | Y |  |  | strong | 97&#8209;103 |
 
-### Chap26/ETSPStPer.rs
+### Chap26/ETSPStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|

@@ -1,0 +1,52 @@
+---
+description: Threading is not an excuse for external_body. Parallel algorithms should verify structurally.
+alwaysApply: true
+---
+
+# Threading Is Not an Excuse for external_body
+
+Do NOT slap `#[verifier::external_body]` on a function just because it uses threads.
+
+## The Pattern
+
+A parallel algorithm has two parts:
+
+1. **Structural logic** — splitting, combining, maintaining invariants. This is verifiable.
+2. **Thread spawning** — the actual `spawn`, `join`, `Arc`, `ParaPair!` calls. This is not verifiable in Verus.
+
+Wrap only the thread-spawning boundary in `external_body`, not the whole algorithm. The structural logic (preconditions, postconditions, loop invariants, combination proofs) should be verified.
+
+## The Only Acceptable Hole
+
+The only proof hole a threaded algorithm should have at the spawn boundary is:
+
+```rust
+#[verifier::external_body]
+fn parallel_wrapper(args: ...) -> (result: ...)
+    requires ...
+    ensures ...
+{
+    // exec code that spawns threads and calls verified inner functions
+}
+```
+
+The only acceptable proof hole for threading is at the thread-divergence boundary — where a spawned thread might not return. Use:
+
+```rust
+{ assume(false); diverge(); }
+```
+
+The `assume(false)` introduces the contradiction; `diverge()` satisfies Verus's return-type obligation so the function body type-checks. This is strictly for modeling thread divergence (a thread that never joins), not a general-purpose escape hatch.
+
+## Do NOT
+
+- Do NOT mark an entire recursive algorithm `external_body` because one level uses `ParaPair!`.
+- Do NOT use `external_body` to avoid writing loop invariants or combination proofs.
+- Do NOT treat "parallel" as synonymous with "unverifiable."
+
+## Do
+
+- Use `HFSchedulerMtEph` (help-first scheduler, Chap02) as the default threading primitive. Its `join` function handles fork-join parallelism directly inside `verus!` with named closures (see `fork-join-inside-verus` rule). Reach for `ParaPair!` or raw `thread::spawn` only when the scheduler doesn't fit.
+- Extract f64 arithmetic into small `external_body` helpers with tight `ensures`.
+- Keep the structural proof (splitting, combining, invariants) inside `verus!`.
+- Audit every `external_body` — ask: "Is this truly unverifiable, or am I being lazy?"

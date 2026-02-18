@@ -1,0 +1,57 @@
+---
+description: Fork-join parallelism uses join() directly inside verus! with named closures. No external_body wrappers.
+alwaysApply: true
+---
+
+# Fork-Join Inside verus!
+
+In Mt files, **all fork-join parallelism lives inside `verus!`** using `join()` directly with named closures. Never create `external_body` wrappers around `join()` or `ParaPair!`.
+
+## The Pattern
+
+1. Build owned data for each branch (clone, split, subseq_copy).
+2. Capture ghost views **before** the `move`.
+3. Define named closures with explicit `ensures` referencing the ghost views.
+4. Pass them to `join()`.
+
+```rust
+let (left, right) = split(input);
+
+let ghost left_view = left@;
+let ghost right_view = right@;
+
+let f1 = move || -> (r: ResultType)
+    ensures post(r, left_view)
+{ recurse(&left) };
+
+let f2 = move || -> (r: ResultType)
+    ensures post(r, right_view)
+{ recurse(&right) };
+
+let (a, b) = join(f1, f2);
+```
+
+## Why This Works
+
+- `join()` is already `external_body` with verified spec propagation — it requires `fa.requires(())` and ensures `fa.ensures((), result.0)`.
+- Named closures with explicit `ensures` propagate specs through `join()`.
+- Ghost variables are spec-level (always Copy) — they survive `move` captures.
+- The closure body is verified at definition time with the full ambient context.
+- Add `decreases` on the recursive function for termination through closures.
+
+## Do NOT
+
+- **Do NOT create `external_body` wrappers** around `join()` — it IS the verified fork-join primitive. Wrapping it adds a trust boundary for no reason.
+- **Do NOT put fork-join code outside `verus!`** — code outside has no specs.
+- **Do NOT use `Arc`** to share data between closures. Move owned copies directly.
+- **Do NOT use inline closures** (`move || foo()`) — their ensures don't propagate. Always bind to a named variable with explicit `ensures`.
+
+## Closure Patterns
+
+| # | Pattern | Propagates? |
+|---|---------|-------------|
+| 1 | `let f = move \|\| -> (r: T) ensures P { body };` | Yes |
+| 2 | `ParaPair!(f1, f2)` with named closures | Yes |
+| 3 | `ParaPair!(foo, bar)` with direct fn refs | Yes |
+| 4 | `ParaPair!(move \|\| foo(), move \|\| bar())` | **No** |
+| 5 | Inline closure with ensures inside macro | **No** (parse error) |

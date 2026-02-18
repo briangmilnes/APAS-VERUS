@@ -82,7 +82,7 @@
   {
     "id": 11,
     "function": "etsp",
-    "file": "Chap26/ETSPStPer.rs",
+    "file": "Chap26/ETSPStEph.rs",
     "lines": "58-60",
     "spec_strength": "hole",
     "snippet": "        fn etsp(points: &Vec<Point>) -> (tour: Vec<Edge>)\n            requires points@.len() >= 2,\n            ensures tour@.len() == points@.len();"
@@ -90,7 +90,7 @@
   {
     "id": 12,
     "function": "distance",
-    "file": "Chap26/ETSPStPer.rs",
+    "file": "Chap26/ETSPStEph.rs",
     "lines": "85-89",
     "spec_strength": "",
     "snippet": "        pub fn distance(&self, other: &Point) -> f64 {\n            let dx = self.x - other.x;\n            let dy = self.y - other.y;\n            (dx * dx + dy * dy).sqrt()\n        }"
@@ -98,7 +98,7 @@
   {
     "id": 13,
     "function": "etsp_inner",
-    "file": "Chap26/ETSPStPer.rs",
+    "file": "Chap26/ETSPStEph.rs",
     "lines": "92-186",
     "spec_strength": "",
     "snippet": "    /// Recursive eTSP implementation (outside verus! — uses f64 arithmetic).\n    fn etsp_inner(points: &Vec<Point>) -> Vec<Edge> {\n        let n = points.len();\n        if n == 2 {\n            // Base case: two points form a simple cycle\n            return vec![\n                Edge { from: points[0].clone(), to: points[1].clone() },\n                Edge { from: points[1].clone(), to: points[0].clone() },\n            ];\n        }\n        if n == 3 {\n            // Base case: three points — find the cheapest Hamiltonian cycle (3! / 2 = 3 orderings)\n            // Just use the greedy nearest neighbor from point 0\n            let (a, b, c) = (&points[0], &points[1], &points[2]);\n            return vec![\n                Edge { from: a.clone(), to: b.clone() },\n                Edge { from: b.clone(), to: c.clone() },\n                Edge { from: c.clone(), to: a.clone() },\n            ];\n        }\n\n        // Find the dimension with the largest spread\n        let (mut min_x, mut max_x, mut min_y, mut max_y) =\n            (points[0].x, points[0].x, points[0].y, points[0].y);\n        for i in 1..n {\n            if points[i].x < min_x { min_x = points[i].x; }\n            if points[i].x > max_x { max_x = points[i].x; }\n            if points[i].y < min_y { min_y = points[i].y; }\n            if points[i].y > max_y { max_y = points[i].y; }\n        }\n        let split_on_x = (max_x - min_x) >= (max_y - min_y);\n\n        // Sort points by the chosen dimension and split at median\n        let mut sorted_points = points.clone();\n        if split_on_x {\n            sorted_points.sort_by(|a, b| a.x.partial_cmp(&b.x).unwrap_or(std::cmp::Ordering::Equal));\n        } else {\n            sorted_points.sort_by(|a, b| a.y.partial_cmp(&b.y).unwrap_or(std::cmp::Ordering::Equal));\n        }\n\n        // Split at median, ensuring both halves have at least 2 points\n        let mid = (n / 2).max(2);\n        let left_points: Vec<Point> = sorted_points[..mid].to_vec();\n        let right_points: Vec<Point> = sorted_points[mid..].to_vec();\n\n        // Recur on each half\n        let left_tour = etsp_inner(&left_points);\n        let right_tour = etsp_inner(&right_points);\n\n        // Find best swap: try all pairs of edges (one from each tour)\n        let mut best_cost = f64::MAX;\n        let mut best_li = 0usize;\n        let mut best_ri = 0usize;\n\n        for li in 0..left_tour.len() {\n            for ri in 0..right_tour.len() {\n                let el = &left_tour[li];\n                let er = &right_tour[ri];\n                // swapCost = d(u_l, v_r) + d(u_r, v_l) - d(u_l, v_l) - d(u_r, v_r)\n                let cost = el.from.distance(&er.to) + er.from.distance(&el.to)\n                         - el.from.distance(&el.to) - er.from.distance(&er.to);\n                if cost < best_cost {\n                    best_cost = cost;\n                    best_li = li;\n                    best_ri = ri;\n                }\n            }\n        }\n\n        // Combine tours by swapping the best pair of edges\n        let el = &left_tour[best_li];\n        let er = &right_tour[best_ri];\n        let ln = left_tour.len();\n        let rn = right_tour.len();\n\n        let mut combined: Vec<Edge> = Vec::with_capacity(ln + rn);\n\n        // Left side: edges after best_li (wrapping), up to but not including best_li\n        for i in 1..ln {\n            combined.push(left_tour[(best_li + i) % ln].clone());\n        }\n\n        // Bridge from left to right: el.from -> er.to\n        combined.push(Edge { from: el.from.clone(), to: er.to.clone() });\n\n        // Right side: edges after best_ri (wrapping)\n        for i in 1..rn {\n            combined.push(right_tour[(best_ri + i) % rn].clone());\n        }\n\n        // Bridge from right to left: er.from -> el.to\n        combined.push(Edge { from: er.from.clone(), to: el.to.clone() });\n\n        combined\n    }"
