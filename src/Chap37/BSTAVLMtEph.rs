@@ -27,7 +27,12 @@ pub mod BSTAVLMtEph {
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
-    // RwLock type and constructor specs are in BSTPlainMtEph.
+    #[verifier::external_type_specification]
+    #[verifier::external_body]
+    #[verifier::reject_recursive_types(T)]
+    pub struct ExRwLock<T: ?Sized>(RwLock<T>);
+
+    pub assume_specification<T>[ RwLock::<T>::new ](t: T) -> (v: RwLock<T>);
 
     // 7. proof fns
 
