@@ -230,12 +230,9 @@ fn test_string_concatenation_multithreaded() {
     table.insert(3, "World".to_string(), |_old, new| new.clone());
     assert_eq!(table.reduce_val(), "Hello World");
 
-    // Test thread-safe modification
+    // Replace key 2's value; reduction recalculated from scratch.
     table.insert(2, "Beautiful ".to_string(), |_old, new| new.clone());
-    // Note: The current implementation has a bug where it appends instead of replacing
-    // the cached reduction. This should be "HelloBeautiful World" but is "Hello WorldBeautiful "
-    // TODO: Fix AugOrderedTable reduction logic for key replacements
-    assert_eq!(table.reduce_val(), "Hello WorldBeautiful ");
+    assert_eq!(table.reduce_val(), "HelloBeautiful World");
 }
 
 #[test]

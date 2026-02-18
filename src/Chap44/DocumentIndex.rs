@@ -70,70 +70,42 @@ pub mod DocumentIndex {
 
     impl DocumentIndexTrait for DocumentIndex {
         /// Algorithm 44.2: Make Index
+        /// - Sort-based grouping: O(n log n) instead of O(n²) quadratic rescan.
         fn make_index(docs: &DocumentCollection) -> Self {
-            // Step 1: Create word-document pairs using tagWords
-            let mut all_pairs = ArraySeqStPerS::empty();
+            // Step 1: Create word-document pairs using tagWords (flatten)
+            let mut pairs_vec: Vec<(Word, DocumentId)> = Vec::new();
 
             for i in 0..docs.length() {
                 let doc = docs.nth(i);
-                let doc_id = &doc.0;
+                let doc_id = doc.0.clone();
                 let content = &doc.1;
                 let word_tokens = tokens(content);
 
-                // Tag each word with the document ID
                 for j in 0..word_tokens.length() {
-                    let word = word_tokens.nth(j);
-                    let pair = Pair(word.clone(), doc_id.clone());
-                    let single_seq = ArraySeqStPerS::singleton(pair);
-                    all_pairs = ArraySeqStPerS::append(&all_pairs, &single_seq);
+                    let word = word_tokens.nth(j).clone();
+                    pairs_vec.push((word, doc_id.clone()));
                 }
             }
 
-            // Step 2: Build table by inserting word-document pairs
-            let mut word_table = TableStPer::empty();
+            // Step 2: Sort by (word, doc_id) for O(n log n) grouping
+            pairs_vec.sort_unstable_by(|a, b| a.0.cmp(&b.0).then_with(|| a.1.cmp(&b.1)));
 
-            for i in 0..all_pairs.length() {
-                let pair = all_pairs.nth(i);
-                let word = &pair.0;
-                let doc_id = &pair.1;
-
-                // Insert or update the word entry
-                word_table = word_table.insert(word.clone(), doc_id.clone(), |_old_doc, new_doc| {
-                    // This shouldn't happen since we're building from scratch, but just in case
-                    new_doc.clone()
-                });
-            }
-
-            // Step 3: Convert the table to have sets as values instead of single documents
+            // Step 3: Group consecutive equal keys in one pass (Table.collect)
             let mut final_table = TableStPer::empty();
-            let word_entries = word_table.collect();
+            let mut i = 0;
 
-            for i in 0..word_entries.length() {
-                let entry = word_entries.nth(i);
-                let word = &entry.0;
-                let _doc_id = &entry.1; // Single document ID
+            while i < pairs_vec.len() {
+                let word = pairs_vec[i].0.clone();
+                let mut doc_ids = Vec::new();
 
-                // Get all documents for this word by collecting from all_pairs
-                let mut doc_ids = ArraySeqStPerS::empty();
-                for j in 0..all_pairs.length() {
-                    let pair = all_pairs.nth(j);
-                    if &pair.0 == word {
-                        let single_seq = ArraySeqStPerS::singleton(pair.1.clone());
-                        doc_ids = ArraySeqStPerS::append(&doc_ids, &single_seq);
-                    }
+                while i < pairs_vec.len() && pairs_vec[i].0 == word {
+                    doc_ids.push(pairs_vec[i].1.clone());
+                    i += 1;
                 }
 
-                // Convert ArraySeqStPerS to AVLTreeSeqStPerS
-                let mut doc_vec = Vec::new();
-                for k in 0..doc_ids.length() {
-                    let doc_id = doc_ids.nth(k);
-                    doc_vec.push(doc_id.clone());
-                }
-                let avl_seq = AVLTreeSeqStPerS::from_vec(doc_vec);
-
-                // Convert sequence to set to eliminate duplicates
+                let avl_seq = AVLTreeSeqStPerS::from_vec(doc_ids);
                 let doc_set = AVLTreeSetStPer::from_seq(avl_seq);
-                final_table = final_table.insert(word.clone(), doc_set, |_old, new| new.clone());
+                final_table = final_table.insert(word, doc_set, |_old, new| new.clone());
             }
 
             DocumentIndex {

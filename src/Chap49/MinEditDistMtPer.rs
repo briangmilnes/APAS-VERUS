@@ -1,5 +1,9 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 49: Minimum Edit Distance - persistent, multi-threaded.
+//!
+//! This module is outside verus! because it uses std::collections::HashMap for
+//! memoization (via Arc<Mutex<HashMap>>), which Verus does not support. Full
+//! verification would require replacing HashMap with a verified equivalent.
 
 pub mod MinEditDistMtPer {
 
@@ -14,10 +18,8 @@ pub mod MinEditDistMtPer {
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
 
-    verus! {
-    } // verus!
-
     // 4. type definitions
+    // Struct contains Arc<Mutex<HashMap>> for memoization — cannot be inside verus!.
 
     #[derive(Clone)]
     pub struct MinEditDistMtPerS<T: MtVal> {

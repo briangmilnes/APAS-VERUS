@@ -91,46 +91,35 @@ pub mod BalancedTreePQ {
         }
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — converts to Vec, linear scan, rebuilds from Vec.
+        /// - Tree has no value-based insert; use sorted-sequence approach: binary search for
+        ///   position, insert into vec, rebuild. O(n) for flatten+rebuild.
         fn insert(&self, element: T) -> Self {
-            // Convert to vector, insert in sorted position, rebuild tree
             let mut values = self.elements.values_in_order();
-
-            // Find insertion position
-            let mut insert_pos = values.len();
-            for (i, current) in values.iter().enumerate() {
-                if element <= *current {
-                    insert_pos = i;
-                    break;
-                }
-            }
-
-            // Insert element at correct position
+            let insert_pos = match values.binary_search(&element) {
+                Ok(pos) => pos,
+                Err(pos) => pos,
+            };
             values.insert(insert_pos, element);
-
             BalancedTreePQ {
                 elements: AVLTreeSeqStPerS::from_vec(values),
             }
         }
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — converts to Vec, removes index 0, rebuilds from Vec.
+        /// - Uses tree's subseq_copy to get elements [1..n] without Vec round-trip.
         fn delete_min(&self) -> (Self, Option<T>) {
             if self.elements.length() == 0 {
                 return (self.clone(), None);
             }
-
             let min_element = self.elements.nth(0).clone();
-
-            // Convert to vector, remove first element, rebuild tree
-            let mut values = self.elements.values_in_order();
-            values.remove(0);
-
-            let new_pq = BalancedTreePQ {
-                elements: AVLTreeSeqStPerS::from_vec(values),
-            };
-
-            (new_pq, Some(min_element))
+            let n = self.elements.length();
+            let remaining = self.elements.subseq_copy(1, n - 1);
+            (
+                BalancedTreePQ {
+                    elements: remaining,
+                },
+                Some(min_element),
+            )
         }
 
         /// - APAS: Work Θ(m log(1 + n/m)), Span Θ(log n + log m)
@@ -171,14 +160,13 @@ pub mod BalancedTreePQ {
         }
 
         /// - APAS: Work Θ(n log n), Span Θ(log² n)
-        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — repeated O(n) insert (Vec conversion each time).
+        /// - Sorted-sequence approach: collect values, sort, build tree in one pass.
         fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
-            let mut result = Self::empty();
-            for i in 0..seq.length() {
-                let element = seq.nth(i);
-                result = result.insert(element.clone());
+            let mut values: Vec<T> = (0..seq.length()).map(|i| seq.nth(i).clone()).collect();
+            values.sort();
+            BalancedTreePQ {
+                elements: AVLTreeSeqStPerS::from_vec(values),
             }
-            result
         }
 
         /// - APAS: N/A — utility function not in prose.
@@ -247,21 +235,18 @@ pub mod BalancedTreePQ {
 
         fn remove(&self, element: &T) -> (Self, bool) {
             let mut values = self.elements.values_in_order();
-
-            for (i, current) in values.iter().enumerate() {
-                if current == element {
-                    values.remove(i);
-                    let new_pq = BalancedTreePQ {
-                        elements: AVLTreeSeqStPerS::from_vec(values),
-                    };
-                    return (new_pq, true);
+            match values.binary_search(element) {
+                Ok(pos) => {
+                    values.remove(pos);
+                    (
+                        BalancedTreePQ {
+                            elements: AVLTreeSeqStPerS::from_vec(values),
+                        },
+                        true,
+                    )
                 }
-                if current > element {
-                    // Element not found (would be here if it existed)
-                    break;
-                }
+                Err(_) => (self.clone(), false),
             }
-            (self.clone(), false)
         }
 
         fn range(&self, min_val: &T, max_val: &T) -> AVLTreeSeqStPerS<T> {
@@ -281,11 +266,11 @@ pub mod BalancedTreePQ {
         }
 
         fn from_vec(elements: Vec<T>) -> Self {
-            let mut pq = Self::empty();
-            for element in elements {
-                pq = pq.insert(element);
+            let mut values = elements;
+            values.sort();
+            BalancedTreePQ {
+                elements: AVLTreeSeqStPerS::from_vec(values),
             }
-            pq
         }
 
         fn to_vec(&self) -> Vec<T> {

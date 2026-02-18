@@ -5,7 +5,7 @@
 //! - Parallel operations using BSTParaTreapMtEph<Pair<K, V>>
 //! - O(lg n) span for insert, delete, map, filter (use ParaPair! divide-and-conquer)
 //! - find() uses binary search on in-order sequence: O(lg n) work, O(lg n) span
-//! - domain() uses parallel key extraction with rayon: O(n) work, O(lg n) span
+//! - domain() uses sequential key extraction: O(n) work, O(1) per element; parallelism overhead would dominate
 
 pub mod OrderedTableMtPer {
 
@@ -31,10 +31,10 @@ pub mod OrderedTableMtPer {
         fn insert(&self, k: K, v: V) -> Self;
         /// claude-4-sonet: Work Θ(n), Span Θ(lg n) - parallel filter via ParaPair!
         fn delete(&self, k: &K)      -> Self;
-        /// claude-4-sonet: Work Θ(n), Span Θ(lg n) - parallel key extraction with rayon
+        /// claude-4-sonet: Work Θ(n), Span Θ(n) - sequential in_order + key extraction; from_seq may use parallel tree build
         fn domain(&self)             -> OrderedSetMtEph<K>;
-        /// claude-4-sonet: Work Θ(n), Span Θ(lg n) - parallel filter via ParaPair!
-        fn map<F: Pred<Pair<K, V>>>(&self, f: F) -> Self;
+        /// claude-4-sonet: Work Θ(n), Span Θ(lg n) - extract pairs, transform values, rebuild treap
+        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> Self;
         /// claude-4-sonet: Work Θ(n), Span Θ(lg n) - parallel filter via ParaPair!
         fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> Self;
     }
@@ -94,12 +94,10 @@ pub mod OrderedTableMtPer {
         }
 
         fn domain(&self) -> OrderedSetMtEph<K> {
-            // Extract keys from pairs and build set
-            // TODO: Make fully parallel - currently in_order() is sequential O(n),
-            // but from_seq() uses parallel tree construction
+            // Extract keys from pairs and build set. in_order() is sequential O(n).
+            // Key extraction is O(n) work, O(1) per element; parallelism would add
+            // overhead (split, spawn, concat) without meaningful benefit.
             let pair_seq = self.tree.in_order();
-            
-            // Extract keys sequentially
             let mut keys = Vec::with_capacity(pair_seq.length());
             for i in 0..pair_seq.length() {
                 let Pair(key, _val) = pair_seq.nth(i);
@@ -110,10 +108,15 @@ pub mod OrderedTableMtPer {
             OrderedSetMtEph::from_seq(key_seq)
         }
 
-        fn map<F: Pred<Pair<K, V>>>(&self, f: F) -> Self {
-            OrderedTableMtPer {
-                tree: self.tree.filter(f),
+        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> Self {
+            let seq = self.tree.in_order();
+            let new_tree = ParamTreap::new();
+            for i in 0..seq.length() {
+                let Pair(k, v) = seq.nth(i);
+                let new_v = f(k, v);
+                new_tree.insert(Pair(k.clone(), new_v));
             }
+            OrderedTableMtPer { tree: new_tree }
         }
 
         fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> Self {

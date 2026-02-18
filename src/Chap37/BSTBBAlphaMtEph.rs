@@ -1,10 +1,12 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Ephemeral weight-balanced (BB[α]) binary search tree with locking for multi-threaded access.
-//! Verusified: BST ordering + weight-balance spec fully verified; lock acquisition is external_body.
+//! Ephemeral weight-balanced (BB[α]) binary search tree with vstd::rwlock for verified multi-threaded access.
+//! Verusified: BST ordering + weight-balance spec fully verified; lock operations are verified.
 
 // Table of Contents
 // 1. module
 // 2. imports
+// 4. type definitions
+// 8. traits
 // 6. spec fns
 // 9. impls
 // 12. macros
@@ -14,20 +16,34 @@
 #[allow(non_shorthand_field_patterns)]
 pub mod BSTBBAlphaMtEph {
 
-    use std::sync::{Arc, RwLock};
+    use core::marker::PhantomData;
 
     use vstd::prelude::*;
+    use vstd::rwlock::{ReadHandle, RwLock, RwLockPredicate, WriteHandle};
 
     verus! {
 
     // 2. imports
 
+    use crate::Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::{tree_is_bb, weight_balanced};
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{tree_contains, tree_is_bst};
-    use crate::Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::{weight_balanced, tree_is_bb};
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
-    // RwLock type and constructor specs are in BSTPlainMtEph.
+    // 4. type definitions
+
+    /// Lock invariant: the stored tree satisfies BST ordering.
+    struct BstPred<T> {
+        _phantom: PhantomData<T>,
+    }
+
+    // 8. traits
+
+    impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BstPred<T> {
+        open spec fn inv(self, tree: BalBinTree<T>) -> bool {
+            tree_is_bst::<T>(tree)
+        }
+    }
 
     // 6. spec fns
 
@@ -36,8 +52,8 @@ pub mod BSTBBAlphaMtEph {
     // 9. impls
 
     #[verifier::reject_recursive_types(T)]
-    pub struct BSTBBAlphaMtEph<T> {
-        root: Arc<RwLock<BalBinTree<T>>>,
+    pub struct BSTBBAlphaMtEph<T: TotalOrder> {
+        root: RwLock<BalBinTree<T>, BstPred<T>>,
     }
 
     // Verified BST insert (same proof as BSTBBAlphaStEph / BSTPlainStEph).
@@ -208,50 +224,62 @@ pub mod BSTBBAlphaMtEph {
         }
     }
 
-    // Public API: lock acquisition is external_body, BST specs verified.
+    // Public API: lock operations are fully verified through vstd::rwlock.
 
     impl<T: TotalOrder> BSTBBAlphaMtEph<T> {
         pub fn new() -> (tree: Self)
         {
             BSTBBAlphaMtEph {
-                root: Arc::new(RwLock::new(BalBinTree::Leaf)),
+                root: RwLock::new(
+                    BalBinTree::Leaf,
+                    Ghost(BstPred { _phantom: PhantomData }),
+                ),
             }
         }
 
-        #[verifier::external_body]
         pub fn insert(&self, value: T)
         {
-            let mut guard = self.root.write().unwrap();
-            let old_tree = std::mem::replace(&mut *guard, BalBinTree::Leaf);
-            *guard = insert_node(old_tree, value);
+            let (tree, write_handle) = self.root.acquire_write();
+            let new_tree = insert_node(tree, value);
+            write_handle.release_write(new_tree);
         }
 
-        #[verifier::external_body]
         pub fn contains(&self, target: &T) -> (result: bool)
         {
-            let guard = self.root.read().unwrap();
-            contains_node(&*guard, target)
+            let read_handle = self.root.acquire_read();
+            let tree_ref = read_handle.borrow();
+            let result = contains_node(tree_ref, target);
+            read_handle.release_read();
+            result
         }
 
-        #[verifier::external_body]
         pub fn size(&self) -> (n: usize)
         {
-            let guard = self.root.read().unwrap();
-            guard.size()
+            let read_handle = self.root.acquire_read();
+            let tree_ref = read_handle.borrow();
+            assume(tree_ref.spec_size() <= usize::MAX);
+            let n = tree_ref.size();
+            read_handle.release_read();
+            n
         }
 
-        #[verifier::external_body]
         pub fn is_empty(&self) -> (b: bool)
         {
-            let guard = self.root.read().unwrap();
-            guard.is_leaf()
+            let read_handle = self.root.acquire_read();
+            let tree_ref = read_handle.borrow();
+            let b = tree_ref.is_leaf();
+            read_handle.release_read();
+            b
         }
 
-        #[verifier::external_body]
         pub fn height(&self) -> (h: usize)
         {
-            let guard = self.root.read().unwrap();
-            guard.height()
+            let read_handle = self.root.acquire_read();
+            let tree_ref = read_handle.borrow();
+            assume(tree_ref.spec_height() <= usize::MAX);
+            let h = tree_ref.height();
+            read_handle.release_read();
+            h
         }
     }
 

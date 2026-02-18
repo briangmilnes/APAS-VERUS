@@ -1,22 +1,72 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs
 
-❌ BSTPlainMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:263: assume() - assume(tree_ref.spec_size() <= usize::MAX);
-       259 |         pub fn size(&self) -> (n: usize)
+❌ BSTAVLStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:356: assume() - assume(result.spec_height() <= tree_ghost.spec_height());
+       309 |     fn rebalance<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
             ...
-       261 |             let read_handle = self.root.acquire_read();
-       262 |             let tree_ref = read_handle.borrow();
-       264 |             let n = tree_ref.size();
-       265 |             read_handle.release_read();
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:273: assume() - assume(tree_ref.spec_height() <= usize::MAX);
-       269 |         pub fn height(&self) -> (h: usize)
+       354 |                         let result = rotate_right(intermediate);
+       355 |                         proof {
+       357 |                             assume(avl_balanced(result));
+       358 |                         }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:357: assume() - assume(avl_balanced(result));
+       309 |     fn rebalance<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
             ...
-       271 |             let read_handle = self.root.acquire_read();
-       272 |             let tree_ref = read_handle.borrow();
-       274 |             let h = tree_ref.height();
-       275 |             read_handle.release_read();
-   Holes: 2 total
-      2 × assume()
+       355 |                         proof {
+       356 |                             assume(result.spec_height() <= tree_ghost.spec_height());
+       358 |                         }
+       359 |                         result
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:363: assume() - assume(result.spec_height() <= tree_ghost.spec_height());
+       309 |     fn rebalance<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+            ...
+       361 |                         let result = rotate_right(BalBinTree::Node(inner));
+       362 |                         proof {
+       364 |                             assume(avl_balanced(result));
+       365 |                         }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:364: assume() - assume(avl_balanced(result));
+       309 |     fn rebalance<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+            ...
+       362 |                         proof {
+       363 |                             assume(result.spec_height() <= tree_ghost.spec_height());
+       365 |                         }
+       366 |                         result
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:399: assume() - assume(result.spec_height() <= tree_ghost.spec_height());
+       309 |     fn rebalance<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+            ...
+       397 |                         let result = rotate_left(intermediate);
+       398 |                         proof {
+       400 |                             assume(avl_balanced(result));
+       401 |                         }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:400: assume() - assume(avl_balanced(result));
+       309 |     fn rebalance<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+            ...
+       398 |                         proof {
+       399 |                             assume(result.spec_height() <= tree_ghost.spec_height());
+       401 |                         }
+       402 |                         result
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:406: assume() - assume(result.spec_height() <= tree_ghost.spec_height());
+       309 |     fn rebalance<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+            ...
+       404 |                         let result = rotate_left(BalBinTree::Node(inner));
+       405 |                         proof {
+       407 |                             assume(avl_balanced(result));
+       408 |                         }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:407: assume() - assume(avl_balanced(result));
+       309 |     fn rebalance<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+            ...
+       405 |                         proof {
+       406 |                             assume(result.spec_height() <= tree_ghost.spec_height());
+       408 |                         }
+       409 |                         result
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLStEph.rs:414: assume() - assume(avl_balanced(result));
+       309 |     fn rebalance<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+            ...
+       412 |                     let result = BalBinTree::Node(inner);
+       413 |                     proof {
+       415 |                     }
+       416 |                     result
+   Holes: 9 total
+      9 × assume()
+   Proof functions: 2 total (2 clean, 0 holed)
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -28,9 +78,9 @@ Modules:
    1 total
 
 Proof Functions:
-   0 clean
+   2 clean
    0 holed
-   0 total
+   2 total
 
-Holes Found: 2 total
-   2 × assume()
+Holes Found: 9 total
+   9 × assume()

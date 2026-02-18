@@ -176,6 +176,12 @@ pub mod BottomUpDPMtPer {
         }
     }
 
+    impl BottomUpDPMtPerTrait<usize> for BottomUpDPMtPerS {
+        fn new() -> Self { Self::default() }
+
+        fn solve(&self, _input: &[usize]) -> usize { self.med_bottom_up_parallel() }
+    }
+
     // 11. derive impls
     impl Clone for BottomUpDPMtPerS {
         fn clone(&self) -> Self {

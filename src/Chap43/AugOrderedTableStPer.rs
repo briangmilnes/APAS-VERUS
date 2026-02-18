@@ -104,14 +104,10 @@ pub mod AugOrderedTableStPer {
         /// Claude Work: O(lg n), Span: O(lg n)
         fn find(&self, k: &K) -> Option<V> { self.base_table.find(k) }
 
-        /// Claude Work: O(lg n), Span: O(lg n)
+        /// Claude Work: O(n), Span: O(n)
         fn insert(&self, k: K, v: V) -> Self {
-            let new_base = self.base_table.insert(k, v.clone());
-            let new_reduction = if self.base_table.size() == 0 {
-                v
-            } else {
-                (self.reducer)(&self.cached_reduction, &v)
-            };
+            let new_base = self.base_table.insert(k, v);
+            let new_reduction = Self::calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             Self {
                 base_table: new_base,

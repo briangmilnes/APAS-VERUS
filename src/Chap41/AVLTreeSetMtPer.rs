@@ -96,6 +96,9 @@ pub mod AVLTreeSetMtPer {
         fn insert(&self, x: T)                       -> Self;
     }
 
+    /// Sequential cutoff to prevent thread explosion from recursive ParaPair! calls.
+    const SEQUENTIAL_CUTOFF: N = 128;
+
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
         fn size(&self) -> N { self.elements.length() }
 
@@ -116,10 +119,13 @@ pub mod AVLTreeSetMtPer {
         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> Self {
             let mut vals = seq.values_in_order();
 
-            // Unconditionally parallel merge sort using ParaPair!
             fn parallel_sort<T: StTInMtT + Ord + 'static>(mut vals: Vec<T>) -> Vec<T> {
                 let n = vals.len();
                 if n <= 1 {
+                    return vals;
+                }
+                if n <= SEQUENTIAL_CUTOFF {
+                    vals.sort();
                     return vals;
                 }
 
@@ -155,8 +161,8 @@ pub mod AVLTreeSetMtPer {
             }
         }
 
-        // PARALLEL: filter using divide-and-conquer (unconditionally parallel)
-        // Work: Θ(n), Span: Θ(log n)
+        // PARALLEL: filter using divide-and-conquer with sequential cutoff
+        // Work: Θ(n), Span: Θ(log n) when parallel
         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> Self {
             let n = self.size();
 
@@ -172,7 +178,22 @@ pub mod AVLTreeSetMtPer {
                 }
             }
 
-            // Unconditionally parallel divide-and-conquer using ParaPair!
+            if n <= SEQUENTIAL_CUTOFF {
+                let mut vals: Vec<T> = Vec::new();
+                for i in 0..n {
+                    let elem = self.elements.nth(i);
+                    if f(elem) {
+                        vals.push(elem.clone());
+                    }
+                }
+                vals.sort();
+                vals.dedup();
+                return AVLTreeSetMtPer {
+                    elements: AVLTreeSeqMtPerS::from_vec(vals),
+                };
+            }
+
+            // Parallel divide-and-conquer using ParaPair!
             let mid = n / 2;
 
             let left_vals = (0..mid).map(|i| self.elements.nth(i).clone()).collect::<Vec<T>>();
@@ -197,8 +218,8 @@ pub mod AVLTreeSetMtPer {
             }
         }
 
-        // PARALLEL: intersection using divide-and-conquer (unconditionally parallel)
-        // Work: Θ(n+m), Span: Θ(log(n+m))
+        // PARALLEL: intersection using divide-and-conquer with sequential cutoff
+        // Work: Θ(n+m), Span: Θ(log(n+m)) when parallel
         fn intersection(&self, other: &Self) -> Self {
             let n = self.size();
             let m = other.size();
@@ -216,7 +237,20 @@ pub mod AVLTreeSetMtPer {
                 }
             }
 
-            // Unconditionally parallel divide-and-conquer using ParaPair!
+            if n + m <= SEQUENTIAL_CUTOFF {
+                let mut vals: Vec<T> = Vec::new();
+                for i in 0..n {
+                    let elem = self.elements.nth(i);
+                    if other.find(elem) {
+                        vals.push(elem.clone());
+                    }
+                }
+                return AVLTreeSetMtPer {
+                    elements: AVLTreeSeqMtPerS::from_vec(vals),
+                };
+            }
+
+            // Parallel divide-and-conquer using ParaPair!
             let mid = n / 2;
 
             let left_vals = (0..mid).map(|i| self.elements.nth(i).clone()).collect::<Vec<T>>();
@@ -246,8 +280,8 @@ pub mod AVLTreeSetMtPer {
             self.filter(move |x| !other_clone.find(x))
         }
 
-        // PARALLEL: union using divide-and-conquer (unconditionally parallel)
-        // Work: Θ(n+m), Span: Θ(log(n+m))
+        // PARALLEL: union using divide-and-conquer with sequential cutoff
+        // Work: Θ(n+m), Span: Θ(log(n+m)) when parallel
         fn union(&self, other: &Self) -> Self {
             let n = self.size();
             let m = other.size();
@@ -263,7 +297,18 @@ pub mod AVLTreeSetMtPer {
                 return other.insert(self.elements.nth(0).clone());
             }
 
-            // Unconditionally parallel divide-and-conquer using ParaPair!
+            if n + m <= SEQUENTIAL_CUTOFF {
+                let mut vals = self.elements.values_in_order();
+                let other_vals = other.elements.values_in_order();
+                vals.extend(other_vals);
+                vals.sort();
+                vals.dedup();
+                return AVLTreeSetMtPer {
+                    elements: AVLTreeSeqMtPerS::from_vec(vals),
+                };
+            }
+
+            // Parallel divide-and-conquer using ParaPair!
             let mid = n / 2;
 
             let left_vals = (0..mid).map(|i| self.elements.nth(i).clone()).collect::<Vec<T>>();

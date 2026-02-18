@@ -113,17 +113,10 @@ pub mod AugOrderedTableStEph {
         /// Claude Work: O(1), Span: O(1)
         fn is_empty(&self) -> B { self.base_table.is_empty() }
 
-        /// Claude Work: O(lg n), Span: O(lg n)
+        /// Claude Work: O(n), Span: O(n)
         fn insert<G: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: G) {
-            let old_size = self.base_table.size();
-            self.base_table.insert(k, v.clone(), combine);
-
-            // Update cached reduction
-            if old_size == 0 {
-                self.cached_reduction = v;
-            } else {
-                self.cached_reduction = (self.reducer)(&self.cached_reduction, &v);
-            }
+            self.base_table.insert(k, v, combine);
+            self.cached_reduction = self.recalculate_reduction();
         }
 
         /// Claude Work: O(lg n), Span: O(lg n)

@@ -228,6 +228,12 @@ pub mod TopDownDPMtPer {
         }
     }
 
+    impl TopDownDPMtPerTrait<usize> for TopDownDPMtPerS {
+        fn new() -> Self { Self::default() }
+
+        fn solve(&self, _input: &[usize]) -> usize { self.med_memoized_concurrent() }
+    }
+
     // 11. derive impls
     impl PartialEq for TopDownDPMtPerS {
         /// - APAS: N/A — infrastructure.

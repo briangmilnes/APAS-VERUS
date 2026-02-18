@@ -134,10 +134,9 @@ pub mod VecChainedHashTableStEph {
         for VecChainedHashTableStEph
     {
         /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — placeholder always returns 0; should use actual hash function.
-        fn hash_index(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics>, _key: &Key) -> N {
-            let hash_val = 0; // Placeholder: would use actual hash function
-            hash_val % table.current_size
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to stored hash function.
+        fn hash_index(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics>, key: &Key) -> N {
+            (table.hash_fn)(key) % table.current_size
         }
     }
 }

@@ -64,9 +64,11 @@ pub mod TableStEph {
         /// claude-4-sonet: Work Θ(m + n), Span Θ(m + n), Parallelism Θ(1)
         fn subtract(&mut self, keys: &ArraySetStEph<K>);
 
+        /// Returns a flat sequence of (K, V) pairs in key order.
+        /// Per APAS Algorithm 42.3, true collect groups values by key (Seq<(K, Seq<V>)>); this is entries.
         /// APAS: Work Θ(|a|), Span Θ(lg |a|)
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn collect(&self)              -> ArraySeqStEphS<Pair<K, V>>;
+        fn entries(&self)              -> ArraySeqStEphS<Pair<K, V>>;
     }
 
     impl<K: StT + Ord, V: StT> TableStEphTrait<K, V> for TableStEph<K, V> {
@@ -324,7 +326,7 @@ pub mod TableStEph {
             self.entries = ArraySeqStEphS::from_vec(result);
         }
 
-        fn collect(&self) -> ArraySeqStEphS<Pair<K, V>> { self.entries.clone() }
+        fn entries(&self) -> ArraySeqStEphS<Pair<K, V>> { self.entries.clone() }
     }
 
     /// Create tables from sorted entries

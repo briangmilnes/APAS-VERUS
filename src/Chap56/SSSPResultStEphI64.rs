@@ -2,7 +2,7 @@
 //!
 //! Single-Source Shortest Path Result Structure - Sequential Ephemeral (Integer Weights)
 
-pub mod SSSPResultStEphInt {
+pub mod SSSPResultStEphI64 {
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
@@ -14,7 +14,7 @@ pub mod SSSPResultStEphInt {
     pub const UNREACHABLE: i64 = i64::MAX;
     pub const NO_PREDECESSOR: usize = usize::MAX;
 
-    pub struct SSSPResultStEphInt {
+    pub struct SSSPResultStEphI64 {
         pub distances: ArraySeqStEphS<i64>,
         pub predecessors: ArraySeqStEphS<usize>,
         pub source: usize,
@@ -22,7 +22,7 @@ pub mod SSSPResultStEphInt {
 
     // 8. traits
 
-    pub trait SSSPResultStEphIntTrait: Sized {
+    pub trait SSSPResultStEphI64Trait: Sized {
         fn new(n: usize, source: usize) -> (result: Self)
             requires source < n;
 
@@ -41,7 +41,7 @@ pub mod SSSPResultStEphInt {
 
     // 9. impls
 
-    impl SSSPResultStEphIntTrait for SSSPResultStEphInt {
+    impl SSSPResultStEphI64Trait for SSSPResultStEphI64 {
         #[verifier::external_body]
         fn new(n: usize, source: usize) -> (result: Self)
             ensures
@@ -52,7 +52,7 @@ pub mod SSSPResultStEphInt {
             let mut dist_seq = ArraySeqStEphS::<i64>::new(n, UNREACHABLE);
             let _ = dist_seq.set(source, 0i64);
             let pred_seq = ArraySeqStEphS::<usize>::new(n, NO_PREDECESSOR);
-            SSSPResultStEphInt {
+            SSSPResultStEphI64 {
                 distances: dist_seq,
                 predecessors: pred_seq,
                 source,

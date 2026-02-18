@@ -2,7 +2,7 @@
 //!
 //! All-Pairs Shortest Path Result Structure - Sequential Ephemeral (Integer Weights)
 
-pub mod AllPairsResultStEphInt {
+pub mod AllPairsResultStEphI64 {
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
@@ -14,7 +14,7 @@ pub mod AllPairsResultStEphInt {
     pub const UNREACHABLE: i64 = i64::MAX;
     pub const NO_PREDECESSOR: usize = usize::MAX;
 
-    pub struct AllPairsResultStEphInt {
+    pub struct AllPairsResultStEphI64 {
         pub distances: ArraySeqStEphS<ArraySeqStEphS<i64>>,
         pub predecessors: ArraySeqStEphS<ArraySeqStEphS<usize>>,
         pub n: usize,
@@ -22,7 +22,7 @@ pub mod AllPairsResultStEphInt {
 
     // 8. traits
 
-    pub trait AllPairsResultStEphIntTrait: Sized {
+    pub trait AllPairsResultStEphI64Trait: Sized {
         fn new(n: usize) -> (result: Self);
 
         fn get_distance(&self, u: usize, v: usize) -> (dist: i64);
@@ -40,7 +40,7 @@ pub mod AllPairsResultStEphInt {
 
     // 9. impls
 
-    impl AllPairsResultStEphIntTrait for AllPairsResultStEphInt {
+    impl AllPairsResultStEphI64Trait for AllPairsResultStEphI64 {
         #[verifier::external_body]
         fn new(n: usize) -> (result: Self)
             ensures result.n == n,
@@ -54,7 +54,7 @@ pub mod AllPairsResultStEphInt {
             let distances = ArraySeqStEphS::from_vec(dist_matrix);
             let pred_matrix = vec![ArraySeqStEphS::new(n, NO_PREDECESSOR); n];
             let predecessors = ArraySeqStEphS::from_vec(pred_matrix);
-            AllPairsResultStEphInt { distances, predecessors, n }
+            AllPairsResultStEphI64 { distances, predecessors, n }
         }
 
         fn get_distance(&self, u: usize, v: usize) -> (dist: i64)

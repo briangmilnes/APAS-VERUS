@@ -49,6 +49,8 @@ pub mod BSTSizeStEph {
         fn height(&self)               -> N;
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
         fn insert(&mut self, value: T);
+        /// claude-4-sonet: Work Θ(n), Span Θ(n) — in-order filter + rebuild
+        fn delete(&mut self, key: &T);
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
         fn find(&self, target: &T)     -> Option<&T>;
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
@@ -196,6 +198,36 @@ pub mod BSTSizeStEph {
             }
         }
 
+        /// - APAS: N/A — internal in-order traversal collecting (key, priority) for rebuild.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+        fn in_order_collect_with_priority(link: &Link<T>, out: &mut Vec<(T, u64)>) {
+            if let Some(node) = link {
+                Self::in_order_collect_with_priority(&node.left, out);
+                out.push((node.key.clone(), node.priority));
+                Self::in_order_collect_with_priority(&node.right, out);
+            }
+        }
+
+        /// - APAS: N/A — build treap from sorted (key, priority) sequence.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — min-priority root, recurse.
+        fn build_treap_from_sorted(seq: &[(T, u64)]) -> Link<T> {
+            if seq.is_empty() {
+                return None;
+            }
+            let min_idx = seq
+                .iter()
+                .enumerate()
+                .min_by(|(_, a), (_, b)| a.1.cmp(&b.1))
+                .map(|(i, _)| i)
+                .unwrap();
+            let (key, priority) = seq[min_idx].clone();
+            let left_seq = &seq[..min_idx];
+            let right_seq = &seq[min_idx + 1..];
+            let left = Self::build_treap_from_sorted(left_seq);
+            let right = Self::build_treap_from_sorted(right_seq);
+            Self::make_node(key, priority, left, right)
+        }
+
         /// - APAS: Work Θ(log n) with size augmentation, Span Θ(log n) — Algorithm 40.1.
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn rank_link(link: &Link<T>, key: &T) -> N {
@@ -232,25 +264,6 @@ pub mod BSTSizeStEph {
             }
         }
 
-        /// - APAS: Work Θ(log n), Span Θ(log n) — Exercise 40.1.
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
-        fn split_rank_link(link: &Link<T>, rank: N) -> (Link<T>, Link<T>) {
-            match link {
-                | None => (None, None),
-                | Some(node) => {
-                    let left_size = Self::size_link(&node.left);
-                    if rank <= left_size {
-                        let (ll, lr) = Self::split_rank_link(&node.left, rank);
-                        let right_tree = Self::make_node(node.key.clone(), node.priority, lr, node.right.clone());
-                        (ll, right_tree)
-                    } else {
-                        let (rl, rr) = Self::split_rank_link(&node.right, rank - left_size - 1);
-                        let left_tree = Self::make_node(node.key.clone(), node.priority, node.left.clone(), rl);
-                        (left_tree, rr)
-                    }
-                }
-            }
-        }
     }
 
     impl<T: StT + Ord> BSTSizeStEphTrait<T> for BSTSizeStEph<T> {
@@ -273,6 +286,13 @@ pub mod BSTSizeStEph {
         fn insert(&mut self, value: T) {
             let mut r = rng();
             Self::insert_link(&mut self.root, value, &mut r);
+        }
+
+        fn delete(&mut self, key: &T) {
+            let mut in_order: Vec<(T, u64)> = Vec::new();
+            Self::in_order_collect_with_priority(&self.root, &mut in_order);
+            let filtered: Vec<(T, u64)> = in_order.into_iter().filter(|(k, _)| k != key).collect();
+            self.root = Self::build_treap_from_sorted(&filtered);
         }
 
         fn find(&self, target: &T) -> Option<&T> { Self::find_link(&self.root, target) }
@@ -305,8 +325,17 @@ pub mod BSTSizeStEph {
             } else if rank >= self.size() {
                 (self.clone(), BSTSizeStEph::new())
             } else {
-                let (left_root, right_root) = Self::split_rank_link(&self.root, rank);
-                (BSTSizeStEph { root: left_root }, BSTSizeStEph { root: right_root })
+                let mut in_order: Vec<(T, u64)> = Vec::new();
+                Self::in_order_collect_with_priority(&self.root, &mut in_order);
+                let rank = rank.min(in_order.len());
+                let left_seq: Vec<(T, u64)> = in_order[..rank].to_vec();
+                let right_seq: Vec<(T, u64)> = in_order[rank..].to_vec();
+                let left_root = Self::build_treap_from_sorted(&left_seq);
+                let right_root = Self::build_treap_from_sorted(&right_seq);
+                (
+                    BSTSizeStEph { root: left_root },
+                    BSTSizeStEph { root: right_root },
+                )
             }
         }
     }

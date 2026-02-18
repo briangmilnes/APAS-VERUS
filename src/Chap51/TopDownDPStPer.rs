@@ -154,6 +154,12 @@ pub mod TopDownDPStPer {
         }
     }
 
+    impl TopDownDPStPerTrait<usize> for TopDownDPStPerS {
+        fn new() -> Self { Self::default() }
+
+        fn solve(&self, _input: &[usize]) -> usize { self.med_memoized() }
+    }
+
     // 11. derive impls
     impl Default for TopDownDPStPerS {
         /// - APAS: N/A — infrastructure.

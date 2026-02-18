@@ -161,6 +161,15 @@ pub mod BottomUpDPStEph {
         }
     }
 
+    impl BottomUpDPStEphTrait<usize> for BottomUpDPStEphS {
+        fn new() -> Self { Self::default() }
+
+        fn solve(&self, _input: &[usize]) -> usize {
+            let mut clone = self.clone();
+            clone.med_bottom_up()
+        }
+    }
+
     // 11. derive impls
     impl Clone for BottomUpDPStEphS {
         fn clone(&self) -> Self {

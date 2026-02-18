@@ -507,15 +507,14 @@ pub mod Chap55 {
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap56 {
-    pub mod SSSPResultStEphInt;
-    pub mod SSSPResultStPerInt;
-    pub mod AllPairsResultStEphInt;
-    pub mod AllPairsResultStPerInt;
+    pub mod SSSPResultStEphI64;
+    pub mod SSSPResultStPerI64;
+    pub mod AllPairsResultStEphI64;
+    pub mod AllPairsResultStPerI64;
     #[cfg(feature = "all_chapters")]
     pub mod PathWeightUtilsStEph;
     #[cfg(feature = "all_chapters")]
     pub mod PathWeightUtilsStPer;
-    #[cfg(feature = "all_chapters")]
     pub mod SSSPResultStEphFloat;
     #[cfg(feature = "all_chapters")]
     pub mod SSSPResultStPerFloat;
@@ -532,22 +531,22 @@ pub mod Chap56 {
 #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
 pub mod Chap57 {
     pub mod StackStEph;
-    pub mod DijkstraStEphInt;
+    pub mod DijkstraStEphI64;
     #[cfg(feature = "all_chapters")]
     pub mod DijkstraStEphFloat;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap58 {
-    pub mod BellmanFordStEphInt;
+    pub mod BellmanFordStEphI64;
     #[cfg(feature = "all_chapters")]
     pub mod BellmanFordStEphFloat;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap59 {
-    pub mod JohnsonStEphInt;
-    pub mod JohnsonMtEphInt;
+    pub mod JohnsonStEphI64;
+    pub mod JohnsonMtEphI64;
     #[cfg(feature = "all_chapters")]
     pub mod JohnsonStEphFloat;
     #[cfg(feature = "all_chapters")]

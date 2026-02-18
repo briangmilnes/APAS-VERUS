@@ -1,5 +1,9 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 49: Minimum Edit Distance - ephemeral, single-threaded.
+//!
+//! This module is outside verus! because it uses std::collections::HashMap for
+//! memoization, which Verus does not support. Full verification would require
+//! replacing HashMap with a verified equivalent.
 
 pub mod MinEditDistStEph {
 
@@ -14,10 +18,8 @@ pub mod MinEditDistStEph {
     use crate::Types::Types::*;
     use crate::ArraySeqStEphSLit;
 
-    verus! {
-    } // verus!
-
     // 4. type definitions
+    // Struct contains HashMap for memoization — cannot be inside verus!.
 
     #[derive(Clone, PartialEq, Eq)]
     pub struct MinEditDistStEphS<T: StT> {

@@ -7,7 +7,7 @@
 //! **Algorithmic Analysis:**
 //! - Dijkstra: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
 
-pub mod DijkstraStEphInt {
+pub mod DijkstraStEphI64 {
 
     use std::cmp::Ordering;
     use std::collections::HashMap;
@@ -20,13 +20,13 @@ pub mod DijkstraStEphInt {
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
     use crate::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
     use crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::*;
-    use crate::Chap56::SSSPResultStEphInt::SSSPResultStEphInt::*;
+    use crate::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::*;
     use crate::Types::Types::*;
 
     verus! {
 
     // Table of Contents
-    // 1. module (DijkstraStEphInt)
+    // 1. module (DijkstraStEphI64)
     // 2. imports
     // 4. type definitions
     // 5. view impls
@@ -55,11 +55,11 @@ pub mod DijkstraStEphInt {
 
     // 8. traits
 
-    pub trait DijkstraStEphIntTrait {
+    pub trait DijkstraStEphI64Trait {
         /// Dijkstra's single source shortest path algorithm
         /// - APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
         /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — agrees with APAS.
-        fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphInt;
+        fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64;
     }
 
     // 9. impls
@@ -96,11 +96,11 @@ pub mod DijkstraStEphInt {
     /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — agrees with APAS. Sequential
     ///   implementation with BinaryHeapPQ insert/deleteMin at O(log m) each, m edge relaxations.
     #[verifier::external_body]
-    pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphInt {
+    pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64 {
         let n = graph.vertices().size();
 
         // Initialize result with all distances = infinity except source = 0
-        let mut result = SSSPResultStEphInt::new(n, source);
+        let mut result = SSSPResultStEphI64::new(n, source);
 
         // Track visited vertices (X in the algorithm)
         let mut visited = HashMap::<usize, i64>::new();

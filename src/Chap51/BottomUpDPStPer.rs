@@ -149,6 +149,12 @@ pub mod BottomUpDPStPer {
         }
     }
 
+    impl BottomUpDPStPerTrait<usize> for BottomUpDPStPerS {
+        fn new() -> Self { Self::default() }
+
+        fn solve(&self, _input: &[usize]) -> usize { self.med_bottom_up() }
+    }
+
     // 11. derive impls
     impl Clone for BottomUpDPStPerS {
         fn clone(&self) -> Self {

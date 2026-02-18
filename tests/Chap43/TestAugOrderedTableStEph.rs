@@ -156,11 +156,9 @@ fn test_string_concatenation_reducer() {
     table.insert(3, "World".to_string(), |_old, new| new.clone());
     assert_eq!(table.reduce_val(), "Hello World");
 
-    // Test in-place modification
+    // Replace key 2's value; reduction recalculated from scratch.
     table.insert(2, "Beautiful ".to_string(), |_old, new| new.clone());
-    // Note: Same bug as MtEph version - appends instead of replacing in cached reduction
-    // TODO: Fix AugOrderedTable reduction logic for key replacements
-    assert_eq!(table.reduce_val(), "Hello WorldBeautiful ");
+    assert_eq!(table.reduce_val(), "HelloBeautiful World");
 }
 
 #[test]

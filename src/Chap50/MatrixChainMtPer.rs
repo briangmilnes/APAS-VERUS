@@ -1,5 +1,9 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Multi-threaded persistent matrix chain multiplication implementation using Vec and Arc for thread safety.
+//!
+//! This module is outside verus! because it uses std::collections::HashMap for
+//! memoization (via Arc<Mutex<HashMap>>), which Verus does not support. Full
+//! verification would require replacing HashMap with a verified equivalent.
 
 pub mod MatrixChainMtPer {
 
@@ -15,9 +19,6 @@ pub mod MatrixChainMtPer {
 
     use crate::Types::Types::*;
 
-    verus! {
-    } // verus!
-
     // 4. type definitions
     #[derive(Clone, Debug, PartialEq, Eq)]
     pub struct MatrixDim {
@@ -25,6 +26,7 @@ pub mod MatrixChainMtPer {
         pub cols: usize,
     }
 
+    // Struct contains Arc<Mutex<HashMap>> for memoization — cannot be inside verus!.
     /// Persistent multi-threaded matrix chain multiplication solver using parallel dynamic programming
     #[derive(Clone, Debug)]
     pub struct MatrixChainMtPerS {
@@ -80,7 +82,7 @@ pub mod MatrixChainMtPer {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer min reduction
         fn parallel_min_reduction(&self, costs: Vec<usize>) -> usize {
             if costs.is_empty() {
-                return 0;
+                return usize::MAX;
             }
             if costs.len() == 1 {
                 return costs[0];

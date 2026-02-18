@@ -1,0 +1,48 @@
+---
+description: All APAS module functions must be specified in a trait and implemented via impl Trait for Type
+alwaysApply: true
+---
+
+# Trait-Impl Pattern
+
+Every APAS module defines a trait containing **all** public functions, and implements them
+in a single `impl Trait for Type` block. There are no bare `impl Type` blocks for functions
+that belong in the trait.
+
+## Required Structure
+
+```rust
+pub trait FooTrait: Sized {
+    fn new(...) -> Self;
+    fn bar(&self, ...) -> ...;
+    fn baz(&mut self, ...) -> ...;
+}
+
+impl FooTrait for Foo {
+    fn new(...) -> Self { ... }
+    fn bar(&self, ...) -> ... { ... }
+    fn baz(&mut self, ...) -> ... { ... }
+}
+```
+
+## Bare `impl Type` is an Error
+
+If the hole detector reports `bare_impl`, that means functions are on a direct `impl Type`
+block instead of `impl Trait for Type`. This must be fixed by moving the functions into the
+trait and the trait impl.
+
+## Exceptions
+
+- **Example/Exercise/Algorithm files** (`Ex*`, `Pr*`, `Alg*`) that have not been given a
+  trait are exempt. These are standalone demonstrations, not reusable ADT modules.
+- **Module-level functions** whose return type cannot be named in the trait signature
+  (e.g., closures, complex generic returns) may remain as free functions outside the trait.
+  These should be rare.
+
+## What This Means for the Bare Impl Detector
+
+A `bare_impl` error from `veracity-review-proof-holes` means the file violates this rule.
+Fix it by:
+1. Adding the missing functions to the trait definition.
+2. Moving the function bodies from `impl Type` into `impl Trait for Type`.
+3. Removing the bare `impl Type` block.

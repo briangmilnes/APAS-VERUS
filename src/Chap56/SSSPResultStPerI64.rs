@@ -2,7 +2,7 @@
 //!
 //! Single-Source Shortest Path Result Structure - Sequential Persistent (Integer Weights)
 
-pub mod SSSPResultStPerInt {
+pub mod SSSPResultStPerI64 {
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
@@ -13,7 +13,7 @@ pub mod SSSPResultStPerInt {
     pub const UNREACHABLE: i64 = i64::MAX;
     pub const NO_PREDECESSOR: usize = usize::MAX;
 
-    pub struct SSSPResultStPerInt {
+    pub struct SSSPResultStPerI64 {
         pub distances: ArraySeqStPerS<i64>,
         pub predecessors: ArraySeqStPerS<usize>,
         pub source: usize,
@@ -21,7 +21,7 @@ pub mod SSSPResultStPerInt {
 
     // 8. traits
 
-    pub trait SSSPResultStPerIntTrait: Sized {
+    pub trait SSSPResultStPerI64Trait: Sized {
         fn new(n: usize, source: usize) -> (result: Self)
             requires source < n;
 
@@ -40,7 +40,7 @@ pub mod SSSPResultStPerInt {
 
     // 9. impls
 
-    impl SSSPResultStPerIntTrait for SSSPResultStPerInt {
+    impl SSSPResultStPerI64Trait for SSSPResultStPerI64 {
         fn new(n: usize, source: usize) -> (result: Self)
             ensures
                 result.distances@.len() == n as int,
@@ -64,7 +64,7 @@ pub mod SSSPResultStPerInt {
                 }),
                 n,
             );
-            SSSPResultStPerInt { distances, predecessors, source }
+            SSSPResultStPerI64 { distances, predecessors, source }
         }
 
         fn get_distance(&self, v: usize) -> (dist: i64) {
@@ -83,7 +83,7 @@ pub mod SSSPResultStPerInt {
                 result.source == self.source,
         {
             if v >= self.distances.length() { return self; }
-            SSSPResultStPerInt {
+            SSSPResultStPerI64 {
                 distances: ArraySeqStPerS::update(&self.distances, v, dist),
                 predecessors: self.predecessors,
                 source: self.source,
@@ -107,7 +107,7 @@ pub mod SSSPResultStPerInt {
                 result.source == self.source,
         {
             if v >= self.predecessors.length() { return self; }
-            SSSPResultStPerInt {
+            SSSPResultStPerI64 {
                 distances: self.distances,
                 predecessors: ArraySeqStPerS::update(&self.predecessors, v, pred),
                 source: self.source,

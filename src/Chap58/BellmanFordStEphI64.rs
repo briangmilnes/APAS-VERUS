@@ -3,7 +3,7 @@
 //! Bellman-Ford's Algorithm - Single Source Shortest Path with arbitrary edge weights (integer)
 //! Implements Algorithm 58.2 from the textbook.
 
-pub mod BellmanFordStEphInt {
+pub mod BellmanFordStEphI64 {
 
     use vstd::prelude::*;
 
@@ -11,7 +11,7 @@ pub mod BellmanFordStEphInt {
     use std::collections::HashMap;
 
     use crate::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
-    use crate::Chap56::SSSPResultStEphInt::SSSPResultStEphInt::*;
+    use crate::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::*;
 
     #[cfg(not(verus_keep_ghost))]
     use crate::Chap05::SetStEph::SetStEph::*;
@@ -22,15 +22,15 @@ pub mod BellmanFordStEphInt {
 
     verus! {
 
-    pub trait BellmanFordStEphIntTrait {
+    pub trait BellmanFordStEphI64Trait {
         fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
-            -> (result: Result<SSSPResultStEphInt, String>);
+            -> (result: Result<SSSPResultStEphI64, String>);
     }
 
     } // verus!
 
     #[cfg(not(verus_keep_ghost))]
-    pub fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> Result<SSSPResultStEphInt, String> {
+    pub fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> Result<SSSPResultStEphI64, String> {
         let n = graph.vertices().size();
         let mut distances = HashMap::<usize, i64>::new();
         for v in 0..n {
@@ -55,7 +55,7 @@ pub mod BellmanFordStEphInt {
             }
             distances = new_distances;
             if !changed {
-                let mut result = SSSPResultStEphInt::new(n, source);
+                let mut result = SSSPResultStEphI64::new(n, source);
                 for v in 0..n {
                     let dist = *distances.get(&v).unwrap_or(&i64::MAX);
                     result.set_distance(v, dist);
@@ -72,7 +72,7 @@ pub mod BellmanFordStEphInt {
     fn reconstruct_predecessors(
         graph: &WeightedDirGraphStEphI128<usize>,
         distances: &HashMap<usize, i64>,
-        result: &mut SSSPResultStEphInt,
+        result: &mut SSSPResultStEphI64,
         source: usize,
     ) {
         let n = graph.vertices().size();

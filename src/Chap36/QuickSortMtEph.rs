@@ -1,7 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 36 (Multi-threaded): Quicksort over `ArraySeqMtEph`.
 //! Verusified: sort functions are proven via partition-sort-concat decomposition.
-//! Uses sequential recursion inside verus! (parallel recursion would need external_body).
+//! Uses parallel recursion via ParaPair! for left/right subarrays after partition.
+//! Pivot: first-element (median3 and random use first-element, TODO).
 
 // Table of Contents
 // 1. module
@@ -20,6 +21,7 @@ pub mod Chapter36Mt {
     // 2. imports
 
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
+    use crate::Types::Types::Pair;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use vstd::relations::*;
 
@@ -40,7 +42,7 @@ pub mod Chapter36Mt {
     // 9. impls
 
     /// Recursive non-mutating quicksort for MtEph arrays. Same proof as StEph variant.
-    fn sort_vec<T: TotalOrder + Copy>(a: &ArraySeqMtEphS<T>) -> (result: Vec<T>)
+    fn sort_vec<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (result: Vec<T>)
         requires a.spec_len() <= usize::MAX,
         ensures result@ =~= a.seq@.sort_by(spec_leq::<T>())
         decreases a.spec_len(),
@@ -147,8 +149,19 @@ pub mod Chapter36Mt {
         let left_a = ArraySeqMtEphS { seq: left };
         let right_a = ArraySeqMtEphS { seq: right };
         let equals_a = ArraySeqMtEphS { seq: equals };
-        let sorted_left_a = ArraySeqMtEphS { seq: sort_vec(&left_a) };
-        let sorted_right_a = ArraySeqMtEphS { seq: sort_vec(&right_a) };
+        let f1 = move || -> (r: Vec<T>)
+            ensures r@ =~= left_view.sort_by(spec_leq::<T>())
+        {
+            sort_vec(&left_a)
+        };
+        let f2 = move || -> (r: Vec<T>)
+            ensures r@ =~= right_view.sort_by(spec_leq::<T>())
+        {
+            sort_vec(&right_a)
+        };
+        let Pair(sorted_left, sorted_right) = crate::ParaPair!(f1, f2);
+        let sorted_left_a = ArraySeqMtEphS { seq: sorted_left };
+        let sorted_right_a = ArraySeqMtEphS { seq: sorted_right };
 
         let sl = sorted_left_a.length();
         let el = equals_a.length();
@@ -342,7 +355,8 @@ pub mod Chapter36Mt {
         result
     }
 
-    pub fn quick_sort_first<T: TotalOrder + Copy>(a: &mut ArraySeqMtEphS<T>)
+    /// Quicksort with first-element pivot. Parallel recursion via ParaPair!.
+    pub fn quick_sort_first<T: TotalOrder + Copy + Send + 'static>(a: &mut ArraySeqMtEphS<T>)
         requires old(a).spec_len() <= usize::MAX,
         ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>())
     {
@@ -350,7 +364,8 @@ pub mod Chapter36Mt {
         a.seq = result;
     }
 
-    pub fn quick_sort_median3<T: TotalOrder + Copy>(a: &mut ArraySeqMtEphS<T>)
+    /// Quicksort with median-of-three pivot. Currently uses first-element pivot (TODO).
+    pub fn quick_sort_median3<T: TotalOrder + Copy + Send + 'static>(a: &mut ArraySeqMtEphS<T>)
         requires old(a).spec_len() <= usize::MAX,
         ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>())
     {
@@ -358,7 +373,8 @@ pub mod Chapter36Mt {
         a.seq = result;
     }
 
-    pub fn quick_sort_random<T: TotalOrder + Copy>(a: &mut ArraySeqMtEphS<T>)
+    /// Quicksort with random pivot. Currently uses first-element pivot (TODO).
+    pub fn quick_sort_random<T: TotalOrder + Copy + Send + 'static>(a: &mut ArraySeqMtEphS<T>)
         requires old(a).spec_len() <= usize::MAX,
         ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>())
     {

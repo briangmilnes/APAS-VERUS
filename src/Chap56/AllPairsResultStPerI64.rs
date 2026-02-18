@@ -2,7 +2,7 @@
 //!
 //! All-Pairs Shortest Path Result Structure - Sequential Persistent (Integer Weights)
 
-pub mod AllPairsResultStPerInt {
+pub mod AllPairsResultStPerI64 {
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
@@ -13,7 +13,7 @@ pub mod AllPairsResultStPerInt {
     pub const UNREACHABLE: i64 = i64::MAX;
     pub const NO_PREDECESSOR: usize = usize::MAX;
 
-    pub struct AllPairsResultStPerInt {
+    pub struct AllPairsResultStPerI64 {
         pub distances: ArraySeqStPerS<ArraySeqStPerS<i64>>,
         pub predecessors: ArraySeqStPerS<ArraySeqStPerS<usize>>,
         pub n: usize,
@@ -21,7 +21,7 @@ pub mod AllPairsResultStPerInt {
 
     // 8. traits
 
-    pub trait AllPairsResultStPerIntTrait: Sized {
+    pub trait AllPairsResultStPerI64Trait: Sized {
         fn new(n: usize) -> (result: Self);
 
         fn get_distance(&self, u: usize, v: usize) -> (dist: i64);
@@ -39,7 +39,7 @@ pub mod AllPairsResultStPerInt {
 
     // 9. impls
 
-    impl AllPairsResultStPerIntTrait for AllPairsResultStPerInt {
+    impl AllPairsResultStPerI64Trait for AllPairsResultStPerI64 {
         #[verifier::external_body]
         fn new(n: usize) -> (result: Self)
             ensures result.n == n,
@@ -49,7 +49,7 @@ pub mod AllPairsResultStPerInt {
                 n,
             );
             let predecessors = ArraySeqStPerS::tabulate(&|_| ArraySeqStPerS::tabulate(&|_| NO_PREDECESSOR, n), n);
-            AllPairsResultStPerInt { distances, predecessors, n }
+            AllPairsResultStPerI64 { distances, predecessors, n }
         }
 
         fn get_distance(&self, u: usize, v: usize) -> (dist: i64)
@@ -76,7 +76,7 @@ pub mod AllPairsResultStPerInt {
         {
             if u >= self.n || v >= self.n { return self; }
             let updated_row = ArraySeqStPerS::update(self.distances.nth(u), v, dist);
-            AllPairsResultStPerInt {
+            AllPairsResultStPerI64 {
                 distances: ArraySeqStPerS::update(&self.distances, u, updated_row),
                 predecessors: self.predecessors,
                 n: self.n,
@@ -109,7 +109,7 @@ pub mod AllPairsResultStPerInt {
         {
             if u >= self.n || v >= self.n { return self; }
             let updated_row = ArraySeqStPerS::update(self.predecessors.nth(u), v, pred);
-            AllPairsResultStPerInt {
+            AllPairsResultStPerI64 {
                 distances: self.distances,
                 predecessors: ArraySeqStPerS::update(&self.predecessors, u, updated_row),
                 n: self.n,

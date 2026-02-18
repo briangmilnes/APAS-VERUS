@@ -1,5 +1,9 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 50: Optimal Binary Search Tree - persistent, single-threaded.
+//!
+//! This module is outside verus! because it uses std::collections::HashMap for
+//! memoization, which Verus does not support. Full verification would require
+//! replacing HashMap with a verified equivalent.
 
 pub mod OptBinSearchTreeStPer {
 
@@ -16,9 +20,6 @@ pub mod OptBinSearchTreeStPer {
     use crate::Types::Types::*;
     use crate::prob;
 
-    verus! {
-    } // verus!
-
     // 4. type definitions
     #[derive(Clone, Debug, PartialEq)]
     pub struct KeyProb<T: StT> {
@@ -26,6 +27,7 @@ pub mod OptBinSearchTreeStPer {
         pub prob: Probability,
     }
 
+    // Struct contains HashMap for memoization — cannot be inside verus!.
     /// Persistent single-threaded optimal binary search tree solver using dynamic programming
     #[derive(Clone, Debug, PartialEq)]
     pub struct OBSTStPerS<T: StT> {

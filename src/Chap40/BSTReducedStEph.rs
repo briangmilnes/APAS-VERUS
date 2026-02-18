@@ -90,6 +90,8 @@ pub mod BSTReducedStEph {
         fn height(&self)                          -> N;
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
         fn insert(&mut self, key: K, value: V);
+        /// claude-4-sonet: Work Θ(n), Span Θ(n) — in-order filter + rebuild
+        fn delete(&mut self, key: &K);
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
         fn find(&self, key: &K)                   -> Option<&V>;
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
@@ -274,6 +276,34 @@ pub mod BSTReducedStEph {
             }
         }
 
+        /// - APAS: N/A — in-order collect (key, value, priority) for rebuild.
+        fn collect_in_order_kvp(link: &Link<K, V, R>, out: &mut Vec<(K, V, u64)>) {
+            if let Some(node) = link {
+                Self::collect_in_order_kvp(&node.left, out);
+                out.push((node.key.clone(), node.value.clone(), node.priority));
+                Self::collect_in_order_kvp(&node.right, out);
+            }
+        }
+
+        /// - APAS: N/A — build treap from sorted (key, value, priority) sequence.
+        fn build_treap_from_sorted(seq: &[(K, V, u64)]) -> Link<K, V, R> {
+            if seq.is_empty() {
+                return None;
+            }
+            let min_idx = seq
+                .iter()
+                .enumerate()
+                .min_by(|(_, a), (_, b)| a.2.cmp(&b.2))
+                .map(|(i, _)| i)
+                .unwrap();
+            let (key, value, priority) = seq[min_idx].clone();
+            let left_seq = &seq[..min_idx];
+            let right_seq = &seq[min_idx + 1..];
+            let left = Self::build_treap_from_sorted(left_seq);
+            let right = Self::build_treap_from_sorted(right_seq);
+            Self::make_node(key, value, priority, left, right)
+        }
+
         /// - APAS: Work Θ(log n), Span Θ(log n) — range query on augmented BST.
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn range_reduce_link(link: &Link<K, V, R>, low: &K, high: &K) -> R {
@@ -330,6 +360,13 @@ pub mod BSTReducedStEph {
         fn insert(&mut self, key: K, value: V) {
             let mut r = rng();
             Self::insert_link(&mut self.root, key, value, &mut r);
+        }
+
+        fn delete(&mut self, key: &K) {
+            let mut in_order: Vec<(K, V, u64)> = Vec::new();
+            Self::collect_in_order_kvp(&self.root, &mut in_order);
+            let filtered: Vec<(K, V, u64)> = in_order.into_iter().filter(|(k, _, _)| k != key).collect();
+            self.root = Self::build_treap_from_sorted(&filtered);
         }
 
         fn find(&self, key: &K) -> Option<&V> { Self::find_link(&self.root, key) }
