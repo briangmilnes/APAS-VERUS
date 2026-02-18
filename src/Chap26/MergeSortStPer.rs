@@ -92,7 +92,7 @@ pub mod MergeSortStPer {
     //		9. impls
 
     /// Helper: pushing an element >= all existing elements preserves sorted.
-    proof fn lemma_push_sorted(s: Seq<N>, v: N)
+    pub proof fn lemma_push_sorted(s: Seq<N>, v: N)
         requires
             spec_sorted(s),
             s.len() > 0 ==> s.last() <= v,

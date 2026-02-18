@@ -1,7 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for divide-and-conquer eTSP heuristic (Chapter 26).
 
-use apas_verus::Chap26::ETSPStPer::ETSPStPer::*;
+use apas_verus::Chap26::ETSPStEph::ETSPStEph::*;
 
 #[test]
 fn test_etsp_two_points() {

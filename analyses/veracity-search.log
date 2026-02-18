@@ -1,42 +1,45 @@
-Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS-review/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn \(append\|extend\|concat_vec\)
-Searching: /home/milnes/projects/APAS-VERUS
-Files: 658, Functions: 11004, Matches: 37
+Pattern: fn \(sort\|insertion_sort\|merge_sort\|quicksort\|bubble_sort\)
+Searching: /home/milnes/projects/verus/examples
+Files: 145, Functions: 1550, Matches: 8
 
-[31m/home/milnes/projects/APAS-VERUS/tests/Chap19/TestArraySeqStEph.rs:45: [0m
-#[test]
-[38;5;22mfn test_append()[0m
+[31m/home/milnes/projects/verus/examples/summer_school/chapter-2-3.rs:89: [0m
+[38;5;22mspec fn sort_spec(input: Seq<int>, output: Seq<int>) -> bool[0m
 
-[31m/home/milnes/projects/APAS-VERUS/tests/Chap19/TestArraySeqStPer.rs:38: [0m
-#[test]
-[38;5;22mfn test_append()[0m
+[31m/home/milnes/projects/verus/examples/summer_school/chapter-2-3.rs:98: [0m
+[38;5;22mfn merge_sort(input: Vec<i64>) -> (output: Vec<i64>)[0m
+[38;5;22m    ensures[0m
+[38;5;22m        sort_spec(view_i64(input.view()), view_i64(output.view())),[0m
 
-[31m/home/milnes/projects/APAS-VERUS/tests/Chap19/TestArraySeqMtEph.rs:46: [0m
-#[test]
-[38;5;22mfn test_append()[0m
+[31m/home/milnes/projects/verus/examples/state_machines/top_sort_dfs.rs:89: [0m
+#[invariant]
+[38;5;22m        pub fn top_sort_is_sort(&self) -> bool[0m
 
-[31m/home/milnes/projects/APAS-VERUS/tests/Chap18/TestLinkedListStPer.rs:39: [0m
-#[test]
-[38;5;22mfn test_append()[0m
+[31m/home/milnes/projects/verus/examples/state_machines/top_sort_dfs.rs:101: [0m
+#[invariant]
+[38;5;22m        pub fn top_sort_matches_visited(&self) -> bool[0m
 
-[31m/home/milnes/projects/APAS-VERUS/tests/Chap18/TestArraySeqStEph.rs:46: [0m
-#[test]
-[38;5;22mfn test_append()[0m
+[31m/home/milnes/projects/verus/examples/state_machines/top_sort_dfs.rs:110: [0m
+#[inductive(push_into_top_sort)]
+[38;5;22m        fn push_into_top_sort_inductive(pre: Self, post: Self, v: V)[0m
 
-[31m/home/milnes/projects/APAS-VERUS/tests/Chap18/TestLinkedListStEph.rs:46: [0m
-#[test]
-[38;5;22mfn test_append()[0m
+[31m/home/milnes/projects/verus/examples/state_machines/top_sort_dfs.rs:228: [0m
+[38;5;22mspec fn is_complete_top_sort(top_sort: &Vec<usize>, graph: &ConcreteDirectedGraph) -> bool[0m
 
-[31m/home/milnes/projects/APAS-VERUS/tests/Chap18/TestArraySeqStPer.rs:39: [0m
-#[test]
-[38;5;22mfn test_append()[0m
+[31m/home/milnes/projects/verus/examples/state_machines/top_sort_dfs.rs:485: [0m
+[38;5;22mfn compute_top_sort(graph: &ConcreteDirectedGraph) -> (tsr: TopSortResult)[0m
+[38;5;22m    requires[0m
+[38;5;22m        graph.well_formed(),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        (match tsr[0m
 
-[31m/home/milnes/projects/APAS-VERUS/tests/Chap37/TestAVLTreeSeqStEph18.rs:25: [0m
-#[test]
-[38;5;22mfn test_append_union()[0m
+[31m/home/milnes/projects/verus/examples/mergesort.rs:147: [0m
+[38;5;22mfn merge_sort(v: &Vec<u64>) -> (r: Vec<u64>)[0m
+[38;5;22m    ensures[0m
+[38;5;22m        r@.to_multiset() == (*v)@.to_multiset(),[0m
+[38;5;22m        is_sorted(&r),[0m
+[38;5;22m    decreases v.len(),[0m
 
-[31m/home/milnes/projects/APAS-VERUS/tests/Chap37/TestAVLTreeSeqStEphChap37.rs:400: [0m
-#[test]

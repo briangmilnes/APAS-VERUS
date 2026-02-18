@@ -1,13 +1,11 @@
 ---
 description: No decorative separator lines or box-drawing characters in code comments
-globs: "**/*.rs"
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Comment Style
 
 Do not use decorative separator lines or box-drawing characters in code comments.
-Comments must be full sentences.
 
 **Bad:**
 ```rust
@@ -28,17 +26,29 @@ Comments must be full sentences.
 // ── Anvil-style vec_filter: multiset equality postcondition ──────────
 ```
 
-**Good:**
+**Bad:**
+```rust
+    // ========================================================================
+    // f64 implementation
+    // ========================================================================
+```
+
+**Bad:**
+```rust
+// ---
+```
+
+**Good:** Just a plain comment, no decoration.
 ```rust
 // Section Name
 ```
 
-**Good:**
+**Good:** Doc comment.
 ```rust
 /// Section documentation
 ```
 
-**Good:**
+**Good:** Full sentence.
 ```rust
 // Anvil-style vec_filter using a multiset equality postcondition.
 ```
@@ -49,4 +59,4 @@ Decorative separators and box-drawing characters (─, ═, etc.) are acceptable
 - Markdown documentation
 - README files
 
-But not in source code comments.
+But never in source code comments.

@@ -91,7 +91,7 @@ pub mod ScanDCStPer {
 
     /// Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f))
     /// when (f, id) is a monoid.
-    proof fn lemma_fold_left_monoid(s: Seq<N>, x: N, f: spec_fn(N, N) -> N, id: N)
+    pub proof fn lemma_fold_left_monoid(s: Seq<N>, x: N, f: spec_fn(N, N) -> N, id: N)
         requires spec_monoid(f, id),
         ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),
         decreases s.len(),

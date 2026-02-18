@@ -79,12 +79,23 @@ pub mod experiments {
 //   pub mod vec_remove_duplicates;
 //   pub mod deep_view_2_tuple;
 //    pub mod deep_view_struct;
-
 //    pub mod collect2;
 //    pub mod collect_deep_view;
 //    pub mod verus_keep_ghost_and_test;
 //    pub mod biconditional_spec_fun;
-    pub mod arc_rwlock_ninject;
+//    pub mod arc_rwlock_ninject;
+    // Hypothesis: Can Verus verify f64 sorting using bit-level ordering?
+    // Result: Yes. Structural verification (loop invariants, sorted postcondition) works
+    // with two classes of assumes: IEEE 754 ordering axioms and an external_body bridge
+    // from exec `<=` to spec `to_bits_spec()` ordering. Multiset not proven (orthogonal).
+    // pub mod f64_bits_sort;
+
+    // Hypothesis: Can Verus verify f64 sorting using native `<=` and uninterpreted le_ensures?
+    // Result: Partially. Comparison bridge works, but le_ensures is hostile to invariant
+    // maintenance across Vec::set mutations — the solver can't propagate ordering facts
+    // through swaps. Requires assume for sorted-prefix maintenance. The bits approach is
+    // cleaner for production use. Led to creation of vstdplus::float broadcast axiom group.
+    // pub mod f64_float_cmp_sort;
 }
 
 pub mod vstdplus {
@@ -104,6 +115,7 @@ pub mod vstdplus {
     pub mod checked_nat;
     pub mod hashed_checked_u32;
     pub mod sqrt;
+    pub mod float;
     pub mod monoid;
     pub mod multiset;
     pub mod arithmetic {
@@ -224,16 +236,16 @@ pub mod Chap23 {
     pub mod BalBinTreeStEph;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap26 {
     pub mod DivConReduceStPer;
     pub mod MergeSortStPer;
     pub mod ScanDCStPer;
-    pub mod ETSPStPer;
+    pub mod ETSPStEph;
     pub mod DivConReduceMtPer;
     pub mod MergeSortMtPer;
     pub mod ScanDCMtPer;
-    pub mod ETSPMtPer;
+    pub mod ETSPMtEph;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
