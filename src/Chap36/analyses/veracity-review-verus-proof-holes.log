@@ -1,23 +1,185 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap36/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap36 -d src/Chap37 -d src/Chap38 -d src/Chap39 -d src/Chap40 -d src/Chap41 -d src/Chap42 -d src/Chap43 -d src/Chap44 -d src/Chap45 -d src/Chap47 -d src/Chap49 -d src/Chap50 -d src/Chap51
 
 ✓ QuickSortMtEph.rs
 ✓ QuickSortMtEphSlice.rs
 ✓ QuickSortStEph.rs
+✓ src/Chap37/AVLTreeSeq.rs
+✓ src/Chap37/AVLTreeSeqMtPer.rs
+✓ src/Chap37/AVLTreeSeqStEph.rs
+✓ src/Chap37/AVLTreeSeqStPer.rs
+❌ src/Chap37/BSTAVLMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:30: external_type_specification - #[verifier::external_type_specification]
+        31 |     #[verifier::external_body]
+        32 |     #[verifier::reject_recursive_types(T)]
+        33 |     pub struct ExRwLock<T: ?Sized>(RwLock<T>);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:31: external_body - #[verifier::external_body]
+        32 |     #[verifier::reject_recursive_types(T)]
+        33 |     pub struct ExRwLock<T: ?Sized>(RwLock<T>);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:35: assume_specification - pub assume_specification<T>[ RwLock::<T>::new ](t: T) -> (v: RwLock<T>);
+        33 |     pub struct ExRwLock<T: ?Sized>(RwLock<T>);
+        34 | 
+        36 | 
+        37 |     // 7. proof fns
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:395: external_body - #[verifier::external_body]
+       396 |         pub fn insert(&self, value: T)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:403: external_body - #[verifier::external_body]
+       404 |         pub fn contains(&self, target: &T) -> (result: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:410: external_body - #[verifier::external_body]
+       411 |         pub fn size(&self) -> (n: usize)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:417: external_body - #[verifier::external_body]
+       418 |         pub fn is_empty(&self) -> (b: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:424: external_body - #[verifier::external_body]
+       425 |         pub fn height(&self) -> (h: usize)
+   Holes: 8 total
+      1 × assume_specification
+      6 × external_body
+      1 × external_type_specification
+   Proof functions: 1 total (1 clean, 0 holed)
+✓ src/Chap37/BSTAVLStEph.rs
+   1 clean proof function
+❌ src/Chap37/BSTBBAlphaMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:220: external_body - #[verifier::external_body]
+       221 |         pub fn insert(&self, value: T)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:228: external_body - #[verifier::external_body]
+       229 |         pub fn contains(&self, target: &T) -> (result: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:235: external_body - #[verifier::external_body]
+       236 |         pub fn size(&self) -> (n: usize)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:242: external_body - #[verifier::external_body]
+       243 |         pub fn is_empty(&self) -> (b: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:249: external_body - #[verifier::external_body]
+       250 |         pub fn height(&self) -> (h: usize)
+   Holes: 5 total
+      5 × external_body
+✓ src/Chap37/BSTBBAlphaStEph.rs
+❌ src/Chap37/BSTPlainMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:263: assume() - assume(tree_ref.spec_size() <= usize::MAX);
+       259 |         pub fn size(&self) -> (n: usize)
+            ...
+       261 |             let read_handle = self.root.acquire_read();
+       262 |             let tree_ref = read_handle.borrow();
+       264 |             let n = tree_ref.size();
+       265 |             read_handle.release_read();
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:273: assume() - assume(tree_ref.spec_height() <= usize::MAX);
+       269 |         pub fn height(&self) -> (h: usize)
+            ...
+       271 |             let read_handle = self.root.acquire_read();
+       272 |             let tree_ref = read_handle.borrow();
+       274 |             let h = tree_ref.height();
+       275 |             read_handle.release_read();
+   Holes: 2 total
+      2 × assume()
+✓ src/Chap37/BSTPlainStEph.rs
+✓ src/Chap37/BSTRBMtEph.rs
+✓ src/Chap37/BSTRBStEph.rs
+   1 clean proof function
+✓ src/Chap37/BSTSetAVLMtEph.rs
+✓ src/Chap37/BSTSetBBAlphaMtEph.rs
+✓ src/Chap37/BSTSetPlainMtEph.rs
+✓ src/Chap37/BSTSetRBMtEph.rs
+✓ src/Chap37/BSTSetSplayMtEph.rs
+✓ src/Chap37/BSTSplayMtEph.rs
+✓ src/Chap37/BSTSplayStEph.rs
+✓ src/Chap38/BSTParaMtEph.rs
+✓ src/Chap38/BSTParaStEph.rs
+✓ src/Chap39/BSTParaTreapMtEph.rs
+✓ src/Chap39/BSTSetTreapMtEph.rs
+✓ src/Chap39/BSTTreapMtEph.rs
+✓ src/Chap39/BSTTreapStEph.rs
+✓ src/Chap40/BSTKeyValueStEph.rs
+✓ src/Chap40/BSTReducedStEph.rs
+✓ src/Chap40/BSTSizeStEph.rs
+✓ src/Chap41/AVLTreeSetMtEph.rs
+✓ src/Chap41/AVLTreeSetMtPer.rs
+✓ src/Chap41/AVLTreeSetStEph.rs
+✓ src/Chap41/AVLTreeSetStPer.rs
+✓ src/Chap41/ArraySetEnumMtEph.rs
+✓ src/Chap41/ArraySetStEph.rs
+✓ src/Chap41/Example41_3.rs
+✓ src/Chap42/Example42_1.rs
+✓ src/Chap42/TableMtEph.rs
+✓ src/Chap42/TableStEph.rs
+✓ src/Chap42/TableStPer.rs
+✓ src/Chap43/AugOrderedTableMtEph.rs
+✓ src/Chap43/AugOrderedTableStEph.rs
+✓ src/Chap43/AugOrderedTableStPer.rs
+✓ src/Chap43/Example43_1.rs
+✓ src/Chap43/OrderedSetMtEph.rs
+✓ src/Chap43/OrderedSetStEph.rs
+✓ src/Chap43/OrderedSetStPer.rs
+✓ src/Chap43/OrderedTableMtEph.rs
+✓ src/Chap43/OrderedTableMtPer.rs
+✓ src/Chap43/OrderedTableStEph.rs
+✓ src/Chap43/OrderedTableStPer.rs
+✓ src/Chap44/DocumentIndex.rs
+✓ src/Chap44/Example44_1.rs
+✓ src/Chap45/BalancedTreePQ.rs
+✓ src/Chap45/BinaryHeapPQ.rs
+✓ src/Chap45/Example45_2.rs
+✓ src/Chap45/HeapsortExample.rs
+✓ src/Chap45/LeftistHeapPQ.rs
+✓ src/Chap45/SortedListPQ.rs
+✓ src/Chap45/UnsortedListPQ.rs
+✓ src/Chap47/ChainedHashTable.rs
+❌ src/Chap47/DoubleHashFlatHashTableStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:37: unsafe {} - unsafe {
+        24 |         pub fn second_hash<Key: StT>(key: &Key, table_size: N) -> N {
+            ...
+        35 |             let mut hash: u64 = 0xcbf29ce484222325; // FNV offset basis
+        36 | 
+        38 |                 for i in 0..key_size {
+        39 |                     let byte = *key_ptr.add(i);
+   Holes: 1 total
+      1 × unsafe {}
+✓ src/Chap47/FlatHashTable.rs
+✓ src/Chap47/LinProbFlatHashTableStEph.rs
+✓ src/Chap47/LinkedListChainedHashTableStEph.rs
+✓ src/Chap47/ParaHashTableStEph.rs
+✓ src/Chap47/QuadProbFlatHashTableStEph.rs
+✓ src/Chap47/StructChainedHashTable.rs
+✓ src/Chap47/VecChainedHashTableStEph.rs
+✓ src/Chap49/MinEditDistMtEph.rs
+✓ src/Chap49/MinEditDistMtPer.rs
+✓ src/Chap49/MinEditDistStEph.rs
+✓ src/Chap49/MinEditDistStPer.rs
+✓ src/Chap49/SubsetSumMtEph.rs
+✓ src/Chap49/SubsetSumMtPer.rs
+✓ src/Chap49/SubsetSumStEph.rs
+✓ src/Chap49/SubsetSumStPer.rs
+✓ src/Chap50/MatrixChainMtEph.rs
+✓ src/Chap50/MatrixChainMtPer.rs
+✓ src/Chap50/MatrixChainStEph.rs
+✓ src/Chap50/MatrixChainStPer.rs
+✓ src/Chap50/OptBinSearchTreeMtEph.rs
+✓ src/Chap50/OptBinSearchTreeMtPer.rs
+✓ src/Chap50/OptBinSearchTreeStEph.rs
+✓ src/Chap50/OptBinSearchTreeStPer.rs
+✓ src/Chap50/Probability.rs
+✓ src/Chap51/BottomUpDPMtEph.rs
+✓ src/Chap51/BottomUpDPMtPer.rs
+✓ src/Chap51/BottomUpDPStEph.rs
+✓ src/Chap51/BottomUpDPStPer.rs
+✓ src/Chap51/TopDownDPMtEph.rs
+✓ src/Chap51/TopDownDPMtPer.rs
+✓ src/Chap51/TopDownDPStEph.rs
+✓ src/Chap51/TopDownDPStPer.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   3 clean (no holes)
-   0 holed (contains holes)
-   3 total
+   92 clean (no holes)
+   4 holed (contains holes)
+   96 total
 
 Proof Functions:
-   0 clean
+   3 clean
    0 holed
-   0 total
+   3 total
 
-Holes Found: 0 total
-
-🎉 No proof holes found! All proofs are complete.
+Holes Found: 16 total
+   2 × assume()
+   1 × assume_specification
+   1 × unsafe {}
+   11 × external_body
+   1 × external_type_specification
