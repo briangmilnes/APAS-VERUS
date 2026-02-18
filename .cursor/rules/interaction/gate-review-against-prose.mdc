@@ -1,0 +1,35 @@
+---
+description: Gate review-against-prose on changed inputs
+alwaysApply: true
+---
+
+# Gate Review-Against-Prose on Changed Inputs
+
+Before regenerating `review-against-prose.md` for any chapter, check whether any inputs are newer than the existing review:
+
+```bash
+find src/ChapNN/*.rs prompts/ChapNN.txt \
+     src/ChapNN/analyses/veracity-review-verus-proof-holes.log \
+     tests/test_ChapNN*.rs \
+     -newer src/ChapNN/analyses/review-against-prose.md 2>/dev/null | head -1
+```
+
+Replace `ChapNN` with the actual chapter (e.g., `Chap56`).
+
+## Decision
+
+- **Empty output** → review is up to date. Skip it.
+- **Any output** → at least one input changed. Regenerate.
+
+## Inputs that matter
+
+| Input | Why |
+|-------|-----|
+| `src/ChapNN/*.rs` | Source code changed |
+| `prompts/ChapNN.txt` | Prose text changed |
+| `src/ChapNN/analyses/veracity-review-verus-proof-holes.log` | Proof holes changed |
+| `tests/test_ChapNN*.rs` | Runtime tests changed |
+
+## When regenerating
+
+Only update sections affected by the changed files. For example, if only the proof holes log changed, update the Proof Holes Summary and Action Items — don't rewrite Phase 2 (Prose Inventory).
