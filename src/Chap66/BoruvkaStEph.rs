@@ -6,45 +6,20 @@
 
 pub mod BoruvkaStEph {
 
-    use std::collections::HashMap;
-    use std::hash::Hash;
-
-    use ordered_float::OrderedFloat;
     use vstd::prelude::*;
-    use rand::rngs::StdRng;
-    use rand::*;
-
+    use ordered_float::OrderedFloat;
     use crate::Chap05::SetStEph::SetStEph::*;
-    use crate::SetLit;
     use crate::Types::Types::*;
 
-    pub trait BoruvkaStEphTrait {
-        /// Find vertex bridges for Borůvka's algorithm
-        /// APAS: Work O(|E|), Span O(|E|)
-        fn vertex_bridges<V: StT + Hash + Ord>(edges: &SetStEph<LabeledEdge<V>>) -> SetStEph<(V, LabeledEdge<V>)>;
-
-        /// Bridge-based star partition
-        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn bridge_star_partition<V: StT + Hash + Ord>(
-            vertices: &SetStEph<V>,
-            bridges: &SetStEph<(V, LabeledEdge<V>)>,
-        ) -> SetStEph<SetStEph<V>>;
-
-        /// Borůvka's MST algorithm
-        /// APAS: Work O(m log n), Span O(m log n)
-        fn boruvka_mst<V: StT + Hash + Ord>(edges: &SetStEph<LabeledEdge<V>>)    -> SetStEph<LabeledEdge<V>>;
-
-        /// Borůvka's MST with random seed
-        /// APAS: Work O(m log n), Span O(m log n)
-        fn boruvka_mst_with_seed<V: StT + Hash + Ord>(
-            edges: &SetStEph<LabeledEdge<V>>,
-            seed: u64,
-        ) -> SetStEph<LabeledEdge<V>>;
-
-        /// Compute total weight of MST
-        /// APAS: Work O(m), Span O(1)
-        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabeledEdge<V>>)             -> OrderedFloat<f64>;
-    }
+    #[cfg(not(verus_keep_ghost))]
+    use std::collections::HashMap;
+    use std::hash::Hash;
+    #[cfg(not(verus_keep_ghost))]
+    use rand::rngs::StdRng;
+    #[cfg(not(verus_keep_ghost))]
+    use rand::*;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::SetLit;
 
     /// Edge with label: (u, v, weight, label)
     /// Vertices u,v change during contraction, but weight and label are immutable
@@ -53,6 +28,42 @@ pub mod BoruvkaStEph {
     #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct LabeledEdge<V>(pub V, pub V, pub OrderedFloat<f64>, pub usize);
 
+    verus! {
+        pub trait BoruvkaStEphTrait {
+            /// Find vertex bridges for Borůvka's algorithm
+            /// APAS: Work O(|E|), Span O(|E|)
+            fn vertex_bridges<V: StT + Hash + Ord>(edges: &SetStEph<LabeledEdge<V>>) -> SetStEph<(V, LabeledEdge<V>)>;
+
+            /// Bridge-based star partition
+            /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+            fn bridge_star_partition<V: StT + Hash + Ord>(
+                vertices: &SetStEph<V>,
+                bridges: &SetStEph<(V, LabeledEdge<V>)>,
+            ) -> SetStEph<SetStEph<V>>;
+
+            /// Borůvka's MST algorithm
+            /// APAS: Work O(m log n), Span O(m log n)
+            fn boruvka_mst<V: StT + Hash + Ord>(edges: &SetStEph<LabeledEdge<V>>) -> SetStEph<LabeledEdge<V>>;
+
+            /// Borůvka's MST with random seed
+            /// APAS: Work O(m log n), Span O(m log n)
+            fn boruvka_mst_with_seed<V: StT + Hash + Ord>(
+                edges: &SetStEph<LabeledEdge<V>>,
+                seed: u64,
+            ) -> SetStEph<LabeledEdge<V>>;
+
+            /// Compute total weight of MST
+            /// APAS: Work O(m), Span O(1)
+            fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabeledEdge<V>>) -> OrderedFloat<f64>;
+        }
+
+        impl<V: StT + Ord> View for LabeledEdge<V> {
+            type V = Self;
+            open spec fn view(&self) -> Self { *self }
+        }
+    }
+
+    #[cfg(not(verus_keep_ghost))]
     impl<V: std::fmt::Display> std::fmt::Display for LabeledEdge<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "({}, {}, {}, {})", self.0, self.1, self.2, self.3)
@@ -66,6 +77,7 @@ pub mod BoruvkaStEph {
     ///
     /// - APAS: Work O(m), Span O(log m)
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential iteration over edges.
+    #[cfg(not(verus_keep_ghost))]
     pub fn vertex_bridges<V: StT + Hash + Ord>(
         edges: &SetStEph<LabeledEdge<V>>,
     ) -> HashMap<V, (V, OrderedFloat<f64>, usize)> {
@@ -109,6 +121,7 @@ pub mod BoruvkaStEph {
     ///
     /// - APAS: Work O(n), Span O(log n)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) — sequential iteration over vertices.
+    #[cfg(not(verus_keep_ghost))]
     pub fn bridge_star_partition<V: StT + Hash + Ord>(
         vertices: &SetStEph<V>,
         bridges: &HashMap<V, (V, OrderedFloat<f64>, usize)>,
@@ -151,6 +164,7 @@ pub mod BoruvkaStEph {
     ///
     /// - APAS: Work O(m log n), Span O(log² n)
     /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — sequential; O(log n) rounds each doing O(m) work sequentially.
+    #[cfg(not(verus_keep_ghost))]
     pub fn boruvka_mst<V: StT + Hash + Ord>(
         vertices: &SetStEph<V>,
         edges: &SetStEph<LabeledEdge<V>>,
@@ -204,6 +218,7 @@ pub mod BoruvkaStEph {
     ///
     /// - APAS: Work O(m log n), Span O(log² n)
     /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — delegates to sequential boruvka_mst.
+    #[cfg(not(verus_keep_ghost))]
     pub fn boruvka_mst_with_seed<V: StT + Hash + Ord>(
         vertices: &SetStEph<V>,
         edges: &SetStEph<LabeledEdge<V>>,
@@ -217,6 +232,7 @@ pub mod BoruvkaStEph {
     ///
     /// - APAS: N/A — utility function, not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential scan of edges.
+    #[cfg(not(verus_keep_ghost))]
     pub fn mst_weight<V: StT + Hash>(
         edges: &SetStEph<LabeledEdge<V>>,
         mst_labels: &SetStEph<usize>,
@@ -228,12 +244,5 @@ pub mod BoruvkaStEph {
             }
         }
         total
-    }
-
-    verus! {
-        impl<V: StT + Hash + Ord> View for LabeledEdge<V> {
-            type V = Self;
-            open spec fn view(&self) -> Self { *self }
-        }
     }
 }

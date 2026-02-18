@@ -9,34 +9,44 @@
 
 pub mod ConnectivityStEph {
 
-    use std::collections::HashMap;
-    use std::hash::Hash;
+    use vstd::prelude::*;
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
-    use crate::Chap62::StarContractionStEph::StarContractionStEph::star_contract;
-    use crate::Chap62::StarPartitionStEph::StarPartitionStEph::sequential_star_partition;
-    use crate::SetLit;
     use crate::Types::Types::*;
+
+    #[cfg(not(verus_keep_ghost))]
+    use std::collections::HashMap;
+    use std::hash::Hash;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::Chap62::StarContractionStEph::StarContractionStEph::star_contract;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::Chap62::StarPartitionStEph::StarPartitionStEph::sequential_star_partition;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::SetLit;
+
+    verus! {
+        pub trait ConnectivityStEphTrait {
+            /// Count connected components using star contraction
+            /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+            fn count_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N;
+
+            /// Find connected components using star contraction
+            /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+            fn connected_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<SetStEph<V>>;
+
+            /// Count components using higher-order function approach
+            /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+            fn count_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N;
+
+            /// Find components using higher-order function approach
+            /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+            fn connected_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<SetStEph<V>>;
+        }
+    } // verus!
+
+    #[cfg(not(verus_keep_ghost))]
     pub type T<V> = UnDirGraphStEph<V>;
-
-    pub trait ConnectivityStEphTrait {
-        /// Count connected components using star contraction
-        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn count_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>)         -> N;
-
-        /// Find connected components using star contraction
-        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn connected_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>)     -> SetStEph<SetStEph<V>>;
-
-        /// Count components using higher-order function approach
-        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn count_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>)     -> N;
-
-        /// Find components using higher-order function approach
-        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn connected_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<SetStEph<V>>;
-    }
 
     /// Algorithm 63.2: Count Connected Components
     ///
@@ -52,20 +62,17 @@ pub mod ConnectivityStEph {
     ///
     /// Returns:
     /// - The number of connected components
+    #[cfg(not(verus_keep_ghost))]
     pub fn count_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N {
-        // Base case: no edges, each vertex is own component
         if graph.sizeE() == 0 {
             return graph.sizeV();
         }
 
-        // Partition the graph
         let (centers, partition_map) = sequential_star_partition(graph);
 
-        // Build quotient graph by routing edges through partition map
         let quotient_edges = build_quotient_edges(graph, &partition_map);
         let quotient_graph = <UnDirGraphStEph<V> as UnDirGraphStEphTrait<V>>::from_sets(centers, quotient_edges);
 
-        // Recursively count components in quotient graph
         count_components(&quotient_graph)
     }
 
@@ -83,8 +90,8 @@ pub mod ConnectivityStEph {
     /// Returns:
     /// - (representatives, component_map): Set of component representatives and
     ///   mapping from each vertex to its component representative
+    #[cfg(not(verus_keep_ghost))]
     pub fn connected_components<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
-        // Base case: no edges, each vertex maps to itself
         if graph.sizeE() == 0 {
             let mut component_map = HashMap::new();
             for vertex in graph.vertices().iter() {
@@ -93,17 +100,13 @@ pub mod ConnectivityStEph {
             return (graph.vertices().clone(), component_map);
         }
 
-        // Partition the graph
         let (centers, partition_map) = sequential_star_partition(graph);
 
-        // Build quotient graph
         let quotient_edges = build_quotient_edges(graph, &partition_map);
         let quotient_graph = <UnDirGraphStEph<V> as UnDirGraphStEphTrait<V>>::from_sets(centers, quotient_edges);
 
-        // Recursively compute components in quotient graph
         let (representatives, component_map_quotient) = connected_components(&quotient_graph);
 
-        // Compose maps: for each vertex u, map it to C[P[u]]
         let mut component_map = HashMap::new();
         for (u, v) in partition_map.iter() {
             let component = component_map_quotient.get(v).unwrap_or(v);
@@ -118,6 +121,7 @@ pub mod ConnectivityStEph {
     ///
     /// - APAS: N/A — helper function implicit in Algorithm 63.2/63.3 Line 7.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — single pass over edges
+    #[cfg(not(verus_keep_ghost))]
     fn build_quotient_edges<V: StT + Hash + Ord>(
         graph: &UnDirGraphStEph<V>,
         partition_map: &HashMap<V, V>,
@@ -129,7 +133,6 @@ pub mod ConnectivityStEph {
             let u_center = partition_map.get(u).unwrap_or(u);
             let v_center = partition_map.get(v).unwrap_or(v);
 
-            // Only add if centers are different (no self-loops)
             if u_center != v_center {
                 let new_edge = if u_center < v_center {
                     Edge(u_center.clone(), v_center.clone())
@@ -149,11 +152,10 @@ pub mod ConnectivityStEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.2
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
+    #[cfg(not(verus_keep_ghost))]
     pub fn count_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> N {
-        // Base: when no edges, return number of vertices
         let base = |vertices: &SetStEph<V>| vertices.size();
 
-        // Expand: just return the recursive result (no expansion needed for counting)
         let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMap<V, V>, r: N| r;
 
         star_contract(graph, &base, &expand)
@@ -165,8 +167,8 @@ pub mod ConnectivityStEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.3
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
+    #[cfg(not(verus_keep_ghost))]
     pub fn connected_components_hof<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
-        // Base: when no edges, each vertex maps to itself
         let base = |vertices: &SetStEph<V>| {
             let mut map = HashMap::new();
             for v in vertices.iter() {
@@ -175,7 +177,6 @@ pub mod ConnectivityStEph {
             (vertices.clone(), map)
         };
 
-        // Expand: compose partition map P with component map C
         let expand = |_v: &SetStEph<V>,
                       _e: &SetStEph<Edge<V>>,
                       _centers: &SetStEph<V>,

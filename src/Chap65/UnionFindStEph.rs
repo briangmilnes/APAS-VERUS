@@ -6,42 +6,48 @@
 
 pub mod UnionFindStEph {
 
+    use vstd::prelude::*;
+    use crate::Types::Types::*;
+
+    #[cfg(not(verus_keep_ghost))]
     use std::collections::HashMap;
     use std::hash::Hash;
 
-    use crate::Types::Types::*;
+    verus! {
+        pub trait UnionFindStEphTrait<V: StT + Hash> {
+            /// Create a new empty Union-Find structure
+            /// APAS: Work Θ(1), Span Θ(1)
+            fn new() -> Self;
 
-    pub trait UnionFindStEphTrait<V: StT + Hash> {
-        /// Create a new empty Union-Find structure
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn new()                           -> Self;
+            /// Insert a new element into the Union-Find structure
+            /// APAS: Work Θ(1), Span Θ(1)
+            fn insert(&mut self, v: V);
 
-        /// Insert a new element into the Union-Find structure
-        /// APAS: Work Θ(1), Span Θ(1)
-        fn insert(&mut self, v: V);
+            /// Find the representative (root) of the set containing v with path compression
+            /// APAS: Work O(α(n)), Span O(α(n)) amortized (inverse Ackermann)
+            fn find(&mut self, v: &V) -> V;
 
-        /// Find the representative (root) of the set containing v with path compression
-        /// APAS: Work O(α(n)), Span O(α(n)) amortized (inverse Ackermann)
-        fn find(&mut self, v: &V)          -> V;
+            /// Union two sets containing u and v using union by rank
+            /// APAS: Work O(α(n)), Span O(α(n)) amortized
+            fn union(&mut self, u: &V, v: &V);
 
-        /// Union two sets containing u and v using union by rank
-        /// APAS: Work O(α(n)), Span O(α(n)) amortized
-        fn union(&mut self, u: &V, v: &V);
+            /// Check if two elements are in the same set
+            /// APAS: Work O(α(n)), Span O(α(n)) amortized
+            fn equals(&mut self, u: &V, v: &V) -> B;
 
-        /// Check if two elements are in the same set
-        /// APAS: Work O(α(n)), Span O(α(n)) amortized
-        fn equals(&mut self, u: &V, v: &V) -> B;
-
-        /// Get the number of distinct sets
-        /// APAS: Work O(n α(n)), Span O(n α(n))
-        fn num_sets(&mut self)             -> usize;
+            /// Get the number of distinct sets
+            /// APAS: Work O(n α(n)), Span O(n α(n))
+            fn num_sets(&mut self) -> usize;
+        }
     }
 
+    #[cfg(not(verus_keep_ghost))]
     pub struct UnionFindStEph<V: StT + Hash> {
         parent: HashMap<V, V>,
         rank: HashMap<V, usize>,
     }
 
+    #[cfg(not(verus_keep_ghost))]
     impl<V: StT + Hash> UnionFindStEphTrait<V> for UnionFindStEph<V> {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS
@@ -115,6 +121,7 @@ pub mod UnionFindStEph {
         }
     }
 
+    #[cfg(not(verus_keep_ghost))]
     impl<V: StT + Hash> Default for UnionFindStEph<V> {
         /// - APAS: N/A — Rust trait boilerplate.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to new()

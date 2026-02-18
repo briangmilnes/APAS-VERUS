@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap56/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap56/ -d /home/milnes/projects/APAS-VERUS/src/Chap58/ -d /home/milnes/projects/APAS-VERUS/src/Chap59/ -d /home/milnes/projects/APAS-VERUS/src/Chap61/ -d /home/milnes/projects/APAS-VERUS/src/Chap62/ -d /home/milnes/projects/APAS-VERUS/src/Chap63/ -d /home/milnes/projects/APAS-VERUS/src/Chap64/ -d /home/milnes/projects/APAS-VERUS/src/Chap65/ -d /home/milnes/projects/APAS-VERUS/src/Chap66/
 
 ✓ AllPairsResultStEphFloat.rs
 ✓ AllPairsResultStEphInt.rs
@@ -12,15 +12,39 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ SSSPResultStEphInt.rs
 ✓ SSSPResultStPerFloat.rs
 ✓ SSSPResultStPerInt.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphFloat.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphInt.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphFloat.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphInt.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphFloat.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphInt.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionMtEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionStEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   12 clean (no holes)
+   36 clean (no holes)
    0 holed (contains holes)
-   12 total
+   36 total
 
 Proof Functions:
    0 clean

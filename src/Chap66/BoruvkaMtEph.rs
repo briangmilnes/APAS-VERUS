@@ -6,50 +6,22 @@
 
 pub mod BoruvkaMtEph {
 
-    use std::collections::HashMap;
-    use std::hash::Hash;
-    use std::sync::Arc;
-
-    use ordered_float::OrderedFloat;
     use vstd::prelude::*;
-    use rand::rngs::StdRng;
-    use rand::*;
-
+    use ordered_float::OrderedFloat;
     use crate::Chap05::SetStEph::SetStEph::*;
-    use crate::{ParaPair, SetLit};
     use crate::Types::Types::*;
 
-    pub trait BoruvkaMtEphTrait {
-        /// Find vertex bridges for parallel Borůvka's algorithm
-        /// APAS: Work O(|E|), Span O(lg |E|)
-        fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
-            edges: &SetStEph<LabeledEdge<V>>,
-        ) -> SetStEph<(V, LabeledEdge<V>)>;
-
-        /// Parallel bridge-based star partition
-        /// APAS: Work O(|V| + |E|), Span O(lg |V|)
-        fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
-            vertices: &SetStEph<V>,
-            bridges: &SetStEph<(V, LabeledEdge<V>)>,
-        ) -> SetStEph<SetStEph<V>>;
-
-        /// Parallel Borůvka's MST algorithm
-        /// APAS: Work O(m log n), Span O(log² n)
-        fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(
-            edges: &SetStEph<LabeledEdge<V>>,
-        ) -> SetStEph<LabeledEdge<V>>;
-
-        /// Parallel Borůvka's MST with random seed
-        /// APAS: Work O(m log n), Span O(log² n)
-        fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
-            edges: &SetStEph<LabeledEdge<V>>,
-            seed: u64,
-        ) -> SetStEph<LabeledEdge<V>>;
-
-        /// Compute total weight of MST
-        /// APAS: Work O(m), Span O(1)
-        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabeledEdge<V>>) -> OrderedFloat<f64>;
-    }
+    #[cfg(not(verus_keep_ghost))]
+    use std::collections::HashMap;
+    use std::hash::Hash;
+    #[cfg(not(verus_keep_ghost))]
+    use std::sync::Arc;
+    #[cfg(not(verus_keep_ghost))]
+    use rand::rngs::StdRng;
+    #[cfg(not(verus_keep_ghost))]
+    use rand::*;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::{ParaPair, SetLit};
 
     /// Edge with label: (u, v, weight, label)
     /// Labeled edge for Borůvka's algorithm: (from, to, weight, label_id)
@@ -57,6 +29,46 @@ pub mod BoruvkaMtEph {
     #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct LabeledEdge<V>(pub V, pub V, pub OrderedFloat<f64>, pub usize);
 
+    verus! {
+        pub trait BoruvkaMtEphTrait {
+            /// Find vertex bridges for parallel Borůvka's algorithm
+            /// APAS: Work O(|E|), Span O(lg |E|)
+            fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
+                edges: &SetStEph<LabeledEdge<V>>,
+            ) -> SetStEph<(V, LabeledEdge<V>)>;
+
+            /// Parallel bridge-based star partition
+            /// APAS: Work O(|V| + |E|), Span O(lg |V|)
+            fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
+                vertices: &SetStEph<V>,
+                bridges: &SetStEph<(V, LabeledEdge<V>)>,
+            ) -> SetStEph<SetStEph<V>>;
+
+            /// Parallel Borůvka's MST algorithm
+            /// APAS: Work O(m log n), Span O(log² n)
+            fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(
+                edges: &SetStEph<LabeledEdge<V>>,
+            ) -> SetStEph<LabeledEdge<V>>;
+
+            /// Parallel Borůvka's MST with random seed
+            /// APAS: Work O(m log n), Span O(log² n)
+            fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
+                edges: &SetStEph<LabeledEdge<V>>,
+                seed: u64,
+            ) -> SetStEph<LabeledEdge<V>>;
+
+            /// Compute total weight of MST
+            /// APAS: Work O(m), Span O(1)
+            fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabeledEdge<V>>) -> OrderedFloat<f64>;
+        }
+
+        impl<V: StTInMtT + Ord + 'static> View for LabeledEdge<V> {
+            type V = Self;
+            open spec fn view(&self) -> Self { *self }
+        }
+    }
+
+    #[cfg(not(verus_keep_ghost))]
     impl<V: std::fmt::Display> std::fmt::Display for LabeledEdge<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "({}, {}, {}, {})", self.0, self.1, self.2, self.3)
@@ -70,6 +82,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: Work O(m), Span O(log m)
     /// - Claude-Opus-4.6: Work O(m), Span O(log m) — agrees with APAS; parallel divide-and-conquer via ParaPair!.
+    #[cfg(not(verus_keep_ghost))]
     pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
         start: usize,
@@ -125,6 +138,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: Work O(n), Span O(log n)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) — coin flips are sequential O(n); filter is parallel O(log n); remaining vertices computed sequentially O(n). Bottleneck is sequential loops.
+    #[cfg(not(verus_keep_ghost))]
     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices_vec: Vec<V>,
         bridges: HashMap<V, (V, OrderedFloat<f64>, usize)>,
@@ -158,6 +172,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: N/A — internal helper, not in prose.
     /// - Claude-Opus-4.6: Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.
+    #[cfg(not(verus_keep_ghost))]
     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices: Arc<Vec<V>>,
         bridges: Arc<HashMap<V, (V, OrderedFloat<f64>, usize)>>,
@@ -213,6 +228,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: Work O(m log n), Span O(log² n)
     /// - Claude-Opus-4.6: Work O(m log n), Span O(n log n) — vertex_bridges_mt is O(log m) span, but bridge_star_partition_mt has O(n) span due to sequential coin flips and remaining-vertex computation. Over O(log n) rounds, span is O(n log n), not O(log² n).
+    #[cfg(not(verus_keep_ghost))]
     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices_vec: Vec<V>,
         edges_vec: Vec<LabeledEdge<V>>,
@@ -260,6 +276,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: N/A — internal helper, not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(log m) — parallel divide-and-conquer via ParaPair!.
+    #[cfg(not(verus_keep_ghost))]
     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
         partition: Arc<HashMap<V, V>>,
@@ -305,6 +322,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: Work O(m log n), Span O(log² n)
     /// - Claude-Opus-4.6: Work O(m log n), Span O(n log n) — delegates to boruvka_mst_mt which has O(n) span per round.
+    #[cfg(not(verus_keep_ghost))]
     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
         vertices: &SetStEph<V>,
         edges: &SetStEph<LabeledEdge<V>>,
@@ -320,6 +338,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: N/A — utility function, not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential scan of edges.
+    #[cfg(not(verus_keep_ghost))]
     pub fn mst_weight<V: StT + Hash>(
         edges: &SetStEph<LabeledEdge<V>>,
         mst_labels: &SetStEph<usize>,
@@ -331,12 +350,5 @@ pub mod BoruvkaMtEph {
             }
         }
         total
-    }
-
-    verus! {
-        impl<V: StTInMtT + Hash + Ord + 'static> View for LabeledEdge<V> {
-            type V = Self;
-            open spec fn view(&self) -> Self { *self }
-        }
     }
 }

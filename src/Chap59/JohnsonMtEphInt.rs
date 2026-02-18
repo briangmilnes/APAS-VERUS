@@ -13,23 +13,32 @@
 
 pub mod JohnsonMtEphInt {
 
-    use std::thread;
+    use vstd::prelude::*;
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::*;
     use crate::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap56::AllPairsResultStEphInt::AllPairsResultStEphInt::AllPairsResultStEphInt;
-    use crate::Chap57::DijkstraStEphInt::DijkstraStEphInt::dijkstra;
-    use crate::Chap58::BellmanFordStEphInt::BellmanFordStEphInt::bellman_ford;
     use crate::Types::Types::*;
-    pub type T = WeightedDirGraphStEphI128<usize>;
 
-    pub trait JohnsonMtEphIntTrait {
-        /// Parallel Johnson's all-pairs shortest path algorithm
-        /// APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|
-        fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphInt;
-    }
+    #[cfg(not(verus_keep_ghost))]
+    use std::thread;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::Chap57::DijkstraStEphInt::DijkstraStEphInt::dijkstra;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::Chap58::BellmanFordStEphInt::BellmanFordStEphInt::bellman_ford;
+
+    verus! {
+        pub trait JohnsonMtEphIntTrait {
+            /// Parallel Johnson's all-pairs shortest path algorithm
+            /// APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|
+            fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphInt;
+        }
+    } // verus!
+
+    #[cfg(not(verus_keep_ghost))]
+    pub type T = WeightedDirGraphStEphI128<usize>;
 
     /// Algorithm 59.1: Johnson's All-Pairs Shortest Paths (Parallel)
     ///
@@ -40,28 +49,23 @@ pub mod JohnsonMtEphInt {
     ///
     /// - APAS: Work O(mn log n), Span O(m log n), Parallelism Θ(n)
     /// - Claude-Opus-4.6: Work O(mn log n), Span O(m log n) — agrees with APAS; ParaPair! recursion achieves Θ(n) parallelism in Phase 3
+    #[cfg(not(verus_keep_ghost))]
     pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphInt {
         let n = graph.vertices().size();
 
-        // Phase 1: Add dummy source and run Bellman-Ford
         let (graph_with_dummy, dummy_idx) = add_dummy_source(&graph, n);
 
         let bellman_ford_result = match bellman_ford(&graph_with_dummy, dummy_idx) {
             | Ok(res) => res,
             | Err(_) => {
-                // Negative cycle detected - return infinity matrix
                 return create_negative_cycle_result(n);
             }
         };
 
-        // Extract potentials
         let potentials = ArraySeqStEphS::tabulate(&|i| bellman_ford_result.get_distance(i), n);
 
-        // Phase 2: Reweight edges to eliminate negative weights
         let reweighted_graph = reweight_graph(&graph, &potentials, n);
 
-        // Phase 3: Run Dijkstra from each vertex IN PARALLEL and adjust distances
-        // Unconditionally parallel using recursive divide-and-conquer with ParaPair!
         let (all_distances, all_predecessors) = parallel_dijkstra_all(&reweighted_graph, &potentials, 0, n, n);
 
         AllPairsResultStEphInt {
@@ -75,6 +79,7 @@ pub mod JohnsonMtEphInt {
     ///
     /// - APAS: N/A — internal helper, not named in prose.
     /// - Claude-Opus-4.6: Work O(k * m log n), Span O(m log n) where k = end - start — binary split with ParaPair! gives log k depth, each leaf runs Dijkstra O(m log n)
+    #[cfg(not(verus_keep_ghost))]
     fn parallel_dijkstra_all(
         graph: &WeightedDirGraphStEphI128<usize>,
         potentials: &ArraySeqStEphS<i64>,
@@ -87,17 +92,14 @@ pub mod JohnsonMtEphInt {
     ) {
         let range_size = end - start;
 
-        // Base case: empty range
         if range_size == 0 {
             return (ArraySeqStEphS::empty(), ArraySeqStEphS::empty());
         }
 
-        // Base case: single vertex
         if range_size == 1 {
             let u = start;
             let dijkstra_result = dijkstra(graph, u);
 
-            // Adjust distances: δG(u,v) = δG'(u,v) - p(u) + p(v)
             let p_u = *potentials.nth(u);
             let adjusted_row = ArraySeqStEphS::tabulate(
                 &|v| {
@@ -117,7 +119,6 @@ pub mod JohnsonMtEphInt {
             return (dist_seq, pred_seq);
         }
 
-        // Recursive case: split in half and use ParaPair! for unconditional parallelism
         let mid = start + range_size / 2;
         let graph_left = graph.clone();
         let graph_right = graph.clone();
@@ -129,7 +130,6 @@ pub mod JohnsonMtEphInt {
             move || parallel_dijkstra_all(&graph_right, &potentials_right, mid, end, n)
         );
 
-        // Combine results
         let combined_dist = ArraySeqStEphS::append(&left_dist, &right_dist);
         let combined_pred = ArraySeqStEphS::append(&left_pred, &right_pred);
 
@@ -140,23 +140,21 @@ pub mod JohnsonMtEphInt {
     ///
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — iterates over vertices and edges
+    #[cfg(not(verus_keep_ghost))]
     fn add_dummy_source(graph: &WeightedDirGraphStEphI128<usize>, n: usize) -> (WeightedDirGraphStEphI128<usize>, usize) {
         let mut vertices = SetStEph::empty();
         for i in 0..n {
             vertices.insert(i);
         }
 
-        // Add dummy vertex
         vertices.insert(n);
 
         let mut edges = SetStEph::empty();
 
-        // Copy all original edges
         for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {
             edges.insert(WeightedEdge(*from, *to, *weight));
         }
 
-        // Add edges from dummy source to all original vertices
         for v in 0..n {
             edges.insert(WeightedEdge(n, v, 0i128));
         }
@@ -168,6 +166,7 @@ pub mod JohnsonMtEphInt {
     ///
     /// - APAS: Work O(m), Span O(m)
     /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — rebuilds vertex set O(n) plus iterates edges O(m)
+    #[cfg(not(verus_keep_ghost))]
     fn reweight_graph(
         graph: &WeightedDirGraphStEphI128<usize>,
         potentials: &ArraySeqStEphS<i64>,
@@ -193,6 +192,7 @@ pub mod JohnsonMtEphInt {
     ///
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — builds n×n distance and predecessor matrices
+    #[cfg(not(verus_keep_ghost))]
     fn create_negative_cycle_result(n: usize) -> AllPairsResultStEphInt {
         let distances = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| i64::MAX, n), n);
         let predecessors = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| 0, n), n);

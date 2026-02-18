@@ -210,8 +210,7 @@ pub mod Chap19 {
     pub mod ArraySeqStPer;
     pub mod ArraySeqStEph;
     pub mod ArraySeqMtEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod ArraySeqMtEphSlice;
+    // pub mod ArraySeqMtEphSlice; // WIP: verusification in progress
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
@@ -494,7 +493,7 @@ pub mod Chap55 {
     pub mod SCCStPer;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap56 {
     pub mod SSSPResultStEphInt;
     pub mod SSSPResultStPerInt;
@@ -526,14 +525,14 @@ pub mod Chap57 {
     pub mod DijkstraStEphFloat;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap58 {
     pub mod BellmanFordStEphInt;
     #[cfg(feature = "all_chapters")]
     pub mod BellmanFordStEphFloat;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap59 {
     pub mod JohnsonStEphInt;
     pub mod JohnsonMtEphInt;
@@ -543,7 +542,7 @@ pub mod Chap59 {
     pub mod JohnsonMtEphFloat;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap61 {
     pub mod EdgeContractionStEph;
     pub mod EdgeContractionMtEph;
@@ -551,7 +550,7 @@ pub mod Chap61 {
     pub mod VertexMatchingMtEph;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap62 {
     pub mod StarPartitionStEph;
     pub mod StarPartitionMtEph;
@@ -559,7 +558,7 @@ pub mod Chap62 {
     pub mod StarContractionMtEph;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap63 {
     pub mod ConnectivityStEph;
     pub mod ConnectivityMtEph;

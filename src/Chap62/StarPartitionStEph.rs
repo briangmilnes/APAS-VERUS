@@ -7,20 +7,28 @@
 
 pub mod StarPartitionStEph {
 
-    use std::collections::HashMap;
-    use std::hash::Hash;
+    use vstd::prelude::*;
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
-    use crate::SetLit;
     use crate::Types::Types::*;
-    pub type T<V> = UnDirGraphStEph<V>;
 
-    pub trait StarPartitionStEphTrait {
-        /// Sequential star partition using greedy selection
-        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn sequential_star_partition<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<SetStEph<V>>;
-    }
+    #[cfg(not(verus_keep_ghost))]
+    use std::collections::HashMap;
+    use std::hash::Hash;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::SetLit;
+
+    verus! {
+        pub trait StarPartitionStEphTrait {
+            /// Sequential star partition using greedy selection
+            /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+            fn sequential_star_partition<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<SetStEph<V>>;
+        }
+    } // verus!
+
+    #[cfg(not(verus_keep_ghost))]
+    pub type T<V> = UnDirGraphStEph<V>;
 
     /// Sequential Star Partition using greedy selection
     ///
@@ -38,24 +46,21 @@ pub mod StarPartitionStEph {
     ///
     /// Returns:
     /// - (centers, partition_map): Set of center vertices and mapping from each vertex to its center
+    #[cfg(not(verus_keep_ghost))]
     pub fn sequential_star_partition<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
         let mut partition_map = HashMap::<V, V>::new();
         let mut centers: SetStEph<V> = SetLit![];
         let mut processed: SetStEph<V> = SetLit![];
 
-        // Iterate through all vertices
         for vertex in graph.vertices().iter() {
-            // Skip if already processed as a satellite
             if processed.mem(vertex) {
                 continue;
             }
 
-            // Make this vertex a center
             let _ = centers.insert(vertex.clone());
             let _ = partition_map.insert(vertex.clone(), vertex.clone());
             let _ = processed.insert(vertex.clone());
 
-            // Add all neighbors as satellites of this center
             let neighbors = graph.ng(vertex);
             for neighbor in neighbors.iter() {
                 if !processed.mem(neighbor) {

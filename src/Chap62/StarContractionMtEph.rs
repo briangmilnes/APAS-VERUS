@@ -6,33 +6,44 @@
 
 pub mod StarContractionMtEph {
 
-    use std::collections::HashMap;
-    use std::hash::Hash;
-    use std::sync::{Arc, Mutex};
-    use std::vec::Vec;
+    use vstd::prelude::*;
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
-    use crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition;
-    use crate::{ParaPair, SetLit};
     use crate::Types::Types::*;
+
+    #[cfg(not(verus_keep_ghost))]
+    use std::collections::HashMap;
+    use std::hash::Hash;
+    #[cfg(not(verus_keep_ghost))]
+    use std::sync::Arc;
+    #[cfg(not(verus_keep_ghost))]
+    use std::vec::Vec;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::{ParaPair, SetLit};
+
+    verus! {
+        pub trait StarContractionMtEphTrait {
+            /// Parallel star contraction higher-order function
+            /// APAS: Work O((n + m) lg n), Span O(lg² n)
+            fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, base: F, expand: G) -> R
+            where
+                V: StT + MtT + Hash + Ord + 'static,
+                R: StT + MtT + 'static,
+                F: Fn(&SetStEph<V>) -> R + 'static,
+                G: Fn(&SetStEph<V>, &R) -> R + 'static;
+
+            /// Contract graph to just vertices (no edges)
+            /// APAS: Work O((n + m) lg n), Span O(lg² n)
+            fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>) -> SetStEph<V>;
+        }
+    } // verus!
+
+    #[cfg(not(verus_keep_ghost))]
     pub type T<V> = UnDirGraphMtEph<V>;
-
-    pub trait StarContractionMtEphTrait {
-        /// Parallel star contraction higher-order function
-        /// APAS: Work O((n + m) lg n), Span O(lg² n)
-        fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, base: F, expand: G)             -> R
-        where
-            V: StT + MtT + Hash + Ord + 'static,
-            R: StT + MtT + 'static,
-            F: Fn(&SetStEph<V>) -> R + Send + Sync + 'static,
-            G: Fn(&SetStEph<V>, &R) -> R + Send + Sync + 'static;
-
-        /// Contract graph to just vertices (no edges)
-        /// APAS: Work O((n + m) lg n), Span O(lg² n)
-        fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>) -> SetStEph<V>;
-    }
 
     /// Algorithm 62.5: Star Contraction (Parallel)
     ///
@@ -51,28 +62,23 @@ pub mod StarContractionMtEph {
     ///
     /// Returns:
     /// - Result of type R as computed by base and expand functions
+    #[cfg(not(verus_keep_ghost))]
     pub fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R
     where
         V: StT + MtT + Hash + Ord + 'static,
         F: Fn(&SetStEph<V>) -> R,
         G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R,
     {
-        // Base case: no edges
         if graph.sizeE() == 0 {
             return base(graph.vertices());
         }
 
-        // Recursive case:
-        // 1. Compute parallel star partition
         let (centers, partition_map) = parallel_star_partition(graph, seed);
 
-        // 2. Build quotient graph in parallel
         let quotient_graph = build_quotient_graph_parallel(graph, &centers, &partition_map);
 
-        // 3. Recursively contract quotient graph
         let r = star_contract_mt(&quotient_graph, seed + 1, base, expand);
 
-        // 4. Expand result back to original graph
         expand(graph.vertices(), graph.edges(), &centers, &partition_map, r)
     }
 
@@ -82,20 +88,18 @@ pub mod StarContractionMtEph {
     ///
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(lg m) — delegates to route_edges_parallel which uses ParaPair fork-join.
+    #[cfg(not(verus_keep_ghost))]
     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         centers: &SetStEph<V>,
         partition_map: &HashMap<V, V>,
     ) -> UnDirGraphMtEph<V> {
-        // Convert edges to sequence for parallel processing
         let edges_vec = graph.edges().iter().cloned().collect::<Vec<Edge<V>>>();
         let edges_seq = ArraySeqStEphS::from_vec(edges_vec);
         let n_edges = edges_seq.length();
 
-        // Build partition map Arc for sharing across threads
         let part_map_arc = Arc::new(partition_map.clone());
 
-        // Process edges in parallel
         let quotient_edges = route_edges_parallel(&edges_seq, part_map_arc, 0, n_edges);
 
         <UnDirGraphMtEph<V> as UnDirGraphMtEphTrait<V>>::from_sets(centers.clone(), quotient_edges)
@@ -105,6 +109,7 @@ pub mod StarContractionMtEph {
     ///
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.
+    #[cfg(not(verus_keep_ghost))]
     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
         partition_map: Arc<HashMap<V, V>>,
@@ -118,13 +123,11 @@ pub mod StarContractionMtEph {
         }
 
         if size == 1 {
-            // Base case: process single edge
             let edge = edges.nth(start as N);
             let Edge(u, v) = edge;
             let u_center = partition_map.get(u).unwrap_or(u);
             let v_center = partition_map.get(v).unwrap_or(v);
 
-            // Add edge if centers are different
             if u_center != v_center {
                 let new_edge = if u_center < v_center {
                     Edge(u_center.clone(), v_center.clone())
@@ -136,7 +139,6 @@ pub mod StarContractionMtEph {
             return SetLit![];
         }
 
-        // Recursive case: divide and conquer
         let mid = start + size / 2;
 
         let edges1 = edges.clone();
@@ -148,7 +150,6 @@ pub mod StarContractionMtEph {
             route_edges_parallel(&edges2, map2, mid, end)
         });
 
-        // Union the two sets
         let mut result = pair.0;
         for edge in pair.1.iter() {
             let _ = result.insert(edge.clone());
@@ -162,6 +163,7 @@ pub mod StarContractionMtEph {
     ///
     /// - APAS: Work O((n + m) lg n), Span O(lg² n)
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — delegates to star_contract_mt which has sequential partition.
+    #[cfg(not(verus_keep_ghost))]
     pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,

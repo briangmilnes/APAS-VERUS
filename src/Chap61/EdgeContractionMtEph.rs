@@ -6,33 +6,42 @@
 
 pub mod EdgeContractionMtEph {
 
-    use std::collections::HashMap;
-    use std::hash::Hash;
-    use std::sync::Arc;
-    use std::vec::Vec;
+    use vstd::prelude::*;
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
-    use crate::Chap61::VertexMatchingMtEph::VertexMatchingMtEph::parallel_matching_mt;
-    use crate::{ParaPair, SetLit};
     use crate::Types::Types::*;
 
-    pub trait EdgeContractionMtEphTrait {
-        /// Parallel edge contraction algorithm
-        /// APAS: Work O(|E|), Span O(lg |V|)
-        fn edge_contract_mt<V: StT + MtT + Hash + Ord + 'static>(
-            graph: &UnDirGraphMtEph<V>,
-            matching: &SetStEph<Edge<V>>,
-        ) -> UnDirGraphMtEph<V>;
+    #[cfg(not(verus_keep_ghost))]
+    use std::collections::HashMap;
+    use std::hash::Hash;
+    #[cfg(not(verus_keep_ghost))]
+    use std::sync::Arc;
+    #[cfg(not(verus_keep_ghost))]
+    use std::vec::Vec;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::Chap61::VertexMatchingMtEph::VertexMatchingMtEph::parallel_matching_mt;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::{ParaPair, SetLit};
 
-        /// Single round of parallel edge contraction
-        /// APAS: Work O(|V| + |E|), Span O(lg |V|)
-        fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(
-            graph: &UnDirGraphMtEph<V>,
-            seed: u64,
-        ) -> UnDirGraphMtEph<V>;
-    }
+    verus! {
+        pub trait EdgeContractionMtEphTrait {
+            /// Parallel edge contraction algorithm
+            /// APAS: Work O(|E|), Span O(lg |V|)
+            fn edge_contract_mt<V: StT + MtT + Hash + Ord + 'static>(
+                graph: &UnDirGraphMtEph<V>,
+                matching: &SetStEph<Edge<V>>,
+            ) -> UnDirGraphMtEph<V>;
+
+            /// Single round of parallel edge contraction
+            /// APAS: Work O(|V| + |E|), Span O(lg |V|)
+            fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(
+                graph: &UnDirGraphMtEph<V>,
+                seed: u64,
+            ) -> UnDirGraphMtEph<V>;
+        }
+    } // verus!
 
     /// Algorithm 61.6: Parallel Edge Contraction
     ///
@@ -54,6 +63,7 @@ pub mod EdgeContractionMtEph {
     ///
     /// Returns:
     /// - Contracted graph where matched edges are merged into single vertices
+    #[cfg(not(verus_keep_ghost))]
     pub fn edge_contract_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         matching: &SetStEph<Edge<V>>,
@@ -61,10 +71,8 @@ pub mod EdgeContractionMtEph {
         use std::sync::{Arc, Mutex};
         pub type T<V> = UnDirGraphMtEph<V>;
 
-        // Create a mapping from original vertices to their block representatives
         let vertex_to_block = Arc::new(Mutex::new(HashMap::new()));
 
-        // Phase 1: Assign block representatives for matched edges (sequential for now)
         {
             let mut map = vertex_to_block.lock().unwrap();
             for edge in matching.iter() {
@@ -73,7 +81,6 @@ pub mod EdgeContractionMtEph {
                 map.insert(v.clone(), u.clone());
             }
 
-            // For unmatched vertices, they are their own representatives
             for vertex in graph.vertices().iter() {
                 if !map.contains_key(vertex) {
                     map.insert(vertex.clone(), vertex.clone());
@@ -83,13 +90,11 @@ pub mod EdgeContractionMtEph {
 
         let vertex_to_block = Arc::try_unwrap(vertex_to_block).unwrap().into_inner().unwrap();
 
-        // Phase 2: Build new vertex set (representatives)
         let mut new_vertices: SetStEph<V> = SetLit![];
         for representative in vertex_to_block.values() {
             let _ = new_vertices.insert(representative.clone());
         }
 
-        // Phase 3: Build new edge set in parallel
         let edges_vec = graph.edges().iter().cloned().collect::<Vec<Edge<V>>>();
         let edges_seq = ArraySeqStEphS::from_vec(edges_vec);
         let n_edges = edges_seq.length();
@@ -105,6 +110,7 @@ pub mod EdgeContractionMtEph {
     ///
     /// - APAS: N/A — Verus-specific scaffolding (parallel edge routing helper)
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(lg |E|) — genuine divide-and-conquer parallelism
+    #[cfg(not(verus_keep_ghost))]
     fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
         vertex_map: Arc<HashMap<V, V>>,
@@ -118,7 +124,6 @@ pub mod EdgeContractionMtEph {
         }
 
         if size == 1 {
-            // Base case: process single edge
             let edge = edges.nth(start as N);
             let Edge(u, v) = edge;
             let block_u = vertex_map.get(u).unwrap().clone();
@@ -138,7 +143,6 @@ pub mod EdgeContractionMtEph {
             }
         }
 
-        // Recursive case: divide and conquer
         let mid = start + size / 2;
 
         let edges1 = edges.clone();
@@ -150,7 +154,6 @@ pub mod EdgeContractionMtEph {
             build_edges_parallel(edges2, map2, mid, end)
         });
 
-        // Combine results (union of sets)
         let mut result = pair.0;
         for edge in pair.1.iter() {
             let _ = result.insert(edge.clone());
@@ -172,6 +175,7 @@ pub mod EdgeContractionMtEph {
     ///
     /// Returns:
     /// - Contracted graph
+    #[cfg(not(verus_keep_ghost))]
     pub fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,

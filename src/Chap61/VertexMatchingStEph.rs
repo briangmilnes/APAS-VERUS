@@ -7,23 +7,29 @@
 
 pub mod VertexMatchingStEph {
 
-    use std::collections::HashMap;
-    use std::hash::Hash;
+    use vstd::prelude::*;
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
-    use crate::SetLit;
     use crate::Types::Types::*;
 
-    pub trait VertexMatchingStEphTrait {
-        /// Greedy vertex matching algorithm
-        /// APAS: Work Θ(|E|), Span Θ(|E|)
-        fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>)      -> SetStEph<Edge<V>>;
+    #[cfg(not(verus_keep_ghost))]
+    use std::collections::HashMap;
+    use std::hash::Hash;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::SetLit;
 
-        /// Sequential version of parallel matching
-        /// APAS: Work Θ(|E|), Span Θ(|E|)
-        fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>;
-    }
+    verus! {
+        pub trait VertexMatchingStEphTrait {
+            /// Greedy vertex matching algorithm
+            /// APAS: Work Θ(|E|), Span Θ(|E|)
+            fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>;
+
+            /// Sequential version of parallel matching
+            /// APAS: Work Θ(|E|), Span Θ(|E|)
+            fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>;
+        }
+    } // verus!
 
     /// Algorithm 61.3: Greedy Vertex Matching
     ///
@@ -38,15 +44,14 @@ pub mod VertexMatchingStEph {
     ///
     /// Returns:
     /// - A set of edges forming a vertex matching (no two edges share an endpoint)
+    #[cfg(not(verus_keep_ghost))]
     pub fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>> {
         let mut matching: SetStEph<Edge<V>> = SetLit![];
         let mut matched_vertices: SetStEph<V> = SetLit![];
 
-        // Iterate over all edges
         for edge in graph.edges().iter() {
             let Edge(u, v) = edge;
 
-            // Add edge if neither endpoint is already matched
             if !matched_vertices.mem(u) && !matched_vertices.mem(v) {
                 let _ = matching.insert(edge.clone());
                 let _ = matched_vertices.insert(u.clone());
@@ -73,6 +78,7 @@ pub mod VertexMatchingStEph {
     ///
     /// Returns:
     /// - A set of edges forming a vertex matching
+    #[cfg(not(verus_keep_ghost))]
     pub fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>> {
         use rand::rngs::StdRng;
         use rand::{Rng, RngExt, SeedableRng};
@@ -81,31 +87,26 @@ pub mod VertexMatchingStEph {
         let mut rng = StdRng::seed_from_u64(seed);
         let mut matching: SetStEph<Edge<V>> = SetLit![];
 
-        // Create a map from edges to their coin flips (heads = true, tails = false)
         let mut edge_coins = HashMap::<Edge<V>, bool>::new();
 
         for edge in graph.edges().iter() {
             edge_coins.insert(edge.clone(), rng.random());
         }
 
-        // Select edges where coin is heads and all adjacent edges are tails
         for edge in graph.edges().iter() {
             let Edge(u, v) = edge;
 
-            // Check if this edge flipped heads
             if !edge_coins.get(edge).copied().unwrap_or(false) {
                 continue;
             }
 
-            // Check if all edges incident on u and v flipped tails (except this one)
             let mut all_adjacent_tails = true;
 
             for adj_edge in graph.edges().iter() {
                 if adj_edge == edge {
-                    continue; // Skip the current edge
+                    continue;
                 }
 
-                // Check if adjacent edge is incident on u or v
                 if (graph.incident(adj_edge, u) || graph.incident(adj_edge, v))
                     && edge_coins.get(adj_edge).copied().unwrap_or(false)
                 {

@@ -5,29 +5,39 @@
 
 pub mod SpanTreeMtEph {
 
-    use std::collections::HashMap;
-    use std::hash::Hash;
-    use std::sync::{Arc, Mutex};
-    use std::thread;
-
+    use vstd::prelude::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
-    use crate::Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt;
-    use crate::SetLit;
     use crate::Types::Types::*;
+
+    #[cfg(not(verus_keep_ghost))]
+    use std::collections::HashMap;
+    use std::hash::Hash;
+    #[cfg(not(verus_keep_ghost))]
+    use std::sync::{Arc, Mutex};
+    #[cfg(not(verus_keep_ghost))]
+    use std::thread;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::SetLit;
+
     pub type T<V> = UnDirGraphMtEph<V>;
 
-    pub trait SpanTreeMtEphTrait {
-        /// Parallel spanning tree via star contraction
-        /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
-        fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
-            graph: &UnDirGraphMtEph<V>,
-        ) -> SetStEph<Edge<V>>;
+    verus! {
+        pub trait SpanTreeMtEphTrait {
+            /// Parallel spanning tree via star contraction
+            /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
+            fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
+                graph: &UnDirGraphMtEph<V>,
+            ) -> SetStEph<Edge<V>>;
 
-        /// Verify spanning tree properties
-        /// APAS: Work O(|V| + |E|), Span O(lg |V|)
-        fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(graph: &UnDirGraphMtEph<V>, tree: &SetStEph<Edge<V>>) -> B;
+            /// Verify spanning tree properties
+            /// APAS: Work O(|V| + |E|), Span O(lg |V|)
+            fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(graph: &UnDirGraphMtEph<V>, tree: &SetStEph<Edge<V>>) -> B;
+        }
     }
 
     /// Exercise 64.2: Spanning Tree via Star Contraction (Parallel)
@@ -46,6 +56,7 @@ pub mod SpanTreeMtEph {
     ///
     /// Returns:
     /// - Set of edges forming a spanning tree
+    #[cfg(not(verus_keep_ghost))]
     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
@@ -164,6 +175,7 @@ pub mod SpanTreeMtEph {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(|V| + |E_tree|), Span O(|E_tree|) — 2-way split
     ///   halves work but span is O(E_tree/2), not O(lg V).
+    #[cfg(not(verus_keep_ghost))]
     pub fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(
         graph: &UnDirGraphMtEph<V>,
         tree_edges: &SetStEph<Edge<V>>,

@@ -7,29 +7,39 @@
 
 pub mod EdgeContractionStEph {
 
-    use std::collections::HashMap;
-    use std::hash::Hash;
+    use vstd::prelude::*;
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
-    use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
-    use crate::Chap61::VertexMatchingStEph::VertexMatchingStEph::greedy_matching;
-    use crate::SetLit;
     use crate::Types::Types::*;
+
+    #[cfg(not(verus_keep_ghost))]
+    use std::collections::HashMap;
+    use std::hash::Hash;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::Chap61::VertexMatchingStEph::VertexMatchingStEph::greedy_matching;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::SetLit;
+
+    verus! {
+        pub trait EdgeContractionStEphTrait {
+            /// Sequential edge contraction algorithm
+            /// APAS: Work O(|E|), Span O(|E|)
+            fn edge_contract<V: StT + Hash + Ord>(
+                graph: &UnDirGraphStEph<V>,
+                matching: &SetStEph<Edge<V>>,
+            ) -> UnDirGraphStEph<SetStEph<V>>;
+
+            /// Single round of sequential edge contraction
+            /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+            fn contract_round<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V>;
+        }
+    } // verus!
+
+    #[cfg(not(verus_keep_ghost))]
     pub type T<V> = UnDirGraphStEph<V>;
-
-    pub trait EdgeContractionStEphTrait {
-        /// Sequential edge contraction algorithm
-        /// APAS: Work O(|E|), Span O(|E|)
-        fn edge_contract<V: StT + Hash + Ord>(
-            graph: &UnDirGraphStEph<V>,
-            matching: &SetStEph<Edge<V>>,
-        ) -> UnDirGraphStEph<SetStEph<V>>;
-
-        /// Single round of sequential edge contraction
-        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn contract_round<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V>;
-    }
 
     /// Algorithm 61.6: Sequential Edge Contraction
     ///
@@ -46,45 +56,37 @@ pub mod EdgeContractionStEph {
     ///
     /// Returns:
     /// - Contracted graph where matched edges are merged into single vertices
+    #[cfg(not(verus_keep_ghost))]
     pub fn edge_contract<V: StT + Hash + Ord>(
         graph: &UnDirGraphStEph<V>,
         matching: &SetStEph<Edge<V>>,
     ) -> UnDirGraphStEph<V> {
-        // Create a mapping from original vertices to their block representatives
         let mut vertex_to_block = HashMap::<V, V>::new();
 
-        // For each edge in the matching, assign both endpoints to the same representative
         for edge in matching.iter() {
             let Edge(u, v) = edge;
-            // Use the first vertex as the representative
             vertex_to_block.insert(u.clone(), u.clone());
             vertex_to_block.insert(v.clone(), u.clone());
         }
 
-        // For unmatched vertices, they are their own representatives
         for vertex in graph.vertices().iter() {
             if !vertex_to_block.contains_key(vertex) {
                 vertex_to_block.insert(vertex.clone(), vertex.clone());
             }
         }
 
-        // Build the new contracted graph
         let mut new_vertices: SetStEph<V> = SetLit![];
         let mut new_edges: SetStEph<Edge<V>> = SetLit![];
 
-        // Add all block representatives as vertices
         for representative in vertex_to_block.values() {
             let _ = new_vertices.insert(representative.clone());
         }
 
-        // For each edge in the original graph, add a new edge between block representatives
-        // (unless both endpoints are in the same block)
         for edge in graph.edges().iter() {
             let Edge(u, v) = edge;
             let block_u = vertex_to_block.get(u).unwrap().clone();
             let block_v = vertex_to_block.get(v).unwrap().clone();
 
-            // Only add edge if endpoints are in different blocks (no self-loops)
             if block_u != block_v {
                 let new_edge = if block_u < block_v {
                     Edge(block_u, block_v)
@@ -110,6 +112,7 @@ pub mod EdgeContractionStEph {
     ///
     /// Returns:
     /// - Contracted graph
+    #[cfg(not(verus_keep_ghost))]
     pub fn contract_round<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V> {
         let matching = greedy_matching(graph);
         edge_contract(graph, &matching)

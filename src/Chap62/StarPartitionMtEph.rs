@@ -6,26 +6,32 @@
 
 pub mod StarPartitionMtEph {
 
-    use std::collections::HashMap;
-    use std::hash::Hash;
-    use std::vec::Vec;
-
-    use rand::rngs::StdRng;
-    use rand::{Rng, RngExt, SeedableRng};
+    use vstd::prelude::*;
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
-    use crate::SetLit;
     use crate::Types::Types::*;
-    pub type T<V> = UnDirGraphMtEph<V>;
 
-    pub trait StarPartitionMtEphTrait {
-        /// Parallel star partition using randomized coin flips
-        /// APAS: Work O(|V| + |E|), Span O(lg |V|)
-        fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(
-            graph: &UnDirGraphMtEph<V>,
-        ) -> SetStEph<SetStEph<V>>;
-    }
+    #[cfg(not(verus_keep_ghost))]
+    use std::collections::HashMap;
+    use std::hash::Hash;
+    #[cfg(not(verus_keep_ghost))]
+    use std::vec::Vec;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::SetLit;
+
+    verus! {
+        pub trait StarPartitionMtEphTrait {
+            /// Parallel star partition using randomized coin flips
+            /// APAS: Work O(|V| + |E|), Span O(lg |V|)
+            fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(
+                graph: &UnDirGraphMtEph<V>,
+            ) -> SetStEph<SetStEph<V>>;
+        }
+    } // verus!
+
+    #[cfg(not(verus_keep_ghost))]
+    pub type T<V> = UnDirGraphMtEph<V>;
 
     /// Algorithm 62.3: Parallel Star Partition
     ///
@@ -44,13 +50,16 @@ pub mod StarPartitionMtEph {
     ///
     /// Returns:
     /// - (centers, partition_map): Set of center vertices and mapping from each vertex to its center
+    #[cfg(not(verus_keep_ghost))]
     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
     ) -> (SetStEph<V>, HashMap<V, V>) {
+        use rand::rngs::StdRng;
+        use rand::{Rng, RngExt, SeedableRng};
+
         let mut rng = StdRng::seed_from_u64(seed);
 
-        // Create vertex to index mapping for inject operation
         let vertices_vec = graph.vertices().iter().cloned().collect::<Vec<V>>();
         let n = vertices_vec.len() as N;
 
@@ -59,26 +68,22 @@ pub mod StarPartitionMtEph {
             let _ = vertex_to_index.insert(v.clone(), i as N);
         }
 
-        // Phase 1: Flip coins for each vertex (heads = true, tails = false)
         let mut coin_flips = HashMap::<V, bool>::new();
         for vertex in vertices_vec.iter() {
             let _ = coin_flips.insert(vertex.clone(), rng.random());
         }
 
-        // Phase 2: Find edges from tails to heads (TH)
         let mut th_edges = Vec::<(N, V)>::new();
         for edge in graph.edges().iter() {
             let Edge(u, v) = edge;
             let u_heads = coin_flips.get(u).copied().unwrap_or(false);
             let v_heads = coin_flips.get(v).copied().unwrap_or(false);
 
-            // Add edge if u is tails and v is heads
             if !u_heads && v_heads {
                 if let Some(&u_idx) = vertex_to_index.get(u) {
                     th_edges.push((u_idx, v.clone()));
                 }
             }
-            // Add edge if v is tails and u is heads
             if !v_heads && u_heads {
                 if let Some(&v_idx) = vertex_to_index.get(v) {
                     th_edges.push((v_idx, u.clone()));
@@ -86,13 +91,11 @@ pub mod StarPartitionMtEph {
             }
         }
 
-        // Phase 3-5: Apply updates (manual loop replaces Seq.inject)
         let mut p_vec: Vec<V> = vertices_vec.clone();
         for (idx, vertex) in th_edges {
             p_vec[idx as usize] = vertex;
         }
 
-        // Phase 6: Extract centers (vertices where P[v] = v)
         let mut centers: SetStEph<V> = SetLit![];
         let mut partition_map = HashMap::<V, V>::new();
 
@@ -100,7 +103,6 @@ pub mod StarPartitionMtEph {
             let center = p_vec[i].clone();
             let _ = partition_map.insert(vertex.clone(), center.clone());
 
-            // A vertex is a center if it maps to itself
             if *vertex == center {
                 let _ = centers.insert(vertex.clone());
             }

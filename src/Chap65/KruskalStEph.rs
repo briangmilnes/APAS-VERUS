@@ -6,34 +6,38 @@
 
 pub mod KruskalStEph {
 
-    use std::hash::Hash;
-
+    use vstd::prelude::*;
     use ordered_float::OrderedFloat;
-
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
-    use crate::Chap65::UnionFindStEph::UnionFindStEph::*;
-    use crate::SetLit;
     use crate::Types::Types::*;
+    use std::hash::Hash;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::Chap65::UnionFindStEph::UnionFindStEph::*;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::SetLit;
+
     pub type T<V> = LabUnDirGraphStEph<V, OrderedFloat<f64>>;
 
-    pub trait KruskalStEphTrait {
-        /// Kruskal's MST algorithm
-        /// APAS: Work O(m log m), Span O(m log m) where m = |E|
-        fn kruskal_mst<V: StT + Hash + Ord>(
-            graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
-        ) -> SetStEph<LabEdge<V, OrderedFloat<f64>>>;
+    verus! {
+        pub trait KruskalStEphTrait {
+            /// Kruskal's MST algorithm
+            /// APAS: Work O(m log m), Span O(m log m) where m = |E|
+            fn kruskal_mst<V: StT + Hash + Ord>(
+                graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
+            ) -> SetStEph<LabEdge<V, OrderedFloat<f64>>>;
 
-        /// Compute total weight of MST
-        /// APAS: Work O(m), Span O(1)
-        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, OrderedFloat<f64>>>) -> OrderedFloat<f64>;
+            /// Compute total weight of MST
+            /// APAS: Work O(m), Span O(1)
+            fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, OrderedFloat<f64>>>) -> OrderedFloat<f64>;
 
-        /// Verify MST has correct size
-        /// APAS: Work O(1), Span O(1)
-        fn verify_mst_size<V: StT + Hash + Ord>(
-            graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
-            mst: &SetStEph<LabEdge<V, OrderedFloat<f64>>>,
-        ) -> B;
+            /// Verify MST has correct size
+            /// APAS: Work O(1), Span O(1)
+            fn verify_mst_size<V: StT + Hash + Ord>(
+                graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
+                mst: &SetStEph<LabEdge<V, OrderedFloat<f64>>>,
+            ) -> B;
+        }
     }
 
     /// Algorithm 65.2: Kruskal's MST Algorithm
@@ -49,6 +53,7 @@ pub mod KruskalStEph {
     ///
     /// - APAS: Work O(m lg n), Span O(m lg n)
     /// - Claude-Opus-4.6: Work O(m lg m), Span O(m lg m) — sorting dominates; sequential
+    #[cfg(not(verus_keep_ghost))]
     pub fn kruskal_mst<V: StT + Hash + Ord>(
         graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
     ) -> SetStEph<LabEdge<V, OrderedFloat<f64>>> {
@@ -88,6 +93,7 @@ pub mod KruskalStEph {
     /// Compute total MST weight.
     /// - APAS: (no cost stated) — utility function
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
+    #[cfg(not(verus_keep_ghost))]
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, OrderedFloat<f64>>>) -> OrderedFloat<f64> {
         let mut total = OrderedFloat(0.0);
         for edge in mst_edges.iter() {
@@ -101,6 +107,7 @@ pub mod KruskalStEph {
     /// A valid MST of n vertices should have n-1 edges.
     /// - APAS: (no cost stated) — validation utility
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    #[cfg(not(verus_keep_ghost))]
     pub fn verify_mst_size<V: StT + Hash + Ord>(
         n_vertices: N,
         mst_edges: &SetStEph<LabEdge<V, OrderedFloat<f64>>>,

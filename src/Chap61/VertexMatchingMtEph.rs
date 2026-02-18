@@ -6,22 +6,30 @@
 
 pub mod VertexMatchingMtEph {
 
-    use std::collections::HashMap;
-    use std::hash::Hash;
-    use std::sync::Arc;
-    use std::vec::Vec;
+    use vstd::prelude::*;
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
-    use crate::{ParaPair, SetLit};
     use crate::Types::Types::*;
 
-    pub trait VertexMatchingMtEphTrait {
-        /// Parallel vertex matching using randomized symmetry breaking
-        /// APAS: Work O(|E|), Span O(lg |V|)
-        fn parallel_matching_mt<V: StT + MtT + Hash + 'static>(graph: &UnDirGraphMtEph<V>) -> SetStEph<Edge<V>>;
-    }
+    #[cfg(not(verus_keep_ghost))]
+    use std::collections::HashMap;
+    use std::hash::Hash;
+    #[cfg(not(verus_keep_ghost))]
+    use std::sync::Arc;
+    #[cfg(not(verus_keep_ghost))]
+    use std::vec::Vec;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::{ParaPair, SetLit};
+
+    verus! {
+        pub trait VertexMatchingMtEphTrait {
+            /// Parallel vertex matching using randomized symmetry breaking
+            /// APAS: Work O(|E|), Span O(lg |V|)
+            fn parallel_matching_mt<V: StT + MtT + Hash + 'static>(graph: &UnDirGraphMtEph<V>) -> SetStEph<Edge<V>>;
+        }
+    } // verus!
 
     /// Algorithm 61.4: Parallel Vertex Matching
     ///
@@ -43,17 +51,17 @@ pub mod VertexMatchingMtEph {
     ///
     /// Returns:
     /// - A set of edges forming a vertex matching
+    #[cfg(not(verus_keep_ghost))]
     pub fn parallel_matching_mt<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
     ) -> SetStEph<Edge<V>> {
-    use rand::rngs::StdRng;
-    use rand::{Rng, RngExt, SeedableRng};
+        use rand::rngs::StdRng;
+        use rand::{Rng, RngExt, SeedableRng};
         use std::sync::{Arc, Mutex};
 
         let mut rng = StdRng::seed_from_u64(seed);
 
-        // Convert edges to a sequence for parallel processing
         let edges_vec = graph.edges().iter().cloned().collect::<Vec<Edge<V>>>();
         let edges_seq = ArraySeqStEphS::<Edge<V>>::from_vec(edges_vec);
         let n_edges = edges_seq.length();
@@ -62,10 +70,7 @@ pub mod VertexMatchingMtEph {
             return SetLit![];
         }
 
-        // Phase 1: Flip coins for all edges in parallel
         let coins = flip_coins_parallel(&edges_seq, &mut rng);
-
-        // Phase 2: Select edges where coin is heads and all adjacent edges are tails
 
         select_edges_parallel(graph, &edges_seq, &coins)
     }
@@ -74,6 +79,7 @@ pub mod VertexMatchingMtEph {
     ///
     /// - APAS: Work Θ(|E|), Span Θ(1) — each coin is independent
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — RNG is sequential, no actual parallelism
+    #[cfg(not(verus_keep_ghost))]
     fn flip_coins_parallel<V: StT + MtT + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
         rng: &mut rand::rngs::StdRng,
@@ -85,13 +91,11 @@ pub mod VertexMatchingMtEph {
             return ArraySeqStEphS::empty();
         }
 
-        // Generate all random values sequentially (RNG must be sequential)
         let mut coins_vec = Vec::with_capacity(n);
         for _ in 0..n {
             coins_vec.push(rng.random());
         }
 
-        // Convert to sequence
         ArraySeqStEphS::from_vec(coins_vec)
     }
 
@@ -99,6 +103,7 @@ pub mod VertexMatchingMtEph {
     ///
     /// - APAS: Work O(|E|), Span O(lg |V|) — each edge checks only incident edges
     /// - Claude-Opus-4.6: Work Θ(|E|²), Span Θ(lg |E| + |E|) — should_select_edge scans all |E| edges
+    #[cfg(not(verus_keep_ghost))]
     fn select_edges_parallel<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,
         edges: &ArraySeqStEphS<Edge<V>>,
@@ -112,18 +117,14 @@ pub mod VertexMatchingMtEph {
             return SetLit![];
         }
 
-        // Build edge index for O(1) coin lookups
         let edge_coin_map = edges.iter().zip(coins.iter()).map(|(e, c)| (e.clone(), *c)).collect::<HashMap<Edge<V>, bool>>();
 
-        // Wrap in Arc for thread-safe sharing
         let graph_arc = Arc::new(graph.clone());
         let edges_arc = Arc::new(edges.clone());
         let map_arc = Arc::new(edge_coin_map);
 
-        // Parallel edge selection using divide-and-conquer
         let selected = select_edges_recursive(graph_arc, edges_arc, map_arc, 0, n);
 
-        // Convert sequence to set
         let mut result: SetStEph<Edge<V>> = SetLit![];
         for edge in selected.iter() {
             let _ = result.insert(edge.clone());
@@ -133,6 +134,7 @@ pub mod VertexMatchingMtEph {
 
     /// - APAS: N/A — Verus-specific scaffolding (parallel recursion helper)
     /// - Claude-Opus-4.6: Work Θ(k × |E|), Span Θ(lg k + |E|) — each base case calls should_select_edge which is Θ(|E|)
+    #[cfg(not(verus_keep_ghost))]
     fn select_edges_recursive<V: StT + MtT + Hash + 'static>(
         graph: Arc<UnDirGraphMtEph<V>>,
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
@@ -147,7 +149,6 @@ pub mod VertexMatchingMtEph {
         }
 
         if size == 1 {
-            // Base case: check single edge
             let edge = edges.nth(start as N);
             if should_select_edge(&graph, edge, &edge_coins) {
                 return ArraySeqStEphS::from_vec(std::vec![edge.clone()]);
@@ -156,7 +157,6 @@ pub mod VertexMatchingMtEph {
             }
         }
 
-        // Recursive case: divide and conquer
         let mid = start + size / 2;
 
         let graph1 = graph.clone();
@@ -171,7 +171,6 @@ pub mod VertexMatchingMtEph {
             move || select_edges_recursive(graph2, edges2, coins2, mid, end)
         );
 
-        // Combine results
         let mut left_vec = pair.0.iter().cloned().collect::<Vec<Edge<V>>>();
         let right_vec = pair.1.iter().cloned().collect::<Vec<Edge<V>>>();
         left_vec.extend(right_vec);
@@ -184,6 +183,7 @@ pub mod VertexMatchingMtEph {
     ///
     /// - APAS: Work O(degree(u) + degree(v)), Span O(degree(u) + degree(v)) — checks only incident edges
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — iterates all edges, not just incident ones
+    #[cfg(not(verus_keep_ghost))]
     fn should_select_edge<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,
         edge: &Edge<V>,
@@ -191,22 +191,19 @@ pub mod VertexMatchingMtEph {
     ) -> bool {
         let Edge(u, v) = edge;
 
-        // Check if this edge flipped heads
         if !edge_coins.get(edge).copied().unwrap_or(false) {
             return false;
         }
 
-        // Check if all edges incident on u and v flipped tails (except this one)
         for adj_edge in graph.edges().iter() {
             if adj_edge == edge {
-                continue; // Skip the current edge
+                continue;
             }
 
-            // Check if adjacent edge is incident on u or v
             if (graph.incident(adj_edge, u) || graph.incident(adj_edge, v))
                 && edge_coins.get(adj_edge).copied().unwrap_or(false)
             {
-                return false; // Adjacent edge flipped heads
+                return false;
             }
         }
 

@@ -9,41 +9,53 @@
 
 pub mod ConnectivityMtEph {
 
-    use std::collections::HashMap;
-    use std::hash::Hash;
-    use std::sync::Arc;
-    use std::vec::Vec;
+    use vstd::prelude::*;
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
-    use crate::Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt;
-    use crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition;
-    use crate::{ParaPair, SetLit};
     use crate::Types::Types::*;
+
+    #[cfg(not(verus_keep_ghost))]
+    use std::collections::HashMap;
+    use std::hash::Hash;
+    #[cfg(not(verus_keep_ghost))]
+    use std::sync::Arc;
+    #[cfg(not(verus_keep_ghost))]
+    use std::vec::Vec;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::{ParaPair, SetLit};
+
+    verus! {
+        pub trait ConnectivityMtEphTrait {
+            /// Count connected components using parallel star contraction
+            /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
+            fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>) -> N;
+
+            /// Find connected components using parallel star contraction
+            /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
+            fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
+                graph: &UnDirGraphMtEph<V>,
+            ) -> SetStEph<SetStEph<V>>;
+
+            /// Count components using higher-order function approach
+            /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
+            fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>) -> N;
+
+            /// Find components using higher-order function approach
+            /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
+            fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
+                graph: &UnDirGraphMtEph<V>,
+            ) -> SetStEph<SetStEph<V>>;
+        }
+    } // verus!
+
+    #[cfg(not(verus_keep_ghost))]
     pub type T<V> = UnDirGraphMtEph<V>;
-
-    pub trait ConnectivityMtEphTrait {
-        /// Count connected components using parallel star contraction
-        /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
-        fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>)  -> N;
-
-        /// Find connected components using parallel star contraction
-        /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
-        fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
-            graph: &UnDirGraphMtEph<V>,
-        ) -> SetStEph<SetStEph<V>>;
-
-        /// Count components using higher-order function approach
-        /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
-        fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>) -> N;
-
-        /// Find components using higher-order function approach
-        /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
-        fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
-            graph: &UnDirGraphMtEph<V>,
-        ) -> SetStEph<SetStEph<V>>;
-    }
 
     /// Algorithm 63.2: Count Connected Components (Parallel)
     ///
@@ -58,20 +70,17 @@ pub mod ConnectivityMtEph {
     ///
     /// Returns:
     /// - The number of connected components
+    #[cfg(not(verus_keep_ghost))]
     pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
-        // Base case: no edges, each vertex is own component
         if graph.sizeE() == 0 {
             return graph.sizeV();
         }
 
-        // Partition the graph in parallel
         let (centers, partition_map) = parallel_star_partition(graph, seed);
 
-        // Build quotient graph in parallel
         let quotient_edges = build_quotient_edges_parallel(graph, &partition_map);
         let quotient_graph = <UnDirGraphMtEph<V> as UnDirGraphMtEphTrait<V>>::from_sets(centers, quotient_edges);
 
-        // Recursively count components in quotient graph
         count_components_mt(&quotient_graph, seed + 1)
     }
 
@@ -89,11 +98,11 @@ pub mod ConnectivityMtEph {
     /// Returns:
     /// - (representatives, component_map): Set of component representatives and
     ///   mapping from each vertex to its component representative
+    #[cfg(not(verus_keep_ghost))]
     pub fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
     ) -> (SetStEph<V>, HashMap<V, V>) {
-        // Base case: no edges, each vertex maps to itself
         if graph.sizeE() == 0 {
             let mut component_map = HashMap::new();
             for vertex in graph.vertices().iter() {
@@ -102,17 +111,13 @@ pub mod ConnectivityMtEph {
             return (graph.vertices().clone(), component_map);
         }
 
-        // Partition the graph in parallel
         let (centers, partition_map) = parallel_star_partition(graph, seed);
 
-        // Build quotient graph in parallel
         let quotient_edges = build_quotient_edges_parallel(graph, &partition_map);
         let quotient_graph = <UnDirGraphMtEph<V> as UnDirGraphMtEphTrait<V>>::from_sets(centers, quotient_edges);
 
-        // Recursively compute components in quotient graph
         let (representatives, component_map_quotient) = connected_components_mt(&quotient_graph, seed + 1);
 
-        // Compose maps in parallel
         let component_map = compose_maps_parallel(&partition_map, &component_map_quotient);
 
         (representatives, component_map)
@@ -122,6 +127,7 @@ pub mod ConnectivityMtEph {
     ///
     /// - APAS: N/A — helper function implicit in Algorithm 63.2/63.3 Line 7.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to route_edges_parallel whose merge is sequential
+    #[cfg(not(verus_keep_ghost))]
     fn build_quotient_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         partition_map: &HashMap<V, V>,
@@ -139,6 +145,7 @@ pub mod ConnectivityMtEph {
     ///
     /// - APAS: N/A — helper function, not in prose.
     /// - Claude-Opus-4.6: Work O(k), Span O(k) — sequential set union after ParaPair! makes span O(k) not O(lg k)
+    #[cfg(not(verus_keep_ghost))]
     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
         partition_map: Arc<HashMap<V, V>>,
@@ -152,13 +159,11 @@ pub mod ConnectivityMtEph {
         }
 
         if size == 1 {
-            // Base case: process single edge
             let edge = edges.nth(start as N);
             let Edge(u, v) = edge;
             let u_center = partition_map.get(u).unwrap_or(u);
             let v_center = partition_map.get(v).unwrap_or(v);
 
-            // Only add if centers are different
             if u_center != v_center {
                 let new_edge = if u_center < v_center {
                     Edge(u_center.clone(), v_center.clone())
@@ -170,7 +175,6 @@ pub mod ConnectivityMtEph {
             return SetLit![];
         }
 
-        // Recursive case: divide and conquer
         let mid = start + size / 2;
 
         let edges1 = edges.clone();
@@ -182,7 +186,6 @@ pub mod ConnectivityMtEph {
             route_edges_parallel(&edges2, map2, mid, end)
         });
 
-        // Union the two sets
         let mut result = pair.0;
         for edge in pair.1.iter() {
             let _ = result.insert(edge.clone());
@@ -194,12 +197,11 @@ pub mod ConnectivityMtEph {
     ///
     /// - APAS: N/A — helper function, Line 10 of Algorithm 63.3.
     /// - Claude-Opus-4.6: Work O(|P|), Span O(|P|) — currently sequential despite "parallel" name
+    #[cfg(not(verus_keep_ghost))]
     fn compose_maps_parallel<V: StT + MtT + Hash + Ord + 'static>(
         partition_map: &HashMap<V, V>,
         component_map: &HashMap<V, V>,
     ) -> HashMap<V, V> {
-        // For now, compose sequentially since tuples don't implement Display
-        // Future optimization: use custom parallel map composition
         let mut result = HashMap::new();
         for (u, v) in partition_map.iter() {
             let component = component_map.get(v).unwrap_or(v);
@@ -212,11 +214,10 @@ pub mod ConnectivityMtEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O(lg² n) — same as Algorithm 63.2 (parallel)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt (inherits merge bottleneck)
+    #[cfg(not(verus_keep_ghost))]
     pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
-        // Base: when no edges, return number of vertices
         let base = |vertices: &SetStEph<V>| vertices.size();
 
-        // Expand: just return the recursive result
         let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMap<V, V>, r: N| r;
 
         star_contract_mt(graph, seed, &base, &expand)
@@ -226,11 +227,11 @@ pub mod ConnectivityMtEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O(lg² n) — same as Algorithm 63.3 (parallel)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(n lg n) — delegates to star_contract_mt (inherits compose bottleneck)
+    #[cfg(not(verus_keep_ghost))]
     pub fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
     ) -> (SetStEph<V>, HashMap<V, V>) {
-        // Base: when no edges, each vertex maps to itself
         let base = |vertices: &SetStEph<V>| {
             let mut map = HashMap::new();
             for v in vertices.iter() {
@@ -239,7 +240,6 @@ pub mod ConnectivityMtEph {
             (vertices.clone(), map)
         };
 
-        // Expand: compose partition map P with component map C
         let expand = |_v: &SetStEph<V>,
                       _e: &SetStEph<Edge<V>>,
                       _centers: &SetStEph<V>,

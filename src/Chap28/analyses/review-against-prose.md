@@ -115,14 +115,14 @@ table { width: 100% !important; table-layout: fixed; }
 | 2 | 28.6 | MCS: Brute Force | Θ(n³) | Θ(log n) | No | — |
 | 3 | 28.7 | MCSS via MCS | Θ(n³) | Θ(log n) | No | — |
 | 4 | 28.8 | MCSS: Brute Force Strengthened | Θ(n³) | Θ(log n) | **Yes** | **Yes** |
-| 5 | 28.11 | MCSSS Optimal | Θ(n) | Θ(log n) | Helper | **Yes** |
-| 6 | 28.12 | MCSSE Optimal | Θ(n) | Θ(log n) | Helper | **Yes** |
+| 5 | 28.11 | MCSSS Optimal | Θ(n) | Θ(log n) | **Yes** — `max_prefix_sum` in DivCon{St,Mt}Eph | **Yes** (St+Mt) |
+| 6 | 28.12 | MCSSE Optimal | Θ(n) | Θ(log n) | **Yes** — `max_suffix_sum` in DivCon{St,Mt}Eph | **Yes** (St+Mt) |
 | 7 | 28.13 | MCSS: Reduced Force | Θ(n²) | Θ(log n) | **Yes** | **Yes** |
 | 8 | 28.14 | MCSS by Reduction to MCSSE | O(n²) | O(log n) | **Yes** | **Yes** |
 | 9 | 28.15 | MCSS with Iteration (Kadane) | Θ(n) | Θ(n) | **Yes** | **Yes** |
 | 10 | 28.16 | MCSS: Work Optimal Low Span | Θ(n) | Θ(log n) | **Yes** | **Yes** (St+Mt) |
 | 11 | 28.17 | Simple D&C for MCSS | Θ(n log n) | Θ(log² n) | **Yes** | **Yes** (St+Mt) |
-| 12 | 28.18 | bestAcross (max spanning cut) | Θ(n) | Θ(log n) | Inline | **Yes** |
+| 12 | 28.18 | bestAcross (max spanning cut) | Θ(n) | Θ(log n) | **Yes** — inline in `lemma_divcon_combine` / `lemma_strength_combine` | **Yes** (St+Mt) |
 | 13 | 28.19 | Linear Work D&C MCSS | Θ(n) | Θ(log² n) | **Yes** | **Yes** (St+Mt) |
 
 ### Theorems and Proofs
@@ -150,15 +150,15 @@ table { width: 100% !important; table-layout: fixed; }
 
 **Key discrepancies**:
 
-1. **St span mismatches**: Expected — St modules are sequential implementations; APAS span assumes parallel operations.
-2. **DivConOpt work mismatch**: `subseq_copy` costs O(n) per level instead of APAS's O(1) or O(log n) `splitMid`. This inflates work from O(n) to O(n log n).
-3. **Kadane's is the only algorithm where both work and span match APAS**, since it is inherently sequential.
+1. **St span mismatches** (rows 1-3, 5-6): Expected — St modules are sequential; APAS span assumes parallel `scan`/`reduce`/`tabulate`.
+2. **DivConOpt work mismatch** (row 7): `subseq_copy` costs O(n) per D&C level instead of APAS's O(1) `splitMid`. This inflates work from Θ(n) to Θ(n log n). See §3b.
+3. **Kadane's** (row 4) is the only algorithm where both work and span match APAS, since it is inherently sequential (Θ(n) work, Θ(n) span).
 
 ### 3b. Implementation Fidelity
 
 | # | Issue | Severity | Details |
 |---|-------|----------|---------|
-| 1 | `subseq_copy` vs `splitMid` | **Medium** | DivConOpt uses `subseq_copy` (O(n)) instead of O(1) split, degrading work to O(n log n). |
+| 1 | `subseq_copy` vs `splitMid` | **Medium** | D&C modules (28.17 St/Mt, 28.19 St/Mt) use `subseq_copy` O(n) per level instead of APAS's O(1) `splitMid`. This degrades DivConOpt from Θ(n) to Θ(n log n) work and DivCon from Θ(n log n) to Θ(n log n) (no change — dominated by other work). Chap19 `ArraySeqMtEphSlice` provides an O(1) `slice()` operation that could serve as `splitMid`. |
 | 2 | `-∞` representation | Low | `Option<i32>` for results (None = −∞). Clean spec via `is_mcss_of`. |
 
 ### 3c. Spec Fidelity
@@ -178,23 +178,33 @@ table { width: 100% !important; table-layout: fixed; }
 
 All three Mt modules are **fully verusified** using a cfg-gated dual-implementation architecture:
 - Under `verus_keep_ghost`: verified sequential implementation (same algorithm, loop-based)
-- Under normal Rust compilation: parallel implementation (scan/reduce/`ParaPair!`)
+- Under normal Rust compilation: parallel implementation using Chap19 primitives
 
 The trait + specs live inside `verus!{}` and are visible to both impls.
 
-| # | Module | Parallel Mechanism (runtime) | Verified Impl (Verus) | Status |
-|---|--------|-----------------------------|-----------------------|--------|
-| 1 | `OptMtEph` | Chap19 scan + reduce + tabulate | Loop-based prefix-sum scan | Verified + 6 tests pass |
-| 2 | `DivConMtEph` | Chap19 scan + `ParaPair!` | Recursive D&C with `subseq_copy` | Verified + 6 tests pass |
-| 3 | `DivConOptMtEph` | `ParaPair!` for recursive calls | Strengthened recursive D&C | Verified + 6 tests pass |
+### 4a. Parallel Mechanisms vs. Prose
 
-**Architecture**: Each Mt module defines one trait with `requires`/`ensures` inside `verus!{}`.
-The verified impl (`#[cfg(verus_keep_ghost)]`) proves the spec using sequential code.
-The parallel impl (`#[cfg(not(verus_keep_ghost))]`) provides runtime performance.
-Proof lemmas are reused from StEph modules via pub imports — no proof duplication.
+| # | Module | Prose Parallel Structure | Runtime Parallel Impl | Parallelism Match? |
+|---|--------|-------------------------|----------------------|:------------------:|
+| 1 | `OptMtEph` (28.16) | `scan '+' 0 a` → `scan min ∞ c` → `tabulate` → `reduce max` | `scan` → `singleton+append` → `scan` (via `tabulate+reduce`) → `tabulate` → `reduce` | ✓ Full |
+| 2 | `DivConMtEph` (28.17) | `(MCSSDC b ‖ MCSSDC c)` then `bestAcross(b,c)` = `MCSSE(left) ‖ MCSSS(right)`, each using `scan+reduce` | `ParaPair!(recurse left, recurse right)` then `ParaPair!(max_suffix_sum_par, max_prefix_sum_par)`, each using `scan+reduce` | ✓ Full |
+| 3 | `DivConOptMtEph` (28.19) | `(MCSSDCAux b ‖ MCSSDCAux c)` then O(1) combine of 4-tuple | `ParaPair!(aux left, aux right)` then O(1) combine of `(mcss, prefix, suffix, total)` | ✓ Full |
 
-**D&C Mt modules** require `obeys_feq_clone::<i32>()` as a precondition (needed for
-`ArraySeqMtEphTrait::subseq_copy`).
+### 4b. Verified Impl (Verus) vs. Runtime Impl
+
+| # | Module | Verified Impl (`verus_keep_ghost`) | Runtime Impl (`not(verus_keep_ghost)`) |
+|---|--------|-----------------------------------|---------------------------------------|
+| 1 | `OptMtEph` | 3 sequential while loops (prefix sums, min prefixes, max scan) | Chap19 `scan` + `reduce` + `tabulate` parallel primitives |
+| 2 | `DivConMtEph` | Sequential recursive D&C; loop-based `max_suffix_sum` + `max_prefix_sum` | `ParaPair!` for recursion + `ParaPair!` for suffix/prefix; `scan`+`reduce` in helpers |
+| 3 | `DivConOptMtEph` | Sequential recursive strengthened D&C returning 4-tuple | `ParaPair!` for recursion; O(1) combine |
+
+### 4c. Architecture Notes
+
+- Each Mt module defines one trait with `requires`/`ensures` inside `verus!{}`.
+- The verified impl (`#[cfg(verus_keep_ghost)]`) proves the spec using sequential code.
+- The parallel impl (`#[cfg(not(verus_keep_ghost))]`) provides runtime performance.
+- Proof lemmas are reused from StEph modules via pub imports — zero proof duplication.
+- D&C Mt modules require `obeys_feq_clone::<i32>()` as a precondition (for `subseq_copy`).
 
 ## Phase 5: Runtime Test Review
 
@@ -287,5 +297,7 @@ verification results:: 1602 verified, 0 errors
 
 ### Remaining Work
 
-1. **`subseq_copy` performance**: DivConOpt work degraded to O(n log n) due to O(n) copies.
-   Fixing requires an O(1) split primitive (subseq view / slice).
+1. **`subseq_copy` → `slice`**: D&C modules use `subseq_copy` (O(n) per level) instead of APAS's
+   O(1) `splitMid`. Chap19's `ArraySeqMtEphSlice::slice()` provides O(1) splitting via
+   `Arc<Mutex<Box<[T]>>>` range views, but it has no Verus specs. Migrating D&C modules to use
+   `ArraySeqMtEphSliceS` would restore DivConOpt to Θ(n) work, matching the prose.
