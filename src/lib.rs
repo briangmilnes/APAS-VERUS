@@ -299,39 +299,9 @@ pub mod Chap36 {
 //     pub mod BSTBBAlphaMtEph;
 // }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
-pub mod Chap37 {
-    pub mod AVLTreeSeq;
-    pub mod AVLTreeSeqStEph;
-    pub mod AVLTreeSeqStPer;
-    #[cfg(feature = "all_chapters")]
-    pub mod AVLTreeSeqMtPer;
-    pub mod BSTPlainStEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTPlainMtEph;
-    pub mod BSTAVLStEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTAVLMtEph;
-    pub mod BSTRBStEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTRBMtEph;
-    pub mod BSTSplayStEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTSplayMtEph;
-    pub mod BSTBBAlphaStEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTBBAlphaMtEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTSetPlainMtEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTSetAVLMtEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTSetRBMtEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTSetSplayMtEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTSetBBAlphaMtEph;
-}
+// FIXME: Chap37 (cargo) depends on Chap23::BalBinTreeStEph which is commented out pending fix.
+// #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+// pub mod Chap37 { ... }
 
 #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
 pub mod Chap38 {
@@ -354,57 +324,25 @@ pub mod Chap40 {
     pub mod BSTReducedStEph;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
-pub mod Chap41 {
-    pub mod ArraySetStEph;
-    pub mod ArraySetEnumMtEph;
-    pub mod AVLTreeSetStEph;
-    pub mod AVLTreeSetStPer;
-    pub mod AVLTreeSetMtEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod AVLTreeSetMtPer;
-    pub mod Example41_3;
-}
+// FIXME: Chap41 depends on Chap37 which is commented out pending Chap23 fix.
+// #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+// pub mod Chap41 { ... }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
-pub mod Chap42 {
-    pub mod TableStEph;
-    pub mod TableStPer;
-    pub mod TableMtEph;
-    pub mod Example42_1;
-}
+// FIXME: Chap42 depends on Chap41 which is commented out pending Chap23 fix.
+// #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+// pub mod Chap42 { ... }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
-pub mod Chap43 {
-    pub mod OrderedSetStEph;
-    pub mod OrderedSetStPer;
-    pub mod OrderedSetMtEph;
-    pub mod OrderedTableStEph;
-    pub mod OrderedTableStPer;
-    pub mod OrderedTableMtEph;
-    pub mod OrderedTableMtPer;
-    pub mod AugOrderedTableStEph;
-    pub mod AugOrderedTableStPer;
-    pub mod AugOrderedTableMtEph;
-    pub mod Example43_1;
-}
+// FIXME: Chap43 depends on Chap37 which is commented out pending Chap23 fix.
+// #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+// pub mod Chap43 { ... }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
-pub mod Chap44 {
-    pub mod DocumentIndex;
-    pub mod Example44_1;
-}
+// FIXME: Chap44 depends on Chap37 which is commented out pending Chap23 fix.
+// #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+// pub mod Chap44 { ... }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
-pub mod Chap45 {
-    pub mod UnsortedListPQ;
-    pub mod SortedListPQ;
-    pub mod BinaryHeapPQ;
-    pub mod BalancedTreePQ;
-    pub mod LeftistHeapPQ;
-    pub mod HeapsortExample;
-    pub mod Example45_2;
-}
+// FIXME: Chap45 depends on Chap37 which is commented out pending Chap23 fix.
+// #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+// pub mod Chap45 { ... }
 
 #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
 pub mod Chap47 {
@@ -456,35 +394,13 @@ pub mod Chap51 {
     pub mod TopDownDPMtPer;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
-pub mod Chap52 {
-    pub mod AdjSeqGraphStEph;
-    pub mod AdjSeqGraphStPer;
-    pub mod AdjSeqGraphMtEph;
-    pub mod AdjSeqGraphMtPer;
-    pub mod AdjTableGraphStEph;
-    pub mod AdjTableGraphStPer;
-    #[cfg(feature = "all_chapters")]
-    pub mod AdjTableGraphMtPer;
-    pub mod AdjMatrixGraphStEph;
-    pub mod AdjMatrixGraphStPer;
-    pub mod AdjMatrixGraphMtEph;
-    pub mod AdjMatrixGraphMtPer;
-    pub mod EdgeSetGraphStEph;
-    pub mod EdgeSetGraphStPer;
-    #[cfg(feature = "all_chapters")]
-    pub mod EdgeSetGraphMtPer;
-}
+// FIXME: Chap52 partially depends on Chap37 which is commented out pending Chap23 fix.
+// #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+// pub mod Chap52 { ... }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
-pub mod Chap53 {
-    pub mod PQMinStEph;
-    pub mod PQMinStPer;
-    pub mod GraphSearchStEph;
-    pub mod GraphSearchStPer;
-    #[cfg(feature = "all_chapters")]
-    pub mod GraphSearchMtPer;
-}
+// FIXME: Chap53 depends on Chap37 which is commented out pending Chap23 fix.
+// #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+// pub mod Chap53 { ... }
 
 #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
 pub mod Chap54 {
@@ -494,17 +410,9 @@ pub mod Chap54 {
     pub mod BFSMtPer;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
-pub mod Chap55 {
-    pub mod DFSStEph;
-    pub mod DFSStPer;
-    pub mod TopoSortStEph;
-    pub mod TopoSortStPer;
-    pub mod CycleDetectStEph;
-    pub mod CycleDetectStPer;
-    pub mod SCCStEph;
-    pub mod SCCStPer;
-}
+// FIXME: Chap55 depends on Chap37 which is commented out pending Chap23 fix.
+// #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+// pub mod Chap55 { ... }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap56 {
@@ -529,12 +437,13 @@ pub mod Chap56 {
     pub mod Example56_3;
 }
 
+// FIXME: Chap57 Dijkstra depends on Chap45::BinaryHeapPQ which is commented out pending Chap23 fix.
+// DijkstraStEph* files commented out; StackStEph has no dependency on Chap45.
 #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
 pub mod Chap57 {
     pub mod StackStEph;
-    pub mod DijkstraStEphI64;
-    #[cfg(feature = "all_chapters")]
-    pub mod DijkstraStEphFloat;
+    // pub mod DijkstraStEphI64;
+    // pub mod DijkstraStEphFloat;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
@@ -544,7 +453,9 @@ pub mod Chap58 {
     pub mod BellmanFordStEphFloat;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+// FIXME: Chap59 Johnson depends on Chap57::Dijkstra which is commented out pending Chap23 fix.
+// Verus-only: only trait signatures inside verus! are verified; impls are cfg-gated.
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), verus_keep_ghost))]
 pub mod Chap59 {
     pub mod JohnsonStEphI64;
     pub mod JohnsonMtEphI64;
