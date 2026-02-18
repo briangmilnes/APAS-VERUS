@@ -212,6 +212,7 @@ pub mod ReduceContractMtEph {
 
     pub trait ReduceContractMtEphTrait<T: StTInMtT> {
         /// Reduce a sequence using parallel contraction: contract→solve→expand.
+        /// Subsumes Example 27.1 (Maximal Element): call with max and 0 identity.
         /// - APAS: Work Θ(n), Span Θ(log n) — Algorithm 27.2.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(log n) — parallel tabulate for contraction; agrees with APAS.
         fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(

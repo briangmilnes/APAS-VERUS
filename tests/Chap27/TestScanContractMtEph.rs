@@ -66,6 +66,32 @@ fn test_scan_contract_parallel_even_length() {
 }
 
 #[test]
+fn test_scan_contract_parallel_two_elements() {
+    let a = ArraySeqMtEphS::tabulate(&|i| i + 1, 2); // [1, 2]
+    let result = ArraySeqMtEphS::scan_contract_parallel(&a, Arc::new(|x: &usize, y: &usize| x + y), Ghost::assume_new(), 0);
+    assert_eq!(result.length(), 2);
+    assert_eq!(*result.nth(0), 0); // exclusive scan: nothing before index 0
+    assert_eq!(*result.nth(1), 1); // 0 + 1
+}
+
+#[test]
+fn test_scan_contract_parallel_power_of_2() {
+    let a = ArraySeqMtEphS::tabulate(&|_i| 1usize, 16);
+    let result = ArraySeqMtEphS::scan_contract_parallel(&a, Arc::new(|x: &usize, y: &usize| x + y), Ghost::assume_new(), 0);
+    assert_eq!(result.length(), 16);
+    for i in 0..16 {
+        assert_eq!(*result.nth(i), i, "scan[{i}] should be {i}");
+    }
+
+    let a32 = ArraySeqMtEphS::tabulate(&|_i| 1usize, 32);
+    let result32 = ArraySeqMtEphS::scan_contract_parallel(&a32, Arc::new(|x: &usize, y: &usize| x + y), Ghost::assume_new(), 0);
+    assert_eq!(result32.length(), 32);
+    for i in 0..32 {
+        assert_eq!(*result32.nth(i), i, "scan32[{i}] should be {i}");
+    }
+}
+
+#[test]
 fn test_scan_contract_parallel_large() {
     let a = ArraySeqMtEphS::tabulate(&|_i| 1usize, 100);
     let result = ArraySeqMtEphS::scan_contract_parallel(&a, Arc::new(|x: &usize, y: &usize| x + y), Ghost::assume_new(), 0);

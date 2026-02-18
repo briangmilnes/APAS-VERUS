@@ -55,6 +55,24 @@ fn test_reduce_contract_even_length() {
 }
 
 #[test]
+fn test_reduce_contract_two_elements() {
+    let a = ArraySeqStEphS::tabulate(&|i| i + 1, 2); // [1, 2]
+    let result = ArraySeqStEphS::reduce_contract(&a, &|x, y| x + y, Ghost::assume_new(), 0);
+    assert_eq!(result, 3, "Sum of [1, 2] should be 3");
+}
+
+#[test]
+fn test_reduce_contract_power_of_2() {
+    let a = ArraySeqStEphS::tabulate(&|_i| 1usize, 16);
+    let result = ArraySeqStEphS::reduce_contract(&a, &|x, y| x + y, Ghost::assume_new(), 0);
+    assert_eq!(result, 16, "Sum of 16 ones should be 16");
+
+    let a32 = ArraySeqStEphS::tabulate(&|_i| 1usize, 32);
+    let result32 = ArraySeqStEphS::reduce_contract(&a32, &|x, y| x + y, Ghost::assume_new(), 0);
+    assert_eq!(result32, 32, "Sum of 32 ones should be 32");
+}
+
+#[test]
 fn test_reduce_contract_large() {
     let a = ArraySeqStEphS::tabulate(&|_i| 1usize, 1000);
     let result = ArraySeqStEphS::reduce_contract(&a, &|x, y| x + y, Ghost::assume_new(), 0);

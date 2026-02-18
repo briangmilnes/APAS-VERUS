@@ -1,8 +1,9 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap35/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap35/
 
 ✓ OrderStatSelectMtEph.rs
 ✓ OrderStatSelectMtPer.rs
 ✓ OrderStatSelectStEph.rs
+   1 clean proof function
 ✓ OrderStatSelectStPer.rs
 
 ═══════════════════════════════════════════════════════════════
@@ -15,9 +16,9 @@ Modules:
    4 total
 
 Proof Functions:
-   0 clean
+   1 clean
    0 holed
-   0 total
+   1 total
 
 Holes Found: 0 total
 

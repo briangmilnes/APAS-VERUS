@@ -118,6 +118,7 @@ pub mod vstdplus {
     pub mod float;
     pub mod monoid;
     pub mod multiset;
+    pub mod rand;
     pub mod arithmetic {
     pub mod power2_plus;
     }
@@ -274,7 +275,7 @@ pub mod Chap28 {
     pub mod MaxContigSubSumOptMtEph;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap35 {
     pub mod OrderStatSelectStEph;
     pub mod OrderStatSelectStPer;
@@ -282,12 +283,20 @@ pub mod Chap35 {
     pub mod OrderStatSelectMtPer;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap36 {
     pub mod QuickSortStEph;
     pub mod QuickSortMtEph;
-    #[cfg(feature = "all_chapters")]
+    #[cfg(all(not(verus_keep_ghost), feature = "all_chapters"))]
     pub mod QuickSortMtEphSlice;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), verus_keep_ghost))]
+pub mod Chap37 {
+    pub mod BSTPlainStEph;
+    pub mod BSTAVLStEph;
+    pub mod BSTBBAlphaStEph;
+    pub mod BSTRBStEph;
 }
 
 #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]

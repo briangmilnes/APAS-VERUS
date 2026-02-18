@@ -1,33 +1,15 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap37/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBStEph.rs
 
-✓ AVLTreeSeq.rs
-✓ AVLTreeSeqMtPer.rs
-✓ AVLTreeSeqStEph.rs
-✓ AVLTreeSeqStPer.rs
-✓ BSTAVLMtEph.rs
-✓ BSTAVLStEph.rs
-✓ BSTBBAlphaMtEph.rs
-✓ BSTBBAlphaStEph.rs
-✓ BSTPlainMtEph.rs
-✓ BSTPlainStEph.rs
-✓ BSTRBMtEph.rs
 ✓ BSTRBStEph.rs
-✓ BSTSetAVLMtEph.rs
-✓ BSTSetBBAlphaMtEph.rs
-✓ BSTSetPlainMtEph.rs
-✓ BSTSetRBMtEph.rs
-✓ BSTSetSplayMtEph.rs
-✓ BSTSplayMtEph.rs
-✓ BSTSplayStEph.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   19 clean (no holes)
+   1 clean (no holes)
    0 holed (contains holes)
-   19 total
+   1 total
 
 Proof Functions:
    0 clean
