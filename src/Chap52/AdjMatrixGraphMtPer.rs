@@ -1,10 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 52: Adjacency Matrix Graph (persistent, multi-threaded).
-//! PARALLEL complement operation.
+//! Verified sequential implementation (no parallel helpers).
 
 pub mod AdjMatrixGraphMtPer {
-
-    use std::thread;
 
     use vstd::prelude::*;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
@@ -15,6 +13,8 @@ pub mod AdjMatrixGraphMtPer {
     // Table of Contents
     // 4. type definitions
     // 5. view impls
+    // 6. spec fns
+    // 7. proof fns
     // 8. traits
     // 9. impls
 
@@ -35,259 +35,287 @@ pub mod AdjMatrixGraphMtPer {
         }
     }
 
+    // 6. spec fns
+
+    /// Count how many of f(0), f(1), ..., f(n-1) are true.
+    pub open spec fn spec_count_true(f: spec_fn(int) -> bool, n: int) -> nat
+        decreases n
+    {
+        if n <= 0 { 0 }
+        else if f(n - 1) { 1 + spec_count_true(f, n - 1) }
+        else { spec_count_true(f, n - 1) }
+    }
+
+    /// Sum of f(0) + f(1) + ... + f(n-1).
+    pub open spec fn spec_sum_of(n: int, f: spec_fn(int) -> nat) -> nat
+        decreases n
+    {
+        if n <= 0 { 0 }
+        else { f(n - 1) + spec_sum_of(n - 1, f) }
+    }
+
+    /// A well-formed adjacency matrix: square n x n.
+    pub open spec fn spec_wf(g: AdjMatrixGraphMtPer) -> bool {
+        g.matrix.spec_len() == g.n
+        && forall|i: int| #![auto] 0 <= i < g.n ==>
+            g.matrix.spec_index(i).spec_len() == g.n
+    }
+
+    // 7. proof fns
+
+    proof fn lemma_count_true_monotone(f: spec_fn(int) -> bool, i: int, n: int)
+        requires 0 <= i <= n
+        ensures spec_count_true(f, i) <= spec_count_true(f, n)
+        decreases n - i
+    {
+        if i < n {
+            lemma_count_true_monotone(f, i, n - 1);
+        }
+    }
+
+    proof fn lemma_sum_of_monotone(i: int, n: int, f: spec_fn(int) -> nat)
+        requires 0 <= i <= n
+        ensures spec_sum_of(i, f) <= spec_sum_of(n, f)
+        decreases n - i
+    {
+        if i < n {
+            lemma_sum_of_monotone(i, n - 1, f);
+        }
+    }
+
     // 8. traits
 
     pub trait AdjMatrixGraphMtPerTrait: Sized {
-        /// claude-4-sonet: Work Θ(n²), Span Θ(log n), Parallelism Θ(n²/log n)
-        fn new(n: N)                   -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn num_vertices(&self)         -> N;
-        /// claude-4-sonet: Work Θ(n²), Span Θ(log n), Parallelism Θ(n²/log n)
-        fn num_edges(&self)            -> N;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn has_edge(&self, u: N, v: N) -> B;
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn out_neighbors(&self, u: N)  -> ArraySeqMtPerS<N>;
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn out_degree(&self, u: N)     -> N;
-        /// claude-4-sonet: Work Θ(n²), Span Θ(log n), Parallelism Θ(n²/log n)
-        fn complement(&self)           -> Self
-        where
-            bool: 'static;
+        spec fn spec_n(&self) -> nat;
+        spec fn spec_edge(&self, u: int, v: int) -> bool
+            recommends 0 <= u < self.spec_n(), 0 <= v < self.spec_n();
+
+        /// Work Theta(n^2), Span Theta(n^2)
+        fn new(n: N) -> (result: Self)
+            ensures
+                spec_wf(result),
+                result.spec_n() == n,
+                forall|u: int, v: int| #![auto]
+                    0 <= u < n && 0 <= v < n ==> !result.spec_edge(u, v);
+
+        /// Work Theta(1), Span Theta(1)
+        fn num_vertices(&self) -> (n: N)
+            requires spec_wf(*self)
+            ensures n as nat == self.spec_n();
+
+        /// Work Theta(n^2), Span Theta(n^2)
+        fn num_edges(&self) -> (m: N)
+            requires
+                spec_wf(*self),
+                spec_sum_of(
+                    self.spec_n() as int,
+                    |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
+                ) <= usize::MAX as nat
+            ensures
+                m as nat == spec_sum_of(
+                    self.spec_n() as int,
+                    |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
+                );
+
+        /// Work Theta(1), Span Theta(1)
+        fn has_edge(&self, u: N, v: N) -> (found: B)
+            requires spec_wf(*self)
+            ensures
+                u < self.spec_n() && v < self.spec_n() ==> found == self.spec_edge(u as int, v as int),
+                (u >= self.spec_n() || v >= self.spec_n()) ==> !found;
+
+        /// Work Theta(n), Span Theta(n)
+        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtPerS<N>)
+            requires spec_wf(*self)
+            ensures
+                u < self.spec_n() ==> (
+                    forall|k: int| #![auto] 0 <= k < neighbors.spec_len()
+                        ==> neighbors.spec_index(k) < self.spec_n()
+                            && self.spec_edge(u as int, neighbors.spec_index(k) as int),
+                    forall|v: int| #![auto] 0 <= v < self.spec_n() && self.spec_edge(u as int, v)
+                        ==> exists|k: int| #![auto]
+                            0 <= k < neighbors.spec_len() && neighbors.spec_index(k) == v as N
+                ),
+                u >= self.spec_n() ==> neighbors.spec_len() == 0;
+
+        /// Work Theta(n), Span Theta(n)
+        fn out_degree(&self, u: N) -> (d: N)
+            requires spec_wf(*self)
+            ensures
+                u < self.spec_n() ==> d as nat == spec_count_true(
+                    |v: int| self.spec_edge(u as int, v),
+                    self.spec_n() as int,
+                ),
+                u >= self.spec_n() ==> d == 0;
+
+        /// Work Theta(n^2), Span Theta(n^2)
+        fn complement(&self) -> (result: Self)
+            requires spec_wf(*self)
+            ensures
+                spec_wf(result),
+                result.spec_n() == self.spec_n(),
+                forall|i: int, j: int| #![auto]
+                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()
+                    ==> result.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));
     }
 
     // 9. impls
 
     impl AdjMatrixGraphMtPerTrait for AdjMatrixGraphMtPer {
-        /// - APAS: N/A — constructor not in cost table.
-        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential creation of n×n false matrix.
-        #[verifier::external_body]
-        fn new(n: N) -> Self {
-            let false_row = ArraySeqMtPerS::from_vec(vec![false; n]);
-            let mut matrix_rows = Vec::with_capacity(n);
-            for _ in 0..n {
-                matrix_rows.push(false_row.clone());
-            }
-            AdjMatrixGraphMtPer {
-                matrix: ArraySeqMtPerS::from_vec(matrix_rows),
+
+        open spec fn spec_n(&self) -> nat { self.n as nat }
+
+        open spec fn spec_edge(&self, u: int, v: int) -> bool {
+            self.matrix.spec_index(u).spec_index(v)
+        }
+
+        fn new(n: N) -> (result: Self) {
+            let matrix = ArraySeqMtPerS::tabulate(
+                &|_i: usize| -> (r: ArraySeqMtPerS<bool>)
+                    ensures
+                        r.spec_len() == n,
+                        forall|j: int| #![auto] 0 <= j < n ==> !r.spec_index(j)
+                {
+                    ArraySeqMtPerS::tabulate(
+                        &|_j: usize| -> (r: bool) ensures !r { false },
+                        n,
+                    )
+                },
                 n,
+            );
+            AdjMatrixGraphMtPer { matrix, n }
+        }
+
+        fn num_vertices(&self) -> (n: N) { self.n }
+
+        fn num_edges(&self) -> (m: N) {
+            let n = self.n;
+            let mut total: usize = 0;
+            let mut u: usize = 0;
+            let ghost row_count = |u: int| spec_count_true(|v: int| self.spec_edge(u, v), n as int);
+            while u < n
+                invariant
+                    u <= n,
+                    spec_wf(*self),
+                    total as nat == spec_sum_of(u as int, row_count),
+                    row_count == (|u: int| spec_count_true(|v: int| self.spec_edge(u, v), n as int)),
+                    spec_sum_of(n as int, row_count) <= usize::MAX as nat,
+                decreases n - u
+            {
+                proof { lemma_sum_of_monotone(u as int + 1, n as int, row_count); }
+                let row = self.matrix.nth(u);
+                let mut count: usize = 0;
+                let mut v: usize = 0;
+                let ghost edge_fn = |v: int| self.spec_edge(u as int, v);
+                while v < n
+                    invariant
+                        v <= n,
+                        spec_wf(*self),
+                        count as nat == spec_count_true(edge_fn, v as int),
+                        edge_fn == (|v: int| self.spec_edge(u as int, v)),
+                        spec_count_true(edge_fn, n as int) <= usize::MAX as nat,
+                    decreases n - v
+                {
+                    proof { lemma_count_true_monotone(edge_fn, v as int + 1, n as int); }
+                    if *row.nth(v) {
+                        count = count + 1;
+                    }
+                    v = v + 1;
+                }
+                total = total + count;
+                u = u + 1;
             }
+            total
         }
 
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — stored field.
-        #[verifier::external_body]
-        fn num_vertices(&self) -> N { self.n }
-
-        /// - APAS: Work Θ(n²), Span Θ(1) [Cost Spec 52.6, map over edges]
-        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(lg n) — parallel divide-and-conquer over rows and columns.
-        #[verifier::external_body]
-        fn num_edges(&self) -> N {
-            count_edges_parallel(&self.matrix)
-        }
-
-        /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.6]
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        #[verifier::external_body]
-        fn has_edge(&self, u: N, v: N) -> B {
+        fn has_edge(&self, u: N, v: N) -> (found: B) {
             if u >= self.n || v >= self.n {
                 return false;
             }
             *self.matrix.nth(u).nth(v)
         }
 
-        /// - APAS: Work Θ(n), Span Θ(1) [Cost Spec 52.6]
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer over columns.
-        #[verifier::external_body]
-        fn out_neighbors(&self, u: N) -> ArraySeqMtPerS<N> {
+        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtPerS<N>) {
             if u >= self.n {
                 return ArraySeqMtPerS::empty();
             }
+            let n = self.n;
             let row = self.matrix.nth(u);
-            collect_neighbors_parallel(row, 0, self.n)
+            let mut nvec = Vec::<N>::new();
+            let mut v: usize = 0;
+            while v < n
+                invariant
+                    v <= n,
+                    spec_wf(*self),
+                    u < self.spec_n(),
+                    forall|k: int| #![auto] 0 <= k < nvec@.len() as int
+                        ==> nvec@[k] < n
+                            && self.spec_edge(u as int, nvec@[k] as int),
+                    forall|j: int| #![auto] 0 <= j < v && self.spec_edge(u as int, j)
+                        ==> exists|k: int| #![auto]
+                            0 <= k < nvec@.len() as int && nvec@[k] == j as N,
+                decreases n - v
+            {
+                if *row.nth(v) {
+                    nvec.push(v);
+                }
+                v = v + 1;
+            }
+            ArraySeqMtPerS::from_vec(nvec)
         }
 
-        /// - APAS: Work Θ(n), Span Θ(lg n) [Cost Spec 52.6]
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer; agrees with APAS.
-        #[verifier::external_body]
-        fn out_degree(&self, u: N) -> N {
+        fn out_degree(&self, u: N) -> (d: N) {
             if u >= self.n {
                 return 0;
             }
-            let row = self.matrix.nth(u);
-            count_row_parallel(row)
-        }
-
-        /// - APAS: Work Θ(n²), Span Θ(1) [Exercise 52.6]
-        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(lg n) — parallel divide-and-conquer over rows and columns.
-        #[verifier::external_body]
-        fn complement(&self) -> Self
-        where
-            bool: 'static,
-        {
             let n = self.n;
-            let new_matrix = complement_matrix_parallel(&self.matrix, n);
-            AdjMatrixGraphMtPer {
-                matrix: new_matrix,
-                n: self.n,
+            let row = self.matrix.nth(u);
+            let mut count: usize = 0;
+            let mut v: usize = 0;
+            let ghost edge_fn = |v: int| self.spec_edge(u as int, v);
+            while v < n
+                invariant
+                    v <= n,
+                    spec_wf(*self),
+                    count as nat == spec_count_true(edge_fn, v as int),
+                    edge_fn == (|v: int| self.spec_edge(u as int, v)),
+                    spec_count_true(edge_fn, n as int) <= usize::MAX as nat,
+                decreases n - v
+            {
+                proof { lemma_count_true_monotone(edge_fn, v as int + 1, n as int); }
+                if *row.nth(v) {
+                    count = count + 1;
+                }
+                v = v + 1;
             }
-        }
-    }
-
-    /// - APAS: N/A — parallel helper not in cost table.
-    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(lg n) — parallel divide-and-conquer over rows.
-    #[verifier::external_body]
-    fn count_edges_parallel(matrix: &ArraySeqMtPerS<ArraySeqMtPerS<bool>>) -> (result: N) {
-        let n = matrix.length();
-        if n == 0 {
-            return 0;
-        }
-        if n == 1 {
-            return count_row_parallel(matrix.nth(0));
+            count
         }
 
-        let mid = n / 2;
-        let left_matrix = matrix.subseq_copy(0, mid);
-        let right_matrix = matrix.subseq_copy(mid, n - mid);
-
-        let left_handle = thread::spawn(move || count_edges_parallel(&left_matrix));
-        let right_count = count_edges_parallel(&right_matrix);
-        let left_count = left_handle.join().unwrap();
-
-        left_count + right_count
-    }
-
-    /// - APAS: N/A — parallel helper not in cost table.
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer over columns.
-    #[verifier::external_body]
-    fn count_row_parallel(row: &ArraySeqMtPerS<bool>) -> (result: N) {
-        let n = row.length();
-        if n == 0 {
-            return 0;
+        fn complement(&self) -> (result: Self) {
+            let n = self.n;
+            let matrix = ArraySeqMtPerS::tabulate(
+                &|i: usize| -> (r: ArraySeqMtPerS<bool>)
+                    requires i < n
+                    ensures
+                        r.spec_len() == n,
+                        forall|j: int| #![auto] 0 <= j < n ==>
+                            r.spec_index(j) == (i as int != j && !self.matrix.spec_index(i as int).spec_index(j))
+                {
+                    let row = self.matrix.nth(i);
+                    ArraySeqMtPerS::tabulate(
+                        &|j: usize| -> (r: bool)
+                            requires j < n
+                            ensures r == (i as int != j as int && !row.spec_index(j as int))
+                        {
+                            i != j && !*row.nth(j)
+                        },
+                        n,
+                    )
+                },
+                n,
+            );
+            AdjMatrixGraphMtPer { matrix, n }
         }
-        if n == 1 {
-            return if *row.nth(0) { 1 } else { 0 };
-        }
-
-        let mid = n / 2;
-        let left_row = row.subseq_copy(0, mid);
-        let right_row = row.subseq_copy(mid, n - mid);
-
-        let left_handle = thread::spawn(move || count_row_parallel(&left_row));
-        let right_count = count_row_parallel(&right_row);
-        let left_count = left_handle.join().unwrap();
-
-        left_count + right_count
-    }
-
-    /// - APAS: N/A — parallel helper not in cost table.
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer + append.
-    #[verifier::external_body]
-    fn collect_neighbors_parallel(
-        row: &ArraySeqMtPerS<bool>,
-        start: N,
-        end: N,
-    ) -> (result: ArraySeqMtPerS<N>) {
-        if start >= end {
-            return ArraySeqMtPerS::empty();
-        }
-        if end - start == 1 {
-            return if *row.nth(start) {
-                ArraySeqMtPerS::from_vec(vec![start])
-            } else {
-                ArraySeqMtPerS::empty()
-            };
-        }
-
-        let mid = (start + end) / 2;
-        let row_clone = row.clone();
-
-        let left_handle =
-            thread::spawn(move || collect_neighbors_parallel(&row_clone, start, mid));
-        let right_result = collect_neighbors_parallel(row, mid, end);
-        let left_result = left_handle.join().unwrap();
-
-        ArraySeqMtPerS::append(&left_result, &right_result)
-    }
-
-    /// - APAS: N/A — parallel helper not in cost table.
-    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(lg n) — parallel divide-and-conquer over rows and columns.
-    #[verifier::external_body]
-    fn complement_matrix_parallel(
-        matrix: &ArraySeqMtPerS<ArraySeqMtPerS<bool>>,
-        n: N,
-    ) -> (result: ArraySeqMtPerS<ArraySeqMtPerS<bool>>) {
-        complement_rows_parallel(matrix, 0, n, n)
-    }
-
-    /// - APAS: N/A — parallel helper not in cost table.
-    /// - Claude-Opus-4.6: Work Θ(k × n), Span Θ(lg k × n) — parallel over row range k.
-    #[verifier::external_body]
-    fn complement_rows_parallel(
-        matrix: &ArraySeqMtPerS<ArraySeqMtPerS<bool>>,
-        start_row: N,
-        end_row: N,
-        n: N,
-    ) -> (result: ArraySeqMtPerS<ArraySeqMtPerS<bool>>) {
-        if start_row >= end_row {
-            return ArraySeqMtPerS::empty();
-        }
-        if end_row - start_row == 1 {
-            let i = start_row;
-            let row = matrix.nth(i);
-            let comp_row = complement_row_parallel(row, i, n);
-            return ArraySeqMtPerS::from_vec(vec![comp_row]);
-        }
-
-        let mid = (start_row + end_row) / 2;
-        let matrix_clone = matrix.clone();
-
-        let left_handle =
-            thread::spawn(move || complement_rows_parallel(&matrix_clone, start_row, mid, n));
-        let right_result = complement_rows_parallel(matrix, mid, end_row, n);
-        let left_result = left_handle.join().unwrap();
-
-        ArraySeqMtPerS::append(&left_result, &right_result)
-    }
-
-    /// - APAS: N/A — parallel helper not in cost table.
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to parallel column complementing.
-    #[verifier::external_body]
-    fn complement_row_parallel(row: &ArraySeqMtPerS<bool>, row_idx: N, n: N) -> (result: ArraySeqMtPerS<bool>) {
-        complement_columns_parallel(row, row_idx, 0, n)
-    }
-
-    /// - APAS: N/A — parallel helper not in cost table.
-    /// - Claude-Opus-4.6: Work Θ(k), Span Θ(lg k) — parallel divide-and-conquer over column range k.
-    #[verifier::external_body]
-    fn complement_columns_parallel(
-        row: &ArraySeqMtPerS<bool>,
-        row_idx: N,
-        start: N,
-        end: N,
-    ) -> (result: ArraySeqMtPerS<bool>) {
-        if start >= end {
-            return ArraySeqMtPerS::empty();
-        }
-        if end - start == 1 {
-            let j = start;
-            let val = if row_idx == j {
-                false
-            } else {
-                !*row.nth(j)
-            };
-            return ArraySeqMtPerS::from_vec(vec![val]);
-        }
-
-        let mid = (start + end) / 2;
-        let row_clone = row.clone();
-
-        let left_handle =
-            thread::spawn(move || complement_columns_parallel(&row_clone, row_idx, start, mid));
-        let right_result = complement_columns_parallel(row, row_idx, mid, end);
-        let left_result = left_handle.join().unwrap();
-
-        ArraySeqMtPerS::append(&left_result, &right_result)
     }
 
     } // verus!

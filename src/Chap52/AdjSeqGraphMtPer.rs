@@ -1,22 +1,19 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 52: Adjacency Sequence Graph (persistent, multi-threaded).
-//! PARALLEL operations via ArraySeqMtPer.
 
 pub mod AdjSeqGraphMtPer {
-
-    use std::thread;
 
     use vstd::prelude::*;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
-
-    const SEQUENTIAL_CUTOFF: N = 64;
 
     verus! {
 
     // Table of Contents
     // 4. type definitions
     // 5. view impls
+    // 6. spec fns
+    // 7. proof fns
     // 8. traits
     // 9. impls
 
@@ -40,164 +37,165 @@ pub mod AdjSeqGraphMtPer {
         }
     }
 
+    // 6. spec fns
+
+    pub open spec fn spec_sum_of(n: int, f: spec_fn(int) -> nat) -> nat
+        decreases n
+    {
+        if n <= 0 { 0 }
+        else { f(n - 1) + spec_sum_of(n - 1, f) }
+    }
+
+    // 7. proof fns
+
+    proof fn lemma_sum_of_monotone(i: int, n: int, f: spec_fn(int) -> nat)
+        requires 0 <= i <= n
+        ensures spec_sum_of(i, f) <= spec_sum_of(n, f)
+        decreases n - i
+    {
+        if i < n {
+            lemma_sum_of_monotone(i, n - 1, f);
+        }
+    }
+
     // 8. traits
 
     pub trait AdjSeqGraphMtPerTrait: Sized {
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn new(n: N)                   -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn num_vertices(&self)         -> N;
-        /// claude-4-sonet: Work Θ(Σ deg(v)), Span Θ(log n), Parallelism Θ(|E|/log n)
-        fn num_edges(&self)            -> N;
-        /// claude-4-sonet: Work Θ(deg(u)), Span Θ(log(deg(u))), Parallelism Θ(deg(u)/log(deg(u)))
-        fn has_edge(&self, u: N, v: N) -> B;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn out_neighbors(&self, u: N)  -> ArraySeqMtPerS<N>;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn out_degree(&self, u: N)     -> N;
+        spec fn spec_num_vertices(&self) -> nat;
+        spec fn spec_degree(&self, u: int) -> nat
+            recommends 0 <= u < self.spec_num_vertices();
+        spec fn spec_neighbor(&self, u: int, j: int) -> N
+            recommends 0 <= u < self.spec_num_vertices(), 0 <= j < self.spec_degree(u);
+
+        /// Work Theta(n), Span Theta(log n)
+        fn new(n: N) -> (result: Self)
+            ensures
+                result.spec_num_vertices() == n,
+                forall|i: int| #![auto] 0 <= i < n ==> result.spec_degree(i) == 0;
+
+        /// Work Theta(1), Span Theta(1)
+        fn num_vertices(&self) -> (n: N)
+            ensures n as nat == self.spec_num_vertices();
+
+        /// Work Theta(n + m), Span Theta(lg n)
+        fn num_edges(&self) -> (m: N)
+            requires
+                spec_sum_of(
+                    self.spec_num_vertices() as int,
+                    |i: int| self.spec_degree(i),
+                ) <= usize::MAX as nat
+            ensures
+                m as nat == spec_sum_of(
+                    self.spec_num_vertices() as int,
+                    |i: int| self.spec_degree(i),
+                );
+
+        /// Work Theta(deg(u)), Span Theta(deg(u))
+        fn has_edge(&self, u: N, v: N) -> (found: B)
+            requires u < self.spec_num_vertices()
+            ensures found == exists|j: int|
+                #![auto] 0 <= j < self.spec_degree(u as int)
+                && self.spec_neighbor(u as int, j) == v;
+
+        /// Work Theta(1), Span Theta(1)
+        fn out_neighbors(&self, u: N) -> (neighbors: &ArraySeqMtPerS<N>)
+            requires u < self.spec_num_vertices()
+            ensures
+                neighbors.spec_len() == self.spec_degree(u as int),
+                forall|j: int| #![auto] 0 <= j < neighbors.spec_len()
+                    ==> neighbors.spec_index(j) == self.spec_neighbor(u as int, j);
+
+        /// Work Theta(1), Span Theta(1)
+        fn out_degree(&self, u: N) -> (d: N)
+            requires u < self.spec_num_vertices()
+            ensures d as nat == self.spec_degree(u as int);
     }
 
     // 9. impls
 
     impl AdjSeqGraphMtPerTrait for AdjSeqGraphMtPer {
-        /// - APAS: N/A — constructor not in cost table.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop creating n empty neighbor lists.
-        #[verifier::external_body]
-        fn new(n: N) -> Self {
-            let empty_list = ArraySeqMtPerS::empty();
-            let mut adj_lists = Vec::with_capacity(n);
-            for _ in 0..n {
-                adj_lists.push(empty_list.clone());
-            }
-            AdjSeqGraphMtPer {
-                adj: ArraySeqMtPerS::from_vec(adj_lists),
-            }
+
+        open spec fn spec_num_vertices(&self) -> nat {
+            self.adj.spec_len()
         }
 
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — sequence length.
-        #[verifier::external_body]
-        fn num_vertices(&self) -> N { self.adj.length() }
-
-        /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
-        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(lg n) — parallel divide-and-conquer over vertex range.
-        #[verifier::external_body]
-        fn num_edges(&self) -> N {
-            count_edges_parallel(&self.adj)
+        open spec fn spec_degree(&self, u: int) -> nat {
+            self.adj.spec_index(u).spec_len()
         }
 
-        /// - APAS: Work Θ(d(u)), Span Θ(lg d(u)) [Cost Spec 52.5]
-        /// - Claude-Opus-4.6: Work Θ(d(u)), Span Θ(d(u)) — sequential linear scan; span not logarithmic.
-        #[verifier::external_body]
-        fn has_edge(&self, u: N, v: N) -> B {
-            if u >= self.adj.length() {
-                return false;
+        open spec fn spec_neighbor(&self, u: int, j: int) -> N {
+            self.adj.spec_index(u).spec_index(j)
+        }
+
+        fn new(n: N) -> (result: Self) {
+            let adj = ArraySeqMtPerS::tabulate(
+                &|_i: usize| -> (r: ArraySeqMtPerS<N>)
+                    ensures r.spec_len() == 0
+                {
+                    ArraySeqMtPerS::empty()
+                },
+                n,
+            );
+            AdjSeqGraphMtPer { adj }
+        }
+
+        fn num_vertices(&self) -> (n: N) {
+            self.adj.length()
+        }
+
+        fn num_edges(&self) -> (m: N) {
+            let n = self.adj.length();
+            let mut count: usize = 0;
+            let mut i: usize = 0;
+            let ghost degree_fn: spec_fn(int) -> nat = |k: int| self.adj.spec_index(k).spec_len();
+            while i < n
+                invariant
+                    i <= n,
+                    n == self.adj.spec_len(),
+                    count as nat == spec_sum_of(i as int, degree_fn),
+                    degree_fn == (|k: int| self.adj.spec_index(k).spec_len()),
+                    spec_sum_of(n as int, degree_fn) <= usize::MAX as nat,
+                decreases n - i
+            {
+                proof {
+                    lemma_sum_of_monotone(i as int + 1, n as int, degree_fn);
+                }
+                let deg = self.adj.nth(i).length();
+                count = count + deg;
+                i = i + 1;
             }
+            count
+        }
+
+        fn has_edge(&self, u: N, v: N) -> (found: B) {
             let neighbors = self.adj.nth(u);
-            for i in 0..neighbors.length() {
+            let len = neighbors.length();
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len as nat == self.adj.spec_index(u as int).spec_len(),
+                    forall|j: int| #![auto] 0 <= j < i
+                        ==> self.adj.spec_index(u as int).spec_index(j) != v,
+                decreases len - i
+            {
                 if *neighbors.nth(i) == v {
+                    assert(self.adj.spec_index(u as int).spec_index(i as int) == v);
                     return true;
                 }
+                i = i + 1;
             }
             false
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5]
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        #[verifier::external_body]
-        fn out_neighbors(&self, u: N) -> ArraySeqMtPerS<N> { self.adj.nth(u).clone() }
-
-        /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5]
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        #[verifier::external_body]
-        fn out_degree(&self, u: N) -> N { self.adj.nth(u).length() }
-    }
-
-    /// - APAS: N/A — parallel helper.
-    /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(lg n) — parallel divide-and-conquer over vertex range.
-    #[verifier::external_body]
-    fn count_edges_parallel(adj: &ArraySeqMtPerS<ArraySeqMtPerS<N>>) -> (result: N) {
-        let n = adj.length();
-        if n == 0 {
-            return 0;
+        fn out_neighbors(&self, u: N) -> (neighbors: &ArraySeqMtPerS<N>) {
+            self.adj.nth(u)
         }
-        if n <= SEQUENTIAL_CUTOFF {
-            let mut count = 0;
-            for i in 0..n {
-                count += adj.nth(i).length();
-            }
-            return count;
+
+        fn out_degree(&self, u: N) -> (d: N) {
+            self.adj.nth(u).length()
         }
-        let mid = n / 2;
-        let left_adj = adj.subseq_copy(0, mid);
-        let right_adj = adj.subseq_copy(mid, n - mid);
-        let left_handle = thread::spawn(move || count_edges_parallel(&left_adj));
-        let right_count = count_edges_parallel(&right_adj);
-        let left_count = left_handle.join().unwrap();
-        left_count + right_count
     }
 
     } // verus!
-
-    // 13. derive impls outside verus!
-
-    impl AdjSeqGraphMtPer {
-        /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
-        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(lg n) — parallel divide-and-conquer over vertex range.
-        pub fn map_vertices<F: Fn(N) -> N + Send + Sync + Clone + 'static>(&self, f: F) -> Self
-        where
-            N: 'static,
-        {
-            let n = self.adj.length();
-            if n <= SEQUENTIAL_CUTOFF {
-                let mut new_adj_vec = Vec::with_capacity(n);
-                for i in 0..n {
-                    let neighbors = self.adj.nth(i);
-                    let len = neighbors.length();
-                    let mut new_neighbors_vec = Vec::with_capacity(len);
-                    for j in 0..len {
-                        new_neighbors_vec.push(f(*neighbors.nth(j)));
-                    }
-                    new_adj_vec.push(ArraySeqMtPerS::from_vec(new_neighbors_vec));
-                }
-                return AdjSeqGraphMtPer {
-                    adj: ArraySeqMtPerS::from_vec(new_adj_vec),
-                };
-            }
-            let mid = n / 2;
-            let adj = &self.adj;
-            let left_adj = adj.subseq_copy(0, mid);
-            let right_adj = adj.subseq_copy(mid, n - mid);
-            let f_left = f.clone();
-            let f_right = f;
-            let left_handle = thread::spawn(move || {
-                let mut new_adj_vec = Vec::with_capacity(mid);
-                for i in 0..mid {
-                    let neighbors = left_adj.nth(i);
-                    let len = neighbors.length();
-                    let mut new_neighbors_vec = Vec::with_capacity(len);
-                    for j in 0..len {
-                        new_neighbors_vec.push(f_left(*neighbors.nth(j)));
-                    }
-                    new_adj_vec.push(ArraySeqMtPerS::from_vec(new_neighbors_vec));
-                }
-                ArraySeqMtPerS::from_vec(new_adj_vec)
-            });
-            let mut right_adj_vec = Vec::with_capacity(n - mid);
-            for i in 0..(n - mid) {
-                let neighbors = right_adj.nth(i);
-                let len = neighbors.length();
-                let mut new_neighbors_vec = Vec::with_capacity(len);
-                for j in 0..len {
-                    new_neighbors_vec.push(f_right(*neighbors.nth(j)));
-                }
-                right_adj_vec.push(ArraySeqMtPerS::from_vec(new_neighbors_vec));
-            }
-            let right_result = ArraySeqMtPerS::from_vec(right_adj_vec);
-            let left_result = left_handle.join().unwrap();
-            AdjSeqGraphMtPer {
-                adj: ArraySeqMtPerS::append(&left_result, &right_result),
-            }
-        }
-    }
 }

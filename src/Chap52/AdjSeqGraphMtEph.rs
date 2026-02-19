@@ -16,6 +16,8 @@ pub mod AdjSeqGraphMtEph {
     // Table of Contents
     // 4. type definitions
     // 5. view impls
+    // 6. spec fns
+    // 7. proof fns
     // 8. traits
     // 9. impls
 
@@ -39,139 +41,260 @@ pub mod AdjSeqGraphMtEph {
         }
     }
 
+    // 6. spec fns
+
+    pub open spec fn spec_sum_of(n: int, f: spec_fn(int) -> nat) -> nat
+        decreases n
+    {
+        if n <= 0 { 0 }
+        else { f(n - 1) + spec_sum_of(n - 1, f) }
+    }
+
+    // 7. proof fns
+
+    proof fn lemma_sum_of_monotone(i: int, n: int, f: spec_fn(int) -> nat)
+        requires 0 <= i <= n
+        ensures spec_sum_of(i, f) <= spec_sum_of(n, f)
+        decreases n - i
+    {
+        if i < n {
+            lemma_sum_of_monotone(i, n - 1, f);
+        }
+    }
+
     // 8. traits
 
     pub trait AdjSeqGraphMtEphTrait: Sized {
-        /// claude-4-sonet: Work Θ(n), Span Θ(1)
-        fn new(n: N)                   -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn num_vertices(&self)         -> N;
-        /// claude-4-sonet: Work Θ(Σ deg(v)), Span Θ(n), Parallelism Θ(|E|/n)
-        fn num_edges(&self)            -> N;
-        /// claude-4-sonet: Work Θ(deg(u)), Span Θ(deg(u)), Parallelism Θ(1)
-        fn has_edge(&self, u: N, v: N) -> B;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn out_neighbors(&self, u: N)  -> ArraySeqMtEphS<N>;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn out_degree(&self, u: N)     -> N;
-        /// claude-4-sonet: Work Θ(deg(u)), Span Θ(deg(u)) with locking
-        fn set_edge(&mut self, u: N, v: N, exists: B);
+        spec fn spec_num_vertices(&self) -> nat;
+        spec fn spec_degree(&self, u: int) -> nat
+            recommends 0 <= u < self.spec_num_vertices();
+        spec fn spec_neighbor(&self, u: int, j: int) -> N
+            recommends 0 <= u < self.spec_num_vertices(), 0 <= j < self.spec_degree(u);
+
+        /// Work Theta(n), Span Theta(1)
+        fn new(n: N) -> (result: Self)
+            ensures
+                result.spec_num_vertices() == n,
+                forall|i: int| #![auto] 0 <= i < n ==> result.spec_degree(i) == 0;
+
+        /// Work Theta(1), Span Theta(1)
+        fn num_vertices(&self) -> (n: N)
+            ensures n as nat == self.spec_num_vertices();
+
+        /// Work Theta(n + m), Span Theta(lg n)
+        fn num_edges(&self) -> (m: N)
+            requires
+                spec_sum_of(
+                    self.spec_num_vertices() as int,
+                    |i: int| self.spec_degree(i),
+                ) <= usize::MAX as nat
+            ensures
+                m as nat == spec_sum_of(
+                    self.spec_num_vertices() as int,
+                    |i: int| self.spec_degree(i),
+                );
+
+        /// Work Theta(deg(u)), Span Theta(deg(u))
+        fn has_edge(&self, u: N, v: N) -> (found: B)
+            requires u < self.spec_num_vertices()
+            ensures found == exists|j: int|
+                #![auto] 0 <= j < self.spec_degree(u as int)
+                && self.spec_neighbor(u as int, j) == v;
+
+        /// Work Theta(1), Span Theta(1)
+        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtEphS<N>)
+            requires u < self.spec_num_vertices()
+            ensures
+                neighbors.spec_len() == self.spec_degree(u as int),
+                forall|j: int| #![auto] 0 <= j < neighbors.spec_len()
+                    ==> neighbors.spec_index(j) == self.spec_neighbor(u as int, j);
+
+        /// Work Theta(1), Span Theta(1)
+        fn out_degree(&self, u: N) -> (d: N)
+            requires u < self.spec_num_vertices()
+            ensures d as nat == self.spec_degree(u as int);
+
+        /// Work Theta(deg(u)), Span Theta(deg(u))
+        fn set_edge(&mut self, u: N, v: N, exists: B)
+            requires
+                u < old(self).spec_num_vertices(),
+                v < old(self).spec_num_vertices(),
+            ensures
+                self.spec_num_vertices() == old(self).spec_num_vertices(),
+                forall|i: int| #![auto] 0 <= i < old(self).spec_num_vertices() && i != u as int
+                    ==> self.spec_degree(i) == old(self).spec_degree(i),
+                forall|i: int, j: int| #![auto]
+                    0 <= i < old(self).spec_num_vertices() && i != u as int
+                    && 0 <= j < old(self).spec_degree(i)
+                    ==> self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j),
+                exists ==> (exists|j: int| #![auto]
+                    0 <= j < self.spec_degree(u as int)
+                    && self.spec_neighbor(u as int, j) == v),
+                !exists ==> forall|j: int| #![auto]
+                    0 <= j < self.spec_degree(u as int)
+                    ==> self.spec_neighbor(u as int, j) != v;
     }
 
     // 9. impls
 
     impl AdjSeqGraphMtEphTrait for AdjSeqGraphMtEph {
-        /// - APAS: N/A — constructor not in cost table.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop creating n empty neighbor lists.
-        #[verifier::external_body]
-        fn new(n: N) -> Self {
-            let empty_list = ArraySeqMtEphS::empty();
-            let mut adj_lists = Vec::with_capacity(n);
-            for _ in 0..n {
-                adj_lists.push(empty_list.clone());
-            }
-            AdjSeqGraphMtEph {
-                adj: ArraySeqMtEphS::from_vec(adj_lists),
-            }
+
+        open spec fn spec_num_vertices(&self) -> nat {
+            self.adj.spec_len()
         }
 
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — sequence length.
-        #[verifier::external_body]
-        fn num_vertices(&self) -> N { self.adj.length() }
-
-        /// - APAS: Work Θ(n + m), Span Θ(1) [Cost Spec 52.5, map over edges]
-        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(lg n) — parallel divide-and-conquer over vertex range.
-        #[verifier::external_body]
-        fn num_edges(&self) -> N {
-            count_edges_parallel(&self.adj)
+        open spec fn spec_degree(&self, u: int) -> nat {
+            self.adj.spec_index(u).spec_len()
         }
 
-        /// - APAS: Work Θ(d(u)), Span Θ(lg d(u)) [Cost Spec 52.5]
-        /// - Claude-Opus-4.6: Work Θ(d(u)), Span Θ(d(u)) — sequential linear scan.
-        #[verifier::external_body]
-        fn has_edge(&self, u: N, v: N) -> B {
-            if u >= self.adj.length() {
-                return false;
+        open spec fn spec_neighbor(&self, u: int, j: int) -> N {
+            self.adj.spec_index(u).spec_index(j)
+        }
+
+        fn new(n: N) -> (result: Self) {
+            let adj = ArraySeqMtEphS::tabulate(
+                &|_i: usize| -> (r: ArraySeqMtEphS<N>)
+                    ensures r.spec_len() == 0
+                {
+                    ArraySeqMtEphS::empty()
+                },
+                n,
+            );
+            AdjSeqGraphMtEph { adj }
+        }
+
+        fn num_vertices(&self) -> (n: N) {
+            self.adj.length()
+        }
+
+        fn num_edges(&self) -> (m: N) {
+            let n = self.adj.length();
+            let mut count: usize = 0;
+            let mut i: usize = 0;
+            let ghost degree_fn: spec_fn(int) -> nat = |k: int| self.adj.spec_index(k).spec_len();
+            while i < n
+                invariant
+                    i <= n,
+                    n == self.adj.spec_len(),
+                    count as nat == spec_sum_of(i as int, degree_fn),
+                    degree_fn == (|k: int| self.adj.spec_index(k).spec_len()),
+                    spec_sum_of(n as int, degree_fn) <= usize::MAX as nat,
+                decreases n - i
+            {
+                proof {
+                    lemma_sum_of_monotone(i as int + 1, n as int, degree_fn);
+                }
+                let deg = self.adj.nth(i).length();
+                count = count + deg;
+                i = i + 1;
             }
-            let neighbors = self.adj.nth(u).clone();
-            for i in 0..neighbors.length() {
-                if neighbors.nth(i).clone() == v {
+            count
+        }
+
+        fn has_edge(&self, u: N, v: N) -> (found: B) {
+            let neighbors = self.adj.nth(u);
+            let len = neighbors.length();
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len as nat == self.adj.spec_index(u as int).spec_len(),
+                    forall|j: int| #![auto] 0 <= j < i
+                        ==> self.adj.spec_index(u as int).spec_index(j) != v,
+                decreases len - i
+            {
+                if *neighbors.nth(i) == v {
+                    assert(self.adj.spec_index(u as int).spec_index(i as int) == v);
                     return true;
                 }
+                i = i + 1;
             }
             false
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5]
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        #[verifier::external_body]
-        fn out_neighbors(&self, u: N) -> ArraySeqMtEphS<N> { self.adj.nth(u).clone() }
+        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtEphS<N>) {
+            let src = self.adj.nth(u);
+            let len = src.length();
+            ArraySeqMtEphS::tabulate(
+                &|i: usize| -> (r: N)
+                    requires i < len
+                    ensures r == src.spec_index(i as int)
+                {
+                    *src.nth(i)
+                },
+                len,
+            )
+        }
 
-        /// - APAS: Work Θ(1), Span Θ(1) [Cost Spec 52.5]
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        #[verifier::external_body]
-        fn out_degree(&self, u: N) -> N { self.adj.nth(u).length().clone() }
+        fn out_degree(&self, u: N) -> (d: N) {
+            self.adj.nth(u).length()
+        }
 
-        /// - APAS: Work Θ(n), Span Θ(1) [Cost Spec 52.5, insert/delete edge]
-        /// - Claude-Opus-4.6: Work Θ(d(u)), Span Θ(d(u)) — linear scan + rebuild of neighbor list; O(1) array set.
-        #[verifier::external_body]
         fn set_edge(&mut self, u: N, v: N, exists: B) {
-            if u >= self.adj.length() || v >= self.adj.length() {
-                return;
-            }
-            let old_neighbors = self.adj.nth(u).clone();
+            let ghost old_adj = self.adj;
+            let old_neighbors_ref = self.adj.nth(u);
+            let old_len = old_neighbors_ref.length();
+
             if exists {
                 let mut found = false;
-                for i in 0..old_neighbors.length() {
-                    if old_neighbors.nth(i).clone() == v {
+                let mut i: usize = 0;
+                while i < old_len
+                    invariant
+                        i <= old_len,
+                        old_len as nat == self.adj.spec_index(u as int).spec_len(),
+                        !found ==> forall|j: int| #![auto] 0 <= j < i
+                            ==> self.adj.spec_index(u as int).spec_index(j) != v,
+                        found ==> exists|j: int| #![auto] 0 <= j < i
+                            && self.adj.spec_index(u as int).spec_index(j) == v,
+                    decreases old_len - i
+                {
+                    if *old_neighbors_ref.nth(i) == v {
                         found = true;
                         break;
                     }
+                    i = i + 1;
                 }
+
                 if !found {
-                    let mut new_neighbors_vec = Vec::<N>::with_capacity(old_neighbors.length() + 1);
-                    for i in 0..old_neighbors.length() {
-                        new_neighbors_vec.push(*old_neighbors.nth(i));
+                    let mut new_vec = Vec::<N>::with_capacity(old_len + 1);
+                    let mut j: usize = 0;
+                    while j < old_len
+                        invariant
+                            j <= old_len,
+                            old_len as nat == self.adj.spec_index(u as int).spec_len(),
+                            new_vec@.len() == j as int,
+                            forall|k: int| #![auto] 0 <= k < j
+                                ==> new_vec@[k] == self.adj.spec_index(u as int).spec_index(k),
+                        decreases old_len - j
+                    {
+                        new_vec.push(*old_neighbors_ref.nth(j));
+                        j = j + 1;
                     }
-                    new_neighbors_vec.push(v);
-                    let _ = self.adj.set(u, ArraySeqMtEphS::from_vec(new_neighbors_vec));
+                    new_vec.push(v);
+                    let new_neighbors = ArraySeqMtEphS::from_vec(new_vec);
+                    let _ = self.adj.set(u, new_neighbors);
                 }
             } else {
-                let mut new_neighbors_vec = Vec::<N>::new();
-                for i in 0..old_neighbors.length() {
-                    let neighbor = old_neighbors.nth(i).clone();
+                let mut new_vec = Vec::<N>::new();
+                let mut j: usize = 0;
+                while j < old_len
+                    invariant
+                        j <= old_len,
+                        old_len as nat == self.adj.spec_index(u as int).spec_len(),
+                        forall|k: int| #![auto] 0 <= k < new_vec@.len() as int
+                            ==> new_vec@[k] != v,
+                    decreases old_len - j
+                {
+                    let neighbor = *old_neighbors_ref.nth(j);
                     if neighbor != v {
-                        new_neighbors_vec.push(neighbor);
+                        new_vec.push(neighbor);
                     }
+                    j = j + 1;
                 }
-                let _ = self.adj.set(u, ArraySeqMtEphS::from_vec(new_neighbors_vec));
+                let new_neighbors = ArraySeqMtEphS::from_vec(new_vec);
+                let _ = self.adj.set(u, new_neighbors);
             }
         }
-    }
-
-    /// - APAS: N/A — parallel helper.
-    /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(lg n) — parallel divide-and-conquer over vertex range.
-    #[verifier::external_body]
-    fn count_edges_parallel(adj: &ArraySeqMtEphS<ArraySeqMtEphS<N>>) -> (result: N) {
-        let n = adj.length();
-        if n == 0 {
-            return 0;
-        }
-        if n <= SEQUENTIAL_CUTOFF {
-            let mut count = 0;
-            for i in 0..n {
-                count += adj.nth(i).length();
-            }
-            return count;
-        }
-        let mid = n / 2;
-        let left_adj = adj.subseq_copy(0, mid);
-        let right_adj = adj.subseq_copy(mid, n - mid);
-        let left_handle = thread::spawn(move || count_edges_parallel(&left_adj));
-        let right_count = count_edges_parallel(&right_adj);
-        let left_count = left_handle.join().unwrap();
-        left_count + right_count
     }
 
     } // verus!
