@@ -1,7 +1,7 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphStEph.rs
+Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphStEph.rs
 Codebase: /home/milnes/projects/APAS-VERUS-agent1
 Mode: basic
 Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap06/analyses/veracity-review-verus-style.log
@@ -9,5 +9,5 @@ Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap06/analyses/veracity
 Checking 1 files...
 
 ════════════════════════════════════════════════════════════════
-Summary: 13 passed, 3 warnings in 1 files (checked 1 files)
+Summary: 14 passed, 3 warnings in 1 files (checked 1 files)
 ════════════════════════════════════════════════════════════════

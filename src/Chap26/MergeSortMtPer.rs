@@ -173,7 +173,7 @@ pub mod MergeSortMtPer {
         /// Merge two sorted sequences using parallel binary-search divide and conquer.
         /// - APAS: Work Θ(n), Span Θ(lg n) — assumed for merge sort Span analysis.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — parallel D&C merge via join(); Vec concat at each level is Θ(n), dominating span. Θ(lg² n) requires O(1) concat (balanced tree).
-        fn merge_parallel(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (result: ArraySeqMtPerS<N>)
+        fn merge_parallel(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (merged: ArraySeqMtPerS<N>)
             requires
                 spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),
                 spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),
@@ -182,17 +182,17 @@ pub mod MergeSortMtPer {
                 spec_merge_post(
                     Seq::new(left.spec_len(), |i: int| left.spec_index(i)),
                     Seq::new(right.spec_len(), |i: int| right.spec_index(i)),
-                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));
+                    Seq::new(merged.spec_len(), |i: int| merged.spec_index(i)));
 
         /// Sort a sequence using parallel merge sort. Algorithm 26.4.
         /// - APAS: Work Θ(n lg n), Span Θ(lg² n) — with O(lg n)-span merge.
         /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n) — parallel recursion via join(), Θ(n) merge: S(n) = S(n/2) + Θ(n) = Θ(n).
-        fn merge_sort_parallel(a: &ArraySeqMtPerS<N>) -> (result: ArraySeqMtPerS<N>)
+        fn merge_sort_parallel(a: &ArraySeqMtPerS<N>) -> (sorted: ArraySeqMtPerS<N>)
             requires a.spec_len() <= usize::MAX,
             ensures
                 spec_sort_post(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
-                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));
+                    Seq::new(sorted.spec_len(), |i: int| sorted.spec_index(i)));
     }
 
 
@@ -258,7 +258,7 @@ pub mod MergeSortMtPer {
 
     /// Parallel binary-search merge. Picks the median of left, binary searches in right,
     /// then recursively merges both halves in parallel via join().
-    fn merge_dc(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (result: ArraySeqMtPerS<N>)
+    fn merge_dc(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (merged: ArraySeqMtPerS<N>)
         requires
             spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),
             spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),
@@ -267,7 +267,7 @@ pub mod MergeSortMtPer {
             spec_merge_post(
                 Seq::new(left.spec_len(), |i: int| left.spec_index(i)),
                 Seq::new(right.spec_len(), |i: int| right.spec_index(i)),
-                Seq::new(result.spec_len(), |i: int| result.spec_index(i))),
+                Seq::new(merged.spec_len(), |i: int| merged.spec_index(i))),
         decreases left.spec_len() + right.spec_len(),
     {
         let nl = left.length();
@@ -456,10 +456,10 @@ pub mod MergeSortMtPer {
         { out.push(*merged_r.nth(i)); i += 1; }
 
         let ghost out_view = out@;
-        let result = ArraySeqMtPerS { seq: out };
+        let merged = ArraySeqMtPerS { seq: out };
 
         proof {
-            let ghost rv = Seq::new(result.spec_len(), |i: int| result.spec_index(i));
+            let ghost rv = Seq::new(merged.spec_len(), |i: int| merged.spec_index(i));
             assert(rv =~= out_view);
 
             // Length.
@@ -555,16 +555,16 @@ pub mod MergeSortMtPer {
             lemma_multiset_commutative(pivot_seq + sl_r, sr_l);
         }
 
-        result
+        merged
     }
 
     impl MergeSortMtTrait for ArraySeqMtPerS<N> {
-        fn merge_parallel(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (result: ArraySeqMtPerS<N>) {
+        fn merge_parallel(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (merged: ArraySeqMtPerS<N>) {
             merge_dc(left, right)
         }
 
         // Verified parallel merge sort: structural logic proven, recursion parallelized.
-        fn merge_sort_parallel(a: &ArraySeqMtPerS<N>) -> (result: ArraySeqMtPerS<N>)
+        fn merge_sort_parallel(a: &ArraySeqMtPerS<N>) -> (sorted: ArraySeqMtPerS<N>)
             decreases a.spec_len(),
         {
             let n = a.length();

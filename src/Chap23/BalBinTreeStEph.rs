@@ -777,16 +777,16 @@ pub mod BalBinTreeStEph {
     impl<T: Eq> Eq for BalBinTree<T> {}
 
     impl<T: PartialEq> PartialEq for BalBinTree<T> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (*self == *other)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (*self == *other)
             decreases self,
         {
             match (self, other) {
                 (BalBinTree::Leaf, BalBinTree::Leaf) => true,
                 (BalBinTree::Node(a), BalBinTree::Node(b)) => {
-                    let r = a.left == b.left && a.value == b.value && a.right == b.right;
-                    proof { assume(r == (*self == *other)); }
-                    r
+                    let equal = a.left == b.left && a.value == b.value && a.right == b.right;
+                    proof { assume(equal == (*self == *other)); }
+                    equal
                 },
                 _ => false,
             }
@@ -796,12 +796,12 @@ pub mod BalBinTreeStEph {
     impl<T: Eq> Eq for BalBinNode<T> {}
 
     impl<T: PartialEq> PartialEq for BalBinNode<T> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (*self == *other)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (*self == *other)
         {
-            let r = self.left == other.left && self.value == other.value && self.right == other.right;
-            proof { assume(r == (*self == *other)); }
-            r
+            let equal = self.left == other.left && self.value == other.value && self.right == other.right;
+            proof { assume(equal == (*self == *other)); }
+            equal
         }
     }
 

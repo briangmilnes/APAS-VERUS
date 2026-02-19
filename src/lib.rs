@@ -159,16 +159,16 @@ pub mod Chap06 {
     // WeightedDirGraphStEph per-type variants, 
     // just one being verified but they all work.
     pub mod WeightedDirGraphStEphU8;
-//    pub mod WeightedDirGraphStEphU16;
-//    pub mod WeightedDirGraphStEphU64;
-//    pub mod WeightedDirGraphStEphU128;
-//    pub mod WeightedDirGraphStEphUsize;
-//    pub mod WeightedDirGraphStEphI8;
-//    pub mod WeightedDirGraphStEphI16;
-//    pub mod WeightedDirGraphStEphI32;
-//    pub mod WeightedDirGraphStEphI64;
+    pub mod WeightedDirGraphStEphU16;
+    pub mod WeightedDirGraphStEphU64;
+    pub mod WeightedDirGraphStEphU128;
+    pub mod WeightedDirGraphStEphUsize;
+    pub mod WeightedDirGraphStEphI8;
+    pub mod WeightedDirGraphStEphI16;
+    pub mod WeightedDirGraphStEphI32;
+    pub mod WeightedDirGraphStEphI64;
     pub mod WeightedDirGraphStEphI128;
-//    pub mod WeightedDirGraphStEphIsize;
+    pub mod WeightedDirGraphStEphIsize;
     // Int/Float aggregate graph modules removed: Rust lacks disjunctive typing
     // (no `impl Trait for i8 | i16 | i32 | ...`), so these can't be expressed cleanly.
     // Use per-type variants above instead.

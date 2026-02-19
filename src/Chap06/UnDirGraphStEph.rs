@@ -338,8 +338,8 @@ verus! {
     impl<V: StT + Hash> Eq for UnDirGraphStEph<V> {}
 
     impl<V: StT + Hash> PartialEq for UnDirGraphStEph<V> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             let v_eq = self.V == other.V;
             let e_eq = self.E == other.E;

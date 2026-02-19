@@ -110,7 +110,7 @@ pub mod MergeSortStPer {
         /// Merge two sorted sequences into one sorted sequence.
         /// - APAS: Work Θ(n), Span Θ(lg n) — parallel merge assumed for merge sort analysis.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential two-pointer merge, Span = Work.
-        fn merge(left: &ArraySeqStPerS<N>, right: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<N>)
+        fn merge(left: &ArraySeqStPerS<N>, right: &ArraySeqStPerS<N>) -> (merged: ArraySeqStPerS<N>)
             requires
                 spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),
                 spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),
@@ -119,24 +119,24 @@ pub mod MergeSortStPer {
                 spec_merge_post(
                     Seq::new(left.spec_len(), |i: int| left.spec_index(i)),
                     Seq::new(right.spec_len(), |i: int| right.spec_index(i)),
-                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));
+                    Seq::new(merged.spec_len(), |i: int| merged.spec_index(i)));
 
         /// Sort a sequence using merge sort. Algorithm 26.4.
         /// - APAS: Work Θ(n lg n), Span Θ(lg² n) — with parallel merge and recursive parallelism.
         /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential merge sort, Span = Work.
-        fn merge_sort(a: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<N>)
+        fn merge_sort(a: &ArraySeqStPerS<N>) -> (sorted: ArraySeqStPerS<N>)
             requires a.spec_len() <= usize::MAX,
             ensures
                 spec_sort_post(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
-                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));
+                    Seq::new(sorted.spec_len(), |i: int| sorted.spec_index(i)));
     }
 
 
     //		9. impls
 
     impl MergeSortStTrait for ArraySeqStPerS<N> {
-        fn merge(left: &ArraySeqStPerS<N>, right: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<N>) {
+        fn merge(left: &ArraySeqStPerS<N>, right: &ArraySeqStPerS<N>) -> (merged: ArraySeqStPerS<N>) {
             let n_left = left.length();
             let n_right = right.length();
             let total = n_left + n_right;
@@ -202,7 +202,7 @@ pub mod MergeSortStPer {
             merged_result
         }
 
-        fn merge_sort(a: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<N>)
+        fn merge_sort(a: &ArraySeqStPerS<N>) -> (sorted: ArraySeqStPerS<N>)
             decreases a.spec_len(),
         {
             let n = a.length();

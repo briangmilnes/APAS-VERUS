@@ -573,8 +573,8 @@ verus! {
     impl<V: StT + Hash> Eq for DirGraphStEph<V> {}
 
     impl<V: StT + Hash> PartialEq for DirGraphStEph<V> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             let v_eq = self.V == other.V;
             let a_eq = self.A == other.A;

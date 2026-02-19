@@ -19,18 +19,18 @@ pub mod MaxContigSubSumOptMtEph {
         /// Returns None for empty sequence (representing -infinity).
         /// - APAS: Work Θ(n), Span Θ(log n)
         /// - Claude-Opus-4.6 (verified): Work Θ(n), Span Θ(n)
-        fn max_contig_sub_sum_opt_mt(a: &ArraySeqMtEphS<i32>) -> (result: Option<i32>)
+        fn max_contig_sub_sum_opt_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),
                 a.seq@.len() < usize::MAX,
             ensures
-                a.seq@.len() == 0 ==> result.is_none(),
-                a.seq@.len() > 0 ==> result.is_some(),
-                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
+                a.seq@.len() == 0 ==> mcss.is_none(),
+                a.seq@.len() > 0 ==> mcss.is_some(),
+                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
     }
 
     impl MaxContigSubSumOptMtTrait for ArraySeqMtEphS<i32> {
-        fn max_contig_sub_sum_opt_mt(a: &ArraySeqMtEphS<i32>) -> (result: Option<i32>) {
+        fn max_contig_sub_sum_opt_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();
             if n == 0 { return None; }
 

@@ -300,14 +300,14 @@ pub mod PrimTreeSeqStPer {
         /// Borrows the inner slice.
         /// - APAS: N/A — utility method, not in prose.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
-        fn as_slice(&self) -> (result: &[T])
-            ensures result@ =~= self@;
+        fn as_slice(&self) -> (slice: &[T])
+            ensures slice@ =~= self@;
 
         /// Unwraps into the inner Vec.
         /// - APAS: N/A — utility method, not in prose.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
-        fn into_vec(self) -> (result: Vec<T>)
-            ensures result@ =~= self@;
+        fn into_vec(self) -> (vec: Vec<T>)
+            ensures vec@ =~= self@;
     }
 
 
@@ -722,9 +722,9 @@ pub mod PrimTreeSeqStPer {
             PrimTreeSeqStS { seq }
         }
 
-        fn as_slice(&self) -> (result: &[T]) { &self.seq }
+        fn as_slice(&self) -> (slice: &[T]) { &self.seq }
 
-        fn into_vec(self) -> (result: Vec<T>) { self.seq }
+        fn into_vec(self) -> (vec: Vec<T>) { self.seq }
     }
 
     #[cfg(verus_keep_ghost)]
@@ -876,12 +876,12 @@ pub mod PrimTreeSeqStPer {
     }
 
     impl<T: PartialEq + View> PartialEq for PrimTreeSeqStS<T> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
-            let r = self.seq == other.seq;
-            proof { assume(r == (self@ == other@)); }
-            r
+            let equal = self.seq == other.seq;
+            proof { assume(equal == (self@ == other@)); }
+            equal
         }
     }
 
@@ -902,8 +902,8 @@ pub mod PrimTreeSeqStPer {
     }
 
     impl<T: PartialEq + View> PartialEq for PrimTreeSeqStTree<T> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             match (self, other) {
                 (PrimTreeSeqStTree::Zero, PrimTreeSeqStTree::Zero) => {
@@ -911,14 +911,14 @@ pub mod PrimTreeSeqStPer {
                     true
                 },
                 (PrimTreeSeqStTree::One(a), PrimTreeSeqStTree::One(b)) => {
-                    let r = *a == *b;
-                    proof { assume(r == (self@ == other@)); }
-                    r
+                    let equal = *a == *b;
+                    proof { assume(equal == (self@ == other@)); }
+                    equal
                 },
                 (PrimTreeSeqStTree::Two(l1, r1), PrimTreeSeqStTree::Two(l2, r2)) => {
-                    let r = *l1 == *l2 && *r1 == *r2;
-                    proof { assume(r == (self@ == other@)); }
-                    r
+                    let equal = *l1 == *l2 && *r1 == *r2;
+                    proof { assume(equal == (self@ == other@)); }
+                    equal
                 },
                 _ => {
                     false

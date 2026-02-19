@@ -1,7 +1,7 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs
+Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEphSlice.rs
 Codebase: /home/milnes/projects/APAS-VERUS-agent1
 Mode: basic
 Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap19/analyses/veracity-review-verus-style.log
@@ -9,5 +9,5 @@ Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap19/analyses/veracity
 Checking 1 files...
 
 ════════════════════════════════════════════════════════════════
-Summary: 15 passed, 7 warnings in 1 files (checked 1 files)
+Summary: 15 passed, 4 warnings in 1 files (checked 1 files)
 ════════════════════════════════════════════════════════════════

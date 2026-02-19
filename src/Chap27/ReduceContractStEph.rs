@@ -166,14 +166,14 @@ pub mod ReduceContractStEph {
             f: &F,
             Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
             id: T,
-        ) -> (result: T)
+        ) -> (reduced: T)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_f, id),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
-                result == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f);
+                reduced == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f);
     }
 
     //		9. impls
@@ -184,7 +184,7 @@ pub mod ReduceContractStEph {
             f: &F,
             Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
             id: T,
-        ) -> (result: T)
+        ) -> (reduced: T)
             decreases a.spec_len(),
         {
             let n = a.length();
@@ -201,12 +201,12 @@ pub mod ReduceContractStEph {
 
             // Base case: single element — use f(id, a[0]) to avoid unspecified clone
             if n == 1 {
-                let result = f(&id, a.nth(0));
+                let reduced = f(&id, a.nth(0));
                 proof {
                     reveal_with_fuel(Seq::fold_left, 2);
                     assert(s.drop_last() =~= Seq::<T>::empty());
                 }
-                return result;
+                return reduced;
             }
 
             // Contract: b[i] = f(a[2i], a[2i+1])
@@ -258,7 +258,7 @@ pub mod ReduceContractStEph {
             // Expand: handle odd-length sequences
             if n % 2 == 1 {
                 let last = a.nth(n - 1);
-                let result = f(&contracted_result, last);
+                let reduced = f(&contracted_result, last);
                 proof {
                     let s_even = s.subrange(0, (n - 1) as int);
                     let s_last_part = s.subrange((n - 1) as int, n as int);
@@ -280,7 +280,7 @@ pub mod ReduceContractStEph {
                     ));
                     lemma_contraction_even::<T>(s_even, spec_f, id);
                 }
-                result
+                reduced
             } else {
                 proof {
                     assert(b_seq =~= Seq::new(

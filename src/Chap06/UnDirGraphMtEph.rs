@@ -462,8 +462,8 @@ pub mod UnDirGraphMtEph {
     impl<V: StTInMtT + Hash + 'static> Eq for UnDirGraphMtEph<V> {}
 
     impl<V: StTInMtT + Hash + 'static> PartialEq for UnDirGraphMtEph<V> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             let v_eq = self.V == other.V;
             let e_eq = self.E == other.E;

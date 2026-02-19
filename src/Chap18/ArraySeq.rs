@@ -458,25 +458,25 @@ pub mod ArraySeq {
         /// - The Rust equivalent is `Iterator::fold`.
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (result: A)
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (accumulated: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
                 forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
             ensures
-                result == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, start_x);
+                accumulated == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, start_x);
 
         /// - Definition 18.18 (reduce). Combine elements using associative function and identity `id`.
         /// - The Rust equivalent is `Iterator::fold` with the accumulator type equal to the element type.
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
-        fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: T)
+        fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
             requires
                 spec_monoid(spec_f, id),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
-                result == spec_iterate(
+                reduced == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
 
         /// - Definition 18.19 (scan). Prefix-reduce returning inclusive prefix sums and total.
@@ -518,7 +518,7 @@ pub mod ArraySeq {
         /// - Our `scan` currently computes inclusive prefixes; this function makes the intent explicit.
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
-        fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: Self)
+        fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: Self)
             where T: Clone + Eq
             requires
                 spec_monoid(spec_f, id),
@@ -526,9 +526,9 @@ pub mod ArraySeq {
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
-                result.spec_len() == a.spec_len(),
-                forall|i: int| #![trigger result.spec_index(i)] 0 <= i < a.spec_len() ==>
-                    result.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f);
+                scanned.spec_len() == a.spec_len(),
+                forall|i: int| #![trigger scanned.spec_index(i)] 0 <= i < a.spec_len() ==>
+                    scanned.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
         /// - APAS: N/A — implementation utility, not in prose.
@@ -831,7 +831,7 @@ pub mod ArraySeq {
             self.seq.len() == 1
         }
 
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (acc: A) {
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (accumulated: A) {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             let mut acc = start_x;
@@ -870,7 +870,7 @@ pub mod ArraySeq {
             acc
         }
 
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: T)
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
         {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
@@ -1049,7 +1049,7 @@ pub mod ArraySeq {
             injected
         }
 
-        fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: ArraySeqS<T>)
+        fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: ArraySeqS<T>)
             where T: Clone + Eq
         {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
@@ -1090,15 +1090,15 @@ pub mod ArraySeq {
                 seq.push(cloned);
                 i += 1;
             }
-            let result = ArraySeqS { seq };
+            let scanned = ArraySeqS { seq };
             proof {
-                assert forall|i: int| #![trigger result.spec_index(i)] 0 <= i < a.spec_len() implies
-                    result.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
+                assert forall|i: int| #![trigger scanned.spec_index(i)] 0 <= i < a.spec_len() implies
+                    scanned.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
                 by {
-                    assert(result.spec_index(i) == seq@[i]);
+                    assert(scanned.spec_index(i) == seq@[i]);
                 }
             }
-            result
+            scanned
         }
 
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: ArraySeqS<T>)

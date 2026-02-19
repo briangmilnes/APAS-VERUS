@@ -252,13 +252,13 @@ pub mod MaxContigSubSumDivConOptStEph {
         /// Returns None for empty sequence (representing -infinity).
         /// - APAS: Work Θ(n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n) — subseq_copy; sequential
-        fn max_contig_sub_sum_divcon_opt(a: &ArraySeqStEphS<i32>) -> (result: Option<i32>)
+        fn max_contig_sub_sum_divcon_opt(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),
             ensures
-                a.seq@.len() == 0 ==> result.is_none(),
-                a.seq@.len() > 0 ==> result.is_some(),
-                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
+                a.seq@.len() == 0 ==> mcss.is_none(),
+                a.seq@.len() > 0 ==> mcss.is_some(),
+                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
     }
 
 
@@ -266,8 +266,8 @@ pub mod MaxContigSubSumDivConOptStEph {
 
     // ─── 3. exec functions ───
 
-    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (result: Option<i32>)
-        ensures result == spec_max_opt_i32(a, b),
+    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
+        ensures max == spec_max_opt_i32(a, b),
     {
         match (a, b) {
             (None, None) => None,
@@ -280,16 +280,16 @@ pub mod MaxContigSubSumDivConOptStEph {
     /// Auxiliary function: returns (mcss, max_prefix, max_suffix, total).
     /// - APAS: Work Θ(n), Span Θ(log² n)
     /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n) — subseq_copy O(n) per level; sequential
-    fn max_contig_sub_sum_aux(a: &ArraySeqStEphS<i32>) -> (result: StrengthResult)
+    fn max_contig_sub_sum_aux(a: &ArraySeqStEphS<i32>) -> (mcss: StrengthResult)
         requires
             a.seq@.len() > 0,
             sums_fit_i32(a.seq@),
         ensures
-            result.0.is_some(),
-            is_mcss_of(a.seq@, result.0.unwrap() as int),
-            is_max_prefix_sum(a.seq@, result.1 as int),
-            is_max_suffix_sum(a.seq@, result.2 as int),
-            result.3 as int == spec_range_sum(a.seq@, 0, a.seq@.len() as int),
+            mcss.0.is_some(),
+            is_mcss_of(a.seq@, mcss.0.unwrap() as int),
+            is_max_prefix_sum(a.seq@, mcss.1 as int),
+            is_max_suffix_sum(a.seq@, mcss.2 as int),
+            mcss.3 as int == spec_range_sum(a.seq@, 0, a.seq@.len() as int),
         decreases a.seq@.len(),
     {
         let n = a.length();
@@ -371,7 +371,7 @@ pub mod MaxContigSubSumDivConOptStEph {
     }
 
     impl MaxContigSubSumDivConOptTrait for ArraySeqStEphS<i32> {
-        fn max_contig_sub_sum_divcon_opt(a: &ArraySeqStEphS<i32>) -> (result: Option<i32>) {
+        fn max_contig_sub_sum_divcon_opt(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             if a.length() == 0 {
                 return None;
             }

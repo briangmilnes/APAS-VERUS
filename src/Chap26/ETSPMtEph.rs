@@ -457,31 +457,31 @@ pub mod ETSPMtEph {
     /// Sort points by longest-spread dimension and split at median.
     /// Structural ensures: both halves are non-trivial and every point traces to the input.
     #[verifier::external_body]
-    pub fn sort_and_split(points: &Vec<Point>) -> (result: (Vec<Point>, Vec<Point>))
+    pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
         requires points@.len() >= 4,
         ensures
-            result.0@.len() >= 2,
-            result.1@.len() >= 2,
-            result.0@.len() + result.1@.len() == points@.len(),
-            result.0@.len() < points@.len(),
-            result.1@.len() < points@.len(),
-            forall|i: int| #![trigger result.0@[i]] 0 <= i < result.0@.len() ==>
-                spec_point_in_seq(result.0@[i], points@),
-            forall|i: int| #![trigger result.1@[i]] 0 <= i < result.1@.len() ==>
-                spec_point_in_seq(result.1@[i], points@),
+            halves.0@.len() >= 2,
+            halves.1@.len() >= 2,
+            halves.0@.len() + halves.1@.len() == points@.len(),
+            halves.0@.len() < points@.len(),
+            halves.1@.len() < points@.len(),
+            forall|i: int| #![trigger halves.0@[i]] 0 <= i < halves.0@.len() ==>
+                spec_point_in_seq(halves.0@[i], points@),
+            forall|i: int| #![trigger halves.1@[i]] 0 <= i < halves.1@.len() ==>
+                spec_point_in_seq(halves.1@[i], points@),
     {
         sort_and_split_impl(points)
     }
 
     /// Find the pair of edges (one from each tour) with minimum swap cost.
     #[verifier::external_body]
-    pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
+    pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
         requires
             left_tour@.len() >= 2,
             right_tour@.len() >= 2,
         ensures
-            (result.0 as int) < left_tour@.len(),
-            (result.1 as int) < right_tour@.len(),
+            (swap_indices.0 as int) < left_tour@.len(),
+            (swap_indices.1 as int) < right_tour@.len(),
     {
         find_best_swap_impl(left_tour, right_tour)
     }
@@ -490,14 +490,14 @@ pub mod ETSPMtEph {
     //		11. derive impls in verus!
 
     impl Clone for Point {
-        fn clone(&self) -> (r: Point)
-            ensures r == *self
+        fn clone(&self) -> (cloned: Point)
+            ensures cloned == *self
         { *self }
     }
 
     impl Clone for Edge {
-        fn clone(&self) -> (r: Edge)
-            ensures r == *self
+        fn clone(&self) -> (cloned: Edge)
+            ensures cloned == *self
         { *self }
     }
 

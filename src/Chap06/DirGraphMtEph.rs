@@ -679,8 +679,8 @@ pub mod DirGraphMtEph {
     impl<V: StTInMtT + Hash + 'static> Eq for DirGraphMtEph<V> {}
 
     impl<V: StTInMtT + Hash + 'static> PartialEq for DirGraphMtEph<V> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             let v_eq = self.V == other.V;
             let a_eq = self.A == other.A;

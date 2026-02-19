@@ -52,7 +52,7 @@ pub mod ScanContractMtEph {
             f: Arc<F>,
             Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
             id: T,
-        ) -> (result: ArraySeqMtEphS<T>)
+        ) -> (scanned: ArraySeqMtEphS<T>)
             requires
                 a.spec_len() <= usize::MAX,
                 obeys_feq_clone::<T>(),
@@ -60,10 +60,10 @@ pub mod ScanContractMtEph {
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
-                result.spec_len() == a.spec_len(),
-                forall|i: int| #![trigger result.spec_index(i)]
+                scanned.spec_len() == a.spec_len(),
+                forall|i: int| #![trigger scanned.spec_index(i)]
                     0 <= i < a.spec_len() ==>
-                        result.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i).fold_left(id, spec_f);
+                        scanned.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i).fold_left(id, spec_f);
     }
 
     //		9. impls
@@ -77,7 +77,7 @@ pub mod ScanContractMtEph {
         f: &Arc<F>,
         Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
         id: T,
-    ) -> (result: ArraySeqMtEphS<T>)
+    ) -> (scanned: ArraySeqMtEphS<T>)
         requires
             a.spec_len() <= usize::MAX,
             obeys_feq_clone::<T>(),
@@ -85,10 +85,10 @@ pub mod ScanContractMtEph {
             forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
             forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
         ensures
-            result.spec_len() == a.spec_len(),
-            forall|i: int| #![trigger result.spec_index(i)]
+            scanned.spec_len() == a.spec_len(),
+            forall|i: int| #![trigger scanned.spec_index(i)]
                 0 <= i < a.spec_len() ==>
-                    result.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i).fold_left(id, spec_f),
+                    scanned.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i).fold_left(id, spec_f),
         decreases a.spec_len(),
     {
         let n = a.length();
@@ -224,18 +224,18 @@ pub mod ScanContractMtEph {
             result_vec.push(last_val);
         }
 
-        // Build result
-        let result = ArraySeqMtEphS { seq: result_vec };
+        // Build scanned
+        let scanned = ArraySeqMtEphS { seq: result_vec };
         proof {
-            assert(result.spec_len() == n as nat);
-            assert forall|k: int| #![trigger result.spec_index(k)]
+            assert(scanned.spec_len() == n as nat);
+            assert forall|k: int| #![trigger scanned.spec_index(k)]
                 0 <= k < n as int implies
-                result.spec_index(k) == s.take(k).fold_left(id, spec_f)
+                scanned.spec_index(k) == s.take(k).fold_left(id, spec_f)
             by {
-                assert(result.spec_index(k) == result_vec@[k]);
+                assert(scanned.spec_index(k) == result_vec@[k]);
             }
         }
-        result
+        scanned
     }
 
     impl<T: StTInMtT + Clone + 'static> ScanContractMtEphTrait<T> for ArraySeqMtEphS<T> {
@@ -244,7 +244,7 @@ pub mod ScanContractMtEph {
             f: Arc<F>,
             Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
             id: T,
-        ) -> (result: ArraySeqMtEphS<T>) {
+        ) -> (scanned: ArraySeqMtEphS<T>) {
             scan_contract_verified(a, &f, Ghost(spec_f), id)
         }
     }

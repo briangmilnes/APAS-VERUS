@@ -45,21 +45,21 @@ pub mod MaxContigSubSumDivConMtEph {
         /// Returns None for empty sequence (representing -infinity).
         /// - APAS: Work Θ(n log n), Span Θ(log² n)
         /// - Claude-Opus-4.6 (verified): Work Θ(n log n), Span Θ(n log n)
-        fn max_contig_sub_sum_divcon_mt(a: &ArraySeqMtEphS<i32>) -> (result: Option<i32>)
+        fn max_contig_sub_sum_divcon_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),
                 obeys_feq_clone::<i32>(),
             ensures
-                a.seq@.len() == 0 ==> result.is_none(),
-                a.seq@.len() > 0 ==> result.is_some(),
-                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
+                a.seq@.len() == 0 ==> mcss.is_none(),
+                a.seq@.len() > 0 ==> mcss.is_some(),
+                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
     }
 
 
     //		9. impls
 
-    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (result: Option<i32>)
-        ensures result == spec_max_opt_i32(a, b),
+    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
+        ensures max == spec_max_opt_i32(a, b),
     {
         match (a, b) {
             (None, None) => None,
@@ -69,9 +69,9 @@ pub mod MaxContigSubSumDivConMtEph {
         }
     }
 
-    fn max_suffix_sum(a: &ArraySeqMtEphS<i32>) -> (result: i32)
+    fn max_suffix_sum(a: &ArraySeqMtEphS<i32>) -> (mss: i32)
         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
-        ensures is_max_suffix_sum(a.seq@, result as int),
+        ensures is_max_suffix_sum(a.seq@, mss as int),
     {
         let n = a.length();
         let mut running_sum: i32 = 0;
@@ -119,9 +119,9 @@ pub mod MaxContigSubSumDivConMtEph {
         running_sum - min_prefix
     }
 
-    fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> (result: i32)
+    fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> (mps: i32)
         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
-        ensures is_max_prefix_sum(a.seq@, result as int),
+        ensures is_max_prefix_sum(a.seq@, mps as int),
     {
         let n = a.length();
         let mut max_val: i32 = *a.nth(0);
@@ -151,7 +151,7 @@ pub mod MaxContigSubSumDivConMtEph {
     }
 
     impl MaxContigSubSumDivConMtTrait for ArraySeqMtEphS<i32> {
-        fn max_contig_sub_sum_divcon_mt(a: &ArraySeqMtEphS<i32>) -> (result: Option<i32>)
+        fn max_contig_sub_sum_divcon_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)
             decreases a.seq@.len(),
         {
             let n = a.length();
@@ -197,8 +197,8 @@ pub mod MaxContigSubSumDivConMtEph {
             }
 
             let max_crossing: i32 = s_left + p_right;
-            let result = max_with_neginf(max_left, max_right);
-            let result = max_with_neginf(result, Some(max_crossing));
+            let mcss = max_with_neginf(max_left, max_right);
+            let mcss = max_with_neginf(mcss, Some(max_crossing));
 
             proof {
                 lemma_divcon_combine(
@@ -207,7 +207,7 @@ pub mod MaxContigSubSumDivConMtEph {
                     s_left as int, p_right as int,
                 );
             }
-            result
+            mcss
         }
     }
 

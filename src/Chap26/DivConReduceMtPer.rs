@@ -152,64 +152,64 @@ pub mod DivConReduceMtPer {
         /// Pattern: reduce max identity (parallel)
         /// - APAS: Work Θ(n), Span Θ(lg n) — Example 26.2, D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
-        fn max_element_parallel(a: &ArraySeqMtPerS<N>) -> (result: Option<N>)
+        fn max_element_parallel(a: &ArraySeqMtPerS<N>) -> (max: Option<N>)
             requires a.spec_len() <= usize::MAX,
             ensures
-                a.spec_len() == 0 ==> result is None,
+                a.spec_len() == 0 ==> max is None,
                 a.spec_len() > 0 ==> {
-                    &&& result is Some
+                    &&& max is Some
                     &&& forall|i: int| #![trigger a.spec_index(i)]
-                            0 <= i < a.spec_len() ==> a.spec_index(i) <= result->Some_0
+                            0 <= i < a.spec_len() ==> a.spec_index(i) <= max->Some_0
                     &&& exists|i: int| #![trigger a.spec_index(i)]
-                            0 <= i < a.spec_len() && a.spec_index(i) == result->Some_0
+                            0 <= i < a.spec_len() && a.spec_index(i) == max->Some_0
                 };
 
         /// Sum all elements via parallel reduce.
         /// Pattern: reduce (+) 0 identity (parallel)
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
-        fn sum_parallel(a: &ArraySeqMtPerS<N>) -> (result: N)
+        fn sum_parallel(a: &ArraySeqMtPerS<N>) -> (total: N)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_sum_fn(), 0),
             ensures
-                result == spec_iterate(
+                total == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_sum_fn(), 0);
 
         /// Product of all elements via parallel reduce.
         /// Pattern: reduce (*) 1 identity (parallel)
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
-        fn product_parallel(a: &ArraySeqMtPerS<N>) -> (result: N)
+        fn product_parallel(a: &ArraySeqMtPerS<N>) -> (total: N)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_product_fn(), 1),
             ensures
-                result == spec_iterate(
+                total == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_product_fn(), 1);
 
         /// Logical OR of all elements via parallel reduce.
         /// Pattern: reduce (||) false identity (parallel)
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
-        fn any_parallel(a: &ArraySeqMtPerS<B>) -> (result: B)
+        fn any_parallel(a: &ArraySeqMtPerS<B>) -> (found: B)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_or_fn(), false),
             ensures
-                result == spec_iterate(
+                found == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_or_fn(), false);
 
         /// Logical AND of all elements via parallel reduce.
         /// Pattern: reduce (&&) true identity (parallel)
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
-        fn all_parallel(a: &ArraySeqMtPerS<B>) -> (result: B)
+        fn all_parallel(a: &ArraySeqMtPerS<B>) -> (all_true: B)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_and_fn(), true),
             ensures
-                result == spec_iterate(
+                all_true == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true);
     }
 
@@ -217,7 +217,7 @@ pub mod DivConReduceMtPer {
     //		9. impls
 
     impl DivConReduceMtTrait for ArraySeqMtPerS<N> {
-        fn max_element_parallel(a: &ArraySeqMtPerS<N>) -> (result: Option<N>) {
+        fn max_element_parallel(a: &ArraySeqMtPerS<N>) -> (max: Option<N>) {
             let len = a.length();
             if len == 0 {
                 return None;
@@ -252,7 +252,7 @@ pub mod DivConReduceMtPer {
             Some(max_val)
         }
 
-        fn sum_parallel(a: &ArraySeqMtPerS<N>) -> (result: N) {
+        fn sum_parallel(a: &ArraySeqMtPerS<N>) -> (total: N) {
             ArraySeqMtPerS::reduce(a,
                 &(|x: &N, y: &N| -> (ret: N)
                     ensures ret == spec_wrapping_add(*x, *y)
@@ -260,7 +260,7 @@ pub mod DivConReduceMtPer {
                 Ghost(spec_sum_fn()), 0)
         }
 
-        fn product_parallel(a: &ArraySeqMtPerS<N>) -> (result: N) {
+        fn product_parallel(a: &ArraySeqMtPerS<N>) -> (total: N) {
             ArraySeqMtPerS::reduce(a,
                 &(|x: &N, y: &N| -> (ret: N)
                     ensures ret == spec_wrapping_mul(*x, *y)
@@ -268,7 +268,7 @@ pub mod DivConReduceMtPer {
                 Ghost(spec_product_fn()), 1)
         }
 
-        fn any_parallel(a: &ArraySeqMtPerS<B>) -> (result: B) {
+        fn any_parallel(a: &ArraySeqMtPerS<B>) -> (found: B) {
             ArraySeqMtPerS::reduce(a,
                 &(|x: &B, y: &B| -> (ret: B)
                     ensures ret == spec_or_fn()(*x, *y)
@@ -276,7 +276,7 @@ pub mod DivConReduceMtPer {
                 Ghost(spec_or_fn()), false)
         }
 
-        fn all_parallel(a: &ArraySeqMtPerS<B>) -> (result: B) {
+        fn all_parallel(a: &ArraySeqMtPerS<B>) -> (all_true: B) {
             ArraySeqMtPerS::reduce(a,
                 &(|x: &B, y: &B| -> (ret: B)
                     ensures ret == spec_and_fn()(*x, *y)

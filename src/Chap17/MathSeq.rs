@@ -721,12 +721,12 @@ pub mod MathSeq {
     impl<T: StT> Eq for MathSeqS<T> {}
 
     impl<T: StT> PartialEq for MathSeqS<T> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
-            let r = self.data == other.data;
-            proof { assume(r == (self@ == other@)); }
-            r
+            let equal = self.data == other.data;
+            proof { assume(equal == (self@ == other@)); }
+            equal
         }
     }
 

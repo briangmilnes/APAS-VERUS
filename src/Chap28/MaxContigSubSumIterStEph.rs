@@ -122,13 +122,13 @@ pub mod MaxContigSubSumIterStEph {
         /// Returns None for empty sequence (representing -infinity).
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn max_contig_sub_sum_iter(a: &ArraySeqStEphS<i32>) -> (result: Option<i32>)
+        fn max_contig_sub_sum_iter(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),
             ensures
-                a.seq@.len() == 0 ==> result.is_none(),
-                a.seq@.len() > 0 ==> result.is_some(),
-                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
+                a.seq@.len() == 0 ==> mcss.is_none(),
+                a.seq@.len() > 0 ==> mcss.is_some(),
+                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
     }
 
 
@@ -136,8 +136,8 @@ pub mod MaxContigSubSumIterStEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (result: Option<i32>)
-        ensures result == spec_max_opt_i32(a, b),
+    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
+        ensures max == spec_max_opt_i32(a, b),
     {
         match (a, b) {
             (None, None) => None,
@@ -148,7 +148,7 @@ pub mod MaxContigSubSumIterStEph {
     }
 
     impl MaxContigSubSumIterTrait for ArraySeqStEphS<i32> {
-        fn max_contig_sub_sum_iter(a: &ArraySeqStEphS<i32>) -> (result: Option<i32>) {
+        fn max_contig_sub_sum_iter(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();
             if n == 0 {
                 return None;

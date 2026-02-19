@@ -932,6 +932,20 @@ verus! {
         }
     }
 
+    impl<'a, T: StT + Hash> std::iter::IntoIterator for &'a SetMtEph<T> {
+        type Item = &'a T;
+        type IntoIter = SetMtEphIter<'a, T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires valid_key_type::<T>()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, k: T| k@).to_set() == self@,
+                it@.1.no_duplicates(),
+        {
+            self.iter()
+        }
+    }
+
 
     //		11. derive impls in verus!
 
@@ -948,12 +962,12 @@ verus! {
     impl<T: StT + Hash> Eq for SetMtEph<T> {}
 
     impl<T: StT + Hash> PartialEq for SetMtEph<T> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
-            let r = self.elements == other.elements;
-            proof { assume(r == (self@ == other@)); }
-            r
+            let equal = self.elements == other.elements;
+            proof { assume(equal == (self@ == other@)); }
+            equal
         }
     }
 
