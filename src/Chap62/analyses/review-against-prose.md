@@ -228,13 +228,16 @@ No derive impls in any file. Trait definitions are correctly inside `verus!` blo
 ## Proof Holes Summary
 
 ```
+veracity-review-proof-holes output (2026-02-18):
+
 ✓ StarContractionMtEph.rs
 ✓ StarContractionStEph.rs
 ✓ StarPartitionMtEph.rs
 ✓ StarPartitionStEph.rs
 
-Modules:  4 clean, 0 holed
-Holes Found: 0
+Modules: 4 clean, 0 holed
+Proof Functions: 0 total
+Holes Found: 0 total
 ```
 
 No proof holes. The trait definitions inside `verus!` contain no `assume`, `admit`, or `external_body`. The cfg-gated implementations are invisible to Verus.

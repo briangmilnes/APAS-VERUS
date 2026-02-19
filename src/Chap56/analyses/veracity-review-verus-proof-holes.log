@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap56
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap56/
 
 ❌ AllPairsResultStEphFloat.rs
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:82: external_body - #[verifier::external_body]

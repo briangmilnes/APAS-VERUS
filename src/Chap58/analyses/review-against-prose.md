@@ -207,10 +207,13 @@ Neither file has the standard Table of Contents block or section headers. Bellma
 ## Proof Holes Summary
 
 ```
+veracity-review-proof-holes output (2026-02-18):
+
 ✓ BellmanFordStEphFloat.rs
 ✓ BellmanFordStEphI64.rs
 
 Modules: 2 clean, 0 holed
+Proof Functions: 0 total
 Holes Found: 0 total
 ```
 

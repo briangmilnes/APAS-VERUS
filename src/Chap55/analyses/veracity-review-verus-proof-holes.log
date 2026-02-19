@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap55
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap55/
 
 ❌ CycleDetectStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:27: external_body - #[verifier::external_body]

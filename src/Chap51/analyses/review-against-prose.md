@@ -147,10 +147,10 @@ Since all code is outside `verus!`, every trait impl is "out":
 ```
 veracity-review-proof-holes output (2026-02-18):
 
-✓ BottomUpDPMtEph.rs  (but 2 bare_impl errors)
-✓ BottomUpDPMtPer.rs  (but 2 bare_impl errors)
-✓ BottomUpDPStEph.rs  (but 2 bare_impl errors)
-✓ BottomUpDPStPer.rs  (but 2 bare_impl errors)
+✓ BottomUpDPMtEph.rs  (but 1 bare_impl error)
+✓ BottomUpDPMtPer.rs  (but 1 bare_impl error)
+✓ BottomUpDPStEph.rs  (but 1 bare_impl error)
+✓ BottomUpDPStPer.rs  (but 1 bare_impl error)
 ✓ TopDownDPMtEph.rs   (but 1 bare_impl error)
 ✓ TopDownDPMtPer.rs   (but 1 bare_impl error)
 ✓ TopDownDPStEph.rs   (but 1 bare_impl error)
@@ -158,10 +158,10 @@ veracity-review-proof-holes output (2026-02-18):
 
 Proof Functions: 0 total
 Holes Found: 0 total
-Errors: 12 bare impl(s) in files with trait definitions
+Errors: 8 bare impl(s) in files with trait definitions
 ```
 
-Zero proof holes (vacuously — no proof functions, spec functions, or requires/ensures). However, the bare_impl detector now reports **12 bare impl errors**: each file defines a trait (e.g., `BottomUpDPStEphTrait`) but the `impl` block is `impl BottomUpDPStEphS` rather than `impl BottomUpDPStEphTrait for BottomUpDPStEphS`. These need trait wiring.
+Zero proof holes (vacuously — no proof functions, spec functions, or requires/ensures). However, the bare_impl detector reports **8 bare impl errors**: each file defines a trait (e.g., `BottomUpDPStEphTrait`) but the `impl` block is `impl BottomUpDPStEphS` rather than `impl BottomUpDPStEphTrait for BottomUpDPStEphS`. These need trait wiring.
 
 ## Phase 8: Test Coverage
 
@@ -190,7 +190,7 @@ No test exercises an input where TopDown (with substitute) and BottomUp (without
 |---|---|---|---|
 | 1 | **HIGH** | Remove substitute branch from TopDown `med_recursive` / `med_recursive_concurrent` / `med_recursive_parallel` to match APAS Algorithm 51.4 | TopDownDPStEph, TopDownDPStPer, TopDownDPMtEph, TopDownDPMtPer |
 | 2 | **HIGH** | Add cross-variant test: verify MED("a", "b") gives same result from TopDown and BottomUp | All test files |
-| 3 | **HIGH** | Wire traits: `impl Type` → `impl Trait for Type` (12 bare_impl errors). Traits exist but are not used as impls. | All 8 files |
+| 3 | **HIGH** | Wire traits: `impl Type` → `impl Trait for Type` (8 bare_impl errors). Traits exist but are not used as impls. | All 8 files |
 | 4 | **LOW** | Consider moving base-case-only code inside `verus!` (struct definitions, spec functions for MED correctness) even if the main algorithm stays outside | All 8 files |
 | 5 | **LOW** | TopDownDPStPer.rs `med_memoized()` clones the memo table on every call — this defeats persistence semantics. Consider returning updated self. | TopDownDPStPer.rs |
 | 6 | **INFO** | BottomUpDPMtEph/MtPer spawn one thread per diagonal element — for small diagonals this is pure overhead. Consider a threshold. | BottomUpDPMtEph, BottomUpDPMtPer |

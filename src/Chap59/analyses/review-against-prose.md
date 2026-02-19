@@ -237,12 +237,15 @@ The I64 files now have `verus!` blocks but they contain only trait definitions �
 ## Proof Holes Summary
 
 ```
+veracity-review-proof-holes output (2026-02-18):
+
 ✓ JohnsonMtEphFloat.rs
 ✓ JohnsonMtEphI64.rs
 ✓ JohnsonStEphFloat.rs
 ✓ JohnsonStEphI64.rs
 
 Modules: 4 clean, 0 holed
+Proof Functions: 0 total
 Holes Found: 0 total
 ```
 

@@ -210,9 +210,10 @@ Trait definitions are now inside `verus!` blocks, so trait method signatures are
 ## Proof Holes Summary
 
 ```
-veracity-review-proof-holes -d src/Chap65/
+veracity-review-proof-holes output (2026-02-18):
 
 Modules: 3 clean, 0 holed
+Proof Functions: 0 total
 Holes Found: 0 total
 ```
 

@@ -234,14 +234,18 @@ No derive impls in any Chap64 file. No action items.
 
 ## Proof Holes Summary
 
+**Last verified:** 2026-02-18 (`veracity-review-proof-holes`)
+
 ```
-veracity-review-proof-holes -d src/Chap64/
+✓ SpanTreeMtEph.rs
+✓ SpanTreeStEph.rs
+✓ TSPApproxStEph.rs
 
 Modules: 3 clean, 0 holed
 Holes Found: 0
 ```
 
-**0 proof holes** — trivially clean because no proof obligations exist. The `verus!` blocks contain only trait definitions.
+**0 proof holes** — trivially clean because no proof obligations exist. The `verus!` blocks contain only trait definitions. SpanTreeMtEph.rs, SpanTreeStEph.rs, and TSPApproxStEph.rs were all updated 2026-02-18; hole count remains 0.
 
 ## Spec Strength Summary
 

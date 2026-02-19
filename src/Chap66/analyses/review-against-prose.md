@@ -226,15 +226,17 @@ Note: `Clone`, `PartialEq`, `Eq`, `PartialOrd`, `Ord`, `Hash`, `Debug`, and `Cop
 
 ## Proof Holes Summary
 
-```
-BoruvkaMtEph.rs  — clean
-BoruvkaStEph.rs  — clean
+**Last verified:** 2026-02-18 (`veracity-review-proof-holes`)
 
-Modules:  2 clean, 0 holed
+```
+✓ BoruvkaMtEph.rs
+✓ BoruvkaStEph.rs
+
+Modules: 2 clean, 0 holed
 Holes Found: 0
 ```
 
-No proof holes — but this is because implementations are behind `#[cfg(not(verus_keep_ghost))]` and not verified, not because proofs are complete.
+No proof holes — but this is because implementations are behind `#[cfg(not(verus_keep_ghost))]` and not verified, not because proofs are complete. BoruvkaStEph.rs was updated 2026-02-18; hole count remains 0.
 
 ## Spec Strength Summary
 

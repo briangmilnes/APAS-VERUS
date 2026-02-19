@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 55 — Depth-First Search: Review Against Prose
 
-**Date:** 2026-02-17
+**Date:** 2026-02-18
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 1: Inventory Summary
@@ -305,6 +305,8 @@ No derive impls. These are algorithm modules (free functions), not data type mod
 
 ## Proof Holes Summary
 
+**Last verified:** 2026-02-18 (`veracity-review-proof-holes`)
+
 | # | File | Function | Hole Type |
 |---|------|----------|-----------|
 | 1 | DFSStEph.rs | `dfs` | `external_body` |
@@ -334,6 +336,6 @@ No derive impls. These are algorithm modules (free functions), not data type mod
 | 25 | SCCStPer.rs | `transpose_graph` | `external_body` |
 | 26 | SCCStPer.rs | `dfs_reach` | `external_body` |
 
-**Modules:** 8 files, 26 `external_body` holes, 0 verified functions.
+**Modules:** 0 clean, 8 holed. 26 `external_body` holes, 0 verified proof functions.
 
-All holes are from batch-verusification. None can be removed until the `not(verus_keep_ghost)` gate is lifted (requires Chap37 and Chap41 to be verified first).
+CycleDetectStPer.rs and its test were updated 2026-02-18 but the hole count is unchanged — both functions remain `external_body`. All holes are from batch-verusification. None can be removed until the `not(verus_keep_ghost)` gate is lifted (requires Chap37 and Chap41 to be verified first).

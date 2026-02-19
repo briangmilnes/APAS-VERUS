@@ -7,21 +7,21 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 54 — Breadth-First Search: Review Against Prose
 
-**Date:** 2026-02-17
+**Date:** 2026-02-18
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 1: Inventory Summary
 
-| # | File | Functions | external_body | verus! | Notes |
+| # | File | Exec Fns | external_body | verus! | Notes |
 |---|------|:---------:|:-------------:|:------:|-------|
-| 1 | BFSStEph.rs | 1 | 1 | Yes | Sequential ephemeral BFS |
-| 2 | BFSStPer.rs | 1 | 1 | Yes | Sequential persistent BFS |
-| 3 | BFSMtEph.rs | 1 | 1 | Yes | Parallel ephemeral BFS (sequential impl) |
-| 4 | BFSMtPer.rs | 2 | 2 | Yes | Parallel persistent BFS with thread::spawn |
+| 1 | BFSStEph.rs | 4 | 0 | Yes | Sequential ephemeral BFS (54.3 + 54.6) |
+| 2 | BFSStPer.rs | 4 | 0 | Yes | Sequential persistent BFS (54.3 + 54.6) |
+| 3 | BFSMtEph.rs | 8 | 0 | Yes | Parallel ephemeral BFS via HF Scheduler join() (54.3 + 54.6) |
+| 4 | BFSMtPer.rs | 8 | 0 | Yes | Parallel persistent BFS via HF Scheduler join() (54.3 + 54.6) |
 
-**Totals:** 4 files, 5 exec functions, 5 `#[verifier::external_body]` holes, 0 verified functions.
+**Totals:** 4 files, 24 exec functions, 0 `#[verifier::external_body]` holes, 24 verified functions.
 
-All files are inside `verus! {}` blocks. All exec functions are `#[verifier::external_body]`. No specs (`requires`/`ensures`) on any function. Chap54 is NOT gated with `not(verus_keep_ghost)` — it compiles under Verus but verifies trivially.
+All files are inside `verus! {}` blocks. All exec functions carry `requires`/`ensures` specifications and are fully verified. Each file implements Algorithm 54.3 (BFS distances) and Algorithm 54.6 (BFS tree) with loop invariants and proof lemmas. Mt files use HF Scheduler `join()` for parallel fork-join frontier processing with `copy_graph`/`copy_distances` helpers for ownership duplication.
 
 ## Phase 2: Prose Inventory
 
@@ -41,7 +41,7 @@ Source: `prompts/Chap54.txt`.
 | 1 | Algorithm 54.3 — Sequential BFS: Reachability | Queue-based BFS; returns reachable set X and max distance | Yes (BFSStEph, BFSStPer) |
 | 2 | Algorithm 54.4 — Parallel BFS: Reachability | Layer-by-layer BFS; returns X and max distance | Partially (BFSMtEph, BFSMtPer) |
 | 3 | Algorithm 54.5 — Unweighted Shortest Paths (BFSDistance) | Parallel BFS returning table mapping each reachable vertex to its distance | No |
-| 4 | Algorithm 54.6 — BFS Tree with Sequences | Parallel BFS computing shortest-path tree via inject; returns parent sequence | No |
+| 4 | Algorithm 54.6 — BFS Tree with Sequences | Parallel BFS computing shortest-path tree via inject; returns parent sequence | Yes (all 4 variants) |
 
 ### Cost Specs
 
@@ -165,16 +165,21 @@ Good coverage of edge cases. Tests verify exact distance values. The Example 54.
 | # | Prose Item | Type | Notes |
 |---|-----------|------|-------|
 | 1 | Algorithm 54.5 — BFSDistance | Algorithm | Returns table mapping vertices to distances |
-| 2 | Algorithm 54.6 — BFS Tree with Sequences | Algorithm | Computes shortest-path tree via inject |
-| 3 | Lemma 54.1 — Parallel BFS and Distances | Theorem | X_i and F_i invariants |
-| 4 | Theorem 54.2 — BFS Tree Gives Shortest Paths | Theorem | Shortest path property |
-| 5 | Exercise 54.1–54.4 | Text proofs | Not formalized |
+| 2 | Lemma 54.1 — Parallel BFS and Distances | Theorem | X_i and F_i invariants |
+| 3 | Theorem 54.2 — BFS Tree Gives Shortest Paths | Theorem | Shortest path property |
+| 4 | Exercise 54.1–54.4 | Text proofs | Not formalized |
 
 ### Code with No Prose Counterpart
 
 | # | Module | Function | Purpose |
 |---|--------|----------|---------|
-| 1 | BFSMtPer | `process_layer_parallel` | Verus-specific scaffolding: fork-join helper for parallel layer processing |
+| 1 | BFSMtEph | `process_frontier_parallel` | Fork-join helper for parallel distance frontier processing |
+| 2 | BFSMtEph | `process_frontier_tree_parallel` | Fork-join helper for parallel BFS tree frontier processing |
+| 3 | BFSMtEph | `copy_distances`, `copy_graph` | Ownership duplication for fork-join closures |
+| 4 | BFSMtPer | `process_frontier_parallel` | Fork-join helper for parallel distance frontier processing |
+| 5 | BFSMtPer | `process_frontier_tree_parallel` | Fork-join helper for parallel BFS tree frontier processing |
+| 6 | BFSMtPer | `copy_distances`, `copy_graph` | Ownership duplication for fork-join closures |
+| 7 | All 4 files | `BFSTreeS::top_down_order`, `bottom_up_order` | BFS tree traversal helpers not in prose |
 
 ## Phase 8: TOC / In-Out Table
 
@@ -202,21 +207,26 @@ No derive impls in any file. The BFS modules define only type aliases, traits, a
 
 | # | Priority | Action | Notes |
 |---|:--------:|--------|-------|
-| 1 | High | Remove `external_body` from BFSStEph::bfs and add `requires`/`ensures` | Simplest starting point for verification |
-| 2 | High | Remove `external_body` from BFSStPer::bfs | Same algorithm, persistent |
-| 3 | Medium | Make BFSMtEph genuinely parallel or rename/document as sequential-layered | Currently sequential despite Mt name |
-| 4 | Medium | Add `requires`/`ensures` to BFSMtPer::`bfs` and `process_layer_parallel` | Define correctness specs |
-| 5 | Low | Implement Algorithm 54.6 (BFS Tree with Sequences) | Most algorithmically interesting variant |
-| 6 | Low | Implement Algorithm 54.5 (BFSDistance) | Table-based distance computation |
+| 1 | Done | ~~Remove `external_body` from BFSStEph and add specs~~ | Completed 2026-02-18. Full verification with loop invariants. |
+| 2 | Done | ~~Remove `external_body` from BFSStPer and add specs~~ | Completed 2026-02-18. Full verification with loop invariants. |
+| 3 | Done | ~~Make BFSMtEph genuinely parallel~~ | Completed 2026-02-18. Uses HF Scheduler join() for fork-join frontier processing. |
+| 4 | Done | ~~Add specs to BFSMtPer~~ | Completed 2026-02-18. Full verification with parallel frontier processing. |
+| 5 | Done | ~~Implement Algorithm 54.6 (BFS Tree)~~ | Completed 2026-02-18. All 4 variants (StEph, StPer, MtEph, MtPer). |
+| 6 | Low | Implement Algorithm 54.5 (BFSDistance) | Table-based distance computation; not yet implemented |
+| 7 | Low | Fix 4 bare_impl errors | `impl BFSTreeS` blocks should be moved into traits per project conventions |
+| 8 | Low | Formalize Lemma 54.1 / Theorem 54.2 | Prose proofs not yet encoded as Verus proof functions |
 
 ## Proof Holes Summary
 
-| # | File | Function | Hole Type | Justification |
-|---|------|----------|-----------|---------------|
-| 1 | BFSStEph.rs | `bfs` | `external_body` | Batch-verusified; awaiting verification |
-| 2 | BFSStPer.rs | `bfs` | `external_body` | Batch-verusified; awaiting verification |
-| 3 | BFSMtEph.rs | `bfs` | `external_body` | Batch-verusified; awaiting verification |
-| 4 | BFSMtPer.rs | `bfs` | `external_body` | Batch-verusified; awaiting verification |
-| 5 | BFSMtPer.rs | `process_layer_parallel` | `external_body` | Threading boundary; will remain external_body |
+**0 proof holes.** All 4 BFS files are clean — no `external_body`, `assume`, or `admit` annotations.
 
-**Modules:** 4 files, 5 `external_body` holes, 0 verified functions.
+| # | File | Status |
+|---|------|--------|
+| 1 | BFSStEph.rs | Clean |
+| 2 | BFSStPer.rs | Clean |
+| 3 | BFSMtEph.rs | Clean |
+| 4 | BFSMtPer.rs | Clean |
+
+**Style issues:** 4 `bare_impl` errors (each file has `impl BFSTreeS` with `top_down_order` and `bottom_up_order` outside the trait). These are not proof holes but violate the trait-impl pattern convention.
+
+**Modules:** 4 files, 0 proof holes, 24 verified exec functions.

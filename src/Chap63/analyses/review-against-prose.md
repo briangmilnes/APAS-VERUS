@@ -219,7 +219,7 @@ No derive impls exist. The `verus!` blocks contain only trait definitions (no ex
 ## Proof Holes Summary
 
 ```
-veracity-review-proof-holes -d src/Chap63/
+veracity-review-proof-holes output (2026-02-18):
 
 Modules: 2 clean, 0 holed, 2 total
 Proof Functions: 0 total

@@ -196,8 +196,11 @@ All Clone derives are inside `verus!` (correct). Debug impls are outside `verus!
 ## Proof Holes Summary
 
 ```
+veracity-review-proof-holes output (2026-02-18):
+
 Modules: 0 clean, 5 holed
 Holes Found: 23 total (all external_body)
+Proof Functions: 0 total
 
 PQMinStEph.rs:       4 × external_body
 PQMinStPer.rs:       4 × external_body

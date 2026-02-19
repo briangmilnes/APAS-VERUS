@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap51
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap51/
 
 ❌ BottomUpDPMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:79: error: bare_impl - impl BottomUpDPMtEphS { — `impl BottomUpDPMtEphS` without trait; file defines [BottomUpDPMtEphTrait]

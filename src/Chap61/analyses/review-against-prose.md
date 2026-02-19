@@ -256,6 +256,8 @@ No derive impls in any file. Trait definitions are correctly inside `verus!` blo
 
 ## Proof Holes Summary
 
+**Last verified:** 2026-02-18 (`veracity-review-proof-holes`)
+
 ```
 ✓ EdgeContractionMtEph.rs
 ✓ EdgeContractionStEph.rs
@@ -266,7 +268,7 @@ Modules: 4 clean, 0 holed
 Holes Found: 0
 ```
 
-No proof holes. The trait definitions inside `verus!` contain no `assume`, `admit`, or `external_body`. The cfg-gated implementations are invisible to Verus.
+No proof holes. The trait definitions inside `verus!` contain no `assume`, `admit`, or `external_body`. The cfg-gated implementations are invisible to Verus. VertexMatchingStEph.rs was updated 2026-02-18; hole count remains 0.
 
 ## Spec Strength Summary
 

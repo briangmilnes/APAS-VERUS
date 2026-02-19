@@ -14,9 +14,9 @@ table { width: 100% !important; table-layout: fixed; }
 
 | # | File | exec fns | external_body | spec fns | proof fns | View | verus! | Trait Wired |
 |---|------|:--------:|:-------------:|:--------:|:---------:|:----:|:------:|:-----------:|
-| 1 | SSSPResultStEphI64.rs | 7 | 4 | 0 | 0 | Yes | Yes | Yes |
+| 1 | SSSPResultStEphI64.rs | 7 | 1 | 0 | 0 | Yes | Yes | Yes |
 | 2 | SSSPResultStPerI64.rs | 7 | 3 | 0 | 0 | Yes | Yes | Yes |
-| 3 | SSSPResultStEphFloat.rs | 7 | 6 | 2 | 1 | Yes | Yes | No (bare impl) |
+| 3 | SSSPResultStEphFloat.rs | 7 | 5 | 2 | 1 | Yes | Yes | No (bare impl) |
 | 4 | SSSPResultStPerFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes | Yes |
 | 5 | AllPairsResultStEphI64.rs | 7 | 2 | 0 | 0 | Yes | Yes | Yes |
 | 6 | AllPairsResultStPerI64.rs | 7 | 4 | 0 | 0 | Yes | Yes | Yes |
@@ -26,7 +26,7 @@ table { width: 100% !important; table-layout: fixed; }
 | 10 | PathWeightUtilsStPer.rs | 4 | 4 | 0 | 0 | No | Yes | N/A (free fns) |
 | 11 | Example56_1.rs | 3 | 3 | 0 | 0 | No | Yes | N/A |
 | 12 | Example56_3.rs | 2 | 2 | 0 | 0 | No | Yes | N/A |
-| | **Total** | **69** | **53** | **2** | **1** | | | |
+| | **Total** | **69** | **49** | **2** | **1** | | | |
 
 **Changes since last review:**
 - **File renames:** All `*Int.rs` → `*I64.rs` (SSSPResultStEphInt→SSSPResultStEphI64, SSSPResultStPerInt→SSSPResultStPerI64, AllPairsResultStEphInt→AllPairsResultStEphI64, AllPairsResultStPerInt→AllPairsResultStPerI64).
@@ -34,7 +34,7 @@ table { width: 100% !important; table-layout: fixed; }
 - **I64 files use trait-impl pattern:** SSSPResultStEphI64Trait, SSSPResultStPerI64Trait, AllPairsResultStEphI64Trait, AllPairsResultStPerI64Trait. external_body counts: 4, 3, 2, 4 respectively.
 - **Float files (except SSSPResultStEphFloat):** AllPairsResultStEphFloat, AllPairsResultStPerFloat, SSSPResultStPerFloat still all external_body (7 each).
 - **Tests:** All 12 files now have runtime tests (TestSSSPResultStEphI64, TestSSSPResultStPerI64, TestSSSPResultStEphFloat, TestSSSPResultStPerFloat, TestAllPairsResultStEphI64, TestAllPairsResultStPerI64, TestAllPairsResultStEphFloat, TestAllPairsResultStPerFloat, TestPathWeightUtilsStEph, TestPathWeightUtilsStPer, TestExample56_1, TestExample56_3).
-- **Total external_body:** 53 (down from 69).
+- **Total external_body:** 49 (down from 69 at initial review; was 53 at previous review).
 
 **Gating:** Chap56: `#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]`. SSSPResultStEphI64, SSSPResultStPerI64, AllPairsResultStEphI64, AllPairsResultStPerI64, SSSPResultStEphFloat are **not** behind `all_chapters`. PathWeightUtilsStEph, PathWeightUtilsStPer, SSSPResultStPerFloat, AllPairsResultStEphFloat, AllPairsResultStPerFloat, Example56_1, Example56_3 are behind `#[cfg(feature = "all_chapters")]`.
 
@@ -220,10 +220,12 @@ SSSPResultStEphFloat has F64Dist with Clone (in verus!), PartialEq and Debug (ou
 
 ## Proof Holes Summary
 
+**Last verified:** 2026-02-18 (`veracity-review-proof-holes`)
+
 ```
 Modules: 0 clean, 12 holed
 Proof Functions: 1 clean, 0 holed
-Holes Found: 53 total (all external_body)
+Holes Found: 49 total (all external_body)
 
 AllPairsResultStEphFloat.rs:     7 × external_body
 AllPairsResultStEphI64.rs:       2 × external_body
@@ -233,20 +235,22 @@ Example56_1.rs:                  3 × external_body
 Example56_3.rs:                  2 × external_body
 PathWeightUtilsStEph.rs:         4 × external_body
 PathWeightUtilsStPer.rs:         4 × external_body
-SSSPResultStEphFloat.rs:         6 × external_body, 1 clean proof fn
-SSSPResultStEphI64.rs:           4 × external_body
+SSSPResultStEphFloat.rs:         5 × external_body, 1 clean proof fn
+SSSPResultStEphI64.rs:           1 × external_body
 SSSPResultStPerFloat.rs:         7 × external_body
 SSSPResultStPerI64.rs:           3 × external_body
 ```
 
+**Changes since last review (2026-02-18):** Total holes decreased from 53 to 49 (−4). SSSPResultStEphI64: 4→1 external_body (3 functions verified). SSSPResultStEphFloat: 6→5 external_body (1 function verified). Example56_1, Example56_3, PathWeightUtilsStEph, and PathWeightUtilsStPer source files also changed but their hole counts are unchanged.
+
 ## Action Items
 
-| # | Action | Priority |
-|---|--------|----------|
-| 1 | Wire trait for SSSPResultStEphFloat (apply trait-impl pattern) | High |
-| 2 | Remove remaining `external_body` from I64 result files (new, set_distance, set_predecessor, extract_path) | High |
-| 3 | Remove `external_body` from Float result files and verify | Medium |
-| 4 | Remove `external_body` from PathWeightUtils* and verify | Medium |
-| 5 | Add `spec fn spec_distance` for δ_G(u,v) | Medium |
-| 6 | Fix module header cost for `validate_subpath_property` (O(k²) → O(k)) | Low |
-| 7 | Remove `external_body` from Example fns (demonstration code) | Low |
+| # | Action | Priority | Status |
+|---|--------|----------|--------|
+| 1 | Wire trait for SSSPResultStEphFloat (apply trait-impl pattern) | High | Open |
+| 2 | Remove remaining `external_body` from SSSPResultStEphI64 (1 remaining: `extract_path`) | High | Partially done (4→1) |
+| 3 | Remove `external_body` from Float result files and verify (SSSPResultStEphFloat: 5 remaining, SSSPResultStPerFloat: 7, AllPairsFloat: 7+7) | Medium | Open |
+| 4 | Remove `external_body` from PathWeightUtils* and verify (4+4 remaining) | Medium | Open |
+| 5 | Add `spec fn spec_distance` for δ_G(u,v) | Medium | Open |
+| 6 | Fix module header cost for `validate_subpath_property` (O(k²) → O(k)) | Low | Open |
+| 7 | Remove `external_body` from Example fns (3+2 remaining) | Low | Open |

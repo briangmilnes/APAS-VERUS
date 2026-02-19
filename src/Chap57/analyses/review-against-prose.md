@@ -14,15 +14,15 @@ table { width: 100% !important; table-layout: fixed; }
 
 | # | File | exec fns | external_body | spec fns | proof fns | View | verus! | Trait Wired |
 |---|------|:--------:|:-------------:|:--------:|:---------:|:----:|:------:|:-----------:|
-| 1 | StackStEph.rs | 7 | 8 | 0 | 0 | Yes | Yes | Yes |
+| 1 | StackStEph.rs | 7 | 0 | 0 | 0 | Yes | Yes | Yes |
 | 2 | DijkstraStEphI64.rs | 4 | 4 | 0 | 0 | Yes | Yes | Yes (cfg-gated impl) |
 | 3 | DijkstraStEphFloat.rs | 4 | 4 | 0 | 0 | Yes | Yes | Yes (cfg-gated impl) |
-| | **Total** | **15** | **16** | **0** | **0** | | | |
+| | **Total** | **15** | **8** | **0** | **0** | | | |
 
 **Changes since last review:**
 - `DijkstraStEphInt.rs` renamed to `DijkstraStEphI64.rs` (agent2 merge).
 - `DijkstraStEphI64` / `DijkstraStEphFloat`: trait inside `verus!`, impl cfg-gated (pending Chap45/Chap23 fix).
-- `StackStEph`: trait with 7 functions, all `external_body`. 8 external_body counts include duplicate on `new` (trait + impl both annotated).
+- `StackStEph`: trait with 7 functions, all now verified (0 `external_body` — was 8, all removed 2026-02-18).
 
 **Gating:**
 - Chap57 module: `#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]` — excluded during Verus verification.
@@ -203,26 +203,30 @@ All files have TOC comment blocks and numbered section headers.
 
 ## Proof Holes Summary
 
-```
-Modules: 0 clean, 3 holed
-Holes Found: 16 total (all external_body)
+**Last verified:** 2026-02-18 (`veracity-review-proof-holes`)
 
-StackStEph.rs:            8 × external_body (includes dup on new: trait + impl)
+```
+Modules: 1 clean, 2 holed
+Holes Found: 8 total (all external_body)
+
+StackStEph.rs:            ✓ CLEAN (0 holes — was 8, all removed)
 DijkstraStEphI64.rs:      4 × external_body
 DijkstraStEphFloat.rs:    4 × external_body
 ```
 
+**Changes since last review:** StackStEph.rs is now fully verified — all 8 `external_body` annotations removed (including the duplicate on `new`). Total holes decreased from 16 to 8. The Dijkstra modules remain fully `external_body` (commented out in `lib.rs`, pending Chap45/Chap23 fix).
+
 ## Action Items
 
-| # | Action | Priority |
-|---|--------|----------|
-| 1 | Fix duplicate `#[verifier::external_body]` on StackStEph::new (trait and impl both annotated) | High |
-| 2 | Remove `external_body` from StackStEph and add `requires`/`ensures` | High |
-| 3 | Uncomment DijkstraStEphI64/DijkstraStEphFloat in lib.rs (pending Chap45/Chap23 fix) | High |
-| 4 | Move PQEntry `Clone`/`PartialEq`/`Eq` to `PartialEqSpecImpl` pattern | Medium |
-| 5 | Add `ensures` to `Ord`/`PartialOrd` impls | Medium |
-| 6 | Replace `HashMap` with verified table for visited set in Dijkstra | Medium |
-| 7 | Verify runtime tests run (Dijkstra modules commented out may block) | Medium |
-| 8 | Consider removing unused StackStEph or documenting its intended use | Low |
-| 9 | Implement Exercise 57.1 (decreaseKey variant) | Low |
-| 10 | Add Example 57.3 as runtime test | Low |
+| # | Action | Priority | Status |
+|---|--------|----------|--------|
+| 1 | ~~Fix duplicate `#[verifier::external_body]` on StackStEph::new~~ | ~~High~~ | **Done** (2026-02-18) |
+| 2 | ~~Remove `external_body` from StackStEph and add `requires`/`ensures`~~ | ~~High~~ | **Done** (2026-02-18) — StackStEph is now CLEAN |
+| 3 | Uncomment DijkstraStEphI64/DijkstraStEphFloat in lib.rs (pending Chap45/Chap23 fix) | High | Open |
+| 4 | Move PQEntry `Clone`/`PartialEq`/`Eq` to `PartialEqSpecImpl` pattern | Medium | Open |
+| 5 | Add `ensures` to `Ord`/`PartialOrd` impls | Medium | Open |
+| 6 | Replace `HashMap` with verified table for visited set in Dijkstra | Medium | Open |
+| 7 | Verify runtime tests run (Dijkstra modules commented out may block) | Medium | Open |
+| 8 | Consider removing unused StackStEph or documenting its intended use | Low | Open |
+| 9 | Implement Exercise 57.1 (decreaseKey variant) | Low | Open |
+| 10 | Add Example 57.3 as runtime test | Low | Open |
