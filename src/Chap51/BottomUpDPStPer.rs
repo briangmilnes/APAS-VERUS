@@ -27,59 +27,35 @@ pub mod BottomUpDPStPer {
 
     // 4. type definitions
     pub struct BottomUpDPStPerS {
-        /// Input sequence S
         pub seq_s: ArraySeqStPerS<char>,
-        /// Input sequence T
         pub seq_t: ArraySeqStPerS<char>,
-    }
-
-    // 9. impls
-    impl BottomUpDPStPerS {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        pub fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> (result: Self)
-            ensures result.seq_s == s, result.seq_t == t
-        { BottomUpDPStPerS { seq_s: s, seq_t: t } }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn s_length(&self) -> (result: usize)
-            ensures result as int == self.seq_s.spec_len()
-        { self.seq_s.length() }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn t_length(&self) -> (result: usize)
-            ensures result as int == self.seq_t.spec_len()
-        { self.seq_t.length() }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn is_empty(&self) -> (result: bool)
-            ensures result == (self.seq_s.spec_len() == 0 && self.seq_t.spec_len() == 0)
-        { self.seq_s.length() == 0usize && self.seq_t.length() == 0usize }
     }
 
     } // verus!
 
     // 8. traits
-    /// Trait for bottom-up dynamic programming operations
-    pub trait BottomUpDPStPerTrait<T: StT> : Sized {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        fn new()                     -> Self;
 
-        /// - APAS: Work O(|S|×|T|), Span O(|S|+|T|)
-        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential: no parallelism within diagonals.
-        fn solve(&self, input: &[T]) -> T;
+    pub trait BottomUpDPStPerTrait: Sized {
+        fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> Self;
+        fn s_length(&self) -> usize;
+        fn t_length(&self) -> usize;
+        fn is_empty(&self) -> bool;
+        fn med_bottom_up(&self) -> usize;
     }
 
-    // 9. impls (complex methods outside verus — they use Vec<Vec<usize>>)
-    impl BottomUpDPStPerS {
-        /// Compute minimum edit distance using bottom-up diagonal pebbling (Algorithm 51.1).
-        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — diagonal parallelism.
-        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential: no parallelism within diagonals.
-        pub fn med_bottom_up(&self) -> usize {
+    // 9. impls
+
+    impl BottomUpDPStPerTrait for BottomUpDPStPerS {
+        fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> Self {
+            BottomUpDPStPerS { seq_s: s, seq_t: t }
+        }
+
+        fn s_length(&self) -> usize { self.seq_s.length() }
+        fn t_length(&self) -> usize { self.seq_t.length() }
+        fn is_empty(&self) -> bool { self.seq_s.length() == 0usize && self.seq_t.length() == 0usize }
+
+        /// Compute MED using bottom-up diagonal pebbling (Algorithm 51.1).
+        fn med_bottom_up(&self) -> usize {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
 
@@ -91,10 +67,9 @@ pub mod BottomUpDPStPer {
 
             table[s_len][t_len]
         }
+    }
 
-        /// Initialize base cases for DP table.
-        /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(|S|+|T|), Span Θ(|S|+|T|)
+    impl BottomUpDPStPerS {
         fn initialize_base_cases(&self) -> Vec<Vec<usize>> {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -111,9 +86,6 @@ pub mod BottomUpDPStPer {
             table
         }
 
-        /// Compute one diagonal of the DP table.
-        /// - APAS: Work Θ(diagonal length), Span Θ(1) — each element computed in parallel.
-        /// - Claude-Opus-4.6: Work Θ(min(|S|,|T|)), Span Θ(min(|S|,|T|)) — sequential loop, no parallelism.
         fn compute_diagonal(&self, mut table: Vec<Vec<usize>>, k: usize) -> Vec<Vec<usize>> {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -132,9 +104,6 @@ pub mod BottomUpDPStPer {
             table
         }
 
-        /// Compute value for a single DP table cell (medOne from Algorithm 51.1).
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn compute_cell_value(&self, table: &[Vec<usize>], i: usize, j: usize) -> usize {
             let s_char = *self.seq_s.nth(i - 1);
             let t_char = *self.seq_t.nth(j - 1);
@@ -147,12 +116,6 @@ pub mod BottomUpDPStPer {
                 1 + min(delete_cost, insert_cost)
             }
         }
-    }
-
-    impl BottomUpDPStPerTrait<usize> for BottomUpDPStPerS {
-        fn new() -> Self { Self::default() }
-
-        fn solve(&self, _input: &[usize]) -> usize { self.med_bottom_up() }
     }
 
     // 11. derive impls

@@ -95,3 +95,12 @@ path = "tests/Chap23/ProveBalBinTreeStEph.rs"
 [[test]]
 name = "ProvePrimTreeSeqStPer"
 path = "tests/Chap23/ProvePrimTreeSeqStPer.rs"
+
+# Chap54 BFS tree iterator proof tests
+[[test]]
+name = "ProveBFSStEph"
+path = "tests/Chap54/ProveBFSStEph.rs"
+
+[[test]]
+name = "ProveBFSMtEph"
+path = "tests/Chap54/ProveBFSMtEph.rs"

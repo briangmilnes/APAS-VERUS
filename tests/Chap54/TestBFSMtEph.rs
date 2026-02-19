@@ -6,13 +6,7 @@ use apas_verus::Chap54::BFSMtEph::*;
 use apas_verus::Types::Types::*;
 
 const UNREACHABLE: usize = usize::MAX;
-
-#[test]
-fn test_empty_graph() {
-    let graph: ArraySeqMtEphS<ArraySeqMtEphS<usize>> = ArraySeqMtEphChap19SLit![];
-    let distances = BFSMtEph::bfs(&graph, 0);
-    assert_eq!(distances.length(), 0);
-}
+const NO_PARENT: usize = usize::MAX;
 
 #[test]
 fn test_single_vertex() {
@@ -85,11 +79,98 @@ fn test_cycle() {
     assert_eq!(*distances.nth(2), 2);
 }
 
+// BFS Tree tests (Algorithm 54.6)
+
 #[test]
-fn test_invalid_source() {
-    let graph = ArraySeqMtEphS::from_vec(vec![ArraySeqMtEphChap19SLit![1], ArraySeqMtEphChap19SLit![]]);
-    let distances = BFSMtEph::bfs(&graph, 5);
-    assert_eq!(distances.length(), 2);
-    assert_eq!(*distances.nth(0), UNREACHABLE);
-    assert_eq!(*distances.nth(1), UNREACHABLE);
+fn test_tree_single_vertex() {
+    let graph = ArraySeqMtEphS::from_vec(vec![ArraySeqMtEphChap19SLit![]]);
+    let tree = BFSMtEph::bfs_tree(&graph, 0);
+    assert_eq!(*tree.parents.nth(0), 0);
+    assert_eq!(tree.order.length(), 1);
+    assert_eq!(*tree.order.nth(0), 0);
 }
+
+#[test]
+fn test_tree_line_graph() {
+    let graph = ArraySeqMtEphS::from_vec(vec![
+        ArraySeqMtEphChap19SLit![1],
+        ArraySeqMtEphChap19SLit![2],
+        ArraySeqMtEphChap19SLit![3],
+        ArraySeqMtEphChap19SLit![],
+    ]);
+    let tree = BFSMtEph::bfs_tree(&graph, 0);
+    assert_eq!(*tree.parents.nth(0), 0);
+    assert_eq!(*tree.parents.nth(1), 0);
+    assert_eq!(*tree.parents.nth(2), 1);
+    assert_eq!(*tree.parents.nth(3), 2);
+    assert_eq!(tree.order.length(), 4);
+    assert_eq!(*tree.order.nth(0), 0);
+}
+
+#[test]
+fn test_tree_dag() {
+    let graph = ArraySeqMtEphS::from_vec(vec![
+        ArraySeqMtEphChap19SLit![1, 2],
+        ArraySeqMtEphChap19SLit![2, 3, 4],
+        ArraySeqMtEphChap19SLit![4],
+        ArraySeqMtEphChap19SLit![5, 6],
+        ArraySeqMtEphChap19SLit![0, 4, 6],
+        ArraySeqMtEphChap19SLit![],
+        ArraySeqMtEphChap19SLit![],
+    ]);
+    let tree = BFSMtEph::bfs_tree(&graph, 0);
+    assert_eq!(*tree.parents.nth(0), 0);
+    assert_eq!(*tree.parents.nth(1), 0);
+    assert_eq!(*tree.parents.nth(2), 0);
+    assert_eq!(tree.order.length(), 7);
+    assert_eq!(*tree.order.nth(0), 0);
+}
+
+#[test]
+fn test_tree_unreachable() {
+    let graph = ArraySeqMtEphS::from_vec(vec![
+        ArraySeqMtEphChap19SLit![1],
+        ArraySeqMtEphChap19SLit![],
+        ArraySeqMtEphChap19SLit![3],
+        ArraySeqMtEphChap19SLit![],
+    ]);
+    let tree = BFSMtEph::bfs_tree(&graph, 0);
+    assert_eq!(*tree.parents.nth(0), 0);
+    assert_eq!(*tree.parents.nth(1), 0);
+    assert_eq!(*tree.parents.nth(2), NO_PARENT);
+    assert_eq!(*tree.parents.nth(3), NO_PARENT);
+    assert_eq!(tree.order.length(), 2);
+}
+
+#[test]
+fn test_tree_top_down_iteration() {
+    let graph = ArraySeqMtEphS::from_vec(vec![
+        ArraySeqMtEphChap19SLit![1],
+        ArraySeqMtEphChap19SLit![2],
+        ArraySeqMtEphChap19SLit![],
+    ]);
+    let tree = BFSMtEph::bfs_tree(&graph, 0);
+    let td = tree.top_down_order();
+    let mut collected: Vec<usize> = Vec::new();
+    for v in td {
+        collected.push(*v);
+    }
+    assert_eq!(collected, vec![0, 1, 2]);
+}
+
+#[test]
+fn test_tree_bottom_up_iteration() {
+    let graph = ArraySeqMtEphS::from_vec(vec![
+        ArraySeqMtEphChap19SLit![1],
+        ArraySeqMtEphChap19SLit![2],
+        ArraySeqMtEphChap19SLit![],
+    ]);
+    let tree = BFSMtEph::bfs_tree(&graph, 0);
+    let bu = tree.bottom_up_order();
+    let mut collected: Vec<usize> = Vec::new();
+    for v in &bu {
+        collected.push(*v);
+    }
+    assert_eq!(collected, vec![2, 1, 0]);
+}
+

@@ -40,22 +40,25 @@ pub mod TopDownDPMtPer {
     }
 
     // 8. traits
-    /// Trait for top-down dynamic programming operations
-    pub trait TopDownDPMtPerTrait<T: MtVal> : Sized {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        fn new()                     -> Self;
 
-        /// - APAS: Work O(|S|×|T|), Span O(|S|×|T|) — inherently sequential (memo threading).
-        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential despite concurrent memo table.
-        fn solve(&self, input: &[T]) -> T;
+    pub trait TopDownDPMtPerTrait: Sized {
+        fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> Self;
+        fn med_memoized_concurrent(&self) -> usize;
+        fn med_memoized_parallel(&self) -> usize;
+        fn with_memo_table(self, memo: HashMap<(usize, usize), usize>) -> Self;
+        fn memo_size(&self) -> usize;
+        fn is_memoized(&self, i: usize, j: usize) -> bool;
+        fn get_memoized(&self, i: usize, j: usize) -> Option<usize>;
+        fn s_length(&self) -> usize;
+        fn t_length(&self) -> usize;
+        fn is_empty(&self) -> bool;
+        fn clear_memo(self) -> Self;
     }
 
     // 9. impls
-    impl TopDownDPMtPerS {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        pub fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> Self {
+
+    impl TopDownDPMtPerTrait for TopDownDPMtPerS {
+        fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> Self {
             TopDownDPMtPerS {
                 seq_s: s,
                 seq_t: t,
@@ -63,120 +66,21 @@ pub mod TopDownDPMtPer {
             }
         }
 
-        /// Compute minimum edit distance using concurrent top-down memoization (Algorithm 51.4).
-        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — inherently sequential (memo threading).
-        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — sequential recursive calls despite concurrent memo.
-        pub fn med_memoized_concurrent(&self) -> usize {
+        /// Compute MED using concurrent top-down memoization (Algorithm 51.4).
+        fn med_memoized_concurrent(&self) -> usize {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
-
             self.med_recursive_concurrent(s_len, t_len)
         }
 
-        /// Recursive MED with concurrent memoization.
-        /// - APAS: Work Θ(1) amortized per call, Θ(|S|×|T|) total; Span Θ(|S|×|T|).
-        /// - Claude-Opus-4.6: Work Θ(1) amortized, Span Θ(|S|×|T|) — sequential recursive calls.
-        fn med_recursive_concurrent(&self, i: usize, j: usize) -> usize {
-            // Check memo table first
-            {
-                let memo_guard = self.memo_table.lock().unwrap();
-                if let Some(&cached_result) = memo_guard.get(&(i, j)) {
-                    return cached_result;
-                }
-            }
-
-            // Base cases
-            let result = match (i, j) {
-                | (0, j) => j, // Insert all remaining characters from T
-                | (i, 0) => i, // Delete all remaining characters from S
-                | (i, j) => {
-                    let s_char = *self.seq_s.nth(i - 1);
-                    let t_char = *self.seq_t.nth(j - 1);
-
-                    if s_char == t_char {
-                        // Characters match: no edit needed
-                        self.med_recursive_concurrent(i - 1, j - 1)
-                    } else {
-                        // Characters don't match: insert or delete (APAS Algorithm 51.4)
-                        let insert_cost = 1 + self.med_recursive_concurrent(i, j - 1);
-                        let delete_cost = 1 + self.med_recursive_concurrent(i - 1, j);
-
-                        insert_cost.min(delete_cost)
-                    }
-                }
-            };
-
-            // Store result in memo table
-            {
-                let mut memo_guard = self.memo_table.lock().unwrap();
-                memo_guard.insert((i, j), result);
-            }
-
-            result
-        }
-
-        /// Compute minimum edit distance with parallel subproblem exploration.
-        /// - APAS: (no cost stated) — prose says top-down is inherently sequential.
-        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — parallel: thread::spawn per recursive branch.
-        pub fn med_memoized_parallel(&self) -> usize {
+        /// Compute MED with parallel subproblem exploration.
+        fn med_memoized_parallel(&self) -> usize {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
-
             self.med_recursive_parallel(s_len, t_len)
         }
 
-        /// Recursive MED with parallel branch exploration.
-        /// - APAS: (no cost stated) — prose says top-down is inherently sequential.
-        /// - Claude-Opus-4.6: Work Θ(1) amortized per call, Span Θ(|S|+|T|) — parallel recursive branches via thread::spawn.
-        fn med_recursive_parallel(&self, i: usize, j: usize) -> usize {
-            // Check memo table first
-            {
-                let memo_guard = self.memo_table.lock().unwrap();
-                if let Some(&cached_result) = memo_guard.get(&(i, j)) {
-                    return cached_result;
-                }
-            }
-
-            // Base cases
-            let result = match (i, j) {
-                | (0, j) => j, // Insert all remaining characters from T
-                | (i, 0) => i, // Delete all remaining characters from S
-                | (i, j) => {
-                    let s_char = *self.seq_s.nth(i - 1);
-                    let t_char = *self.seq_t.nth(j - 1);
-
-                    if s_char == t_char {
-                        // Characters match: no edit needed
-                        self.med_recursive_parallel(i - 1, j - 1)
-                    } else {
-                        // Characters don't match: insert or delete in parallel (APAS Algorithm 51.4)
-                        let self_clone1 = self.clone();
-                        let self_clone2 = self.clone();
-
-                        let handle1 = thread::spawn(move || 1 + self_clone1.med_recursive_parallel(i, j - 1));
-
-                        let handle2 = thread::spawn(move || 1 + self_clone2.med_recursive_parallel(i - 1, j));
-
-                        let insert_cost = handle1.join().unwrap();
-                        let delete_cost = handle2.join().unwrap();
-
-                        insert_cost.min(delete_cost)
-                    }
-                }
-            };
-
-            // Store result in memo table
-            {
-                let mut memo_guard = self.memo_table.lock().unwrap();
-                memo_guard.insert((i, j), result);
-            }
-
-            result
-        }
-
-        /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn with_memo_table(self, memo: HashMap<(usize, usize), usize>) -> Self {
+        fn with_memo_table(self, memo: HashMap<(usize, usize), usize>) -> Self {
             TopDownDPMtPerS {
                 seq_s: self.seq_s,
                 seq_t: self.seq_t,
@@ -184,42 +88,26 @@ pub mod TopDownDPMtPer {
             }
         }
 
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn memo_size(&self) -> usize {
+        fn memo_size(&self) -> usize {
             let memo_guard = self.memo_table.lock().unwrap();
             memo_guard.len()
         }
 
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn is_memoized(&self, i: usize, j: usize) -> bool {
+        fn is_memoized(&self, i: usize, j: usize) -> bool {
             let memo_guard = self.memo_table.lock().unwrap();
             memo_guard.contains_key(&(i, j))
         }
 
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn get_memoized(&self, i: usize, j: usize) -> Option<usize> {
+        fn get_memoized(&self, i: usize, j: usize) -> Option<usize> {
             let memo_guard = self.memo_table.lock().unwrap();
             memo_guard.get(&(i, j)).copied()
         }
 
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn s_length(&self) -> usize { self.seq_s.length() }
+        fn s_length(&self) -> usize { self.seq_s.length() }
+        fn t_length(&self) -> usize { self.seq_t.length() }
+        fn is_empty(&self) -> bool { self.seq_s.length() == 0usize && self.seq_t.length() == 0usize }
 
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn t_length(&self) -> usize { self.seq_t.length() }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn is_empty(&self) -> bool { self.seq_s.length() == 0usize && self.seq_t.length() == 0usize }
-
-        /// - APAS: N/A — mutator.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn clear_memo(self) -> Self {
+        fn clear_memo(self) -> Self {
             TopDownDPMtPerS {
                 seq_s: self.seq_s,
                 seq_t: self.seq_t,
@@ -228,10 +116,76 @@ pub mod TopDownDPMtPer {
         }
     }
 
-    impl TopDownDPMtPerTrait<usize> for TopDownDPMtPerS {
-        fn new() -> Self { Self::default() }
+    impl TopDownDPMtPerS {
+        fn med_recursive_concurrent(&self, i: usize, j: usize) -> usize {
+            {
+                let memo_guard = self.memo_table.lock().unwrap();
+                if let Some(&cached_result) = memo_guard.get(&(i, j)) {
+                    return cached_result;
+                }
+            }
 
-        fn solve(&self, _input: &[usize]) -> usize { self.med_memoized_concurrent() }
+            let result = match (i, j) {
+                | (0, j) => j,
+                | (i, 0) => i,
+                | (i, j) => {
+                    let s_char = *self.seq_s.nth(i - 1);
+                    let t_char = *self.seq_t.nth(j - 1);
+
+                    if s_char == t_char {
+                        self.med_recursive_concurrent(i - 1, j - 1)
+                    } else {
+                        let insert_cost = 1 + self.med_recursive_concurrent(i, j - 1);
+                        let delete_cost = 1 + self.med_recursive_concurrent(i - 1, j);
+                        insert_cost.min(delete_cost)
+                    }
+                }
+            };
+
+            {
+                let mut memo_guard = self.memo_table.lock().unwrap();
+                memo_guard.insert((i, j), result);
+            }
+            result
+        }
+
+        fn med_recursive_parallel(&self, i: usize, j: usize) -> usize {
+            {
+                let memo_guard = self.memo_table.lock().unwrap();
+                if let Some(&cached_result) = memo_guard.get(&(i, j)) {
+                    return cached_result;
+                }
+            }
+
+            let result = match (i, j) {
+                | (0, j) => j,
+                | (i, 0) => i,
+                | (i, j) => {
+                    let s_char = *self.seq_s.nth(i - 1);
+                    let t_char = *self.seq_t.nth(j - 1);
+
+                    if s_char == t_char {
+                        self.med_recursive_parallel(i - 1, j - 1)
+                    } else {
+                        let self_clone1 = self.clone();
+                        let self_clone2 = self.clone();
+
+                        let handle1 = thread::spawn(move || 1 + self_clone1.med_recursive_parallel(i, j - 1));
+                        let handle2 = thread::spawn(move || 1 + self_clone2.med_recursive_parallel(i - 1, j));
+
+                        let insert_cost = handle1.join().unwrap();
+                        let delete_cost = handle2.join().unwrap();
+                        insert_cost.min(delete_cost)
+                    }
+                }
+            };
+
+            {
+                let mut memo_guard = self.memo_table.lock().unwrap();
+                memo_guard.insert((i, j), result);
+            }
+            result
+        }
     }
 
     // 11. derive impls

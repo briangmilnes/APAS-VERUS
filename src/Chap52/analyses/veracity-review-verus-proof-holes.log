@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap52
+
 ❌ AdjMatrixGraphMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphMtEph.rs:61: external_body - #[verifier::external_body]
         62 |         fn new(n: N) -> Self {
@@ -348,18 +350,6 @@ SUMMARY
 Modules:
    0 clean (no holes)
    14 holed (contains holes)
-   14 total
-
-Proof Functions:
-   0 clean
-   0 holed
-   0 total
-
-Holes Found: 148 total
-   148 × external_body
-
-Errors: 1 bare impl(s) in files with trait definitions
-4 holed (contains holes)
    14 total
 
 Proof Functions:

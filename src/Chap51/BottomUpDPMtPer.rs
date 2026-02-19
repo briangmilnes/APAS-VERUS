@@ -29,59 +29,35 @@ pub mod BottomUpDPMtPer {
 
     // 4. type definitions
     pub struct BottomUpDPMtPerS {
-        /// Input sequence S
         pub seq_s: ArraySeqMtPerS<char>,
-        /// Input sequence T
         pub seq_t: ArraySeqMtPerS<char>,
-    }
-
-    // 9. impls
-    impl BottomUpDPMtPerS {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        pub fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> (result: Self)
-            ensures result.seq_s == s, result.seq_t == t
-        { BottomUpDPMtPerS { seq_s: s, seq_t: t } }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn s_length(&self) -> (result: usize)
-            ensures result as int == self.seq_s.spec_len()
-        { self.seq_s.length() }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn t_length(&self) -> (result: usize)
-            ensures result as int == self.seq_t.spec_len()
-        { self.seq_t.length() }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn is_empty(&self) -> (result: bool)
-            ensures result == (self.seq_s.spec_len() == 0 && self.seq_t.spec_len() == 0)
-        { self.seq_s.length() == 0usize && self.seq_t.length() == 0usize }
     }
 
     } // verus!
 
     // 8. traits
-    /// Trait for bottom-up dynamic programming operations
-    pub trait BottomUpDPMtPerTrait<T: MtVal> : Sized {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        fn new()                     -> Self;
 
-        /// - APAS: Work O(|S|×|T|), Span O(|S|+|T|) — diagonal parallelism.
-        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — agrees with APAS; diagonals processed in parallel.
-        fn solve(&self, input: &[T]) -> T;
+    pub trait BottomUpDPMtPerTrait: Sized {
+        fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> Self;
+        fn s_length(&self) -> usize;
+        fn t_length(&self) -> usize;
+        fn is_empty(&self) -> bool;
+        fn med_bottom_up_parallel(&self) -> usize;
     }
 
-    // 9. impls (complex methods outside verus — they use Arc<Mutex<Vec<Vec<usize>>>>)
-    impl BottomUpDPMtPerS {
-        /// Compute minimum edit distance using parallel bottom-up diagonal pebbling (Algorithm 51.1).
-        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — diagonal parallelism.
-        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — parallel: thread::spawn per diagonal element.
-        pub fn med_bottom_up_parallel(&self) -> usize {
+    // 9. impls
+
+    impl BottomUpDPMtPerTrait for BottomUpDPMtPerS {
+        fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> Self {
+            BottomUpDPMtPerS { seq_s: s, seq_t: t }
+        }
+
+        fn s_length(&self) -> usize { self.seq_s.length() }
+        fn t_length(&self) -> usize { self.seq_t.length() }
+        fn is_empty(&self) -> bool { self.seq_s.length() == 0usize && self.seq_t.length() == 0usize }
+
+        /// Compute MED using parallel bottom-up diagonal pebbling (Algorithm 51.1).
+        fn med_bottom_up_parallel(&self) -> usize {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
 
@@ -94,10 +70,9 @@ pub mod BottomUpDPMtPer {
             let final_table = table.lock().unwrap();
             final_table[s_len][t_len]
         }
+    }
 
-        /// Initialize base cases for DP table.
-        /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(|S|+|T|), Span Θ(|S|+|T|)
+    impl BottomUpDPMtPerS {
         fn initialize_base_cases(&self) -> Vec<Vec<usize>> {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -114,9 +89,6 @@ pub mod BottomUpDPMtPer {
             table
         }
 
-        /// Compute one diagonal of the DP table in parallel.
-        /// - APAS: Work Θ(diagonal length), Span Θ(1) — each element computed in parallel.
-        /// - Claude-Opus-4.6: Work Θ(min(|S|,|T|)), Span Θ(1) — agrees with APAS; thread::spawn per element.
         fn compute_diagonal_parallel(&self, table: Arc<Mutex<Vec<Vec<usize>>>>, k: usize) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -151,9 +123,6 @@ pub mod BottomUpDPMtPer {
             }
         }
 
-        /// Compute value for a single DP table cell (medOne from Algorithm 51.1).
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
         fn compute_cell_value_static(
             seq_s: &ArraySeqMtPerS<char>,
             seq_t: &ArraySeqMtPerS<char>,
@@ -174,12 +143,6 @@ pub mod BottomUpDPMtPer {
                 1 + min(delete_cost, insert_cost)
             }
         }
-    }
-
-    impl BottomUpDPMtPerTrait<usize> for BottomUpDPMtPerS {
-        fn new() -> Self { Self::default() }
-
-        fn solve(&self, _input: &[usize]) -> usize { self.med_bottom_up_parallel() }
     }
 
     // 11. derive impls

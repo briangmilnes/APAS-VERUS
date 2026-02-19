@@ -38,22 +38,25 @@ pub mod TopDownDPStPer {
     }
 
     // 8. traits
-    /// Trait for top-down dynamic programming operations
-    pub trait TopDownDPStPerTrait<T: StT> : Sized {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        fn new()                     -> Self;
 
-        /// - APAS: Work O(|S|×|T|), Span O(|S|×|T|) — inherently sequential (memo threading).
-        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — agrees with APAS.
-        fn solve(&self, input: &[T]) -> T;
+    pub trait TopDownDPStPerTrait: Sized {
+        fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> Self;
+        fn med_memoized(&self) -> usize;
+        fn with_memo_table(self, memo: HashMap<(usize, usize), usize>) -> Self;
+        fn memo_size(&self) -> usize;
+        fn is_memoized(&self, i: usize, j: usize) -> bool;
+        fn get_memoized(&self, i: usize, j: usize) -> Option<usize>;
+        fn s_length(&self) -> usize;
+        fn t_length(&self) -> usize;
+        fn is_empty(&self) -> bool;
+        fn clear_memo(self) -> Self;
     }
 
     // 9. impls
-    impl TopDownDPStPerS {
+
+    impl TopDownDPStPerTrait for TopDownDPStPerS {
         /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        pub fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> Self {
+        fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> Self {
             TopDownDPStPerS {
                 seq_s: s,
                 seq_t: t,
@@ -62,102 +65,57 @@ pub mod TopDownDPStPer {
         }
 
         /// Compute minimum edit distance using top-down memoization (Algorithm 51.4).
-        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — inherently sequential (memo threading).
-        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|×|T|) — agrees with APAS.
-        pub fn med_memoized(&self) -> usize {
+        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|×|T|)
+        fn med_memoized(&self) -> usize {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
-
-            // Create mutable copy of memo table for computation
             let mut memo = self.memo_table.clone();
-
             self.med_recursive(s_len, t_len, &mut memo)
         }
 
+        fn with_memo_table(self, memo: HashMap<(usize, usize), usize>) -> Self {
+            TopDownDPStPerS { seq_s: self.seq_s, seq_t: self.seq_t, memo_table: memo }
+        }
+
+        fn memo_size(&self) -> usize { self.memo_table.len() }
+        fn is_memoized(&self, i: usize, j: usize) -> bool { self.memo_table.contains_key(&(i, j)) }
+        fn get_memoized(&self, i: usize, j: usize) -> Option<usize> { self.memo_table.get(&(i, j)).copied() }
+        fn s_length(&self) -> usize { self.seq_s.length() }
+        fn t_length(&self) -> usize { self.seq_t.length() }
+        fn is_empty(&self) -> bool { self.seq_s.length() == 0usize && self.seq_t.length() == 0usize }
+
+        fn clear_memo(self) -> Self {
+            TopDownDPStPerS { seq_s: self.seq_s, seq_t: self.seq_t, memo_table: HashMap::new() }
+        }
+    }
+
+    impl TopDownDPStPerS {
         /// Recursive MED with memoization (medOne from Algorithm 51.4).
-        /// - APAS: Work Θ(1) amortized per call, Θ(|S|×|T|) total; Span Θ(|S|×|T|).
-        /// - Claude-Opus-4.6: Work Θ(1) amortized, Span Θ(|S|×|T|) — agrees with APAS.
         fn med_recursive(&self, i: usize, j: usize, memo: &mut HashMap<(usize, usize), usize>) -> usize {
-            // Check memo table first
             if let Some(&cached_result) = memo.get(&(i, j)) {
                 return cached_result;
             }
 
-            // Base cases
             let result = match (i, j) {
-                | (0, j) => j, // Insert all remaining characters from T
-                | (i, 0) => i, // Delete all remaining characters from S
+                | (0, j) => j,
+                | (i, 0) => i,
                 | (i, j) => {
                     let s_char = *self.seq_s.nth(i - 1);
                     let t_char = *self.seq_t.nth(j - 1);
 
                     if s_char == t_char {
-                        // Characters match: no edit needed
                         self.med_recursive(i - 1, j - 1, memo)
                     } else {
-                        // Characters don't match: insert or delete (APAS Algorithm 51.4)
                         let insert_cost = 1 + self.med_recursive(i, j - 1, memo);
                         let delete_cost = 1 + self.med_recursive(i - 1, j, memo);
-
                         insert_cost.min(delete_cost)
                     }
                 }
             };
 
-            // Store result in memo table
             memo.insert((i, j), result);
             result
         }
-
-        /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn with_memo_table(self, memo: HashMap<(usize, usize), usize>) -> Self {
-            TopDownDPStPerS {
-                seq_s: self.seq_s,
-                seq_t: self.seq_t,
-                memo_table: memo,
-            }
-        }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn memo_size(&self) -> usize { self.memo_table.len() }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn is_memoized(&self, i: usize, j: usize) -> bool { self.memo_table.contains_key(&(i, j)) }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn get_memoized(&self, i: usize, j: usize) -> Option<usize> { self.memo_table.get(&(i, j)).copied() }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn s_length(&self) -> usize { self.seq_s.length() }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn t_length(&self) -> usize { self.seq_t.length() }
-
-        /// - APAS: N/A — accessor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn is_empty(&self) -> bool { self.seq_s.length() == 0usize && self.seq_t.length() == 0usize }
-
-        /// - APAS: N/A — mutator.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn clear_memo(self) -> Self {
-            TopDownDPStPerS {
-                seq_s: self.seq_s,
-                seq_t: self.seq_t,
-                memo_table: HashMap::new(),
-            }
-        }
-    }
-
-    impl TopDownDPStPerTrait<usize> for TopDownDPStPerS {
-        fn new() -> Self { Self::default() }
-
-        fn solve(&self, _input: &[usize]) -> usize { self.med_memoized() }
     }
 
     // 11. derive impls

@@ -198,6 +198,7 @@ pub mod ArraySeqMtEph {
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
             ensures
+                success.is_ok(),
                 success.is_ok() ==> self.spec_len() == old(self).spec_len(),
                 success.is_ok() ==> self.spec_index(index as int) == item,
                 success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);

@@ -5,6 +5,7 @@
 pub mod SSSPResultStEphI64 {
 
     use vstd::prelude::*;
+    use vstd::assert_seqs_equal;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
@@ -42,15 +43,15 @@ pub mod SSSPResultStEphI64 {
     // 9. impls
 
     impl SSSPResultStEphI64Trait for SSSPResultStEphI64 {
-        #[verifier::external_body]
         fn new(n: usize, source: usize) -> (result: Self)
             ensures
-                result.distances@.len() == n as int,
-                result.predecessors@.len() == n as int,
+                result.distances.spec_len() == n,
+                result.predecessors.spec_len() == n,
                 result.source == source,
         {
             let mut dist_seq = ArraySeqStEphS::<i64>::new(n, UNREACHABLE);
-            let _ = dist_seq.set(source, 0i64);
+            let ok = dist_seq.set(source, 0i64);
+            assert(ok.is_ok());
             let pred_seq = ArraySeqStEphS::<usize>::new(n, NO_PREDECESSOR);
             SSSPResultStEphI64 {
                 distances: dist_seq,
@@ -66,16 +67,20 @@ pub mod SSSPResultStEphI64 {
             *self.distances.nth(v)
         }
 
-        #[verifier::external_body]
         fn set_distance(&mut self, v: usize, dist: i64)
             ensures
-                v < old(self).distances@.len() ==> self.distances@ == old(self).distances@.update(v as int, dist),
-                v >= old(self).distances@.len() ==> self.distances@ == old(self).distances@,
-                self.predecessors@ == old(self).predecessors@,
+                self.distances.spec_len() == old(self).distances.spec_len(),
+                v < old(self).distances.spec_len() ==> self.distances.spec_index(v as int) == dist,
+                v < old(self).distances.spec_len() ==> forall|i: int|
+                    #![trigger self.distances.spec_index(i)]
+                    0 <= i < old(self).distances.spec_len() && i != v as int
+                    ==> self.distances.spec_index(i) == old(self).distances.spec_index(i),
+                self.predecessors == old(self).predecessors,
                 self.source == old(self).source,
         {
             if v < self.distances.length() {
-                let _ = self.distances.set(v, dist);
+                let ok = self.distances.set(v, dist);
+                assert(ok.is_ok());
             }
         }
 
@@ -87,16 +92,20 @@ pub mod SSSPResultStEphI64 {
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
-        #[verifier::external_body]
         fn set_predecessor(&mut self, v: usize, pred: usize)
             ensures
-                v < old(self).predecessors@.len() ==> self.predecessors@ == old(self).predecessors@.update(v as int, pred),
-                v >= old(self).predecessors@.len() ==> self.predecessors@ == old(self).predecessors@,
-                self.distances@ == old(self).distances@,
+                self.predecessors.spec_len() == old(self).predecessors.spec_len(),
+                v < old(self).predecessors.spec_len() ==> self.predecessors.spec_index(v as int) == pred,
+                v < old(self).predecessors.spec_len() ==> forall|i: int|
+                    #![trigger self.predecessors.spec_index(i)]
+                    0 <= i < old(self).predecessors.spec_len() && i != v as int
+                    ==> self.predecessors.spec_index(i) == old(self).predecessors.spec_index(i),
+                self.distances == old(self).distances,
                 self.source == old(self).source,
         {
             if v < self.predecessors.length() {
-                let _ = self.predecessors.set(v, pred);
+                let ok = self.predecessors.set(v, pred);
+                assert(ok.is_ok());
             }
         }
 

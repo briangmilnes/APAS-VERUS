@@ -64,37 +64,30 @@ pub mod StackStEph {
     // 9. impls
 
     impl<T: StT> StackStEphTrait<T> for StackStEph<T> {
-        #[verifier::external_body]
-        #[verifier::external_body]
         fn new() -> (result: Self)
             ensures result@ == Seq::<T>::empty(),
         { StackStEph { elements: Vec::new() } }
 
-        #[verifier::external_body]
         fn push(&mut self, item: T)
             ensures self@ == old(self)@.push(item),
         { self.elements.push(item); }
 
-        #[verifier::external_body]
         fn pop(&mut self) -> (result: Option<T>)
             ensures
                 old(self)@.len() > 0 ==> result == Some(old(self)@.last()) && self@ == old(self)@.drop_last(),
                 old(self)@.len() == 0 ==> result.is_None() && self@ == old(self)@,
         { self.elements.pop() }
 
-        #[verifier::external_body]
         fn peek(&self) -> (result: Option<&T>)
             ensures
                 self@.len() > 0 ==> result.is_Some(),
                 self@.len() == 0 ==> result.is_None(),
         { self.elements.last() }
 
-        #[verifier::external_body]
         fn is_empty(&self) -> (result: bool)
             ensures result == (self@.len() == 0),
         { self.elements.is_empty() }
 
-        #[verifier::external_body]
         fn size(&self) -> (result: N)
             ensures result == self@.len(),
         { self.elements.len() }
@@ -103,7 +96,6 @@ pub mod StackStEph {
     // 11. derive impls in verus!
 
     impl<T: StT> Default for StackStEph<T> {
-        #[verifier::external_body]
         fn default() -> (result: Self)
             ensures result@ == Seq::<T>::empty(),
         { Self::new() }

@@ -485,7 +485,7 @@ pub mod Chap53 {
     pub mod GraphSearchMtPer;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap54 {
     pub mod BFSStEph;
     pub mod BFSStPer;

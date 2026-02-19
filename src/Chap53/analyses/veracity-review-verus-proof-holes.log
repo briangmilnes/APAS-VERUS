@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap53/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap53
 
 ❌ GraphSearchMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:57: external_body - #[verifier::external_body]

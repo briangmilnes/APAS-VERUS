@@ -1,141 +1,137 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap56
+
 ❌ AllPairsResultStEphFloat.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStEphFloat.rs:82: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:82: external_body - #[verifier::external_body]
         83 |         fn new(n: usize) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStEphFloat.rs:104: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:104: external_body - #[verifier::external_body]
        105 |         fn get_distance(&self, u: usize, v: usize) -> (dist: OrderedF64)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStEphFloat.rs:116: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:116: external_body - #[verifier::external_body]
        117 |         fn set_distance(&mut self, u: usize, v: usize, dist: OrderedF64)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStEphFloat.rs:129: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:129: external_body - #[verifier::external_body]
        130 |         fn get_predecessor(&self, u: usize, v: usize) -> (result: Option<usize>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStEphFloat.rs:143: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:143: external_body - #[verifier::external_body]
        144 |         fn set_predecessor(&mut self, u: usize, v: usize, pred: usize)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStEphFloat.rs:156: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:156: external_body - #[verifier::external_body]
        157 |         fn is_reachable(&self, u: usize, v: usize) -> (result: bool) { self.get_distance(u, v).is_finite() }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStEphFloat.rs:159: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphFloat.rs:159: external_body - #[verifier::external_body]
        160 |         fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
    Holes: 7 total
       7 × external_body
 ❌ AllPairsResultStEphI64.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStEphI64.rs:44: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:44: external_body - #[verifier::external_body]
         45 |         fn new(n: usize) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStEphI64.rs:128: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:128: external_body - #[verifier::external_body]
        129 |         fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
    Holes: 2 total
       2 × external_body
 ❌ AllPairsResultStPerFloat.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStPerFloat.rs:81: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:81: external_body - #[verifier::external_body]
         82 |         fn new(n: usize) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStPerFloat.rs:98: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:98: external_body - #[verifier::external_body]
         99 |         fn get_distance(&self, u: usize, v: usize) -> (dist: OrderedF64)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStPerFloat.rs:110: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:110: external_body - #[verifier::external_body]
        111 |         fn set_distance(self, u: usize, v: usize, dist: OrderedF64) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStPerFloat.rs:127: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:127: external_body - #[verifier::external_body]
        128 |         fn get_predecessor(&self, u: usize, v: usize) -> (result: Option<usize>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStPerFloat.rs:141: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:141: external_body - #[verifier::external_body]
        142 |         fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStPerFloat.rs:158: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:158: external_body - #[verifier::external_body]
        159 |         fn is_reachable(&self, u: usize, v: usize) -> (result: bool) { self.get_distance(u, v).is_finite() }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStPerFloat.rs:161: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:161: external_body - #[verifier::external_body]
        162 |         fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
    Holes: 7 total
       7 × external_body
 ❌ AllPairsResultStPerI64.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStPerI64.rs:43: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:43: external_body - #[verifier::external_body]
         44 |         fn new(n: usize) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStPerI64.rs:71: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:71: external_body - #[verifier::external_body]
         72 |         fn set_distance(self, u: usize, v: usize, dist: i64) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStPerI64.rs:104: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:104: external_body - #[verifier::external_body]
        105 |         fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/AllPairsResultStPerI64.rs:123: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:123: external_body - #[verifier::external_body]
        124 |         fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
    Holes: 4 total
       4 × external_body
 ❌ Example56_1.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/Example56_1.rs:45: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:45: external_body - #[verifier::external_body]
         46 |     pub fn example_path_weight_int() {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/Example56_1.rs:64: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:64: external_body - #[verifier::external_body]
         65 |     pub fn example_path_weight_float() {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/Example56_1.rs:103: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:103: external_body - #[verifier::external_body]
        104 |     pub fn example_negative_weights() {
    Holes: 3 total
       3 × external_body
 ❌ Example56_3.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/Example56_3.rs:41: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:41: external_body - #[verifier::external_body]
         42 |     pub fn example_negative_cycle() {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/Example56_3.rs:75: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:75: external_body - #[verifier::external_body]
         76 |     pub fn example_undefined_shortest_path() {
    Holes: 2 total
       2 × external_body
 ❌ PathWeightUtilsStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/PathWeightUtilsStEph.rs:74: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:74: external_body - #[verifier::external_body]
         75 |     pub fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStEphS<ArraySeqStEphS<i64>>) -> Option<i64> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/PathWeightUtilsStEph.rs:97: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:97: external_body - #[verifier::external_body]
         98 |     pub fn path_weight_float(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/PathWeightUtilsStEph.rs:125: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:125: external_body - #[verifier::external_body]
        126 |     pub fn validate_subpath_property_int(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/PathWeightUtilsStEph.rs:156: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:156: external_body - #[verifier::external_body]
        157 |     pub fn validate_subpath_property_float(
    Holes: 4 total
       4 × external_body
 ❌ PathWeightUtilsStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/PathWeightUtilsStPer.rs:73: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:73: external_body - #[verifier::external_body]
         74 |     pub fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>) -> Option<i64> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/PathWeightUtilsStPer.rs:96: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:96: external_body - #[verifier::external_body]
         97 |     pub fn path_weight_float(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/PathWeightUtilsStPer.rs:124: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:124: external_body - #[verifier::external_body]
        125 |     pub fn validate_subpath_property_int(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/PathWeightUtilsStPer.rs:155: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:155: external_body - #[verifier::external_body]
        156 |     pub fn validate_subpath_property_float(
    Holes: 4 total
       4 × external_body
 ❌ SSSPResultStEphFloat.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStEphFloat.rs:47: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:47: external_body - #[verifier::external_body]
         48 |         pub fn is_finite(&self) -> (b: bool)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStEphFloat.rs:54: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:54: external_body - #[verifier::external_body]
         55 |         pub fn eq(&self, other: &Self) -> (b: bool)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStEphFloat.rs:64: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:64: external_body - #[verifier::external_body]
         65 |     pub broadcast proof fn axiom_unreachable_not_finite()
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStEphFloat.rs:69: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:69: external_body - #[verifier::external_body]
         70 |     pub fn unreachable_dist() -> (d: F64Dist)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStEphFloat.rs:77: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:77: external_body - #[verifier::external_body]
         78 |     pub fn zero_dist() -> (d: F64Dist)
    Holes: 5 total
       5 × external_body
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ SSSPResultStEphI64.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStEphI64.rs:45: external_body - #[verifier::external_body]
-        46 |         fn new(n: usize, source: usize) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStEphI64.rs:69: external_body - #[verifier::external_body]
-        70 |         fn set_distance(&mut self, v: usize, dist: i64)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStEphI64.rs:90: external_body - #[verifier::external_body]
-        91 |         fn set_predecessor(&mut self, v: usize, pred: usize)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStEphI64.rs:107: external_body - #[verifier::external_body]
-       108 |         fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
-   Holes: 4 total
-      4 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:116: external_body - #[verifier::external_body]
+       117 |         fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
+   Holes: 1 total
+      1 × external_body
 ❌ SSSPResultStPerFloat.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStPerFloat.rs:80: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:80: external_body - #[verifier::external_body]
         81 |         fn new(n: usize, source: usize) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStPerFloat.rs:96: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:96: external_body - #[verifier::external_body]
         97 |         fn get_distance(&self, v: usize) -> (dist: OrderedF64)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStPerFloat.rs:108: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:108: external_body - #[verifier::external_body]
        109 |         fn set_distance(self, v: usize, dist: OrderedF64) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStPerFloat.rs:126: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:126: external_body - #[verifier::external_body]
        127 |         fn get_predecessor(&self, v: usize) -> (result: Option<usize>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStPerFloat.rs:140: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:140: external_body - #[verifier::external_body]
        141 |         fn set_predecessor(self, v: usize, pred: usize) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStPerFloat.rs:158: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:158: external_body - #[verifier::external_body]
        159 |         fn is_reachable(&self, v: usize) -> (result: bool) { self.get_distance(v).is_finite() }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStPerFloat.rs:161: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:161: external_body - #[verifier::external_body]
        162 |         fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
    Holes: 7 total
       7 × external_body
 ❌ SSSPResultStPerI64.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStPerI64.rs:77: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:77: external_body - #[verifier::external_body]
         78 |         fn set_distance(self, v: usize, dist: i64) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStPerI64.rs:101: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:101: external_body - #[verifier::external_body]
        102 |         fn set_predecessor(self, v: usize, pred: usize) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap56/SSSPResultStPerI64.rs:121: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:121: external_body - #[verifier::external_body]
        122 |         fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
    Holes: 3 total
       3 × external_body
@@ -154,19 +150,5 @@ Proof Functions:
    0 holed
    1 total
 
-Holes Found: 52 total
-   52 × external_body
-�══════
-
-Modules:
-   0 clean (no holes)
-   12 holed (contains holes)
-   12 total
-
-Proof Functions:
-   1 clean
-   0 holed
-   1 total
-
-Holes Found: 52 total
-   52 × external_body
+Holes Found: 49 total
+   49 × external_body

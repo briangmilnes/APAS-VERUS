@@ -1,41 +1,46 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap54/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap54
 
 ❌ BFSMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtEph.rs:41: external_body - #[verifier::external_body]
-        42 |     pub fn bfs(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>, source: N) -> ArraySeqMtEphS<N> {
-   Holes: 1 total
-      1 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtEph.rs:837: error: bare_impl - impl BFSTreeS { — `impl BFSTreeS` without trait; file defines [BFSMtEphTrait]
+       838 |         /// Vertices in BFS order (root first, then distance 1, 2, ...).
+       839 |         pub fn top_down_order(&self) -> (result: &ArraySeqMtEphS<N>)
+   Errors: 1 bare impl(s) in file with trait definition
+   Proof functions: 7 total (7 clean, 0 holed)
 ❌ BFSMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtPer.rs:42: external_body - #[verifier::external_body]
-        43 |     pub fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> ArraySeqMtPerS<N> {
-/home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtPer.rs:74: external_body - #[verifier::external_body]
-        75 |     fn process_layer_parallel(
-   Holes: 2 total
-      2 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap54/BFSMtPer.rs:854: error: bare_impl - impl BFSTreeS { — `impl BFSTreeS` without trait; file defines [BFSMtPerTrait]
+       855 |         /// Vertices in BFS order (root first, then distance 1, 2, ...).
+       856 |         pub fn top_down_order(&self) -> (result: &ArraySeqMtPerS<N>)
+   Errors: 1 bare impl(s) in file with trait definition
+   Proof functions: 7 total (7 clean, 0 holed)
 ❌ BFSStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap54/BFSStEph.rs:40: external_body - #[verifier::external_body]
-        41 |     pub fn bfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> ArraySeqStEphS<N> {
-   Holes: 1 total
-      1 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap54/BFSStEph.rs:397: error: bare_impl - impl BFSTreeS { — `impl BFSTreeS` without trait; file defines [BFSStEphTrait]
+       398 |         /// Vertices in BFS order (root first, then distance 1, 2, ...).
+       399 |         pub fn top_down_order(&self) -> (result: &ArraySeqStEphS<N>)
+   Errors: 1 bare impl(s) in file with trait definition
+   Proof functions: 4 total (4 clean, 0 holed)
 ❌ BFSStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap54/BFSStPer.rs:40: external_body - #[verifier::external_body]
-        41 |     pub fn bfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> ArraySeqStPerS<N> {
-   Holes: 1 total
-      1 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap54/BFSStPer.rs:393: error: bare_impl - impl BFSTreeS { — `impl BFSTreeS` without trait; file defines [BFSStPerTrait]
+       394 |         /// Vertices in BFS order (root first, then distance 1, 2, ...).
+       395 |         pub fn top_down_order(&self) -> (result: &ArraySeqStPerS<N>)
+   Errors: 1 bare impl(s) in file with trait definition
+   Proof functions: 4 total (4 clean, 0 holed)
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   0 clean (no holes)
-   4 holed (contains holes)
+   4 clean (no holes)
+   0 holed (contains holes)
    4 total
 
 Proof Functions:
-   0 clean
+   22 clean
    0 holed
-   0 total
+   22 total
 
-Holes Found: 5 total
-   5 × external_body
+Holes Found: 0 total
+
+Errors: 4 bare impl(s) in files with trait definitions
+
+🎉 No proof holes found! All proofs are complete.
