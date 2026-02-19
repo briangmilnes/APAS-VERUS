@@ -4,8 +4,11 @@ Verus Style Review
 Path: /home/milnes/projects/APAS-VERUS-agent1/src
 Codebase: /home/milnes/projects/APAS-VERUS-agent1
 Mode: basic
-Excluding: ["Chap21", "vstdplus", "Types.rs", "Concurrency.rs", "experiments", "lib.rs"]
+Excluding: ["Chap21", "vstdplus", "Types.rs", "Concurrency.rs", "experiments", "lib.rs", "Chap35", "Chap36", "Chap37", "Chap38", "Chap39", "Chap40", "Chap41", "Chap42", "Chap43", "Chap44", "Chap45", "Chap47", "Chap49", "Chap50", "Chap51", "Chap52", "Chap53", "Chap54", "Chap55", "Chap56", "Chap57", "Chap58", "Chap59", "Chap61", "Chap62", "Chap63", "Chap64", "Chap65", "Chap66"]
 Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/analyses/veracity-review-verus-style.log
 
-Checking 244 files...
+Checking 74 files...
 
+════════════════════════════════════════════════════════════════
+Summary: 1101 passed, 256 warnings in 63 files (checked 74 files)
+════════════════════════════════════════════════════════════════

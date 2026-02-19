@@ -1,8 +1,25 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 6 Labeled Directed Graph (ephemeral) using Set for vertices and labeled arcs - Multi-threaded version.
 //!
 //! Note: NOW uses true parallelism via ParaPair! for neighbor operations.
 //! Labeled arc filtering (n_plus, n_minus) are parallel.
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod LabDirGraphMtEph {
 
@@ -17,14 +34,18 @@ pub mod LabDirGraphMtEph {
 
     verus! {
 
+    //		2. imports
+
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
-
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::Types::Types::*;
+
+
+    //		3. broadcast use
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -33,9 +54,8 @@ pub mod LabDirGraphMtEph {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
-    pub open spec fn valid_key_type_for_lab_graph<V: StTInMtT + Hash, L: StTInMtT + Hash>() -> bool {
-        valid_key_type_LabEdge::<V, L>()
-    }
+
+    //		4. type definitions
 
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(L)]
@@ -44,13 +64,8 @@ pub mod LabDirGraphMtEph {
         pub labeled_arcs: SetStEph<LabEdge<V, L>>,
     }
 
-    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> Clone for LabDirGraphMtEph<V, L> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
-        {
-            LabDirGraphMtEph { vertices: self.vertices.clone(), labeled_arcs: self.labeled_arcs.clone() }
-        }
-    }
+
+    //		5. view impls
 
     impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> View for LabDirGraphMtEph<V, L> {
         type V = LabGraphView<<V as View>::V, <L as View>::V>;
@@ -59,13 +74,24 @@ pub mod LabDirGraphMtEph {
         }
     }
 
+
+    //		6. spec fns
+
+    pub open spec fn valid_key_type_for_lab_graph<V: StTInMtT + Hash, L: StTInMtT + Hash>() -> bool {
+        valid_key_type_LabEdge::<V, L>()
+    }
+
+
+    //		8. traits
+
     pub trait LabDirGraphMtEphTrait<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> 
         : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized 
     {
         open spec fn spec_vertices(&self) -> Set<V::V> { self@.V }
         open spec fn spec_labeled_arcs(&self) -> Set<(V::V, V::V, L::V)> { self@.A }
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn empty() -> (g: Self)
             requires valid_key_type_for_lab_graph::<V, L>()
             ensures
@@ -73,7 +99,8 @@ pub mod LabDirGraphMtEph {
                 g@.V == Set::<<V as View>::V>::empty(),
                 g@.A == Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
-        /// APAS: Work Θ(|V| + |A|), Span Θ(1)
+        /// - APAS: Work Θ(|V| + |A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|V| + |A|), Span Θ(1)
         fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: Self)
             requires
                 valid_key_type_for_lab_graph::<V, L>(),
@@ -86,26 +113,31 @@ pub mod LabDirGraphMtEph {
                 g@.V == vertices@,
                 g@.A == labeled_arcs@;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn labeled_arcs(&self) -> (a: &SetStEph<LabEdge<V, L>>)
             ensures a@ == self@.A;
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential map
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>)
             requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>(), valid_key_type_Edge::<V>()
             ensures forall |u: V::V, w: V::V| arcs@.contains((u, w)) == 
                 (exists |l: L::V| #![trigger self@.A.contains((u, w, l))] self@.A.contains((u, w, l)));
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn add_vertex(&mut self, v: V)
             requires wf_lab_graph_view(old(self)@), valid_key_type_for_lab_graph::<V, L>()
             ensures wf_lab_graph_view(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn add_labeled_arc(&mut self, from: V, to: V, label: L)
             requires wf_lab_graph_view(old(self)@), valid_key_type_for_lab_graph::<V, L>()
             ensures 
@@ -113,7 +145,8 @@ pub mod LabDirGraphMtEph {
                 self@.V == old(self)@.V.insert(from@).insert(to@),
                 self@.A == old(self)@.A.insert((from@, to@, label@));
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential search
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>)
             requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>()
             ensures match label {
@@ -121,7 +154,8 @@ pub mod LabDirGraphMtEph {
                 None => forall |l: L::V| !self@.A.contains((from@, to@, l)),
             };
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential search
         fn has_arc(&self, from: &V, to: &V) -> (b: bool)
             requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>()
             ensures b == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l)));
@@ -155,7 +189,8 @@ pub mod LabDirGraphMtEph {
         }
 
         /// out-neighbors
-        /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
+        /// - APAS: Work Θ(|A|), Span Θ(log |A|) — parallel
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — ParaPair! split arcs
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>)
             requires 
                 wf_lab_graph_view(self@), 
@@ -166,7 +201,8 @@ pub mod LabDirGraphMtEph {
                 n_plus@ <= self@.V;
 
         /// in-neighbors
-        /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
+        /// - APAS: Work Θ(|A|), Span Θ(log |A|) — parallel
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — ParaPair! split arcs
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)
             requires 
                 wf_lab_graph_view(self@), 
@@ -176,6 +212,9 @@ pub mod LabDirGraphMtEph {
                 n_minus@ == self.spec_n_minus(v@),
                 n_minus@ <= self@.V;
     }
+
+
+    //		9. impls
 
     /// out-neighbors: Parallel arc filtering using set split.
     fn n_plus_par<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>(
@@ -210,11 +249,11 @@ pub mod LabDirGraphMtEph {
                     // spec_n_plus_from_set(v@, arcs@) = {w | exists l. arcs@.contains((v@, w, l))}
                     // Since arcs@.len() == 1 and contains (v@, to@, label@), the only w is to@
                     
-                    assert forall |w: V::V| #![auto] Set::empty().insert(to@).contains(w) implies 
+                    assert forall |w: V::V| #![trigger Set::empty().insert(to@).contains(w)] Set::empty().insert(to@).contains(w) implies 
                         g.spec_n_plus_from_set(v@, arcs@).contains(w) by {
                         assert(arcs@.contains((from@, to@, label@)));
                     }
-                    assert forall |w: V::V| #![auto] g.spec_n_plus_from_set(v@, arcs@).contains(w) implies
+                    assert forall |w: V::V| #![trigger Set::empty().insert(to@).contains(w)] g.spec_n_plus_from_set(v@, arcs@).contains(w) implies
                         Set::empty().insert(to@).contains(w) by {
                         let l = choose |l: L::V| arcs@.contains((v@, w, l));
                         assert(arcs@.remove((from@, to@, label@)).len() == 0);
@@ -228,7 +267,7 @@ pub mod LabDirGraphMtEph {
             } else {
                 proof {
                     // from@ != v@ by feq correctness
-                    assert forall |w: V::V| #![auto] g.spec_n_plus_from_set(v@, arcs@).contains(w) implies false by {
+                    assert forall |w: V::V| g.spec_n_plus_from_set(v@, arcs@).contains(w) implies false by {
                         let l = choose |l: L::V| arcs@.contains((v@, w, l));
                         assert(arcs@.remove((from@, to@, label@)).len() == 0);
                         if (v@, w, l) != (from@, to@, label@) {
@@ -262,7 +301,7 @@ pub mod LabDirGraphMtEph {
             
             proof {
                 // Prove subset in one direction
-                assert forall |w: V::V| #![auto] left_neighbors@.union(right_neighbors@).contains(w) implies
+                assert forall |w: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(w)] left_neighbors@.union(right_neighbors@).contains(w) implies
                     g.spec_n_plus_from_set(v@, arcs@).contains(w) by {
                     if left_neighbors@.contains(w) {
                         let l = choose |l: L::V| left_arcs@.contains((v@, w, l));
@@ -274,7 +313,7 @@ pub mod LabDirGraphMtEph {
                 }
                 
                 // Prove subset in other direction
-                assert forall |w: V::V| #![auto] g.spec_n_plus_from_set(v@, arcs@).contains(w) implies
+                assert forall |w: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(w)] g.spec_n_plus_from_set(v@, arcs@).contains(w) implies
                     left_neighbors@.union(right_neighbors@).contains(w) by {
                     let l = choose |l: L::V| arcs@.contains((v@, w, l));
                     if left_arcs@.contains((v@, w, l)) {
@@ -326,12 +365,12 @@ pub mod LabDirGraphMtEph {
                     // Since arcs@.len() == 1 and contains (from@, v@, label@), the only u is from@
                     
                     // Prove: singleton(from)@ == spec_n_minus_from_set(v@, arcs@)
-                    assert forall |u: V::V| #![auto] Set::empty().insert(from@).contains(u) implies 
+                    assert forall |u: V::V| #![trigger Set::empty().insert(from@).contains(u)] Set::empty().insert(from@).contains(u) implies 
                         g.spec_n_minus_from_set(v@, arcs@).contains(u) by {
                         // u == from@, and arcs contains (from@, v@, label@)
                         assert(arcs@.contains((from@, to@, label@)));
                     }
-                    assert forall |u: V::V| #![auto] g.spec_n_minus_from_set(v@, arcs@).contains(u) implies
+                    assert forall |u: V::V| #![trigger Set::empty().insert(from@).contains(u)] g.spec_n_minus_from_set(v@, arcs@).contains(u) implies
                         Set::empty().insert(from@).contains(u) by {
                         // exists l such that arcs@ contains (u, v@, l)
                         let l = choose |l: L::V| arcs@.contains((u, v@, l));
@@ -353,7 +392,7 @@ pub mod LabDirGraphMtEph {
                     // spec_n_minus_from_set(v@, arcs@) = {u | exists l. arcs@.contains((u, v@, l))}
                     // Since arcs@ has only (from@, to@, label@) and to@ != v@, no u satisfies the condition
                     
-                    assert forall |u: V::V| #![auto] g.spec_n_minus_from_set(v@, arcs@).contains(u) implies false by {
+                    assert forall |u: V::V| g.spec_n_minus_from_set(v@, arcs@).contains(u) implies false by {
                         let l = choose |l: L::V| arcs@.contains((u, v@, l));
                         // arcs@.len() == 1 and contains (from@, to@, label@)
                         // arcs@.contains((u, v@, l)) and len==1 implies (u, v@, l) == (from@, to@, label@)
@@ -394,7 +433,7 @@ pub mod LabDirGraphMtEph {
                 //      right_neighbors@ == spec_n_minus_from_set(v@, right_arcs@)
                 
                 // Prove subset in one direction
-                assert forall |u: V::V| #![auto] left_neighbors@.union(right_neighbors@).contains(u) implies
+                assert forall |u: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(u)] left_neighbors@.union(right_neighbors@).contains(u) implies
                     g.spec_n_minus_from_set(v@, arcs@).contains(u) by {
                     if left_neighbors@.contains(u) {
                         let l = choose |l: L::V| left_arcs@.contains((u, v@, l));
@@ -406,7 +445,7 @@ pub mod LabDirGraphMtEph {
                 }
                 
                 // Prove subset in other direction
-                assert forall |u: V::V| #![auto] g.spec_n_minus_from_set(v@, arcs@).contains(u) implies
+                assert forall |u: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(u)] g.spec_n_minus_from_set(v@, arcs@).contains(u) implies
                     left_neighbors@.union(right_neighbors@).contains(u) by {
                     let l = choose |l: L::V| arcs@.contains((u, v@, l));
                     if left_arcs@.contains((u, v@, l)) {
@@ -590,7 +629,21 @@ pub mod LabDirGraphMtEph {
         }
     }
 
+
+    //		11. derive impls in verus!
+
+    impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> Clone for LabDirGraphMtEph<V, L> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            LabDirGraphMtEph { vertices: self.vertices.clone(), labeled_arcs: self.labeled_arcs.clone() }
+        }
+    }
+
     } // verus!
+
+
+    //		13. derive impls outside verus!
 
     impl<V: StTInMtT + Hash, L: StTInMtT + Hash> Display for LabDirGraphMtEph<V, L> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
@@ -607,6 +660,9 @@ pub mod LabDirGraphMtEph {
             )
         }
     }
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! LabDirGraphMtEphLit {

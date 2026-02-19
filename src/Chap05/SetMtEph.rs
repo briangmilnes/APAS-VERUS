@@ -492,7 +492,7 @@ verus! {
                     s2@ == s2_view,
                     handles@.len() == spawned_views.len(),
                     spawned_views.len() == it@.0,
-                    forall |i: int| #![auto] 0 <= i < spawned_views.len() ==> spawned_views[i] == it_seq[i]@,
+                    forall |i: int| #![trigger spawned_views[i]] 0 <= i < spawned_views.len() ==> spawned_views[i] == it_seq[i]@,
                     // Track what each handle's predicate implies (the thread's ensures)
                     forall |i: int, ret: SetMtEph<Pair<T, U>>| (#[trigger] handles@[i].predicate(ret) && 0 <= i < handles@.len()) ==> (
                         ret@.finite() &&
@@ -551,13 +551,13 @@ verus! {
                     n == it_seq.len(),
                     spawned_views.len() == n,
                     it_seq.no_duplicates(),
-                    forall |j: int| #![auto] 0 <= j < n ==> spawned_views[j] == it_seq[j]@,
+                    forall |j: int| #![trigger spawned_views[j]] 0 <= j < n ==> spawned_views[j] == it_seq[j]@,
                     product@.finite(),
                     joined_views.finite(),
                     // joined_views contains the elements we've processed (from the back)
-                    forall |j: int| #![auto] handles@.len() <= j < n ==> joined_views.contains(spawned_views[j]),
+                    forall |j: int| #![trigger spawned_views[j]] handles@.len() <= j < n ==> joined_views.contains(spawned_views[j]),
                     forall |v: T::V| joined_views.contains(v) ==> 
-                        exists |j: int| #![auto] handles@.len() <= j < n && v == spawned_views[j],
+                        exists |j: int| handles@.len() <= j < n && v == spawned_views[j],
                     forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (joined_views.contains(av) && s2_view.contains(bv)),
                     // Track what each handle's predicate implies (the thread's ensures)
                     forall |i: int, ret: SetMtEph<Pair<T, U>>| (#[trigger] handles@[i].predicate(ret) && 0 <= i < handles@.len()) ==> (
@@ -620,12 +620,12 @@ verus! {
                 assert(joined_views == s1_view) by {
                     assert forall |v: T::V| s1_view.contains(v) implies joined_views.contains(v) by {
                         lemma_map_to_set_contains_index(it_seq, v);
-                        let j = choose |j: int| #![auto] 0 <= j < it_seq.len() && v == it_seq[j]@;
+                        let j = choose |j: int| #![trigger it_seq[j]] 0 <= j < it_seq.len() && v == it_seq[j]@;
                         assert(0 <= j < n as int);
                         assert(v == spawned_views[j]);
                     }
                     assert forall |v: T::V| joined_views.contains(v) implies s1_view.contains(v) by {
-                        let j = choose |j: int| #![auto] 0 <= j < n && v == spawned_views[j];
+                        let j = choose |j: int| 0 <= j < n && v == spawned_views[j];
                         assert(v == it_seq[j]@);
                         lemma_seq_index_in_map_to_set(it_seq, j);
                     }

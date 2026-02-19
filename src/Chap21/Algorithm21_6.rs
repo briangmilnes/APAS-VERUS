@@ -2,24 +2,55 @@
 //! Chapter 21 — Algorithm 21.6: Prime Sieve using ArraySeqPer and ninject.
 //! Verusified.
 
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	7. proof fns/broadcast groups
+//	9. impls
+
+//		1. module
+
 pub mod Algorithm21_6 {
 
-    #[cfg(verus_keep_ghost)]
     use vstd::prelude::*;
 
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+    verus! {
 
+    //		2. imports
+
+    use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     #[cfg(verus_keep_ghost)]
+    use crate::Chap21::Exercise21_8::Exercise21_8::spec_is_prime;
     use crate::Types::Types::*;
 
-    #[cfg(verus_keep_ghost)]
-    verus! {
+    //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
+
+    //		7. proof fns/broadcast groups
+
+    /// A product of two integers >= 2 is not prime.
+    proof fn lemma_product_not_prime(a: int, b: int)
+        requires a >= 2, b >= 2,
+        ensures !spec_is_prime(a * b)
+    {
+        let c = a * b;
+        assert(a * b >= 4) by (nonlinear_arith) requires a >= 2, b >= 2;
+        if a * a <= c {
+            assert(c == a * b);
+            assert((a * b) % a == 0) by (nonlinear_arith) requires a >= 2;
+        } else {
+            assert(b * b <= a * b) by (nonlinear_arith)
+                requires a * a > a * b, b >= 2, a >= 2;
+            assert((a * b) % b == 0) by (nonlinear_arith) requires b >= 2;
+        }
+    }
+
+    //		9. impls
 
     /// Algorithm 21.6 (Prime Sieve) using ninject-based boolean sieve.
     /// 1. Generate composite numbers via nested tabulate + flatten.
@@ -33,11 +64,12 @@ pub mod Algorithm21_6 {
         ensures
             n <= 2 ==> result.spec_len() == 0,
             n > 2  ==> result.spec_len() <= n - 1,
+            forall|i: int| 0 <= i < result.spec_len() ==>
+                2 <= #[trigger] result.spec_index(i) && result.spec_index(i) <= n,
     {
         if n <= 2 {
             return ArraySeqStPerS::from_vec(Vec::new());
         }
-        // cs = 〈 i * j : 2 ≤ i ≤ floor(sqrt(n)) , 2 ≤ j ≤ n/i 〉
         let root: N = n.isqrt();
         let outer_len: N = if root >= 2 { root - 1 } else { 0 };
         let nested: ArraySeqStPerS<ArraySeqStPerS<N>> =
@@ -109,6 +141,8 @@ pub mod Algorithm21_6 {
                 n < usize::MAX,
                 primes@.len() <= idx - 2,
                 sieve@.len() == n + 1,
+                forall|k: int| 0 <= k < primes@.len() ==>
+                    2 <= #[trigger] primes@[k] && primes@[k] <= n,
             decreases n - idx + 1,
         {
             if sieve[idx] {

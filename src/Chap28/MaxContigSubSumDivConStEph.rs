@@ -1,5 +1,6 @@
 // Copyright (C) 2025 Brian G. Milnes
 // SPDX-License-Identifier: MIT
+
 //! Maximum Contiguous Subsequence Sum — Divide and Conquer (Chapter 28, Algorithm 28.17).
 //!
 //! Historical Note: This divide-and-conquer algorithm was first designed by Michael Shamos
@@ -12,6 +13,16 @@
 //! 3. exec functions
 //! 4. proof functions
 
+//  Table of Contents
+//	1. module
+//	6. spec fns
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+
+//		1. module
+
+
 pub mod MaxContigSubSumDivConStEph {
     use vstd::prelude::*;
 
@@ -19,6 +30,8 @@ pub mod MaxContigSubSumDivConStEph {
     use crate::Chap28::MCSSSpec::MCSSSpec::*;
 
     verus! {
+
+    //		6. spec fns
 
     // ─── 2. spec definitions ───
 
@@ -30,6 +43,117 @@ pub mod MaxContigSubSumDivConStEph {
             (Option::Some(x), Option::Some(y)) => if x >= y { a } else { b },
         }
     }
+
+
+    //		7. proof fns/broadcast groups
+
+    // ─── 4. proof functions ───
+
+    /// Key lemma: MCSS of the whole = max(MCSS-left, MCSS-right, max-crossing).
+    pub proof fn lemma_divcon_combine(
+        s: Seq<i32>,
+        left: Seq<i32>,
+        right: Seq<i32>,
+        mid: int,
+        m_left: int,
+        m_right: int,
+        s_left: int,
+        p_right: int,
+    )
+        requires
+            s.len() > 1,
+            0 < mid < s.len() as int,
+            left.len() == mid,
+            right.len() == s.len() - mid,
+            forall|i: int| #![trigger left[i]] 0 <= i < left.len() ==> left[i] == s[i],
+            forall|i: int| #![trigger right[i]] 0 <= i < right.len() ==> right[i] == s[mid + i],
+            is_mcss_of(left, m_left),
+            is_mcss_of(right, m_right),
+            is_max_suffix_sum(left, s_left),
+            is_max_prefix_sum(right, p_right),
+        ensures
+            is_mcss_of(s, ({
+                let crossing = s_left + p_right;
+                if m_left >= m_right && m_left >= crossing { m_left }
+                else if m_right >= crossing { m_right }
+                else { crossing }
+            })),
+    {
+        let n = s.len() as int;
+        let crossing = s_left + p_right;
+        let result = if m_left >= m_right && m_left >= crossing { m_left }
+                     else if m_right >= crossing { m_right }
+                     else { crossing };
+
+        // Part (a): result is achieved.
+        if m_left >= m_right && m_left >= crossing {
+            let (lo_l, hi_l) = choose|lo: int, hi: int|
+                #![trigger spec_range_sum(left, lo, hi)]
+                0 <= lo < hi <= left.len() as int &&
+                spec_range_sum(left, lo, hi) == m_left;
+            lemma_range_sum_subseq(s, left, 0, lo_l, hi_l);
+            assert(spec_range_sum(s, lo_l, hi_l) == m_left);
+        } else if m_right >= crossing {
+            let (lo_r, hi_r) = choose|lo: int, hi: int|
+                #![trigger spec_range_sum(right, lo, hi)]
+                0 <= lo < hi <= right.len() as int &&
+                spec_range_sum(right, lo, hi) == m_right;
+            lemma_range_sum_subseq(s, right, mid, lo_r, hi_r);
+            assert(spec_range_sum(s, mid + lo_r, mid + hi_r) == m_right);
+        } else {
+            let lo_s: int = choose|lo: int|
+                #![trigger spec_range_sum(left, lo, left.len() as int)]
+                0 <= lo < left.len() as int &&
+                spec_range_sum(left, lo, left.len() as int) == s_left;
+            let hi_p: int = choose|hi: int|
+                #![trigger spec_range_sum(right, 0, hi)]
+                1 <= hi <= right.len() as int &&
+                spec_range_sum(right, 0, hi) == p_right;
+            lemma_range_sum_subseq(s, left, 0, lo_s, mid);
+            lemma_range_sum_subseq(s, right, mid, 0, hi_p);
+            lemma_range_sum_split(s, lo_s, mid, mid + hi_p);
+            assert(spec_range_sum(s, lo_s, mid + hi_p) == crossing);
+        }
+
+        // Part (b): result is maximal.
+        assert forall|lo: int, hi: int|
+            #![trigger spec_range_sum(s, lo, hi)]
+            0 <= lo < hi <= n
+        implies
+            spec_range_sum(s, lo, hi) <= result
+        by {
+            if hi <= mid {
+                lemma_range_sum_subseq(s, left, 0, lo, hi);
+            } else if lo >= mid {
+                lemma_range_sum_subseq(s, right, mid, lo - mid, hi - mid);
+            } else {
+                lemma_range_sum_split(s, lo, mid, hi);
+                lemma_range_sum_subseq(s, left, 0, lo, mid);
+                lemma_range_sum_subseq(s, right, mid, 0, hi - mid);
+            }
+        };
+    }
+
+
+    //		8. traits
+
+    /// Trait for divide-and-conquer MCSS.
+    pub trait MaxContigSubSumDivConTrait {
+        /// Compute MCSS using divide-and-conquer (Algorithm 28.17).
+        /// Returns None for empty sequence (representing -infinity).
+        /// - APAS: Work Θ(n log n), Span Θ(log² n)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) — sequential
+        fn max_contig_sub_sum_divcon(a: &ArraySeqStEphS<i32>) -> (result: Option<i32>)
+            requires
+                sums_fit_i32(a.seq@),
+            ensures
+                a.seq@.len() == 0 ==> result.is_none(),
+                a.seq@.len() > 0 ==> result.is_some(),
+                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
+    }
+
+
+    //		9. impls
 
     // ─── 3. exec functions ───
 
@@ -162,108 +286,6 @@ pub mod MaxContigSubSumDivConStEph {
         }
 
         max_val
-    }
-
-    // ─── 4. proof functions ───
-
-    /// Key lemma: MCSS of the whole = max(MCSS-left, MCSS-right, max-crossing).
-    pub proof fn lemma_divcon_combine(
-        s: Seq<i32>,
-        left: Seq<i32>,
-        right: Seq<i32>,
-        mid: int,
-        m_left: int,
-        m_right: int,
-        s_left: int,
-        p_right: int,
-    )
-        requires
-            s.len() > 1,
-            0 < mid < s.len() as int,
-            left.len() == mid,
-            right.len() == s.len() - mid,
-            forall|i: int| #![trigger left[i]] 0 <= i < left.len() ==> left[i] == s[i],
-            forall|i: int| #![trigger right[i]] 0 <= i < right.len() ==> right[i] == s[mid + i],
-            is_mcss_of(left, m_left),
-            is_mcss_of(right, m_right),
-            is_max_suffix_sum(left, s_left),
-            is_max_prefix_sum(right, p_right),
-        ensures
-            is_mcss_of(s, ({
-                let crossing = s_left + p_right;
-                if m_left >= m_right && m_left >= crossing { m_left }
-                else if m_right >= crossing { m_right }
-                else { crossing }
-            })),
-    {
-        let n = s.len() as int;
-        let crossing = s_left + p_right;
-        let result = if m_left >= m_right && m_left >= crossing { m_left }
-                     else if m_right >= crossing { m_right }
-                     else { crossing };
-
-        // Part (a): result is achieved.
-        if m_left >= m_right && m_left >= crossing {
-            let (lo_l, hi_l) = choose|lo: int, hi: int|
-                #![trigger spec_range_sum(left, lo, hi)]
-                0 <= lo < hi <= left.len() as int &&
-                spec_range_sum(left, lo, hi) == m_left;
-            lemma_range_sum_subseq(s, left, 0, lo_l, hi_l);
-            assert(spec_range_sum(s, lo_l, hi_l) == m_left);
-        } else if m_right >= crossing {
-            let (lo_r, hi_r) = choose|lo: int, hi: int|
-                #![trigger spec_range_sum(right, lo, hi)]
-                0 <= lo < hi <= right.len() as int &&
-                spec_range_sum(right, lo, hi) == m_right;
-            lemma_range_sum_subseq(s, right, mid, lo_r, hi_r);
-            assert(spec_range_sum(s, mid + lo_r, mid + hi_r) == m_right);
-        } else {
-            let lo_s: int = choose|lo: int|
-                #![trigger spec_range_sum(left, lo, left.len() as int)]
-                0 <= lo < left.len() as int &&
-                spec_range_sum(left, lo, left.len() as int) == s_left;
-            let hi_p: int = choose|hi: int|
-                #![trigger spec_range_sum(right, 0, hi)]
-                1 <= hi <= right.len() as int &&
-                spec_range_sum(right, 0, hi) == p_right;
-            lemma_range_sum_subseq(s, left, 0, lo_s, mid);
-            lemma_range_sum_subseq(s, right, mid, 0, hi_p);
-            lemma_range_sum_split(s, lo_s, mid, mid + hi_p);
-            assert(spec_range_sum(s, lo_s, mid + hi_p) == crossing);
-        }
-
-        // Part (b): result is maximal.
-        assert forall|lo: int, hi: int|
-            #![trigger spec_range_sum(s, lo, hi)]
-            0 <= lo < hi <= n
-        implies
-            spec_range_sum(s, lo, hi) <= result
-        by {
-            if hi <= mid {
-                lemma_range_sum_subseq(s, left, 0, lo, hi);
-            } else if lo >= mid {
-                lemma_range_sum_subseq(s, right, mid, lo - mid, hi - mid);
-            } else {
-                lemma_range_sum_split(s, lo, mid, hi);
-                lemma_range_sum_subseq(s, left, 0, lo, mid);
-                lemma_range_sum_subseq(s, right, mid, 0, hi - mid);
-            }
-        };
-    }
-
-    /// Trait for divide-and-conquer MCSS.
-    pub trait MaxContigSubSumDivConTrait {
-        /// Compute MCSS using divide-and-conquer (Algorithm 28.17).
-        /// Returns None for empty sequence (representing -infinity).
-        /// - APAS: Work Θ(n log n), Span Θ(log² n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) — sequential
-        fn max_contig_sub_sum_divcon(a: &ArraySeqStEphS<i32>) -> (result: Option<i32>)
-            requires
-                sums_fit_i32(a.seq@),
-            ensures
-                a.seq@.len() == 0 ==> result.is_none(),
-                a.seq@.len() > 0 ==> result.is_some(),
-                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
     }
 
     impl MaxContigSubSumDivConTrait for ArraySeqStEphS<i32> {

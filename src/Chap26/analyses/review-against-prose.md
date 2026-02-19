@@ -8,7 +8,8 @@ table { width: 100% !important; table-layout: fixed; }
 # Chapter 26 — Divide and Conquer: Review Against Prose
 
 **Reviewer:** Claude-Opus-4.6 (agent2)  
-**Date:** 2026-02-17 (updated 2026-02-17)  
+**Date:** 2026-02-17  
+**Last mechanical audit:** 2026-02-18 — section reorder, trigger fixes, doc comments only; no functional changes.
 **Source:** `prompts/Chap26.txt` vs `src/Chap26/`
 
 ---
@@ -301,6 +302,8 @@ No style issues. ETSPStEph correctly has `Copy` and `Clone` for `Point` and `Edg
 
 ## Proof Holes Summary
 
+**8 holes total** (4 assume, 4 external_body) across 2 modules. **2 bare_impl errors** (Point::distance).
+
 **4 `external_body` holes** across 2 modules:
 
 | # | Module | Function | Reason for Hole | Category | Fixable? |
@@ -310,8 +313,12 @@ No style issues. ETSPStEph correctly has `Copy` and `Clone` for `Point` and `Edg
 | 3 | ETSPMtEph | `sort_and_split` | Standalone copy of #1 (per mt-standalone rule) | f64 | No (permanent) |
 | 4 | ETSPMtEph | `find_best_swap` | Standalone copy of #2 (per mt-standalone rule) | f64 | No (permanent) |
 
+**4 assume holes** (lemma_combined_cycle): ETSPStEph and ETSPMtEph each have 2 assumes in `lemma_combined_cycle` — Z3 rlimit on mod identity `(a%m + 1)%m == (a+1)%m` plus f64 `spec_point_eq` chain. These are proof-mode assumes, not exec holes.
+
+**2 bare_impl errors:** `impl Point` in both ETSPStEph.rs and ETSPMtEph.rs — contains only `distance(&self, other: &Point) -> f64`. Per trait-impl-pattern.mdc, module-level helpers with complex return types (f64, outside verus!) may remain as bare impls. Point is a simple struct; distance is a Euclidean helper implied by prose. The bare_impl is acceptable for this utility.
+
 **Categories:**
-- **f64 arithmetic** (4 holes, 2 unique): Both are permanent. Verus provides no float axioms; `vstd::float.rs` has only bit-level classification. The f64-dependent code is correctly isolated in `external_body` helpers with tight structural ensures, while the recursive algorithm and combination logic are fully verified. The duplication (2→4) is intentional per the `mt-standalone.mdc` rule: each Mt file is self-contained.
+- **f64 arithmetic** (4 external_body, 2 unique): Both are permanent. Verus provides no float axioms; `vstd::float.rs` has only bit-level classification. The f64-dependent code is correctly isolated in `external_body` helpers with tight structural ensures, while the recursive algorithm and combination logic are fully verified. The duplication (2→4) is intentional per the `mt-standalone.mdc` rule: each Mt file is self-contained.
 
 **What changed from the 2026-02-13 review:**
 The old review reported 10 `external_body` holes. The following 8 have been eliminated:

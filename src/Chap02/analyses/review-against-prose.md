@@ -9,6 +9,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 **Reviewer:** Claude-Opus-4.6
 **Date:** 2026-02-17
+**Last mechanical audit:** 2026-02-18 — section reorder, trigger fixes, doc comments only; no functional changes.
 **Prose file:** `prompts/Chap02.txt`
 **Source files:** `FibonacciHFScheduler.rs`, `HFSchedulerMtEph.rs` (renamed from `WSSchedulerMtEph.rs` — "HF" = help-first, reflecting the actual scheduling policy)
 

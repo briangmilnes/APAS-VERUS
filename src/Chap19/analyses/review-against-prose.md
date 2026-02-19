@@ -9,8 +9,9 @@ table { width: 100% !important; table-layout: fixed; }
 
 **Reviewer:** Claude-Opus-4.6
 **Date:** 2026-02-17
+**Last mechanical audit:** 2026-02-18 — section reorder, trigger fixes, doc comments only; no functional changes.
 **Prose files:** `prompts/Chap19.txt`, `prompts/Chap19Scan.txt`
-**Source files:** ArraySeqStEph.rs, ArraySeqStPer.rs, ArraySeqMtEph.rs
+**Source files:** ArraySeqStEph.rs, ArraySeqStPer.rs, ArraySeqMtEph.rs, ArraySeqMtEphSlice.rs
 
 ## Prose Inventory
 
@@ -42,8 +43,9 @@ algorithms for each derived operation.
 | 1 | ArraySeqStEph.rs | 1112 | No | 1 (assume in PartialEq) | Yes | St ephemeral variant |
 | 2 | ArraySeqStPer.rs | 1122 | No | 1 (assume in PartialEq) | Yes | St persistent variant |
 | 3 | ArraySeqMtEph.rs | 1434 | Yes | 1 (assume in PartialEq) | Yes | Mt ephemeral, map/filter/reduce_par |
+| 4 | ArraySeqMtEphSlice.rs | 338 | Yes | 0 holes, 2 bare_impl | Yes | WIP: slice-oriented Mt variant; commented out in lib.rs; cost annotations added |
 
-Total: 3668 lines across 3 files. All modules are independent — no imports from
+Total: 4006+ lines across 4 files. All modules are independent — no imports from
 Chap18 or cross-Chap19 dependencies. Each module defines its own trait and
 implementations.
 
@@ -179,6 +181,15 @@ patterns verifiable.
 Total: 3 holes (all assume in PartialEq). Clean — all are the standard justified pattern.
 12 clean proof functions (inject proofs, ninject proofs, inject lemmas).
 
+**ArraySeqMtEphSlice bare_impl errors (2):** The hole detector reports 2 bare impls in
+ArraySeqMtEphSlice.rs — `impl Inner<T>` and `impl ArraySeqMtEphSliceS<T>` (for `to_vec`).
+Both are inside `#[cfg(not(verus_keep_ghost))]` blocks. This is the old antipattern per
+`no-cfg-not-verus-keep-ghost.mdc`: duplicate implementations for cargo test compatibility.
+The rule: do not create `#[cfg(not(verus_keep_ghost))]` duplicate implementations of
+functions that already exist inside `verus!`. These blocks should be removed when
+ArraySeqMtEphSlice is fully verusified — the verusified code compiles under both Verus
+and cargo. ArraySeqMtEphSlice is currently commented out in lib.rs (WIP).
+
 ## Gap Analysis
 
 **Prose items partially implemented:**
@@ -231,3 +242,4 @@ derived operations are built from primitives. The code provides 3 implementation
 | # | Priority | Item |
 |---|----------|------|
 | 1 | Low | Consider adding contraction-based parallel scan per Algorithm 19.10 (Chap26 already covers this) |
+| 2 | Low | Remove `#[cfg(not(verus_keep_ghost))]` duplicate impls in ArraySeqMtEphSlice.rs when verusification completes (per no-cfg-not-verus-keep-ghost rule) |

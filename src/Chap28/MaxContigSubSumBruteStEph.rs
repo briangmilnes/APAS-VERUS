@@ -1,5 +1,6 @@
 // Copyright (C) 2025 Brian G. Milnes
 // SPDX-License-Identifier: MIT
+
 //! Maximum Contiguous Subsequence Sum — Brute Force (Chapter 28, Algorithm 28.8).
 //!
 //! ## Table of Contents
@@ -8,6 +9,15 @@
 //! 3. exec functions
 //! 4. proof functions
 
+//  Table of Contents
+//	1. module
+//	6. spec fns
+//	8. traits
+//	9. impls
+
+//		1. module
+
+
 pub mod MaxContigSubSumBruteStEph {
     use vstd::prelude::*;
 
@@ -15,6 +25,8 @@ pub mod MaxContigSubSumBruteStEph {
     use crate::Chap28::MCSSSpec::MCSSSpec::*;
 
     verus! {
+
+    //		6. spec fns
 
     // ─── 2. spec definitions ───
 
@@ -28,6 +40,27 @@ pub mod MaxContigSubSumBruteStEph {
             (Option::Some(x), Option::Some(y)) => if x >= y { a } else { b },
         }
     }
+
+
+    //		8. traits
+
+    /// Trait for brute force maximum contiguous subsequence sum.
+    pub trait MaxContigSubSumBruteTrait {
+        /// Compute MCSS using brute force (Algorithm 28.8).
+        /// Returns None for empty sequence (representing -infinity).
+        /// - APAS: Work Θ(n³), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — sequential
+        fn max_contig_sub_sum_brute(a: &ArraySeqStEphS<i32>) -> (result: Option<i32>)
+            requires
+                sums_fit_i32(a.seq@),
+            ensures
+                a.seq@.len() == 0 ==> result.is_none(),
+                a.seq@.len() > 0 ==> result.is_some(),
+                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
+    }
+
+
+    //		9. impls
 
     // ─── 3. exec functions ───
 
@@ -43,21 +76,6 @@ pub mod MaxContigSubSumBruteStEph {
             (Some(_), None) => a,
             (Some(x), Some(y)) => if x >= y { a } else { b },
         }
-    }
-
-    /// Trait for brute force maximum contiguous subsequence sum.
-    pub trait MaxContigSubSumBruteTrait {
-        /// Compute MCSS using brute force (Algorithm 28.8).
-        /// Returns None for empty sequence (representing -infinity).
-        /// - APAS: Work Θ(n³), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — sequential
-        fn max_contig_sub_sum_brute(a: &ArraySeqStEphS<i32>) -> (result: Option<i32>)
-            requires
-                sums_fit_i32(a.seq@),
-            ensures
-                a.seq@.len() == 0 ==> result.is_none(),
-                a.seq@.len() > 0 ==> result.is_some(),
-                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
     }
 
     impl MaxContigSubSumBruteTrait for ArraySeqStEphS<i32> {

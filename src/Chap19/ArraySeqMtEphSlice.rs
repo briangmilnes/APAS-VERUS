@@ -13,14 +13,6 @@ pub mod ArraySeqMtEphSlice {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
 
-    #[cfg(not(verus_keep_ghost))]
-    use std::ops::Range;
-    #[cfg(not(verus_keep_ghost))]
-    use std::sync::{Arc, Mutex};
-    #[cfg(not(verus_keep_ghost))]
-    use crate::ParaPair;
-    #[cfg(not(verus_keep_ghost))]
-    use crate::Types::Types::*;
 
     verus! {
 
@@ -120,14 +112,20 @@ pub mod ArraySeqMtEphSlice {
             self.seq[i]
         }
 
+        /// - APAS: primitive (Section 19.2).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn length(&self) -> (len: usize) {
             self.seq.len()
         }
 
+        /// - APAS: primitive (Section 19.2).
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn nth_cloned(&self, index: usize) -> (elem: T) {
             self.seq[index].clone_plus()
         }
 
+        /// - APAS: primitive (Section 19.2) — subseq variant.
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(length).
         fn slice(&self, start: usize, length: usize) -> (sliced: Self) {
             let mut v: Vec<T> = Vec::with_capacity(length);
             let mut i: usize = 0;
@@ -148,24 +146,34 @@ pub mod ArraySeqMtEphSlice {
             ArraySeqMtEphSliceS { seq: v }
         }
 
+        /// - APAS: N/A — implementation utility.
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(length).
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self) {
             self.slice(start, length)
         }
 
+        /// - APAS: N/A — implementation utility.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn from_vec(data: Vec<T>) -> (seq: Self) {
             ArraySeqMtEphSliceS { seq: data }
         }
 
+        /// - APAS: Algorithm 19.1 — empty.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn empty() -> (empty_seq: Self) {
             ArraySeqMtEphSliceS { seq: Vec::new() }
         }
 
+        /// - APAS: Algorithm 19.2 — singleton.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn singleton(item: T) -> (s: Self) {
             let mut v: Vec<T> = Vec::new();
             v.push(item);
             ArraySeqMtEphSliceS { seq: v }
         }
 
+        /// - APAS: N/A — implementation utility.
+        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(length).
         fn new(length: usize, init_value: T) -> (new_seq: Self) {
             let mut v: Vec<T> = Vec::with_capacity(length);
             let mut i: usize = 0;
@@ -187,130 +195,19 @@ pub mod ArraySeqMtEphSlice {
 
     } // verus!
 
-    // ═══════════════════════════════════════════════════════════════
-    // Runtime: Arc<Mutex<Box<[T]>>> backed struct with O(1) slicing
-    // ═══════════════════════════════════════════════════════════════
+    // 13. derive impls outside verus!
 
-    #[cfg(not(verus_keep_ghost))]
-    #[derive(Debug)]
-    struct Inner<T: StTInMtT> {
-        data: Mutex<Box<[T]>>,
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: StTInMtT> Inner<T> {
-        fn new(data: Box<[T]>) -> Self { Inner { data: Mutex::new(data) } }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    pub struct ArraySeqMtEphSliceS<T: StTInMtT> {
-        inner: Arc<Inner<T>>,
-        range: Range<usize>,
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    fn clamp_subrange<T: StTInMtT + 'static>(a: &ArraySeqMtEphSliceS<T>, start: usize, length: usize) -> Range<usize> {
-        let local_len = a.length();
-        let clamped_start = start.min(local_len);
-        let clamped_end = clamped_start.saturating_add(length).min(local_len);
-        let base = a.range.start;
-        (base + clamped_start)..(base + clamped_end)
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: StTInMtT + Eq + 'static> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
-        fn length(&self) -> usize {
-            self.range.end - self.range.start
-        }
-
-        fn nth_cloned(&self, index: usize) -> T {
-            let guard = self.inner.data.lock().unwrap();
-            guard[self.range.start + index].clone()
-        }
-
-        fn slice(&self, start: usize, length: usize) -> Self {
-            let sub = clamp_subrange(self, start, length);
-            ArraySeqMtEphSliceS {
-                inner: Arc::clone(&self.inner),
-                range: sub,
-            }
-        }
-
-        fn subseq_copy(&self, start: usize, length: usize) -> Self {
-            let sub = clamp_subrange(self, start, length);
-            let guard = self.inner.data.lock().unwrap();
-            let data: Vec<T> = guard[sub.start..sub.end].to_vec();
-            Self::from_vec(data)
-        }
-
-        fn from_vec(data: Vec<T>) -> Self {
-            let len = data.len();
-            ArraySeqMtEphSliceS {
-                inner: Arc::new(Inner::new(data.into_boxed_slice())),
-                range: 0..len,
-            }
-        }
-
-        fn empty() -> Self {
-            Self::from_vec(Vec::new())
-        }
-
-        fn singleton(item: T) -> Self {
-            Self::from_vec(vec![item])
-        }
-
-        fn new(length: usize, init_value: T) -> Self {
-            let mut data = Vec::with_capacity(length);
-            for _ in 0..length { data.push(init_value.clone()); }
-            Self::from_vec(data)
-        }
-    }
-
-    // ─── Runtime trait impls ───
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: StTInMtT> Clone for ArraySeqMtEphSliceS<T> {
-        fn clone(&self) -> Self {
-            ArraySeqMtEphSliceS {
-                inner: Arc::clone(&self.inner),
-                range: self.range.clone(),
-            }
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: StTInMtT + 'static> PartialEq for ArraySeqMtEphSliceS<T> {
-        fn eq(&self, other: &Self) -> bool {
-            if Arc::ptr_eq(&self.inner, &other.inner) && self.range == other.range {
-                return true;
-            }
-            if self.length() != other.length() { return false; }
-            let left = self.to_vec();
-            let right = other.to_vec();
-            left.iter().zip(right.iter()).all(|(a, b)| a == b)
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: StTInMtT + 'static> Eq for ArraySeqMtEphSliceS<T> {}
-
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: StTInMtT> std::fmt::Debug for ArraySeqMtEphSliceS<T> {
+    impl<T: std::fmt::Debug> std::fmt::Debug for ArraySeqMtEphSliceS<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            let guard = self.inner.data.lock().unwrap();
-            f.debug_list()
-                .entries(guard[self.range.start..self.range.end].iter())
-                .finish()
+            f.debug_list().entries(self.seq.iter()).finish()
         }
     }
 
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: StTInMtT> std::fmt::Display for ArraySeqMtEphSliceS<T> {
+    impl<T: std::fmt::Display> std::fmt::Display for ArraySeqMtEphSliceS<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            let guard = self.inner.data.lock().unwrap();
             let mut first = true;
             write!(f, "[")?;
-            for item in &guard[self.range.start..self.range.end] {
+            for item in self.seq.iter() {
                 if !first { write!(f, ", ")?; }
                 first = false;
                 write!(f, "{item}")?;
@@ -319,15 +216,6 @@ pub mod ArraySeqMtEphSlice {
         }
     }
 
-    #[cfg(not(verus_keep_ghost))]
-    impl<T: StTInMtT + 'static> ArraySeqMtEphSliceS<T> {
-        pub fn to_vec(&self) -> Vec<T> {
-            let guard = self.inner.data.lock().unwrap();
-            guard[self.range.start..self.range.end].to_vec()
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
     #[macro_export]
     macro_rules! ArraySeqMtEphSliceSLit {
         () => { $crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS::from_vec(Vec::new()) };

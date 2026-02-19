@@ -11,14 +11,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Holes: 1 total
       1 × assume()
    Proof functions: 6 total (6 clean, 0 holed)
-❌ ArraySeqMtEphSlice.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEphSlice.rs:200: error: bare_impl - #[cfg(not(verus_keep_ghost))] — `impl Inner` without trait; file defines [ArraySeqMtEphSliceTrait]
-       201 |     impl<T: StTInMtT> Inner<T> {
-       202 |         fn new(data: Box<[T]>) -> Self { Inner { data: Mutex::new(data) } }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEphSlice.rs:322: error: bare_impl - #[cfg(not(verus_keep_ghost))] — `impl ArraySeqMtEphSliceS` without trait; file defines [ArraySeqMtEphSliceTrait]
-       323 |     impl<T: StTInMtT + 'static> ArraySeqMtEphSliceS<T> {
-       324 |         pub fn to_vec(&self) -> Vec<T> {
-   Errors: 2 bare impl(s) in file with trait definition
+✓ ArraySeqMtEphSlice.rs
 ❌ ArraySeqStEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:1090: assume() - proof { assume(equal == (self@ == other@)); }
       1086 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -58,5 +51,3 @@ Proof Functions:
 
 Holes Found: 3 total
    3 × assume()
-
-Errors: 2 bare impl(s) in files with trait definitions

@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 21 — Review Against Prose
 
-**Date:** 2026-02-13
+**Date:** 2026-02-18
 **Reviewer:** Claude-Opus-4.6
 **Prose source:** `prompts/Chap21.txt`
 **Source directory:** `src/Chap21/`
@@ -25,32 +25,37 @@ table { width: 100% !important; table-layout: fixed; }
 | 3 | Algorithm21_1.rs | `lemma_sum_inner_lens_uniform` | proof fn | Y | strong | Uniform inner length → sum = k*m |
 | 4 | Algorithm21_1.rs | `flatten_inner` | exec fn | Y | partial | Length correct, element content unspecified |
 | 5 | Algorithm21_1.rs | `points2d_tab_flat` | exec fn | Y | partial | Length correct, no element content |
-| 6 | Algorithm21_2.rs | `lemma_flatten_uniform_len` | proof fn | Y | strong | Seq::flatten uniform length |
-| 7 | Algorithm21_2.rs | `points3d_tab_flat` | exec fn | Y | partial | Length = pow(n,3), no element bounds |
-| 8 | Algorithm21_5.rs | `primes_bf` | exec fn | Y | partial | Soundness only (every element is prime), no completeness |
-| 9 | Algorithm21_6.rs | `prime_sieve` | exec fn | Y | weak | Length bounds only, no primality guarantee |
-| 10 | Exercise21_5.rs | `all_contiguous_subseqs` | exec fn | Y | none | No ensures clause |
-| 11 | Exercise21_6.rs | — | docs only | — | — | Cost analysis documentation, no code |
-| 12 | Exercise21_7.rs | `spec_is_even` | spec fn | Y | — | |
-| 13 | Exercise21_7.rs | `is_even` | exec fn | Y | strong | r == spec_is_even |
-| 14 | Exercise21_7.rs | `spec_is_vowel` | spec fn | Y | — | |
-| 15 | Exercise21_7.rs | `is_vowel` | exec fn | Y | strong | r == spec_is_vowel |
-| 16 | Exercise21_7.rs | `pair_even_with_vowels` | exec fn | Y | none | No ensures clause |
-| 17 | Exercise21_8.rs | `spec_is_prime` | spec fn | Y | — | |
-| 18 | Exercise21_8.rs | `spec_divisor_count` | spec fn | Y | — | |
-| 19 | Exercise21_8.rs | `lemma_zero_count_means_no_divisors` | proof fn | Y | strong | Count 0 → no divisors |
-| 20 | Exercise21_8.rs | `lemma_no_divisors_means_zero_count` | proof fn | Y | strong | No divisors → count 0 |
-| 21 | Exercise21_8.rs | `lemma_divisor_count_nonneg` | proof fn | Y | strong | Non-negativity |
-| 22 | Exercise21_8.rs | `is_divisible` | exec fn | Y | strong | divides == (n % i == 0) |
-| 23 | Exercise21_8.rs | `is_prime` | exec fn | Y | strong | prime == spec_is_prime(n) (2 proof holes) |
-| 24 | Exercise21_9.rs | — | placeholder | — | — | Proof-only exercise, no Verus code |
-| 25 | Problem21_1.rs | `points2d` | exec fn | Y | strong | Length + element coordinate bounds |
-| 26 | Problem21_3.rs | `points3d_loops` | exec fn | Y | strong | Length + element coordinate bounds |
-| 27 | Problem21_4.rs | `cartesian_loops` | exec fn | Y | partial | Length only, no element content |
-| 28 | Problem21_4.rs | `lemma_flatten_uniform_len` | proof fn | Y | strong | Duplicate of Algorithm21_2's lemma |
-| 29 | Problem21_4.rs | `cartesian_tab_flat` | exec fn | Y | partial | Length only, no element content |
+| 6 | Algorithm21_2.rs | `points3d_tab_flat` | exec fn | Y | partial | Length = pow(n,3), no element bounds |
+| 7 | Algorithm21_5.rs | `primes_bf` | exec fn | Y | strong | Soundness + completeness: every element is prime, every prime in range appears |
+| 8 | Algorithm21_6.rs | `lemma_product_not_prime` | proof fn | Y | strong | Product of two integers ≥ 2 is not prime |
+| 9 | Algorithm21_6.rs | `prime_sieve` | exec fn | Y | partial | Element bounds (2 ≤ x ≤ n), no primality guarantee |
+| 10 | Exercise21_5.rs | `lemma_inner_lens_sum_triangular` | proof fn | Y | strong | Descending-length pattern sums to n*(n+1)/2 |
+| 11 | Exercise21_5.rs | `all_contiguous_subseqs` | exec fn | Y | partial | Length = n*(n+1)/2 (triangular), no element content |
+| 12 | Exercise21_6.rs | — | docs only | — | — | Cost analysis documentation, no code |
+| 13 | Exercise21_7.rs | `spec_is_even` | spec fn | Y | — | |
+| 14 | Exercise21_7.rs | `is_even` | exec fn | Y | strong | r == spec_is_even |
+| 15 | Exercise21_7.rs | `spec_is_vowel` | spec fn | Y | — | |
+| 16 | Exercise21_7.rs | `is_vowel` | exec fn | Y | strong | r == spec_is_vowel |
+| 17 | Exercise21_7.rs | `pair_even_with_vowels` | exec fn | Y | partial | Length ≤ |a|·|b|, no element content |
+| 18 | Exercise21_8.rs | `spec_is_prime` | spec fn | Y | — | |
+| 19 | Exercise21_8.rs | `spec_divisor_count` | spec fn | Y | — | |
+| 20 | Exercise21_8.rs | `lemma_zero_count_means_no_divisors` | proof fn | Y | strong | Count 0 → no divisors |
+| 21 | Exercise21_8.rs | `lemma_no_divisors_means_zero_count` | proof fn | Y | strong | No divisors → count 0 |
+| 22 | Exercise21_8.rs | `lemma_divisor_count_nonneg` | proof fn | Y | strong | Non-negativity |
+| 23 | Exercise21_8.rs | `is_divisible` | exec fn | Y | strong | divides == (n % i == 0) |
+| 24 | Exercise21_8.rs | `is_prime` | exec fn | Y | strong | prime == spec_is_prime(n) — fully verified |
+| 25 | Exercise21_8.rs | `lemma_filter_len_eq_divisor_count` | proof fn | Y | strong | Bridge: spec_filter_len over bool seq == spec_divisor_count |
+| 26 | Exercise21_8.rs | `lemma_divisor_count_split_last` | proof fn | Y | strong | Splits last element off spec_divisor_count range |
+| 27 | Exercise21_9.rs | `spec_is_composite` | spec fn | Y | — | m > 1 with a divisor d where 2 ≤ d < m |
+| 28 | Exercise21_9.rs | `lemma_div_exact` | proof fn | Y | strong | d divides m → m == d * (m / d) |
+| 29 | Exercise21_9.rs | `lemma_composite_has_small_divisor` | proof fn | Y | strong | Every composite has a divisor d with d² ≤ m |
+| 30 | Exercise21_9.rs | `lemma_composites_covered_by_small_multiples` | proof fn | Y | strong | Composites in [2,n] are covered by multiples of i where i² ≤ n |
+| 31 | Problem21_1.rs | `points2d` | exec fn | Y | strong | Length + element coordinate bounds |
+| 32 | Problem21_3.rs | `points3d_loops` | exec fn | Y | strong | Length + element coordinate bounds |
+| 33 | Problem21_4.rs | `cartesian_loops` | exec fn | Y | partial | Length only, no element content |
+| 34 | Problem21_4.rs | `cartesian_tab_flat` | exec fn | Y | strong | Length + element containment (a.contains first, b.contains second) |
 
-**Summary:** 12 source files, 22 veracity-tracked functions (15 exec, 7 proof), 4 spec fns, 2 placeholder modules.
+**Summary:** 12 source files, 27 locally-defined functions (15 exec, 12 proof), 6 spec fns, 1 documentation-only module. The `lemma_flatten_uniform_len` lemma, previously duplicated in Algorithm21_2.rs and Problem21_4.rs, is now imported from `vstdplus::seq::seq`.
 
 ---
 
@@ -97,7 +102,7 @@ table { width: 100% !important; table-layout: fixed; }
 | # | Item | Description | Implemented? |
 |---|---|---|---|
 | 1 | Exercise 21.2 | Cost analysis of 2D Points | No separate file (implicit in Algorithm21_1) |
-| 2 | Exercise 21.9 | Prove composites ≤ √n suffice | Placeholder only (Exercise21_9.rs) |
+| 2 | Exercise 21.9 | Prove composites ≤ √n suffice | **Yes** — 3 proof lemmas in Exercise21_9.rs |
 
 ---
 
@@ -111,7 +116,7 @@ table { width: 100% !important; table-layout: fixed; }
 | 2 | `points2d_tab_flat` | W Θ(n²), S Θ(lg n) | W Θ(n²), S Θ(n²) | Work ✓, Span ✗ | Sequential StPer |
 | 3 | `points3d_tab_flat` | W Θ(n³), S Θ(lg n) | W Θ(n³), S Θ(n³) | Work ✓, Span ✗ | Sequential StPer |
 | 4 | `primes_bf` | W Θ(n^{3/2}), S Θ(lg n) | W Θ(n^{3/2}), S Θ(n^{3/2}) | Work ✓, Span ✗ | Sequential StPer |
-| 5 | `prime_sieve` | W Θ(n lg n), S Θ(lg n) | W Θ(n² lg n), S Θ(n² lg n) | **Both ✗** | Linear membership scan instead of ninject sieve |
+| 5 | `prime_sieve` | W Θ(n lg n), S Θ(lg n) | W Θ(n lg n), S Θ(n lg n) | Work ✓, Span ✗ | Ninject-based boolean sieve; sequential StPer |
 | 6 | `all_contiguous_subseqs` | W Θ(n²), S Θ(lg n) | W Θ(n³), S Θ(n³) | **Both ✗** | subseq_copy is O(k), not O(1) |
 | 7 | `is_even` | W Θ(1), S Θ(1) | W Θ(1), S Θ(1) | ✓ | |
 | 8 | `is_vowel` | W Θ(1), S Θ(1) | W Θ(1), S Θ(1) | ✓ | |
@@ -123,7 +128,7 @@ table { width: 100% !important; table-layout: fixed; }
 | 14 | `cartesian_loops` | W Θ(|a|·|b|), S Θ(|a|·|b|) | W Θ(|a|·|b|), S Θ(|a|·|b|) | ✓ | Imperative, expected sequential |
 | 15 | `cartesian_tab_flat` | W Θ(|a|·|b|), S Θ(lg |a|) | W Θ(|a|·|b|), S Θ(|a|·|b|) | Work ✓, Span ✗ | Sequential StPer |
 
-**Summary:** 6/15 fully match, 7/15 match on work but not span (expected for StPer/StEph), 2/15 diverge on work (`prime_sieve`, `all_contiguous_subseqs`).
+**Summary:** 7/15 fully match, 7/15 match on work but not span (expected for StPer/StEph), 1/15 diverges on work (`all_contiguous_subseqs`).
 
 ### 3b. Implementation Fidelity
 
@@ -136,9 +141,10 @@ table { width: 100% !important; table-layout: fixed; }
 | 5 | Ex 21.7 (Comprehension with conditionals) | High | filter + tabulate + flatten matches prose |
 | 6 | Algo 21.4 (isPrime) | High | tabulate + filter per textbook |
 | 7 | Algo 21.5 (primesBF) | High | tabulate + filter(isPrime) matches prose |
-| 8 | Algo 21.6 (primeSieve) | **Low** | Uses linear membership test instead of ninject sieve; asymptotically worse |
+| 8 | Algo 21.6 (primeSieve) | High | Ninject-based boolean sieve: generate composites, mark sieve positions false, collect primes |
+| 9 | Ex 21.9 (Composite √n proof) | High | Three lemmas proving composites are covered by multiples of numbers ≤ √n |
 
-**Key deviation:** Algorithm 21.6 (`prime_sieve`) does not use `ninject` to build a boolean sieve array. Instead, it generates the list of composites and uses a linear scan filter to check membership. This changes the work from Θ(n lg n) to Θ(n² lg n), a significant algorithmic divergence.
+**Implementation note:** Algorithm 21.6 (`prime_sieve`) now uses the ninject-based approach: generate composites via nested tabulate + flatten, iterate to set sieve[c]=false for each composite, then collect indices where sieve is true. Work matches APAS Θ(n lg n). The `lemma_product_not_prime` proof supports the soundness argument.
 
 ### 3c. Spec Fidelity
 
@@ -146,11 +152,14 @@ table { width: 100% !important; table-layout: fixed; }
 |---|---|---|
 | 1 | `points2d_tab_flat` | Ensures specifies length but not element content. The imperative `points2d` is stronger (includes coordinate bounds). |
 | 2 | `points3d_tab_flat` | Same: length only vs. `points3d_loops` which includes coordinate bounds. |
-| 3 | `primes_bf` | Soundness only: every returned element is prime. Missing completeness: all primes < n are present. |
-| 4 | `prime_sieve` | Only upper-bounds the result length. No primality guarantee at all. |
-| 5 | `all_contiguous_subseqs` | No ensures clause. |
-| 6 | `pair_even_with_vowels` | No ensures clause. |
-| 7 | `cartesian_loops` / `cartesian_tab_flat` | Length only. No ensures that elements are actual pairs from a and b. |
+| 3 | `prime_sieve` | Element bounds (2 ≤ x ≤ n) but no primality guarantee. Stronger than before (was length-only) but still missing the key property. |
+| 4 | `cartesian_loops` | Length only. The functional `cartesian_tab_flat` is now stronger (includes element containment). |
+
+**Resolved since last review:**
+- `primes_bf` now has both soundness (every element is prime) and completeness (every prime in [2,n) appears in result).
+- `all_contiguous_subseqs` now ensures the exact count: `result.len() * 2 == n * (n+1)` (triangular number).
+- `pair_even_with_vowels` now ensures `result.len() <= |a| * |b|` (length upper bound).
+- `cartesian_tab_flat` now ensures element containment: every pair's first is in a, second is in b.
 
 ---
 
@@ -164,7 +173,7 @@ This is a notable gap: the APAS chapter emphasizes parallelism through comprehen
 
 ## Phase 5: Runtime Test Review
 
-**No runtime tests exist.** The directories `tests/Chap21/` and `rust_verify_test/tests/Chap21/` do not exist.
+**No runtime tests exist.** No `tests/test_Chap21*` files found.
 
 ### Missing Test Coverage
 
@@ -196,9 +205,8 @@ Chapter 21 has no iterators and no verified loops that require proof-time tests.
 | # | Prose Item | Status |
 |---|---|---|
 | 1 | Exercise 21.2 (Cost analysis of 2D Points) | Not separately implemented; cost is documented in Algorithm21_1.rs comments |
-| 2 | Exercise 21.9 (Prove composites ≤ √n suffice) | **Placeholder only** — Exercise21_9.rs is empty |
-| 3 | Remark on eliminating flatten | N/A — discussion only, no algorithm |
-| 4 | Remark on comprehensions | N/A — discussion only |
+| 2 | Remark on eliminating flatten | N/A — discussion only, no algorithm |
+| 3 | Remark on comprehensions | N/A — discussion only |
 
 ### Code with No Direct Prose Counterpart
 
@@ -209,12 +217,14 @@ Chapter 21 has no iterators and no verified loops that require proof-time tests.
 | 3 | `Problem21_4.rs` (`cartesian_loops` imperative) | Same: bonus imperative variant |
 | 4 | `flatten_inner` (Algorithm21_1.rs) | Helper not in prose; needed because flatten is not available as a library operation |
 | 5 | `lemma_sum_inner_lens_mono/uniform` | Verus proof scaffolding |
-| 6 | `lemma_flatten_uniform_len` (duplicated in Algorithm21_2.rs and Problem21_4.rs) | Should be deduplicated into a shared module |
-| 7 | `spec_divisor_count` and associated lemmas | Verus proof infrastructure for isPrime |
+| 6 | `spec_divisor_count` and associated lemmas | Verus proof infrastructure for isPrime |
+| 7 | `lemma_inner_lens_sum_triangular` (Exercise21_5.rs) | Proves descending-length sum = n*(n+1)/2; Verus proof scaffolding |
+| 8 | `lemma_product_not_prime` (Algorithm21_6.rs) | Proves product of ≥ 2 is composite; Verus proof scaffolding for sieve |
 
-### Duplication
+### Resolved Issues
 
-`lemma_flatten_uniform_len` appears in both `Algorithm21_2.rs` and `Problem21_4.rs` with identical implementations. This should be refactored into a shared module (e.g., `vstdplus` or a Chap21 utils module).
+- **Exercise 21.9 implemented:** Was a placeholder; now contains `spec_is_composite`, `lemma_div_exact`, `lemma_composite_has_small_divisor`, and `lemma_composites_covered_by_small_multiples` — proving that composites in [2,n] are covered by multiples of i where i² ≤ n.
+- **Duplication resolved:** `lemma_flatten_uniform_len` was previously duplicated in Algorithm21_2.rs and Problem21_4.rs. Both files now import from `crate::vstdplus::seq::seq::lemma_flatten_uniform_len`.
 
 ---
 
@@ -224,20 +234,20 @@ Chapter 21 has no iterators and no verified loops that require proof-time tests.
 
 | # | File | TOC Present? | Sections Used |
 |---|---|:---:|---|
-| 1 | Algorithm21_1.rs | No | imports, broadcast use, spec fns, proof fns, exec fns |
-| 2 | Algorithm21_2.rs | No | imports, broadcast use, proof fns, exec fns |
-| 3 | Algorithm21_5.rs | No | imports, broadcast use, type alias, exec fns |
-| 4 | Algorithm21_6.rs | No | imports, broadcast use, exec fns |
-| 5 | Exercise21_5.rs | No | imports, broadcast use, exec fns |
+| 1 | Algorithm21_1.rs | Yes | module, imports, broadcast use, spec fns, proof fns, impls |
+| 2 | Algorithm21_2.rs | Yes | module, imports, broadcast use, impls |
+| 3 | Algorithm21_5.rs | Yes | module, imports, broadcast use, type definitions, impls |
+| 4 | Algorithm21_6.rs | Yes | module, imports, broadcast use, proof fns, impls |
+| 5 | Exercise21_5.rs | Yes | module, imports, broadcast use, proof fns, impls |
 | 6 | Exercise21_6.rs | No | documentation only |
-| 7 | Exercise21_7.rs | No | imports, broadcast use, spec fns, exec fns |
-| 8 | Exercise21_8.rs | No | imports, broadcast use, spec fns, proof fns, exec fns |
-| 9 | Exercise21_9.rs | No | placeholder |
-| 10 | Problem21_1.rs | No | imports, broadcast use, exec fns |
-| 11 | Problem21_3.rs | No | imports, broadcast use, exec fns |
-| 12 | Problem21_4.rs | No | imports, broadcast use, exec fns, proof fns |
+| 7 | Exercise21_7.rs | Yes | module, imports, broadcast use, spec fns, impls |
+| 8 | Exercise21_8.rs | Yes | module, imports, broadcast use, spec fns, proof fns, impls |
+| 9 | Exercise21_9.rs | Yes | module, spec fns, proof fns |
+| 10 | Problem21_1.rs | Yes | module, imports, broadcast use, impls |
+| 11 | Problem21_3.rs | Yes | module, imports, broadcast use, impls |
+| 12 | Problem21_4.rs | Yes | module, broadcast use, impls |
 
-**Finding:** No files in Chapter 21 have TOC headers per the project standard.
+**Finding:** 11 of 12 files have TOC headers per the project standard. Exercise21_6.rs is documentation-only and does not need one.
 
 ### In/Out Table
 
@@ -263,30 +273,27 @@ Chapter 21 defines no new data types, so no derive impls are needed.
 ```
 veracity-review-proof-holes -d src/Chap21/
 
-✓ Algorithm21_1.rs  (2 clean proof functions)
-✓ Algorithm21_2.rs  (1 clean proof function)
+✓ Algorithm21_1.rs   (2 clean proof functions)
+✓ Algorithm21_2.rs
 ✓ Algorithm21_5.rs
-✓ Algorithm21_6.rs
-✓ Exercise21_5.rs
+✓ Algorithm21_6.rs   (1 clean proof function)
+✓ Exercise21_5.rs    (1 clean proof function)
 ✓ Exercise21_6.rs
 ✓ Exercise21_7.rs
-❌ Exercise21_8.rs   (2 × assume())
-✓ Exercise21_9.rs
+✓ Exercise21_8.rs    (5 clean proof functions)
+✓ Exercise21_9.rs    (3 clean proof functions)
 ✓ Problem21_1.rs
 ✓ Problem21_3.rs
-✓ Problem21_4.rs     (1 clean proof function)
+✓ Problem21_4.rs
 
-SUMMARY: 11 clean modules, 1 holed module
-Holes: 2 total (2 × assume())
-Proof functions: 7 total (7 clean, 0 holed)
+SUMMARY: 12 clean modules, 0 holed modules
+Proof functions: 12 total (12 clean, 0 holed)
+Holes: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
 ```
 
-### Hole Details
-
-| # | File | Line | Hole | Purpose |
-|---|---|---|---|---|
-| 1 | Exercise21_8.rs | 142 | `assume(1 < k as int + 1)` | Bridge: isqrt(n) >= 1 for n >= 2. Could be proved with isqrt properties. |
-| 2 | Exercise21_8.rs | 153 | `assume(ones.seq@.len() == spec_divisor_count(...))` | Bridge: filter count equals divisor count. Requires stronger filter spec (multiset equality). |
+**All 12 proof functions across 5 modules are clean.** The two `assume()` holes that previously existed in Exercise21_8.rs (isqrt bound and filter-count bridge) were closed in a prior update by adding `lemma_filter_len_eq_divisor_count` and `lemma_divisor_count_split_last`.
 
 ---
 
@@ -294,17 +301,17 @@ Proof functions: 7 total (7 clean, 0 holed)
 
 | Classification | Count |
 |---|---|
-| strong | 13 |
-| partial | 6 |
-| weak | 1 |
-| none | 2 |
+| strong | 20 |
+| partial | 7 |
+| weak | 0 |
+| none | 0 |
 
 | Strength | Functions |
 |---|---|
-| **strong** | `lemma_sum_inner_lens_mono`, `lemma_sum_inner_lens_uniform`, `lemma_flatten_uniform_len` (×2), `is_even`, `is_vowel`, `lemma_zero_count_means_no_divisors`, `lemma_no_divisors_means_zero_count`, `lemma_divisor_count_nonneg`, `is_divisible`, `is_prime`, `points2d`, `points3d_loops` |
-| **partial** | `flatten_inner`, `points2d_tab_flat`, `points3d_tab_flat`, `primes_bf`, `cartesian_loops`, `cartesian_tab_flat` |
-| **weak** | `prime_sieve` |
-| **none** | `all_contiguous_subseqs`, `pair_even_with_vowels` |
+| **strong** | `lemma_sum_inner_lens_mono`, `lemma_sum_inner_lens_uniform`, `is_even`, `is_vowel`, `lemma_zero_count_means_no_divisors`, `lemma_no_divisors_means_zero_count`, `lemma_divisor_count_nonneg`, `is_divisible`, `is_prime`, `lemma_filter_len_eq_divisor_count`, `lemma_divisor_count_split_last`, `points2d`, `points3d_loops`, `primes_bf`, `cartesian_tab_flat`, `lemma_product_not_prime`, `lemma_inner_lens_sum_triangular`, `lemma_div_exact`, `lemma_composite_has_small_divisor`, `lemma_composites_covered_by_small_multiples` |
+| **partial** | `flatten_inner`, `points2d_tab_flat`, `points3d_tab_flat`, `prime_sieve`, `all_contiguous_subseqs`, `pair_even_with_vowels`, `cartesian_loops` |
+
+**Changes since last review:** `primes_bf` upgraded from partial to strong (completeness added). `cartesian_tab_flat` upgraded from partial to strong (element containment added). `prime_sieve` upgraded from weak to partial (element bounds added). `all_contiguous_subseqs` upgraded from none to partial (triangular length property). `pair_even_with_vowels` upgraded from none to partial (length upper bound). Five new strong proof functions added (Exercise21_5, Algorithm21_6, Exercise21_9). Two `lemma_flatten_uniform_len` duplicates removed (moved to vstdplus).
 
 ---
 
@@ -312,34 +319,29 @@ Proof functions: 7 total (7 clean, 0 holed)
 
 ### Strengths
 
-1. **Good coverage:** 8 of 8 prose algorithms/exercises have implementations (plus 3 bonus imperative variants).
-2. **Strong proof infrastructure:** The isPrime proof in Exercise21_8.rs is sophisticated, with 3 clean proof lemmas establishing the connection between divisor count and primality.
-3. **All code is inside verus!:** Every executable and proof function is properly inside `verus!` blocks.
-4. **Imperative variants provide good spec contrast:** `points2d` and `points3d_loops` have strictly stronger specs than their functional counterparts, demonstrating what full verification looks like.
+1. **Full coverage:** All 8 prose algorithms/exercises have implementations, plus 3 bonus imperative variants and Exercise 21.9's proof.
+2. **Zero proof holes:** All 12 proof functions across 12 modules are clean.
+3. **Strong proof infrastructure:** The isPrime proof in Exercise21_8.rs is sophisticated with 5 clean proof lemmas. Exercise21_9.rs proves that composites are covered by multiples of numbers ≤ √n. Algorithm21_6 has `lemma_product_not_prime` supporting the sieve.
+4. **All code is inside verus!:** Every executable and proof function is properly inside `verus!` blocks.
+5. **Imperative variants provide good spec contrast:** `points2d` and `points3d_loops` have strictly stronger specs than their functional counterparts.
+6. **`primes_bf` is fully specified:** Both soundness (every element is prime) and completeness (every prime in range appears).
+7. **No duplication:** `lemma_flatten_uniform_len` is now imported from vstdplus in both Algorithm21_2 and Problem21_4.
+8. **TOC headers present:** 11 of 12 files have the project-standard TOC.
 
 ### Weaknesses
 
-1. **Algorithm 21.6 (prime_sieve) has significant algorithmic divergence:** It uses linear membership testing instead of the ninject-based boolean sieve from the prose. This changes work from Θ(n lg n) to Θ(n² lg n). This is the most important fidelity gap in the chapter.
-2. **Missing ensures on 2 functions:** `all_contiguous_subseqs` and `pair_even_with_vowels` have no ensures clauses.
-3. **Functional variants have weaker specs than imperative variants:** `points2d_tab_flat` specifies only length while `points2d` also specifies element bounds. This pattern repeats for 3D points.
-4. **No runtime tests at all:** Zero test coverage for the entire chapter.
-5. **No TOC headers:** None of the 12 source files have the project-standard TOC.
-6. **Proof holes in isPrime:** 2 `assume()` calls remain. The first could likely be closed with isqrt properties; the second requires a stronger filter specification.
-7. **Duplicate lemma:** `lemma_flatten_uniform_len` is copy-pasted in two files.
-8. **Exercise 21.9 is empty:** Just a placeholder with no Verus proof code.
-9. **No Mt (parallel) variants:** The chapter emphasizes parallelism but all implementations are single-threaded.
+1. **No runtime tests at all:** Zero test coverage for the entire chapter.
+2. **Functional variants have weaker specs than imperative variants:** `points2d_tab_flat` specifies only length while `points2d` also specifies element bounds. This pattern repeats for 3D points.
+3. **`prime_sieve` lacks primality guarantee:** Has element bounds (2 ≤ x ≤ n) but doesn't prove returned elements are actually prime.
+4. **No Mt (parallel) variants:** The chapter emphasizes parallelism but all implementations are single-threaded.
+5. **`cartesian_loops` weaker than `cartesian_tab_flat`:** The imperative version has length-only spec while the functional version now has element containment.
 
 ### Priority Recommendations
 
 | # | Priority | Action |
 |---|---|---|
-| 1 | High | Fix `prime_sieve` to use ninject-based boolean sieve per the prose algorithm |
-| 2 | High | Add ensures to `all_contiguous_subseqs` and `pair_even_with_vowels` |
-| 3 | High | Add runtime tests for all algorithms |
-| 4 | Medium | Strengthen specs on functional variants (`points2d_tab_flat`, etc.) to include element bounds |
-| 5 | Medium | Close proof hole 1 in isPrime (isqrt ≥ 1) |
-| 6 | Medium | Deduplicate `lemma_flatten_uniform_len` into shared module |
-| 7 | Low | Add TOC headers to all 12 files |
-| 8 | Low | Implement Exercise 21.9 as a Verus proof |
-| 9 | Low | Add `primes_bf` completeness to ensures (all primes < n are returned) |
-| 10 | Low | Consider Mt variants for the tabulate+flatten algorithms |
+| 1 | High | Add runtime tests for all algorithms |
+| 2 | Medium | Strengthen specs on functional variants (`points2d_tab_flat`, `points3d_tab_flat`) to include element bounds |
+| 3 | Medium | Add primality guarantee to `prime_sieve` ensures |
+| 4 | Medium | Strengthen `cartesian_loops` to match `cartesian_tab_flat`'s element containment spec |
+| 5 | Low | Consider Mt variants for the tabulate+flatten algorithms |

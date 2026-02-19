@@ -1,5 +1,6 @@
 // Copyright (C) 2025 Brian G. Milnes
 // SPDX-License-Identifier: MIT
+
 //! Maximum Contiguous Subsequence Sum — Reduction to MCSSE (Chapter 28, Algorithm 28.14).
 //!
 //! For each ending position j, compute MCSSE(j) = prefix_sum(j+1) - min_prefix_sum(0..j)
@@ -10,6 +11,15 @@
 //! 2. spec definitions
 //! 3. exec functions
 
+//  Table of Contents
+//	1. module
+//	6. spec fns
+//	8. traits
+//	9. impls
+
+//		1. module
+
+
 pub mod MaxContigSubSumReducedMcsseStEph {
     use vstd::prelude::*;
 
@@ -17,6 +27,8 @@ pub mod MaxContigSubSumReducedMcsseStEph {
     use crate::Chap28::MCSSSpec::MCSSSpec::*;
 
     verus! {
+
+    //		6. spec fns
 
     // ─── 2. spec definitions ───
 
@@ -28,6 +40,26 @@ pub mod MaxContigSubSumReducedMcsseStEph {
             (Option::Some(x), Option::Some(y)) => if x >= y { a } else { b },
         }
     }
+
+
+    //		8. traits
+
+    pub trait MaxContigSubSumReducedMcsseTrait {
+        /// Compute MCSS by enumerating all MCSSE instances (Algorithm 28.14).
+        /// Returns None for empty sequence (representing -infinity).
+        /// - APAS: Work O(n²), Span O(log n)
+        /// - Claude-Opus-4.6: Work O(n²), Span O(n²) — sequential
+        fn max_contig_sub_sum_reduced_mcsse(a: &ArraySeqStEphS<i32>) -> (result: Option<i32>)
+            requires
+                sums_fit_i32(a.seq@),
+            ensures
+                a.seq@.len() == 0 ==> result.is_none(),
+                a.seq@.len() > 0 ==> result.is_some(),
+                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
+    }
+
+
+    //		9. impls
 
     // ─── 3. exec functions ───
 
@@ -42,20 +74,6 @@ pub mod MaxContigSubSumReducedMcsseStEph {
             (Some(_), None) => a,
             (Some(x), Some(y)) => if x >= y { a } else { b },
         }
-    }
-
-    pub trait MaxContigSubSumReducedMcsseTrait {
-        /// Compute MCSS by enumerating all MCSSE instances (Algorithm 28.14).
-        /// Returns None for empty sequence (representing -infinity).
-        /// - APAS: Work O(n²), Span O(log n)
-        /// - Claude-Opus-4.6: Work O(n²), Span O(n²) — sequential
-        fn max_contig_sub_sum_reduced_mcsse(a: &ArraySeqStEphS<i32>) -> (result: Option<i32>)
-            requires
-                sums_fit_i32(a.seq@),
-            ensures
-                a.seq@.len() == 0 ==> result.is_none(),
-                a.seq@.len() > 0 ==> result.is_some(),
-                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
     }
 
     impl MaxContigSubSumReducedMcsseTrait for ArraySeqStEphS<i32> {

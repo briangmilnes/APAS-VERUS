@@ -11,13 +11,18 @@
 //	4. type definitions
 //	5. view impls
 //	6. spec fns
+//	7. proof fns/broadcast groups
 //	8. traits
 //	9. impls
 //	10. iterators
 //	11. derive impls in verus!
+//	12. macros
 //	13. derive impls outside verus!
 
 //		1. module
+
+
+
 
 
 pub mod ArraySeqStEph {
@@ -30,6 +35,8 @@ pub mod ArraySeqStEph {
     use vstd::prelude::*;
 
     verus! {
+
+    //		2. imports
 
     //		2. imports
 
@@ -48,6 +55,8 @@ pub mod ArraySeqStEph {
 
     //		3. broadcast use
 
+    //		3. broadcast use
+
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
@@ -55,6 +64,8 @@ pub mod ArraySeqStEph {
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
+
+    //		4. type definitions
 
     //		4. type definitions
 
@@ -66,6 +77,8 @@ pub mod ArraySeqStEph {
 
     //		5. view impls
 
+    //		5. view impls
+
     impl<T: View> View for ArraySeqStEphS<T> {
         type V = Seq<T::V>;
 
@@ -74,6 +87,8 @@ pub mod ArraySeqStEph {
         }
     }
 
+
+    //		6. spec fns
 
     //		6. spec fns
 
@@ -92,6 +107,46 @@ pub mod ArraySeqStEph {
         }
     }
 
+
+    //		7. proof fns/broadcast groups
+
+    //		9. bare impl (lemmas and iterators not in any trait)
+
+    /// If every inner sequence has length <= 1, flatten has length <= the outer length.
+    proof fn lemma_flatten_bounded_by_outer_len<T>(ss: Seq<Seq<T>>)
+        requires forall|i: int| #![trigger ss[i]] 0 <= i < ss.len() ==> ss[i].len() <= 1
+        ensures ss.flatten().len() <= ss.len()
+        decreases ss.len()
+    {
+        if ss.len() > 0 {
+            let prefix = ss.drop_last();
+            lemma_flatten_bounded_by_outer_len::<T>(prefix);
+            prefix.lemma_flatten_push(ss.last());
+            assert(ss =~= prefix.push(ss.last()));
+            assert(ss.flatten() =~= prefix.flatten() + ss.last());
+        }
+    }
+
+    /// Every element of flatten(ss) satisfies p, if every element of every inner sequence does.
+    proof fn lemma_flatten_all_satisfy<T>(ss: Seq<Seq<T>>, p: spec_fn(T) -> bool)
+        requires
+            forall|j: int, k: int| #![trigger ss[j][k]] 0 <= j < ss.len() && 0 <= k < ss[j].len() ==> p(ss[j][k])
+        ensures
+            forall|i: int| #![trigger ss.flatten()[i]] 0 <= i < ss.flatten().len() ==> p(ss.flatten()[i])
+        decreases ss.len()
+    {
+        if ss.len() > 0 {
+            let prefix = ss.drop_last();
+            let last = ss.last();
+            lemma_flatten_all_satisfy::<T>(prefix, p);
+            prefix.lemma_flatten_push(last);
+            assert(ss =~= prefix.push(last));
+            assert(ss.flatten() =~= prefix.flatten() + last);
+        }
+    }
+
+
+    //		8. traits
 
     //		8. traits
 
@@ -342,6 +397,8 @@ pub mod ArraySeqStEph {
                 deflated.spec_len() == 0 ==> pred.ensures((x,), false);
     }
 
+
+    //		9. impls
 
     //		9. impl Trait for Struct
 
@@ -881,41 +938,6 @@ pub mod ArraySeqStEph {
         }
     }
 
-    //		9. bare impl (lemmas and iterators not in any trait)
-
-    /// If every inner sequence has length <= 1, flatten has length <= the outer length.
-    proof fn lemma_flatten_bounded_by_outer_len<T>(ss: Seq<Seq<T>>)
-        requires forall|i: int| #![trigger ss[i]] 0 <= i < ss.len() ==> ss[i].len() <= 1
-        ensures ss.flatten().len() <= ss.len()
-        decreases ss.len()
-    {
-        if ss.len() > 0 {
-            let prefix = ss.drop_last();
-            lemma_flatten_bounded_by_outer_len::<T>(prefix);
-            prefix.lemma_flatten_push(ss.last());
-            assert(ss =~= prefix.push(ss.last()));
-            assert(ss.flatten() =~= prefix.flatten() + ss.last());
-        }
-    }
-
-    /// Every element of flatten(ss) satisfies p, if every element of every inner sequence does.
-    proof fn lemma_flatten_all_satisfy<T>(ss: Seq<Seq<T>>, p: spec_fn(T) -> bool)
-        requires
-            forall|j: int, k: int| #![trigger ss[j][k]] 0 <= j < ss.len() && 0 <= k < ss[j].len() ==> p(ss[j][k])
-        ensures
-            forall|i: int| #![trigger ss.flatten()[i]] 0 <= i < ss.flatten().len() ==> p(ss.flatten()[i])
-        decreases ss.len()
-    {
-        if ss.len() > 0 {
-            let prefix = ss.drop_last();
-            let last = ss.last();
-            lemma_flatten_all_satisfy::<T>(prefix, p);
-            prefix.lemma_flatten_push(last);
-            assert(ss =~= prefix.push(last));
-            assert(ss.flatten() =~= prefix.flatten() + last);
-        }
-    }
-
     impl<T> ArraySeqStEphS<T> {
         broadcast proof fn lemma_spec_index(&self, i: int)
             requires 0 <= i < self.spec_len()
@@ -939,6 +961,8 @@ pub mod ArraySeqStEph {
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
+
+    //		10. iterators
 
     //		10. iterators
 
@@ -1069,6 +1093,8 @@ pub mod ArraySeqStEph {
 
     //		11. derive impls in verus!
 
+    //		11. derive impls in verus!
+
     impl<T: Clone> Clone for ArraySeqStEphS<T> {
         fn clone(&self) -> (res: Self)
             ensures
@@ -1095,6 +1121,8 @@ pub mod ArraySeqStEph {
     } // verus!
 
 
+
+
     //		13. derive impls outside verus!
 
     impl<T: Debug> Debug for ArraySeqStEphS<T> {
@@ -1113,6 +1141,9 @@ pub mod ArraySeqStEph {
             write!(f, "]")
         }
     }
+
+
+    //		12. macros
 
     /// Literal constructor macro for ArraySeqStEphS.
     #[macro_export]

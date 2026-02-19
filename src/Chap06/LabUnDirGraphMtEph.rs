@@ -1,8 +1,25 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 6 Labeled Undirected Graph (ephemeral) using Set for vertices and labeled edges - Multi-threaded version.
 //!
 //! Note: NOW uses true parallelism via ParaPair! for neighbor operations.
 //! Labeled edge filtering (ng) is parallel.
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod LabUnDirGraphMtEph {
 
@@ -17,14 +34,18 @@ pub mod LabUnDirGraphMtEph {
 
     verus! {
 
+    //		2. imports
+
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
-
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::Types::Types::*;
+
+
+    //		3. broadcast use
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -33,9 +54,8 @@ pub mod LabUnDirGraphMtEph {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
-    pub open spec fn valid_key_type_for_lab_graph<V: StTInMtT + Hash + Ord, L: StTInMtT + Hash>() -> bool {
-        valid_key_type_LabEdge::<V, L>()
-    }
+
+    //		4. type definitions
 
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(L)]
@@ -44,13 +64,8 @@ pub mod LabUnDirGraphMtEph {
         pub labeled_edges: SetStEph<LabEdge<V, L>>,
     }
 
-    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> Clone for LabUnDirGraphMtEph<V, L> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
-        {
-            LabUnDirGraphMtEph { vertices: self.vertices.clone(), labeled_edges: self.labeled_edges.clone() }
-        }
-    }
+
+    //		5. view impls
 
     impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> View for LabUnDirGraphMtEph<V, L> {
         type V = LabGraphView<<V as View>::V, <L as View>::V>;
@@ -58,6 +73,16 @@ pub mod LabUnDirGraphMtEph {
             LabGraphView { V: self.vertices@, A: self.labeled_edges@ }
         }
     }
+
+
+    //		6. spec fns
+
+    pub open spec fn valid_key_type_for_lab_graph<V: StTInMtT + Hash + Ord, L: StTInMtT + Hash>() -> bool {
+        valid_key_type_LabEdge::<V, L>()
+    }
+
+
+    //		8. traits
 
     pub trait LabUnDirGraphMtEphTrait<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static>
         : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized
@@ -73,7 +98,8 @@ pub mod LabUnDirGraphMtEph {
             Set::new(|w: V::V| exists |l: L::V| subedges.contains((v, w, l)) || subedges.contains((w, v, l)))
         }
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn empty() -> (g: Self)
             requires valid_key_type_for_lab_graph::<V, L>()
             ensures
@@ -81,7 +107,8 @@ pub mod LabUnDirGraphMtEph {
                 g@.V == Set::<<V as View>::V>::empty(),
                 g@.A == Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
-        /// APAS: Work Θ(|V| + |E|), Span Θ(1)
+        /// - APAS: Work Θ(|V| + |E|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(1)
         fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: Self)
             requires
                 valid_key_type_for_lab_graph::<V, L>(),
@@ -94,31 +121,37 @@ pub mod LabUnDirGraphMtEph {
                 g@.V == vertices@,
                 g@.A == labeled_edges@;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn labeled_edges(&self) -> (e: &SetStEph<LabEdge<V, L>>)
             ensures e@ == self@.A;
 
-        /// APAS: Work Θ(|E|), Span Θ(1)
+        /// - APAS: Work Θ(|E|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential map
         fn edges(&self) -> (edges: SetStEph<Edge<V>>)
             requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>(), valid_key_type_Edge::<V>()
             ensures forall |u: V::V, w: V::V| edges@.contains((u, w)) ==
                 (exists |l: L::V| #![trigger self@.A.contains((u, w, l))] self@.A.contains((u, w, l)));
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn add_vertex(&mut self, v: V)
             requires wf_lab_graph_view(old(self)@), valid_key_type_for_lab_graph::<V, L>()
             ensures wf_lab_graph_view(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L)
             requires wf_lab_graph_view(old(self)@), valid_key_type_for_lab_graph::<V, L>()
             ensures wf_lab_graph_view(self@);
 
-        /// APAS: Work Θ(|E|), Span Θ(1)
+        /// - APAS: Work Θ(|E|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential search
         fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>)
             requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>()
             ensures match label {
@@ -126,7 +159,8 @@ pub mod LabUnDirGraphMtEph {
                 None => forall |l: L::V| !self@.A.contains((v1@, v2@, l)) && !self@.A.contains((v2@, v1@, l)),
             };
 
-        /// APAS: Work Θ(|E|), Span Θ(1)
+        /// - APAS: Work Θ(|E|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential search
         fn has_edge(&self, v1: &V, v2: &V) -> (b: bool)
             requires wf_lab_graph_view(self@), valid_key_type_for_lab_graph::<V, L>()
             ensures b == (exists |l: L::V| 
@@ -140,8 +174,8 @@ pub mod LabUnDirGraphMtEph {
             Set::new(|w: V::V| exists |l: L::V| self@.A.contains((v, w, l)) || self@.A.contains((w, v, l)))
         }
 
-        /// APAS: Work Θ(|E|), Span Θ(log |E|) - parallel
-        /// neighbors
+        /// - APAS: Work Θ(|E|), Span Θ(log |E|) — parallel
+        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(log |E|) — ParaPair! split edges
         fn ng(&self, v: &V) -> (ng: SetStEph<V>)
             requires
                 wf_lab_graph_view(self@),
@@ -151,6 +185,9 @@ pub mod LabUnDirGraphMtEph {
                 ng@ == self.spec_ng(v@),
                 ng@ <= self@.V;
     }
+
+
+    //		9. impls
 
     /// Parallel edge filtering for neighbors using set split.
     fn ng_par<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static>(
@@ -187,11 +224,11 @@ pub mod LabUnDirGraphMtEph {
                     //   (w, v@, l) in edges@ iff (w, v@, l) == (a@, b@, label@) iff w == a@ == v@ and v@ == b@
                     // So the only neighbor is b@ (and possibly v@ if v@ == b@, but that's still just b@)
                     
-                    assert forall |w: V::V| #![auto] Set::empty().insert(b@).contains(w) implies 
+                    assert forall |w: V::V| #![trigger Set::empty().insert(b@).contains(w)] Set::empty().insert(b@).contains(w) implies 
                         g.spec_ng_from_set(v@, edges@).contains(w) by {
                         assert(edges@.contains((a@, b@, label@)));
                     }
-                    assert forall |w: V::V| #![auto] g.spec_ng_from_set(v@, edges@).contains(w) implies
+                    assert forall |w: V::V| #![trigger Set::empty().insert(b@).contains(w)] g.spec_ng_from_set(v@, edges@).contains(w) implies
                         Set::empty().insert(b@).contains(w) by {
                         let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
                         assert(edges@.remove((a@, b@, label@)).len() == 0);
@@ -217,11 +254,11 @@ pub mod LabUnDirGraphMtEph {
                     // (w, v@, l) in edges@ iff (w, v@, l) == (a@, b@, label@) iff w == a@ and v@ == b@ (true)
                     // So the only neighbor is a@
                     
-                    assert forall |w: V::V| #![auto] Set::empty().insert(a@).contains(w) implies 
+                    assert forall |w: V::V| #![trigger Set::empty().insert(a@).contains(w)] Set::empty().insert(a@).contains(w) implies 
                         g.spec_ng_from_set(v@, edges@).contains(w) by {
                         assert(edges@.contains((a@, b@, label@)));
                     }
-                    assert forall |w: V::V| #![auto] g.spec_ng_from_set(v@, edges@).contains(w) implies
+                    assert forall |w: V::V| #![trigger Set::empty().insert(a@).contains(w)] g.spec_ng_from_set(v@, edges@).contains(w) implies
                         Set::empty().insert(a@).contains(w) by {
                         let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
                         assert(edges@.remove((a@, b@, label@)).len() == 0);
@@ -248,7 +285,7 @@ pub mod LabUnDirGraphMtEph {
                     // (w, v@, l) in edges@ requires v@ == b@ (false)
                     // So no w satisfies the condition
                     
-                    assert forall |w: V::V| #![auto] g.spec_ng_from_set(v@, edges@).contains(w) implies false by {
+                    assert forall |w: V::V| g.spec_ng_from_set(v@, edges@).contains(w) implies false by {
                         let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
                         assert(edges@.remove((a@, b@, label@)).len() == 0);
                         if edges@.contains((v@, w, l)) {
@@ -287,7 +324,7 @@ pub mod LabUnDirGraphMtEph {
             
             proof {
                 // Prove subset in one direction
-                assert forall |w: V::V| #![auto] left_neighbors@.union(right_neighbors@).contains(w) implies
+                assert forall |w: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(w)] left_neighbors@.union(right_neighbors@).contains(w) implies
                     g.spec_ng_from_set(v@, edges@).contains(w) by {
                     if left_neighbors@.contains(w) {
                         let l = choose |l: L::V| left_edges@.contains((v@, w, l)) || left_edges@.contains((w, v@, l));
@@ -299,7 +336,7 @@ pub mod LabUnDirGraphMtEph {
                 }
                 
                 // Prove subset in other direction
-                assert forall |w: V::V| #![auto] g.spec_ng_from_set(v@, edges@).contains(w) implies
+                assert forall |w: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(w)] g.spec_ng_from_set(v@, edges@).contains(w) implies
                     left_neighbors@.union(right_neighbors@).contains(w) by {
                     let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
                     if edges@.contains((v@, w, l)) {
@@ -507,7 +544,21 @@ pub mod LabUnDirGraphMtEph {
         }
     }
 
+
+    //		11. derive impls in verus!
+
+    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> Clone for LabUnDirGraphMtEph<V, L> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            LabUnDirGraphMtEph { vertices: self.vertices.clone(), labeled_edges: self.labeled_edges.clone() }
+        }
+    }
+
     } // verus!
+
+
+    //		13. derive impls outside verus!
 
     impl<V: StTInMtT + Hash + Ord, L: StTInMtT + Hash> Display for LabUnDirGraphMtEph<V, L> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
@@ -524,6 +575,9 @@ pub mod LabUnDirGraphMtEph {
             )
         }
     }
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! LabUnDirGraphMtEphLit {

@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Parallel merge sort implementation (Chapter 26).
 //! merge_parallel uses a parallel binary-search D&C merge via join().
 //! Span is O(n) due to Vec concatenation at each level; O(lg² n) requires O(1) concat.
@@ -9,12 +10,15 @@
 //	1. module
 //	2. imports
 //	3. broadcast use
-//	4. spec fns
-//	7. proof fns
+//	6. spec fns
+//	7. proof fns/broadcast groups
 //	8. traits
 //	9. impls
 
 //		1. module
+
+
+
 
 pub mod MergeSortMtPer {
 
@@ -24,9 +28,16 @@ pub mod MergeSortMtPer {
 
     //		2. imports
 
+    //		2. imports
+
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::seq_lib::lemma_multiset_commutative;
+
+
+    //		3. broadcast use
 
     //		3. broadcast use
 
@@ -37,8 +48,8 @@ pub mod MergeSortMtPer {
         vstd::multiset::group_multiset_axioms,
     };
 
-    #[cfg(verus_keep_ghost)]
-    use vstd::seq_lib::lemma_multiset_commutative;
+
+    //		6. spec fns
 
     //		4. spec fns
 
@@ -65,6 +76,9 @@ pub mod MergeSortMtPer {
         &&& spec_sorted(result)
         &&& spec_is_permutation(input, result)
     }
+
+
+    //		7. proof fns/broadcast groups
 
     //		7. proof fns
 
@@ -150,6 +164,9 @@ pub mod MergeSortMtPer {
         }
     }
 
+
+    //		8. traits
+
     //		8. traits
 
     pub trait MergeSortMtTrait {
@@ -177,6 +194,9 @@ pub mod MergeSortMtPer {
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
                     Seq::new(result.spec_len(), |i: int| result.spec_index(i)));
     }
+
+
+    //		9. impls
 
     //		9. impls
 
@@ -448,7 +468,7 @@ pub mod MergeSortMtPer {
             // Sequence decompositions — help the solver with extensional equality.
             assert(sl =~= sl_l + pivot_seq + sl_r) by {
                 assert(sl.len() == sl_l.len() + 1 + sl_r.len());
-                assert forall|k: int| #![auto] 0 <= k < sl.len() implies
+                assert forall|k: int| #![trigger sl[k]] 0 <= k < sl.len() implies
                     sl[k] == (sl_l + pivot_seq + sl_r)[k]
                 by {
                     if k < sl_l.len() {
@@ -461,7 +481,7 @@ pub mod MergeSortMtPer {
             }
             assert(sr =~= sr_l + sr_r) by {
                 assert(sr.len() == sr_l.len() + sr_r.len());
-                assert forall|k: int| #![auto] 0 <= k < sr.len() implies
+                assert forall|k: int| #![trigger sr[k]] 0 <= k < sr.len() implies
                     sr[k] == (sr_l + sr_r)[k]
                 by {
                     if k < sr_l.len() {
@@ -473,7 +493,7 @@ pub mod MergeSortMtPer {
             }
             assert(out_view =~= ml_view + pivot_seq + mr_view) by {
                 assert(out_view.len() == ml_view.len() + 1 + mr_view.len());
-                assert forall|k: int| #![auto] 0 <= k < out_view.len() implies
+                assert forall|k: int| #![trigger out_view[k]] 0 <= k < out_view.len() implies
                     out_view[k] == (ml_view + pivot_seq + mr_view)[k]
                 by {
                     if k < ml_view.len() {

@@ -1,8 +1,25 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 6.1 Undirected Graph (ephemeral) using Set for vertices and edges - Multi-threaded version.
 //!
 //! Note: NOW uses true parallelism via ParaPair! for neighbor/degree operations.
 //! Edge filtering (ng) and vertex map-reduce (ng_of_vertices) are parallel.
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod UnDirGraphMtEph {
 
@@ -20,13 +37,17 @@ pub mod UnDirGraphMtEph {
 
     verus! {
 
+    //		2. imports
+
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
-
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
     use crate::Types::Types::*;
+
+
+    //		3. broadcast use
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -35,9 +56,8 @@ pub mod UnDirGraphMtEph {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
-    pub open spec fn valid_key_type_for_graph<V: StTInMtT + Hash>() -> bool {
-        valid_key_type_Edge::<V>()
-    }
+
+    //		4. type definitions
 
     #[verifier::reject_recursive_types(V)]
     pub struct UnDirGraphMtEph<V: StTInMtT + Hash + 'static> {
@@ -45,13 +65,8 @@ pub mod UnDirGraphMtEph {
         pub E: SetStEph<Edge<V>>,
     }
 
-    impl<V: StTInMtT + Hash + 'static> Clone for UnDirGraphMtEph<V> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
-        {
-            UnDirGraphMtEph { V: self.V.clone(), E: self.E.clone() }
-        }
-    }
+
+    //		5. view impls
 
     impl<V: StTInMtT + Hash + 'static> View for UnDirGraphMtEph<V> {
         type V = GraphView<<V as View>::V>;
@@ -59,6 +74,16 @@ pub mod UnDirGraphMtEph {
             GraphView { V: self.V@, A: self.E@ }
         }
     }
+
+
+    //		6. spec fns
+
+    pub open spec fn valid_key_type_for_graph<V: StTInMtT + Hash>() -> bool {
+        valid_key_type_Edge::<V>()
+    }
+
+
+    //		8. traits
 
     pub trait UnDirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
 
@@ -78,7 +103,8 @@ pub mod UnDirGraphMtEph {
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_ng(u).contains(w))
         }
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn empty() -> (g: Self)
             requires valid_key_type_for_graph::<V>()
             ensures 
@@ -86,7 +112,8 @@ pub mod UnDirGraphMtEph {
                 g@.V == Set::<<V as View>::V>::empty(), 
                 g@.A == Set::<(<V as View>::V, <V as View>::V)>::empty();
 
-        /// APAS: Work Θ(|V| + |E|), Span Θ(1)
+        /// - APAS: Work Θ(|V| + |E|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(1)
         fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: Self)
             requires 
                 valid_key_type_for_graph::<V>(),
@@ -99,23 +126,28 @@ pub mod UnDirGraphMtEph {
                 g@.V == V@, 
                 g@.A == E@;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn edges(&self) -> (e: &SetStEph<Edge<V>>)
             ensures e@ == self@.A;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn sizeV(&self) -> (n: N)
             ensures n == self@.V.len();
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn sizeE(&self) -> (n: N)
             ensures n == self@.A.len();
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: B)
             requires 
                 wf_graph_view(self@),
@@ -130,7 +162,8 @@ pub mod UnDirGraphMtEph {
             Set::new(|w: V::V| self@.A.contains((v, w)) || self@.A.contains((w, v)))
         }
 
-        /// APAS: Work Θ(|E|), Span Θ(log |E|) - parallel
+        /// - APAS: Work Θ(|E|), Span Θ(log |E|) — parallel
+        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(log |E|) — ParaPair! split edges
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires 
                 wf_graph_view(self@),
@@ -143,10 +176,11 @@ pub mod UnDirGraphMtEph {
         open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
             recommends wf_graph_view(self@), vertices <= self@.V
         {
-            Set::new(|w: V::V| exists |u: V::V| #![auto] vertices.contains(u) && self.spec_ng(u).contains(w))
+            Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
         }
 
-        /// APAS: Work Θ(|u_set| × |E|), Span Θ(log |u_set| + log |E|) - parallel
+        /// - APAS: Work Θ(|u_set| × |E|), Span Θ(log |u_set| + log |E|) — parallel
+        /// - Claude-Opus-4.6: Work Θ(|u_set| × |E|), Span Θ(log |u_set| + log |E|) — ParaPair! split vertices
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires 
                 wf_graph_view(self@),
@@ -156,12 +190,14 @@ pub mod UnDirGraphMtEph {
                 neighbors@ == self.spec_ng_of_vertices(u_set@),
                 neighbors@ <= self@.V;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn incident(&self, e: &Edge<V>, v: &V) -> (b: B)
             requires valid_key_type_for_graph::<V>()
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
-        /// APAS: Work Θ(|E|), Span Θ(log |E|) - parallel
+        /// - APAS: Work Θ(|E|), Span Θ(log |E|) — parallel
+        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(log |E|) — calls ng
         fn degree(&self, v: &V) -> (n: N)
             requires 
                 wf_graph_view(self@),
@@ -169,6 +205,9 @@ pub mod UnDirGraphMtEph {
                 self@.V.contains(v@),
             ensures n == self.spec_ng(v@).len();
     }
+
+
+    //		9. impls
 
     /// Parallel edge filtering for neighbors using set split.
     fn ng_par<V: StTInMtT + Hash + 'static>(g: &UnDirGraphMtEph<V>, v: V, edges: SetStEph<Edge<V>>) 
@@ -306,10 +345,10 @@ pub mod UnDirGraphMtEph {
                     }
                 }
                 assert(verts@ =~= Set::empty().insert(u@));
-                assert forall |w: V::V| #![auto] g.spec_ng_of_vertices_from_set(verts@).contains(w)
+                assert forall |w: V::V| g.spec_ng_of_vertices_from_set(verts@).contains(w)
                     <==> g.spec_ng(u@).contains(w) by {
                     if g.spec_ng_of_vertices_from_set(verts@).contains(w) {
-                        let v_wit: V::V = choose |v: V::V| #![auto] verts@.contains(v) && g.spec_ng(v).contains(w);
+                        let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && g.spec_ng(v).contains(w);
                         assert(v_wit == u@);
                     }
                 }
@@ -335,10 +374,10 @@ pub mod UnDirGraphMtEph {
             let result = left_neighbors.union(&right_neighbors);
             proof {
                 assert(verts@ =~= left_verts@.union(right_verts@));
-                assert forall |w: V::V| #![auto] g.spec_ng_of_vertices_from_set(verts@).contains(w)
+                assert forall |w: V::V| #![trigger result@.contains(w)] g.spec_ng_of_vertices_from_set(verts@).contains(w)
                     <==> result@.contains(w) by {
                     if g.spec_ng_of_vertices_from_set(verts@).contains(w) {
-                        let v_wit: V::V = choose |v: V::V| #![auto] verts@.contains(v) && g.spec_ng(v).contains(w);
+                        let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && g.spec_ng(v).contains(w);
                         assert(left_verts@.contains(v_wit) || right_verts@.contains(v_wit));
                         if left_verts@.contains(v_wit) {
                             assert(g.spec_ng_of_vertices_from_set(left_verts@).contains(w));
@@ -348,10 +387,10 @@ pub mod UnDirGraphMtEph {
                     }
                     if result@.contains(w) {
                         if left_neighbors@.contains(w) {
-                            let v_wit: V::V = choose |v: V::V| #![auto] left_verts@.contains(v) && g.spec_ng(v).contains(w);
+                            let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && g.spec_ng(v).contains(w);
                             assert(verts@.contains(v_wit));
                         } else {
-                            let v_wit: V::V = choose |v: V::V| #![auto] right_verts@.contains(v) && g.spec_ng(v).contains(w);
+                            let v_wit: V::V = choose |v: V::V| #![trigger right_verts@.contains(v)] right_verts@.contains(v) && g.spec_ng(v).contains(w);
                             assert(verts@.contains(v_wit));
                         }
                     }
@@ -409,6 +448,17 @@ pub mod UnDirGraphMtEph {
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
+
+    //		11. derive impls in verus!
+
+    impl<V: StTInMtT + Hash + 'static> Clone for UnDirGraphMtEph<V> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            UnDirGraphMtEph { V: self.V.clone(), E: self.E.clone() }
+        }
+    }
+
     impl<V: StTInMtT + Hash + 'static> Eq for UnDirGraphMtEph<V> {}
 
     impl<V: StTInMtT + Hash + 'static> PartialEq for UnDirGraphMtEph<V> {
@@ -428,6 +478,9 @@ pub mod UnDirGraphMtEph {
 
     } // verus!
 
+
+    //		13. derive impls outside verus!
+
     impl<V: StTInMtT + Hash + 'static> Debug for UnDirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             f.debug_struct("UnDirGraphMtEph")
@@ -440,6 +493,9 @@ pub mod UnDirGraphMtEph {
     impl<V: StTInMtT + Hash + 'static> Display for UnDirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} E={:?}", self.V, self.E) }
     }
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! UnDirGraphMtEphLit {

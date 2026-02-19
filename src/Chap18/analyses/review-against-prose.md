@@ -8,7 +8,8 @@ table { width: 100% !important; table-layout: fixed; }
 # Chap18 Review Against Prose
 
 **Reviewer:** Claude-Opus-4.6
-**Date:** 2026-02-15 (updated 2026-02-16)
+**Date:** 2026-02-17
+**Last mechanical audit:** 2026-02-18 — section reorder, trigger fixes, doc comments only; no functional changes.
 **Prose file:** `prompts/Chap18.txt`
 **Source files:** ArraySeq.rs, ArraySeqStEph.rs, ArraySeqStPer.rs, ArraySeqMtEph.rs, ArraySeqMtPer.rs, LinkedListStEph.rs, LinkedListStPer.rs
 
@@ -49,10 +50,10 @@ later chapters (Chap26 for reduce/scan).
 | 1 | ArraySeq.rs | 1641 | No | 3 (1 assume, 2 external) | N/A (base) | Base trait + impl, iterator, collect |
 | 2 | ArraySeqStEph.rs | 1062 | No | 1 (assume in PartialEq) | Yes | St ephemeral variant |
 | 3 | ArraySeqStPer.rs | 1036 | No | 1 (assume in PartialEq) | Yes | St persistent variant |
-| 4 | ArraySeqMtEph.rs | 1574 | Yes | 8 (7 ninject_par + 1 PartialEq) | Yes | Mt ephemeral, map/filter/reduce/ninject_par |
+| 4 | ArraySeqMtEph.rs | 1574 | Yes | 3 (2 Arc pred + 1 PartialEq) | Yes | Mt ephemeral, map/filter/reduce/ninject_par |
 | 5 | ArraySeqMtPer.rs | 1195 | Yes | 1 (assume in PartialEq) | Yes | Mt persistent, map/filter/reduce_par |
-| 6 | LinkedListStEph.rs | 898 | No | 1 (assume in PartialEq) | Yes | LinkedList-backed sequence |
-| 7 | LinkedListStPer.rs | 881 | No | 1 (assume in PartialEq) | Yes | LinkedList persistent variant |
+| 6 | LinkedListStEph.rs | 898 | No | 2 (clone + PartialEq) | Yes | LinkedList-backed sequence |
+| 7 | LinkedListStPer.rs | 881 | No | 2 (clone + PartialEq) | Yes | LinkedList persistent variant |
 
 Total: 8287 lines across 7 files. All 6 variant modules are independent of ArraySeq.rs — each
 defines its own `spec_iterate`, `spec_inject` (where needed), and imports `spec_monoid` from
@@ -209,25 +210,26 @@ PTT total: 26 tests, all pass. ProveArraySeq required adding
 | 3 | ArraySeq.rs | #[verifier::external] on IntoIterator for &mut | 1 | Verus &mut limitation |
 | 4 | ArraySeqStEph.rs | assume in PartialEq | 1 | Standard pattern |
 | 5 | ArraySeqStPer.rs | assume in PartialEq | 1 | Standard pattern |
-| 6 | ArraySeqMtEph.rs | assume in PartialEq | 1 | Standard pattern |
-| 7 | ArraySeqMtEph.rs | assume(val == updates@[i].1) in apply_ninject_updates | 1 | Clone preserves value |
-| 8 | ArraySeqMtEph.rs | assume(buf@ =~= a.seq@) in ninject_par | 1 | Vec::clone preserves view |
-| 9 | ArraySeqMtEph.rs | assume(lock.pred() == pred) in ninject_par | 1 | Arc::new preserves RwLock pred |
-| 10 | ArraySeqMtEph.rs | assume((pos, val) == updates@[k]) in ninject_par | 1 | Tuple clone preserves value |
-| 11 | ArraySeqMtEph.rs | assume(lock1.pred() == pred) in ninject_par | 1 | Arc::clone preserves RwLock pred |
-| 12 | ArraySeqMtEph.rs | assume(lock2.pred() == pred) in ninject_par | 1 | Arc::clone preserves RwLock pred |
-| 13 | ArraySeqMtEph.rs | assume(r@ =~= result_vec@) in ninject_par | 1 | Vec::clone preserves view |
-| 14 | ArraySeqMtPer.rs | assume in PartialEq | 1 | Standard pattern |
-| 15 | LinkedListStEph.rs | assume in PartialEq | 1 | Standard pattern |
-| 16 | LinkedListStPer.rs | assume in PartialEq | 1 | Standard pattern |
+| 6 | ArraySeqMtEph.rs | assume(lock1.pred() == pred) in ninject_par | 1 | Arc::clone preserves RwLock pred |
+| 7 | ArraySeqMtEph.rs | assume(lock2.pred() == pred) in ninject_par | 1 | Arc::clone preserves RwLock pred |
+| 8 | ArraySeqMtEph.rs | assume in PartialEq | 1 | Standard pattern |
+| 9 | ArraySeqMtPer.rs | assume in PartialEq | 1 | Standard pattern |
+| 10 | LinkedListStEph.rs | assume(cloned@ == self@) in clone | 1 | Seq.clone preserves view |
+| 11 | LinkedListStEph.rs | assume in PartialEq | 1 | Standard pattern |
+| 12 | LinkedListStPer.rs | assume(cloned@ == self@) in clone | 1 | Seq.clone preserves view |
+| 13 | LinkedListStPer.rs | assume in PartialEq | 1 | Standard pattern |
 
-Total: 16 holes (14 assume, 2 external).
+Total: 13 holes (11 assume, 2 external).
 
 - 7 PartialEq assumes: standard leaf-type pattern, justified.
 - 2 external: Verus &mut limitation, justified.
-- 7 ninject_par assumes: all for clone-view preservation and Arc opacity. The concurrent
-  lock-invariant proof itself is fully verified. These could be closed with better Verus
-  support for generic Clone specs and Arc transparency.
+- 2 LinkedList clone assumes: Seq.clone preserves view; Verus cannot prove through generic Clone.
+- 2 ninject_par Arc assumes: Arc::clone preserves RwLock pred; no vstd spec for Arc refcount bump.
+
+**Closed (feq axiom fixes):** ArraySeqMtEph previously had 5 ninject_par assumes (val==updates@[i].1,
+buf@=~=a.seq@, lock.pred on Arc::new, (pos,val)==updates@[k], r@=~=result_vec@). These were removed
+by feq axiom improvements. The 2 Arc::clone pred assumes remain. LinkedListStEph and LinkedListStPer
+gained clone assumes (previously assumed PartialEq only).
 
 ## Table of Contents / In-Out Table
 
@@ -253,9 +255,9 @@ with 8287 lines total:
 
 - **Spec fidelity:** 20 of 20 implementable prose operations implemented. All strong.
 - **Module independence:** All 6 variants are independent of ArraySeq.rs.
-- **Proof holes:** 16 total (14 assume, 2 external). 7 PartialEq + 2 &mut external are
-  standard justified patterns. 7 ninject_par assumes are clone/Arc opacity — the
-  concurrent invariant proof is fully verified.
+- **Proof holes:** 13 total (11 assume, 2 external). 7 PartialEq + 2 &mut external are
+  standard justified patterns. 2 ninject_par Arc assumes + 2 LinkedList clone assumes
+  remain. 5 ninject_par assumes were closed by feq axiom fixes.
 - **RTTs:** 99 tests across 7 files, all pass. Every module has dedicated RTTs.
 - **PTTs:** 26 tests across 7 files, all pass.
 - **Cost annotations:** All 7 files carry dual APAS/Claude-Opus-4.6 annotations.
@@ -267,4 +269,5 @@ with 8287 lines total:
 
 | # | Priority | Item |
 |---|----------|------|
-| 1 | Low | Close 7 ninject_par clone/Arc assumes when Verus support improves |
+| 1 | Low | Close 2 ninject_par Arc assumes when vstd provides Arc::clone spec |
+| 2 | Low | Close 2 LinkedList clone assumes when Verus can prove Seq.clone preserves view |

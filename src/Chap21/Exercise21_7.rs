@@ -2,22 +2,31 @@
 //! Chapter 21 — Exercise 21.7: Comprehension with Conditionals - even elements paired with vowels.
 //! Verusified.
 
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	6. spec fns
+//	9. impls
+
+//		1. module
+
 pub mod Exercise21_7 {
 
-    #[cfg(verus_keep_ghost)]
     use vstd::prelude::*;
 
     #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::seq::seq::lemma_flatten_uniform_len;
+
+    verus! {
+
+    //		2. imports
+
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
-
-    #[cfg(verus_keep_ghost)]
     use crate::Types::Types::*;
-
-    #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
 
-    #[cfg(verus_keep_ghost)]
-    verus! {
+    //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -25,8 +34,12 @@ pub mod Exercise21_7 {
         crate::Types::Types::group_Pair_axioms,
     };
 
+    //		6. spec fns
+
     /// Spec: x is even.
-    pub open spec fn spec_is_even(x: int) -> bool { x % 2 == 0 }
+    pub open spec fn spec_is_even(x: int) -> bool { x % 2 == 0     }
+
+    //		9. impls
 
     /// Check if a number is even.
     /// - APAS: Work Θ(1), Span Θ(1)
@@ -65,7 +78,10 @@ pub mod Exercise21_7 {
     ) -> (result: ArraySeqStPerS<Pair<N, char>>)
        requires 
             obeys_feq_clone::<char>(),
-            obeys_feq_clone::<Pair<N, char>>()
+            obeys_feq_clone::<Pair<N, char>>(),
+            a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,
+       ensures
+            result.seq@.len() <= a.seq@.len() as int * b.seq@.len() as int,
     {
         let pred_even = |x: &N| -> (r: B) ensures r == spec_is_even(*x as int) { is_even(x) };
         let pred_vowel = |y: &char| -> (r: B) ensures r == spec_is_vowel(*y) { is_vowel(y) };
@@ -83,6 +99,8 @@ pub mod Exercise21_7 {
                     i < fa_len,
                     fa_len == filtered_a.seq@.len(),
                     fb_len == filtered_b.seq@.len(),
+                ensures
+                    row.seq@.len() == fb_len,
             {
                 let x = filtered_a.nth(i);
                 ArraySeqStPerS::tabulate(
@@ -98,7 +116,24 @@ pub mod Exercise21_7 {
             }),
             fa_len,
         );
-        ArraySeqStPerS::flatten(&nested)
+        let result = ArraySeqStPerS::flatten(&nested);
+        proof {
+            let ghost mapped = nested.seq@.map_values(
+                |inner: ArraySeqStPerS<Pair<N, char>>| inner.seq@);
+            assert forall|i: int| 0 <= i < mapped.len() implies
+                (#[trigger] mapped[i]).len() == fb_len as int by {}
+            lemma_flatten_uniform_len(mapped, fb_len as int);
+            assert(result.seq@.len() == fa_len as int * fb_len as int);
+            assert(fa_len <= a.seq@.len());
+            assert(fb_len <= b.seq@.len());
+            assert(fa_len as int * fb_len as int <= a.seq@.len() as int * b.seq@.len() as int)
+                by (nonlinear_arith)
+                requires
+                    fa_len as int >= 0, fb_len as int >= 0,
+                    fa_len as int <= a.seq@.len() as int,
+                    fb_len as int <= b.seq@.len() as int;
+        }
+        result
     }
 
     } // verus!

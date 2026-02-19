@@ -8,7 +8,8 @@ table { width: 100% !important; table-layout: fixed; }
 # Chap17 Review Against Prose
 
 **Reviewer:** Claude-Opus-4.6
-**Date:** 2026-02-16
+**Date:** 2026-02-17
+**Last mechanical audit:** 2026-02-18 — section reorder, trigger fixes, doc comments only; no functional changes.
 **Prose file:** `prompts/Chap17.txt`
 **Source files:** `MathSeq.rs`
 
@@ -28,7 +29,7 @@ no algorithms, no cost tables.
 
 | # | File | Lines | Parallel? | Proof holes | Notes |
 |---|------|-------|-----------|-------------|-------|
-| 1 | MathSeq.rs | 552 | No | 1 assume() in PartialEq | Vec-backed sequence ADT with 15+ operations, iterators, Clone, Eq, Display, Debug, macro |
+| 1 | MathSeq.rs | 439 | No | 2 assume() (Clone, PartialEq), 1 bare_impl | Vec-backed sequence ADT. bare_impl: iter_mut — must stay outside verus! per style rule. |
 
 ## Prose-to-Code Mapping
 
@@ -125,11 +126,16 @@ Definition 17.1 as a dense Vec-backed sequence.
 
 | # | File | Hole | Count | Justification |
 |---|------|------|-------|---------------|
-| 1 | MathSeq.rs | assume(r == (self@ == other@)) in PartialEq::eq | 1 | Leaf type wrapping Vec — Verus cannot resolve eq_spec through trait machinery. Standard pattern per partialeq-eq-pattern rule. |
+| 1 | MathSeq.rs | assume(cloned@ == self@) in Clone::clone | 1 | Vec::clone view equality — Verus cannot prove cloned@ == self@ through Vec's external specs. |
+| 2 | MathSeq.rs | assume(r == (self@ == other@)) in PartialEq::eq | 1 | Leaf type wrapping Vec — Verus cannot resolve eq_spec through trait machinery. Standard pattern per partialeq-eq-pattern rule. |
+| 3 | MathSeq.rs | bare_impl (iter_mut) | 1 | Exception: iter_mut returns &mut; must stay outside verus! per style rule. Not a violation. |
+
+The bare_impl detector flags `impl MathSeqS` for iter_mut, but this is the
+required exception — `&mut`-returning methods cannot be inside verus!.
 
 ## Style Notes
 
-1. **Clone** — now inside `verus!`. Correct per style rule.
+1. **Clone** — inside `verus!` with assume for view equality. Correct.
 2. **PartialEq/Eq/PartialEqSpecImpl** — inside `verus!`. Correct.
 3. **IntoIterator for &** and consuming **IntoIterator** — inside `verus!`. Correct.
 4. **iter()** — inside `verus!` with ensures clause. Returns `MathSeqIter`.
@@ -150,7 +156,7 @@ Vec-backed implementation with strong specs on all operations:
 - Excellent RTT coverage (26 tests) including iterators, macros, traits
 - PTT coverage: 9 tests across 2 files, all passing
 - Full collection iterator standard implemented (MathSeqIter, ghost iter, etc.)
-- Single proof hole: `assume()` in PartialEq — standard leaf-type pattern
+- Two proof holes: `assume()` in Clone and PartialEq — standard leaf-type patterns
 - No APAS cost specs to compare against (definitions-only chapter)
 
 This is a well-implemented building block used extensively by Chap18 (ArraySeq)

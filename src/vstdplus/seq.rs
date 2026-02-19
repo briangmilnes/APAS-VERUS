@@ -156,6 +156,101 @@ verus! {
         lemma_sum_int_unfold_take(views, i);
     }
 
+    /// If all inner sequences have the same length m, then flatten has length n * m.
+    pub proof fn lemma_flatten_uniform_len<A>(ss: Seq<Seq<A>>, m: int)
+        requires
+            forall|i: int| 0 <= i < ss.len() ==> (#[trigger] ss[i]).len() == m,
+        ensures
+            ss.flatten().len() == ss.len() * m,
+        decreases ss.len()
+    {
+        if ss.len() == 0 {
+            assert(ss.len() * m == 0) by (nonlinear_arith) requires ss.len() == 0;
+        } else {
+            assert forall|i: int| 0 <= i < ss.drop_first().len() implies
+                (#[trigger] ss.drop_first()[i]).len() == m by {
+                assert(ss.drop_first()[i] == ss[i + 1]);
+            }
+            lemma_flatten_uniform_len(ss.drop_first(), m);
+            assert(ss.first().len() == m);
+            assert(m + (ss.len() - 1) * m == ss.len() * m) by (nonlinear_arith)
+                requires ss.len() > 0;
+        }
+    }
+
+    /// Sum of inner sequence lengths.
+    pub open spec fn spec_inner_lens_sum<A>(ss: Seq<Seq<A>>) -> int
+        decreases ss.len()
+    {
+        if ss.len() == 0 { 0 }
+        else { ss.first().len() + spec_inner_lens_sum(ss.drop_first()) }
+    }
+
+    /// General flatten length: equals sum of inner lengths.
+    pub proof fn lemma_flatten_len_is_inner_lens_sum<A>(ss: Seq<Seq<A>>)
+        ensures ss.flatten().len() == spec_inner_lens_sum(ss),
+        decreases ss.len()
+    {
+        if ss.len() > 0 {
+            lemma_flatten_len_is_inner_lens_sum(ss.drop_first());
+        }
+    }
+
+    /// If a predicate holds for all elements of all inner sequences,
+    /// it holds for all elements of the flattened result.
+    pub proof fn lemma_flatten_all<A>(ss: Seq<Seq<A>>, pred: spec_fn(A) -> bool)
+        requires
+            forall|i: int, j: int|
+                0 <= i < ss.len() && 0 <= j < ss[i].len()
+                ==> #[trigger] pred(ss[i][j]),
+        ensures
+            forall|k: int|
+                0 <= k < ss.flatten().len()
+                ==> #[trigger] pred(ss.flatten()[k]),
+        decreases ss.len()
+    {
+        if ss.len() > 0 {
+            let first = ss.first();
+            let rest = ss.drop_first();
+            assert forall|i: int, j: int|
+                0 <= i < rest.len() && 0 <= j < rest[i].len()
+                implies #[trigger] pred(rest[i][j]) by {
+                assert(rest[i] == ss[i + 1]);
+                assert(pred(ss[i + 1][j]));
+            }
+            lemma_flatten_all(rest, pred);
+            assert forall|k: int|
+                0 <= k < ss.flatten().len()
+                implies #[trigger] pred(ss.flatten()[k]) by {
+                if k < first.len() {
+                    assert(ss.flatten()[k] == first[k]);
+                    assert(first == ss[0]);
+                    assert(pred(ss[0][k]));
+                } else {
+                    assert(ss.flatten()[k] == rest.flatten()[k - first.len()]);
+                }
+            }
+        }
+    }
+
+    /// If ss[i][j] is an element of the nested structure, it appears in the flattened result.
+    pub proof fn lemma_flatten_contains<A>(ss: Seq<Seq<A>>, i: int, j: int)
+        requires 0 <= i < ss.len(), 0 <= j < ss[i].len(),
+        ensures ss.flatten().contains(ss[i][j]),
+        decreases ss.len()
+    {
+        if i == 0 {
+            assert(ss.flatten()[j] == ss.first()[j]);
+            assert(ss[0] == ss.first());
+        } else {
+            let rest = ss.drop_first();
+            assert(rest[i - 1] == ss[i]);
+            lemma_flatten_contains(rest, i - 1, j);
+            let k = choose|k: int| 0 <= k < rest.flatten().len() && rest.flatten()[k] == ss[i][j];
+            assert(ss.flatten()[ss.first().len() + k] == rest.flatten()[k]);
+        }
+    }
+
 } // verus!
 
 } // mod seq

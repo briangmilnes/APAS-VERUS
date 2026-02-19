@@ -1,26 +1,30 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Divide-and-conquer Euclidean Traveling Salesperson heuristic (Chapter 26, Section 4).
 //! Verusified: structural properties (no fabrication) verified; f64 arithmetic external.
 
 //  Table of Contents
 //	1. module
-//	2. imports
 //	3. broadcast use
 //	4. type definitions
-//	5. spec functions
-//	7. proof fns
+//	6. spec fns
+//	7. proof fns/broadcast groups
 //	8. traits
 //	9. impls
-//	10. external helpers (f64-dependent)
-//	13. derive impls outside verus!
+//	11. derive impls in verus!
 
 //		1. module
+
+
+
 
 pub mod ETSPStEph {
 
     use vstd::prelude::*;
 
     verus! {
+
+    //		3. broadcast use
 
     //		2. imports
 
@@ -30,6 +34,9 @@ pub mod ETSPStEph {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
     };
+
+
+    //		4. type definitions
 
     //		4. type definitions
 
@@ -45,19 +52,8 @@ pub mod ETSPStEph {
         pub to: Point,
     }
 
-    impl Copy for Point {}
-    impl Clone for Point {
-        fn clone(&self) -> (r: Point)
-            ensures r == *self
-        { *self }
-    }
 
-    impl Copy for Edge {}
-    impl Clone for Edge {
-        fn clone(&self) -> (r: Edge)
-            ensures r == *self
-        { *self }
-    }
+    //		6. spec fns
 
     //		5. spec functions
 
@@ -105,6 +101,9 @@ pub mod ETSPStEph {
         forall|i: int| #![trigger tour[i]] 0 <= i < tour.len() ==>
             spec_point_eq(tour[i].to, tour[((i + 1) % (tour.len() as int))].from)
     }
+
+
+    //		7. proof fns/broadcast groups
 
     //		7. proof fns
 
@@ -231,6 +230,9 @@ pub mod ETSPStEph {
         }
     }
 
+
+    //		8. traits
+
     //		8. traits
 
     pub trait ETSPStTrait {
@@ -244,6 +246,13 @@ pub mod ETSPStEph {
                 points@.len() < usize::MAX / 2,
             ensures spec_etsp(tour@, points@);
     }
+
+
+    //		9. impls
+
+    impl Copy for Point {}
+
+    impl Copy for Edge {}
 
     //		9. impls
 
@@ -451,9 +460,23 @@ pub mod ETSPStEph {
         find_best_swap_impl(left_tour, right_tour)
     }
 
+
+    //		11. derive impls in verus!
+
+    impl Clone for Point {
+        fn clone(&self) -> (r: Point)
+            ensures r == *self
+        { *self }
+    }
+
+    impl Clone for Edge {
+        fn clone(&self) -> (r: Edge)
+            ensures r == *self
+        { *self }
+    }
+
     } // verus!
 
-    //		13. derive impls outside verus!
 
     impl Point {
         /// Euclidean distance between two points.

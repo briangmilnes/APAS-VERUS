@@ -175,6 +175,10 @@ name = "TestChap19ArraySeqMtEph"
 path = "tests/Chap19/TestArraySeqMtEph.rs"
 
 [[test]]
+name = "TestChap21"
+path = "tests/Chap21/TestChap21.rs"
+
+[[test]]
 name = "TestBalBinTreeStEph"
 path = "tests/Chap23/TestBalBinTreeStEph.rs"
 

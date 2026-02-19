@@ -1,8 +1,17 @@
 // Copyright (C) 2025 Brian G. Milnes
 // SPDX-License-Identifier: MIT
+
 //! Maximum Contiguous Subsequence Sum — Parallel Strengthened D&C (Chapter 28, Algorithm 28.19).
-//!
-//! Verified sequential impl under verus_keep_ghost; parallel impl at runtime.
+
+//  Table of Contents
+//	1. module
+//	4. type definitions
+//	6. spec fns
+//	8. traits
+//	9. impls
+
+//		1. module
+
 
 pub mod MaxContigSubSumDivConOptMtEph {
     use vstd::prelude::*;
@@ -13,12 +22,17 @@ pub mod MaxContigSubSumDivConOptMtEph {
     use crate::Chap28::MaxContigSubSumDivConOptStEph::MaxContigSubSumDivConOptStEph::lemma_strength_combine;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
-    #[cfg(not(verus_keep_ghost))]
-    use crate::ParaPair;
 
     pub type T = ArraySeqMtEphS<i32>;
 
     verus! {
+
+    //		4. type definitions
+
+    type StrengthResult = (Option<i32>, i32, i32, i32);
+
+
+    //		6. spec fns
 
     pub open spec fn spec_max_opt_i32(a: Option<i32>, b: Option<i32>) -> Option<i32> {
         match (a, b) {
@@ -28,6 +42,27 @@ pub mod MaxContigSubSumDivConOptMtEph {
             (Option::Some(x), Option::Some(y)) => if x >= y { a } else { b },
         }
     }
+
+
+    //		8. traits
+
+    pub trait MaxContigSubSumDivConOptMtTrait {
+        /// Compute MCSS using parallel strengthened D&C (Algorithm 28.19).
+        /// Returns None for empty sequence (representing -infinity).
+        /// - APAS: Work Θ(n), Span Θ(log n)
+        /// - Claude-Opus-4.6 (verified): Work Θ(n log n), Span Θ(n)
+        fn max_contig_sub_sum_divcon_opt_mt(a: &ArraySeqMtEphS<i32>) -> (result: Option<i32>)
+            requires
+                sums_fit_i32(a.seq@),
+                obeys_feq_clone::<i32>(),
+            ensures
+                a.seq@.len() == 0 ==> result.is_none(),
+                a.seq@.len() > 0 ==> result.is_some(),
+                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
+    }
+
+
+    //		9. impls
 
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (result: Option<i32>)
         ensures result == spec_max_opt_i32(a, b),
@@ -40,9 +75,6 @@ pub mod MaxContigSubSumDivConOptMtEph {
         }
     }
 
-    type StrengthResult = (Option<i32>, i32, i32, i32);
-
-    #[cfg(verus_keep_ghost)]
     fn max_contig_sub_sum_aux(a: &ArraySeqMtEphS<i32>) -> (result: StrengthResult)
         requires a.seq@.len() > 0, sums_fit_i32(a.seq@), obeys_feq_clone::<i32>(),
         ensures
@@ -118,22 +150,6 @@ pub mod MaxContigSubSumDivConOptMtEph {
         (max_sum, max_prefix, max_suffix, total)
     }
 
-    pub trait MaxContigSubSumDivConOptMtTrait {
-        /// Compute MCSS using parallel strengthened D&C (Algorithm 28.19).
-        /// Returns None for empty sequence (representing -infinity).
-        /// - APAS: Work Θ(n), Span Θ(log n)
-        /// - Claude-Opus-4.6 (verified): Work Θ(n log n), Span Θ(n)
-        fn max_contig_sub_sum_divcon_opt_mt(a: &ArraySeqMtEphS<i32>) -> (result: Option<i32>)
-            requires
-                sums_fit_i32(a.seq@),
-                obeys_feq_clone::<i32>(),
-            ensures
-                a.seq@.len() == 0 ==> result.is_none(),
-                a.seq@.len() > 0 ==> result.is_some(),
-                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
-    }
-
-    #[cfg(verus_keep_ghost)]
     impl MaxContigSubSumDivConOptMtTrait for ArraySeqMtEphS<i32> {
         fn max_contig_sub_sum_divcon_opt_mt(a: &ArraySeqMtEphS<i32>) -> (result: Option<i32>) {
             if a.length() == 0 { return None; }
@@ -143,56 +159,4 @@ pub mod MaxContigSubSumDivConOptMtEph {
     }
 
     } // verus!
-
-    #[cfg(not(verus_keep_ghost))]
-    fn max_with_neginf_par(a: Option<i32>, b: Option<i32>) -> Option<i32> {
-        match (a, b) {
-            (None, None) => None,
-            (None, Some(_)) => b,
-            (Some(_), None) => a,
-            (Some(x), Some(y)) => Some(x.max(y)),
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    type StrengthResultPar = (Option<i32>, i32, i32, i32);
-
-    #[cfg(not(verus_keep_ghost))]
-    fn max_contig_sub_sum_aux_par(a: &ArraySeqMtEphS<i32>) -> StrengthResultPar {
-        let n = a.length();
-        if n == 0 { return (None, i32::MIN / 2, i32::MIN / 2, 0); }
-        if n == 1 {
-            let val = a.nth(0).clone();
-            return (Some(val), val, val, val);
-        }
-
-        let mid = n / 2;
-        let left = a.subseq_copy(0, mid);
-        let right = a.subseq_copy(mid, n - mid);
-
-        let left_clone = left.clone();
-        let right_clone = right.clone();
-        let result_pair = ParaPair!(
-            move || max_contig_sub_sum_aux_par(&left_clone),
-            move || max_contig_sub_sum_aux_par(&right_clone)
-        );
-        let (m_left, p_left, s_left, t_left) = result_pair.0;
-        let (m_right, p_right, s_right, t_right) = result_pair.1;
-
-        let max_crossing = s_left + p_right;
-        let max_sum = max_with_neginf_par(max_with_neginf_par(m_left, m_right), Some(max_crossing));
-        let max_prefix = p_left.max(t_left + p_right);
-        let max_suffix = s_right.max(s_left + t_right);
-        let total = t_left + t_right;
-
-        (max_sum, max_prefix, max_suffix, total)
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl MaxContigSubSumDivConOptMtTrait for ArraySeqMtEphS<i32> {
-        fn max_contig_sub_sum_divcon_opt_mt(a: &ArraySeqMtEphS<i32>) -> Option<i32> {
-            let (max_sum, _, _, _) = max_contig_sub_sum_aux_par(a);
-            max_sum
-        }
-    }
 }

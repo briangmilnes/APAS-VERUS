@@ -7,7 +7,8 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 28: Maximum Contiguous Subsequence Sum — Review Against Prose
 
-**Date**: 2026-02-13 (initial), 2026-02-18 (full verusification incl. Mt modules)
+**Date**: 2026-02-17
+**Last mechanical audit:** 2026-02-18 — section reorder, trigger fixes, doc comments only; no functional changes.
 **Reviewer**: Claude-Opus-4.6
 **Prose Source**: `prompts/Chap28.txt` (Chapter 28 of APAS)
 

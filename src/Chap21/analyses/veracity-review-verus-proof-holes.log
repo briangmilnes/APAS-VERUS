@@ -1,51 +1,36 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap21/
-
 ✓ Algorithm21_1.rs
    2 clean proof functions
 ✓ Algorithm21_2.rs
-   1 clean proof function
 ✓ Algorithm21_5.rs
 ✓ Algorithm21_6.rs
+   1 clean proof function
 ✓ Exercise21_5.rs
+   1 clean proof function
 ✓ Exercise21_6.rs
 ✓ Exercise21_7.rs
-❌ Exercise21_8.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap21/Exercise21_8.rs:148: assume() - assume(1 < k as int + 1);
-       107 |     pub fn is_prime(n: N) -> (prime: B)
-            ...
-       146 |             assert(n as int % 1 == 0) by (nonlinear_arith) requires n >= 2;
-       147 |             // k >= 1 so 1 < k+1, triggering the recursive case.
-       149 |             assert(n as int % 1 == 0);
-       150 | 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap21/Exercise21_8.rs:159: assume() - assume(ones.seq@.len() as int == spec_divisor_count(n as int, 1, k as int + 1));
-       107 |     pub fn is_prime(n: N) -> (prime: B)
-            ...
-       157 |             // Bridge: the filter count equals the ghost divisor count.
-       158 |             // This is the proof hole — filter's spec doesn't give us the exact count.
-       160 | 
-       161 |             // Now prove: prime <==> spec_is_prime(n as int).
-   Holes: 2 total
-      2 × assume()
-   Proof functions: 3 total (3 clean, 0 holed)
+✓ Exercise21_8.rs
+   5 clean proof functions
 ✓ Exercise21_9.rs
+   3 clean proof functions
 ✓ Problem21_1.rs
 ✓ Problem21_3.rs
 ✓ Problem21_4.rs
-   1 clean proof function
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   11 clean (no holes)
-   1 holed (contains holes)
+   12 clean (no holes)
+   0 holed (contains holes)
    12 total
 
 Proof Functions:
-   7 clean
+   12 clean
    0 holed
-   7 total
+   12 total
 
-Holes Found: 2 total
-   2 × assume()
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
+

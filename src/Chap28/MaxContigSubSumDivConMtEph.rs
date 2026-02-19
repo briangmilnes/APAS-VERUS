@@ -1,8 +1,16 @@
 // Copyright (C) 2025 Brian G. Milnes
 // SPDX-License-Identifier: MIT
+
 //! Maximum Contiguous Subsequence Sum — Parallel Divide and Conquer (Chapter 28, Algorithm 28.17).
-//!
-//! Verified sequential impl under verus_keep_ghost; parallel impl at runtime.
+
+//  Table of Contents
+//	1. module
+//	6. spec fns
+//	8. traits
+//	9. impls
+
+//		1. module
+
 
 pub mod MaxContigSubSumDivConMtEph {
     use vstd::prelude::*;
@@ -13,12 +21,12 @@ pub mod MaxContigSubSumDivConMtEph {
     use crate::Chap28::MaxContigSubSumDivConStEph::MaxContigSubSumDivConStEph::lemma_divcon_combine;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
-    #[cfg(not(verus_keep_ghost))]
-    use crate::ParaPair;
 
     pub type T = ArraySeqMtEphS<i32>;
 
     verus! {
+
+    //		6. spec fns
 
     pub open spec fn spec_max_opt_i32(a: Option<i32>, b: Option<i32>) -> Option<i32> {
         match (a, b) {
@@ -28,6 +36,27 @@ pub mod MaxContigSubSumDivConMtEph {
             (Option::Some(x), Option::Some(y)) => if x >= y { a } else { b },
         }
     }
+
+
+    //		8. traits
+
+    pub trait MaxContigSubSumDivConMtTrait {
+        /// Compute MCSS using parallel divide-and-conquer (Algorithm 28.17).
+        /// Returns None for empty sequence (representing -infinity).
+        /// - APAS: Work Θ(n log n), Span Θ(log² n)
+        /// - Claude-Opus-4.6 (verified): Work Θ(n log n), Span Θ(n log n)
+        fn max_contig_sub_sum_divcon_mt(a: &ArraySeqMtEphS<i32>) -> (result: Option<i32>)
+            requires
+                sums_fit_i32(a.seq@),
+                obeys_feq_clone::<i32>(),
+            ensures
+                a.seq@.len() == 0 ==> result.is_none(),
+                a.seq@.len() > 0 ==> result.is_some(),
+                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
+    }
+
+
+    //		9. impls
 
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (result: Option<i32>)
         ensures result == spec_max_opt_i32(a, b),
@@ -40,7 +69,6 @@ pub mod MaxContigSubSumDivConMtEph {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
     fn max_suffix_sum(a: &ArraySeqMtEphS<i32>) -> (result: i32)
         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
         ensures is_max_suffix_sum(a.seq@, result as int),
@@ -91,7 +119,6 @@ pub mod MaxContigSubSumDivConMtEph {
         running_sum - min_prefix
     }
 
-    #[cfg(verus_keep_ghost)]
     fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> (result: i32)
         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
         ensures is_max_prefix_sum(a.seq@, result as int),
@@ -123,22 +150,6 @@ pub mod MaxContigSubSumDivConMtEph {
         max_val
     }
 
-    pub trait MaxContigSubSumDivConMtTrait {
-        /// Compute MCSS using parallel divide-and-conquer (Algorithm 28.17).
-        /// Returns None for empty sequence (representing -infinity).
-        /// - APAS: Work Θ(n log n), Span Θ(log² n)
-        /// - Claude-Opus-4.6 (verified): Work Θ(n log n), Span Θ(n log n)
-        fn max_contig_sub_sum_divcon_mt(a: &ArraySeqMtEphS<i32>) -> (result: Option<i32>)
-            requires
-                sums_fit_i32(a.seq@),
-                obeys_feq_clone::<i32>(),
-            ensures
-                a.seq@.len() == 0 ==> result.is_none(),
-                a.seq@.len() > 0 ==> result.is_some(),
-                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
-    }
-
-    #[cfg(verus_keep_ghost)]
     impl MaxContigSubSumDivConMtTrait for ArraySeqMtEphS<i32> {
         fn max_contig_sub_sum_divcon_mt(a: &ArraySeqMtEphS<i32>) -> (result: Option<i32>)
             decreases a.seq@.len(),
@@ -201,71 +212,4 @@ pub mod MaxContigSubSumDivConMtEph {
     }
 
     } // verus!
-
-    #[cfg(not(verus_keep_ghost))]
-    fn max_suffix_sum_par(a: &ArraySeqMtEphS<i32>) -> i32 {
-        if a.length() == 0 { return i32::MIN / 2; }
-        let (prefix_sums, total) =
-            <ArraySeqMtEphS<i32> as ArraySeqMtEphTrait<i32>>::scan(a, &|x, y| x + y, 0);
-        let zero_seq = <ArraySeqMtEphS<i32> as ArraySeqMtEphTrait<i32>>::singleton(0);
-        let all_prefixes =
-            <ArraySeqMtEphS<i32> as ArraySeqMtEphTrait<i32>>::append(&zero_seq, &prefix_sums);
-        let min_prefix = <ArraySeqMtEphS<i32> as ArraySeqMtEphTrait<i32>>::reduce(
-            &all_prefixes, &|x: &i32, y: &i32| (*x).min(*y), i32::MAX,
-        );
-        total - min_prefix
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    fn max_prefix_sum_par(a: &ArraySeqMtEphS<i32>) -> i32 {
-        if a.length() == 0 { return i32::MIN / 2; }
-        let (prefix_sums, _total) =
-            <ArraySeqMtEphS<i32> as ArraySeqMtEphTrait<i32>>::scan(a, &|x, y| x + y, 0);
-        <ArraySeqMtEphS<i32> as ArraySeqMtEphTrait<i32>>::reduce(
-            &prefix_sums, &|x: &i32, y: &i32| (*x).max(*y), i32::MIN,
-        )
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    fn max_with_neginf_par(a: Option<i32>, b: Option<i32>) -> Option<i32> {
-        match (a, b) {
-            (None, None) => None,
-            (None, Some(_)) => b,
-            (Some(_), None) => a,
-            (Some(x), Some(y)) => Some(x.max(y)),
-        }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    impl MaxContigSubSumDivConMtTrait for ArraySeqMtEphS<i32> {
-        fn max_contig_sub_sum_divcon_mt(a: &ArraySeqMtEphS<i32>) -> Option<i32> {
-            let n = a.length();
-            if n == 0 { return None; }
-            if n == 1 { return Some(*a.nth(0)); }
-
-            let mid = n / 2;
-            let left = a.subseq_copy(0, mid);
-            let right = a.subseq_copy(mid, n - mid);
-
-            let left_clone = left.clone();
-            let right_clone = right.clone();
-            let result_pair = ParaPair!(
-                move || Self::max_contig_sub_sum_divcon_mt(&left_clone),
-                move || Self::max_contig_sub_sum_divcon_mt(&right_clone)
-            );
-            let max_left = result_pair.0;
-            let max_right = result_pair.1;
-
-            let left_for_suffix = left.clone();
-            let right_for_prefix = right.clone();
-            let crossing_pair = ParaPair!(
-                move || max_suffix_sum_par(&left_for_suffix),
-                move || max_prefix_sum_par(&right_for_prefix)
-            );
-            let max_crossing = crossing_pair.0 + crossing_pair.1;
-
-            let result = max_with_neginf_par(max_left, max_right);
-            max_with_neginf_par(result, Some(max_crossing))
-        }
-    }
 }

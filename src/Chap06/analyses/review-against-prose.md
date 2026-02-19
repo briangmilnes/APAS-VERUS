@@ -8,7 +8,8 @@ table { width: 100% !important; table-layout: fixed; }
 # Chap06 Review Against Prose
 
 **Reviewer:** Claude-Opus-4.6
-**Date:** 2026-02-16
+**Date:** 2026-02-17
+**Last mechanical audit:** 2026-02-18 — section reorder, trigger fixes, doc comments only; no functional changes.
 **Prose file:** `prompts/Chap06.txt`
 **Source files:** 20 files (4 St graph types, 4 Mt graph types, 12 WeightedDirGraph per-type variants)
 
@@ -104,28 +105,20 @@ all would add ~10x verification time for no coverage gain.
 The prose has no cost specifications (purely definitional chapter). All cost
 annotations in the code are inferred from the implementations.
 
-### St modules: Cost annotations present
+### Cost annotations: All modules complete
 
-DirGraphStEph and UnDirGraphStEph have APAS cost annotations on every trait
-function. The pattern is consistent:
+All 8 core graph modules have paired APAS and Claude-Opus-4.6 cost annotations
+on every exec function. The pattern is consistent:
 
 - O(1) operations: empty, from_sets, vertices, arcs, sizeV, sizeA, neighbor, incident
 - O(|A|) or O(|E|) operations: ng, n_plus, n_minus, degree, in_degree, out_degree (iterate arcs/edges)
-- O(|vertices| x |A|): ng_of_vertices, n_plus_of_vertices, n_minus_of_vertices (nested iteration)
+- O(|vertices| × |A|): ng_of_vertices, n_plus_of_vertices, n_minus_of_vertices (nested iteration)
 
-### LabDirGraphStEph and LabUnDirGraphStEph
+### Mt modules
 
-Have `claude-4-sonet` annotations (15 total across both files). These should be
-updated to `Claude-Opus-4.6` but that is a cosmetic fix, not a correctness issue.
-
-### UnDirGraphStEph
-
-Has 4 `claude-4-sonet` annotations needing update.
-
-### Mt modules: Annotations present
-
-DirGraphMtEph annotates parallel functions with `Span Theta(log |A|)` — appropriate
-for ParaPair! which splits into two halves and recurses.
+DirGraphMtEph, UnDirGraphMtEph, LabDirGraphMtEph, and LabUnDirGraphMtEph
+annotate parallel functions with `Span Θ(log |A|)` or `Span Θ(log |E|)` —
+appropriate for ParaPair! which splits into two halves and recurses.
 
 ## Parallelism Audit (Mt modules)
 

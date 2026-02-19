@@ -7,7 +7,8 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chap27 — Review Against Prose
 
-**Date**: 2026-02-17 (updated)  
+**Date**: 2026-02-17  
+**Last mechanical audit:** 2026-02-18 — section reorder, trigger fixes, doc comments only; no functional changes.
 **Reviewer**: Claude-Opus-4.6  
 **Verification**: 1513 verified, 0 errors  
 **Proof holes (Chap27)**: 0

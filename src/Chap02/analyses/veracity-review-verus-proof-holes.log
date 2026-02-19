@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap02
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap02 -d src/Chap03 -d src/Chap05 -d src/Chap06 -d src/Chap11 -d src/Chap12 -d src/Chap17 -d src/Chap18 -d src/Chap19 -d src/Chap21 -d src/Chap23 -d src/Chap26 -d src/Chap27 -d src/Chap28
 
 ✓ FibonacciHFScheduler.rs
    5 clean proof functions
@@ -25,23 +25,499 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
       6 × external_body
       1 × external_type_specification
    Info: 1 assume(false); diverge() idiom(s)
+✓ src/Chap03/InsertionSortStEph.rs
+✓ src/Chap05/KleeneStPer.rs
+   9 clean proof functions
+❌ src/Chap05/MappingStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:518: assume() - assume(r == (self@ == other@));
+       508 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       516 |                 }
+       517 |                 // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
+       519 |             }
+       520 |             r
+   Holes: 1 total
+      1 × assume()
+✓ src/Chap05/RelationStEph.rs
+❌ src/Chap05/SetMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:955: assume() - proof { assume(r == (self@ == other@)); }
+       951 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       953 |         {
+       954 |             let r = self.elements == other.elements;
+       956 |             r
+       957 |         }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ src/Chap05/SetStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:832: assume() - proof { assume(equal == (self@ == other@)); }
+       827 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       830 |             let equal = self.elements == other.elements;
+       831 |             // HashSetWithView* eq is external_body so we have to trust it here.
+       833 |             equal
+       834 |         }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+✓ src/Chap06/DirGraphMtEph.rs
+✓ src/Chap06/DirGraphStEph.rs
+✓ src/Chap06/LabDirGraphMtEph.rs
+✓ src/Chap06/LabDirGraphStEph.rs
+✓ src/Chap06/LabUnDirGraphMtEph.rs
+✓ src/Chap06/LabUnDirGraphStEph.rs
+✓ src/Chap06/UnDirGraphMtEph.rs
+✓ src/Chap06/UnDirGraphStEph.rs
+✓ src/Chap06/WeightedDirGraphStEphI128.rs
+✓ src/Chap06/WeightedDirGraphStEphI16.rs
+✓ src/Chap06/WeightedDirGraphStEphI32.rs
+✓ src/Chap06/WeightedDirGraphStEphI64.rs
+✓ src/Chap06/WeightedDirGraphStEphI8.rs
+✓ src/Chap06/WeightedDirGraphStEphIsize.rs
+✓ src/Chap06/WeightedDirGraphStEphU128.rs
+✓ src/Chap06/WeightedDirGraphStEphU16.rs
+✓ src/Chap06/WeightedDirGraphStEphU32.rs
+✓ src/Chap06/WeightedDirGraphStEphU64.rs
+✓ src/Chap06/WeightedDirGraphStEphU8.rs
+✓ src/Chap06/WeightedDirGraphStEphUsize.rs
+ℹ src/Chap11/FibonacciMtEph2Threads.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEph2Threads.rs:155: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEph2Threads.rs:163: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+   Info: 2 assume(false); diverge() idiom(s)
+ℹ src/Chap11/FibonacciMtEphRecomputes.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEphRecomputes.rs:151: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEphRecomputes.rs:159: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge()} — valid non-termination idiom
+   Info: 2 assume(false); diverge() idiom(s)
+✓ src/Chap11/FibonacciMtPerAllThreads.rs
+ℹ src/Chap11/FibonacciMtPerTSM.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtPerTSM.rs:145: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtPerTSM.rs:153: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+   Info: 2 assume(false); diverge() idiom(s)
+✓ src/Chap11/FibonacciStEph.rs
+   3 clean proof functions
+❌ src/Chap12/Exercise12_1.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:19: external_body - #[verifier::external_body]
+        20 |     pub struct SpinLock {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:57: external_body - #[verifier::external_body]
+        58 |         fn new() -> (lock: Self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:65: external_body - #[verifier::external_body]
+        66 |         fn lock(&self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:73: external_body - #[verifier::external_body]
+        74 |         fn unlock(&self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:78: external_body - #[verifier::external_body]
+        79 |         fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:90: external_body - #[verifier::external_body]
+        91 |     pub fn parallel_increment(iterations: usize) -> (incremented: usize)
+   Holes: 6 total
+      6 × external_body
+✓ src/Chap12/Exercise12_2.rs
+❌ src/Chap12/Exercise12_5.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:30: external - #[verifier::external]
+        31 | struct Node<T> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:38: external_body - #[verifier::external_body]
+        39 | #[verifier::reject_recursive_types(T)]
+        40 | pub struct ConcurrentStackMt<T: Send> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:96: external_body - #[verifier::external_body]
+        97 |     fn new() -> (stack: Self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:103: external_body - #[verifier::external_body]
+       104 |     fn push(&self, value: T) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:117: external_body - #[verifier::external_body]
+       118 |     fn pop(&self) -> (possible_top: Option<T>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:132: external_body - #[verifier::external_body]
+       133 |     fn is_empty(&self) -> (empty: bool) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:137: external_body - #[verifier::external_body]
+       138 |     fn drain(&self) -> (items: Vec<T>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:154: external_body - #[verifier::external_body]
+       155 |     fn drop(&mut self)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:113: unsafe {} - new_node = unsafe { Box::from_raw(node_ptr) };
+       104 |     fn push(&self, value: T) {
+            ...
+       111 |                 break;
+       112 |             }
+       114 |         }
+       115 |     }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:124: unsafe {} - let next = unsafe { (*head).next };
+       118 |     fn pop(&self) -> (possible_top: Option<T>) {
+            ...
+       122 |                 return None;
+       123 |             }
+       125 |             if self.head.compare_exchange_weak(head, next, Ordering::AcqRel, Ordering::Acquire).is_ok() {
+       126 |                 let boxed = unsafe { Box::from_raw(head) };
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:126: unsafe {} - let boxed = unsafe { Box::from_raw(head) };
+       118 |     fn pop(&self) -> (possible_top: Option<T>) {
+            ...
+       124 |             let next = unsafe { (*head).next };
+       125 |             if self.head.compare_exchange_weak(head, next, Ordering::AcqRel, Ordering::Acquire).is_ok() {
+       127 |                 return Some(boxed.value);
+       128 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:161: unsafe {} - unsafe {
+       155 |     fn drop(&mut self)
+            ...
+       159 |         let mut current = self.head.load(Ordering::Relaxed);
+       160 |         while !current.is_null() {
+       162 |                 let node = Box::from_raw(current);
+       163 |                 current = node.next;
+   Holes: 12 total
+      4 × unsafe {}
+      7 × external_body
+      1 × external
+❌ src/Chap17/MathSeq.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:670: assume() - proof { assume(cloned@ == self@); }
+       666 |         fn clone(&self) -> (cloned: Self)
+            ...
+       668 |         {
+       669 |             let cloned = MathSeqS { data: self.data.clone() };
+       671 |             cloned
+       672 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:688: assume() - proof { assume(r == (self@ == other@)); }
+       684 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       686 |         {
+       687 |             let r = self.data == other.data;
+       689 |             r
+       690 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:697: error: bare_impl - impl<T: StT + Hash> MathSeqS<T> { — `impl MathSeqS` without trait; file defines [MathSeqSTrait]
+       698 |         /// Mutable borrow iterator. Must stay outside verus! (returns &mut).
+       699 |         /// - APAS: no cost spec.
+   Holes: 2 total
+      2 × assume()
+   Errors: 1 bare impl(s) in file with trait definition
+❌ src/Chap18/ArraySeq.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1459: external - #[verifier::external]
+      1460 |     impl<T: View> ArraySeqS<T> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1593: external - #[verifier::external]
+      1594 |     impl<'a, T> std::iter::IntoIterator for &'a mut ArraySeqS<T> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1621: assume() - proof { assume(equal == (self@ == other@)); }
+      1617 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1619 |         {
+      1620 |             let equal = self.seq == other.seq;
+      1622 |             equal
+      1623 |         }
+   Holes: 3 total
+      1 × assume()
+      2 × external
+   Proof functions: 10 total (10 clean, 0 holed)
+❌ src/Chap18/ArraySeqMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:1370: assume() - proof { assume(lock1.pred() == pred); }
+      1308 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            ...
+      1368 |             // No Arc::clone spec in vstd — can't prove pred is preserved through Arc refcount bump.
+      1369 |             let lock1 = lock.clone();
+      1371 |             let lock2 = lock.clone();
+      1372 |             proof { assume(lock2.pred() == pred); }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:1372: assume() - proof { assume(lock2.pred() == pred); }
+      1308 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+            ...
+      1370 |             proof { assume(lock1.pred() == pred); }
+      1371 |             let lock2 = lock.clone();
+      1373 | 
+      1374 |             let ghost lv = left@;
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:1571: assume() - proof { assume(equal == (self@ == other@)); }
+      1567 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1569 |         {
+      1570 |             let equal = self.seq == other.seq;
+      1572 |             equal
+      1573 |         }
+   Holes: 3 total
+      3 × assume()
+   Proof functions: 4 total (4 clean, 0 holed)
+❌ src/Chap18/ArraySeqMtPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:1176: assume() - proof { assume(equal == (self@ == other@)); }
+      1172 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1174 |         {
+      1175 |             let equal = self.seq == other.seq;
+      1177 |             equal
+      1178 |         }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 2 total (2 clean, 0 holed)
+❌ src/Chap18/ArraySeqStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStEph.rs:1043: assume() - proof { assume(equal == (self@ == other@)); }
+      1039 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1041 |         {
+      1042 |             let equal = self.seq == other.seq;
+      1044 |             equal
+      1045 |         }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ src/Chap18/ArraySeqStPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStPer.rs:1014: assume() - proof { assume(equal == (self@ == other@)); }
+      1010 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1012 |         {
+      1013 |             let equal = self.seq == other.seq;
+      1015 |             equal
+      1016 |         }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ src/Chap18/LinkedListStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:864: assume() - proof { assume(cloned@ == self@); }
+       860 |         fn clone(&self) -> (cloned: Self)
+            ...
+       862 |         {
+       863 |             let cloned = LinkedListStEphS { seq: self.seq.clone() };
+       865 |             cloned
+       866 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:878: assume() - proof { assume(r == (self@ == other@)); }
+       874 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       876 |         {
+       877 |             let r = self.seq == other.seq;
+       879 |             r
+       880 |         }
+   Holes: 2 total
+      2 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ src/Chap18/LinkedListStPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:847: assume() - proof { assume(cloned@ == self@); }
+       843 |         fn clone(&self) -> (cloned: Self)
+            ...
+       845 |         {
+       846 |             let cloned = LinkedListStPerS { seq: self.seq.clone() };
+       848 |             cloned
+       849 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:861: assume() - proof { assume(r == (self@ == other@)); }
+       857 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       859 |         {
+       860 |             let r = self.seq == other.seq;
+       862 |             r
+       863 |         }
+   Holes: 2 total
+      2 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ src/Chap19/ArraySeqMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1412: assume() - proof { assume(equal == (self@ == other@)); }
+      1408 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1410 |         {
+      1411 |             let equal = self.seq == other.seq;
+      1413 |             equal
+      1414 |         }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 6 total (6 clean, 0 holed)
+✓ src/Chap19/ArraySeqMtEphSlice.rs
+❌ src/Chap19/ArraySeqStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:1090: assume() - proof { assume(equal == (self@ == other@)); }
+      1086 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1088 |         {
+      1089 |             let equal = self.seq == other.seq;
+      1091 |             equal
+      1092 |         }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 3 total (3 clean, 0 holed)
+❌ src/Chap19/ArraySeqStPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs:1100: assume() - proof { assume(equal == (self@ == other@)); }
+      1096 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1098 |         {
+      1099 |             let equal = self.seq == other.seq;
+      1101 |             equal
+      1102 |         }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 3 total (3 clean, 0 holed)
+✓ src/Chap21/Algorithm21_1.rs
+   2 clean proof functions
+✓ src/Chap21/Algorithm21_2.rs
+✓ src/Chap21/Algorithm21_5.rs
+✓ src/Chap21/Algorithm21_6.rs
+   1 clean proof function
+✓ src/Chap21/Exercise21_5.rs
+   1 clean proof function
+✓ src/Chap21/Exercise21_6.rs
+✓ src/Chap21/Exercise21_7.rs
+✓ src/Chap21/Exercise21_8.rs
+   5 clean proof functions
+✓ src/Chap21/Exercise21_9.rs
+   3 clean proof functions
+✓ src/Chap21/Problem21_1.rs
+✓ src/Chap21/Problem21_3.rs
+✓ src/Chap21/Problem21_4.rs
+❌ src/Chap23/BalBinTreeStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:752: assume() - proof { assume(r == (*self == *other)); }
+       744 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       750 |                 (BalBinTree::Node(a), BalBinTree::Node(b)) => {
+       751 |                     let r = a.left == b.left && a.value == b.value && a.right == b.right;
+       753 |                     r
+       754 |                 },
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:773: assume() - proof { assume(r == (*self == *other)); }
+       769 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       771 |         {
+       772 |             let r = self.left == other.left && self.value == other.value && self.right == other.right;
+       774 |             r
+       775 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:781: external_body - #[verifier::external_body]
+       782 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:793: external_body - #[verifier::external_body]
+       794 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:235: error: bare_impl - impl<T> BalBinTree<T> { — `impl BalBinTree` without trait; file defines [BalBinTreeTrait]
+       236 |         pub open spec fn spec_size(self) -> nat
+       237 |             decreases self,
+   Holes: 4 total
+      2 × assume()
+      2 × external_body
+   Errors: 1 bare impl(s) in file with trait definition
+   Proof functions: 2 total (2 clean, 0 holed)
+❌ src/Chap23/PrimTreeSeqStPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:831: assume() - proof { assume(cloned@ == self@); }
+       827 |         fn clone(&self) -> (cloned: Self)
+            ...
+       829 |         {
+       830 |             let cloned = PrimTreeSeqStS { seq: self.seq.clone() };
+       832 |             cloned
+       833 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:847: assume() - proof { assume(r == (self@ == other@)); }
+       843 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       845 |         {
+       846 |             let r = self.seq == other.seq;
+       848 |             r
+       849 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:863: assume() - proof { assume(cloned@ == self@); }
+       855 |         fn clone(&self) -> (cloned: Self)
+            ...
+       861 |                 PrimTreeSeqStTree::Two(l, r) => PrimTreeSeqStTree::Two(l.clone(), r.clone()),
+       862 |             };
+       864 |             cloned
+       865 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:885: assume() - proof { assume(r == (self@ == other@)); }
+       875 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       883 |                 (PrimTreeSeqStTree::One(a), PrimTreeSeqStTree::One(b)) => {
+       884 |                     let r = *a == *b;
+       886 |                     r
+       887 |                 },
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:890: assume() - proof { assume(r == (self@ == other@)); }
+       875 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       888 |                 (PrimTreeSeqStTree::Two(l1, r1), PrimTreeSeqStTree::Two(l2, r2)) => {
+       889 |                     let r = *l1 == *l2 && *r1 == *r2;
+       891 |                     r
+       892 |                 },
+   Holes: 5 total
+      5 × assume()
+✓ src/Chap26/DivConReduceMtPer.rs
+   3 clean proof functions
+✓ src/Chap26/DivConReduceStPer.rs
+❌ src/Chap26/ETSPMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:210: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from));
+       163 |     proof fn lemma_combined_cycle(
+            ...
+       208 |                 assert(spec_point_eq(lt[li].to, lt[((li + 1) % ln_i)].from));
+       209 |                 // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
+       211 |             } else if i == ln_i - 1 {
+       212 |                 assert(combined[i].to == er_to);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:227: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from));
+       163 |     proof fn lemma_combined_cycle(
+            ...
+       225 |                 assert(spec_point_eq(rt[ri].to, rt[((ri + 1) % rn_i)].from));
+       226 |                 // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
+       228 |             } else {
+       229 |                 assert(i == ln_i + rn_i - 1);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:446: external_body - #[verifier::external_body]
+       447 |     pub fn sort_and_split(points: &Vec<Point>) -> (result: (Vec<Point>, Vec<Point>))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:464: external_body - #[verifier::external_body]
+       465 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:480: error: bare_impl - impl Point { — `impl Point` without trait; file defines [ETSPMtTrait]
+       481 |         /// Euclidean distance between two points.
+       482 |         /// - APAS: N/A — helper function.
+   Holes: 4 total
+      2 × assume()
+      2 × external_body
+   Errors: 1 bare impl(s) in file with trait definition
+   Proof functions: 4 total (4 clean, 0 holed)
+❌ src/Chap26/ETSPStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:197: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from));
+       147 |     proof fn lemma_combined_cycle(
+            ...
+       195 | 
+       196 |                 // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
+       198 |             } else if i == ln_i - 1 {
+       199 |                 // Bridge: left -> right.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:217: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from));
+       147 |     proof fn lemma_combined_cycle(
+            ...
+       215 | 
+       216 |                 // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
+       218 |             } else {
+       219 |                 // Bridge: right -> left (wraps to index 0).
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:424: external_body - #[verifier::external_body]
+       425 |     pub fn sort_and_split(points: &Vec<Point>) -> (result: (Vec<Point>, Vec<Point>))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:442: external_body - #[verifier::external_body]
+       443 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:458: error: bare_impl - impl Point { — `impl Point` without trait; file defines [ETSPStTrait]
+       459 |         /// Euclidean distance between two points.
+       460 |         /// - APAS: N/A — helper function.
+   Holes: 4 total
+      2 × assume()
+      2 × external_body
+   Errors: 1 bare impl(s) in file with trait definition
+   Proof functions: 3 total (3 clean, 0 holed)
+✓ src/Chap26/MergeSortMtPer.rs
+   4 clean proof functions
+✓ src/Chap26/MergeSortStPer.rs
+   1 clean proof function
+✓ src/Chap26/ScanDCMtPer.rs
+   1 clean proof function
+✓ src/Chap26/ScanDCStPer.rs
+   1 clean proof function
+✓ src/Chap27/ReduceContractMtEph.rs
+✓ src/Chap27/ReduceContractStEph.rs
+   4 clean proof functions
+✓ src/Chap27/ScanContractMtEph.rs
+✓ src/Chap27/ScanContractStEph.rs
+   1 clean proof function
+✓ src/Chap28/MCSSSpec.rs
+   10 clean proof functions
+✓ src/Chap28/MaxContigSubSumBruteStEph.rs
+✓ src/Chap28/MaxContigSubSumDivConMtEph.rs
+✓ src/Chap28/MaxContigSubSumDivConOptMtEph.rs
+✓ src/Chap28/MaxContigSubSumDivConOptStEph.rs
+   1 clean proof function
+✓ src/Chap28/MaxContigSubSumDivConStEph.rs
+   1 clean proof function
+✓ src/Chap28/MaxContigSubSumIterStEph.rs
+   2 clean proof functions
+✓ src/Chap28/MaxContigSubSumOptMtEph.rs
+✓ src/Chap28/MaxContigSubSumOptStEph.rs
+   1 clean proof function
+✓ src/Chap28/MaxContigSubSumReducedMcsseStEph.rs
+✓ src/Chap28/MaxContigSubSumReducedStEph.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   1 clean (no holes)
-   1 holed (contains holes)
-   2 total
+   64 clean (no holes)
+   21 holed (contains holes)
+   85 total
 
 Proof Functions:
-   5 clean
+   102 clean
    0 holed
-   5 total
+   102 total
 
-Holes Found: 7 total
-   6 × external_body
+Holes Found: 63 total
+   30 × assume()
+   4 × unsafe {}
+   25 × external_body
    1 × external_type_specification
+   3 × external
 
-Info: 1 assume(false); diverge() idiom(s) (valid non-termination)
+Errors: 4 bare impl(s) in files with trait definitions
+
+Info: 7 assume(false); diverge() idiom(s) (valid non-termination)

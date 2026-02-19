@@ -8,7 +8,8 @@ table { width: 100% !important; table-layout: fixed; }
 # Chap12 Review Against Prose
 
 **Reviewer:** Claude-Opus-4.6
-**Date:** 2026-02-16
+**Date:** 2026-02-17
+**Last mechanical audit:** 2026-02-18 — section reorder, trigger fixes, doc comments only; no functional changes.
 **Prose file:** `prompts/Chap12.txt`
 **Source files:** `Exercise12_1.rs`, `Exercise12_2.rs`, `Exercise12_5.rs`
 
@@ -31,9 +32,9 @@ definitions provide background but require no code.
 
 | # | File | Lines | Parallel? | Proof holes | Notes |
 |---|------|-------|-----------|-------------|-------|
-| 1 | Exercise12_1.rs | 112 | Yes — multi-thread test | 5 external_body | Ticket-based spin lock via FAA. Default verified (delegates to new). |
+| 1 | Exercise12_1.rs | 127 | Yes — multi-thread test | 6 external_body | Ticket-based spin lock via FAA. wf moved into trait (spec_locked). Default verified (delegates to new). |
 | 2 | Exercise12_2.rs | 37 | No (trait on AtomicUsize) | 0 — clean | CAS-loop FAA, well-formed |
-| 3 | Exercise12_5.rs | 166 | Yes — lock-free CAS | 7 external_body, 1 external, 4 unsafe | Lock-free Treiber stack. Default verified, Drop inside verus! with external_body. |
+| 3 | Exercise12_5.rs | 171 | Yes — lock-free CAS | 7 external_body, 1 external, 4 unsafe | Lock-free Treiber stack. wf in trait. Default verified, Drop inside verus! with external_body. |
 
 ## Prose-to-Code Mapping
 
@@ -103,19 +104,20 @@ No gaps — all three assigned exercises are implemented.
 
 | # | File | Hole | Count | Justification |
 |---|------|------|-------|---------------|
-| 1 | Exercise12_1.rs | external_body (struct + 4 fns + parallel_increment) | 5 | Atomic operations (AtomicUsize) and OS threads are beyond Verus. Default is now verified (delegates to new). |
-| 2 | Exercise12_5.rs | external_body (struct + 6 fns + Drop) | 7 | AtomicPtr, raw pointers, and unsafe Box::from_raw are beyond Verus. Default is now verified (delegates to new). Drop moved inside verus! with external_body + opens_invariants none + no_unwind. |
+| 1 | Exercise12_1.rs | external_body (struct + 5 trait fns + parallel_increment) | 6 | Atomic operations (AtomicUsize) and OS threads are beyond Verus. wf moved into trait (spec_locked). Default verified (delegates to new). |
+| 2 | Exercise12_5.rs | external_body (struct + 6 fns + Drop) | 7 | AtomicPtr, raw pointers, and unsafe Box::from_raw are beyond Verus. wf in trait. Default verified (delegates to new). Drop inside verus! with external_body + opens_invariants none + no_unwind. |
 | 3 | Exercise12_5.rs | external (Node struct) | 1 | Raw pointer field (*mut Node) |
 | 4 | Exercise12_5.rs | unsafe blocks | 4 | Raw pointer dereference and Box::from_raw in lock-free algorithms |
 
-All proof holes are inherent to the domain: Verus cannot verify atomic
-operations, raw pointers, or OS-level synchronization. The trait specs
-provide trusted documentation of linearizable behavior.
+All proof holes (18 total: 4 unsafe, 13 external_body, 1 external) are inherent
+to the domain: Verus cannot verify atomic operations, raw pointers, or OS-level
+synchronization. The trait specs provide trusted documentation of linearizable
+behavior.
 
-Both `Default` impls are now verified (they delegate to `new()` which has a
-contract). `Drop` for `ConcurrentStackMt` is inside `verus!` with
-`external_body`, `opens_invariants none`, and `no_unwind`. Only `Debug`
-for `SpinLock` remains outside `verus!` — correct per the style rule.
+Both `Default` impls are verified (delegate to `new()`). `Drop` for
+`ConcurrentStackMt` is inside `verus!` with `external_body`, `opens_invariants
+none`, and `no_unwind`. Only `Debug` for `SpinLock` remains outside `verus!` —
+correct per the style rule.
 
 Exercise12_2 is the only clean module — its CAS loop uses only Verus-visible
 operations on AtomicUsize (via vstd's `exec_allows_no_decreases_clause`).
@@ -136,8 +138,10 @@ implemented faithfully:
 3. **Exercise12_5** — Lock-free Treiber stack using CAS. Classic concurrent
    data structure with proper memory management via Box ownership.
 
-The proof holes (16 total, down from 18) are all inherent to concurrent
-programming with atomics and raw pointers — Verus cannot verify these. The
-specs serve as trusted documentation. Runtime tests provide good coverage
-of correctness under contention. Both `Default` impls are now verified,
-`Drop` is inside `verus!`. No remaining action items.
+The proof holes (18 total: 4 unsafe, 13 external_body, 1 external) are all
+inherent to concurrent programming with atomics and raw pointers — Verus
+cannot verify these. The specs serve as trusted documentation. Runtime tests
+provide good coverage of correctness under contention. Both `Default` impls
+are verified, `Drop` is inside `verus!`. Bare-impl fixes: wf moved into trait
+(SpinLockTrait::spec_locked, ConcurrentStackMtTrait::wf). All exec functions
+have cost annotation doc comments. No remaining action items.

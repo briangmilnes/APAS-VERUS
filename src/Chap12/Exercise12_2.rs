@@ -1,5 +1,11 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 12 — Exercise 12.2: implement fetch-and-add using compare-and-swap.
+//!
+//! The missing requires/ensures on fetch_add_cas is permanent. vstd's
+//! std_specs::atomic provides assume_specification for AtomicUsize but without
+//! value postconditions, so we cannot state "returns old value and atomically
+//! adds delta." Proving functional correctness would require a tokenized state
+//! machine (TSM) model, which is disproportionate for a CAS-loop exercise.
 
 pub mod Exercise12_2 {
     use vstd::prelude::*;

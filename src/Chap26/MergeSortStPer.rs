@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Sequential merge sort implementation (Chapter 26).
 //! Verusified.
 
@@ -6,11 +7,15 @@
 //	1. module
 //	2. imports
 //	3. broadcast use
-//	4. spec functions
+//	6. spec fns
+//	7. proof fns/broadcast groups
 //	8. traits
 //	9. impls
 
 //		1. module
+
+
+
 
 pub mod MergeSortStPer {
 
@@ -20,8 +25,15 @@ pub mod MergeSortStPer {
 
     //		2. imports
 
+    //		2. imports
+
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::seq_lib::lemma_multiset_commutative;
+
+
+    //		3. broadcast use
 
     //		3. broadcast use
 
@@ -32,8 +44,8 @@ pub mod MergeSortStPer {
         vstd::multiset::group_multiset_axioms,
     };
 
-    #[cfg(verus_keep_ghost)]
-    use vstd::seq_lib::lemma_multiset_commutative;
+
+    //		6. spec fns
 
     //		4. spec functions
 
@@ -60,6 +72,37 @@ pub mod MergeSortStPer {
         &&& spec_sorted(result)
         &&& spec_is_permutation(input, result)
     }
+
+
+    //		7. proof fns/broadcast groups
+
+    //		9. impls
+
+    /// Helper: pushing an element >= all existing elements preserves sorted.
+    pub proof fn lemma_push_sorted(s: Seq<N>, v: N)
+        requires
+            spec_sorted(s),
+            s.len() > 0 ==> s.last() <= v,
+        ensures
+            spec_sorted(s.push(v)),
+    {
+        assert forall|i: int, j: int|
+            0 <= i < j < s.push(v).len() implies s.push(v)[i] <= s.push(v)[j]
+        by {
+            if j < s.len() as int {
+            } else {
+                // j == s.len(), s.push(v)[j] == v
+                if s.len() > 0 {
+                    // s[i] <= s.last() <= v
+                } else {
+                    // i < 0 < j, impossible since i >= 0
+                }
+            }
+        }
+    }
+
+
+    //		8. traits
 
     //		8. traits
 
@@ -89,30 +132,8 @@ pub mod MergeSortStPer {
                     Seq::new(result.spec_len(), |i: int| result.spec_index(i)));
     }
 
-    //		9. impls
 
-    /// Helper: pushing an element >= all existing elements preserves sorted.
-    pub proof fn lemma_push_sorted(s: Seq<N>, v: N)
-        requires
-            spec_sorted(s),
-            s.len() > 0 ==> s.last() <= v,
-        ensures
-            spec_sorted(s.push(v)),
-    {
-        assert forall|i: int, j: int|
-            0 <= i < j < s.push(v).len() implies s.push(v)[i] <= s.push(v)[j]
-        by {
-            if j < s.len() as int {
-            } else {
-                // j == s.len(), s.push(v)[j] == v
-                if s.len() > 0 {
-                    // s[i] <= s.last() <= v
-                } else {
-                    // i < 0 < j, impossible since i >= 0
-                }
-            }
-        }
-    }
+    //		9. impls
 
     impl MergeSortStTrait for ArraySeqStPerS<N> {
         fn merge(left: &ArraySeqStPerS<N>, right: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<N>) {

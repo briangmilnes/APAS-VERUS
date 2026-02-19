@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Divide-and-conquer scan - sequential implementation (Chapter 26, Section 3).
 //! Verusified.
 
@@ -6,11 +7,15 @@
 //	1. module
 //	2. imports
 //	3. broadcast use
-//	4. spec functions
+//	6. spec fns
+//	7. proof fns/broadcast groups
 //	8. traits
 //	9. impls
 
 //		1. module
+
+
+
 
 pub mod ScanDCStPer {
 
@@ -20,11 +25,16 @@ pub mod ScanDCStPer {
 
     //		2. imports
 
+    //		2. imports
+
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     #[cfg(verus_keep_ghost)]
     use crate::Chap26::DivConReduceStPer::DivConReduceStPer::{spec_sum_fn, spec_wrapping_add};
     use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
+
+
+    //		3. broadcast use
 
     //		3. broadcast use
 
@@ -32,6 +42,9 @@ pub mod ScanDCStPer {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
     };
+
+
+    //		6. spec fns
 
     //		4. spec functions
 
@@ -52,6 +65,29 @@ pub mod ScanDCStPer {
                 0 <= i < input.len() ==> prefixes[i] == spec_scan_at(input, spec_f, id, i)
         &&& total == spec_iterate(input, spec_f, id)
     }
+
+
+    //		7. proof fns/broadcast groups
+
+    //		9. impls
+
+    /// Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f))
+    /// when (f, id) is a monoid.
+    pub proof fn lemma_fold_left_monoid(s: Seq<N>, x: N, f: spec_fn(N, N) -> N, id: N)
+        requires spec_monoid(f, id),
+        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),
+        decreases s.len(),
+    {
+        reveal(Seq::fold_left);
+        if s.len() == 0 {
+        } else {
+            lemma_fold_left_monoid(s.drop_last(), x, f, id);
+            lemma_fold_left_monoid(s.drop_last(), id, f, id);
+        }
+    }
+
+
+    //		8. traits
 
     //		8. traits
 
@@ -87,22 +123,8 @@ pub mod ScanDCStPer {
                     result.1);
     }
 
-    //		9. impls
 
-    /// Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f))
-    /// when (f, id) is a monoid.
-    pub proof fn lemma_fold_left_monoid(s: Seq<N>, x: N, f: spec_fn(N, N) -> N, id: N)
-        requires spec_monoid(f, id),
-        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),
-        decreases s.len(),
-    {
-        reveal(Seq::fold_left);
-        if s.len() == 0 {
-        } else {
-            lemma_fold_left_monoid(s.drop_last(), x, f, id);
-            lemma_fold_left_monoid(s.drop_last(), id, f, id);
-        }
-    }
+    //		9. impls
 
     impl ScanDCStTrait for ArraySeqStPerS<N> {
         fn scan_dc<F: Fn(&N, &N) -> N>(a: &ArraySeqStPerS<N>, f: &F, Ghost(spec_f): Ghost<spec_fn(N, N) -> N>, id: N) -> (result: (ArraySeqStPerS<N>, N))

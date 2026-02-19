@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Divide-and-conquer via reduce pattern - parallel implementation (Chapter 26, Section 5).
 //! Note: Unconditionally parallel - no thresholding per APAS rules.
 //! Verusified.
@@ -7,12 +8,15 @@
 //	1. module
 //	2. imports
 //	3. broadcast use
-//	4. spec fns
-//	7. proof fns
+//	6. spec fns
+//	7. proof fns/broadcast groups
 //	8. traits
 //	9. impls
 
 //		1. module
+
+
+
 
 pub mod DivConReduceMtPer {
 
@@ -22,9 +26,14 @@ pub mod DivConReduceMtPer {
 
     //		2. imports
 
+    //		2. imports
+
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
+
+
+    //		3. broadcast use
 
     //		3. broadcast use
 
@@ -32,6 +41,9 @@ pub mod DivConReduceMtPer {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
     };
+
+
+    //		6. spec fns
 
     //		4. spec fns
 
@@ -50,10 +62,88 @@ pub mod DivConReduceMtPer {
     }
 
     pub open spec fn spec_sum_fn() -> spec_fn(N, N) -> N { |x: N, y: N| spec_wrapping_add(x, y) }
+
     pub open spec fn spec_product_fn() -> spec_fn(N, N) -> N { |x: N, y: N| spec_wrapping_mul(x, y) }
+
     pub open spec fn spec_or_fn() -> spec_fn(B, B) -> B { |x: B, y: B| x || y }
+
     pub open spec fn spec_and_fn() -> spec_fn(B, B) -> B { |x: B, y: B| x && y }
+
     pub open spec fn spec_max_fn() -> spec_fn(N, N) -> N { |x: N, y: N| if x >= y { x } else { y } }
+
+
+    //		7. proof fns/broadcast groups
+
+    //		9. impls
+
+    /// Helper: establish fold_left one-step decomposition via lemma_fold_left_split.
+    proof fn lemma_fold_left_step(s: Seq<N>, acc: N)
+        requires s.len() > 0,
+        ensures s.fold_left(acc, spec_max_fn())
+            == s.subrange(1, s.len() as int).fold_left(
+                spec_max_fn()(acc, s[0]), spec_max_fn()),
+    {
+        reveal_with_fuel(Seq::<_>::fold_left::<_>, 2);
+        s.lemma_fold_left_split(acc, spec_max_fn(), 1);
+        let first = s.subrange(0, 1);
+        assert(first =~= Seq::new(1, |i: int| s[0]));
+    }
+
+    /// fold_left(s, acc, max) >= acc and every s[i] <= fold_left result.
+    proof fn lemma_max_fold_left_bound(s: Seq<N>, acc: N)
+        ensures
+            s.fold_left(acc, spec_max_fn()) >= acc,
+            forall|i: int| #![trigger s[i]] 0 <= i < s.len()
+                ==> s[i] <= s.fold_left(acc, spec_max_fn()),
+        decreases s.len(),
+    {
+        if s.len() == 0 {
+        } else {
+            let rest = s.subrange(1, s.len() as int);
+            let new_acc = spec_max_fn()(acc, s[0]);
+            lemma_fold_left_step(s, acc);
+            lemma_max_fold_left_bound(rest, new_acc);
+            assert forall|i: int| #![trigger s[i]] 0 <= i < s.len()
+                implies s[i] <= s.fold_left(acc, spec_max_fn())
+            by {
+                if i == 0 {
+                } else {
+                    assert(rest[i - 1] == s[i]);
+                }
+            }
+        }
+    }
+
+    /// fold_left(s, acc, max) is either acc itself or some element of s.
+    proof fn lemma_max_fold_left_achievable(s: Seq<N>, acc: N)
+        ensures
+            s.fold_left(acc, spec_max_fn()) == acc
+            || exists|i: int| #![trigger s[i]] 0 <= i < s.len()
+                && s[i] == s.fold_left(acc, spec_max_fn()),
+        decreases s.len(),
+    {
+        if s.len() == 0 {
+        } else {
+            let rest = s.subrange(1, s.len() as int);
+            let new_acc = spec_max_fn()(acc, s[0]);
+            lemma_fold_left_step(s, acc);
+            lemma_max_fold_left_achievable(rest, new_acc);
+            let result = rest.fold_left(new_acc, spec_max_fn());
+            if result == new_acc {
+                if new_acc == acc {
+                } else {
+                    assert(s[0] == result);
+                }
+            } else {
+                let j = choose|j: int| 0 <= j < rest.len() && rest[j] == result;
+                assert(rest[j] == s[j + 1]);
+                assert(s[j + 1] == result);
+            }
+        }
+    }
+
+
+    //		8. traits
 
     //		7. proof fns
 
@@ -123,73 +213,8 @@ pub mod DivConReduceMtPer {
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true);
     }
 
+
     //		9. impls
-
-    /// Helper: establish fold_left one-step decomposition via lemma_fold_left_split.
-    proof fn lemma_fold_left_step(s: Seq<N>, acc: N)
-        requires s.len() > 0,
-        ensures s.fold_left(acc, spec_max_fn())
-            == s.subrange(1, s.len() as int).fold_left(
-                spec_max_fn()(acc, s[0]), spec_max_fn()),
-    {
-        reveal_with_fuel(Seq::<_>::fold_left::<_>, 2);
-        s.lemma_fold_left_split(acc, spec_max_fn(), 1);
-        let first = s.subrange(0, 1);
-        assert(first =~= Seq::new(1, |i: int| s[0]));
-    }
-
-    /// fold_left(s, acc, max) >= acc and every s[i] <= fold_left result.
-    proof fn lemma_max_fold_left_bound(s: Seq<N>, acc: N)
-        ensures
-            s.fold_left(acc, spec_max_fn()) >= acc,
-            forall|i: int| #![trigger s[i]] 0 <= i < s.len()
-                ==> s[i] <= s.fold_left(acc, spec_max_fn()),
-        decreases s.len(),
-    {
-        if s.len() == 0 {
-        } else {
-            let rest = s.subrange(1, s.len() as int);
-            let new_acc = spec_max_fn()(acc, s[0]);
-            lemma_fold_left_step(s, acc);
-            lemma_max_fold_left_bound(rest, new_acc);
-            assert forall|i: int| #![trigger s[i]] 0 <= i < s.len()
-                implies s[i] <= s.fold_left(acc, spec_max_fn())
-            by {
-                if i == 0 {
-                } else {
-                    assert(rest[i - 1] == s[i]);
-                }
-            }
-        }
-    }
-
-    /// fold_left(s, acc, max) is either acc itself or some element of s.
-    proof fn lemma_max_fold_left_achievable(s: Seq<N>, acc: N)
-        ensures
-            s.fold_left(acc, spec_max_fn()) == acc
-            || exists|i: int| #![trigger s[i]] 0 <= i < s.len()
-                && s[i] == s.fold_left(acc, spec_max_fn()),
-        decreases s.len(),
-    {
-        if s.len() == 0 {
-        } else {
-            let rest = s.subrange(1, s.len() as int);
-            let new_acc = spec_max_fn()(acc, s[0]);
-            lemma_fold_left_step(s, acc);
-            lemma_max_fold_left_achievable(rest, new_acc);
-            let result = rest.fold_left(new_acc, spec_max_fn());
-            if result == new_acc {
-                if new_acc == acc {
-                } else {
-                    assert(s[0] == result);
-                }
-            } else {
-                let j = choose|j: int| 0 <= j < rest.len() && rest[j] == result;
-                assert(rest[j] == s[j + 1]);
-                assert(s[j + 1] == result);
-            }
-        }
-    }
 
     impl DivConReduceMtTrait for ArraySeqMtPerS<N> {
         fn max_element_parallel(a: &ArraySeqMtPerS<N>) -> (result: Option<N>) {

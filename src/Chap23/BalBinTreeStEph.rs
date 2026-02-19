@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Ephemeral balanced binary tree utilities (Chapter 23). Verusified.
 
 //  Table of Contents
@@ -6,13 +7,18 @@
 //	2. imports
 //	3. broadcast use
 //	4. type definitions
-//	5. spec functions
+//	6. spec fns
+//	7. proof fns/broadcast groups
 //	8. traits
 //	9. impls
 //	10. iterators
+//	11. derive impls in verus!
 //	13. derive impls outside verus!
 
 //		1. module
+
+
+
 
 pub mod BalBinTreeStEph {
 
@@ -21,6 +27,8 @@ pub mod BalBinTreeStEph {
     use vstd::prelude::*;
 
     verus! {
+
+    //		2. imports
 
     //		2. imports
 
@@ -33,6 +41,9 @@ pub mod BalBinTreeStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
+
+    //		3. broadcast use
+
     //		3. broadcast use
 
     broadcast use {
@@ -40,6 +51,9 @@ pub mod BalBinTreeStEph {
         vstd::seq::group_seq_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
+
+
+    //		4. type definitions
 
     //		4. type definitions
 
@@ -56,12 +70,30 @@ pub mod BalBinTreeStEph {
         pub right: BalBinTree<T>,
     }
 
-    //		5. spec functions
+
+    //		6. spec fns
+
+    pub open spec fn in_order_iter_invariant<T>(it: &InOrderIter<T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    pub open spec fn pre_order_iter_invariant<T>(it: &PreOrderIter<T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    pub open spec fn post_order_iter_invariant<T>(it: &PostOrderIter<T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+
+    //		7. proof fns/broadcast groups
+
+    //		6. spec fns
 
     // spec_size, spec_height, spec_in_order, spec_pre_order, spec_post_order
     // are defined in impl BalBinTreeTrait for BalBinTree below.
 
-    //		6. proof functions
+    //		7. proof fns/broadcast groups
 
     /// The in-order and pre-order traversals of a tree are permutations of each other.
     /// - APAS: N/A — Verus-specific scaffolding.
@@ -151,6 +183,9 @@ pub mod BalBinTreeStEph {
         }
     }
 
+
+    //		8. traits
+
     //		8. traits
 
     pub trait BalBinTreeTrait<T>: Sized {
@@ -224,6 +259,9 @@ pub mod BalBinTreeStEph {
                      obeys_feq_clone::<T>(),
             ensures traversal@ =~= self.spec_post_order();
     }
+
+
+    //		9. impls
 
     //		9. impls
 
@@ -394,6 +432,67 @@ pub mod BalBinTreeStEph {
         }
     }
 
+    impl<T: Clone + Eq> BalBinTree<T> {
+        /// Returns an in-order iterator.
+        /// - APAS: Work Θ(n), Span Θ(n) — dominated by in_order traversal.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — calls in_order() then wraps in iterator.
+        pub fn iter_in_order(&self) -> (it: InOrderIter<T>)
+            requires self.spec_size() <= usize::MAX,
+                     obeys_feq_clone::<T>(),
+            ensures
+                it@.0 == 0,
+                it@.1 =~= self.spec_in_order(),
+                in_order_iter_invariant(&it),
+        {
+            InOrderIter { inner: self.in_order().into_iter() }
+        }
+
+        /// Returns a pre-order iterator.
+        /// - APAS: Work Θ(n), Span Θ(n) — dominated by pre_order traversal.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — calls pre_order() then wraps in iterator.
+        pub fn iter_pre_order(&self) -> (it: PreOrderIter<T>)
+            requires self.spec_size() <= usize::MAX,
+                     obeys_feq_clone::<T>(),
+            ensures
+                it@.0 == 0,
+                it@.1 =~= self.spec_pre_order(),
+                pre_order_iter_invariant(&it),
+        {
+            PreOrderIter { inner: self.pre_order().into_iter() }
+        }
+
+        /// Returns a post-order iterator.
+        /// - APAS: Work Θ(n), Span Θ(n) — dominated by post_order traversal.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — calls post_order() then wraps in iterator.
+        pub fn iter_post_order(&self) -> (it: PostOrderIter<T>)
+            requires self.spec_size() <= usize::MAX,
+                     obeys_feq_clone::<T>(),
+            ensures
+                it@.0 == 0,
+                it@.1 =~= self.spec_post_order(),
+                post_order_iter_invariant(&it),
+        {
+            PostOrderIter { inner: self.post_order().into_iter() }
+        }
+    }
+
+    //		11. derive impls in verus!
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: PartialEq> PartialEqSpecImpl for BalBinTree<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: PartialEq> PartialEqSpecImpl for BalBinNode<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
+    }
+
+
+    //		10. iterators
+
     //		10. iterators
 
     /// Iterator over in-order traversal of a BalBinTree.
@@ -469,18 +568,6 @@ pub mod BalBinTreeStEph {
     impl<T> View for PostOrderGhostIterator<T> {
         type V = Seq<T>;
         open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    pub open spec fn in_order_iter_invariant<T>(it: &InOrderIter<T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    pub open spec fn pre_order_iter_invariant<T>(it: &PreOrderIter<T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    pub open spec fn post_order_iter_invariant<T>(it: &PostOrderIter<T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
     }
 
     impl<T> std::iter::Iterator for InOrderIter<T> {
@@ -684,57 +771,8 @@ pub mod BalBinTreeStEph {
         }
     }
 
-    impl<T: Clone + Eq> BalBinTree<T> {
-        /// Returns an in-order iterator.
-        /// - APAS: Work Θ(n), Span Θ(n) — dominated by in_order traversal.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — calls in_order() then wraps in iterator.
-        pub fn iter_in_order(&self) -> (it: InOrderIter<T>)
-            requires self.spec_size() <= usize::MAX,
-                     obeys_feq_clone::<T>(),
-            ensures
-                it@.0 == 0,
-                it@.1 =~= self.spec_in_order(),
-                in_order_iter_invariant(&it),
-        {
-            InOrderIter { inner: self.in_order().into_iter() }
-        }
 
-        /// Returns a pre-order iterator.
-        /// - APAS: Work Θ(n), Span Θ(n) — dominated by pre_order traversal.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — calls pre_order() then wraps in iterator.
-        pub fn iter_pre_order(&self) -> (it: PreOrderIter<T>)
-            requires self.spec_size() <= usize::MAX,
-                     obeys_feq_clone::<T>(),
-            ensures
-                it@.0 == 0,
-                it@.1 =~= self.spec_pre_order(),
-                pre_order_iter_invariant(&it),
-        {
-            PreOrderIter { inner: self.pre_order().into_iter() }
-        }
-
-        /// Returns a post-order iterator.
-        /// - APAS: Work Θ(n), Span Θ(n) — dominated by post_order traversal.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — calls post_order() then wraps in iterator.
-        pub fn iter_post_order(&self) -> (it: PostOrderIter<T>)
-            requires self.spec_size() <= usize::MAX,
-                     obeys_feq_clone::<T>(),
-            ensures
-                it@.0 == 0,
-                it@.1 =~= self.spec_post_order(),
-                post_order_iter_invariant(&it),
-        {
-            PostOrderIter { inner: self.post_order().into_iter() }
-        }
-    }
-
-    //		13. PartialEq / Eq impls
-
-    #[cfg(verus_keep_ghost)]
-    impl<T: PartialEq> PartialEqSpecImpl for BalBinTree<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
-    }
+    //		11. derive impls in verus!
 
     impl<T: Eq> Eq for BalBinTree<T> {}
 
@@ -753,12 +791,6 @@ pub mod BalBinTreeStEph {
                 _ => false,
             }
         }
-    }
-
-    #[cfg(verus_keep_ghost)]
-    impl<T: PartialEq> PartialEqSpecImpl for BalBinNode<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
     }
 
     impl<T: Eq> Eq for BalBinNode<T> {}
@@ -797,6 +829,9 @@ pub mod BalBinTreeStEph {
     }
 
     } // verus!
+
+
+    //		13. derive impls outside verus!
 
     impl<T: std::fmt::Debug> std::fmt::Debug for BalBinTree<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
