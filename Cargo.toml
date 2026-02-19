@@ -377,9 +377,9 @@ path = "tests/Chap35/TestOrderStatSelectStPer.rs"
 name = "TestQuickSortMtEph"
 path = "tests/Chap36/TestQuickSortMtEph.rs"
 
-[[test]]
-name = "TestQuickSortMtEphSlice"
-path = "tests/Chap36/TestQuickSortMtEphSlice.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestQuickSortMtEphSlice"
+# path = "disabled"
 
 [[test]]
 name = "TestQuickSortStEph"
@@ -417,17 +417,17 @@ path = "tests/Chap37/TestAVLTreeSeqStPer19.rs"
 name = "TestAVLTreeSeqStPer"
 path = "tests/Chap37/TestAVLTreeSeqStPer.rs"
 
-[[test]]
-name = "TestBSTAVLMtEph"
-path = "tests/Chap37/TestBSTAVLMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestBSTAVLMtEph"
+# path = "disabled"
 
 [[test]]
 name = "TestBSTAVLStEph"
 path = "tests/Chap37/TestBSTAVLStEph.rs"
 
-[[test]]
-name = "TestBSTBBAlphaMtEph"
-path = "tests/Chap37/TestBSTBBAlphaMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestBSTBBAlphaMtEph"
+# path = "disabled"
 
 [[test]]
 name = "TestBSTBBAlphaStEph"
@@ -437,9 +437,9 @@ path = "tests/Chap37/TestBSTBBAlphaStEph.rs"
 name = "TestBSTMtEph"
 path = "tests/Chap37/TestBSTMtEph.rs"
 
-[[test]]
-name = "TestBSTPlainMtEph"
-path = "tests/Chap37/TestBSTPlainMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestBSTPlainMtEph"
+# path = "disabled"
 
 [[test]]
 name = "TestBSTPlainStEph"
@@ -513,33 +513,33 @@ path = "tests/Chap40/TestBSTReducedStEph.rs"
 name = "TestBSTSizeStEph"
 path = "tests/Chap40/TestBSTSizeStEph.rs"
 
-[[test]]
-name = "TestArraySetEnumMtEph"
-path = "tests/Chap41/TestArraySetEnumMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestArraySetEnumMtEph"
+# path = "disabled"
 
 [[test]]
 name = "TestArraySetStEph"
 path = "tests/Chap41/TestArraySetStEph.rs"
 
-[[test]]
-name = "TestAVLTreeSetMtEph"
-path = "tests/Chap41/TestAVLTreeSetMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAVLTreeSetMtEph"
+# path = "disabled"
 
-[[test]]
-name = "TestAVLTreeSetMtPer"
-path = "tests/Chap41/TestAVLTreeSetMtPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAVLTreeSetMtPer"
+# path = "disabled"
 
-[[test]]
-name = "TestAVLTreeSetStEph"
-path = "tests/Chap41/TestAVLTreeSetStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAVLTreeSetStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestAVLTreeSetStPer"
-path = "tests/Chap41/TestAVLTreeSetStPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAVLTreeSetStPer"
+# path = "disabled"
 
-[[test]]
-name = "TestExample41_3"
-path = "tests/Chap41/TestExample41_3.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestExample41_3"
+# path = "disabled"
 
 [[test]]
 name = "TestExample42_1"
@@ -557,57 +557,57 @@ path = "tests/Chap42/TestTableStEph.rs"
 name = "TestTableStPer"
 path = "tests/Chap42/TestTableStPer.rs"
 
-[[test]]
-name = "TestAugOrderedTableMtEph"
-path = "tests/Chap43/TestAugOrderedTableMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAugOrderedTableMtEph"
+# path = "disabled"
 
-[[test]]
-name = "TestAugOrderedTableStEph"
-path = "tests/Chap43/TestAugOrderedTableStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAugOrderedTableStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestAugOrderedTableStPer"
-path = "tests/Chap43/TestAugOrderedTableStPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAugOrderedTableStPer"
+# path = "disabled"
 
-[[test]]
-name = "TestExample43_1"
-path = "tests/Chap43/TestExample43_1.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestExample43_1"
+# path = "disabled"
 
-[[test]]
-name = "TestOrderedSetMtEph"
-path = "tests/Chap43/TestOrderedSetMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestOrderedSetMtEph"
+# path = "disabled"
 
-[[test]]
-name = "TestOrderedSetStEph"
-path = "tests/Chap43/TestOrderedSetStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestOrderedSetStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestOrderedSetStPer"
-path = "tests/Chap43/TestOrderedSetStPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestOrderedSetStPer"
+# path = "disabled"
 
-[[test]]
-name = "TestOrderedTableMtEph"
-path = "tests/Chap43/TestOrderedTableMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestOrderedTableMtEph"
+# path = "disabled"
 
-[[test]]
-name = "TestOrderedTableMtPer"
-path = "tests/Chap43/TestOrderedTableMtPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestOrderedTableMtPer"
+# path = "disabled"
 
-[[test]]
-name = "TestOrderedTableStEph"
-path = "tests/Chap43/TestOrderedTableStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestOrderedTableStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestOrderedTableStPer"
-path = "tests/Chap43/TestOrderedTableStPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestOrderedTableStPer"
+# path = "disabled"
 
-[[test]]
-name = "TestDocumentIndex"
-path = "tests/Chap44/TestDocumentIndex.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestDocumentIndex"
+# path = "disabled"
 
-[[test]]
-name = "TestExample44_1"
-path = "tests/Chap44/TestExample44_1.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestExample44_1"
+# path = "disabled"
 
 [[test]]
 name = "TestBalancedTreePQ"
@@ -765,77 +765,77 @@ path = "tests/Chap51/TestTopDownDPStEph.rs"
 name = "TestTopDownDPStPer"
 path = "tests/Chap51/TestTopDownDPStPer.rs"
 
-[[test]]
-name = "TestAdjMatrixGraphMtPer"
-path = "tests/Chap52/TestAdjMatrixGraphMtPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAdjMatrixGraphMtPer"
+# path = "disabled"
 
-[[test]]
-name = "TestAdjMatrixGraphStEph"
-path = "tests/Chap52/TestAdjMatrixGraphStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAdjMatrixGraphStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestAdjMatrixGraphStPer"
-path = "tests/Chap52/TestAdjMatrixGraphStPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAdjMatrixGraphStPer"
+# path = "disabled"
 
-[[test]]
-name = "TestAdjSeqGraphMtPer"
-path = "tests/Chap52/TestAdjSeqGraphMtPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAdjSeqGraphMtPer"
+# path = "disabled"
 
-[[test]]
-name = "TestAdjSeqGraphStEph"
-path = "tests/Chap52/TestAdjSeqGraphStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAdjSeqGraphStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestAdjSeqGraphStPer"
-path = "tests/Chap52/TestAdjSeqGraphStPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAdjSeqGraphStPer"
+# path = "disabled"
 
-[[test]]
-name = "TestAdjTableGraphMtPer"
-path = "tests/Chap52/TestAdjTableGraphMtPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAdjTableGraphMtPer"
+# path = "disabled"
 
-[[test]]
-name = "TestAdjTableGraphStEph"
-path = "tests/Chap52/TestAdjTableGraphStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAdjTableGraphStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestAdjTableGraphStPer"
-path = "tests/Chap52/TestAdjTableGraphStPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAdjTableGraphStPer"
+# path = "disabled"
 
 [[test]]
 name = "TestEdgeSetGraphMtEph"
 path = "tests/Chap52/TestEdgeSetGraphMtEph.rs"
 
-[[test]]
-name = "TestEdgeSetGraphMtPer"
-path = "tests/Chap52/TestEdgeSetGraphMtPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestEdgeSetGraphMtPer"
+# path = "disabled"
 
-[[test]]
-name = "TestEdgeSetGraphStEph"
-path = "tests/Chap52/TestEdgeSetGraphStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestEdgeSetGraphStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestEdgeSetGraphStPer"
-path = "tests/Chap52/TestEdgeSetGraphStPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestEdgeSetGraphStPer"
+# path = "disabled"
 
-[[test]]
-name = "TestGraphSearchMtPer"
-path = "tests/Chap53/TestGraphSearchMtPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestGraphSearchMtPer"
+# path = "disabled"
 
-[[test]]
-name = "TestGraphSearchStEph"
-path = "tests/Chap53/TestGraphSearchStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestGraphSearchStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestGraphSearchStPer"
-path = "tests/Chap53/TestGraphSearchStPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestGraphSearchStPer"
+# path = "disabled"
 
-[[test]]
-name = "TestPQMinStEph"
-path = "tests/Chap53/TestPQMinStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestPQMinStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestPQMinStPer"
-path = "tests/Chap53/TestPQMinStPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestPQMinStPer"
+# path = "disabled"
 
 [[test]]
 name = "TestBFSMtEph"
@@ -853,61 +853,61 @@ path = "tests/Chap54/TestBFSStEph.rs"
 name = "TestBFSStPer"
 path = "tests/Chap54/TestBFSStPer.rs"
 
-[[test]]
-name = "TestCycleDetectStEph"
-path = "tests/Chap55/TestCycleDetectStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestCycleDetectStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestCycleDetectStPer"
-path = "tests/Chap55/TestCycleDetectStPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestCycleDetectStPer"
+# path = "disabled"
 
-[[test]]
-name = "TestDFSStEph"
-path = "tests/Chap55/TestDFSStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestDFSStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestDFSStPer"
-path = "tests/Chap55/TestDFSStPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestDFSStPer"
+# path = "disabled"
 
-[[test]]
-name = "TestSCCStEph"
-path = "tests/Chap55/TestSCCStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestSCCStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestSCCStPer"
-path = "tests/Chap55/TestSCCStPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestSCCStPer"
+# path = "disabled"
 
-[[test]]
-name = "TestTopoSortStEph"
-path = "tests/Chap55/TestTopoSortStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestTopoSortStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestTopoSortStPer"
-path = "tests/Chap55/TestTopoSortStPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestTopoSortStPer"
+# path = "disabled"
 
-[[test]]
-name = "TestAllPairsResultStEphFloat"
-path = "tests/Chap56/TestAllPairsResultStEphFloat.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAllPairsResultStEphFloat"
+# path = "disabled"
 
 [[test]]
 name = "TestAllPairsResultStEphI64"
 path = "tests/Chap56/TestAllPairsResultStEphI64.rs"
 
-[[test]]
-name = "TestAllPairsResultStPerFloat"
-path = "tests/Chap56/TestAllPairsResultStPerFloat.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAllPairsResultStPerFloat"
+# path = "disabled"
 
 [[test]]
 name = "TestAllPairsResultStPerI64"
 path = "tests/Chap56/TestAllPairsResultStPerI64.rs"
 
-[[test]]
-name = "TestExample56_1"
-path = "tests/Chap56/TestExample56_1.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestExample56_1"
+# path = "disabled"
 
-[[test]]
-name = "TestExample56_3"
-path = "tests/Chap56/TestExample56_3.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestExample56_3"
+# path = "disabled"
 
 [[test]]
 name = "TestPathWeightUtilsStEph"
@@ -917,29 +917,29 @@ path = "tests/Chap56/TestPathWeightUtilsStEph.rs"
 name = "TestPathWeightUtilsStPer"
 path = "tests/Chap56/TestPathWeightUtilsStPer.rs"
 
-[[test]]
-name = "TestSSSPResultStEphFloat"
-path = "tests/Chap56/TestSSSPResultStEphFloat.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestSSSPResultStEphFloat"
+# path = "disabled"
 
 [[test]]
 name = "TestSSSPResultStEphI64"
 path = "tests/Chap56/TestSSSPResultStEphI64.rs"
 
-[[test]]
-name = "TestSSSPResultStPerFloat"
-path = "tests/Chap56/TestSSSPResultStPerFloat.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestSSSPResultStPerFloat"
+# path = "disabled"
 
 [[test]]
 name = "TestSSSPResultStPerI64"
 path = "tests/Chap56/TestSSSPResultStPerI64.rs"
 
-[[test]]
-name = "TestDijkstraStEphFloat"
-path = "tests/Chap57/TestDijkstraStEphFloat.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestDijkstraStEphFloat"
+# path = "disabled"
 
-[[test]]
-name = "TestDijkstraStEphI64"
-path = "tests/Chap57/TestDijkstraStEphI64.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestDijkstraStEphI64"
+# path = "disabled"
 
 [[test]]
 name = "TestStackStEph"
@@ -953,57 +953,57 @@ path = "tests/Chap58/TestBellmanFordStEphFloat.rs"
 name = "TestBellmanFordStEphI64"
 path = "tests/Chap58/TestBellmanFordStEphI64.rs"
 
-[[test]]
-name = "TestJohnsonMtEphFloat"
-path = "tests/Chap59/TestJohnsonMtEphFloat.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestJohnsonMtEphFloat"
+# path = "disabled"
 
-[[test]]
-name = "TestJohnsonMtEphI64"
-path = "tests/Chap59/TestJohnsonMtEphI64.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestJohnsonMtEphI64"
+# path = "disabled"
 
-[[test]]
-name = "TestJohnsonStEphFloat"
-path = "tests/Chap59/TestJohnsonStEphFloat.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestJohnsonStEphFloat"
+# path = "disabled"
 
-[[test]]
-name = "TestJohnsonStEphI64"
-path = "tests/Chap59/TestJohnsonStEphI64.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestJohnsonStEphI64"
+# path = "disabled"
 
-[[test]]
-name = "TestEdgeContractionMtEph"
-path = "tests/Chap61/TestEdgeContractionMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestEdgeContractionMtEph"
+# path = "disabled"
 
-[[test]]
-name = "TestEdgeContractionStEph"
-path = "tests/Chap61/TestEdgeContractionStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestEdgeContractionStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestVertexMatchingMtEph"
-path = "tests/Chap61/TestVertexMatchingMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestVertexMatchingMtEph"
+# path = "disabled"
 
-[[test]]
-name = "TestVertexMatchingStEph"
-path = "tests/Chap61/TestVertexMatchingStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestVertexMatchingStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestStarContractionMtEph"
-path = "tests/Chap62/TestStarContractionMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestStarContractionMtEph"
+# path = "disabled"
 
 [[test]]
 name = "TestStarContractionStEph"
 path = "tests/Chap62/TestStarContractionStEph.rs"
 
-[[test]]
-name = "TestStarPartitionMtEph"
-path = "tests/Chap62/TestStarPartitionMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestStarPartitionMtEph"
+# path = "disabled"
 
 [[test]]
 name = "TestStarPartitionStEph"
 path = "tests/Chap62/TestStarPartitionStEph.rs"
 
-[[test]]
-name = "TestConnectivityMtEph"
-path = "tests/Chap63/TestConnectivityMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestConnectivityMtEph"
+# path = "disabled"
 
 [[test]]
 name = "TestConnectivityStEph"
@@ -1017,27 +1017,27 @@ path = "tests/Chap64/TestSpanTreeMtEph.rs"
 name = "TestSpanTreeStEph"
 path = "tests/Chap64/TestSpanTreeStEph.rs"
 
-[[test]]
-name = "TestTSPApproxStEph"
-path = "tests/Chap64/TestTSPApproxStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestTSPApproxStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestKruskalStEph"
-path = "tests/Chap65/TestKruskalStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestKruskalStEph"
+# path = "disabled"
 
-[[test]]
-name = "TestPrimStEph"
-path = "tests/Chap65/TestPrimStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestPrimStEph"
+# path = "disabled"
 
 [[test]]
 name = "TestUnionFindStEph"
 path = "tests/Chap65/TestUnionFindStEph.rs"
 
-[[test]]
-name = "TestBoruvkaMtEph"
-path = "tests/Chap66/TestBoruvkaMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestBoruvkaMtEph"
+# path = "disabled"
 
-[[test]]
-name = "TestBoruvkaStEph"
-path = "tests/Chap66/TestBoruvkaStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestBoruvkaStEph"
+# path = "disabled"
 

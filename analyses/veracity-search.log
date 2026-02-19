@@ -2,21 +2,13 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn \(into_iter\|IntoIterator\)
+Pattern: fn _ types rand
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 95, Functions: 2289, Matches: 3
+Searching: /home/milnes/projects/APAS-VERUS/src/vstdplus
+Files: 117, Functions: 2919, Matches: 1
 
-[31m/home/milnes/projects/verus/source/vstd/std_specs/core.rs:128: [0m
-[38;5;22mpub open spec fn iter_into_iter_spec<I: Iterator>(i: I) -> I[0m
-
-[31m/home/milnes/projects/verus/source/vstd/std_specs/vec.rs:465: [0m
-[38;5;22mpub uninterp spec fn spec_into_iter<T, A: Allocator>(v: Vec<T, A>) -> (iter: <Vec<[0m
-[38;5;22m    T,[0m
-[38;5;22m    A,[0m
-[38;5;22m> as core::iter::IntoIterator>::IntoIter);[0m
-
-[31m/home/milnes/projects/verus/source/vstd/std_specs/vec.rs:470: [0m
-[38;5;22mpub broadcast proof fn axiom_spec_into_iter<T, A: Allocator>(v: Vec<T, A>)[0m
+[31m/home/milnes/projects/verus/source/vstd/std_specs/hash.rs:262: [0m
+[38;5;22mpub broadcast proof fn axiom_random_state_builds_valid_hashers()[0m
 [38;5;22m    ensures[0m
-[38;5;22m        (#[trigger] spec_into_iter(v))@ == (0int, v@),[0m
+[38;5;22m        #[trigger] builds_valid_hashers::<RandomState>(),[0m
 

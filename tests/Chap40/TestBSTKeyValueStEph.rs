@@ -1,6 +1,10 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
+use rand::{Rng, RngExt};
+
 use apas_verus::BSTKeyValueStEphLit;
+
+fn rand_priority() -> u64 { rand::rng().random() }
 use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
 use apas_verus::Chap40::BSTKeyValueStEph::BSTKeyValueStEph::*;
 use apas_verus::Types::Types::*;
@@ -12,11 +16,11 @@ fn key_value_bst_basic_operations() {
     assert_eq!(bst.size(), 0);
 
     // Insert key-value pairs
-    bst.insert(5, "five");
-    bst.insert(3, "three");
-    bst.insert(7, "seven");
-    bst.insert(1, "one");
-    bst.insert(9, "nine");
+    bst.insert(5, "five", rand_priority());
+    bst.insert(3, "three", rand_priority());
+    bst.insert(7, "seven", rand_priority());
+    bst.insert(1, "one", rand_priority());
+    bst.insert(9, "nine", rand_priority());
 
     assert_eq!(bst.size(), 5);
     assert!(!bst.is_empty());
@@ -38,8 +42,8 @@ fn key_value_bst_basic_operations() {
 #[test]
 fn key_value_bst_update_existing_key() {
     let mut bst = BSTreeKeyValue::new();
-    bst.insert(5, "five");
-    bst.insert(5, "FIVE"); // Update existing key
+    bst.insert(5, "five", rand_priority());
+    bst.insert(5, "FIVE", rand_priority()); // Update existing key
 
     assert_eq!(bst.size(), 1); // Size should not change
     assert_eq!(bst.find(&5), Some(&"FIVE")); // Value should be updated
@@ -48,11 +52,11 @@ fn key_value_bst_update_existing_key() {
 #[test]
 fn key_value_bst_collections() {
     let mut bst = BSTreeKeyValue::new();
-    bst.insert(3, 30);
-    bst.insert(1, 10);
-    bst.insert(5, 50);
-    bst.insert(2, 20);
-    bst.insert(4, 40);
+    bst.insert(3, 30, rand_priority());
+    bst.insert(1, 10, rand_priority());
+    bst.insert(5, 50, rand_priority());
+    bst.insert(2, 20, rand_priority());
+    bst.insert(4, 40, rand_priority());
 
     // Test keys (should be in sorted order)
     let keys = bst.keys();
@@ -93,7 +97,7 @@ fn key_value_bst_height_stays_reasonable() {
 
     // Insert many elements
     for i in 0..100 {
-        bst.insert(i, i * 10);
+        bst.insert(i, i * 10, rand_priority());
     }
 
     assert_eq!(bst.size(), 100);
@@ -111,9 +115,9 @@ fn key_value_bst_height_stays_reasonable() {
 #[test]
 fn key_value_bst_string_keys() {
     let mut bst = BSTreeKeyValue::new();
-    bst.insert("banana".to_string(), 2);
-    bst.insert("apple".to_string(), 1);
-    bst.insert("cherry".to_string(), 3);
+    bst.insert("banana".to_string(), 2, rand_priority());
+    bst.insert("apple".to_string(), 1, rand_priority());
+    bst.insert("cherry".to_string(), 3, rand_priority());
 
     assert_eq!(bst.size(), 3);
     assert_eq!(bst.find(&"apple".to_string()), Some(&1));

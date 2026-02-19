@@ -329,17 +329,17 @@ pub mod Chap38 {
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap39 {
-    // pub mod BSTTreapStEph;  // uses rand (Verus can't link)
-    // pub mod BSTTreapMtEph;  // uses rand (Verus can't link)
-    // pub mod BSTParaTreapMtEph;  // depends on BSTTreapMtEph
-    // pub mod BSTSetTreapMtEph;  // depends on BSTTreapMtEph
+    pub mod BSTTreapStEph;
+    pub mod BSTTreapMtEph;
+    pub mod BSTParaTreapMtEph;
+    pub mod BSTSetTreapMtEph;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap40 {
-    // pub mod BSTKeyValueStEph;  // uses rand (Verus can't link)
-    // pub mod BSTSizeStEph;  // uses rand (Verus can't link)
-    // pub mod BSTReducedStEph;  // uses rand (Verus can't link)
+    pub mod BSTKeyValueStEph;
+    pub mod BSTSizeStEph;
+    pub mod BSTReducedStEph;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
@@ -363,7 +363,11 @@ pub mod Chap42 {
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap43 {
-    // All files depend on Chap41::AVLTreeSet (types outside verus!)
+    // All Chap43 files blocked by types declared outside verus!:
+    // - AVLTreeSeqStPerS (Chap37), TableStPer (Chap42), ParamTreap (Chap39)
+    // - AVLTreeSetStEph/StPer (Chap41)
+    // Fix requires verusifying Chap37/AVLTreeSeqStPer, Chap42/TableStPer,
+    // Chap39/BSTParaTreapMtEph first.
     // pub mod OrderedSetStEph;
     // pub mod OrderedSetStPer;
     // pub mod OrderedSetMtEph;
@@ -400,10 +404,10 @@ pub mod Chap47 {
     pub mod StructChainedHashTable;
     pub mod VecChainedHashTableStEph;
     pub mod LinkedListChainedHashTableStEph;
-    // pub mod FlatHashTable;  // uses &mut match (Verus unsupported)
-    // pub mod LinProbFlatHashTableStEph;  // depends on FlatHashTable
-    // pub mod QuadProbFlatHashTableStEph;  // depends on FlatHashTable
-    // pub mod DoubleHashFlatHashTableStEph;  // depends on FlatHashTable
+    pub mod FlatHashTable;
+    pub mod LinProbFlatHashTableStEph;
+    pub mod QuadProbFlatHashTableStEph;
+    pub mod DoubleHashFlatHashTableStEph;
     pub mod ParaHashTableStEph;
 }
 
@@ -528,16 +532,16 @@ pub mod Chap58 {
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap59 {
-    pub mod JohnsonStEphI64;
-    pub mod JohnsonMtEphI64;
+    // pub mod JohnsonStEphI64;  // depends on DijkstraStEphI64
+    // pub mod JohnsonMtEphI64;  // depends on DijkstraStEphI64
     // pub mod JohnsonStEphFloat;  // uses ordered_float (removed)
     // pub mod JohnsonMtEphFloat;  // uses ordered_float (removed)
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap61 {
-    pub mod EdgeContractionStEph;
-    pub mod EdgeContractionMtEph;
+    // pub mod EdgeContractionStEph;  // depends on VertexMatchingStEph
+    // pub mod EdgeContractionMtEph;  // depends on VertexMatchingMtEph
     // pub mod VertexMatchingStEph;  // uses rand (Verus can't link)
     // pub mod VertexMatchingMtEph;  // uses rand (Verus can't link)
 }
@@ -547,13 +551,13 @@ pub mod Chap62 {
     pub mod StarPartitionStEph;
     // pub mod StarPartitionMtEph;  // uses rand (Verus can't link)
     pub mod StarContractionStEph;
-    pub mod StarContractionMtEph;
+    // pub mod StarContractionMtEph;  // depends on StarPartitionMtEph
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap63 {
     pub mod ConnectivityStEph;
-    pub mod ConnectivityMtEph;
+    // pub mod ConnectivityMtEph;  // depends on StarPartitionMtEph
 }
 
 #[cfg(feature = "all_chapters")]

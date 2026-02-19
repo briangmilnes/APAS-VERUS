@@ -40,7 +40,7 @@ pub mod OrderedSetMtEph {
     // 8. traits
 
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1) with multi-threaded ephemeral semantics
-    pub trait OrderedSetMtEphTrait<T: MtKey + 'static> {
+    pub trait OrderedSetMtEphTrait<T: MtKey + 'static>: Sized + View<V = Set<T>> {
         // Base set operations (ADT 41.1) - ephemeral semantics with parallelism
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (result: N)

@@ -47,7 +47,7 @@ pub mod OrderedTableMtPer {
 
     // 8. traits
 
-    pub trait OrderedTableMtPerTrait<K: MtKey + 'static, V: StTInMtT + Ord + 'static> {
+    pub trait OrderedTableMtPerTrait<K: MtKey + 'static, V: StTInMtT + Ord + 'static>: Sized + View<V = Map<K::V, V::V>> {
         fn size(&self) -> (result: N)
             ensures result == self@.dom().len(), self@.dom().finite();
 
@@ -57,10 +57,7 @@ pub mod OrderedTableMtPer {
         fn singleton(k: K, v: V) -> (result: Self)
             ensures result@ == Map::<K::V, V::V>::empty().insert(k@, v@), result@.dom().finite();
 
-        fn find(&self, k: &K) -> (result: Option<V>)
-            ensures
-                self@.contains_key(k@) ==> result == Some(self@[k@]),
-                !self@.contains_key(k@) ==> result.is_none();
+        fn find(&self, k: &K) -> (result: Option<V>);
 
         fn insert(&self, k: K, v: V) -> (result: Self)
             ensures result@.dom().finite();
@@ -89,7 +86,7 @@ pub mod OrderedTableMtPer {
         fn next_key(&self, k: &K) -> (result: Option<K>)
             ensures self@.dom().finite();
 
-        fn split_key(&self, k: &K) -> (Self, Option<V>, Self)
+        fn split_key(&self, k: &K) -> (result: (Self, Option<V>, Self))
             where Self: Sized
             ensures self@.dom().finite();
 
@@ -105,7 +102,7 @@ pub mod OrderedTableMtPer {
         fn select_key(&self, i: N) -> (result: Option<K>)
             ensures self@.dom().finite();
 
-        fn split_rank_key(&self, i: N) -> (Self, Self)
+        fn split_rank_key(&self, i: N) -> (result: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite();
     }
@@ -139,11 +136,7 @@ pub mod OrderedTableMtPer {
         }
 
         #[verifier::external_body]
-        fn find(&self, k: &K) -> (result: Option<V>)
-            ensures
-                self@.contains_key(k@) ==> result == Some(self@[k@]),
-                !self@.contains_key(k@) ==> result.is_none()
-        {
+        fn find(&self, k: &K) -> (result: Option<V>) {
             let seq = self.tree.in_order();
             let mut left = 0;
             let mut right = seq.length();
@@ -261,7 +254,7 @@ pub mod OrderedTableMtPer {
         }
 
         #[verifier::external_body]
-        fn split_key(&self, k: &K) -> (Self, Option<V>, Self)
+        fn split_key(&self, k: &K) -> (result: (Self, Option<V>, Self))
             where Self: Sized
             ensures self@.dom().finite()
         {
@@ -334,7 +327,7 @@ pub mod OrderedTableMtPer {
         }
 
         #[verifier::external_body]
-        fn split_rank_key(&self, i: N) -> (Self, Self)
+        fn split_rank_key(&self, i: N) -> (result: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite()
         {

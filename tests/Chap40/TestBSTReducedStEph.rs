@@ -1,6 +1,10 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
+use rand::{Rng, RngExt};
+
 use apas_verus::BSTReducedStEphLit;
+
+fn rand_priority() -> u64 { rand::rng().random() }
 use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
 use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap40::BSTReducedStEph::BSTReducedStEph::*;
@@ -14,11 +18,11 @@ fn reduced_bst_sum_operations() {
     assert_eq!(bst.reduced_value(), 0); // Sum identity
 
     // Insert key-value pairs
-    bst.insert(5, 50);
-    bst.insert(3, 30);
-    bst.insert(7, 70);
-    bst.insert(1, 10);
-    bst.insert(9, 90);
+    bst.insert(5, 50, rand_priority());
+    bst.insert(3, 30, rand_priority());
+    bst.insert(7, 70, rand_priority());
+    bst.insert(1, 10, rand_priority());
+    bst.insert(9, 90, rand_priority());
 
     assert_eq!(bst.size(), 5);
     assert_eq!(bst.reduced_value(), 250); // Sum: 50+30+70+10+90 = 250
@@ -42,11 +46,11 @@ fn reduced_bst_count_operations() {
     assert_eq!(bst.reduced_value(), 0); // Count identity
 
     // Insert key-value pairs
-    bst.insert(5, "five");
-    bst.insert(3, "three");
-    bst.insert(7, "seven");
-    bst.insert(1, "one");
-    bst.insert(9, "nine");
+    bst.insert(5, "five", rand_priority());
+    bst.insert(3, "three", rand_priority());
+    bst.insert(7, "seven", rand_priority());
+    bst.insert(1, "one", rand_priority());
+    bst.insert(9, "nine", rand_priority());
 
     assert_eq!(bst.size(), 5);
     assert_eq!(bst.reduced_value(), 5); // Count: 5 elements
@@ -61,12 +65,12 @@ fn reduced_bst_count_operations() {
 #[test]
 fn reduced_bst_update_existing_key() {
     let mut bst: BSTSumStEph<i32, i32> = BSTreeReduced::new();
-    bst.insert(5, 50);
-    bst.insert(3, 30);
+    bst.insert(5, 50, rand_priority());
+    bst.insert(3, 30, rand_priority());
     assert_eq!(bst.reduced_value(), 80); // 50 + 30
 
     // Update existing key
-    bst.insert(5, 100); // Update 5 -> 100
+    bst.insert(5, 100, rand_priority()); // Update 5 -> 100
 
     assert_eq!(bst.size(), 2); // Size should not change
     assert_eq!(bst.find(&5), Some(&100)); // Value should be updated
@@ -76,11 +80,11 @@ fn reduced_bst_update_existing_key() {
 #[test]
 fn reduced_bst_collections() {
     let mut bst: BSTSumStEph<i32, i32> = BSTreeReduced::new();
-    bst.insert(3, 300);
-    bst.insert(1, 100);
-    bst.insert(5, 500);
-    bst.insert(2, 200);
-    bst.insert(4, 400);
+    bst.insert(3, 300, rand_priority());
+    bst.insert(1, 100, rand_priority());
+    bst.insert(5, 500, rand_priority());
+    bst.insert(2, 200, rand_priority());
+    bst.insert(4, 400, rand_priority());
 
     // Test keys (should be in sorted order)
     let keys = bst.keys();
@@ -128,7 +132,7 @@ fn reduced_bst_height_stays_reasonable() {
     let mut expected_sum = 0;
     for i in 0..100 {
         let value = i * 10;
-        bst.insert(i, value);
+        bst.insert(i, value, rand_priority());
         expected_sum += value;
     }
 
@@ -152,7 +156,7 @@ fn reduced_bst_range_queries() {
 
     // Insert elements: keys 1,2,3,4,5 with values 10,20,30,40,50
     for i in 1..=5 {
-        bst.insert(i, i * 10);
+        bst.insert(i, i * 10, rand_priority());
     }
 
     // Test various range queries
@@ -168,9 +172,9 @@ fn reduced_bst_range_queries() {
 #[test]
 fn reduced_bst_string_keys() {
     let mut bst: BSTSumStEph<String, i32> = BSTreeReduced::new();
-    bst.insert("banana".to_string(), 2);
-    bst.insert("apple".to_string(), 1);
-    bst.insert("cherry".to_string(), 3);
+    bst.insert("banana".to_string(), 2, rand_priority());
+    bst.insert("apple".to_string(), 1, rand_priority());
+    bst.insert("cherry".to_string(), 3, rand_priority());
 
     assert_eq!(bst.size(), 3);
     assert_eq!(bst.reduced_value(), 6); // 1+2+3
@@ -187,9 +191,9 @@ fn reduced_bst_string_keys() {
 #[test]
 fn test_contains_method() {
     let mut bst: BSTSumStEph<i32, i32> = BSTreeReduced::new();
-    bst.insert(5, 50);
-    bst.insert(3, 30);
-    bst.insert(7, 70);
+    bst.insert(5, 50, rand_priority());
+    bst.insert(3, 30, rand_priority());
+    bst.insert(7, 70, rand_priority());
 
     assert!(bst.contains(&5));
     assert!(bst.contains(&3));
@@ -201,9 +205,9 @@ fn test_contains_method() {
 #[test]
 fn test_get_method() {
     let mut bst: BSTSumStEph<i32, i32> = BSTreeReduced::new();
-    bst.insert(5, 50);
-    bst.insert(3, 30);
-    bst.insert(7, 70);
+    bst.insert(5, 50, rand_priority());
+    bst.insert(3, 30, rand_priority());
+    bst.insert(7, 70, rand_priority());
 
     assert_eq!(bst.get(&5), Some(&50));
     assert_eq!(bst.get(&3), Some(&30));
@@ -221,23 +225,23 @@ fn test_minimum_maximum_keys() {
     assert_eq!(bst.maximum_key(), None);
 
     // Insert elements in random order
-    bst.insert(5, 50);
+    bst.insert(5, 50, rand_priority());
     assert_eq!(bst.minimum_key(), Some(&5));
     assert_eq!(bst.maximum_key(), Some(&5));
 
-    bst.insert(3, 30);
+    bst.insert(3, 30, rand_priority());
     assert_eq!(bst.minimum_key(), Some(&3));
     assert_eq!(bst.maximum_key(), Some(&5));
 
-    bst.insert(7, 70);
+    bst.insert(7, 70, rand_priority());
     assert_eq!(bst.minimum_key(), Some(&3));
     assert_eq!(bst.maximum_key(), Some(&7));
 
-    bst.insert(1, 10);
+    bst.insert(1, 10, rand_priority());
     assert_eq!(bst.minimum_key(), Some(&1));
     assert_eq!(bst.maximum_key(), Some(&7));
 
-    bst.insert(9, 90);
+    bst.insert(9, 90, rand_priority());
     assert_eq!(bst.minimum_key(), Some(&1));
     assert_eq!(bst.maximum_key(), Some(&9));
 }
@@ -247,12 +251,12 @@ fn test_count_reducer_all_operations() {
     let mut bst: BSTCountStEph<i32, &str> = BSTreeReduced::new();
 
     // Insert and verify count updates
-    bst.insert(5, "five");
+    bst.insert(5, "five", rand_priority());
     assert_eq!(bst.reduced_value(), 1);
     assert_eq!(bst.size(), 1);
 
-    bst.insert(3, "three");
-    bst.insert(7, "seven");
+    bst.insert(3, "three", rand_priority());
+    bst.insert(7, "seven", rand_priority());
     assert_eq!(bst.reduced_value(), 3);
     assert_eq!(bst.size(), 3);
 
@@ -287,7 +291,7 @@ fn test_empty_tree_operations() {
 #[test]
 fn test_single_element_operations() {
     let mut bst: BSTSumStEph<i32, i32> = BSTreeReduced::new();
-    bst.insert(42, 100);
+    bst.insert(42, 100, rand_priority());
 
     assert!(!bst.is_empty());
     assert_eq!(bst.size(), 1);
@@ -320,7 +324,7 @@ fn test_large_tree_with_all_operations() {
     let mut expected_sum = 0;
     for i in 0..50 {
         let value = i * 2;
-        bst.insert(i, value);
+        bst.insert(i, value, rand_priority());
         expected_sum += value;
     }
 
@@ -360,18 +364,18 @@ fn test_large_tree_with_all_operations() {
 fn test_duplicate_keys_overwrite() {
     let mut bst: BSTSumStEph<i32, i32> = BSTreeReduced::new();
 
-    bst.insert(5, 50);
+    bst.insert(5, 50, rand_priority());
     assert_eq!(bst.size(), 1);
     assert_eq!(bst.reduced_value(), 50);
 
     // Insert same key with different value
-    bst.insert(5, 100);
+    bst.insert(5, 100, rand_priority());
     assert_eq!(bst.size(), 1); // Size should not change
     assert_eq!(bst.get(&5), Some(&100)); // Value should be updated
     assert_eq!(bst.reduced_value(), 100); // Reduced value should reflect new value
 
     // Insert again
-    bst.insert(5, 200);
+    bst.insert(5, 200, rand_priority());
     assert_eq!(bst.size(), 1);
     assert_eq!(bst.get(&5), Some(&200));
     assert_eq!(bst.reduced_value(), 200);
@@ -382,7 +386,7 @@ fn test_edge_case_ranges() {
     let mut bst: BSTSumStEph<i32, i32> = BSTreeReduced::new();
 
     for i in 1..=5 {
-        bst.insert(i, i * 10);
+        bst.insert(i, i * 10, rand_priority());
     }
 
     // Range with no elements

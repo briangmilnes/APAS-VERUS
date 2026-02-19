@@ -23,7 +23,7 @@ pub mod FlatHashTable {
 
     /// Entry type for flat hash tables using open addressing.
     /// Represents the three states a slot can be in.
-    #[derive(Clone, PartialEq)]
+    #[derive(PartialEq)]
     pub enum FlatEntry<Key, Value> {
         /// Empty slot - never occupied
         Empty,
@@ -31,6 +31,18 @@ pub mod FlatHashTable {
         Occupied(Key, Value),
         /// Deleted slot - previously occupied, now available for insertion
         Deleted,
+    }
+
+    // 11. derive impls in verus!
+
+    impl<Key: Clone, Value: Clone> Clone for FlatEntry<Key, Value> {
+        fn clone(&self) -> (result: Self) {
+            match self {
+                FlatEntry::Empty => FlatEntry::Empty,
+                FlatEntry::Occupied(k, v) => FlatEntry::Occupied(k.clone(), v.clone()),
+                FlatEntry::Deleted => FlatEntry::Deleted,
+            }
+        }
     }
 
     // 9. impls
@@ -49,7 +61,7 @@ pub mod FlatHashTable {
         fn lookup(&self, key: &Key) -> Option<Value> {
             match self {
                 | FlatEntry::Occupied(k, v) => {
-                    if k == key { Some(v.clone()) } else { None }
+                    if *k == *key { Some(v.clone()) } else { None }
                 }
                 | _ => None,
             }
@@ -58,16 +70,16 @@ pub mod FlatHashTable {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — single match + enum assignment.
         fn delete(&mut self, key: &Key) -> B {
-            match self {
-                | FlatEntry::Occupied(k, _) => {
-                    if k == key {
-                        *self = FlatEntry::Deleted;
-                        true
-                    } else {
-                        false
-                    }
-                }
-                | _ => false,
+            let is_match = if let FlatEntry::Occupied(k, _) = &*self {
+                *k == *key
+            } else {
+                false
+            };
+            if is_match {
+                *self = FlatEntry::Deleted;
+                true
+            } else {
+                false
             }
         }
     }

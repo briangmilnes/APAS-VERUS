@@ -3,8 +3,6 @@
 
 pub mod BSTKeyValueStEph {
 
-    use rand::*;
-
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
@@ -49,7 +47,7 @@ pub mod BSTKeyValueStEph {
         /// claude-4-sonet: Work Θ(n), Span Θ(n)
         fn height(&self)            -> N;
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
-        fn insert(&mut self, key: K, value: V);
+        fn insert(&mut self, key: K, value: V, priority: u64);
         /// claude-4-sonet: Work Θ(n), Span Θ(n) — in-order filter + rebuild
         fn delete(&mut self, key: &K);
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
@@ -100,28 +98,27 @@ pub mod BSTKeyValueStEph {
 
     /// - APAS: N/A — internal recursive insert helper.
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-    fn insert_link<K: StT + Ord, V: StT>(link: &mut Link<K, V>, key: K, value: V, rng: &mut impl Rng) -> bool {
+    fn insert_link<K: StT + Ord, V: StT>(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> bool {
         if let Some(node) = link.as_mut() {
             if key < node.key {
-                let inserted = insert_link(&mut node.left, key, value, rng);
+                let inserted = insert_link(&mut node.left, key, value, priority);
                 if node.left.as_ref().is_some_and(|left| left.priority < node.priority) {
                     rotate_right(link);
                 }
                 inserted
             } else if key > node.key {
-                let inserted = insert_link(&mut node.right, key, value, rng);
+                let inserted = insert_link(&mut node.right, key, value, priority);
                 if node.right.as_ref().is_some_and(|right| right.priority < node.priority) {
                     rotate_left(link);
                 }
                 inserted
             } else {
-                // Key exists, update value
                 node.value = value;
-                false // No new insertion
+                false
             }
         } else {
-            *link = Some(Box::new(new_node(key, value, rng.random())));
-            true // New insertion
+            *link = Some(Box::new(new_node(key, value, priority)));
+            true
         }
     }
 
@@ -236,9 +233,8 @@ pub mod BSTKeyValueStEph {
             height_rec(&self.root)
         }
 
-        fn insert(&mut self, key: K, value: V) {
-            let mut r = rng();
-            let inserted = insert_link(&mut self.root, key, value, &mut r);
+        fn insert(&mut self, key: K, value: V, priority: u64) {
+            let inserted = insert_link(&mut self.root, key, value, priority);
             if inserted {
                 self.size += 1;
             }
@@ -285,8 +281,14 @@ pub mod BSTKeyValueStEph {
             < $crate::Chap40::BSTKeyValueStEph::BSTKeyValueStEph::BSTKeyValueStEph<_, _> as $crate::Chap40::BSTKeyValueStEph::BSTKeyValueStEph::BSTKeyValueStEphTrait<_, _> >::new()
         };
         ( $( ($k:expr, $v:expr) ),* $(,)? ) => {{
+            use std::hash::{Hash, Hasher};
             let mut __tree = < $crate::Chap40::BSTKeyValueStEph::BSTKeyValueStEph::BSTKeyValueStEph<_, _> as $crate::Chap40::BSTKeyValueStEph::BSTKeyValueStEph::BSTKeyValueStEphTrait<_, _> >::new();
-            $( __tree.insert($k, $v); )*
+            $( {
+                let __key = $k;
+                let mut __h = ::std::collections::hash_map::DefaultHasher::new();
+                __key.hash(&mut __h);
+                __tree.insert(__key, $v, __h.finish());
+            } )*
             __tree
         }};
     }

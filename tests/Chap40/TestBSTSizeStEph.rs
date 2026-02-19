@@ -1,6 +1,10 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
+use rand::{Rng, RngExt};
+
 use apas_verus::BSTSizeStEphLit;
+
+fn rand_priority() -> u64 { rand::rng().random() }
 use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
 use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap40::BSTSizeStEph::BSTSizeStEph::*;
@@ -13,11 +17,11 @@ fn size_bst_basic_operations() {
     assert_eq!(bst.size(), 0);
 
     // Insert elements
-    bst.insert(5);
-    bst.insert(3);
-    bst.insert(7);
-    bst.insert(1);
-    bst.insert(9);
+    bst.insert(5, rand_priority());
+    bst.insert(3, rand_priority());
+    bst.insert(7, rand_priority());
+    bst.insert(1, rand_priority());
+    bst.insert(9, rand_priority());
 
     assert_eq!(bst.size(), 5);
     assert!(!bst.is_empty());
@@ -41,7 +45,7 @@ fn size_bst_rank_operations() {
     let values = vec![5, 3, 7, 1, 9, 2, 6, 8, 4];
 
     for val in values {
-        bst.insert(val);
+        bst.insert(val, rand_priority());
     }
 
     // Test rank function (number of elements <= key)
@@ -64,7 +68,7 @@ fn size_bst_select_operations() {
     let values = vec![5, 3, 7, 1, 9, 2, 6, 8, 4];
 
     for val in values {
-        bst.insert(val);
+        bst.insert(val, rand_priority());
     }
 
     // Test select function (1-indexed: get element with rank i)
@@ -87,7 +91,7 @@ fn size_bst_rank_select_consistency() {
     let values = vec![10, 5, 15, 3, 7, 12, 18, 1, 4, 6, 8, 11, 13, 16, 20];
 
     for val in values {
-        bst.insert(val);
+        bst.insert(val, rand_priority());
     }
 
     // For each element, rank(select(i)) should equal i
@@ -112,7 +116,7 @@ fn size_bst_split_rank_operations() {
     let values = vec![5, 3, 7, 1, 9, 2, 6, 8, 4];
 
     for val in values {
-        bst.insert(val);
+        bst.insert(val, rand_priority());
     }
 
     // Split at rank 5: implementation puts ranks 1-5 in left, ranks 6-9 in right
@@ -160,8 +164,8 @@ fn size_bst_macro_literal() {
 #[test]
 fn size_bst_duplicate_insert_is_idempotent() {
     let mut bst = BSTreeSize::new();
-    bst.insert(5);
-    bst.insert(5); // Duplicate
+    bst.insert(5, rand_priority());
+    bst.insert(5, rand_priority()); // Duplicate
 
     assert_eq!(bst.size(), 1);
     assert_eq!(bst.rank(&5), 1);
@@ -174,7 +178,7 @@ fn size_bst_large_dataset_performance() {
 
     // Insert 1000 elements
     for i in 0..1000 {
-        bst.insert(i);
+        bst.insert(i, rand_priority());
     }
 
     assert_eq!(bst.size(), 1000);

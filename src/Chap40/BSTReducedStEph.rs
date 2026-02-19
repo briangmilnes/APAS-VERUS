@@ -5,8 +5,6 @@ pub mod BSTReducedStEph {
 
     use std::marker::PhantomData;
 
-    use rand::*;
-
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
@@ -85,7 +83,7 @@ pub mod BSTReducedStEph {
         /// claude-4-sonet: Work Θ(n), Span Θ(n)
         fn height(&self)                          -> N;
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
-        fn insert(&mut self, key: K, value: V);
+        fn insert(&mut self, key: K, value: V, priority: u64);
         /// claude-4-sonet: Work Θ(n), Span Θ(n) — in-order filter + rebuild
         fn delete(&mut self, key: &K);
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
@@ -197,21 +195,20 @@ pub mod BSTReducedStEph {
         link: &mut Link<K, V, R>,
         key: K,
         value: V,
-        rng: &mut impl Rng,
+        priority: u64,
     ) {
         if let Some(node) = link.as_mut() {
             if key < node.key {
-                insert_link::<K, V, R, Op>(&mut node.left, key, value, rng);
+                insert_link::<K, V, R, Op>(&mut node.left, key, value, priority);
                 if node.left.as_ref().is_some_and(|left| left.priority < node.priority) {
                     rotate_right::<K, V, R, Op>(link);
                 }
             } else if key > node.key {
-                insert_link::<K, V, R, Op>(&mut node.right, key, value, rng);
+                insert_link::<K, V, R, Op>(&mut node.right, key, value, priority);
                 if node.right.as_ref().is_some_and(|right| right.priority < node.priority) {
                     rotate_left::<K, V, R, Op>(link);
                 }
             } else {
-                // Key exists, update value
                 node.value = value;
             }
             if let Some(node) = link.as_mut() {
@@ -219,7 +216,7 @@ pub mod BSTReducedStEph {
             }
         } else {
             let node_reduced = Op::lift(&value);
-            *link = Some(Box::new(Node::new(key, value, rng.random(), node_reduced)));
+            *link = Some(Box::new(Node::new(key, value, priority, node_reduced)));
         }
     }
 
@@ -376,9 +373,8 @@ pub mod BSTReducedStEph {
             height_rec(&self.root)
         }
 
-        fn insert(&mut self, key: K, value: V) {
-            let mut r = rng();
-            insert_link::<K, V, R, Op>(&mut self.root, key, value, &mut r);
+        fn insert(&mut self, key: K, value: V, priority: u64) {
+            insert_link::<K, V, R, Op>(&mut self.root, key, value, priority);
         }
 
         fn delete(&mut self, key: &K) {
@@ -427,8 +423,14 @@ pub mod BSTReducedStEph {
             < $crate::Chap40::BSTReducedStEph::BSTReducedStEph::BSTReducedStEph<_, _, _, _> as $crate::Chap40::BSTReducedStEph::BSTReducedStEph::BSTReducedStEphTrait<_, _, _, _> >::new()
         };
         ( $( ($k:expr, $v:expr) ),* $(,)? ) => {{
+            use std::hash::{Hash, Hasher};
             let mut __tree = < $crate::Chap40::BSTReducedStEph::BSTReducedStEph::BSTReducedStEph<_, _, _, _> as $crate::Chap40::BSTReducedStEph::BSTReducedStEph::BSTReducedStEphTrait<_, _, _, _> >::new();
-            $( __tree.insert($k, $v); )*
+            $( {
+                let __key = $k;
+                let mut __h = ::std::collections::hash_map::DefaultHasher::new();
+                __key.hash(&mut __h);
+                __tree.insert(__key, $v, __h.finish());
+            } )*
             __tree
         }};
     }

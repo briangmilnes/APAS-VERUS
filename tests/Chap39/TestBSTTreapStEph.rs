@@ -1,7 +1,11 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for BSTTreapStEph.
 
+use rand::{Rng, RngExt};
+
 use apas_verus::BSTTreapStEphLit;
+
+fn rand_priority() -> u64 { rand::rng().random() }
 use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
 use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap39::BSTTreapStEph::BSTTreapStEph::*;
@@ -32,19 +36,19 @@ fn test_empty() {
 #[test]
 fn test_insert_and_size() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(5);
+    tree.insert(5, rand_priority());
     assert_eq!(tree.size(), 1);
-    tree.insert(3);
-    tree.insert(7);
+    tree.insert(3, rand_priority());
+    tree.insert(7, rand_priority());
     assert_eq!(tree.size(), 3);
 }
 
 #[test]
 fn test_contains() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(5);
-    tree.insert(3);
-    tree.insert(7);
+    tree.insert(5, rand_priority());
+    tree.insert(3, rand_priority());
+    tree.insert(7, rand_priority());
 
     assert!(tree.contains(&5));
     assert!(tree.contains(&3));
@@ -55,8 +59,8 @@ fn test_contains() {
 #[test]
 fn test_find() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(5);
-    tree.insert(3);
+    tree.insert(5, rand_priority());
+    tree.insert(3, rand_priority());
 
     assert_eq!(tree.find(&5), Some(&5));
     assert_eq!(tree.find(&3), Some(&3));
@@ -69,11 +73,11 @@ fn test_minimum_maximum() {
     assert_eq!(tree.minimum(), None);
     assert_eq!(tree.maximum(), None);
 
-    tree.insert(5);
-    tree.insert(3);
-    tree.insert(7);
-    tree.insert(1);
-    tree.insert(9);
+    tree.insert(5, rand_priority());
+    tree.insert(3, rand_priority());
+    tree.insert(7, rand_priority());
+    tree.insert(1, rand_priority());
+    tree.insert(9, rand_priority());
 
     assert_eq!(tree.minimum(), Some(&1));
     assert_eq!(tree.maximum(), Some(&9));
@@ -84,22 +88,22 @@ fn test_height() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
     assert_eq!(tree.height(), 0);
 
-    tree.insert(5);
+    tree.insert(5, rand_priority());
     assert!(tree.height() >= 1);
 
-    tree.insert(3);
-    tree.insert(7);
+    tree.insert(3, rand_priority());
+    tree.insert(7, rand_priority());
     assert!(tree.height() >= 1);
 }
 
 #[test]
 fn test_in_order() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(5);
-    tree.insert(3);
-    tree.insert(7);
-    tree.insert(1);
-    tree.insert(9);
+    tree.insert(5, rand_priority());
+    tree.insert(3, rand_priority());
+    tree.insert(7, rand_priority());
+    tree.insert(1, rand_priority());
+    tree.insert(9, rand_priority());
 
     let _seq = tree.in_order();
     // Just verify it returns without panicking
@@ -108,9 +112,9 @@ fn test_in_order() {
 #[test]
 fn test_pre_order() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(5);
-    tree.insert(3);
-    tree.insert(7);
+    tree.insert(5, rand_priority());
+    tree.insert(3, rand_priority());
+    tree.insert(7, rand_priority());
 
     let _seq = tree.pre_order();
     // Just verify it returns without panicking
@@ -121,16 +125,16 @@ fn test_is_empty() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
     assert!(tree.is_empty());
 
-    tree.insert(5);
+    tree.insert(5, rand_priority());
     assert!(!tree.is_empty());
 }
 
 #[test]
 fn test_duplicate_insert() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(5);
-    tree.insert(5);
-    tree.insert(5);
+    tree.insert(5, rand_priority());
+    tree.insert(5, rand_priority());
+    tree.insert(5, rand_priority());
 
     // Treaps may allow duplicates depending on implementation
     assert!(tree.size() >= 1);
@@ -140,7 +144,7 @@ fn test_duplicate_insert() {
 #[test]
 fn test_single_element() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(42);
+    tree.insert(42, rand_priority());
 
     assert_eq!(tree.size(), 1);
     assert_eq!(tree.minimum(), Some(&42));
@@ -152,7 +156,7 @@ fn test_single_element() {
 fn test_large_tree() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
     for i in 0..100 {
-        tree.insert(i);
+        tree.insert(i, rand_priority());
     }
 
     assert_eq!(tree.size(), 100);
@@ -163,11 +167,11 @@ fn test_large_tree() {
 #[test]
 fn test_reverse_order_insert() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(5);
-    tree.insert(4);
-    tree.insert(3);
-    tree.insert(2);
-    tree.insert(1);
+    tree.insert(5, rand_priority());
+    tree.insert(4, rand_priority());
+    tree.insert(3, rand_priority());
+    tree.insert(2, rand_priority());
+    tree.insert(1, rand_priority());
 
     assert_eq!(tree.size(), 5);
     assert_eq!(tree.minimum(), Some(&1));
@@ -177,10 +181,10 @@ fn test_reverse_order_insert() {
 #[test]
 fn test_negative_numbers() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(-5);
-    tree.insert(-10);
-    tree.insert(-3);
-    tree.insert(-1);
+    tree.insert(-5, rand_priority());
+    tree.insert(-10, rand_priority());
+    tree.insert(-3, rand_priority());
+    tree.insert(-1, rand_priority());
 
     assert_eq!(tree.size(), 4);
     assert_eq!(tree.minimum(), Some(&-10));
@@ -191,11 +195,11 @@ fn test_negative_numbers() {
 #[test]
 fn test_mixed_positive_negative() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(5);
-    tree.insert(-3);
-    tree.insert(0);
-    tree.insert(-10);
-    tree.insert(15);
+    tree.insert(5, rand_priority());
+    tree.insert(-3, rand_priority());
+    tree.insert(0, rand_priority());
+    tree.insert(-10, rand_priority());
+    tree.insert(15, rand_priority());
 
     assert_eq!(tree.minimum(), Some(&-10));
     assert_eq!(tree.maximum(), Some(&15));
@@ -205,9 +209,9 @@ fn test_mixed_positive_negative() {
 #[test]
 fn test_find_missing() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(5);
-    tree.insert(3);
-    tree.insert(7);
+    tree.insert(5, rand_priority());
+    tree.insert(3, rand_priority());
+    tree.insert(7, rand_priority());
 
     assert_eq!(tree.find(&5), Some(&5));
     assert_eq!(tree.find(&100), None);
@@ -217,11 +221,11 @@ fn test_find_missing() {
 #[test]
 fn test_in_order_traversal() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(5);
-    tree.insert(3);
-    tree.insert(7);
-    tree.insert(1);
-    tree.insert(9);
+    tree.insert(5, rand_priority());
+    tree.insert(3, rand_priority());
+    tree.insert(7, rand_priority());
+    tree.insert(1, rand_priority());
+    tree.insert(9, rand_priority());
 
     let seq = tree.in_order();
     assert_eq!(seq.length(), 5);
@@ -236,9 +240,9 @@ fn test_in_order_traversal() {
 #[test]
 fn test_pre_order_traversal() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(5);
-    tree.insert(3);
-    tree.insert(7);
+    tree.insert(5, rand_priority());
+    tree.insert(3, rand_priority());
+    tree.insert(7, rand_priority());
 
     let seq = tree.pre_order();
     assert_eq!(seq.length(), 3);
@@ -248,7 +252,7 @@ fn test_pre_order_traversal() {
 fn test_sequential_inserts() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
     for i in 0..50 {
-        tree.insert(i);
+        tree.insert(i, rand_priority());
     }
 
     assert_eq!(tree.size(), 50);
@@ -267,7 +271,7 @@ fn test_random_order_inserts() {
     let values = vec![15, 3, 22, 8, 1, 45, 12, 30, 7, 19];
 
     for &v in &values {
-        tree.insert(v);
+        tree.insert(v, rand_priority());
     }
 
     assert_eq!(tree.size(), 10);
@@ -285,7 +289,7 @@ fn test_height_balanced() {
 
     // Insert many elements
     for i in 0..64 {
-        tree.insert(i);
+        tree.insert(i, rand_priority());
     }
 
     let height = tree.height();
@@ -315,7 +319,7 @@ fn test_contains_after_many_inserts() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
 
     for i in (0..100).step_by(3) {
-        tree.insert(i);
+        tree.insert(i, rand_priority());
     }
 
     // Check present values
@@ -333,10 +337,10 @@ fn test_contains_after_many_inserts() {
 fn test_string_treap() {
     let mut tree: BSTTreapStEph<String> = Default::default();
 
-    tree.insert("dog".to_string());
-    tree.insert("cat".to_string());
-    tree.insert("elephant".to_string());
-    tree.insert("ant".to_string());
+    tree.insert("dog".to_string(), rand_priority());
+    tree.insert("cat".to_string(), rand_priority());
+    tree.insert("elephant".to_string(), rand_priority());
+    tree.insert("ant".to_string(), rand_priority());
 
     assert_eq!(tree.size(), 4);
     assert_eq!(tree.minimum(), Some(&"ant".to_string()));
@@ -358,7 +362,7 @@ fn test_traversal_empty_tree() {
 #[test]
 fn test_singleton_traversal() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(42);
+    tree.insert(42, rand_priority());
 
     let in_seq = tree.in_order();
     assert_eq!(in_seq.length(), 1);
@@ -372,9 +376,9 @@ fn test_singleton_traversal() {
 #[test]
 fn test_zero_value() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(0);
-    tree.insert(-5);
-    tree.insert(5);
+    tree.insert(0, rand_priority());
+    tree.insert(-5, rand_priority());
+    tree.insert(5, rand_priority());
 
     assert_eq!(tree.size(), 3);
     assert!(tree.contains(&0));
@@ -384,9 +388,9 @@ fn test_zero_value() {
 #[test]
 fn test_extremes() {
     let mut tree: BSTTreapStEph<i32> = Default::default();
-    tree.insert(i32::MAX);
-    tree.insert(i32::MIN);
-    tree.insert(0);
+    tree.insert(i32::MAX, rand_priority());
+    tree.insert(i32::MIN, rand_priority());
+    tree.insert(0, rand_priority());
 
     assert_eq!(tree.size(), 3);
     assert_eq!(tree.minimum(), Some(&i32::MIN));

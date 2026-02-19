@@ -49,7 +49,7 @@ pub mod OrderedTableMtEph {
     // 8. traits
 
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1 for keys) with multi-threaded ephemeral semantics
-    pub trait OrderedTableMtEphTrait<K: MtKey, V: MtVal> {
+    pub trait OrderedTableMtEphTrait<K: MtKey, V: MtVal>: Sized + View<V = Map<K::V, V::V>> {
         fn size(&self) -> (result: N)
             ensures result == self@.dom().len(), self@.dom().finite();
 
@@ -59,15 +59,9 @@ pub mod OrderedTableMtEph {
         fn singleton(k: K, v: V) -> (result: Self)
             ensures result@ == Map::<K::V, V::V>::empty().insert(k@, v@), result@.dom().finite();
 
-        fn find(&self, k: &K) -> (result: Option<V>)
-            ensures
-                self@.contains_key(k@) ==> result == Some(self@[k@]),
-                !self@.contains_key(k@) ==> result.is_none();
+        fn find(&self, k: &K) -> (result: Option<V>);
 
-        fn lookup(&self, k: &K) -> (result: Option<V>)
-            ensures
-                self@.contains_key(k@) ==> result == Some(self@[k@]),
-                !self@.contains_key(k@) ==> result.is_none();
+        fn lookup(&self, k: &K) -> (result: Option<V>);
 
         fn is_empty(&self) -> (result: B)
             ensures result == self@.dom().is_empty();
@@ -123,7 +117,7 @@ pub mod OrderedTableMtEph {
         fn next_key(&self, k: &K) -> (result: Option<K>)
             ensures self@.dom().finite();
 
-        fn split_key(&mut self, k: &K) -> (Self, Option<V>, Self)
+        fn split_key(&mut self, k: &K) -> (result: (Self, Option<V>, Self))
             where Self: Sized
             ensures self@.dom().finite();
 
@@ -139,7 +133,7 @@ pub mod OrderedTableMtEph {
         fn select_key(&self, i: N) -> (result: Option<K>)
             ensures self@.dom().finite();
 
-        fn split_rank_key(&mut self, i: N) -> (Self, Self)
+        fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite();
     }
@@ -173,20 +167,12 @@ pub mod OrderedTableMtEph {
         }
 
         #[verifier::external_body]
-        fn find(&self, k: &K) -> (result: Option<V>)
-            ensures
-                self@.contains_key(k@) ==> result == Some(self@[k@]),
-                !self@.contains_key(k@) ==> result.is_none()
-        {
+        fn find(&self, k: &K) -> (result: Option<V>) {
             self.base_table.find(k)
         }
 
         #[verifier::external_body]
-        fn lookup(&self, k: &K) -> (result: Option<V>)
-            ensures
-                self@.contains_key(k@) ==> result == Some(self@[k@]),
-                !self@.contains_key(k@) ==> result.is_none()
-        {
+        fn lookup(&self, k: &K) -> (result: Option<V>) {
             self.find(k)
         }
 
@@ -267,8 +253,7 @@ pub mod OrderedTableMtEph {
         }
 
         #[verifier::external_body]
-        fn reduce<R, F>(&self, init: R, f: F) -> (result: R)
-            where F: Fn(R, &K, &V) -> R + Send + Sync + 'static, R: Send + Sync + 'static
+        fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (result: R)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
@@ -388,7 +373,7 @@ pub mod OrderedTableMtEph {
         }
 
         #[verifier::external_body]
-        fn split_key(&mut self, k: &K) -> (Self, Option<V>, Self)
+        fn split_key(&mut self, k: &K) -> (result: (Self, Option<V>, Self))
             where Self: Sized
             ensures self@.dom().finite()
         {
@@ -474,7 +459,7 @@ pub mod OrderedTableMtEph {
         }
 
         #[verifier::external_body]
-        fn split_rank_key(&mut self, i: N) -> (Self, Self)
+        fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite()
         {

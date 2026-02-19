@@ -24,19 +24,27 @@
 pub mod BSTSetTreapMtEph {
 
     use std::collections::BTreeSet;
+    use std::collections::hash_map::DefaultHasher;
+    use std::hash::{Hash, Hasher};
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::*;
     use crate::Types::Types::*;
 
+    fn priority_for<T: Hash>(key: &T) -> u64 {
+        let mut hasher = DefaultHasher::new();
+        key.hash(&mut hasher);
+        hasher.finish()
+    }
+
     #[derive(Debug, Clone)]
-    pub struct BSTSetTreapMtEph<T: StTInMtT + Ord> {
+    pub struct BSTSetTreapMtEph<T: StTInMtT + Ord + Hash> {
         tree: BSTTreapMtEph<T>,
     }
 
-    pub type BSTSetTreapMt<T> = BSTSetTreapMtEph<T>;
+    pub type BSTSetTreapMt<T> = BSTSetTreapMtEph<T>;  // T: StTInMtT + Ord + Hash
 
-    pub trait BSTSetTreapMtEphTrait<T: StTInMtT + Ord>: Sized {
+    pub trait BSTSetTreapMtEphTrait<T: StTInMtT + Ord + Hash>: Sized {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn empty()                                   -> Self;
@@ -103,23 +111,25 @@ pub mod BSTSetTreapMtEph {
         tree.in_order().iter().cloned().collect()
     }
 
-    fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> BSTTreapMtEph<T> {
+    fn rebuild_from_vec<T: StTInMtT + Ord + Hash>(values: Vec<T>) -> BSTTreapMtEph<T> {
         let tree = BSTTreapMtEph::new();
         for value in values {
-            tree.insert(value);
+            let p = priority_for(&value);
+            tree.insert(value, p);
         }
         tree
     }
 
-    fn from_sorted_iter<T: StTInMtT + Ord, I: IntoIterator<Item = T>>(values: I) -> BSTSetTreapMtEph<T> {
+    fn from_sorted_iter<T: StTInMtT + Ord + Hash, I: IntoIterator<Item = T>>(values: I) -> BSTSetTreapMtEph<T> {
         let tree = BSTTreapMtEph::new();
         for value in values {
-            tree.insert(value);
+            let p = priority_for(&value);
+            tree.insert(value, p);
         }
         BSTSetTreapMtEph { tree }
     }
 
-    impl<T: StTInMtT + Ord> BSTSetTreapMtEphTrait<T> for BSTSetTreapMtEph<T> {
+    impl<T: StTInMtT + Ord + Hash> BSTSetTreapMtEphTrait<T> for BSTSetTreapMtEph<T> {
         fn empty() -> Self {
             Self {
                 tree: BSTTreapMtEph::new(),
@@ -128,7 +138,8 @@ pub mod BSTSetTreapMtEph {
 
         fn singleton(value: T) -> Self {
             let tree = BSTTreapMtEph::new();
-            tree.insert(value);
+            let p = priority_for(&value);
+            tree.insert(value, p);
             Self { tree }
         }
 
@@ -144,7 +155,10 @@ pub mod BSTSetTreapMtEph {
 
         fn maximum(&self) -> Option<T> { self.tree.maximum() }
 
-        fn insert(&mut self, value: T) { self.tree.insert(value); }
+        fn insert(&mut self, value: T) {
+            let p = priority_for(&value);
+            self.tree.insert(value, p);
+        }
 
         fn delete(&mut self, target: &T) {
             let mut values = values_vec(&self.tree);

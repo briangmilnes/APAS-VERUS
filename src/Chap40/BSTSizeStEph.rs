@@ -3,8 +3,6 @@
 
 pub mod BSTSizeStEph {
 
-    use rand::*;
-
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
@@ -48,7 +46,7 @@ pub mod BSTSizeStEph {
         /// claude-4-sonet: Work Θ(n), Span Θ(n)
         fn height(&self)               -> N;
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
-        fn insert(&mut self, value: T);
+        fn insert(&mut self, value: T, priority: u64);
         /// claude-4-sonet: Work Θ(n), Span Θ(n) — in-order filter + rebuild
         fn delete(&mut self, key: &T);
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
@@ -127,15 +125,15 @@ pub mod BSTSizeStEph {
 
     /// - APAS: N/A — internal recursive insert helper.
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-    fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T, rng: &mut impl Rng) {
+    fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T, priority: u64) {
         if let Some(node) = link.as_mut() {
             if value < node.key {
-                insert_link(&mut node.left, value, rng);
+                insert_link(&mut node.left, value, priority);
                 if node.left.as_ref().is_some_and(|left| left.priority < node.priority) {
                     rotate_right(link);
                 }
             } else if value > node.key {
-                insert_link(&mut node.right, value, rng);
+                insert_link(&mut node.right, value, priority);
                 if node.right.as_ref().is_some_and(|right| right.priority < node.priority) {
                     rotate_left(link);
                 }
@@ -144,7 +142,7 @@ pub mod BSTSizeStEph {
                 update_size(node);
             }
         } else {
-            *link = Some(Box::new(Node::new(value, rng.random())));
+            *link = Some(Box::new(Node::new(value, priority)));
         }
     }
 
@@ -285,9 +283,8 @@ pub mod BSTSizeStEph {
             height_rec(&self.root)
         }
 
-        fn insert(&mut self, value: T) {
-            let mut r = rng();
-            insert_link(&mut self.root, value, &mut r);
+        fn insert(&mut self, value: T, priority: u64) {
+            insert_link(&mut self.root, value, priority);
         }
 
         fn delete(&mut self, key: &T) {
@@ -352,8 +349,14 @@ pub mod BSTSizeStEph {
             < $crate::Chap40::BSTSizeStEph::BSTSizeStEph::BSTSizeStEph<_> as $crate::Chap40::BSTSizeStEph::BSTSizeStEph::BSTSizeStEphTrait<_> >::new()
         };
         ( $( $x:expr ),* $(,)? ) => {{
+            use std::hash::{Hash, Hasher};
             let mut __tree = < $crate::Chap40::BSTSizeStEph::BSTSizeStEph::BSTSizeStEph<_> as $crate::Chap40::BSTSizeStEph::BSTSizeStEph::BSTSizeStEphTrait<_> >::new();
-            $( __tree.insert($x); )*
+            $( {
+                let __val = $x;
+                let mut __h = ::std::collections::hash_map::DefaultHasher::new();
+                __val.hash(&mut __h);
+                __tree.insert(__val, __h.finish());
+            } )*
             __tree
         }};
     }

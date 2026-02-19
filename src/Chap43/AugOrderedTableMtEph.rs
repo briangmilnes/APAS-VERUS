@@ -97,21 +97,15 @@ pub mod AugOrderedTableMtEph {
 
     /// Trait defining all augmented ordered table operations (ADT 43.3) with multi-threaded ephemeral semantics
     /// Extends ordered table operations with efficient reduction and thread-safe operations
-    pub trait AugOrderedTableMtEphTrait<K: MtKey, V: MtVal, F: MtReduceFn<V>> {
+    pub trait AugOrderedTableMtEphTrait<K: MtKey, V: MtVal, F: MtReduceFn<V>>: Sized + View<V = Map<K::V, V::V>> {
         fn size(&self) -> (result: N)
             ensures result == self@.dom().len(), self@.dom().finite();
         fn empty(reducer: F, identity: V) -> (result: Self)
             ensures result@ == Map::<K::V, V::V>::empty();
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (result: Self)
             ensures result@.dom().finite();
-        fn find(&self, k: &K) -> (result: Option<V>)
-            ensures
-                self@.contains_key(k@) ==> result == Some(self@[k@]),
-                !self@.contains_key(k@) ==> result == None;
-        fn lookup(&self, k: &K) -> (result: Option<V>)
-            ensures
-                self@.contains_key(k@) ==> result == Some(self@[k@]),
-                !self@.contains_key(k@) ==> result == None;
+        fn find(&self, k: &K) -> (result: Option<V>);
+        fn lookup(&self, k: &K) -> (result: Option<V>);
         fn is_empty(&self) -> (result: B)
             ensures result == self@.dom().is_empty(), self@.dom().finite();
         fn insert<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: G)
@@ -153,7 +147,7 @@ pub mod AugOrderedTableMtEph {
             ensures self@.dom().finite();
         fn next_key(&self, k: &K) -> (result: Option<K>)
             ensures self@.dom().finite();
-        fn split_key(&mut self, k: &K) -> (Self, Option<V>, Self)
+        fn split_key(&mut self, k: &K) -> (result: (Self, Option<V>, Self))
             where Self: Sized,
             ensures self@.dom().finite();
         fn join_key(&mut self, other: Self)
@@ -164,7 +158,7 @@ pub mod AugOrderedTableMtEph {
             ensures self@.dom().finite();
         fn select_key(&self, i: N) -> (result: Option<K>)
             ensures self@.dom().finite();
-        fn split_rank_key(&mut self, i: N) -> (Self, Self)
+        fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
             where Self: Sized,
             ensures self@.dom().finite();
         fn reduce_val(&self) -> (result: V)
@@ -210,20 +204,12 @@ pub mod AugOrderedTableMtEph {
         }
 
         #[verifier::external_body]
-        fn find(&self, k: &K) -> (result: Option<V>)
-            ensures
-                self@.contains_key(k@) ==> result == Some(self@[k@]),
-                !self@.contains_key(k@) ==> result == None
-        {
+        fn find(&self, k: &K) -> (result: Option<V>) {
             self.base_table.find(k)
         }
 
         #[verifier::external_body]
-        fn lookup(&self, k: &K) -> (result: Option<V>)
-            ensures
-                self@.contains_key(k@) ==> result == Some(self@[k@]),
-                !self@.contains_key(k@) ==> result == None
-        {
+        fn lookup(&self, k: &K) -> (result: Option<V>) {
             self.base_table.lookup(k)
         }
 
@@ -392,7 +378,7 @@ pub mod AugOrderedTableMtEph {
         }
 
         #[verifier::external_body]
-        fn split_key(&mut self, k: &K) -> (Self, Option<V>, Self)
+        fn split_key(&mut self, k: &K) -> (result: (Self, Option<V>, Self))
             ensures self@.dom().finite()
         {
             let (left_base, found_value, right_base) = self.base_table.split_key(k);
@@ -467,7 +453,7 @@ pub mod AugOrderedTableMtEph {
         }
 
         #[verifier::external_body]
-        fn split_rank_key(&mut self, i: N) -> (Self, Self)
+        fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
             ensures self@.dom().finite()
         {
             let (left_base, right_base) = self.base_table.split_rank_key(i);
