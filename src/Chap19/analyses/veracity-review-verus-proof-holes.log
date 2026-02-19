@@ -1,25 +1,25 @@
 $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap19/
 
 ❌ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1412: assume() - proof { assume(equal == (self@ == other@)); }
-      1408 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1413: assume() - proof { assume(equal == (self@ == other@)); }
+      1409 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1410 |         {
-      1411 |             let equal = self.seq == other.seq;
-      1413 |             equal
-      1414 |         }
+      1411 |         {
+      1412 |             let equal = self.seq == other.seq;
+      1414 |             equal
+      1415 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 6 total (6 clean, 0 holed)
 ✓ ArraySeqMtEphSlice.rs
 ❌ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:1116: assume() - proof { assume(equal == (self@ == other@)); }
-      1112 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:1117: assume() - proof { assume(equal == (self@ == other@)); }
+      1113 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1114 |         {
-      1115 |             let equal = self.seq == other.seq;
-      1117 |             equal
-      1118 |         }
+      1115 |         {
+      1116 |             let equal = self.seq == other.seq;
+      1118 |             equal
+      1119 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 3 total (3 clean, 0 holed)
