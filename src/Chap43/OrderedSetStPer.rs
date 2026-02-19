@@ -3,152 +3,223 @@
 
 pub mod OrderedSetStPer {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions
+    // 5. view impls
+    // 8. traits
+    // 9. impls
+    // 11. derive impls in verus!
+    // 12. macros
+    // 13. derive impls outside verus!
+
+    use std::fmt;
+
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Types::Types::*;
 
-    #[derive(PartialEq)]
+    verus! {
+
+    // 4. type definitions
+
     pub struct OrderedSetStPer<T: StT + Ord> {
         base_set: AVLTreeSetStPer<T>,
     }
 
     pub type OrderedSetPer<T> = OrderedSetStPer<T>;
 
+    // 5. view impls
+
+    impl<T: StT + Ord> View for OrderedSetStPer<T> {
+        type V = Set<T>;
+        #[verifier::external_body]
+        open spec fn view(&self) -> Set<T> { Set::empty() }
+    }
+
+    // 8. traits
+
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1)
     pub trait OrderedSetStPerTrait<T: StT + Ord> {
         // Base set operations (ADT 41.1) - delegated
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)                        -> N;
+        fn size(&self) -> (result: N)
+            ensures result == self@.len(), self@.finite();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty()                            -> Self;
+        fn empty() -> (result: Self)
+            ensures result@ == Set::<T>::empty();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn singleton(x: T)                    -> Self;
+        fn singleton(x: T) -> (result: Self)
+            ensures result@ == Set::<T>::empty().insert(x), result@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn find(&self, x: &T)                 -> B;
+        fn find(&self, x: &T) -> (result: B)
+            ensures result == self@.contains(*x);
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn insert(&self, x: T)                -> Self;
+        fn insert(&self, x: T) -> (result: Self)
+            ensures result@ == self@.insert(x), result@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn delete(&self, x: &T)               -> Self;
+        fn delete(&self, x: &T) -> (result: Self)
+            ensures result@ == self@.remove(*x), result@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn filter<F: PredSt<T>>(&self, f: F)  -> Self;
+        fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
+            ensures result@.finite(), result@.subset_of(self@);
         /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
-        fn intersection(&self, other: &Self)  -> Self;
+        fn intersection(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.intersect(other@), result@.finite();
         /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
-        fn union(&self, other: &Self)         -> Self;
+        fn union(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.union(other@), result@.finite();
         /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
-        fn difference(&self, other: &Self)    -> Self;
+        fn difference(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.difference(other@), result@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn to_seq(&self)                      -> AVLTreeSeqStPerS<T>;
+        fn to_seq(&self) -> (result: AVLTreeSeqStPerS<T>)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
-        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> Self;
+        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (result: Self)
+            ensures result@.finite();
 
         // Ordering operations (ADT 43.1)
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn first(&self)                       -> Option<T>;
+        fn first(&self) -> (result: Option<T>)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn last(&self)                        -> Option<T>;
+        fn last(&self) -> (result: Option<T>)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn previous(&self, k: &T)             -> Option<T>;
+        fn previous(&self, k: &T) -> (result: Option<T>)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn next(&self, k: &T)                 -> Option<T>;
+        fn next(&self, k: &T) -> (result: Option<T>)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn split(&self, k: &T)                -> (Self, B, Self)
-        where
-            Self: Sized;
+        fn split(&self, k: &T) -> (result: (Self, B, Self))
+            where Self: Sized
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(log(|left| + |right|)), Span Θ(log(|left| + |right|)), Parallelism Θ(1)
-        fn join(left: &Self, right: &Self)    -> Self;
+        fn join(left: &Self, right: &Self) -> (result: Self)
+            ensures result@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn get_range(&self, k1: &T, k2: &T)   -> Self;
+        fn get_range(&self, k1: &T, k2: &T) -> (result: Self)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn rank(&self, k: &T)                 -> N;
+        fn rank(&self, k: &T) -> (result: N)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn select(&self, i: N)                -> Option<T>;
+        fn select(&self, i: N) -> (result: Option<T>)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn split_rank(&self, i: N)            -> (Self, Self)
-        where
-            Self: Sized;
+        fn split_rank(&self, i: N) -> (result: (Self, Self))
+            where Self: Sized
+            ensures self@.finite();
     }
 
+    // 9. impls
+
     impl<T: StT + Ord> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
-        // Base set operations - delegate to backing store
+        #[verifier::external_body]
+        fn size(&self) -> (result: N)
+            ensures result == self@.len(), self@.finite()
+        { self.base_set.size() }
 
-        /// Claude Work: O(1), Span: O(1)
-        fn size(&self) -> N { self.base_set.size() }
-
-        /// Claude Work: O(1), Span: O(1)
-        fn empty() -> Self {
+        #[verifier::external_body]
+        fn empty() -> (result: Self)
+            ensures result@ == Set::<T>::empty()
+        {
             OrderedSetStPer {
                 base_set: AVLTreeSetStPer::empty(),
             }
         }
 
-        /// Claude Work: O(1), Span: O(1)
-        fn singleton(x: T) -> Self {
+        #[verifier::external_body]
+        fn singleton(x: T) -> (result: Self)
+            ensures result@ == Set::<T>::empty().insert(x), result@.finite()
+        {
             OrderedSetStPer {
                 base_set: AVLTreeSetStPer::singleton(x),
             }
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn find(&self, x: &T) -> B { self.base_set.find(x) }
+        #[verifier::external_body]
+        fn find(&self, x: &T) -> (result: B)
+            ensures result == self@.contains(*x)
+        { self.base_set.find(x) }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn insert(&self, x: T) -> Self {
+        #[verifier::external_body]
+        fn insert(&self, x: T) -> (result: Self)
+            ensures result@ == self@.insert(x), result@.finite()
+        {
             OrderedSetStPer {
                 base_set: self.base_set.insert(x),
             }
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn delete(&self, x: &T) -> Self {
+        #[verifier::external_body]
+        fn delete(&self, x: &T) -> (result: Self)
+            ensures result@ == self@.remove(*x), result@.finite()
+        {
             OrderedSetStPer {
                 base_set: self.base_set.delete(x),
             }
         }
 
-        /// Claude Work: O(n), Span: O(log n)
-        fn filter<F: PredSt<T>>(&self, f: F) -> Self {
+        #[verifier::external_body]
+        fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
+            ensures result@.finite(), result@.subset_of(self@)
+        {
             OrderedSetStPer {
                 base_set: self.base_set.filter(f),
             }
         }
 
-        /// Claude Work: O(m + n), Span: O(log(m + n))
-        fn intersection(&self, other: &Self) -> Self {
+        #[verifier::external_body]
+        fn intersection(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.intersect(other@), result@.finite()
+        {
             OrderedSetStPer {
                 base_set: self.base_set.intersection(&other.base_set),
             }
         }
 
-        /// Claude Work: O(m + n), Span: O(log(m + n))
-        fn union(&self, other: &Self) -> Self {
+        #[verifier::external_body]
+        fn union(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.union(other@), result@.finite()
+        {
             OrderedSetStPer {
                 base_set: self.base_set.union(&other.base_set),
             }
         }
 
-        /// Claude Work: O(m + n), Span: O(log(m + n))
-        fn difference(&self, other: &Self) -> Self {
+        #[verifier::external_body]
+        fn difference(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.difference(other@), result@.finite()
+        {
             OrderedSetStPer {
                 base_set: self.base_set.difference(&other.base_set),
             }
         }
 
-        /// Claude Work: O(n), Span: O(log n)
-        fn to_seq(&self) -> AVLTreeSeqStPerS<T> { self.base_set.to_seq() }
+        #[verifier::external_body]
+        fn to_seq(&self) -> (result: AVLTreeSeqStPerS<T>)
+            ensures self@.finite()
+        { self.base_set.to_seq() }
 
-        /// Claude Work: O(n log n), Span: O(log² n)
-        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> Self {
+        #[verifier::external_body]
+        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (result: Self)
+            ensures result@.finite()
+        {
             OrderedSetStPer {
                 base_set: AVLTreeSetStPer::from_seq(seq),
             }
         }
 
-        // Ordering operations (ADT 43.1)
-
-        /// Claude Work: O(log n), Span: O(log n)
-        fn first(&self) -> Option<T> {
+        #[verifier::external_body]
+        fn first(&self) -> (result: Option<T>)
+            ensures self@.finite()
+        {
             if self.size() == 0 {
                 None
             } else {
@@ -157,8 +228,10 @@ pub mod OrderedSetStPer {
             }
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn last(&self) -> Option<T> {
+        #[verifier::external_body]
+        fn last(&self) -> (result: Option<T>)
+            ensures self@.finite()
+        {
             let size = self.size();
             if size == 0 {
                 None
@@ -168,8 +241,10 @@ pub mod OrderedSetStPer {
             }
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn previous(&self, k: &T) -> Option<T> {
+        #[verifier::external_body]
+        fn previous(&self, k: &T) -> (result: Option<T>)
+            ensures self@.finite()
+        {
             let seq = self.to_seq();
             let size = seq.length();
 
@@ -182,8 +257,10 @@ pub mod OrderedSetStPer {
             None
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn next(&self, k: &T) -> Option<T> {
+        #[verifier::external_body]
+        fn next(&self, k: &T) -> (result: Option<T>)
+            ensures self@.finite()
+        {
             let seq = self.to_seq();
             let size = seq.length();
 
@@ -196,14 +273,15 @@ pub mod OrderedSetStPer {
             None
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn split(&self, k: &T) -> (Self, B, Self) {
+        #[verifier::external_body]
+        fn split(&self, k: &T) -> (result: (Self, B, Self))
+            where Self: Sized
+            ensures self@.finite()
+        {
             let seq = self.to_seq();
 
-            // Convert to ArraySeqStPerS for filtering operations
             let array_seq = ArraySeqStPerS::tabulate(&|i| seq.nth(i).clone(), seq.length());
 
-            // Manual filter (ArraySeqStPerS::filter requires Ghost spec_pred)
             let mut left_vec = Vec::new();
             let mut right_vec = Vec::new();
             let mut found = false;
@@ -218,24 +296,25 @@ pub mod OrderedSetStPer {
                 }
             }
 
-            // Convert back to AVLTreeSeqStPerS
             let left_seq = AVLTreeSeqStPerS::from_vec(left_vec);
             let right_seq = AVLTreeSeqStPerS::from_vec(right_vec);
 
             (Self::from_seq(left_seq), found, Self::from_seq(right_seq))
         }
 
-        /// Claude Work: O(log(m + n)), Span: O(log(m + n))
-        fn join(left: &Self, right: &Self) -> Self { left.union(right) }
+        #[verifier::external_body]
+        fn join(left: &Self, right: &Self) -> (result: Self)
+            ensures result@.finite()
+        { left.union(right) }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn get_range(&self, k1: &T, k2: &T) -> Self {
+        #[verifier::external_body]
+        fn get_range(&self, k1: &T, k2: &T) -> (result: Self)
+            ensures self@.finite()
+        {
             let seq = self.to_seq();
 
-            // Convert to ArraySeqStPerS for filtering operations
             let array_seq = ArraySeqStPerS::tabulate(&|i| seq.nth(i).clone(), seq.length());
 
-            // Manual filter (ArraySeqStPerS::filter requires Ghost spec_pred)
             let mut range_vec = Vec::new();
             for i in 0..array_seq.length() {
                 let elem = array_seq.nth(i).clone();
@@ -244,13 +323,14 @@ pub mod OrderedSetStPer {
                 }
             }
 
-            // Convert back to AVLTreeSeqStPerS
             let range_seq = AVLTreeSeqStPerS::from_vec(range_vec);
             Self::from_seq(range_seq)
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn rank(&self, k: &T) -> N {
+        #[verifier::external_body]
+        fn rank(&self, k: &T) -> (result: N)
+            ensures self@.finite()
+        {
             let seq = self.to_seq();
             let size = seq.length();
             let mut count = 0;
@@ -266,8 +346,10 @@ pub mod OrderedSetStPer {
             count
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn select(&self, i: N) -> Option<T> {
+        #[verifier::external_body]
+        fn select(&self, i: N) -> (result: Option<T>)
+            ensures self@.finite()
+        {
             let seq = self.to_seq();
             if i >= seq.length() {
                 None
@@ -276,8 +358,11 @@ pub mod OrderedSetStPer {
             }
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn split_rank(&self, i: N) -> (Self, Self) {
+        #[verifier::external_body]
+        fn split_rank(&self, i: N) -> (result: (Self, Self))
+            where Self: Sized
+            ensures self@.finite()
+        {
             let seq = self.to_seq();
             let size = seq.length();
 
@@ -285,7 +370,6 @@ pub mod OrderedSetStPer {
                 return (self.clone(), Self::empty());
             }
 
-            // Use subseq_copy for known index ranges
             let left_seq = seq.subseq_copy(0, i);
             let right_seq = seq.subseq_copy(i, size - i);
 
@@ -293,18 +377,30 @@ pub mod OrderedSetStPer {
         }
     }
 
+    // 11. derive impls in verus!
+
     impl<T: StT + Ord> Clone for OrderedSetStPer<T> {
-        fn clone(&self) -> Self {
+        #[verifier::external_body]
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@
+        {
             OrderedSetStPer {
                 base_set: self.base_set.clone(),
             }
         }
     }
 
-    pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> OrderedSetStPer<T> {
+    #[verifier::external_body]
+    pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (result: OrderedSetStPer<T>)
+        ensures result@.finite()
+    {
         let seq = AVLTreeSeqStPerS::from_vec(elements);
         OrderedSetStPer::from_seq(seq)
     }
+
+    } // verus!
+
+    // 12. macros
 
     /// Macro for creating ordered sets from sorted element lists
     #[macro_export]
@@ -315,5 +411,37 @@ pub mod OrderedSetStPer {
         ($($elem:expr),+ $(,)?) => {
             $crate::Chap43::OrderedSetStPer::OrderedSetStPer::from_sorted_elements(vec![$($elem),+])
         };
+    }
+
+    // 13. derive impls outside verus!
+
+    impl<T: StT + Ord> Default for OrderedSetStPer<T> {
+        fn default() -> Self { Self::empty() }
+    }
+
+    impl<T: StT + Ord> PartialEq for OrderedSetStPer<T> {
+        fn eq(&self, other: &Self) -> bool {
+            self.size() == other.size() && {
+                let seq = self.to_seq();
+                for i in 0..seq.length() {
+                    if !other.find(seq.nth(i)) {
+                        return false;
+                    }
+                }
+                true
+            }
+        }
+    }
+
+    impl<T: StT + Ord> fmt::Debug for OrderedSetStPer<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "{{")?;
+            let seq = self.to_seq();
+            for i in 0..seq.length() {
+                if i > 0 { write!(f, ", ")?; }
+                write!(f, "{:?}", seq.nth(i))?;
+            }
+            write!(f, "}}")
+        }
     }
 }

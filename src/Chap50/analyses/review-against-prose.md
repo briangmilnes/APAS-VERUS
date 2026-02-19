@@ -106,6 +106,9 @@ All 9 files have been annotated with two-line cost comments on every exec functi
 ```
 veracity-review-proof-holes output:
 ✓ All 9 files clean — 0 proof holes found.
+Errors: 7 bare impl(s) in files with trait definitions
+  MatrixChainStEph, MatrixChainStPer, MatrixChainMtEph, MatrixChainMtPer,
+  OptBinSearchTreeStEph, OptBinSearchTreeStPer, Probability
 ```
 
 ### verus! block status

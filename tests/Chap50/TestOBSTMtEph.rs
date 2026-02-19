@@ -2,6 +2,7 @@
 //! Tests for OBSTMtEph (Optimal Binary Search Tree).
 
 use apas_verus::Chap50::OptBinSearchTreeMtEph::OptBinSearchTreeMtEph::*;
+use apas_verus::Chap50::Probability::Probability::ProbabilityTrait;
 use apas_verus::OBSTMtEphLit;
 use apas_verus::Types::Types::*;
 

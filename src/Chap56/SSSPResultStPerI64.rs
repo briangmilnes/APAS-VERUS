@@ -74,7 +74,6 @@ pub mod SSSPResultStPerI64 {
             *self.distances.nth(v)
         }
 
-        #[verifier::external_body]
         fn set_distance(self, v: usize, dist: i64) -> (result: Self)
             ensures
                 v < self.distances@.len() ==> result.distances@ == self.distances@.update(v as int, dist),
@@ -82,9 +81,11 @@ pub mod SSSPResultStPerI64 {
                 result.predecessors@ == self.predecessors@,
                 result.source == self.source,
         {
-            if v >= self.distances.length() { return self; }
+            if v >= self.distances.seq.len() { return self; }
+            let mut dist_vec = self.distances.seq;
+            dist_vec.set(v, dist);
             SSSPResultStPerI64 {
-                distances: ArraySeqStPerS::update(&self.distances, v, dist),
+                distances: ArraySeqStPerS { seq: dist_vec },
                 predecessors: self.predecessors,
                 source: self.source,
             }
@@ -98,7 +99,6 @@ pub mod SSSPResultStPerI64 {
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
-        #[verifier::external_body]
         fn set_predecessor(self, v: usize, pred: usize) -> (result: Self)
             ensures
                 v < self.predecessors@.len() ==> result.predecessors@ == self.predecessors@.update(v as int, pred),
@@ -106,10 +106,12 @@ pub mod SSSPResultStPerI64 {
                 result.distances@ == self.distances@,
                 result.source == self.source,
         {
-            if v >= self.predecessors.length() { return self; }
+            if v >= self.predecessors.seq.len() { return self; }
+            let mut pred_vec = self.predecessors.seq;
+            pred_vec.set(v, pred);
             SSSPResultStPerI64 {
                 distances: self.distances,
-                predecessors: ArraySeqStPerS::update(&self.predecessors, v, pred),
+                predecessors: ArraySeqStPerS { seq: pred_vec },
                 source: self.source,
             }
         }
@@ -118,20 +120,44 @@ pub mod SSSPResultStPerI64 {
             self.get_distance(v) != UNREACHABLE
         }
 
-        #[verifier::external_body]
         fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
             if !self.is_reachable(v) { return None; }
-            let mut path = Vec::new();
-            let mut current = v;
+            let n = self.predecessors.length();
+            if v >= n { return None; }
+            let mut path: Vec<usize> = Vec::new();
+            let mut current: usize = v;
             path.push(current);
-            while current != self.source {
+            let mut steps: usize = 0;
+            while current != self.source && steps < n
+                invariant
+                    steps <= n,
+                    current < n,
+                    n as int == self.predecessors.spec_len(),
+                    path@.len() > 0,
+                decreases n - steps,
+            {
+                if current >= n { return None; }
                 let pred = *self.predecessors.nth(current);
-                if pred == NO_PREDECESSOR { return None; }
+                if pred == NO_PREDECESSOR || pred >= n { return None; }
                 path.push(pred);
                 current = pred;
+                steps = steps + 1;
             }
-            path.reverse();
-            Some(ArraySeqStPerS::from_vec(path))
+            if current != self.source { return None; }
+            let path_len = path.len();
+            let mut reversed: Vec<usize> = Vec::new();
+            let mut k: usize = path_len;
+            while k > 0
+                invariant
+                    k <= path_len,
+                    path_len == path@.len(),
+                    reversed@.len() == (path_len - k) as int,
+                decreases k,
+            {
+                k = k - 1;
+                reversed.push(path[k]);
+            }
+            Some(ArraySeqStPerS::from_vec(reversed))
         }
     }
 

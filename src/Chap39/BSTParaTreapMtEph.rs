@@ -70,6 +70,194 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    fn join_with_priority<T: MtKey + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> ParamTreap<T>
+    where
+        ParamTreap<T>: ParamTreapTrait<T>,
+    {
+        let left_priority = tree_priority(&left);
+        let right_priority = tree_priority(&right);
+        if priority > left_priority && priority > right_priority {
+            return make_node(left, key, priority, right);
+        }
+        if left_priority > right_priority {
+            if let Some((ll, lk, lp, lr)) = left.expose_with_priority() {
+                let merged_right = join_with_priority(lr, key, priority, right);
+                return make_node(ll, lk, lp, merged_right);
+            }
+            make_node(left, key, priority, right)
+        } else {
+            if let Some((rl, rk, rp, rr)) = right.expose_with_priority() {
+                let merged_left = join_with_priority(left, key, priority, rl);
+                return make_node(merged_left, rk, rp, rr);
+            }
+            make_node(left, key, priority, right)
+        }
+    }
+
+    fn split_inner<T: MtKey + 'static>(tree: &ParamTreap<T>, key: &T) -> (ParamTreap<T>, B, ParamTreap<T>)
+    where
+        ParamTreap<T>: ParamTreapTrait<T>,
+    {
+        match tree.expose_with_priority() {
+            | None => (ParamTreap::new(), false, ParamTreap::new()),
+            | Some((left, root_key, priority, right)) => match key.cmp(&root_key) {
+                | Less => {
+                    let (ll, found, lr) = split_inner(&left, key);
+                    let rebuilt = join_with_priority(lr, root_key, priority, right);
+                    (ll, found, rebuilt)
+                }
+                | Greater => {
+                    let (rl, found, rr) = split_inner(&right, key);
+                    let rebuilt = join_with_priority(left, root_key, priority, rl);
+                    (rebuilt, found, rr)
+                }
+                | Equal => (left, true, right),
+            },
+        }
+    }
+
+    fn join_pair_inner<T: MtKey + 'static>(left: ParamTreap<T>, right: ParamTreap<T>) -> ParamTreap<T>
+    where
+        ParamTreap<T>: ParamTreapTrait<T>,
+    {
+        match right.expose_with_priority() {
+            | None => left,
+            | Some((r_left, r_key, r_priority, r_right)) => {
+                let (split_left, _, split_right) = split_inner(&left, &r_key);
+                let combined_left = join_pair_inner(split_left, r_left);
+                let combined_right = join_pair_inner(split_right, r_right);
+                join_with_priority(combined_left, r_key, r_priority, combined_right)
+            }
+        }
+    }
+
+    fn union_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> ParamTreap<T>
+    where
+        ParamTreap<T>: ParamTreapTrait<T>,
+    {
+        match a.expose_with_priority() {
+            | None => b.clone(),
+            | Some((al, ak, ap, ar)) => {
+                let (bl, _, br) = split_inner(b, &ak);
+                let Pair(left_union, right_union) =
+                    crate::ParaPair!(move || union_inner(&al, &bl), move || union_inner(&ar, &br));
+                join_with_priority(left_union, ak, ap, right_union)
+            }
+        }
+    }
+
+    fn intersect_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> ParamTreap<T>
+    where
+        ParamTreap<T>: ParamTreapTrait<T>,
+    {
+        match a.expose_with_priority() {
+            | None => ParamTreap::new(),
+            | Some((al, ak, ap, ar)) => {
+                let (bl, found, br) = split_inner(b, &ak);
+                let Pair(left_res, right_res) =
+                    crate::ParaPair!(move || intersect_inner(&al, &bl), move || intersect_inner(&ar, &br));
+                if found {
+                    join_with_priority(left_res, ak, ap, right_res)
+                } else {
+                    join_pair_inner(left_res, right_res)
+                }
+            }
+        }
+    }
+
+    fn difference_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> ParamTreap<T>
+    where
+        ParamTreap<T>: ParamTreapTrait<T>,
+    {
+        match a.expose_with_priority() {
+            | None => ParamTreap::new(),
+            | Some((al, ak, ap, ar)) => {
+                let (bl, found, br) = split_inner(b, &ak);
+                let Pair(left_res, right_res) =
+                    crate::ParaPair!(move || difference_inner(&al, &bl), move || difference_inner(&ar, &br));
+                if found {
+                    join_pair_inner(left_res, right_res)
+                } else {
+                    join_with_priority(left_res, ak, ap, right_res)
+                }
+            }
+        }
+    }
+
+    fn filter_inner<T: MtKey + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: &Arc<F>) -> ParamTreap<T>
+    where
+        ParamTreap<T>: ParamTreapTrait<T>,
+    {
+        match tree.expose_with_priority() {
+            | None => ParamTreap::new(),
+            | Some((left, key, priority, right)) => {
+                let pred_left = Arc::clone(predicate);
+                let pred_right = Arc::clone(predicate);
+                let Pair(left_filtered, right_filtered) =
+                    crate::ParaPair!(move || filter_inner(&left, &pred_left), move || filter_inner(&right, &pred_right));
+                if (**predicate)(&key) {
+                    join_with_priority(left_filtered, key, priority, right_filtered)
+                } else {
+                    join_pair_inner(left_filtered, right_filtered)
+                }
+            }
+        }
+    }
+
+    fn filter_parallel<T: MtKey + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: F) -> ParamTreap<T>
+    where
+        ParamTreap<T>: ParamTreapTrait<T>,
+    {
+        let predicate = Arc::new(predicate);
+        filter_inner(tree, &predicate)
+    }
+
+    fn reduce_inner<T: MtKey + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> T
+    where
+        ParamTreap<T>: ParamTreapTrait<T>,
+        F: Fn(T, T) -> T + Send + Sync + 'static,
+    {
+        match tree.expose_with_priority() {
+            | None => identity,
+            | Some((left, key, _priority, right)) => {
+                let op_left = Arc::clone(op);
+                let op_right = Arc::clone(op);
+                let left_base = identity.clone();
+                let right_base = identity;
+                let Pair(left_acc, right_acc) = crate::ParaPair!(
+                    move || reduce_inner(&left, &op_left, left_base),
+                    move || reduce_inner(&right, &op_right, right_base)
+                );
+                let op_ref = op.as_ref();
+                let right_with_key = op_ref(key, right_acc);
+                op_ref(left_acc, right_with_key)
+            }
+        }
+    }
+
+    fn reduce_parallel<T: MtKey + 'static, F>(tree: &ParamTreap<T>, op: F, base: T) -> T
+    where
+        ParamTreap<T>: ParamTreapTrait<T>,
+        F: Fn(T, T) -> T + Send + Sync + 'static,
+    {
+        let op = Arc::new(op);
+        reduce_inner(tree, &op, base)
+    }
+
+    fn collect_in_order<T: MtKey + 'static>(tree: &ParamTreap<T>, out: &mut Vec<T>)
+    where
+        ParamTreap<T>: ParamTreapTrait<T>,
+    {
+        match tree.expose_with_priority() {
+            | None => {}
+            | Some((left, key, _priority, right)) => {
+                collect_in_order(&left, out);
+                out.push(key);
+                collect_in_order(&right, out);
+            }
+        }
+    }
+
     pub trait ParamTreapTrait<T: MtKey + 'static>: Sized {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -77,6 +265,9 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn expose(&self)                           -> Exposed<T>;
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        fn expose_with_priority(&self)             -> Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>;
         /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))
         /// - Claude-Opus-4.6: Work O(log(|left| + |right|)), Span O(log(|left| + |right|)) — delegates to join_with_priority
         fn join_mid(exposed: Exposed<T>)           -> Self;
@@ -123,216 +314,6 @@ pub mod BSTParaTreapMtEph {
         fn in_order(&self)                         -> ArraySeqStPerS<T>;
     }
 
-    impl<T: MtKey + 'static> ParamTreap<T> {
-        /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn expose_internal(&self) -> Exposed<T> {
-            let guard = self.root.read().unwrap();
-            match &*guard {
-                | None => Exposed::Leaf,
-                | Some(node) => Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone()),
-            }
-        }
-
-        /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn expose_with_priority(&self) -> Option<(ParamTreap<T>, T, i64, ParamTreap<T>)> {
-            let guard = self.root.read().unwrap();
-            guard
-                .as_ref()
-                .map(|node| (node.left.clone(), node.key.clone(), node.priority, node.right.clone()))
-        }
-
-        /// - APAS: Work O(lg(|left| + |right|)), Span O(lg(|left| + |right|))
-        /// - Claude-Opus-4.6: Work O(lg(|left| + |right|)), Span O(lg(|left| + |right|))
-        fn join_with_priority(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> ParamTreap<T> {
-            let left_priority = tree_priority(&left);
-            let right_priority = tree_priority(&right);
-            if priority > left_priority && priority > right_priority {
-                return make_node(left, key, priority, right);
-            }
-            if left_priority > right_priority {
-                if let Some((ll, lk, lp, lr)) = left.expose_with_priority() {
-                    let merged_right = ParamTreap::join_with_priority(lr, key, priority, right);
-                    return make_node(ll, lk, lp, merged_right);
-                }
-                make_node(left, key, priority, right)
-            } else {
-                if let Some((rl, rk, rp, rr)) = right.expose_with_priority() {
-                    let merged_left = ParamTreap::join_with_priority(left, key, priority, rl);
-                    return make_node(merged_left, rk, rp, rr);
-                }
-                make_node(left, key, priority, right)
-            }
-        }
-
-        /// - APAS: Work O(lg |t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
-        fn split_inner(tree: &Self, key: &T) -> (Self, B, Self) {
-            match tree.expose_with_priority() {
-                | None => (ParamTreap::new(), false, ParamTreap::new()),
-                | Some((left, root_key, priority, right)) => match key.cmp(&root_key) {
-                    | Less => {
-                        let (ll, found, lr) = ParamTreap::split_inner(&left, key);
-                        let rebuilt = ParamTreap::join_with_priority(lr, root_key, priority, right);
-                        (ll, found, rebuilt)
-                    }
-                    | Greater => {
-                        let (rl, found, rr) = ParamTreap::split_inner(&right, key);
-                        let rebuilt = ParamTreap::join_with_priority(left, root_key, priority, rl);
-                        (rebuilt, found, rr)
-                    }
-                    | Equal => (left, true, right),
-                },
-            }
-        }
-
-        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
-        fn join_pair_inner(left: Self, right: Self) -> Self {
-            match right.expose_with_priority() {
-                | None => left,
-                | Some((r_left, r_key, r_priority, r_right)) => {
-                    let (split_left, _, split_right) = ParamTreap::split_inner(&left, &r_key);
-                    let combined_left = ParamTreap::join_pair_inner(split_left, r_left);
-                    let combined_right = ParamTreap::join_pair_inner(split_right, r_right);
-                    ParamTreap::join_with_priority(combined_left, r_key, r_priority, combined_right)
-                }
-            }
-        }
-
-        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
-        fn union_inner(a: &Self, b: &Self) -> Self {
-            match a.expose_with_priority() {
-                | None => b.clone(),
-                | Some((al, ak, ap, ar)) => {
-                    let (bl, _, br) = ParamTreap::split_inner(b, &ak);
-                    let Pair(left_union, right_union) =
-                        crate::ParaPair!(move || ParamTreap::union_inner(&al, &bl), move || {
-                            ParamTreap::union_inner(&ar, &br)
-                        });
-                    ParamTreap::join_with_priority(left_union, ak, ap, right_union)
-                }
-            }
-        }
-
-        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
-        fn intersect_inner(a: &Self, b: &Self) -> Self {
-            match a.expose_with_priority() {
-                | None => ParamTreap::new(),
-                | Some((al, ak, ap, ar)) => {
-                    let (bl, found, br) = ParamTreap::split_inner(b, &ak);
-                    let Pair(left_res, right_res) =
-                        crate::ParaPair!(move || ParamTreap::intersect_inner(&al, &bl), move || {
-                            ParamTreap::intersect_inner(&ar, &br)
-                        });
-                    if found {
-                        ParamTreap::join_with_priority(left_res, ak, ap, right_res)
-                    } else {
-                        ParamTreap::join_pair_inner(left_res, right_res)
-                    }
-                }
-            }
-        }
-
-        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
-        fn difference_inner(a: &Self, b: &Self) -> Self {
-            match a.expose_with_priority() {
-                | None => ParamTreap::new(),
-                | Some((al, ak, ap, ar)) => {
-                    let (bl, found, br) = ParamTreap::split_inner(b, &ak);
-                    let Pair(left_res, right_res) =
-                        crate::ParaPair!(move || ParamTreap::difference_inner(&al, &bl), move || {
-                            ParamTreap::difference_inner(&ar, &br)
-                        });
-                    if found {
-                        ParamTreap::join_pair_inner(left_res, right_res)
-                    } else {
-                        ParamTreap::join_with_priority(left_res, ak, ap, right_res)
-                    }
-                }
-            }
-        }
-
-        /// - APAS: Work O(|t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
-        fn filter_inner<F: Pred<T>>(tree: &Self, predicate: &Arc<F>) -> Self {
-            match tree.expose_with_priority() {
-                | None => ParamTreap::new(),
-                | Some((left, key, priority, right)) => {
-                    let pred_left = Arc::clone(predicate);
-                    let pred_right = Arc::clone(predicate);
-                    let Pair(left_filtered, right_filtered) =
-                        crate::ParaPair!(move || ParamTreap::filter_inner(&left, &pred_left), move || {
-                            ParamTreap::filter_inner(&right, &pred_right)
-                        });
-                    if (**predicate)(&key) {
-                        ParamTreap::join_with_priority(left_filtered, key, priority, right_filtered)
-                    } else {
-                        ParamTreap::join_pair_inner(left_filtered, right_filtered)
-                    }
-                }
-            }
-        }
-
-        /// - APAS: Work O(|t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
-        fn filter_parallel<F: Pred<T>>(tree: &Self, predicate: F) -> Self {
-            let predicate = Arc::new(predicate);
-            ParamTreap::filter_inner(tree, &predicate)
-        }
-
-        /// - APAS: Work O(|t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
-        fn reduce_inner<F>(tree: &Self, op: &Arc<F>, identity: T) -> T
-        where
-            F: Fn(T, T) -> T + Send + Sync + 'static,
-        {
-            match tree.expose_with_priority() {
-                | None => identity,
-                | Some((left, key, _priority, right)) => {
-                    let op_left = Arc::clone(op);
-                    let op_right = Arc::clone(op);
-                    let left_base = identity.clone();
-                    let right_base = identity;
-                    let Pair(left_acc, right_acc) = crate::ParaPair!(
-                        move || ParamTreap::reduce_inner(&left, &op_left, left_base),
-                        move || ParamTreap::reduce_inner(&right, &op_right, right_base)
-                    );
-                    let op_ref = op.as_ref();
-                    let right_with_key = op_ref(key, right_acc);
-                    op_ref(left_acc, right_with_key)
-                }
-            }
-        }
-
-        /// - APAS: Work O(|t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
-        fn reduce_parallel<F>(tree: &Self, op: F, base: T) -> T
-        where
-            F: Fn(T, T) -> T + Send + Sync + 'static,
-        {
-            let op = Arc::new(op);
-            ParamTreap::reduce_inner(tree, &op, base)
-        }
-
-        /// - APAS: Work O(|t|), Span O(|t|)
-        /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|)
-        fn collect_in_order(tree: &Self, out: &mut Vec<T>) {
-            match tree.expose_internal() {
-                | Exposed::Leaf => {}
-                | Exposed::Node(left, key, right) => {
-                    ParamTreap::collect_in_order(&left, out);
-                    out.push(key);
-                    ParamTreap::collect_in_order(&right, out);
-                }
-            }
-        }
-    }
-
     impl<T: MtKey + 'static> ParamTreapTrait<T> for ParamTreap<T> {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -344,7 +325,21 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn expose(&self) -> Exposed<T> { self.expose_internal() }
+        fn expose(&self) -> Exposed<T> {
+            match self.expose_with_priority() {
+                | None => Exposed::Leaf,
+                | Some((left, key, _, right)) => Exposed::Node(left, key, right),
+            }
+        }
+
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        fn expose_with_priority(&self) -> Option<(ParamTreap<T>, T, i64, ParamTreap<T>)> {
+            let guard = self.root.read().unwrap();
+            guard
+                .as_ref()
+                .map(|node| (node.left.clone(), node.key.clone(), node.priority, node.right.clone()))
+        }
 
         /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))
         /// - Claude-Opus-4.6: Work O(log(|left| + |right|)), Span O(log(|left| + |right|)) — delegates to join_with_priority
@@ -353,7 +348,7 @@ pub mod BSTParaTreapMtEph {
                 | Exposed::Leaf => ParamTreap::new(),
                 | Exposed::Node(left, key, right) => {
                     let priority = priority_for(&key);
-                    ParamTreap::join_with_priority(left, key, priority, right)
+                    join_with_priority(left, key, priority, right)
                 }
             }
         }
@@ -369,9 +364,9 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         fn insert(&self, key: T) {
-            let (left, _, right) = ParamTreap::split_inner(self, &key);
+            let (left, _, right) = split_inner(self, &key);
             let priority = priority_for(&key);
-            let rebuilt = ParamTreap::join_with_priority(left, key, priority, right);
+            let rebuilt = join_with_priority(left, key, priority, right);
             let new_state = rebuilt.root.read().unwrap().clone();
             let mut guard = self.root.write().unwrap();
             *guard = new_state;
@@ -380,8 +375,8 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         fn delete(&self, key: &T) {
-            let (left, _, right) = ParamTreap::split_inner(self, key);
-            let merged = ParamTreap::join_pair_inner(left, right);
+            let (left, _, right) = split_inner(self, key);
+            let merged = join_pair_inner(left, right);
             let new_state = merged.root.read().unwrap().clone();
             let mut guard = self.root.write().unwrap();
             *guard = new_state;
@@ -390,9 +385,9 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         fn find(&self, key: &T) -> Option<T> {
-            match self.expose_internal() {
-                | Exposed::Leaf => None,
-                | Exposed::Node(left, root_key, right) => match key.cmp(&root_key) {
+            match self.expose_with_priority() {
+                | None => None,
+                | Some((left, root_key, _, right)) => match key.cmp(&root_key) {
                     | Less => ParamTreapTrait::find(&left, key),
                     | Greater => ParamTreapTrait::find(&right, key),
                     | Equal => Some(root_key),
@@ -402,27 +397,27 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
-        fn split(&self, key: &T) -> (Self, B, Self) { ParamTreap::split_inner(self, key) }
+        fn split(&self, key: &T) -> (Self, B, Self) { split_inner(self, key) }
 
         /// - APAS: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         /// - Claude-Opus-4.6: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
-        fn join_pair(&self, other: Self) -> Self { ParamTreap::join_pair_inner(self.clone(), other) }
+        fn join_pair(&self, other: Self) -> Self { join_pair_inner(self.clone(), other) }
 
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
-        fn union(&self, other: &Self) -> Self { ParamTreap::union_inner(self, other) }
+        fn union(&self, other: &Self) -> Self { union_inner(self, other) }
 
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
-        fn intersect(&self, other: &Self) -> Self { ParamTreap::intersect_inner(self, other) }
+        fn intersect(&self, other: &Self) -> Self { intersect_inner(self, other) }
 
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
-        fn difference(&self, other: &Self) -> Self { ParamTreap::difference_inner(self, other) }
+        fn difference(&self, other: &Self) -> Self { difference_inner(self, other) }
 
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
-        fn filter<F: Pred<T>>(&self, predicate: F) -> Self { ParamTreap::filter_parallel(self, predicate) }
+        fn filter<F: Pred<T>>(&self, predicate: F) -> Self { filter_parallel(self, predicate) }
 
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
@@ -430,14 +425,14 @@ pub mod BSTParaTreapMtEph {
         where
             F: Fn(T, T) -> T + Send + Sync + 'static,
         {
-            ParamTreap::reduce_parallel(self, op, base)
+            reduce_parallel(self, op, base)
         }
 
         /// - APAS: Work O(|t|), Span O(|t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|)
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
-            ParamTreap::collect_in_order(self, &mut out);
+            collect_in_order(self, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
     }

@@ -8,176 +8,180 @@ pub mod OrderedTableStPer {
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Chap42::TableStPer::TableStPer::*;
     use crate::Types::Types::*;
+    use vstd::prelude::*;
 
-    #[derive(PartialEq)]
+    verus! {
+
+    // Table of Contents
+    // 1. module (above)
+    // 2. imports (above)
+    // 4. type definitions
+    // 5. view impls
+    // 8. traits
+    // 9. impls
+    // 11. derive impls in verus!
+    // 12. macros
+    // 13. derive impls outside verus!
+
+    // 4. type definitions
+
     pub struct OrderedTableStPer<K: StT + Ord, V: StT> {
         base_table: TableStPer<K, V>,
     }
 
     pub type OrderedTablePer<K, V> = OrderedTableStPer<K, V>;
 
+    // 5. view impls
+
+    impl<K: StT + Ord, V: StT> View for OrderedTableStPer<K, V> {
+        type V = Map<K::V, V::V>;
+
+        #[verifier::external_body]
+        open spec fn view(&self) -> Self::V;
+    }
+
+    // 8. traits
+
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1 for keys)
     pub trait OrderedTableStPerTrait<K: StT + Ord, V: StT> {
-        // Base table operations (ADT 42.1) - delegated
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)                              -> N;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty()                                  -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn singleton(k: K, v: V)                    -> Self;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn find(&self, k: &K)                       -> Option<V>;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn insert(&self, k: K, v: V)                -> Self;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn delete(&self, k: &K)                     -> Self;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn domain(&self)                            -> ArraySetStEph<K>;
-        /// claude-4-sonet: Work Θ(|keys| × W(f)), Span Θ(|keys| × S(f)), Parallelism Θ(1)
+        fn size(&self) -> N;
+        fn empty() -> Self;
+        fn singleton(k: K, v: V) -> Self;
+        fn find(&self, k: &K) -> Option<V>;
+        fn insert(&self, k: K, v: V) -> Self;
+        fn delete(&self, k: &K) -> Self;
+        fn domain(&self) -> ArraySetStEph<K>;
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> Self;
-        /// claude-4-sonet: Work Θ(n × W(f)), Span Θ(n × S(f)), Parallelism Θ(1)
         fn map<F: Fn(&V) -> V>(&self, f: F) -> Self;
-        /// claude-4-sonet: Work Θ(n × W(f)), Span Θ(n × S(f)), Parallelism Θ(1)
         fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> Self;
-        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> Self;
-        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> Self;
-        /// claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
-        fn difference(&self, other: &Self)          -> Self;
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(m + n), Parallelism Θ(1)
+        fn difference(&self, other: &Self) -> Self;
         fn restrict(&self, keys: &ArraySetStEph<K>) -> Self;
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(m + n), Parallelism Θ(1)
         fn subtract(&self, keys: &ArraySetStEph<K>) -> Self;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn collect(&self)                           -> AVLTreeSeqStPerS<Pair<K, V>>;
+        fn collect(&self) -> AVLTreeSeqStPerS<Pair<K, V>>;
 
-        // Key ordering operations (ADT 43.1 adapted for tables)
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn first_key(&self)                         -> Option<K>;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn last_key(&self)                          -> Option<K>;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn previous_key(&self, k: &K)               -> Option<K>;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn next_key(&self, k: &K)                   -> Option<K>;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn split_key(&self, k: &K)                  -> (Self, Option<V>, Self)
+        fn first_key(&self) -> Option<K>;
+        fn last_key(&self) -> Option<K>;
+        fn previous_key(&self, k: &K) -> Option<K>;
+        fn next_key(&self, k: &K) -> Option<K>;
+        fn split_key(&self, k: &K) -> (Self, Option<V>, Self)
         where
             Self: Sized;
-        /// claude-4-sonet: Work Θ(log(|left| + |right|)), Span Θ(log(|left| + |right|)), Parallelism Θ(1)
-        fn join_key(left: &Self, right: &Self)      -> Self;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn get_key_range(&self, k1: &K, k2: &K)     -> Self;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn rank_key(&self, k: &K)                   -> N;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn select_key(&self, i: N)                  -> Option<K>;
-        fn split_rank_key(&self, i: N)              -> (Self, Self)
+        fn join_key(left: &Self, right: &Self) -> Self;
+        fn get_key_range(&self, k1: &K, k2: &K) -> Self;
+        fn rank_key(&self, k: &K) -> N;
+        fn select_key(&self, i: N) -> Option<K>;
+        fn split_rank_key(&self, i: N) -> (Self, Self)
         where
             Self: Sized;
     }
 
+    // 9. impls
+
     impl<K: StT + Ord, V: StT> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
-        // Base table operations - delegate to backing store
+        #[verifier::external_body]
+        fn size(&self) -> N {
+            self.base_table.size()
+        }
 
-        /// Claude Work: O(1), Span: O(1)
-        fn size(&self) -> N { self.base_table.size() }
-
-        /// Claude Work: O(1), Span: O(1)
+        #[verifier::external_body]
         fn empty() -> Self {
             OrderedTableStPer {
                 base_table: TableStPer::empty(),
             }
         }
 
-        /// Claude Work: O(1), Span: O(1)
+        #[verifier::external_body]
         fn singleton(k: K, v: V) -> Self {
             OrderedTableStPer {
                 base_table: TableStPer::singleton(k, v),
             }
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn find(&self, k: &K) -> Option<V> { self.base_table.find(k) }
+        #[verifier::external_body]
+        fn find(&self, k: &K) -> Option<V> {
+            self.base_table.find(k)
+        }
 
-        /// Claude Work: O(log n), Span: O(log n)
+        #[verifier::external_body]
         fn insert(&self, k: K, v: V) -> Self {
             OrderedTableStPer {
                 base_table: self.base_table.insert(k, v, |_old, new| new.clone()),
             }
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
+        #[verifier::external_body]
         fn delete(&self, k: &K) -> Self {
             OrderedTableStPer {
                 base_table: self.base_table.delete(k),
             }
         }
 
-        /// Claude Work: O(n), Span: O(log n)
-        fn domain(&self) -> ArraySetStEph<K> { self.base_table.domain() }
+        #[verifier::external_body]
+        fn domain(&self) -> ArraySetStEph<K> {
+            self.base_table.domain()
+        }
 
-        /// Claude Work: O(n log n), Span: O(log² n)
+        #[verifier::external_body]
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> Self {
             OrderedTableStPer {
                 base_table: TableStPer::tabulate(f, keys),
             }
         }
 
-        /// Claude Work: O(n), Span: O(log n)
+        #[verifier::external_body]
         fn map<F: Fn(&V) -> V>(&self, f: F) -> Self {
             OrderedTableStPer {
                 base_table: self.base_table.map(f),
             }
         }
 
-        /// Claude Work: O(n), Span: O(log n)
+        #[verifier::external_body]
         fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> Self {
             OrderedTableStPer {
                 base_table: self.base_table.filter(f),
             }
         }
 
-        /// Claude Work: O(m + n), Span: O(log(m + n))
+        #[verifier::external_body]
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> Self {
             OrderedTableStPer {
                 base_table: self.base_table.intersection(&other.base_table, f),
             }
         }
 
-        /// Claude Work: O(m + n), Span: O(log(m + n))
+        #[verifier::external_body]
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> Self {
             OrderedTableStPer {
                 base_table: self.base_table.union(&other.base_table, f),
             }
         }
 
-        /// Claude Work: O(m + n), Span: O(log(m + n))
+        #[verifier::external_body]
         fn difference(&self, other: &Self) -> Self {
             OrderedTableStPer {
                 base_table: self.base_table.difference(&other.base_table),
             }
         }
 
-        /// Claude Work: O(n), Span: O(log n)
+        #[verifier::external_body]
         fn restrict(&self, keys: &ArraySetStEph<K>) -> Self {
             OrderedTableStPer {
                 base_table: self.base_table.restrict(keys),
             }
         }
 
-        /// Claude Work: O(n), Span: O(log n)
+        #[verifier::external_body]
         fn subtract(&self, keys: &ArraySetStEph<K>) -> Self {
             OrderedTableStPer {
                 base_table: self.base_table.subtract(keys),
             }
         }
 
-        /// Claude Work: O(n), Span: O(log n)
+        #[verifier::external_body]
         fn collect(&self) -> AVLTreeSeqStPerS<Pair<K, V>> {
             let array_seq = self.base_table.collect();
-            // Convert ArraySeqStPerS to AVLTreeSeqStPerS
             let len = array_seq.length();
             let mut elements = Vec::new();
             for i in 0..len {
@@ -186,9 +190,7 @@ pub mod OrderedTableStPer {
             AVLTreeSeqStPerS::from_vec(elements)
         }
 
-        // Key ordering operations (ADT 43.1 adapted for tables)
-
-        /// Claude Work: O(log n), Span: O(log n)
+        #[verifier::external_body]
         fn first_key(&self) -> Option<K> {
             let entries = self.collect();
             if entries.length() == 0 {
@@ -198,7 +200,7 @@ pub mod OrderedTableStPer {
             }
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
+        #[verifier::external_body]
         fn last_key(&self) -> Option<K> {
             let entries = self.collect();
             let size = entries.length();
@@ -209,7 +211,7 @@ pub mod OrderedTableStPer {
             }
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
+        #[verifier::external_body]
         fn previous_key(&self, k: &K) -> Option<K> {
             let entries = self.collect();
             let size = entries.length();
@@ -223,7 +225,7 @@ pub mod OrderedTableStPer {
             None
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
+        #[verifier::external_body]
         fn next_key(&self, k: &K) -> Option<K> {
             let entries = self.collect();
             let size = entries.length();
@@ -237,7 +239,7 @@ pub mod OrderedTableStPer {
             None
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
+        #[verifier::external_body]
         fn split_key(&self, k: &K) -> (Self, Option<V>, Self) {
             let entries = self.collect();
             let size = entries.length();
@@ -266,10 +268,12 @@ pub mod OrderedTableStPer {
             )
         }
 
-        /// Claude Work: O(log(m + n)), Span: O(log(m + n))
-        fn join_key(left: &Self, right: &Self) -> Self { left.union(right, |v1, _v2| v1.clone()) }
+        #[verifier::external_body]
+        fn join_key(left: &Self, right: &Self) -> Self {
+            left.union(right, |v1, _v2| v1.clone())
+        }
 
-        /// Claude Work: O(log n), Span: O(log n)
+        #[verifier::external_body]
         fn get_key_range(&self, k1: &K, k2: &K) -> Self {
             let entries = self.collect();
             let size = entries.length();
@@ -286,7 +290,7 @@ pub mod OrderedTableStPer {
             from_sorted_entries(range_seq)
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
+        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> N {
             let entries = self.collect();
             let size = entries.length();
@@ -303,7 +307,7 @@ pub mod OrderedTableStPer {
             count
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
+        #[verifier::external_body]
         fn select_key(&self, i: N) -> Option<K> {
             let entries = self.collect();
             if i >= entries.length() {
@@ -313,7 +317,7 @@ pub mod OrderedTableStPer {
             }
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
+        #[verifier::external_body]
         fn split_rank_key(&self, i: N) -> (Self, Self) {
             let entries = self.collect();
             let size = entries.length();
@@ -339,6 +343,8 @@ pub mod OrderedTableStPer {
         }
     }
 
+    // 11. derive impls in verus!
+
     impl<K: StT + Ord, V: StT> Clone for OrderedTableStPer<K, V> {
         fn clone(&self) -> Self {
             OrderedTableStPer {
@@ -347,7 +353,10 @@ pub mod OrderedTableStPer {
         }
     }
 
-    pub fn from_sorted_entries<K: StT + Ord, V: StT>(entries: AVLTreeSeqStPerS<Pair<K, V>>) -> OrderedTableStPer<K, V> {
+    #[verifier::external_body]
+    pub fn from_sorted_entries<K: StT + Ord, V: StT>(
+        entries: AVLTreeSeqStPerS<Pair<K, V>>,
+    ) -> OrderedTableStPer<K, V> {
         let len = entries.length();
         let mut elements = Vec::new();
         for i in 0..len {
@@ -355,6 +364,14 @@ pub mod OrderedTableStPer {
         }
         OrderedTableStPer {
             base_table: crate::Chap42::TableStPer::TableStPer::from_sorted_entries(elements),
+        }
+    }
+
+    } // verus!
+
+    impl<K: StT + Ord, V: StT> PartialEq for OrderedTableStPer<K, V> {
+        fn eq(&self, other: &Self) -> bool {
+            self.base_table == other.base_table
         }
     }
 

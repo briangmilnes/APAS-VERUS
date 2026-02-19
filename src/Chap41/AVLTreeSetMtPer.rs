@@ -8,19 +8,25 @@
 
 pub mod AVLTreeSetMtPer {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions
+    // 5. view impls
+    // 8. traits
+    // 9. impls
+    // 11. derive impls in verus!
+    // 12. macros
+    // 13. derive impls outside verus!
+
     use std::cmp::Ordering::{self, Equal, Greater, Less};
-    use std::{fmt, thread};
+    use std::fmt;
 
     use vstd::prelude::*;
 
     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::*;
     use crate::ParaPair;
     use crate::Types::Types::*;
-
-    #[derive(PartialEq, Eq)]
-    pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + 'static> {
-        elements: AVLTreeSeqMtPerS<T>,
-    }
 
     // NOTE: This type implements Ord because it is used as a VALUE in OrderedTableMtPer.
     // OrderedTableMtPer<K, V> is backed by BSTParaTreapMtEph<Pair<K, V>>, which requires
@@ -30,93 +36,112 @@ pub mod AVLTreeSetMtPer {
     // This is purely a caller requirement - if no code used AVLTreeSetMtPer as a value in
     // an ordered table, we wouldn't need Ord. See AVLTreeSetMtEph for comparison (no Ord needed).
 
-    impl<T: StTInMtT + Ord + 'static> PartialOrd for AVLTreeSetMtPer<T> {
-        fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-            Some(self.cmp(other))
-        }
+    verus! {
+
+    // 4. type definitions
+
+    pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + 'static> {
+        elements: AVLTreeSeqMtPerS<T>,
     }
 
-    impl<T: StTInMtT + Ord + 'static> Ord for AVLTreeSetMtPer<T> {
-        fn cmp(&self, other: &Self) -> Ordering {
-            // Lexicographic ordering: compare element by element (no cloning)
-            let n_self = self.size();
-            let n_other = other.size();
-            let min_n = n_self.min(n_other);
-            
-            // Compare common prefix
-            for i in 0..min_n {
-                let a = self.elements.nth(i);
-                let b = other.elements.nth(i);
-                match a.cmp(b) {
-                    Equal => continue,
-                    non_equal => return non_equal,
-                }
-            }
-            
-            // If all compared elements are equal, compare by size
-            n_self.cmp(&n_other)
-        }
+    /// Sequential cutoff to prevent thread explosion from recursive ParaPair! calls.
+    pub const SEQUENTIAL_CUTOFF: N = 128;
+
+    // 5. view impls
+
+    impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtPer<T> {
+        type V = Set<T>;
+        #[verifier::external_body]
+        open spec fn view(&self) -> Set<T> { Set::empty() }
     }
+
+    // 8. traits
 
     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static> {
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)                               -> N;
+        fn size(&self) -> (result: N)
+            ensures result == self@.len(), self@.finite();
         /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn to_seq(&self)                             -> AVLTreeSeqMtPerS<T>;
+        fn to_seq(&self) -> (result: AVLTreeSeqMtPerS<T>)
+            ensures self@.finite();
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty()                                   -> Self;
+        fn empty() -> (result: Self)
+            ensures result@ == Set::<T>::empty();
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn singleton(x: T)                           -> Self;
+        fn singleton(x: T) -> (result: Self)
+            ensures result@ == Set::<T>::empty().insert(x), result@.finite();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)
-        fn from_seq(seq: AVLTreeSeqMtPerS<T>)        -> Self;
+        fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (result: Self)
+            ensures result@.finite();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> Self;
+        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (result: Self)
+            ensures result@.finite(), result@.subset_of(self@);
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
-        fn intersection(&self, other: &Self)         -> Self;
+        fn intersection(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.intersect(other@), result@.finite();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
-        fn difference(&self, other: &Self)           -> Self;
+        fn difference(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.difference(other@), result@.finite();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
-        fn union(&self, other: &Self)                -> Self;
+        fn union(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.union(other@), result@.finite();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn find(&self, x: &T)                        -> B;
+        fn find(&self, x: &T) -> (result: B)
+            ensures result == self@.contains(*x);
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn delete(&self, x: &T)                      -> Self;
+        fn delete(&self, x: &T) -> (result: Self)
+            ensures result@ == self@.remove(*x), result@.finite();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn insert(&self, x: T)                       -> Self;
+        fn insert(&self, x: T) -> (result: Self)
+            ensures result@ == self@.insert(x), result@.finite();
     }
 
-    /// Sequential cutoff to prevent thread explosion from recursive ParaPair! calls.
-    const SEQUENTIAL_CUTOFF: N = 128;
+    // 9. impls
 
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
-        fn size(&self) -> N { self.elements.length() }
+        #[verifier::external_body]
+        fn size(&self) -> (result: N)
+            ensures result == self@.len(), self@.finite()
+        { self.elements.length() }
 
-        fn to_seq(&self) -> AVLTreeSeqMtPerS<T> { self.elements.clone() }
+        #[verifier::external_body]
+        fn to_seq(&self) -> (result: AVLTreeSeqMtPerS<T>)
+            ensures self@.finite()
+        { self.elements.clone() }
 
-        fn empty() -> Self {
+        #[verifier::external_body]
+        fn empty() -> (result: Self)
+            ensures result@ == Set::<T>::empty()
+        {
             AVLTreeSetMtPer {
                 elements: AVLTreeSeqMtPerS::empty(),
             }
         }
 
-        fn singleton(x: T) -> Self {
+        #[verifier::external_body]
+        fn singleton(x: T) -> (result: Self)
+            ensures result@ == Set::<T>::empty().insert(x), result@.finite()
+        {
             AVLTreeSetMtPer {
                 elements: AVLTreeSeqMtPerS::singleton(x),
             }
         }
 
-        fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> Self {
+        #[verifier::external_body]
+        fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (result: Self)
+            ensures result@.finite()
+        {
             let mut vals = seq.values_in_order();
 
             fn parallel_sort<T: StTInMtT + Ord + 'static>(mut vals: Vec<T>) -> Vec<T> {
@@ -163,7 +188,10 @@ pub mod AVLTreeSetMtPer {
 
         // PARALLEL: filter using divide-and-conquer with sequential cutoff
         // Work: Θ(n), Span: Θ(log n) when parallel
-        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> Self {
+        #[verifier::external_body]
+        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (result: Self)
+            ensures result@.finite(), result@.subset_of(self@)
+        {
             let n = self.size();
 
             if n <= 1 {
@@ -220,7 +248,10 @@ pub mod AVLTreeSetMtPer {
 
         // PARALLEL: intersection using divide-and-conquer with sequential cutoff
         // Work: Θ(n+m), Span: Θ(log(n+m)) when parallel
-        fn intersection(&self, other: &Self) -> Self {
+        #[verifier::external_body]
+        fn intersection(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.intersect(other@), result@.finite()
+        {
             let n = self.size();
             let m = other.size();
 
@@ -275,14 +306,20 @@ pub mod AVLTreeSetMtPer {
             }
         }
 
-        fn difference(&self, other: &Self) -> Self {
+        #[verifier::external_body]
+        fn difference(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.difference(other@), result@.finite()
+        {
             let other_clone = other.clone();
             self.filter(move |x| !other_clone.find(x))
         }
 
         // PARALLEL: union using divide-and-conquer with sequential cutoff
         // Work: Θ(n+m), Span: Θ(log(n+m)) when parallel
-        fn union(&self, other: &Self) -> Self {
+        #[verifier::external_body]
+        fn union(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.union(other@), result@.finite()
+        {
             let n = self.size();
             let m = other.size();
 
@@ -332,7 +369,10 @@ pub mod AVLTreeSetMtPer {
             }
         }
 
-        fn find(&self, x: &T) -> B {
+        #[verifier::external_body]
+        fn find(&self, x: &T) -> (result: B)
+            ensures result == self@.contains(*x)
+        {
             // Binary search in sorted sequence
             let n = self.size();
             let mut left = 0;
@@ -350,13 +390,19 @@ pub mod AVLTreeSetMtPer {
             false
         }
 
-        fn delete(&self, x: &T) -> Self {
+        #[verifier::external_body]
+        fn delete(&self, x: &T) -> (result: Self)
+            ensures result@ == self@.remove(*x), result@.finite()
+        {
             // Unconditionally use parallel filter
             let x_clone = x.clone();
             self.filter(move |v| v != &x_clone)
         }
 
-        fn insert(&self, x: T) -> Self {
+        #[verifier::external_body]
+        fn insert(&self, x: T) -> (result: Self)
+            ensures result@ == self@.insert(x), result@.finite()
+        {
             if self.find(&x) {
                 return self.clone();
             }
@@ -368,15 +414,81 @@ pub mod AVLTreeSetMtPer {
         }
     }
 
+    // 11. derive impls in verus!
+
+    impl<T: StTInMtT + Ord + 'static> Clone for AVLTreeSetMtPer<T> {
+        #[verifier::external_body]
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@
+        {
+            AVLTreeSetMtPer {
+                elements: self.elements.clone(),
+            }
+        }
+    }
+
+    } // verus!
+
+    // 12. macros
+
+    #[macro_export]
+    macro_rules! AVLTreeSetMtPerLit {
+        () => {
+            < $crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<_> as $crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait<_> >::empty()
+        };
+        ( $( $x:expr ),* $(,)? ) => {{
+            let mut __set = < $crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<_> as $crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait<_> >::empty();
+            $( __set = __set.insert($x); )*
+            __set
+        }};
+    }
+
+    // 13. derive impls outside verus!
+
     impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtPer<T> {
         fn default() -> Self { Self::empty() }
     }
 
-    impl<T: StTInMtT + Ord + 'static> Clone for AVLTreeSetMtPer<T> {
-        fn clone(&self) -> Self {
-            AVLTreeSetMtPer {
-                elements: self.elements.clone(),
+    impl<T: StTInMtT + Ord + 'static> PartialEq for AVLTreeSetMtPer<T> {
+        fn eq(&self, other: &Self) -> bool {
+            self.size() == other.size() && {
+                for i in 0..self.size() {
+                    if !other.find(self.elements.nth(i)) {
+                        return false;
+                    }
+                }
+                true
             }
+        }
+    }
+
+    impl<T: StTInMtT + Ord + 'static> Eq for AVLTreeSetMtPer<T> {}
+
+    impl<T: StTInMtT + Ord + 'static> PartialOrd for AVLTreeSetMtPer<T> {
+        fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+            Some(self.cmp(other))
+        }
+    }
+
+    impl<T: StTInMtT + Ord + 'static> Ord for AVLTreeSetMtPer<T> {
+        fn cmp(&self, other: &Self) -> Ordering {
+            // Lexicographic ordering: compare element by element (no cloning)
+            let n_self = self.size();
+            let n_other = other.size();
+            let min_n = n_self.min(n_other);
+
+            // Compare common prefix
+            for i in 0..min_n {
+                let a = self.elements.nth(i);
+                let b = other.elements.nth(i);
+                match a.cmp(b) {
+                    Equal => continue,
+                    non_equal => return non_equal,
+                }
+            }
+
+            // If all compared elements are equal, compare by size
+            n_self.cmp(&n_other)
         }
     }
 
@@ -403,28 +515,6 @@ pub mod AVLTreeSetMtPer {
                 write!(f, "{}", self.elements.nth(i))?;
             }
             write!(f, "}}")
-        }
-    }
-
-    #[macro_export]
-    macro_rules! AVLTreeSetMtPerLit {
-        () => {
-            < $crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<_> as $crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait<_> >::empty()
-        };
-        ( $( $x:expr ),* $(,)? ) => {{
-            let mut __set = < $crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<_> as $crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait<_> >::empty();
-            $( __set = __set.insert($x); )*
-            __set
-        }};
-    }
-
-    verus! {
-        impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtPer<T> {
-            type V = Self;
-
-            open spec fn view(&self) -> Self {
-                *self
-            }
         }
     }
 }

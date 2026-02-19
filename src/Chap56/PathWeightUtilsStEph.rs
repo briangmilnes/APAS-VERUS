@@ -71,22 +71,33 @@ pub mod PathWeightUtilsStEph {
     /// Returns the sum of weights along the path, or None if path is invalid.
     /// - APAS: Work Θ(k), Span Θ(k) — implied by Def 56.1 (sum of k-1 edge weights).
     /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — agrees with APAS.
-    #[verifier::external_body]
     pub fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStEphS<ArraySeqStEphS<i64>>) -> Option<i64> {
         let k = path.length();
         if k < 2 {
             return Some(0);
         }
-
-        let mut total = 0i64;
-        for i in 0..k - 1 {
+        let mut total: i64 = 0;
+        let mut i: usize = 0;
+        let end = k - 1;
+        while i < end
+            invariant
+                i <= end,
+                end == k - 1,
+                k == path.spec_len(),
+                end < k,
+            decreases end - i,
+        {
             let u = *path.nth(i);
             let v = *path.nth(i + 1);
             if u >= weights.length() || v >= weights.nth(u).length() {
                 return None;
             }
             let edge_weight = *weights.nth(u).nth(v);
-            total = total.saturating_add(edge_weight);
+            match i64::checked_add(total, edge_weight) {
+                Some(sum) => { total = sum; }
+                None => { return None; }
+            }
+            i = i + 1;
         }
         Some(total)
     }
@@ -122,7 +133,6 @@ pub mod PathWeightUtilsStEph {
     /// This is a validation utility, not used in actual shortest path algorithms.
     /// - APAS: (no cost stated) — Def 56.4 states the property but not a validation algorithm.
     /// - Claude-Opus-4.6: Work Θ(k), Span Θ(k) — checks k-1 consecutive edges; module header overstates as O(k²).
-    #[verifier::external_body]
     pub fn validate_subpath_property_int(
         path: &ArraySeqStPerS<usize>,
         distances: &ArraySeqStEphS<i64>,
@@ -132,8 +142,16 @@ pub mod PathWeightUtilsStEph {
         if k < 2 {
             return true;
         }
-
-        for i in 0..k - 1 {
+        let mut i: usize = 0;
+        let end = k - 1;
+        while i < end
+            invariant
+                i <= end,
+                end == k - 1,
+                k == path.spec_len(),
+                end < k,
+            decreases end - i,
+        {
             let u = *path.nth(i);
             let v = *path.nth(i + 1);
             if u >= distances.length() || v >= distances.length() {
@@ -141,11 +159,17 @@ pub mod PathWeightUtilsStEph {
             }
             let dist_u = *distances.nth(u);
             let dist_v = *distances.nth(v);
-            let edge_weight = *weights.nth(u).nth(v);
-
-            if dist_u != i64::MAX && dist_v != dist_u.saturating_add(edge_weight) {
+            if u >= weights.length() || v >= weights.nth(u).length() {
                 return false;
             }
+            let edge_weight = *weights.nth(u).nth(v);
+            if dist_u != i64::MAX {
+                match i64::checked_add(dist_u, edge_weight) {
+                    Some(expected) => { if dist_v != expected { return false; } }
+                    None => { return false; }
+                }
+            }
+            i = i + 1;
         }
         true
     }

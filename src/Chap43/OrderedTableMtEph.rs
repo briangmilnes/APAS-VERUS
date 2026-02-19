@@ -6,144 +6,236 @@ pub mod OrderedTableMtEph {
     use std::sync::Arc;
     use std::thread;
 
+    use vstd::prelude::*;
+
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Chap42::TableMtEph::TableMtEph::*;
     use crate::Types::Types::*;
 
-    #[derive(PartialEq)]
+    verus! {
+
+    // Table of Contents
+    // 1. module (above)
+    // 2. imports (above)
+    // 4. type definitions
+    // 5. view impls
+    // 8. traits
+    // 9. impls
+    // 11. derive impls in verus!
+    // 12. macros
+    // 13. derive impls outside verus!
+
+    // 4. type definitions
+
     pub struct OrderedTableMtEph<K: MtKey, V: MtVal> {
         base_table: TableMtEph<K, V>,
     }
 
     pub type OrderedTableMt<K, V> = OrderedTableMtEph<K, V>;
 
-    /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1 for keys) with multi-threaded ephemeral semantics
-    pub trait OrderedTableMtEphTrait<K: MtKey, V: MtVal> {
-        // Base table operations (ADT 42.1) - ephemeral semantics with parallelism
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)                          -> N;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty()                              -> Self;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn singleton(k: K, v: V)                -> Self;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn find(&self, k: &K)                   -> Option<V>;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn lookup(&self, k: &K)                 -> Option<V>; // Alias for find
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)                      -> B;
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F);
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn delete(&mut self, k: &K)             -> Option<V>;
-        /// claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)
-        fn domain(&self)                        -> ArraySetStEph<K>;
-        /// claude-4-sonet: Work Θ(|keys| × W(f)), Span Θ(log |keys| + S(f)), Parallelism Θ(|keys|/(log |keys| + S(f)))
-        fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> Self;
-        /// claude-4-sonet: Work Θ(n × W(f)), Span Θ(log n + S(f)), Parallelism Θ(n/(log n + S(f)))
-        fn map<F: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: F) -> Self;
-        /// claude-4-sonet: Work Θ(n × W(f)), Span Θ(log n + S(f)), Parallelism Θ(n/(log n + S(f)))
-        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&self, f: F) -> Self;
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
-        fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F);
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
-        fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F);
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
-        fn difference(&mut self, other: &Self);
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
-        fn restrict(&mut self, keys: &ArraySetStEph<K>);
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
-        fn subtract(&mut self, keys: &ArraySetStEph<K>);
-        /// claude-4-sonet: Work Θ(n × W(f)), Span Θ(log n + S(f)), Parallelism Θ(n/(log n + S(f)))
-        fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> R;
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn collect(&self)                       -> AVLTreeSeqStPerS<Pair<K, V>>;
+    // 5. view impls
 
-        // Key ordering operations (ADT 43.1 adapted for tables) - sequential (inherently sequential on trees)
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn first_key(&self)                     -> Option<K>;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn last_key(&self)                      -> Option<K>;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn previous_key(&self, k: &K)           -> Option<K>;
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn next_key(&self, k: &K)               -> Option<K>;
-        /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn split_key(&mut self, k: &K)          -> (Self, Self)
-        where
-            Self: Sized;
-        fn join_key(&mut self, other: Self);
-        fn get_key_range(&self, k1: &K, k2: &K) -> Self;
-        fn rank_key(&self, k: &K)               -> N;
-        fn select_key(&self, i: N)              -> Option<K>;
-        fn split_rank_key(&mut self, i: N)      -> (Self, Self)
-        where
-            Self: Sized;
+    impl<K: MtKey, V: MtVal> View for OrderedTableMtEph<K, V> {
+        type V = Map<K::V, V::V>;
+
+        #[verifier::external_body]
+        open spec fn view(&self) -> Map<K::V, V::V> {
+            Map::empty()
+        }
     }
 
+    // 8. traits
+
+    /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1 for keys) with multi-threaded ephemeral semantics
+    pub trait OrderedTableMtEphTrait<K: MtKey, V: MtVal> {
+        fn size(&self) -> (result: N)
+            ensures result == self@.dom().len(), self@.dom().finite();
+
+        fn empty() -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty();
+
+        fn singleton(k: K, v: V) -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty().insert(k@, v@), result@.dom().finite();
+
+        fn find(&self, k: &K) -> (result: Option<V>)
+            ensures
+                self@.contains_key(k@) ==> result == Some(self@[k@]),
+                !self@.contains_key(k@) ==> result.is_none();
+
+        fn lookup(&self, k: &K) -> (result: Option<V>)
+            ensures
+                self@.contains_key(k@) ==> result == Some(self@[k@]),
+                !self@.contains_key(k@) ==> result.is_none();
+
+        fn is_empty(&self) -> (result: B)
+            ensures result == self@.dom().is_empty();
+
+        fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F)
+            ensures self@.dom().finite();
+
+        fn delete(&mut self, k: &K) -> (result: Option<V>)
+            ensures self@ == old(self)@.remove(k@), self@.dom().finite();
+
+        fn domain(&self) -> (result: ArraySetStEph<K>)
+            ensures self@.dom().finite();
+
+        fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
+            ensures result@.dom().finite();
+
+        fn map<F: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: F) -> (result: Self)
+            ensures result@.dom().finite();
+
+        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&self, f: F) -> (result: Self)
+            ensures result@.dom().finite();
+
+        fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F)
+            ensures self@.dom().finite();
+
+        fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F)
+            ensures self@.dom().finite();
+
+        fn difference(&mut self, other: &Self)
+            ensures self@.dom().finite();
+
+        fn restrict(&mut self, keys: &ArraySetStEph<K>)
+            ensures self@.dom().finite();
+
+        fn subtract(&mut self, keys: &ArraySetStEph<K>)
+            ensures self@.dom().finite();
+
+        fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (result: R)
+            ensures self@.dom().finite();
+
+        fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
+            ensures self@.dom().finite();
+
+        fn first_key(&self) -> (result: Option<K>)
+            ensures self@.dom().finite();
+
+        fn last_key(&self) -> (result: Option<K>)
+            ensures self@.dom().finite();
+
+        fn previous_key(&self, k: &K) -> (result: Option<K>)
+            ensures self@.dom().finite();
+
+        fn next_key(&self, k: &K) -> (result: Option<K>)
+            ensures self@.dom().finite();
+
+        fn split_key(&mut self, k: &K) -> (Self, Option<V>, Self)
+            where Self: Sized
+            ensures self@.dom().finite();
+
+        fn join_key(&mut self, other: Self)
+            ensures self@.dom().finite();
+
+        fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
+            ensures result@.dom().finite();
+
+        fn rank_key(&self, k: &K) -> (result: N)
+            ensures self@.dom().finite();
+
+        fn select_key(&self, i: N) -> (result: Option<K>)
+            ensures self@.dom().finite();
+
+        fn split_rank_key(&mut self, i: N) -> (Self, Self)
+            where Self: Sized
+            ensures self@.dom().finite();
+    }
+
+    // 9. impls
+
     impl<K: MtKey, V: MtVal> OrderedTableMtEphTrait<K, V> for OrderedTableMtEph<K, V> {
-        // Base table operations - delegate to backing store with ephemeral semantics and parallelism
+        #[verifier::external_body]
+        fn size(&self) -> (result: N)
+            ensures result == self@.dom().len(), self@.dom().finite()
+        {
+            self.base_table.size()
+        }
 
-        /// Claude Work: O(1), Span: O(1)
-        fn size(&self) -> N { self.base_table.size() }
-
-        /// Claude Work: O(1), Span: O(1)
-        fn empty() -> Self {
+        #[verifier::external_body]
+        fn empty() -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty()
+        {
             OrderedTableMtEph {
                 base_table: TableMtEph::empty(),
             }
         }
 
-        /// Claude Work: O(1), Span: O(1)
-        fn singleton(k: K, v: V) -> Self {
+        #[verifier::external_body]
+        fn singleton(k: K, v: V) -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty().insert(k@, v@), result@.dom().finite()
+        {
             OrderedTableMtEph {
                 base_table: TableMtEph::singleton(k, v),
             }
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn find(&self, k: &K) -> Option<V> { self.base_table.find(k) }
+        #[verifier::external_body]
+        fn find(&self, k: &K) -> (result: Option<V>)
+            ensures
+                self@.contains_key(k@) ==> result == Some(self@[k@]),
+                !self@.contains_key(k@) ==> result.is_none()
+        {
+            self.base_table.find(k)
+        }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn lookup(&self, k: &K) -> Option<V> { self.find(k) }
+        #[verifier::external_body]
+        fn lookup(&self, k: &K) -> (result: Option<V>)
+            ensures
+                self@.contains_key(k@) ==> result == Some(self@[k@]),
+                !self@.contains_key(k@) ==> result.is_none()
+        {
+            self.find(k)
+        }
 
-        /// Claude Work: O(1), Span: O(1)
-        fn is_empty(&self) -> B { self.size() == 0 }
+        #[verifier::external_body]
+        fn is_empty(&self) -> (result: B)
+            ensures result == self@.dom().is_empty()
+        {
+            self.size() == 0
+        }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F) {
+        #[verifier::external_body]
+        fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F)
+            ensures self@.dom().finite()
+        {
             self.base_table.insert(k, v, combine);
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn delete(&mut self, k: &K) -> Option<V> {
+        #[verifier::external_body]
+        fn delete(&mut self, k: &K) -> (result: Option<V>)
+            ensures self@ == old(self)@.remove(k@), self@.dom().finite()
+        {
             let old_value = self.find(k);
             self.base_table.delete(k);
             old_value
         }
 
-        /// Claude Work: O(n), Span: O(log n) - Parallel domain extraction
-        fn domain(&self) -> ArraySetStEph<K> { self.base_table.domain() }
+        #[verifier::external_body]
+        fn domain(&self) -> (result: ArraySetStEph<K>)
+            ensures self@.dom().finite()
+        {
+            self.base_table.domain()
+        }
 
-        /// Claude Work: O(n log n), Span: O(log² n) - Parallel tabulation
-        fn tabulate<F>(f: F, keys: &ArraySetStEph<K>) -> Self
-        where
-            F: Fn(&K) -> V + Send + Sync + 'static,
+        #[verifier::external_body]
+        fn tabulate<F>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
+            where F: Fn(&K) -> V + Send + Sync + 'static
+            ensures result@.dom().finite()
         {
             OrderedTableMtEph {
                 base_table: TableMtEph::tabulate(f, keys),
             }
         }
 
-        /// Claude Work: O(n), Span: O(log n) - Parallel map
-        fn map<F>(&self, f: F) -> Self
-        where
-            F: Fn(&K, &V) -> V + Send + Sync + 'static,
+        #[verifier::external_body]
+        fn map<F>(&self, f: F) -> (result: Self)
+            where F: Fn(&K, &V) -> V + Send + Sync + 'static
+            ensures result@.dom().finite()
         {
             let mut result = self.clone();
-            // Sequential implementation for now - parallel mapping would require more complex logic
             let entries = self.collect();
             result.base_table = TableMtEph::empty();
             for i in 0..entries.length() {
@@ -156,13 +248,12 @@ pub mod OrderedTableMtEph {
             result
         }
 
-        /// Claude Work: O(n), Span: O(log n) - Parallel filter
-        fn filter<F>(&self, f: F) -> Self
-        where
-            F: Fn(&K, &V) -> B + Send + Sync + 'static,
+        #[verifier::external_body]
+        fn filter<F>(&self, f: F) -> (result: Self)
+            where F: Fn(&K, &V) -> B + Send + Sync + 'static
+            ensures result@.dom().finite()
         {
             let mut result = OrderedTableMtEph::empty();
-            // Sequential implementation for now - parallel filtering would require more complex logic
             let entries = self.collect();
             for i in 0..entries.length() {
                 let pair = entries.nth(i);
@@ -175,13 +266,11 @@ pub mod OrderedTableMtEph {
             result
         }
 
-        /// Claude Work: O(n), Span: O(log n) - Parallel reduction
-        fn reduce<R, F>(&self, init: R, f: F) -> R
-        where
-            F: Fn(R, &K, &V) -> R + Send + Sync + 'static,
-            R: Send + Sync + 'static,
+        #[verifier::external_body]
+        fn reduce<R, F>(&self, init: R, f: F) -> (result: R)
+            where F: Fn(R, &K, &V) -> R + Send + Sync + 'static, R: Send + Sync + 'static
+            ensures self@.dom().finite()
         {
-            // Sequential implementation for now - parallel reduction would require more complex logic
             let entries = self.collect();
             let mut result = init;
             for i in 0..entries.length() {
@@ -191,35 +280,48 @@ pub mod OrderedTableMtEph {
             result
         }
 
-        /// Claude Work: O(m + n), Span: O(log(m + n)) - Parallel intersection
+        #[verifier::external_body]
         fn intersection<F>(&mut self, other: &Self, f: F)
-        where
-            F: Fn(&V, &V) -> V + Send + Sync + 'static,
+            where F: Fn(&V, &V) -> V + Send + Sync + 'static
+            ensures self@.dom().finite()
         {
             self.base_table.intersection(&other.base_table, f);
         }
 
-        /// Claude Work: O(m + n), Span: O(log(m + n)) - Parallel union
+        #[verifier::external_body]
         fn union<F>(&mut self, other: &Self, f: F)
-        where
-            F: Fn(&V, &V) -> V + Send + Sync + 'static,
+            where F: Fn(&V, &V) -> V + Send + Sync + 'static
+            ensures self@.dom().finite()
         {
             self.base_table.union(&other.base_table, f);
         }
 
-        /// Claude Work: O(m + n), Span: O(log(m + n)) - Parallel difference
-        fn difference(&mut self, other: &Self) { self.base_table.difference(&other.base_table); }
+        #[verifier::external_body]
+        fn difference(&mut self, other: &Self)
+            ensures self@.dom().finite()
+        {
+            self.base_table.difference(&other.base_table);
+        }
 
-        /// Claude Work: O(n), Span: O(log n) - Parallel restrict
-        fn restrict(&mut self, keys: &ArraySetStEph<K>) { self.base_table.restrict(keys); }
+        #[verifier::external_body]
+        fn restrict(&mut self, keys: &ArraySetStEph<K>)
+            ensures self@.dom().finite()
+        {
+            self.base_table.restrict(keys);
+        }
 
-        /// Claude Work: O(n), Span: O(log n) - Parallel subtract
-        fn subtract(&mut self, keys: &ArraySetStEph<K>) { self.base_table.subtract(keys); }
+        #[verifier::external_body]
+        fn subtract(&mut self, keys: &ArraySetStEph<K>)
+            ensures self@.dom().finite()
+        {
+            self.base_table.subtract(keys);
+        }
 
-        /// Claude Work: O(n), Span: O(log n)
-        fn collect(&self) -> AVLTreeSeqStPerS<Pair<K, V>> {
+        #[verifier::external_body]
+        fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
+            ensures self@.dom().finite()
+        {
             let array_seq = self.base_table.entries();
-            // Convert ArraySeqMtEphS to AVLTreeSeqStPerS
             let len = array_seq.length();
             let mut elements = Vec::new();
             for i in 0..len {
@@ -228,10 +330,10 @@ pub mod OrderedTableMtEph {
             AVLTreeSeqStPerS::from_vec(elements)
         }
 
-        // Key ordering operations (ADT 43.1 adapted for tables) - Sequential implementation
-
-        /// Claude Work: O(log n), Span: O(log n)
-        fn first_key(&self) -> Option<K> {
+        #[verifier::external_body]
+        fn first_key(&self) -> (result: Option<K>)
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             if entries.length() == 0 {
                 None
@@ -240,8 +342,10 @@ pub mod OrderedTableMtEph {
             }
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn last_key(&self) -> Option<K> {
+        #[verifier::external_body]
+        fn last_key(&self) -> (result: Option<K>)
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             let size = entries.length();
             if size == 0 {
@@ -251,8 +355,10 @@ pub mod OrderedTableMtEph {
             }
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn previous_key(&self, k: &K) -> Option<K> {
+        #[verifier::external_body]
+        fn previous_key(&self, k: &K) -> (result: Option<K>)
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             let size = entries.length();
 
@@ -265,8 +371,10 @@ pub mod OrderedTableMtEph {
             None
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn next_key(&self, k: &K) -> Option<K> {
+        #[verifier::external_body]
+        fn next_key(&self, k: &K) -> (result: Option<K>)
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             let size = entries.length();
 
@@ -279,24 +387,25 @@ pub mod OrderedTableMtEph {
             None
         }
 
-        /// Claude Work: O(n), Span: O(log n) - Sequential split (AVLTreeSeq not thread-safe)
-        fn split_key(&mut self, k: &K) -> (Self, Self) {
+        #[verifier::external_body]
+        fn split_key(&mut self, k: &K) -> (Self, Option<V>, Self)
+            where Self: Sized
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             let size = entries.length();
             let mut left_entries = Vec::new();
             let mut right_entries = Vec::new();
-            let mut _found_value = None;
+            let mut found_value = None;
 
             for i in 0..size {
                 let pair = entries.nth(i);
                 if &pair.0 < k {
                     left_entries.push(pair.clone());
-                } else {
-                    // Keys >= k go to the right side
+                } else if &pair.0 > k {
                     right_entries.push(pair.clone());
-                    if &pair.0 == k {
-                        _found_value = Some(pair.1.clone());
-                    }
+                } else {
+                    found_value = Some(pair.1.clone());
                 }
             }
 
@@ -304,14 +413,20 @@ pub mod OrderedTableMtEph {
             let right_seq = AVLTreeSeqStPerS::from_vec(right_entries);
 
             *self = Self::empty();
-            (from_sorted_entries(left_seq), from_sorted_entries(right_seq))
+            (from_sorted_entries(left_seq), found_value, from_sorted_entries(right_seq))
         }
 
-        /// Claude Work: O(log(m + n)), Span: O(log(m + n))
-        fn join_key(&mut self, other: Self) { self.union(&other, |v1, _v2| v1.clone()); }
+        #[verifier::external_body]
+        fn join_key(&mut self, other: Self)
+            ensures self@.dom().finite()
+        {
+            self.union(&other, |v1, _v2| v1.clone());
+        }
 
-        /// Claude Work: O(log n), Span: O(log n) - Sequential (AVLTreeSeq not thread-safe)
-        fn get_key_range(&self, k1: &K, k2: &K) -> Self {
+        #[verifier::external_body]
+        fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             let entries = self.collect();
             let size = entries.length();
             let mut range_entries = Vec::new();
@@ -327,8 +442,10 @@ pub mod OrderedTableMtEph {
             from_sorted_entries(range_seq)
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn rank_key(&self, k: &K) -> N {
+        #[verifier::external_body]
+        fn rank_key(&self, k: &K) -> (result: N)
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             let size = entries.length();
             let mut count = 0;
@@ -344,8 +461,10 @@ pub mod OrderedTableMtEph {
             count
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn select_key(&self, i: N) -> Option<K> {
+        #[verifier::external_body]
+        fn select_key(&self, i: N) -> (result: Option<K>)
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             if i >= entries.length() {
                 None
@@ -354,8 +473,11 @@ pub mod OrderedTableMtEph {
             }
         }
 
-        /// Claude Work: O(n), Span: O(log n) - Sequential (AVLTreeSeq not thread-safe)
-        fn split_rank_key(&mut self, i: N) -> (Self, Self) {
+        #[verifier::external_body]
+        fn split_rank_key(&mut self, i: N) -> (Self, Self)
+            where Self: Sized
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             let size = entries.length();
 
@@ -383,15 +505,23 @@ pub mod OrderedTableMtEph {
         }
     }
 
+    // 11. derive impls in verus!
+
     impl<K: MtKey, V: MtVal> Clone for OrderedTableMtEph<K, V> {
-        fn clone(&self) -> Self {
+        #[verifier::external_body]
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@
+        {
             OrderedTableMtEph {
                 base_table: self.base_table.clone(),
             }
         }
     }
 
-    pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: AVLTreeSeqStPerS<Pair<K, V>>) -> OrderedTableMtEph<K, V> {
+    #[verifier::external_body]
+    pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: AVLTreeSeqStPerS<Pair<K, V>>) -> (result: OrderedTableMtEph<K, V>)
+        ensures result@.dom().finite()
+    {
         let len = entries.length();
         let mut elements = Vec::new();
         for i in 0..len {
@@ -401,6 +531,18 @@ pub mod OrderedTableMtEph {
             base_table: crate::Chap42::TableMtEph::TableMtEph::from_sorted_entries(elements),
         }
     }
+
+    } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl<K: MtKey, V: MtVal> PartialEq for OrderedTableMtEph<K, V> {
+        fn eq(&self, other: &Self) -> bool {
+            self.base_table == other.base_table
+        }
+    }
+
+    // 12. macros
 
     /// Macro for creating multi-threaded ephemeral ordered tables from sorted key-value pairs
     #[macro_export]

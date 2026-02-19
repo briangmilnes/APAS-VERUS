@@ -94,51 +94,54 @@ pub mod MinEditDistMtEph {
 
     // 9. impls
 
-    impl<T: MtVal> MinEditDistMtEphS<T> {
-        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
-        /// - Claude-Opus-4.6: Work Θ(|S|×|T|), Span Θ(|S|+|T|) — parallel fork on delete/insert branches; outside verus!, not verified
-        fn min_edit_distance_rec(&self, i: usize, j: usize) -> usize
-        where
-            T: Send + Sync + 'static,
+    fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
+        source: &ArraySeqMtEphS<T>,
+        target: &ArraySeqMtEphS<T>,
+        memo: &Arc<Mutex<HashMap<(usize, usize), usize>>>,
+        i: usize,
+        j: usize,
+    ) -> usize {
         {
-            {
-                let memo_guard = self.memo.lock().unwrap();
-                if let Some(&result) = memo_guard.get(&(i, j)) {
-                    return result;
-                }
+            let memo_guard = memo.lock().unwrap();
+            if let Some(&result) = memo_guard.get(&(i, j)) {
+                return result;
             }
-
-            let result = match (i, j) {
-                | (i, 0) => i,
-                | (0, j) => j,
-                | (i, j) => {
-                    let source_char = self.source.nth(i - 1).clone();
-                    let target_char = self.target.nth(j - 1).clone();
-
-                    if source_char == target_char {
-                        self.min_edit_distance_rec(i - 1, j - 1)
-                    } else {
-                        let self_clone1 = self.clone();
-                        let self_clone2 = self.clone();
-
-                        let handle1 = thread::spawn(move || self_clone1.min_edit_distance_rec(i - 1, j));
-                        let handle2 = thread::spawn(move || self_clone2.min_edit_distance_rec(i, j - 1));
-
-                        let delete_cost = handle1.join().unwrap();
-                        let insert_cost = handle2.join().unwrap();
-
-                        1 + std::cmp::min(delete_cost, insert_cost)
-                    }
-                }
-            };
-
-            {
-                let mut memo_guard = self.memo.lock().unwrap();
-                memo_guard.insert((i, j), result);
-            }
-
-            result
         }
+
+        let result = match (i, j) {
+            | (i, 0) => i,
+            | (0, j) => j,
+            | (i, j) => {
+                let source_char = source.nth(i - 1).clone();
+                let target_char = target.nth(j - 1).clone();
+
+                if source_char == target_char {
+                    min_edit_distance_rec(source, target, memo, i - 1, j - 1)
+                } else {
+                    let source1 = source.clone();
+                    let target1 = target.clone();
+                    let memo1 = Arc::clone(memo);
+                    let source2 = source.clone();
+                    let target2 = target.clone();
+                    let memo2 = Arc::clone(memo);
+
+                    let handle1 = thread::spawn(move || min_edit_distance_rec(&source1, &target1, &memo1, i - 1, j));
+                    let handle2 = thread::spawn(move || min_edit_distance_rec(&source2, &target2, &memo2, i, j - 1));
+
+                    let delete_cost = handle1.join().unwrap();
+                    let insert_cost = handle2.join().unwrap();
+
+                    1 + std::cmp::min(delete_cost, insert_cost)
+                }
+            }
+        };
+
+        {
+            let mut memo_guard = memo.lock().unwrap();
+            memo_guard.insert((i, j), result);
+        }
+
+        result
     }
 
     impl<T: MtVal> MinEditDistMtEphTrait<T> for MinEditDistMtEphS<T> {
@@ -173,7 +176,7 @@ pub mod MinEditDistMtEph {
             let source_len = self.source.length();
             let target_len = self.target.length();
 
-            self.min_edit_distance_rec(source_len, target_len)
+            min_edit_distance_rec(&self.source, &self.target, &self.memo, source_len, target_len)
         }
 
         fn source(&self) -> &ArraySeqMtEphS<T> { &self.source }

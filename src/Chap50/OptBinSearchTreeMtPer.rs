@@ -17,7 +17,7 @@ pub mod OptBinSearchTreeMtPer {
 
     use vstd::prelude::*;
 
-    use crate::Chap50::Probability::Probability::Probability;
+    use crate::Chap50::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
 
     // 4. type definitions
@@ -269,7 +269,7 @@ macro_rules! OBSTMtPerLit {
     (keys: [$($k:expr),* $(,)?], probs: [$($p:expr),* $(,)?]) => {
         $crate::Chap50::OptBinSearchTreeMtPer::OptBinSearchTreeMtPer::OBSTMtPerS::from_keys_probs(
             vec![$($k),*],
-            vec![$($crate::Chap50::Probability::Probability::Probability::new($p)),*]
+            vec![$(<$crate::Chap50::Probability::Probability::Probability as $crate::Chap50::Probability::Probability::ProbabilityTrait>::new($p)),*]
         )
     };
     () => {

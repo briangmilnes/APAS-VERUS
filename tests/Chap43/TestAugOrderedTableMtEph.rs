@@ -247,8 +247,9 @@ fn test_split_and_join_multithreaded() {
 
     assert_eq!(table.reduce_val(), 160);
 
-    // Split at key 4
-    let (left, right) = table.split_key(&4);
+    // Split at key 4 (not in table)
+    let (left, found, right) = table.split_key(&4);
+    assert_eq!(found, None);
 
     // Left should have keys 1,3 with values 10,30
     assert_eq!(left.reduce_val(), 40);

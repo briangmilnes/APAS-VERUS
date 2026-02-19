@@ -6,6 +6,17 @@
 
 pub mod AVLTreeSetStPer {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions
+    // 5. view impls
+    // 8. traits
+    // 9. impls
+    // 11. derive impls in verus!
+    // 12. macros
+    // 13. derive impls outside verus!
+
     use std::fmt::{Display, Formatter};
 
     use vstd::prelude::*;
@@ -13,56 +24,88 @@ pub mod AVLTreeSetStPer {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Types::Types::*;
 
-    #[derive(PartialEq, Eq, Debug)]
+    verus! {
+
+    // 4. type definitions
+
     pub struct AVLTreeSetStPer<T: StT + Ord> {
         elements: AVLTreeSeqStPerS<T>,
     }
 
     pub type AVLTreeSetPer<T> = AVLTreeSetStPer<T>;
 
+    // 5. view impls
+
+    impl<T: StT + Ord> View for AVLTreeSetStPer<T> {
+        type V = Set<T>;
+        #[verifier::external_body]
+        open spec fn view(&self) -> Set<T> { Set::empty() }
+    }
+
+    // 8. traits
+
     pub trait AVLTreeSetStPerTrait<T: StT + Ord> {
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)                        -> N;
+        fn size(&self) -> (result: N)
+            ensures result == self@.len(), self@.finite();
         /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn to_seq(&self)                      -> AVLTreeSeqStPerS<T>;
+        fn to_seq(&self) -> (result: AVLTreeSeqStPerS<T>)
+            ensures self@.finite();
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty()                            -> Self;
+        fn empty() -> (result: Self)
+            ensures result@ == Set::<T>::empty();
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn singleton(x: T)                    -> Self;
+        fn singleton(x: T) -> (result: Self)
+            ensures result@ == Set::<T>::empty().insert(x), result@.finite();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
-        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> Self;
+        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (result: Self)
+            ensures result@.finite();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn filter<F: PredSt<T>>(&self, f: F)  -> Self;
+        fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
+            ensures result@.finite(), result@.subset_of(self@);
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
-        fn intersection(&self, other: &Self)  -> Self;
+        fn intersection(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.intersect(other@), result@.finite();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
-        fn difference(&self, other: &Self)    -> Self;
+        fn difference(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.difference(other@), result@.finite();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
-        fn union(&self, other: &Self)         -> Self;
+        fn union(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.union(other@), result@.finite();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn find(&self, x: &T)                 -> B;
+        fn find(&self, x: &T) -> (result: B)
+            ensures result == self@.contains(*x);
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn delete(&self, x: &T)               -> Self;
+        fn delete(&self, x: &T) -> (result: Self)
+            ensures result@ == self@.remove(*x), result@.finite();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn insert(&self, x: T)                -> Self;
+        fn insert(&self, x: T) -> (result: Self)
+            ensures result@ == self@.insert(x), result@.finite();
     }
 
-    impl<T: StT + Ord> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
-        fn size(&self) -> N { self.elements.length() }
+    // 9. impls
 
-        fn to_seq(&self) -> AVLTreeSeqStPerS<T> {
-            // Create a new sequence from the elements
+    impl<T: StT + Ord> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+        #[verifier::external_body]
+        fn size(&self) -> (result: N)
+            ensures result == self@.len(), self@.finite()
+        { self.elements.length() }
+
+        #[verifier::external_body]
+        fn to_seq(&self) -> (result: AVLTreeSeqStPerS<T>)
+            ensures self@.finite()
+        {
             let size = self.elements.length();
             let mut vec_elements = Vec::with_capacity(size);
             for i in 0..size {
@@ -71,26 +114,32 @@ pub mod AVLTreeSetStPer {
             AVLTreeSeqStPerS::from_vec(vec_elements)
         }
 
-        fn empty() -> Self {
+        #[verifier::external_body]
+        fn empty() -> (result: Self)
+            ensures result@ == Set::<T>::empty()
+        {
             AVLTreeSetStPer {
                 elements: AVLTreeSeqStPerS::empty(),
             }
         }
 
-        fn singleton(x: T) -> Self {
+        #[verifier::external_body]
+        fn singleton(x: T) -> (result: Self)
+            ensures result@ == Set::<T>::empty().insert(x), result@.finite()
+        {
             AVLTreeSetStPer {
                 elements: AVLTreeSeqStPerS::singleton(x),
             }
         }
 
-        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> Self {
-            // Example 41.3: fromSeq a = Seq.reduce Set.union ∅ ⟨{x} : x ∈ a⟩
-            // Work efficient and parallel implementation
+        #[verifier::external_body]
+        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (result: Self)
+            ensures result@.finite()
+        {
             if seq.length() == 0 {
                 return Self::empty();
             }
 
-            // Create sequence of singleton sets ⟨{x} : x ∈ a⟩
             let seq_len = seq.length();
             let mut singleton_sets = Vec::with_capacity(seq_len);
             for i in 0..seq_len {
@@ -98,7 +147,6 @@ pub mod AVLTreeSetStPer {
                 singleton_sets.push(Self::singleton(elem));
             }
 
-            // Reduce with union operation
             let mut result = Self::empty();
             for set in singleton_sets {
                 result = result.union(&set);
@@ -106,7 +154,10 @@ pub mod AVLTreeSetStPer {
             result
         }
 
-        fn filter<F: PredSt<T>>(&self, f: F) -> Self {
+        #[verifier::external_body]
+        fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
+            ensures result@.finite(), result@.subset_of(self@)
+        {
             let mut result = Self::empty();
             for i in 0..self.elements.length() {
                 let elem = self.elements.nth(i);
@@ -117,7 +168,10 @@ pub mod AVLTreeSetStPer {
             result
         }
 
-        fn intersection(&self, other: &Self) -> Self {
+        #[verifier::external_body]
+        fn intersection(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.intersect(other@), result@.finite()
+        {
             let mut result = Self::empty();
             for i in 0..self.elements.length() {
                 let elem = self.elements.nth(i);
@@ -128,7 +182,10 @@ pub mod AVLTreeSetStPer {
             result
         }
 
-        fn difference(&self, other: &Self) -> Self {
+        #[verifier::external_body]
+        fn difference(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.difference(other@), result@.finite()
+        {
             let mut result = Self::empty();
             for i in 0..self.elements.length() {
                 let elem = self.elements.nth(i);
@@ -139,14 +196,15 @@ pub mod AVLTreeSetStPer {
             result
         }
 
-        fn union(&self, other: &Self) -> Self {
+        #[verifier::external_body]
+        fn union(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.union(other@), result@.finite()
+        {
             let mut result = Self::empty();
-            // Add all elements from self
             for i in 0..self.elements.length() {
                 let elem = self.elements.nth(i);
                 result = result.insert(elem.clone());
             }
-            // Add all elements from other
             for i in 0..other.elements.length() {
                 let elem = other.elements.nth(i);
                 result = result.insert(elem.clone());
@@ -154,8 +212,10 @@ pub mod AVLTreeSetStPer {
             result
         }
 
-        fn find(&self, x: &T) -> B {
-            // Binary search on sorted sequence: O(log n) via nth(i)
+        #[verifier::external_body]
+        fn find(&self, x: &T) -> (result: B)
+            ensures result == self@.contains(*x)
+        {
             let n = self.elements.length();
             let mut lo = 0usize;
             let mut hi = n;
@@ -174,8 +234,10 @@ pub mod AVLTreeSetStPer {
             false
         }
 
-        fn delete(&self, x: &T) -> Self {
-            // Binary search for index, then rebuild without that element
+        #[verifier::external_body]
+        fn delete(&self, x: &T) -> (result: Self)
+            ensures result@ == self@.remove(*x), result@.finite()
+        {
             let n = self.elements.length();
             let mut lo = 0usize;
             let mut hi = n;
@@ -212,13 +274,15 @@ pub mod AVLTreeSetStPer {
             }
         }
 
-        fn insert(&self, x: T) -> Self {
+        #[verifier::external_body]
+        fn insert(&self, x: T) -> (result: Self)
+            ensures result@ == self@.insert(x), result@.finite()
+        {
             if self.find(&x) {
                 return Self {
                     elements: self.elements.clone(),
                 };
             }
-            // Binary search for insertion point, then rebuild
             let n = self.elements.length();
             let mut lo = 0usize;
             let mut hi = n;
@@ -244,30 +308,22 @@ pub mod AVLTreeSetStPer {
         }
     }
 
-    impl<T: StT + Ord> Default for AVLTreeSetStPer<T> {
-        fn default() -> Self { Self::empty() }
-    }
+    // 11. derive impls in verus!
 
     impl<T: StT + Ord> Clone for AVLTreeSetStPer<T> {
-        fn clone(&self) -> Self {
+        #[verifier::external_body]
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@
+        {
             AVLTreeSetStPer {
                 elements: self.elements.clone(),
             }
         }
     }
 
-    impl<T: StT + Ord> Display for AVLTreeSetStPer<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(
-                f,
-                "{{{}}}",
-                (0..self.size())
-                    .map(|i| format!("{}", self.elements.nth(i)))
-                    .collect::<Vec<_>>()
-                    .join(", ")
-            )
-        }
-    }
+    } // verus!
+
+    // 12. macros
 
     #[macro_export]
     macro_rules! AVLTreeSetStPerLit {
@@ -281,13 +337,50 @@ pub mod AVLTreeSetStPer {
         }};
     }
 
-    verus! {
-        impl<T: StT + Ord> View for AVLTreeSetStPer<T> {
-            type V = Self;
+    // 13. derive impls outside verus!
 
-            open spec fn view(&self) -> Self {
-                *self
+    impl<T: StT + Ord> Default for AVLTreeSetStPer<T> {
+        fn default() -> Self { Self::empty() }
+    }
+
+    impl<T: StT + Ord> PartialEq for AVLTreeSetStPer<T> {
+        fn eq(&self, other: &Self) -> bool {
+            self.size() == other.size() && {
+                for i in 0..self.elements.length() {
+                    if !other.find(self.elements.nth(i)) {
+                        return false;
+                    }
+                }
+                true
             }
+        }
+    }
+
+    impl<T: StT + Ord> Eq for AVLTreeSetStPer<T> {}
+
+    impl<T: StT + Ord> std::fmt::Debug for AVLTreeSetStPer<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{{")?;
+            for i in 0..self.elements.length() {
+                if i > 0 {
+                    write!(f, ", ")?;
+                }
+                write!(f, "{:?}", self.elements.nth(i))?;
+            }
+            write!(f, "}}")
+        }
+    }
+
+    impl<T: StT + Ord> Display for AVLTreeSetStPer<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(
+                f,
+                "{{{}}}",
+                (0..self.size())
+                    .map(|i| format!("{}", self.elements.nth(i)))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )
         }
     }
 }

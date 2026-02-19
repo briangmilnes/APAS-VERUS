@@ -59,25 +59,16 @@ pub mod BSTSetSplayMtEph {
         fn as_tree(&self)                            -> &BSTSplayMtEph<T>;
     }
 
-    impl<T: StTInMtT + Ord> BSTSetSplayMtEph<T> {
-        fn values_vec(&self) -> Vec<T> { self.tree.in_order().iter().cloned().collect() }
-        fn rebuild_from_vec(values: Vec<T>) -> BSTSplayMtEph<T> {
-            let tree = BSTSplayMtEph::new();
-            for value in values {
-                tree.insert(value);
-            }
-            tree
+    fn values_vec<T: StTInMtT + Ord>(tree: &BSTSplayMtEph<T>) -> Vec<T> {
+        tree.in_order().iter().cloned().collect()
+    }
+
+    fn from_sorted_iter<T: StTInMtT + Ord, I: IntoIterator<Item = T>>(values: I) -> BSTSetSplayMtEph<T> {
+        let tree = BSTSplayMtEph::new();
+        for value in values {
+            tree.insert(value);
         }
-        fn from_sorted_iter<I>(values: I) -> Self
-        where
-            I: IntoIterator<Item = T>,
-        {
-            let tree = BSTSplayMtEph::new();
-            for value in values {
-                tree.insert(value);
-            }
-            Self { tree }
-        }
+        BSTSetSplayMtEph { tree }
     }
 
     impl<T: StTInMtT + Ord> BSTSetSplayMtEphTrait<T> for BSTSetSplayMtEph<T> {
@@ -241,15 +232,15 @@ pub mod BSTSetSplayMtEph {
                     found = true;
                 }
             }
-            (Self::from_sorted_iter(left), found, Self::from_sorted_iter(right))
+            (from_sorted_iter(left), found, from_sorted_iter(right))
         }
 
         fn join_pair(left: Self, right: Self) -> Self {
             // Parallel extraction of values from both trees
             use crate::Types::Types::Pair;
             let Pair(left_values, right_values) = crate::ParaPair!(
-                move || left.values_vec(),
-                move || right.values_vec()
+                move || values_vec(&left.tree),
+                move || values_vec(&right.tree)
             );
             
             // Merge into BTreeSet and rebuild
@@ -257,15 +248,15 @@ pub mod BSTSetSplayMtEph {
             for value in right_values {
                 combined.insert(value);
             }
-            Self::from_sorted_iter(combined)
+            from_sorted_iter(combined)
         }
 
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
             // Parallel extraction of values from both trees
             use crate::Types::Types::Pair;
             let Pair(left_values, right_values) = crate::ParaPair!(
-                move || left.values_vec(),
-                move || right.values_vec()
+                move || values_vec(&left.tree),
+                move || values_vec(&right.tree)
             );
             
             // Merge into BTreeSet with pivot and rebuild
@@ -274,7 +265,7 @@ pub mod BSTSetSplayMtEph {
             for value in right_values {
                 combined.insert(value);
             }
-            Self::from_sorted_iter(combined)
+            from_sorted_iter(combined)
         }
 
         fn filter<F: FnMut(&T) -> bool + Send>(&self, mut predicate: F) -> Self {
@@ -285,7 +276,7 @@ pub mod BSTSetSplayMtEph {
                 .in_order()
                 .iter()
                 .filter_map(|v| if predicate(v) { Some(v.clone()) } else { None }).collect::<Vec<T>>();
-            Self::from_sorted_iter(filtered)
+            from_sorted_iter(filtered)
         }
 
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, mut op: F, base: T) -> T {

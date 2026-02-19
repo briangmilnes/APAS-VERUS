@@ -96,7 +96,9 @@ fn test_ordered_table_st_eph_split_key() {
     table.insert(3, "three".to_string(), |_old, new| new.clone());
     table.insert(4, "four".to_string(), |_old, new| new.clone());
 
-    let (left, right) = table.split_key(&3);
+    let (left, found, right) = table.split_key(&3);
+
+    assert_eq!(found, Some("three".to_string()));
 
     // Left should contain keys < 3
     assert_eq!(left.size(), 2);
@@ -104,10 +106,10 @@ fn test_ordered_table_st_eph_split_key() {
     assert_eq!(left.lookup(&2), Some("two".to_string()));
     assert_eq!(left.lookup(&3), None);
 
-    // Right should contain keys >= 3
-    assert_eq!(right.size(), 2);
-    assert_eq!(right.lookup(&3), Some("three".to_string()));
+    // Right should contain keys > 3
+    assert_eq!(right.size(), 1);
     assert_eq!(right.lookup(&4), Some("four".to_string()));
+    assert_eq!(right.lookup(&3), None);
     assert_eq!(right.lookup(&1), None);
 }
 
@@ -292,8 +294,9 @@ fn test_ordered_table_st_eph_empty_operations() {
     assert_eq!(table.next_key(&1), None);
     assert_eq!(table.select_key(0), None);
 
-    let (left, right) = table.split_key(&1);
+    let (left, found, right) = table.split_key(&1);
     assert_eq!(left.size(), 0);
+    assert_eq!(found, None);
     assert_eq!(right.size(), 0);
 
     let range = table.get_key_range(&1, &5);

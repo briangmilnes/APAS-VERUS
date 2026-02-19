@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap49
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap49/ -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap50/
 
 ✓ MinEditDistMtEph.rs
 ✓ MinEditDistMtPer.rs
@@ -8,15 +8,24 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ SubsetSumMtPer.rs
 ✓ SubsetSumStEph.rs
 ✓ SubsetSumStPer.rs
+✓ /home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainMtEph.rs
+✓ /home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainMtPer.rs
+✓ /home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainStEph.rs
+✓ /home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainStPer.rs
+✓ /home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeMtEph.rs
+✓ /home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeMtPer.rs
+✓ /home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeStEph.rs
+✓ /home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeStPer.rs
+✓ /home/milnes/projects/APAS-VERUS-agent2/src/Chap50/Probability.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   8 clean (no holes)
+   17 clean (no holes)
    0 holed (contains holes)
-   8 total
+   17 total
 
 Proof Functions:
    0 clean
@@ -25,4 +34,4 @@ Proof Functions:
 
 Holes Found: 0 total
 
-🎉 No proof holes found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.

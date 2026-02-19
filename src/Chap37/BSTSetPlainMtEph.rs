@@ -59,25 +59,18 @@ pub mod BSTSetPlainMtEph {
         fn as_tree(&self)                            -> &BSTPlainMtEph<T>;
     }
 
-    impl<T: StTInMtT + Ord> BSTSetPlainMtEph<T> {
-        fn values_vec(&self) -> Vec<T> { self.tree.in_order().iter().cloned().collect() }
-        fn rebuild_from_vec(values: Vec<T>) -> BSTPlainMtEph<T> {
-            let tree = BSTPlainMtEph::new();
-            for value in values {
-                tree.insert(value);
-            }
-            tree
-        }
-        fn from_sorted_iter<I>(values: I) -> Self
-        where
-            I: IntoIterator<Item = T>,
-        {
-            let tree = BSTPlainMtEph::new();
-            for value in values {
-                tree.insert(value);
-            }
-            Self { tree }
-        }
+    fn values_vec<T: StTInMtT + Ord>(tree: &BSTPlainMtEph<T>) -> Vec<T> {
+        tree.in_order().iter().cloned().collect()
+    }
+    fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> BSTPlainMtEph<T> {
+        let tree = BSTPlainMtEph::new();
+        for value in values { tree.insert(value); }
+        tree
+    }
+    fn from_sorted_iter<T: StTInMtT + Ord, I: IntoIterator<Item = T>>(values: I) -> BSTSetPlainMtEph<T> {
+        let tree = BSTPlainMtEph::new();
+        for value in values { tree.insert(value); }
+        BSTSetPlainMtEph { tree }
     }
 
     impl<T: StTInMtT + Ord> BSTSetPlainMtEphTrait<T> for BSTSetPlainMtEph<T> {
@@ -118,7 +111,7 @@ pub mod BSTSetPlainMtEph {
                 .filter(|x| x != target)
                 .cloned()
                 .collect();
-            self.tree = Self::rebuild_from_vec(filtered);
+            self.tree = rebuild_from_vec(filtered);
         }
 
         fn union(&self, other: &Self) -> Self {
@@ -224,24 +217,24 @@ pub mod BSTSetPlainMtEph {
                     found = true;
                 }
             }
-            (Self::from_sorted_iter(left), found, Self::from_sorted_iter(right))
+            (from_sorted_iter(left), found, from_sorted_iter(right))
         }
 
         fn join_pair(left: Self, right: Self) -> Self {
-            let mut combined = left.values_vec().into_iter().collect::<BTreeSet<T>>();
-            for value in right.values_vec() {
+            let mut combined = values_vec(&left.tree).into_iter().collect::<BTreeSet<T>>();
+            for value in values_vec(&right.tree) {
                 combined.insert(value);
             }
-            Self::from_sorted_iter(combined)
+            from_sorted_iter(combined)
         }
 
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-            let mut combined = left.values_vec().into_iter().collect::<BTreeSet<T>>();
+            let mut combined = values_vec(&left.tree).into_iter().collect::<BTreeSet<T>>();
             combined.insert(pivot);
-            for value in right.values_vec() {
+            for value in values_vec(&right.tree) {
                 combined.insert(value);
             }
-            Self::from_sorted_iter(combined)
+            from_sorted_iter(combined)
         }
 
         fn filter<F>(&self, mut predicate: F) -> Self
@@ -253,7 +246,7 @@ pub mod BSTSetPlainMtEph {
                 .in_order()
                 .iter()
                 .filter_map(|v| if predicate(v) { Some(v.clone()) } else { None }).collect::<Vec<T>>();
-            Self::from_sorted_iter(filtered)
+            from_sorted_iter(filtered)
         }
 
         fn reduce<F>(&self, mut op: F, base: T) -> T

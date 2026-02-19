@@ -46,117 +46,114 @@ pub mod BinaryHeapPQ {
         fn size(&self)                       -> N;
         fn is_empty(&self)                   -> bool;
         fn to_seq(&self)                     -> ArraySeqStPerS<T>;
+        fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self;
+        fn extract_all_sorted(&self)         -> ArraySeqStPerS<T>;
+        fn is_valid_heap(&self)              -> bool;
+        fn height(&self)                     -> N;
+        fn level_elements(&self, level: N)   -> ArraySeqStPerS<T>;
+        fn from_vec(vec: Vec<T>)             -> Self;
+        fn to_vec(&self)                     -> Vec<T>;
+        fn to_sorted_vec(&self)              -> Vec<T>;
     }
 
-    impl<T: StT + Ord> BinaryHeapPQ<T> {
-        fn left_child(i: N) -> N { 2 * i + 1 }
-        fn right_child(i: N) -> N { 2 * i + 2 }
-        fn parent(i: N) -> N { if i == 0 { 0 } else { (i - 1) / 2 } }
+    fn left_child(i: N) -> N { 2 * i + 1 }
+    fn right_child(i: N) -> N { 2 * i + 2 }
+    fn parent(i: N) -> N { if i == 0 { 0 } else { (i - 1) / 2 } }
 
-        fn is_heap(&self) -> bool {
-            for i in 0..self.elements.length() {
-                let left = Self::left_child(i);
-                let right = Self::right_child(i);
+    fn swap_elements<T: StT + Ord>(seq: &ArraySeqStPerS<T>, i: N, j: N) -> ArraySeqStPerS<T> {
+        let mut result = ArraySeqStPerS::empty();
 
-                if left < self.elements.length() && self.elements.nth(i) > self.elements.nth(left) {
-                    return false;
-                }
+        for k in 0..seq.length() {
+            let element = if k == i {
+                seq.nth(j).clone()
+            } else if k == j {
+                seq.nth(i).clone()
+            } else {
+                seq.nth(k).clone()
+            };
 
-                if right < self.elements.length() && self.elements.nth(i) > self.elements.nth(right) {
-                    return false;
-                }
-            }
-            true
+            let single_seq = ArraySeqStPerS::singleton(element);
+            result = ArraySeqStPerS::append(&result, &single_seq);
         }
 
-        /// Bubble up element at index i to maintain heap property
-        fn bubble_up(&self, mut i: N) -> ArraySeqStPerS<T> {
-            let mut result = self.elements.clone();
+        result
+    }
 
-            while i > 0 {
-                let parent_idx = Self::parent(i);
-                let current = result.nth(i);
-                let parent = result.nth(parent_idx);
+    fn bubble_up<T: StT + Ord>(seq: &ArraySeqStPerS<T>, mut i: N) -> ArraySeqStPerS<T> {
+        let mut result = seq.clone();
 
-                if current >= parent {
-                    break;
-                }
+        while i > 0 {
+            let parent_idx = parent(i);
+            let current = result.nth(i);
+            let parent_val = result.nth(parent_idx);
 
-                // Swap current with parent
-                result = self.swap_elements(&result, i, parent_idx);
-                i = parent_idx;
+            if current >= parent_val {
+                break;
             }
 
-            result
+            result = swap_elements(&result, i, parent_idx);
+            i = parent_idx;
         }
 
-        /// Bubble down element at index i to maintain heap property
-        fn bubble_down(&self, mut i: N, heap: &ArraySeqStPerS<T>) -> ArraySeqStPerS<T> {
-            let mut result = heap.clone();
+        result
+    }
 
-            loop {
-                let left = Self::left_child(i);
-                let right = Self::right_child(i);
-                let mut smallest = i;
+    fn bubble_down<T: StT + Ord>(heap: &ArraySeqStPerS<T>, mut i: N) -> ArraySeqStPerS<T> {
+        let mut result = heap.clone();
 
-                // Find smallest among current, left child, right child
-                if left < result.length() && result.nth(left) < result.nth(smallest) {
-                    smallest = left;
-                }
+        loop {
+            let left = left_child(i);
+            let right = right_child(i);
+            let mut smallest = i;
 
-                if right < result.length() && result.nth(right) < result.nth(smallest) {
-                    smallest = right;
-                }
-
-                if smallest == i {
-                    break; // Heap property satisfied
-                }
-
-                // Swap current with smallest child
-                result = self.swap_elements(&result, i, smallest);
-                i = smallest;
+            if left < result.length() && result.nth(left) < result.nth(smallest) {
+                smallest = left;
             }
 
-            result
+            if right < result.length() && result.nth(right) < result.nth(smallest) {
+                smallest = right;
+            }
+
+            if smallest == i {
+                break;
+            }
+
+            result = swap_elements(&result, i, smallest);
+            i = smallest;
         }
 
-        /// Swap elements at indices i and j
-        fn swap_elements(&self, seq: &ArraySeqStPerS<T>, i: N, j: N) -> ArraySeqStPerS<T> {
-            let mut result = ArraySeqStPerS::empty();
+        result
+    }
 
-            for k in 0..seq.length() {
-                let element = if k == i {
-                    seq.nth(j).clone()
-                } else if k == j {
-                    seq.nth(i).clone()
-                } else {
-                    seq.nth(k).clone()
-                };
-
-                let single_seq = ArraySeqStPerS::singleton(element);
-                result = ArraySeqStPerS::append(&result, &single_seq);
-            }
-
-            result
+    fn heapify<T: StT + Ord>(seq: &ArraySeqStPerS<T>) -> ArraySeqStPerS<T> {
+        if seq.length() <= 1 {
+            return seq.clone();
         }
 
-        /// Build heap from arbitrary sequence (bottom-up heapify)
-        fn heapify(&self, seq: &ArraySeqStPerS<T>) -> ArraySeqStPerS<T> {
-            if seq.length() <= 1 {
-                return seq.clone();
-            }
+        let mut result = seq.clone();
+        let last_non_leaf = if seq.length() >= 2 { (seq.length() - 2) / 2 } else { 0 };
 
-            let mut result = seq.clone();
-
-            // Start from last non-leaf node and bubble down
-            let last_non_leaf = if seq.length() >= 2 { (seq.length() - 2) / 2 } else { 0 };
-
-            for i in (0..=last_non_leaf).rev() {
-                result = self.bubble_down(i, &result);
-            }
-
-            result
+        for i in (0..=last_non_leaf).rev() {
+            result = bubble_down(&result, i);
         }
+
+        result
+    }
+
+    fn is_heap<T: StT + Ord>(elements: &ArraySeqStPerS<T>) -> bool {
+        for i in 0..elements.length() {
+            let left = left_child(i);
+            let right = right_child(i);
+
+            if left < elements.length() && elements.nth(i) > elements.nth(left) {
+                return false;
+            }
+
+            if right < elements.length() && elements.nth(i) > elements.nth(right) {
+                return false;
+            }
+        }
+        true
     }
 
     impl<T: StT + Ord> BinaryHeapPQTrait<T> for BinaryHeapPQ<T> {
@@ -195,8 +192,7 @@ pub mod BinaryHeapPQ {
 
             // Bubble up from the last position
             let last_index = new_elements.length() - 1;
-            let unheapified_pq = BinaryHeapPQ { elements: new_elements };
-            let heapified = unheapified_pq.bubble_up(last_index);
+            let heapified = bubble_up(&new_elements, last_index);
 
             BinaryHeapPQ { elements: heapified }
         }
@@ -225,7 +221,7 @@ pub mod BinaryHeapPQ {
             }
 
             // Bubble down from root
-            let heapified = self.bubble_down(0, &new_elements);
+            let heapified = bubble_down(&new_elements, 0);
 
             let new_pq = BinaryHeapPQ { elements: heapified };
 
@@ -236,7 +232,7 @@ pub mod BinaryHeapPQ {
         /// - Claude-Opus-4.6: Work Θ((m+n) log(m+n)), Span Θ((m+n) log(m+n)) — heapify does O(n) bubble_downs, each O(n) from swap.
         fn meld(&self, other: &Self) -> Self {
             let merged = ArraySeqStPerS::append(&self.elements, &other.elements);
-            let heapified = self.heapify(&merged);
+            let heapified = heapify(&merged);
 
             BinaryHeapPQ { elements: heapified }
         }
@@ -244,8 +240,7 @@ pub mod BinaryHeapPQ {
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n² log n), Span Θ(n² log n) — heapify: O(n) bubble_downs, each O(n) swap cost.
         fn from_seq(seq: &ArraySeqStPerS<T>) -> Self {
-            let heap = Self::empty();
-            let heapified = heap.heapify(seq);
+            let heapified = heapify(seq);
 
             BinaryHeapPQ { elements: heapified }
         }
@@ -261,16 +256,12 @@ pub mod BinaryHeapPQ {
         /// - APAS: N/A — utility function not in prose.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone is O(n).
         fn to_seq(&self) -> ArraySeqStPerS<T> { self.elements.clone() }
-    }
 
-    impl<T: StT + Ord> BinaryHeapPQ<T> {
-        /// Insert multiple elements from a sequence
-        pub fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self {
+        fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self {
             self.meld(&Self::from_seq(elements))
         }
 
-        /// Extract all elements in sorted order (heapsort)
-        pub fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
+        fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
             let mut result = ArraySeqStPerS::empty();
             let mut current_heap = self.clone();
 
@@ -286,11 +277,9 @@ pub mod BinaryHeapPQ {
             result
         }
 
-        /// Check if the heap property is maintained (for testing)
-        pub fn is_valid_heap(&self) -> bool { self.is_heap() }
+        fn is_valid_heap(&self) -> bool { is_heap(&self.elements) }
 
-        /// Get the height of the heap (for testing)
-        pub fn height(&self) -> N {
+        fn height(&self) -> N {
             if self.elements.length() == 0 {
                 0
             } else {
@@ -298,11 +287,10 @@ pub mod BinaryHeapPQ {
             }
         }
 
-        /// Get elements at a specific level (for testing)
-        pub fn level_elements(&self, level: N) -> ArraySeqStPerS<T> {
+        fn level_elements(&self, level: N) -> ArraySeqStPerS<T> {
             let mut result = ArraySeqStPerS::empty();
-            let start_idx = (1 << level) - 1; // 2^level - 1
-            let end_idx = ((1 << (level + 1)) - 1).min(self.elements.length()); // 2^(level+1) - 1
+            let start_idx = (1 << level) - 1;
+            let end_idx = ((1 << (level + 1)) - 1).min(self.elements.length());
 
             for i in start_idx..end_idx {
                 if i < self.elements.length() {
@@ -312,6 +300,28 @@ pub mod BinaryHeapPQ {
                 }
             }
 
+            result
+        }
+
+        fn from_vec(vec: Vec<T>) -> Self {
+            let seq = ArraySeqStPerS::from_vec(vec);
+            Self::from_seq(&seq)
+        }
+
+        fn to_vec(&self) -> Vec<T> {
+            let mut result = Vec::new();
+            for i in 0..self.elements.length() {
+                result.push(self.elements.nth(i).clone());
+            }
+            result
+        }
+
+        fn to_sorted_vec(&self) -> Vec<T> {
+            let sorted_seq = self.extract_all_sorted();
+            let mut result = Vec::new();
+            for i in 0..sorted_seq.length() {
+                result.push(sorted_seq.nth(i).clone());
+            }
             result
         }
     }
@@ -348,31 +358,4 @@ pub mod BinaryHeapPQ {
         }};
     }
 
-    /// Convenience functions for common operations
-    impl<T: StT + Ord> BinaryHeapPQ<T> {
-        /// Create priority queue from vector (for testing)
-        pub fn from_vec(vec: Vec<T>) -> Self {
-            let seq = ArraySeqStPerS::from_vec(vec);
-            Self::from_seq(&seq)
-        }
-
-        /// Convert to vector (for testing)
-        pub fn to_vec(&self) -> Vec<T> {
-            let mut result = Vec::new();
-            for i in 0..self.elements.length() {
-                result.push(self.elements.nth(i).clone());
-            }
-            result
-        }
-
-        /// Get elements in sorted order as vector (for testing)
-        pub fn to_sorted_vec(&self) -> Vec<T> {
-            let sorted_seq = self.extract_all_sorted();
-            let mut result = Vec::new();
-            for i in 0..sorted_seq.length() {
-                result.push(sorted_seq.nth(i).clone());
-            }
-            result
-        }
-    }
 }
