@@ -9,11 +9,21 @@ pub mod SCCStPer {
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::{AVLTreeSeqStPerS, AVLTreeSeqStPerTrait};
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
+    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false};
+    use crate::Chap55::TopoSortStPer::TopoSortStPer::spec_wf_adj_list_per;
     use crate::Types::Types::*;
 
     verus! {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 8. traits
+    // 9. impls
+
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
+
+    // 8. traits
 
     pub trait SCCStPerTrait {
         /// Finds strongly connected components in a directed graph
@@ -21,10 +31,165 @@ pub mod SCCStPer {
         fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>>;
     }
 
+    // 9. impls
+
+    /// Recursive DFS that appends vertices in finish order.
+    fn dfs_finish_order(
+        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        visited: &mut Vec<bool>,
+        result: &mut Vec<N>,
+        vertex: N,
+    )
+        requires
+            vertex < old(visited)@.len(),
+            old(visited)@.len() == graph@.len(),
+            spec_wf_adj_list_per(graph),
+        ensures
+            visited@.len() == old(visited)@.len(),
+            forall|j: int| #![auto]
+                0 <= j < visited@.len() && old(visited)@[j]
+                ==> visited@[j],
+            spec_num_false(visited@) <= spec_num_false(old(visited)@),
+        decreases spec_num_false(old(visited)@),
+    {
+        if visited[vertex] {
+            return;
+        }
+        assert(!old(visited)@[vertex as int]);
+        visited.set(vertex, true);
+        proof {
+            lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
+        }
+
+        let neighbors = graph.nth(vertex);
+        let neighbors_len = neighbors.length();
+        let mut i: usize = 0;
+        while i < neighbors_len
+            invariant
+                i <= neighbors_len,
+                neighbors_len == graph@[vertex as int]@.len(),
+                visited@.len() == graph@.len(),
+                spec_wf_adj_list_per(graph),
+                forall|j: int| #![auto]
+                    0 <= j < visited@.len() && old(visited)@[j]
+                    ==> visited@[j],
+                spec_num_false(visited@) < spec_num_false(old(visited)@),
+            decreases neighbors_len - i,
+        {
+            let neighbor = *neighbors.nth(i);
+            assert(graph@[vertex as int]@[i as int] < graph@.len());
+            dfs_finish_order(graph, visited, result, neighbor);
+            i = i + 1;
+        }
+        result.push(vertex);
+    }
+
+    /// Computes the finish order for SCC (decreasing finish times).
+    fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N>
+        requires spec_wf_adj_list_per(graph),
+    {
+        let n = graph.length();
+        let mut visited: Vec<bool> = Vec::new();
+        let mut result: Vec<N> = Vec::new();
+        let mut j: usize = 0;
+        while j < n
+            invariant j <= n, visited@.len() == j as int,
+            decreases n - j,
+        {
+            visited.push(false);
+            j = j + 1;
+        }
+
+        let mut start: usize = 0;
+        while start < n
+            invariant
+                start <= n,
+                n == graph@.len(),
+                visited@.len() == n,
+                spec_wf_adj_list_per(graph),
+            decreases n - start,
+        {
+            if !visited[start] {
+                dfs_finish_order(graph, &mut visited, &mut result, start);
+            }
+            start = start + 1;
+        }
+        let result_len = result.len();
+        let mut reversed: Vec<N> = Vec::new();
+        let mut k: usize = result_len;
+        while k > 0
+            invariant
+                k <= result_len,
+                result_len == result@.len(),
+            decreases k,
+        {
+            k = k - 1;
+            reversed.push(result[k]);
+        }
+        AVLTreeSeqStPerS::from_vec(reversed)
+    }
+
+    /// Transposes a directed graph (reverses all edges).
+    fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: ArraySeqStPerS<ArraySeqStPerS<N>>)
+        requires spec_wf_adj_list_per(graph),
+        ensures result@.len() == graph@.len(),
+    {
+        let n = graph.length();
+        let mut adj_vecs: Vec<Vec<N>> = Vec::new();
+        let mut k: usize = 0;
+        while k < n
+            invariant k <= n, adj_vecs@.len() == k as int,
+            decreases n - k,
+        {
+            adj_vecs.push(Vec::new());
+            k = k + 1;
+        }
+
+        let mut u: usize = 0;
+        while u < n
+            invariant
+                u <= n,
+                n == graph@.len(),
+                adj_vecs@.len() == n,
+                spec_wf_adj_list_per(graph),
+            decreases n - u,
+        {
+            let neighbors = graph.nth(u);
+            let neighbors_len = neighbors.length();
+            let mut i: usize = 0;
+            while i < neighbors_len
+                invariant
+                    i <= neighbors_len,
+                    neighbors_len == graph@[u as int]@.len(),
+                    adj_vecs@.len() == n,
+                    n == graph@.len(),
+                    spec_wf_adj_list_per(graph),
+                decreases neighbors_len - i,
+            {
+                let v = *neighbors.nth(i);
+                assert(graph@[u as int]@[i as int] < graph@.len());
+                adj_vecs[v].push(u);
+                i = i + 1;
+            }
+            u = u + 1;
+        }
+
+        let mut result_vecs: Vec<ArraySeqStPerS<N>> = Vec::new();
+        let mut m: usize = 0;
+        while m < n
+            invariant
+                m <= n,
+                adj_vecs@.len() == n,
+                result_vecs@.len() == m as int,
+            decreases n - m,
+        {
+            result_vecs.push(ArraySeqStPerS::from_vec(adj_vecs[m].clone()));
+            m = m + 1;
+        }
+        ArraySeqStPerS::from_vec(result_vecs)
+    }
+
     /// Finds strongly connected components in a directed graph.
-    /// Returns sequence of components, each component is a set of vertices.
-    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-    /// - Claude-Opus-4.6: Work O(|V|^2 + (|V| + |E|) log |V|), Span same — Vec::insert(0, ..) O(|V|), AVL ops O(log |V|), union O(|comp|)
     #[verifier::external_body]
     pub fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>> {
         let finish_order = compute_finish_order(graph);
@@ -48,73 +213,7 @@ pub mod SCCStPer {
         components
     }
 
-    /// - APAS: (no cost stated — internal helper, corresponds to decreasingFinish)
-    /// - Claude-Opus-4.6: Work O((|V| + |E|) log |V|), Span same
-    #[verifier::external_body]
-    fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N> {
-        let n = graph.length();
-        let mut visited = AVLTreeSetStPer::empty();
-        let mut result = Vec::new();
-
-        for start in 0..n {
-            if !visited.find(&start) {
-                let (new_visited, new_result) = dfs_finish_order(graph, visited, result, start);
-                visited = new_visited;
-                result = new_result;
-            }
-        }
-        result.reverse();
-        AVLTreeSeqStPerS::from_vec(result)
-    }
-
-    /// - APAS: (no cost stated — internal helper)
-    /// - Claude-Opus-4.6: Work O(degree(v) + log |V|) per call
-    #[verifier::external_body]
-    fn dfs_finish_order(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
-        visited: AVLTreeSetStPer<N>,
-        mut result: Vec<N>,
-        vertex: N,
-    ) -> (AVLTreeSetStPer<N>, Vec<N>) {
-        if visited.find(&vertex) {
-            return (visited, result);
-        }
-
-        let visited = visited.insert(vertex);
-        let neighbors = graph.nth(vertex);
-
-        let mut visited = visited;
-        for i in 0..neighbors.length() {
-            let neighbor = *neighbors.nth(i);
-            let (new_visited, new_result) = dfs_finish_order(graph, visited, result, neighbor);
-            visited = new_visited;
-            result = new_result;
-        }
-
-        result.push(vertex);
-        (visited, result)
-    }
-
-    /// - APAS: (no cost stated — transpose is standard O(|V| + |E|))
-    /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with expected cost
-    #[verifier::external_body]
-    fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> ArraySeqStPerS<ArraySeqStPerS<N>> {
-        let n = graph.length();
-        let mut adj_vecs: Vec<Vec<N>> = vec![Vec::new(); n];
-
-        for u in 0..n {
-            let neighbors = graph.nth(u);
-            for i in 0..neighbors.length() {
-                let v = *neighbors.nth(i);
-                adj_vecs[v].push(u);
-            }
-        }
-
-        ArraySeqStPerS::tabulate(&|i| ArraySeqStPerS::from_vec(adj_vecs[i].clone()), n)
-    }
-
-    /// - APAS: (no cost stated — internal helper, corresponds to DFSReach)
-    /// - Claude-Opus-4.6: Work O(deg(v) log |V| + |comp| log |comp|) per call — AVL insert + union
+    /// DFS reachability: collects all reachable vertices into a component set.
     #[verifier::external_body]
     fn dfs_reach(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,

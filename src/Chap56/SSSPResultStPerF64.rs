@@ -13,7 +13,7 @@
 //! - `get_distance`: Work O(1), Span O(1)
 //! - `extract_path`: Work O(k), Span O(k) where k is path length
 
-pub mod SSSPResultStPerFloat {
+pub mod SSSPResultStPerF64 {
 
     use ordered_float::OrderedFloat;
 
@@ -36,7 +36,7 @@ pub mod SSSPResultStPerFloat {
     const NO_PREDECESSOR: usize = usize::MAX;
 
     /// Result structure for single-source shortest paths with floating-point weights (persistent).
-    pub struct SSSPResultStPerFloat {
+    pub struct SSSPResultStPerF64 {
         /// Distance from source to each vertex (OrderedFloat(f64::INFINITY) for unreachable).
         pub distances: ArraySeqStPerS<OrderedF64>,
         /// Predecessor of each vertex in shortest path tree (usize::MAX for source/unreachable).
@@ -47,7 +47,7 @@ pub mod SSSPResultStPerFloat {
 
     // 5. view impls
 
-    impl View for SSSPResultStPerFloat {
+    impl View for SSSPResultStPerF64 {
         type V = Seq<int>;
         open spec fn view(&self) -> Self::V {
             self.predecessors@.map(|_i: int, v: usize| v as int)
@@ -57,7 +57,7 @@ pub mod SSSPResultStPerFloat {
     // 8. traits
 
     /// Trait for single-source shortest path result operations
-    pub trait SSSPResultStPerFloatTrait: Sized {
+    pub trait SSSPResultStPerF64Trait: Sized {
         fn new(n: usize, source: usize) -> (result: Self)
             requires source < n;
 
@@ -76,7 +76,7 @@ pub mod SSSPResultStPerFloat {
 
     // 9. impls
 
-    impl SSSPResultStPerFloatTrait for SSSPResultStPerFloat {
+    impl SSSPResultStPerF64Trait for SSSPResultStPerF64 {
         #[verifier::external_body]
         fn new(n: usize, source: usize) -> (result: Self)
             ensures
@@ -86,7 +86,7 @@ pub mod SSSPResultStPerFloat {
         {
             let distances = ArraySeqStPerS::tabulate(&|i| if i == source { OrderedFloat(0.0) } else { UNREACHABLE }, n);
             let predecessors = ArraySeqStPerS::tabulate(&|_| NO_PREDECESSOR, n);
-            SSSPResultStPerFloat {
+            SSSPResultStPerF64 {
                 distances,
                 predecessors,
                 source,
@@ -116,7 +116,7 @@ pub mod SSSPResultStPerFloat {
             if v >= self.distances.length() {
                 return self;
             }
-            SSSPResultStPerFloat {
+            SSSPResultStPerF64 {
                 distances: ArraySeqStPerS::update(&self.distances, v, dist),
                 predecessors: self.predecessors,
                 source: self.source,
@@ -148,7 +148,7 @@ pub mod SSSPResultStPerFloat {
             if v >= self.predecessors.length() {
                 return self;
             }
-            SSSPResultStPerFloat {
+            SSSPResultStPerF64 {
                 distances: self.distances,
                 predecessors: ArraySeqStPerS::update(&self.predecessors, v, pred),
                 source: self.source,

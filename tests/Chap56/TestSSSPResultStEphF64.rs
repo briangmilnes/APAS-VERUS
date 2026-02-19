@@ -1,15 +1,15 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //!
-//! Test suite for SSSPResultStEphFloat.
+//! Test suite for SSSPResultStEphF64.
 
 use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
-use apas_verus::Chap56::SSSPResultStEphFloat::SSSPResultStEphFloat::*;
+use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::*;
 
 fn dist(v: f64) -> F64Dist { F64Dist { val: v } }
 
 #[test]
 fn test_new() {
-    let result = SSSPResultStEphFloat::new(5, 0);
+    let result = SSSPResultStEphF64::new(5, 0);
     assert_eq!(result.get_distance(0), dist(0.0));
     assert_eq!(result.get_distance(1), dist(f64::INFINITY));
     assert!(result.is_reachable(0));
@@ -18,7 +18,7 @@ fn test_new() {
 
 #[test]
 fn test_set_distance() {
-    let mut result = SSSPResultStEphFloat::new(3, 0);
+    let mut result = SSSPResultStEphF64::new(3, 0);
     result.set_distance(1, dist(5.5));
     result.set_distance(2, dist(10.5));
     assert_eq!(result.get_distance(1), dist(5.5));
@@ -27,7 +27,7 @@ fn test_set_distance() {
 
 #[test]
 fn test_set_predecessor() {
-    let mut result = SSSPResultStEphFloat::new(3, 0);
+    let mut result = SSSPResultStEphF64::new(3, 0);
     result.set_predecessor(1, 0);
     result.set_predecessor(2, 1);
     assert_eq!(result.get_predecessor(1), Some(0));
@@ -36,7 +36,7 @@ fn test_set_predecessor() {
 
 #[test]
 fn test_extract_path() {
-    let mut result = SSSPResultStEphFloat::new(4, 0);
+    let mut result = SSSPResultStEphF64::new(4, 0);
     result.set_distance(1, dist(1.0));
     result.set_predecessor(1, 0);
     result.set_distance(2, dist(2.0));
@@ -54,6 +54,6 @@ fn test_extract_path() {
 
 #[test]
 fn test_extract_path_unreachable() {
-    let result = SSSPResultStEphFloat::new(3, 0);
+    let result = SSSPResultStEphF64::new(3, 0);
     assert_eq!(result.extract_path(2), None);
 }

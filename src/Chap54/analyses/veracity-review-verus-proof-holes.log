@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap54/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap54/ -d src/Chap58/ -d src/Chap59/ -d src/Chap61/ -d src/Chap62/ -d src/Chap63/ -d src/Chap65/ -d src/Chap66/
 
 ✓ BFSMtEph.rs
    7 clean proof functions
@@ -8,15 +8,36 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
    4 clean proof functions
 ✓ BFSStPer.rs
    4 clean proof functions
+✓ src/Chap58/BellmanFordStEphFloat.rs
+✓ src/Chap58/BellmanFordStEphI64.rs
+✓ src/Chap59/JohnsonMtEphFloat.rs
+✓ src/Chap59/JohnsonMtEphI64.rs
+✓ src/Chap59/JohnsonStEphFloat.rs
+✓ src/Chap59/JohnsonStEphI64.rs
+✓ src/Chap61/EdgeContractionMtEph.rs
+✓ src/Chap61/EdgeContractionStEph.rs
+✓ src/Chap61/VertexMatchingMtEph.rs
+✓ src/Chap61/VertexMatchingStEph.rs
+✓ src/Chap62/StarContractionMtEph.rs
+✓ src/Chap62/StarContractionStEph.rs
+✓ src/Chap62/StarPartitionMtEph.rs
+✓ src/Chap62/StarPartitionStEph.rs
+✓ src/Chap63/ConnectivityMtEph.rs
+✓ src/Chap63/ConnectivityStEph.rs
+✓ src/Chap65/KruskalStEph.rs
+✓ src/Chap65/PrimStEph.rs
+✓ src/Chap65/UnionFindStEph.rs
+✓ src/Chap66/BoruvkaMtEph.rs
+✓ src/Chap66/BoruvkaStEph.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   4 clean (no holes)
+   25 clean (no holes)
    0 holed (contains holes)
-   4 total
+   25 total
 
 Proof Functions:
    22 clean

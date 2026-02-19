@@ -13,7 +13,7 @@
 //! - `get_distance`: Work O(1), Span O(1)
 //! - `extract_path`: Work O(k), Span O(k) where k is path length
 
-pub mod AllPairsResultStPerFloat {
+pub mod AllPairsResultStPerF64 {
 
     use ordered_float::OrderedFloat;
 
@@ -36,7 +36,7 @@ pub mod AllPairsResultStPerFloat {
     const NO_PREDECESSOR: usize = usize::MAX;
 
     /// Result structure for all-pairs shortest paths with floating-point weights (persistent).
-    pub struct AllPairsResultStPerFloat {
+    pub struct AllPairsResultStPerF64 {
         /// Distance matrix: distances.nth(u).nth(v) is the distance from u to v.
         pub distances: ArraySeqStPerS<ArraySeqStPerS<OrderedF64>>,
         /// Predecessor matrix: predecessors.nth(u).nth(v) is the predecessor of v on shortest path from u.
@@ -47,7 +47,7 @@ pub mod AllPairsResultStPerFloat {
 
     // 5. view impls
 
-    impl View for AllPairsResultStPerFloat {
+    impl View for AllPairsResultStPerF64 {
         type V = Seq<Seq<int>>;
         open spec fn view(&self) -> Self::V {
             Seq::new(self.predecessors@.len(), |i: int|
@@ -59,7 +59,7 @@ pub mod AllPairsResultStPerFloat {
     // 8. traits
 
     /// Trait for all-pairs shortest path result operations
-    pub trait AllPairsResultStPerFloatTrait: Sized {
+    pub trait AllPairsResultStPerF64Trait: Sized {
         fn new(n: usize) -> (result: Self);
 
         fn get_distance(&self, u: usize, v: usize) -> (dist: OrderedF64);
@@ -77,7 +77,7 @@ pub mod AllPairsResultStPerFloat {
 
     // 9. impls
 
-    impl AllPairsResultStPerFloatTrait for AllPairsResultStPerFloat {
+    impl AllPairsResultStPerF64Trait for AllPairsResultStPerF64 {
         #[verifier::external_body]
         fn new(n: usize) -> (result: Self)
             ensures
@@ -88,7 +88,7 @@ pub mod AllPairsResultStPerFloat {
                 n,
             );
             let predecessors = ArraySeqStPerS::tabulate(&|_| ArraySeqStPerS::tabulate(&|_| NO_PREDECESSOR, n), n);
-            AllPairsResultStPerFloat {
+            AllPairsResultStPerF64 {
                 distances,
                 predecessors,
                 n,
@@ -117,7 +117,7 @@ pub mod AllPairsResultStPerFloat {
                 return self;
             }
             let updated_row = ArraySeqStPerS::update(self.distances.nth(u), v, dist);
-            AllPairsResultStPerFloat {
+            AllPairsResultStPerF64 {
                 distances: ArraySeqStPerS::update(&self.distances, u, updated_row),
                 predecessors: self.predecessors,
                 n: self.n,
@@ -148,7 +148,7 @@ pub mod AllPairsResultStPerFloat {
                 return self;
             }
             let updated_row = ArraySeqStPerS::update(self.predecessors.nth(u), v, pred);
-            AllPairsResultStPerFloat {
+            AllPairsResultStPerF64 {
                 distances: self.distances,
                 predecessors: ArraySeqStPerS::update(&self.predecessors, u, updated_row),
                 n: self.n,

@@ -5,7 +5,7 @@
 //! Uses a `F64Dist` newtype around f64 with a View impl so that Verus can reason about
 //! the distance array. At runtime, callers convert to/from `OrderedF64` at the boundary.
 
-pub mod SSSPResultStEphFloat {
+pub mod SSSPResultStEphF64 {
 
     use vstd::prelude::*;
     use vstd::float::FloatBitsProperties;
@@ -84,7 +84,7 @@ pub mod SSSPResultStEphFloat {
     // 6. spec fns
 
     /// Result structure for single-source shortest paths with floating-point weights.
-    pub struct SSSPResultStEphFloat {
+    pub struct SSSPResultStEphF64 {
         pub distances: ArraySeqStEphS<F64Dist>,
         pub predecessors: ArraySeqStEphS<usize>,
         pub source: usize,
@@ -92,7 +92,7 @@ pub mod SSSPResultStEphFloat {
 
     // 9. impls
 
-    impl SSSPResultStEphFloat {
+    impl SSSPResultStEphF64 {
         pub fn new(n: usize, source: usize) -> (result: Self)
             requires source < n,
         {
@@ -116,7 +116,7 @@ pub mod SSSPResultStEphFloat {
             }
             let distances = ArraySeqStEphS::from_vec(dist_vec);
             let predecessors = ArraySeqStEphS::<usize>::new(n, NO_PREDECESSOR);
-            SSSPResultStEphFloat { distances, predecessors, source }
+            SSSPResultStEphF64 { distances, predecessors, source }
         }
 
         pub fn get_distance(&self, v: usize) -> (dist: F64Dist) {
@@ -164,7 +164,7 @@ pub mod SSSPResultStEphFloat {
     }
 
     #[cfg(not(verus_keep_ghost))]
-    impl SSSPResultStEphFloat {
+    impl SSSPResultStEphF64 {
         pub fn extract_path(&self, v: usize) -> Option<ArraySeqStPerS<usize>> {
             if !self.is_reachable(v) {
                 return None;

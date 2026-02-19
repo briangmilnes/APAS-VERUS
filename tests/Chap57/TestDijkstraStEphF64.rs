@@ -1,12 +1,12 @@
 #![cfg(feature = "all_chapters")]
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Tests for DijkstraStEphFloat.
+//! Tests for DijkstraStEphF64.
 
 use ordered_float::OrderedFloat;
 
 use apas_verus::Chap05::SetStEph::SetStEph::*;
 use apas_verus::Chap06::WeightedDirGraphStEphFloat::WeightedDirGraphStEphFloat::*;
-use apas_verus::Chap57::DijkstraStEphFloat::DijkstraStEphFloat::*;
+use apas_verus::Chap57::DijkstraStEphF64::DijkstraStEphF64::*;
 use apas_verus::Types::Types::*;
 
 #[test]

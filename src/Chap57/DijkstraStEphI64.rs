@@ -64,27 +64,28 @@ pub mod DijkstraStEphI64 {
 
     // 9. impls
 
-    /// Module-level function to create a new PQEntry
-    /// - APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — trivial constructor.
-    #[verifier::external_body]
-    fn pq_entry_new(dist: i64, vertex: usize) -> PQEntry { PQEntry { dist, vertex } }
+    fn pq_entry_new(dist: i64, vertex: usize) -> (r: PQEntry)
+        ensures r.dist == dist, r.vertex == vertex,
+    {
+        PQEntry { dist, vertex }
+    }
 
     impl Ord for PQEntry {
-        /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — integer comparison.
-        #[verifier::external_body]
         fn cmp(&self, other: &Self) -> (r: Ordering) {
-            // Min-heap: smaller distance has higher priority
-            self.dist.cmp(&other.dist)
+            if self.dist < other.dist {
+                Ordering::Less
+            } else if self.dist == other.dist {
+                Ordering::Equal
+            } else {
+                Ordering::Greater
+            }
         }
     }
 
     impl PartialOrd for PQEntry {
-        /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to cmp.
-        #[verifier::external_body]
-        fn partial_cmp(&self, other: &Self) -> (r: Option<Ordering>) { Some(self.cmp(other)) }
+        fn partial_cmp(&self, other: &Self) -> (r: Option<Ordering>) {
+            Some(self.cmp(other))
+        }
     }
 
     /// Runs Dijkstra's algorithm on a weighted directed graph.

@@ -11,7 +11,7 @@
 //! - Phase 3 (n Dijkstras in parallel): Work O(n * m log n) = O(mn log n), Span O(m log n)
 //! - Parallelism in Phase 3: Θ(n) - n independent Dijkstra runs
 
-pub mod JohnsonMtEphFloat {
+pub mod JohnsonMtEphF64 {
 
     use std::thread;
 
@@ -21,14 +21,14 @@ pub mod JohnsonMtEphFloat {
     use crate::Chap06::WeightedDirGraphMtEphFloat::WeightedDirGraphMtEphFloat::*;
     use crate::Chap06::WeightedDirGraphStEphFloat::WeightedDirGraphStEphFloat::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
-    use crate::Chap56::AllPairsResultStEphFloat::AllPairsResultStEphFloat::*;
-    use crate::Chap56::SSSPResultStEphFloat::SSSPResultStEphFloat::*;
-    use crate::Chap57::DijkstraStEphFloat::DijkstraStEphFloat::dijkstra;
-    use crate::Chap58::BellmanFordStEphFloat::BellmanFordStEphFloat::bellman_ford;
+    use crate::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::*;
+    use crate::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::*;
+    use crate::Chap57::DijkstraStEphF64::DijkstraStEphF64::dijkstra;
+    use crate::Chap58::BellmanFordStEphF64::BellmanFordStEphF64::bellman_ford;
     use crate::Types::Types::*;
     pub type T = WeightedDirGraphMtEphFloat<usize>;
 
-    pub trait JohnsonMtEphFloatTrait {
+    pub trait JohnsonMtEphF64Trait {
         /// Parallel Johnson's all-pairs shortest path algorithm
         /// APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|
         fn johnson_apsp(graph: &WeightedDirGraphMtEphFloat<usize>) -> AllPairsResultStEphFloat;

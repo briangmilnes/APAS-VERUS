@@ -2,7 +2,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 use apas_verus::Chap05::SetStEph::SetStEph::*;
 use apas_verus::Chap06::WeightedDirGraphMtEphFloat::WeightedDirGraphMtEphFloat::*;
-use apas_verus::Chap59::JohnsonMtEphFloat::JohnsonMtEphFloat::*;
+use apas_verus::Chap59::JohnsonMtEphF64::JohnsonMtEphF64::*;
 use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
 

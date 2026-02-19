@@ -9,18 +9,18 @@
 //! - Bellman-Ford: Work O(nm), Span O(n lg n) where n = |V|, m = |E|
 //! - Parallelizable: Lines 5-6 parallelize over vertices
 
-pub mod BellmanFordStEphFloat {
+pub mod BellmanFordStEphF64 {
 
     use std::collections::HashMap;
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
     use crate::Chap06::WeightedDirGraphStEphFloat::WeightedDirGraphStEphFloat::*;
-    use crate::Chap56::SSSPResultStEphFloat::SSSPResultStEphFloat::*;
+    use crate::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::*;
     use crate::Types::Types::*;
     pub type T = WeightedDirGraphStEphFloat<usize>;
 
-    pub trait BellmanFordStEphFloatTrait {
+    pub trait BellmanFordStEphF64Trait {
         /// Bellman-Ford single source shortest path algorithm
         /// - APAS: Work O(nm), Span O(n lg n) where n = |V|, m = |E|
         /// - Claude-Opus-4.6: Work O(nm), Span O(nm) — sequential implementation; inner vertex loop not parallelized

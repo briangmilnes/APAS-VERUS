@@ -7,7 +7,7 @@
 //! **Algorithmic Analysis:**
 //! - Dijkstra: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
 
-pub mod DijkstraStEphFloat {
+pub mod DijkstraStEphF64 {
 
     use std::cmp::Ordering;
     use std::collections::HashMap;
@@ -20,13 +20,13 @@ pub mod DijkstraStEphFloat {
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
     use crate::Chap06::WeightedDirGraphStEphFloat::WeightedDirGraphStEphFloat::*;
     use crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::*;
-    use crate::Chap56::SSSPResultStEphFloat::SSSPResultStEphFloat::*;
+    use crate::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::*;
     use crate::Types::Types::*;
 
     verus! {
 
     // Table of Contents
-    // 1. module (DijkstraStEphFloat)
+    // 1. module (DijkstraStEphF64)
     // 2. imports
     // 4. type definitions
     // 5. view impls
@@ -55,7 +55,7 @@ pub mod DijkstraStEphFloat {
 
     // 8. traits
 
-    pub trait DijkstraStEphFloatTrait {
+    pub trait DijkstraStEphF64Trait {
         /// Dijkstra's single source shortest path algorithm
         /// - APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
         /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — agrees with APAS.

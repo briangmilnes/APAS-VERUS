@@ -1,39 +1,180 @@
-✓ MatrixChainMtEph.rs
-✓ MatrixChainMtPer.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap50/ -d src/Chap51/ -d src/Chap55/ -d src/Chap57/ -d src/Chap64/
+
+❌ MatrixChainMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:36: external_type_specification - #[verifier::external_type_specification]
+        37 |         pub struct ExMatrixDim(MatrixDim);
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:43: external_body - #[verifier::external_body]
+        44 |         fn new_mceph_dim_lock(val: Vec<MatrixDim>) -> (lock: RwLock<Vec<MatrixDim>, McEphDimWf>) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:52: external_body - #[verifier::external_body]
+        53 |         fn new_mceph_memo_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>) {
+   Holes: 3 total
+      2 × external_body
+      1 × external_type_specification
+❌ MatrixChainMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:42: external_body - #[verifier::external_body]
+        43 |         fn new_mcper_memo_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>) {
+   Holes: 1 total
+      1 × external_body
 ✓ MatrixChainStEph.rs
 ✓ MatrixChainStPer.rs
-✓ OptBinSearchTreeMtEph.rs
-✓ OptBinSearchTreeMtPer.rs
+❌ OptBinSearchTreeMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:37: external_type_specification - #[verifier::external_type_specification]
+        38 |         pub struct ExProbability(Probability);
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:41: external_type_specification - #[verifier::external_type_specification]
+        42 |         pub struct ExKeyProb<T: MtVal>(KeyProb<T>);
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:48: external_body - #[verifier::external_body]
+        49 |         fn new_obst_eph_keys_lock<T: MtVal>(val: Vec<KeyProb<T>>) -> (lock: RwLock<Vec<KeyProb<T>>, ObstEphKeysWf>) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:57: external_body - #[verifier::external_body]
+        58 |         fn new_obst_eph_memo_lock(val: HashMap<(usize, usize), Probability>) -> (lock: RwLock<HashMap<(usize, usize), Probability>, ObstEphMemoWf>) {
+   Holes: 4 total
+      2 × external_body
+      2 × external_type_specification
+❌ OptBinSearchTreeMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:43: external_body - #[verifier::external_body]
+        44 |         fn new_obst_per_memo_lock(val: HashMap<(usize, usize), Probability>) -> (lock: RwLock<HashMap<(usize, usize), Probability>, ObstPerMemoWf>) {
+   Holes: 1 total
+      1 × external_body
 ✓ OptBinSearchTreeStEph.rs
 ✓ OptBinSearchTreeStPer.rs
 ✓ Probability.rs
+❌ src/Chap51/BottomUpDPMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:42: external_body - #[verifier::external_body]
+        43 |     fn new_bu_eph_lock(val: Vec<Vec<usize>>) -> (lock: RwLock<Vec<Vec<usize>>, BottomUpDPMtEphWf>) {
+   Holes: 1 total
+      1 × external_body
+❌ src/Chap51/BottomUpDPMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:42: external_body - #[verifier::external_body]
+        43 |     fn new_bu_per_lock(val: Vec<Vec<usize>>) -> (lock: RwLock<Vec<Vec<usize>>, BottomUpDPMtPerWf>) {
+   Holes: 1 total
+      1 × external_body
+✓ src/Chap51/BottomUpDPStEph.rs
+✓ src/Chap51/BottomUpDPStPer.rs
+❌ src/Chap51/TopDownDPMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:36: external_body - #[verifier::external_body]
+        37 |     fn new_td_eph_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, TopDownDPMtEphWf>) {
+   Holes: 1 total
+      1 × external_body
+❌ src/Chap51/TopDownDPMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:36: external_body - #[verifier::external_body]
+        37 |     fn new_td_per_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, TopDownDPMtPerWf>) {
+   Holes: 1 total
+      1 × external_body
+✓ src/Chap51/TopDownDPStEph.rs
+✓ src/Chap51/TopDownDPStPer.rs
+❌ src/Chap55/CycleDetectStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:27: external_body - #[verifier::external_body]
+        28 |     pub fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> B {
+/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:45: external_body - #[verifier::external_body]
+        46 |     fn dfs_check_cycle(
+   Holes: 2 total
+      2 × external_body
+❌ src/Chap55/CycleDetectStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:27: external_body - #[verifier::external_body]
+        28 |     pub fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> B {
+/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:46: external_body - #[verifier::external_body]
+        47 |     fn dfs_check_cycle(
+   Holes: 2 total
+      2 × external_body
+❌ src/Chap55/DFSStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:27: external_body - #[verifier::external_body]
+        28 |     pub fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> AVLTreeSetStEph<N> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:42: external_body - #[verifier::external_body]
+        43 |     fn dfs_recursive(
+   Holes: 2 total
+      2 × external_body
+❌ src/Chap55/DFSStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:27: external_body - #[verifier::external_body]
+        28 |     pub fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> AVLTreeSetStPer<N> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:38: external_body - #[verifier::external_body]
+        39 |     fn dfs_recursive(
+   Holes: 2 total
+      2 × external_body
+❌ src/Chap55/SCCStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:28: external_body - #[verifier::external_body]
+        29 |     pub fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:57: external_body - #[verifier::external_body]
+        58 |     fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:74: external_body - #[verifier::external_body]
+        75 |     fn dfs_finish_order(
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:98: external_body - #[verifier::external_body]
+        99 |     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> ArraySeqStEphS<ArraySeqStEphS<N>> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:116: external_body - #[verifier::external_body]
+       117 |     fn dfs_reach(
+   Holes: 5 total
+      5 × external_body
+❌ src/Chap55/SCCStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:28: external_body - #[verifier::external_body]
+        29 |     pub fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:53: external_body - #[verifier::external_body]
+        54 |     fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:72: external_body - #[verifier::external_body]
+        73 |     fn dfs_finish_order(
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:100: external_body - #[verifier::external_body]
+       101 |     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> ArraySeqStPerS<ArraySeqStPerS<N>> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:118: external_body - #[verifier::external_body]
+       119 |     fn dfs_reach(
+   Holes: 5 total
+      5 × external_body
+❌ src/Chap55/TopoSortStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:126: external_body - #[verifier::external_body]
+       127 |     fn dfs_finish_order_cycle_detect(
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:158: external_body - #[verifier::external_body]
+       159 |     pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> Option<AVLTreeSeqStEphS<N>> {
+   Holes: 2 total
+      2 × external_body
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ src/Chap55/TopoSortStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:28: external_body - #[verifier::external_body]
+        29 |     pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> Option<AVLTreeSeqStPerS<N>> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:55: external_body - #[verifier::external_body]
+        56 |     pub fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:74: external_body - #[verifier::external_body]
+        75 |     fn dfs_finish_order_cycle_detect(
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:114: external_body - #[verifier::external_body]
+       115 |     fn dfs_finish_order(
+   Holes: 4 total
+      4 × external_body
+❌ src/Chap57/DijkstraStEphFloat.rs
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphFloat.rs:70: external_body - #[verifier::external_body]
+        71 |     fn pq_entry_new(dist: OrderedF64, vertex: usize) -> PQEntry { PQEntry { dist, vertex } }
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphFloat.rs:76: external_body - #[verifier::external_body]
+        77 |         fn cmp(&self, other: &Self) -> (r: Ordering) {
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphFloat.rs:86: external_body - #[verifier::external_body]
+        87 |         fn partial_cmp(&self, other: &Self) -> (r: Option<Ordering>) { Some(self.cmp(other)) }
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphFloat.rs:98: external_body - #[verifier::external_body]
+        99 |     pub fn dijkstra(graph: &WeightedDirGraphStEphFloat<usize>, source: usize) -> SSSPResultStEphFloat {
+   Holes: 4 total
+      4 × external_body
+❌ src/Chap57/DijkstraStEphI64.rs
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:99: external_body - #[verifier::external_body]
+       100 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64 {
+   Holes: 1 total
+      1 × external_body
+✓ src/Chap57/StackStEph.rs
+❌ src/Chap64/SpanTreeMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:35: external_body - #[verifier::external_body]
+        36 |         fn new_spanning_edges_lock<V: StT + MtT + Hash + Ord>(
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:46: external_body - #[verifier::external_body]
+        47 |         fn new_valid_lock(val: bool) -> (lock: RwLock<bool, SpanTreeMtEphValidWf>) {
+   Holes: 2 total
+      2 × external_body
+✓ src/Chap64/SpanTreeStEph.rs
+✓ src/Chap64/TSPApproxStEph.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   9 clean (no holes)
-   0 holed (contains holes)
-   9 total
+   12 clean (no holes)
+   19 holed (contains holes)
+   31 total
 
 Proof Functions:
-   0 clean
+   1 clean
    0 holed
-   0 total
+   1 total
 
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
-n (no holes)
-   0 holed (contains holes)
-   9 total
-
-Proof Functions:
-   0 clean
-   0 holed
-   0 total
-
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
+Holes Found: 44 total
+   41 × external_body
+   3 × external_type_specification

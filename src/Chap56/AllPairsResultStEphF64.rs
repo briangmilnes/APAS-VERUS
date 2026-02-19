@@ -13,7 +13,7 @@
 //! - `get_distance`: Work O(1), Span O(1)
 //! - `extract_path`: Work O(k), Span O(k) where k is path length
 
-pub mod AllPairsResultStEphFloat {
+pub mod AllPairsResultStEphF64 {
 
     use ordered_float::OrderedFloat;
 
@@ -37,7 +37,7 @@ pub mod AllPairsResultStEphFloat {
     const NO_PREDECESSOR: usize = usize::MAX;
 
     /// Result structure for all-pairs shortest paths with floating-point weights.
-    pub struct AllPairsResultStEphFloat {
+    pub struct AllPairsResultStEphF64 {
         /// Distance matrix: distances.nth(u).nth(v) is the distance from u to v.
         pub distances: ArraySeqStEphS<ArraySeqStEphS<OrderedF64>>,
         /// Predecessor matrix: predecessors.nth(u).nth(v) is the predecessor of v on shortest path from u.
@@ -48,7 +48,7 @@ pub mod AllPairsResultStEphFloat {
 
     // 5. view impls
 
-    impl View for AllPairsResultStEphFloat {
+    impl View for AllPairsResultStEphF64 {
         type V = Seq<Seq<int>>;
         open spec fn view(&self) -> Self::V {
             Seq::new(self.predecessors@.len(), |i: int|
@@ -60,7 +60,7 @@ pub mod AllPairsResultStEphFloat {
     // 8. traits
 
     /// Trait for all-pairs shortest path result operations
-    pub trait AllPairsResultStEphFloatTrait: Sized {
+    pub trait AllPairsResultStEphF64Trait: Sized {
         fn new(n: usize) -> (result: Self);
 
         fn get_distance(&self, u: usize, v: usize) -> (dist: OrderedF64);
@@ -78,7 +78,7 @@ pub mod AllPairsResultStEphFloat {
 
     // 9. impls
 
-    impl AllPairsResultStEphFloatTrait for AllPairsResultStEphFloat {
+    impl AllPairsResultStEphF64Trait for AllPairsResultStEphF64 {
         #[verifier::external_body]
         fn new(n: usize) -> (result: Self)
             ensures
@@ -94,7 +94,7 @@ pub mod AllPairsResultStEphFloat {
 
             let pred_matrix = vec![ArraySeqStEphS::new(n, NO_PREDECESSOR); n];
             let predecessors = ArraySeqStEphS::from_vec(pred_matrix);
-            AllPairsResultStEphFloat {
+            AllPairsResultStEphF64 {
                 distances,
                 predecessors,
                 n,

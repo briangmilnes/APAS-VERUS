@@ -508,10 +508,10 @@ pub mod Chap56 {
     pub mod PathWeightUtilsStEph;
     #[cfg(feature = "all_chapters")]
     pub mod PathWeightUtilsStPer;
-    // pub mod SSSPResultStEphFloat;  // uses ordered_float (removed)
-    // pub mod SSSPResultStPerFloat;  // uses ordered_float (removed)
-    // pub mod AllPairsResultStEphFloat;  // uses ordered_float (removed)
-    // pub mod AllPairsResultStPerFloat;  // uses ordered_float (removed)
+    // pub mod SSSPResultStEphF64;  // uses ordered_float (removed)
+    // pub mod SSSPResultStPerF64;  // uses ordered_float (removed)
+    // pub mod AllPairsResultStEphF64;  // uses ordered_float (removed)
+    // pub mod AllPairsResultStPerF64;  // uses ordered_float (removed)
     // pub mod Example56_1;  // uses ordered_float (removed)
     // pub mod Example56_3;  // uses ordered_float (removed)
 }
@@ -520,22 +520,22 @@ pub mod Chap56 {
 pub mod Chap57 {
     pub mod StackStEph;
     // pub mod DijkstraStEphI64;  // depends on Chap45::BinaryHeapPQ (types outside verus!)
-    // pub mod DijkstraStEphFloat;  // depends on Chap45::BinaryHeapPQ (types outside verus!)
+    // pub mod DijkstraStEphF64;  // depends on Chap45::BinaryHeapPQ (types outside verus!)
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap58 {
     pub mod BellmanFordStEphI64;
     #[cfg(feature = "all_chapters")]
-    pub mod BellmanFordStEphFloat;
+    pub mod BellmanFordStEphF64;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap59 {
     // pub mod JohnsonStEphI64;  // depends on DijkstraStEphI64
     // pub mod JohnsonMtEphI64;  // depends on DijkstraStEphI64
-    // pub mod JohnsonStEphFloat;  // uses ordered_float (removed)
-    // pub mod JohnsonMtEphFloat;  // uses ordered_float (removed)
+    // pub mod JohnsonStEphF64;  // uses ordered_float (removed)
+    // pub mod JohnsonMtEphF64;  // uses ordered_float (removed)
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]

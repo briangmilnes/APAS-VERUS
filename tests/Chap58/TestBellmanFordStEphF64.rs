@@ -5,7 +5,7 @@
 
 use apas_verus::Chap05::SetStEph::SetStEph::*;
 use apas_verus::Chap06::WeightedDirGraphStEphFloat::WeightedDirGraphStEphFloat::*;
-use apas_verus::Chap58::BellmanFordStEphFloat::BellmanFordStEphFloat::*;
+use apas_verus::Chap58::BellmanFordStEphF64::BellmanFordStEphF64::*;
 use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
 
