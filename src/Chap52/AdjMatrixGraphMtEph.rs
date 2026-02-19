@@ -82,9 +82,20 @@ pub mod AdjMatrixGraphMtEph {
         }
     }
 
+    proof fn lemma_count_true_bound(f: spec_fn(int) -> bool, n: int)
+        requires n >= 0
+        ensures spec_count_true(f, n) <= n as nat
+        decreases n
+    {
+        if n > 0 {
+            lemma_count_true_bound(f, n - 1);
+        }
+    }
+
     // 8. traits
 
     pub trait AdjMatrixGraphMtEphTrait: Sized {
+        spec fn spec_wf(&self) -> bool;
         spec fn spec_n(&self) -> nat;
         spec fn spec_edge(&self, u: int, v: int) -> bool
             recommends 0 <= u < self.spec_n(), 0 <= v < self.spec_n();
@@ -92,7 +103,7 @@ pub mod AdjMatrixGraphMtEph {
         /// Work Theta(n^2), Span Theta(n^2)
         fn new(n: N) -> (result: Self)
             ensures
-                spec_wf(result),
+                result.spec_wf(),
                 result.spec_n() == n,
                 forall|u: int, v: int| #![auto]
                     0 <= u < n && 0 <= v < n ==> !result.spec_edge(u, v);
@@ -103,7 +114,7 @@ pub mod AdjMatrixGraphMtEph {
                 forall|i: int| #![auto] 0 <= i < matrix.spec_len() ==>
                     matrix.spec_index(i).spec_len() == matrix.spec_len()
             ensures
-                spec_wf(result),
+                result.spec_wf(),
                 result.spec_n() == matrix.spec_len(),
                 forall|u: int, v: int| #![auto]
                     0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()
@@ -111,13 +122,13 @@ pub mod AdjMatrixGraphMtEph {
 
         /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: N)
-            requires spec_wf(*self)
+            requires self.spec_wf()
             ensures n as nat == self.spec_n();
 
         /// Work Theta(n^2), Span Theta(n^2)
         fn num_edges(&self) -> (m: N)
             requires
-                spec_wf(*self),
+                self.spec_wf(),
                 spec_sum_of(
                     self.spec_n() as int,
                     |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
@@ -130,12 +141,12 @@ pub mod AdjMatrixGraphMtEph {
 
         /// Work Theta(1), Span Theta(1)
         fn has_edge(&self, u: N, v: N) -> (found: B)
-            requires spec_wf(*self), u < self.spec_n(), v < self.spec_n()
+            requires self.spec_wf(), u < self.spec_n(), v < self.spec_n()
             ensures found == self.spec_edge(u as int, v as int);
 
         /// Work Theta(n), Span Theta(n)
         fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtEphS<N>)
-            requires spec_wf(*self), u < self.spec_n()
+            requires self.spec_wf(), u < self.spec_n()
             ensures
                 forall|k: int| #![auto] 0 <= k < neighbors.spec_len()
                     ==> neighbors.spec_index(k) < self.spec_n()
@@ -146,7 +157,7 @@ pub mod AdjMatrixGraphMtEph {
 
         /// Work Theta(n), Span Theta(n)
         fn out_degree(&self, u: N) -> (d: N)
-            requires spec_wf(*self), u < self.spec_n()
+            requires self.spec_wf(), u < self.spec_n()
             ensures d as nat == spec_count_true(
                 |v: int| self.spec_edge(u as int, v),
                 self.spec_n() as int,
@@ -155,11 +166,11 @@ pub mod AdjMatrixGraphMtEph {
         /// Work Theta(1), Span Theta(1)
         fn set_edge(&mut self, u: N, v: N, exists: B)
             requires
-                spec_wf(*old(self)),
+                old(self).spec_wf(),
                 u < old(self).spec_n(),
                 v < old(self).spec_n(),
             ensures
-                spec_wf(*self),
+                self.spec_wf(),
                 self.spec_n() == old(self).spec_n(),
                 self.spec_edge(u as int, v as int) == exists,
                 forall|i: int, j: int| #![auto]
@@ -169,9 +180,9 @@ pub mod AdjMatrixGraphMtEph {
 
         /// Work Theta(n^2), Span Theta(n^2)
         fn complement(&self) -> (result: Self)
-            requires spec_wf(*self)
+            requires self.spec_wf()
             ensures
-                spec_wf(result),
+                result.spec_wf(),
                 result.spec_n() == self.spec_n(),
                 forall|i: int, j: int| #![auto]
                     0 <= i < self.spec_n() && 0 <= j < self.spec_n()
@@ -181,6 +192,12 @@ pub mod AdjMatrixGraphMtEph {
     // 9. impls
 
     impl AdjMatrixGraphMtEphTrait for AdjMatrixGraphMtEph {
+
+        open spec fn spec_wf(&self) -> bool {
+            self.matrix.spec_len() == self.n
+            && forall|i: int| #![auto] 0 <= i < self.n ==>
+                self.matrix.spec_index(i).spec_len() == self.n
+        }
 
         open spec fn spec_n(&self) -> nat { self.n as nat }
 
@@ -224,7 +241,8 @@ pub mod AdjMatrixGraphMtEph {
             while u < n
                 invariant
                     u <= n,
-                    spec_wf(*self),
+                    self.spec_wf(),
+                    n as nat == self.spec_n(),
                     total as nat == spec_sum_of(u as int, row_count),
                     row_count == (|u: int| spec_count_true(|v: int| self.spec_edge(u, v), n as int)),
                     spec_sum_of(n as int, row_count) <= usize::MAX as nat,
@@ -238,7 +256,11 @@ pub mod AdjMatrixGraphMtEph {
                 while v < n
                     invariant
                         v <= n,
-                        spec_wf(*self),
+                        self.spec_wf(),
+                        n as nat == self.spec_n(),
+                        u < n,
+                        row.spec_len() == n,
+                        forall|vi: int| #![auto] 0 <= vi < n ==> row.spec_index(vi) == self.spec_edge(u as int, vi),
                         count as nat == spec_count_true(edge_fn, v as int),
                         edge_fn == (|v: int| self.spec_edge(u as int, v)),
                         spec_count_true(edge_fn, n as int) <= usize::MAX as nat,
@@ -268,8 +290,11 @@ pub mod AdjMatrixGraphMtEph {
             while v < n
                 invariant
                     v <= n,
-                    spec_wf(*self),
+                    self.spec_wf(),
+                    n as nat == self.spec_n(),
                     u < self.spec_n(),
+                    row.spec_len() == n,
+                    forall|vi: int| #![auto] 0 <= vi < n ==> row.spec_index(vi) == self.spec_edge(u as int, vi),
                     forall|k: int| #![auto] 0 <= k < nvec@.len() as int
                         ==> nvec@[k] < n
                             && self.spec_edge(u as int, nvec@[k] as int),
@@ -278,12 +303,41 @@ pub mod AdjMatrixGraphMtEph {
                             0 <= k < nvec@.len() as int && nvec@[k] == j as N,
                 decreases n - v
             {
-                if *row.nth(v) {
+                let val = *row.nth(v);
+                assert(val == self.spec_edge(u as int, v as int));
+                let ghost pre_push = nvec@;
+                let ghost old_nvec_len = nvec@.len();
+                if val {
                     nvec.push(v);
+                }
+                proof {
+                    assert forall|k: int| 0 <= k < old_nvec_len as int
+                        implies nvec@[k] == pre_push[k]
+                    by {};
+                    assert forall|j: int| 0 <= j < (v as int + 1) && self.spec_edge(u as int, j)
+                        implies exists|k: int| 0 <= k < nvec@.len() as int && nvec@[k] == j as N
+                    by {
+                        if j < v as int {
+                            let witness = choose|k: int| 0 <= k < old_nvec_len as int && pre_push[k] == j as N;
+                            assert(nvec@[witness] == j as N);
+                        } else {
+                            assert(nvec@[old_nvec_len as int] == v as N);
+                        }
+                    }
                 }
                 v = v + 1;
             }
-            ArraySeqMtEphS::from_vec(nvec)
+            let ghost nvec_view = nvec@;
+            let neighbors = ArraySeqMtEphS::from_vec(nvec);
+            proof {
+                assert forall|j: int| 0 <= j < (n as int) && self.spec_edge(u as int, j)
+                    implies exists|k: int| 0 <= k < neighbors.spec_len() && neighbors.spec_index(k) == j as N
+                by {
+                    let witness = choose|k: int| 0 <= k < nvec_view.len() as int && nvec_view[k] == j as N;
+                    assert(neighbors.spec_index(witness) == nvec_view[witness]);
+                }
+            }
+            neighbors
         }
 
         fn out_degree(&self, u: N) -> (d: N) {
@@ -292,13 +346,17 @@ pub mod AdjMatrixGraphMtEph {
             let mut count: usize = 0;
             let mut v: usize = 0;
             let ghost edge_fn = |v: int| self.spec_edge(u as int, v);
+            proof { lemma_count_true_bound(edge_fn, n as int); }
             while v < n
                 invariant
                     v <= n,
-                    spec_wf(*self),
+                    self.spec_wf(),
+                    n as nat == self.spec_n(),
+                    row.spec_len() == n,
+                    forall|vi: int| #![auto] 0 <= vi < n ==> row.spec_index(vi) == self.spec_edge(u as int, vi),
                     count as nat == spec_count_true(edge_fn, v as int),
                     edge_fn == (|v: int| self.spec_edge(u as int, v)),
-                    spec_count_true(edge_fn, n as int) <= usize::MAX as nat,
+                    spec_count_true(edge_fn, n as int) <= n as nat,
                 decreases n - v
             {
                 proof { lemma_count_true_monotone(edge_fn, v as int + 1, n as int); }
@@ -311,9 +369,55 @@ pub mod AdjMatrixGraphMtEph {
         }
 
         fn set_edge(&mut self, u: N, v: N, exists: B) {
-            let mut row = self.matrix.nth(u).clone();
-            let _ = row.set(v, exists);
-            let _ = self.matrix.set(u, row);
+            let n = self.n;
+            let new_row = ArraySeqMtEphS::tabulate(
+                &|j: usize| -> (r: bool)
+                    requires j < n
+                    ensures
+                        r == (if j == v {
+                            exists
+                        } else {
+                            self.matrix.spec_index(u as int).spec_index(j as int)
+                        })
+                {
+                    if j == v {
+                        exists
+                    } else {
+                        *self.matrix.nth(u).nth(j)
+                    }
+                },
+                n,
+            );
+            let matrix = ArraySeqMtEphS::tabulate(
+                &|i: usize| -> (r: ArraySeqMtEphS<bool>)
+                    requires i < n
+                    ensures
+                        r.spec_len() == n,
+                        (i as int == u as int) ==> forall|j: int| #![auto] 0 <= j < n ==>
+                            r.spec_index(j) == (if j == v as int {
+                                exists
+                            } else {
+                                self.matrix.spec_index(u as int).spec_index(j)
+                            }),
+                        (i as int != u as int) ==> forall|j: int| #![auto] 0 <= j < n ==>
+                            r.spec_index(j) == self.matrix.spec_index(i as int).spec_index(j)
+                {
+                    if i == u {
+                        new_row.clone()
+                    } else {
+                        let row = self.matrix.nth(i);
+                        ArraySeqMtEphS::tabulate(
+                            &|j: usize| -> (r: bool)
+                                requires j < n
+                                ensures r == row.spec_index(j as int)
+                            { *row.nth(j) },
+                            n,
+                        )
+                    }
+                },
+                n,
+            );
+            self.matrix = matrix;
         }
 
         fn complement(&self) -> (result: Self) {

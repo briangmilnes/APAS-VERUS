@@ -55,6 +55,8 @@ pub mod TopDownDPMtEph {
         fn clear_memo(&mut self);
         fn set_s(&mut self, s: ArraySeqMtEphS<char>);
         fn set_t(&mut self, t: ArraySeqMtEphS<char>);
+        fn med_recursive_concurrent(&self, i: usize, j: usize) -> usize;
+        fn med_recursive_parallel(&self, i: usize, j: usize) -> usize;
     }
 
     // 9. impls
@@ -120,9 +122,7 @@ pub mod TopDownDPMtEph {
             self.seq_t = t;
             self.clear_memo();
         }
-    }
 
-    impl TopDownDPMtEphS {
         fn med_recursive_concurrent(&self, i: usize, j: usize) -> usize {
             {
                 let memo_guard = self.memo_table.lock().unwrap();

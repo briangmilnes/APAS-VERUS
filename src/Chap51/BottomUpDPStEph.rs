@@ -43,6 +43,9 @@ pub mod BottomUpDPStEph {
         fn set_s(&mut self, s: ArraySeqStEphS<char>);
         fn set_t(&mut self, t: ArraySeqStEphS<char>);
         fn med_bottom_up(&mut self) -> usize;
+        fn initialize_base_cases(&self) -> Vec<Vec<usize>>;
+        fn compute_diagonal(&self, table: &mut [Vec<usize>], k: usize);
+        fn compute_cell_value(&self, table: &[Vec<usize>], i: usize, j: usize) -> usize;
     }
 
     // 9. impls
@@ -71,9 +74,7 @@ pub mod BottomUpDPStEph {
 
             table[s_len][t_len]
         }
-    }
 
-    impl BottomUpDPStEphS {
         fn initialize_base_cases(&self) -> Vec<Vec<usize>> {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();

@@ -113,22 +113,48 @@ pub mod SSSPResultStEphI64 {
             self.get_distance(v) != UNREACHABLE
         }
 
-        #[verifier::external_body]
         fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
             if !self.is_reachable(v) {
                 return None;
             }
+            let n = self.predecessors.length();
             let mut path = Vec::new();
             let mut current = v;
             path.push(current);
-            while current != self.source {
+            let mut steps: usize = 0;
+            while current != self.source && steps < n
+                invariant
+                    steps <= n,
+                    n == self.predecessors.spec_len(),
+                    path@.len() > 0,
+                decreases n - steps
+            {
+                if current >= n {
+                    return None;
+                }
                 let pred = *self.predecessors.nth(current);
                 if pred == NO_PREDECESSOR { return None; }
                 path.push(pred);
                 current = pred;
+                steps = steps + 1;
             }
-            path.reverse();
-            Some(ArraySeqStPerS::from_vec(path))
+            if current != self.source {
+                return None;
+            }
+            let path_len = path.len();
+            let mut reversed = Vec::new();
+            let mut k: usize = path_len;
+            while k > 0
+                invariant
+                    k <= path_len,
+                    path_len == path@.len(),
+                    reversed@.len() == (path_len - k) as int,
+                decreases k
+            {
+                k = k - 1;
+                reversed.push(path[k]);
+            }
+            Some(ArraySeqStPerS::from_vec(reversed))
         }
     }
 

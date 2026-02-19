@@ -53,6 +53,8 @@ pub mod TopDownDPMtPer {
         fn t_length(&self) -> usize;
         fn is_empty(&self) -> bool;
         fn clear_memo(self) -> Self;
+        fn med_recursive_concurrent(&self, i: usize, j: usize) -> usize;
+        fn med_recursive_parallel(&self, i: usize, j: usize) -> usize;
     }
 
     // 9. impls
@@ -114,9 +116,7 @@ pub mod TopDownDPMtPer {
                 memo_table: Arc::new(Mutex::new(HashMap::new())),
             }
         }
-    }
 
-    impl TopDownDPMtPerS {
         fn med_recursive_concurrent(&self, i: usize, j: usize) -> usize {
             {
                 let memo_guard = self.memo_table.lock().unwrap();

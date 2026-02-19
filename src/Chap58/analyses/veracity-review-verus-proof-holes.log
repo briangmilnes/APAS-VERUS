@@ -1,16 +1,20 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap58/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap58/ -d /home/milnes/projects/APAS-VERUS/src/Chap59/
 
 ✓ BellmanFordStEphFloat.rs
 ✓ BellmanFordStEphI64.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphFloat.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphFloat.rs
+✓ /home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   2 clean (no holes)
+   6 clean (no holes)
    0 holed (contains holes)
-   2 total
+   6 total
 
 Proof Functions:
    0 clean

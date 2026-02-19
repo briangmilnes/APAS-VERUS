@@ -52,6 +52,7 @@ pub mod TopDownDPStEph {
         fn clear_memo(&mut self);
         fn set_s(&mut self, s: ArraySeqStEphS<char>);
         fn set_t(&mut self, t: ArraySeqStEphS<char>);
+        fn med_recursive(&mut self, i: usize, j: usize) -> usize;
     }
 
     // 9. impls
@@ -92,9 +93,7 @@ pub mod TopDownDPStEph {
             self.seq_t = t;
             self.clear_memo();
         }
-    }
 
-    impl TopDownDPStEphS {
         /// Recursive MED with memoization (medOne from Algorithm 51.4).
         /// - APAS: Work Θ(1) amortized per call, Θ(|S|×|T|) total
         fn med_recursive(&mut self, i: usize, j: usize) -> usize {

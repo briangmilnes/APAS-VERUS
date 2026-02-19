@@ -83,9 +83,20 @@ pub mod AdjMatrixGraphMtPer {
         }
     }
 
+    proof fn lemma_count_true_bound(f: spec_fn(int) -> bool, n: int)
+        requires n >= 0
+        ensures spec_count_true(f, n) <= n as nat
+        decreases n
+    {
+        if n > 0 {
+            lemma_count_true_bound(f, n - 1);
+        }
+    }
+
     // 8. traits
 
     pub trait AdjMatrixGraphMtPerTrait: Sized {
+        spec fn spec_wf(&self) -> bool;
         spec fn spec_n(&self) -> nat;
         spec fn spec_edge(&self, u: int, v: int) -> bool
             recommends 0 <= u < self.spec_n(), 0 <= v < self.spec_n();
@@ -93,20 +104,20 @@ pub mod AdjMatrixGraphMtPer {
         /// Work Theta(n^2), Span Theta(n^2)
         fn new(n: N) -> (result: Self)
             ensures
-                spec_wf(result),
+                result.spec_wf(),
                 result.spec_n() == n,
                 forall|u: int, v: int| #![auto]
                     0 <= u < n && 0 <= v < n ==> !result.spec_edge(u, v);
 
         /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: N)
-            requires spec_wf(*self)
+            requires self.spec_wf()
             ensures n as nat == self.spec_n();
 
         /// Work Theta(n^2), Span Theta(n^2)
         fn num_edges(&self) -> (m: N)
             requires
-                spec_wf(*self),
+                self.spec_wf(),
                 spec_sum_of(
                     self.spec_n() as int,
                     |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
@@ -119,28 +130,28 @@ pub mod AdjMatrixGraphMtPer {
 
         /// Work Theta(1), Span Theta(1)
         fn has_edge(&self, u: N, v: N) -> (found: B)
-            requires spec_wf(*self)
+            requires self.spec_wf()
             ensures
                 u < self.spec_n() && v < self.spec_n() ==> found == self.spec_edge(u as int, v as int),
                 (u >= self.spec_n() || v >= self.spec_n()) ==> !found;
 
         /// Work Theta(n), Span Theta(n)
         fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtPerS<N>)
-            requires spec_wf(*self)
+            requires self.spec_wf()
             ensures
                 u < self.spec_n() ==> (
-                    forall|k: int| #![auto] 0 <= k < neighbors.spec_len()
+                    (forall|k: int| #![auto] 0 <= k < neighbors.spec_len()
                         ==> neighbors.spec_index(k) < self.spec_n()
-                            && self.spec_edge(u as int, neighbors.spec_index(k) as int),
-                    forall|v: int| #![auto] 0 <= v < self.spec_n() && self.spec_edge(u as int, v)
+                            && self.spec_edge(u as int, neighbors.spec_index(k) as int))
+                    && (forall|v: int| #![auto] 0 <= v < self.spec_n() && self.spec_edge(u as int, v)
                         ==> exists|k: int| #![auto]
-                            0 <= k < neighbors.spec_len() && neighbors.spec_index(k) == v as N
+                            0 <= k < neighbors.spec_len() && neighbors.spec_index(k) == v as N)
                 ),
                 u >= self.spec_n() ==> neighbors.spec_len() == 0;
 
         /// Work Theta(n), Span Theta(n)
         fn out_degree(&self, u: N) -> (d: N)
-            requires spec_wf(*self)
+            requires self.spec_wf()
             ensures
                 u < self.spec_n() ==> d as nat == spec_count_true(
                     |v: int| self.spec_edge(u as int, v),
@@ -150,9 +161,9 @@ pub mod AdjMatrixGraphMtPer {
 
         /// Work Theta(n^2), Span Theta(n^2)
         fn complement(&self) -> (result: Self)
-            requires spec_wf(*self)
+            requires self.spec_wf()
             ensures
-                spec_wf(result),
+                result.spec_wf(),
                 result.spec_n() == self.spec_n(),
                 forall|i: int, j: int| #![auto]
                     0 <= i < self.spec_n() && 0 <= j < self.spec_n()
@@ -162,6 +173,12 @@ pub mod AdjMatrixGraphMtPer {
     // 9. impls
 
     impl AdjMatrixGraphMtPerTrait for AdjMatrixGraphMtPer {
+
+        open spec fn spec_wf(&self) -> bool {
+            self.matrix.spec_len() == self.n
+            && forall|i: int| #![auto] 0 <= i < self.n ==>
+                self.matrix.spec_index(i).spec_len() == self.n
+        }
 
         open spec fn spec_n(&self) -> nat { self.n as nat }
 
@@ -196,7 +213,8 @@ pub mod AdjMatrixGraphMtPer {
             while u < n
                 invariant
                     u <= n,
-                    spec_wf(*self),
+                    self.spec_wf(),
+                    n as nat == self.spec_n(),
                     total as nat == spec_sum_of(u as int, row_count),
                     row_count == (|u: int| spec_count_true(|v: int| self.spec_edge(u, v), n as int)),
                     spec_sum_of(n as int, row_count) <= usize::MAX as nat,
@@ -210,7 +228,11 @@ pub mod AdjMatrixGraphMtPer {
                 while v < n
                     invariant
                         v <= n,
-                        spec_wf(*self),
+                        self.spec_wf(),
+                        n as nat == self.spec_n(),
+                        u < n,
+                        row.spec_len() == n,
+                        forall|vi: int| #![auto] 0 <= vi < n ==> row.spec_index(vi) == self.spec_edge(u as int, vi),
                         count as nat == spec_count_true(edge_fn, v as int),
                         edge_fn == (|v: int| self.spec_edge(u as int, v)),
                         spec_count_true(edge_fn, n as int) <= usize::MAX as nat,
@@ -246,8 +268,11 @@ pub mod AdjMatrixGraphMtPer {
             while v < n
                 invariant
                     v <= n,
-                    spec_wf(*self),
+                    self.spec_wf(),
+                    n as nat == self.spec_n(),
                     u < self.spec_n(),
+                    row.spec_len() == n,
+                    forall|vi: int| #![auto] 0 <= vi < n ==> row.spec_index(vi) == self.spec_edge(u as int, vi),
                     forall|k: int| #![auto] 0 <= k < nvec@.len() as int
                         ==> nvec@[k] < n
                             && self.spec_edge(u as int, nvec@[k] as int),
@@ -256,12 +281,41 @@ pub mod AdjMatrixGraphMtPer {
                             0 <= k < nvec@.len() as int && nvec@[k] == j as N,
                 decreases n - v
             {
-                if *row.nth(v) {
+                let val = *row.nth(v);
+                assert(val == self.spec_edge(u as int, v as int));
+                let ghost pre_push = nvec@;
+                let ghost old_nvec_len = nvec@.len();
+                if val {
                     nvec.push(v);
+                }
+                proof {
+                    assert forall|k: int| 0 <= k < old_nvec_len as int
+                        implies nvec@[k] == pre_push[k]
+                    by {};
+                    assert forall|j: int| 0 <= j < (v as int + 1) && self.spec_edge(u as int, j)
+                        implies exists|k: int| 0 <= k < nvec@.len() as int && nvec@[k] == j as N
+                    by {
+                        if j < v as int {
+                            let witness = choose|k: int| 0 <= k < old_nvec_len as int && pre_push[k] == j as N;
+                            assert(nvec@[witness] == j as N);
+                        } else {
+                            assert(nvec@[old_nvec_len as int] == v as N);
+                        }
+                    }
                 }
                 v = v + 1;
             }
-            ArraySeqMtPerS::from_vec(nvec)
+            let ghost nvec_view = nvec@;
+            let neighbors = ArraySeqMtPerS::from_vec(nvec);
+            proof {
+                assert forall|j: int| 0 <= j < (n as int) && self.spec_edge(u as int, j)
+                    implies exists|k: int| 0 <= k < neighbors.spec_len() && neighbors.spec_index(k) == j as N
+                by {
+                    let witness = choose|k: int| 0 <= k < nvec_view.len() as int && nvec_view[k] == j as N;
+                    assert(neighbors.spec_index(witness) == nvec_view[witness]);
+                }
+            }
+            neighbors
         }
 
         fn out_degree(&self, u: N) -> (d: N) {
@@ -273,13 +327,17 @@ pub mod AdjMatrixGraphMtPer {
             let mut count: usize = 0;
             let mut v: usize = 0;
             let ghost edge_fn = |v: int| self.spec_edge(u as int, v);
+            proof { lemma_count_true_bound(edge_fn, n as int); }
             while v < n
                 invariant
                     v <= n,
-                    spec_wf(*self),
+                    self.spec_wf(),
+                    n as nat == self.spec_n(),
+                    row.spec_len() == n,
+                    forall|vi: int| #![auto] 0 <= vi < n ==> row.spec_index(vi) == self.spec_edge(u as int, vi),
                     count as nat == spec_count_true(edge_fn, v as int),
                     edge_fn == (|v: int| self.spec_edge(u as int, v)),
-                    spec_count_true(edge_fn, n as int) <= usize::MAX as nat,
+                    spec_count_true(edge_fn, n as int) <= n as nat,
                 decreases n - v
             {
                 proof { lemma_count_true_monotone(edge_fn, v as int + 1, n as int); }

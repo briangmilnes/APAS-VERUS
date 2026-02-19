@@ -50,6 +50,7 @@ pub mod TopDownDPStPer {
         fn t_length(&self) -> usize;
         fn is_empty(&self) -> bool;
         fn clear_memo(self) -> Self;
+        fn med_recursive(&self, i: usize, j: usize, memo: &mut HashMap<(usize, usize), usize>) -> usize;
     }
 
     // 9. impls
@@ -87,9 +88,7 @@ pub mod TopDownDPStPer {
         fn clear_memo(self) -> Self {
             TopDownDPStPerS { seq_s: self.seq_s, seq_t: self.seq_t, memo_table: HashMap::new() }
         }
-    }
 
-    impl TopDownDPStPerS {
         /// Recursive MED with memoization (medOne from Algorithm 51.4).
         fn med_recursive(&self, i: usize, j: usize, memo: &mut HashMap<(usize, usize), usize>) -> usize {
             if let Some(&cached_result) = memo.get(&(i, j)) {

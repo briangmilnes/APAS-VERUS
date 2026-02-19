@@ -58,6 +58,12 @@ pub mod AdjSeqGraphMtPer {
         }
     }
 
+    proof fn lemma_sum_of_unfold(i: int, f: spec_fn(int) -> nat)
+        requires i >= 0
+        ensures spec_sum_of(i + 1, f) == f(i) + spec_sum_of(i, f)
+    {
+    }
+
     // 8. traits
 
     pub trait AdjSeqGraphMtPerTrait: Sized {
@@ -147,17 +153,18 @@ pub mod AdjSeqGraphMtPer {
             let n = self.adj.length();
             let mut count: usize = 0;
             let mut i: usize = 0;
-            let ghost degree_fn: spec_fn(int) -> nat = |k: int| self.adj.spec_index(k).spec_len();
+            let ghost degree_fn: spec_fn(int) -> nat = |k: int| self.spec_degree(k);
             while i < n
                 invariant
                     i <= n,
-                    n == self.adj.spec_len(),
+                    n as nat == self.spec_num_vertices(),
                     count as nat == spec_sum_of(i as int, degree_fn),
-                    degree_fn == (|k: int| self.adj.spec_index(k).spec_len()),
+                    degree_fn == (|k: int| self.spec_degree(k)),
                     spec_sum_of(n as int, degree_fn) <= usize::MAX as nat,
                 decreases n - i
             {
                 proof {
+                    lemma_sum_of_unfold(i as int, degree_fn);
                     lemma_sum_of_monotone(i as int + 1, n as int, degree_fn);
                 }
                 let deg = self.adj.nth(i).length();
@@ -174,13 +181,17 @@ pub mod AdjSeqGraphMtPer {
             while i < len
                 invariant
                     i <= len,
-                    len as nat == self.adj.spec_index(u as int).spec_len(),
+                    u < self.spec_num_vertices(),
+                    len as nat == neighbors.spec_len(),
+                    len as nat == self.spec_degree(u as int),
+                    forall|j: int| #![auto] 0 <= j < len as int
+                        ==> neighbors.spec_index(j) == self.spec_neighbor(u as int, j),
                     forall|j: int| #![auto] 0 <= j < i
-                        ==> self.adj.spec_index(u as int).spec_index(j) != v,
+                        ==> neighbors.spec_index(j) != v,
                 decreases len - i
             {
                 if *neighbors.nth(i) == v {
-                    assert(self.adj.spec_index(u as int).spec_index(i as int) == v);
+                    assert(self.spec_neighbor(u as int, i as int) == v);
                     return true;
                 }
                 i = i + 1;

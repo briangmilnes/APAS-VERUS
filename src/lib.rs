@@ -455,6 +455,18 @@ pub mod Chap51 {
     pub mod TopDownDPMtPer;
 }
 
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), verus_keep_ghost))]
+pub mod Chap52 {
+    pub mod AdjSeqGraphStEph;
+    pub mod AdjSeqGraphStPer;
+    pub mod AdjSeqGraphMtEph;
+    pub mod AdjSeqGraphMtPer;
+    pub mod AdjMatrixGraphStEph;
+    pub mod AdjMatrixGraphStPer;
+    pub mod AdjMatrixGraphMtEph;
+    pub mod AdjMatrixGraphMtPer;
+}
+
 #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
 pub mod Chap52 {
     pub mod AdjSeqGraphStEph;
@@ -526,6 +538,11 @@ pub mod Chap56 {
     pub mod Example56_1;
     #[cfg(feature = "all_chapters")]
     pub mod Example56_3;
+}
+
+#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), verus_keep_ghost))]
+pub mod Chap57 {
+    pub mod StackStEph;
 }
 
 #[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]

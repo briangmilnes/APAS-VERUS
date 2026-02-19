@@ -3,6 +3,7 @@
 use apas_verus::ArraySeqStPerSLit;
 use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap54::BFSStPer::*;
+use apas_verus::Chap54::BFSStPer::BFSStPer::BFSTreeStPerTrait;
 use apas_verus::Types::Types::*;
 
 const UNREACHABLE: usize = usize::MAX;

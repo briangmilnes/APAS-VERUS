@@ -1,0 +1,10 @@
+
+ You are the main agent working in gittree: ~/projects/APAS-VERUS.
+ You updated your worktree but other agents may have touched your
+  chapters by accident.
+ REREAD ANY FILES BEFORE MODIFYING THEM.
+ You are working ONLY on Chap51-Chap66.
+ Run check-stale-reviews.sh to check which analyses on your
+ chapter need to be updated.
+ Propose a table of code fixes by priority.
+ 

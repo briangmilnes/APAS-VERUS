@@ -205,13 +205,13 @@ pub mod AdjSeqGraphStEph {
             let n = self.adj.length();
             let mut count: usize = 0;
             let mut i: usize = 0;
-            let ghost degree_fn: spec_fn(int) -> nat = |k: int| self.adj.spec_index(k).spec_len();
+            let ghost degree_fn: spec_fn(int) -> nat = |k: int| self.spec_degree(k);
             while i < n
                 invariant
                     i <= n,
-                    n == self.adj.spec_len(),
+                    n as nat == self.spec_num_vertices(),
                     count as nat == spec_sum_of(i as int, degree_fn),
-                    degree_fn == (|k: int| self.adj.spec_index(k).spec_len()),
+                    degree_fn == (|k: int| self.spec_degree(k)),
                     spec_sum_of(n as int, degree_fn) <= usize::MAX as nat,
                 decreases n - i
             {
@@ -233,13 +233,17 @@ pub mod AdjSeqGraphStEph {
             while i < len
                 invariant
                     i <= len,
-                    len as nat == self.adj.spec_index(u as int).spec_len(),
+                    u < self.spec_num_vertices(),
+                    len as nat == neighbors.spec_len(),
+                    len as nat == self.spec_degree(u as int),
+                    forall|j: int| #![auto] 0 <= j < len as int
+                        ==> neighbors.spec_index(j) == self.spec_neighbor(u as int, j),
                     forall|j: int| #![auto] 0 <= j < i
-                        ==> self.adj.spec_index(u as int).spec_index(j) != v,
+                        ==> neighbors.spec_index(j) != v,
                 decreases len - i
             {
                 if *neighbors.nth(i) == v {
-                    assert(self.adj.spec_index(u as int).spec_index(i as int) == v);
+                    assert(self.spec_neighbor(u as int, i as int) == v);
                     return true;
                 }
                 i = i + 1;
@@ -270,24 +274,27 @@ pub mod AdjSeqGraphStEph {
         }
 
         fn set_edge(&mut self, u: N, v: N, exists: B) {
-            let ghost old_adj = self.adj;
-            let old_neighbors_ref = self.adj.nth(u);
-            let old_len = old_neighbors_ref.length();
+            let ghost old_degree = self.spec_degree(u as int);
+            let ghost old_neighbors_view = Seq::new(old_degree, |j: int| self.spec_neighbor(u as int, j));
 
             if exists {
+                let old_len = self.adj.nth(u).length();
                 let mut found = false;
                 let mut i: usize = 0;
                 while i < old_len
                     invariant
                         i <= old_len,
-                        old_len as nat == self.adj.spec_index(u as int).spec_len(),
+                        u < self.spec_num_vertices(),
+                        old_len as nat == self.spec_degree(u as int),
                         !found ==> forall|j: int| #![auto] 0 <= j < i
-                            ==> self.adj.spec_index(u as int).spec_index(j) != v,
-                        found ==> exists|j: int| #![auto] 0 <= j < i
-                            && self.adj.spec_index(u as int).spec_index(j) == v,
+                            ==> self.spec_neighbor(u as int, j) != v,
+                        found ==> exists|j: int| #![auto] 0 <= j < self.spec_degree(u as int)
+                            && self.spec_neighbor(u as int, j) == v,
                     decreases old_len - i
                 {
-                    if *old_neighbors_ref.nth(i) == v {
+                    let elem = *self.adj.nth(u).nth(i);
+                    if elem == v {
+                        assert(self.spec_neighbor(u as int, i as int) == v);
                         found = true;
                         break;
                     }
@@ -295,36 +302,41 @@ pub mod AdjSeqGraphStEph {
                 }
 
                 if !found {
-                    let mut new_vec = Vec::<N>::with_capacity(old_len + 1);
+                    let mut new_vec = Vec::<N>::new();
                     let mut j: usize = 0;
                     while j < old_len
                         invariant
                             j <= old_len,
-                            old_len as nat == self.adj.spec_index(u as int).spec_len(),
+                            u < self.spec_num_vertices(),
+                            old_len as nat == self.spec_degree(u as int),
                             new_vec@.len() == j as int,
                             forall|k: int| #![auto] 0 <= k < j
-                                ==> new_vec@[k] == self.adj.spec_index(u as int).spec_index(k),
+                                ==> new_vec@[k] == self.spec_neighbor(u as int, k),
                         decreases old_len - j
                     {
-                        new_vec.push(*old_neighbors_ref.nth(j));
+                        new_vec.push(*self.adj.nth(u).nth(j));
                         j = j + 1;
                     }
                     new_vec.push(v);
                     let new_neighbors = ArraySeqStEphS::from_vec(new_vec);
                     let _ = self.adj.set(u, new_neighbors);
+                    assert(self.spec_degree(u as int) == old_len as nat + 1);
+                    assert(self.spec_neighbor(u as int, old_len as int) == v);
                 }
             } else {
+                let old_len = self.adj.nth(u).length();
                 let mut new_vec = Vec::<N>::new();
                 let mut j: usize = 0;
                 while j < old_len
                     invariant
                         j <= old_len,
-                        old_len as nat == self.adj.spec_index(u as int).spec_len(),
+                        u < self.spec_num_vertices(),
+                        old_len as nat == self.spec_degree(u as int),
                         forall|k: int| #![auto] 0 <= k < new_vec@.len() as int
                             ==> new_vec@[k] != v,
                     decreases old_len - j
                 {
-                    let neighbor = *old_neighbors_ref.nth(j);
+                    let neighbor = *self.adj.nth(u).nth(j);
                     if neighbor != v {
                         new_vec.push(neighbor);
                     }

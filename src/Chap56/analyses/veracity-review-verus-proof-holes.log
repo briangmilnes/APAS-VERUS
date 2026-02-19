@@ -17,13 +17,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
        160 |         fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
    Holes: 7 total
       7 × external_body
-❌ AllPairsResultStEphI64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:44: external_body - #[verifier::external_body]
-        45 |         fn new(n: usize) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStEphI64.rs:128: external_body - #[verifier::external_body]
-       129 |         fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
-   Holes: 2 total
-      2 × external_body
+✓ AllPairsResultStEphI64.rs
 ❌ AllPairsResultStPerFloat.rs
 /home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerFloat.rs:81: external_body - #[verifier::external_body]
         82 |         fn new(n: usize) -> (result: Self)
@@ -41,17 +35,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
        162 |         fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
    Holes: 7 total
       7 × external_body
-❌ AllPairsResultStPerI64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:43: external_body - #[verifier::external_body]
-        44 |         fn new(n: usize) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:71: external_body - #[verifier::external_body]
-        72 |         fn set_distance(self, u: usize, v: usize, dist: i64) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:104: external_body - #[verifier::external_body]
-       105 |         fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap56/AllPairsResultStPerI64.rs:123: external_body - #[verifier::external_body]
-       124 |         fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
-   Holes: 4 total
-      4 × external_body
+✓ AllPairsResultStPerI64.rs
 ❌ Example56_1.rs
 /home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:45: external_body - #[verifier::external_body]
         46 |     pub fn example_path_weight_int() {
@@ -69,27 +53,19 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
    Holes: 2 total
       2 × external_body
 ❌ PathWeightUtilsStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:74: external_body - #[verifier::external_body]
-        75 |     pub fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStEphS<ArraySeqStEphS<i64>>) -> Option<i64> {
-/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:97: external_body - #[verifier::external_body]
-        98 |     pub fn path_weight_float(
-/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:125: external_body - #[verifier::external_body]
-       126 |     pub fn validate_subpath_property_int(
-/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:156: external_body - #[verifier::external_body]
-       157 |     pub fn validate_subpath_property_float(
-   Holes: 4 total
-      4 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:108: external_body - #[verifier::external_body]
+       109 |     pub fn path_weight_float(
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:180: external_body - #[verifier::external_body]
+       181 |     pub fn validate_subpath_property_float(
+   Holes: 2 total
+      2 × external_body
 ❌ PathWeightUtilsStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:73: external_body - #[verifier::external_body]
-        74 |     pub fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>) -> Option<i64> {
-/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:96: external_body - #[verifier::external_body]
-        97 |     pub fn path_weight_float(
-/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:124: external_body - #[verifier::external_body]
-       125 |     pub fn validate_subpath_property_int(
-/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:155: external_body - #[verifier::external_body]
-       156 |     pub fn validate_subpath_property_float(
-   Holes: 4 total
-      4 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:107: external_body - #[verifier::external_body]
+       108 |     pub fn path_weight_float(
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:179: external_body - #[verifier::external_body]
+       180 |     pub fn validate_subpath_property_float(
+   Holes: 2 total
+      2 × external_body
 ❌ SSSPResultStEphFloat.rs
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphFloat.rs:47: external_body - #[verifier::external_body]
         48 |         pub fn is_finite(&self) -> (b: bool)
@@ -104,11 +80,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
    Holes: 5 total
       5 × external_body
    Proof functions: 1 total (1 clean, 0 holed)
-❌ SSSPResultStEphI64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStEphI64.rs:116: external_body - #[verifier::external_body]
-       117 |         fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
-   Holes: 1 total
-      1 × external_body
+✓ SSSPResultStEphI64.rs
 ❌ SSSPResultStPerFloat.rs
 /home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerFloat.rs:80: external_body - #[verifier::external_body]
         81 |         fn new(n: usize, source: usize) -> (result: Self)
@@ -126,23 +98,15 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
        162 |         fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
    Holes: 7 total
       7 × external_body
-❌ SSSPResultStPerI64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:77: external_body - #[verifier::external_body]
-        78 |         fn set_distance(self, v: usize, dist: i64) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:101: external_body - #[verifier::external_body]
-       102 |         fn set_predecessor(self, v: usize, pred: usize) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap56/SSSPResultStPerI64.rs:121: external_body - #[verifier::external_body]
-       122 |         fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
-   Holes: 3 total
-      3 × external_body
+✓ SSSPResultStPerI64.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   0 clean (no holes)
-   12 holed (contains holes)
+   4 clean (no holes)
+   8 holed (contains holes)
    12 total
 
 Proof Functions:
@@ -150,5 +114,5 @@ Proof Functions:
    0 holed
    1 total
 
-Holes Found: 49 total
-   49 × external_body
+Holes Found: 35 total
+   35 × external_body

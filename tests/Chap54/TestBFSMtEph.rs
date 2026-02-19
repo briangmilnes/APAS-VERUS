@@ -2,6 +2,7 @@
 
 use apas_verus::ArraySeqMtEphChap19SLit;
 use apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
+use apas_verus::Chap54::BFSMtEph::BFSMtEph::BFSTreeMtEphTrait;
 use apas_verus::Chap54::BFSMtEph::*;
 use apas_verus::Types::Types::*;
 

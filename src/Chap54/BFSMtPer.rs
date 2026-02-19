@@ -254,6 +254,27 @@ pub mod BFSMtPer {
     }
 
     // 8. traits
+    pub trait BFSTreeMtPerTrait {
+        spec fn spec_order(&self) -> ArraySeqMtPerS<N>;
+
+        /// Vertices in BFS order (root first, then distance 1, 2, ...).
+        fn top_down_order(&self) -> (result: &ArraySeqMtPerS<N>)
+            ensures
+                result.spec_len() == self.spec_order().spec_len(),
+                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>
+                    result.spec_index(i) == self.spec_order().spec_index(i),
+        ;
+
+        /// Vertices in reverse BFS order (furthest from root first).
+        fn bottom_up_order(&self) -> (result: ArraySeqMtPerS<N>)
+            requires self.spec_order().spec_len() <= usize::MAX,
+            ensures
+                result.spec_len() == self.spec_order().spec_len(),
+                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>
+                    result.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i),
+        ;
+    }
+
     pub trait BFSMtPerTrait {
         fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (result: ArraySeqMtPerS<N>)
             requires
@@ -851,25 +872,16 @@ pub mod BFSMtPer {
         BFSTreeS { parents, order: order_seq }
     }
 
-    impl BFSTreeS {
-        /// Vertices in BFS order (root first, then distance 1, 2, ...).
-        pub fn top_down_order(&self) -> (result: &ArraySeqMtPerS<N>)
-            ensures
-                result.spec_len() == self.order.spec_len(),
-                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>
-                    result.spec_index(i) == self.order.spec_index(i),
-        {
+    impl BFSTreeMtPerTrait for BFSTreeS {
+        open spec fn spec_order(&self) -> ArraySeqMtPerS<N> {
+            self.order
+        }
+
+        fn top_down_order(&self) -> (result: &ArraySeqMtPerS<N>) {
             &self.order
         }
 
-        /// Vertices in reverse BFS order (furthest from root first).
-        pub fn bottom_up_order(&self) -> (result: ArraySeqMtPerS<N>)
-            requires self.order.spec_len() <= usize::MAX,
-            ensures
-                result.spec_len() == self.order.spec_len(),
-                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>
-                    result.spec_index(i) == self.order.spec_index(self.order.spec_len() - 1 - i),
-        {
+        fn bottom_up_order(&self) -> (result: ArraySeqMtPerS<N>) {
             let n = self.order.length();
             ArraySeqMtPerS::tabulate(
                 &|i: usize| -> (r: N)

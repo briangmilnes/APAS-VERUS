@@ -75,13 +75,14 @@ pub mod StackStEph {
         fn pop(&mut self) -> (result: Option<T>)
             ensures
                 old(self)@.len() > 0 ==> result == Some(old(self)@.last()) && self@ == old(self)@.drop_last(),
-                old(self)@.len() == 0 ==> result.is_None() && self@ == old(self)@,
+                old(self)@.len() == 0 ==> (result matches Option::None),
+                old(self)@.len() == 0 ==> self@ == old(self)@,
         { self.elements.pop() }
 
         fn peek(&self) -> (result: Option<&T>)
             ensures
-                self@.len() > 0 ==> result.is_Some(),
-                self@.len() == 0 ==> result.is_None(),
+                self@.len() > 0 ==> (result matches Option::Some(_)),
+                self@.len() == 0 ==> (result matches Option::None),
         { self.elements.last() }
 
         fn is_empty(&self) -> (result: bool)

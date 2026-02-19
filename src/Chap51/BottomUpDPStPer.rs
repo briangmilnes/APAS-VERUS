@@ -41,6 +41,9 @@ pub mod BottomUpDPStPer {
         fn t_length(&self) -> usize;
         fn is_empty(&self) -> bool;
         fn med_bottom_up(&self) -> usize;
+        fn initialize_base_cases(&self) -> Vec<Vec<usize>>;
+        fn compute_diagonal(&self, table: Vec<Vec<usize>>, k: usize) -> Vec<Vec<usize>>;
+        fn compute_cell_value(&self, table: &[Vec<usize>], i: usize, j: usize) -> usize;
     }
 
     // 9. impls
@@ -67,9 +70,7 @@ pub mod BottomUpDPStPer {
 
             table[s_len][t_len]
         }
-    }
 
-    impl BottomUpDPStPerS {
         fn initialize_base_cases(&self) -> Vec<Vec<usize>> {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -86,7 +87,8 @@ pub mod BottomUpDPStPer {
             table
         }
 
-        fn compute_diagonal(&self, mut table: Vec<Vec<usize>>, k: usize) -> Vec<Vec<usize>> {
+        fn compute_diagonal(&self, table: Vec<Vec<usize>>, k: usize) -> Vec<Vec<usize>> {
+            let mut table = table;
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
 

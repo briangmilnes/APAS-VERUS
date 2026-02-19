@@ -2,6 +2,7 @@
 
 use apas_verus::ArrayMtPerSLit;
 use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
+use apas_verus::Chap54::BFSMtPer::BFSMtPer::BFSTreeMtPerTrait;
 use apas_verus::Chap54::BFSMtPer::*;
 use apas_verus::Types::Types::*;
 

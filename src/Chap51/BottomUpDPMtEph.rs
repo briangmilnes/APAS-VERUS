@@ -45,6 +45,15 @@ pub mod BottomUpDPMtEph {
         fn set_s(&mut self, s: ArraySeqMtEphS<char>);
         fn set_t(&mut self, t: ArraySeqMtEphS<char>);
         fn med_bottom_up_parallel(&mut self) -> usize;
+        fn initialize_base_cases(&self) -> Vec<Vec<usize>>;
+        fn compute_diagonal_parallel(&self, table: Arc<Mutex<Vec<Vec<usize>>>>, k: usize);
+        fn compute_cell_value_static(
+            seq_s: &ArraySeqMtEphS<char>,
+            seq_t: &ArraySeqMtEphS<char>,
+            table: &Arc<Mutex<Vec<Vec<usize>>>>,
+            i: usize,
+            j: usize,
+        ) -> usize;
     }
 
     // 9. impls
@@ -74,9 +83,7 @@ pub mod BottomUpDPMtEph {
             let final_table = table.lock().unwrap();
             final_table[s_len][t_len]
         }
-    }
 
-    impl BottomUpDPMtEphS {
         fn initialize_base_cases(&self) -> Vec<Vec<usize>> {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();

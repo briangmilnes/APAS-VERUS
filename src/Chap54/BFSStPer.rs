@@ -168,6 +168,23 @@ pub mod BFSStPer {
         ;
     }
 
+    pub trait BFSTreeStPerTrait {
+        spec fn spec_order(&self) -> ArraySeqStPerS<N>;
+
+        fn top_down_order(&self) -> (result: &ArraySeqStPerS<N>)
+            ensures
+                result.spec_len() == self.spec_order().spec_len(),
+                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>
+                    result.spec_index(i) == self.spec_order().spec_index(i);
+
+        fn bottom_up_order(&self) -> (result: ArraySeqStPerS<N>)
+            requires self.spec_order().spec_len() <= usize::MAX,
+            ensures
+                result.spec_len() == self.spec_order().spec_len(),
+                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>
+                    result.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i);
+    }
+
     // 9. impls
 
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
@@ -390,25 +407,18 @@ pub mod BFSStPer {
         BFSTreeS { parents, order: order_seq }
     }
 
-    impl BFSTreeS {
+    impl BFSTreeStPerTrait for BFSTreeS {
+        open spec fn spec_order(&self) -> ArraySeqStPerS<N> {
+            self.order
+        }
+
         /// Vertices in BFS order (root first, then distance 1, 2, ...).
-        pub fn top_down_order(&self) -> (result: &ArraySeqStPerS<N>)
-            ensures
-                result.spec_len() == self.order.spec_len(),
-                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>
-                    result.spec_index(i) == self.order.spec_index(i),
-        {
+        fn top_down_order(&self) -> (result: &ArraySeqStPerS<N>) {
             &self.order
         }
 
         /// Vertices in reverse BFS order (furthest from root first).
-        pub fn bottom_up_order(&self) -> (result: ArraySeqStPerS<N>)
-            requires self.order.spec_len() <= usize::MAX,
-            ensures
-                result.spec_len() == self.order.spec_len(),
-                forall|i: int| #![auto] 0 <= i < result.spec_len() ==>
-                    result.spec_index(i) == self.order.spec_index(self.order.spec_len() - 1 - i),
-        {
+        fn bottom_up_order(&self) -> (result: ArraySeqStPerS<N>) {
             let n = self.order.length();
             ArraySeqStPerS::tabulate(
                 &|i: usize| -> (r: N)

@@ -1,0 +1,9 @@
+
+ You are agent2 working in gittree: ~/projects/APAS-VERUS-agent2/.
+ Your worktree has been updated.
+ REREAD ANY FILES BEFORE MODIFYING THEM.
+ You are working ONLY on Chap35-Chap50. 
+ Run check-stale-reviews.sh to check which analyses on your
+ chapter need to be updated.
+ Propose a table of code fixes by priority.
+ 
