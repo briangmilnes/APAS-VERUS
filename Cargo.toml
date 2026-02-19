@@ -569,13 +569,13 @@ path = "tests/Chap43/TestAugOrderedTableStEph.rs"
 name = "TestAugOrderedTableStPer"
 path = "tests/Chap43/TestAugOrderedTableStPer.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestExample43_1"
-# path = "disabled"
+[[test]]
+name = "TestExample43_1"
+path = "tests/Chap43/TestExample43_1.rs"
 
-# [[test]]  # module commented out in lib.rs (needs ParamTreap)
-# name = "TestOrderedSetMtEph"
-# path = "disabled"
+[[test]]
+name = "TestOrderedSetMtEph"
+path = "tests/Chap43/TestOrderedSetMtEph.rs"
 
 [[test]]
 name = "TestOrderedSetStEph"
@@ -589,9 +589,9 @@ path = "tests/Chap43/TestOrderedSetStPer.rs"
 name = "TestOrderedTableMtEph"
 path = "tests/Chap43/TestOrderedTableMtEph.rs"
 
-# [[test]]  # module commented out in lib.rs (needs ParamTreap)
-# name = "TestOrderedTableMtPer"
-# path = "disabled"
+[[test]]
+name = "TestOrderedTableMtPer"
+path = "tests/Chap43/TestOrderedTableMtPer.rs"
 
 [[test]]
 name = "TestOrderedTableStEph"

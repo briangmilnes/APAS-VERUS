@@ -30,6 +30,8 @@ pub mod OrderedTableMtPer {
 
     // 4. type definitions
 
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
     pub struct OrderedTableMtPer<K: MtKey + 'static, V: StTInMtT + Ord + 'static> {
         tree: ParamTreap<Pair<K, V>>,
     }

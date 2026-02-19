@@ -6,30 +6,81 @@ pub mod BSTParaTreapMtEph {
     use std::cmp::Ordering::{Equal, Greater, Less};
     use std::fmt::Write;
     use std::hash::{Hash, Hasher};
-    use std::sync::{Arc, RwLock};
+    use std::sync::Arc;
 
+    use vstd::prelude::*;
+    use vstd::rwlock::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
-    #[derive(Clone)]
+    verus! {
+
+    // 4. type definitions
+
+    /// Trivially-true RwLock predicate for treap nodes.
+    pub struct TreapWf;
+
+    impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for TreapWf {
+        open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool { true }
+    }
+
+    #[verifier::reject_recursive_types(T)]
     pub enum Exposed<T: MtKey> {
         Leaf,
         Node(ParamTreap<T>, T, ParamTreap<T>),
     }
 
-    #[derive(Clone)]
-    struct NodeInner<T: MtKey> {
-        key: T,
-        priority: i64,
-        size: N,
-        left: ParamTreap<T>,
-        right: ParamTreap<T>,
+    #[verifier::reject_recursive_types(T)]
+    pub struct NodeInner<T: MtKey> {
+        pub key: T,
+        pub priority: i64,
+        pub size: N,
+        pub left: ParamTreap<T>,
+        pub right: ParamTreap<T>,
     }
 
-    #[derive(Clone)]
+    #[verifier::reject_recursive_types(T)]
     pub struct ParamTreap<T: MtKey> {
-        root: Arc<RwLock<Option<Box<NodeInner<T>>>>>,
+        pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, TreapWf>>,
     }
+
+    #[verifier::external_body]
+    fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, TreapWf>) {
+        RwLock::new(val, Ghost(TreapWf))
+    }
+
+    } // verus!
+
+    // 11. derive impls outside verus!
+
+    impl<T: MtKey> Clone for Exposed<T> {
+        fn clone(&self) -> Self {
+            match self {
+                Exposed::Leaf => Exposed::Leaf,
+                Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
+            }
+        }
+    }
+
+    impl<T: MtKey> Clone for NodeInner<T> {
+        fn clone(&self) -> Self {
+            NodeInner {
+                key: self.key.clone(),
+                priority: self.priority,
+                size: self.size,
+                left: self.left.clone(),
+                right: self.right.clone(),
+            }
+        }
+    }
+
+    impl<T: MtKey> Clone for ParamTreap<T> {
+        fn clone(&self) -> Self {
+            ParamTreap { root: self.root.clone() }
+        }
+    }
+
+    // 6. free helper functions
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -44,15 +95,19 @@ pub mod BSTParaTreapMtEph {
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn tree_priority<T: MtKey>(tree: &ParamTreap<T>) -> i64 {
-        let guard = tree.root.read().unwrap();
-        guard.as_ref().map_or(i64::MIN, |node| node.priority)
+        let handle = tree.root.acquire_read();
+        let result = handle.borrow().as_ref().map_or(i64::MIN, |node| node.priority);
+        handle.release_read();
+        result
     }
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn tree_size<T: MtKey>(tree: &ParamTreap<T>) -> N {
-        let guard = tree.root.read().unwrap();
-        guard.as_ref().map_or(0, |node| node.size)
+        let handle = tree.root.acquire_read();
+        let result = handle.borrow().as_ref().map_or(0, |node| node.size);
+        handle.release_read();
+        result
     }
 
     /// - APAS: Work Θ(1), Span Θ(1)
@@ -60,13 +115,9 @@ pub mod BSTParaTreapMtEph {
     fn make_node<T: MtKey>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> ParamTreap<T> {
         let size = 1 + tree_size(&left) + tree_size(&right);
         ParamTreap {
-            root: Arc::new(RwLock::new(Some(Box::new(NodeInner {
-                key,
-                priority,
-                size,
-                left,
-                right,
-            })))),
+            root: Arc::new(new_treap_lock(
+                Some(Box::new(NodeInner { key, priority, size, left, right })),
+            )),
         }
     }
 
@@ -258,6 +309,8 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    // 8. traits
+
     pub trait ParamTreapTrait<T: MtKey + 'static>: Sized {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -314,12 +367,14 @@ pub mod BSTParaTreapMtEph {
         fn in_order(&self)                         -> ArraySeqStPerS<T>;
     }
 
+    // 9. impls
+
     impl<T: MtKey + 'static> ParamTreapTrait<T> for ParamTreap<T> {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn new() -> Self {
             ParamTreap {
-                root: Arc::new(RwLock::new(None)),
+                root: Arc::new(new_treap_lock(None)),
             }
         }
 
@@ -335,10 +390,12 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn expose_with_priority(&self) -> Option<(ParamTreap<T>, T, i64, ParamTreap<T>)> {
-            let guard = self.root.read().unwrap();
-            guard
+            let handle = self.root.acquire_read();
+            let result = handle.borrow()
                 .as_ref()
-                .map(|node| (node.left.clone(), node.key.clone(), node.priority, node.right.clone()))
+                .map(|node| (node.left.clone(), node.key.clone(), node.priority, node.right.clone()));
+            handle.release_read();
+            result
         }
 
         /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))
@@ -367,9 +424,11 @@ pub mod BSTParaTreapMtEph {
             let (left, _, right) = split_inner(self, &key);
             let priority = priority_for(&key);
             let rebuilt = join_with_priority(left, key, priority, right);
-            let new_state = rebuilt.root.read().unwrap().clone();
-            let mut guard = self.root.write().unwrap();
-            *guard = new_state;
+            let read_handle = rebuilt.root.acquire_read();
+            let new_state = read_handle.borrow().clone();
+            read_handle.release_read();
+            let (_old_val, write_handle) = self.root.acquire_write();
+            write_handle.release_write(new_state);
         }
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
@@ -377,9 +436,11 @@ pub mod BSTParaTreapMtEph {
         fn delete(&self, key: &T) {
             let (left, _, right) = split_inner(self, key);
             let merged = join_pair_inner(left, right);
-            let new_state = merged.root.read().unwrap().clone();
-            let mut guard = self.root.write().unwrap();
-            *guard = new_state;
+            let read_handle = merged.root.acquire_read();
+            let new_state = read_handle.borrow().clone();
+            read_handle.release_read();
+            let (_old_val, write_handle) = self.root.acquire_write();
+            write_handle.release_write(new_state);
         }
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
@@ -436,6 +497,8 @@ pub mod BSTParaTreapMtEph {
             ArraySeqStPerS::from_vec(out)
         }
     }
+
+    // 12. macros
 
     #[macro_export]
     macro_rules! ParamTreapLit {

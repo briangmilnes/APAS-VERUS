@@ -375,10 +375,10 @@ pub mod Chap43 {
     // Wave 3: OrderedSet (depend on AVLTreeSetStEph/StPer)
     pub mod OrderedSetStEph;
     pub mod OrderedSetStPer;
-    // Wave 4: blocked by BSTParaTreapMtEph (ParamTreap uses Arc<RwLock<>>)
-    // pub mod OrderedSetMtEph;  // needs ParamTreap inside verus!
-    // pub mod OrderedTableMtPer;  // needs ParamTreap inside verus!
-    // pub mod Example43_1;  // needs OrderedSetMtEph
+    // Wave 4: ParamTreap now uses vstd::rwlock::RwLock, declared inside verus!
+    pub mod OrderedSetMtEph;
+    pub mod OrderedTableMtPer;
+    pub mod Example43_1;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]

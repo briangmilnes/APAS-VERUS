@@ -23,6 +23,7 @@ pub mod OrderedSetMtEph {
 
     // 4. type definitions
 
+    #[verifier::reject_recursive_types(T)]
     pub struct OrderedSetMtEph<T: MtKey + 'static> {
         tree: ParamTreap<T>,
     }
