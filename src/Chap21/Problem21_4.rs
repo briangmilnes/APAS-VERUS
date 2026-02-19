@@ -6,7 +6,6 @@
 //  Table of Contents
 //	1. module
 //	3. broadcast use
-//	7. proof fns/broadcast groups
 //	9. impls
 
 //		1. module
@@ -14,17 +13,15 @@
 
 pub mod Problem21_4 {
 
-    #[cfg(verus_keep_ghost)]
     use vstd::prelude::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+    use crate::vstdplus::seq::seq::{lemma_flatten_uniform_len, lemma_flatten_all};
 
-    #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::*;
-
-    #[cfg(verus_keep_ghost)]
     verus! {
+
+    use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+    use crate::Types::Types::*;
 
     //		3. broadcast use
 
@@ -33,33 +30,6 @@ pub mod Problem21_4 {
         crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_Pair_axioms,
     };
-
-
-    //		7. proof fns/broadcast groups
-
-    /// Lemma: Seq::flatten of k sequences each of length m has length k * m.
-    /// - APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
-    proof fn lemma_flatten_uniform_len<A>(ss: Seq<Seq<A>>, m: int)
-        requires
-            forall|i: int| 0 <= i < ss.len() ==> (#[trigger] ss[i]).len() == m,
-        ensures
-            ss.flatten().len() == ss.len() * m,
-        decreases ss.len()
-    {
-        if ss.len() == 0 {
-            assert(ss.len() * m == 0) by (nonlinear_arith) requires ss.len() == 0;
-        } else {
-            assert forall|i: int| 0 <= i < ss.drop_first().len() implies
-                (#[trigger] ss.drop_first()[i]).len() == m by {
-                assert(ss.drop_first()[i] == ss[i + 1]);
-            }
-            lemma_flatten_uniform_len(ss.drop_first(), m);
-            assert(ss.first().len() == m);
-            assert(m + (ss.len() - 1) * m == ss.len() * m) by (nonlinear_arith)
-                requires ss.len() > 0;
-        }
-    }
 
 
     //		9. impls
@@ -127,6 +97,10 @@ pub mod Problem21_4 {
             a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,
         ensures
             result.seq@.len() == a.seq@.len() as int * b.seq@.len() as int,
+            forall|k: int| 0 <= k < result.seq@.len() ==> (
+                a.seq@.contains((#[trigger] result.seq@[k]).0)
+                && b.seq@.contains(result.seq@[k].1)
+            ),
     {
         let alen = a.length();
         let blen = b.length();
@@ -139,18 +113,33 @@ pub mod Problem21_4 {
                     blen == b.seq@.len(),
                 ensures
                     row.seq@.len() == blen,
+                    forall|j: int| 0 <= j < row.seq@.len() ==> (
+                        a.seq@.contains((#[trigger] row.seq@[j]).0)
+                        && b.seq@.contains(row.seq@[j].1)
+                    ),
             {
                 let x = *a.nth(i);
-                ArraySeqStPerS::tabulate(
+                let row = ArraySeqStPerS::tabulate(
                     &(|j: usize| -> (p: Pair<N, N>)
                         requires
                             j < blen,
                             blen == b.seq@.len(),
+                            i < alen,
+                            alen == a.seq@.len(),
+                        ensures
+                            a.seq@.contains(p.0),
+                            b.seq@.contains(p.1),
                     {
-                        Pair(x, *b.nth(j))
+                        let y = *b.nth(j);
+                        proof {
+                            assert(a.seq@[i as int] == x);
+                            assert(b.seq@[j as int] == y);
+                        }
+                        Pair(x, y)
                     }),
                     blen,
-                )
+                );
+                row
             }),
             alen,
         );
@@ -163,6 +152,22 @@ pub mod Problem21_4 {
             assert forall|i: int| 0 <= i < mapped.len() implies
                 (#[trigger] mapped[i]).len() == blen as int by {}
             lemma_flatten_uniform_len(mapped, blen as int);
+
+            let ghost pred = |p: Pair<N, N>|
+                a.seq@.contains(p.0) && b.seq@.contains(p.1);
+            assert forall|i: int, j: int|
+                0 <= i < mapped.len() && 0 <= j < mapped[i].len()
+                implies #[trigger] pred(mapped[i][j]) by {
+                assert(mapped[i][j] == nested.seq@[i].seq@[j]);
+            }
+            lemma_flatten_all(mapped, pred);
+            assert forall|k: int| 0 <= k < result.seq@.len() implies (
+                a.seq@.contains((#[trigger] result.seq@[k]).0)
+                && b.seq@.contains(result.seq@[k].1)
+            ) by {
+                assert(result.seq@[k] == mapped.flatten()[k]);
+                assert(pred(mapped.flatten()[k]));
+            }
         }
         result
     }

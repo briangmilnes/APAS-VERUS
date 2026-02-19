@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Divide-and-conquer Euclidean Traveling Salesperson heuristic — parallel (Chapter 26, Section 4).
 //! Structural logic verified; threading via help-first scheduler join().
 //! Verusified.
@@ -8,14 +9,16 @@
 //	2. imports
 //	3. broadcast use
 //	4. type definitions
-//	5. spec fns
-//	7. proof fns
+//	6. spec fns
+//	7. proof fns/broadcast groups
 //	8. traits
 //	9. impls
-//	10. external helpers (f64-dependent)
-//	13. derive impls outside verus!
+//	11. derive impls in verus!
 
 //		1. module
+
+
+
 
 pub mod ETSPMtEph {
 
@@ -25,7 +28,12 @@ pub mod ETSPMtEph {
 
     //		2. imports
 
+    //		2. imports
+
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
+
+
+    //		3. broadcast use
 
     //		3. broadcast use
 
@@ -33,6 +41,9 @@ pub mod ETSPMtEph {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
     };
+
+
+    //		4. type definitions
 
     //		4. type definitions
 
@@ -48,19 +59,8 @@ pub mod ETSPMtEph {
         pub to: Point,
     }
 
-    impl Copy for Point {}
-    impl Clone for Point {
-        fn clone(&self) -> (r: Point)
-            ensures r == *self
-        { *self }
-    }
 
-    impl Copy for Edge {}
-    impl Clone for Edge {
-        fn clone(&self) -> (r: Edge)
-            ensures r == *self
-        { *self }
-    }
+    //		6. spec fns
 
     //		5. spec fns
 
@@ -108,6 +108,9 @@ pub mod ETSPMtEph {
         forall|i: int| #![trigger tour[i]] 0 <= i < tour.len() ==>
             spec_point_eq(tour[i].to, tour[((i + 1) % (tour.len() as int))].from)
     }
+
+
+    //		7. proof fns/broadcast groups
 
     //		7. proof fns
 
@@ -240,6 +243,9 @@ pub mod ETSPMtEph {
         }
     }
 
+
+    //		8. traits
+
     //		8. traits
 
     pub trait ETSPMtTrait {
@@ -255,6 +261,13 @@ pub mod ETSPMtEph {
                 points@.len() < usize::MAX / 2,
             ensures spec_etsp(tour@, points@);
     }
+
+
+    //		9. impls
+
+    impl Copy for Point {}
+
+    impl Copy for Edge {}
 
     //		9. impls
 
@@ -444,41 +457,57 @@ pub mod ETSPMtEph {
     /// Sort points by longest-spread dimension and split at median.
     /// Structural ensures: both halves are non-trivial and every point traces to the input.
     #[verifier::external_body]
-    pub fn sort_and_split(points: &Vec<Point>) -> (result: (Vec<Point>, Vec<Point>))
+    pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
         requires points@.len() >= 4,
         ensures
-            result.0@.len() >= 2,
-            result.1@.len() >= 2,
-            result.0@.len() + result.1@.len() == points@.len(),
-            result.0@.len() < points@.len(),
-            result.1@.len() < points@.len(),
-            forall|i: int| #![trigger result.0@[i]] 0 <= i < result.0@.len() ==>
-                spec_point_in_seq(result.0@[i], points@),
-            forall|i: int| #![trigger result.1@[i]] 0 <= i < result.1@.len() ==>
-                spec_point_in_seq(result.1@[i], points@),
+            halves.0@.len() >= 2,
+            halves.1@.len() >= 2,
+            halves.0@.len() + halves.1@.len() == points@.len(),
+            halves.0@.len() < points@.len(),
+            halves.1@.len() < points@.len(),
+            forall|i: int| #![trigger halves.0@[i]] 0 <= i < halves.0@.len() ==>
+                spec_point_in_seq(halves.0@[i], points@),
+            forall|i: int| #![trigger halves.1@[i]] 0 <= i < halves.1@.len() ==>
+                spec_point_in_seq(halves.1@[i], points@),
     {
         sort_and_split_impl(points)
     }
 
     /// Find the pair of edges (one from each tour) with minimum swap cost.
     #[verifier::external_body]
-    pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
+    pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
         requires
             left_tour@.len() >= 2,
             right_tour@.len() >= 2,
         ensures
-            (result.0 as int) < left_tour@.len(),
-            (result.1 as int) < right_tour@.len(),
+            (swap_indices.0 as int) < left_tour@.len(),
+            (swap_indices.1 as int) < right_tour@.len(),
     {
         find_best_swap_impl(left_tour, right_tour)
     }
 
+
+    //		11. derive impls in verus!
+
+    impl Clone for Point {
+        fn clone(&self) -> (cloned: Point)
+            ensures cloned == *self
+        { *self }
+    }
+
+    impl Clone for Edge {
+        fn clone(&self) -> (cloned: Edge)
+            ensures cloned == *self
+        { *self }
+    }
+
     } // verus!
 
-    //		13. derive impls outside verus!
 
     impl Point {
         /// Euclidean distance between two points.
+        /// - APAS: N/A — helper function.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         pub fn distance(&self, other: &Point) -> f64 {
             let dx = self.x - other.x;
             let dy = self.y - other.y;

@@ -1,0 +1,55 @@
+---
+description: Generate a prioritized table of proposed fixes across chapters
+alwaysApply: true
+---
+
+# Proposed Fixes Table
+
+When the user says "proposed fixes table", "fixes table", or "audit my chapters", generate a
+severity-ordered table of issues across the agent's assigned chapters.
+
+## Procedure
+
+1. Run proof holes on each chapter:
+   ```bash
+   ~/projects/veracity/target/release/veracity-review-proof-holes -d src/ChapNN/
+   ```
+
+2. Check for stale reviews (per `gate-review-against-prose` rule).
+
+3. Scan for code issues:
+   - `assume()` that isn't the standard PartialEq or thread-join pattern
+   - `external_body` on functions with algorithmic logic (not threading/FFI wrappers)
+   - `ensures true` or missing ensures on non-trivial functions
+   - `#![auto]` triggers that should be explicit
+   - `#[cfg(not(verus_keep_ghost))]` duplicate blocks (the old antipattern)
+   - `bare_impl` not covered by the recursive-spec-fn exception
+
+4. Classify severity:
+   - **critical**: non-standard `assume`/`admit`, `external_body` hiding algorithmic logic
+   - **high**: `ensures true`, stale reviews, cfg(not) antipattern blocks
+   - **medium**: `#![auto]` triggers, bare_impl violations, missing cfg guards
+   - **low**: informational (accepted patterns like PartialEq assume, thread-join assume(false))
+
+5. Output a single table sorted by severity, then by chapter number:
+
+   ```
+   | # | Sev | Chapter | File | Issue | Description |
+   |---|-----|---------|------|-------|-------------|
+   ```
+
+   Include a summary count at the bottom:
+
+   ```
+   | Severity | Count |
+   |----------|-------|
+   | critical | N |
+   | high | N |
+   | medium | N |
+   ```
+
+## Do NOT include
+
+- Accepted patterns in the main table (list them separately as "informational" if at all)
+- Issues outside the agent's assigned chapter range
+- Bare impls that are valid exceptions (recursive spec fns with `decreases self`)

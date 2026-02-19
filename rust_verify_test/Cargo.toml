@@ -36,6 +36,14 @@ path = "tests/Chap05/RelationStEph.rs"
 name = "MappingStEph"
 path = "tests/Chap05/MappingStEph.rs"
 
+[[test]]
+name = "ProveSetMtEph"
+path = "tests/Chap05/ProveSetMtEph.rs"
+
+[[test]]
+name = "ProveKleeneStPer"
+path = "tests/Chap05/ProveKleeneStPer.rs"
+
 # Chap17 iterator proof tests
 [[test]]
 name = "ProveMathSeq"

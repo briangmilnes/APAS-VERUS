@@ -11,8 +11,8 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
         74 |         fn unlock(&self) {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:78: external_body - #[verifier::external_body]
         79 |         fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:87: external_body - #[verifier::external_body]
-        88 |     pub fn parallel_increment(iterations: usize) -> (incremented: usize)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:90: external_body - #[verifier::external_body]
+        91 |     pub fn parallel_increment(iterations: usize) -> (incremented: usize)
    Holes: 6 total
       6 × external_body
 ✓ Exercise12_2.rs
@@ -22,54 +22,50 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:38: external_body - #[verifier::external_body]
         39 | #[verifier::reject_recursive_types(T)]
         40 | pub struct ConcurrentStackMt<T: Send> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:106: external_body - #[verifier::external_body]
-       107 |     fn new() -> (stack: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:113: external_body - #[verifier::external_body]
-       114 |     fn push(&self, value: T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:127: external_body - #[verifier::external_body]
-       128 |     fn pop(&self) -> (possible_top: Option<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:142: external_body - #[verifier::external_body]
-       143 |     fn is_empty(&self) -> (empty: bool) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:147: external_body - #[verifier::external_body]
-       148 |     fn drain(&self) -> (items: Vec<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:164: external_body - #[verifier::external_body]
-       165 |     fn drop(&mut self)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:123: unsafe {} - new_node = unsafe { Box::from_raw(node_ptr) };
-       114 |     fn push(&self, value: T) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:96: external_body - #[verifier::external_body]
+        97 |     fn new() -> (stack: Self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:103: external_body - #[verifier::external_body]
+       104 |     fn push(&self, value: T) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:117: external_body - #[verifier::external_body]
+       118 |     fn pop(&self) -> (possible_top: Option<T>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:132: external_body - #[verifier::external_body]
+       133 |     fn is_empty(&self) -> (empty: bool) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:137: external_body - #[verifier::external_body]
+       138 |     fn drain(&self) -> (items: Vec<T>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:154: external_body - #[verifier::external_body]
+       155 |     fn drop(&mut self)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:113: unsafe {} - new_node = unsafe { Box::from_raw(node_ptr) };
+       104 |     fn push(&self, value: T) {
             ...
-       121 |                 break;
-       122 |             }
-       124 |         }
-       125 |     }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:134: unsafe {} - let next = unsafe { (*head).next };
-       128 |     fn pop(&self) -> (possible_top: Option<T>) {
+       111 |                 break;
+       112 |             }
+       114 |         }
+       115 |     }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:124: unsafe {} - let next = unsafe { (*head).next };
+       118 |     fn pop(&self) -> (possible_top: Option<T>) {
             ...
-       132 |                 return None;
-       133 |             }
-       135 |             if self.head.compare_exchange_weak(head, next, Ordering::AcqRel, Ordering::Acquire).is_ok() {
-       136 |                 let boxed = unsafe { Box::from_raw(head) };
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:136: unsafe {} - let boxed = unsafe { Box::from_raw(head) };
-       128 |     fn pop(&self) -> (possible_top: Option<T>) {
+       122 |                 return None;
+       123 |             }
+       125 |             if self.head.compare_exchange_weak(head, next, Ordering::AcqRel, Ordering::Acquire).is_ok() {
+       126 |                 let boxed = unsafe { Box::from_raw(head) };
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:126: unsafe {} - let boxed = unsafe { Box::from_raw(head) };
+       118 |     fn pop(&self) -> (possible_top: Option<T>) {
             ...
-       134 |             let next = unsafe { (*head).next };
-       135 |             if self.head.compare_exchange_weak(head, next, Ordering::AcqRel, Ordering::Acquire).is_ok() {
-       137 |                 return Some(boxed.value);
-       138 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:171: unsafe {} - unsafe {
-       165 |     fn drop(&mut self)
+       124 |             let next = unsafe { (*head).next };
+       125 |             if self.head.compare_exchange_weak(head, next, Ordering::AcqRel, Ordering::Acquire).is_ok() {
+       127 |                 return Some(boxed.value);
+       128 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:161: unsafe {} - unsafe {
+       155 |     fn drop(&mut self)
             ...
-       169 |         let mut current = self.head.load(Ordering::Relaxed);
-       170 |         while !current.is_null() {
-       172 |                 let node = Box::from_raw(current);
-       173 |                 current = node.next;
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:94: error: bare_impl - impl<T: Send> ConcurrentStackMt<T> { — `impl ConcurrentStackMt` without trait; file defines [ConcurrentStackMtTrait]
-        95 |     /// Spec: the stack is always well-formed after construction.
-        96 |     pub closed spec fn wf(&self) -> bool {
+       159 |         let mut current = self.head.load(Ordering::Relaxed);
+       160 |         while !current.is_null() {
+       162 |                 let node = Box::from_raw(current);
+       163 |                 current = node.next;
    Holes: 12 total
       4 × unsafe {}
       7 × external_body
       1 × external
-   Errors: 1 bare impl(s) in file with trait definition
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -89,5 +85,3 @@ Holes Found: 18 total
    4 × unsafe {}
    13 × external_body
    1 × external
-
-Errors: 1 bare impl(s) in files with trait definitions

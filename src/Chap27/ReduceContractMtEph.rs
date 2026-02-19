@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Parallel reduce using contraction technique (Chapter 27, Algorithm 27.2).
 //! Uses the help-first scheduler for fork-join parallelism.
 //! Verusified.
@@ -7,11 +8,13 @@
 //	1. module
 //	2. imports
 //	3. broadcast use
-//	4. helpers
 //	8. traits
 //	9. impls
 
 //		1. module
+
+
+
 
 pub mod ReduceContractMtEph {
 
@@ -19,6 +22,8 @@ pub mod ReduceContractMtEph {
     use vstd::prelude::*;
 
     verus! {
+
+    //		2. imports
 
     //		2. imports
 
@@ -31,12 +36,44 @@ pub mod ReduceContractMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
+
+    //		3. broadcast use
+
     //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
     };
+
+
+    //		8. traits
+
+    //		8. traits
+
+    pub trait ReduceContractMtEphTrait<T: StTInMtT> {
+        /// Reduce a sequence using parallel contraction: contract→solve→expand.
+        /// Subsumes Example 27.1 (Maximal Element): call with max and 0 identity.
+        /// - APAS: Work Θ(n), Span Θ(log n) — Algorithm 27.2.
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(log n) — parallel tabulate for contraction; agrees with APAS.
+        fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
+            a: &ArraySeqMtEphS<T>,
+            f: Arc<F>,
+            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
+            id: T,
+        ) -> (reduced: T)
+            requires
+                a.spec_len() <= usize::MAX,
+                obeys_feq_clone::<T>(),
+                spec_monoid(spec_f, id),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+            ensures
+                reduced == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f);
+    }
+
+
+    //		9. impls
 
     //		4. helpers
 
@@ -208,29 +245,6 @@ pub mod ReduceContractMtEph {
         b
     }
 
-    //		8. traits
-
-    pub trait ReduceContractMtEphTrait<T: StTInMtT> {
-        /// Reduce a sequence using parallel contraction: contract→solve→expand.
-        /// Subsumes Example 27.1 (Maximal Element): call with max and 0 identity.
-        /// - APAS: Work Θ(n), Span Θ(log n) — Algorithm 27.2.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(log n) — parallel tabulate for contraction; agrees with APAS.
-        fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
-            a: &ArraySeqMtEphS<T>,
-            f: Arc<F>,
-            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
-            id: T,
-        ) -> (result: T)
-            requires
-                a.spec_len() <= usize::MAX,
-                obeys_feq_clone::<T>(),
-                spec_monoid(spec_f, id),
-                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
-            ensures
-                result == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f);
-    }
-
     //		9. impls
 
     /// Verified reduce using contraction with parallel contraction step.
@@ -242,7 +256,7 @@ pub mod ReduceContractMtEph {
         f: &Arc<F>,
         Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
         id: T,
-    ) -> (result: T)
+    ) -> (reduced: T)
         requires
             a.spec_len() <= usize::MAX,
             obeys_feq_clone::<T>(),
@@ -250,7 +264,7 @@ pub mod ReduceContractMtEph {
             forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
             forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
         ensures
-            result == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f),
+            reduced == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f),
         decreases a.spec_len(),
     {
         let n = a.length();
@@ -267,12 +281,12 @@ pub mod ReduceContractMtEph {
 
         // Base case: single element — use f(id, a[0]) to avoid unspecified clone
         if n == 1 {
-            let result = call_f(f, &id, a.nth(0));
+            let reduced = call_f(f, &id, a.nth(0));
             proof {
                 reveal_with_fuel(Seq::fold_left, 2);
                 assert(s.drop_last() =~= Seq::<T>::empty());
             }
-            return result;
+            return reduced;
         }
 
         // Contract: b[i] = f(a[2i], a[2i+1]) — parallel via join
@@ -298,7 +312,7 @@ pub mod ReduceContractMtEph {
         // Expand: handle odd-length sequences
         if n % 2 == 1 {
             let last = a.nth(n - 1);
-            let result = call_f(f, &contracted_result, last);
+            let reduced = call_f(f, &contracted_result, last);
             proof {
                 let s_even = s.subrange(0, (n - 1) as int);
                 let s_last_part = s.subrange((n - 1) as int, n as int);
@@ -317,7 +331,7 @@ pub mod ReduceContractMtEph {
                 ));
                 lemma_contraction_even::<T>(s_even, spec_f, id);
             }
-            result
+            reduced
         } else {
             proof {
                 assert(b_seq =~= Seq::new(
@@ -336,7 +350,7 @@ pub mod ReduceContractMtEph {
             f: Arc<F>,
             Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
             id: T,
-        ) -> (result: T) {
+        ) -> (reduced: T) {
             reduce_contract_verified(a, &f, Ghost(spec_f), id)
         }
     }

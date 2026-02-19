@@ -7,8 +7,12 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 23 — Tree Sequences: Review Against Prose
 
-**Date:** 2026-02-13
+**Date:** 2026-02-18
+**Last mechanical audit:** 2026-02-19 — return variable renames, IntoIterator additions, eq→equal/clone→cloned renames; no functional changes.
 **Reviewer:** Claude-Opus-4.6
+
+**Recent changes:** PrimTreeSeqStPer: moved `as_slice` and `into_vec` from bare `impl PrimTreeSeqStS<T>` into the trait and trait impl, eliminating one bare impl block. BalBinTreeStEph: no meaningful change (attempted to remove `external_body` from Clone but reverted — `T::clone()` has no spec in Verus).
+
 **Source files:** `src/Chap23/BalBinTreeStEph.rs`, `src/Chap23/PrimTreeSeqStPer.rs`
 **Test files:** `tests/Chap23/TestBalBinTreeStEph.rs`, `tests/Chap23/TestPrimTreeSeqStPer.rs`
 **PTT files:** `rust_verify_test/tests/Chap23/ProveBalBinTreeStEph.rs`, `rust_verify_test/tests/Chap23/ProvePrimTreeSeqStPer.rs`
@@ -35,7 +39,7 @@ table { width: 100% !important; table-layout: fixed; }
 | 12 | `iter_in_order` | IBI | Y | strong | — | 679–685 |
 | 13 | `iter_pre_order` | IBI | Y | strong | — | 691–697 |
 | 14 | `iter_post_order` | IBI | Y | strong | — | 703–709 |
-| 15 | `eq` ×2 | IT (PartialEq) | Y | strong | assume | 726–728 |
+| 15 | `eq` ×2 | IT (PartialEq) | Y | strong | assume | 750, 771 |
 
 ### PrimTreeSeqStPer.rs — 20 functions
 
@@ -59,8 +63,8 @@ table { width: 100% !important; table-layout: fixed; }
 | 31 | `flatten` | Tr+IT | Y | strong | — | 277–282 |
 | 32 | `next` | IT (Iterator) | Y | strong | — | 702–718 |
 | 33 | `eq` ×2 | IT (PartialEq) | Y | strong | assume | 804–805 |
-| 34 | `as_slice` | IBI | Y | strong | — | 862–863 |
-| 35 | `into_vec` | IBI | Y | strong | — | 866–867 |
+| 34 | `as_slice` | Tr+IT | Y | strong | — | 304, 697 |
+| 35 | `into_vec` | Tr+IT | Y | strong | — | 310, 699 |
 
 ---
 
@@ -272,7 +276,7 @@ Comprehensive iterator coverage: all six patterns (3 loop + 3 for) are tested.
 |---|----------|-------|
 | 1 | `BalBinTreeStEph` module | General binary tree utility; not in Chapter 23 prose (which focuses on tree sequences) |
 | 2 | `from_vec()` | Vec-specific constructor, not in prose |
-| 3 | `as_slice()`, `into_vec()` | Utility methods for test support |
+| 3 | `as_slice()`, `into_vec()` | Utility methods for test support (now in trait) |
 | 4 | `iter()`, iterator infrastructure | Verus-specific iteration scaffolding |
 | 5 | `lemma_in_order_pre_order_permutation` | Verus-specific tree property proof |
 | 6 | `lemma_pre_order_post_order_permutation` | Verus-specific tree property proof |
@@ -343,21 +347,29 @@ All trait impls are correctly placed.
 
 ```
 ❌ BalBinTreeStEph.rs
-  Line 734: assume(r == (*self == *other))  — PartialEq for BalBinTree::Node
-  Line 755: assume(r == (*self == *other))  — PartialEq for BalBinNode
+  Line 752: assume(r == (*self == *other))  — PartialEq for BalBinTree::Node
+  Line 773: assume(r == (*self == *other))  — PartialEq for BalBinNode
+  Line 781, 793: external_body — Clone for BalBinTree and BalBinNode
 
 ❌ PrimTreeSeqStPer.rs
-  Line 808: assume(r == (self@ == other@))  — PartialEq for PrimTreeSeqStS
-  Line 842: assume(r == (self@ == other@))  — PartialEq for PrimTreeSeqStTree::One
-  Line 847: assume(r == (self@ == other@))  — PartialEq for PrimTreeSeqStTree::Two
-  Line 851: assume(self@ != other@)         — PartialEq for PrimTreeSeqStTree wildcard
+  Line 831: assume(cloned@ == self@)       — Clone for PrimTreeSeqStS
+  Line 847: assume(r == (self@ == other@))  — PartialEq for PrimTreeSeqStS
+  Line 863: assume(cloned@ == self@)       — Clone for PrimTreeSeqStTree
+  Line 885, 890: assume — PartialEq for PrimTreeSeqStTree::One, Two
 
-Total: 6 assume() holes, all in PartialEq implementations.
+Total: 9 holes (7 assume, 2 external_body).
 ```
 
-All 6 holes follow the standard PartialEq/Eq pattern (`partialeq-eq-pattern.mdc`). These are the accepted trust boundary for equality — Verus cannot resolve `eq_spec` through the trait extension machinery. The `assume` statements are narrowly scoped: only the connection between structural equality and view equality is assumed. The rest of each function body is verified.
+- **7 assume:** 2 BalBinTree PartialEq (standard pattern); 2 PrimTreeSeqSt clone (Seq.clone preserves view); 3 PrimTreeSeqSt PartialEq (standard pattern).
+- **2 external_body:** BalBinTree and BalBinNode Clone — `T::clone()` has no spec in Verus, so `external_body` cannot be removed without upstream support.
 
 **Proof functions:** 2 clean, 0 holed.
+
+**Bare impl errors (1):**
+
+| # | File | Bare impl | Justification |
+|---|------|-----------|---------------|
+| 1 | BalBinTreeStEph.rs | `impl BalBinTree<T>` (lines 235+) | **Legitimate** — per `trait-impl-pattern.mdc`, recursive spec fns (`spec_size`, `spec_height`) must be inherent impls with `decreases self`; Verus cannot unfold through trait dispatch. Trait impl delegates to them. |
 
 ---
 
@@ -390,13 +402,13 @@ Every function in Chapter 23 has a strong specification. The trait contracts ful
 1. **Vec-backed implementation** — PrimTreeSeqStPer uses a flat Vec, not a balanced tree. This means the APAS cost bounds from Cost Spec 23.2 (O(1) expose, O(1+|r(L)−r(R)|) join) are not achieved. The implementation is correct but suboptimal.
 2. **Missing RTT coverage** — The derived operations (append, subseq, update, map, tabulate, filter, drop, flatten) have no runtime tests. Only constructors, expose/join, and iterators are tested.
 3. **No post-order PTT** — Post-order iterator has no proof-time test.
-4. **Clone outside verus!** — `BalBinTree` and `BalBinNode` Clone impls are outside `verus!` without specs.
+4. **Clone external_body** — `BalBinTree` and `BalBinNode` Clone impls use `#[verifier::external_body]`. Cannot be removed because `T::clone()` has no spec in Verus; requires upstream support.
 5. **No Mt modules** — The prose describes parallel operations (map‖, tabulate‖, filter‖) but no multi-threaded implementations exist.
 6. **TOC minor issues** — Section 6 label inconsistency ("spec helpers" vs "spec fns"), missing proof fn listing in BalBinTree TOC.
 
 ### Recommendations
 1. Add RTTs for append, subseq, update, map, tabulate, filter, drop, and flatten.
 2. Add a post-order iterator PTT.
-3. Move BalBinTree/BalBinNode Clone impls inside `verus!`.
+3. ~~Move BalBinTree/BalBinNode Clone impls inside `verus!`.~~ Blocked: `T::clone()` has no spec in Verus.
 4. Consider adding Mt modules for map, tabulate, and filter to demonstrate the parallelism from Algorithm 23.3.
 5. Consider a tree-backed implementation (AVL/Red-Black) to achieve the prose cost bounds, when later chapters provide the balancing infrastructure.

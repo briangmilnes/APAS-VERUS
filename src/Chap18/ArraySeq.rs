@@ -9,6 +9,7 @@
 //	4. type definitions
 //	5. view impls
 //	6. spec fns
+//	7. proof fns/broadcast groups
 //	8. traits
 //	9. impls
 //	10. iterators
@@ -16,6 +17,9 @@
 //	13. derive impls outside verus!
 
 //		1. module
+
+
+
 
 pub mod ArraySeq {
 
@@ -30,6 +34,8 @@ pub mod ArraySeq {
 
     //		2. imports
 
+    //		2. imports
+
     #[cfg(verus_keep_ghost)]
     use {
         vstd::std_specs::cmp::PartialEqSpecImpl,
@@ -39,13 +45,15 @@ pub mod ArraySeq {
         vstd::laws_eq::obeys_concrete_eq,
         vstd::laws_eq::obeys_deep_eq,
     };
-
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::monoid::monoid::*;
     use crate::vstdplus::multiset::multiset::*;
     #[cfg(verus_keep_ghost)]
     use vstd::relations::associative;
+
+
+    //		3. broadcast use
 
     //		3. broadcast use
 
@@ -63,11 +71,15 @@ pub mod ArraySeq {
 
     //		4. type definitions
 
+    //		4. type definitions
+
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqS<T> {
         pub seq: Vec<T>,
     }
 
+
+    //		5. view impls
 
     //		5. view impls
 
@@ -79,15 +91,8 @@ pub mod ArraySeq {
         }
     }
 
-    impl<T: DeepView> DeepView for ArraySeqS<T> {
-        type V = Seq<T::V>;
 
-        open spec fn deep_view(&self) -> Seq<T::V> {
-            let v = self.seq@;
-            Seq::new(v.len(), |i: int| v[i].deep_view())
-        }
-    }
-
+    //		6. spec fns
 
     //		6. spec fns
 
@@ -160,6 +165,163 @@ pub mod ArraySeq {
         forall|x: T, y: T| x.eq_spec(&y) <==> x == y
     }
 
+    // deep_view is the identity function for this type.
+    pub open spec fn obeys_generic_deep_eq<T: DeepView<V = T>>() -> bool {
+        forall|x: T| x.deep_view() == x
+    }
+
+
+    //		7. proof fns/broadcast groups
+
+    // Bridge: deep_view preserves length.
+    proof fn lemma_deep_view_len<T: DeepView>(v: &Vec<T>)
+        ensures
+            v.deep_view().len() == v@.len(),
+    {
+    }
+
+    // Bridge: deep_view preserves .0 at every index
+    proof fn lemma_deep_view_key<K: DeepView, V: DeepView>(s: &Vec<(K, ArraySeqS<V>)>, i: int)
+        requires
+            0 <= i < s@.len(),
+        ensures
+            s.deep_view()[i].0 == s@[i].0.deep_view(),
+            s.deep_view().len() == s@.len(),
+    {
+    }
+
+    // spec_find_key_index returning Some(idx) implies idx is in bounds.
+    proof fn lemma_find_key_index_bounds<K, V>(groups: Seq<(K, Seq<V>)>, k: K, idx: int)
+        requires
+            spec_find_key_index(groups, k) == Some(idx),
+        ensures
+            0 <= idx < groups.len(),
+        decreases groups.len(),
+    {
+        reveal(spec_find_key_index);
+        if groups.len() > 0 && groups[0].0 != k {
+            lemma_find_key_index_bounds(groups.skip(1), k, idx - 1);
+        }
+    }
+
+    // Pure spec: spec_find_key_index returns Some(idx) when element idx matches
+    // and no earlier element does.
+    proof fn lemma_find_key_index_found<K, V>(
+        groups: Seq<(K, Seq<V>)>,
+        k: K,
+        idx: int,
+    )
+        requires
+            0 <= idx < groups.len(),
+            groups[idx].0 == k,
+            forall|m: int| #![trigger groups[m]] 0 <= m < idx ==> groups[m].0 != k,
+        ensures
+            spec_find_key_index(groups, k) == Some(idx),
+        decreases groups.len(),
+    {
+        reveal(spec_find_key_index);
+        if groups.len() > 0 && groups[0].0 != k {
+            lemma_find_key_index_found(groups.skip(1), k, idx - 1);
+        }
+    }
+
+    // Pure spec: spec_find_key_index returns None when no element matches.
+    proof fn lemma_find_key_index_not_found<K, V>(
+        groups: Seq<(K, Seq<V>)>,
+        k: K,
+    )
+        requires
+            forall|m: int| #![trigger groups[m]] 0 <= m < groups.len() ==> groups[m].0 != k,
+        ensures
+            spec_find_key_index(groups, k) == None::<int>,
+        decreases groups.len(),
+    {
+        reveal(spec_find_key_index);
+        if groups.len() > 0 {
+            lemma_find_key_index_not_found(groups.skip(1), k);
+        }
+    }
+
+    // Unfolding spec_collect one step when the key is found.
+    proof fn lemma_spec_collect_step_some<K, V>(
+        old_dv: Seq<(K, Seq<V>)>,
+        pairs_prefix: Seq<(K, V)>,
+        k: K,
+        v: V,
+        idx: int,
+    )
+        requires
+            old_dv =~= spec_collect(pairs_prefix),
+            spec_find_key_index(old_dv, k) == Some(idx),
+        ensures
+            spec_collect(pairs_prefix.push((k, v)))
+                =~= old_dv.remove(idx).insert(idx, (k, old_dv[idx].1.push(v))),
+    {
+        lemma_find_key_index_bounds(old_dv, k, idx);
+        let extended = pairs_prefix.push((k, v));
+        assert(extended.len() > 0);
+        assert(extended.drop_last() =~= pairs_prefix);
+        assert(extended.last() == (k, v));
+        reveal(spec_collect);
+    }
+
+    // Unfolding spec_collect one step when the key is new.
+    proof fn lemma_spec_collect_step_none<K, V>(
+        old_dv: Seq<(K, Seq<V>)>,
+        pairs_prefix: Seq<(K, V)>,
+        k: K,
+        v: V,
+    )
+        requires
+            old_dv =~= spec_collect(pairs_prefix),
+            spec_find_key_index(old_dv, k) == None::<int>,
+        ensures
+            spec_collect(pairs_prefix.push((k, v)))
+                =~= old_dv.push((k, seq![v])),
+    {
+        let extended = pairs_prefix.push((k, v));
+        assert(extended.len() > 0);
+        assert(extended.drop_last() =~= pairs_prefix);
+        assert(extended.last() == (k, v));
+        reveal(spec_collect);
+    }
+
+    // When find_key returns Some(idx), spec_find_key_index on deep_view agrees.
+    proof fn lemma_find_key_some<K: DeepView<V = K>, V: DeepView>(s: &Vec<(K, ArraySeqS<V>)>, k: K, idx: usize)
+        requires
+            obeys_generic_deep_eq::<K>(),
+            idx < s@.len(),
+            s@[idx as int].0 == k,
+            forall|m: int| #![trigger s@[m]] 0 <= m < idx as int ==> s@[m].0 != k,
+        ensures
+            spec_find_key_index(s.deep_view(), k.deep_view()) == Some(idx as int),
+    {
+        assert forall|j: int| #![trigger s.deep_view()[j]]
+            0 <= j < s.deep_view().len() implies s.deep_view()[j].0 == s@[j].0
+        by {
+            lemma_deep_view_key::<K, V>(s, j);
+        };
+        lemma_find_key_index_found(s.deep_view(), k.deep_view(), idx as int);
+    }
+
+    // When find_key returns None, spec_find_key_index on deep_view is None.
+    proof fn lemma_find_key_none<K: DeepView<V = K>, V: DeepView>(s: &Vec<(K, ArraySeqS<V>)>, k: K)
+        requires
+            obeys_generic_deep_eq::<K>(),
+            forall|m: int| #![trigger s@[m]] 0 <= m < s@.len() ==> s@[m].0 != k,
+        ensures
+            spec_find_key_index(s.deep_view(), k.deep_view()) == None::<int>,
+    {
+        assert forall|j: int| #![trigger s.deep_view()[j]]
+            0 <= j < s.deep_view().len() implies s.deep_view()[j].0 == s@[j].0
+        by {
+            lemma_deep_view_key::<K, V>(s, j);
+        };
+        lemma_find_key_index_not_found(s.deep_view(), k.deep_view());
+    }
+
+
+    //		8. traits
 
     //		8. traits
 
@@ -296,25 +458,25 @@ pub mod ArraySeq {
         /// - The Rust equivalent is `Iterator::fold`.
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (result: A)
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (accumulated: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
                 forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
             ensures
-                result == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, start_x);
+                accumulated == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, start_x);
 
         /// - Definition 18.18 (reduce). Combine elements using associative function and identity `id`.
         /// - The Rust equivalent is `Iterator::fold` with the accumulator type equal to the element type.
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
-        fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: T)
+        fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
             requires
                 spec_monoid(spec_f, id),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
-                result == spec_iterate(
+                reduced == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
 
         /// - Definition 18.19 (scan). Prefix-reduce returning inclusive prefix sums and total.
@@ -356,7 +518,7 @@ pub mod ArraySeq {
         /// - Our `scan` currently computes inclusive prefixes; this function makes the intent explicit.
         /// - APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
-        fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: Self)
+        fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: Self)
             where T: Clone + Eq
             requires
                 spec_monoid(spec_f, id),
@@ -364,9 +526,9 @@ pub mod ArraySeq {
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
-                result.spec_len() == a.spec_len(),
-                forall|i: int| #![trigger result.spec_index(i)] 0 <= i < a.spec_len() ==>
-                    result.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f);
+                scanned.spec_len() == a.spec_len(),
+                forall|i: int| #![trigger scanned.spec_index(i)] 0 <= i < a.spec_len() ==>
+                    scanned.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
         /// - APAS: N/A — implementation utility, not in prose.
@@ -446,6 +608,18 @@ pub mod ArraySeq {
         ensures
            collected.seq.deep_view() =~= spec_collect(pairs.seq@);
    }
+
+
+    //		9. impls
+
+    impl<T: DeepView> DeepView for ArraySeqS<T> {
+        type V = Seq<T::V>;
+
+        open spec fn deep_view(&self) -> Seq<T::V> {
+            let v = self.seq@;
+            Seq::new(v.len(), |i: int| v[i].deep_view())
+        }
+    }
 
     //		9. impls
 
@@ -657,7 +831,7 @@ pub mod ArraySeq {
             self.seq.len() == 1
         }
 
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (acc: A) {
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (accumulated: A) {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             let mut acc = start_x;
@@ -696,7 +870,7 @@ pub mod ArraySeq {
             acc
         }
 
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: T)
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
         {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
@@ -875,7 +1049,7 @@ pub mod ArraySeq {
             injected
         }
 
-        fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: ArraySeqS<T>)
+        fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: ArraySeqS<T>)
             where T: Clone + Eq
         {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
@@ -916,15 +1090,15 @@ pub mod ArraySeq {
                 seq.push(cloned);
                 i += 1;
             }
-            let result = ArraySeqS { seq };
+            let scanned = ArraySeqS { seq };
             proof {
-                assert forall|i: int| #![trigger result.spec_index(i)] 0 <= i < a.spec_len() implies
-                    result.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
+                assert forall|i: int| #![trigger scanned.spec_index(i)] 0 <= i < a.spec_len() implies
+                    scanned.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
                 by {
-                    assert(result.spec_index(i) == seq@[i]);
+                    assert(scanned.spec_index(i) == seq@[i]);
                 }
             }
-            result
+            scanned
         }
 
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: ArraySeqS<T>)
@@ -1088,7 +1262,7 @@ pub mod ArraySeq {
             collected
         }
     }
-        
+
     /// Algorithm 18.4 (map). Transform each element via `f`.
     /// - APAS: no cost spec (semantics-only chapter).
     /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
@@ -1286,158 +1460,6 @@ pub mod ArraySeq {
         (result, acc)
     }
 
-    // deep_view is the identity function for this type.
-    pub open spec fn obeys_generic_deep_eq<T: DeepView<V = T>>() -> bool {
-        forall|x: T| x.deep_view() == x
-    }
-
-    // Bridge: deep_view preserves length.
-    proof fn lemma_deep_view_len<T: DeepView>(v: &Vec<T>)
-        ensures
-            v.deep_view().len() == v@.len(),
-    {
-    }
-
-    // Bridge: deep_view preserves .0 at every index
-    proof fn lemma_deep_view_key<K: DeepView, V: DeepView>(s: &Vec<(K, ArraySeqS<V>)>, i: int)
-        requires
-            0 <= i < s@.len(),
-        ensures
-            s.deep_view()[i].0 == s@[i].0.deep_view(),
-            s.deep_view().len() == s@.len(),
-    {
-    }
-
-    // spec_find_key_index returning Some(idx) implies idx is in bounds.
-    proof fn lemma_find_key_index_bounds<K, V>(groups: Seq<(K, Seq<V>)>, k: K, idx: int)
-        requires
-            spec_find_key_index(groups, k) == Some(idx),
-        ensures
-            0 <= idx < groups.len(),
-        decreases groups.len(),
-    {
-        reveal(spec_find_key_index);
-        if groups.len() > 0 && groups[0].0 != k {
-            lemma_find_key_index_bounds(groups.skip(1), k, idx - 1);
-        }
-    }
-
-    // Pure spec: spec_find_key_index returns Some(idx) when element idx matches
-    // and no earlier element does.
-    proof fn lemma_find_key_index_found<K, V>(
-        groups: Seq<(K, Seq<V>)>,
-        k: K,
-        idx: int,
-    )
-        requires
-            0 <= idx < groups.len(),
-            groups[idx].0 == k,
-            forall|m: int| #![trigger groups[m]] 0 <= m < idx ==> groups[m].0 != k,
-        ensures
-            spec_find_key_index(groups, k) == Some(idx),
-        decreases groups.len(),
-    {
-        reveal(spec_find_key_index);
-        if groups.len() > 0 && groups[0].0 != k {
-            lemma_find_key_index_found(groups.skip(1), k, idx - 1);
-        }
-    }
-
-    // Pure spec: spec_find_key_index returns None when no element matches.
-    proof fn lemma_find_key_index_not_found<K, V>(
-        groups: Seq<(K, Seq<V>)>,
-        k: K,
-    )
-        requires
-            forall|m: int| #![trigger groups[m]] 0 <= m < groups.len() ==> groups[m].0 != k,
-        ensures
-            spec_find_key_index(groups, k) == None::<int>,
-        decreases groups.len(),
-    {
-        reveal(spec_find_key_index);
-        if groups.len() > 0 {
-            lemma_find_key_index_not_found(groups.skip(1), k);
-        }
-    }
-
-    // Unfolding spec_collect one step when the key is found.
-    proof fn lemma_spec_collect_step_some<K, V>(
-        old_dv: Seq<(K, Seq<V>)>,
-        pairs_prefix: Seq<(K, V)>,
-        k: K,
-        v: V,
-        idx: int,
-    )
-        requires
-            old_dv =~= spec_collect(pairs_prefix),
-            spec_find_key_index(old_dv, k) == Some(idx),
-        ensures
-            spec_collect(pairs_prefix.push((k, v)))
-                =~= old_dv.remove(idx).insert(idx, (k, old_dv[idx].1.push(v))),
-    {
-        lemma_find_key_index_bounds(old_dv, k, idx);
-        let extended = pairs_prefix.push((k, v));
-        assert(extended.len() > 0);
-        assert(extended.drop_last() =~= pairs_prefix);
-        assert(extended.last() == (k, v));
-        reveal(spec_collect);
-    }
-
-    // Unfolding spec_collect one step when the key is new.
-    proof fn lemma_spec_collect_step_none<K, V>(
-        old_dv: Seq<(K, Seq<V>)>,
-        pairs_prefix: Seq<(K, V)>,
-        k: K,
-        v: V,
-    )
-        requires
-            old_dv =~= spec_collect(pairs_prefix),
-            spec_find_key_index(old_dv, k) == None::<int>,
-        ensures
-            spec_collect(pairs_prefix.push((k, v)))
-                =~= old_dv.push((k, seq![v])),
-    {
-        let extended = pairs_prefix.push((k, v));
-        assert(extended.len() > 0);
-        assert(extended.drop_last() =~= pairs_prefix);
-        assert(extended.last() == (k, v));
-        reveal(spec_collect);
-    }
-
-    // When find_key returns Some(idx), spec_find_key_index on deep_view agrees.
-    proof fn lemma_find_key_some<K: DeepView<V = K>, V: DeepView>(s: &Vec<(K, ArraySeqS<V>)>, k: K, idx: usize)
-        requires
-            obeys_generic_deep_eq::<K>(),
-            idx < s@.len(),
-            s@[idx as int].0 == k,
-            forall|m: int| #![trigger s@[m]] 0 <= m < idx as int ==> s@[m].0 != k,
-        ensures
-            spec_find_key_index(s.deep_view(), k.deep_view()) == Some(idx as int),
-    {
-        assert forall|j: int| #![trigger s.deep_view()[j]]
-            0 <= j < s.deep_view().len() implies s.deep_view()[j].0 == s@[j].0
-        by {
-            lemma_deep_view_key::<K, V>(s, j);
-        };
-        lemma_find_key_index_found(s.deep_view(), k.deep_view(), idx as int);
-    }
-
-    // When find_key returns None, spec_find_key_index on deep_view is None.
-    proof fn lemma_find_key_none<K: DeepView<V = K>, V: DeepView>(s: &Vec<(K, ArraySeqS<V>)>, k: K)
-        requires
-            obeys_generic_deep_eq::<K>(),
-            forall|m: int| #![trigger s@[m]] 0 <= m < s@.len() ==> s@[m].0 != k,
-        ensures
-            spec_find_key_index(s.deep_view(), k.deep_view()) == None::<int>,
-    {
-        assert forall|j: int| #![trigger s.deep_view()[j]]
-            0 <= j < s.deep_view().len() implies s.deep_view()[j].0 == s@[j].0
-        by {
-            lemma_deep_view_key::<K, V>(s, j);
-        };
-        lemma_find_key_index_not_found(s.deep_view(), k.deep_view());
-    }
-
     impl<T: View> ArraySeqS<T> {
         // Equate our spec_index on this type with vector indexing.
         broadcast proof fn lemma_spec_index(&self, i: int)
@@ -1470,6 +1492,8 @@ pub mod ArraySeq {
 
     //		10. iterators
 
+    //		10. iterators
+
     /// Iterator wrapper with closed spec view for encapsulation.
     /// Inner is private; closed view() can access it but external code cannot see it.
     #[verifier::reject_recursive_types(T)]
@@ -1499,7 +1523,6 @@ pub mod ArraySeq {
             self.elements.take(self.pos)
         }
     }
-
 
     pub open spec fn iter_invariant<'a, T>(it: &ArraySeqIter<'a, T>) -> bool {
         0 <= it@.0 <= it@.1.len()
@@ -1600,6 +1623,8 @@ pub mod ArraySeq {
 
     //		11. derive impls in verus!
 
+    //		11. derive impls in verus!
+
     impl<T: Clone> Clone for ArraySeqS<T> {
         fn clone(&self) -> (res: Self)
             ensures
@@ -1624,6 +1649,8 @@ pub mod ArraySeq {
     }
 
     } // verus!
+
+
 
     //		13. derive impls outside verus!
 

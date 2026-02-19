@@ -2,21 +2,31 @@
 //! Chapter 21 — Algorithm 21.2: 3D Points using ArraySeqPer via flatten of nested tabulates.
 //! Verusified.
 
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	9. impls
+
+//		1. module
+
 pub mod Algorithm21_2 {
 
-    #[cfg(verus_keep_ghost)]
     use vstd::prelude::*;
 
     #[cfg(verus_keep_ghost)]
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
-
+    use vstd::arithmetic::power::pow;
     #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::*;
+    use crate::vstdplus::seq::seq::lemma_flatten_uniform_len;
 
-    #[cfg(verus_keep_ghost)]
     verus! {
 
-    use vstd::arithmetic::power::pow;
+    //		2. imports
+
+    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+    use crate::Types::Types::*;
+
+    //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -26,29 +36,7 @@ pub mod Algorithm21_2 {
         crate::Types::Types::group_Pair_axioms,
     };
 
-    /// Lemma: Seq::flatten of n sequences each of length m has length n * m.
-    /// - APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
-    proof fn lemma_flatten_uniform_len<A>(ss: Seq<Seq<A>>, m: int)
-        requires
-            forall|i: int| 0 <= i < ss.len() ==> (#[trigger] ss[i]).len() == m,
-        ensures
-            ss.flatten().len() == ss.len() * m,
-        decreases ss.len()
-    {
-        if ss.len() == 0 {
-            assert(ss.len() * m == 0) by (nonlinear_arith) requires ss.len() == 0;
-        } else {
-            assert forall|i: int| 0 <= i < ss.drop_first().len() implies
-                (#[trigger] ss.drop_first()[i]).len() == m by {
-                assert(ss.drop_first()[i] == ss[i + 1]);
-            }
-            lemma_flatten_uniform_len(ss.drop_first(), m);
-            assert(ss.first().len() == m);
-            assert(m + (ss.len() - 1) * m == ss.len() * m) by (nonlinear_arith)
-                requires ss.len() > 0;
-        }
-    }
+    //		9. impls
 
     /// Algorithm 21.2 (3D Points) using ArraySeqPer: flatten of nested tabulates.
     /// - Comprehension form: 〈(x,y,z): 0 ≤ x < n, 1 ≤ y ≤ n, 2 ≤ z ≤ n+1〉

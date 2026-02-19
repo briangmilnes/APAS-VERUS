@@ -1,8 +1,25 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 6.1 Directed Graph (ephemeral) using Set for vertices and arcs - Multi-threaded version.
 //!
 //! Note: NOW uses true parallelism via ParaPair! for neighbor/degree operations.
 //! Arc filtering (n_plus, n_minus) and vertex map-reduce (ng_of_vertices, etc.) are parallel.
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod DirGraphMtEph {
 
@@ -20,11 +37,18 @@ pub mod DirGraphMtEph {
 
     verus! {
 
+    //		2. imports
+
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::seq_set::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Types::Types::*;
+
+
+    //		3. broadcast use
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -33,15 +57,17 @@ pub mod DirGraphMtEph {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
-    pub open spec fn valid_key_type_for_graph<V: StTInMtT + Hash>() -> bool {
-        valid_key_type_Edge::<V>()
-    }
+
+    //		4. type definitions
 
     #[verifier::reject_recursive_types(V)]
     pub struct DirGraphMtEph<V: StTInMtT + Hash + 'static> {
         pub V: SetStEph<V>,
         pub A: SetStEph<Edge<V>>,
     }
+
+
+    //		5. view impls
 
     impl<V: StTInMtT + Hash + 'static> View for DirGraphMtEph<V> {
         type V = GraphView<<V as View>::V>;
@@ -50,15 +76,23 @@ pub mod DirGraphMtEph {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::*;
+
+    //		6. spec fns
+
+    pub open spec fn valid_key_type_for_graph<V: StTInMtT + Hash>() -> bool {
+        valid_key_type_Edge::<V>()
+    }
+
+
+    //		8. traits
 
     pub trait DirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
 
         open spec fn spec_vertices(&self) -> Set<V::V> { self@.V }
         open spec fn spec_arcs(&self) -> Set<(V::V, V::V)> { self@.A }
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn empty() -> (g: Self)
             requires valid_key_type_for_graph::<V>()
             ensures 
@@ -66,7 +100,8 @@ pub mod DirGraphMtEph {
                 g@.V == Set::<<V as View>::V>::empty(), 
                 g@.A == Set::<(<V as View>::V, <V as View>::V)>::empty();
 
-        /// APAS: Work Θ(|V| + |A|), Span Θ(1)
+        /// - APAS: Work Θ(|V| + |A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|V| + |A|), Span Θ(1)
         fn from_sets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (g: Self)
             requires 
                 valid_key_type_for_graph::<V>(),
@@ -79,23 +114,28 @@ pub mod DirGraphMtEph {
                 g@.V == V@, 
                 g@.A == A@;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn arcs(&self) -> (a: &SetStEph<Edge<V>>)
             ensures a@ == self@.A;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn sizeV(&self) -> (n: N)
             ensures n == self@.V.len();
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn sizeA(&self) -> (n: N)
             ensures n == self@.A.len();
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: B)
             requires 
                 wf_graph_view(self@),
@@ -104,7 +144,8 @@ pub mod DirGraphMtEph {
                 self@.V.contains(v@),
             ensures b == self@.A.contains((u@, v@));
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn incident(&self, e: &Edge<V>, v: &V) -> (b: B)
             requires valid_key_type_for_graph::<V>()
             ensures b == (e@.0 == v@ || e@.1 == v@);
@@ -123,7 +164,8 @@ pub mod DirGraphMtEph {
             Set::new(|w: V::V| subarcs.contains((v, w)))
         }
 
-        /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
+        /// - APAS: Work Θ(|A|), Span Θ(log |A|) — parallel
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — ParaPair! split arcs
         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)
             requires 
                 wf_graph_view(self@),
@@ -133,7 +175,8 @@ pub mod DirGraphMtEph {
                 out_neighbors@ == self.spec_n_plus(v@),
                 out_neighbors@ <= self@.V;
 
-        /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
+        /// - APAS: Work Θ(|A|), Span Θ(log |A|) — parallel
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — calls n_plus
         fn out_degree(&self, v: &V) -> (n: N)
             requires 
                 wf_graph_view(self@),
@@ -155,7 +198,8 @@ pub mod DirGraphMtEph {
             Set::new(|u: V::V| subarcs.contains((u, v)))
         }
 
-        /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
+        /// - APAS: Work Θ(|A|), Span Θ(log |A|) — parallel
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — ParaPair! split arcs
         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)
             requires 
                 wf_graph_view(self@),
@@ -165,7 +209,8 @@ pub mod DirGraphMtEph {
                 in_neighbors@ == self.spec_n_minus(v@),
                 in_neighbors@ <= self@.V;
 
-        /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
+        /// - APAS: Work Θ(|A|), Span Θ(log |A|) — parallel
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — calls n_minus
         fn in_degree(&self, v: &V) -> (n: N)
             requires 
                 wf_graph_view(self@),
@@ -179,7 +224,8 @@ pub mod DirGraphMtEph {
             self.spec_n_plus(v).union(self.spec_n_minus(v)) 
         }
 
-        /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
+        /// - APAS: Work Θ(|A|), Span Θ(log |A|) — parallel
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — n_plus + n_minus
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires 
                 wf_graph_view(self@),
@@ -195,7 +241,8 @@ pub mod DirGraphMtEph {
             self.spec_ng(v).len() 
         }
 
-        /// APAS: Work Θ(|A|), Span Θ(log |A|) - parallel
+        /// - APAS: Work Θ(|A|), Span Θ(log |A|) — parallel
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — calls ng
         fn degree(&self, v: &V) -> (n: N)
             requires 
                 wf_graph_view(self@),
@@ -215,7 +262,8 @@ pub mod DirGraphMtEph {
             Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_n_plus(u).contains(w))
         }
 
-        /// APAS: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) - parallel
+        /// - APAS: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) — parallel
+        /// - Claude-Opus-4.6: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) — ParaPair! split vertices
         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)
             requires 
                 wf_graph_view(self@),
@@ -237,7 +285,8 @@ pub mod DirGraphMtEph {
             Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_n_minus(u).contains(w))
         }
 
-        /// APAS: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) - parallel
+        /// - APAS: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) — parallel
+        /// - Claude-Opus-4.6: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) — ParaPair! split vertices
         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)
             requires 
                 wf_graph_view(self@),
@@ -259,7 +308,8 @@ pub mod DirGraphMtEph {
             Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_ng(u).contains(w))
         }
 
-        /// APAS: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) - parallel
+        /// - APAS: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) — parallel
+        /// - Claude-Opus-4.6: Work Θ(|u_set| × |A|), Span Θ(log |u_set| + log |A|) — ParaPair! split vertices
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires 
                 wf_graph_view(self@),
@@ -269,6 +319,9 @@ pub mod DirGraphMtEph {
                 neighbors@ == self.spec_ng_of_vertices(u_set@),
                 neighbors@ <= self@.V;
     }
+
+
+    //		9. impls
 
     /// Parallel arc filtering for out-neighbors using set split.
     fn n_plus_par<V: StTInMtT + Hash + 'static>(g: &DirGraphMtEph<V>, v: V, arcs: SetStEph<Edge<V>>) 
@@ -408,20 +461,20 @@ pub mod DirGraphMtEph {
             proof {
                 // split guarantees: left_verts@ ∪ right_verts@ == verts@
                 // Prove set equality for the union
-                assert forall |w: V::V| #![auto] g.spec_n_plus_of_vertices_from_set(verts@).contains(w)
+                assert forall |w: V::V| #![trigger result@.contains(w)] g.spec_n_plus_of_vertices_from_set(verts@).contains(w)
                     <==> result@.contains(w) by {
                     if g.spec_n_plus_of_vertices_from_set(verts@).contains(w) {
-                        let v_wit: V::V = choose |v: V::V| #![auto] verts@.contains(v) && g.spec_n_plus(v).contains(w);
+                        let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && g.spec_n_plus(v).contains(w);
                         if left_verts@.contains(v_wit) {
                         } else {
                         }
                     }
                     if result@.contains(w) {
                         if left_neighbors@.contains(w) {
-                            let v_wit: V::V = choose |v: V::V| #![auto] left_verts@.contains(v) && g.spec_n_plus(v).contains(w);
+                            let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && g.spec_n_plus(v).contains(w);
                             assert(verts@.contains(v_wit));
                         } else {
-                            let v_wit: V::V = choose |v: V::V| #![auto] right_verts@.contains(v) && g.spec_n_plus(v).contains(w);
+                            let v_wit: V::V = choose |v: V::V| #![trigger right_verts@.contains(v)] right_verts@.contains(v) && g.spec_n_plus(v).contains(w);
                             assert(verts@.contains(v_wit));
                         }
                     }
@@ -475,20 +528,20 @@ pub mod DirGraphMtEph {
             proof {
                 // split guarantees: left_verts@ ∪ right_verts@ == verts@
                 // Prove set equality for the union
-                assert forall |w: V::V| #![auto] g.spec_n_minus_of_vertices_from_set(verts@).contains(w)
+                assert forall |w: V::V| #![trigger result@.contains(w)] g.spec_n_minus_of_vertices_from_set(verts@).contains(w)
                     <==> result@.contains(w) by {
                     if g.spec_n_minus_of_vertices_from_set(verts@).contains(w) {
-                        let v_wit: V::V = choose |v: V::V| #![auto] verts@.contains(v) && g.spec_n_minus(v).contains(w);
+                        let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && g.spec_n_minus(v).contains(w);
                         if left_verts@.contains(v_wit) {
                         } else {
                         }
                     }
                     if result@.contains(w) {
                         if left_neighbors@.contains(w) {
-                            let v_wit: V::V = choose |v: V::V| #![auto] left_verts@.contains(v) && g.spec_n_minus(v).contains(w);
+                            let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && g.spec_n_minus(v).contains(w);
                             assert(verts@.contains(v_wit));
                         } else {
-                            let v_wit: V::V = choose |v: V::V| #![auto] right_verts@.contains(v) && g.spec_n_minus(v).contains(w);
+                            let v_wit: V::V = choose |v: V::V| #![trigger right_verts@.contains(v)] right_verts@.contains(v) && g.spec_n_minus(v).contains(w);
                             assert(verts@.contains(v_wit));
                         }
                     }
@@ -542,34 +595,26 @@ pub mod DirGraphMtEph {
             proof {
                 // split guarantees: left_verts@ ∪ right_verts@ == verts@
                 // Prove set equality for the union
-                assert forall |w: V::V| #![auto] g.spec_ng_of_vertices_from_set(verts@).contains(w)
+                assert forall |w: V::V| #![trigger result@.contains(w)] g.spec_ng_of_vertices_from_set(verts@).contains(w)
                     <==> result@.contains(w) by {
                     if g.spec_ng_of_vertices_from_set(verts@).contains(w) {
-                        let v_wit: V::V = choose |v: V::V| #![auto] verts@.contains(v) && g.spec_ng(v).contains(w);
+                        let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && g.spec_ng(v).contains(w);
                         if left_verts@.contains(v_wit) {
                         } else {
                         }
                     }
                     if result@.contains(w) {
                         if left_neighbors@.contains(w) {
-                            let v_wit: V::V = choose |v: V::V| #![auto] left_verts@.contains(v) && g.spec_ng(v).contains(w);
+                            let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && g.spec_ng(v).contains(w);
                             assert(verts@.contains(v_wit));
                         } else {
-                            let v_wit: V::V = choose |v: V::V| #![auto] right_verts@.contains(v) && g.spec_ng(v).contains(w);
+                            let v_wit: V::V = choose |v: V::V| #![trigger right_verts@.contains(v)] right_verts@.contains(v) && g.spec_ng(v).contains(w);
                             assert(verts@.contains(v_wit));
                         }
                     }
                 }
             }
             result
-        }
-    }
-
-    impl<V: StTInMtT + Hash + 'static> Clone for DirGraphMtEph<V> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
-        {
-            DirGraphMtEph { V: self.V.clone(), A: self.A.clone() }
         }
     }
 
@@ -620,11 +665,22 @@ pub mod DirGraphMtEph {
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
+
+    //		11. derive impls in verus!
+
+    impl<V: StTInMtT + Hash + 'static> Clone for DirGraphMtEph<V> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            DirGraphMtEph { V: self.V.clone(), A: self.A.clone() }
+        }
+    }
+
     impl<V: StTInMtT + Hash + 'static> Eq for DirGraphMtEph<V> {}
 
     impl<V: StTInMtT + Hash + 'static> PartialEq for DirGraphMtEph<V> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             let v_eq = self.V == other.V;
             let a_eq = self.A == other.A;
@@ -639,6 +695,9 @@ pub mod DirGraphMtEph {
 
     } // verus!
 
+
+    //		13. derive impls outside verus!
+
     impl<V: StTInMtT + Hash + 'static> Debug for DirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             f.debug_struct("DirGraphMtEph")
@@ -651,6 +710,9 @@ pub mod DirGraphMtEph {
     impl<V: StTInMtT + Hash + 'static> Display for DirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} A={:?}", self.V, self.A) }
     }
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! DirGraphMtEphLit {

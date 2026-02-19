@@ -2,29 +2,39 @@
 //! Chapter 21 — Algorithm 21.5: Brute Force Solution to the Primes Problem.
 //! Verusified.
 
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	4. type definitions
+//	9. impls
+
+//		1. module
+
 pub mod Algorithm21_5 {
 
-    #[cfg(verus_keep_ghost)]
     use vstd::prelude::*;
 
-    #[cfg(verus_keep_ghost)]
+    verus! {
+
+    //		2. imports
+
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
-
-    #[cfg(verus_keep_ghost)]
     use crate::Chap21::Exercise21_8::Exercise21_8::*;
-
-    #[cfg(verus_keep_ghost)]
     use crate::Types::Types::*;
 
-    #[cfg(verus_keep_ghost)]
-    verus! {
+    //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
+    //		4. type definitions
+
     pub type T = N;
+
+    //		9. impls
 
     /// Algorithm 21.5 (Brute Force Solution to the Primes Problem)
     /// primesBF n = { i in 2..n : isPrime(i) }
@@ -39,6 +49,9 @@ pub mod Algorithm21_5 {
             n > 2  ==> primes.spec_len() <= n - 2,
             forall|i: int| 0 <= i < primes.spec_len()
                 ==> spec_is_prime(#[trigger] primes.spec_index(i) as int),
+            forall|p: int| 2 <= p < n as int && spec_is_prime(p) ==>
+                Seq::new(primes.spec_len(), |i: int| primes.spec_index(i))
+                    .contains(#[trigger] (p as N)),
     {
         if n <= 2 {
             return ArraySeqStPerS::from_vec(Vec::new());
@@ -59,6 +72,26 @@ pub mod Algorithm21_5 {
             &pred,
             Ghost(spec_pred),
         );
+        proof {
+            let ghost all_seq = Seq::new(all.seq@.len(), |i: int| all.seq@[i]);
+            let ghost filt_seq = Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i));
+            // Filter ensures: filt_seq.to_multiset() =~= all_seq.to_multiset().filter(spec_pred)
+            assert forall|p: int| 2 <= p < n as int && spec_is_prime(p) implies
+                filt_seq.contains(#[trigger] (p as N)) by {
+                let idx = (p - 2) as int;
+                assert(0 <= idx < all.seq@.len());
+                assert(all.spec_index(idx) == p as N);
+                assert(all_seq[idx] == p as N);
+                all_seq.to_multiset_ensures();
+                assert(all_seq.to_multiset().count(p as N) > 0);
+                assert(spec_pred(p as N));
+                // axiom_filter_count: m.filter(f).count(v) == if f(v) { m.count(v) } else { 0 }
+                assert(all_seq.to_multiset().filter(spec_pred).count(p as N)
+                    == all_seq.to_multiset().count(p as N));
+                assert(filt_seq.to_multiset().count(p as N) > 0);
+                filt_seq.to_multiset_ensures();
+            }
+        }
         filtered
     }
 

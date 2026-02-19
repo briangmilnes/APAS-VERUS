@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Primitive tree sequence implementation for Chapter 23. Verusified.
 //!
 //! A single-threaded persistent tree sequence backed by Vec.
@@ -12,7 +13,7 @@
 //	3. broadcast use
 //	4. type definitions
 //	5. view impls
-//	6. spec helpers
+//	6. spec fns
 //	8. traits
 //	9. impls
 //	10. iterators
@@ -20,6 +21,9 @@
 //	13. derive impls outside verus!
 
 //		1. module
+
+
+
 
 pub mod PrimTreeSeqStPer {
 
@@ -29,6 +33,8 @@ pub mod PrimTreeSeqStPer {
     use vstd::prelude::*;
 
     verus! {
+
+    //		2. imports
 
     //		2. imports
 
@@ -46,6 +52,9 @@ pub mod PrimTreeSeqStPer {
         crate::vstdplus::multiset::multiset::spec_filter_len,
     };
 
+
+    //		3. broadcast use
+
     //		3. broadcast use
 
     broadcast use {
@@ -53,6 +62,9 @@ pub mod PrimTreeSeqStPer {
         vstd::seq::group_seq_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
+
+
+    //		4. type definitions
 
     //		4. type definitions
 
@@ -70,6 +82,17 @@ pub mod PrimTreeSeqStPer {
         Two(PrimTreeSeqStS<T>, PrimTreeSeqStS<T>),
     }
 
+    /// Ghost view of the exposed tree structure.
+    #[verifier::reject_recursive_types(T)]
+    pub ghost enum PrimTreeSeqStTreeView<T> {
+        Zero,
+        One(T),
+        Two(Seq<T>, Seq<T>),
+    }
+
+
+    //		5. view impls
+
     //		5. view impls
 
     impl<T> View for PrimTreeSeqStS<T> {
@@ -78,14 +101,6 @@ pub mod PrimTreeSeqStPer {
         open spec fn view(&self) -> Seq<T> {
             self.seq@
         }
-    }
-
-    /// Ghost view of the exposed tree structure.
-    #[verifier::reject_recursive_types(T)]
-    pub ghost enum PrimTreeSeqStTreeView<T> {
-        Zero,
-        One(T),
-        Two(Seq<T>, Seq<T>),
     }
 
     impl<T> View for PrimTreeSeqStTree<T> {
@@ -100,31 +115,15 @@ pub mod PrimTreeSeqStPer {
         }
     }
 
-    //		6. spec helpers
 
-    impl<T> PrimTreeSeqStS<T> {
-        pub open spec fn spec_len(&self) -> nat {
-            self.seq@.len() as nat
-        }
+    //		6. spec fns
 
-        pub open spec fn spec_index(&self, i: int) -> T
-            recommends 0 <= i < self.spec_len(),
-        {
-            self.seq@[i]
-        }
-
-        /// Returns a borrow iterator over the sequence elements.
-        /// - APAS: N/A — Verus-specific iterator scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps slice::Iter.
-        pub fn iter(&self) -> (it: PrimTreeSeqStIter<'_, T>)
-            ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
-                prim_tree_seq_iter_invariant(&it),
-        {
-            PrimTreeSeqStIter { inner: self.seq.iter() }
-        }
+    pub open spec fn prim_tree_seq_iter_invariant<'a, T>(it: &PrimTreeSeqStIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
     }
+
+
+    //		8. traits
 
     //		8. traits
 
@@ -297,6 +296,47 @@ pub mod PrimTreeSeqStPer {
                 obeys_feq_clone::<T>(),
             ensures
                 flattened.seq@ =~= a.seq@.map_values(|inner: PrimTreeSeqStS<T>| inner.seq@).flatten();
+
+        /// Borrows the inner slice.
+        /// - APAS: N/A — utility method, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        fn as_slice(&self) -> (slice: &[T])
+            ensures slice@ =~= self@;
+
+        /// Unwraps into the inner Vec.
+        /// - APAS: N/A — utility method, not in prose.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        fn into_vec(self) -> (vec: Vec<T>)
+            ensures vec@ =~= self@;
+    }
+
+
+    //		9. impls
+
+    //		6. spec fns
+
+    impl<T> PrimTreeSeqStS<T> {
+        pub open spec fn spec_len(&self) -> nat {
+            self.seq@.len() as nat
+        }
+
+        pub open spec fn spec_index(&self, i: int) -> T
+            recommends 0 <= i < self.spec_len(),
+        {
+            self.seq@[i]
+        }
+
+        /// Returns a borrow iterator over the sequence elements.
+        /// - APAS: N/A — Verus-specific iterator scaffolding.
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps slice::Iter.
+        pub fn iter(&self) -> (it: PrimTreeSeqStIter<'_, T>)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+                prim_tree_seq_iter_invariant(&it),
+        {
+            PrimTreeSeqStIter { inner: self.seq.iter() }
+        }
     }
 
     //		9. impls
@@ -681,7 +721,26 @@ pub mod PrimTreeSeqStPer {
             }
             PrimTreeSeqStS { seq }
         }
+
+        fn as_slice(&self) -> (slice: &[T]) { &self.seq }
+
+        fn into_vec(self) -> (vec: Vec<T>) { self.seq }
     }
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: View + PartialEq> PartialEqSpecImpl for PrimTreeSeqStS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: PartialEq + View> PartialEqSpecImpl for PrimTreeSeqStTree<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+
+    //		10. iterators
 
     //		10. iterators
 
@@ -707,10 +766,6 @@ pub mod PrimTreeSeqStPer {
     impl<'a, T> View for PrimTreeSeqStGhostIterator<'a, T> {
         type V = Seq<T>;
         open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    pub open spec fn prim_tree_seq_iter_invariant<'a, T>(it: &PrimTreeSeqStIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
     }
 
     impl<'a, T> std::iter::Iterator for PrimTreeSeqStIter<'a, T> {
@@ -805,6 +860,9 @@ pub mod PrimTreeSeqStPer {
         }
     }
 
+
+    //		11. derive impls in verus!
+
     //		11. derive impls in verus!
 
     impl<T: Clone> Clone for PrimTreeSeqStS<T> {
@@ -817,19 +875,13 @@ pub mod PrimTreeSeqStPer {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: View + PartialEq> PartialEqSpecImpl for PrimTreeSeqStS<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
-
     impl<T: PartialEq + View> PartialEq for PrimTreeSeqStS<T> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
-            let r = self.seq == other.seq;
-            proof { assume(r == (self@ == other@)); }
-            r
+            let equal = self.seq == other.seq;
+            proof { assume(equal == (self@ == other@)); }
+            equal
         }
     }
 
@@ -849,15 +901,9 @@ pub mod PrimTreeSeqStPer {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: PartialEq + View> PartialEqSpecImpl for PrimTreeSeqStTree<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
-
     impl<T: PartialEq + View> PartialEq for PrimTreeSeqStTree<T> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             match (self, other) {
                 (PrimTreeSeqStTree::Zero, PrimTreeSeqStTree::Zero) => {
@@ -865,17 +911,16 @@ pub mod PrimTreeSeqStPer {
                     true
                 },
                 (PrimTreeSeqStTree::One(a), PrimTreeSeqStTree::One(b)) => {
-                    let r = *a == *b;
-                    proof { assume(r == (self@ == other@)); }
-                    r
+                    let equal = *a == *b;
+                    proof { assume(equal == (self@ == other@)); }
+                    equal
                 },
                 (PrimTreeSeqStTree::Two(l1, r1), PrimTreeSeqStTree::Two(l2, r2)) => {
-                    let r = *l1 == *l2 && *r1 == *r2;
-                    proof { assume(r == (self@ == other@)); }
-                    r
+                    let equal = *l1 == *l2 && *r1 == *r2;
+                    proof { assume(equal == (self@ == other@)); }
+                    equal
                 },
                 _ => {
-                    proof { assume(self@ != other@); }
                     false
                 },
             }
@@ -884,22 +929,10 @@ pub mod PrimTreeSeqStPer {
 
     impl<T: Eq + View> Eq for PrimTreeSeqStTree<T> {}
 
-    // Utility methods for runtime test support.
-    impl<T> PrimTreeSeqStS<T> {
-        /// - APAS: N/A — utility method, not in prose.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — borrows inner slice.
-        pub fn as_slice(&self) -> (result: &[T])
-            ensures result@ =~= self@
-        { &self.seq }
-
-        /// - APAS: N/A — utility method, not in prose.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — unwraps inner Vec.
-        pub fn into_vec(self) -> (result: Vec<T>)
-            ensures result@ =~= self@
-        { self.seq }
-    }
-
     } // verus!
+
+
+    //		13. derive impls outside verus!
 
     impl<T: std::fmt::Debug> std::fmt::Debug for PrimTreeSeqStS<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

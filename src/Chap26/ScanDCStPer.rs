@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Divide-and-conquer scan - sequential implementation (Chapter 26, Section 3).
 //! Verusified.
 
@@ -6,11 +7,15 @@
 //	1. module
 //	2. imports
 //	3. broadcast use
-//	4. spec functions
+//	6. spec fns
+//	7. proof fns/broadcast groups
 //	8. traits
 //	9. impls
 
 //		1. module
+
+
+
 
 pub mod ScanDCStPer {
 
@@ -20,11 +25,16 @@ pub mod ScanDCStPer {
 
     //		2. imports
 
+    //		2. imports
+
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     #[cfg(verus_keep_ghost)]
     use crate::Chap26::DivConReduceStPer::DivConReduceStPer::{spec_sum_fn, spec_wrapping_add};
     use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
+
+
+    //		3. broadcast use
 
     //		3. broadcast use
 
@@ -32,6 +42,9 @@ pub mod ScanDCStPer {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
     };
+
+
+    //		6. spec fns
 
     //		4. spec functions
 
@@ -53,39 +66,8 @@ pub mod ScanDCStPer {
         &&& total == spec_iterate(input, spec_f, id)
     }
 
-    //		8. traits
 
-    pub trait ScanDCStTrait {
-        /// Algorithm 26.5: Exclusive prefix scan via divide and conquer.
-        /// Returns (prefixes, total) where prefixes[i] = f(id, a[0], ..., a[i-1]).
-        /// - APAS: Work Θ(n lg n), Span Θ(lg n) — Algorithm 26.5 with parallel recursive calls and O(n)/O(1) combine.
-        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential implementation, Span = Work.
-        fn scan_dc<F: Fn(&N, &N) -> N>(a: &ArraySeqStPerS<N>, f: &F, Ghost(spec_f): Ghost<spec_fn(N, N) -> N>, id: N) -> (result: (ArraySeqStPerS<N>, N))
-            requires
-                a.spec_len() <= usize::MAX,
-                spec_monoid(spec_f, id),
-                forall|x: &N, y: &N| #[trigger] f.requires((x, y)),
-                forall|x: N, y: N, ret: N| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
-            ensures
-                spec_scan_post(
-                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
-                    spec_f, id,
-                    Seq::new(result.0.spec_len(), |i: int| result.0.spec_index(i)),
-                    result.1);
-
-        /// Exclusive prefix sums via divide-and-conquer scan.
-        /// Convenience: scan_dc with (+, 0).
-        /// - APAS: Work Θ(n lg n), Span Θ(lg n) — same as scan_dc.
-        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — delegates to sequential scan_dc.
-        fn prefix_sums_dc(a: &ArraySeqStPerS<N>) -> (result: (ArraySeqStPerS<N>, N))
-            requires a.spec_len() <= usize::MAX,
-            ensures
-                spec_scan_post(
-                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
-                    spec_sum_fn(), 0,
-                    Seq::new(result.0.spec_len(), |i: int| result.0.spec_index(i)),
-                    result.1);
-    }
+    //		7. proof fns/broadcast groups
 
     //		9. impls
 
@@ -104,8 +86,48 @@ pub mod ScanDCStPer {
         }
     }
 
+
+    //		8. traits
+
+    //		8. traits
+
+    pub trait ScanDCStTrait {
+        /// Algorithm 26.5: Exclusive prefix scan via divide and conquer.
+        /// Returns (prefixes, total) where prefixes[i] = f(id, a[0], ..., a[i-1]).
+        /// - APAS: Work Θ(n lg n), Span Θ(lg n) — Algorithm 26.5 with parallel recursive calls and O(n)/O(1) combine.
+        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential implementation, Span = Work.
+        fn scan_dc<F: Fn(&N, &N) -> N>(a: &ArraySeqStPerS<N>, f: &F, Ghost(spec_f): Ghost<spec_fn(N, N) -> N>, id: N) -> (scanned: (ArraySeqStPerS<N>, N))
+            requires
+                a.spec_len() <= usize::MAX,
+                spec_monoid(spec_f, id),
+                forall|x: &N, y: &N| #[trigger] f.requires((x, y)),
+                forall|x: N, y: N, ret: N| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+            ensures
+                spec_scan_post(
+                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+                    spec_f, id,
+                    Seq::new(scanned.0.spec_len(), |i: int| scanned.0.spec_index(i)),
+                    scanned.1);
+
+        /// Exclusive prefix sums via divide-and-conquer scan.
+        /// Convenience: scan_dc with (+, 0).
+        /// - APAS: Work Θ(n lg n), Span Θ(lg n) — same as scan_dc.
+        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — delegates to sequential scan_dc.
+        fn prefix_sums_dc(a: &ArraySeqStPerS<N>) -> (sums: (ArraySeqStPerS<N>, N))
+            requires a.spec_len() <= usize::MAX,
+            ensures
+                spec_scan_post(
+                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+                    spec_sum_fn(), 0,
+                    Seq::new(sums.0.spec_len(), |i: int| sums.0.spec_index(i)),
+                    sums.1);
+    }
+
+
+    //		9. impls
+
     impl ScanDCStTrait for ArraySeqStPerS<N> {
-        fn scan_dc<F: Fn(&N, &N) -> N>(a: &ArraySeqStPerS<N>, f: &F, Ghost(spec_f): Ghost<spec_fn(N, N) -> N>, id: N) -> (result: (ArraySeqStPerS<N>, N))
+        fn scan_dc<F: Fn(&N, &N) -> N>(a: &ArraySeqStPerS<N>, f: &F, Ghost(spec_f): Ghost<spec_fn(N, N) -> N>, id: N) -> (scanned: (ArraySeqStPerS<N>, N))
             decreases a.spec_len(),
         {
             let n = a.length();
@@ -292,7 +314,7 @@ pub mod ScanDCStPer {
             (result_prefixes, total)
         }
 
-        fn prefix_sums_dc(a: &ArraySeqStPerS<N>) -> (result: (ArraySeqStPerS<N>, N)) {
+        fn prefix_sums_dc(a: &ArraySeqStPerS<N>) -> (sums: (ArraySeqStPerS<N>, N)) {
             Self::scan_dc(a,
                 &(|x: &N, y: &N| -> (ret: N)
                     ensures ret == spec_wrapping_add(*x, *y)

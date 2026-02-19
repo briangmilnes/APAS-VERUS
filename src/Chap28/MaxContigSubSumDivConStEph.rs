@@ -1,5 +1,6 @@
 // Copyright (C) 2025 Brian G. Milnes
 // SPDX-License-Identifier: MIT
+
 //! Maximum Contiguous Subsequence Sum — Divide and Conquer (Chapter 28, Algorithm 28.17).
 //!
 //! Historical Note: This divide-and-conquer algorithm was first designed by Michael Shamos
@@ -12,6 +13,16 @@
 //! 3. exec functions
 //! 4. proof functions
 
+//  Table of Contents
+//	1. module
+//	6. spec fns
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+
+//		1. module
+
+
 pub mod MaxContigSubSumDivConStEph {
     use vstd::prelude::*;
 
@@ -19,6 +30,8 @@ pub mod MaxContigSubSumDivConStEph {
     use crate::Chap28::MCSSSpec::MCSSSpec::*;
 
     verus! {
+
+    //		6. spec fns
 
     // ─── 2. spec definitions ───
 
@@ -31,138 +44,8 @@ pub mod MaxContigSubSumDivConStEph {
         }
     }
 
-    // ─── 3. exec functions ───
 
-    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (result: Option<i32>)
-        ensures result == spec_max_opt_i32(a, b),
-    {
-        match (a, b) {
-            (None, None) => None,
-            (None, Some(_)) => b,
-            (Some(_), None) => a,
-            (Some(x), Some(y)) => if x >= y { a } else { b },
-        }
-    }
-
-    /// Find max suffix sum (MCSSE problem, Algorithm 28.12).
-    /// max over lo in 0..n of range_sum(a, lo, n).
-    /// Uses prefix-sum approach: result = total - min(prefix(0), ..., prefix(n-1)).
-    /// - APAS: Work Θ(n), Span Θ(log n)
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop
-    fn max_suffix_sum(a: &ArraySeqStEphS<i32>) -> (result: i32)
-        requires
-            a.seq@.len() > 0,
-            sums_fit_i32(a.seq@),
-        ensures
-            is_max_suffix_sum(a.seq@, result as int),
-    {
-        let n = a.length();
-        let mut running_sum: i32 = 0;
-        let mut min_prefix: i32 = 0;  // prefix(0) = 0
-
-        let mut i: usize = 0;
-        while i < n
-            invariant
-                0 <= i <= n,
-                n as int == a.seq@.len(),
-                sums_fit_i32(a.seq@),
-                running_sum as int == spec_prefix_sum(a.seq@, i as int),
-                // min_prefix = min of prefix(0), ..., prefix(i-1) when i > 0;
-                // min_prefix = prefix(0) = 0 when i == 0.
-                (forall|j: int|
-                    #![trigger spec_prefix_sum(a.seq@, j)]
-                    0 <= j < i || j == 0 ==> min_prefix as int <= spec_prefix_sum(a.seq@, j)),
-                (exists|j: int|
-                    #![trigger spec_prefix_sum(a.seq@, j)]
-                    0 <= j <= i && j < n && min_prefix as int == spec_prefix_sum(a.seq@, j))
-                    || (i == 0 && min_prefix == 0),
-            decreases n - i,
-        {
-            // Update min_prefix with prefix(i) BEFORE adding a[i].
-            // This ensures we only include prefix(0), ..., prefix(n-1).
-            if running_sum < min_prefix {
-                min_prefix = running_sum;
-            }
-
-            proof { lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int); }
-            running_sum = running_sum + *a.nth(i);
-            i = i + 1;
-        }
-
-        // Now: running_sum = prefix(n) = total,
-        //      min_prefix = min(prefix(0), ..., prefix(n-1)).
-        // result = total - min_prefix = max suffix sum.
-        proof {
-            let total = running_sum as int;
-
-            // (a) Achieved: min_prefix = prefix(lo_w) for some lo_w < n.
-            // range_sum(a, lo_w, n) = prefix(n) - prefix(lo_w) = total - min_prefix.
-            if n > 0 {
-                // min_prefix is achieved at some j
-                let lo_w: int = choose|j: int|
-                    #![trigger spec_prefix_sum(a.seq@, j)]
-                    0 <= j < n as int && min_prefix as int == spec_prefix_sum(a.seq@, j);
-                lemma_range_sum_via_prefix(a.seq@, lo_w, n as int);
-                assert(spec_range_sum(a.seq@, lo_w, a.seq@.len() as int) == total - min_prefix as int);
-            }
-
-            // (b) Maximal: for all lo in 0..n: range_sum(a, lo, n) <= total - min_prefix.
-            assert forall|lo: int|
-                #![trigger spec_range_sum(a.seq@, lo, a.seq@.len() as int)]
-                0 <= lo < a.seq@.len() as int
-            implies
-                spec_range_sum(a.seq@, lo, a.seq@.len() as int) <= (running_sum - min_prefix) as int
-            by {
-                lemma_range_sum_via_prefix(a.seq@, lo, n as int);
-                // range_sum = prefix(n) - prefix(lo) <= prefix(n) - min_prefix
-            };
-        }
-
-        running_sum - min_prefix
-    }
-
-    /// Find max prefix sum (MCSSS problem, Algorithm 28.11).
-    /// max over hi in 1..=n of range_sum(a, 0, hi).
-    /// - APAS: Work Θ(n), Span Θ(log n)
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop
-    fn max_prefix_sum(a: &ArraySeqStEphS<i32>) -> (result: i32)
-        requires
-            a.seq@.len() > 0,
-            sums_fit_i32(a.seq@),
-        ensures
-            is_max_prefix_sum(a.seq@, result as int),
-    {
-        let n = a.length();
-        let mut max_val: i32 = *a.nth(0);
-        let mut running_sum: i32 = *a.nth(0);
-
-        proof { lemma_range_sum_single(a.seq@, 0); }
-
-        let mut i: usize = 1;
-        while i < n
-            invariant
-                1 <= i <= n,
-                n as int == a.seq@.len(),
-                sums_fit_i32(a.seq@),
-                running_sum as int == spec_prefix_sum(a.seq@, i as int),
-                (forall|j: int|
-                    #![trigger spec_range_sum(a.seq@, 0, j)]
-                    1 <= j <= i ==> max_val as int >= spec_range_sum(a.seq@, 0, j)),
-                (exists|j: int|
-                    #![trigger spec_range_sum(a.seq@, 0, j)]
-                    1 <= j <= i && max_val as int == spec_range_sum(a.seq@, 0, j)),
-            decreases n - i,
-        {
-            proof { lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int); }
-            running_sum = running_sum + *a.nth(i);
-            if running_sum > max_val {
-                max_val = running_sum;
-            }
-            i = i + 1;
-        }
-
-        max_val
-    }
+    //		7. proof fns/broadcast groups
 
     // ─── 4. proof functions ───
 
@@ -251,23 +134,162 @@ pub mod MaxContigSubSumDivConStEph {
         };
     }
 
+
+    //		8. traits
+
     /// Trait for divide-and-conquer MCSS.
     pub trait MaxContigSubSumDivConTrait {
         /// Compute MCSS using divide-and-conquer (Algorithm 28.17).
         /// Returns None for empty sequence (representing -infinity).
         /// - APAS: Work Θ(n log n), Span Θ(log² n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) — sequential
-        fn max_contig_sub_sum_divcon(a: &ArraySeqStEphS<i32>) -> (result: Option<i32>)
+        fn max_contig_sub_sum_divcon(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),
             ensures
-                a.seq@.len() == 0 ==> result.is_none(),
-                a.seq@.len() > 0 ==> result.is_some(),
-                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
+                a.seq@.len() == 0 ==> mcss.is_none(),
+                a.seq@.len() > 0 ==> mcss.is_some(),
+                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
+    }
+
+
+    //		9. impls
+
+    // ─── 3. exec functions ───
+
+    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
+        ensures max == spec_max_opt_i32(a, b),
+    {
+        match (a, b) {
+            (None, None) => None,
+            (None, Some(_)) => b,
+            (Some(_), None) => a,
+            (Some(x), Some(y)) => if x >= y { a } else { b },
+        }
+    }
+
+    /// Find max suffix sum (MCSSE problem, Algorithm 28.12).
+    /// max over lo in 0..n of range_sum(a, lo, n).
+    /// Uses prefix-sum approach: result = total - min(prefix(0), ..., prefix(n-1)).
+    /// - APAS: Work Θ(n), Span Θ(log n)
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop
+    fn max_suffix_sum(a: &ArraySeqStEphS<i32>) -> (mss: i32)
+        requires
+            a.seq@.len() > 0,
+            sums_fit_i32(a.seq@),
+        ensures
+            is_max_suffix_sum(a.seq@, mss as int),
+    {
+        let n = a.length();
+        let mut running_sum: i32 = 0;
+        let mut min_prefix: i32 = 0;  // prefix(0) = 0
+
+        let mut i: usize = 0;
+        while i < n
+            invariant
+                0 <= i <= n,
+                n as int == a.seq@.len(),
+                sums_fit_i32(a.seq@),
+                running_sum as int == spec_prefix_sum(a.seq@, i as int),
+                // min_prefix = min of prefix(0), ..., prefix(i-1) when i > 0;
+                // min_prefix = prefix(0) = 0 when i == 0.
+                (forall|j: int|
+                    #![trigger spec_prefix_sum(a.seq@, j)]
+                    0 <= j < i || j == 0 ==> min_prefix as int <= spec_prefix_sum(a.seq@, j)),
+                (exists|j: int|
+                    #![trigger spec_prefix_sum(a.seq@, j)]
+                    0 <= j <= i && j < n && min_prefix as int == spec_prefix_sum(a.seq@, j))
+                    || (i == 0 && min_prefix == 0),
+            decreases n - i,
+        {
+            // Update min_prefix with prefix(i) BEFORE adding a[i].
+            // This ensures we only include prefix(0), ..., prefix(n-1).
+            if running_sum < min_prefix {
+                min_prefix = running_sum;
+            }
+
+            proof { lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int); }
+            running_sum = running_sum + *a.nth(i);
+            i = i + 1;
+        }
+
+        // Now: running_sum = prefix(n) = total,
+        //      min_prefix = min(prefix(0), ..., prefix(n-1)).
+        // result = total - min_prefix = max suffix sum.
+        proof {
+            let total = running_sum as int;
+
+            // (a) Achieved: min_prefix = prefix(lo_w) for some lo_w < n.
+            // range_sum(a, lo_w, n) = prefix(n) - prefix(lo_w) = total - min_prefix.
+            if n > 0 {
+                // min_prefix is achieved at some j
+                let lo_w: int = choose|j: int|
+                    #![trigger spec_prefix_sum(a.seq@, j)]
+                    0 <= j < n as int && min_prefix as int == spec_prefix_sum(a.seq@, j);
+                lemma_range_sum_via_prefix(a.seq@, lo_w, n as int);
+                assert(spec_range_sum(a.seq@, lo_w, a.seq@.len() as int) == total - min_prefix as int);
+            }
+
+            // (b) Maximal: for all lo in 0..n: range_sum(a, lo, n) <= total - min_prefix.
+            assert forall|lo: int|
+                #![trigger spec_range_sum(a.seq@, lo, a.seq@.len() as int)]
+                0 <= lo < a.seq@.len() as int
+            implies
+                spec_range_sum(a.seq@, lo, a.seq@.len() as int) <= (running_sum - min_prefix) as int
+            by {
+                lemma_range_sum_via_prefix(a.seq@, lo, n as int);
+                // range_sum = prefix(n) - prefix(lo) <= prefix(n) - min_prefix
+            };
+        }
+
+        running_sum - min_prefix
+    }
+
+    /// Find max prefix sum (MCSSS problem, Algorithm 28.11).
+    /// max over hi in 1..=n of range_sum(a, 0, hi).
+    /// - APAS: Work Θ(n), Span Θ(log n)
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop
+    fn max_prefix_sum(a: &ArraySeqStEphS<i32>) -> (mps: i32)
+        requires
+            a.seq@.len() > 0,
+            sums_fit_i32(a.seq@),
+        ensures
+            is_max_prefix_sum(a.seq@, mps as int),
+    {
+        let n = a.length();
+        let mut max_val: i32 = *a.nth(0);
+        let mut running_sum: i32 = *a.nth(0);
+
+        proof { lemma_range_sum_single(a.seq@, 0); }
+
+        let mut i: usize = 1;
+        while i < n
+            invariant
+                1 <= i <= n,
+                n as int == a.seq@.len(),
+                sums_fit_i32(a.seq@),
+                running_sum as int == spec_prefix_sum(a.seq@, i as int),
+                (forall|j: int|
+                    #![trigger spec_range_sum(a.seq@, 0, j)]
+                    1 <= j <= i ==> max_val as int >= spec_range_sum(a.seq@, 0, j)),
+                (exists|j: int|
+                    #![trigger spec_range_sum(a.seq@, 0, j)]
+                    1 <= j <= i && max_val as int == spec_range_sum(a.seq@, 0, j)),
+            decreases n - i,
+        {
+            proof { lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int); }
+            running_sum = running_sum + *a.nth(i);
+            if running_sum > max_val {
+                max_val = running_sum;
+            }
+            i = i + 1;
+        }
+
+        max_val
     }
 
     impl MaxContigSubSumDivConTrait for ArraySeqStEphS<i32> {
-        fn max_contig_sub_sum_divcon(a: &ArraySeqStEphS<i32>) -> (result: Option<i32>)
+        fn max_contig_sub_sum_divcon(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             decreases a.seq@.len(),
         {
             let n = a.length();
@@ -323,8 +345,8 @@ pub mod MaxContigSubSumDivConStEph {
             }
 
             let max_crossing: i32 = s_left + p_right;
-            let result = max_with_neginf(max_left, max_right);
-            let result = max_with_neginf(result, Some(max_crossing));
+            let mcss = max_with_neginf(max_left, max_right);
+            let mcss = max_with_neginf(mcss, Some(max_crossing));
 
             proof {
                 lemma_divcon_combine(
@@ -339,7 +361,7 @@ pub mod MaxContigSubSumDivConStEph {
                 );
             }
 
-            result
+            mcss
         }
     }
 

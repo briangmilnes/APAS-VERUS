@@ -1,11 +1,21 @@
 // Copyright (C) 2025 Brian G. Milnes
 // SPDX-License-Identifier: MIT
+
 //! Maximum Contiguous Subsequence Sum — Reduced Force (Chapter 28, Algorithm 28.13).
 //!
 //! ## Table of Contents
 //! 1. imports
 //! 2. spec definitions
 //! 3. exec functions
+
+//  Table of Contents
+//	1. module
+//	6. spec fns
+//	8. traits
+//	9. impls
+
+//		1. module
+
 
 pub mod MaxContigSubSumReducedStEph {
     use vstd::prelude::*;
@@ -14,6 +24,8 @@ pub mod MaxContigSubSumReducedStEph {
     use crate::Chap28::MCSSSpec::MCSSSpec::*;
 
     verus! {
+
+    //		6. spec fns
 
     // ─── 2. spec definitions ───
 
@@ -26,12 +38,32 @@ pub mod MaxContigSubSumReducedStEph {
         }
     }
 
+
+    //		8. traits
+
+    pub trait MaxContigSubSumReducedTrait {
+        /// Compute MCSS using reduced force (Algorithm 28.13).
+        /// Returns None for empty sequence (representing -infinity).
+        /// - APAS: Work Θ(n²), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential
+        fn max_contig_sub_sum_reduced(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
+            requires
+                sums_fit_i32(a.seq@),
+            ensures
+                a.seq@.len() == 0 ==> mcss.is_none(),
+                a.seq@.len() > 0 ==> mcss.is_some(),
+                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
+    }
+
+
+    //		9. impls
+
     // ─── 3. exec functions ───
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (result: Option<i32>)
-        ensures result == spec_max_opt_i32(a, b),
+    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
+        ensures max == spec_max_opt_i32(a, b),
     {
         match (a, b) {
             (None, None) => None,
@@ -41,22 +73,8 @@ pub mod MaxContigSubSumReducedStEph {
         }
     }
 
-    pub trait MaxContigSubSumReducedTrait {
-        /// Compute MCSS using reduced force (Algorithm 28.13).
-        /// Returns None for empty sequence (representing -infinity).
-        /// - APAS: Work Θ(n²), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential
-        fn max_contig_sub_sum_reduced(a: &ArraySeqStEphS<i32>) -> (result: Option<i32>)
-            requires
-                sums_fit_i32(a.seq@),
-            ensures
-                a.seq@.len() == 0 ==> result.is_none(),
-                a.seq@.len() > 0 ==> result.is_some(),
-                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
-    }
-
     impl MaxContigSubSumReducedTrait for ArraySeqStEphS<i32> {
-        fn max_contig_sub_sum_reduced(a: &ArraySeqStEphS<i32>) -> (result: Option<i32>) {
+        fn max_contig_sub_sum_reduced(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();
 
             if n == 0 {

@@ -88,27 +88,27 @@ pub mod ScanDCMtPer {
         /// Returns (prefixes, total) where prefixes[i] = sum(a[0], ..., a[i-1]).
         /// - APAS: Work Θ(n lg n), Span Θ(lg n) — Algorithm 26.5 with parallel recursive calls.
         /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n) — parallel recursion via join(), sequential Θ(n) combine: S(n) = S(n/2) + Θ(n) = Θ(n).
-        fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<N>) -> (result: (ArraySeqMtPerS<N>, N))
+        fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<N>) -> (sums: (ArraySeqMtPerS<N>, N))
             requires a.spec_len() <= usize::MAX,
             ensures
                 spec_scan_post(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
                     spec_sum_fn(), 0,
-                    Seq::new(result.0.spec_len(), |i: int| result.0.spec_index(i)),
-                    result.1);
+                    Seq::new(sums.0.spec_len(), |i: int| sums.0.spec_index(i)),
+                    sums.1);
     }
 
     //		9. impls
 
     // Parallel prefix sums: structural logic verified, recursion parallelized.
-    fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<N>) -> (result: (ArraySeqMtPerS<N>, N))
+    fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<N>) -> (sums: (ArraySeqMtPerS<N>, N))
         requires a.spec_len() <= usize::MAX,
         ensures
             spec_scan_post(
                 Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
                 spec_sum_fn(), 0,
-                Seq::new(result.0.spec_len(), |i: int| result.0.spec_index(i)),
-                result.1),
+                Seq::new(sums.0.spec_len(), |i: int| sums.0.spec_index(i)),
+                sums.1),
         decreases a.spec_len(),
     {
         let n = a.length();
@@ -319,7 +319,7 @@ pub mod ScanDCMtPer {
     }
 
     impl ScanDCMtTrait for ArraySeqMtPerS<N> {
-        fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<N>) -> (result: (ArraySeqMtPerS<N>, N)) {
+        fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<N>) -> (sums: (ArraySeqMtPerS<N>, N)) {
             prefix_sums_dc_inner(a)
         }
     }

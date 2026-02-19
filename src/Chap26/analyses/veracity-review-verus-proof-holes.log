@@ -24,7 +24,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
        465 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:480: error: bare_impl - impl Point { — `impl Point` without trait; file defines [ETSPMtTrait]
        481 |         /// Euclidean distance between two points.
-       482 |         pub fn distance(&self, other: &Point) -> f64 {
+       482 |         /// - APAS: N/A — helper function.
    Holes: 4 total
       2 × assume()
       2 × external_body

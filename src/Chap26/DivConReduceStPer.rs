@@ -60,71 +60,71 @@ pub mod DivConReduceStPer {
         /// Pattern: reduce max identity
         /// - APAS: Work Θ(n), Span Θ(lg n) — Example 26.2, D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential while loop, Span = Work.
-        fn max_element(a: &ArraySeqStPerS<N>) -> (result: Option<N>)
+        fn max_element(a: &ArraySeqStPerS<N>) -> (max: Option<N>)
             requires a.spec_len() <= usize::MAX,
             ensures
-                a.spec_len() == 0 ==> result is None,
+                a.spec_len() == 0 ==> max is None,
                 a.spec_len() > 0 ==> {
-                    &&& result is Some
+                    &&& max is Some
                     &&& forall|i: int| #![trigger a.spec_index(i)]
-                            0 <= i < a.spec_len() ==> a.spec_index(i) <= result->Some_0
+                            0 <= i < a.spec_len() ==> a.spec_index(i) <= max->Some_0
                     &&& exists|i: int| #![trigger a.spec_index(i)]
-                            0 <= i < a.spec_len() && a.spec_index(i) == result->Some_0
+                            0 <= i < a.spec_len() && a.spec_index(i) == max->Some_0
                 };
 
         /// Sum all elements via reduce.
         /// Pattern: reduce (+) 0 identity
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
-        fn sum(a: &ArraySeqStPerS<N>) -> (result: N)
+        fn sum(a: &ArraySeqStPerS<N>) -> (total: N)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_sum_fn(), 0),
             ensures
-                result == spec_iterate(
+                total == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_sum_fn(), 0);
 
         /// Product of all elements via reduce.
         /// Pattern: reduce (*) 1 identity
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
-        fn product(a: &ArraySeqStPerS<N>) -> (result: N)
+        fn product(a: &ArraySeqStPerS<N>) -> (total: N)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_product_fn(), 1),
             ensures
-                result == spec_iterate(
+                total == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_product_fn(), 1);
 
         /// Logical OR of all elements via reduce.
         /// Pattern: reduce (||) false identity
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
-        fn any(a: &ArraySeqStPerS<B>) -> (result: B)
+        fn any(a: &ArraySeqStPerS<B>) -> (found: B)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_or_fn(), false),
             ensures
-                result == spec_iterate(
+                found == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_or_fn(), false);
 
         /// Logical AND of all elements via reduce.
         /// Pattern: reduce (&&) true identity
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
-        fn all(a: &ArraySeqStPerS<B>) -> (result: B)
+        fn all(a: &ArraySeqStPerS<B>) -> (all_true: B)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_and_fn(), true),
             ensures
-                result == spec_iterate(
+                all_true == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true);
     }
 
     //		9. impls
 
     impl DivConReduceStTrait for ArraySeqStPerS<N> {
-        fn max_element(a: &ArraySeqStPerS<N>) -> (result: Option<N>) {
+        fn max_element(a: &ArraySeqStPerS<N>) -> (max: Option<N>) {
             let len = a.length();
             if len == 0 {
                 return None;
@@ -152,7 +152,7 @@ pub mod DivConReduceStPer {
             Some(best)
         }
 
-        fn sum(a: &ArraySeqStPerS<N>) -> (result: N) {
+        fn sum(a: &ArraySeqStPerS<N>) -> (total: N) {
             ArraySeqStPerS::reduce(a,
                 &(|x: &N, y: &N| -> (ret: N)
                     ensures ret == spec_wrapping_add(*x, *y)
@@ -160,7 +160,7 @@ pub mod DivConReduceStPer {
                 Ghost(spec_sum_fn()), 0)
         }
 
-        fn product(a: &ArraySeqStPerS<N>) -> (result: N) {
+        fn product(a: &ArraySeqStPerS<N>) -> (total: N) {
             ArraySeqStPerS::reduce(a,
                 &(|x: &N, y: &N| -> (ret: N)
                     ensures ret == spec_wrapping_mul(*x, *y)
@@ -168,7 +168,7 @@ pub mod DivConReduceStPer {
                 Ghost(spec_product_fn()), 1)
         }
 
-        fn any(a: &ArraySeqStPerS<B>) -> (result: B) {
+        fn any(a: &ArraySeqStPerS<B>) -> (found: B) {
             ArraySeqStPerS::reduce(a,
                 &(|x: &B, y: &B| -> (ret: B)
                     ensures ret == spec_or_fn()(*x, *y)
@@ -176,7 +176,7 @@ pub mod DivConReduceStPer {
                 Ghost(spec_or_fn()), false)
         }
 
-        fn all(a: &ArraySeqStPerS<B>) -> (result: B) {
+        fn all(a: &ArraySeqStPerS<B>) -> (all_true: B) {
             ArraySeqStPerS::reduce(a,
                 &(|x: &B, y: &B| -> (ret: B)
                     ensures ret == spec_and_fn()(*x, *y)

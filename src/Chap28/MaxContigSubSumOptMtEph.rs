@@ -1,8 +1,6 @@
 // Copyright (C) 2025 Brian G. Milnes
 // SPDX-License-Identifier: MIT
 //! Maximum Contiguous Subsequence Sum — Parallel Optimal (Chapter 28, Algorithm 28.16).
-//!
-//! Verified sequential impl under verus_keep_ghost; parallel impl at runtime.
 
 pub mod MaxContigSubSumOptMtEph {
     use vstd::prelude::*;
@@ -21,19 +19,18 @@ pub mod MaxContigSubSumOptMtEph {
         /// Returns None for empty sequence (representing -infinity).
         /// - APAS: Work Θ(n), Span Θ(log n)
         /// - Claude-Opus-4.6 (verified): Work Θ(n), Span Θ(n)
-        fn max_contig_sub_sum_opt_mt(a: &ArraySeqMtEphS<i32>) -> (result: Option<i32>)
+        fn max_contig_sub_sum_opt_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),
                 a.seq@.len() < usize::MAX,
             ensures
-                a.seq@.len() == 0 ==> result.is_none(),
-                a.seq@.len() > 0 ==> result.is_some(),
-                result.is_some() ==> is_mcss_of(a.seq@, result.unwrap() as int);
+                a.seq@.len() == 0 ==> mcss.is_none(),
+                a.seq@.len() > 0 ==> mcss.is_some(),
+                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
     }
 
-    #[cfg(verus_keep_ghost)]
     impl MaxContigSubSumOptMtTrait for ArraySeqMtEphS<i32> {
-        fn max_contig_sub_sum_opt_mt(a: &ArraySeqMtEphS<i32>) -> (result: Option<i32>) {
+        fn max_contig_sub_sum_opt_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();
             if n == 0 { return None; }
 
@@ -151,27 +148,4 @@ pub mod MaxContigSubSumOptMtEph {
     }
 
     } // verus!
-
-    #[cfg(not(verus_keep_ghost))]
-    impl MaxContigSubSumOptMtTrait for ArraySeqMtEphS<i32> {
-        fn max_contig_sub_sum_opt_mt(a: &ArraySeqMtEphS<i32>) -> Option<i32> {
-            let n = a.length();
-            if n == 0 { return None; }
-
-            let (inclusive_prefixes, _total) =
-                <ArraySeqMtEphS<i32> as ArraySeqMtEphTrait<i32>>::scan(a, &|x, y| x + y, 0);
-            let zero_seq = <ArraySeqMtEphS<i32> as ArraySeqMtEphTrait<i32>>::singleton(0);
-            let all_prefixes =
-                <ArraySeqMtEphS<i32> as ArraySeqMtEphTrait<i32>>::append(&zero_seq, &inclusive_prefixes);
-            let (min_prefixes, _) =
-                <ArraySeqMtEphS<i32> as ArraySeqMtEphTrait<i32>>::scan(&all_prefixes, &|x, y| (*x).min(*y), i32::MAX);
-            let differences = <ArraySeqMtEphS<i32> as ArraySeqMtEphTrait<i32>>::tabulate(
-                &|i| *all_prefixes.nth(i + 1) - *min_prefixes.nth(i),
-                n,
-            );
-            Some(<ArraySeqMtEphS<i32> as ArraySeqMtEphTrait<i32>>::reduce(
-                &differences, &|x: &i32, y: &i32| (*x).max(*y), i32::MIN,
-            ))
-        }
-    }
 }

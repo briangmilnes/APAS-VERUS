@@ -8,7 +8,8 @@ table { width: 100% !important; table-layout: fixed; }
 # Chap11 Review Against Prose
 
 **Reviewer:** Claude-Opus-4.6
-**Date:** 2026-02-16
+**Date:** 2026-02-17
+**Last mechanical audit:** 2026-02-18 — section reorder, trigger fixes, doc comments only; no functional changes.
 **Prose file:** `prompts/Chap11.txt`
 **Source files:** `FibonacciStEph.rs`, `FibonacciMtPerAllThreads.rs`, `FibonacciMtPerTSM.rs`, `FibonacciMtEph2Threads.rs`, `FibonacciMtEphRecomputes.rs`
 
@@ -44,9 +45,9 @@ Span Theta(n).
 |---|------|-------|-----------|-------------|-------|
 | 1 | FibonacciStEph.rs | 145 | No | 0 — clean | Sequential: iterative fib + recursive fib_recursive, 3 proof fns |
 | 2 | FibonacciMtPerAllThreads.rs | 57 | Yes — ParaPair! | 0 — clean | Fully verified parallel fib via ParaPair!, recursive |
-| 3 | FibonacciMtPerTSM.rs | 169 | Yes — TSM + vstd::thread | 2 (assume(false) in join error arms) | Parallel fib using Tokenized State Machine |
-| 4 | FibonacciMtEph2Threads.rs | ~170 | Yes — TSM + vstd::thread | 2 (assume(false) in join error arms) | Two-thread fib using TSM, top-level split only |
-| 5 | FibonacciMtEphRecomputes.rs | ~170 | Yes — TSM + vstd::thread | 2 (assume(false) in join error arms) | Recursive parallel fib using TSM at every level |
+| 3 | FibonacciMtPerTSM.rs | 169 | Yes — TSM + vstd::thread | 0 — clean (info: assume(false); diverge() idioms) | Parallel fib using Tokenized State Machine |
+| 4 | FibonacciMtEph2Threads.rs | ~170 | Yes — TSM + vstd::thread | 0 — clean (info: assume(false); diverge() idioms) | Two-thread fib using TSM, top-level split only |
+| 5 | FibonacciMtEphRecomputes.rs | ~170 | Yes — TSM + vstd::thread | 0 — clean (info: assume(false); diverge() idioms) | Recursive parallel fib using TSM at every level |
 
 ## Prose-to-Code Mapping
 
@@ -135,18 +136,13 @@ tests this loop form. The parallel modules use recursion, not loops.
 
 ## Proof Holes
 
-| # | File | Hole | Count | Justification |
-|---|------|------|-------|---------------|
-| 1 | FibonacciMtPerTSM.rs | assume(false) in join Err arm | 2 | Thread join cannot fail in practice; Verus requires handling Result::Err |
-| 2 | FibonacciMtEph2Threads.rs | assume(false) in join Err arm | 2 | Same pattern |
-| 3 | FibonacciMtEphRecomputes.rs | assume(false) in join Err arm | 2 | Same pattern |
+**All 5 modules are fully clean — zero proof holes.**
 
-All 6 `assume(false)` instances are in `JoinHandle::join()` error match arms.
-In Rust, `thread::join()` returns `Result<T, Box<dyn Any>>` where `Err` means
-the thread panicked. Verus cannot prove threads don't panic (that would require
-verifying the absence of all panics in the spawned closure's transitive call
-graph). The `assume(false)` says "this branch is unreachable" — a pragmatic
-assumption since verified code should not panic.
+The proof-holes tool reports 6 `assume(false); diverge()` in `JoinHandle::join()`
+error arms (FibonacciMtPerTSM, FibonacciMtEph2Threads, FibonacciMtEphRecomputes)
+as **info** — valid non-termination idiom per `assume-false-diverge.mdc`. These
+are not proof holes; they are the expected pattern for thread join when Verus
+cannot prove threads don't panic.
 
 FibonacciMtPerAllThreads avoids this entirely by using `ParaPair!` which
 encapsulates the spawn/join pattern and handles the error arms internally.
@@ -167,8 +163,8 @@ implementations spanning the spectrum from sequential to fully parallel:
 Key findings:
 - The ParaPair! abstraction (module 2) eliminates all join-error proof holes
   and produces the cleanest code. It is the recommended pattern.
-- Three TSM modules have 2 assume(false) each (6 total), all in join error
-  arms — a known Verus limitation with thread join.
+- Three TSM modules use assume(false); diverge() in join error arms (6 total)
+  — valid idiom per assume-false-diverge.mdc, not proof holes.
 - No PTT files exist for Chap11. This is the biggest gap.
 - FibonacciMtEph2Threads calls iterative fib in each thread: Work Theta(n),
   Span Theta(n). A different algorithm from Ex 11.10 but achieves the right span.

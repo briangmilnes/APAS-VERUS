@@ -99,6 +99,46 @@ name = "TestWeightedDirGraphStEphU8"
 path = "tests/Chap06/TestWeightedDirGraphStEphU8.rs"
 
 [[test]]
+name = "TestWeightedDirGraphStEphI8"
+path = "tests/Chap06/TestWeightedDirGraphStEphI8.rs"
+
+[[test]]
+name = "TestWeightedDirGraphStEphI16"
+path = "tests/Chap06/TestWeightedDirGraphStEphI16.rs"
+
+[[test]]
+name = "TestWeightedDirGraphStEphI32"
+path = "tests/Chap06/TestWeightedDirGraphStEphI32.rs"
+
+[[test]]
+name = "TestWeightedDirGraphStEphI64"
+path = "tests/Chap06/TestWeightedDirGraphStEphI64.rs"
+
+[[test]]
+name = "TestWeightedDirGraphStEphI128"
+path = "tests/Chap06/TestWeightedDirGraphStEphI128.rs"
+
+[[test]]
+name = "TestWeightedDirGraphStEphIsize"
+path = "tests/Chap06/TestWeightedDirGraphStEphIsize.rs"
+
+[[test]]
+name = "TestWeightedDirGraphStEphU16"
+path = "tests/Chap06/TestWeightedDirGraphStEphU16.rs"
+
+[[test]]
+name = "TestWeightedDirGraphStEphU64"
+path = "tests/Chap06/TestWeightedDirGraphStEphU64.rs"
+
+[[test]]
+name = "TestWeightedDirGraphStEphU128"
+path = "tests/Chap06/TestWeightedDirGraphStEphU128.rs"
+
+[[test]]
+name = "TestWeightedDirGraphStEphUsize"
+path = "tests/Chap06/TestWeightedDirGraphStEphUsize.rs"
+
+[[test]]
 name = "TestParaPairs"
 path = "tests/Chap11/TestParaPairs.rs"
 
@@ -173,6 +213,10 @@ path = "tests/Chap19/TestArraySeqStPer.rs"
 [[test]]
 name = "TestChap19ArraySeqMtEph"
 path = "tests/Chap19/TestArraySeqMtEph.rs"
+
+[[test]]
+name = "TestChap21"
+path = "tests/Chap21/TestChap21.rs"
 
 [[test]]
 name = "TestBalBinTreeStEph"

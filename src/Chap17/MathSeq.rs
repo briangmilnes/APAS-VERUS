@@ -1,9 +1,26 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //!
 //! Mathematical sequence backed by a growable vector. Dense domain 0..len-1.
 //!
 //! Abstract: Definition 17.1 (Sequence) — runtime-sized, dense-domain sequence (0..n-1),
 //! using rust vector which is dense.
+
+//  Table of Contents
+//	1. module
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	6. spec fns
+//	8. traits
+//	9. impls
+//	10. iterators
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod MathSeq {
     use std::fmt::{Debug, Display, Formatter};
@@ -27,6 +44,8 @@ pub mod MathSeq {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
+
+        //		3. broadcast use
 
         // Table of Contents
         // 1. module
@@ -62,17 +81,16 @@ pub mod MathSeq {
             crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
         };
 
-        // 4. type definitions
 
-        pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
-            &&& obeys_key_model::<T>()
-                &&& obeys_feq_full::<T>()
-        }
-        
+        //		4. type definitions
+
         #[verifier::reject_recursive_types(T)]
         pub struct MathSeqS<T: StT> {
             pub data: Vec<T>,
         }
+
+
+        //		5. view impls
 
         // 5. view impls
         
@@ -84,11 +102,24 @@ pub mod MathSeq {
             }
         }
 
+
+        //		6. spec fns
+
+        // 4. type definitions
+
+        pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
+            &&& obeys_key_model::<T>()
+                &&& obeys_feq_full::<T>()
+        }
+
         // 6. spec fns
 
         pub open spec fn spec_clamp(val: int, max: int) -> int {
             if val < 0 { 0 } else if val > max { max } else { val }
         }
+
+
+        //		8. traits
 
         // 8. traits
 
@@ -110,7 +141,7 @@ pub mod MathSeq {
             fn new(length: N, init_value: T) -> (new_seq: Self)
                 ensures
                     new_seq.spec_len() == length,
-                    forall|i: int| #![auto] 0 <= i < length ==> cloned(init_value, new_seq.spec_seq()[i]);
+                    forall|i: int| #![trigger new_seq.spec_seq()[i]] 0 <= i < length ==> cloned(init_value, new_seq.spec_seq()[i]);
 
             /// - APAS: no cost spec.
             /// - Claude-Opus-4.6: O(1) — direct index write.
@@ -183,7 +214,7 @@ pub mod MathSeq {
             fn with_len(length: N, init_value: T) -> (seq_of_len_value: Self)
                 ensures
                     seq_of_len_value.spec_len() == length,
-                    forall|i: int| #![auto] 0 <= i < length ==> cloned(init_value, seq_of_len_value.spec_seq()[i]);
+                    forall|i: int| #![trigger seq_of_len_value.spec_seq()[i]] 0 <= i < length ==> cloned(init_value, seq_of_len_value.spec_seq()[i]);
 
             /// - APAS: no cost spec.
             /// - Claude-Opus-4.6: O(1) — returns slice reference.
@@ -236,6 +267,9 @@ pub mod MathSeq {
                     it@.1 == self.spec_seq(),
                     iter_invariant(&it);
         }
+
+
+        //		9. impls
 
         // 9. impls
 
@@ -459,7 +493,7 @@ pub mod MathSeq {
                         forall|k1: T, k2: T| k1@ == k2@ ==> k1 == k2,
                         i <= len,
                         order@.len() <= i,
-                        forall|idx: int| #![auto] 0 <= idx < order@.len() ==> counts@.contains_key(order@[idx]@),
+                        forall|idx: int| #![trigger order@[idx]@] 0 <= idx < order@.len() ==> counts@.contains_key(order@[idx]@),
                     decreases len - i,
                 {
                     let x = self.data[i].clone();
@@ -471,7 +505,7 @@ pub mod MathSeq {
                         if old_count < usize::MAX {
                             counts.insert(x, old_count + 1);
                             proof {
-                                assert forall|idx: int| #![auto] 0 <= idx < order@.len()
+                                assert forall|idx: int| #![trigger order@[idx]@] 0 <= idx < order@.len()
                                     implies counts@.contains_key(order@[idx]@) by {
                                     assert(old_counts.contains_key(order@[idx]@));
                                 }
@@ -487,7 +521,7 @@ pub mod MathSeq {
                         proof {
                             assert(counts@.contains_key(x@));
                             assert(order@ =~= old_order.push(x));
-                            assert forall|idx: int| #![auto] 0 <= idx < order@.len()
+                            assert forall|idx: int| #![trigger order@[idx]@] 0 <= idx < order@.len()
                                 implies counts@.contains_key(order@[idx]@) by {
                                 if idx < old_order.len() {
                                     assert(order@[idx] == old_order[idx]);
@@ -514,7 +548,7 @@ pub mod MathSeq {
                         range@.len() == j,
                         order_len <= len,
                         counts@ == final_counts,
-                        forall|idx: int| #![auto] 0 <= idx < order@.len() ==> final_counts.contains_key(order@[idx]@),
+                        forall|idx: int| #![trigger order@[idx]@] 0 <= idx < order@.len() ==> final_counts.contains_key(order@[idx]@),
                     decreases order_len - j,
                 {
                     let x = order[j].clone();
@@ -537,6 +571,15 @@ pub mod MathSeq {
                 MathSeqIter { inner: self.data.iter() }
             }
         }
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: StT> PartialEqSpecImpl for MathSeqS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+
+        //		10. iterators
 
     // 10. iterators
 
@@ -660,6 +703,9 @@ pub mod MathSeq {
         }
     }
 
+
+        //		11. derive impls in verus!
+
     // 11. derive impls in verus!
 
     impl<T: StT> Clone for MathSeqS<T> {
@@ -672,21 +718,15 @@ pub mod MathSeq {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: StT> PartialEqSpecImpl for MathSeqS<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
-
     impl<T: StT> Eq for MathSeqS<T> {}
 
     impl<T: StT> PartialEq for MathSeqS<T> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
-            let r = self.data == other.data;
-            proof { assume(r == (self@ == other@)); }
-            r
+            let equal = self.data == other.data;
+            proof { assume(equal == (self@ == other@)); }
+            equal
         }
     }
 
@@ -695,6 +735,9 @@ pub mod MathSeq {
     // 13. derive impls outside verus!
 
     impl<T: StT + Hash> MathSeqS<T> {
+        /// Mutable borrow iterator. Must stay outside verus! (returns &mut).
+        /// - APAS: no cost spec.
+        /// - Claude-Opus-4.6: O(1) — returns iterator wrapper.
         pub fn iter_mut(&mut self) -> IterMut<'_, T> {
             self.data.iter_mut()
         }
@@ -708,6 +751,9 @@ pub mod MathSeq {
         }
     }
     
+
+    //		13. derive impls outside verus!
+
     impl<T: StT> Debug for MathSeqS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             f.debug_list().entries(self.data.iter()).finish()
@@ -731,6 +777,9 @@ pub mod MathSeq {
     }
     
     // 12. macros
+
+
+    //		12. macros
 
     #[macro_export]
     macro_rules! MathSeqSLit {

@@ -464,6 +464,60 @@ fn test_filter_none() {
     assert_eq!(evens.length(), 0);
 }
 
+#[test]
+fn test_nth() {
+    let seq = PrimTreeSeqStS::from_vec(vec![10, 20, 30, 40, 50]);
+    assert_eq!(*seq.nth(0), 10);
+    assert_eq!(*seq.nth(2), 30);
+    assert_eq!(*seq.nth(4), 50);
+}
+
+#[test]
+fn test_drop_some() {
+    let seq = PrimTreeSeqStS::from_vec(vec![1, 2, 3, 4, 5]);
+    let dropped = seq.drop(2);
+    assert_eq!(dropped.as_slice(), &[3, 4, 5]);
+}
+
+#[test]
+fn test_drop_all() {
+    let seq = PrimTreeSeqStS::from_vec(vec![1, 2, 3]);
+    let dropped = seq.drop(3);
+    assert_eq!(dropped.length(), 0);
+}
+
+#[test]
+fn test_drop_none() {
+    let seq = PrimTreeSeqStS::from_vec(vec![1, 2, 3]);
+    let dropped = seq.drop(0);
+    assert_eq!(dropped.as_slice(), &[1, 2, 3]);
+}
+
+#[test]
+fn test_flatten_basic() {
+    let inner1 = PrimTreeSeqStS::from_vec(vec![1, 2]);
+    let inner2 = PrimTreeSeqStS::from_vec(vec![3, 4, 5]);
+    let outer = PrimTreeSeqStS::from_vec(vec![inner1, inner2]);
+    let flat = PrimTreeSeqStS::flatten(&outer);
+    assert_eq!(flat.as_slice(), &[1, 2, 3, 4, 5]);
+}
+
+#[test]
+fn test_flatten_empty_outers() {
+    let outer = PrimTreeSeqStS::<PrimTreeSeqStS<i32>>::from_vec(Vec::new());
+    let flat = PrimTreeSeqStS::flatten(&outer);
+    assert_eq!(flat.length(), 0);
+}
+
+#[test]
+fn test_flatten_with_empty_inner() {
+    let inner1 = PrimTreeSeqStS::<i32>::from_vec(Vec::new());
+    let inner2 = PrimTreeSeqStS::from_vec(vec![1, 2]);
+    let outer = PrimTreeSeqStS::from_vec(vec![inner1, inner2]);
+    let flat = PrimTreeSeqStS::flatten(&outer);
+    assert_eq!(flat.as_slice(), &[1, 2]);
+}
+
 fn generic_length<T: StT, S: PrimTreeSeqStTrait<T>>(seq: &S) -> N { seq.length() }
 
 fn generic_expose<T: StT, S: PrimTreeSeqStTrait<T>>(seq: &S) -> PrimTreeSeqStTree<T> { seq.expose() }

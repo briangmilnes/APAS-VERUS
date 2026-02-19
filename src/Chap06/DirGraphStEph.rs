@@ -1,5 +1,22 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Chapter 6.1 Directed Graph (ephemeral) using Set for vertices and arcs.
+
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	4. type definitions
+//	5. view impls
+//	8. traits
+//	9. impls
+//	10. iterators
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//		1. module
+
 
 pub mod DirGraphStEph {
 
@@ -16,8 +33,13 @@ pub mod DirGraphStEph {
 
 verus! {
 
+    //		2. imports
+
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
+
+
+    //		3. broadcast use
 
     // Broadcast groups for hash collections, sets, and our custom axioms
     broadcast use {
@@ -29,36 +51,14 @@ verus! {
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
     };
 
+
+    //		4. type definitions
+
     #[verifier::reject_recursive_types(V)]
     pub struct DirGraphStEph<V: StT + Hash> { pub V: SetStEph<V>, pub A: SetStEph<Edge<V>> }
 
-    impl<V: StT + Hash> DirGraphStEph<V> {
-        /// Returns an iterator over the vertices
-        pub fn iter_vertices(&self) -> (it: SetStEphIter<'_, V>)
-            requires valid_key_type_Edge::<V>() 
-       { self.V.iter() }
 
-        /// Returns an iterator over the arcs
-        pub fn iter_arcs(&self) -> (it: SetStEphIter<'_, Edge<V>>)
-            requires valid_key_type_Edge::<V>()
-        { self.A.iter() }
-    }
-
-    // Ghost view for graph vertex iterator: (visited, current, remaining) sets
-    #[verifier::reject_recursive_types(V)]
-    pub ghost struct DirGraphVertexIterView<V> {
-        pub visited: Set<V>,
-        pub current: Option<V>,
-        pub remaining: Set<V>,
-    }
-
-    // Ghost view for graph arc iterator: (visited, current, remaining) sets  
-    #[verifier::reject_recursive_types(V)]
-    pub ghost struct DirGraphArcIterView<V> {
-        pub visited: Set<(V, V)>,
-        pub current: Option<(V, V)>,
-        pub remaining: Set<(V, V)>,
-    }
+    //		5. view impls
 
     // View implementation: GraphView with named V and A fields
     impl<V: StT + Hash> View for DirGraphStEph<V> {
@@ -66,6 +66,9 @@ verus! {
 
         open spec fn view(&self) -> Self::V { GraphView { V: self.V@, A: self.A@ } }
     }
+
+
+    //		8. traits
 
     pub trait DirGraphStEphTrait<V: StT + Hash>:
          View<V = GraphView<<V as View>::V>> + Sized {
@@ -104,7 +107,8 @@ verus! {
             Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
         }
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn empty() -> (g: DirGraphStEph<V>)
             requires valid_key_type_Edge::<V>()
             ensures
@@ -112,7 +116,8 @@ verus! {
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
 
-        /// APAS: Work Θ(|V| + |A|), Span Θ(1)
+        /// - APAS: Work Θ(|V| + |A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|V| + |A|), Span Θ(|V| + |A|) — sequential
         fn from_sets(vertices: SetStEph<V>, arcs: SetStEph<Edge<V>>) -> (g: DirGraphStEph<V>)
             requires
                 forall |u: V::V, w: V::V| 
@@ -123,78 +128,108 @@ verus! {
                 g@.V =~= vertices@,
                 g@.A =~= arcs@;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn arcs(&self) -> (a: &SetStEph<Edge<V>>)
             ensures a@ =~= self@.A;
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn sizeV(&self) -> (n: N)
             requires wf_graph_view(self@), valid_key_type_Edge::<V>()
             ensures n == self@.V.len();
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn sizeA(&self) -> (n: N)
             requires wf_graph_view(self@), valid_key_type_Edge::<V>()
             ensures n == self@.A.len();
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: B)
             requires wf_graph_view(self@), valid_key_type_Edge::<V>()
             ensures b == self@.A.contains((u@, v@));
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential filter
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires wf_graph_view(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures neighbors@ == self.spec_ng(v@);
 
-        /// APAS: Work Θ(|vertices| × |A|), Span Θ(1)
+        /// - APAS: Work Θ(|vertices| × |A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|vertices| × |A|), Span Θ(|vertices| × |A|) — nested iteration
         fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires wf_graph_view(self@), valid_key_type_Edge::<V>(), vertices@ <= self@.V
             ensures neighbors@ == self.spec_ng_of_vertices(vertices@);
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential filter
         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)
             requires wf_graph_view(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures out_neighbors@ == self.spec_n_plus(v@);
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential filter
         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)
             requires wf_graph_view(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures in_neighbors@ == self.spec_n_minus(v@);
 
-        /// APAS: Work Θ(|vertices| × |A|), Span Θ(1)
+        /// - APAS: Work Θ(|vertices| × |A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|vertices| × |A|), Span Θ(|vertices| × |A|) — nested iteration
         fn n_plus_of_vertices(&self, vertices: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)
             requires wf_graph_view(self@), valid_key_type_Edge::<V>(), vertices@ <= self@.V
             ensures out_neighbors@ == self.spec_n_plus_of_vertices(vertices@);
 
-        /// APAS: Work Θ(|vertices| × |A|), Span Θ(1)
+        /// - APAS: Work Θ(|vertices| × |A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|vertices| × |A|), Span Θ(|vertices| × |A|) — nested iteration
         fn n_minus_of_vertices(&self, vertices: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)
             requires wf_graph_view(self@), valid_key_type_Edge::<V>(), vertices@ <= self@.V
             ensures in_neighbors@ == self.spec_n_minus_of_vertices(vertices@);
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn incident(&self, e: &Edge<V>, v: &V) -> (b: B)
             requires valid_key_type_Edge::<V>()
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential filter
         fn degree(&self, v: &V) -> (n: N)
             requires wf_graph_view(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures n == self.spec_degree(v@);
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential filter
         fn in_degree(&self, v: &V) -> (n: N)
             requires wf_graph_view(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures n == self.spec_n_minus(v@).len();
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - APAS: Work Θ(|A|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential filter
         fn out_degree(&self, v: &V) -> (n: N)
             requires wf_graph_view(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures n == self.spec_n_plus(v@).len();
+    }
+
+
+    //		9. impls
+
+    impl<V: StT + Hash> DirGraphStEph<V> {
+        /// Returns an iterator over the vertices
+        pub fn iter_vertices(&self) -> (it: SetStEphIter<'_, V>)
+            requires valid_key_type_Edge::<V>() 
+       { self.V.iter() }
+
+        /// Returns an iterator over the arcs
+        pub fn iter_arcs(&self) -> (it: SetStEphIter<'_, Edge<V>>)
+            requires valid_key_type_Edge::<V>()
+        { self.A.iter() }
     }
 
     impl<V: StT + Hash> DirGraphStEphTrait<V> for DirGraphStEph<V> {
@@ -499,6 +534,34 @@ verus! {
         { self.n_plus(v).size() }
     }
 
+    #[cfg(verus_keep_ghost)]
+    impl<V: StT + Hash> PartialEqSpecImpl for DirGraphStEph<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+
+    //		10. iterators
+
+    // Ghost view for graph vertex iterator: (visited, current, remaining) sets
+    #[verifier::reject_recursive_types(V)]
+    pub ghost struct DirGraphVertexIterView<V> {
+        pub visited: Set<V>,
+        pub current: Option<V>,
+        pub remaining: Set<V>,
+    }
+
+    // Ghost view for graph arc iterator: (visited, current, remaining) sets  
+    #[verifier::reject_recursive_types(V)]
+    pub ghost struct DirGraphArcIterView<V> {
+        pub visited: Set<(V, V)>,
+        pub current: Option<(V, V)>,
+        pub remaining: Set<(V, V)>,
+    }
+
+
+    //		11. derive impls in verus!
+
     impl<V: StT + Hash> Clone for DirGraphStEph<V> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
@@ -507,17 +570,11 @@ verus! {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<V: StT + Hash> PartialEqSpecImpl for DirGraphStEph<V> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
-
     impl<V: StT + Hash> Eq for DirGraphStEph<V> {}
 
     impl<V: StT + Hash> PartialEq for DirGraphStEph<V> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             let v_eq = self.V == other.V;
             let a_eq = self.A == other.A;
@@ -532,6 +589,9 @@ verus! {
 
     } // verus!
 
+
+    //		13. derive impls outside verus!
+
     impl<V: StT + Hash> Debug for DirGraphStEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             f.debug_struct("DirGraphStEph")
@@ -544,6 +604,9 @@ verus! {
     impl<V: StT + Hash> Display for DirGraphStEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} A={:?}", self.V, self.A) }
     }
+
+
+    //		12. macros
 
     // Macro defined outside verus! block
     #[macro_export]

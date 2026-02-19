@@ -1,21 +1,30 @@
 // Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 21 — Problem 21.1: Points in 2D using imperative loops.
 
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	9. impls
+
+//		1. module
+
 pub mod Problem21_1 {
 
-    #[cfg(verus_keep_ghost)]
     use vstd::prelude::*;
 
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
-
-    #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::*;
-
-    #[cfg(verus_keep_ghost)]
     verus! {
 
+    //		2. imports
+
+    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+    use crate::Types::Types::*;
+
+    //		3. broadcast use
+
     broadcast use vstd::std_specs::vec::group_vec_axioms;
+
+    //		9. impls
 
     /// Problem 21.1 (Points in 2D) - Imperative approach using nested loops.
     /// Construct the sequence of 2D points (x, y) with 0 ≤ x < n and 1 ≤ y < n,

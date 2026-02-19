@@ -2,21 +2,32 @@
 //! Chapter 21 — Algorithm 21.1: 2D Points using ArraySeqPer via tabulate + flatten.
 //! Verusified.
 
+//  Table of Contents
+//	1. module
+//	2. imports
+//	3. broadcast use
+//	6. spec fns
+//	7. proof fns/broadcast groups
+//	9. impls
+
+//		1. module
+
 pub mod Algorithm21_1 {
 
-    #[cfg(verus_keep_ghost)]
     use vstd::prelude::*;
 
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
-
-    #[cfg(verus_keep_ghost)]
-    use crate::Types::Types::*;
-
-    #[cfg(verus_keep_ghost)]
     verus! {
 
+    //		2. imports
+
+    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+    use crate::Types::Types::*;
+
+    //		3. broadcast use
+
     broadcast use vstd::std_specs::vec::group_vec_axioms;
+
+    //		6. spec fns
 
     /// Spec function: sum of lengths of first k inner sequences.
     pub open spec fn sum_inner_lens<T>(ss: Seq<ArraySeqStPerS<T>>, k: int) -> int
@@ -25,6 +36,8 @@ pub mod Algorithm21_1 {
         if k <= 0 { 0 }
         else { sum_inner_lens(ss, k - 1) + ss[k - 1].seq@.len() as int }
     }
+
+    //		7. proof fns/broadcast groups
 
     /// Lemma: sum_inner_lens is monotonically increasing.
     /// - APAS: N/A — Verus-specific scaffolding.
@@ -63,6 +76,8 @@ pub mod Algorithm21_1 {
                 requires k == 0;
         }
     }
+
+    //		9. impls
 
     /// Flatten a sequence of sequences into a single sequence.
     /// - APAS: Work Θ(m), Span Θ(lg k) where m = total elements, k = number of inner sequences.
