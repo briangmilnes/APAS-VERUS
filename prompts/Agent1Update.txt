@@ -5,5 +5,6 @@
  You are working ONLY on Chap02-Chap28.
  Run check-stale-reviews.sh to check which analyses on your
  chapter need to be updated.
+ Verus has been updated.
  Propose a table of code fixes by priority.
 

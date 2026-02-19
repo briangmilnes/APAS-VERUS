@@ -95,6 +95,10 @@ path = "tests/Chap19/ProveArraySeqStPer.rs"
 name = "ProveChap19ArraySeqMtEph"
 path = "tests/Chap19/ProveArraySeqMtEph.rs"
 
+[[test]]
+name = "ProveChap19ArraySeqMtEphSlice"
+path = "tests/Chap19/ProveArraySeqMtEphSlice.rs"
+
 # Chap23 iterator proof tests
 [[test]]
 name = "ProveBalBinTreeStEph"

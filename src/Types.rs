@@ -403,8 +403,7 @@ pub mod Types {
 
     } // verus!
 
-    // View impl for OrderedFloat removed — orphan rule prevents impl for external type.
-    // Chapters using OrderedFloat (56–66) remain gated when they have too many errors.
+    // OrderedFloat removed from the project. Float chapters use raw f64 with vstdplus::float.
 
     /// Type supporting arithmetic operations (for reductions). Must be outside verus! block because Default is not supported.
     pub trait ArithmeticT: StT + Add<Output = Self> + Default + Copy {}
@@ -464,13 +463,6 @@ pub mod Types {
         fn from(e: WeightedLabEdge<V, L, W>) -> (V, V, L, W) { (e.0, e.1, e.2, e.3) }
     }
 
-    // Import OrderedFloat from the ordered-float crate (not available during Verus compilation)
-    #[cfg(not(verus_keep_ghost))]
-    pub use ordered_float::OrderedFloat;
-    #[cfg(not(verus_keep_ghost))]
-    pub type OrderedF32 = OrderedFloat<f32>;
-    #[cfg(not(verus_keep_ghost))]
-    pub type OrderedF64 = OrderedFloat<f64>;
 
 
     impl<A, B> From<(A, B)> for Pair<A, B> {

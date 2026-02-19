@@ -29,9 +29,13 @@ pub mod StackStEph {
     // 11. derive impls in verus!
     // 13. derive impls outside verus!
 
+    // 2. imports
+
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::clone::*;
+
     // 4. type definitions
 
-    #[derive(Clone)]
     pub struct StackStEph<T: StT> {
         pub elements: Vec<T>,
     }
@@ -95,6 +99,18 @@ pub mod StackStEph {
     }
 
     // 11. derive impls in verus!
+
+    impl<T: StT> Clone for StackStEph<T> {
+        fn clone(&self) -> (res: Self)
+            ensures
+                res.elements@.len() == self.elements@.len(),
+                forall|i: int| #![trigger res.elements@[i]]
+                    0 <= i < self.elements@.len()
+                        ==> cloned::<T>(self.elements@[i], res.elements@[i]),
+        {
+            StackStEph { elements: self.elements.clone() }
+        }
+    }
 
     impl<T: StT> Default for StackStEph<T> {
         fn default() -> (result: Self)

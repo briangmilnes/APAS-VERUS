@@ -1,7 +1,11 @@
 // Copyright (c) 2025 Brian G. Milnes
 //! APAS-VERUS library crate
-#![cfg_attr(verus_keep_ghost, feature(sized_hierarchy))]
+// Verus's rustc exposes Arc<T, A> (allocator_api). Our assume_specification
+// for Arc::clone in vstdplus/smart_ptrs.rs must match that exact signature.
+// Verus's rustc exposes PointeeSized (sized_hierarchy). Our ExFeq trait in
+// vstdplus/feq.rs uses it as a supertrait bound.
 #![cfg_attr(verus_keep_ghost, feature(allocator_api))]
+#![cfg_attr(verus_keep_ghost, feature(sized_hierarchy))]
 #![allow(non_snake_case)]
 
 // Foundation modules — always included unless experiments_only
@@ -169,7 +173,7 @@ pub mod Chap06 {
     pub mod WeightedDirGraphStEphI64;
     pub mod WeightedDirGraphStEphI128;
     pub mod WeightedDirGraphStEphIsize;
-    // Int/Float aggregate graph modules removed: Rust lacks disjunctive typing
+    // Int/Float aggregate graph modules removed: Rust lacks sum types
     // (no `impl Trait for i8 | i16 | i32 | ...`), so these can't be expressed cleanly.
     // Use per-type variants above instead.
 }
@@ -211,7 +215,7 @@ pub mod Chap19 {
     pub mod ArraySeqStPer;
     pub mod ArraySeqStEph;
     pub mod ArraySeqMtEph;
-    // pub mod ArraySeqMtEphSlice; // WIP: verusification in progress
+    pub mod ArraySeqMtEphSlice;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
@@ -283,22 +287,10 @@ pub mod Chap35 {
 pub mod Chap36 {
     pub mod QuickSortStEph;
     pub mod QuickSortMtEph;
-    #[cfg(all(not(verus_keep_ghost), feature = "all_chapters"))]
-    pub mod QuickSortMtEphSlice;
+    // pub mod QuickSortMtEphSlice;  // uses rand (Verus can't link)
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), verus_keep_ghost))]
-pub mod Chap37 {
-    pub mod BSTPlainStEph;
-    pub mod BSTAVLStEph;
-    pub mod BSTBBAlphaStEph;
-    pub mod BSTRBStEph;
-    pub mod BSTPlainMtEph;
-    pub mod BSTAVLMtEph;
-    pub mod BSTBBAlphaMtEph;
-}
-
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap37 {
     pub mod AVLTreeSeq;
     pub mod AVLTreeSeqStEph;
@@ -306,11 +298,9 @@ pub mod Chap37 {
     #[cfg(feature = "all_chapters")]
     pub mod AVLTreeSeqMtPer;
     pub mod BSTPlainStEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTPlainMtEph;
+    // pub mod BSTPlainMtEph;  // stale imports (was Verus-only, never cargo-compiled)
     pub mod BSTAVLStEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTAVLMtEph;
+    // pub mod BSTAVLMtEph;  // stale imports (was Verus-only, never cargo-compiled)
     pub mod BSTRBStEph;
     #[cfg(feature = "all_chapters")]
     pub mod BSTRBMtEph;
@@ -318,8 +308,7 @@ pub mod Chap37 {
     #[cfg(feature = "all_chapters")]
     pub mod BSTSplayMtEph;
     pub mod BSTBBAlphaStEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTBBAlphaMtEph;
+    // pub mod BSTBBAlphaMtEph;  // stale imports (was Verus-only, never cargo-compiled)
     #[cfg(feature = "all_chapters")]
     pub mod BSTSetPlainMtEph;
     #[cfg(feature = "all_chapters")]
@@ -332,40 +321,39 @@ pub mod Chap37 {
     pub mod BSTSetBBAlphaMtEph;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap38 {
     pub mod BSTParaStEph;
     pub mod BSTParaMtEph;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap39 {
-    pub mod BSTTreapStEph;
-    pub mod BSTTreapMtEph;
-    pub mod BSTParaTreapMtEph;
-    pub mod BSTSetTreapMtEph;
+    // pub mod BSTTreapStEph;  // uses rand (Verus can't link)
+    // pub mod BSTTreapMtEph;  // uses rand (Verus can't link)
+    // pub mod BSTParaTreapMtEph;  // depends on BSTTreapMtEph
+    // pub mod BSTSetTreapMtEph;  // depends on BSTTreapMtEph
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap40 {
-    pub mod BSTKeyValueStEph;
-    pub mod BSTSizeStEph;
-    pub mod BSTReducedStEph;
+    // pub mod BSTKeyValueStEph;  // uses rand (Verus can't link)
+    // pub mod BSTSizeStEph;  // uses rand (Verus can't link)
+    // pub mod BSTReducedStEph;  // uses rand (Verus can't link)
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap41 {
     pub mod ArraySetStEph;
-    pub mod ArraySetEnumMtEph;
-    pub mod AVLTreeSetStEph;
-    pub mod AVLTreeSetStPer;
-    pub mod AVLTreeSetMtEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod AVLTreeSetMtPer;
-    pub mod Example41_3;
+    // pub mod ArraySetEnumMtEph;  // uses bitvec (Verus can't link)
+    // pub mod AVLTreeSetStEph;  // types declared outside verus!
+    // pub mod AVLTreeSetStPer;  // types declared outside verus!
+    // pub mod AVLTreeSetMtEph;  // types declared outside verus!
+    // pub mod AVLTreeSetMtPer;  // types declared outside verus!
+    // pub mod Example41_3;  // depends on AVLTreeSetStEph
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap42 {
     pub mod TableStEph;
     pub mod TableStPer;
@@ -373,28 +361,29 @@ pub mod Chap42 {
     pub mod Example42_1;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap43 {
-    pub mod OrderedSetStEph;
-    pub mod OrderedSetStPer;
-    pub mod OrderedSetMtEph;
-    pub mod OrderedTableStEph;
-    pub mod OrderedTableStPer;
-    pub mod OrderedTableMtEph;
-    pub mod OrderedTableMtPer;
-    pub mod AugOrderedTableStEph;
-    pub mod AugOrderedTableStPer;
-    pub mod AugOrderedTableMtEph;
-    pub mod Example43_1;
+    // All files depend on Chap41::AVLTreeSet (types outside verus!)
+    // pub mod OrderedSetStEph;
+    // pub mod OrderedSetStPer;
+    // pub mod OrderedSetMtEph;
+    // pub mod OrderedTableStEph;
+    // pub mod OrderedTableStPer;
+    // pub mod OrderedTableMtEph;
+    // pub mod OrderedTableMtPer;
+    // pub mod AugOrderedTableStEph;
+    // pub mod AugOrderedTableStPer;
+    // pub mod AugOrderedTableMtEph;
+    // pub mod Example43_1;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap44 {
-    pub mod DocumentIndex;
-    pub mod Example44_1;
+    // pub mod DocumentIndex;  // depends on Chap41::AVLTreeSet (types outside verus!)
+    // pub mod Example44_1;  // depends on DocumentIndex
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap45 {
     pub mod UnsortedListPQ;
     pub mod SortedListPQ;
@@ -405,20 +394,20 @@ pub mod Chap45 {
     pub mod Example45_2;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap47 {
     pub mod ChainedHashTable;
     pub mod StructChainedHashTable;
     pub mod VecChainedHashTableStEph;
     pub mod LinkedListChainedHashTableStEph;
-    pub mod FlatHashTable;
-    pub mod LinProbFlatHashTableStEph;
-    pub mod QuadProbFlatHashTableStEph;
-    pub mod DoubleHashFlatHashTableStEph;
+    // pub mod FlatHashTable;  // uses &mut match (Verus unsupported)
+    // pub mod LinProbFlatHashTableStEph;  // depends on FlatHashTable
+    // pub mod QuadProbFlatHashTableStEph;  // depends on FlatHashTable
+    // pub mod DoubleHashFlatHashTableStEph;  // depends on FlatHashTable
     pub mod ParaHashTableStEph;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap49 {
     pub mod SubsetSumStEph;
     pub mod SubsetSumStPer;
@@ -430,7 +419,7 @@ pub mod Chap49 {
     pub mod MinEditDistMtPer;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap50 {
     pub mod Probability;
     pub mod MatrixChainStEph;
@@ -443,7 +432,7 @@ pub mod Chap50 {
     pub mod OptBinSearchTreeMtPer;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap51 {
     pub mod BottomUpDPStEph;
     pub mod BottomUpDPStPer;
@@ -455,46 +444,33 @@ pub mod Chap51 {
     pub mod TopDownDPMtPer;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), verus_keep_ghost))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap52 {
-    pub mod AdjSeqGraphStEph;
-    pub mod AdjSeqGraphStPer;
-    pub mod AdjSeqGraphMtEph;
-    pub mod AdjSeqGraphMtPer;
-    pub mod AdjMatrixGraphStEph;
-    pub mod AdjMatrixGraphStPer;
-    pub mod AdjMatrixGraphMtEph;
-    pub mod AdjMatrixGraphMtPer;
+    // All graph files use types from Chap37/41/42 declared outside verus!
+    // pub mod AdjSeqGraphStEph;
+    // pub mod AdjSeqGraphStPer;
+    // pub mod AdjSeqGraphMtEph;
+    // pub mod AdjSeqGraphMtPer;
+    // pub mod AdjTableGraphStEph;
+    // pub mod AdjTableGraphStPer;
+    // pub mod AdjTableGraphMtPer;
+    // pub mod AdjMatrixGraphStEph;
+    // pub mod AdjMatrixGraphStPer;
+    // pub mod AdjMatrixGraphMtEph;
+    // pub mod AdjMatrixGraphMtPer;
+    // pub mod EdgeSetGraphStEph;
+    // pub mod EdgeSetGraphStPer;
+    // pub mod EdgeSetGraphMtPer;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
-pub mod Chap52 {
-    pub mod AdjSeqGraphStEph;
-    pub mod AdjSeqGraphStPer;
-    pub mod AdjSeqGraphMtEph;
-    pub mod AdjSeqGraphMtPer;
-    pub mod AdjTableGraphStEph;
-    pub mod AdjTableGraphStPer;
-    #[cfg(feature = "all_chapters")]
-    pub mod AdjTableGraphMtPer;
-    pub mod AdjMatrixGraphStEph;
-    pub mod AdjMatrixGraphStPer;
-    pub mod AdjMatrixGraphMtEph;
-    pub mod AdjMatrixGraphMtPer;
-    pub mod EdgeSetGraphStEph;
-    pub mod EdgeSetGraphStPer;
-    #[cfg(feature = "all_chapters")]
-    pub mod EdgeSetGraphMtPer;
-}
-
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap53 {
-    pub mod PQMinStEph;
-    pub mod PQMinStPer;
-    pub mod GraphSearchStEph;
-    pub mod GraphSearchStPer;
-    #[cfg(feature = "all_chapters")]
-    pub mod GraphSearchMtPer;
+    // All files use types from Chap41/42/45 declared outside verus!
+    // pub mod PQMinStEph;
+    // pub mod PQMinStPer;
+    // pub mod GraphSearchStEph;
+    // pub mod GraphSearchStPer;
+    // pub mod GraphSearchMtPer;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
@@ -505,16 +481,17 @@ pub mod Chap54 {
     pub mod BFSMtPer;
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap55 {
-    pub mod DFSStEph;
-    pub mod DFSStPer;
-    pub mod TopoSortStEph;
-    pub mod TopoSortStPer;
-    pub mod CycleDetectStEph;
-    pub mod CycleDetectStPer;
-    pub mod SCCStEph;
-    pub mod SCCStPer;
+    // All files use types from Chap37/41 declared outside verus!
+    // pub mod DFSStEph;
+    // pub mod DFSStPer;
+    // pub mod TopoSortStEph;
+    // pub mod TopoSortStPer;
+    // pub mod CycleDetectStEph;
+    // pub mod CycleDetectStPer;
+    // pub mod SCCStEph;
+    // pub mod SCCStPer;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
@@ -527,30 +504,19 @@ pub mod Chap56 {
     pub mod PathWeightUtilsStEph;
     #[cfg(feature = "all_chapters")]
     pub mod PathWeightUtilsStPer;
-    pub mod SSSPResultStEphFloat;
-    #[cfg(feature = "all_chapters")]
-    pub mod SSSPResultStPerFloat;
-    #[cfg(feature = "all_chapters")]
-    pub mod AllPairsResultStEphFloat;
-    #[cfg(feature = "all_chapters")]
-    pub mod AllPairsResultStPerFloat;
-    #[cfg(feature = "all_chapters")]
-    pub mod Example56_1;
-    #[cfg(feature = "all_chapters")]
-    pub mod Example56_3;
+    // pub mod SSSPResultStEphFloat;  // uses ordered_float (removed)
+    // pub mod SSSPResultStPerFloat;  // uses ordered_float (removed)
+    // pub mod AllPairsResultStEphFloat;  // uses ordered_float (removed)
+    // pub mod AllPairsResultStPerFloat;  // uses ordered_float (removed)
+    // pub mod Example56_1;  // uses ordered_float (removed)
+    // pub mod Example56_3;  // uses ordered_float (removed)
 }
 
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), verus_keep_ghost))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap57 {
     pub mod StackStEph;
-}
-
-#[cfg(all(not(any(feature = "experiments_only", feature = "dev_only")), not(verus_keep_ghost)))]
-pub mod Chap57 {
-    pub mod StackStEph;
-    pub mod DijkstraStEphI64;
-    #[cfg(feature = "all_chapters")]
-    pub mod DijkstraStEphFloat;
+    // pub mod DijkstraStEphI64;  // depends on Chap45::BinaryHeapPQ (types outside verus!)
+    // pub mod DijkstraStEphFloat;  // depends on Chap45::BinaryHeapPQ (types outside verus!)
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
@@ -564,24 +530,22 @@ pub mod Chap58 {
 pub mod Chap59 {
     pub mod JohnsonStEphI64;
     pub mod JohnsonMtEphI64;
-    #[cfg(feature = "all_chapters")]
-    pub mod JohnsonStEphFloat;
-    #[cfg(feature = "all_chapters")]
-    pub mod JohnsonMtEphFloat;
+    // pub mod JohnsonStEphFloat;  // uses ordered_float (removed)
+    // pub mod JohnsonMtEphFloat;  // uses ordered_float (removed)
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap61 {
     pub mod EdgeContractionStEph;
     pub mod EdgeContractionMtEph;
-    pub mod VertexMatchingStEph;
-    pub mod VertexMatchingMtEph;
+    // pub mod VertexMatchingStEph;  // uses rand (Verus can't link)
+    // pub mod VertexMatchingMtEph;  // uses rand (Verus can't link)
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap62 {
     pub mod StarPartitionStEph;
-    pub mod StarPartitionMtEph;
+    // pub mod StarPartitionMtEph;  // uses rand (Verus can't link)
     pub mod StarContractionStEph;
     pub mod StarContractionMtEph;
 }
@@ -596,18 +560,18 @@ pub mod Chap63 {
 pub mod Chap64 {
     pub mod SpanTreeStEph;
     pub mod SpanTreeMtEph;
-    pub mod TSPApproxStEph;
+    // pub mod TSPApproxStEph;  // uses ordered_float (removed)
 }
 
 #[cfg(feature = "all_chapters")]
 pub mod Chap65 {
     pub mod UnionFindStEph;
-    pub mod KruskalStEph;
-    pub mod PrimStEph;
+    // pub mod KruskalStEph;  // uses ordered_float (removed)
+    // pub mod PrimStEph;  // uses ordered_float (removed)
 }
 
 #[cfg(feature = "all_chapters")]
 pub mod Chap66 {
-    pub mod BoruvkaStEph;
-    pub mod BoruvkaMtEph;
+    // pub mod BoruvkaStEph;  // uses rand + ordered_float (removed)
+    // pub mod BoruvkaMtEph;  // uses rand + ordered_float (removed)
 }

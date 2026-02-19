@@ -29,6 +29,8 @@ pub mod TableMtEph {
 
     // 4. type definitions
 
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
     pub struct TableMtEph<K: MtKey, V: MtVal> {
         entries: ArraySeqMtEphS<Pair<K, V>>,
     }

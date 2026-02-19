@@ -1,25 +1,47 @@
 ---
-description: Do not create cfg(not(verus_keep_ghost)) duplicate implementations
+description: No verus_keep_ghost in lib.rs or as duplicate function gates
 alwaysApply: true
 ---
 
-# No cfg(not(verus_keep_ghost)) Duplicates
+# No verus_keep_ghost Antipatterns
+
+There must be **no** use of `verus_keep_ghost` in `lib.rs`. Period.
+
+## Antipattern 1: Duplicate function implementations
 
 **NEVER** create `#[cfg(not(verus_keep_ghost))]` duplicate implementations of functions that already exist inside `verus! {}` blocks.
 
 This is an old antipattern from before the codebase was fully verusified. It duplicated every function — once inside `verus! {}` with specs, and once outside with `#[cfg(not(verus_keep_ghost))]` for cargo test compatibility.
 
-## Why it's wrong
+### Why it's wrong
 
 - The duplicate drifts out of sync with the verified version
 - It doubles maintenance burden
 - It's no longer needed — the verusified code compiles and runs under both Verus and cargo
 
-## What to do instead
+### What to do instead
 
 - Put the implementation inside `verus! {}` with its specs
 - That's it. No duplicate needed.
 
+## Antipattern 2: Nightly feature gates
+
+**NEVER** add `#![cfg_attr(verus_keep_ghost, feature(...))]` to `lib.rs`.
+
+Lines like `#![cfg_attr(verus_keep_ghost, feature(sized_hierarchy))]` are cargo-cult copies from vstd's own `vstd.rs`. vstd needs nightly features for deep Rust intrinsics work. User crates do not — Verus links vstd as a precompiled dependency.
+
+## Antipattern 3: Module gating in lib.rs
+
+**NEVER** use `verus_keep_ghost` or `not(verus_keep_ghost)` to conditionally compile module blocks in `lib.rs`. This includes:
+
+- `#[cfg(all(..., not(verus_keep_ghost)))] pub mod ChapNN { ... }` — hiding a chapter from Verus
+- Split declarations — two `pub mod ChapNN` blocks, one gated `verus_keep_ghost`, one `not(verus_keep_ghost)`, with different file lists
+
+If a chapter doesn't verify, that's the project's current state (PBOGH). Every chapter gets one unconditional `pub mod ChapNN` block containing all its files. Verus reports errors on unverified code until it's fixed.
+
 ## If you see it
 
-If you encounter existing `#[cfg(not(verus_keep_ghost))]` blocks that duplicate verusified functions, remove them when working in that file.
+If you encounter any of these antipatterns, remove them:
+- Duplicate function bodies: delete the `#[cfg(not(verus_keep_ghost))]` block.
+- Nightly feature gates: delete the `#![cfg_attr(verus_keep_ghost, ...)]` line.
+- Module gating: merge split `pub mod` blocks into one unconditional block with all files.

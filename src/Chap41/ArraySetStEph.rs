@@ -24,6 +24,7 @@ pub mod ArraySetStEph {
 
     // 4. type definitions
 
+    #[verifier::reject_recursive_types(T)]
     pub struct ArraySetStEph<T: StT + Ord> {
         elements: ArraySeqStEphS<T>,
     }

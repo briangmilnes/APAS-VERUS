@@ -1,15 +1,22 @@
-Logging to: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn _ types Multiset ensures .*filter
+Pattern: fn \(into_iter\|IntoIterator\)
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 95, Functions: 2289, Matches: 1
+Files: 95, Functions: 2289, Matches: 3
 
-[31m/home/milnes/projects/verus/source/vstd/multiset.rs:310: [0m
-/// For a given value `v` and boolean predicate `f`, if `f(v)` is true, then the count of `v` in
-/// `m.filter(f)` is the same as the count of `v` in `m`. Otherwise, the count of `v` in `m.filter(f)` is 0.
-[38;5;22mpub broadcast axiom fn axiom_filter_count<V>(m: Multiset<V>, f: spec_fn(V) -> bool, v: V)[0m
+[31m/home/milnes/projects/verus/source/vstd/std_specs/core.rs:128: [0m
+[38;5;22mpub open spec fn iter_into_iter_spec<I: Iterator>(i: I) -> I[0m
+
+[31m/home/milnes/projects/verus/source/vstd/std_specs/vec.rs:465: [0m
+[38;5;22mpub uninterp spec fn spec_into_iter<T, A: Allocator>(v: Vec<T, A>) -> (iter: <Vec<[0m
+[38;5;22m    T,[0m
+[38;5;22m    A,[0m
+[38;5;22m> as core::iter::IntoIterator>::IntoIter);[0m
+
+[31m/home/milnes/projects/verus/source/vstd/std_specs/vec.rs:470: [0m
+[38;5;22mpub broadcast proof fn axiom_spec_into_iter<T, A: Allocator>(v: Vec<T, A>)[0m
 [38;5;22m    ensures[0m
-[38;5;22m        (#[trigger] m.filter(f).count(v)) == if f(v)[0m
+[38;5;22m        (#[trigger] spec_into_iter(v))@ == (0int, v@),[0m
 

@@ -1,0 +1,90 @@
+---
+description: Structure and rules for lib.rs
+globs: src/lib.rs
+alwaysApply: true
+---
+
+# lib.rs Structure
+
+## Rust Toolchain
+
+The project pins Rust 1.93.0 via `rust-toolchain.toml`. No nightly features are used
+by project code.
+
+The one exception: `#![cfg_attr(verus_keep_ghost, feature(allocator_api))]` is required
+because Verus's nightly Rust exposes `Arc<T, A>` and our `assume_specification` for
+`Arc::clone` in `vstdplus/smart_ptrs.rs` must match that exact signature. If vstd adds
+an `Arc::clone` spec upstream, remove this line and delete our local spec.
+
+Do not add any other `#![feature(...)]` or `#![cfg_attr(..., feature(...))]` to `lib.rs`.
+
+## No verus_keep_ghost
+
+There must be no use of `verus_keep_ghost` in `lib.rs` for module gating, split `pub mod`
+blocks, or `#[cfg(not(verus_keep_ghost))]` duplicate code. The sole permitted use is the
+`allocator_api` feature gate documented in the Rust Toolchain section above.
+See `no-cfg-not-verus-keep-ghost.mdc` for the full antipattern list.
+
+Every chapter gets one unconditional `pub mod ChapNN` block containing all its files.
+If a chapter doesn't verify under Verus, that is the project state (PBOGH), not something
+to hide behind conditional compilation.
+
+## Commenting out files that don't compile under Verus
+
+Files that use external crates Verus can't link (`rand`, `bitvec`, `ordered_float`, etc.)
+or have other Verus-incompatible constructs should be **commented out** in `lib.rs` with
+a reason, not hidden behind `verus_keep_ghost` gates:
+
+```rust
+pub mod Chap39 {
+    // pub mod BSTTreapStEph;  // uses rand (Verus can't link)
+    // pub mod BSTTreapMtEph;  // uses rand (Verus can't link)
+}
+```
+
+This keeps the files visible and grep-able. When `#[verifier::expect_failure]` becomes
+available in Verus, these can be uncommented and marked as expected failures, making it
+easy to check whether a Verus update fixes them.
+
+## Allowed cfg gates
+
+Only these `cfg` attributes are permitted in `lib.rs`:
+
+| Gate | Purpose |
+|---|---|
+| `#[cfg(not(feature = "experiments_only"))]` | Skip chapters when verifying only experiments |
+| `#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]` | Skip chapters in dev-only mode |
+| `#[cfg(feature = "all_chapters")]` | Optional slow/WIP files within a chapter |
+
+## Module ordering
+
+```rust
+// Copyright
+//! Crate doc
+#![allow(non_snake_case)]
+
+// Foundation modules
+pub mod Types;
+pub mod Concurrency;
+pub mod ParaPairs;
+
+// Experiments (commented-out experiments stay as documentation)
+pub mod experiments { ... }
+
+// vstdplus library
+pub mod vstdplus { ... }
+
+// Chapters in numeric order
+pub mod Chap02 { ... }
+pub mod Chap03 { ... }
+// ...
+```
+
+## Adding a new chapter
+
+1. Add `pub mod ChapNN { ... }` in numeric order.
+2. Gate with `#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]` unless
+   the chapter is a foundation dependency (Chap02, Chap18, Chap19, Chap26).
+3. List all `.rs` files in the chapter directory.
+4. Gate optional/slow files with `#[cfg(feature = "all_chapters")]`.
+5. Do not use `verus_keep_ghost` for any purpose.

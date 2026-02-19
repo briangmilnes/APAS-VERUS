@@ -26,6 +26,8 @@ pub mod TableStEph {
 
     // 4. type definitions
 
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
     pub struct TableStEph<K: StT + Ord, V: StT> {
         entries: ArraySeqStEphS<Pair<K, V>>,
     }

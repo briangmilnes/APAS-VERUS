@@ -16,7 +16,7 @@ pub mod smart_ptrs {
 
     /// Call a binary function through an Arc reference.
     /// Arc<F> derefs to F, so (**f)(a, b) invokes F directly.
-    /// This helper makes the requires/ensures explicit for Verus.
+    /// This makes the requires/ensures explicit for Verus.
     pub fn call_f<T, F: Fn(&T, &T) -> T + Send + Sync + 'static>(
         f: &Arc<F>,
         a: &T,
@@ -26,6 +26,25 @@ pub mod smart_ptrs {
         ensures f.ensures((a, b), result),
     {
         (**f)(a, b)
+    }
+
+    /// Deref an Arc to get a shared reference to the inner value.
+    /// Verus cannot see through Arc's Deref impl in exec mode.
+    #[verifier::external_body]
+    pub fn arc_deref<T>(a: &Arc<T>) -> (r: &T)
+        ensures *r == **a,
+    {
+        a.as_ref()
+    }
+
+    /// Get a subslice of the Vec inside an Arc. Combines Arc deref,
+    /// Vec-to-slice coercion, and range indexing in one step.
+    #[verifier::external_body]
+    pub fn arc_vec_as_slice<'a, T>(a: &'a Arc<Vec<T>>, start: usize, len: usize) -> (r: &'a [T])
+        requires start + len <= (*a)@.len(),
+        ensures r@ == (*a)@.subrange(start as int, (start + len) as int),
+    {
+        &a[start..start + len]
     }
 
     } // verus!

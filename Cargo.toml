@@ -19,7 +19,6 @@ all_chapters = []
 vstd = "0.0.0-2025-08-12-1837"
 verus_state_machines_macros = "0.0.0-2025-11-23-0053"
 rand = "0.10.0"
-ordered-float = "5.1.0"
 bitvec = "1.0.1"
 
 [lib]
