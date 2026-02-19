@@ -1,82 +1,24 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap37/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap37/BSTAVLMtEph.rs -d src/Chap37/BSTBBAlphaMtEph.rs -d src/Chap37/BSTPlainMtEph.rs
 
-❌ AVLTreeSeq.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:29: error: bare_impl - impl<T: StT> AVLTreeNode<T> { — `impl AVLTreeNode` without trait; file defines [AVLTreeSeq]
-        30 |         fn new(value: T, index: N) -> Self {
-        31 |             AVLTreeNode {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeq.rs:307: error: bare_impl - impl<'a, T: StT> AVLTreeSeqIter<'a, T> { — `impl AVLTreeSeqIter` without trait; file defines [AVLTreeSeq]
-       308 |         fn new(root: &'a Link<T>) -> Self {
-       309 |             let mut it = AVLTreeSeqIter {
-   Errors: 2 bare impl(s) in file with trait definition
-✓ AVLTreeSeqMtPer.rs
-❌ AVLTreeSeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:24: error: bare_impl - impl<T: StT> AVLTreeNode<T> { — `impl AVLTreeNode` without trait; file defines [AVLTreeSeqStEphTrait]
-        25 |         fn new(value: T, index: N) -> Self {
-        26 |             AVLTreeNode {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStEph.rs:200: error: bare_impl - impl<'a, T: StT> AVLTreeSeqIterStEph<'a, T> { — `impl AVLTreeSeqIterStEph` without trait; file defines [AVLTreeSeqStEphTrait]
-       201 |         fn new(root: &'a Link<T>) -> Self {
-       202 |             let mut it = AVLTreeSeqIterStEph {
-   Errors: 2 bare impl(s) in file with trait definition
-❌ AVLTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/AVLTreeSeqStPer.rs:257: error: bare_impl - impl<'a, T: StT> AVLTreeSeqStPerIter<'a, T> { — `impl AVLTreeSeqStPerIter` without trait; file defines [AVLTreeSeqStPerTrait]
-       258 |         fn push_left(&mut self, mut cur: Option<&'a Node<T>>) {
-       259 |             while let Some(n) = cur {
-   Errors: 1 bare impl(s) in file with trait definition
-❌ BSTAVLMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:430: assume() - assume(tree_ref.spec_size() <= usize::MAX);
-       426 |         pub fn size(&self) -> (n: usize)
-            ...
-       428 |             let read_handle = self.root.acquire_read();
-       429 |             let tree_ref = read_handle.borrow();
-       431 |             let n = tree_ref.size();
-       432 |             read_handle.release_read();
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTAVLMtEph.rs:449: assume() - assume(tree_ref.spec_height() <= usize::MAX);
-       445 |         pub fn height(&self) -> (h: usize)
-            ...
-       447 |             let read_handle = self.root.acquire_read();
-       448 |             let tree_ref = read_handle.borrow();
-       450 |             let h = tree_ref.height();
-       451 |             read_handle.release_read();
-   Holes: 2 total
-      2 × assume()
-   Proof functions: 1 total (1 clean, 0 holed)
-✓ BSTAVLStEph.rs
-   2 clean proof functions
-❌ BSTBBAlphaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:260: assume() - assume(tree_ref.spec_size() <= usize::MAX);
-       256 |         pub fn size(&self) -> (n: usize)
-            ...
-       258 |             let read_handle = self.root.acquire_read();
-       259 |             let tree_ref = read_handle.borrow();
-       261 |             let n = tree_ref.size();
-       262 |             read_handle.release_read();
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTBBAlphaMtEph.rs:279: assume() - assume(tree_ref.spec_height() <= usize::MAX);
-       275 |         pub fn height(&self) -> (h: usize)
-            ...
-       277 |             let read_handle = self.root.acquire_read();
-       278 |             let tree_ref = read_handle.borrow();
-       280 |             let h = tree_ref.height();
-       281 |             read_handle.release_read();
-   Holes: 2 total
-      2 × assume()
-✓ BSTBBAlphaStEph.rs
-❌ BSTPlainMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:264: assume() - assume(tree_ref.spec_size() <= usize::MAX);
-       260 |         pub fn size(&self) -> (n: usize)
-            ...
-       262 |             let read_handle = self.root.acquire_read();
-       263 |             let tree_ref = read_handle.borrow();
-       265 |             let n = tree_ref.size();
-       266 |             read_handle.release_read();
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTPlainMtEph.rs:274: assume() - assume(tree_ref.spec_height() <= usize::MAX);
-       270 |         pub fn height(&self) -> (h: usize)
-            ...
-       272 |             let read_handle = self.root.acquire_read();
-       273 |             let tree_ref = read_handle.borrow();
-       275 |             let h = tree_ref.height();
-       276 |             read_handle.release_read();
-   Holes: 2 total
-      2 × assume()
-✓ BSTPlainStEph.rs
-✓ BSTRBMtEph.rs
-✓ BSTRBStEph.rs
+✓ BSTAVLMtEph.rs
+   1 clean proof function
+✓ BSTBBAlphaMtEph.rs
+✓ BSTPlainMtEph.rs
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   3 clean (no holes)
+   0 holed (contains holes)
+   3 total
+
+Proof Functions:
+   1 clean
+   0 holed
+   1 total
+
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.

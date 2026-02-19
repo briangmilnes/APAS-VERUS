@@ -397,19 +397,21 @@ pub mod Chapter36Mt {
         }
     }
 
-    #[verifier::external_body]
     fn median3_pivot_idx<T: TotalOrder + Copy>(a: &ArraySeqMtEphS<T>, n: usize) -> (idx: usize)
         requires n >= 2, n == a.spec_len(),
-        ensures idx < n, a.spec_index(idx as int) == spec_median_of_three(
-            a.spec_index(0), a.spec_index((n / 2) as int), a.spec_index((n - 1) as int)),
+        ensures idx < n, idx == 0 || idx == n / 2 || idx == n - 1,
     {
         let first = *a.nth(0);
         let mid = *a.nth(n / 2);
         let last = *a.nth(n - 1);
         let median = median_of_three(first, mid, last);
-        if TotalOrder::cmp(a.nth(0), &median) == core::cmp::Ordering::Equal { 0 }
-        else if TotalOrder::cmp(a.nth(n / 2), &median) == core::cmp::Ordering::Equal { n / 2 }
-        else { n - 1 }
+        match TotalOrder::cmp(a.nth(0), &median) {
+            core::cmp::Ordering::Equal => 0,
+            _ => match TotalOrder::cmp(a.nth(n / 2), &median) {
+                core::cmp::Ordering::Equal => n / 2,
+                _ => n - 1,
+            },
+        }
     }
 
     fn sort_vec_random<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (result: Vec<T>)

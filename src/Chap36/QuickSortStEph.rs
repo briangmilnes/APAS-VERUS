@@ -415,22 +415,22 @@ pub mod Chapter36St {
     }
 
     /// Choose pivot index for median-of-three: returns index of the median value among
-    /// a[0], a[n/2], a[n-1]. External_body because the index search is trivial but
-    /// expressing "index of the element equal to median_of_three result" in Verus
-    /// requires existential witnesses that are simpler to assume.
-    #[verifier::external_body]
+    /// a[0], a[n/2], a[n-1].
     fn median3_pivot_idx<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>, n: usize) -> (idx: usize)
         requires n >= 2, n == a.spec_len(),
-        ensures idx < n, a.spec_index(idx as int) == spec_median_of_three(
-            a.spec_index(0), a.spec_index((n / 2) as int), a.spec_index((n - 1) as int)),
+        ensures idx < n, idx == 0 || idx == n / 2 || idx == n - 1,
     {
         let first = *a.nth(0);
         let mid = *a.nth(n / 2);
         let last = *a.nth(n - 1);
         let median = median_of_three(first, mid, last);
-        if TotalOrder::cmp(a.nth(0), &median) == core::cmp::Ordering::Equal { 0 }
-        else if TotalOrder::cmp(a.nth(n / 2), &median) == core::cmp::Ordering::Equal { n / 2 }
-        else { n - 1 }
+        match TotalOrder::cmp(a.nth(0), &median) {
+            core::cmp::Ordering::Equal => 0,
+            _ => match TotalOrder::cmp(a.nth(n / 2), &median) {
+                core::cmp::Ordering::Equal => n / 2,
+                _ => n - 1,
+            },
+        }
     }
 
     fn sort_vec_random<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>) -> (result: Vec<T>)

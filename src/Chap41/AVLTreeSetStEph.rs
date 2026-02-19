@@ -38,9 +38,9 @@ pub mod AVLTreeSetStEph {
     // 5. view impls
 
     impl<T: StT + Ord> View for AVLTreeSetStEph<T> {
-        type V = Set<T>;
+        type V = Set<<T as View>::V>;
         #[verifier::external_body]
-        open spec fn view(&self) -> Set<T> { Set::empty() }
+        open spec fn view(&self) -> Set<<T as View>::V> { Set::empty() }
     }
 
     // 8. traits
@@ -57,11 +57,11 @@ pub mod AVLTreeSetStEph {
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (result: Self)
-            ensures result@ == Set::<T>::empty();
+            ensures result@ == Set::<<T as View>::V>::empty();
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<T>::empty().insert(x), result@.finite();
+            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (result: Self)
             ensures result@.finite();
@@ -84,15 +84,15 @@ pub mod AVLTreeSetStEph {
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T) -> (result: B)
-            ensures result == self@.contains(*x);
+            ensures result == self@.contains(x@);
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn delete(&mut self, x: &T)
-            ensures self@ == old(self)@.remove(*x), self@.finite();
+            ensures self@ == old(self)@.remove(x@), self@.finite();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&mut self, x: T)
-            ensures self@ == old(self)@.insert(x), self@.finite();
+            ensures self@ == old(self)@.insert(x@), self@.finite();
     }
 
     // 9. impls
@@ -117,7 +117,7 @@ pub mod AVLTreeSetStEph {
 
         #[verifier::external_body]
         fn empty() -> (result: Self)
-            ensures result@ == Set::<T>::empty()
+            ensures result@ == Set::<<T as View>::V>::empty()
         {
             AVLTreeSetStEph {
                 elements: AVLTreeSeqStEphS::empty(),
@@ -126,7 +126,7 @@ pub mod AVLTreeSetStEph {
 
         #[verifier::external_body]
         fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<T>::empty().insert(x), result@.finite()
+            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite()
         {
             AVLTreeSetStEph {
                 elements: AVLTreeSeqStEphS::singleton(x),
@@ -215,7 +215,7 @@ pub mod AVLTreeSetStEph {
 
         #[verifier::external_body]
         fn find(&self, x: &T) -> (result: B)
-            ensures result == self@.contains(*x)
+            ensures result == self@.contains(x@)
         {
             let n = self.elements.length();
             let mut lo = 0usize;
@@ -237,14 +237,14 @@ pub mod AVLTreeSetStEph {
 
         #[verifier::external_body]
         fn delete(&mut self, x: &T)
-            ensures self@ == old(self)@.remove(*x), self@.finite()
+            ensures self@ == old(self)@.remove(x@), self@.finite()
         {
             let _ = self.elements.delete_value(x);
         }
 
         #[verifier::external_body]
         fn insert(&mut self, x: T)
-            ensures self@ == old(self)@.insert(x), self@.finite()
+            ensures self@ == old(self)@.insert(x@), self@.finite()
         {
             if self.find(&x) {
                 return;

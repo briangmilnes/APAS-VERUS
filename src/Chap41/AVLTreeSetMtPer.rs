@@ -50,9 +50,9 @@ pub mod AVLTreeSetMtPer {
     // 5. view impls
 
     impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtPer<T> {
-        type V = Set<T>;
+        type V = Set<<T as View>::V>;
         #[verifier::external_body]
-        open spec fn view(&self) -> Set<T> { Set::empty() }
+        open spec fn view(&self) -> Set<<T as View>::V> { Set::empty() }
     }
 
     // 8. traits
@@ -69,11 +69,11 @@ pub mod AVLTreeSetMtPer {
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (result: Self)
-            ensures result@ == Set::<T>::empty();
+            ensures result@ == Set::<<T as View>::V>::empty();
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<T>::empty().insert(x), result@.finite();
+            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)
         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (result: Self)
             ensures result@.finite();
@@ -96,15 +96,15 @@ pub mod AVLTreeSetMtPer {
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T) -> (result: B)
-            ensures result == self@.contains(*x);
+            ensures result == self@.contains(x@);
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn delete(&self, x: &T) -> (result: Self)
-            ensures result@ == self@.remove(*x), result@.finite();
+            ensures result@ == self@.remove(x@), result@.finite();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&self, x: T) -> (result: Self)
-            ensures result@ == self@.insert(x), result@.finite();
+            ensures result@ == self@.insert(x@), result@.finite();
     }
 
     // 9. impls
@@ -122,7 +122,7 @@ pub mod AVLTreeSetMtPer {
 
         #[verifier::external_body]
         fn empty() -> (result: Self)
-            ensures result@ == Set::<T>::empty()
+            ensures result@ == Set::<<T as View>::V>::empty()
         {
             AVLTreeSetMtPer {
                 elements: AVLTreeSeqMtPerS::empty(),
@@ -131,7 +131,7 @@ pub mod AVLTreeSetMtPer {
 
         #[verifier::external_body]
         fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<T>::empty().insert(x), result@.finite()
+            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite()
         {
             AVLTreeSetMtPer {
                 elements: AVLTreeSeqMtPerS::singleton(x),
@@ -371,7 +371,7 @@ pub mod AVLTreeSetMtPer {
 
         #[verifier::external_body]
         fn find(&self, x: &T) -> (result: B)
-            ensures result == self@.contains(*x)
+            ensures result == self@.contains(x@)
         {
             // Binary search in sorted sequence
             let n = self.size();
@@ -392,7 +392,7 @@ pub mod AVLTreeSetMtPer {
 
         #[verifier::external_body]
         fn delete(&self, x: &T) -> (result: Self)
-            ensures result@ == self@.remove(*x), result@.finite()
+            ensures result@ == self@.remove(x@), result@.finite()
         {
             // Unconditionally use parallel filter
             let x_clone = x.clone();
@@ -401,7 +401,7 @@ pub mod AVLTreeSetMtPer {
 
         #[verifier::external_body]
         fn insert(&self, x: T) -> (result: Self)
-            ensures result@ == self@.insert(x), result@.finite()
+            ensures result@ == self@.insert(x@), result@.finite()
         {
             if self.find(&x) {
                 return self.clone();

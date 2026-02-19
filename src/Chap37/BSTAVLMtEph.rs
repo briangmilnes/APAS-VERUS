@@ -43,6 +43,8 @@ pub mod BSTAVLMtEph {
     impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BstPred<T> {
         open spec fn inv(self, tree: BalBinTree<T>) -> bool {
             tree_is_bst::<T>(tree)
+                && tree.spec_size() <= usize::MAX
+                && tree.spec_height() <= usize::MAX
         }
     }
 
@@ -235,6 +237,8 @@ pub mod BSTAVLMtEph {
             tree_contains(result, value),
             forall|x: T| #![auto] tree_contains(result, x) <==>
                 (tree_contains(node, x) || x == value),
+            result.spec_size() <= node.spec_size() + 1,
+            result.spec_height() <= node.spec_height() + 1,
         decreases node.spec_size(),
     {
         match node {
@@ -410,8 +414,24 @@ pub mod BSTAVLMtEph {
         pub fn insert(&self, value: T)
         {
             let (tree, write_handle) = self.root.acquire_write();
-            let new_tree = insert_node(tree, value);
-            write_handle.release_write(new_tree);
+            let current_size = tree.size();
+            let current_height = tree.height();
+            if current_size < usize::MAX && current_height < usize::MAX {
+                let new_tree = insert_node(tree, value);
+                proof {
+                    assert(tree.spec_size() <= usize::MAX);
+                    assert(new_tree.spec_size() <= tree.spec_size() + 1);
+                    assert(tree.spec_size() + 1 <= usize::MAX);
+                    assert(new_tree.spec_size() <= usize::MAX);
+                    assert(tree.spec_height() <= usize::MAX);
+                    assert(new_tree.spec_height() <= tree.spec_height() + 1);
+                    assert(tree.spec_height() + 1 <= usize::MAX);
+                    assert(new_tree.spec_height() <= usize::MAX);
+                }
+                write_handle.release_write(new_tree);
+            } else {
+                write_handle.release_write(tree);
+            }
         }
 
         pub fn contains(&self, target: &T) -> (result: bool)
@@ -427,7 +447,7 @@ pub mod BSTAVLMtEph {
         {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
-            assume(tree_ref.spec_size() <= usize::MAX);
+            assert(tree_ref.spec_size() <= usize::MAX);
             let n = tree_ref.size();
             read_handle.release_read();
             n
@@ -446,7 +466,7 @@ pub mod BSTAVLMtEph {
         {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
-            assume(tree_ref.spec_height() <= usize::MAX);
+            assert(tree_ref.spec_height() <= usize::MAX);
             let h = tree_ref.height();
             read_handle.release_read();
             h
