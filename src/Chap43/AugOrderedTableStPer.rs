@@ -90,7 +90,7 @@ pub mod AugOrderedTableStPer {
 
     /// Trait defining all augmented ordered table operations (ADT 43.3)
     /// Extends ordered table operations with efficient reduction
-    pub trait AugOrderedTableStPerTrait<K: StT + Ord, V: StT, F>
+    pub trait AugOrderedTableStPerTrait<K: StT + Ord, V: StT, F>: Sized + View<V = Map<K::V, V::V>>
     where
         F: Fn(&V, &V) -> V + Clone,
     {
@@ -102,8 +102,10 @@ pub mod AugOrderedTableStPer {
             ensures result@.dom().finite();
         fn find(&self, k: &K) -> (result: Option<V>)
             ensures
-                self@.contains_key(k@) ==> result == Some(self@[k@]),
-                !self@.contains_key(k@) ==> result == None;
+                match result {
+                    Some(v) => self@.contains_key(k@) && v@ == self@[k@],
+                    None => !self@.contains_key(k@),
+                };
         fn insert(&self, k: K, v: V) -> (result: Self)
             ensures result@.dom().finite();
         fn delete(&self, k: &K) -> (result: Self)
@@ -136,7 +138,7 @@ pub mod AugOrderedTableStPer {
             ensures self@.dom().finite();
         fn next_key(&self, k: &K) -> (result: Option<K>)
             ensures self@.dom().finite();
-        fn split_key(&self, k: &K) -> (Self, Option<V>, Self)
+        fn split_key(&self, k: &K) -> (result: (Self, Option<V>, Self))
             where Self: Sized,
             ensures self@.dom().finite();
         fn join_key(left: &Self, right: &Self) -> (result: Self)
@@ -147,7 +149,7 @@ pub mod AugOrderedTableStPer {
             ensures self@.dom().finite();
         fn select_key(&self, i: N) -> (result: Option<K>)
             ensures self@.dom().finite();
-        fn split_rank_key(&self, i: N) -> (Self, Self)
+        fn split_rank_key(&self, i: N) -> (result: (Self, Self))
             where Self: Sized,
             ensures self@.dom().finite();
         fn reduce_val(&self) -> (result: V)
@@ -196,8 +198,10 @@ pub mod AugOrderedTableStPer {
         #[verifier::external_body]
         fn find(&self, k: &K) -> (result: Option<V>)
             ensures
-                self@.contains_key(k@) ==> result == Some(self@[k@]),
-                !self@.contains_key(k@) ==> result == None
+                match result {
+                    Some(v) => self@.contains_key(k@) && v@ == self@[k@],
+                    None => !self@.contains_key(k@),
+                }
         {
             self.base_table.find(k)
         }
@@ -397,7 +401,7 @@ pub mod AugOrderedTableStPer {
         }
 
         #[verifier::external_body]
-        fn split_key(&self, k: &K) -> (Self, Option<V>, Self)
+        fn split_key(&self, k: &K) -> (result: (Self, Option<V>, Self))
             ensures self@.dom().finite()
         {
             let (left_base, middle, right_base) = self.base_table.split_key(k);
@@ -473,7 +477,7 @@ pub mod AugOrderedTableStPer {
         }
 
         #[verifier::external_body]
-        fn split_rank_key(&self, i: N) -> (Self, Self)
+        fn split_rank_key(&self, i: N) -> (result: (Self, Self))
             ensures self@.dom().finite()
         {
             let (left_base, right_base) = self.base_table.split_rank_key(i);

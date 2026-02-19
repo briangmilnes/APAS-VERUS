@@ -40,7 +40,7 @@ pub mod ArraySetStEph {
 
     // 8. traits
 
-    pub trait ArraySetStEphTrait<T: StT + Ord> {
+    pub trait ArraySetStEphTrait<T: StT + Ord>: Sized + View<V = Set<T>> {
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (result: N)
             ensures result == self@.len(), self@.finite();

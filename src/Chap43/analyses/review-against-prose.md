@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 43: Ordered Sets, Ordered Tables, and Augmented Tables — Review Against Prose
 
-**Date:** 2026-02-18
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 **Prose sources:** `prompts/Chap43.txt` (Data Type 43.1, Cost Spec 43.2, Exercise 43.1, Example 43.1), `prompts/Chap43part2.txt` (Definition 43.3, Examples 43.2–43.3)
 **Verification status:** All 10 ADT modules verusified with `#[verifier::external_body]` specs. Verus: 1863 verified, 0 errors. RTT: 2698 passed.
@@ -175,6 +175,23 @@ Holes Found: 283 total
 ```
 
 All 10 ADT modules use `#[verifier::external_body]` on exec methods and the View `view` spec. This is the accepted verusification pattern: specs (`requires`/`ensures`) are verified; implementations are trusted at the boundary. Example43_1 has no Verus code and reports clean.
+
+### Per-File Breakdown
+
+| # | File | external_body | Notes |
+|---|------|:---:|-------|
+| 1 | OrderedSetStEph.rs | 25 | Includes clone, from_sorted_elements |
+| 2 | OrderedSetStPer.rs | 25 | Includes clone, from_sorted_elements |
+| 3 | OrderedSetMtEph.rs | 23 | No clone, no from_sorted_elements |
+| 4 | OrderedTableStEph.rs | 31 | Includes from_sorted_entries |
+| 5 | OrderedTableStPer.rs | 28 | Includes from_sorted_entries |
+| 6 | OrderedTableMtEph.rs | 32 | Includes clone, from_sorted_entries |
+| 7 | OrderedTableMtPer.rs | 21 | Includes clone; fewer bulk ops |
+| 8 | AugOrderedTableStEph.rs | 33 | Includes calculate_reduction |
+| 9 | AugOrderedTableStPer.rs | 30 | Includes calculate_reduction |
+| 10 | AugOrderedTableMtEph.rs | 35 | Includes calculate_reduction, recalculate_reduction |
+| 11 | Example43_1.rs | 0 | Clean — no verus! code |
+| | **Total** | **283** | |
 
 ## Phase 5: Action Items
 

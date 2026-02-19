@@ -1,6 +1,88 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap42/
+
 ✓ Example42_1.rs
-✓ TableMtEph.rs
-✓ TableStEph.rs
+❌ TableMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:43: external_body - #[verifier::external_body]
+        44 |         open spec fn view(&self) -> Map<K::V, V::V> {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:104: external_body - #[verifier::external_body]
+       105 |         fn size(&self) -> (result: N)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:111: external_body - #[verifier::external_body]
+       112 |         fn empty() -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:120: external_body - #[verifier::external_body]
+       121 |         fn singleton(key: K, value: V) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:129: external_body - #[verifier::external_body]
+       130 |         fn domain(&self) -> (result: ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:164: external_body - #[verifier::external_body]
+       165 |         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:224: external_body - #[verifier::external_body]
+       225 |         fn map<F: Fn(&V) -> V + Send + Sync + 'static>(&mut self, f: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:278: external_body - #[verifier::external_body]
+       279 |         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&mut self, f: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:330: external_body - #[verifier::external_body]
+       331 |         fn intersection<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:358: external_body - #[verifier::external_body]
+       359 |         fn union<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:402: external_body - #[verifier::external_body]
+       403 |         fn difference(&mut self, other: &Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:437: external_body - #[verifier::external_body]
+       438 |         fn find(&self, key: &K) -> (result: Option<V>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:458: external_body - #[verifier::external_body]
+       459 |         fn delete(&mut self, key: &K)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:510: external_body - #[verifier::external_body]
+       511 |         fn insert<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, key: K, value: V, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:587: external_body - #[verifier::external_body]
+       588 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:639: external_body - #[verifier::external_body]
+       640 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:691: external_body - #[verifier::external_body]
+       692 |         fn entries(&self) -> (result: ArraySeqMtEphS<Pair<K, V>>) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:700: external_body - #[verifier::external_body]
+       701 |         fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:710: external_body - #[verifier::external_body]
+       711 |     pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (result: TableMtEph<K, V>)
+   Holes: 19 total
+      19 × external_body
+❌ TableStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:39: external_body - #[verifier::external_body]
+        40 |         open spec fn view(&self) -> Map<K::V, V::V> { Map::empty() }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:104: external_body - #[verifier::external_body]
+       105 |         fn size(&self) -> (result: N)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:111: external_body - #[verifier::external_body]
+       112 |         fn empty() -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:120: external_body - #[verifier::external_body]
+       121 |         fn singleton(key: K, value: V) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:129: external_body - #[verifier::external_body]
+       130 |         fn domain(&self) -> (result: ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:141: external_body - #[verifier::external_body]
+       142 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:158: external_body - #[verifier::external_body]
+       159 |         fn map<F: Fn(&V) -> V>(&mut self, f: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:173: external_body - #[verifier::external_body]
+       174 |         fn filter<F: Fn(&K, &V) -> B>(&mut self, f: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:187: external_body - #[verifier::external_body]
+       188 |         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:214: external_body - #[verifier::external_body]
+       215 |         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:257: external_body - #[verifier::external_body]
+       258 |         fn difference(&mut self, other: &Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:290: external_body - #[verifier::external_body]
+       291 |         fn find(&self, key: &K) -> (result: Option<V>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:315: external_body - #[verifier::external_body]
+       316 |         fn delete(&mut self, key: &K)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:329: external_body - #[verifier::external_body]
+       330 |         fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:356: external_body - #[verifier::external_body]
+       357 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:370: external_body - #[verifier::external_body]
+       371 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:384: external_body - #[verifier::external_body]
+       385 |         fn entries(&self) -> (result: ArraySeqStEphS<Pair<K, V>>) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:393: external_body - #[verifier::external_body]
+       394 |         fn clone(&self) -> (result: Self) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:401: external_body - #[verifier::external_body]
+       402 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
+   Holes: 19 total
+      19 × external_body
 ✓ TableStPer.rs
 
 ═══════════════════════════════════════════════════════════════
@@ -8,8 +90,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   4 clean (no holes)
-   0 holed (contains holes)
+   2 clean (no holes)
+   2 holed (contains holes)
    4 total
 
 Proof Functions:
@@ -17,18 +99,5 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
-n (no holes)
-   0 holed (contains holes)
-   4 total
-
-Proof Functions:
-   0 clean
-   0 holed
-   0 total
-
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
+Holes Found: 38 total
+   38 × external_body

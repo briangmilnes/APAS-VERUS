@@ -12,17 +12,7 @@
    Holes: 2 total
       1 × unsafe {}
       1 × external_body
-❌ FlatHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/FlatHashTable.rs:41: external_body - #[verifier::external_body]
-        42 |         fn new() -> Self { FlatEntry::Empty }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/FlatHashTable.rs:46: external_body - #[verifier::external_body]
-        47 |         fn insert(&mut self, key: Key, value: Value) { *self = FlatEntry::Occupied(key, value); }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/FlatHashTable.rs:51: external_body - #[verifier::external_body]
-        52 |         fn lookup(&self, key: &Key) -> Option<Value> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/FlatHashTable.rs:61: external_body - #[verifier::external_body]
-        62 |         fn delete(&mut self, key: &Key) -> B {
-   Holes: 4 total
-      4 × external_body
+✓ FlatHashTable.rs
 ✓ LinProbFlatHashTableStEph.rs
 ✓ LinkedListChainedHashTableStEph.rs
 ✓ ParaHashTableStEph.rs
@@ -45,8 +35,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   6 clean (no holes)
-   3 holed (contains holes)
+   7 clean (no holes)
+   2 holed (contains holes)
    9 total
 
 Proof Functions:
@@ -54,14 +44,14 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 10 total
+Holes Found: 6 total
    1 × unsafe {}
-   9 × external_body
-�═
+   5 × external_body
+��═
 
 Modules:
-   6 clean (no holes)
-   3 holed (contains holes)
+   7 clean (no holes)
+   2 holed (contains holes)
    9 total
 
 Proof Functions:
@@ -69,6 +59,6 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 10 total
+Holes Found: 6 total
    1 × unsafe {}
-   9 × external_body
+   5 × external_body

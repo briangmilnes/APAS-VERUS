@@ -27,7 +27,7 @@ pub mod OrderedSetStPer {
     // 4. type definitions
 
     pub struct OrderedSetStPer<T: StT + Ord> {
-        base_set: AVLTreeSetStPer<T>,
+        pub base_set: AVLTreeSetStPer<T>,
     }
 
     pub type OrderedSetPer<T> = OrderedSetStPer<T>;
@@ -36,14 +36,13 @@ pub mod OrderedSetStPer {
 
     impl<T: StT + Ord> View for OrderedSetStPer<T> {
         type V = Set<T>;
-        #[verifier::external_body]
-        open spec fn view(&self) -> Set<T> { Set::empty() }
+        open spec fn view(&self) -> Set<T> { self.base_set@ }
     }
 
     // 8. traits
 
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1)
-    pub trait OrderedSetStPerTrait<T: StT + Ord> {
+    pub trait OrderedSetStPerTrait<T: StT + Ord>: Sized + View<V = Set<T>> {
         // Base set operations (ADT 41.1) - delegated
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (result: N)
@@ -120,12 +119,10 @@ pub mod OrderedSetStPer {
     // 9. impls
 
     impl<T: StT + Ord> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
-        #[verifier::external_body]
         fn size(&self) -> (result: N)
             ensures result == self@.len(), self@.finite()
         { self.base_set.size() }
 
-        #[verifier::external_body]
         fn empty() -> (result: Self)
             ensures result@ == Set::<T>::empty()
         {
@@ -134,7 +131,6 @@ pub mod OrderedSetStPer {
             }
         }
 
-        #[verifier::external_body]
         fn singleton(x: T) -> (result: Self)
             ensures result@ == Set::<T>::empty().insert(x), result@.finite()
         {
@@ -143,12 +139,10 @@ pub mod OrderedSetStPer {
             }
         }
 
-        #[verifier::external_body]
         fn find(&self, x: &T) -> (result: B)
             ensures result == self@.contains(*x)
         { self.base_set.find(x) }
 
-        #[verifier::external_body]
         fn insert(&self, x: T) -> (result: Self)
             ensures result@ == self@.insert(x), result@.finite()
         {
@@ -157,7 +151,6 @@ pub mod OrderedSetStPer {
             }
         }
 
-        #[verifier::external_body]
         fn delete(&self, x: &T) -> (result: Self)
             ensures result@ == self@.remove(*x), result@.finite()
         {
@@ -166,7 +159,6 @@ pub mod OrderedSetStPer {
             }
         }
 
-        #[verifier::external_body]
         fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
             ensures result@.finite(), result@.subset_of(self@)
         {
@@ -175,7 +167,6 @@ pub mod OrderedSetStPer {
             }
         }
 
-        #[verifier::external_body]
         fn intersection(&self, other: &Self) -> (result: Self)
             ensures result@ == self@.intersect(other@), result@.finite()
         {
@@ -184,7 +175,6 @@ pub mod OrderedSetStPer {
             }
         }
 
-        #[verifier::external_body]
         fn union(&self, other: &Self) -> (result: Self)
             ensures result@ == self@.union(other@), result@.finite()
         {
@@ -193,7 +183,6 @@ pub mod OrderedSetStPer {
             }
         }
 
-        #[verifier::external_body]
         fn difference(&self, other: &Self) -> (result: Self)
             ensures result@ == self@.difference(other@), result@.finite()
         {
@@ -202,12 +191,10 @@ pub mod OrderedSetStPer {
             }
         }
 
-        #[verifier::external_body]
         fn to_seq(&self) -> (result: AVLTreeSeqStPerS<T>)
             ensures self@.finite()
         { self.base_set.to_seq() }
 
-        #[verifier::external_body]
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (result: Self)
             ensures result@.finite()
         {
@@ -302,7 +289,6 @@ pub mod OrderedSetStPer {
             (Self::from_seq(left_seq), found, Self::from_seq(right_seq))
         }
 
-        #[verifier::external_body]
         fn join(left: &Self, right: &Self) -> (result: Self)
             ensures result@.finite()
         { left.union(right) }
@@ -380,7 +366,6 @@ pub mod OrderedSetStPer {
     // 11. derive impls in verus!
 
     impl<T: StT + Ord> Clone for OrderedSetStPer<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (result: Self)
             ensures result@ == self@
         {

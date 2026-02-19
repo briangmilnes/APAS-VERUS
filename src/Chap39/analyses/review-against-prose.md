@@ -1,12 +1,13 @@
 <style>
 body { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 1em !important; }
 .markdown-body { max-width: 100% !important; width: 100% !important; }
+.container, .container-lg, .container-xl, main, article { max-width: 100% !important; width: 100% !important; }
 table { width: 100% !important; table-layout: fixed; }
 </style>
 
 # Chapter 39 — Treaps: Review Against Prose
 
-**Date:** 2026-02-17
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 2: Prose Inventory
@@ -53,7 +54,7 @@ Source: `prompts/Chap39.txt`
 
 ### 3a. Cost Annotations
 
-All cost annotations are present in the `/// - APAS:` / `/// - Claude-Opus-4.6:` format across all four source files.
+All cost annotations are present in the `/// - APAS:` / `/// - Claude-Opus-4.6:` dual-line format across all four source files.
 
 ### 3b. Implementation Fidelity
 
@@ -120,6 +121,8 @@ Key specifications that would be needed for eventual verification:
 3. **BSTSetTreapMtEph is a compatibility layer.** It wraps BSTTreapMtEph with a set API but uses sequential BTreeSet/Vec-based rebuilds for all aggregate operations. The module header explicitly acknowledges this and directs users to BSTParaTreapMtEph for parallel operations.
 
 4. **priority\_for relies on Debug output for hashing.** The function formats the key via `Debug`, hashes the resulting string, and casts to `i64`. This is fragile: two structurally identical keys with different `Debug` output would get different priorities, and the approach adds allocation overhead. However, it satisfies the prose's requirement that p(·) is a deterministic function of the key.
+
+5. **MtKey and Pred type aliases.** BSTParaTreapMtEph uses `MtKey` (from `Types.rs`) as a combined bound alias instead of spelling out `StTInMtT + Ord + Debug + Hash + Send + Sync + Clone + 'static`, and `Pred<T>` for filter predicates (`Fn(&T) -> bool + Send + Sync + 'static`). This keeps signatures clean.
 
 ## Phase 4: Parallelism Review
 
@@ -306,17 +309,21 @@ All derive impls and macros are outside `verus!` (there is no `verus!` block). T
 
 ## Proof Holes Summary
 
+From `veracity-review-verus-proof-holes -d src/Chap39/`:
+
 ```
 ✓ BSTParaTreapMtEph.rs — CLEAN
 ✓ BSTSetTreapMtEph.rs  — CLEAN
-✓ BSTTreapMtEph.rs     — CLEAN
 ✓ BSTTreapStEph.rs     — CLEAN
 
-Modules: 4 clean, 0 holed
+❌ BSTTreapMtEph.rs     — 1 bare_impl error (impl Node without trait)
+
+Modules: 4 clean (no holes), 0 holed
 Holes Found: 0 total
+Errors: 1 bare impl(s) in files with trait definitions
 ```
 
-Vacuously clean — no Verus verification exists. The entire chapter is plain Rust gated with `#[cfg(not(verus_keep_ghost))]`.
+Vacuously clean for proof holes — no Verus verification exists. The entire chapter is plain Rust gated with `#[cfg(not(verus_keep_ghost))]`. The bare_impl error in BSTTreapMtEph.rs (`impl<T: StTInMtT + Ord> Node<T>` at line 24) should be resolved by moving `Node::new` into the trait when verusifying.
 
 ## Review TODOs
 
@@ -330,7 +337,8 @@ Vacuously clean — no Verus verification exists. The entire chapter is plain Ru
 | 6 | Medium | Testing | Add concurrent access tests for BSTTreapMtEph (multiple reader/writer threads). |
 | 7 | Medium | Design | Consider deprecating BSTSetTreapMtEph in favor of a set wrapper around BSTParaTreapMtEph, which would provide correct asymptotic costs for all operations. |
 | 8 | Medium | Fidelity | Evaluate whether `priority_for`'s hash-based approach provides sufficient randomness properties for the O(lg n) height guarantee. Consider switching to a proper random hash or recording priorities per key. |
-| 9 | Low | Fidelity | The prose defers size augmentation to Ch40. Document that Ch39 includes size augmentation early for practical reasons. |
-| 10 | Low | Testing | Add structural property tests verifying BST ordering and max-heap property after operations. |
-| 11 | Low | Testing | Add `test_priority_for_determinism` verifying the same key always maps to the same priority. |
-| 12 | Low | Exercise | Exercise 39.1 (uniqueness of treap structure) could be a future Verus proof goal. |
+| 9 | Medium | Style | Fix bare_impl in BSTTreapMtEph.rs — move `Node::new` into the trait or to a separate constructor. |
+| 10 | Low | Fidelity | The prose defers size augmentation to Ch40. Document that Ch39 includes size augmentation early for practical reasons. |
+| 11 | Low | Testing | Add structural property tests verifying BST ordering and max-heap property after operations. |
+| 12 | Low | Testing | Add `test_priority_for_determinism` verifying the same key always maps to the same priority. |
+| 13 | Low | Exercise | Exercise 39.1 (uniqueness of treap structure) could be a future Verus proof goal. |

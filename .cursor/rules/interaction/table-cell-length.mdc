@@ -1,0 +1,28 @@
+---
+description: Limit markdown table cell length to stay readable in Cursor chat
+alwaysApply: true
+---
+
+# Table Cell Length Limit
+
+Every cell in a markdown table must be **at most 40 characters**. If a cell would exceed 40 characters, shorten it:
+
+1. Abbreviate: "Remove external\_body from OrderedSetStEph delegation methods" → "Remove ext\_body OrderedSetStEph"
+2. Drop redundant words: "New verification coverage" → "New coverage"
+3. Move detail to a footnote or a row below the table.
+
+## Self-check
+
+Before emitting any markdown table, mentally scan every cell. If any cell exceeds 40 characters, rewrite it shorter. This applies to all columns including the last one.
+
+## Bad
+
+```
+| Fix external_body from OrderedSetStEph delegation methods | 1 file | Enables future OrderedTable verification |
+```
+
+## Good
+
+```
+| Remove ext_body OrderedSetStEph | 1 | Enables OrderedTable fixes |
+```

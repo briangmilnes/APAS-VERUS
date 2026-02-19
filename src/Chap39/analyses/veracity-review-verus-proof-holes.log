@@ -1,15 +1,10 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap39/
-
 ✓ BSTParaTreapMtEph.rs
 ✓ BSTSetTreapMtEph.rs
 ❌ BSTTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:24: error: bare_impl - impl<T: StTInMtT + Ord> Node<T> { — `impl Node` without trait; file defines [BSTTreapMtEphTrait]
         25 |         fn new(key: T, priority: u64) -> Self {
         26 |             Node {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:80: error: bare_impl - impl<T: StTInMtT + Ord> BSTTreapMtEph<T> { — `impl BSTTreapMtEph` without trait; file defines [BSTTreapMtEphTrait]
-        81 |         /// - APAS: Work Θ(1), Span Θ(1)
-        82 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-   Errors: 2 bare impl(s) in file with trait definition
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ BSTTreapStEph.rs
 
 ═══════════════════════════════════════════════════════════════
@@ -28,6 +23,18 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 2 bare impl(s) in files with trait definitions
+Errors: 1 bare impl(s) in files with trait definitions
+
+🎉 No proof holes found! All proofs are complete.
+4 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 0 total
+
+Errors: 1 bare impl(s) in files with trait definitions
 
 🎉 No proof holes found! All proofs are complete.
