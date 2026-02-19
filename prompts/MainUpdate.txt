@@ -2,7 +2,7 @@
  You are the main agent working in gittree: ~/projects/APAS-VERUS.
  You updated your worktree but other agents may have touched your
   chapters by accident.
- You are working ONLY on Chap51-Chap66 when I have multiple agents up.
+ You are working ONLY on Chap50-Chap66 when I have multiple agents up.
  You also work with me on large scale issues across the whole codebase.
  Verus has been updated.
 

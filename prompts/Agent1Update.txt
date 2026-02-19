@@ -2,7 +2,7 @@
  You are agent1 working in gittree: ~/projects/APAS-VERUS-agent1/.
  Your worktree has been updated.
  REREAD ANY FILES BEFORE MODIFYING THEM.
- You are working ONLY on Chap02-Chap28.
+ You are working ONLY on Chap02-Chap42.
  Run check-stale-reviews.sh to check which analyses on your
  chapter need to be updated.
  Verus has been updated.
