@@ -397,6 +397,20 @@ verus! {
         }
     }
 
+    impl<'a, V: StT + Hash, L: StT + Hash> std::iter::IntoIterator for &'a LabDirGraphStEph<V, L> {
+        type Item = &'a V;
+        type IntoIter = SetStEphIter<'a, V>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires valid_key_type::<V>()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, k: V| k@).to_set() == self@.V,
+                it@.1.no_duplicates(),
+        {
+            self.vertices().iter()
+        }
+    }
+
     impl<V: StT + Hash, L: StT + Hash> Clone for LabDirGraphStEph<V, L> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@

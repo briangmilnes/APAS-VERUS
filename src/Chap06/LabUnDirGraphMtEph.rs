@@ -544,6 +544,19 @@ pub mod LabUnDirGraphMtEph {
         }
     }
 
+    impl<'a, V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> std::iter::IntoIterator for &'a LabUnDirGraphMtEph<V, L> {
+        type Item = &'a V;
+        type IntoIter = SetStEphIter<'a, V>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires valid_key_type::<V>()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, k: V| k@).to_set() == self@.V,
+                it@.1.no_duplicates(),
+        {
+            self.vertices().iter()
+        }
+    }
 
     //		11. derive impls in verus!
 

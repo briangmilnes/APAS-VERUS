@@ -1365,11 +1365,8 @@ pub mod ArraySeqMtEph {
             }
 
             // Two threads race for the single lock.
-            // No Arc::clone spec in vstd — can't prove pred is preserved through Arc refcount bump.
             let lock1 = lock.clone();
-            proof { assume(lock1.pred() == pred); }
             let lock2 = lock.clone();
-            proof { assume(lock2.pred() == pred); }
 
             let ghost lv = left@;
             let ghost rv = right@;

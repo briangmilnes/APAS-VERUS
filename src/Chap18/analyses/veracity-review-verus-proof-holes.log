@@ -1,115 +1,16 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap18/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap18/ArraySeqMtEph.rs
 
-❌ ArraySeq.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1459: external - #[verifier::external]
-      1460 |     impl<T: View> ArraySeqS<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1593: external - #[verifier::external]
-      1594 |     impl<'a, T> std::iter::IntoIterator for &'a mut ArraySeqS<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1621: assume() - proof { assume(equal == (self@ == other@)); }
-      1617 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1619 |         {
-      1620 |             let equal = self.seq == other.seq;
-      1622 |             equal
-      1623 |         }
-   Holes: 3 total
-      1 × assume()
-      2 × external
-   Proof functions: 10 total (10 clean, 0 holed)
 ❌ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:1370: assume() - proof { assume(lock1.pred() == pred); }
-      1308 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:1568: assume() - proof { assume(equal == (self@ == other@)); }
+      1564 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1368 |             // No Arc::clone spec in vstd — can't prove pred is preserved through Arc refcount bump.
-      1369 |             let lock1 = lock.clone();
-      1371 |             let lock2 = lock.clone();
-      1372 |             proof { assume(lock2.pred() == pred); }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:1372: assume() - proof { assume(lock2.pred() == pred); }
-      1308 |         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)
-            ...
-      1370 |             proof { assume(lock1.pred() == pred); }
-      1371 |             let lock2 = lock.clone();
-      1373 | 
-      1374 |             let ghost lv = left@;
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:1571: assume() - proof { assume(equal == (self@ == other@)); }
-      1567 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1569 |         {
-      1570 |             let equal = self.seq == other.seq;
-      1572 |             equal
-      1573 |         }
-   Holes: 3 total
-      3 × assume()
+      1566 |         {
+      1567 |             let equal = self.seq == other.seq;
+      1569 |             equal
+      1570 |         }
+   Holes: 1 total
+      1 × assume()
    Proof functions: 4 total (4 clean, 0 holed)
-❌ ArraySeqMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:1176: assume() - proof { assume(equal == (self@ == other@)); }
-      1172 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1174 |         {
-      1175 |             let equal = self.seq == other.seq;
-      1177 |             equal
-      1178 |         }
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 2 total (2 clean, 0 holed)
-❌ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStEph.rs:1043: assume() - proof { assume(equal == (self@ == other@)); }
-      1039 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1041 |         {
-      1042 |             let equal = self.seq == other.seq;
-      1044 |             equal
-      1045 |         }
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 1 total (1 clean, 0 holed)
-❌ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStPer.rs:1014: assume() - proof { assume(equal == (self@ == other@)); }
-      1010 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1012 |         {
-      1013 |             let equal = self.seq == other.seq;
-      1015 |             equal
-      1016 |         }
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 1 total (1 clean, 0 holed)
-❌ LinkedListStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:864: assume() - proof { assume(cloned@ == self@); }
-       860 |         fn clone(&self) -> (cloned: Self)
-            ...
-       862 |         {
-       863 |             let cloned = LinkedListStEphS { seq: self.seq.clone() };
-       865 |             cloned
-       866 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:878: assume() - proof { assume(r == (self@ == other@)); }
-       874 |         fn eq(&self, other: &Self) -> (r: bool)
-            ...
-       876 |         {
-       877 |             let r = self.seq == other.seq;
-       879 |             r
-       880 |         }
-   Holes: 2 total
-      2 × assume()
-   Proof functions: 1 total (1 clean, 0 holed)
-❌ LinkedListStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:847: assume() - proof { assume(cloned@ == self@); }
-       843 |         fn clone(&self) -> (cloned: Self)
-            ...
-       845 |         {
-       846 |             let cloned = LinkedListStPerS { seq: self.seq.clone() };
-       848 |             cloned
-       849 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:861: assume() - proof { assume(r == (self@ == other@)); }
-       857 |         fn eq(&self, other: &Self) -> (r: bool)
-            ...
-       859 |         {
-       860 |             let r = self.seq == other.seq;
-       862 |             r
-       863 |         }
-   Holes: 2 total
-      2 × assume()
-   Proof functions: 1 total (1 clean, 0 holed)
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -117,14 +18,13 @@ SUMMARY
 
 Modules:
    0 clean (no holes)
-   7 holed (contains holes)
-   7 total
+   1 holed (contains holes)
+   1 total
 
 Proof Functions:
-   20 clean
+   4 clean
    0 holed
-   20 total
+   4 total
 
-Holes Found: 13 total
-   11 × assume()
-   2 × external
+Holes Found: 1 total
+   1 × assume()

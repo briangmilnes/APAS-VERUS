@@ -543,6 +543,20 @@ verus! {
 
     //		10. iterators
 
+    impl<'a, V: StT + Hash> std::iter::IntoIterator for &'a DirGraphStEph<V> {
+        type Item = &'a V;
+        type IntoIter = SetStEphIter<'a, V>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires valid_key_type::<V>()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, k: V| k@).to_set() == self@.V,
+                it@.1.no_duplicates(),
+        {
+            self.vertices().iter()
+        }
+    }
+
     // Ghost view for graph vertex iterator: (visited, current, remaining) sets
     #[verifier::reject_recursive_types(V)]
     pub ghost struct DirGraphVertexIterView<V> {

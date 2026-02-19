@@ -10,5 +10,5 @@ Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/analyses/veracity-review
 Checking 74 files...
 
 ════════════════════════════════════════════════════════════════
-Summary: 1138 passed, 127 warnings in 41 files (checked 74 files)
+Summary: 1148 passed, 107 warnings in 34 files (checked 74 files)
 ════════════════════════════════════════════════════════════════
