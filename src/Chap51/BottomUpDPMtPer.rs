@@ -18,7 +18,8 @@ pub mod BottomUpDPMtPer {
     // 2. imports
     use std::cmp::{max, min};
     use std::fmt::{Formatter, Debug, Display};
-    use std::sync::{Arc, Mutex};
+    use std::sync::Arc;
+    use vstd::rwlock::*;
     use std::thread;
 
     use vstd::prelude::*;
@@ -33,6 +34,16 @@ pub mod BottomUpDPMtPer {
         pub seq_t: ArraySeqMtPerS<char>,
     }
 
+    pub struct BottomUpDPMtPerWf;
+    impl RwLockPredicate<Vec<Vec<usize>>> for BottomUpDPMtPerWf {
+        open spec fn inv(self, v: Vec<Vec<usize>>) -> bool { true }
+    }
+
+    #[verifier::external_body]
+    fn new_bu_per_lock(val: Vec<Vec<usize>>) -> (lock: RwLock<Vec<Vec<usize>>, BottomUpDPMtPerWf>) {
+        RwLock::new(val, Ghost(BottomUpDPMtPerWf))
+    }
+
     } // verus!
 
     // 8. traits
@@ -44,11 +55,11 @@ pub mod BottomUpDPMtPer {
         fn is_empty(&self) -> bool;
         fn med_bottom_up_parallel(&self) -> usize;
         fn initialize_base_cases(&self) -> Vec<Vec<usize>>;
-        fn compute_diagonal_parallel(&self, table: Arc<Mutex<Vec<Vec<usize>>>>, k: usize);
+        fn compute_diagonal_parallel(&self, table: Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtPerWf>>, k: usize);
         fn compute_cell_value_static(
             seq_s: &ArraySeqMtPerS<char>,
             seq_t: &ArraySeqMtPerS<char>,
-            table: &Arc<Mutex<Vec<Vec<usize>>>>,
+            table: &Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtPerWf>>,
             i: usize,
             j: usize,
         ) -> usize;
@@ -70,14 +81,16 @@ pub mod BottomUpDPMtPer {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
 
-            let table = Arc::new(Mutex::new(self.initialize_base_cases()));
+            let table = Arc::new(new_bu_per_lock(self.initialize_base_cases()));
 
             for k in 1..=(s_len + t_len) {
                 self.compute_diagonal_parallel(Arc::clone(&table), k);
             }
 
-            let final_table = table.lock().unwrap();
-            final_table[s_len][t_len]
+            let read_handle = table.acquire_read();
+            let result = read_handle.borrow()[s_len][t_len];
+            read_handle.release_read();
+            result
         }
 
         fn initialize_base_cases(&self) -> Vec<Vec<usize>> {
@@ -96,7 +109,7 @@ pub mod BottomUpDPMtPer {
             table
         }
 
-        fn compute_diagonal_parallel(&self, table: Arc<Mutex<Vec<Vec<usize>>>>, k: usize) {
+        fn compute_diagonal_parallel(&self, table: Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtPerWf>>, k: usize) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
 
@@ -124,31 +137,33 @@ pub mod BottomUpDPMtPer {
 
             let results = handles.into_iter().map(|handle| handle.join().unwrap()).collect::<Vec<(usize, usize, usize)>>();
 
-            let mut table_guard = table.lock().unwrap();
+            let (mut current, write_handle) = table.acquire_write();
             for (i, j, new_value) in results {
-                table_guard[i][j] = new_value;
+                current[i][j] = new_value;
             }
+            write_handle.release_write(current);
         }
 
         fn compute_cell_value_static(
             seq_s: &ArraySeqMtPerS<char>,
             seq_t: &ArraySeqMtPerS<char>,
-            table: &Arc<Mutex<Vec<Vec<usize>>>>,
+            table: &Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtPerWf>>,
             i: usize,
             j: usize,
         ) -> usize {
             let s_char = *seq_s.nth(i - 1);
             let t_char = *seq_t.nth(j - 1);
 
-            let table_guard = table.lock().unwrap();
-
-            if s_char == t_char {
-                table_guard[i - 1][j - 1]
+            let read_handle = table.acquire_read();
+            let result = if s_char == t_char {
+                read_handle.borrow()[i - 1][j - 1]
             } else {
-                let delete_cost = table_guard[i - 1][j];
-                let insert_cost = table_guard[i][j - 1];
+                let delete_cost = read_handle.borrow()[i - 1][j];
+                let insert_cost = read_handle.borrow()[i][j - 1];
                 1 + min(delete_cost, insert_cost)
-            }
+            };
+            read_handle.release_read();
+            result
         }
     }
 

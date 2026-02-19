@@ -3,7 +3,10 @@
 
 pub mod BSTSplayMtEph {
 
-    use std::sync::{Arc, RwLock};
+    use std::sync::Arc;
+
+    use vstd::prelude::*;
+    use vstd::rwlock::*;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
@@ -269,7 +272,6 @@ pub mod BSTSplayMtEph {
         }
         let mid = values.len() / 2;
         
-        // Parallel construction of left and right subtrees
         use crate::Types::Types::Pair;
         let Pair(left, right) = crate::ParaPair!(
             move || build_balanced(&values[..mid]),
@@ -284,15 +286,15 @@ pub mod BSTSplayMtEph {
     }
 
     // Parallel filter
-    fn filter_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, predicate: &std::sync::Arc<F>) -> Vec<T>
+    fn filter_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, predicate: &Arc<F>) -> Vec<T>
     where
         F: Fn(&T) -> bool + Send + Sync,
     {
         match link {
             | None => Vec::new(),
             | Some(node) => {
-                let pred_left = std::sync::Arc::clone(predicate);
-                let pred_right = std::sync::Arc::clone(predicate);
+                let pred_left = Arc::clone(predicate);
+                let pred_right = Arc::clone(predicate);
                 
                 use crate::Types::Types::Pair;
                 let Pair(left_vals, right_vals) = crate::ParaPair!(
@@ -311,15 +313,15 @@ pub mod BSTSplayMtEph {
     }
 
     // Parallel reduce
-    fn reduce_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, op: &std::sync::Arc<F>, identity: T) -> T
+    fn reduce_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> T
     where
         F: Fn(T, T) -> T + Send + Sync,
     {
         match link {
             | None => identity,
             | Some(node) => {
-                let op_left = std::sync::Arc::clone(op);
-                let op_right = std::sync::Arc::clone(op);
+                let op_left = Arc::clone(op);
+                let op_right = Arc::clone(op);
                 let id_left = identity.clone();
                 
                 use crate::Types::Types::Pair;
@@ -334,9 +336,32 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    #[derive(Debug, Clone)]
+    verus! {
+        #[verifier::reject_recursive_types(T)]
+        #[verifier::external_type_specification]
+        struct ExNode<T: StTInMtT + Ord>(Node<T>);
+
+        pub struct SplayLinkWf;
+
+        impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for SplayLinkWf {
+            open spec fn inv(self, v: Link<T>) -> bool { true }
+        }
+
+        #[verifier::external_body]
+        fn new_splay_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, SplayLinkWf>) {
+            RwLock::new(val, Ghost(SplayLinkWf))
+        }
+    }
+
+    #[derive(Clone)]
     pub struct BSTSplayMtEph<T: StTInMtT + Ord> {
-        root: Arc<RwLock<Link<T>>>,
+        root: Arc<RwLock<Link<T>, SplayLinkWf>>,
+    }
+
+    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTSplayMtEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTSplayMtEph").finish()
+        }
     }
 
     pub type BSTreeSplay<T> = BSTSplayMtEph<T>;
@@ -379,25 +404,30 @@ pub mod BSTSplayMtEph {
     impl<T: StTInMtT + Ord> BSTSplayMtEphTrait<T> for BSTSplayMtEph<T> {
         fn new() -> Self {
             BSTSplayMtEph {
-                root: Arc::new(RwLock::new(None)),
+                root: Arc::new(new_splay_link_lock(None)),
             }
         }
 
         fn insert(&self, value: T) {
-            let mut guard = self.root.write().unwrap();
-            insert_link(&mut *guard, value);
+            let (mut current, write_handle) = self.root.acquire_write();
+            insert_link(&mut current, value);
+            write_handle.release_write(current);
         }
 
         fn find(&self, target: &T) -> Option<T> {
-            let guard = self.root.read().unwrap();
-            find_link(&*guard, target).cloned()
+            let handle = self.root.acquire_read();
+            let result = find_link(handle.borrow(), target).cloned();
+            handle.release_read();
+            result
         }
 
         fn contains(&self, target: &T) -> B { self.find(target).is_some() }
 
         fn size(&self) -> N {
-            let guard = self.root.read().unwrap();
-            size_link(&*guard)
+            let handle = self.root.acquire_read();
+            let result = size_link(handle.borrow());
+            handle.release_read();
+            result
         }
 
         fn is_empty(&self) -> B { self.size() == 0 }
@@ -409,35 +439,43 @@ pub mod BSTSplayMtEph {
                     | Some(node) => 1 + height_rec(&node.left).max(height_rec(&node.right)),
                 }
             }
-            let guard = self.root.read().unwrap();
-            height_rec(&*guard)
+            let handle = self.root.acquire_read();
+            let result = height_rec(handle.borrow());
+            handle.release_read();
+            result
         }
 
         fn minimum(&self) -> Option<T> {
-            let guard = self.root.read().unwrap();
-            min_link(&*guard).cloned()
+            let handle = self.root.acquire_read();
+            let result = min_link(handle.borrow()).cloned();
+            handle.release_read();
+            result
         }
 
         fn maximum(&self) -> Option<T> {
-            let guard = self.root.read().unwrap();
-            max_link(&*guard).cloned()
+            let handle = self.root.acquire_read();
+            let result = max_link(handle.borrow()).cloned();
+            handle.release_read();
+            result
         }
 
         fn in_order(&self) -> ArraySeqStPerS<T> {
-            let guard = self.root.read().unwrap();
-            let out = in_order_parallel(&*guard);
+            let handle = self.root.acquire_read();
+            let out = in_order_parallel(handle.borrow());
+            handle.release_read();
             ArraySeqStPerS::from_vec(out)
         }
 
         fn pre_order(&self) -> ArraySeqStPerS<T> {
-            let guard = self.root.read().unwrap();
-            let out = pre_order_parallel(&*guard);
+            let handle = self.root.acquire_read();
+            let out = pre_order_parallel(handle.borrow());
+            handle.release_read();
             ArraySeqStPerS::from_vec(out)
         }
 
         fn from_sorted_slice(values: &[T]) -> Self {
             BSTSplayMtEph {
-                root: Arc::new(RwLock::new(build_balanced(values))),
+                root: Arc::new(new_splay_link_lock(build_balanced(values))),
             }
         }
 
@@ -445,9 +483,10 @@ pub mod BSTSplayMtEph {
         where
             F: Fn(&T) -> bool + Send + Sync,
         {
-            let guard = self.root.read().unwrap();
-            let predicate = std::sync::Arc::new(predicate);
-            let out = filter_parallel(&*guard, &predicate);
+            let handle = self.root.acquire_read();
+            let predicate = Arc::new(predicate);
+            let out = filter_parallel(handle.borrow(), &predicate);
+            handle.release_read();
             ArraySeqStPerS::from_vec(out)
         }
 
@@ -455,9 +494,11 @@ pub mod BSTSplayMtEph {
         where
             F: Fn(T, T) -> T + Send + Sync,
         {
-            let guard = self.root.read().unwrap();
-            let op = std::sync::Arc::new(op);
-            reduce_parallel(&*guard, &op, identity)
+            let handle = self.root.acquire_read();
+            let op = Arc::new(op);
+            let result = reduce_parallel(handle.borrow(), &op, identity);
+            handle.release_read();
+            result
         }
     }
 

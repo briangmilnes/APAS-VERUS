@@ -3,7 +3,10 @@
 
 pub mod BSTTreapMtEph {
 
-    use std::sync::{Arc, RwLock};
+    use std::sync::Arc;
+
+    use vstd::prelude::*;
+    use vstd::rwlock::*;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
@@ -31,9 +34,32 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    #[derive(Debug, Clone)]
+    verus! {
+        #[verifier::reject_recursive_types(T)]
+        #[verifier::external_type_specification]
+        struct ExNode<T: StTInMtT + Ord>(Node<T>);
+
+        pub struct TreapLinkWf;
+
+        impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for TreapLinkWf {
+            open spec fn inv(self, v: Link<T>) -> bool { true }
+        }
+
+        #[verifier::external_body]
+        fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>) {
+            RwLock::new(val, Ghost(TreapLinkWf))
+        }
+    }
+
+    #[derive(Clone)]
     pub struct BSTTreapMtEph<T: StTInMtT + Ord> {
-        root: Arc<RwLock<Link<T>>>,
+        root: Arc<RwLock<Link<T>, TreapLinkWf>>,
+    }
+
+    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTTreapMtEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTTreapMtEph").finish()
+        }
     }
 
     pub type BSTreeTreap<T> = BSTTreapMtEph<T>;
@@ -202,25 +228,30 @@ pub mod BSTTreapMtEph {
     impl<T: StTInMtT + Ord> BSTTreapMtEphTrait<T> for BSTTreapMtEph<T> {
         fn new() -> Self {
             BSTTreapMtEph {
-                root: Arc::new(RwLock::new(None)),
+                root: Arc::new(new_treap_link_lock(None)),
             }
         }
 
         fn insert(&self, value: T, priority: u64) {
-            let mut guard = self.root.write().unwrap();
-            insert_link(&mut *guard, value, priority);
+            let (mut current, write_handle) = self.root.acquire_write();
+            insert_link(&mut current, value, priority);
+            write_handle.release_write(current);
         }
 
         fn find(&self, target: &T) -> Option<T> {
-            let guard = self.root.read().unwrap();
-            find_link(&*guard, target).cloned()
+            let handle = self.root.acquire_read();
+            let result = find_link(handle.borrow(), target).cloned();
+            handle.release_read();
+            result
         }
 
         fn contains(&self, target: &T) -> B { self.find(target).is_some() }
 
         fn size(&self) -> N {
-            let guard = self.root.read().unwrap();
-            size_link(&*guard)
+            let handle = self.root.acquire_read();
+            let result = size_link(handle.borrow());
+            handle.release_read();
+            result
         }
 
         fn is_empty(&self) -> B { self.size() == 0 }
@@ -233,31 +264,39 @@ pub mod BSTTreapMtEph {
                 }
             }
 
-            let guard = self.root.read().unwrap();
-            height_rec(&*guard)
+            let handle = self.root.acquire_read();
+            let result = height_rec(handle.borrow());
+            handle.release_read();
+            result
         }
 
         fn minimum(&self) -> Option<T> {
-            let guard = self.root.read().unwrap();
-            min_link(&*guard).cloned()
+            let handle = self.root.acquire_read();
+            let result = min_link(handle.borrow()).cloned();
+            handle.release_read();
+            result
         }
 
         fn maximum(&self) -> Option<T> {
-            let guard = self.root.read().unwrap();
-            max_link(&*guard).cloned()
+            let handle = self.root.acquire_read();
+            let result = max_link(handle.borrow()).cloned();
+            handle.release_read();
+            result
         }
 
         fn in_order(&self) -> ArraySeqStPerS<T> {
-            let guard = self.root.read().unwrap();
-            let mut out = Vec::with_capacity(size_link(&*guard));
-            in_order_collect(&*guard, &mut out);
+            let handle = self.root.acquire_read();
+            let mut out = Vec::with_capacity(size_link(handle.borrow()));
+            in_order_collect(handle.borrow(), &mut out);
+            handle.release_read();
             ArraySeqStPerS::from_vec(out)
         }
 
         fn pre_order(&self) -> ArraySeqStPerS<T> {
-            let guard = self.root.read().unwrap();
-            let mut out = Vec::with_capacity(size_link(&*guard));
-            pre_order_collect(&*guard, &mut out);
+            let handle = self.root.acquire_read();
+            let mut out = Vec::with_capacity(size_link(handle.borrow()));
+            pre_order_collect(handle.borrow(), &mut out);
+            handle.release_read();
             ArraySeqStPerS::from_vec(out)
         }
     }

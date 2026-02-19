@@ -4,120 +4,143 @@
 pub mod BSTParaMtEph {
 
     use std::cmp::Ordering::{Equal, Greater, Less};
-    use std::sync::{Arc, RwLock};
+    use std::sync::Arc;
+
+    use vstd::prelude::*;
+    use vstd::rwlock::*;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
-    #[derive(Clone)]
-    pub enum Exposed<T: MtKey> {
-        Leaf,
-        Node(ParamBST<T>, T, ParamBST<T>),
+    verus! {
+        pub struct BstParaWf;
+
+        impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for BstParaWf {
+            open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool { true }
+        }
+
+        #[verifier::reject_recursive_types(T)]
+        pub enum Exposed<T: MtKey> {
+            Leaf,
+            Node(ParamBST<T>, T, ParamBST<T>),
+        }
+
+        #[verifier::reject_recursive_types(T)]
+        pub struct NodeInner<T: MtKey> {
+            pub key: T,
+            pub size: N,
+            pub left: ParamBST<T>,
+            pub right: ParamBST<T>,
+        }
+
+        #[verifier::reject_recursive_types(T)]
+        pub struct ParamBST<T: MtKey> {
+            pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, BstParaWf>>,
+        }
+
+        #[verifier::external_body]
+        fn new_bst_para_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {
+            RwLock::new(val, Ghost(BstParaWf))
+        }
     }
 
-    #[derive(Clone, Debug)]
-    struct NodeInner<T: MtKey> {
-        key: T,
-        size: N,
-        left: ParamBST<T>,
-        right: ParamBST<T>,
+    impl<T: MtKey> Clone for Exposed<T> {
+        fn clone(&self) -> Self {
+            match self {
+                Exposed::Leaf => Exposed::Leaf,
+                Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
+            }
+        }
     }
 
-    #[derive(Debug, Clone)]
-    pub struct ParamBST<T: MtKey> {
-        root: Arc<RwLock<Option<Box<NodeInner<T>>>>>,
+    impl<T: MtKey> Clone for NodeInner<T> {
+        fn clone(&self) -> Self {
+            NodeInner { key: self.key.clone(), size: self.size, left: self.left.clone(), right: self.right.clone() }
+        }
+    }
+
+    impl<T: MtKey> Clone for ParamBST<T> {
+        fn clone(&self) -> Self {
+            ParamBST { root: self.root.clone() }
+        }
+    }
+
+    impl<T: MtKey> std::fmt::Debug for NodeInner<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("NodeInner").field("key", &self.key).field("size", &self.size).finish()
+        }
+    }
+
+    impl<T: MtKey> std::fmt::Debug for ParamBST<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("ParamBST").finish()
+        }
+    }
+
+    fn new_leaf<T: MtKey>() -> ParamBST<T> {
+        ParamBST { root: Arc::new(new_bst_para_lock(None)) }
     }
 
     pub trait ParamBSTTrait<T: MtKey + 'static>: Sized {
         /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn new()                           -> Self;
         /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn expose(&self)                   -> Exposed<T>;
         /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn join_mid(exposed: Exposed<T>)   -> Self;
         /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self)                     -> N;
         /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn is_empty(&self)                 -> B;
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn insert(&self, key: T);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn delete(&self, key: &T);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn find(&self, key: &T)            -> Option<T>;
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn split(&self, key: &T)           -> (Self, B, Self);
         /// - APAS: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|))
-        /// - Claude-Opus-4.6: Work Θ(log(|t1| + |t2|)), Span Θ(log(|t1| + |t2|))
         fn join_pair(&self, other: Self)   -> Self;
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-        /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
         fn union(&self, other: &Self)      -> Self;
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-        /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
         fn intersect(&self, other: &Self)  -> Self;
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-        /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
         fn difference(&self, other: &Self) -> Self;
         /// - APAS: Work O(|t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(&self, predicate: F) -> Self;
         /// - APAS: Work O(|t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T;
         /// - APAS: Work O(|t|), Span O(|t|)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn in_order(&self)                 -> ArraySeqStPerS<T>;
     }
 
-    /// - APAS: Work O(1), Span O(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> Exposed<T> {
-        let guard = tree.root.read().unwrap();
-        match &*guard {
+        let handle = tree.root.acquire_read();
+        let result = match handle.borrow() {
             | None => Exposed::Leaf,
             | Some(node) => Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone()),
-        }
+        };
+        handle.release_read();
+        result
     }
 
-    /// - APAS: Work O(1), Span O(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn join_mid<T: MtKey + 'static>(exposed: Exposed<T>) -> ParamBST<T> {
         match exposed {
-            | Exposed::Leaf => ParamBST {
-                root: Arc::new(RwLock::new(None)),
-            },
+            | Exposed::Leaf => new_leaf(),
             | Exposed::Node(left, key, right) => {
                 let size = 1 + left.size() + right.size();
                 ParamBST {
-                    root: Arc::new(RwLock::new(Some(Box::new(NodeInner { key, size, left, right })))),
+                    root: Arc::new(new_bst_para_lock(Some(Box::new(NodeInner { key, size, left, right })))),
                 }
             }
         }
     }
 
-    /// - APAS: Work O(lg |t|), Span O(lg |t|)
-    /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
     fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (ParamBST<T>, B, ParamBST<T>) {
         match expose_internal(tree) {
-            | Exposed::Leaf => (
-                ParamBST {
-                    root: Arc::new(RwLock::new(None)),
-                },
-                false,
-                ParamBST {
-                    root: Arc::new(RwLock::new(None)),
-                },
-            ),
+            | Exposed::Leaf => (new_leaf(), false, new_leaf()),
             | Exposed::Node(left, root_key, right) => match key.cmp(&root_key) {
                 | Less => {
                     let (ll, found, lr) = split_inner(&left, key);
@@ -134,14 +157,10 @@ pub mod BSTParaMtEph {
         }
     }
 
-    /// - APAS: Work O(1), Span O(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn join_m<T: MtKey + 'static>(left: ParamBST<T>, key: T, right: ParamBST<T>) -> ParamBST<T> {
         join_mid(Exposed::Node(left, key, right))
     }
 
-    /// - APAS: Work O(lg |t|), Span O(lg |t|)
-    /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
     fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> Option<T> {
         match expose_internal(tree) {
             | Exposed::Leaf => None,
@@ -152,8 +171,6 @@ pub mod BSTParaMtEph {
         }
     }
 
-    /// - APAS: Work O(lg(|left| + |right|)), Span O(lg(|left| + |right|))
-    /// - Claude-Opus-4.6: Work Θ(log(|left| + |right|)), Span Θ(log(|left| + |right|))
     fn join_pair_inner<T: MtKey + 'static>(left: ParamBST<T>, right: ParamBST<T>) -> ParamBST<T> {
         match expose_internal(&right) {
             | Exposed::Leaf => left,
@@ -165,8 +182,6 @@ pub mod BSTParaMtEph {
         }
     }
 
-    /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-    /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
     fn union_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
         match (expose_internal(a), expose_internal(b)) {
             | (Exposed::Leaf, _) => b.clone(),
@@ -180,13 +195,9 @@ pub mod BSTParaMtEph {
         }
     }
 
-    /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-    /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
     fn intersect_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
         match (expose_internal(a), expose_internal(b)) {
-            | (Exposed::Leaf, _) | (_, Exposed::Leaf) => ParamBST {
-                root: Arc::new(RwLock::new(None)),
-            },
+            | (Exposed::Leaf, _) | (_, Exposed::Leaf) => new_leaf(),
             | (Exposed::Node(al, ak, ar), _) => {
                 let (bl, found, br) = split_inner(b, &ak);
                 let Pair(left_res, right_res) =
@@ -200,13 +211,9 @@ pub mod BSTParaMtEph {
         }
     }
 
-    /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-    /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
     fn difference_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
         match (expose_internal(a), expose_internal(b)) {
-            | (Exposed::Leaf, _) => ParamBST {
-                root: Arc::new(RwLock::new(None)),
-            },
+            | (Exposed::Leaf, _) => new_leaf(),
             | (_, Exposed::Leaf) => a.clone(),
             | (Exposed::Node(al, ak, ar), _) => {
                 let (bl, found, br) = split_inner(b, &ak);
@@ -222,16 +229,12 @@ pub mod BSTParaMtEph {
         }
     }
 
-    /// - APAS: Work O(|t|), Span O(lg |t|)
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
     fn filter_inner<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         predicate: &Arc<F>,
     ) -> ParamBST<T> {
         match expose_internal(tree) {
-            | Exposed::Leaf => ParamBST {
-                root: Arc::new(RwLock::new(None)),
-            },
+            | Exposed::Leaf => new_leaf(),
             | Exposed::Node(left, key, right) => {
                 let pred_left = Arc::clone(predicate);
                 let pred_right = Arc::clone(predicate);
@@ -248,8 +251,6 @@ pub mod BSTParaMtEph {
         }
     }
 
-    /// - APAS: Work O(|t|), Span O(lg |t|)
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
     fn filter_parallel<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         predicate: F,
@@ -258,8 +259,6 @@ pub mod BSTParaMtEph {
         filter_inner(tree, &predicate)
     }
 
-    /// - APAS: Work O(|t|), Span O(lg |t|)
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
     fn reduce_inner<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         op: &Arc<F>,
@@ -283,8 +282,6 @@ pub mod BSTParaMtEph {
         }
     }
 
-    /// - APAS: Work O(|t|), Span O(lg |t|)
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
     fn reduce_parallel<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         op: F,
@@ -294,8 +291,6 @@ pub mod BSTParaMtEph {
         reduce_inner(tree, &op, base)
     }
 
-    /// - APAS: Work O(|t|), Span O(|t|)
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
     fn collect_in_order<T: MtKey + 'static>(tree: &ParamBST<T>, out: &mut Vec<T>) {
         match expose_internal(tree) {
             | Exposed::Leaf => {}
@@ -308,55 +303,41 @@ pub mod BSTParaMtEph {
     }
 
     impl<T: MtKey + 'static> ParamBSTTrait<T> for ParamBST<T> {
-        /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn new() -> Self {
-            ParamBST {
-                root: Arc::new(RwLock::new(None)),
-            }
-        }
+        fn new() -> Self { new_leaf() }
 
-        /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn expose(&self) -> Exposed<T> { expose_internal(self) }
 
-        /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn join_mid(exposed: Exposed<T>) -> Self { join_mid(exposed) }
 
-        /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self) -> N {
-            let guard = self.root.read().unwrap();
-            guard.as_ref().map_or(0, |node| node.size)
+            let handle = self.root.acquire_read();
+            let result = handle.borrow().as_ref().map_or(0, |node| node.size);
+            handle.release_read();
+            result
         }
 
-        /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn is_empty(&self) -> B { self.size() == 0 }
 
-        /// - APAS: Work O(lg |t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn insert(&self, key: T) {
             let (left, _, right) = split_inner(self, &key);
             let rebuilt = join_m(left, key, right);
-            let new_state = rebuilt.root.read().unwrap().clone();
-            let mut guard = self.root.write().unwrap();
-            *guard = new_state;
+            let read_handle = rebuilt.root.acquire_read();
+            let new_state = read_handle.borrow().clone();
+            read_handle.release_read();
+            let (_old, write_handle) = self.root.acquire_write();
+            write_handle.release_write(new_state);
         }
 
-        /// - APAS: Work O(lg |t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn delete(&self, key: &T) {
             let (left, _, right) = split_inner(self, key);
             let merged = join_pair_inner(left, right);
-            let new_state = merged.root.read().unwrap().clone();
-            let mut guard = self.root.write().unwrap();
-            *guard = new_state;
+            let read_handle = merged.root.acquire_read();
+            let new_state = read_handle.borrow().clone();
+            read_handle.release_read();
+            let (_old, write_handle) = self.root.acquire_write();
+            write_handle.release_write(new_state);
         }
 
-        /// - APAS: Work O(lg |t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn find(&self, key: &T) -> Option<T> {
             match expose_internal(self) {
                 | Exposed::Leaf => None,
@@ -368,40 +349,24 @@ pub mod BSTParaMtEph {
             }
         }
 
-        /// - APAS: Work O(lg |t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn split(&self, key: &T) -> (Self, B, Self) { split_inner(self, key) }
 
-        /// - APAS: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|))
-        /// - Claude-Opus-4.6: Work Θ(log(|t1| + |t2|)), Span Θ(log(|t1| + |t2|))
         fn join_pair(&self, other: Self) -> Self { join_pair_inner(self.clone(), other) }
 
-        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-        /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
         fn union(&self, other: &Self) -> Self { union_inner(self, other) }
 
-        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-        /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
         fn intersect(&self, other: &Self) -> Self { intersect_inner(self, other) }
 
-        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
-        /// - Claude-Opus-4.6: Work Θ(m · lg(n/m)), Span Θ(lg n)
         fn difference(&self, other: &Self) -> Self { difference_inner(self, other) }
 
-        /// - APAS: Work O(|t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(&self, predicate: F) -> Self {
             filter_parallel(self, predicate)
         }
 
-        /// - APAS: Work O(|t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n)
         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T {
             reduce_parallel(self, op, base)
         }
 
-        /// - APAS: Work O(|t|), Span O(|t|)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
             collect_in_order(self, &mut out);

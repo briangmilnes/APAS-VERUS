@@ -348,7 +348,7 @@ pub mod Chap41 {
     // pub mod ArraySetEnumMtEph;  // uses bitvec (Verus can't link)
     pub mod AVLTreeSetStEph;
     pub mod AVLTreeSetStPer;
-    // pub mod AVLTreeSetMtEph;  // Mutex not supported in verus! struct
+    pub mod AVLTreeSetMtEph;
     #[cfg(feature = "all_chapters")]
     pub mod AVLTreeSetMtPer;
     pub mod Example41_3;

@@ -2,7 +2,7 @@
 //! Chapter 49: Subset Sum - persistent, multi-threaded.
 //!
 //! This module is outside verus! because it uses std::collections::HashMap for
-//! memoization (via Arc<Mutex<HashMap>>), which Verus does not support. Full
+//! memoization (via Arc<RwLock<HashMap>>), which Verus does not support. Full
 //! verification would require replacing HashMap with a verified equivalent.
 
 pub mod SubsetSumMtPer {
@@ -10,21 +10,33 @@ pub mod SubsetSumMtPer {
     use std::collections::HashMap;
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
-    use std::sync::{Arc, Mutex};
+    use std::sync::Arc;
     use std::thread;
 
     use vstd::prelude::*;
+    use vstd::rwlock::*;
 
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
 
+    verus! {
+        pub struct SubsetSumMtPerWf;
+        impl RwLockPredicate<HashMap<(usize, i32), bool>> for SubsetSumMtPerWf {
+            open spec fn inv(self, v: HashMap<(usize, i32), bool>) -> bool { true }
+        }
+
+        #[verifier::external_body]
+        fn new_subset_sum_per_lock(val: HashMap<(usize, i32), bool>) -> (lock: RwLock<HashMap<(usize, i32), bool>, SubsetSumMtPerWf>) {
+            RwLock::new(val, Ghost(SubsetSumMtPerWf))
+        }
+    }
+
     // 4. type definitions
-    // Struct contains Arc<Mutex<HashMap>> for memoization — cannot be inside verus!.
 
     #[derive(Clone)]
     pub struct SubsetSumMtPerS<T: MtVal> {
         pub multiset: ArraySeqMtPerS<T>,
-        pub memo: Arc<Mutex<HashMap<(usize, i32), bool>>>,
+        pub memo: Arc<RwLock<HashMap<(usize, i32), bool>, SubsetSumMtPerWf>>,
     }
 
     // 8. traits
@@ -70,8 +82,10 @@ pub mod SubsetSumMtPer {
         j: i32,
     ) -> bool {
         {
-            let memo_guard = table.memo.lock().unwrap();
-            if let Some(&result) = memo_guard.get(&(i, j)) {
+            let handle = table.memo.acquire_read();
+            let found = handle.borrow().get(&(i, j)).copied();
+            handle.release_read();
+            if let Some(result) = found {
                 return result;
             }
         }
@@ -99,8 +113,9 @@ pub mod SubsetSumMtPer {
         };
 
         {
-            let mut memo_guard = table.memo.lock().unwrap();
-            memo_guard.insert((i, j), result);
+            let (mut current, write_handle) = table.memo.acquire_write();
+            current.insert((i, j), result);
+            write_handle.release_write(current);
         }
 
         result
@@ -113,14 +128,14 @@ pub mod SubsetSumMtPer {
         {
             Self {
                 multiset: ArraySeqMtPerS::new(0, T::default()),
-                memo: Arc::new(Mutex::new(HashMap::new())),
+                memo: Arc::new(new_subset_sum_per_lock(HashMap::new())),
             }
         }
 
         fn from_multiset(multiset: ArraySeqMtPerS<T>) -> Self {
             Self {
                 multiset,
-                memo: Arc::new(Mutex::new(HashMap::new())),
+                memo: Arc::new(new_subset_sum_per_lock(HashMap::new())),
             }
         }
 
@@ -133,8 +148,9 @@ pub mod SubsetSumMtPer {
             }
 
             {
-                let mut memo_guard = self.memo.lock().unwrap();
-                memo_guard.clear();
+                let (mut current, write_handle) = self.memo.acquire_write();
+                current.clear();
+                write_handle.release_write(current);
             }
 
             let n = self.multiset.length();
@@ -144,8 +160,10 @@ pub mod SubsetSumMtPer {
         fn multiset(&self) -> &ArraySeqMtPerS<T> { &self.multiset }
 
         fn memo_size(&self) -> usize {
-            let memo_guard = self.memo.lock().unwrap();
-            memo_guard.len()
+            let handle = self.memo.acquire_read();
+            let size = handle.borrow().len();
+            handle.release_read();
+            size
         }
     }
 
@@ -170,8 +188,10 @@ pub mod SubsetSumMtPer {
     impl<T: MtVal> Display for SubsetSumMtPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             let memo_size = {
-                let memo_guard = self.memo.lock().unwrap();
-                memo_guard.len()
+                let handle = self.memo.acquire_read();
+                let size = handle.borrow().len();
+                handle.release_read();
+                size
             };
             write!(
                 f,

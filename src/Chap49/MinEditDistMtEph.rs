@@ -2,7 +2,7 @@
 //! Chapter 49: Minimum Edit Distance - ephemeral, multi-threaded.
 //!
 //! This module is outside verus! because it uses std::collections::HashMap for
-//! memoization (via Arc<Mutex<HashMap>>), which Verus does not support. Full
+//! memoization (via Arc<RwLock<HashMap>>), which Verus does not support. Full
 //! verification would require replacing HashMap with a verified equivalent.
 
 pub mod MinEditDistMtEph {
@@ -10,23 +10,35 @@ pub mod MinEditDistMtEph {
     use std::collections::HashMap;
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
-    use std::sync::{Arc, Mutex};
+    use std::sync::Arc;
     use std::thread;
 
     use vstd::prelude::*;
+    use vstd::rwlock::*;
 
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::*;
     use crate::ArraySeqMtEphChap19SLit;
 
+    verus! {
+        pub struct MinEditDistMtEphWf;
+        impl RwLockPredicate<HashMap<(usize, usize), usize>> for MinEditDistMtEphWf {
+            open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
+        }
+
+        #[verifier::external_body]
+        fn new_min_edit_dist_eph_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, MinEditDistMtEphWf>) {
+            RwLock::new(val, Ghost(MinEditDistMtEphWf))
+        }
+    }
+
     // 4. type definitions
-    // Struct contains Arc<Mutex<HashMap>> for memoization — cannot be inside verus!.
 
     #[derive(Clone)]
     pub struct MinEditDistMtEphS<T: MtVal> {
         pub source: ArraySeqMtEphS<T>,
         pub target: ArraySeqMtEphS<T>,
-        pub memo: Arc<Mutex<HashMap<(usize, usize), usize>>>,
+        pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, MinEditDistMtEphWf>>,
     }
 
     // 8. traits
@@ -97,13 +109,15 @@ pub mod MinEditDistMtEph {
     fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
         source: &ArraySeqMtEphS<T>,
         target: &ArraySeqMtEphS<T>,
-        memo: &Arc<Mutex<HashMap<(usize, usize), usize>>>,
+        memo: &Arc<RwLock<HashMap<(usize, usize), usize>, MinEditDistMtEphWf>>,
         i: usize,
         j: usize,
     ) -> usize {
         {
-            let memo_guard = memo.lock().unwrap();
-            if let Some(&result) = memo_guard.get(&(i, j)) {
+            let handle = memo.acquire_read();
+            let found = handle.borrow().get(&(i, j)).copied();
+            handle.release_read();
+            if let Some(result) = found {
                 return result;
             }
         }
@@ -137,8 +151,9 @@ pub mod MinEditDistMtEph {
         };
 
         {
-            let mut memo_guard = memo.lock().unwrap();
-            memo_guard.insert((i, j), result);
+            let (mut current, write_handle) = memo.acquire_write();
+            current.insert((i, j), result);
+            write_handle.release_write(current);
         }
 
         result
@@ -152,7 +167,7 @@ pub mod MinEditDistMtEph {
             Self {
                 source: ArraySeqMtEphS::new(0, T::default()),
                 target: ArraySeqMtEphS::new(0, T::default()),
-                memo: Arc::new(Mutex::new(HashMap::new())),
+                memo: Arc::new(new_min_edit_dist_eph_lock(HashMap::new())),
             }
         }
 
@@ -160,7 +175,7 @@ pub mod MinEditDistMtEph {
             Self {
                 source,
                 target,
-                memo: Arc::new(Mutex::new(HashMap::new())),
+                memo: Arc::new(new_min_edit_dist_eph_lock(HashMap::new())),
             }
         }
 
@@ -169,8 +184,9 @@ pub mod MinEditDistMtEph {
             T: Send + Sync + 'static,
         {
             {
-                let mut memo_guard = self.memo.lock().unwrap();
-                memo_guard.clear();
+                let (mut current, write_handle) = self.memo.acquire_write();
+                current.clear();
+                write_handle.release_write(current);
             }
 
             let source_len = self.source.length();
@@ -189,24 +205,29 @@ pub mod MinEditDistMtEph {
 
         fn set_source(&mut self, index: usize, value: T) {
             let _ = self.source.set(index, value);
-            let mut memo_guard = self.memo.lock().unwrap();
-            memo_guard.clear();
+            let (mut current, write_handle) = self.memo.acquire_write();
+            current.clear();
+            write_handle.release_write(current);
         }
 
         fn set_target(&mut self, index: usize, value: T) {
             let _ = self.target.set(index, value);
-            let mut memo_guard = self.memo.lock().unwrap();
-            memo_guard.clear();
+            let (mut current, write_handle) = self.memo.acquire_write();
+            current.clear();
+            write_handle.release_write(current);
         }
 
         fn clear_memo(&mut self) {
-            let mut memo_guard = self.memo.lock().unwrap();
-            memo_guard.clear();
+            let (mut current, write_handle) = self.memo.acquire_write();
+            current.clear();
+            write_handle.release_write(current);
         }
 
         fn memo_size(&self) -> usize {
-            let memo_guard = self.memo.lock().unwrap();
-            memo_guard.len()
+            let handle = self.memo.acquire_read();
+            let size = handle.borrow().len();
+            handle.release_read();
+            size
         }
     }
 
@@ -232,8 +253,10 @@ pub mod MinEditDistMtEph {
     impl<T: MtVal> Display for MinEditDistMtEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             let memo_size = {
-                let memo_guard = self.memo.lock().unwrap();
-                memo_guard.len()
+                let handle = self.memo.acquire_read();
+                let size = handle.borrow().len();
+                handle.release_read();
+                size
             };
             write!(
                 f,

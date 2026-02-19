@@ -521,9 +521,9 @@ path = "tests/Chap40/TestBSTSizeStEph.rs"
 name = "TestArraySetStEph"
 path = "tests/Chap41/TestArraySetStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestAVLTreeSetMtEph"
-# path = "disabled"
+[[test]]
+name = "TestAVLTreeSetMtEph"
+path = "tests/Chap41/TestAVLTreeSetMtEph.rs"
 
 # [[test]]  # module commented out in lib.rs
 # name = "TestAVLTreeSetMtPer"

@@ -2,7 +2,7 @@
 //! Multi-threaded persistent optimal binary search tree implementation using Vec and Arc for thread safety.
 //!
 //! This module is outside verus! because it uses std::collections::HashMap for
-//! memoization (via Arc<Mutex<HashMap>>), which Verus does not support. Full
+//! memoization (via Arc<RwLock<HashMap>>), which Verus does not support. Full
 //! verification would require replacing HashMap with a verified equivalent.
 
 pub mod OptBinSearchTreeMtPer {
@@ -11,11 +11,12 @@ pub mod OptBinSearchTreeMtPer {
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::iter::Cloned;
     use std::slice::Iter;
-    use std::sync::{Arc, Mutex};
+    use std::sync::Arc;
     use std::thread;
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
+    use vstd::rwlock::*;
 
     use crate::Chap50::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
@@ -27,12 +28,22 @@ pub mod OptBinSearchTreeMtPer {
         pub prob: Probability,
     }
 
-    // Struct contains Arc<Mutex<HashMap>> for memoization — cannot be inside verus!.
     /// Persistent multi-threaded optimal binary search tree solver using parallel dynamic programming
-    #[derive(Clone, Debug)]
+    #[derive(Clone)]
     pub struct OBSTMtPerS<T: MtVal> {
         pub keys: Arc<Vec<KeyProb<T>>>,
-        pub memo: Arc<Mutex<HashMap<(usize, usize), Probability>>>,
+        pub memo: Arc<RwLock<HashMap<(usize, usize), Probability>, ObstPerMemoWf>>,
+    }
+
+    verus! {
+        pub struct ObstPerMemoWf;
+        impl RwLockPredicate<HashMap<(usize, usize), Probability>> for ObstPerMemoWf {
+            open spec fn inv(self, v: HashMap<(usize, usize), Probability>) -> bool { true }
+        }
+        #[verifier::external_body]
+        fn new_obst_per_memo_lock(val: HashMap<(usize, usize), Probability>) -> (lock: RwLock<HashMap<(usize, usize), Probability>, ObstPerMemoWf>) {
+            RwLock::new(val, Ghost(ObstPerMemoWf))
+        }
     }
 
     // 8. traits
@@ -65,7 +76,7 @@ pub mod OptBinSearchTreeMtPer {
         fn num_keys(&self)                                        -> usize;
 
         /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under lock
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under read lock
         fn memo_size(&self)                                       -> usize;
     }
 
@@ -101,8 +112,10 @@ pub mod OptBinSearchTreeMtPer {
     /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — memoized DP per Algorithm 50.3, parallel min reduction per subproblem
     fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtPerS<T>, i: usize, l: usize) -> Probability {
         {
-            let memo_guard = table.memo.lock().unwrap();
-            if let Some(&result) = memo_guard.get(&(i, l)) {
+            let handle = table.memo.acquire_read();
+            let cached = handle.borrow().get(&(i, l)).copied();
+            handle.release_read();
+            if let Some(result) = cached {
                 return result;
             }
         }
@@ -127,8 +140,9 @@ pub mod OptBinSearchTreeMtPer {
         };
 
         {
-            let mut memo_guard = table.memo.lock().unwrap();
-            memo_guard.insert((i, l), result);
+            let (mut memo, write_handle) = table.memo.acquire_write();
+            memo.insert((i, l), result);
+            write_handle.release_write(memo);
         }
 
         result
@@ -140,7 +154,7 @@ pub mod OptBinSearchTreeMtPer {
         fn new() -> Self {
             Self {
                 keys: Arc::new(Vec::new()),
-                memo: Arc::new(Mutex::new(HashMap::new())),
+                memo: Arc::new(new_obst_per_memo_lock(HashMap::new())),
             }
         }
 
@@ -154,7 +168,7 @@ pub mod OptBinSearchTreeMtPer {
 
             Self {
                 keys: Arc::new(key_probs),
-                memo: Arc::new(Mutex::new(HashMap::new())),
+                memo: Arc::new(new_obst_per_memo_lock(HashMap::new())),
             }
         }
 
@@ -163,7 +177,7 @@ pub mod OptBinSearchTreeMtPer {
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> Self {
             Self {
                 keys: Arc::new(key_probs),
-                memo: Arc::new(Mutex::new(HashMap::new())),
+                memo: Arc::new(new_obst_per_memo_lock(HashMap::new())),
             }
         }
 
@@ -178,8 +192,9 @@ pub mod OptBinSearchTreeMtPer {
             }
 
             {
-                let mut memo_guard = self.memo.lock().unwrap();
-                memo_guard.clear();
+                let (mut memo, write_handle) = self.memo.acquire_write();
+                memo.clear();
+                write_handle.release_write(memo);
             }
 
             let n = self.keys.len();
@@ -195,10 +210,12 @@ pub mod OptBinSearchTreeMtPer {
         fn num_keys(&self) -> usize { self.keys.len() }
 
         /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under lock
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under read lock
         fn memo_size(&self) -> usize {
-            let memo_guard = self.memo.lock().unwrap();
-            memo_guard.len()
+            let handle = self.memo.acquire_read();
+            let len = handle.borrow().len();
+            handle.release_read();
+            len
         }
     }
 
@@ -222,14 +239,17 @@ pub mod OptBinSearchTreeMtPer {
     impl<T: MtVal> Eq for KeyProb<T> {}
 
     // 13. derive impls outside verus!
+    impl<T: MtVal> Debug for OBSTMtPerS<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { Display::fmt(self, f) }
+    }
+
     impl<T: MtVal> Display for OBSTMtPerS<T> {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format two integers
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-            let memo_size = {
-                let memo_guard = self.memo.lock().unwrap();
-                memo_guard.len()
-            };
+            let memo_handle = self.memo.acquire_read();
+            let memo_size = memo_handle.borrow().len();
+            memo_handle.release_read();
             write!(f, "OBSTMtPer(keys: {}, memo_entries: {})", self.keys.len(), memo_size)
         }
     }

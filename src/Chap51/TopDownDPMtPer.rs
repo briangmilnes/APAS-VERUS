@@ -18,7 +18,8 @@ pub mod TopDownDPMtPer {
     // 2. imports
     use std::collections::HashMap;
     use std::fmt::{Formatter, Debug, Display};
-    use std::sync::{Arc, Mutex};
+    use std::sync::Arc;
+    use vstd::rwlock::*;
     use std::thread;
 
     use vstd::prelude::*;
@@ -26,6 +27,17 @@ pub mod TopDownDPMtPer {
     use crate::Types::Types::*;
 
     verus! {
+
+    pub struct TopDownDPMtPerWf;
+    impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtPerWf {
+        open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
+    }
+
+    #[verifier::external_body]
+    fn new_td_per_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, TopDownDPMtPerWf>) {
+        RwLock::new(val, Ghost(TopDownDPMtPerWf))
+    }
+
     } // verus!
 
     // 4. type definitions
@@ -36,7 +48,7 @@ pub mod TopDownDPMtPer {
         /// Input sequence T
         pub seq_t: ArraySeqMtPerS<char>,
         /// Concurrent memoization table for subproblem results
-        pub memo_table: Arc<Mutex<HashMap<(usize, usize), usize>>>,
+        pub memo_table: Arc<RwLock<HashMap<(usize, usize), usize>, TopDownDPMtPerWf>>,
     }
 
     // 8. traits
@@ -64,7 +76,7 @@ pub mod TopDownDPMtPer {
             TopDownDPMtPerS {
                 seq_s: s,
                 seq_t: t,
-                memo_table: Arc::new(Mutex::new(HashMap::new())),
+                memo_table: Arc::new(new_td_per_lock(HashMap::new())),
             }
         }
 
@@ -86,23 +98,29 @@ pub mod TopDownDPMtPer {
             TopDownDPMtPerS {
                 seq_s: self.seq_s,
                 seq_t: self.seq_t,
-                memo_table: Arc::new(Mutex::new(memo)),
+                memo_table: Arc::new(new_td_per_lock(memo)),
             }
         }
 
         fn memo_size(&self) -> usize {
-            let memo_guard = self.memo_table.lock().unwrap();
-            memo_guard.len()
+            let read_handle = self.memo_table.acquire_read();
+            let len = read_handle.borrow().len();
+            read_handle.release_read();
+            len
         }
 
         fn is_memoized(&self, i: usize, j: usize) -> bool {
-            let memo_guard = self.memo_table.lock().unwrap();
-            memo_guard.contains_key(&(i, j))
+            let read_handle = self.memo_table.acquire_read();
+            let result = read_handle.borrow().contains_key(&(i, j));
+            read_handle.release_read();
+            result
         }
 
         fn get_memoized(&self, i: usize, j: usize) -> Option<usize> {
-            let memo_guard = self.memo_table.lock().unwrap();
-            memo_guard.get(&(i, j)).copied()
+            let read_handle = self.memo_table.acquire_read();
+            let result = read_handle.borrow().get(&(i, j)).copied();
+            read_handle.release_read();
+            result
         }
 
         fn s_length(&self) -> usize { self.seq_s.length() }
@@ -113,14 +131,16 @@ pub mod TopDownDPMtPer {
             TopDownDPMtPerS {
                 seq_s: self.seq_s,
                 seq_t: self.seq_t,
-                memo_table: Arc::new(Mutex::new(HashMap::new())),
+                memo_table: Arc::new(new_td_per_lock(HashMap::new())),
             }
         }
 
         fn med_recursive_concurrent(&self, i: usize, j: usize) -> usize {
             {
-                let memo_guard = self.memo_table.lock().unwrap();
-                if let Some(&cached_result) = memo_guard.get(&(i, j)) {
+                let read_handle = self.memo_table.acquire_read();
+                let cached = read_handle.borrow().get(&(i, j)).copied();
+                read_handle.release_read();
+                if let Some(cached_result) = cached {
                     return cached_result;
                 }
             }
@@ -143,16 +163,19 @@ pub mod TopDownDPMtPer {
             };
 
             {
-                let mut memo_guard = self.memo_table.lock().unwrap();
-                memo_guard.insert((i, j), result);
+                let (mut current, write_handle) = self.memo_table.acquire_write();
+                current.insert((i, j), result);
+                write_handle.release_write(current);
             }
             result
         }
 
         fn med_recursive_parallel(&self, i: usize, j: usize) -> usize {
             {
-                let memo_guard = self.memo_table.lock().unwrap();
-                if let Some(&cached_result) = memo_guard.get(&(i, j)) {
+                let read_handle = self.memo_table.acquire_read();
+                let cached = read_handle.borrow().get(&(i, j)).copied();
+                read_handle.release_read();
+                if let Some(cached_result) = cached {
                     return cached_result;
                 }
             }
@@ -181,8 +204,9 @@ pub mod TopDownDPMtPer {
             };
 
             {
-                let mut memo_guard = self.memo_table.lock().unwrap();
-                memo_guard.insert((i, j), result);
+                let (mut current, write_handle) = self.memo_table.acquire_write();
+                current.insert((i, j), result);
+                write_handle.release_write(current);
             }
             result
         }
@@ -193,9 +217,13 @@ pub mod TopDownDPMtPer {
         /// - APAS: N/A — infrastructure.
         /// - Claude-Opus-4.6: Work Θ(|S|+|T|+|memo|), Span Θ(|S|+|T|+|memo|)
         fn eq(&self, other: &Self) -> bool {
-            let self_memo = self.memo_table.lock().unwrap();
-            let other_memo = other.memo_table.lock().unwrap();
-            self.seq_s == other.seq_s && self.seq_t == other.seq_t && *self_memo == *other_memo
+            let self_handle = self.memo_table.acquire_read();
+            let other_handle = other.memo_table.acquire_read();
+            let result = self.seq_s == other.seq_s && self.seq_t == other.seq_t
+                && *self_handle.borrow() == *other_handle.borrow();
+            other_handle.release_read();
+            self_handle.release_read();
+            result
         }
     }
 
@@ -214,11 +242,14 @@ pub mod TopDownDPMtPer {
         /// - APAS: N/A — infrastructure.
         /// - Claude-Opus-4.6: Work Θ(|S|+|T|+|memo|), Span Θ(|S|+|T|+|memo|)
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            f.debug_struct("TopDownDPMtPerS")
+            let read_handle = self.memo_table.acquire_read();
+            let result = f.debug_struct("TopDownDPMtPerS")
                 .field("seq_s", &self.seq_s)
                 .field("seq_t", &self.seq_t)
-                .field("memo_table", &self.memo_table)
-                .finish()
+                .field("memo_table", read_handle.borrow())
+                .finish();
+            read_handle.release_read();
+            result
         }
     }
 

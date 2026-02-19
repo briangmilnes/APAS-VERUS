@@ -6,6 +6,7 @@
 pub mod SpanTreeMtEph {
 
     use vstd::prelude::*;
+    use vstd::rwlock::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
     use crate::Types::Types::*;
@@ -14,7 +15,7 @@ pub mod SpanTreeMtEph {
     use std::collections::HashMap;
     use std::hash::Hash;
     #[cfg(not(verus_keep_ghost))]
-    use std::sync::{Arc, Mutex};
+    use std::sync::Arc;
     #[cfg(not(verus_keep_ghost))]
     use std::thread;
     #[cfg(not(verus_keep_ghost))]
@@ -27,6 +28,26 @@ pub mod SpanTreeMtEph {
     pub type T<V> = UnDirGraphMtEph<V>;
 
     verus! {
+        pub struct SpanTreeMtEphSpanningEdgesWf;
+        impl<V: StT + MtT + Hash + Ord> RwLockPredicate<SetStEph<Edge<V>>> for SpanTreeMtEphSpanningEdgesWf {
+            open spec fn inv(self, _v: SetStEph<Edge<V>>) -> bool { true }
+        }
+        #[verifier::external_body]
+        fn new_spanning_edges_lock<V: StT + MtT + Hash + Ord>(
+            val: SetStEph<Edge<V>>,
+        ) -> (lock: RwLock<SetStEph<Edge<V>>, SpanTreeMtEphSpanningEdgesWf>) {
+            RwLock::new(val, Ghost(SpanTreeMtEphSpanningEdgesWf))
+        }
+
+        pub struct SpanTreeMtEphValidWf;
+        impl RwLockPredicate<bool> for SpanTreeMtEphValidWf {
+            open spec fn inv(self, _v: bool) -> bool { true }
+        }
+        #[verifier::external_body]
+        fn new_valid_lock(val: bool) -> (lock: RwLock<bool, SpanTreeMtEphValidWf>) {
+            RwLock::new(val, Ghost(SpanTreeMtEphValidWf))
+        }
+
         pub trait SpanTreeMtEphTrait {
             /// Parallel spanning tree via star contraction
             /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
@@ -71,7 +92,7 @@ pub mod SpanTreeMtEph {
                       _centers: &SetStEph<V>,
                       partition_map: &HashMap<V, V>,
                       quotient_tree: SetStEph<Edge<V>>| {
-            let spanning_edges = Arc::new(Mutex::new(SetLit![]));
+            let spanning_edges = Arc::new(new_spanning_edges_lock(SetLit![]));
 
             // Part 1: Add edges from vertices to their centers (star edges) - PARALLEL
             // Convert HashMap to Vec for parallel processing
@@ -94,7 +115,9 @@ pub mod SpanTreeMtEph {
                             } else {
                                 Edge(center, vertex)
                             };
-                            let _ = spanning_edges_clone.lock().unwrap().insert(edge);
+                            let (mut current, write_handle) = spanning_edges_clone.acquire_write();
+                            current.insert(edge);
+                            write_handle.release_write(current);
                         }
                     }
                 });
@@ -106,7 +129,9 @@ pub mod SpanTreeMtEph {
                         } else {
                             Edge(center, vertex)
                         };
-                        let _ = spanning_edges.lock().unwrap().insert(edge);
+                        let (mut current, write_handle) = spanning_edges.acquire_write();
+                        current.insert(edge);
+                        write_handle.release_write(current);
                     }
                 }
 
@@ -138,7 +163,9 @@ pub mod SpanTreeMtEph {
                             let v_center = partition_map_clone.get(v).unwrap_or(v);
 
                             if (u_center == &c1 && v_center == &c2) || (u_center == &c2 && v_center == &c1) {
-                                let _ = spanning_edges_clone.lock().unwrap().insert(original_edge.clone());
+                                let (mut current, write_handle) = spanning_edges_clone.acquire_write();
+                                current.insert(original_edge.clone());
+                                write_handle.release_write(current);
                                 break;
                             }
                         }
@@ -155,7 +182,9 @@ pub mod SpanTreeMtEph {
                         let v_center = partition_map.get(v).unwrap_or(v);
 
                         if (u_center == &c1 && v_center == &c2) || (u_center == &c2 && v_center == &c1) {
-                            let _ = spanning_edges.lock().unwrap().insert(original_edge.clone());
+                            let (mut current, write_handle) = spanning_edges.acquire_write();
+                            current.insert(original_edge.clone());
+                            write_handle.release_write(current);
                             break;
                         }
                     }
@@ -164,7 +193,7 @@ pub mod SpanTreeMtEph {
                 let _ = handle.join();
             }
 
-            Arc::try_unwrap(spanning_edges).unwrap().into_inner().unwrap()
+            Arc::try_unwrap(spanning_edges).unwrap().into_inner()
         };
 
         star_contract_mt(graph, seed, &base, &expand)
@@ -193,7 +222,7 @@ pub mod SpanTreeMtEph {
             return true;
         }
 
-        let valid = Arc::new(Mutex::new(true));
+        let valid = Arc::new(new_valid_lock(true));
 
         let mid = edges_vec.len() / 2;
         let left_edges = edges_vec[..mid].to_vec();
@@ -207,7 +236,8 @@ pub mod SpanTreeMtEph {
             for edge in left_edges {
                 let Edge(u, v) = &edge;
                 if !graph_edges_clone.mem(&edge) && !graph_edges_clone.mem(&Edge(v.clone(), u.clone())) {
-                    *valid_clone.lock().unwrap() = false;
+                    let (_current, write_handle) = valid_clone.acquire_write();
+                    write_handle.release_write(false);
                     return;
                 }
             }
@@ -216,13 +246,17 @@ pub mod SpanTreeMtEph {
         for edge in right_edges {
             let Edge(u, v) = &edge;
             if !graph_edges.mem(&edge) && !graph_edges.mem(&Edge(v.clone(), u.clone())) {
-                *valid.lock().unwrap() = false;
+                let (_current, write_handle) = valid.acquire_write();
+                write_handle.release_write(false);
                 break;
             }
         }
 
         let _ = handle.join();
 
-        *valid.lock().unwrap()
+        let read_handle = valid.acquire_read();
+        let result = *read_handle.borrow();
+        read_handle.release_read();
+        result
     }
 }

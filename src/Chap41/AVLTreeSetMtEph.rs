@@ -20,9 +20,10 @@ pub mod AVLTreeSetMtEph {
     // 13. derive impls outside verus!
 
     use std::fmt;
-    use std::sync::{Arc, Mutex};
+    use std::sync::Arc;
 
     use vstd::prelude::*;
+    use vstd::rwlock::*;
 
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
@@ -42,8 +43,19 @@ pub mod AVLTreeSetMtEph {
 
     // 4. type definitions
 
+    pub struct SetMtWf;
+
+    impl<T: StTInMtT + Ord + 'static> RwLockPredicate<AVLTreeSetStEph<T>> for SetMtWf {
+        open spec fn inv(self, v: AVLTreeSetStEph<T>) -> bool { true }
+    }
+
+    #[verifier::external_body]
+    fn new_set_mt_lock<T: StTInMtT + Ord + 'static>(val: AVLTreeSetStEph<T>) -> (lock: RwLock<AVLTreeSetStEph<T>, SetMtWf>) {
+        RwLock::new(val, Ghost(SetMtWf))
+    }
+
     pub struct AVLTreeSetMtEph<T: StTInMtT + Ord + 'static> {
-        inner: Arc<Mutex<AVLTreeSetStEph<T>>>,
+        inner: Arc<RwLock<AVLTreeSetStEph<T>, SetMtWf>>,
     }
 
     // 5. view impls
@@ -113,16 +125,20 @@ pub mod AVLTreeSetMtEph {
         fn size(&self) -> (result: N)
             ensures result == self@.len(), self@.finite()
         {
-            let inner = self.inner.lock().unwrap();
-            inner.size()
+            let handle = self.inner.acquire_read();
+            let result = handle.borrow().size();
+            handle.release_read();
+            result
         }
 
         #[verifier::external_body]
         fn to_seq(&self) -> (result: AVLTreeSeqStEphS<T>)
             ensures self@.finite()
         {
-            let inner = self.inner.lock().unwrap();
-            inner.to_seq()
+            let handle = self.inner.acquire_read();
+            let result = handle.borrow().to_seq();
+            handle.release_read();
+            result
         }
 
         #[verifier::external_body]
@@ -130,7 +146,7 @@ pub mod AVLTreeSetMtEph {
             ensures result@ == Set::<T>::empty()
         {
             AVLTreeSetMtEph {
-                inner: Arc::new(Mutex::new(AVLTreeSetStEph::empty())),
+                inner: Arc::new(new_set_mt_lock(AVLTreeSetStEph::empty())),
             }
         }
 
@@ -139,7 +155,7 @@ pub mod AVLTreeSetMtEph {
             ensures result@ == Set::<T>::empty().insert(x), result@.finite()
         {
             AVLTreeSetMtEph {
-                inner: Arc::new(Mutex::new(AVLTreeSetStEph::singleton(x))),
+                inner: Arc::new(new_set_mt_lock(AVLTreeSetStEph::singleton(x))),
             }
         }
 
@@ -148,7 +164,7 @@ pub mod AVLTreeSetMtEph {
             ensures result@.finite()
         {
             AVLTreeSetMtEph {
-                inner: Arc::new(Mutex::new(AVLTreeSetStEph::from_seq(seq))),
+                inner: Arc::new(new_set_mt_lock(AVLTreeSetStEph::from_seq(seq))),
             }
         }
 
@@ -158,19 +174,17 @@ pub mod AVLTreeSetMtEph {
         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (result: Self)
             ensures result@.finite(), result@.subset_of(self@)
         {
-            // Extract data from mutex
             let vals = {
-                let inner = self.inner.lock().unwrap();
-                let seq = inner.to_seq();
+                let handle = self.inner.acquire_read();
+                let seq = handle.borrow().to_seq();
                 let mut vals = Vec::with_capacity(seq.length());
                 for i in 0..seq.length() {
                     vals.push(seq.nth(i).clone());
                 }
+                handle.release_read();
                 vals
             };
-            // Lock released here
 
-            // Unconditionally parallel divide-and-conquer using ParaPair!
             fn parallel_filter<T: StTInMtT + Ord + 'static, F: PredMt<T> + Clone>(vals: Vec<T>, f: F) -> Vec<T> {
                 let n = vals.len();
                 if n == 0 {
@@ -208,13 +222,12 @@ pub mod AVLTreeSetMtEph {
         fn intersection(&self, other: &Self) -> (result: Self)
             ensures result@ == self@.intersect(other@), result@.finite()
         {
-            // Extract data from both mutexes
             let (self_vals, other_vals) = {
-                let self_inner = self.inner.lock().unwrap();
-                let other_inner = other.inner.lock().unwrap();
+                let self_handle = self.inner.acquire_read();
+                let other_handle = other.inner.acquire_read();
 
-                let self_seq = self_inner.to_seq();
-                let other_seq = other_inner.to_seq();
+                let self_seq = self_handle.borrow().to_seq();
+                let other_seq = other_handle.borrow().to_seq();
 
                 let mut sv = Vec::with_capacity(self_seq.length());
                 for i in 0..self_seq.length() {
@@ -226,11 +239,12 @@ pub mod AVLTreeSetMtEph {
                     ov.push(other_seq.nth(i).clone());
                 }
 
+                self_handle.release_read();
+                other_handle.release_read();
+
                 (sv, ov)
             };
-            // Locks released here
 
-            // Unconditionally parallel divide-and-conquer using ParaPair!
             fn parallel_intersect<T: StTInMtT + Ord + 'static>(self_vals: Vec<T>, other_vals: Vec<T>) -> Vec<T> {
                 let n = self_vals.len();
                 if n == 0 {
@@ -283,13 +297,12 @@ pub mod AVLTreeSetMtEph {
         fn union(&self, other: &Self) -> (result: Self)
             ensures result@ == self@.union(other@), result@.finite()
         {
-            // Extract data from both mutexes
             let (self_vals, other_vals) = {
-                let self_inner = self.inner.lock().unwrap();
-                let other_inner = other.inner.lock().unwrap();
+                let self_handle = self.inner.acquire_read();
+                let other_handle = other.inner.acquire_read();
 
-                let self_seq = self_inner.to_seq();
-                let other_seq = other_inner.to_seq();
+                let self_seq = self_handle.borrow().to_seq();
+                let other_seq = other_handle.borrow().to_seq();
 
                 let mut sv = Vec::with_capacity(self_seq.length());
                 for i in 0..self_seq.length() {
@@ -301,11 +314,12 @@ pub mod AVLTreeSetMtEph {
                     ov.push(other_seq.nth(i).clone());
                 }
 
+                self_handle.release_read();
+                other_handle.release_read();
+
                 (sv, ov)
             };
-            // Locks released here
 
-            // Simple merge (sequential to avoid thread explosion)
             let mut merged = self_vals;
             merged.extend(other_vals);
             merged.sort();
@@ -318,24 +332,28 @@ pub mod AVLTreeSetMtEph {
         fn find(&self, x: &T) -> (result: B)
             ensures result == self@.contains(*x)
         {
-            let inner = self.inner.lock().unwrap();
-            inner.find(x)
+            let handle = self.inner.acquire_read();
+            let result = handle.borrow().find(x);
+            handle.release_read();
+            result
         }
 
         #[verifier::external_body]
         fn delete(&mut self, x: &T)
             ensures self@ == old(self)@.remove(*x), self@.finite()
         {
-            let mut inner = self.inner.lock().unwrap();
-            inner.delete(x);
+            let (mut current, write_handle) = self.inner.acquire_write();
+            current.delete(x);
+            write_handle.release_write(current);
         }
 
         #[verifier::external_body]
         fn insert(&mut self, x: T)
             ensures self@ == old(self)@.insert(x), self@.finite()
         {
-            let mut inner = self.inner.lock().unwrap();
-            inner.insert(x);
+            let (mut current, write_handle) = self.inner.acquire_write();
+            current.insert(x);
+            write_handle.release_write(current);
         }
     }
 
@@ -346,9 +364,11 @@ pub mod AVLTreeSetMtEph {
         fn clone(&self) -> (result: Self)
             ensures result@ == self@
         {
-            let inner = self.inner.lock().unwrap();
+            let handle = self.inner.acquire_read();
+            let cloned_inner = (*handle.borrow()).clone();
+            handle.release_read();
             AVLTreeSetMtEph {
-                inner: Arc::new(Mutex::new((*inner).clone())),
+                inner: Arc::new(new_set_mt_lock(cloned_inner)),
             }
         }
     }

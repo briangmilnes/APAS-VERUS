@@ -2,7 +2,7 @@
 //! Chapter 49: Minimum Edit Distance - persistent, multi-threaded.
 //!
 //! This module is outside verus! because it uses std::collections::HashMap for
-//! memoization (via Arc<Mutex<HashMap>>), which Verus does not support. Full
+//! memoization (via Arc<RwLock<HashMap>>), which Verus does not support. Full
 //! verification would require replacing HashMap with a verified equivalent.
 
 pub mod MinEditDistMtPer {
@@ -10,22 +10,34 @@ pub mod MinEditDistMtPer {
     use std::collections::HashMap;
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
-    use std::sync::{Arc, Mutex};
+    use std::sync::Arc;
     use std::thread;
 
     use vstd::prelude::*;
+    use vstd::rwlock::*;
 
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
 
+    verus! {
+        pub struct MinEditDistMtPerWf;
+        impl RwLockPredicate<HashMap<(usize, usize), usize>> for MinEditDistMtPerWf {
+            open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
+        }
+
+        #[verifier::external_body]
+        fn new_min_edit_dist_per_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, MinEditDistMtPerWf>) {
+            RwLock::new(val, Ghost(MinEditDistMtPerWf))
+        }
+    }
+
     // 4. type definitions
-    // Struct contains Arc<Mutex<HashMap>> for memoization — cannot be inside verus!.
 
     #[derive(Clone)]
     pub struct MinEditDistMtPerS<T: MtVal> {
         pub source: ArraySeqMtPerS<T>,
         pub target: ArraySeqMtPerS<T>,
-        pub memo: Arc<Mutex<HashMap<(usize, usize), usize>>>,
+        pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, MinEditDistMtPerWf>>,
     }
 
     // 8. traits
@@ -76,8 +88,10 @@ pub mod MinEditDistMtPer {
         j: usize,
     ) -> usize {
         {
-            let memo_guard = table.memo.lock().unwrap();
-            if let Some(&result) = memo_guard.get(&(i, j)) {
+            let handle = table.memo.acquire_read();
+            let found = handle.borrow().get(&(i, j)).copied();
+            handle.release_read();
+            if let Some(result) = found {
                 return result;
             }
         }
@@ -107,8 +121,9 @@ pub mod MinEditDistMtPer {
         };
 
         {
-            let mut memo_guard = table.memo.lock().unwrap();
-            memo_guard.insert((i, j), result);
+            let (mut current, write_handle) = table.memo.acquire_write();
+            current.insert((i, j), result);
+            write_handle.release_write(current);
         }
 
         result
@@ -122,7 +137,7 @@ pub mod MinEditDistMtPer {
             Self {
                 source: ArraySeqMtPerS::new(0, T::default()),
                 target: ArraySeqMtPerS::new(0, T::default()),
-                memo: Arc::new(Mutex::new(HashMap::new())),
+                memo: Arc::new(new_min_edit_dist_per_lock(HashMap::new())),
             }
         }
 
@@ -130,7 +145,7 @@ pub mod MinEditDistMtPer {
             Self {
                 source,
                 target,
-                memo: Arc::new(Mutex::new(HashMap::new())),
+                memo: Arc::new(new_min_edit_dist_per_lock(HashMap::new())),
             }
         }
 
@@ -139,8 +154,9 @@ pub mod MinEditDistMtPer {
             T: Send + Sync + 'static,
         {
             {
-                let mut memo_guard = self.memo.lock().unwrap();
-                memo_guard.clear();
+                let (mut current, write_handle) = self.memo.acquire_write();
+                current.clear();
+                write_handle.release_write(current);
             }
 
             let source_len = self.source.length();
@@ -154,8 +170,10 @@ pub mod MinEditDistMtPer {
         fn target(&self) -> &ArraySeqMtPerS<T> { &self.target }
 
         fn memo_size(&self) -> usize {
-            let memo_guard = self.memo.lock().unwrap();
-            memo_guard.len()
+            let handle = self.memo.acquire_read();
+            let size = handle.borrow().len();
+            handle.release_read();
+            size
         }
     }
 
@@ -181,8 +199,10 @@ pub mod MinEditDistMtPer {
     impl<T: MtVal> Display for MinEditDistMtPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             let memo_size = {
-                let memo_guard = self.memo.lock().unwrap();
-                memo_guard.len()
+                let handle = self.memo.acquire_read();
+                let size = handle.borrow().len();
+                handle.release_read();
+                size
             };
             write!(
                 f,
