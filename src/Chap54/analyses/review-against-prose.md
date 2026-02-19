@@ -8,6 +8,7 @@ table { width: 100% !important; table-layout: fixed; }
 # Chapter 54 — Breadth-First Search: Review Against Prose
 
 **Date:** 2026-02-17
+**Last mechanical audit:** 2026-02-19 — proof holes log regenerated; hole counts unchanged (5 external_body).
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 1: Inventory Summary

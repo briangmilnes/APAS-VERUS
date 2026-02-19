@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 35 — Order Statistics: Review Against Prose
 
-**Date:** 2026-02-18 (updated: St* fully proven, 0 assumes)
+**Date:** 2026-02-19 (updated: Mt* select_inner now fully proven, 0 holes across all modules)
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 1: Inventory
@@ -29,10 +29,10 @@ All functions extracted by `veracity-review-module-fn-impls -d src/Chap35`.
 | 11 | OrderStatSelectStEph | `lemma_total_ordering` | V! | Proof | strong | — |
 | 12 | OrderStatSelectStEph | `select_inner` | V! | HasSpec | strong | — |
 | 13 | OrderStatSelectStPer | `select_inner` | V! | HasSpec | strong | — |
-| 14 | OrderStatSelectMtEph | `select_inner` | V! | HasSpec (external_body) | strong | — |
-| 15 | OrderStatSelectMtPer | `select_inner` | V! | HasSpec (external_body) | strong | — |
+| 14 | OrderStatSelectMtEph | `select_inner` | V! | HasSpec | strong | — |
+| 15 | OrderStatSelectMtPer | `select_inner` | V! | HasSpec | strong | — |
 
-**Key observation:** All four modules are verusified. St* `select_inner` is fully proven (no assumes, no external_body). Mt* `select_inner` is `external_body` due to `filter_par` closure limitations. `lemma_total_ordering` bridges `TotalOrder` to vstd's `total_ordering` predicate.
+**Key observation:** All four modules are verusified with 0 proof holes. All `select_inner` functions are fully proven (no assumes, no external_body). `lemma_total_ordering` bridges `TotalOrder` to vstd's `total_ordering` predicate.
 
 ## Phase 2: Prose Inventory
 
@@ -133,7 +133,7 @@ All four modules have corresponding test files in `tests/Chap35/`.
 
 No PTT files exist in `rust_verify_test/tests/Chap35/`.
 
-The St* `select_inner` functions are fully verified inline (no external_body). The Mt* `select_inner` are external_body. PTTs would be useful if the Mt* bodies were further decomposed. **No PTTs needed currently.**
+All `select_inner` functions are fully verified inline (no external_body, no assumes). **No PTTs needed currently.**
 
 ## Phase 7: Gap Analysis
 
@@ -164,7 +164,7 @@ The St* `select_inner` functions are fully verified inline (no external_body). T
 | 7 | ~~Exec bodies are `external_body` (rand)~~ | ~~Medium~~ | **Fixed** — `vstdplus/rand.rs` provides `random_usize_range` with spec; St* `select_inner` now fully inside verus! |
 | 8 | `TotalOrder` bounds instead of generic `Ord` | Low | Trade-off: `TotalOrder` provides spec-level `le` for the kth order statistic spec; `Ord` would need a similar bridge |
 | 9 | ~~St* `select_inner` has 9 assumes each~~ | ~~Medium~~ | **Fixed** — all 18 assumes closed via `lemma_total_ordering`, multiset-tracking loop invariant, and partition-sort decomposition proof |
-| 10 | Mt* `select_inner` is `external_body` (filter_par closures) | Medium | filter_par closures not expressible inside verus! currently |
+| 10 | ~~Mt* `select_inner` is `external_body`~~ | ~~Medium~~ | **Fixed** — Mt* `select_inner` now fully proven inside verus! |
 
 ## Phase 8: TOC Review
 
@@ -183,30 +183,28 @@ The St* `select_inner` functions are fully verified inline (no external_body). T
 |---|------|:---------:|:--------:|:--------------:|:----------:|:----------:|
 | 1 | OrderStatSelectStEph.rs | ✅ in | ✅ in (proven) | ✅ in (proven) | ✅ in | ✅ in |
 | 2 | OrderStatSelectStPer.rs | ✅ in | ✅ in (proven) | ✅ in (proven) | - | - |
-| 3 | OrderStatSelectMtEph.rs | ✅ in | ✅ in (proven) | ✅ in (external_body) | - | - |
-| 4 | OrderStatSelectMtPer.rs | ✅ in | ✅ in (proven) | ✅ in (external_body) | - | - |
+| 3 | OrderStatSelectMtEph.rs | ✅ in | ✅ in (proven) | ✅ in (proven) | - | - |
+| 4 | OrderStatSelectMtPer.rs | ✅ in | ✅ in (proven) | ✅ in (proven) | - | - |
 
 ## Proof Holes Summary
 
 ```
 veracity-review-proof-holes -d src/Chap35/
 
+✓ OrderStatSelectMtEph.rs
+✓ OrderStatSelectMtPer.rs
 ✓ OrderStatSelectStEph.rs — 1 clean proof function
-✓ OrderStatSelectStPer.rs — clean
-❌ OrderStatSelectMtEph.rs — 1 × external_body (select_inner)
-❌ OrderStatSelectMtPer.rs — 1 × external_body (select_inner)
+✓ OrderStatSelectStPer.rs
 
-Modules: 2 clean, 2 holed
-Holes Found: 2 total (2 × external_body)
+Modules: 4 clean, 0 holed
+Holes Found: 0 total
 ```
 
-**St* (fully proven):** Both `select_inner` functions are completely verified inside verus! with zero assumes. The proof uses:
+**All four modules fully proven (0 holes).** All `select_inner` functions are completely verified inside verus! with zero assumes. The proof uses:
 - `lemma_total_ordering<T>` — bridges `TotalOrder` trait to vstd's `total_ordering` predicate (for `lemma_sort_by_ensures`, `lemma_sorted_unique`)
 - Multiset-tracking loop invariant — tracks `s.subrange(0, i).to_multiset() =~= left.to_multiset() + right.to_multiset() + equals.to_multiset()`
 - Pivot-tracking invariant — `i > pivot_idx ==> left.len() + right.len() < i` (proves termination: partition always removes at least the pivot)
 - Partition-sort decomposition — after the loop, builds `candidate = sort(left) ++ equals ++ sort(right)`, proves `sorted_by(candidate, leq)` and `candidate.to_multiset() == s.to_multiset()`, then uses `lemma_sorted_unique` to conclude `sort(s) == candidate`
-
-**Mt* external_body (1 each):** The `select_inner` uses `filter_par` with closures that cannot be expressed inside verus! (closure trait bounds `Send + Sync + Clone + 'static` interact poorly with verus! macro). The `select` dispatch is proven.
 
 **vstdplus/rand.rs:** Adds 1 external_body (`random_usize_range`) with spec `ensures lo <= result < hi`. This is infrastructure, not counted in Chap35's holes.
 
@@ -228,32 +226,29 @@ All spec fns and functions have strong specifications:
 ## Verification Summary
 
 ```
-Verus verification: 1552 verified, 0 errors
+Verus verification: 1885 verified, 0 errors
 Runtime tests: 40 tests, 40 passed
-Proof holes: 2 × external_body (Mt* select_inner only)
+Proof holes: 0 (all modules clean)
 ```
 
 ## Overall Assessment
 
-**Chapter 35 is verusified with strong specifications and fully proven sequential implementations.** All four module variants implement Algorithm 35.2 (contraction-based select) with formal `requires`/`ensures` connecting to `spec_kth`, which captures Definition 35.1 using `Seq::sort_by` from vstd.
+**Chapter 35 is fully verusified with strong specifications and 0 proof holes.** All four module variants implement Algorithm 35.2 (contraction-based select) with formal `requires`/`ensures` connecting to `spec_kth`, which captures Definition 35.1 using `Seq::sort_by` from vstd.
 
-1. **St* fully proven (0 holes)**: `select_inner` is completely verified inside verus! with:
+1. **All four modules fully proven (0 holes)**: All `select_inner` functions are completely verified inside verus! with:
    - `lemma_total_ordering` bridging `TotalOrder` to vstd's `total_ordering`
    - Multiset-tracking loop invariant proving the partition decomposes the input
    - Pivot-tracking invariant proving termination (the pivot is "consumed" by the equals bucket)
    - Partition-sort decomposition proof: builds `sort(left) ++ equals ++ sort(right)`, proves sorted and multiset-equal, uses `lemma_sorted_unique` to equate with `sort(s)`, then indexes into the concatenation
 
-2. **Mt* implementations: select proven, select_inner external_body**: The `filter_par` closures cannot be expressed inside verus! due to trait bound limitations. The exec implementations use `filter_par` for parallel partition and `random_usize_range` for pivot selection.
-
-3. **Algorithmic fidelity**:
+2. **Algorithmic fidelity**:
    - **StEph and StPer**: single-pass O(n) Vec partition (was O(n²) tabulate).
    - **MtPer**: `filter_par` (was `Arc<Mutex<Vec>>` thread-per-element).
    - **MtEph**: `filter_par` (unchanged).
 
-4. **Test coverage is good** (10 tests × 4 modules = 40 tests).
+3. **Test coverage is good** (10 tests × 4 modules = 40 tests).
 
-5. **Infrastructure**: `vstdplus/rand.rs` provides `random_usize_range` with `ensures lo <= result < hi` — reusable by any randomized algorithm.
+4. **Infrastructure**: `vstdplus/rand.rs` provides `random_usize_range` with `ensures lo <= result < hi` — reusable by any randomized algorithm.
 
 ### Remaining work
-1. Move Mt* select_inner inside verus! if/when filter_par closures become expressible
-2. Exercises 35.1–35.3 are text proofs and not expected as code
+1. Exercises 35.1–35.3 are text proofs and not expected as code

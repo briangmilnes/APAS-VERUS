@@ -9,7 +9,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 **Reviewer:** Claude-Opus-4.6
 **Date:** 2026-02-17
-**Last mechanical audit:** 2026-02-18 — section reorder, trigger fixes, doc comments only; no functional changes.
+**Last mechanical audit:** 2026-02-19 — return variable renames, IntoIterator additions, eq→equal/clone→cloned renames; no functional changes.
 **Prose file:** `prompts/Chap05.txt`
 **Source files:** `SetStEph.rs`, `SetMtEph.rs`, `RelationStEph.rs`, `MappingStEph.rs`, `KleeneStPer.rs`
 

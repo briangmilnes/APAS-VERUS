@@ -8,6 +8,7 @@ table { width: 100% !important; table-layout: fixed; }
 # Chapter 64: Minimum Spanning Trees — Review Against Prose
 
 **Date:** 2026-02-13 (updated 2026-02-18: verusification — traits inside verus!, impls cfg-gated)
+**Last mechanical audit:** 2026-02-19 — proof holes log regenerated; 0 holes unchanged.
 **Reviewer:** Claude-Opus-4.6
 **Source:** `prompts/Chap64.txt` (APAS Part XVII, Chapter 64)
 
