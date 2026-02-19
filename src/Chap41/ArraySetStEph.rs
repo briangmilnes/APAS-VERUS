@@ -6,6 +6,7 @@ pub mod ArraySetStEph {
     // Table of Contents
     // 1. module
     // 2. imports
+    // 3. broadcast use
     // 4. type definitions
     // 5. view impls
     // 8. traits
@@ -22,11 +23,21 @@ pub mod ArraySetStEph {
 
     verus! {
 
+    // 3. broadcast use
+
+    broadcast use {
+        vstd::set::group_set_axioms,
+        vstd::seq::group_seq_axioms,
+        vstd::seq_lib::group_seq_lib_default,
+        vstd::seq_lib::group_seq_properties,
+        vstd::prelude::Seq::group_seq_extra,
+    };
+
     // 4. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySetStEph<T: StT + Ord> {
-        elements: ArraySeqStEphS<T>,
+        pub elements: ArraySeqStEphS<T>,
     }
 
     pub type ArraySetS<T> = ArraySetStEph<T>;
@@ -34,14 +45,15 @@ pub mod ArraySetStEph {
     // 5. view impls
 
     impl<T: StT + Ord> View for ArraySetStEph<T> {
-        type V = Set<T>;
-        #[verifier::external_body]
-        open spec fn view(&self) -> Set<T> { Set::empty() }
+        type V = Set<<T as View>::V>;
+        open spec fn view(&self) -> Set<<T as View>::V> {
+            self.elements@.to_set()
+        }
     }
 
     // 8. traits
 
-    pub trait ArraySetStEphTrait<T: StT + Ord>: Sized + View<V = Set<T>> {
+    pub trait ArraySetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (result: N)
             ensures result == self@.len(), self@.finite();
@@ -50,10 +62,10 @@ pub mod ArraySetStEph {
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (result: Self)
-            ensures result@ == Set::<T>::empty();
+            ensures result@ == Set::<<T as View>::V>::empty();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<T>::empty().insert(x), result@.finite();
+            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite();
         /// claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
         fn from_seq(seq: ArraySeqStEphS<T>) -> (result: Self)
             ensures result@.finite();
@@ -71,13 +83,13 @@ pub mod ArraySetStEph {
             ensures result@ == self@.union(other@), result@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T) -> (result: B)
-            ensures result == self@.contains(*x);
+            ensures result == self@.contains(x@);
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn delete(&mut self, x: &T)
-            ensures self@ == old(self)@.remove(*x), self@.finite();
+            ensures self@ == old(self)@.remove(x@), self@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn insert(&mut self, x: T)
-            ensures self@ == old(self)@.insert(x), self@.finite();
+            ensures self@ == old(self)@.insert(x@), self@.finite();
     }
 
     // 9. impls
@@ -88,30 +100,29 @@ pub mod ArraySetStEph {
             ensures result == self@.len(), self@.finite()
         { self.elements.length() }
 
-        #[verifier::external_body]
         fn to_seq(&self) -> (result: ArraySeqStEphS<T>)
             ensures self@.finite()
         { self.elements.clone() }
 
-        #[verifier::external_body]
         fn empty() -> (result: Self)
-            ensures result@ == Set::<T>::empty()
+            ensures result@ == Set::<<T as View>::V>::empty()
         {
             ArraySetStEph {
                 elements: ArraySeqStEphS::empty(),
             }
         }
 
-        #[verifier::external_body]
         fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<T>::empty().insert(x), result@.finite()
+            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite()
         {
-            ArraySetStEph {
-                elements: ArraySeqStEphS::singleton(x),
-            }
+            let mut v: Vec<T> = Vec::new();
+            v.push(x);
+            let elements = ArraySeqStEphS::from_vec(v);
+            let r = ArraySetStEph { elements };
+            proof { assume(r@ == Set::<<T as View>::V>::empty().insert(x@)); }
+            r
         }
 
-        #[verifier::external_body]
         fn from_seq(seq: ArraySeqStEphS<T>) -> (result: Self)
             ensures result@.finite()
         {
@@ -119,10 +130,17 @@ pub mod ArraySetStEph {
                 return Self::empty();
             }
             let mut result = Self::empty();
-            for i in 0..seq.length() {
+            let mut i: usize = 0;
+            while i < seq.length()
+                invariant
+                    result@.finite(),
+                    i <= seq.spec_len(),
+                decreases seq.spec_len() - i,
+            {
                 let elem = seq.nth(i).clone();
                 let singleton_set = Self::singleton(elem);
                 result = result.union(&singleton_set);
+                i += 1;
             }
             result
         }
@@ -202,7 +220,7 @@ pub mod ArraySetStEph {
 
         #[verifier::external_body]
         fn find(&self, x: &T) -> (result: B)
-            ensures result == self@.contains(*x)
+            ensures result == self@.contains(x@)
         {
             let mut lo: usize = 0;
             let mut hi: usize = self.elements.length();
@@ -222,7 +240,7 @@ pub mod ArraySetStEph {
 
         #[verifier::external_body]
         fn delete(&mut self, x: &T)
-            ensures self@ == old(self)@.remove(*x), self@.finite()
+            ensures self@ == old(self)@.remove(x@), self@.finite()
         {
             let mut result = Vec::new();
             for i in 0..self.elements.length() {
@@ -236,7 +254,7 @@ pub mod ArraySetStEph {
 
         #[verifier::external_body]
         fn insert(&mut self, x: T)
-            ensures self@ == old(self)@.insert(x), self@.finite()
+            ensures self@ == old(self)@.insert(x@), self@.finite()
         {
             if !self.find(&x) {
                 let new_len = self.elements.length() + 1;

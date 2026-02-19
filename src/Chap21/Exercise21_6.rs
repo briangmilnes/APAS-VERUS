@@ -3,16 +3,15 @@
 
 pub mod Exercise21_6 {
 
-    //! Exercise 21.6: Cost analysis of all contiguous subsequences
+    //! Exercise 21.6: Cost analysis of all contiguous subsequences.
     //!
-    //! This exercise analyzes the work and span complexity of the all_contiguous_subseqs function.
-    //! The analysis shows that the nested tabulate + flatten approach achieves:
-    //!
-    //! Work: Θ(n²) - Each of the n² subsequences requires constant work to create
-    //! Span: Θ(lg n) - The tabulate operations can be parallelized with logarithmic depth
-    //!
-    //! This is optimal for generating all contiguous subsequences since there are Θ(n²) of them.
+    //! Work: Theta(n^2) — each of the n^2 subsequences requires constant work to create.
+    //! Span: Theta(lg n) — the tabulate operations can be parallelized with logarithmic depth.
+    //! Optimal for generating all contiguous subsequences since there are Theta(n^2) of them.
 
-    // This is a theoretical analysis exercise - no implementation code needed.
-    // The cost analysis is documented in the module-level documentation above.
+    use vstd::prelude::*;
+
+    verus! {
+    // Theoretical analysis exercise — no implementation code needed.
+    } // verus!
 }

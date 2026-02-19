@@ -37,33 +37,33 @@ pub mod OrderedSetStEph {
     // 5. view impls
 
     impl<T: StT + Ord> View for OrderedSetStEph<T> {
-        type V = Set<T>;
-        open spec fn view(&self) -> Set<T> { self.base_set@ }
+        type V = Set<<T as View>::V>;
+        open spec fn view(&self) -> Set<<T as View>::V> { self.base_set@ }
     }
 
     // 8. traits
 
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1) with ephemeral semantics
-    pub trait OrderedSetStEphTrait<T: StT + Ord>: Sized + View<V = Set<T>> {
+    pub trait OrderedSetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         // Base set operations (ADT 41.1) - ephemeral semantics
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (result: N)
             ensures result == self@.len(), self@.finite();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (result: Self)
-            ensures result@ == Set::<T>::empty();
+            ensures result@ == Set::<<T as View>::V>::empty();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<T>::empty().insert(x), result@.finite();
+            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T) -> (result: B)
-            ensures result == self@.contains(*x);
+            ensures result == self@.contains(x@);
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&mut self, x: T)
-            ensures self@ == old(self)@.insert(x), self@.finite();
+            ensures self@ == old(self)@.insert(x@), self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn delete(&mut self, x: &T)
-            ensures self@ == old(self)@.remove(*x), self@.finite();
+            ensures self@ == old(self)@.remove(x@), self@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn filter<F: PredSt<T>>(&mut self, f: F)
             ensures self@.finite();
@@ -126,7 +126,7 @@ pub mod OrderedSetStEph {
         { self.base_set.size() }
 
         fn empty() -> (result: Self)
-            ensures result@ == Set::<T>::empty()
+            ensures result@ == Set::<<T as View>::V>::empty()
         {
             OrderedSetStEph {
                 base_set: AVLTreeSetStEph::empty(),
@@ -134,7 +134,7 @@ pub mod OrderedSetStEph {
         }
 
         fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<T>::empty().insert(x), result@.finite()
+            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite()
         {
             OrderedSetStEph {
                 base_set: AVLTreeSetStEph::singleton(x),
@@ -142,15 +142,15 @@ pub mod OrderedSetStEph {
         }
 
         fn find(&self, x: &T) -> (result: B)
-            ensures result == self@.contains(*x)
+            ensures result == self@.contains(x@)
         { self.base_set.find(x) }
 
         fn insert(&mut self, x: T)
-            ensures self@ == old(self)@.insert(x), self@.finite()
+            ensures self@ == old(self)@.insert(x@), self@.finite()
         { self.base_set.insert(x); }
 
         fn delete(&mut self, x: &T)
-            ensures self@ == old(self)@.remove(*x), self@.finite()
+            ensures self@ == old(self)@.remove(x@), self@.finite()
         { self.base_set.delete(x); }
 
         fn filter<F: PredSt<T>>(&mut self, f: F)
