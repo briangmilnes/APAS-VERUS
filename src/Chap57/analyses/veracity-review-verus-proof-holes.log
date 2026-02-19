@@ -20,34 +20,15 @@
         99 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64 {
    Holes: 4 total
       4 × external_body
-❌ StackStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/StackStEph.rs:67: external_body - #[verifier::external_body]
-        68 |         #[verifier::external_body]
-        69 |         fn new() -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/StackStEph.rs:68: external_body - #[verifier::external_body]
-        69 |         fn new() -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/StackStEph.rs:73: external_body - #[verifier::external_body]
-        74 |         fn push(&mut self, item: T)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/StackStEph.rs:78: external_body - #[verifier::external_body]
-        79 |         fn pop(&mut self) -> (result: Option<T>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/StackStEph.rs:85: external_body - #[verifier::external_body]
-        86 |         fn peek(&self) -> (result: Option<&T>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/StackStEph.rs:92: external_body - #[verifier::external_body]
-        93 |         fn is_empty(&self) -> (result: bool)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/StackStEph.rs:97: external_body - #[verifier::external_body]
-        98 |         fn size(&self) -> (result: N)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/StackStEph.rs:106: external_body - #[verifier::external_body]
-       107 |         fn default() -> (result: Self)
-   Holes: 8 total
-      8 × external_body
+✓ StackStEph.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   0 clean (no holes)
-   3 holed (contains holes)
+   1 clean (no holes)
+   2 holed (contains holes)
    3 total
 
 Proof Functions:
@@ -55,19 +36,6 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 16 total
-   16 × external_body
-═══════
+Holes Found: 8 total
+   8 × external_body
 
-Modules:
-   0 clean (no holes)
-   3 holed (contains holes)
-   3 total
-
-Proof Functions:
-   0 clean
-   0 holed
-   0 total
-
-Holes Found: 16 total
-   16 × external_body

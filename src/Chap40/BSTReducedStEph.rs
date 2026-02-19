@@ -57,10 +57,6 @@ pub mod BSTReducedStEph {
         fn lift(value: &T) -> T { *value }
     }
 
-    /// Example: Max reduction for ordered values
-    #[derive(Debug, Clone)]
-    pub struct MaxOp<T>(PhantomData<T>);
-
     /// Example: Count reduction (counts number of elements)
     #[derive(Debug, Clone)]
     pub struct CountOp<T>(PhantomData<T>);
@@ -120,215 +116,238 @@ pub mod BSTReducedStEph {
         fn default() -> Self { Self::new() }
     }
 
-    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> BSTReducedStEph<K, V, R, Op> {
-        /// - APAS: Work Θ(1), Span Θ(1) — O(1) via augmented size field.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn size_link(link: &Link<K, V, R>) -> N { link.as_ref().map_or(0, |n| n.size) }
+    /// - APAS: Work Θ(1), Span Θ(1) — O(1) via augmented size field.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    fn size_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> N {
+        link.as_ref().map_or(0, |n| n.size)
+    }
 
-        /// - APAS: Work Θ(1), Span Θ(1) — reads augmented reduced value.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn reduced_value_link(link: &Link<K, V, R>) -> R {
-            link.as_ref()
-                .map_or_else(|| Op::identity(), |n| n.reduced_value.clone())
-        }
+    /// - APAS: Work Θ(1), Span Θ(1) — reads augmented reduced value.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    fn reduced_value_link<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(link: &Link<K, V, R>) -> R {
+        link.as_ref()
+            .map_or_else(|| Op::identity(), |n| n.reduced_value.clone())
+    }
 
-        /// - APAS: Work Θ(1), Span Θ(1) — recomputes size and reduced value from children.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn update_node(node: &mut Node<K, V, R>) {
-            node.size = 1 + Self::size_link(&node.left) + Self::size_link(&node.right);
+    /// - APAS: Work Θ(1), Span Θ(1) — recomputes size and reduced value from children.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    fn update_node<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(node: &mut Node<K, V, R>) {
+        node.size = 1 + size_link(&node.left) + size_link(&node.right);
 
-            // Compute reduced value: f(left_reduced, f(node_value, right_reduced))
-            let left_reduced = Self::reduced_value_link(&node.left);
-            let right_reduced = Self::reduced_value_link(&node.right);
-            let node_reduced = Op::lift(&node.value);
+        // Compute reduced value: f(left_reduced, f(node_value, right_reduced))
+        let left_reduced = reduced_value_link::<K, V, R, Op>(&node.left);
+        let right_reduced = reduced_value_link::<K, V, R, Op>(&node.right);
+        let node_reduced = Op::lift(&node.value);
 
-            node.reduced_value = Op::combine(left_reduced, Op::combine(node_reduced, right_reduced));
-        }
+        node.reduced_value = Op::combine(left_reduced, Op::combine(node_reduced, right_reduced));
+    }
 
-        /// - APAS: Work Θ(1), Span Θ(1) — corresponds to APAS makeNode with reduced values.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn make_node(key: K, value: V, priority: u64, left: Link<K, V, R>, right: Link<K, V, R>) -> Link<K, V, R> {
-            let node_reduced = Op::lift(&value);
-            let mut node = Node::new(key, value, priority, node_reduced);
-            node.left = left;
-            node.right = right;
-            Self::update_node(&mut node);
-            Some(Box::new(node))
-        }
+    /// - APAS: Work Θ(1), Span Θ(1) — corresponds to APAS makeNode with reduced values.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    fn make_node<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(
+        key: K,
+        value: V,
+        priority: u64,
+        left: Link<K, V, R>,
+        right: Link<K, V, R>,
+    ) -> Link<K, V, R> {
+        let node_reduced = Op::lift(&value);
+        let mut node = Node::new(key, value, priority, node_reduced);
+        node.left = left;
+        node.right = right;
+        update_node::<K, V, R, Op>(&mut node);
+        Some(Box::new(node))
+    }
 
-        /// - APAS: N/A — internal treap rotation (updates sizes and reduced values).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn rotate_left(link: &mut Link<K, V, R>) {
-            if let Some(mut x) = link.take() {
-                if let Some(mut y) = x.right.take() {
-                    x.right = y.left.take();
-                    Self::update_node(&mut x);
-                    Self::update_node(&mut y);
-                    y.left = Some(x);
-                    *link = Some(y);
-                } else {
-                    *link = Some(x);
-                }
+    /// - APAS: N/A — internal treap rotation (updates sizes and reduced values).
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    fn rotate_left<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(link: &mut Link<K, V, R>) {
+        if let Some(mut x) = link.take() {
+            if let Some(mut y) = x.right.take() {
+                x.right = y.left.take();
+                update_node::<K, V, R, Op>(&mut x);
+                update_node::<K, V, R, Op>(&mut y);
+                y.left = Some(x);
+                *link = Some(y);
+            } else {
+                *link = Some(x);
             }
         }
+    }
 
-        /// - APAS: N/A — internal treap rotation (updates sizes and reduced values).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn rotate_right(link: &mut Link<K, V, R>) {
-            if let Some(mut x) = link.take() {
-                if let Some(mut y) = x.left.take() {
-                    x.left = y.right.take();
-                    Self::update_node(&mut x);
-                    Self::update_node(&mut y);
-                    y.right = Some(x);
-                    *link = Some(y);
-                } else {
-                    *link = Some(x);
-                }
+    /// - APAS: N/A — internal treap rotation (updates sizes and reduced values).
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    fn rotate_right<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(link: &mut Link<K, V, R>) {
+        if let Some(mut x) = link.take() {
+            if let Some(mut y) = x.left.take() {
+                x.left = y.right.take();
+                update_node::<K, V, R, Op>(&mut x);
+                update_node::<K, V, R, Op>(&mut y);
+                y.right = Some(x);
+                *link = Some(y);
+            } else {
+                *link = Some(x);
             }
         }
+    }
 
-        /// - APAS: N/A — internal recursive insert helper.
-        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-        fn insert_link(link: &mut Link<K, V, R>, key: K, value: V, rng: &mut impl Rng) {
-            if let Some(node) = link.as_mut() {
-                if key < node.key {
-                    Self::insert_link(&mut node.left, key, value, rng);
-                    if node.left.as_ref().is_some_and(|left| left.priority < node.priority) {
-                        Self::rotate_right(link);
-                    }
-                } else if key > node.key {
-                    Self::insert_link(&mut node.right, key, value, rng);
-                    if node.right.as_ref().is_some_and(|right| right.priority < node.priority) {
-                        Self::rotate_left(link);
-                    }
-                } else {
-                    // Key exists, update value
-                    node.value = value;
+    /// - APAS: N/A — internal recursive insert helper.
+    /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
+    fn insert_link<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(
+        link: &mut Link<K, V, R>,
+        key: K,
+        value: V,
+        rng: &mut impl Rng,
+    ) {
+        if let Some(node) = link.as_mut() {
+            if key < node.key {
+                insert_link::<K, V, R, Op>(&mut node.left, key, value, rng);
+                if node.left.as_ref().is_some_and(|left| left.priority < node.priority) {
+                    rotate_right::<K, V, R, Op>(link);
                 }
-                if let Some(node) = link.as_mut() {
-                    Self::update_node(node);
+            } else if key > node.key {
+                insert_link::<K, V, R, Op>(&mut node.right, key, value, rng);
+                if node.right.as_ref().is_some_and(|right| right.priority < node.priority) {
+                    rotate_left::<K, V, R, Op>(link);
                 }
             } else {
-                let node_reduced = Op::lift(&value);
-                *link = Some(Box::new(Node::new(key, value, rng.random(), node_reduced)));
+                // Key exists, update value
+                node.value = value;
             }
+            if let Some(node) = link.as_mut() {
+                update_node::<K, V, R, Op>(node);
+            }
+        } else {
+            let node_reduced = Op::lift(&value);
+            *link = Some(Box::new(Node::new(key, value, rng.random(), node_reduced)));
         }
+    }
 
-        /// - APAS: N/A — internal recursive find helper.
-        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-        fn find_link<'a>(link: &'a Link<K, V, R>, key: &K) -> Option<&'a V> {
-            match link {
-                | None => None,
-                | Some(node) => {
-                    if key == &node.key {
-                        Some(&node.value)
-                    } else if key < &node.key {
-                        Self::find_link(&node.left, key)
-                    } else {
-                        Self::find_link(&node.right, key)
-                    }
+    /// - APAS: N/A — internal recursive find helper.
+    /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
+    fn find_link<'a, K: StT + Ord, V: StT, R: StT>(
+        link: &'a Link<K, V, R>,
+        key: &K,
+    ) -> Option<&'a V> {
+        match link {
+            | None => None,
+            | Some(node) => {
+                if key == &node.key {
+                    Some(&node.value)
+                } else if key < &node.key {
+                    find_link(&node.left, key)
+                } else {
+                    find_link(&node.right, key)
                 }
             }
         }
+    }
 
-        /// - APAS: N/A — internal recursive min-key helper.
-        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-        fn min_key_link(link: &Link<K, V, R>) -> Option<&K> {
-            match link {
-                | None => None,
-                | Some(node) => match node.left {
-                    | None => Some(&node.key),
-                    | Some(_) => Self::min_key_link(&node.left),
-                },
-            }
+    /// - APAS: N/A — internal recursive min-key helper.
+    /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
+    fn min_key_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> Option<&K> {
+        match link {
+            | None => None,
+            | Some(node) => match node.left {
+                | None => Some(&node.key),
+                | Some(_) => min_key_link(&node.left),
+            },
         }
+    }
 
-        /// - APAS: N/A — internal recursive max-key helper.
-        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-        fn max_key_link(link: &Link<K, V, R>) -> Option<&K> {
-            match link {
-                | None => None,
-                | Some(node) => match node.right {
-                    | None => Some(&node.key),
-                    | Some(_) => Self::max_key_link(&node.right),
-                },
-            }
+    /// - APAS: N/A — internal recursive max-key helper.
+    /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
+    fn max_key_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> Option<&K> {
+        match link {
+            | None => None,
+            | Some(node) => match node.right {
+                | None => Some(&node.key),
+                | Some(_) => max_key_link(&node.right),
+            },
         }
+    }
 
-        /// - APAS: N/A — internal recursive key collection helper.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn collect_keys(link: &Link<K, V, R>, out: &mut Vec<K>) {
-            if let Some(node) = link {
-                Self::collect_keys(&node.left, out);
-                out.push(node.key.clone());
-                Self::collect_keys(&node.right, out);
-            }
+    /// - APAS: N/A — internal recursive key collection helper.
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+    fn collect_keys<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>, out: &mut Vec<K>) {
+        if let Some(node) = link {
+            collect_keys(&node.left, out);
+            out.push(node.key.clone());
+            collect_keys(&node.right, out);
         }
+    }
 
-        /// - APAS: N/A — internal recursive value collection helper.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn collect_values(link: &Link<K, V, R>, out: &mut Vec<V>) {
-            if let Some(node) = link {
-                Self::collect_values(&node.left, out);
-                out.push(node.value.clone());
-                Self::collect_values(&node.right, out);
-            }
+    /// - APAS: N/A — internal recursive value collection helper.
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+    fn collect_values<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>, out: &mut Vec<V>) {
+        if let Some(node) = link {
+            collect_values(&node.left, out);
+            out.push(node.value.clone());
+            collect_values(&node.right, out);
         }
+    }
 
-        /// - APAS: N/A — in-order collect (key, value, priority) for rebuild.
-        fn collect_in_order_kvp(link: &Link<K, V, R>, out: &mut Vec<(K, V, u64)>) {
-            if let Some(node) = link {
-                Self::collect_in_order_kvp(&node.left, out);
-                out.push((node.key.clone(), node.value.clone(), node.priority));
-                Self::collect_in_order_kvp(&node.right, out);
-            }
+    /// - APAS: N/A — in-order collect (key, value, priority) for rebuild.
+    fn collect_in_order_kvp<K: StT + Ord, V: StT, R: StT>(
+        link: &Link<K, V, R>,
+        out: &mut Vec<(K, V, u64)>,
+    ) {
+        if let Some(node) = link {
+            collect_in_order_kvp(&node.left, out);
+            out.push((node.key.clone(), node.value.clone(), node.priority));
+            collect_in_order_kvp(&node.right, out);
         }
+    }
 
-        /// - APAS: N/A — build treap from sorted (key, value, priority) sequence.
-        fn build_treap_from_sorted(seq: &[(K, V, u64)]) -> Link<K, V, R> {
-            if seq.is_empty() {
-                return None;
-            }
-            let min_idx = seq
-                .iter()
-                .enumerate()
-                .min_by(|(_, a), (_, b)| a.2.cmp(&b.2))
-                .map(|(i, _)| i)
-                .unwrap();
-            let (key, value, priority) = seq[min_idx].clone();
-            let left_seq = &seq[..min_idx];
-            let right_seq = &seq[min_idx + 1..];
-            let left = Self::build_treap_from_sorted(left_seq);
-            let right = Self::build_treap_from_sorted(right_seq);
-            Self::make_node(key, value, priority, left, right)
+    /// - APAS: N/A — build treap from sorted (key, value, priority) sequence.
+    fn build_treap_from_sorted<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(
+        seq: &[(K, V, u64)],
+    ) -> Link<K, V, R> {
+        if seq.is_empty() {
+            return None;
         }
+        let min_idx = seq
+            .iter()
+            .enumerate()
+            .min_by(|(_, a), (_, b)| a.2.cmp(&b.2))
+            .map(|(i, _)| i)
+            .unwrap();
+        let (key, value, priority) = seq[min_idx].clone();
+        let left_seq = &seq[..min_idx];
+        let right_seq = &seq[min_idx + 1..];
+        let left = build_treap_from_sorted::<K, V, R, Op>(left_seq);
+        let right = build_treap_from_sorted::<K, V, R, Op>(right_seq);
+        make_node::<K, V, R, Op>(key, value, priority, left, right)
+    }
 
-        /// - APAS: Work Θ(log n), Span Θ(log n) — range query on augmented BST.
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
-        fn range_reduce_link(link: &Link<K, V, R>, low: &K, high: &K) -> R {
-            match link {
-                | None => Op::identity(),
-                | Some(node) => {
-                    let mut result = Op::identity();
+    /// - APAS: Work Θ(log n), Span Θ(log n) — range query on augmented BST.
+    /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
+    fn range_reduce_link<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(
+        link: &Link<K, V, R>,
+        low: &K,
+        high: &K,
+    ) -> R {
+        match link {
+            | None => Op::identity(),
+            | Some(node) => {
+                let mut result = Op::identity();
 
-                    // Include left subtree if it might contain keys >= low
-                    if &node.key > low {
-                        result = Op::combine(result, Self::range_reduce_link(&node.left, low, high));
-                    }
-
-                    // Include current node if it's in range
-                    if &node.key >= low && &node.key <= high {
-                        result = Op::combine(result, Op::lift(&node.value));
-                    }
-
-                    // Include right subtree if it might contain keys <= high
-                    if &node.key < high {
-                        result = Op::combine(result, Self::range_reduce_link(&node.right, low, high));
-                    }
-
-                    result
+                // Include left subtree if it might contain keys >= low
+                if &node.key > low {
+                    result = Op::combine(result, range_reduce_link::<K, V, R, Op>(&node.left, low, high));
                 }
+
+                // Include current node if it's in range
+                if &node.key >= low && &node.key <= high {
+                    result = Op::combine(result, Op::lift(&node.value));
+                }
+
+                // Include right subtree if it might contain keys <= high
+                if &node.key < high {
+                    result = Op::combine(result, range_reduce_link::<K, V, R, Op>(&node.right, low, high));
+                }
+
+                result
             }
         }
     }
@@ -343,7 +362,7 @@ pub mod BSTReducedStEph {
             }
         }
 
-        fn size(&self) -> N { Self::size_link(&self.root) }
+        fn size(&self) -> N { size_link(&self.root) }
 
         fn is_empty(&self) -> B { self.size() == 0 }
 
@@ -359,17 +378,17 @@ pub mod BSTReducedStEph {
 
         fn insert(&mut self, key: K, value: V) {
             let mut r = rng();
-            Self::insert_link(&mut self.root, key, value, &mut r);
+            insert_link::<K, V, R, Op>(&mut self.root, key, value, &mut r);
         }
 
         fn delete(&mut self, key: &K) {
             let mut in_order: Vec<(K, V, u64)> = Vec::new();
-            Self::collect_in_order_kvp(&self.root, &mut in_order);
+            collect_in_order_kvp(&self.root, &mut in_order);
             let filtered: Vec<(K, V, u64)> = in_order.into_iter().filter(|(k, _, _)| k != key).collect();
-            self.root = Self::build_treap_from_sorted(&filtered);
+            self.root = build_treap_from_sorted::<K, V, R, Op>(&filtered);
         }
 
-        fn find(&self, key: &K) -> Option<&V> { Self::find_link(&self.root, key) }
+        fn find(&self, key: &K) -> Option<&V> { find_link(&self.root, key) }
 
         fn contains(&self, key: &K) -> B { self.find(key).is_some() }
 
@@ -377,23 +396,25 @@ pub mod BSTReducedStEph {
 
         fn keys(&self) -> ArraySeqStPerS<K> {
             let mut out = Vec::with_capacity(self.size());
-            Self::collect_keys(&self.root, &mut out);
+            collect_keys(&self.root, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
 
         fn values(&self) -> ArraySeqStPerS<V> {
             let mut out = Vec::with_capacity(self.size());
-            Self::collect_values(&self.root, &mut out);
+            collect_values(&self.root, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
 
-        fn minimum_key(&self) -> Option<&K> { Self::min_key_link(&self.root) }
+        fn minimum_key(&self) -> Option<&K> { min_key_link(&self.root) }
 
-        fn maximum_key(&self) -> Option<&K> { Self::max_key_link(&self.root) }
+        fn maximum_key(&self) -> Option<&K> { max_key_link(&self.root) }
 
-        fn reduced_value(&self) -> R { Self::reduced_value_link(&self.root) }
+        fn reduced_value(&self) -> R { reduced_value_link::<K, V, R, Op>(&self.root) }
 
-        fn range_reduce(&self, low: &K, high: &K) -> R { Self::range_reduce_link(&self.root, low, high) }
+        fn range_reduce(&self, low: &K, high: &K) -> R {
+            range_reduce_link::<K, V, R, Op>(&self.root, low, high)
+        }
     }
 
     // Type aliases for common reductions

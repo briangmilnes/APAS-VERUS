@@ -7,38 +7,40 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 56 — Shortest Paths (Introduction): Review Against Prose
 
-**Date:** 2026-02-18
+**Date:** 2026-02-18 (updated 2026-02-18)
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 1: Inventory
 
 | # | File | exec fns | external_body | spec fns | proof fns | View | verus! | Trait Wired |
 |---|------|:--------:|:-------------:|:--------:|:---------:|:----:|:------:|:-----------:|
-| 1 | SSSPResultStEphI64.rs | 7 | 4 | 0 | 0 | Yes | Yes | Yes |
-| 2 | SSSPResultStPerI64.rs | 7 | 3 | 0 | 0 | Yes | Yes | Yes |
-| 3 | SSSPResultStEphFloat.rs | 7 | 6 | 2 | 1 | Yes | Yes | No (bare impl) |
+| 1 | SSSPResultStEphI64.rs | 7 | 0 | 0 | 0 | Yes | Yes | Yes |
+| 2 | SSSPResultStPerI64.rs | 7 | 0 | 0 | 0 | Yes | Yes | Yes |
+| 3 | SSSPResultStEphFloat.rs | 7 | 5 | 2 | 1 | Yes | Yes | Yes |
 | 4 | SSSPResultStPerFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes | Yes |
-| 5 | AllPairsResultStEphI64.rs | 7 | 2 | 0 | 0 | Yes | Yes | Yes |
-| 6 | AllPairsResultStPerI64.rs | 7 | 4 | 0 | 0 | Yes | Yes | Yes |
+| 5 | AllPairsResultStEphI64.rs | 7 | 0 | 0 | 0 | Yes | Yes | Yes |
+| 6 | AllPairsResultStPerI64.rs | 7 | 0 | 0 | 0 | Yes | Yes | Yes |
 | 7 | AllPairsResultStEphFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes | Yes |
 | 8 | AllPairsResultStPerFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes | Yes |
-| 9 | PathWeightUtilsStEph.rs | 4 | 4 | 0 | 0 | No | Yes | N/A (free fns) |
-| 10 | PathWeightUtilsStPer.rs | 4 | 4 | 0 | 0 | No | Yes | N/A (free fns) |
+| 9 | PathWeightUtilsStEph.rs | 4 | 2 | 0 | 0 | No | Yes | N/A (free fns) |
+| 10 | PathWeightUtilsStPer.rs | 4 | 2 | 0 | 0 | No | Yes | N/A (free fns) |
 | 11 | Example56_1.rs | 3 | 3 | 0 | 0 | No | Yes | N/A |
 | 12 | Example56_3.rs | 2 | 2 | 0 | 0 | No | Yes | N/A |
-| | **Total** | **69** | **53** | **2** | **1** | | | |
+| | **Total** | **69** | **35** | **2** | **1** | | | |
 
 **Changes since last review:**
-- **File renames:** All `*Int.rs` → `*I64.rs` (SSSPResultStEphInt→SSSPResultStEphI64, SSSPResultStPerInt→SSSPResultStPerI64, AllPairsResultStEphInt→AllPairsResultStEphI64, AllPairsResultStPerInt→AllPairsResultStPerI64).
-- **SSSPResultStEphFloat.rs restructured:** `F64Dist` newtype with `F64DistTrait` (spec_is_finite, is_finite, dist_eq, unreachable_dist, zero_dist). `new` is now **verified** (while loop with invariants). 1 clean proof fn (`axiom_unreachable_not_finite`). 6 external_body (down from 7). View impl for F64Dist. Debug and PartialEq impls outside verus!. TOC sections: 4 (type defs), 5 (view impls), 6 (spec fns), 7 (proof fns), 8 (traits), 9 (impls), 13 (derive outside verus!).
-- **I64 files use trait-impl pattern:** SSSPResultStEphI64Trait, SSSPResultStPerI64Trait, AllPairsResultStEphI64Trait, AllPairsResultStPerI64Trait. external_body counts: 4, 3, 2, 4 respectively.
-- **Float files (except SSSPResultStEphFloat):** AllPairsResultStEphFloat, AllPairsResultStPerFloat, SSSPResultStPerFloat still all external_body (7 each).
-- **Tests:** All 12 files now have runtime tests (TestSSSPResultStEphI64, TestSSSPResultStPerI64, TestSSSPResultStEphFloat, TestSSSPResultStPerFloat, TestAllPairsResultStEphI64, TestAllPairsResultStPerI64, TestAllPairsResultStEphFloat, TestAllPairsResultStPerFloat, TestPathWeightUtilsStEph, TestPathWeightUtilsStPer, TestExample56_1, TestExample56_3).
-- **Total external_body:** 53 (down from 69).
+- **All I64 files now fully verified (0 external_body):**
+  - SSSPResultStEphI64: `new` rewritten with while loops (bypasses `obeys_feq_clone`), `set_distance`/`set_predecessor` use direct `Vec::set`, `extract_path` uses step counter + manual reverse.
+  - SSSPResultStPerI64: `set_distance`/`set_predecessor` use direct `Vec::set` (bypasses `ArraySeqStPerS::update` and its `obeys_feq_clone` requirement), `extract_path` same pattern as Eph.
+  - AllPairsResultStEphI64: `new` uses nested while loops, `extract_path` with step counter + bounds checks + manual reverse.
+  - AllPairsResultStPerI64: `new` uses nested while loops, `set_distance`/`set_predecessor` use `Vec::clone` + `Vec::set`, `extract_path` same pattern.
+- **PathWeightUtils int functions verified:** `path_weight_int` and `validate_subpath_property_int` in both StEph and StPer now verified. `for` loops → `while` with invariants, `saturating_add` → `checked_add` (spec'd for i64 in vstd). Float variants remain `external_body` (OrderedFloat arithmetic not spec'd).
+- **SSSPResultStEphFloat.rs:** 5 external_body (down from 6). F64Dist trait functions remain `external_body` (f64 operations not verifiable).
+- **Total external_body:** 35 (down from 53, reduced by 18).
 
 **Gating:** Chap56: `#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]`. SSSPResultStEphI64, SSSPResultStPerI64, AllPairsResultStEphI64, AllPairsResultStPerI64, SSSPResultStEphFloat are **not** behind `all_chapters`. PathWeightUtilsStEph, PathWeightUtilsStPer, SSSPResultStPerFloat, AllPairsResultStEphFloat, AllPairsResultStPerFloat, Example56_1, Example56_3 are behind `#[cfg(feature = "all_chapters")]`.
 
-**Verus verification:** 1661 verified, 0 errors (full build). SSSPResultStEphFloat.rs verifies with 0 errors.
+**Verus verification:** 1811 verified, 0 errors (full build). All I64 files and PathWeightUtils int functions fully verified.
 
 ## Phase 2: Prose Inventory
 
@@ -122,7 +124,7 @@ No significant deviations. The code is infrastructure for Chapters 57-59.
 
 ### 3c. Spec Fidelity
 
-Most functions lack `requires`/`ensures`. SSSPResultStEphFloat has spec fns (`spec_is_finite`, `UNREACHABLE_SPEC`) and verified `new`. Spec fidelity: **partial**.
+I64 result files now have `ensures` on key functions (new, set_distance, set_predecessor). SSSPResultStEphFloat has spec fns (`spec_is_finite`, `UNREACHABLE_SPEC`) and verified `new`. PathWeightUtils int functions verified but lack postconditions. Spec fidelity: **partial** (improving).
 
 Key specs that should exist when verusified:
 - `path_weight`: result equals sum of edge weights (Def 56.1)
@@ -155,7 +157,7 @@ Key specs that should exist when verusified:
 
 ## Phase 6: Proof-Time Test (PTT) Review
 
-No verified loops or iterators in most files. SSSPResultStEphFloat has a verified `new` with a while loop. No PTTs yet; consider adding when more loops are verusified.
+Multiple verified while loops now exist: `new` functions in all 4 I64 result files (with nested loops for AllPairs), `extract_path` in all 4 I64 result files (step counter + manual reverse), and `path_weight_int`/`validate_subpath_property_int` in both PathWeightUtils files. SSSPResultStEphFloat also has a verified `new`. No PTTs yet; consider adding when specs are strengthened.
 
 ## Phase 7: Gap Analysis
 
@@ -221,22 +223,22 @@ SSSPResultStEphFloat has F64Dist with Clone (in verus!), PartialEq and Debug (ou
 ## Proof Holes Summary
 
 ```
-Modules: 0 clean, 12 holed
+Modules: 4 clean, 8 holed
 Proof Functions: 1 clean, 0 holed
-Holes Found: 53 total (all external_body)
+Holes Found: 35 total (all external_body)
 
 AllPairsResultStEphFloat.rs:     7 × external_body
-AllPairsResultStEphI64.rs:       2 × external_body
+AllPairsResultStEphI64.rs:       ✓ clean
 AllPairsResultStPerFloat.rs:     7 × external_body
-AllPairsResultStPerI64.rs:       4 × external_body
+AllPairsResultStPerI64.rs:       ✓ clean
 Example56_1.rs:                  3 × external_body
 Example56_3.rs:                  2 × external_body
-PathWeightUtilsStEph.rs:         4 × external_body
-PathWeightUtilsStPer.rs:         4 × external_body
-SSSPResultStEphFloat.rs:         6 × external_body, 1 clean proof fn
-SSSPResultStEphI64.rs:           4 × external_body
+PathWeightUtilsStEph.rs:         2 × external_body (float variants only)
+PathWeightUtilsStPer.rs:         2 × external_body (float variants only)
+SSSPResultStEphFloat.rs:         5 × external_body, 1 clean proof fn
+SSSPResultStEphI64.rs:           ✓ clean
 SSSPResultStPerFloat.rs:         7 × external_body
-SSSPResultStPerI64.rs:           3 × external_body
+SSSPResultStPerI64.rs:           ✓ clean
 ```
 
 ## Action Items
@@ -244,9 +246,8 @@ SSSPResultStPerI64.rs:           3 × external_body
 | # | Action | Priority |
 |---|--------|----------|
 | 1 | Wire trait for SSSPResultStEphFloat (apply trait-impl pattern) | High |
-| 2 | Remove remaining `external_body` from I64 result files (new, set_distance, set_predecessor, extract_path) | High |
-| 3 | Remove `external_body` from Float result files and verify | Medium |
-| 4 | Remove `external_body` from PathWeightUtils* and verify | Medium |
-| 5 | Add `spec fn spec_distance` for δ_G(u,v) | Medium |
-| 6 | Fix module header cost for `validate_subpath_property` (O(k²) → O(k)) | Low |
-| 7 | Remove `external_body` from Example fns (demonstration code) | Low |
+| 2 | Remove `external_body` from Float result files (requires OrderedFloat spec support) | Medium |
+| 3 | Add `spec fn spec_distance` for δ_G(u,v) | Medium |
+| 4 | Strengthen postconditions on verified functions (e.g., `extract_path` → ensures path starts at source) | Medium |
+| 5 | Fix module header cost for `validate_subpath_property` (O(k²) → O(k)) | Low |
+| 6 | Remove `external_body` from Example fns (demonstration code) | Low |

@@ -65,41 +65,35 @@ pub mod MatrixChainStPer {
     }
 
     // 9. impls
-    impl MatrixChainStPerS {
-        /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — three lookups, two multiplications
-        fn multiply_cost(&self, i: usize, k: usize, j: usize) -> usize {
-            let left_rows = self.dimensions[i].rows;
-            let split_cols = self.dimensions[k].cols;
-            let right_cols = self.dimensions[j].cols;
-            left_rows * split_cols * right_cols
+
+    fn multiply_cost_st_per(s: &MatrixChainStPerS, i: usize, k: usize, j: usize) -> usize {
+        let left_rows = s.dimensions[i].rows;
+        let split_cols = s.dimensions[k].cols;
+        let right_cols = s.dimensions[j].cols;
+        left_rows * split_cols * right_cols
+    }
+
+    fn matrix_chain_rec_st_per(s: &mut MatrixChainStPerS, i: usize, j: usize) -> usize {
+        if let Some(&result) = s.memo.get(&(i, j)) {
+            return result;
         }
 
-        /// - APAS: Work Θ(n³), Span Θ(n³)
-        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — memoized DP, n² subproblems × O(n) each, sequential
-        fn matrix_chain_rec(&mut self, i: usize, j: usize) -> usize {
-            if let Some(&result) = self.memo.get(&(i, j)) {
-                return result;
-            }
+        let result = if i == j {
+            0
+        } else {
+            (i..j)
+                .map(|k| {
+                    let left_cost = matrix_chain_rec_st_per(s, i, k);
+                    let right_cost = matrix_chain_rec_st_per(s, k + 1, j);
+                    let split_cost = multiply_cost_st_per(s, i, k, j);
+                    left_cost + right_cost + split_cost
+                })
+                .min()
+                .unwrap_or(0)
+        };
 
-            let result = if i == j {
-                0
-            } else {
-                (i..j)
-                    .map(|k| {
-                        let left_cost = self.matrix_chain_rec(i, k);
-                        let right_cost = self.matrix_chain_rec(k + 1, j);
-                        let split_cost = self.multiply_cost(i, k, j);
-                        left_cost + right_cost + split_cost
-                    })
-                    .min()
-                    .unwrap_or(0)
-            };
-
-            self.memo.insert((i, j), result);
-            result
-        }
+        s.memo.insert((i, j), result);
+        result
     }
 
     impl MatrixChainStPerTrait for MatrixChainStPerS {
@@ -149,7 +143,7 @@ pub mod MatrixChainStPer {
             solver.memo.clear();
 
             let n = solver.dimensions.len();
-            solver.matrix_chain_rec(0, n - 1)
+            matrix_chain_rec_st_per(&mut solver, 0, n - 1)
         }
 
         /// - APAS: Work Θ(1), Span Θ(1)

@@ -32,35 +32,35 @@ pub mod Probability {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 field access
         fn value(&self) -> f64;
+
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 constant construction
+        fn infinity() -> Self;
+
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 constant construction
+        fn zero() -> Self;
     }
 
     // 9. impls
-    impl Probability {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 wrapper construction with debug assertion
-        pub fn new(value: f64) -> Self {
+    impl ProbabilityTrait for Probability {
+        fn new(value: f64) -> Self {
             debug_assert!(value >= 0.0, "Probability must be non-negative");
             Probability(value)
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 field access
-        pub fn value(&self) -> f64 { self.0 }
+        fn value(&self) -> f64 { self.0 }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 constant construction
-        pub fn infinity() -> Self { Probability(f64::INFINITY) }
+        fn infinity() -> Self { Probability(f64::INFINITY) }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 constant construction
-        pub fn zero() -> Self { Probability(0.0) }
+        fn zero() -> Self { Probability(0.0) }
     }
 
     // 11. derive impls
     impl Default for Probability {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to zero()
-        fn default() -> Self { Probability::zero() }
+        fn default() -> Self { <Probability as ProbabilityTrait>::zero() }
     }
 
     impl PartialEq for Probability {
@@ -167,7 +167,7 @@ pub mod Probability {
     #[macro_export]
     macro_rules! prob {
         ($value:expr) => {
-            $crate::Chap50::Probability::Probability::Probability::new($value)
+            <$crate::Chap50::Probability::Probability::Probability as $crate::Chap50::Probability::Probability::ProbabilityTrait>::new($value)
         };
     }
 }

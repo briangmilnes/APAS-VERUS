@@ -1,11 +1,10 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent1/src
-Codebase: /home/milnes/projects/APAS-VERUS-agent1
+Path: /home/milnes/projects/APAS-VERUS-agent2/src
+Codebase: /home/milnes/projects/APAS-VERUS-agent2
 Mode: basic
-Excluding: ["Chap21", "vstdplus", "Types.rs", "Concurrency.rs", "experiments", "lib.rs"]
-Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/src/analyses/veracity-review-verus-style.log
 
-Checking 244 files...
+Checking 371 files...
 

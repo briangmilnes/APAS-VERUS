@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap43/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/ -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/
 
 ✓ AugOrderedTableMtEph.rs
 ✓ AugOrderedTableStEph.rs
@@ -11,15 +11,30 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ OrderedTableMtPer.rs
 ✓ OrderedTableStEph.rs
 ✓ OrderedTableStPer.rs
+✓ /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs
+✓ /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs
+✓ /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/Example45_2.rs
+❌ /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/HeapsortExample.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/HeapsortExample.rs:194: error: bare_impl - impl<T: StT + Ord> HeapsortComparison<T> { — `impl HeapsortComparison` without trait; file defines [HeapsortTrait, HeapsortExamplesTrait, HeapsortAnalysisTrait, SequenceUtilsTrait]
+       195 |         /// Verify that all implementations produce the same sorted result
+       196 |         pub fn all_results_match(&self) -> bool {
+   Errors: 1 bare impl(s) in file with trait definition
+❌ /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:83: error: bare_impl - impl<T: StT + Ord> LeftistHeapNode<T> { — `impl LeftistHeapNode` without trait; file defines [LeftistHeapPQTrait, LeftistHeapDemoTrait]
+        84 |         /// Get the rank (distance to nearest leaf) of a node
+        85 |         fn rank(&self) -> N {
+   Errors: 1 bare impl(s) in file with trait definition
+✓ /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs
+✓ /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/UnsortedListPQ.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   11 clean (no holes)
+   18 clean (no holes)
    0 holed (contains holes)
-   11 total
+   18 total
 
 Proof Functions:
    0 clean
@@ -27,5 +42,7 @@ Proof Functions:
    0 total
 
 Holes Found: 0 total
+
+Errors: 2 bare impl(s) in files with trait definitions
 
 🎉 No proof holes found! All proofs are complete.

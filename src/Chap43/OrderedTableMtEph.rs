@@ -71,7 +71,7 @@ pub mod OrderedTableMtEph {
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn next_key(&self, k: &K)               -> Option<K>;
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn split_key(&mut self, k: &K)          -> (Self, Self)
+        fn split_key(&mut self, k: &K)          -> (Self, Option<V>, Self)
         where
             Self: Sized;
         fn join_key(&mut self, other: Self);
@@ -280,23 +280,21 @@ pub mod OrderedTableMtEph {
         }
 
         /// Claude Work: O(n), Span: O(log n) - Sequential split (AVLTreeSeq not thread-safe)
-        fn split_key(&mut self, k: &K) -> (Self, Self) {
+        fn split_key(&mut self, k: &K) -> (Self, Option<V>, Self) {
             let entries = self.collect();
             let size = entries.length();
             let mut left_entries = Vec::new();
             let mut right_entries = Vec::new();
-            let mut _found_value = None;
+            let mut found_value = None;
 
             for i in 0..size {
                 let pair = entries.nth(i);
                 if &pair.0 < k {
                     left_entries.push(pair.clone());
-                } else {
-                    // Keys >= k go to the right side
+                } else if &pair.0 > k {
                     right_entries.push(pair.clone());
-                    if &pair.0 == k {
-                        _found_value = Some(pair.1.clone());
-                    }
+                } else {
+                    found_value = Some(pair.1.clone());
                 }
             }
 
@@ -304,7 +302,7 @@ pub mod OrderedTableMtEph {
             let right_seq = AVLTreeSeqStPerS::from_vec(right_entries);
 
             *self = Self::empty();
-            (from_sorted_entries(left_seq), from_sorted_entries(right_seq))
+            (from_sorted_entries(left_seq), found_value, from_sorted_entries(right_seq))
         }
 
         /// Claude Work: O(log(m + n)), Span: O(log(m + n))

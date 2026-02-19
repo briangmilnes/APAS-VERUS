@@ -107,7 +107,7 @@ pub mod AugOrderedTableStPer {
         /// Claude Work: O(n), Span: O(n)
         fn insert(&self, k: K, v: V) -> Self {
             let new_base = self.base_table.insert(k, v);
-            let new_reduction = Self::calculate_reduction(&new_base, &self.reducer, &self.identity);
+            let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             Self {
                 base_table: new_base,
@@ -122,7 +122,7 @@ pub mod AugOrderedTableStPer {
             let new_base = self.base_table.delete(k);
             // For simplicity, recalculate reduction from scratch
             // In practice, would maintain augmented tree structure
-            let new_reduction = self.recalculate_reduction(&new_base);
+            let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             Self {
                 base_table: new_base,
@@ -138,7 +138,7 @@ pub mod AugOrderedTableStPer {
         /// Claude Work: O(n), Span: O(lg n)
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> Self {
             let base_table = OrderedTableStPer::tabulate(f, keys);
-            let cached_reduction = Self::calculate_reduction(&base_table, &reducer, &identity);
+            let cached_reduction = calculate_reduction(&base_table, &reducer, &identity);
 
             Self {
                 base_table,
@@ -151,7 +151,7 @@ pub mod AugOrderedTableStPer {
         /// Claude Work: O(n), Span: O(lg n)
         fn map<G: Fn(&V) -> V>(&self, f: G) -> Self {
             let new_base = self.base_table.map(f);
-            let new_reduction = self.recalculate_reduction(&new_base);
+            let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             Self {
                 base_table: new_base,
@@ -164,7 +164,7 @@ pub mod AugOrderedTableStPer {
         /// Claude Work: O(n), Span: O(lg n)
         fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> Self {
             let new_base = self.base_table.filter(f);
-            let new_reduction = self.recalculate_reduction(&new_base);
+            let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             Self {
                 base_table: new_base,
@@ -177,7 +177,7 @@ pub mod AugOrderedTableStPer {
         /// Claude Work: O(n + m), Span: O(lg n + lg m)
         fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> Self {
             let new_base = self.base_table.intersection(&other.base_table, f);
-            let new_reduction = self.recalculate_reduction(&new_base);
+            let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             Self {
                 base_table: new_base,
@@ -190,7 +190,7 @@ pub mod AugOrderedTableStPer {
         /// Claude Work: O(n + m), Span: O(lg n + lg m)
         fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> Self {
             let new_base = self.base_table.union(&other.base_table, f);
-            let new_reduction = self.recalculate_reduction(&new_base);
+            let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             Self {
                 base_table: new_base,
@@ -203,7 +203,7 @@ pub mod AugOrderedTableStPer {
         /// Claude Work: O(n + m), Span: O(lg n + lg m)
         fn difference(&self, other: &Self) -> Self {
             let new_base = self.base_table.difference(&other.base_table);
-            let new_reduction = self.recalculate_reduction(&new_base);
+            let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             Self {
                 base_table: new_base,
@@ -216,7 +216,7 @@ pub mod AugOrderedTableStPer {
         /// Claude Work: O(n + m), Span: O(lg n + lg m)
         fn restrict(&self, keys: &ArraySetStEph<K>) -> Self {
             let new_base = self.base_table.restrict(keys);
-            let new_reduction = self.recalculate_reduction(&new_base);
+            let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             Self {
                 base_table: new_base,
@@ -229,7 +229,7 @@ pub mod AugOrderedTableStPer {
         /// Claude Work: O(n + m), Span: O(lg n + lg m)
         fn subtract(&self, keys: &ArraySetStEph<K>) -> Self {
             let new_base = self.base_table.subtract(keys);
-            let new_reduction = self.recalculate_reduction(&new_base);
+            let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             Self {
                 base_table: new_base,
@@ -258,8 +258,8 @@ pub mod AugOrderedTableStPer {
         fn split_key(&self, k: &K) -> (Self, Option<V>, Self) {
             let (left_base, middle, right_base) = self.base_table.split_key(k);
 
-            let left_reduction = self.recalculate_reduction(&left_base);
-            let right_reduction = self.recalculate_reduction(&right_base);
+            let left_reduction = calculate_reduction(&left_base, &self.reducer, &self.identity);
+            let right_reduction = calculate_reduction(&right_base, &self.reducer, &self.identity);
 
             let left = Self {
                 base_table: left_base,
@@ -300,7 +300,7 @@ pub mod AugOrderedTableStPer {
         /// Claude Work: O(lg n), Span: O(lg n)
         fn get_key_range(&self, k1: &K, k2: &K) -> Self {
             let new_base = self.base_table.get_key_range(k1, k2);
-            let new_reduction = self.recalculate_reduction(&new_base);
+            let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             Self {
                 base_table: new_base,
@@ -320,8 +320,8 @@ pub mod AugOrderedTableStPer {
         fn split_rank_key(&self, i: N) -> (Self, Self) {
             let (left_base, right_base) = self.base_table.split_rank_key(i);
 
-            let left_reduction = self.recalculate_reduction(&left_base);
-            let right_reduction = self.recalculate_reduction(&right_base);
+            let left_reduction = calculate_reduction(&left_base, &self.reducer, &self.identity);
+            let right_reduction = calculate_reduction(&right_base, &self.reducer, &self.identity);
 
             let left = Self {
                 base_table: left_base,
@@ -352,35 +352,33 @@ pub mod AugOrderedTableStPer {
         }
     }
 
-    impl<K: StT + Ord, V: StT, F> AugOrderedTableStPer<K, V, F>
+    fn calculate_reduction<K: StT + Ord, V: StT, F>(
+        base: &OrderedTableStPer<K, V>,
+        reducer: &F,
+        identity: &V,
+    ) -> V
     where
         F: Fn(&V, &V) -> V + Clone,
     {
-        fn recalculate_reduction(&self, base: &OrderedTableStPer<K, V>) -> V {
-            Self::calculate_reduction(base, &self.reducer, &self.identity)
+        if base.size() == 0 {
+            return identity.clone();
         }
 
-        fn calculate_reduction(base: &OrderedTableStPer<K, V>, reducer: &F, identity: &V) -> V {
-            if base.size() == 0 {
-                return identity.clone();
+        let pairs = base.collect();
+        let mut result = identity.clone();
+        let mut first = true;
+
+        for i in 0..pairs.length() {
+            let pair = pairs.nth(i);
+            if first {
+                result = pair.1.clone();
+                first = false;
+            } else {
+                result = reducer(&result, &pair.1);
             }
-
-            let pairs = base.collect();
-            let mut result = identity.clone();
-            let mut first = true;
-
-            for i in 0..pairs.length() {
-                let pair = pairs.nth(i);
-                if first {
-                    result = pair.1.clone();
-                    first = false;
-                } else {
-                    result = reducer(&result, &pair.1);
-                }
-            }
-
-            result
         }
+
+        result
     }
 
     impl<K: StT + Ord, V: StT, F> Display for AugOrderedTableStPer<K, V, F>

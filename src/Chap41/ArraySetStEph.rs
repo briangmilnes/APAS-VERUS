@@ -138,9 +138,17 @@ pub mod ArraySetStEph {
         }
 
         fn find(&self, x: &T) -> B {
-            for i in 0..self.elements.length() {
-                if self.elements.nth(i) == x {
+            let mut lo: usize = 0;
+            let mut hi: usize = self.elements.length();
+            while lo < hi {
+                let mid = lo + (hi - lo) / 2;
+                let elem = self.elements.nth(mid);
+                if elem == x {
                     return true;
+                } else if elem < x {
+                    lo = mid + 1;
+                } else {
+                    hi = mid;
                 }
             }
             false

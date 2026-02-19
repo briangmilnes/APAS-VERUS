@@ -16,7 +16,7 @@ pub mod OptBinSearchTreeStPer {
 
     use vstd::prelude::*;
 
-    use crate::Chap50::Probability::Probability::Probability;
+    use crate::Chap50::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
     use crate::prob;
 
@@ -68,35 +68,32 @@ pub mod OptBinSearchTreeStPer {
     }
 
     // 9. impls
-    impl<T: StT> OBSTStPerS<T> {
-        /// - APAS: Work Θ(n³), Span Θ(n³)
-        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — memoized DP per Algorithm 50.3, sequential
-        fn obst_rec(&mut self, i: usize, l: usize) -> Probability {
-            if let Some(&result) = self.memo.get(&(i, l)) {
-                return result;
-            }
 
-            let result = if l == 0 {
-                Probability::zero()
-            } else {
-                let prob_sum = (0..l)
-                    .map(|k| self.keys[i + k].prob)
-                    .fold(Probability::zero(), |acc, p| acc + p);
-
-                let min_cost = (0..l)
-                    .map(|k| {
-                        let left_cost = self.obst_rec(i, k);
-                        let right_cost = self.obst_rec(i + k + 1, l - k - 1);
-                        left_cost + right_cost
-                    })
-                    .fold(Probability::infinity(), min);
-
-                prob_sum + min_cost
-            };
-
-            self.memo.insert((i, l), result);
-            result
+    fn obst_rec_st_per<T: StT>(s: &mut OBSTStPerS<T>, i: usize, l: usize) -> Probability {
+        if let Some(&result) = s.memo.get(&(i, l)) {
+            return result;
         }
+
+        let result = if l == 0 {
+            Probability::zero()
+        } else {
+            let prob_sum = (0..l)
+                .map(|k| s.keys[i + k].prob)
+                .fold(Probability::zero(), |acc, p| acc + p);
+
+            let min_cost = (0..l)
+                .map(|k| {
+                    let left_cost = obst_rec_st_per(s, i, k);
+                    let right_cost = obst_rec_st_per(s, i + k + 1, l - k - 1);
+                    left_cost + right_cost
+                })
+                .fold(Probability::infinity(), min);
+
+            prob_sum + min_cost
+        };
+
+        s.memo.insert((i, l), result);
+        result
     }
 
     impl<T: StT> OBSTStPerTrait<T> for OBSTStPerS<T> {
@@ -144,7 +141,7 @@ pub mod OptBinSearchTreeStPer {
             solver.memo.clear();
 
             let n = solver.keys.len();
-            solver.obst_rec(0, n)
+            obst_rec_st_per(&mut solver, 0, n)
         }
 
         /// - APAS: Work Θ(1), Span Θ(1)

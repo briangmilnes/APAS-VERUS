@@ -56,7 +56,7 @@ pub mod AugOrderedTableStEph {
         fn last_key(&self) -> Option<K>;
         fn previous_key(&self, k: &K) -> Option<K>;
         fn next_key(&self, k: &K) -> Option<K>;
-        fn split_key(&mut self, k: &K) -> (Self, Self)
+        fn split_key(&mut self, k: &K) -> (Self, Option<V>, Self)
         where
             Self: Sized;
         fn join_key(&mut self, other: Self);
@@ -116,14 +116,14 @@ pub mod AugOrderedTableStEph {
         /// Claude Work: O(n), Span: O(n)
         fn insert<G: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: G) {
             self.base_table.insert(k, v, combine);
-            self.cached_reduction = self.recalculate_reduction();
+            self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
         }
 
         /// Claude Work: O(lg n), Span: O(lg n)
         fn delete(&mut self, k: &K) -> Option<V> {
             let result = self.base_table.delete(k);
             // Recalculate reduction after deletion
-            self.cached_reduction = self.recalculate_reduction();
+            self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
             result
         }
 
@@ -133,7 +133,7 @@ pub mod AugOrderedTableStEph {
         /// Claude Work: O(n), Span: O(lg n)
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> Self {
             let base_table = OrderedTableStEph::tabulate(f, keys);
-            let cached_reduction = Self::calculate_reduction(&base_table, &reducer, &identity);
+            let cached_reduction = calculate_reduction(&base_table, &reducer, &identity);
 
             Self {
                 base_table,
@@ -146,7 +146,7 @@ pub mod AugOrderedTableStEph {
         /// Claude Work: O(n), Span: O(lg n)
         fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> Self {
             let new_base = self.base_table.map(f);
-            let new_reduction = Self::calculate_reduction(&new_base, &self.reducer, &self.identity);
+            let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             Self {
                 base_table: new_base,
@@ -159,7 +159,7 @@ pub mod AugOrderedTableStEph {
         /// Claude Work: O(n), Span: O(lg n)
         fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> Self {
             let new_base = self.base_table.filter(f);
-            let new_reduction = Self::calculate_reduction(&new_base, &self.reducer, &self.identity);
+            let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             Self {
                 base_table: new_base,
@@ -175,31 +175,31 @@ pub mod AugOrderedTableStEph {
         /// Claude Work: O(n + m), Span: O(lg n + lg m)
         fn intersection<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G) {
             self.base_table.intersection(&other.base_table, f);
-            self.cached_reduction = self.recalculate_reduction();
+            self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
         }
 
         /// Claude Work: O(n + m), Span: O(lg n + lg m)
         fn union<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G) {
             self.base_table.union(&other.base_table, f);
-            self.cached_reduction = self.recalculate_reduction();
+            self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
         }
 
         /// Claude Work: O(n + m), Span: O(lg n + lg m)
         fn difference(&mut self, other: &Self) {
             self.base_table.difference(&other.base_table);
-            self.cached_reduction = self.recalculate_reduction();
+            self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
         }
 
         /// Claude Work: O(n + m), Span: O(lg n + lg m)
         fn restrict(&mut self, keys: &ArraySetStEph<K>) {
             self.base_table.restrict(keys);
-            self.cached_reduction = self.recalculate_reduction();
+            self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
         }
 
         /// Claude Work: O(n + m), Span: O(lg n + lg m)
         fn subtract(&mut self, keys: &ArraySetStEph<K>) {
             self.base_table.subtract(keys);
-            self.cached_reduction = self.recalculate_reduction();
+            self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
         }
 
         /// Claude Work: O(n), Span: O(lg n)
@@ -218,11 +218,11 @@ pub mod AugOrderedTableStEph {
         fn next_key(&self, k: &K) -> Option<K> { self.base_table.next_key(k) }
 
         /// Claude Work: O(lg n), Span: O(lg n)
-        fn split_key(&mut self, k: &K) -> (Self, Self) {
-            let (left_base, right_base) = self.base_table.split_key(k);
+        fn split_key(&mut self, k: &K) -> (Self, Option<V>, Self) {
+            let (left_base, found_value, right_base) = self.base_table.split_key(k);
 
-            let left_reduction = Self::calculate_reduction(&left_base, &self.reducer, &self.identity);
-            let right_reduction = Self::calculate_reduction(&right_base, &self.reducer, &self.identity);
+            let left_reduction = calculate_reduction(&left_base, &self.reducer, &self.identity);
+            let right_reduction = calculate_reduction(&right_base, &self.reducer, &self.identity);
 
             let left = Self {
                 base_table: left_base,
@@ -238,7 +238,7 @@ pub mod AugOrderedTableStEph {
                 identity: self.identity.clone(),
             };
 
-            (left, right)
+            (left, found_value, right)
         }
 
         /// Claude Work: O(lg n), Span: O(lg n)
@@ -262,7 +262,7 @@ pub mod AugOrderedTableStEph {
         /// Claude Work: O(lg n), Span: O(lg n)
         fn get_key_range(&self, k1: &K, k2: &K) -> Self {
             let new_base = self.base_table.get_key_range(k1, k2);
-            let new_reduction = Self::calculate_reduction(&new_base, &self.reducer, &self.identity);
+            let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             Self {
                 base_table: new_base,
@@ -282,8 +282,8 @@ pub mod AugOrderedTableStEph {
         fn split_rank_key(&mut self, i: N) -> (Self, Self) {
             let (left_base, right_base) = self.base_table.split_rank_key(i);
 
-            let left_reduction = Self::calculate_reduction(&left_base, &self.reducer, &self.identity);
-            let right_reduction = Self::calculate_reduction(&right_base, &self.reducer, &self.identity);
+            let left_reduction = calculate_reduction(&left_base, &self.reducer, &self.identity);
+            let right_reduction = calculate_reduction(&right_base, &self.reducer, &self.identity);
 
             let left = Self {
                 base_table: left_base,
@@ -314,35 +314,33 @@ pub mod AugOrderedTableStEph {
         }
     }
 
-    impl<K: StT + Ord, V: StT, F> AugOrderedTableStEph<K, V, F>
+    fn calculate_reduction<K: StT + Ord, V: StT, F>(
+        base: &OrderedTableStEph<K, V>,
+        reducer: &F,
+        identity: &V,
+    ) -> V
     where
         F: Fn(&V, &V) -> V + Clone,
     {
-        fn recalculate_reduction(&self) -> V {
-            Self::calculate_reduction(&self.base_table, &self.reducer, &self.identity)
+        if base.size() == 0 {
+            return identity.clone();
         }
 
-        fn calculate_reduction(base: &OrderedTableStEph<K, V>, reducer: &F, identity: &V) -> V {
-            if base.size() == 0 {
-                return identity.clone();
+        let pairs = base.collect();
+        let mut result = identity.clone();
+        let mut first = true;
+
+        for i in 0..pairs.length() {
+            let pair = pairs.nth(i);
+            if first {
+                result = pair.1.clone();
+                first = false;
+            } else {
+                result = reducer(&result, &pair.1);
             }
-
-            let pairs = base.collect();
-            let mut result = identity.clone();
-            let mut first = true;
-
-            for i in 0..pairs.length() {
-                let pair = pairs.nth(i);
-                if first {
-                    result = pair.1.clone();
-                    first = false;
-                } else {
-                    result = reducer(&result, &pair.1);
-                }
-            }
-
-            result
         }
+
+        result
     }
 
     impl<K: StT + Ord, V: StT, F> Display for AugOrderedTableStEph<K, V, F>

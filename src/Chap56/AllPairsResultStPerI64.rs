@@ -40,16 +40,50 @@ pub mod AllPairsResultStPerI64 {
     // 9. impls
 
     impl AllPairsResultStPerI64Trait for AllPairsResultStPerI64 {
-        #[verifier::external_body]
         fn new(n: usize) -> (result: Self)
             ensures result.n == n,
         {
-            let distances = ArraySeqStPerS::tabulate(
-                &|i| ArraySeqStPerS::tabulate(&|j| if i == j { 0 } else { UNREACHABLE }, n),
+            let mut dist_rows: Vec<ArraySeqStPerS<i64>> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant i <= n, dist_rows@.len() == i as int,
+                decreases n - i,
+            {
+                let mut row: Vec<i64> = Vec::new();
+                let mut j: usize = 0;
+                while j < n
+                    invariant j <= n, row@.len() == j as int,
+                    decreases n - j,
+                {
+                    if j == i { row.push(0i64); } else { row.push(UNREACHABLE); }
+                    j = j + 1;
+                }
+                dist_rows.push(ArraySeqStPerS { seq: row });
+                i = i + 1;
+            }
+            let mut pred_rows: Vec<ArraySeqStPerS<usize>> = Vec::new();
+            let mut k: usize = 0;
+            while k < n
+                invariant k <= n, pred_rows@.len() == k as int,
+                decreases n - k,
+            {
+                let mut prow: Vec<usize> = Vec::new();
+                let mut m: usize = 0;
+                while m < n
+                    invariant m <= n, prow@.len() == m as int,
+                    decreases n - m,
+                {
+                    prow.push(NO_PREDECESSOR);
+                    m = m + 1;
+                }
+                pred_rows.push(ArraySeqStPerS { seq: prow });
+                k = k + 1;
+            }
+            AllPairsResultStPerI64 {
+                distances: ArraySeqStPerS { seq: dist_rows },
+                predecessors: ArraySeqStPerS { seq: pred_rows },
                 n,
-            );
-            let predecessors = ArraySeqStPerS::tabulate(&|_| ArraySeqStPerS::tabulate(&|_| NO_PREDECESSOR, n), n);
-            AllPairsResultStPerI64 { distances, predecessors, n }
+            }
         }
 
         fn get_distance(&self, u: usize, v: usize) -> (dist: i64)
@@ -68,16 +102,21 @@ pub mod AllPairsResultStPerI64 {
             *row.nth(v)
         }
 
-        #[verifier::external_body]
         fn set_distance(self, u: usize, v: usize, dist: i64) -> (result: Self)
             ensures
                 result.n == self.n,
                 result.predecessors == self.predecessors,
         {
-            if u >= self.n || v >= self.n { return self; }
-            let updated_row = ArraySeqStPerS::update(self.distances.nth(u), v, dist);
+            if u >= self.distances.seq.len() || v >= self.n { return self; }
+            let mut row_vec = self.distances.seq[u].seq.clone();
+            if v < row_vec.len() {
+                row_vec.set(v, dist);
+            }
+            let updated_row = ArraySeqStPerS { seq: row_vec };
+            let mut dist_vec = self.distances.seq;
+            dist_vec.set(u, updated_row);
             AllPairsResultStPerI64 {
-                distances: ArraySeqStPerS::update(&self.distances, u, updated_row),
+                distances: ArraySeqStPerS { seq: dist_vec },
                 predecessors: self.predecessors,
                 n: self.n,
             }
@@ -101,17 +140,22 @@ pub mod AllPairsResultStPerI64 {
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
-        #[verifier::external_body]
         fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (result: Self)
             ensures
                 result.n == self.n,
                 result.distances == self.distances,
         {
-            if u >= self.n || v >= self.n { return self; }
-            let updated_row = ArraySeqStPerS::update(self.predecessors.nth(u), v, pred);
+            if u >= self.predecessors.seq.len() || v >= self.n { return self; }
+            let mut row_vec = self.predecessors.seq[u].seq.clone();
+            if v < row_vec.len() {
+                row_vec.set(v, pred);
+            }
+            let updated_row = ArraySeqStPerS { seq: row_vec };
+            let mut pred_vec = self.predecessors.seq;
+            pred_vec.set(u, updated_row);
             AllPairsResultStPerI64 {
                 distances: self.distances,
-                predecessors: ArraySeqStPerS::update(&self.predecessors, u, updated_row),
+                predecessors: ArraySeqStPerS { seq: pred_vec },
                 n: self.n,
             }
         }
@@ -120,21 +164,53 @@ pub mod AllPairsResultStPerI64 {
             self.get_distance(u, v) != UNREACHABLE
         }
 
-        #[verifier::external_body]
         fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
-            if u == v { return Some(ArraySeqStPerS::from_vec(vec![u])); }
+            if u >= self.predecessors.length() || v >= self.predecessors.length() {
+                return None;
+            }
+            if u == v {
+                let mut single: Vec<usize> = Vec::new();
+                single.push(u);
+                return Some(ArraySeqStPerS::from_vec(single));
+            }
             if !self.is_reachable(u, v) { return None; }
-            let mut path = Vec::new();
-            let mut current = v;
+            let pred_row = self.predecessors.nth(u);
+            let row_len = pred_row.length();
+            if v >= row_len { return None; }
+            let mut path: Vec<usize> = Vec::new();
+            let mut current: usize = v;
             path.push(current);
-            while current != u {
-                let pred = *self.predecessors.nth(u).nth(current);
-                if pred == NO_PREDECESSOR { return None; }
+            let mut steps: usize = 0;
+            while current != u && steps < row_len
+                invariant
+                    steps <= row_len,
+                    current < row_len,
+                    row_len as int == pred_row.spec_len(),
+                    path@.len() > 0,
+                decreases row_len - steps,
+            {
+                if current >= row_len { return None; }
+                let pred = *pred_row.nth(current);
+                if pred == NO_PREDECESSOR || pred >= row_len { return None; }
                 path.push(pred);
                 current = pred;
+                steps = steps + 1;
             }
-            path.reverse();
-            Some(ArraySeqStPerS::from_vec(path))
+            if current != u { return None; }
+            let path_len = path.len();
+            let mut reversed: Vec<usize> = Vec::new();
+            let mut k: usize = path_len;
+            while k > 0
+                invariant
+                    k <= path_len,
+                    path_len == path@.len(),
+                    reversed@.len() == (path_len - k) as int,
+                decreases k,
+            {
+                k = k - 1;
+                reversed.push(path[k]);
+            }
+            Some(ArraySeqStPerS::from_vec(reversed))
         }
     }
 

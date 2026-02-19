@@ -37,6 +37,16 @@ pub mod OrderedTableMtPer {
         fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> Self;
         /// claude-4-sonet: Work Θ(n), Span Θ(lg n) - parallel filter via ParaPair!
         fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> Self;
+        fn first_key(&self) -> Option<K>;
+        fn last_key(&self) -> Option<K>;
+        fn previous_key(&self, k: &K) -> Option<K>;
+        fn next_key(&self, k: &K) -> Option<K>;
+        fn split_key(&self, k: &K) -> (Self, Option<V>, Self) where Self: Sized;
+        fn join_key(&self, other: &Self) -> Self;
+        fn get_key_range(&self, k1: &K, k2: &K) -> Self;
+        fn rank_key(&self, k: &K) -> N;
+        fn select_key(&self, i: N) -> Option<K>;
+        fn split_rank_key(&self, i: N) -> (Self, Self) where Self: Sized;
     }
 
     impl<K: MtKey + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
@@ -123,6 +133,108 @@ pub mod OrderedTableMtPer {
             OrderedTableMtPer {
                 tree: self.tree.filter(f),
             }
+        }
+
+        fn first_key(&self) -> Option<K> {
+            let seq = self.tree.in_order();
+            if seq.length() == 0 { None } else { Some(seq.nth(0).0.clone()) }
+        }
+
+        fn last_key(&self) -> Option<K> {
+            let seq = self.tree.in_order();
+            let n = seq.length();
+            if n == 0 { None } else { Some(seq.nth(n - 1).0.clone()) }
+        }
+
+        fn previous_key(&self, k: &K) -> Option<K> {
+            let seq = self.tree.in_order();
+            let mut result = None;
+            for i in 0..seq.length() {
+                let pair = seq.nth(i);
+                if &pair.0 < k { result = Some(pair.0.clone()); } else { break; }
+            }
+            result
+        }
+
+        fn next_key(&self, k: &K) -> Option<K> {
+            let seq = self.tree.in_order();
+            for i in 0..seq.length() {
+                let pair = seq.nth(i);
+                if &pair.0 > k { return Some(pair.0.clone()); }
+            }
+            None
+        }
+
+        fn split_key(&self, k: &K) -> (Self, Option<V>, Self) {
+            let seq = self.tree.in_order();
+            let left_tree = ParamTreap::new();
+            let right_tree = ParamTreap::new();
+            let mut found_value = None;
+
+            for i in 0..seq.length() {
+                let pair = seq.nth(i);
+                if &pair.0 < k {
+                    left_tree.insert(pair.clone());
+                } else if &pair.0 > k {
+                    right_tree.insert(pair.clone());
+                } else {
+                    found_value = Some(pair.1.clone());
+                }
+            }
+
+            (
+                OrderedTableMtPer { tree: left_tree },
+                found_value,
+                OrderedTableMtPer { tree: right_tree },
+            )
+        }
+
+        fn join_key(&self, other: &Self) -> Self {
+            OrderedTableMtPer {
+                tree: self.tree.union(&other.tree),
+            }
+        }
+
+        fn get_key_range(&self, k1: &K, k2: &K) -> Self {
+            let seq = self.tree.in_order();
+            let result_tree = ParamTreap::new();
+            for i in 0..seq.length() {
+                let pair = seq.nth(i);
+                if &pair.0 >= k1 && &pair.0 <= k2 {
+                    result_tree.insert(pair.clone());
+                }
+            }
+            OrderedTableMtPer { tree: result_tree }
+        }
+
+        fn rank_key(&self, k: &K) -> N {
+            let seq = self.tree.in_order();
+            let mut count = 0;
+            for i in 0..seq.length() {
+                let pair = seq.nth(i);
+                if &pair.0 < k { count += 1; } else { break; }
+            }
+            count
+        }
+
+        fn select_key(&self, i: N) -> Option<K> {
+            let seq = self.tree.in_order();
+            if i >= seq.length() { None } else { Some(seq.nth(i).0.clone()) }
+        }
+
+        fn split_rank_key(&self, i: N) -> (Self, Self) {
+            let seq = self.tree.in_order();
+            let left_tree = ParamTreap::new();
+            let right_tree = ParamTreap::new();
+            for j in 0..seq.length() {
+                let pair = seq.nth(j);
+                if j < i { left_tree.insert(pair.clone()); }
+                else { right_tree.insert(pair.clone()); }
+            }
+            (
+                OrderedTableMtPer { tree: left_tree },
+                OrderedTableMtPer { tree: right_tree },
+            )
         }
     }
 

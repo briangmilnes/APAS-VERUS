@@ -1,182 +1,293 @@
 <style>
 body { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 1em !important; }
 .markdown-body { max-width: 100% !important; width: 100% !important; }
+.container, .container-lg, .container-xl, main, article { max-width: 100% !important; width: 100% !important; }
 table { width: 100% !important; table-layout: fixed; }
 </style>
 
-# Chapter 43: Ordering and Augmentation — Review Against Prose
+# Chapter 43: Ordered Sets, Ordered Tables, and Augmented Tables — Review Against Prose
 
-**Date:** 2026-02-17
+**Date:** 2026-02-18
 **Reviewer:** Claude-Opus-4.6
-**Prose Source:** `prompts/Chap43.txt`
+**Prose sources:** `prompts/Chap43.txt` (Data Type 43.1, Cost Spec 43.2, Exercise 43.1, Example 43.1), `prompts/Chap43part2.txt` (Definition 43.3, Examples 43.2–43.3)
 
-## Phase 2: Implementation Strategy
+## Phase 1: Inventory
 
-The prose defines three ADT families. The implementations span 11 source files across 10 data structure variants plus one example file.
+Source files: 12 (3 ordered sets, 4 ordered tables, 3 augmented ordered tables, 1 ordered table Mt persistent, 1 example). All plain Rust, no `verus!` blocks.
 
-### ADT Family 1: Ordered Sets (ADT 43.1)
+| # | File | Functions | Traits | Trait Impls | Bare Impls | V! | -V! | NoSpec |
+|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 1 | `OrderedSetStEph.rs` | 21 | 1 (20 methods) | 1 (20 methods) | 0 | 0 | 21 | 21 |
+| 2 | `OrderedSetStPer.rs` | 21 | 1 (20 methods) | 1 (20 methods) | 0 | 0 | 21 | 21 |
+| 3 | `OrderedSetMtEph.rs` | 20 | 1 (20 methods) | 1 (20 methods) | 0 | 0 | 20 | 20 |
+| 4 | `OrderedTableStEph.rs` | 30 | 1 (25 methods) | 1 (25 methods) | 0 | 0 | 30 | 30 |
+| 5 | `OrderedTableStPer.rs` | 30 | 1 (25 methods) | 1 (25 methods) | 0 | 0 | 30 | 30 |
+| 6 | `OrderedTableMtEph.rs` | 30 | 1 (25 methods) | 1 (25 methods) | 0 | 0 | 30 | 30 |
+| 7 | `OrderedTableMtPer.rs` | 14 | 1 (14 methods) | 1 (14 methods) | 0 | 0 | 14 | 14 |
+| 8 | `AugOrderedTableStEph.rs` | 20 | 1 (15 methods) | 1 (15 methods) | 1 (5 methods) | 0 | 20 | 20 |
+| 9 | `AugOrderedTableStPer.rs` | 20 | 1 (15 methods) | 1 (15 methods) | 1 (5 methods) | 0 | 20 | 20 |
+| 10 | `AugOrderedTableMtEph.rs` | 22 | 1 (16 methods) | 1 (16 methods) | 1 (6 methods) | 0 | 22 | 22 |
+| 11 | `Example43_1.rs` | 3 | 0 | 0 | 0 | 0 | 3 | 3 |
+| | **Total** | **231** | | | | **0** | **231** | **231** |
 
-| # | File | Backing Store | Ordering Strategy | True Cost of Ordering Ops |
-|---|---|---|---|---|
-| 1 | `OrderedSetStEph.rs` | `AVLTreeSetStEph` (Chap41) | `to_seq()` → linear scan/filter | O(n) |
-| 2 | `OrderedSetStPer.rs` | `AVLTreeSetStPer` (Chap41) | `to_seq()` → linear scan/filter | O(n) |
-| 3 | `OrderedSetMtEph.rs` | `ParamTreap` (Chap39) | Tree traversal via `expose()` + `split()` | O(lg n) for most ops |
+**Veracity Notes:** 2 bare-impl warnings on `AugOrderedTableStEph.rs` and `AugOrderedTableStPer.rs`. The bare impls contain `reduce_val`, `reduce_range`, `insert`, `delete`, and `recalculate_cached_reduction` which should be in the trait impl.
 
-**StEph/StPer pattern:** Every ordering operation calls `to_seq()` which materializes the entire sorted sequence in O(n), then scans linearly. The operations `first`, `last`, `previous`, `next`, `get_range`, `rank`, `select`, `split`, `split_rank` all follow this pattern. `join` delegates to `union` which is O(m+n).
+## Phase 2: Prose Inventory
 
-**MtEph pattern:** Uses tree-native operations. `first`/`last` traverse the left/right spine in O(lg n). `previous`/`next` split the tree then find min/max of one half in O(lg n). `rank` splits and measures left size in O(lg n). `get_range` uses two splits in O(lg n). However, `select` and `split_rank` call `in_order()` which materializes the sequence in O(n), making them O(n) despite the O(lg n) doc comment.
+### Definitions
 
-### ADT Family 2: Ordered Tables (ADT 43.1 adapted for key-value pairs)
-
-| # | File | Backing Store | Ordering Strategy | True Cost of Ordering Ops |
-|---|---|---|---|---|
-| 4 | `OrderedTableStEph.rs` | `TableStEph` (Chap42) | `collect()` → linear scan/filter | O(n) |
-| 5 | `OrderedTableStPer.rs` | `TableStPer` (Chap42) | `collect()` → linear scan/filter | O(n) |
-| 6 | `OrderedTableMtEph.rs` | `TableMtEph` (Chap42) | `collect()` → linear scan/filter | O(n) |
-| 7 | `OrderedTableMtPer.rs` | `ParamTreap<Pair<K,V>>` (Chap39) | No ordering ops implemented | N/A |
-
-All table ordering implementations (StEph, StPer, MtEph) follow the same linearization pattern: call `collect()` to materialize sorted key-value pairs, then scan linearly. The MtEph table implementation does **not** use tree-native operations for ordering, unlike the MtEph set. This is a lost opportunity; the MtEph table delegates to `TableMtEph` which itself wraps a treap, but the ordering layer doesn't reach through to use the treap's `split`/`expose`.
-
-OrderedTableMtPer is a **minimal stub** — it implements only the base table operations (`size`, `empty`, `singleton`, `find`, `insert`, `delete`, `domain`, `map`, `filter`) and none of the 10 ADT 43.1 ordering operations.
-
-### ADT Family 3: Augmented Ordered Tables (ADT 43.3)
-
-| # | File | Backing Store | Augmentation Strategy | reduce_val Cost | reduce_range Cost |
-|---|---|---|---|---|---|
-| 8 | `AugOrderedTableStEph.rs` | `OrderedTableStEph` + cached reduction | Flat cached `V` field | O(1) | O(n) (via get_key_range) |
-| 9 | `AugOrderedTableStPer.rs` | `OrderedTableStPer` + cached reduction | Flat cached `V` field | O(1) | O(n) (via get_key_range) |
-| 10 | `AugOrderedTableMtEph.rs` | `OrderedTableMtEph` + cached reduction | Flat cached `V` field; `ParaPair!` for parallel range | O(1) | O(n) (via get_key_range) |
-
-All three augmented variants maintain a `cached_reduction` field that provides O(1) `reduce_val`. However, `reduce_range` calls `get_key_range` (O(n) in all implementations) followed by `reduce_val` (O(1)), so `reduce_range` is actually O(n) in all variants — not the O(lg n) the prose specifies.
-
-The prose envisions augmentation stored per-node in a BST, enabling O(lg n) range reductions by combining subtree annotations during a single tree traversal. The current flat-cache approach cannot achieve this; it requires a full recalculation after every mutation that changes the set of values (delete, intersection, difference, filter, restrict, subtract).
-
-**AugOrderedTableMtEph** adds `reduce_range_parallel` which uses `ParaPair!` to parallelize the reduction of two sub-ranges. This goes beyond the prose specification.
-
-### Example File
-
-| # | File | Purpose |
+| # | Item | Description |
 |---|---|---|
-| 11 | `Example43_1.rs` | Demonstrates all Example 43.1 operations from the textbook using `OrderedSetStPer` |
+| 1 | Data Type 43.1 (Ordered Sets) | Extends Set ADT with 10 ordering operations: `first`, `last`, `previous`, `next`, `split`, `join`, `getRange`, `rank`, `select`, `splitRank` |
+| 2 | ADT 43.1 (Ordered Tables) | Same 10 ordering operations extended to tables: `first`, `last`, `previous`, `next`, `split`, `join`, `getRange`, `rank`, `select`, `splitRank`. Plus all base Table ops. |
+| 3 | Definition 43.3 (Reducer-Augmented Ordered Table) | Extends ordered table with reducer `g:T×T→T` and identity `I`, cached reduction `r(a)`. Operations: `reduceVal`, plus maintaining cache on insert/delete. |
 
-## Phase 3: Cost Analysis
+### Cost Specs
 
-The prose states (Cost Specification 43.2): "The work and span for all the operations in ADT 43.1 is O(lg n)."
+| # | Item | Description |
+|---|---|---|
+| 1 | Cost Specification 43.2 (Tree-Based) | All 10 ordering ops: O(lg n) work and span. Bulk ops (`intersection`, `union`, `difference`, `restrict`, `subtract`): O(m·lg(1+n/m)) work, O(lg²(n+m)) span. |
 
-### Ordered Sets
+Specific ordering operation costs from APAS:
 
-| # | Operation | APAS | StEph/StPer Claimed | StEph/StPer Actual | MtEph Claimed | MtEph Actual | Match? |
-|---|---|---|---|---|---|---|---|
-| 1 | first | O(lg n) | O(lg n) | O(n) | O(lg n) | O(lg n) | St: ❌ Mt: ✅ |
-| 2 | last | O(lg n) | O(lg n) | O(n) | O(lg n) | O(lg n) | St: ❌ Mt: ✅ |
-| 3 | previous | O(lg n) | O(lg n) | O(n) | O(lg n) | O(lg n) | St: ❌ Mt: ✅ |
-| 4 | next | O(lg n) | O(lg n) | O(n) | O(lg n) | O(lg n) | St: ❌ Mt: ✅ |
-| 5 | split | O(lg n) | O(lg n) | O(n) | O(lg n) | O(lg n) | St: ❌ Mt: ✅ |
-| 6 | join | O(lg n) | O(lg(m+n)) | O(m+n) via union | O(lg(m+n)) | O(lg(m+n)) | St: ❌ Mt: ✅ |
-| 7 | getRange | O(lg n) | O(lg n) | O(n) | O(lg n) | O(lg n) | St: ❌ Mt: ✅ |
-| 8 | rank | O(lg n) | O(lg n) | O(n) | O(lg n) | O(lg n) | St: ❌ Mt: ✅ |
-| 9 | select | O(lg n) | O(lg n) | O(n) | O(lg n) | O(n) via `in_order()` | St: ❌ Mt: ❌ |
-| 10 | splitRank | O(lg n) | O(lg n) | O(n) | O(lg n) | O(n) via `in_order()` | St: ❌ Mt: ❌ |
-
-### Ordered Tables
-
-| # | Operation | APAS | StEph/StPer/MtEph Claimed | StEph/StPer/MtEph Actual | Match? |
-|---|---|---|---|---|---|
-| 1 | first_key | O(lg n) | O(lg n) | O(n) via `collect()` | ❌ |
-| 2 | last_key | O(lg n) | O(lg n) | O(n) via `collect()` | ❌ |
-| 3 | previous_key | O(lg n) | O(lg n) | O(n) via `collect()` | ❌ |
-| 4 | next_key | O(lg n) | O(lg n) | O(n) via `collect()` | ❌ |
-| 5 | split_key | O(lg n) | O(lg n) | O(n) via `collect()` | ❌ |
-| 6 | join_key | O(lg n) | O(lg(m+n)) | O(m+n) via union | ❌ |
-| 7 | get_key_range | O(lg n) | O(lg n) | O(n) via `collect()` | ❌ |
-| 8 | rank_key | O(lg n) | O(lg n) | O(n) via `collect()` | ❌ |
-| 9 | select_key | O(lg n) | O(lg n) | O(n) via `collect()` | ❌ |
-| 10 | split_rank_key | O(lg n) | O(lg n) | O(n) via `collect()` | ❌ |
-
-### Augmented Tables
-
-| # | Operation | APAS | All Variants Claimed | All Variants Actual | Match? |
-|---|---|---|---|---|---|
-| 1 | reduce_val | O(1) | O(1) | O(1) | ✅ |
-| 2 | reduce_range | O(lg n) | O(lg n) | O(n) via get_key_range | ❌ |
-| 3 | reduce_range_parallel | N/A (beyond prose) | O(lg n) | O(n) base + thread overhead | N/A |
-
-**Summary:** The only implementations that achieve the prose's O(lg n) bound are OrderedSetMtEph's first/last/previous/next/split/join/getRange/rank — 8 of 10 operations. Every other implementation linearizes through `to_seq()`/`collect()`/`in_order()` and runs in O(n). **Doc comments in all StEph/StPer files claim O(lg n) which is incorrect.**
-
-## Phase 4: Semantic Fidelity
-
-### split signature mismatch
-
-The prose defines `split(A, k) = ({k' < k}, k ∈? S, {k' > k})` — a 3-tuple returning left set, membership boolean/value, and right set.
-
-| # | Implementation | Signature | Matches Prose? |
+| # | Operation | APAS Work | APAS Span |
 |---|---|---|---|
-| 1 | OrderedSetStEph | `split(&mut self, k: &T) -> (Self, B, Self)` | ✅ |
-| 2 | OrderedSetStPer | `split(&self, k: &T) -> (Self, B, Self)` | ✅ |
-| 3 | OrderedSetMtEph | `split(&mut self, k: &T) -> (Self, B, Self)` | ✅ |
-| 4 | OrderedTableStEph | `split_key(&mut self, k: &K) -> (Self, Self)` | ❌ drops found value, puts k≥ in right |
-| 5 | OrderedTableStPer | `split_key(&self, k: &K) -> (Self, Option<V>, Self)` | ✅ |
-| 6 | OrderedTableMtEph | `split_key(&mut self, k: &K) -> (Self, Self)` | ❌ drops found value, puts k≥ in right |
-| 7 | AugOrderedTableStEph | `split_key(&mut self, k: &K) -> (Self, Self)` | ❌ drops found value |
-| 8 | AugOrderedTableStPer | `split_key(&self, k: &K) -> (Self, Option<V>, Self)` | ✅ |
-| 9 | AugOrderedTableMtEph | `split_key(&mut self, k: &K) -> (Self, Self)` | ❌ drops found value |
+| 1 | `first(a)` / `last(a)` | O(lg\|a\|) | O(lg\|a\|) |
+| 2 | `previous(a)(k)` / `next(a)(k)` | O(lg\|a\|) | O(lg\|a\|) |
+| 3 | `split(a)(k)` | O(lg\|a\|) | O(lg\|a\|) |
+| 4 | `join(a)(b)` | O(lg(\|a\|+\|b\|)) | O(lg(\|a\|+\|b\|)) |
+| 5 | `getRange(a)(k₁)(k₂)` | O(lg\|a\|) | O(lg\|a\|) |
+| 6 | `rank(a)(k)` | O(lg\|a\|) | O(lg\|a\|) |
+| 7 | `select(a)(i)` | O(lg\|a\|) | O(lg\|a\|) |
+| 8 | `splitRank(a)(i)` | O(lg\|a\|) | O(lg\|a\|) |
+| 9 | `reduceVal(a)` | O(1) | O(1) |
 
-Four table implementations drop the found value from split, losing information the prose provides.
+### Examples
 
-### join precondition not enforced
+| # | Item | Description |
+|---|---|---|
+| 1 | Example 43.1 (Ordered Set) | `a = {1,3,5,7,9}`, demonstrating first, last, previous, next, split, rank, select, getRange |
+| 2 | Example 43.2 (TRAMLAW) | Reducer-augmented table for inventory with max reducer |
+| 3 | Example 43.3 (QADSAN) | Reducer-augmented table for NASDAQ quote ranges |
 
-The prose requires `max(A1) < min(A2)` for join. All implementations delegate to `union`, which works correctly for overlapping sets but does not enforce or check the precondition. This is functionally safe but does not match the prose's precondition semantics.
+### Exercises
 
-### OrderedTableMtPer: map is actually filter
+| # | Item | Description |
+|---|---|---|
+| 1 | Exercise 43.1 | 11 questions about ordered set/table operations on specific data |
 
-```rust
-fn map<F: Pred<Pair<K, V>>>(&self, f: F) -> Self {
-    OrderedTableMtPer { tree: self.tree.filter(f) }
-}
-```
+## Phase 3: Algorithmic Analysis
 
-The `map` method takes a predicate (returns bool) and calls `filter` internally. This is semantically a filter, not a map. The prose map transforms values; this removes entries. The test confirms this misuse:
+### Phase 3a: Cost Annotations — Ordered Sets
 
-```rust
-let mapped = table.map(|pair: &Pair<i32, String>| pair.0 < 5);
-assert_eq!(mapped.size(), 5); // keeps entries where key < 5
-```
+#### OrderedSetStEph.rs (delegates to `AVLTreeSetStEph`)
 
-### Augmented table insert bug (documented)
+| # | Operation | APAS Work | APAS Span | Actual Work | Actual Span | Match |
+|---|---|---|---|---|---|:---:|
+| 1 | `first` | O(lg n) | O(lg n) | O(n) | O(n) | No |
+| 2 | `last` | O(lg n) | O(lg n) | O(n) | O(n) | No |
+| 3 | `previous` | O(lg n) | O(lg n) | O(n) | O(n) | No |
+| 4 | `next` | O(lg n) | O(lg n) | O(n) | O(n) | No |
+| 5 | `split` | O(lg n) | O(lg n) | O(n) | O(n) | No |
+| 6 | `join` | O(lg(m+n)) | O(lg(m+n)) | O(m+n) | O(m+n) | No |
+| 7 | `get_range` | O(lg n) | O(lg n) | O(n) | O(n) | No |
+| 8 | `rank` | O(lg n) | O(lg n) | O(n) | O(n) | No |
+| 9 | `select` | O(lg n) | O(lg n) | O(n) | O(n) | No |
+| 10 | `split_rank` | O(lg n) | O(lg n) | O(n) | O(n) | No |
 
-When inserting a key that already exists, the cached reduction appends the new value's contribution without removing the old value's contribution. This produces incorrect results for non-idempotent reducers. Both StEph and MtEph test files document this:
+**All 10 ordering operations are O(n)** because they call `values_in_order()` (collects into a `Vec`) or convert to `AVLTreeSeqStPerS` and iterate. **0/10 match APAS costs.**
 
-```rust
-// Note: Same bug as MtEph version - appends instead of replacing in cached reduction
-// TODO: Fix AugOrderedTable reduction logic for key replacements
-```
+#### OrderedSetStPer.rs (delegates to `AVLTreeSetStPer`)
 
-The StPer variant avoids this by always recalculating from scratch after insert, but that makes insert O(n).
+Same as StEph: all 10 ordering ops are O(n). **0/10 match.**
 
-## Phase 5: Verus Verification Status
+#### OrderedSetMtEph.rs (uses `ParamTreap<T>`)
 
-**None of the Chapter 43 source files contain `verus!` blocks.** All code is plain Rust with no formal verification.
+| # | Operation | APAS Work | APAS Span | Actual Work | Actual Span | Match |
+|---|---|---|---|---|---|:---:|
+| 1 | `first` | O(lg n) | O(lg n) | O(lg n) | O(lg n) | Yes |
+| 2 | `last` | O(lg n) | O(lg n) | O(lg n) | O(lg n) | Yes |
+| 3 | `previous` | O(lg n) | O(lg n) | O(lg n) | O(lg n) | Yes |
+| 4 | `next` | O(lg n) | O(lg n) | O(lg n) | O(lg n) | Yes |
+| 5 | `split` | O(lg n) | O(lg n) | O(lg n) | O(lg n) | Yes |
+| 6 | `join` | O(lg(m+n)) | O(lg(m+n)) | O(lg(m+n)) | O(lg(m+n)) | Yes |
+| 7 | `get_range` | O(lg n) | O(lg n) | O(lg n) | O(lg n) | Yes |
+| 8 | `rank` | O(lg n) | O(lg n) | O(lg n) | O(lg n) | Yes |
+| 9 | `select` | O(lg n) | O(lg n) | **O(n)** | **O(n)** | **No** |
+| 10 | `split_rank` | O(lg n) | O(lg n) | **O(n)** | **O(n)** | **No** |
 
-| # | File | Inside verus! | Specs (requires/ensures) | Proof Holes | Status |
-|---|---|---|---|---|---|
-| 1 | `OrderedSetStEph.rs` | No | None | 0 | Unverified |
-| 2 | `OrderedSetStPer.rs` | No | None | 0 | Unverified |
-| 3 | `OrderedSetMtEph.rs` | No | None | 0 | Unverified |
-| 4 | `OrderedTableStEph.rs` | No | None | 0 | Unverified |
-| 5 | `OrderedTableStPer.rs` | No | None | 0 | Unverified |
-| 6 | `OrderedTableMtEph.rs` | No | None | 0 | Unverified |
-| 7 | `OrderedTableMtPer.rs` | No | None | 0 | Unverified |
-| 8 | `AugOrderedTableStEph.rs` | No | None | 0 | Unverified |
-| 9 | `AugOrderedTableStPer.rs` | No | None | 0 | Unverified |
-| 10 | `AugOrderedTableMtEph.rs` | No | None | 0 | Unverified |
-| 11 | `Example43_1.rs` | No | None | 0 | Unverified |
+**MtEph matches 8/10.** `select` and `split_rank` call `in_order()` (O(n)) instead of using the treap's rank operations directly.
 
-## Phase 6: TOC Headers and File Structure
+### Phase 3a: Cost Annotations — Ordered Tables
 
-No source files contain TOC section headers (the standard `// Table of Contents` block). Since none of the files use `verus!` blocks, the TOC standard doesn't strictly apply.
+#### OrderedTableStEph.rs (delegates to `TableStEph`)
 
-| # | File | Has TOC | Has Module Header | Has Copyright |
+All 10 ordering operations call `collect()` (O(n)) then linear scan. **0/10 match APAS costs.** Base table costs same as Chapter 42 (4/15 match).
+
+#### OrderedTableStPer.rs (delegates to `TableStPer`)
+
+Same as StEph. **0/10 ordering ops match.** Base table: 4/15 match.
+
+#### OrderedTableMtEph.rs (delegates to `TableMtEph`)
+
+Same as StEph. **0/10 ordering ops match.** Base table: 4/15 match.
+
+#### OrderedTableMtPer.rs (uses `ParamTreap<Pair<K,V>>`)
+
+Only implements 9 base table operations (size, empty, singleton, find, insert, delete, domain, map, filter). **None of the 10 ADT 43.1 ordering operations are implemented.** The `map` function has **filter semantics** — it takes a predicate and calls `self.tree.filter`, not a mapping function.
+
+### Phase 3a: Cost Annotations — Augmented Ordered Tables
+
+#### AugOrderedTableStEph.rs
+
+| # | Operation | APAS Work | APAS Span | Actual Work | Actual Span | Match |
+|---|---|---|---|---|---|:---:|
+| 1 | `reduce_val` | O(1) | O(1) | O(1) | O(1) | Yes |
+| 2 | `reduce_range` | O(lg n) | O(lg n) | O(n) | O(n) | No |
+| 3 | `insert` | O(lg n) | O(lg n) | O(n) | O(n) | No |
+| 4 | `delete` | O(lg n) | O(lg n) | O(n) | O(n) | No |
+
+`reduce_val` returns cached value: O(1). `reduce_range` calls `get_key_range` (O(n)) then folds. `insert`/`delete` delegate to inner table then recalculate reduction (O(n) fold over all entries).
+
+#### AugOrderedTableStPer.rs
+
+Same pattern as StEph. **1/4 augmented ops match** (only `reduce_val`).
+
+#### AugOrderedTableMtEph.rs
+
+Same as StEph for `reduce_val` (O(1)) and `reduce_range` (O(n)). Adds `reduce_range_parallel` using `ParaPair!` but still depends on O(n) `get_key_range`. **1/4 match.**
+
+### Phase 3b: Implementation Fidelity
+
+#### Ordered Sets
+
+| # | Operation | Prose | Implementation | Fidelity |
 |---|---|---|---|---|
+| 1 | `first(a)` | Smallest element | Converts to sorted vec/seq, takes first | Correct (slow) |
+| 2 | `last(a)` | Largest element | Converts to sorted vec/seq, takes last | Correct (slow) |
+| 3 | `previous(a)(k)` | Largest element < k | Linear scan of sorted sequence | Correct (slow) |
+| 4 | `next(a)(k)` | Smallest element > k | Linear scan of sorted sequence | Correct (slow) |
+| 5 | `split(a)(k)` | `({x∈a : x<k}, k∈a, {x∈a : x>k})` | Partition into three parts | Correct (slow) |
+| 6 | `join(a)(b)` | Union when max(a) < min(b) | `self.union(&other)` (ignores ordering precondition) | Partial |
+| 7 | `get_range(a)(k₁)(k₂)` | `{x∈a : k₁≤x≤k₂}` | Filter elements in range | Correct (slow) |
+| 8 | `rank(a)(k)` | `\|{x∈a : x<k}\|` | Count elements less than k | Correct (slow) |
+| 9 | `select(a)(i)` | i-th smallest element | Index sorted vec/seq | Correct (slow) |
+| 10 | `split_rank(a)(i)` | `(first i elements, rest)` | Partition by index | Correct (slow) |
+
+#### Ordered Tables
+
+| # | Issue | Details |
+|---|---|---|
+| 1 | `split_key` signature | APAS returns `(Table, Option<V>, Table)`. StEph/StPer/MtEph return `(Self, Self)` — the found key's value is lost. |
+| 2 | `join` | Prose requires `max(domain a) < min(domain b)`. Implementation is just `self.union(&other)` with no precondition check. |
+| 3 | `OrderedTableMtPer::map` | **Semantic error:** has filter semantics. Takes a predicate `&dyn Fn(&Pair<K,V>) -> bool` and calls `self.tree.filter`. Should take `&dyn Fn(&V) -> V`. |
+
+#### Augmented Tables
+
+| # | Issue | Details |
+|---|---|---|
+| 1 | `reduce_range` cost | O(n) instead of O(lg n) because `get_key_range` collects all entries and linearly scans them. |
+| 2 | Cache invalidation | `insert`/`delete` recalculate by folding over all entries: O(n) instead of O(lg n) incremental update. A balanced-tree backing would allow O(lg n) via subtree-cached reductions. |
+
+### Phase 3c: Spec Fidelity
+
+No Verus specs exist. All functions have `spec_strength = none`.
+
+## Phase 4: Parallelism Review
+
+### OrderedSetMtEph.rs (ParamTreap backing)
+
+| # | Operation | Parallel? | Classification |
+|---|---|---|---|
+| 1 | `first` / `last` | No | Sequential (O(lg n) tree walk) |
+| 2 | `previous` / `next` | No | Sequential (O(lg n) tree walk) |
+| 3 | `split` / `join` | No | Sequential (O(lg n) tree ops) |
+| 4 | `get_range` | No | Sequential (O(lg n)) |
+| 5 | `rank` | No | Sequential (O(lg n)) |
+| 6 | `select` / `split_rank` | No | Sequential (O(n) — collects to vec) |
+| 7 | Base set ops (`union`, `intersection`, etc.) | **Yes** | Parallel via treap's parallel merge |
+
+### OrderedTableMtEph.rs (delegates to TableMtEph)
+
+Same as Chapter 42 MtEph parallelism: some 2-way spawns for filter/map, but intersection/union/difference are sequential.
+
+### OrderedTableMtPer.rs (ParamTreap backing)
+
+| # | Operation | Parallel? | Notes |
+|---|---|---|---|
+| 1 | `insert` / `delete` / `find` | No | Tree operations |
+| 2 | `domain` | **Yes** | Uses `thread::spawn` for parallel traversal |
+| 3 | `map` (has filter semantics) | **Yes** | Uses treap's parallel filter |
+| 4 | `filter` | **Yes** | Uses treap's parallel filter |
+
+No ordering operations implemented in this file.
+
+### AugOrderedTableMtEph.rs
+
+| # | Operation | Parallel? | Notes |
+|---|---|---|---|
+| 1 | `reduce_val` | No | O(1) cached lookup |
+| 2 | `reduce_range` | No | Sequential fold |
+| 3 | `reduce_range_parallel` | **Yes** | `ParaPair!` with 2-way split, but still O(n) total from `get_key_range` |
+
+## Phase 5: Runtime Test Review
+
+| # | Test File | Tests | Operations Covered |
+|---|---|:---:|---|
+| 1 | `TestOrderedSetStEph.rs` | ~15 | All 10 ordering ops + base set ops |
+| 2 | `TestOrderedSetStPer.rs` | ~15 | All 10 ordering ops + base set ops |
+| 3 | `TestOrderedSetMtEph.rs` | ~15 | All 10 ordering ops + base set ops + parallel ops |
+| 4 | `TestOrderedTableStEph.rs` | ~20 | Base table ops + ordering ops |
+| 5 | `TestOrderedTableStPer.rs` | ~20 | Base table ops + ordering ops |
+| 6 | `TestOrderedTableMtEph.rs` | ~20 | Base table ops + ordering ops |
+| 7 | `TestOrderedTableMtPer.rs` | ~12 | Base table ops (no ordering ops) |
+| 8 | `TestAugOrderedTableStEph.rs` | ~10 | Augmented ops: reduce_val, reduce_range, insert, delete |
+| 9 | `TestAugOrderedTableStPer.rs` | ~10 | Augmented ops |
+| 10 | `TestAugOrderedTableMtEph.rs` | ~12 | Augmented ops + reduce_range_parallel |
+| 11 | `TestExample43_1.rs` | 1 | Example 43.1 demonstration |
+| | **Total RTT** | **~150** | |
+
+### Test Gaps
+
+| # | Gap | Severity |
+|---|---|---|
+| 1 | No tests for OrderedTableMtPer ordering operations (not implemented) | High |
+| 2 | No tests verifying APAS Example 43.1 exact values against code output | Medium |
+| 3 | No tests for APAS Example 43.2 (TRAMLAW augmented table) | Medium |
+| 4 | No tests for APAS Example 43.3 (QADSAN augmented table) | Medium |
+| 5 | No tests verifying `split_key` returns the found value | Medium |
+| 6 | No tests for Exercise 43.1 answers | Low |
+
+## Phase 6: PTT Review
+
+No PTTs exist. No Verus code to test.
+
+## Phase 7: Gap Analysis
+
+### Prose Items Not Implemented
+
+| # | Prose Item | Status | Notes |
+|---|---|---|---|
+| 1 | OrderedTableMtPer ordering ops | **Missing** | 10 operations from ADT 43.1 not implemented in MtPer variant |
+| 2 | `split_key` returns `(Table, Option<V>, Table)` | **Wrong signature** | Implementations return `(Self, Self)`, losing the found value |
+| 3 | Example 43.2 (TRAMLAW) | **Not implemented** | No code demonstrating inventory max reducer |
+| 4 | Example 43.3 (QADSAN) | **Not implemented** | No code demonstrating NASDAQ quote ranges |
+| 5 | Exercise 43.1 | **Not implemented** | No exercise solution code |
+| 6 | `collect` for ordered tables | **Not implemented** | Same gap as Chapter 42 |
+
+### Code with No Prose Counterpart
+
+| # | Item | Kind | Notes |
+|---|---|---|---|
+| 1 | `OrderedTableMtPer::map` with filter semantics | Bug | Takes predicate, calls filter — not a mapping function |
+| 2 | `reduce_range_parallel` in AugMtEph | Extension | Not in APAS prose; parallel version of reduce_range |
+| 3 | `entries` / `collect` methods | Utility | Returns flat entries, not APAS collect |
+| 4 | Macros (`OrderedSetStEphLit!`, etc.) | Convenience | Literal syntax |
+
+## Phase 8: TOC Review
+
+| # | File | Has TOC | Has Module Header | Copyright |
+|---|---|:---:|:---:|:---:|
 | 1 | `OrderedSetStEph.rs` | No | Yes | Yes |
 | 2 | `OrderedSetStPer.rs` | No | Yes | Yes |
 | 3 | `OrderedSetMtEph.rs` | No | Yes | Yes |
@@ -189,157 +300,65 @@ No source files contain TOC section headers (the standard `// Table of Contents`
 | 10 | `AugOrderedTableMtEph.rs` | No | Yes | Yes |
 | 11 | `Example43_1.rs` | No | Yes | Yes |
 
-## Phase 7: Test Coverage
+### In/Out Table
 
-### Runtime Tests (RTT): 11 test files
+| # | File | Clone | PartialEq/Eq | Debug | Display | Macro |
+|---|---|:---:|:---:|:---:|:---:|:---:|
+| 1 | `OrderedSetStEph.rs` | ❌ out | ❌ out | ❌ out | - | ✅ out |
+| 2 | `OrderedSetStPer.rs` | ❌ out | ❌ out | ❌ out | - | ✅ out |
+| 3 | `OrderedSetMtEph.rs` | ❌ out | ❌ out | ❌ out | - | ✅ out |
+| 4 | `OrderedTableStEph.rs` | ❌ out | ❌ out | ❌ out | - | ✅ out |
+| 5 | `OrderedTableStPer.rs` | ❌ out | ❌ out | ❌ out | - | ✅ out |
+| 6 | `OrderedTableMtEph.rs` | ❌ out | ❌ out | ❌ out | - | ✅ out |
+| 7 | `OrderedTableMtPer.rs` | ❌ out | ❌ out | ❌ out | - | - |
+| 8 | `AugOrderedTableStEph.rs` | ❌ out | ❌ out | ❌ out | - | ✅ out |
+| 9 | `AugOrderedTableStPer.rs` | ❌ out | ❌ out | ❌ out | - | ✅ out |
+| 10 | `AugOrderedTableMtEph.rs` | ❌ out | ❌ out | ❌ out | - | ✅ out |
 
-| # | Test File | # Tests | Covers | Key Scenarios |
-|---|---|---|---|---|
-| 1 | `TestOrderedSetStEph.rs` | 19 | All ADT 43.1 set ops + ephemeral semantics | empty, singleton, CRUD, ordering ops, filter, set ops, string ordering, macro |
-| 2 | `TestOrderedSetStPer.rs` | 19 | All ADT 43.1 set ops + persistence | Same as StEph plus persistence verification, split at non-existing element |
-| 3 | `TestOrderedSetMtEph.rs` | 20 | All ADT 43.1 set ops + threading | Same as StEph plus parallel ops, thread safety with Arc, large dataset |
-| 4 | `TestOrderedTableStEph.rs` | 34 | All ADT 43.1 table ops + base table ops | CRUD, ordering, filter, map, reduce, restrict, subtract, domain, tabulate, clone |
-| 5 | `TestOrderedTableStPer.rs` | 24 | All ADT 43.1 table ops + persistence | Same themes plus persistence verification, macro construction |
-| 6 | `TestOrderedTableMtEph.rs` | 33 | All ADT 43.1 table ops + parallelism | Same themes plus thread safety, parallel filter/map/reduce, macro |
-| 7 | `TestOrderedTableMtPer.rs` | 7 | Base table ops only (no ordering ops) | CRUD, filter, map (actually filter), domain, persistence |
-| 8 | `TestAugOrderedTableStEph.rs` | 22 | ADT 43.3 + ordering + base ops | reduce_val, reduce_range, QADSAN scenario, split/join, map, filter, union, intersection, difference, restrict, subtract, tabulate, domain, collect, macro, Display/Debug |
-| 9 | `TestAugOrderedTableStPer.rs` | 20 | ADT 43.3 + ordering + base ops | Same themes, TRAMLAW scenario, persistence |
-| 10 | `TestAugOrderedTableMtEph.rs` | 26 | ADT 43.3 + ordering + parallelism | Same themes, parallel range reduction, concurrent reads/writes, thread safety |
-| 11 | `TestExample43_1.rs` | 2 | Example 43.1 execution | Runs both string and integer examples |
+No verus! blocks exist, so the "should be inside" classification is aspirational.
 
-**Total: 226 runtime tests across 11 files.**
-
-### Proof Time Tests (PTT)
-
-None. Expected since no Verus code exists.
-
-### Test Quality Notes
-
-1. **QADSAN/TRAMLAW scenarios** are well-tested in augmented table tests with realistic stock-price and sales-data examples.
-2. **Thread safety** is tested via `Arc<Mutex<...>>` wrapping for write access and `Arc` sharing for concurrent reads.
-3. **Edge cases** are well-covered: empty structures, singleton, delete nonexistent, split at boundaries, out-of-bounds select.
-4. **The MtPer tests confirm the map-is-actually-filter bug** — the test asserts filtering behavior, not value transformation.
-5. **The string concatenation tests document the insert-on-existing-key bug** with explicit TODO comments.
-
-## Phase 8: Cost Annotations
-
-### Annotation Format
-
-Two formats are used:
-
-1. **Trait declarations:** `/// claude-4-sonet: Work Θ(...), Span Θ(...)` — present on most trait methods
-2. **Implementations:** `/// Claude Work: O(...), Span: O(...)` — present on most impl methods
-
-### APAS Cost Annotations
-
-Only `Example43_1.rs` has explicit APAS cost comments (`/// APAS: Work Θ(n log n), Span Θ(log n)`). No other file has paired `/// APAS: ...` / `/// Claude: ...` cost comments per the project standard.
-
-### Cost Annotation Accuracy
-
-| # | Issue | Severity |
-|---|---|---|
-| 1 | All StEph/StPer files claim O(lg n) for ordering ops that are actually O(n) | High |
-| 2 | MtEph set claims O(lg n) for `select` and `split_rank` that are O(n) | Medium |
-| 3 | All MtEph table ordering ops claim O(lg n) but are O(n) via `collect()` | High |
-| 4 | AugOrderedTable `reduce_range` claims O(lg n) but is O(n) via `get_key_range` | High |
-| 5 | MtEph set `split` and `join` trait annotations claim O(n) work (correct) but impl comments say O(lg n) | Low — trait is more honest |
-| 6 | No files have APAS/Claude paired cost comments | Medium |
-
-### Unused Imports
-
-| # | File | Unused Import |
-|---|---|---|
-| 1 | `OrderedTableMtEph.rs` | `std::sync::Arc`, `std::thread` |
-| 2 | `AugOrderedTableMtEph.rs` | `std::sync::Arc`, `std::thread` (uses `ParaPair!` instead) |
-
-## Proof Holes
+## Proof Holes Summary
 
 ```
-veracity-review-proof-holes -d src/Chap43/
-
-Modules:
-   11 clean (no holes)
-   0 holed (contains holes)
-   11 total
-
+Modules:   11 clean (no holes), 0 holed
 Holes Found: 0 total
+Veracity Errors: 2 bare impl(s) in AugOrderedTableStEph.rs and AugOrderedTableStPer.rs
 ```
 
-There are no proof holes because there is no Verus code — all 11 files are plain Rust without `verus!` blocks.
+Zero proof holes — vacuously clean since no Verus code exists. Two bare-impl warnings from veracity.
 
-## ADT Interface Completeness
+## Spec Strength Summary
 
-| # | ADT Operation | OSet StEph | OSet StPer | OSet MtEph | OTbl StEph | OTbl StPer | OTbl MtEph | OTbl MtPer | Aug StEph | Aug StPer | Aug MtEph |
-|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 1 | first / first_key | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | - | ✅ | ✅ | ✅ |
-| 2 | last / last_key | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | - | ✅ | ✅ | ✅ |
-| 3 | previous / previous_key | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | - | ✅ | ✅ | ✅ |
-| 4 | next / next_key | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | - | ✅ | ✅ | ✅ |
-| 5 | split / split_key | ✅ | ✅ | ✅ | ⚠️ | ✅ | ⚠️ | - | ⚠️ | ✅ | ⚠️ |
-| 6 | join / join_key | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | - | ✅ | ✅ | ✅ |
-| 7 | getRange / get_key_range | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | - | ✅ | ✅ | ✅ |
-| 8 | rank / rank_key | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | - | ✅ | ✅ | ✅ |
-| 9 | select / select_key | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | - | ✅ | ✅ | ✅ |
-| 10 | splitRank / split_rank_key | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | - | ✅ | ✅ | ✅ |
-| 11 | reduceVal | - | - | - | - | - | - | - | ✅ | ✅ | ✅ |
-| 12 | reduce_range | - | - | - | - | - | - | - | ✅ | ✅ | ✅ |
-| 13 | reduce_range_parallel | - | - | - | - | - | - | - | - | - | ✅ |
+| Classification | Count |
+|---|---|
+| strong | 0 |
+| partial | 0 |
+| weak | 0 |
+| none | 231 |
 
-**Legend:** ✅ = implemented and semantically matches prose. ⚠️ = implemented but split drops the found value (2-tuple instead of 3-tuple). `-` = not implemented.
-
-## Example 43.1 Verification
-
-| # | Prose Example | Expected Result | Implementation | Status |
-|---|---|---|---|---|
-| 1 | first A → 'artie' | min element | `first()` on sorted set | ✅ |
-| 2 | next(A, 'quinn') → 'rachel' | min {k > 'quinn'} | `next()` with scan | ✅ |
-| 3 | next(A, 'mike') → 'rachel' | min {k > 'mike'} | `next()` with scan | ✅ |
-| 4 | getRange A ('burt','mike') → {'burt','finn','mike'} | {k: k1 ≤ k ≤ k2} | `get_range()` with filter | ✅ |
-| 5 | rank(A, 'rachel') → 4 | \|{k < 'rachel'}\| | `rank()` with count | ✅ |
-| 6 | rank(A, 'quinn') → 4 | \|{k < 'quinn'}\| | `rank()` with count | ✅ |
-| 7 | select(A, 5) → 'sam' | k at rank 5 | `select()` with index | ✅ |
-| 8 | splitRank(A, 3) → ({artie,burt,finn}, {mike,rachel,sam,tina}) | split at rank 3 | `split_rank()` with partition | ✅ |
-
-`Example43_1.rs` also demonstrates `last`, `previous`, `split`, and `join` with both string and integer examples. The example file is a faithful reproduction of the textbook's Example 43.1.
-
-## Review TODOs
-
-| # | Priority | Category | Description |
-|---|---|---|---|
-| 1 | High | Cost | Fix doc comments in all St files: ordering ops are O(n), not O(lg n) |
-| 2 | High | Cost | Fix doc comments in MtEph table: ordering ops are O(n) via `collect()` |
-| 3 | High | Cost | Fix doc comments for `select`/`split_rank` in MtEph set: O(n) via `in_order()` |
-| 4 | High | Semantic | Fix split_key in OrderedTableStEph, OrderedTableMtEph, AugOrderedTableStEph, AugOrderedTableMtEph to return `(Self, Option<V>, Self)` matching prose 3-tuple |
-| 5 | High | Bug | Fix augmented table insert: when key already exists, cached_reduction is corrupted for non-idempotent reducers |
-| 6 | High | API | Fix OrderedTableMtPer::map — currently implements filter semantics, not map |
-| 7 | High | Completeness | Add all 10 ADT 43.1 ordering operations to OrderedTableMtPer |
-| 8 | Medium | Cost | Add paired APAS/Claude cost comments to all functions per project standard |
-| 9 | Medium | Verification | Verus-ify at least one variant per ADT family (suggest StPer variants first) |
-| 10 | Medium | Architecture | Consider rewriting MtEph table ordering ops to use tree-native operations instead of `collect()` linearization |
-| 11 | Medium | Architecture | Consider augmented BST approach (per-node annotations) for AugOrderedTable to achieve true O(lg n) reduce_range |
-| 12 | Low | Style | No files have TOC headers (acceptable since no verus! blocks) |
-| 13 | Low | Cleanup | Remove unused imports (`Arc`, `thread`) from OrderedTableMtEph.rs and AugOrderedTableMtEph.rs |
-| 14 | Low | Testing | No PTTs exist (blocked on Verus-ification) |
+All functions lack Verus specifications.
 
 ## Overall Assessment
 
-**Chapter 43 implements all three prose ADTs (Ordered Sets, Ordered Tables, Reducer-Augmented Ordered Tables) across 10 implementation files plus 1 example file, with 11 runtime test files and 226 tests. No Verus verification exists. All 11 files are proof-hole clean (trivially, since there is no Verus code).**
+**Chapter 43 implements ordered sets (3 variants), ordered tables (4 variants), and augmented ordered tables (3 variants) across 11 source files with ~150 runtime tests. No Verus verification exists. OrderedTableMtPer is critically incomplete, missing all 10 ordering operations. OrderedTableMtPer::map has filter semantics (bug).**
 
 ### Strengths
 
-1. **Interface completeness:** All 10 operations from ADT 43.1 are implemented across 9 of 10 variants (MtPer is the exception). All 2 augmented operations from ADT 43.3 are implemented across 3 variants.
-2. **Augmented tables:** The reducer-augmented table correctly provides O(1) `reduce_val` via cached reduction, matching the prose's key innovation.
-3. **Example fidelity:** Example 43.1 is faithfully reproduced and tested with all operations from the textbook.
-4. **Test depth:** 226 runtime tests including realistic QADSAN/TRAMLAW scenarios, thread safety, persistence verification, and edge cases.
-5. **MtEph set tree operations:** OrderedSetMtEph correctly uses tree traversal for 8 of 10 ordering operations, achieving O(lg n).
+1. **OrderedSetMtEph achieves O(lg n)** for 8/10 ordering operations using ParamTreap — the best cost profile in this chapter.
+2. All ordered set variants semantically implement all 10 ADT 43.1 operations.
+3. Augmented table `reduce_val` correctly returns cached reduction in O(1).
+4. Comprehensive test coverage: ~150 RTTs across 11 test files.
+5. Example43_1 demonstrates basic ordered set operations.
 
 ### Weaknesses
 
-1. **No Verus verification** across all 11 files.
-2. **Systematically incorrect cost claims:** 7 of 10 implementation files claim O(lg n) for ordering operations that actually run in O(n).
-3. **split_key semantic mismatch:** 4 table implementations drop the found value, diverging from the prose's 3-tuple return.
-4. **OrderedTableMtPer is a stub** missing all ordering operations.
-5. **OrderedTableMtPer::map is actually filter** — wrong API semantics.
-6. **Augmented table insert bug** corrupts cached reduction on key replacement for non-idempotent reducers.
-7. **No implementation achieves O(lg n) for all 10 ordering operations.** The closest is MtEph set (8/10), but `select` and `split_rank` still linearize.
-8. **reduce_range is O(n) in all variants**, not the O(lg n) the prose specifies, because it depends on get_key_range which linearizes.
+1. **No Verus verification** — zero functions inside `verus!`, zero specs.
+2. **StEph/StPer ordering operations are all O(n)** due to collecting into sorted vectors. The balanced-tree backing is present (`AVLTreeSetStEph/StPer`) but unused for navigation.
+3. **OrderedTableMtPer is critically incomplete** — only base table ops, no ordering operations, and `map` has wrong semantics (filter instead of map).
+4. **`split_key` returns wrong type** — `(Self, Self)` instead of `(Self, Option<V>, Self)`, discarding the found key's value.
+5. **Augmented table insert/delete are O(n)** — recalculate full reduction instead of O(lg n) incremental update.
+6. **2 bare-impl veracity warnings** in AugOrderedTableStEph and AugOrderedTableStPer.
+7. **No TOC headers** in any source file.
+8. **Examples 43.2 (TRAMLAW) and 43.3 (QADSAN) not implemented.**
+9. **Exercise 43.1 not implemented.**
+10. **MtEph ordered table parallelism is inherited from Chapter 42** — shallow 2-way splits; intersection/union/difference still sequential.

@@ -1,14 +1,40 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap50
-
-✓ MatrixChainMtEph.rs
-✓ MatrixChainMtPer.rs
-✓ MatrixChainStEph.rs
-✓ MatrixChainStPer.rs
+❌ MatrixChainMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainMtEph.rs:79: error: bare_impl - // 9. impls — `impl MatrixChainMtEphS` without trait; file defines [MatrixChainMtEphTrait]
+        80 |     impl MatrixChainMtEphS {
+        81 |         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ MatrixChainMtPer.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainMtPer.rs:69: error: bare_impl - // 9. impls — `impl MatrixChainMtPerS` without trait; file defines [MatrixChainMtPerTrait]
+        70 |     impl MatrixChainMtPerS {
+        71 |         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ MatrixChainStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainStEph.rs:83: error: bare_impl - // 9. impls — `impl MatrixChainStEphS` without trait; file defines [MatrixChainStEphTrait]
+        84 |     impl MatrixChainStEphS {
+        85 |         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ MatrixChainStPer.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainStPer.rs:67: error: bare_impl - // 9. impls — `impl MatrixChainStPerS` without trait; file defines [MatrixChainStPerTrait]
+        68 |     impl MatrixChainStPerS {
+        69 |         /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
+   Errors: 1 bare impl(s) in file with trait definition
 ✓ OptBinSearchTreeMtEph.rs
 ✓ OptBinSearchTreeMtPer.rs
-✓ OptBinSearchTreeStEph.rs
-✓ OptBinSearchTreeStPer.rs
-✓ Probability.rs
+❌ OptBinSearchTreeStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeStEph.rs:86: error: bare_impl - // 9. impls — `impl OBSTStEphS` without trait; file defines [OBSTStEphTrait]
+        87 |     impl<T: StT> OBSTStEphS<T> {
+        88 |         /// - APAS: Work Θ(n³), Span Θ(n³)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ OptBinSearchTreeStPer.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeStPer.rs:70: error: bare_impl - // 9. impls — `impl OBSTStPerS` without trait; file defines [OBSTStPerTrait]
+        71 |     impl<T: StT> OBSTStPerS<T> {
+        72 |         /// - APAS: Work Θ(n³), Span Θ(n³)
+   Errors: 1 bare impl(s) in file with trait definition
+❌ Probability.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/Probability.rs:37: error: bare_impl - // 9. impls — `impl Probability` without trait; file defines [ProbabilityTrait]
+        38 |     impl Probability {
+        39 |         /// - APAS: Work Θ(1), Span Θ(1)
+   Errors: 1 bare impl(s) in file with trait definition
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -25,5 +51,19 @@ Proof Functions:
    0 total
 
 Holes Found: 0 total
+
+Errors: 7 bare impl(s) in files with trait definitions
+
+🎉 No proof holes found! All proofs are complete.
+9 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 0 total
+
+Errors: 7 bare impl(s) in files with trait definitions
 
 🎉 No proof holes found! All proofs are complete.

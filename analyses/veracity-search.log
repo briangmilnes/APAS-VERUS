@@ -1,8 +1,8 @@
-Logging to: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn _ types Arc
+Pattern: fn _ types obeys_feq_clone
 Searching: /home/milnes/projects/verus/source/vstd
 Files: 95, Functions: 2289, Matches: 0
 

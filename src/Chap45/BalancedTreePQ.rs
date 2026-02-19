@@ -60,6 +60,19 @@ pub mod BalancedTreePQ {
         fn from_vec(elements: Vec<T>)                        -> Self;
         fn to_vec(&self)                                     -> Vec<T>;
         fn to_sorted_vec(&self)                              -> Vec<T>;
+        fn is_sorted(&self)                                  -> bool;
+        fn height(&self)                                     -> N;
+        fn split(&self, element: &T)                         -> (Self, bool, Self)
+        where
+            Self: Sized;
+        fn join(left: &Self, right: &Self)                   -> Self;
+        fn filter<F>(&self, predicate: F)                    -> Self
+        where
+            F: Fn(&T) -> bool;
+        fn map<U, G>(&self, f: G)                           -> BalancedTreePQ<U>
+        where
+            U: StT + Ord,
+            G: Fn(&T) -> U;
     }
 
     impl<T: StT + Ord> BalancedTreePQTrait<T> for BalancedTreePQ<T> {
@@ -285,6 +298,79 @@ pub mod BalancedTreePQ {
             // Already sorted, just convert to vector
             self.to_vec()
         }
+
+        fn is_sorted(&self) -> bool {
+            for i in 1..self.elements.length() {
+                let prev = self.elements.nth(i - 1);
+                let curr = self.elements.nth(i);
+                if prev > curr {
+                    return false;
+                }
+            }
+            true
+        }
+
+        fn height(&self) -> N {
+            if self.elements.length() == 0 {
+                0
+            } else {
+                ((self.elements.length() as f64).log2().ceil() as N).max(1)
+            }
+        }
+
+        fn split(&self, element: &T) -> (Self, bool, Self) {
+            let mut left = Self::empty();
+            let mut right = Self::empty();
+            let mut found = false;
+
+            for i in 0..self.elements.length() {
+                let current = self.elements.nth(i);
+                if current < element {
+                    left = left.insert(current.clone());
+                } else if current == element {
+                    found = true;
+                    right = right.insert(current.clone());
+                } else {
+                    right = right.insert(current.clone());
+                }
+            }
+
+            (left, found, right)
+        }
+
+        fn join(left: &Self, right: &Self) -> Self { left.meld(right) }
+
+        fn filter<F>(&self, predicate: F) -> Self
+        where
+            F: Fn(&T) -> bool,
+        {
+            let mut result = Self::empty();
+
+            for i in 0..self.elements.length() {
+                let current = self.elements.nth(i);
+                if predicate(current) {
+                    result = result.insert(current.clone());
+                }
+            }
+
+            result
+        }
+
+        fn map<U, G>(&self, f: G) -> BalancedTreePQ<U>
+        where
+            U: StT + Ord,
+            G: Fn(&T) -> U,
+        {
+            let mut result = BalancedTreePQ::<U>::empty();
+
+            for i in 0..self.elements.length() {
+                let current = self.elements.nth(i);
+                let mapped = f(current);
+                result = result.insert(mapped);
+            }
+
+            result
+        }
     }
 
     impl<T: StT + Ord> Default for BalancedTreePQ<T> {
@@ -319,90 +405,4 @@ pub mod BalancedTreePQ {
         }};
     }
 
-    /// Convenience functions for common operations
-    impl<T: StT + Ord> BalancedTreePQ<T> {
-        /// Check if the tree maintains sorted order (for testing)
-        pub fn is_sorted(&self) -> bool {
-            for i in 1..self.elements.length() {
-                let prev = self.elements.nth(i - 1);
-                let curr = self.elements.nth(i);
-                if prev > curr {
-                    return false;
-                }
-            }
-            true
-        }
-        /// Get height of the underlying AVL tree (for testing)
-        pub fn height(&self) -> N {
-            // This would require access to internal tree structure
-            // For now, return log(n) as expected height
-            if self.elements.length() == 0 {
-                0
-            } else {
-                ((self.elements.length() as f64).log2().ceil() as N).max(1)
-            }
-        }
-    }
-
-    /// Advanced operations for balanced tree priority queue
-    impl<T: StT + Ord> BalancedTreePQ<T> {
-        /// Split the priority queue at a given element
-        /// Returns (left, found, right) where left < element <= right
-        pub fn split(&self, element: &T) -> (Self, bool, Self) {
-            let mut left = Self::empty();
-            let mut right = Self::empty();
-            let mut found = false;
-
-            for i in 0..self.elements.length() {
-                let current = self.elements.nth(i);
-                if current < element {
-                    left = left.insert(current.clone());
-                } else if current == element {
-                    found = true;
-                    right = right.insert(current.clone());
-                } else {
-                    right = right.insert(current.clone());
-                }
-            }
-
-            (left, found, right)
-        }
-
-        /// Join two priority queues where all elements in left <= all elements in right
-        pub fn join(left: &Self, right: &Self) -> Self { left.meld(right) }
-
-        /// Filter elements based on a predicate
-        pub fn filter<F>(&self, predicate: F) -> Self
-        where
-            F: Fn(&T) -> bool,
-        {
-            let mut result = Self::empty();
-
-            for i in 0..self.elements.length() {
-                let current = self.elements.nth(i);
-                if predicate(current) {
-                    result = result.insert(current.clone());
-                }
-            }
-
-            result
-        }
-
-        /// Map elements to a new type (maintaining order)
-        pub fn map<U, F>(&self, f: F) -> BalancedTreePQ<U>
-        where
-            U: StT + Ord,
-            F: Fn(&T) -> U,
-        {
-            let mut result = BalancedTreePQ::<U>::empty();
-
-            for i in 0..self.elements.length() {
-                let current = self.elements.nth(i);
-                let mapped = f(current);
-                result = result.insert(mapped);
-            }
-
-            result
-        }
-    }
 }

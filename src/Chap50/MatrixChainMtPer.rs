@@ -67,75 +67,67 @@ pub mod MatrixChainMtPer {
     }
 
     // 9. impls
-    impl MatrixChainMtPerS {
-        /// Cost = rows[i] * cols[k] * cols[j] (scalar multiplications)
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — three lookups through Arc, two multiplications
-        fn multiply_cost(&self, i: usize, k: usize, j: usize) -> usize {
-            let left_rows = self.dimensions[i].rows;
-            let split_cols = self.dimensions[k].cols;
-            let right_cols = self.dimensions[j].cols;
-            left_rows * split_cols * right_cols
+
+    fn multiply_cost_mt_per(s: &MatrixChainMtPerS, i: usize, k: usize, j: usize) -> usize {
+        let left_rows = s.dimensions[i].rows;
+        let split_cols = s.dimensions[k].cols;
+        let right_cols = s.dimensions[j].cols;
+        left_rows * split_cols * right_cols
+    }
+
+    fn parallel_min_reduction_mt_per(s: &MatrixChainMtPerS, costs: Vec<usize>) -> usize {
+        if costs.is_empty() {
+            return usize::MAX;
+        }
+        if costs.len() == 1 {
+            return costs[0];
         }
 
-        /// - APAS: Work Θ(n), Span Θ(lg n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer min reduction
-        fn parallel_min_reduction(&self, costs: Vec<usize>) -> usize {
-            if costs.is_empty() {
-                return usize::MAX;
+        let mid = costs.len() / 2;
+        let left_costs = costs[..mid].to_vec();
+        let right_costs = costs[mid..].to_vec();
+
+        let s1 = s.clone();
+        let s2 = s.clone();
+
+        let handle1 = thread::spawn(move || parallel_min_reduction_mt_per(&s1, left_costs));
+        let handle2 = thread::spawn(move || parallel_min_reduction_mt_per(&s2, right_costs));
+
+        let left_min = handle1.join().unwrap();
+        let right_min = handle2.join().unwrap();
+
+        left_min.min(right_min)
+    }
+
+    fn matrix_chain_rec_mt_per(s: &MatrixChainMtPerS, i: usize, j: usize) -> usize {
+        {
+            let memo_guard = s.memo.lock().unwrap();
+            if let Some(&result) = memo_guard.get(&(i, j)) {
+                return result;
             }
-            if costs.len() == 1 {
-                return costs[0];
-            }
-
-            let mid = costs.len() / 2;
-            let left_costs = costs[..mid].to_vec();
-            let right_costs = costs[mid..].to_vec();
-
-            let self_clone1 = self.clone();
-            let self_clone2 = self.clone();
-
-            let handle1 = thread::spawn(move || self_clone1.parallel_min_reduction(left_costs));
-
-            let handle2 = thread::spawn(move || self_clone2.parallel_min_reduction(right_costs));
-
-            let left_min = handle1.join().unwrap();
-            let right_min = handle2.join().unwrap();
-
-            left_min.min(right_min)
         }
 
-        /// - APAS: Work Θ(n³), Span Θ(n² lg n)
-        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — memoized DP, n² subproblems, parallel min reduction per subproblem
-        fn matrix_chain_rec(&self, i: usize, j: usize) -> usize {
-            {
-                let memo_guard = self.memo.lock().unwrap();
-                if let Some(&result) = memo_guard.get(&(i, j)) {
-                    return result;
-                }
-            }
+        let result = if i == j {
+            0
+        } else {
+            let costs = (i..j)
+                .map(|k| {
+                    let left_cost = matrix_chain_rec_mt_per(s, i, k);
+                    let right_cost = matrix_chain_rec_mt_per(s, k + 1, j);
+                    let split_cost = multiply_cost_mt_per(s, i, k, j);
+                    left_cost + right_cost + split_cost
+                })
+                .collect::<Vec<usize>>();
 
-            let result = if i == j {
-                0
-            } else {
-                let costs = (i..j)
-                    .map(|k| {
-                        let left_cost = self.matrix_chain_rec(i, k);
-                        let right_cost = self.matrix_chain_rec(k + 1, j);
-                        let split_cost = self.multiply_cost(i, k, j);
-                        left_cost + right_cost + split_cost
-                    }).collect::<Vec<usize>>();
+            parallel_min_reduction_mt_per(s, costs)
+        };
 
-                self.parallel_min_reduction(costs)
-            };
-
-            {
-                let mut memo_guard = self.memo.lock().unwrap();
-                memo_guard.insert((i, j), result);
-            }
-
-            result
+        {
+            let mut memo_guard = s.memo.lock().unwrap();
+            memo_guard.insert((i, j), result);
         }
+
+        result
     }
 
     impl MatrixChainMtPerTrait for MatrixChainMtPerS {
@@ -186,7 +178,7 @@ pub mod MatrixChainMtPer {
             }
 
             let n = self.dimensions.len();
-            self.matrix_chain_rec(0, n - 1)
+            matrix_chain_rec_mt_per(self, 0, n - 1)
         }
 
         /// - APAS: Work Θ(1), Span Θ(1)

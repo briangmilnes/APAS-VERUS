@@ -71,205 +71,207 @@ pub mod BSTSizeStEph {
         fn split_rank(&self, rank: N)  -> (BSTSizeStEph<T>, BSTSizeStEph<T>);
     }
 
-    impl<T: StT + Ord> BSTSizeStEph<T> {
-        /// - APAS: Work Θ(1), Span Θ(1) — O(1) size access via augmented field.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn size_link(link: &Link<T>) -> N { link.as_ref().map_or(0, |n| n.size) }
+    /// - APAS: Work Θ(1), Span Θ(1) — O(1) size access via augmented field.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    fn size_link<T: StT + Ord>(link: &Link<T>) -> N {
+        link.as_ref().map_or(0, |n| n.size)
+    }
 
-        /// - APAS: Work Θ(1), Span Θ(1) — recomputes subtree size from children.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn update_size(node: &mut Node<T>) {
-            node.size = 1 + Self::size_link(&node.left) + Self::size_link(&node.right);
-        }
+    /// - APAS: Work Θ(1), Span Θ(1) — recomputes subtree size from children.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    fn update_size<T: StT + Ord>(node: &mut Node<T>) {
+        node.size = 1 + size_link(&node.left) + size_link(&node.right);
+    }
 
-        /// - APAS: Work Θ(1), Span Θ(1) — corresponds to APAS makeNode.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn make_node(key: T, priority: u64, left: Link<T>, right: Link<T>) -> Link<T> {
-            let mut node = Node::new(key, priority);
-            node.left = left;
-            node.right = right;
-            Self::update_size(&mut node);
-            Some(Box::new(node))
-        }
+    /// - APAS: Work Θ(1), Span Θ(1) — corresponds to APAS makeNode.
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    fn make_node<T: StT + Ord>(key: T, priority: u64, left: Link<T>, right: Link<T>) -> Link<T> {
+        let mut node = Node::new(key, priority);
+        node.left = left;
+        node.right = right;
+        update_size(&mut node);
+        Some(Box::new(node))
+    }
 
-        /// - APAS: N/A — internal treap rotation (updates sizes).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn rotate_left(link: &mut Link<T>) {
-            if let Some(mut x) = link.take() {
-                if let Some(mut y) = x.right.take() {
-                    x.right = y.left.take();
-                    Self::update_size(&mut x);
-                    Self::update_size(&mut y);
-                    y.left = Some(x);
-                    *link = Some(y);
-                } else {
-                    *link = Some(x);
-                }
-            }
-        }
-
-        /// - APAS: N/A — internal treap rotation (updates sizes).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn rotate_right(link: &mut Link<T>) {
-            if let Some(mut x) = link.take() {
-                if let Some(mut y) = x.left.take() {
-                    x.left = y.right.take();
-                    Self::update_size(&mut x);
-                    Self::update_size(&mut y);
-                    y.right = Some(x);
-                    *link = Some(y);
-                } else {
-                    *link = Some(x);
-                }
-            }
-        }
-
-        /// - APAS: N/A — internal recursive insert helper.
-        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-        fn insert_link(link: &mut Link<T>, value: T, rng: &mut impl Rng) {
-            if let Some(node) = link.as_mut() {
-                if value < node.key {
-                    Self::insert_link(&mut node.left, value, rng);
-                    if node.left.as_ref().is_some_and(|left| left.priority < node.priority) {
-                        Self::rotate_right(link);
-                    }
-                } else if value > node.key {
-                    Self::insert_link(&mut node.right, value, rng);
-                    if node.right.as_ref().is_some_and(|right| right.priority < node.priority) {
-                        Self::rotate_left(link);
-                    }
-                }
-                if let Some(node) = link.as_mut() {
-                    Self::update_size(node);
-                }
+    /// - APAS: N/A — internal treap rotation (updates sizes).
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    fn rotate_left<T: StT + Ord>(link: &mut Link<T>) {
+        if let Some(mut x) = link.take() {
+            if let Some(mut y) = x.right.take() {
+                x.right = y.left.take();
+                update_size(&mut x);
+                update_size(&mut y);
+                y.left = Some(x);
+                *link = Some(y);
             } else {
-                *link = Some(Box::new(Node::new(value, rng.random())));
+                *link = Some(x);
             }
         }
+    }
 
-        /// - APAS: N/A — internal recursive find helper.
-        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-        fn find_link<'a>(link: &'a Link<T>, target: &T) -> Option<&'a T> {
-            match link {
-                | None => None,
-                | Some(node) => {
-                    if target == &node.key {
-                        Some(&node.key)
-                    } else if target < &node.key {
-                        Self::find_link(&node.left, target)
-                    } else {
-                        Self::find_link(&node.right, target)
-                    }
+    /// - APAS: N/A — internal treap rotation (updates sizes).
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    fn rotate_right<T: StT + Ord>(link: &mut Link<T>) {
+        if let Some(mut x) = link.take() {
+            if let Some(mut y) = x.left.take() {
+                x.left = y.right.take();
+                update_size(&mut x);
+                update_size(&mut y);
+                y.right = Some(x);
+                *link = Some(y);
+            } else {
+                *link = Some(x);
+            }
+        }
+    }
+
+    /// - APAS: N/A — internal recursive insert helper.
+    /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
+    fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T, rng: &mut impl Rng) {
+        if let Some(node) = link.as_mut() {
+            if value < node.key {
+                insert_link(&mut node.left, value, rng);
+                if node.left.as_ref().is_some_and(|left| left.priority < node.priority) {
+                    rotate_right(link);
+                }
+            } else if value > node.key {
+                insert_link(&mut node.right, value, rng);
+                if node.right.as_ref().is_some_and(|right| right.priority < node.priority) {
+                    rotate_left(link);
+                }
+            }
+            if let Some(node) = link.as_mut() {
+                update_size(node);
+            }
+        } else {
+            *link = Some(Box::new(Node::new(value, rng.random())));
+        }
+    }
+
+    /// - APAS: N/A — internal recursive find helper.
+    /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
+    fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T> {
+        match link {
+            | None => None,
+            | Some(node) => {
+                if target == &node.key {
+                    Some(&node.key)
+                } else if target < &node.key {
+                    find_link(&node.left, target)
+                } else {
+                    find_link(&node.right, target)
                 }
             }
         }
+    }
 
-        /// - APAS: N/A — internal recursive minimum helper.
-        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-        fn min_link(link: &Link<T>) -> Option<&T> {
-            match link {
-                | None => None,
-                | Some(node) => match node.left {
-                    | None => Some(&node.key),
-                    | Some(_) => Self::min_link(&node.left),
-                },
-            }
+    /// - APAS: N/A — internal recursive minimum helper.
+    /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
+    fn min_link<T: StT + Ord>(link: &Link<T>) -> Option<&T> {
+        match link {
+            | None => None,
+            | Some(node) => match node.left {
+                | None => Some(&node.key),
+                | Some(_) => min_link(&node.left),
+            },
         }
+    }
 
-        /// - APAS: N/A — internal recursive maximum helper.
-        /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-        fn max_link(link: &Link<T>) -> Option<&T> {
-            match link {
-                | None => None,
-                | Some(node) => match node.right {
-                    | None => Some(&node.key),
-                    | Some(_) => Self::max_link(&node.right),
-                },
-            }
+    /// - APAS: N/A — internal recursive maximum helper.
+    /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
+    fn max_link<T: StT + Ord>(link: &Link<T>) -> Option<&T> {
+        match link {
+            | None => None,
+            | Some(node) => match node.right {
+                | None => Some(&node.key),
+                | Some(_) => max_link(&node.right),
+            },
         }
+    }
 
-        /// - APAS: N/A — internal recursive in-order traversal helper.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn in_order_collect(link: &Link<T>, out: &mut Vec<T>) {
-            if let Some(node) = link {
-                Self::in_order_collect(&node.left, out);
-                out.push(node.key.clone());
-                Self::in_order_collect(&node.right, out);
-            }
+    /// - APAS: N/A — internal recursive in-order traversal helper.
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+    fn in_order_collect<T: StT + Ord>(link: &Link<T>, out: &mut Vec<T>) {
+        if let Some(node) = link {
+            in_order_collect(&node.left, out);
+            out.push(node.key.clone());
+            in_order_collect(&node.right, out);
         }
+    }
 
-        /// - APAS: N/A — internal in-order traversal collecting (key, priority) for rebuild.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn in_order_collect_with_priority(link: &Link<T>, out: &mut Vec<(T, u64)>) {
-            if let Some(node) = link {
-                Self::in_order_collect_with_priority(&node.left, out);
-                out.push((node.key.clone(), node.priority));
-                Self::in_order_collect_with_priority(&node.right, out);
-            }
+    /// - APAS: N/A — internal in-order traversal collecting (key, priority) for rebuild.
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+    fn in_order_collect_with_priority<T: StT + Ord>(
+        link: &Link<T>,
+        out: &mut Vec<(T, u64)>,
+    ) {
+        if let Some(node) = link {
+            in_order_collect_with_priority(&node.left, out);
+            out.push((node.key.clone(), node.priority));
+            in_order_collect_with_priority(&node.right, out);
         }
+    }
 
-        /// - APAS: N/A — build treap from sorted (key, priority) sequence.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — min-priority root, recurse.
-        fn build_treap_from_sorted(seq: &[(T, u64)]) -> Link<T> {
-            if seq.is_empty() {
-                return None;
-            }
-            let min_idx = seq
-                .iter()
-                .enumerate()
-                .min_by(|(_, a), (_, b)| a.1.cmp(&b.1))
-                .map(|(i, _)| i)
-                .unwrap();
-            let (key, priority) = seq[min_idx].clone();
-            let left_seq = &seq[..min_idx];
-            let right_seq = &seq[min_idx + 1..];
-            let left = Self::build_treap_from_sorted(left_seq);
-            let right = Self::build_treap_from_sorted(right_seq);
-            Self::make_node(key, priority, left, right)
+    /// - APAS: N/A — build treap from sorted (key, priority) sequence.
+    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — min-priority root, recurse.
+    fn build_treap_from_sorted<T: StT + Ord>(seq: &[(T, u64)]) -> Link<T> {
+        if seq.is_empty() {
+            return None;
         }
+        let min_idx = seq
+            .iter()
+            .enumerate()
+            .min_by(|(_, a), (_, b)| a.1.cmp(&b.1))
+            .map(|(i, _)| i)
+            .unwrap();
+        let (key, priority) = seq[min_idx].clone();
+        let left_seq = &seq[..min_idx];
+        let right_seq = &seq[min_idx + 1..];
+        let left = build_treap_from_sorted(left_seq);
+        let right = build_treap_from_sorted(right_seq);
+        make_node(key, priority, left, right)
+    }
 
-        /// - APAS: Work Θ(log n) with size augmentation, Span Θ(log n) — Algorithm 40.1.
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
-        fn rank_link(link: &Link<T>, key: &T) -> N {
-            match link {
-                | None => 0,
-                | Some(node) => {
-                    let left_size = Self::size_link(&node.left);
-                    if key < &node.key {
-                        Self::rank_link(&node.left, key)
-                    } else if key == &node.key {
-                        left_size + 1
-                    } else {
-                        left_size + 1 + Self::rank_link(&node.right, key)
-                    }
+    /// - APAS: Work Θ(log n) with size augmentation, Span Θ(log n) — Algorithm 40.1.
+    /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
+    fn rank_link<T: StT + Ord>(link: &Link<T>, key: &T) -> N {
+        match link {
+            | None => 0,
+            | Some(node) => {
+                let left_size = size_link(&node.left);
+                if key < &node.key {
+                    rank_link(&node.left, key)
+                } else if key == &node.key {
+                    left_size + 1
+                } else {
+                    left_size + 1 + rank_link(&node.right, key)
                 }
             }
         }
+    }
 
-        /// - APAS: Work Θ(log n) with size augmentation, Span Θ(log n) — Algorithm 40.1.
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
-        fn select_link(link: &Link<T>, rank: N) -> Option<&T> {
-            match link {
-                | None => None,
-                | Some(node) => {
-                    let left_size = Self::size_link(&node.left);
-                    if rank <= left_size {
-                        Self::select_link(&node.left, rank)
-                    } else if rank == left_size + 1 {
-                        Some(&node.key)
-                    } else {
-                        Self::select_link(&node.right, rank - left_size - 1)
-                    }
+    /// - APAS: Work Θ(log n) with size augmentation, Span Θ(log n) — Algorithm 40.1.
+    /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
+    fn select_link<T: StT + Ord>(link: &Link<T>, rank: N) -> Option<&T> {
+        match link {
+            | None => None,
+            | Some(node) => {
+                let left_size = size_link(&node.left);
+                if rank <= left_size {
+                    select_link(&node.left, rank)
+                } else if rank == left_size + 1 {
+                    Some(&node.key)
+                } else {
+                    select_link(&node.right, rank - left_size - 1)
                 }
             }
         }
-
     }
 
     impl<T: StT + Ord> BSTSizeStEphTrait<T> for BSTSizeStEph<T> {
         fn new() -> Self { BSTSizeStEph { root: None } }
 
-        fn size(&self) -> N { Self::size_link(&self.root) }
+        fn size(&self) -> N { size_link(&self.root) }
 
         fn is_empty(&self) -> B { self.size() == 0 }
 
@@ -285,37 +287,37 @@ pub mod BSTSizeStEph {
 
         fn insert(&mut self, value: T) {
             let mut r = rng();
-            Self::insert_link(&mut self.root, value, &mut r);
+            insert_link(&mut self.root, value, &mut r);
         }
 
         fn delete(&mut self, key: &T) {
             let mut in_order: Vec<(T, u64)> = Vec::new();
-            Self::in_order_collect_with_priority(&self.root, &mut in_order);
+            in_order_collect_with_priority(&self.root, &mut in_order);
             let filtered: Vec<(T, u64)> = in_order.into_iter().filter(|(k, _)| k != key).collect();
-            self.root = Self::build_treap_from_sorted(&filtered);
+            self.root = build_treap_from_sorted(&filtered);
         }
 
-        fn find(&self, target: &T) -> Option<&T> { Self::find_link(&self.root, target) }
+        fn find(&self, target: &T) -> Option<&T> { find_link(&self.root, target) }
 
         fn contains(&self, target: &T) -> B { self.find(target).is_some() }
 
-        fn minimum(&self) -> Option<&T> { Self::min_link(&self.root) }
+        fn minimum(&self) -> Option<&T> { min_link(&self.root) }
 
-        fn maximum(&self) -> Option<&T> { Self::max_link(&self.root) }
+        fn maximum(&self) -> Option<&T> { max_link(&self.root) }
 
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
-            Self::in_order_collect(&self.root, &mut out);
+            in_order_collect(&self.root, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
 
-        fn rank(&self, key: &T) -> N { Self::rank_link(&self.root, key) }
+        fn rank(&self, key: &T) -> N { rank_link(&self.root, key) }
 
         fn select(&self, rank: N) -> Option<&T> {
             if rank == 0 || rank > self.size() {
                 None
             } else {
-                Self::select_link(&self.root, rank)
+                select_link(&self.root, rank)
             }
         }
 
@@ -326,12 +328,12 @@ pub mod BSTSizeStEph {
                 (self.clone(), BSTSizeStEph::new())
             } else {
                 let mut in_order: Vec<(T, u64)> = Vec::new();
-                Self::in_order_collect_with_priority(&self.root, &mut in_order);
+                in_order_collect_with_priority(&self.root, &mut in_order);
                 let rank = rank.min(in_order.len());
                 let left_seq: Vec<(T, u64)> = in_order[..rank].to_vec();
                 let right_seq: Vec<(T, u64)> = in_order[rank..].to_vec();
-                let left_root = Self::build_treap_from_sorted(&left_seq);
-                let right_root = Self::build_treap_from_sorted(&right_seq);
+                let left_root = build_treap_from_sorted(&left_seq);
+                let right_root = build_treap_from_sorted(&right_seq);
                 (
                     BSTSizeStEph { root: left_root },
                     BSTSizeStEph { root: right_root },

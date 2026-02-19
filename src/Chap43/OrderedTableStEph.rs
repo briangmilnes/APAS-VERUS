@@ -68,7 +68,7 @@ pub mod OrderedTableStEph {
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn next_key(&self, k: &K)               -> Option<K>;
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn split_key(&mut self, k: &K)          -> (Self, Self)
+        fn split_key(&mut self, k: &K)          -> (Self, Option<V>, Self)
         where
             Self: Sized;
         /// claude-4-sonet: Work Θ(log(|self| + |other|)), Span Θ(log(|self| + |other|)), Parallelism Θ(1)
@@ -251,30 +251,30 @@ pub mod OrderedTableStEph {
         }
 
         /// Claude Work: O(log n), Span: O(log n)
-        fn split_key(&mut self, k: &K) -> (Self, Self) {
+        fn split_key(&mut self, k: &K) -> (Self, Option<V>, Self) {
             let entries = self.collect();
             let size = entries.length();
             let mut left_entries = Vec::new();
             let mut right_entries = Vec::new();
-            let mut _found_value: Option<V> = None;
+            let mut found_value: Option<V> = None;
 
             for i in 0..size {
                 let pair = entries.nth(i);
                 if &pair.0 < k {
                     left_entries.push(pair.clone());
-                } else {
-                    // Keys >= k go to the right side
+                } else if &pair.0 > k {
                     right_entries.push(pair.clone());
+                } else {
+                    found_value = Some(pair.1.clone());
                 }
             }
 
             let left_seq = AVLTreeSeqStPerS::from_vec(left_entries);
             let right_seq = AVLTreeSeqStPerS::from_vec(right_entries);
 
-            // Clear current table (ephemeral behavior)
             *self = Self::empty();
 
-            (from_sorted_entries(left_seq), from_sorted_entries(right_seq))
+            (from_sorted_entries(left_seq), found_value, from_sorted_entries(right_seq))
         }
 
         /// Claude Work: O(log(m + n)), Span: O(log(m + n))

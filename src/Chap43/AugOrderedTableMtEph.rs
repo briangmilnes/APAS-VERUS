@@ -60,7 +60,7 @@ pub mod AugOrderedTableMtEph {
         fn last_key(&self)                                -> Option<K>;
         fn previous_key(&self, k: &K)                     -> Option<K>;
         fn next_key(&self, k: &K)                         -> Option<K>;
-        fn split_key(&mut self, k: &K)                    -> (Self, Self)
+        fn split_key(&mut self, k: &K)                    -> (Self, Option<V>, Self)
         where
             Self: Sized;
         fn join_key(&mut self, other: Self);
@@ -230,8 +230,8 @@ pub mod AugOrderedTableMtEph {
         fn next_key(&self, k: &K) -> Option<K> { self.base_table.next_key(k) }
 
         /// Claude Work: O(lg n), Span: O(lg n)
-        fn split_key(&mut self, k: &K) -> (Self, Self) {
-            let (left_base, right_base) = self.base_table.split_key(k);
+        fn split_key(&mut self, k: &K) -> (Self, Option<V>, Self) {
+            let (left_base, found_value, right_base) = self.base_table.split_key(k);
 
             let left_reduction = calculate_reduction(&left_base, &self.reducer, &self.identity);
             let right_reduction = calculate_reduction(&right_base, &self.reducer, &self.identity);
@@ -250,7 +250,7 @@ pub mod AugOrderedTableMtEph {
                 identity: self.identity.clone(),
             };
 
-            (left, right)
+            (left, found_value, right)
         }
 
         /// Claude Work: O(lg n), Span: O(lg n)

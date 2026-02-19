@@ -38,32 +38,34 @@ pub mod FlatHashTable {
     impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for FlatEntry<Key, Value> {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time enum construction.
-        #[verifier::external_body]
         fn new() -> Self { FlatEntry::Empty }
 
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time enum assignment.
-        #[verifier::external_body]
         fn insert(&mut self, key: Key, value: Value) { *self = FlatEntry::Occupied(key, value); }
 
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — single match + key comparison.
-        #[verifier::external_body]
         fn lookup(&self, key: &Key) -> Option<Value> {
             match self {
-                | FlatEntry::Occupied(k, v) if k == key => Some(v.clone()),
+                | FlatEntry::Occupied(k, v) => {
+                    if k == key { Some(v.clone()) } else { None }
+                }
                 | _ => None,
             }
         }
 
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — single match + enum assignment.
-        #[verifier::external_body]
         fn delete(&mut self, key: &Key) -> B {
             match self {
-                | FlatEntry::Occupied(k, _) if k == key => {
-                    *self = FlatEntry::Deleted;
-                    true
+                | FlatEntry::Occupied(k, _) => {
+                    if k == key {
+                        *self = FlatEntry::Deleted;
+                        true
+                    } else {
+                        false
+                    }
                 }
                 | _ => false,
             }

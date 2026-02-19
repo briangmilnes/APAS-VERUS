@@ -7,275 +7,256 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 47: Hash Tables — Review Against Prose
 
-**Date:** 2026-02-17
+**Date:** 2026-02-18
 **Reviewer:** Claude-Opus-4.6
-**Project:** APAS-VERUS-agent2
-**Prose source:** `prompts/Chap47.txt`
+**Prose source:** `prompts/Chap47.txt`, `prompts/Chap47part2.txt`
 
-## Phase 1: Source File Inventory
+## Phase 1: Inventory
 
-| # | File | Prose Section | Inside verus! | Outside verus! | Reason Outside |
-|---|------|---------------|:---:|:---:|----------------|
-| 1 | `ParaHashTableStEph.rs` | §1.1 Parametric Design | `LoadAndSize`, `EntryTrait` | `HashFunGen`, `HashFun`, `HashTable`, `ParaHashTableStEphTrait` | `Rc<dyn Fn>`, `Box<dyn Fn>` fields in HashTable |
-| 2 | `ChainedHashTable.rs` | §1.2 Separate Chaining | `ChainEntry` (derive only) | `ChainedHashTable` trait | References `HashTable` (dyn Fn) |
-| 3 | `FlatHashTable.rs` | §2.1 Parametric Flat | `FlatEntry`, `EntryTrait for FlatEntry` | `FlatHashTable` trait | References `HashTable` (dyn Fn) |
-| 4 | `VecChainedHashTableStEph.rs` | §1.2 (Vec chains) | `EntryTrait for Vec` | `ParaHashTableStEphTrait`, `ChainedHashTable` impls | References `HashTable` (dyn Fn) |
-| 5 | `LinkedListChainedHashTableStEph.rs` | §1.2 (LinkedList chains) | (nothing) | All code | `LinkedList` not supported in Verus |
-| 6 | `StructChainedHashTable.rs` | §1.2 (custom linked list) | (nothing) | All code | Recursive `Node<K,V>` with `Box` |
-| 7 | `LinProbFlatHashTableStEph.rs` | §2 Linear Probing | Struct decl only | All impls | References `HashTable` (dyn Fn) |
-| 8 | `QuadProbFlatHashTableStEph.rs` | §2 Quadratic Probing | Struct decl only | All impls | References `HashTable` (dyn Fn) |
-| 9 | `DoubleHashFlatHashTableStEph.rs` | §2 Double Hashing | Struct decl, `second_hash` | All other impls | References `HashTable` (dyn Fn) |
+58 function entries extracted by `veracity-review-module-fn-impls` across 9 source files. Most code lives outside `verus!` due to `HashTable` containing `Rc<dyn Fn>` and `Box<dyn Fn>`.
 
-**Summary:** 9 source files, 7 test files, 0 PTT files. The dominant reason code lives outside `verus!` is the `HashTable` struct containing `Rc<dyn Fn>` and `Box<dyn Fn>` fields, which Verus cannot handle. This cascades through all traits and impls that reference `HashTable`.
+| # | File | Lines | V! Content | Outside verus! | Description |
+|---|------|------:|------------|----------------|-------------|
+| 1 | `ParaHashTableStEph.rs` | 155 | `LoadAndSize`, `EntryTrait` | `HashFunGen`, `HashFun`, `HashTable`, `ParaHashTableStEphTrait` | §1.1 Parametric design |
+| 2 | `ChainedHashTable.rs` | 99 | `ChainEntry` (derive) | `ChainedHashTable` trait | §1.2 Separate chaining base |
+| 3 | `FlatHashTable.rs` | 131 | `FlatEntry`, `EntryTrait for FlatEntry` | `FlatHashTable` trait | §2.1 Parametric flat base |
+| 4 | `VecChainedHashTableStEph.rs` | 143 | `EntryTrait for Vec` | `ParaHashTableStEphTrait`, `ChainedHashTable` impls | §1.2 Vec chains |
+| 5 | `LinkedListChainedHashTableStEph.rs` | 141 | (nothing) | All code | §1.2 LinkedList chains |
+| 6 | `StructChainedHashTable.rs` | 193 | (nothing) | All code | §1.2 Custom linked list chains |
+| 7 | `LinProbFlatHashTableStEph.rs` | 152 | Struct decl only | All impls | §2.2 Linear probing |
+| 8 | `QuadProbFlatHashTableStEph.rs` | 156 | Struct decl only | All impls | §2.3 Quadratic probing |
+| 9 | `DoubleHashFlatHashTableStEph.rs` | 193 | Struct decl, `second_hash` | All other impls | §2.4 Double hashing |
 
-## Phase 2: Prose Alignment
+**Root cause for code outside verus!:** `HashTable` struct contains `Rc<dyn Fn>` and `Box<dyn Fn>` fields, which Verus cannot handle. This cascades through all traits and impls that reference `HashTable`, forcing ~85% of the codebase outside `verus!`.
 
-### Definition 47.1 — Hash Table ADT
+## Phase 2: Prose Inventory
 
-| # | ADT Operation | Prose Description | Implemented | File(s) |
-|---|---------------|-------------------|:-----------:|---------|
-| 1 | `createTable(eqFn, hashFnGen, initSize)` | Creates empty table with equality fn, hash fn generator, initial size | Yes | `ParaHashTableStEph.rs` — but equality fn is not an explicit parameter (uses Rust's `PartialEq` trait) |
-| 2 | `insert(table, key, value)` | Inserts key-value pair | Yes | All 6 concrete implementations |
-| 3 | `lookup(table, key)` | Returns value or indicates not found | Yes | All 6 concrete implementations |
-| 4 | `loadAndSize(table)` | Returns (n, m) | Yes | `ParaHashTableStEph.rs` — returns `LoadAndSize { load: f64, size: N }` (computes α directly rather than returning raw n,m) |
-| 5 | `resize(table, newSize)` | Rehashes into new table | Yes | All 6 concrete implementations |
-| 6 | `delete(table, key)` | Removes key from table | Yes | All 6 concrete implementations (not in Definition 47.1 but in Data Structure 47.6) |
+### Definitions
 
-### Section 1.1 — Parametric Nested Design
+| # | Item | Description |
+|---|------|-------------|
+| 1 | Definition 47.1 | Hash Table ADT: `createTable`, `insert`, `lookup`, `loadAndSize`, `resize`, (+ `delete` from §2) |
+| 2 | Definition 47.2 | Load Factor: α = n/m |
+| 3 | Definition 47.3 | Separate Chaining: inner table as a list of key-value pairs |
+| 4 | Definition 47.5 | Probe Sequence: permutation of {0, 1, ..., m-1} |
+| 5 | Definition 47.7 | Linear Probing: h_i(k) = (h(k) + i) mod m |
+| 6 | Definition 47.8 | Quadratic Probing: h_i(k) = (h(k) + i²) mod m |
+| 7 | Definition 47.9 | Secondary Clustering |
+| 8 | Definition 47.10 | Double Hashing: h_i(k) = (h(k) + i·hh(k)) mod m |
 
-| # | Prose Concept | Code Alignment | Notes |
-|---|---------------|:-:|-------|
-| 1 | Outer table = array, inner table = abstract | Aligned | `HashTable.table: Vec<Entry>` is the array; `Entry` is the abstract inner table via `EntryTrait` |
-| 2 | Hash function maps keys to `{0..m-1}` | Aligned | `HashFunGen<K> = Rc<dyn Fn(N) -> Box<dyn Fn(&K) -> N>>` generates size-specific hash fns |
-| 3 | Load factor α = n/m | Aligned | `loadAndSize` computes `num_elements as f64 / current_size as f64` |
-| 4 | Resize by doubling to keep α bounded | Partial | `resize` exists but caller must decide when/how to trigger it; no automatic doubling |
+### Algorithms / Data Structures
 
-### Section 1.2 — Separate Chaining
+| # | Item | Description |
+|---|------|-------------|
+| 1 | §1.1 Parametric Design | Outer table = array of inner tables; hash function maps keys to inner table index |
+| 2 | Data Structure 47.6 | Parametric Flat Hash Table: entry = Empty / Dead / Live(key, value); lookup, insert, delete via probe sequence |
+| 3 | Lemma 47.1 | Quadratic probing: if m is prime and table ≥ half empty, first ⌈m/2⌉ probes are distinct |
 
-| # | Prose Statement | Code Alignment | Notes |
-|---|-----------------|:-:|-------|
-| 1 | Insert at head of list in O(1) | **GAP** | All 3 chain implementations scan for duplicate keys first, making insert O(chain_length) not O(1). Textbook assumes no dup check. |
-| 2 | Lookup = linear scan of chain | Aligned | All implementations do linear scan |
-| 3 | Delete = find + remove | Aligned | All implementations find then remove |
-| 4 | Expected cost O(1+α) for all ops | Aligned (with caveat) | True in expectation if α is constant and hash is uniform; code does match this expected analysis |
+### Exercises
 
-### Section 2 — Flat Tables / Open Addressing
+| # | Exercise | Status |
+|---|----------|--------|
+| 1 | Exercise 47.1 | Implement nested tables using Table ADT (text file) — not directly implemented |
+| 2 | Exercise 47.2 | When to reduce table size (text file) — not implemented |
+| 3 | Exercise 47.3 | Implement resize with cost bound — implemented in all 6 concrete impls |
+| 4 | Exercise 47.6 | Single higher-order function for lookup/insert/delete — not implemented |
+| 5 | Exercise 47.7 | Complete parametric flat hash table implementation — implemented |
 
-#### Data Structure 47.6 — Entry type
+### Cost Specs
 
-| # | Prose | Code | Notes |
-|---|-------|------|-------|
-| 1 | `Empty` | `FlatEntry::Empty` | Aligned |
-| 2 | `Dead` | `FlatEntry::Deleted` | Name differs (`Dead` vs `Deleted`) but semantics match |
-| 3 | `Live(key, value)` | `FlatEntry::Occupied(key, value)` | Name differs but semantics match |
+| # | Strategy | insert | lookup | delete | resize |
+|---|----------|--------|--------|--------|--------|
+| 1 | Separate Chaining | O(1+α) expected | O(1+α) expected | O(1+α) expected | O(n+m+m') |
+| 2 | Flat (general) | O(1/(1−α)) expected | O(1/(1−α)) expected | O(1/(1−α)) expected | O(n+m+m') |
+| 3 | Flat (successful lookup) | — | O((1/α)·ln(1/(1−α))) average | — | — |
 
-#### Lookup (Data Structure 47.6, lines 1-10)
+## Phase 3: Algorithmic Analysis
 
-| # | Prose Step | Code | Notes |
-|---|-----------|------|-------|
-| 1 | `T[h_i(k)]` = Empty → None | Aligned | All 3 flat impls check `FlatEntry::Empty => return None` |
-| 2 | `T[h_i(k)]` = Dead → recurse `i+1` | Aligned | `FlatEntry::Deleted => attempt += 1` |
-| 3 | `T[h_i(k)]` = Live(k', v') and k==k' → Some v | Aligned | `FlatEntry::Occupied(k, v) if k == key => Some(v.clone())` |
-| 4 | `T[h_i(k)]` = Live(k', v') and k≠k' → recurse `i+1` | Aligned | Falls through to `attempt += 1` |
+### Phase 3a: Cost Annotations
 
-#### Insert (Data Structure 47.6, lines 1-10)
+| # | Module | Function | APAS Cost | Actual Cost | Match? | Notes |
+|---|--------|----------|-----------|-------------|:------:|-------|
+| 1 | ParaHashTableStEph | `createTable` | O(m) | O(m) | Yes | Creates m empty entries |
+| 2 | All chained impls | `insert_chained` | O(1) head insert | O(chain_length) | **No** | Scans for duplicate key before inserting |
+| 3 | All chained impls | `lookup_chained` | O(1+α) expected | O(chain_length) | Yes | Same analysis |
+| 4 | All chained impls | `delete_chained` | O(1+α) expected | O(chain_length) | Yes | Same analysis |
+| 5 | All impls | `resize` | O(n+m+m') | O(n+m+m') | Yes | Collects pairs, creates new table, reinserts |
+| 6 | ParaHashTableStEph | `loadAndSize` | O(1) | O(1) | Yes | Field reads + division |
+| 7 | All flat impls | `probe` | O(1) | O(1) | Yes | Hash + arithmetic |
+| 8 | All flat impls | `find_slot` | O(1/(1−α)) exp | O(1/(1−α)) exp | Yes | Probes until empty/deleted |
+| 9 | All flat impls | `insert` | O(1/(1−α)) exp | O(1/(1−α)) exp | Yes | find_slot + O(1) write |
+| 10 | All flat impls | `lookup` | O(1/(1−α)) exp | O(1/(1−α)) exp | Yes | Probe until found/empty |
+| 11 | All flat impls | `delete` | O(1/(1−α)) exp | O(1/(1−α)) exp | Yes | Tombstone marker |
+| 12 | DoubleHash | `second_hash` | O(1) per APAS | O(sizeof(Key)) | **Differs** | FNV-1a iterates key bytes |
 
-| # | Prose Step | Code | Notes |
-|---|-----------|------|-------|
-| 1 | Empty → update(T, h_i(k), Live(k,v)) | Aligned | `FlatEntry::Empty => Occupied(key, value)` |
-| 2 | Dead → update(T, h_i(k), Live(k,v)) | Aligned | `FlatEntry::Deleted => Occupied(key, value)` |
-| 3 | Live(k', v') and k==k' → () (no-op) | **Differs** | Code updates the value: `Occupied(key, value)`. Prose says do nothing. Code behavior is more useful (upsert). |
-| 4 | Live(k', v') and k≠k' → recurse `i+1` | Aligned | Falls through to next probe |
+### Phase 3b: Implementation Fidelity
 
-#### Delete (Data Structure 47.6, lines 1-10)
+| # | Prose Item | Implementation | Fidelity | Notes |
+|---|-----------|---------------|----------|-------|
+| 1 | Definition 47.1 (Hash Table ADT) | `ParaHashTableStEphTrait` | ✅ Faithful | All ADT operations present; equality via Rust `PartialEq` rather than explicit param |
+| 2 | §1.1 Parametric nested design | `ParaHashTableStEph.rs` | ✅ Faithful | Outer array + abstract inner `EntryTrait` |
+| 3 | §1.2 Separate chaining | Vec, LinkedList, Struct chain impls | ✅ Faithful | Three chain implementations with different inner containers |
+| 4 | Data Structure 47.6 (Flat entry type) | `FlatEntry::Empty/Occupied/Deleted` | ✅ Faithful | Names differ (Dead→Deleted, Live→Occupied) but semantics match |
+| 5 | Data Structure 47.6 (Flat lookup) | All flat impls | ✅ Faithful | Probe sequence matches: Empty→None, Dead→next, Live+match→Some, Live+no match→next |
+| 6 | Data Structure 47.6 (Flat insert) | All flat impls | ⚠️ Minor | Prose says no-op on existing key; code does upsert (updates value). More useful behavior. |
+| 7 | Definition 47.7 (Linear probing) | `LinProbFlatHashTableStEph` | ✅ Faithful | `(h(k) + i) mod m` |
+| 8 | Definition 47.8 (Quadratic probing) | `QuadProbFlatHashTableStEph` | ✅ Faithful | `(h(k) + i²) mod m`, max_attempts = `⌈m/2⌉` per Lemma 47.1 |
+| 9 | Definition 47.10 (Double hashing) | `DoubleHashFlatHashTableStEph` | ✅ Faithful | `(h₁(k) + i·h₂(k)) mod m`, second hash ensures coprimality |
+| 10 | Lemma 47.1 (Quadratic ⌈m/2⌉ guarantee) | `QuadProbFlatHashTableStEph` | ✅ Implemented | `max_attempts = table.current_size.div_ceil(2)` |
+| 11 | Load factor α = n/m | `loadAndSize` | ✅ Faithful | Computes `num_elements / current_size` as f64 |
+| 12 | Resize by doubling | All impls | ⚠️ Partial | `resize` exists but no automatic trigger; caller must decide when |
 
-| # | Prose Step | Code | Notes |
-|---|-----------|------|-------|
-| 1 | Empty → () | Aligned | `FlatEntry::Empty => return false` |
-| 2 | Dead → recurse `i+1` | Aligned | `FlatEntry::Deleted => attempt += 1` |
-| 3 | Live(k', v') and k==k' → update(T, k, Dead) | Aligned | `table.table[slot] = FlatEntry::Deleted` |
-| 4 | Live(k', v') and k≠k' → recurse `i+1` | Aligned | Falls through to `attempt += 1` |
+### Phase 3c: Spec Fidelity
 
-#### Probe Sequences
+Minimal verification exists. Only `EntryTrait` and a few type definitions are inside `verus!`, all with `external_body`. No `requires`/`ensures` specifications on any function.
 
-| # | Strategy | Prose | Code | Formula |
-|---|----------|-------|:---:|---------|
-| 1 | Linear | Implicit in §2 | `LinProbFlatHashTableStEph` | `(h(k) + i) mod m` |
-| 2 | Quadratic | Lemma 47.1: first ⌈m/2⌉ distinct | `QuadProbFlatHashTableStEph` | `(h(k) + i²) mod m`, max_attempts = `⌈m/2⌉` |
-| 3 | Double | Exercise 47.4 area | `DoubleHashFlatHashTableStEph` | `(h₁(k) + i·h₂(k)) mod m` |
+## Phase 4: Parallelism Review
 
-## Phase 3: Cost Analysis
-
-### Chaining Operations
-
-| # | Operation | APAS Expected | Code Actual | Match? | Notes |
-|---|-----------|---------------|-------------|:------:|-------|
-| 1 | `createTable` | O(m) | O(m) | Yes | Creates m empty entries |
-| 2 | Chain insert (head) | O(1) | O(chain_length) | **No** | Code scans for dup key before inserting |
-| 3 | Chain lookup | O(1+α) expected | O(chain_length) | Yes | Same analysis; chain_length is O(1+α) expected |
-| 4 | Chain delete | O(1+α) expected | O(chain_length) | Yes | Same analysis |
-| 5 | `resize` | O(n+m+m') | O(n+m+m') | Yes | Collects n pairs from m buckets, creates m' new buckets, reinserts |
-| 6 | `loadAndSize` | O(1) | O(1) | Yes | Field reads + division |
-
-### Flat Table Operations
-
-| # | Operation | APAS Expected | Code Actual | Match? | Notes |
-|---|-----------|---------------|-------------|:------:|-------|
-| 1 | `probe` (each strategy) | O(1) | O(1) | Yes | Hash + arithmetic |
-| 2 | `find_slot` | O(1/(1−α)) expected | O(1/(1−α)) expected | Yes | Probes until empty/deleted |
-| 3 | Insert (unsuccessful) | O(1/(1−α)) expected | O(1/(1−α)) expected | Yes | |
-| 4 | Lookup (unsuccessful) | O(1/(1−α)) expected | O(1/(1−α)) expected | Yes | |
-| 5 | Lookup (successful) | O((1/α)·ln(1/(1−α))) average | O(1/(1−α)) worst probe | Coarser | Code uses same probe loop; APAS has tighter average-case bound |
-| 6 | Delete | O(1/(1−α)) expected | O(1/(1−α)) expected | Yes | Tombstone (Deleted) marker preserves probe chains |
-| 7 | `resize` | O(n+m+m') | O(n+m+m') | Yes | |
-| 8 | `second_hash` (double) | O(1) per APAS | O(sizeof(Key)) | **Differs** | FNV-1a iterates over key bytes; O(1) only if key size is bounded |
-
-## Phase 4: Parallelism
+The "Para" prefix in `ParaHashTableStEph` refers to "parametric" (§1.1 "A Parametric Design"), not "parallel." No parallelism is expected for this chapter. No Mt modules exist.
 
 | # | Item | Status | Notes |
 |---|------|--------|-------|
-| 1 | `ParaHashTableStEph` naming | Present | Name suggests parallel, but implementation is fully sequential |
-| 2 | Parallel insert/lookup | Not implemented | Textbook doesn't specify parallel hash table ops in this chapter |
-| 3 | Parallel resize | Not implemented | Could parallelize rehash with fork-join, but not done |
+| 1 | `ParaHashTableStEph` naming | Present | "Parametric", not "parallel" |
+| 2 | Parallel insert/lookup | Not implemented | Textbook doesn't specify parallel hash table ops |
+| 3 | Parallel resize | Not implemented | Could parallelize rehash, but not needed |
 
-The "Para" prefix in `ParaHashTableStEph` refers to "parametric" (§1.1 "A Parametric Design"), not "parallel." This is consistent with the textbook section title. No parallelism is expected for this chapter.
+## Phase 5: Runtime Test Review
 
-## Phase 5: Runtime Tests (RTT)
-
-| # | Test File | Tests | Coverage |
-|---|-----------|:-----:|----------|
-| 1 | `TestVecChainedHashTable.rs` | 8 | Entry CRUD, table insert/lookup/delete, resize, hash_index |
-| 2 | `TestLinProbFlatHashTable.rs` | 20 | Entry CRUD, probe, find_slot, insert/lookup/delete, resize, load_and_size, edge cases |
-| 3 | `TestDoubleHashFlatHashTable.rs` | 12 | Basic ops, second_hash properties (nonzero, odd), probe sequence, coprimality, resize |
+| # | Test File | Test Count | Coverage |
+|---|-----------|:----------:|----------|
+| 1 | `TestVecChainedHashTable.rs` | 9 | Entry CRUD, table insert/lookup/delete, resize, hash_index |
+| 2 | `TestLinProbFlatHashTable.rs` | 26 | Entry CRUD, probe, find_slot, insert/lookup/delete, resize, load_and_size, edge cases |
+| 3 | `TestDoubleHashFlatHashTable.rs` | 15 | Basic ops, second_hash properties (nonzero, odd), probe sequence, coprimality, resize |
 | 4 | `TestParaHashTableStEph.rs` | 4 | createTable, loadAndSize (empty/with elements), metrics |
-| 5 | `TestStructChainedHashTable.rs` | 12 | ChainList CRUD, table ops, default, resize, node clone |
-| 6 | `TestLinkedListChainedHashTable.rs` | 11 | Entry CRUD, collision handling, resize, load_and_size, update |
-| 7 | `TestQuadProbFlatHashTable.rs` | 14 | Basic ops, quadratic sequence verification, ⌈m/2⌉ limit, prime size guarantees |
+| 5 | `TestStructChainedHashTable.rs` | 11 | ChainList CRUD, table ops, default, resize, node clone |
+| 6 | `TestLinkedListChainedHashTable.rs` | 13 | Entry CRUD, collision handling, resize, load_and_size, update |
+| 7 | `TestQuadProbFlatHashTable.rs` | 12 | Basic ops, quadratic sequence verification, ⌈m/2⌉ limit, prime size guarantees |
 
-**Total: 81 runtime tests across 7 files.**
+**Total: 90 runtime tests across 7 files.**
 
 Test quality is good. Notable coverage:
 - Collision handling tested explicitly for LinkedList and double hashing
 - Quadratic probing's ⌈m/2⌉ distinct-probe guarantee (Lemma 47.1) tested
-- Double hashing coprimality tested (all slots visited with prime table size)
-- Delete-through-tombstone probe chain integrity tested for all flat table variants
+- Double hashing coprimality tested
+- Delete-through-tombstone probe chain integrity tested
 - Resize preserves elements and excludes deleted entries
 
-**Missing test:** No test file for the `FlatHashTable` trait's default methods (`insert_with_probe`, `lookup_with_probe`) in isolation for quad/double (only tested for linear probing in `TestLinProbFlatHashTable`).
+## Phase 6: PTT Review
 
-## Phase 6: Proof-Time Tests (PTT)
+No PTTs exist for Chapter 47. There are zero `proof fn` definitions and zero spec functions with `requires`/`ensures`. This is expected given that nearly all code is outside `verus!`.
 
-No PTTs exist for Chapter 47. There are zero `proof fn` definitions across all 9 source files, and zero spec functions with `requires`/`ensures`. This is expected given that nearly all code is outside `verus!` blocks due to the `dyn Fn` limitation.
+## Phase 7: Gap Analysis
 
-## Phase 7: Gaps and Issues
+### Prose Items with No Implementation
 
-### Critical
+| # | Prose Item | Status | Notes |
+|---|-----------|--------|-------|
+| 1 | Exercise 47.1 (nested tables via Table ADT) | Not implemented | Text exercise |
+| 2 | Exercise 47.2 (reduce table size) | Not implemented | Text exercise |
+| 3 | Exercise 47.6 (single higher-order function) | Not implemented | Refactoring exercise |
+| 4 | Auto-resize (doubling on load factor threshold) | Not implemented | `resize` exists but never triggered automatically |
+| 5 | Primary clustering analysis | Not demonstrated | Prose discusses it; code does not measure or demonstrate |
 
-| # | Issue | Severity | File(s) | Description |
-|---|-------|----------|---------|-------------|
-| 1 | `hash_index` always returns 0 | **Critical** | `VecChainedHashTableStEph.rs`, `LinkedListChainedHashTableStEph.rs`, `StructChainedHashTable.rs` | All three chained implementations have `let hash_val = 0; hash_val % table.current_size` — a placeholder that sends every key to bucket 0. Tests pass because the chain handles all elements, but this defeats the purpose of hashing. Should call `(table.hash_fn)(key)`. |
-| 2 | Zero formal verification | **High** | All files | No `requires`, `ensures`, `spec fn`, or `proof fn` anywhere. The entire chapter is unverified exec code. The root cause is `HashTable` containing `dyn Fn` types. |
+### Code with No Prose Counterpart
 
-### Moderate
+| # | Item | Module | Purpose |
+|---|------|--------|---------|
+| 1 | `ChainEntry` struct | ChainedHashTable | Defined but unused — concrete impls use Vec/LinkedList/ChainList directly |
+| 2 | `FlatHashTable::insert_with_probe`, `lookup_with_probe` | FlatHashTable | Default trait methods for flat tables |
+| 3 | `metrics` accessor | ParaHashTableStEph | Scaffolding for performance metrics |
+| 4 | `Debug` impls | All files | Trait impls for ergonomics |
 
-| # | Issue | Severity | File(s) | Description |
-|---|-------|----------|---------|-------------|
-| 3 | Chain insert scans for duplicates | Moderate | Vec, LinkedList, Struct chain impls | APAS says insert-at-head is O(1); code scans for duplicate key making it O(chain_length). This is arguably better behavior (upsert) but doesn't match the prose algorithm. |
-| 4 | Flat insert does upsert instead of no-op | Low | All flat impls | APAS insert says "if keyEqual(k, k') then ()" (no-op on existing key). Code updates the value. More useful but differs from prose. |
-| 5 | `unsafe` in `second_hash` | Moderate | `DoubleHashFlatHashTableStEph.rs` | Raw pointer arithmetic over key bytes for FNV-1a hash. Correct but unsafe. Could use `std::hash::Hash` instead. |
-| 6 | `num_elements` not maintained by chained impls | Moderate | Vec, LinkedList, Struct chain impls | The `ParaHashTableStEphTrait` insert/delete for chained variants delegate to `insert_chained`/`delete_chained` which do not update `table.num_elements`. Only flat table impls maintain this counter. This causes `loadAndSize` to report incorrect load factors for chained tables. |
-| 7 | `loadAndSize` returns `f64` instead of `(n, m)` | Low | `ParaHashTableStEph.rs` | APAS returns (load, size) as integers. Code computes the ratio as `f64`. Acceptable but differs from the ADT definition. |
+### Critical Issues
 
-### Design
+| # | Issue | Severity | Notes |
+|---|-------|----------|-------|
+| 1 | Zero formal verification | High | Root cause: `dyn Fn` in `HashTable` prevents `verus!` placement |
+| 2 | Chain insert scans for duplicates | Moderate | APAS says O(1) head insert; code scans for dup key making it O(chain_length) |
+| 3 | Flat insert does upsert | Low | APAS insert is no-op on existing key; code updates value |
+| 4 | `unsafe` in `second_hash` | Moderate | Raw pointer arithmetic over key bytes; could use `std::hash::Hash` instead |
+| 5 | `loadAndSize` returns f64 ratio | Low | APAS returns (n, m) as integers; code computes α as f64 |
+| 6 | No auto-resize | Moderate | Resize exists but is never triggered automatically |
 
-| # | Issue | File(s) | Description |
-|---|-------|---------|-------------|
-| 8 | No auto-resize | All impls | Resize exists but is never triggered automatically. Caller must manually check load factor and call resize. APAS discusses "doubling every time the load factor exceeds the desired bound" but this is not implemented. |
-| 9 | `ChainEntry` struct unused | `ChainedHashTable.rs` | `ChainEntry<Key, Value, Container>` is defined but never used — the concrete impls use `Vec<(K,V)>`, `LinkedList<(K,V)>`, and `ChainList<K,V>` directly as `Entry` types. |
-
-## Phase 8: TOC and In/Out Table
+## Phase 8: TOC and In/Out Review
 
 ### TOC Compliance
 
-| # | File | Has TOC | Sections Present | Notes |
-|---|------|:-------:|------------------|-------|
-| 1 | `ParaHashTableStEph.rs` | Yes | 1,2,4,8,13 | Split between in/out clearly documented |
-| 2 | `ChainedHashTable.rs` | Yes | 1,2,4,8,13 | |
-| 3 | `FlatHashTable.rs` | Yes | 1,2,4,9,8,13 | Section 9 before 8 (order issue) |
-| 4 | `VecChainedHashTableStEph.rs` | Yes | 1,2,4,9 | |
-| 5 | `LinkedListChainedHashTableStEph.rs` | Yes | 1,2,4,9 | |
-| 6 | `StructChainedHashTable.rs` | Yes | 1,2,4,9,11,13 | |
-| 7 | `LinProbFlatHashTableStEph.rs` | Yes | 1,2,4,9 | |
-| 8 | `QuadProbFlatHashTableStEph.rs` | Yes | 1,2,4,9 | |
-| 9 | `DoubleHashFlatHashTableStEph.rs` | Yes | 1,2,4,9 | |
+| # | File | Has TOC | Notes |
+|---|------|:-------:|-------|
+| 1 | `ParaHashTableStEph.rs` | Yes | Split between in/out clearly documented |
+| 2 | `ChainedHashTable.rs` | Yes | |
+| 3 | `FlatHashTable.rs` | Yes | Section 9 before 8 (order issue) |
+| 4 | `VecChainedHashTableStEph.rs` | Yes | |
+| 5 | `LinkedListChainedHashTableStEph.rs` | Yes | |
+| 6 | `StructChainedHashTable.rs` | Yes | |
+| 7 | `LinProbFlatHashTableStEph.rs` | Yes | |
+| 8 | `QuadProbFlatHashTableStEph.rs` | Yes | |
+| 9 | `DoubleHashFlatHashTableStEph.rs` | Yes | |
 
 ### In/Out Table
 
-| # | File | Item | Inside verus! | Outside verus! | Correct? | Reason |
-|---|------|------|:---:|:---:|:---:|--------|
-| 1 | `ParaHashTableStEph` | `LoadAndSize` struct | Yes | - | Correct | No dyn Fn |
-| 2 | `ParaHashTableStEph` | `EntryTrait` | Yes | - | Correct | No dyn Fn |
-| 3 | `ParaHashTableStEph` | `HashFunGen`, `HashFun` types | - | Yes | Forced | `Rc<dyn Fn>`, `Box<dyn Fn>` |
-| 4 | `ParaHashTableStEph` | `HashTable` struct | - | Yes | Forced | Contains `HashFunGen`, `HashFun` fields |
-| 5 | `ParaHashTableStEph` | `ParaHashTableStEphTrait` | - | Yes | Forced | Methods reference `HashTable` |
-| 6 | `ParaHashTableStEph` | `Debug for LoadAndSize` | - | Yes | Correct | Debug must be outside |
-| 7 | `ChainedHashTable` | `ChainEntry` struct | - | Yes (derive) | Acceptable | Outside with `#[derive]` |
-| 8 | `ChainedHashTable` | `ChainedHashTable` trait | - | Yes | Forced | References `HashTable` |
-| 9 | `ChainedHashTable` | `Debug for ChainEntry` | - | Yes | Correct | Debug must be outside |
-| 10 | `FlatHashTable` | `FlatEntry` enum | Yes | - | Correct | No dyn Fn |
-| 11 | `FlatHashTable` | `EntryTrait for FlatEntry` | Yes (ext_body) | - | Correct | entry-level ops, no dyn Fn |
-| 12 | `FlatHashTable` | `FlatHashTable` trait | - | Yes | Forced | References `HashTable` |
-| 13 | `FlatHashTable` | `Debug for FlatEntry` | - | Yes | Correct | Debug must be outside |
-| 14 | `VecChainedHashTableStEph` | `EntryTrait for Vec` | Yes (ext_body) | - | Correct | No dyn Fn |
-| 15 | `VecChainedHashTableStEph` | `ParaHashTableStEphTrait` impl | - | Yes | Forced | References `HashTable` |
-| 16 | `VecChainedHashTableStEph` | `ChainedHashTable` impl | - | Yes | Forced | References `HashTable` |
-| 17 | `LinkedListChainedHashTableStEph` | `EntryTrait for LinkedList` | - | Yes | Forced | `LinkedList` not in Verus |
-| 18 | `LinkedListChainedHashTableStEph` | All other impls | - | Yes | Forced | `LinkedList` + `HashTable` |
-| 19 | `StructChainedHashTable` | `Node`, `ChainList` structs | - | Yes | Forced | Recursive `Box<Node>` |
-| 20 | `StructChainedHashTable` | All impls | - | Yes | Forced | Recursive types + `HashTable` |
-| 21 | `StructChainedHashTable` | `Debug for Node/ChainList` | - | Yes | Correct | Debug must be outside |
-| 22 | `LinProbFlatHashTableStEph` | Struct decl | Yes | - | Correct | |
-| 23 | `LinProbFlatHashTableStEph` | All impls | - | Yes | Forced | References `HashTable` |
-| 24 | `QuadProbFlatHashTableStEph` | Struct decl | Yes | - | Correct | |
-| 25 | `QuadProbFlatHashTableStEph` | All impls | - | Yes | Forced | References `HashTable` |
-| 26 | `DoubleHashFlatHashTableStEph` | Struct decl | Yes | - | Correct | |
-| 27 | `DoubleHashFlatHashTableStEph` | `second_hash` | Yes (ext_body) | - | Correct | Standalone fn, no dyn Fn |
-| 28 | `DoubleHashFlatHashTableStEph` | All other impls | - | Yes | Forced | References `HashTable` |
+| # | File | Item | In V! | Out V! | Correct? | Reason |
+|---|------|------|:-----:|:------:|:--------:|--------|
+| 1 | ParaHashTableStEph | `LoadAndSize` | Yes | - | Correct | No dyn Fn |
+| 2 | ParaHashTableStEph | `EntryTrait` | Yes | - | Correct | No dyn Fn |
+| 3 | ParaHashTableStEph | `HashTable` struct | - | Yes | Forced | Contains `Rc<dyn Fn>`, `Box<dyn Fn>` |
+| 4 | ParaHashTableStEph | `ParaHashTableStEphTrait` | - | Yes | Forced | Methods reference `HashTable` |
+| 5 | FlatHashTable | `FlatEntry` enum | Yes | - | Correct | No dyn Fn |
+| 6 | FlatHashTable | `EntryTrait for FlatEntry` | Yes (ext_body) | - | Correct | Entry-level ops, no dyn Fn |
+| 7 | FlatHashTable | `FlatHashTable` trait | - | Yes | Forced | References `HashTable` |
+| 8 | VecChainedHashTableStEph | `EntryTrait for Vec` | Yes (ext_body) | - | Correct | No dyn Fn |
+| 9 | VecChainedHashTableStEph | `ParaHashTableStEphTrait` impl | - | Yes | Forced | References `HashTable` |
+| 10 | DoubleHashFlatHashTableStEph | `second_hash` | Yes (ext_body) | - | Correct | Standalone fn |
+| 11 | All others | All impls | - | Yes | Forced | `HashTable` cascade |
+| 12 | All | Debug impls | - | Yes | Correct | Debug must be outside |
 
-**Root cause analysis:** The single design decision to store `Rc<dyn Fn>` and `Box<dyn Fn>` in `HashTable` forces the entire `ParaHashTableStEphTrait` and all its implementors outside `verus!`. This cascades to ~85% of the codebase being unverifiable. The only items that remain inside `verus!` are:
-- Type definitions that don't reference `HashTable` (`LoadAndSize`, `FlatEntry`, struct decls)
-- `EntryTrait` (methods don't take `HashTable`)
-- `EntryTrait` impls for `Vec` and `FlatEntry` (external_body but inside verus!)
-- `second_hash` (standalone, no dyn Fn)
-
-## Proof Holes
+## Proof Holes Summary
 
 | # | File | Hole Type | Location | Description |
 |---|------|-----------|----------|-------------|
-| 1 | `FlatHashTable.rs` | `external_body` | `FlatEntry::new` | Trivial — could potentially verify |
-| 2 | `FlatHashTable.rs` | `external_body` | `FlatEntry::insert` | Trivial — enum assignment |
-| 3 | `FlatHashTable.rs` | `external_body` | `FlatEntry::lookup` | Match + key comparison |
-| 4 | `FlatHashTable.rs` | `external_body` | `FlatEntry::delete` | Match + enum assignment |
-| 5 | `VecChainedHashTableStEph.rs` | `external_body` | `Vec::new` | Trivial |
-| 6 | `VecChainedHashTableStEph.rs` | `external_body` | `Vec::insert` | Linear scan + push |
-| 7 | `VecChainedHashTableStEph.rs` | `external_body` | `Vec::lookup` | Linear scan |
-| 8 | `VecChainedHashTableStEph.rs` | `external_body` | `Vec::delete` | Linear scan + remove |
-| 9 | `DoubleHashFlatHashTableStEph.rs` | `external_body` | `second_hash` | FNV-1a hash over key bytes |
-| 10 | `DoubleHashFlatHashTableStEph.rs` | `unsafe` | Inside `second_hash` | Raw pointer arithmetic over key bytes |
+| 1 | `FlatHashTable.rs` | `external_body` ×4 | `FlatEntry::{new, insert, lookup, delete}` | Simple enum ops; potentially removable |
+| 2 | `VecChainedHashTableStEph.rs` | `external_body` ×4 | `Vec::{new, insert, lookup, delete}` | Vec operations |
+| 3 | `DoubleHashFlatHashTableStEph.rs` | `external_body` ×1 | `second_hash` | FNV-1a hash |
+| 4 | `DoubleHashFlatHashTableStEph.rs` | `unsafe` ×1 | Inside `second_hash` | Raw pointer arithmetic |
 
-**Total: 9 `external_body` + 1 `unsafe`.**
+**Total: 9 `external_body` + 1 `unsafe` = 10 holes.**
 
-Holes 1-4 (`FlatEntry` methods) are potentially removable — they are simple enum operations that Verus should be able to verify if given proper `ensures` clauses. Holes 5-8 (`Vec` methods) require Verus's `Vec` specs which may be sufficient. Holes 9-10 are inherently unverifiable (raw pointer arithmetic).
+## Spec Strength Summary
 
-## Action Items
+| Classification | Count |
+|---|:---:|
+| strong | 0 |
+| partial | 0 |
+| weak | 0 |
+| none | 58 |
 
-| # | Priority | Description | Files |
-|---|----------|-------------|-------|
-| 1 | **P0** | Fix `hash_index` placeholder — call `(table.hash_fn)(key)` instead of returning 0 | `VecChainedHashTableStEph.rs`, `LinkedListChainedHashTableStEph.rs`, `StructChainedHashTable.rs` |
-| 2 | **P1** | Fix `num_elements` tracking in chained insert/delete (either in `insert_chained`/`delete_chained` or in each concrete impl) | `ChainedHashTable.rs` or all chained impls |
-| 3 | **P1** | Investigate removing `external_body` from `FlatEntry` methods (simple enum ops that Verus may verify) | `FlatHashTable.rs` |
-| 4 | **P2** | Add auto-resize logic (e.g., double table when α > threshold) | All impls or a wrapper layer |
-| 5 | **P2** | Consider redesigning `HashTable` to avoid `dyn Fn` — e.g., use a `Hasher` trait bound instead, enabling the struct to live inside `verus!` | `ParaHashTableStEph.rs` and all dependents |
-| 6 | **P3** | Remove unused `ChainEntry` struct | `ChainedHashTable.rs` |
-| 7 | **P3** | Replace `unsafe` pointer arithmetic in `second_hash` with `std::hash::Hash` | `DoubleHashFlatHashTableStEph.rs` |
-| 8 | **P3** | Add PTTs once spec functions exist (blocked on P5) | New `rust_verify_test/` files |
+All 58 functions have **no spec**. The `external_body` functions inside `verus!` lack `ensures` clauses.
+
+## Overall Assessment
+
+### Strengths
+
+1. **Complete prose coverage**: All strategies from the textbook are implemented — parametric nested (3 chain variants), linear probing, quadratic probing, and double hashing.
+2. **Parametric design**: The trait hierarchy (`EntryTrait` → `ParaHashTableStEphTrait` → `FlatHashTable`/`ChainedHashTable`) faithfully captures the §1.1 parametric structure.
+3. **Lemma 47.1 implemented**: Quadratic probing correctly limits to `⌈m/2⌉` attempts.
+4. **Good test coverage**: 90 tests covering all implementations including collision handling, resize, and probe sequence properties.
+5. **TOC compliance**: All 9 files have TOC headers with in/out annotations.
+6. **Cost annotations**: Every function has APAS and Claude cost annotations in doc comments.
+
+### Weaknesses
+
+1. **Zero formal verification**: `dyn Fn` in `HashTable` forces ~85% of code outside `verus!`. The 10 `external_body` functions inside `verus!` have no specs.
+2. **Chain insert deviates from prose**: All chain impls scan for duplicate keys (O(chain_length)) instead of O(1) head insert.
+3. **`unsafe` in `second_hash`**: Raw pointer arithmetic for FNV-1a hashing.
+4. **No auto-resize**: Resize logic exists but is never triggered automatically.
+5. **Unused `ChainEntry` struct**: Defined but never used in any implementation.
+
+### Review TODOs
+
+| # | Priority | TODO | Notes |
+|---|:--------:|------|-------|
+| 1 | P1 | Investigate removing `external_body` from `FlatEntry` methods | Simple enum ops that Verus may verify |
+| 2 | P2 | Add auto-resize logic | Double table when α > threshold |
+| 3 | P2 | Consider redesigning `HashTable` to avoid `dyn Fn` | Use a `Hasher` trait bound instead, enabling struct inside `verus!` |
+| 4 | P3 | Remove unused `ChainEntry` struct | Dead code |
+| 5 | P3 | Replace `unsafe` in `second_hash` with `std::hash::Hash` | Safety improvement |

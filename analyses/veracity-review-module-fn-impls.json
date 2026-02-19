@@ -1,10 +1,706 @@
 [
   {
     "id": 1,
-    "function": "insertion_sort",
-    "file": "Chap03/InsertionSortStEph.rs",
-    "lines": "34-38",
-    "spec_strength": "unknown",
-    "snippet": "pub fn insertion_sort<T: TotalOrder + Copy>(a: &mut [T]) -> (sorted: &[T])\n        ensures\n          sorted.len() == old(a).len(),\n          sorted@.to_multiset() == old(a)@.to_multiset(),\n          is_sorted(sorted),"
+    "function": "size",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "33-35",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work 1, Span 1\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn size(&self)                               -> N;"
+  },
+  {
+    "id": 2,
+    "function": "to_seq",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "36-38",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(n), Span Θ(n)\n        fn to_seq(&self)                             -> AVLTreeSeqStEphS<T>;"
+  },
+  {
+    "id": 3,
+    "function": "empty",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "39-41",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work 1, Span 1\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn empty()                                   -> Self;"
+  },
+  {
+    "id": 4,
+    "function": "singleton",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "42-44",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work 1, Span 1\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn singleton(x: T)                           -> Self;"
+  },
+  {
+    "id": 5,
+    "function": "from_seq",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "45-46",
+    "spec_strength": "",
+    "snippet": "        /// - claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)\n        fn from_seq(seq: AVLTreeSeqStEphS<T>)        -> Self;"
+  },
+  {
+    "id": 6,
+    "function": "filter",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "47-49",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))\n        /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)\n        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> Self;"
+  },
+  {
+    "id": 7,
+    "function": "intersection",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "50-52",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)\n        /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))\n        fn intersection(&self, other: &Self)         -> Self;"
+  },
+  {
+    "id": 8,
+    "function": "difference",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "53-55",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)\n        /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))\n        fn difference(&self, other: &Self)           -> Self;"
+  },
+  {
+    "id": 9,
+    "function": "union",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "56-58",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)\n        /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))\n        fn union(&self, other: &Self)                -> Self;"
+  },
+  {
+    "id": 10,
+    "function": "find",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "59-61",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)\n        fn find(&self, x: &T)                        -> B;"
+  },
+  {
+    "id": 11,
+    "function": "delete",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "62-64",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)\n        fn delete(&mut self, x: &T);"
+  },
+  {
+    "id": 12,
+    "function": "insert",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "65-67",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)\n        fn insert(&mut self, x: T);"
+  },
+  {
+    "id": 13,
+    "function": "parallel_filter",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "114-140",
+    "spec_strength": "",
+    "snippet": "            // Unconditionally parallel divide-and-conquer using ParaPair!\n            fn parallel_filter<T: StTInMtT + Ord + 'static, F: PredMt<T> + Clone>(vals: Vec<T>, f: F) -> Vec<T> {\n                let n = vals.len();\n                if n == 0 {\n                    return Vec::new();\n                }\n                if n == 1 {\n                    return if f(&vals[0]) { vals } else { Vec::new() };\n                }\n\n                let mid = n / 2;\n                let mut right_vals = vals;\n                let left_vals = right_vals.split_off(mid);\n                let right_vals_final = right_vals;\n\n                let f_left = f.clone();\n                let f_right = f;\n\n                let Pair(left_filtered, right_filtered) = ParaPair!(\n                    move || parallel_filter(left_vals, f_left),\n                    move || parallel_filter(right_vals_final, f_right)\n                );\n\n                let mut result = left_filtered;\n                result.extend(right_filtered);\n                result\n            }"
+  },
+  {
+    "id": 14,
+    "function": "parallel_intersect",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "171-202",
+    "spec_strength": "",
+    "snippet": "            // Unconditionally parallel divide-and-conquer using ParaPair!\n            fn parallel_intersect<T: StTInMtT + Ord + 'static>(self_vals: Vec<T>, other_vals: Vec<T>) -> Vec<T> {\n                let n = self_vals.len();\n                if n == 0 {\n                    return Vec::new();\n                }\n                if n == 1 {\n                    let other_set = AVLTreeSetMtEph::from_seq(AVLTreeSeqStEphS::from_vec(other_vals));\n                    return if other_set.find(&self_vals[0]) {\n                        self_vals\n                    } else {\n                        Vec::new()\n                    };\n                }\n\n                let mid = n / 2;\n                let mut right_self = self_vals;\n                let left_self = right_self.split_off(mid);\n                let right_self_final = right_self;\n\n                let other_left = other_vals.clone();\n                let other_right = other_vals;\n\n                let Pair(left_intersect, right_intersect) =\n                    ParaPair!(move || parallel_intersect(left_self, other_left), move || {\n                        parallel_intersect(right_self_final, other_right)\n                    });\n\n                let mut result = left_intersect;\n                result.extend(right_intersect);\n                result\n            }"
+  },
+  {
+    "id": 15,
+    "function": "default",
+    "file": "Chap41/AVLTreeSetMtEph.rs",
+    "lines": "266",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::empty() }"
+  },
+  {
+    "id": 16,
+    "function": "partial_cmp",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "34-36",
+    "spec_strength": "",
+    "snippet": "        fn partial_cmp(&self, other: &Self) -> Option<Ordering> {\n            Some(self.cmp(other))\n        }"
+  },
+  {
+    "id": 17,
+    "function": "cmp",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "40-58",
+    "spec_strength": "",
+    "snippet": "        fn cmp(&self, other: &Self) -> Ordering {\n            // Lexicographic ordering: compare element by element (no cloning)\n            let n_self = self.size();\n            let n_other = other.size();\n            let min_n = n_self.min(n_other);\n            \n            // Compare common prefix\n            for i in 0..min_n {\n                let a = self.elements.nth(i);\n                let b = other.elements.nth(i);\n                match a.cmp(b) {\n                    Equal => continue,\n                    non_equal => return non_equal,\n                }\n            }\n            \n            // If all compared elements are equal, compare by size\n            n_self.cmp(&n_other)\n        }"
+  },
+  {
+    "id": 18,
+    "function": "size",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "62-64",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work 1, Span 1\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn size(&self)                               -> N;"
+  },
+  {
+    "id": 19,
+    "function": "to_seq",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "65-67",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn to_seq(&self)                             -> AVLTreeSeqMtPerS<T>;"
+  },
+  {
+    "id": 20,
+    "function": "empty",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "68-70",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work 1, Span 1\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn empty()                                   -> Self;"
+  },
+  {
+    "id": 21,
+    "function": "singleton",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "71-73",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work 1, Span 1\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn singleton(x: T)                           -> Self;"
+  },
+  {
+    "id": 22,
+    "function": "from_seq",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "74-75",
+    "spec_strength": "",
+    "snippet": "        /// - claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)\n        fn from_seq(seq: AVLTreeSeqMtPerS<T>)        -> Self;"
+  },
+  {
+    "id": 23,
+    "function": "filter",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "76-78",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))\n        /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)\n        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> Self;"
+  },
+  {
+    "id": 24,
+    "function": "intersection",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "79-81",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)\n        /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))\n        fn intersection(&self, other: &Self)         -> Self;"
+  },
+  {
+    "id": 25,
+    "function": "difference",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "82-84",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)\n        /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))\n        fn difference(&self, other: &Self)           -> Self;"
+  },
+  {
+    "id": 26,
+    "function": "union",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "85-87",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)\n        /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))\n        fn union(&self, other: &Self)                -> Self;"
+  },
+  {
+    "id": 27,
+    "function": "find",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "88-90",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)\n        fn find(&self, x: &T)                        -> B;"
+  },
+  {
+    "id": 28,
+    "function": "delete",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "91-93",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)\n        fn delete(&self, x: &T)                      -> Self;"
+  },
+  {
+    "id": 29,
+    "function": "insert",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "94-96",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)\n        fn insert(&self, x: T)                       -> Self;"
+  },
+  {
+    "id": 30,
+    "function": "parallel_sort",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "122-155",
+    "spec_strength": "",
+    "snippet": "            fn parallel_sort<T: StTInMtT + Ord + 'static>(mut vals: Vec<T>) -> Vec<T> {\n                let n = vals.len();\n                if n <= 1 {\n                    return vals;\n                }\n                if n <= SEQUENTIAL_CUTOFF {\n                    vals.sort();\n                    return vals;\n                }\n\n                let mid = n / 2;\n                let right_vals = vals.split_off(mid);\n                let left_vals = vals;\n\n                let Pair(left_sorted, right_sorted) =\n                    ParaPair!(move || parallel_sort(left_vals), move || parallel_sort(right_vals));\n\n                // Merge sorted halves\n                let mut result = Vec::with_capacity(n);\n                let mut i = 0;\n                let mut j = 0;\n                while i < left_sorted.len() && j < right_sorted.len() {\n                    if left_sorted[i] <= right_sorted[j] {\n                        result.push(left_sorted[i].clone());\n                        i += 1;\n                    } else {\n                        result.push(right_sorted[j].clone());\n                        j += 1;\n                    }\n                }\n                result.extend_from_slice(&left_sorted[i..]);\n                result.extend_from_slice(&right_sorted[j..]);\n                result\n            }"
+  },
+  {
+    "id": 31,
+    "function": "default",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "372",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::empty() }"
+  },
+  {
+    "id": 32,
+    "function": "size",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "25-27",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work 1, Span 1\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn size(&self)                        -> N;"
+  },
+  {
+    "id": 33,
+    "function": "to_seq",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "28-30",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)\n        fn to_seq(&self)                      -> AVLTreeSeqStEphS<T>;"
+  },
+  {
+    "id": 34,
+    "function": "empty",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "31-33",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work 1, Span 1\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn empty()                            -> Self;"
+  },
+  {
+    "id": 35,
+    "function": "singleton",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "34-36",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work 1, Span 1\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn singleton(x: T)                    -> Self;"
+  },
+  {
+    "id": 36,
+    "function": "from_seq",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "37-38",
+    "spec_strength": "",
+    "snippet": "        /// - claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)\n        fn from_seq(seq: AVLTreeSeqStEphS<T>) -> Self;"
+  },
+  {
+    "id": 37,
+    "function": "filter",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "39-41",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))\n        /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)\n        fn filter<F: PredSt<T>>(&self, f: F)  -> Self;"
+  },
+  {
+    "id": 38,
+    "function": "intersection",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "42-44",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)\n        /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)\n        fn intersection(&self, other: &Self)  -> Self;"
+  },
+  {
+    "id": 39,
+    "function": "difference",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "45-47",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)\n        /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)\n        fn difference(&self, other: &Self)    -> Self;"
+  },
+  {
+    "id": 40,
+    "function": "union",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "48-50",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)\n        /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)\n        fn union(&self, other: &Self)         -> Self;"
+  },
+  {
+    "id": 41,
+    "function": "find",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "51-53",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)\n        fn find(&self, x: &T)                 -> B;"
+  },
+  {
+    "id": 42,
+    "function": "delete",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "54-56",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)\n        fn delete(&mut self, x: &T);"
+  },
+  {
+    "id": 43,
+    "function": "insert",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "57-59",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)\n        fn insert(&mut self, x: T);"
+  },
+  {
+    "id": 44,
+    "function": "default",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "212",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::empty() }"
+  },
+  {
+    "id": 45,
+    "function": "size",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "24-26",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work 1, Span 1\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn size(&self)                        -> N;"
+  },
+  {
+    "id": 46,
+    "function": "to_seq",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "27-29",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)\n        fn to_seq(&self)                      -> AVLTreeSeqStPerS<T>;"
+  },
+  {
+    "id": 47,
+    "function": "empty",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "30-32",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work 1, Span 1\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn empty()                            -> Self;"
+  },
+  {
+    "id": 48,
+    "function": "singleton",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "33-35",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work 1, Span 1\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn singleton(x: T)                    -> Self;"
+  },
+  {
+    "id": 49,
+    "function": "from_seq",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "36-37",
+    "spec_strength": "",
+    "snippet": "        /// - claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)\n        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> Self;"
+  },
+  {
+    "id": 50,
+    "function": "filter",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "38-40",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))\n        /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)\n        fn filter<F: PredSt<T>>(&self, f: F)  -> Self;"
+  },
+  {
+    "id": 51,
+    "function": "intersection",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "41-43",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)\n        /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)\n        fn intersection(&self, other: &Self)  -> Self;"
+  },
+  {
+    "id": 52,
+    "function": "difference",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "44-46",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)\n        /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)\n        fn difference(&self, other: &Self)    -> Self;"
+  },
+  {
+    "id": 53,
+    "function": "union",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "47-49",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)\n        /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)\n        fn union(&self, other: &Self)         -> Self;"
+  },
+  {
+    "id": 54,
+    "function": "find",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "50-52",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)\n        fn find(&self, x: &T)                 -> B;"
+  },
+  {
+    "id": 55,
+    "function": "delete",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "53-55",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)\n        fn delete(&self, x: &T)               -> Self;"
+  },
+  {
+    "id": 56,
+    "function": "insert",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "56-58",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|\n        /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)\n        fn insert(&self, x: T)                -> Self;"
+  },
+  {
+    "id": 57,
+    "function": "default",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "248",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::empty() }"
+  },
+  {
+    "id": 58,
+    "function": "new",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "21-22",
+    "spec_strength": "",
+    "snippet": "        /// claude-4-sonet: Work Θ(u), Span Θ(1)\n        fn new(u: N)                                  -> Self;"
+  },
+  {
+    "id": 59,
+    "function": "size",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "23-25",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.3: Work u, Span 1\n        /// - claude-4-sonet: Work Θ(u/w) where w is word size, Span Θ(u/w)\n        fn size(&self)                                -> N;"
+  },
+  {
+    "id": 60,
+    "function": "to_seq",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "26-28",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.3: Work u, Span 1\n        /// - claude-4-sonet: Work Θ(|set|), Span Θ(|set|)\n        fn to_seq(&self)                              -> ArraySeqMtEphS<N>;"
+  },
+  {
+    "id": 61,
+    "function": "empty",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "29-30",
+    "spec_strength": "",
+    "snippet": "        /// claude-4-sonet: Work Θ(u), Span Θ(1)\n        fn empty(u: N)                                -> Self;"
+  },
+  {
+    "id": 62,
+    "function": "singleton",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "31-33",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.3: Work u, Span 1\n        /// - claude-4-sonet: Work Θ(u), Span Θ(1)\n        fn singleton(u: N, x: N)                      -> Self;"
+  },
+  {
+    "id": 63,
+    "function": "from_seq",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "34-35",
+    "spec_strength": "",
+    "snippet": "        /// claude-4-sonet: Work Θ(u + |seq|), Span Θ(1)\n        fn from_seq(u: N, seq: ArraySeqMtEphS<N>)     -> Self;"
+  },
+  {
+    "id": 64,
+    "function": "filter",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "36-38",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.3: Work u + Σ W(f(x)), Span 1 + max S(f(x))\n        /// - claude-4-sonet: Work Θ(u), Span Θ(log u), Parallelism Θ(u/log u)\n        fn filter<F: PredVal<N> + Clone>(&self, f: F) -> Self;"
+  },
+  {
+    "id": 65,
+    "function": "intersection",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "39-41",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.3: Work u, Span 1\n        /// - claude-4-sonet: Work Θ(u/w), Span Θ(u/w)\n        fn intersection(&self, other: &Self)          -> Self;"
+  },
+  {
+    "id": 66,
+    "function": "difference",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "42-44",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.3: Work u, Span 1\n        /// - claude-4-sonet: Work Θ(u/w), Span Θ(u/w)\n        fn difference(&self, other: &Self)            -> Self;"
+  },
+  {
+    "id": 67,
+    "function": "union",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "45-47",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.3: Work u, Span 1\n        /// - claude-4-sonet: Work Θ(u/w), Span Θ(u/w)\n        fn union(&self, other: &Self)                 -> Self;"
+  },
+  {
+    "id": 68,
+    "function": "find",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "48-50",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.3: Work 1, Span 1\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn find(&self, x: N)                          -> B;"
+  },
+  {
+    "id": 69,
+    "function": "delete",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "51-53",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.3: Work u, Span 1\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn delete(&mut self, x: N);"
+  },
+  {
+    "id": 70,
+    "function": "insert",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "54-56",
+    "spec_strength": "",
+    "snippet": "        /// - APAS Cost Spec 41.3: Work u, Span 1\n        /// - claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn insert(&mut self, x: N);"
+  },
+  {
+    "id": 71,
+    "function": "size",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "17-18",
+    "spec_strength": "",
+    "snippet": "        /// claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn size(&self)                       -> N;"
+  },
+  {
+    "id": 72,
+    "function": "to_seq",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "19-20",
+    "spec_strength": "",
+    "snippet": "        /// claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn to_seq(&self)                     -> ArraySeqStEphS<T>;"
+  },
+  {
+    "id": 73,
+    "function": "empty",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "21-22",
+    "spec_strength": "",
+    "snippet": "        /// claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn empty()                           -> Self;"
+  },
+  {
+    "id": 74,
+    "function": "singleton",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "23-24",
+    "spec_strength": "",
+    "snippet": "        /// claude-4-sonet: Work Θ(1), Span Θ(1)\n        fn singleton(x: T)                   -> Self;"
+  },
+  {
+    "id": 75,
+    "function": "from_seq",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "25-26",
+    "spec_strength": "",
+    "snippet": "        /// claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)\n        fn from_seq(seq: ArraySeqStEphS<T>)  -> Self;"
+  },
+  {
+    "id": 76,
+    "function": "filter",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "27-28",
+    "spec_strength": "",
+    "snippet": "        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)\n        fn filter<F: PredSt<T>>(&self, f: F) -> Self;"
+  },
+  {
+    "id": 77,
+    "function": "intersection",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "29-30",
+    "spec_strength": "",
+    "snippet": "        /// claude-4-sonet: Work Θ(m + n), Span Θ(m + n), Parallelism Θ(1)\n        fn intersection(&self, other: &Self) -> Self;"
+  },
+  {
+    "id": 78,
+    "function": "difference",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "31-32",
+    "spec_strength": "",
+    "snippet": "        /// claude-4-sonet: Work Θ(m + n), Span Θ(m + n), Parallelism Θ(1)\n        fn difference(&self, other: &Self)   -> Self;"
+  },
+  {
+    "id": 79,
+    "function": "union",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "33-34",
+    "spec_strength": "",
+    "snippet": "        /// claude-4-sonet: Work Θ(m + n), Span Θ(m + n), Parallelism Θ(1)\n        fn union(&self, other: &Self)        -> Self;"
+  },
+  {
+    "id": 80,
+    "function": "find",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "35-36",
+    "spec_strength": "",
+    "snippet": "        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)\n        fn find(&self, x: &T)                -> B;"
+  },
+  {
+    "id": 81,
+    "function": "delete",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "37-38",
+    "spec_strength": "",
+    "snippet": "        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)\n        fn delete(&mut self, x: &T);"
+  },
+  {
+    "id": 82,
+    "function": "insert",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "39-40",
+    "spec_strength": "",
+    "snippet": "        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)\n        fn insert(&mut self, x: T);"
+  },
+  {
+    "id": 83,
+    "function": "default",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "176",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::empty() }"
+  },
+  {
+    "id": 84,
+    "function": "example_41_1_array_set",
+    "file": "Chap41/Example41_3.rs",
+    "lines": "15-17",
+    "spec_strength": "",
+    "snippet": "        /// Example 41.1 cases using ArraySetStEph\n        /// APAS: Work Θ(n log n), Span Θ(log n)\n        fn example_41_1_array_set();"
+  },
+  {
+    "id": 85,
+    "function": "example_41_1_avl_set",
+    "file": "Chap41/Example41_3.rs",
+    "lines": "19-21",
+    "spec_strength": "",
+    "snippet": "        /// Example 41.1 cases using AVLTreeSetStEph\n        /// APAS: Work Θ(n log n), Span Θ(log n)\n        fn example_41_1_avl_set();"
+  },
+  {
+    "id": 86,
+    "function": "demonstrate_set_operations",
+    "file": "Chap41/Example41_3.rs",
+    "lines": "23-25",
+    "spec_strength": "",
+    "snippet": "        /// Demonstrate set operations with different implementations\n        /// APAS: Work Θ(n log n), Span Θ(log n)\n        fn demonstrate_set_operations();"
+  },
+  {
+    "id": 87,
+    "function": "example_41_3_from_seq_demonstration",
+    "file": "Chap41/Example41_3.rs",
+    "lines": "128-172",
+    "spec_strength": "",
+    "snippet": "    pub fn example_41_3_from_seq_demonstration() {\n        // Example 41.3: Two implementations of fromSeq\n\n        // Sequential version: fromseq a = Seq.iterate Set.insert ∅ a\n        // (This would be implemented as a simple loop with insert)\n\n        // Parallel version: fromSeq a = Seq.reduce Set.union ∅ ⟨{x} : x ∈ a⟩\n        // This is what our implementation uses\n\n        let seq = ArraySeqStEphSLit![1, 3, 2, 3, 1, 4, 2];\n        let set_result = ArraySetStEph::from_seq(seq);\n\n        // Should contain unique elements: {1, 2, 3, 4}\n        assert_eq!(set_result.size(), 4);\n        assert!(set_result.find(&1));\n        assert!(set_result.find(&2));\n        assert!(set_result.find(&3));\n        assert!(set_result.find(&4));\n\n        // Demonstrate the conceptual steps:\n        // 1. Create singleton sets: ⟨{1}, {3}, {2}, {3}, {1}, {4}, {2}⟩\n        // 2. Reduce with union: {1} ∪ {3} ∪ {2} ∪ {3} ∪ {1} ∪ {4} ∪ {2} = {1, 2, 3, 4}\n\n        let singleton1 = ArraySetStEph::singleton(1);\n        let singleton3 = ArraySetStEph::singleton(3);\n        let singleton2 = ArraySetStEph::singleton(2);\n        let singleton4 = ArraySetStEph::singleton(4);\n\n        let manual_union = singleton1\n            .union(&singleton3)\n            .union(&singleton2)\n            .union(&singleton3) // duplicate, should not change result\n            .union(&singleton1) // duplicate, should not change result\n            .union(&singleton4)\n            .union(&singleton2); // duplicate, should not change result\n\n        assert_eq!(manual_union.size(), 4);\n        assert!(manual_union.find(&1));\n        assert!(manual_union.find(&2));\n        assert!(manual_union.find(&3));\n        assert!(manual_union.find(&4));\n\n        // Both approaches should yield the same result\n        assert_eq!(set_result.size(), manual_union.size());\n    }"
+  },
+  {
+    "id": 88,
+    "function": "additional_set_operations",
+    "file": "Chap41/Example41_3.rs",
+    "lines": "174-215",
+    "spec_strength": "",
+    "snippet": "    pub fn additional_set_operations() {\n        // Additional set operations testing\n        let set1 = ArraySetStEphLit![1, 2, 3, 4, 5];\n        let set2 = ArraySetStEphLit![4, 5, 6, 7, 8];\n\n        // Intersection: {1, 2, 3, 4, 5} ∩ {4, 5, 6, 7, 8} = {4, 5}\n        let intersection = set1.intersection(&set2);\n        assert_eq!(intersection.size(), 2);\n        assert!(intersection.find(&4));\n        assert!(intersection.find(&5));\n        assert!(!intersection.find(&1));\n        assert!(!intersection.find(&6));\n\n        // Difference: {1, 2, 3, 4, 5} \\ {4, 5, 6, 7, 8} = {1, 2, 3}\n        let difference = set1.difference(&set2);\n        assert_eq!(difference.size(), 3);\n        assert!(difference.find(&1));\n        assert!(difference.find(&2));\n        assert!(difference.find(&3));\n        assert!(!difference.find(&4));\n        assert!(!difference.find(&5));\n\n        // Delete operation\n        let mut set_delete = ArraySetStEphLit![1, 2, 3, 4, 5];\n        set_delete.delete(&3);\n        assert_eq!(set_delete.size(), 4);\n        assert!(!set_delete.find(&3));\n        assert!(set_delete.find(&1));\n        assert!(set_delete.find(&2));\n        assert!(set_delete.find(&4));\n        assert!(set_delete.find(&5));\n\n        // Insert operation\n        let mut set_insert = ArraySetStEphLit![1, 2, 4, 5];\n        set_insert.insert(3);\n        assert_eq!(set_insert.size(), 5);\n        assert!(set_insert.find(&3));\n\n        // Insert duplicate (should not change size)\n        set_insert.insert(3);\n        assert_eq!(set_insert.size(), 5);\n    }"
   }
 ]
