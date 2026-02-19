@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 40 — Augmenting Binary Search Trees: Review Against Prose
 
-**Date:** 2026-02-18
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 **Prose source:** `prompts/Chap40.txt`
 **Source files:** `src/Chap40/BSTSizeStEph.rs`, `src/Chap40/BSTKeyValueStEph.rs`, `src/Chap40/BSTReducedStEph.rs`
@@ -20,12 +20,12 @@ table { width: 100% !important; table-layout: fixed; }
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
 | 1 | Chap40 | BSTKeyValueStEph | 13 | 15 | 0 | 11 | 0 | 26 | 0 | 0 | 26 |
-| 2 | Chap40 | BSTReducedStEph | 18 | 20 | 16 | 0 | 0 | 35 | 0 | 0 | 35 |
-| 3 | Chap40 | BSTSizeStEph | 14 | 16 | 15 | 0 | 0 | 30 | 0 | 0 | 30 |
+| 2 | Chap40 | BSTReducedStEph | 16 | 20 | 1 | 15 | 0 | 35 | 0 | 0 | 35 |
+| 3 | Chap40 | BSTSizeStEph | 12 | 13 | 1 | 14 | 0 | 28 | 0 | 0 | 28 |
 
-**Total:** 91 functions, 0 inside `verus!`, 91 outside, 0 with specs, 0 proof holes.
+**Total:** ~89 functions, 0 inside `verus!`, ~89 outside, 0 with specs, 0 proof holes.
 
-**Note:** BSTReducedStEph (16 IBI) and BSTSizeStEph (15 IBI) have bare `impl` blocks for internal helpers on `Node` and on the main struct. These are flagged by veracity as `bare_impl` style issues.
+**Note:** BSTReducedStEph and BSTSizeStEph previously had 16 and 15 functions respectively in bare `impl` blocks. Internal helpers (rotations, link operations, build_treap_from_sorted, etc.) have been moved to module-level free functions. Only `impl Node` with `fn new()` remains as a bare impl in each file (1 bare_impl error each). BSTKeyValueStEph is clean.
 
 ## Phase 2: Prose Inventory
 
@@ -72,7 +72,7 @@ The prose references Cost Specification 38.11 from Chapter 38. No new cost speci
 | 7 | Monoid framework | - | - | Yes | `ReduceOp` trait with identity/combine/lift |
 | 8 | Sum reduction | - | - | Yes | `SumOp<T>` |
 | 9 | Count reduction | - | - | Yes | `CountOp<T>` |
-| 10 | Max reduction | - | - | Partial | `MaxOp<T>` struct declared but trait impl not provided |
+| 10 | Max reduction | - | - | No | `MaxOp<T>` removed (was dead code — struct declared without trait impl) |
 | 11 | Range queries | - | - | Yes | `range_reduce` and `range_reduce_link` |
 
 ## Phase 3: Algorithmic Analysis
@@ -112,7 +112,7 @@ All three modules implement Treap-based BSTs (using random priorities for balanc
 | 7 | ReduceOp trait | BSTReducedStEph | Faithful | identity/combine/lift match the prose monoid framework |
 | 8 | range_reduce | BSTReducedStEph | Faithful | Walks tree, combines reduced values from subtrees within range bounds |
 | 9 | update_node/make_node | BSTReducedStEph | Faithful | Recomputes reduced_value = combine(combine(left_rv, lift(value)), right_rv) |
-| 10 | delete | BSTSizeStEph | Not in Reduced | BSTReducedStEph has no delete — would need `update_node` after restructuring |
+| 10 | delete | BSTSizeStEph | Not in Reduced | BSTReducedStEph has delete but via O(n) collect-filter-rebuild |
 
 ### 3c. Spec Fidelity
 
@@ -176,7 +176,7 @@ No Mt (multi-threaded) modules exist in Chapter 40. All three implementations ar
 - **BSTSizeStEph:** Excellent. All prose algorithms tested including rank-select consistency roundtrip and Exercise 40.1 (split_rank).
 - **BSTKeyValueStEph:** Good. Covers basic CRUD, duplicate key handling, and non-integer key types.
 - **BSTReducedStEph:** Excellent. 19 tests cover both reduction operations, range queries, edge cases, and direct trait unit tests.
-- **Missing:** No test for delete on BSTReducedStEph (not implemented). No test for MaxOp (incomplete implementation).
+- **Missing:** No test for delete on BSTReducedStEph (implemented via O(n) collect-filter-rebuild). No test for MaxOp (removed — was dead code).
 
 ## Phase 6: PTT Review
 
@@ -188,11 +188,11 @@ No PTTs exist. No `verus!` blocks, so no proof-time verification to test.
 
 | # | Priority | Gap | Detail | Recommendation |
 |---|----------|-----|--------|----------------|
-| 1 | Medium | No delete in BSTReducedStEph | Size and KeyValue have delete; Reduced does not. Deletion requires recomputing reduced_value up the path, which update_node already handles. | Implement delete_link using same pattern as insert_link |
-| 2 | Medium | MaxOp incomplete | Struct declared but ReduceOp trait not implemented. Prose mentions max as a reduction example. | Implement ReduceOp for MaxOp |
+| 1 | Medium | No delete in BSTReducedStEph | Delete exists but uses O(n) collect-filter-rebuild instead of O(lg n) treap deletion with reduced value recomputation. | Implement proper delete_link using same rotation/update_node pattern as insert_link |
+| 2 | Low | MaxOp not implemented | Prose mentions max as a reduction example. `MaxOp<T>` dead code was removed. | Implement `MaxOp<T>` with `ReduceOp` trait impl if needed by downstream chapters |
 | 3 | Medium | No Mt variants | Prose discusses parallel BST operations (Ch38). Augmented variants could benefit from parallelism for range_reduce on subtrees. | Consider MtEph variants if needed by later chapters |
 | 4 | High | No `verus!` blocks | No formal specifications or proofs for any module. | Future verusification |
-| 5 | Low | Bare impl style issues | BSTReducedStEph has 16 functions in bare `impl Node`/`impl BSTReducedStEph`. BSTSizeStEph has 15. Veracity flags these as `bare_impl` errors. | Move internal helpers to trait or document exemption |
+| 5 | Low | Bare impl on Node | BSTReducedStEph and BSTSizeStEph each have 1 bare `impl Node` block (for `Node::new`). Veracity flags as `bare_impl`. | Acceptable — Node is a private internal type, not a public ADT requiring a trait |
 
 ### Code With No Prose Counterpart
 
@@ -216,32 +216,32 @@ No files contain `verus!` blocks. The 13-section TOC standard does not apply.
 
 | # | File | Clone | PartialEq/Eq | Default | Drop | Iterator | Debug | Display | Macro | Other |
 |---|------|:-----:|:---:|:------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
-| 1 | BSTSizeStEph.rs | ✅ out (derive) | ✅ out (derive) | ✅ out (impl) | - | - | ✅ out (derive) | ✅ out (impl) | ✅ out (BSTSizeStEphLit!) | No `verus!` block |
-| 2 | BSTKeyValueStEph.rs | ✅ out (derive) | ✅ out (derive) | ✅ out (impl) | - | - | ✅ out (derive) | ✅ out (impl) | ✅ out (BSTKeyValueStEphLit!) | No `verus!` block |
-| 3 | BSTReducedStEph.rs | ✅ out (derive) | ✅ out (derive) | ✅ out (impl) | - | - | ✅ out (derive) | ✅ out (impl) | ✅ out (BSTReducedStEphLit!) | No `verus!` block |
+| 1 | BSTSizeStEph.rs | ✅ out (derive) | ✅ out (derive) | ✅ out (impl) | - | - | ✅ out (derive) | - | ✅ out (BSTSizeStEphLit!) | No `verus!` block |
+| 2 | BSTKeyValueStEph.rs | ✅ out (derive) | ✅ out (derive) | ✅ out (impl) | - | - | ✅ out (derive) | - | ✅ out (BSTKeyValueStEphLit!) | No `verus!` block |
+| 3 | BSTReducedStEph.rs | ✅ out (derive) | ✅ out (derive) | ✅ out (impl) | - | - | ✅ out (derive) | - | ✅ out (BSTReducedStEphLit!) | No `verus!` block |
 
 ## Proof Holes Summary
 
 ```
 ✓ BSTKeyValueStEph.rs
-❌ BSTReducedStEph.rs  (2 bare_impl errors)
-❌ BSTSizeStEph.rs     (2 bare_impl errors)
+❌ BSTReducedStEph.rs  (1 bare_impl error: impl Node)
+❌ BSTSizeStEph.rs     (1 bare_impl error: impl Node)
 
 Modules:     1 clean, 2 with style errors
 Proof Holes: 0
-Style Errors: 4 bare_impl (helpers on Node and main struct outside trait)
+Style Errors: 2 bare_impl (Node::new on private internal type)
 ```
 
-The bare_impl errors are style issues — internal helper functions (rotations, link operations, build_treap_from_sorted) are implemented in bare `impl Node` and `impl BSTSizeStEph`/`BSTReducedStEph` blocks rather than in the trait. Per the `trait-impl-pattern` rule, these should be in the trait, though internal helpers on `Node` are a reasonable exception.
+Internal helpers (rotations, link operations, build_treap_from_sorted, size_link, update_size/update_node, make_node, etc.) were moved from bare `impl` blocks to module-level free functions, reducing bare_impl errors from 4 to 2. The remaining 2 are `impl Node` blocks containing only `fn new()` on a private internal type — acceptable since Node is not a public ADT.
 
 ## Spec Strength Summary
 
 | Classification | Count |
-|---------------|------:|
+|----------------|------:|
 | strong | 0 |
 | partial | 0 |
 | weak | 0 |
-| none | 91 |
+| none | ~89 |
 
 ## Overall Assessment
 
@@ -253,10 +253,11 @@ Chapter 40 faithfully implements the three forms of BST augmentation described i
 - ReduceOp trait cleanly captures the monoid framework (identity/combine/lift)
 - Excellent test coverage: 33 tests across three modules, including edge cases and large datasets
 - range_reduce correctly handles arbitrary ranges using the augmented reduced values
+- Internal helpers refactored from bare impl blocks to module-level free functions (bare_impl reduced from 4 to 2)
 
 **Weaknesses:**
 - No formal verification — entirely plain Rust with zero `verus!` code
-- BSTReducedStEph missing `delete` operation
-- MaxOp declared but not implemented
-- 4 bare_impl style warnings from veracity
+- BSTReducedStEph delete uses O(n) collect-filter-rebuild instead of O(lg n) treap deletion
+- MaxOp removed (was dead code); prose mentions max as a reduction example but no implementation exists
+- 2 bare_impl style warnings from veracity (Node::new on private type — acceptable)
 - No Mt variants (Ch40 is entirely single-threaded)

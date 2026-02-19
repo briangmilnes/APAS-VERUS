@@ -45,7 +45,7 @@ pub mod AVLTreeSetStEph {
 
     // 8. traits
 
-    pub trait AVLTreeSetStEphTrait<T: StT + Ord> {
+    pub trait AVLTreeSetStEphTrait<T: StT + Ord>: Sized + View<V = Set<T>> {
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (result: N)

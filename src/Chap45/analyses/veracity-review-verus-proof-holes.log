@@ -1,22 +1,5 @@
-❌ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:322: error: bare_impl - /// Convenience functions for common operations — `impl BalancedTreePQ` without trait; file defines [BalancedTreePQTrait]
-       323 |     impl<T: StT + Ord> BalancedTreePQ<T> {
-       324 |         /// Check if the tree maintains sorted order (for testing)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:347: error: bare_impl - /// Advanced operations for balanced tree priority queue — `impl BalancedTreePQ` without trait; file defines [BalancedTreePQTrait]
-       348 |     impl<T: StT + Ord> BalancedTreePQ<T> {
-       349 |         /// Split the priority queue at a given element
-   Errors: 2 bare impl(s) in file with trait definition
-❌ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:51: error: bare_impl - impl<T: StT + Ord> BinaryHeapPQ<T> { — `impl BinaryHeapPQ` without trait; file defines [BinaryHeapPQTrait]
-        52 |         fn left_child(i: N) -> N { 2 * i + 1 }
-        53 |         fn right_child(i: N) -> N { 2 * i + 2 }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:266: error: bare_impl - impl<T: StT + Ord> BinaryHeapPQ<T> { — `impl BinaryHeapPQ` without trait; file defines [BinaryHeapPQTrait]
-       267 |         /// Insert multiple elements from a sequence
-       268 |         pub fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:351: error: bare_impl - /// Convenience functions for common operations — `impl BinaryHeapPQ` without trait; file defines [BinaryHeapPQTrait]
-       352 |     impl<T: StT + Ord> BinaryHeapPQ<T> {
-       353 |         /// Create priority queue from vector (for testing)
-   Errors: 3 bare impl(s) in file with trait definition
+✓ BalancedTreePQ.rs
+✓ BinaryHeapPQ.rs
 ✓ Example45_2.rs
 ❌ HeapsortExample.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/HeapsortExample.rs:194: error: bare_impl - impl<T: StT + Ord> HeapsortComparison<T> { — `impl HeapsortComparison` without trait; file defines [HeapsortTrait, HeapsortExamplesTrait, HeapsortAnalysisTrait, SequenceUtilsTrait]
@@ -47,7 +30,7 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 7 bare impl(s) in files with trait definitions
+Errors: 2 bare impl(s) in files with trait definitions
 
 🎉 No proof holes found! All proofs are complete.
 ��═══════
@@ -64,6 +47,6 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 7 bare impl(s) in files with trait definitions
+Errors: 2 bare impl(s) in files with trait definitions
 
 🎉 No proof holes found! All proofs are complete.

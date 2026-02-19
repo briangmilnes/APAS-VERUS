@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 47: Hash Tables — Review Against Prose
 
-**Date:** 2026-02-18
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 **Prose source:** `prompts/Chap47.txt`, `prompts/Chap47part2.txt`
 
@@ -19,7 +19,7 @@ table { width: 100% !important; table-layout: fixed; }
 |---|------|------:|------------|----------------|-------------|
 | 1 | `ParaHashTableStEph.rs` | 155 | `LoadAndSize`, `EntryTrait` | `HashFunGen`, `HashFun`, `HashTable`, `ParaHashTableStEphTrait` | §1.1 Parametric design |
 | 2 | `ChainedHashTable.rs` | 99 | `ChainEntry` (derive) | `ChainedHashTable` trait | §1.2 Separate chaining base |
-| 3 | `FlatHashTable.rs` | 131 | `FlatEntry`, `EntryTrait for FlatEntry` | `FlatHashTable` trait | §2.1 Parametric flat base |
+| 3 | `FlatHashTable.rs` | 131 | `FlatEntry`, `EntryTrait for FlatEntry` (verified) | `FlatHashTable` trait | §2.1 Parametric flat base |
 | 4 | `VecChainedHashTableStEph.rs` | 143 | `EntryTrait for Vec` | `ParaHashTableStEphTrait`, `ChainedHashTable` impls | §1.2 Vec chains |
 | 5 | `LinkedListChainedHashTableStEph.rs` | 141 | (nothing) | All code | §1.2 LinkedList chains |
 | 6 | `StructChainedHashTable.rs` | 193 | (nothing) | All code | §1.2 Custom linked list chains |
@@ -27,7 +27,7 @@ table { width: 100% !important; table-layout: fixed; }
 | 8 | `QuadProbFlatHashTableStEph.rs` | 156 | Struct decl only | All impls | §2.3 Quadratic probing |
 | 9 | `DoubleHashFlatHashTableStEph.rs` | 193 | Struct decl, `second_hash` | All other impls | §2.4 Double hashing |
 
-**Root cause for code outside verus!:** `HashTable` struct contains `Rc<dyn Fn>` and `Box<dyn Fn>` fields, which Verus cannot handle. This cascades through all traits and impls that reference `HashTable`, forcing ~85% of the codebase outside `verus!`.
+**Root cause for code outside verus!:** `HashTable` struct contains `Rc<dyn Fn>` and `Box<dyn Fn>` fields, which Verus cannot handle. This cascades through all traits and impls that reference `HashTable`, forcing ~85% of the codebase outside `verus!`. However, self-contained types like `FlatEntry` and its `EntryTrait` impl can be (and now are) verified inside `verus!`.
 
 ## Phase 2: Prose Inventory
 
@@ -108,7 +108,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 ### Phase 3c: Spec Fidelity
 
-Minimal verification exists. Only `EntryTrait` and a few type definitions are inside `verus!`, all with `external_body`. No `requires`/`ensures` specifications on any function.
+Minimal verification exists. `EntryTrait` and type definitions are inside `verus!`. The `FlatEntry` enum and its `EntryTrait` impl (`new`, `insert`, `lookup`, `delete`) are now verified inside `verus!` without `external_body` — Verus checks these enum operations directly. The `Vec`-based chain entry impl and `second_hash` remain `external_body`. No `requires`/`ensures` specifications exist on any function.
 
 ## Phase 4: Parallelism Review
 
@@ -170,7 +170,7 @@ No PTTs exist for Chapter 47. There are zero `proof fn` definitions and zero spe
 
 | # | Issue | Severity | Notes |
 |---|-------|----------|-------|
-| 1 | Zero formal verification | High | Root cause: `dyn Fn` in `HashTable` prevents `verus!` placement |
+| 1 | Minimal formal verification | High | Root cause: `dyn Fn` in `HashTable` prevents `verus!` placement; `FlatEntry` ops now verified |
 | 2 | Chain insert scans for duplicates | Moderate | APAS says O(1) head insert; code scans for dup key making it O(chain_length) |
 | 3 | Flat insert does upsert | Low | APAS insert is no-op on existing key; code updates value |
 | 4 | `unsafe` in `second_hash` | Moderate | Raw pointer arithmetic over key bytes; could use `std::hash::Hash` instead |
@@ -202,7 +202,7 @@ No PTTs exist for Chapter 47. There are zero `proof fn` definitions and zero spe
 | 3 | ParaHashTableStEph | `HashTable` struct | - | Yes | Forced | Contains `Rc<dyn Fn>`, `Box<dyn Fn>` |
 | 4 | ParaHashTableStEph | `ParaHashTableStEphTrait` | - | Yes | Forced | Methods reference `HashTable` |
 | 5 | FlatHashTable | `FlatEntry` enum | Yes | - | Correct | No dyn Fn |
-| 6 | FlatHashTable | `EntryTrait for FlatEntry` | Yes (ext_body) | - | Correct | Entry-level ops, no dyn Fn |
+| 6 | FlatHashTable | `EntryTrait for FlatEntry` | Yes (verified) | - | Correct | Entry-level ops verified, no dyn Fn |
 | 7 | FlatHashTable | `FlatHashTable` trait | - | Yes | Forced | References `HashTable` |
 | 8 | VecChainedHashTableStEph | `EntryTrait for Vec` | Yes (ext_body) | - | Correct | No dyn Fn |
 | 9 | VecChainedHashTableStEph | `ParaHashTableStEphTrait` impl | - | Yes | Forced | References `HashTable` |
@@ -212,14 +212,29 @@ No PTTs exist for Chapter 47. There are zero `proof fn` definitions and zero spe
 
 ## Proof Holes Summary
 
+```
+✓ ChainedHashTable.rs
+✓ DoubleHashFlatHashTableStEph.rs (1 external_body, 1 unsafe)
+✓ FlatHashTable.rs
+✓ LinProbFlatHashTableStEph.rs
+✓ LinkedListChainedHashTableStEph.rs
+✓ ParaHashTableStEph.rs
+✓ QuadProbFlatHashTableStEph.rs
+✓ StructChainedHashTable.rs
+✓ VecChainedHashTableStEph.rs (4 external_body)
+
+Modules: 7 clean, 2 holed
+Proof Functions: 0 total
+Holes Found: 6 total (5 external_body, 1 unsafe)
+```
+
 | # | File | Hole Type | Location | Description |
 |---|------|-----------|----------|-------------|
-| 1 | `FlatHashTable.rs` | `external_body` ×4 | `FlatEntry::{new, insert, lookup, delete}` | Simple enum ops; potentially removable |
-| 2 | `VecChainedHashTableStEph.rs` | `external_body` ×4 | `Vec::{new, insert, lookup, delete}` | Vec operations |
-| 3 | `DoubleHashFlatHashTableStEph.rs` | `external_body` ×1 | `second_hash` | FNV-1a hash |
-| 4 | `DoubleHashFlatHashTableStEph.rs` | `unsafe` ×1 | Inside `second_hash` | Raw pointer arithmetic |
+| 1 | `VecChainedHashTableStEph.rs` | `external_body` ×4 | `Vec::{new, insert, lookup, delete}` | Vec operations |
+| 2 | `DoubleHashFlatHashTableStEph.rs` | `external_body` ×1 | `second_hash` | FNV-1a hash |
+| 3 | `DoubleHashFlatHashTableStEph.rs` | `unsafe` ×1 | Inside `second_hash` | Raw pointer arithmetic |
 
-**Total: 9 `external_body` + 1 `unsafe` = 10 holes.**
+**Total: 5 `external_body` + 1 `unsafe` = 6 holes.** (Down from 10 — the 4 `FlatEntry` `external_body` annotations were removed; `new`, `insert`, `lookup`, `delete` are now verified inside `verus!`.)
 
 ## Spec Strength Summary
 
@@ -230,7 +245,7 @@ No PTTs exist for Chapter 47. There are zero `proof fn` definitions and zero spe
 | weak | 0 |
 | none | 58 |
 
-All 58 functions have **no spec**. The `external_body` functions inside `verus!` lack `ensures` clauses.
+All 58 functions have **no spec**. The `FlatEntry` operations are now verified inside `verus!` (no `external_body`) but still lack `requires`/`ensures` clauses. The remaining `external_body` functions also lack `ensures` clauses.
 
 ## Overall Assessment
 
@@ -245,7 +260,7 @@ All 58 functions have **no spec**. The `external_body` functions inside `verus!`
 
 ### Weaknesses
 
-1. **Zero formal verification**: `dyn Fn` in `HashTable` forces ~85% of code outside `verus!`. The 10 `external_body` functions inside `verus!` have no specs.
+1. **Minimal formal verification**: `dyn Fn` in `HashTable` forces ~85% of code outside `verus!`. The `FlatEntry` enum operations are now verified (no `external_body`), but 6 holes remain (5 `external_body` + 1 `unsafe`). No functions have `requires`/`ensures` specs.
 2. **Chain insert deviates from prose**: All chain impls scan for duplicate keys (O(chain_length)) instead of O(1) head insert.
 3. **`unsafe` in `second_hash`**: Raw pointer arithmetic for FNV-1a hashing.
 4. **No auto-resize**: Resize logic exists but is never triggered automatically.
@@ -255,7 +270,7 @@ All 58 functions have **no spec**. The `external_body` functions inside `verus!`
 
 | # | Priority | TODO | Notes |
 |---|:--------:|------|-------|
-| 1 | P1 | Investigate removing `external_body` from `FlatEntry` methods | Simple enum ops that Verus may verify |
+| 1 | P1 | ~~Investigate removing `external_body` from `FlatEntry` methods~~ | **DONE** — `FlatEntry::{new, insert, lookup, delete}` now verified inside `verus!` |
 | 2 | P2 | Add auto-resize logic | Double table when α > threshold |
 | 3 | P2 | Consider redesigning `HashTable` to avoid `dyn Fn` | Use a `Hasher` trait bound instead, enabling struct inside `verus!` |
 | 4 | P3 | Remove unused `ChainEntry` struct | Dead code |

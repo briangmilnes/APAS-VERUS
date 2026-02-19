@@ -18,7 +18,7 @@ pub mod TableStPer {
     pub type TableS<K, V> = TableStPer<K, V>;
 
     /// Trait defining the Table ADT operations from Chapter 42
-    pub trait TableStPerTrait<K: StT + Ord, V: StT> {
+    pub trait TableStPerTrait<K: StT + Ord, V: StT>: Sized {
         /// APAS: Work Θ(1), Span Θ(1)
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self)                              -> N;

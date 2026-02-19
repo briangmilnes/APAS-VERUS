@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 49: DP — SubsetSum, MinEditDist — Review Against Prose
 
-**Date:** 2026-02-18
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 **Prose source:** `prompts/Chap49.txt`
 
@@ -23,7 +23,7 @@ table { width: 100% !important; table-layout: fixed; }
 | 4 | `SubsetSumMtPer.rs` | Mt/Per | Subset Sum (parallel memo) | 198 | empty |
 | 5 | `MinEditDistStEph.rs` | St/Eph | Min Edit Distance (top-down memo) | 254 | empty |
 | 6 | `MinEditDistStPer.rs` | St/Per | Min Edit Distance (top-down memo) | 199 | empty |
-| 7 | `MinEditDistMtEph.rs` | Mt/Eph | Min Edit Distance (parallel memo) | 258 | empty |
+| 7 | `MinEditDistMtEph.rs` | Mt/Eph | Min Edit Distance (parallel memo) | 261 | empty |
 | 8 | `MinEditDistMtPer.rs` | Mt/Per | Min Edit Distance (parallel memo) | 211 | empty |
 
 **Root cause for code outside verus!:** All modules use `std::collections::HashMap` for memoization, which Verus does not support. Mt variants additionally use `Arc<Mutex<HashMap>>`.
@@ -184,7 +184,7 @@ Test quality is solid:
 | 4 | `SubsetSumMtPer.rs` | Partial | Same pattern |
 | 5 | `MinEditDistStEph.rs` | Partial | Sections 4, 8, 9, 13 |
 | 6 | `MinEditDistStPer.rs` | Partial | Same pattern |
-| 7 | `MinEditDistMtEph.rs` | Partial | Sections 4, 8, 9, 13 |
+| 7 | `MinEditDistMtEph.rs` | Partial | Sections 4, 8, 9, 11, 13 |
 | 8 | `MinEditDistMtPer.rs` | Partial | Same pattern |
 
 All files have section comments but not the full formal TOC block at the top. Since code is outside `verus!`, this is acceptable.
@@ -209,7 +209,7 @@ All placements correct — everything must be outside `verus!` because of `HashM
 ## Proof Holes Summary
 
 ```
-❌ MinEditDistMtEph.rs — 1 bare_impl error
+✓ MinEditDistMtEph.rs
 ✓ MinEditDistMtPer.rs
 ✓ MinEditDistStEph.rs
 ✓ MinEditDistStPer.rs
@@ -221,12 +221,12 @@ All placements correct — everything must be outside `verus!` because of `HashM
 Modules: 8 clean, 0 holed
 Proof Functions: 0 total
 Holes Found: 0 total
-Errors: 1 bare impl(s) in files with trait definitions
+Errors: 0
 ```
 
 **0 proof holes** — trivially clean because no Verus verification exists.
 
-**1 structural error:** `MinEditDistMtEph.rs` has a bare `impl MinEditDistMtEphS<T>` block with `min_edit_distance_parallel` that should be in the trait.
+**0 structural errors.** The bare `impl` that previously existed in `MinEditDistMtEph.rs` has been fixed: `min_edit_distance_rec` is now a free function and `min_edit_distance` is in the trait impl.
 
 ## Spec Strength Summary
 
@@ -249,6 +249,7 @@ All 72 functions have **no spec** — the entire chapter is unverified plain Rus
 4. **Good test coverage**: 136 tests across 8 files, including textbook examples, edge cases, memoization behavior, and persistence semantics.
 5. **Correct memoization**: Top-down with HashMap faithfully implements the prose's "sharing of subproblems" via the recursion DAG.
 6. **Cost annotations**: Every function has APAS and Claude cost annotations.
+7. **Clean structure**: All modules follow the trait-impl pattern correctly with no bare impl violations.
 
 ### Weaknesses
 
@@ -257,15 +258,13 @@ All 72 functions have **no spec** — the entire chapter is unverified plain Rus
 3. **Lock contention**: `Arc<Mutex<HashMap>>` serializes memo access. A concurrent hash map or lock-free structure would better exploit parallelism.
 4. **No bottom-up DP**: Prose discusses both top-down and bottom-up approaches; only top-down implemented.
 5. **No edit sequence recovery**: Only computes distance, not the actual edits.
-6. **Bare impl in MinEditDistMtEph**: `min_edit_distance_parallel` is on a bare `impl` instead of in the trait.
 
 ### Review TODOs
 
 | # | Priority | TODO | Notes |
 |---|:--------:|------|-------|
-| 1 | High | Fix bare_impl in MinEditDistMtEph | Move `min_edit_distance_parallel` into trait |
-| 2 | High | Add thread creation threshold | Parallelize only at top k levels to avoid exponential thread spawn |
-| 3 | Medium | Consider verified DP approach | Replace HashMap with a 2D array (verifiable); enables Verus specifications |
-| 4 | Medium | Add bottom-up DP variant | Prose discusses it; table-filling approach may be easier to verify |
-| 5 | Low | Add edit sequence recovery | Prose mentions it as exercise |
-| 6 | Low | Replace `Arc<Mutex<HashMap>>` with concurrent map | Reduce lock contention in Mt variants |
+| 1 | High | Add thread creation threshold | Parallelize only at top k levels to avoid exponential thread spawn |
+| 2 | Medium | Consider verified DP approach | Replace HashMap with a 2D array (verifiable); enables Verus specifications |
+| 3 | Medium | Add bottom-up DP variant | Prose discusses it; table-filling approach may be easier to verify |
+| 4 | Low | Add edit sequence recovery | Prose mentions it as exercise |
+| 5 | Low | Replace `Arc<Mutex<HashMap>>` with concurrent map | Reduce lock contention in Mt variants |

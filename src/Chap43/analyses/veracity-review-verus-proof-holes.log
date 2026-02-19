@@ -612,7 +612,11 @@ Proof Functions:
 
 Holes Found: 283 total
    283 × external_body
-led (contains holes)
+��═════
+
+Modules:
+   1 clean (no holes)
+   10 holed (contains holes)
    11 total
 
 Proof Functions:

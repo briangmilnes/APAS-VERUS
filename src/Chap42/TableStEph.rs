@@ -4,93 +4,132 @@
 pub mod TableStEph {
 
     use std::cmp::Ordering;
+    use std::fmt;
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Types::Types::*;
 
-    #[derive(Debug, Clone, PartialEq)]
+    // Table of Contents
+    // 1. module (above)
+    // 2. imports (above)
+    // 4. type definitions
+    // 5. view impls
+    // 8. traits
+    // 9. impls
+    // 11. derive impls in verus!
+    // 12. macros
+    // 13. derive impls outside verus!
+
+    verus! {
+
+    // 4. type definitions
+
     pub struct TableStEph<K: StT + Ord, V: StT> {
         entries: ArraySeqStEphS<Pair<K, V>>,
     }
 
     pub type TableS<K, V> = TableStEph<K, V>;
 
-    /// Trait defining the Table ADT operations from Chapter 42
-    pub trait TableStEphTrait<K: StT + Ord, V: StT> {
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)                 -> N;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty()                     -> Self;
-        /// APAS: Work Θ(1), Span Θ(1)
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn singleton(key: K, value: V) -> Self;
-        /// APAS: Work Θ(|a|), Span Θ(lg |a|)
-        /// claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
-        fn domain(&self)               -> ArraySetStEph<K>;
-        /// APAS: Work Θ(|s| * W(f)), Span Θ(lg |s| + S(f))
-        /// claude-4-sonet: Work Θ(|keys| × W(f)), Span Θ(|keys| × S(f)), Parallelism Θ(1)
-        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> Self;
-        /// APAS: Work Θ(Σ W(f(v))), Span Θ(lg |a| + max S(f(v)))
-        /// claude-4-sonet: Work Θ(n × W(f)), Span Θ(n × S(f)), Parallelism Θ(1)
-        fn map<F: Fn(&V) -> V>(&mut self, f: F);
-        /// APAS: Work Θ(Σ W(p(k,v))), Span Θ(lg |a| + max S(p(k,v)))
-        /// claude-4-sonet: Work Θ(n × W(f)), Span Θ(n × S(f)), Parallelism Θ(1)
-        fn filter<F: Fn(&K, &V) -> B>(&mut self, f: F);
-        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(m + n), Parallelism Θ(1)
-        fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F);
-        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(m + n), Parallelism Θ(1)
-        fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F);
-        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(m + n), Parallelism Θ(1)
-        fn difference(&mut self, other: &Self);
-        /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
-        /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn find(&self, key: &K)        -> Option<V>;
-        /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn delete(&mut self, key: &K);
-        /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F);
-        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(m + n), Parallelism Θ(1)
-        fn restrict(&mut self, keys: &ArraySetStEph<K>);
-        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
-        /// claude-4-sonet: Work Θ(m + n), Span Θ(m + n), Parallelism Θ(1)
-        fn subtract(&mut self, keys: &ArraySetStEph<K>);
+    // 5. view impls
 
-        /// Returns a flat sequence of (K, V) pairs in key order.
-        /// Per APAS Algorithm 42.3, true collect groups values by key (Seq<(K, Seq<V>)>); this is entries.
-        /// APAS: Work Θ(|a|), Span Θ(lg |a|)
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn entries(&self)              -> ArraySeqStEphS<Pair<K, V>>;
+    impl<K: StT + Ord, V: StT> View for TableStEph<K, V> {
+        type V = Map<K::V, V::V>;
+        #[verifier::external_body]
+        open spec fn view(&self) -> Map<K::V, V::V> { Map::empty() }
     }
 
-    impl<K: StT + Ord, V: StT> TableStEphTrait<K, V> for TableStEph<K, V> {
-        /// Work: O(1), Span: O(1)
-        fn size(&self) -> N { self.entries.length() }
+    // 8. traits
 
-        /// Work: O(1), Span: O(1)
-        fn empty() -> Self {
+    /// Trait defining the Table ADT operations from Chapter 42
+    pub trait TableStEphTrait<K: StT + Ord, V: StT>: Sized + View<V = Map<K::V, V::V>> {
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn size(&self) -> (result: N)
+            ensures result == self@.len();
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn empty() -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty();
+        /// APAS: Work Θ(1), Span Θ(1)
+        fn singleton(key: K, value: V) -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty().insert(key@, value@);
+        /// APAS: Work Θ(|a|), Span Θ(lg |a|)
+        fn domain(&self) -> (result: ArraySetStEph<K>)
+            ensures result@.finite();
+        /// APAS: Work Θ(|s| * W(f)), Span Θ(lg |s| + S(f))
+        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
+            ensures result@.dom().finite();
+        /// APAS: Work Θ(Σ W(f(v))), Span Θ(lg |a| + max S(f(v)))
+        fn map<F: Fn(&V) -> V>(&mut self, f: F)
+            ensures self@.dom() == old(self)@.dom();
+        /// APAS: Work Θ(Σ W(p(k,v))), Span Θ(lg |a| + max S(p(k,v)))
+        fn filter<F: Fn(&K, &V) -> B>(&mut self, f: F)
+            ensures self@.dom().subset_of(old(self)@.dom());
+        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
+        fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
+            ensures self@.dom().subset_of(old(self)@.dom().intersect(other@.dom()));
+        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
+        fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
+            ensures old(self)@.dom().union(other@.dom()).subset_of(self@.dom());
+        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
+        fn difference(&mut self, other: &Self)
+            ensures self@.dom().subset_of(old(self)@.dom().difference(other@.dom()));
+        /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
+        fn find(&self, key: &K) -> (result: Option<V>)
+            ensures
+                match result {
+                    Some(v) => self@.contains_key(key@) && self@[key@] == v@,
+                    None => !self@.contains_key(key@),
+                };
+        /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
+        fn delete(&mut self, key: &K)
+            ensures !self@.contains_key(key@);
+        /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
+        fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)
+            ensures self@.contains_key(key@);
+        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
+        fn restrict(&mut self, keys: &ArraySetStEph<K>)
+            ensures self@.dom().subset_of(old(self)@.dom());
+        /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
+        fn subtract(&mut self, keys: &ArraySetStEph<K>)
+            ensures self@.dom().subset_of(old(self)@.dom());
+
+        /// Returns a flat sequence of (K, V) pairs in key order.
+        fn entries(&self) -> (result: ArraySeqStEphS<Pair<K, V>>);
+    }
+
+    // 9. impls
+
+    impl<K: StT + Ord, V: StT> TableStEphTrait<K, V> for TableStEph<K, V> {
+        #[verifier::external_body]
+        fn size(&self) -> (result: N)
+            ensures result == self@.len()
+        {
+            self.entries.length()
+        }
+
+        #[verifier::external_body]
+        fn empty() -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty()
+        {
             TableStEph {
                 entries: ArraySeqStEphS::empty(),
             }
         }
 
-        /// Work: O(1), Span: O(1)
-        fn singleton(key: K, value: V) -> Self {
+        #[verifier::external_body]
+        fn singleton(key: K, value: V) -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty().insert(key@, value@)
+        {
             TableStEph {
                 entries: ArraySeqStEphS::singleton(Pair(key, value)),
             }
         }
 
-        /// Work: O(n), Span: O(n)
-        fn domain(&self) -> ArraySetStEph<K> {
+        #[verifier::external_body]
+        fn domain(&self) -> (result: ArraySetStEph<K>)
+            ensures result@.finite()
+        {
             let mut keys = ArraySetStEph::empty();
             for i in 0..self.entries.length() {
                 let pair = self.entries.nth(i);
@@ -99,8 +138,10 @@ pub mod TableStEph {
             keys
         }
 
-        /// Work: O(n), Span: O(n)
-        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> Self {
+        #[verifier::external_body]
+        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             let key_seq = keys.to_seq();
             let mut entries = Vec::with_capacity(key_seq.length());
             for i in 0..key_seq.length() {
@@ -108,15 +149,16 @@ pub mod TableStEph {
                 let value = f(key);
                 entries.push(Pair(key.clone(), value));
             }
-            // Sort entries by key
             entries.sort_by(|a, b| a.0.cmp(&b.0));
             TableStEph {
                 entries: ArraySeqStEphS::from_vec(entries),
             }
         }
 
-        /// Work: O(n), Span: O(n)
-        fn map<F: Fn(&V) -> V>(&mut self, f: F) {
+        #[verifier::external_body]
+        fn map<F: Fn(&V) -> V>(&mut self, f: F)
+            ensures self@.dom() == old(self)@.dom()
+        {
             let mapped_entries = ArraySeqStEphS::tabulate(
                 &|i| {
                     let pair = self.entries.nth(i);
@@ -128,8 +170,10 @@ pub mod TableStEph {
             self.entries = mapped_entries;
         }
 
-        /// Work: O(n), Span: O(n)
-        fn filter<F: Fn(&K, &V) -> B>(&mut self, f: F) {
+        #[verifier::external_body]
+        fn filter<F: Fn(&K, &V) -> B>(&mut self, f: F)
+            ensures self@.dom().subset_of(old(self)@.dom())
+        {
             let mut result = Vec::new();
             for i in 0..self.entries.length() {
                 let pair = self.entries.nth(i);
@@ -140,8 +184,10 @@ pub mod TableStEph {
             self.entries = ArraySeqStEphS::from_vec(result);
         }
 
-        /// Work: O(n + m), Span: O(n + m)
-        fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F) {
+        #[verifier::external_body]
+        fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
+            ensures self@.dom().subset_of(old(self)@.dom().intersect(other@.dom()))
+        {
             let mut intersection_entries = Vec::new();
             let mut i = 0;
             let mut j = 0;
@@ -151,9 +197,9 @@ pub mod TableStEph {
                 let pair2 = other.entries.nth(j);
 
                 match pair1.0.cmp(&pair2.0) {
-                    | Ordering::Less => i += 1,
-                    | Ordering::Greater => j += 1,
-                    | Ordering::Equal => {
+                    Ordering::Less => i += 1,
+                    Ordering::Greater => j += 1,
+                    Ordering::Equal => {
                         let combined_value = combine(&pair1.1, &pair2.1);
                         intersection_entries.push(Pair(pair1.0.clone(), combined_value));
                         i += 1;
@@ -165,8 +211,10 @@ pub mod TableStEph {
             self.entries = ArraySeqStEphS::from_vec(intersection_entries);
         }
 
-        /// Work: O(n + m), Span: O(n + m)
-        fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F) {
+        #[verifier::external_body]
+        fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
+            ensures old(self)@.dom().union(other@.dom()).subset_of(self@.dom())
+        {
             let mut union_entries = Vec::new();
             let mut i = 0;
             let mut j = 0;
@@ -176,15 +224,15 @@ pub mod TableStEph {
                 let pair2 = other.entries.nth(j);
 
                 match pair1.0.cmp(&pair2.0) {
-                    | Ordering::Less => {
+                    Ordering::Less => {
                         union_entries.push(pair1.clone());
                         i += 1;
                     }
-                    | Ordering::Greater => {
+                    Ordering::Greater => {
                         union_entries.push(pair2.clone());
                         j += 1;
                     }
-                    | Ordering::Equal => {
+                    Ordering::Equal => {
                         let combined_value = combine(&pair1.1, &pair2.1);
                         union_entries.push(Pair(pair1.0.clone(), combined_value));
                         i += 1;
@@ -193,13 +241,11 @@ pub mod TableStEph {
                 }
             }
 
-            // Add remaining entries from self
             while i < self.entries.length() {
                 union_entries.push(self.entries.nth(i).clone());
                 i += 1;
             }
 
-            // Add remaining entries from other
             while j < other.entries.length() {
                 union_entries.push(other.entries.nth(j).clone());
                 j += 1;
@@ -208,8 +254,10 @@ pub mod TableStEph {
             self.entries = ArraySeqStEphS::from_vec(union_entries);
         }
 
-        /// Work: O(n + m), Span: O(n + m)
-        fn difference(&mut self, other: &Self) {
+        #[verifier::external_body]
+        fn difference(&mut self, other: &Self)
+            ensures self@.dom().subset_of(old(self)@.dom().difference(other@.dom()))
+        {
             let mut difference_entries = Vec::new();
             let mut i = 0;
             let mut j = 0;
@@ -219,21 +267,18 @@ pub mod TableStEph {
                 let pair2 = other.entries.nth(j);
 
                 match pair1.0.cmp(&pair2.0) {
-                    | Ordering::Less => {
+                    Ordering::Less => {
                         difference_entries.push(pair1.clone());
                         i += 1;
                     }
-                    | Ordering::Greater => {
-                        j += 1;
-                    }
-                    | Ordering::Equal => {
+                    Ordering::Greater => j += 1,
+                    Ordering::Equal => {
                         i += 1;
                         j += 1;
                     }
                 }
             }
 
-            // Add remaining entries from self
             while i < self.entries.length() {
                 difference_entries.push(self.entries.nth(i).clone());
                 i += 1;
@@ -242,9 +287,14 @@ pub mod TableStEph {
             self.entries = ArraySeqStEphS::from_vec(difference_entries);
         }
 
-        /// Work: O(log n), Span: O(log n)
-        fn find(&self, key: &K) -> Option<V> {
-            // Binary search since entries are sorted by key
+        #[verifier::external_body]
+        fn find(&self, key: &K) -> (result: Option<V>)
+            ensures
+                match result {
+                    Some(v) => self@.contains_key(key@) && self@[key@] == v@,
+                    None => !self@.contains_key(key@),
+                }
+        {
             let mut left = 0;
             let mut right = self.entries.length();
 
@@ -253,17 +303,19 @@ pub mod TableStEph {
                 let pair = self.entries.nth(mid);
 
                 match key.cmp(&pair.0) {
-                    | Ordering::Less => right = mid,
-                    | Ordering::Greater => left = mid + 1,
-                    | Ordering::Equal => return Some(pair.1.clone()),
+                    Ordering::Less => right = mid,
+                    Ordering::Greater => left = mid + 1,
+                    Ordering::Equal => return Some(pair.1.clone()),
                 }
             }
 
             None
         }
 
-        /// Work: O(n), Span: O(n)
-        fn delete(&mut self, key: &K) {
+        #[verifier::external_body]
+        fn delete(&mut self, key: &K)
+            ensures !self@.contains_key(key@)
+        {
             let mut result = Vec::new();
             for i in 0..self.entries.length() {
                 let pair = self.entries.nth(i);
@@ -274,11 +326,11 @@ pub mod TableStEph {
             self.entries = ArraySeqStEphS::from_vec(result);
         }
 
-        /// Work: O(n), Span: O(n)
-        fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F) {
-            // Check if key already exists
+        #[verifier::external_body]
+        fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)
+            ensures self@.contains_key(key@)
+        {
             if let Some(existing_value) = self.find(&key) {
-                // Key exists, combine values and replace
                 let combined_value = combine(&existing_value, &value);
                 let mut updated_entries = Vec::new();
                 for i in 0..self.entries.length() {
@@ -291,7 +343,6 @@ pub mod TableStEph {
                 updated_entries.sort_by(|a, b| a.0.cmp(&b.0));
                 self.entries = ArraySeqStEphS::from_vec(updated_entries);
             } else {
-                // Key doesn't exist, add new entry
                 let mut new_entries = Vec::with_capacity(self.entries.length() + 1);
                 for i in 0..self.entries.length() {
                     new_entries.push(self.entries.nth(i).clone());
@@ -302,8 +353,10 @@ pub mod TableStEph {
             }
         }
 
-        /// Work: O(n + m), Span: O(n + m)
-        fn restrict(&mut self, keys: &ArraySetStEph<K>) {
+        #[verifier::external_body]
+        fn restrict(&mut self, keys: &ArraySetStEph<K>)
+            ensures self@.dom().subset_of(old(self)@.dom())
+        {
             let mut result = Vec::new();
             for i in 0..self.entries.length() {
                 let pair = self.entries.nth(i);
@@ -314,8 +367,10 @@ pub mod TableStEph {
             self.entries = ArraySeqStEphS::from_vec(result);
         }
 
-        /// Work: O(n + m), Span: O(n + m)
-        fn subtract(&mut self, keys: &ArraySetStEph<K>) {
+        #[verifier::external_body]
+        fn subtract(&mut self, keys: &ArraySetStEph<K>)
+            ensures self@.dom().subset_of(old(self)@.dom())
+        {
             let mut result = Vec::new();
             for i in 0..self.entries.length() {
                 let pair = self.entries.nth(i);
@@ -326,17 +381,38 @@ pub mod TableStEph {
             self.entries = ArraySeqStEphS::from_vec(result);
         }
 
-        fn entries(&self) -> ArraySeqStEphS<Pair<K, V>> { self.entries.clone() }
+        #[verifier::external_body]
+        fn entries(&self) -> (result: ArraySeqStEphS<Pair<K, V>>) {
+            self.entries.clone()
+        }
     }
 
-    /// Create tables from sorted entries
-    pub fn from_sorted_entries<K: StT + Ord, V: StT>(entries: Vec<Pair<K, V>>) -> TableStEph<K, V> {
+    // 11. derive impls in verus!
+
+    impl<K: StT + Ord, V: StT> Clone for TableStEph<K, V> {
+        #[verifier::external_body]
+        fn clone(&self) -> (result: Self) {
+            TableStEph {
+                entries: self.entries.clone(),
+            }
+        }
+    }
+
+    #[verifier::external_body]
+    pub fn from_sorted_entries<K: StT + Ord, V: StT>(
+        entries: Vec<Pair<K, V>>,
+    ) -> (result: TableStEph<K, V>)
+        ensures result@.dom().finite()
+    {
         TableStEph {
             entries: ArraySeqStEphS::from_vec(entries),
         }
     }
 
-    /// Macro for creating ephemeral table literals
+    } // verus!
+
+    // 12. macros
+
     #[macro_export]
     macro_rules! TableStEphLit {
         () => {
@@ -347,5 +423,25 @@ pub mod TableStEph {
             entries.sort_by(|a, b| a.0.cmp(&b.0));
             $crate::Chap42::TableStEph::TableStEph::from_sorted_entries(entries)
         }};
+    }
+
+    // 13. derive impls outside verus!
+
+    impl<K: StT + Ord, V: StT> Default for TableStEph<K, V> {
+        fn default() -> Self {
+            TableStEph::empty()
+        }
+    }
+
+    impl<K: StT + Ord, V: StT> PartialEq for TableStEph<K, V> {
+        fn eq(&self, other: &Self) -> bool {
+            self.entries == other.entries
+        }
+    }
+
+    impl<K: StT + Ord + fmt::Debug, V: StT + fmt::Debug> fmt::Debug for TableStEph<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "TableStEph({:?})", self.entries)
+        }
     }
 }

@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 45: Priority Queues — Review Against Prose
 
-**Date:** 2026-02-18
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 **Prose source:** `prompts/Chap45.txt`
 
@@ -228,18 +228,22 @@ All placements are correct for a non-Verus chapter.
 ✓ BalancedTreePQ.rs
 ✓ BinaryHeapPQ.rs
 ✓ Example45_2.rs
-✓ HeapsortExample.rs
-✓ LeftistHeapPQ.rs
+✓ HeapsortExample.rs (bare_impl: impl HeapsortComparison without trait)
+✓ LeftistHeapPQ.rs (bare_impl: impl LeftistHeapNode without trait)
 ✓ SortedListPQ.rs
 ✓ UnsortedListPQ.rs
 
 Modules: 7 clean, 0 holed
 Proof Functions: 0 total
 Holes Found: 0 total
-Errors: 7 bare impl(s) in files with trait definitions
+Errors: 2 bare impl(s) in files with trait definitions
 ```
 
 **0 proof holes** — trivially clean because no Verus verification exists.
+
+The bare_impl count dropped from 7 to 2. The remaining 2 are:
+1. `HeapsortExample.rs`: `impl HeapsortComparison<T>` — file defines traits but this impl is for a comparison helper struct.
+2. `LeftistHeapPQ.rs`: `impl LeftistHeapNode<T>` — inherent methods (`rank`, `make_node`, `meld_nodes`) on the recursive node type. This is a valid exception per the recursive-spec-fn pattern (though this is plain Rust, not Verus).
 
 ## Spec Strength Summary
 

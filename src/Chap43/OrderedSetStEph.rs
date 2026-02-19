@@ -28,7 +28,7 @@ pub mod OrderedSetStEph {
     // 4. type definitions
 
     pub struct OrderedSetStEph<T: StT + Ord> {
-        base_set: AVLTreeSetStEph<T>,
+        pub base_set: AVLTreeSetStEph<T>,
     }
 
     pub type OrderedSetEph<T> = OrderedSetStEph<T>;
@@ -37,14 +37,13 @@ pub mod OrderedSetStEph {
 
     impl<T: StT + Ord> View for OrderedSetStEph<T> {
         type V = Set<T>;
-        #[verifier::external_body]
-        open spec fn view(&self) -> Set<T> { Set::empty() }
+        open spec fn view(&self) -> Set<T> { self.base_set@ }
     }
 
     // 8. traits
 
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1) with ephemeral semantics
-    pub trait OrderedSetStEphTrait<T: StT + Ord> {
+    pub trait OrderedSetStEphTrait<T: StT + Ord>: Sized + View<V = Set<T>> {
         // Base set operations (ADT 41.1) - ephemeral semantics
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (result: N)
@@ -121,12 +120,10 @@ pub mod OrderedSetStEph {
     // 9. impls
 
     impl<T: StT + Ord> OrderedSetStEphTrait<T> for OrderedSetStEph<T> {
-        #[verifier::external_body]
         fn size(&self) -> (result: N)
             ensures result == self@.len(), self@.finite()
         { self.base_set.size() }
 
-        #[verifier::external_body]
         fn empty() -> (result: Self)
             ensures result@ == Set::<T>::empty()
         {
@@ -135,7 +132,6 @@ pub mod OrderedSetStEph {
             }
         }
 
-        #[verifier::external_body]
         fn singleton(x: T) -> (result: Self)
             ensures result@ == Set::<T>::empty().insert(x), result@.finite()
         {
@@ -144,22 +140,18 @@ pub mod OrderedSetStEph {
             }
         }
 
-        #[verifier::external_body]
         fn find(&self, x: &T) -> (result: B)
             ensures result == self@.contains(*x)
         { self.base_set.find(x) }
 
-        #[verifier::external_body]
         fn insert(&mut self, x: T)
             ensures self@ == old(self)@.insert(x), self@.finite()
         { self.base_set.insert(x); }
 
-        #[verifier::external_body]
         fn delete(&mut self, x: &T)
             ensures self@ == old(self)@.remove(*x), self@.finite()
         { self.base_set.delete(x); }
 
-        #[verifier::external_body]
         fn filter<F: PredSt<T>>(&mut self, f: F)
             ensures self@.finite()
         {
@@ -167,7 +159,6 @@ pub mod OrderedSetStEph {
             self.base_set = result;
         }
 
-        #[verifier::external_body]
         fn intersection(&mut self, other: &Self)
             ensures self@ == old(self)@.intersect(other@), self@.finite()
         {
@@ -175,7 +166,6 @@ pub mod OrderedSetStEph {
             self.base_set = result;
         }
 
-        #[verifier::external_body]
         fn union(&mut self, other: &Self)
             ensures self@ == old(self)@.union(other@), self@.finite()
         {
@@ -183,7 +173,6 @@ pub mod OrderedSetStEph {
             self.base_set = result;
         }
 
-        #[verifier::external_body]
         fn difference(&mut self, other: &Self)
             ensures self@ == old(self)@.difference(other@), self@.finite()
         {
@@ -307,7 +296,6 @@ pub mod OrderedSetStEph {
             (Self::from_seq(left_seq), found, Self::from_seq(right_seq))
         }
 
-        #[verifier::external_body]
         fn join(&mut self, other: Self)
             ensures self@.finite()
         { self.union(&other); }
@@ -399,7 +387,6 @@ pub mod OrderedSetStEph {
     // 11. derive impls in verus!
 
     impl<T: StT + Ord> Clone for OrderedSetStEph<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (result: Self)
             ensures result@ == self@
         {

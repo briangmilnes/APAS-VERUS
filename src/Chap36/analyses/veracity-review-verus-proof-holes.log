@@ -1,14 +1,22 @@
-✓ QuickSortMtEph.rs
+❌ QuickSortMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortMtEph.rs:400: external_body - #[verifier::external_body]
+       401 |     fn median3_pivot_idx<T: TotalOrder + Copy>(a: &ArraySeqMtEphS<T>, n: usize) -> (idx: usize)
+   Holes: 1 total
+      1 × external_body
 ✓ QuickSortMtEphSlice.rs
-✓ QuickSortStEph.rs
+❌ QuickSortStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap36/QuickSortStEph.rs:421: external_body - #[verifier::external_body]
+       422 |     fn median3_pivot_idx<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>, n: usize) -> (idx: usize)
+   Holes: 1 total
+      1 × external_body
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   3 clean (no holes)
-   0 holed (contains holes)
+   1 clean (no holes)
+   2 holed (contains holes)
    3 total
 
 Proof Functions:
@@ -16,11 +24,13 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 0 total
+Holes Found: 2 total
+   2 × external_body
+��═══════
 
-🎉 No proof holes or warnings found! All proofs are complete.
-n (no holes)
-   0 holed (contains holes)
+Modules:
+   1 clean (no holes)
+   2 holed (contains holes)
    3 total
 
 Proof Functions:
@@ -28,6 +38,5 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
+Holes Found: 2 total
+   2 × external_body

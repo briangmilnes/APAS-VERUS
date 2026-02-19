@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 50: Review Against Prose
 
-**Date:** 2026-02-17
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6 (automated)
 **Project:** APAS-VERUS-agent2
 **Chapter:** 50 — DP: MatrixChain, OptBinSearchTree, Probability
@@ -28,13 +28,13 @@ Chapter 50 covers the **Optimal Binary Search Tree (OBST) problem** (Definition 
 
 | # | File | Algorithm | Variant | Lines | verus! content |
 |---|---|---|---|---|---|
-| 1 | `MatrixChainStEph.rs` | Matrix Chain DP | St/Eph | ~230 | empty |
-| 2 | `MatrixChainStPer.rs` | Matrix Chain DP | St/Per | ~188 | empty |
-| 3 | `MatrixChainMtEph.rs` | Matrix Chain DP | Mt/Eph | ~310 | empty |
-| 4 | `MatrixChainMtPer.rs` | Matrix Chain DP | Mt/Per | ~246 | empty |
+| 1 | `MatrixChainStEph.rs` | Matrix Chain DP | St/Eph | ~264 | empty |
+| 2 | `MatrixChainStPer.rs` | Matrix Chain DP | St/Per | ~212 | empty |
+| 3 | `MatrixChainMtEph.rs` | Matrix Chain DP | Mt/Eph | ~344 | empty |
+| 4 | `MatrixChainMtPer.rs` | Matrix Chain DP | Mt/Per | ~269 | empty |
 | 5 | `OptBinSearchTreeStEph.rs` | OBST (Alg 50.3) | St/Eph | ~224 | empty |
 | 6 | `OptBinSearchTreeStPer.rs` | OBST (Alg 50.3) | St/Per | ~188 | empty |
-| 7 | `OptBinSearchTreeMtEph.rs` | OBST (Alg 50.3) | Mt/Eph | ~315 | empty |
+| 7 | `OptBinSearchTreeMtEph.rs` | OBST (Alg 50.3) | Mt/Eph | ~358 | empty |
 | 8 | `OptBinSearchTreeMtPer.rs` | OBST (Alg 50.3) | Mt/Per | ~247 | empty |
 | 9 | `Probability.rs` | Probability wrapper | Infrastructure | ~154 | empty |
 
@@ -104,12 +104,23 @@ All 9 files have been annotated with two-line cost comments on every exec functi
 ### Proof holes
 
 ```
-veracity-review-proof-holes output:
-✓ All 9 files clean — 0 proof holes found.
-Errors: 7 bare impl(s) in files with trait definitions
-  MatrixChainStEph, MatrixChainStPer, MatrixChainMtEph, MatrixChainMtPer,
-  OptBinSearchTreeStEph, OptBinSearchTreeStPer, Probability
+✓ MatrixChainMtEph.rs
+✓ MatrixChainMtPer.rs
+✓ MatrixChainStEph.rs
+✓ MatrixChainStPer.rs
+✓ OptBinSearchTreeMtEph.rs
+✓ OptBinSearchTreeMtPer.rs
+✓ OptBinSearchTreeStEph.rs
+✓ OptBinSearchTreeStPer.rs
+✓ Probability.rs
+
+Modules: 9 clean, 0 holed
+Proof Functions: 0 total
+Holes Found: 0 total
+Errors: 0
 ```
+
+**0 proof holes, 0 structural errors.** All modules follow the trait-impl pattern correctly. Functions like `matrix_chain_rec_*`, `multiply_cost_*`, `parallel_min_reduction*`, and `obst_rec` are free functions (not on bare impl blocks), and all public API methods are in trait impls.
 
 ### verus! block status
 
@@ -171,13 +182,12 @@ All code is outside `verus!` due to the Verus limitations above. The in/out desi
 | 4 | Info | Consider bottom-up DP for better parallel span | Medium | Would achieve textbook Θ(n log n) span but requires 2D array, not HashMap |
 | 5 | Info | Exercise 50.5 (return optimal tree structure) not implemented | Low | Prose mentions it as exercise; optional |
 | 6 | Info | MatrixChain not formally specified in prose | None | Prose mentions it as "similar problem"; implementation follows standard DP |
-| 7 | Info | MatrixChainStPer macro is outside module closure | Trivial | Inconsistent with StEph which has macro inside |
-| 8 | Info | Probability type duplicates f64 ordering logic | None | Necessary for HashMap key usage and Ord trait |
+| 7 | Info | Probability type duplicates f64 ordering logic | None | Necessary for HashMap key usage and Ord trait |
 
 ## Summary
 
 Chapter 50 implements two interval-DP algorithms (OBST and Matrix Chain) across the standard 4-variant matrix (St/Mt × Eph/Per), plus a Probability infrastructure type. The OBST implementation faithfully follows Algorithm 50.3 from the textbook. Matrix Chain follows the standard DP formulation mentioned in the prose as a "similar problem."
 
-**Verification status:** All code lives outside `verus!` due to Verus limitations with HashMap and mutable references. The `verus!` blocks are empty shells. There are 0 proof holes — trivially, because there are no proofs. This chapter is **functionally correct** (validated by 91+ runtime tests) but **unverified** by Verus.
+**Verification status:** All code lives outside `verus!` due to Verus limitations with HashMap and mutable references. The `verus!` blocks are empty shells. There are 0 proof holes and 0 structural errors — all modules follow the trait-impl pattern correctly with helper functions as free functions. This chapter is **functionally correct** (validated by 91+ runtime tests) but **unverified** by Verus.
 
 **Cost conformance:** Work Θ(n³) matches the textbook for both algorithms. The Mt implementations achieve Span Θ(n² lg n) via parallel min reduction, which is worse than the textbook's optimal Θ(n log n) due to the sequential inner loop in the memoized recursive approach.

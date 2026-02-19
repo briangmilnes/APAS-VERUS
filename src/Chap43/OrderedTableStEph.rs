@@ -37,13 +37,13 @@ pub mod OrderedTableStEph {
         type V = Map<K::V, V::V>;
 
         #[verifier::external_body]
-        open spec fn view(&self) -> Self::V;
+        open spec fn view(&self) -> Self::V { Map::empty() }
     }
 
     // 8. traits
 
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1 for keys) with ephemeral semantics
-    pub trait OrderedTableStEphTrait<K: StT + Ord, V: StT> {
+    pub trait OrderedTableStEphTrait<K: StT + Ord, V: StT>: Sized {
         fn size(&self) -> (result: N);
         fn empty() -> (result: Self);
         fn singleton(k: K, v: V) -> (result: Self);
