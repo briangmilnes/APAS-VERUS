@@ -557,49 +557,49 @@ path = "tests/Chap42/TestTableStEph.rs"
 name = "TestTableStPer"
 path = "tests/Chap42/TestTableStPer.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestAugOrderedTableMtEph"
-# path = "disabled"
+[[test]]
+name = "TestAugOrderedTableMtEph"
+path = "tests/Chap43/TestAugOrderedTableMtEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestAugOrderedTableStEph"
-# path = "disabled"
+[[test]]
+name = "TestAugOrderedTableStEph"
+path = "tests/Chap43/TestAugOrderedTableStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestAugOrderedTableStPer"
-# path = "disabled"
+[[test]]
+name = "TestAugOrderedTableStPer"
+path = "tests/Chap43/TestAugOrderedTableStPer.rs"
 
 # [[test]]  # module commented out in lib.rs
 # name = "TestExample43_1"
 # path = "disabled"
 
-# [[test]]  # module commented out in lib.rs
+# [[test]]  # module commented out in lib.rs (needs ParamTreap)
 # name = "TestOrderedSetMtEph"
 # path = "disabled"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestOrderedSetStEph"
-# path = "disabled"
+[[test]]
+name = "TestOrderedSetStEph"
+path = "tests/Chap43/TestOrderedSetStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestOrderedSetStPer"
-# path = "disabled"
+[[test]]
+name = "TestOrderedSetStPer"
+path = "tests/Chap43/TestOrderedSetStPer.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestOrderedTableMtEph"
-# path = "disabled"
+[[test]]
+name = "TestOrderedTableMtEph"
+path = "tests/Chap43/TestOrderedTableMtEph.rs"
 
-# [[test]]  # module commented out in lib.rs
+# [[test]]  # module commented out in lib.rs (needs ParamTreap)
 # name = "TestOrderedTableMtPer"
 # path = "disabled"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestOrderedTableStEph"
-# path = "disabled"
+[[test]]
+name = "TestOrderedTableStEph"
+path = "tests/Chap43/TestOrderedTableStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestOrderedTableStPer"
-# path = "disabled"
+[[test]]
+name = "TestOrderedTableStPer"
+path = "tests/Chap43/TestOrderedTableStPer.rs"
 
 # [[test]]  # module commented out in lib.rs
 # name = "TestDocumentIndex"

@@ -25,6 +25,8 @@ pub mod OrderedTableStPer {
 
     // 4. type definitions
 
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
     pub struct OrderedTableStPer<K: StT + Ord, V: StT> {
         base_table: TableStPer<K, V>,
     }
@@ -42,145 +44,197 @@ pub mod OrderedTableStPer {
 
     // 8. traits
 
-    /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1 for keys)
-    pub trait OrderedTableStPerTrait<K: StT + Ord, V: StT>: Sized {
-        fn size(&self) -> N;
-        fn empty() -> Self;
-        fn singleton(k: K, v: V) -> Self;
-        fn find(&self, k: &K) -> Option<V>;
-        fn insert(&self, k: K, v: V) -> Self;
-        fn delete(&self, k: &K) -> Self;
-        fn domain(&self) -> ArraySetStEph<K>;
-        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> Self;
-        fn map<F: Fn(&V) -> V>(&self, f: F) -> Self;
-        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> Self;
-        fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> Self;
-        fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> Self;
-        fn difference(&self, other: &Self) -> Self;
-        fn restrict(&self, keys: &ArraySetStEph<K>) -> Self;
-        fn subtract(&self, keys: &ArraySetStEph<K>) -> Self;
-        fn collect(&self) -> AVLTreeSeqStPerS<Pair<K, V>>;
-
-        fn first_key(&self) -> Option<K>;
-        fn last_key(&self) -> Option<K>;
-        fn previous_key(&self, k: &K) -> Option<K>;
-        fn next_key(&self, k: &K) -> Option<K>;
-        fn split_key(&self, k: &K) -> (Self, Option<V>, Self)
-        where
-            Self: Sized;
-        fn join_key(left: &Self, right: &Self) -> Self;
-        fn get_key_range(&self, k1: &K, k2: &K) -> Self;
-        fn rank_key(&self, k: &K) -> N;
-        fn select_key(&self, i: N) -> Option<K>;
-        fn split_rank_key(&self, i: N) -> (Self, Self)
-        where
-            Self: Sized;
+    /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1) with persistent semantics.
+    pub trait OrderedTableStPerTrait<K: StT + Ord, V: StT>: Sized + View<V = Map<K::V, V::V>> {
+        fn size(&self) -> (result: N)
+            ensures result == self@.dom().len(), self@.dom().finite();
+        fn empty() -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty();
+        fn singleton(k: K, v: V) -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty().insert(k@, v@), result@.dom().finite();
+        fn find(&self, k: &K) -> (result: Option<V>);
+        fn insert(&self, k: K, v: V) -> (result: Self)
+            ensures result@.dom().finite();
+        fn delete(&self, k: &K) -> (result: Self)
+            ensures result@ == self@.remove(k@), result@.dom().finite();
+        fn domain(&self) -> (result: ArraySetStEph<K>)
+            ensures self@.dom().finite();
+        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
+            ensures result@.dom().finite();
+        fn map<F: Fn(&V) -> V>(&self, f: F) -> (result: Self)
+            ensures result@.dom().finite();
+        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (result: Self)
+            ensures result@.dom().finite();
+        fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (result: Self)
+            ensures result@.dom().finite();
+        fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (result: Self)
+            ensures result@.dom().finite();
+        fn difference(&self, other: &Self) -> (result: Self)
+            ensures result@.dom().finite();
+        fn restrict(&self, keys: &ArraySetStEph<K>) -> (result: Self)
+            ensures result@.dom().finite();
+        fn subtract(&self, keys: &ArraySetStEph<K>) -> (result: Self)
+            ensures result@.dom().finite();
+        fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
+            ensures self@.dom().finite();
+        fn first_key(&self) -> (result: Option<K>)
+            ensures self@.dom().finite();
+        fn last_key(&self) -> (result: Option<K>)
+            ensures self@.dom().finite();
+        fn previous_key(&self, k: &K) -> (result: Option<K>)
+            ensures self@.dom().finite();
+        fn next_key(&self, k: &K) -> (result: Option<K>)
+            ensures self@.dom().finite();
+        fn split_key(&self, k: &K) -> (result: (Self, Option<V>, Self))
+            where Self: Sized
+            ensures self@.dom().finite();
+        fn join_key(left: &Self, right: &Self) -> (result: Self)
+            ensures result@.dom().finite();
+        fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
+            ensures result@.dom().finite();
+        fn rank_key(&self, k: &K) -> (result: N)
+            ensures self@.dom().finite();
+        fn select_key(&self, i: N) -> (result: Option<K>)
+            ensures self@.dom().finite();
+        fn split_rank_key(&self, i: N) -> (result: (Self, Self))
+            where Self: Sized
+            ensures self@.dom().finite();
     }
 
     // 9. impls
 
     impl<K: StT + Ord, V: StT> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
         #[verifier::external_body]
-        fn size(&self) -> N {
+        fn size(&self) -> (result: N)
+            ensures result == self@.dom().len(), self@.dom().finite()
+        {
             self.base_table.size()
         }
 
         #[verifier::external_body]
-        fn empty() -> Self {
+        fn empty() -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty()
+        {
             OrderedTableStPer {
                 base_table: TableStPer::empty(),
             }
         }
 
         #[verifier::external_body]
-        fn singleton(k: K, v: V) -> Self {
+        fn singleton(k: K, v: V) -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty().insert(k@, v@), result@.dom().finite()
+        {
             OrderedTableStPer {
                 base_table: TableStPer::singleton(k, v),
             }
         }
 
         #[verifier::external_body]
-        fn find(&self, k: &K) -> Option<V> {
+        fn find(&self, k: &K) -> (result: Option<V>) {
             self.base_table.find(k)
         }
 
         #[verifier::external_body]
-        fn insert(&self, k: K, v: V) -> Self {
+        fn insert(&self, k: K, v: V) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             OrderedTableStPer {
                 base_table: self.base_table.insert(k, v, |_old, new| new.clone()),
             }
         }
 
         #[verifier::external_body]
-        fn delete(&self, k: &K) -> Self {
+        fn delete(&self, k: &K) -> (result: Self)
+            ensures result@ == self@.remove(k@), result@.dom().finite()
+        {
             OrderedTableStPer {
                 base_table: self.base_table.delete(k),
             }
         }
 
         #[verifier::external_body]
-        fn domain(&self) -> ArraySetStEph<K> {
+        fn domain(&self) -> (result: ArraySetStEph<K>)
+            ensures self@.dom().finite()
+        {
             self.base_table.domain()
         }
 
         #[verifier::external_body]
-        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> Self {
+        fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             OrderedTableStPer {
                 base_table: TableStPer::tabulate(f, keys),
             }
         }
 
         #[verifier::external_body]
-        fn map<F: Fn(&V) -> V>(&self, f: F) -> Self {
+        fn map<F: Fn(&V) -> V>(&self, f: F) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             OrderedTableStPer {
                 base_table: self.base_table.map(f),
             }
         }
 
         #[verifier::external_body]
-        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> Self {
+        fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             OrderedTableStPer {
                 base_table: self.base_table.filter(f),
             }
         }
 
         #[verifier::external_body]
-        fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> Self {
+        fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             OrderedTableStPer {
                 base_table: self.base_table.intersection(&other.base_table, f),
             }
         }
 
         #[verifier::external_body]
-        fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> Self {
+        fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             OrderedTableStPer {
                 base_table: self.base_table.union(&other.base_table, f),
             }
         }
 
         #[verifier::external_body]
-        fn difference(&self, other: &Self) -> Self {
+        fn difference(&self, other: &Self) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             OrderedTableStPer {
                 base_table: self.base_table.difference(&other.base_table),
             }
         }
 
         #[verifier::external_body]
-        fn restrict(&self, keys: &ArraySetStEph<K>) -> Self {
+        fn restrict(&self, keys: &ArraySetStEph<K>) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             OrderedTableStPer {
                 base_table: self.base_table.restrict(keys),
             }
         }
 
         #[verifier::external_body]
-        fn subtract(&self, keys: &ArraySetStEph<K>) -> Self {
+        fn subtract(&self, keys: &ArraySetStEph<K>) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             OrderedTableStPer {
                 base_table: self.base_table.subtract(keys),
             }
         }
 
         #[verifier::external_body]
-        fn collect(&self) -> AVLTreeSeqStPerS<Pair<K, V>> {
+        fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
+            ensures self@.dom().finite()
+        {
             let array_seq = self.base_table.collect();
             let len = array_seq.length();
             let mut elements = Vec::new();
@@ -191,7 +245,9 @@ pub mod OrderedTableStPer {
         }
 
         #[verifier::external_body]
-        fn first_key(&self) -> Option<K> {
+        fn first_key(&self) -> (result: Option<K>)
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             if entries.length() == 0 {
                 None
@@ -201,7 +257,9 @@ pub mod OrderedTableStPer {
         }
 
         #[verifier::external_body]
-        fn last_key(&self) -> Option<K> {
+        fn last_key(&self) -> (result: Option<K>)
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             let size = entries.length();
             if size == 0 {
@@ -212,7 +270,9 @@ pub mod OrderedTableStPer {
         }
 
         #[verifier::external_body]
-        fn previous_key(&self, k: &K) -> Option<K> {
+        fn previous_key(&self, k: &K) -> (result: Option<K>)
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             let size = entries.length();
 
@@ -226,7 +286,9 @@ pub mod OrderedTableStPer {
         }
 
         #[verifier::external_body]
-        fn next_key(&self, k: &K) -> Option<K> {
+        fn next_key(&self, k: &K) -> (result: Option<K>)
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             let size = entries.length();
 
@@ -240,7 +302,10 @@ pub mod OrderedTableStPer {
         }
 
         #[verifier::external_body]
-        fn split_key(&self, k: &K) -> (Self, Option<V>, Self) {
+        fn split_key(&self, k: &K) -> (result: (Self, Option<V>, Self))
+            where Self: Sized
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             let size = entries.length();
             let mut left_entries = Vec::new();
@@ -269,12 +334,16 @@ pub mod OrderedTableStPer {
         }
 
         #[verifier::external_body]
-        fn join_key(left: &Self, right: &Self) -> Self {
+        fn join_key(left: &Self, right: &Self) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             left.union(right, |v1, _v2| v1.clone())
         }
 
         #[verifier::external_body]
-        fn get_key_range(&self, k1: &K, k2: &K) -> Self {
+        fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             let entries = self.collect();
             let size = entries.length();
             let mut range_entries = Vec::new();
@@ -291,7 +360,9 @@ pub mod OrderedTableStPer {
         }
 
         #[verifier::external_body]
-        fn rank_key(&self, k: &K) -> N {
+        fn rank_key(&self, k: &K) -> (result: N)
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             let size = entries.length();
             let mut count = 0;
@@ -308,7 +379,9 @@ pub mod OrderedTableStPer {
         }
 
         #[verifier::external_body]
-        fn select_key(&self, i: N) -> Option<K> {
+        fn select_key(&self, i: N) -> (result: Option<K>)
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             if i >= entries.length() {
                 None
@@ -318,7 +391,10 @@ pub mod OrderedTableStPer {
         }
 
         #[verifier::external_body]
-        fn split_rank_key(&self, i: N) -> (Self, Self) {
+        fn split_rank_key(&self, i: N) -> (result: (Self, Self))
+            where Self: Sized
+            ensures self@.dom().finite()
+        {
             let entries = self.collect();
             let size = entries.length();
 

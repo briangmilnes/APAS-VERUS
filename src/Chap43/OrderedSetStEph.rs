@@ -27,6 +27,7 @@ pub mod OrderedSetStEph {
 
     // 4. type definitions
 
+    #[verifier::reject_recursive_types(T)]
     pub struct OrderedSetStEph<T: StT + Ord> {
         pub base_set: AVLTreeSetStEph<T>,
     }

@@ -34,6 +34,9 @@ pub mod AugOrderedTableMtEph {
 
     // 4. type definitions
 
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    #[verifier::reject_recursive_types(F)]
     pub struct AugOrderedTableMtEph<K: MtKey, V: MtVal, F: MtReduceFn<V>> {
         base_table: OrderedTableMtEph<K, V>,
         reducer: F,
@@ -534,6 +537,7 @@ pub mod AugOrderedTableMtEph {
     // 11. derive impls in verus!
 
     impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> Clone for AugOrderedTableMtEph<K, V, F> {
+        #[verifier::external_body]
         fn clone(&self) -> (result: Self)
             ensures result@ == self@
         {

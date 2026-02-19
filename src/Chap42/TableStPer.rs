@@ -5,17 +5,50 @@ pub mod TableStPer {
 
     use std::cmp::Ordering;
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Types::Types::*;
 
-    #[derive(Debug, Clone, PartialEq)]
+    verus! {
+
+    // Type declaration inside verus! so Chap43 can use it as a struct field.
+
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
     pub struct TableStPer<K: StT + Ord, V: StT> {
-        entries: ArraySeqStPerS<Pair<K, V>>,
+        pub entries: ArraySeqStPerS<Pair<K, V>>,
     }
 
     pub type TableS<K, V> = TableStPer<K, V>;
+
+    // 11. derive impls in verus!
+
+    impl<K: StT + Ord, V: StT> Clone for TableStPer<K, V> {
+        #[verifier::external_body]
+        fn clone(&self) -> (result: Self)
+            ensures result == *self
+        {
+            TableStPer { entries: self.entries.clone() }
+        }
+    }
+
+    } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl<K: StT + Ord, V: StT> PartialEq for TableStPer<K, V> {
+        fn eq(&self, other: &Self) -> bool {
+            self.entries == other.entries
+        }
+    }
+
+    impl<K: StT + Ord, V: StT> std::fmt::Debug for TableStPer<K, V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("TableStPer").finish()
+        }
+    }
 
     /// Trait defining the Table ADT operations from Chapter 42
     pub trait TableStPerTrait<K: StT + Ord, V: StT>: Sized {

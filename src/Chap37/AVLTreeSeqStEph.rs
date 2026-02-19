@@ -5,12 +5,16 @@ pub mod AVLTreeSeqStEph {
 
     use std::fmt::Debug;
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
 
-    type Link<T> = Option<Box<AVLTreeNode<T>>>;
+    verus! {
 
-    #[derive(Clone)]
+    // Type declarations inside verus! so downstream modules can use them as struct fields.
+
+    pub type Link<T> = Option<Box<AVLTreeNode<T>>>;
+
     pub struct AVLTreeNode<T: StT> {
         pub value: T,
         pub height: N,
@@ -19,6 +23,27 @@ pub mod AVLTreeSeqStEph {
         pub left: Link<T>,
         pub right: Link<T>,
         pub index: N,
+    }
+
+    pub struct AVLTreeSeqStEphS<T: StT> {
+        pub root: Link<T>,
+        pub next_key: N,
+    }
+
+    } // verus!
+
+    impl<T: StT> Clone for AVLTreeNode<T> {
+        fn clone(&self) -> Self {
+            AVLTreeNode {
+                value: self.value.clone(),
+                height: self.height,
+                left_size: self.left_size,
+                right_size: self.right_size,
+                left: self.left.clone(),
+                right: self.right.clone(),
+                index: self.index,
+            }
+        }
     }
 
     impl<T: StT> AVLTreeNode<T> {
@@ -33,11 +58,6 @@ pub mod AVLTreeSeqStEph {
                 index,
             }
         }
-    }
-
-    pub struct AVLTreeSeqStEphS<T: StT> {
-        pub root: Link<T>,
-        pub next_key: N,
     }
 
     pub trait AVLTreeSeqStEphTrait<T: StT> {

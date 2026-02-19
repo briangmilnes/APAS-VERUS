@@ -346,11 +346,12 @@ pub mod Chap40 {
 pub mod Chap41 {
     pub mod ArraySetStEph;
     // pub mod ArraySetEnumMtEph;  // uses bitvec (Verus can't link)
-    // pub mod AVLTreeSetStEph;  // types declared outside verus!
-    // pub mod AVLTreeSetStPer;  // types declared outside verus!
-    // pub mod AVLTreeSetMtEph;  // types declared outside verus!
-    // pub mod AVLTreeSetMtPer;  // types declared outside verus!
-    // pub mod Example41_3;  // depends on AVLTreeSetStEph
+    pub mod AVLTreeSetStEph;
+    pub mod AVLTreeSetStPer;
+    // pub mod AVLTreeSetMtEph;  // Mutex not supported in verus! struct
+    #[cfg(feature = "all_chapters")]
+    pub mod AVLTreeSetMtPer;
+    pub mod Example41_3;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
@@ -363,22 +364,21 @@ pub mod Chap42 {
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap43 {
-    // All Chap43 files blocked by types declared outside verus!:
-    // - AVLTreeSeqStPerS (Chap37), TableStPer (Chap42), ParamTreap (Chap39)
-    // - AVLTreeSetStEph/StPer (Chap41)
-    // Fix requires verusifying Chap37/AVLTreeSeqStPer, Chap42/TableStPer,
-    // Chap39/BSTParaTreapMtEph first.
-    // pub mod OrderedSetStEph;
-    // pub mod OrderedSetStPer;
-    // pub mod OrderedSetMtEph;
-    // pub mod OrderedTableStEph;
-    // pub mod OrderedTableStPer;
-    // pub mod OrderedTableMtEph;
-    // pub mod OrderedTableMtPer;
-    // pub mod AugOrderedTableStEph;
-    // pub mod AugOrderedTableStPer;
-    // pub mod AugOrderedTableMtEph;
-    // pub mod Example43_1;
+    // Wave 1: OrderedTable + AugOrderedTable (depend on ArraySetStEph, AVLTreeSeqStEph/StPer)
+    pub mod OrderedTableStEph;
+    pub mod OrderedTableMtEph;
+    pub mod AugOrderedTableStEph;
+    pub mod AugOrderedTableMtEph;
+    // Wave 2: StPer variants (depend on TableStPer)
+    pub mod OrderedTableStPer;
+    pub mod AugOrderedTableStPer;
+    // Wave 3: OrderedSet (depend on AVLTreeSetStEph/StPer)
+    pub mod OrderedSetStEph;
+    pub mod OrderedSetStPer;
+    // Wave 4: blocked by BSTParaTreapMtEph (ParamTreap uses Arc<RwLock<>>)
+    // pub mod OrderedSetMtEph;  // needs ParamTreap inside verus!
+    // pub mod OrderedTableMtPer;  // needs ParamTreap inside verus!
+    // pub mod Example43_1;  // needs OrderedSetMtEph
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]

@@ -29,6 +29,8 @@ pub mod OrderedTableMtEph {
 
     // 4. type definitions
 
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
     pub struct OrderedTableMtEph<K: MtKey, V: MtVal> {
         base_table: TableMtEph<K, V>,
     }

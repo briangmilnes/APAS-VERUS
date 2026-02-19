@@ -2,13 +2,39 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn _ types rand
+Pattern: fn _ types RwLock
 Searching: /home/milnes/projects/verus/source/vstd
-Searching: /home/milnes/projects/APAS-VERUS/src/vstdplus
-Files: 117, Functions: 2919, Matches: 1
+Files: 95, Functions: 2289, Matches: 7
 
-[31m/home/milnes/projects/verus/source/vstd/std_specs/hash.rs:262: [0m
-[38;5;22mpub broadcast proof fn axiom_random_state_builds_valid_hashers()[0m
-[38;5;22m    ensures[0m
-[38;5;22m        #[trigger] builds_valid_hashers::<RandomState>(),[0m
+[31m/home/milnes/projects/verus/source/vstd/rwlock.rs:240: [0m
+[38;5;22m    spec fn inv(self, v: V) -> bool;[0m
 
+[31m/home/milnes/projects/verus/source/vstd/rwlock.rs:279: [0m
+[38;5;22m    fn example1()[0m
+
+[31m/home/milnes/projects/verus/source/vstd/rwlock.rs:399: [0m
+[38;5;22m    pub closed spec fn rwlock(self) -> RwLock<V, Pred>[0m
+
+[31m/home/milnes/projects/verus/source/vstd/rwlock.rs:403: [0m
+[38;5;22m    pub fn release_write(self, new_val: V)[0m
+[38;5;22m        requires[0m
+[38;5;22m            self.rwlock().inv(new_val),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/rwlock.rs:436: [0m
+[38;5;22m    pub closed spec fn rwlock(self) -> RwLock<V, Pred>[0m
+
+[31m/home/milnes/projects/verus/source/vstd/rwlock.rs:455: [0m
+[38;5;22m    pub proof fn lemma_readers_match([0m
+[38;5;22m        tracked read_handle1: &ReadHandle<V, Pred>,[0m
+[38;5;22m        tracked read_handle2: &ReadHandle<V, Pred>,[0m
+[38;5;22m    )[0m
+[38;5;22m        requires[0m
+[38;5;22m            read_handle1.rwlock() == read_handle2.rwlock(),[0m
+[38;5;22m        ensures[0m
+[38;5;22m            (equal(read_handle1.view(), read_handle2.view())),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/rwlock.rs:620: [0m
+/// **Warning:** The lock is _NOT_ released automatically when the handle
+/// is dropped. You must call [`ReadHandle::release_read`].
+/// Verus does not check that lock is released.
+#[verifier::exec_allows_no_decreases_clause]

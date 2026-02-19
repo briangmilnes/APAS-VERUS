@@ -28,6 +28,9 @@ pub mod AugOrderedTableStPer {
 
     // 4. type definitions
 
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    #[verifier::reject_recursive_types(F)]
     pub struct AugOrderedTableStPer<K: StT + Ord, V: StT, F>
     where
         F: Fn(&V, &V) -> V + Clone,
@@ -524,6 +527,7 @@ pub mod AugOrderedTableStPer {
     where
         F: Fn(&V, &V) -> V + Clone,
     {
+        #[verifier::external_body]
         fn clone(&self) -> (result: Self)
             ensures result@ == self@
         {

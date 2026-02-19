@@ -6,18 +6,29 @@ pub mod AVLTreeSeqStPer {
     use std::fmt::{Debug, Formatter};
     use std::rc::Rc;
 
+    use vstd::prelude::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
-    type Link<T> = Option<Rc<Node<T>>>;
+    verus! {
 
-    struct Node<T: StT> {
-        value: T,
-        height: N,
-        size: N,
-        left: Link<T>,
-        right: Link<T>,
+    // Type declarations inside verus! so downstream modules can use them as struct fields.
+
+    pub type Link<T> = Option<Rc<Node<T>>>;
+
+    pub struct Node<T: StT> {
+        pub value: T,
+        pub height: N,
+        pub size: N,
+        pub left: Link<T>,
+        pub right: Link<T>,
     }
+
+    pub struct AVLTreeSeqStPerS<T: StT> {
+        pub root: Link<T>,
+    }
+
+    } // verus!
 
     fn height<T: StT>(n: &Link<T>) -> N { n.as_ref().map_or(0, |r| r.height) }
     fn size<T: StT>(n: &Link<T>) -> N { n.as_ref().map_or(0, |r| r.size) }
@@ -130,10 +141,6 @@ pub mod AVLTreeSeqStPer {
             Some(mk(a[mid].clone(), left, right))
         }
         rec(a)
-    }
-
-    pub struct AVLTreeSeqStPerS<T: StT> {
-        root: Link<T>,
     }
 
     pub trait AVLTreeSeqStPerTrait<T: StT> {
