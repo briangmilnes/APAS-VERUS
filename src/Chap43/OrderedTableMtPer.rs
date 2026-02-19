@@ -9,77 +9,149 @@
 
 pub mod OrderedTableMtPer {
 
+    use vstd::prelude::*;
+
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap39::BSTParaTreapMtEph::BSTParaTreapMtEph::*;
     use crate::Chap43::OrderedSetMtEph::OrderedSetMtEph::*;
     use crate::Types::Types::*;
 
+    verus! {
+
+    // Table of Contents
+    // 1. module (above)
+    // 2. imports (above)
+    // 4. type definitions
+    // 5. view impls
+    // 8. traits
+    // 9. impls
+    // 11. derive impls in verus!
+    // 13. derive impls outside verus!
+
+    // 4. type definitions
+
     pub struct OrderedTableMtPer<K: MtKey + 'static, V: StTInMtT + Ord + 'static> {
         tree: ParamTreap<Pair<K, V>>,
     }
 
-    pub trait OrderedTableMtPerTrait<K: MtKey + 'static, V: StTInMtT + Ord + 'static> {
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)               -> N;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty()                   -> Self;
-        /// claude-4-sonet: Work Θ(lg n), Span Θ(lg n)
-        fn singleton(k: K, v: V)     -> Self;
-        /// claude-4-sonet: Work Θ(lg n), Span Θ(lg n) - binary search on in-order sequence
-        fn find(&self, k: &K)        -> Option<V>;
-        /// claude-4-sonet: Work Θ(n), Span Θ(lg n) - parallel filter + insert via ParaPair!
-        fn insert(&self, k: K, v: V) -> Self;
-        /// claude-4-sonet: Work Θ(n), Span Θ(lg n) - parallel filter via ParaPair!
-        fn delete(&self, k: &K)      -> Self;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n) - sequential in_order + key extraction; from_seq may use parallel tree build
-        fn domain(&self)             -> OrderedSetMtEph<K>;
-        /// claude-4-sonet: Work Θ(n), Span Θ(lg n) - extract pairs, transform values, rebuild treap
-        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> Self;
-        /// claude-4-sonet: Work Θ(n), Span Θ(lg n) - parallel filter via ParaPair!
-        fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> Self;
-        fn first_key(&self) -> Option<K>;
-        fn last_key(&self) -> Option<K>;
-        fn previous_key(&self, k: &K) -> Option<K>;
-        fn next_key(&self, k: &K) -> Option<K>;
-        fn split_key(&self, k: &K) -> (Self, Option<V>, Self) where Self: Sized;
-        fn join_key(&self, other: &Self) -> Self;
-        fn get_key_range(&self, k1: &K, k2: &K) -> Self;
-        fn rank_key(&self, k: &K) -> N;
-        fn select_key(&self, i: N) -> Option<K>;
-        fn split_rank_key(&self, i: N) -> (Self, Self) where Self: Sized;
+    // 5. view impls
+
+    impl<K: MtKey + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+        type V = Map<K::V, V::V>;
+
+        #[verifier::external_body]
+        open spec fn view(&self) -> Map<K::V, V::V> {
+            Map::empty()
+        }
     }
 
-    impl<K: MtKey + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
-        fn size(&self) -> N { self.tree.size() }
+    // 8. traits
 
-        fn empty() -> Self {
+    pub trait OrderedTableMtPerTrait<K: MtKey + 'static, V: StTInMtT + Ord + 'static> {
+        fn size(&self) -> (result: N)
+            ensures result == self@.dom().len(), self@.dom().finite();
+
+        fn empty() -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty();
+
+        fn singleton(k: K, v: V) -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty().insert(k@, v@), result@.dom().finite();
+
+        fn find(&self, k: &K) -> (result: Option<V>)
+            ensures
+                self@.contains_key(k@) ==> result == Some(self@[k@]),
+                !self@.contains_key(k@) ==> result.is_none();
+
+        fn insert(&self, k: K, v: V) -> (result: Self)
+            ensures result@.dom().finite();
+
+        fn delete(&self, k: &K) -> (result: Self)
+            ensures result@.dom().finite();
+
+        fn domain(&self) -> (result: OrderedSetMtEph<K>)
+            ensures self@.dom().finite();
+
+        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (result: Self)
+            ensures result@.dom().finite();
+
+        fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (result: Self)
+            ensures result@.dom().finite();
+
+        fn first_key(&self) -> (result: Option<K>)
+            ensures self@.dom().finite();
+
+        fn last_key(&self) -> (result: Option<K>)
+            ensures self@.dom().finite();
+
+        fn previous_key(&self, k: &K) -> (result: Option<K>)
+            ensures self@.dom().finite();
+
+        fn next_key(&self, k: &K) -> (result: Option<K>)
+            ensures self@.dom().finite();
+
+        fn split_key(&self, k: &K) -> (Self, Option<V>, Self)
+            where Self: Sized
+            ensures self@.dom().finite();
+
+        fn join_key(&self, other: &Self) -> (result: Self)
+            ensures result@.dom().finite();
+
+        fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
+            ensures result@.dom().finite();
+
+        fn rank_key(&self, k: &K) -> (result: N)
+            ensures self@.dom().finite();
+
+        fn select_key(&self, i: N) -> (result: Option<K>)
+            ensures self@.dom().finite();
+
+        fn split_rank_key(&self, i: N) -> (Self, Self)
+            where Self: Sized
+            ensures self@.dom().finite();
+    }
+
+    // 9. impls
+
+    impl<K: MtKey + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+        #[verifier::external_body]
+        fn size(&self) -> (result: N)
+            ensures result == self@.dom().len(), self@.dom().finite()
+        {
+            self.tree.size()
+        }
+
+        #[verifier::external_body]
+        fn empty() -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty()
+        {
             OrderedTableMtPer {
                 tree: ParamTreap::new(),
             }
         }
 
-        fn singleton(k: K, v: V) -> Self {
+        #[verifier::external_body]
+        fn singleton(k: K, v: V) -> (result: Self)
+            ensures result@ == Map::<K::V, V::V>::empty().insert(k@, v@), result@.dom().finite()
+        {
             let tree = ParamTreap::new();
             tree.insert(Pair(k, v));
             OrderedTableMtPer { tree }
         }
 
-        fn find(&self, k: &K) -> Option<V> {
-            // Use parallel tree search via find on Pair
-            // Create a dummy pair for searching (value doesn't matter for key comparison)
-            // Actually, we need to search the tree directly
-            // The tree is ordered by Pair<K, V> which compares keys first
-            // So we can search for any pair with the target key
+        #[verifier::external_body]
+        fn find(&self, k: &K) -> (result: Option<V>)
+            ensures
+                self@.contains_key(k@) ==> result == Some(self@[k@]),
+                !self@.contains_key(k@) ==> result.is_none()
+        {
             let seq = self.tree.in_order();
-            
-            // Binary search through the sorted sequence (keys are ordered)
             let mut left = 0;
             let mut right = seq.length();
-            
+
             while left < right {
                 let mid = (left + right) / 2;
                 let Pair(mid_key, mid_val) = seq.nth(mid);
-                
+
                 match k.cmp(mid_key) {
                     std::cmp::Ordering::Equal => return Some(mid_val.clone()),
                     std::cmp::Ordering::Less => right = mid,
@@ -89,36 +161,44 @@ pub mod OrderedTableMtPer {
             None
         }
 
-        fn insert(&self, k: K, v: V) -> Self {
-            // Delete old entry with same key, then insert new pair
+        #[verifier::external_body]
+        fn insert(&self, k: K, v: V) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             let k_clone = k.clone();
             let filtered = self.tree.filter(move |pair: &Pair<K, V>| pair.0 != k_clone);
             filtered.insert(Pair(k, v));
             OrderedTableMtPer { tree: filtered }
         }
 
-        fn delete(&self, k: &K) -> Self {
+        #[verifier::external_body]
+        fn delete(&self, k: &K) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             let k_clone = k.clone();
             let filtered = self.tree.filter(move |pair: &Pair<K, V>| pair.0 != k_clone);
             OrderedTableMtPer { tree: filtered }
         }
 
-        fn domain(&self) -> OrderedSetMtEph<K> {
-            // Extract keys from pairs and build set. in_order() is sequential O(n).
-            // Key extraction is O(n) work, O(1) per element; parallelism would add
-            // overhead (split, spawn, concat) without meaningful benefit.
+        #[verifier::external_body]
+        fn domain(&self) -> (result: OrderedSetMtEph<K>)
+            ensures self@.dom().finite()
+        {
             let pair_seq = self.tree.in_order();
             let mut keys = Vec::with_capacity(pair_seq.length());
             for i in 0..pair_seq.length() {
                 let Pair(key, _val) = pair_seq.nth(i);
                 keys.push(key.clone());
             }
-            
+
             let key_seq = ArraySeqStPerS::from_vec(keys);
             OrderedSetMtEph::from_seq(key_seq)
         }
 
-        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> Self {
+        #[verifier::external_body]
+        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             let seq = self.tree.in_order();
             let new_tree = ParamTreap::new();
             for i in 0..seq.length() {
@@ -129,24 +209,36 @@ pub mod OrderedTableMtPer {
             OrderedTableMtPer { tree: new_tree }
         }
 
-        fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> Self {
+        #[verifier::external_body]
+        fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             OrderedTableMtPer {
                 tree: self.tree.filter(f),
             }
         }
 
-        fn first_key(&self) -> Option<K> {
+        #[verifier::external_body]
+        fn first_key(&self) -> (result: Option<K>)
+            ensures self@.dom().finite()
+        {
             let seq = self.tree.in_order();
             if seq.length() == 0 { None } else { Some(seq.nth(0).0.clone()) }
         }
 
-        fn last_key(&self) -> Option<K> {
+        #[verifier::external_body]
+        fn last_key(&self) -> (result: Option<K>)
+            ensures self@.dom().finite()
+        {
             let seq = self.tree.in_order();
             let n = seq.length();
             if n == 0 { None } else { Some(seq.nth(n - 1).0.clone()) }
         }
 
-        fn previous_key(&self, k: &K) -> Option<K> {
+        #[verifier::external_body]
+        fn previous_key(&self, k: &K) -> (result: Option<K>)
+            ensures self@.dom().finite()
+        {
             let seq = self.tree.in_order();
             let mut result = None;
             for i in 0..seq.length() {
@@ -156,7 +248,10 @@ pub mod OrderedTableMtPer {
             result
         }
 
-        fn next_key(&self, k: &K) -> Option<K> {
+        #[verifier::external_body]
+        fn next_key(&self, k: &K) -> (result: Option<K>)
+            ensures self@.dom().finite()
+        {
             let seq = self.tree.in_order();
             for i in 0..seq.length() {
                 let pair = seq.nth(i);
@@ -165,7 +260,11 @@ pub mod OrderedTableMtPer {
             None
         }
 
-        fn split_key(&self, k: &K) -> (Self, Option<V>, Self) {
+        #[verifier::external_body]
+        fn split_key(&self, k: &K) -> (Self, Option<V>, Self)
+            where Self: Sized
+            ensures self@.dom().finite()
+        {
             let seq = self.tree.in_order();
             let left_tree = ParamTreap::new();
             let right_tree = ParamTreap::new();
@@ -189,13 +288,19 @@ pub mod OrderedTableMtPer {
             )
         }
 
-        fn join_key(&self, other: &Self) -> Self {
+        #[verifier::external_body]
+        fn join_key(&self, other: &Self) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             OrderedTableMtPer {
                 tree: self.tree.union(&other.tree),
             }
         }
 
-        fn get_key_range(&self, k1: &K, k2: &K) -> Self {
+        #[verifier::external_body]
+        fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
+            ensures result@.dom().finite()
+        {
             let seq = self.tree.in_order();
             let result_tree = ParamTreap::new();
             for i in 0..seq.length() {
@@ -207,7 +312,10 @@ pub mod OrderedTableMtPer {
             OrderedTableMtPer { tree: result_tree }
         }
 
-        fn rank_key(&self, k: &K) -> N {
+        #[verifier::external_body]
+        fn rank_key(&self, k: &K) -> (result: N)
+            ensures self@.dom().finite()
+        {
             let seq = self.tree.in_order();
             let mut count = 0;
             for i in 0..seq.length() {
@@ -217,12 +325,19 @@ pub mod OrderedTableMtPer {
             count
         }
 
-        fn select_key(&self, i: N) -> Option<K> {
+        #[verifier::external_body]
+        fn select_key(&self, i: N) -> (result: Option<K>)
+            ensures self@.dom().finite()
+        {
             let seq = self.tree.in_order();
             if i >= seq.length() { None } else { Some(seq.nth(i).0.clone()) }
         }
 
-        fn split_rank_key(&self, i: N) -> (Self, Self) {
+        #[verifier::external_body]
+        fn split_rank_key(&self, i: N) -> (Self, Self)
+            where Self: Sized
+            ensures self@.dom().finite()
+        {
             let seq = self.tree.in_order();
             let left_tree = ParamTreap::new();
             let right_tree = ParamTreap::new();
@@ -238,15 +353,24 @@ pub mod OrderedTableMtPer {
         }
     }
 
-    impl<K: MtKey + 'static, V: MtKey + 'static> Default for OrderedTableMtPer<K, V> {
-        fn default() -> Self { Self::empty() }
-    }
+    // 11. derive impls in verus!
 
-    impl<K: MtKey + 'static, V: MtKey + 'static> Clone for OrderedTableMtPer<K, V> {
-        fn clone(&self) -> Self {
+    impl<K: MtKey + 'static, V: StTInMtT + Ord + 'static> Clone for OrderedTableMtPer<K, V> {
+        #[verifier::external_body]
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@
+        {
             OrderedTableMtPer {
                 tree: self.tree.clone(),
             }
         }
+    }
+
+    } // verus!
+
+    // 13. derive impls outside verus!
+
+    impl<K: MtKey + 'static, V: MtKey + 'static> Default for OrderedTableMtPer<K, V> {
+        fn default() -> Self { Self::empty() }
     }
 }

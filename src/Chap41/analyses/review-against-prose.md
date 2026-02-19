@@ -13,21 +13,21 @@ table { width: 100% !important; table-layout: fixed; }
 **Source files:** `src/Chap41/ArraySetStEph.rs`, `src/Chap41/ArraySetEnumMtEph.rs`, `src/Chap41/AVLTreeSetStEph.rs`, `src/Chap41/AVLTreeSetStPer.rs`, `src/Chap41/AVLTreeSetMtEph.rs`, `src/Chap41/AVLTreeSetMtPer.rs`, `src/Chap41/Example41_3.rs`
 **Test files:** 7 test files, 156 tests total
 **PTT files:** None
-**Verification status:** No `verus!` blocks — entire chapter is plain Rust
+**Verification status:** All 6 ADT modules verusified with `#[verifier::external_body]` specs; View type is `Set<T>`. Verus: 1863 verified, 0 errors. RTT: 2698 passed.
 
 ## Phase 1: Inventory
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap41 | AVLTreeSetMtEph | 12 | 15 | 0 | 0 | 0 | 15 | 0 | 0 | 15 |
-| 2 | Chap41 | AVLTreeSetMtPer | 12 | 16 | 0 | 0 | 0 | 16 | 0 | 0 | 16 |
-| 3 | Chap41 | AVLTreeSetStEph | 12 | 13 | 0 | 0 | 0 | 13 | 0 | 0 | 13 |
-| 4 | Chap41 | AVLTreeSetStPer | 12 | 13 | 0 | 0 | 0 | 13 | 0 | 0 | 13 |
-| 5 | Chap41 | ArraySetEnumMtEph | 13 | 13 | 0 | 0 | 0 | 13 | 0 | 0 | 13 |
-| 6 | Chap41 | ArraySetStEph | 12 | 13 | 0 | 0 | 0 | 13 | 0 | 0 | 13 |
+| 1 | Chap41 | AVLTreeSetMtEph | 12 | 14 | 0 | 0 | 14 | 0 | 0 | 14 | 0 |
+| 2 | Chap41 | AVLTreeSetMtPer | 12 | 14 | 0 | 0 | 14 | 0 | 0 | 14 | 0 |
+| 3 | Chap41 | AVLTreeSetStEph | 12 | 14 | 0 | 0 | 14 | 0 | 0 | 14 | 0 |
+| 4 | Chap41 | AVLTreeSetStPer | 12 | 14 | 0 | 0 | 14 | 0 | 0 | 14 | 0 |
+| 5 | Chap41 | ArraySetEnumMtEph | 13 | 15 | 0 | 0 | 15 | 0 | 0 | 15 | 0 |
+| 6 | Chap41 | ArraySetStEph | 12 | 14 | 0 | 0 | 14 | 0 | 0 | 14 | 0 |
 | 7 | Chap41 | Example41_3 | 3 | 0 | 0 | 4 | 0 | 5 | 0 | 0 | 5 |
 
-**Total:** 88 functions, 0 inside `verus!`, 88 outside, 0 with specs, 0 proof holes.
+**Total:** 90 functions, 85 inside `verus!`, 5 outside, 85 with specs, 85 proof holes (all `external_body`).
 
 ## Phase 2: Prose Inventory
 
@@ -170,7 +170,13 @@ Note: All four AVL tree set implementations use the backing AVLTreeSeq as a sort
 
 ### 3c. Spec Fidelity
 
-Not applicable — no `verus!` blocks, no `requires`/`ensures`.
+All 6 ADT modules now have:
+- Code inside `verus! {}` blocks
+- View impls with `type V = Set<T>` and `#[verifier::external_body]`
+- All exec methods have `#[verifier::external_body]` with `ensures` clauses
+- Set operation specs: empty, singleton, size, find, insert, delete, union, intersection, difference, filter, to_seq, from_seq, clone
+
+Specs are complete (ensures clauses on every trait method). Implementation bodies are trusted via `external_body`; no verified proofs of correctness yet.
 
 ## Phase 4: Parallelism Review
 
@@ -249,7 +255,7 @@ Not applicable — no `verus!` blocks, no `requires`/`ensures`.
 
 ## Phase 6: PTT Review
 
-No PTTs exist. No `verus!` blocks, so no proof-time verification to test.
+No PTTs exist. ADT modules are verusified with `external_body`; no proof-time verification of implementations to test.
 
 ## Phase 7: Gap Analysis
 
@@ -262,7 +268,7 @@ No PTTs exist. No `verus!` blocks, so no proof-time verification to test.
 | 3 | Medium | ArraySetEnumMtEph is not truly Mt | Named "Mt" but has no thread spawning. Only word-level hardware parallelism from bitwise ops. | Either add true parallelism or rename to clarify |
 | 4 | Medium | AVLTreeSetMtEph union is sequential | Explicit comment about avoiding thread explosion. Other set-set ops are parallel. | Implement parallel union or document trade-off |
 | 5 | Medium | MtEph difference is O(m·n) | Delegates to filter with `other.find(x)` which is O(n) per element, giving O(m·n) total. | Use merge-based approach or BST-based approach |
-| 6 | Low | No `verus!` blocks | No formal specifications or proofs. | Future verusification |
+| 6 | Low | All ADT impls use external_body | 85 proof holes; specs exist but bodies are trusted. | Future: replace external_body with verified proofs |
 | 7 | Low | ArraySetEnumMtEph.size() is O(u) | Counts bits by iterating. Could maintain a count field for O(1). | Add size field or use popcount |
 
 ### Code With No Prose Counterpart
@@ -275,56 +281,77 @@ No PTTs exist. No `verus!` blocks, so no proof-time verification to test.
 | 4 | `parallel_sort` | AVLTreeSetMtPer | Internal merge sort for from_seq |
 | 5 | `parallel_filter` / `parallel_intersect` | AVLTreeSetMtEph | Internal parallel helpers |
 | 6 | Various macros | ArraySetStEph, ArraySetEnumMtEph, all AVL | Literal constructors |
-| 7 | `View` impl | AVLTreeSetStEph, AVLTreeSetMtPer | Verus view trait (ghost only) |
+| 7 | `View` impl | All 6 ADT modules | Verus view trait (ghost spec) |
 
 ## Phase 8: TOC Review
 
-No files contain `verus!` blocks, so the 13-section TOC standard does not apply. Two files have minimal `verus!` blocks for `View` only.
+All 6 ADT files follow the 13-section TOC standard. Example41_3 has no `verus!` blocks.
 
 ### In/Out Table
 
 | # | File | Clone | PartialEq/Eq | Default | Drop | Iterator | Debug | Display | Macro | Other |
 |---|------|:-----:|:---:|:------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
-| 1 | ArraySetStEph.rs | - | - | ✅ out | - | - | - | - | ✅ out | |
-| 2 | ArraySetEnumMtEph.rs | ✅ out (derive) | ✅ out (derive) | - | - | - | ✅ out (derive) | - | ✅ out | |
+| 1 | ArraySetStEph.rs | - | - | ✅ out | - | - | - | - | ✅ out | View in V! |
+| 2 | ArraySetEnumMtEph.rs | ✅ out (derive) | ✅ out (derive) | - | - | - | ✅ out (derive) | - | ✅ out | View in V! |
 | 3 | AVLTreeSetStEph.rs | ✅ out | ✅ out | ✅ out | - | - | ✅ out | ✅ out | ✅ out | View in V! |
-| 4 | AVLTreeSetStPer.rs | ✅ out | ✅ out | ✅ out | - | - | ✅ out | ✅ out | ✅ out | |
-| 5 | AVLTreeSetMtEph.rs | ✅ out | ✅ out | ✅ out | - | - | ✅ out | ✅ out | ✅ out | |
+| 4 | AVLTreeSetStPer.rs | ✅ out | ✅ out | ✅ out | - | - | ✅ out | ✅ out | ✅ out | View in V! |
+| 5 | AVLTreeSetMtEph.rs | ✅ out | ✅ out | ✅ out | - | - | ✅ out | ✅ out | ✅ out | View in V! |
 | 6 | AVLTreeSetMtPer.rs | ✅ out | ✅ out (derive) | ✅ out | - | - | ✅ out | ✅ out | ✅ out | View in V!, Ord out |
 | 7 | Example41_3.rs | - | - | - | - | - | - | - | - | |
 
 ## Proof Holes Summary
 
 ```
-✓ AVLTreeSetMtEph.rs
-✓ AVLTreeSetMtPer.rs
-✓ AVLTreeSetStEph.rs
-✓ AVLTreeSetStPer.rs
-✓ ArraySetEnumMtEph.rs
-✓ ArraySetStEph.rs
-✓ Example41_3.rs
+❌ AVLTreeSetMtEph.rs      14 × external_body (View + 12 ADT ops + clone)
+❌ AVLTreeSetMtPer.rs      14 × external_body (View + 12 ADT ops + clone)
+❌ AVLTreeSetStEph.rs      14 × external_body (View + 12 ADT ops + clone)
+❌ AVLTreeSetStPer.rs      14 × external_body (View + 12 ADT ops + clone)
+❌ ArraySetEnumMtEph.rs    15 × external_body (View + new + 12 ADT ops + clone)
+❌ ArraySetStEph.rs        14 × external_body (View + 12 ADT ops + clone)
+✓ Example41_3.rs           clean (demo code, no verus!)
 
-Modules:     7 clean, 0 holed
-Holes Found: 0 total
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:     1 clean, 6 holed, 7 total
+Holes Found: 85 total (all external_body)
 ```
 
-Trivially clean — no `verus!` code exists (except View impls).
+All holes are `#[verifier::external_body]` on View::view and trait impl methods. Each method has an `ensures` clause; the implementation body is trusted rather than verified.
 
 ## Spec Strength Summary
 
 | Classification | Count |
 |---------------|------:|
 | strong | 0 |
-| partial | 0 |
+| partial | 83 |
 | weak | 0 |
-| none | 88 |
+| none | 5 |
+
+**Partial:** 83 functions in ADT modules have `ensures` clauses but use `external_body` (trusted, not verified). **None:** 5 functions in Example41_3 (plain Rust, no specs).
+
+## Action Items
+
+| # | Priority | Action |
+|---|----------|--------|
+| 1 | Critical | Rewrite AVL tree sets using BST split/join for O(lg n) find/insert/delete and O(m·lg(n/m)) set-set ops |
+| 2 | High | Add binary search to ArraySetStEph.find |
+| 3 | Medium | Add true parallelism to ArraySetEnumMtEph or rename to clarify word-parallel only |
+| 4 | Medium | Implement parallel union in AVLTreeSetMtEph |
+| 5 | Medium | Fix AVLTreeSetMtEph.difference O(m·n) by using merge-based approach |
+| 6 | Low | Replace external_body with verified proofs where feasible |
+| 7 | Low | Optimize ArraySetEnumMtEph.size() to O(1) via maintained count or popcount |
 
 ## Overall Assessment
 
 Chapter 41 provides a complete implementation of the Sets ADT (Data Type 41.1) across 6 modules covering sorted-array, bit-array, and tree-based representations in St/Mt and Eph/Per variants. All 12 ADT operations are implemented in every module, and 156 runtime tests provide excellent coverage.
 
+**Verification status (2026-02-18):** All 6 ADT modules are verusified. Code lives inside `verus!` blocks with View type `Set<T>`. All trait methods have `ensures` clauses. All 85 impl methods use `#[verifier::external_body]` — specs are complete, bodies are trusted. Example41_3 remains plain Rust demo code. Verus: 1863 verified, 0 errors. RTT: 2698 passed.
+
 **Strengths:**
 - Complete ADT coverage: all 12 operations in all 6 modules
+- Full verusification: all ADT code in `verus!` with View and ensures
 - ArraySetEnumMtEph faithfully implements bit-array set operations with O(1) find/insert/delete
 - AVLTreeSetMtPer provides genuine parallelism with `ParaPair!` and sequential cutoffs for from_seq, filter, intersection, difference, and union
 - Excellent test suite: 156 tests covering all operations, edge cases, parallel paths, persistence, and trait implementations
@@ -332,8 +359,8 @@ Chapter 41 provides a complete implementation of the Sets ADT (Data Type 41.1) a
 
 **Weaknesses:**
 - **Fundamental algorithmic mismatch in AVL tree sets:** All 4 AVLTreeSet modules treat the backing AVL tree as a flat sorted sequence, giving O(n) for find/insert/delete and O(m+n) for set-set operations, versus the prose's O(lg n) and O(m·lg(n/m)) respectively. This is the most significant gap — the tree structure exists but is used only for sequential access, not for logarithmic operations.
+- **85 proof holes:** All impl methods use `external_body`; no verified proofs of correctness yet
 - ArraySetStEph.find uses linear scan instead of binary search on sorted array
 - ArraySetEnumMtEph is named "Mt" but has no thread spawning
 - AVLTreeSetMtEph.union is explicitly sequential
 - AVLTreeSetMtEph.difference is O(m·n) due to linear find in filter predicate
-- No formal verification — zero `verus!` specs

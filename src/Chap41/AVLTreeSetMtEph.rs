@@ -8,8 +8,21 @@
 
 pub mod AVLTreeSetMtEph {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions
+    // 5. view impls
+    // 8. traits
+    // 9. impls
+    // 11. derive impls in verus!
+    // 12. macros
+    // 13. derive impls outside verus!
+
     use std::fmt;
     use std::sync::{Arc, Mutex};
+
+    use vstd::prelude::*;
 
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
@@ -25,72 +38,115 @@ pub mod AVLTreeSetMtEph {
     // will fail with "the trait bound `AVLTreeSetMtEph<V>: Ord` is not satisfied", and we can
     // implement Ord then. This is purely driven by caller requirements.
 
+    verus! {
+
+    // 4. type definitions
+
     pub struct AVLTreeSetMtEph<T: StTInMtT + Ord + 'static> {
         inner: Arc<Mutex<AVLTreeSetStEph<T>>>,
     }
 
+    // 5. view impls
+
+    impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEph<T> {
+        type V = Set<T>;
+        #[verifier::external_body]
+        open spec fn view(&self) -> Set<T> { Set::empty() }
+    }
+
+    // 8. traits
+
     pub trait AVLTreeSetMtEphTrait<T: StTInMtT + Ord + 'static> {
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)                               -> N;
+        fn size(&self) -> (result: N)
+            ensures result == self@.len(), self@.finite();
         /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(n), Span Θ(n)
-        fn to_seq(&self)                             -> AVLTreeSeqStEphS<T>;
+        fn to_seq(&self) -> (result: AVLTreeSeqStEphS<T>)
+            ensures self@.finite();
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty()                                   -> Self;
+        fn empty() -> (result: Self)
+            ensures result@ == Set::<T>::empty();
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn singleton(x: T)                           -> Self;
+        fn singleton(x: T) -> (result: Self)
+            ensures result@ == Set::<T>::empty().insert(x), result@.finite();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)
-        fn from_seq(seq: AVLTreeSeqStEphS<T>)        -> Self;
+        fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (result: Self)
+            ensures result@.finite();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> Self;
+        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (result: Self)
+            ensures result@.finite(), result@.subset_of(self@);
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
-        fn intersection(&self, other: &Self)         -> Self;
+        fn intersection(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.intersect(other@), result@.finite();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
-        fn difference(&self, other: &Self)           -> Self;
+        fn difference(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.difference(other@), result@.finite();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
-        fn union(&self, other: &Self)                -> Self;
+        fn union(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.union(other@), result@.finite();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn find(&self, x: &T)                        -> B;
+        fn find(&self, x: &T) -> (result: B)
+            ensures result == self@.contains(*x);
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn delete(&mut self, x: &T);
+        fn delete(&mut self, x: &T)
+            ensures self@ == old(self)@.remove(*x), self@.finite();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn insert(&mut self, x: T);
+        fn insert(&mut self, x: T)
+            ensures self@ == old(self)@.insert(x), self@.finite();
     }
 
+    // 9. impls
+
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
-        fn size(&self) -> N {
+        #[verifier::external_body]
+        fn size(&self) -> (result: N)
+            ensures result == self@.len(), self@.finite()
+        {
             let inner = self.inner.lock().unwrap();
             inner.size()
         }
 
-        fn to_seq(&self) -> AVLTreeSeqStEphS<T> {
+        #[verifier::external_body]
+        fn to_seq(&self) -> (result: AVLTreeSeqStEphS<T>)
+            ensures self@.finite()
+        {
             let inner = self.inner.lock().unwrap();
             inner.to_seq()
         }
 
-        fn empty() -> Self {
+        #[verifier::external_body]
+        fn empty() -> (result: Self)
+            ensures result@ == Set::<T>::empty()
+        {
             AVLTreeSetMtEph {
                 inner: Arc::new(Mutex::new(AVLTreeSetStEph::empty())),
             }
         }
 
-        fn singleton(x: T) -> Self {
+        #[verifier::external_body]
+        fn singleton(x: T) -> (result: Self)
+            ensures result@ == Set::<T>::empty().insert(x), result@.finite()
+        {
             AVLTreeSetMtEph {
                 inner: Arc::new(Mutex::new(AVLTreeSetStEph::singleton(x))),
             }
         }
 
-        fn from_seq(seq: AVLTreeSeqStEphS<T>) -> Self {
+        #[verifier::external_body]
+        fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (result: Self)
+            ensures result@.finite()
+        {
             AVLTreeSetMtEph {
                 inner: Arc::new(Mutex::new(AVLTreeSetStEph::from_seq(seq))),
             }
@@ -98,7 +154,10 @@ pub mod AVLTreeSetMtEph {
 
         // PARALLEL: filter using extract-parallelize-rebuild pattern (unconditionally parallel)
         // Work: Θ(n), Span: Θ(log n)
-        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> Self {
+        #[verifier::external_body]
+        fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (result: Self)
+            ensures result@.finite(), result@.subset_of(self@)
+        {
             // Extract data from mutex
             let vals = {
                 let inner = self.inner.lock().unwrap();
@@ -145,7 +204,10 @@ pub mod AVLTreeSetMtEph {
 
         // PARALLEL: intersection using extract-parallelize-rebuild pattern (unconditionally parallel)
         // Work: Θ(n+m), Span: Θ(log(n+m))
-        fn intersection(&self, other: &Self) -> Self {
+        #[verifier::external_body]
+        fn intersection(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.intersect(other@), result@.finite()
+        {
             // Extract data from both mutexes
             let (self_vals, other_vals) = {
                 let self_inner = self.inner.lock().unwrap();
@@ -206,7 +268,10 @@ pub mod AVLTreeSetMtEph {
         }
 
         // PARALLEL: difference using filter
-        fn difference(&self, other: &Self) -> Self {
+        #[verifier::external_body]
+        fn difference(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.difference(other@), result@.finite()
+        {
             let other_clone = other.clone();
             self.filter(move |x| !other_clone.find(x))
         }
@@ -214,7 +279,10 @@ pub mod AVLTreeSetMtEph {
         // PARALLEL: union using extract-parallelize-rebuild pattern (unconditionally parallel)
         // Work: Θ(n+m), Span: Θ(log(n+m))
         // Note: Union uses a simple merge strategy to avoid thread explosion.
-        fn union(&self, other: &Self) -> Self {
+        #[verifier::external_body]
+        fn union(&self, other: &Self) -> (result: Self)
+            ensures result@ == self@.union(other@), result@.finite()
+        {
             // Extract data from both mutexes
             let (self_vals, other_vals) = {
                 let self_inner = self.inner.lock().unwrap();
@@ -246,33 +314,65 @@ pub mod AVLTreeSetMtEph {
             Self::from_seq(AVLTreeSeqStEphS::from_vec(merged))
         }
 
-        fn find(&self, x: &T) -> B {
+        #[verifier::external_body]
+        fn find(&self, x: &T) -> (result: B)
+            ensures result == self@.contains(*x)
+        {
             let inner = self.inner.lock().unwrap();
             inner.find(x)
         }
 
-        fn delete(&mut self, x: &T) {
+        #[verifier::external_body]
+        fn delete(&mut self, x: &T)
+            ensures self@ == old(self)@.remove(*x), self@.finite()
+        {
             let mut inner = self.inner.lock().unwrap();
             inner.delete(x);
         }
 
-        fn insert(&mut self, x: T) {
+        #[verifier::external_body]
+        fn insert(&mut self, x: T)
+            ensures self@ == old(self)@.insert(x), self@.finite()
+        {
             let mut inner = self.inner.lock().unwrap();
             inner.insert(x);
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtEph<T> {
-        fn default() -> Self { Self::empty() }
-    }
+    // 11. derive impls in verus!
 
     impl<T: StTInMtT + Ord + 'static> Clone for AVLTreeSetMtEph<T> {
-        fn clone(&self) -> Self {
+        #[verifier::external_body]
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@
+        {
             let inner = self.inner.lock().unwrap();
             AVLTreeSetMtEph {
                 inner: Arc::new(Mutex::new((*inner).clone())),
             }
         }
+    }
+
+    } // verus!
+
+    // 12. macros
+
+    #[macro_export]
+    macro_rules! AVLTreeSetMtEphLit {
+        () => {
+            < $crate::Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEph<_> as $crate::Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait<_> >::empty()
+        };
+        ( $( $x:expr ),* $(,)? ) => {{
+            let mut __set = < $crate::Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEph<_> as $crate::Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait<_> >::empty();
+            $( __set.insert($x); )*
+            __set
+        }};
+    }
+
+    // 13. derive impls outside verus!
+
+    impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtEph<T> {
+        fn default() -> Self { Self::empty() }
     }
 
     impl<T: StTInMtT + Ord + 'static> fmt::Debug for AVLTreeSetMtEph<T> {
@@ -301,17 +401,5 @@ pub mod AVLTreeSetMtEph {
             }
             write!(f, "}}")
         }
-    }
-
-    #[macro_export]
-    macro_rules! AVLTreeSetMtEphLit {
-        () => {
-            < $crate::Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEph<_> as $crate::Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait<_> >::empty()
-        };
-        ( $( $x:expr ),* $(,)? ) => {{
-            let mut __set = < $crate::Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEph<_> as $crate::Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait<_> >::empty();
-            $( __set.insert($x); )*
-            __set
-        }};
     }
 }

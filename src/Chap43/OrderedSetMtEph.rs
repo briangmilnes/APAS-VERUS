@@ -3,9 +3,25 @@
 
 pub mod OrderedSetMtEph {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions
+    // 5. view impls
+    // 8. traits
+    // 9. impls
+    // 11. derive impls in verus!
+    // 12. macros
+    // 13. derive impls outside verus!
+
+    use vstd::prelude::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap39::BSTParaTreapMtEph::BSTParaTreapMtEph::*;
     use crate::Types::Types::*;
+
+    verus! {
+
+    // 4. type definitions
 
     pub struct OrderedSetMtEph<T: MtKey + 'static> {
         tree: ParamTreap<T>,
@@ -13,115 +29,171 @@ pub mod OrderedSetMtEph {
 
     pub type OrderedSetMt<T> = OrderedSetMtEph<T>;
 
+    // 5. view impls
+
+    impl<T: MtKey + 'static> View for OrderedSetMtEph<T> {
+        type V = Set<T>;
+        #[verifier::external_body]
+        open spec fn view(&self) -> Set<T> { Set::empty() }
+    }
+
+    // 8. traits
+
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1) with multi-threaded ephemeral semantics
     pub trait OrderedSetMtEphTrait<T: MtKey + 'static> {
         // Base set operations (ADT 41.1) - ephemeral semantics with parallelism
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)                        -> N;
+        fn size(&self) -> (result: N)
+            ensures result == self@.len(), self@.finite();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn empty()                            -> Self;
+        fn empty() -> (result: Self)
+            ensures result@ == Set::<T>::empty();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn singleton(x: T)                    -> Self;
+        fn singleton(x: T) -> (result: Self)
+            ensures result@ == Set::<T>::empty().insert(x), result@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn find(&self, x: &T)                 -> B;
+        fn find(&self, x: &T) -> (result: B)
+            ensures result == self@.contains(*x);
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn insert(&mut self, x: T);
+        fn insert(&mut self, x: T)
+            ensures self@ == old(self)@.insert(x), self@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn delete(&mut self, x: &T);
+        fn delete(&mut self, x: &T)
+            ensures self@ == old(self)@.remove(*x), self@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn filter<F: Pred<T>>(&mut self, f: F);
+        fn filter<F: Pred<T>>(&mut self, f: F)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
-        fn intersection(&mut self, other: &Self);
+        fn intersection(&mut self, other: &Self)
+            ensures self@ == old(self)@.intersect(other@), self@.finite();
         /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
-        fn union(&mut self, other: &Self);
+        fn union(&mut self, other: &Self)
+            ensures self@ == old(self)@.union(other@), self@.finite();
         /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
-        fn difference(&mut self, other: &Self);
+        fn difference(&mut self, other: &Self)
+            ensures self@ == old(self)@.difference(other@), self@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn to_seq(&self)                      -> ArraySeqStPerS<T>;
+        fn to_seq(&self) -> (result: ArraySeqStPerS<T>)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(n lg n), Span Θ(lg n), Parallelism Θ(1)
-        fn from_seq(seq: ArraySeqStPerS<T>) -> Self;
+        fn from_seq(seq: ArraySeqStPerS<T>) -> (result: Self)
+            ensures result@.finite();
 
         // Ordering operations (ADT 43.1) - sequential (inherently sequential on trees)
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn first(&self)                       -> Option<T>;
+        fn first(&self) -> (result: Option<T>)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn last(&self)                        -> Option<T>;
+        fn last(&self) -> (result: Option<T>)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn previous(&self, k: &T)             -> Option<T>;
+        fn previous(&self, k: &T) -> (result: Option<T>)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn next(&self, k: &T)                 -> Option<T>;
+        fn next(&self, k: &T) -> (result: Option<T>)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn split(&mut self, k: &T)            -> (Self, B, Self)
-        where
-            Self: Sized;
+        fn split(&mut self, k: &T) -> (result: (Self, B, Self))
+            where Self: Sized
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
-        fn join(&mut self, other: Self);
+        fn join(&mut self, other: Self)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn get_range(&self, k1: &T, k2: &T)   -> Self;
+        fn get_range(&self, k1: &T, k2: &T) -> (result: Self)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn rank(&self, k: &T)                 -> N;
+        fn rank(&self, k: &T) -> (result: N)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn select(&self, i: N)                -> Option<T>;
+        fn select(&self, i: N) -> (result: Option<T>)
+            ensures self@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn split_rank(&mut self, i: N)        -> (Self, Self)
-        where
-            Self: Sized;
+        fn split_rank(&mut self, i: N) -> (result: (Self, Self))
+            where Self: Sized
+            ensures self@.finite();
     }
 
+    // 9. impls
+
     impl<T: MtKey + 'static> OrderedSetMtEphTrait<T> for OrderedSetMtEph<T> {
-        /// Claude Work: O(1), Span: O(1)
-        fn size(&self) -> N { self.tree.size() }
+        #[verifier::external_body]
+        fn size(&self) -> (result: N)
+            ensures result == self@.len(), self@.finite()
+        { self.tree.size() }
 
-        /// Claude Work: O(1), Span: O(1)
-        fn empty() -> Self { OrderedSetMtEph { tree: ParamTreap::new() } }
+        #[verifier::external_body]
+        fn empty() -> (result: Self)
+            ensures result@ == Set::<T>::empty()
+        { OrderedSetMtEph { tree: ParamTreap::new() } }
 
-        /// Claude Work: O(lg n), Span: O(lg n)
-        fn singleton(x: T) -> Self {
+        #[verifier::external_body]
+        fn singleton(x: T) -> (result: Self)
+            ensures result@ == Set::<T>::empty().insert(x), result@.finite()
+        {
             let tree = ParamTreap::new();
             tree.insert(x);
             OrderedSetMtEph { tree }
         }
 
-        /// Claude Work: O(log n), Span: O(log n)
-        fn find(&self, x: &T) -> B { self.tree.find(x).is_some() }
+        #[verifier::external_body]
+        fn find(&self, x: &T) -> (result: B)
+            ensures result == self@.contains(*x)
+        { self.tree.find(x).is_some() }
 
-        /// Claude Work: O(lg n), Span: O(lg n)
-        fn insert(&mut self, x: T) {
+        #[verifier::external_body]
+        fn insert(&mut self, x: T)
+            ensures self@ == old(self)@.insert(x), self@.finite()
+        {
             self.tree.insert(x);
         }
 
-        /// Claude Work: O(lg n), Span: O(lg n)
-        fn delete(&mut self, x: &T) {
+        #[verifier::external_body]
+        fn delete(&mut self, x: &T)
+            ensures self@ == old(self)@.remove(*x), self@.finite()
+        {
             self.tree.delete(x);
         }
 
-        /// Claude Work: O(n), Span: O(lg n)
-        fn filter<F: PredMt<T>>(&mut self, f: F) {
+        #[verifier::external_body]
+        fn filter<F: PredMt<T>>(&mut self, f: F)
+            ensures self@.finite()
+        {
             self.tree = self.tree.filter(f);
         }
 
-        /// Claude Work: O(m lg(n/m)), Span: O(lg n)
-        fn intersection(&mut self, other: &Self) {
+        #[verifier::external_body]
+        fn intersection(&mut self, other: &Self)
+            ensures self@ == old(self)@.intersect(other@), self@.finite()
+        {
             self.tree = self.tree.intersect(&other.tree);
         }
 
-        /// Claude Work: O(m lg(n/m)), Span: O(lg n)
-        fn union(&mut self, other: &Self) {
+        #[verifier::external_body]
+        fn union(&mut self, other: &Self)
+            ensures self@ == old(self)@.union(other@), self@.finite()
+        {
             self.tree = self.tree.union(&other.tree);
         }
 
-        /// Claude Work: O(n), Span: O(lg n)
-        fn difference(&mut self, other: &Self) {
+        #[verifier::external_body]
+        fn difference(&mut self, other: &Self)
+            ensures self@ == old(self)@.difference(other@), self@.finite()
+        {
             self.tree = self.tree.difference(&other.tree);
         }
 
-        /// Claude Work: O(n), Span: O(n)
-        fn to_seq(&self) -> ArraySeqStPerS<T> {
+        #[verifier::external_body]
+        fn to_seq(&self) -> (result: ArraySeqStPerS<T>)
+            ensures self@.finite()
+        {
             self.tree.in_order()
         }
 
-        /// Claude Work: O(n lg n), Span: O(lg n)
-        fn from_seq(seq: ArraySeqStPerS<T>) -> Self {
+        #[verifier::external_body]
+        fn from_seq(seq: ArraySeqStPerS<T>) -> (result: Self)
+            ensures result@.finite()
+        {
             let tree = ParamTreap::new();
             for i in 0..seq.length() {
                 tree.insert(seq.nth(i).clone());
@@ -129,11 +201,10 @@ pub mod OrderedSetMtEph {
             OrderedSetMtEph { tree }
         }
 
-        // Ordering operations (ADT 43.1)
-
-        /// Claude Work: O(lg n), Span: O(lg n)
-        fn first(&self) -> Option<T> {
-            // Find minimum by traversing left spine
+        #[verifier::external_body]
+        fn first(&self) -> (result: Option<T>)
+            ensures self@.finite()
+        {
             match self.tree.expose() {
                 Exposed::Leaf => None,
                 Exposed::Node(left, key, _right) => {
@@ -152,9 +223,10 @@ pub mod OrderedSetMtEph {
             }
         }
 
-        /// Claude Work: O(lg n), Span: O(lg n)
-        fn last(&self) -> Option<T> {
-            // Find maximum by traversing right spine
+        #[verifier::external_body]
+        fn last(&self) -> (result: Option<T>)
+            ensures self@.finite()
+        {
             match self.tree.expose() {
                 Exposed::Leaf => None,
                 Exposed::Node(_left, key, right) => {
@@ -173,11 +245,11 @@ pub mod OrderedSetMtEph {
             }
         }
 
-        /// Claude Work: O(lg n), Span: O(lg n)
-        fn previous(&self, k: &T) -> Option<T> {
-            // Split at k, then find max of left tree
+        #[verifier::external_body]
+        fn previous(&self, k: &T) -> (result: Option<T>)
+            ensures self@.finite()
+        {
             let (left, _found, _right) = self.tree.split(k);
-            // Find maximum in left tree (rightmost element)
             match left.expose() {
                 Exposed::Leaf => None,
                 Exposed::Node(_left_sub, key, right_sub) => {
@@ -196,11 +268,11 @@ pub mod OrderedSetMtEph {
             }
         }
 
-        /// Claude Work: O(lg n), Span: O(lg n)
-        fn next(&self, k: &T) -> Option<T> {
-            // Split at k, then find min of right tree
+        #[verifier::external_body]
+        fn next(&self, k: &T) -> (result: Option<T>)
+            ensures self@.finite()
+        {
             let (_left, _found, right) = self.tree.split(k);
-            // Find minimum in right tree (leftmost element)
             match right.expose() {
                 Exposed::Leaf => None,
                 Exposed::Node(left_sub, key, _right_sub) => {
@@ -219,8 +291,11 @@ pub mod OrderedSetMtEph {
             }
         }
 
-        /// Claude Work: O(lg n), Span: O(lg n)
-        fn split(&mut self, k: &T) -> (Self, B, Self) {
+        #[verifier::external_body]
+        fn split(&mut self, k: &T) -> (result: (Self, B, Self))
+            where Self: Sized
+            ensures self@.finite()
+        {
             let (left_tree, found, right_tree) = self.tree.split(k);
             *self = Self::empty();
             (
@@ -230,16 +305,18 @@ pub mod OrderedSetMtEph {
             )
         }
 
-        /// Claude Work: O(lg(m + n)), Span: O(lg(m + n))
-        fn join(&mut self, other: Self) {
+        #[verifier::external_body]
+        fn join(&mut self, other: Self)
+            ensures self@.finite()
+        {
             self.tree = self.tree.join_pair(other.tree);
         }
 
-        /// Claude Work: O(lg n), Span: O(lg n)
-        fn get_range(&self, k1: &T, k2: &T) -> Self {
-            // Split at k1 to get elements >= k1
+        #[verifier::external_body]
+        fn get_range(&self, k1: &T, k2: &T) -> (result: Self)
+            ensures self@.finite()
+        {
             let (_left, found1, right1) = self.tree.split(k1);
-            // If k1 was found, rejoin it to right1
             let geq_k1 = if found1 {
                 let singleton = ParamTreap::new();
                 singleton.insert(k1.clone());
@@ -247,9 +324,7 @@ pub mod OrderedSetMtEph {
             } else {
                 right1
             };
-            // Split at k2 to get elements <= k2
             let (mid, found2, _right2) = geq_k1.split(k2);
-            // If k2 was found, rejoin it to mid
             let result_tree = if found2 {
                 let singleton = ParamTreap::new();
                 singleton.insert(k2.clone());
@@ -260,17 +335,18 @@ pub mod OrderedSetMtEph {
             OrderedSetMtEph { tree: result_tree }
         }
 
-        /// Claude Work: O(lg n), Span: O(lg n)
-        fn rank(&self, k: &T) -> N {
-            // Count elements < k using split
+        #[verifier::external_body]
+        fn rank(&self, k: &T) -> (result: N)
+            ensures self@.finite()
+        {
             let (left, _found, _right) = self.tree.split(k);
             left.size()
         }
 
-        /// Claude Work: O(lg n), Span: O(lg n)
-        fn select(&self, i: N) -> Option<T> {
-            // Select ith smallest element (0-indexed)
-            // Convert sequence to sorted array and index
+        #[verifier::external_body]
+        fn select(&self, i: N) -> (result: Option<T>)
+            ensures self@.finite()
+        {
             let seq = self.tree.in_order();
             if i < seq.length() {
                 Some(seq.nth(i).clone())
@@ -279,25 +355,24 @@ pub mod OrderedSetMtEph {
             }
         }
 
-        /// Claude Work: O(lg n), Span: O(lg n)
-        fn split_rank(&mut self, i: N) -> (Self, Self) {
-            // Split at rank i: left has elements [0..i), right has elements [i..)
+        #[verifier::external_body]
+        fn split_rank(&mut self, i: N) -> (result: (Self, Self))
+            where Self: Sized
+            ensures self@.finite()
+        {
             let seq = self.tree.in_order();
             if i == 0 {
-                // All elements go to right
                 let result = (Self::empty(), OrderedSetMtEph { tree: self.tree.clone() });
                 *self = Self::empty();
                 return result;
             }
             if i >= seq.length() {
-                // All elements go to left
                 let result = (OrderedSetMtEph { tree: self.tree.clone() }, Self::empty());
                 *self = Self::empty();
                 return result;
             }
             let pivot = seq.nth(i);
             let (left, found, right) = self.tree.split(pivot);
-            // Pivot should be included in right, so rejoin it if found
             let right_tree = if found {
                 let singleton = ParamTreap::new();
                 singleton.insert(pivot.clone());
@@ -309,6 +384,10 @@ pub mod OrderedSetMtEph {
             (OrderedSetMtEph { tree: left }, OrderedSetMtEph { tree: right_tree })
         }
     }
+
+    } // verus!
+
+    // 12. macros
 
     /// Macro for creating ordered sets from literals
     #[macro_export]
