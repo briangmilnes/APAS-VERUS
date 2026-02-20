@@ -1,42 +1,20 @@
 ✓ ChainedHashTable.rs
-❌ DoubleHashFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/DoubleHashFlatHashTableStEph.rs:39: external_body - #[verifier::external_body]
-        40 |         pub fn second_hash<Key: StT>(key: &Key, table_size: N) -> N {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/DoubleHashFlatHashTableStEph.rs:49: unsafe {} - unsafe {
-        40 |         pub fn second_hash<Key: StT>(key: &Key, table_size: N) -> N {
-            ...
-        47 |             let mut hash: u64 = 0xcbf29ce484222325; // FNV offset basis
-        48 | 
-        50 |                 for i in 0..key_size {
-        51 |                     let byte = *key_ptr.add(i);
-   Holes: 2 total
-      1 × unsafe {}
-      1 × external_body
+✓ DoubleHashFlatHashTableStEph.rs
 ✓ FlatHashTable.rs
 ✓ LinProbFlatHashTableStEph.rs
 ✓ LinkedListChainedHashTableStEph.rs
 ✓ ParaHashTableStEph.rs
 ✓ QuadProbFlatHashTableStEph.rs
 ✓ StructChainedHashTable.rs
-❌ VecChainedHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/VecChainedHashTableStEph.rs:28: external_body - #[verifier::external_body]
-        29 |         fn new() -> Self { Vec::new() }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/VecChainedHashTableStEph.rs:33: external_body - #[verifier::external_body]
-        34 |         fn insert(&mut self, key: Key, value: Value) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/VecChainedHashTableStEph.rs:46: external_body - #[verifier::external_body]
-        47 |         fn lookup(&self, key: &Key) -> Option<Value> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/VecChainedHashTableStEph.rs:58: external_body - #[verifier::external_body]
-        59 |         fn delete(&mut self, key: &Key) -> B {
-   Holes: 4 total
-      4 × external_body
+✓ VecChainedHashTableStEph.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   7 clean (no holes)
-   2 holed (contains holes)
+   9 clean (no holes)
+   0 holed (contains holes)
    9 total
 
 Proof Functions:
@@ -44,14 +22,11 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 6 total
-   1 × unsafe {}
-   5 × external_body
-��═
+Holes Found: 0 total
 
-Modules:
-   7 clean (no holes)
-   2 holed (contains holes)
+🎉 No proof holes or warnings found! All proofs are complete.
+n (no holes)
+   0 holed (contains holes)
    9 total
 
 Proof Functions:
@@ -59,6 +34,6 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 6 total
-   1 × unsafe {}
-   5 × external_body
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.

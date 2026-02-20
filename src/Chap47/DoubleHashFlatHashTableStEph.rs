@@ -11,6 +11,7 @@ pub mod DoubleHashFlatHashTableStEph {
     // 9. impls (outside verus! — reference HashTable which contains dyn Fn types)
 
     // 2. imports
+    use std::hash::Hash;
     use std::marker::PhantomData;
 
     use vstd::prelude::*;
@@ -27,32 +28,28 @@ pub mod DoubleHashFlatHashTableStEph {
     /// Uses two hash functions to avoid both primary and secondary clustering.
     pub struct DoubleHashFlatHashTableStEph;
 
-    // 9. impls (inside verus! — second_hash does not reference dyn Fn types)
+    } // verus!
+
+    // 9. impls
 
     impl DoubleHashFlatHashTableStEph {
         /// Compute second hash value for double hashing.
         /// APAS: hh(k) must be relatively prime to m.
         /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: Work O(sizeof(Key)), Span O(sizeof(Key)) — iterates over key bytes with FNV-1a.
+        /// - Claude-Opus-4.6: Work O(sizeof(Key)), Span O(sizeof(Key)) — hashes key with SipHash.
         /// Strategy: Always return an odd number (works for power-of-2 sizes),
         /// and for prime sizes, ensure < m and non-zero.
-        #[verifier::external_body]
-        pub fn second_hash<Key: StT>(key: &Key, table_size: N) -> N {
+        pub fn second_hash<Key: StT + Hash>(key: &Key, table_size: N) -> N {
+            use std::collections::hash_map::DefaultHasher;
+            use std::hash::Hasher;
+
             if table_size <= 2 {
                 return 1;
             }
 
-            let key_ptr = key as *const Key as *const u8;
-            let key_size = std::mem::size_of::<Key>();
-            let mut hash: u64 = 0xcbf29ce484222325; // FNV offset basis
-
-            unsafe {
-                for i in 0..key_size {
-                    let byte = *key_ptr.add(i);
-                    hash ^= byte as u64;
-                    hash = hash.wrapping_mul(0x100000001b3); // FNV prime
-                }
-            }
+            let mut hasher = DefaultHasher::new();
+            key.hash(&mut hasher);
+            let hash = hasher.finish();
 
             let base = (table_size - 1) as u64;
             let mut step = ((hash % base) + 1) as N;
@@ -65,11 +62,7 @@ pub mod DoubleHashFlatHashTableStEph {
         }
     }
 
-    } // verus!
-
-    // 9. impls (outside verus! — these reference HashTable which contains dyn Fn types)
-
-    impl<Key: StT, Value: StT, Metrics: Default> ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics>
+    impl<Key: StT + Hash, Value: StT, Metrics: Default> ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics>
         for DoubleHashFlatHashTableStEph
     {
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
@@ -163,7 +156,7 @@ pub mod DoubleHashFlatHashTableStEph {
         }
     }
 
-    impl<Key: StT, Value: StT, Metrics: Default> FlatHashTable<Key, Value, FlatEntry<Key, Value>, Metrics>
+    impl<Key: StT + Hash, Value: StT, Metrics: Default> FlatHashTable<Key, Value, FlatEntry<Key, Value>, Metrics>
         for DoubleHashFlatHashTableStEph
     {
         /// - APAS: Work O(1), Span O(1).

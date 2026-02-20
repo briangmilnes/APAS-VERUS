@@ -7,8 +7,8 @@ pub mod VecChainedHashTableStEph {
     // Table of Contents
     // 1. module
     // 2. imports
-    // 4. type definitions (inside verus!)
-    // 9. impls (inside verus!: EntryTrait for Vec; outside verus!: ParaHashTableStEphTrait, ChainedHashTable)
+    // 4. type definitions
+    // 9. impls (outside verus!: EntryTrait for Vec, ParaHashTableStEphTrait, ChainedHashTable)
 
     // 2. imports
     use std::marker::PhantomData;
@@ -18,19 +18,15 @@ pub mod VecChainedHashTableStEph {
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
 
-    verus! {
-
-    // 9. impls (inside verus! — EntryTrait does not reference dyn Fn types)
+    // 9. impls (EntryTrait for Vec — outside verus!, matching LinkedList pattern)
 
     impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for Vec<(Key, Value)> {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty Vec construction.
-        #[verifier::external_body]
         fn new() -> Self { Vec::new() }
 
         /// - APAS: Work O(1+α) expected, Span O(1+α).
         /// - Claude-Opus-4.6: Work O(n) worst case, Span O(n) — linear scan for duplicate key, n = chain length.
-        #[verifier::external_body]
         fn insert(&mut self, key: Key, value: Value) {
             for (k, v) in self.iter_mut() {
                 if k == &key {
@@ -43,7 +39,6 @@ pub mod VecChainedHashTableStEph {
 
         /// - APAS: Work O(1+α) expected, Span O(1+α).
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan of chain, n = chain length.
-        #[verifier::external_body]
         fn lookup(&self, key: &Key) -> Option<Value> {
             for (k, v) in self.iter() {
                 if k == key {
@@ -55,7 +50,6 @@ pub mod VecChainedHashTableStEph {
 
         /// - APAS: Work O(1+α) expected, Span O(1+α).
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan + Vec::remove (shifts elements), n = chain length.
-        #[verifier::external_body]
         fn delete(&mut self, key: &Key) -> B {
             if let Some(pos) = self.iter().position(|(k, _)| k == key) {
                 self.remove(pos);
@@ -70,8 +64,6 @@ pub mod VecChainedHashTableStEph {
 
     /// Vec Chained Hash Table implementation.
     pub struct VecChainedHashTableStEph;
-
-    } // verus!
 
     // 9. impls (outside verus! — these reference HashTable which contains dyn Fn types)
 

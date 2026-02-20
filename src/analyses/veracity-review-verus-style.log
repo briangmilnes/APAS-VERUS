@@ -3405,7 +3405,6 @@ Checking 244 files...
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [4] no std imports (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [5] no vstd imports (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [13] no non-derive trait impls (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [14] no Debug/Display impls (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [16] no Lit macro definitions (ok)
@@ -3414,10 +3413,11 @@ Checking 244 files...
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: warning: [3] file should have verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:201: warning: [13] impl HeapsortComparisonTrait for HeapsortComparison should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:18: warning: [20] trait HeapsortTrait is defined but has no impl
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:157: warning: [20] trait HeapsortExamplesTrait is defined but has no impl
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:176: warning: [20] trait HeapsortAnalysisTrait is defined but has no impl
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:183: warning: [20] trait SequenceUtilsTrait is defined but has no impl
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:183: warning: [20] trait HeapsortAnalysisTrait is defined but has no impl
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:190: warning: [20] trait SequenceUtilsTrait is defined but has no impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [1] has mod declarations
@@ -3433,8 +3433,9 @@ Checking 244 files...
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: warning: [3] file should have verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:223: warning: [13] impl LeftistHeapPQTrait for LeftistHeapPQ should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:376: warning: [13] impl Default for LeftistHeapPQ should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:95: warning: [13] impl LeftistHeapNodeTrait for LeftistHeapNode should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:221: warning: [13] impl LeftistHeapPQTrait for LeftistHeapPQ should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:374: warning: [13] impl Default for LeftistHeapPQ should be inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:75: warning: [20] trait LeftistHeapDemoTrait is defined but has no impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:
@@ -3494,7 +3495,6 @@ Checking 244 files...
 /home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [1] has mod declarations
 /home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
 /home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [4] std imports grouped with trailing blank
 /home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [5] no vstd imports (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [12] no traits (ok)
@@ -3506,8 +3506,9 @@ Checking 244 files...
 /home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:72: warning: [13] impl ParaHashTableStEphTrait for DoubleHashFlatHashTableStEph should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:166: warning: [13] impl FlatHashTable for DoubleHashFlatHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:43: warning: [4] use std::... imports should be grouped with trailing blank line
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:65: warning: [13] impl ParaHashTableStEphTrait for DoubleHashFlatHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:159: warning: [13] impl FlatHashTable for DoubleHashFlatHashTableStEph should be inside verus!
 
 /home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [1] has mod declarations
@@ -3629,8 +3630,7 @@ Checking 244 files...
 
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [2] no verus! macro (prelude check N/A)
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [4] std imports grouped with trailing blank
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [5] no vstd imports (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [11] no Set/Seq usage (ok)
@@ -3639,12 +3639,14 @@ Checking 244 files...
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [16] no Lit macro definitions (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [18] no verus! macro (order check N/A)
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:78: warning: [13] impl ParaHashTableStEphTrait for VecChainedHashTableStEph should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:133: warning: [13] impl ChainedHashTable for VecChainedHashTableStEph should be inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:72: warning: [18] struct VecChainedHashTableStEph should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:1: warning: [3] file should have verus! macro
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:23: warning: [13] impl EntryTrait for Vec should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:70: warning: [13] impl ParaHashTableStEphTrait for VecChainedHashTableStEph should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:125: warning: [13] impl ChainedHashTable for VecChainedHashTableStEph should be inside verus!
 
 /home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:1: info: [1] has mod declarations
@@ -5695,6 +5697,6 @@ Checking 244 files...
 /home/milnes/projects/APAS-VERUS/src/ParaPairs.rs:1: info: [21] no broadcast use entries
 
 ════════════════════════════════════════════════════════════════
-Summary: 3413 passed, 1784 warnings in 196 files (checked 244 files)
+Summary: 3411 passed, 1788 warnings in 196 files (checked 244 files)
 ════════════════════════════════════════════════════════════════
 ════════════════════════════════════════════════════════════════

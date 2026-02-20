@@ -80,8 +80,19 @@ pub mod LeftistHeapPQ {
         fn parallel_heap_construction<T: StT + Ord>(elements: Vec<T>)      -> LeftistHeapPQ<T>;
     }
 
-    impl<T: StT + Ord> LeftistHeapNode<T> {
-        /// Get the rank (distance to nearest leaf) of a node
+    pub trait LeftistHeapNodeTrait<T: StT + Ord> {
+        fn rank(&self) -> N;
+        fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> Self;
+        /// Core meld operation following right spines (Data Structure 45.3).
+        fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> LeftistHeapNode<T>;
+        fn size(&self) -> N;
+        fn height(&self) -> N;
+        fn is_leftist(&self) -> bool;
+        fn is_heap(&self) -> bool;
+        fn to_vec(&self) -> Vec<T>;
+    }
+
+    impl<T: StT + Ord> LeftistHeapNodeTrait<T> for LeftistHeapNode<T> {
         fn rank(&self) -> N {
             match self {
                 | LeftistHeapNode::Leaf => 0,
@@ -89,12 +100,10 @@ pub mod LeftistHeapPQ {
             }
         }
 
-        /// Create a new node with correct rank and leftist property
         fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> Self {
             let left_rank = left.rank();
             let right_rank = right.rank();
 
-            // Ensure leftist property: left subtree has >= rank than right subtree
             let (final_left, final_right) = if left_rank >= right_rank {
                 (left, right)
             } else {
@@ -111,8 +120,6 @@ pub mod LeftistHeapPQ {
             }
         }
 
-        /// Core meld operation - follows right spines (Data Structure 45.3 algorithm)
-        /// This is the key innovation that makes meld O(log n)!
         fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> LeftistHeapNode<T> {
             match (a, b) {
                 | (LeftistHeapNode::Leaf, other) => other,
@@ -132,27 +139,23 @@ pub mod LeftistHeapPQ {
                     },
                 ) => {
                     if ka <= kb {
-                        // ka is smaller, so it becomes the root
-                        // Meld ra (right subtree of a) with entire b
                         let melded_right = Self::meld_nodes(
                             *ra,
                             LeftistHeapNode::Node {
                                 key: kb,
                                 left: lb,
                                 right: rb,
-                                rank: 0, // rank will be recalculated
+                                rank: 0,
                             },
                         );
                         Self::make_node(ka, *la, melded_right)
                     } else {
-                        // kb is smaller, so it becomes the root
-                        // Meld entire a with rb (right subtree of b)
                         let melded_right = Self::meld_nodes(
                             LeftistHeapNode::Node {
                                 key: ka,
                                 left: la,
                                 right: ra,
-                                rank: 0, // rank will be recalculated
+                                rank: 0,
                             },
                             *rb,
                         );
@@ -162,7 +165,6 @@ pub mod LeftistHeapPQ {
             }
         }
 
-        /// Count total number of nodes in the heap
         fn size(&self) -> N {
             match self {
                 | LeftistHeapNode::Leaf => 0,
@@ -170,7 +172,6 @@ pub mod LeftistHeapPQ {
             }
         }
 
-        /// Get height of the heap
         fn height(&self) -> N {
             match self {
                 | LeftistHeapNode::Leaf => 0,
@@ -178,7 +179,6 @@ pub mod LeftistHeapPQ {
             }
         }
 
-        /// Check if leftist property is maintained
         fn is_leftist(&self) -> bool {
             match self {
                 | LeftistHeapNode::Leaf => true,
@@ -188,7 +188,6 @@ pub mod LeftistHeapPQ {
             }
         }
 
-        /// Check if heap property is maintained
         fn is_heap(&self) -> bool {
             match self {
                 | LeftistHeapNode::Leaf => true,
@@ -206,7 +205,6 @@ pub mod LeftistHeapPQ {
             }
         }
 
-        /// Convert to vector for testing (in-order traversal)
         fn to_vec(&self) -> Vec<T> {
             match self {
                 | LeftistHeapNode::Leaf => Vec::new(),

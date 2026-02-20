@@ -2,6 +2,7 @@
 //! Tests for Example 45.2.
 
 use apas_verus::Chap45::Example45_2::Example45_2::*;
+use apas_verus::Chap45::HeapsortExample::HeapsortExample::HeapsortComparisonTrait;
 
 #[test]
 fn test_textbook_example() {
