@@ -28,7 +28,8 @@ pub mod SCCStPer {
     pub trait SCCStPerTrait {
         /// Finds strongly connected components in a directed graph
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>>;
+        fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>>
+            requires spec_wf_adj_list_per(graph);
     }
 
     // 9. impls
@@ -189,54 +190,146 @@ pub mod SCCStPer {
         ArraySeqStPerS::from_vec(result_vecs)
     }
 
+    /// Runtime check that all neighbor indices are valid vertex indices.
+    fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: bool)
+        ensures result ==> spec_wf_adj_list_per(graph),
+    {
+        let n = graph.length();
+        let mut u: usize = 0;
+        while u < n
+            invariant
+                u <= n,
+                n == graph@.len(),
+                forall|v: int, i: int| #![auto]
+                    0 <= v < u as int && 0 <= i < graph@[v]@.len()
+                    ==> graph@[v]@[i] < graph@.len(),
+            decreases n - u,
+        {
+            let neighbors = graph.nth(u);
+            let neighbors_len = neighbors.length();
+            let mut i: usize = 0;
+            while i < neighbors_len
+                invariant
+                    i <= neighbors_len,
+                    u < n,
+                    n == graph@.len(),
+                    neighbors_len == graph@[u as int]@.len(),
+                    forall|v: int, j: int| #![auto]
+                        0 <= v < u as int && 0 <= j < graph@[v]@.len()
+                        ==> graph@[v]@[j] < graph@.len(),
+                    forall|j: int| #![auto]
+                        0 <= j < i as int
+                        ==> graph@[u as int]@[j] < graph@.len(),
+                decreases neighbors_len - i,
+            {
+                let neighbor = *neighbors.nth(i);
+                if neighbor >= n {
+                    return false;
+                }
+                i = i + 1;
+            }
+            u = u + 1;
+        }
+        true
+    }
+
+    /// DFS reachability using Vec<bool> for termination and persistent set
+    /// for component accumulation (same pattern as DFSStPer::dfs_recursive).
+    fn dfs_reach(
+        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        visited_bool: &mut Vec<bool>,
+        component: AVLTreeSetStPer<N>,
+        vertex: N,
+    ) -> (out: AVLTreeSetStPer<N>)
+        requires
+            vertex < old(visited_bool)@.len(),
+            old(visited_bool)@.len() == graph@.len(),
+            spec_wf_adj_list_per(graph),
+        ensures
+            visited_bool@.len() == old(visited_bool)@.len(),
+            forall|j: int| #![auto]
+                0 <= j < visited_bool@.len() && old(visited_bool)@[j]
+                ==> visited_bool@[j],
+            spec_num_false(visited_bool@) <= spec_num_false(old(visited_bool)@),
+        decreases spec_num_false(old(visited_bool)@),
+    {
+        if visited_bool[vertex] {
+            return component;
+        }
+        assert(!old(visited_bool)@[vertex as int]);
+        visited_bool.set(vertex, true);
+        proof {
+            lemma_set_true_decreases_num_false(old(visited_bool)@, vertex as int);
+        }
+        let mut component = component.insert(vertex);
+
+        let neighbors = graph.nth(vertex);
+        let neighbors_len = neighbors.length();
+        let mut i: usize = 0;
+        while i < neighbors_len
+            invariant
+                i <= neighbors_len,
+                neighbors_len == graph@[vertex as int]@.len(),
+                visited_bool@.len() == graph@.len(),
+                spec_wf_adj_list_per(graph),
+                forall|j: int| #![auto]
+                    0 <= j < visited_bool@.len() && old(visited_bool)@[j]
+                    ==> visited_bool@[j],
+                spec_num_false(visited_bool@) < spec_num_false(old(visited_bool)@),
+            decreases neighbors_len - i,
+        {
+            let neighbor = *neighbors.nth(i);
+            assert(graph@[vertex as int]@[i as int] < graph@.len());
+            component = dfs_reach(graph, visited_bool, component, neighbor);
+            i = i + 1;
+        }
+        component
+    }
+
     /// Finds strongly connected components in a directed graph.
-    #[verifier::external_body]
-    pub fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>> {
+    pub fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>>
+        requires spec_wf_adj_list_per(graph),
+    {
         let finish_order = compute_finish_order(graph);
         let transposed = transpose_graph(graph);
 
-        let mut visited = AVLTreeSetStPer::empty();
-        let mut components = AVLTreeSeqStPerS::empty();
+        if !check_wf_adj_list_per(&transposed) {
+            return AVLTreeSeqStPerS::empty();
+        }
 
-        for i in 0..finish_order.length() {
+        let n = transposed.length();
+        let mut visited_bool: Vec<bool> = Vec::new();
+        let mut j: usize = 0;
+        while j < n
+            invariant j <= n, visited_bool@.len() == j as int,
+            decreases n - j,
+        {
+            visited_bool.push(false);
+            j = j + 1;
+        }
+
+        let finish_len = finish_order.length();
+        let mut components_vec: Vec<AVLTreeSetStPer<N>> = Vec::new();
+        let mut i: usize = 0;
+        while i < finish_len
+            invariant
+                i <= finish_len,
+                visited_bool@.len() == n,
+                n == transposed@.len(),
+                spec_wf_adj_list_per(&transposed),
+            decreases finish_len - i,
+        {
             let vertex = *finish_order.nth(i);
-            if !visited.find(&vertex) {
-                let (new_visited, component) = dfs_reach(&transposed, visited, vertex);
-                visited = new_visited;
+            if vertex < n && !visited_bool[vertex] {
+                let component = AVLTreeSetStPer::empty();
+                let component = dfs_reach(&transposed, &mut visited_bool, component, vertex);
                 if component.size() > 0 {
-                    let mut vec = components.values_in_order();
-                    vec.push(component);
-                    components = AVLTreeSeqStPerS::from_vec(vec);
+                    components_vec.push(component);
                 }
             }
+            i = i + 1;
         }
-        components
-    }
-
-    /// DFS reachability: collects all reachable vertices into a component set.
-    #[verifier::external_body]
-    fn dfs_reach(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
-        visited: AVLTreeSetStPer<N>,
-        vertex: N,
-    ) -> (AVLTreeSetStPer<N>, AVLTreeSetStPer<N>) {
-        if visited.find(&vertex) {
-            return (visited, AVLTreeSetStPer::empty());
-        }
-
-        let visited = visited.insert(vertex);
-        let mut component = AVLTreeSetStPer::singleton(vertex);
-        let neighbors = graph.nth(vertex);
-
-        let mut visited = visited;
-        for i in 0..neighbors.length() {
-            let neighbor = *neighbors.nth(i);
-            let (new_visited, sub_component) = dfs_reach(graph, visited, neighbor);
-            visited = new_visited;
-            component = component.union(&sub_component);
-        }
-
-        (visited, component)
+        AVLTreeSeqStPerS::from_vec(components_vec)
     }
 
     } // verus!

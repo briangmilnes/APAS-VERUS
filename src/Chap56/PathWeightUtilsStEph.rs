@@ -159,7 +159,14 @@ pub mod PathWeightUtilsStEph {
         true
     }
 
+    /// Checks whether two float distances are approximately equal (within epsilon).
     #[verifier::external_body]
+    fn f64_approx_eq(a: &F64Dist, b: &F64Dist) -> bool {
+        let diff = a.val - b.val;
+        let abs_diff = if diff >= 0.0 { diff } else { -diff };
+        abs_diff <= 1e-9
+    }
+
     pub fn validate_subpath_property_float(
         path: &ArraySeqStPerS<usize>,
         distances: &ArraySeqStEphS<F64Dist>,
@@ -169,8 +176,16 @@ pub mod PathWeightUtilsStEph {
         if k < 2 {
             return true;
         }
-        let epsilon = 1e-9;
-        for i in 0..k - 1 {
+        let mut i: usize = 0;
+        let end = k - 1;
+        while i < end
+            invariant
+                i <= end,
+                end == k - 1,
+                k == path.spec_len(),
+                end < k,
+            decreases end - i,
+        {
             let u = *path.nth(i);
             let v = *path.nth(i + 1);
             if u >= distances.length() || v >= distances.length() {
@@ -178,10 +193,17 @@ pub mod PathWeightUtilsStEph {
             }
             let dist_u = *distances.nth(u);
             let dist_v = *distances.nth(v);
-            let edge_weight = *weights.nth(u).nth(v);
-            if dist_u.is_finite() && ((dist_v.val - (dist_u.val + edge_weight.val)).abs() > epsilon) {
+            if u >= weights.length() || v >= weights.nth(u).length() {
                 return false;
             }
+            let edge_weight = *weights.nth(u).nth(v);
+            if dist_u.is_finite() {
+                let expected = dist_u.dist_add(&edge_weight);
+                if !f64_approx_eq(&dist_v, &expected) {
+                    return false;
+                }
+            }
+            i = i + 1;
         }
         true
     }

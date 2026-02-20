@@ -30,7 +30,8 @@ pub mod SCCStEph {
     pub trait SCCStEphTrait {
         /// Finds strongly connected components in a directed graph
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>>;
+        fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>>
+            requires spec_wf_adj_list(graph);
     }
 
     // 9. impls
@@ -134,33 +135,85 @@ pub mod SCCStEph {
         ArraySeqStEphS::from_vec(result_vecs)
     }
 
+    /// Runtime check that all neighbor indices are valid vertex indices.
+    fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (result: bool)
+        ensures result ==> spec_wf_adj_list(graph),
+    {
+        let n = graph.length();
+        let mut u: usize = 0;
+        while u < n
+            invariant
+                u <= n,
+                n == graph@.len(),
+                forall|v: int, i: int| #![auto]
+                    0 <= v < u as int && 0 <= i < graph@[v]@.len()
+                    ==> graph@[v]@[i] < graph@.len(),
+            decreases n - u,
+        {
+            let neighbors = graph.nth(u);
+            let neighbors_len = neighbors.length();
+            let mut i: usize = 0;
+            while i < neighbors_len
+                invariant
+                    i <= neighbors_len,
+                    u < n,
+                    n == graph@.len(),
+                    neighbors_len == graph@[u as int]@.len(),
+                    forall|v: int, j: int| #![auto]
+                        0 <= v < u as int && 0 <= j < graph@[v]@.len()
+                        ==> graph@[v]@[j] < graph@.len(),
+                    forall|j: int| #![auto]
+                        0 <= j < i as int
+                        ==> graph@[u as int]@[j] < graph@.len(),
+                decreases neighbors_len - i,
+            {
+                let neighbor = *neighbors.nth(i);
+                if neighbor >= n {
+                    return false;
+                }
+                i = i + 1;
+            }
+            u = u + 1;
+        }
+        true
+    }
+
     /// Finds strongly connected components in a directed graph.
-    /// Returns sequence of components, each component is a set of vertices.
-    #[verifier::external_body]
-    pub fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>> {
+    pub fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>>
+        requires spec_wf_adj_list(graph),
+    {
         let finish_order = compute_finish_order(graph);
         let transposed = transpose_graph(graph);
 
-        let n = graph.length();
-        let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
-        let mut components = AVLTreeSeqStEphS::<AVLTreeSetStEph<N>>::empty();
+        if !check_wf_adj_list_eph(&transposed) {
+            return AVLTreeSeqStEphS::empty();
+        }
 
-        for i in 0..finish_order.length() {
+        let n = transposed.length();
+        let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
+        let mut components_vec: Vec<AVLTreeSetStEph<N>> = Vec::new();
+
+        let finish_len = finish_order.length();
+        let mut i: usize = 0;
+        while i < finish_len
+            invariant
+                i <= finish_len,
+                visited@.len() == n,
+                n == transposed@.len(),
+                spec_wf_adj_list(&transposed),
+            decreases finish_len - i,
+        {
             let vertex = *finish_order.nth(i);
-            if !*visited.nth(vertex) {
+            if vertex < n && !*visited.nth(vertex) {
                 let mut component = AVLTreeSetStEph::empty();
                 dfs_reach(&transposed, &mut visited, &mut component, vertex);
                 if component.size() > 0 {
-                    let mut vec = Vec::new();
-                    for i in 0..components.length() {
-                        vec.push(components.nth(i).clone());
-                    }
-                    vec.push(component);
-                    components = AVLTreeSeqStEphS::from_vec(vec);
+                    components_vec.push(component);
                 }
             }
+            i = i + 1;
         }
-        components
+        AVLTreeSeqStEphS::from_vec(components_vec)
     }
 
     fn dfs_reach(

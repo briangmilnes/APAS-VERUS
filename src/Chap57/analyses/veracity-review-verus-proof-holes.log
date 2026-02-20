@@ -1,27 +1,11 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap57/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap57/
 
-❌ DijkstraStEphFloat.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphFloat.rs:70: external_body - #[verifier::external_body]
-        71 |     fn pq_entry_new(dist: OrderedF64, vertex: usize) -> PQEntry { PQEntry { dist, vertex } }
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphFloat.rs:76: external_body - #[verifier::external_body]
-        77 |         fn cmp(&self, other: &Self) -> (r: Ordering) {
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphFloat.rs:86: external_body - #[verifier::external_body]
-        87 |         fn partial_cmp(&self, other: &Self) -> (r: Option<Ordering>) { Some(self.cmp(other)) }
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphFloat.rs:98: external_body - #[verifier::external_body]
-        99 |     pub fn dijkstra(graph: &WeightedDirGraphStEphFloat<usize>, source: usize) -> SSSPResultStEphFloat {
-   Holes: 4 total
-      4 × external_body
+✓ DijkstraStEphF64.rs
 ❌ DijkstraStEphI64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:70: external_body - #[verifier::external_body]
-        71 |     fn pq_entry_new(dist: i64, vertex: usize) -> PQEntry { PQEntry { dist, vertex } }
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:76: external_body - #[verifier::external_body]
-        77 |         fn cmp(&self, other: &Self) -> (r: Ordering) {
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:86: external_body - #[verifier::external_body]
-        87 |         fn partial_cmp(&self, other: &Self) -> (r: Option<Ordering>) { Some(self.cmp(other)) }
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:98: external_body - #[verifier::external_body]
-        99 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64 {
-   Holes: 4 total
-      4 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:99: external_body - #[verifier::external_body]
+       100 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64 {
+   Holes: 1 total
+      1 × external_body
 ✓ StackStEph.rs
 
 ═══════════════════════════════════════════════════════════════
@@ -29,8 +13,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   1 clean (no holes)
-   2 holed (contains holes)
+   2 clean (no holes)
+   1 holed (contains holes)
    3 total
 
 Proof Functions:
@@ -38,5 +22,5 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 8 total
-   8 × external_body
+Holes Found: 1 total
+   1 × external_body

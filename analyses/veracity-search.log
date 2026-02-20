@@ -1,20 +1,42 @@
-Logging to: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn cloned
-Searching: /home/milnes/projects/verus/source/vstd
-Files: 95, Functions: 2289, Matches: 2
+Pattern: fn _ types F64Dist
+Searching: /home/milnes/projects/APAS-VERUS
+Files: 687, Functions: 11751, Matches: 38
 
-[31m/home/milnes/projects/verus/source/vstd/pervasive.rs:416: [0m
-///
-/// It is usually recommended to use [`cloned`] instead,
-/// which takes the reflexive closure.
-[38;5;22mpub open spec fn strictly_cloned<T: Clone>(a: T, b: T) -> bool[0m
+[31m/home/milnes/projects/APAS-VERUS/tests/Chap56/TestAllPairsResultStPerF64.rs:9: [0m
+[38;5;22mfn dist(v: f64) -> F64Dist { F64Dist { val: v } }[0m
 
-[31m/home/milnes/projects/verus/source/vstd/pervasive.rs:426: [0m
-/// By always considering a value to be a clone of itself, regardless of the definition
-/// of `T::clone`, this definition is useful in places where 'clone' calls might be
-/// optimized to copies. This is particularly common in the Rust stdlib.
-[38;5;22mpub open spec fn cloned<T: Clone>(a: T, b: T) -> bool[0m
+[31m/home/milnes/projects/APAS-VERUS/tests/Chap56/TestPathWeightUtilsStPer.rs:9: [0m
+[38;5;22mfn dist(v: f64) -> F64Dist { F64Dist { val: v } }[0m
 
+[31m/home/milnes/projects/APAS-VERUS/tests/Chap56/TestSSSPResultStEphF64.rs:8: [0m
+[38;5;22mfn dist(v: f64) -> F64Dist { F64Dist { val: v } }[0m
+
+[31m/home/milnes/projects/APAS-VERUS/tests/Chap56/TestPathWeightUtilsStEph.rs:10: [0m
+[38;5;22mfn dist(v: f64) -> F64Dist { F64Dist { val: v } }[0m
+
+[31m/home/milnes/projects/APAS-VERUS/tests/Chap56/TestAllPairsResultStEphF64.rs:9: [0m
+[38;5;22mfn dist(v: f64) -> F64Dist { F64Dist { val: v } }[0m
+
+[31m/home/milnes/projects/APAS-VERUS/tests/Chap56/TestSSSPResultStPerF64.rs:9: [0m
+[38;5;22mfn dist(v: f64) -> F64Dist { F64Dist { val: v } }[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/float.rs:293: [0m
+#[verifier::external_body]
+[38;5;22m    pub fn unreachable_dist() -> (d: F64Dist)[0m
+[38;5;22m        ensures d@ == UNREACHABLE_SPEC(),[0m
+[38;5;22m                !d.spec_is_finite(),[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/float.rs:301: [0m
+#[verifier::external_body]
+[38;5;22m    pub fn zero_dist() -> (d: F64Dist)[0m
+[38;5;22m        ensures d.spec_is_finite(),[0m
+[38;5;22m                d@ == 0.0f64,[0m
+
+[31m/home/milnes/projects/APAS-VERUS/src/vstdplus/float.rs:308: [0m
+[38;5;22m    pub fn finite_dist(v: f64) -> (d: F64Dist)[0m
+[38;5;22m        requires v.is_finite_spec(),[0m
+[38;5;22m        ensures d.spec_is_finite(),[0m

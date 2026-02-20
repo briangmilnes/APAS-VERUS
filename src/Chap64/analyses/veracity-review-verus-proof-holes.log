@@ -1,6 +1,12 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap64/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap64/
 
-✓ SpanTreeMtEph.rs
+❌ SpanTreeMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:35: external_body - #[verifier::external_body]
+        36 |         fn new_spanning_edges_lock<V: StT + MtT + Hash + Ord>(
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:46: external_body - #[verifier::external_body]
+        47 |         fn new_valid_lock(val: bool) -> (lock: RwLock<bool, SpanTreeMtEphValidWf>) {
+   Holes: 2 total
+      2 × external_body
 ✓ SpanTreeStEph.rs
 ✓ TSPApproxStEph.rs
 
@@ -9,8 +15,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   3 clean (no holes)
-   0 holed (contains holes)
+   2 clean (no holes)
+   1 holed (contains holes)
    3 total
 
 Proof Functions:
@@ -18,6 +24,5 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
+Holes Found: 2 total
+   2 × external_body

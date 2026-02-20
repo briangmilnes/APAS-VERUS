@@ -4,10 +4,9 @@
   chapters by accident.
  You are working ONLY on Chap50-Chap66 when I have multiple agents up.
  You also work with me on large scale issues across the whole codebase.
- Verus has been updated.
+ Run the veracity proof hole detector on all of your directories, one by one.
+
  You can only work on a blocker outside of your chapters with my
  explicit permission.
 
- Run check-stale-reviews.sh to check which analyses on your
- chapter need to be updated.
  Propose a table of code fixes by priority. 

@@ -1,44 +1,38 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap53/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap53/
 
 ❌ GraphSearchMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:57: external_body - #[verifier::external_body]
-        58 |         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (AVLTreeSetMtPer<V>, B) { (frontier.clone(), false) }
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:62: external_body - #[verifier::external_body]
-        63 |         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (AVLTreeSetMtPer<V>, B) {
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:77: external_body - #[verifier::external_body]
-        78 |     pub fn graph_search<V: StTInMtT + Ord + 'static, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:90: external_body - #[verifier::external_body]
-        91 |     pub fn graph_search_multi<V: StTInMtT + Ord + 'static, G, S>(
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:142: external_body - #[verifier::external_body]
-       143 |     pub fn reachable<V: StTInMtT + Ord + 'static, G>(graph: &G, source: V) -> AVLTreeSetMtPer<V>
-   Holes: 5 total
-      5 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:61: external_body - #[verifier::external_body]
+        62 |         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (AVLTreeSetMtPer<V>, B) {
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:76: external_body - #[verifier::external_body]
+        77 |     pub fn graph_search<V: StTInMtT + Ord + 'static, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:89: external_body - #[verifier::external_body]
+        90 |     pub fn graph_search_multi<V: StTInMtT + Ord + 'static, G, S>(
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:141: external_body - #[verifier::external_body]
+       142 |     pub fn reachable<V: StTInMtT + Ord + 'static, G>(graph: &G, source: V) -> AVLTreeSetMtPer<V>
+   Holes: 4 total
+      4 × external_body
 ❌ GraphSearchStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:52: external_body - #[verifier::external_body]
-        53 |         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (AVLTreeSetStEph<V>, B) { (frontier.clone(), false) }
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:57: external_body - #[verifier::external_body]
-        58 |         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (AVLTreeSetStEph<V>, B) {
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:72: external_body - #[verifier::external_body]
-        73 |     pub fn graph_search<V: StT + Ord, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:85: external_body - #[verifier::external_body]
-        86 |     pub fn graph_search_multi<V: StT + Ord, G, S>(
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:133: external_body - #[verifier::external_body]
-       134 |     pub fn reachable<V: StT + Ord, G>(graph: &G, source: V) -> AVLTreeSetStEph<V>
-   Holes: 5 total
-      5 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:56: external_body - #[verifier::external_body]
+        57 |         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (AVLTreeSetStEph<V>, B) {
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:68: external_body - #[verifier::external_body]
+        69 |     pub fn graph_search<V: StT + Ord, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:81: external_body - #[verifier::external_body]
+        82 |     pub fn graph_search_multi<V: StT + Ord, G, S>(
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:129: external_body - #[verifier::external_body]
+       130 |     pub fn reachable<V: StT + Ord, G>(graph: &G, source: V) -> AVLTreeSetStEph<V>
+   Holes: 4 total
+      4 × external_body
 ❌ GraphSearchStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:60: external_body - #[verifier::external_body]
-        61 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (AVLTreeSetStPer<V>, B) { (frontier.clone(), false) }
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:65: external_body - #[verifier::external_body]
-        66 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (AVLTreeSetStPer<V>, B) {
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:80: external_body - #[verifier::external_body]
-        81 |     pub fn graph_search<V: StT + Ord, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:93: external_body - #[verifier::external_body]
-        94 |     pub fn graph_search_multi<V: StT + Ord, G, S>(
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:152: external_body - #[verifier::external_body]
-       153 |     pub fn reachable<V: StT + Ord, G>(graph: &G, source: V) -> AVLTreeSetStPer<V>
-   Holes: 5 total
-      5 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:64: external_body - #[verifier::external_body]
+        65 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (AVLTreeSetStPer<V>, B) {
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:79: external_body - #[verifier::external_body]
+        80 |     pub fn graph_search<V: StT + Ord, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:92: external_body - #[verifier::external_body]
+        93 |     pub fn graph_search_multi<V: StT + Ord, G, S>(
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:151: external_body - #[verifier::external_body]
+       152 |     pub fn reachable<V: StT + Ord, G>(graph: &G, source: V) -> AVLTreeSetStPer<V>
+   Holes: 4 total
+      4 × external_body
 ❌ PQMinStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:55: external_body - #[verifier::external_body]
         56 |         fn new(f: F) -> Self {
@@ -76,5 +70,5 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 23 total
-   23 × external_body
+Holes Found: 20 total
+   20 × external_body
