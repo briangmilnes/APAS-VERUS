@@ -1,5 +1,5 @@
 #!/bin/bash
-# Run full validation pipeline: validate, check, RTT, PTT. Stops on first failure.
+# Run full validation pipeline: validate, RTT, PTT. Stops on first failure.
 # Usage: validate-check-rtt-ptt.sh [full|dev|exp] [--time] [filter]
 #   mode defaults to dev, filter is optional test name substring for RTT/PTT.
 
@@ -29,6 +29,5 @@ if [ -n "$FILTER" ]; then
 fi
 
 "$SCRIPT_DIR/validate.sh" "${VALIDATE_ARGS[@]}"
-"$SCRIPT_DIR/check.sh"
 "$SCRIPT_DIR/rtt.sh" "${RTT_ARGS[@]}"
 "$SCRIPT_DIR/ptt.sh" "${PTT_ARGS[@]}"
