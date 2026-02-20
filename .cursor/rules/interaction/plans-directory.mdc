@@ -1,0 +1,18 @@
+---
+description: Put plans, proposed work tables, and similar outputs in plans/
+alwaysApply: true
+---
+
+# Plans Directory
+
+When generating plans, proposed work tables, retables, or similar markdown outputs that the user may need to read or reference:
+
+- **Always** write them to `plans/` on disk
+- Use descriptive filenames: `proposed-work.md`, `fixes-table.md`, etc.
+- Do not rely on chat-only output for tables; the user may not be able to read them
+
+## Examples
+
+- Proposed work table → `plans/proposed-work.md`
+- Proposed fixes table → `plans/proposed-fixes.md`
+- Other plan documents → `plans/<descriptive-name>.md`

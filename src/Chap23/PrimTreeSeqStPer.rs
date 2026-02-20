@@ -8,22 +8,20 @@
 //! The balancing here chooses a midpoint split.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	13. derive impls outside verus!
+//  1. module
+//  2. imports
+//  3. broadcast use
+//  4. type definitions
+//  5. view impls
+//  6. spec fns
+//  7. proof fns/broadcast groups
+//  8. traits
+//  9. impls
+//  10. iterators
+//  11. derive impls in verus!
+//  13. derive impls outside verus!
 
 //		1. module
-
-
-
 
 pub mod PrimTreeSeqStPer {
 
@@ -33,8 +31,6 @@ pub mod PrimTreeSeqStPer {
     use vstd::prelude::*;
 
     verus! {
-
-    //		2. imports
 
     //		2. imports
 
@@ -55,16 +51,12 @@ pub mod PrimTreeSeqStPer {
 
     //		3. broadcast use
 
-    //		3. broadcast use
-
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
-
-    //		4. type definitions
 
     //		4. type definitions
 
@@ -90,8 +82,6 @@ pub mod PrimTreeSeqStPer {
         Two(Seq<T>, Seq<T>),
     }
 
-
-    //		5. view impls
 
     //		5. view impls
 
@@ -121,9 +111,6 @@ pub mod PrimTreeSeqStPer {
     pub open spec fn prim_tree_seq_iter_invariant<'a, T>(it: &PrimTreeSeqStIter<'a, T>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
-
-
-    //		8. traits
 
     //		8. traits
 
@@ -312,8 +299,6 @@ pub mod PrimTreeSeqStPer {
 
 
     //		9. impls
-
-    //		6. spec fns
 
     impl<T> PrimTreeSeqStS<T> {
         pub open spec fn spec_len(&self) -> nat {
@@ -742,8 +727,6 @@ pub mod PrimTreeSeqStPer {
 
     //		10. iterators
 
-    //		10. iterators
-
     /// Borrow iterator wrapper with closed spec view for encapsulation.
     #[verifier::reject_recursive_types(T)]
     pub struct PrimTreeSeqStIter<'a, T> {
@@ -859,9 +842,6 @@ pub mod PrimTreeSeqStPer {
             self.seq.into_iter()
         }
     }
-
-
-    //		11. derive impls in verus!
 
     //		11. derive impls in verus!
 

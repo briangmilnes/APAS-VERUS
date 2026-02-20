@@ -27,5 +27,6 @@ if $USE_TIME; then
 fi
 
 cd "$PROJECT_ROOT"
-"$VERUS" --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors \
+echo "Starting verification"
+time timeout 60 "$VERUS" --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors \
     "${CFG_FLAG[@]}" "${TIME_FLAG[@]}" 2>&1 | sed 's/\x1b\[[0-9;]*m//g'
