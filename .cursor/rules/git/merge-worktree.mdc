@@ -2,7 +2,7 @@
 
 ## When to use
 
-When merging agent worktree branches into main. Execute phases in strict order.
+When merging agent worktree branches into main. Execute phases 0–4 in strict order.
 Do NOT skip phases. Do NOT reorder phases.
 
 ## Agent worktree layout
@@ -12,6 +12,30 @@ Do NOT skip phases. Do NOT reorder phases.
 | main | `~/projects/APAS-VERUS` | `main` |
 | agent1 | `~/projects/APAS-VERUS-agent1` | `agent1/ready` |
 | agent2 | `~/projects/APAS-VERUS-agent2` | `agent2/ready` |
+
+## Phase 0: Ensure all worktrees are committed and pushed
+
+All branches must be clean and pushed before merging. Do not proceed if any
+worktree has uncommitted changes or unpushed commits.
+
+```bash
+# 1. Check main
+cd ~/projects/APAS-VERUS && git status
+cd ~/projects/APAS-VERUS && git log origin/main..HEAD --oneline
+
+# 2. Check agent1
+cd ~/projects/APAS-VERUS-agent1 && git status
+cd ~/projects/APAS-VERUS-agent1 && git log origin/agent1/ready..HEAD --oneline
+
+# 3. Check agent2
+cd ~/projects/APAS-VERUS-agent2 && git status
+cd ~/projects/APAS-VERUS-agent2 && git log origin/agent2/ready..HEAD --oneline
+```
+
+- `git status` must show "nothing to commit, working tree clean" in each worktree.
+- `git log origin/<branch>..HEAD --oneline` must show no output (no unpushed commits).
+
+STOP. Do not proceed to Phase 1 until all three worktrees are committed and pushed.
 
 ## Phase 1: Merge agent1/ready into main
 
@@ -132,7 +156,7 @@ cd ~/projects/APAS-VERUS-agent2 && git log --oneline -1
 
 ## Notes
 
-- Execute phases 1, 2, 3, 4 in strict order. Never skip a phase.
+- Execute phases 0, 1, 2, 3, 4 in strict order. Never skip a phase.
 - Phase 2 is critical: agent2 must rebase onto post-agent1 main BEFORE Phase 3.
 - All verification (RTTs, Verus, PTTs) happens in `~/projects/APAS-VERUS` only.
 - Agent worktrees are only used for rebase + force-push. No verification there.
