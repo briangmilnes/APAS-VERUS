@@ -8,25 +8,15 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ ParaHashTableStEph.rs
 ✓ QuadProbFlatHashTableStEph.rs
 ✓ StructChainedHashTable.rs
-❌ VecChainedHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/VecChainedHashTableStEph.rs:28: external_body - #[verifier::external_body]
-        29 |         fn new() -> Self { Vec::new() }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/VecChainedHashTableStEph.rs:33: external_body - #[verifier::external_body]
-        34 |         fn insert(&mut self, key: Key, value: Value) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/VecChainedHashTableStEph.rs:46: external_body - #[verifier::external_body]
-        47 |         fn lookup(&self, key: &Key) -> Option<Value> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/VecChainedHashTableStEph.rs:58: external_body - #[verifier::external_body]
-        59 |         fn delete(&mut self, key: &Key) -> B {
-   Holes: 4 total
-      4 × external_body
+✓ VecChainedHashTableStEph.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   8 clean (no holes)
-   1 holed (contains holes)
+   9 clean (no holes)
+   0 holed (contains holes)
    9 total
 
 Proof Functions:
@@ -34,5 +24,6 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 4 total
-   4 × external_body
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
