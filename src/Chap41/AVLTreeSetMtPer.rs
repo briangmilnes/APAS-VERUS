@@ -49,10 +49,16 @@ pub mod AVLTreeSetMtPer {
 
     // 5. view impls
 
+    impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPer<T> {
+        #[verifier::external_body]
+        pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
+            Set::empty()
+        }
+    }
+
     impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtPer<T> {
         type V = Set<<T as View>::V>;
-        #[verifier::external_body]
-        open spec fn view(&self) -> Set<<T as View>::V> { Set::empty() }
+        open spec fn view(&self) -> Set<<T as View>::V> { self.spec_set_view() }
     }
 
     // 8. traits

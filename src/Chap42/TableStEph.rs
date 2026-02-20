@@ -29,17 +29,31 @@ pub mod TableStEph {
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
     pub struct TableStEph<K: StT + Ord, V: StT> {
-        entries: ArraySeqStEphS<Pair<K, V>>,
+        pub entries: ArraySeqStEphS<Pair<K, V>>,
     }
 
     pub type TableS<K, V> = TableStEph<K, V>;
 
     // 5. view impls
 
+    // Converts a sorted sequence of (key, value) pairs to a Map.
+    // Later entries win on duplicate keys (irrelevant when keys are unique).
+    pub open spec fn spec_entries_to_map<KV, VV>(entries: Seq<(KV, VV)>) -> Map<KV, VV>
+        decreases entries.len()
+    {
+        if entries.len() == 0 {
+            Map::empty()
+        } else {
+            let last = entries.last();
+            spec_entries_to_map(entries.drop_last()).insert(last.0, last.1)
+        }
+    }
+
     impl<K: StT + Ord, V: StT> View for TableStEph<K, V> {
         type V = Map<K::V, V::V>;
-        #[verifier::external_body]
-        open spec fn view(&self) -> Map<K::V, V::V> { Map::empty() }
+        open spec fn view(&self) -> Map<K::V, V::V> {
+            spec_entries_to_map(self.entries@)
+        }
     }
 
     // 8. traits
@@ -110,13 +124,12 @@ pub mod TableStEph {
             self.entries.length()
         }
 
-        #[verifier::external_body]
         fn empty() -> (result: Self)
             ensures result@ == Map::<K::V, V::V>::empty()
         {
-            TableStEph {
-                entries: ArraySeqStEphS::empty(),
-            }
+            let entries = ArraySeqStEphS::empty();
+            assert(entries@ =~= Seq::<(K::V, V::V)>::empty());
+            TableStEph { entries }
         }
 
         #[verifier::external_body]

@@ -115,12 +115,25 @@ pub mod ArraySetStEph {
         fn singleton(x: T) -> (result: Self)
             ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite()
         {
+            let ghost x_view = x@;
             let mut v: Vec<T> = Vec::new();
             v.push(x);
+            let ghost v_snapshot = v@;
+            assert(v_snapshot.len() == 1);
+            assert(v_snapshot[0]@ == x_view);
             let elements = ArraySeqStEphS::from_vec(v);
-            let r = ArraySetStEph { elements };
-            proof { assume(r@ == Set::<<T as View>::V>::empty().insert(x@)); }
-            r
+            proof {
+                assert(elements.spec_index(0) == v_snapshot[0]);
+                assert(elements.spec_index(0)@ == x_view);
+                assert(elements@.len() == 1) by {
+                    assert(elements.spec_len() == 1);
+                };
+                assert(elements@[0] == elements.spec_index(0)@);
+                assert(elements@ =~= seq![x_view]);
+                Seq::<<T as View>::V>::empty().lemma_push_to_set_commute(x_view);
+                assert(seq![x_view] =~= Seq::<<T as View>::V>::empty().push(x_view));
+            }
+            ArraySetStEph { elements }
         }
 
         fn from_seq(seq: ArraySeqStEphS<T>) -> (result: Self)

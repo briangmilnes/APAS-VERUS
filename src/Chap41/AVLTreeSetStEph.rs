@@ -37,10 +37,18 @@ pub mod AVLTreeSetStEph {
 
     // 5. view impls
 
+    // Abstract view function. Closed + external_body = uninterpreted. The ensures
+    // clauses on the trait operations axiomatize its behavior. Do not reveal.
+    impl<T: StT + Ord> AVLTreeSetStEph<T> {
+        #[verifier::external_body]
+        pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
+            Set::empty()
+        }
+    }
+
     impl<T: StT + Ord> View for AVLTreeSetStEph<T> {
         type V = Set<<T as View>::V>;
-        #[verifier::external_body]
-        open spec fn view(&self) -> Set<<T as View>::V> { Set::empty() }
+        open spec fn view(&self) -> Set<<T as View>::V> { self.spec_set_view() }
     }
 
     // 8. traits
