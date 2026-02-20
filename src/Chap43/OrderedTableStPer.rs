@@ -6,7 +6,7 @@ pub mod OrderedTableStPer {
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
-    use crate::Chap42::TableStEph::TableStEph::spec_entries_to_map;
+    use crate::Chap42::TableStEph::TableStEph::*;
     use crate::Chap42::TableStPer::TableStPer::*;
     use crate::Types::Types::*;
     use vstd::prelude::*;

@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap64/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap64/
 
 ❌ SpanTreeMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:35: external_body - #[verifier::external_body]

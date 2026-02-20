@@ -1,5 +1,5 @@
 #!/bin/bash
-# Verus verification. Usage: validate.sh [full|dev|exp] [--time]
+# Verus verification. Usage: validate.sh [full|dev_only|exp] [--time]
 
 set -euo pipefail
 
@@ -15,10 +15,10 @@ for arg in "$@"; do
 done
 
 case "$MODE" in
-    full) CFG_FLAG=(--cfg 'feature="full_verify"') ;;
-    dev)  CFG_FLAG=() ;;
-    exp)  CFG_FLAG=(--cfg 'feature="experiments_only"') ;;
-    *)    echo "Usage: validate.sh [full|dev|exp] [--time]"; exit 1 ;;
+    full)     CFG_FLAG=() ;;
+    dev_only) CFG_FLAG=(--cfg 'feature="dev_only"') ;;
+    exp)      CFG_FLAG=(--cfg 'feature="experiments_only"') ;;
+    *)        echo "Usage: validate.sh [full|dev_only|exp] [--time]"; exit 1 ;;
 esac
 
 TIME_FLAG=()

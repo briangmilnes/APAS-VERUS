@@ -25,7 +25,7 @@ pub mod AugOrderedTableMtEph {
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
-    use crate::Chap42::TableMtEph::TableMtEph::lemma_entries_to_map_finite;
+    use crate::Chap42::TableMtEph::TableMtEph::*;
     use crate::Chap43::OrderedTableMtEph::OrderedTableMtEph::*;
     use crate::Concurrency::Concurrency::*;
     use crate::{OrderedTableMtEphLit, ParaPair};

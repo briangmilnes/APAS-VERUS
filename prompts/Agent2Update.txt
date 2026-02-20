@@ -2,7 +2,7 @@
  You are agent2 working in gittree: ~/projects/APAS-VERUS-agent2/.
  Your worktree has been updated.
  REREAD ANY FILES BEFORE MODIFYING THEM.
- You are working ONLY on Chap43-Chap49.
+ You are working ONLY on Chap42-Chap49.
  Run the veracity proof hole detector on all of your directories, one by one.
  Propose a table of code fixes by priority.
  

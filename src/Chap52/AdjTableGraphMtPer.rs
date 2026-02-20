@@ -15,6 +15,7 @@ pub mod AdjTableGraphMtPer {
     use crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait;
     use crate::Chap43::OrderedSetMtEph::OrderedSetMtEph::OrderedSetMtEphTrait;
     use crate::Chap43::OrderedTableMtPer::OrderedTableMtPer::*;
+    use crate::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::spec_sum_adj_sizes;
     use crate::Types::Types::*;
 
     verus! {
@@ -51,31 +52,57 @@ pub mod AdjTableGraphMtPer {
     // 8. traits
 
     pub trait AdjTableGraphMtPerTrait<V: StTInMtT + Ord + 'static> {
+        spec fn spec_adj(&self) -> Map<<V as View>::V, Set<<V as View>::V>>;
+        spec fn spec_num_edges(&self) -> nat;
+
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty()                          -> Self;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn num_vertices(&self)              -> N;
         /// claude-4-sonet: Work Θ(|V| + |E|), Span Θ(log |V| × log |E|), Parallelism Θ(|E|/log |V|)
-        fn num_edges(&self)                 -> N;
+        fn num_edges(&self) -> (m: N)
+            requires self.spec_num_edges() <= usize::MAX as nat
+            ensures m as nat == self.spec_num_edges();
         /// claude-4-sonet: Work Θ(log |V| + log |E|), Span Θ(log |V| + log |E|), Parallelism Θ(1)
-        fn has_edge(&self, u: &V, v: &V)    -> B;
+        fn has_edge(&self, u: &V, v: &V) -> (found: B)
+            ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));
         /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
-        fn out_neighbors(&self, u: &V)      -> AVLTreeSetMtPer<V>;
+        fn out_neighbors(&self, u: &V) -> (result: AVLTreeSetMtPer<V>)
+            ensures
+                self.spec_adj().dom().contains(u@) ==> result@ == self.spec_adj()[u@],
+                !self.spec_adj().dom().contains(u@) ==> result@ == Set::<<V as View>::V>::empty();
         /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
         fn out_degree(&self, u: &V)         -> N;
         /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
-        fn insert_vertex(&self, v: V)       -> Self;
+        fn insert_vertex(&self, v: V) -> (result: Self)
+            ensures result.spec_adj().dom().contains(v@);
         /// claude-4-sonet: Work Θ((|V| + |E|) log |V|), Span Θ(log² |V| + log |E|), Parallelism Θ(|E|/log |V|)
-        fn delete_vertex(&self, v: &V)      -> Self;
+        fn delete_vertex(&self, v: &V) -> (result: Self)
+            ensures !result.spec_adj().dom().contains(v@);
         /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
-        fn insert_edge(&self, u: V, v: V)   -> Self;
+        fn insert_edge(&self, u: V, v: V) -> (result: Self)
+            ensures
+                result.spec_adj().dom().contains(u@),
+                result.spec_adj().dom().contains(v@),
+                result.spec_adj()[u@].contains(v@);
         /// claude-4-sonet: Work Θ(log |V| + log |E|), Span Θ(log |V| + log |E|), Parallelism Θ(1)
-        fn delete_edge(&self, u: &V, v: &V) -> Self;
+        fn delete_edge(&self, u: &V, v: &V) -> (result: Self)
+            ensures
+                !result.spec_adj().dom().contains(u@)
+                    || !result.spec_adj()[u@].contains(v@);
     }
 
     // 9. impls
 
     impl<V: StTInMtT + Ord + 'static> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+        open spec fn spec_adj(&self) -> Map<<V as View>::V, Set<<V as View>::V>> {
+            self.adj@
+        }
+
+        open spec fn spec_num_edges(&self) -> nat {
+            spec_sum_adj_sizes(self.spec_adj())
+        }
+
         fn empty() -> Self {
             AdjTableGraphMtPer {
                 adj: OrderedTableMtPer::empty(),
@@ -84,45 +111,58 @@ pub mod AdjTableGraphMtPer {
 
         fn num_vertices(&self) -> N { self.adj.size() }
 
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — sequential iteration over domain; not parallel despite Mt type.
-        #[verifier::external_body]
-        fn num_edges(&self) -> N {
+        fn num_edges(&self) -> (m: N)
+            requires self.spec_num_edges() <= usize::MAX as nat
+            ensures m as nat == self.spec_num_edges()
+        {
             let domain = self.adj.domain();
             let domain_seq = domain.to_seq();
-            let mut count = 0;
-            for i in 0..domain.size() {
-                let v = domain_seq.nth(i);
-                if let Some(neighbors) = self.adj.find(v) {
+            let mut count: usize = 0;
+            let mut i: usize = 0;
+            while i < domain.size()
+                invariant i <= domain.size()
+                decreases domain.size() - i
+            {
+                let v = domain_seq.nth(i).clone();
+                if let Some(neighbors) = self.adj.find(&v) {
                     count += neighbors.size();
                 }
+                i += 1;
             }
             count
         }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
-        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
-        #[verifier::external_body]
-        fn has_edge(&self, u: &V, v: &V) -> B { self.adj.find(u).is_some_and(|neighbors| neighbors.find(v)) }
+        fn has_edge(&self, u: &V, v: &V) -> (found: B)
+            ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@))
+        {
+            match self.adj.find(u) {
+                Some(neighbors) => neighbors.find(v),
+                None => false,
+            }
+        }
 
-        /// - APAS: Work Θ(lg n + d(v)), Span Θ(lg n) [Cost Spec 52.3]
-        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
-        #[verifier::external_body]
-        fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
-            self.adj.find(u).unwrap_or_else(|| AVLTreeSetMtPer::empty())
+        fn out_neighbors(&self, u: &V) -> (result: AVLTreeSetMtPer<V>)
+            ensures
+                self.spec_adj().dom().contains(u@) ==> result@ == self.spec_adj()[u@],
+                !self.spec_adj().dom().contains(u@) ==> result@ == Set::<<V as View>::V>::empty(),
+        {
+            match self.adj.find(u) {
+                Some(neighbors) => neighbors.clone(),
+                None => AVLTreeSetMtPer::empty(),
+            }
         }
 
         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
-        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
-        #[verifier::external_body]
-        fn insert_vertex(&self, v: V) -> Self {
+        fn insert_vertex(&self, v: V) -> (result: Self)
+            ensures result.spec_adj().dom().contains(v@)
+        {
             if self.adj.find(&v).is_some() {
-                return self.clone();
-            }
-            AdjTableGraphMtPer {
-                adj: self.adj.insert(v, AVLTreeSetMtPer::empty()),
+                self.clone()
+            } else {
+                AdjTableGraphMtPer {
+                    adj: self.adj.insert(v, AVLTreeSetMtPer::empty()),
+                }
             }
         }
 
@@ -183,10 +223,12 @@ pub mod AdjTableGraphMtPer {
             AdjTableGraphMtPer { adj: result_adj }
         }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
-        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
-        #[verifier::external_body]
-        fn insert_edge(&self, u: V, v: V) -> Self {
+        fn insert_edge(&self, u: V, v: V) -> (result: Self)
+            ensures
+                result.spec_adj().dom().contains(u@),
+                result.spec_adj().dom().contains(v@),
+                result.spec_adj()[u@].contains(v@),
+        {
             let mut new_adj = self.adj.clone();
             if new_adj.find(&u).is_none() {
                 new_adj = new_adj.insert(u.clone(), AVLTreeSetMtPer::empty());
@@ -194,24 +236,29 @@ pub mod AdjTableGraphMtPer {
             if new_adj.find(&v).is_none() {
                 new_adj = new_adj.insert(v.clone(), AVLTreeSetMtPer::empty());
             }
-            let u_neighbors = new_adj.find(&u).unwrap_or_else(|| AVLTreeSetMtPer::empty());
+            let u_neighbors = match new_adj.find(&u) {
+                Some(ns) => ns,
+                None => AVLTreeSetMtPer::empty(),
+            };
             let new_u_neighbors = u_neighbors.insert(v);
             AdjTableGraphMtPer {
                 adj: new_adj.insert(u, new_u_neighbors),
             }
         }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
-        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
-        #[verifier::external_body]
-        fn delete_edge(&self, u: &V, v: &V) -> Self {
-            if let Some(u_neighbors) = self.adj.find(u) {
-                let new_u_neighbors = u_neighbors.delete(v);
-                AdjTableGraphMtPer {
-                    adj: self.adj.insert(u.clone(), new_u_neighbors),
+        fn delete_edge(&self, u: &V, v: &V) -> (result: Self)
+            ensures
+                !result.spec_adj().dom().contains(u@)
+                    || !result.spec_adj()[u@].contains(v@),
+        {
+            match self.adj.find(u) {
+                Some(u_neighbors) => {
+                    let new_u_neighbors = u_neighbors.delete(v);
+                    AdjTableGraphMtPer {
+                        adj: self.adj.insert(u.clone(), new_u_neighbors),
+                    }
                 }
-            } else {
-                self.clone()
+                None => self.clone(),
             }
         }
     }

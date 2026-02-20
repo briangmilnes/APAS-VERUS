@@ -20,7 +20,7 @@ pub mod AugOrderedTableStEph {
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
-    use crate::Chap42::TableStEph::TableStEph::lemma_entries_to_map_finite;
+    use crate::Chap42::TableStEph::TableStEph::*;
     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::*;
     use crate::OrderedTableStEphLit;
     use crate::Types::Types::*;

@@ -43,6 +43,7 @@ pub mod EdgeSetGraphStPer {
     // 8. traits
 
     pub trait EdgeSetGraphStPerTrait<V: StT + Ord> {
+        spec fn spec_out_neighbors(&self, u: <V as View>::V) -> Set<<V as View>::V>;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty()                                                                        -> Self;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
@@ -58,13 +59,15 @@ pub mod EdgeSetGraphStPer {
         /// claude-4-sonet: Work Θ(log |E|), Span Θ(log |E|), Parallelism Θ(1)
         fn has_edge(&self, u: &V, v: &V)                                                  -> B;
         /// claude-4-sonet: Work Θ(|E| log |V|), Span Θ(|E| log |V|), Parallelism Θ(1)
-        fn out_neighbors(&self, u: &V)                                                    -> AVLTreeSetStPer<V>;
+        fn out_neighbors(&self, u: &V) -> (result: AVLTreeSetStPer<V>)
+            ensures result@ == self.spec_out_neighbors(u@);
         /// claude-4-sonet: Work Θ(|E|), Span Θ(|E|), Parallelism Θ(1)
         fn out_degree(&self, u: &V)                                                       -> N;
         /// claude-4-sonet: Work Θ(log |V|), Span Θ(log |V|), Parallelism Θ(1)
         fn insert_vertex(&self, v: V)                                                     -> Self;
         /// claude-4-sonet: Work Θ(|E| log |E|), Span Θ(|E| log |E|), Parallelism Θ(1)
-        fn delete_vertex(&self, v: &V)                                                    -> Self;
+        fn delete_vertex(&self, v: &V) -> (result: Self)
+            ensures !result.vertices@.contains(v@);
         /// claude-4-sonet: Work Θ(log |V| + log |E|), Span Θ(log |V| + log |E|), Parallelism Θ(1)
         fn insert_edge(&self, u: V, v: V)                                                 -> Self;
         /// claude-4-sonet: Work Θ(log |E|), Span Θ(log |E|), Parallelism Θ(1)
@@ -74,6 +77,10 @@ pub mod EdgeSetGraphStPer {
     // 9. impls
 
     impl<V: StT + Ord> EdgeSetGraphStPerTrait<V> for EdgeSetGraphStPer<V> {
+        open spec fn spec_out_neighbors(&self, u: <V as View>::V) -> Set<<V as View>::V> {
+            Set::new(|v: <V as View>::V| self.edges@.contains((u, v)))
+        }
+
         fn empty() -> Self {
             EdgeSetGraphStPer {
                 vertices: AVLTreeSetStPer::empty(),
@@ -95,17 +102,24 @@ pub mod EdgeSetGraphStPer {
 
         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
 
-        /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1, mapping over neighbors]
-        /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — sequential filter + insert loop; span not parallel.
-        #[verifier::external_body]
-        fn out_neighbors(&self, u: &V) -> AVLTreeSetStPer<V> {
+        fn out_neighbors(&self, u: &V) -> (result: AVLTreeSetStPer<V>)
+            ensures result@ == self.spec_out_neighbors(u@)
+        {
             let u_clone = u.clone();
             let filtered = self.edges.filter(|edge| edge.0 == u_clone);
-            let mut neighbors = AVLTreeSetStPer::empty();
             let seq = filtered.to_seq();
-            for i in 0..seq.length() {
-                let Pair(_, v) = seq.nth(i);
-                neighbors = neighbors.insert(v.clone());
+            let mut neighbors = AVLTreeSetStPer::empty();
+            let mut i: usize = 0;
+            while i < seq.length()
+                invariant
+                    i <= seq.length(),
+                    neighbors@.finite(),
+                    neighbors@ == seq.subrange(0, i as int).map(|p: (V::V, V::V)| p.1).to_set(),
+                decreases seq.length() - i
+            {
+                let Pair(_, v) = seq.nth(i).clone();
+                neighbors = neighbors.insert(v);
+                i += 1;
             }
             neighbors
         }
@@ -121,13 +135,14 @@ pub mod EdgeSetGraphStPer {
             }
         }
 
-        #[verifier::external_body]
-        fn delete_vertex(&self, v: &V) -> Self {
+        fn delete_vertex(&self, v: &V) -> (result: Self)
+            ensures !result.vertices@.contains(v@)
+        {
             let v_clone = v.clone();
             let new_vertices = self.vertices.delete(&v_clone);
             let new_edges = self.edges.filter(|edge| {
                 let Pair(u, w) = edge;
-                u != &v_clone && w != &v_clone
+                *u != v_clone && *w != v_clone
             });
             EdgeSetGraphStPer {
                 vertices: new_vertices,

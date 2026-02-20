@@ -1,8 +1,10 @@
 
  You are agent1 working in gittree: ~/projects/APAS-VERUS-agent1/.
  Your worktree has been updated.
+ Read ./rules/apas-verus/senior-proof-engineer.mdc:
+ Read ./rules/style/senior-prose-engineer.mdc. 
  REREAD ANY FILES BEFORE MODIFYING THEM.
- You are working ONLY on Chap02-Chap42.
+ You are working ONLY on Chap02-Chap41, keep this in your context. 
  Run the veracity proof hole detector on all of your directories, one by one.
  Propose a table of code fixes by priority.
 
