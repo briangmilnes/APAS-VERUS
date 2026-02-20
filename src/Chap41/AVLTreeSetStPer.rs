@@ -28,6 +28,7 @@ pub mod AVLTreeSetStPer {
 
     // 4. type definitions
 
+    #[verifier::reject_recursive_types(T)]
     pub struct AVLTreeSetStPer<T: StT + Ord> {
         elements: AVLTreeSeqStPerS<T>,
     }
@@ -36,10 +37,16 @@ pub mod AVLTreeSetStPer {
 
     // 5. view impls
 
+    impl<T: StT + Ord> AVLTreeSetStPer<T> {
+        #[verifier::external_body]
+        pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
+            Set::empty()
+        }
+    }
+
     impl<T: StT + Ord> View for AVLTreeSetStPer<T> {
         type V = Set<<T as View>::V>;
-        #[verifier::external_body]
-        open spec fn view(&self) -> Set<<T as View>::V> { Set::empty() }
+        open spec fn view(&self) -> Set<<T as View>::V> { self.spec_set_view() }
     }
 
     // 8. traits

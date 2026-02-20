@@ -17,7 +17,7 @@ fn test_avl_ephemeral_basic() {
     assert_eq!(t.length(), 3);
     assert_eq!(*t.nth(1), 2);
     // AVL trees ephemeral - has update method
-    let _ = t.update((1, 9));
+    t.update(1, 9);
     assert_eq!(*t.nth(1), 9);
 }
 
@@ -82,12 +82,11 @@ fn test_avl_update_method() {
     let mut tree = AVLTreeSeqStEphS::from_vec(vec![1, 2, 3, 4, 5]);
 
     // Test update (which internally uses set)
-    let updated = tree.update((1, 88));
-    assert_eq!(*updated.nth(1), 88);
-    assert_eq!(*tree.nth(1), 88); // Ephemeral - original is modified
+    tree.update(1, 88);
+    assert_eq!(*tree.nth(1), 88);
 
     // Test out-of-bounds update (should be silently ignored per APAS style)
-    let _ = tree.update((10, 99));
+    tree.update(10, 99);
     // Tree should remain unchanged for out-of-bounds
     assert_eq!(tree.length(), 5);
 }

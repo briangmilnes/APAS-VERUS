@@ -32,19 +32,28 @@ pub mod TableMtEph {
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
     pub struct TableMtEph<K: MtKey, V: MtVal> {
-        entries: ArraySeqMtEphS<Pair<K, V>>,
+        pub entries: ArraySeqMtEphS<Pair<K, V>>,
     }
 
     pub type TableS<K, V> = TableMtEph<K, V>;
 
     // 5. view impls
 
+    pub open spec fn spec_entries_to_map<KV, VV>(entries: Seq<(KV, VV)>) -> Map<KV, VV>
+        decreases entries.len()
+    {
+        if entries.len() == 0 {
+            Map::empty()
+        } else {
+            let last = entries.last();
+            spec_entries_to_map(entries.drop_last()).insert(last.0, last.1)
+        }
+    }
+
     impl<K: MtKey, V: MtVal> View for TableMtEph<K, V> {
         type V = Map<K::V, V::V>;
-
-        #[verifier::external_body]
         open spec fn view(&self) -> Map<K::V, V::V> {
-            Map::empty()
+            spec_entries_to_map(self.entries@)
         }
     }
 
@@ -110,13 +119,12 @@ pub mod TableMtEph {
             self.entries.length()
         }
 
-        #[verifier::external_body]
         fn empty() -> (result: Self)
             ensures result@ == Map::<K::V, V::V>::empty()
         {
-            TableMtEph {
-                entries: ArraySeqMtEphS::empty(),
-            }
+            let entries = ArraySeqMtEphS::empty();
+            assert(entries@ =~= Seq::<(K::V, V::V)>::empty());
+            TableMtEph { entries }
         }
 
         #[verifier::external_body]

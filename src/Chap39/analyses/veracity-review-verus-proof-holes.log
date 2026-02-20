@@ -1,9 +1,22 @@
-✓ BSTParaTreapMtEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap39
+
+❌ BSTParaTreapMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:47: external_body - #[verifier::external_body]
+        48 |     fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, TreapWf>) {
+   Holes: 1 total
+      1 × external_body
 ✓ BSTSetTreapMtEph.rs
 ❌ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:24: error: bare_impl - impl<T: StTInMtT + Ord> Node<T> { — `impl Node` without trait; file defines [BSTTreapMtEphTrait]
-        25 |         fn new(key: T, priority: u64) -> Self {
-        26 |             Node {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:39: external_type_specification - #[verifier::external_type_specification]
+        40 |         struct ExNode<T: StTInMtT + Ord>(Node<T>);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:48: external_body - #[verifier::external_body]
+        49 |         fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:25: error: bare_impl - impl<T: StTInMtT + Ord> Node<T> { — `impl Node` without trait; file defines [BSTTreapMtEphTrait]
+        26 |         fn new(key: T, priority: u64) -> Self {
+        27 |             Node {
+   Holes: 2 total
+      1 × external_body
+      1 × external_type_specification
    Errors: 1 bare impl(s) in file with trait definition
 ✓ BSTTreapStEph.rs
 
@@ -12,8 +25,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   4 clean (no holes)
-   0 holed (contains holes)
+   2 clean (no holes)
+   2 holed (contains holes)
    4 total
 
 Proof Functions:
@@ -21,20 +34,8 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 0 total
+Holes Found: 3 total
+   2 × external_body
+   1 × external_type_specification
 
 Errors: 1 bare impl(s) in files with trait definitions
-
-🎉 No proof holes found! All proofs are complete.
-4 total
-
-Proof Functions:
-   0 clean
-   0 holed
-   0 total
-
-Holes Found: 0 total
-
-Errors: 1 bare impl(s) in files with trait definitions
-
-🎉 No proof holes found! All proofs are complete.
