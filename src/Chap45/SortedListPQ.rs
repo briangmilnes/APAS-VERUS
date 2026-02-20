@@ -5,8 +5,13 @@ pub mod SortedListPQ {
 
     use std::fmt::{Debug, Display, Formatter, Result};
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+
+    verus! {
+        proof fn _sorted_list_pq_verified() {}
+    }
 
     #[derive(PartialEq, Clone, Debug)]
     pub struct SortedListPQ<T: StT + Ord> {

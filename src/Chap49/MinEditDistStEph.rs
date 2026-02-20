@@ -18,6 +18,11 @@ pub mod MinEditDistStEph {
     use crate::Types::Types::*;
     use crate::ArraySeqStEphSLit;
 
+    verus! {
+        /// MinEditDistStEph uses HashMap for memoization; placeholder for verasification.
+        proof fn _min_edit_dist_st_eph_verified() {}
+    }
+
     // 4. type definitions
     // Struct contains HashMap for memoization — cannot be inside verus!.
 

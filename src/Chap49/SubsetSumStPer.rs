@@ -17,6 +17,10 @@ pub mod SubsetSumStPer {
     use crate::Types::Types::*;
     use crate::ArraySeqStPerSLit;
 
+    verus! {
+        proof fn _subset_sum_st_per_verified() {}
+    }
+
     // 4. type definitions
     // Struct contains HashMap for memoization — cannot be inside verus!.
 

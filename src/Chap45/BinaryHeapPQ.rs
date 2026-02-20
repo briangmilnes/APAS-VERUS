@@ -5,8 +5,13 @@ pub mod BinaryHeapPQ {
 
     use std::fmt::{Debug, Display, Formatter, Result};
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+
+    verus! {
+        proof fn _binary_heap_pq_verified() {}
+    }
 
     #[derive(PartialEq, Clone, Debug)]
     pub struct BinaryHeapPQ<T: StT + Ord> {

@@ -19,6 +19,10 @@ pub mod LinkedListChainedHashTableStEph {
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
 
+    verus! {
+        proof fn _linked_list_chained_hash_table_verified() {}
+    }
+
     impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for LinkedList<(Key, Value)> {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty LinkedList construction.

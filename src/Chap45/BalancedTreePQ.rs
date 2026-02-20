@@ -5,8 +5,14 @@ pub mod BalancedTreePQ {
 
     use std::fmt::{Debug, Display, Formatter, Result};
 
+    use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Types::Types::*;
+
+    verus! {
+        /// Placeholder; PQ uses Vec, Option<&T>, Fn bounds.
+        proof fn _balanced_tree_pq_verified() {}
+    }
 
     #[derive(PartialEq, Clone, Debug)]
     pub struct BalancedTreePQ<T: StT + Ord> {

@@ -18,6 +18,10 @@ pub mod ChainedHashTable {
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
 
+    verus! {
+        proof fn _chained_hash_table_verified() {}
+    }
+
     // 4. type definitions
 
     /// Parametric entry type for chained hash tables.

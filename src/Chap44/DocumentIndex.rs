@@ -5,11 +5,17 @@ pub mod DocumentIndex {
 
     use std::fmt::{Debug, Display, Formatter, Result};
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Chap42::TableStPer::TableStPer::*;
     use crate::Types::Types::*;
+
+    verus! {
+        /// Placeholder; DocumentIndex uses Vec, Box<dyn Fn>, chars().
+        proof fn _document_index_verified() {}
+    }
 
     pub type Word = String;
     pub type DocumentId = String;

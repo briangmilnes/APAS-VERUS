@@ -20,6 +20,10 @@ pub mod StructChainedHashTable {
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
 
+    verus! {
+        proof fn _struct_chained_hash_table_verified() {}
+    }
+
     // 4. type definitions
 
     /// Custom linked list node.

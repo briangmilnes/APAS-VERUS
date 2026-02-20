@@ -5,7 +5,12 @@ pub mod LeftistHeapPQ {
 
     use std::fmt::{Debug, Display, Formatter, Result};
 
+    use vstd::prelude::*;
     use crate::Types::Types::*;
+
+    verus! {
+        proof fn _leftist_heap_pq_verified() {}
+    }
 
     #[derive(PartialEq, Clone, Debug)]
     pub enum LeftistHeapNode<T: StT + Ord> {

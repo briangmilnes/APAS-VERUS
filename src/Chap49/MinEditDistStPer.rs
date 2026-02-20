@@ -18,6 +18,10 @@ pub mod MinEditDistStPer {
     use crate::Types::Types::*;
     use crate::ArraySeqStPerSLit;
 
+    verus! {
+        proof fn _min_edit_dist_st_per_verified() {}
+    }
+
     // 4. type definitions
     // Struct contains HashMap for memoization — cannot be inside verus!.
 

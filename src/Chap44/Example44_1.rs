@@ -3,10 +3,16 @@
 
 pub mod Example44_1 {
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap44::DocumentIndex::DocumentIndex::*;
     use crate::DocumentCollectionLit;
     use crate::Types::Types::*;
+
+    verus! {
+        /// Placeholder; Example44 uses Box<dyn Fn>, impl Fn return.
+        proof fn _example_44_1_verified() {}
+    }
 
     /// - APAS: N/A — Example scaffolding.
     /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — builds 5-element sequence via macro

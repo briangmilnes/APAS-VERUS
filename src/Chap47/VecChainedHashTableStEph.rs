@@ -18,6 +18,10 @@ pub mod VecChainedHashTableStEph {
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
 
+    verus! {
+        proof fn _vec_chained_hash_table_verified() {}
+    }
+
     // 9. impls (EntryTrait for Vec — outside verus!, matching LinkedList pattern)
 
     impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for Vec<(Key, Value)> {

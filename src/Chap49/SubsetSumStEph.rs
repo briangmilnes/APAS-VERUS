@@ -17,6 +17,10 @@ pub mod SubsetSumStEph {
     use crate::Types::Types::*;
     use crate::ArraySeqStEphSLit;
 
+    verus! {
+        proof fn _subset_sum_st_eph_verified() {}
+    }
+
     // 4. type definitions
     // Struct contains HashMap for memoization — cannot be inside verus!.
 

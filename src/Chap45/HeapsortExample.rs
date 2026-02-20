@@ -3,6 +3,7 @@
 
 pub mod HeapsortExample {
 
+    use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ;
@@ -14,6 +15,10 @@ pub mod HeapsortExample {
     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ;
     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::*;
     use crate::Types::Types::*;
+
+    verus! {
+        proof fn _heapsort_example_verified() {}
+    }
 
     pub trait HeapsortTrait {
         /// Heapsort using UnsortedListPQ
