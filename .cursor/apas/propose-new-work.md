@@ -1,6 +1,6 @@
 # Propose New Work
 
-When the user says "propose new work", "proposed work table", or "retable", generate a table of actionable work from the proof holes report. Output in Cursor chat only (no file).
+When the user says "propose new work", "proposed work table", or "retable", generate a table of actionable work from the proof holes report. Write output to `plans/proposed-work.md` (see plans-directory rule).
 
 ## Procedure
 
@@ -25,6 +25,8 @@ When the user says "propose new work", "proposed work table", or "retable", gene
    **Last column (Proposed Work)**: Keep each cell ≤ 30 chars. Use terse abbreviations (e.g. "ext_body" not "external_body", "struct out" for "struct outside verus"). If needed, move detail to a footnote below the table.
 
 5. Skip chapters with no proposed work. Do not include rows where all holes are accepted patterns.
+
+6. Write the table to `plans/proposed-work.md`.
 
 ## Permanent external_body (no proposed work)
 
