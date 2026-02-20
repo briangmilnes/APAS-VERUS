@@ -1,17 +1,7 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap47/
+
 ✓ ChainedHashTable.rs
-❌ DoubleHashFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/DoubleHashFlatHashTableStEph.rs:39: external_body - #[verifier::external_body]
-        40 |         pub fn second_hash<Key: StT>(key: &Key, table_size: N) -> N {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/DoubleHashFlatHashTableStEph.rs:49: unsafe {} - unsafe {
-        40 |         pub fn second_hash<Key: StT>(key: &Key, table_size: N) -> N {
-            ...
-        47 |             let mut hash: u64 = 0xcbf29ce484222325; // FNV offset basis
-        48 | 
-        50 |                 for i in 0..key_size {
-        51 |                     let byte = *key_ptr.add(i);
-   Holes: 2 total
-      1 × unsafe {}
-      1 × external_body
+✓ DoubleHashFlatHashTableStEph.rs
 ✓ FlatHashTable.rs
 ✓ LinProbFlatHashTableStEph.rs
 ✓ LinkedListChainedHashTableStEph.rs
@@ -35,8 +25,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   7 clean (no holes)
-   2 holed (contains holes)
+   8 clean (no holes)
+   1 holed (contains holes)
    9 total
 
 Proof Functions:
@@ -44,21 +34,5 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 6 total
-   1 × unsafe {}
-   5 × external_body
-��═
-
-Modules:
-   7 clean (no holes)
-   2 holed (contains holes)
-   9 total
-
-Proof Functions:
-   0 clean
-   0 holed
-   0 total
-
-Holes Found: 6 total
-   1 × unsafe {}
-   5 × external_body
+Holes Found: 4 total
+   4 × external_body

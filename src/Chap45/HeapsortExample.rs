@@ -173,6 +173,13 @@ pub mod HeapsortExample {
         fn efficiency_demonstration() -> Vec<(String, Vec<i32>)>;
     }
 
+    pub trait HeapsortComparisonTrait<T: StT + Ord> {
+        /// Verify that all implementations produce the same sorted result
+        fn all_results_match(&self)  -> bool;
+        /// Check if all results are properly sorted
+        fn all_results_sorted(&self) -> bool;
+    }
+
     pub trait HeapsortAnalysisTrait {
         /// Analyze the theoretical complexity of each heapsort variant
         fn complexity_analysis()      -> Vec<(String, String, String)>;
@@ -191,18 +198,16 @@ pub mod HeapsortExample {
         fn generate_test_sequences(size: usize) -> Vec<(String, Vec<i32>)>;
     }
 
-    impl<T: StT + Ord> HeapsortComparison<T> {
-        /// Verify that all implementations produce the same sorted result
-        pub fn all_results_match(&self) -> bool {
-            let expected = &self.binary_heap_result; // Use binary heap as reference
+    impl<T: StT + Ord> HeapsortComparisonTrait<T> for HeapsortComparison<T> {
+        fn all_results_match(&self) -> bool {
+            let expected = &self.binary_heap_result;
             self.unsorted_list_result == *expected
                 && self.sorted_list_result == *expected
                 && self.balanced_tree_result == *expected
                 && self.leftist_heap_result == *expected
         }
 
-        /// Check if all results are properly sorted
-        pub fn all_results_sorted(&self) -> bool {
+        fn all_results_sorted(&self) -> bool {
             fn is_sorted<T: Ord>(vec: &[T]) -> bool { vec.windows(2).all(|w| w[0] <= w[1]) }
 
             is_sorted(&self.unsorted_list_result)
