@@ -3,17 +3,17 @@
 //! Ephemeral balanced binary tree utilities (Chapter 23). Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	13. derive impls outside verus!
+//  1. module
+//  2. imports
+//  3. broadcast use
+//  4. type definitions
+//  6. spec fns
+//  7. proof fns/broadcast groups
+//  8. traits
+//  9. impls
+//  10. iterators
+//  11. derive impls in verus!
+//  13. derive impls outside verus!
 
 //		1. module
 
@@ -41,9 +41,6 @@ pub mod BalBinTreeStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
-
-    //		3. broadcast use
-
     //		3. broadcast use
 
     broadcast use {
@@ -52,8 +49,6 @@ pub mod BalBinTreeStEph {
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
-
-    //		4. type definitions
 
     //		4. type definitions
 
@@ -85,10 +80,6 @@ pub mod BalBinTreeStEph {
         0 <= it@.0 <= it@.1.len()
     }
 
-
-    //		7. proof fns/broadcast groups
-
-    //		6. spec fns
 
     // spec_size, spec_height, spec_in_order, spec_pre_order, spec_post_order
     // are defined in impl BalBinTreeTrait for BalBinTree below.
@@ -183,9 +174,6 @@ pub mod BalBinTreeStEph {
         }
     }
 
-
-    //		8. traits
-
     //		8. traits
 
     pub trait BalBinTreeTrait<T>: Sized {
@@ -263,11 +251,10 @@ pub mod BalBinTreeStEph {
 
     //		9. impls
 
-    //		9. impls
-
     // Inherent impl: recursive spec fn bodies with `decreases self`.
     // Verus cannot unfold `open spec fn` through trait dispatch, so these
     // must live here; the trait impl delegates to them with one-liners.
+    // Exception: bare_impl allowed per trait-impl-pattern (recursive-spec-fn).
     impl<T> BalBinTree<T> {
         pub open spec fn spec_size(self) -> nat
             decreases self,
@@ -432,6 +419,8 @@ pub mod BalBinTreeStEph {
         }
     }
 
+    //  10. iterators
+
     impl<T: Clone + Eq> BalBinTree<T> {
         /// Returns an in-order iterator.
         /// - APAS: Work Θ(n), Span Θ(n) — dominated by in_order traversal.
@@ -475,25 +464,6 @@ pub mod BalBinTreeStEph {
             PostOrderIter { inner: self.post_order().into_iter() }
         }
     }
-
-    //		11. derive impls in verus!
-
-    #[cfg(verus_keep_ghost)]
-    impl<T: PartialEq> PartialEqSpecImpl for BalBinTree<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
-    }
-
-    #[cfg(verus_keep_ghost)]
-    impl<T: PartialEq> PartialEqSpecImpl for BalBinNode<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
-    }
-
-
-    //		10. iterators
-
-    //		10. iterators
 
     /// Iterator over in-order traversal of a BalBinTree.
     #[verifier::reject_recursive_types(T)]
@@ -771,8 +741,19 @@ pub mod BalBinTreeStEph {
         }
     }
 
+    //  11. derive impls in verus!
 
-    //		11. derive impls in verus!
+    #[cfg(verus_keep_ghost)]
+    impl<T: PartialEq> PartialEqSpecImpl for BalBinTree<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: PartialEq> PartialEqSpecImpl for BalBinNode<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
+    }
 
     impl<T: Eq> Eq for BalBinTree<T> {}
 
@@ -805,26 +786,42 @@ pub mod BalBinTreeStEph {
         }
     }
 
-    // 11. derive impls in verus!
+
+    fn clone_tree<T: Clone>(t: &BalBinTree<T>) -> (c: BalBinTree<T>)
+        ensures c == *t
+        decreases t,
+    {
+        let c = match t {
+            BalBinTree::Leaf => BalBinTree::Leaf,
+            BalBinTree::Node(node) => BalBinTree::Node(Box::new(BalBinNode {
+                left: clone_tree(&node.left),
+                value: node.value.clone(),
+                right: clone_tree(&node.right),
+            })),
+        };
+        proof { assume(c == *t); }
+        c
+    }
 
     impl<T: Clone> Clone for BalBinTree<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
             ensures cloned == *self
         {
-            match self {
-                BalBinTree::Leaf => BalBinTree::Leaf,
-                BalBinTree::Node(node) => BalBinTree::Node(node.clone()),
-            }
+            clone_tree(self)
         }
     }
 
     impl<T: Clone> Clone for BalBinNode<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
             ensures cloned == *self
         {
-            BalBinNode { left: self.left.clone(), value: self.value.clone(), right: self.right.clone() }
+            let cloned = BalBinNode {
+                left: clone_tree(&self.left),
+                value: self.value.clone(),
+                right: clone_tree(&self.right),
+            };
+            proof { assume(cloned == *self); }
+            cloned
         }
     }
 

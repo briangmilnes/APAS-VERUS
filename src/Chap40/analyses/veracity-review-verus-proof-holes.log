@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap40/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap40/
 
 ✓ BSTKeyValueStEph.rs
 ❌ BSTReducedStEph.rs
@@ -28,6 +28,6 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 2 bare impl(s) in files with trait definitions
+Errors: 2 (bare impl(s), struct/enum outside verus!)
 
 🎉 No proof holes found! All proofs are complete.

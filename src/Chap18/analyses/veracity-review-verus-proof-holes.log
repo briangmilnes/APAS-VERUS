@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap18/
 
 ❌ ArraySeq.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1481: external - #[verifier::external]

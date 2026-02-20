@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap11/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap11/
 
 ℹ FibonacciMtEph2Threads.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEph2Threads.rs:155: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom

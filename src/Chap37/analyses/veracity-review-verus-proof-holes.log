@@ -1,68 +1,127 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap37/
 
 ❌ AVLTreeSeq.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:211: external_body - #[verifier::external_body]
-       212 |     fn size_link_fn<T: StT>(n: &Link<T>) -> (result: N)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:221: external_body - #[verifier::external_body]
-       222 |     fn update_meta<T: StT>(n: &mut Box<AVLTreeNode<T>>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:230: external_body - #[verifier::external_body]
-       231 |     fn rotate_right_fn<T: StT>(mut y: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:247: external_body - #[verifier::external_body]
-       248 |     fn rotate_left_fn<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:264: external_body - #[verifier::external_body]
-       265 |     fn rebalance_fn<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:291: external_body - #[verifier::external_body]
-       292 |     pub(crate) fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:320: external_body - #[verifier::external_body]
-       321 |     fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (result: &'a T)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:336: external_body - #[verifier::external_body]
-       337 |     fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (result: Result<(), &'static str>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:354: external_body - #[verifier::external_body]
-       355 |     fn push_inorder<T: StT>(link: &Link<T>, out: &mut Vec<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:363: external_body - #[verifier::external_body]
-       364 |     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (result: bool) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:400: external_body - #[verifier::external_body]
-       401 |         fn nth(&self, index: N) -> (result: &T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:406: external_body - #[verifier::external_body]
-       407 |         fn set(&mut self, index: N, item: T) -> (result: Result<(), &'static str>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:411: external_body - #[verifier::external_body]
-       412 |         fn singleton(item: T) -> (result: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:426: external_body - #[verifier::external_body]
-       427 |         fn subseq_copy(&self, start: N, length: N) -> (result: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:445: external_body - #[verifier::external_body]
-       446 |         fn update(&mut self, index: N, item: T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:450: external_body - #[verifier::external_body]
-       451 |         fn from_vec(values: Vec<T>) -> (result: AVLTreeS<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:461: external_body - #[verifier::external_body]
-       462 |         fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:479: external_body - #[verifier::external_body]
-       480 |         fn iter<'a>(&'a self) -> (result: AVLTreeSeqIter<'a, T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:489: external_body - #[verifier::external_body]
-       490 |         fn push_back(&mut self, value: T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:496: external_body - #[verifier::external_body]
-       497 |         fn contains_value(&self, target: &T) -> (result: B) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:506: external_body - #[verifier::external_body]
-       507 |         fn insert_value(&mut self, value: T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:511: external_body - #[verifier::external_body]
-       512 |         fn delete_value(&mut self, target: &T) -> (result: bool) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:536: external_body - #[verifier::external_body]
-       537 |         fn is_tree_empty(&self) -> (result: bool) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:541: external_body - #[verifier::external_body]
-       542 |         fn values_in_order(&self) -> (result: Vec<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:552: external_body - #[verifier::external_body]
-       553 |         fn clone(&self) -> (result: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:579: assume() - proof { assume(r == (self@ == other@)); }
-       575 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:217: assume() - proof { assume(1 + b.left_size + b.right_size < usize::MAX); }
+       211 |     fn size_link_fn<T: StT>(n: &Link<T>) -> (result: N)
             ...
-       577 |         {
-       578 |             let r = compare_trees(&self.root, &other.root);
-       580 |             r
-       581 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:585: external_body - #[verifier::external_body]
-       586 |         fn clone(&self) -> (result: Self)
-   Holes: 27 total
-      1 × assume()
-      26 × external_body
+       215 |             None => 0,
+       216 |             Some(b) => {
+       218 |                 1 + b.left_size + b.right_size
+       219 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:223: external_body - #[verifier::external_body]
+       224 |     fn update_meta<T: StT>(n: &mut Box<AVLTreeNode<T>>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:232: external_body - #[verifier::external_body]
+       233 |     fn rotate_right_fn<T: StT>(mut y: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:249: external_body - #[verifier::external_body]
+       250 |     fn rotate_left_fn<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:266: external_body - #[verifier::external_body]
+       267 |     fn rebalance_fn<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:293: external_body - #[verifier::external_body]
+       294 |     pub(crate) fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:322: external_body - #[verifier::external_body]
+       323 |     fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (result: &'a T)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:338: external_body - #[verifier::external_body]
+       339 |     fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (result: Result<(), &'static str>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:356: external_body - #[verifier::external_body]
+       357 |     fn push_inorder<T: StT>(link: &Link<T>, out: &mut Vec<T>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:365: external_body - #[verifier::external_body]
+       366 |     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (result: bool) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:415: assume() - assume(t.spec_seq().len() == 1);
+       411 |         fn singleton(item: T) -> (result: Self) {
+            ...
+       413 |             t.root = insert_at_link(t.root.take(), 0, item, &mut t.next_key);
+       414 |             proof {
+       416 |                 assume(t.spec_well_formed());
+       417 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:416: assume() - assume(t.spec_well_formed());
+       411 |         fn singleton(item: T) -> (result: Self) {
+            ...
+       414 |             proof {
+       415 |                 assume(t.spec_seq().len() == 1);
+       417 |             }
+       418 |             t
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:430: assume() - proof { assume(self.spec_well_formed()); }
+       428 | 
+       429 |         fn subseq_copy(&self, start: N, length: N) -> (result: Self) {
+       431 |             let n = self.length();
+       432 |             let s = if start < n { start } else { n };
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:460: assume() - assume(self.spec_well_formed());
+       458 |         fn update(&mut self, index: N, item: T) {
+       459 |             proof {
+       461 |                 assume((index as int) < self.spec_seq().len());
+       462 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:461: assume() - assume((index as int) < self.spec_seq().len());
+       458 |         fn update(&mut self, index: N, item: T) {
+            ...
+       459 |             proof {
+       460 |                 assume(self.spec_well_formed());
+       462 |             }
+       463 |             let _ = self.set(index, item);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:480: assume() - assume(t.spec_well_formed());
+       466 |         fn from_vec(values: Vec<T>) -> (result: AVLTreeS<T>) {
+            ...
+       478 |             }
+       479 |             proof {
+       481 |             }
+       482 |             t
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:486: assume() - proof { assume(self.spec_well_formed()); }
+       484 | 
+       485 |         fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>) {
+       487 |             let vals = self.values_in_order();
+       488 |             ArraySeqStEphS::from_vec(vals)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:491: external_body - #[verifier::external_body]
+       492 |         fn iter<'a>(&'a self) -> (result: AVLTreeSeqIter<'a, T>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:502: assume() - proof { assume(self.spec_well_formed()); }
+       500 | 
+       501 |         fn push_back(&mut self, value: T) {
+       503 |             let len = self.length();
+       504 |             let node = insert_at_link(self.root.take(), len, value, &mut self.next_key);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:509: assume() - proof { assume(self.spec_well_formed()); }
+       507 | 
+       508 |         fn contains_value(&self, target: &T) -> (result: B) {
+       510 |             let n = self.length();
+       511 |             let mut i: usize = 0;
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:528: assume() - proof { assume(self.spec_well_formed()); }
+       526 | 
+       527 |         fn insert_value(&mut self, value: T) {
+       529 |             self.push_back(value);
+       530 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:533: assume() - proof { assume(self.spec_well_formed()); }
+       531 | 
+       532 |         fn delete_value(&mut self, target: &T) -> (result: bool) {
+       534 |             let len = self.length();
+       535 |             let mut found_index: Option<N> = None;
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:551: assume() - proof { assume(idx < len); }
+       532 |         fn delete_value(&mut self, target: &T) -> (result: bool) {
+            ...
+       549 |             }
+       550 |             if let Some(idx) = found_index {
+       552 |                 let mut out_vec: Vec<T> = Vec::new();
+       553 |                 let mut j: usize = 0;
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:583: assume() - proof { assume(self.spec_well_formed()); }
+       581 | 
+       582 |         fn is_tree_empty(&self) -> (result: bool) {
+       584 |             self.length() == 0
+       585 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:588: assume() - proof { assume(self.spec_well_formed()); }
+       586 | 
+       587 |         fn values_in_order(&self) -> (result: Vec<T>) {
+       589 |             let mut out: Vec<T> = Vec::new();
+       590 |             push_inorder(&self.root, &mut out);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:598: external_body - #[verifier::external_body]
+       599 |         fn clone(&self) -> (result: Self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:625: assume() - proof { assume(r == (self@ == other@)); }
+       621 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       623 |         {
+       624 |             let r = compare_trees(&self.root, &other.root);
+       626 |             r
+       627 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:631: external_body - #[verifier::external_body]
+       632 |         fn clone(&self) -> (result: Self)
+   Holes: 28 total
+      16 × assume()
+      12 × external_body
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ AVLTreeSeqMtPer.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:194: external_body - #[verifier::external_body]
@@ -83,181 +142,139 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
        326 |     fn build_balanced_from_slice<T: StTInMtT>(a: &[T]) -> (result: Link<T>)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:343: external_body - #[verifier::external_body]
        344 |     fn compare_trees<T: StTInMtT>(a: &Link<T>, b: &Link<T>) -> (result: bool) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:386: external_body - #[verifier::external_body]
-       387 |         fn nth(&self, index: N) -> (result: &T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:400: external_body - #[verifier::external_body]
-       401 |         fn set(&self, index: N, item: T) -> (result: Result<Self, &'static str>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:407: external_body - #[verifier::external_body]
-       408 |         fn subseq_copy(&self, start: N, length: N) -> (result: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:438: external_body - #[verifier::external_body]
-       439 |         fn from_vec(values: Vec<T>) -> (result: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:445: external_body - #[verifier::external_body]
-       446 |         fn values_in_order(&self) -> (result: Vec<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:469: assume() - proof { assume(r == (self@ == other@)); }
-       465 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:406: external_body - #[verifier::external_body]
+       407 |         fn subseq_copy(&self, start: N, length: N) -> (result: Self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:444: assume() - proof { assume(self.spec_well_formed()); }
+       442 | 
+       443 |         fn values_in_order(&self) -> (result: Vec<T>) {
+       445 |             let mut out: Vec<T> = Vec::new();
+       446 |             inorder_collect(&self.root, &mut out);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:466: assume() - proof { assume(r == (self@ == other@)); }
+       462 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-       467 |         {
-       468 |             let r = compare_trees(&self.root, &other.root);
-       470 |             r
-       471 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:475: external_body - #[verifier::external_body]
-       476 |         fn clone(&self) -> (result: Self)
-   Holes: 16 total
-      1 × assume()
-      15 × external_body
+       464 |         {
+       465 |             let r = compare_trees(&self.root, &other.root);
+       467 |             r
+       468 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:472: external_body - #[verifier::external_body]
+       473 |         fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:504: error: struct_outside_verus - struct AVLTreeSeqMtPerIter — should be inside verus!
+       504 |     pub struct AVLTreeSeqMtPerIter<T: StTInMtT> {
+       505 |         values: Vec<T>,
+       506 |         index: usize,
+   Holes: 13 total
+      2 × assume()
+      11 × external_body
+   Errors: 1 total (0 bare impl(s), 1 struct/enum outside verus!)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ AVLTreeSeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:206: external_body - #[verifier::external_body]
-       207 |     fn size_link_fn<T: StT>(n: &Link<T>) -> (result: N)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:216: external_body - #[verifier::external_body]
-       217 |     fn update_meta<T: StT>(n: &mut Box<AVLTreeNode<T>>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:225: external_body - #[verifier::external_body]
-       226 |     fn rotate_right_fn<T: StT>(mut y: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:242: external_body - #[verifier::external_body]
-       243 |     fn rotate_left_fn<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:259: external_body - #[verifier::external_body]
-       260 |     fn rebalance_fn<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:286: external_body - #[verifier::external_body]
-       287 |     pub(crate) fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:315: external_body - #[verifier::external_body]
-       316 |     fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (result: &'a T)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:331: external_body - #[verifier::external_body]
-       332 |     fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (result: Result<(), &'static str>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:349: external_body - #[verifier::external_body]
-       350 |     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (result: bool) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:386: external_body - #[verifier::external_body]
-       387 |         fn nth(&self, index: N) -> (result: &T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:392: external_body - #[verifier::external_body]
-       393 |         fn set(&mut self, index: N, item: T) -> (result: Result<(), &'static str>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:397: external_body - #[verifier::external_body]
-       398 |         fn singleton(item: T) -> (result: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:412: external_body - #[verifier::external_body]
-       413 |         fn subseq_copy(&self, start: N, length: N) -> (result: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:431: external_body - #[verifier::external_body]
-       432 |         fn update(&mut self, index: N, item: T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:436: external_body - #[verifier::external_body]
-       437 |         fn from_vec(values: Vec<T>) -> (result: AVLTreeSeqStEphS<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:447: external_body - #[verifier::external_body]
-       448 |         fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:465: external_body - #[verifier::external_body]
-       466 |         fn iter<'a>(&'a self) -> (result: AVLTreeSeqIterStEph<'a, T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:475: external_body - #[verifier::external_body]
-       476 |         fn push_back(&mut self, value: T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:482: external_body - #[verifier::external_body]
-       483 |         fn contains_value(&self, target: &T) -> (result: B) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:492: external_body - #[verifier::external_body]
-       493 |         fn insert_value(&mut self, value: T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:497: external_body - #[verifier::external_body]
-       498 |         fn delete_value(&mut self, target: &T) -> (result: bool) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:528: external_body - #[verifier::external_body]
-       529 |         fn clone(&self) -> (result: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:555: assume() - proof { assume(r == (self@ == other@)); }
-       551 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:212: assume() - proof { assume(1 + b.left_size + b.right_size < usize::MAX); }
+       206 |     fn size_link_fn<T: StT>(n: &Link<T>) -> (result: N)
             ...
-       553 |         {
-       554 |             let r = compare_trees(&self.root, &other.root);
-       556 |             r
-       557 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:561: external_body - #[verifier::external_body]
-       562 |         fn clone(&self) -> (result: Self)
-   Holes: 24 total
-      1 × assume()
-      23 × external_body
-   Proof functions: 1 total (1 clean, 0 holed)
-❌ AVLTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:204: external_body - #[verifier::external_body]
-       205 |     fn mk<T: StT>(value: T, left: Link<T>, right: Link<T>) -> (result: Arc<Node<T>>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:223: external_body - #[verifier::external_body]
-       224 |     fn rotate_right<T: StT>(y: Arc<Node<T>>) -> (result: Arc<Node<T>>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:236: external_body - #[verifier::external_body]
-       237 |     fn rotate_left<T: StT>(x: Arc<Node<T>>) -> (result: Arc<Node<T>>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:249: external_body - #[verifier::external_body]
-       250 |     fn rebalance<T: StT>(n: Arc<Node<T>>) -> (result: Arc<Node<T>>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:277: external_body - #[verifier::external_body]
-       278 |     fn nth_ref<'a, T: StT>(cur: &'a Link<T>, index: N) -> (result: &'a T)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:298: external_body - #[verifier::external_body]
-       299 |     fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (result: Result<Link<T>, &'static str>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:326: external_body - #[verifier::external_body]
-       327 |     fn inorder_collect<T: StT>(cur: &Link<T>, out: &mut Vec<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:335: external_body - #[verifier::external_body]
-       336 |     fn build_balanced_from_slice<T: StT>(a: &[T]) -> (result: Link<T>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:351: external_body - #[verifier::external_body]
+       210 |             None => 0,
+       211 |             Some(b) => {
+       213 |                 1 + b.left_size + b.right_size
+       214 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:218: external_body - #[verifier::external_body]
+       219 |     fn update_meta<T: StT>(n: &mut Box<AVLTreeNode<T>>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:227: external_body - #[verifier::external_body]
+       228 |     fn rotate_right_fn<T: StT>(mut y: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:244: external_body - #[verifier::external_body]
+       245 |     fn rotate_left_fn<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:261: external_body - #[verifier::external_body]
+       262 |     fn rebalance_fn<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:288: external_body - #[verifier::external_body]
+       289 |     pub(crate) fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:317: external_body - #[verifier::external_body]
+       318 |     fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (result: &'a T)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:333: external_body - #[verifier::external_body]
+       334 |     fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (result: Result<(), &'static str>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:351: external_body - #[verifier::external_body]
        352 |     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (result: bool) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:394: external_body - #[verifier::external_body]
-       395 |         fn nth(&self, index: N) -> (result: &T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:408: external_body - #[verifier::external_body]
-       409 |         fn set(&self, index: N, item: T) -> (result: Result<Self, &'static str>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:415: external_body - #[verifier::external_body]
-       416 |         fn subseq_copy(&self, start: N, length: N) -> (result: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:429: external_body - #[verifier::external_body]
-       430 |         fn from_vec(values: Vec<T>) -> (result: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:436: external_body - #[verifier::external_body]
-       437 |         fn values_in_order(&self) -> (result: Vec<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:444: external_body - #[verifier::external_body]
-       445 |         fn to_arrayseq(&self) -> (result: ArraySeqStPerS<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:450: external_body - #[verifier::external_body]
-       451 |         fn iter<'a>(&'a self) -> (result: AVLTreeSeqStPerIter<'a, T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:474: assume() - proof { assume(r == (self@ == other@)); }
-       470 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:401: assume() - assume(t.spec_seq().len() == 1);
+       397 |         fn singleton(item: T) -> (result: Self) {
             ...
-       472 |         {
-       473 |             let r = compare_trees(&self.root, &other.root);
-       475 |             r
-       476 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:480: external_body - #[verifier::external_body]
-       481 |         fn clone(&self) -> (result: Self)
-   Holes: 18 total
-      1 × assume()
-      17 × external_body
+       399 |             t.root = insert_at_link(t.root.take(), 0, item, &mut t.next_key);
+       400 |             proof {
+       402 |                 assume(t.spec_well_formed());
+       403 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:402: assume() - assume(t.spec_well_formed());
+       397 |         fn singleton(item: T) -> (result: Self) {
+            ...
+       400 |             proof {
+       401 |                 assume(t.spec_seq().len() == 1);
+       403 |             }
+       404 |             t
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:416: assume() - proof { assume(self.spec_well_formed()); }
+       414 | 
+       415 |         fn subseq_copy(&self, start: N, length: N) -> (result: Self) {
+       417 |             let n = self.length();
+       418 |             let s = if start < n { start } else { n };
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:446: assume() - assume(self.spec_well_formed());
+       444 |         fn update(&mut self, index: N, item: T) {
+       445 |             proof {
+       447 |                 assume((index as int) < self.spec_seq().len());
+       448 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:447: assume() - assume((index as int) < self.spec_seq().len());
+       444 |         fn update(&mut self, index: N, item: T) {
+            ...
+       445 |             proof {
+       446 |                 assume(self.spec_well_formed());
+       448 |             }
+       449 |             let _ = self.set(index, item);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:465: assume() - proof { assume(t.spec_well_formed()); }
+       452 |         fn from_vec(values: Vec<T>) -> (result: AVLTreeSeqStEphS<T>) {
+            ...
+       463 |                 i += 1;
+       464 |             }
+       466 |             t
+       467 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:470: assume() - proof { assume(self.spec_well_formed()); }
+       468 | 
+       469 |         fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>) {
+       471 |             let n = self.length();
+       472 |             let mut vals: Vec<T> = Vec::new();
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:487: external_body - #[verifier::external_body]
+       488 |         fn iter<'a>(&'a self) -> (result: AVLTreeSeqIterStEph<'a, T>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:498: assume() - proof { assume(self.spec_well_formed()); }
+       496 | 
+       497 |         fn push_back(&mut self, value: T) {
+       499 |             let len = self.length();
+       500 |             let node = insert_at_link(self.root.take(), len, value, &mut self.next_key);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:505: assume() - proof { assume(self.spec_well_formed()); }
+       503 | 
+       504 |         fn contains_value(&self, target: &T) -> (result: B) {
+       506 |             let n = self.length();
+       507 |             let mut i: usize = 0;
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:524: assume() - proof { assume(self.spec_well_formed()); }
+       522 | 
+       523 |         fn insert_value(&mut self, value: T) {
+       525 |             self.push_back(value);
+       526 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:529: assume() - proof { assume(self.spec_well_formed()); }
+       527 | 
+       528 |         fn delete_value(&mut self, target: &T) -> (result: bool) {
+       530 |             let len = self.length();
+       531 |             let mut found_index: Option<N> = None;
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:547: assume() - proof { assume(idx < len); }
+       528 |         fn delete_value(&mut self, target: &T) -> (result: bool) {
+            ...
+       545 |             }
+       546 |             if let Some(idx) = found_index {
+       548 |                 let mut out_vec: Vec<T> = Vec::new();
+       549 |                 let mut j: usize = 0;
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:584: external_body - #[verifier::external_body]
+       585 |         fn clone(&self) -> (result: Self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:611: assume() - proof { assume(r == (self@ == other@)); }
+       607 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       609 |         {
+       610 |             let r = compare_trees(&self.root, &other.root);
+       612 |             r
+       613 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:617: external_body - #[verifier::external_body]
+       618 |         fn clone(&self) -> (result: Self)
+   Holes: 25 total
+      14 × assume()
+      11 × external_body
    Proof functions: 1 total (1 clean, 0 holed)
-✓ BSTAVLMtEph.rs
-   1 clean proof function
-✓ BSTAVLStEph.rs
-   2 clean proof functions
-✓ BSTBBAlphaMtEph.rs
-✓ BSTBBAlphaStEph.rs
-✓ BSTPlainMtEph.rs
-✓ BSTPlainStEph.rs
-❌ BSTRBMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:319: external_type_specification - #[verifier::external_type_specification]
-       320 |         struct ExNode<T: StTInMtT + Ord>(Node<T>);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:328: external_body - #[verifier::external_body]
-       329 |         fn new_rb_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, RBLinkWf>) {
-   Holes: 2 total
-      1 × external_body
-      1 × external_type_specification
-✓ BSTRBStEph.rs
-   1 clean proof function
-✓ BSTSetAVLMtEph.rs
-✓ BSTSetBBAlphaMtEph.rs
-✓ BSTSetPlainMtEph.rs
-✓ BSTSetRBMtEph.rs
-✓ BSTSetSplayMtEph.rs
-❌ BSTSplayMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:341: external_type_specification - #[verifier::external_type_specification]
-       342 |         struct ExNode<T: StTInMtT + Ord>(Node<T>);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:350: external_body - #[verifier::external_body]
-       351 |         fn new_splay_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, SplayLinkWf>) {
-   Holes: 2 total
-      1 × external_body
-      1 × external_type_specification
-✓ BSTSplayStEph.rs
-
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
-
-Modules:
-   13 clean (no holes)
-   6 holed (contains holes)
-   19 total
-
-Proof Functions:
-   8 clean
-   0 holed
-   8 total
-
-Holes Found: 89 total
-   4 × assume()
-   83 × external_body
-   2 × external_type_specification

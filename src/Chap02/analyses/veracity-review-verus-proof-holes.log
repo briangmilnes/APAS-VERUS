@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap02/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap02/
 
 ✓ FibonacciHFScheduler.rs
    5 clean proof functions
@@ -20,10 +20,19 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
        153 |     pub fn spawn<T, F>(f: F) -> (task: TaskState<T>)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:174: external_body - #[verifier::external_body]
        175 |     pub fn wait<T: Send + 'static>(task: TaskState<T>) -> (task_result: T)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:15: error: struct_outside_verus - struct PoolState — should be inside verus!
+        15 |     /// - We track the number of available tasks and have a condition variable to signal when task finishes.
+        16 |     /// - This is outside of the verus! macro, and thus outside of proof, as we need a Condvar to signal
+        17 |     /// that at task has finished, and it Rust it must be protected by a Mutex.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:23: error: enum_outside_verus - enum TaskState — should be inside verus!
+        23 |     /// - State of a spawned task: either running in a thread or already completed (help-first).
+        24 |     pub enum TaskState<T> {
+        25 |         Spawned   { handle: JoinHandlePlus<T> },
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:140: info: assume(false); diverge() - assume(false); — valid non-termination idiom
    Holes: 7 total
       6 × external_body
       1 × external_type_specification
+   Errors: 2 total (0 bare impl(s), 2 struct/enum outside verus!)
    Info: 1 assume(false); diverge() idiom(s)
 
 ═══════════════════════════════════════════════════════════════
@@ -43,5 +52,7 @@ Proof Functions:
 Holes Found: 7 total
    6 × external_body
    1 × external_type_specification
+
+Errors: 2 (bare impl(s), struct/enum outside verus!)
 
 Info: 1 assume(false); diverge() idiom(s) (valid non-termination)

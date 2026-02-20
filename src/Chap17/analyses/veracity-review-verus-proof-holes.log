@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap17/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap17/
 
 ❌ MathSeq.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:716: assume() - proof { assume(cloned@ == self@); }
@@ -15,12 +15,8 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
        727 |             let equal = self.data == other.data;
        729 |             equal
        730 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:737: error: bare_impl - impl<T: StT + Hash> MathSeqS<T> { — `impl MathSeqS` without trait; file defines [MathSeqSTrait]
-       738 |         /// Mutable borrow iterator. Must stay outside verus! (returns &mut).
-       739 |         /// - APAS: no cost spec.
    Holes: 2 total
       2 × assume()
-   Errors: 1 bare impl(s) in file with trait definition
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -38,5 +34,3 @@ Proof Functions:
 
 Holes Found: 2 total
    2 × assume()
-
-Errors: 1 bare impl(s) in files with trait definitions

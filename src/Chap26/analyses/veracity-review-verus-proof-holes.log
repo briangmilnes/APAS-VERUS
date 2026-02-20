@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap26/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap26/
 
 ✓ DivConReduceMtPer.rs
    3 clean proof functions
@@ -84,4 +84,4 @@ Holes Found: 8 total
    4 × assume()
    4 × external_body
 
-Errors: 2 bare impl(s) in files with trait definitions
+Errors: 2 (bare impl(s), struct/enum outside verus!)
