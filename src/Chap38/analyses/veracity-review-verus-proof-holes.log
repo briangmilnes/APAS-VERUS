@@ -1,4 +1,10 @@
-✓ BSTParaMtEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap38
+
+❌ BSTParaMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:41: external_body - #[verifier::external_body]
+        42 |         fn new_bst_para_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {
+   Holes: 1 total
+      1 × external_body
 ✓ BSTParaStEph.rs
 
 ═══════════════════════════════════════════════════════════════
@@ -6,8 +12,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   2 clean (no holes)
-   0 holed (contains holes)
+   1 clean (no holes)
+   1 holed (contains holes)
    2 total
 
 Proof Functions:
@@ -15,18 +21,5 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
-n (no holes)
-   0 holed (contains holes)
-   2 total
-
-Proof Functions:
-   0 clean
-   0 holed
-   0 total
-
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
+Holes Found: 1 total
+   1 × external_body

@@ -1,18 +1,18 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap12/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap12/
 
 ❌ Exercise12_1.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:19: external_body - #[verifier::external_body]
         20 |     pub struct SpinLock {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:57: external_body - #[verifier::external_body]
-        58 |         fn new() -> (lock: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:65: external_body - #[verifier::external_body]
-        66 |         fn lock(&self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:73: external_body - #[verifier::external_body]
-        74 |         fn unlock(&self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:78: external_body - #[verifier::external_body]
-        79 |         fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:90: external_body - #[verifier::external_body]
-        91 |     pub fn parallel_increment(iterations: usize) -> (incremented: usize)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:59: external_body - #[verifier::external_body]
+        60 |         fn new() -> (lock: Self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:67: external_body - #[verifier::external_body]
+        68 |         fn lock(&self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:75: external_body - #[verifier::external_body]
+        76 |         fn unlock(&self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:80: external_body - #[verifier::external_body]
+        81 |         fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:92: external_body - #[verifier::external_body]
+        93 |     pub fn parallel_increment(iterations: usize) -> (incremented: usize)
    Holes: 6 total
       6 × external_body
 ✓ Exercise12_2.rs

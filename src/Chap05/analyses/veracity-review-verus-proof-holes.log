@@ -1,37 +1,37 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap05/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap05
 
 ✓ KleeneStPer.rs
    9 clean proof functions
 ❌ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:518: assume() - assume(r == (self@ == other@));
-       508 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:576: assume() - assume(r == (self@ == other@));
+       566 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       516 |                 }
-       517 |                 // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
-       519 |             }
-       520 |             r
+       574 |                 }
+       575 |                 // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
+       577 |             }
+       578 |             r
    Holes: 1 total
       1 × assume()
 ✓ RelationStEph.rs
 ❌ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:955: assume() - proof { assume(r == (self@ == other@)); }
-       951 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:969: assume() - proof { assume(equal == (self@ == other@)); }
+       965 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       953 |         {
-       954 |             let r = self.elements == other.elements;
-       956 |             r
-       957 |         }
+       967 |         {
+       968 |             let equal = self.elements == other.elements;
+       970 |             equal
+       971 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ SetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:832: assume() - proof { assume(equal == (self@ == other@)); }
-       827 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:878: assume() - proof { assume(equal == (self@ == other@)); }
+       873 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       830 |             let equal = self.elements == other.elements;
-       831 |             // HashSetWithView* eq is external_body so we have to trust it here.
-       833 |             equal
-       834 |         }
+       876 |             let equal = self.elements == other.elements;
+       877 |             // HashSetWithView* eq is external_body so we have to trust it here.
+       879 |             equal
+       880 |         }
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)

@@ -1,23 +1,23 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap17/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap17
 
 ❌ MathSeq.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:670: assume() - proof { assume(cloned@ == self@); }
-       666 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:716: assume() - proof { assume(cloned@ == self@); }
+       712 |         fn clone(&self) -> (cloned: Self)
             ...
-       668 |         {
-       669 |             let cloned = MathSeqS { data: self.data.clone() };
-       671 |             cloned
-       672 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:688: assume() - proof { assume(r == (self@ == other@)); }
-       684 |         fn eq(&self, other: &Self) -> (r: bool)
+       714 |         {
+       715 |             let cloned = MathSeqS { data: self.data.clone() };
+       717 |             cloned
+       718 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:728: assume() - proof { assume(equal == (self@ == other@)); }
+       724 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       686 |         {
-       687 |             let r = self.data == other.data;
-       689 |             r
-       690 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:697: error: bare_impl - impl<T: StT + Hash> MathSeqS<T> { — `impl MathSeqS` without trait; file defines [MathSeqSTrait]
-       698 |         /// Mutable borrow iterator. Must stay outside verus! (returns &mut).
-       699 |         /// - APAS: no cost spec.
+       726 |         {
+       727 |             let equal = self.data == other.data;
+       729 |             equal
+       730 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:737: error: bare_impl - impl<T: StT + Hash> MathSeqS<T> { — `impl MathSeqS` without trait; file defines [MathSeqSTrait]
+       738 |         /// Mutable borrow iterator. Must stay outside verus! (returns &mut).
+       739 |         /// - APAS: no cost spec.
    Holes: 2 total
       2 × assume()
    Errors: 1 bare impl(s) in file with trait definition

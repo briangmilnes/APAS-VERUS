@@ -50,7 +50,7 @@ fn test_set() {
 #[test]
 fn test_update() {
     let mut tree = AVLTreeSeqStEphS::from_vec(vec![1, 2, 3]);
-    tree.update((1, 99));
+    tree.update(1, 99);
     assert_eq!(*tree.nth(1), 99);
 }
 

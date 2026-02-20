@@ -1,7 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for AVLTreeSeq base trait functionality.
 
-use apas_verus::Chap18::ArraySeq::ArraySeq::*;
+use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::*;
 use apas_verus::Chap37::AVLTreeSeq::AVLTreeSeq::*;
 use apas_verus::Types::Types::*;
 
@@ -223,7 +223,7 @@ fn test_new_root() {
 #[test]
 fn test_update() {
     let mut tree = AVLTreeS::<i32>::from_vec(vec![1, 2, 3]);
-    tree.update((1, 99));
+    tree.update(1, 99);
     assert_eq!(*tree.nth(1), 99);
 }
 
@@ -619,7 +619,9 @@ fn test_avltreeseq_update_chain() {
     let mut tree = AVLTreeS::from_vec(vec![1, 2, 3, 4, 5]);
 
     // Chain multiple updates
-    tree.update((0, 10)).update((2, 30)).update((4, 50));
+    tree.update(0, 10);
+    tree.update(2, 30);
+    tree.update(4, 50);
 
     assert_eq!(*tree.nth(0), 10);
     assert_eq!(*tree.nth(2), 30);

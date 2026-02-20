@@ -28,6 +28,7 @@ pub mod AVLTreeSetStPer {
 
     // 4. type definitions
 
+    #[verifier::reject_recursive_types(T)]
     pub struct AVLTreeSetStPer<T: StT + Ord> {
         elements: AVLTreeSeqStPerS<T>,
     }

@@ -2,23 +2,19 @@ Logging to: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn _ ensures .*to_set.*insert
+Pattern: fn cloned
 Searching: /home/milnes/projects/verus/source/vstd
 Files: 95, Functions: 2289, Matches: 2
 
-[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:1147: [0m
-/// Appending an element to a sequence and converting to set, is equal
-/// to converting to set and inserting it.
-[38;5;22m    pub broadcast proof fn lemma_to_set_insert_commutes(sq: Seq<A>, elt: A)[0m
-[38;5;22m        requires[0m
-[38;5;22m        ensures[0m
-[38;5;22m            #[trigger] (sq + seq![elt]).to_set() =~= sq.to_set().insert(elt),[0m
+[31m/home/milnes/projects/verus/source/vstd/pervasive.rs:416: [0m
+///
+/// It is usually recommended to use [`cloned`] instead,
+/// which takes the reflexive closure.
+[38;5;22mpub open spec fn strictly_cloned<T: Clone>(a: T, b: T) -> bool[0m
 
-[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:1922: [0m
-///     assert(s.push(3).to_set() =~= s.to_set().insert(3));
-/// }
-/// ```
-[38;5;22m    pub broadcast proof fn lemma_push_to_set_commute(self, elem: A)[0m
-[38;5;22m        ensures[0m
-[38;5;22m            #[trigger] self.push(elem).to_set() =~= self.to_set().insert(elem),[0m
+[31m/home/milnes/projects/verus/source/vstd/pervasive.rs:426: [0m
+/// By always considering a value to be a clone of itself, regardless of the definition
+/// of `T::clone`, this definition is useful in places where 'clone' calls might be
+/// optimized to copies. This is particularly common in the Rust stdlib.
+[38;5;22mpub open spec fn cloned<T: Clone>(a: T, b: T) -> bool[0m
 
