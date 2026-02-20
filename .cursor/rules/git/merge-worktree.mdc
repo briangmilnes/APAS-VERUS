@@ -12,87 +12,113 @@ When merging changes between the main branch and an agent worktree branch.
 | agent1 | `~/projects/APAS-VERUS-agent1` | `agent1/` |
 | agent2 | `~/projects/APAS-VERUS-agent2` | `agent2/` |
 
-## Main — merging an agent branch (one at a time)
+## Phase 1: Merge agent1/ready into main
 
-Merge agent branches sequentially, never simultaneously. Complete the full verify cycle
-for one agent before starting the next.
+All steps run in `~/projects/APAS-VERUS` (the main worktree).
 
 ```bash
-# 1. Merge the agent branch into main (replace BRANCH with e.g. agent1/verusify-chap37)
-git merge BRANCH
+# 1. Merge
+cd ~/projects/APAS-VERUS && git merge agent1/ready
 
 # 2. If conflicts: fix them, then
-git add -A && GIT_EDITOR=true git merge --continue
+cd ~/projects/APAS-VERUS && git add -A && GIT_EDITOR=true git merge --continue
 
-# 3. Verify: compilation
-cargo check --lib
+# 3. Verify: RTTs
+cd ~/projects/APAS-VERUS && cargo nextest run --no-fail-fast
 
-# 4. Verify: RTTs
-cargo nextest run --no-fail-fast
+# 4. Verify: validate (full)
+cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors
 
-# 5. Verify: validate (full)
-~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors
+# 5. Verify: validate (dev_only)
+cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg 'feature="dev_only"'
 
-# 6. Verify: validate (dev_only)
-~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg 'feature="dev_only"'
-
-# 7. Verify: compile_ptt (build .rlib + .vir for proof-time tests)
-~/projects/verus/source/target-verus/release/verus \
+# 6. Verify: compile_ptt (build .rlib + .vir for proof-time tests)
+cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus \
   --compile --crate-type=lib --crate-name apas_verus src/lib.rs \
   -o target/verus/libapas_verus.rlib \
   --export /home/milnes/projects/APAS-VERUS/target/verus/apas_verus.vir
 
-# 8. Verify: PTTs
-cd rust_verify_test && cargo nextest run --no-fail-fast && cd ..
+# 7. Verify: PTTs
+cd ~/projects/APAS-VERUS/rust_verify_test && cargo nextest run --no-fail-fast
 
-# 9. Push
-git push
+# 8. Push main
+cd ~/projects/APAS-VERUS && git push
 ```
 
-## Agent — catching up after main merges
+## Phase 2: Rebase both agents onto updated main
 
-Each agent rebases onto the updated main after it has been pushed.
+The main merge is verified and pushed. Rebase both agents so they sit on top of
+the new main. No verification needed — main was just verified with their content.
 
 ```bash
-# 1. Fetch the merged main
-git fetch origin
+# 9. Rebase agent1
+cd ~/projects/APAS-VERUS-agent1 && git fetch origin && git rebase origin/main
 
-# 2. Rebase the agent branch onto main
-git rebase origin/main
+# 10. Force-push agent1
+cd ~/projects/APAS-VERUS-agent1 && git push origin agent1/ready --force
 
-# 3. If conflicts: fix them, then
-git add -A && GIT_EDITOR=true git rebase --continue
+# 11. Rebase agent2
+cd ~/projects/APAS-VERUS-agent2 && git fetch origin && git rebase origin/main
 
-# 4. Verify: compilation
-cargo check --lib
+# 12. Force-push agent2
+cd ~/projects/APAS-VERUS-agent2 && git push origin agent2/ready --force
+```
 
-# 5. Verify: RTTs
-cargo nextest run --no-fail-fast
+## Phase 3: Merge agent2/ready into main
 
-# 6. Verify: validate (full)
-~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors
+All steps run in `~/projects/APAS-VERUS` (the main worktree).
 
-# 7. Verify: validate (dev_only)
-~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg 'feature="dev_only"'
+```bash
+# 13. Merge
+cd ~/projects/APAS-VERUS && git merge agent2/ready
 
-# 8. Verify: compile_ptt
-~/projects/verus/source/target-verus/release/verus \
+# 14. If conflicts: fix them, then
+cd ~/projects/APAS-VERUS && git add -A && GIT_EDITOR=true git merge --continue
+
+# 15. Verify: RTTs
+cd ~/projects/APAS-VERUS && cargo nextest run --no-fail-fast
+
+# 16. Verify: validate (full)
+cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors
+
+# 17. Verify: validate (dev_only)
+cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg 'feature="dev_only"'
+
+# 18. Verify: compile_ptt
+cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus \
   --compile --crate-type=lib --crate-name apas_verus src/lib.rs \
   -o target/verus/libapas_verus.rlib \
   --export /home/milnes/projects/APAS-VERUS/target/verus/apas_verus.vir
 
-# 9. Verify: PTTs
-cd rust_verify_test && cargo nextest run --no-fail-fast && cd ..
+# 19. Verify: PTTs
+cd ~/projects/APAS-VERUS/rust_verify_test && cargo nextest run --no-fail-fast
 
-# 10. Force-push rebased branch
-git push origin BRANCH --force
+# 20. Push main
+cd ~/projects/APAS-VERUS && git push
+```
+
+## Phase 4: Rebase both agents onto final main
+
+```bash
+# 21. Rebase agent1
+cd ~/projects/APAS-VERUS-agent1 && git fetch origin && git rebase origin/main
+
+# 22. Force-push agent1
+cd ~/projects/APAS-VERUS-agent1 && git push origin agent1/ready --force
+
+# 23. Rebase agent2
+cd ~/projects/APAS-VERUS-agent2 && git fetch origin && git rebase origin/main
+
+# 24. Force-push agent2
+cd ~/projects/APAS-VERUS-agent2 && git push origin agent2/ready --force
 ```
 
 ## Notes
 
-- Merge one agent at a time. Never merge agent1 and agent2 into main simultaneously.
-- After main merges agent1, push main, then BOTH agent1 and agent2 should rebase.
+- Merge one agent at a time. Complete the full verify cycle before starting the next.
+- All verification (RTTs, Verus, PTTs) happens on main, not in agent worktrees.
+- Agent rebases after a merge need no verification — main was just verified with that content.
 - Each agent works only in its own worktree. Never cd into another agent's directory.
 - Use `GIT_EDITOR=true` for merge/rebase --continue to avoid the "dumb terminal" error.
-- Always run full verification after merge/rebase on ALL sides — even if the merge was clean.
 - Fix conflicts before verifying.
+- If a rebase has conflicts, fix them, then `git add -A && GIT_EDITOR=true git rebase --continue`.
