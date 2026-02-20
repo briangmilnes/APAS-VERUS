@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap23
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap23/
 
 ❌ BalBinTreeStEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:788: assume() - proof { assume(equal == (*self == *other)); }

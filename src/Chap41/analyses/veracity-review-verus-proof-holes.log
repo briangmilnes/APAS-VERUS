@@ -1,315 +1,317 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/
+
 ❌ AVLTreeSetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:52: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:52: external_body - #[verifier::external_body]
         53 |     fn new_set_mt_lock<T: StTInMtT + Ord + 'static>(val: AVLTreeSetStEph<T>) -> (lock: RwLock<AVLTreeSetStEph<T>, SetMtWf>) {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:64: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:64: external_body - #[verifier::external_body]
         65 |         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:130: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:130: external_body - #[verifier::external_body]
        131 |         fn size(&self) -> (result: N)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:140: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:140: external_body - #[verifier::external_body]
        141 |         fn to_seq(&self) -> (result: AVLTreeSeqStEphS<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:150: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:150: external_body - #[verifier::external_body]
        151 |         fn empty() -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:159: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:159: external_body - #[verifier::external_body]
        160 |         fn singleton(x: T) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:168: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:168: external_body - #[verifier::external_body]
        169 |         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:179: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:179: external_body - #[verifier::external_body]
        180 |         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:227: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:227: external_body - #[verifier::external_body]
        228 |         fn intersection(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:291: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:291: external_body - #[verifier::external_body]
        292 |         fn difference(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:302: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:302: external_body - #[verifier::external_body]
        303 |         fn union(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:337: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:337: external_body - #[verifier::external_body]
        338 |         fn find(&self, x: &T) -> (result: B)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:347: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:347: external_body - #[verifier::external_body]
        348 |         fn delete(&mut self, x: &T)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:356: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:356: external_body - #[verifier::external_body]
        357 |         fn insert(&mut self, x: T)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:369: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:369: external_body - #[verifier::external_body]
        370 |         fn clone(&self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:63: error: bare_impl - impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEph<T> { — `impl AVLTreeSetMtEph` without trait; file defines [AVLTreeSetMtEphTrait]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:63: error: bare_impl - impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEph<T> { — `impl AVLTreeSetMtEph` without trait; file defines [AVLTreeSetMtEphTrait]
         64 |         #[verifier::external_body]
         65 |         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
    Holes: 15 total
       15 × external_body
    Errors: 1 bare impl(s) in file with trait definition
 ❌ AVLTreeSetMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:53: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:53: external_body - #[verifier::external_body]
         54 |         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:119: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:119: external_body - #[verifier::external_body]
        120 |         fn size(&self) -> (result: N)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:124: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:124: external_body - #[verifier::external_body]
        125 |         fn to_seq(&self) -> (result: AVLTreeSeqMtPerS<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:129: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:129: external_body - #[verifier::external_body]
        130 |         fn empty() -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:138: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:138: external_body - #[verifier::external_body]
        139 |         fn singleton(x: T) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:147: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:147: external_body - #[verifier::external_body]
        148 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:197: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:197: external_body - #[verifier::external_body]
        198 |         fn filter<F: PredMt<T> + Clone>(&self, f: F) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:257: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:257: external_body - #[verifier::external_body]
        258 |         fn intersection(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:315: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:315: external_body - #[verifier::external_body]
        316 |         fn difference(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:325: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:325: external_body - #[verifier::external_body]
        326 |         fn union(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:378: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:378: external_body - #[verifier::external_body]
        379 |         fn find(&self, x: &T) -> (result: B)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:399: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:399: external_body - #[verifier::external_body]
        400 |         fn delete(&self, x: &T) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:408: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:408: external_body - #[verifier::external_body]
        409 |         fn insert(&self, x: T) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:426: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:426: external_body - #[verifier::external_body]
        427 |         fn clone(&self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:52: error: bare_impl - impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPer<T> { — `impl AVLTreeSetMtPer` without trait; file defines [AVLTreeSetMtPerTrait]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:52: error: bare_impl - impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPer<T> { — `impl AVLTreeSetMtPer` without trait; file defines [AVLTreeSetMtPerTrait]
         53 |         #[verifier::external_body]
         54 |         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
    Holes: 14 total
       14 × external_body
    Errors: 1 bare impl(s) in file with trait definition
 ❌ AVLTreeSetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:43: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:43: external_body - #[verifier::external_body]
         44 |         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:109: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:109: external_body - #[verifier::external_body]
        110 |         fn size(&self) -> (result: N)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:114: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:114: external_body - #[verifier::external_body]
        115 |         fn to_seq(&self) -> (result: AVLTreeSeqStEphS<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:126: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:126: external_body - #[verifier::external_body]
        127 |         fn empty() -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:135: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:135: external_body - #[verifier::external_body]
        136 |         fn singleton(x: T) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:144: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:144: external_body - #[verifier::external_body]
        145 |         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:166: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:166: external_body - #[verifier::external_body]
        167 |         fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:180: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:180: external_body - #[verifier::external_body]
        181 |         fn intersection(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:194: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:194: external_body - #[verifier::external_body]
        195 |         fn difference(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:208: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:208: external_body - #[verifier::external_body]
        209 |         fn union(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:224: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:224: external_body - #[verifier::external_body]
        225 |         fn find(&self, x: &T) -> (result: B)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:246: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:246: external_body - #[verifier::external_body]
        247 |         fn delete(&mut self, x: &T)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:253: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:253: external_body - #[verifier::external_body]
        254 |         fn insert(&mut self, x: T)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:286: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:286: external_body - #[verifier::external_body]
        287 |         fn clone(&self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:42: error: bare_impl - impl<T: StT + Ord> AVLTreeSetStEph<T> { — `impl AVLTreeSetStEph` without trait; file defines [AVLTreeSetStEphTrait]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:42: error: bare_impl - impl<T: StT + Ord> AVLTreeSetStEph<T> { — `impl AVLTreeSetStEph` without trait; file defines [AVLTreeSetStEphTrait]
         43 |         #[verifier::external_body]
         44 |         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
    Holes: 14 total
       14 × external_body
    Errors: 1 bare impl(s) in file with trait definition
 ❌ AVLTreeSetStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:41: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:41: external_body - #[verifier::external_body]
         42 |         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:107: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:107: external_body - #[verifier::external_body]
        108 |         fn size(&self) -> (result: N)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:112: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:112: external_body - #[verifier::external_body]
        113 |         fn to_seq(&self) -> (result: AVLTreeSeqStPerS<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:124: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:124: external_body - #[verifier::external_body]
        125 |         fn empty() -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:133: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:133: external_body - #[verifier::external_body]
        134 |         fn singleton(x: T) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:142: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:142: external_body - #[verifier::external_body]
        143 |         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:164: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:164: external_body - #[verifier::external_body]
        165 |         fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:178: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:178: external_body - #[verifier::external_body]
        179 |         fn intersection(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:192: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:192: external_body - #[verifier::external_body]
        193 |         fn difference(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:206: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:206: external_body - #[verifier::external_body]
        207 |         fn union(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:222: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:222: external_body - #[verifier::external_body]
        223 |         fn find(&self, x: &T) -> (result: B)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:244: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:244: external_body - #[verifier::external_body]
        245 |         fn delete(&self, x: &T) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:284: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:284: external_body - #[verifier::external_body]
        285 |         fn insert(&self, x: T) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:321: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:321: external_body - #[verifier::external_body]
        322 |         fn clone(&self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:40: error: bare_impl - impl<T: StT + Ord> AVLTreeSetStPer<T> { — `impl AVLTreeSetStPer` without trait; file defines [AVLTreeSetStPerTrait]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:40: error: bare_impl - impl<T: StT + Ord> AVLTreeSetStPer<T> { — `impl AVLTreeSetStPer` without trait; file defines [AVLTreeSetStPerTrait]
         41 |         #[verifier::external_body]
         42 |         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
    Holes: 14 total
       14 × external_body
    Errors: 1 bare impl(s) in file with trait definition
 ❌ ArraySetEnumMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:40: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:40: external_body - #[verifier::external_body]
         41 |         open spec fn view(&self) -> Set<N> { Set::empty() }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:104: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:104: external_body - #[verifier::external_body]
        105 |         fn new(u: N) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:114: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:114: external_body - #[verifier::external_body]
        115 |         fn size(&self) -> (result: N)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:121: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:121: external_body - #[verifier::external_body]
        122 |         fn to_seq(&self) -> (result: ArraySeqMtEphS<N>)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:135: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:135: external_body - #[verifier::external_body]
        136 |         fn empty(u: N) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:142: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:142: external_body - #[verifier::external_body]
        143 |         fn singleton(u: N, x: N) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:156: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:156: external_body - #[verifier::external_body]
        157 |         fn from_seq(u: N, seq: ArraySeqMtEphS<N>) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:170: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:170: external_body - #[verifier::external_body]
        171 |         fn filter<F: PredVal<N> + Clone>(&self, f: F) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:188: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:188: external_body - #[verifier::external_body]
        189 |         fn intersection(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:203: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:203: external_body - #[verifier::external_body]
        204 |         fn difference(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:218: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:218: external_body - #[verifier::external_body]
        219 |         fn union(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:233: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:233: external_body - #[verifier::external_body]
        234 |         fn find(&self, x: N) -> (result: B)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:240: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:240: external_body - #[verifier::external_body]
        241 |         fn delete(&mut self, x: N)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:249: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:249: external_body - #[verifier::external_body]
        250 |         fn insert(&mut self, x: N)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:262: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:262: external_body - #[verifier::external_body]
        263 |         fn clone(&self) -> (result: Self)
    Holes: 15 total
       15 × external_body
 ❌ ArraySetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:92: assume() - assume(s.filter(|e: V| e != v).to_set() =~= s.to_set().remove(v));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:92: assume() - assume(s.filter(|e: V| e != v).to_set() =~= s.to_set().remove(v));
         74 |     proof fn lemma_filter_remove<V>(s: Seq<V>, v: V)
             ...
         90 |             lemma_filter_remove::<V>(tail, v);
         91 |             // The filter distributes over cons
         93 |         }
         94 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:272: assume() - assume(self.elements@.to_set().contains(x@));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:272: assume() - assume(self.elements@.to_set().contains(x@));
        259 |         fn find(&self, x: &T) -> (result: B)
             ...
        270 |                 if *elem == *x {
        271 |                     proof {
        273 |                     }
        274 |                     assert(self@.contains(x@));
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:280: assume() - assume(!self.elements@.to_set().contains(x@));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:280: assume() - assume(!self.elements@.to_set().contains(x@));
        259 |         fn find(&self, x: &T) -> (result: B)
             ...
        278 |             }
        279 |             proof {
        281 |             }
        282 |             assert(!self@.contains(x@));
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:286: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:286: external_body - #[verifier::external_body]
        287 |         fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:322: assume() - assume(result@ == self@.intersect(other@));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:322: assume() - assume(result@ == self@.intersect(other@));
        301 |         fn intersection(&self, other: &Self) -> (result: Self)
             ...
        320 |             };
        321 |             proof {
        323 |                 assume(result@.finite());
        324 |                 assume(result.spec_wf());
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:323: assume() - assume(result@.finite());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:323: assume() - assume(result@.finite());
        301 |         fn intersection(&self, other: &Self) -> (result: Self)
             ...
        321 |             proof {
        322 |                 assume(result@ == self@.intersect(other@));
        324 |                 assume(result.spec_wf());
        325 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:324: assume() - assume(result.spec_wf());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:324: assume() - assume(result.spec_wf());
        301 |         fn intersection(&self, other: &Self) -> (result: Self)
             ...
        322 |                 assume(result@ == self@.intersect(other@));
        323 |                 assume(result@.finite());
        325 |             }
        326 |             result
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:350: assume() - assume(result@ == self@.difference(other@));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:350: assume() - assume(result@ == self@.difference(other@));
        329 |         fn difference(&self, other: &Self) -> (result: Self)
             ...
        348 |             };
        349 |             proof {
        351 |                 assume(result@.finite());
        352 |                 assume(result.spec_wf());
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:351: assume() - assume(result@.finite());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:351: assume() - assume(result@.finite());
        329 |         fn difference(&self, other: &Self) -> (result: Self)
             ...
        349 |             proof {
        350 |                 assume(result@ == self@.difference(other@));
        352 |                 assume(result.spec_wf());
        353 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:352: assume() - assume(result.spec_wf());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:352: assume() - assume(result.spec_wf());
        329 |         fn difference(&self, other: &Self) -> (result: Self)
             ...
        350 |                 assume(result@ == self@.difference(other@));
        351 |                 assume(result@.finite());
        353 |             }
        354 |             result
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:389: assume() - assume(result@ == self@.union(other@));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:389: assume() - assume(result@ == self@.union(other@));
        357 |         fn union(&self, other: &Self) -> (result: Self)
             ...
        387 |             };
        388 |             proof {
        390 |                 assume(result@.finite());
        391 |                 assume(result.spec_wf());
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:390: assume() - assume(result@.finite());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:390: assume() - assume(result@.finite());
        357 |         fn union(&self, other: &Self) -> (result: Self)
             ...
        388 |             proof {
        389 |                 assume(result@ == self@.union(other@));
        391 |                 assume(result.spec_wf());
        392 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:391: assume() - assume(result.spec_wf());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:391: assume() - assume(result.spec_wf());
        357 |         fn union(&self, other: &Self) -> (result: Self)
             ...
        389 |                 assume(result@ == self@.union(other@));
        390 |                 assume(result@.finite());
        392 |             }
        393 |             result
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:415: assume() - assume(self@ == old(self)@.remove(x@));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:415: assume() - assume(self@ == old(self)@.remove(x@));
        396 |         fn delete(&mut self, x: &T)
             ...
        413 |             self.elements = ArraySeqStEphS::from_vec(result_vec);
        414 |             proof {
        416 |                 assume(self@.finite());
        417 |                 assume(self.spec_wf());
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:416: assume() - assume(self@.finite());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:416: assume() - assume(self@.finite());
        396 |         fn delete(&mut self, x: &T)
             ...
        414 |             proof {
        415 |                 assume(self@ == old(self)@.remove(x@));
        417 |                 assume(self.spec_wf());
        418 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:417: assume() - assume(self.spec_wf());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:417: assume() - assume(self.spec_wf());
        396 |         fn delete(&mut self, x: &T)
             ...
        415 |                 assume(self@ == old(self)@.remove(x@));
        416 |                 assume(self@.finite());
        418 |             }
        419 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:440: assume() - assume(self@ == old(self)@.insert(x@));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:440: assume() - assume(self@ == old(self)@.insert(x@));
        421 |         fn insert(&mut self, x: T)
             ...
        438 |             }
        439 |             proof {
        441 |                 assume(self@.finite());
        442 |                 assume(self.spec_wf());
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:441: assume() - assume(self@.finite());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:441: assume() - assume(self@.finite());
        421 |         fn insert(&mut self, x: T)
             ...
        439 |             proof {
        440 |                 assume(self@ == old(self)@.insert(x@));
        442 |                 assume(self.spec_wf());
        443 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:442: assume() - assume(self.spec_wf());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:442: assume() - assume(self.spec_wf());
        421 |         fn insert(&mut self, x: T)
             ...
        440 |                 assume(self@ == old(self)@.insert(x@));
        441 |                 assume(self@.finite());
        443 |             }
        444 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:457: assume() - assume(result@ == self@);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:457: assume() - assume(result@ == self@);
        450 |         fn clone(&self) -> (result: Self)
             ...
        455 |             };
        456 |             proof {
        458 |             }
        459 |             result
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:65: error: bare_impl - impl<T: StT + Ord> ArraySetStEph<T> { — `impl ArraySetStEph` without trait; file defines [ArraySetStEphTrait]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:65: error: bare_impl - impl<T: StT + Ord> ArraySetStEph<T> { — `impl ArraySetStEph` without trait; file defines [ArraySetStEphTrait]
         66 |         pub open spec fn spec_wf(&self) -> bool {
         67 |             self.elements@.no_duplicates()
    Holes: 20 total
@@ -325,20 +327,6 @@ SUMMARY
 
 Modules:
    1 clean (no holes)
-   6 holed (contains holes)
-   7 total
-
-Proof Functions:
-   2 clean
-   1 holed
-   3 total
-
-Holes Found: 92 total
-   19 × assume()
-   73 × external_body
-
-Errors: 5 bare impl(s) in files with trait definitions
-o holes)
    6 holed (contains holes)
    7 total
 

@@ -383,9 +383,8 @@ pub mod AVLTreeSeqMtPer {
             size_fn(&self.root)
         }
 
-        #[verifier::external_body]
         fn nth(&self, index: N) -> (result: &T) {
-            assert!(index < self.length(), "index out of bounds");
+            proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             nth_ref(&self.root, index)
         }
 
@@ -397,8 +396,8 @@ pub mod AVLTreeSeqMtPer {
             self.length() == 1
         }
 
-        #[verifier::external_body]
         fn set(&self, index: N, item: T) -> (result: Result<Self, &'static str>) {
+            proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             Ok(AVLTreeSeqMtPerS {
                 root: set_rec(&self.root, index, item)?,
             })
@@ -435,17 +434,15 @@ pub mod AVLTreeSeqMtPer {
             Self::from_vec(vals)
         }
 
-        #[verifier::external_body]
         fn from_vec(values: Vec<T>) -> (result: Self) {
             AVLTreeSeqMtPerS {
                 root: build_balanced_from_slice(&values),
             }
         }
 
-        #[verifier::external_body]
         fn values_in_order(&self) -> (result: Vec<T>) {
-            let cap = size_fn(&self.root);
-            let mut out = Vec::with_capacity(cap);
+            proof { assume(self.spec_well_formed()); }
+            let mut out: Vec<T> = Vec::new();
             inorder_collect(&self.root, &mut out);
             out
         }

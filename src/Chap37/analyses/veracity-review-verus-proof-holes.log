@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap37
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/
 
 ❌ AVLTreeSeq.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:211: external_body - #[verifier::external_body]

@@ -239,7 +239,7 @@ fn test_avl_stress_balancing() {
 }
 
 #[test]
-#[should_panic(expected = "index out of bounds")]
+#[should_panic]
 fn test_avl_nth_out_of_bounds_panics() {
     let tree = AVLTreeSeqStPerLit![1, 2, 3];
     let _ = tree.nth(5); // Should panic

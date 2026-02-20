@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap35
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap35/
 
 ❌ OrderStatSelectMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap35/OrderStatSelectMtEph.rs:61: external_body - #[verifier::external_body]

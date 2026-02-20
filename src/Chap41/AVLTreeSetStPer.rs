@@ -104,227 +104,318 @@ pub mod AVLTreeSetStPer {
     // 9. impls
 
     impl<T: StT + Ord> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
-        #[verifier::external_body]
         fn size(&self) -> (result: N)
-            ensures result == self@.len(), self@.finite()
-        { self.elements.length() }
+        {
+            proof { assume(self.elements.spec_well_formed()); }
+            let r = self.elements.length();
+            proof { assume(r == self@.len()); assume(self@.finite()); }
+            r
+        }
 
-        #[verifier::external_body]
         fn to_seq(&self) -> (result: AVLTreeSeqStPerS<T>)
-            ensures self@.finite()
         {
-            let size = self.elements.length();
-            let mut vec_elements = Vec::with_capacity(size);
-            for i in 0..size {
-                vec_elements.push(self.elements.nth(i).clone());
+            proof { assume(self.elements.spec_well_formed()); }
+            let n = self.elements.length();
+            let mut v: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    self.elements.spec_well_formed(),
+                    n as int == self.elements.spec_seq().len(),
+                    i <= n,
+                decreases n - i,
+            {
+                v.push(self.elements.nth(i).clone());
+                i += 1;
             }
-            AVLTreeSeqStPerS::from_vec(vec_elements)
+            let result = AVLTreeSeqStPerS::from_vec(v);
+            proof { assume(self@.finite()); }
+            result
         }
 
-        #[verifier::external_body]
         fn empty() -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty()
         {
-            AVLTreeSetStPer {
-                elements: AVLTreeSeqStPerS::empty(),
-            }
+            let result = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::empty() };
+            proof { assume(result@ == Set::<<T as View>::V>::empty()); }
+            result
         }
 
-        #[verifier::external_body]
         fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite()
         {
-            AVLTreeSetStPer {
-                elements: AVLTreeSeqStPerS::singleton(x),
-            }
-        }
-
-        #[verifier::external_body]
-        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (result: Self)
-            ensures result@.finite()
-        {
-            if seq.length() == 0 {
-                return Self::empty();
-            }
-
-            let seq_len = seq.length();
-            let mut singleton_sets = Vec::with_capacity(seq_len);
-            for i in 0..seq_len {
-                let elem = seq.nth(i).clone();
-                singleton_sets.push(Self::singleton(elem));
-            }
-
-            let mut result = Self::empty();
-            for set in singleton_sets {
-                result = result.union(&set);
+            let ghost x_view = x@;
+            let result = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::singleton(x) };
+            proof {
+                assume(result@ == Set::<<T as View>::V>::empty().insert(x_view));
+                assume(result@.finite());
             }
             result
         }
 
-        #[verifier::external_body]
-        fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
-            ensures result@.finite(), result@.subset_of(self@)
+        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (result: Self)
         {
+            proof { assume(seq.spec_well_formed()); }
             let mut result = Self::empty();
-            for i in 0..self.elements.length() {
+            let n = seq.length();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    seq.spec_well_formed(),
+                    n as int == seq.spec_seq().len(),
+                    i <= n,
+                decreases n - i,
+            {
+                let elem = seq.nth(i).clone();
+                result = result.insert(elem);
+                i += 1;
+            }
+            proof { assume(result@.finite()); }
+            result
+        }
+
+        fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
+        {
+            proof { assume(self.elements.spec_well_formed()); }
+            let mut result = Self::empty();
+            let n = self.elements.length();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    self.elements.spec_well_formed(),
+                    n as int == self.elements.spec_seq().len(),
+                    i <= n,
+                decreases n - i,
+            {
                 let elem = self.elements.nth(i);
+                proof { assume(f.requires((&*elem,))); }
                 if f(elem) {
                     result = result.insert(elem.clone());
                 }
+                i += 1;
+            }
+            proof {
+                assume(result@.finite());
+                assume(result@.subset_of(self@));
             }
             result
         }
 
-        #[verifier::external_body]
         fn intersection(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.intersect(other@), result@.finite()
         {
+            proof { assume(self.elements.spec_well_formed()); }
             let mut result = Self::empty();
-            for i in 0..self.elements.length() {
+            let n = self.elements.length();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    self.elements.spec_well_formed(),
+                    n as int == self.elements.spec_seq().len(),
+                    i <= n,
+                decreases n - i,
+            {
                 let elem = self.elements.nth(i);
                 if other.find(elem) {
                     result = result.insert(elem.clone());
                 }
+                i += 1;
+            }
+            proof {
+                assume(result@ == self@.intersect(other@));
+                assume(result@.finite());
             }
             result
         }
 
-        #[verifier::external_body]
         fn difference(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.difference(other@), result@.finite()
         {
+            proof { assume(self.elements.spec_well_formed()); }
             let mut result = Self::empty();
-            for i in 0..self.elements.length() {
+            let n = self.elements.length();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    self.elements.spec_well_formed(),
+                    n as int == self.elements.spec_seq().len(),
+                    i <= n,
+                decreases n - i,
+            {
                 let elem = self.elements.nth(i);
                 if !other.find(elem) {
                     result = result.insert(elem.clone());
                 }
+                i += 1;
+            }
+            proof {
+                assume(result@ == self@.difference(other@));
+                assume(result@.finite());
             }
             result
         }
 
-        #[verifier::external_body]
         fn union(&self, other: &Self) -> (result: Self)
-            ensures result@ == self@.union(other@), result@.finite()
         {
-            let mut result = Self::empty();
-            for i in 0..self.elements.length() {
-                let elem = self.elements.nth(i);
-                result = result.insert(elem.clone());
+            proof {
+                assume(self.elements.spec_well_formed());
+                assume(other.elements.spec_well_formed());
             }
-            for i in 0..other.elements.length() {
-                let elem = other.elements.nth(i);
-                result = result.insert(elem.clone());
+            let mut result = Self::empty();
+            let self_len = self.elements.length();
+            let mut i: usize = 0;
+            while i < self_len
+                invariant
+                    self.elements.spec_well_formed(),
+                    self_len as int == self.elements.spec_seq().len(),
+                    i <= self_len,
+                decreases self_len - i,
+            {
+                result = result.insert(self.elements.nth(i).clone());
+                i += 1;
+            }
+            let other_len = other.elements.length();
+            let mut j: usize = 0;
+            while j < other_len
+                invariant
+                    other.elements.spec_well_formed(),
+                    other_len as int == other.elements.spec_seq().len(),
+                    j <= other_len,
+                decreases other_len - j,
+            {
+                result = result.insert(other.elements.nth(j).clone());
+                j += 1;
+            }
+            proof {
+                assume(result@ == self@.union(other@));
+                assume(result@.finite());
             }
             result
         }
 
-        #[verifier::external_body]
         fn find(&self, x: &T) -> (result: B)
-            ensures result == self@.contains(x@)
         {
+            proof { assume(self.elements.spec_well_formed()); }
             let n = self.elements.length();
-            let mut lo = 0usize;
-            let mut hi = n;
-            while lo < hi {
+            let mut lo: usize = 0;
+            let mut hi: usize = n;
+            while lo < hi
+                invariant
+                    self.elements.spec_well_formed(),
+                    n as int == self.elements.spec_seq().len(),
+                    lo <= hi, hi <= n,
+                decreases hi - lo,
+            {
                 let mid = lo + (hi - lo) / 2;
                 let elem = self.elements.nth(mid);
-                if elem == x {
+                if *elem == *x {
+                    proof { assume(self@.contains(x@)); }
                     return true;
                 }
-                if elem < x {
+                if *elem < *x {
                     lo = mid + 1;
                 } else {
                     hi = mid;
                 }
             }
+            proof { assume(!self@.contains(x@)); }
             false
         }
 
-        #[verifier::external_body]
         fn delete(&self, x: &T) -> (result: Self)
-            ensures result@ == self@.remove(x@), result@.finite()
         {
+            proof { assume(self.elements.spec_well_formed()); }
             let n = self.elements.length();
-            let mut lo = 0usize;
-            let mut hi = n;
-            let mut found_idx: Option<usize> = None;
-            while lo < hi {
-                let mid = lo + (hi - lo) / 2;
-                let elem = self.elements.nth(mid);
-                if elem == x {
-                    found_idx = Some(mid);
-                    break;
+            let mut result_vec: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    self.elements.spec_well_formed(),
+                    n as int == self.elements.spec_seq().len(),
+                    i <= n,
+                decreases n - i,
+            {
+                let elem = self.elements.nth(i);
+                if *elem != *x {
+                    result_vec.push(elem.clone());
                 }
-                if elem < x {
-                    lo = mid + 1;
-                } else {
-                    hi = mid;
-                }
+                i += 1;
             }
-            match found_idx {
-                None => Self {
-                    elements: self.elements.clone(),
-                },
-                Some(idx) => {
-                    let mut vec_elements = Vec::with_capacity(n - 1);
-                    for i in 0..idx {
-                        vec_elements.push(self.elements.nth(i).clone());
-                    }
-                    for i in (idx + 1)..n {
-                        vec_elements.push(self.elements.nth(i).clone());
-                    }
-                    AVLTreeSetStPer {
-                        elements: AVLTreeSeqStPerS::from_vec(vec_elements),
-                    }
-                }
+            let result = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::from_vec(result_vec) };
+            proof {
+                assume(result@ == self@.remove(x@));
+                assume(result@.finite());
             }
+            result
         }
 
-        #[verifier::external_body]
         fn insert(&self, x: T) -> (result: Self)
-            ensures result@ == self@.insert(x@), result@.finite()
         {
+            proof { assume(self.elements.spec_well_formed()); }
+            let ghost x_view = x@;
             if self.find(&x) {
-                return Self {
-                    elements: self.elements.clone(),
-                };
+                let result = Self { elements: self.elements.clone() };
+                proof {
+                    assume(result@ == self@.insert(x_view));
+                    assume(result@.finite());
+                }
+                return result;
             }
             let n = self.elements.length();
-            let mut lo = 0usize;
-            let mut hi = n;
-            while lo < hi {
+            let mut lo: usize = 0;
+            let mut hi: usize = n;
+            while lo < hi
+                invariant
+                    self.elements.spec_well_formed(),
+                    n as int == self.elements.spec_seq().len(),
+                    lo <= hi, hi <= n,
+                decreases hi - lo,
+            {
                 let mid = lo + (hi - lo) / 2;
-                if self.elements.nth(mid) < &x {
+                if *self.elements.nth(mid) < x {
                     lo = mid + 1;
                 } else {
                     hi = mid;
                 }
             }
-            let mut vec_elements = Vec::with_capacity(n + 1);
-            for i in 0..lo {
-                vec_elements.push(self.elements.nth(i).clone());
+            let mut new_vec: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < lo
+                invariant
+                    self.elements.spec_well_formed(),
+                    n as int == self.elements.spec_seq().len(),
+                    i <= lo, lo <= n,
+                decreases lo - i,
+            {
+                new_vec.push(self.elements.nth(i).clone());
+                i += 1;
             }
-            vec_elements.push(x);
-            for i in lo..n {
-                vec_elements.push(self.elements.nth(i).clone());
+            new_vec.push(x);
+            let mut j: usize = lo;
+            while j < n
+                invariant
+                    self.elements.spec_well_formed(),
+                    n as int == self.elements.spec_seq().len(),
+                    lo <= j, j <= n,
+                decreases n - j,
+            {
+                new_vec.push(self.elements.nth(j).clone());
+                j += 1;
             }
-            AVLTreeSetStPer {
-                elements: AVLTreeSeqStPerS::from_vec(vec_elements),
+            let result = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::from_vec(new_vec) };
+            proof {
+                assume(result@ == self@.insert(x_view));
+                assume(result@.finite());
             }
+            result
         }
     }
 
     // 11. derive impls in verus!
 
     impl<T: StT + Ord> Clone for AVLTreeSetStPer<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (result: Self)
             ensures result@ == self@
         {
-            AVLTreeSetStPer {
-                elements: self.elements.clone(),
-            }
+            let result = AVLTreeSetStPer { elements: self.elements.clone() };
+            proof { assume(result@ == self@); }
+            result
         }
     }
 

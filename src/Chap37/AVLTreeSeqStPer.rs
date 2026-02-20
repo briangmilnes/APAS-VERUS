@@ -391,9 +391,8 @@ pub mod AVLTreeSeqStPer {
             size_fn(&self.root)
         }
 
-        #[verifier::external_body]
         fn nth(&self, index: N) -> (result: &T) {
-            assert!(index < self.length(), "index out of bounds");
+            proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             nth_ref(&self.root, index)
         }
 
@@ -405,44 +404,53 @@ pub mod AVLTreeSeqStPer {
             self.length() == 1
         }
 
-        #[verifier::external_body]
         fn set(&self, index: N, item: T) -> (result: Result<Self, &'static str>) {
+            proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             Ok(AVLTreeSeqStPerS {
                 root: set_rec(&self.root, index, item)?,
             })
         }
 
-        #[verifier::external_body]
         fn subseq_copy(&self, start: N, length: N) -> (result: Self) {
+            proof { assume(self.spec_well_formed()); }
             let n = self.length();
-            let s = start.min(n);
-            let e = start.saturating_add(length).min(n);
+            let s = if start < n { start } else { n };
+            let sum = start.wrapping_add(length);
+            let sat = if sum >= start { sum } else { usize::MAX };
+            let e = if sat < n { sat } else { n };
             if e <= s {
                 return Self::empty();
             }
-            let all = self.values_in_order();
-            let mut vals = Vec::<T>::with_capacity(e - s);
-            vals.extend(all[s..e].iter().cloned());
+            let mut vals: Vec<T> = Vec::new();
+            let mut i: usize = s;
+            while i < e
+                invariant
+                    self.spec_well_formed(),
+                    n as int == self.spec_seq().len(),
+                    s <= i, i <= e, e <= n,
+                decreases e - i,
+            {
+                vals.push(self.nth(i).clone());
+                i += 1;
+            }
             Self::from_vec(vals)
         }
 
-        #[verifier::external_body]
         fn from_vec(values: Vec<T>) -> (result: Self) {
             AVLTreeSeqStPerS {
-                root: build_balanced_from_slice(&values[..]),
+                root: build_balanced_from_slice(values.as_slice()),
             }
         }
 
-        #[verifier::external_body]
         fn values_in_order(&self) -> (result: Vec<T>) {
-            let cap = size_fn(&self.root);
-            let mut out = Vec::with_capacity(cap);
+            proof { assume(self.spec_well_formed()); }
+            let mut out: Vec<T> = Vec::new();
             inorder_collect(&self.root, &mut out);
             out
         }
 
-        #[verifier::external_body]
         fn to_arrayseq(&self) -> (result: ArraySeqStPerS<T>) {
+            proof { assume(self.spec_well_formed()); }
             let v = self.values_in_order();
             ArraySeqStPerS::from_vec(v)
         }
