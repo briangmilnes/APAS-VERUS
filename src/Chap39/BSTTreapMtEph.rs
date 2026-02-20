@@ -3,6 +3,7 @@
 
 pub mod BSTTreapMtEph {
 
+    use std::fmt::{Debug, Display};
     use std::sync::Arc;
 
     use vstd::prelude::*;
@@ -11,18 +12,24 @@ pub mod BSTTreapMtEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
-    type Link<T> = Option<Box<Node<T>>>;
+    verus! {
 
-    #[derive(Debug, Clone)]
-    struct Node<T: StTInMtT + Ord> {
-        key: T,
-        priority: u64,
-        size: N,
-        left: Link<T>,
-        right: Link<T>,
+    #[verifier::reject_recursive_types(T)]
+    pub struct Node<T: StTInMtT + Ord> {
+        pub key: T,
+        pub priority: u64,
+        pub size: N,
+        pub left: Link<T>,
+        pub right: Link<T>,
     }
 
-    impl<T: StTInMtT + Ord> Node<T> {
+    type Link<T> = Option<Box<Node<T>>>;
+
+    trait NodeTrait<T: StTInMtT + Ord>: Sized {
+        fn new(key: T, priority: u64) -> Self;
+    }
+
+    impl<T: StTInMtT + Ord> NodeTrait<T> for Node<T> {
         fn new(key: T, priority: u64) -> Self {
             Node {
                 key,
@@ -34,31 +41,69 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    verus! {
-        #[verifier::reject_recursive_types(T)]
-        #[verifier::external_type_specification]
-        struct ExNode<T: StTInMtT + Ord>(Node<T>);
-
-        pub struct TreapLinkWf;
-
-        impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for TreapLinkWf {
-            open spec fn inv(self, v: Link<T>) -> bool { true }
-        }
-
-        #[verifier::external_body]
-        fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>) {
-            RwLock::new(val, Ghost(TreapLinkWf))
+    fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
+        decreases link,
+    {
+        match link {
+            None => {
+                let c = None;
+                proof { assume(c == *link); }
+                c
+            }
+            Some(node) => {
+                let left = clone_link(&node.left);
+                let right = clone_link(&node.right);
+                let c = Some(Box::new(Node {
+                    key: node.key.clone(),
+                    priority: node.priority,
+                    size: node.size,
+                    left,
+                    right,
+                }));
+                proof { assume(c == *link); }
+                c
+            }
         }
     }
 
-    #[derive(Clone)]
+    impl<T: StTInMtT + Ord + Clone> Clone for Node<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned == *self
+        {
+            let cloned = Node {
+                key: self.key.clone(),
+                priority: self.priority,
+                size: self.size,
+                left: clone_link(&self.left),
+                right: clone_link(&self.right),
+            };
+            proof { assume(cloned == *self); }
+            cloned
+        }
+    }
+
+    pub struct TreapLinkWf;
+
+    impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for TreapLinkWf {
+        open spec fn inv(self, v: Link<T>) -> bool { true }
+    }
+
+    #[verifier::external_body]
+    fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>) {
+        RwLock::new(val, Ghost(TreapLinkWf))
+    }
+
+    #[verifier::reject_recursive_types(T)]
     pub struct BSTTreapMtEph<T: StTInMtT + Ord> {
         root: Arc<RwLock<Link<T>, TreapLinkWf>>,
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTTreapMtEph<T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            f.debug_struct("BSTTreapMtEph").finish()
+    impl<T: StTInMtT + Ord> Clone for BSTTreapMtEph<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures true
+        {
+            let cloned = BSTTreapMtEph { root: self.root.clone() };
+            cloned
         }
     }
 
@@ -103,11 +148,19 @@ pub mod BSTTreapMtEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> N { link.as_ref().map_or(0, |n| n.size) }
+    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> N {
+        match link {
+            None => 0,
+            Some(n) => n.size,
+        }
+    }
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn update<T: StTInMtT + Ord>(node: &mut Node<T>) { node.size = 1 + size_link(&node.left) + size_link(&node.right); }
+    #[verifier::external_body]
+    fn update<T: StTInMtT + Ord>(node: &mut Node<T>) {
+        node.size = 1 + size_link(&node.left) + size_link(&node.right);
+    }
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -143,21 +196,36 @@ pub mod BSTTreapMtEph {
 
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-    fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T, priority: u64) {
-        if let Some(node) = link.as_mut() {
+    fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T, priority: u64)
+        decreases old(link),
+    {
+        if let Some(mut node) = link.take() {
             if value < node.key {
                 insert_link(&mut node.left, value, priority);
-                if node.left.as_ref().is_some_and(|left| left.priority < node.priority) {
+                *link = Some(node);
+                let need_rotate_right = match link.as_ref().unwrap().left.as_ref() {
+                    Some(left) => left.priority < link.as_ref().unwrap().priority,
+                    None => false,
+                };
+                if need_rotate_right {
                     rotate_right(link);
                 }
             } else if value > node.key {
                 insert_link(&mut node.right, value, priority);
-                if node.right.as_ref().is_some_and(|right| right.priority < node.priority) {
+                *link = Some(node);
+                let need_rotate_left = match link.as_ref().unwrap().right.as_ref() {
+                    Some(right) => right.priority < link.as_ref().unwrap().priority,
+                    None => false,
+                };
+                if need_rotate_left {
                     rotate_left(link);
                 }
+            } else {
+                *link = Some(node);
             }
-            if let Some(node) = link.as_mut() {
-                update(node);
+            if let Some(mut n) = link.take() {
+                update(&mut n);
+                *link = Some(n);
             }
         } else {
             *link = Some(Box::new(Node::new(value, priority)));
@@ -166,13 +234,15 @@ pub mod BSTTreapMtEph {
 
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-    fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T> {
+    fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T>
+        decreases *link,
+    {
         match link {
             | None => None,
             | Some(node) => {
-                if target == &node.key {
+                if (*target) == node.key {
                     Some(&node.key)
-                } else if target < &node.key {
+                } else if (*target) < node.key {
                     find_link(&node.left, target)
                 } else {
                     find_link(&node.right, target)
@@ -183,7 +253,9 @@ pub mod BSTTreapMtEph {
 
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-    fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T> {
+    fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T>
+        decreases *link,
+    {
         match link {
             | None => None,
             | Some(node) => match node.left {
@@ -195,7 +267,9 @@ pub mod BSTTreapMtEph {
 
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-    fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T> {
+    fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T>
+        decreases *link,
+    {
         match link {
             | None => None,
             | Some(node) => match node.right {
@@ -205,9 +279,19 @@ pub mod BSTTreapMtEph {
         }
     }
 
+    #[verifier::external_body]
+    fn height_link<T: StTInMtT + Ord>(link: &Link<T>) -> N {
+        match link {
+            None => 0,
+            Some(node) => 1 + height_link(&node.left).max(height_link(&node.right)),
+        }
+    }
+
     /// - APAS: Work Θ(n), Span Θ(n)
     /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-    fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>) {
+    fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+        decreases *link,
+    {
         if let Some(node) = link {
             in_order_collect(&node.left, out);
             out.push(node.key.clone());
@@ -217,7 +301,9 @@ pub mod BSTTreapMtEph {
 
     /// - APAS: Work Θ(n), Span Θ(n)
     /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-    fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>) {
+    fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+        decreases *link,
+    {
         if let Some(node) = link {
             out.push(node.key.clone());
             pre_order_collect(&node.left, out);
@@ -257,15 +343,8 @@ pub mod BSTTreapMtEph {
         fn is_empty(&self) -> B { self.size() == 0 }
 
         fn height(&self) -> N {
-            fn height_rec<T: StTInMtT + Ord>(link: &Link<T>) -> N {
-                match link {
-                    | None => 0,
-                    | Some(node) => 1 + height_rec(&node.left).max(height_rec(&node.right)),
-                }
-            }
-
             let handle = self.root.acquire_read();
-            let result = height_rec(handle.borrow());
+            let result = height_link(handle.borrow());
             handle.release_read();
             result
         }
@@ -303,6 +382,38 @@ pub mod BSTTreapMtEph {
 
     impl<T: StTInMtT + Ord> Default for BSTTreapMtEph<T> {
         fn default() -> Self { Self::new() }
+    }
+
+    } // verus!
+
+    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTTreapMtEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTTreapMtEph").finish()
+        }
+    }
+
+    impl<T: StTInMtT + Ord> std::fmt::Display for BSTTreapMtEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTTreapMtEph")
+        }
+    }
+
+    impl<T: StTInMtT + Ord + std::fmt::Debug> std::fmt::Debug for Node<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("Node")
+                .field("key", &self.key)
+                .field("priority", &self.priority)
+                .field("size", &self.size)
+                .field("left", &self.left)
+                .field("right", &self.right)
+                .finish()
+        }
+    }
+
+    impl<T: StTInMtT + Ord + std::fmt::Display> std::fmt::Display for Node<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "Node(key={}, priority={}, size={})", self.key, self.priority, self.size)
+        }
     }
 
     #[macro_export]

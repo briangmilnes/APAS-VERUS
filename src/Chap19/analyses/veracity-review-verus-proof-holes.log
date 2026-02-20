@@ -1,53 +1,53 @@
 $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap19/
 
 ❌ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1413: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1413: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1409 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1411 |         {
       1412 |             let equal = self.seq == other.seq;
       1414 |             equal
       1415 |         }
-   Holes: 1 total
-      1 × assume()
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 6 total (6 clean, 0 holed)
 ✓ ArraySeqMtEphSlice.rs
 ❌ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:1117: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:1117: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1113 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1115 |         {
       1116 |             let equal = self.seq == other.seq;
       1118 |             equal
       1119 |         }
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 3 total (3 clean, 0 holed)
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
+   Proof functions: 2 total (2 clean, 0 holed)
 ❌ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs:1126: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs:1126: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1122 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1124 |         {
       1125 |             let equal = self.seq == other.seq;
       1127 |             equal
       1128 |         }
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 3 total (3 clean, 0 holed)
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
+   Proof functions: 2 total (2 clean, 0 holed)
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   1 clean (no holes)
-   3 holed (contains holes)
+   4 clean (no holes)
+   0 holed (contains holes)
    4 total
 
 Proof Functions:
-   12 clean
+   10 clean
    0 holed
-   12 total
+   10 total
 
-Holes Found: 3 total
-   3 × assume()
+Holes Found: 0 total
+
+Errors: 3 (bare impl(s), struct/enum outside verus!)
+
+🎉 No proof holes found! All proofs are complete.

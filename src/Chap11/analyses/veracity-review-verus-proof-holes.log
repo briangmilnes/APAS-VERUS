@@ -1,18 +1,57 @@
 $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap11/
 
-ℹ FibonacciMtEph2Threads.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEph2Threads.rs:155: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEph2Threads.rs:163: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
-   Info: 2 assume(false); diverge() idiom(s)
-ℹ FibonacciMtEphRecomputes.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEphRecomputes.rs:151: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEphRecomputes.rs:159: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge()} — valid non-termination idiom
-   Info: 2 assume(false); diverge() idiom(s)
+❌ FibonacciMtEph2Threads.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEph2Threads.rs:155: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
+       100 | pub fn fib_2threads(n: u64) -> (fibonacci: u64)
+            ...
+       153 |     let left_out = match join_handle1.join() {
+       154 |         Result::Ok(out) => out,
+       156 |     };
+       157 |     let left_val = left_out.0;
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEph2Threads.rs:163: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
+       100 | pub fn fib_2threads(n: u64) -> (fibonacci: u64)
+            ...
+       161 |     let right_out = match join_handle2.join() {
+       162 |         Result::Ok(out) => out,
+       164 |     };
+       165 |     let right_val = right_out.0;
+   Holes: 2 total
+      2 × assume(false)
+❌ FibonacciMtEphRecomputes.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEphRecomputes.rs:151: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
+        92 | pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
+            ...
+       149 |         let left_out = match left_handle.join() {
+       150 |             Result::Ok(out) => out,
+       152 |         };
+       153 |         let left_val = left_out.0;
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEphRecomputes.rs:159: assume(false) - Result::Err(_) => { assume(false); diverge()} — needs diverge(); use `assume(false); diverge()`
+        92 | pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
+            ...
+       157 |         let right_out = match right_handle.join() {
+       158 |             Result::Ok(out) => out,
+       160 |         };
+       161 |         let right_val = right_out.0;
+   Holes: 2 total
+      2 × assume(false)
 ✓ FibonacciMtPerAllThreads.rs
-ℹ FibonacciMtPerTSM.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtPerTSM.rs:145: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtPerTSM.rs:153: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
-   Info: 2 assume(false); diverge() idiom(s)
+❌ FibonacciMtPerTSM.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtPerTSM.rs:145: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
+        86 | pub fn fib(n: u64) -> (fibonacci: u64)
+            ...
+       143 |         let left_out = match left_handle.join() {
+       144 |             Result::Ok(out) => out,
+       146 |         };
+       147 |         let left_val = left_out.0;
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtPerTSM.rs:153: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
+        86 | pub fn fib(n: u64) -> (fibonacci: u64)
+            ...
+       151 |         let right_out = match right_handle.join() {
+       152 |             Result::Ok(out) => out,
+       154 |         };
+       155 |         let right_val = right_out.0;
+   Holes: 2 total
+      2 × assume(false)
 ✓ FibonacciStEph.rs
    3 clean proof functions
 
@@ -21,8 +60,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   5 clean (no holes)
-   0 holed (contains holes)
+   2 clean (no holes)
+   3 holed (contains holes)
    5 total
 
 Proof Functions:
@@ -30,8 +69,5 @@ Proof Functions:
    0 holed
    3 total
 
-Holes Found: 0 total
-
-Info: 6 assume(false); diverge() idiom(s) (valid non-termination)
-
-🎉 No proof holes or warnings found! All proofs are complete.
+Holes Found: 6 total
+   6 × assume(false)

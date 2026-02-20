@@ -69,7 +69,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
        136 |             let result = AVLTreeSetMtPer { elements: AVLTreeSeqMtPerS::empty() };
        138 |             result
        139 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:146: assume() - assume(result@ == Set::<<T as View>::V>::empty().insert(x_view));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:146: assume() - assume(result@ == Set::<<T as View>::V>::empty().insert(x_vi
        141 |         fn singleton(x: T) -> (result: Self)
             ...
        144 |             let result = AVLTreeSetMtPer { elements: AVLTreeSeqMtPerS::singleton(x) };
@@ -116,16 +116,17 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
        413 |         fn delete(&self, x: &T) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:421: external_body - #[verifier::external_body]
        422 |         fn insert(&self, x: T) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:443: assume() - proof { assume(result@ == self@); }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:443: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        439 |         fn clone(&self) -> (result: Self)
             ...
        441 |         {
        442 |             let result = AVLTreeSetMtPer { elements: self.elements.clone() };
        444 |             result
        445 |         }
-   Holes: 19 total
-      11 × assume()
+   Holes: 18 total
+      10 × assume()
       8 × external_body
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
 ❌ AVLTreeSetStEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:43: external_body - #[verifier::external_body]
         44 |         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
@@ -167,7 +168,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
        140 |             let result = AVLTreeSetStEph { elements: AVLTreeSeqStEphS::empty() };
        142 |             result
        143 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:150: assume() - assume(result@ == Set::<<T as View>::V>::empty().insert(x_view));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:150: assume() - assume(result@ == Set::<<T as View>::V>::empty().insert(x_vi
        145 |         fn singleton(x: T) -> (result: Self)
             ...
        148 |             let result = AVLTreeSetStEph { elements: AVLTreeSeqStEphS::singleton(x) };
@@ -329,3 +330,17 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
        352 |             let ghost x_view = x@;
        353 |             if !self.find(&x) {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:398: assume() - assume(self@ == old(self)@.insert(x_view));
+       349 |         fn insert(&mut self, x: T)
+            ...
+       396 |             }
+       397 |             proof {
+       399 |                 assume(self@.finite());
+       400 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:399: assume() - assume(self@.finite());
+       349 |         fn insert(&mut self, x: T)
+            ...
+       397 |             proof {
+       398 |                 assume(self@ == old(self)@.insert(x_view));
+       400 |             }
+       401 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:411: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types

@@ -1,39 +1,63 @@
-$ target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap39
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap39
 
 ❌ BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:47: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:24: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+        22 | 
+        23 |     impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for TreapWf {
+        25 |     }
+        26 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:47: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+        24 |         open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool { true }
+            ...
+        45 |     }
+        46 | 
         48 |     fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, TreapWf>) {
-   Holes: 1 total
-      1 × external_body
+        49 |         RwLock::new(val, Ghost(TreapWf))
+   Errors: 2 total (1 Verus RwLock external_body, 1 dummy RwLockPredicate)
 ✓ BSTSetTreapMtEph.rs
 ❌ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:39: external_type_specification - #[verifier::external_type_specification]
-        40 |         struct ExNode<T: StTInMtT + Ord>(Node<T>);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:48: external_body - #[verifier::external_body]
-        49 |         fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:25: error: bare_impl - impl<T: StTInMtT + Ord> Node<T> { — `impl Node` without trait; file defines [BSTTreapMtEphTrait]
-        26 |         fn new(key: T, priority: u64) -> Self {
-        27 |             Node {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:17: error: struct_outside_verus - struct Node — should be inside verus!
-        17 |     struct Node<T: StTInMtT + Ord> {
-        18 |         key: T,
-        19 |         priority: u64,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:17: error: clone_derived_outside - struct Node — Clone should be implemented inside verus!, not derived outside
-        17 |     struct Node<T: StTInMtT + Ord> {
-        18 |         key: T,
-        19 |         priority: u64,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:55: error: struct_outside_verus - struct BSTTreapMtEph — should be inside verus!
-        55 |     pub struct BSTTreapMtEph<T: StTInMtT + Ord> {
-        56 |         root: Arc<RwLock<Link<T>, TreapLinkWf>>,
-        57 |     }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:55: error: clone_derived_outside - struct BSTTreapMtEph — Clone should be implemented inside verus!, not derived outside
-        55 |     pub struct BSTTreapMtEph<T: StTInMtT + Ord> {
-        56 |         root: Arc<RwLock<Link<T>, TreapLinkWf>>,
-        57 |     }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:160: external_body - #[verifier::external_body]
+       161 |     fn update<T: StTInMtT + Ord>(node: &mut Node<T>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:282: external_body - #[verifier::external_body]
+       283 |     fn height_link<T: StTInMtT + Ord>(link: &Link<T>) -> N {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:50: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        44 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
+            ...
+        48 |             None => {
+        49 |                 let c = None;
+        51 |                 c
+        52 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:63: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        44 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
+            ...
+        61 |                     right,
+        62 |                 }));
+        64 |                 c
+        65 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:80: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        70 |         fn clone(&self) -> (cloned: Self)
+            ...
+        78 |                 right: clone_link(&self.right),
+        79 |             };
+        81 |             cloned
+        82 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:88: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+        70 |         fn clone(&self) -> (cloned: Self)
+            ...
+        86 | 
+        87 |     impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for TreapLinkWf {
+        89 |     }
+        90 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:91: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+        88 |         open spec fn inv(self, v: Link<T>) -> bool { true }
+            ...
+        89 |     }
+        90 | 
+        92 |     fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>) {
+        93 |         RwLock::new(val, Ghost(TreapLinkWf))
    Holes: 2 total
-      1 × external_body
-      1 × external_type_specification
-   Errors: 5 total (1 bare impl(s), 2 struct/enum outside verus!, 2 Clone derived outside)
+      2 × external_body
+   Errors: 5 total (3 assume in eq/clone (Verus workaround), 1 Verus RwLock external_body, 1 dummy RwLockPredicate)
 ✓ BSTTreapStEph.rs
 
 ═══════════════════════════════════════════════════════════════
@@ -41,8 +65,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   2 clean (no holes)
-   2 holed (contains holes)
+   3 clean (no holes)
+   1 holed (contains holes)
    4 total
 
 Proof Functions:
@@ -50,8 +74,7 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 3 total
+Holes Found: 2 total
    2 × external_body
-   1 × external_type_specification
 
-Errors: 5 (bare impl(s), struct/enum outside verus!)
+Errors: 7 (bare impl(s), struct/enum outside verus!)

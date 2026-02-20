@@ -5,12 +5,12 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:34: error: bare_impl - impl<K: StT + Ord, V: StT, R: StT> Node<K, V, R> { — `impl Node` without trait; file defines [ReduceOp, BSTReducedStEphTrait]
         35 |         fn new(key: K, value: V, priority: u64, reduced_value: R) -> Self {
         36 |             Node {
-   Errors: 1 bare impl(s) in file with trait definition
+   Errors: 1 total (1 bare impl(s))
 ❌ BSTSizeStEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:20: error: bare_impl - impl<T: StT + Ord> Node<T> { — `impl Node` without trait; file defines [BSTSizeStEphTrait]
         21 |         fn new(key: T, priority: u64) -> Self {
         22 |             Node {
-   Errors: 1 bare impl(s) in file with trait definition
+   Errors: 1 total (1 bare impl(s))
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY

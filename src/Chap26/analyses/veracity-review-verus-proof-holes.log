@@ -4,14 +4,14 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    3 clean proof functions
 ✓ DivConReduceStPer.rs
 ❌ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:213: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:213: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from))
        166 |     proof fn lemma_combined_cycle(
             ...
        211 |                 assert(spec_point_eq(lt[li].to, lt[((li + 1) % ln_i)].from));
        212 |                 // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
        214 |             } else if i == ln_i - 1 {
        215 |                 assert(combined[i].to == er_to);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:230: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:230: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from))
        166 |     proof fn lemma_combined_cycle(
             ...
        228 |                 assert(spec_point_eq(rt[ri].to, rt[((ri + 1) % rn_i)].from));
@@ -28,17 +28,17 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Holes: 4 total
       2 × assume()
       2 × external_body
-   Errors: 1 bare impl(s) in file with trait definition
-   Proof functions: 4 total (4 clean, 0 holed)
+   Errors: 1 total (1 bare impl(s))
+   Proof functions: 4 total (3 clean, 1 holed)
 ❌ ETSPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:196: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:196: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from))
        146 |     proof fn lemma_combined_cycle(
             ...
        194 | 
        195 |                 // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
        197 |             } else if i == ln_i - 1 {
        198 |                 // Bridge: left -> right.
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:216: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:216: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from))
        146 |     proof fn lemma_combined_cycle(
             ...
        214 | 
@@ -55,8 +55,8 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Holes: 4 total
       2 × assume()
       2 × external_body
-   Errors: 1 bare impl(s) in file with trait definition
-   Proof functions: 3 total (3 clean, 0 holed)
+   Errors: 1 total (1 bare impl(s))
+   Proof functions: 3 total (2 clean, 1 holed)
 ✓ MergeSortMtPer.rs
    4 clean proof functions
 ✓ MergeSortStPer.rs
@@ -76,8 +76,8 @@ Modules:
    8 total
 
 Proof Functions:
-   17 clean
-   0 holed
+   15 clean
+   2 holed
    17 total
 
 Holes Found: 8 total
