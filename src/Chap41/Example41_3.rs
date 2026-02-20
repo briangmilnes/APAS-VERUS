@@ -9,6 +9,7 @@ pub mod Example41_3 {
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Types::Types::*;
     use crate::*;
+
     pub type T = N;
 
     pub trait Example41_3Trait {

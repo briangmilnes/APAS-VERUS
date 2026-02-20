@@ -3,18 +3,36 @@
 
 pub mod BSTKeyValueStEph {
 
+    use std::fmt;
+
+    use vstd::prelude::*;
+
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
+    verus! {
+
     type Link<K, V> = Option<Box<Node<K, V>>>;
 
-    #[derive(Clone, Debug)]
     struct Node<K: StT + Ord, V: StT> {
         key: K,
         value: V,
         priority: u64,
         left: Link<K, V>,
         right: Link<K, V>,
+    }
+
+    impl<K: StT + Ord, V: StT> Clone for Node<K, V> {
+        #[verifier::external_body]
+        fn clone(&self) -> Self {
+            Node {
+                key: self.key.clone(),
+                value: self.value.clone(),
+                priority: self.priority,
+                left: self.left.clone(),
+                right: self.right.clone(),
+            }
+        }
     }
 
     /// - APAS: N/A — internal node constructor.
@@ -29,17 +47,29 @@ pub mod BSTKeyValueStEph {
         }
     }
 
-    #[derive(Debug, Clone)]
     pub struct BSTKeyValueStEph<K: StT + Ord, V: StT> {
         root: Link<K, V>,
         size: N,
+    }
+
+    impl<K: StT + Ord, V: StT> Clone for BSTKeyValueStEph<K, V> {
+        fn clone(&self) -> (result: Self)
+            ensures true,
+        {
+            BSTKeyValueStEph {
+                root: self.root.clone(),
+                size: self.size,
+            }
+        }
     }
 
     pub type BSTreeKeyValue<K, V> = BSTKeyValueStEph<K, V>;
 
     pub trait BSTKeyValueStEphTrait<K: StT + Ord, V: StT> {
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn new()                    -> Self;
+        fn new()                    -> Self
+        where
+            Self: Sized;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self)              -> N;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
@@ -66,6 +96,19 @@ pub mod BSTKeyValueStEph {
         /// - APAS: Work Θ(log n) expected, Span Θ(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
         fn maximum_key(&self)       -> Option<&K>;
+    }
+
+    fn height_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> N
+        decreases *link,
+    {
+        match link {
+            | None => 0,
+            | Some(node) => {
+                let m = height_link(&node.left).max(height_link(&node.right));
+                proof { assume(m < usize::MAX); }
+                1 + m
+            }
+        }
     }
 
     /// - APAS: N/A — internal treap rotation.
@@ -98,7 +141,10 @@ pub mod BSTKeyValueStEph {
 
     /// - APAS: N/A — internal recursive insert helper.
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-    fn insert_link<K: StT + Ord, V: StT>(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> bool {
+    #[verifier::external_body]
+    fn insert_link<K: StT + Ord, V: StT>(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> bool
+        decreases old(link),
+    {
         if let Some(node) = link.as_mut() {
             if key < node.key {
                 let inserted = insert_link(&mut node.left, key, value, priority);
@@ -124,13 +170,14 @@ pub mod BSTKeyValueStEph {
 
     /// - APAS: N/A — internal recursive find helper.
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
+    #[verifier::external_body]
     fn find_link<'a, K: StT + Ord, V: StT>(link: &'a Link<K, V>, key: &K) -> Option<&'a V> {
         match link {
             | None => None,
             | Some(node) => {
-                if key == &node.key {
+                if *key == node.key {
                     Some(&node.value)
-                } else if key < &node.key {
+                } else if *key < node.key {
                     find_link(&node.left, key)
                 } else {
                     find_link(&node.right, key)
@@ -141,7 +188,9 @@ pub mod BSTKeyValueStEph {
 
     /// - APAS: N/A — internal recursive min-key helper.
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-    fn min_key_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Option<&K> {
+    fn min_key_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Option<&K>
+        decreases *link,
+    {
         match link {
             | None => None,
             | Some(node) => match node.left {
@@ -153,7 +202,9 @@ pub mod BSTKeyValueStEph {
 
     /// - APAS: N/A — internal recursive max-key helper.
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-    fn max_key_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Option<&K> {
+    fn max_key_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Option<&K>
+        decreases *link,
+    {
         match link {
             | None => None,
             | Some(node) => match node.right {
@@ -165,7 +216,9 @@ pub mod BSTKeyValueStEph {
 
     /// - APAS: N/A — internal recursive key collection helper.
     /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-    fn collect_keys<K: StT + Ord, V: StT>(link: &Link<K, V>, out: &mut Vec<K>) {
+    fn collect_keys<K: StT + Ord, V: StT>(link: &Link<K, V>, out: &mut Vec<K>)
+        decreases *link,
+    {
         if let Some(node) = link {
             collect_keys(&node.left, out);
             out.push(node.key.clone());
@@ -175,7 +228,9 @@ pub mod BSTKeyValueStEph {
 
     /// - APAS: N/A — internal recursive value collection helper.
     /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-    fn collect_values<K: StT + Ord, V: StT>(link: &Link<K, V>, out: &mut Vec<V>) {
+    fn collect_values<K: StT + Ord, V: StT>(link: &Link<K, V>, out: &mut Vec<V>)
+        decreases *link,
+    {
         if let Some(node) = link {
             collect_values(&node.left, out);
             out.push(node.value.clone());
@@ -184,7 +239,9 @@ pub mod BSTKeyValueStEph {
     }
 
     /// - APAS: N/A — in-order collect (key, value, priority) for rebuild.
-    fn collect_in_order_kvp<K: StT + Ord, V: StT>(link: &Link<K, V>, out: &mut Vec<(K, V, u64)>) {
+    fn collect_in_order_kvp<K: StT + Ord, V: StT>(link: &Link<K, V>, out: &mut Vec<(K, V, u64)>)
+        decreases *link,
+    {
         if let Some(node) = link {
             collect_in_order_kvp(&node.left, out);
             out.push((node.key.clone(), node.value.clone(), node.priority));
@@ -193,6 +250,7 @@ pub mod BSTKeyValueStEph {
     }
 
     /// - APAS: N/A — build treap from sorted (key, value, priority) sequence.
+    #[verifier::external_body]
     fn build_treap_from_sorted<K: StT + Ord, V: StT>(
         seq: &[(K, V, u64)],
     ) -> Link<K, V> {
@@ -223,23 +281,17 @@ pub mod BSTKeyValueStEph {
 
         fn is_empty(&self) -> B { self.size == 0 }
 
-        fn height(&self) -> N {
-            fn height_rec<K: StT + Ord, V: StT>(link: &Link<K, V>) -> N {
-                match link {
-                    | None => 0,
-                    | Some(node) => 1 + height_rec(&node.left).max(height_rec(&node.right)),
-                }
-            }
-            height_rec(&self.root)
-        }
+        fn height(&self) -> N { height_link(&self.root) }
 
         fn insert(&mut self, key: K, value: V, priority: u64) {
             let inserted = insert_link(&mut self.root, key, value, priority);
             if inserted {
-                self.size += 1;
+                proof { assume(self.size < usize::MAX); }
+                self.size = self.size + 1;
             }
         }
 
+        #[verifier::external_body]
         fn delete(&mut self, key: &K) {
             let mut in_order: Vec<(K, V, u64)> = Vec::new();
             collect_in_order_kvp(&self.root, &mut in_order);
@@ -254,12 +306,14 @@ pub mod BSTKeyValueStEph {
 
         fn get(&self, key: &K) -> Option<&V> { self.find(key) }
 
+        #[verifier::external_body]
         fn keys(&self) -> ArraySeqStPerS<K> {
             let mut out = Vec::with_capacity(self.size);
             collect_keys(&self.root, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
 
+        #[verifier::external_body]
         fn values(&self) -> ArraySeqStPerS<V> {
             let mut out = Vec::with_capacity(self.size);
             collect_values(&self.root, &mut out);
@@ -273,6 +327,29 @@ pub mod BSTKeyValueStEph {
 
     impl<K: StT + Ord, V: StT> Default for BSTreeKeyValue<K, V> {
         fn default() -> Self { Self::new() }
+    }
+
+    }
+
+    impl<K: StT + Ord + fmt::Debug, V: StT + fmt::Debug> fmt::Debug for Node<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("Node")
+                .field("key", &self.key)
+                .field("value", &self.value)
+                .field("priority", &self.priority)
+                .field("left", &self.left)
+                .field("right", &self.right)
+                .finish()
+        }
+    }
+
+    impl<K: StT + Ord + fmt::Debug, V: StT + fmt::Debug> fmt::Debug for BSTKeyValueStEph<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("BSTKeyValueStEph")
+                .field("root", &self.root)
+                .field("size", &self.size)
+                .finish()
+        }
     }
 
     #[macro_export]

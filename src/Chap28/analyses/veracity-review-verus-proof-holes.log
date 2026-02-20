@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap28/
+
 ✓ MCSSSpec.rs
    10 clean proof functions
 ✓ MaxContigSubSumBruteStEph.rs
@@ -32,4 +34,3 @@ Proof Functions:
 Holes Found: 0 total
 
 🎉 No proof holes or warnings found! All proofs are complete.
-fs are complete.

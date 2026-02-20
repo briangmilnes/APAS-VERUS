@@ -5,6 +5,7 @@ pub mod BSTParaStEph {
 
     use std::cell::RefCell;
     use std::cmp::Ordering::{Equal, Greater, Less};
+    use std::fmt;
     use std::rc::Rc;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;

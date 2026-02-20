@@ -25,21 +25,35 @@ pub mod BSTSetTreapMtEph {
 
     use std::collections::BTreeSet;
     use std::collections::hash_map::DefaultHasher;
+    use std::fmt;
     use std::hash::{Hash, Hasher};
+
+    use vstd::prelude::*;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::*;
     use crate::Types::Types::*;
 
+    verus! {
+
+    #[verifier::external_body]
     fn priority_for<T: Hash>(key: &T) -> u64 {
         let mut hasher = DefaultHasher::new();
         key.hash(&mut hasher);
         hasher.finish()
     }
 
-    #[derive(Debug, Clone)]
+    #[verifier::reject_recursive_types(T)]
     pub struct BSTSetTreapMtEph<T: StTInMtT + Ord + Hash> {
         tree: BSTTreapMtEph<T>,
+    }
+
+    impl<T: StTInMtT + Ord + Hash> Clone for BSTSetTreapMtEph<T> {
+        fn clone(&self) -> (result: Self)
+            ensures true,
+        {
+            BSTSetTreapMtEph { tree: self.tree.clone() }
+        }
     }
 
     pub type BSTSetTreapMt<T> = BSTSetTreapMtEph<T>;  // T: StTInMtT + Ord + Hash
@@ -107,6 +121,7 @@ pub mod BSTSetTreapMtEph {
         fn as_tree(&self)                            -> &BSTTreapMtEph<T>;
     }
 
+    #[verifier::external_body]
     fn values_vec<T: StTInMtT + Ord>(tree: &BSTTreapMtEph<T>) -> Vec<T> {
         tree.in_order().iter().cloned().collect()
     }
@@ -120,6 +135,7 @@ pub mod BSTSetTreapMtEph {
         tree
     }
 
+    #[verifier::external_body]
     fn from_sorted_iter<T: StTInMtT + Ord + Hash, I: IntoIterator<Item = T>>(values: I) -> BSTSetTreapMtEph<T> {
         let tree = BSTTreapMtEph::new();
         for value in values {
@@ -160,6 +176,7 @@ pub mod BSTSetTreapMtEph {
             self.tree.insert(value, p);
         }
 
+        #[verifier::external_body]
         fn delete(&mut self, target: &T) {
             let mut values = values_vec(&self.tree);
             if let Some(pos) = values.iter().position(|x| x == target) {
@@ -168,6 +185,7 @@ pub mod BSTSetTreapMtEph {
             }
         }
 
+        #[verifier::external_body]
         fn union(&self, other: &Self) -> Self {
             let mut merged = values_vec(&self.tree).into_iter().collect::<BTreeSet<T>>();
             for value in values_vec(&other.tree) {
@@ -176,6 +194,7 @@ pub mod BSTSetTreapMtEph {
             from_sorted_iter(merged)
         }
 
+        #[verifier::external_body]
         fn intersection(&self, other: &Self) -> Self {
             let other_values = values_vec(&other.tree).into_iter().collect::<BTreeSet<T>>();
             let filtered = self
@@ -192,6 +211,7 @@ pub mod BSTSetTreapMtEph {
             from_sorted_iter(filtered)
         }
 
+        #[verifier::external_body]
         fn difference(&self, other: &Self) -> Self {
             let other_values = values_vec(&other.tree).into_iter().collect::<BTreeSet<T>>();
             let filtered = self
@@ -208,6 +228,7 @@ pub mod BSTSetTreapMtEph {
             from_sorted_iter(filtered)
         }
 
+        #[verifier::external_body]
         fn split(&self, pivot: &T) -> (Self, B, Self) {
             let mut left = Vec::<T>::new();
             let mut right = Vec::<T>::new();
@@ -224,6 +245,8 @@ pub mod BSTSetTreapMtEph {
             (from_sorted_iter(left), found, from_sorted_iter(right))
         }
 
+        #[verifier::external_body]
+        #[verifier::external_body]
         fn join_pair(left: Self, right: Self) -> Self {
             let mut combined = values_vec(&left.tree).into_iter().collect::<BTreeSet<T>>();
             for value in values_vec(&right.tree) {
@@ -232,6 +255,8 @@ pub mod BSTSetTreapMtEph {
             from_sorted_iter(combined)
         }
 
+        #[verifier::external_body]
+        #[verifier::external_body]
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
             let mut combined = values_vec(&left.tree).into_iter().collect::<BTreeSet<T>>();
             combined.insert(pivot);
@@ -241,6 +266,7 @@ pub mod BSTSetTreapMtEph {
             from_sorted_iter(combined)
         }
 
+        #[verifier::external_body]
         fn filter<F: FnMut(&T) -> bool>(&self, mut predicate: F) -> Self {
             let filtered = self
                 .tree
@@ -250,6 +276,7 @@ pub mod BSTSetTreapMtEph {
             from_sorted_iter(filtered)
         }
 
+        #[verifier::external_body]
         fn reduce<F: FnMut(T, T) -> T>(&self, mut op: F, base: T) -> T {
             self.tree
                 .in_order()
@@ -260,6 +287,14 @@ pub mod BSTSetTreapMtEph {
         fn iter_in_order(&self) -> ArraySeqStPerS<T> { self.tree.in_order() }
 
         fn as_tree(&self) -> &BSTTreapMtEph<T> { &self.tree }
+    }
+
+    }
+
+    impl<T: StTInMtT + Ord + Hash + fmt::Debug> fmt::Debug for BSTSetTreapMtEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("BSTSetTreapMtEph").field("tree", &self.tree).finish()
+        }
     }
 
     #[macro_export]

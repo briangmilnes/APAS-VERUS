@@ -4,12 +4,17 @@
 pub mod BSTSetAVLMtEph {
 
     use std::collections::BTreeSet;
+    use std::fmt;
+
+    use vstd::prelude::*;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::BSTAVLMtEph::BSTAVLMtEph::*;
     use crate::Types::Types::*;
 
-    #[derive(Debug, Clone)]
+    verus! {
+
+    #[derive(Clone)]
     pub struct BSTSetAVLMtEph<T: StTInMtT + Ord> {
         tree: BSTAVLMtEph<T>,
     }
@@ -300,6 +305,14 @@ pub mod BSTSetAVLMtEph {
         fn iter_in_order(&self) -> ArraySeqStPerS<T> { self.tree.in_order() }
 
         fn as_tree(&self) -> &BSTAVLMtEph<T> { &self.tree }
+    }
+
+    }
+
+    impl<T: StTInMtT + Ord + fmt::Debug> fmt::Debug for BSTSetAVLMtEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("BSTSetAVLMtEph").field("tree", &self.tree).finish()
+        }
     }
 
     #[macro_export]

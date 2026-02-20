@@ -182,9 +182,9 @@ pub mod BSTSplayMtEph {
         match link {
             | None => None,
             | Some(node) => {
-                if target == &node.key {
+                if *target == node.key {
                     Some(&node.key)
-                } else if target < &node.key {
+                } else if *target < node.key {
                     find_link(&node.left, target)
                 } else {
                     find_link(&node.right, target)
