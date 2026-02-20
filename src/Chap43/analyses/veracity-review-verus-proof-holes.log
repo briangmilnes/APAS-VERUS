@@ -1,216 +1,45 @@
 $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap43/
 
 ❌ AugOrderedTableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:53: external_body - #[verifier::external_body]
-        54 |         open spec fn view(&self) -> Map<K::V, V::V> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:61: external_body - #[verifier::external_body]
-        62 |     pub fn recalculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:70: external_body - #[verifier::external_body]
-        71 |     pub fn calculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:178: external_body - #[verifier::external_body]
-       179 |         fn size(&self) -> (result: N)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:185: external_body - #[verifier::external_body]
-       186 |         fn empty(reducer: F, identity: V) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:197: external_body - #[verifier::external_body]
-       198 |         fn singleton(k: K, v: V, reducer: F, identity: V) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:209: external_body - #[verifier::external_body]
-       210 |         fn find(&self, k: &K) -> (result: Option<V>) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:214: external_body - #[verifier::external_body]
-       215 |         fn lookup(&self, k: &K) -> (result: Option<V>) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:219: external_body - #[verifier::external_body]
-       220 |         fn is_empty(&self) -> (result: B)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:226: external_body - #[verifier::external_body]
-       227 |         fn insert<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: G)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:234: external_body - #[verifier::external_body]
-       235 |         fn delete(&mut self, k: &K) -> (result: Option<V>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:244: external_body - #[verifier::external_body]
-       245 |         fn domain(&self) -> (result: ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:251: external_body - #[verifier::external_body]
-       252 |         fn tabulate<G: Fn(&K) -> V + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:271: external_body - #[verifier::external_body]
-       272 |         fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:286: external_body - #[verifier::external_body]
-       287 |         fn filter<G: Fn(&K, &V) -> B + Send + Sync + 'static>(&self, f: G) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:301: external_body - #[verifier::external_body]
-       302 |         fn intersection<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: G)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:309: external_body - #[verifier::external_body]
-       310 |         fn union<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: G)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:317: external_body - #[verifier::external_body]
-       318 |         fn difference(&mut self, other: &Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:325: external_body - #[verifier::external_body]
-       326 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:333: external_body - #[verifier::external_body]
-       334 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:341: external_body - #[verifier::external_body]
-       342 |         fn reduce<R: StTInMtT + 'static, G: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: G) -> (result: R)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:348: external_body - #[verifier::external_body]
-       349 |         fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:355: external_body - #[verifier::external_body]
-       356 |         fn first_key(&self) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:362: external_body - #[verifier::external_body]
-       363 |         fn last_key(&self) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:369: external_body - #[verifier::external_body]
-       370 |         fn previous_key(&self, k: &K) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:376: external_body - #[verifier::external_body]
-       377 |         fn next_key(&self, k: &K) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:383: external_body - #[verifier::external_body]
-       384 |         fn split_key(&mut self, k: &K) -> (result: (Self, Option<V>, Self))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:409: external_body - #[verifier::external_body]
-       410 |         fn join_key(&mut self, other: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:429: external_body - #[verifier::external_body]
-       430 |         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:444: external_body - #[verifier::external_body]
-       445 |         fn rank_key(&self, k: &K) -> (result: N)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:451: external_body - #[verifier::external_body]
-       452 |         fn select_key(&self, i: N) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:458: external_body - #[verifier::external_body]
-       459 |         fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:484: external_body - #[verifier::external_body]
-       485 |         fn reduce_val(&self) -> (result: V)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:491: external_body - #[verifier::external_body]
-       492 |         fn reduce_range(&self, k1: &K, k2: &K) -> (result: V)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:499: external_body - #[verifier::external_body]
-       500 |         fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (result: V)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:540: external_body - #[verifier::external_body]
-       541 |         fn clone(&self) -> (result: Self)
-   Holes: 36 total
-      36 × external_body
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:59: external_body - #[verifier::external_body]
+        60 |     pub fn recalculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:68: external_body - #[verifier::external_body]
+        69 |     pub fn calculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:422: external_body - #[verifier::external_body]
+       423 |         fn join_key(&mut self, other: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:518: external_body - #[verifier::external_body]
+       519 |         fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (result: V)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:554: external_body - #[verifier::external_body]
+       555 |         fn clone(&self) -> (result: Self)
+   Holes: 5 total
+      5 × external_body
+   Proof functions: 1 total (1 clean, 0 holed)
 ❌ AugOrderedTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:53: external_body - #[verifier::external_body]
-        54 |         open spec fn view(&self) -> Map<K::V, V::V> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:61: external_body - #[verifier::external_body]
-        62 |     pub fn calculate_reduction<K: StT + Ord, V: StT, F>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:180: external_body - #[verifier::external_body]
-       181 |         fn size(&self) -> (result: N)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:187: external_body - #[verifier::external_body]
-       188 |         fn empty(reducer: F, identity: V) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:199: external_body - #[verifier::external_body]
-       200 |         fn singleton(k: K, v: V, reducer: F, identity: V) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:211: external_body - #[verifier::external_body]
-       212 |         fn find(&self, k: &K) -> (result: Option<V>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:222: external_body - #[verifier::external_body]
-       223 |         fn lookup(&self, k: &K) -> (result: Option<V>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:233: external_body - #[verifier::external_body]
-       234 |         fn is_empty(&self) -> (result: B)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:240: external_body - #[verifier::external_body]
-       241 |         fn insert<G: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: G)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:248: external_body - #[verifier::external_body]
-       249 |         fn delete(&mut self, k: &K) -> (result: Option<V>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:258: external_body - #[verifier::external_body]
-       259 |         fn domain(&self) -> (result: ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:265: external_body - #[verifier::external_body]
-       266 |         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:280: external_body - #[verifier::external_body]
-       281 |         fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:295: external_body - #[verifier::external_body]
-       296 |         fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:310: external_body - #[verifier::external_body]
-       311 |         fn reduce<R, G: Fn(R, &K, &V) -> R>(&self, init: R, f: G) -> (result: R)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:317: external_body - #[verifier::external_body]
-       318 |         fn intersection<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:325: external_body - #[verifier::external_body]
-       326 |         fn union<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:333: external_body - #[verifier::external_body]
-       334 |         fn difference(&mut self, other: &Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:341: external_body - #[verifier::external_body]
-       342 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:349: external_body - #[verifier::external_body]
-       350 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:357: external_body - #[verifier::external_body]
-       358 |         fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:364: external_body - #[verifier::external_body]
-       365 |         fn first_key(&self) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:371: external_body - #[verifier::external_body]
-       372 |         fn last_key(&self) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:378: external_body - #[verifier::external_body]
-       379 |         fn previous_key(&self, k: &K) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:385: external_body - #[verifier::external_body]
-       386 |         fn next_key(&self, k: &K) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:392: external_body - #[verifier::external_body]
-       393 |         fn split_key(&mut self, k: &K) -> (result: (Self, Option<V>, Self))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:418: external_body - #[verifier::external_body]
-       419 |         fn join_key(&mut self, other: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:438: external_body - #[verifier::external_body]
-       439 |         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:453: external_body - #[verifier::external_body]
-       454 |         fn rank_key(&self, k: &K) -> (result: N)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:460: external_body - #[verifier::external_body]
-       461 |         fn select_key(&self, i: N) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:467: external_body - #[verifier::external_body]
-       468 |         fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:493: external_body - #[verifier::external_body]
-       494 |         fn reduce_val(&self) -> (result: V)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:500: external_body - #[verifier::external_body]
-       501 |         fn reduce_range(&self, k1: &K, k2: &K) -> (result: V)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:515: external_body - #[verifier::external_body]
-       516 |         fn clone(&self) -> (result: Self)
-   Holes: 34 total
-      34 × external_body
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:59: external_body - #[verifier::external_body]
+        60 |     pub fn calculate_reduction<K: StT + Ord, V: StT, F>(
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:221: external_body - #[verifier::external_body]
+       222 |         fn find(&self, k: &K) -> (result: Option<V>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:232: external_body - #[verifier::external_body]
+       233 |         fn lookup(&self, k: &K) -> (result: Option<V>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:433: external_body - #[verifier::external_body]
+       434 |         fn join_key(&mut self, other: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStEph.rs:536: external_body - #[verifier::external_body]
+       537 |         fn clone(&self) -> (result: Self)
+   Holes: 5 total
+      5 × external_body
+   Proof functions: 1 total (1 clean, 0 holed)
 ❌ AugOrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:53: external_body - #[verifier::external_body]
-        54 |         open spec fn view(&self) -> Map<K::V, V::V> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:61: external_body - #[verifier::external_body]
-        62 |     pub fn calculate_reduction<K: StT + Ord, V: StT, F>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:170: external_body - #[verifier::external_body]
-       171 |         fn size(&self) -> (result: N)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:177: external_body - #[verifier::external_body]
-       178 |         fn empty(reducer: F, identity: V) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:189: external_body - #[verifier::external_body]
-       190 |         fn singleton(k: K, v: V, reducer: F, identity: V) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:201: external_body - #[verifier::external_body]
-       202 |         fn find(&self, k: &K) -> (result: Option<V>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:212: external_body - #[verifier::external_body]
-       213 |         fn insert(&self, k: K, v: V) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:227: external_body - #[verifier::external_body]
-       228 |         fn delete(&self, k: &K) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:244: external_body - #[verifier::external_body]
-       245 |         fn domain(&self) -> (result: ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:251: external_body - #[verifier::external_body]
-       252 |         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:266: external_body - #[verifier::external_body]
-       267 |         fn map<G: Fn(&V) -> V>(&self, f: G) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:281: external_body - #[verifier::external_body]
-       282 |         fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:296: external_body - #[verifier::external_body]
-       297 |         fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:311: external_body - #[verifier::external_body]
-       312 |         fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:326: external_body - #[verifier::external_body]
-       327 |         fn difference(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:341: external_body - #[verifier::external_body]
-       342 |         fn restrict(&self, keys: &ArraySetStEph<K>) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:356: external_body - #[verifier::external_body]
-       357 |         fn subtract(&self, keys: &ArraySetStEph<K>) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:371: external_body - #[verifier::external_body]
-       372 |         fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:378: external_body - #[verifier::external_body]
-       379 |         fn first_key(&self) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:385: external_body - #[verifier::external_body]
-       386 |         fn last_key(&self) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:392: external_body - #[verifier::external_body]
-       393 |         fn previous_key(&self, k: &K) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:399: external_body - #[verifier::external_body]
-       400 |         fn next_key(&self, k: &K) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:406: external_body - #[verifier::external_body]
-       407 |         fn split_key(&self, k: &K) -> (result: (Self, Option<V>, Self))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:432: external_body - #[verifier::external_body]
-       433 |         fn join_key(left: &Self, right: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:453: external_body - #[verifier::external_body]
-       454 |         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:468: external_body - #[verifier::external_body]
-       469 |         fn rank_key(&self, k: &K) -> (result: N)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:475: external_body - #[verifier::external_body]
-       476 |         fn select_key(&self, i: N) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:482: external_body - #[verifier::external_body]
-       483 |         fn split_rank_key(&self, i: N) -> (result: (Self, Self))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:508: external_body - #[verifier::external_body]
-       509 |         fn reduce_val(&self) -> (result: V)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:515: external_body - #[verifier::external_body]
-       516 |         fn reduce_range(&self, k1: &K, k2: &K) -> (result: V)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:530: external_body - #[verifier::external_body]
-       531 |         fn clone(&self) -> (result: Self)
-   Holes: 31 total
-      31 × external_body
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:59: external_body - #[verifier::external_body]
+        60 |     pub fn calculate_reduction<K: StT + Ord, V: StT, F>(
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:211: external_body - #[verifier::external_body]
+       212 |         fn find(&self, k: &K) -> (result: Option<V>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:450: external_body - #[verifier::external_body]
+       451 |         fn join_key(left: &Self, right: &Self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:555: external_body - #[verifier::external_body]
+       556 |         fn clone(&self) -> (result: Self)
+   Holes: 4 total
+      4 × external_body
+   Proof functions: 1 total (1 clean, 0 holed)
 ✓ Example43_1.rs
 ❌ OrderedSetMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:37: external_body - #[verifier::external_body]
@@ -312,72 +141,46 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Holes: 10 total
       10 × external_body
 ❌ OrderedTableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:45: external_body - #[verifier::external_body]
-        46 |         open spec fn view(&self) -> Map<K::V, V::V> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:146: external_body - #[verifier::external_body]
-       147 |         fn size(&self) -> (result: N)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:153: external_body - #[verifier::external_body]
-       154 |         fn empty() -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:162: external_body - #[verifier::external_body]
-       163 |         fn singleton(k: K, v: V) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:171: external_body - #[verifier::external_body]
-       172 |         fn find(&self, k: &K) -> (result: Option<V>) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:176: external_body - #[verifier::external_body]
-       177 |         fn lookup(&self, k: &K) -> (result: Option<V>) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:181: external_body - #[verifier::external_body]
-       182 |         fn is_empty(&self) -> (result: B)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:188: external_body - #[verifier::external_body]
-       189 |         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:195: external_body - #[verifier::external_body]
-       196 |         fn delete(&mut self, k: &K) -> (result: Option<V>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:204: external_body - #[verifier::external_body]
-       205 |         fn domain(&self) -> (result: ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:211: external_body - #[verifier::external_body]
-       212 |         fn tabulate<F>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:221: external_body - #[verifier::external_body]
-       222 |         fn map<F>(&self, f: F) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:239: external_body - #[verifier::external_body]
-       240 |         fn filter<F>(&self, f: F) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:257: external_body - #[verifier::external_body]
-       258 |         fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (result: R)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:270: external_body - #[verifier::external_body]
-       271 |         fn intersection<F>(&mut self, other: &Self, f: F)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:278: external_body - #[verifier::external_body]
-       279 |         fn union<F>(&mut self, other: &Self, f: F)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:286: external_body - #[verifier::external_body]
-       287 |         fn difference(&mut self, other: &Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:293: external_body - #[verifier::external_body]
-       294 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:143: external_body - #[verifier::external_body]
+       144 |         fn size(&self) -> (result: N)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:158: external_body - #[verifier::external_body]
+       159 |         fn singleton(k: K, v: V) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:175: external_body - #[verifier::external_body]
+       176 |         fn is_empty(&self) -> (result: B)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:189: external_body - #[verifier::external_body]
+       190 |         fn delete(&mut self, k: &K) -> (result: Option<V>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:214: external_body - #[verifier::external_body]
+       215 |         fn map<F>(&self, f: F) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:232: external_body - #[verifier::external_body]
+       233 |         fn filter<F>(&self, f: F) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:250: external_body - #[verifier::external_body]
+       251 |         fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (result: R)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:300: external_body - #[verifier::external_body]
-       301 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:307: external_body - #[verifier::external_body]
-       308 |         fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:320: external_body - #[verifier::external_body]
-       321 |         fn first_key(&self) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:332: external_body - #[verifier::external_body]
-       333 |         fn last_key(&self) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:345: external_body - #[verifier::external_body]
-       346 |         fn previous_key(&self, k: &K) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:361: external_body - #[verifier::external_body]
-       362 |         fn next_key(&self, k: &K) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:377: external_body - #[verifier::external_body]
-       378 |         fn split_key(&mut self, k: &K) -> (result: (Self, Option<V>, Self))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:406: external_body - #[verifier::external_body]
-       407 |         fn join_key(&mut self, other: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:413: external_body - #[verifier::external_body]
-       414 |         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:432: external_body - #[verifier::external_body]
-       433 |         fn rank_key(&self, k: &K) -> (result: N)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:451: external_body - #[verifier::external_body]
-       452 |         fn select_key(&self, i: N) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:463: external_body - #[verifier::external_body]
-       464 |         fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:498: external_body - #[verifier::external_body]
-       499 |         fn clone(&self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:508: external_body - #[verifier::external_body]
-       509 |     pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: AVLTreeSeqStPerS<Pair<K, V>>) -> (result: OrderedTableMtEph<K, V>)
-   Holes: 32 total
-      32 × external_body
+       301 |         fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:313: external_body - #[verifier::external_body]
+       314 |         fn first_key(&self) -> (result: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:325: external_body - #[verifier::external_body]
+       326 |         fn last_key(&self) -> (result: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:338: external_body - #[verifier::external_body]
+       339 |         fn previous_key(&self, k: &K) -> (result: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:354: external_body - #[verifier::external_body]
+       355 |         fn next_key(&self, k: &K) -> (result: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:370: external_body - #[verifier::external_body]
+       371 |         fn split_key(&mut self, k: &K) -> (result: (Self, Option<V>, Self))
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:405: external_body - #[verifier::external_body]
+       406 |         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:424: external_body - #[verifier::external_body]
+       425 |         fn rank_key(&self, k: &K) -> (result: N)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:443: external_body - #[verifier::external_body]
+       444 |         fn select_key(&self, i: N) -> (result: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:455: external_body - #[verifier::external_body]
+       456 |         fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:490: external_body - #[verifier::external_body]
+       491 |         fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:500: external_body - #[verifier::external_body]
+       501 |     pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: AVLTreeSeqStPerS<Pair<K, V>>) -> (result: OrderedTableMtEph<K, V>)
+   Holes: 19 total
+      19 × external_body
 ❌ OrderedTableMtPer.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:44: external_body - #[verifier::external_body]
         45 |         open spec fn view(&self) -> Map<K::V, V::V> {
@@ -424,73 +227,45 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Holes: 21 total
       21 × external_body
 ❌ OrderedTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:41: external_body - #[verifier::external_body]
-        42 |         open spec fn view(&self) -> Self::V { Map::empty() }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:112: external_body - #[verifier::external_body]
-       113 |         fn size(&self) -> (result: N)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:119: external_body - #[verifier::external_body]
-       120 |         fn empty() -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:128: external_body - #[verifier::external_body]
-       129 |         fn singleton(k: K, v: V) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:137: external_body - #[verifier::external_body]
-       138 |         fn find(&self, k: &K) -> (result: Option<V>) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:142: external_body - #[verifier::external_body]
-       143 |         fn lookup(&self, k: &K) -> (result: Option<V>) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:147: external_body - #[verifier::external_body]
-       148 |         fn is_empty(&self) -> (result: B)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:154: external_body - #[verifier::external_body]
-       155 |         fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:161: external_body - #[verifier::external_body]
-       162 |         fn delete(&mut self, k: &K) -> (result: Option<V>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:170: external_body - #[verifier::external_body]
-       171 |         fn domain(&self) -> (result: ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:177: external_body - #[verifier::external_body]
-       178 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:186: external_body - #[verifier::external_body]
-       187 |         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:201: external_body - #[verifier::external_body]
-       202 |         fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:217: external_body - #[verifier::external_body]
-       218 |         fn reduce<R, F: Fn(R, &K, &V) -> R>(&self, init: R, f: F) -> (result: R)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:230: external_body - #[verifier::external_body]
-       231 |         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:237: external_body - #[verifier::external_body]
-       238 |         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:244: external_body - #[verifier::external_body]
-       245 |         fn difference(&mut self, other: &Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:251: external_body - #[verifier::external_body]
-       252 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:258: external_body - #[verifier::external_body]
-       259 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:265: external_body - #[verifier::external_body]
-       266 |         fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:278: external_body - #[verifier::external_body]
-       279 |         fn first_key(&self) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:290: external_body - #[verifier::external_body]
-       291 |         fn last_key(&self) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:303: external_body - #[verifier::external_body]
-       304 |         fn previous_key(&self, k: &K) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:319: external_body - #[verifier::external_body]
-       320 |         fn next_key(&self, k: &K) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:335: external_body - #[verifier::external_body]
-       336 |         fn split_key(&mut self, k: &K) -> (result: (Self, Option<V>, Self))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:368: external_body - #[verifier::external_body]
-       369 |         fn join_key(&mut self, other: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:375: external_body - #[verifier::external_body]
-       376 |         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:394: external_body - #[verifier::external_body]
-       395 |         fn rank_key(&self, k: &K) -> (result: N)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:413: external_body - #[verifier::external_body]
-       414 |         fn select_key(&self, i: N) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:425: external_body - #[verifier::external_body]
-       426 |         fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:467: external_body - #[verifier::external_body]
-       468 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
-   Holes: 31 total
-      31 × external_body
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:111: external_body - #[verifier::external_body]
+       112 |         fn size(&self) -> (result: N)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:126: external_body - #[verifier::external_body]
+       127 |         fn singleton(k: K, v: V) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:143: external_body - #[verifier::external_body]
+       144 |         fn is_empty(&self) -> (result: B)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:157: external_body - #[verifier::external_body]
+       158 |         fn delete(&mut self, k: &K) -> (result: Option<V>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:181: external_body - #[verifier::external_body]
+       182 |         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:196: external_body - #[verifier::external_body]
+       197 |         fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:212: external_body - #[verifier::external_body]
+       213 |         fn reduce<R, F: Fn(R, &K, &V) -> R>(&self, init: R, f: F) -> (result: R)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:260: external_body - #[verifier::external_body]
+       261 |         fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:273: external_body - #[verifier::external_body]
+       274 |         fn first_key(&self) -> (result: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:285: external_body - #[verifier::external_body]
+       286 |         fn last_key(&self) -> (result: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:298: external_body - #[verifier::external_body]
+       299 |         fn previous_key(&self, k: &K) -> (result: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:314: external_body - #[verifier::external_body]
+       315 |         fn next_key(&self, k: &K) -> (result: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:330: external_body - #[verifier::external_body]
+       331 |         fn split_key(&mut self, k: &K) -> (result: (Self, Option<V>, Self))
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:369: external_body - #[verifier::external_body]
+       370 |         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:388: external_body - #[verifier::external_body]
+       389 |         fn rank_key(&self, k: &K) -> (result: N)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:407: external_body - #[verifier::external_body]
+       408 |         fn select_key(&self, i: N) -> (result: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:419: external_body - #[verifier::external_body]
+       420 |         fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:461: external_body - #[verifier::external_body]
+       462 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
+   Holes: 18 total
+      18 × external_body
 ❌ OrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:41: external_body - #[verifier::external_body]
-        42 |         open spec fn view(&self) -> Self::V { Map::empty() }
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:107: external_body - #[verifier::external_body]
        108 |         fn size(&self) -> (result: N)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:114: external_body - #[verifier::external_body]
@@ -545,8 +320,8 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
        394 |         fn split_rank_key(&self, i: N) -> (result: (Self, Self))
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:432: external_body - #[verifier::external_body]
        433 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
-   Holes: 28 total
-      28 × external_body
+   Holes: 27 total
+      27 × external_body
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -558,9 +333,9 @@ Modules:
    11 total
 
 Proof Functions:
-   0 clean
+   3 clean
    0 holed
-   0 total
+   3 total
 
-Holes Found: 258 total
-   258 × external_body
+Holes Found: 144 total
+   144 × external_body

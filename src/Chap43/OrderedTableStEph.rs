@@ -108,11 +108,15 @@ pub mod OrderedTableStEph {
     // 9. impls
 
     impl<K: StT + Ord, V: StT> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
-        #[verifier::external_body]
         fn size(&self) -> (result: N)
             ensures result == self@.dom().len(), self@.dom().finite()
         {
-            self.base_table.size()
+            let r = self.base_table.size();
+            proof {
+                assert(self@ =~= self.base_table@);
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@);
+            }
+            r
         }
 
         fn empty() -> (result: Self)
@@ -140,10 +144,10 @@ pub mod OrderedTableStEph {
             self.find(k)
         }
 
-        #[verifier::external_body]
         fn is_empty(&self) -> (result: B)
             ensures result == self@.dom().is_empty()
         {
+            proof { assert(self@ =~= self.base_table@); }
             self.size() == 0
         }
 
