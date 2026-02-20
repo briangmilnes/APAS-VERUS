@@ -1,6 +1,6 @@
 # Propose New Work
 
-When the user says "propose new work", "proposed work table", or "retable", generate a table of actionable work from the proof holes report. Output in Cursor chat only (no file).
+When the user says "propose new work", "proposed work table", or "retable", generate a table of actionable work from the proof holes report. Write output to `plans/proposed-work.md` (see plans-directory rule).
 
 ## Procedure
 
@@ -13,15 +13,20 @@ When the user says "propose new work", "proposed work table", or "retable", gene
 
 2. For each holed file, determine whether it has **proposed work**:
    - **Yes**: non-standard assume, external_body hiding algorithmic logic, bare_impl (except iter_mut/recursive-spec-fn)
-   - **No**: accepted patterns only — PartialEq assume, Clone assume, `assume(false); diverge()` in thread join, external_body at threading boundaries, external_body at AtomicUsize (Chap12)
+   - **No**: accepted patterns only — PartialEq assume, Clone assume, assume_eq_clone_workaround, `assume(false); diverge()` in thread join, external_body at threading boundaries, external_body at AtomicUsize (Chap12)
+
+   Do **not** table proposed work on assume_eq_clone_workaround.
 
 3. List only files with proposed work. If a chapter has multiple holed files, include only those with proposed work (e.g., Chap19: ArraySeqMtEphSlice has bare_impl; ArraySeqMtEph/StEph/StPer have PartialEq only → list only ArraySeqMtEphSlice).
 
 4. Output table format:
    | # | Chapter | Holed Files | Proposed Work |
    Cells ≤ 40 chars. Avoid the word "in" in cells (use "lacking" not "without").
+   **Last column (Proposed Work)**: Keep each cell ≤ 30 chars. Use terse abbreviations (e.g. "ext_body" not "external_body", "struct out" for "struct outside verus"). If needed, move detail to a footnote below the table.
 
 5. Skip chapters with no proposed work. Do not include rows where all holes are accepted patterns.
+
+6. Write the table to `plans/proposed-work.md`.
 
 ## Permanent external_body (no proposed work)
 

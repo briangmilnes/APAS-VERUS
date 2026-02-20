@@ -17,7 +17,11 @@ pub mod BSTSizeStEph {
         right: Link<T>,
     }
 
-    impl<T: StT + Ord> Node<T> {
+    trait NodeTrait<T: StT + Ord>: Sized {
+        fn new(key: T, priority: u64) -> Self;
+    }
+
+    impl<T: StT + Ord> NodeTrait<T> for Node<T> {
         fn new(key: T, priority: u64) -> Self {
             Node {
                 key,

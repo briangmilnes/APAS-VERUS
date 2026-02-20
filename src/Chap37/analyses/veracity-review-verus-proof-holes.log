@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap37/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/
 
 ❌ AVLTreeSeq.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:217: assume() - proof { assume(1 + b.left_size + b.right_size < usize::MAX);
@@ -300,3 +300,150 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:351: external_body - #[verifier::external_body]
        352 |     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (result: bool) {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:415: assume() - proof { assume(self.spec_well_formed()); }
+       413 | 
+       414 |         fn subseq_copy(&self, start: N, length: N) -> (result: Self) {
+       416 |             let n = self.length();
+       417 |             let s = if start < n { start } else { n };
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:446: assume() - proof { assume(self.spec_well_formed()); }
+       444 | 
+       445 |         fn values_in_order(&self) -> (result: Vec<T>) {
+       447 |             let mut out: Vec<T> = Vec::new();
+       448 |             inorder_collect(&self.root, &mut out);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:453: assume() - proof { assume(self.spec_well_formed()); }
+       451 | 
+       452 |         fn to_arrayseq(&self) -> (result: ArraySeqStPerS<T>) {
+       454 |             let v = self.values_in_order();
+       455 |             ArraySeqStPerS::from_vec(v)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:458: external_body - #[verifier::external_body]
+       459 |         fn iter<'a>(&'a self) -> (result: AVLTreeSeqStPerIter<'a, T>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:488: external_body - #[verifier::external_body]
+       489 |         fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:482: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       478 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       480 |         {
+       481 |             let r = compare_trees(&self.root, &other.root);
+       483 |             r
+       484 |         }
+   Holes: 14 total
+      3 × assume()
+      11 × external_body
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
+   Proof functions: 1 total (1 clean, 0 holed)
+✓ BSTAVLMtEph.rs
+   1 clean proof function
+✓ BSTAVLStEph.rs
+   2 clean proof functions
+✓ BSTBBAlphaMtEph.rs
+✓ BSTBBAlphaStEph.rs
+✓ BSTPlainMtEph.rs
+✓ BSTPlainStEph.rs
+❌ BSTRBMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:319: external_type_specification - #[verifier::external_type_specification]
+       320 |         struct ExNode<T: StTInMtT + Ord>(Node<T>);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:325: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+       294 |     fn reduce_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> T
+            ...
+       323 | 
+       324 |         impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for RBLinkWf {
+       326 |         }
+       327 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:328: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+       325 |             open spec fn inv(self, v: Link<T>) -> bool { true }
+            ...
+       326 |         }
+       327 | 
+       329 |         fn new_rb_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, RBLinkWf>) {
+       330 |             RwLock::new(val, Ghost(RBLinkWf))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:15: error: enum_outside_verus - enum Color — should be inside verus!
+        15 |     enum Color {
+        16 |         Red,
+        17 |         Black,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:15: error: clone_derived_outside - enum Color — Clone should be implemented inside verus!, not derived outside
+        15 |     enum Color {
+        16 |         Red,
+        17 |         Black,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:23: error: struct_outside_verus - struct Node — should be inside verus!
+        23 |     struct Node<T: StTInMtT + Ord> {
+        24 |         key: T,
+        25 |         color: Color,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:23: error: clone_derived_outside - struct Node — Clone should be implemented inside verus!, not derived outside
+        23 |     struct Node<T: StTInMtT + Ord> {
+        24 |         key: T,
+        25 |         color: Color,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:335: error: struct_outside_verus - struct BSTRBMtEph — should be inside verus!
+       335 |     pub struct BSTRBMtEph<T: StTInMtT + Ord> {
+       336 |         root: Arc<RwLock<Link<T>, RBLinkWf>>,
+       337 |     }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:335: error: clone_derived_outside - struct BSTRBMtEph — Clone should be implemented inside verus!, not derived outside
+       335 |     pub struct BSTRBMtEph<T: StTInMtT + Ord> {
+       336 |         root: Arc<RwLock<Link<T>, RBLinkWf>>,
+       337 |     }
+   Holes: 1 total
+      1 × external_type_specification
+   Errors: 8 total (3 struct/enum outside verus!, 3 Clone derived outside, 1 Verus RwLock external_body, 1 dummy RwLockPredicate)
+✓ BSTRBStEph.rs
+   1 clean proof function
+✓ BSTSetAVLMtEph.rs
+✓ BSTSetBBAlphaMtEph.rs
+✓ BSTSetPlainMtEph.rs
+✓ BSTSetRBMtEph.rs
+✓ BSTSetSplayMtEph.rs
+❌ BSTSplayMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:341: external_type_specification - #[verifier::external_type_specification]
+       342 |         struct ExNode<T: StTInMtT + Ord>(Node<T>);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:347: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+       316 |     fn reduce_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> T
+            ...
+       345 | 
+       346 |         impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for SplayLinkWf {
+       348 |         }
+       349 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:350: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+       347 |             open spec fn inv(self, v: Link<T>) -> bool { true }
+            ...
+       348 |         }
+       349 | 
+       351 |         fn new_splay_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, SplayLinkWf>) {
+       352 |             RwLock::new(val, Ghost(SplayLinkWf))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:17: error: struct_outside_verus - struct Node — should be inside verus!
+        17 |     struct Node<T: StTInMtT + Ord> {
+        18 |         key: T,
+        19 |         size: N,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:17: error: clone_derived_outside - struct Node — Clone should be implemented inside verus!, not derived outside
+        17 |     struct Node<T: StTInMtT + Ord> {
+        18 |         key: T,
+        19 |         size: N,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:357: error: struct_outside_verus - struct BSTSplayMtEph — should be inside verus!
+       357 |     pub struct BSTSplayMtEph<T: StTInMtT + Ord> {
+       358 |         root: Arc<RwLock<Link<T>, SplayLinkWf>>,
+       359 |     }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:357: error: clone_derived_outside - struct BSTSplayMtEph — Clone should be implemented inside verus!, not derived outside
+       357 |     pub struct BSTSplayMtEph<T: StTInMtT + Ord> {
+       358 |         root: Arc<RwLock<Link<T>, SplayLinkWf>>,
+       359 |     }
+   Holes: 1 total
+      1 × external_type_specification
+   Errors: 6 total (2 struct/enum outside verus!, 2 Clone derived outside, 1 Verus RwLock external_body, 1 dummy RwLockPredicate)
+✓ BSTSplayStEph.rs
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   13 clean (no holes)
+   6 holed (contains holes)
+   19 total
+
+Proof Functions:
+   8 clean
+   0 holed
+   8 total
+
+Holes Found: 79 total
+   32 × assume()
+   45 × external_body
+   2 × external_type_specification
+
+Errors: 19 (bare impl(s), struct/enum outside verus!)

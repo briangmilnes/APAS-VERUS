@@ -21,17 +21,11 @@ pub mod BSTReducedStEph {
         right: Link<K, V, R>,
     }
 
-    /// Trait for associative reduction operations
-    pub trait ReduceOp<V: StT, R: StT> {
-        /// Identity element for the reduction operation
-        fn identity()          -> R;
-        /// Associative binary operation: f(a, b)
-        fn combine(a: R, b: R) -> R;
-        /// Convert value to reduced form
-        fn lift(value: &V)     -> R;
+    trait NodeTrait<K: StT + Ord, V: StT, R: StT>: Sized {
+        fn new(key: K, value: V, priority: u64, reduced_value: R) -> Self;
     }
 
-    impl<K: StT + Ord, V: StT, R: StT> Node<K, V, R> {
+    impl<K: StT + Ord, V: StT, R: StT> NodeTrait<K, V, R> for Node<K, V, R> {
         fn new(key: K, value: V, priority: u64, reduced_value: R) -> Self {
             Node {
                 key,
@@ -43,6 +37,16 @@ pub mod BSTReducedStEph {
                 right: None,
             }
         }
+    }
+
+    /// Trait for associative reduction operations
+    pub trait ReduceOp<V: StT, R: StT> {
+        /// Identity element for the reduction operation
+        fn identity()          -> R;
+        /// Associative binary operation: f(a, b)
+        fn combine(a: R, b: R) -> R;
+        /// Convert value to reduced form
+        fn lift(value: &V)     -> R;
     }
 
     /// Example: Sum reduction for numeric values
