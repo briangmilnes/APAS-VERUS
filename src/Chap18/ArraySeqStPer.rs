@@ -978,17 +978,8 @@ pub mod ArraySeqStPer {
         }
     }
 
-    impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStPerS<T> {
-        type Item = &'a T;
-        type IntoIter = ArraySeqStPerIter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { ArraySeqStPerIter { inner: self.seq.iter() } }
-    }
-
-    impl<T> std::iter::IntoIterator for ArraySeqStPerS<T> {
-        type Item = T;
-        type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
-    }
+    // IntoIterator impls moved outside verus! — Verus hits ill-typed AIR on
+    // proj%%core!iter.traits.collect.IntoIterator./Item for ArraySeqStPerS.
 
 
     //		11. derive impls in verus!
@@ -1017,6 +1008,20 @@ pub mod ArraySeqStPer {
     }
 
     } // verus!
+
+
+    // IntoIterator outside verus! — Verus ill-typed AIR on IntoIterator./Item.
+    impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStPerS<T> {
+        type Item = &'a T;
+        type IntoIter = ArraySeqStPerIter<'a, T>;
+        fn into_iter(self) -> Self::IntoIter { ArraySeqStPerIter { inner: self.seq.iter() } }
+    }
+
+    impl<T> std::iter::IntoIterator for ArraySeqStPerS<T> {
+        type Item = T;
+        type IntoIter = IntoIter<T>;
+        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
+    }
 
 
     //		13. derive impls outside verus!

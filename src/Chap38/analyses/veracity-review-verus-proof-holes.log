@@ -1,17 +1,32 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap38/
+
 ❌ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:41: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:19: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+        17 | 
+        18 |         impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for BstParaWf {
+        20 |         }
+        21 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:41: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+        19 |             open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool { true }
+            ...
+        39 |         }
+        40 | 
         42 |         fn new_bst_para_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {
-   Holes: 1 total
-      1 × external_body
-✓ BSTParaStEph.rs
+        43 |             RwLock::new(val, Ghost(BstParaWf))
+   Errors: 2 total (1 Verus RwLock external_body, 1 dummy RwLockPredicate)
+❌ BSTParaStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Parametric single-threaded BST built around a joinMid interface.
+         3 | 
+   Errors: 1 total (1 not verusified)
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   1 clean (no holes)
-   1 holed (contains holes)
+   2 clean (no holes)
+   0 holed (contains holes)
    2 total
 
 Proof Functions:
@@ -19,6 +34,8 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 1 total
-   1 × external_body
-   1 × external_body
+Holes Found: 0 total
+
+Errors: 3 (bare impl(s), struct/enum outside verus!)
+
+🎉 No proof holes found! All proofs are complete.

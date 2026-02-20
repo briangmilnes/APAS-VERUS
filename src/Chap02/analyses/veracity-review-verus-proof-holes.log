@@ -1,28 +1,45 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap02/
+
 ✓ FibonacciHFScheduler.rs
    5 clean proof functions
 ❌ HFSchedulerMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:72: external_type_specification - #[verifier::external_type_specification]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:72: external_type_specification - #[verifier::external_type_specification]
         73 |     #[verifier::external_body]
         74 |     #[verifier::reject_recursive_types(T)]
         75 |     pub struct ExTaskState<T>(TaskState<T>);
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:73: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:73: external_body - #[verifier::external_body]
         74 |     #[verifier::reject_recursive_types(T)]
         75 |     pub struct ExTaskState<T>(TaskState<T>);
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:84: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:84: external_body - #[verifier::external_body]
         85 |     pub fn set_parallelism(n: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:94: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:94: external_body - #[verifier::external_body]
         95 |     pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:121: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:121: external_body - #[verifier::external_body]
        122 |     pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:152: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:140: assume(false) - assume(false); — needs diverge(); use `assume(false); diverge()`
+       122 |     pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
+            ...
+       138 |             Ok(val) => val,
+       139 |             Err(_) => {
+       141 |                 diverge()
+       142 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:152: external_body - #[verifier::external_body]
        153 |     pub fn spawn<T, F>(f: F) -> (task: TaskState<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:174: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:174: external_body - #[verifier::external_body]
        175 |     pub fn wait<T: Send + 'static>(task: TaskState<T>) -> (task_result: T)
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:140: info: assume(false); diverge() - assume(false); — valid non-termination idiom
-   Holes: 7 total
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:18: error: struct_outside_verus - struct PoolState — should be inside verus!
+        18 |     struct PoolState {
+        19 |         available_tasks: Mutex<usize>,
+        20 |         task_freed: Condvar,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:24: error: enum_outside_verus - enum TaskState — should be inside verus!
+        24 |     pub enum TaskState<T> {
+        25 |         Spawned   { handle: JoinHandlePlus<T> },
+        26 |         Completed { result: Option<T> },
+   Holes: 8 total
+      1 × assume(false)
       6 × external_body
       1 × external_type_specification
-   Info: 1 assume(false); diverge() idiom(s)
+   Errors: 2 total (2 struct/enum outside verus!)
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -38,11 +55,9 @@ Proof Functions:
    0 holed
    5 total
 
-Holes Found: 7 total
+Holes Found: 8 total
+   1 × assume(false)
    6 × external_body
    1 × external_type_specification
 
-Info: 1 assume(false); diverge() idiom(s) (valid non-termination)
-ernal_type_specification
-
-Info: 1 assume(false); diverge() idiom(s) (valid non-termination)
+Errors: 2 (bare impl(s), struct/enum outside verus!)

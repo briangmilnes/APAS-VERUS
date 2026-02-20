@@ -4,12 +4,17 @@
 pub mod BSTSetBBAlphaMtEph {
 
     use std::collections::BTreeSet;
+    use std::fmt;
+
+    use vstd::prelude::*;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::*;
     use crate::Types::Types::*;
 
-    #[derive(Debug, Clone)]
+    verus! {
+
+    #[derive(Clone)]
     pub struct BSTSetBBAlphaMtEph<T: StTInMtT + Ord> {
         tree: BSTBBAlphaMtEph<T>,
     }
@@ -206,6 +211,14 @@ pub mod BSTSetBBAlphaMtEph {
         fn iter_in_order(&self) -> ArraySeqStPerS<T> { self.tree.in_order() }
 
         fn as_tree(&self) -> &BSTBBAlphaMtEph<T> { &self.tree }
+    }
+
+    }
+
+    impl<T: StTInMtT + Ord + fmt::Debug> fmt::Debug for BSTSetBBAlphaMtEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("BSTSetBBAlphaMtEph").field("tree", &self.tree).finish()
+        }
     }
 
     #[macro_export]

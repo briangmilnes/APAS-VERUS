@@ -1,22 +1,64 @@
-✓ BSTKeyValueStEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap40
+
+❌ BSTKeyValueStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:26: external_body - #[verifier::external_body]
+        27 |         fn clone(&self) -> Self {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:130: external_body - #[verifier::external_body]
+       131 |     fn insert_link<K: StT + Ord, V: StT>(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> bool
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:159: external_body - #[verifier::external_body]
+       160 |     fn find_link<'a, K: StT + Ord, V: StT>(link: &'a Link<K, V>, key: &K) -> Option<&'a V> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:239: external_body - #[verifier::external_body]
+       240 |     fn build_treap_from_sorted<K: StT + Ord, V: StT>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:279: external_body - #[verifier::external_body]
+       280 |         fn delete(&mut self, key: &K) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:294: external_body - #[verifier::external_body]
+       295 |         fn keys(&self) -> ArraySeqStPerS<K> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:301: external_body - #[verifier::external_body]
+       302 |         fn values(&self) -> ArraySeqStPerS<V> {
+   Holes: 7 total
+      7 × external_body
 ❌ BSTReducedStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:34: error: bare_impl - impl<K: StT + Ord, V: StT, R: StT> Node<K, V, R> { — `impl Node` without trait; file defines [ReduceOp, BSTReducedStEphTrait]
-        35 |         fn new(key: K, value: V, priority: u64, reduced_value: R) -> Self {
-        36 |             Node {
-   Errors: 1 bare impl(s) in file with trait definition
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:29: external_body - #[verifier::external_body]
+        30 |         fn clone(&self) -> Self {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:167: external_body - #[verifier::external_body]
+       168 |     fn reduced_value_link<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(link: &Link<K, V, R>) -> R {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:239: external_body - #[verifier::external_body]
+       240 |     fn insert_link<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:367: external_body - #[verifier::external_body]
+       368 |     fn build_treap_from_sorted<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:390: external_body - #[verifier::external_body]
+       391 |     fn range_reduce_link<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:441: external_body - #[verifier::external_body]
+       442 |         fn delete(&mut self, key: &K) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:455: external_body - #[verifier::external_body]
+       456 |         fn keys(&self) -> ArraySeqStPerS<K> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:462: external_body - #[verifier::external_body]
+       463 |         fn values(&self) -> ArraySeqStPerS<V> {
+   Holes: 8 total
+      8 × external_body
 ❌ BSTSizeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:20: error: bare_impl - impl<T: StT + Ord> Node<T> { — `impl Node` without trait; file defines [BSTSizeStEphTrait]
-        21 |         fn new(key: T, priority: u64) -> Self {
-        22 |             Node {
-   Errors: 1 bare impl(s) in file with trait definition
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:26: external_body - #[verifier::external_body]
+        27 |         fn clone(&self) -> Self {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:164: external_body - #[verifier::external_body]
+       165 |     fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T, priority: u64)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:264: external_body - #[verifier::external_body]
+       265 |     fn build_treap_from_sorted<T: StT + Ord>(seq: &[(T, u64)]) -> Link<T> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:336: external_body - #[verifier::external_body]
+       337 |         fn delete(&mut self, key: &T) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:352: external_body - #[verifier::external_body]
+       353 |         fn in_order(&self) -> ArraySeqStPerS<T> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:369: external_body - #[verifier::external_body]
+       370 |         fn split_rank(&self, rank: N) -> (BSTSizeStEph<T>, BSTSizeStEph<T>) {
+   Holes: 6 total
+      6 × external_body
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   3 clean (no holes)
-   0 holed (contains holes)
+   0 clean (no holes)
+   3 holed (contains holes)
    3 total
 
 Proof Functions:
@@ -24,11 +66,5 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 0 total
-
-Errors: 2 bare impl(s) in files with trait definitions
-
-🎉 No proof holes found! All proofs are complete.
-mpl(s) in files with trait definitions
-
-🎉 No proof holes found! All proofs are complete.
+Holes Found: 21 total
+   21 × external_body

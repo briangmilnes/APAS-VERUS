@@ -4,12 +4,17 @@
 pub mod BSTSetPlainMtEph {
 
     use std::collections::BTreeSet;
+    use std::fmt;
+
+    use vstd::prelude::*;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::BSTPlainMtEph::BSTPlainMtEph::*;
     use crate::Types::Types::*;
 
-    #[derive(Debug, Clone)]
+    verus! {
+
+    #[derive(Clone)]
     pub struct BSTSetPlainMtEph<T: StTInMtT + Ord> {
         tree: BSTPlainMtEph<T>,
     }
@@ -262,6 +267,14 @@ pub mod BSTSetPlainMtEph {
         fn iter_in_order(&self) -> ArraySeqStPerS<T> { self.tree.in_order() }
 
         fn as_tree(&self) -> &BSTPlainMtEph<T> { &self.tree }
+    }
+
+    }
+
+    impl<T: StTInMtT + Ord + std::fmt::Debug> std::fmt::Debug for BSTSetPlainMtEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BSTSetPlainMtEph").field("tree", &self.tree).finish()
+        }
     }
 
     #[macro_export]

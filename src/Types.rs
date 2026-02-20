@@ -401,13 +401,20 @@ pub mod Types {
         }
     }
 
+    /// Type supporting arithmetic operations (for reductions). External: Verus does not verify Add/Default.
+    #[verifier::external_trait_specification]
+    pub trait ArithmeticT: StT + Add<Output = Self> + Default + Copy {
+        type ExternalTraitSpecificationFor: ArithmeticT;
+    }
+
     } // verus!
 
-    // OrderedFloat removed from the project. Float chapters use raw f64 with vstdplus::float.
-
-    /// Type supporting arithmetic operations (for reductions). Must be outside verus! block because Default is not supported.
-    pub trait ArithmeticT: StT + Add<Output = Self> + Default + Copy {}
-    impl<T> ArithmeticT for T where T: StT + Add<Output = T> + Default + Copy {}
+    impl<T> ArithmeticT for T
+    where
+        T: StT + Add<Output = T> + Default + Copy,
+    {
+        type ExternalTraitSpecificationFor = T;
+    }
 
     // Re-export MT traits from Concurrency (canonical definitions)
     pub use crate::Concurrency::Concurrency::{

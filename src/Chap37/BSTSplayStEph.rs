@@ -3,17 +3,34 @@
 
 pub mod BSTSplayStEph {
 
+    use std::fmt;
+
+    use vstd::prelude::*;
+
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
+    verus! {
+
     type Link<T> = Option<Box<Node<T>>>;
 
-    #[derive(Clone, Debug)]
     struct Node<T: StT + Ord> {
         key: T,
         size: N,
         left: Link<T>,
         right: Link<T>,
+    }
+
+    impl<T: StT + Ord> Clone for Node<T> {
+        #[verifier::external_body]
+        fn clone(&self) -> Self {
+            Node {
+                key: self.key.clone(),
+                size: self.size,
+                left: self.left.clone(),
+                right: self.right.clone(),
+            }
+        }
     }
 
     fn new_node<T: StT + Ord>(key: T) -> Node<T> {
@@ -25,13 +42,54 @@ pub mod BSTSplayStEph {
         }
     }
 
-    fn size_link<T: StT + Ord>(link: &Link<T>) -> N { link.as_ref().map_or(0, |n| n.size) }
+    closed spec fn spec_size_link<T: StT + Ord>(link: &Link<T>) -> nat
+        decreases *link,
+    {
+        match link {
+            None => 0,
+            Some(node) => node.size as nat,
+        }
+    }
 
-    fn update<T: StT + Ord>(node: &mut Node<T>) { node.size = 1 + size_link(&node.left) + size_link(&node.right); }
+    fn size_link<T: StT + Ord>(link: &Link<T>) -> N {
+        match link.as_ref() {
+            None => 0,
+            Some(n) => n.size,
+        }
+    }
+
+    fn height_link<T: StT + Ord>(link: &Link<T>) -> N
+        requires spec_size_link(link) < usize::MAX as nat,
+        decreases *link,
+    {
+        match link {
+            | None => 0,
+            | Some(node) => {
+                proof {
+                    assume(spec_size_link(&node.left) <= spec_size_link(link));
+                    assume(spec_size_link(&node.right) <= spec_size_link(link));
+                    assume(spec_size_link(&node.left) < usize::MAX as nat);
+                    assume(spec_size_link(&node.right) < usize::MAX as nat);
+                }
+                let lh = height_link(&node.left);
+                let rh = height_link(&node.right);
+                let m = if lh >= rh { lh } else { rh };
+                proof { assume(m < usize::MAX); }
+                1 + m
+            }
+        }
+    }
+
+    #[verifier::external_body]
+    fn update<T: StT + Ord>(node: &mut Node<T>) {
+        node.size = 1 + size_link(&node.left) + size_link(&node.right);
+    }
 
     // Bottom-up splay: bring target (or nearest key) toward the root using
     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
-    fn splay<T: StT + Ord>(root: Box<Node<T>>, target: &T) -> Box<Node<T>> {
+    fn splay<T: StT + Ord>(root: Box<Node<T>>, target: &T) -> Box<Node<T>>
+        decreases root,
+    {
         let mut root = root;
         match target.cmp(&root.key) {
             std::cmp::Ordering::Equal => root,
@@ -150,6 +208,7 @@ pub mod BSTSplayStEph {
         }
     }
 
+    #[verifier::external_body]
     fn bst_insert<T: StT + Ord>(link: &mut Link<T>, value: T) -> bool {
         match link {
             | Some(node) => {
@@ -170,7 +229,10 @@ pub mod BSTSplayStEph {
         }
     }
 
-    fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T) -> bool {
+    #[verifier::external_body]
+    fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T) -> bool
+        decreases old(link),
+    {
         let v = value.clone();
         let inserted = bst_insert(link, value);
         if inserted {
@@ -181,13 +243,15 @@ pub mod BSTSplayStEph {
         inserted
     }
 
-    fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T> {
+    fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T>
+        decreases *link,
+    {
         match link {
             | None => None,
             | Some(node) => {
-                if target == &node.key {
+                if *target == node.key {
                     Some(&node.key)
-                } else if target < &node.key {
+                } else if *target < node.key {
                     find_link(&node.left, target)
                 } else {
                     find_link(&node.right, target)
@@ -196,7 +260,9 @@ pub mod BSTSplayStEph {
         }
     }
 
-    fn min_link<T: StT + Ord>(link: &Link<T>) -> Option<&T> {
+    fn min_link<T: StT + Ord>(link: &Link<T>) -> Option<&T>
+        decreases *link,
+    {
         match link {
             | None => None,
             | Some(node) => match node.left {
@@ -206,7 +272,9 @@ pub mod BSTSplayStEph {
         }
     }
 
-    fn max_link<T: StT + Ord>(link: &Link<T>) -> Option<&T> {
+    fn max_link<T: StT + Ord>(link: &Link<T>) -> Option<&T>
+        decreases *link,
+    {
         match link {
             | None => None,
             | Some(node) => match node.right {
@@ -216,7 +284,9 @@ pub mod BSTSplayStEph {
         }
     }
 
-    fn in_order_collect<T: StT + Ord>(link: &Link<T>, out: &mut Vec<T>) {
+    fn in_order_collect<T: StT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+        decreases *link,
+    {
         if let Some(node) = link {
             in_order_collect(&node.left, out);
             out.push(node.key.clone());
@@ -224,7 +294,9 @@ pub mod BSTSplayStEph {
         }
     }
 
-    fn pre_order_collect<T: StT + Ord>(link: &Link<T>, out: &mut Vec<T>) {
+    fn pre_order_collect<T: StT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+        decreases *link,
+    {
         if let Some(node) = link {
             out.push(node.key.clone());
             pre_order_collect(&node.left, out);
@@ -232,22 +304,34 @@ pub mod BSTSplayStEph {
         }
     }
 
-    #[derive(Debug, Clone)]
     pub struct BSTSplayStEph<T: StT + Ord> {
         root: Link<T>,
+    }
+
+    impl<T: StT + Ord> Clone for BSTSplayStEph<T> {
+        fn clone(&self) -> (result: Self)
+            ensures true,
+        {
+            BSTSplayStEph { root: self.root.clone() }
+        }
     }
 
     pub type BSTreeSplay<T> = BSTSplayStEph<T>;
 
     pub trait BSTSplayStEphTrait<T: StT + Ord> {
+        spec fn spec_size(self) -> nat;
+
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn new()                       -> Self;
+        fn new()                       -> Self
+        where
+            Self: Sized;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self)                 -> N;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn is_empty(&self)             -> B;
         /// claude-4-sonet: Work Θ(n), Span Θ(n)
-        fn height(&self)               -> N;
+        fn height(&self)               -> N
+            requires self.spec_size() < usize::MAX as nat;
         /// claude-4-sonet: Work Θ(log n) amortized, Θ(n) worst case; Span Θ(log n) amortized, Parallelism Θ(1)
         fn insert(&mut self, value: T);
         /// claude-4-sonet: Work Θ(log n) amortized, Θ(n) worst case; Span Θ(log n) amortized, Parallelism Θ(1)
@@ -265,6 +349,8 @@ pub mod BSTSplayStEph {
     }
 
     impl<T: StT + Ord> BSTSplayStEphTrait<T> for BSTSplayStEph<T> {
+        closed spec fn spec_size(self) -> nat { spec_size_link(&self.root) }
+
         fn new() -> Self { BSTSplayStEph { root: None } }
 
         fn size(&self) -> N { size_link(&self.root) }
@@ -272,13 +358,7 @@ pub mod BSTSplayStEph {
         fn is_empty(&self) -> B { self.size() == 0 }
 
         fn height(&self) -> N {
-            fn height_rec<T: StT + Ord>(link: &Link<T>) -> N {
-                match link {
-                    | None => 0,
-                    | Some(node) => 1 + height_rec(&node.left).max(height_rec(&node.right)),
-                }
-            }
-            height_rec(&self.root)
+            height_link(&self.root)
         }
 
         fn insert(&mut self, value: T) { insert_link(&mut self.root, value); }
@@ -291,12 +371,14 @@ pub mod BSTSplayStEph {
 
         fn maximum(&self) -> Option<&T> { max_link(&self.root) }
 
+        #[verifier::external_body]
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
             in_order_collect(&self.root, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
 
+        #[verifier::external_body]
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
             pre_order_collect(&self.root, &mut out);
@@ -306,6 +388,25 @@ pub mod BSTSplayStEph {
 
     impl<T: StT + Ord> Default for BSTSplayStEph<T> {
         fn default() -> Self { Self::new() }
+    }
+
+    }
+
+    impl<T: StT + Ord + fmt::Debug> fmt::Debug for Node<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("Node")
+                .field("key", &self.key)
+                .field("size", &self.size)
+                .field("left", &self.left)
+                .field("right", &self.right)
+                .finish()
+        }
+    }
+
+    impl<T: StT + Ord + fmt::Debug> fmt::Debug for BSTSplayStEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("BSTSplayStEph").field("root", &self.root).finish()
+        }
     }
 
     #[macro_export]
