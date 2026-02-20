@@ -20,6 +20,7 @@ pub mod AugOrderedTableStPer {
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+    use crate::Chap42::TableStEph::TableStEph::lemma_entries_to_map_finite;
     use crate::Chap43::OrderedTableStPer::OrderedTableStPer::*;
     use crate::OrderedTableStPerLit;
     use crate::Types::Types::*;
@@ -35,10 +36,10 @@ pub mod AugOrderedTableStPer {
     where
         F: Fn(&V, &V) -> V + Clone,
     {
-        base_table: OrderedTableStPer<K, V>,
-        reducer: F,
-        identity: V,
-        cached_reduction: V,
+        pub base_table: OrderedTableStPer<K, V>,
+        pub reducer: F,
+        pub identity: V,
+        pub cached_reduction: V,
     }
 
     pub type AugOrderedTablePer<K, V, F> = AugOrderedTableStPer<K, V, F>;
@@ -50,10 +51,7 @@ pub mod AugOrderedTableStPer {
         F: Fn(&V, &V) -> V + Clone,
     {
         type V = Map<K::V, V::V>;
-        #[verifier::external_body]
-        open spec fn view(&self) -> Map<K::V, V::V> {
-            Map::empty()
-        }
+        open spec fn view(&self) -> Map<K::V, V::V> { self.base_table@ }
     }
 
     // 7. free functions (calculate_reduction)
@@ -88,6 +86,14 @@ pub mod AugOrderedTableStPer {
 
         result
     }
+
+    // 7b. proof fns
+
+    proof fn lemma_aug_view<K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone>(
+        t: &AugOrderedTableStPer<K, V, F>,
+    )
+        ensures t@ =~= t.base_table@
+    {}
 
     // 8. traits
 
@@ -167,35 +173,39 @@ pub mod AugOrderedTableStPer {
     where
         F: Fn(&V, &V) -> V + Clone,
     {
-        #[verifier::external_body]
         fn size(&self) -> (result: N)
             ensures result == self@.dom().len(), self@.dom().finite()
         {
+            proof { lemma_aug_view(self); }
             self.base_table.size()
         }
 
-        #[verifier::external_body]
         fn empty(reducer: F, identity: V) -> (result: Self)
             ensures result@ == Map::<K::V, V::V>::empty()
         {
-            Self {
-                base_table: OrderedTableStPer::empty(),
+            let base = OrderedTableStPer::empty();
+            let r = Self {
+                base_table: base,
                 cached_reduction: identity.clone(),
                 reducer,
                 identity,
-            }
+            };
+            proof { lemma_aug_view(&r); }
+            r
         }
 
-        #[verifier::external_body]
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (result: Self)
             ensures result@.dom().finite()
         {
-            Self {
-                base_table: OrderedTableStPer::singleton(k, v.clone()),
+            let base = OrderedTableStPer::singleton(k, v.clone());
+            let r = Self {
+                base_table: base,
                 cached_reduction: v,
                 reducer,
                 identity,
-            }
+            };
+            proof { lemma_aug_view(&r); }
+            r
         }
 
         #[verifier::external_body]
@@ -209,201 +219,208 @@ pub mod AugOrderedTableStPer {
             self.base_table.find(k)
         }
 
-        #[verifier::external_body]
         fn insert(&self, k: K, v: V) -> (result: Self)
             ensures result@.dom().finite()
         {
             let new_base = self.base_table.insert(k, v);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
-            Self {
+            let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
-            }
+            };
+            proof { lemma_aug_view(&r); }
+            r
         }
 
-        #[verifier::external_body]
         fn delete(&self, k: &K) -> (result: Self)
             ensures result@.dom().finite()
         {
             let new_base = self.base_table.delete(k);
-            // For simplicity, recalculate reduction from scratch
-            // In practice, would maintain augmented tree structure
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
-            Self {
+            let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
-            }
+            };
+            proof { lemma_aug_view(&r); }
+            r
         }
 
-        #[verifier::external_body]
         fn domain(&self) -> (result: ArraySetStEph<K>)
             ensures self@.dom().finite()
         {
+            proof { lemma_aug_view(self); }
             self.base_table.domain()
         }
 
-        #[verifier::external_body]
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (result: Self)
             ensures result@.dom().finite()
         {
             let base_table = OrderedTableStPer::tabulate(f, keys);
             let cached_reduction = calculate_reduction(&base_table, &reducer, &identity);
 
-            Self {
+            let r = Self {
                 base_table,
                 cached_reduction,
                 reducer,
                 identity,
-            }
+            };
+            proof { lemma_aug_view(&r); }
+            r
         }
 
-        #[verifier::external_body]
         fn map<G: Fn(&V) -> V>(&self, f: G) -> (result: Self)
             ensures result@.dom().finite()
         {
             let new_base = self.base_table.map(f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
-            Self {
+            let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
-            }
+            };
+            proof { lemma_aug_view(&r); }
+            r
         }
 
-        #[verifier::external_body]
         fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (result: Self)
             ensures result@.dom().finite()
         {
             let new_base = self.base_table.filter(f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
-            Self {
+            let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
-            }
+            };
+            proof { lemma_aug_view(&r); }
+            r
         }
 
-        #[verifier::external_body]
         fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (result: Self)
             ensures result@.dom().finite()
         {
             let new_base = self.base_table.intersection(&other.base_table, f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
-            Self {
+            let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
-            }
+            };
+            proof { lemma_aug_view(&r); }
+            r
         }
 
-        #[verifier::external_body]
         fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (result: Self)
             ensures result@.dom().finite()
         {
             let new_base = self.base_table.union(&other.base_table, f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
-            Self {
+            let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
-            }
+            };
+            proof { lemma_aug_view(&r); }
+            r
         }
 
-        #[verifier::external_body]
         fn difference(&self, other: &Self) -> (result: Self)
             ensures result@.dom().finite()
         {
             let new_base = self.base_table.difference(&other.base_table);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
-            Self {
+            let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
-            }
+            };
+            proof { lemma_aug_view(&r); }
+            r
         }
 
-        #[verifier::external_body]
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (result: Self)
             ensures result@.dom().finite()
         {
             let new_base = self.base_table.restrict(keys);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
-            Self {
+            let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
-            }
+            };
+            proof { lemma_aug_view(&r); }
+            r
         }
 
-        #[verifier::external_body]
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (result: Self)
             ensures result@.dom().finite()
         {
             let new_base = self.base_table.subtract(keys);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
-            Self {
+            let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
-            }
+            };
+            proof { lemma_aug_view(&r); }
+            r
         }
 
-        #[verifier::external_body]
         fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite()
         {
+            proof { lemma_aug_view(self); }
             self.base_table.collect()
         }
 
-        #[verifier::external_body]
         fn first_key(&self) -> (result: Option<K>)
             ensures self@.dom().finite()
         {
+            proof { lemma_aug_view(self); }
             self.base_table.first_key()
         }
 
-        #[verifier::external_body]
         fn last_key(&self) -> (result: Option<K>)
             ensures self@.dom().finite()
         {
+            proof { lemma_aug_view(self); }
             self.base_table.last_key()
         }
 
-        #[verifier::external_body]
         fn previous_key(&self, k: &K) -> (result: Option<K>)
             ensures self@.dom().finite()
         {
+            proof { lemma_aug_view(self); }
             self.base_table.previous_key(k)
         }
 
-        #[verifier::external_body]
         fn next_key(&self, k: &K) -> (result: Option<K>)
             ensures self@.dom().finite()
         {
+            proof { lemma_aug_view(self); }
             self.base_table.next_key(k)
         }
 
-        #[verifier::external_body]
         fn split_key(&self, k: &K) -> (result: (Self, Option<V>, Self))
             ensures self@.dom().finite()
         {
@@ -426,6 +443,7 @@ pub mod AugOrderedTableStPer {
                 identity: self.identity.clone(),
             };
 
+            proof { lemma_aug_view(self); }
             (left, middle, right)
         }
 
@@ -450,36 +468,36 @@ pub mod AugOrderedTableStPer {
             }
         }
 
-        #[verifier::external_body]
         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
             ensures result@.dom().finite()
         {
             let new_base = self.base_table.get_key_range(k1, k2);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
-            Self {
+            let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
-            }
+            };
+            proof { lemma_aug_view(&r); }
+            r
         }
 
-        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (result: N)
             ensures self@.dom().finite()
         {
+            proof { lemma_aug_view(self); }
             self.base_table.rank_key(k)
         }
 
-        #[verifier::external_body]
         fn select_key(&self, i: N) -> (result: Option<K>)
             ensures self@.dom().finite()
         {
+            proof { lemma_aug_view(self); }
             self.base_table.select_key(i)
         }
 
-        #[verifier::external_body]
         fn split_rank_key(&self, i: N) -> (result: (Self, Self))
             ensures self@.dom().finite()
         {
@@ -502,20 +520,27 @@ pub mod AugOrderedTableStPer {
                 identity: self.identity.clone(),
             };
 
+            proof { lemma_aug_view(self); }
             (left, right)
         }
 
-        #[verifier::external_body]
         fn reduce_val(&self) -> (result: V)
             ensures self@.dom().finite()
         {
+            proof {
+                lemma_aug_view(self);
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_table.entries@);
+            }
             self.cached_reduction.clone()
         }
 
-        #[verifier::external_body]
         fn reduce_range(&self, k1: &K, k2: &K) -> (result: V)
             ensures self@.dom().finite()
         {
+            proof {
+                lemma_aug_view(self);
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_table.entries@);
+            }
             let range_table = self.get_key_range(k1, k2);
             range_table.reduce_val()
         }

@@ -698,7 +698,6 @@ pub mod TableMtEph {
             self.entries = ArraySeqMtEphS::from_vec(filtered_entries);
         }
 
-        #[verifier::external_body]
         fn entries(&self) -> (result: ArraySeqMtEphS<Pair<K, V>>) {
             self.entries.clone()
         }
@@ -717,12 +716,22 @@ pub mod TableMtEph {
         }
     }
 
-    #[verifier::external_body]
     pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (result: TableMtEph<K, V>)
         ensures result@.dom().finite()
     {
-        TableMtEph {
-            entries: ArraySeqMtEphS::from_vec(entries),
+        let seq = ArraySeqMtEphS::from_vec(entries);
+        proof {
+            lemma_entries_to_map_finite::<K::V, V::V>(seq@);
+        }
+        TableMtEph { entries: seq }
+    }
+
+    pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
+        ensures spec_entries_to_map(entries).dom().finite()
+        decreases entries.len()
+    {
+        if entries.len() > 0 {
+            lemma_entries_to_map_finite::<KV, VV>(entries.drop_last());
         }
     }
 

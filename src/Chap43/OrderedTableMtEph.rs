@@ -32,7 +32,7 @@ pub mod OrderedTableMtEph {
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
     pub struct OrderedTableMtEph<K: MtKey, V: MtVal> {
-        base_table: TableMtEph<K, V>,
+        pub base_table: TableMtEph<K, V>,
     }
 
     pub type OrderedTableMt<K, V> = OrderedTableMtEph<K, V>;
@@ -42,10 +42,7 @@ pub mod OrderedTableMtEph {
     impl<K: MtKey, V: MtVal> View for OrderedTableMtEph<K, V> {
         type V = Map<K::V, V::V>;
 
-        #[verifier::external_body]
-        open spec fn view(&self) -> Map<K::V, V::V> {
-            Map::empty()
-        }
+        open spec fn view(&self) -> Map<K::V, V::V> { self.base_table@ }
     }
 
     // 8. traits
@@ -150,7 +147,6 @@ pub mod OrderedTableMtEph {
             self.base_table.size()
         }
 
-        #[verifier::external_body]
         fn empty() -> (result: Self)
             ensures result@ == Map::<K::V, V::V>::empty()
         {
@@ -168,12 +164,10 @@ pub mod OrderedTableMtEph {
             }
         }
 
-        #[verifier::external_body]
         fn find(&self, k: &K) -> (result: Option<V>) {
             self.base_table.find(k)
         }
 
-        #[verifier::external_body]
         fn lookup(&self, k: &K) -> (result: Option<V>) {
             self.find(k)
         }
@@ -185,11 +179,11 @@ pub mod OrderedTableMtEph {
             self.size() == 0
         }
 
-        #[verifier::external_body]
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F)
             ensures self@.dom().finite()
         {
             self.base_table.insert(k, v, combine);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
         }
 
         #[verifier::external_body]
@@ -201,21 +195,20 @@ pub mod OrderedTableMtEph {
             old_value
         }
 
-        #[verifier::external_body]
         fn domain(&self) -> (result: ArraySetStEph<K>)
             ensures self@.dom().finite()
         {
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             self.base_table.domain()
         }
 
-        #[verifier::external_body]
         fn tabulate<F>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
             where F: Fn(&K) -> V + Send + Sync + 'static
             ensures result@.dom().finite()
         {
-            OrderedTableMtEph {
-                base_table: TableMtEph::tabulate(f, keys),
-            }
+            let base = TableMtEph::tabulate(f, keys);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
+            OrderedTableMtEph { base_table: base }
         }
 
         #[verifier::external_body]
@@ -267,41 +260,41 @@ pub mod OrderedTableMtEph {
             result
         }
 
-        #[verifier::external_body]
         fn intersection<F>(&mut self, other: &Self, f: F)
             where F: Fn(&V, &V) -> V + Send + Sync + 'static
             ensures self@.dom().finite()
         {
             self.base_table.intersection(&other.base_table, f);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
         }
 
-        #[verifier::external_body]
         fn union<F>(&mut self, other: &Self, f: F)
             where F: Fn(&V, &V) -> V + Send + Sync + 'static
             ensures self@.dom().finite()
         {
             self.base_table.union(&other.base_table, f);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
         }
 
-        #[verifier::external_body]
         fn difference(&mut self, other: &Self)
             ensures self@.dom().finite()
         {
             self.base_table.difference(&other.base_table);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
         }
 
-        #[verifier::external_body]
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
             ensures self@.dom().finite()
         {
             self.base_table.restrict(keys);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
         }
 
-        #[verifier::external_body]
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             ensures self@.dom().finite()
         {
             self.base_table.subtract(keys);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
         }
 
         #[verifier::external_body]
@@ -403,7 +396,6 @@ pub mod OrderedTableMtEph {
             (from_sorted_entries(left_seq), found_value, from_sorted_entries(right_seq))
         }
 
-        #[verifier::external_body]
         fn join_key(&mut self, other: Self)
             ensures self@.dom().finite()
         {

@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap44/
+
 ✓ DocumentIndex.rs
 ✓ Example44_1.rs
 
@@ -7,18 +9,6 @@ SUMMARY
 
 Modules:
    2 clean (no holes)
-   0 holed (contains holes)
-   2 total
-
-Proof Functions:
-   0 clean
-   0 holed
-   0 total
-
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
-n (no holes)
    0 holed (contains holes)
    2 total
 

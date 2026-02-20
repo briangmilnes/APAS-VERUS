@@ -6,6 +6,7 @@ pub mod OrderedTableStPer {
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+    use crate::Chap42::TableStEph::TableStEph::spec_entries_to_map;
     use crate::Chap42::TableStPer::TableStPer::*;
     use crate::Types::Types::*;
     use vstd::prelude::*;
@@ -28,7 +29,7 @@ pub mod OrderedTableStPer {
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
     pub struct OrderedTableStPer<K: StT + Ord, V: StT> {
-        base_table: TableStPer<K, V>,
+        pub base_table: TableStPer<K, V>,
     }
 
     pub type OrderedTablePer<K, V> = OrderedTableStPer<K, V>;
@@ -38,8 +39,7 @@ pub mod OrderedTableStPer {
     impl<K: StT + Ord, V: StT> View for OrderedTableStPer<K, V> {
         type V = Map<K::V, V::V>;
 
-        #[verifier::external_body]
-        open spec fn view(&self) -> Self::V { Map::empty() }
+        open spec fn view(&self) -> Self::V { spec_entries_to_map(self.base_table.entries@) }
     }
 
     // 8. traits

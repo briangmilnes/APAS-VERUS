@@ -396,7 +396,6 @@ pub mod TableStEph {
             self.entries = ArraySeqStEphS::from_vec(result);
         }
 
-        #[verifier::external_body]
         fn entries(&self) -> (result: ArraySeqStEphS<Pair<K, V>>) {
             self.entries.clone()
         }
@@ -405,7 +404,6 @@ pub mod TableStEph {
     // 11. derive impls in verus!
 
     impl<K: StT + Ord, V: StT> Clone for TableStEph<K, V> {
-        #[verifier::external_body]
         fn clone(&self) -> (result: Self) {
             TableStEph {
                 entries: self.entries.clone(),
@@ -413,14 +411,24 @@ pub mod TableStEph {
         }
     }
 
-    #[verifier::external_body]
     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
         entries: Vec<Pair<K, V>>,
     ) -> (result: TableStEph<K, V>)
         ensures result@.dom().finite()
     {
-        TableStEph {
-            entries: ArraySeqStEphS::from_vec(entries),
+        let seq = ArraySeqStEphS::from_vec(entries);
+        proof {
+            lemma_entries_to_map_finite::<K::V, V::V>(seq@);
+        }
+        TableStEph { entries: seq }
+    }
+
+    pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
+        ensures spec_entries_to_map(entries).dom().finite()
+        decreases entries.len()
+    {
+        if entries.len() > 0 {
+            lemma_entries_to_map_finite::<KV, VV>(entries.drop_last());
         }
     }
 
