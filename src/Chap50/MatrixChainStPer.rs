@@ -32,6 +32,13 @@ pub mod MatrixChainStPer {
         pub memo: HashMap<(usize, usize), usize>,
     }
 
+    verus! {
+    #[verifier::external_type_specification]
+    pub struct ExMatrixDim(MatrixDim);
+    #[verifier::external_type_specification]
+    pub struct ExMatrixChainStPerS(MatrixChainStPerS);
+    }
+
     // 8. traits
     /// Trait for matrix chain multiplication operations
     pub trait MatrixChainStPerTrait: Sized {

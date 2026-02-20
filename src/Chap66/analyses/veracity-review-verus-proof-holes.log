@@ -1,5 +1,23 @@
-✓ BoruvkaMtEph.rs
-✓ BoruvkaStEph.rs
+❌ BoruvkaMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:30: error: struct_outside_verus - struct LabeledEdge — should be inside verus!
+        30 |     pub struct LabeledEdge<V>(pub V, pub V, pub OrderedFloat<f64>, pub usize);
+        31 | 
+        32 |     verus! {
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:30: error: clone_derived_outside - struct LabeledEdge — Clone should be implemented inside verus!, not derived outside
+        30 |     pub struct LabeledEdge<V>(pub V, pub V, pub OrderedFloat<f64>, pub usize);
+        31 | 
+        32 |     verus! {
+   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
+❌ BoruvkaStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:29: error: struct_outside_verus - struct LabeledEdge — should be inside verus!
+        29 |     pub struct LabeledEdge<V>(pub V, pub V, pub OrderedFloat<f64>, pub usize);
+        30 | 
+        31 |     verus! {
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:29: error: clone_derived_outside - struct LabeledEdge — Clone should be implemented inside verus!, not derived outside
+        29 |     pub struct LabeledEdge<V>(pub V, pub V, pub OrderedFloat<f64>, pub usize);
+        30 | 
+        31 |     verus! {
+   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -17,5 +35,7 @@ Proof Functions:
 
 Holes Found: 0 total
 
-🎉 No proof holes or warnings found! All proofs are complete.
-fs are complete.
+Errors: 4 (bare impl(s), struct/enum outside verus!)
+
+🎉 No proof holes found! All proofs are complete.
+ proofs are complete.

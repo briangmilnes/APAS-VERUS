@@ -34,9 +34,6 @@ pub mod OptBinSearchTreeMtEph {
     }
 
     verus! {
-        #[verifier::external_type_specification]
-        pub struct ExProbability(Probability);
-
         #[verifier::reject_recursive_types(T)]
         #[verifier::external_type_specification]
         pub struct ExKeyProb<T: MtVal>(KeyProb<T>);

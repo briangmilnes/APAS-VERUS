@@ -35,6 +35,15 @@ pub mod OptBinSearchTreeStPer {
         pub memo: HashMap<(usize, usize), Probability>,
     }
 
+    verus! {
+    #[verifier::reject_recursive_types(T)]
+    #[verifier::external_type_specification]
+    pub struct ExKeyProb<T: StT>(KeyProb<T>);
+    #[verifier::reject_recursive_types(T)]
+    #[verifier::external_type_specification]
+    pub struct ExOBSTStPerS<T: StT>(OBSTStPerS<T>);
+    }
+
     // 8. traits
     /// Trait for optimal BST operations
     pub trait OBSTStPerTrait<T: StT>: Sized {

@@ -1,6 +1,14 @@
-✓ JohnsonMtEphF64.rs
+❌ JohnsonMtEphF64.rs
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Chapter 59: Johnson's Algorithm - Multi-threaded Ephemeral Float Weights
+         3 | //!
+   Errors: 1 total (1 not verusified)
 ✓ JohnsonMtEphI64.rs
-✓ JohnsonStEphF64.rs
+❌ JohnsonStEphF64.rs
+/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Chapter 59: Johnson's Algorithm - Single-threaded Ephemeral Float Weights
+         3 | //!
+   Errors: 1 total (1 not verusified)
 ✓ JohnsonStEphI64.rs
 
 ═══════════════════════════════════════════════════════════════
@@ -19,5 +27,18 @@ Proof Functions:
 
 Holes Found: 0 total
 
-🎉 No proof holes or warnings found! All proofs are complete.
-l proofs are complete.
+Errors: 2 (bare impl(s), struct/enum outside verus!)
+
+🎉 No proof holes found! All proofs are complete.
+  4 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 0 total
+
+Errors: 2 (bare impl(s), struct/enum outside verus!)
+
+🎉 No proof holes found! All proofs are complete.

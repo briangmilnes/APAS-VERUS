@@ -1,9 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 50: Matrix Chain Multiplication - ephemeral, single-threaded.
 //!
-//! This module is outside verus! because it uses std::collections::HashMap for
-//! memoization, which Verus does not support. Full verification would require
-//! replacing HashMap with a verified equivalent.
+//! Uses HashMap for memoization. Struct/trait in verus! with external_type_spec.
 
 pub mod MatrixChainStEph {
 
@@ -30,6 +28,13 @@ pub mod MatrixChainStEph {
     pub struct MatrixChainStEphS {
         pub dimensions: Vec<MatrixDim>,
         pub memo: HashMap<(usize, usize), usize>,
+    }
+
+    verus! {
+    #[verifier::external_type_specification]
+    pub struct ExMatrixDim(MatrixDim);
+    #[verifier::external_type_specification]
+    pub struct ExMatrixChainStEphS(MatrixChainStEphS);
     }
 
     // 8. traits

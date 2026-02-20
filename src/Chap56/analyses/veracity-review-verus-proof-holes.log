@@ -49,4 +49,17 @@ Proof Functions:
 
 Holes Found: 7 total
    7 × external_body
-ernal_body
+�═══════
+
+Modules:
+   8 clean (no holes)
+   4 holed (contains holes)
+   12 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 7 total
+   7 × external_body
