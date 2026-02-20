@@ -77,9 +77,6 @@ pub mod EdgeSetGraphMtPer {
     // 9. impls
 
     impl<V: StTInMtT + Ord + 'static> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
-        /// - APAS: N/A — constructor not in cost table.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — creates two empty AVL sets.
-        #[verifier::external_body]
         fn empty() -> Self {
             EdgeSetGraphMtPer {
                 vertices: AVLTreeSetMtPer::empty(),
@@ -87,36 +84,18 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
-        /// - APAS: N/A — constructor not in cost table.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps existing sets.
-        #[verifier::external_body]
         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> Self {
             EdgeSetGraphMtPer { vertices: v, edges: e }
         }
 
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to AVL tree size.
-        #[verifier::external_body]
         fn num_vertices(&self) -> N { self.vertices.size() }
 
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to AVL tree size.
-        #[verifier::external_body]
         fn num_edges(&self) -> N { self.edges.size() }
 
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — returns reference.
-        #[verifier::external_body]
         fn vertices(&self) -> &AVLTreeSetMtPer<V> { &self.vertices }
 
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — returns reference.
-        #[verifier::external_body]
         fn edges(&self) -> &AVLTreeSetMtPer<Pair<V, V>> { &self.edges }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1]
-        /// - Claude-Opus-4.6: Work Θ(lg m), Span Θ(lg m) — agrees with APAS.
-        #[verifier::external_body]
         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
 
         /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1]
@@ -156,12 +135,8 @@ pub mod EdgeSetGraphMtPer {
 
         /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to out_neighbors.
-        #[verifier::external_body]
         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1]
-        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
-        #[verifier::external_body]
         fn insert_vertex(&self, v: V) -> Self {
             EdgeSetGraphMtPer {
                 vertices: self.vertices.insert(v),
@@ -169,8 +144,6 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1, isolated vertex]
-        /// - Claude-Opus-4.6: Work Θ(m), Span Θ(lg m) — parallel filter over edges; APAS assumes isolated.
         #[verifier::external_body]
         fn delete_vertex(&self, v: &V) -> Self {
             let v_clone = v.clone();
@@ -186,9 +159,6 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1]
-        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
-        #[verifier::external_body]
         fn insert_edge(&self, u: V, v: V) -> Self {
             let new_vertices = self.vertices.insert(u.clone()).insert(v.clone());
             let new_edges = self.edges.insert(Pair(u, v));
@@ -198,9 +168,6 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1]
-        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
-        #[verifier::external_body]
         fn delete_edge(&self, u: &V, v: &V) -> Self {
             EdgeSetGraphMtPer {
                 vertices: self.vertices.clone(),
@@ -212,9 +179,6 @@ pub mod EdgeSetGraphMtPer {
     // 11. derive impls in verus!
 
     impl<V: StTInMtT + Ord + 'static> Default for EdgeSetGraphMtPer<V> {
-        /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to empty(); external_body, not verified.
-        #[verifier::external_body]
         fn default() -> Self { Self::empty() }
     }
 

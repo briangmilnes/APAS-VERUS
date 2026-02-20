@@ -76,18 +76,12 @@ pub mod AdjTableGraphMtPer {
     // 9. impls
 
     impl<V: StTInMtT + Ord + 'static> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
-        /// - APAS: N/A — constructor not in cost table.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — creates empty table.
-        #[verifier::external_body]
         fn empty() -> Self {
             AdjTableGraphMtPer {
                 adj: OrderedTableMtPer::empty(),
             }
         }
 
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to table size.
-        #[verifier::external_body]
         fn num_vertices(&self) -> N { self.adj.size() }
 
         /// - APAS: (no cost stated)
@@ -118,9 +112,6 @@ pub mod AdjTableGraphMtPer {
             self.adj.find(u).unwrap_or_else(|| AVLTreeSetMtPer::empty())
         }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
-        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
-        #[verifier::external_body]
         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
 
         /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
@@ -228,9 +219,6 @@ pub mod AdjTableGraphMtPer {
     // 11. derive impls in verus!
 
     impl<V: StTInMtT + Ord + 'static> Default for AdjTableGraphMtPer<V> {
-        /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to empty(); external_body, not verified.
-        #[verifier::external_body]
         fn default() -> Self { Self::empty() }
     }
 

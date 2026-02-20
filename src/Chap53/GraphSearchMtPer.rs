@@ -54,7 +54,6 @@ pub mod GraphSearchMtPer {
 
     // 9. impls
     impl<V: StTInMtT + Ord + 'static> SelectionStrategy<V> for SelectAll {
-        #[verifier::external_body]
         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (AVLTreeSetMtPer<V>, B) { (frontier.clone(), false) }
     }
 

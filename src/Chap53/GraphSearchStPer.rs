@@ -57,7 +57,6 @@ pub mod GraphSearchStPer {
 
     // 9. impls
     impl<V: StT + Ord> SelectionStrategy<V> for SelectAll {
-        #[verifier::external_body]
         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (AVLTreeSetStPer<V>, B) { (frontier.clone(), false) }
     }
 

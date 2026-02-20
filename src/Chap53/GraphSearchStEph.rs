@@ -49,7 +49,6 @@ pub mod GraphSearchStEph {
 
     // 9. impls
     impl<V: StT + Ord> SelectionStrategy<V> for SelectAll {
-        #[verifier::external_body]
         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (AVLTreeSetStEph<V>, B) { (frontier.clone(), false) }
     }
 
@@ -66,9 +65,6 @@ pub mod GraphSearchStEph {
         }
     }
 
-    /// Generic graph search starting from single source.
-    /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
-    /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search_multi.
     #[verifier::external_body]
     pub fn graph_search<V: StT + Ord, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
     where

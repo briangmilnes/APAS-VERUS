@@ -74,9 +74,6 @@ pub mod EdgeSetGraphStPer {
     // 9. impls
 
     impl<V: StT + Ord> EdgeSetGraphStPerTrait<V> for EdgeSetGraphStPer<V> {
-        /// - APAS: N/A — constructor not in cost table.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — creates two empty AVL sets.
-        #[verifier::external_body]
         fn empty() -> Self {
             EdgeSetGraphStPer {
                 vertices: AVLTreeSetStPer::empty(),
@@ -84,36 +81,18 @@ pub mod EdgeSetGraphStPer {
             }
         }
 
-        /// - APAS: N/A — constructor not in cost table.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps existing sets.
-        #[verifier::external_body]
         fn from_vertices_and_edges(v: AVLTreeSetStPer<V>, e: AVLTreeSetStPer<Pair<V, V>>) -> Self {
             EdgeSetGraphStPer { vertices: v, edges: e }
         }
 
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to AVL tree size.
-        #[verifier::external_body]
         fn num_vertices(&self) -> N { self.vertices.size() }
 
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to AVL tree size.
-        #[verifier::external_body]
         fn num_edges(&self) -> N { self.edges.size() }
 
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — returns reference.
-        #[verifier::external_body]
         fn vertices(&self) -> &AVLTreeSetStPer<V> { &self.vertices }
 
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — returns reference.
-        #[verifier::external_body]
         fn edges(&self) -> &AVLTreeSetStPer<Pair<V, V>> { &self.edges }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1, since lg m = O(lg n)]
-        /// - Claude-Opus-4.6: Work Θ(lg m), Span Θ(lg m) — agrees with APAS.
-        #[verifier::external_body]
         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
 
         /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1, mapping over neighbors]
@@ -133,12 +112,8 @@ pub mod EdgeSetGraphStPer {
 
         /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1, degree of vertex]
         /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to out_neighbors which is sequential.
-        #[verifier::external_body]
         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1, insert vertex]
-        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
-        #[verifier::external_body]
         fn insert_vertex(&self, v: V) -> Self {
             EdgeSetGraphStPer {
                 vertices: self.vertices.insert(v),
@@ -146,8 +121,6 @@ pub mod EdgeSetGraphStPer {
             }
         }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1, isolated vertex deletion]
-        /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — filters all edges, sequential; APAS assumes isolated.
         #[verifier::external_body]
         fn delete_vertex(&self, v: &V) -> Self {
             let v_clone = v.clone();
@@ -162,9 +135,6 @@ pub mod EdgeSetGraphStPer {
             }
         }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1, insert edge]
-        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
-        #[verifier::external_body]
         fn insert_edge(&self, u: V, v: V) -> Self {
             let new_vertices = self.vertices.insert(u.clone()).insert(v.clone());
             let new_edges = self.edges.insert(Pair(u, v));
@@ -174,9 +144,6 @@ pub mod EdgeSetGraphStPer {
             }
         }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.1, delete edge]
-        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
-        #[verifier::external_body]
         fn delete_edge(&self, u: &V, v: &V) -> Self {
             let new_edges = self.edges.delete(&Pair(u.clone(), v.clone()));
             EdgeSetGraphStPer {

@@ -10,7 +10,8 @@ pub mod SCCStEph {
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::{AVLTreeSeqStEphS, AVLTreeSeqStEphTrait};
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{
-        spec_wf_adj_list, dfs_finish_order,
+        spec_wf_adj_list, spec_num_false, lemma_set_true_decreases_num_false,
+        dfs_finish_order,
     };
     use crate::Types::Types::*;
 
@@ -162,25 +163,55 @@ pub mod SCCStEph {
         components
     }
 
-    /// DFS reachability: collects all reachable vertices into a component set.
-    #[verifier::external_body]
     fn dfs_reach(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
         component: &mut AVLTreeSetStEph<N>,
         vertex: N,
-    ) {
+    )
+        requires
+            vertex < old(visited)@.len(),
+            old(visited)@.len() == graph@.len(),
+            spec_wf_adj_list(graph),
+        ensures
+            visited@.len() == old(visited)@.len(),
+            forall|j: int| #![auto]
+                0 <= j < visited@.len() && old(visited)@[j]
+                ==> visited@[j],
+            spec_num_false(visited@) <= spec_num_false(old(visited)@),
+        decreases spec_num_false(old(visited)@),
+    {
         if *visited.nth(vertex) {
             return;
         }
+        assert(!old(visited)@[vertex as int]);
+        let set_ok = visited.set(vertex, true);
+        assert(set_ok.is_ok());
+        proof {
+            lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
+        }
 
-        let _ = visited.set(vertex, true);
         component.insert(vertex);
 
         let neighbors = graph.nth(vertex);
-        for i in 0..neighbors.length() {
+        let neighbors_len = neighbors.length();
+        let mut i: usize = 0;
+        while i < neighbors_len
+            invariant
+                i <= neighbors_len,
+                neighbors_len == graph@[vertex as int]@.len(),
+                visited@.len() == graph@.len(),
+                spec_wf_adj_list(graph),
+                forall|j: int| #![auto]
+                    0 <= j < visited@.len() && old(visited)@[j]
+                    ==> visited@[j],
+                spec_num_false(visited@) < spec_num_false(old(visited)@),
+            decreases neighbors_len - i,
+        {
             let neighbor = *neighbors.nth(i);
+            assert(graph@[vertex as int]@[i as int] < graph@.len());
             dfs_reach(graph, visited, component, neighbor);
+            i = i + 1;
         }
     }
 

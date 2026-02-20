@@ -70,23 +70,14 @@ pub mod AdjTableGraphStPer {
     // 9. impls
 
     impl<V: StT + Ord> AdjTableGraphStPerTrait<V> for AdjTableGraphStPer<V> {
-        /// - APAS: N/A — constructor not in cost table.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — creates empty table.
-        #[verifier::external_body]
         fn empty() -> Self {
             AdjTableGraphStPer {
                 adj: OrderedTableStPer::empty(),
             }
         }
 
-        /// - APAS: N/A — constructor not in cost table.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps existing table.
-        #[verifier::external_body]
         fn from_table(table: OrderedTableStPer<V, AVLTreeSetStPer<V>>) -> Self { AdjTableGraphStPer { adj: table } }
 
-        /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to table size.
-        #[verifier::external_body]
         fn num_vertices(&self) -> N { self.adj.size() }
 
         /// - APAS: (no cost stated, implied by map over edges: Work Θ(m), Span Θ(lg n))
@@ -138,9 +129,6 @@ pub mod AdjTableGraphStPer {
             }
         }
 
-        /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]
-        /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
-        #[verifier::external_body]
         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
 
         /// - APAS: Work Θ(lg n), Span Θ(lg n) [Cost Spec 52.3]

@@ -7,13 +7,12 @@
 
 pub mod Example56_1 {
 
-    use ordered_float::OrderedFloat;
-
     use vstd::prelude::*;
 
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap56::PathWeightUtilsStEph::PathWeightUtilsStEph::*;
+    use crate::vstdplus::float::float::*;
 
     verus! {
 
@@ -63,36 +62,25 @@ pub mod Example56_1 {
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
     #[verifier::external_body]
     pub fn example_path_weight_float() {
+        let inf = unreachable_dist();
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![
-                OrderedFloat(0.0),
-                OrderedFloat(2.5),
-                OrderedFloat(5.0),
-                OrderedFloat(f64::INFINITY),
+                dist(0.0), dist(2.5), dist(5.0), inf,
             ]),
             ArraySeqStEphS::from_vec(vec![
-                OrderedFloat(f64::INFINITY),
-                OrderedFloat(0.0),
-                OrderedFloat(1.5),
-                OrderedFloat(f64::INFINITY),
+                inf, dist(0.0), dist(1.5), inf,
             ]),
             ArraySeqStEphS::from_vec(vec![
-                OrderedFloat(f64::INFINITY),
-                OrderedFloat(f64::INFINITY),
-                OrderedFloat(0.0),
-                OrderedFloat(0.5),
+                inf, inf, dist(0.0), dist(0.5),
             ]),
             ArraySeqStEphS::from_vec(vec![
-                OrderedFloat(f64::INFINITY),
-                OrderedFloat(f64::INFINITY),
-                OrderedFloat(f64::INFINITY),
-                OrderedFloat(0.0),
+                inf, inf, inf, dist(0.0),
             ]),
         ]);
 
         let path = ArraySeqStPerS::from_vec(vec![0, 1, 2, 3]);
         match path_weight_float(&path, &weights) {
-            | Some(w) => println!("Path 0→1→2→3 has weight: {:.1}", w.0),
+            | Some(w) => println!("Path 0→1→2→3 has weight: {:.1}", w.val),
             | None => println!("Invalid path"),
         }
     }
