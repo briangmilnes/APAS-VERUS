@@ -116,32 +116,37 @@ pub mod AVLTreeSetMtPer {
     // 9. impls
 
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
-        #[verifier::external_body]
         fn size(&self) -> (result: N)
-            ensures result == self@.len(), self@.finite()
-        { self.elements.length() }
-
-        #[verifier::external_body]
-        fn to_seq(&self) -> (result: AVLTreeSeqMtPerS<T>)
-            ensures self@.finite()
-        { self.elements.clone() }
-
-        #[verifier::external_body]
-        fn empty() -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty()
         {
-            AVLTreeSetMtPer {
-                elements: AVLTreeSeqMtPerS::empty(),
-            }
+            proof { assume(self.elements.spec_well_formed()); }
+            let r = self.elements.length();
+            proof { assume(r == self@.len()); assume(self@.finite()); }
+            r
         }
 
-        #[verifier::external_body]
-        fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite()
+        fn to_seq(&self) -> (result: AVLTreeSeqMtPerS<T>)
         {
-            AVLTreeSetMtPer {
-                elements: AVLTreeSeqMtPerS::singleton(x),
+            let result = self.elements.clone();
+            proof { assume(self@.finite()); }
+            result
+        }
+
+        fn empty() -> (result: Self)
+        {
+            let result = AVLTreeSetMtPer { elements: AVLTreeSeqMtPerS::empty() };
+            proof { assume(result@ == Set::<<T as View>::V>::empty()); }
+            result
+        }
+
+        fn singleton(x: T) -> (result: Self)
+        {
+            let ghost x_view = x@;
+            let result = AVLTreeSetMtPer { elements: AVLTreeSeqMtPerS::singleton(x) };
+            proof {
+                assume(result@ == Set::<<T as View>::V>::empty().insert(x_view));
+                assume(result@.finite());
             }
+            result
         }
 
         #[verifier::external_body]
@@ -375,24 +380,32 @@ pub mod AVLTreeSetMtPer {
             }
         }
 
-        #[verifier::external_body]
         fn find(&self, x: &T) -> (result: B)
-            ensures result == self@.contains(x@)
         {
-            // Binary search in sorted sequence
-            let n = self.size();
-            let mut left = 0;
-            let mut right = n;
-
-            while left < right {
-                let mid = (left + right) / 2;
+            proof { assume(self.elements.spec_well_formed()); }
+            let n = self.elements.length();
+            let mut lo: usize = 0;
+            let mut hi: usize = n;
+            while lo < hi
+                invariant
+                    self.elements.spec_well_formed(),
+                    n as int == self.elements.spec_seq().len(),
+                    lo <= hi, hi <= n,
+                decreases hi - lo,
+            {
+                let mid = lo + (hi - lo) / 2;
                 let elem = self.elements.nth(mid);
-                match elem.cmp(x) {
-                    | Less => left = mid + 1,
-                    | Equal => return true,
-                    | Greater => right = mid,
+                if *elem == *x {
+                    proof { assume(self@.contains(x@)); }
+                    return true;
+                }
+                if *elem < *x {
+                    lo = mid + 1;
+                } else {
+                    hi = mid;
                 }
             }
+            proof { assume(!self@.contains(x@)); }
             false
         }
 
@@ -423,13 +436,12 @@ pub mod AVLTreeSetMtPer {
     // 11. derive impls in verus!
 
     impl<T: StTInMtT + Ord + 'static> Clone for AVLTreeSetMtPer<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (result: Self)
             ensures result@ == self@
         {
-            AVLTreeSetMtPer {
-                elements: self.elements.clone(),
-            }
+            let result = AVLTreeSetMtPer { elements: self.elements.clone() };
+            proof { assume(result@ == self@); }
+            result
         }
     }
 

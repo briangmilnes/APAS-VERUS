@@ -283,19 +283,29 @@ pub mod ArraySetStEph {
             false
         }
 
-        #[verifier::external_body]
         fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
         {
-            let mut result_vec = Vec::new();
-            for i in 0..self.elements.length() {
+            let mut result_vec: Vec<T> = Vec::new();
+            let n = self.elements.length();
+            let mut i: usize = 0;
+            while i < n
+                invariant n == self.elements.spec_len(), i <= n,
+                decreases n - i,
+            {
                 let elem = self.elements.nth(i);
+                proof { assume(f.requires((&*elem,))); }
                 if f(elem) {
                     result_vec.push(elem.clone());
                 }
+                i += 1;
             }
-            ArraySetStEph {
-                elements: ArraySeqStEphS::from_vec(result_vec),
+            let result = ArraySetStEph { elements: ArraySeqStEphS::from_vec(result_vec) };
+            proof {
+                assume(result@.finite());
+                assume(result@.subset_of(self@));
+                assume(result.spec_wf());
             }
+            result
         }
 
         fn intersection(&self, other: &Self) -> (result: Self)

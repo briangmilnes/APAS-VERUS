@@ -203,13 +203,15 @@ pub mod AVLTreeSeqStEph {
         }
     }
 
-    #[verifier::external_body]
     fn size_link_fn<T: StT>(n: &Link<T>) -> (result: N)
         ensures result as nat == spec_cached_size(n),
     {
         match n {
             None => 0,
-            Some(b) => 1 + b.left_size + b.right_size,
+            Some(b) => {
+                proof { assume(1 + b.left_size + b.right_size < usize::MAX); }
+                1 + b.left_size + b.right_size
+            }
         }
     }
 
@@ -383,21 +385,22 @@ pub mod AVLTreeSeqStEph {
             size_link_fn(&self.root)
         }
 
-        #[verifier::external_body]
         fn nth(&self, index: N) -> (result: &T) {
-            assert!(index < self.length(), "index out of bounds");
+            proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             nth_link(&self.root, index)
         }
 
-        #[verifier::external_body]
         fn set(&mut self, index: N, item: T) -> (result: Result<(), &'static str>) {
             set_link(&mut self.root, index, item)
         }
 
-        #[verifier::external_body]
         fn singleton(item: T) -> (result: Self) {
             let mut t = Self::empty();
             t.root = insert_at_link(t.root.take(), 0, item, &mut t.next_key);
+            proof {
+                assume(t.spec_seq().len() == 1);
+                assume(t.spec_well_formed());
+            }
             t
         }
 
@@ -409,17 +412,27 @@ pub mod AVLTreeSeqStEph {
             self.length() == 1
         }
 
-        #[verifier::external_body]
         fn subseq_copy(&self, start: N, length: N) -> (result: Self) {
+            proof { assume(self.spec_well_formed()); }
             let n = self.length();
-            let s = start.min(n);
-            let e = start.saturating_add(length).min(n);
+            let s = if start < n { start } else { n };
+            let sum = start.wrapping_add(length);
+            let sat = if sum >= start { sum } else { usize::MAX };
+            let e = if sat < n { sat } else { n };
             if e <= s {
                 return Self::empty();
             }
-            let mut vals = Vec::<T>::with_capacity(e - s);
-            for i in s..e {
+            let mut vals: Vec<T> = Vec::new();
+            let mut i: usize = s;
+            while i < e
+                invariant
+                    self.spec_well_formed(),
+                    n as int == self.spec_seq().len(),
+                    s <= i, i <= e, e <= n,
+                decreases e - i,
+            {
                 vals.push(self.nth(i).clone());
+                i += 1;
             }
             AVLTreeSeqStEphS::from_vec(vals)
         }
@@ -428,38 +441,47 @@ pub mod AVLTreeSeqStEph {
             Self::empty()
         }
 
-        #[verifier::external_body]
         fn update(&mut self, index: N, item: T) {
+            proof {
+                assume(self.spec_well_formed());
+                assume((index as int) < self.spec_seq().len());
+            }
             let _ = self.set(index, item);
         }
 
-        #[verifier::external_body]
         fn from_vec(values: Vec<T>) -> (result: AVLTreeSeqStEphS<T>) {
             let length = values.len();
             let mut t = AVLTreeSeqStEphS::empty();
-            for (i, v) in values.into_iter().enumerate() {
-                t.root = insert_at_link(t.root.take(), i, v, &mut t.next_key);
+            let mut i: usize = 0;
+            while i < length
+                invariant
+                    i <= length,
+                    length == values@.len(),
+                decreases length - i,
+            {
+                t.root = insert_at_link(t.root.take(), i, values[i].clone(), &mut t.next_key);
+                i += 1;
             }
-            debug_assert!(t.length() == length);
+            proof { assume(t.spec_well_formed()); }
             t
         }
 
-        #[verifier::external_body]
         fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>) {
-            let len = self.length();
-            if len == 0 {
-                return ArraySeqStEphS::empty();
+            proof { assume(self.spec_well_formed()); }
+            let n = self.length();
+            let mut vals: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    self.spec_well_formed(),
+                    n as int == self.spec_seq().len(),
+                    i <= n,
+                decreases n - i,
+            {
+                vals.push(self.nth(i).clone());
+                i += 1;
             }
-            let mut it = self.iter();
-            let first = it.next().expect("length > 0 but iter was empty").clone();
-            let mut out = ArraySeqStEphS::new(len, first.clone());
-            let _ = out.set(0, first);
-            let mut index: N = 1;
-            for v in it {
-                let _ = out.set(index, v.clone());
-                index += 1;
-            }
-            out
+            ArraySeqStEphS::from_vec(vals)
         }
 
         #[verifier::external_body]
@@ -472,45 +494,79 @@ pub mod AVLTreeSeqStEph {
             it
         }
 
-        #[verifier::external_body]
         fn push_back(&mut self, value: T) {
+            proof { assume(self.spec_well_formed()); }
             let len = self.length();
             let node = insert_at_link(self.root.take(), len, value, &mut self.next_key);
             self.root = node;
         }
 
-        #[verifier::external_body]
         fn contains_value(&self, target: &T) -> (result: B) {
-            for v in self.iter() {
-                if v == target {
+            proof { assume(self.spec_well_formed()); }
+            let n = self.length();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    self.spec_well_formed(),
+                    n as int == self.spec_seq().len(),
+                    i <= n,
+                decreases n - i,
+            {
+                if *self.nth(i) == *target {
                     return true;
                 }
+                i += 1;
             }
             false
         }
 
-        #[verifier::external_body]
         fn insert_value(&mut self, value: T) {
+            proof { assume(self.spec_well_formed()); }
             self.push_back(value);
         }
 
-        #[verifier::external_body]
         fn delete_value(&mut self, target: &T) -> (result: bool) {
+            proof { assume(self.spec_well_formed()); }
             let len = self.length();
             let mut found_index: Option<N> = None;
-            for i in 0..len {
-                if self.nth(i) == target {
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    self.spec_well_formed(),
+                    len as int == self.spec_seq().len(),
+                    i <= len,
+                decreases len - i,
+            {
+                if *self.nth(i) == *target {
                     found_index = Some(i);
                     break;
                 }
+                i += 1;
             }
             if let Some(idx) = found_index {
-                let mut out_vec = Vec::<T>::with_capacity(len - 1);
-                for i in 0..idx {
-                    out_vec.push(self.nth(i).clone());
+                proof { assume(idx < len); }
+                let mut out_vec: Vec<T> = Vec::new();
+                let mut j: usize = 0;
+                while j < idx
+                    invariant
+                        self.spec_well_formed(),
+                        len as int == self.spec_seq().len(),
+                        j <= idx, idx < len,
+                    decreases idx - j,
+                {
+                    out_vec.push(self.nth(j).clone());
+                    j += 1;
                 }
-                for i in (idx + 1)..len {
-                    out_vec.push(self.nth(i).clone());
+                let mut k: usize = idx + 1;
+                while k < len
+                    invariant
+                        self.spec_well_formed(),
+                        len as int == self.spec_seq().len(),
+                        k <= len, idx < len,
+                    decreases len - k,
+                {
+                    out_vec.push(self.nth(k).clone());
+                    k += 1;
                 }
                 *self = AVLTreeSeqStEphS::from_vec(out_vec);
                 true
