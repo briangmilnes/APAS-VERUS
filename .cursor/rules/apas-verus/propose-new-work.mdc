@@ -1,0 +1,37 @@
+---
+description: Generate proposed work table from proof holes report
+alwaysApply: false
+---
+
+# Propose New Work
+
+When the user says "propose new work", "proposed work table", or "retable", generate a table of actionable work from the proof holes report. Output in Cursor chat only (no file).
+
+## Procedure
+
+1. Run proof holes chapter by chapter on the agent's assigned chapters:
+   ```bash
+   for ch in Chap02 Chap03 Chap05 Chap06 Chap11 Chap12 Chap17 Chap18 Chap19 Chap21 Chap23 Chap26 Chap27 Chap28 Chap35 Chap36 Chap37 Chap38 Chap39 Chap40 Chap41; do
+     ~/projects/veracity/target/release/veracity-review-proof-holes -d "src/$ch/"
+   done
+   ```
+
+2. For each holed file, determine whether it has **proposed work**:
+   - **Yes**: non-standard assume, external_body hiding algorithmic logic, bare_impl (except iter_mut/recursive-spec-fn)
+   - **No**: accepted patterns only — PartialEq assume, Clone assume, `assume(false); diverge()` in thread join, external_body at threading boundaries, external_body at AtomicUsize (Chap12)
+
+3. List only files with proposed work. If a chapter has multiple holed files, include only those with proposed work (e.g., Chap19: ArraySeqMtEphSlice has bare_impl; ArraySeqMtEph/StEph/StPer have PartialEq only → list only ArraySeqMtEphSlice).
+
+4. Output table format:
+   | # | Chapter | Holed Files | Proposed Work |
+   Cells ≤ 40 chars. Avoid the word "in" in cells (use "lacking" not "without").
+
+5. Skip chapters with no proposed work. Do not include rows where all holes are accepted patterns.
+
+## Permanent external_body (no proposed work)
+
+- Chap02 HFSchedulerMtEph: threading boundary
+- Chap12 Exercise12_1, Exercise12_5: AtomicUsize operations
+- Chap35 OrderStatSelectMtEph/MtPer: parallel partition
+- Chap38 BSTParaMtEph: threading boundary
+- Chap39 BSTParaTreapMtEph: threading boundary

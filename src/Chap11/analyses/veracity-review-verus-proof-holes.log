@@ -1,17 +1,15 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap11/
-
 ℹ FibonacciMtEph2Threads.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEph2Threads.rs:155: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEph2Threads.rs:163: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:155: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:163: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
    Info: 2 assume(false); diverge() idiom(s)
 ℹ FibonacciMtEphRecomputes.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEphRecomputes.rs:151: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEphRecomputes.rs:159: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge()} — valid non-termination idiom
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:151: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:159: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge()} — valid non-termination idiom
    Info: 2 assume(false); diverge() idiom(s)
 ✓ FibonacciMtPerAllThreads.rs
 ℹ FibonacciMtPerTSM.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtPerTSM.rs:145: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtPerTSM.rs:153: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:145: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:153: info: assume(false); diverge() - Result::Err(_) => { assume(false); diverge() } — valid non-termination idiom
    Info: 2 assume(false); diverge() idiom(s)
 ✓ FibonacciStEph.rs
    3 clean proof functions
@@ -27,6 +25,15 @@ Modules:
 
 Proof Functions:
    3 clean
+   0 holed
+   3 total
+
+Holes Found: 0 total
+
+Info: 6 assume(false); diverge() idiom(s) (valid non-termination)
+
+🎉 No proof holes or warnings found! All proofs are complete.
+clean
    0 holed
    3 total
 

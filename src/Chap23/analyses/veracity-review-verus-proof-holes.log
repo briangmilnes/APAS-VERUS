@@ -1,25 +1,23 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap23/
-
 ❌ BalBinTreeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:788: assume() - proof { assume(equal == (*self == *other)); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:788: assume() - proof { assume(equal == (*self == *other)); }
        780 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        786 |                 (BalBinTree::Node(a), BalBinTree::Node(b)) => {
        787 |                     let equal = a.left == b.left && a.value == b.value && a.right == b.right;
        789 |                     equal
        790 |                 },
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:803: assume() - proof { assume(equal == (*self == *other)); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:803: assume() - proof { assume(equal == (*self == *other)); }
        799 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        801 |         {
        802 |             let equal = self.left == other.left && self.value == other.value && self.right == other.right;
        804 |             equal
        805 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:811: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:811: external_body - #[verifier::external_body]
        812 |         fn clone(&self) -> (cloned: Self)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:823: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:823: external_body - #[verifier::external_body]
        824 |         fn clone(&self) -> (cloned: Self)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:271: error: bare_impl - impl<T> BalBinTree<T> { — `impl BalBinTree` without trait; file defines [BalBinTreeTrait]
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:271: error: bare_impl - impl<T> BalBinTree<T> { — `impl BalBinTree` without trait; file defines [BalBinTreeTrait]
        272 |         pub open spec fn spec_size(self) -> nat
        273 |             decreases self,
    Holes: 4 total
@@ -28,35 +26,35 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
    Errors: 1 bare impl(s) in file with trait definition
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ PrimTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:873: assume() - proof { assume(cloned@ == self@); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:873: assume() - proof { assume(cloned@ == self@); }
        869 |         fn clone(&self) -> (cloned: Self)
             ...
        871 |         {
        872 |             let cloned = PrimTreeSeqStS { seq: self.seq.clone() };
        874 |             cloned
        875 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:883: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:883: assume() - proof { assume(equal == (self@ == other@)); }
        879 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        881 |         {
        882 |             let equal = self.seq == other.seq;
        884 |             equal
        885 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:899: assume() - proof { assume(cloned@ == self@); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:899: assume() - proof { assume(cloned@ == self@); }
        891 |         fn clone(&self) -> (cloned: Self)
             ...
        897 |                 PrimTreeSeqStTree::Two(l, r) => PrimTreeSeqStTree::Two(l.clone(), r.clone()),
        898 |             };
        900 |             cloned
        901 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:915: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:915: assume() - proof { assume(equal == (self@ == other@)); }
        905 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        913 |                 (PrimTreeSeqStTree::One(a), PrimTreeSeqStTree::One(b)) => {
        914 |                     let equal = *a == *b;
        916 |                     equal
        917 |                 },
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:920: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:920: assume() - proof { assume(equal == (self@ == other@)); }
        905 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        918 |                 (PrimTreeSeqStTree::Two(l1, r1), PrimTreeSeqStTree::Two(l2, r2)) => {
@@ -79,6 +77,13 @@ Proof Functions:
    2 clean
    0 holed
    2 total
+
+Holes Found: 9 total
+   7 × assume()
+   2 × external_body
+
+Errors: 1 bare impl(s) in files with trait definitions
+al
 
 Holes Found: 9 total
    7 × assume()

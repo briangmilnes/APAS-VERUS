@@ -1,7 +1,5 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap38/
-
 ❌ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:41: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:41: external_body - #[verifier::external_body]
         42 |         fn new_bst_para_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {
    Holes: 1 total
       1 × external_body
@@ -22,4 +20,5 @@ Proof Functions:
    0 total
 
 Holes Found: 1 total
+   1 × external_body
    1 × external_body

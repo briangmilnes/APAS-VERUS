@@ -1,17 +1,15 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap39/
-
 ❌ BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:47: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:47: external_body - #[verifier::external_body]
         48 |     fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, TreapWf>) {
    Holes: 1 total
       1 × external_body
 ✓ BSTSetTreapMtEph.rs
 ❌ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:39: external_type_specification - #[verifier::external_type_specification]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:39: external_type_specification - #[verifier::external_type_specification]
         40 |         struct ExNode<T: StTInMtT + Ord>(Node<T>);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:48: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:48: external_body - #[verifier::external_body]
         49 |         fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:25: error: bare_impl - impl<T: StTInMtT + Ord> Node<T> { — `impl Node` without trait; file defines [BSTTreapMtEphTrait]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:25: error: bare_impl - impl<T: StTInMtT + Ord> Node<T> { — `impl Node` without trait; file defines [BSTTreapMtEphTrait]
         26 |         fn new(key: T, priority: u64) -> Self {
         27 |             Node {
    Holes: 2 total
@@ -39,3 +37,4 @@ Holes Found: 3 total
    1 × external_type_specification
 
 Errors: 1 bare impl(s) in files with trait definitions
+ith trait definitions

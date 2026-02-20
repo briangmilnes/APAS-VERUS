@@ -1,24 +1,22 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap49/
-
 ❌ MinEditDistMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:29: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:29: external_body - #[verifier::external_body]
         30 |         fn new_min_edit_dist_eph_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, MinEditDistMtEphWf>) {
    Holes: 1 total
       1 × external_body
 ❌ MinEditDistMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtPer.rs:28: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:28: external_body - #[verifier::external_body]
         29 |         fn new_min_edit_dist_per_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, MinEditDistMtPerWf>) {
    Holes: 1 total
       1 × external_body
 ✓ MinEditDistStEph.rs
 ✓ MinEditDistStPer.rs
 ❌ SubsetSumMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtEph.rs:29: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:29: external_body - #[verifier::external_body]
         30 |         fn new_subset_sum_eph_lock(val: HashMap<(usize, i32), bool>) -> (lock: RwLock<HashMap<(usize, i32), bool>, SubsetSumMtEphWf>) {
    Holes: 1 total
       1 × external_body
 ❌ SubsetSumMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap49/SubsetSumMtPer.rs:28: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:28: external_body - #[verifier::external_body]
         29 |         fn new_subset_sum_per_lock(val: HashMap<(usize, i32), bool>) -> (lock: RwLock<HashMap<(usize, i32), bool>, SubsetSumMtPerWf>) {
    Holes: 1 total
       1 × external_body
@@ -41,3 +39,4 @@ Proof Functions:
 
 Holes Found: 4 total
    4 × external_body
+nal_body

@@ -1,5 +1,3 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap59/
-
 ✓ JohnsonMtEphF64.rs
 ✓ JohnsonMtEphI64.rs
 ✓ JohnsonStEphF64.rs
@@ -22,3 +20,4 @@ Proof Functions:
 Holes Found: 0 total
 
 🎉 No proof holes or warnings found! All proofs are complete.
+l proofs are complete.

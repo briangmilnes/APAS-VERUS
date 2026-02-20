@@ -1,11 +1,9 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/
-
 ❌ ArraySeq.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1481: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1481: external - #[verifier::external]
       1482 |     impl<T: View> ArraySeqS<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1616: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1616: external - #[verifier::external]
       1617 |     impl<'a, T> std::iter::IntoIterator for &'a mut ArraySeqS<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1646: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1646: assume() - proof { assume(equal == (self@ == other@)); }
       1642 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1644 |         {
@@ -17,7 +15,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
       2 × external
    Proof functions: 10 total (10 clean, 0 holed)
 ❌ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:1568: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1568: assume() - proof { assume(equal == (self@ == other@)); }
       1564 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1566 |         {
@@ -28,7 +26,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
       1 × assume()
    Proof functions: 4 total (4 clean, 0 holed)
 ❌ ArraySeqMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:1176: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1176: assume() - proof { assume(equal == (self@ == other@)); }
       1172 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1174 |         {
@@ -39,7 +37,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
       1 × assume()
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStEph.rs:1043: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1043: assume() - proof { assume(equal == (self@ == other@)); }
       1039 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1041 |         {
@@ -50,7 +48,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStPer.rs:1014: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1014: assume() - proof { assume(equal == (self@ == other@)); }
       1010 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1012 |         {
@@ -61,14 +59,14 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ LinkedListStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:864: assume() - proof { assume(cloned@ == self@); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:864: assume() - proof { assume(cloned@ == self@); }
        860 |         fn clone(&self) -> (cloned: Self)
             ...
        862 |         {
        863 |             let cloned = LinkedListStEphS { seq: self.seq.clone() };
        865 |             cloned
        866 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:878: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:878: assume() - proof { assume(equal == (self@ == other@)); }
        874 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        876 |         {
@@ -79,14 +77,14 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
       2 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ LinkedListStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:847: assume() - proof { assume(cloned@ == self@); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:847: assume() - proof { assume(cloned@ == self@); }
        843 |         fn clone(&self) -> (cloned: Self)
             ...
        845 |         {
        846 |             let cloned = LinkedListStPerS { seq: self.seq.clone() };
        848 |             cloned
        849 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:861: assume() - proof { assume(equal == (self@ == other@)); }
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:861: assume() - proof { assume(equal == (self@ == other@)); }
        857 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        859 |         {
@@ -100,6 +98,21 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
+
+Modules:
+   0 clean (no holes)
+   7 holed (contains holes)
+   7 total
+
+Proof Functions:
+   20 clean
+   0 holed
+   20 total
+
+Holes Found: 11 total
+   9 × assume()
+   2 × external
+��══
 
 Modules:
    0 clean (no holes)
