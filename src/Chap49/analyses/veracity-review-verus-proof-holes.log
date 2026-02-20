@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap49/
+
 ❌ MinEditDistMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:29: external_body - #[verifier::external_body]
         30 |         fn new_min_edit_dist_eph_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, MinEditDistMtEphWf>) {
@@ -26,20 +28,6 @@
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
-
-Modules:
-   4 clean (no holes)
-   4 holed (contains holes)
-   8 total
-
-Proof Functions:
-   0 clean
-   0 holed
-   0 total
-
-Holes Found: 4 total
-   4 × external_body
-��═══════
 
 Modules:
    4 clean (no holes)
