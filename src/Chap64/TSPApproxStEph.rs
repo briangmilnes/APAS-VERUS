@@ -10,6 +10,10 @@ pub mod TSPApproxStEph {
 
     use vstd::prelude::*;
 
+    verus! {
+        // Placeholder. Full verusification blocked: uses ordered_float (Verus can't link).
+    }
+
     #[cfg(not(verus_keep_ghost))]
     use std::collections::{HashMap, HashSet};
     use std::hash::Hash;

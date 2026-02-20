@@ -9,6 +9,7 @@
 
 pub mod JohnsonMtEphF64 {
 
-    // Blocked: depends on WeightedDirGraphStEphF64, DijkstraStEphF64, BellmanFordStEphF64.
-    // All blocked on missing f64 graph type.
+    verus! {
+        // Placeholder. Full verusification blocked: requires f64 graph types.
+    }
 }

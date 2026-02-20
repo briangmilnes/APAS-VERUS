@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap52
+
 ✓ AdjMatrixGraphMtEph.rs
    3 clean proof functions
 ✓ AdjMatrixGraphMtPer.rs
@@ -40,13 +42,6 @@ Modules:
    14 total
 
 Proof Functions:
-   21 clean
-   0 holed
-   21 total
-
-Holes Found: 2 total
-   2 × external_body
-f Functions:
    21 clean
    0 holed
    21 total

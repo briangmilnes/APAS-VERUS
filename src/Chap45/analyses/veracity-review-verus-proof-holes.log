@@ -1,22 +1,22 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap45
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap45
 
 ❌ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:18: error: struct_outside_verus - struct BalancedTreePQ — should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:18: error: struct_outside_verus - struct BalancedTreePQ — should be inside verus!
         18 |     pub struct BalancedTreePQ<T: StT + Ord> {
         19 |         elements: AVLTreeSeqStPerS<T>,
         20 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:18: error: clone_derived_outside - struct BalancedTreePQ — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:18: error: clone_derived_outside - struct BalancedTreePQ — Clone should be implemented inside verus!, not derived outside
         18 |     pub struct BalancedTreePQ<T: StT + Ord> {
         19 |         elements: AVLTreeSeqStPerS<T>,
         20 |     }
    Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:17: error: struct_outside_verus - struct BinaryHeapPQ — should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:17: error: struct_outside_verus - struct BinaryHeapPQ — should be inside verus!
         17 |     pub struct BinaryHeapPQ<T: StT + Ord> {
         18 |         elements: ArraySeqStPerS<T>,
         19 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:17: error: clone_derived_outside - struct BinaryHeapPQ — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:17: error: clone_derived_outside - struct BinaryHeapPQ — Clone should be implemented inside verus!, not derived outside
         17 |     pub struct BinaryHeapPQ<T: StT + Ord> {
         18 |         elements: ArraySeqStPerS<T>,
         19 |     }
@@ -25,52 +25,52 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 ✓ Example45_2.rs
    1 clean proof function
 ❌ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/HeapsortExample.rs:153: error: struct_outside_verus - struct HeapsortComparison — should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:153: error: struct_outside_verus - struct HeapsortComparison — should be inside verus!
        153 |     pub struct HeapsortComparison<T: StT + Ord> {
        154 |         pub input: Vec<T>,
        155 |         pub unsorted_list_result: Vec<T>,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/HeapsortExample.rs:153: error: clone_derived_outside - struct HeapsortComparison — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:153: error: clone_derived_outside - struct HeapsortComparison — Clone should be implemented inside verus!, not derived outside
        153 |     pub struct HeapsortComparison<T: StT + Ord> {
        154 |         pub input: Vec<T>,
        155 |         pub unsorted_list_result: Vec<T>,
    Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:16: error: enum_outside_verus - enum LeftistHeapNode — should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:16: error: enum_outside_verus - enum LeftistHeapNode — should be inside verus!
         16 |     pub enum LeftistHeapNode<T: StT + Ord> {
         17 |         Leaf,
         18 |         Node {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:16: error: clone_derived_outside - enum LeftistHeapNode — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:16: error: clone_derived_outside - enum LeftistHeapNode — Clone should be implemented inside verus!, not derived outside
         16 |     pub enum LeftistHeapNode<T: StT + Ord> {
         17 |         Leaf,
         18 |         Node {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:29: error: struct_outside_verus - struct LeftistHeapPQ — should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:29: error: struct_outside_verus - struct LeftistHeapPQ — should be inside verus!
         29 |     pub struct LeftistHeapPQ<T: StT + Ord> {
         30 |         root: LeftistHeapNode<T>,
         31 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:29: error: clone_derived_outside - struct LeftistHeapPQ — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:29: error: clone_derived_outside - struct LeftistHeapPQ — Clone should be implemented inside verus!, not derived outside
         29 |     pub struct LeftistHeapPQ<T: StT + Ord> {
         30 |         root: LeftistHeapNode<T>,
         31 |     }
    Errors: 4 total (2 struct/enum outside verus!, 2 Clone derived outside)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:17: error: struct_outside_verus - struct SortedListPQ — should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:17: error: struct_outside_verus - struct SortedListPQ — should be inside verus!
         17 |     pub struct SortedListPQ<T: StT + Ord> {
         18 |         elements: ArraySeqStPerS<T>,
         19 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:17: error: clone_derived_outside - struct SortedListPQ — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:17: error: clone_derived_outside - struct SortedListPQ — Clone should be implemented inside verus!, not derived outside
         17 |     pub struct SortedListPQ<T: StT + Ord> {
         18 |         elements: ArraySeqStPerS<T>,
         19 |     }
    Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/UnsortedListPQ.rs:17: error: struct_outside_verus - struct UnsortedListPQ — should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:17: error: struct_outside_verus - struct UnsortedListPQ — should be inside verus!
         17 |     pub struct UnsortedListPQ<T: StT + Ord> {
         18 |         elements: ArraySeqStPerS<T>,
         19 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/UnsortedListPQ.rs:17: error: clone_derived_outside - struct UnsortedListPQ — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:17: error: clone_derived_outside - struct UnsortedListPQ — Clone should be implemented inside verus!, not derived outside
         17 |     pub struct UnsortedListPQ<T: StT + Ord> {
         18 |         elements: ArraySeqStPerS<T>,
         19 |     }

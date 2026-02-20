@@ -1,14 +1,14 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap11/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap11
 
 ❌ FibonacciMtEph2Threads.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEph2Threads.rs:155: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:155: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
        100 | pub fn fib_2threads(n: u64) -> (fibonacci: u64)
             ...
        153 |     let left_out = match join_handle1.join() {
        154 |         Result::Ok(out) => out,
        156 |     };
        157 |     let left_val = left_out.0;
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEph2Threads.rs:163: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:163: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
        100 | pub fn fib_2threads(n: u64) -> (fibonacci: u64)
             ...
        161 |     let right_out = match join_handle2.join() {
@@ -18,14 +18,14 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
    Holes: 2 total
       2 × assume(false)
 ❌ FibonacciMtEphRecomputes.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEphRecomputes.rs:151: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:151: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
         92 | pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
             ...
        149 |         let left_out = match left_handle.join() {
        150 |             Result::Ok(out) => out,
        152 |         };
        153 |         let left_val = left_out.0;
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEphRecomputes.rs:159: assume(false) - Result::Err(_) => { assume(false); diverge()} — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:159: assume(false) - Result::Err(_) => { assume(false); diverge()} — needs diverge(); use `assume(false); diverge()`
         92 | pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
             ...
        157 |         let right_out = match right_handle.join() {
@@ -36,14 +36,14 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
       2 × assume(false)
 ✓ FibonacciMtPerAllThreads.rs
 ❌ FibonacciMtPerTSM.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtPerTSM.rs:145: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:145: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
         86 | pub fn fib(n: u64) -> (fibonacci: u64)
             ...
        143 |         let left_out = match left_handle.join() {
        144 |             Result::Ok(out) => out,
        146 |         };
        147 |         let left_val = left_out.0;
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtPerTSM.rs:153: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:153: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
         86 | pub fn fib(n: u64) -> (fibonacci: u64)
             ...
        151 |         let right_out = match right_handle.join() {

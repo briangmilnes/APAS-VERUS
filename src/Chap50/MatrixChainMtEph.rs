@@ -17,24 +17,48 @@ pub mod MatrixChainMtEph {
     use vstd::rwlock::*;
 
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
+    verus! {
     // 4. type definitions
-    #[derive(Clone, Debug, PartialEq, Eq)]
+    #[verifier::reject_recursive_types]
     pub struct MatrixDim {
         pub rows: usize,
         pub cols: usize,
     }
 
-    /// Ephemeral multi-threaded matrix chain multiplication solver using parallel dynamic programming
-    #[derive(Clone)]
-    pub struct MatrixChainMtEphS {
-        pub dimensions: Arc<RwLock<Vec<MatrixDim>, McEphDimWf>>,
-        pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>>,
+    impl View for MatrixDim {
+        type V = (nat, nat);
+        open spec fn view(&self) -> (nat, nat) {
+            (self.rows as nat, self.cols as nat)
+        }
     }
 
-    verus! {
-        #[verifier::external_type_specification]
-        pub struct ExMatrixDim(MatrixDim);
+    impl Clone for MatrixDim {
+        fn clone(&self) -> (s: Self)
+            ensures s@ == self@
+        {
+            MatrixDim { rows: self.rows, cols: self.cols }
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl PartialEqSpecImpl for MatrixDim {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl Eq for MatrixDim {}
+    impl PartialEq for MatrixDim {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let r = self.rows == other.rows && self.cols == other.cols;
+            proof { assume(r == (self@ == other@)); }
+            r
+        }
+    }
 
         pub struct McEphDimWf;
         impl RwLockPredicate<Vec<MatrixDim>> for McEphDimWf {
@@ -53,6 +77,13 @@ pub mod MatrixChainMtEph {
         fn new_mceph_memo_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>) {
             RwLock::new(val, Ghost(McEphMemoWf))
         }
+    }
+
+    /// Ephemeral multi-threaded matrix chain multiplication solver using parallel dynamic programming
+    #[derive(Clone)]
+    pub struct MatrixChainMtEphS {
+        pub dimensions: Arc<RwLock<Vec<MatrixDim>, McEphDimWf>>,
+        pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>>,
     }
 
     // 8. traits
@@ -367,6 +398,10 @@ pub mod MatrixChainMtEph {
             handle.release_read();
             dims.into_iter()
         }
+    }
+
+    impl Debug for MatrixDim {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixDim({}×{})", self.rows, self.cols) }
     }
 
     impl Display for MatrixDim {

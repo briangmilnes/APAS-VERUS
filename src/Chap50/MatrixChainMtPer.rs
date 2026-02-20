@@ -19,22 +19,49 @@ pub mod MatrixChainMtPer {
     use vstd::rwlock::*;
 
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
+    verus! {
     // 4. type definitions
-    #[derive(Clone, Debug, PartialEq, Eq)]
+    #[verifier::reject_recursive_types]
     pub struct MatrixDim {
         pub rows: usize,
         pub cols: usize,
     }
 
-    /// Persistent multi-threaded matrix chain multiplication solver using parallel dynamic programming
-    #[derive(Clone)]
-    pub struct MatrixChainMtPerS {
-        pub dimensions: Arc<Vec<MatrixDim>>,
-        pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>>,
+    impl View for MatrixDim {
+        type V = (nat, nat);
+        open spec fn view(&self) -> (nat, nat) {
+            (self.rows as nat, self.cols as nat)
+        }
     }
 
-    verus! {
+    impl Clone for MatrixDim {
+        fn clone(&self) -> (s: Self)
+            ensures s@ == self@
+        {
+            MatrixDim { rows: self.rows, cols: self.cols }
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl PartialEqSpecImpl for MatrixDim {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl Eq for MatrixDim {}
+    impl PartialEq for MatrixDim {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let r = self.rows == other.rows && self.cols == other.cols;
+            proof { assume(r == (self@ == other@)); }
+            r
+        }
+    }
+
         pub struct McPerMemoWf;
         impl RwLockPredicate<HashMap<(usize, usize), usize>> for McPerMemoWf {
             open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
@@ -43,6 +70,13 @@ pub mod MatrixChainMtPer {
         fn new_mcper_memo_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>) {
             RwLock::new(val, Ghost(McPerMemoWf))
         }
+    }
+
+    /// Persistent multi-threaded matrix chain multiplication solver using parallel dynamic programming
+    #[derive(Clone)]
+    pub struct MatrixChainMtPerS {
+        pub dimensions: Arc<Vec<MatrixDim>>,
+        pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>>,
     }
 
     // 8. traits
@@ -265,6 +299,10 @@ pub mod MatrixChainMtPer {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — create cloned iterator adapter over Arc<Vec>
         fn into_iter(self) -> Self::IntoIter { self.dimensions.iter().cloned() }
+    }
+
+    impl Debug for MatrixDim {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixDim({}×{})", self.rows, self.cols) }
     }
 
     impl Display for MatrixDim {

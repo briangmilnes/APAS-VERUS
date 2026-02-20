@@ -1,12 +1,12 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap39
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap39
 
 ❌ BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:24: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:24: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         22 | 
         23 |     impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for TreapWf {
         25 |     }
         26 | 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:47: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:47: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
         24 |         open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool { true }
             ...
         45 |     }
@@ -15,72 +15,72 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
         49 |         RwLock::new(val, Ghost(TreapWf))
    Errors: 2 total (1 Verus RwLock external_body, 1 dummy RwLockPredicate)
 ❌ BSTSetTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:39: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:39: external_body - #[verifier::external_body]
         40 |     fn priority_for<T: Hash>(key: &T) -> u64 {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:117: external_body - #[verifier::external_body]
-       118 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTTreapMtEph<T>) -> Vec<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:131: external_body - #[verifier::external_body]
-       132 |     fn from_sorted_iter<T: StTInMtT + Ord + Hash, I: IntoIterator<Item = T>>(values: I) -> BSTSetTreapMtEph<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:172: external_body - #[verifier::external_body]
-       173 |         fn delete(&mut self, target: &T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:181: external_body - #[verifier::external_body]
-       182 |         fn union(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:190: external_body - #[verifier::external_body]
-       191 |         fn intersection(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:207: external_body - #[verifier::external_body]
-       208 |         fn difference(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:224: external_body - #[verifier::external_body]
-       225 |         fn split(&self, pivot: &T) -> (Self, B, Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:241: external_body - #[verifier::external_body]
-       242 |         #[verifier::external_body]
-       243 |         fn join_pair(left: Self, right: Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:242: external_body - #[verifier::external_body]
-       243 |         fn join_pair(left: Self, right: Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:251: external_body - #[verifier::external_body]
-       252 |         #[verifier::external_body]
-       253 |         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:252: external_body - #[verifier::external_body]
-       253 |         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:262: external_body - #[verifier::external_body]
-       263 |         fn filter<F: FnMut(&T) -> bool>(&self, mut predicate: F) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:272: external_body - #[verifier::external_body]
-       273 |         fn reduce<F: FnMut(T, T) -> T>(&self, mut op: F, base: T) -> T {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:124: external_body - #[verifier::external_body]
+       125 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTTreapMtEph<T>) -> Vec<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:138: external_body - #[verifier::external_body]
+       139 |     fn from_sorted_iter<T: StTInMtT + Ord + Hash, I: IntoIterator<Item = T>>(values: I) -> BSTSetTreapMtEph<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:179: external_body - #[verifier::external_body]
+       180 |         fn delete(&mut self, target: &T) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:188: external_body - #[verifier::external_body]
+       189 |         fn union(&self, other: &Self) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:197: external_body - #[verifier::external_body]
+       198 |         fn intersection(&self, other: &Self) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:214: external_body - #[verifier::external_body]
+       215 |         fn difference(&self, other: &Self) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:231: external_body - #[verifier::external_body]
+       232 |         fn split(&self, pivot: &T) -> (Self, B, Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:248: external_body - #[verifier::external_body]
+       249 |         #[verifier::external_body]
+       250 |         fn join_pair(left: Self, right: Self) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:249: external_body - #[verifier::external_body]
+       250 |         fn join_pair(left: Self, right: Self) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:258: external_body - #[verifier::external_body]
+       259 |         #[verifier::external_body]
+       260 |         fn join_m(left: Self, pivot: T, right: Self) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:259: external_body - #[verifier::external_body]
+       260 |         fn join_m(left: Self, pivot: T, right: Self) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:269: external_body - #[verifier::external_body]
+       270 |         fn filter<F: FnMut(&T) -> bool>(&self, mut predicate: F) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:279: external_body - #[verifier::external_body]
+       280 |         fn reduce<F: FnMut(T, T) -> T>(&self, mut op: F, base: T) -> T {
    Holes: 14 total
       14 × external_body
 ❌ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:160: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:160: external_body - #[verifier::external_body]
        161 |     fn update<T: StTInMtT + Ord>(node: &mut Node<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:282: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:282: external_body - #[verifier::external_body]
        283 |     fn height_link<T: StTInMtT + Ord>(link: &Link<T>) -> N {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:50: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:50: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         44 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
             ...
         48 |             None => {
         49 |                 let c = None;
         51 |                 c
         52 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:63: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:63: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         44 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
             ...
         61 |                     right,
         62 |                 }));
         64 |                 c
         65 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:80: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:80: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         70 |         fn clone(&self) -> (cloned: Self)
             ...
         78 |                 right: clone_link(&self.right),
         79 |             };
         81 |             cloned
         82 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:88: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:88: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         70 |         fn clone(&self) -> (cloned: Self)
             ...
         86 | 
         87 |     impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for TreapLinkWf {
         89 |     }
         90 | 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:91: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:91: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
         88 |         open spec fn inv(self, v: Link<T>) -> bool { true }
             ...
         89 |     }
@@ -91,20 +91,44 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
       2 × external_body
    Errors: 5 total (3 assume in eq/clone (Verus workaround), 1 Verus RwLock external_body, 1 dummy RwLockPredicate)
 ❌ BSTTreapStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:26: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:26: external_body - #[verifier::external_body]
         27 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:97: external_body - #[verifier::external_body]
-        98 |     fn size_link<T: StT + Ord>(link: &Link<T>) -> N { link.as_ref().map_or(0, |n| n.size) }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:147: external_body - #[verifier::external_body]
-       148 |     fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T, priority: u64)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:173: external_body - #[verifier::external_body]
-       174 |     fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T>
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:264: external_body - #[verifier::external_body]
-       265 |         fn in_order(&self) -> ArraySeqStPerS<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:271: external_body - #[verifier::external_body]
-       272 |         fn pre_order(&self) -> ArraySeqStPerS<T> {
-   Holes: 6 total
-      6 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:116: external_body - #[verifier::external_body]
+       117 |     fn size_link<T: StT + Ord>(link: &Link<T>) -> N { link.as_ref().map_or(0, |n| n.size) }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:127: assume() - assume(spec_size_link(&node.left) < usize::MAX as nat);
+       119 |     fn height_link<T: StT + Ord>(link: &Link<T>) -> N
+            ...
+       125 |             | Some(node) => {
+       126 |                 proof {
+       128 |                     assume(spec_size_link(&node.right) < usize::MAX as nat);
+       129 |                 }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:128: assume() - assume(spec_size_link(&node.right) < usize::MAX as nat);
+       119 |     fn height_link<T: StT + Ord>(link: &Link<T>) -> N
+            ...
+       126 |                 proof {
+       127 |                     assume(spec_size_link(&node.left) < usize::MAX as nat);
+       129 |                 }
+       130 |                 let lh = height_link(&node.left);
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:133: assume() - proof { assume(m < usize::MAX); }
+       119 |     fn height_link<T: StT + Ord>(link: &Link<T>) -> N
+            ...
+       131 |                 let rh = height_link(&node.right);
+       132 |                 let m = if lh >= rh { lh } else { rh };
+       134 |                 1 + m
+       135 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:141: external_body - #[verifier::external_body]
+       142 |     fn update<T: StT + Ord>(node: &mut Node<T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:180: external_body - #[verifier::external_body]
+       181 |     fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T, priority: u64)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:206: external_body - #[verifier::external_body]
+       207 |     fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T>
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:301: external_body - #[verifier::external_body]
+       302 |         fn in_order(&self) -> ArraySeqStPerS<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:308: external_body - #[verifier::external_body]
+       309 |         fn pre_order(&self) -> ArraySeqStPerS<T> {
+   Holes: 10 total
+      3 × assume()
+      7 × external_body
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -120,7 +144,8 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 22 total
-   22 × external_body
+Holes Found: 26 total
+   3 × assume()
+   23 × external_body
 
 Errors: 7 (bare impl(s), struct/enum outside verus!)

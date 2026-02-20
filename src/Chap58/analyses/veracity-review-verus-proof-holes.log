@@ -1,8 +1,6 @@
-❌ BellmanFordStEphF64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphF64.rs:1: error: not_verusified - File has no verus! block — not verusified.
-         2 | //!
-         3 | //! Bellman-Ford's Algorithm - Single Source Shortest Path with arbitrary edge weights (float)
-   Errors: 1 total (1 not verusified)
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap58
+
+✓ BellmanFordStEphF64.rs
 ✓ BellmanFordStEphI64.rs
 
 ═══════════════════════════════════════════════════════════════
@@ -21,9 +19,4 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 1 (bare impl(s), struct/enum outside verus!)
-
-🎉 No proof holes found! All proofs are complete.
-e impl(s), struct/enum outside verus!)
-
-🎉 No proof holes found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.

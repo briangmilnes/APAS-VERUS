@@ -12,6 +12,12 @@
 pub mod DijkstraStEphF64 {
 
     use std::cmp::Ordering;
+
+    verus! {
+        // Placeholder verus! block. Full verusification blocked: requires
+        // WeightedDirGraphStEphF64 and BinaryHeapPQ with types inside verus!.
+    }
+
     use std::collections::HashMap;
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;

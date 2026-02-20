@@ -1,7 +1,7 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap19/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap19
 
 ❌ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1413: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1413: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1409 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1411 |         {
@@ -12,7 +12,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
    Proof functions: 6 total (6 clean, 0 holed)
 ✓ ArraySeqMtEphSlice.rs
 ❌ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:1117: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1117: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1113 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1115 |         {
@@ -22,7 +22,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 2 total (2 clean, 0 holed)
 ❌ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs:1126: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:1126: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1122 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1124 |         {

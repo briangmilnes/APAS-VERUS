@@ -3,5 +3,9 @@
  Your worktree has been updated.
  REREAD ANY FILES BEFORE MODIFYING THEM.
  You are working ONLY on Chap42-Chap49.
+ Read ./rules/apas-verus/senior-proof-engineer.mdc:
+ Read ./rules/style/senior-prose-engineer.mdc. 
  Run the veracity proof hole detector on all of your directories, one by one.
  Propose a table of code fixes by priority on your chapters and only on your chapters. 
+ The most important fixes are verasification missing as per the hole report.
+ 

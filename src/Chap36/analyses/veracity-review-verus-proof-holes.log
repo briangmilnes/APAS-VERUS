@@ -1,8 +1,8 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap36/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap36
 
 ✓ QuickSortMtEph.rs
 ❌ QuickSortMtEphSlice.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap36/QuickSortMtEphSlice.rs:1: error: not_verusified - File has no verus! block — not verusified.
+/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:1: error: not_verusified - File has no verus! block — not verusified.
          2 | //! Chapter 36 (Multi-threaded Slice): Quicksort over `ArraySeqMtEphSlice` without extra copies.
          3 | 
    Errors: 1 total (1 not verusified)

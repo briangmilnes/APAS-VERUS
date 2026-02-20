@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap66
+
 ❌ BoruvkaMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:30: error: struct_outside_verus - struct LabeledEdge — should be inside verus!
         30 |     pub struct LabeledEdge<V>(pub V, pub V, pub OrderedFloat<f64>, pub usize);
@@ -38,4 +40,3 @@ Holes Found: 0 total
 Errors: 4 (bare impl(s), struct/enum outside verus!)
 
 🎉 No proof holes found! All proofs are complete.
- proofs are complete.

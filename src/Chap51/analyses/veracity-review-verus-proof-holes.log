@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap51
+
 ❌ BottomUpDPMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:39: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         37 |     pub struct BottomUpDPMtEphWf;
@@ -110,8 +112,5 @@ Proof Functions:
 Holes Found: 0 total
 
 Errors: 16 (bare impl(s), struct/enum outside verus!)
-
-🎉 No proof holes found! All proofs are complete.
-
 
 🎉 No proof holes found! All proofs are complete.

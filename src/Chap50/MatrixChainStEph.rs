@@ -12,14 +12,53 @@ pub mod MatrixChainStEph {
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     use crate::Types::Types::*;
 
+    verus! {
     // 4. type definitions
-    #[derive(Clone, Debug, PartialEq, Eq)]
+    #[verifier::reject_recursive_types]
     pub struct MatrixDim {
         pub rows: usize,
         pub cols: usize,
+    }
+
+    impl View for MatrixDim {
+        type V = (nat, nat);
+        open spec fn view(&self) -> (nat, nat) {
+            (self.rows as nat, self.cols as nat)
+        }
+    }
+
+    impl Clone for MatrixDim {
+        fn clone(&self) -> (s: Self)
+            ensures s@ == self@
+        {
+            MatrixDim { rows: self.rows, cols: self.cols }
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl PartialEqSpecImpl for MatrixDim {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl Eq for MatrixDim {}
+    impl PartialEq for MatrixDim {
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            let r = self.rows == other.rows && self.cols == other.cols;
+            proof { assume(r == (self@ == other@)); }
+            r
+        }
+    }
+
+    #[verifier::external_type_specification]
+    pub struct ExMatrixChainStEphS(MatrixChainStEphS);
     }
 
     // Struct contains HashMap for memoization — cannot be inside verus!.
@@ -28,13 +67,6 @@ pub mod MatrixChainStEph {
     pub struct MatrixChainStEphS {
         pub dimensions: Vec<MatrixDim>,
         pub memo: HashMap<(usize, usize), usize>,
-    }
-
-    verus! {
-    #[verifier::external_type_specification]
-    pub struct ExMatrixDim(MatrixDim);
-    #[verifier::external_type_specification]
-    pub struct ExMatrixChainStEphS(MatrixChainStEphS);
     }
 
     // 8. traits
@@ -245,6 +277,10 @@ pub mod MatrixChainStEph {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — create cloned iterator adapter
         fn into_iter(self) -> Self::IntoIter { self.dimensions.iter().cloned() }
+    }
+
+    impl Debug for MatrixDim {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixDim({}×{})", self.rows, self.cols) }
     }
 
     impl Display for MatrixDim {

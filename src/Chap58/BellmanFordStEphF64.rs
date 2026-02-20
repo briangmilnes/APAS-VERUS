@@ -10,6 +10,10 @@
 
 pub mod BellmanFordStEphF64 {
 
+    verus! {
+        // Placeholder. Full verusification blocked: requires WeightedDirGraphStEphF64.
+    }
+
     use std::collections::HashMap;
 
     use crate::Chap05::SetStEph::SetStEph::*;

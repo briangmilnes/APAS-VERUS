@@ -1,61 +1,61 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap12/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap12
 
 ❌ Exercise12_1.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:19: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:19: external_body - #[verifier::external_body]
         20 |     pub struct SpinLock {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:59: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:59: external_body - #[verifier::external_body]
         60 |         fn new() -> (lock: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:67: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:67: external_body - #[verifier::external_body]
         68 |         fn lock(&self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:75: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:75: external_body - #[verifier::external_body]
         76 |         fn unlock(&self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:80: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:80: external_body - #[verifier::external_body]
         81 |         fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:92: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:92: external_body - #[verifier::external_body]
         93 |     pub fn parallel_increment(iterations: usize) -> (incremented: usize)
    Holes: 6 total
       6 × external_body
 ✓ Exercise12_2.rs
 ❌ Exercise12_5.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:30: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:30: external - #[verifier::external]
         31 | struct Node<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:38: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:38: external_body - #[verifier::external_body]
         39 | #[verifier::reject_recursive_types(T)]
         40 | pub struct ConcurrentStackMt<T: Send> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:96: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:96: external_body - #[verifier::external_body]
         97 |     fn new() -> (stack: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:103: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:103: external_body - #[verifier::external_body]
        104 |     fn push(&self, value: T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:117: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:117: external_body - #[verifier::external_body]
        118 |     fn pop(&self) -> (possible_top: Option<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:132: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:132: external_body - #[verifier::external_body]
        133 |     fn is_empty(&self) -> (empty: bool) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:137: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:137: external_body - #[verifier::external_body]
        138 |     fn drain(&self) -> (items: Vec<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:154: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:154: external_body - #[verifier::external_body]
        155 |     fn drop(&mut self)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:113: unsafe {} - new_node = unsafe { Box::from_raw(node_ptr) };
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:113: unsafe {} - new_node = unsafe { Box::from_raw(node_ptr) };
        104 |     fn push(&self, value: T) {
             ...
        111 |                 break;
        112 |             }
        114 |         }
        115 |     }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:124: unsafe {} - let next = unsafe { (*head).next };
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:124: unsafe {} - let next = unsafe { (*head).next };
        118 |     fn pop(&self) -> (possible_top: Option<T>) {
             ...
        122 |                 return None;
        123 |             }
        125 |             if self.head.compare_exchange_weak(head, next, Ordering::AcqRel, Ordering::Acquire).is_ok() {
        126 |                 let boxed = unsafe { Box::from_raw(head) };
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:126: unsafe {} - let boxed = unsafe { Box::from_raw(head) };
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:126: unsafe {} - let boxed = unsafe { Box::from_raw(head) };
        118 |     fn pop(&self) -> (possible_top: Option<T>) {
             ...
        124 |             let next = unsafe { (*head).next };
        125 |             if self.head.compare_exchange_weak(head, next, Ordering::AcqRel, Ordering::Acquire).is_ok() {
        127 |                 return Some(boxed.value);
        128 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:161: unsafe {} - unsafe {
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:161: unsafe {} - unsafe {
        155 |     fn drop(&mut self)
             ...
        159 |         let mut current = self.head.load(Ordering::Relaxed);
@@ -81,7 +81,3 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 18 total
-   4 × unsafe {}
-   13 × external_body
-   1 × external

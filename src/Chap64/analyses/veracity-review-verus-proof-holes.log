@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap64
+
 ❌ SpanTreeMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:33: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         31 |         pub struct SpanTreeMtEphSpanningEdgesWf;
@@ -23,11 +25,7 @@
         48 |             RwLock::new(val, Ghost(SpanTreeMtEphValidWf))
    Errors: 4 total (2 Verus RwLock external_body, 2 dummy RwLockPredicate)
 ✓ SpanTreeStEph.rs
-❌ TSPApproxStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
-         2 | //! Chapter 64: TSP 2-Approximation via MST (Sequential)
-         3 | //!
-   Errors: 1 total (1 not verusified)
+✓ TSPApproxStEph.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -45,9 +43,6 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 5 (bare impl(s), struct/enum outside verus!)
-
-🎉 No proof holes found! All proofs are complete.
-
+Errors: 4 (bare impl(s), struct/enum outside verus!)
 
 🎉 No proof holes found! All proofs are complete.

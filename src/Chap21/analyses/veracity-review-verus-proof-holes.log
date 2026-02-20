@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap21/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap21
 
 ✓ Algorithm21_1.rs
    2 clean proof functions
