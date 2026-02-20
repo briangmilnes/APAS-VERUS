@@ -504,14 +504,12 @@ pub mod Chap56 {
     pub mod SSSPResultStPerI64;
     pub mod AllPairsResultStEphI64;
     pub mod AllPairsResultStPerI64;
-    #[cfg(feature = "all_chapters")]
     pub mod PathWeightUtilsStEph;
-    #[cfg(feature = "all_chapters")]
     pub mod PathWeightUtilsStPer;
-    // pub mod SSSPResultStEphF64;  // uses ordered_float (removed)
-    // pub mod SSSPResultStPerF64;  // uses ordered_float (removed)
-    // pub mod AllPairsResultStEphF64;  // uses ordered_float (removed)
-    // pub mod AllPairsResultStPerF64;  // uses ordered_float (removed)
+    pub mod SSSPResultStEphF64;
+    pub mod SSSPResultStPerF64;
+    pub mod AllPairsResultStEphF64;
+    pub mod AllPairsResultStPerF64;
     // pub mod Example56_1;  // uses ordered_float (removed)
     // pub mod Example56_3;  // uses ordered_float (removed)
 }
@@ -520,22 +518,21 @@ pub mod Chap56 {
 pub mod Chap57 {
     pub mod StackStEph;
     // pub mod DijkstraStEphI64;  // depends on Chap45::BinaryHeapPQ (types outside verus!)
-    // pub mod DijkstraStEphF64;  // depends on Chap45::BinaryHeapPQ (types outside verus!)
+    // pub mod DijkstraStEphF64;  // blocked: no WeightedDirGraphStEphF64 + BinaryHeapPQ
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap58 {
     pub mod BellmanFordStEphI64;
-    #[cfg(feature = "all_chapters")]
-    pub mod BellmanFordStEphF64;
+    // pub mod BellmanFordStEphF64;  // blocked: no WeightedDirGraphStEphF64
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap59 {
     // pub mod JohnsonStEphI64;  // depends on DijkstraStEphI64
     // pub mod JohnsonMtEphI64;  // depends on DijkstraStEphI64
-    // pub mod JohnsonStEphF64;  // uses ordered_float (removed)
-    // pub mod JohnsonMtEphF64;  // uses ordered_float (removed)
+    // pub mod JohnsonStEphF64;  // blocked: no WeightedDirGraphStEphF64
+    // pub mod JohnsonMtEphF64;  // blocked: no WeightedDirGraphStEphF64
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]

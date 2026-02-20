@@ -2,88 +2,28 @@
 //!
 //! Single-Source Shortest Path Result Structure - Sequential Ephemeral (Float Weights)
 //!
-//! Uses a `F64Dist` newtype around f64 with a View impl so that Verus can reason about
-//! the distance array. At runtime, callers convert to/from `OrderedF64` at the boundary.
+//! Uses `F64Dist` from vstdplus::float for distances, giving Verus a View impl
+//! over f64 values stored in ArraySeq containers.
 
 pub mod SSSPResultStEphF64 {
 
     use vstd::prelude::*;
-    use vstd::float::FloatBitsProperties;
 
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
-    #[cfg(not(verus_keep_ghost))]
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::float::float::*;
 
     verus! {
 
     // Table of Contents
     // 4. type definitions
-    // 6. spec fns
     // 9. impls
 
     // 4. type definitions
 
     pub const NO_PREDECESSOR: usize = usize::MAX;
 
-    // Newtype wrapper for f64 distances, giving Verus a View impl.
-    // OrderedFloat<f64> is not available during verification (cfg-gated out),
-    // and f64 has no View impl in vstd.
-    #[derive(Clone, Copy)]
-    pub struct F64Dist {
-        pub val: f64,
-    }
-
-    impl View for F64Dist {
-        type V = f64;
-        open spec fn view(&self) -> f64 { self.val }
-    }
-
-    impl F64Dist {
-        pub open spec fn spec_is_finite(&self) -> bool {
-            self.val.is_finite_spec()
-        }
-
-        #[verifier::external_body]
-        pub fn is_finite(&self) -> (b: bool)
-            ensures b == self.spec_is_finite()
-        {
-            self.val.is_finite()
-        }
-
-        #[verifier::external_body]
-        pub fn eq(&self, other: &Self) -> (b: bool)
-            ensures b == (self@ == other@)
-        {
-            self.val == other.val
-        }
-    }
-
-    pub uninterp spec fn UNREACHABLE_SPEC() -> f64;
-
-    #[verifier::external_body]
-    pub broadcast proof fn axiom_unreachable_not_finite()
-        ensures #[trigger] UNREACHABLE_SPEC().is_finite_spec() == false
-    {}
-
-    #[verifier::external_body]
-    pub fn unreachable_dist() -> (d: F64Dist)
-        ensures d@ == UNREACHABLE_SPEC(),
-                !d.spec_is_finite(),
-    {
-        F64Dist { val: f64::INFINITY }
-    }
-
-    #[verifier::external_body]
-    pub fn zero_dist() -> (d: F64Dist)
-        ensures d.spec_is_finite(),
-    {
-        F64Dist { val: 0.0 }
-    }
-
-    // 6. spec fns
-
-    /// Result structure for single-source shortest paths with floating-point weights.
     pub struct SSSPResultStEphF64 {
         pub distances: ArraySeqStEphS<F64Dist>,
         pub predecessors: ArraySeqStEphS<usize>,
@@ -153,17 +93,6 @@ pub mod SSSPResultStEphF64 {
 
     } // verus!
 
-    impl std::fmt::Debug for F64Dist {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "F64Dist({})", self.val)
-        }
-    }
-
-    impl PartialEq for F64Dist {
-        fn eq(&self, other: &Self) -> bool { self.val == other.val }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
     impl SSSPResultStEphF64 {
         pub fn extract_path(&self, v: usize) -> Option<ArraySeqStPerS<usize>> {
             if !self.is_reachable(v) {

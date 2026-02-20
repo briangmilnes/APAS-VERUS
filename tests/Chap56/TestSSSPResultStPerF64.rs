@@ -1,19 +1,18 @@
-#![cfg(feature = "all_chapters")]
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //!
 //! Test suite for SSSPResultStPerF64.
 
-use ordered_float::OrderedFloat;
-
 use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap56::SSSPResultStPerF64::SSSPResultStPerF64::*;
-use apas_verus::Types::Types::*;
+use apas_verus::vstdplus::float::float::*;
+
+fn dist(v: f64) -> F64Dist { F64Dist { val: v } }
 
 #[test]
 fn test_new() {
     let result = SSSPResultStPerF64::new(5, 0);
-    assert_eq!(result.get_distance(0), OrderedFloat(0.0));
-    assert_eq!(result.get_distance(1), OrderedFloat(f64::INFINITY));
+    assert_eq!(result.get_distance(0), dist(0.0));
+    assert_eq!(result.get_distance(1), dist(f64::INFINITY));
     assert!(result.is_reachable(0));
     assert!(!result.is_reachable(1));
 }
@@ -21,10 +20,10 @@ fn test_new() {
 #[test]
 fn test_set_distance() {
     let result = SSSPResultStPerF64::new(3, 0);
-    let result = result.set_distance(1, OrderedFloat(5.5));
-    let result = result.set_distance(2, OrderedFloat(10.5));
-    assert_eq!(result.get_distance(1), OrderedFloat(5.5));
-    assert_eq!(result.get_distance(2), OrderedFloat(10.5));
+    let result = result.set_distance(1, dist(5.5));
+    let result = result.set_distance(2, dist(10.5));
+    assert_eq!(result.get_distance(1), dist(5.5));
+    assert_eq!(result.get_distance(2), dist(10.5));
 }
 
 #[test]
@@ -39,9 +38,9 @@ fn test_set_predecessor() {
 #[test]
 fn test_extract_path() {
     let result = SSSPResultStPerF64::new(4, 0);
-    let result = result.set_distance(1, OrderedFloat(1.0)).set_predecessor(1, 0);
-    let result = result.set_distance(2, OrderedFloat(2.0)).set_predecessor(2, 1);
-    let result = result.set_distance(3, OrderedFloat(3.0)).set_predecessor(3, 2);
+    let result = result.set_distance(1, dist(1.0)).set_predecessor(1, 0);
+    let result = result.set_distance(2, dist(2.0)).set_predecessor(2, 1);
+    let result = result.set_distance(3, dist(3.0)).set_predecessor(3, 2);
 
     let path = result.extract_path(3).unwrap();
     assert_eq!(path.length(), 4);

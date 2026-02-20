@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap50/ -d src/Chap51/ -d src/Chap55/ -d src/Chap57/ -d src/Chap64/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap50/ -d src/Chap51/ -d src/Chap52/ -d src/Chap53/ -d src/Chap54/ -d src/Chap55/ -d src/Chap56/ -d src/Chap57/ -d src/Chap58/ -d src/Chap59/ -d src/Chap61/ -d src/Chap62/ -d src/Chap63/ -d src/Chap64/ -d src/Chap65/ -d src/Chap66/
 
 ❌ MatrixChainMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:36: external_type_specification - #[verifier::external_type_specification]
@@ -61,96 +61,337 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
       1 × external_body
 ✓ src/Chap51/TopDownDPStEph.rs
 ✓ src/Chap51/TopDownDPStPer.rs
-❌ src/Chap55/CycleDetectStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:27: external_body - #[verifier::external_body]
-        28 |     pub fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> B {
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:45: external_body - #[verifier::external_body]
-        46 |     fn dfs_check_cycle(
-   Holes: 2 total
-      2 × external_body
-❌ src/Chap55/CycleDetectStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:27: external_body - #[verifier::external_body]
-        28 |     pub fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> B {
-/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:46: external_body - #[verifier::external_body]
-        47 |     fn dfs_check_cycle(
-   Holes: 2 total
-      2 × external_body
-❌ src/Chap55/DFSStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:27: external_body - #[verifier::external_body]
-        28 |     pub fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> AVLTreeSetStEph<N> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStEph.rs:42: external_body - #[verifier::external_body]
-        43 |     fn dfs_recursive(
-   Holes: 2 total
-      2 × external_body
-❌ src/Chap55/DFSStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:27: external_body - #[verifier::external_body]
-        28 |     pub fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> AVLTreeSetStPer<N> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/DFSStPer.rs:38: external_body - #[verifier::external_body]
-        39 |     fn dfs_recursive(
-   Holes: 2 total
-      2 × external_body
+✓ src/Chap52/AdjMatrixGraphMtEph.rs
+   3 clean proof functions
+✓ src/Chap52/AdjMatrixGraphMtPer.rs
+   3 clean proof functions
+✓ src/Chap52/AdjMatrixGraphStEph.rs
+   3 clean proof functions
+✓ src/Chap52/AdjMatrixGraphStPer.rs
+   3 clean proof functions
+✓ src/Chap52/AdjSeqGraphMtEph.rs
+   2 clean proof functions
+✓ src/Chap52/AdjSeqGraphMtPer.rs
+   2 clean proof functions
+✓ src/Chap52/AdjSeqGraphStEph.rs
+   2 clean proof functions
+✓ src/Chap52/AdjSeqGraphStPer.rs
+   2 clean proof functions
+❌ src/Chap52/AdjTableGraphMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:81: external_body - #[verifier::external_body]
+        82 |         fn empty() -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:90: external_body - #[verifier::external_body]
+        91 |         fn num_vertices(&self) -> N { self.adj.size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:95: external_body - #[verifier::external_body]
+        96 |         fn num_edges(&self) -> N {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:111: external_body - #[verifier::external_body]
+       112 |         fn has_edge(&self, u: &V, v: &V) -> B { self.adj.find(u).is_some_and(|neighbors| neighbors.find(v)) }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:116: external_body - #[verifier::external_body]
+       117 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:123: external_body - #[verifier::external_body]
+       124 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:128: external_body - #[verifier::external_body]
+       129 |         fn insert_vertex(&self, v: V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:140: external_body - #[verifier::external_body]
+       141 |         fn delete_vertex(&self, v: &V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:197: external_body - #[verifier::external_body]
+       198 |         fn insert_edge(&self, u: V, v: V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:215: external_body - #[verifier::external_body]
+       216 |         fn delete_edge(&self, u: &V, v: &V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:233: external_body - #[verifier::external_body]
+       234 |         fn default() -> Self { Self::empty() }
+   Holes: 11 total
+      11 × external_body
+❌ src/Chap52/AdjTableGraphStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:75: external_body - #[verifier::external_body]
+        76 |         fn empty() -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:84: external_body - #[verifier::external_body]
+        85 |         fn from_table(table: OrderedTableStEph<V, AVLTreeSetStEph<V>>) -> Self { AdjTableGraphStEph { adj: table } }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:89: external_body - #[verifier::external_body]
+        90 |         fn num_vertices(&self) -> N { self.adj.size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:94: external_body - #[verifier::external_body]
+        95 |         fn num_edges(&self) -> N {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:112: external_body - #[verifier::external_body]
+       113 |         fn vertices(&self) -> AVLTreeSetStEph<V> {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:125: external_body - #[verifier::external_body]
+       126 |         fn has_edge(&self, u: &V, v: &V) -> B {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:135: external_body - #[verifier::external_body]
+       136 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetStEph<V> {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:145: external_body - #[verifier::external_body]
+       146 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:150: external_body - #[verifier::external_body]
+       151 |         fn insert_vertex(&mut self, v: V) { self.adj.insert(v, AVLTreeSetStEph::empty(), |_, new| new.clone()); }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:155: external_body - #[verifier::external_body]
+       156 |         fn delete_vertex(&mut self, v: &V) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:174: external_body - #[verifier::external_body]
+       175 |         fn insert_edge(&mut self, u: V, v: V) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:192: external_body - #[verifier::external_body]
+       193 |         fn delete_edge(&mut self, u: &V, v: &V) {
+   Holes: 12 total
+      12 × external_body
+❌ src/Chap52/AdjTableGraphStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:75: external_body - #[verifier::external_body]
+        76 |         fn empty() -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:84: external_body - #[verifier::external_body]
+        85 |         fn from_table(table: OrderedTableStPer<V, AVLTreeSetStPer<V>>) -> Self { AdjTableGraphStPer { adj: table } }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:89: external_body - #[verifier::external_body]
+        90 |         fn num_vertices(&self) -> N { self.adj.size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:94: external_body - #[verifier::external_body]
+        95 |         fn num_edges(&self) -> N {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:110: external_body - #[verifier::external_body]
+       111 |         fn vertices(&self) -> AVLTreeSetStPer<V> {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:123: external_body - #[verifier::external_body]
+       124 |         fn has_edge(&self, u: &V, v: &V) -> B {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:133: external_body - #[verifier::external_body]
+       134 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetStPer<V> {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:143: external_body - #[verifier::external_body]
+       144 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:148: external_body - #[verifier::external_body]
+       149 |         fn insert_vertex(&self, v: V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:156: external_body - #[verifier::external_body]
+       157 |         fn delete_vertex(&self, v: &V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:175: external_body - #[verifier::external_body]
+       176 |         fn insert_edge(&self, u: V, v: V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:192: external_body - #[verifier::external_body]
+       193 |         fn delete_edge(&self, u: &V, v: &V) -> Self {
+   Holes: 12 total
+      12 × external_body
+❌ src/Chap52/EdgeSetGraphMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:82: external_body - #[verifier::external_body]
+        83 |         fn empty() -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:92: external_body - #[verifier::external_body]
+        93 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:99: external_body - #[verifier::external_body]
+       100 |         fn num_vertices(&self) -> N { self.vertices.size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:104: external_body - #[verifier::external_body]
+       105 |         fn num_edges(&self) -> N { self.edges.size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:109: external_body - #[verifier::external_body]
+       110 |         fn vertices(&self) -> &AVLTreeSetMtPer<V> { &self.vertices }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:114: external_body - #[verifier::external_body]
+       115 |         fn edges(&self) -> &AVLTreeSetMtPer<Pair<V, V>> { &self.edges }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:119: external_body - #[verifier::external_body]
+       120 |         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:124: external_body - #[verifier::external_body]
+       125 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:159: external_body - #[verifier::external_body]
+       160 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:164: external_body - #[verifier::external_body]
+       165 |         fn insert_vertex(&self, v: V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:174: external_body - #[verifier::external_body]
+       175 |         fn delete_vertex(&self, v: &V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:191: external_body - #[verifier::external_body]
+       192 |         fn insert_edge(&self, u: V, v: V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:203: external_body - #[verifier::external_body]
+       204 |         fn delete_edge(&self, u: &V, v: &V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:217: external_body - #[verifier::external_body]
+       218 |         fn default() -> Self { Self::empty() }
+   Holes: 14 total
+      14 × external_body
+❌ src/Chap52/EdgeSetGraphStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:75: external_body - #[verifier::external_body]
+        76 |         fn empty() -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:85: external_body - #[verifier::external_body]
+        86 |         fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:92: external_body - #[verifier::external_body]
+        93 |         fn num_vertices(&self) -> N { self.vertices.size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:97: external_body - #[verifier::external_body]
+        98 |         fn num_edges(&self) -> N { self.edges.size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:102: external_body - #[verifier::external_body]
+       103 |         fn vertices(&self) -> &AVLTreeSetStEph<V> { &self.vertices }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:107: external_body - #[verifier::external_body]
+       108 |         fn edges(&self) -> &AVLTreeSetStEph<Pair<V, V>> { &self.edges }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:112: external_body - #[verifier::external_body]
+       113 |         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:117: external_body - #[verifier::external_body]
+       118 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetStEph<V> {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:132: external_body - #[verifier::external_body]
+       133 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:137: external_body - #[verifier::external_body]
+       138 |         fn insert_vertex(&mut self, v: V) { self.vertices.insert(v); }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:142: external_body - #[verifier::external_body]
+       143 |         fn delete_vertex(&mut self, v: &V) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:165: external_body - #[verifier::external_body]
+       166 |         fn insert_edge(&mut self, u: V, v: V) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:174: external_body - #[verifier::external_body]
+       175 |         fn delete_edge(&mut self, u: &V, v: &V) { self.edges.delete(&Pair(u.clone(), v.clone())); }
+   Holes: 13 total
+      13 × external_body
+❌ src/Chap52/EdgeSetGraphStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:79: external_body - #[verifier::external_body]
+        80 |         fn empty() -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:89: external_body - #[verifier::external_body]
+        90 |         fn from_vertices_and_edges(v: AVLTreeSetStPer<V>, e: AVLTreeSetStPer<Pair<V, V>>) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:96: external_body - #[verifier::external_body]
+        97 |         fn num_vertices(&self) -> N { self.vertices.size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:101: external_body - #[verifier::external_body]
+       102 |         fn num_edges(&self) -> N { self.edges.size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:106: external_body - #[verifier::external_body]
+       107 |         fn vertices(&self) -> &AVLTreeSetStPer<V> { &self.vertices }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:111: external_body - #[verifier::external_body]
+       112 |         fn edges(&self) -> &AVLTreeSetStPer<Pair<V, V>> { &self.edges }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:116: external_body - #[verifier::external_body]
+       117 |         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:121: external_body - #[verifier::external_body]
+       122 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetStPer<V> {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:136: external_body - #[verifier::external_body]
+       137 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:141: external_body - #[verifier::external_body]
+       142 |         fn insert_vertex(&self, v: V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:151: external_body - #[verifier::external_body]
+       152 |         fn delete_vertex(&self, v: &V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:167: external_body - #[verifier::external_body]
+       168 |         fn insert_edge(&self, u: V, v: V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:179: external_body - #[verifier::external_body]
+       180 |         fn delete_edge(&self, u: &V, v: &V) -> Self {
+   Holes: 13 total
+      13 × external_body
+❌ src/Chap53/GraphSearchMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:57: external_body - #[verifier::external_body]
+        58 |         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (AVLTreeSetMtPer<V>, B) { (frontier.clone(), false) }
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:62: external_body - #[verifier::external_body]
+        63 |         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (AVLTreeSetMtPer<V>, B) {
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:77: external_body - #[verifier::external_body]
+        78 |     pub fn graph_search<V: StTInMtT + Ord + 'static, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:90: external_body - #[verifier::external_body]
+        91 |     pub fn graph_search_multi<V: StTInMtT + Ord + 'static, G, S>(
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:142: external_body - #[verifier::external_body]
+       143 |     pub fn reachable<V: StTInMtT + Ord + 'static, G>(graph: &G, source: V) -> AVLTreeSetMtPer<V>
+   Holes: 5 total
+      5 × external_body
+❌ src/Chap53/GraphSearchStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:52: external_body - #[verifier::external_body]
+        53 |         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (AVLTreeSetStEph<V>, B) { (frontier.clone(), false) }
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:57: external_body - #[verifier::external_body]
+        58 |         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (AVLTreeSetStEph<V>, B) {
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:72: external_body - #[verifier::external_body]
+        73 |     pub fn graph_search<V: StT + Ord, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:85: external_body - #[verifier::external_body]
+        86 |     pub fn graph_search_multi<V: StT + Ord, G, S>(
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:133: external_body - #[verifier::external_body]
+       134 |     pub fn reachable<V: StT + Ord, G>(graph: &G, source: V) -> AVLTreeSetStEph<V>
+   Holes: 5 total
+      5 × external_body
+❌ src/Chap53/GraphSearchStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:60: external_body - #[verifier::external_body]
+        61 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (AVLTreeSetStPer<V>, B) { (frontier.clone(), false) }
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:65: external_body - #[verifier::external_body]
+        66 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (AVLTreeSetStPer<V>, B) {
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:80: external_body - #[verifier::external_body]
+        81 |     pub fn graph_search<V: StT + Ord, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:93: external_body - #[verifier::external_body]
+        94 |     pub fn graph_search_multi<V: StT + Ord, G, S>(
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:152: external_body - #[verifier::external_body]
+       153 |     pub fn reachable<V: StT + Ord, G>(graph: &G, source: V) -> AVLTreeSetStPer<V>
+   Holes: 5 total
+      5 × external_body
+❌ src/Chap53/PQMinStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:55: external_body - #[verifier::external_body]
+        56 |         fn new(f: F) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:65: external_body - #[verifier::external_body]
+        66 |         fn priority(&self, v: &V) -> P { (self.f)(v) }
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:72: external_body - #[verifier::external_body]
+        73 |     pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF) -> PQMinResult<V, P>
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:85: external_body - #[verifier::external_body]
+        86 |     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
+   Holes: 4 total
+      4 × external_body
+❌ src/Chap53/PQMinStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:61: external_body - #[verifier::external_body]
+        62 |         fn new(f: F) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:71: external_body - #[verifier::external_body]
+        72 |         fn priority(&self, v: &V) -> P { (self.f)(v) }
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:78: external_body - #[verifier::external_body]
+        79 |     pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF) -> PQMinResult<V, P>
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:91: external_body - #[verifier::external_body]
+        92 |     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
+   Holes: 4 total
+      4 × external_body
+✓ src/Chap54/BFSMtEph.rs
+   7 clean proof functions
+✓ src/Chap54/BFSMtPer.rs
+   7 clean proof functions
+✓ src/Chap54/BFSStEph.rs
+   4 clean proof functions
+✓ src/Chap54/BFSStPer.rs
+   4 clean proof functions
+✓ src/Chap55/CycleDetectStEph.rs
+✓ src/Chap55/CycleDetectStPer.rs
+✓ src/Chap55/DFSStEph.rs
+✓ src/Chap55/DFSStPer.rs
 ❌ src/Chap55/SCCStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:28: external_body - #[verifier::external_body]
-        29 |     pub fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:57: external_body - #[verifier::external_body]
-        58 |     fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:74: external_body - #[verifier::external_body]
-        75 |     fn dfs_finish_order(
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:98: external_body - #[verifier::external_body]
-        99 |     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> ArraySeqStEphS<ArraySeqStEphS<N>> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:116: external_body - #[verifier::external_body]
-       117 |     fn dfs_reach(
-   Holes: 5 total
-      5 × external_body
-❌ src/Chap55/SCCStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:28: external_body - #[verifier::external_body]
-        29 |     pub fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:53: external_body - #[verifier::external_body]
-        54 |     fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:72: external_body - #[verifier::external_body]
-        73 |     fn dfs_finish_order(
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:100: external_body - #[verifier::external_body]
-       101 |     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> ArraySeqStPerS<ArraySeqStPerS<N>> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:118: external_body - #[verifier::external_body]
-       119 |     fn dfs_reach(
-   Holes: 5 total
-      5 × external_body
-❌ src/Chap55/TopoSortStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:126: external_body - #[verifier::external_body]
-       127 |     fn dfs_finish_order_cycle_detect(
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:158: external_body - #[verifier::external_body]
-       159 |     pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> Option<AVLTreeSeqStEphS<N>> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:138: external_body - #[verifier::external_body]
+       139 |     pub fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:166: external_body - #[verifier::external_body]
+       167 |     fn dfs_reach(
    Holes: 2 total
       2 × external_body
-   Proof functions: 1 total (1 clean, 0 holed)
-❌ src/Chap55/TopoSortStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:28: external_body - #[verifier::external_body]
-        29 |     pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> Option<AVLTreeSeqStPerS<N>> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:55: external_body - #[verifier::external_body]
-        56 |     pub fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N> {
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:74: external_body - #[verifier::external_body]
-        75 |     fn dfs_finish_order_cycle_detect(
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:114: external_body - #[verifier::external_body]
-       115 |     fn dfs_finish_order(
-   Holes: 4 total
-      4 × external_body
-❌ src/Chap57/DijkstraStEphFloat.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphFloat.rs:70: external_body - #[verifier::external_body]
-        71 |     fn pq_entry_new(dist: OrderedF64, vertex: usize) -> PQEntry { PQEntry { dist, vertex } }
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphFloat.rs:76: external_body - #[verifier::external_body]
-        77 |         fn cmp(&self, other: &Self) -> (r: Ordering) {
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphFloat.rs:86: external_body - #[verifier::external_body]
-        87 |         fn partial_cmp(&self, other: &Self) -> (r: Option<Ordering>) { Some(self.cmp(other)) }
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphFloat.rs:98: external_body - #[verifier::external_body]
-        99 |     pub fn dijkstra(graph: &WeightedDirGraphStEphFloat<usize>, source: usize) -> SSSPResultStEphFloat {
-   Holes: 4 total
-      4 × external_body
+❌ src/Chap55/SCCStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:193: external_body - #[verifier::external_body]
+       194 |     pub fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>> {
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:217: external_body - #[verifier::external_body]
+       218 |     fn dfs_reach(
+   Holes: 2 total
+      2 × external_body
+✓ src/Chap55/TopoSortStEph.rs
+   1 clean proof function
+✓ src/Chap55/TopoSortStPer.rs
+✓ src/Chap56/AllPairsResultStEphF64.rs
+✓ src/Chap56/AllPairsResultStEphI64.rs
+✓ src/Chap56/AllPairsResultStPerF64.rs
+✓ src/Chap56/AllPairsResultStPerI64.rs
+❌ src/Chap56/Example56_1.rs
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:45: external_body - #[verifier::external_body]
+        46 |     pub fn example_path_weight_int() {
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:64: external_body - #[verifier::external_body]
+        65 |     pub fn example_path_weight_float() {
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:103: external_body - #[verifier::external_body]
+       104 |     pub fn example_negative_weights() {
+   Holes: 3 total
+      3 × external_body
+❌ src/Chap56/Example56_3.rs
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:41: external_body - #[verifier::external_body]
+        42 |     pub fn example_negative_cycle() {
+/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:75: external_body - #[verifier::external_body]
+        76 |     pub fn example_undefined_shortest_path() {
+   Holes: 2 total
+      2 × external_body
+❌ src/Chap56/PathWeightUtilsStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:162: external_body - #[verifier::external_body]
+       163 |     pub fn validate_subpath_property_float(
+   Holes: 1 total
+      1 × external_body
+❌ src/Chap56/PathWeightUtilsStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:161: external_body - #[verifier::external_body]
+       162 |     pub fn validate_subpath_property_float(
+   Holes: 1 total
+      1 × external_body
+✓ src/Chap56/SSSPResultStEphF64.rs
+✓ src/Chap56/SSSPResultStEphI64.rs
+✓ src/Chap56/SSSPResultStPerF64.rs
+✓ src/Chap56/SSSPResultStPerI64.rs
+✓ src/Chap57/DijkstraStEphF64.rs
 ❌ src/Chap57/DijkstraStEphI64.rs
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:99: external_body - #[verifier::external_body]
        100 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64 {
    Holes: 1 total
       1 × external_body
 ✓ src/Chap57/StackStEph.rs
+✓ src/Chap58/BellmanFordStEphF64.rs
+✓ src/Chap58/BellmanFordStEphI64.rs
+✓ src/Chap59/JohnsonMtEphF64.rs
+✓ src/Chap59/JohnsonMtEphI64.rs
+✓ src/Chap59/JohnsonStEphF64.rs
+✓ src/Chap59/JohnsonStEphI64.rs
+✓ src/Chap61/EdgeContractionMtEph.rs
+✓ src/Chap61/EdgeContractionStEph.rs
+✓ src/Chap61/VertexMatchingMtEph.rs
+✓ src/Chap61/VertexMatchingStEph.rs
+✓ src/Chap62/StarContractionMtEph.rs
+✓ src/Chap62/StarContractionStEph.rs
+✓ src/Chap62/StarPartitionMtEph.rs
+✓ src/Chap62/StarPartitionStEph.rs
+✓ src/Chap63/ConnectivityMtEph.rs
+✓ src/Chap63/ConnectivityStEph.rs
 ❌ src/Chap64/SpanTreeMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:35: external_body - #[verifier::external_body]
         36 |         fn new_spanning_edges_lock<V: StT + MtT + Hash + Ord>(
@@ -160,21 +401,26 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
       2 × external_body
 ✓ src/Chap64/SpanTreeStEph.rs
 ✓ src/Chap64/TSPApproxStEph.rs
+✓ src/Chap65/KruskalStEph.rs
+✓ src/Chap65/PrimStEph.rs
+✓ src/Chap65/UnionFindStEph.rs
+✓ src/Chap66/BoruvkaMtEph.rs
+✓ src/Chap66/BoruvkaStEph.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   12 clean (no holes)
-   19 holed (contains holes)
-   31 total
+   60 clean (no holes)
+   27 holed (contains holes)
+   87 total
 
 Proof Functions:
-   1 clean
+   43 clean
    0 holed
-   1 total
+   43 total
 
-Holes Found: 44 total
-   41 × external_body
+Holes Found: 125 total
+   122 × external_body
    3 × external_type_specification

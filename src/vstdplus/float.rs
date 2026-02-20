@@ -207,6 +207,143 @@ pub mod float {
             #![trigger le_ensures::<f32>(a, b, true), le_ensures::<f32>(b, a, true)]
             le_ensures::<f32>(a, b, true) || le_ensures::<f32>(b, a, true);
 
+    // F64Dist: newtype wrapper giving f64 a View impl for use in ArraySeq and other
+    // Verus containers that require View.
+
+    #[derive(Clone, Copy)]
+    pub struct F64Dist {
+        pub val: f64,
+    }
+
+    impl View for F64Dist {
+        type V = f64;
+        open spec fn view(&self) -> f64 { self.val }
+    }
+
+    impl F64Dist {
+        pub open spec fn spec_is_finite(&self) -> bool {
+            self.val.is_finite_spec()
+        }
+
+        #[verifier::external_body]
+        pub fn is_finite(&self) -> (b: bool)
+            ensures b == self.spec_is_finite()
+        {
+            self.val.is_finite()
+        }
+
+        #[verifier::external_body]
+        pub fn eq(&self, other: &Self) -> (b: bool)
+            ensures b == (self@ == other@)
+        {
+            self.val == other.val
+        }
+
+        #[verifier::external_body]
+        pub fn dist_le(&self, other: &Self) -> (b: bool)
+            requires self.spec_is_finite(), other.spec_is_finite(),
+            ensures b == self.val.le(other.val)
+        {
+            self.val <= other.val
+        }
+
+        #[verifier::external_body]
+        pub fn dist_lt(&self, other: &Self) -> (b: bool)
+            requires self.spec_is_finite(), other.spec_is_finite(),
+            ensures b == (self.val.le(other.val) && self.val != other.val)
+        {
+            self.val < other.val
+        }
+
+        #[verifier::external_body]
+        pub fn dist_add(&self, other: &Self) -> (r: Self)
+            ensures r@ == f64_add_spec(self@, other@)
+        {
+            F64Dist { val: self.val + other.val }
+        }
+
+        #[verifier::external_body]
+        pub fn dist_sub(&self, other: &Self) -> (r: Self)
+            ensures r@ == f64_sub_spec(self@, other@)
+        {
+            F64Dist { val: self.val - other.val }
+        }
+    }
+
+    // Exec bridge for f64::is_finite().
+    #[verifier::external_body]
+    pub fn f64_is_finite(x: f64) -> (b: bool)
+        ensures b == x.is_finite_spec()
+    {
+        x.is_finite()
+    }
+
+    // Uninterpreted sentinel for unreachable distance (f64::INFINITY at runtime).
+    pub uninterp spec fn UNREACHABLE_SPEC() -> f64;
+
+    // f64 constant axioms.
+
+    pub broadcast axiom fn axiom_f64_zero_is_finite()
+        ensures #[trigger] (0.0f64).is_finite_spec();
+
+    pub broadcast axiom fn axiom_f64_unreachable_not_finite()
+        ensures #[trigger] UNREACHABLE_SPEC().is_finite_spec() == false;
+
+    #[verifier::external_body]
+    pub fn unreachable_dist() -> (d: F64Dist)
+        ensures d@ == UNREACHABLE_SPEC(),
+                !d.spec_is_finite(),
+    {
+        F64Dist { val: f64::INFINITY }
+    }
+
+    #[verifier::external_body]
+    pub fn zero_dist() -> (d: F64Dist)
+        ensures d.spec_is_finite(),
+                d@ == 0.0f64,
+    {
+        F64Dist { val: 0.0 }
+    }
+
+    pub fn finite_dist(v: f64) -> (d: F64Dist)
+        requires v.is_finite_spec(),
+        ensures d.spec_is_finite(),
+                d@ == v,
+    {
+        F64Dist { val: v }
+    }
+
+    // Uninterpreted spec functions for f64 arithmetic (Verus has no spec_add for f64).
+
+    pub uninterp spec fn f64_add_spec(a: f64, b: f64) -> f64;
+    pub uninterp spec fn f64_sub_spec(a: f64, b: f64) -> f64;
+
+    // f64 arithmetic axioms.
+
+    pub broadcast axiom fn axiom_f64_add_zero_right(a: f64)
+        requires a.is_finite_spec(),
+        ensures #[trigger] f64_add_spec(a, 0.0f64) == a;
+
+    pub broadcast axiom fn axiom_f64_add_commutative(a: f64, b: f64)
+        ensures
+            #![trigger f64_add_spec(a, b), f64_add_spec(b, a)]
+            f64_add_spec(a, b) == f64_add_spec(b, a);
+
+    pub broadcast axiom fn axiom_f64_add_finite_preserves(a: f64, b: f64)
+        requires a.is_finite_spec(), b.is_finite_spec(),
+                 f64_add_spec(a, b).is_finite_spec(),
+        ensures
+            #[trigger] f64_add_spec(a, b).is_finite_spec();
+
+    pub broadcast axiom fn axiom_f64_add_monotone_left(a: f64, b: f64, c: f64)
+        requires a.is_finite_spec(), b.is_finite_spec(), c.is_finite_spec(),
+                 le_ensures::<f64>(a, b, true),
+                 f64_add_spec(a, c).is_finite_spec(),
+                 f64_add_spec(b, c).is_finite_spec(),
+        ensures
+            #![trigger le_ensures::<f64>(a, b, true), f64_add_spec(a, c), f64_add_spec(b, c)]
+            le_ensures::<f64>(f64_add_spec(a, c), f64_add_spec(b, c), true);
+
     // Single broadcast group for both float types.
     pub broadcast group group_float_finite_total_order {
         axiom_f64_le_functional,
@@ -221,5 +358,32 @@ pub mod float {
         axiom_f32_totality,
     }
 
+    pub broadcast group group_float_arithmetic {
+        axiom_f64_zero_is_finite,
+        axiom_f64_unreachable_not_finite,
+        axiom_f64_add_zero_right,
+        axiom_f64_add_commutative,
+        axiom_f64_add_finite_preserves,
+        axiom_f64_add_monotone_left,
+    }
+
     } // verus!
+
+    impl std::fmt::Debug for F64Dist {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "F64Dist({})", self.val)
+        }
+    }
+
+    impl std::fmt::Display for F64Dist {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{}", self.val)
+        }
+    }
+
+    impl PartialEq for F64Dist {
+        fn eq(&self, other: &Self) -> bool { self.val == other.val }
+    }
+
+    impl Eq for F64Dist {}
 } // mod

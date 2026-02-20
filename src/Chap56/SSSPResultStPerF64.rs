@@ -2,25 +2,15 @@
 //!
 //! Single-Source Shortest Path Result Structure - Sequential Persistent (Float Weights)
 //!
-//! Data structure for storing the result of single-source shortest path algorithms
-//! with floating-point edge weights. Stores distance and predecessor arrays for path reconstruction.
-//!
-//! Uses persistent array sequences for functional-style immutability.
-//! Uses `OrderedF64` (OrderedFloat<f64>) for weights to ensure Eq/Hash traits.
-//!
-//! **Algorithmic Analysis:**
-//! - `new`: Work O(n), Span O(n) for n vertices
-//! - `get_distance`: Work O(1), Span O(1)
-//! - `extract_path`: Work O(k), Span O(k) where k is path length
+//! Uses `F64Dist` from vstdplus::float for distances with persistent array sequences.
 
 pub mod SSSPResultStPerF64 {
-
-    use ordered_float::OrderedFloat;
 
     use vstd::prelude::*;
 
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::float::float::*;
 
     verus! {
 
@@ -32,16 +22,11 @@ pub mod SSSPResultStPerF64 {
 
     // 4. type definitions
 
-    const UNREACHABLE: OrderedF64 = OrderedFloat(f64::INFINITY);
-    const NO_PREDECESSOR: usize = usize::MAX;
+    pub const NO_PREDECESSOR: usize = usize::MAX;
 
-    /// Result structure for single-source shortest paths with floating-point weights (persistent).
     pub struct SSSPResultStPerF64 {
-        /// Distance from source to each vertex (OrderedFloat(f64::INFINITY) for unreachable).
-        pub distances: ArraySeqStPerS<OrderedF64>,
-        /// Predecessor of each vertex in shortest path tree (usize::MAX for source/unreachable).
+        pub distances: ArraySeqStPerS<F64Dist>,
         pub predecessors: ArraySeqStPerS<usize>,
-        /// Source vertex.
         pub source: usize,
     }
 
@@ -56,14 +41,13 @@ pub mod SSSPResultStPerF64 {
 
     // 8. traits
 
-    /// Trait for single-source shortest path result operations
     pub trait SSSPResultStPerF64Trait: Sized {
         fn new(n: usize, source: usize) -> (result: Self)
             requires source < n;
 
-        fn get_distance(&self, v: usize) -> (dist: OrderedF64);
+        fn get_distance(&self, v: usize) -> (dist: F64Dist);
 
-        fn set_distance(self, v: usize, dist: OrderedF64) -> (result: Self);
+        fn set_distance(self, v: usize, dist: F64Dist) -> (result: Self);
 
         fn get_predecessor(&self, v: usize) -> (result: Option<usize>);
 
@@ -77,59 +61,58 @@ pub mod SSSPResultStPerF64 {
     // 9. impls
 
     impl SSSPResultStPerF64Trait for SSSPResultStPerF64 {
-        #[verifier::external_body]
         fn new(n: usize, source: usize) -> (result: Self)
             ensures
                 result.distances@.len() == n,
                 result.predecessors@.len() == n,
                 result.source == source,
         {
-            let distances = ArraySeqStPerS::tabulate(&|i| if i == source { OrderedFloat(0.0) } else { UNREACHABLE }, n);
-            let predecessors = ArraySeqStPerS::tabulate(&|_| NO_PREDECESSOR, n);
-            SSSPResultStPerF64 {
-                distances,
-                predecessors,
-                source,
+            let unreach = unreachable_dist();
+            let zero = zero_dist();
+            let mut dist_vec: Vec<F64Dist> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    i <= n,
+                    dist_vec@.len() == i as int,
+                    n <= usize::MAX,
+                decreases n - i,
+            {
+                if i == source {
+                    dist_vec.push(zero);
+                } else {
+                    dist_vec.push(unreach);
+                }
+                i = i + 1;
             }
+            let distances = ArraySeqStPerS::from_vec(dist_vec);
+            let predecessors = ArraySeqStPerS::<usize>::new(n, NO_PREDECESSOR);
+            SSSPResultStPerF64 { distances, predecessors, source }
         }
 
-        #[verifier::external_body]
-        fn get_distance(&self, v: usize) -> (dist: OrderedF64)
-            ensures
-                v < self.distances@.len() ==> dist == self.distances@[v as int],
-                v >= self.distances@.len() ==> dist == UNREACHABLE,
-        {
+        fn get_distance(&self, v: usize) -> (dist: F64Dist) {
             if v >= self.distances.length() {
-                return UNREACHABLE;
+                return unreachable_dist();
             }
             *self.distances.nth(v)
         }
 
-        #[verifier::external_body]
-        fn set_distance(self, v: usize, dist: OrderedF64) -> (result: Self)
+        fn set_distance(self, v: usize, dist: F64Dist) -> (result: Self)
             ensures
-                v < self.distances@.len() ==> result.distances@ == self.distances@.update(v as int, dist),
-                v >= self.distances@.len() ==> result.distances@ == self.distances@,
                 result.predecessors@ == self.predecessors@,
                 result.source == self.source,
         {
-            if v >= self.distances.length() {
-                return self;
-            }
+            if v >= self.distances.seq.len() { return self; }
+            let mut dist_vec = self.distances.seq;
+            dist_vec.set(v, dist);
             SSSPResultStPerF64 {
-                distances: ArraySeqStPerS::update(&self.distances, v, dist),
+                distances: ArraySeqStPerS { seq: dist_vec },
                 predecessors: self.predecessors,
                 source: self.source,
             }
         }
 
-        #[verifier::external_body]
-        fn get_predecessor(&self, v: usize) -> (result: Option<usize>)
-            ensures
-                v >= self.predecessors@.len() ==> result.is_none(),
-                v < self.predecessors@.len() && self.predecessors@[v as int] == NO_PREDECESSOR ==> result.is_none(),
-                v < self.predecessors@.len() && self.predecessors@[v as int] != NO_PREDECESSOR ==> result == Some(self.predecessors@[v as int]),
-        {
+        fn get_predecessor(&self, v: usize) -> (result: Option<usize>) {
             if v >= self.predecessors.length() {
                 return None;
             }
@@ -137,48 +120,63 @@ pub mod SSSPResultStPerF64 {
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
-        #[verifier::external_body]
         fn set_predecessor(self, v: usize, pred: usize) -> (result: Self)
             ensures
-                v < self.predecessors@.len() ==> result.predecessors@ == self.predecessors@.update(v as int, pred),
-                v >= self.predecessors@.len() ==> result.predecessors@ == self.predecessors@,
                 result.distances@ == self.distances@,
                 result.source == self.source,
         {
-            if v >= self.predecessors.length() {
-                return self;
-            }
+            if v >= self.predecessors.seq.len() { return self; }
+            let mut pred_vec = self.predecessors.seq;
+            pred_vec.set(v, pred);
             SSSPResultStPerF64 {
                 distances: self.distances,
-                predecessors: ArraySeqStPerS::update(&self.predecessors, v, pred),
+                predecessors: ArraySeqStPerS { seq: pred_vec },
                 source: self.source,
             }
         }
 
-        #[verifier::external_body]
-        fn is_reachable(&self, v: usize) -> (result: bool) { self.get_distance(v).is_finite() }
+        fn is_reachable(&self, v: usize) -> (result: bool) {
+            self.get_distance(v).is_finite()
+        }
 
-        #[verifier::external_body]
         fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>) {
-            if !self.is_reachable(v) {
-                return None;
-            }
-
-            let mut path = Vec::new();
-            let mut current = v;
+            if !self.is_reachable(v) { return None; }
+            let n = self.predecessors.length();
+            if v >= n { return None; }
+            let mut path: Vec<usize> = Vec::new();
+            let mut current: usize = v;
             path.push(current);
-
-            while current != self.source {
+            let mut steps: usize = 0;
+            while current != self.source && steps < n
+                invariant
+                    steps <= n,
+                    current < n,
+                    n as int == self.predecessors.spec_len(),
+                    path@.len() > 0,
+                decreases n - steps,
+            {
+                if current >= n { return None; }
                 let pred = *self.predecessors.nth(current);
-                if pred == NO_PREDECESSOR {
-                    return None;
-                }
+                if pred == NO_PREDECESSOR || pred >= n { return None; }
                 path.push(pred);
                 current = pred;
+                steps = steps + 1;
             }
-
-            path.reverse();
-            Some(ArraySeqStPerS::from_vec(path))
+            if current != self.source { return None; }
+            let path_len = path.len();
+            let mut reversed: Vec<usize> = Vec::new();
+            let mut k: usize = path_len;
+            while k > 0
+                invariant
+                    k <= path_len,
+                    path_len == path@.len(),
+                    reversed@.len() == (path_len - k) as int,
+                decreases k,
+            {
+                k = k - 1;
+                reversed.push(path[k]);
+            }
+            Some(ArraySeqStPerS::from_vec(reversed))
         }
     }
 
