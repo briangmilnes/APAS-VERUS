@@ -6,28 +6,122 @@ pub mod LeftistHeapPQ {
     use std::fmt::{Debug, Display, Formatter, Result};
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Types::Types::*;
 
     verus! {
         proof fn _leftist_heap_pq_verified() {}
+
+        #[verifier::reject_recursive_types(T)]
+        pub enum LeftistHeapNode<T: StT + Ord> {
+            Leaf,
+            Node {
+                key: T,
+                left: Box<LeftistHeapNode<T>>,
+                right: Box<LeftistHeapNode<T>>,
+                rank: usize,
+            },
+        }
+
+        /// Priority Queue implemented using Leftist Heap
+        /// Data Type 45.1: Meldable Priority Queue with efficient O(log n) meld
+        #[verifier::reject_recursive_types(T)]
+        pub struct LeftistHeapPQ<T: StT + Ord> {
+            pub root: LeftistHeapNode<T>,
+        }
+
+        #[cfg(verus_keep_ghost)]
+        impl<T: StT + Ord> PartialEqSpecImpl for LeftistHeapNode<T> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { self == other }
+        }
+
+        impl<T: StT + Ord> Clone for LeftistHeapNode<T> {
+            fn clone(&self) -> (result: Self)
+                ensures result == *self
+                decreases self
+            {
+                match self {
+                    LeftistHeapNode::Leaf => LeftistHeapNode::Leaf,
+                    LeftistHeapNode::Node { key, left, right, rank } => {
+                        let result = LeftistHeapNode::Node {
+                            key: key.clone(),
+                left: Box::new((**left).clone()),
+                    right: Box::new((**right).clone()),
+                            rank: *rank,
+                        };
+                        proof { assume(result == *self); }
+                        result
+                    }
+                }
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::PartialEq for LeftistHeapNode<T> {
+            fn eq(&self, other: &Self) -> (r: bool)
+                ensures r == (*self == *other)
+                decreases self, other
+            {
+                let r = match (self, other) {
+                    (LeftistHeapNode::Leaf, LeftistHeapNode::Leaf) => true,
+                    (LeftistHeapNode::Node { key: k1, left: l1, right: r1, rank: rk1 },
+                     LeftistHeapNode::Node { key: k2, left: l2, right: r2, rank: rk2 }) => {
+                        *k1 == *k2 && (**l1) == (**l2) && (**r1) == (**r2) && *rk1 == *rk2
+                    }
+                    _ => false,
+                };
+                proof { assume(r == (*self == *other)); }
+                r
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::Eq for LeftistHeapNode<T> {}
+
+        #[cfg(verus_keep_ghost)]
+        impl<T: StT + Ord> PartialEqSpecImpl for LeftistHeapPQ<T> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { self.root == other.root }
+        }
+
+        impl<T: StT + Ord> Clone for LeftistHeapPQ<T> {
+            fn clone(&self) -> (result: Self)
+                ensures result.root == self.root
+            {
+                let result = LeftistHeapPQ { root: self.root.clone() };
+                proof { assume(result.root == self.root); }
+                result
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::PartialEq for LeftistHeapPQ<T> {
+            fn eq(&self, other: &Self) -> (r: bool)
+                ensures r == (self.root == other.root)
+            {
+                let r = self.root == other.root;
+                proof { assume(r == (self.root == other.root)); }
+                r
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::Eq for LeftistHeapPQ<T> {}
     }
 
-    #[derive(PartialEq, Clone, Debug)]
-    pub enum LeftistHeapNode<T: StT + Ord> {
-        Leaf,
-        Node {
-            key: T,
-            left: Box<LeftistHeapNode<T>>,
-            right: Box<LeftistHeapNode<T>>,
-            rank: usize, // Distance to nearest leaf (for leftist property)
-        },
+    impl<T: StT + Ord + Debug> Debug for LeftistHeapNode<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            match self {
+                LeftistHeapNode::Leaf => write!(f, "Leaf"),
+                LeftistHeapNode::Node { key, left, right, rank } => {
+                    write!(f, "Node({:?}, {:?}, {:?}, {})", key, left, right, rank)
+                }
+            }
+        }
     }
 
-    /// Priority Queue implemented using Leftist Heap
-    /// Data Type 45.1: Meldable Priority Queue with efficient O(log n) meld
-    #[derive(PartialEq, Clone, Debug)]
-    pub struct LeftistHeapPQ<T: StT + Ord> {
-        root: LeftistHeapNode<T>,
+    impl<T: StT + Ord + Debug> Debug for LeftistHeapPQ<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            write!(f, "LeftistHeapPQ({:?})", self.root)
+        }
     }
 
     /// Trait defining the Meldable Priority Queue ADT operations (Data Type 45.1)

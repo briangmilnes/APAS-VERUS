@@ -313,61 +313,6 @@ pub mod float {
         F64Dist { val: v }
     }
 
-    // F64Ord: OrderedFloat replacement for graph weights. Provides Eq, Ord, Hash
-    // for use in HashSet, HashMap, BinaryHeap. Uses FloatTotalOrder for comparisons.
-    // For finite f64 values only (MST, TSP, etc.).
-
-    #[derive(Clone, Copy)]
-    pub struct F64Ord {
-        pub val: f64,
-    }
-
-    impl View for F64Ord {
-        type V = f64;
-        open spec fn view(&self) -> f64 { self.val }
-    }
-
-    impl F64Ord {
-        pub open spec fn spec_is_finite(&self) -> bool {
-            self.val.is_finite_spec()
-        }
-
-        #[verifier::external_body]
-        pub fn ord_cmp(&self, other: &Self) -> (c: core::cmp::Ordering)
-            requires self.spec_is_finite(), other.spec_is_finite(),
-            ensures
-                (match c {
-                    core::cmp::Ordering::Less =>
-                        self.val.le(other.val) && self.val != other.val,
-                    core::cmp::Ordering::Equal => self.val == other.val,
-                    core::cmp::Ordering::Greater =>
-                        other.val.le(self.val) && self.val != other.val,
-                })
-        {
-            match self.val.partial_cmp(&other.val) {
-                Some(c) => c,
-                None => core::cmp::Ordering::Less, // unreachable for finite
-            }
-        }
-
-        #[verifier::external_body]
-        pub fn ord_add(&self, other: &Self) -> (r: Self)
-            requires self.spec_is_finite(), other.spec_is_finite(),
-            ensures r.spec_is_finite(),
-                    r@ == f64_add_spec(self@, other@)
-        {
-            F64Ord { val: self.val + other.val }
-        }
-    }
-
-    pub fn f64_ord(v: f64) -> (r: F64Ord)
-        requires v.is_finite_spec(),
-        ensures r.spec_is_finite(),
-                r@ == v,
-    {
-        F64Ord { val: v }
-    }
-
     // Uninterpreted spec functions for f64 arithmetic (Verus has no spec_add for f64).
 
     pub uninterp spec fn f64_add_spec(a: f64, b: f64) -> f64;
@@ -442,52 +387,34 @@ pub mod float {
 
     impl Eq for F64Dist {}
 
-    impl PartialEq for F64Ord {
-        fn eq(&self, other: &Self) -> bool { self.val == other.val }
-    }
-
-    impl Eq for F64Ord {}
-
-    impl PartialOrd for F64Ord {
-        fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
-            Some(self.ord_cmp(other))
-        }
-    }
-
-    impl Ord for F64Ord {
-        fn cmp(&self, other: &Self) -> core::cmp::Ordering {
-            self.ord_cmp(other)
-        }
-    }
-
-    impl std::hash::Hash for F64Ord {
+    impl std::hash::Hash for F64Dist {
         fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
             self.val.to_bits().hash(state);
         }
     }
 
-    impl std::fmt::Debug for F64Ord {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "F64Ord({})", self.val)
+    impl PartialOrd for F64Dist {
+        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+            self.val.partial_cmp(&other.val)
         }
     }
 
-    impl std::fmt::Display for F64Ord {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "{}", self.val)
+    impl Ord for F64Dist {
+        fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+            self.val.partial_cmp(&other.val).unwrap_or(std::cmp::Ordering::Equal)
         }
     }
 
-    impl std::ops::Add for F64Ord {
-        type Output = F64Ord;
-        fn add(self, other: F64Ord) -> F64Ord {
-            self.ord_add(&other)
+    impl core::ops::Add for F64Dist {
+        type Output = Self;
+        fn add(self, rhs: Self) -> Self {
+            F64Dist { val: self.val + rhs.val }
         }
     }
 
-    impl std::ops::AddAssign for F64Ord {
-        fn add_assign(&mut self, other: F64Ord) {
-            *self = self.ord_add(&other);
+    impl core::ops::AddAssign for F64Dist {
+        fn add_assign(&mut self, rhs: Self) {
+            self.val += rhs.val;
         }
     }
 } // mod

@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap44
+
 ✓ DocumentIndex.rs
    1 clean proof function
 ✓ Example44_1.rs
@@ -16,11 +18,6 @@ Proof Functions:
    2 clean
    0 holed
    2 total
-
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
-otal
 
 Holes Found: 0 total
 

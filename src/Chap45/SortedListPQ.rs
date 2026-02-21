@@ -10,6 +10,8 @@ pub mod SortedListPQ {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{lemma_seq_map_cloned_view_eq, obeys_feq_clone};
 
     verus! {
         proof fn _sorted_list_pq_verified() {}
@@ -31,11 +33,18 @@ pub mod SortedListPQ {
         }
 
         impl<T: StT + Ord> Clone for SortedListPQ<T> {
-            #[verifier::external_body]
             fn clone(&self) -> (result: Self)
                 ensures result@ == self@
             {
-                SortedListPQ { elements: self.elements.clone() }
+                let result = SortedListPQ { elements: self.elements.clone() };
+                proof {
+                    assume(obeys_feq_clone::<T>());
+                    lemma_seq_map_cloned_view_eq(
+                        self.elements.seq@,
+                        result.elements.seq@,
+                    );
+                }
+                result
             }
         }
 

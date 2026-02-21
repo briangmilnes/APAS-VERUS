@@ -176,6 +176,23 @@ pub mod feq {
         admit();
     }
 
+    /// When two sequences have the same length and cloned at each index, their map to view is equal.
+    /// Use when establishing clone postconditions for types wrapping ArraySeqStPerS.
+    pub proof fn lemma_seq_map_cloned_view_eq<T: Eq + View + Clone + Sized>(
+        s1: Seq<T>,
+        s2: Seq<T>,
+    )
+        requires
+            s1.len() == s2.len(),
+            forall|i: int| #![trigger s1[i]] #![trigger s2[i]] 0 <= i < s1.len() ==> cloned(s1[i], s2[i]),
+            obeys_feq_clone::<T>(),
+        ensures
+            s1.map(|_i: int, t: T| t@) == s2.map(|_i: int, t: T| t@),
+    {
+        broadcast use axiom_cloned_implies_eq_owned;
+        broadcast use vstd::seq::group_seq_axioms;
+    }
+
     // Exec function: test equality and get spec fact
     pub fn feq<T: Eq + View + Clone + Sized>(x: &T, y: &T) -> (eq: bool)
         requires obeys_feq_full::<T>()

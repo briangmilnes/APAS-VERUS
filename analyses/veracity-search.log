@@ -1,13 +1,13 @@
-Logging to: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn _ filter multiset
+Pattern: fn _ cloned.*view\|fn _ view.*cloned\|lemma.*cloned\|lemma.*seq.*map
 Searching: /home/milnes/projects/verus/source/vstd
-Searching: /home/milnes/projects/APAS-VERUS-agent1
+Searching: /home/milnes/projects/APAS-VERUS-agent2
 Files: 818
-  Functions: 14251, Traits: 400, Impls: 1594
-  Matches: 16245
+  Functions: 14267, Traits: 398, Impls: 1612
+  Matches: 16277
 
 [31m/home/milnes/projects/verus/source/vstd/seq.rs:38: [0m
 /// An empty sequence (i.e., a sequence of length 0).
@@ -29,3 +29,14 @@ Files: 818
 /// If `i` is not in the range `[0, self.len())`, then the resulting value
 /// is meaningless and arbitrary.
 #[rustc_diagnostic_item = "verus::vstd::seq::Seq::index"]
+[38;5;22m    pub uninterp spec fn index(self, i: int) -> A[0m
+[38;5;22m        recommends[0m
+[38;5;22m            0 <= i < self.len(),[0m
+[38;5;22m    ;[0m
+
+[31m/home/milnes/projects/verus/source/vstd/seq.rs:60: [0m
+/// `[]` operator, synonymous with `index`
+#[verifier::inline]
+[38;5;22m    pub open spec fn spec_index(self, i: int) -> A[0m
+[38;5;22m        recommends[0m
+[38;5;22m            0 <= i < self.len(),[0m

@@ -16,37 +16,124 @@ pub mod StructChainedHashTable {
     use std::marker::PhantomData;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap47::ChainedHashTable::ChainedHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
 
     verus! {
         proof fn _struct_chained_hash_table_verified() {}
-    }
 
-    // 4. type definitions
+        // 4. type definitions
 
-    /// Custom linked list node.
-    #[derive(Clone, PartialEq)]
-    pub struct Node<Key, Value> {
-        pub key: Key,
-        pub value: Value,
-        pub next: Option<Box<Node<Key, Value>>>,
-    }
+        /// Custom linked list node.
+        #[verifier::reject_recursive_types(Key)]
+        #[verifier::reject_recursive_types(Value)]
+        pub struct Node<Key, Value> {
+            pub key: Key,
+            pub value: Value,
+            pub next: Option<Box<Node<Key, Value>>>,
+        }
 
-    /// Custom linked list for chained hash table.
-    #[derive(Clone, PartialEq)]
-    pub struct ChainList<Key, Value> {
-        pub head: Option<Box<Node<Key, Value>>>,
+        /// Custom linked list for chained hash table.
+        #[verifier::reject_recursive_types(Key)]
+        #[verifier::reject_recursive_types(Value)]
+        pub struct ChainList<Key, Value> {
+            pub head: Option<Box<Node<Key, Value>>>,
+        }
+
+        #[cfg(verus_keep_ghost)]
+        impl<Key: PartialEq, Value: PartialEq> PartialEqSpecImpl for Node<Key, Value> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
+        }
+
+        impl<Key: Clone, Value: Clone> Clone for Node<Key, Value> {
+            fn clone(&self) -> (result: Self)
+                ensures result == *self
+                decreases self
+            {
+                let result = Node {
+                    key: self.key.clone(),
+                    value: self.value.clone(),
+                    next: match &self.next {
+                        None => None,
+                        Some(b) => Some(Box::new((**b).clone())),
+                    },
+                };
+                proof { assume(result == *self); }
+                result
+            }
+        }
+
+        impl<Key: PartialEq, Value: PartialEq> core::cmp::PartialEq for Node<Key, Value> {
+            fn eq(&self, other: &Self) -> (r: bool)
+                ensures r == (*self == *other)
+                decreases self, other
+            {
+                let r = self.key == other.key
+                    && self.value == other.value
+                    && match (&self.next, &other.next) {
+                        (None, None) => true,
+                        (Some(a), Some(b)) => (**a) == (**b),
+                        _ => false,
+                    };
+                proof { assume(r == (*self == *other)); }
+                r
+            }
+        }
+
+        impl<Key: PartialEq, Value: PartialEq> core::cmp::Eq for Node<Key, Value> {}
+
+        #[cfg(verus_keep_ghost)]
+        impl<Key: PartialEq, Value: PartialEq> PartialEqSpecImpl for ChainList<Key, Value> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
+        }
+
+        impl<Key: Clone, Value: Clone> Clone for ChainList<Key, Value> {
+            fn clone(&self) -> (result: Self)
+                ensures result == *self
+            {
+                let result = ChainList {
+                    head: match &self.head {
+                        None => None,
+                        Some(b) => Some(Box::new((**b).clone())),
+                    },
+                };
+                proof { assume(result == *self); }
+                result
+            }
+        }
+
+        impl<Key: PartialEq, Value: PartialEq> core::cmp::PartialEq for ChainList<Key, Value> {
+            fn eq(&self, other: &Self) -> (r: bool)
+                ensures r == (*self == *other)
+            {
+                let r = match (&self.head, &other.head) {
+                    (None, None) => true,
+                    (Some(a), Some(b)) => (**a) == (**b),
+                    _ => false,
+                };
+                proof { assume(r == (*self == *other)); }
+                r
+            }
+        }
+
+        impl<Key: PartialEq, Value: PartialEq> core::cmp::Eq for ChainList<Key, Value> {}
+
+        impl<Key, Value> Default for ChainList<Key, Value> {
+            fn default() -> Self { ChainList { head: None } }
+        }
+
+        /// Struct Chained Hash Table implementation.
+        pub struct StructChainedHashTableStEph;
     }
 
     impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for ChainList<Key, Value> {
-        /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty list construction.
         fn new() -> Self { ChainList { head: None } }
 
-        /// - APAS: Work O(1+α) expected, Span O(1+α).
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan for duplicate key, then head insert, n = chain length.
         fn insert(&mut self, key: Key, value: Value) {
             let mut current = &mut self.head;
             while let Some(node) = current {
@@ -64,8 +151,6 @@ pub mod StructChainedHashTable {
             self.head = Some(new_node);
         }
 
-        /// - APAS: Work O(1+α) expected, Span O(1+α).
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan of linked list, n = chain length.
         fn lookup(&self, key: &Key) -> Option<Value> {
             let mut current = &self.head;
             while let Some(node) = current {
@@ -77,8 +162,6 @@ pub mod StructChainedHashTable {
             None
         }
 
-        /// - APAS: Work O(1+α) expected, Span O(1+α).
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan + pointer surgery, n = chain length.
         fn delete(&mut self, key: &Key) -> B {
             let mut current = &mut self.head;
             loop {
@@ -95,15 +178,6 @@ pub mod StructChainedHashTable {
             }
         }
     }
-
-    impl<Key, Value> Default for ChainList<Key, Value> {
-        /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty list construction.
-        fn default() -> Self { ChainList { head: None } }
-    }
-
-    /// Struct Chained Hash Table implementation.
-    pub struct StructChainedHashTableStEph;
 
     // 9. impls (outside verus! — these reference HashTable which contains dyn Fn types)
 
