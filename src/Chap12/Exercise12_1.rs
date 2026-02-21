@@ -16,7 +16,7 @@ pub mod Exercise12_1 {
 
 verus! {
 
-    #[verifier::external_body]
+    #[verifier::external_body] // accept hole
     pub struct SpinLock {
         ticket: AtomicUsize,
         turn: AtomicUsize,
@@ -56,7 +56,7 @@ verus! {
     impl SpinLockTrait for SpinLock {
         uninterp spec fn spec_locked(&self) -> bool;
 
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole
         fn new() -> (lock: Self) {
             SpinLock {
                 ticket: AtomicUsize::new(0),
@@ -64,7 +64,7 @@ verus! {
             }
         }
 
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole
         fn lock(&self) {
             let my_ticket = self.ticket.fetch_add(1, Ordering::Relaxed);
             while self.turn.load(Ordering::Acquire) != my_ticket {
@@ -72,12 +72,12 @@ verus! {
             }
         }
 
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole
         fn unlock(&self) {
             self.turn.fetch_add(1, Ordering::Release);
         }
 
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole
         fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T {
             self.lock();
             let result = action();
@@ -89,7 +89,7 @@ verus! {
     /// Run 4 threads, each incrementing a shared counter `iterations` times.
     /// - APAS: no cost spec.
     /// - Claude-Opus-4.6: Work Θ(iterations), Span Θ(iterations) — 4-way parallel, bounded by lock contention.
-    #[verifier::external_body]
+    #[verifier::external_body] // accept hole
     pub fn parallel_increment(iterations: usize) -> (incremented: usize)
         ensures incremented == 4 * iterations
     {

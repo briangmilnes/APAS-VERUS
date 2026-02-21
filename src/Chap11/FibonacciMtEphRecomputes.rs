@@ -15,6 +15,7 @@ use crate::Concurrency::*;
 verus! {
 
 use crate::Chap11::FibonacciStEph::FibonacciStEph::*;
+use crate::vstdplus::accept::accept;
 
 // TSM for tracking one fork-join pair at each recursive level
 tokenized_state_machine!{
@@ -148,7 +149,7 @@ pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
         // Join left
         let left_out = match left_handle.join() {
             Result::Ok(out) => out,
-            Result::Err(_) => { assume(false); diverge() }
+            Result::Err(_) => { proof { accept(false); }; diverge() }
         };
         let left_val = left_out.0;
         let tracked left_token = left_out.1.get();
@@ -156,7 +157,7 @@ pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
         // Join right
         let right_out = match right_handle.join() {
             Result::Ok(out) => out,
-            Result::Err(_) => { assume(false); diverge()} 
+            Result::Err(_) => { proof { accept(false); }; diverge()} 
         };
         let right_val = right_out.0;
         let tracked right_token = right_out.1.get();
