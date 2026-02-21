@@ -1,4 +1,4 @@
-$ ~/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap49/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap49/
 
 ❌ MinEditDistMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:26: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
@@ -140,19 +140,6 @@ SUMMARY
 Modules:
    8 clean (no holes)
    0 holed (contains holes)
-   8 total
-
-Proof Functions:
-   4 clean
-   0 holed
-   4 total
-
-Holes Found: 0 total
-
-Errors: 24 (bare impl(s), struct/enum outside verus!)
-
-🎉 No proof holes found! All proofs are complete.
-oles)
    8 total
 
 Proof Functions:

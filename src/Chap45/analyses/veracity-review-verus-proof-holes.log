@@ -1,4 +1,4 @@
-$ ~/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap45/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/
 
 ❌ BalancedTreePQ.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:47: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
@@ -27,15 +27,21 @@ $ ~/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap45/
 ✓ Example45_2.rs
    1 clean proof function
 ❌ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/HeapsortExample.rs:153: error: struct_outside_verus - struct HeapsortComparison — should be inside verus!
-       153 |     pub struct HeapsortComparison<T: StT + Ord> {
-       154 |         pub input: Vec<T>,
-       155 |         pub unsorted_list_result: Vec<T>,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/HeapsortExample.rs:153: error: clone_derived_outside - struct HeapsortComparison — Clone should be implemented inside verus!, not derived outside
-       153 |     pub struct HeapsortComparison<T: StT + Ord> {
-       154 |         pub input: Vec<T>,
-       155 |         pub unsorted_list_result: Vec<T>,
-   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/HeapsortExample.rs:75: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        64 |             fn clone(&self) -> (result: Self)
+            ...
+        73 |                     leftist_heap_result: self.leftist_heap_result.clone(),
+        74 |                 };
+        76 |                 result
+        77 |             }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/HeapsortExample.rs:90: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        81 |             fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        88 |                     && self.binary_heap_result == other.binary_heap_result
+        89 |                     && self.leftist_heap_result == other.leftist_heap_result;
+        91 |                 r
+        92 |             }
+   Errors: 2 total (2 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ LeftistHeapPQ.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/LeftistHeapPQ.rs:16: error: enum_outside_verus - enum LeftistHeapNode — should be inside verus!
@@ -91,19 +97,6 @@ SUMMARY
 
 Modules:
    4 clean (no holes)
-   3 holed (contains holes)
-   7 total
-
-Proof Functions:
-   7 clean
-   0 holed
-   7 total
-
-Holes Found: 3 total
-   3 × external_body
-
-Errors: 10 (bare impl(s), struct/enum outside verus!)
-no holes)
    3 holed (contains holes)
    7 total
 

@@ -1,4 +1,4 @@
-$ ~/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap42/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap42/
 
 ✓ Example42_1.rs
    1 clean proof function
@@ -77,20 +77,6 @@ $ ~/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap42/
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
-
-Modules:
-   1 clean (no holes)
-   3 holed (contains holes)
-   4 total
-
-Proof Functions:
-   3 clean
-   0 holed
-   3 total
-
-Holes Found: 30 total
-   30 × external_body
-═══════
 
 Modules:
    1 clean (no holes)
