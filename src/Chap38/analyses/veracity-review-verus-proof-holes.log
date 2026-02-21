@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap38/
+
 ❌ BSTParaMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:46: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
         19 |             closed spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
@@ -40,8 +42,5 @@ Holes Found: 0 total
 Errors: 2 (bare impl(s), struct/enum outside verus!)
 
 Info: 3 assume(false); diverge() idiom(s) (valid non-termination)
-
-🎉 No proof holes found! All proofs are complete.
-rge() idiom(s) (valid non-termination)
 
 🎉 No proof holes found! All proofs are complete.

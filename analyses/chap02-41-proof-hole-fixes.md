@@ -6,59 +6,76 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chap02–Chap41 Proof Hole Fixes (Agent1 Scope)
 
-Veracity run on each directory. Verusification is highest priority.
+**Date:** 2026-02-19  
+**Scope:** Chap02–Chap41 only (agent1 when multi-agent)  
+**Priority:** Verusification — Prove Big Or Go Home
+
+Veracity proof hole detector run on each directory. Table ordered by severity, then chapter.
 
 ## Proposed Fixes Table
 
 | # | Sev | Chapter | File | Issue | Fix |
-|---|-----|---------|------|-------|-----|
-| 1 | high | Chap02 | HFSchedulerMtEph.rs | struct/enum outside verus! | Move PoolState, TaskState inside verus! |
-| 2 | high | Chap26 | ETSPStEph.rs | bare_impl Point | Move Point helpers into ETSPStTrait |
-| 3 | high | Chap26 | ETSPMtEph.rs | bare_impl Point | Move Point helpers into ETSPMtTrait |
-| 4 | high | Chap38 | BSTParaStEph.rs | dummy RwLockPredicate | Replace inv=true with real BST inv |
-| 5 | high | Chap38 | BSTParaMtEph.rs | dummy RwLockPredicate | Replace inv=true with real BST inv |
-| 6 | med | Chap26 | ETSPStEph.rs | 2 assume() in lemma_combined_cycle | Prove f64 mod/point_eq chain |
-| 7 | med | Chap26 | ETSPMtEph.rs | 2 assume() in lemma_combined_cycle | Prove f64 mod/point_eq chain |
-| 8 | med | Chap26 | ETSP* | 2 external_body sort_and_split, find_best_swap | Verify or document f64/vec |
-| 9 | med | Chap35 | OrderStatSelectMtEph.rs | 1 external_body parallel_three_way_partition | Verify partition logic |
-| 10 | med | Chap35 | OrderStatSelectMtPer.rs | 1 external_body parallel_three_way_partition | Verify partition logic |
-| 11 | med | Chap36 | QuickSortMtEphSlice.rs | 1 external_body quick_sort_mt_random | Verify random pivot test |
-| 12 | med | Chap37 | AVLTreeSeq.rs | 15+ assume, 12 external_body | Close spec_wf, size_link, update_meta |
-| 13 | med | Chap37 | BSTSplayStEph.rs | 5 assume, 6 external_body | Close height_link, update, insert |
-| 14 | med | Chap37 | AVLTreeSeqMtPer.rs | 3 assume, 11 external_body | Same pattern as AVLTreeSeq |
-| 15 | med | Chap39 | BSTSetTreapMtEph.rs | 14 external_body | Verify treap ops |
-| 16 | med | Chap39 | BSTTreapStEph.rs | 3 assume, 7 external_body | Close height_link, update |
-| 17 | med | Chap40 | BSTReducedStEph.rs | 1 assume, 11 external_body | Verify values, etc. |
-| 18 | med | Chap40 | BSTSizeStEph.rs | 1 assume, 8 external_body | Close height_link, update_size |
-| 19 | med | Chap41 | ArraySetStEph.rs | 22 assume (spec_wf) | Prove insert postcondition |
-| 20 | med | Chap41 | AVLTreeSetStEph.rs | 22 assume | Prove spec_wf in ops |
-| 21 | low | Chap05 | MappingStEph, SetStEph, SetMtEph | assume_eq_clone | Verus workaround, info |
-| 22 | low | Chap17 | MathSeq.rs | assume_eq_clone | Verus workaround, info |
-| 23 | low | Chap18–23 | ArraySeq*, LinkedList*, PrimTreeSeq* | assume_eq_clone | Verus workaround, info |
+|---|:---:|---------|------|-------|-----|
+| 1 | crit | Chap41 | 7 modules | 143 holes (100 assume, 43 ext_body) | Prove spec_wf, close assumes |
+| 2 | crit | Chap37 | 7 modules | 90 holes (37 assume, 51 ext_body) | Close AVL/Splay/Treap specs |
+| 3 | high | Chap40 | BSTKeyValue, Reduced, Size | 30 holes (4 assume, 26 ext_body) | Verify in_order, split_rank |
+| 4 | high | Chap39 | BSTSetTreap, BSTTreap* | 26 holes (3 assume, 23 ext_body) | Verify treap ops |
+| 5 | high | Chap12 | Exercise12_1, 12_5 | 18 holes (4 unsafe, 13 ext_body) | Lock-free expected; doc |
+| 6 | high | Chap02 | HFSchedulerMtEph | 8 holes + 2 struct outside | Move PoolState, TaskState in |
+| 7 | med | Chap26 | ETSPStEph, ETSPMtEph | 4 external_body | sort_and_split, find_best_swap |
+| 8 | med | Chap35 | OrderStatSelectMt* | 2 external_body | parallel_three_way_partition |
+| 9 | med | Chap18 | ArraySeq* | 2 external + 9 bare_impl | Iterator/Seq specs |
+| 10 | med | Chap38 | BSTPara* | 2 verus_rwlock_ext_body | RwLock::new limitation |
+| 11 | low | Chap11 | FibonacciMt* | 6 assume(false) | Thread-join idiom (OK) |
+| 12 | low | Chap05,17,19,23 | assume_eq_clone | Verus workaround | Info only |
 
 ## Severity Legend
 
 | Sev | Meaning |
-|-----|---------|
-| high | Structural: struct/enum outside verus!, bare_impl, dummy predicate |
-| med | Proof gaps: assume(), external_body on algorithmic logic |
-| low | Accepted: assume_eq_clone (Verus limitation), thread-join assume(false) |
+|:---:|---------|
+| crit | 50+ holes; blocks downstream verification |
+| high | 10+ holes or structural (struct outside, unsafe) |
+| med | 1–10 holes; verifiable with effort |
+| low | Accepted idiom or Verus limitation |
 
-## Verusification Status (Chap02–41)
+## Summary by Chapter
 
-All files in scope have `verus!` blocks. No `not_verusified` in current run.
+| # | Chapter | Holed | Holes | Clean | Notes |
+|---|---------|:-----:|:-----:|:-----:|-------|
+| 1 | Chap02 | 1 | 8 | 1 | HFScheduler threading |
+| 2 | Chap03 | 0 | 0 | 1 | Clean |
+| 3 | Chap05 | 0 | 0 | 5 | assume_eq workaround |
+| 4 | Chap06 | 0 | 0 | 20 | Clean |
+| 5 | Chap11 | 3 | 6 | 2 | assume(false) join OK |
+| 6 | Chap12 | 2 | 18 | 1 | Lock-free exercises |
+| 7 | Chap17 | 0 | 0 | 1 | Clean |
+| 8 | Chap18 | 1 | 2 | 6 | external + bare_impl |
+| 9 | Chap19 | 0 | 0 | 4 | Clean |
+| 10 | Chap21 | 0 | 0 | 12 | Clean |
+| 11 | Chap23 | 0 | 0 | 2 | Clean |
+| 12 | Chap26 | 2 | 4 | 6 | ETSP f64 external_body |
+| 13 | Chap27 | 0 | 0 | 4 | Clean |
+| 14 | Chap28 | 0 | 0 | 11 | Clean |
+| 15 | Chap35 | 2 | 2 | 2 | parallel_three_way_partition |
+| 16 | Chap36 | 0 | 0 | 3 | Clean |
+| 17 | Chap37 | 7 | 90 | 12 | AVL, Splay, Treap |
+| 18 | Chap38 | 0 | 0 | 2 | verus_rwlock only |
+| 19 | Chap39 | 3 | 26 | 1 | Treap external_body |
+| 20 | Chap40 | 3 | 30 | 0 | All holed |
+| 21 | Chap41 | 7 | 143 | 0 | All holed |
 
 ## Accepted (Do Not Fix)
 
 - **Chap11** assume(false) in thread join — assume-false-diverge idiom
-- **Chap12** Exercise12_1, Exercise12_5 — lock-free/unsafe, expected external_body
-- **assume_eq_clone_workaround** — Verus BUG, info only
+- **Chap12** Exercise12_1, Exercise12_5 — lock-free/unsafe, expected
+- **assume_eq_clone** — Verus PartialEq workaround, info only
 
-## Priority Order
+## Verusification Priority Order
 
-1. Chap38 RwLockPredicate (enables future BST verification)
-2. Chap02 struct/enum inside verus!
-3. Chap26 bare_impl + assume in ETSP
-4. Chap37 AVLTreeSeq, BSTSplay (most assume + external_body)
-5. Chap41 ArraySetStEph, AVLTreeSetStEph (spec_wf assumes)
-6. Chap35, Chap36, Chap39, Chap40 external_body
+1. **Chap41** — 143 holes; blocks Chap42, Chap43, Chap52
+2. **Chap37** — 90 holes; blocks Chap41 AVLTreeSet
+3. **Chap40** — 30 holes; BST augmentations
+4. **Chap39** — 26 holes; Treap
+5. **Chap02** — struct/enum inside verus!
+6. **Chap26** — 4 external_body (f64)
+7. **Chap35** — 2 external_body (partition)

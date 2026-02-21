@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap36/
+
 ✓ QuickSortMtEph.rs
 ✓ QuickSortMtEphSlice.rs
 ✓ QuickSortStEph.rs
@@ -15,11 +17,6 @@ Proof Functions:
    0 clean
    0 holed
    0 total
-
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
-otal
 
 Holes Found: 0 total
 

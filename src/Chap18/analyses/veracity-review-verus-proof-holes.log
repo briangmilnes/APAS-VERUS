@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap18/
+
 ❌ ArraySeq.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1481: external - #[verifier::external]
       1482 |     impl<T: View> ArraySeqS<T> {
@@ -98,10 +100,6 @@ Proof Functions:
    0 holed
    13 total
 
-Holes Found: 2 total
-   2 × external
-
-Errors: 9 (bare impl(s), struct/enum outside verus!)
 Holes Found: 2 total
    2 × external
 

@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap19/
+
 ❌ ArraySeqMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1413: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1409 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -47,8 +49,5 @@ Proof Functions:
 Holes Found: 0 total
 
 Errors: 3 (bare impl(s), struct/enum outside verus!)
-
-🎉 No proof holes found! All proofs are complete.
-e impl(s), struct/enum outside verus!)
 
 🎉 No proof holes found! All proofs are complete.

@@ -175,21 +175,29 @@ pub mod AVLTreeSeqStEph {
         fn new_root() -> (result: Self)
             ensures result.spec_seq() =~= Seq::<T::V>::empty(), result.spec_well_formed();
 
-        fn update(&mut self, index: N, item: T);
+        fn update(&mut self, index: N, item: T)
+            requires
+                old(self).spec_well_formed(),
+                (index as int) < old(self).spec_seq().len();
 
         fn from_vec(values: Vec<T>) -> (result: AVLTreeSeqStEphS<T>);
 
-        fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>);
+        fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>)
+            requires self.spec_well_formed();
 
         fn iter<'a>(&'a self) -> (result: AVLTreeSeqIterStEph<'a, T>);
 
-        fn push_back(&mut self, value: T);
+        fn push_back(&mut self, value: T)
+            requires old(self).spec_well_formed();
 
-        fn contains_value(&self, target: &T) -> (result: B);
+        fn contains_value(&self, target: &T) -> (result: B)
+            requires self.spec_well_formed();
 
-        fn insert_value(&mut self, value: T);
+        fn insert_value(&mut self, value: T)
+            requires old(self).spec_well_formed();
 
-        fn delete_value(&mut self, target: &T) -> (result: bool);
+        fn delete_value(&mut self, target: &T) -> (result: bool)
+            requires old(self).spec_well_formed();
     }
 
     // 9. impls
@@ -413,7 +421,7 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn subseq_copy(&self, start: N, length: N) -> (result: Self) {
-            proof { assume(self.spec_well_formed()); }
+            assert(self.spec_well_formed());
             let n = self.length();
             let s = if start < n { start } else { n };
             let sum = start.wrapping_add(length);
@@ -442,10 +450,8 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn update(&mut self, index: N, item: T) {
-            proof {
-                assume(self.spec_well_formed());
-                assume((index as int) < self.spec_seq().len());
-            }
+            assert(self.spec_well_formed());
+            assert((index as int) < self.spec_seq().len());
             let _ = self.set(index, item);
         }
 
@@ -467,7 +473,7 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>) {
-            proof { assume(self.spec_well_formed()); }
+            assert(self.spec_well_formed());
             let n = self.length();
             let mut vals: Vec<T> = Vec::new();
             let mut i: usize = 0;
@@ -495,14 +501,14 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn push_back(&mut self, value: T) {
-            proof { assume(self.spec_well_formed()); }
+            assert(self.spec_well_formed());
             let len = self.length();
             let node = insert_at_link(self.root.take(), len, value, &mut self.next_key);
             self.root = node;
         }
 
         fn contains_value(&self, target: &T) -> (result: B) {
-            proof { assume(self.spec_well_formed()); }
+            assert(self.spec_well_formed());
             let n = self.length();
             let mut i: usize = 0;
             while i < n
@@ -521,12 +527,12 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn insert_value(&mut self, value: T) {
-            proof { assume(self.spec_well_formed()); }
+            assert(self.spec_well_formed());
             self.push_back(value);
         }
 
         fn delete_value(&mut self, target: &T) -> (result: bool) {
-            proof { assume(self.spec_well_formed()); }
+            assert(self.spec_well_formed());
             let len = self.length();
             let mut found_index: Option<N> = None;
             let mut i: usize = 0;
@@ -535,16 +541,18 @@ pub mod AVLTreeSeqStEph {
                     self.spec_well_formed(),
                     len as int == self.spec_seq().len(),
                     i <= len,
+                    forall|k: N| found_index == Some(k) ==> (k as int) < len as int,
                 decreases len - i,
             {
                 if *self.nth(i) == *target {
                     found_index = Some(i);
+                    assert((i as int) < len as int);
                     break;
                 }
                 i += 1;
             }
             if let Some(idx) = found_index {
-                proof { assume(idx < len); }
+                assert(idx < len);
                 let mut out_vec: Vec<T> = Vec::new();
                 let mut j: usize = 0;
                 while j < idx

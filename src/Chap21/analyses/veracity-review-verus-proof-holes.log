@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap21/
+
 ✓ Algorithm21_1.rs
    2 clean proof functions
 ✓ Algorithm21_2.rs
@@ -29,11 +31,6 @@ Proof Functions:
    12 clean
    0 holed
    12 total
-
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
-otal
 
 Holes Found: 0 total
 
