@@ -302,8 +302,6 @@ pub mod ETSPStEph {
 
     impl Copy for Edge {}
 
-    //		9. impls
-
     /// Verified eTSP implementation. The base cases are fully proven. The recursive
     /// case delegates f64-dependent work (sort, swap search) to external_body helpers
     /// and verifies the structural combination.

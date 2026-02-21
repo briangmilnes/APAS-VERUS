@@ -17,12 +17,11 @@ pub mod MatrixChainMtEph {
     use vstd::rwlock::*;
 
     use crate::Types::Types::*;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
     // 4. type definitions
     #[verifier::reject_recursive_types]
+    #[derive(Clone, Copy, PartialEq, Eq, Debug)]
     pub struct MatrixDim {
         pub rows: usize,
         pub cols: usize,
@@ -32,31 +31,6 @@ pub mod MatrixChainMtEph {
         type V = (nat, nat);
         open spec fn view(&self) -> (nat, nat) {
             (self.rows as nat, self.cols as nat)
-        }
-    }
-
-    impl Clone for MatrixDim {
-        fn clone(&self) -> (s: Self)
-            ensures s@ == self@
-        {
-            MatrixDim { rows: self.rows, cols: self.cols }
-        }
-    }
-
-    #[cfg(verus_keep_ghost)]
-    impl PartialEqSpecImpl for MatrixDim {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
-
-    impl Eq for MatrixDim {}
-    impl PartialEq for MatrixDim {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
-        {
-            let r = self.rows == other.rows && self.cols == other.cols;
-            proof { assume(r == (self@ == other@)); }
-            r
         }
     }
 
@@ -398,10 +372,6 @@ pub mod MatrixChainMtEph {
             handle.release_read();
             dims.into_iter()
         }
-    }
-
-    impl Debug for MatrixDim {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixDim({}×{})", self.rows, self.cols) }
     }
 
     impl Display for MatrixDim {

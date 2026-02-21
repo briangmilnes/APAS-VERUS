@@ -46,6 +46,25 @@ Hypothesis/result are in each experiment file header; this doc summarizes.
 Useful proof: Counter.inc() and Counter.add(n) with ensures let callers prove
 exact state changes (val increases by 1 or n).
 
+## Struct with Vec Inside verus!
+
+Each experiment tests `#[derive(TR)]` on a struct containing `Vec<i32>` inside `verus!`.
+Hypothesis: derive works for structs with Vec (Verus supports Vec).
+Result: All verify.
+
+| # | Trait | Struct with Vec | Result |
+|---|-------|:---------------:|--------|
+| 1 | Clone | ✅ | Verifies (warns: no spec for non-Copy clone) |
+| 2 | PartialEq | ✅ | Verifies |
+| 3 | Eq | ✅ | Verifies |
+| 4 | Default | ✅ | Verifies |
+| 5 | Debug | ✅ | Verifies |
+| 6 | Hash | ✅ | Verifies |
+| 7 | PartialOrd | ✅ | Verifies |
+| 8 | Ord | ✅ | Verifies |
+
+Copy is not tested — Vec is not Copy.
+
 ## Run Commands
 
 ```bash

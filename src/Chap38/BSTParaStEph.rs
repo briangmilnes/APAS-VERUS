@@ -279,7 +279,7 @@ pub mod BSTParaStEph {
             let read_h = rebuilt.root.acquire_read();
             let new_val = read_h.borrow().clone();
             read_h.release_read();
-            let (_, mut write_h) = self.root.acquire_write();
+            let (_, write_h) = self.root.acquire_write();
             write_h.release_write(new_val);
         }
 
@@ -289,7 +289,7 @@ pub mod BSTParaStEph {
             let read_h = merged.root.acquire_read();
             let new_val = read_h.borrow().clone();
             read_h.release_read();
-            let (_, mut write_h) = self.root.acquire_write();
+            let (_, write_h) = self.root.acquire_write();
             write_h.release_write(new_val);
         }
 

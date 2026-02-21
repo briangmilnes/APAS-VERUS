@@ -22,30 +22,11 @@ pub mod DijkstraStEphF64 {
 
     verus! {
         /// Priority queue entry for Dijkstra's algorithm.
+        #[derive(Clone, PartialEq, Eq)]
         pub struct PQEntry {
             pub dist: WrappedF64,
             pub vertex: usize,
         }
-
-        impl Clone for PQEntry {
-            fn clone(&self) -> (s: Self)
-                ensures s@ == self@
-            {
-                PQEntry { dist: self.dist, vertex: self.vertex }
-            }
-        }
-
-        impl PartialEq for PQEntry {
-            fn eq(&self, other: &Self) -> (r: bool)
-                ensures r == (self@ == other@)
-            {
-                let r = self.dist == other.dist && self.vertex == other.vertex;
-                proof { assume(r == (self@ == other@)); }
-                r
-            }
-        }
-
-        impl Eq for PQEntry {}
     }
 
     impl PartialOrd for PQEntry {

@@ -30,36 +30,12 @@ pub mod PrimStEph {
 
     verus! {
         /// Priority queue entry for Prim's algorithm.
-        pub struct PQEntry<V: StT + Ord> {
+        #[derive(Clone, PartialEq, Eq)]
+        pub struct PQEntry<V: StT + Ord + Clone> {
             pub priority: WrappedF64,
             pub vertex: V,
             pub parent: Option<V>,
         }
-
-        impl<V: StT + Ord + Clone> Clone for PQEntry<V> {
-            fn clone(&self) -> (s: Self)
-                ensures s@ == self@
-            {
-                PQEntry {
-                    priority: self.priority,
-                    vertex: self.vertex.clone(),
-                    parent: self.parent.clone(),
-                }
-            }
-        }
-
-        impl<V: StT + Ord + PartialEq + Clone> PartialEq for PQEntry<V> {
-            fn eq(&self, other: &Self) -> (r: bool)
-                ensures r == (self@ == other@)
-            {
-                let r = self.priority == other.priority && self.vertex == other.vertex
-                    && self.parent == other.parent;
-                proof { assume(r == (self@ == other@)); }
-                r
-            }
-        }
-
-        impl<V: StT + Ord + Eq + Clone> Eq for PQEntry<V> {}
 
         pub trait PrimStEphTrait {
             /// Prim's MST algorithm
