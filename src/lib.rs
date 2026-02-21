@@ -104,9 +104,11 @@ pub mod experiments {
     // accept, accept_external_body — Veracity treatment (see Accepted.md)
     pub mod accept;
     // pub mod accept_external_body;  // FAILS - see file header
+    pub mod external_body_accept_hole;
 }
 
 pub mod vstdplus {
+    pub mod accept;
     pub mod pervasives_plus;
     pub mod threads_plus;
     pub mod VecQueue;

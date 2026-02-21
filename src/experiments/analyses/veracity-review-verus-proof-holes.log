@@ -1,34 +1,10 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/experiments/assume_accept_accept_external_body.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/experiments/external_body_accept_hole.rs
 
-❌ assume_accept_accept_external_body.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/experiments/assume_accept_accept_external_body.rs:23: admit() - admit();
-        20 | pub proof fn accept(b: bool)
-            ...
-        21 |     ensures b,
-        22 | {
-        24 | }
-        25 | 
-/home/milnes/projects/APAS-VERUS-agent2/src/experiments/assume_accept_accept_external_body.rs:122: external_body - #[verifier::external_body]
-       123 |     fn clone(&self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/experiments/assume_accept_accept_external_body.rs:54: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        50 |     fn clone(&self) -> (result: Self)
-            ...
-        52 |     {
-        53 |         let result = AssumeBox { data: self.data.clone() };
-        55 |         result
-        56 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/experiments/assume_accept_accept_external_body.rs:64: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        60 |     fn eq(&self, other: &Self) -> (r: bool)
-            ...
-        62 |     {
-        63 |         let r = self.data == other.data;
-        65 |         r
-        66 |     }
-   Holes: 2 total
-      1 × admit()
+❌ external_body_accept_hole.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/external_body_accept_hole.rs:26: external_body - #[verifier::external_body]  // accept hole
+        27 |     fn clone(&self) -> (result: Self)
+   Holes: 1 total
       1 × external_body
-   Errors: 2 total (2 assume in eq/clone (Verus workaround))
-   Proof functions: 2 total (1 clean, 1 holed)
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -40,12 +16,9 @@ Modules:
    1 total
 
 Proof Functions:
-   1 clean
-   1 holed
-   2 total
+   0 clean
+   0 holed
+   0 total
 
-Holes Found: 2 total
-   1 × admit()
+Holes Found: 1 total
    1 × external_body
-
-Errors: 2 (bare impl(s), struct/enum outside verus!)

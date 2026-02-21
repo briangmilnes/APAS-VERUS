@@ -1,0 +1,35 @@
+// Copyright (c) 2025 Brian G. Milnes
+//! Experiment: Does Veracity use `// accept hole` comments after #[verifier::external_body]?
+//!
+//! Per vstdplus/accept.rs: we cannot write a macro for external_body, so Veracity
+//! will use `// accept hole` comments after the attribute to indicate accepted holes.
+//!
+//! RESULT: Verus verifies. Veracity still reports 1× external_body hole — it does
+//! not yet recognize `// accept hole` to downgrade. The vstdplus comment is aspirational.
+//!
+//! Run: veracity-review-proof-holes -d src/experiments/external_body_accept_hole.rs
+
+use vstd::prelude::*;
+
+verus! {
+
+#[verifier::reject_recursive_types(T)]
+pub struct ExternalBodyAcceptHoleBox<T> {
+    pub data: Vec<T>,
+}
+
+impl<T> View for ExternalBodyAcceptHoleBox<T> {
+    type V = Seq<T>;
+    open spec fn view(&self) -> Seq<T> { self.data@ }
+}
+
+impl<T: Clone> Clone for ExternalBodyAcceptHoleBox<T> {
+    #[verifier::external_body]  // accept hole
+    fn clone(&self) -> (result: Self)
+        ensures result@ == self@
+    {
+        ExternalBodyAcceptHoleBox { data: self.data.clone() }
+    }
+}
+
+} // verus!
