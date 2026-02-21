@@ -1,0 +1,32 @@
+---
+description: APAS accept and // accept hole — add only when user explicitly requests
+globs: "src/**/*.rs"
+alwaysApply: true
+---
+
+# Accept Hole Rule
+
+Patterns that mark known verification gaps or expected failures must **not** be added unless the user explicitly instructs it.
+
+## Covered patterns
+
+| Pattern | Purpose |
+|---------|---------|
+| `// accept hole` | Comment near `external_body`; Veracity treats as info |
+| `accept(...)` / `proof { accept(cond); }` | APAS accept proof fn; replaces `assume` for intentional holes |
+| `#[accepted_external_body]` | Attribute macro for accepted external bodies |
+| `#[verifier::expect_failure]` | Marks expected verification failure |
+
+## Rule
+
+- **DO NOT** add these patterns proactively.
+- **DO NOT** add them to silence verification errors or proof-hole reports.
+- **DO** add them only when the user explicitly says to (e.g., "add accept hole", "mark as accepted", "add APAS accept").
+
+## Rationale
+
+These annotations document known gaps. Adding them without explicit approval can hide real issues or mask incomplete verification.
+
+## When the user asks
+
+If the user says "add accept hole", "mark as accepted", "APAS accept", or similar, add the requested annotation at the specified location.
