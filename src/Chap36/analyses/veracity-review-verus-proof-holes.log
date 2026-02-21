@@ -1,13 +1,11 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap36/
+
 ✓ QuickSortMtEph.rs
 ❌ QuickSortMtEphSlice.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap36/QuickSortMtEphSlice.rs:152: external_body - #[verifier::external_body]
-       153 |         fn quick_sort_mt_random(&self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap36/QuickSortMtEphSlice.rs:1: error: not_verusified - File has no verus! block — not verusified.
-         2 | //! Chapter 36 (Multi-threaded Slice): Quicksort over `ArraySeqMtEphSlice` without extra copies.
-         3 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap36/QuickSortMtEphSlice.rs:153: external_body - #[verifier::external_body]
+       154 |         fn quick_sort_mt_random(&self) {
    Holes: 1 total
       1 × external_body
-   Errors: 1 total (1 not verusified)
 ✓ QuickSortStEph.rs
 
 ═══════════════════════════════════════════════════════════════
@@ -26,18 +24,3 @@ Proof Functions:
 
 Holes Found: 1 total
    1 × external_body
-
-Errors: 1 (bare impl(s), struct/enum outside verus!)
-)
-   1 holed (contains holes)
-   3 total
-
-Proof Functions:
-   0 clean
-   0 holed
-   0 total
-
-Holes Found: 1 total
-   1 × external_body
-
-Errors: 1 (bare impl(s), struct/enum outside verus!)

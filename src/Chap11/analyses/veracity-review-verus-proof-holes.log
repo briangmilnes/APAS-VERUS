@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap11
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap11/
 
 ❌ FibonacciMtEph2Threads.rs
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:155: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`

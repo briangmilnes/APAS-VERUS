@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap23
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap23/
 
 ❌ BalBinTreeStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:769: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types

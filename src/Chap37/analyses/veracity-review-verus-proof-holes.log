@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap37
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap37/
 
 ❌ AVLTreeSeq.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:217: assume() - proof { assume(1 + b.left_size + b.right_size < usize::MAX);

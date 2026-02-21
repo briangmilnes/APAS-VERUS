@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap19
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap19/
 
 ❌ ArraySeqMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1413: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
