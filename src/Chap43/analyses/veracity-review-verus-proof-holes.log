@@ -1,4 +1,6 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /❌ AugOrderedTableMtEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/
+
+❌ AugOrderedTableMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:59: external_body - #[verifier::external_body]
         60 |     pub fn recalculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:68: external_body - #[verifier::external_body]
@@ -317,20 +319,6 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
-
-Modules:
-   1 clean (no holes)
-   10 holed (contains holes)
-   11 total
-
-Proof Functions:
-   4 clean
-   0 holed
-   4 total
-
-Holes Found: 140 total
-   140 × external_body
-��═════
 
 Modules:
    1 clean (no holes)

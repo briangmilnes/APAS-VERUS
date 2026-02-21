@@ -102,9 +102,14 @@ pub mod experiments {
     // cleaner for production use. Led to creation of vstdplus::float broadcast axiom group.
     // pub mod f64_float_cmp_sort;
     pub mod boxing_fns;
+    // accept, accept_external_body — Veracity treatment (see Accepted.md)
+    pub mod accept;
+    // pub mod accept_external_body;  // FAILS - see file header
+    pub mod external_body_accept_hole;
 }
 
 pub mod vstdplus {
+    pub mod accept;
     pub mod pervasives_plus;
     pub mod threads_plus;
     pub mod VecQueue;

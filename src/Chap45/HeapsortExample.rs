@@ -3,7 +3,11 @@
 
 pub mod HeapsortExample {
 
+    use std::fmt;
+
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ;
@@ -18,6 +22,77 @@ pub mod HeapsortExample {
 
     verus! {
         proof fn _heapsort_example_verified() {}
+
+        #[verifier::reject_recursive_types(T)]
+        pub struct HeapsortComparison<T: StT + Ord> {
+            pub input: Vec<T>,
+            pub unsorted_list_result: Vec<T>,
+            pub sorted_list_result: Vec<T>,
+            pub balanced_tree_result: Vec<T>,
+            pub binary_heap_result: Vec<T>,
+            pub leftist_heap_result: Vec<T>,
+        }
+
+        impl<T: StT + Ord> View for HeapsortComparison<T> {
+            type V = (
+                Seq<T>,
+                Seq<T>,
+                Seq<T>,
+                Seq<T>,
+                Seq<T>,
+                Seq<T>,
+            );
+            open spec fn view(&self) -> Self::V {
+                (
+                    self.input@,
+                    self.unsorted_list_result@,
+                    self.sorted_list_result@,
+                    self.balanced_tree_result@,
+                    self.binary_heap_result@,
+                    self.leftist_heap_result@,
+                )
+            }
+        }
+
+        #[cfg(verus_keep_ghost)]
+        impl<T: StT + Ord> PartialEqSpecImpl for HeapsortComparison<T> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+        }
+
+        impl<T: StT + Ord> Clone for HeapsortComparison<T> {
+            fn clone(&self) -> (result: Self)
+                ensures result@ == self@
+            {
+                let result = HeapsortComparison {
+                    input: self.input.clone(),
+                    unsorted_list_result: self.unsorted_list_result.clone(),
+                    sorted_list_result: self.sorted_list_result.clone(),
+                    balanced_tree_result: self.balanced_tree_result.clone(),
+                    binary_heap_result: self.binary_heap_result.clone(),
+                    leftist_heap_result: self.leftist_heap_result.clone(),
+                };
+                proof { assume(result@ == self@); }
+                result
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::PartialEq for HeapsortComparison<T> {
+            fn eq(&self, other: &Self) -> (r: bool)
+                ensures r == (self@ == other@)
+            {
+                let r = self.input == other.input
+                    && self.unsorted_list_result == other.unsorted_list_result
+                    && self.sorted_list_result == other.sorted_list_result
+                    && self.balanced_tree_result == other.balanced_tree_result
+                    && self.binary_heap_result == other.binary_heap_result
+                    && self.leftist_heap_result == other.leftist_heap_result;
+                proof { assume(r == (self@ == other@)); }
+                r
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::Eq for HeapsortComparison<T> {}
     }
 
     pub trait HeapsortTrait {
@@ -148,15 +223,17 @@ pub mod HeapsortExample {
         }
     }
 
-    /// Results of comparing all heapsort implementations
-    #[derive(Debug, Clone, PartialEq)]
-    pub struct HeapsortComparison<T: StT + Ord> {
-        pub input: Vec<T>,
-        pub unsorted_list_result: Vec<T>,
-        pub sorted_list_result: Vec<T>,
-        pub balanced_tree_result: Vec<T>,
-        pub binary_heap_result: Vec<T>,
-        pub leftist_heap_result: Vec<T>,
+    impl<T: StT + Ord + fmt::Debug> fmt::Debug for HeapsortComparison<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("HeapsortComparison")
+                .field("input", &self.input)
+                .field("unsorted_list_result", &self.unsorted_list_result)
+                .field("sorted_list_result", &self.sorted_list_result)
+                .field("balanced_tree_result", &self.balanced_tree_result)
+                .field("binary_heap_result", &self.binary_heap_result)
+                .field("leftist_heap_result", &self.leftist_heap_result)
+                .finish()
+        }
     }
 
     pub trait HeapsortExamplesTrait {

@@ -1,20 +1,24 @@
-✓ collect_deep_view.rs
-   9 clean proof functions
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/experiments/external_body_accept_hole.rs
+
+❌ external_body_accept_hole.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/external_body_accept_hole.rs:26: external_body - #[verifier::external_body]  // accept hole
+        27 |     fn clone(&self) -> (result: Self)
+   Holes: 1 total
+      1 × external_body
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   1 clean (no holes)
-   0 holed (contains holes)
+   0 clean (no holes)
+   1 holed (contains holes)
    1 total
 
 Proof Functions:
-   9 clean
+   0 clean
    0 holed
-   9 total
+   0 total
 
-Holes Found: 0 total
-
-🎉 No proof holes found! All proofs are complete.
+Holes Found: 1 total
+   1 × external_body

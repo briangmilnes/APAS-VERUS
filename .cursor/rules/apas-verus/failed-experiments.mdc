@@ -10,6 +10,7 @@ alwaysApply: false
 When an experiment file fails verification:
 
 - **DO NOT** modify it to pass (no adding `assume`, no commenting out failing assertions)
+- **DO NOT** remove dead code — failed attempts stay as documentation
 - **DO** add a `RESULT: FAILS` comment at the top explaining what fails
 - **DO** comment out the module in `lib.rs` so the project validates
 
