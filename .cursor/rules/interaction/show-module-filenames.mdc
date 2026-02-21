@@ -1,0 +1,29 @@
+---
+description: Show file names (ChapNN, vstdplus/, experiments) when providing module info
+alwaysApply: true
+---
+
+# Show Module Filenames
+
+When providing information about modules — functions, summaries, tables, analyses — **always include the file path** so the user can locate it.
+
+## Format
+
+Use paths like:
+
+- `src/ChapNN/ModuleName.rs` — chapter modules
+- `src/vstdplus/module.rs` — vstdplus
+- `src/experiments/module.rs` — experiments
+
+## When to Apply
+
+- Summarizing what a module does
+- Listing functions, types, or proof holes
+- Describing changes or fixes
+- Tables of modules, errors, or status
+
+## Example
+
+**Bad:** "The predicate is in BstParaWf."
+
+**Good:** "The predicate is in `src/Chap38/BSTParaStEph.rs` (BstParaWf)."

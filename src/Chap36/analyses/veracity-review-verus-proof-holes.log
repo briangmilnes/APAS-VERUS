@@ -2,7 +2,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 
 ✓ QuickSortMtEph.rs
 ❌ QuickSortMtEphSlice.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap36/QuickSortMtEphSlice.rs:153: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:153: external_body - #[verifier::external_body]
        154 |         fn quick_sort_mt_random(&self) {
    Holes: 1 total
       1 × external_body

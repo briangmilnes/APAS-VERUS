@@ -81,3 +81,7 @@ Proof Functions:
    17 total
 
 Holes Found: 8 total
+   4 × assume()
+   4 × external_body
+
+Errors: 2 (bare impl(s), struct/enum outside verus!)

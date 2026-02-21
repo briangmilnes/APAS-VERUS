@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap65/
+
 ✓ KruskalStEph.rs
 ❌ PrimStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:31: error: struct_outside_verus - struct PQEntry — should be inside verus!
@@ -24,18 +26,6 @@ Modules:
    3 clean (no holes)
    0 holed (contains holes)
    3 total
-
-Proof Functions:
-   0 clean
-   0 holed
-   0 total
-
-Holes Found: 0 total
-
-Errors: 3 (bare impl(s), struct/enum outside verus!)
-
-🎉 No proof holes found! All proofs are complete.
-  3 total
 
 Proof Functions:
    0 clean

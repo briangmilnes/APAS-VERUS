@@ -14,8 +14,6 @@ Patterns that mark known verification gaps or expected failures must **not** be 
 |---------|---------|
 | `// accept hole` | Comment near `external_body`; Veracity treats as info |
 | `accept(...)` / `proof { accept(cond); }` | APAS accept proof fn; replaces `assume` for intentional holes |
-| `#[accepted_external_body]` | Attribute macro for accepted external bodies |
-| `#[verifier::expect_failure]` | Marks expected verification failure |
 
 ## Rule
 

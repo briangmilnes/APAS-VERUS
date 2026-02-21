@@ -1,24 +1,56 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Parametric single-threaded BST built around a joinMid interface.
+//! Coarse lock (vstd RwLock) for thread-safe access.
 
 pub mod BSTParaStEph {
 
-    use std::cell::RefCell;
     use std::cmp::Ordering::{Equal, Greater, Less};
     use std::fmt;
-    use std::rc::Rc;
+    use std::sync::Arc;
+
+    use vstd::prelude::*;
+    use vstd::rwlock::*;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
-    #[derive(Debug, Clone, Default)]
+    verus! {
+
+    pub struct BstParaWf;
+
+    impl<T: StT + Ord> RwLockPredicate<Option<Box<NodeInner<T>>>> for BstParaWf {
+        open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool { true }
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    #[derive(Debug, Default)]
     pub enum Exposed<T: StT + Ord> {
         #[default]
         Leaf,
         Node(ParamBST<T>, T, ParamBST<T>),
     }
 
-    #[derive(Debug, Clone)]
+    impl<T: StT + Ord> View for Exposed<T> {
+        type V = ();
+        open spec fn view(&self) -> () { () }
+    }
+
+    impl<T: StT + Ord + Clone> Clone for Exposed<T> {
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@
+        {
+            let result = match self {
+                Exposed::Leaf => Exposed::Leaf,
+                Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
+            };
+            proof { accept(result@ == self@); }
+            result
+        }
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    #[derive(Debug)]
     struct NodeInner<T: StT + Ord> {
         key: T,
         size: N,
@@ -26,9 +58,51 @@ pub mod BSTParaStEph {
         right: ParamBST<T>,
     }
 
-    #[derive(Debug, Clone)]
+    impl<T: StT + Ord> View for NodeInner<T> {
+        type V = ();
+        open spec fn view(&self) -> () { () }
+    }
+
+    impl<T: StT + Ord + Clone> Clone for NodeInner<T> {
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@
+        {
+            let result = NodeInner {
+                key: self.key.clone(),
+                size: self.size,
+                left: self.left.clone(),
+                right: self.right.clone(),
+            };
+            proof { accept(result@ == self@); }
+            result
+        }
+    }
+
+    #[verifier::reject_recursive_types(T)]
     pub struct ParamBST<T: StT + Ord> {
-        root: Rc<RefCell<Option<Box<NodeInner<T>>>>>,
+        root: Arc<RwLock<Option<Box<NodeInner<T>>>, BstParaWf>>,
+    }
+
+    impl<T: StT + Ord> View for ParamBST<T> {
+        type V = ();
+        open spec fn view(&self) -> () { () }
+    }
+
+    impl<T: StT + Ord> Clone for ParamBST<T> {
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@
+        {
+            let result = ParamBST { root: Arc::clone(&self.root) };
+            proof { accept(result@ == self@); }
+            result
+        }
+    }
+
+    #[verifier::external_body]
+    fn new_bst_para_lock<T: StT + Ord>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {
+        RwLock::new(val, Ghost(BstParaWf))
+    }
+
     }
 
     pub trait ParamBSTTrait<T: StT + Ord>: Sized {
@@ -70,27 +144,29 @@ pub mod BSTParaStEph {
         fn in_order(&self)               -> ArraySeqStPerS<T>;
     }
 
-    /// - APAS: Work O(1), Span O(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn expose_internal<T: StT + Ord>(tree: &ParamBST<T>) -> Exposed<T> {
-        let guard = tree.root.borrow();
-        match &*guard {
-            | None => Exposed::Leaf,
-            | Some(node) => Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone()),
-        }
+    fn new_leaf<T: StT + Ord>() -> ParamBST<T> {
+        ParamBST { root: Arc::new(new_bst_para_lock(None)) }
     }
 
     /// - APAS: Work O(1), Span O(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    fn expose_internal<T: StT + Ord>(tree: &ParamBST<T>) -> Exposed<T> {
+        let handle = tree.root.acquire_read();
+        let result = match handle.borrow() {
+            | None => Exposed::Leaf,
+            | Some(node) => Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone()),
+        };
+        handle.release_read();
+        result
+    }
+
+    /// - APAS: Work O(1), Span O(1)
     fn join_mid<T: StT + Ord>(exposed: Exposed<T>) -> ParamBST<T> {
         match exposed {
-            | Exposed::Leaf => ParamBST {
-                root: Rc::new(RefCell::new(None)),
-            },
+            | Exposed::Leaf => new_leaf(),
             | Exposed::Node(left, key, right) => {
                 let size = 1 + left.size() + right.size();
                 ParamBST {
-                    root: Rc::new(RefCell::new(Some(Box::new(NodeInner { key, size, left, right })))),
+                    root: Arc::new(new_bst_para_lock(Some(Box::new(NodeInner { key, size, left, right })))),
                 }
             }
         }
@@ -100,15 +176,7 @@ pub mod BSTParaStEph {
     /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
     fn split_inner<T: StT + Ord>(tree: &ParamBST<T>, key: &T) -> (ParamBST<T>, B, ParamBST<T>) {
         match expose_internal(tree) {
-            | Exposed::Leaf => (
-                ParamBST {
-                    root: Rc::new(RefCell::new(None)),
-                },
-                false,
-                ParamBST {
-                    root: Rc::new(RefCell::new(None)),
-                },
-            ),
+            | Exposed::Leaf => (new_leaf(), false, new_leaf()),
             | Exposed::Node(left, root_key, right) => match key.cmp(&root_key) {
                 | Less => {
                     let (ll, found, lr) = split_inner(&left, key);
@@ -185,32 +253,39 @@ pub mod BSTParaStEph {
     }
 
     impl<T: StT + Ord> ParamBSTTrait<T> for ParamBST<T> {
-        fn new() -> Self {
-            ParamBST {
-                root: Rc::new(RefCell::new(None)),
-            }
-        }
+        fn new() -> Self { new_leaf() }
 
         fn expose(&self) -> Exposed<T> { expose_internal(self) }
 
         fn join_mid(exposed: Exposed<T>) -> Self { join_mid(exposed) }
 
-        fn size(&self) -> N { self.root.borrow().as_ref().map_or(0, |node| node.size) }
+        fn size(&self) -> N {
+            let handle = self.root.acquire_read();
+            let n = handle.borrow().as_ref().map_or(0, |node| node.size);
+            handle.release_read();
+            n
+        }
 
         fn is_empty(&self) -> B { self.size() == 0 }
 
         fn insert(&self, key: T) {
             let (left, _, right) = split_inner(self, &key);
             let rebuilt = join_m(left, key, right);
-            let new_state = { rebuilt.root.borrow().clone() };
-            *self.root.borrow_mut() = new_state;
+            let read_h = rebuilt.root.acquire_read();
+            let new_val = read_h.borrow().clone();
+            read_h.release_read();
+            let (_, mut write_h) = self.root.acquire_write();
+            write_h.release_write(new_val);
         }
 
         fn delete(&self, key: &T) {
             let (left, _, right) = split_inner(self, key);
             let merged = join_pair_inner(left, right);
-            let new_state = { merged.root.borrow().clone() };
-            *self.root.borrow_mut() = new_state;
+            let read_h = merged.root.acquire_read();
+            let new_val = read_h.borrow().clone();
+            read_h.release_read();
+            let (_, mut write_h) = self.root.acquire_write();
+            write_h.release_write(new_val);
         }
 
         fn find(&self, key: &T) -> Option<T> {
@@ -234,6 +309,12 @@ pub mod BSTParaStEph {
             let mut out = Vec::with_capacity(self.size());
             collect_in_order(self, &mut out);
             ArraySeqStPerS::from_vec(out)
+        }
+    }
+
+    impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for ParamBST<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("ParamBST").finish()
         }
     }
 

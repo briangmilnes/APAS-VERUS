@@ -1,9 +1,9 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap47/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap47/
 
 ❌ ChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ChainedHashTable.rs:43: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:43: external_body - #[verifier::external_body]
         44 |             fn clone(&self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ChainedHashTable.rs:56: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:56: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         52 |             fn eq(&self, other: &Self) -> (r: bool)
             ...
         54 |             {
@@ -18,44 +18,44 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 ✓ FlatHashTable.rs
 ✓ LinProbFlatHashTableStEph.rs
 ❌ LinkedListChainedHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/LinkedListChainedHashTableStEph.rs:76: error: struct_outside_verus - struct LinkedListChainedHashTableStEph — should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:76: error: struct_outside_verus - struct LinkedListChainedHashTableStEph — should be inside verus!
         76 |     pub struct LinkedListChainedHashTableStEph;
         77 | 
         78 |     // 9. impls (outside verus! — these reference HashTable which contains dyn Fn types)
    Errors: 1 total (1 struct/enum outside verus!)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ ParaHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:66: error: struct_outside_verus - struct HashTable — should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:66: error: struct_outside_verus - struct HashTable — should be inside verus!
         66 |     pub struct HashTable<Key, Value, Entry, Metrics> {
         67 |         pub table: Vec<Entry>,
         68 |         pub hash_fn_gen: HashFunGen<Key>,
    Errors: 1 total (1 struct/enum outside verus!)
 ✓ QuadProbFlatHashTableStEph.rs
 ❌ StructChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:31: error: struct_outside_verus - struct Node — should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:31: error: struct_outside_verus - struct Node — should be inside verus!
         31 |     pub struct Node<Key, Value> {
         32 |         pub key: Key,
         33 |         pub value: Value,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:31: error: clone_derived_outside - struct Node — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:31: error: clone_derived_outside - struct Node — Clone should be implemented inside verus!, not derived outside
         31 |     pub struct Node<Key, Value> {
         32 |         pub key: Key,
         33 |         pub value: Value,
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:39: error: struct_outside_verus - struct ChainList — should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:39: error: struct_outside_verus - struct ChainList — should be inside verus!
         39 |     pub struct ChainList<Key, Value> {
         40 |         pub head: Option<Box<Node<Key, Value>>>,
         41 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:39: error: clone_derived_outside - struct ChainList — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:39: error: clone_derived_outside - struct ChainList — Clone should be implemented inside verus!, not derived outside
         39 |     pub struct ChainList<Key, Value> {
         40 |         pub head: Option<Box<Node<Key, Value>>>,
         41 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:106: error: struct_outside_verus - struct StructChainedHashTableStEph — should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:106: error: struct_outside_verus - struct StructChainedHashTableStEph — should be inside verus!
        106 |     pub struct StructChainedHashTableStEph;
        107 | 
        108 |     // 9. impls (outside verus! — these reference HashTable which contains dyn Fn types)
    Errors: 5 total (3 struct/enum outside verus!, 2 Clone derived outside)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ VecChainedHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/VecChainedHashTableStEph.rs:70: error: struct_outside_verus - struct VecChainedHashTableStEph — should be inside verus!
+/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:70: error: struct_outside_verus - struct VecChainedHashTableStEph — should be inside verus!
         70 |     pub struct VecChainedHashTableStEph;
         71 | 
         72 |     // 9. impls (outside verus! — these reference HashTable which contains dyn Fn types)

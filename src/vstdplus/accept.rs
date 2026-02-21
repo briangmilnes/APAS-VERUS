@@ -21,3 +21,13 @@ pub proof fn accept(b: bool)
 }
 
 } // verus!
+
+// Re-export for cargo/runtime builds where proof fn may not be available.
+#[cfg(not(verus_keep_ghost))]
+pub use cargo_accept::accept;
+
+#[cfg(not(verus_keep_ghost))]
+mod cargo_accept {
+    /// Stub for cargo/runtime builds. Verus uses the proof fn above.
+    pub fn accept(_b: bool) {}
+}
