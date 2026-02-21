@@ -14,7 +14,7 @@ When the user says "validate", run the full verification with all modules:
 cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors
 ```
 
-Or: `python3 scripts/validate.py`
+Or: `scripts/validate.sh`
 
 ## dev_only_validate — foundation modules only
 
@@ -46,6 +46,6 @@ When the user says "V1", run a single Verus verification. If working with `exper
 cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg 'feature="experiments_only"'
 ```
 
-Or: `python3 scripts/exponlyverify.py`
+Or: `scripts/validate.sh exp`
 
 Otherwise, same as validate. Do not iterate or fix errors. Just run once, show the full output, and stop.

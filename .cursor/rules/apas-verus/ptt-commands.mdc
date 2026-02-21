@@ -30,7 +30,7 @@ cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus \
   --export /home/milnes/projects/APAS-VERUS/target/verus/apas_verus.vir
 ```
 
-Or: `python3 scripts/compile_ptt.py`
+Or: `scripts/ptt.sh` (compiles then runs PTTs)
 
 **Critical:** The `--export` path must be **absolute**. Without `--export`,
 the `.vir` file is NOT generated and PTTs will use stale specs.
@@ -38,7 +38,7 @@ the `.vir` file is NOT generated and PTTs will use stale specs.
 ## ptt — compile + run proof time tests
 
 ```bash
-python3 scripts/pttest.py
+scripts/ptt.sh
 ```
 
 Or manually:
@@ -54,4 +54,4 @@ Always compile first. Stale `.rlib` or `.vir` causes mysterious failures.
 cd ~/projects/APAS-VERUS && timeout 120 cargo nextest run --no-fail-fast
 ```
 
-Or: `python3 scripts/rttest.py`
+Or: `scripts/rtt.sh`
