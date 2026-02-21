@@ -1,6 +1,13 @@
 // Copyright (c) 2025 Brian G. Milnes
 //! Abstract Set with Set-based Iterator View (visited, current, remaining)
 //! Based on simple_set_iter but with a set-based ghost model instead of sequence-based.
+//!
+//! Hypothesis: Verus can verify a set iterator with a set-based ghost view (visited, current,
+//! remaining) instead of a sequence-based view, enabling loop proofs that reason about subsets.
+//!
+//! Result: Yes. The set-based AbstractSetIter view (visited, current, remaining) verifies. Loop
+//! invariants for abstract_set_copy_loop use set union/disjoint reasoning. ClonePlus and feq
+//! bridge exec Vec to spec Set.
 
 pub mod abstract_set_iter {
     use vstd::prelude::*;
@@ -11,7 +18,7 @@ pub mod abstract_set_iter {
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::vec::vec::*;
-    
+
     broadcast use {
             vstd::seq_lib::group_seq_properties,
             vstd::seq::group_seq_axioms,
@@ -128,7 +135,7 @@ pub mod abstract_set_iter {
         }
 
         fn iter(&self) -> (it: AbstractSetIter<V>)
-        { 
+        {
             let cloned = self.elements.clone_plus();
             proof {
                 // clone_plus ensures cloned(self.elements, cloned)

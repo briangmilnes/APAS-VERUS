@@ -1,3 +1,5 @@
+// Copyright (c) 2025 Brian G. Milnes
+//! Hypothesis: Can Verus verify for loops with bounds and array access?
 
 pub mod ForLoops {
 

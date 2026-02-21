@@ -1,4 +1,5 @@
-/// Can I make a for over a for on arrays prove?
+// Copyright (c) 2025 Brian G. Milnes
+//! Hypothesis: Can Verus verify nested for loops on arrays?
 
 pub mod ForFor {
 

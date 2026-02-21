@@ -1,4 +1,7 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! Hypothesis: Can Verus verify for/while on arrays with length assumptions?
+//! Result: Yes.
+
 pub mod ArrayVecSet {
 
 use vstd::prelude::*;

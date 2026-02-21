@@ -4,9 +4,11 @@
  Read ./rules/apas-verus/senior-proof-engineer.mdc:
  Read ./rules/style/senior-prose-engineer.mdc. 
  REREAD ANY FILES BEFORE MODIFYING THEM.
- You are working ONLY on Chap02-Chap41, keep this in your context. 
+ You may touch any chapter. 
  Run the veracity proof hole detector on all of your directories, one by one.
- Propose a table of code fixes by priority on your chapters and only on your chapters.
- The most important hole is verasification (no verus!).
+ Propose a table of code fixes for HashSet to replace it with HashSetWithView
+ and a correct view of the data in the hash set.
  
+
+  
 

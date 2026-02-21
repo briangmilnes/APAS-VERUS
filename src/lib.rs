@@ -21,7 +21,7 @@ pub mod experiments {
 //    pub mod tcb_foul;  // TCB foul experiment - Verus blocks unspecified &mut self methods
 //    pub mod pervasives;
 //    pub mod sigma_pi;
-//    pub mod abstract_set_iter;
+    // pub mod abstract_set_iter;  // FAILS: vstdplus::vec, clone_view moved to attic
 //    pub mod SetLoops;
 //    pub mod ToVecProof;
 //    pub mod supertrait;
@@ -87,8 +87,88 @@ pub mod experiments {
 //    pub mod collect_deep_view;
 //    pub mod verus_keep_ghost_and_test;
 //    pub mod biconditional_spec_fun;
-//    pub mod arc_rwlock_ninject;
+    // pub mod arc_rwlock_ninject;
+    // pub mod ArrayVal;
+    // pub mod ArrayVecSet;
+    // pub mod assume_spec_test;  // FAILS: Verus panic (traits.rs assertion)
+    // pub mod baseviewtypes;
+    // pub mod boxing_fns;
+    // pub mod checked_comm;
+    // pub mod CheckedI32;
+    // pub mod checked_signed_int;
+    // pub mod checked_unsigned_int;
+    // pub mod checked_u32;
+    // pub mod clone_fn;
+    // pub mod clone_plus;  // FAILS: postcondition not satisfied (feq_works)
+    // pub mod clone;
+    // pub mod collect_deep_view;
+    // pub mod collect;
+    // pub mod deep_view_struct;
+    // pub mod eq_rel;
+    // pub mod executable_use_of_int;
+    // pub mod external_body_accept_hole;
+    // pub mod f64_bits_sort;
+    // pub mod f64_float_cmp_sort;
+    // pub mod f64_sort;  // FAILS: assertion failed (f64_le_spec in loop invariant)
+    // pub mod ForFor;  // FAILS: precondition not satisfied, invariant not satisfied
+    // pub mod ForLoops;
+    // pub mod ghost_type_invariant;  // FAILS: type_invariant makes struct opaque
+    // pub mod HashCheckedU32;  // FAILS: conflicting impls with vstdplus::hashed_checked_u32
+    // pub mod hash_set_iter;
+    // pub mod hash_set_modern_pattern;
+    // pub mod hash_set_with_view_plus_loops;
+    // pub mod invariant_proof_test;  // FAILS: expected `!` in proof fn
+    // pub mod minimal_iter;
+    // pub mod modify_a_ghost_struct;
+    // pub mod parapair_closure_ensures;  // FAILS: ParaPairs not in experiments_only
+    // pub mod parapair_move_closure_ensures;  // FAILS: ParaPairs not in experiments_only
+    // pub mod parapair_named_closure;  // FAILS: ParaPairs not in experiments_only
+    // pub mod parapair_toplevel_closure;  // FAILS: ParaPairs not in experiments_only
+    // pub mod pervasives;
+    // pub mod possession;  // FAILS: missing field `a` in struct initializer
+    // pub mod proof_fn_in_trait;
+    // pub mod proven_partialeq;
+    // pub mod pub_crate_test;
+    // pub mod seq_array_equality;
+    // pub mod seq_for_basic_proofs;
+    // pub mod seq_loop_basic_proofs;
+    // pub mod seq_set_exec;  // FAILS: Chap05 not in experiments_only
+    // pub mod seq_vec_equality;
+    // pub mod seq_while_basic_proofs;
     // pub mod set_len_empty_both_ways;
+    // pub mod SetLoops;  // FAILS: clone_view moved to attic
+    // pub mod sigma_pi;
+    // pub mod signed_int;
+    // pub mod simple_hash_set_iter;  // FAILS: obeys_feq_full, assertion failed
+    // pub mod simple_seq_iter;  // FAILS: clone_view moved to attic
+    // pub mod simple_set_iter;  // FAILS: clone_view, lemma_take_full_to_set
+    // pub mod struct_construction_test;
+    // pub mod supertrait;  // FAILS: multiple applicable items (supertrait foo)
+    // pub mod tcb_foul;  // FAILS: use old(x) for &mut in requires
+    // pub mod test_feq_insertion_sort;
+    // pub mod test_feq;
+    // pub mod test_test;
+    // pub mod test_verify_one_file;
+    // pub mod total_ord_gen_axioms;  // FAILS: trigger must be fn/field/arith
+    // pub mod total_ord_gen;  // FAILS: assertion failed (axiom_cloned_view_eq)
+    // pub mod ToVecProof;  // FAILS: clone_view moved to attic
+    // pub mod triangle;
+    // pub mod unsigned_int;
+    // pub mod proven_partialeq;
+    // pub mod use_proven_partialeq;
+    // pub mod vec_clone_in_verus;
+    // pub mod vec_if;
+    // pub mod vec_length_while_rust;
+    // pub mod vec_length_while_verus;
+    // pub mod vec_remove_duplicates;
+    // pub mod verus_iterator;
+    // pub mod verus_pub_crate_test;  // FAILS: field expr for opaque datatype
+    // pub mod verus_iterator;
+    // pub mod verus_vec_iterator;  // FAILS: precondition not satisfied (exec_invariant)
+    // pub mod verus_vec_iterator_while_basic_proofs;  // FAILS: depends on verus_vec_iterator
+    // pub mod verus_wrapped_iter_loops;
+    // pub mod VSTDLoopProofs;
+    // pub mod WhileWhile;
     // Hypothesis: Can Verus verify f64 sorting using bit-level ordering?
     // Result: Yes. Structural verification (loop invariants, sorted postcondition) works
     // with two classes of assumes: IEEE 754 ordering axioms and an external_body bridge
@@ -101,33 +181,33 @@ pub mod experiments {
     // through swaps. Requires assume for sorted-prefix maintenance. The bits approach is
     // cleaner for production use. Led to creation of vstdplus::float broadcast axiom group.
     // pub mod f64_float_cmp_sort;
-    pub mod boxing_fns;
+//    pub mod boxing_fns;
     // derive experiments: #[derive(TR)] on {struct,enum} inside verus!
-    pub mod derive_debug_struct_in_verus;
-    pub mod derive_debug_enum_in_verus;
+//    pub mod derive_debug_struct_in_verus;
+//    pub mod derive_debug_enum_in_verus;
     // pub mod derive_display_struct_in_verus;  // derive_more (Verus can't link external crates)
     // pub mod derive_display_enum_in_verus;
-    pub mod derive_eq_struct_in_verus;
-    pub mod derive_eq_enum_in_verus;
-    pub mod derive_partial_eq_struct_in_verus;
-    pub mod derive_partial_eq_enum_in_verus;
-    pub mod derive_clone_struct_in_verus;
-    pub mod derive_clone_enum_in_verus;
-    pub mod derive_copy_struct_in_verus;
-    pub mod derive_copy_enum_in_verus;
-    pub mod derive_default_struct_in_verus;
-    pub mod derive_default_enum_in_verus;
-    pub mod derive_hash_struct_in_verus;
-    pub mod derive_hash_enum_in_verus;
-    pub mod derive_partial_ord_struct_in_verus;
-    pub mod derive_partial_ord_enum_in_verus;
-    pub mod derive_ord_struct_in_verus;
-    pub mod derive_ord_enum_in_verus;
-    pub mod mut_refs_and_mut_returns;
+//    pub mod derive_eq_struct_in_verus;
+//    pub mod derive_eq_enum_in_verus;
+//    pub mod derive_partial_eq_struct_in_verus;
+//    pub mod derive_partial_eq_enum_in_verus;
+    // pub mod derive_clone_struct_in_verus;  // Verus autoderive Clone warning
+    // pub mod derive_clone_enum_in_verus;    // Verus autoderive Clone warning
+//    pub mod derive_copy_struct_in_verus;
+//    pub mod derive_copy_enum_in_verus;
+//    pub mod derive_default_struct_in_verus;
+//    pub mod derive_default_enum_in_verus;
+//    pub mod derive_hash_struct_in_verus;
+//    pub mod derive_hash_enum_in_verus;
+//    pub mod derive_partial_ord_struct_in_verus;
+//    pub mod derive_partial_ord_enum_in_verus;
+//    pub mod derive_ord_struct_in_verus;
+//    pub mod derive_ord_enum_in_verus;
+//    pub mod mut_refs_and_mut_returns;
     // accept, accept_external_body — Veracity treatment (see Accepted.md)
-    pub mod accept;
-    // pub mod accept_external_body;  // FAILS - see file header
-    pub mod external_body_accept_hole;
+//    pub mod accept;
+    // pub mod accept_external_body;  // FAILS: macro cannot produce attribute attaching to item
+//    pub mod external_body_accept_hole;
 }
 
 pub mod vstdplus {

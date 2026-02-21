@@ -1,6 +1,13 @@
 // Copyright (c) 2025 Brian G. Milnes
 //! Experiment: assume vs accept — Veracity treatment
 //!
+//! Hypothesis: Using a named proof fn `accept(b)` (with admit) instead of raw `assume(b)` lets
+//! Veracity distinguish intentional workarounds from accidental holes. Call sites use accept(...)
+//! and are not flagged; the single admit is in the accept body.
+//!
+//! Result: Yes. Veracity reports 1× admit in accept body; call sites (Clone, PartialEq) are not
+//! flagged. Belt: proof { accept(...); }. Suspenders: assert(...) by { accept(...); }.
+//!
 //! Per veracity/docs/Accepted.md.
 //! 1. assume() — Veracity: 2× assume_eq_clone_workaround (warning)
 //! 2. accept() — Veracity: call sites not flagged; 1× admit() in accept body

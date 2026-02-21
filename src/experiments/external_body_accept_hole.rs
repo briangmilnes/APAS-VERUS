@@ -1,5 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
-//! Experiment: Does Veracity use `// accept hole` comments after #[verifier::external_body]?
+//! Hypothesis: Does Veracity use `// accept hole` comments after #[verifier::external_body]?
 //!
 //! Per vstdplus/accept.rs: we cannot write a macro for external_body, so Veracity
 //! will use `// accept hole` comments after the attribute to indicate accepted holes.

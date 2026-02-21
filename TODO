@@ -1,16 +1,8 @@
 
- 17 Feb 2026
-
-Chapter
- main   - Chap28
- agent1 - Chap35
- agent2 - Chap26 
- 
-Done
-  Chap27
-
+ 21 Feb 2026
 
 2) Suss out how to get comments up to normal English standards.
 8) Clean up types, pair, concurrency.
 14) Check my total order and partial orders against updates to vstd.
 15) Deep_view review.
+16) Get the derives in use where they now work.

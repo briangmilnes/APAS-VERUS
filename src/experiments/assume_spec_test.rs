@@ -1,5 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
-//! Test: Can we use assume_specification on our own Iterator::next with requires?
+//! Hypothesis: Can we use assume_specification on our own Iterator::next with requires?
 
 use vstd::prelude::*;
 

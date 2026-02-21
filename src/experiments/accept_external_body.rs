@@ -1,7 +1,10 @@
 // Copyright (c) 2025 Brian G. Milnes
 //! Experiment: accepted_external_body declarative macro — per veracity/docs/Accepted.md
 //!
-//! RESULT: FAILS — declarative macro_rules! cannot produce attributes that attach to items.
+//! Hypothesis: A declarative macro_rules! can expand to #[verifier::external_body] and attach
+//! to function items, providing a concise "accepted" wrapper for external_body functions.
+//!
+//! Result: FAILS — declarative macro_rules! cannot produce attributes that attach to items.
 //! Attempt 1: macro! {} expands to #[verifier::external_body] — "expected item after attributes".
 //! Attempt 2: structured macro (capture+reemit fn) — expansion `(result: Self)` rejected at `:`.
 //! Use proc-macro instead.

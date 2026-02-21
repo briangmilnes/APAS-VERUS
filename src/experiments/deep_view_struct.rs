@@ -1,4 +1,5 @@
-//  Experiment: DeepView on a struct with an Option<usize> field.
+// Copyright (c) 2025 Brian G. Milnes
+//! Hypothesis: Can Verus verify DeepView on a struct with Option<usize> field?
 
 
 pub mod deep_view_struct {

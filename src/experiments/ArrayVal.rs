@@ -1,3 +1,6 @@
+// Copyright (c) 2025 Brian G. Milnes
+//! Hypothesis: Can Verus verify array literals, mutation, and refs?
+//! Result: Yes.
 
 pub mod ArrayVal {
 

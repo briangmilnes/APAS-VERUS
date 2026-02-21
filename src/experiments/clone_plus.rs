@@ -1,5 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
-//! Test clone_plus preserves views with and without feq
+//! Hypothesis: Does clone_plus preserve views with and without feq?
 
 pub mod clone_plus_test {
     use vstd::prelude::*;

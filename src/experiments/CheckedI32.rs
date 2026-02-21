@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! Hypothesis: Can Verus verify a checked integer tracking true mathematical value?
 #[allow(unused_imports)]
 use vstd::prelude::*;
 #[allow(unused_imports)]

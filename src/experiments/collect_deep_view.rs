@@ -1,4 +1,5 @@
-//  Experiment: collect with DeepView trait instead of standalone deep_view function.
+// Copyright (c) 2025 Brian G. Milnes
+//! Hypothesis: Can collect use DeepView trait instead of standalone deep_view?
 //
 //  Start from collect2 (Vec types, proven). Replace the standalone deep_view
 //  with Vec's DeepView trait method.

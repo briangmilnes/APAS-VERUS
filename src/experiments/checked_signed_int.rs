@@ -1,5 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
-//! Checked signed integer trait with overflow/underflow tracking.
+//! Hypothesis: Can Verus verify checked signed integer trait with overflow tracking?
 //! No monotonicity guarantee for addition.
 
 #[allow(unused_imports)]

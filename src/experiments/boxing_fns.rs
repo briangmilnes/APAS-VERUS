@@ -1,5 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes.
-//! Experiment: Which Fn types can Verus verify when boxed or stored?
+//! Hypothesis: Which Fn types can Verus verify when boxed or stored?
 //!
 //! Supported: impl Fn, impl FnOnce, impl FnMut, spec_fn (ghost lambda).
 //! Not supported: fn(T) -> U (function pointer), Box<dyn Fn> (trait object).

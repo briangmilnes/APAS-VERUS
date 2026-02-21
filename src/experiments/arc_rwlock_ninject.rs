@@ -1,7 +1,10 @@
 // Copyright (c) 2025 Brian G. Milnes
 //! arc_rwlock_ninject — Experiment: Arc<RwLock<Vec<T>>> + spawn for parallel ninject.
-//! Tests whether Verus can verify threads contending for a single RwLock
-//! to produce nondeterministic writes to a shared buffer.
+//!
+//! Hypothesis: Verus can verify threads contending for a single RwLock to produce
+//! nondeterministic writes to a shared buffer, using RwLockPredicate and spawn.
+//!
+//! Result: PASSES with assumes for clone-view, Arc::clone pred, and ghost field opacity.
 //!
 //! ASSUMES: Several assume()s for clone-view, Arc::clone pred, and ghost field opacity.
 //! The goal is to test the RwLock acquire/write/release + spawn machinery,

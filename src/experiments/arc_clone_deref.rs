@@ -1,5 +1,9 @@
 //! Proof time test: Does Arc::clone preserve dereferenced value equality?
-//! RESULT: PASSES - Arc::clone preserves *x == *y for u8, u64, and generic T
+//!
+//! Hypothesis: Verus can verify that Arc::clone preserves *x == *y (deref equality) for
+//! concrete and generic T, using vstd's Arc spec.
+//!
+//! Result: PASSES — Arc::clone preserves *x == *y for u8, u64, and generic T.
 
 use vstd::prelude::*;
 use std::sync::Arc;

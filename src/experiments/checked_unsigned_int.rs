@@ -1,5 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
-//! Checked unsigned integer trait with overflow tracking.
+//! Hypothesis: Can Verus verify checked unsigned integer trait with overflow tracking?
 //! Key property: if final sum fits, all partial sums fit (monotonicity).
 
 #[allow(unused_imports)]

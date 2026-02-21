@@ -1,5 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
-//! CheckedU32 implementing CheckedUnsignedInt trait.
+//! Hypothesis: Can Verus verify CheckedU32 implementing CheckedUnsignedInt?
 
 #[allow(unused_imports)]
 use vstd::prelude::*;

@@ -1,5 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
-//! Experiment: Can Verus express clone preserving closure specs?
+//! Hypothesis: Can Verus express clone preserving closure specs?
 
 use vstd::prelude::*;
 

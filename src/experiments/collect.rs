@@ -1,4 +1,5 @@
-//  Experiment: collect (group-by-key)
+// Copyright (c) 2025 Brian G. Milnes
+//! Hypothesis: Can Verus verify collect (group-by-key) with two spec families?
 //
 //  Two spec families: _rec (recursive), _deduplicating (map_values/remove_duplicates).
 //  Two exec versions of each function, one per spec family.

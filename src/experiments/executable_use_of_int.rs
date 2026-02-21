@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! Hypothesis: Can Verus allow executable use of int (Vec<int>, etc.)?
 #![allow(unused_imports)]
 use vstd::prelude::*;
 

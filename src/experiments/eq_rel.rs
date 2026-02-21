@@ -1,5 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
-//! Experiment: Trait hierarchy for equality relations
+//! Hypothesis: Can we build a trait hierarchy for equality relations?
 //!
 //! GOAL: Build a trait hierarchy that guarantees:
 //! 1. EqRel: Basic equality (reflexive, symmetric, transitive)
