@@ -101,6 +101,7 @@ pub mod experiments {
     // through swaps. Requires assume for sorted-prefix maintenance. The bits approach is
     // cleaner for production use. Led to creation of vstdplus::float broadcast axiom group.
     // pub mod f64_float_cmp_sort;
+    pub mod boxing_fns;
 }
 
 pub mod vstdplus {

@@ -6,16 +6,56 @@ pub mod SortedListPQ {
     use std::fmt::{Debug, Display, Formatter, Result};
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
     verus! {
         proof fn _sorted_list_pq_verified() {}
+
+        #[verifier::reject_recursive_types(T)]
+        pub struct SortedListPQ<T: StT + Ord> {
+            pub elements: ArraySeqStPerS<T>,
+        }
+
+        impl<T: StT + Ord> View for SortedListPQ<T> {
+            type V = Seq<T::V>;
+            open spec fn view(&self) -> Seq<T::V> { self.elements@ }
+        }
+
+        #[cfg(verus_keep_ghost)]
+        impl<T: StT + Ord> PartialEqSpecImpl for SortedListPQ<T> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+        }
+
+        impl<T: StT + Ord> Clone for SortedListPQ<T> {
+            #[verifier::external_body]
+            fn clone(&self) -> (result: Self)
+                ensures result@ == self@
+            {
+                SortedListPQ { elements: self.elements.clone() }
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::PartialEq for SortedListPQ<T> {
+            fn eq(&self, other: &Self) -> (r: bool)
+                ensures r == (self@ == other@)
+            {
+                let r = self.elements == other.elements;
+                proof { assume(r == (self@ == other@)); }
+                r
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::Eq for SortedListPQ<T> {}
     }
 
-    #[derive(PartialEq, Clone, Debug)]
-    pub struct SortedListPQ<T: StT + Ord> {
-        elements: ArraySeqStPerS<T>,
+    impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for SortedListPQ<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("SortedListPQ").field("elements", &self.elements).finish()
+        }
     }
 
     /// Trait defining the Meldable Priority Queue ADT operations (Data Type 45.1)

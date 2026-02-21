@@ -12,11 +12,6 @@ pub mod DocumentIndex {
     use crate::Chap42::TableStPer::TableStPer::*;
     use crate::Types::Types::*;
 
-    verus! {
-        /// Placeholder; DocumentIndex uses Vec, Box<dyn Fn>, chars().
-        proof fn _document_index_verified() {}
-    }
-
     pub type Word = String;
     pub type DocumentId = String;
     pub type Contents = String;
@@ -25,10 +20,32 @@ pub mod DocumentIndex {
     /// Document collection type - sequence of (id, contents) pairs
     pub type DocumentCollection = ArraySeqStPerS<Pair<DocumentId, Contents>>;
 
-    /// Document Index structure implementing Data Type 44.1
-    #[derive(PartialEq, Clone)]
-    pub struct DocumentIndex {
-        word_to_docs: TableStPer<Word, DocumentSet>,
+    verus! {
+        /// Placeholder; DocumentIndex uses Vec, Box<dyn Fn>, chars().
+        proof fn _document_index_verified() {}
+
+        /// Document Index structure implementing Data Type 44.1
+        pub struct DocumentIndex {
+            pub word_to_docs: TableStPer<Word, DocumentSet>,
+        }
+
+        impl Clone for DocumentIndex {
+            fn clone(&self) -> (result: Self)
+                ensures result == *self
+            {
+                DocumentIndex { word_to_docs: self.word_to_docs.clone() }
+            }
+        }
+
+        impl core::cmp::PartialEq for DocumentIndex {
+            fn eq(&self, other: &Self) -> (b: bool)
+                ensures b == (self.word_to_docs == other.word_to_docs)
+            {
+                self.word_to_docs == other.word_to_docs
+            }
+        }
+
+        impl core::cmp::Eq for DocumentIndex {}
     }
 
     /// Trait defining the Document Index ADT (Data Type 44.1)
@@ -253,9 +270,11 @@ pub mod DocumentIndex {
         }};
     }
 
-    /// Complex query builder for chaining operations
-    pub struct QueryBuilder<'a> {
-        index: &'a DocumentIndex,
+    verus! {
+        /// Complex query builder for chaining operations
+        pub struct QueryBuilder<'a> {
+            pub index: &'a DocumentIndex,
+        }
     }
 
     pub trait QueryBuilderTrait<'a> {

@@ -6,17 +6,56 @@ pub mod BalancedTreePQ {
     use std::fmt::{Debug, Display, Formatter, Result};
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Types::Types::*;
 
     verus! {
         /// Placeholder; PQ uses Vec, Option<&T>, Fn bounds.
         proof fn _balanced_tree_pq_verified() {}
+
+        #[verifier::reject_recursive_types(T)]
+        pub struct BalancedTreePQ<T: StT + Ord> {
+            pub elements: AVLTreeSeqStPerS<T>,
+        }
+
+        impl<T: StT + Ord> View for BalancedTreePQ<T> {
+            type V = Seq<T::V>;
+            open spec fn view(&self) -> Seq<T::V> { self.elements@ }
+        }
+
+        #[cfg(verus_keep_ghost)]
+        impl<T: StT + Ord> PartialEqSpecImpl for BalancedTreePQ<T> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+        }
+
+        impl<T: StT + Ord> Clone for BalancedTreePQ<T> {
+            fn clone(&self) -> (result: Self)
+                ensures result@ == self@
+            {
+                BalancedTreePQ { elements: self.elements.clone() }
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::PartialEq for BalancedTreePQ<T> {
+            fn eq(&self, other: &Self) -> (r: bool)
+                ensures r == (self@ == other@)
+            {
+                let r = self.elements == other.elements;
+                proof { assume(r == (self@ == other@)); }
+                r
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::Eq for BalancedTreePQ<T> {}
     }
 
-    #[derive(PartialEq, Clone, Debug)]
-    pub struct BalancedTreePQ<T: StT + Ord> {
-        elements: AVLTreeSeqStPerS<T>,
+    impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for BalancedTreePQ<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BalancedTreePQ").field("elements", &self.elements).finish()
+        }
     }
 
     /// Trait defining the Meldable Priority Queue ADT operations (Data Type 45.1)
