@@ -287,7 +287,7 @@ pub mod Chap35 {
 pub mod Chap36 {
     pub mod QuickSortStEph;
     pub mod QuickSortMtEph;
-    // pub mod QuickSortMtEphSlice;  // uses rand (Verus can't link)
+    // pub mod QuickSortMtEphSlice;  // trait impl needs verus! wrapper
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]

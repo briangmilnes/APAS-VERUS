@@ -56,7 +56,7 @@ pub mod AVLTreeSetStEph {
     pub trait AVLTreeSetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.len(), self@.finite();
         /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
@@ -106,7 +106,7 @@ pub mod AVLTreeSetStEph {
     // 9. impls
 
     impl<T: StT + Ord> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
         {
             proof { assume(self.elements.spec_well_formed()); }
             let r = self.elements.length();

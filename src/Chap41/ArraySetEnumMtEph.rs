@@ -30,47 +30,47 @@ pub mod ArraySetEnumMtEph {
 
     pub struct ArraySetEnumMtEph {
         bits: BitBox,
-        universe_size: N,
+        universe_size: usize,
     }
 
     // 5. view impls
 
     impl View for ArraySetEnumMtEph {
-        type V = Set<N>;
+        type V = Set<usize>;
         #[verifier::external_body]
-        open spec fn view(&self) -> Set<N> { Set::empty() }
+        open spec fn view(&self) -> Set<usize> { Set::empty() }
     }
 
     // 8. traits
 
     pub trait ArraySetEnumMtEphTrait {
         /// claude-4-sonet: Work Θ(u), Span Θ(1)
-        fn new(u: N) -> (result: Self)
-            ensures result@ == Set::<N>::empty();
+        fn new(u: usize) -> (result: Self)
+            ensures result@ == Set::<usize>::empty();
         /// - APAS Cost Spec 41.3: Work u, Span 1
         /// - claude-4-sonet: Work Θ(u/w) where w is word size, Span Θ(u/w)
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.len(), self@.finite();
         /// - APAS Cost Spec 41.3: Work u, Span 1
         /// - claude-4-sonet: Work Θ(|set|), Span Θ(|set|)
-        fn to_seq(&self) -> (result: ArraySeqMtEphS<N>)
+        fn to_seq(&self) -> (result: ArraySeqMtEphS<usize>)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(u), Span Θ(1)
-        fn empty(u: N) -> (result: Self)
-            ensures result@ == Set::<N>::empty();
+        fn empty(u: usize) -> (result: Self)
+            ensures result@ == Set::<usize>::empty();
         /// - APAS Cost Spec 41.3: Work u, Span 1
         /// - claude-4-sonet: Work Θ(u), Span Θ(1)
-        fn singleton(u: N, x: N) -> (result: Self)
+        fn singleton(u: usize, x: usize) -> (result: Self)
             ensures
-                (x < u ==> result@ == Set::<N>::empty().insert(x)),
-                (x >= u ==> result@ == Set::<N>::empty()),
+                (x < u ==> result@ == Set::<usize>::empty().insert(x)),
+                (x >= u ==> result@ == Set::<usize>::empty()),
                 result@.finite();
         /// claude-4-sonet: Work Θ(u + |seq|), Span Θ(1)
-        fn from_seq(u: N, seq: ArraySeqMtEphS<N>) -> (result: Self)
+        fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (result: Self)
             ensures result@.finite();
         /// - APAS Cost Spec 41.3: Work u + Σ W(f(x)), Span 1 + max S(f(x))
         /// - claude-4-sonet: Work Θ(u), Span Θ(log u), Parallelism Θ(u/log u)
-        fn filter<F: PredVal<N> + Clone>(&self, f: F) -> (result: Self)
+        fn filter<F: PredVal<usize> + Clone>(&self, f: F) -> (result: Self)
             ensures result@.finite(), result@.subset_of(self@);
         /// - APAS Cost Spec 41.3: Work u, Span 1
         /// - claude-4-sonet: Work Θ(u/w), Span Θ(u/w)
@@ -86,15 +86,15 @@ pub mod ArraySetEnumMtEph {
             ensures result@ == self@.union(other@), result@.finite();
         /// - APAS Cost Spec 41.3: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn find(&self, x: N) -> (result: B)
+        fn find(&self, x: usize) -> (result: B)
             ensures result == self@.contains(x);
         /// - APAS Cost Spec 41.3: Work u, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn delete(&mut self, x: N)
+        fn delete(&mut self, x: usize)
             ensures self@ == old(self)@.remove(x), self@.finite();
         /// - APAS Cost Spec 41.3: Work u, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn insert(&mut self, x: N)
+        fn insert(&mut self, x: usize)
             ensures self@ == old(self)@.insert(x), self@.finite();
     }
 
@@ -102,8 +102,8 @@ pub mod ArraySetEnumMtEph {
 
     impl ArraySetEnumMtEphTrait for ArraySetEnumMtEph {
         #[verifier::external_body]
-        fn new(u: N) -> (result: Self)
-            ensures result@ == Set::<N>::empty()
+        fn new(u: usize) -> (result: Self)
+            ensures result@ == Set::<usize>::empty()
         {
             ArraySetEnumMtEph {
                 bits: bitbox![0; u],
@@ -112,14 +112,14 @@ pub mod ArraySetEnumMtEph {
         }
 
         #[verifier::external_body]
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.len(), self@.finite()
         {
             self.bits.count_ones()
         }
 
         #[verifier::external_body]
-        fn to_seq(&self) -> (result: ArraySeqMtEphS<N>)
+        fn to_seq(&self) -> (result: ArraySeqMtEphS<usize>)
             ensures self@.finite()
         {
             let set_size = self.size();
@@ -133,17 +133,17 @@ pub mod ArraySetEnumMtEph {
         }
 
         #[verifier::external_body]
-        fn empty(u: N) -> (result: Self)
-            ensures result@ == Set::<N>::empty()
+        fn empty(u: usize) -> (result: Self)
+            ensures result@ == Set::<usize>::empty()
         {
             Self::new(u)
         }
 
         #[verifier::external_body]
-        fn singleton(u: N, x: N) -> (result: Self)
+        fn singleton(u: usize, x: usize) -> (result: Self)
             ensures
-                (x < u ==> result@ == Set::<N>::empty().insert(x)),
-                (x >= u ==> result@ == Set::<N>::empty()),
+                (x < u ==> result@ == Set::<usize>::empty().insert(x)),
+                (x >= u ==> result@ == Set::<usize>::empty()),
                 result@.finite()
         {
             let mut bits = bitbox![0; u];
@@ -154,7 +154,7 @@ pub mod ArraySetEnumMtEph {
         }
 
         #[verifier::external_body]
-        fn from_seq(u: N, seq: ArraySeqMtEphS<N>) -> (result: Self)
+        fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (result: Self)
             ensures result@.finite()
         {
             let mut bits = bitbox![0; u];
@@ -168,7 +168,7 @@ pub mod ArraySetEnumMtEph {
         }
 
         #[verifier::external_body]
-        fn filter<F: PredVal<N> + Clone>(&self, f: F) -> (result: Self)
+        fn filter<F: PredVal<usize> + Clone>(&self, f: F) -> (result: Self)
             ensures result@.finite(), result@.subset_of(self@)
         {
             let mut new_bits = bitbox![0; self.universe_size];
@@ -231,14 +231,14 @@ pub mod ArraySetEnumMtEph {
         }
 
         #[verifier::external_body]
-        fn find(&self, x: N) -> (result: B)
+        fn find(&self, x: usize) -> (result: B)
             ensures result == self@.contains(x)
         {
             if x < self.universe_size { self.bits[x] } else { false }
         }
 
         #[verifier::external_body]
-        fn delete(&mut self, x: N)
+        fn delete(&mut self, x: usize)
             ensures self@ == old(self)@.remove(x), self@.finite()
         {
             if x < self.universe_size {
@@ -247,7 +247,7 @@ pub mod ArraySetEnumMtEph {
         }
 
         #[verifier::external_body]
-        fn insert(&mut self, x: N)
+        fn insert(&mut self, x: usize)
             ensures self@ == old(self)@.insert(x), self@.finite()
         {
             if x < self.universe_size {

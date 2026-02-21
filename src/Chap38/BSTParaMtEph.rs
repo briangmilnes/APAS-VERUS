@@ -28,7 +28,7 @@ pub mod BSTParaMtEph {
         #[verifier::reject_recursive_types(T)]
         pub struct NodeInner<T: MtKey> {
             pub key: T,
-            pub size: N,
+            pub size: usize,
             pub left: ParamBST<T>,
             pub right: ParamBST<T>,
         }
@@ -89,7 +89,7 @@ pub mod BSTParaMtEph {
         /// - APAS: Work O(1), Span O(1)
         fn join_mid(exposed: Exposed<T>)   -> Self;
         /// - APAS: Work O(1), Span O(1)
-        fn size(&self)                     -> N;
+        fn size(&self)                     -> usize;
         /// - APAS: Work O(1), Span O(1)
         fn is_empty(&self)                 -> B;
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
@@ -309,7 +309,7 @@ pub mod BSTParaMtEph {
 
         fn join_mid(exposed: Exposed<T>) -> Self { join_mid(exposed) }
 
-        fn size(&self) -> N {
+        fn size(&self) -> usize {
             let handle = self.root.acquire_read();
             let result = handle.borrow().as_ref().map_or(0, |node| node.size);
             handle.release_read();

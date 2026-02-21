@@ -1,10 +1,8 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/
-
 ❌ AVLTreeSetMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:64: external_body - #[verifier::external_body]
         65 |         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:130: external_body - #[verifier::external_body]
-       131 |         fn size(&self) -> (result: N)
+       131 |         fn size(&self) -> (result: usize)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:140: external_body - #[verifier::external_body]
        141 |         fn to_seq(&self) -> (result: AVLTreeSeqStEphS<T>)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:150: external_body - #[verifier::external_body]
@@ -48,19 +46,19 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:53: external_body - #[verifier::external_body]
         54 |         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:121: assume() - proof { assume(self.elements.spec_well_formed()); }
-       119 |         fn size(&self) -> (result: N)
+       119 |         fn size(&self) -> (result: usize)
        120 |         {
        122 |             let r = self.elements.length();
        123 |             proof { assume(r == self@.len()); assume(self@.finite()); }
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:123: assume() - proof { assume(r == self@.len()); assume(self@.finite()); }
-       119 |         fn size(&self) -> (result: N)
+       119 |         fn size(&self) -> (result: usize)
             ...
        121 |             proof { assume(self.elements.spec_well_formed()); }
        122 |             let r = self.elements.length();
        124 |             r
        125 |         }
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:123: assume() - proof { assume(r == self@.len()); assume(self@.finite()); }
-       119 |         fn size(&self) -> (result: N)
+       119 |         fn size(&self) -> (result: usize)
             ...
        121 |             proof { assume(self.elements.spec_well_formed()); }
        122 |             let r = self.elements.length();
@@ -142,19 +140,19 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:43: external_body - #[verifier::external_body]
         44 |         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:111: assume() - proof { assume(self.elements.spec_well_formed()); }
-       109 |         fn size(&self) -> (result: N)
+       109 |         fn size(&self) -> (result: usize)
        110 |         {
        112 |             let r = self.elements.length();
        113 |             proof { assume(r == self@.len()); assume(self@.finite()); }
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:113: assume() - proof { assume(r == self@.len()); assume(self@.finite()); }
-       109 |         fn size(&self) -> (result: N)
+       109 |         fn size(&self) -> (result: usize)
             ...
        111 |             proof { assume(self.elements.spec_well_formed()); }
        112 |             let r = self.elements.length();
        114 |             r
        115 |         }
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:113: assume() - proof { assume(r == self@.len()); assume(self@.finite()); }
-       109 |         fn size(&self) -> (result: N)
+       109 |         fn size(&self) -> (result: usize)
             ...
        111 |             proof { assume(self.elements.spec_well_formed()); }
        112 |             let r = self.elements.length();
@@ -369,19 +367,19 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:41: external_body - #[verifier::external_body]
         42 |         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:109: assume() - proof { assume(self.elements.spec_well_formed()); }
-       107 |         fn size(&self) -> (result: N)
+       107 |         fn size(&self) -> (result: usize)
        108 |         {
        110 |             let r = self.elements.length();
        111 |             proof { assume(r == self@.len()); assume(self@.finite()); }
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:111: assume() - proof { assume(r == self@.len()); assume(self@.finite()); }
-       107 |         fn size(&self) -> (result: N)
+       107 |         fn size(&self) -> (result: usize)
             ...
        109 |             proof { assume(self.elements.spec_well_formed()); }
        110 |             let r = self.elements.length();
        112 |             r
        113 |         }
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:111: assume() - proof { assume(r == self@.len()); assume(self@.finite()); }
-       107 |         fn size(&self) -> (result: N)
+       107 |         fn size(&self) -> (result: usize)
             ...
        109 |             proof { assume(self.elements.spec_well_formed()); }
        110 |             let r = self.elements.length();
@@ -608,21 +606,21 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
 ❌ ArraySetEnumMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:40: external_body - #[verifier::external_body]
-        41 |         open spec fn view(&self) -> Set<N> { Set::empty() }
+        41 |         open spec fn view(&self) -> Set<usize> { Set::empty() }
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:104: external_body - #[verifier::external_body]
-       105 |         fn new(u: N) -> (result: Self)
+       105 |         fn new(u: usize) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:114: external_body - #[verifier::external_body]
-       115 |         fn size(&self) -> (result: N)
+       115 |         fn size(&self) -> (result: usize)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:121: external_body - #[verifier::external_body]
-       122 |         fn to_seq(&self) -> (result: ArraySeqMtEphS<N>)
+       122 |         fn to_seq(&self) -> (result: ArraySeqMtEphS<usize>)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:135: external_body - #[verifier::external_body]
-       136 |         fn empty(u: N) -> (result: Self)
+       136 |         fn empty(u: usize) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:142: external_body - #[verifier::external_body]
-       143 |         fn singleton(u: N, x: N) -> (result: Self)
+       143 |         fn singleton(u: usize, x: usize) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:156: external_body - #[verifier::external_body]
-       157 |         fn from_seq(u: N, seq: ArraySeqMtEphS<N>) -> (result: Self)
+       157 |         fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:170: external_body - #[verifier::external_body]
-       171 |         fn filter<F: PredVal<N> + Clone>(&self, f: F) -> (result: Self)
+       171 |         fn filter<F: PredVal<usize> + Clone>(&self, f: F) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:188: external_body - #[verifier::external_body]
        189 |         fn intersection(&self, other: &Self) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:203: external_body - #[verifier::external_body]
@@ -630,11 +628,11 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:218: external_body - #[verifier::external_body]
        219 |         fn union(&self, other: &Self) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:233: external_body - #[verifier::external_body]
-       234 |         fn find(&self, x: N) -> (result: B)
+       234 |         fn find(&self, x: usize) -> (result: B)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:240: external_body - #[verifier::external_body]
-       241 |         fn delete(&mut self, x: N)
+       241 |         fn delete(&mut self, x: usize)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:249: external_body - #[verifier::external_body]
-       250 |         fn insert(&mut self, x: N)
+       250 |         fn insert(&mut self, x: usize)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:262: external_body - #[verifier::external_body]
        263 |         fn clone(&self) -> (result: Self)
    Holes: 15 total
@@ -806,18 +804,24 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 3 total (2 clean, 1 holed)
 ❌ Example41_3.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/Example41_3.rs:1: error: not_verusified - File has no verus! block — not verusified.
-         2 | //! Example 41.3: Demonstrating set operations from Example 41.1
-         3 | 
-   Errors: 1 total (1 not verusified)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/Example41_3.rs:32: external_body - #[verifier::external_body]
+        33 |     fn example_41_1_array_set_impl()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/Example41_3.rs:85: external_body - #[verifier::external_body]
+        86 |     fn example_41_1_avl_set_impl()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/Example41_3.rs:138: external_body - #[verifier::external_body]
+       139 |     fn example_41_3_from_seq_demonstration_impl()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/Example41_3.rs:187: external_body - #[verifier::external_body]
+       188 |     fn additional_set_operations_impl()
+   Holes: 4 total
+      4 × external_body
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   1 clean (no holes)
-   6 holed (contains holes)
+   0 clean (no holes)
+   7 holed (contains holes)
    7 total
 
 Proof Functions:
@@ -825,8 +829,21 @@ Proof Functions:
    1 holed
    3 total
 
-Holes Found: 139 total
+Holes Found: 143 total
    100 × assume()
-   39 × external_body
+   43 × external_body
 
-Errors: 7 (bare impl(s), struct/enum outside verus!)
+Errors: 6 (bare impl(s), struct/enum outside verus!)
+ holes)
+   7 total
+
+Proof Functions:
+   2 clean
+   1 holed
+   3 total
+
+Holes Found: 143 total
+   100 × assume()
+   43 × external_body
+
+Errors: 6 (bare impl(s), struct/enum outside verus!)

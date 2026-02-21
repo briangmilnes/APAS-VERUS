@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap37 -d src/Chap39 -d src/Chap40
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap37
 
 ❌ AVLTreeSeq.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:217: assume() - proof { assume(1 + b.left_size + b.right_size < usize::MAX);
@@ -476,245 +476,24 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Holes: 11 total
       5 × assume()
       6 × external_body
-❌ src/Chap39/BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:24: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        22 | 
-        23 |     impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for TreapWf {
-        25 |     }
-        26 | 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:47: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        24 |         open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool { true }
-            ...
-        45 |     }
-        46 | 
-        48 |     fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, TreapWf>) {
-        49 |         RwLock::new(val, Ghost(TreapWf))
-   Errors: 2 total (1 Verus RwLock external_body, 1 dummy RwLockPredicate)
-❌ src/Chap39/BSTSetTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:39: external_body - #[verifier::external_body]
-        40 |     fn priority_for<T: Hash>(key: &T) -> u64 {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:124: external_body - #[verifier::external_body]
-       125 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTTreapMtEph<T>) -> Vec<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:138: external_body - #[verifier::external_body]
-       139 |     fn from_sorted_iter<T: StTInMtT + Ord + Hash, I: IntoIterator<Item = T>>(values: I) -> BSTSetTreapMtEph<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:179: external_body - #[verifier::external_body]
-       180 |         fn delete(&mut self, target: &T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:188: external_body - #[verifier::external_body]
-       189 |         fn union(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:197: external_body - #[verifier::external_body]
-       198 |         fn intersection(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:214: external_body - #[verifier::external_body]
-       215 |         fn difference(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:231: external_body - #[verifier::external_body]
-       232 |         fn split(&self, pivot: &T) -> (Self, B, Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:248: external_body - #[verifier::external_body]
-       249 |         #[verifier::external_body]
-       250 |         fn join_pair(left: Self, right: Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:249: external_body - #[verifier::external_body]
-       250 |         fn join_pair(left: Self, right: Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:258: external_body - #[verifier::external_body]
-       259 |         #[verifier::external_body]
-       260 |         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:259: external_body - #[verifier::external_body]
-       260 |         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:269: external_body - #[verifier::external_body]
-       270 |         fn filter<F: FnMut(&T) -> bool>(&self, mut predicate: F) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:279: external_body - #[verifier::external_body]
-       280 |         fn reduce<F: FnMut(T, T) -> T>(&self, mut op: F, base: T) -> T {
-   Holes: 14 total
-      14 × external_body
-❌ src/Chap39/BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:160: external_body - #[verifier::external_body]
-       161 |     fn update<T: StTInMtT + Ord>(node: &mut Node<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:282: external_body - #[verifier::external_body]
-       283 |     fn height_link<T: StTInMtT + Ord>(link: &Link<T>) -> N {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:50: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        44 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
-            ...
-        48 |             None => {
-        49 |                 let c = None;
-        51 |                 c
-        52 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:63: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        44 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
-            ...
-        61 |                     right,
-        62 |                 }));
-        64 |                 c
-        65 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:80: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        70 |         fn clone(&self) -> (cloned: Self)
-            ...
-        78 |                 right: clone_link(&self.right),
-        79 |             };
-        81 |             cloned
-        82 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:88: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        70 |         fn clone(&self) -> (cloned: Self)
-            ...
-        86 | 
-        87 |     impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for TreapLinkWf {
-        89 |     }
-        90 | 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:91: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        88 |         open spec fn inv(self, v: Link<T>) -> bool { true }
-            ...
-        89 |     }
-        90 | 
-        92 |     fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>) {
-        93 |         RwLock::new(val, Ghost(TreapLinkWf))
-   Holes: 2 total
-      2 × external_body
-   Errors: 5 total (3 assume in eq/clone (Verus workaround), 1 Verus RwLock external_body, 1 dummy RwLockPredicate)
-❌ src/Chap39/BSTTreapStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:26: external_body - #[verifier::external_body]
-        27 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:116: external_body - #[verifier::external_body]
-       117 |     fn size_link<T: StT + Ord>(link: &Link<T>) -> N { link.as_ref().map_or(0, |n| n.size) }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:127: assume() - assume(spec_size_link(&node.left) < usize::MAX as nat);
-       119 |     fn height_link<T: StT + Ord>(link: &Link<T>) -> N
-            ...
-       125 |             | Some(node) => {
-       126 |                 proof {
-       128 |                     assume(spec_size_link(&node.right) < usize::MAX as nat);
-       129 |                 }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:128: assume() - assume(spec_size_link(&node.right) < usize::MAX as nat);
-       119 |     fn height_link<T: StT + Ord>(link: &Link<T>) -> N
-            ...
-       126 |                 proof {
-       127 |                     assume(spec_size_link(&node.left) < usize::MAX as nat);
-       129 |                 }
-       130 |                 let lh = height_link(&node.left);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:133: assume() - proof { assume(m < usize::MAX); }
-       119 |     fn height_link<T: StT + Ord>(link: &Link<T>) -> N
-            ...
-       131 |                 let rh = height_link(&node.right);
-       132 |                 let m = if lh >= rh { lh } else { rh };
-       134 |                 1 + m
-       135 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:141: external_body - #[verifier::external_body]
-       142 |     fn update<T: StT + Ord>(node: &mut Node<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:180: external_body - #[verifier::external_body]
-       181 |     fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T, priority: u64)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:206: external_body - #[verifier::external_body]
-       207 |     fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T>
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:301: external_body - #[verifier::external_body]
-       302 |         fn in_order(&self) -> ArraySeqStPerS<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:308: external_body - #[verifier::external_body]
-       309 |         fn pre_order(&self) -> ArraySeqStPerS<T> {
-   Holes: 10 total
-      3 × assume()
-      7 × external_body
-❌ src/Chap40/BSTKeyValueStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:26: external_body - #[verifier::external_body]
-        27 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:108: assume() - proof { assume(m < usize::MAX); }
-       101 |     fn height_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> N
-            ...
-       106 |             | Some(node) => {
-       107 |                 let m = height_link(&node.left).max(height_link(&node.right));
-       109 |                 1 + m
-       110 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:144: external_body - #[verifier::external_body]
-       145 |     fn insert_link<K: StT + Ord, V: StT>(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> bool
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:173: external_body - #[verifier::external_body]
-       174 |     fn find_link<'a, K: StT + Ord, V: StT>(link: &'a Link<K, V>, key: &K) -> Option<&'a V> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:253: external_body - #[verifier::external_body]
-       254 |     fn build_treap_from_sorted<K: StT + Ord, V: StT>(
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:289: assume() - proof { assume(self.size < usize::MAX); }
-       286 |         fn insert(&mut self, key: K, value: V, priority: u64) {
-            ...
-       287 |             let inserted = insert_link(&mut self.root, key, value, priority);
-       288 |             if inserted {
-       290 |                 self.size = self.size + 1;
-       291 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:294: external_body - #[verifier::external_body]
-       295 |         fn delete(&mut self, key: &K) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:309: external_body - #[verifier::external_body]
-       310 |         fn keys(&self) -> ArraySeqStPerS<K> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:316: external_body - #[verifier::external_body]
-       317 |         fn values(&self) -> ArraySeqStPerS<V> {
-   Holes: 9 total
-      2 × assume()
-      7 × external_body
-❌ src/Chap40/BSTReducedStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:29: external_body - #[verifier::external_body]
-        30 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:80: external_body - #[verifier::external_body]
-        81 |         fn combine(a: T, b: T) -> T { a + b }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:94: external_body - #[verifier::external_body]
-        95 |         fn combine(a: N, b: N) -> N { a + b }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:169: external_body - #[verifier::external_body]
-       170 |     fn reduced_value_link<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(link: &Link<K, V, R>) -> R {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:179: external_body - #[verifier::external_body]
-       180 |     fn update_node<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(node: &mut Node<K, V, R>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:242: external_body - #[verifier::external_body]
-       243 |     fn insert_link<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:367: assume() - proof { assume(m < usize::MAX); }
-       360 |     fn height_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> N
-            ...
-       365 |             | Some(node) => {
-       366 |                 let m = height_link(&node.left).max(height_link(&node.right));
-       368 |                 1 + m
-       369 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:374: external_body - #[verifier::external_body]
-       375 |     fn build_treap_from_sorted<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:397: external_body - #[verifier::external_body]
-       398 |     fn range_reduce_link<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:448: external_body - #[verifier::external_body]
-       449 |         fn delete(&mut self, key: &K) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:462: external_body - #[verifier::external_body]
-       463 |         fn keys(&self) -> ArraySeqStPerS<K> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:469: external_body - #[verifier::external_body]
-       470 |         fn values(&self) -> ArraySeqStPerS<V> {
-   Holes: 12 total
-      1 × assume()
-      11 × external_body
-❌ src/Chap40/BSTSizeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:26: external_body - #[verifier::external_body]
-        27 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:110: assume() - proof { assume(m < usize::MAX); }
-       103 |     fn height_link<T: StT + Ord>(link: &Link<T>) -> N
-            ...
-       108 |             | Some(node) => {
-       109 |                 let m = height_link(&node.left).max(height_link(&node.right));
-       111 |                 1 + m
-       112 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:127: external_body - #[verifier::external_body]
-       128 |     fn update_size<T: StT + Ord>(node: &mut Node<T>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:176: external_body - #[verifier::external_body]
-       177 |     fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T, priority: u64)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:276: external_body - #[verifier::external_body]
-       277 |     fn build_treap_from_sorted<T: StT + Ord>(seq: &[(T, u64)]) -> Link<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:297: external_body - #[verifier::external_body]
-       298 |     fn rank_link<T: StT + Ord>(link: &Link<T>, key: &T) -> N
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:349: external_body - #[verifier::external_body]
-       350 |         fn delete(&mut self, key: &T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:365: external_body - #[verifier::external_body]
-       366 |         fn in_order(&self) -> ArraySeqStPerS<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:382: external_body - #[verifier::external_body]
-       383 |         fn split_rank(&self, rank: N) -> (BSTSizeStEph<T>, BSTSizeStEph<T>) {
-   Holes: 9 total
-      1 × assume()
-      8 × external_body
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   13 clean (no holes)
-   13 holed (contains holes)
-   26 total
+   12 clean (no holes)
+   7 holed (contains holes)
+   19 total
 
 Proof Functions:
    8 clean
    0 holed
    8 total
 
-Holes Found: 146 total
-   44 × assume()
-   100 × external_body
+Holes Found: 90 total
+   37 × assume()
+   51 × external_body
    2 × external_type_specification
 
-Errors: 26 (bare impl(s), struct/enum outside verus!)
+Errors: 19 (bare impl(s), struct/enum outside verus!)

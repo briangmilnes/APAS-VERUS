@@ -170,7 +170,7 @@ pub mod AdjTableGraphMtPer {
         /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(lg² n) — parallel computation of new neighbor sets, sequential table rebuild.
         #[verifier::external_body]
         fn delete_vertex(&self, v: &V) -> Self {
-            const SEQUENTIAL_CUTOFF: usize = 64;
+            const SEQUENTIAL_CUTOFF: usize = 1;
 
             let v_clone = v.clone();
             let new_adj = self.adj.delete(&v_clone);
