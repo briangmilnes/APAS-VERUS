@@ -23,6 +23,7 @@
 pub mod ETSPMtEph {
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
     use vstd::arithmetic::div_mod::{
         lemma_add_mod_noop,
         lemma_mod_multiples_vanish,

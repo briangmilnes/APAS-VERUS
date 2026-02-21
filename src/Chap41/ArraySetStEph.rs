@@ -29,6 +29,7 @@ pub mod ArraySetStEph {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
     use crate::vstdplus::seq_set::lemma_push_not_contains_to_set;
 
     verus! {
