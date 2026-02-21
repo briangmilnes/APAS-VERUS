@@ -11,21 +11,24 @@ pub mod BSTRBMtEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
-    #[derive(Clone, Copy, PartialEq, Eq, Debug)]
-    enum Color {
-        Red,
-        Black,
-    }
+    verus! {
+        #[derive(Clone, Copy, PartialEq, Eq)]
+        enum Color {
+            Red,
+            Black,
+        }
 
-    type Link<T> = Option<Box<Node<T>>>;
+        #[verifier::reject_recursive_types(T)]
+        #[derive(Clone)]
+        struct Node<T: StTInMtT + Ord> {
+            key: T,
+            color: Color,
+            size: N,
+            left: Option<Box<Node<T>>>,
+            right: Option<Box<Node<T>>>,
+        }
 
-    #[derive(Clone, Debug)]
-    struct Node<T: StTInMtT + Ord> {
-        key: T,
-        color: Color,
-        size: N,
-        left: Link<T>,
-        right: Link<T>,
+        type Link<T> = Option<Box<Node<T>>>;
     }
 
     fn new_node<T: StTInMtT + Ord>(key: T) -> Node<T> {
@@ -315,25 +318,27 @@ pub mod BSTRBMtEph {
     }
 
     verus! {
-        #[verifier::reject_recursive_types(T)]
-        #[verifier::external_type_specification]
-        struct ExNode<T: StTInMtT + Ord>(Node<T>);
+        /// Uninterpreted well-formedness for RB tree links (Node is outside verus!).
+        pub open spec fn link_wf<T: StTInMtT + Ord>(link: Link<T>) -> bool;
 
         pub struct RBLinkWf;
 
         impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for RBLinkWf {
-            open spec fn inv(self, v: Link<T>) -> bool { true }
+            open spec fn inv(self, v: Link<T>) -> bool {
+                link_wf(v)
+            }
         }
 
         #[verifier::external_body]
         fn new_rb_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, RBLinkWf>) {
             RwLock::new(val, Ghost(RBLinkWf))
         }
-    }
 
-    #[derive(Clone)]
-    pub struct BSTRBMtEph<T: StTInMtT + Ord> {
-        root: Arc<RwLock<Link<T>, RBLinkWf>>,
+        #[verifier::reject_recursive_types(T)]
+        #[derive(Clone)]
+        pub struct BSTRBMtEph<T: StTInMtT + Ord> {
+            root: Arc<RwLock<Link<T>, RBLinkWf>>,
+        }
     }
 
     impl<T: StTInMtT + Ord> std::fmt::Debug for BSTRBMtEph<T> {

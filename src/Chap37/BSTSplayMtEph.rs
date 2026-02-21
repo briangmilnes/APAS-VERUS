@@ -11,14 +11,17 @@ pub mod BSTSplayMtEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
-    type Link<T> = Option<Box<Node<T>>>;
+    verus! {
+        #[verifier::reject_recursive_types(T)]
+        #[derive(Clone)]
+        struct Node<T: StTInMtT + Ord> {
+            key: T,
+            size: N,
+            left: Option<Box<Node<T>>>,
+            right: Option<Box<Node<T>>>,
+        }
 
-    #[derive(Debug, Clone)]
-    struct Node<T: StTInMtT + Ord> {
-        key: T,
-        size: N,
-        left: Link<T>,
-        right: Link<T>,
+        type Link<T> = Option<Box<Node<T>>>;
     }
 
     fn new_node<T: StTInMtT + Ord>(key: T) -> Node<T> {
@@ -337,25 +340,27 @@ pub mod BSTSplayMtEph {
     }
 
     verus! {
-        #[verifier::reject_recursive_types(T)]
-        #[verifier::external_type_specification]
-        struct ExNode<T: StTInMtT + Ord>(Node<T>);
+        /// Uninterpreted well-formedness for splay tree links (Node is outside verus!).
+        pub open spec fn link_wf<T: StTInMtT + Ord>(link: Link<T>) -> bool;
 
         pub struct SplayLinkWf;
 
         impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for SplayLinkWf {
-            open spec fn inv(self, v: Link<T>) -> bool { true }
+            open spec fn inv(self, v: Link<T>) -> bool {
+                link_wf(v)
+            }
         }
 
         #[verifier::external_body]
         fn new_splay_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, SplayLinkWf>) {
             RwLock::new(val, Ghost(SplayLinkWf))
         }
-    }
 
-    #[derive(Clone)]
-    pub struct BSTSplayMtEph<T: StTInMtT + Ord> {
-        root: Arc<RwLock<Link<T>, SplayLinkWf>>,
+        #[verifier::reject_recursive_types(T)]
+        #[derive(Clone)]
+        pub struct BSTSplayMtEph<T: StTInMtT + Ord> {
+            root: Arc<RwLock<Link<T>, SplayLinkWf>>,
+        }
     }
 
     impl<T: StTInMtT + Ord> std::fmt::Debug for BSTSplayMtEph<T> {
