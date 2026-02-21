@@ -29,6 +29,7 @@ pub mod ArraySetStEph {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::seq_set::lemma_push_not_contains_to_set;
 
     verus! {
 
@@ -80,7 +81,6 @@ pub mod ArraySetStEph {
         } else {
             let head = s[0];
             let tail = s.subrange(1, s.len() as int);
-            // Recurse on tail
             assert(tail.no_duplicates()) by {
                 assert forall|i: int, j: int| 0 <= i < j < tail.len()
                     implies tail[i] != tail[j] by {
@@ -88,8 +88,25 @@ pub mod ArraySetStEph {
                 }
             }
             lemma_filter_remove::<V>(tail, v);
-            // The filter distributes over cons
-            assume(s.filter(|e: V| e != v).to_set() =~= s.to_set().remove(v));
+            let pred = |e: V| e != v;
+            assert(s =~= seq![head] + tail);
+            Seq::filter_distributes_over_add(seq![head], tail, pred);
+            assert(s.filter(pred) =~= seq![head].filter(pred) + tail.filter(pred));
+            if head == v {
+                assert(seq![head].filter(pred) =~= Seq::empty());
+                assert(s.filter(pred) =~= tail.filter(pred));
+                assert(s.to_set().remove(v) =~= tail.to_set());
+            } else {
+                assert(seq![head].filter(pred) =~= seq![head]);
+                assert(s.filter(pred) =~= seq![head] + tail.filter(pred));
+                assert(!tail.contains(head));
+                assert(!tail.filter(pred).contains(head));
+                vstd::seq_lib::seq_to_set_distributes_over_add(seq![head], tail.filter(pred));
+                lemma_push_not_contains_to_set(tail.filter(pred), head);
+                assert((seq![head] + tail.filter(pred)).to_set() =~= (tail.filter(pred) + seq![head]).to_set());
+                assert(s.filter(pred).to_set() =~= tail.filter(pred).to_set().insert(head));
+                assert(s.to_set().remove(v) =~= tail.to_set().remove(v).insert(head));
+            }
         }
     }
 

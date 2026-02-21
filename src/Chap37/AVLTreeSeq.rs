@@ -176,25 +176,35 @@ pub mod AVLTreeSeq {
         fn new_root() -> (result: Self)
             ensures result.spec_seq() =~= Seq::<T::V>::empty(), result.spec_well_formed();
 
-        fn update(&mut self, index: N, item: T);
+        fn update(&mut self, index: N, item: T)
+            requires
+                old(self).spec_well_formed(),
+                (index as int) < old(self).spec_seq().len();
 
         fn from_vec(values: Vec<T>) -> (result: AVLTreeS<T>);
 
-        fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>);
+        fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>)
+            requires self.spec_well_formed();
 
         fn iter<'a>(&'a self) -> (result: AVLTreeSeqIter<'a, T>);
 
-        fn push_back(&mut self, value: T);
+        fn push_back(&mut self, value: T)
+            requires old(self).spec_well_formed();
 
-        fn contains_value(&self, target: &T) -> (result: B);
+        fn contains_value(&self, target: &T) -> (result: B)
+            requires self.spec_well_formed();
 
-        fn insert_value(&mut self, value: T);
+        fn insert_value(&mut self, value: T)
+            requires old(self).spec_well_formed();
 
-        fn delete_value(&mut self, target: &T) -> (result: bool);
+        fn delete_value(&mut self, target: &T) -> (result: bool)
+            requires old(self).spec_well_formed();
 
-        fn is_tree_empty(&self) -> (result: bool);
+        fn is_tree_empty(&self) -> (result: bool)
+            requires self.spec_well_formed();
 
-        fn values_in_order(&self) -> (result: Vec<T>);
+        fn values_in_order(&self) -> (result: Vec<T>)
+            requires self.spec_well_formed();
     }
 
     // 9. impls
@@ -427,7 +437,7 @@ pub mod AVLTreeSeq {
         }
 
         fn subseq_copy(&self, start: N, length: N) -> (result: Self) {
-            proof { assume(self.spec_well_formed()); }
+            assert(self.spec_well_formed());
             let n = self.length();
             let s = if start < n { start } else { n };
             let sum = start.wrapping_add(length);
@@ -456,10 +466,8 @@ pub mod AVLTreeSeq {
         }
 
         fn update(&mut self, index: N, item: T) {
-            proof {
-                assume(self.spec_well_formed());
-                assume((index as int) < self.spec_seq().len());
-            }
+            assert(self.spec_well_formed());
+            assert((index as int) < self.spec_seq().len());
             let _ = self.set(index, item);
         }
 
@@ -483,7 +491,7 @@ pub mod AVLTreeSeq {
         }
 
         fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>) {
-            proof { assume(self.spec_well_formed()); }
+            assert(self.spec_well_formed());
             let vals = self.values_in_order();
             ArraySeqStEphS::from_vec(vals)
         }
@@ -499,14 +507,14 @@ pub mod AVLTreeSeq {
         }
 
         fn push_back(&mut self, value: T) {
-            proof { assume(self.spec_well_formed()); }
+            assert(self.spec_well_formed());
             let len = self.length();
             let node = insert_at_link(self.root.take(), len, value, &mut self.next_key);
             self.root = node;
         }
 
         fn contains_value(&self, target: &T) -> (result: B) {
-            proof { assume(self.spec_well_formed()); }
+            assert(self.spec_well_formed());
             let n = self.length();
             let mut i: usize = 0;
             while i < n
@@ -525,12 +533,12 @@ pub mod AVLTreeSeq {
         }
 
         fn insert_value(&mut self, value: T) {
-            proof { assume(self.spec_well_formed()); }
+            assert(self.spec_well_formed());
             self.push_back(value);
         }
 
         fn delete_value(&mut self, target: &T) -> (result: bool) {
-            proof { assume(self.spec_well_formed()); }
+            assert(self.spec_well_formed());
             let len = self.length();
             let mut found_index: Option<N> = None;
             let mut i: usize = 0;
@@ -539,16 +547,18 @@ pub mod AVLTreeSeq {
                     self.spec_well_formed(),
                     len as int == self.spec_seq().len(),
                     i <= len,
+                    forall|k: N| found_index == Some(k) ==> (k as int) < len as int,
                 decreases len - i,
             {
                 if *self.nth(i) == *target {
                     found_index = Some(i);
+                    assert((i as int) < len as int);
                     break;
                 }
                 i += 1;
             }
             if let Some(idx) = found_index {
-                proof { assume(idx < len); }
+                assert(idx < len);
                 let mut out_vec: Vec<T> = Vec::new();
                 let mut j: usize = 0;
                 while j < idx
@@ -580,12 +590,12 @@ pub mod AVLTreeSeq {
         }
 
         fn is_tree_empty(&self) -> (result: bool) {
-            proof { assume(self.spec_well_formed()); }
+            assert(self.spec_well_formed());
             self.length() == 0
         }
 
         fn values_in_order(&self) -> (result: Vec<T>) {
-            proof { assume(self.spec_well_formed()); }
+            assert(self.spec_well_formed());
             let mut out: Vec<T> = Vec::new();
             push_inorder(&self.root, &mut out);
             out

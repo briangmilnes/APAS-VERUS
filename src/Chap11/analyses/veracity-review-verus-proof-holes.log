@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap11/
+
 ❌ FibonacciMtEph2Threads.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEph2Threads.rs:155: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
        100 | pub fn fib_2threads(n: u64) -> (fibonacci: u64)
@@ -63,13 +65,6 @@ Modules:
    5 total
 
 Proof Functions:
-   3 clean
-   0 holed
-   3 total
-
-Holes Found: 6 total
-   6 × assume(false)
-oof Functions:
    3 clean
    0 holed
    3 total

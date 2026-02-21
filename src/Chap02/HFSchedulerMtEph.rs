@@ -14,8 +14,7 @@ pub mod HFSchedulerMtEph {
     use std::sync::{Mutex, Condvar, LazyLock, RwLock};
 
     /// - We track the number of available tasks and have a condition variable to signal when task finishes.
-    /// - This is outside of the verus! macro, and thus outside of proof, as we need a Condvar to signal
-    /// that at task has finished, and it Rust it must be protected by a Mutex.
+    /// - Outside verus! because Condvar/Mutex and LazyLock closure are not Verus-friendly.
     struct PoolState {
         available_tasks: Mutex<usize>,
         task_freed: Condvar,
@@ -30,7 +29,7 @@ pub mod HFSchedulerMtEph {
     /// - The configured parallelism level. None means use the number of CPUs minus one, minimum one.
     static PARALLELISM: RwLock<Option<usize>> = RwLock::new(None);
 
-    static POOL: LazyLock<PoolState> = LazyLock::new(|| {
+    fn init_pool() -> PoolState {
         let n = PARALLELISM.read().unwrap();
         let threads = n.unwrap_or_else(|| {
             let cpus = std::thread::available_parallelism()
@@ -42,7 +41,9 @@ pub mod HFSchedulerMtEph {
             available_tasks: Mutex::new(threads),
             task_freed: Condvar::new(),
         }
-    });
+    }
+
+    static POOL: LazyLock<PoolState> = LazyLock::new(init_pool);
 
     fn try_acquire() -> bool {
         let mut available = POOL.available_tasks.lock().unwrap();
@@ -68,9 +69,9 @@ pub mod HFSchedulerMtEph {
         POOL.task_freed.notify_one();
     }
 
-verus! {
+    verus! {
 
-    #[verifier::external_type_specification]
+    #[verifier::external_type_specification] // accept hole
     #[verifier::external_body] // accept hole
     #[verifier::reject_recursive_types(T)]
     pub struct ExTaskState<T>(TaskState<T>);
@@ -138,7 +139,7 @@ verus! {
         let b = match handle.join() {
             Ok(val) => val,
             Err(_) => {
-                accept(false);
+                proof { accept(false); }
                 diverge()
             }
         };
@@ -192,5 +193,5 @@ verus! {
         }
     }
 
-} // verus!
-} 
+    } // verus!
+}

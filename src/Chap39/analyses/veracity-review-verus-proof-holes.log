@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap39/
+
 ❌ BSTParaTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:24: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         22 | 
@@ -143,11 +145,6 @@ Proof Functions:
    0 total
 
 Holes Found: 26 total
-   3 × assume()
-   23 × external_body
-
-Errors: 7 (bare impl(s), struct/enum outside verus!)
-: 26 total
    3 × assume()
    23 × external_body
 
