@@ -10,6 +10,8 @@ pub mod BinaryHeapPQ {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{lemma_seq_map_cloned_view_eq, obeys_feq_clone};
 
     verus! {
         proof fn _binary_heap_pq_verified() {}
@@ -31,11 +33,21 @@ pub mod BinaryHeapPQ {
         }
 
         impl<T: StT + Ord> Clone for BinaryHeapPQ<T> {
-            #[verifier::external_body]
             fn clone(&self) -> (result: Self)
                 ensures result@ == self@
             {
-                BinaryHeapPQ { elements: self.elements.clone() }
+                let result = BinaryHeapPQ { elements: self.elements.clone() };
+                proof {
+                    // obeys_feq_clone::<T>() cannot be proved for generic T; we assume it.
+                    // For concrete T (i32, u64, etc.) it holds; for custom T, caller must ensure
+                    // Clone produces equal values (standard Rust semantics).
+                    assume(obeys_feq_clone::<T>());
+                    lemma_seq_map_cloned_view_eq(
+                        self.elements.seq@,
+                        result.elements.seq@,
+                    );
+                }
+                result
             }
         }
 

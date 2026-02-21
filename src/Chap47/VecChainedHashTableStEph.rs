@@ -20,6 +20,9 @@ pub mod VecChainedHashTableStEph {
 
     verus! {
         proof fn _vec_chained_hash_table_verified() {}
+
+        /// Vec Chained Hash Table implementation.
+        pub struct VecChainedHashTableStEph;
     }
 
     // 9. impls (EntryTrait for Vec — outside verus!, matching LinkedList pattern)
@@ -63,11 +66,6 @@ pub mod VecChainedHashTableStEph {
             }
         }
     }
-
-    // 4. type definitions
-
-    /// Vec Chained Hash Table implementation.
-    pub struct VecChainedHashTableStEph;
 
     // 9. impls (outside verus! — these reference HashTable which contains dyn Fn types)
 

@@ -21,6 +21,9 @@ pub mod LinkedListChainedHashTableStEph {
 
     verus! {
         proof fn _linked_list_chained_hash_table_verified() {}
+
+        /// LinkedList Chained Hash Table implementation.
+        pub struct LinkedListChainedHashTableStEph;
     }
 
     impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for LinkedList<(Key, Value)> {
@@ -71,9 +74,6 @@ pub mod LinkedListChainedHashTableStEph {
             }
         }
     }
-
-    /// LinkedList Chained Hash Table implementation.
-    pub struct LinkedListChainedHashTableStEph;
 
     // 9. impls (outside verus! — these reference HashTable which contains dyn Fn types)
 

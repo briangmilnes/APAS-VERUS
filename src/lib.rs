@@ -670,18 +670,18 @@ pub mod Chap63 {
 pub mod Chap64 {
     pub mod SpanTreeStEph;
     pub mod SpanTreeMtEph;
-    // pub mod TSPApproxStEph;  // uses ordered_float (removed)
+    pub mod TSPApproxStEph;
 }
 
 #[cfg(feature = "all_chapters")]
 pub mod Chap65 {
     pub mod UnionFindStEph;
-    // pub mod KruskalStEph;  // uses ordered_float (removed)
-    // pub mod PrimStEph;  // uses ordered_float (removed)
+    pub mod KruskalStEph;
+    pub mod PrimStEph;
 }
 
 #[cfg(feature = "all_chapters")]
 pub mod Chap66 {
-    // pub mod BoruvkaStEph;  // uses rand + ordered_float (removed)
-    // pub mod BoruvkaMtEph;  // uses rand + ordered_float (removed)
+    pub mod BoruvkaStEph;
+    pub mod BoruvkaMtEph;
 }
