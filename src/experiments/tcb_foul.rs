@@ -52,7 +52,7 @@ pub fn tcb_foul_lying_spec() {
 /// Claims to increment, but actually decrements
 #[verifier::external_body]
 pub fn lying_increment(x: &mut u64)
-    requires *x < u64::MAX
+    requires *old(x) < u64::MAX
     ensures *x == *old(x) + 1  // LIE! Actually decrements
 {
     *x = x.wrapping_sub(1);  // Decrement, not increment

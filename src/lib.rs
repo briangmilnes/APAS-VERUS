@@ -108,7 +108,7 @@ pub mod experiments {
     // pub mod executable_use_of_int;
     // pub mod external_body_accept_hole;
     // pub mod f64_bits_sort;
-    // pub mod f64_float_cmp_sort;
+    pub mod f64_float_cmp_sort;
     // pub mod f64_sort;  // FAILS: assertion failed (f64_le_spec in loop invariant)
     // pub mod ForFor;  // FAILS: precondition not satisfied, invariant not satisfied
     // pub mod ForLoops;
@@ -670,14 +670,14 @@ pub mod Chap63 {
 pub mod Chap64 {
     pub mod SpanTreeStEph;
     pub mod SpanTreeMtEph;
-    // pub mod TSPApproxStEph;  // uses ordered_float (removed)
+    pub mod TSPApproxStEph;
 }
 
 #[cfg(feature = "all_chapters")]
 pub mod Chap65 {
     pub mod UnionFindStEph;
-    // pub mod KruskalStEph;  // uses ordered_float (removed)
-    // pub mod PrimStEph;  // uses ordered_float (removed)
+    pub mod KruskalStEph;
+    pub mod PrimStEph;
 }
 
 #[cfg(feature = "all_chapters")]

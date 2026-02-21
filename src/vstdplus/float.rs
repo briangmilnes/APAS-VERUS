@@ -386,4 +386,35 @@ pub mod float {
     }
 
     impl Eq for F64Dist {}
+
+    impl PartialOrd for F64Dist {
+        fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
+            self.val.partial_cmp(&other.val)
+        }
+    }
+
+    impl Ord for F64Dist {
+        fn cmp(&self, other: &Self) -> core::cmp::Ordering {
+            self.val.partial_cmp(&other.val).unwrap_or(core::cmp::Ordering::Equal)
+        }
+    }
+
+    impl std::hash::Hash for F64Dist {
+        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+            self.val.to_bits().hash(state);
+        }
+    }
+
+    impl std::ops::Add for F64Dist {
+        type Output = F64Dist;
+        fn add(self, other: F64Dist) -> F64Dist {
+            F64Dist { val: self.val + other.val }
+        }
+    }
+
+    impl std::ops::AddAssign for F64Dist {
+        fn add_assign(&mut self, other: F64Dist) {
+            self.val += other.val;
+        }
+    }
 } // mod

@@ -6,9 +6,8 @@
 
 pub mod AdjTableGraphMtPer {
 
-    use std::thread;
-
     use vstd::prelude::*;
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::*;
@@ -196,7 +195,7 @@ pub mod AdjTableGraphMtPer {
             let seq_clone = seq.clone();
             let v_clone_left = v_clone.clone();
 
-            let left_handle = thread::spawn(move || {
+            let f1 = move || -> Vec<(V, AVLTreeSetMtPer<V>)> {
                 let mut updates = Vec::with_capacity(mid);
                 for i in 0..mid {
                     let u = seq_clone.nth(i);
@@ -205,19 +204,22 @@ pub mod AdjTableGraphMtPer {
                     }
                 }
                 updates
-            });
+            };
 
-            let mut right_updates = Vec::with_capacity(len - mid);
-            for i in mid..len {
-                let u = seq.nth(i);
-                if let Some(neighbors) = new_adj_right.find(u) {
-                    right_updates.push((u.clone(), neighbors.delete(&v_clone)));
+            let f2 = move || -> Vec<(V, AVLTreeSetMtPer<V>)> {
+                let mut right_updates = Vec::with_capacity(len - mid);
+                for i in mid..len {
+                    let u = seq.nth(i);
+                    if let Some(neighbors) = new_adj_right.find(u) {
+                        right_updates.push((u.clone(), neighbors.delete(&v_clone)));
+                    }
                 }
-            }
+                right_updates
+            };
 
-            let left_updates = left_handle.join().unwrap();
+            let (left_updates, right_updates) = join(f1, f2);
             let mut result_adj = new_adj;
-            for (u, new_neighbors) in left_updates.into_iter().chain(right_updates.into_iter()) {
+            for (u, new_neighbors) in left_updates.into_iter().chain(right_updates) {
                 result_adj = result_adj.insert(u, new_neighbors);
             }
             AdjTableGraphMtPer { adj: result_adj }

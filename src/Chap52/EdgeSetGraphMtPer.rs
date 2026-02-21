@@ -8,9 +8,8 @@
 
 pub mod EdgeSetGraphMtPer {
 
-    use std::thread;
-
     use vstd::prelude::*;
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerTrait;
     use crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::*;
     use crate::Types::Types::*;
@@ -117,21 +116,25 @@ pub mod EdgeSetGraphMtPer {
                 return neighbors;
             }
             let mid = len / 2;
-            let seq_clone = seq.clone();
-            let left_handle = thread::spawn(move || {
+            let seq_left = seq.clone();
+            let seq_right = seq.clone();
+            let f1 = move || -> AVLTreeSetMtPer<V> {
                 let mut neighbors = AVLTreeSetMtPer::empty();
                 for i in 0..mid {
-                    let Pair(_, v) = seq_clone.nth(i);
+                    let Pair(_, v) = seq_left.nth(i);
                     neighbors = neighbors.insert(v.clone());
                 }
                 neighbors
-            });
-            let mut right_neighbors = AVLTreeSetMtPer::empty();
-            for i in mid..len {
-                let Pair(_, v) = seq.nth(i);
-                right_neighbors = right_neighbors.insert(v.clone());
-            }
-            let left_neighbors = left_handle.join().unwrap();
+            };
+            let f2 = move || -> AVLTreeSetMtPer<V> {
+                let mut neighbors = AVLTreeSetMtPer::empty();
+                for i in mid..len {
+                    let Pair(_, v) = seq_right.nth(i);
+                    neighbors = neighbors.insert(v.clone());
+                }
+                neighbors
+            };
+            let (left_neighbors, right_neighbors) = join(f1, f2);
             left_neighbors.union(&right_neighbors)
         }
 

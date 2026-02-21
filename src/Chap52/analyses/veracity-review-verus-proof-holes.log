@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap52
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap52/
 
 ✓ AdjMatrixGraphMtEph.rs
    3 clean proof functions
@@ -17,7 +17,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ AdjSeqGraphStPer.rs
    2 clean proof functions
 ❌ AdjTableGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:171: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:171: external_body - #[verifier::external_body]
        172 |         fn delete_vertex(&self, v: &V) -> Self {
    Holes: 1 total
       1 × external_body
@@ -25,7 +25,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    1 clean proof function
 ✓ AdjTableGraphStPer.rs
 ❌ EdgeSetGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphMtPer.rs:105: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:105: external_body - #[verifier::external_body]
        106 |         fn out_neighbors(&self, u: &V) -> AVLTreeSetMtPer<V> {
    Holes: 1 total
       1 × external_body

@@ -16,7 +16,9 @@ pub mod possession {
         impl STrait for S {
             fn new_exorcised (b: i32) -> (s: Self)
                 ensures s.a == 0, s.b == b,
-            { S { b: 0i32, } }
+            {
+                S { a: 0nat, b: b, }
+            }
 
             fn new_possessed(b: i32) -> (s: Self)
                ensures s.a == 0, s.b == b,

@@ -10,8 +10,8 @@ pub mod supertrait {
     }
 
     pub trait Super: Base {
-        fn foo(&self) -> (r: u64)
-            ensures r > 10;  // Different ensures
+        fn foo_strict(&self) -> (r: u64)
+            ensures r > 10;
     }
 
     impl Base for Concrete {
@@ -21,7 +21,7 @@ pub mod supertrait {
     }
 
     impl Super for Concrete {
-        fn foo(&self) -> (r: u64)
+        fn foo_strict(&self) -> (r: u64)
             ensures r > 10,
         { 15 }
     }
