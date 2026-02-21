@@ -61,7 +61,7 @@ pub mod TableStEph {
     /// Trait defining the Table ADT operations from Chapter 42
     pub trait TableStEphTrait<K: StT + Ord, V: StT>: Sized + View<V = Map<K::V, V::V>> {
         /// APAS: Work Θ(1), Span Θ(1)
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.len();
         /// APAS: Work Θ(1), Span Θ(1)
         fn empty() -> (result: Self)
@@ -118,7 +118,7 @@ pub mod TableStEph {
 
     impl<K: StT + Ord, V: StT> TableStEphTrait<K, V> for TableStEph<K, V> {
         #[verifier::external_body]
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.len()
         {
             self.entries.length()

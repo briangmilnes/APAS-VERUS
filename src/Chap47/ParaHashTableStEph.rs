@@ -24,10 +24,10 @@ pub mod ParaHashTableStEph {
     /// Hash function generator: takes table size, returns hash function for that size.
     /// This allows the hash function to adapt to different table sizes (e.g., hash(key) mod size).
     /// Uses Rc for clonability during resize operations.
-    pub type HashFunGen<K> = Rc<dyn Fn(N) -> Box<dyn Fn(&K) -> N>>;
+    pub type HashFunGen<K> = Rc<dyn Fn(usize) -> Box<dyn Fn(&K) -> usize>>;
 
     /// Hash function: takes a key, returns hash code.
-    pub type HashFun<K> = Box<dyn Fn(&K) -> N>;
+    pub type HashFun<K> = Box<dyn Fn(&K) -> usize>;
 
     verus! {
 
@@ -36,7 +36,7 @@ pub mod ParaHashTableStEph {
     #[derive(Clone, Copy, PartialEq)]
     pub struct LoadAndSize {
         pub load: f64,
-        pub size: N,
+        pub size: usize,
     }
 
     // 8. traits
@@ -67,9 +67,9 @@ pub mod ParaHashTableStEph {
         pub table: Vec<Entry>,
         pub hash_fn_gen: HashFunGen<Key>,
         pub hash_fn: HashFun<Key>,
-        pub initial_size: N,
-        pub current_size: N,
-        pub num_elements: N,
+        pub initial_size: usize,
+        pub current_size: usize,
+        pub num_elements: usize,
         pub metrics: Metrics,
         pub _phantom: PhantomData<(Key, Value)>,
     }
@@ -82,7 +82,7 @@ pub mod ParaHashTableStEph {
         /// Takes a hash function generator that produces hash functions for different table sizes.
         /// - APAS: Work O(m), Span O(m) where m is initial size.
         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
-        fn createTable(hash_fn_gen: HashFunGen<Key>, initial_size: N)           -> HashTable<Key, Value, Entry, Metrics> {
+        fn createTable(hash_fn_gen: HashFunGen<Key>, initial_size: usize)           -> HashTable<Key, Value, Entry, Metrics> {
             let table = (0..initial_size).map(|_| Entry::new()).collect();
             let hash_fn = hash_fn_gen(initial_size);
             HashTable {
@@ -138,7 +138,7 @@ pub mod ParaHashTableStEph {
         /// - APAS: Work O(n + m + m'), Span O(n + m + m') where n is number of elements,
         ///   m is old size, m' is new size.
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
-        fn resize(table: &HashTable<Key, Value, Entry, Metrics>, new_size: N)   -> HashTable<Key, Value, Entry, Metrics>;
+        fn resize(table: &HashTable<Key, Value, Entry, Metrics>, new_size: usize)   -> HashTable<Key, Value, Entry, Metrics>;
     }
 
     // 13. derive impls outside verus!

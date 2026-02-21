@@ -102,7 +102,7 @@ pub mod LinkedListChainedHashTableStEph {
         /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' lists, reinserts.
         fn resize(
             table: &HashTable<Key, Value, LinkedList<(Key, Value)>, Metrics>,
-            new_size: N,
+            new_size: usize,
         ) -> HashTable<Key, Value, LinkedList<(Key, Value)>, Metrics> {
             let mut pairs = Vec::new();
             for chain in &table.table {
@@ -137,7 +137,7 @@ pub mod LinkedListChainedHashTableStEph {
     {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to stored hash function.
-        fn hash_index(table: &HashTable<Key, Value, LinkedList<(Key, Value)>, Metrics>, key: &Key) -> N {
+        fn hash_index(table: &HashTable<Key, Value, LinkedList<(Key, Value)>, Metrics>, key: &Key) -> usize {
             (table.hash_fn)(key) % table.current_size
         }
     }

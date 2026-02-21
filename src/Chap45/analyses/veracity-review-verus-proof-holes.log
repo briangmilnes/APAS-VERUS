@@ -1,26 +1,28 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap45
+$ ~/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap45/
 
 ❌ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:18: error: struct_outside_verus - struct BalancedTreePQ — should be inside verus!
-        18 |     pub struct BalancedTreePQ<T: StT + Ord> {
-        19 |         elements: AVLTreeSeqStPerS<T>,
-        20 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:18: error: clone_derived_outside - struct BalancedTreePQ — Clone should be implemented inside verus!, not derived outside
-        18 |     pub struct BalancedTreePQ<T: StT + Ord> {
-        19 |         elements: AVLTreeSeqStPerS<T>,
-        20 |     }
-   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:47: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        43 |             fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        45 |             {
+        46 |                 let r = self.elements == other.elements;
+        48 |                 r
+        49 |             }
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:17: error: struct_outside_verus - struct BinaryHeapPQ — should be inside verus!
-        17 |     pub struct BinaryHeapPQ<T: StT + Ord> {
-        18 |         elements: ArraySeqStPerS<T>,
-        19 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:17: error: clone_derived_outside - struct BinaryHeapPQ — Clone should be implemented inside verus!, not derived outside
-        17 |     pub struct BinaryHeapPQ<T: StT + Ord> {
-        18 |         elements: ArraySeqStPerS<T>,
-        19 |     }
-   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:34: external_body - #[verifier::external_body]
+        35 |             fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BinaryHeapPQ.rs:47: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        43 |             fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        45 |             {
+        46 |                 let r = self.elements == other.elements;
+        48 |                 r
+        49 |             }
+   Holes: 1 total
+      1 × external_body
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ✓ Example45_2.rs
    1 clean proof function
@@ -55,26 +57,32 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
    Errors: 4 total (2 struct/enum outside verus!, 2 Clone derived outside)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:17: error: struct_outside_verus - struct SortedListPQ — should be inside verus!
-        17 |     pub struct SortedListPQ<T: StT + Ord> {
-        18 |         elements: ArraySeqStPerS<T>,
-        19 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:17: error: clone_derived_outside - struct SortedListPQ — Clone should be implemented inside verus!, not derived outside
-        17 |     pub struct SortedListPQ<T: StT + Ord> {
-        18 |         elements: ArraySeqStPerS<T>,
-        19 |     }
-   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:34: external_body - #[verifier::external_body]
+        35 |             fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/SortedListPQ.rs:47: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        43 |             fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        45 |             {
+        46 |                 let r = self.elements == other.elements;
+        48 |                 r
+        49 |             }
+   Holes: 1 total
+      1 × external_body
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/UnsortedListPQ.rs:17: error: struct_outside_verus - struct UnsortedListPQ — should be inside verus!
-        17 |     pub struct UnsortedListPQ<T: StT + Ord> {
-        18 |         elements: ArraySeqStPerS<T>,
-        19 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/UnsortedListPQ.rs:17: error: clone_derived_outside - struct UnsortedListPQ — Clone should be implemented inside verus!, not derived outside
-        17 |     pub struct UnsortedListPQ<T: StT + Ord> {
-        18 |         elements: ArraySeqStPerS<T>,
-        19 |     }
-   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/UnsortedListPQ.rs:34: external_body - #[verifier::external_body]
+        35 |             fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap45/UnsortedListPQ.rs:47: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        43 |             fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        45 |             {
+        46 |                 let r = self.elements == other.elements;
+        48 |                 r
+        49 |             }
+   Holes: 1 total
+      1 × external_body
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 
 ═══════════════════════════════════════════════════════════════
@@ -82,8 +90,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   7 clean (no holes)
-   0 holed (contains holes)
+   4 clean (no holes)
+   3 holed (contains holes)
    7 total
 
 Proof Functions:
@@ -91,8 +99,20 @@ Proof Functions:
    0 holed
    7 total
 
-Holes Found: 0 total
+Holes Found: 3 total
+   3 × external_body
 
-Errors: 14 (bare impl(s), struct/enum outside verus!)
+Errors: 10 (bare impl(s), struct/enum outside verus!)
+no holes)
+   3 holed (contains holes)
+   7 total
 
-🎉 No proof holes found! All proofs are complete.
+Proof Functions:
+   7 clean
+   0 holed
+   7 total
+
+Holes Found: 3 total
+   3 × external_body
+
+Errors: 10 (bare impl(s), struct/enum outside verus!)

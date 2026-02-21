@@ -46,7 +46,7 @@ pub mod OrderedTableStPer {
 
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1) with persistent semantics.
     pub trait OrderedTableStPerTrait<K: StT + Ord, V: StT>: Sized + View<V = Map<K::V, V::V>> {
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.dom().len(), self@.dom().finite();
         fn empty() -> (result: Self)
             ensures result@ == Map::<K::V, V::V>::empty();
@@ -92,11 +92,11 @@ pub mod OrderedTableStPer {
             ensures result@.dom().finite();
         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
             ensures result@.dom().finite();
-        fn rank_key(&self, k: &K) -> (result: N)
+        fn rank_key(&self, k: &K) -> (result: usize)
             ensures self@.dom().finite();
-        fn select_key(&self, i: N) -> (result: Option<K>)
+        fn select_key(&self, i: usize) -> (result: Option<K>)
             ensures self@.dom().finite();
-        fn split_rank_key(&self, i: N) -> (result: (Self, Self))
+        fn split_rank_key(&self, i: usize) -> (result: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite();
     }
@@ -105,7 +105,7 @@ pub mod OrderedTableStPer {
 
     impl<K: StT + Ord, V: StT> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
         #[verifier::external_body]
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.dom().len(), self@.dom().finite()
         {
             self.base_table.size()
@@ -360,7 +360,7 @@ pub mod OrderedTableStPer {
         }
 
         #[verifier::external_body]
-        fn rank_key(&self, k: &K) -> (result: N)
+        fn rank_key(&self, k: &K) -> (result: usize)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
@@ -379,7 +379,7 @@ pub mod OrderedTableStPer {
         }
 
         #[verifier::external_body]
-        fn select_key(&self, i: N) -> (result: Option<K>)
+        fn select_key(&self, i: usize) -> (result: Option<K>)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
@@ -391,7 +391,7 @@ pub mod OrderedTableStPer {
         }
 
         #[verifier::external_body]
-        fn split_rank_key(&self, i: N) -> (result: (Self, Self))
+        fn split_rank_key(&self, i: usize) -> (result: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite()
         {

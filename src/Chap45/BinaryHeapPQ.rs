@@ -6,16 +6,56 @@ pub mod BinaryHeapPQ {
     use std::fmt::{Debug, Display, Formatter, Result};
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
     verus! {
         proof fn _binary_heap_pq_verified() {}
+
+        #[verifier::reject_recursive_types(T)]
+        pub struct BinaryHeapPQ<T: StT + Ord> {
+            pub elements: ArraySeqStPerS<T>,
+        }
+
+        impl<T: StT + Ord> View for BinaryHeapPQ<T> {
+            type V = Seq<T::V>;
+            open spec fn view(&self) -> Seq<T::V> { self.elements@ }
+        }
+
+        #[cfg(verus_keep_ghost)]
+        impl<T: StT + Ord> PartialEqSpecImpl for BinaryHeapPQ<T> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+        }
+
+        impl<T: StT + Ord> Clone for BinaryHeapPQ<T> {
+            #[verifier::external_body]
+            fn clone(&self) -> (result: Self)
+                ensures result@ == self@
+            {
+                BinaryHeapPQ { elements: self.elements.clone() }
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::PartialEq for BinaryHeapPQ<T> {
+            fn eq(&self, other: &Self) -> (r: bool)
+                ensures r == (self@ == other@)
+            {
+                let r = self.elements == other.elements;
+                proof { assume(r == (self@ == other@)); }
+                r
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::Eq for BinaryHeapPQ<T> {}
     }
 
-    #[derive(PartialEq, Clone, Debug)]
-    pub struct BinaryHeapPQ<T: StT + Ord> {
-        elements: ArraySeqStPerS<T>,
+    impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for BinaryHeapPQ<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BinaryHeapPQ").field("elements", &self.elements).finish()
+        }
     }
 
     /// Trait defining the Meldable Priority Queue ADT operations (Data Type 45.1)
@@ -48,24 +88,24 @@ pub mod BinaryHeapPQ {
         /// Creates heap from sequence using bottom-up heapify
         fn from_seq(seq: &ArraySeqStPerS<T>) -> Self;
 
-        fn size(&self)                       -> N;
+        fn size(&self)                       -> usize;
         fn is_empty(&self)                   -> bool;
         fn to_seq(&self)                     -> ArraySeqStPerS<T>;
         fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self;
         fn extract_all_sorted(&self)         -> ArraySeqStPerS<T>;
         fn is_valid_heap(&self)              -> bool;
-        fn height(&self)                     -> N;
-        fn level_elements(&self, level: N)   -> ArraySeqStPerS<T>;
+        fn height(&self)                     -> usize;
+        fn level_elements(&self, level: usize)   -> ArraySeqStPerS<T>;
         fn from_vec(vec: Vec<T>)             -> Self;
         fn to_vec(&self)                     -> Vec<T>;
         fn to_sorted_vec(&self)              -> Vec<T>;
     }
 
-    fn left_child(i: N) -> N { 2 * i + 1 }
-    fn right_child(i: N) -> N { 2 * i + 2 }
-    fn parent(i: N) -> N { if i == 0 { 0 } else { (i - 1) / 2 } }
+    fn left_child(i: usize) -> usize { 2 * i + 1 }
+    fn right_child(i: usize) -> usize { 2 * i + 2 }
+    fn parent(i: usize) -> usize { if i == 0 { 0 } else { (i - 1) / 2 } }
 
-    fn swap_elements<T: StT + Ord>(seq: &ArraySeqStPerS<T>, i: N, j: N) -> ArraySeqStPerS<T> {
+    fn swap_elements<T: StT + Ord>(seq: &ArraySeqStPerS<T>, i: usize, j: usize) -> ArraySeqStPerS<T> {
         let mut result = ArraySeqStPerS::empty();
 
         for k in 0..seq.length() {
@@ -84,7 +124,7 @@ pub mod BinaryHeapPQ {
         result
     }
 
-    fn bubble_up<T: StT + Ord>(seq: &ArraySeqStPerS<T>, mut i: N) -> ArraySeqStPerS<T> {
+    fn bubble_up<T: StT + Ord>(seq: &ArraySeqStPerS<T>, mut i: usize) -> ArraySeqStPerS<T> {
         let mut result = seq.clone();
 
         while i > 0 {
@@ -103,7 +143,7 @@ pub mod BinaryHeapPQ {
         result
     }
 
-    fn bubble_down<T: StT + Ord>(heap: &ArraySeqStPerS<T>, mut i: N) -> ArraySeqStPerS<T> {
+    fn bubble_down<T: StT + Ord>(heap: &ArraySeqStPerS<T>, mut i: usize) -> ArraySeqStPerS<T> {
         let mut result = heap.clone();
 
         loop {
@@ -252,7 +292,7 @@ pub mod BinaryHeapPQ {
 
         /// - APAS: N/A — utility function not in prose.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
-        fn size(&self) -> N { self.elements.length() }
+        fn size(&self) -> usize { self.elements.length() }
 
         /// - APAS: N/A — utility function not in prose.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
@@ -284,15 +324,15 @@ pub mod BinaryHeapPQ {
 
         fn is_valid_heap(&self) -> bool { is_heap(&self.elements) }
 
-        fn height(&self) -> N {
+        fn height(&self) -> usize {
             if self.elements.length() == 0 {
                 0
             } else {
-                ((self.elements.length() as f64).log2().floor() as N) + 1
+                ((self.elements.length() as f64).log2().floor() as usize) + 1
             }
         }
 
-        fn level_elements(&self, level: N) -> ArraySeqStPerS<T> {
+        fn level_elements(&self, level: usize) -> ArraySeqStPerS<T> {
             let mut result = ArraySeqStPerS::empty();
             let start_idx = (1 << level) - 1;
             let end_idx = ((1 << (level + 1)) - 1).min(self.elements.length());

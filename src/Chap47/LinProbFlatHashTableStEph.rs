@@ -93,7 +93,7 @@ pub mod LinProbFlatHashTableStEph {
         /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs from m slots, creates m' new slots, reinserts n pairs.
         fn resize(
             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>,
-            new_size: N,
+            new_size: usize,
         ) -> HashTable<Key, Value, FlatEntry<Key, Value>, Metrics> {
             let mut pairs = Vec::new();
             for entry in &table.table {
@@ -128,14 +128,14 @@ pub mod LinProbFlatHashTableStEph {
     {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — hash + addition + modulo.
-        fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key, attempt: N) -> N {
+        fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key, attempt: usize) -> usize {
             let hash_val = (table.hash_fn)(key);
             (hash_val + attempt) % table.current_size
         }
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe until empty/deleted/matching slot.
-        fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> N {
+        fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> usize {
             let mut attempt = 0;
             while attempt < table.current_size {
                 let slot = Self::probe(table, key, attempt);

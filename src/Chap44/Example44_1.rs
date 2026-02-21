@@ -43,10 +43,13 @@ pub mod Example44_1 {
         move |word: &Word| index.find(word)
     }
 
-    /// Demonstrates the example queries from the textbook.
-    pub struct TweetQueryExamples {
-        index: DocumentIndex,
-        fw: Box<dyn Fn(&Word) -> DocumentSet>,
+    verus! {
+        /// Demonstrates the example queries from the textbook.
+        /// fw is Box<dyn Fn> — unverifiable; struct is inside verus! for style compliance.
+        pub struct TweetQueryExamples {
+            pub index: DocumentIndex,
+            pub fw: Box<dyn Fn(&Word) -> DocumentSet>,
+        }
     }
 
     impl Default for TweetQueryExamples {
@@ -105,7 +108,7 @@ pub mod Example44_1 {
         /// Expected result: 2 (mary and peter).
         /// - APAS: N/A — Example scaffolding; cost is 2 finds + queryAndNot + size.
         /// - Claude-Opus-4.6: Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m)) — dominated by set difference
-        pub fn count_fun_but_not_chess(&self) -> N {
+        pub fn count_fun_but_not_chess(&self) -> usize {
             let fun_docs = (self.fw)(&"fun".to_string());
             let chess_docs = (self.fw)(&"chess".to_string());
 
@@ -141,7 +144,7 @@ pub mod Example44_1 {
         /// Get word count statistics.
         /// - APAS: N/A — Example scaffolding.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        pub fn get_word_count(&self) -> N { self.index.word_count() }
+        pub fn get_word_count(&self) -> usize { self.index.word_count() }
 
         /// Demonstrate query builder pattern.
         /// - APAS: N/A — Example scaffolding.
@@ -219,7 +222,7 @@ pub mod Example44_1 {
     /// Performance demonstration: compare indexed search vs brute force.
     /// - APAS: N/A — Example scaffolding.
     /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — dominated by index construction
-    pub fn performance_comparison_demo() -> (N, N) {
+    pub fn performance_comparison_demo() -> (usize, usize) {
         let tweets = create_tweet_collection();
         let _index = create_tweet_index();
 
@@ -243,7 +246,7 @@ pub mod Example44_1 {
     /// Show index statistics for the tweet collection.
     /// - APAS: N/A — Example scaffolding.
     /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — builds index + iterates documents
-    pub fn index_statistics() -> (N, N, N) {
+    pub fn index_statistics() -> (usize, usize, usize) {
         let tweets = create_tweet_collection();
         let index = create_tweet_index();
 

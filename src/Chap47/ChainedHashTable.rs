@@ -15,21 +15,50 @@ pub mod ChainedHashTable {
     use std::marker::PhantomData;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
 
     verus! {
         proof fn _chained_hash_table_verified() {}
-    }
 
-    // 4. type definitions
+        /// Parametric entry type for chained hash tables.
+        /// Container type is abstract - can be Vec, LinkedList, Seq, etc.
+        #[verifier::reject_recursive_types(Key)]
+        #[verifier::reject_recursive_types(Value)]
+        #[verifier::reject_recursive_types(Container)]
+        pub struct ChainEntry<Key, Value, Container> {
+            pub chain: Container,
+            pub _phantom: PhantomData<(Key, Value)>,
+        }
 
-    /// Parametric entry type for chained hash tables.
-    /// Container type is abstract - can be Vec, LinkedList, Seq, etc.
-    #[derive(Clone, PartialEq)]
-    pub struct ChainEntry<Key, Value, Container> {
-        pub chain: Container,
-        pub _phantom: PhantomData<(Key, Value)>,
+        #[cfg(verus_keep_ghost)]
+        impl<Key, Value, Container: core::cmp::PartialEq> PartialEqSpecImpl for ChainEntry<Key, Value, Container> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { self.chain == other.chain }
+        }
+
+        impl<Key, Value, Container: Clone> Clone for ChainEntry<Key, Value, Container> {
+            #[verifier::external_body]
+            fn clone(&self) -> (result: Self)
+                ensures result == *self
+            {
+                ChainEntry { chain: self.chain.clone(), _phantom: PhantomData }
+            }
+        }
+
+        impl<Key, Value, Container: core::cmp::PartialEq> core::cmp::PartialEq for ChainEntry<Key, Value, Container> {
+            fn eq(&self, other: &Self) -> (r: bool)
+                ensures r == (self.chain == other.chain)
+            {
+                let r = self.chain == other.chain;
+                proof { assume(r == (self.chain == other.chain)); }
+                r
+            }
+        }
+
+        impl<Key, Value, Container: core::cmp::Eq> core::cmp::Eq for ChainEntry<Key, Value, Container> {}
     }
 
     // 8. traits (outside verus! — references HashTable which contains dyn Fn types)
@@ -43,7 +72,7 @@ pub mod ChainedHashTable {
         /// Computes the hash index for a key.
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on hash function.
-        fn hash_index(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key) -> N;
+        fn hash_index(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key) -> usize;
 
         /// Inserts into the chain at the hashed bucket, updating num_elements on new keys.
         /// - APAS: Work O(1) expected, Span O(1).

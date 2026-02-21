@@ -6,17 +6,56 @@ pub mod BalancedTreePQ {
     use std::fmt::{Debug, Display, Formatter, Result};
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Types::Types::*;
 
     verus! {
         /// Placeholder; PQ uses Vec, Option<&T>, Fn bounds.
         proof fn _balanced_tree_pq_verified() {}
+
+        #[verifier::reject_recursive_types(T)]
+        pub struct BalancedTreePQ<T: StT + Ord> {
+            pub elements: AVLTreeSeqStPerS<T>,
+        }
+
+        impl<T: StT + Ord> View for BalancedTreePQ<T> {
+            type V = Seq<T::V>;
+            open spec fn view(&self) -> Seq<T::V> { self.elements@ }
+        }
+
+        #[cfg(verus_keep_ghost)]
+        impl<T: StT + Ord> PartialEqSpecImpl for BalancedTreePQ<T> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+        }
+
+        impl<T: StT + Ord> Clone for BalancedTreePQ<T> {
+            fn clone(&self) -> (result: Self)
+                ensures result@ == self@
+            {
+                BalancedTreePQ { elements: self.elements.clone() }
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::PartialEq for BalancedTreePQ<T> {
+            fn eq(&self, other: &Self) -> (r: bool)
+                ensures r == (self@ == other@)
+            {
+                let r = self.elements == other.elements;
+                proof { assume(r == (self@ == other@)); }
+                r
+            }
+        }
+
+        impl<T: StT + Ord> core::cmp::Eq for BalancedTreePQ<T> {}
     }
 
-    #[derive(PartialEq, Clone, Debug)]
-    pub struct BalancedTreePQ<T: StT + Ord> {
-        elements: AVLTreeSeqStPerS<T>,
+    impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for BalancedTreePQ<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BalancedTreePQ").field("elements", &self.elements).finish()
+        }
     }
 
     /// Trait defining the Meldable Priority Queue ADT operations (Data Type 45.1)
@@ -49,7 +88,7 @@ pub mod BalancedTreePQ {
         /// Creates priority queue from sequence using balanced tree construction
         fn from_seq(seq: &AVLTreeSeqStPerS<T>)               -> Self;
 
-        fn size(&self)                                       -> N;
+        fn size(&self)                                       -> usize;
         fn is_empty(&self)                                   -> bool;
         fn to_seq(&self)                                     -> AVLTreeSeqStPerS<T>;
         fn find_max(&self)                                   -> Option<&T>;
@@ -67,7 +106,7 @@ pub mod BalancedTreePQ {
         fn to_vec(&self)                                     -> Vec<T>;
         fn to_sorted_vec(&self)                              -> Vec<T>;
         fn is_sorted(&self)                                  -> bool;
-        fn height(&self)                                     -> N;
+        fn height(&self)                                     -> usize;
         fn split(&self, element: &T)                         -> (Self, bool, Self)
         where
             Self: Sized;
@@ -190,7 +229,7 @@ pub mod BalancedTreePQ {
 
         /// - APAS: N/A — utility function not in prose.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
-        fn size(&self) -> N { self.elements.length() }
+        fn size(&self) -> usize { self.elements.length() }
 
         /// - APAS: N/A — utility function not in prose.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
@@ -316,11 +355,11 @@ pub mod BalancedTreePQ {
             true
         }
 
-        fn height(&self) -> N {
+        fn height(&self) -> usize {
             if self.elements.length() == 0 {
                 0
             } else {
-                ((self.elements.length() as f64).log2().ceil() as N).max(1)
+                ((self.elements.length() as f64).log2().ceil() as usize).max(1)
             }
         }
 

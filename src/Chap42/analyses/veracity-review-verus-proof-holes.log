@@ -1,10 +1,10 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap42
+$ ~/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap42/
 
 ✓ Example42_1.rs
    1 clean proof function
 ❌ TableMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:115: external_body - #[verifier::external_body]
-       116 |         fn size(&self) -> (result: N)
+       116 |         fn size(&self) -> (result: usize)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:130: external_body - #[verifier::external_body]
        131 |         fn singleton(key: K, value: V) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:139: external_body - #[verifier::external_body]
@@ -38,7 +38,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ TableStEph.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:120: external_body - #[verifier::external_body]
-       121 |         fn size(&self) -> (result: N)
+       121 |         fn size(&self) -> (result: usize)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:135: external_body - #[verifier::external_body]
        136 |         fn singleton(key: K, value: V) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:144: external_body - #[verifier::external_body]
@@ -77,6 +77,20 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
+
+Modules:
+   1 clean (no holes)
+   3 holed (contains holes)
+   4 total
+
+Proof Functions:
+   3 clean
+   0 holed
+   3 total
+
+Holes Found: 30 total
+   30 × external_body
+═══════
 
 Modules:
    1 clean (no holes)

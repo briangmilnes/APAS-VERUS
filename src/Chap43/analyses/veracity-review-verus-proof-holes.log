@@ -1,6 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap43
-
-❌ AugOrderedTableMtEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /❌ AugOrderedTableMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:59: external_body - #[verifier::external_body]
         60 |     pub fn recalculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableMtEph.rs:68: external_body - #[verifier::external_body]
@@ -46,7 +44,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:37: external_body - #[verifier::external_body]
         38 |         open spec fn view(&self) -> Set<<T as View>::V> { Set::empty() }
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:121: external_body - #[verifier::external_body]
-       122 |         fn size(&self) -> (result: N)
+       122 |         fn size(&self) -> (result: usize)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:126: external_body - #[verifier::external_body]
        127 |         fn empty() -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:131: external_body - #[verifier::external_body]
@@ -84,11 +82,11 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:316: external_body - #[verifier::external_body]
        317 |         fn get_range(&self, k1: &T, k2: &T) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:339: external_body - #[verifier::external_body]
-       340 |         fn rank(&self, k: &T) -> (result: N)
+       340 |         fn rank(&self, k: &T) -> (result: usize)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:347: external_body - #[verifier::external_body]
-       348 |         fn select(&self, i: N) -> (result: Option<T>)
+       348 |         fn select(&self, i: usize) -> (result: Option<T>)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetMtEph.rs:359: external_body - #[verifier::external_body]
-       360 |         fn split_rank(&mut self, i: N) -> (result: (Self, Self))
+       360 |         fn split_rank(&mut self, i: usize) -> (result: (Self, Self))
    Holes: 23 total
       23 × external_body
 ❌ OrderedSetStEph.rs
@@ -109,11 +107,11 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:304: external_body - #[verifier::external_body]
        305 |         fn get_range(&self, k1: &T, k2: &T) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:324: external_body - #[verifier::external_body]
-       325 |         fn rank(&self, k: &T) -> (result: N)
+       325 |         fn rank(&self, k: &T) -> (result: usize)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:343: external_body - #[verifier::external_body]
-       344 |         fn select(&self, i: N) -> (result: Option<T>)
+       344 |         fn select(&self, i: usize) -> (result: Option<T>)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:355: external_body - #[verifier::external_body]
-       356 |         fn split_rank(&mut self, i: N) -> (result: (Self, Self))
+       356 |         fn split_rank(&mut self, i: usize) -> (result: (Self, Self))
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStEph.rs:400: external_body - #[verifier::external_body]
        401 |     pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (result: OrderedSetStEph<T>)
    Holes: 12 total
@@ -132,11 +130,11 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:297: external_body - #[verifier::external_body]
        298 |         fn get_range(&self, k1: &T, k2: &T) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:317: external_body - #[verifier::external_body]
-       318 |         fn rank(&self, k: &T) -> (result: N)
+       318 |         fn rank(&self, k: &T) -> (result: usize)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:336: external_body - #[verifier::external_body]
-       337 |         fn select(&self, i: N) -> (result: Option<T>)
+       337 |         fn select(&self, i: usize) -> (result: Option<T>)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:348: external_body - #[verifier::external_body]
-       349 |         fn split_rank(&self, i: N) -> (result: (Self, Self))
+       349 |         fn split_rank(&self, i: usize) -> (result: (Self, Self))
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedSetStPer.rs:379: external_body - #[verifier::external_body]
        380 |     pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (result: OrderedSetStPer<T>)
    Holes: 10 total
@@ -167,11 +165,11 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:409: external_body - #[verifier::external_body]
        410 |         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:428: external_body - #[verifier::external_body]
-       429 |         fn rank_key(&self, k: &K) -> (result: N)
+       429 |         fn rank_key(&self, k: &K) -> (result: usize)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:447: external_body - #[verifier::external_body]
-       448 |         fn select_key(&self, i: N) -> (result: Option<K>)
+       448 |         fn select_key(&self, i: usize) -> (result: Option<K>)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:459: external_body - #[verifier::external_body]
-       460 |         fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
+       460 |         fn split_rank_key(&mut self, i: usize) -> (result: (Self, Self))
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:494: external_body - #[verifier::external_body]
        495 |         fn clone(&self) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtEph.rs:504: external_body - #[verifier::external_body]
@@ -182,7 +180,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:44: external_body - #[verifier::external_body]
         45 |         open spec fn view(&self) -> Map<K::V, V::V> {
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:115: external_body - #[verifier::external_body]
-       116 |         fn size(&self) -> (result: N)
+       116 |         fn size(&self) -> (result: usize)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:122: external_body - #[verifier::external_body]
        123 |         fn empty() -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:131: external_body - #[verifier::external_body]
@@ -214,11 +212,11 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:295: external_body - #[verifier::external_body]
        296 |         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:310: external_body - #[verifier::external_body]
-       311 |         fn rank_key(&self, k: &K) -> (result: N)
+       311 |         fn rank_key(&self, k: &K) -> (result: usize)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:323: external_body - #[verifier::external_body]
-       324 |         fn select_key(&self, i: N) -> (result: Option<K>)
+       324 |         fn select_key(&self, i: usize) -> (result: Option<K>)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:331: external_body - #[verifier::external_body]
-       332 |         fn split_rank_key(&self, i: N) -> (result: (Self, Self))
+       332 |         fn split_rank_key(&self, i: usize) -> (result: (Self, Self))
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableMtPer.rs:354: external_body - #[verifier::external_body]
        355 |         fn clone(&self) -> (result: Self)
    Holes: 21 total
@@ -249,18 +247,18 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:373: external_body - #[verifier::external_body]
        374 |         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:392: external_body - #[verifier::external_body]
-       393 |         fn rank_key(&self, k: &K) -> (result: N)
+       393 |         fn rank_key(&self, k: &K) -> (result: usize)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:411: external_body - #[verifier::external_body]
-       412 |         fn select_key(&self, i: N) -> (result: Option<K>)
+       412 |         fn select_key(&self, i: usize) -> (result: Option<K>)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:423: external_body - #[verifier::external_body]
-       424 |         fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
+       424 |         fn split_rank_key(&mut self, i: usize) -> (result: (Self, Self))
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:465: external_body - #[verifier::external_body]
        466 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
    Holes: 16 total
       16 × external_body
 ❌ OrderedTableStPer.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:107: external_body - #[verifier::external_body]
-       108 |         fn size(&self) -> (result: N)
+       108 |         fn size(&self) -> (result: usize)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:114: external_body - #[verifier::external_body]
        115 |         fn empty() -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:123: external_body - #[verifier::external_body]
@@ -306,11 +304,11 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:343: external_body - #[verifier::external_body]
        344 |         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:362: external_body - #[verifier::external_body]
-       363 |         fn rank_key(&self, k: &K) -> (result: N)
+       363 |         fn rank_key(&self, k: &K) -> (result: usize)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:381: external_body - #[verifier::external_body]
-       382 |         fn select_key(&self, i: N) -> (result: Option<K>)
+       382 |         fn select_key(&self, i: usize) -> (result: Option<K>)
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:393: external_body - #[verifier::external_body]
-       394 |         fn split_rank_key(&self, i: N) -> (result: (Self, Self))
+       394 |         fn split_rank_key(&self, i: usize) -> (result: (Self, Self))
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:432: external_body - #[verifier::external_body]
        433 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
    Holes: 27 total
@@ -319,6 +317,20 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
+
+Modules:
+   1 clean (no holes)
+   10 holed (contains holes)
+   11 total
+
+Proof Functions:
+   4 clean
+   0 holed
+   4 total
+
+Holes Found: 140 total
+   140 × external_body
+��═════
 
 Modules:
    1 clean (no holes)

@@ -61,7 +61,7 @@ pub mod TableMtEph {
 
     /// Trait defining the Table ADT operations from Chapter 42
     pub trait TableMtEphTrait<K: MtKey, V: MtVal>: Sized + View<V = Map<K::V, V::V>> {
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.dom().len();
 
         fn empty() -> (result: Self)
@@ -113,7 +113,7 @@ pub mod TableMtEph {
 
     impl<K: MtKey, V: MtVal> TableMtEphTrait<K, V> for TableMtEph<K, V> {
         #[verifier::external_body]
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.dom().len()
         {
             self.entries.length()

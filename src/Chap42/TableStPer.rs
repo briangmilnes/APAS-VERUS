@@ -54,7 +54,7 @@ pub mod TableStPer {
     pub trait TableStPerTrait<K: StT + Ord, V: StT>: Sized {
         /// APAS: Work Θ(1), Span Θ(1)
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)                              -> N;
+        fn size(&self)                              -> usize;
 
         /// APAS: Work Θ(1), Span Θ(1)
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
@@ -118,7 +118,7 @@ pub mod TableStPer {
     }
 
     impl<K: StT + Ord, V: StT> TableStPerTrait<K, V> for TableStPer<K, V> {
-        fn size(&self) -> N { self.entries.length() }
+        fn size(&self) -> usize { self.entries.length() }
 
         fn empty() -> Self {
             TableStPer {

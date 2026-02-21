@@ -6,7 +6,7 @@ pub mod Example45_2 {
     use vstd::prelude::*;
     use crate::Chap45::HeapsortExample::HeapsortExample::*;
     use crate::Types::Types::*;
-    pub type T = N;
+    pub type T = usize;
 
     verus! {
         proof fn _example_45_2_verified() {}
