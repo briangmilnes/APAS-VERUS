@@ -11,7 +11,9 @@ pub mod TSPApproxStEph {
     use vstd::prelude::*;
 
     #[cfg(not(verus_keep_ghost))]
-    use std::collections::{HashMap, HashSet};
+    use std::collections::HashMap;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::{HashSetWithViewPlus, HashSetWithViewPlusTrait};
     use std::hash::Hash;
     #[cfg(not(verus_keep_ghost))]
     use std::vec::Vec;
@@ -76,7 +78,7 @@ pub mod TSPApproxStEph {
         tree_edges: &SetStEph<LabEdge<V, OrderedFloat<f64>>>,
     ) -> Vec<V> {
         let mut tour = Vec::new();
-        let mut visited_edges = HashSet::<(V, V)>::new();
+        let mut visited_edges = HashSetWithViewPlus::<(V, V)>::new();
 
         euler_tour_dfs(graph, start, None, tree_edges, &mut tour, &mut visited_edges);
 
@@ -93,7 +95,7 @@ pub mod TSPApproxStEph {
         parent: Option<&V>,
         tree_edges: &SetStEph<LabEdge<V, OrderedFloat<f64>>>,
         tour: &mut Vec<V>,
-        visited_edges: &mut HashSet<(V, V)>,
+        visited_edges: &mut HashSetWithViewPlus<(V, V)>,
     ) {
         tour.push(current.clone());
 
@@ -156,7 +158,7 @@ pub mod TSPApproxStEph {
         }
 
         let mut shortcut = Vec::new();
-        let mut visited = HashSet::<V>::new();
+        let mut visited = HashSetWithViewPlus::<V>::new();
 
         for vertex in euler_tour.iter() {
             if !visited.contains(vertex) {

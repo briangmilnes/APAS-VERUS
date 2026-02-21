@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap40/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap40
 
 ❌ BSTKeyValueStEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:26: external_body - #[verifier::external_body]
@@ -80,33 +80,3 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:176: external_body - #[verifier::external_body]
        177 |     fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T, priority: u64)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:276: external_body - #[verifier::external_body]
-       277 |     fn build_treap_from_sorted<T: StT + Ord>(seq: &[(T, u64)]) -> Link<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:297: external_body - #[verifier::external_body]
-       298 |     fn rank_link<T: StT + Ord>(link: &Link<T>, key: &T) -> N
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:349: external_body - #[verifier::external_body]
-       350 |         fn delete(&mut self, key: &T) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:365: external_body - #[verifier::external_body]
-       366 |         fn in_order(&self) -> ArraySeqStPerS<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:382: external_body - #[verifier::external_body]
-       383 |         fn split_rank(&self, rank: N) -> (BSTSizeStEph<T>, BSTSizeStEph<T>) {
-   Holes: 9 total
-      1 × assume()
-      8 × external_body
-
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
-
-Modules:
-   0 clean (no holes)
-   3 holed (contains holes)
-   3 total
-
-Proof Functions:
-   0 clean
-   0 holed
-   0 total
-
-Holes Found: 30 total
-   4 × assume()
-   26 × external_body

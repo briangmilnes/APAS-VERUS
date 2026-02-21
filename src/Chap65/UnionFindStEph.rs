@@ -11,6 +11,8 @@ pub mod UnionFindStEph {
 
     #[cfg(not(verus_keep_ghost))]
     use std::collections::HashMap;
+    #[cfg(not(verus_keep_ghost))]
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::{HashSetWithViewPlus, HashSetWithViewPlusTrait};
     use std::hash::Hash;
 
     verus! {
@@ -111,7 +113,7 @@ pub mod UnionFindStEph {
         /// - APAS: Work O(n α(n)), Span O(n α(n))
         /// - Claude-Opus-4.6: Work O(n α(n)), Span O(n α(n)) — agrees with APAS; finds root for every element
         fn num_sets(&mut self) -> usize {
-            let mut roots = std::collections::HashSet::new();
+            let mut roots = HashSetWithViewPlus::<V>::new();
             let keys = self.parent.keys().cloned().collect::<Vec<V>>();
             for v in keys.iter() {
                 let root = self.find(v);

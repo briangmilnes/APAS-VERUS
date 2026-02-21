@@ -1,0 +1,309 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/vstdplus
+
+✓ VecQueue.rs
+✓ arithmetic/power2_plus.rs
+   6 clean proof functions
+✓ checked_int.rs
+✓ checked_nat.rs
+✓ checked_nat_with_checked_view.rs
+❌ clone_plus.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/clone_plus.rs:18: external_body - #[verifier::external_body]
+        19 |         fn clone_plus(&self) -> (res: Self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/clone_plus.rs:27: external_body - #[verifier::external_body]
+        28 |     pub fn clone_fn<T, U, F: Fn(&T) -> U + Clone>(f: &F) -> (res: F)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/clone_plus.rs:37: external_body - #[verifier::external_body]
+        38 |     pub fn clone_fn2<T, F: Fn(&T, &T) -> T + Clone>(f: &F) -> (res: F)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/clone_plus.rs:47: external_body - #[verifier::external_body]
+        48 |     pub fn clone_pred<T, F: Fn(&T) -> bool + Clone>(f: &F) -> (res: F)
+   Holes: 4 total
+      4 × external_body
+❌ feq.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/feq.rs:18: external_trait_specification - #[verifier::external_trait_specification]
+        19 |     #[verifier::external_trait_extension(FeqSpec via FeqSpecImpl)]
+        20 |     pub trait ExFeq: PartialEq + PointeeSized {
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/feq.rs:19: external_trait_extension - #[verifier::external_trait_extension(FeqSpec via FeqSpecImpl
+        20 |     pub trait ExFeq: PartialEq + PointeeSized {
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/feq.rs:167: admit() - admit();
+       163 |     pub broadcast proof fn axiom_cloned_implies_eq<T: Eq + Clone + Sized>(x: &T, y: T)
+            ...
+       165 |         ensures *x == y
+       166 |     {
+       168 |     }
+       169 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/feq.rs:176: admit() - admit();
+       172 |     pub broadcast proof fn axiom_cloned_implies_eq_owned<T: Eq + Clone + Sized>(x: T, y: T)
+            ...
+       174 |         ensures x == y
+       175 |     {
+       177 |     }
+       178 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/feq.rs:189: assume() - assume(result == (x@ == y@));
+       180 |     pub fn feq<T: Eq + View + Clone + Sized>(x: &T, y: &T) -> (eq: bool)
+            ...
+       187 |             // obeys_feq_view: x.eq_spec(&y) ==> x@ == y@
+       188 |             // obeys_feq_view_injective: x@ == y@ ==> x == y
+       190 |         }
+       191 |         result
+   Holes: 5 total
+      1 × assume()
+      2 × admit()
+      1 × external_trait_specification
+      1 × external_trait_extension
+   Proof functions: 4 total (2 clean, 2 holed)
+❌ float.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/float.rs:103: external_body - #[verifier::external_body]
+       104 |         fn float_cmp(&self, other: &Self) -> (c: Ordering) {
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/float.rs:170: external_body - #[verifier::external_body]
+       171 |         fn float_cmp(&self, other: &Self) -> (c: Ordering) {
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/float.rs:228: external_body - #[verifier::external_body]
+       229 |         pub fn is_finite(&self) -> (b: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/float.rs:235: external_body - #[verifier::external_body]
+       236 |         pub fn eq(&self, other: &Self) -> (b: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/float.rs:242: external_body - #[verifier::external_body]
+       243 |         pub fn dist_le(&self, other: &Self) -> (b: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/float.rs:250: external_body - #[verifier::external_body]
+       251 |         pub fn dist_lt(&self, other: &Self) -> (b: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/float.rs:258: external_body - #[verifier::external_body]
+       259 |         pub fn dist_add(&self, other: &Self) -> (r: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/float.rs:265: external_body - #[verifier::external_body]
+       266 |         pub fn dist_sub(&self, other: &Self) -> (r: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/float.rs:274: external_body - #[verifier::external_body]
+       275 |     pub fn f64_is_finite(x: f64) -> (b: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/float.rs:292: external_body - #[verifier::external_body]
+       293 |     pub fn unreachable_dist() -> (d: F64Dist)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/float.rs:300: external_body - #[verifier::external_body]
+       301 |     pub fn zero_dist() -> (d: F64Dist)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/float.rs:223: error: bare_impl - impl F64Dist { — `impl F64Dist` without trait; file defines [FloatTotalOrder]
+       224 |         pub open spec fn spec_is_finite(&self) -> bool {
+       225 |             self.val.is_finite_spec()
+   Holes: 11 total
+      11 × external_body
+   Errors: 1 total (1 bare impl(s))
+❌ hash_set_specs.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hash_set_specs.rs:12: assume_specification - pub assume_specification<T, S> [<std::collections::HashSet<T
+        10 | verus! {
+        11 | 
+        13 | where
+        14 |     S: std::clone::Clone,
+   Holes: 1 total
+      1 × assume_specification
+❌ hash_set_with_view_plus.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hash_set_with_view_plus.rs:42: admit() - admit();
+        38 | pub broadcast proof fn axiom_hash_set_with_view_plus_finite<Key: View + Eq + Hash>(s: &HashSetWithViewPlus<Key>)
+            ...
+        40 |         #[trigger] s@.finite(),
+        41 | {
+        43 | }
+        44 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hash_set_with_view_plus.rs:50: external_body - #[verifier::external_body]
+        51 |     fn clone(&self) -> (clone: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hash_set_with_view_plus.rs:59: external_body - #[verifier::external_body]
+        60 |     pub fn new() -> (hash_set: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hash_set_with_view_plus.rs:70: external_body - #[verifier::external_body]
+        71 |     pub fn with_capacity(capacity: usize) -> (hash_set: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hash_set_with_view_plus.rs:81: external_body - #[verifier::external_body]
+        82 |     pub fn len(&self) -> (len: usize)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hash_set_with_view_plus.rs:89: external_body - #[verifier::external_body]
+        90 |     pub fn contains(&self, k: &Key) -> (contains: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hash_set_with_view_plus.rs:99: external_body - #[verifier::external_body]
+       100 |     pub fn insert(&mut self, k: Key) -> (inserted: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hash_set_with_view_plus.rs:125: external_body - #[verifier::external_body]
+       126 |     fn iter(&self) -> (r: std::collections::hash_set::Iter<'_, Key>)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hash_set_with_view_plus.rs:131: external_body - #[verifier::external_body]
+       132 |     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hash_set_with_view_plus.rs:140: external_body - #[verifier::external_body]
+       141 |     fn eq(&self, other: &Self) -> bool { self.inner == other.inner }
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hash_set_with_view_plus.rs:58: error: bare_impl - impl<Key: View + Eq + Hash + Clone> HashSetWithViewPlus<Key> { — `impl HashSetWithViewPlus` without trait; file defines [HashSetWithViewPlusTrait]
+        59 |     #[verifier::external_body]
+        60 |     pub fn new() -> (hash_set: Self)
+   Holes: 10 total
+      1 × admit()
+      9 × external_body
+   Errors: 1 total (1 bare impl(s))
+   Proof functions: 1 total (0 clean, 1 holed)
+❌ hashed_checked_u32.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hashed_checked_u32.rs:30: external_body - #[verifier::external_body]
+        31 |     fn hash<H: Hasher>(&self, state: &mut H) {
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hashed_checked_u32.rs:38: external_body - #[verifier::external_body]
+        39 |     fn eq(&self, other: &Self) -> bool {
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hashed_checked_u32.rs:53: admit() - { admit(); }
+        50 | pub broadcast proof fn axiom_CheckedU32_feq()
+            ...
+        51 |     requires #[trigger] CheckedU32_feq_trigger()
+        52 |     ensures obeys_feq_full::<CheckedU32>()
+        54 | // Veracity: USED
+        55 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hashed_checked_u32.rs:59: admit() - { admit(); }
+        56 | pub broadcast proof fn axiom_CheckedU32_key_model()
+            ...
+        57 |     requires #[trigger] CheckedU32_feq_trigger()
+        58 |     ensures obeys_key_model::<CheckedU32>()
+        60 | 
+        61 | pub broadcast group group_CheckedU32_axioms {
+   Holes: 4 total
+      2 × admit()
+      2 × external_body
+   Proof functions: 2 total (0 clean, 2 holed)
+✓ monoid.rs
+✓ multiset.rs
+   6 clean proof functions
+❌ partial_order.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/partial_order.rs:404: admit() - admit();
+       402 | 
+       403 |         proof fn reflexive(x: Self) {
+       405 |         }
+       406 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/partial_order.rs:408: admit() - admit();
+       406 | 
+       407 |         proof fn transitive(x: Self, y: Self, z: Self) {
+       409 |         }
+       410 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/partial_order.rs:413: admit() - admit();
+       411 | // Veracity: USED
+       412 |         proof fn antisymmetric(x: Self, y: Self) {
+       414 |         }
+       415 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/partial_order.rs:416: external_body - #[verifier::external_body]
+       417 |         fn compare(&self, other: &Self) -> (c: Option<Ordering>)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/partial_order.rs:432: admit() - admit();
+       430 | 
+       431 |         proof fn reflexive(x: Self) {
+       433 |         }
+       434 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/partial_order.rs:436: admit() - admit();
+       434 | 
+       435 |         proof fn transitive(x: Self, y: Self, z: Self) {
+       437 |         }
+       438 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/partial_order.rs:441: admit() - admit();
+       439 | // Veracity: USED
+       440 |         proof fn antisymmetric(x: Self, y: Self) {
+       442 |         }
+       443 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/partial_order.rs:444: external_body - #[verifier::external_body]
+       445 |         fn compare(&self, other: &Self) -> (c: Option<Ordering>)
+   Holes: 8 total
+      6 × admit()
+      2 × external_body
+✓ pervasives_plus.rs
+❌ rand.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/rand.rs:20: external_body - #[verifier::external_body]
+        21 |     pub fn random_usize_range(lo: usize, hi: usize) -> (result: usize)
+   Holes: 1 total
+      1 × external_body
+❌ seq.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/seq.rs:67: assume() - assume(sum.is_normal() ==> sum@ == spec_sum_u32_seq(s_spec.t
+        32 |     pub fn seq_u32_to_CheckedU32(s: &Vec<u32>) -> (sum: CheckedU32)
+            ...
+        65 | 
+        66 |                 // FIXME: SMT has trouble connecting recursive spec function unfolding
+        68 |             }
+        69 |         }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 9 total (9 clean, 0 holed)
+✓ seq_set.rs
+   60 clean proof functions
+❌ smart_ptrs.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/smart_ptrs.rs:13: assume_specification - pub assume_specification<T: ?Sized, A: core::alloc::Allocato
+        11 |     /// Spec for Arc::clone: the result equals the original (Arc is transparent).
+        12 |     /// Fills the gap in vstd::std_specs::smart_ptrs which has Arc::new but not Arc::clone.
+        14 |         ensures res == *a,
+        15 |     ;
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/smart_ptrs.rs:33: external_body - #[verifier::external_body]
+        34 |     pub fn arc_deref<T>(a: &Arc<T>) -> (r: &T)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/smart_ptrs.rs:42: external_body - #[verifier::external_body]
+        43 |     pub fn arc_vec_as_slice<'a, T>(a: &'a Arc<Vec<T>>, start: usize, len: usize) -> (r: &'a [T])
+   Holes: 3 total
+      1 × assume_specification
+      2 × external_body
+❌ sqrt.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/sqrt.rs:12: assume_specification - pub assume_specification [<usize>::isqrt] (n: usize) -> (roo
+        10 | verus! {
+        11 | 
+        13 |     ensures
+        14 |         root as int * root as int <= n as int,
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/sqrt.rs:17: assume_specification - pub assume_specification [<u64>::isqrt] (n: u64) -> (root: u
+        15 |         (root as int + 1) * (root as int + 1) > n as int;
+        16 | 
+        18 |     ensures
+        19 |         root as int * root as int <= n as int,
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/sqrt.rs:22: assume_specification - pub assume_specification [<u32>::isqrt] (n: u32) -> (root: u
+        20 |         (root as int + 1) * (root as int + 1) > n as int;
+        21 | 
+        23 |     ensures
+        24 |         root as int * root as int <= n as int,
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/sqrt.rs:27: assume_specification - pub assume_specification [<u16>::isqrt] (n: u16) -> (root: u
+        25 |         (root as int + 1) * (root as int + 1) > n as int;
+        26 | 
+        28 |     ensures
+        29 |         root as int * root as int <= n as int,
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/sqrt.rs:32: assume_specification - pub assume_specification [<u8>::isqrt] (n: u8) -> (root: u8)
+        30 |         (root as int + 1) * (root as int + 1) > n as int;
+        31 | 
+        33 |     ensures
+        34 |         root as int * root as int <= n as int,
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/sqrt.rs:37: assume_specification - pub assume_specification [<u128>::isqrt] (n: u128) -> (root:
+        35 |         (root as int + 1) * (root as int + 1) > n as int;
+        36 | 
+        38 |     ensures
+        39 |         root as int * root as int <= n as int,
+   Holes: 6 total
+      6 × assume_specification
+❌ threads_plus.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/threads_plus.rs:13: external_body - #[verifier::external_body]
+        14 |     #[verifier::reject_recursive_types(Ret)]
+        15 |     pub struct JoinHandlePlus<Ret> { handle: std::thread::JoinHandle<Ret> }
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/threads_plus.rs:21: external_body - #[verifier::external_body]
+        22 |         pub fn is_finished(&self) -> (finished: bool) { self.handle.is_finished() }
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/threads_plus.rs:24: external_body - #[verifier::external_body]
+        25 |         pub fn join(self) -> (res: Result<Ret, ()>)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/threads_plus.rs:39: external_body - #[verifier::external_body]
+        40 |     pub fn spawn_plus<F, Ret>(f: F) -> (handle: JoinHandlePlus<Ret>)
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/threads_plus.rs:55: external_body - #[verifier::external_body]
+        56 |     pub struct ThreadIdPlus { thread_id: std::thread::ThreadId }
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/threads_plus.rs:79: external_body - #[verifier::external_body]
+        80 |     pub fn thread_id_plus() -> (res: (ThreadIdPlus, Tracked<IsThreadPlus>))
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/threads_plus.rs:84: assume_new() - (id, Tracked::assume_new())
+        80 |     pub fn thread_id_plus() -> (res: (ThreadIdPlus, Tracked<IsThreadPlus>))
+            ...
+        82 |     {
+        83 |         let id = ThreadIdPlus { thread_id: std::thread::current().id() };
+        85 |     }
+        86 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/threads_plus.rs:125: unsafe impl - unsafe impl<V> Sync for ThreadShareablePlus<V> {}
+       126 | unsafe impl<V> Send for ThreadShareablePlus<V> {}
+/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/threads_plus.rs:126: unsafe impl - unsafe impl<V> Send for ThreadShareablePlus<V> {}
+       127 | 
+       128 | }
+   Holes: 9 total
+      1 × Tracked::assume_new()
+      2 × unsafe impl
+      6 × external_body
+✓ total_order.rs
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   10 clean (no holes)
+   12 holed (contains holes)
+   22 total
+
+Proof Functions:
+   83 clean
+   5 holed
+   88 total
+
+Holes Found: 63 total
+   2 × assume()
+   1 × Tracked::assume_new()
+   8 × assume_specification
+   11 × admit()
+   2 × unsafe impl
+   37 × external_body
+   1 × external_trait_specification
+   1 × external_trait_extension
+
+Errors: 2 (bare impl(s), struct/enum outside verus!)

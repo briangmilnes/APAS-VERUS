@@ -1,20 +1,82 @@
-✓ collect_deep_view.rs
-   9 clean proof functions
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/experiments
 
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
-
-Modules:
-   1 clean (no holes)
-   0 holed (contains holes)
-   1 total
-
-Proof Functions:
-   9 clean
-   0 holed
-   9 total
-
-Holes Found: 0 total
-
-🎉 No proof holes found! All proofs are complete.
+✓ ArrayVal.rs
+❌ ArrayVecSet.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/ArrayVecSet.rs:29: assume() - assume(a.len() == l);
+        19 |     fn for_on_array_with_sum(a: &mut [usize]) -> ()
+            ...
+        27 |             for i in iter: 0..l
+        28 |             {
+        30 |                 assert(i < a.len());
+        31 |                 a[i] = i;
+   Holes: 1 total
+      1 × assume()
+❌ CheckedI32.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/CheckedI32.rs:130: external_body - #[verifier::external_body]
+       131 |         pub exec fn add_value(&self, v2: i32) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/CheckedI32.rs:143: external_body - #[verifier::external_body]
+       144 |         pub exec fn add_checked(&self, v2: &CheckedI32) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/CheckedI32.rs:156: external_body - #[verifier::external_body]
+       157 |         pub exec fn sub_value(&self, v2: i32) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/CheckedI32.rs:169: external_body - #[verifier::external_body]
+       170 |         pub exec fn sub_checked(&self, v2: &CheckedI32) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/CheckedI32.rs:182: external_body - #[verifier::external_body]
+       183 |         pub exec fn mul_value(&self, v2: i32) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/CheckedI32.rs:201: external_body - #[verifier::external_body]
+       202 |         pub exec fn mul_checked(&self, v2: &CheckedI32) -> (result: Self)
+   Holes: 6 total
+      6 × external_body
+❌ ForFor.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/ForFor.rs:35: assume() - assume(old(a).len() == a.len());
+        26 |       fn unprovable_array_for(a: &mut [u64]) -> (r: &[u64])
+            ...
+        33 |               {
+        34 | //                 assert(old(a).len() == a.len());  // unprovable
+        36 |                    a[i] = a[i];
+        37 | //                 assert(old(a).len() == a.len());  // unprovable
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/ForFor.rs:38: assume() - assume(old(a).len() == a.len());
+        26 |       fn unprovable_array_for(a: &mut [u64]) -> (r: &[u64])
+            ...
+        36 |                    a[i] = a[i];
+        37 | //                 assert(old(a).len() == a.len());  // unprovable
+        39 |               }
+        40 |               a
+   Holes: 2 total
+      2 × assume()
+✓ ForLoops.rs
+❌ HashCheckedU32.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/HashCheckedU32.rs:17: external_body - #[verifier::external_body]
+        18 |     fn hash<H: Hasher>(&self, state: &mut H) {
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/HashCheckedU32.rs:25: external_body - #[verifier::external_body]
+        26 |     fn eq(&self, other: &Self) -> bool {
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/HashCheckedU32.rs:39: admit() - { admit(); }
+        36 | pub broadcast proof fn axiom_CheckedU32_feq()
+            ...
+        37 |     requires #[trigger] CheckedU32_feq_trigger()
+        38 |     ensures obeys_feq_full::<CheckedU32>()
+        40 | 
+        41 | pub broadcast proof fn axiom_CheckedU32_key_model()
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/HashCheckedU32.rs:44: admit() - { admit(); }
+        41 | pub broadcast proof fn axiom_CheckedU32_key_model()
+            ...
+        42 |     requires #[trigger] CheckedU32_feq_trigger()
+        43 |     ensures obeys_key_model::<CheckedU32>()
+        45 | 
+        46 | pub broadcast group group_CheckedU32_axioms {
+   Holes: 4 total
+      2 × admit()
+      2 × external_body
+   Proof functions: 2 total (0 clean, 2 holed)
+✓ SetLoops.rs
+✓ ToVecProof.rs
+❌ VSTDLoopProofs.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/VSTDLoopProofs.rs:85: external_body - #[verifier::external_body] // The proof fails - break doesn'
+        86 | pub fn vec_length_loop_break(s: &Vec<u64>) -> (length: usize)
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/VSTDLoopProofs.rs:176: external_body - #[verifier::external_body] // The proof fails so we turn it 
+       177 | pub fn vec_mem_for_vec(v: Vec<u64>, elt: u64) -> (result: bool)
+   Holes: 2 total
+      2 × external_body
+❌ WhileWhile.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/experiments/WhileWhile.rs:39: assume() - assume(a.len() == l);
+        28 |       fn unprovable_array_while(a: &mut [u64]) -> (r: &[u64])
+            ...

@@ -1,22 +1,24 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap64
+
 ❌ SpanTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:33: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap64/SpanTreeMtEph.rs:33: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         31 |         pub struct SpanTreeMtEphSpanningEdgesWf;
         32 |         impl<V: StT + MtT + Hash + Ord> RwLockPredicate<SetStEph<Edge<V>>> for SpanTreeMtEphSpanningEdgesWf {
         34 |         }
         35 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:35: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap64/SpanTreeMtEph.rs:35: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
         33 |             open spec fn inv(self, _v: SetStEph<Edge<V>>) -> bool { true }
         34 |         }
         36 |         fn new_spanning_edges_lock<V: StT + MtT + Hash + Ord>(
         37 |             val: SetStEph<Edge<V>>,
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:44: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap64/SpanTreeMtEph.rs:44: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         36 |         fn new_spanning_edges_lock<V: StT + MtT + Hash + Ord>(
             ...
         42 |         pub struct SpanTreeMtEphValidWf;
         43 |         impl RwLockPredicate<bool> for SpanTreeMtEphValidWf {
         45 |         }
         46 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:46: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap64/SpanTreeMtEph.rs:46: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
         44 |             open spec fn inv(self, _v: bool) -> bool { true }
         45 |         }
         47 |         fn new_valid_lock(val: bool) -> (lock: RwLock<bool, SpanTreeMtEphValidWf>) {
@@ -24,7 +26,7 @@
    Errors: 4 total (2 Verus RwLock external_body, 2 dummy RwLockPredicate)
 ✓ SpanTreeStEph.rs
 ❌ TSPApproxStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap64/TSPApproxStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
          2 | //! Chapter 64: TSP 2-Approximation via MST (Sequential)
          3 | //!
    Errors: 1 total (1 not verusified)
@@ -46,8 +48,5 @@ Proof Functions:
 Holes Found: 0 total
 
 Errors: 5 (bare impl(s), struct/enum outside verus!)
-
-🎉 No proof holes found! All proofs are complete.
-
 
 🎉 No proof holes found! All proofs are complete.

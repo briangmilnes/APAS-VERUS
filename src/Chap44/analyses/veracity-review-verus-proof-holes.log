@@ -1,22 +1,22 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap44
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap44
 
 ❌ DocumentIndex.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap44/DocumentIndex.rs:30: error: struct_outside_verus - struct DocumentIndex — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap44/DocumentIndex.rs:30: error: struct_outside_verus - struct DocumentIndex — should be inside verus!
         30 |     pub struct DocumentIndex {
         31 |         word_to_docs: TableStPer<Word, DocumentSet>,
         32 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap44/DocumentIndex.rs:30: error: clone_derived_outside - struct DocumentIndex — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap44/DocumentIndex.rs:30: error: clone_derived_outside - struct DocumentIndex — Clone should be implemented inside verus!, not derived outside
         30 |     pub struct DocumentIndex {
         31 |         word_to_docs: TableStPer<Word, DocumentSet>,
         32 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap44/DocumentIndex.rs:257: error: struct_outside_verus - struct QueryBuilder — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap44/DocumentIndex.rs:257: error: struct_outside_verus - struct QueryBuilder — should be inside verus!
        257 |     pub struct QueryBuilder<'a> {
        258 |         index: &'a DocumentIndex,
        259 |     }
    Errors: 3 total (2 struct/enum outside verus!, 1 Clone derived outside)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Example44_1.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap44/Example44_1.rs:47: error: struct_outside_verus - struct TweetQueryExamples — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap44/Example44_1.rs:47: error: struct_outside_verus - struct TweetQueryExamples — should be inside verus!
         47 |     pub struct TweetQueryExamples {
         48 |         index: DocumentIndex,
         49 |         fw: Box<dyn Fn(&Word) -> DocumentSet>,
