@@ -8,8 +8,8 @@ table { width: 100% !important; table-layout: fixed; }
 # Chap12 Review Against Prose
 
 **Reviewer:** Claude-Opus-4.6
-**Date:** 2026-02-17
-**Last mechanical audit:** 2026-02-18 — section reorder, trigger fixes, doc comments only; no functional changes.
+**Date:** 2026-02-19
+**Last mechanical audit:** 2026-02-19 — full review regeneration; proof holes log updated.
 **Prose file:** `prompts/Chap12.txt`
 **Source files:** `Exercise12_1.rs`, `Exercise12_2.rs`, `Exercise12_5.rs`
 

@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 58 — Bellman-Ford's Algorithm: Review Against Prose
 
-**Date:** 2026-02-18 (updated 2026-02-18: file rename Int→I64; tests present; hole detector clean)
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 1: Inventory (tool-generated)

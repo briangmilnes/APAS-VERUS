@@ -1,90 +1,88 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap50/
-
 ❌ MatrixChainMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:58: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:58: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         54 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
         56 |         {
         57 |             let r = self.rows == other.rows && self.cols == other.cols;
         59 |             r
         60 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:65: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:65: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         54 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
         63 |         pub struct McEphDimWf;
         64 |         impl RwLockPredicate<Vec<MatrixDim>> for McEphDimWf {
         66 |         }
         67 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:67: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:67: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
         65 |             open spec fn inv(self, v: Vec<MatrixDim>) -> bool { true }
         66 |         }
         68 |         fn new_mceph_dim_lock(val: Vec<MatrixDim>) -> (lock: RwLock<Vec<MatrixDim>, McEphDimWf>) {
         69 |             RwLock::new(val, Ghost(McEphDimWf))
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:74: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:74: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         68 |         fn new_mceph_dim_lock(val: Vec<MatrixDim>) -> (lock: RwLock<Vec<MatrixDim>, McEphDimWf>) {
             ...
         72 |         pub struct McEphMemoWf;
         73 |         impl RwLockPredicate<HashMap<(usize, usize), usize>> for McEphMemoWf {
         75 |         }
         76 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:76: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:76: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
         74 |             open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
         75 |         }
         77 |         fn new_mceph_memo_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>) {
         78 |             RwLock::new(val, Ghost(McEphMemoWf))
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:84: error: struct_outside_verus - struct MatrixChainMtEphS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:84: error: struct_outside_verus - struct MatrixChainMtEphS — should be inside verus!
         84 |     pub struct MatrixChainMtEphS {
         85 |         pub dimensions: Arc<RwLock<Vec<MatrixDim>, McEphDimWf>>,
         86 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:84: error: clone_derived_outside - struct MatrixChainMtEphS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:84: error: clone_derived_outside - struct MatrixChainMtEphS — Clone should be implemented inside verus!, not derived outside
         84 |     pub struct MatrixChainMtEphS {
         85 |         pub dimensions: Arc<RwLock<Vec<MatrixDim>, McEphDimWf>>,
         86 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>>,
    Errors: 7 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 assume in eq/clone (Verus workaround), 2 Verus RwLock external_body, 2 dummy RwLockPredicate)
 ❌ MatrixChainMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:60: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtPer.rs:60: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         56 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
         58 |         {
         59 |             let r = self.rows == other.rows && self.cols == other.cols;
         61 |             r
         62 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:67: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtPer.rs:67: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         56 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
         65 |         pub struct McPerMemoWf;
         66 |         impl RwLockPredicate<HashMap<(usize, usize), usize>> for McPerMemoWf {
         68 |         }
         69 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:69: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtPer.rs:69: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
         67 |             open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
         68 |         }
         70 |         fn new_mcper_memo_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>) {
         71 |             RwLock::new(val, Ghost(McPerMemoWf))
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:77: error: struct_outside_verus - struct MatrixChainMtPerS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtPer.rs:77: error: struct_outside_verus - struct MatrixChainMtPerS — should be inside verus!
         77 |     pub struct MatrixChainMtPerS {
         78 |         pub dimensions: Arc<Vec<MatrixDim>>,
         79 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:77: error: clone_derived_outside - struct MatrixChainMtPerS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtPer.rs:77: error: clone_derived_outside - struct MatrixChainMtPerS — Clone should be implemented inside verus!, not derived outside
         77 |     pub struct MatrixChainMtPerS {
         78 |         pub dimensions: Arc<Vec<MatrixDim>>,
         79 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>>,
    Errors: 5 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 assume in eq/clone (Verus workaround), 1 Verus RwLock external_body, 1 dummy RwLockPredicate)
 ❌ MatrixChainStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:60: external_type_specification - #[verifier::external_type_specification]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStEph.rs:60: external_type_specification - #[verifier::external_type_specification]
         61 |     pub struct ExMatrixChainStEphS(MatrixChainStEphS);
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:55: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStEph.rs:55: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         51 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
         53 |         {
         54 |             let r = self.rows == other.rows && self.cols == other.cols;
         56 |             r
         57 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:67: error: struct_outside_verus - struct MatrixChainStEphS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStEph.rs:67: error: struct_outside_verus - struct MatrixChainStEphS — should be inside verus!
         67 |     pub struct MatrixChainStEphS {
         68 |         pub dimensions: Vec<MatrixDim>,
         69 |         pub memo: HashMap<(usize, usize), usize>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:67: error: clone_derived_outside - struct MatrixChainStEphS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStEph.rs:67: error: clone_derived_outside - struct MatrixChainStEphS — Clone should be implemented inside verus!, not derived outside
         67 |     pub struct MatrixChainStEphS {
         68 |         pub dimensions: Vec<MatrixDim>,
         69 |         pub memo: HashMap<(usize, usize), usize>,
@@ -92,20 +90,20 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
       1 × external_type_specification
    Errors: 3 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 assume in eq/clone (Verus workaround))
 ❌ MatrixChainStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:62: external_type_specification - #[verifier::external_type_specification]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStPer.rs:62: external_type_specification - #[verifier::external_type_specification]
         63 |     pub struct ExMatrixChainStPerS(MatrixChainStPerS);
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:57: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStPer.rs:57: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         53 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
         55 |         {
         56 |             let r = self.rows == other.rows && self.cols == other.cols;
         58 |             r
         59 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:69: error: struct_outside_verus - struct MatrixChainStPerS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStPer.rs:69: error: struct_outside_verus - struct MatrixChainStPerS — should be inside verus!
         69 |     pub struct MatrixChainStPerS {
         70 |         pub dimensions: Vec<MatrixDim>,
         71 |         pub memo: HashMap<(usize, usize), usize>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:69: error: clone_derived_outside - struct MatrixChainStPerS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStPer.rs:69: error: clone_derived_outside - struct MatrixChainStPerS — Clone should be implemented inside verus!, not derived outside
         69 |     pub struct MatrixChainStPerS {
         70 |         pub dimensions: Vec<MatrixDim>,
         71 |         pub memo: HashMap<(usize, usize), usize>,
@@ -113,43 +111,43 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
       1 × external_type_specification
    Errors: 3 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 assume in eq/clone (Verus workaround))
 ❌ OptBinSearchTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:38: external_type_specification - #[verifier::external_type_specification]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:38: external_type_specification - #[verifier::external_type_specification]
         39 |         pub struct ExKeyProb<T: MtVal>(KeyProb<T>);
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:43: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:43: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         41 |         pub struct ObstEphKeysWf;
         42 |         impl<T: MtVal> RwLockPredicate<Vec<KeyProb<T>>> for ObstEphKeysWf {
         44 |         }
         45 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:45: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:45: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
         43 |             open spec fn inv(self, v: Vec<KeyProb<T>>) -> bool { true }
         44 |         }
         46 |         fn new_obst_eph_keys_lock<T: MtVal>(val: Vec<KeyProb<T>>) -> (lock: RwLock<Vec<KeyProb<T>>, ObstEphKeysWf>) {
         47 |             RwLock::new(val, Ghost(ObstEphKeysWf))
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:52: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:52: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         46 |         fn new_obst_eph_keys_lock<T: MtVal>(val: Vec<KeyProb<T>>) -> (lock: RwLock<Vec<KeyProb<T>>, ObstEphKeysWf>) {
             ...
         50 |         pub struct ObstEphMemoWf;
         51 |         impl RwLockPredicate<HashMap<(usize, usize), Probability>> for ObstEphMemoWf {
         53 |         }
         54 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:54: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:54: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
         52 |             open spec fn inv(self, v: HashMap<(usize, usize), Probability>) -> bool { true }
         53 |         }
         55 |         fn new_obst_eph_memo_lock(val: HashMap<(usize, usize), Probability>) -> (lock: RwLock<HashMap<(usize, usize), Probability>, ObstEphMemoWf>) {
         56 |             RwLock::new(val, Ghost(ObstEphMemoWf))
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:24: error: struct_outside_verus - struct KeyProb — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:24: error: struct_outside_verus - struct KeyProb — should be inside verus!
         24 |     pub struct KeyProb<T: MtVal> {
         25 |         pub key: T,
         26 |         pub prob: Probability,
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:24: error: clone_derived_outside - struct KeyProb — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:24: error: clone_derived_outside - struct KeyProb — Clone should be implemented inside verus!, not derived outside
         24 |     pub struct KeyProb<T: MtVal> {
         25 |         pub key: T,
         26 |         pub prob: Probability,
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:31: error: struct_outside_verus - struct OBSTMtEphS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:31: error: struct_outside_verus - struct OBSTMtEphS — should be inside verus!
         31 |     pub struct OBSTMtEphS<T: MtVal> {
         32 |         pub keys: Arc<RwLock<Vec<KeyProb<T>>, ObstEphKeysWf>>,
         33 |         pub memo: Arc<RwLock<HashMap<(usize, usize), Probability>, ObstEphMemoWf>>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:31: error: clone_derived_outside - struct OBSTMtEphS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:31: error: clone_derived_outside - struct OBSTMtEphS — Clone should be implemented inside verus!, not derived outside
         31 |     pub struct OBSTMtEphS<T: MtVal> {
         32 |         pub keys: Arc<RwLock<Vec<KeyProb<T>>, ObstEphKeysWf>>,
         33 |         pub memo: Arc<RwLock<HashMap<(usize, usize), Probability>, ObstEphMemoWf>>,
@@ -157,51 +155,51 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
       1 × external_type_specification
    Errors: 8 total (2 struct/enum outside verus!, 2 Clone derived outside, 2 Verus RwLock external_body, 2 dummy RwLockPredicate)
 ❌ OptBinSearchTreeMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:41: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:41: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         39 |         pub struct ObstPerMemoWf;
         40 |         impl RwLockPredicate<HashMap<(usize, usize), Probability>> for ObstPerMemoWf {
         42 |         }
         43 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:43: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:43: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
         41 |             open spec fn inv(self, v: HashMap<(usize, usize), Probability>) -> bool { true }
         42 |         }
         44 |         fn new_obst_per_memo_lock(val: HashMap<(usize, usize), Probability>) -> (lock: RwLock<HashMap<(usize, usize), Probability>, ObstPerMemoWf>) {
         45 |             RwLock::new(val, Ghost(ObstPerMemoWf))
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:26: error: struct_outside_verus - struct KeyProb — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:26: error: struct_outside_verus - struct KeyProb — should be inside verus!
         26 |     pub struct KeyProb<T: MtVal> {
         27 |         pub key: T,
         28 |         pub prob: Probability,
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:26: error: clone_derived_outside - struct KeyProb — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:26: error: clone_derived_outside - struct KeyProb — Clone should be implemented inside verus!, not derived outside
         26 |     pub struct KeyProb<T: MtVal> {
         27 |         pub key: T,
         28 |         pub prob: Probability,
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:33: error: struct_outside_verus - struct OBSTMtPerS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:33: error: struct_outside_verus - struct OBSTMtPerS — should be inside verus!
         33 |     pub struct OBSTMtPerS<T: MtVal> {
         34 |         pub keys: Arc<Vec<KeyProb<T>>>,
         35 |         pub memo: Arc<RwLock<HashMap<(usize, usize), Probability>, ObstPerMemoWf>>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:33: error: clone_derived_outside - struct OBSTMtPerS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:33: error: clone_derived_outside - struct OBSTMtPerS — Clone should be implemented inside verus!, not derived outside
         33 |     pub struct OBSTMtPerS<T: MtVal> {
         34 |         pub keys: Arc<Vec<KeyProb<T>>>,
         35 |         pub memo: Arc<RwLock<HashMap<(usize, usize), Probability>, ObstPerMemoWf>>,
    Errors: 6 total (2 struct/enum outside verus!, 2 Clone derived outside, 1 Verus RwLock external_body, 1 dummy RwLockPredicate)
 ❌ OptBinSearchTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:40: external_type_specification - #[verifier::external_type_specification]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStEph.rs:40: external_type_specification - #[verifier::external_type_specification]
         41 |     pub struct ExKeyProb<T: StT>(KeyProb<T>);
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:43: external_type_specification - #[verifier::external_type_specification]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStEph.rs:43: external_type_specification - #[verifier::external_type_specification]
         44 |     pub struct ExOBSTStEphS<T: StT>(OBSTStEphS<T>);
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:25: error: struct_outside_verus - struct KeyProb — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStEph.rs:25: error: struct_outside_verus - struct KeyProb — should be inside verus!
         25 |     pub struct KeyProb<T: StT> {
         26 |         pub key: T,
         27 |         pub prob: Probability,
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:25: error: clone_derived_outside - struct KeyProb — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStEph.rs:25: error: clone_derived_outside - struct KeyProb — Clone should be implemented inside verus!, not derived outside
         25 |     pub struct KeyProb<T: StT> {
         26 |         pub key: T,
         27 |         pub prob: Probability,
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:33: error: struct_outside_verus - struct OBSTStEphS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStEph.rs:33: error: struct_outside_verus - struct OBSTStEphS — should be inside verus!
         33 |     pub struct OBSTStEphS<T: StT> {
         34 |         pub keys: Vec<KeyProb<T>>,
         35 |         pub memo: HashMap<(usize, usize), Probability>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:33: error: clone_derived_outside - struct OBSTStEphS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStEph.rs:33: error: clone_derived_outside - struct OBSTStEphS — Clone should be implemented inside verus!, not derived outside
         33 |     pub struct OBSTStEphS<T: StT> {
         34 |         pub keys: Vec<KeyProb<T>>,
         35 |         pub memo: HashMap<(usize, usize), Probability>,
@@ -209,23 +207,23 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
       2 × external_type_specification
    Errors: 4 total (2 struct/enum outside verus!, 2 Clone derived outside)
 ❌ OptBinSearchTreeStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:40: external_type_specification - #[verifier::external_type_specification]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStPer.rs:40: external_type_specification - #[verifier::external_type_specification]
         41 |     pub struct ExKeyProb<T: StT>(KeyProb<T>);
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:43: external_type_specification - #[verifier::external_type_specification]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStPer.rs:43: external_type_specification - #[verifier::external_type_specification]
         44 |     pub struct ExOBSTStPerS<T: StT>(OBSTStPerS<T>);
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:25: error: struct_outside_verus - struct KeyProb — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStPer.rs:25: error: struct_outside_verus - struct KeyProb — should be inside verus!
         25 |     pub struct KeyProb<T: StT> {
         26 |         pub key: T,
         27 |         pub prob: Probability,
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:25: error: clone_derived_outside - struct KeyProb — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStPer.rs:25: error: clone_derived_outside - struct KeyProb — Clone should be implemented inside verus!, not derived outside
         25 |     pub struct KeyProb<T: StT> {
         26 |         pub key: T,
         27 |         pub prob: Probability,
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:33: error: struct_outside_verus - struct OBSTStPerS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStPer.rs:33: error: struct_outside_verus - struct OBSTStPerS — should be inside verus!
         33 |     pub struct OBSTStPerS<T: StT> {
         34 |         pub keys: Vec<KeyProb<T>>,
         35 |         pub memo: HashMap<(usize, usize), Probability>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:33: error: clone_derived_outside - struct OBSTStPerS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStPer.rs:33: error: clone_derived_outside - struct OBSTStPerS — Clone should be implemented inside verus!, not derived outside
         33 |     pub struct OBSTStPerS<T: StT> {
         34 |         pub keys: Vec<KeyProb<T>>,
         35 |         pub memo: HashMap<(usize, usize), Probability>,
@@ -233,45 +231,45 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
       2 × external_type_specification
    Errors: 4 total (2 struct/enum outside verus!, 2 Clone derived outside)
 ❌ Probability.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:46: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/Probability.rs:46: external_body - #[verifier::external_body]
         47 |         fn new(value: f64) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:52: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/Probability.rs:52: external_body - #[verifier::external_body]
         53 |         fn value(&self) -> f64 { self.0 }
-/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:55: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/Probability.rs:55: external_body - #[verifier::external_body]
         56 |         fn infinity() -> Self { Probability(f64::INFINITY) }
-/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:58: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/Probability.rs:58: external_body - #[verifier::external_body]
         59 |         fn zero() -> Self { Probability(0.0) }
-/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:64: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/Probability.rs:64: external_body - #[verifier::external_body]
         65 |         fn default() -> Self { <Probability as ProbabilityTrait>::zero() }
-/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:69: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/Probability.rs:69: external_body - #[verifier::external_body]
         70 |         /// - APAS: Work Θ(1), Span Θ(1)
         71 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — bit-level f64 comparison
         72 |         fn eq(&self, other: &Self) -> bool {
-/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:80: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/Probability.rs:80: external_body - #[verifier::external_body]
         81 |         fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
-/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:85: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/Probability.rs:85: external_body - #[verifier::external_body]
         86 |         /// - APAS: Work Θ(1), Span Θ(1)
         87 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — NaN-aware f64 comparison
         88 |         fn cmp(&self, other: &Self) -> Ordering {
-/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:107: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/Probability.rs:107: external_body - #[verifier::external_body]
        108 |         /// - APAS: Work Θ(1), Span Θ(1)
        109 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — hash f64 bits
        110 |         fn hash<H: Hasher>(&self, state: &mut H) { self.0.to_bits().hash(state); }
-/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:114: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/Probability.rs:114: external_body - #[verifier::external_body]
        115 |         /// - APAS: Work Θ(1), Span Θ(1)
        116 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 wrapping
        117 |         fn from(value: f64) -> Self { Probability(value) }
-/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:121: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/Probability.rs:121: external_body - #[verifier::external_body]
        122 |         /// - APAS: Work Θ(1), Span Θ(1)
        123 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 unwrapping
        124 |         fn from(prob: Probability) -> Self { prob.0 }
-/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:130: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/Probability.rs:130: external_body - #[verifier::external_body]
        131 |         fn add(self, other: Self) -> Self { Probability(self.0 + other.0) }
-/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:137: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/Probability.rs:137: external_body - #[verifier::external_body]
        138 |         fn sub(self, other: Self) -> Self { Probability(self.0 - other.0) }
-/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:144: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/Probability.rs:144: external_body - #[verifier::external_body]
        145 |         fn mul(self, other: Self) -> Self { Probability(self.0 * other.0) }
-/home/milnes/projects/APAS-VERUS/src/Chap50/Probability.rs:151: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/Probability.rs:151: external_body - #[verifier::external_body]
        152 |         fn div(self, other: Self) -> Self { Probability(self.0 / other.0) }
    Holes: 15 total
       15 × external_body
@@ -292,6 +290,10 @@ Proof Functions:
 
 Holes Found: 22 total
    15 × external_body
+   7 × external_type_specification
+
+Errors: 40 (bare impl(s), struct/enum outside verus!)
+
    7 × external_type_specification
 
 Errors: 40 (bare impl(s), struct/enum outside verus!)

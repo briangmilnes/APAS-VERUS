@@ -1,32 +1,30 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap56/
-
 ✓ AllPairsResultStEphF64.rs
 ✓ AllPairsResultStEphI64.rs
 ✓ AllPairsResultStPerF64.rs
 ✓ AllPairsResultStPerI64.rs
 ❌ Example56_1.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:44: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_1.rs:44: external_body - #[verifier::external_body]
         45 |     pub fn example_path_weight_int() {
-/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:63: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_1.rs:63: external_body - #[verifier::external_body]
         64 |     pub fn example_path_weight_float() {
-/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_1.rs:91: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_1.rs:91: external_body - #[verifier::external_body]
         92 |     pub fn example_negative_weights() {
    Holes: 3 total
       3 × external_body
 ❌ Example56_3.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:41: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_3.rs:41: external_body - #[verifier::external_body]
         42 |     pub fn example_negative_cycle() {
-/home/milnes/projects/APAS-VERUS/src/Chap56/Example56_3.rs:75: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/Example56_3.rs:75: external_body - #[verifier::external_body]
         76 |     pub fn example_undefined_shortest_path() {
    Holes: 2 total
       2 × external_body
 ❌ PathWeightUtilsStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:163: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/PathWeightUtilsStEph.rs:163: external_body - #[verifier::external_body]
        164 |     fn f64_approx_eq(a: &F64Dist, b: &F64Dist) -> bool {
    Holes: 1 total
       1 × external_body
 ❌ PathWeightUtilsStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:162: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap56/PathWeightUtilsStPer.rs:162: external_body - #[verifier::external_body]
        163 |     fn f64_approx_eq(a: &F64Dist, b: &F64Dist) -> bool {
    Holes: 1 total
       1 × external_body
@@ -45,6 +43,13 @@ Modules:
    12 total
 
 Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 7 total
+   7 × external_body
+oof Functions:
    0 clean
    0 holed
    0 total

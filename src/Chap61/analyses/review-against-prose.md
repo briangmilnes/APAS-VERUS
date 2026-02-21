@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 61: Edge Contraction — Review Against Prose
 
-- **Date**: 2026-02-13 (updated 2026-02-18: verusification — traits inside verus!, impls cfg-gated)
+- **Date**: 2026-02-19
 - **Reviewer**: Claude-Opus-4.6
 - **Source files**: 4 (`EdgeContractionMtEph.rs`, `EdgeContractionStEph.rs`, `VertexMatchingMtEph.rs`, `VertexMatchingStEph.rs`)
 - **Runtime tests**: 0

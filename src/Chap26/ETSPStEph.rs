@@ -21,6 +21,11 @@
 pub mod ETSPStEph {
 
     use vstd::prelude::*;
+    use vstd::arithmetic::div_mod::{
+        lemma_add_mod_noop,
+        lemma_mod_multiples_vanish,
+        lemma_small_mod,
+    };
 
     verus! {
 
@@ -191,9 +196,30 @@ pub mod ETSPStEph {
                 assert(combined[k] == lt[((best_li + 1 + k) % ln_i)]);
                 let li = (best_li + 1 + k) % ln_i;
                 assert(spec_point_eq(lt[li].to, lt[((li + 1) % ln_i)].from));
-
-                // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
-                assume(spec_point_eq(combined[i].to, combined[next_i].from));
+                assert(combined[i] == lt[li]);
+                if i < ln_i - 2 {
+                    // next_i = i+1 still in left segment; forall applies.
+                    lemma_small_mod(1, ln_i as nat);
+                    lemma_add_mod_noop(best_li + 1 + i, 1, ln_i);
+                    assert(combined[(i + 1)] == lt[((best_li + 1 + (i + 1)) % ln_i)]);
+                    assert((best_li + 1 + (i + 1)) % ln_i == (li + 1) % ln_i);
+                    assert(combined[next_i] == lt[((li + 1) % ln_i)]);
+                } else {
+                    // i == ln_i - 2, next_i == ln_i - 1 is bridge.
+                    assert(i == ln_i - 2);
+                    assert(next_i == ln_i - 1);
+                    assert(combined[next_i] == (Edge { from: el_from, to: er_to }));
+                    assert(el_from == lt[best_li].from);
+                    lemma_small_mod(1, ln_i as nat);
+                    lemma_add_mod_noop(best_li + ln_i - 1, 1, ln_i);
+                    lemma_mod_multiples_vanish(1, best_li, ln_i);
+                    lemma_small_mod(best_li as nat, ln_i as nat);
+                    assert((li + 1) % ln_i == best_li);
+                    assert(spec_point_eq(lt[li].to, lt[best_li].from));
+                }
+                assert(combined[i].to == lt[li].to);
+                assert(combined[next_i].from == lt[((li + 1) % ln_i)].from);
+                assert(spec_point_eq(combined[i].to, combined[next_i].from));
             } else if i == ln_i - 1 {
                 // Bridge: left -> right.
                 assert(combined[i].to == er_to);
@@ -211,9 +237,30 @@ pub mod ETSPStEph {
                 assert(combined[(ln_i + m)] == rt[((best_ri + 1 + m) % rn_i)]);
                 let ri = (best_ri + 1 + m) % rn_i;
                 assert(spec_point_eq(rt[ri].to, rt[((ri + 1) % rn_i)].from));
-
-                // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
-                assume(spec_point_eq(combined[i].to, combined[next_i].from));
+                assert(combined[(ln_i + m)] == rt[ri]);
+                if m < rn_i - 2 {
+                    let m1 = m + 1;
+                    assert(0 <= m1 && m1 < rn_i - 1);
+                    assert(combined[(ln_i + m1)] == rt[((best_ri + 1 + m1) % rn_i)]);
+                    lemma_small_mod(1, rn_i as nat);
+                    lemma_add_mod_noop(best_ri + 1 + m, 1, rn_i);
+                    assert((best_ri + 1 + m1) % rn_i == (ri + 1) % rn_i);
+                    assert(combined[next_i] == rt[((ri + 1) % rn_i)]);
+                } else {
+                    assert(m == rn_i - 2);
+                    assert(next_i == ln_i + rn_i - 1);
+                    assert(combined[next_i] == (Edge { from: er_from, to: el_to }));
+                    assert(er_from == rt[best_ri].from);
+                    lemma_small_mod(1, rn_i as nat);
+                    lemma_add_mod_noop(best_ri + rn_i - 1, 1, rn_i);
+                    lemma_mod_multiples_vanish(1, best_ri, rn_i);
+                    lemma_small_mod(best_ri as nat, rn_i as nat);
+                    assert((ri + 1) % rn_i == best_ri);
+                    assert(spec_point_eq(rt[ri].to, rt[best_ri].from));
+                }
+                assert(combined[i].to == rt[ri].to);
+                assert(combined[next_i].from == rt[((ri + 1) % rn_i)].from);
+                assert(spec_point_eq(combined[i].to, combined[next_i].from));
             } else {
                 // Bridge: right -> left (wraps to index 0).
                 assert(i == ln_i + rn_i - 1);
@@ -477,12 +524,12 @@ pub mod ETSPStEph {
 
     } // verus!
 
+    pub trait ETSPPointTrait {
+        fn distance(&self, other: &Point) -> f64;
+    }
 
-    impl Point {
-        /// Euclidean distance between two points.
-        /// - APAS: N/A — helper function.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
-        pub fn distance(&self, other: &Point) -> f64 {
+    impl ETSPPointTrait for Point {
+        fn distance(&self, other: &Point) -> f64 {
             let dx = self.x - other.x;
             let dy = self.y - other.y;
             (dx * dx + dy * dy).sqrt()

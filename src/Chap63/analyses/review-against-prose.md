@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 63: Graph Connectivity — Review Against Prose
 
-**Date:** 2026-02-13 (updated 2026-02-18: verusification — traits inside verus!, impls cfg-gated)
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 **Source:** `prompts/Chap63.txt`, `src/Chap63/ConnectivityStEph.rs`, `src/Chap63/ConnectivityMtEph.rs`
 

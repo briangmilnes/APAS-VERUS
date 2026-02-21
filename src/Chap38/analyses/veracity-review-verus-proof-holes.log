@@ -1,24 +1,25 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap38
-
 ❌ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:19: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        17 | 
-        18 |         impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for BstParaWf {
-        20 |         }
-        21 | 
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:41: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        19 |             open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool { true }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:46: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+        19 |             closed spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
             ...
-        39 |         }
-        40 | 
-        42 |         fn new_bst_para_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {
-        43 |             RwLock::new(val, Ghost(BstParaWf))
-   Errors: 2 total (1 Verus RwLock external_body, 1 dummy RwLockPredicate)
+        44 |         }
+        45 | 
+        47 |         fn new_bst_para_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {
+        48 |             RwLock::new(val, Ghost(BstParaWf))
+   Errors: 1 total (1 Verus RwLock external_body)
 ❌ BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
-         2 | //! Parametric single-threaded BST built around a joinMid interface.
-         3 | 
-   Errors: 1 total (1 not verusified)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:106: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+        97 |         fn clone(&self) -> (result: Self)
+            ...
+       104 |     }
+       105 | 
+       107 |     fn new_bst_para_lock<T: StT + Ord>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {
+       108 |         RwLock::new(val, Ghost(BstParaWf))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:52: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:81: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:101: info: accept() - accept hole
+   Errors: 1 total (1 Verus RwLock external_body)
+   Info: 3 assume(false); diverge() idiom(s)
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -36,6 +37,11 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 3 (bare impl(s), struct/enum outside verus!)
+Errors: 2 (bare impl(s), struct/enum outside verus!)
+
+Info: 3 assume(false); diverge() idiom(s) (valid non-termination)
+
+🎉 No proof holes found! All proofs are complete.
+rge() idiom(s) (valid non-termination)
 
 🎉 No proof holes found! All proofs are complete.

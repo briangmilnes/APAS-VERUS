@@ -85,8 +85,8 @@
 | 61 | Chap23 | PrimTreeSeqStPer | 17 | 19 | 1 | 0 | 20 | 0 | 19 | 1 | 0 |
 | 62 | Chap26 | DivConReduceMtPer | 5 | 5 | 0 | 3 | 8 | 0 | 8 | 0 | 0 |
 | 63 | Chap26 | DivConReduceStPer | 5 | 5 | 0 | 0 | 5 | 0 | 5 | 0 | 0 |
-| 64 | Chap26 | ETSPMtEph | 1 | 1 | 1 | 10 | 8 | 4 | 5 | 3 | 4 |
-| 65 | Chap26 | ETSPStEph | 1 | 1 | 1 | 8 | 7 | 3 | 4 | 3 | 3 |
+| 64 | Chap26 | ETSPMtEph | 2 | 2 | 0 | 10 | 8 | 4 | 6 | 2 | 4 |
+| 65 | Chap26 | ETSPStEph | 2 | 2 | 0 | 8 | 7 | 3 | 5 | 2 | 3 |
 | 66 | Chap26 | MergeSortMtPer | 2 | 2 | 0 | 6 | 8 | 0 | 8 | 0 | 0 |
 | 67 | Chap26 | MergeSortStPer | 2 | 2 | 0 | 1 | 3 | 0 | 3 | 0 | 0 |
 | 68 | Chap26 | ScanDCMtPer | 1 | 1 | 0 | 2 | 3 | 0 | 3 | 0 | 0 |
@@ -111,7 +111,7 @@
 | 87 | Chap35 | OrderStatSelectStEph | 1 | 1 | 0 | 2 | 3 | 0 | 3 | 0 | 0 |
 | 88 | Chap35 | OrderStatSelectStPer | 1 | 1 | 0 | 1 | 2 | 0 | 2 | 0 | 0 |
 | 89 | Chap36 | QuickSortMtEph | 0 | 0 | 0 | 9 | 9 | 0 | 9 | 0 | 0 |
-| 90 | Chap36 | QuickSortMtEphSlice | 6 | 6 | 0 | 0 | 6 | 0 | 0 | 1 | 5 |
+| 90 | Chap36 | QuickSortMtEphSlice | 6 | 6 | 0 | 0 | 6 | 0 | 0 | 0 | 6 |
 | 91 | Chap36 | QuickSortStEph | 0 | 0 | 0 | 9 | 9 | 0 | 9 | 0 | 0 |
 | 92 | Chap37 | AVLTreeSeq | 20 | 23 | 0 | 13 | 33 | 3 | 10 | 23 | 3 |
 | 93 | Chap37 | AVLTreeSeqMtPer | 11 | 14 | 0 | 13 | 25 | 2 | 11 | 12 | 4 |
@@ -273,122 +273,6 @@
 | 249 | Chap65 | UnionFindStEph | 6 | 7 | 0 | 0 | 6 | 1 | 0 | 0 | 7 |
 | 250 | Chap66 | BoruvkaMtEph | 5 | 0 | 0 | 7 | 5 | 2 | 0 | 0 | 7 |
 | 251 | Chap66 | BoruvkaStEph | 5 | 0 | 0 | 5 | 5 | 0 | 0 | 0 | 5 |
-| 252 | arithmetic | power2_plus | 0 | 0 | 0 | 6 | 6 | 0 | 6 | 0 | 0 |
-| 253 | experiments | ArrayVal | 0 | 0 | 0 | 4 | 3 | 1 | 3 | 0 | 1 |
-| 254 | experiments | ArrayVecSet | 0 | 0 | 0 | 4 | 3 | 1 | 0 | 1 | 3 |
-| 255 | experiments | CheckedI32 | 0 | 0 | 12 | 0 | 12 | 0 | 6 | 6 | 0 |
-| 256 | experiments | ForFor | 0 | 0 | 0 | 4 | 3 | 1 | 2 | 1 | 1 |
-| 257 | experiments | ForLoops | 0 | 0 | 0 | 3 | 2 | 1 | 0 | 0 | 3 |
-| 258 | experiments | HashCheckedU32 | 0 | 2 | 0 | 2 | 4 | 0 | 0 | 4 | 0 |
-| 259 | experiments | SetLoops | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 1 |
-| 260 | experiments | ToVecProof | 0 | 0 | 0 | 1 | 1 | 0 | 1 | 0 | 0 |
-| 261 | experiments | VSTDLoopProofs | 0 | 0 | 0 | 9 | 9 | 0 | 7 | 2 | 0 |
-| 262 | experiments | WhileWhile | 0 | 0 | 0 | 4 | 3 | 1 | 2 | 1 | 1 |
-| 263 | experiments | abstract_set_iter | 5 | 5 | 1 | 1 | 7 | 0 | 6 | 0 | 1 |
-| 264 | experiments | accept | 0 | 1 | 0 | 2 | 3 | 0 | 0 | 2 | 1 |
-| 265 | experiments | accept_external_body | 0 | 0 | 0 | 1 | 1 | 0 | 1 | 0 | 0 |
-| 266 | experiments | arc_clone_deref | 0 | 0 | 0 | 2 | 2 | 0 | 0 | 0 | 2 |
-| 267 | experiments | arc_rwlock_ninject | 0 | 0 | 0 | 2 | 2 | 0 | 2 | 0 | 0 |
-| 268 | experiments | assume_spec_test | 0 | 1 | 0 | 1 | 2 | 0 | 0 | 0 | 2 |
-| 269 | experiments | baseviewtypes | 0 | 0 | 0 | 7 | 7 | 0 | 1 | 0 | 6 |
-| 270 | experiments | biconditional_spec_fun | 0 | 0 | 0 | 10 | 10 | 0 | 1 | 0 | 9 |
-| 271 | experiments | boxing_fns | 0 | 0 | 0 | 12 | 12 | 0 | 5 | 0 | 7 |
-| 272 | experiments | checked_signed_int | 16 | 0 | 0 | 0 | 16 | 0 | 16 | 0 | 0 |
-| 273 | experiments | checked_u32 | 0 | 8 | 3 | 0 | 11 | 0 | 6 | 3 | 2 |
-| 274 | experiments | checked_unsigned_int | 15 | 0 | 0 | 0 | 15 | 0 | 15 | 0 | 0 |
-| 275 | experiments | clone | 0 | 0 | 0 | 11 | 11 | 0 | 4 | 6 | 1 |
-| 276 | experiments | clone_fn | 0 | 0 | 0 | 5 | 5 | 0 | 0 | 5 | 0 |
-| 277 | experiments | clone_plus | 0 | 0 | 0 | 4 | 4 | 0 | 2 | 1 | 1 |
-| 278 | experiments | clone_plus_vs_deep_clone | 0 | 0 | 0 | 3 | 3 | 0 | 1 | 0 | 2 |
-| 279 | experiments | collect | 0 | 0 | 0 | 7 | 7 | 0 | 7 | 0 | 0 |
-| 280 | experiments | collect2 | 0 | 0 | 0 | 5 | 5 | 0 | 5 | 0 | 0 |
-| 281 | experiments | collect_deep_view | 0 | 0 | 0 | 11 | 11 | 0 | 10 | 1 | 0 |
-| 282 | experiments | deep_view_2_tuple | 0 | 0 | 0 | 2 | 2 | 0 | 2 | 0 | 0 |
-| 283 | experiments | deep_view_struct | 1 | 1 | 0 | 1 | 2 | 0 | 1 | 0 | 1 |
-| 284 | experiments | eq_rel | 9 | 9 | 0 | 0 | 9 | 0 | 5 | 1 | 3 |
-| 285 | experiments | executable_use_of_int | 0 | 0 | 0 | 2 | 2 | 0 | 0 | 1 | 1 |
-| 286 | experiments | f64_bits_sort | 0 | 0 | 0 | 5 | 5 | 0 | 2 | 3 | 0 |
-| 287 | experiments | f64_float_cmp_sort | 0 | 0 | 0 | 4 | 4 | 0 | 0 | 4 | 0 |
-| 288 | experiments | f64_sort | 0 | 0 | 0 | 4 | 4 | 0 | 1 | 3 | 0 |
-| 289 | experiments | ghost_type_invariant | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 1 |
-| 290 | experiments | hash_set_iter | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 1 |
-| 291 | experiments | hash_set_modern_pattern | 0 | 0 | 0 | 5 | 5 | 0 | 0 | 1 | 4 |
-| 292 | experiments | hash_set_with_view_plus_loops | 0 | 0 | 0 | 7 | 7 | 0 | 4 | 1 | 2 |
-| 293 | experiments | invariant_proof_test | 0 | 0 | 0 | 4 | 4 | 0 | 4 | 0 | 0 |
-| 294 | experiments | minimal_iter | 2 | 0 | 0 | 0 | 2 | 0 | 0 | 0 | 2 |
-| 295 | experiments | modify_a_ghost_struct | 0 | 0 | 0 | 6 | 6 | 0 | 0 | 0 | 6 |
-| 296 | experiments | mut_refs_and_mut_returns | 0 | 0 | 3 | 2 | 5 | 0 | 3 | 0 | 2 |
-| 297 | experiments | parapair_closure_ensures | 0 | 0 | 0 | 3 | 3 | 0 | 2 | 0 | 1 |
-| 298 | experiments | parapair_move_closure_ensures | 0 | 0 | 0 | 3 | 3 | 0 | 2 | 0 | 1 |
-| 299 | experiments | parapair_named_closure | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 1 |
-| 300 | experiments | parapair_toplevel_closure | 0 | 0 | 0 | 3 | 3 | 0 | 2 | 0 | 1 |
-| 301 | experiments | pervasives | 0 | 0 | 0 | 8 | 8 | 0 | 3 | 3 | 2 |
-| 302 | experiments | possession | 2 | 2 | 0 | 0 | 2 | 0 | 2 | 0 | 0 |
-| 303 | experiments | proof_fn_in_trait | 2 | 2 | 0 | 1 | 3 | 0 | 2 | 0 | 1 |
-| 304 | experiments | proven_partialeq | 5 | 5 | 0 | 2 | 7 | 0 | 7 | 0 | 0 |
-| 305 | experiments | pub_crate_test | 0 | 0 | 1 | 3 | 0 | 4 | 0 | 0 | 4 |
-| 306 | experiments | seq_array_equality | 0 | 0 | 0 | 2 | 2 | 0 | 2 | 0 | 0 |
-| 307 | experiments | seq_for_basic_proofs | 0 | 0 | 0 | 27 | 27 | 0 | 25 | 2 | 0 |
-| 308 | experiments | seq_loop_basic_proofs | 0 | 0 | 0 | 27 | 27 | 0 | 25 | 2 | 0 |
-| 309 | experiments | seq_set_exec | 0 | 0 | 0 | 6 | 6 | 0 | 4 | 2 | 0 |
-| 310 | experiments | seq_vec_equality | 0 | 0 | 0 | 2 | 2 | 0 | 1 | 1 | 0 |
-| 311 | experiments | seq_while_basic_proofs | 0 | 0 | 0 | 27 | 27 | 0 | 25 | 2 | 0 |
-| 312 | experiments | set_len_empty_both_ways | 0 | 0 | 0 | 4 | 4 | 0 | 3 | 0 | 1 |
-| 313 | experiments | sigma_pi | 4 | 4 | 0 | 0 | 4 | 0 | 1 | 3 | 0 |
-| 314 | experiments | signed_int | 6 | 0 | 0 | 0 | 6 | 0 | 6 | 0 | 0 |
-| 315 | experiments | simple_hash_set_iter | 5 | 5 | 0 | 1 | 6 | 0 | 3 | 2 | 1 |
-| 316 | experiments | simple_seq_iter | 4 | 5 | 0 | 5 | 10 | 0 | 8 | 1 | 1 |
-| 317 | experiments | simple_set_iter | 5 | 6 | 0 | 4 | 10 | 0 | 7 | 2 | 1 |
-| 318 | experiments | spec_fun_argument | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 |
-| 319 | experiments | spec_loop | 2 | 2 | 0 | 0 | 2 | 0 | 2 | 0 | 0 |
-| 320 | experiments | struct_construction_test | 0 | 0 | 4 | 3 | 0 | 7 | 0 | 0 | 7 |
-| 321 | experiments | supertrait | 2 | 2 | 0 | 0 | 2 | 0 | 2 | 0 | 0 |
-| 322 | experiments | tcb_foul | 0 | 0 | 0 | 5 | 5 | 0 | 0 | 3 | 2 |
-| 323 | experiments | test_feq | 0 | 0 | 0 | 35 | 35 | 0 | 20 | 4 | 11 |
-| 324 | experiments | test_feq_insertion_sort | 0 | 0 | 0 | 5 | 5 | 0 | 2 | 3 | 0 |
-| 325 | experiments | test_test | 0 | 0 | 0 | 3 | 3 | 0 | 3 | 0 | 0 |
-| 326 | experiments | total_ord_gen | 10 | 10 | 0 | 4 | 14 | 0 | 1 | 9 | 4 |
-| 327 | experiments | total_ord_gen_axioms | 0 | 0 | 0 | 11 | 11 | 0 | 0 | 7 | 4 |
-| 328 | experiments | trait_decreases | 2 | 2 | 0 | 1 | 3 | 0 | 3 | 0 | 0 |
-| 329 | experiments | triangle | 0 | 0 | 0 | 3 | 3 | 0 | 3 | 0 | 0 |
-| 330 | experiments | unsigned_int | 7 | 0 | 0 | 0 | 7 | 0 | 7 | 0 | 0 |
-| 331 | experiments | use_proven_partialeq | 0 | 0 | 1 | 5 | 6 | 0 | 5 | 0 | 1 |
-| 332 | experiments | vec_clone_in_verus | 0 | 0 | 1 | 1 | 2 | 0 | 1 | 0 | 1 |
-| 333 | experiments | vec_filter | 0 | 0 | 0 | 3 | 3 | 0 | 2 | 1 | 0 |
-| 334 | experiments | vec_if | 0 | 0 | 0 | 4 | 4 | 0 | 4 | 0 | 0 |
-| 335 | experiments | vec_length_while_rust | 0 | 0 | 0 | 2 | 0 | 2 | 0 | 0 | 2 |
-| 336 | experiments | vec_length_while_verus | 0 | 0 | 0 | 1 | 1 | 0 | 1 | 0 | 0 |
-| 337 | experiments | vec_remove_duplicates | 0 | 0 | 0 | 2 | 2 | 0 | 2 | 0 | 0 |
-| 338 | experiments | verus_iterator | 2 | 0 | 0 | 0 | 2 | 0 | 2 | 0 | 0 |
-| 339 | experiments | verus_keep_ghost_and_test | 0 | 0 | 6 | 0 | 6 | 0 | 6 | 0 | 0 |
-| 340 | experiments | verus_pub_crate_test | 0 | 0 | 1 | 1 | 2 | 0 | 1 | 0 | 1 |
-| 341 | experiments | verus_sum_loops_iterators | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 1 |
-| 342 | experiments | verus_vec_iterator | 2 | 2 | 0 | 0 | 2 | 0 | 2 | 0 | 0 |
-| 343 | experiments | verus_vec_iterator_for_basic_proofs | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 1 |
-| 344 | experiments | verus_vec_iterator_loop_basic_proofs | 0 | 0 | 0 | 4 | 4 | 0 | 4 | 0 | 0 |
-| 345 | experiments | verus_vec_iterator_while_basic_proofs | 0 | 0 | 0 | 4 | 4 | 0 | 4 | 0 | 0 |
-| 346 | experiments | verus_wrapped_iter_loops | 0 | 0 | 0 | 7 | 7 | 0 | 5 | 2 | 0 |
-| 347 | src | Concurrency | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 1 |
-| 348 | src | ParaPairs | 0 | 0 | 0 | 2 | 2 | 0 | 2 | 0 | 0 |
-| 349 | src | Types | 0 | 4 | 0 | 14 | 14 | 4 | 2 | 12 | 4 |
-| 350 | vstdplus | VecQueue | 5 | 5 | 0 | 0 | 5 | 0 | 5 | 0 | 0 |
-| 351 | vstdplus | accept | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 |
-| 352 | vstdplus | checked_int | 12 | 0 | 0 | 0 | 12 | 0 | 12 | 0 | 0 |
-| 353 | vstdplus | checked_nat | 11 | 0 | 0 | 0 | 11 | 0 | 11 | 0 | 0 |
-| 354 | vstdplus | checked_nat_with_checked_view | 4 | 0 | 0 | 0 | 4 | 0 | 4 | 0 | 0 |
-| 355 | vstdplus | clone_plus | 1 | 1 | 0 | 3 | 4 | 0 | 0 | 4 | 0 |
-| 356 | vstdplus | feq | 0 | 0 | 0 | 6 | 5 | 1 | 2 | 3 | 1 |
-| 357 | vstdplus | float | 5 | 11 | 6 | 20 | 31 | 5 | 21 | 10 | 5 |
-| 358 | vstdplus | hash_set_with_view_plus | 1 | 3 | 5 | 1 | 9 | 0 | 0 | 9 | 0 |
-| 359 | vstdplus | hashed_checked_u32 | 0 | 2 | 0 | 2 | 4 | 0 | 0 | 4 | 0 |
-| 360 | vstdplus | multiset | 0 | 0 | 0 | 6 | 6 | 0 | 6 | 0 | 0 |
-| 361 | vstdplus | partial_order | 4 | 4 | 0 | 0 | 4 | 0 | 0 | 4 | 0 |
-| 362 | vstdplus | rand | 0 | 0 | 0 | 2 | 1 | 1 | 0 | 1 | 1 |
-| 363 | vstdplus | seq | 0 | 0 | 0 | 10 | 10 | 0 | 9 | 1 | 0 |
-| 364 | vstdplus | seq_set | 0 | 0 | 0 | 60 | 60 | 0 | 60 | 0 | 0 |
-| 365 | vstdplus | smart_ptrs | 0 | 0 | 0 | 3 | 3 | 0 | 1 | 2 | 0 |
-| 366 | vstdplus | threads_plus | 0 | 0 | 7 | 3 | 10 | 0 | 5 | 4 | 1 |
-| 367 | vstdplus | total_order | 5 | 5 | 0 | 0 | 5 | 0 | 5 | 0 | 0 |
 
 ## Function-by-Function Detail
 
@@ -1454,33 +1338,33 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 744 | `lemma_point_in_seq_transitive` |  |  |  | Y | Y |  |  | unknown | 118&#8209;124 |
-| 745 | `lemma_edge_valid_transitive` |  |  |  | Y | Y |  |  | unknown | 134&#8209;146 |
-| 746 | `lemma_mod_successor` |  |  |  | Y | Y |  |  | unknown | 153&#8209;155 |
-| 747 | `lemma_combined_cycle` |  |  |  | Y | Y |  |  | hole | 166&#8209;190 |
-| 748 | `etsp_parallel` | Y | Y |  |  | Y |  |  | unknown | 258&#8209;262 |
-| 749 | `etsp_parallel_inner` |  |  |  | Y | Y |  |  | unknown | 274&#8209;279 |
-| 750 | `sort_and_split` |  |  |  | Y | Y |  |  | hole | 460&#8209;471 |
-| 751 | `find_best_swap` |  |  |  | Y | Y |  |  | hole | 478&#8209;484 |
-| 752 | `distance` |  |  | Y |  |  | Y | Y |  | 508&#8209;515 |
-| 753 | `sort_and_split_impl` |  |  |  | Y |  | Y | Y |  | 518&#8209;540 |
-| 754 | `find_best_swap_impl` |  |  |  | Y |  | Y | Y |  | 542&#8209;548 |
-| 755 | `find_best_swap_par` |  |  |  | Y |  | Y | Y |  | 550&#8209;584 |
+| 744 | `lemma_point_in_seq_transitive` |  |  |  | Y | Y |  |  | unknown | 123&#8209;129 |
+| 745 | `lemma_edge_valid_transitive` |  |  |  | Y | Y |  |  | unknown | 139&#8209;151 |
+| 746 | `lemma_mod_successor` |  |  |  | Y | Y |  |  | unknown | 158&#8209;160 |
+| 747 | `lemma_combined_cycle` |  |  |  | Y | Y |  |  | unknown | 168&#8209;192 |
+| 748 | `etsp_parallel` | Y | Y |  |  | Y |  |  | unknown | 302&#8209;306 |
+| 749 | `etsp_parallel_inner` |  |  |  | Y | Y |  |  | unknown | 318&#8209;323 |
+| 750 | `sort_and_split` |  |  |  | Y | Y |  |  | hole | 504&#8209;515 |
+| 751 | `find_best_swap` |  |  |  | Y | Y |  |  | hole | 522&#8209;528 |
+| 752 | `distance` | Y | Y |  |  |  | Y | Y |  | 552 |
+| 753 | `sort_and_split_impl` |  |  |  | Y |  | Y | Y |  | 563&#8209;585 |
+| 754 | `find_best_swap_impl` |  |  |  | Y |  | Y | Y |  | 587&#8209;593 |
+| 755 | `find_best_swap_par` |  |  |  | Y |  | Y | Y |  | 595&#8209;629 |
 
 ### Chap26/ETSPStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 756 | `lemma_point_in_seq_transitive` |  |  |  | Y | Y |  |  | unknown | 111&#8209;117 |
-| 757 | `lemma_edge_valid_transitive` |  |  |  | Y | Y |  |  | unknown | 127&#8209;139 |
-| 758 | `lemma_combined_cycle` |  |  |  | Y | Y |  |  | hole | 146&#8209;170 |
-| 759 | `etsp` | Y | Y |  |  | Y |  |  | unknown | 243&#8209;247 |
-| 760 | `etsp_inner` |  |  |  | Y | Y |  |  | unknown | 262&#8209;267 |
-| 761 | `sort_and_split` |  |  |  | Y | Y |  |  | hole | 434&#8209;445 |
-| 762 | `find_best_swap` |  |  |  | Y | Y |  |  | hole | 452&#8209;458 |
-| 763 | `distance` |  |  | Y |  |  | Y | Y |  | 482&#8209;489 |
-| 764 | `sort_and_split_impl` |  |  |  | Y |  | Y | Y |  | 492&#8209;514 |
-| 765 | `find_best_swap_impl` |  |  |  | Y |  | Y | Y |  | 516&#8209;535 |
+| 756 | `lemma_point_in_seq_transitive` |  |  |  | Y | Y |  |  | unknown | 116&#8209;122 |
+| 757 | `lemma_edge_valid_transitive` |  |  |  | Y | Y |  |  | unknown | 132&#8209;144 |
+| 758 | `lemma_combined_cycle` |  |  |  | Y | Y |  |  | unknown | 151&#8209;175 |
+| 759 | `etsp` | Y | Y |  |  | Y |  |  | unknown | 290&#8209;294 |
+| 760 | `etsp_inner` |  |  |  | Y | Y |  |  | unknown | 309&#8209;314 |
+| 761 | `sort_and_split` |  |  |  | Y | Y |  |  | hole | 481&#8209;492 |
+| 762 | `find_best_swap` |  |  |  | Y | Y |  |  | hole | 499&#8209;505 |
+| 763 | `distance` | Y | Y |  |  |  | Y | Y |  | 528 |
+| 764 | `sort_and_split_impl` |  |  |  | Y |  | Y | Y |  | 539&#8209;561 |
+| 765 | `find_best_swap_impl` |  |  |  | Y |  | Y | Y |  | 563&#8209;582 |
 
 ### Chap26/MergeSortMtPer.rs
 
@@ -1699,7 +1583,7 @@
 | 856 | `pivot_mt_random` | Y | Y |  |  | Y |  | Y |  | 26 |
 | 857 | `quick_sort_mt_first` | Y | Y |  |  | Y |  | Y |  | 29 |
 | 858 | `quick_sort_mt_median3` | Y | Y |  |  | Y |  | Y |  | 32 |
-| 859 | `quick_sort_mt_random` | Y | Y |  |  | Y |  |  | hole | 35 |
+| 859 | `quick_sort_mt_random` | Y | Y |  |  | Y |  | Y |  | 35 |
 
 ### Chap36/QuickSortStEph.rs
 
@@ -2238,63 +2122,63 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1293 | `new_bst_para_lock` |  |  |  | Y | Y |  |  | hole | 42 |
-| 1294 | `new_leaf` |  |  |  | Y |  | Y | Y |  | 80&#8209;82 |
-| 1295 | `new` | Y | Y |  |  |  | Y | Y |  | 85&#8209;86 |
-| 1296 | `expose` | Y | Y |  |  |  | Y | Y |  | 87&#8209;88 |
-| 1297 | `join_mid` | Y | Y |  | Y |  | Y | Y |  | 89&#8209;90 |
-| 1298 | `size` | Y | Y |  |  |  | Y | Y |  | 91&#8209;92 |
-| 1299 | `is_empty` | Y | Y |  |  |  | Y | Y |  | 93&#8209;94 |
-| 1300 | `insert` | Y | Y |  |  |  | Y | Y |  | 95&#8209;96 |
-| 1301 | `delete` | Y | Y |  |  |  | Y | Y |  | 97&#8209;98 |
-| 1302 | `find` | Y | Y |  |  |  | Y | Y |  | 99&#8209;100 |
-| 1303 | `split` | Y | Y |  |  |  | Y | Y |  | 101&#8209;102 |
-| 1304 | `join_pair` | Y | Y |  |  |  | Y | Y |  | 103&#8209;104 |
-| 1305 | `union` | Y | Y |  |  |  | Y | Y |  | 105&#8209;106 |
-| 1306 | `intersect` | Y | Y |  |  |  | Y | Y |  | 107&#8209;108 |
-| 1307 | `difference` | Y | Y |  |  |  | Y | Y |  | 109&#8209;110 |
-| 1308 | `filter` | Y | Y |  |  |  | Y | Y |  | 111&#8209;112 |
-| 1309 | `reduce` | Y | Y |  |  |  | Y | Y |  | 113&#8209;114 |
-| 1310 | `in_order` | Y | Y |  |  |  | Y | Y |  | 115&#8209;116 |
-| 1311 | `expose_internal` |  |  |  | Y |  | Y | Y |  | 119&#8209;127 |
-| 1312 | `split_inner` |  |  |  | Y |  | Y | Y |  | 141&#8209;158 |
-| 1313 | `join_m` |  |  |  | Y |  | Y | Y |  | 160&#8209;162 |
-| 1314 | `min_key` |  |  |  | Y |  | Y | Y |  | 164&#8209;172 |
-| 1315 | `join_pair_inner` |  |  |  | Y |  | Y | Y |  | 174&#8209;183 |
-| 1316 | `union_inner` |  |  |  | Y |  | Y | Y |  | 185&#8209;196 |
-| 1317 | `intersect_inner` |  |  |  | Y |  | Y | Y |  | 198&#8209;212 |
-| 1318 | `difference_inner` |  |  |  | Y |  | Y | Y |  | 214&#8209;230 |
-| 1319 | `filter_inner` |  |  |  | Y |  | Y | Y |  | 232&#8209;252 |
-| 1320 | `filter_parallel` |  |  |  | Y |  | Y | Y |  | 254&#8209;260 |
-| 1321 | `reduce_inner` |  |  |  | Y |  | Y | Y |  | 262&#8209;283 |
-| 1322 | `reduce_parallel` |  |  |  | Y |  | Y | Y |  | 285&#8209;292 |
-| 1323 | `collect_in_order` |  |  |  | Y |  | Y | Y |  | 294&#8209;303 |
+| 1293 | `new_bst_para_lock` |  |  |  | Y | Y |  |  | hole | 47 |
+| 1294 | `new_leaf` |  |  |  | Y |  | Y | Y |  | 85&#8209;87 |
+| 1295 | `new` | Y | Y |  |  |  | Y | Y |  | 90&#8209;91 |
+| 1296 | `expose` | Y | Y |  |  |  | Y | Y |  | 92&#8209;93 |
+| 1297 | `join_mid` | Y | Y |  | Y |  | Y | Y |  | 94&#8209;95 |
+| 1298 | `size` | Y | Y |  |  |  | Y | Y |  | 96&#8209;97 |
+| 1299 | `is_empty` | Y | Y |  |  |  | Y | Y |  | 98&#8209;99 |
+| 1300 | `insert` | Y | Y |  |  |  | Y | Y |  | 100&#8209;101 |
+| 1301 | `delete` | Y | Y |  |  |  | Y | Y |  | 102&#8209;103 |
+| 1302 | `find` | Y | Y |  |  |  | Y | Y |  | 104&#8209;105 |
+| 1303 | `split` | Y | Y |  |  |  | Y | Y |  | 106&#8209;107 |
+| 1304 | `join_pair` | Y | Y |  |  |  | Y | Y |  | 108&#8209;109 |
+| 1305 | `union` | Y | Y |  |  |  | Y | Y |  | 110&#8209;111 |
+| 1306 | `intersect` | Y | Y |  |  |  | Y | Y |  | 112&#8209;113 |
+| 1307 | `difference` | Y | Y |  |  |  | Y | Y |  | 114&#8209;115 |
+| 1308 | `filter` | Y | Y |  |  |  | Y | Y |  | 116&#8209;117 |
+| 1309 | `reduce` | Y | Y |  |  |  | Y | Y |  | 118&#8209;119 |
+| 1310 | `in_order` | Y | Y |  |  |  | Y | Y |  | 120&#8209;121 |
+| 1311 | `expose_internal` |  |  |  | Y |  | Y | Y |  | 124&#8209;132 |
+| 1312 | `split_inner` |  |  |  | Y |  | Y | Y |  | 146&#8209;163 |
+| 1313 | `join_m` |  |  |  | Y |  | Y | Y |  | 165&#8209;167 |
+| 1314 | `min_key` |  |  |  | Y |  | Y | Y |  | 169&#8209;177 |
+| 1315 | `join_pair_inner` |  |  |  | Y |  | Y | Y |  | 179&#8209;188 |
+| 1316 | `union_inner` |  |  |  | Y |  | Y | Y |  | 190&#8209;201 |
+| 1317 | `intersect_inner` |  |  |  | Y |  | Y | Y |  | 203&#8209;217 |
+| 1318 | `difference_inner` |  |  |  | Y |  | Y | Y |  | 219&#8209;235 |
+| 1319 | `filter_inner` |  |  |  | Y |  | Y | Y |  | 237&#8209;257 |
+| 1320 | `filter_parallel` |  |  |  | Y |  | Y | Y |  | 259&#8209;265 |
+| 1321 | `reduce_inner` |  |  |  | Y |  | Y | Y |  | 267&#8209;288 |
+| 1322 | `reduce_parallel` |  |  |  | Y |  | Y | Y |  | 290&#8209;297 |
+| 1323 | `collect_in_order` |  |  |  | Y |  | Y | Y |  | 299&#8209;308 |
 
 ### Chap38/BSTParaStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1324 | `new_bst_para_lock` |  |  |  | Y | Y |  |  | hole | 102 |
-| 1325 | `new` | Y | Y |  |  |  | Y | Y |  | 109&#8209;111 |
-| 1326 | `expose` | Y | Y |  |  |  | Y | Y |  | 112&#8209;114 |
-| 1327 | `join_mid` | Y | Y |  | Y |  | Y | Y |  | 115&#8209;117 |
-| 1328 | `size` | Y | Y |  |  |  | Y | Y |  | 118&#8209;120 |
-| 1329 | `is_empty` | Y | Y |  |  |  | Y | Y |  | 121&#8209;123 |
-| 1330 | `insert` | Y | Y |  |  |  | Y | Y |  | 124&#8209;126 |
-| 1331 | `delete` | Y | Y |  |  |  | Y | Y |  | 127&#8209;129 |
-| 1332 | `find` | Y | Y |  |  |  | Y | Y |  | 130&#8209;132 |
-| 1333 | `split` | Y | Y |  |  |  | Y | Y |  | 133&#8209;135 |
-| 1334 | `join_pair` | Y | Y |  |  |  | Y | Y |  | 136&#8209;138 |
-| 1335 | `union` | Y | Y |  |  |  | Y | Y |  | 139&#8209;141 |
-| 1336 | `in_order` | Y | Y |  |  |  | Y | Y |  | 142&#8209;144 |
-| 1337 | `new_leaf` |  |  |  | Y |  | Y | Y |  | 147&#8209;149 |
-| 1338 | `expose_internal` |  |  |  | Y |  | Y | Y |  | 151&#8209;160 |
-| 1339 | `split_inner` |  |  |  | Y |  | Y | Y |  | 175&#8209;194 |
-| 1340 | `join_m` |  |  |  | Y |  | Y | Y |  | 196&#8209;200 |
-| 1341 | `min_key` |  |  |  | Y |  | Y | Y |  | 202&#8209;212 |
-| 1342 | `join_pair_inner` |  |  |  | Y |  | Y | Y |  | 214&#8209;225 |
-| 1343 | `union_inner` |  |  |  | Y |  | Y | Y |  | 227&#8209;240 |
-| 1344 | `collect_in_order` |  |  |  | Y |  | Y | Y |  | 242&#8209;253 |
+| 1324 | `new_bst_para_lock` |  |  |  | Y | Y |  |  | hole | 107 |
+| 1325 | `new` | Y | Y |  |  |  | Y | Y |  | 114&#8209;116 |
+| 1326 | `expose` | Y | Y |  |  |  | Y | Y |  | 117&#8209;119 |
+| 1327 | `join_mid` | Y | Y |  | Y |  | Y | Y |  | 120&#8209;122 |
+| 1328 | `size` | Y | Y |  |  |  | Y | Y |  | 123&#8209;125 |
+| 1329 | `is_empty` | Y | Y |  |  |  | Y | Y |  | 126&#8209;128 |
+| 1330 | `insert` | Y | Y |  |  |  | Y | Y |  | 129&#8209;131 |
+| 1331 | `delete` | Y | Y |  |  |  | Y | Y |  | 132&#8209;134 |
+| 1332 | `find` | Y | Y |  |  |  | Y | Y |  | 135&#8209;137 |
+| 1333 | `split` | Y | Y |  |  |  | Y | Y |  | 138&#8209;140 |
+| 1334 | `join_pair` | Y | Y |  |  |  | Y | Y |  | 141&#8209;143 |
+| 1335 | `union` | Y | Y |  |  |  | Y | Y |  | 144&#8209;146 |
+| 1336 | `in_order` | Y | Y |  |  |  | Y | Y |  | 147&#8209;149 |
+| 1337 | `new_leaf` |  |  |  | Y |  | Y | Y |  | 152&#8209;154 |
+| 1338 | `expose_internal` |  |  |  | Y |  | Y | Y |  | 156&#8209;165 |
+| 1339 | `split_inner` |  |  |  | Y |  | Y | Y |  | 180&#8209;199 |
+| 1340 | `join_m` |  |  |  | Y |  | Y | Y |  | 201&#8209;205 |
+| 1341 | `min_key` |  |  |  | Y |  | Y | Y |  | 207&#8209;217 |
+| 1342 | `join_pair_inner` |  |  |  | Y |  | Y | Y |  | 219&#8209;230 |
+| 1343 | `union_inner` |  |  |  | Y |  | Y | Y |  | 232&#8209;245 |
+| 1344 | `collect_in_order` |  |  |  | Y |  | Y | Y |  | 247&#8209;258 |
 
 ### Chap39/BSTParaTreapMtEph.rs
 
@@ -3988,17 +3872,17 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 2633 | `empty` | Y | Y |  |  | Y |  | Y |  | 58 |
-| 2634 | `num_vertices` | Y | Y |  |  | Y |  | Y |  | 60 |
-| 2635 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;64 |
-| 2636 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 66&#8209;67 |
-| 2637 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 69&#8209;72 |
-| 2638 | `out_degree` | Y | Y |  |  | Y |  | Y |  | 74 |
-| 2639 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;77 |
-| 2640 | `delete_vertex` | Y | Y |  |  | Y |  |  | hole | 79&#8209;80 |
-| 2641 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 82&#8209;86 |
-| 2642 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;91 |
-| 2643 | `default` |  | Y |  |  | Y |  | Y |  | 271 |
+| 2633 | `empty` | Y | Y |  |  | Y |  | Y |  | 59 |
+| 2634 | `num_vertices` | Y | Y |  |  | Y |  | Y |  | 61 |
+| 2635 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;65 |
+| 2636 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
+| 2637 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;73 |
+| 2638 | `out_degree` | Y | Y |  |  | Y |  | Y |  | 75 |
+| 2639 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 77&#8209;78 |
+| 2640 | `delete_vertex` | Y | Y |  |  | Y |  |  | hole | 80&#8209;81 |
+| 2641 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 83&#8209;87 |
+| 2642 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;92 |
+| 2643 | `default` |  | Y |  |  | Y |  | Y |  | 269 |
 
 ### Chap52/AdjTableGraphStEph.rs
 
@@ -4039,20 +3923,20 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 2669 | `empty` | Y | Y |  |  | Y |  | Y |  | 49 |
-| 2670 | `from_vertices_and_edges` | Y | Y |  |  | Y |  | Y |  | 51 |
-| 2671 | `num_vertices` | Y | Y |  |  | Y |  | Y |  | 53 |
-| 2672 | `num_edges` | Y | Y |  |  | Y |  | Y |  | 55 |
-| 2673 | `vertices` | Y | Y |  |  | Y |  | Y |  | 57 |
-| 2674 | `edges` | Y | Y |  |  | Y |  | Y |  | 59 |
-| 2675 | `has_edge` | Y | Y |  |  | Y |  | Y |  | 61 |
-| 2676 | `out_neighbors` | Y | Y |  |  | Y |  |  | hole | 63&#8209;64 |
-| 2677 | `out_degree` | Y | Y |  |  | Y |  | Y |  | 66 |
-| 2678 | `insert_vertex` | Y | Y |  |  | Y |  | Y |  | 68 |
-| 2679 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;71 |
-| 2680 | `insert_edge` | Y | Y |  |  | Y |  | Y |  | 73 |
-| 2681 | `delete_edge` | Y | Y |  |  | Y |  | Y |  | 75 |
-| 2682 | `default` |  | Y |  |  | Y |  | Y |  | 187 |
+| 2669 | `empty` | Y | Y |  |  | Y |  | Y |  | 50 |
+| 2670 | `from_vertices_and_edges` | Y | Y |  |  | Y |  | Y |  | 52 |
+| 2671 | `num_vertices` | Y | Y |  |  | Y |  | Y |  | 54 |
+| 2672 | `num_edges` | Y | Y |  |  | Y |  | Y |  | 56 |
+| 2673 | `vertices` | Y | Y |  |  | Y |  | Y |  | 58 |
+| 2674 | `edges` | Y | Y |  |  | Y |  | Y |  | 60 |
+| 2675 | `has_edge` | Y | Y |  |  | Y |  | Y |  | 62 |
+| 2676 | `out_neighbors` | Y | Y |  |  | Y |  |  | hole | 64&#8209;65 |
+| 2677 | `out_degree` | Y | Y |  |  | Y |  | Y |  | 67 |
+| 2678 | `insert_vertex` | Y | Y |  |  | Y |  | Y |  | 69 |
+| 2679 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;72 |
+| 2680 | `insert_edge` | Y | Y |  |  | Y |  | Y |  | 74 |
+| 2681 | `delete_edge` | Y | Y |  |  | Y |  | Y |  | 76 |
+| 2682 | `default` |  | Y |  |  | Y |  | Y |  | 184 |
 
 ### Chap52/EdgeSetGraphStEph.rs
 
@@ -4624,1356 +4508,6 @@
 | 2976 | `boruvka_mst` | Y |  |  | Y | Y |  | Y |  | 49&#8209;54 |
 | 2977 | `boruvka_mst_with_seed` | Y |  |  | Y | Y |  | Y |  | 58&#8209;62 |
 | 2978 | `mst_weight` | Y |  |  | Y | Y |  | Y |  | 66&#8209;69 |
-
-### arithmetic/power2_plus.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 2979 | `lemma_pow2_mono` |  |  |  | Y | Y |  |  | unknown | 13&#8209;15 |
-| 2980 | `lemma_pow2_46_lt_u64_max` |  |  |  | Y | Y |  |  | unknown | 25&#8209;26 |
-| 2981 | `lemma_pow2_63_lt_u64_max` |  |  |  | Y | Y |  |  | unknown | 33&#8209;34 |
-| 2982 | `lemma_pow2_lt_u64_max` |  |  |  | Y | Y |  |  | unknown | 41&#8209;43 |
-| 2983 | `lemma_pow2_31_lt_u32_max` |  |  |  | Y | Y |  |  | unknown | 53&#8209;54 |
-| 2984 | `lemma_pow2_lt_u32_max` |  |  |  | Y | Y |  |  | unknown | 61&#8209;63 |
-
-### experiments/ArrayVal.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 2985 | `array_lit` |  |  |  | Y | Y |  |  | unknown | 12&#8209;13 |
-| 2986 | `array_mod` |  |  |  | Y | Y |  |  | unknown | 19&#8209;20 |
-| 2987 | `mut_array_ref_in_array_ref_out` |  |  |  | Y | Y |  |  | unknown | 38&#8209;41 |
-| 2988 | `main` |  |  |  | Y |  | Y | Y |  | 49 |
-
-### experiments/ArrayVecSet.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 2989 | `for_on_array_with_use` |  |  |  | Y | Y |  | Y |  | 11 |
-| 2990 | `for_on_array_with_sum` |  |  |  | Y | Y |  |  | hole | 22 |
-| 2991 | `while_on_array_with_sum` |  |  |  | Y | Y |  | Y |  | 40 |
-| 2992 | `main` |  |  |  | Y |  | Y | Y |  | 57 |
-
-### experiments/CheckedI32.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 2993 | `new` |  |  | Y |  | Y |  |  | unknown | 60&#8209;61 |
-| 2994 | `new_out_of_range` |  |  | Y |  | Y |  |  | unknown | 67&#8209;69 |
-| 2995 | `is_normal` |  |  | Y |  | Y |  |  | unknown | 80&#8209;81 |
-| 2996 | `is_out_of_range` |  |  | Y |  | Y |  |  | unknown | 103&#8209;104 |
-| 2997 | `unwrap` |  |  | Y |  | Y |  |  | unknown | 111&#8209;113 |
-| 2998 | `to_option` |  |  | Y |  | Y |  |  | unknown | 120&#8209;123 |
-| 2999 | `add_value` |  |  | Y |  | Y |  |  | hole | 132&#8209;133 |
-| 3000 | `add_checked` |  |  | Y |  | Y |  |  | hole | 145&#8209;146 |
-| 3001 | `sub_value` |  |  | Y |  | Y |  |  | hole | 158&#8209;159 |
-| 3002 | `sub_checked` |  |  | Y |  | Y |  |  | hole | 171&#8209;172 |
-| 3003 | `mul_value` |  |  | Y |  | Y |  |  | hole | 184&#8209;185 |
-| 3004 | `mul_checked` |  |  | Y |  | Y |  |  | hole | 203&#8209;204 |
-
-### experiments/ForFor.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3005 | `provable_array_for` |  |  |  | Y | Y |  |  | unknown | 11&#8209;12 |
-| 3006 | `unprovable_array_for` |  |  |  | Y | Y |  |  | hole | 27 |
-| 3007 | `provable_for_for` |  |  |  | Y | Y |  |  | unknown | 45&#8209;46 |
-| 3008 | `main` |  |  |  | Y |  | Y | Y |  | 71 |
-
-### experiments/ForLoops.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3009 | `loop_bounds` |  |  |  | Y | Y |  | Y |  | 11 |
-| 3010 | `loop_on_array` |  |  |  | Y | Y |  | Y |  | 21 |
-| 3011 | `main` |  |  |  | Y |  | Y | Y |  | 32 |
-
-### experiments/HashCheckedU32.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3012 | `hash` |  | Y |  |  | Y |  |  | hole | 18 |
-| 3013 | `eq` |  | Y |  |  | Y |  |  | hole | 26 |
-| 3014 | `axiom_CheckedU32_feq` |  |  |  | Y | Y |  |  | hole | 36&#8209;38 |
-| 3015 | `axiom_CheckedU32_key_model` |  |  |  | Y | Y |  |  | hole | 41&#8209;43 |
-
-### experiments/SetLoops.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3016 | `walkvec_while` |  |  |  | Y | Y |  | Y |  | 19 |
-
-### experiments/ToVecProof.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3017 | `vec_to_vec` |  |  |  | Y | Y |  |  | unknown | 15&#8209;18 |
-
-### experiments/VSTDLoopProofs.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3018 | `vec_length_while` |  |  |  | Y | Y |  |  | unknown | 13&#8209;14 |
-| 3019 | `vec_length_while_asserted` |  |  |  | Y | Y |  |  | unknown | 32&#8209;33 |
-| 3020 | `vec_length_loop_return` |  |  |  | Y | Y |  |  | unknown | 59&#8209;60 |
-| 3021 | `vec_length_loop_break` |  |  |  | Y | Y |  |  | hole | 86&#8209;87 |
-| 3022 | `vec_length_loop_return_asserted` |  |  |  | Y | Y |  |  | unknown | 108&#8209;109 |
-| 3023 | `vec_length_for_range` |  |  |  | Y | Y |  |  | unknown | 139&#8209;140 |
-| 3024 | `vec_length_for_range_asserted` |  |  |  | Y | Y |  |  | unknown | 154&#8209;155 |
-| 3025 | `vec_mem_for_vec` |  |  |  | Y | Y |  |  | hole | 177&#8209;178 |
-| 3026 | `vec_mem_for_range` |  |  |  | Y | Y |  |  | unknown | 190&#8209;191 |
-
-### experiments/WhileWhile.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3027 | `provable_array_while` |  |  |  | Y | Y |  |  | unknown | 10&#8209;11 |
-| 3028 | `unprovable_array_while` |  |  |  | Y | Y |  |  | hole | 28 |
-| 3029 | `provable_while_while` |  |  |  | Y | Y |  |  | unknown | 48&#8209;49 |
-| 3030 | `main` |  |  |  | Y |  | Y | Y |  | 77 |
-
-### experiments/abstract_set_iter.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3031 | `len` | Y | Y |  |  | Y |  | Y |  | 49 |
-| 3032 | `new` | Y | Y |  |  | Y |  |  | unknown | 51&#8209;52 |
-| 3033 | `mem` | Y | Y |  |  | Y |  |  | unknown | 54&#8209;56 |
-| 3034 | `insert` | Y | Y |  |  | Y |  |  | unknown | 58&#8209;65 |
-| 3035 | `iter` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;83 |
-| 3036 | `next` |  |  | Y |  | Y |  |  | unknown | 217&#8209;249 |
-| 3037 | `abstract_set_copy_loop` |  |  |  | Y | Y |  |  | unknown | 284&#8209;288 |
-
-### experiments/accept.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3038 | `accept` |  |  |  | Y | Y |  |  | hole | 26&#8209;27 |
-| 3039 | `accept_propagates_like_assume` |  |  |  | Y | Y |  | Y |  | 32 |
-| 3040 | `eq` x2 |  | Y |  |  | Y |  |  | hole | 65&#8209;66 |
-
-### experiments/accept_external_body.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3041 | `clone_ensures_propagates` |  |  |  | Y | Y |  |  | unknown | 56&#8209;57 |
-
-### experiments/arc_clone_deref.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3042 | `test_arc_clone_u8` |  |  |  | Y | Y |  | Y |  | 14 |
-| 3043 | `test_arc_clone_generic` |  |  |  | Y | Y |  | Y |  | 20 |
-
-### experiments/arc_rwlock_ninject.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3044 | `apply_updates` |  |  |  | Y | Y |  |  | unknown | 44&#8209;51 |
-| 3045 | `ninject_par` |  |  |  | Y | Y |  |  | unknown | 105&#8209;114 |
-
-### experiments/assume_spec_test.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3046 | `next` |  | Y |  |  | Y |  | Y |  | 52 |
-| 3047 | `test` |  |  |  | Y | Y |  | Y |  | 63 |
-
-### experiments/baseviewtypes.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3048 | `test_u64_view` |  |  |  | Y | Y |  | Y |  | 16 |
-| 3049 | `test_i64_view` |  |  |  | Y | Y |  | Y |  | 23 |
-| 3050 | `test_bool_view` |  |  |  | Y | Y |  | Y |  | 29 |
-| 3051 | `test_unit_view` |  |  |  | Y | Y |  | Y |  | 36 |
-| 3052 | `test_explicit_conversion` |  |  |  | Y | Y |  | Y |  | 43 |
-| 3053 | `test_vec_u64_view` |  |  |  | Y | Y |  |  | unknown | 55&#8209;56 |
-| 3054 | `test_cross_type_comparison` |  |  |  | Y | Y |  | Y |  | 70 |
-
-### experiments/biconditional_spec_fun.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3055 | `is_even` |  |  |  | Y | Y |  |  | unknown | 23&#8209;24 |
-| 3056 | `test_forward_direction` |  |  |  | Y | Y |  | Y |  | 31 |
-| 3057 | `test_backward_direction` |  |  |  | Y | Y |  | Y |  | 46 |
-| 3058 | `test_biconditional` |  |  |  | Y | Y |  | Y |  | 61 |
-| 3059 | `test_identity_biconditional` |  |  |  | Y | Y |  | Y |  | 76 |
-| 3060 | `test_biconditional_inline` |  |  |  | Y | Y |  | Y |  | 90 |
-| 3061 | `test_biconditional_with_by` |  |  |  | Y | Y |  | Y |  | 103 |
-| 3062 | `test_forward_with_by` |  |  |  | Y | Y |  | Y |  | 118 |
-| 3063 | `test_specific_call` |  |  |  | Y | Y |  | Y |  | 133 |
-| 3064 | `test_call_ensures` |  |  |  | Y | Y |  | Y |  | 152 |
-
-### experiments/boxing_fns.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3065 | `apply_impl_fn` |  |  |  | Y | Y |  |  | unknown | 14&#8209;18 |
-| 3066 | `double` |  |  |  | Y | Y |  |  | unknown | 23&#8209;25 |
-| 3067 | `test_impl_fn` |  |  |  | Y | Y |  | Y |  | 30 |
-| 3068 | `test_impl_fn_closure` |  |  |  | Y | Y |  | Y |  | 36 |
-| 3069 | `triple` |  |  |  | Y | Y |  |  | unknown | 49&#8209;51 |
-| 3070 | `test_fn_item_as_impl_fn` |  |  |  | Y | Y |  | Y |  | 56 |
-| 3071 | `test_spec_fn_direct` |  |  |  | Y | Y |  | Y |  | 66 |
-| 3072 | `test_spec_fn_lambda` |  |  |  | Y | Y |  | Y |  | 71 |
-| 3073 | `apply_fn_once` |  |  |  | Y | Y |  |  | unknown | 77&#8209;81 |
-| 3074 | `test_fn_once` |  |  |  | Y | Y |  | Y |  | 86 |
-| 3075 | `apply_fn_mut` |  |  |  | Y | Y |  |  | unknown | 98&#8209;102 |
-| 3076 | `test_fn_mut` |  |  |  | Y | Y |  | Y |  | 107 |
-
-### experiments/checked_signed_int.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3077 | `is_normal` | Y |  |  |  | Y |  |  | unknown | 18&#8209;19 |
-| 3078 | `is_overflow` | Y |  |  |  | Y |  |  | unknown | 21&#8209;22 |
-| 3079 | `is_underflow` | Y |  |  |  | Y |  |  | unknown | 24&#8209;25 |
-| 3080 | `from_value` | Y |  |  |  | Y |  |  | unknown | 27&#8209;29 |
-| 3081 | `from_int` | Y |  |  |  | Y |  |  | unknown | 31&#8209;32 |
-| 3082 | `to_value` | Y |  |  |  | Y |  |  | unknown | 34&#8209;36 |
-| 3083 | `add_checked` | Y |  |  |  | Y |  |  | unknown | 38&#8209;39 |
-| 3084 | `sub_checked` | Y |  |  |  | Y |  |  | unknown | 41&#8209;42 |
-| 3085 | `mul_checked` | Y |  |  |  | Y |  |  | unknown | 44&#8209;45 |
-| 3086 | `clone_checked` | Y |  |  |  | Y |  |  | unknown | 47&#8209;48 |
-| 3087 | `lemma_add_commutative_ghost` | Y |  |  |  | Y |  |  | unknown | 50&#8209;51 |
-| 3088 | `lemma_mul_commutative_ghost` | Y |  |  |  | Y |  |  | unknown | 54&#8209;55 |
-| 3089 | `lemma_add_associative_ghost` | Y |  |  |  | Y |  |  | unknown | 58&#8209;59 |
-| 3090 | `lemma_mul_associative_ghost` | Y |  |  |  | Y |  |  | unknown | 62&#8209;63 |
-| 3091 | `lemma_mul_distributes_over_add_ghost` | Y |  |  |  | Y |  |  | unknown | 66&#8209;67 |
-| 3092 | `lemma_sub_anti_commutative_ghost` | Y |  |  |  | Y |  |  | unknown | 70&#8209;71 |
-
-### experiments/checked_u32.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3093 | `new` |  |  | Y |  | Y |  |  | unknown | 41&#8209;42 |
-| 3094 | `new_overflow` |  |  | Y |  | Y |  |  | unknown | 47&#8209;49 |
-| 3095 | `unwrap` |  |  | Y |  | Y |  |  | unknown | 54&#8209;56 |
-| 3096 | `is_normal` |  | Y |  |  | Y |  |  | unknown | 66&#8209;67 |
-| 3097 | `is_overflow` |  | Y |  |  | Y |  |  | unknown | 73&#8209;74 |
-| 3098 | `from_value` |  | Y |  |  | Y |  | Y |  | 80 |
-| 3099 | `from_int` |  | Y |  |  | Y |  |  | hole | 86&#8209;87 |
-| 3100 | `to_value` |  | Y |  |  | Y |  | Y |  | 93 |
-| 3101 | `add_checked` |  | Y |  |  | Y |  |  | hole | 100&#8209;101 |
-| 3102 | `mul_checked` |  | Y |  |  | Y |  |  | hole | 111&#8209;112 |
-| 3103 | `clone_checked` |  | Y |  |  | Y |  |  | unknown | 123&#8209;124 |
-
-### experiments/checked_unsigned_int.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3104 | `is_normal` | Y |  |  |  | Y |  |  | unknown | 17&#8209;18 |
-| 3105 | `is_overflow` | Y |  |  |  | Y |  |  | unknown | 20&#8209;21 |
-| 3106 | `from_value` | Y |  |  |  | Y |  |  | unknown | 23&#8209;25 |
-| 3107 | `from_int` | Y |  |  |  | Y |  |  | unknown | 27&#8209;28 |
-| 3108 | `to_value` | Y |  |  |  | Y |  |  | unknown | 30&#8209;32 |
-| 3109 | `add_checked` | Y |  |  |  | Y |  |  | unknown | 34&#8209;35 |
-| 3110 | `mul_checked` | Y |  |  |  | Y |  |  | unknown | 37&#8209;38 |
-| 3111 | `clone_checked` | Y |  |  |  | Y |  |  | unknown | 40&#8209;41 |
-| 3112 | `lemma_add_commutative_ghost` | Y |  |  |  | Y |  |  | unknown | 43&#8209;44 |
-| 3113 | `lemma_mul_commutative_ghost` | Y |  |  |  | Y |  |  | unknown | 47&#8209;48 |
-| 3114 | `lemma_add_associative_ghost` | Y |  |  |  | Y |  |  | unknown | 51&#8209;52 |
-| 3115 | `lemma_mul_associative_ghost` | Y |  |  |  | Y |  |  | unknown | 55&#8209;56 |
-| 3116 | `lemma_mul_distributes_over_add_ghost` | Y |  |  |  | Y |  |  | unknown | 59&#8209;60 |
-| 3117 | `lemma_add_monotonic` | Y |  |  |  | Y |  |  | unknown | 63&#8209;65 |
-| 3118 | `lemma_partial_sums_fit` | Y |  |  |  | Y |  |  | unknown | 68&#8209;70 |
-
-### experiments/clone.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3119 | `axiom_cloned_view_eq` |  |  |  | Y | Y |  |  | unknown | 23&#8209;26 |
-| 3120 | `test_clone_no_assert_return_eq` |  |  |  | Y | Y |  |  | hole | 36&#8209;39 |
-| 3121 | `test_clone_no_assert_return_eq_view` |  |  |  | Y | Y |  |  | hole | 47&#8209;50 |
-| 3122 | `test_clone_assert_return` |  |  |  | Y | Y |  |  | hole | 59&#8209;61 |
-| 3123 | `test_clone_with_assert` |  |  |  | Y | Y |  |  | hole | 78&#8209;79 |
-| 3124 | `test_1_cloned_automatic` |  |  |  | Y | Y |  | Y |  | 87&#8209;88 |
-| 3125 | `test_2_concrete_eq` |  |  |  | Y | Y |  |  | hole | 97&#8209;98 |
-| 3126 | `test_3_extensional_equality` |  |  |  | Y | Y |  |  | hole | 110 |
-| 3127 | `test_clone_no_assert_return_eq_u64` |  |  |  | Y | Y |  |  | unknown | 121&#8209;124 |
-| 3128 | `test_clone_no_assert_return_eq_view_u64` |  |  |  | Y | Y |  |  | unknown | 130&#8209;133 |
-| 3129 | `test_clone_assert_return_u64` |  |  |  | Y | Y |  |  | unknown | 139&#8209;141 |
-
-### experiments/clone_fn.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3130 | `clone_fn1` |  |  |  | Y | Y |  |  | hole | 9&#8209;13 |
-| 3131 | `clone_fn2` |  |  |  | Y | Y |  |  | hole | 21&#8209;26 |
-| 3132 | `clone_fn_binary` |  |  |  | Y | Y |  |  | hole | 35&#8209;40 |
-| 3133 | `clone_predicate` |  |  |  | Y | Y |  |  | hole | 49&#8209;54 |
-| 3134 | `clone_fn_axiom` |  |  |  | Y | Y |  |  | hole | 64&#8209;67 |
-
-### experiments/clone_plus.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3135 | `test_clone_gives_cloned` |  |  |  | Y | Y |  | Y |  | 12 |
-| 3136 | `test_clone_view_no_feq` |  |  |  | Y | Y |  |  | hole | 19 |
-| 3137 | `test_clone_view_with_feq` |  |  |  | Y | Y |  |  | unknown | 26&#8209;27 |
-| 3138 | `test_clone_eq_with_feq` |  |  |  | Y | Y |  |  | unknown | 34&#8209;36 |
-
-### experiments/clone_plus_vs_deep_clone.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3139 | `test_clone_u64` |  |  |  | Y | Y |  | Y |  | 58 |
-| 3140 | `test_vstd_equality` |  |  |  | Y | Y |  |  | unknown | 69&#8209;70 |
-| 3141 | `test_element_deep_clone` |  |  |  | Y | Y |  | Y |  | 87 |
-
-### experiments/collect.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3142 | `vec_mem` |  |  |  | Y | Y |  |  | unknown | 26&#8209;31 |
-| 3143 | `collect_keys_rec` |  |  |  | Y | Y |  |  | unknown | 171&#8209;179 |
-| 3144 | `collect_keys_deduplicating` |  |  |  | Y | Y |  |  | unknown | 218&#8209;226 |
-| 3145 | `collect_values_rec` |  |  |  | Y | Y |  |  | unknown | 267&#8209;280 |
-| 3146 | `collect_values_deduplicating` |  |  |  | Y | Y |  |  | unknown | 339&#8209;352 |
-| 3147 | `collect_rec` |  |  |  | Y | Y |  |  | unknown | 411&#8209;423 |
-| 3148 | `collect_deduplicating` |  |  |  | Y | Y |  |  | unknown | 429&#8209;441 |
-
-### experiments/collect2.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3149 | `lemma_deep_view_key` |  |  |  | Y | Y |  |  | unknown | 61&#8209;66 |
-| 3150 | `lemma_find_key_some` |  |  |  | Y | Y |  |  | unknown | 71&#8209;78 |
-| 3151 | `lemma_find_key_none` |  |  |  | Y | Y |  |  | unknown | 90&#8209;95 |
-| 3152 | `vec_find_key` |  |  |  | Y | Y |  |  | unknown | 105&#8209;117 |
-| 3153 | `collect2` |  |  |  | Y | Y |  |  | unknown | 140&#8209;148 |
-
-### experiments/collect_deep_view.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3154 | `lemma_find_key_index_bounds` |  |  |  | Y | Y |  |  | unknown | 53&#8209;58 |
-| 3155 | `lemma_spec_collect_step_some` |  |  |  | Y | Y |  |  | unknown | 67&#8209;79 |
-| 3156 | `lemma_spec_collect_step_none` |  |  |  | Y | Y |  |  | unknown | 90&#8209;101 |
-| 3157 | `lemma_deep_view_len` |  |  |  | Y | Y |  |  | unknown | 111&#8209;113 |
-| 3158 | `lemma_deep_view_key` |  |  |  | Y | Y |  |  | unknown | 118&#8209;123 |
-| 3159 | `lemma_find_key_index_found` |  |  |  | Y | Y |  |  | unknown | 129&#8209;140 |
-| 3160 | `lemma_find_key_index_not_found` |  |  |  | Y | Y |  |  | unknown | 149&#8209;157 |
-| 3161 | `lemma_find_key_some` |  |  |  | Y | Y |  |  | unknown | 166&#8209;173 |
-| 3162 | `lemma_find_key_none` |  |  |  | Y | Y |  |  | unknown | 187&#8209;192 |
-| 3163 | `vec_find_key` |  |  |  | Y | Y |  |  | unknown | 202&#8209;214 |
-| 3164 | `collect` |  |  |  | Y | Y |  |  | hole | 240&#8209;250 |
-
-### experiments/deep_view_2_tuple.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3165 | `test_1_tuple_deep_view` |  |  |  | Y | Y |  |  | unknown | 12&#8209;14 |
-| 3166 | `test_2_tuple_deep_view` |  |  |  | Y | Y |  |  | unknown | 18&#8209;20 |
-
-### experiments/deep_view_struct.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3167 | `get_val` | Y | Y |  |  | Y |  |  | unknown | 34&#8209;35 |
-| 3168 | `test_deep_view` |  |  |  | Y | Y |  | Y |  | 48 |
-
-### experiments/eq_rel.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3169 | `eq_reflexive` | Y | Y |  |  | Y |  |  | unknown | 15 |
-| 3170 | `eq_symmetric` | Y | Y |  |  | Y |  |  | unknown | 16 |
-| 3171 | `eq_transitive` | Y | Y |  |  | Y |  |  | unknown | 17&#8209;18 |
-| 3172 | `eq_view` | Y | Y |  |  | Y |  |  | unknown | 22&#8209;24 |
-| 3173 | `axiom_cloned_implies_eq` | Y | Y |  |  | Y |  |  | hole | 30&#8209;32 |
-| 3174 | `clone_view_eq` | Y | Y |  |  | Y |  |  | unknown | 35&#8209;38 |
-| 3175 | `test_eq_rel` x2 | Y | Y |  |  | Y |  | Y |  | 58 |
-| 3176 | `test_eq_rel_view` x2 | Y | Y |  |  | Y |  | Y |  | 59 |
-| 3177 | `test_eq_rel_clone` x2 | Y | Y |  |  | Y |  | Y |  | 60 |
-
-### experiments/executable_use_of_int.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3178 | `vec_int_succeeds` |  |  |  | Y | Y |  |  | hole | 20&#8209;21 |
-| 3179 | `vec_int_mem_verifies` |  |  |  | Y | Y |  | Y |  | 31 |
-
-### experiments/f64_bits_sort.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3180 | `axiom_f64_le_total_ordering` |  |  |  | Y | Y |  |  | hole | 61&#8209;63 |
-| 3181 | `lemma_f64_le_transitive` |  |  |  | Y | Y |  |  | unknown | 79&#8209;84 |
-| 3182 | `f64_le` |  |  |  | Y | Y |  |  | hole | 89&#8209;94 |
-| 3183 | `insertion_sort_f64` |  |  |  | Y | Y |  |  | unknown | 100&#8209;106 |
-| 3184 | `test_sort` |  |  |  | Y | Y |  |  | hole | 194 |
-
-### experiments/f64_float_cmp_sort.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3185 | `insertion_sort_f64` |  |  |  | Y | Y |  |  | hole | 42&#8209;47 |
-| 3186 | `test_comparison_bridge` |  |  |  | Y | Y |  |  | hole | 89 |
-| 3187 | `test_strong_connectivity` |  |  |  | Y | Y |  |  | hole | 104 |
-| 3188 | `test_sort` |  |  |  | Y | Y |  |  | hole | 120 |
-
-### experiments/f64_sort.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3189 | `axiom_f64_le_total_ordering` |  |  |  | Y | Y |  |  | hole | 50&#8209;52 |
-| 3190 | `f64_le` |  |  |  | Y | Y |  |  | hole | 73&#8209;78 |
-| 3191 | `insertion_sort_f64` |  |  |  | Y | Y |  |  | unknown | 85&#8209;92 |
-| 3192 | `test_sort` |  |  |  | Y | Y |  |  | hole | 181 |
-
-### experiments/ghost_type_invariant.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3193 | `test_basic` |  |  |  | Y | Y |  | Y |  | 80 |
-
-### experiments/hash_set_iter.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3194 | `test_hash_set_iter` |  |  |  | Y | Y |  | Y |  | 11 |
-
-### experiments/hash_set_modern_pattern.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3195 | `test_hashset_new` |  |  |  | Y | Y |  | Y |  | 59 |
-| 3196 | `test_hashset_insert` |  |  |  | Y | Y |  | Y |  | 68 |
-| 3197 | `test_hashset_contains` |  |  |  | Y | Y |  | Y |  | 86 |
-| 3198 | `test_hashset_remove` |  |  |  | Y | Y |  | Y |  | 102 |
-| 3199 | `test_hashset_with_view_comparison` |  |  |  | Y | Y |  |  | hole | 119 |
-
-### experiments/hash_set_with_view_plus_loops.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3200 | `vec_to_vec_copy_fails` |  |  |  | Y | Y |  |  | hole | 24&#8209;25 |
-| 3201 | `vec_to_vec_copy` |  |  |  | Y | Y |  |  | unknown | 38&#8209;39 |
-| 3202 | `vec_to_vec_copy_stepped` |  |  |  | Y | Y |  | Y |  | 57 |
-| 3203 | `vec_add_one` |  |  |  | Y | Y |  |  | unknown | 161&#8209;163 |
-| 3204 | `hash_set_copy` |  |  |  | Y | Y |  |  | unknown | 182&#8209;183 |
-| 3205 | `hash_set_add_one` |  |  |  | Y | Y |  |  | unknown | 201&#8209;203 |
-| 3206 | `hash_set_copy_stepped` |  |  |  | Y | Y |  | Y |  | 224 |
-
-### experiments/invariant_proof_test.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3207 | `new_iter` |  |  |  | Y | Y |  |  | unknown | 29&#8209;32 |
-| 3208 | `next_with_invariant` |  |  |  | Y | Y |  |  | unknown | 38&#8209;59 |
-| 3209 | `lemma_iter_lengths` |  |  |  | Y | Y |  |  | unknown | 77&#8209;82 |
-| 3210 | `test_copy` |  |  |  | Y | Y |  |  | unknown | 88&#8209;89 |
-
-### experiments/minimal_iter.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3211 | `next` | Y |  |  |  | Y |  | Y |  | 8 |
-| 3212 | `iter` | Y |  |  |  | Y |  | Y |  | 14 |
-
-### experiments/modify_a_ghost_struct.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3213 | `test_create_ghost` |  |  |  | Y | Y |  | Y |  | 26 |
-| 3214 | `test_functional_update` |  |  |  | Y | Y |  | Y |  | 35 |
-| 3215 | `test_mutable_ghost_var` |  |  |  | Y | Y |  | Y |  | 46 |
-| 3216 | `test_direct_field_modify` |  |  |  | Y | Y |  | Y |  | 62 |
-| 3217 | `test_ghost_in_exec` |  |  |  | Y | Y |  | Y |  | 73 |
-| 3218 | `test_modify_ghost_in_exec` |  |  |  | Y | Y |  | Y |  | 84 |
-
-### experiments/mut_refs_and_mut_returns.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3219 | `new` |  |  | Y |  | Y |  |  | unknown | 29&#8209;30 |
-| 3220 | `inc` |  |  | Y |  | Y |  |  | unknown | 36&#8209;40 |
-| 3221 | `add` |  |  | Y |  | Y |  |  | unknown | 46&#8209;50 |
-| 3222 | `proof_inc_spec` |  |  |  | Y | Y |  | Y |  | 76 |
-| 3223 | `proof_add_spec` |  |  |  | Y | Y |  | Y |  | 87 |
-
-### experiments/parapair_closure_ensures.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3224 | `return_42` |  |  |  | Y | Y |  |  | unknown | 10&#8209;11 |
-| 3225 | `return_99` |  |  |  | Y | Y |  |  | unknown | 16&#8209;17 |
-| 3226 | `test_parapair_closure_ensures` |  |  |  | Y | Y |  | Y |  | 23 |
-
-### experiments/parapair_move_closure_ensures.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3227 | `return_42` |  |  |  | Y | Y |  |  | unknown | 11&#8209;12 |
-| 3228 | `return_99` |  |  |  | Y | Y |  |  | unknown | 18&#8209;19 |
-| 3229 | `test_parapair_literal_return` |  |  |  | Y | Y |  | Y |  | 25 |
-
-### experiments/parapair_named_closure.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3230 | `test_parapair_named_closure` |  |  |  | Y | Y |  | Y |  | 11 |
-
-### experiments/parapair_toplevel_closure.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3231 | `f42` |  |  |  | Y | Y |  |  | unknown | 10&#8209;11 |
-| 3232 | `f99` |  |  |  | Y | Y |  |  | unknown | 14&#8209;15 |
-| 3233 | `test_parapair_toplevel_closure` |  |  |  | Y | Y |  | Y |  | 18 |
-
-### experiments/pervasives.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3234 | `test_unreached_in_match` |  |  |  | Y | Y |  | Y |  | 15 |
-| 3235 | `test_unreached_with_proof` |  |  |  | Y | Y |  |  | unknown | 29&#8209;30 |
-| 3236 | `assert_unchecked` |  |  |  | Y | Y |  |  | hole | 44&#8209;45 |
-| 3237 | `test_assert_unchecked_proves_false` |  |  |  | Y | Y |  |  | unknown | 51&#8209;52 |
-| 3238 | `claim_anything` |  |  |  | Y | Y |  |  | hole | 60&#8209;61 |
-| 3239 | `test_claim_anything_proves_false` |  |  |  | Y | Y |  |  | unknown | 65&#8209;66 |
-| 3240 | `example_with_spec_comments` |  |  |  | Y | Y |  | Y |  | 79 |
-| 3241 | `using_assume_proves_false` |  |  |  | Y | Y |  |  | hole | 86&#8209;87 |
-
-### experiments/possession.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3242 | `new_exorcised` | Y | Y |  |  | Y |  |  | unknown | 12 |
-| 3243 | `new_possessed` | Y | Y |  |  | Y |  |  | unknown | 13 |
-
-### experiments/proof_fn_in_trait.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3244 | `simple_proof_method` | Y | Y |  |  | Y |  |  | unknown | 14&#8209;15 |
-| 3245 | `lemma_property_holds` | Y | Y |  |  | Y |  |  | unknown | 31&#8209;33 |
-| 3246 | `test_call_proof_fn` |  |  |  | Y | Y |  | Y |  | 50 |
-
-### experiments/proven_partialeq.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3247 | `eq` x2 | Y | Y |  |  | Y |  |  | unknown | 20&#8209;21 |
-| 3248 | `ne` x2 | Y | Y |  |  | Y |  |  | unknown | 23&#8209;24 |
-| 3249 | `proof_reflexivity` x2 | Y | Y |  |  | Y |  |  | unknown | 26&#8209;27 |
-| 3250 | `proof_symmetry` x2 | Y | Y |  |  | Y |  |  | unknown | 29&#8209;31 |
-| 3251 | `proof_transitivity` x2 | Y | Y |  |  | Y |  |  | unknown | 33&#8209;35 |
-| 3252 | `test_use_i32` |  |  |  | Y | Y |  |  | unknown | 64&#8209;65 |
-| 3253 | `test_use_myint` |  |  |  | Y | Y |  |  | unknown | 103&#8209;104 |
-
-### experiments/pub_crate_test.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3254 | `_new_valid` x2 |  |  | Y |  |  | Y | Y |  | 12&#8209;14 |
-| 3255 | `test_pub_crate` |  |  |  | Y |  | Y | Y |  | 33&#8209;37 |
-| 3256 | `test_pub_super` |  |  |  | Y |  | Y | Y |  | 39&#8209;43 |
-| 3257 | `main` |  |  |  | Y |  | Y | Y |  | 46&#8209;50 |
-
-### experiments/seq_array_equality.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3258 | `array_copy_equality` |  |  |  | Y | Y |  |  | unknown | 12&#8209;15 |
-| 3259 | `array_clone_equality` |  |  |  | Y | Y |  |  | unknown | 20&#8209;23 |
-
-### experiments/seq_for_basic_proofs.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3260 | `fixed_length_i64_array` |  |  |  | Y | Y |  |  | unknown | 13&#8209;14 |
-| 3261 | `length_i64_array` |  |  |  | Y | Y |  |  | unknown | 17&#8209;18 |
-| 3262 | `length_i64_vec` |  |  |  | Y | Y |  |  | unknown | 21&#8209;22 |
-| 3263 | `fixed_length_usize_array` |  |  |  | Y | Y |  |  | unknown | 28&#8209;29 |
-| 3264 | `length_usize_array` |  |  |  | Y | Y |  |  | unknown | 32&#8209;33 |
-| 3265 | `length_usize_vec` |  |  |  | Y | Y |  |  | unknown | 36&#8209;37 |
-| 3266 | `fixed_length_t_array` |  |  |  | Y | Y |  |  | unknown | 44&#8209;45 |
-| 3267 | `length_t_array` |  |  |  | Y | Y |  |  | unknown | 48&#8209;49 |
-| 3268 | `length_t_vec` |  |  |  | Y | Y |  |  | unknown | 52&#8209;53 |
-| 3269 | `i64_array_mem_for` |  |  |  | Y | Y |  |  | unknown | 65&#8209;66 |
-| 3270 | `i64_vec_mem_for` |  |  |  | Y | Y |  |  | unknown | 79&#8209;80 |
-| 3271 | `usize_array_mem_for` |  |  |  | Y | Y |  |  | unknown | 98&#8209;99 |
-| 3272 | `usize_vec_mem_for` |  |  |  | Y | Y |  |  | unknown | 112&#8209;113 |
-| 3273 | `i64_array_find_for` |  |  |  | Y | Y |  |  | unknown | 171&#8209;176 |
-| 3274 | `i64_vec_find_for` |  |  |  | Y | Y |  |  | unknown | 189&#8209;194 |
-| 3275 | `usize_array_find_for` |  |  |  | Y | Y |  |  | unknown | 216&#8209;221 |
-| 3276 | `usize_vec_find_for` |  |  |  | Y | Y |  |  | unknown | 234&#8209;239 |
-| 3277 | `i64_array_sum_non_negative_up_for` |  |  |  | Y | Y |  |  | unknown | 284&#8209;285 |
-| 3278 | `i64_vec_sum_non_negative_up_for` |  |  |  | Y | Y |  |  | unknown | 303&#8209;304 |
-| 3279 | `i64_array_sum_non_negative_down_for` |  |  |  | Y | Y |  |  | hole | 350&#8209;351 |
-| 3280 | `i64_vec_sum_non_negative_down_for` |  |  |  | Y | Y |  |  | hole | 384&#8209;385 |
-| 3281 | `array_length_up_for` |  |  |  | Y | Y |  |  | unknown | 419&#8209;420 |
-| 3282 | `vec_length_up_for` |  |  |  | Y | Y |  |  | unknown | 432&#8209;433 |
-| 3283 | `i64_array_count_up_for` |  |  |  | Y | Y |  |  | unknown | 467&#8209;468 |
-| 3284 | `i64_vec_count_up_for` |  |  |  | Y | Y |  |  | unknown | 482&#8209;483 |
-| 3285 | `seq_int_sum_equivalence` |  |  |  | Y | Y |  |  | unknown | 497&#8209;499 |
-| 3286 | `seq_i64_sum_equivalence` |  |  |  | Y | Y |  |  | unknown | 516&#8209;518 |
-
-### experiments/seq_loop_basic_proofs.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3287 | `fixed_length_i64_array` |  |  |  | Y | Y |  |  | unknown | 13&#8209;14 |
-| 3288 | `length_i64_array` |  |  |  | Y | Y |  |  | unknown | 17&#8209;18 |
-| 3289 | `length_i64_vec` |  |  |  | Y | Y |  |  | unknown | 21&#8209;22 |
-| 3290 | `fixed_length_usize_array` |  |  |  | Y | Y |  |  | unknown | 28&#8209;29 |
-| 3291 | `length_usize_array` |  |  |  | Y | Y |  |  | unknown | 32&#8209;33 |
-| 3292 | `length_usize_vec` |  |  |  | Y | Y |  |  | unknown | 36&#8209;37 |
-| 3293 | `fixed_length_t_array` |  |  |  | Y | Y |  |  | unknown | 44&#8209;45 |
-| 3294 | `length_t_array` |  |  |  | Y | Y |  |  | unknown | 48&#8209;49 |
-| 3295 | `length_t_vec` |  |  |  | Y | Y |  |  | unknown | 52&#8209;53 |
-| 3296 | `i64_array_mem_loop` |  |  |  | Y | Y |  |  | unknown | 65&#8209;66 |
-| 3297 | `i64_vec_mem_loop` |  |  |  | Y | Y |  |  | unknown | 85&#8209;86 |
-| 3298 | `usize_array_mem_loop` |  |  |  | Y | Y |  |  | unknown | 110&#8209;111 |
-| 3299 | `usize_vec_mem_loop` |  |  |  | Y | Y |  |  | unknown | 130&#8209;131 |
-| 3300 | `i64_array_find_loop` |  |  |  | Y | Y |  |  | unknown | 195&#8209;200 |
-| 3301 | `i64_vec_find_loop` |  |  |  | Y | Y |  |  | unknown | 219&#8209;224 |
-| 3302 | `usize_array_find_loop` |  |  |  | Y | Y |  |  | unknown | 252&#8209;257 |
-| 3303 | `usize_vec_find_loop` |  |  |  | Y | Y |  |  | unknown | 276&#8209;281 |
-| 3304 | `i64_array_sum_non_negative_up_loop` |  |  |  | Y | Y |  |  | unknown | 332&#8209;333 |
-| 3305 | `i64_vec_sum_non_negative_up_loop` |  |  |  | Y | Y |  |  | unknown | 357&#8209;358 |
-| 3306 | `i64_array_sum_non_negative_down_loop` |  |  |  | Y | Y |  |  | hole | 410&#8209;411 |
-| 3307 | `i64_vec_sum_non_negative_down_loop` |  |  |  | Y | Y |  |  | hole | 444&#8209;445 |
-| 3308 | `array_length_up_loop` |  |  |  | Y | Y |  |  | unknown | 479&#8209;480 |
-| 3309 | `vec_length_up_loop` |  |  |  | Y | Y |  |  | unknown | 498&#8209;499 |
-| 3310 | `i64_array_count_up_loop` |  |  |  | Y | Y |  |  | unknown | 539&#8209;540 |
-| 3311 | `i64_vec_count_up_loop` |  |  |  | Y | Y |  |  | unknown | 560&#8209;561 |
-| 3312 | `seq_int_sum_equivalence` |  |  |  | Y | Y |  |  | unknown | 581&#8209;583 |
-| 3313 | `seq_i64_sum_equivalence` |  |  |  | Y | Y |  |  | unknown | 600&#8209;602 |
-
-### experiments/seq_set_exec.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3314 | `lemma_nat_fold_left_step` |  |  |  | Y | Y |  |  | unknown | 33&#8209;37 |
-| 3315 | `proof_sum_seq_nat` |  |  |  | Y | Y |  |  | unknown | 49&#8209;54 |
-| 3316 | `proof_sum_seq_nat_full` |  |  |  | Y | Y |  |  | unknown | 67&#8209;69 |
-| 3317 | `sum_seq_u32_no_overflow` |  |  |  | Y | Y |  |  | hole | 75&#8209;77 |
-| 3318 | `sum_seq_CheckedU32` |  |  |  | Y | Y |  |  | unknown | 87&#8209;89 |
-| 3319 | `sum_set_CheckedU32` |  |  |  | Y | Y |  |  | hole | 113&#8209;118 |
-
-### experiments/seq_vec_equality.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3320 | `vec_copy_generic_equality` |  |  |  | Y | Y |  |  | hole | 8&#8209;11 |
-| 3321 | `vec_clone_usize_equality` |  |  |  | Y | Y |  |  | unknown | 16&#8209;19 |
-
-### experiments/seq_while_basic_proofs.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3322 | `fixed_length_i64_array` |  |  |  | Y | Y |  |  | unknown | 13&#8209;14 |
-| 3323 | `length_i64_array` |  |  |  | Y | Y |  |  | unknown | 17&#8209;18 |
-| 3324 | `length_i64_vec` |  |  |  | Y | Y |  |  | unknown | 21&#8209;22 |
-| 3325 | `fixed_length_usize_array` |  |  |  | Y | Y |  |  | unknown | 28&#8209;29 |
-| 3326 | `length_usize_array` |  |  |  | Y | Y |  |  | unknown | 32&#8209;33 |
-| 3327 | `length_usize_vec` |  |  |  | Y | Y |  |  | unknown | 36&#8209;37 |
-| 3328 | `fixed_length_t_array` |  |  |  | Y | Y |  |  | unknown | 44&#8209;45 |
-| 3329 | `length_t_array` |  |  |  | Y | Y |  |  | unknown | 48&#8209;49 |
-| 3330 | `length_t_vec` |  |  |  | Y | Y |  |  | unknown | 52&#8209;53 |
-| 3331 | `i64_array_mem_while` |  |  |  | Y | Y |  |  | unknown | 65&#8209;66 |
-| 3332 | `i64_vec_mem_while` |  |  |  | Y | Y |  |  | unknown | 83&#8209;84 |
-| 3333 | `usize_array_mem_while` |  |  |  | Y | Y |  |  | unknown | 106&#8209;107 |
-| 3334 | `usize_vec_mem_while` |  |  |  | Y | Y |  |  | unknown | 124&#8209;125 |
-| 3335 | `i64_array_find_while` |  |  |  | Y | Y |  |  | unknown | 192&#8209;197 |
-| 3336 | `i64_vec_find_while` |  |  |  | Y | Y |  |  | unknown | 214&#8209;219 |
-| 3337 | `usize_array_find_while` |  |  |  | Y | Y |  |  | unknown | 245&#8209;250 |
-| 3338 | `usize_vec_find_while` |  |  |  | Y | Y |  |  | unknown | 267&#8209;272 |
-| 3339 | `i64_array_sum_non_negative_up_while` |  |  |  | Y | Y |  |  | unknown | 321&#8209;322 |
-| 3340 | `i64_vec_sum_non_negative_up_while` |  |  |  | Y | Y |  |  | unknown | 344&#8209;345 |
-| 3341 | `i64_array_sum_non_negative_down_while` |  |  |  | Y | Y |  |  | hole | 395&#8209;396 |
-| 3342 | `i64_vec_sum_non_negative_down_while` |  |  |  | Y | Y |  |  | hole | 427&#8209;428 |
-| 3343 | `array_length_up_while` |  |  |  | Y | Y |  |  | unknown | 460&#8209;461 |
-| 3344 | `vec_length_up_while` |  |  |  | Y | Y |  |  | unknown | 477&#8209;478 |
-| 3345 | `i64_array_count_up_while` |  |  |  | Y | Y |  |  | unknown | 516&#8209;517 |
-| 3346 | `i64_vec_count_up_while` |  |  |  | Y | Y |  |  | unknown | 535&#8209;536 |
-| 3347 | `seq_int_sum_equivalence` |  |  |  | Y | Y |  |  | unknown | 554&#8209;556 |
-| 3348 | `seq_i64_sum_equivalence` |  |  |  | Y | Y |  |  | unknown | 573&#8209;575 |
-
-### experiments/set_len_empty_both_ways.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3349 | `lemma_len0_implies_empty` |  |  |  | Y | Y |  |  | unknown | 18&#8209;20 |
-| 3350 | `lemma_len_pos_implies_not_empty` |  |  |  | Y | Y |  |  | unknown | 26&#8209;28 |
-| 3351 | `lemma_set_len_empty_both_ways` |  |  |  | Y | Y |  |  | unknown | 34&#8209;38 |
-| 3352 | `test_both_directions` |  |  |  | Y | Y |  | Y |  | 44 |
-
-### experiments/sigma_pi.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3353 | `add_commutative_at` | Y | Y |  |  | Y |  |  | unknown | 28&#8209;33 |
-| 3354 | `lemma_add_commutative` | Y | Y |  |  | Y |  |  | hole | 35&#8209;36 |
-| 3355 | `mul_commutative_at` | Y | Y |  |  | Y |  |  | hole | 38&#8209;44 |
-| 3356 | `lemma_mul_commutative` | Y | Y |  |  | Y |  |  | hole | 46&#8209;47 |
-
-### experiments/signed_int.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3357 | `lemma_add_commutative` | Y |  |  |  | Y |  |  | unknown | 20&#8209;21 |
-| 3358 | `lemma_mul_commutative` | Y |  |  |  | Y |  |  | unknown | 24&#8209;25 |
-| 3359 | `lemma_add_associative` | Y |  |  |  | Y |  |  | unknown | 28&#8209;29 |
-| 3360 | `lemma_mul_associative` | Y |  |  |  | Y |  |  | unknown | 32&#8209;33 |
-| 3361 | `lemma_mul_distributes_over_add` | Y |  |  |  | Y |  |  | unknown | 36&#8209;37 |
-| 3362 | `lemma_sub_anti_commutative` | Y |  |  |  | Y |  |  | unknown | 40&#8209;41 |
-
-### experiments/simple_hash_set_iter.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3363 | `len` | Y | Y |  |  | Y |  | Y |  | 49 |
-| 3364 | `new` | Y | Y |  |  | Y |  |  | unknown | 51&#8209;56 |
-| 3365 | `contains` | Y | Y |  |  | Y |  |  | unknown | 58&#8209;60 |
-| 3366 | `insert` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;68 |
-| 3367 | `iter` | Y | Y |  |  | Y |  |  | hole | 70&#8209;74 |
-| 3368 | `simple_hash_set_copy_loop` |  |  |  | Y | Y |  |  | hole | 94&#8209;99 |
-
-### experiments/simple_seq_iter.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3369 | `len` | Y | Y |  |  | Y |  | Y |  | 24 |
-| 3370 | `new` | Y | Y |  |  | Y |  |  | unknown | 25 |
-| 3371 | `push` | Y | Y |  |  | Y |  |  | unknown | 26 |
-| 3372 | `iter` | Y | Y |  |  | Y |  |  | unknown | 27 |
-| 3373 | `lemma_iter_invariant` |  |  |  | Y | Y |  |  | unknown | 74&#8209;78 |
-| 3374 | `assumption_free_next` |  |  |  | Y | Y |  |  | unknown | 83&#8209;104 |
-| 3375 | `next` |  | Y |  |  | Y |  |  | hole | 118&#8209;137 |
-| 3376 | `simple_seq_copy_loop` |  |  |  | Y | Y |  |  | unknown | 242&#8209;244 |
-| 3377 | `simple_seq_copy_for_iter` |  |  |  | Y | Y |  |  | unknown | 266&#8209;268 |
-| 3378 | `simple_seq_copy_for_range` |  |  |  | Y | Y |  |  | unknown | 288&#8209;290 |
-
-### experiments/simple_set_iter.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3379 | `len` | Y | Y |  |  | Y |  | Y |  | 48 |
-| 3380 | `new` | Y | Y |  |  | Y |  |  | unknown | 50&#8209;51 |
-| 3381 | `mem` | Y | Y |  |  | Y |  |  | hole | 53&#8209;54 |
-| 3382 | `insert` | Y | Y |  |  | Y |  |  | unknown | 56&#8209;58 |
-| 3383 | `iter` | Y | Y |  |  | Y |  |  | unknown | 67&#8209;70 |
-| 3384 | `lemma_iter_invariant` |  |  |  | Y | Y |  |  | unknown | 138&#8209;142 |
-| 3385 | `assumption_free_next` |  |  |  | Y | Y |  |  | unknown | 147&#8209;168 |
-| 3386 | `next` |  | Y |  |  | Y |  |  | hole | 182&#8209;201 |
-| 3387 | `simple_set_copy_loop` |  |  |  | Y | Y |  |  | unknown | 261&#8209;263 |
-| 3388 | `simple_set_copy_for` |  |  |  | Y | Y |  |  | unknown | 319&#8209;321 |
-
-### experiments/spec_fun_argument.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3389 | `vec_filter_predicate_provenence_completeness_loop` |  |  |  | Y | Y |  |  | hole | 29&#8209;47 |
-
-### experiments/spec_loop.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3390 | `filter` | Y | Y |  |  | Y |  |  | unknown | 42&#8209;48 |
-| 3391 | `map` | Y | Y |  |  | Y |  |  | unknown | 50&#8209;55 |
-
-### experiments/struct_construction_test.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3392 | `_new_valid` |  |  | Y |  |  | Y | Y |  | 13&#8209;15 |
-| 3393 | `new` |  |  | Y |  |  | Y | Y |  | 25&#8209;27 |
-| 3394 | `get_x` |  |  | Y |  |  | Y | Y |  | 29 |
-| 3395 | `get_y` |  |  | Y |  |  | Y | Y |  | 30 |
-| 3396 | `test_public_fields` |  |  |  | Y |  | Y | Y |  | 37&#8209;44 |
-| 3397 | `test_private_fields` |  |  |  | Y |  | Y | Y |  | 46&#8209;54 |
-| 3398 | `main` |  |  |  | Y |  | Y | Y |  | 57&#8209;60 |
-
-### experiments/supertrait.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3399 | `foo` | Y | Y |  |  | Y |  |  | unknown | 8&#8209;9 |
-| 3400 | `foo_strict` | Y | Y |  |  | Y |  |  | unknown | 13&#8209;14 |
-
-### experiments/tcb_foul.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3401 | `lying_function` |  |  |  | Y | Y |  |  | hole | 33&#8209;34 |
-| 3402 | `tcb_foul_lying_spec` |  |  |  | Y | Y |  | Y |  | 40 |
-| 3403 | `lying_increment` |  |  |  | Y | Y |  |  | hole | 54&#8209;56 |
-| 3404 | `tcb_foul_mutation` |  |  |  | Y | Y |  | Y |  | 61 |
-| 3405 | `tcb_foul_assume` |  |  |  | Y | Y |  |  | hole | 73 |
-
-### experiments/test_feq.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3406 | `axiom_point_feq` |  |  |  | Y | Y |  |  | hole | 91&#8209;93 |
-| 3407 | `axiom_color_feq` |  |  |  | Y | Y |  |  | hole | 96&#8209;98 |
-| 3408 | `axiom_inttree_feq` |  |  |  | Y | Y |  |  | hole | 101&#8209;103 |
-| 3409 | `test_generic_reflexive` |  |  |  | Y | Y |  |  | unknown | 113&#8209;114 |
-| 3410 | `test_generic_symmetric` |  |  |  | Y | Y |  |  | unknown | 122&#8209;123 |
-| 3411 | `test_generic_transitive` |  |  |  | Y | Y |  |  | unknown | 133&#8209;134 |
-| 3412 | `test_generic_view` |  |  |  | Y | Y |  |  | unknown | 144&#8209;145 |
-| 3413 | `test_generic_view_injective` |  |  |  | Y | Y |  |  | unknown | 154&#8209;155 |
-| 3414 | `test_exec_eq_implies_view_eq` |  |  |  | Y | Y |  |  | hole | 167&#8209;168 |
-| 3415 | `test_exec_feq_implies_eq_and_view` |  |  |  | Y | Y |  |  | unknown | 178&#8209;179 |
-| 3416 | `test_generic_clone` |  |  |  | Y | Y |  |  | unknown | 189&#8209;190 |
-| 3417 | `test_generic_no_requires` |  |  |  | Y | Y |  | Y |  | 200 |
-| 3418 | `test_u64_reflexive` |  |  |  | Y | Y |  | Y |  | 209 |
-| 3419 | `test_u64_symmetric` |  |  |  | Y | Y |  | Y |  | 216 |
-| 3420 | `test_u64_transitive` |  |  |  | Y | Y |  | Y |  | 225 |
-| 3421 | `test_u64_view` |  |  |  | Y | Y |  | Y |  | 234 |
-| 3422 | `test_u64_view_injective` |  |  |  | Y | Y |  | Y |  | 243 |
-| 3423 | `test_u64_clone` |  |  |  | Y | Y |  | Y |  | 252 |
-| 3424 | `test_point_reflexive` |  |  |  | Y | Y |  |  | unknown | 262&#8209;263 |
-| 3425 | `test_point_symmetric` |  |  |  | Y | Y |  |  | unknown | 268&#8209;269 |
-| 3426 | `test_point_clone` |  |  |  | Y | Y |  |  | unknown | 274&#8209;275 |
-| 3427 | `test_color_reflexive` |  |  |  | Y | Y |  |  | unknown | 281&#8209;282 |
-| 3428 | `test_color_symmetric` |  |  |  | Y | Y |  |  | unknown | 287&#8209;288 |
-| 3429 | `test_color_clone` |  |  |  | Y | Y |  |  | unknown | 293&#8209;294 |
-| 3430 | `test_point_with_axiom` |  |  |  | Y | Y |  | Y |  | 300 |
-| 3431 | `test_color_with_axiom` |  |  |  | Y | Y |  | Y |  | 309 |
-| 3432 | `test_inttree_reflexive` |  |  |  | Y | Y |  |  | unknown | 319&#8209;320 |
-| 3433 | `test_inttree_symmetric` |  |  |  | Y | Y |  |  | unknown | 325&#8209;326 |
-| 3434 | `test_inttree_clone` |  |  |  | Y | Y |  |  | unknown | 331&#8209;332 |
-| 3435 | `test_inttree_with_axiom` |  |  |  | Y | Y |  | Y |  | 337 |
-| 3436 | `test_pair_reflexive` |  |  |  | Y | Y |  |  | unknown | 347&#8209;348 |
-| 3437 | `test_pair_symmetric` |  |  |  | Y | Y |  |  | unknown | 353&#8209;354 |
-| 3438 | `test_pair_view` |  |  |  | Y | Y |  |  | unknown | 359&#8209;360 |
-| 3439 | `test_pair_view_injective` |  |  |  | Y | Y |  |  | unknown | 365&#8209;366 |
-| 3440 | `test_pair_with_axiom` |  |  |  | Y | Y |  | Y |  | 371 |
-
-### experiments/test_feq_insertion_sort.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3441 | `is_sorted` |  |  |  | Y | Y |  |  | hole | 20&#8209;22 |
-| 3442 | `insertion_sort_while` |  |  |  | Y | Y |  |  | hole | 54&#8209;60 |
-| 3443 | `insertion_sort_loop` |  |  |  | Y | Y |  |  | hole | 113&#8209;119 |
-| 3444 | `test_insertion_sort_while` |  |  |  | Y | Y |  |  | unknown | 181&#8209;187 |
-| 3445 | `test_insertion_sort_loop` |  |  |  | Y | Y |  |  | unknown | 194&#8209;200 |
-
-### experiments/test_test.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3446 | `add_one` |  |  |  | Y | Y |  |  | unknown | 12&#8209;14 |
-| 3447 | `multiply_by_two` |  |  |  | Y | Y |  |  | unknown | 20&#8209;22 |
-| 3448 | `swap` |  |  |  | Y | Y |  |  | unknown | 28&#8209;29 |
-
-### experiments/total_ord_gen.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3449 | `axiom_eq_reflexive` | Y | Y |  |  | Y |  |  | hole | 16 |
-| 3450 | `axiom_eq_symmetric` | Y | Y |  |  | Y |  |  | hole | 17 |
-| 3451 | `axiom_eq_transitive` | Y | Y |  |  | Y |  |  | hole | 18 |
-| 3452 | `axiom_eq_view` | Y | Y |  |  | Y |  |  | hole | 19 |
-| 3453 | `axiom_cloned_implies_eq` | Y | Y |  |  | Y |  |  | hole | 22&#8209;24 |
-| 3454 | `axiom_cloned_view_eq` | Y | Y |  |  | Y |  |  | unknown | 26&#8209;28 |
-| 3455 | `axiom_le_reflexive` | Y | Y |  |  | Y |  |  | hole | 35 |
-| 3456 | `axiom_le_antisymmetric` | Y | Y |  |  | Y |  |  | hole | 36 |
-| 3457 | `axiom_le_transitive` | Y | Y |  |  | Y |  |  | hole | 37&#8209;39 |
-| 3458 | `axiom_le_total` | Y | Y |  |  | Y |  |  | hole | 40 |
-| 3459 | `test_equality_axioms` |  |  |  | Y | Y |  | Y |  | 68 |
-| 3460 | `test_clone_axioms` |  |  |  | Y | Y |  | Y |  | 86 |
-| 3461 | `test_ordering_axioms` |  |  |  | Y | Y |  | Y |  | 94 |
-| 3462 | `test_u64_uses_trait` |  |  |  | Y | Y |  | Y |  | 111 |
-
-### experiments/total_ord_gen_axioms.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3463 | `axiom_eq_transitive` |  |  |  | Y | Y |  |  | hole | 27&#8209;29 |
-| 3464 | `axiom_eq_view` |  |  |  | Y | Y |  |  | hole | 34&#8209;36 |
-| 3465 | `axiom_cloned_implies_eq` |  |  |  | Y | Y |  |  | hole | 42&#8209;44 |
-| 3466 | `axiom_le_reflexive` |  |  |  | Y | Y |  |  | hole | 50&#8209;52 |
-| 3467 | `axiom_le_antisymmetric` |  |  |  | Y | Y |  |  | hole | 57&#8209;59 |
-| 3468 | `axiom_le_transitive` |  |  |  | Y | Y |  |  | hole | 64&#8209;66 |
-| 3469 | `axiom_le_total` |  |  |  | Y | Y |  |  | hole | 71&#8209;73 |
-| 3470 | `test_equality_axioms` |  |  |  | Y | Y |  | Y |  | 90 |
-| 3471 | `test_clone_axioms` |  |  |  | Y | Y |  | Y |  | 106 |
-| 3472 | `test_ordering_axioms` |  |  |  | Y | Y |  | Y |  | 115 |
-| 3473 | `test_u64_uses_broadcast` |  |  |  | Y | Y |  | Y |  | 130 |
-
-### experiments/trait_decreases.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3474 | `test1_inherent_works` |  |  |  | Y | Y |  |  | unknown | 50&#8209;51 |
-| 3475 | `is_leaf3` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;95 |
-| 3476 | `is_leaf4` | Y | Y |  |  | Y |  |  | unknown | 115 |
-
-### experiments/triangle.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3477 | `triangle_is_monotonic` |  |  |  | Y | Y |  |  | unknown | 16&#8209;21 |
-| 3478 | `loop_triangle` |  |  |  | Y | Y |  |  | unknown | 28&#8209;32 |
-| 3479 | `loop_triangle_with_vec` |  |  |  | Y | Y |  |  | unknown | 52&#8209;57 |
-
-### experiments/unsigned_int.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3480 | `lemma_add_commutative` | Y |  |  |  | Y |  |  | unknown | 19&#8209;20 |
-| 3481 | `lemma_mul_commutative` | Y |  |  |  | Y |  |  | unknown | 23&#8209;24 |
-| 3482 | `lemma_add_associative` | Y |  |  |  | Y |  |  | unknown | 27&#8209;28 |
-| 3483 | `lemma_mul_associative` | Y |  |  |  | Y |  |  | unknown | 31&#8209;32 |
-| 3484 | `lemma_mul_distributes_over_add` | Y |  |  |  | Y |  |  | unknown | 35&#8209;36 |
-| 3485 | `lemma_add_monotonic` | Y |  |  |  | Y |  |  | unknown | 39&#8209;41 |
-| 3486 | `lemma_partial_sums_fit` | Y |  |  |  | Y |  |  | unknown | 44&#8209;50 |
-
-### experiments/use_proven_partialeq.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3487 | `are_equal` |  |  |  | Y | Y |  |  | unknown | 14&#8209;15 |
-| 3488 | `reflexivity_example` |  |  |  | Y | Y |  |  | unknown | 21&#8209;22 |
-| 3489 | `symmetry_example` |  |  |  | Y | Y |  |  | unknown | 30&#8209;32 |
-| 3490 | `transitivity_example` |  |  |  | Y | Y |  |  | unknown | 40&#8209;42 |
-| 3491 | `test_with_i32` |  |  |  | Y | Y |  | Y |  | 50 |
-| 3492 | `are_same` |  |  | Y |  | Y |  |  | unknown | 73&#8209;74 |
-
-### experiments/vec_clone_in_verus.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3493 | `deep_clone_wrapper` |  |  | Y |  | Y |  |  | unknown | 64&#8209;65 |
-| 3494 | `test_deep_clone` |  |  |  | Y | Y |  | Y |  | 71 |
-
-### experiments/vec_filter.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3495 | `vec_filter_predicate_for` |  |  |  | Y | Y |  |  | unknown | 32&#8209;44 |
-| 3496 | `vec_filter_anvil` |  |  |  | Y | Y |  |  | unknown | 71&#8209;81 |
-| 3497 | `vec_filter_predicate_provenence_completeness_loop` |  |  |  | Y | Y |  |  | hole | 114&#8209;132 |
-
-### experiments/vec_if.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3498 | `axiom_view_eq_auto_reveal` |  |  |  | Y | Y |  |  | unknown | 17&#8209;24 |
-| 3499 | `vec_elem_equals` |  |  |  | Y | Y |  |  | unknown | 32&#8209;39 |
-| 3500 | `vec_elem_equals_with_reveal` |  |  |  | Y | Y |  |  | unknown | 53&#8209;60 |
-| 3501 | `vec_u64_equals` |  |  |  | Y | Y |  |  | unknown | 74&#8209;77 |
-
-### experiments/vec_length_while_rust.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3502 | `vec_length_while` |  |  |  | Y |  | Y | Y |  | 1&#8209;11 |
-| 3503 | `main` |  |  |  | Y |  | Y | Y |  | 13&#8209;17 |
-
-### experiments/vec_length_while_verus.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3504 | `vec_length_while` |  |  |  | Y | Y |  |  | unknown | 7&#8209;8 |
-
-### experiments/vec_remove_duplicates.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3505 | `vec_mem_from` |  |  |  | Y | Y |  |  | unknown | 23&#8209;29 |
-| 3506 | `vec_remove_duplicates` |  |  |  | Y | Y |  |  | unknown | 60&#8209;66 |
-
-### experiments/verus_iterator.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3507 | `iter` | Y |  |  |  | Y |  |  | unknown | 25&#8209;27 |
-| 3508 | `next` | Y |  |  |  | Y |  |  | unknown | 29&#8209;45 |
-
-### experiments/verus_keep_ghost_and_test.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3509 | `empty` |  |  | Y |  | Y |  |  | unknown | 68&#8209;69 |
-| 3510 | `push` |  |  | Y |  | Y |  |  | unknown | 75&#8209;78 |
-| 3511 | `len` |  |  | Y |  | Y |  |  | unknown | 84&#8209;85 |
-| 3512 | `nth` |  |  | Y |  | Y |  |  | unknown | 91&#8209;93 |
-| 3513 | `sum` |  |  | Y |  | Y |  |  | unknown | 100&#8209;103 |
-| 3514 | `lemma_push_increases_len` |  |  | Y |  | Y |  |  | unknown | 123&#8209;128 |
-
-### experiments/verus_pub_crate_test.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3515 | `new` |  |  | Y |  | Y |  |  | unknown | 19&#8209;21 |
-| 3516 | `test` |  |  |  | Y | Y |  | Y |  | 27 |
-
-### experiments/verus_sum_loops_iterators.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3517 | `stub` |  |  |  | Y | Y |  | Y |  | 9 |
-
-### experiments/verus_vec_iterator.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3518 | `iter` | Y | Y |  |  | Y |  |  | unknown | 24&#8209;25 |
-| 3519 | `next` x2 | Y | Y |  |  | Y |  |  | unknown | 26&#8209;38 |
-
-### experiments/verus_vec_iterator_for_basic_proofs.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3520 | `test_for_semantics` |  |  |  | Y | Y |  | Y |  | 13 |
-
-### experiments/verus_vec_iterator_loop_basic_proofs.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3521 | `usize_vec_mem_loop` |  |  |  | Y | Y |  |  | unknown | 12&#8209;13 |
-| 3522 | `usize_vec_find_loop` |  |  |  | Y | Y |  |  | unknown | 49&#8209;54 |
-| 3523 | `vec_length_up_loop` |  |  |  | Y | Y |  |  | unknown | 84&#8209;85 |
-| 3524 | `usize_vec_count_up_loop` |  |  |  | Y | Y |  |  | unknown | 120&#8209;121 |
-
-### experiments/verus_vec_iterator_while_basic_proofs.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3525 | `usize_vec_mem_while` |  |  |  | Y | Y |  |  | unknown | 12&#8209;13 |
-| 3526 | `usize_vec_find_while` |  |  |  | Y | Y |  |  | unknown | 47&#8209;52 |
-| 3527 | `vec_length_up_while` |  |  |  | Y | Y |  |  | unknown | 80&#8209;81 |
-| 3528 | `usize_vec_count_up_while` |  |  |  | Y | Y |  |  | unknown | 113&#8209;114 |
-
-### experiments/verus_wrapped_iter_loops.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3529 | `lemma_found_at_pos` |  |  |  | Y | Y |  |  | hole | 11&#8209;16 |
-| 3530 | `lemma_not_found` |  |  |  | Y | Y |  |  | hole | 21&#8209;25 |
-| 3531 | `i64_vec_mem_while` |  |  |  | Y | Y |  |  | unknown | 31&#8209;32 |
-| 3532 | `i64_vec_mem_loop` |  |  |  | Y | Y |  |  | unknown | 50&#8209;51 |
-| 3533 | `i64_vec_mem_for` |  |  |  | Y | Y |  |  | unknown | 71&#8209;72 |
-| 3534 | `i64_vec_mem_for_no_auto` |  |  |  | Y | Y |  |  | unknown | 98&#8209;99 |
-| 3535 | `i64_vec_mem_for_into_iter` |  |  |  | Y | Y |  |  | unknown | 177&#8209;178 |
-
-### src/Concurrency.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3536 | `diverge` |  |  |  | Y | Y |  | Y |  | 13 |
-
-### src/ParaPairs.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3537 | `para_pair` |  |  |  | Y | Y |  |  | unknown | 52&#8209;63 |
-| 3538 | `para_pair_disjoint` |  |  |  | Y | Y |  |  | unknown | 72&#8209;85 |
-
-### src/Types.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3539 | `lemma_wf_graph_view_subset_arcs` |  |  |  | Y | Y |  |  | unknown | 45&#8209;50 |
-| 3540 | `lemma_wf_lab_graph_view_subset_arcs` |  |  |  | Y | Y |  |  | unknown | 72&#8209;77 |
-| 3541 | `axiom_Pair_view_injective` |  |  |  | Y | Y |  |  | hole | 188&#8209;192 |
-| 3542 | `axiom_Pair_feq` |  |  |  | Y | Y |  |  | hole | 204&#8209;206 |
-| 3543 | `axiom_Edge_feq` |  |  |  | Y | Y |  |  | hole | 226&#8209;228 |
-| 3544 | `axiom_Edge_key_model` |  |  |  | Y | Y |  |  | hole | 231&#8209;233 |
-| 3545 | `axiom_LabEdge_feq` |  |  |  | Y | Y |  |  | hole | 253&#8209;255 |
-| 3546 | `axiom_LabEdge_key_model` |  |  |  | Y | Y |  |  | hole | 258&#8209;260 |
-| 3547 | `axiom_WeightedEdge_feq` |  |  |  | Y | Y |  |  | hole | 275&#8209;277 |
-| 3548 | `axiom_WeightedEdge_key_model` |  |  |  | Y | Y |  |  | hole | 280&#8209;282 |
-| 3549 | `axiom_WeightedLabEdge_feq` |  |  |  | Y | Y |  |  | hole | 302&#8209;304 |
-| 3550 | `axiom_WeightedLabEdge_key_model` |  |  |  | Y | Y |  |  | hole | 307&#8209;309 |
-| 3551 | `axiom_Triple_feq` |  |  |  | Y | Y |  |  | hole | 324&#8209;326 |
-| 3552 | `axiom_Triple_key_model` |  |  |  | Y | Y |  |  | hole | 329&#8209;331 |
-| 3553 | `from` x10 |  | Y |  |  |  | Y | Y |  | 431 |
-| 3554 | `next` |  | Y |  |  |  | Y | Y |  | 502&#8209;504 |
-| 3555 | `deref` |  | Y |  |  |  | Y | Y |  | 511&#8209;513 |
-| 3556 | `deref_mut` |  | Y |  |  |  | Y | Y |  | 517&#8209;519 |
-
-### vstdplus/VecQueue.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3557 | `new` | Y | Y |  |  | Y |  |  | unknown | 20&#8209;21 |
-| 3558 | `len` | Y | Y |  |  | Y |  |  | unknown | 23&#8209;24 |
-| 3559 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 26&#8209;27 |
-| 3560 | `enqueue` | Y | Y |  |  | Y |  |  | unknown | 29&#8209;30 |
-| 3561 | `dequeue` | Y | Y |  |  | Y |  |  | unknown | 32&#8209;35 |
-
-### vstdplus/accept.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3562 | `accept` x2 |  |  |  | Y | Y |  |  | hole | 17&#8209;18 |
-
-### vstdplus/checked_int.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3563 | `is_normal` | Y |  |  |  | Y |  |  | unknown | 88&#8209;89 |
-| 3564 | `is_out_of_range` | Y |  |  |  | Y |  |  | unknown | 91&#8209;92 |
-| 3565 | `add_checked` | Y |  |  |  | Y |  |  | unknown | 94&#8209;95 |
-| 3566 | `sub_checked` | Y |  |  |  | Y |  |  | unknown | 97&#8209;98 |
-| 3567 | `mul_checked` | Y |  |  |  | Y |  |  | unknown | 100&#8209;101 |
-| 3568 | `lemma_add_commutative_ghost` | Y |  |  |  | Y |  |  | unknown | 105&#8209;106 |
-| 3569 | `lemma_mul_commutative_ghost` | Y |  |  |  | Y |  |  | unknown | 109&#8209;111 |
-| 3570 | `lemma_sub_anticommutative_ghost` | Y |  |  |  | Y |  |  | unknown | 113&#8209;114 |
-| 3571 | `lemma_add_associative_ghost` | Y |  |  |  | Y |  |  | unknown | 118&#8209;119 |
-| 3572 | `lemma_mul_associative_ghost` | Y |  |  |  | Y |  |  | unknown | 122&#8209;123 |
-| 3573 | `lemma_mul_distributes_over_add_ghost` | Y |  |  |  | Y |  |  | unknown | 130&#8209;132 |
-| 3574 | `lemma_mul_distributes_over_sub_ghost` | Y |  |  |  | Y |  |  | unknown | 134&#8209;135 |
-
-### vstdplus/checked_nat.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3575 | `is_normal` | Y |  |  |  | Y |  |  | unknown | 87&#8209;88 |
-| 3576 | `is_overflow` | Y |  |  |  | Y |  |  | unknown | 90&#8209;91 |
-| 3577 | `add_checked` | Y |  |  |  | Y |  |  | unknown | 93&#8209;94 |
-| 3578 | `mul_checked` | Y |  |  |  | Y |  |  | unknown | 96&#8209;97 |
-| 3579 | `lemma_add_commutative_ghost` | Y |  |  |  | Y |  |  | unknown | 101&#8209;102 |
-| 3580 | `lemma_mul_commutative_ghost` | Y |  |  |  | Y |  |  | unknown | 105&#8209;106 |
-| 3581 | `lemma_add_associative_ghost` | Y |  |  |  | Y |  |  | unknown | 112&#8209;113 |
-| 3582 | `lemma_mul_associative_ghost` | Y |  |  |  | Y |  |  | unknown | 115&#8209;116 |
-| 3583 | `lemma_mul_distributes_over_add_ghost` | Y |  |  |  | Y |  |  | unknown | 121&#8209;122 |
-| 3584 | `lemma_sum_monotonic` | Y |  |  |  | Y |  |  | unknown | 127&#8209;134 |
-| 3585 | `lemma_add_normal_if_sum_fits` | Y |  |  |  | Y |  |  | unknown | 137&#8209;142 |
-
-### vstdplus/checked_nat_with_checked_view.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3586 | `is_normal` | Y |  |  |  | Y |  |  | unknown | 62&#8209;63 |
-| 3587 | `is_overflow` | Y |  |  |  | Y |  |  | unknown | 65&#8209;66 |
-| 3588 | `add_checked` | Y |  |  |  | Y |  |  | unknown | 68&#8209;69 |
-| 3589 | `mul_checked` | Y |  |  |  | Y |  |  | unknown | 71&#8209;72 |
-
-### vstdplus/clone_plus.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3590 | `clone_plus` x3 | Y | Y |  |  | Y |  |  | hole | 62 |
-| 3591 | `clone_fn` x2 |  |  |  | Y | Y |  |  | hole | 28&#8209;31 |
-| 3592 | `clone_fn2` x2 |  |  |  | Y | Y |  |  | hole | 38&#8209;41 |
-| 3593 | `clone_pred` x2 |  |  |  | Y | Y |  |  | hole | 48&#8209;51 |
-
-### vstdplus/feq.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3594 | `lemma_cloned_view_eq` |  |  |  | Y | Y |  |  | unknown | 76&#8209;78 |
-| 3595 | `lemma_view_injective` |  |  |  | Y | Y |  |  | unknown | 86&#8209;88 |
-| 3596 | `axiom_cloned_implies_eq` |  |  |  | Y | Y |  |  | hole | 163&#8209;165 |
-| 3597 | `axiom_cloned_implies_eq_owned` |  |  |  | Y | Y |  |  | hole | 172&#8209;174 |
-| 3598 | `feq` x2 |  |  |  | Y | Y |  |  | hole | 180&#8209;182 |
-| 3599 | `obeys_feq_clone` |  |  |  | Y |  | Y | Y |  | 210&#8209;211 |
-
-### vstdplus/float.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3600 | `reflexive` x2 | Y | Y |  |  | Y |  |  | unknown | 34&#8209;36 |
-| 3601 | `antisymmetric` x2 | Y | Y |  |  | Y |  |  | unknown | 39&#8209;42 |
-| 3602 | `transitive` x2 | Y | Y |  |  | Y |  |  | unknown | 45&#8209;48 |
-| 3603 | `totality` x2 | Y | Y |  |  | Y |  |  | unknown | 51&#8209;53 |
-| 3604 | `float_cmp` x2 | Y | Y |  |  | Y |  |  | hole | 56&#8209;63 |
-| 3605 | `axiom_f64_le_functional` |  |  |  | Y | Y |  |  | unknown | 114&#8209;117 |
-| 3606 | `axiom_f64_reflexive` |  |  |  | Y | Y |  |  | unknown | 119&#8209;121 |
-| 3607 | `axiom_f64_antisymmetric` |  |  |  | Y | Y |  |  | unknown | 123&#8209;128 |
-| 3608 | `axiom_f64_transitive` |  |  |  | Y | Y |  |  | unknown | 130&#8209;135 |
-| 3609 | `axiom_f64_totality` |  |  |  | Y | Y |  |  | unknown | 137&#8209;141 |
-| 3610 | `axiom_f32_le_functional` |  |  |  | Y | Y |  |  | unknown | 181&#8209;184 |
-| 3611 | `axiom_f32_reflexive` |  |  |  | Y | Y |  |  | unknown | 186&#8209;188 |
-| 3612 | `axiom_f32_antisymmetric` |  |  |  | Y | Y |  |  | unknown | 190&#8209;195 |
-| 3613 | `axiom_f32_transitive` |  |  |  | Y | Y |  |  | unknown | 197&#8209;202 |
-| 3614 | `axiom_f32_totality` |  |  |  | Y | Y |  |  | unknown | 204&#8209;208 |
-| 3615 | `is_finite` |  |  | Y |  | Y |  |  | hole | 229&#8209;230 |
-| 3616 | `eq` |  | Y | Y |  | Y |  |  | hole | 236&#8209;237 |
-| 3617 | `dist_le` |  |  | Y |  | Y |  |  | hole | 243&#8209;245 |
-| 3618 | `dist_lt` |  |  | Y |  | Y |  |  | hole | 251&#8209;253 |
-| 3619 | `dist_add` |  |  | Y |  | Y |  |  | hole | 259&#8209;260 |
-| 3620 | `dist_sub` |  |  | Y |  | Y |  |  | hole | 266&#8209;267 |
-| 3621 | `f64_is_finite` |  |  |  | Y | Y |  |  | hole | 275&#8209;276 |
-| 3622 | `axiom_f64_zero_is_finite` |  |  |  | Y | Y |  |  | unknown | 286&#8209;287 |
-| 3623 | `axiom_f64_unreachable_not_finite` |  |  |  | Y | Y |  |  | unknown | 289&#8209;290 |
-| 3624 | `unreachable_dist` |  |  |  | Y | Y |  |  | hole | 293&#8209;295 |
-| 3625 | `zero_dist` |  |  |  | Y | Y |  |  | hole | 301&#8209;303 |
-| 3626 | `finite_dist` |  |  |  | Y | Y |  |  | unknown | 308&#8209;311 |
-| 3627 | `axiom_f64_add_zero_right` |  |  |  | Y | Y |  |  | unknown | 323&#8209;325 |
-| 3628 | `axiom_f64_add_commutative` |  |  |  | Y | Y |  |  | unknown | 327&#8209;330 |
-| 3629 | `axiom_f64_add_finite_preserves` |  |  |  | Y | Y |  |  | unknown | 332&#8209;336 |
-| 3630 | `axiom_f64_add_monotone_left` |  |  |  | Y | Y |  |  | unknown | 338&#8209;345 |
-| 3631 | `partial_cmp` |  | Y |  |  |  | Y | Y |  | 391&#8209;393 |
-| 3632 | `cmp` |  | Y |  |  |  | Y | Y |  | 397&#8209;399 |
-| 3633 | `hash` |  | Y |  |  |  | Y | Y |  | 403&#8209;405 |
-| 3634 | `add` |  | Y |  |  |  | Y | Y |  | 410&#8209;412 |
-| 3635 | `add_assign` |  | Y |  |  |  | Y | Y |  | 416&#8209;418 |
-
-### vstdplus/hash_set_with_view_plus.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3636 | `axiom_hash_set_with_view_plus_finite` |  |  |  | Y | Y |  |  | hole | 38&#8209;40 |
-| 3637 | `new` |  |  | Y |  | Y |  |  | hole | 60&#8209;65 |
-| 3638 | `with_capacity` |  |  | Y |  | Y |  |  | hole | 71&#8209;76 |
-| 3639 | `len` |  |  | Y |  | Y |  |  | hole | 82&#8209;84 |
-| 3640 | `contains` |  |  | Y |  | Y |  |  | hole | 90&#8209;94 |
-| 3641 | `insert` |  |  | Y |  | Y |  |  | hole | 100&#8209;106 |
-| 3642 | `iter` | Y | Y |  |  | Y |  |  | hole | 113&#8209;117 |
-| 3643 | `hash` |  | Y |  |  | Y |  |  | hole | 132 |
-| 3644 | `eq` |  | Y |  |  | Y |  |  | hole | 141 |
-
-### vstdplus/hashed_checked_u32.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3645 | `hash` |  | Y |  |  | Y |  |  | hole | 31 |
-| 3646 | `eq` |  | Y |  |  | Y |  |  | hole | 39 |
-| 3647 | `axiom_CheckedU32_feq` |  |  |  | Y | Y |  |  | hole | 50&#8209;52 |
-| 3648 | `axiom_CheckedU32_key_model` |  |  |  | Y | Y |  |  | hole | 56&#8209;58 |
-
-### vstdplus/multiset.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3649 | `lemma_spec_filter_len_nonneg` |  |  |  | Y | Y |  |  | unknown | 31&#8209;33 |
-| 3650 | `lemma_spec_filter_len_le_len` |  |  |  | Y | Y |  |  | unknown | 41&#8209;43 |
-| 3651 | `lemma_flatten_01_eq_spec_filter_len` |  |  |  | Y | Y |  |  | unknown | 54&#8209;65 |
-| 3652 | `lemma_multiset_insert_filter_pos` |  |  |  | Y | Y |  |  | unknown | 86&#8209;88 |
-| 3653 | `lemma_multiset_insert_filter_neg` |  |  |  | Y | Y |  |  | unknown | 96&#8209;98 |
-| 3654 | `lemma_flatten_01_multiset_eq_filter` |  |  |  | Y | Y |  |  | unknown | 109&#8209;121 |
-
-### vstdplus/partial_order.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3655 | `reflexive` x14 | Y | Y |  |  | Y |  |  | hole | 17&#8209;20 |
-| 3656 | `transitive` x14 | Y | Y |  |  | Y |  |  | hole | 23&#8209;29 |
-| 3657 | `antisymmetric` x14 | Y | Y |  |  | Y |  |  | hole | 32&#8209;38 |
-| 3658 | `compare` x14 | Y | Y |  |  | Y |  |  | hole | 40&#8209;48 |
-
-### vstdplus/rand.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3659 | `random_usize_range` |  |  |  | Y | Y |  |  | hole | 21&#8209;23 |
-| 3660 | `random_usize_range_exec` x2 |  |  |  | Y |  | Y | Y |  | 30&#8209;35 |
-
-### vstdplus/seq.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3661 | `seq_u32_to_CheckedU32` |  |  |  | Y | Y |  |  | hole | 32&#8209;34 |
-| 3662 | `lemma_sum_u32_unfold_take` |  |  |  | Y | Y |  |  | unknown | 77&#8209;79 |
-| 3663 | `lemma_sum_int_equiv` |  |  |  | Y | Y |  |  | unknown | 105&#8209;107 |
-| 3664 | `lemma_sum_int_push` |  |  |  | Y | Y |  |  | unknown | 117&#8209;118 |
-| 3665 | `lemma_sum_int_unfold_take` |  |  |  | Y | Y |  |  | unknown | 125&#8209;127 |
-| 3666 | `lemma_sum_checked_u32_unfold_take` |  |  |  | Y | Y |  |  | unknown | 143&#8209;145 |
-| 3667 | `lemma_flatten_uniform_len` |  |  |  | Y | Y |  |  | unknown | 160&#8209;165 |
-| 3668 | `lemma_flatten_len_is_inner_lens_sum` |  |  |  | Y | Y |  |  | unknown | 190&#8209;192 |
-| 3669 | `lemma_flatten_all` |  |  |  | Y | Y |  |  | unknown | 201&#8209;210 |
-| 3670 | `lemma_flatten_contains` |  |  |  | Y | Y |  |  | unknown | 237&#8209;240 |
-
-### vstdplus/seq_set.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3671 | `lemma_push_not_contains_to_set_subset` |  |  |  | Y | Y |  |  | unknown | 20&#8209;24 |
-| 3672 | `lemma_push_not_contains_to_set_superset` |  |  |  | Y | Y |  |  | unknown | 42&#8209;46 |
-| 3673 | `lemma_push_not_contains_to_set` |  |  |  | Y | Y |  |  | unknown | 62&#8209;66 |
-| 3674 | `lemma_take_extends_set_subset` |  |  |  | Y | Y |  |  | unknown | 77&#8209;81 |
-| 3675 | `lemma_take_extends_set_superset` |  |  |  | Y | Y |  |  | unknown | 102&#8209;106 |
-| 3676 | `lemma_take_one_more_extends_the_seq_set` |  |  |  | Y | Y |  |  | unknown | 125&#8209;129 |
-| 3677 | `lemma_set_contains_insert_idempotent` |  |  |  | Y | Y |  |  | unknown | 137&#8209;141 |
-| 3678 | `lemma_take_one_more_extends_the_seq_set_with_view` |  |  |  | Y | Y |  |  | unknown | 151&#8209;155 |
-| 3679 | `lemma_take_full_to_set_with_view` |  |  |  | Y | Y |  |  | unknown | 191&#8209;194 |
-| 3680 | `lemma_seq_index_in_map_to_set` |  |  |  | Y | Y |  |  | unknown | 201&#8209;205 |
-| 3681 | `lemma_map_to_set_contains_index` |  |  |  | Y | Y |  |  | unknown | 216&#8209;220 |
-| 3682 | `lemma_map_not_contains_implies_all_ne` |  |  |  | Y | Y |  |  | unknown | 232&#8209;236 |
-| 3683 | `lemma_seq_map_to_set_equality` |  |  |  | Y | Y |  |  | unknown | 246&#8209;252 |
-| 3684 | `lemma_take_one_more_intersect` |  |  |  | Y | Y |  |  | unknown | 283&#8209;292 |
-| 3685 | `lemma_spec_nat_seq_fold_equals_spec_set_fold` |  |  |  | Y | Y |  |  | unknown | 342&#8209;347 |
-| 3686 | `lemma_to_seq_no_duplicates` |  |  |  | Y | Y |  |  | unknown | 382&#8209;387 |
-| 3687 | `lemma_spec_nat_seq_sum_is_nat_set_sum` |  |  |  | Y | Y |  |  | unknown | 416&#8209;420 |
-| 3688 | `lemma_nat_partial_sum_monotonic` |  |  |  | Y | Y |  |  | unknown | 433&#8209;438 |
-| 3689 | `lemma_nat_fold_left_step` |  |  |  | Y | Y |  |  | unknown | 447&#8209;451 |
-| 3690 | `lemma_spec_nat_seq_sum_no_intermediate_overflow` |  |  |  | Y | Y |  |  | unknown | 474&#8209;478 |
-| 3691 | `lemma_nat_any_order_no_overflow` |  |  |  | Y | Y |  |  | unknown | 490&#8209;498 |
-| 3692 | `lemma_no_dup_same_set_implies_same_multiset` |  |  |  | Y | Y |  |  | unknown | 505&#8209;511 |
-| 3693 | `lemma_spec_nat_seq_sum_permutation_invariant` |  |  |  | Y | Y |  |  | unknown | 533&#8209;539 |
-| 3694 | `lemma_u32_view_identity` |  |  |  | Y | Y |  |  | unknown | 558&#8209;559 |
-| 3695 | `lemma_to_seq_gives_same_set` |  |  |  | Y | Y |  |  | unknown | 567&#8209;572 |
-| 3696 | `lemma_seq_map_to_set_eq_set_map` |  |  |  | Y | Y |  |  | unknown | 589&#8209;594 |
-| 3697 | `lemma_set_contains_iff_to_seq_map_contains` |  |  |  | Y | Y |  |  | unknown | 614&#8209;619 |
-| 3698 | `lemma_weighted_fold_left_step` |  |  |  | Y | Y |  |  | unknown | 646&#8209;650 |
-| 3699 | `lemma_weighted_seq_fold_equals_set_fold` |  |  |  | Y | Y |  |  | unknown | 660&#8209;665 |
-| 3700 | `lemma_weighted_seq_sum_is_set_sum` |  |  |  | Y | Y |  |  | unknown | 703&#8209;707 |
-| 3701 | `lemma_int_fold_equals_nat_fold_weighted` |  |  |  | Y | Y |  |  | unknown | 718&#8209;722 |
-| 3702 | `lemma_seq_fold_left_plus_is_weighted_seq_sum` |  |  |  | Y | Y |  |  | unknown | 735&#8209;739 |
-| 3703 | `lemma_fold_left_int_equals_nat_as_int` |  |  |  | Y | Y |  |  | unknown | 768&#8209;772 |
-| 3704 | `lemma_seq_fold_left_plus_is_weighted_seq_sum_u8` |  |  |  | Y | Y |  |  | unknown | 804&#8209;806 |
-| 3705 | `lemma_fold_left_int_equals_nat_as_int_u8` |  |  |  | Y | Y |  |  | unknown | 817&#8209;819 |
-| 3706 | `lemma_weighted_seq_fold_equals_set_fold_u8` |  |  |  | Y | Y |  |  | unknown | 823&#8209;826 |
-| 3707 | `lemma_seq_fold_left_plus_is_weighted_seq_sum_u16` |  |  |  | Y | Y |  |  | unknown | 854&#8209;856 |
-| 3708 | `lemma_fold_left_int_equals_nat_as_int_u16` |  |  |  | Y | Y |  |  | unknown | 867&#8209;869 |
-| 3709 | `lemma_weighted_seq_fold_equals_set_fold_u16` |  |  |  | Y | Y |  |  | unknown | 873&#8209;876 |
-| 3710 | `lemma_seq_fold_left_plus_is_weighted_seq_sum_u64` |  |  |  | Y | Y |  |  | unknown | 902&#8209;904 |
-| 3711 | `lemma_fold_left_int_equals_nat_as_int_u64` |  |  |  | Y | Y |  |  | unknown | 916&#8209;918 |
-| 3712 | `lemma_weighted_seq_fold_equals_set_fold_u64` |  |  |  | Y | Y |  |  | unknown | 922&#8209;925 |
-| 3713 | `lemma_seq_fold_left_plus_is_weighted_seq_sum_u128` |  |  |  | Y | Y |  |  | unknown | 952&#8209;954 |
-| 3714 | `lemma_fold_left_int_equals_nat_as_int_u128` |  |  |  | Y | Y |  |  | unknown | 966&#8209;968 |
-| 3715 | `lemma_weighted_seq_fold_equals_set_fold_u128` |  |  |  | Y | Y |  |  | unknown | 972&#8209;975 |
-| 3716 | `lemma_seq_fold_left_plus_is_weighted_seq_sum_usize` |  |  |  | Y | Y |  |  | unknown | 1002&#8209;1004 |
-| 3717 | `lemma_fold_left_int_equals_nat_as_int_usize` |  |  |  | Y | Y |  |  | unknown | 1016&#8209;1018 |
-| 3718 | `lemma_weighted_seq_fold_equals_set_fold_usize` |  |  |  | Y | Y |  |  | unknown | 1022&#8209;1025 |
-| 3719 | `lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i8` |  |  |  | Y | Y |  |  | unknown | 1054&#8209;1056 |
-| 3720 | `lemma_signed_weighted_seq_fold_equals_set_fold_i8` |  |  |  | Y | Y |  |  | unknown | 1066&#8209;1069 |
-| 3721 | `lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i16` |  |  |  | Y | Y |  |  | unknown | 1095&#8209;1097 |
-| 3722 | `lemma_signed_weighted_seq_fold_equals_set_fold_i16` |  |  |  | Y | Y |  |  | unknown | 1108&#8209;1111 |
-| 3723 | `lemma_signed_seq_fold_left_plus_is_weighted_seq_sum` |  |  |  | Y | Y |  |  | unknown | 1138&#8209;1140 |
-| 3724 | `lemma_signed_weighted_seq_fold_equals_set_fold` |  |  |  | Y | Y |  |  | unknown | 1150&#8209;1154 |
-| 3725 | `lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i64` |  |  |  | Y | Y |  |  | unknown | 1180&#8209;1182 |
-| 3726 | `lemma_signed_weighted_seq_fold_equals_set_fold_i64` |  |  |  | Y | Y |  |  | unknown | 1192&#8209;1196 |
-| 3727 | `lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i128` |  |  |  | Y | Y |  |  | unknown | 1222&#8209;1224 |
-| 3728 | `lemma_signed_weighted_seq_fold_equals_set_fold_i128` |  |  |  | Y | Y |  |  | unknown | 1234&#8209;1238 |
-| 3729 | `lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_isize` |  |  |  | Y | Y |  |  | unknown | 1264&#8209;1266 |
-| 3730 | `lemma_signed_weighted_seq_fold_equals_set_fold_isize` |  |  |  | Y | Y |  |  | unknown | 1276&#8209;1279 |
-
-### vstdplus/smart_ptrs.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3731 | `call_f` |  |  |  | Y | Y |  |  | unknown | 20&#8209;26 |
-| 3732 | `arc_deref` |  |  |  | Y | Y |  |  | hole | 34&#8209;35 |
-| 3733 | `arc_vec_as_slice` |  |  |  | Y | Y |  |  | hole | 43&#8209;45 |
-
-### vstdplus/threads_plus.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3734 | `is_finished` |  |  | Y |  | Y |  |  | hole | 22 |
-| 3735 | `join` |  |  | Y |  | Y |  |  | hole | 25&#8209;26 |
-| 3736 | `spawn_plus` |  |  |  | Y | Y |  |  | hole | 40&#8209;43 |
-| 3737 | `agrees` |  |  | Y |  | Y |  |  | unknown | 73&#8209;74 |
-| 3738 | `thread_id_plus` |  |  |  | Y | Y |  |  | hole | 80&#8209;81 |
-| 3739 | `ghost_thread_id_plus` |  |  |  | Y | Y |  | Y |  | 87 |
-| 3740 | `into` |  |  | Y |  | Y |  |  | unknown | 96&#8209;99 |
-| 3741 | `borrow` |  |  | Y |  | Y |  |  | unknown | 100&#8209;102 |
-| 3742 | `send_into` |  |  | Y |  | Y |  |  | unknown | 106&#8209;107 |
-| 3743 | `sync_borrow` |  |  | Y |  | Y |  |  | unknown | 111&#8209;112 |
-
-### vstdplus/total_order.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3744 | `reflexive` x12 | Y | Y |  |  | Y |  |  | unknown | 13&#8209;16 |
-| 3745 | `transitive` x12 | Y | Y |  |  | Y |  |  | unknown | 19&#8209;25 |
-| 3746 | `antisymmetric` x12 | Y | Y |  |  | Y |  |  | unknown | 28&#8209;34 |
-| 3747 | `total` x12 | Y | Y |  |  | Y |  |  | unknown | 37&#8209;40 |
-| 3748 | `cmp` x12 | Y | Y |  |  | Y |  |  | unknown | 42&#8209;49 |
 
 
 ### Legend

@@ -7,7 +7,7 @@
 pub mod BoruvkaMtEph {
 
     use vstd::prelude::*;
-    use crate::vstdplus::float::float::*;
+    use crate::vstdplus::float::float::{F64Ord, f64_ord};
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
 
@@ -27,7 +27,7 @@ pub mod BoruvkaMtEph {
     /// Labeled edge for Borůvka's algorithm: (from, to, weight, label_id)
     /// Tuple struct wrapper to implement Display trait for StT compliance
     #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-    pub struct LabeledEdge<V>(pub V, pub V, pub F64Dist, pub usize);
+    pub struct LabeledEdge<V>(pub V, pub V, pub F64Ord, pub usize);
 
     verus! {
         pub trait BoruvkaMtEphTrait {
@@ -37,15 +37,15 @@ pub mod BoruvkaMtEph {
                 edges: Arc<Vec<LabeledEdge<V>>>,
                 start: usize,
                 end: usize,
-            ) -> HashMap<V, (V, F64Dist, usize)>;
+            ) -> HashMap<V, (V, F64Ord, usize)>;
 
             /// Parallel bridge-based star partition
             /// APAS: Work O(|V| + |E|), Span O(lg |V|)
             fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
                 vertices_vec: Vec<V>,
-                bridges: HashMap<V, (V, F64Dist, usize)>,
+                bridges: HashMap<V, (V, F64Ord, usize)>,
                 rng: &mut StdRng,
-            ) -> (SetStEph<V>, HashMap<V, (V, F64Dist, usize)>);
+            ) -> (SetStEph<V>, HashMap<V, (V, F64Ord, usize)>);
 
             /// Parallel Borůvka's MST algorithm
             /// APAS: Work O(m log n), Span O(log² n)
@@ -69,7 +69,7 @@ pub mod BoruvkaMtEph {
             fn mst_weight<V: StT + Hash>(
                 edges: &SetStEph<LabeledEdge<V>>,
                 mst_labels: &SetStEph<usize>,
-            ) -> F64Dist;
+            ) -> F64Ord;
         }
 
         impl<V: StTInMtT + Ord + 'static> View for LabeledEdge<V> {
@@ -97,7 +97,7 @@ pub mod BoruvkaMtEph {
         edges: Arc<Vec<LabeledEdge<V>>>,
         start: usize,
         end: usize,
-    ) -> HashMap<V, (V, F64Dist, usize)> {
+    ) -> HashMap<V, (V, F64Ord, usize)> {
         let size = end - start;
         if size == 0 {
             return HashMap::new();
@@ -151,9 +151,9 @@ pub mod BoruvkaMtEph {
     #[cfg(not(verus_keep_ghost))]
     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices_vec: Vec<V>,
-        bridges: HashMap<V, (V, F64Dist, usize)>,
+        bridges: HashMap<V, (V, F64Ord, usize)>,
         rng: &mut StdRng,
-    ) -> (SetStEph<V>, HashMap<V, (V, F64Dist, usize)>) {
+    ) -> (SetStEph<V>, HashMap<V, (V, F64Ord, usize)>) {
         // Coin flips (sequential for consistent seed)
         let mut coin_flips = HashMap::<V, bool>::new();
         for vertex in vertices_vec.iter() {
@@ -185,11 +185,11 @@ pub mod BoruvkaMtEph {
     #[cfg(not(verus_keep_ghost))]
     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices: Arc<Vec<V>>,
-        bridges: Arc<HashMap<V, (V, F64Dist, usize)>>,
+        bridges: Arc<HashMap<V, (V, F64Ord, usize)>>,
         coin_flips: Arc<HashMap<V, bool>>,
         start: usize,
         end: usize,
-    ) -> HashMap<V, (V, F64Dist, usize)> {
+    ) -> HashMap<V, (V, F64Ord, usize)> {
         let size = end - start;
         if size == 0 {
             return HashMap::new();
@@ -352,8 +352,8 @@ pub mod BoruvkaMtEph {
     pub fn mst_weight<V: StT + Hash>(
         edges: &SetStEph<LabeledEdge<V>>,
         mst_labels: &SetStEph<usize>,
-    ) -> F64Dist {
-        let mut total = zero_dist();
+    ) -> F64Ord {
+        let mut total = f64_ord(0.0);
         for LabeledEdge(_, _, w, label) in edges.iter() {
             if mst_labels.mem(label) {
                 total += *w;

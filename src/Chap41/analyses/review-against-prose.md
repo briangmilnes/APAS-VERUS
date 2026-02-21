@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 41 — Sets: Review Against Prose
 
-**Date:** 2026-02-18
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 **Prose source:** `prompts/Chap41.txt`
 **Source files:** `src/Chap41/ArraySetStEph.rs`, `src/Chap41/ArraySetEnumMtEph.rs`, `src/Chap41/AVLTreeSetStEph.rs`, `src/Chap41/AVLTreeSetStPer.rs`, `src/Chap41/AVLTreeSetMtEph.rs`, `src/Chap41/AVLTreeSetMtPer.rs`, `src/Chap41/Example41_3.rs`

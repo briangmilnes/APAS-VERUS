@@ -9,7 +9,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 **Reviewer:** Claude-Opus-4.6
 **Date:** 2026-02-17
-**Last mechanical audit:** 2026-02-19 — return variable renames, IntoIterator additions, eq→equal/clone→cloned renames; no functional changes.
+**Last mechanical audit:** 2026-02-19 — full review regeneration; proof holes log updated.
 **Prose files:** `prompts/Chap19.txt`, `prompts/Chap19Scan.txt`
 **Source files:** ArraySeqStEph.rs, ArraySeqStPer.rs, ArraySeqMtEph.rs, ArraySeqMtEphSlice.rs
 

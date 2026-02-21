@@ -150,7 +150,6 @@ pub mod Chapter36MtEphSlice {
             });
         }
 
-        #[verifier::external_body]
         fn quick_sort_mt_random(&self) {
             if self.length() <= 1usize {
                 return;

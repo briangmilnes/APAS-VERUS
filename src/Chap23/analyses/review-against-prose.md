@@ -7,8 +7,8 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 23 — Tree Sequences: Review Against Prose
 
-**Date:** 2026-02-18
-**Last mechanical audit:** 2026-02-19 — return variable renames, IntoIterator additions, eq→equal/clone→cloned renames; no functional changes.
+**Date:** 2026-02-19
+**Last mechanical audit:** 2026-02-19 — full review regeneration; proof holes log updated.
 **Reviewer:** Claude-Opus-4.6
 
 **Recent changes:** PrimTreeSeqStPer: moved `as_slice` and `into_vec` from bare `impl PrimTreeSeqStS<T>` into the trait and trait impl, eliminating one bare impl block. BalBinTreeStEph: no meaningful change (attempted to remove `external_body` from Clone but reverted — `T::clone()` has no spec in Verus).

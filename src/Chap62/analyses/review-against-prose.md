@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 62: Star Contraction — Review Against Prose
 
-**Date:** 2026-02-13 (updated 2026-02-18: verusification — traits inside verus!, impls cfg-gated)
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 **Verus coverage:** Partial — trait definitions inside `verus!`, implementations `#[cfg(not(verus_keep_ghost))]`
 **lib.rs gate:** No longer behind `#[cfg(not(verus_keep_ghost))]` — Verus sees the trait declarations

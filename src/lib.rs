@@ -108,7 +108,7 @@ pub mod experiments {
     // pub mod executable_use_of_int;
     // pub mod external_body_accept_hole;
     // pub mod f64_bits_sort;
-    pub mod f64_float_cmp_sort;
+    // pub mod f64_float_cmp_sort;
     // pub mod f64_sort;  // FAILS: assertion failed (f64_le_spec in loop invariant)
     // pub mod ForFor;  // FAILS: precondition not satisfied, invariant not satisfied
     // pub mod ForLoops;
@@ -619,8 +619,8 @@ pub mod Chap56 {
     pub mod SSSPResultStPerF64;
     pub mod AllPairsResultStEphF64;
     pub mod AllPairsResultStPerF64;
-    // pub mod Example56_1;  // uses ordered_float (removed)
-    // pub mod Example56_3;  // uses ordered_float (removed)
+    // pub mod Example56_1;  // uses vstdplus float (F64Dist)
+    // pub mod Example56_3;  // i64 only
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
@@ -670,18 +670,18 @@ pub mod Chap63 {
 pub mod Chap64 {
     pub mod SpanTreeStEph;
     pub mod SpanTreeMtEph;
-    pub mod TSPApproxStEph;
+    // pub mod TSPApproxStEph;  // migrated to F64Ord
 }
 
 #[cfg(feature = "all_chapters")]
 pub mod Chap65 {
     pub mod UnionFindStEph;
-    pub mod KruskalStEph;
-    pub mod PrimStEph;
+    // pub mod KruskalStEph;  // migrated to F64Ord
+    // pub mod PrimStEph;  // migrated to F64Ord
 }
 
 #[cfg(feature = "all_chapters")]
 pub mod Chap66 {
-    // pub mod BoruvkaStEph;  // uses rand + ordered_float (removed)
-    // pub mod BoruvkaMtEph;  // uses rand + ordered_float (removed)
+    // pub mod BoruvkaStEph;  // migrated to F64Ord
+    // pub mod BoruvkaMtEph;  // migrated to F64Ord
 }

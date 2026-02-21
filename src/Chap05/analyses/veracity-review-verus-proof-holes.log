@@ -1,9 +1,7 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap05
-
 ✓ KleeneStPer.rs
    9 clean proof functions
 ❌ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:576: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:576: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        566 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        574 |                 }
@@ -13,7 +11,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
 ✓ RelationStEph.rs
 ❌ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:969: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:969: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        965 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        967 |         {
@@ -23,7 +21,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ SetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:878: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:878: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        873 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        876 |             let equal = self.elements == other.elements;
@@ -41,6 +39,18 @@ Modules:
    5 clean (no holes)
    0 holed (contains holes)
    5 total
+
+Proof Functions:
+   11 clean
+   0 holed
+   11 total
+
+Holes Found: 0 total
+
+Errors: 3 (bare impl(s), struct/enum outside verus!)
+
+🎉 No proof holes found! All proofs are complete.
+5 total
 
 Proof Functions:
    11 clean

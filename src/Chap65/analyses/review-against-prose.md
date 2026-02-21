@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 65 — Sequential MST Algorithms: Review Against Prose
 
-**Date:** 2026-02-13 (updated 2026-02-18: verusification — traits inside verus!, impls cfg-gated)
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 1: Inventory (tool-generated)
@@ -209,15 +209,19 @@ Trait definitions are now inside `verus!` blocks, so trait method signatures are
 
 ## Proof Holes Summary
 
-```
-veracity-review-proof-holes output (2026-02-18):
+**Last verified:** 2026-02-19 (`veracity-review-proof-holes`)
 
-Modules: 3 clean, 0 holed
-Proof Functions: 0 total
+```
+✓ KruskalStEph.rs
+❌ PrimStEph.rs (2 errors: PQEntry struct outside verus!, Clone derived outside)
+❌ UnionFindStEph.rs (1 error: struct outside verus!)
+
+Modules: 3 clean (no holes), 0 holed
 Holes Found: 0 total
+Errors: 3 (struct/enum outside verus!, Clone derived outside)
 ```
 
-**All clean.** No `assume`, `admit`, or `external_body` in any Chap65 file. However, this is because the implementations are behind `#[cfg(not(verus_keep_ghost))]` and not verified, not because the proofs are complete.
+**0 proof holes.** PrimStEph and UnionFindStEph have style errors (struct outside verus!, Clone derived outside). Implementations are behind `#[cfg(not(verus_keep_ghost))]` and not verified.
 
 ## Spec Strength Summary
 

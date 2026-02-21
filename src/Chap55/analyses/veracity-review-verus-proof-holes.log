@@ -1,5 +1,3 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap55/
-
 ✓ CycleDetectStEph.rs
 ✓ CycleDetectStPer.rs
 ✓ DFSStEph.rs
@@ -23,6 +21,11 @@ Proof Functions:
    1 clean
    0 holed
    1 total
+
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
+otal
 
 Holes Found: 0 total
 
