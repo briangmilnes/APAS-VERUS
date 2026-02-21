@@ -1,5 +1,3 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap57
-
 ❌ DijkstraStEphF64.rs
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:36: error: struct_outside_verus - struct PQEntry — should be inside verus!
         36 |     pub struct PQEntry {
@@ -23,6 +21,19 @@ SUMMARY
 
 Modules:
    2 clean (no holes)
+   1 holed (contains holes)
+   3 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 1 total
+   1 × external_body
+
+Errors: 2 (bare impl(s), struct/enum outside verus!)
+)
    1 holed (contains holes)
    3 total
 

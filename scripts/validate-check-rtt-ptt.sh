@@ -1,13 +1,13 @@
 #!/bin/bash
 # Run full validation pipeline: validate, RTT, PTT. Stops on first failure.
 # Usage: validate-check-rtt-ptt.sh [full|dev|exp] [--time] [filter]
-#   mode defaults to dev, filter is optional test name substring for RTT/PTT.
+#   mode defaults to full, filter is optional test name substring for RTT/PTT.
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-MODE="${1:-dev}"
+MODE="${1:-full}"
 shift 2>/dev/null || true
 
 VALIDATE_ARGS=("$MODE")

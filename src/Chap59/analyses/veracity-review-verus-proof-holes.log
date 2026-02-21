@@ -1,5 +1,3 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap59
-
 ✓ JohnsonMtEphF64.rs
 ✓ JohnsonMtEphI64.rs
 ✓ JohnsonStEphF64.rs
@@ -11,6 +9,18 @@ SUMMARY
 
 Modules:
    4 clean (no holes)
+   0 holed (contains holes)
+   4 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
+n (no holes)
    0 holed (contains holes)
    4 total
 
