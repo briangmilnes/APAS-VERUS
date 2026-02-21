@@ -16,6 +16,11 @@ pub mod UnionFindStEph {
     use std::hash::Hash;
 
     verus! {
+        pub struct UnionFindStEph<V: StT + Hash> {
+            pub parent: std::collections::HashMap<V, V>,
+            pub rank: std::collections::HashMap<V, usize>,
+        }
+
         pub trait UnionFindStEphTrait<V: StT + Hash> {
             /// Create a new empty Union-Find structure
             /// APAS: Work Θ(1), Span Θ(1)
@@ -41,12 +46,6 @@ pub mod UnionFindStEph {
             /// APAS: Work O(n α(n)), Span O(n α(n))
             fn num_sets(&mut self) -> usize;
         }
-    }
-
-    #[cfg(not(verus_keep_ghost))]
-    pub struct UnionFindStEph<V: StT + Hash> {
-        parent: HashMap<V, V>,
-        rank: HashMap<V, usize>,
     }
 
     #[cfg(not(verus_keep_ghost))]

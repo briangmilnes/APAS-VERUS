@@ -10,7 +10,6 @@
 pub mod DijkstraStEphI64 {
 
     use std::cmp::Ordering;
-    use std::collections::HashMap;
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
 
@@ -22,6 +21,8 @@ pub mod DijkstraStEphI64 {
     use crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::*;
     use crate::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::clone_plus::clone_plus::*;
+    use crate::vstdplus::seq_set::lemma_take_one_more_extends_the_seq_set_with_view;
 
     verus! {
 
@@ -94,25 +95,30 @@ pub mod DijkstraStEphI64 {
     /// **Algorithm 57.2**: Priority-First Search using Priority Queue
     ///
     /// - APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
-    /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — agrees with APAS. Sequential
-    ///   implementation with BinaryHeapPQ insert/deleteMin at O(log m) each, m edge relaxations.
-    #[verifier::external_body]
-    pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64 {
+    pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64
+        requires
+            source < graph.vertices().size(),
+            wf_lab_graph_view(graph@),
+            valid_key_type_WeightedEdge::<usize, i128>(),
+        ensures
+            result.distances.spec_len() == graph.vertices().size(),
+            result.source == source,
+    {
         let n = graph.vertices().size();
 
-        // Initialize result with all distances = infinity except source = 0
         let mut result = SSSPResultStEphI64::new(n, source);
-
-        // Track visited vertices (X in the algorithm)
-        let mut visited = HashMap::<usize, i64>::new();
-
-        // Priority queue Q: stores PQEntry(distance, vertex)
-        // BinaryHeapPQ is a min-heap
+        let mut visited = SetStEph::<usize>::empty();
         let mut pq = BinaryHeapPQ::<PQEntry>::singleton(pq_entry_new(0, source));
+        let ghost verts = graph.vertices()@;
 
-        // Main loop: deleteMin until queue is empty
-        while !pq.is_empty() {
-            // deleteMin from priority queue
+        while !pq.is_empty()
+            invariant
+                result.distances.spec_len() == n,
+                result.source == source,
+                visited@.finite(),
+                visited@.subset_of(verts),
+                result.distances.spec_index(source as int) == 0,
+        {
             let (new_pq, min_elem) = pq.delete_min();
             pq = new_pq;
 
@@ -120,31 +126,38 @@ pub mod DijkstraStEphI64 {
                 let dist = entry.dist;
                 let v = entry.vertex;
 
-                // Skip if already visited (handles duplicate entries)
-                if visited.contains_key(&v) {
+                if visited.mem(&v) {
                     continue;
                 }
 
-                // Mark v as visited with distance dist
-                visited.insert(v, dist);
+                let _ = visited.insert(v);
                 result.set_distance(v, dist);
 
-                // Relax all out-neighbors: add PQEntry(d + w, u) to PQ
                 let neighbors = graph.out_neighbors_weighed(&v);
-                for neighbor in neighbors.iter() {
-                    let Pair(u, weight) = neighbor;
-                    let u_idx = *u;
+                let mut it = neighbors.iter();
+                let ghost neighbors_seq = it@.1;
 
-                    // Skip if already visited
-                    if visited.contains_key(&u_idx) {
+                for neighbor in iter: it
+                    invariant
+                        valid_key_type::<Pair<usize, i128>>(),
+                        result.distances.spec_len() == n,
+                        result.source == source,
+                        visited@.finite(),
+                        visited@.subset_of(verts),
+                        it.elements == neighbors_seq,
+                        neighbors_seq.map(|_i: int, p: Pair<usize, i128>| p@).to_set() == neighbors@,
+                {
+                    proof { lemma_take_one_more_extends_the_seq_set_with_view(neighbors_seq, it.pos); }
+                    let Pair(u, weight) = neighbor;
+                    let u_idx = u.clone_plus();
+
+                    if visited.mem(&u_idx) {
                         continue;
                     }
 
                     let new_dist = dist + (*weight as i64);
                     pq = pq.insert(pq_entry_new(new_dist, u_idx));
 
-                    // Update predecessor if this is a better path
-                    // (First time we reach u with minimum distance through PQ ordering)
                     if result.get_distance(u_idx) > new_dist {
                         result.set_predecessor(u_idx, v);
                     }

@@ -21,14 +21,32 @@ pub mod BoruvkaStEph {
     #[cfg(not(verus_keep_ghost))]
     use crate::SetLit;
 
-    /// Edge with label: (u, v, weight, label)
-    /// Vertices u,v change during contraction, but weight and label are immutable
-    /// Labeled edge for Borůvka's algorithm: (from, to, weight, label_id)
-    /// Tuple struct wrapper to implement Display trait for StT compliance
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-    pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize);
-
     verus! {
+        /// Edge with label: (u, v, weight, label). Vertices u,v change during contraction.
+        pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize);
+
+        impl<V: Copy> Copy for LabeledEdge<V> {}
+
+        impl<V: Copy> Clone for LabeledEdge<V> {
+            fn clone(&self) -> (s: Self)
+                ensures s@ == self@
+            {
+                *self
+            }
+        }
+
+        impl<V: PartialEq + Copy> PartialEq for LabeledEdge<V> {
+            fn eq(&self, other: &Self) -> (r: bool)
+                ensures r == (self@ == other@)
+            {
+                let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
+                proof { assume(r == (self@ == other@)); }
+                r
+            }
+        }
+
+        impl<V: Eq + Copy> Eq for LabeledEdge<V> {}
+
         pub trait BoruvkaStEphTrait {
             /// Find vertex bridges for Borůvka's algorithm
             /// APAS: Work O(|E|), Span O(|E|)
@@ -75,6 +93,36 @@ pub mod BoruvkaStEph {
         }
     }
 
+    #[cfg(not(verus_keep_ghost))]
+    impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> PartialOrd for LabeledEdge<V> {
+        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+            Some(self.cmp(other))
+        }
+    }
+    #[cfg(not(verus_keep_ghost))]
+    impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> Ord for LabeledEdge<V> {
+        fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+            self.0.cmp(&other.0)
+                .then_with(|| self.1.cmp(&other.1))
+                .then_with(|| self.2.val.partial_cmp(&other.2.val).unwrap_or(std::cmp::Ordering::Equal))
+                .then_with(|| self.3.cmp(&other.3))
+        }
+    }
+    #[cfg(not(verus_keep_ghost))]
+    impl<V: std::hash::Hash> std::hash::Hash for LabeledEdge<V> {
+        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+            self.0.hash(state);
+            self.1.hash(state);
+            self.2.val.to_bits().hash(state);
+            self.3.hash(state);
+        }
+    }
+    #[cfg(not(verus_keep_ghost))]
+    impl<V: std::fmt::Debug> std::fmt::Debug for LabeledEdge<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_tuple("LabeledEdge").field(&self.0).field(&self.1).field(&self.2.val).field(&self.3).finish()
+        }
+    }
     #[cfg(not(verus_keep_ghost))]
     impl<V: std::fmt::Display> std::fmt::Display for LabeledEdge<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

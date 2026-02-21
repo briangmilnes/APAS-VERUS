@@ -16,6 +16,7 @@ Procedure for merging agent branches into `main` and syncing all worktrees.
 | 1 | main | `~/projects/APAS-VERUS` | `main` |
 | 2 | agent1 | `~/projects/APAS-VERUS-agent1` | `agent1/ready` (or `agent1/<topic>`) |
 | 3 | agent2 | `~/projects/APAS-VERUS-agent2` | `agent2/ready` (or `agent2/<topic>`) |
+| 4 | agent3 | `~/projects/APAS-VERUS-agent3` | `agent3/ready` (or `agent3/<topic>`) |
 
 ## Scripts
 
@@ -47,7 +48,7 @@ All scripts live in `scripts/` and auto-detect the worktree root. They strip ANS
 | 1 | `src/lib.rs` | **main** (ours) | Main controls module visibility and cfg gates |
 | 2 | `analyses/*` | **agent** (theirs) | Agents produce the latest analyses |
 | 3 | `src/ChapNN/analyses/*` | **agent** (theirs) | Agents produce the latest chapter reviews |
-| 4 | `src/ChapNN/*.rs` source files | **manual merge** | All three worktrees modify source — inspect the diff and decide |
+| 4 | `src/ChapNN/*.rs` source files | **manual merge** | All four worktrees modify source — inspect the diff and decide |
 
 ## Phase 1: Main Validates, Commits, and Pushes
 
@@ -167,6 +168,21 @@ cd ~/projects/APAS-VERUS-agent2
 git add -A
 git commit -m "Pre-merge: agent2 work"
 git push origin agent2/ready
+```
+
+## Phase 3.5: Agent3 Validates, Commits, and Pushes
+
+### Step 6a: Validate agent3
+
+> **Script:** `cd ~/projects/APAS-VERUS-agent3 && scripts/validate-check-rtt-ptt.sh`
+
+### Step 6b: Commit and push agent3
+
+```bash
+cd ~/projects/APAS-VERUS-agent3
+git add -A
+git commit -m "Pre-merge: agent3 work"
+git push origin agent3/ready
 ```
 
 ## Phase 4: Merge Agent1 Into Main
@@ -329,6 +345,29 @@ git commit -m "Merge agent2/ready into main"
 git push origin main
 ```
 
+## Phase 5.5: Merge Agent3 Into Main
+
+### Step 14a: Fetch and merge
+
+> **Script:** `cd ~/projects/APAS-VERUS && scripts/merge-agent.sh agent3/ready`
+
+### Step 14b: Resolve conflicts (if any)
+
+Same pattern as Step 8 or 12 — take ours for lib.rs, theirs for analyses, manual for source files.
+
+### Step 14c: Validate after agent3 merge
+
+> **Script:** `cd ~/projects/APAS-VERUS && scripts/validate-check-rtt-ptt.sh`
+
+### Step 14d: Commit and push main
+
+```bash
+cd ~/projects/APAS-VERUS
+git add -A
+git commit -m "Merge agent3/ready into main"
+git push origin main
+```
+
 ## Phase 6: Reset Agent1 to Main
 
 **Do NOT `git checkout main`** — it's already checked out in the primary worktree.
@@ -363,6 +402,21 @@ git reset --hard origin/main
 git push origin agent2/ready --force
 ```
 
+## Phase 7.5: Reset Agent3 to Main
+
+### Step 16a: Reset agent3 and push
+
+> **Script:** `cd ~/projects/APAS-VERUS-agent3 && scripts/reset-agent-to-main.sh`
+
+Full commands:
+
+```bash
+cd ~/projects/APAS-VERUS-agent3
+git fetch origin
+git reset --hard origin/main
+git push origin agent3/ready --force
+```
+
 ## Phase 8: Verify All Worktrees Are In Sync
 
 ### Step 17: Check commit hashes
@@ -372,7 +426,7 @@ cd ~/projects/APAS-VERUS
 git worktree list
 ```
 
-All three should show the same commit hash.
+All four should show the same commit hash.
 
 ## Common Mistakes
 

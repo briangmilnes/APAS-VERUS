@@ -30,7 +30,7 @@ pub mod SpanTreeMtEph {
     verus! {
         pub struct SpanTreeMtEphSpanningEdgesWf;
         impl<V: StT + MtT + Hash + Ord> RwLockPredicate<SetStEph<Edge<V>>> for SpanTreeMtEphSpanningEdgesWf {
-            open spec fn inv(self, _v: SetStEph<Edge<V>>) -> bool { true }
+            open spec fn inv(self, v: SetStEph<Edge<V>>) -> bool { v@.finite() }
         }
         #[verifier::external_body]
         fn new_spanning_edges_lock<V: StT + MtT + Hash + Ord>(
@@ -41,7 +41,7 @@ pub mod SpanTreeMtEph {
 
         pub struct SpanTreeMtEphValidWf;
         impl RwLockPredicate<bool> for SpanTreeMtEphValidWf {
-            open spec fn inv(self, _v: bool) -> bool { true }
+            open spec fn inv(self, v: bool) -> bool { v == true || v == false }
         }
         #[verifier::external_body]
         fn new_valid_lock(val: bool) -> (lock: RwLock<bool, SpanTreeMtEphValidWf>) {

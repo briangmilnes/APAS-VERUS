@@ -57,16 +57,41 @@ pub mod MatrixChainStEph {
         }
     }
 
-    #[verifier::external_type_specification]
-    pub struct ExMatrixChainStEphS(MatrixChainStEphS);
-    }
-
-    // Struct contains HashMap for memoization — cannot be inside verus!.
-    /// Ephemeral single-threaded matrix chain multiplication solver using dynamic programming
-    #[derive(Clone, Debug, PartialEq, Eq)]
+    /// Ephemeral single-threaded matrix chain multiplication solver using dynamic programming.
     pub struct MatrixChainStEphS {
         pub dimensions: Vec<MatrixDim>,
-        pub memo: HashMap<(usize, usize), usize>,
+        pub memo: std::collections::HashMap<(usize, usize), usize>,
+    }
+
+    impl View for MatrixChainStEphS {
+        type V = (Seq<MatrixDim>, Map<(usize, usize), usize>);
+        open spec fn view(&self) -> Self::V {
+            (self.dimensions@, self.memo@)
+        }
+    }
+
+    impl Clone for MatrixChainStEphS {
+        #[verifier::external_body]
+        fn clone(&self) -> (s: Self)
+            ensures s@ == self@
+        {
+            MatrixChainStEphS {
+                dimensions: self.dimensions.clone(),
+                memo: self.memo.clone(),
+            }
+        }
+    }
+
+    impl PartialEq for MatrixChainStEphS {
+        #[verifier::external_body]
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            self.dimensions == other.dimensions && self.memo == other.memo
+        }
+    }
+
+    impl Eq for MatrixChainStEphS {}
     }
 
     // 8. traits

@@ -1,0 +1,8 @@
+
+ You are agent3 working in gittree: ~/projects/APAS-VERUS-agent3/.
+ Your worktree has been updated.
+ REREAD ANY FILES BEFORE MODIFYING THEM.
+ Read ./rules/apas-verus/senior-proof-engineer.mdc:
+ Read ./rules/style/senior-prose-engineer.mdc. 
+ Run the veracity proof hole detector on all of your directories, one by one.
+ We are going to \\ accept hole and accept(...) using a tool. 

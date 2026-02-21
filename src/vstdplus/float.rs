@@ -268,6 +268,17 @@ pub mod float {
         {
             WrappedF64 { val: self.val - other.val }
         }
+
+        /// Approximately equal within epsilon (1e-9). Used for path-weight validation.
+        #[verifier::external_body]
+        pub fn approx_eq(&self, other: &Self) -> (b: bool)
+            requires self.spec_is_finite(), other.spec_is_finite(),
+            ensures b == f64_approx_eq_spec(self@, other@)
+        {
+            let diff = self.val - other.val;
+            let abs_diff = if diff >= 0.0 { diff } else { -diff };
+            abs_diff <= 1e-9
+        }
     }
 
     // Exec bridge for f64::is_finite().
@@ -317,6 +328,7 @@ pub mod float {
 
     pub uninterp spec fn f64_add_spec(a: f64, b: f64) -> f64;
     pub uninterp spec fn f64_sub_spec(a: f64, b: f64) -> f64;
+    pub uninterp spec fn f64_approx_eq_spec(a: f64, b: f64) -> bool;
 
     // f64 arithmetic axioms.
 

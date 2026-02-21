@@ -7,8 +7,9 @@
 | main | `~/projects/APAS-VERUS` | `main` |
 | agent1 | `~/projects/APAS-VERUS-agent1` | `agent1/` |
 | agent2 | `~/projects/APAS-VERUS-agent2` | `agent2/` |
+| agent3 | `~/projects/APAS-VERUS-agent3` | `agent3/` |
 
-Branch names follow the pattern `agent1/<topic>` (e.g., `agent1/verusify-chap37`).
+Branch names follow the pattern `agentN/<topic>` (e.g., `agent1/verusify-chap37`).
 
 ## Creating a worktree
 
@@ -21,6 +22,9 @@ git worktree add -b agent1/<topic> ~/projects/APAS-VERUS-agent1 main
 
 # Create agent2 worktree with a topic branch
 git worktree add -b agent2/<topic> ~/projects/APAS-VERUS-agent2 main
+
+# Create agent3 worktree with a topic branch
+git worktree add -b agent3/<topic> ~/projects/APAS-VERUS-agent3 main
 ```
 
 ## Switching an agent's topic
@@ -40,6 +44,10 @@ git checkout -b agent1/<new-topic>
 cd ~/projects/APAS-VERUS
 git worktree remove ~/projects/APAS-VERUS-agent1
 git branch -d agent1/<topic>
+
+# Similarly for agent2, agent3:
+# git worktree remove ~/projects/APAS-VERUS-agent2
+# git worktree remove ~/projects/APAS-VERUS-agent3
 ```
 
 ## Rules

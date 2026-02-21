@@ -59,16 +59,41 @@ pub mod MatrixChainStPer {
         }
     }
 
-    #[verifier::external_type_specification]
-    pub struct ExMatrixChainStPerS(MatrixChainStPerS);
-    }
-
-    // Struct contains HashMap for memoization — cannot be inside verus!.
-    /// Persistent single-threaded matrix chain multiplication solver using dynamic programming
-    #[derive(Clone, Debug, PartialEq, Eq)]
+    /// Persistent single-threaded matrix chain multiplication solver using dynamic programming.
     pub struct MatrixChainStPerS {
         pub dimensions: Vec<MatrixDim>,
-        pub memo: HashMap<(usize, usize), usize>,
+        pub memo: std::collections::HashMap<(usize, usize), usize>,
+    }
+
+    impl View for MatrixChainStPerS {
+        type V = (Seq<MatrixDim>, Map<(usize, usize), usize>);
+        open spec fn view(&self) -> Self::V {
+            (self.dimensions@, self.memo@)
+        }
+    }
+
+    impl Clone for MatrixChainStPerS {
+        #[verifier::external_body]
+        fn clone(&self) -> (s: Self)
+            ensures s@ == self@
+        {
+            MatrixChainStPerS {
+                dimensions: self.dimensions.clone(),
+                memo: self.memo.clone(),
+            }
+        }
+    }
+
+    impl PartialEq for MatrixChainStPerS {
+        #[verifier::external_body]
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            self.dimensions == other.dimensions && self.memo == other.memo
+        }
+    }
+
+    impl Eq for MatrixChainStPerS {}
     }
 
     // 8. traits

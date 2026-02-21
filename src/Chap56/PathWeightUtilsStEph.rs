@@ -159,14 +159,6 @@ pub mod PathWeightUtilsStEph {
         true
     }
 
-    /// Checks whether two float distances are approximately equal (within epsilon).
-    #[verifier::external_body]
-    fn f64_approx_eq(a: &WrappedF64, b: &WrappedF64) -> bool {
-        let diff = a.val - b.val;
-        let abs_diff = if diff >= 0.0 { diff } else { -diff };
-        abs_diff <= 1e-9
-    }
-
     pub fn validate_subpath_property_float(
         path: &ArraySeqStPerS<usize>,
         distances: &ArraySeqStEphS<WrappedF64>,
@@ -199,7 +191,12 @@ pub mod PathWeightUtilsStEph {
             let edge_weight = *weights.nth(u).nth(v);
             if dist_u.is_finite() {
                 let expected = dist_u.dist_add(&edge_weight);
-                if !f64_approx_eq(&dist_v, &expected) {
+                let ok = if dist_v.is_finite() && expected.is_finite() {
+                    dist_v.approx_eq(&expected)
+                } else {
+                    dist_v.eq(&expected)
+                };
+                if !ok {
                     return false;
                 }
             }

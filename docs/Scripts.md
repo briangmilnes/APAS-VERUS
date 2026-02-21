@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Scripts
 
-All scripts live in `scripts/`, auto-detect the worktree root via `BASH_SOURCE`, and work from any of the three worktrees (main, agent1, agent2). Output is ANSI-stripped for Emacs `M-x compile`.
+All scripts live in `scripts/`, auto-detect the worktree root via `BASH_SOURCE`, and work from any of the four worktrees (main, agent1, agent2, agent3). Output is ANSI-stripped for Emacs `M-x compile`.
 
 ## Summary
 

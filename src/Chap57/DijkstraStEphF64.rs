@@ -13,18 +13,6 @@ pub mod DijkstraStEphF64 {
 
     use std::cmp::Ordering;
 
-    verus! {
-        // Placeholder verus! block. Full verusification blocked: requires
-        // WeightedDirGraphStEphF64 and BinaryHeapPQ with types inside verus!.
-    }
-
-    use std::collections::HashMap;
-    use std::fmt::{Debug, Display, Formatter};
-    use std::fmt::Result as FmtResult;
-
-    // Blocked: WeightedDirGraphStEphF64 does not exist.
-    // When a Verus-compiled f64 graph module is created, uncomment:
-    // use crate::Chap06::WeightedDirGraphStEphF64::WeightedDirGraphStEphF64::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
     use crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::*;
@@ -32,32 +20,49 @@ pub mod DijkstraStEphF64 {
     use crate::vstdplus::float::float::*;
     use crate::Types::Types::*;
 
-    #[derive(Clone)]
-    pub struct PQEntry {
-        pub dist: WrappedF64,
-        pub vertex: usize,
-    }
-
-    impl PartialEq for PQEntry {
-        fn eq(&self, other: &Self) -> bool {
-            self.dist == other.dist && self.vertex == other.vertex
+    verus! {
+        /// Priority queue entry for Dijkstra's algorithm.
+        pub struct PQEntry {
+            pub dist: WrappedF64,
+            pub vertex: usize,
         }
-    }
-    impl Eq for PQEntry {}
 
-    impl Ord for PQEntry {
-        fn cmp(&self, other: &Self) -> Ordering {
-            self.dist.val.partial_cmp(&other.dist.val)
-                .unwrap_or(Ordering::Equal)
+        impl Clone for PQEntry {
+            fn clone(&self) -> (s: Self)
+                ensures s@ == self@
+            {
+                PQEntry { dist: self.dist, vertex: self.vertex }
+            }
         }
+
+        impl PartialEq for PQEntry {
+            fn eq(&self, other: &Self) -> (r: bool)
+                ensures r == (self@ == other@)
+            {
+                let r = self.dist == other.dist && self.vertex == other.vertex;
+                proof { assume(r == (self@ == other@)); }
+                r
+            }
+        }
+
+        impl Eq for PQEntry {}
     }
 
     impl PartialOrd for PQEntry {
-        fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
+        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+            Some(self.cmp(other))
+        }
     }
 
-    impl Debug for PQEntry {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+    impl Ord for PQEntry {
+        fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+            self.dist.val.partial_cmp(&other.dist.val)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        }
+    }
+
+    impl std::fmt::Debug for PQEntry {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("PQEntry")
                 .field("dist", &self.dist.val)
                 .field("vertex", &self.vertex)
@@ -65,8 +70,8 @@ pub mod DijkstraStEphF64 {
         }
     }
 
-    impl Display for PQEntry {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+    impl std::fmt::Display for PQEntry {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "({}, {})", self.dist.val, self.vertex)
         }
     }

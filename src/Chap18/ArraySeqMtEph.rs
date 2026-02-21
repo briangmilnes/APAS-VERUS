@@ -1122,12 +1122,12 @@ pub mod ArraySeqMtEph {
                 let left_len = Ghost(left_seq.seq@.len());
                 let right_len = Ghost(right_seq.seq@.len());
                 let (left, right) = join(
-                    move || -> (r: ArraySeqMtEphS<U>)
+                    (move || -> (r: ArraySeqMtEphS<U>)
                         ensures r.seq@.len() == left_len@
-                    { Self::map_par(&left_seq, f1) },
-                    move || -> (r: ArraySeqMtEphS<U>)
+                     { Self::map_par(&left_seq, f1) }),
+                    (move || -> (r: ArraySeqMtEphS<U>)
                         ensures r.seq@.len() == right_len@
-                    { Self::map_par(&right_seq, f2) },
+                     { Self::map_par(&right_seq, f2) }),
                 );
                 ArraySeqMtEphS::<U>::append(&left, &right)
             }

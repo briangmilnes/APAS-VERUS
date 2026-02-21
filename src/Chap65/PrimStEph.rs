@@ -26,17 +26,41 @@ pub mod PrimStEph {
     #[cfg(not(verus_keep_ghost))]
     use crate::SetLit;
 
-    /// Priority queue entry for Prim's algorithm
-    #[derive(Clone, Eq, PartialEq, Debug)]
-    pub struct PQEntry<V: StT + Ord> {
-        priority: WrappedF64,
-        vertex: V,
-        parent: Option<V>,
-    }
-
     pub type T<V> = PQEntry<V>;
 
     verus! {
+        /// Priority queue entry for Prim's algorithm.
+        pub struct PQEntry<V: StT + Ord> {
+            pub priority: WrappedF64,
+            pub vertex: V,
+            pub parent: Option<V>,
+        }
+
+        impl<V: StT + Ord + Clone> Clone for PQEntry<V> {
+            fn clone(&self) -> (s: Self)
+                ensures s@ == self@
+            {
+                PQEntry {
+                    priority: self.priority,
+                    vertex: self.vertex.clone(),
+                    parent: self.parent.clone(),
+                }
+            }
+        }
+
+        impl<V: StT + Ord + PartialEq + Clone> PartialEq for PQEntry<V> {
+            fn eq(&self, other: &Self) -> (r: bool)
+                ensures r == (self@ == other@)
+            {
+                let r = self.priority == other.priority && self.vertex == other.vertex
+                    && self.parent == other.parent;
+                proof { assume(r == (self@ == other@)); }
+                r
+            }
+        }
+
+        impl<V: StT + Ord + Eq + Clone> Eq for PQEntry<V> {}
+
         pub trait PrimStEphTrait {
             /// Prim's MST algorithm
             /// APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
@@ -85,6 +109,17 @@ pub mod PrimStEph {
     #[cfg(not(verus_keep_ghost))]
     impl<V: StT + Hash + Ord + Display> Display for PQEntry<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "({}, {})", self.priority, self.vertex) }
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    impl<V: StT + Hash + Ord + std::fmt::Debug> std::fmt::Debug for PQEntry<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("PQEntry")
+                .field("priority", &self.priority.val)
+                .field("vertex", &self.vertex)
+                .field("parent", &self.parent)
+                .finish()
+        }
     }
 
     /// Algorithm 65.1: Prim's MST Algorithm
