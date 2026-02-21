@@ -36,6 +36,7 @@ pub mod MathSeq {
     use vstd::std_specs::hash::obeys_key_model;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::*;
     use crate::vstdplus::seq_set::*;
     use vstd::slice::slice_subrange;
@@ -713,7 +714,7 @@ pub mod MathSeq {
             ensures cloned@ == self@
         {
             let cloned = MathSeqS { data: self.data.clone() };
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }
@@ -725,7 +726,7 @@ pub mod MathSeq {
             ensures equal == (self@ == other@)
         {
             let equal = self.data == other.data;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

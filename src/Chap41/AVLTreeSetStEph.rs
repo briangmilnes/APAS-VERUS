@@ -23,6 +23,7 @@ pub mod AVLTreeSetStEph {
     use vstd::prelude::*;
 
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
+    use crate::vstdplus::accept::accept;
     use crate::Types::Types::*;
 
     verus! {
@@ -408,7 +409,7 @@ pub mod AVLTreeSetStEph {
             ensures result@ == self@
         {
             let result = AVLTreeSetStEph { elements: self.elements.clone() };
-            proof { assume(result@ == self@); }
+            proof { accept(result@ == self@); }
             result
         }
     }

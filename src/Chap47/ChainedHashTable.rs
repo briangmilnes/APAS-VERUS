@@ -18,6 +18,7 @@ pub mod ChainedHashTable {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
+    use crate::vstdplus::accept::accept;
     use crate::Types::Types::*;
 
     verus! {
@@ -53,7 +54,7 @@ pub mod ChainedHashTable {
                 ensures r == (self.chain == other.chain)
             {
                 let r = self.chain == other.chain;
-                proof { assume(r == (self.chain == other.chain)); }
+                proof { accept(r == (self.chain == other.chain)); }
                 r
             }
         }

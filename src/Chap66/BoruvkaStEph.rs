@@ -7,6 +7,7 @@
 pub mod BoruvkaStEph {
 
     use vstd::prelude::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::float::float::{WrappedF64, zero_dist};
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
@@ -40,7 +41,7 @@ pub mod BoruvkaStEph {
                 ensures r == (self@ == other@)
             {
                 let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
-                proof { assume(r == (self@ == other@)); }
+                proof { accept(r == (self@ == other@)); }
                 r
             }
         }

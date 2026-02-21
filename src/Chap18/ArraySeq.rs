@@ -46,6 +46,7 @@ pub mod ArraySeq {
         vstd::laws_eq::obeys_deep_eq,
     };
     #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::monoid::monoid::*;
     use crate::vstdplus::multiset::multiset::*;
@@ -1643,7 +1644,7 @@ pub mod ArraySeq {
             ensures equal == (self@ == other@)
         {
             let equal = self.seq == other.seq;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

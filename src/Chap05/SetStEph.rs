@@ -39,6 +39,7 @@ verus! {
         vstd::pervasive::strictly_cloned,
         vstd::laws_eq::*,
     };
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -875,7 +876,7 @@ verus! {
         {
             let equal = self.elements == other.elements;
             // HashSetWithView* eq is external_body so we have to trust it here.
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

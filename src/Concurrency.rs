@@ -8,7 +8,9 @@ use crate::Types::Types::*;
 
 verus! {
 
-/// Diverges. Use with `assume(false)` in unreachable error branches.
+/// Diverges. Use with `assume(false)` or `crate::vstdplus::accept::accept(false)` in
+/// unreachable error branches (e.g. `JoinHandle::join()` Err arm). The `accept` variant
+/// is preferred for intentional holes — proof hole checkers treat it as an accepted idiom.
 #[verifier::exec_allows_no_decreases_clause]
 pub fn diverge<A>() -> A {
     loop { }

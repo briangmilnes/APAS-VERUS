@@ -3,30 +3,6 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ Chap02/FibonacciHFScheduler.rs
    5 clean proof functions
 ❌ Chap02/HFSchedulerMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:72: external_type_specification - #[verifier::external_type_specification]
-        73 |     #[verifier::external_body]
-        74 |     #[verifier::reject_recursive_types(T)]
-        75 |     pub struct ExTaskState<T>(TaskState<T>);
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:73: external_body - #[verifier::external_body]
-        74 |     #[verifier::reject_recursive_types(T)]
-        75 |     pub struct ExTaskState<T>(TaskState<T>);
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:84: external_body - #[verifier::external_body]
-        85 |     pub fn set_parallelism(n: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:94: external_body - #[verifier::external_body]
-        95 |     pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:121: external_body - #[verifier::external_body]
-       122 |     pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:140: assume(false) - assume(false); — needs diverge(); use `assume(false); diverge()`
-       122 |     pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
-            ...
-       138 |             Ok(val) => val,
-       139 |             Err(_) => {
-       141 |                 diverge()
-       142 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:152: external_body - #[verifier::external_body]
-       153 |     pub fn spawn<T, F>(f: F) -> (task: TaskState<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:174: external_body - #[verifier::external_body]
-       175 |     pub fn wait<T: Send + 'static>(task: TaskState<T>) -> (task_result: T)
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:18: error: struct_outside_verus - struct PoolState — should be inside verus!
         18 |     struct PoolState {
         19 |         available_tasks: Mutex<usize>,
@@ -35,11 +11,16 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
         24 |     pub enum TaskState<T> {
         25 |         Spawned   { handle: JoinHandlePlus<T> },
         26 |         Completed { result: Option<T> },
-   Holes: 8 total
-      1 × assume(false)
-      6 × external_body
-      1 × external_type_specification
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:74: info: external_type_specification_accept_hole - external_type_specification with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:75: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:86: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:96: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:123: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:142: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:154: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:176: info: external_body_accept_hole - external_body with accept hole comment
    Errors: 2 total (2 struct/enum outside verus!)
+   Info: 8 assume(false); diverge() idiom(s)
 ✓ Chap03/InsertionSortStEph.rs
 ✓ Chap05/KleeneStPer.rs
    9 clean proof functions
@@ -93,94 +74,31 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ Chap06/WeightedDirGraphStEphU64.rs
 ✓ Chap06/WeightedDirGraphStEphU8.rs
 ✓ Chap06/WeightedDirGraphStEphUsize.rs
-❌ Chap11/FibonacciMtEph2Threads.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:155: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
-       100 | pub fn fib_2threads(n: u64) -> (fibonacci: u64)
-            ...
-       153 |     let left_out = match join_handle1.join() {
-       154 |         Result::Ok(out) => out,
-       156 |     };
-       157 |     let left_val = left_out.0;
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:163: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
-       100 | pub fn fib_2threads(n: u64) -> (fibonacci: u64)
-            ...
-       161 |     let right_out = match join_handle2.join() {
-       162 |         Result::Ok(out) => out,
-       164 |     };
-       165 |     let right_val = right_out.0;
-   Holes: 2 total
-      2 × assume(false)
-❌ Chap11/FibonacciMtEphRecomputes.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:151: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
-        92 | pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
-            ...
-       149 |         let left_out = match left_handle.join() {
-       150 |             Result::Ok(out) => out,
-       152 |         };
-       153 |         let left_val = left_out.0;
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:159: assume(false) - Result::Err(_) => { assume(false); diverge()} — needs diverge(); use `assume(false); diverge()`
-        92 | pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
-            ...
-       157 |         let right_out = match right_handle.join() {
-       158 |             Result::Ok(out) => out,
-       160 |         };
-       161 |         let right_val = right_out.0;
-   Holes: 2 total
-      2 × assume(false)
+ℹ Chap11/FibonacciMtEph2Threads.rs
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:156: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:164: info: accept() - accept hole
+   Info: 2 assume(false); diverge() idiom(s)
+ℹ Chap11/FibonacciMtEphRecomputes.rs
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:152: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:160: info: accept() - accept hole
+   Info: 2 assume(false); diverge() idiom(s)
 ✓ Chap11/FibonacciMtPerAllThreads.rs
-❌ Chap11/FibonacciMtPerTSM.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:145: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
-        86 | pub fn fib(n: u64) -> (fibonacci: u64)
-            ...
-       143 |         let left_out = match left_handle.join() {
-       144 |             Result::Ok(out) => out,
-       146 |         };
-       147 |         let left_val = left_out.0;
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:153: assume(false) - Result::Err(_) => { assume(false); diverge() } — needs diverge(); use `assume(false); diverge()`
-        86 | pub fn fib(n: u64) -> (fibonacci: u64)
-            ...
-       151 |         let right_out = match right_handle.join() {
-       152 |             Result::Ok(out) => out,
-       154 |         };
-       155 |         let right_val = right_out.0;
-   Holes: 2 total
-      2 × assume(false)
+ℹ Chap11/FibonacciMtPerTSM.rs
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:146: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:154: info: accept() - accept hole
+   Info: 2 assume(false); diverge() idiom(s)
 ✓ Chap11/FibonacciStEph.rs
    3 clean proof functions
-❌ Chap12/Exercise12_1.rs
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:19: external_body - #[verifier::external_body]
-        20 |     pub struct SpinLock {
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:59: external_body - #[verifier::external_body]
-        60 |         fn new() -> (lock: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:67: external_body - #[verifier::external_body]
-        68 |         fn lock(&self) {
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:75: external_body - #[verifier::external_body]
-        76 |         fn unlock(&self) {
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:80: external_body - #[verifier::external_body]
-        81 |         fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T {
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:92: external_body - #[verifier::external_body]
-        93 |     pub fn parallel_increment(iterations: usize) -> (incremented: usize)
-   Holes: 6 total
-      6 × external_body
+ℹ Chap12/Exercise12_1.rs
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:19: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:59: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:67: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:75: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:80: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:92: info: external_body_accept_hole - external_body with accept hole comment
+   Info: 6 assume(false); diverge() idiom(s)
 ✓ Chap12/Exercise12_2.rs
 ❌ Chap12/Exercise12_5.rs
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:30: external - #[verifier::external]
-        31 | struct Node<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:38: external_body - #[verifier::external_body]
-        39 | #[verifier::reject_recursive_types(T)]
-        40 | pub struct ConcurrentStackMt<T: Send> {
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:96: external_body - #[verifier::external_body]
-        97 |     fn new() -> (stack: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:103: external_body - #[verifier::external_body]
-       104 |     fn push(&self, value: T) {
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:117: external_body - #[verifier::external_body]
-       118 |     fn pop(&self) -> (possible_top: Option<T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:132: external_body - #[verifier::external_body]
-       133 |     fn is_empty(&self) -> (empty: bool) {
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:137: external_body - #[verifier::external_body]
-       138 |     fn drain(&self) -> (items: Vec<T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:154: external_body - #[verifier::external_body]
-       155 |     fn drop(&mut self)
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:113: unsafe {} - new_node = unsafe { Box::from_raw(node_ptr) };
        104 |     fn push(&self, value: T) {
             ...
@@ -209,10 +127,17 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
        160 |         while !current.is_null() {
        162 |                 let node = Box::from_raw(current);
        163 |                 current = node.next;
-   Holes: 12 total
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:30: info: external_accept_hole - external with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:38: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:96: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:103: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:117: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:132: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:137: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:154: info: external_body_accept_hole - external_body with accept hole comment
+   Holes: 4 total
       4 × unsafe {}
-      7 × external_body
-      1 × external
+   Info: 8 assume(false); diverge() idiom(s)
 ❌ Chap17/MathSeq.rs
 /home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:716: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        712 |         fn clone(&self) -> (cloned: Self)
@@ -434,59 +359,21 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    3 clean proof functions
 ✓ Chap26/DivConReduceStPer.rs
 ❌ Chap26/ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:213: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from))
-       166 |     proof fn lemma_combined_cycle(
-            ...
-       211 |                 assert(spec_point_eq(lt[li].to, lt[((li + 1) % ln_i)].from));
-       212 |                 // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
-       214 |             } else if i == ln_i - 1 {
-       215 |                 assert(combined[i].to == er_to);
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:230: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from))
-       166 |     proof fn lemma_combined_cycle(
-            ...
-       228 |                 assert(spec_point_eq(rt[ri].to, rt[((ri + 1) % rn_i)].from));
-       229 |                 // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
-       231 |             } else {
-       232 |                 assert(i == ln_i + rn_i - 1);
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:459: external_body - #[verifier::external_body]
-       460 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:477: external_body - #[verifier::external_body]
-       478 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:507: error: bare_impl - impl Point { — `impl Point` without trait; file defines [ETSPMtTrait]
-       508 |         /// Euclidean distance between two points.
-       509 |         /// - APAS: N/A — helper function.
-   Holes: 4 total
-      2 × assume()
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:504: external_body - #[verifier::external_body]
+       505 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:522: external_body - #[verifier::external_body]
+       523 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
+   Holes: 2 total
       2 × external_body
-   Errors: 1 total (1 bare impl(s))
-   Proof functions: 4 total (3 clean, 1 holed)
+   Proof functions: 4 total (4 clean, 0 holed)
 ❌ Chap26/ETSPStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:196: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from))
-       146 |     proof fn lemma_combined_cycle(
-            ...
-       194 | 
-       195 |                 // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
-       197 |             } else if i == ln_i - 1 {
-       198 |                 // Bridge: left -> right.
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:216: assume() - assume(spec_point_eq(combined[i].to, combined[next_i].from))
-       146 |     proof fn lemma_combined_cycle(
-            ...
-       214 | 
-       215 |                 // Z3 rlimit: mod identity (a%m + 1)%m == (a+1)%m + f64 point_eq chain.
-       217 |             } else {
-       218 |                 // Bridge: right -> left (wraps to index 0).
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:433: external_body - #[verifier::external_body]
-       434 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:451: external_body - #[verifier::external_body]
-       452 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:481: error: bare_impl - impl Point { — `impl Point` without trait; file defines [ETSPStTrait]
-       482 |         /// Euclidean distance between two points.
-       483 |         /// - APAS: N/A — helper function.
-   Holes: 4 total
-      2 × assume()
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:479: external_body - #[verifier::external_body]
+       480 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:497: external_body - #[verifier::external_body]
+       498 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
+   Holes: 2 total
       2 × external_body
-   Errors: 1 total (1 bare impl(s))
-   Proof functions: 3 total (2 clean, 1 holed)
+   Proof functions: 3 total (3 clean, 0 holed)
 ✓ Chap26/MergeSortMtPer.rs
    4 clean proof functions
 ✓ Chap26/MergeSortStPer.rs
@@ -531,133 +418,70 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    1 clean proof function
 ✓ Chap35/OrderStatSelectStPer.rs
 ✓ Chap36/QuickSortMtEph.rs
-❌ Chap36/QuickSortMtEphSlice.rs
-/home/milnes/projects/APAS-VERUS/src/Chap36/QuickSortMtEphSlice.rs:153: external_body - #[verifier::external_body]
-       154 |         fn quick_sort_mt_random(&self) {
-   Holes: 1 total
-      1 × external_body
+✓ Chap36/QuickSortMtEphSlice.rs
 ✓ Chap36/QuickSortStEph.rs
 ❌ Chap37/AVLTreeSeq.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:217: assume() - proof { assume(1 + b.left_size + b.right_size < usize::MAX);
-       211 |     fn size_link_fn<T: StT>(n: &Link<T>) -> (result: N)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:227: assume() - proof { assume(1 + b.left_size + b.right_size < usize::MAX);
+       221 |     fn size_link_fn<T: StT>(n: &Link<T>) -> (result: N)
             ...
-       215 |             None => 0,
-       216 |             Some(b) => {
-       218 |                 1 + b.left_size + b.right_size
-       219 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:223: external_body - #[verifier::external_body]
-       224 |     fn update_meta<T: StT>(n: &mut Box<AVLTreeNode<T>>) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:232: external_body - #[verifier::external_body]
-       233 |     fn rotate_right_fn<T: StT>(mut y: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:249: external_body - #[verifier::external_body]
-       250 |     fn rotate_left_fn<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:266: external_body - #[verifier::external_body]
-       267 |     fn rebalance_fn<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:293: external_body - #[verifier::external_body]
-       294 |     pub(crate) fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:322: external_body - #[verifier::external_body]
-       323 |     fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (result: &'a T)
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:338: external_body - #[verifier::external_body]
-       339 |     fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (result: Result<(), &'static str>) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:356: external_body - #[verifier::external_body]
-       357 |     fn push_inorder<T: StT>(link: &Link<T>, out: &mut Vec<T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:365: external_body - #[verifier::external_body]
-       366 |     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (result: bool) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:415: assume() - assume(t.spec_seq().len() == 1);
-       411 |         fn singleton(item: T) -> (result: Self) {
+       225 |             None => 0,
+       226 |             Some(b) => {
+       228 |                 1 + b.left_size + b.right_size
+       229 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:233: external_body - #[verifier::external_body]
+       234 |     fn update_meta<T: StT>(n: &mut Box<AVLTreeNode<T>>) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:242: external_body - #[verifier::external_body]
+       243 |     fn rotate_right_fn<T: StT>(mut y: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:259: external_body - #[verifier::external_body]
+       260 |     fn rotate_left_fn<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:276: external_body - #[verifier::external_body]
+       277 |     fn rebalance_fn<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:303: external_body - #[verifier::external_body]
+       304 |     pub(crate) fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:332: external_body - #[verifier::external_body]
+       333 |     fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (result: &'a T)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:348: external_body - #[verifier::external_body]
+       349 |     fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (result: Result<(), &'static str>) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:366: external_body - #[verifier::external_body]
+       367 |     fn push_inorder<T: StT>(link: &Link<T>, out: &mut Vec<T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:375: external_body - #[verifier::external_body]
+       376 |     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (result: bool) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:425: assume() - assume(t.spec_seq().len() == 1);
+       421 |         fn singleton(item: T) -> (result: Self) {
             ...
-       413 |             t.root = insert_at_link(t.root.take(), 0, item, &mut t.next_key);
-       414 |             proof {
-       416 |                 assume(t.spec_well_formed());
-       417 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:416: assume() - assume(t.spec_well_formed());
-       411 |         fn singleton(item: T) -> (result: Self) {
+       423 |             t.root = insert_at_link(t.root.take(), 0, item, &mut t.next_key);
+       424 |             proof {
+       426 |                 assume(t.spec_well_formed());
+       427 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:426: assume() - assume(t.spec_well_formed());
+       421 |         fn singleton(item: T) -> (result: Self) {
             ...
-       414 |             proof {
-       415 |                 assume(t.spec_seq().len() == 1);
-       417 |             }
-       418 |             t
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:430: assume() - proof { assume(self.spec_well_formed()); }
-       428 | 
-       429 |         fn subseq_copy(&self, start: N, length: N) -> (result: Self) {
-       431 |             let n = self.length();
-       432 |             let s = if start < n { start } else { n };
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:460: assume() - assume(self.spec_well_formed());
-       458 |         fn update(&mut self, index: N, item: T) {
-       459 |             proof {
-       461 |                 assume((index as int) < self.spec_seq().len());
-       462 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:461: assume() - assume((index as int) < self.spec_seq().len());
-       458 |         fn update(&mut self, index: N, item: T) {
+       424 |             proof {
+       425 |                 assume(t.spec_seq().len() == 1);
+       427 |             }
+       428 |             t
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:488: assume() - assume(t.spec_well_formed());
+       474 |         fn from_vec(values: Vec<T>) -> (result: AVLTreeS<T>) {
             ...
-       459 |             proof {
-       460 |                 assume(self.spec_well_formed());
-       462 |             }
-       463 |             let _ = self.set(index, item);
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:480: assume() - assume(t.spec_well_formed());
-       466 |         fn from_vec(values: Vec<T>) -> (result: AVLTreeS<T>) {
+       486 |             }
+       487 |             proof {
+       489 |             }
+       490 |             t
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:499: external_body - #[verifier::external_body]
+       500 |         fn iter<'a>(&'a self) -> (result: AVLTreeSeqIter<'a, T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:608: external_body - #[verifier::external_body]
+       609 |         fn clone(&self) -> (result: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:641: external_body - #[verifier::external_body]
+       642 |         fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:635: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       631 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-       478 |             }
-       479 |             proof {
-       481 |             }
-       482 |             t
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:486: assume() - proof { assume(self.spec_well_formed()); }
-       484 | 
-       485 |         fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>) {
-       487 |             let vals = self.values_in_order();
-       488 |             ArraySeqStEphS::from_vec(vals)
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:491: external_body - #[verifier::external_body]
-       492 |         fn iter<'a>(&'a self) -> (result: AVLTreeSeqIter<'a, T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:502: assume() - proof { assume(self.spec_well_formed()); }
-       500 | 
-       501 |         fn push_back(&mut self, value: T) {
-       503 |             let len = self.length();
-       504 |             let node = insert_at_link(self.root.take(), len, value, &mut self.next_key);
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:509: assume() - proof { assume(self.spec_well_formed()); }
-       507 | 
-       508 |         fn contains_value(&self, target: &T) -> (result: B) {
-       510 |             let n = self.length();
-       511 |             let mut i: usize = 0;
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:528: assume() - proof { assume(self.spec_well_formed()); }
-       526 | 
-       527 |         fn insert_value(&mut self, value: T) {
-       529 |             self.push_back(value);
-       530 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:533: assume() - proof { assume(self.spec_well_formed()); }
-       531 | 
-       532 |         fn delete_value(&mut self, target: &T) -> (result: bool) {
-       534 |             let len = self.length();
-       535 |             let mut found_index: Option<N> = None;
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:551: assume() - proof { assume(idx < len); }
-       532 |         fn delete_value(&mut self, target: &T) -> (result: bool) {
-            ...
-       549 |             }
-       550 |             if let Some(idx) = found_index {
-       552 |                 let mut out_vec: Vec<T> = Vec::new();
-       553 |                 let mut j: usize = 0;
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:583: assume() - proof { assume(self.spec_well_formed()); }
-       581 | 
-       582 |         fn is_tree_empty(&self) -> (result: bool) {
-       584 |             self.length() == 0
-       585 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:588: assume() - proof { assume(self.spec_well_formed()); }
-       586 | 
-       587 |         fn values_in_order(&self) -> (result: Vec<T>) {
-       589 |             let mut out: Vec<T> = Vec::new();
-       590 |             push_inorder(&self.root, &mut out);
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:598: external_body - #[verifier::external_body]
-       599 |         fn clone(&self) -> (result: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:631: external_body - #[verifier::external_body]
-       632 |         fn clone(&self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:625: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       621 |         fn eq(&self, other: &Self) -> (r: bool)
-            ...
-       623 |         {
-       624 |             let r = compare_trees(&self.root, &other.root);
-       626 |             r
-       627 |         }
-   Holes: 27 total
-      15 × assume()
+       633 |         {
+       634 |             let r = compare_trees(&self.root, &other.root);
+       636 |             r
+       637 |         }
+   Holes: 16 total
+      4 × assume()
       12 × external_body
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
@@ -706,114 +530,65 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Errors: 2 total (1 struct/enum outside verus!, 1 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap37/AVLTreeSeqStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:212: assume() - proof { assume(1 + b.left_size + b.right_size < usize::MAX);
-       206 |     fn size_link_fn<T: StT>(n: &Link<T>) -> (result: N)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:220: assume() - proof { assume(1 + b.left_size + b.right_size < usize::MAX);
+       214 |     fn size_link_fn<T: StT>(n: &Link<T>) -> (result: N)
             ...
-       210 |             None => 0,
-       211 |             Some(b) => {
-       213 |                 1 + b.left_size + b.right_size
-       214 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:218: external_body - #[verifier::external_body]
-       219 |     fn update_meta<T: StT>(n: &mut Box<AVLTreeNode<T>>) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:227: external_body - #[verifier::external_body]
-       228 |     fn rotate_right_fn<T: StT>(mut y: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:244: external_body - #[verifier::external_body]
-       245 |     fn rotate_left_fn<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:261: external_body - #[verifier::external_body]
-       262 |     fn rebalance_fn<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:288: external_body - #[verifier::external_body]
-       289 |     pub(crate) fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:317: external_body - #[verifier::external_body]
-       318 |     fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (result: &'a T)
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:333: external_body - #[verifier::external_body]
-       334 |     fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (result: Result<(), &'static str>) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:351: external_body - #[verifier::external_body]
-       352 |     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (result: bool) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:401: assume() - assume(t.spec_seq().len() == 1);
-       397 |         fn singleton(item: T) -> (result: Self) {
+       218 |             None => 0,
+       219 |             Some(b) => {
+       221 |                 1 + b.left_size + b.right_size
+       222 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:226: external_body - #[verifier::external_body]
+       227 |     fn update_meta<T: StT>(n: &mut Box<AVLTreeNode<T>>) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:235: external_body - #[verifier::external_body]
+       236 |     fn rotate_right_fn<T: StT>(mut y: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:252: external_body - #[verifier::external_body]
+       253 |     fn rotate_left_fn<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:269: external_body - #[verifier::external_body]
+       270 |     fn rebalance_fn<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:296: external_body - #[verifier::external_body]
+       297 |     pub(crate) fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:325: external_body - #[verifier::external_body]
+       326 |     fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (result: &'a T)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:341: external_body - #[verifier::external_body]
+       342 |     fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (result: Result<(), &'static str>) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:359: external_body - #[verifier::external_body]
+       360 |     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (result: bool) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:409: assume() - assume(t.spec_seq().len() == 1);
+       405 |         fn singleton(item: T) -> (result: Self) {
             ...
-       399 |             t.root = insert_at_link(t.root.take(), 0, item, &mut t.next_key);
-       400 |             proof {
-       402 |                 assume(t.spec_well_formed());
-       403 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:402: assume() - assume(t.spec_well_formed());
-       397 |         fn singleton(item: T) -> (result: Self) {
+       407 |             t.root = insert_at_link(t.root.take(), 0, item, &mut t.next_key);
+       408 |             proof {
+       410 |                 assume(t.spec_well_formed());
+       411 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:410: assume() - assume(t.spec_well_formed());
+       405 |         fn singleton(item: T) -> (result: Self) {
             ...
-       400 |             proof {
-       401 |                 assume(t.spec_seq().len() == 1);
-       403 |             }
-       404 |             t
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:416: assume() - proof { assume(self.spec_well_formed()); }
-       414 | 
-       415 |         fn subseq_copy(&self, start: N, length: N) -> (result: Self) {
-       417 |             let n = self.length();
-       418 |             let s = if start < n { start } else { n };
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:446: assume() - assume(self.spec_well_formed());
-       444 |         fn update(&mut self, index: N, item: T) {
-       445 |             proof {
-       447 |                 assume((index as int) < self.spec_seq().len());
-       448 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:447: assume() - assume((index as int) < self.spec_seq().len());
-       444 |         fn update(&mut self, index: N, item: T) {
+       408 |             proof {
+       409 |                 assume(t.spec_seq().len() == 1);
+       411 |             }
+       412 |             t
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:471: assume() - proof { assume(t.spec_well_formed()); }
+       458 |         fn from_vec(values: Vec<T>) -> (result: AVLTreeSeqStEphS<T>) {
             ...
-       445 |             proof {
-       446 |                 assume(self.spec_well_formed());
-       448 |             }
-       449 |             let _ = self.set(index, item);
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:465: assume() - proof { assume(t.spec_well_formed()); }
-       452 |         fn from_vec(values: Vec<T>) -> (result: AVLTreeSeqStEphS<T>) {
+       469 |                 i += 1;
+       470 |             }
+       472 |             t
+       473 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:493: external_body - #[verifier::external_body]
+       494 |         fn iter<'a>(&'a self) -> (result: AVLTreeSeqIterStEph<'a, T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:592: external_body - #[verifier::external_body]
+       593 |         fn clone(&self) -> (result: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:625: external_body - #[verifier::external_body]
+       626 |         fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:619: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       615 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-       463 |                 i += 1;
-       464 |             }
-       466 |             t
-       467 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:470: assume() - proof { assume(self.spec_well_formed()); }
-       468 | 
-       469 |         fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>) {
-       471 |             let n = self.length();
-       472 |             let mut vals: Vec<T> = Vec::new();
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:487: external_body - #[verifier::external_body]
-       488 |         fn iter<'a>(&'a self) -> (result: AVLTreeSeqIterStEph<'a, T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:498: assume() - proof { assume(self.spec_well_formed()); }
-       496 | 
-       497 |         fn push_back(&mut self, value: T) {
-       499 |             let len = self.length();
-       500 |             let node = insert_at_link(self.root.take(), len, value, &mut self.next_key);
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:505: assume() - proof { assume(self.spec_well_formed()); }
-       503 | 
-       504 |         fn contains_value(&self, target: &T) -> (result: B) {
-       506 |             let n = self.length();
-       507 |             let mut i: usize = 0;
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:524: assume() - proof { assume(self.spec_well_formed()); }
-       522 | 
-       523 |         fn insert_value(&mut self, value: T) {
-       525 |             self.push_back(value);
-       526 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:529: assume() - proof { assume(self.spec_well_formed()); }
-       527 | 
-       528 |         fn delete_value(&mut self, target: &T) -> (result: bool) {
-       530 |             let len = self.length();
-       531 |             let mut found_index: Option<N> = None;
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:547: assume() - proof { assume(idx < len); }
-       528 |         fn delete_value(&mut self, target: &T) -> (result: bool) {
-            ...
-       545 |             }
-       546 |             if let Some(idx) = found_index {
-       548 |                 let mut out_vec: Vec<T> = Vec::new();
-       549 |                 let mut j: usize = 0;
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:584: external_body - #[verifier::external_body]
-       585 |         fn clone(&self) -> (result: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:617: external_body - #[verifier::external_body]
-       618 |         fn clone(&self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:611: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       607 |         fn eq(&self, other: &Self) -> (r: bool)
-            ...
-       609 |         {
-       610 |             let r = compare_trees(&self.root, &other.root);
-       612 |             r
-       613 |         }
-   Holes: 24 total
-      13 × assume()
+       617 |         {
+       618 |             let r = compare_trees(&self.root, &other.root);
+       620 |             r
+       621 |         }
+   Holes: 15 total
+      4 × assume()
       11 × external_body
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
@@ -876,49 +651,14 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ Chap37/BSTPlainMtEph.rs
 ✓ Chap37/BSTPlainStEph.rs
 ❌ Chap37/BSTRBMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:319: external_type_specification - #[verifier::external_type_specification]
-       320 |         struct ExNode<T: StTInMtT + Ord>(Node<T>);
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:325: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-       294 |     fn reduce_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> T
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:332: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+       327 |             open spec fn inv(self, v: Link<T>) -> bool {
             ...
-       323 | 
-       324 |         impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for RBLinkWf {
-       326 |         }
-       327 | 
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:328: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-       325 |             open spec fn inv(self, v: Link<T>) -> bool { true }
-            ...
-       326 |         }
-       327 | 
-       329 |         fn new_rb_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, RBLinkWf>) {
-       330 |             RwLock::new(val, Ghost(RBLinkWf))
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:15: error: enum_outside_verus - enum Color — should be inside verus!
-        15 |     enum Color {
-        16 |         Red,
-        17 |         Black,
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:15: error: clone_derived_outside - enum Color — Clone should be implemented inside verus!, not derived outside
-        15 |     enum Color {
-        16 |         Red,
-        17 |         Black,
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:23: error: struct_outside_verus - struct Node — should be inside verus!
-        23 |     struct Node<T: StTInMtT + Ord> {
-        24 |         key: T,
-        25 |         color: Color,
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:23: error: clone_derived_outside - struct Node — Clone should be implemented inside verus!, not derived outside
-        23 |     struct Node<T: StTInMtT + Ord> {
-        24 |         key: T,
-        25 |         color: Color,
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:335: error: struct_outside_verus - struct BSTRBMtEph — should be inside verus!
-       335 |     pub struct BSTRBMtEph<T: StTInMtT + Ord> {
-       336 |         root: Arc<RwLock<Link<T>, RBLinkWf>>,
-       337 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:335: error: clone_derived_outside - struct BSTRBMtEph — Clone should be implemented inside verus!, not derived outside
-       335 |     pub struct BSTRBMtEph<T: StTInMtT + Ord> {
-       336 |         root: Arc<RwLock<Link<T>, RBLinkWf>>,
-       337 |     }
-   Holes: 1 total
-      1 × external_type_specification
-   Errors: 8 total (3 struct/enum outside verus!, 3 Clone derived outside, 1 Verus RwLock external_body, 1 dummy RwLockPredicate)
+       330 |         }
+       331 | 
+       333 |         fn new_rb_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, RBLinkWf>) {
+       334 |             RwLock::new(val, Ghost(RBLinkWf))
+   Errors: 1 total (1 Verus RwLock external_body)
 ✓ Chap37/BSTRBStEph.rs
    1 clean proof function
 ✓ Chap37/BSTSetAVLMtEph.rs
@@ -927,41 +667,14 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ Chap37/BSTSetRBMtEph.rs
 ✓ Chap37/BSTSetSplayMtEph.rs
 ❌ Chap37/BSTSplayMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:341: external_type_specification - #[verifier::external_type_specification]
-       342 |         struct ExNode<T: StTInMtT + Ord>(Node<T>);
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:347: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-       316 |     fn reduce_parallel<T: StTInMtT + Ord, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> T
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:354: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+       349 |             open spec fn inv(self, v: Link<T>) -> bool {
             ...
-       345 | 
-       346 |         impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for SplayLinkWf {
-       348 |         }
-       349 | 
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:350: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-       347 |             open spec fn inv(self, v: Link<T>) -> bool { true }
-            ...
-       348 |         }
-       349 | 
-       351 |         fn new_splay_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, SplayLinkWf>) {
-       352 |             RwLock::new(val, Ghost(SplayLinkWf))
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:17: error: struct_outside_verus - struct Node — should be inside verus!
-        17 |     struct Node<T: StTInMtT + Ord> {
-        18 |         key: T,
-        19 |         size: N,
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:17: error: clone_derived_outside - struct Node — Clone should be implemented inside verus!, not derived outside
-        17 |     struct Node<T: StTInMtT + Ord> {
-        18 |         key: T,
-        19 |         size: N,
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:357: error: struct_outside_verus - struct BSTSplayMtEph — should be inside verus!
-       357 |     pub struct BSTSplayMtEph<T: StTInMtT + Ord> {
-       358 |         root: Arc<RwLock<Link<T>, SplayLinkWf>>,
-       359 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:357: error: clone_derived_outside - struct BSTSplayMtEph — Clone should be implemented inside verus!, not derived outside
-       357 |     pub struct BSTSplayMtEph<T: StTInMtT + Ord> {
-       358 |         root: Arc<RwLock<Link<T>, SplayLinkWf>>,
-       359 |     }
-   Holes: 1 total
-      1 × external_type_specification
-   Errors: 6 total (2 struct/enum outside verus!, 2 Clone derived outside, 1 Verus RwLock external_body, 1 dummy RwLockPredicate)
+       352 |         }
+       353 | 
+       355 |         fn new_splay_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, SplayLinkWf>) {
+       356 |             RwLock::new(val, Ghost(SplayLinkWf))
+   Errors: 1 total (1 Verus RwLock external_body)
 ❌ Chap37/BSTSplayStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayStEph.rs:25: external_body - #[verifier::external_body]
         26 |         fn clone(&self) -> Self {
@@ -1014,36 +727,26 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
       5 × assume()
       6 × external_body
 ❌ Chap38/BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:19: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        17 | 
-        18 |         impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for BstParaWf {
-        20 |         }
-        21 | 
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:41: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        19 |             open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool { true }
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:46: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+        19 |             closed spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
             ...
-        39 |         }
-        40 | 
-        42 |         fn new_bst_para_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {
-        43 |             RwLock::new(val, Ghost(BstParaWf))
-   Errors: 2 total (1 Verus RwLock external_body, 1 dummy RwLockPredicate)
+        44 |         }
+        45 | 
+        47 |         fn new_bst_para_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {
+        48 |             RwLock::new(val, Ghost(BstParaWf))
+   Errors: 1 total (1 Verus RwLock external_body)
 ❌ Chap38/BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:23: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        21 | 
-        22 |     impl<T: StT + Ord> RwLockPredicate<Option<Box<NodeInner<T>>>> for BstParaWf {
-        24 |     }
-        25 | 
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:101: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        92 |         fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:106: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+        97 |         fn clone(&self) -> (result: Self)
             ...
-        99 |     }
-       100 | 
-       102 |     fn new_bst_para_lock<T: StT + Ord>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {
-       103 |         RwLock::new(val, Ghost(BstParaWf))
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:47: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:76: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:96: info: accept() - accept hole
-   Errors: 2 total (1 Verus RwLock external_body, 1 dummy RwLockPredicate)
+       104 |     }
+       105 | 
+       107 |     fn new_bst_para_lock<T: StT + Ord>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {
+       108 |         RwLock::new(val, Ghost(BstParaWf))
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:52: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:81: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:101: info: accept() - accept hole
+   Errors: 1 total (1 Verus RwLock external_body)
    Info: 3 assume(false); diverge() idiom(s)
 ❌ Chap39/BSTParaTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:24: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
@@ -1906,171 +1609,164 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Holes: 15 total
       15 × external_body
 ❌ Chap41/ArraySetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:92: assume() - assume(s.filter(|e: V| e != v).to_set() =~= s.to_set().remov
-        74 |     proof fn lemma_filter_remove<V>(s: Seq<V>, v: V)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:290: assume() - assume(self.elements@.to_set().contains(x@));
+       277 |         fn find(&self, x: &T) -> (result: B)
             ...
-        90 |             lemma_filter_remove::<V>(tail, v);
-        91 |             // The filter distributes over cons
-        93 |         }
-        94 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:272: assume() - assume(self.elements@.to_set().contains(x@));
-       259 |         fn find(&self, x: &T) -> (result: B)
+       288 |                 if *elem == *x {
+       289 |                     proof {
+       291 |                     }
+       292 |                     assert(self@.contains(x@));
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:298: assume() - assume(!self.elements@.to_set().contains(x@));
+       277 |         fn find(&self, x: &T) -> (result: B)
             ...
-       270 |                 if *elem == *x {
-       271 |                     proof {
-       273 |                     }
-       274 |                     assert(self@.contains(x@));
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:280: assume() - assume(!self.elements@.to_set().contains(x@));
-       259 |         fn find(&self, x: &T) -> (result: B)
+       296 |             }
+       297 |             proof {
+       299 |             }
+       300 |             assert(!self@.contains(x@));
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:314: assume() - proof { assume(f.requires((&*elem,))); }
+       304 |         fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
             ...
-       278 |             }
-       279 |             proof {
-       281 |             }
-       282 |             assert(!self@.contains(x@));
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:296: assume() - proof { assume(f.requires((&*elem,))); }
-       286 |         fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
+       312 |             {
+       313 |                 let elem = self.elements.nth(i);
+       315 |                 if f(elem) {
+       316 |                     result_vec.push(elem.clone());
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:322: assume() - assume(result@.finite());
+       304 |         fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
             ...
-       294 |             {
-       295 |                 let elem = self.elements.nth(i);
-       297 |                 if f(elem) {
-       298 |                     result_vec.push(elem.clone());
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:304: assume() - assume(result@.finite());
-       286 |         fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
+       320 |             let result = ArraySetStEph { elements: ArraySeqStEphS::from_vec(result_vec) };
+       321 |             proof {
+       323 |                 assume(result@.subset_of(self@));
+       324 |                 assume(result.spec_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:323: assume() - assume(result@.subset_of(self@));
+       304 |         fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
             ...
-       302 |             let result = ArraySetStEph { elements: ArraySeqStEphS::from_vec(result_vec) };
-       303 |             proof {
-       305 |                 assume(result@.subset_of(self@));
-       306 |                 assume(result.spec_wf());
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:305: assume() - assume(result@.subset_of(self@));
-       286 |         fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
+       321 |             proof {
+       322 |                 assume(result@.finite());
+       324 |                 assume(result.spec_wf());
+       325 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:324: assume() - assume(result.spec_wf());
+       304 |         fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
             ...
-       303 |             proof {
-       304 |                 assume(result@.finite());
-       306 |                 assume(result.spec_wf());
-       307 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:306: assume() - assume(result.spec_wf());
-       286 |         fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
+       322 |                 assume(result@.finite());
+       323 |                 assume(result@.subset_of(self@));
+       325 |             }
+       326 |             result
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:350: assume() - assume(result@ == self@.intersect(other@));
+       329 |         fn intersection(&self, other: &Self) -> (result: Self)
             ...
-       304 |                 assume(result@.finite());
-       305 |                 assume(result@.subset_of(self@));
-       307 |             }
-       308 |             result
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:332: assume() - assume(result@ == self@.intersect(other@));
-       311 |         fn intersection(&self, other: &Self) -> (result: Self)
+       348 |             };
+       349 |             proof {
+       351 |                 assume(result@.finite());
+       352 |                 assume(result.spec_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:351: assume() - assume(result@.finite());
+       329 |         fn intersection(&self, other: &Self) -> (result: Self)
             ...
-       330 |             };
-       331 |             proof {
-       333 |                 assume(result@.finite());
-       334 |                 assume(result.spec_wf());
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:333: assume() - assume(result@.finite());
-       311 |         fn intersection(&self, other: &Self) -> (result: Self)
+       349 |             proof {
+       350 |                 assume(result@ == self@.intersect(other@));
+       352 |                 assume(result.spec_wf());
+       353 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:352: assume() - assume(result.spec_wf());
+       329 |         fn intersection(&self, other: &Self) -> (result: Self)
             ...
-       331 |             proof {
-       332 |                 assume(result@ == self@.intersect(other@));
-       334 |                 assume(result.spec_wf());
-       335 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:334: assume() - assume(result.spec_wf());
-       311 |         fn intersection(&self, other: &Self) -> (result: Self)
+       350 |                 assume(result@ == self@.intersect(other@));
+       351 |                 assume(result@.finite());
+       353 |             }
+       354 |             result
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:378: assume() - assume(result@ == self@.difference(other@));
+       357 |         fn difference(&self, other: &Self) -> (result: Self)
             ...
-       332 |                 assume(result@ == self@.intersect(other@));
-       333 |                 assume(result@.finite());
-       335 |             }
-       336 |             result
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:360: assume() - assume(result@ == self@.difference(other@));
-       339 |         fn difference(&self, other: &Self) -> (result: Self)
+       376 |             };
+       377 |             proof {
+       379 |                 assume(result@.finite());
+       380 |                 assume(result.spec_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:379: assume() - assume(result@.finite());
+       357 |         fn difference(&self, other: &Self) -> (result: Self)
             ...
-       358 |             };
-       359 |             proof {
-       361 |                 assume(result@.finite());
-       362 |                 assume(result.spec_wf());
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:361: assume() - assume(result@.finite());
-       339 |         fn difference(&self, other: &Self) -> (result: Self)
+       377 |             proof {
+       378 |                 assume(result@ == self@.difference(other@));
+       380 |                 assume(result.spec_wf());
+       381 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:380: assume() - assume(result.spec_wf());
+       357 |         fn difference(&self, other: &Self) -> (result: Self)
             ...
-       359 |             proof {
-       360 |                 assume(result@ == self@.difference(other@));
-       362 |                 assume(result.spec_wf());
-       363 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:362: assume() - assume(result.spec_wf());
-       339 |         fn difference(&self, other: &Self) -> (result: Self)
+       378 |                 assume(result@ == self@.difference(other@));
+       379 |                 assume(result@.finite());
+       381 |             }
+       382 |             result
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:417: assume() - assume(result@ == self@.union(other@));
+       385 |         fn union(&self, other: &Self) -> (result: Self)
             ...
-       360 |                 assume(result@ == self@.difference(other@));
-       361 |                 assume(result@.finite());
-       363 |             }
-       364 |             result
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:399: assume() - assume(result@ == self@.union(other@));
-       367 |         fn union(&self, other: &Self) -> (result: Self)
+       415 |             };
+       416 |             proof {
+       418 |                 assume(result@.finite());
+       419 |                 assume(result.spec_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:418: assume() - assume(result@.finite());
+       385 |         fn union(&self, other: &Self) -> (result: Self)
             ...
-       397 |             };
-       398 |             proof {
-       400 |                 assume(result@.finite());
-       401 |                 assume(result.spec_wf());
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:400: assume() - assume(result@.finite());
-       367 |         fn union(&self, other: &Self) -> (result: Self)
+       416 |             proof {
+       417 |                 assume(result@ == self@.union(other@));
+       419 |                 assume(result.spec_wf());
+       420 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:419: assume() - assume(result.spec_wf());
+       385 |         fn union(&self, other: &Self) -> (result: Self)
             ...
-       398 |             proof {
-       399 |                 assume(result@ == self@.union(other@));
-       401 |                 assume(result.spec_wf());
-       402 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:401: assume() - assume(result.spec_wf());
-       367 |         fn union(&self, other: &Self) -> (result: Self)
+       417 |                 assume(result@ == self@.union(other@));
+       418 |                 assume(result@.finite());
+       420 |             }
+       421 |             result
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:443: assume() - assume(self@ == old(self)@.remove(x@));
+       424 |         fn delete(&mut self, x: &T)
             ...
-       399 |                 assume(result@ == self@.union(other@));
-       400 |                 assume(result@.finite());
-       402 |             }
-       403 |             result
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:425: assume() - assume(self@ == old(self)@.remove(x@));
-       406 |         fn delete(&mut self, x: &T)
+       441 |             self.elements = ArraySeqStEphS::from_vec(result_vec);
+       442 |             proof {
+       444 |                 assume(self@.finite());
+       445 |                 assume(self.spec_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:444: assume() - assume(self@.finite());
+       424 |         fn delete(&mut self, x: &T)
             ...
-       423 |             self.elements = ArraySeqStEphS::from_vec(result_vec);
-       424 |             proof {
-       426 |                 assume(self@.finite());
-       427 |                 assume(self.spec_wf());
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:426: assume() - assume(self@.finite());
-       406 |         fn delete(&mut self, x: &T)
+       442 |             proof {
+       443 |                 assume(self@ == old(self)@.remove(x@));
+       445 |                 assume(self.spec_wf());
+       446 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:445: assume() - assume(self.spec_wf());
+       424 |         fn delete(&mut self, x: &T)
             ...
-       424 |             proof {
-       425 |                 assume(self@ == old(self)@.remove(x@));
-       427 |                 assume(self.spec_wf());
-       428 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:427: assume() - assume(self.spec_wf());
-       406 |         fn delete(&mut self, x: &T)
+       443 |                 assume(self@ == old(self)@.remove(x@));
+       444 |                 assume(self@.finite());
+       446 |             }
+       447 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:468: assume() - assume(self@ == old(self)@.insert(x@));
+       449 |         fn insert(&mut self, x: T)
             ...
-       425 |                 assume(self@ == old(self)@.remove(x@));
-       426 |                 assume(self@.finite());
-       428 |             }
-       429 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:450: assume() - assume(self@ == old(self)@.insert(x@));
-       431 |         fn insert(&mut self, x: T)
+       466 |             }
+       467 |             proof {
+       469 |                 assume(self@.finite());
+       470 |                 assume(self.spec_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:469: assume() - assume(self@.finite());
+       449 |         fn insert(&mut self, x: T)
             ...
-       448 |             }
-       449 |             proof {
-       451 |                 assume(self@.finite());
-       452 |                 assume(self.spec_wf());
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:451: assume() - assume(self@.finite());
-       431 |         fn insert(&mut self, x: T)
+       467 |             proof {
+       468 |                 assume(self@ == old(self)@.insert(x@));
+       470 |                 assume(self.spec_wf());
+       471 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:470: assume() - assume(self.spec_wf());
+       449 |         fn insert(&mut self, x: T)
             ...
-       449 |             proof {
-       450 |                 assume(self@ == old(self)@.insert(x@));
-       452 |                 assume(self.spec_wf());
-       453 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:452: assume() - assume(self.spec_wf());
-       431 |         fn insert(&mut self, x: T)
+       468 |                 assume(self@ == old(self)@.insert(x@));
+       469 |                 assume(self@.finite());
+       471 |             }
+       472 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:485: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       478 |         fn clone(&self) -> (result: Self)
             ...
-       450 |                 assume(self@ == old(self)@.insert(x@));
-       451 |                 assume(self@.finite());
-       453 |             }
-       454 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:467: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       460 |         fn clone(&self) -> (result: Self)
-            ...
-       465 |             };
-       466 |             proof {
-       468 |             }
-       469 |             result
-   Holes: 22 total
-      22 × assume()
+       483 |             };
+       484 |             proof {
+       486 |             }
+       487 |             result
+   Holes: 21 total
+      21 × assume()
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
-   Proof functions: 3 total (2 clean, 1 holed)
+   Proof functions: 3 total (3 clean, 0 holed)
 ❌ Chap41/Example41_3.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/Example41_3.rs:32: external_body - #[verifier::external_body]
         33 |     fn example_41_1_array_set_impl()
@@ -2151,10 +1847,14 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
       14 × external_body
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap42/TableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:29: external_body - #[verifier::external_body]
-        30 |         fn clone(&self) -> (result: Self)
-   Holes: 1 total
-      1 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:36: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        31 |         fn clone(&self) -> (result: Self)
+            ...
+        34 |             let result = TableStPer { entries: self.entries.clone() };
+        35 |             proof {
+        37 |                 lemma_seq_map_cloned_view_eq(
+        38 |                     self.entries.seq@,
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
 ❌ Chap43/AugOrderedTableMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:59: external_body - #[verifier::external_body]
         60 |     pub fn recalculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
@@ -2485,18 +2185,21 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap45/BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:34: external_body - #[verifier::external_body]
-        35 |             fn clone(&self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:47: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        43 |             fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:44: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        36 |             fn clone(&self) -> (result: Self)
             ...
-        45 |             {
-        46 |                 let r = self.elements == other.elements;
-        48 |                 r
-        49 |             }
-   Holes: 1 total
-      1 × external_body
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
+        42 |                     // For concrete T (i32, u64, etc.) it holds; for custom T, caller must ensure
+        43 |                     // Clone produces equal values (standard Rust semantics).
+        45 |                     lemma_seq_map_cloned_view_eq(
+        46 |                         self.elements.seq@,
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:59: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        55 |             fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        57 |             {
+        58 |                 let r = self.elements == other.elements;
+        60 |                 r
+        61 |             }
+   Errors: 2 total (2 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ✓ Chap45/Example45_2.rs
    1 clean proof function
@@ -2518,51 +2221,69 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Errors: 2 total (2 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap45/LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:16: error: enum_outside_verus - enum LeftistHeapNode — should be inside verus!
-        16 |     pub enum LeftistHeapNode<T: StT + Ord> {
-        17 |         Leaf,
-        18 |         Node {
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:16: error: clone_derived_outside - enum LeftistHeapNode — Clone should be implemented inside verus!, not derived outside
-        16 |     pub enum LeftistHeapNode<T: StT + Ord> {
-        17 |         Leaf,
-        18 |         Node {
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:29: error: struct_outside_verus - struct LeftistHeapPQ — should be inside verus!
-        29 |     pub struct LeftistHeapPQ<T: StT + Ord> {
-        30 |         root: LeftistHeapNode<T>,
-        31 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:29: error: clone_derived_outside - struct LeftistHeapPQ — Clone should be implemented inside verus!, not derived outside
-        29 |     pub struct LeftistHeapPQ<T: StT + Ord> {
-        30 |         root: LeftistHeapNode<T>,
-        31 |     }
-   Errors: 4 total (2 struct/enum outside verus!, 2 Clone derived outside)
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:54: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        41 |             fn clone(&self) -> (result: Self)
+            ...
+        52 |                             rank: *rank,
+        53 |                         };
+        55 |                         result
+        56 |                     }
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:74: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        62 |             fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        72 |                     _ => false,
+        73 |                 };
+        75 |                 r
+        76 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:92: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        88 |             fn clone(&self) -> (result: Self)
+            ...
+        90 |             {
+        91 |                 let result = LeftistHeapPQ { root: self.root.clone() };
+        93 |                 result
+        94 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:102: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        98 |             fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       100 |             {
+       101 |                 let r = self.root == other.root;
+       103 |                 r
+       104 |             }
+   Errors: 4 total (4 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap45/SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:34: external_body - #[verifier::external_body]
-        35 |             fn clone(&self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:47: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        43 |             fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:41: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        36 |             fn clone(&self) -> (result: Self)
             ...
-        45 |             {
-        46 |                 let r = self.elements == other.elements;
-        48 |                 r
-        49 |             }
-   Holes: 1 total
-      1 × external_body
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
+        39 |                 let result = SortedListPQ { elements: self.elements.clone() };
+        40 |                 proof {
+        42 |                     lemma_seq_map_cloned_view_eq(
+        43 |                         self.elements.seq@,
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:56: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        52 |             fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        54 |             {
+        55 |                 let r = self.elements == other.elements;
+        57 |                 r
+        58 |             }
+   Errors: 2 total (2 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap45/UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:34: external_body - #[verifier::external_body]
-        35 |             fn clone(&self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:47: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        43 |             fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:41: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        36 |             fn clone(&self) -> (result: Self)
             ...
-        45 |             {
-        46 |                 let r = self.elements == other.elements;
-        48 |                 r
-        49 |             }
-   Holes: 1 total
-      1 × external_body
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
+        39 |                 let result = UnsortedListPQ { elements: self.elements.clone() };
+        40 |                 proof {
+        42 |                     lemma_seq_map_cloned_view_eq(
+        43 |                         self.elements.seq@,
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:56: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        52 |             fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        54 |             {
+        55 |                 let r = self.elements == other.elements;
+        57 |                 r
+        58 |             }
+   Errors: 2 total (2 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap47/ChainedHashTable.rs
 /home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:43: external_body - #[verifier::external_body]
@@ -2581,13 +2302,8 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ Chap47/DoubleHashFlatHashTableStEph.rs
 ✓ Chap47/FlatHashTable.rs
 ✓ Chap47/LinProbFlatHashTableStEph.rs
-❌ Chap47/LinkedListChainedHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:76: error: struct_outside_verus - struct LinkedListChainedHashTableStEph — should be inside verus!
-        76 |     pub struct LinkedListChainedHashTableStEph;
-        77 | 
-        78 |     // 9. impls (outside verus! — these reference HashTable which contains dyn Fn types)
-   Errors: 1 total (1 struct/enum outside verus!)
-   Proof functions: 1 total (1 clean, 0 holed)
+✓ Chap47/LinkedListChainedHashTableStEph.rs
+   1 clean proof function
 ❌ Chap47/ParaHashTableStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:66: error: struct_outside_verus - struct HashTable — should be inside verus!
         66 |     pub struct HashTable<Key, Value, Entry, Metrics> {
@@ -2596,35 +2312,38 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Errors: 1 total (1 struct/enum outside verus!)
 ✓ Chap47/QuadProbFlatHashTableStEph.rs
 ❌ Chap47/StructChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:31: error: struct_outside_verus - struct Node — should be inside verus!
-        31 |     pub struct Node<Key, Value> {
-        32 |         pub key: Key,
-        33 |         pub value: Value,
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:31: error: clone_derived_outside - struct Node — Clone should be implemented inside verus!, not derived outside
-        31 |     pub struct Node<Key, Value> {
-        32 |         pub key: Key,
-        33 |         pub value: Value,
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:39: error: struct_outside_verus - struct ChainList — should be inside verus!
-        39 |     pub struct ChainList<Key, Value> {
-        40 |         pub head: Option<Box<Node<Key, Value>>>,
-        41 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:39: error: clone_derived_outside - struct ChainList — Clone should be implemented inside verus!, not derived outside
-        39 |     pub struct ChainList<Key, Value> {
-        40 |         pub head: Option<Box<Node<Key, Value>>>,
-        41 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:106: error: struct_outside_verus - struct StructChainedHashTableStEph — should be inside verus!
-       106 |     pub struct StructChainedHashTableStEph;
-       107 | 
-       108 |     // 9. impls (outside verus! — these reference HashTable which contains dyn Fn types)
-   Errors: 5 total (3 struct/enum outside verus!, 2 Clone derived outside)
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:65: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        53 |             fn clone(&self) -> (result: Self)
+            ...
+        63 |                     },
+        64 |                 };
+        66 |                 result
+        67 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:82: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        71 |             fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        80 |                         _ => false,
+        81 |                     };
+        83 |                 r
+        84 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:105: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        96 |             fn clone(&self) -> (result: Self)
+            ...
+       103 |                     },
+       104 |                 };
+       106 |                 result
+       107 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:119: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       111 |             fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       117 |                     _ => false,
+       118 |                 };
+       120 |                 r
+       121 |             }
+   Errors: 4 total (4 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
-❌ Chap47/VecChainedHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:70: error: struct_outside_verus - struct VecChainedHashTableStEph — should be inside verus!
-        70 |     pub struct VecChainedHashTableStEph;
-        71 | 
-        72 |     // 9. impls (outside verus! — these reference HashTable which contains dyn Fn types)
-   Errors: 1 total (1 struct/enum outside verus!)
-   Proof functions: 1 total (1 clean, 0 holed)
+✓ Chap47/VecChainedHashTableStEph.rs
+   1 clean proof function
 ❌ Chap49/MinEditDistMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:26: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         24 |         pub struct MinEditDistMtEphWf;
@@ -2758,117 +2477,75 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ Chap50/MatrixChainMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:58: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        54 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:39: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+        32 |         open spec fn view(&self) -> (nat, nat) {
             ...
-        56 |         {
-        57 |             let r = self.rows == other.rows && self.cols == other.cols;
-        59 |             r
-        60 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:65: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        54 |         fn eq(&self, other: &Self) -> (r: bool)
+        37 |         pub struct McEphDimWf;
+        38 |         impl RwLockPredicate<Vec<MatrixDim>> for McEphDimWf {
+        40 |         }
+        41 |         #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:41: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+        39 |             open spec fn inv(self, v: Vec<MatrixDim>) -> bool { true }
+        40 |         }
+        42 |         fn new_mceph_dim_lock(val: Vec<MatrixDim>) -> (lock: RwLock<Vec<MatrixDim>, McEphDimWf>) {
+        43 |             RwLock::new(val, Ghost(McEphDimWf))
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:48: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+        42 |         fn new_mceph_dim_lock(val: Vec<MatrixDim>) -> (lock: RwLock<Vec<MatrixDim>, McEphDimWf>) {
             ...
-        63 |         pub struct McEphDimWf;
-        64 |         impl RwLockPredicate<Vec<MatrixDim>> for McEphDimWf {
-        66 |         }
-        67 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:67: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        65 |             open spec fn inv(self, v: Vec<MatrixDim>) -> bool { true }
-        66 |         }
-        68 |         fn new_mceph_dim_lock(val: Vec<MatrixDim>) -> (lock: RwLock<Vec<MatrixDim>, McEphDimWf>) {
-        69 |             RwLock::new(val, Ghost(McEphDimWf))
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:74: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        68 |         fn new_mceph_dim_lock(val: Vec<MatrixDim>) -> (lock: RwLock<Vec<MatrixDim>, McEphDimWf>) {
-            ...
-        72 |         pub struct McEphMemoWf;
-        73 |         impl RwLockPredicate<HashMap<(usize, usize), usize>> for McEphMemoWf {
-        75 |         }
-        76 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:76: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        74 |             open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
-        75 |         }
-        77 |         fn new_mceph_memo_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>) {
-        78 |             RwLock::new(val, Ghost(McEphMemoWf))
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:84: error: struct_outside_verus - struct MatrixChainMtEphS — should be inside verus!
-        84 |     pub struct MatrixChainMtEphS {
-        85 |         pub dimensions: Arc<RwLock<Vec<MatrixDim>, McEphDimWf>>,
-        86 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:84: error: clone_derived_outside - struct MatrixChainMtEphS — Clone should be implemented inside verus!, not derived outside
-        84 |     pub struct MatrixChainMtEphS {
-        85 |         pub dimensions: Arc<RwLock<Vec<MatrixDim>, McEphDimWf>>,
-        86 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>>,
-   Errors: 7 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 assume in eq/clone (Verus workaround), 2 Verus RwLock external_body, 2 dummy RwLockPredicate)
+        46 |         pub struct McEphMemoWf;
+        47 |         impl RwLockPredicate<HashMap<(usize, usize), usize>> for McEphMemoWf {
+        49 |         }
+        50 |         #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:50: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+        48 |             open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
+        49 |         }
+        51 |         fn new_mceph_memo_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>) {
+        52 |             RwLock::new(val, Ghost(McEphMemoWf))
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:58: error: struct_outside_verus - struct MatrixChainMtEphS — should be inside verus!
+        58 |     pub struct MatrixChainMtEphS {
+        59 |         pub dimensions: Arc<RwLock<Vec<MatrixDim>, McEphDimWf>>,
+        60 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>>,
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:58: error: clone_derived_outside - struct MatrixChainMtEphS — Clone should be implemented inside verus!, not derived outside
+        58 |     pub struct MatrixChainMtEphS {
+        59 |         pub dimensions: Arc<RwLock<Vec<MatrixDim>, McEphDimWf>>,
+        60 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>>,
+   Errors: 6 total (1 struct/enum outside verus!, 1 Clone derived outside, 2 Verus RwLock external_body, 2 dummy RwLockPredicate)
 ❌ Chap50/MatrixChainMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:60: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        56 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:41: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+        34 |         open spec fn view(&self) -> (nat, nat) {
             ...
-        58 |         {
-        59 |             let r = self.rows == other.rows && self.cols == other.cols;
-        61 |             r
-        62 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:67: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        56 |         fn eq(&self, other: &Self) -> (r: bool)
-            ...
-        65 |         pub struct McPerMemoWf;
-        66 |         impl RwLockPredicate<HashMap<(usize, usize), usize>> for McPerMemoWf {
-        68 |         }
-        69 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:69: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        67 |             open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
-        68 |         }
-        70 |         fn new_mcper_memo_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>) {
-        71 |             RwLock::new(val, Ghost(McPerMemoWf))
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:77: error: struct_outside_verus - struct MatrixChainMtPerS — should be inside verus!
-        77 |     pub struct MatrixChainMtPerS {
-        78 |         pub dimensions: Arc<Vec<MatrixDim>>,
-        79 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:77: error: clone_derived_outside - struct MatrixChainMtPerS — Clone should be implemented inside verus!, not derived outside
-        77 |     pub struct MatrixChainMtPerS {
-        78 |         pub dimensions: Arc<Vec<MatrixDim>>,
-        79 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>>,
-   Errors: 5 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 assume in eq/clone (Verus workaround), 1 Verus RwLock external_body, 1 dummy RwLockPredicate)
+        39 |         pub struct McPerMemoWf;
+        40 |         impl RwLockPredicate<HashMap<(usize, usize), usize>> for McPerMemoWf {
+        42 |         }
+        43 |         #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:43: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+        41 |             open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
+        42 |         }
+        44 |         fn new_mcper_memo_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>) {
+        45 |             RwLock::new(val, Ghost(McPerMemoWf))
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:51: error: struct_outside_verus - struct MatrixChainMtPerS — should be inside verus!
+        51 |     pub struct MatrixChainMtPerS {
+        52 |         pub dimensions: Arc<Vec<MatrixDim>>,
+        53 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>>,
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:51: error: clone_derived_outside - struct MatrixChainMtPerS — Clone should be implemented inside verus!, not derived outside
+        51 |     pub struct MatrixChainMtPerS {
+        52 |         pub dimensions: Arc<Vec<MatrixDim>>,
+        53 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>>,
+   Errors: 4 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 Verus RwLock external_body, 1 dummy RwLockPredicate)
 ❌ Chap50/MatrixChainStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:60: external_type_specification - #[verifier::external_type_specification]
-        61 |     pub struct ExMatrixChainStEphS(MatrixChainStEphS);
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:55: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        51 |         fn eq(&self, other: &Self) -> (r: bool)
-            ...
-        53 |         {
-        54 |             let r = self.rows == other.rows && self.cols == other.cols;
-        56 |             r
-        57 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:67: error: struct_outside_verus - struct MatrixChainStEphS — should be inside verus!
-        67 |     pub struct MatrixChainStEphS {
-        68 |         pub dimensions: Vec<MatrixDim>,
-        69 |         pub memo: HashMap<(usize, usize), usize>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:67: error: clone_derived_outside - struct MatrixChainStEphS — Clone should be implemented inside verus!, not derived outside
-        67 |     pub struct MatrixChainStEphS {
-        68 |         pub dimensions: Vec<MatrixDim>,
-        69 |         pub memo: HashMap<(usize, usize), usize>,
-   Holes: 1 total
-      1 × external_type_specification
-   Errors: 3 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 assume in eq/clone (Verus workaround))
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:48: external_body - #[verifier::external_body]
+        49 |         fn clone(&self) -> (s: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:60: external_body - #[verifier::external_body]
+        61 |         fn eq(&self, other: &Self) -> (r: bool)
+   Holes: 2 total
+      2 × external_body
 ❌ Chap50/MatrixChainStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:62: external_type_specification - #[verifier::external_type_specification]
-        63 |     pub struct ExMatrixChainStPerS(MatrixChainStPerS);
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:57: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        53 |         fn eq(&self, other: &Self) -> (r: bool)
-            ...
-        55 |         {
-        56 |             let r = self.rows == other.rows && self.cols == other.cols;
-        58 |             r
-        59 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:69: error: struct_outside_verus - struct MatrixChainStPerS — should be inside verus!
-        69 |     pub struct MatrixChainStPerS {
-        70 |         pub dimensions: Vec<MatrixDim>,
-        71 |         pub memo: HashMap<(usize, usize), usize>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:69: error: clone_derived_outside - struct MatrixChainStPerS — Clone should be implemented inside verus!, not derived outside
-        69 |     pub struct MatrixChainStPerS {
-        70 |         pub dimensions: Vec<MatrixDim>,
-        71 |         pub memo: HashMap<(usize, usize), usize>,
-   Holes: 1 total
-      1 × external_type_specification
-   Errors: 3 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 assume in eq/clone (Verus workaround))
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:50: external_body - #[verifier::external_body]
+        51 |         fn clone(&self) -> (s: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:62: external_body - #[verifier::external_body]
+        63 |         fn eq(&self, other: &Self) -> (r: bool)
+   Holes: 2 total
+      2 × external_body
 ❌ Chap50/OptBinSearchTreeMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:38: external_type_specification - #[verifier::external_type_specification]
         39 |         pub struct ExKeyProb<T: MtVal>(KeyProb<T>);
@@ -3249,35 +2926,14 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
         76 |     pub fn example_undefined_shortest_path() {
    Holes: 2 total
       2 × external_body
-❌ Chap56/PathWeightUtilsStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStEph.rs:163: external_body - #[verifier::external_body]
-       164 |     fn f64_approx_eq(a: &F64Dist, b: &F64Dist) -> bool {
-   Holes: 1 total
-      1 × external_body
-❌ Chap56/PathWeightUtilsStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap56/PathWeightUtilsStPer.rs:162: external_body - #[verifier::external_body]
-       163 |     fn f64_approx_eq(a: &F64Dist, b: &F64Dist) -> bool {
-   Holes: 1 total
-      1 × external_body
+✓ Chap56/PathWeightUtilsStEph.rs
+✓ Chap56/PathWeightUtilsStPer.rs
 ✓ Chap56/SSSPResultStEphF64.rs
 ✓ Chap56/SSSPResultStEphI64.rs
 ✓ Chap56/SSSPResultStPerF64.rs
 ✓ Chap56/SSSPResultStPerI64.rs
-❌ Chap57/DijkstraStEphF64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:36: error: struct_outside_verus - struct PQEntry — should be inside verus!
-        36 |     pub struct PQEntry {
-        37 |         pub dist: F64Dist,
-        38 |         pub vertex: usize,
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:36: error: clone_derived_outside - struct PQEntry — Clone should be implemented inside verus!, not derived outside
-        36 |     pub struct PQEntry {
-        37 |         pub dist: F64Dist,
-        38 |         pub vertex: usize,
-   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
-❌ Chap57/DijkstraStEphI64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:99: external_body - #[verifier::external_body]
-       100 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64 {
-   Holes: 1 total
-      1 × external_body
+✓ Chap57/DijkstraStEphF64.rs
+✓ Chap57/DijkstraStEphI64.rs
 ✓ Chap57/StackStEph.rs
 ✓ Chap58/BellmanFordStEphF64.rs
 ✓ Chap58/BellmanFordStEphI64.rs
@@ -3296,68 +2952,41 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ Chap63/ConnectivityMtEph.rs
 ✓ Chap63/ConnectivityStEph.rs
 ❌ Chap64/SpanTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:33: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        31 |         pub struct SpanTreeMtEphSpanningEdgesWf;
-        32 |         impl<V: StT + MtT + Hash + Ord> RwLockPredicate<SetStEph<Edge<V>>> for SpanTreeMtEphSpanningEdgesWf {
-        34 |         }
-        35 |         #[verifier::external_body]
 /home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:35: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        33 |             open spec fn inv(self, _v: SetStEph<Edge<V>>) -> bool { true }
+        33 |             open spec fn inv(self, v: SetStEph<Edge<V>>) -> bool { v@.finite() }
         34 |         }
         36 |         fn new_spanning_edges_lock<V: StT + MtT + Hash + Ord>(
         37 |             val: SetStEph<Edge<V>>,
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:44: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        36 |         fn new_spanning_edges_lock<V: StT + MtT + Hash + Ord>(
-            ...
-        42 |         pub struct SpanTreeMtEphValidWf;
-        43 |         impl RwLockPredicate<bool> for SpanTreeMtEphValidWf {
-        45 |         }
-        46 |         #[verifier::external_body]
 /home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:46: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        44 |             open spec fn inv(self, _v: bool) -> bool { true }
+        44 |             open spec fn inv(self, v: bool) -> bool { v == true || v == false }
         45 |         }
         47 |         fn new_valid_lock(val: bool) -> (lock: RwLock<bool, SpanTreeMtEphValidWf>) {
         48 |             RwLock::new(val, Ghost(SpanTreeMtEphValidWf))
-   Errors: 4 total (2 Verus RwLock external_body, 2 dummy RwLockPredicate)
+   Errors: 2 total (2 Verus RwLock external_body)
 ✓ Chap64/SpanTreeStEph.rs
 ✓ Chap64/TSPApproxStEph.rs
+   1 clean proof function
 ✓ Chap65/KruskalStEph.rs
-❌ Chap65/PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:31: error: struct_outside_verus - struct PQEntry — should be inside verus!
-        31 |     pub struct PQEntry<V: StT + Ord> {
-        32 |         priority: F64Dist,
-        33 |         vertex: V,
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:31: error: clone_derived_outside - struct PQEntry — Clone should be implemented inside verus!, not derived outside
-        31 |     pub struct PQEntry<V: StT + Ord> {
-        32 |         priority: F64Dist,
-        33 |         vertex: V,
-   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
-❌ Chap65/UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:47: error: struct_outside_verus - struct UnionFindStEph — should be inside verus!
-        47 |     pub struct UnionFindStEph<V: StT + Hash> {
-        48 |         parent: HashMap<V, V>,
-        49 |         rank: HashMap<V, usize>,
-   Errors: 1 total (1 struct/enum outside verus!)
+✓ Chap65/PrimStEph.rs
+✓ Chap65/UnionFindStEph.rs
 ❌ Chap66/BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:30: error: struct_outside_verus - struct LabeledEdge — should be inside verus!
-        30 |     pub struct LabeledEdge<V>(pub V, pub V, pub F64Dist, pub usize);
-        31 | 
-        32 |     verus! {
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:30: error: clone_derived_outside - struct LabeledEdge — Clone should be implemented inside verus!, not derived outside
-        30 |     pub struct LabeledEdge<V>(pub V, pub V, pub F64Dist, pub usize);
-        31 | 
-        32 |     verus! {
-   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:45: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        41 |             fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        43 |             {
+        44 |                 let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
+        46 |                 r
+        47 |             }
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
 ❌ Chap66/BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:29: error: struct_outside_verus - struct LabeledEdge — should be inside verus!
-        29 |     pub struct LabeledEdge<V>(pub V, pub V, pub F64Dist, pub usize);
-        30 | 
-        31 |     verus! {
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:29: error: clone_derived_outside - struct LabeledEdge — Clone should be implemented inside verus!, not derived outside
-        29 |     pub struct LabeledEdge<V>(pub V, pub V, pub F64Dist, pub usize);
-        30 | 
-        31 |     verus! {
-   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:43: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        39 |             fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        41 |             {
+        42 |                 let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
+        44 |                 r
+        45 |             }
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
 ✓ Concurrency.rs
 ✓ ParaPairs.rs
 ❌ Types.rs
@@ -3756,24 +3385,32 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ✓ experiments/deep_view_struct.rs
 ✓ experiments/derive_clone_enum_in_verus.rs
 ✓ experiments/derive_clone_struct_in_verus.rs
+✓ experiments/derive_clone_struct_with_vec_in_verus.rs
 ✓ experiments/derive_copy_enum_in_verus.rs
 ✓ experiments/derive_copy_struct_in_verus.rs
 ✓ experiments/derive_debug_enum_in_verus.rs
 ✓ experiments/derive_debug_struct_in_verus.rs
+✓ experiments/derive_debug_struct_with_vec_in_verus.rs
 ✓ experiments/derive_default_enum_in_verus.rs
 ✓ experiments/derive_default_struct_in_verus.rs
+✓ experiments/derive_default_struct_with_vec_in_verus.rs
 ✓ experiments/derive_display_enum_in_verus.rs
 ✓ experiments/derive_display_struct_in_verus.rs
 ✓ experiments/derive_eq_enum_in_verus.rs
 ✓ experiments/derive_eq_struct_in_verus.rs
+✓ experiments/derive_eq_struct_with_vec_in_verus.rs
 ✓ experiments/derive_hash_enum_in_verus.rs
 ✓ experiments/derive_hash_struct_in_verus.rs
+✓ experiments/derive_hash_struct_with_vec_in_verus.rs
 ✓ experiments/derive_ord_enum_in_verus.rs
 ✓ experiments/derive_ord_struct_in_verus.rs
+✓ experiments/derive_ord_struct_with_vec_in_verus.rs
 ✓ experiments/derive_partial_eq_enum_in_verus.rs
 ✓ experiments/derive_partial_eq_struct_in_verus.rs
+✓ experiments/derive_partial_eq_struct_with_vec_in_verus.rs
 ✓ experiments/derive_partial_ord_enum_in_verus.rs
 ✓ experiments/derive_partial_ord_struct_in_verus.rs
+✓ experiments/derive_partial_ord_struct_with_vec_in_verus.rs
 ❌ experiments/eq_rel.rs
 /home/milnes/projects/APAS-VERUS/src/experiments/eq_rel.rs:102: assume() - assume(cloned(*x, *x_clone) ==> *x == *x_clone);
        100 |          proof fn axiom_cloned_implies_eq(x: &Self, x_clone: &Self) {
@@ -4424,19 +4061,19 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
        175 |     {
        177 |     }
        178 | 
-/home/milnes/projects/APAS-VERUS/src/vstdplus/feq.rs:189: assume() - assume(result == (x@ == y@));
-       180 |     pub fn feq<T: Eq + View + Clone + Sized>(x: &T, y: &T) -> (eq: bool)
+/home/milnes/projects/APAS-VERUS/src/vstdplus/feq.rs:206: assume() - assume(result == (x@ == y@));
+       197 |     pub fn feq<T: Eq + View + Clone + Sized>(x: &T, y: &T) -> (eq: bool)
             ...
-       187 |             // obeys_feq_view: x.eq_spec(&y) ==> x@ == y@
-       188 |             // obeys_feq_view_injective: x@ == y@ ==> x == y
-       190 |         }
-       191 |         result
+       204 |             // obeys_feq_view: x.eq_spec(&y) ==> x@ == y@
+       205 |             // obeys_feq_view_injective: x@ == y@ ==> x == y
+       207 |         }
+       208 |         result
    Holes: 5 total
       1 × assume()
       2 × admit()
       1 × external_trait_specification
       1 × external_trait_extension
-   Proof functions: 4 total (2 clean, 2 holed)
+   Proof functions: 5 total (3 clean, 2 holed)
 ❌ vstdplus/float.rs
 /home/milnes/projects/APAS-VERUS/src/vstdplus/float.rs:103: external_body - #[verifier::external_body]
        104 |         fn float_cmp(&self, other: &Self) -> (c: Ordering) {
@@ -4454,17 +4091,19 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
        259 |         pub fn dist_add(&self, other: &Self) -> (r: Self)
 /home/milnes/projects/APAS-VERUS/src/vstdplus/float.rs:265: external_body - #[verifier::external_body]
        266 |         pub fn dist_sub(&self, other: &Self) -> (r: Self)
-/home/milnes/projects/APAS-VERUS/src/vstdplus/float.rs:274: external_body - #[verifier::external_body]
-       275 |     pub fn f64_is_finite(x: f64) -> (b: bool)
-/home/milnes/projects/APAS-VERUS/src/vstdplus/float.rs:292: external_body - #[verifier::external_body]
-       293 |     pub fn unreachable_dist() -> (d: F64Dist)
-/home/milnes/projects/APAS-VERUS/src/vstdplus/float.rs:300: external_body - #[verifier::external_body]
-       301 |     pub fn zero_dist() -> (d: F64Dist)
-/home/milnes/projects/APAS-VERUS/src/vstdplus/float.rs:223: error: bare_impl - impl F64Dist { — `impl F64Dist` without trait; file defines [FloatTotalOrder]
+/home/milnes/projects/APAS-VERUS/src/vstdplus/float.rs:273: external_body - #[verifier::external_body]
+       274 |         pub fn approx_eq(&self, other: &Self) -> (b: bool)
+/home/milnes/projects/APAS-VERUS/src/vstdplus/float.rs:285: external_body - #[verifier::external_body]
+       286 |     pub fn f64_is_finite(x: f64) -> (b: bool)
+/home/milnes/projects/APAS-VERUS/src/vstdplus/float.rs:303: external_body - #[verifier::external_body]
+       304 |     pub fn unreachable_dist() -> (d: WrappedF64)
+/home/milnes/projects/APAS-VERUS/src/vstdplus/float.rs:311: external_body - #[verifier::external_body]
+       312 |     pub fn zero_dist() -> (d: WrappedF64)
+/home/milnes/projects/APAS-VERUS/src/vstdplus/float.rs:223: error: bare_impl - impl WrappedF64 { — `impl WrappedF64` without trait; file defines [FloatTotalOrder]
        224 |         pub open spec fn spec_is_finite(&self) -> bool {
        225 |             self.val.is_finite_spec()
-   Holes: 11 total
-      11 × external_body
+   Holes: 12 total
+      12 × external_body
    Errors: 1 total (1 bare impl(s))
 ❌ vstdplus/hash_set_specs.rs
 /home/milnes/projects/APAS-VERUS/src/vstdplus/hash_set_specs.rs:12: assume_specification - pub assume_specification<T, S> [<std::collections::HashSet<T
@@ -4674,29 +4313,29 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   278 clean (no holes)
-   121 holed (contains holes)
-   399 total
+   301 clean (no holes)
+   106 holed (contains holes)
+   407 total
 
 Proof Functions:
-   309 clean
-   39 holed
-   348 total
+   314 clean
+   36 holed
+   350 total
 
-Holes Found: 757 total
-   8 × assume(false)
-   209 × assume()
+Holes Found: 697 total
+   1 × assume(false)
+   184 × assume()
    1 × Tracked::assume_new()
    10 × assume_specification
    48 × admit()
    2 × unsafe impl
    4 × unsafe {}
-   459 × external_body
+   437 × external_body
    2 × external_trait_specification
-   10 × external_type_specification
+   5 × external_type_specification
    1 × external_trait_extension
-   3 × external
+   2 × external
 
-Errors: 188 (bare impl(s), struct/enum outside verus!)
+Errors: 156 (bare impl(s), struct/enum outside verus!)
 
-Info: 7 assume(false); diverge() idiom(s) (valid non-termination)
+Info: 35 assume(false); diverge() idiom(s) (valid non-termination)

@@ -9,6 +9,7 @@ pub mod SortedListPQ {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+    use crate::vstdplus::accept::accept;
     use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{lemma_seq_map_cloned_view_eq, obeys_feq_clone};
@@ -53,7 +54,7 @@ pub mod SortedListPQ {
                 ensures r == (self@ == other@)
             {
                 let r = self.elements == other.elements;
-                proof { assume(r == (self@ == other@)); }
+                proof { accept(r == (self@ == other@)); }
                 r
             }
         }

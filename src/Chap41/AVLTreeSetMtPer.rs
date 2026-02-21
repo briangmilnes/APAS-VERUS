@@ -25,6 +25,7 @@ pub mod AVLTreeSetMtPer {
     use vstd::prelude::*;
 
     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::*;
+    use crate::vstdplus::accept::accept;
     use crate::ParaPair;
     use crate::Types::Types::*;
 
@@ -440,7 +441,7 @@ pub mod AVLTreeSetMtPer {
             ensures result@ == self@
         {
             let result = AVLTreeSetMtPer { elements: self.elements.clone() };
-            proof { assume(result@ == self@); }
+            proof { accept(result@ == self@); }
             result
         }
     }

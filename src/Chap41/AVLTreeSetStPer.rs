@@ -22,6 +22,7 @@ pub mod AVLTreeSetStPer {
     use vstd::prelude::*;
 
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
+    use crate::vstdplus::accept::accept;
     use crate::Types::Types::*;
 
     verus! {
@@ -414,7 +415,7 @@ pub mod AVLTreeSetStPer {
             ensures result@ == self@
         {
             let result = AVLTreeSetStPer { elements: self.elements.clone() };
-            proof { assume(result@ == self@); }
+            proof { accept(result@ == self@); }
             result
         }
     }

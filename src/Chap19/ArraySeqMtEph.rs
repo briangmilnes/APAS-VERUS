@@ -42,6 +42,7 @@ pub mod ArraySeqMtEph {
         vstd::std_specs::clone::*,
     };
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::*;
     #[cfg(verus_keep_ghost)]
     use {
@@ -1410,7 +1411,7 @@ pub mod ArraySeqMtEph {
             ensures equal == (self@ == other@)
         {
             let equal = self.seq == other.seq;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

@@ -44,6 +44,7 @@ verus! {
         vstd::pervasive::strictly_cloned,
         vstd::laws_eq::*,
     };
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -966,7 +967,7 @@ verus! {
             ensures equal == (self@ == other@)
         {
             let equal = self.elements == other.elements;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

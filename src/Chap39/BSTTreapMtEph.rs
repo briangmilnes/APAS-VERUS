@@ -10,6 +10,7 @@ pub mod BSTTreapMtEph {
     use vstd::rwlock::*;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+    use crate::vstdplus::accept::accept;
     use crate::Types::Types::*;
 
     verus! {
@@ -47,7 +48,7 @@ pub mod BSTTreapMtEph {
         match link {
             None => {
                 let c = None;
-                proof { assume(c == *link); }
+                proof { accept(c == *link); }
                 c
             }
             Some(node) => {
@@ -60,7 +61,7 @@ pub mod BSTTreapMtEph {
                     left,
                     right,
                 }));
-                proof { assume(c == *link); }
+                proof { accept(c == *link); }
                 c
             }
         }
@@ -77,7 +78,7 @@ pub mod BSTTreapMtEph {
                 left: clone_link(&self.left),
                 right: clone_link(&self.right),
             };
-            proof { assume(cloned == *self); }
+            proof { accept(cloned == *self); }
             cloned
         }
     }

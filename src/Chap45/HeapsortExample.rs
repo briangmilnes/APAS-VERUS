@@ -19,6 +19,7 @@ pub mod HeapsortExample {
     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ;
     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
         proof fn _heapsort_example_verified() {}
@@ -72,7 +73,7 @@ pub mod HeapsortExample {
                     binary_heap_result: self.binary_heap_result.clone(),
                     leftist_heap_result: self.leftist_heap_result.clone(),
                 };
-                proof { assume(result@ == self@); }
+                proof { accept(result@ == self@); }
                 result
             }
         }
@@ -87,7 +88,7 @@ pub mod HeapsortExample {
                     && self.balanced_tree_result == other.balanced_tree_result
                     && self.binary_heap_result == other.binary_heap_result
                     && self.leftist_heap_result == other.leftist_heap_result;
-                proof { assume(r == (self@ == other@)); }
+                proof { accept(r == (self@ == other@)); }
                 r
             }
         }

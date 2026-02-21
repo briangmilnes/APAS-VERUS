@@ -20,6 +20,7 @@ pub mod StructChainedHashTable {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap47::ChainedHashTable::ChainedHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
+    use crate::vstdplus::accept::accept;
     use crate::Types::Types::*;
 
     verus! {
@@ -62,7 +63,7 @@ pub mod StructChainedHashTable {
                         Some(b) => Some(Box::new((**b).clone())),
                     },
                 };
-                proof { assume(result == *self); }
+                proof { accept(result == *self); }
                 result
             }
         }
@@ -79,7 +80,7 @@ pub mod StructChainedHashTable {
                         (Some(a), Some(b)) => (**a) == (**b),
                         _ => false,
                     };
-                proof { assume(r == (*self == *other)); }
+                proof { accept(r == (*self == *other)); }
                 r
             }
         }
@@ -102,7 +103,7 @@ pub mod StructChainedHashTable {
                         Some(b) => Some(Box::new((**b).clone())),
                     },
                 };
-                proof { assume(result == *self); }
+                proof { accept(result == *self); }
                 result
             }
         }
@@ -116,7 +117,7 @@ pub mod StructChainedHashTable {
                     (Some(a), Some(b)) => (**a) == (**b),
                     _ => false,
                 };
-                proof { assume(r == (*self == *other)); }
+                proof { accept(r == (*self == *other)); }
                 r
             }
         }

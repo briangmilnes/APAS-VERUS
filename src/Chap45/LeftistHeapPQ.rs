@@ -9,6 +9,7 @@ pub mod LeftistHeapPQ {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
         proof fn _leftist_heap_pq_verified() {}
@@ -51,7 +52,7 @@ pub mod LeftistHeapPQ {
                     right: Box::new((**right).clone()),
                             rank: *rank,
                         };
-                        proof { assume(result == *self); }
+                        proof { accept(result == *self); }
                         result
                     }
                 }
@@ -71,7 +72,7 @@ pub mod LeftistHeapPQ {
                     }
                     _ => false,
                 };
-                proof { assume(r == (*self == *other)); }
+                proof { accept(r == (*self == *other)); }
                 r
             }
         }
@@ -89,7 +90,7 @@ pub mod LeftistHeapPQ {
                 ensures result.root == self.root
             {
                 let result = LeftistHeapPQ { root: self.root.clone() };
-                proof { assume(result.root == self.root); }
+                proof { accept(result.root == self.root); }
                 result
             }
         }
@@ -99,7 +100,7 @@ pub mod LeftistHeapPQ {
                 ensures r == (self.root == other.root)
             {
                 let r = self.root == other.root;
-                proof { assume(r == (self.root == other.root)); }
+                proof { accept(r == (self.root == other.root)); }
                 r
             }
         }

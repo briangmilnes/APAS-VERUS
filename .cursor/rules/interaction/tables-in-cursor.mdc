@@ -1,0 +1,21 @@
+---
+description: Present tables in Cursor chat by default; write md file only when asked
+alwaysApply: true
+---
+
+# Tables in Cursor
+
+By default, **present tables in Cursor chat** (in the response text).
+
+- **DO**: Render tables as markdown in the response so the user sees them directly.
+- **DO NOT**: Write tables to `.md` files unless the user explicitly asks for an md file.
+
+## When the user wants an md file
+
+The user will say so, e.g.:
+- "write that to a file"
+- "save as md"
+- "put it in analyses/"
+- "create an md file"
+
+Only then write the table (or full report) to disk.

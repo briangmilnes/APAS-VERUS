@@ -9,6 +9,7 @@ pub mod BalancedTreePQ {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
+    use crate::vstdplus::accept::accept;
     use crate::Types::Types::*;
 
     verus! {
@@ -44,7 +45,7 @@ pub mod BalancedTreePQ {
                 ensures r == (self@ == other@)
             {
                 let r = self.elements == other.elements;
-                proof { assume(r == (self@ == other@)); }
+                proof { accept(r == (self@ == other@)); }
                 r
             }
         }
