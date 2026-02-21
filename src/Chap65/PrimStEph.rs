@@ -15,7 +15,7 @@ pub mod PrimStEph {
     #[cfg(not(verus_keep_ghost))]
     use std::cmp::Ordering;
     #[cfg(not(verus_keep_ghost))]
-    use std::collections::HashSet;
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::{HashSetWithViewPlus, HashSetWithViewPlusTrait};
     #[cfg(not(verus_keep_ghost))]
     use std::fmt::{Display, Formatter};
     #[cfg(not(verus_keep_ghost))]
@@ -106,7 +106,7 @@ pub mod PrimStEph {
         start: &V,
     ) -> SetStEph<LabEdge<V, OrderedFloat<f64>>> {
         let mut mst_edges = SetLit![];
-        let mut visited = HashSet::<V>::new();
+        let mut visited = HashSetWithViewPlus::<V>::new();
 
         let mut pq = BinaryHeapPQ::<PQEntry<V>>::singleton(pq_entry_new(OrderedFloat(0.0), start.clone(), None));
 

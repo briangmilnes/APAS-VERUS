@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap02/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap02
 
 ✓ FibonacciHFScheduler.rs
    5 clean proof functions

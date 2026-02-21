@@ -594,9 +594,9 @@ verus! {
             // Check for duplicate domain elements (runtime only, skipped in Verus proof mode)
             #[cfg(not(verus_keep_ghost))]
             {
-                let mut __seen_keys = std::collections::HashSet::new();
+                let mut __seen_keys = $crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus::new();
                 for pair in &__pairs {
-                    let key = &pair.0;
+                    let key = pair.0.clone();
                     if !__seen_keys.insert(key) {
                         panic!("MappingLit!: duplicate domain element {:?}", key);
                     }

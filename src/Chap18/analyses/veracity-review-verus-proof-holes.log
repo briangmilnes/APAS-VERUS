@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap18/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap18
 
 ❌ ArraySeq.rs
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1481: external - #[verifier::external]
@@ -80,27 +80,3 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 /home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:861: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        857 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       859 |         {
-       860 |             let equal = self.seq == other.seq;
-       862 |             equal
-       863 |         }
-   Errors: 2 total (2 assume in eq/clone (Verus workaround))
-
-═══════════════════════════════════════════════════════════════
-SUMMARY
-═══════════════════════════════════════════════════════════════
-
-Modules:
-   6 clean (no holes)
-   1 holed (contains holes)
-   7 total
-
-Proof Functions:
-   13 clean
-   0 holed
-   13 total
-
-Holes Found: 2 total
-   2 × external
-
-Errors: 9 (bare impl(s), struct/enum outside verus!)

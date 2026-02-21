@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap12/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap12
 
 ❌ Exercise12_1.rs
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:19: external_body - #[verifier::external_body]
@@ -80,8 +80,3 @@ Proof Functions:
    0 clean
    0 holed
    0 total
-
-Holes Found: 18 total
-   4 × unsafe {}
-   13 × external_body
-   1 × external

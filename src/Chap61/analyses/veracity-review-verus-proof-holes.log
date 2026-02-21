@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap61/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap61
 
 ✓ EdgeContractionMtEph.rs
 ✓ EdgeContractionStEph.rs
