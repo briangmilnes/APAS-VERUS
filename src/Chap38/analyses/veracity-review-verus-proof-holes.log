@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap38/
+
 ❌ BSTParaMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:19: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         17 | 
@@ -13,31 +15,10 @@
         43 |             RwLock::new(val, Ghost(BstParaWf))
    Errors: 2 total (1 Verus RwLock external_body, 1 dummy RwLockPredicate)
 ❌ BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:17: error: enum_outside_verus - enum Exposed — should be inside verus!
-        17 |     pub enum Exposed<T: StT + Ord> {
-        18 |         #[default]
-        19 |         Leaf,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:17: error: clone_derived_outside - enum Exposed — Clone should be implemented inside verus!, not derived outside
-        17 |     pub enum Exposed<T: StT + Ord> {
-        18 |         #[default]
-        19 |         Leaf,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:24: error: struct_outside_verus - struct NodeInner — should be inside verus!
-        24 |     struct NodeInner<T: StT + Ord> {
-        25 |         key: T,
-        26 |         size: usize,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:24: error: clone_derived_outside - struct NodeInner — Clone should be implemented inside verus!, not derived outside
-        24 |     struct NodeInner<T: StT + Ord> {
-        25 |         key: T,
-        26 |         size: usize,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:32: error: struct_outside_verus - struct ParamBST — should be inside verus!
-        32 |     pub struct ParamBST<T: StT + Ord> {
-        33 |         root: Rc<RefCell<Option<Box<NodeInner<T>>>>>,
-        34 |     }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:32: error: clone_derived_outside - struct ParamBST — Clone should be implemented inside verus!, not derived outside
-        32 |     pub struct ParamBST<T: StT + Ord> {
-        33 |         root: Rc<RefCell<Option<Box<NodeInner<T>>>>>,
-        34 |     }
-   Errors: 6 total (3 struct/enum outside verus!, 3 Clone derived outside)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Parametric single-threaded BST built around a joinMid interface.
+         3 | 
+   Errors: 1 total (1 not verusified)
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -55,18 +36,6 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 8 (bare impl(s), struct/enum outside verus!)
-
-🎉 No proof holes found! All proofs are complete.
-  2 total
-
-Proof Functions:
-   0 clean
-   0 holed
-   0 total
-
-Holes Found: 0 total
-
-Errors: 8 (bare impl(s), struct/enum outside verus!)
+Errors: 3 (bare impl(s), struct/enum outside verus!)
 
 🎉 No proof holes found! All proofs are complete.

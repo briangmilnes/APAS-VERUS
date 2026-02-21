@@ -1,12 +1,14 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 36 (Multi-threaded Slice): Quicksort over `ArraySeqMtEphSlice` without extra copies.
+//! Verusified: trait and impl structure; sort methods use external_body for thread::scope.
 
 pub mod Chapter36MtEphSlice {
 
     use std::thread;
 
-    // use rand::*;
-    // use rand::RngExt;  // Verus can't link rand; random pivot disabled
+    use vstd::prelude::*;
+
+    verus! {
 
     use crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::*;
     use crate::Types::Types::*;
@@ -202,4 +204,6 @@ pub mod Chapter36MtEphSlice {
             });
         }
     }
+
+    } // verus!
 }

@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap12
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap12/
 
 ❌ Exercise12_1.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:19: external_body - #[verifier::external_body]

@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap39
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap39/
 
 ❌ BSTParaTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:24: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.

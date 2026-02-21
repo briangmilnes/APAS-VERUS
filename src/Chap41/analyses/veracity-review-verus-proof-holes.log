@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap41/
+
 ❌ AVLTreeSetMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:64: external_body - #[verifier::external_body]
         65 |         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
@@ -822,19 +824,6 @@ SUMMARY
 Modules:
    0 clean (no holes)
    7 holed (contains holes)
-   7 total
-
-Proof Functions:
-   2 clean
-   1 holed
-   3 total
-
-Holes Found: 143 total
-   100 × assume()
-   43 × external_body
-
-Errors: 6 (bare impl(s), struct/enum outside verus!)
- holes)
    7 total
 
 Proof Functions:

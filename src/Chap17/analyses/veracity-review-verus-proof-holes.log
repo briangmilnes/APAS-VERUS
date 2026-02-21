@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap17
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap17/
 
 ❌ MathSeq.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:716: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
