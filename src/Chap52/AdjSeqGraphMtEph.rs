@@ -9,7 +9,7 @@ pub mod AdjSeqGraphMtEph {
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::*;
 
-    const SEQUENTIAL_CUTOFF: N = 64;
+    const SEQUENTIAL_CUTOFF: usize = 1;
 
     verus! {
 

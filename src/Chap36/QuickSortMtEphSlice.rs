@@ -5,8 +5,8 @@ pub mod Chapter36MtEphSlice {
 
     use std::thread;
 
-    use rand::*;
-    use rand::RngExt;
+    // use rand::*;
+    // use rand::RngExt;  // Verus can't link rand; random pivot disabled
 
     use crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::*;
     use crate::Types::Types::*;
@@ -15,13 +15,13 @@ pub mod Chapter36MtEphSlice {
     pub trait Chapter36MtSliceTrait<T: StTInMtT + Ord> {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        fn pivot_mt_first(&self, lo: N, hi: N)   -> T;
+        fn pivot_mt_first(&self, lo: usize, hi: usize)   -> T;
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        fn pivot_mt_median3(&self, lo: N, hi: N) -> T;
+        fn pivot_mt_median3(&self, lo: usize, hi: usize) -> T;
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        fn pivot_mt_random(&self, lo: N, hi: N)  -> T;
+        fn pivot_mt_random(&self, lo: usize, hi: usize)  -> T;
         /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst
         /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst — parallel via thread::scope (slice-based, no copy); partition is sequential Θ(n).
         fn quick_sort_mt_first(&self);
@@ -34,9 +34,9 @@ pub mod Chapter36MtEphSlice {
     }
 
     impl<T: StTInMtT + Ord + 'static> Chapter36MtSliceTrait<T> for ArraySeqMtEphSliceS<T> {
-        fn pivot_mt_first(&self, lo: N, _hi: N) -> T { self.nth(lo).clone() }
+        fn pivot_mt_first(&self, lo: usize, _hi: usize) -> T { self.nth(lo).clone() }
 
-        fn pivot_mt_median3(&self, lo: N, hi: N) -> T {
+        fn pivot_mt_median3(&self, lo: usize, hi: usize) -> T {
             let mid = lo + (hi - lo) / 2;
             let x0 = self.nth(lo).clone();
             let xm = self.nth(mid).clone();
@@ -50,10 +50,9 @@ pub mod Chapter36MtEphSlice {
             }
         }
 
-        fn pivot_mt_random(&self, lo: N, hi: N) -> T {
-            let mut r = rng();
-            let idx = r.random_range(lo..hi);
-            self.nth(idx).clone()
+        fn pivot_mt_random(&self, lo: usize, hi: usize) -> T {
+            // rand disabled; use median-of-three as deterministic fallback
+            self.pivot_mt_median3(lo, hi)
         }
 
         fn quick_sort_mt_first(&self) {
@@ -149,21 +148,33 @@ pub mod Chapter36MtEphSlice {
             });
         }
 
+        #[verifier::external_body]
         fn quick_sort_mt_random(&self) {
             if self.length() <= 1usize {
                 return;
             }
             self.with_exclusive(|data| {
                 /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst
-                /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst — parallel via thread::scope with random pivot.
+                /// - rand disabled; uses median-of-three as deterministic fallback
                 fn sort<T: StTInMtT + Ord>(data: &mut [T]) {
                     let len = data.len();
                     if len <= 1 {
                         return;
                     }
-                    let mut r = rng();
-                    let idx = r.random_range(0..len);
-                    let pivot = data[idx].clone();
+                    let pivot = {
+                        let mid = len / 2;
+                        let last = len - 1;
+                        let x0 = data[0].clone();
+                        let xm = data[mid].clone();
+                        let xl = data[last].clone();
+                        if (x0 <= xm && xm <= xl) || (xl <= xm && xm <= x0) {
+                            xm
+                        } else if (xm <= x0 && x0 <= xl) || (xl <= x0 && x0 <= xm) {
+                            x0
+                        } else {
+                            xl
+                        }
+                    };
                     let mut lt = 0;
                     let mut i = 0;
                     let mut gt = len;

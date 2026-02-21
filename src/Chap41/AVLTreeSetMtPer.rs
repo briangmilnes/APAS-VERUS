@@ -45,7 +45,7 @@ pub mod AVLTreeSetMtPer {
     }
 
     /// Sequential cutoff to prevent thread explosion from recursive ParaPair! calls.
-    pub const SEQUENTIAL_CUTOFF: N = 128;
+    pub const SEQUENTIAL_CUTOFF: usize = 1;
 
     // 5. view impls
 
@@ -66,7 +66,7 @@ pub mod AVLTreeSetMtPer {
     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static> {
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.len(), self@.finite();
         /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
@@ -116,7 +116,7 @@ pub mod AVLTreeSetMtPer {
     // 9. impls
 
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
         {
             proof { assume(self.elements.spec_well_formed()); }
             let r = self.elements.length();

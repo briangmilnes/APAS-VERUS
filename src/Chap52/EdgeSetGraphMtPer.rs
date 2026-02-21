@@ -15,7 +15,7 @@ pub mod EdgeSetGraphMtPer {
     use crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::*;
     use crate::Types::Types::*;
 
-    const SEQUENTIAL_CUTOFF: N = 64;
+    const SEQUENTIAL_CUTOFF: usize = 1;
 
     verus! {
 

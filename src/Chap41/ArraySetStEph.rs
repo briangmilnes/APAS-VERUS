@@ -143,7 +143,7 @@ pub mod ArraySetStEph {
     pub trait ArraySetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_wf(&self) -> bool;
 
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             requires self.spec_wf()
             ensures result == self@.len(), self@.finite();
 
@@ -194,7 +194,7 @@ pub mod ArraySetStEph {
             self.elements@.no_duplicates()
         }
 
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
         {
             proof {
                 self.elements@.unique_seq_to_set();

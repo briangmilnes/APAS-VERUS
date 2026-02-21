@@ -1,0 +1,27 @@
+---
+description: Same-algorithm implementation files (StEph, MtEph, StPer) must not import specs/lemmas from each other
+globs: "src/Chap*/**/*.rs"
+alwaysApply: true
+---
+
+# Implementation Files Stand Alone
+
+Different implementations of the **same algorithm** (StEph, StPer, MtEph) must not import specs or lemmas from each other, unless the APAS textbook explicitly specifies that one builds on another.
+
+## Rule
+
+`XStEph.rs`, `XMtEph.rs`, and `XStPer.rs` are sibling implementations of algorithm X. Each must be self-contained. A student reading one file should not need to open another to understand the specs and proofs.
+
+## Scope
+
+- **In scope**: `BSTPlainStEph` must not import from `BSTPlainMtEph` or `BSTPlainStPer`; `MergeSortMtPer` must not import from `MergeSortStPer`; etc.
+- **Out of scope**: `BSTAVL` importing from `BSTPlain` when APAS presents AVL as extending plain BST — that is a different algorithm building on another, not a variant implementation.
+
+## What to do
+
+- Define spec functions and proof lemmas locally in each implementation file.
+- Duplicate shared specs across StEph/MtEph/StPer when needed.
+
+## Exception
+
+When APAS explicitly presents one algorithm as building on another (e.g., AVL extends plain BST), follow the textbook and document the dependency.
