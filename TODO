@@ -6,3 +6,6 @@
 14) Check my total order and partial orders against updates to vstd.
 15) Deep_view review.
 16) Get the derives in use where they now work.
+17) Why do we have bogus external_body views?
+18) Why do we have bogus Ex types?
+
