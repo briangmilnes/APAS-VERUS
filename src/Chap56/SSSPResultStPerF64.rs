@@ -2,7 +2,7 @@
 //!
 //! Single-Source Shortest Path Result Structure - Sequential Persistent (Float Weights)
 //!
-//! Uses `F64Dist` from vstdplus::float for distances with persistent array sequences.
+//! Uses `WrappedF64` from vstdplus::float for distances with persistent array sequences.
 
 pub mod SSSPResultStPerF64 {
 
@@ -25,7 +25,7 @@ pub mod SSSPResultStPerF64 {
     pub const NO_PREDECESSOR: usize = usize::MAX;
 
     pub struct SSSPResultStPerF64 {
-        pub distances: ArraySeqStPerS<F64Dist>,
+        pub distances: ArraySeqStPerS<WrappedF64>,
         pub predecessors: ArraySeqStPerS<usize>,
         pub source: usize,
     }
@@ -45,9 +45,9 @@ pub mod SSSPResultStPerF64 {
         fn new(n: usize, source: usize) -> (result: Self)
             requires source < n;
 
-        fn get_distance(&self, v: usize) -> (dist: F64Dist);
+        fn get_distance(&self, v: usize) -> (dist: WrappedF64);
 
-        fn set_distance(self, v: usize, dist: F64Dist) -> (result: Self);
+        fn set_distance(self, v: usize, dist: WrappedF64) -> (result: Self);
 
         fn get_predecessor(&self, v: usize) -> (result: Option<usize>);
 
@@ -69,7 +69,7 @@ pub mod SSSPResultStPerF64 {
         {
             let unreach = unreachable_dist();
             let zero = zero_dist();
-            let mut dist_vec: Vec<F64Dist> = Vec::new();
+            let mut dist_vec: Vec<WrappedF64> = Vec::new();
             let mut i: usize = 0;
             while i < n
                 invariant
@@ -90,14 +90,14 @@ pub mod SSSPResultStPerF64 {
             SSSPResultStPerF64 { distances, predecessors, source }
         }
 
-        fn get_distance(&self, v: usize) -> (dist: F64Dist) {
+        fn get_distance(&self, v: usize) -> (dist: WrappedF64) {
             if v >= self.distances.length() {
                 return unreachable_dist();
             }
             *self.distances.nth(v)
         }
 
-        fn set_distance(self, v: usize, dist: F64Dist) -> (result: Self)
+        fn set_distance(self, v: usize, dist: WrappedF64) -> (result: Self)
             ensures
                 result.predecessors@ == self.predecessors@,
                 result.source == self.source,

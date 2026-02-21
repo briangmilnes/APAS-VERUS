@@ -2,7 +2,7 @@
 //!
 //! All-Pairs Shortest Path Result Structure - Sequential Persistent (Float Weights)
 //!
-//! Uses `F64Dist` from vstdplus::float for distances with persistent array sequences.
+//! Uses `WrappedF64` from vstdplus::float for distances with persistent array sequences.
 
 pub mod AllPairsResultStPerF64 {
 
@@ -24,7 +24,7 @@ pub mod AllPairsResultStPerF64 {
     pub const NO_PREDECESSOR: usize = usize::MAX;
 
     pub struct AllPairsResultStPerF64 {
-        pub distances: ArraySeqStPerS<ArraySeqStPerS<F64Dist>>,
+        pub distances: ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,
         pub predecessors: ArraySeqStPerS<ArraySeqStPerS<usize>>,
         pub n: usize,
     }
@@ -34,9 +34,9 @@ pub mod AllPairsResultStPerF64 {
     pub trait AllPairsResultStPerF64Trait: Sized {
         fn new(n: usize) -> (result: Self);
 
-        fn get_distance(&self, u: usize, v: usize) -> (dist: F64Dist);
+        fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64);
 
-        fn set_distance(self, u: usize, v: usize, dist: F64Dist) -> (result: Self);
+        fn set_distance(self, u: usize, v: usize, dist: WrappedF64) -> (result: Self);
 
         fn get_predecessor(&self, u: usize, v: usize) -> (result: Option<usize>);
 
@@ -55,13 +55,13 @@ pub mod AllPairsResultStPerF64 {
         {
             let unreach = unreachable_dist();
             let zero = zero_dist();
-            let mut dist_rows: Vec<ArraySeqStPerS<F64Dist>> = Vec::new();
+            let mut dist_rows: Vec<ArraySeqStPerS<WrappedF64>> = Vec::new();
             let mut i: usize = 0;
             while i < n
                 invariant i <= n, dist_rows@.len() == i as int,
                 decreases n - i,
             {
-                let mut row: Vec<F64Dist> = Vec::new();
+                let mut row: Vec<WrappedF64> = Vec::new();
                 let mut j: usize = 0;
                 while j < n
                     invariant j <= n, row@.len() == j as int,
@@ -98,7 +98,7 @@ pub mod AllPairsResultStPerF64 {
             }
         }
 
-        fn get_distance(&self, u: usize, v: usize) -> (dist: F64Dist) {
+        fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64) {
             if u >= self.distances.length() {
                 return unreachable_dist();
             }
@@ -109,7 +109,7 @@ pub mod AllPairsResultStPerF64 {
             *row.nth(v)
         }
 
-        fn set_distance(self, u: usize, v: usize, dist: F64Dist) -> (result: Self)
+        fn set_distance(self, u: usize, v: usize, dist: WrappedF64) -> (result: Self)
             ensures
                 result.n == self.n,
                 result.predecessors == self.predecessors,

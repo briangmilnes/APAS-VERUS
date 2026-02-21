@@ -34,7 +34,7 @@ pub mod DijkstraStEphF64 {
 
     #[derive(Clone)]
     pub struct PQEntry {
-        pub dist: F64Dist,
+        pub dist: WrappedF64,
         pub vertex: usize,
     }
 

@@ -7,7 +7,7 @@
 pub mod PrimStEph {
 
     use vstd::prelude::*;
-    use crate::vstdplus::float::float::{F64Dist, zero_dist};
+    use crate::vstdplus::float::float::{WrappedF64, zero_dist};
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
     use crate::Types::Types::*;
@@ -29,7 +29,7 @@ pub mod PrimStEph {
     /// Priority queue entry for Prim's algorithm
     #[derive(Clone, Eq, PartialEq, Debug)]
     pub struct PQEntry<V: StT + Ord> {
-        priority: F64Dist,
+        priority: WrappedF64,
         vertex: V,
         parent: Option<V>,
     }
@@ -41,13 +41,13 @@ pub mod PrimStEph {
             /// Prim's MST algorithm
             /// APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
             fn prim_mst<V: StT + Hash + Ord>(
-                graph: &LabUnDirGraphStEph<V, F64Dist>,
+                graph: &LabUnDirGraphStEph<V, WrappedF64>,
                 start: V,
-            ) -> SetStEph<LabEdge<V, F64Dist>>;
+            ) -> SetStEph<LabEdge<V, WrappedF64>>;
 
             /// Compute total weight of MST
             /// APAS: Work O(m), Span O(1)
-            fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, F64Dist>>) -> F64Dist;
+            fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64;
         }
 
         impl<V: StT + Ord> View for PQEntry<V> {
@@ -60,7 +60,7 @@ pub mod PrimStEph {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     #[cfg(not(verus_keep_ghost))]
-    fn pq_entry_new<V: StT + Hash + Ord>(priority: F64Dist, vertex: V, parent: Option<V>) -> PQEntry<V> {
+    fn pq_entry_new<V: StT + Hash + Ord>(priority: WrappedF64, vertex: V, parent: Option<V>) -> PQEntry<V> {
         PQEntry {
             priority,
             vertex,
@@ -102,9 +102,9 @@ pub mod PrimStEph {
     ///   graph representation this would be O(m lg n) as textbook states.
     #[cfg(not(verus_keep_ghost))]
     pub fn prim_mst<V: StT + Hash + Ord + Display>(
-        graph: &LabUnDirGraphStEph<V, F64Dist>,
+        graph: &LabUnDirGraphStEph<V, WrappedF64>,
         start: &V,
-    ) -> SetStEph<LabEdge<V, F64Dist>> {
+    ) -> SetStEph<LabEdge<V, WrappedF64>> {
         let mut mst_edges = SetLit![];
         let mut visited = HashSetWithViewPlus::<V>::new();
 
@@ -156,7 +156,7 @@ pub mod PrimStEph {
     /// - APAS: (no cost stated) — utility function
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
     #[cfg(not(verus_keep_ghost))]
-    pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, F64Dist>>) -> F64Dist {
+    pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64 {
         let mut total = zero_dist();
         for edge in mst_edges.iter() {
             let LabEdge(_u, _v, w) = edge;

@@ -2,7 +2,7 @@
 //!
 //! Single-Source Shortest Path Result Structure - Sequential Ephemeral (Float Weights)
 //!
-//! Uses `F64Dist` from vstdplus::float for distances, giving Verus a View impl
+//! Uses `WrappedF64` from vstdplus::float for distances, giving Verus a View impl
 //! over f64 values stored in ArraySeq containers.
 
 pub mod SSSPResultStEphF64 {
@@ -25,7 +25,7 @@ pub mod SSSPResultStEphF64 {
     pub const NO_PREDECESSOR: usize = usize::MAX;
 
     pub struct SSSPResultStEphF64 {
-        pub distances: ArraySeqStEphS<F64Dist>,
+        pub distances: ArraySeqStEphS<WrappedF64>,
         pub predecessors: ArraySeqStEphS<usize>,
         pub source: usize,
     }
@@ -38,7 +38,7 @@ pub mod SSSPResultStEphF64 {
         {
             let unreach = unreachable_dist();
             let zero = zero_dist();
-            let mut dist_vec: Vec<F64Dist> = Vec::new();
+            let mut dist_vec: Vec<WrappedF64> = Vec::new();
             let mut i: usize = 0;
             while i < n
                 invariant
@@ -59,14 +59,14 @@ pub mod SSSPResultStEphF64 {
             SSSPResultStEphF64 { distances, predecessors, source }
         }
 
-        pub fn get_distance(&self, v: usize) -> (dist: F64Dist) {
+        pub fn get_distance(&self, v: usize) -> (dist: WrappedF64) {
             if v >= self.distances.length() {
                 return unreachable_dist();
             }
             *self.distances.nth(v)
         }
 
-        pub fn set_distance(&mut self, v: usize, dist: F64Dist) {
+        pub fn set_distance(&mut self, v: usize, dist: WrappedF64) {
             if v < self.distances.length() {
                 let _ = self.distances.set(v, dist);
             }

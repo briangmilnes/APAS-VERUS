@@ -37,8 +37,8 @@ pub mod PathWeightUtilsStPer {
 
         fn path_weight_float(
             path: &ArraySeqStPerS<usize>,
-            weights: &ArraySeqStPerS<ArraySeqStPerS<F64Dist>>,
-        ) -> Option<F64Dist>;
+            weights: &ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,
+        ) -> Option<WrappedF64>;
 
         fn validate_subpath_property_int(
             path: &ArraySeqStPerS<usize>,
@@ -48,8 +48,8 @@ pub mod PathWeightUtilsStPer {
 
         fn validate_subpath_property_float(
             path: &ArraySeqStPerS<usize>,
-            distances: &ArraySeqStPerS<F64Dist>,
-            weights: &ArraySeqStPerS<ArraySeqStPerS<F64Dist>>,
+            distances: &ArraySeqStPerS<WrappedF64>,
+            weights: &ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,
         ) -> bool;
     }
 
@@ -88,8 +88,8 @@ pub mod PathWeightUtilsStPer {
 
     pub fn path_weight_float(
         path: &ArraySeqStPerS<usize>,
-        weights: &ArraySeqStPerS<ArraySeqStPerS<F64Dist>>,
-    ) -> Option<F64Dist> {
+        weights: &ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,
+    ) -> Option<WrappedF64> {
         let k = path.length();
         if k < 2 {
             return Some(zero_dist());
@@ -160,7 +160,7 @@ pub mod PathWeightUtilsStPer {
 
     /// Checks whether two float distances are approximately equal (within epsilon).
     #[verifier::external_body]
-    fn f64_approx_eq(a: &F64Dist, b: &F64Dist) -> bool {
+    fn f64_approx_eq(a: &WrappedF64, b: &WrappedF64) -> bool {
         let diff = a.val - b.val;
         let abs_diff = if diff >= 0.0 { diff } else { -diff };
         abs_diff <= 1e-9
@@ -168,8 +168,8 @@ pub mod PathWeightUtilsStPer {
 
     pub fn validate_subpath_property_float(
         path: &ArraySeqStPerS<usize>,
-        distances: &ArraySeqStPerS<F64Dist>,
-        weights: &ArraySeqStPerS<ArraySeqStPerS<F64Dist>>,
+        distances: &ArraySeqStPerS<WrappedF64>,
+        weights: &ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,
     ) -> bool {
         let k = path.length();
         if k < 2 {

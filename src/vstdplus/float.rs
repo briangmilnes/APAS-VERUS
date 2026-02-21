@@ -207,20 +207,20 @@ pub mod float {
             #![trigger le_ensures::<f32>(a, b, true), le_ensures::<f32>(b, a, true)]
             le_ensures::<f32>(a, b, true) || le_ensures::<f32>(b, a, true);
 
-    // F64Dist: newtype wrapper giving f64 a View impl for use in ArraySeq and other
+    // WrappedF64: newtype wrapper giving f64 a View impl for use in ArraySeq and other
     // Verus containers that require View.
 
     #[derive(Clone, Copy)]
-    pub struct F64Dist {
+    pub struct WrappedF64 {
         pub val: f64,
     }
 
-    impl View for F64Dist {
+    impl View for WrappedF64 {
         type V = f64;
         open spec fn view(&self) -> f64 { self.val }
     }
 
-    impl F64Dist {
+    impl WrappedF64 {
         pub open spec fn spec_is_finite(&self) -> bool {
             self.val.is_finite_spec()
         }
@@ -259,14 +259,14 @@ pub mod float {
         pub fn dist_add(&self, other: &Self) -> (r: Self)
             ensures r@ == f64_add_spec(self@, other@)
         {
-            F64Dist { val: self.val + other.val }
+            WrappedF64 { val: self.val + other.val }
         }
 
         #[verifier::external_body]
         pub fn dist_sub(&self, other: &Self) -> (r: Self)
             ensures r@ == f64_sub_spec(self@, other@)
         {
-            F64Dist { val: self.val - other.val }
+            WrappedF64 { val: self.val - other.val }
         }
     }
 
@@ -290,27 +290,27 @@ pub mod float {
         ensures #[trigger] UNREACHABLE_SPEC().is_finite_spec() == false;
 
     #[verifier::external_body]
-    pub fn unreachable_dist() -> (d: F64Dist)
+    pub fn unreachable_dist() -> (d: WrappedF64)
         ensures d@ == UNREACHABLE_SPEC(),
                 !d.spec_is_finite(),
     {
-        F64Dist { val: f64::INFINITY }
+        WrappedF64 { val: f64::INFINITY }
     }
 
     #[verifier::external_body]
-    pub fn zero_dist() -> (d: F64Dist)
+    pub fn zero_dist() -> (d: WrappedF64)
         ensures d.spec_is_finite(),
                 d@ == 0.0f64,
     {
-        F64Dist { val: 0.0 }
+        WrappedF64 { val: 0.0 }
     }
 
-    pub fn finite_dist(v: f64) -> (d: F64Dist)
+    pub fn finite_dist(v: f64) -> (d: WrappedF64)
         requires v.is_finite_spec(),
         ensures d.spec_is_finite(),
                 d@ == v,
     {
-        F64Dist { val: v }
+        WrappedF64 { val: v }
     }
 
     // Uninterpreted spec functions for f64 arithmetic (Verus has no spec_add for f64).
@@ -369,50 +369,50 @@ pub mod float {
 
     } // verus!
 
-    impl std::fmt::Debug for F64Dist {
+    impl std::fmt::Debug for WrappedF64 {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "F64Dist({})", self.val)
+            write!(f, "WrappedF64({})", self.val)
         }
     }
 
-    impl std::fmt::Display for F64Dist {
+    impl std::fmt::Display for WrappedF64 {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "{}", self.val)
         }
     }
 
-    impl PartialEq for F64Dist {
+    impl PartialEq for WrappedF64 {
         fn eq(&self, other: &Self) -> bool { self.val == other.val }
     }
 
-    impl Eq for F64Dist {}
+    impl Eq for WrappedF64 {}
 
-    impl std::hash::Hash for F64Dist {
+    impl std::hash::Hash for WrappedF64 {
         fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
             self.val.to_bits().hash(state);
         }
     }
 
-    impl PartialOrd for F64Dist {
+    impl PartialOrd for WrappedF64 {
         fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
             self.val.partial_cmp(&other.val)
         }
     }
 
-    impl Ord for F64Dist {
+    impl Ord for WrappedF64 {
         fn cmp(&self, other: &Self) -> std::cmp::Ordering {
             self.val.partial_cmp(&other.val).unwrap_or(std::cmp::Ordering::Equal)
         }
     }
 
-    impl core::ops::Add for F64Dist {
+    impl core::ops::Add for WrappedF64 {
         type Output = Self;
         fn add(self, rhs: Self) -> Self {
-            F64Dist { val: self.val + rhs.val }
+            WrappedF64 { val: self.val + rhs.val }
         }
     }
 
-    impl core::ops::AddAssign for F64Dist {
+    impl core::ops::AddAssign for WrappedF64 {
         fn add_assign(&mut self, rhs: Self) {
             self.val += rhs.val;
         }
