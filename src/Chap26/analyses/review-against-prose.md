@@ -8,8 +8,8 @@ table { width: 100% !important; table-layout: fixed; }
 # Chapter 26 — Divide and Conquer: Review Against Prose
 
 **Reviewer:** Claude-Opus-4.6 (agent2)  
-**Date:** 2026-02-17  
-**Last mechanical audit:** 2026-02-19 — return variable renames, IntoIterator additions, eq→equal/clone→cloned renames; no functional changes.
+**Date:** 2026-02-19
+**Last mechanical audit:** 2026-02-19 — full review regeneration; proof holes log updated.
 **Source:** `prompts/Chap26.txt` vs `src/Chap26/`
 
 ---

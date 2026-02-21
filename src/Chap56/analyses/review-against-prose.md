@@ -7,26 +7,26 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 56 — Shortest Paths (Introduction): Review Against Prose
 
-**Date:** 2026-02-18
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 1: Inventory
 
 | # | File | exec fns | external_body | spec fns | proof fns | View | verus! | Trait Wired |
 |---|------|:--------:|:-------------:|:--------:|:---------:|:----:|:------:|:-----------:|
-| 1 | SSSPResultStEphI64.rs | 7 | 1 | 0 | 0 | Yes | Yes | Yes |
-| 2 | SSSPResultStPerI64.rs | 7 | 3 | 0 | 0 | Yes | Yes | Yes |
-| 3 | SSSPResultStEphFloat.rs | 7 | 5 | 2 | 1 | Yes | Yes | No (bare impl) |
-| 4 | SSSPResultStPerFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes | Yes |
+| 1 | SSSPResultStEphI64.rs | 7 | 0 | 0 | 0 | Yes | Yes | Yes |
+| 2 | SSSPResultStPerI64.rs | 7 | 0 | 0 | 0 | Yes | Yes | Yes |
+| 3 | SSSPResultStEphF64.rs | 7 | 0 | 2 | 1 | Yes | Yes | Yes |
+| 4 | SSSPResultStPerF64.rs | 7 | 0 | 0 | 0 | Yes | Yes | Yes |
 | 5 | AllPairsResultStEphI64.rs | 7 | 2 | 0 | 0 | Yes | Yes | Yes |
 | 6 | AllPairsResultStPerI64.rs | 7 | 4 | 0 | 0 | Yes | Yes | Yes |
-| 7 | AllPairsResultStEphFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes | Yes |
-| 8 | AllPairsResultStPerFloat.rs | 7 | 7 | 0 | 0 | Yes | Yes | Yes |
+| 7 | AllPairsResultStEphF64.rs | 7 | 0 | 0 | 0 | Yes | Yes | Yes |
+| 8 | AllPairsResultStPerF64.rs | 7 | 0 | 0 | 0 | Yes | Yes | Yes |
 | 9 | PathWeightUtilsStEph.rs | 4 | 4 | 0 | 0 | No | Yes | N/A (free fns) |
 | 10 | PathWeightUtilsStPer.rs | 4 | 4 | 0 | 0 | No | Yes | N/A (free fns) |
 | 11 | Example56_1.rs | 3 | 3 | 0 | 0 | No | Yes | N/A |
 | 12 | Example56_3.rs | 2 | 2 | 0 | 0 | No | Yes | N/A |
-| | **Total** | **69** | **49** | **2** | **1** | | | |
+| | **Total** | **69** | **7** | **2** | **1** | | | |
 
 **Changes since last review:**
 - **File renames:** All `*Int.rs` → `*I64.rs` (SSSPResultStEphInt→SSSPResultStEphI64, SSSPResultStPerInt→SSSPResultStPerI64, AllPairsResultStEphInt→AllPairsResultStEphI64, AllPairsResultStPerInt→AllPairsResultStPerI64).
@@ -36,7 +36,7 @@ table { width: 100% !important; table-layout: fixed; }
 - **Tests:** All 12 files now have runtime tests (TestSSSPResultStEphI64, TestSSSPResultStPerI64, TestSSSPResultStEphFloat, TestSSSPResultStPerFloat, TestAllPairsResultStEphI64, TestAllPairsResultStPerI64, TestAllPairsResultStEphFloat, TestAllPairsResultStPerFloat, TestPathWeightUtilsStEph, TestPathWeightUtilsStPer, TestExample56_1, TestExample56_3).
 - **Total external_body:** 49 (down from 69 at initial review; was 53 at previous review).
 
-**Gating:** Chap56: `#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]`. SSSPResultStEphI64, SSSPResultStPerI64, AllPairsResultStEphI64, AllPairsResultStPerI64, SSSPResultStEphFloat are **not** behind `all_chapters`. PathWeightUtilsStEph, PathWeightUtilsStPer, SSSPResultStPerFloat, AllPairsResultStEphFloat, AllPairsResultStPerFloat, Example56_1, Example56_3 are behind `#[cfg(feature = "all_chapters")]`.
+**Gating:** Chap56: `#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]`. SSSPResultStEphI64, SSSPResultStPerI64, AllPairsResultStEphI64, AllPairsResultStPerI64, SSSPResultStEphF64 are **not** behind `all_chapters`. PathWeightUtilsStEph, PathWeightUtilsStPer, SSSPResultStPerF64, AllPairsResultStEphF64, AllPairsResultStPerF64, Example56_1, Example56_3 are behind `#[cfg(feature = "all_chapters")]`.
 
 **Verus verification:** 1661 verified, 0 errors (full build). SSSPResultStEphFloat.rs verifies with 0 errors.
 
@@ -205,12 +205,12 @@ All files have TOC comment blocks and section headers.
 |---|------|:-----:|:------------:|:-------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
 | 1 | SSSPResultStEphI64 | - | - | - | - | - | - | - | - | - |
 | 2 | SSSPResultStPerI64 | - | - | - | - | - | - | - | - | - |
-| 3 | SSSPResultStEphFloat | ✅ in (F64Dist) | ✅ out (F64Dist) | - | - | - | ✅ out (F64Dist) | - | - | - |
-| 4 | SSSPResultStPerFloat | - | - | - | - | - | - | - | - | - |
+| 3 | SSSPResultStEphF64 | ✅ in (F64Dist) | ✅ out (F64Dist) | - | - | - | ✅ out (F64Dist) | - | - | - |
+| 4 | SSSPResultStPerF64 | - | - | - | - | - | - | - | - | - |
 | 5 | AllPairsResultStEphI64 | - | - | - | - | - | - | - | - | - |
 | 6 | AllPairsResultStPerI64 | - | - | - | - | - | - | - | - | - |
-| 7 | AllPairsResultStEphFloat | - | - | - | - | - | - | - | - | - |
-| 8 | AllPairsResultStPerFloat | - | - | - | - | - | - | - | - | - |
+| 7 | AllPairsResultStEphF64 | - | - | - | - | - | - | - | - | - |
+| 8 | AllPairsResultStPerF64 | - | - | - | - | - | - | - | - | - |
 | 9 | PathWeightUtilsStEph | - | - | - | - | - | - | - | - | - |
 | 10 | PathWeightUtilsStPer | - | - | - | - | - | - | - | - | - |
 | 11 | Example56_1 | - | - | - | - | - | - | - | - | - |
@@ -220,28 +220,27 @@ SSSPResultStEphFloat has F64Dist with Clone (in verus!), PartialEq and Debug (ou
 
 ## Proof Holes Summary
 
-**Last verified:** 2026-02-18 (`veracity-review-proof-holes`)
+**Last verified:** 2026-02-19 (`veracity-review-proof-holes`)
 
 ```
-Modules: 0 clean, 12 holed
-Proof Functions: 1 clean, 0 holed
-Holes Found: 49 total (all external_body)
+✓ AllPairsResultStEphF64.rs
+✓ AllPairsResultStEphI64.rs
+✓ AllPairsResultStPerF64.rs
+✓ AllPairsResultStPerI64.rs
+❌ Example56_1.rs (3 × external_body)
+❌ Example56_3.rs (2 × external_body)
+❌ PathWeightUtilsStEph.rs (1 × external_body — f64_approx_eq)
+❌ PathWeightUtilsStPer.rs (1 × external_body — f64_approx_eq)
+✓ SSSPResultStEphF64.rs
+✓ SSSPResultStEphI64.rs
+✓ SSSPResultStPerF64.rs
+✓ SSSPResultStPerI64.rs
 
-AllPairsResultStEphFloat.rs:     7 × external_body
-AllPairsResultStEphI64.rs:       2 × external_body
-AllPairsResultStPerFloat.rs:     7 × external_body
-AllPairsResultStPerI64.rs:       4 × external_body
-Example56_1.rs:                  3 × external_body
-Example56_3.rs:                  2 × external_body
-PathWeightUtilsStEph.rs:         4 × external_body
-PathWeightUtilsStPer.rs:         4 × external_body
-SSSPResultStEphFloat.rs:         5 × external_body, 1 clean proof fn
-SSSPResultStEphI64.rs:           1 × external_body
-SSSPResultStPerFloat.rs:         7 × external_body
-SSSPResultStPerI64.rs:           3 × external_body
+Modules: 8 clean, 4 holed
+Holes Found: 7 total (7 × external_body)
 ```
 
-**Changes since last review (2026-02-18):** Total holes decreased from 53 to 49 (−4). SSSPResultStEphI64: 4→1 external_body (3 functions verified). SSSPResultStEphFloat: 6→5 external_body (1 function verified). Example56_1, Example56_3, PathWeightUtilsStEph, and PathWeightUtilsStPer source files also changed but their hole counts are unchanged.
+**Changes since last review (2026-02-19):** F64Ord migration complete. Float→F64 file renames. AllPairsResultStEphF64, AllPairsResultStPerF64, SSSPResultStEphF64, SSSPResultStPerF64 are now clean. Remaining holes: Example56_1 (3), Example56_3 (2), PathWeightUtilsStEph/StPer (1 each, f64_approx_eq).
 
 ## Action Items
 

@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 38 — Parametric BSTs: Review Against Prose
 
-**Date:** 2026-02-18
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 **Prose source:** `prompts/Chap38.txt`
 **Source files:** `src/Chap38/BSTParaStEph.rs`, `src/Chap38/BSTParaMtEph.rs`

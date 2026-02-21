@@ -7,8 +7,8 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 64: Minimum Spanning Trees — Review Against Prose
 
-**Date:** 2026-02-13 (updated 2026-02-18: verusification — traits inside verus!, impls cfg-gated)
-**Last mechanical audit:** 2026-02-19 — proof holes log regenerated; 0 holes unchanged.
+**Date:** 2026-02-19
+**Last mechanical audit:** 2026-02-19 — proof holes log regenerated; 0 holes. SpanTreeMtEph has 4 errors (dummy RwLockPredicate, verus_rwlock_external_body).
 **Reviewer:** Claude-Opus-4.6
 **Source:** `prompts/Chap64.txt` (APAS Part XVII, Chapter 64)
 
@@ -235,18 +235,19 @@ No derive impls in any Chap64 file. No action items.
 
 ## Proof Holes Summary
 
-**Last verified:** 2026-02-18 (`veracity-review-proof-holes`)
+**Last verified:** 2026-02-19 (`veracity-review-proof-holes`)
 
 ```
-✓ SpanTreeMtEph.rs
+❌ SpanTreeMtEph.rs (4 errors: dummy RwLockPredicate ×2, verus_rwlock_external_body ×2)
 ✓ SpanTreeStEph.rs
 ✓ TSPApproxStEph.rs
 
-Modules: 3 clean, 0 holed
-Holes Found: 0
+Modules: 3 clean (no holes), 0 holed
+Holes Found: 0 total
+Errors: 4 (bare impl(s), struct/enum outside verus!)
 ```
 
-**0 proof holes** — trivially clean because no proof obligations exist. The `verus!` blocks contain only trait definitions. SpanTreeMtEph.rs, SpanTreeStEph.rs, and TSPApproxStEph.rs were all updated 2026-02-18; hole count remains 0.
+**0 proof holes** — trivially clean because no proof obligations exist. SpanTreeMtEph has 4 style errors (RwLockPredicate inv returning true; Verus RwLock new external_body). TSPApproxStEph migrated to F64Ord.
 
 ## Spec Strength Summary
 

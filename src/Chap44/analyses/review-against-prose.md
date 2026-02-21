@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 44: Document Index — Review Against Prose
 
-**Date:** 2026-02-18
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 **Prose source:** `prompts/Chap44.txt` (Data Type 44.1, Algorithms 44.2–44.3, Examples 44.1–44.2)
 

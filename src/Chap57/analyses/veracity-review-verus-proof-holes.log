@@ -1,10 +1,13 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap57
-
 ❌ DijkstraStEphF64.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphF64.rs:1: error: not_verusified - File has no verus! block — not verusified.
-         2 | //!
-         3 | //! Dijkstra's Algorithm - Single Source Shortest Path (SSSP+) for non-negative float edge weights
-   Errors: 1 total (1 not verusified)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphF64.rs:36: error: struct_outside_verus - struct PQEntry — should be inside verus!
+        36 |     pub struct PQEntry {
+        37 |         pub dist: F64Dist,
+        38 |         pub vertex: usize,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphF64.rs:36: error: clone_derived_outside - struct PQEntry — Clone should be implemented inside verus!, not derived outside
+        36 |     pub struct PQEntry {
+        37 |         pub dist: F64Dist,
+        38 |         pub vertex: usize,
+   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
 ❌ DijkstraStEphI64.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphI64.rs:99: external_body - #[verifier::external_body]
        100 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64 {
@@ -29,4 +32,8 @@ Proof Functions:
 Holes Found: 1 total
    1 × external_body
 
-Errors: 1 (bare impl(s), struct/enum outside verus!)
+Errors: 2 (bare impl(s), struct/enum outside verus!)
+ Found: 1 total
+   1 × external_body
+
+Errors: 2 (bare impl(s), struct/enum outside verus!)

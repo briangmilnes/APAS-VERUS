@@ -7,7 +7,7 @@
 pub mod KruskalStEph {
 
     use vstd::prelude::*;
-    use ordered_float::OrderedFloat;
+    use crate::vstdplus::float::float::{F64Ord, f64_ord};
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
     use crate::Types::Types::*;
@@ -17,25 +17,25 @@ pub mod KruskalStEph {
     #[cfg(not(verus_keep_ghost))]
     use crate::SetLit;
 
-    pub type T<V> = LabUnDirGraphStEph<V, OrderedFloat<f64>>;
+    pub type T<V> = LabUnDirGraphStEph<V, F64Ord>;
 
     verus! {
         pub trait KruskalStEphTrait {
             /// Kruskal's MST algorithm
             /// APAS: Work O(m log m), Span O(m log m) where m = |E|
             fn kruskal_mst<V: StT + Hash + Ord>(
-                graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
-            ) -> SetStEph<LabEdge<V, OrderedFloat<f64>>>;
+                graph: &LabUnDirGraphStEph<V, F64Ord>,
+            ) -> SetStEph<LabEdge<V, F64Ord>>;
 
             /// Compute total weight of MST
             /// APAS: Work O(m), Span O(1)
-            fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, OrderedFloat<f64>>>) -> OrderedFloat<f64>;
+            fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, F64Ord>>) -> F64Ord;
 
             /// Verify MST has correct size
             /// APAS: Work O(1), Span O(1)
             fn verify_mst_size<V: StT + Hash + Ord>(
-                graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
-                mst: &SetStEph<LabEdge<V, OrderedFloat<f64>>>,
+                graph: &LabUnDirGraphStEph<V, F64Ord>,
+                mst: &SetStEph<LabEdge<V, F64Ord>>,
             ) -> B;
         }
     }
@@ -55,8 +55,8 @@ pub mod KruskalStEph {
     /// - Claude-Opus-4.6: Work O(m lg m), Span O(m lg m) — sorting dominates; sequential
     #[cfg(not(verus_keep_ghost))]
     pub fn kruskal_mst<V: StT + Hash + Ord>(
-        graph: &LabUnDirGraphStEph<V, OrderedFloat<f64>>,
-    ) -> SetStEph<LabEdge<V, OrderedFloat<f64>>> {
+        graph: &LabUnDirGraphStEph<V, F64Ord>,
+    ) -> SetStEph<LabEdge<V, F64Ord>> {
         let mut mst_edges = SetLit![];
 
         // Initialize Union-Find with all vertices
@@ -66,7 +66,7 @@ pub mod KruskalStEph {
         }
 
         // Sort edges by weight
-        let mut edges_vec = graph.labeled_edges().iter().cloned().collect::<Vec<LabEdge<V, OrderedFloat<f64>>>>();
+        let mut edges_vec = graph.labeled_edges().iter().cloned().collect::<Vec<LabEdge<V, F64Ord>>>();
         edges_vec.sort_by(|e1, e2| {
             let LabEdge(_u1, _v1, w1) = e1;
             let LabEdge(_u2, _v2, w2) = e2;
@@ -94,8 +94,8 @@ pub mod KruskalStEph {
     /// - APAS: (no cost stated) — utility function
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
     #[cfg(not(verus_keep_ghost))]
-    pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, OrderedFloat<f64>>>) -> OrderedFloat<f64> {
-        let mut total = OrderedFloat(0.0);
+    pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, F64Ord>>) -> F64Ord {
+        let mut total = f64_ord(0.0);
         for edge in mst_edges.iter() {
             let LabEdge(_u, _v, w) = edge;
             total += *w;
@@ -110,7 +110,7 @@ pub mod KruskalStEph {
     #[cfg(not(verus_keep_ghost))]
     pub fn verify_mst_size<V: StT + Hash + Ord>(
         n_vertices: N,
-        mst_edges: &SetStEph<LabEdge<V, OrderedFloat<f64>>>,
+        mst_edges: &SetStEph<LabEdge<V, F64Ord>>,
     ) -> B {
         let expected_edges = if n_vertices > 0 { n_vertices - 1 } else { 0 };
         mst_edges.size() == expected_edges

@@ -1,22 +1,20 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap66
-
 ❌ BoruvkaMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:30: error: struct_outside_verus - struct LabeledEdge — should be inside verus!
-        30 |     pub struct LabeledEdge<V>(pub V, pub V, pub OrderedFloat<f64>, pub usize);
+        30 |     pub struct LabeledEdge<V>(pub V, pub V, pub F64Ord, pub usize);
         31 | 
         32 |     verus! {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:30: error: clone_derived_outside - struct LabeledEdge — Clone should be implemented inside verus!, not derived outside
-        30 |     pub struct LabeledEdge<V>(pub V, pub V, pub OrderedFloat<f64>, pub usize);
+        30 |     pub struct LabeledEdge<V>(pub V, pub V, pub F64Ord, pub usize);
         31 | 
         32 |     verus! {
    Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
 ❌ BoruvkaStEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaStEph.rs:29: error: struct_outside_verus - struct LabeledEdge — should be inside verus!
-        29 |     pub struct LabeledEdge<V>(pub V, pub V, pub OrderedFloat<f64>, pub usize);
+        29 |     pub struct LabeledEdge<V>(pub V, pub V, pub F64Ord, pub usize);
         30 | 
         31 |     verus! {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaStEph.rs:29: error: clone_derived_outside - struct LabeledEdge — Clone should be implemented inside verus!, not derived outside
-        29 |     pub struct LabeledEdge<V>(pub V, pub V, pub OrderedFloat<f64>, pub usize);
+        29 |     pub struct LabeledEdge<V>(pub V, pub V, pub F64Ord, pub usize);
         30 | 
         31 |     verus! {
    Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
@@ -29,6 +27,18 @@ Modules:
    2 clean (no holes)
    0 holed (contains holes)
    2 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 0 total
+
+Errors: 4 (bare impl(s), struct/enum outside verus!)
+
+🎉 No proof holes found! All proofs are complete.
+  2 total
 
 Proof Functions:
    0 clean

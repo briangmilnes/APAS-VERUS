@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 66: Parallel MST Algorithms (Boruvka) — Review Against Prose
 
-**Date:** 2026-02-13 (updated 2026-02-18: verusification — traits inside verus!, impls cfg-gated)
+**Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 1: Inventory (tool-generated)
@@ -226,17 +226,18 @@ Note: `Clone`, `PartialEq`, `Eq`, `PartialOrd`, `Ord`, `Hash`, `Debug`, and `Cop
 
 ## Proof Holes Summary
 
-**Last verified:** 2026-02-18 (`veracity-review-proof-holes`)
+**Last verified:** 2026-02-19 (`veracity-review-proof-holes`)
 
 ```
-✓ BoruvkaMtEph.rs
-✓ BoruvkaStEph.rs
+❌ BoruvkaMtEph.rs (2 errors: LabeledEdge struct outside verus!, Clone derived outside)
+❌ BoruvkaStEph.rs (2 errors: LabeledEdge struct outside verus!, Clone derived outside)
 
-Modules: 2 clean, 0 holed
-Holes Found: 0
+Modules: 2 clean (no holes), 0 holed
+Holes Found: 0 total
+Errors: 4 (struct/enum outside verus!, Clone derived outside)
 ```
 
-No proof holes — but this is because implementations are behind `#[cfg(not(verus_keep_ghost))]` and not verified, not because proofs are complete. BoruvkaStEph.rs was updated 2026-02-18; hole count remains 0.
+**0 proof holes.** Both modules have style errors (LabeledEdge struct outside verus!, Clone derived outside). F64Ord migration complete. Implementations are behind `#[cfg(not(verus_keep_ghost))]` and not verified.
 
 ## Spec Strength Summary
 

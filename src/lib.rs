@@ -619,8 +619,8 @@ pub mod Chap56 {
     pub mod SSSPResultStPerF64;
     pub mod AllPairsResultStEphF64;
     pub mod AllPairsResultStPerF64;
-    // pub mod Example56_1;  // uses ordered_float (removed)
-    // pub mod Example56_3;  // uses ordered_float (removed)
+    // pub mod Example56_1;  // uses vstdplus float (F64Dist)
+    // pub mod Example56_3;  // i64 only
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
@@ -670,18 +670,18 @@ pub mod Chap63 {
 pub mod Chap64 {
     pub mod SpanTreeStEph;
     pub mod SpanTreeMtEph;
-    // pub mod TSPApproxStEph;  // uses ordered_float (removed)
+    // pub mod TSPApproxStEph;  // migrated to F64Ord
 }
 
 #[cfg(feature = "all_chapters")]
 pub mod Chap65 {
     pub mod UnionFindStEph;
-    // pub mod KruskalStEph;  // uses ordered_float (removed)
-    // pub mod PrimStEph;  // uses ordered_float (removed)
+    // pub mod KruskalStEph;  // migrated to F64Ord
+    // pub mod PrimStEph;  // migrated to F64Ord
 }
 
 #[cfg(feature = "all_chapters")]
 pub mod Chap66 {
-    // pub mod BoruvkaStEph;  // uses rand + ordered_float (removed)
-    // pub mod BoruvkaMtEph;  // uses rand + ordered_float (removed)
+    // pub mod BoruvkaStEph;  // migrated to F64Ord
+    // pub mod BoruvkaMtEph;  // migrated to F64Ord
 }

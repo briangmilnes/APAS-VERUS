@@ -1,15 +1,16 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap47
-
 ❌ ChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:30: error: struct_outside_verus - struct ChainEntry — should be inside verus!
-        30 |     pub struct ChainEntry<Key, Value, Container> {
-        31 |         pub chain: Container,
-        32 |         pub _phantom: PhantomData<(Key, Value)>,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:30: error: clone_derived_outside - struct ChainEntry — Clone should be implemented inside verus!, not derived outside
-        30 |     pub struct ChainEntry<Key, Value, Container> {
-        31 |         pub chain: Container,
-        32 |         pub _phantom: PhantomData<(Key, Value)>,
-   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:43: external_body - #[verifier::external_body]
+        44 |             fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:56: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        52 |             fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        54 |             {
+        55 |                 let r = self.chain == other.chain;
+        57 |                 r
+        58 |             }
+   Holes: 1 total
+      1 × external_body
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Proof functions: 1 total (1 clean, 0 holed)
 ✓ DoubleHashFlatHashTableStEph.rs
 ✓ FlatHashTable.rs
@@ -64,8 +65,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   9 clean (no holes)
-   0 holed (contains holes)
+   8 clean (no holes)
+   1 holed (contains holes)
    9 total
 
 Proof Functions:
@@ -73,8 +74,11 @@ Proof Functions:
    0 holed
    4 total
 
-Holes Found: 0 total
+Holes Found: 1 total
+   1 × external_body
 
-Errors: 10 (bare impl(s), struct/enum outside verus!)
+Errors: 9 (bare impl(s), struct/enum outside verus!)
+ Found: 1 total
+   1 × external_body
 
-🎉 No proof holes found! All proofs are complete.
+Errors: 9 (bare impl(s), struct/enum outside verus!)
