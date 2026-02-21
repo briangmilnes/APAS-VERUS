@@ -107,7 +107,7 @@ pub mod AugOrderedTableMtEph {
     /// Trait defining all augmented ordered table operations (ADT 43.3) with multi-threaded ephemeral semantics
     /// Extends ordered table operations with efficient reduction and thread-safe operations
     pub trait AugOrderedTableMtEphTrait<K: MtKey, V: MtVal, F: MtReduceFn<V>>: Sized + View<V = Map<K::V, V::V>> {
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.dom().len(), self@.dom().finite();
         fn empty(reducer: F, identity: V) -> (result: Self)
             ensures result@ == Map::<K::V, V::V>::empty();
@@ -163,11 +163,11 @@ pub mod AugOrderedTableMtEph {
             ensures self@.dom().finite();
         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
             ensures result@.dom().finite();
-        fn rank_key(&self, k: &K) -> (result: N)
+        fn rank_key(&self, k: &K) -> (result: usize)
             ensures self@.dom().finite();
-        fn select_key(&self, i: N) -> (result: Option<K>)
+        fn select_key(&self, i: usize) -> (result: Option<K>)
             ensures self@.dom().finite();
-        fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
+        fn split_rank_key(&mut self, i: usize) -> (result: (Self, Self))
             where Self: Sized,
             ensures self@.dom().finite();
         fn reduce_val(&self) -> (result: V)
@@ -181,7 +181,7 @@ pub mod AugOrderedTableMtEph {
     // 9. impls
 
     impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> AugOrderedTableMtEphTrait<K, V, F> for AugOrderedTableMtEph<K, V, F> {
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.dom().len(), self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
@@ -454,21 +454,21 @@ pub mod AugOrderedTableMtEph {
             r
         }
 
-        fn rank_key(&self, k: &K) -> (result: N)
+        fn rank_key(&self, k: &K) -> (result: usize)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.rank_key(k)
         }
 
-        fn select_key(&self, i: N) -> (result: Option<K>)
+        fn select_key(&self, i: usize) -> (result: Option<K>)
             ensures self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
             self.base_table.select_key(i)
         }
 
-        fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
+        fn split_rank_key(&mut self, i: usize) -> (result: (Self, Self))
             ensures self@.dom().finite()
         {
             let (left_base, right_base) = self.base_table.split_rank_key(i);

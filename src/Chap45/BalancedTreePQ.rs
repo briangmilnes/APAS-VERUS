@@ -49,7 +49,7 @@ pub mod BalancedTreePQ {
         /// Creates priority queue from sequence using balanced tree construction
         fn from_seq(seq: &AVLTreeSeqStPerS<T>)               -> Self;
 
-        fn size(&self)                                       -> N;
+        fn size(&self)                                       -> usize;
         fn is_empty(&self)                                   -> bool;
         fn to_seq(&self)                                     -> AVLTreeSeqStPerS<T>;
         fn find_max(&self)                                   -> Option<&T>;
@@ -67,7 +67,7 @@ pub mod BalancedTreePQ {
         fn to_vec(&self)                                     -> Vec<T>;
         fn to_sorted_vec(&self)                              -> Vec<T>;
         fn is_sorted(&self)                                  -> bool;
-        fn height(&self)                                     -> N;
+        fn height(&self)                                     -> usize;
         fn split(&self, element: &T)                         -> (Self, bool, Self)
         where
             Self: Sized;
@@ -190,7 +190,7 @@ pub mod BalancedTreePQ {
 
         /// - APAS: N/A — utility function not in prose.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
-        fn size(&self) -> N { self.elements.length() }
+        fn size(&self) -> usize { self.elements.length() }
 
         /// - APAS: N/A — utility function not in prose.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
@@ -316,11 +316,11 @@ pub mod BalancedTreePQ {
             true
         }
 
-        fn height(&self) -> N {
+        fn height(&self) -> usize {
             if self.elements.length() == 0 {
                 0
             } else {
-                ((self.elements.length() as f64).log2().ceil() as N).max(1)
+                ((self.elements.length() as f64).log2().ceil() as usize).max(1)
             }
         }
 

@@ -49,7 +49,7 @@ pub mod OrderedTableMtEph {
 
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1 for keys) with multi-threaded ephemeral semantics
     pub trait OrderedTableMtEphTrait<K: MtKey, V: MtVal>: Sized + View<V = Map<K::V, V::V>> {
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.dom().len(), self@.dom().finite();
 
         fn empty() -> (result: Self)
@@ -126,13 +126,13 @@ pub mod OrderedTableMtEph {
         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
             ensures result@.dom().finite();
 
-        fn rank_key(&self, k: &K) -> (result: N)
+        fn rank_key(&self, k: &K) -> (result: usize)
             ensures self@.dom().finite();
 
-        fn select_key(&self, i: N) -> (result: Option<K>)
+        fn select_key(&self, i: usize) -> (result: Option<K>)
             ensures self@.dom().finite();
 
-        fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
+        fn split_rank_key(&mut self, i: usize) -> (result: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite();
     }
@@ -140,7 +140,7 @@ pub mod OrderedTableMtEph {
     // 9. impls
 
     impl<K: MtKey, V: MtVal> OrderedTableMtEphTrait<K, V> for OrderedTableMtEph<K, V> {
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.dom().len(), self@.dom().finite()
         {
             let r = self.base_table.size();
@@ -426,7 +426,7 @@ pub mod OrderedTableMtEph {
         }
 
         #[verifier::external_body]
-        fn rank_key(&self, k: &K) -> (result: N)
+        fn rank_key(&self, k: &K) -> (result: usize)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
@@ -445,7 +445,7 @@ pub mod OrderedTableMtEph {
         }
 
         #[verifier::external_body]
-        fn select_key(&self, i: N) -> (result: Option<K>)
+        fn select_key(&self, i: usize) -> (result: Option<K>)
             ensures self@.dom().finite()
         {
             let entries = self.collect();
@@ -457,7 +457,7 @@ pub mod OrderedTableMtEph {
         }
 
         #[verifier::external_body]
-        fn split_rank_key(&mut self, i: N) -> (result: (Self, Self))
+        fn split_rank_key(&mut self, i: usize) -> (result: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite()
         {

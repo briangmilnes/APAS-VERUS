@@ -48,7 +48,7 @@ pub mod UnsortedListPQ {
         /// Creates priority queue from sequence
         fn from_seq(seq: &ArraySeqStPerS<T>)               -> Self;
 
-        fn size(&self)                                     -> N;
+        fn size(&self)                                     -> usize;
         fn is_empty(&self)                                 -> bool;
         fn to_seq(&self)                                   -> ArraySeqStPerS<T>;
         fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self;
@@ -149,7 +149,7 @@ pub mod UnsortedListPQ {
 
         /// - APAS: N/A — utility function not in prose.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
-        fn size(&self) -> N { self.elements.length() }
+        fn size(&self) -> usize { self.elements.length() }
 
         /// - APAS: N/A — utility function not in prose.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).

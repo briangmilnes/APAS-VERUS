@@ -44,7 +44,7 @@ pub mod OrderedSetMtEph {
     pub trait OrderedSetMtEphTrait<T: MtKey + 'static>: Sized + View<V = Set<<T as View>::V>> {
         // Base set operations (ADT 41.1) - ephemeral semantics with parallelism
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.len(), self@.finite();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (result: Self)
@@ -104,13 +104,13 @@ pub mod OrderedSetMtEph {
         fn get_range(&self, k1: &T, k2: &T) -> (result: Self)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn rank(&self, k: &T) -> (result: N)
+        fn rank(&self, k: &T) -> (result: usize)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn select(&self, i: N) -> (result: Option<T>)
+        fn select(&self, i: usize) -> (result: Option<T>)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
-        fn split_rank(&mut self, i: N) -> (result: (Self, Self))
+        fn split_rank(&mut self, i: usize) -> (result: (Self, Self))
             where Self: Sized
             ensures self@.finite();
     }
@@ -119,7 +119,7 @@ pub mod OrderedSetMtEph {
 
     impl<T: MtKey + 'static> OrderedSetMtEphTrait<T> for OrderedSetMtEph<T> {
         #[verifier::external_body]
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.len(), self@.finite()
         { self.tree.size() }
 
@@ -337,7 +337,7 @@ pub mod OrderedSetMtEph {
         }
 
         #[verifier::external_body]
-        fn rank(&self, k: &T) -> (result: N)
+        fn rank(&self, k: &T) -> (result: usize)
             ensures self@.finite()
         {
             let (left, _found, _right) = self.tree.split(k);
@@ -345,7 +345,7 @@ pub mod OrderedSetMtEph {
         }
 
         #[verifier::external_body]
-        fn select(&self, i: N) -> (result: Option<T>)
+        fn select(&self, i: usize) -> (result: Option<T>)
             ensures self@.finite()
         {
             let seq = self.tree.in_order();
@@ -357,7 +357,7 @@ pub mod OrderedSetMtEph {
         }
 
         #[verifier::external_body]
-        fn split_rank(&mut self, i: N) -> (result: (Self, Self))
+        fn split_rank(&mut self, i: usize) -> (result: (Self, Self))
             where Self: Sized
             ensures self@.finite()
         {

@@ -39,7 +39,7 @@ pub mod DoubleHashFlatHashTableStEph {
         /// - Claude-Opus-4.6: Work O(sizeof(Key)), Span O(sizeof(Key)) — hashes key with SipHash.
         /// Strategy: Always return an odd number (works for power-of-2 sizes),
         /// and for prime sizes, ensure < m and non-zero.
-        pub fn second_hash<Key: StT + Hash>(key: &Key, table_size: N) -> N {
+        pub fn second_hash<Key: StT + Hash>(key: &Key, table_size: usize) -> usize {
             use std::collections::hash_map::DefaultHasher;
             use std::hash::Hasher;
 
@@ -52,7 +52,7 @@ pub mod DoubleHashFlatHashTableStEph {
             let hash = hasher.finish();
 
             let base = (table_size - 1) as u64;
-            let mut step = ((hash % base) + 1) as N;
+            let mut step = ((hash % base) + 1) as usize;
 
             if step % 2 == 0 && step < table_size - 1 {
                 step += 1;
@@ -126,7 +126,7 @@ pub mod DoubleHashFlatHashTableStEph {
         /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' slots, reinserts.
         fn resize(
             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>,
-            new_size: N,
+            new_size: usize,
         ) -> HashTable<Key, Value, FlatEntry<Key, Value>, Metrics> {
             let mut pairs = Vec::new();
             for entry in &table.table {
@@ -161,7 +161,7 @@ pub mod DoubleHashFlatHashTableStEph {
     {
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — two hash values + arithmetic + modulo.
-        fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key, attempt: N) -> N {
+        fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key, attempt: usize) -> usize {
             let hash1 = (table.hash_fn)(key);
             let step = Self::second_hash(key, table.current_size);
             (hash1 + (attempt * step)) % table.current_size
@@ -169,7 +169,7 @@ pub mod DoubleHashFlatHashTableStEph {
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash probe until empty/deleted/matching.
-        fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> N {
+        fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics>, key: &Key) -> usize {
             let mut attempt = 0;
             while attempt < table.current_size {
                 let slot = Self::probe(table, key, attempt);

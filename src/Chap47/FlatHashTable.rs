@@ -97,12 +97,12 @@ pub mod FlatHashTable {
         /// Probes for the next slot in the sequence.
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on probing strategy.
-        fn probe(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key, attempt: N) -> N;
+        fn probe(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key, attempt: usize) -> usize;
 
         /// Finds the first available slot (Empty or Deleted) for insertion.
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on probing strategy.
-        fn find_slot(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key) -> N;
+        fn find_slot(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key) -> usize;
 
         /// Inserts using linear probing as default.
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).

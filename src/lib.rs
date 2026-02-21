@@ -88,7 +88,7 @@ pub mod experiments {
 //    pub mod verus_keep_ghost_and_test;
 //    pub mod biconditional_spec_fun;
 //    pub mod arc_rwlock_ninject;
-    pub mod set_len_empty_both_ways;
+    // pub mod set_len_empty_both_ways;
     // Hypothesis: Can Verus verify f64 sorting using bit-level ordering?
     // Result: Yes. Structural verification (loop invariants, sorted postcondition) works
     // with two classes of assumes: IEEE 754 ordering axioms and an external_body bridge

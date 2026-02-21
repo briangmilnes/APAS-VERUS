@@ -1,5 +1,3 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap45
-
 ❌ BalancedTreePQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:18: error: struct_outside_verus - struct BalancedTreePQ — should be inside verus!
         18 |     pub struct BalancedTreePQ<T: StT + Ord> {
@@ -84,6 +82,18 @@ SUMMARY
 Modules:
    7 clean (no holes)
    0 holed (contains holes)
+   7 total
+
+Proof Functions:
+   7 clean
+   0 holed
+   7 total
+
+Holes Found: 0 total
+
+Errors: 14 (bare impl(s), struct/enum outside verus!)
+
+🎉 No proof holes found! All proofs are complete.
    7 total
 
 Proof Functions:

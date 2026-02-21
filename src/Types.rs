@@ -10,6 +10,7 @@ pub mod Types {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::SetIterAdditionalSpecFns;
 
+    /// Verus/Rust really needs usize or an int for indexing and lengths; here we have selected usize.
     pub type N = usize;
 
     /// - Data Type 18.1 (Boolean) type used by APAS.

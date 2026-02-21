@@ -46,7 +46,7 @@ pub mod OrderedSetStPer {
     pub trait OrderedSetStPerTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         // Base set operations (ADT 41.1) - delegated
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.len(), self@.finite();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (result: Self)
@@ -106,13 +106,13 @@ pub mod OrderedSetStPer {
         fn get_range(&self, k1: &T, k2: &T) -> (result: Self)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn rank(&self, k: &T) -> (result: N)
+        fn rank(&self, k: &T) -> (result: usize)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn select(&self, i: N) -> (result: Option<T>)
+        fn select(&self, i: usize) -> (result: Option<T>)
             ensures self@.finite();
         /// claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn split_rank(&self, i: N) -> (result: (Self, Self))
+        fn split_rank(&self, i: usize) -> (result: (Self, Self))
             where Self: Sized
             ensures self@.finite();
     }
@@ -120,7 +120,7 @@ pub mod OrderedSetStPer {
     // 9. impls
 
     impl<T: StT + Ord> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
-        fn size(&self) -> (result: N)
+        fn size(&self) -> (result: usize)
             ensures result == self@.len(), self@.finite()
         { self.base_set.size() }
 
@@ -315,7 +315,7 @@ pub mod OrderedSetStPer {
         }
 
         #[verifier::external_body]
-        fn rank(&self, k: &T) -> (result: N)
+        fn rank(&self, k: &T) -> (result: usize)
             ensures self@.finite()
         {
             let seq = self.to_seq();
@@ -334,7 +334,7 @@ pub mod OrderedSetStPer {
         }
 
         #[verifier::external_body]
-        fn select(&self, i: N) -> (result: Option<T>)
+        fn select(&self, i: usize) -> (result: Option<T>)
             ensures self@.finite()
         {
             let seq = self.to_seq();
@@ -346,7 +346,7 @@ pub mod OrderedSetStPer {
         }
 
         #[verifier::external_body]
-        fn split_rank(&self, i: N) -> (result: (Self, Self))
+        fn split_rank(&self, i: usize) -> (result: (Self, Self))
             where Self: Sized
             ensures self@.finite()
         {

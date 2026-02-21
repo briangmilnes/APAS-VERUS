@@ -43,7 +43,7 @@ pub mod ChainedHashTable {
         /// Computes the hash index for a key.
         /// - APAS: Work O(1), Span O(1).
         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on hash function.
-        fn hash_index(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key) -> N;
+        fn hash_index(table: &HashTable<Key, Value, Entry, Metrics>, key: &Key) -> usize;
 
         /// Inserts into the chain at the hashed bucket, updating num_elements on new keys.
         /// - APAS: Work O(1) expected, Span O(1).

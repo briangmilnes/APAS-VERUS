@@ -55,7 +55,7 @@ pub mod DocumentIndex {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS
-        fn size(docs: &DocumentSet)                                  -> N;
+        fn size(docs: &DocumentSet)                                  -> usize;
 
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential iteration over AVL tree sequence
@@ -71,7 +71,7 @@ pub mod DocumentIndex {
 
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to Table.size
-        fn word_count(&self)                                         -> N;
+        fn word_count(&self)                                         -> usize;
     }
 
     impl DocumentIndexTrait for DocumentIndex {
@@ -137,7 +137,7 @@ pub mod DocumentIndex {
         fn query_and_not(docs_a: &DocumentSet, docs_b: &DocumentSet) -> DocumentSet { docs_a.difference(docs_b) }
 
         /// Algorithm 44.3: size function
-        fn size(docs: &DocumentSet) -> N { docs.size() }
+        fn size(docs: &DocumentSet) -> usize { docs.size() }
 
         /// Algorithm 44.3: toSeq function
         fn to_seq(docs: &DocumentSet) -> ArraySeqStPerS<DocumentId> {
@@ -172,7 +172,7 @@ pub mod DocumentIndex {
             words
         }
 
-        fn word_count(&self) -> N { self.word_to_docs.size() }
+        fn word_count(&self) -> usize { self.word_to_docs.size() }
     }
 
     /// Tokenization function: splits content into words.

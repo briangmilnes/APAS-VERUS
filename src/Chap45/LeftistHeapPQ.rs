@@ -19,7 +19,7 @@ pub mod LeftistHeapPQ {
             key: T,
             left: Box<LeftistHeapNode<T>>,
             right: Box<LeftistHeapNode<T>>,
-            rank: N, // Distance to nearest leaf (for leftist property)
+            rank: usize, // Distance to nearest leaf (for leftist property)
         },
     }
 
@@ -60,11 +60,11 @@ pub mod LeftistHeapPQ {
         /// Creates heap from sequence using reduce with meld
         fn from_seq(seq: &[T])           -> Self;
 
-        fn size(&self)                   -> N;
+        fn size(&self)                   -> usize;
         fn is_empty(&self)               -> bool;
         fn extract_all_sorted(&self)     -> Vec<T>;
-        fn height(&self)                 -> N;
-        fn root_rank(&self)              -> N;
+        fn height(&self)                 -> usize;
+        fn root_rank(&self)              -> usize;
         fn is_valid_leftist_heap(&self)  -> bool;
         fn from_vec(vec: Vec<T>)         -> Self;
         fn to_vec(&self)                 -> Vec<T>;
@@ -86,19 +86,19 @@ pub mod LeftistHeapPQ {
     }
 
     pub trait LeftistHeapNodeTrait<T: StT + Ord> {
-        fn rank(&self) -> N;
+        fn rank(&self) -> usize;
         fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> Self;
         /// Core meld operation following right spines (Data Structure 45.3).
         fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> LeftistHeapNode<T>;
-        fn size(&self) -> N;
-        fn height(&self) -> N;
+        fn size(&self) -> usize;
+        fn height(&self) -> usize;
         fn is_leftist(&self) -> bool;
         fn is_heap(&self) -> bool;
         fn to_vec(&self) -> Vec<T>;
     }
 
     impl<T: StT + Ord> LeftistHeapNodeTrait<T> for LeftistHeapNode<T> {
-        fn rank(&self) -> N {
+        fn rank(&self) -> usize {
             match self {
                 | LeftistHeapNode::Leaf => 0,
                 | LeftistHeapNode::Node { rank, .. } => *rank,
@@ -170,14 +170,14 @@ pub mod LeftistHeapPQ {
             }
         }
 
-        fn size(&self) -> N {
+        fn size(&self) -> usize {
             match self {
                 | LeftistHeapNode::Leaf => 0,
                 | LeftistHeapNode::Node { left, right, .. } => 1 + left.size() + right.size(),
             }
         }
 
-        fn height(&self) -> N {
+        fn height(&self) -> usize {
             match self {
                 | LeftistHeapNode::Leaf => 0,
                 | LeftistHeapNode::Node { left, right, .. } => 1 + left.height().max(right.height()),
@@ -314,7 +314,7 @@ pub mod LeftistHeapPQ {
 
         /// - APAS: N/A — utility function not in prose.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — recursive tree traversal.
-        fn size(&self) -> N { self.root.size() }
+        fn size(&self) -> usize { self.root.size() }
 
         /// - APAS: N/A — utility function not in prose.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
@@ -335,9 +335,9 @@ pub mod LeftistHeapPQ {
             result
         }
 
-        fn height(&self) -> N { self.root.height() }
+        fn height(&self) -> usize { self.root.height() }
 
-        fn root_rank(&self) -> N { self.root.rank() }
+        fn root_rank(&self) -> usize { self.root.rank() }
 
         fn is_valid_leftist_heap(&self) -> bool { self.root.is_leftist() && self.root.is_heap() }
 
