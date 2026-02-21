@@ -183,26 +183,26 @@ pub mod experiments {
     // pub mod f64_float_cmp_sort;
 //    pub mod boxing_fns;
     // derive experiments: #[derive(TR)] on {struct,enum} inside verus!
-    pub mod derive_debug_struct_in_verus;
-    pub mod derive_debug_enum_in_verus;
+    // pub mod derive_debug_struct_in_verus;
+    // pub mod derive_debug_enum_in_verus;
     // pub mod derive_display_struct_in_verus;  // derive_more (Verus can't link external crates)
     // pub mod derive_display_enum_in_verus;
-    pub mod derive_eq_struct_in_verus;
-    pub mod derive_eq_enum_in_verus;
-    pub mod derive_partial_eq_struct_in_verus;
-    pub mod derive_partial_eq_enum_in_verus;
-    pub mod derive_clone_struct_in_verus;
-    pub mod derive_clone_enum_in_verus;
-    pub mod derive_copy_struct_in_verus;
-    pub mod derive_copy_enum_in_verus;
-    pub mod derive_default_struct_in_verus;
-    pub mod derive_default_enum_in_verus;
-    pub mod derive_hash_struct_in_verus;
-    pub mod derive_hash_enum_in_verus;
-    pub mod derive_partial_ord_struct_in_verus;
-    pub mod derive_partial_ord_enum_in_verus;
-    pub mod derive_ord_struct_in_verus;
-    pub mod derive_ord_enum_in_verus;
+    // pub mod derive_eq_struct_in_verus;
+    // pub mod derive_eq_enum_in_verus;
+    // pub mod derive_partial_eq_struct_in_verus;
+    // pub mod derive_partial_eq_enum_in_verus;
+    // pub mod derive_clone_struct_in_verus;
+    // pub mod derive_clone_enum_in_verus;
+    // pub mod derive_copy_struct_in_verus;
+    // pub mod derive_copy_enum_in_verus;
+    // pub mod derive_default_struct_in_verus;
+    // pub mod derive_default_enum_in_verus;
+    // pub mod derive_hash_struct_in_verus;
+    // pub mod derive_hash_enum_in_verus;
+    // pub mod derive_partial_ord_struct_in_verus;
+    // pub mod derive_partial_ord_enum_in_verus;
+    // pub mod derive_ord_struct_in_verus;
+    // pub mod derive_ord_enum_in_verus;
 //    pub mod mut_refs_and_mut_returns;
     // accept, accept_external_body — Veracity treatment (see Accepted.md)
 //    pub mod accept;

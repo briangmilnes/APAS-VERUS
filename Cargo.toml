@@ -283,41 +283,41 @@ path = "tests/Chap27/TestScanContractMtEph.rs"
 # name = "TestVerusKeepGhostAndTest"
 # path = "tests/experiments/TestVerusKeepGhostAndTest.rs"
 
-[[test]]
-name = "TestDeriveClone"
-path = "tests/experiments/TestDeriveClone.rs"
+# [[test]]
+# name = "TestDeriveClone"
+# path = "tests/experiments/TestDeriveClone.rs"
 
-[[test]]
-name = "TestDeriveCopy"
-path = "tests/experiments/TestDeriveCopy.rs"
+# [[test]]
+# name = "TestDeriveCopy"
+# path = "tests/experiments/TestDeriveCopy.rs"
 
-[[test]]
-name = "TestDeriveDebug"
-path = "tests/experiments/TestDeriveDebug.rs"
+# [[test]]
+# name = "TestDeriveDebug"
+# path = "tests/experiments/TestDeriveDebug.rs"
 
-[[test]]
-name = "TestDeriveDefault"
-path = "tests/experiments/TestDeriveDefault.rs"
+# [[test]]
+# name = "TestDeriveDefault"
+# path = "tests/experiments/TestDeriveDefault.rs"
 
-[[test]]
-name = "TestDeriveEq"
-path = "tests/experiments/TestDeriveEq.rs"
+# [[test]]
+# name = "TestDeriveEq"
+# path = "tests/experiments/TestDeriveEq.rs"
 
-[[test]]
-name = "TestDeriveHash"
-path = "tests/experiments/TestDeriveHash.rs"
+# [[test]]
+# name = "TestDeriveHash"
+# path = "tests/experiments/TestDeriveHash.rs"
 
-[[test]]
-name = "TestDerivePartialEq"
-path = "tests/experiments/TestDerivePartialEq.rs"
+# [[test]]
+# name = "TestDerivePartialEq"
+# path = "tests/experiments/TestDerivePartialEq.rs"
 
-[[test]]
-name = "TestDerivePartialOrd"
-path = "tests/experiments/TestDerivePartialOrd.rs"
+# [[test]]
+# name = "TestDerivePartialOrd"
+# path = "tests/experiments/TestDerivePartialOrd.rs"
 
-[[test]]
-name = "TestDeriveOrd"
-path = "tests/experiments/TestDeriveOrd.rs"
+# [[test]]
+# name = "TestDeriveOrd"
+# path = "tests/experiments/TestDeriveOrd.rs"
 
 [[bench]]
 name = "BenchInsertionSortStEph"
