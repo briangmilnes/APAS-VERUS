@@ -27,7 +27,7 @@ verus! {
 //		4. type definitions
 
 /// Node for the lock-free stack. External due to raw pointer field.
-#[verifier::external]
+#[verifier::external] // accept hole
 struct Node<T> {
     value: T,
     next: *mut Node<T>,
@@ -35,7 +35,7 @@ struct Node<T> {
 
 /// Lock-free concurrent stack using AtomicPtr and CAS.
 /// External due to AtomicPtr (no vstd specs) and raw pointers.
-#[verifier::external_body]
+#[verifier::external_body] // accept hole
 #[verifier::reject_recursive_types(T)]
 pub struct ConcurrentStackMt<T: Send> {
     head: AtomicPtr<Node<T>>,
@@ -93,14 +93,14 @@ pub trait ConcurrentStackMtTrait<T: Send>: Sized {
 
 impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
 
-    #[verifier::external_body]
+    #[verifier::external_body] // accept hole
     fn new() -> (stack: Self) {
         ConcurrentStackMt {
             head: AtomicPtr::new(null_mut()),
         }
     }
 
-    #[verifier::external_body]
+    #[verifier::external_body] // accept hole
     fn push(&self, value: T) {
         let mut new_node = Box::new(Node { value, next: null_mut() });
         loop {
@@ -114,7 +114,7 @@ impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
         }
     }
 
-    #[verifier::external_body]
+    #[verifier::external_body] // accept hole
     fn pop(&self) -> (possible_top: Option<T>) {
         loop {
             let head = self.head.load(Ordering::Acquire);
@@ -129,12 +129,12 @@ impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
         }
     }
 
-    #[verifier::external_body]
+    #[verifier::external_body] // accept hole
     fn is_empty(&self) -> (empty: bool) {
         self.head.load(Ordering::Acquire).is_null()
     }
 
-    #[verifier::external_body]
+    #[verifier::external_body] // accept hole
     fn drain(&self) -> (items: Vec<T>) {
         let mut items = Vec::new();
         while let Some(value) = self.pop() {
@@ -151,7 +151,7 @@ impl<T: Send> Default for ConcurrentStackMt<T> {
 }
 
 impl<T: Send> Drop for ConcurrentStackMt<T> {
-    #[verifier::external_body]
+    #[verifier::external_body] // accept hole
     fn drop(&mut self)
         opens_invariants none
         no_unwind
