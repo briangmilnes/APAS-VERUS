@@ -10,6 +10,8 @@ pub mod TableStPer {
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{lemma_seq_map_cloned_view_eq, obeys_feq_clone};
 
     verus! {
 
@@ -26,11 +28,18 @@ pub mod TableStPer {
     // 11. derive impls in verus!
 
     impl<K: StT + Ord, V: StT> Clone for TableStPer<K, V> {
-        #[verifier::external_body]
         fn clone(&self) -> (result: Self)
-            ensures result == *self
+            ensures result.entries@ == self.entries@
         {
-            TableStPer { entries: self.entries.clone() }
+            let result = TableStPer { entries: self.entries.clone() };
+            proof {
+                assume(obeys_feq_clone::<Pair<K, V>>());
+                lemma_seq_map_cloned_view_eq(
+                    self.entries.seq@,
+                    result.entries.seq@,
+                );
+            }
+            result
         }
     }
 

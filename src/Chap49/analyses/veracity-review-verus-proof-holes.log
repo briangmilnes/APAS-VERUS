@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap49
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap49/
 
 ❌ MinEditDistMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap49/MinEditDistMtEph.rs:26: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
