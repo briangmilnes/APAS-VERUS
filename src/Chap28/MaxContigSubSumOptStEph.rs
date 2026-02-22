@@ -15,6 +15,13 @@ pub mod MaxContigSubSumOptStEph {
 
     verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
+
     // ─── 3. exec functions ───
 
     /// Helper: given that m = max over hi of (prefix[hi] - min_prefix[hi-1]),

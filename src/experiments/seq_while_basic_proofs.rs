@@ -4,6 +4,13 @@ pub mod seq_while_basic_proofs {
     use vstd::prelude::*;
 
 verus! {
+
+// Veracity: added broadcast group
+broadcast use {
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
     //  Seq basics
 
     // length on int

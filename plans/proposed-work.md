@@ -1,110 +1,34 @@
-# Planned Work (All Chapters)
+# Proposed Fixes Table
 
-Proof holes run per chapter. Priority: P1 (critical) > P2 (struct/Clone) > P3 (external_body) > P4 (dummy RwLockPred) > P5 (informational).
+Based on the `veracity-review-proof-holes` report and the PBOGH (Prove Big Or Go Home) principle, the true verification holes (excluding all `accept()` and `assume(false)` threading/cloning workarounds) have been isolated. 
 
-## Chapter summary
+Per your prioritization, target files are ordered strictly by **StPer** -> **StEph** -> **MtEph / MtPer**.
 
-| # | Chapter | Clean | Holed | Holes | Errors |
-|---|---------|:-----:|:-----:|-------|--------|
-| 1 | Chap02 | 1 | 1 | 8 | 2 |
-| 2 | Chap03 | 1 | 0 | 0 | 0 |
-| 3 | Chap05 | 5 | 0 | 0 | 3 |
-| 4 | Chap06 | 20 | 0 | 0 | 0 |
-| 5 | Chap11 | 2 | 3 | 6 | 0 |
-| 6 | Chap12 | 1 | 2 | 18 | 0 |
-| 7 | Chap17 | 1 | 0 | 0 | 2 |
-| 8 | Chap18 | 6 | 1 | 2 | 9 |
-| 9 | Chap19 | 4 | 0 | 0 | 3 |
-| 10 | Chap21 | 12 | 0 | 0 | 0 |
-| 11 | Chap23 | 2 | 0 | 0 | 9 |
-| 12 | Chap26 | 6 | 2 | 8 | 2 |
-| 13 | Chap27 | 4 | 0 | 0 | 0 |
-| 14 | Chap28 | 11 | 0 | 0 | 0 |
-| 15 | Chap35 | 2 | 2 | 2 | 0 |
-| 16 | Chap36 | 3 | 0 | 0 | 1 |
-| 17 | Chap37 | 12 | 7 | 90 | 19 |
-| 18 | Chap38 | 2 | 0 | 0 | 3 |
-| 19 | Chap39 | 1 | 3 | 26 | 7 |
-| 20 | Chap40 | 0 | 3 | 30 | 0 |
-| 21 | Chap41 | 1 | 6 | 139 | 7 |
-| 22 | Chap42 | 1 | 3 | 30 | 0 |
-| 23 | Chap43 | 1 | 10 | 140 | 0 |
-| 24 | Chap44 | 2 | 0 | 0 | 4 |
-| 25 | Chap45 | 7 | 0 | 0 | 14 |
-| 26 | Chap47 | 9 | 0 | 0 | 10 |
-| 27 | Chap49 | 8 | 0 | 0 | 24 |
-| 28 | Chap50 | 3 | 6 | 22 | 40 |
-| 29 | Chap51 | 8 | 0 | 0 | 16 |
-| 30 | Chap52 | 12 | 2 | 2 | 0 |
-| 31 | Chap53 | 0 | 5 | 20 | 0 |
-| 32 | Chap54 | 4 | 0 | 0 | 0 |
-| 33 | Chap55 | 8 | 0 | 0 | 0 |
-| 34 | Chap56 | 8 | 4 | 7 | 0 |
-| 35 | Chap57 | 2 | 1 | 1 | 2 |
-| 36 | Chap58 | 2 | 0 | 0 | 0 |
-| 37 | Chap59 | 4 | 0 | 0 | 0 |
-| 38 | Chap61 | 4 | 0 | 0 | 0 |
-| 39 | Chap62 | 4 | 0 | 0 | 0 |
-| 40 | Chap63 | 2 | 0 | 0 | 0 |
-| 41 | Chap64 | 3 | 0 | 0 | 4 |
-| 42 | Chap65 | 3 | 0 | 0 | 3 |
-| 43 | Chap66 | 2 | 0 | 0 | 4 |
+| # | Priority | Category | Chapter | File | Issue | Description |
+|---|----------|----------|---------|------|-------|-------------|
+| 1 | critical | **StPer** | Chap43 | `OrderedSetStPer.rs` | 11 `external_body` | Core ordered set logic (`first`, `last`, `split`, `get_range`, `rank`, `select`) is entirely unverified. |
+| 2 | critical | **StPer** | Chap43 | `OrderedTableStPer.rs` | `external_body` | Companion to OrderedSet, core persistent table mapping logic is unverified. |
+| 3 | critical | **StPer** | Chap43 | `AugOrderedTableStPer.rs` | `external_body` | Core augmented persistent table logic is unverified. |
+| 4 | critical | **StPer** | Chap37 | `AVLTreeSeqStPer.rs` | 11 `external_body` | Deep structural operations (`rebalance`, `rotate_right`, `rotate_left`, `mk`, `build_balanced`) are unverified. |
+| 5 | critical | **StPer** | Chap41 | `AVLTreeSetStPer.rs` | Bogus view / `external_body` | `spec_set_view` is an external_body, meaning the mathematical specification of the persistent set is faked. |
+| 6 | critical | **StEph** | Chap43 | `OrderedSetStEph.rs` | `external_body` | Ephemeral ordered set core operations unverified. (Equivalent to the StPer holes). |
+| 7 | critical | **StEph** | Chap43 | `OrderedTableStEph.rs` | `external_body` | Ephemeral ordered table core operations unverified. |
+| 8 | critical | **StEph** | Chap43 | `AugOrderedTableStEph.rs` | `external_body` | Ephemeral augmented table core operations unverified. |
+| 9 | critical | **StEph** | Chap39 | `BSTTreapStEph.rs` | 5 `external_body` | Ephemeral treap structural logic (`insert_link`, `find_link`) is unverified. |
+| 10 | critical | **StEph** | Chap40 | `BSTKeyValueStEph.rs` | 7 `external_body` | Ephemeral BST Key/Value logic (`insert_link`, `delete`, `keys`, `values`) is unverified. |
+| 11 | critical | **StEph** | Chap40 | `BSTReducedStEph.rs` | 11 `external_body` | Ephemeral BST Reduced logic (`update_node`, `range_reduce_link`) is unverified. |
+| 12 | critical | **StEph** | Chap40 | `BSTSizeStEph.rs` | 7 `external_body` | Ephemeral BST Size logic (`rank_link`, `split_rank`) is unverified. |
+| 13 | critical | **StEph** | Chap37 | `AVLTreeSeqStEph.rs` | 11 `external_body` | Ephemeral AVL rotations (`rebalance`, `rotate_left`) unverified. |
+| 14 | critical | **StEph** | Chap26 | `ETSPStEph.rs` | 2 `external_body` | Euclidean TSP algorithmic core (`sort_and_split`, `find_best_swap`) is unverified. |
+| 15 | critical | **MtPer** | Chap35 | `OrderStatSelectMtPer.rs` | 1 `external_body` | `parallel_three_way_partition` is unverified. |
+| 16 | critical | **MtEph** | Chap39 | `BSTSetTreapMtEph.rs` | 14 `external_body` | Concurrent treap set structures (`split`, `join_pair`, `filter`, `reduce`) are unverified. |
+| 17 | critical | **MtEph** | Chap41 | `AVLTreeSetMtEph.rs` | 14 `external_body` | Concurrent AVL set logic entirely faked (`intersection`, `union`, `difference`). |
+| 18 | critical | **MtEph** | Chap26 | `ETSPMtEph.rs` | 2 `external_body` | Concurrent Euclidean TSP algorithmic core is unverified. |
 
-## Chapters fully clean (no holes, no errors)
+*(Note: 58 `info: accept()` holes for threading/clones have been completely filtered with priority NONE per your request, as well as RwLock workaround warnings).*
 
-Chap03, Chap06, Chap21, Chap27, Chap28, Chap54, Chap55, Chap58, Chap59, Chap61, Chap62, Chap63
+## Summary
 
-## Planned work table (by severity)
-
-| # | Sev | Chapter | File | Issue | Blocker |
-|---|-----|---------|------|-------|---------|
-| 1 | P5 | Chap02 | HFSchedulerMtEph | assume(false)+diverge (thread join) | Acceptable |
-| 2 | P2 | Chap02 | HFSchedulerMtEph | PoolState, TaskState out; 6 ext_body (threading) | Mutex/Condvar |
-| 3 | P5 | Chap11 | FibonacciMt* | assume(false)+diverge (thread join) | Acceptable |
-| 4 | P3 | Chap12 | Exercise12_1 | SpinLock 6 ext_body | — |
-| 5 | P3 | Chap12 | Exercise12_5 | ConcurrentStackMt 7 ext_body, 4 unsafe | — |
-| 6 | P1 | Chap26 | ETSPMtEph, ETSPStEph | 2 assume() each (mod identity) | Z3 rlimit |
-| 7 | P3 | Chap26 | ETSPMtEph, ETSPStEph | sort_and_split, find_best_swap ext_body | Vec/f64 |
-| 8 | P3 | Chap18 | ArraySeq | 2 external (impl ArraySeqS, IntoIterator &mut) | Verus &mut |
-| 9 | P3 | Chap35 | OrderStatSelect* | 2 ext_body | — |
-| 10 | P3 | Chap37 | 7 modules | 90 holes (37 assume, 51 ext_body) | Graph types |
-| 11 | P3 | Chap39 | 3 modules | 26 holes | — |
-| 12 | P3 | Chap40 | 3 modules | 30 holes | — |
-| 13 | P3 | Chap41 | 6 modules | 139 holes | — |
-| 14 | P3 | Chap42 | 3 modules | 30 ext_body | — |
-| 15 | P3 | Chap43 | 10 modules | 140 ext_body | — |
-| 16 | P2 | Chap50 | MatrixChain*, OptBinSearchTree* | struct out, Ex* | HashMap |
-| 17 | P3 | Chap50 | Probability | 15 ext_body | f64 axioms |
-| 18 | P4 | Chap50 | MatrixChainMt*, OptBinSearchTreeMt* | dummy RwLockPred | — |
-| 19 | P2 | Chap51 | TopDownDP* | TopDownDP*S out, Clone derived | HashMap |
-| 20 | P4 | Chap51 | BottomUpDPMt*, TopDownDPMt* | dummy RwLockPred | — |
-| 21 | P3 | Chap52 | AdjTableGraphMtPer, EdgeSetGraphMtPer | 2 ext_body | — |
-| 22 | P3 | Chap53 | GraphSearch*, PQMin* | 20 ext_body | — |
-| 23 | P3 | Chap56 | PathWeightUtils*, Example56_* | 7 ext_body | f64 |
-| 24 | P3 | Chap57 | DijkstraStEphI64 | 1 ext_body | — |
-| 25 | P2 | Chap57 | DijkstraStEphF64 | PQEntry out | F64Dist |
-| 26 | P4 | Chap64 | SpanTreeMtEph | dummy RwLockPred | — |
-| 27 | P2 | Chap65 | UnionFindStEph, PrimStEph | struct out | HashMap, ordered_float |
-| 28 | P2 | Chap66 | Boruvka* | LabeledEdge out | ordered_float |
-
-## Hole type legend
-
-| Type | Description |
-|------|-------------|
-| assume(false)+diverge | Thread join — acceptable per assume-false-diverge rule |
-| assume() | Non-thread assume — needs proof |
-| external_body | Unverified body — needs verusification or justified |
-| external_type_specification | External type spec — bridge to unverifiable types |
-| struct/enum outside verus! | Type should move into verus! |
-| dummy RwLockPredicate | Placeholder predicate for RwLock — low priority |
-
-## Blockers
-
-| Blocker | Affected |
-|---------|----------|
-| HashMap | MatrixChain*S, OptBinSearchTree*, TopDownDP*, UnionFindStEph |
-| ordered_float | Example56_*, PrimStEph, Boruvka* |
-| rand | BoruvkaMtEph |
-| F64Dist | DijkstraStEphF64 PQEntry |
-| Mutex/Condvar | Chap02 HFScheduler PoolState, TaskState |
-| Vec/f64 | Chap26 ETSP sort_and_split, find_best_swap |
+| Severity | Count |
+|----------|-------|
+| critical | ~362 `external_body` and Unverified Assumes (Sorted by StPer > StEph > MtEph above) |

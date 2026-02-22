@@ -80,6 +80,8 @@ pub mod MathSeq {
             // Our groups
             crate::vstdplus::feq::feq::group_feq_axioms,
             crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+        // Veracity: added broadcast groups
+        vstd::seq_lib::group_to_multiset_ensures,
         };
 
 

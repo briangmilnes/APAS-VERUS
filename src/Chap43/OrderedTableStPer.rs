@@ -13,6 +13,11 @@ pub mod OrderedTableStPer {
 
     verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    vstd::map::group_map_axioms,
+};
+
     // Table of Contents
     // 1. module (above)
     // 2. imports (above)

@@ -41,6 +41,12 @@ pub mod AVLTreeSetMtEph {
 
     verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    vstd::set::group_set_axioms,
+    vstd::set_lib::group_set_lib_default,
+};
+
     // 4. type definitions
 
     pub struct SetMtWf;

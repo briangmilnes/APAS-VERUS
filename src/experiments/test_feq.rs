@@ -369,7 +369,13 @@ pub mod test_feq {
     }
 
     fn test_pair_with_axiom(p: Pair<u64, u64>) {
-        broadcast use crate::Types::Types::group_Pair_axioms;
+        broadcast use {
+            crate::Types::Types::group_Pair_axioms,
+            // Veracity: added broadcast groups
+            vstd::seq::group_seq_axioms,
+            vstd::seq_lib::group_seq_properties,
+            vstd::seq_lib::group_to_multiset_ensures,
+        };
         proof {
             assert(Pair_feq_trigger::<u64, u64>()); // Fire the axiom
             assert(obeys_feq_full::<Pair<u64, u64>>()); // Now this works

@@ -21,6 +21,12 @@ pub mod OrderedSetMtEph {
 
     verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    vstd::set::group_set_axioms,
+    vstd::set_lib::group_set_lib_default,
+};
+
     // 4. type definitions
 
     #[verifier::reject_recursive_types(T)]

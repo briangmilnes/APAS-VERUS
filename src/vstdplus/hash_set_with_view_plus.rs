@@ -18,6 +18,12 @@ use crate::vstdplus::feq::feq::*;
 
 verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    vstd::set::group_set_axioms,
+    vstd::set_lib::group_set_lib_default,
+};
+
 // Direct wrapper around std::collections::HashSet
 // View gives Set<Key::V> (mapped view)
 #[verifier::reject_recursive_types(Key)]

@@ -18,7 +18,12 @@ use vstd::pervasive::ForLoopGhostIterator;
 
 verus! {
 
-broadcast use vstd::seq_lib::group_seq_properties;
+broadcast use {
+    vstd::seq_lib::group_seq_properties,
+    // Veracity: added broadcast groups
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
 
 #[verifier::external_body]
 fn vec_to_vec_copy_fails(source: &Vec<u32>) -> (dest: Vec<u32>)

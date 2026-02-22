@@ -13,6 +13,13 @@ use vstd::prelude::*;
 
 verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
+
 #[verifier::reject_recursive_types(T)]
 pub struct ExternalBodyAcceptHoleBox<T> {
     pub data: Vec<T>,

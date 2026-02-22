@@ -54,6 +54,8 @@ pub mod LinkedListStEph {
         vstd::seq::group_seq_axioms,
         vstd::seq_lib::group_seq_properties,
         crate::vstdplus::feq::feq::group_feq_axioms,
+        // Veracity: added broadcast groups
+        vstd::seq_lib::group_to_multiset_ensures,
     };
 
 

@@ -21,6 +21,9 @@ verus! {
 broadcast use {
     vstd::std_specs::vec::group_vec_axioms,
     vstd::seq::group_seq_axioms,
+        // Veracity: added broadcast groups
+        vstd::seq_lib::group_seq_properties,
+        vstd::seq_lib::group_to_multiset_ensures,
 };
 
 // Spec-level ordering on f64 via bit representation.

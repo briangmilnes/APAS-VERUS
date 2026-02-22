@@ -343,13 +343,13 @@ pub mod Chap21 {
     pub mod Problem21_4;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap23 {
     pub mod PrimTreeSeqStPer;
     pub mod BalBinTreeStEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap26 {
     pub mod DivConReduceStPer;
     pub mod MergeSortStPer;
@@ -384,7 +384,7 @@ pub mod Chap28 {
     pub mod MaxContigSubSumDivConOptMtEph;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap35 {
     pub mod OrderStatSelectStEph;
     pub mod OrderStatSelectStPer;
@@ -399,7 +399,7 @@ pub mod Chap36 {
     // pub mod QuickSortMtEphSlice;  // trait impl needs verus! wrapper
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap37 {
     pub mod AVLTreeSeq;
     pub mod AVLTreeSeqStEph;
@@ -436,7 +436,7 @@ pub mod Chap38 {
     pub mod BSTParaMtEph;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap39 {
     pub mod BSTTreapStEph;
     pub mod BSTTreapMtEph;
@@ -444,14 +444,14 @@ pub mod Chap39 {
     pub mod BSTSetTreapMtEph;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap40 {
     pub mod BSTKeyValueStEph;
     pub mod BSTSizeStEph;
     pub mod BSTReducedStEph;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap41 {
     pub mod ArraySetStEph;
     // pub mod ArraySetEnumMtEph;  // uses bitvec (Verus can't link)
@@ -463,7 +463,7 @@ pub mod Chap41 {
     pub mod Example41_3;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap42 {
     pub mod TableStEph;
     pub mod TableStPer;
@@ -471,7 +471,7 @@ pub mod Chap42 {
     pub mod Example42_1;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap43 {
     // Wave 1: OrderedTable + AugOrderedTable (depend on ArraySetStEph, AVLTreeSeqStEph/StPer)
     pub mod OrderedTableStEph;

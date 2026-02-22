@@ -25,6 +25,8 @@ pub mod abstract_set_iter {
             vstd::set::group_set_axioms,
             crate::vstdplus::clone_view::clone_view::group_clone_view_axioms,
             crate::vstdplus::feq::feq::group_feq_axioms
+        // Veracity: added broadcast groups
+        vstd::set_lib::group_set_lib_default,
     };
 
 

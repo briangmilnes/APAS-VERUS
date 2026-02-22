@@ -16,7 +16,13 @@ use vstd::contrib::exec_spec::DeepViewClone;
 
 verus! {
 
-broadcast use vstd::std_specs::vec::group_vec_axioms;
+broadcast use {
+    vstd::std_specs::vec::group_vec_axioms,
+    // Veracity: added broadcast groups
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
 
 // ATTEMPT 1: Vec::clone with all four postconditions — PASSES
 // but cannot prove self.seq@ =~= res.seq@ (commented out, fails)

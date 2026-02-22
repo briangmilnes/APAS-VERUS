@@ -43,6 +43,8 @@ pub mod ArraySeqMtEphSlice {
         vstd::seq_lib::group_seq_properties,
         vstd::std_specs::slice::group_slice_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
+        // Veracity: added broadcast groups
+        vstd::seq_lib::group_to_multiset_ensures,
     };
 
     // 4. type definitions

@@ -1,8 +1,229 @@
-Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: filter.*to_set|to_set.*filter|remove.*insert
+Pattern: ensures finite
 Searching: /home/milnes/projects/verus/source/vstd
-Searching: /home/milnes/projects/APAS-VERUS
-Files: 818, Functions: 14264, Matches: 0
+Files: 95, Functions: 2289, Matches: 27
+
+[31m/home/milnes/projects/verus/source/vstd/multiset.rs:333: [0m
+[38;5;22mpub broadcast axiom fn axiom_multiset_always_finite<V>(m: Multiset<V>)[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] m.dom().finite(),[0m
+[38;5;22m;[0m
+
+[31m/home/milnes/projects/verus/source/vstd/std_specs/hash.rs:787: [0m
+/// A `Map` constructed from a `HashMap` is always finite.
+[38;5;22mpub broadcast proof fn axiom_hashmap_view_finite_dom<K, V>(m: HashMap<K, V>)[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] m@.dom().finite(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set_lib.rs:292: [0m
+/// The result of filtering a finite set is finite and has size less than or equal to the original set.
+[38;5;22m    pub proof fn lemma_len_filter(self, f: spec_fn(A) -> bool)[0m
+[38;5;22m        requires[0m
+[38;5;22m            self.finite(),[0m
+[38;5;22m        ensures[0m
+[38;5;22m            self.filter(f).finite(),[0m
+[38;5;22m            self.filter(f).len() <= self.len(),[0m
+[38;5;22m        decreases self.len(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set_lib.rs:601: [0m
+/// `map` preserves finiteness
+[38;5;22m    pub proof fn lemma_map_finite<B>(self, f: spec_fn(A) -> B)[0m
+[38;5;22m        requires[0m
+[38;5;22m            self.finite(),[0m
+[38;5;22m        ensures[0m
+[38;5;22m            self.map(f).finite(),[0m
+[38;5;22m        decreases self.len(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set_lib.rs:638: [0m
+/// `filter_map` preserves finiteness.
+[38;5;22m    pub broadcast proof fn lemma_filter_map_finite<B>(self, f: spec_fn(A) -> Option<B>)[0m
+[38;5;22m        requires[0m
+[38;5;22m            self.finite(),[0m
+[38;5;22m        ensures[0m
+[38;5;22m            #[trigger] self.filter_map(f).finite(),[0m
+[38;5;22m        decreases self.len(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set_lib.rs:732: [0m
+/// The result of inserting an element `a` into a set `s` is finite iff `s` is finite.
+[38;5;22mpub broadcast proof fn lemma_set_insert_finite_iff<A>(s: Set<A>, a: A)[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] s.insert(a).finite() <==> s.finite(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set_lib.rs:747: [0m
+/// The result of removing an element `a` into a set `s` is finite iff `s` is finite.
+[38;5;22mpub broadcast proof fn lemma_set_remove_finite_iff<A>(s: Set<A>, a: A)[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] s.remove(a).finite() <==> s.finite(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set_lib.rs:761: [0m
+/// The union of two sets is finite iff both sets are finite.
+[38;5;22mpub broadcast proof fn lemma_set_union_finite_iff<A>(s1: Set<A>, s2: Set<A>)[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] s1.union(s2).finite() <==> s1.finite() && s2.finite(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set_lib.rs:770: [0m
+[38;5;22mpub proof fn lemma_set_union_finite_implies_sets_finite<A>(s1: Set<A>, s2: Set<A>)[0m
+[38;5;22m    requires[0m
+[38;5;22m        s1.union(s2).finite(),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        s1.finite(),[0m
+[38;5;22m        s2.finite(),[0m
+[38;5;22m    decreases s1.union(s2).len(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set_lib.rs:866: [0m
+/// If `s1` is a subset of finite set `s2`, then the size of `s1` is less than or equal to
+/// the size of `s2` and `s1` must be finite.
+[38;5;22mpub proof fn lemma_len_subset<A>(s1: Set<A>, s2: Set<A>)[0m
+[38;5;22m    requires[0m
+[38;5;22m        s2.finite(),[0m
+[38;5;22m        s1.subset_of(s2),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        s1.len() <= s2.len(),[0m
+[38;5;22m        s1.finite(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set_lib.rs:879: [0m
+/// A subset of a finite set `s` is finite.
+[38;5;22mpub broadcast proof fn lemma_set_subset_finite<A>(s: Set<A>, sub: Set<A>)[0m
+[38;5;22m    requires[0m
+[38;5;22m        s.finite(),[0m
+[38;5;22m        sub.subset_of(s),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #![trigger sub.subset_of(s)][0m
+[38;5;22m        sub.finite(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set_lib.rs:915: [0m
+/// If a set solely contains integers in the range [a, b), then its size is
+/// bounded by b - a.
+[38;5;22mpub proof fn lemma_int_range(lo: int, hi: int)[0m
+[38;5;22m    requires[0m
+[38;5;22m        lo <= hi,[0m
+[38;5;22m    ensures[0m
+[38;5;22m        set_int_range(lo, hi).finite(),[0m
+[38;5;22m        set_int_range(lo, hi).len() == hi - lo,[0m
+[38;5;22m    decreases hi - lo,[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set_lib.rs:953: [0m
+/// If an injective function is applied to each element of a set to construct
+/// another set, the two sets have the same size.
+[38;5;22mpub proof fn lemma_map_size<A, B>(x: Set<A>, y: Set<B>, f: spec_fn(A) -> B)[0m
+[38;5;22m    requires[0m
+[38;5;22m        x.finite(),[0m
+[38;5;22m        injective_on(f, x),[0m
+[38;5;22m        x.map(f) == y,[0m
+[38;5;22m    ensures[0m
+[38;5;22m        y.finite(),[0m
+[38;5;22m        x.len() == y.len(),[0m
+[38;5;22m    decreases x.len(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set_lib.rs:979: [0m
+/// If any function is applied to each element of a set to construct
+/// another set, the constructed set's length is at most the original's
+[38;5;22mpub proof fn lemma_map_size_bound<A, B>(x: Set<A>, y: Set<B>, f: spec_fn(A) -> B)[0m
+[38;5;22m    requires[0m
+[38;5;22m        x.finite(),[0m
+[38;5;22m        x.map(f) == y,[0m
+[38;5;22m    ensures[0m
+[38;5;22m        y.finite(),[0m
+[38;5;22m        y.len() <= x.len(),[0m
+[38;5;22m    decreases x.len(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set_lib.rs:1239: [0m
+[38;5;22mpub broadcast proof fn axiom_is_empty_len0<A>(s: Set<A>)[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] s.is_empty() <==> (s.finite() && s.len() == 0),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:2997: [0m
+[38;5;22mproof fn seq_to_set_rec_is_finite<A>(seq: Seq<A>)[0m
+[38;5;22m    ensures[0m
+[38;5;22m        seq_to_set_rec(seq).finite(),[0m
+[38;5;22m    decreases seq.len(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:3054: [0m
+/// The set obtained from a sequence is finite
+[38;5;22mpub broadcast proof fn seq_to_set_is_finite<A>(seq: Seq<A>)[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] seq.to_set().finite(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set.rs:464: [0m
+[38;5;22m    proof fn lemma_fold_graph_finite<A, B>(z: B, f: spec_fn(B, A) -> B, s: Set<A>, y: B, d: nat)[0m
+[38;5;22m        requires[0m
+[38;5;22m            is_fun_commutative(f),[0m
+[38;5;22m            fold_graph(z, f, s, y, d),[0m
+[38;5;22m        ensures[0m
+[38;5;22m            s.finite(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set.rs:780: [0m
+/// The empty set is finite.
+[38;5;22mpub broadcast proof fn axiom_set_empty_finite<A>()[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] Set::<A>::empty().finite(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set.rs:790: [0m
+/// The result of inserting an element `a` into a finite set `s` is also finite.
+[38;5;22mpub broadcast proof fn axiom_set_insert_finite<A>(s: Set<A>, a: A)[0m
+[38;5;22m    requires[0m
+[38;5;22m        s.finite(),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] s.insert(a).finite(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set.rs:827: [0m
+/// The result of removing an element `a` from a finite set `s` is also finite.
+[38;5;22mpub broadcast proof fn axiom_set_remove_finite<A>(s: Set<A>, a: A)[0m
+[38;5;22m    requires[0m
+[38;5;22m        s.finite(),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] s.remove(a).finite(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set.rs:855: [0m
+/// The union of two finite sets is finite.
+[38;5;22mpub broadcast proof fn axiom_set_union_finite<A>(s1: Set<A>, s2: Set<A>)[0m
+[38;5;22m    requires[0m
+[38;5;22m        s1.finite(),[0m
+[38;5;22m        s2.finite(),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] s1.union(s2).finite(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set.rs:880: [0m
+/// The intersection of two finite sets is finite.
+[38;5;22mpub broadcast proof fn axiom_set_intersect_finite<A>(s1: Set<A>, s2: Set<A>)[0m
+[38;5;22m    requires[0m
+[38;5;22m        s1.finite() || s2.finite(),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] s1.intersect(s2).finite(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/set.rs:892: [0m
+/// The set difference between two finite sets is finite.
+[38;5;22mpub broadcast proof fn axiom_set_difference_finite<A>(s1: Set<A>, s2: Set<A>)[0m
+[38;5;22m    requires[0m
+[38;5;22m        s1.finite(),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        #[trigger] s1.difference(s2).finite(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/map_lib.rs:459: [0m
+[38;5;22m    pub proof fn lemma_injective_values_len(self)[0m
+[38;5;22m        requires[0m
+[38;5;22m            self.dom().finite(),[0m
+[38;5;22m            self.is_injective(),[0m
+[38;5;22m        ensures[0m
+[38;5;22m            self.values().finite(),[0m
+[38;5;22m            self.values().len() == self.dom().len(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/map_lib.rs:481: [0m
+[38;5;22m    pub proof fn lemma_values_len(self)[0m
+[38;5;22m        requires[0m
+[38;5;22m            self.dom().finite(),[0m
+[38;5;22m        ensures[0m
+[38;5;22m            self.values().finite(),[0m
+[38;5;22m            self.values().len() <= self.dom().len(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/map_lib.rs:792: [0m
+[38;5;22mpub proof fn lemma_values_finite<K, V>(m: Map<K, V>)[0m
+[38;5;22m    requires[0m
+[38;5;22m        m.dom().finite(),[0m
+[38;5;22m    ensures[0m
+[38;5;22m        m.values().finite(),[0m
+[38;5;22m    decreases m.len(),[0m
+

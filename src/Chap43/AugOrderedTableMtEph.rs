@@ -33,6 +33,11 @@ pub mod AugOrderedTableMtEph {
 
     verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    vstd::map::group_map_axioms,
+};
+
     // 4. type definitions
 
     #[verifier::reject_recursive_types(K)]

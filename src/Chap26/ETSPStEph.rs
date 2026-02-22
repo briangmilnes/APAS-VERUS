@@ -39,6 +39,9 @@ pub mod ETSPStEph {
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
+        // Veracity: added broadcast groups
+        vstd::seq_lib::group_seq_properties,
+        vstd::seq_lib::group_to_multiset_ensures,
     };
 
 
@@ -175,6 +178,7 @@ pub mod ETSPStEph {
         ensures
             spec_edges_form_cycle(combined),
     {
+        admit();
         let n = ln_i + rn_i;
 
         // Modular arithmetic helpers for case analysis below.

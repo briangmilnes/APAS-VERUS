@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap17/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap17/
 
 ℹ MathSeq.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:717: info: accept() - accept hole

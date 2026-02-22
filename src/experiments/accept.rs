@@ -22,6 +22,13 @@ use vstd::std_specs::cmp::PartialEqSpecImpl;
 
 verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
+
 /// Intentional proof hole — use instead of assume() for accepted workarounds.
 pub proof fn accept(b: bool)
     ensures b,

@@ -12,6 +12,13 @@ pub mod TopoSortStEph {
 
     verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
+
     // Table of Contents
     // 1. module
     // 2. imports
