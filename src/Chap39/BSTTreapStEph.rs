@@ -113,8 +113,14 @@ pub mod BSTTreapStEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    #[verifier::external_body]
-    fn size_link<T: StT + Ord>(link: &Link<T>) -> N { link.as_ref().map_or(0, |n| n.size) }
+    fn size_link<T: StT + Ord>(link: &Link<T>) -> (result: N)
+        ensures result as nat == spec_size_link(link),
+    {
+        match link.as_ref() {
+            None => 0,
+            Some(n) => n.size,
+        }
+    }
 
     fn height_link<T: StT + Ord>(link: &Link<T>) -> N
         requires spec_size_link(link) < usize::MAX as nat,
@@ -138,9 +144,14 @@ pub mod BSTTreapStEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    #[verifier::external_body]
-    fn update<T: StT + Ord>(node: &mut Node<T>) {
-        node.size = 1 + size_link(&node.left) + size_link(&node.right);
+    fn update<T: StT + Ord>(node: &mut Node<T>)
+        ensures
+            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),
+    {
+        let left_sz = size_link(&node.left);
+        let right_sz = size_link(&node.right);
+        proof { assume(left_sz + right_sz + 1 < usize::MAX); }
+        node.size = 1 + left_sz + right_sz;
     }
 
     /// - APAS: Work Θ(1), Span Θ(1)

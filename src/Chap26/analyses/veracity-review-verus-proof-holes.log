@@ -1,21 +1,21 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap26/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap26/
 
 ✓ DivConReduceMtPer.rs
    3 clean proof functions
 ✓ DivConReduceStPer.rs
 ❌ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:503: external_body - #[verifier::external_body]
-       504 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:521: external_body - #[verifier::external_body]
-       522 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:504: external_body - #[verifier::external_body]
+       505 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:522: external_body - #[verifier::external_body]
+       523 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
    Holes: 2 total
       2 × external_body
    Proof functions: 4 total (4 clean, 0 holed)
 ❌ ETSPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:480: external_body - #[verifier::external_body]
-       481 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:498: external_body - #[verifier::external_body]
-       499 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:479: external_body - #[verifier::external_body]
+       480 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs:497: external_body - #[verifier::external_body]
+       498 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
    Holes: 2 total
       2 × external_body
    Proof functions: 3 total (3 clean, 0 holed)

@@ -113,9 +113,20 @@ pub mod BSTSizeStEph {
         }
     }
 
+    spec fn spec_size_link<T: StT + Ord>(link: &Link<T>) -> nat
+        decreases *link,
+    {
+        match link {
+            None => 0,
+            Some(n) => n.size as nat,
+        }
+    }
+
     /// - APAS: Work Θ(1), Span Θ(1) — O(1) size access via augmented field.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn size_link<T: StT + Ord>(link: &Link<T>) -> N {
+    fn size_link<T: StT + Ord>(link: &Link<T>) -> (result: N)
+        ensures result as nat == spec_size_link(link),
+    {
         match link.as_ref() {
             None => 0,
             Some(n) => n.size,
@@ -124,9 +135,14 @@ pub mod BSTSizeStEph {
 
     /// - APAS: Work Θ(1), Span Θ(1) — recomputes subtree size from children.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    #[verifier::external_body]
-    fn update_size<T: StT + Ord>(node: &mut Node<T>) {
-        node.size = 1 + size_link(&node.left) + size_link(&node.right);
+    fn update_size<T: StT + Ord>(node: &mut Node<T>)
+        ensures
+            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),
+    {
+        let left_sz = size_link(&node.left);
+        let right_sz = size_link(&node.right);
+        proof { assume(left_sz + right_sz + 1 < usize::MAX); }
+        node.size = 1 + left_sz + right_sz;
     }
 
     /// - APAS: Work Θ(1), Span Θ(1) — corresponds to APAS makeNode.

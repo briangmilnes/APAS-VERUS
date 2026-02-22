@@ -1,90 +1,34 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap18/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/
 
 ❌ ArraySeq.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1481: external - #[verifier::external]
-      1482 |     impl<T: View> ArraySeqS<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1616: external - #[verifier::external]
-      1617 |     impl<'a, T> std::iter::IntoIterator for &'a mut ArraySeqS<T> {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1646: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1642 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1644 |         {
-      1645 |             let equal = self.seq == other.seq;
-      1647 |             equal
-      1648 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1482: external - #[verifier::external]
+      1483 |     impl<T: View> ArraySeqS<T> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1617: external - #[verifier::external]
+      1618 |     impl<'a, T> std::iter::IntoIterator for &'a mut ArraySeqS<T> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1647: info: accept() - accept hole
    Holes: 2 total
       2 × external
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
+   Info: 1 assume(false); diverge() idiom(s)
    Proof functions: 9 total (9 clean, 0 holed)
-❌ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:1568: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1564 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1566 |         {
-      1567 |             let equal = self.seq == other.seq;
-      1569 |             equal
-      1570 |         }
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-   Proof functions: 4 total (4 clean, 0 holed)
-❌ ArraySeqMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:1176: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1172 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1174 |         {
-      1175 |             let equal = self.seq == other.seq;
-      1177 |             equal
-      1178 |         }
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-❌ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStEph.rs:1043: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1039 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1041 |         {
-      1042 |             let equal = self.seq == other.seq;
-      1044 |             equal
-      1045 |         }
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-❌ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStPer.rs:1005: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1001 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1003 |         {
-      1004 |             let equal = self.seq == other.seq;
-      1006 |             equal
-      1007 |         }
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-❌ LinkedListStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:864: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       860 |         fn clone(&self) -> (cloned: Self)
-            ...
-       862 |         {
-       863 |             let cloned = LinkedListStEphS { seq: self.seq.clone() };
-       865 |             cloned
-       866 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:878: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       874 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       876 |         {
-       877 |             let equal = self.seq == other.seq;
-       879 |             equal
-       880 |         }
-   Errors: 2 total (2 assume in eq/clone (Verus workaround))
-❌ LinkedListStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:847: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       843 |         fn clone(&self) -> (cloned: Self)
-            ...
-       845 |         {
-       846 |             let cloned = LinkedListStPerS { seq: self.seq.clone() };
-       848 |             cloned
-       849 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:861: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       857 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       859 |         {
-       860 |             let equal = self.seq == other.seq;
-       862 |             equal
-       863 |         }
-   Errors: 2 total (2 assume in eq/clone (Verus workaround))
+✓ ArraySeqMtEph.rs
+   4 clean proof functions
+ℹ ArraySeqMtPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:1177: info: accept() - accept hole
+   Info: 1 assume(false); diverge() idiom(s)
+ℹ ArraySeqStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStEph.rs:1044: info: accept() - accept hole
+   Info: 1 assume(false); diverge() idiom(s)
+ℹ ArraySeqStPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStPer.rs:1006: info: accept() - accept hole
+   Info: 1 assume(false); diverge() idiom(s)
+ℹ LinkedListStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:865: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:879: info: accept() - accept hole
+   Info: 2 assume(false); diverge() idiom(s)
+ℹ LinkedListStPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:848: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:862: info: accept() - accept hole
+   Info: 2 assume(false); diverge() idiom(s)
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -103,4 +47,4 @@ Proof Functions:
 Holes Found: 2 total
    2 × external
 
-Errors: 9 (bare impl(s), struct/enum outside verus!)
+Info: 8 assume(false); diverge() idiom(s) (valid non-termination)
