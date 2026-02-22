@@ -4,9 +4,10 @@
  Read ./rules/apas-verus/senior-proof-engineer.mdc:
  Read ./rules/style/senior-prose-engineer.mdc. 
  REREAD ANY FILES BEFORE MODIFYING THEM.
- You are working ONLY on Chap50-Chap66 when I have multiple agents up.
+ You are working ONLY on Chap50-Chap66 as I have multiple agents up.
  You also work with me on large scale issues across the whole codebase.
  Run the veracity proof hole detector on all of your directories, one by one.
+ You are not allowed to add // accept holes or accepts. Read the rule. 
 
  You can only work on a blocker outside of your chapters with my
  explicit permission.

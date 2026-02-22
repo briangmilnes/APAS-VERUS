@@ -24,7 +24,6 @@ pub mod MinEditDistStEph {
     }
 
     // 4. type definitions
-    // Struct contains HashMap for memoization — cannot be inside verus!.
 
     #[derive(Clone, PartialEq, Eq)]
     pub struct MinEditDistStEphS<T: StT> {

@@ -1,25 +1,11 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap66/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap66
 
-❌ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:30: error: struct_outside_verus - struct LabeledEdge — should be inside verus!
-        30 |     pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize);
-        31 | 
-        32 |     verus! {
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:30: error: clone_derived_outside - struct LabeledEdge — Clone should be implemented inside verus!, not derived outside
-        30 |     pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize);
-        31 | 
-        32 |     verus! {
-   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
-❌ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:29: error: struct_outside_verus - struct LabeledEdge — should be inside verus!
-        29 |     pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize);
-        30 | 
-        31 |     verus! {
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:29: error: clone_derived_outside - struct LabeledEdge — Clone should be implemented inside verus!, not derived outside
-        29 |     pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize);
-        30 | 
-        31 |     verus! {
-   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
+ℹ BoruvkaMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:46: info: accept() - accept hole
+   Info: 1 assume(false); diverge() idiom(s)
+ℹ BoruvkaStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:44: info: accept() - accept hole
+   Info: 1 assume(false); diverge() idiom(s)
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -37,6 +23,6 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 4 (bare impl(s), struct/enum outside verus!)
+Info: 2 assume(false); diverge() idiom(s) (valid non-termination)
 
-🎉 No proof holes found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.

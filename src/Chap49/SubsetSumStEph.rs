@@ -22,7 +22,6 @@ pub mod SubsetSumStEph {
     }
 
     // 4. type definitions
-    // Struct contains HashMap for memoization — cannot be inside verus!.
 
     #[derive(Clone, PartialEq, Eq)]
     pub struct SubsetSumStEphS<T: StT> {

@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap56/ -d /home/milnes/projects/APAS-VERUS/src/Chap57/ -d /home/milnes/projects/APAS-VERUS/src/Chap64/ -d /home/milnes/projects/APAS-VERUS/src/Chap65/ -d /home/milnes/projects/APAS-VERUS/src/Chap66/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap56
 
 ✓ AllPairsResultStEphF64.rs
 ✓ AllPairsResultStEphI64.rs
@@ -26,81 +26,20 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 ✓ SSSPResultStEphI64.rs
 ✓ SSSPResultStPerF64.rs
 ✓ SSSPResultStPerI64.rs
-❌ /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:43: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        39 |             fn eq(&self, other: &Self) -> (r: bool)
-            ...
-        41 |             {
-        42 |                 let r = self.dist == other.dist && self.vertex == other.vertex;
-        44 |                 r
-        45 |             }
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-❌ /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphI64.rs:99: external_body - #[verifier::external_body]
-       100 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64 {
-   Holes: 1 total
-      1 × external_body
-✓ /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs
-❌ /home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:35: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        33 |             open spec fn inv(self, v: SetStEph<Edge<V>>) -> bool { v@.finite() }
-        34 |         }
-        36 |         fn new_spanning_edges_lock<V: StT + MtT + Hash + Ord>(
-        37 |             val: SetStEph<Edge<V>>,
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:46: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        44 |             open spec fn inv(self, v: bool) -> bool { v == true || v == false }
-        45 |         }
-        47 |         fn new_valid_lock(val: bool) -> (lock: RwLock<bool, SpanTreeMtEphValidWf>) {
-        48 |             RwLock::new(val, Ghost(SpanTreeMtEphValidWf))
-   Errors: 2 total (2 Verus RwLock external_body)
-✓ /home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs
-✓ /home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs
-   1 clean proof function
-✓ /home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs
-❌ /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:57: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        52 |             fn eq(&self, other: &Self) -> (r: bool)
-            ...
-        55 |                 let r = self.priority == other.priority && self.vertex == other.vertex
-        56 |                     && self.parent == other.parent;
-        58 |                 r
-        59 |             }
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-✓ /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs
-❌ /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:45: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        41 |             fn eq(&self, other: &Self) -> (r: bool)
-            ...
-        43 |             {
-        44 |                 let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
-        46 |                 r
-        47 |             }
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-❌ /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:43: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        39 |             fn eq(&self, other: &Self) -> (r: bool)
-            ...
-        41 |             {
-        42 |                 let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
-        44 |                 r
-        45 |             }
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   20 clean (no holes)
-   3 holed (contains holes)
-   23 total
+   10 clean (no holes)
+   2 holed (contains holes)
+   12 total
 
 Proof Functions:
-   1 clean
+   0 clean
    0 holed
-   1 total
+   0 total
 
-Holes Found: 6 total
-   6 × external_body
-
-Errors: 6 (bare impl(s), struct/enum outside verus!)
+Holes Found: 5 total
+   5 × external_body

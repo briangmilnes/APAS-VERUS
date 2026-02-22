@@ -1,14 +1,6 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap57/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap57
 
-❌ DijkstraStEphF64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:43: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        39 |             fn eq(&self, other: &Self) -> (r: bool)
-            ...
-        41 |             {
-        42 |                 let r = self.dist == other.dist && self.vertex == other.vertex;
-        44 |                 r
-        45 |             }
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
+✓ DijkstraStEphF64.rs
 ✓ DijkstraStEphI64.rs
 ✓ StackStEph.rs
 
@@ -28,6 +20,4 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 1 (bare impl(s), struct/enum outside verus!)
-
-🎉 No proof holes found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.

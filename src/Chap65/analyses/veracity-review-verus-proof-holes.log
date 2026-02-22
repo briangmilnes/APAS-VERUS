@@ -1,22 +1,8 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap65/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap65
 
 ✓ KruskalStEph.rs
-❌ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:31: error: struct_outside_verus - struct PQEntry — should be inside verus!
-        31 |     pub struct PQEntry<V: StT + Ord> {
-        32 |         priority: WrappedF64,
-        33 |         vertex: V,
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:31: error: clone_derived_outside - struct PQEntry — Clone should be implemented inside verus!, not derived outside
-        31 |     pub struct PQEntry<V: StT + Ord> {
-        32 |         priority: WrappedF64,
-        33 |         vertex: V,
-   Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
-❌ UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:47: error: struct_outside_verus - struct UnionFindStEph — should be inside verus!
-        47 |     pub struct UnionFindStEph<V: StT + Hash> {
-        48 |         parent: HashMap<V, V>,
-        49 |         rank: HashMap<V, usize>,
-   Errors: 1 total (1 struct/enum outside verus!)
+✓ PrimStEph.rs
+✓ UnionFindStEph.rs
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -34,6 +20,4 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 3 (bare impl(s), struct/enum outside verus!)
-
-🎉 No proof holes found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.

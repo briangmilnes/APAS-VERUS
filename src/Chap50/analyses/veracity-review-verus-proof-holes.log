@@ -1,117 +1,75 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap50/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap50
 
 ❌ MatrixChainMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:58: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        54 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:39: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+        32 |         open spec fn view(&self) -> (nat, nat) {
             ...
-        56 |         {
-        57 |             let r = self.rows == other.rows && self.cols == other.cols;
-        59 |             r
-        60 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:65: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        54 |         fn eq(&self, other: &Self) -> (r: bool)
+        37 |         pub struct McEphDimWf;
+        38 |         impl RwLockPredicate<Vec<MatrixDim>> for McEphDimWf {
+        40 |         }
+        41 |         #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:41: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+        39 |             open spec fn inv(self, v: Vec<MatrixDim>) -> bool { true }
+        40 |         }
+        42 |         fn new_mceph_dim_lock(val: Vec<MatrixDim>) -> (lock: RwLock<Vec<MatrixDim>, McEphDimWf>) {
+        43 |             RwLock::new(val, Ghost(McEphDimWf))
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:48: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+        42 |         fn new_mceph_dim_lock(val: Vec<MatrixDim>) -> (lock: RwLock<Vec<MatrixDim>, McEphDimWf>) {
             ...
-        63 |         pub struct McEphDimWf;
-        64 |         impl RwLockPredicate<Vec<MatrixDim>> for McEphDimWf {
-        66 |         }
-        67 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:67: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        65 |             open spec fn inv(self, v: Vec<MatrixDim>) -> bool { true }
-        66 |         }
-        68 |         fn new_mceph_dim_lock(val: Vec<MatrixDim>) -> (lock: RwLock<Vec<MatrixDim>, McEphDimWf>) {
-        69 |             RwLock::new(val, Ghost(McEphDimWf))
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:74: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        68 |         fn new_mceph_dim_lock(val: Vec<MatrixDim>) -> (lock: RwLock<Vec<MatrixDim>, McEphDimWf>) {
-            ...
-        72 |         pub struct McEphMemoWf;
-        73 |         impl RwLockPredicate<HashMap<(usize, usize), usize>> for McEphMemoWf {
-        75 |         }
-        76 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:76: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        74 |             open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
-        75 |         }
-        77 |         fn new_mceph_memo_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>) {
-        78 |             RwLock::new(val, Ghost(McEphMemoWf))
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:84: error: struct_outside_verus - struct MatrixChainMtEphS — should be inside verus!
-        84 |     pub struct MatrixChainMtEphS {
-        85 |         pub dimensions: Arc<RwLock<Vec<MatrixDim>, McEphDimWf>>,
-        86 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:84: error: clone_derived_outside - struct MatrixChainMtEphS — Clone should be implemented inside verus!, not derived outside
-        84 |     pub struct MatrixChainMtEphS {
-        85 |         pub dimensions: Arc<RwLock<Vec<MatrixDim>, McEphDimWf>>,
-        86 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>>,
-   Errors: 7 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 assume in eq/clone (Verus workaround), 2 Verus RwLock external_body, 2 dummy RwLockPredicate)
+        46 |         pub struct McEphMemoWf;
+        47 |         impl RwLockPredicate<HashMap<(usize, usize), usize>> for McEphMemoWf {
+        49 |         }
+        50 |         #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:50: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+        48 |             open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
+        49 |         }
+        51 |         fn new_mceph_memo_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>) {
+        52 |             RwLock::new(val, Ghost(McEphMemoWf))
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:58: error: struct_outside_verus - struct MatrixChainMtEphS — should be inside verus!
+        58 |     pub struct MatrixChainMtEphS {
+        59 |         pub dimensions: Arc<RwLock<Vec<MatrixDim>, McEphDimWf>>,
+        60 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>>,
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:58: error: clone_derived_outside - struct MatrixChainMtEphS — Clone should be implemented inside verus!, not derived outside
+        58 |     pub struct MatrixChainMtEphS {
+        59 |         pub dimensions: Arc<RwLock<Vec<MatrixDim>, McEphDimWf>>,
+        60 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McEphMemoWf>>,
+   Errors: 6 total (1 struct/enum outside verus!, 1 Clone derived outside, 2 Verus RwLock external_body, 2 dummy RwLockPredicate)
 ❌ MatrixChainMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:60: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        56 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:41: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+        34 |         open spec fn view(&self) -> (nat, nat) {
             ...
-        58 |         {
-        59 |             let r = self.rows == other.rows && self.cols == other.cols;
-        61 |             r
-        62 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:67: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        56 |         fn eq(&self, other: &Self) -> (r: bool)
-            ...
-        65 |         pub struct McPerMemoWf;
-        66 |         impl RwLockPredicate<HashMap<(usize, usize), usize>> for McPerMemoWf {
-        68 |         }
-        69 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:69: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        67 |             open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
-        68 |         }
-        70 |         fn new_mcper_memo_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>) {
-        71 |             RwLock::new(val, Ghost(McPerMemoWf))
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:77: error: struct_outside_verus - struct MatrixChainMtPerS — should be inside verus!
-        77 |     pub struct MatrixChainMtPerS {
-        78 |         pub dimensions: Arc<Vec<MatrixDim>>,
-        79 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:77: error: clone_derived_outside - struct MatrixChainMtPerS — Clone should be implemented inside verus!, not derived outside
-        77 |     pub struct MatrixChainMtPerS {
-        78 |         pub dimensions: Arc<Vec<MatrixDim>>,
-        79 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>>,
-   Errors: 5 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 assume in eq/clone (Verus workaround), 1 Verus RwLock external_body, 1 dummy RwLockPredicate)
+        39 |         pub struct McPerMemoWf;
+        40 |         impl RwLockPredicate<HashMap<(usize, usize), usize>> for McPerMemoWf {
+        42 |         }
+        43 |         #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:43: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+        41 |             open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
+        42 |         }
+        44 |         fn new_mcper_memo_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>) {
+        45 |             RwLock::new(val, Ghost(McPerMemoWf))
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:51: error: struct_outside_verus - struct MatrixChainMtPerS — should be inside verus!
+        51 |     pub struct MatrixChainMtPerS {
+        52 |         pub dimensions: Arc<Vec<MatrixDim>>,
+        53 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>>,
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:51: error: clone_derived_outside - struct MatrixChainMtPerS — Clone should be implemented inside verus!, not derived outside
+        51 |     pub struct MatrixChainMtPerS {
+        52 |         pub dimensions: Arc<Vec<MatrixDim>>,
+        53 |         pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>>,
+   Errors: 4 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 Verus RwLock external_body, 1 dummy RwLockPredicate)
 ❌ MatrixChainStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:60: external_type_specification - #[verifier::external_type_specification]
-        61 |     pub struct ExMatrixChainStEphS(MatrixChainStEphS);
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:55: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        51 |         fn eq(&self, other: &Self) -> (r: bool)
-            ...
-        53 |         {
-        54 |             let r = self.rows == other.rows && self.cols == other.cols;
-        56 |             r
-        57 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:67: error: struct_outside_verus - struct MatrixChainStEphS — should be inside verus!
-        67 |     pub struct MatrixChainStEphS {
-        68 |         pub dimensions: Vec<MatrixDim>,
-        69 |         pub memo: HashMap<(usize, usize), usize>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:67: error: clone_derived_outside - struct MatrixChainStEphS — Clone should be implemented inside verus!, not derived outside
-        67 |     pub struct MatrixChainStEphS {
-        68 |         pub dimensions: Vec<MatrixDim>,
-        69 |         pub memo: HashMap<(usize, usize), usize>,
-   Holes: 1 total
-      1 × external_type_specification
-   Errors: 3 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 assume in eq/clone (Verus workaround))
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:48: external_body - #[verifier::external_body]
+        49 |         fn clone(&self) -> (s: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:60: external_body - #[verifier::external_body]
+        61 |         fn eq(&self, other: &Self) -> (r: bool)
+   Holes: 2 total
+      2 × external_body
 ❌ MatrixChainStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:62: external_type_specification - #[verifier::external_type_specification]
-        63 |     pub struct ExMatrixChainStPerS(MatrixChainStPerS);
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:57: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        53 |         fn eq(&self, other: &Self) -> (r: bool)
-            ...
-        55 |         {
-        56 |             let r = self.rows == other.rows && self.cols == other.cols;
-        58 |             r
-        59 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:69: error: struct_outside_verus - struct MatrixChainStPerS — should be inside verus!
-        69 |     pub struct MatrixChainStPerS {
-        70 |         pub dimensions: Vec<MatrixDim>,
-        71 |         pub memo: HashMap<(usize, usize), usize>,
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:69: error: clone_derived_outside - struct MatrixChainStPerS — Clone should be implemented inside verus!, not derived outside
-        69 |     pub struct MatrixChainStPerS {
-        70 |         pub dimensions: Vec<MatrixDim>,
-        71 |         pub memo: HashMap<(usize, usize), usize>,
-   Holes: 1 total
-      1 × external_type_specification
-   Errors: 3 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 assume in eq/clone (Verus workaround))
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:50: external_body - #[verifier::external_body]
+        51 |         fn clone(&self) -> (s: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:62: external_body - #[verifier::external_body]
+        63 |         fn eq(&self, other: &Self) -> (r: bool)
+   Holes: 2 total
+      2 × external_body
 ❌ OptBinSearchTreeMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:38: external_type_specification - #[verifier::external_type_specification]
         39 |         pub struct ExKeyProb<T: MtVal>(KeyProb<T>);
@@ -290,8 +248,8 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 22 total
-   15 × external_body
-   7 × external_type_specification
+Holes Found: 24 total
+   19 × external_body
+   5 × external_type_specification
 
-Errors: 40 (bare impl(s), struct/enum outside verus!)
+Errors: 32 (bare impl(s), struct/enum outside verus!)

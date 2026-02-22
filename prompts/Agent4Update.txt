@@ -1,18 +1,18 @@
 
-You are agent3 working in gittree: ~/projects/APAS-VERUS-agent3/.
+You are agent4 working in gittree: ~/projects/APAS-VERUS-agent4/.
 Your worktree has been updated.
 Read ./rules/apas-verus/senior-proof-engineer.mdc
 Read ./rules/style/senior-prose-engineer.mdc
 REREAD ANY FILES BEFORE MODIFYING THEM.
 
-Chapters: Chap41, Chap42, Chap43, Chap44, Chap45, Chap47.
+Chapters: Chap49, Chap50, Chap51, Chap52, Chap54, Chap56, Chap57, Chap58, Chap62, Chap63, Chap64, Chap65, Chap66.
 Don't touch directories other than these. 
 Excluded: Chap02 (HF scheduler), Chap12 (exercises).
 I have multiple agents up.
 You are not allowed to add // accept holes or accepts. Read the rule. 
 
 Focus: bogus views, unaccepted external_body, unaccepted assumes.
-Heavy: Chap41 AVLTreeSet*, Chap43 OrderedSetMtEph/OrderedTableMtPer, Chap47 ChainedHashTable.
+Medium: Chap49 MinEditDist/SubsetSum, Chap50 MatrixChain, Chap51 DP, Chap52 identity views, Chap64 SpanTreeMtEph.
 Run veracity-review-proof-holes on each chapter directory.
 Propose a table of fixes in chat.
 Verusification priority. Prove Big Or Go Home.
