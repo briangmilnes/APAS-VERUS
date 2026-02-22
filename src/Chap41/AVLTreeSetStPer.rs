@@ -39,9 +39,8 @@ pub mod AVLTreeSetStPer {
     // 5. view impls
 
     impl<T: StT + Ord> AVLTreeSetStPer<T> {
-        #[verifier::external_body]
         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-            Set::empty()
+            self.elements@.to_set()
         }
     }
 
