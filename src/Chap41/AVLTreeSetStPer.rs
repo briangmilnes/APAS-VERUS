@@ -22,26 +22,34 @@ pub mod AVLTreeSetStPer {
     use vstd::prelude::*;
 
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
-    use crate::vstdplus::accept::accept;
     use crate::Types::Types::*;
 
     verus! {
+
+    // 3. broadcast use
+
+    broadcast use {
+        vstd::multiset::group_multiset_axioms,
+        vstd::seq::group_seq_axioms,
+        vstd::seq_lib::group_seq_properties,
+        vstd::seq_lib::group_to_multiset_ensures,
+        vstd::set::group_set_axioms,
+        vstd::set_lib::group_set_lib_default,
+        crate::vstdplus::feq::feq::group_feq_axioms,
+    };
 
     // 4. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct AVLTreeSetStPer<T: StT + Ord> {
-        elements: AVLTreeSeqStPerS<T>,
+        pub elements: AVLTreeSeqStPerS<T>,
     }
-
-    pub type AVLTreeSetPer<T> = AVLTreeSetStPer<T>;
 
     // 5. view impls
 
     impl<T: StT + Ord> AVLTreeSetStPer<T> {
-        #[verifier::external_body]
         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-            Set::empty()
+            self.elements@.to_set()
         }
     }
 
@@ -53,9 +61,12 @@ pub mod AVLTreeSetStPer {
     // 8. traits
 
     pub trait AVLTreeSetStPerTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
+        spec fn spec_wf(&self) -> bool;
+
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (result: usize)
+            requires self.spec_wf(),
             ensures result == self@.len(), self@.finite();
         /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
@@ -64,11 +75,11 @@ pub mod AVLTreeSetStPer {
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty();
+            ensures result@ == Set::<<T as View>::V>::empty(), result.spec_wf();
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite();
+            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite(), result.spec_wf();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (result: Self)
             ensures result@.finite();
@@ -105,11 +116,16 @@ pub mod AVLTreeSetStPer {
     // 9. impls
 
     impl<T: StT + Ord> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+        open spec fn spec_wf(&self) -> bool {
+            self.elements.spec_well_formed() && self.elements.spec_seq().no_duplicates()
+        }
+
         fn size(&self) -> (result: usize)
         {
-            proof { assume(self.elements.spec_well_formed()); }
+            proof {
+                self.elements.spec_seq().unique_seq_to_set();
+            }
             let r = self.elements.length();
-            proof { assume(r == self@.len()); assume(self@.finite()); }
             r
         }
 
@@ -137,7 +153,16 @@ pub mod AVLTreeSetStPer {
         fn empty() -> (result: Self)
         {
             let result = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::empty() };
-            proof { assume(result@ == Set::<<T as View>::V>::empty()); }
+            proof {
+                assert(result.elements.spec_seq() =~= Seq::<<T as View>::V>::empty());
+                assert(result.elements.spec_seq().len() == 0);
+                result.elements.spec_seq().lemma_cardinality_of_empty_set_is_0();
+                vstd::seq_lib::seq_to_set_is_finite(result.elements.spec_seq());
+                assert(result@.finite());
+                assert(result@.len() == 0);
+                result@.lemma_len0_is_empty();
+                assert(result@ =~= Set::<<T as View>::V>::empty());
+            }
             result
         }
 
@@ -146,8 +171,12 @@ pub mod AVLTreeSetStPer {
             let ghost x_view = x@;
             let result = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::singleton(x) };
             proof {
-                assume(result@ == Set::<<T as View>::V>::empty().insert(x_view));
-                assume(result@.finite());
+                assert(result.elements.spec_seq() =~= seq![x_view]);
+                Seq::<<T as View>::V>::empty().lemma_push_to_set_commute(x_view);
+                assert(seq![x_view] =~= Seq::<<T as View>::V>::empty().push(x_view));
+                assert(result@ == Set::<<T as View>::V>::empty().insert(x_view));
+                result.elements.spec_seq().unique_seq_to_set();
+                assert(result@.finite());
             }
             result
         }
@@ -415,7 +444,7 @@ pub mod AVLTreeSetStPer {
             ensures result@ == self@
         {
             let result = AVLTreeSetStPer { elements: self.elements.clone() };
-            proof { accept(result@ == self@); }
+            proof { assume(result@ == self@); }
             result
         }
     }

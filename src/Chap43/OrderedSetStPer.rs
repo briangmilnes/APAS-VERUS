@@ -44,9 +44,12 @@ pub mod OrderedSetStPer {
 
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1)
     pub trait OrderedSetStPerTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
+        spec fn spec_wf(&self) -> bool;
+
         // Base set operations (ADT 41.1) - delegated
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (result: usize)
+            requires self.spec_wf()
             ensures result == self@.len(), self@.finite();
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn empty() -> (result: Self)
@@ -120,12 +123,19 @@ pub mod OrderedSetStPer {
     // 9. impls
 
     impl<T: StT + Ord> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+        open spec fn spec_wf(&self) -> bool {
+            self.base_set.spec_wf()
+        }
+
         fn size(&self) -> (result: usize)
+            // No requires clause here; it is inherited from the trait
             ensures result == self@.len(), self@.finite()
         { self.base_set.size() }
 
         fn empty() -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty()
+            ensures 
+                result@ == Set::<<T as View>::V>::empty(),
+                result.spec_wf()
         {
             OrderedSetStPer {
                 base_set: AVLTreeSetStPer::empty(),
@@ -133,7 +143,10 @@ pub mod OrderedSetStPer {
         }
 
         fn singleton(x: T) -> (result: Self)
-            ensures result@ == Set::<<T as View>::V>::empty().insert(x@), result@.finite()
+            ensures 
+                result@ == Set::<<T as View>::V>::empty().insert(x@), 
+                result@.finite(),
+                result.spec_wf()
         {
             OrderedSetStPer {
                 base_set: AVLTreeSetStPer::singleton(x),
