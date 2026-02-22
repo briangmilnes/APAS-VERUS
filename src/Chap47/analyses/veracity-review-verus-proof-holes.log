@@ -1,18 +1,12 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap47/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap47
 
 ❌ ChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ChainedHashTable.rs:43: external_body - #[verifier::external_body]
-        44 |             fn clone(&self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ChainedHashTable.rs:56: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        52 |             fn eq(&self, other: &Self) -> (r: bool)
-            ...
-        54 |             {
-        55 |                 let r = self.chain == other.chain;
-        57 |                 r
-        58 |             }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ChainedHashTable.rs:44: external_body - #[verifier::external_body]
+        45 |             fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ChainedHashTable.rs:57: info: accept() - accept hole
    Holes: 1 total
       1 × external_body
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
+   Info: 1 assume(false); diverge() idiom(s)
    Proof functions: 1 total (1 clean, 0 holed)
 ✓ DoubleHashFlatHashTableStEph.rs
 ✓ FlatHashTable.rs
@@ -20,43 +14,19 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 ✓ LinkedListChainedHashTableStEph.rs
    1 clean proof function
 ❌ ParaHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/ParaHashTableStEph.rs:66: error: struct_outside_verus - struct HashTable — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:66: error: struct_outside_verus - struct HashTable — should be inside verus!
         66 |     pub struct HashTable<Key, Value, Entry, Metrics> {
         67 |         pub table: Vec<Entry>,
         68 |         pub hash_fn_gen: HashFunGen<Key>,
    Errors: 1 total (1 struct/enum outside verus!)
 ✓ QuadProbFlatHashTableStEph.rs
-❌ StructChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:65: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        53 |             fn clone(&self) -> (result: Self)
-            ...
-        63 |                     },
-        64 |                 };
-        66 |                 result
-        67 |             }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:82: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        71 |             fn eq(&self, other: &Self) -> (r: bool)
-            ...
-        80 |                         _ => false,
-        81 |                     };
-        83 |                 r
-        84 |             }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:105: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        96 |             fn clone(&self) -> (result: Self)
-            ...
-       103 |                     },
-       104 |                 };
-       106 |                 result
-       107 |             }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap47/StructChainedHashTable.rs:119: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       111 |             fn eq(&self, other: &Self) -> (r: bool)
-            ...
-       117 |                     _ => false,
-       118 |                 };
-       120 |                 r
-       121 |             }
-   Errors: 4 total (4 assume in eq/clone (Verus workaround))
-   Proof functions: 1 total (1 clean, 0 holed)
+ℹ StructChainedHashTable.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:66: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:83: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:106: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:120: info: accept() - accept hole
+   Info: 4 assume(false); diverge() idiom(s)
+   1 clean proof function
 ✓ VecChainedHashTableStEph.rs
    1 clean proof function
 
@@ -77,4 +47,6 @@ Proof Functions:
 Holes Found: 1 total
    1 × external_body
 
-Errors: 6 (bare impl(s), struct/enum outside verus!)
+Errors: 1 (bare impl(s), struct/enum outside verus!)
+
+Info: 5 assume(false); diverge() idiom(s) (valid non-termination)
