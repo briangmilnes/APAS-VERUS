@@ -58,9 +58,8 @@ broadcast use {
     // 5. view impls
 
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPer<T> {
-        #[verifier::external_body]
         pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-            Set::empty()
+            self.elements@.to_set()
         }
     }
 

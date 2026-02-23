@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap44/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap44
 
 ✓ DocumentIndex.rs
    1 clean proof function
