@@ -5,13 +5,12 @@ Read ./rules/apas-verus/senior-proof-engineer.mdc
 Read ./rules/style/senior-prose-engineer.mdc
 REREAD ANY FILES BEFORE MODIFYING THEM.
 
-Chapters: Chap03, Chap05, Chap06, Chap11, Chap17, Chap18, Chap19, Chap21, Chap23.
-Don't touch directories other than these. 
-Excluded: Chap02 (HF scheduler), Chap12 (exercises).
 I have multiple agents up.
 You are not allowed to add // accept holes or accepts. Read the rule. 
 
-Focus: bogus views, unaccepted external_body, unaccepted assumes.
-Run veracity-review-proof-holes on each chapter directory.
-Propose a table of fixes (bogus views, external_body, assumes) in chat.
 Verusification priority. Prove Big Or Go Home.
+
+We are going to work only on
+~/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs
+
+Propose fixes.
