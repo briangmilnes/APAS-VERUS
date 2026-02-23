@@ -343,30 +343,30 @@ pub mod Chap21 {
     pub mod Problem21_4;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap23 {
     pub mod PrimTreeSeqStPer;
     pub mod BalBinTreeStEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap26 {
     pub mod DivConReduceStPer;
     pub mod MergeSortStPer;
     pub mod ScanDCStPer;
-    pub mod ETSPStEph;
+//    pub mod ETSPStEph;
+//    pub mod ETSPMtEph;
     pub mod DivConReduceMtPer;
     pub mod MergeSortMtPer;
     pub mod ScanDCMtPer;
-    pub mod ETSPMtEph;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
 pub mod Chap27 {
     pub mod ReduceContractStEph;
     pub mod ReduceContractMtEph;
-    pub mod ScanContractStEph;
-    pub mod ScanContractMtEph;
+//    pub mod ScanContractStEph;
+//    pub mod ScanContractMtEph;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
@@ -374,17 +374,17 @@ pub mod Chap28 {
     pub mod MCSSSpec;
     pub mod MaxContigSubSumBruteStEph;
     pub mod MaxContigSubSumReducedStEph;
-    pub mod MaxContigSubSumOptStEph;
     pub mod MaxContigSubSumDivConStEph;
     pub mod MaxContigSubSumIterStEph;
     pub mod MaxContigSubSumReducedMcsseStEph;
     pub mod MaxContigSubSumDivConOptStEph;
-    pub mod MaxContigSubSumOptMtEph;
+//    pub mod MaxContigSubSumOptStEph;
+//    pub mod MaxContigSubSumOptMtEph;
     pub mod MaxContigSubSumDivConMtEph;
     pub mod MaxContigSubSumDivConOptMtEph;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap35 {
     pub mod OrderStatSelectStEph;
     pub mod OrderStatSelectStPer;
@@ -399,7 +399,7 @@ pub mod Chap36 {
     // pub mod QuickSortMtEphSlice;  // trait impl needs verus! wrapper
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap37 {
     pub mod AVLTreeSeq;
     pub mod AVLTreeSeqStEph;

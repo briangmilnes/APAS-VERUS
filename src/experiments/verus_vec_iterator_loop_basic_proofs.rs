@@ -5,6 +5,14 @@ use crate::experiments::verus_vec_iterator::*;
 
 verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
+
 pub open spec fn seq_usize_mem(s: Seq<usize>, elt: usize) -> bool {
     exists|i: int| 0 <= i < s.len() && s[i] == elt
 }

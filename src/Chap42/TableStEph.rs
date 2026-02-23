@@ -24,6 +24,15 @@ pub mod TableStEph {
 
     verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::map::group_map_axioms,
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
+
     // 4. type definitions
 
     #[verifier::reject_recursive_types(K)]

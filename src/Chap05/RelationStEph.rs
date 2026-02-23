@@ -63,6 +63,8 @@ verus! {
         crate::Types::Types::group_Pair_axioms,
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
+        // Veracity: added broadcast groups
+        vstd::seq_lib::group_to_multiset_ensures,
     };
 
 

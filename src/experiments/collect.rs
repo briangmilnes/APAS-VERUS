@@ -17,6 +17,9 @@ pub mod collect {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
         vstd::seq_lib::group_seq_properties,
+        // Veracity: added broadcast groups
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        vstd::seq_lib::group_to_multiset_ensures,
     };
 
     pub open spec fn obeys_spec_eq<T: PartialEq>() -> bool {

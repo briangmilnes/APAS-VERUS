@@ -190,7 +190,13 @@ pub mod feq {
             s1.map(|_i: int, t: T| t@) == s2.map(|_i: int, t: T| t@),
     {
         broadcast use axiom_cloned_implies_eq_owned;
-        broadcast use vstd::seq::group_seq_axioms;
+        broadcast use {
+            vstd::seq::group_seq_axioms,
+            // Veracity: added broadcast groups
+            crate::vstdplus::feq::feq::group_feq_axioms,
+            vstd::seq_lib::group_seq_properties,
+            vstd::seq_lib::group_to_multiset_ensures,
+        };
     }
 
     // Exec function: test equality and get spec fact

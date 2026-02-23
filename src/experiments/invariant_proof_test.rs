@@ -5,6 +5,14 @@ use vstd::prelude::*;
 
 verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
+
 use vstd::std_specs::clone::*;
 
 #[verifier::reject_recursive_types(V)]

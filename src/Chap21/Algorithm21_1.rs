@@ -25,7 +25,14 @@ pub mod Algorithm21_1 {
 
     //		3. broadcast use
 
-    broadcast use vstd::std_specs::vec::group_vec_axioms;
+    broadcast use {
+        vstd::std_specs::vec::group_vec_axioms,
+        // Veracity: added broadcast groups
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        vstd::seq::group_seq_axioms,
+        vstd::seq_lib::group_seq_properties,
+        vstd::seq_lib::group_to_multiset_ensures,
+    };
 
     //		6. spec fns
 

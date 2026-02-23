@@ -9,5 +9,7 @@ alwaysApply: true
 **NEVER write Python scripts** for anything that will be used more than once.
 
 - All reusable tools, scripts, and utilities must be written in **Rust**.
-- In a pinch, a throwaway Python script is acceptable for a true one-off (e.g., quick data inspection), but if there's any chance it will be reused, write it in Rust.
+- If a tool is needed, the USER will take the output and specification into another agent (on `~/projects/veracity`) and make that tool.
+- The user will then come back and show you how to use that tool.
+- You must have the user's **explicit permission** to write even a throwaway Python script.
 - When in doubt, write Rust.

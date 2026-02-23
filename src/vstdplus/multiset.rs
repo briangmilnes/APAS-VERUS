@@ -122,7 +122,13 @@ pub proof fn lemma_flatten_01_multiset_eq_filter<T>(
 {
     broadcast use Seq::<_>::group_seq_flatten;
     broadcast use vstd::seq_lib::group_to_multiset_ensures;
-    broadcast use vstd::multiset::group_multiset_axioms;
+    broadcast use {
+        vstd::multiset::group_multiset_axioms,
+        // Veracity: added broadcast groups
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        vstd::seq::group_seq_axioms,
+        vstd::seq_lib::group_seq_properties,
+    };
 
     if s.len() == 0 {
         assert(ss =~= Seq::<Seq<T>>::empty());

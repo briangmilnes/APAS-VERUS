@@ -69,7 +69,14 @@ pub mod clone_plus_vs_deep_clone {
     fn test_vstd_equality(x: &u64, y: &u64) -> (eq: bool)
         ensures eq == (x@ == y@)
     {
-        broadcast use vstd::laws_eq::group_laws_eq;
+        broadcast use {
+            vstd::laws_eq::group_laws_eq,
+            // Veracity: added broadcast groups
+            crate::vstdplus::feq::feq::group_feq_axioms,
+            vstd::seq::group_seq_axioms,
+            vstd::seq_lib::group_seq_properties,
+            vstd::seq_lib::group_to_multiset_ensures,
+        };
         *x == *y
     }
 

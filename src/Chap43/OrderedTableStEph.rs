@@ -12,6 +12,12 @@ pub mod OrderedTableStEph {
 
     verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::map::group_map_axioms,
+};
+
     // Table of Contents
     // 1. module (above)
     // 2. imports (above)

@@ -9,6 +9,14 @@ pub mod seq {
 
 verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
+
     // Spec function: sum of u32 values in a sequence as nat
     pub open spec fn spec_sum_u32_seq(s: Seq<u32>) -> nat 
         decreases s.len()

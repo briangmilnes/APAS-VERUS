@@ -42,6 +42,9 @@ pub mod MergeSortStPer {
         vstd::seq::group_seq_axioms,
         vstd::seq_lib::group_to_multiset_ensures,
         vstd::multiset::group_multiset_axioms,
+        // Veracity: added broadcast groups
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        vstd::seq_lib::group_seq_properties,
     };
 
 

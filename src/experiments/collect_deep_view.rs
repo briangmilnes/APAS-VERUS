@@ -16,6 +16,9 @@ pub mod collect_deep_view {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
         vstd::seq_lib::group_seq_properties,
+        // Veracity: added broadcast groups
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        vstd::seq_lib::group_to_multiset_ensures,
     };
 
     pub open spec fn spec_find_key_index<K, V>(groups: Seq<(K, Seq<V>)>, k: K) -> Option<int>

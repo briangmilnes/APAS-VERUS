@@ -5,6 +5,14 @@ alwaysApply: true
 
 # Trait-Impl Pattern
 
+## Philosophy: Traits as ML Modules
+
+Rust decided 40 years after ML modules were proven not to include them, opting instead for Haskell-style typeclasses (traits) for ad-hoc polymorphism. Because APAS-VERUS is a teaching corpus, we use traits to simulate module interfaces to maximize readability.
+
+- **Ignore standard Rust idioms:** Do not restrict traits only to cases with multiple implementing types.
+- **Traits as Interfaces:** Put almost every public function into a trait (some exceptions exist due to complex return types).
+- **Specs in Traits:** Place the Verus specifications (`requires` / `ensures`) in the trait definition, not the implementation block. This separates the interface contract from the implementation details.
+
 Every APAS module defines a trait containing **all** public functions, and implements them
 in a single `impl Trait for Type` block. There are no bare `impl Type` blocks for functions
 that belong in the trait.

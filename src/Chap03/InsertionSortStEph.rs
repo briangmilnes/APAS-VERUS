@@ -13,6 +13,9 @@ pub mod InsertionSortStEph {
 broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
     vstd::seq::group_seq_axioms,
+        // Veracity: added broadcast groups
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        vstd::seq_lib::group_seq_properties,
 };
 
 pub open spec fn sorted_prefix<T: TotalOrder>(v: &[T], i: int) -> bool {

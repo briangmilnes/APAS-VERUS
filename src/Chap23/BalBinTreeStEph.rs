@@ -48,6 +48,9 @@ pub mod BalBinTreeStEph {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
+        // Veracity: added broadcast groups
+        vstd::seq_lib::group_seq_properties,
+        vstd::seq_lib::group_to_multiset_ensures,
     };
 
 

@@ -1,0 +1,713 @@
+veracity-add-broadcast-groups
+Log: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-add-broadcast-groups.log
+dry-run: false
+vstdplus (-l): true
+
+vstd: /home/milnes/projects/verus/source/vstd
+vstd broadcast groups: 46
+
+Target files: 407
+Files with proposed additions: 141
+  src/experiments/modify_a_ghost_struct.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/vstdplus/feq.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap55/TopoSortStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap18/ArraySeqStEph.rs:
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/verus_keep_ghost_and_test.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap26/MergeSortMtPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+  src/experiments/clone_plus_vs_deep_clone.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap41/AVLTreeSetMtPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap23/PrimTreeSeqStPer.rs:
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/accept.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/VSTDLoopProofs.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap18/LinkedListStPer.rs:
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap28/MaxContigSubSumDivConOptStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap19/ArraySeqStEph.rs:
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap21/Algorithm21_1.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap37/AVLTreeSeqMtPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap18/ArraySeqMtPer.rs:
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap41/AVLTreeSetStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap43/AugOrderedTableStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::map::group_map_axioms  // group map axioms
+  src/experiments/baseviewtypes.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/verus_wrapped_iter_loops.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap43/AugOrderedTableStPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::map::group_map_axioms  // group map axioms
+  src/Chap43/OrderedTableStPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::map::group_map_axioms  // group map axioms
+  src/Chap52/AdjMatrixGraphStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Types.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/experiments/f64_sort.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/set_len_empty_both_ways.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap45/BinaryHeapPQ.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap52/AdjSeqGraphMtPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap52/AdjSeqGraphStPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap05/MappingStEph.rs:
+    + vstd::map::group_map_axioms  // group map axioms
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap05/RelationStEph.rs:
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap52/AdjSeqGraphMtEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap03/InsertionSortStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+  src/Chap18/ArraySeqMtEph.rs:
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap26/ETSPStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap26/MergeSortStPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+  src/Chap41/ArraySetEnumMtEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/experiments/simple_seq_iter.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap27/ReduceContractStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap43/AugOrderedTableMtEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::map::group_map_axioms  // group map axioms
+  src/vstdplus/seq_set.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap35/OrderStatSelectMtPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+  src/experiments/collect_deep_view.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/simple_set_iter.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/experiments/verus_vec_iterator_for_basic_proofs.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap50/MatrixChainStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::map::group_map_axioms  // group map axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap18/ArraySeqStPer.rs:
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap43/OrderedSetStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap52/EdgeSetGraphStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap19/ArraySeqMtEph.rs:
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap41/AVLTreeSetStPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap43/OrderedSetMtEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/experiments/seq_set_exec.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/f64_float_cmp_sort.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap45/UnsortedListPQ.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/hash_set_with_view_plus_loops.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap37/AVLTreeSeqStPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap43/OrderedTableMtPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::map::group_map_axioms  // group map axioms
+  src/Chap37/AVLTreeSeqStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap52/AdjSeqGraphStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap52/AdjTableGraphStPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::map::group_map_axioms  // group map axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/experiments/sigma_pi.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/experiments/arc_rwlock_ninject.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap26/ScanDCStPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/vec_clone_in_verus.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap28/MaxContigSubSumDivConStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap21/Exercise21_5.rs:
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap52/AdjTableGraphMtPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::map::group_map_axioms  // group map axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap41/ArraySetStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap52/AdjMatrixGraphMtPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap52/AdjMatrixGraphStPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/accept_external_body.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap52/AdjTableGraphStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::map::group_map_axioms  // group map axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/experiments/verus_vec_iterator.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/ParaPairs.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/experiments/test_feq_insertion_sort.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap19/ArraySeqMtEphSlice.rs:
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap26/ETSPMtEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap05/SetMtEph.rs:
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap06/LabUnDirGraphMtEph.rs:
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap42/TableStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::map::group_map_axioms  // group map axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap18/LinkedListStEph.rs:
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap06/LabDirGraphMtEph.rs:
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap52/AdjMatrixGraphMtEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/collect2.rs:
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/abstract_set_iter.rs:
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap57/StackStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/vstdplus/VecQueue.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap05/KleeneStPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/experiments/test_feq.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap26/ScanDCMtPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/simple_hash_set_iter.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/experiments/verus_vec_iterator_loop_basic_proofs.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap19/ArraySeqStPer.rs:
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap42/TableMtEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::map::group_map_axioms  // group map axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap43/OrderedTableMtEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::map::group_map_axioms  // group map axioms
+  src/Chap17/MathSeq.rs:
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap45/BalancedTreePQ.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap50/MatrixChainStPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::map::group_map_axioms  // group map axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/invariant_proof_test.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap27/ScanContractMtEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap26/DivConReduceMtPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap05/SetStEph.rs:
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/verus_vec_iterator_while_basic_proofs.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap28/MaxContigSubSumOptStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap27/ReduceContractMtEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/seq_for_basic_proofs.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap45/SortedListPQ.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap35/OrderStatSelectStPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+  src/experiments/seq_while_basic_proofs.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap37/AVLTreeSeq.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/external_body_accept_hole.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap27/ScanContractStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/vec_remove_duplicates.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap06/LabUnDirGraphStEph.rs:
+    + vstd::set::group_set_axioms  // group set axioms
+  src/Chap43/OrderedSetStPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap35/OrderStatSelectStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+  src/Chap56/SSSPResultStPerF64.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap43/OrderedTableStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::map::group_map_axioms  // group map axioms
+  src/experiments/collect.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/spec_loop.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap35/OrderStatSelectMtEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+  src/vstdplus/seq.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap06/UnDirGraphMtEph.rs:
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap06/DirGraphStEph.rs:
+    + vstd::set::group_set_axioms  // group set axioms
+  src/vstdplus/float.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/f64_bits_sort.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/ghost_type_invariant.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap28/MCSSSpec.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/seq_loop_basic_proofs.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap23/BalBinTreeStEph.rs:
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap41/AVLTreeSetMtEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap28/MaxContigSubSumIterStEph.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/experiments/assume_spec_test.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/Chap06/DirGraphMtEph.rs:
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/Chap45/HeapsortExample.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+    + vstd::seq_lib::group_to_multiset_ensures  // group to multiset ensures
+  src/vstdplus/hash_set_with_view_plus.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+  src/vstdplus/multiset.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::seq::group_seq_axioms  // group seq axioms
+    + vstd::seq_lib::group_seq_properties  // group seq properties
+  src/Chap06/UnDirGraphStEph.rs:
+    + vstd::set::group_set_axioms  // group set axioms
+  src/Chap52/EdgeSetGraphStPer.rs:
+    + crate::vstdplus::feq::feq::group_feq_axioms  // feq axioms
+    + vstd::set::group_set_axioms  // group set axioms
+    + vstd::set_lib::group_set_lib_default  // group set lib default
+
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/modify_a_ghost_struct.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/feq.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap55/TopoSortStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/verus_keep_ghost_and_test.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap26/MergeSortMtPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/clone_plus_vs_deep_clone.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/accept.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/VSTDLoopProofs.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap28/MaxContigSubSumDivConOptStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap21/Algorithm21_1.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/baseviewtypes.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/verus_wrapped_iter_loops.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjMatrixGraphStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Types.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/f64_sort.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/set_len_empty_both_ways.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjSeqGraphMtPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjSeqGraphStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjSeqGraphMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap03/InsertionSortStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap26/MergeSortStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/simple_seq_iter.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap27/ReduceContractStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/seq_set.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap35/OrderStatSelectMtPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/collect_deep_view.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/simple_set_iter.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/verus_vec_iterator_for_basic_proofs.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/seq_set_exec.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/f64_float_cmp_sort.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/hash_set_with_view_plus_loops.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjSeqGraphStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/sigma_pi.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/arc_rwlock_ninject.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ScanDCStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/vec_clone_in_verus.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap28/MaxContigSubSumDivConStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap21/Exercise21_5.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjMatrixGraphMtPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjMatrixGraphStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/accept_external_body.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/verus_vec_iterator.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/ParaPairs.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/test_feq_insertion_sort.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEphSlice.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabDirGraphMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjMatrixGraphMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/collect2.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/abstract_set_iter.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap57/StackStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/VecQueue.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/test_feq.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ScanDCMtPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/simple_hash_set_iter.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/verus_vec_iterator_loop_basic_proofs.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/invariant_proof_test.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap27/ScanContractMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/verus_vec_iterator_while_basic_proofs.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap28/MaxContigSubSumOptStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap27/ReduceContractMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/seq_for_basic_proofs.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap35/OrderStatSelectStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/seq_while_basic_proofs.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/external_body_accept_hole.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap27/ScanContractStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/vec_remove_duplicates.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetStPer.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap35/OrderStatSelectStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap56/SSSPResultStPerF64.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/collect.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/spec_loop.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap35/OrderStatSelectMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/seq.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/float.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/f64_bits_sort.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/ghost_type_invariant.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap28/MCSSSpec.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/seq_loop_basic_proofs.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap28/MaxContigSubSumIterStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/experiments/assume_spec_test.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hash_set_with_view_plus.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/multiset.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphStEph.rs...
+Applying to /home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStPer.rs...
+Done.

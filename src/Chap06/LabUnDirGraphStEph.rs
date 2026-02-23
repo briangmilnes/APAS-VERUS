@@ -24,6 +24,8 @@ verus! {
         crate::Types::Types::group_LabEdge_axioms,
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
+        // Veracity: added broadcast groups
+        vstd::set::group_set_axioms,
     };
 
     #[verifier::reject_recursive_types(V)]

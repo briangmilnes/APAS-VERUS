@@ -15,6 +15,14 @@ pub mod SortedListPQ {
     use crate::vstdplus::feq::feq::{lemma_seq_map_cloned_view_eq, obeys_feq_clone};
 
     verus! {
+
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
         proof fn _sorted_list_pq_verified() {}
 
         #[verifier::reject_recursive_types(T)]

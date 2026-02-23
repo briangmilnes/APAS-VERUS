@@ -17,6 +17,14 @@ use std::sync::Arc;
 
 verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
+
 // 1. Lock predicate
 
 /// Ghost state carried by the lock. The invariant says the buffer is

@@ -35,7 +35,13 @@ pub mod AVLTreeSeqStPer {
 
     // 3. broadcast use
 
-    broadcast use vstd::seq::group_seq_axioms;
+    broadcast use {
+        vstd::seq::group_seq_axioms,
+        // Veracity: added broadcast groups
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        vstd::seq_lib::group_seq_properties,
+        vstd::seq_lib::group_to_multiset_ensures,
+    };
 
     // 4. type definitions
 
@@ -101,14 +107,14 @@ pub mod AVLTreeSeqStPer {
     }
 
     /// Well-formedness: cached height and size match the actual tree structure.
-    pub open spec fn spec_wf<T: StT>(link: Link<T>) -> bool
+    pub open spec fn spec_avltreeseqstper_wf<T: StT>(link: Link<T>) -> bool
         decreases link,
     {
         match link {
             None => true,
             Some(node) => {
-                spec_wf(node.left)
-                && spec_wf(node.right)
+                spec_avltreeseqstper_wf(node.left)
+                && spec_avltreeseqstper_wf(node.right)
                 && node.height as nat == 1 + spec_nat_max(
                     spec_cached_height(&node.left),
                     spec_cached_height(&node.right),
@@ -123,7 +129,7 @@ pub mod AVLTreeSeqStPer {
 
     /// Under well-formedness, cached size equals in-order sequence length.
     proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)
-        requires spec_wf(*link),
+        requires spec_avltreeseqstper_wf(*link),
         ensures spec_cached_size(link) == spec_inorder(*link).len(),
         decreases *link,
     {
@@ -212,7 +218,7 @@ pub mod AVLTreeSeqStPer {
             result.size as nat == 1 + spec_cached_size(&left) + spec_cached_size(&right),
             result.height as nat == 1 + spec_nat_max(
                 spec_cached_height(&left), spec_cached_height(&right)),
-            spec_wf(left) && spec_wf(right) ==> spec_wf(Some(result)),
+            spec_avltreeseqstper_wf(left) && spec_avltreeseqstper_wf(right) ==> spec_avltreeseqstper_wf(Some(result)),
     {
         let hl = height_fn(&left);
         let hr = height_fn(&right);
@@ -223,10 +229,10 @@ pub mod AVLTreeSeqStPer {
 
     #[verifier::external_body]
     fn rotate_right<T: StT>(y: Arc<Node<T>>) -> (result: Arc<Node<T>>)
-        requires y.left.is_some(), spec_wf(Some(y)),
+        requires y.left.is_some(), spec_avltreeseqstper_wf(Some(y)),
         ensures
             spec_inorder(Some(result)) =~= spec_inorder(Some(y)),
-            spec_wf(Some(result)),
+            spec_avltreeseqstper_wf(Some(result)),
     {
         let x = y.left.as_ref().unwrap().clone();
         let t2 = x.right.clone();
@@ -236,10 +242,10 @@ pub mod AVLTreeSeqStPer {
 
     #[verifier::external_body]
     fn rotate_left<T: StT>(x: Arc<Node<T>>) -> (result: Arc<Node<T>>)
-        requires x.right.is_some(), spec_wf(Some(x)),
+        requires x.right.is_some(), spec_avltreeseqstper_wf(Some(x)),
         ensures
             spec_inorder(Some(result)) =~= spec_inorder(Some(x)),
-            spec_wf(Some(result)),
+            spec_avltreeseqstper_wf(Some(result)),
     {
         let y = x.right.as_ref().unwrap().clone();
         let t2 = y.left.clone();
@@ -249,10 +255,10 @@ pub mod AVLTreeSeqStPer {
 
     #[verifier::external_body]
     fn rebalance<T: StT>(n: Arc<Node<T>>) -> (result: Arc<Node<T>>)
-        requires spec_wf(Some(n)),
+        requires spec_avltreeseqstper_wf(Some(n)),
         ensures
             spec_inorder(Some(result)) =~= spec_inorder(Some(n)),
-            spec_wf(Some(result)),
+            spec_avltreeseqstper_wf(Some(result)),
     {
         let hl = height_fn(&n.left);
         let hr = height_fn(&n.right);
@@ -277,7 +283,7 @@ pub mod AVLTreeSeqStPer {
 
     #[verifier::external_body]
     fn nth_ref<'a, T: StT>(cur: &'a Link<T>, index: N) -> (result: &'a T)
-        requires spec_wf(*cur), (index as int) < spec_inorder(*cur).len(),
+        requires spec_avltreeseqstper_wf(*cur), (index as int) < spec_inorder(*cur).len(),
         ensures result@ == spec_inorder(*cur)[index as int],
     {
         let mut cur = cur;
@@ -298,7 +304,7 @@ pub mod AVLTreeSeqStPer {
 
     #[verifier::external_body]
     fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (result: Result<Link<T>, &'static str>)
-        requires spec_wf(*cur), (index as int) < spec_inorder(*cur).len(),
+        requires spec_avltreeseqstper_wf(*cur), (index as int) < spec_inorder(*cur).len(),
         ensures result.is_ok(),
     {
         match cur {
@@ -335,7 +341,7 @@ pub mod AVLTreeSeqStPer {
 
     #[verifier::external_body]
     fn build_balanced_from_slice<T: StT>(a: &[T]) -> (result: Link<T>)
-        ensures spec_wf(result),
+        ensures spec_avltreeseqstper_wf(result),
     {
         fn rec<T: StT>(a: &[T]) -> Link<T> {
             if a.is_empty() {
@@ -370,7 +376,7 @@ pub mod AVLTreeSeqStPer {
         }
 
         open spec fn spec_well_formed(&self) -> bool {
-            spec_wf(self.root)
+            spec_avltreeseqstper_wf(self.root)
         }
 
         fn empty() -> (result: Self) {

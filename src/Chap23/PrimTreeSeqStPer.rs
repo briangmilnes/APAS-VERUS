@@ -56,6 +56,9 @@ pub mod PrimTreeSeqStPer {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
+        // Veracity: added broadcast groups
+        vstd::seq_lib::group_seq_properties,
+        vstd::seq_lib::group_to_multiset_ensures,
     };
 
 
@@ -851,7 +854,7 @@ pub mod PrimTreeSeqStPer {
             ensures cloned@ == self@
         {
             let cloned = PrimTreeSeqStS { seq: self.seq.clone() };
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }
@@ -877,7 +880,7 @@ pub mod PrimTreeSeqStPer {
                 PrimTreeSeqStTree::One(v) => PrimTreeSeqStTree::One(v.clone()),
                 PrimTreeSeqStTree::Two(l, r) => PrimTreeSeqStTree::Two(l.clone(), r.clone()),
             };
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }

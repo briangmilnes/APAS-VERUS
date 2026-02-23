@@ -31,6 +31,14 @@ pub mod MaxContigSubSumDivConStEph {
 
     verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
+
     //		6. spec fns
 
     // ─── 2. spec definitions ───

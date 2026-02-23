@@ -42,6 +42,10 @@ pub mod ArraySetStEph {
         vstd::seq_lib::group_seq_lib_default,
         vstd::seq_lib::group_seq_properties,
         vstd::prelude::Seq::group_seq_extra,
+        // Veracity: added broadcast groups
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        vstd::seq_lib::group_to_multiset_ensures,
+        vstd::set_lib::group_set_lib_default,
     };
 
     // 4. type definitions

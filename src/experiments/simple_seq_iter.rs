@@ -10,6 +10,10 @@ pub mod simple_seq_iter {
     broadcast use {
             vstd::seq_lib::group_seq_properties,
             crate::vstdplus::clone_view::clone_view::group_clone_view_axioms
+        // Veracity: added broadcast groups
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        vstd::seq::group_seq_axioms,
+        vstd::seq_lib::group_to_multiset_ensures,
     };
 
     #[verifier::reject_recursive_types(V)]

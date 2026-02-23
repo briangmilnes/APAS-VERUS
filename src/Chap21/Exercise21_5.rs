@@ -31,6 +31,10 @@ pub mod Exercise21_5 {
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
+        // Veracity: added broadcast groups
+        vstd::seq::group_seq_axioms,
+        vstd::seq_lib::group_seq_properties,
+        vstd::seq_lib::group_to_multiset_ensures,
     };
 
     //		7. proof fns/broadcast groups

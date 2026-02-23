@@ -4,6 +4,14 @@ use vstd::prelude::*;
 
 verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
+
 pub open spec fn seq_i64_mem(s: Seq<i64>, elt: i64) -> bool {
     exists|i: int| 0 <= i < s.len() && s[i] == elt
 }

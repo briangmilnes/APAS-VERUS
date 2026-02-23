@@ -49,6 +49,8 @@ verus! {
         crate::Types::Types::group_Pair_axioms,
         crate::Types::Types::group_Edge_axioms,
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+        // Veracity: added broadcast groups
+        vstd::set::group_set_axioms,
     };
 
 

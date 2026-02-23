@@ -34,7 +34,13 @@ pub mod AVLTreeSeqStEph {
 
     // 3. broadcast use
 
-    broadcast use vstd::seq::group_seq_axioms;
+    broadcast use {
+        vstd::seq::group_seq_axioms,
+        // Veracity: added broadcast groups
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        vstd::seq_lib::group_seq_properties,
+        vstd::seq_lib::group_to_multiset_ensures,
+    };
 
     // 4. type definitions
 
@@ -101,14 +107,14 @@ pub mod AVLTreeSeqStEph {
     }
 
     /// Well-formedness: cached height and sizes match the actual tree structure.
-    pub open spec fn spec_wf<T: StT>(link: Link<T>) -> bool
+    pub open spec fn spec_avltreeseqsteph_wf<T: StT>(link: Link<T>) -> bool
         decreases link,
     {
         match link {
             None => true,
             Some(node) => {
-                spec_wf(node.left)
-                && spec_wf(node.right)
+                spec_avltreeseqsteph_wf(node.left)
+                && spec_avltreeseqsteph_wf(node.right)
                 && node.left_size as nat == spec_cached_size(&node.left)
                 && node.right_size as nat == spec_cached_size(&node.right)
                 && node.height as nat == 1 + spec_nat_max(
@@ -123,7 +129,7 @@ pub mod AVLTreeSeqStEph {
 
     /// Under well-formedness, cached size equals in-order sequence length.
     proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)
-        requires spec_wf(*link),
+        requires spec_avltreeseqsteph_wf(*link),
         ensures spec_cached_size(link) == spec_inorder(*link).len(),
         decreases *link,
     {
@@ -235,10 +241,10 @@ pub mod AVLTreeSeqStEph {
 
     #[verifier::external_body]
     fn rotate_right_fn<T: StT>(mut y: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-        requires spec_wf(Some(y)),
+        requires spec_avltreeseqsteph_wf(Some(y)),
         ensures
             spec_inorder(Some(result)) =~= spec_inorder(Some(y)),
-            spec_wf(Some(result)),
+            spec_avltreeseqsteph_wf(Some(result)),
     {
         let mut x = y.left.take().expect("rotate_right requires left child");
         let t2 = x.right.take();
@@ -252,10 +258,10 @@ pub mod AVLTreeSeqStEph {
 
     #[verifier::external_body]
     fn rotate_left_fn<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-        requires spec_wf(Some(x)),
+        requires spec_avltreeseqsteph_wf(Some(x)),
         ensures
             spec_inorder(Some(result)) =~= spec_inorder(Some(x)),
-            spec_wf(Some(result)),
+            spec_avltreeseqsteph_wf(Some(result)),
     {
         let mut y = x.right.take().expect("rotate_left requires right child");
         let t2 = y.left.take();
@@ -269,10 +275,10 @@ pub mod AVLTreeSeqStEph {
 
     #[verifier::external_body]
     fn rebalance_fn<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-        requires spec_wf(Some(n)),
+        requires spec_avltreeseqsteph_wf(Some(n)),
         ensures
             spec_inorder(Some(result)) =~= spec_inorder(Some(n)),
-            spec_wf(Some(result)),
+            spec_avltreeseqsteph_wf(Some(result)),
     {
         update_meta(&mut n);
         let hl = h_fn(&n.left);
@@ -325,7 +331,7 @@ pub mod AVLTreeSeqStEph {
 
     #[verifier::external_body]
     fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (result: &'a T)
-        requires spec_wf(*node), (index as int) < spec_inorder(*node).len(),
+        requires spec_avltreeseqsteph_wf(*node), (index as int) < spec_inorder(*node).len(),
         ensures result@ == spec_inorder(*node)[index as int],
     {
         let n = node.as_ref().expect("index out of bounds");
@@ -378,7 +384,7 @@ pub mod AVLTreeSeqStEph {
         }
 
         open spec fn spec_well_formed(&self) -> bool {
-            spec_wf(self.root)
+            spec_avltreeseqsteph_wf(self.root)
         }
 
         fn empty() -> (result: Self) {

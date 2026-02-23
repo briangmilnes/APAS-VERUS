@@ -14,6 +14,13 @@ use vstd::prelude::*;
 
 verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::set::group_set_axioms,
+    vstd::set_lib::group_set_lib_default,
+};
+
 /// Forward: length 0 implies empty.
 pub proof fn lemma_len0_implies_empty<A>(s: Set<A>)
     requires s.finite(),

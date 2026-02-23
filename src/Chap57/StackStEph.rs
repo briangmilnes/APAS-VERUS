@@ -19,6 +19,14 @@ pub mod StackStEph {
 
     verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
+
     // Table of Contents
     // 1. module (StackStEph)
     // 2. imports

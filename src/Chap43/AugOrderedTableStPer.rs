@@ -27,6 +27,12 @@ pub mod AugOrderedTableStPer {
 
     verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::map::group_map_axioms,
+};
+
     // 4. type definitions
 
     #[verifier::reject_recursive_types(K)]

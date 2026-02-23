@@ -1479,7 +1479,7 @@ pub mod ArraySeq {
         }
     }
 
-    #[verifier::external]
+    #[verifier::external] // accept hole
     impl<T: View> ArraySeqS<T> {
         pub fn iter_mut(&mut self) -> IterMut<'_, T> { self.seq.iter_mut() }
     }
@@ -1614,7 +1614,7 @@ pub mod ArraySeq {
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
-    #[verifier::external]
+    #[verifier::external] // accept hole
     impl<'a, T> std::iter::IntoIterator for &'a mut ArraySeqS<T> {
         type Item = &'a mut T;
         type IntoIter = IterMut<'a, T>;

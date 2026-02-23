@@ -55,6 +55,8 @@ pub mod DirGraphMtEph {
         crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_Edge_axioms,
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
+        // Veracity: added broadcast groups
+        vstd::set_lib::group_set_lib_default,
     };
 
 

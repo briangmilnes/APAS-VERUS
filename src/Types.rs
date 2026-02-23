@@ -26,6 +26,16 @@ pub mod Types {
 
     verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+    vstd::set::group_set_axioms,
+    vstd::set_lib::group_set_lib_default,
+};
+
     /// Graph view struct: vertices and arcs/edges as spec sets.
     #[verifier::reject_recursive_types(V)]
     pub ghost struct GraphView<V> {

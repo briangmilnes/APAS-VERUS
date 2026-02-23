@@ -10,6 +10,11 @@ verus! {
 broadcast use {
     vstd::seq_lib::group_seq_properties,
     vstd::set::group_set_axioms,
+        // Veracity: added broadcast groups
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        vstd::seq::group_seq_axioms,
+        vstd::seq_lib::group_to_multiset_ensures,
+        vstd::set_lib::group_set_lib_default,
 };
 
 /// If a sequence contains an element at index i, then that element is in the sequence's set view.

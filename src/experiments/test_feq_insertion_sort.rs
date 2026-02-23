@@ -13,6 +13,14 @@ pub mod test_feq_insertion_sort {
 
     verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
+
     pub open spec fn sorted_spec<T: Ord + Sized>(s: Seq<T>) -> bool {
         forall|i: int, j: int| 0 <= i < j < s.len() ==> s[i].cmp_spec(&s[j]) != Ordering::Greater
     }

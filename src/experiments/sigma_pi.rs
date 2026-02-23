@@ -9,7 +9,13 @@ pub mod sigma_pi {
 
 verus! {
 
-    broadcast use group_mul_properties;
+    broadcast use {
+        group_mul_properties,
+        // Veracity: added broadcast groups
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        vstd::set::group_set_axioms,
+        vstd::set_lib::group_set_lib_default,
+    };
 
     pub trait SigmaPi<T: Integer> {
         spec fn zero() -> T;

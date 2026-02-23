@@ -13,6 +13,14 @@ pub mod BalancedTreePQ {
     use crate::Types::Types::*;
 
     verus! {
+
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
         /// Placeholder; PQ uses Vec, Option<&T>, Fn bounds.
         proof fn _balanced_tree_pq_verified() {}
 

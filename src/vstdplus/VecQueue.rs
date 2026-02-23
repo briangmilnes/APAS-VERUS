@@ -8,6 +8,14 @@ pub mod VecQueue {
 
 verus! {
 
+// Veracity: added broadcast group
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::seq::group_seq_axioms,
+    vstd::seq_lib::group_seq_properties,
+    vstd::seq_lib::group_to_multiset_ensures,
+};
+
     pub struct VecQueue<T> { pub data: Vec<T> }
 
     impl<T> View for VecQueue<T> {
