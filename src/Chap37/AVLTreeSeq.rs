@@ -34,7 +34,6 @@ pub mod AVLTreeSeq {
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
-    use crate::vstdplus::accept::accept;
 
     // 3. broadcast use
 
@@ -705,7 +704,7 @@ pub mod AVLTreeSeq {
             ensures r == (self@ == other@)
         {
             let r = compare_trees(&self.root, &other.root);
-            proof { accept(r == (self@ == other@)); }
+            proof { assume(r == (self@ == other@)); }
             r
         }
     }

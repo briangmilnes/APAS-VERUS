@@ -31,7 +31,6 @@ pub mod AVLTreeSeqMtPer {
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
-    use crate::vstdplus::accept::accept;
 
     // 3. broadcast use
 
@@ -470,7 +469,7 @@ pub mod AVLTreeSeqMtPer {
             ensures r == (self@ == other@)
         {
             let r = compare_trees(&self.root, &other.root);
-            proof { accept(r == (self@ == other@)); }
+            proof { assume(r == (self@ == other@)); }
             r
         }
     }
@@ -484,6 +483,12 @@ pub mod AVLTreeSeqMtPer {
                 root: self.root.clone(),
             }
         }
+    }
+
+    // 10. iterators (struct inside verus!; Iterator impl outside)
+    pub struct AVLTreeSeqMtPerIter<T: StTInMtT> {
+        pub values: Vec<T>,
+        pub index: usize,
     }
 
     } // verus!
@@ -506,12 +511,7 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
-    // Iterator (outside verus! — consuming iterator over collected values)
-
-    pub struct AVLTreeSeqMtPerIter<T: StTInMtT> {
-        values: Vec<T>,
-        index: usize,
-    }
+    // Iterator (impl outside verus! — Verus doesn't support std::iter::Iterator)
 
     impl<T: StTInMtT> Iterator for AVLTreeSeqMtPerIter<T> {
         type Item = T;
