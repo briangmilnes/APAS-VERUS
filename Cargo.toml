@@ -250,13 +250,13 @@ path = "tests/Chap26/TestScanDCStPer.rs"
 name = "TestScanDCMtPer"
 path = "tests/Chap26/TestScanDCMtPer.rs"
 
-[[test]]
-name = "TestETSPStEph"
-path = "tests/Chap26/TestETSPStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestETSPStEph"
+# path = "tests/Chap26/TestETSPStEph.rs"
 
-[[test]]
-name = "TestETSPMtEph"
-path = "tests/Chap26/TestETSPMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestETSPMtEph"
+# path = "tests/Chap26/TestETSPMtEph.rs"
 
 [[test]]
 name = "TestReduceContractStEph"
@@ -266,13 +266,13 @@ path = "tests/Chap27/TestReduceContractStEph.rs"
 name = "TestReduceContractMtEph"
 path = "tests/Chap27/TestReduceContractMtEph.rs"
 
-[[test]]
-name = "TestScanContractStEph"
-path = "tests/Chap27/TestScanContractStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestScanContractStEph"
+# path = "tests/Chap27/TestScanContractStEph.rs"
 
-[[test]]
-name = "TestScanContractMtEph"
-path = "tests/Chap27/TestScanContractMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestScanContractMtEph"
+# path = "tests/Chap27/TestScanContractMtEph.rs"
 
 # Experiments removed - use verus-proof-time-testing project instead
 # [[test]]
@@ -382,13 +382,13 @@ path = "tests/Chap28/TestMaxContigSubSumDivConOptStEph.rs"
 name = "TestMaxContigSubSumDivConStEph"
 path = "tests/Chap28/TestMaxContigSubSumDivConStEph.rs"
 
-[[test]]
-name = "TestMaxContigSubSumOptMtEph"
-path = "tests/Chap28/TestMaxContigSubSumOptMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestMaxContigSubSumOptMtEph"
+# path = "tests/Chap28/TestMaxContigSubSumOptMtEph.rs"
 
-[[test]]
-name = "TestMaxContigSubSumOptStEph"
-path = "tests/Chap28/TestMaxContigSubSumOptStEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestMaxContigSubSumOptStEph"
+# path = "tests/Chap28/TestMaxContigSubSumOptStEph.rs"
 
 [[test]]
 name = "TestMaxContigSubSumReducedStEph"

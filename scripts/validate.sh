@@ -28,5 +28,7 @@ fi
 
 cd "$PROJECT_ROOT"
 echo "Starting verification"
+# Limit parallelism to 6 threads (default is num_cpus-1, can lock machine)
 time timeout 60 "$VERUS" --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors \
+    --num-threads 6 \
     "${CFG_FLAG[@]}" "${TIME_FLAG[@]}" 2>&1 | sed 's/\x1b\[[0-9;]*m//g'
