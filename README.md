@@ -12,7 +12,7 @@ develop two software engineering tools to clean things up:
 
 **Verified: 8 chapters complete (Scheduling, Sorting, Sets/Relations/Mappings, Graphs, Fibonacci, MathSeq, Sequences, Trees)**
 
-**Proof totals: 1298 verified, 0 errors**
+**Proof totals: 2598 verified, 0 errors**
 
 ## Project Structure
 
@@ -227,10 +227,20 @@ develop two software engineering tools to clean things up:
 | ArraySetStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
 | AVLTreeSetStEph | ⬜ | ⬜ | ⬜ | ⬜ | |
 
+### Chapter 45: Priority Queues - ✅ COMPLETE (ZERO HOLES)
+
+| Data Structure | Verified | Parallel | Run Time Test | Proof Time Test | Notes |
+|----------------|----------|----------|---------------|-----------------|-------|
+| BinaryHeapPQ | ✅ | — | ✅ | ⬜ | bubble_down, height (int log2), level_elements (pow2) all verified |
+| UnsortedListPQ | ✅ | — | ✅ | ⬜ | |
+| SortedListPQ | ✅ | — | ✅ | ⬜ | |
+| BalancedTreePQ | ✅ | — | ✅ | ⬜ | |
+| LeftistHeapPQ | ✅ | — | ✅ | ⬜ | |
+
 ### Chapters 42-66: Future Work - ⬜ NOT STARTED
 
 See APAS-AI for unverified implementations of:
-- Chapter 42-45: Hash Tables, Priority Queues, Union-Find, Suffix Trees
+- Chapter 42-44: Hash Tables, Ordered Tables, Document Index
 - Chapter 47-59: Dynamic Programming, Maxflow, Linear Programming, FFT, Geometry
 - Chapter 61-66: ML, Neural Networks, Crypto, Compression, Error Correction, Quantum
 
@@ -243,30 +253,34 @@ See APAS-AI for unverified implementations of:
 
 ## Proof State
 
-Full verification: **1298 verified, 0 errors**
+Full verification: **2598 verified, 0 errors**
 
 | Metric | Count |
 |--------|-------|
-| Clean modules (no holes) | 100 |
-| Holed modules | 61 |
-| Clean proof functions | 321 |
-| Holed proof functions | 61 |
-| Total proof functions | 382 |
+| Clean modules (no holes) | 303 |
+| Holed modules | 104 |
+| Total modules | 407 |
+| Clean proof functions | 316 |
+| Holed proof functions | 36 |
+| Total proof functions | 352 |
 
-### Proof Holes: 197 total
+### Proof Holes: 673 total
 
 | # | Hole Type | Count | Notes |
 |---|-----------|-------|-------|
-| 1 | `external_body` | 75 | Unverified function bodies (FFI, atomics, threading) |
-| 2 | `admit()` | 46 | Admitted without proof |
-| 3 | `assume()` | 52 | Assumed conditions (includes PartialEq bridge) |
-| 4 | `assume(false)` | 8 | Unreachable error paths in thread joins |
-| 5 | `external` | 3 | Fully external functions |
+| 1 | `external_body` | 425 | Unverified function bodies |
+| 2 | `assume()` | 174 | Assumed conditions (includes PartialEq bridge) |
+| 3 | `admit()` | 48 | Admitted without proof |
+| 4 | `assume_specification` | 10 | External fn specs |
+| 5 | `external_type_specification` | 5 | External type specs |
 | 6 | `unsafe {}` | 4 | Unsafe blocks (Chap12 raw pointers) |
-| 7 | `unsafe impl` | 2 | Manual Send/Sync (vstdplus/threads_plus) |
-| 8 | Other | 7 | external_type/trait_spec, assume_specification, Tracked::assume_new |
+| 7 | `external_trait_specification` | 2 | External trait specs |
+| 8 | `unsafe impl` | 2 | Manual Send/Sync (vstdplus/threads_plus) |
+| 9 | `assume(false)` | 1 | Unreachable error path |
+| 10 | `Tracked::assume_new()` | 1 | Tracked ghost state |
+| 11 | `external_trait_extension` | 1 | External trait extension |
 
-Most holes are in infrastructure (vstdplus, Chap02 scheduler, Chap12 concurrency primitives) and PartialEq bridges. Algorithm chapters 03, 06, and 21 have **zero holes**.
+Most holes are `external_body` in chapters that have been batch-verusified (trait inside `verus!`, impl bodies not yet verified). Algorithm chapters 03, 05, 06, 17, 21, and 45 have **zero holes**.
 
 ## Documentation
 
