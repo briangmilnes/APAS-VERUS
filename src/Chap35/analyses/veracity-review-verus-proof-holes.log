@@ -1,13 +1,13 @@
 $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap35/
 
 ❌ OrderStatSelectMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap35/OrderStatSelectMtEph.rs:61: external_body - #[verifier::external_body]
-        62 |     fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap35/OrderStatSelectMtEph.rs:64: external_body - #[verifier::external_body]
+        65 |     fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
    Holes: 1 total
       1 × external_body
 ❌ OrderStatSelectMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap35/OrderStatSelectMtPer.rs:59: external_body - #[verifier::external_body]
-        60 |     fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap35/OrderStatSelectMtPer.rs:62: external_body - #[verifier::external_body]
+        63 |     fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
    Holes: 1 total
       1 × external_body
 ✓ OrderStatSelectStEph.rs
