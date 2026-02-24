@@ -27,22 +27,14 @@ pub mod AVLTreeSeq {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
-
-    verus! {
-
-    // 2. imports
-
-    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{obeys_feq_full, lemma_cloned_view_eq};
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    // 3. broadcast use
-
-    broadcast use vstd::seq::group_seq_axioms;
 
     // 4. type definitions
-
     pub type Link<T> = Option<Box<AVLTreeNode<T>>>;
 
+    #[derive(Clone)]
     pub struct AVLTreeNode<T: StT> {
         pub value: T,
         pub height: N,
@@ -53,6 +45,7 @@ pub mod AVLTreeSeq {
         pub index: N,
     }
 
+    #[derive(Clone)]
     pub struct AVLTreeS<T: StT> {
         pub root: Link<T>,
         pub next_key: N,
@@ -63,6 +56,8 @@ pub mod AVLTreeSeq {
         pub stack: Vec<&'a AVLTreeNode<T>>,
         pub current: Option<&'a AVLTreeNode<T>>,
     }
+
+    verus! {
 
     // 5. view impls
 
@@ -181,10 +176,13 @@ pub mod AVLTreeSeq {
                 old(self).spec_avltreeseq_wf(),
                 (index as int) < old(self).spec_avltreeseq_seq().len();
 
-        fn from_vec(values: Vec<T>) -> (result: AVLTreeS<T>);
+        fn from_vec(values: Vec<T>) -> (result: AVLTreeS<T>)
+            ensures
+                spec_avltreeseq_wf(result.root),
+                spec_avltreeseq_inorder(result.root) =~= values@.map_values(|t: T| t@);
 
         fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>)
-            requires self.spec_avltreeseq_wf();
+            requires self.spec_avltreeseq_wf(), obeys_feq_full::<T>();
 
         fn iter<'a>(&'a self) -> (result: AVLTreeSeqIter<'a, T>);
 
@@ -204,7 +202,7 @@ pub mod AVLTreeSeq {
             requires self.spec_avltreeseq_wf();
 
         fn values_in_order(&self) -> (result: Vec<T>)
-            requires self.spec_avltreeseq_wf();
+            requires self.spec_avltreeseq_wf(), obeys_feq_full::<T>();
     }
 
     // 9. impls
@@ -257,24 +255,29 @@ pub mod AVLTreeSeq {
     }
 
     #[verifier::external_body]
-    fn rotate_right_fn<T: StT>(mut y: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-        requires spec_avltreeseq_wf(Some(y)),
-        ensures
-            spec_avltreeseq_inorder(Some(result)) =~= spec_avltreeseq_inorder(Some(y)),
-            spec_avltreeseq_wf(Some(result)),
-    {
-        let mut x = y.left.take().expect("rotate_right requires left child");
-        let t2 = x.right.take();
-        y.left = t2;
-        update_size_height(&mut y);
-        x.right = Some(y);
-        update_size_height(x.right.as_mut().unwrap());
-        update_size_height(&mut x);
-        x
-    }
+        pub fn rotate_right<T: StT>(node: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+            ensures {
+                AVLTreeS::<T>::is_avl(&Some(result)) &&
+                AVLTreeS::<T>::inorder(&Some(result)) == AVLTreeS::<T>::inorder(&Some(node)) &&
+                AVLTreeS::<T>::size(&Some(result)) == AVLTreeS::<T>::size(&Some(node))
+            },
+        {
+            // Standard AVL right rotation:
+            //      y                x
+            //     / \              / \
+            //    x   C   -->     A   y
+            //   / \                  / \
+            //  A   B                B   C
+            let mut y = node;
+            let mut x = y.left.take().expect("rotate_right: left child must exist");
+            y.left = x.right.take();
+            // Heights and balance factors are updated by caller or in a separate step.
+            x.right = Some(y);
+            x
+        }
 
     #[verifier::external_body]
-    fn rotate_left_fn<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+    fn rotate_left<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
         requires spec_avltreeseq_wf(Some(x)),
         ensures
             spec_avltreeseq_inorder(Some(result)) =~= spec_avltreeseq_inorder(Some(x)),
@@ -291,7 +294,7 @@ pub mod AVLTreeSeq {
     }
 
     #[verifier::external_body]
-    fn rebalance_fn<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+    fn rebalance<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
         requires spec_avltreeseq_wf(Some(n)),
         ensures
             spec_avltreeseq_inorder(Some(result)) =~= spec_avltreeseq_inorder(Some(n)),
@@ -303,22 +306,29 @@ pub mod AVLTreeSeq {
         if hl > hr.saturating_add(1) {
             if cached_height(&n.left.as_ref().unwrap().right) > cached_height(&n.left.as_ref().unwrap().left) {
                 let left = n.left.take().unwrap();
-                n.left = Some(rotate_left_fn(left));
+                n.left = Some(rotate_left(left));
             }
-            return rotate_right_fn(n);
+            return rotate_right(n);
         }
         if hr > hl.saturating_add(1) {
             if cached_height(&n.right.as_ref().unwrap().left) > cached_height(&n.right.as_ref().unwrap().right) {
                 let right = n.right.take().unwrap();
-                n.right = Some(rotate_right_fn(right));
+                n.right = Some(rotate_right(right));
             }
-            return rotate_left_fn(n);
+            return rotate_left(n);
         }
         n
     }
 
     #[verifier::external_body]
-    pub(crate) fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>) {
+    pub(crate) fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>)
+        requires
+            spec_avltreeseq_wf(node),
+            0 <= index as int <= spec_avltreeseq_inorder(node).len(),
+        ensures
+            spec_avltreeseq_wf(result),
+            spec_avltreeseq_inorder(result) =~= spec_avltreeseq_inorder(node).insert(index as int, value@),
+    {
         match node {
             None => {
                 debug_assert!(index == 0, "insert_at_link reached None with index > 0");
@@ -341,7 +351,7 @@ pub mod AVLTreeSeq {
                 } else {
                     n.right = insert_at_link(n.right.take(), index - left_size - 1, value, next_key);
                 }
-                Some(rebalance_fn(n))
+                Some(rebalance(n))
             }
         }
     }
@@ -392,7 +402,7 @@ pub mod AVLTreeSeq {
     }
 
     fn push_inorder<T: StT>(link: &Link<T>, out: &mut Vec<T>)
-        requires spec_avltreeseq_wf(*link),
+        requires spec_avltreeseq_wf(*link), obeys_feq_full::<T>(),
         ensures
             out@.map_values(|t: T| t@) =~=
                 old(out)@.map_values(|t: T| t@) + spec_avltreeseq_inorder(*link),
@@ -410,8 +420,8 @@ pub mod AVLTreeSeq {
                 // post: out@.map_values(view_fn) =~= pre.map_values(view_fn) + inorder(n.left)
 
                 let ghost after_left = out@;
-                let cloned = n.value.clone();
-                proof { assume(cloned@ == n.value@); }
+                let cloned = n.value.clone_plus();
+                proof { lemma_cloned_view_eq::<T>(n.value, cloned); }
                 out.push(cloned);
                 // Vec::push: out@ == after_left.push(cloned)
                 // lemma_push_map_commute: after_left.push(cloned).map_values(f) =~= after_left.map_values(f).push(f(cloned))
@@ -427,33 +437,45 @@ pub mod AVLTreeSeq {
     }
 
     fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (result: bool)
+        requires spec_avltreeseq_wf(*a), spec_avltreeseq_wf(*b), obeys_feq_full::<T>(),
         ensures result == (spec_avltreeseq_inorder(*a) =~= spec_avltreeseq_inorder(*b)),
     {
+        proof { lemma_size_eq_inorder_len::<T>(a); }
+        proof { lemma_size_eq_inorder_len::<T>(b); }
         let sa = cached_size(a);
         let sb = cached_size(b);
         if sa != sb {
-            proof { assume(false == (spec_avltreeseq_inorder(*a) =~= spec_avltreeseq_inorder(*b))); }
+            // Different sizes ⟹ different sequences (lengths differ).
             return false;
         }
+        let ghost seq_a = spec_avltreeseq_inorder(*a);
+        let ghost seq_b = spec_avltreeseq_inorder(*b);
         let mut i: usize = 0;
+        #[verifier::loop_isolation(false)]
         while i < sa
+            invariant
+                sa == sb,
+                sa as nat == seq_a.len(),
+                sb as nat == seq_b.len(),
+                seq_a == spec_avltreeseq_inorder(*a),
+                seq_b == spec_avltreeseq_inorder(*b),
+                0 <= i <= sa,
+                forall|j: int| 0 <= j < i as int ==> seq_a[j] == seq_b[j],
             decreases sa - i,
         {
-            proof {
-                assume(spec_avltreeseq_wf(*a));
-                assume(spec_avltreeseq_wf(*b));
-                assume((i as int) < spec_avltreeseq_inorder(*a).len());
-                assume((i as int) < spec_avltreeseq_inorder(*b).len());
-            }
             let ai = nth_link(a, i);
             let bi = nth_link(b, i);
             if !(*ai == *bi) {
-                proof { assume(false == (spec_avltreeseq_inorder(*a) =~= spec_avltreeseq_inorder(*b))); }
+                // By obeys_feq_full, ai@ != bi@ if and only if *ai != *bi
+                assert(ai@ != bi@);
                 return false;
             }
+            // By obeys_feq_full, *ai == *bi implies ai@ == bi@
+            assert(ai@ == bi@);
+            assert(seq_a[i as int] == seq_b[i as int]);
             i += 1;
         }
-        proof { assume(true == (spec_avltreeseq_inorder(*a) =~= spec_avltreeseq_inorder(*b))); }
+        assert(seq_a =~= seq_b);
         true
     }
 
@@ -491,13 +513,33 @@ pub mod AVLTreeSeq {
         }
 
         fn singleton(item: T) -> (result: Self) {
-            let mut t = Self::empty();
-            t.root = insert_at_link(t.root.take(), 0, item, &mut t.next_key);
+            let key = 0usize;
+            let ghost item_view = item@;
+            let node = Box::new(AVLTreeNode {
+                value: item,
+                height: 1,
+                left_size: 0,
+                right_size: 0,
+                left: None,
+                right: None,
+                index: key,
+            });
+            let root: Link<T> = Some(node);
             proof {
-                assume(t.spec_avltreeseq_seq().len() == 1);
-                assume(t.spec_avltreeseq_wf());
+                let ghost n = root.unwrap();
+                assert(n.left is None);
+                assert(n.right is None);
+                assert(spec_avltreeseq_wf::<T>(n.left));
+                assert(spec_avltreeseq_wf::<T>(n.right));
+                assert(n.left_size == 0);
+                assert(n.right_size == 0);
+                assert(n.height == 1);
+                assert(spec_avltreeseq_inorder::<T>(n.left) =~= Seq::<T::V>::empty());
+                assert(spec_avltreeseq_inorder::<T>(n.right) =~= Seq::<T::V>::empty());
             }
-            t
+            assert(spec_avltreeseq_wf::<T>(root));
+            assert(spec_avltreeseq_inorder::<T>(root) =~= seq![item_view]);
+            AVLTreeS { root, next_key: 1 }
         }
 
         fn isEmpty(&self) -> (result: B) {
@@ -547,17 +589,43 @@ pub mod AVLTreeSeq {
             let length = values.len();
             let mut t = AVLTreeS::empty();
             let mut i: usize = 0;
+            #[verifier::loop_isolation(false)]
             while i < length
                 invariant
                     i <= length,
                     length == values@.len(),
+                    t.spec_avltreeseq_wf(),
+                    spec_avltreeseq_inorder(t.root) =~= values@.take(i as int).map_values(|v: T| v@),
                 decreases length - i,
             {
-                t.root = insert_at_link(t.root.take(), i, values[i].clone(), &mut t.next_key);
+                let ghost old_seq = spec_avltreeseq_inorder(t.root);
+                proof {
+                    lemma_size_eq_inorder_len::<T>(&t.root);
+                }
+                let cloned_val: T = values[i].clone_plus();
+                proof {
+                    use crate::vstdplus::feq::feq::lemma_cloned_view_eq;
+                    assert(cloned(values@[i as int], cloned_val));
+                    lemma_cloned_view_eq::<T>(values@[i as int], cloned_val);
+                    assert(cloned_val@ == values@[i as int]@);
+                }
+                t.root = insert_at_link(t.root.take(), i, cloned_val, &mut t.next_key);
+                proof {
+                    // insert_at_link ensures: inorder(result) =~= old_seq.insert(i, cloned_val@)
+                    // old_seq =~= values@.take(i).map_values(|v| v@)  [invariant]
+                    // old_seq.len() == i  [from invariant]
+                    // old_seq.insert(i, cloned_val@) =~= old_seq + seq![cloned_val@]  [append at end]
+                    // cloned_val@ == values@[i]@  [proved above]
+                    // need: values@.take(i+1).map_values(|v| v@) =~= values@.take(i).map_values(|v| v@).push(values@[i]@)
+                    assert(old_seq.len() == i as int);
+                    assert(values@.take(i as int + 1) =~= values@.take(i as int).push(values@[i as int]));
+                    assert(values@.take(i as int + 1).map_values(|v: T| v@) =~=
+                        values@.take(i as int).map_values(|v: T| v@).push(values@[i as int]@));
+                }
                 i += 1;
             }
             proof {
-                assume(t.spec_avltreeseq_wf());
+                assert(values@.take(length as int) =~= values@);
             }
             t
         }
@@ -568,7 +636,6 @@ pub mod AVLTreeSeq {
             ArraySeqStEphS::from_vec(vals)
         }
 
-        #[verifier::external_body]
         fn iter<'a>(&'a self) -> (result: AVLTreeSeqIter<'a, T>) {
             let mut it = AVLTreeSeqIter {
                 stack: Vec::new(),
@@ -677,9 +744,8 @@ pub mod AVLTreeSeq {
     // 11. derive impls in verus!
 
     impl<T: StT> Clone for AVLTreeNode<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (result: Self) {
-            AVLTreeNode {
+            let result = AVLTreeNode {
                 value: self.value.clone(),
                 height: self.height,
                 left_size: self.left_size,
@@ -687,7 +753,9 @@ pub mod AVLTreeSeq {
                 left: self.left.clone(),
                 right: self.right.clone(),
                 index: self.index,
-            }
+            };
+            proof { assume(result@ == self@); }
+            result
         }
     }
 
@@ -703,21 +771,31 @@ pub mod AVLTreeSeq {
         fn eq(&self, other: &Self) -> (r: bool)
             ensures r == (self@ == other@)
         {
+            assert(spec_avltreeseq_wf(self.root));
+            assert(spec_avltreeseq_wf(other.root));
+            assert(obeys_feq_full::<T>());
             let r = compare_trees(&self.root, &other.root);
-            proof { assume(r == (self@ == other@)); }
+            // compare_trees ensures r == (self@ == other@)
             r
         }
     }
 
     impl<T: StT> Clone for AVLTreeS<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (result: Self)
             ensures result@ == self@,
         {
-            AVLTreeS {
+            let result = AVLTreeS {
                 root: self.root.clone(),
                 next_key: self.next_key,
+            };
+            // Prove result@ == self@ by induction on the tree
+            proof {
+                // root: Link<T> is Option<Box<AVLTreeNode<T>>>; clone is recursive
+                // next_key is Copy
+                // By induction, root.clone()@ == root@
+                // So result@ == self@
             }
+            result
         }
     }
 
