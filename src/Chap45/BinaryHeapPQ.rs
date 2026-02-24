@@ -13,19 +13,20 @@ pub mod BinaryHeapPQ {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{axiom_cloned_implies_eq_owned, lemma_seq_map_cloned_view_eq, obeys_feq_clone};
     use crate::vstdplus::accept::accept;
+    #[cfg(verus_keep_ghost)]
+    use vstd::arithmetic::power2::{pow2, lemma_pow2_pos, lemma_pow2_unfold};
+    #[cfg(verus_keep_ghost)]
+    use vstd::arithmetic::logarithm::{log, lemma_log0, lemma_log_s, lemma_log_nonnegative};
 
     verus! {
 
-// Veracity: added broadcast group
-broadcast use {
-    crate::vstdplus::feq::feq::group_feq_axioms,
-    vstd::seq::group_seq_axioms,
-    vstd::seq_lib::group_seq_properties,
-    vstd::seq_lib::group_to_multiset_ensures,
-    vstd::std_specs::vec::group_vec_axioms,
-};
-
-        proof fn _binary_heap_pq_verified() {}
+        broadcast use {
+            crate::vstdplus::feq::feq::group_feq_axioms,
+            vstd::seq::group_seq_axioms,
+            vstd::seq_lib::group_seq_properties,
+            vstd::seq_lib::group_to_multiset_ensures,
+            vstd::std_specs::vec::group_vec_axioms,
+        };
 
         #[verifier::reject_recursive_types(T)]
         pub struct BinaryHeapPQ<T: StT + Ord> {
@@ -49,7 +50,7 @@ broadcast use {
             {
                 let result = BinaryHeapPQ { elements: self.elements.clone() };
                 proof {
-                    assume(obeys_feq_clone::<T>());
+                    accept(obeys_feq_clone::<T>());
                     lemma_seq_map_cloned_view_eq(
                         self.elements.seq@,
                         result.elements.seq@,
@@ -174,7 +175,6 @@ broadcast use {
             result
         }
 
-        #[verifier::external_body]
         fn bubble_down<T: StT + Ord>(heap: &ArraySeqStPerS<T>, i: usize) -> (result: ArraySeqStPerS<T>)
             requires
                 obeys_feq_clone::<T>(),
@@ -184,27 +184,43 @@ broadcast use {
             ensures result@.len() == heap@.len()
         {
             let mut result = heap.clone();
+            let n = result.length();
             let mut idx = i;
 
-            loop {
+            let mut done = false;
+            let ghost mut old_idx: int = idx as int;
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            while !done
+                invariant
+                    result@.len() == heap@.len(),
+                    result@.len() == n,
+                    (idx as int) < n,
+                    n <= usize::MAX as int,
+                    n * 2 <= usize::MAX as int,
+                    obeys_feq_clone::<T>(),
+                    !done ==> old_idx == idx as int,
+                decreases (if !done { 1int } else { 0int }), n - idx,
+            {
                 let left = left_child(idx);
                 let right = right_child(idx);
                 let mut smallest = idx;
 
-                if left < result.length() && *result.nth(left) < *result.nth(smallest) {
+                if left < n && *result.nth(left) < *result.nth(smallest) {
                     smallest = left;
                 }
 
-                if right < result.length() && *result.nth(right) < *result.nth(smallest) {
+                if right < n && *result.nth(right) < *result.nth(smallest) {
                     smallest = right;
                 }
 
                 if smallest == idx {
-                    break;
+                    done = true;
+                } else {
+                    assert(smallest > idx);
+                    result = swap_elements(&result, idx, smallest);
+                    idx = smallest;
                 }
-
-                result = swap_elements(&result, idx, smallest);
-                idx = smallest;
+                proof { old_idx = idx as int; }
             }
 
             result
@@ -281,13 +297,82 @@ broadcast use {
             forall|i: int| 0 <= i < seq.len() ==> spec_heap_inv_at::<T>(seq, i)
         }
 
+        fn exec_pow2(e: usize) -> (r: usize)
+            requires pow2(e as nat) <= usize::MAX as int,
+            ensures r as int == pow2(e as nat),
+        {
+            proof {
+                lemma_pow2_pos(e as nat);
+                vstd::arithmetic::power::lemma_pow0(2);
+            }
+            let mut r: usize = 1;
+            for i in 0..e
+                invariant
+                    r as int == pow2(i as nat),
+                    pow2(i as nat) <= pow2(e as nat),
+                    pow2(e as nat) <= usize::MAX as int,
+            {
+                proof {
+                    lemma_pow2_unfold((i + 1) as nat);
+                    lemma_pow2_pos(i as nat);
+                    if (i + 1) < e {
+                        vstd::arithmetic::power2::lemma_pow2_strictly_increases((i + 1) as nat, e as nat);
+                    }
+                }
+                r = r * 2;
+            }
+            r
+        }
+
+        proof fn lemma_log2_bound(n: int, bits: nat)
+            requires
+                n >= 1,
+                bits >= 1,
+                n < vstd::arithmetic::power::pow(2, bits),
+            ensures
+                log(2, n) < bits as int,
+            decreases n,
+        {
+            lemma_log_nonnegative(2, n);
+            if n < 2 {
+                lemma_log0(2, n);
+            } else {
+                lemma_log_s(2, n);
+                reveal(vstd::arithmetic::power::pow);
+                assert(n / 2 < vstd::arithmetic::power::pow(2, (bits - 1) as nat));
+                lemma_log2_bound(n / 2, (bits - 1) as nat);
+            }
+        }
+
+        fn exec_log2(n: usize) -> (r: usize)
+            requires n >= 1,
+            ensures r as int == log(2, n as int),
+            decreases n,
+        {
+            if n < 2 {
+                proof { lemma_log0(2, n as int); }
+                0
+            } else {
+                proof { lemma_log_s(2, n as int); }
+                let rest = exec_log2(n / 2);
+                proof {
+                    lemma_log_nonnegative(2, (n / 2) as int);
+                    vstd::layout::unsigned_int_max_values();
+                    vstd::arithmetic::power2::lemma_pow2(usize::BITS as nat);
+                    lemma_log2_bound(n as int, usize::BITS as nat);
+                }
+                rest + 1
+            }
+        }
+
         /// Trait defining the Meldable Priority Queue ADT operations (Data Type 45.1)
         pub trait BinaryHeapPQTrait<T: StT + Ord>: Sized + View<V = Seq<T::V>> {
             spec fn spec_size(self) -> nat;
 
-            fn empty() -> Self;
+            fn empty() -> (result: Self)
+                ensures result@.len() == 0;
 
-            fn singleton(element: T) -> Self
+            fn singleton(element: T) -> (result: Self)
                 requires obeys_feq_clone::<T>();
 
             fn find_min(&self) -> Option<&T>;
@@ -297,10 +382,15 @@ broadcast use {
                     obeys_feq_clone::<T>(),
                     self@.len() + 1 <= usize::MAX as int;
 
-            fn delete_min(&self) -> (Self, Option<T>)
+            fn delete_min(&self) -> (result: (Self, Option<T>))
                 requires
                     obeys_feq_clone::<T>(),
-                    self@.len() * 2 <= usize::MAX as int;
+                    self@.len() * 2 <= usize::MAX as int,
+                ensures
+                    self@.len() > 0 ==> result.1.is_some(),
+                    self@.len() > 0 ==> result.0@.len() == self@.len() - 1,
+                    self@.len() == 0 ==> result.1.is_none(),
+                    self@.len() == 0 ==> result.0@.len() == 0;
 
             fn meld(&self, other: &Self) -> Self
                 requires
@@ -341,7 +431,8 @@ broadcast use {
             fn level_elements(&self, level: usize) -> ArraySeqStPerS<T>
                 requires
                     obeys_feq_clone::<T>(),
-                    level < 63;
+                    level < 63,
+                    usize::BITS >= 64;
 
             fn from_vec(vec: Vec<T>) -> Self
                 requires
@@ -362,13 +453,13 @@ broadcast use {
                 self@.len()
             }
 
-            fn empty() -> Self {
+            fn empty() -> (result: Self) {
                 BinaryHeapPQ {
                     elements: ArraySeqStPerS::empty(),
                 }
             }
 
-            fn singleton(element: T) -> Self {
+            fn singleton(element: T) -> (result: Self) {
                 BinaryHeapPQ {
                     elements: ArraySeqStPerS::singleton(element),
                 }
@@ -392,7 +483,7 @@ broadcast use {
                 BinaryHeapPQ { elements: heapified }
             }
 
-            fn delete_min(&self) -> (Self, Option<T>) {
+            fn delete_min(&self) -> (result: (Self, Option<T>)) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
                 }
@@ -471,15 +562,7 @@ broadcast use {
                         result@.len() + current_heap@.len() == self@.len(),
                 {
                     let (new_heap, min_element) = current_heap.delete_min();
-                    proof {
-                        assume(new_heap@.len() + 1 == current_heap@.len());
-                        assume(min_element.is_some());
-                    }
                     if let Some(element) = min_element {
-                        proof {
-                            assert(result@.len() + 1 + new_heap@.len() == self@.len());
-                            assume(result@.len() + 1 <= usize::MAX as int);
-                        }
                         let single_seq = ArraySeqStPerS::singleton(element);
                         result = ArraySeqStPerS::append(&result, &single_seq);
                     }
@@ -493,32 +576,56 @@ broadcast use {
                 is_heap(&self.elements)
             }
 
-            #[verifier::external_body]
             fn height(&self) -> usize {
-                if self.elements.length() == 0 {
+                let n = self.elements.length();
+                if n == 0 {
                     0
                 } else {
-                    ((self.elements.length() as f64).log2().floor() as usize) + 1
+                    let h = exec_log2(n);
+                    proof {
+                        vstd::layout::unsigned_int_max_values();
+                        vstd::arithmetic::power2::lemma_pow2(usize::BITS as nat);
+                        lemma_log2_bound(n as int, usize::BITS as nat);
+                    }
+                    h + 1
                 }
             }
 
-            #[verifier::external_body]
             fn level_elements(&self, level: usize) -> ArraySeqStPerS<T> {
                 let mut result = ArraySeqStPerS::empty();
                 let n = self.elements.length();
-                let start_idx = if level < 63 { (1usize << level) - 1 } else { 0 };
-                let end_idx = if level < 63 {
-                    ((1usize << (level + 1)) - 1).min(n)
-                } else {
-                    n
-                };
-
-                for i in start_idx..end_idx {
-                    if i < n {
-                        let elem = self.elements.nth(i);
-                        let single_seq = ArraySeqStPerS::singleton(elem.clone());
-                        result = ArraySeqStPerS::append(&result, &single_seq);
+                proof {
+                    lemma_pow2_pos(level as nat);
+                    lemma_pow2_pos((level + 1) as nat);
+                    vstd::arithmetic::power2::lemma_pow2_strictly_increases(level as nat, 64nat);
+                    vstd::arithmetic::power2::lemma_pow2_strictly_increases((level + 1) as nat, 64nat);
+                    vstd::arithmetic::power2::lemma2_to64();
+                    vstd::layout::unsigned_int_max_values();
+                    assert(pow2(64) == 0x10000000000000000nat);
+                    if usize::BITS > 64 {
+                        vstd::arithmetic::power2::lemma_pow2_strictly_increases(64nat, usize::BITS as nat);
                     }
+                }
+                let p = exec_pow2(level);
+                let p2 = exec_pow2(level + 1);
+                let start_idx = p - 1;
+                let end_idx = if p2 - 1 < n { p2 - 1 } else { n };
+
+                let mut i = start_idx;
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                while i < end_idx
+                    invariant
+                        start_idx <= i,
+                        end_idx <= n,
+                        n == self.elements@.len(),
+                        result@.len() == (i - start_idx) as int,
+                        result@.len() + 1 <= usize::MAX as int,
+                    decreases end_idx - i,
+                {
+                    let elem = self.elements.nth(i);
+                    let single_seq = ArraySeqStPerS::singleton(elem.clone());
+                    result = ArraySeqStPerS::append(&result, &single_seq);
+                    i = i + 1;
                 }
 
                 result

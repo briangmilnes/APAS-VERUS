@@ -1,8 +1,24 @@
-Logging to: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn.*to_set|lemma.*contains
+Pattern: fn _ types usize ensures .*pow2
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 95, Functions: 2289, Matches: 0
+Files: 95, Functions: 2289, Matches: 2
 
+[31m/home/milnes/projects/verus/source/vstd/layout.rs:284: [0m
+/// The size of a usize will always be a power of 2,
+/// since Verus assumes 32 or 64-bit architecture.
+[38;5;22mpub proof fn usize_size_pow2()[0m
+[38;5;22m    ensures[0m
+[38;5;22m        is_pow2(size_of::<usize>() as int),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/layout.rs:297: [0m
+/// Relates the unsigned integer max values to their sizes and bits.
+[38;5;22mpub proof fn unsigned_int_max_values()[0m
+[38;5;22m    ensures[0m
+[38;5;22m        (usize::MAX as nat) == pow2(usize::BITS as nat) - 1,[0m
+[38;5;22m        (usize::MAX as nat) == pow(256, size_of::<usize>()) - 1,[0m
+[38;5;22m        (u8::MAX as nat) == pow2(u8::BITS as nat) - 1,[0m
+[38;5;22m        (u8::MAX as nat) == pow(256, size_of::<u8>()) - 1,[0m
+[38;5;22m        (u16::MAX as nat) == pow2(u16::BITS as nat) - 1,[0m
