@@ -14,29 +14,45 @@ pub mod BSTKeyValueStEph {
 
     type Link<K, V> = Option<Box<Node<K, V>>>;
 
-    struct Node<K: StT + Ord, V: StT> {
-        key: K,
-        value: V,
-        priority: u64,
-        left: Link<K, V>,
-        right: Link<K, V>,
+    pub(crate) struct Node<K: StT + Ord, V: StT> {
+        pub(crate) key: K,
+        pub(crate) value: V,
+        pub(crate) priority: u64,
+        pub(crate) left: Link<K, V>,
+        pub(crate) right: Link<K, V>,
+    }
+
+    fn clone_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (result: Link<K, V>)
+        decreases *link,
+    {
+        match link {
+            None => None,
+            Some(node) => {
+                let mut n = Node {
+                    key: node.key.clone(),
+                    value: node.value.clone(),
+                    priority: node.priority,
+                    left: clone_link(&node.left),
+                    right: clone_link(&node.right),
+                };
+                Some(Box::new(n))
+            }
+        }
     }
 
     impl<K: StT + Ord, V: StT> Clone for Node<K, V> {
-        #[verifier::external_body]
         fn clone(&self) -> Self {
             Node {
                 key: self.key.clone(),
                 value: self.value.clone(),
                 priority: self.priority,
-                left: self.left.clone(),
-                right: self.right.clone(),
+                left: clone_link(&self.left),
+                right: clone_link(&self.right),
             }
         }
     }
 
     /// - APAS: N/A — internal node constructor.
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn new_node<K: StT + Ord, V: StT>(key: K, value: V, priority: u64) -> Node<K, V> {
         Node {
             key,
@@ -48,8 +64,8 @@ pub mod BSTKeyValueStEph {
     }
 
     pub struct BSTKeyValueStEph<K: StT + Ord, V: StT> {
-        root: Link<K, V>,
-        size: N,
+        pub(crate) root: Link<K, V>,
+        pub(crate) size: usize,
     }
 
     impl<K: StT + Ord, V: StT> Clone for BSTKeyValueStEph<K, V> {
@@ -66,24 +82,29 @@ pub mod BSTKeyValueStEph {
     pub type BSTreeKeyValue<K, V> = BSTKeyValueStEph<K, V>;
 
     pub trait BSTKeyValueStEphTrait<K: StT + Ord, V: StT> {
+        spec fn spec_size(&self) -> nat;
+        spec fn spec_height(&self) -> nat;
+
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn new()                    -> Self
         where
             Self: Sized;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)              -> N;
+        fn size(&self)              -> usize;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)          -> B;
+        fn is_empty(&self)          -> bool;
         /// claude-4-sonet: Work Θ(n), Span Θ(n)
-        fn height(&self)            -> N;
+        fn height(&self)            -> usize
+            requires self.spec_height() < usize::MAX as nat;
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
-        fn insert(&mut self, key: K, value: V, priority: u64);
+        fn insert(&mut self, key: K, value: V, priority: u64)
+            requires old(self).spec_size() < usize::MAX;
         /// claude-4-sonet: Work Θ(n), Span Θ(n) — in-order filter + rebuild
         fn delete(&mut self, key: &K);
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
         fn find(&self, key: &K)     -> Option<&V>;
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
-        fn contains(&self, key: &K) -> B;
+        fn contains(&self, key: &K) -> bool;
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
         fn get(&self, key: &K)      -> Option<&V>;
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
@@ -98,15 +119,30 @@ pub mod BSTKeyValueStEph {
         fn maximum_key(&self)       -> Option<&K>;
     }
 
-    fn height_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> N
+    fn height_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (result: usize)
+        requires spec_height_link(link) < usize::MAX as nat,
+        ensures result == spec_height_link(link),
         decreases *link,
     {
         match link {
             | None => 0,
             | Some(node) => {
-                let m = height_link(&node.left).max(height_link(&node.right));
-                proof { assume(m < usize::MAX); }
-                1 + m
+                let l = height_link(&node.left);
+                let r = height_link(&node.right);
+                1 + if l >= r { l } else { r }
+            }
+        }
+    }
+
+    pub(crate) open spec fn spec_height_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> nat
+        decreases *link,
+    {
+        match link {
+            None => 0,
+            Some(node) => {
+                let l = spec_height_link(&node.left);
+                let r = spec_height_link(&node.right);
+                1 + if l >= r { l } else { r }
             }
         }
     }
@@ -139,27 +175,35 @@ pub mod BSTKeyValueStEph {
         }
     }
 
-    /// - APAS: N/A — internal recursive insert helper.
-    /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-    #[verifier::external_body]
-    fn insert_link<K: StT + Ord, V: StT>(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> bool
+    fn insert_link<K: StT + Ord, V: StT>(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> (inserted: bool)
         decreases old(link),
     {
-        if let Some(node) = link.as_mut() {
+        if let Some(mut node) = link.take() {
             if key < node.key {
                 let inserted = insert_link(&mut node.left, key, value, priority);
-                if node.left.as_ref().is_some_and(|left| left.priority < node.priority) {
+                *link = Some(node);
+                let need_rotate = match link.as_ref().unwrap().left.as_ref() {
+                    Some(left) => left.priority < link.as_ref().unwrap().priority,
+                    None => false,
+                };
+                if need_rotate {
                     rotate_right(link);
                 }
                 inserted
             } else if key > node.key {
                 let inserted = insert_link(&mut node.right, key, value, priority);
-                if node.right.as_ref().is_some_and(|right| right.priority < node.priority) {
+                *link = Some(node);
+                let need_rotate = match link.as_ref().unwrap().right.as_ref() {
+                    Some(right) => right.priority < link.as_ref().unwrap().priority,
+                    None => false,
+                };
+                if need_rotate {
                     rotate_left(link);
                 }
                 inserted
             } else {
                 node.value = value;
+                *link = Some(node);
                 false
             }
         } else {
@@ -168,10 +212,9 @@ pub mod BSTKeyValueStEph {
         }
     }
 
-    /// - APAS: N/A — internal recursive find helper.
-    /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-    #[verifier::external_body]
-    fn find_link<'a, K: StT + Ord, V: StT>(link: &'a Link<K, V>, key: &K) -> Option<&'a V> {
+    fn find_link<'a, K: StT + Ord, V: StT>(link: &'a Link<K, V>, key: &K) -> Option<&'a V>
+        decreases *link,
+    {
         match link {
             | None => None,
             | Some(node) => {
@@ -249,73 +292,107 @@ pub mod BSTKeyValueStEph {
         }
     }
 
-    /// - APAS: N/A — build treap from sorted (key, value, priority) sequence.
-    #[verifier::external_body]
-    fn build_treap_from_sorted<K: StT + Ord, V: StT>(
-        seq: &[(K, V, u64)],
-    ) -> Link<K, V> {
-        if seq.is_empty() {
+    fn find_min_priority_idx_kvp<K: StT + Ord, V: StT>(
+        items: &Vec<(K, V, u64)>, start: usize, end: usize,
+    ) -> (result: usize)
+        requires start < end, end <= items.len(),
+        ensures start <= result && result < end,
+    {
+        let mut min_idx = start;
+        let mut i = start + 1;
+        while i < end
+            invariant
+                start <= min_idx, min_idx < end, min_idx < i,
+                i <= end, end <= items.len(),
+            decreases end - i,
+        {
+            if items[i].2 < items[min_idx].2 {
+                min_idx = i;
+            }
+            i = i + 1;
+        }
+        min_idx
+    }
+
+    fn build_treap_from_vec<K: StT + Ord, V: StT>(
+        items: &Vec<(K, V, u64)>, start: usize, end: usize,
+    ) -> (result: Link<K, V>)
+        requires start <= end, end <= items.len(),
+        decreases end - start,
+    {
+        if start >= end {
             return None;
         }
-        let min_idx = seq
-            .iter()
-            .enumerate()
-            .min_by(|(_, a), (_, b)| a.2.cmp(&b.2))
-            .map(|(i, _)| i)
-            .unwrap();
-        let (key, value, priority) = seq[min_idx].clone();
-        let left_seq = &seq[..min_idx];
-        let right_seq = &seq[min_idx + 1..];
-        let left = build_treap_from_sorted(left_seq);
-        let right = build_treap_from_sorted(right_seq);
+        let min_idx = find_min_priority_idx_kvp(items, start, end);
+        let key = items[min_idx].0.clone();
+        let value = items[min_idx].1.clone();
+        let priority = items[min_idx].2;
+        let left = build_treap_from_vec(items, start, min_idx);
+        let right = build_treap_from_vec(items, min_idx + 1, end);
         let mut node = new_node(key, value, priority);
         node.left = left;
         node.right = right;
         Some(Box::new(node))
     }
 
+    fn filter_by_key_kvp<K: StT + Ord, V: StT>(
+        items: &Vec<(K, V, u64)>, key: &K,
+    ) -> (result: Vec<(K, V, u64)>) {
+        let mut filtered: Vec<(K, V, u64)> = Vec::new();
+        let mut i: usize = 0;
+        while i < items.len()
+            invariant i <= items.len(),
+            decreases items.len() - i,
+        {
+            if items[i].0 != *key {
+                filtered.push((items[i].0.clone(), items[i].1.clone(), items[i].2));
+            }
+            i = i + 1;
+        }
+        filtered
+    }
+
     impl<K: StT + Ord, V: StT> BSTKeyValueStEphTrait<K, V> for BSTKeyValueStEph<K, V> {
+        closed spec fn spec_size(&self) -> nat { self.size as nat }
+        closed spec fn spec_height(&self) -> nat { spec_height_link(&self.root) }
+
         fn new() -> Self { BSTKeyValueStEph { root: None, size: 0 } }
 
-        fn size(&self) -> N { self.size }
+        fn size(&self) -> usize { self.size }
 
-        fn is_empty(&self) -> B { self.size == 0 }
+        fn is_empty(&self) -> bool { self.size == 0 }
 
-        fn height(&self) -> N { height_link(&self.root) }
+        fn height(&self) -> usize { height_link(&self.root) }
 
         fn insert(&mut self, key: K, value: V, priority: u64) {
             let inserted = insert_link(&mut self.root, key, value, priority);
             if inserted {
-                proof { assume(self.size < usize::MAX); }
                 self.size = self.size + 1;
             }
         }
 
-        #[verifier::external_body]
         fn delete(&mut self, key: &K) {
             let mut in_order: Vec<(K, V, u64)> = Vec::new();
             collect_in_order_kvp(&self.root, &mut in_order);
-            let filtered: Vec<(K, V, u64)> = in_order.into_iter().filter(|(k, _, _)| k != key).collect();
-            self.root = build_treap_from_sorted(&filtered);
+            let filtered = filter_by_key_kvp(&in_order, key);
+            self.root = build_treap_from_vec(&filtered, 0, filtered.len());
             self.size = filtered.len();
         }
 
         fn find(&self, key: &K) -> Option<&V> { find_link(&self.root, key) }
 
-        fn contains(&self, key: &K) -> B { self.find(key).is_some() }
+        fn contains(&self, key: &K) -> bool { self.find(key).is_some() }
 
         fn get(&self, key: &K) -> Option<&V> { self.find(key) }
 
-        #[verifier::external_body]
         fn keys(&self) -> ArraySeqStPerS<K> {
-            let mut out = Vec::with_capacity(self.size);
+            let mut out = Vec::new();
             collect_keys(&self.root, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
 
-        #[verifier::external_body]
         fn values(&self) -> ArraySeqStPerS<V> {
-            let mut out = Vec::with_capacity(self.size);
+            let mut out = Vec::new();
             collect_values(&self.root, &mut out);
             ArraySeqStPerS::from_vec(out)
         }

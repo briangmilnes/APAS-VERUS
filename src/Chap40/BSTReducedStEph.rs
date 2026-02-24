@@ -15,18 +15,34 @@ pub mod BSTReducedStEph {
 
     type Link<K, V, R> = Option<Box<Node<K, V, R>>>;
 
-    struct Node<K: StT + Ord, V: StT, R: StT> {
-        key: K,
-        value: V,
-        priority: u64,
-        size: N,
-        reduced_value: R, // Reduced value of subtree rooted at this node
-        left: Link<K, V, R>,
-        right: Link<K, V, R>,
+    pub(crate) struct Node<K: StT + Ord, V: StT, R: StT> {
+        pub(crate) key: K,
+        pub(crate) value: V,
+        pub(crate) priority: u64,
+        pub(crate) size: usize,
+        pub(crate) reduced_value: R,
+        pub(crate) left: Link<K, V, R>,
+        pub(crate) right: Link<K, V, R>,
+    }
+
+    fn clone_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (result: Link<K, V, R>)
+        decreases *link,
+    {
+        match link {
+            None => None,
+            Some(node) => Some(Box::new(Node {
+                key: node.key.clone(),
+                value: node.value.clone(),
+                priority: node.priority,
+                size: node.size,
+                reduced_value: node.reduced_value.clone(),
+                left: clone_link(&node.left),
+                right: clone_link(&node.right),
+            })),
+        }
     }
 
     impl<K: StT + Ord, V: StT, R: StT> Clone for Node<K, V, R> {
-        #[verifier::external_body]
         fn clone(&self) -> Self {
             Node {
                 key: self.key.clone(),
@@ -34,8 +50,8 @@ pub mod BSTReducedStEph {
                 priority: self.priority,
                 size: self.size,
                 reduced_value: self.reduced_value.clone(),
-                left: self.left.clone(),
-                right: self.right.clone(),
+                left: clone_link(&self.left),
+                right: clone_link(&self.right),
             }
         }
     }
@@ -77,7 +93,7 @@ pub mod BSTReducedStEph {
 
     impl<T: ArithmeticT> ReduceOp<T, T> for SumOp<T> {
         fn identity() -> T { T::default() }
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole
         fn combine(a: T, b: T) -> T { a + b }
         fn lift(value: &T) -> T { *value }
     }
@@ -89,16 +105,16 @@ pub mod BSTReducedStEph {
         fn clone(&self) -> Self { CountOp(PhantomData) }
     }
 
-    impl<T: StT> ReduceOp<T, N> for CountOp<T> {
-        fn identity() -> N { 0 }
-        #[verifier::external_body]
-        fn combine(a: N, b: N) -> N { a + b }
-        fn lift(_value: &T) -> N { 1 }
+    impl<T: StT> ReduceOp<T, usize> for CountOp<T> {
+        fn identity() -> usize { 0 }
+        #[verifier::external_body] // accept hole
+        fn combine(a: usize, b: usize) -> usize { a + b }
+        fn lift(_value: &T) -> usize { 1 }
     }
 
     pub struct BSTReducedStEph<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> {
-        root: Link<K, V, R>,
-        _op: PhantomData<Op>,
+        pub(crate) root: Link<K, V, R>,
+        pub(crate) _op: PhantomData<Op>,
     }
 
     impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> Clone for BSTReducedStEph<K, V, R, Op> {
@@ -113,24 +129,30 @@ pub mod BSTReducedStEph {
     pub type BSTreeReduced<K, V, R, Op> = BSTReducedStEph<K, V, R, Op>;
 
     pub trait BSTReducedStEphTrait<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> {
+        spec fn spec_size(&self) -> nat;
+        spec fn spec_wf(&self) -> bool;
+
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn new()                                  -> Self
         where
             Self: Sized;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)                            -> N;
+        fn size(&self)                            -> usize;
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)                        -> B;
+        fn is_empty(&self)                        -> bool;
+        spec fn spec_height(&self) -> nat;
         /// claude-4-sonet: Work Θ(n), Span Θ(n)
-        fn height(&self)                          -> N;
+        fn height(&self)                          -> usize
+            requires self.spec_height() < usize::MAX as nat;
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
-        fn insert(&mut self, key: K, value: V, priority: u64);
+        fn insert(&mut self, key: K, value: V, priority: u64)
+            requires old(self).spec_size() + 1 <= usize::MAX as nat, old(self).spec_wf();
         /// claude-4-sonet: Work Θ(n), Span Θ(n) — in-order filter + rebuild
         fn delete(&mut self, key: &K);
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
         fn find(&self, key: &K)                   -> Option<&V>;
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
-        fn contains(&self, key: &K)               -> B;
+        fn contains(&self, key: &K)               -> bool;
         /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
         fn get(&self, key: &K)                    -> Option<&V>;
         /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
@@ -155,9 +177,41 @@ pub mod BSTReducedStEph {
         fn default() -> Self { Self::new() }
     }
 
-    /// - APAS: Work Θ(1), Span Θ(1) — O(1) via augmented size field.
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn size_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> N {
+    pub(crate) open spec fn spec_size_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> nat {
+        match link {
+            None => 0,
+            Some(n) => n.size as nat,
+        }
+    }
+
+    pub(crate) open spec fn spec_size_wf_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> bool
+        decreases *link,
+    {
+        match link {
+            None => true,
+            Some(n) => {
+                n.size as nat == 1 + spec_size_link(&n.left) + spec_size_link(&n.right)
+                && spec_size_wf_link(&n.left)
+                && spec_size_wf_link(&n.right)
+            }
+        }
+    }
+
+    proof fn lemma_wf_assemble<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>)
+        requires match link {
+            None => true,
+            Some(n) => {
+                n.size as nat == 1 + spec_size_link(&n.left) + spec_size_link(&n.right)
+                && spec_size_wf_link(&n.left)
+                && spec_size_wf_link(&n.right)
+            }
+        },
+        ensures spec_size_wf_link(link),
+    {}
+
+    fn size_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (result: usize)
+        ensures result as nat == spec_size_link(link),
+    {
         match link.as_ref() {
             None => 0,
             Some(n) => n.size,
@@ -166,7 +220,6 @@ pub mod BSTReducedStEph {
 
     /// - APAS: Work Θ(1), Span Θ(1) — reads augmented reduced value.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    #[verifier::external_body]
     fn reduced_value_link<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(link: &Link<K, V, R>) -> R {
         match link.as_ref() {
             None => Op::identity(),
@@ -176,8 +229,19 @@ pub mod BSTReducedStEph {
 
     /// - APAS: Work Θ(1), Span Θ(1) — recomputes size and reduced value from children.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    #[verifier::external_body]
-    fn update_node<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(node: &mut Node<K, V, R>) {
+    fn update_node<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(node: &mut Node<K, V, R>)
+        requires
+            1 + spec_size_link(&old(node).left) + spec_size_link(&old(node).right) <= usize::MAX as nat,
+            spec_size_wf_link(&old(node).left),
+            spec_size_wf_link(&old(node).right),
+        ensures
+            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),
+            spec_size_wf_link(&node.left),
+            spec_size_wf_link(&node.right),
+            node.key == old(node).key,
+            node.left == old(node).left,
+            node.right == old(node).right,
+    {
         node.size = 1 + size_link(&node.left) + size_link(&node.right);
 
         // Compute reduced value: f(left_reduced, f(node_value, right_reduced))
@@ -196,76 +260,159 @@ pub mod BSTReducedStEph {
         priority: u64,
         left: Link<K, V, R>,
         right: Link<K, V, R>,
-    ) -> Link<K, V, R> {
+    ) -> (result: Link<K, V, R>)
+        requires
+            1 + spec_size_link(&left) + spec_size_link(&right) <= usize::MAX as nat,
+            spec_size_wf_link(&left),
+            spec_size_wf_link(&right),
+        ensures
+            spec_size_link(&result) == 1 + spec_size_link(&left) + spec_size_link(&right),
+            spec_size_wf_link(&result),
+    {
+        let ghost left_sz = spec_size_link(&left);
+        let ghost right_sz = spec_size_link(&right);
         let node_reduced = Op::lift(&value);
         let mut node = Node::new(key, value, priority, node_reduced);
         node.left = left;
         node.right = right;
         update_node::<K, V, R, Op>(&mut node);
-        Some(Box::new(node))
+        let result = Some(Box::new(node));
+        proof { lemma_wf_assemble(&result); }
+        result
     }
 
     /// - APAS: N/A — internal treap rotation (updates sizes and reduced values).
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn rotate_left<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(link: &mut Link<K, V, R>) {
+    fn rotate_left<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(link: &mut Link<K, V, R>)
+        requires
+            spec_size_link(old(link)) <= usize::MAX as nat,
+            spec_size_wf_link(old(link)),
+        ensures
+            spec_size_link(link) == spec_size_link(old(link)),
+            spec_size_wf_link(link),
+    {
         if let Some(mut x) = link.take() {
+            assert(spec_size_wf_link(&x.left));
+            assert(spec_size_wf_link(&x.right));
             if let Some(mut y) = x.right.take() {
+                assert(spec_size_wf_link(&y.left));
+                assert(spec_size_wf_link(&y.right));
+                let ghost x_left_sz = spec_size_link(&x.left);
+                let ghost y_left_sz = spec_size_link(&y.left);
+                let ghost y_right_sz = spec_size_link(&y.right);
                 x.right = y.left.take();
+                assert(spec_size_wf_link(&x.left));
+                assert(spec_size_wf_link(&x.right));
+                assert(1 + x_left_sz + y_left_sz + 1 + y_right_sz <= usize::MAX as nat);
                 update_node::<K, V, R, Op>(&mut x);
-                update_node::<K, V, R, Op>(&mut y);
                 y.left = Some(x);
+                update_node::<K, V, R, Op>(&mut y);
                 *link = Some(y);
+                proof { lemma_wf_assemble(link); }
             } else {
                 *link = Some(x);
+                proof { lemma_wf_assemble(link); }
             }
         }
     }
 
     /// - APAS: N/A — internal treap rotation (updates sizes and reduced values).
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn rotate_right<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(link: &mut Link<K, V, R>) {
+    fn rotate_right<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(link: &mut Link<K, V, R>)
+        requires
+            spec_size_link(old(link)) <= usize::MAX as nat,
+            spec_size_wf_link(old(link)),
+        ensures
+            spec_size_link(link) == spec_size_link(old(link)),
+            spec_size_wf_link(link),
+    {
         if let Some(mut x) = link.take() {
+            assert(spec_size_wf_link(&x.left));
+            assert(spec_size_wf_link(&x.right));
             if let Some(mut y) = x.left.take() {
+                assert(spec_size_wf_link(&y.left));
+                assert(spec_size_wf_link(&y.right));
+                let ghost x_right_sz = spec_size_link(&x.right);
+                let ghost y_left_sz = spec_size_link(&y.left);
+                let ghost y_right_sz = spec_size_link(&y.right);
                 x.left = y.right.take();
+                assert(spec_size_wf_link(&x.left));
+                assert(spec_size_wf_link(&x.right));
+                assert(1 + y_right_sz + x_right_sz + 1 + y_left_sz <= usize::MAX as nat);
                 update_node::<K, V, R, Op>(&mut x);
-                update_node::<K, V, R, Op>(&mut y);
                 y.right = Some(x);
+                update_node::<K, V, R, Op>(&mut y);
                 *link = Some(y);
+                proof { lemma_wf_assemble(link); }
             } else {
                 *link = Some(x);
+                proof { lemma_wf_assemble(link); }
             }
         }
     }
 
     /// - APAS: N/A — internal recursive insert helper.
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-    #[verifier::external_body]
     fn insert_link<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(
         link: &mut Link<K, V, R>,
         key: K,
         value: V,
         priority: u64,
-    ) {
-        if let Some(node) = link.as_mut() {
+    )
+        requires
+            spec_size_link(old(link)) + 1 <= usize::MAX as nat,
+            spec_size_wf_link(old(link)),
+        ensures
+            spec_size_wf_link(link),
+            spec_size_link(link) <= spec_size_link(old(link)) + 1,
+            spec_size_link(link) >= spec_size_link(old(link)),
+        decreases old(link),
+    {
+        if let Some(mut node) = link.take() {
+            assert(spec_size_wf_link(&node.left));
+            assert(spec_size_wf_link(&node.right));
             if key < node.key {
                 insert_link::<K, V, R, Op>(&mut node.left, key, value, priority);
-                if node.left.as_ref().is_some_and(|left| left.priority < node.priority) {
+                update_node::<K, V, R, Op>(&mut *node);
+                *link = Some(node);
+                proof { lemma_wf_assemble(link); }
+                let need_rotate = match link.as_ref().unwrap().left.as_ref() {
+                    Some(left) => left.priority < link.as_ref().unwrap().priority,
+                    None => false,
+                };
+                if need_rotate {
                     rotate_right::<K, V, R, Op>(link);
                 }
             } else if key > node.key {
                 insert_link::<K, V, R, Op>(&mut node.right, key, value, priority);
-                if node.right.as_ref().is_some_and(|right| right.priority < node.priority) {
+                update_node::<K, V, R, Op>(&mut *node);
+                *link = Some(node);
+                proof { lemma_wf_assemble(link); }
+                let need_rotate = match link.as_ref().unwrap().right.as_ref() {
+                    Some(right) => right.priority < link.as_ref().unwrap().priority,
+                    None => false,
+                };
+                if need_rotate {
                     rotate_left::<K, V, R, Op>(link);
                 }
             } else {
                 node.value = value;
-            }
-            if let Some(node) = link.as_mut() {
-                update_node::<K, V, R, Op>(node);
+                update_node::<K, V, R, Op>(&mut *node);
+                *link = Some(node);
+                proof { lemma_wf_assemble(link); }
             }
         } else {
             let node_reduced = Op::lift(&value);
-            *link = Some(Box::new(Node::new(key, value, priority, node_reduced)));
+            *link = Some(Box::new(Node {
+                key,
+                value,
+                priority,
+                size: 1,
+                reduced_value: node_reduced,
+                left: None,
+                right: None,
+            }));
+            proof { lemma_wf_assemble(link); }
         }
     }
 
@@ -357,66 +504,119 @@ pub mod BSTReducedStEph {
         }
     }
 
-    fn height_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> N
+    pub(crate) open spec fn spec_height_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> nat
+        decreases *link,
+    {
+        match link {
+            None => 0,
+            Some(n) => {
+                let l = spec_height_link(&n.left);
+                let r = spec_height_link(&n.right);
+                1 + if l >= r { l } else { r }
+            }
+        }
+    }
+
+    fn height_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (result: usize)
+        requires spec_height_link(link) < usize::MAX as nat,
+        ensures result == spec_height_link(link),
         decreases *link,
     {
         match link {
             | None => 0,
             | Some(node) => {
-                let m = height_link(&node.left).max(height_link(&node.right));
-                proof { assume(m < usize::MAX); }
-                1 + m
+                let l = height_link(&node.left);
+                let r = height_link(&node.right);
+                1 + if l >= r { l } else { r }
             }
         }
     }
 
     /// - APAS: N/A — build treap from sorted (key, value, priority) sequence.
-    #[verifier::external_body]
-    fn build_treap_from_sorted<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(
-        seq: &[(K, V, u64)],
-    ) -> Link<K, V, R> {
-        if seq.is_empty() {
+    fn filter_by_key_kvp_r<K: StT + Ord, V: StT>(
+        items: &Vec<(K, V, u64)>, key: &K,
+    ) -> (result: Vec<(K, V, u64)>) {
+        let mut filtered: Vec<(K, V, u64)> = Vec::new();
+        let mut i: usize = 0;
+        while i < items.len()
+            invariant i <= items.len(),
+            decreases items.len() - i,
+        {
+            if items[i].0 != *key {
+                filtered.push((items[i].0.clone(), items[i].1.clone(), items[i].2));
+            }
+            i = i + 1;
+        }
+        filtered
+    }
+
+    fn find_min_priority_idx_kvp_r<K: StT + Ord, V: StT>(
+        items: &Vec<(K, V, u64)>, start: usize, end: usize,
+    ) -> (result: usize)
+        requires start < end, end <= items.len(),
+        ensures start <= result && result < end,
+    {
+        let mut min_idx = start;
+        let mut i = start + 1;
+        while i < end
+            invariant
+                start <= min_idx, min_idx < end, min_idx < i,
+                i <= end, end <= items.len(),
+            decreases end - i,
+        {
+            if items[i].2 < items[min_idx].2 {
+                min_idx = i;
+            }
+            i = i + 1;
+        }
+        min_idx
+    }
+
+    fn build_treap_from_vec_r<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(
+        items: &Vec<(K, V, u64)>, start: usize, end: usize,
+    ) -> (result: Link<K, V, R>)
+        requires start <= end, end <= items.len(),
+        ensures
+            spec_size_wf_link(&result),
+            spec_size_link(&result) == (end - start) as nat,
+        decreases end - start,
+    {
+        if start >= end {
             return None;
         }
-        let min_idx = seq
-            .iter()
-            .enumerate()
-            .min_by_key(|entry| entry.1.2)
-            .map(|entry| entry.0)
-            .unwrap();
-        let (key, value, priority) = seq[min_idx].clone();
-        let left_seq = &seq[..min_idx];
-        let right_seq = &seq[min_idx + 1..];
-        let left = build_treap_from_sorted::<K, V, R, Op>(left_seq);
-        let right = build_treap_from_sorted::<K, V, R, Op>(right_seq);
+        let min_idx = find_min_priority_idx_kvp_r(items, start, end);
+        let key = items[min_idx].0.clone();
+        let value = items[min_idx].1.clone();
+        let priority = items[min_idx].2;
+        let left = build_treap_from_vec_r::<K, V, R, Op>(items, start, min_idx);
+        let right = build_treap_from_vec_r::<K, V, R, Op>(items, min_idx + 1, end);
         make_node::<K, V, R, Op>(key, value, priority, left, right)
     }
 
     /// - APAS: Work Θ(log n), Span Θ(log n) — range query on augmented BST.
     /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
-    #[verifier::external_body]
     fn range_reduce_link<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(
         link: &Link<K, V, R>,
         low: &K,
         high: &K,
-    ) -> R {
+    ) -> R
+        decreases *link,
+    {
         match link {
             | None => Op::identity(),
             | Some(node) => {
                 let mut result = Op::identity();
 
                 // Include left subtree if it might contain keys >= low
-                if &node.key > low {
+                if node.key > *low {
                     result = Op::combine(result, range_reduce_link::<K, V, R, Op>(&node.left, low, high));
                 }
 
-                // Include current node if it's in range
-                if &node.key >= low && &node.key <= high {
+                if !(node.key < *low) && !(node.key > *high) {
                     result = Op::combine(result, Op::lift(&node.value));
                 }
 
-                // Include right subtree if it might contain keys <= high
-                if &node.key < high {
+                if node.key < *high {
                     result = Op::combine(result, range_reduce_link::<K, V, R, Op>(&node.right, low, high));
                 }
 
@@ -428,6 +628,10 @@ pub mod BSTReducedStEph {
     impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> BSTReducedStEphTrait<K, V, R, Op>
         for BSTReducedStEph<K, V, R, Op>
     {
+        closed spec fn spec_size(&self) -> nat { spec_size_link(&self.root) }
+        closed spec fn spec_wf(&self) -> bool { spec_size_wf_link(&self.root) }
+        closed spec fn spec_height(&self) -> nat { spec_height_link(&self.root) }
+
         fn new() -> Self {
             BSTReducedStEph {
                 root: None,
@@ -435,40 +639,37 @@ pub mod BSTReducedStEph {
             }
         }
 
-        fn size(&self) -> N { size_link(&self.root) }
+        fn size(&self) -> usize { size_link(&self.root) }
 
-        fn is_empty(&self) -> B { self.size() == 0 }
+        fn is_empty(&self) -> bool { self.size() == 0 }
 
-        fn height(&self) -> N { height_link(&self.root) }
+        fn height(&self) -> usize { height_link(&self.root) }
 
         fn insert(&mut self, key: K, value: V, priority: u64) {
             insert_link::<K, V, R, Op>(&mut self.root, key, value, priority);
         }
 
-        #[verifier::external_body]
         fn delete(&mut self, key: &K) {
             let mut in_order: Vec<(K, V, u64)> = Vec::new();
             collect_in_order_kvp(&self.root, &mut in_order);
-            let filtered: Vec<(K, V, u64)> = in_order.into_iter().filter(|x| x.0 != *key).collect();
-            self.root = build_treap_from_sorted::<K, V, R, Op>(&filtered);
+            let filtered = filter_by_key_kvp_r(&in_order, key);
+            self.root = build_treap_from_vec_r::<K, V, R, Op>(&filtered, 0, filtered.len());
         }
 
         fn find(&self, key: &K) -> Option<&V> { find_link(&self.root, key) }
 
-        fn contains(&self, key: &K) -> B { self.find(key).is_some() }
+        fn contains(&self, key: &K) -> bool { self.find(key).is_some() }
 
         fn get(&self, key: &K) -> Option<&V> { self.find(key) }
 
-        #[verifier::external_body]
         fn keys(&self) -> ArraySeqStPerS<K> {
-            let mut out = Vec::with_capacity(self.size());
+            let mut out = Vec::new();
             collect_keys(&self.root, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
 
-        #[verifier::external_body]
         fn values(&self) -> ArraySeqStPerS<V> {
-            let mut out = Vec::with_capacity(self.size());
+            let mut out = Vec::new();
             collect_values(&self.root, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
@@ -486,7 +687,7 @@ pub mod BSTReducedStEph {
 
     // Type aliases for common reductions
     pub type BSTSumStEph<K, V> = BSTReducedStEph<K, V, V, SumOp<V>>;
-    pub type BSTCountStEph<K, V> = BSTReducedStEph<K, V, N, CountOp<V>>;
+    pub type BSTCountStEph<K, V> = BSTReducedStEph<K, V, usize, CountOp<V>>;
 
     }
 
