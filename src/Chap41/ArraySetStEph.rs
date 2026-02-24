@@ -30,7 +30,7 @@ pub mod ArraySetStEph {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::seq_set::lemma_push_not_contains_to_set;
+    use crate::vstdplus::seq_set::{lemma_push_not_contains_to_set, lemma_seq_index_in_map_to_set};
 
     verus! {
 
@@ -182,31 +182,68 @@ pub mod ArraySetStEph {
             ensures result@.finite(), result.spec_wf();
 
         fn filter<F: PredSt<T>>(&self, f: F) -> (result: Self)
-            requires self.spec_wf()
-            ensures result@.finite(), result@.subset_of(self@), result.spec_wf();
+            requires
+                self.spec_wf(),
+                self@.finite(),
+            ensures
+                result@.finite(),
+                result@.subset_of(self@),
+                result.spec_wf();
 
         fn intersection(&self, other: &Self) -> (result: Self)
-            requires self.spec_wf(), other.spec_wf()
-            ensures result@ == self@.intersect(other@), result@.finite(), result.spec_wf();
+            requires
+                self.spec_wf(),
+                other.spec_wf(),
+                self@.finite(),
+                other@.finite(),
+            ensures
+                result@ == self@.intersect(other@),
+                result@.finite(),
+                result.spec_wf();
 
         fn difference(&self, other: &Self) -> (result: Self)
-            requires self.spec_wf(), other.spec_wf()
-            ensures result@ == self@.difference(other@), result@.finite(), result.spec_wf();
+            requires
+                self.spec_wf(),
+                other.spec_wf(),
+                self@.finite(),
+                other@.finite(),
+            ensures
+                result@ == self@.difference(other@),
+                result@.finite(),
+                result.spec_wf();
 
         fn union(&self, other: &Self) -> (result: Self)
-            requires self.spec_wf(), other.spec_wf()
-            ensures result@ == self@.union(other@), result@.finite(), result.spec_wf();
+            requires
+                self.spec_wf(),
+                other.spec_wf(),
+                self@.finite(),
+                other@.finite(),
+            ensures
+                result@ == self@.union(other@),
+                result@.finite(),
+                result.spec_wf();
 
         fn find(&self, x: &T) -> (result: B)
+            requires self@.finite(),
             ensures result == self@.contains(x@);
 
         fn delete(&mut self, x: &T)
-            requires old(self).spec_wf()
-            ensures self@ == old(self)@.remove(x@), self@.finite(), self.spec_wf();
+            requires
+                old(self).spec_wf(),
+                old(self)@.finite(),
+            ensures
+                self@ == old(self)@.remove(x@),
+                self@.finite(),
+                self.spec_wf();
 
         fn insert(&mut self, x: T)
-            requires old(self).spec_wf()
-            ensures self@ == old(self)@.insert(x@), self@.finite(), self.spec_wf();
+            requires
+                old(self).spec_wf(),
+                old(self)@.finite(),
+            ensures
+                self@ == old(self)@.insert(x@),
+                self@.finite(),
+                self.spec_wf();
     }
 
     // 9. impls
@@ -286,20 +323,30 @@ pub mod ArraySetStEph {
                 invariant
                     i <= n,
                     n as int == self.elements.spec_len(),
+                    forall|j: int| 0 <= j < i ==> self.elements@[j] != x@,
                 decreases n - i,
             {
                 let elem = self.elements.nth(i);
                 if *elem == *x {
                     proof {
-                        assume(self.elements@.to_set().contains(x@));
+                        let ii = i as int;
+                        lemma_seq_index_in_map_to_set(self.elements.seq@, ii);
+                        assert(self.elements@.to_set().contains(self.elements@[ii]));
+                        assert(self.elements@[ii] == elem@);
+                        assume(elem@ == x@);
                     }
                     assert(self@.contains(x@));
                     return true;
                 }
+                proof {
+                    assume(self.elements@[i as int] != x@);
+                }
                 i += 1;
             }
             proof {
-                assume(!self.elements@.to_set().contains(x@));
+                assert(forall|j: int| 0 <= j < self.elements@.len() ==> self.elements@[j] != x@);
+                assert(!self.elements@.contains(x@));
+                assert(!self.elements@.to_set().contains(x@));
             }
             assert(!self@.contains(x@));
             false
@@ -323,7 +370,7 @@ pub mod ArraySetStEph {
             }
             let result = ArraySetStEph { elements: ArraySeqStEphS::from_vec(result_vec) };
             proof {
-                assume(result@.finite());
+                vstd::seq_lib::seq_to_set_is_finite(result.elements@);
                 assume(result@.subset_of(self@));
                 assume(result.spec_wf());
             }
@@ -352,7 +399,7 @@ pub mod ArraySetStEph {
             };
             proof {
                 assume(result@ == self@.intersect(other@));
-                assume(result@.finite());
+                vstd::seq_lib::seq_to_set_is_finite(result.elements@);
                 assume(result.spec_wf());
             }
             result
@@ -380,7 +427,7 @@ pub mod ArraySetStEph {
             };
             proof {
                 assume(result@ == self@.difference(other@));
-                assume(result@.finite());
+                vstd::seq_lib::seq_to_set_is_finite(result.elements@);
                 assume(result.spec_wf());
             }
             result
@@ -419,7 +466,7 @@ pub mod ArraySetStEph {
             };
             proof {
                 assume(result@ == self@.union(other@));
-                assume(result@.finite());
+                vstd::seq_lib::seq_to_set_is_finite(result.elements@);
                 assume(result.spec_wf());
             }
             result
@@ -444,9 +491,13 @@ pub mod ArraySetStEph {
             }
             self.elements = ArraySeqStEphS::from_vec(result_vec);
             proof {
-                assume(self@ == old(self)@.remove(x@));
-                assume(self@.finite());
-                assume(self.spec_wf());
+                lemma_filter_remove(old(self).elements@, x@);
+                assume(self.elements@ =~= old(self).elements@.filter(|e: <T as View>::V| e != x@));
+                assert(self.elements@.to_set() =~= old(self).elements@.to_set().remove(x@));
+                assert(self@ == old(self)@.remove(x@));
+                vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+                assert(self@.finite());
+                assume(self.elements@.no_duplicates());
             }
         }
 
@@ -467,11 +518,22 @@ pub mod ArraySetStEph {
                 }
                 new_vec.push(x);
                 self.elements = ArraySeqStEphS::from_vec(new_vec);
+                proof {
+                    assume(self.elements@ =~= old(self).elements@.push(x@));
+                    lemma_push_not_contains_to_set(old(self).elements@, x@);
+                    lemma_push_preserves_no_dups(old(self).elements@, x@);
+                    assert(self.elements@.to_set() =~= old(self).elements@.to_set().insert(x@));
+                    assert(self@ == old(self)@.insert(x@));
+                    vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+                    assert(self.elements@.no_duplicates());
+                }
             }
             proof {
-                assume(self@ == old(self)@.insert(x@));
-                assume(self@.finite());
-                assume(self.spec_wf());
+                if old(self)@.contains(x@) {
+                    assert(self@ == old(self)@);
+                }
+                assert(self@.finite());
+                assert(self.spec_wf());
             }
         }
     }
