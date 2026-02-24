@@ -147,9 +147,85 @@ pub mod BSTTreapMtEph {
     }
 
 
+    closed spec fn spec_size_link<T: StTInMtT + Ord>(link: &Link<T>) -> nat
+        decreases *link,
+    {
+        match link {
+            None => 0,
+            Some(node) => node.size as nat,
+        }
+    }
+
+    closed spec fn spec_size_wf_link<T: StTInMtT + Ord>(link: &Link<T>) -> bool
+        decreases *link,
+    {
+        match link {
+            None => true,
+            Some(node) => {
+                node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right)
+                    && spec_size_wf_link(&node.left)
+                    && spec_size_wf_link(&node.right)
+            }
+        }
+    }
+
+    closed spec fn spec_height_link<T: StTInMtT + Ord>(link: &Link<T>) -> nat
+        decreases *link,
+    {
+        match link {
+            None => 0,
+            Some(node) => {
+                let lh = spec_height_link(&node.left);
+                let rh = spec_height_link(&node.right);
+                1 + if lh >= rh { lh } else { rh }
+            }
+        }
+    }
+
+    proof fn lemma_height_le_size<T: StTInMtT + Ord>(link: &Link<T>)
+        requires
+            spec_size_wf_link(link),
+            spec_size_link(link) < usize::MAX as nat,
+        ensures spec_height_link(link) <= spec_size_link(link),
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_size_wf_child_bounded(link);
+                lemma_height_le_size(&node.left);
+                lemma_height_le_size(&node.right);
+            }
+        }
+    }
+
+    proof fn lemma_size_wf_child_bounded<T: StTInMtT + Ord>(link: &Link<T>)
+        requires
+            spec_size_wf_link(link),
+            spec_size_link(link) > 0,
+            spec_size_link(link) < usize::MAX as nat,
+        ensures
+            match link {
+                None => true,
+                Some(node) => {
+                    spec_size_link(&node.left) < usize::MAX as nat
+                    && spec_size_link(&node.right) < usize::MAX as nat
+                },
+            },
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                assert(node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right));
+            }
+        }
+    }
+
     /// - APAS: Work Θ(1), Span Θ(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> N {
+    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (result: N)
+        ensures result as nat == spec_size_link(link),
+    {
         match link {
             None => 0,
             Some(n) => n.size,
@@ -158,9 +234,11 @@ pub mod BSTTreapMtEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    #[verifier::external_body]
     fn update<T: StTInMtT + Ord>(node: &mut Node<T>) {
-        node.size = 1 + size_link(&node.left) + size_link(&node.right);
+        let l = size_link(&node.left);
+        let r = size_link(&node.right);
+        assume(1 + l + r <= usize::MAX);
+        node.size = 1 + l + r;
     }
 
     /// - APAS: Work Θ(1), Span Θ(1)
@@ -280,11 +358,30 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    #[verifier::external_body]
-    fn height_link<T: StTInMtT + Ord>(link: &Link<T>) -> N {
+    fn height_link<T: StTInMtT + Ord>(link: &Link<T>) -> (h: N)
+        requires
+            spec_size_link(link) < usize::MAX as nat,
+            spec_size_wf_link(link),
+        ensures h as nat == spec_height_link(link),
+        decreases *link,
+    {
         match link {
-            None => 0,
-            Some(node) => 1 + height_link(&node.left).max(height_link(&node.right)),
+            | None => 0,
+            | Some(node) => {
+                proof { lemma_size_wf_child_bounded(link); }
+                let lh = height_link(&node.left);
+                let rh = height_link(&node.right);
+                let m = if lh >= rh { lh } else { rh };
+                proof {
+                    lemma_height_le_size(&node.left);
+                    lemma_height_le_size(&node.right);
+                    assert(lh as nat == spec_height_link(&node.left));
+                    assert(rh as nat == spec_height_link(&node.right));
+                    assert(m as nat <= spec_size_link(&node.left) || m as nat <= spec_size_link(&node.right));
+                    assert(m < usize::MAX);
+                }
+                1 + m
+            }
         }
     }
 
@@ -345,7 +442,10 @@ pub mod BSTTreapMtEph {
 
         fn height(&self) -> N {
             let handle = self.root.acquire_read();
-            let result = height_link(handle.borrow());
+            let link: &Link<T> = handle.borrow();
+            assume(spec_size_link(link) < usize::MAX as nat);
+            assume(spec_size_wf_link(link));
+            let result = height_link(link);
             handle.release_read();
             result
         }

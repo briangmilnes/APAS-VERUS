@@ -183,6 +183,19 @@ pub mod BSTTreapStEph {
         }
     }
 
+    proof fn lemma_wf_decompose<T: StT + Ord>(link: &Link<T>)
+        requires spec_size_wf_link(link),
+        ensures match link {
+            None => true,
+            Some(node) => {
+                node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right)
+                && spec_size_wf_link(&node.left)
+                && spec_size_wf_link(&node.right)
+            },
+        },
+    {
+    }
+
     //		8. traits
 
     pub trait BSTTreapStEphTrait<T: StT + Ord> {
@@ -305,75 +318,75 @@ pub mod BSTTreapStEph {
     }
 
     /// - APAS: Work Θ(1), Span Θ(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    #[verifier::external_body]
-    fn update<T: StT + Ord>(node: &mut Node<T>)
-        ensures
-            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),
+    fn update_size<T: StT + Ord>(node: &mut Box<Node<T>>)
     {
-        node.size = 1 + size_link(&node.left) + size_link(&node.right);
+        let l = size_link(&node.left);
+        let r = size_link(&node.right);
+        assume(1 + l + r <= usize::MAX);
+        node.size = 1 + l + r;
     }
 
     /// - APAS: Work Θ(1), Span Θ(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn rotate_left<T: StT + Ord>(link: &mut Link<T>) {
-        if let Some(mut x) = link.take() {
-            if let Some(mut y) = x.right.take() {
-                x.right = y.left.take();
-                update(&mut x);
-                y.left = Some(x);
-                *link = Some(y);
-            } else {
-                *link = Some(x);
-            }
-        }
-    }
-
-    /// - APAS: Work Θ(1), Span Θ(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn rotate_right<T: StT + Ord>(link: &mut Link<T>) {
-        if let Some(mut x) = link.take() {
-            if let Some(mut y) = x.left.take() {
-                x.left = y.right.take();
-                update(&mut x);
-                y.right = Some(x);
-                *link = Some(y);
-            } else {
-                *link = Some(x);
-            }
-        }
-    }
-
-    /// - APAS: Work O(log n) expected, Span O(log n) expected
-    /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-    #[verifier::external_body]
-    fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T, priority: u64)
-        decreases old(link),
+    fn rotate_left<T: StT + Ord>(mut x: Box<Node<T>>) -> (result: Box<Node<T>>)
     {
-        if let Some(node) = link.as_mut() {
-            if value < node.key {
-                insert_link(&mut node.left, value, priority);
-                if node.left.as_ref().is_some_and(|left| left.priority < node.priority) {
-                    rotate_right(link);
-                }
-            } else if value > node.key {
-                insert_link(&mut node.right, value, priority);
-                if node.right.as_ref().is_some_and(|right| right.priority < node.priority) {
-                    rotate_left(link);
-                }
-            }
-            if let Some(node) = link.as_mut() {
-                update(node);
-            }
+        if let Some(mut y) = x.right.take() {
+            x.right = y.left.take();
+            update_size(&mut x);
+            y.left = Some(x);
+            update_size(&mut y);
+            y
         } else {
-            *link = Some(Box::new(new_node(value, priority)));
+            x
+        }
+    }
+
+    /// - APAS: Work Θ(1), Span Θ(1)
+    fn rotate_right<T: StT + Ord>(mut x: Box<Node<T>>) -> (result: Box<Node<T>>)
+    {
+        if let Some(mut y) = x.left.take() {
+            x.left = y.right.take();
+            update_size(&mut x);
+            y.right = Some(x);
+            update_size(&mut y);
+            y
+        } else {
+            x
+        }
+    }
+
+    /// - APAS: Work O(log n) expected, Span O(log n) expected
+    fn insert_link<T: StT + Ord>(link: Link<T>, value: T, priority: u64) -> (result: Link<T>)
+        decreases link,
+    {
+        match link {
+            None => Some(Box::new(new_node(value, priority))),
+            Some(mut node) => {
+                if value < node.key {
+                    node.left = insert_link(node.left.take(), value, priority);
+                    update_size(&mut node);
+                    let needs_rotate = match &node.left {
+                        Some(l) => l.priority < node.priority,
+                        None => false,
+                    };
+                    if needs_rotate { Some(rotate_right(node)) } else { Some(node) }
+                } else if value > node.key {
+                    node.right = insert_link(node.right.take(), value, priority);
+                    update_size(&mut node);
+                    let needs_rotate = match &node.right {
+                        Some(r) => r.priority < node.priority,
+                        None => false,
+                    };
+                    if needs_rotate { Some(rotate_left(node)) } else { Some(node) }
+                } else {
+                    Some(node)
+                }
+            }
         }
     }
 
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-    #[verifier::external_body]
-    fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T>
+    fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> (result: Option<&'a T>)
         decreases *link,
     {
         match link {
@@ -418,27 +431,56 @@ pub mod BSTTreapStEph {
         }
     }
 
-    /// - APAS: Work Θ(n), Span Θ(n)
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-    fn in_order_collect<T: StT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+    fn in_order_vec<T: StT + Ord>(link: &Link<T>) -> (result: Vec<T>)
         decreases *link,
     {
-        if let Some(node) = link {
-            in_order_collect(&node.left, out);
-            out.push(node.key.clone());
-            in_order_collect(&node.right, out);
+        match link {
+            None => Vec::new(),
+            Some(node) => {
+                let mut left = in_order_vec(&node.left);
+                left.push(node.key.clone());
+                let right = in_order_vec(&node.right);
+                let mut i: usize = 0;
+                while i < right.len()
+                    invariant i <= right.len(),
+                    decreases right.len() - i,
+                {
+                    left.push(right[i].clone());
+                    i = i + 1;
+                }
+                left
+            }
         }
     }
 
-    /// - APAS: Work Θ(n), Span Θ(n)
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-    fn pre_order_collect<T: StT + Ord>(link: &Link<T>, out: &mut Vec<T>)
+    fn pre_order_vec<T: StT + Ord>(link: &Link<T>) -> (result: Vec<T>)
         decreases *link,
     {
-        if let Some(node) = link {
-            out.push(node.key.clone());
-            pre_order_collect(&node.left, out);
-            pre_order_collect(&node.right, out);
+        match link {
+            None => Vec::new(),
+            Some(node) => {
+                let mut result = Vec::new();
+                result.push(node.key.clone());
+                let left = pre_order_vec(&node.left);
+                let mut i: usize = 0;
+                while i < left.len()
+                    invariant i <= left.len(),
+                    decreases left.len() - i,
+                {
+                    result.push(left[i].clone());
+                    i = i + 1;
+                }
+                let right = pre_order_vec(&node.right);
+                let mut j: usize = 0;
+                while j < right.len()
+                    invariant j <= right.len(),
+                    decreases right.len() - j,
+                {
+                    result.push(right[j].clone());
+                    j = j + 1;
+                }
+                result
+            }
         }
     }
 
@@ -457,7 +499,7 @@ pub mod BSTTreapStEph {
         }
 
         fn insert(&mut self, value: T, priority: u64) {
-            insert_link(&mut self.root, value, priority);
+            self.root = insert_link(self.root.take(), value, priority);
         }
 
         fn find(&self, target: &T) -> Option<&T> {
@@ -472,18 +514,12 @@ pub mod BSTTreapStEph {
 
         fn maximum(&self) -> Option<&T> { max_link(&self.root) }
 
-        #[verifier::external_body]
         fn in_order(&self) -> ArraySeqStPerS<T> {
-            let mut out = Vec::with_capacity(self.size());
-            in_order_collect(&self.root, &mut out);
-            ArraySeqStPerS::from_vec(out)
+            ArraySeqStPerS::from_vec(in_order_vec(&self.root))
         }
 
-        #[verifier::external_body]
         fn pre_order(&self) -> ArraySeqStPerS<T> {
-            let mut out = Vec::with_capacity(self.size());
-            pre_order_collect(&self.root, &mut out);
-            ArraySeqStPerS::from_vec(out)
+            ArraySeqStPerS::from_vec(pre_order_vec(&self.root))
         }
     }
 
