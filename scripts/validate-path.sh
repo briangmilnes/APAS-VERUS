@@ -33,5 +33,5 @@ if [ ! -f path/lib.rs ]; then
     exit 1
 fi
 echo "Verifying path/ (parallel build)"
-time timeout 120 "$VERUS" --crate-type=lib path/lib.rs --multiple-errors 20 --expand-errors \
+time "$VERUS" --crate-type=lib path/lib.rs --num-threads 8 --multiple-errors 20 --expand-errors \
     "${CFG_FLAG[@]}" "${TIME_FLAG[@]}" 2>&1 | sed 's/\x1b\[[0-9;]*m//g'

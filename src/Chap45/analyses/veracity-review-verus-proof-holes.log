@@ -1,56 +1,86 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap45
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap45/
 
 ℹ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BalancedTreePQ.rs:48: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:56: info: accept() - accept hole
    Info: 1 assume(false); diverge() idiom(s)
    1 clean proof function
 ❌ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:45: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        37 |             fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:177: external_body - #[verifier::external_body]
+       178 |         fn bubble_down<T: StT + Ord>(heap: &ArraySeqStPerS<T>, i: usize) -> (result: ArraySeqStPerS<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:475: assume() - assume(new_heap@.len() + 1 == current_heap@.len());
+       463 |             fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
             ...
-        43 |                     // For concrete T (i32, u64, etc.) it holds; for custom T, caller must ensure
-        44 |                     // Clone produces equal values (standard Rust semantics).
-        46 |                     lemma_seq_map_cloned_view_eq(
-        47 |                         self.elements.seq@,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:60: info: accept() - accept hole
+       473 |                     let (new_heap, min_element) = current_heap.delete_min();
+       474 |                     proof {
+       476 |                         assume(min_element.is_some());
+       477 |                     }
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:476: assume() - assume(min_element.is_some());
+       463 |             fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
+            ...
+       474 |                     proof {
+       475 |                         assume(new_heap@.len() + 1 == current_heap@.len());
+       477 |                     }
+       478 |                     if let Some(element) = min_element {
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:481: assume() - assume(result@.len() + 1 <= usize::MAX as int);
+       463 |             fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
+            ...
+       479 |                         proof {
+       480 |                             assert(result@.len() + 1 + new_heap@.len() == self@.len());
+       482 |                         }
+       483 |                         let single_seq = ArraySeqStPerS::singleton(element);
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:496: external_body - #[verifier::external_body]
+       497 |             fn height(&self) -> usize {
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:505: external_body - #[verifier::external_body]
+       506 |             fn level_elements(&self, level: usize) -> ArraySeqStPerS<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:52: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        47 |             fn clone(&self) -> (result: Self)
+            ...
+        50 |                 let result = BinaryHeapPQ { elements: self.elements.clone() };
+        51 |                 proof {
+        53 |                     lemma_seq_map_cloned_view_eq(
+        54 |                         self.elements.seq@,
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:67: info: accept() - accept hole
+   Holes: 6 total
+      3 × assume()
+      3 × external_body
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Info: 1 assume(false); diverge() idiom(s)
    Proof functions: 1 total (1 clean, 0 holed)
 ✓ Example45_2.rs
    1 clean proof function
 ℹ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/HeapsortExample.rs:76: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/HeapsortExample.rs:91: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:84: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:99: info: accept() - accept hole
    Info: 2 assume(false); diverge() idiom(s)
    1 clean proof function
 ℹ LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:55: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:75: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:93: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/LeftistHeapPQ.rs:103: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:55: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:75: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:93: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:103: info: accept() - accept hole
    Info: 4 assume(false); diverge() idiom(s)
    1 clean proof function
 ❌ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/SortedListPQ.rs:42: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        37 |             fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:50: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        45 |             fn clone(&self) -> (result: Self)
             ...
-        40 |                 let result = SortedListPQ { elements: self.elements.clone() };
-        41 |                 proof {
-        43 |                     lemma_seq_map_cloned_view_eq(
-        44 |                         self.elements.seq@,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/SortedListPQ.rs:57: info: accept() - accept hole
+        48 |                 let result = SortedListPQ { elements: self.elements.clone() };
+        49 |                 proof {
+        51 |                     lemma_seq_map_cloned_view_eq(
+        52 |                         self.elements.seq@,
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:65: info: accept() - accept hole
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Info: 1 assume(false); diverge() idiom(s)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/UnsortedListPQ.rs:42: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        37 |             fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:50: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        45 |             fn clone(&self) -> (result: Self)
             ...
-        40 |                 let result = UnsortedListPQ { elements: self.elements.clone() };
-        41 |                 proof {
-        43 |                     lemma_seq_map_cloned_view_eq(
-        44 |                         self.elements.seq@,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/UnsortedListPQ.rs:57: info: accept() - accept hole
+        48 |                 let result = UnsortedListPQ { elements: self.elements.clone() };
+        49 |                 proof {
+        51 |                     lemma_seq_map_cloned_view_eq(
+        52 |                         self.elements.seq@,
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:65: info: accept() - accept hole
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Info: 1 assume(false); diverge() idiom(s)
    Proof functions: 1 total (1 clean, 0 holed)
@@ -60,8 +90,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   7 clean (no holes)
-   0 holed (contains holes)
+   6 clean (no holes)
+   1 holed (contains holes)
    7 total
 
 Proof Functions:
@@ -69,10 +99,10 @@ Proof Functions:
    0 holed
    7 total
 
-Holes Found: 0 total
+Holes Found: 6 total
+   3 × assume()
+   3 × external_body
 
 Errors: 3 (bare impl(s), struct/enum outside verus!)
 
 Info: 10 assume(false); diverge() idiom(s) (valid non-termination)
-
-🎉 No proof holes found! All proofs are complete.

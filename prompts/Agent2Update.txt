@@ -5,9 +5,6 @@ Read ./rules/apas-verus/senior-proof-engineer.mdc
 Read ./rules/style/senior-prose-engineer.mdc
 REREAD ANY FILES BEFORE MODIFYING THEM.
 
-Chapters: Chap26, Chap27, Chap28, Chap35, Chap36, Chap37, Chap38, Chap39, Chap40.
-Don't touch directories other than these. 
-Excluded: Chap02 (HF scheduler), Chap12 (exercises).
 I have multiple agents up.
 You are not allowed to add // accept holes or accepts. Read the rule. 
 
