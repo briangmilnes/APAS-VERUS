@@ -1,9 +1,8 @@
-Logging to: /home/milnes/projects/APAS-VERUS-agent2/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: spec_size_link.*nat.*<
+Pattern: fn.*to_set|lemma.*contains
 Searching: /home/milnes/projects/verus/source/vstd
-Searching: /home/milnes/projects/verus/source/vstd
-Files: 190, Functions: 4578, Matches: 0
+Files: 95, Functions: 2289, Matches: 0
 

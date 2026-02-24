@@ -451,7 +451,7 @@ pub mod Chap40 {
     pub mod BSTReducedStEph;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap41 {
     pub mod ArraySetStEph;
     // pub mod ArraySetEnumMtEph;  // uses bitvec (Verus can't link)
