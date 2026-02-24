@@ -2,90 +2,10 @@ Logging to: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: clone
-Searching: /home/milnes/projects/APAS-VERUS-agent1/src/vstdplus
-Files: 23, Functions: 664, Matches: 19
+Pattern: fn map_values types Seq
+Searching: /home/milnes/projects/verus/source/vstd
+Files: 95, Functions: 2289, Matches: 1
 
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/threads_plus.rs:119: [0m
-#[cfg(verus_keep_ghost)]
-[38;5;22m    fn clone(&self) -> Self { IsThreadPlus {} }[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/threads_plus.rs:122: [0m
-#[cfg(not(verus_keep_ghost))]
-[38;5;22m    fn clone(&self) -> Self { IsThreadPlus { _no_send_sync: Default::default() } }[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/checked_nat_with_checked_view.rs:131: [0m
-[38;5;22m        exec fn clone(&self) -> (clone: Self)[0m
-[38;5;22m        ensures clone@ == self@[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/checked_nat_with_checked_view.rs:369: [0m
-[38;5;22m        exec fn clone(&self) -> (clone: Self)[0m
-[38;5;22m        ensures clone@ == self@[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hash_set_with_view_plus.rs:58: [0m
-#[verifier::external_body]
-[38;5;22m    fn clone(&self) -> (clone: Self)[0m
-[38;5;22m        ensures clone@ == self@[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/checked_int.rs:158: [0m
-[38;5;22m                exec fn clone(&self) -> (clone: Self)[0m
-[38;5;22m                    ensures clone@ == self@[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/checked_nat.rs:160: [0m
-[38;5;22m        exec fn clone(&self) -> (clone: Self)[0m
-[38;5;22m        ensures clone@ == self@[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/clone_plus.rs:13: [0m
-[38;5;22m        fn clone_plus(&self) -> (res: Self)[0m
-[38;5;22m            ensures cloned(*self, res);[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/clone_plus.rs:19: [0m
-#[verifier::external_body]
-[38;5;22m        fn clone_plus(&self) -> (res: Self)[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/clone_plus.rs:28: [0m
-/// Clone a unary function preserving requires and ensures
-#[verifier::external_body]
-[38;5;22m    pub fn clone_fn<T, U, F: Fn(&T) -> U + Clone>(f: &F) -> (res: F)[0m
-[38;5;22m        ensures[0m
-[38;5;22m            forall|x: &T| f.requires((x,)) == res.requires((x,)),[0m
-[38;5;22m            forall|x: &T, r: U| f.ensures((x,), r) == res.ensures((x,), r),[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/clone_plus.rs:38: [0m
-/// Clone a binary function preserving requires and ensures
-#[verifier::external_body]
-[38;5;22m    pub fn clone_fn2<T, F: Fn(&T, &T) -> T + Clone>(f: &F) -> (res: F)[0m
-[38;5;22m        ensures[0m
-[38;5;22m            forall|x: &T, y: &T| f.requires((x, y)) == res.requires((x, y)),[0m
-[38;5;22m            forall|x: &T, y: &T, r: T| f.ensures((x, y), r) == res.ensures((x, y), r),[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/clone_plus.rs:48: [0m
-/// Clone a predicate preserving requires and ensures
-#[verifier::external_body]
-[38;5;22m    pub fn clone_pred<T, F: Fn(&T) -> bool + Clone>(f: &F) -> (res: F)[0m
-[38;5;22m        ensures[0m
-[38;5;22m            forall|x: &T| f.requires((x,)) == res.requires((x,)),[0m
-[38;5;22m            forall|x: &T, r: bool| f.ensures((x,), r) == res.ensures((x,), r),[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/clone_plus.rs:62: [0m
-[38;5;22m        fn clone_plus(&self) -> Self;[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/clone_plus.rs:66: [0m
-[38;5;22m        fn clone_plus(&self) -> Self { self.clone() }[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/clone_plus.rs:69: [0m
-[38;5;22m    pub fn clone_fn<T, U, F: Fn(&T) -> U + Clone>(f: &F) -> F { f.clone() }[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/clone_plus.rs:70: [0m
-[38;5;22m    pub fn clone_fn2<T, F: Fn(&T, &T) -> T + Clone>(f: &F) -> F { f.clone() }[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/clone_plus.rs:71: [0m
-[38;5;22m    pub fn clone_pred<T, F: Fn(&T) -> bool + Clone>(f: &F) -> F { f.clone() }[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/feq.rs:50: [0m
-[38;5;22m    pub open spec fn obeys_feq_clone<T: Eq + Clone + Sized>() -> bool[0m
-
-[31m/home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/feq.rs:234: [0m
-/// Stub obeys_feq_clone for non-Verus builds - always true
-[38;5;22m    pub fn obeys_feq_clone<T: Eq + Clone>() -> bool { true }[0m
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:32: [0m
+[38;5;22m    pub open spec fn map_values<B>(self, f: spec_fn(A) -> B) -> Seq<B>[0m
 
