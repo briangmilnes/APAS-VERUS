@@ -4,8 +4,8 @@
 use apas_verus::BSTSetTreapMtEphLit;
 use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
 use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+use apas_verus::Chap39::BSTParaTreapMtEph::BSTParaTreapMtEph::*;
 use apas_verus::Chap39::BSTSetTreapMtEph::BSTSetTreapMtEph::*;
-use apas_verus::Chap39::BSTTreapMtEph::BSTTreapMtEph::*;
 use apas_verus::Types::Types::*;
 
 #[test]
@@ -134,7 +134,7 @@ fn test_filter() {
     for i in 1..=10 {
         set.insert(i);
     }
-    let evens = set.filter(|x| x % 2 == 0);
+    let evens = set.filter(|x: &i32| x % 2 == 0);
     assert_eq!(evens.size(), 5);
     assert!(evens.contains(&2));
     assert!(evens.contains(&4));
@@ -204,7 +204,6 @@ fn test_balanced_after_inserts() {
     for i in 1..=100 {
         set.insert(i);
     }
-    // Treap should stay functional with randomized priorities
     assert_eq!(set.size(), 100);
     assert!(set.contains(&50));
 }
@@ -293,9 +292,9 @@ fn test_as_tree() {
     set.insert(3);
     set.insert(7);
 
-    let tree = set.as_tree();
+    let tree: &ParamTreap<i32> = set.as_tree();
     assert_eq!(tree.size(), 3);
-    assert!(tree.contains(&5));
+    assert_eq!(tree.find(&5), Some(5));
 }
 
 #[test]
@@ -452,7 +451,7 @@ fn test_trait_impl_filter() {
     set.insert(2);
     set.insert(3);
 
-    let result = <BSTSetTreapMtEph<i32> as BSTSetTreapMtEphTrait<i32>>::filter(&set, |x| x % 2 == 1);
+    let result = <BSTSetTreapMtEph<i32> as BSTSetTreapMtEphTrait<i32>>::filter(&set, |x: &i32| x % 2 == 1);
     assert_eq!(result.size(), 2);
 }
 
@@ -483,6 +482,6 @@ fn test_trait_impl_as_tree() {
     let mut set = BSTSetTreapMtEph::empty();
     set.insert(5);
 
-    let tree = <BSTSetTreapMtEph<i32> as BSTSetTreapMtEphTrait<i32>>::as_tree(&set);
+    let tree: &ParamTreap<i32> = <BSTSetTreapMtEph<i32> as BSTSetTreapMtEphTrait<i32>>::as_tree(&set);
     assert_eq!(tree.size(), 1);
 }

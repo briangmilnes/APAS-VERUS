@@ -14,39 +14,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
         48 |     fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, TreapWf>) {
         49 |         RwLock::new(val, Ghost(TreapWf))
    Errors: 2 total (1 Verus RwLock external_body, 1 dummy RwLockPredicate)
-❌ BSTSetTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:39: external_body - #[verifier::external_body]
-        40 |     fn priority_for<T: Hash>(key: &T) -> u64 {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:124: external_body - #[verifier::external_body]
-       125 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTTreapMtEph<T>) -> Vec<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:138: external_body - #[verifier::external_body]
-       139 |     fn from_sorted_iter<T: StTInMtT + Ord + Hash, I: IntoIterator<Item = T>>(values: I) -> BSTSetTreapMtEph<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:179: external_body - #[verifier::external_body]
-       180 |         fn delete(&mut self, target: &T) {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:188: external_body - #[verifier::external_body]
-       189 |         fn union(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:197: external_body - #[verifier::external_body]
-       198 |         fn intersection(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:214: external_body - #[verifier::external_body]
-       215 |         fn difference(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:231: external_body - #[verifier::external_body]
-       232 |         fn split(&self, pivot: &T) -> (Self, B, Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:248: external_body - #[verifier::external_body]
-       249 |         #[verifier::external_body]
-       250 |         fn join_pair(left: Self, right: Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:249: external_body - #[verifier::external_body]
-       250 |         fn join_pair(left: Self, right: Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:258: external_body - #[verifier::external_body]
-       259 |         #[verifier::external_body]
-       260 |         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:259: external_body - #[verifier::external_body]
-       260 |         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:269: external_body - #[verifier::external_body]
-       270 |         fn filter<F: FnMut(&T) -> bool>(&self, mut predicate: F) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:279: external_body - #[verifier::external_body]
-       280 |         fn reduce<F: FnMut(T, T) -> T>(&self, mut op: F, base: T) -> T {
-   Holes: 14 total
-      14 × external_body
+✓ BSTSetTreapMtEph.rs
 ❌ BSTTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:240: assume() - assume(1 + l + r <= usize::MAX);
        237 |     fn update<T: StTInMtT + Ord>(node: &mut Node<T>) {
@@ -108,8 +76,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   1 clean (no holes)
-   3 holed (contains holes)
+   2 clean (no holes)
+   2 holed (contains holes)
    4 total
 
 Proof Functions:
@@ -117,9 +85,8 @@ Proof Functions:
    0 holed
    5 total
 
-Holes Found: 18 total
+Holes Found: 4 total
    4 × assume()
-   14 × external_body
 
 Errors: 4 (bare impl(s), struct/enum outside verus!)
 
