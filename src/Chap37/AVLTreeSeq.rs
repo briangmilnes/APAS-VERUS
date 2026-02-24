@@ -28,7 +28,9 @@ pub mod AVLTreeSeq {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
-    use crate::vstdplus::feq::feq::{obeys_feq_full, lemma_cloned_view_eq};
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::*;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
 
@@ -449,7 +451,7 @@ pub mod AVLTreeSeq {
         let ghost seq_a = spec_avltreeseq_inorder(*a);
         let ghost seq_b = spec_avltreeseq_inorder(*b);
         let mut i: usize = 0;
-        #[verifier::loop_isolation(false)]
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         while i < sa
             invariant
                 sa == sb,
@@ -587,7 +589,7 @@ pub mod AVLTreeSeq {
             let length = values.len();
             let mut t = AVLTreeS::empty();
             let mut i: usize = 0;
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             while i < length
                 invariant
                     i <= length,

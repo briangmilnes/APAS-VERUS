@@ -80,8 +80,8 @@ pub mod BSTTreapStEph {
             Some(node) => {
                 spec_bst_link(&node.left)
                     && spec_bst_link(&node.right)
-                    && (forall|k: T| spec_contains_link(&node.left, k) ==> k.is_lt(&node.key))
-                    && (forall|k: T| spec_contains_link(&node.right, k) ==> node.key.is_lt(&k))
+                    && (forall|k: T| #![trigger spec_contains_link(&node.left, k)] spec_contains_link(&node.left, k) ==> k.is_lt(&node.key))
+                    && (forall|k: T| #![trigger spec_contains_link(&node.right, k)] spec_contains_link(&node.right, k) ==> node.key.is_lt(&k))
             }
         }
     }

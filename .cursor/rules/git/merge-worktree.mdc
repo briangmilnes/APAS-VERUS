@@ -14,6 +14,13 @@ Do NOT skip phases. Do NOT reorder phases.
 | agent2 | `~/projects/APAS-VERUS-agent2` | `agent2/ready` |
 | agent3 | `~/projects/APAS-VERUS-agent3` | `agent3/ready` |
 
+## Branches not used in merge
+
+**Do NOT merge `review/prose`.** That branch is deprecated. It diverged before the
+Int→I64/Float→F64 rename and other lib.rs evolution. Merging it overwrites lib.rs
+with an outdated version and breaks the build. Only merge agent1/ready, agent2/ready,
+and agent3/ready.
+
 ## Phase 0: Ensure all worktrees are committed and pushed
 
 All branches must be clean and pushed before merging. Do not proceed if any

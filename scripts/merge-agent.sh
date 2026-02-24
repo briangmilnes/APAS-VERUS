@@ -13,6 +13,10 @@ if [ -z "$BRANCH" ]; then
     echo "Usage: merge-agent.sh <branch>"
     exit 1
 fi
+if [ "$BRANCH" = "review/prose" ] || [ "$BRANCH" = "origin/review/prose" ]; then
+    echo "ERROR: Do not merge review/prose. That branch is deprecated (see .cursor/rules/git/merge-worktree.mdc)."
+    exit 1
+fi
 
 cd "$PROJECT_ROOT"
 

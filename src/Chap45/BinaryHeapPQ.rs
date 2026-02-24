@@ -111,7 +111,7 @@ broadcast use {
             let n = seq.length();
             let mut result = ArraySeqStPerS::empty();
 
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             for k in 0..n
                 invariant
                     n == seq@.len(),
@@ -143,7 +143,7 @@ broadcast use {
         {
             let mut result = seq.clone();
 
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             while i > 0
                 invariant
                     result@.len() == seq@.len(),
@@ -225,7 +225,7 @@ broadcast use {
             let last_non_leaf = if seq.length() >= 2 { (seq.length() - 2) / 2 } else { 0 };
 
             let mut idx = last_non_leaf + 1;
-            #[verifier::loop_isolation(false)]
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             while idx > 0
                 invariant
                     result@.len() == seq@.len(),
@@ -408,7 +408,7 @@ broadcast use {
                 let mut new_elements = ArraySeqStPerS::singleton(last_element);
                 let n = self.elements.length();
                 let end = n - 1;
-                #[verifier::loop_isolation(false)]
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 1..end
                     invariant
                         n == self.elements@.len(),
@@ -464,7 +464,7 @@ broadcast use {
                 let mut result = ArraySeqStPerS::empty();
                 let mut current_heap = self.clone();
 
-                #[verifier::loop_isolation(false)]
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 while !current_heap.is_empty()
                     invariant
                         current_heap@.len() * 2 <= usize::MAX as int,
@@ -533,12 +533,12 @@ broadcast use {
                 let seq = self.to_seq();
                 let n = seq.length();
                 let mut result: Vec<T> = Vec::new();
-                #[verifier::loop_isolation(false)]
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
                     invariant
                         n == seq@.len(),
                         result@.len() == i as int,
-                        forall|j: int| 0 <= j < i ==> (result@[j])@ == seq@[j],
+                        forall|j: int| 0 <= j < i ==> (result@[j])@ == #[trigger] seq@[j],
                 {
                     let elem = seq.nth(i).clone();
                     proof { axiom_cloned_implies_eq_owned(seq.spec_index(i as int), elem); }
@@ -551,12 +551,12 @@ broadcast use {
                 let sorted_seq = self.extract_all_sorted();
                 let n = sorted_seq.length();
                 let mut result: Vec<T> = Vec::new();
-                #[verifier::loop_isolation(false)]
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
                     invariant
                         n == sorted_seq@.len(),
                         result@.len() == i as int,
-                        forall|j: int| 0 <= j < i ==> (result@[j])@ == sorted_seq@[j],
+                        forall|j: int| 0 <= j < i ==> (result@[j])@ == #[trigger] sorted_seq@[j],
                 {
                     let elem = sorted_seq.nth(i).clone();
                     proof { axiom_cloned_implies_eq_owned(sorted_seq.spec_index(i as int), elem); }
