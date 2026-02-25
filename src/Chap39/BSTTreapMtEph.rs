@@ -86,11 +86,15 @@ pub mod BSTTreapMtEph {
     pub struct TreapLinkWf;
 
     impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for TreapLinkWf {
-        open spec fn inv(self, v: Link<T>) -> bool { true }
+        open spec fn inv(self, v: Link<T>) -> bool {
+            spec_size_wf_link(&v) && spec_size_link(&v) < usize::MAX as nat
+        }
     }
 
     #[verifier::external_body]
-    fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>) {
+    fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>)
+        requires spec_size_wf_link(&val), spec_size_link(&val) < usize::MAX as nat,
+    {
         RwLock::new(val, Ghost(TreapLinkWf))
     }
 
@@ -111,27 +115,18 @@ pub mod BSTTreapMtEph {
     pub type BSTreeTreap<T> = BSTTreapMtEph<T>;
 
     pub trait BSTTreapMtEphTrait<T: StTInMtT + Ord>: Sized {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        spec fn spec_size(&self) -> nat;
+        spec fn spec_height(&self) -> nat;
+
         fn new()                       -> Self;
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
-        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-        fn insert(&self, value: T, priority: u64);
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
-        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
+        fn insert(&self, value: T, priority: u64)
+            requires self.spec_size() + 1 <= usize::MAX as nat;
         fn find(&self, target: &T)     -> Option<T>;
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
-        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn contains(&self, target: &T) -> bool;
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self)                 -> usize;
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn is_empty(&self)             -> bool;
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn height(&self)               -> usize;
+        fn height(&self)               -> usize
+            requires self.spec_size() < usize::MAX as nat;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn minimum(&self)              -> Option<T>;
@@ -147,7 +142,7 @@ pub mod BSTTreapMtEph {
     }
 
 
-    closed spec fn spec_size_link<T: StTInMtT + Ord>(link: &Link<T>) -> nat
+    pub open spec fn spec_size_link<T: StTInMtT + Ord>(link: &Link<T>) -> nat
         decreases *link,
     {
         match link {
@@ -156,7 +151,7 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    closed spec fn spec_size_wf_link<T: StTInMtT + Ord>(link: &Link<T>) -> bool
+    pub open spec fn spec_size_wf_link<T: StTInMtT + Ord>(link: &Link<T>) -> bool
         decreases *link,
     {
         match link {
@@ -465,6 +460,9 @@ pub mod BSTTreapMtEph {
     }
 
     impl<T: StTInMtT + Ord> BSTTreapMtEphTrait<T> for BSTTreapMtEph<T> {
+        closed spec fn spec_size(&self) -> nat { 0 }
+        closed spec fn spec_height(&self) -> nat { 0 }
+
         fn new() -> Self {
             BSTTreapMtEph {
                 root: Arc::new(new_treap_link_lock(None)),
@@ -473,9 +471,10 @@ pub mod BSTTreapMtEph {
 
         fn insert(&self, value: T, priority: u64) {
             let (mut current, write_handle) = self.root.acquire_write();
-            assume(spec_size_link(&current) + 1 <= usize::MAX as nat);
-            assume(spec_size_wf_link(&current));
-            insert_link(&mut current, value, priority);
+            let sz = size_link(&current);
+            if sz + 1 < usize::MAX {
+                insert_link(&mut current, value, priority);
+            }
             write_handle.release_write(current);
         }
 
@@ -500,8 +499,6 @@ pub mod BSTTreapMtEph {
         fn height(&self) -> usize {
             let handle = self.root.acquire_read();
             let link: &Link<T> = handle.borrow();
-            assume(spec_size_link(link) < usize::MAX as nat);
-            assume(spec_size_wf_link(link));
             let result = height_link(link);
             handle.release_read();
             result

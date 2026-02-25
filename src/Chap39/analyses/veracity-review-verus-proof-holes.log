@@ -1,67 +1,27 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap39/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap39
 
 ❌ BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:24: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        22 | 
-        23 |     impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for TreapWf {
-        25 |     }
-        26 | 
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:47: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        24 |         open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool { true }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:59: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+        34 |         open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
             ...
-        45 |     }
-        46 | 
-        48 |     fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, TreapWf>) {
-        49 |         RwLock::new(val, Ghost(TreapWf))
-   Errors: 2 total (1 Verus RwLock external_body, 1 dummy RwLockPredicate)
+        57 |     }
+        58 | 
+        60 |     fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, TreapWf>)
+        61 |         requires spec_node_wf(&val),
+   Errors: 1 total (1 Verus RwLock external_body)
 ✓ BSTSetTreapMtEph.rs
 ❌ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:476: assume() - assume(spec_size_link(&current) + 1 <= usize::MAX as nat);
-       474 |         fn insert(&self, value: T, priority: u64) {
-       475 |             let (mut current, write_handle) = self.root.acquire_write();
-       477 |             assume(spec_size_wf_link(&current));
-       478 |             insert_link(&mut current, value, priority);
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:477: assume() - assume(spec_size_wf_link(&current));
-       474 |         fn insert(&self, value: T, priority: u64) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:94: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+        89 |         open spec fn inv(self, v: Link<T>) -> bool {
             ...
-       475 |             let (mut current, write_handle) = self.root.acquire_write();
-       476 |             assume(spec_size_link(&current) + 1 <= usize::MAX as nat);
-       478 |             insert_link(&mut current, value, priority);
-       479 |             write_handle.release_write(current);
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:503: assume() - assume(spec_size_link(link) < usize::MAX as nat);
-       500 |         fn height(&self) -> usize {
-            ...
-       501 |             let handle = self.root.acquire_read();
-       502 |             let link: &Link<T> = handle.borrow();
-       504 |             assume(spec_size_wf_link(link));
-       505 |             let result = height_link(link);
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:504: assume() - assume(spec_size_wf_link(link));
-       500 |         fn height(&self) -> usize {
-            ...
-       502 |             let link: &Link<T> = handle.borrow();
-       503 |             assume(spec_size_link(link) < usize::MAX as nat);
-       505 |             let result = height_link(link);
-       506 |             handle.release_read();
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:89: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-        71 |         fn clone(&self) -> (cloned: Self)
-            ...
-        87 | 
-        88 |     impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for TreapLinkWf {
-        90 |     }
-        91 | 
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:92: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        89 |         open spec fn inv(self, v: Link<T>) -> bool { true }
-            ...
-        90 |     }
-        91 | 
-        93 |     fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>) {
-        94 |         RwLock::new(val, Ghost(TreapLinkWf))
+        92 |     }
+        93 | 
+        95 |     fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>)
+        96 |         requires spec_size_wf_link(&val), spec_size_link(&val) < usize::MAX as nat,
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:51: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:64: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:81: info: accept() - accept hole
-   Holes: 4 total
-      4 × assume()
-   Errors: 2 total (1 Verus RwLock external_body, 1 dummy RwLockPredicate)
+   Errors: 1 total (1 Verus RwLock external_body)
    Info: 3 assume(false); diverge() idiom(s)
    Proof functions: 3 total (3 clean, 0 holed)
 ✓ BSTTreapStEph.rs
@@ -72,8 +32,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   3 clean (no holes)
-   1 holed (contains holes)
+   4 clean (no holes)
+   0 holed (contains holes)
    4 total
 
 Proof Functions:
@@ -81,9 +41,10 @@ Proof Functions:
    0 holed
    7 total
 
-Holes Found: 4 total
-   4 × assume()
+Holes Found: 0 total
 
-Errors: 4 (bare impl(s), struct/enum outside verus!)
+Errors: 2 total (2 Verus RwLock external_body)
 
 Info: 3 assume(false); diverge() idiom(s) (valid non-termination)
+
+🎉 No proof holes found! All proofs are complete.

@@ -17,11 +17,23 @@ pub mod BSTParaTreapMtEph {
 
     // 4. type definitions
 
-    /// Trivially-true RwLock predicate for treap nodes.
+    /// RwLock predicate for treap nodes. Children live behind separate locks,
+    /// so we can only check one-level properties: a present node has size >= 1.
     pub struct TreapWf;
 
+    // 6. spec fns
+
+    pub open spec fn spec_node_wf<T: MtKey>(v: &Option<Box<NodeInner<T>>>) -> bool {
+        match v {
+            None => true,
+            Some(node) => node.size >= 1 && node.size < usize::MAX,
+        }
+    }
+
     impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for TreapWf {
-        open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool { true }
+        open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
+            spec_node_wf(&v)
+        }
     }
 
     #[verifier::reject_recursive_types(T)]
@@ -34,7 +46,7 @@ pub mod BSTParaTreapMtEph {
     pub struct NodeInner<T: MtKey> {
         pub key: T,
         pub priority: i64,
-        pub size: N,
+        pub size: usize,
         pub left: ParamTreap<T>,
         pub right: ParamTreap<T>,
     }
@@ -45,7 +57,9 @@ pub mod BSTParaTreapMtEph {
     }
 
     #[verifier::external_body]
-    fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, TreapWf>) {
+    fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, TreapWf>)
+        requires spec_node_wf(&val),
+    {
         RwLock::new(val, Ghost(TreapWf))
     }
 
@@ -103,7 +117,7 @@ pub mod BSTParaTreapMtEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn tree_size<T: MtKey>(tree: &ParamTreap<T>) -> N {
+    fn tree_size<T: MtKey>(tree: &ParamTreap<T>) -> usize {
         let handle = tree.root.acquire_read();
         let result = handle.borrow().as_ref().map_or(0, |node| node.size);
         handle.release_read();
@@ -145,7 +159,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    fn split_inner<T: MtKey + 'static>(tree: &ParamTreap<T>, key: &T) -> (ParamTreap<T>, B, ParamTreap<T>)
+    fn split_inner<T: MtKey + 'static>(tree: &ParamTreap<T>, key: &T) -> (ParamTreap<T>, bool, ParamTreap<T>)
     where
         ParamTreap<T>: ParamTreapTrait<T>,
     {
@@ -326,10 +340,10 @@ pub mod BSTParaTreapMtEph {
         fn join_mid(exposed: Exposed<T>)           -> Self;
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn size(&self)                             -> N;
+        fn size(&self)                             -> usize;
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)                         -> B;
+        fn is_empty(&self)                         -> bool;
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
         fn insert(&self, key: T);
@@ -341,7 +355,7 @@ pub mod BSTParaTreapMtEph {
         fn find(&self, key: &T)                    -> Option<T>;
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
-        fn split(&self, key: &T)                   -> (Self, B, Self);
+        fn split(&self, key: &T)                   -> (Self, bool, Self);
         /// - APAS: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         /// - Claude-Opus-4.6: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         fn join_pair(&self, other: Self)           -> Self;
@@ -412,11 +426,11 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn size(&self) -> N { tree_size(self) }
+        fn size(&self) -> usize { tree_size(self) }
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn is_empty(&self) -> B { self.size() == 0 }
+        fn is_empty(&self) -> bool { self.size() == 0 }
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
@@ -458,7 +472,7 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
-        fn split(&self, key: &T) -> (Self, B, Self) { split_inner(self, key) }
+        fn split(&self, key: &T) -> (Self, bool, Self) { split_inner(self, key) }
 
         /// - APAS: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         /// - Claude-Opus-4.6: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
