@@ -1,8 +1,8 @@
-Logging to: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn.*to_set|lemma.*contains
+Pattern: fn empty types ArraySeqStPerS
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 95, Functions: 2289, Matches: 0
+Files: 96, Functions: 2371, Matches: 0
 

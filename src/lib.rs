@@ -463,7 +463,7 @@ pub mod Chap41 {
     pub mod Example41_3;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap42 {
     pub mod TableStEph;
     pub mod TableStPer;
