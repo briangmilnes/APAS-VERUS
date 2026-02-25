@@ -20,7 +20,7 @@ pub mod AugOrderedTableStPer {
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
-    use crate::Chap42::TableStEph::TableStEph::*;
+    use crate::Chap42::TableStPer::TableStPer::*;
     use crate::Chap43::OrderedTableStPer::OrderedTableStPer::*;
     use crate::OrderedTableStPerLit;
     use crate::Types::Types::*;

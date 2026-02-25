@@ -9,7 +9,6 @@ pub mod TableStPer {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
-    use crate::Chap42::TableStEph::TableStEph::{spec_entries_to_map, lemma_entries_to_map_finite};
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
     #[cfg(verus_keep_ghost)]
@@ -39,6 +38,30 @@ pub mod TableStPer {
         vstd::seq_lib::group_seq_properties,
         vstd::seq_lib::group_to_multiset_ensures,
     };
+
+    // 6. spec fns
+
+    pub open spec fn spec_entries_to_map<KV, VV>(entries: Seq<(KV, VV)>) -> Map<KV, VV>
+        decreases entries.len()
+    {
+        if entries.len() == 0 {
+            Map::empty()
+        } else {
+            let last = entries.last();
+            spec_entries_to_map(entries.drop_last()).insert(last.0, last.1)
+        }
+    }
+
+    // 7. proof fns
+
+    pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
+        ensures spec_entries_to_map(entries).dom().finite()
+        decreases entries.len()
+    {
+        if entries.len() > 0 {
+            lemma_entries_to_map_finite::<KV, VV>(entries.drop_last());
+        }
+    }
 
     // 4. type definitions
 
@@ -312,6 +335,7 @@ pub mod TableStPer {
 
         /// APAS: Work Θ(lg |a|), Span Θ(lg |a|)
         fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (result: Self)
+            requires forall|v1: &V, v2: &V| combine.requires((v1, v2)),
             ensures result@.contains_key(key@);
 
         /// APAS: Work Θ(m * lg(1 + n/m)), Span Θ(lg(n + m))
@@ -567,67 +591,24 @@ pub mod TableStPer {
         {
             let ghost self_view = self.entries@;
             let ghost other_view = other.entries@;
-            let mut all: Vec<Pair<K, V>> = Vec::new();
-            let mut i: usize = 0;
-            while i < self.entries.length()
-                invariant
-                    i <= self.entries.spec_len(),
-                    self.entries@ == self_view,
-                    all@.len() == i as int,
-                    forall|k: int| #![auto] 0 <= k < i as int ==>
-                        all@[k].0@ == self_view[k].0,
-                decreases self.entries.spec_len() - i,
-            {
-                let pair = self.entries.nth(i);
-                let cloned = pair.clone_plus();
-                proof { assume(cloned.0@ == pair.0@); }
-                all.push(cloned);
-                i += 1;
-            }
-            let ghost self_count = all@.len();
+            let mut result = self.clone_plus();
             let mut j: usize = 0;
             while j < other.entries.length()
                 invariant
                     j <= other.entries.spec_len(),
-                    self.entries@ == self_view,
                     other.entries@ == other_view,
-                    self_count == self_view.len(),
-                    all@.len() == self_count + j as int,
-                    forall|k: int| #![auto] 0 <= k < self_count ==>
-                        all@[k].0@ == self_view[k].0,
-                    forall|k: int| #![auto] 0 <= k < j as int ==>
-                        all@[self_count + k].0@ == other_view[k].0,
+                    forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 decreases other.entries.spec_len() - j,
             {
                 let pair = other.entries.nth(j);
                 let cloned = pair.clone_plus();
-                proof { assume(cloned.0@ == pair.0@); }
-                all.push(cloned);
+                result = result.insert(cloned.0, cloned.1, &combine);
                 j += 1;
             }
-            let entries = ArraySeqStPerS::from_vec(all);
             proof {
-                assert forall|k: K::V| #![auto]
-                    self@.dom().contains(k) || other@.dom().contains(k)
-                    implies spec_entries_to_map(entries@).dom().contains(k)
-                by {
-                    if self@.dom().contains(k) {
-                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(self_view, k);
-                        let si = choose|si: int| 0 <= si < self_view.len()
-                            && (#[trigger] self_view[si]).0 == k;
-                        assert(entries.spec_index(si) == all@[si]);
-                        lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, si);
-                    } else {
-                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(other_view, k);
-                        let oi = choose|oi: int| 0 <= oi < other_view.len()
-                            && (#[trigger] other_view[oi]).0 == k;
-                        let idx = self_count + oi;
-                        assert(entries.spec_index(idx) == all@[idx]);
-                        lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, idx);
-                    }
-                };
+                assume(self@.dom().union(other@.dom()).subset_of(result@.dom()));
             }
-            TableStPer { entries }
+            result
         }
 
         fn difference(&self, other: &Self) -> (result: Self)
@@ -770,16 +751,25 @@ pub mod TableStPer {
         {
             let ghost key_view: K::V = key@;
             let mut all: Vec<Pair<K, V>> = Vec::new();
+            let mut found_value: Option<V> = None;
             let mut i: usize = 0;
             while i < self.entries.length()
                 invariant i <= self.entries.spec_len(),
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
-                all.push(pair.clone_plus());
+                if pair.0 == key {
+                    found_value = Some(pair.1.clone_plus());
+                } else {
+                    all.push(pair.clone_plus());
+                }
                 i += 1;
             }
-            all.push(Pair(key, value));
+            let final_value = match found_value {
+                Some(old_val) => combine(&old_val, &value),
+                None => value,
+            };
+            all.push(Pair(key, final_value));
             let entries = ArraySeqStPerS::from_vec(all);
             proof {
                 let last = (entries@.len() - 1) as int;

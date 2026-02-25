@@ -1,29 +1,16 @@
 $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap39
 
-❌ BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:59: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        34 |         open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
-            ...
-        57 |     }
-        58 | 
-        60 |     fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, TreapWf>)
-        61 |         requires spec_node_wf(&val),
-   Errors: 1 total (1 Verus RwLock external_body)
+ℹ BSTParaTreapMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:59: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Info: 1 total
 ✓ BSTSetTreapMtEph.rs
-❌ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:94: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        89 |         open spec fn inv(self, v: Link<T>) -> bool {
-            ...
-        92 |     }
-        93 | 
-        95 |     fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>)
-        96 |         requires spec_size_wf_link(&val), spec_size_link(&val) < usize::MAX as nat,
+ℹ BSTTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:51: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:64: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:81: info: accept() - accept hole
-   Errors: 1 total (1 Verus RwLock external_body)
-   Info: 3 assume(false); diverge() idiom(s)
-   Proof functions: 3 total (3 clean, 0 holed)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:94: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Info: 4 total
+   3 clean proof functions
 ✓ BSTTreapStEph.rs
    4 clean proof functions
 
@@ -43,8 +30,11 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 2 total (2 Verus RwLock external_body)
+Info: 5 total
+   BSTTreapMtEph.rs:51: info: accept() - accept hole
+   BSTTreapMtEph.rs:64: info: accept() - accept hole
+   BSTTreapMtEph.rs:81: info: accept() - accept hole
+   BSTTreapMtEph.rs:94: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   BSTParaTreapMtEph.rs:59: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
 
-Info: 3 assume(false); diverge() idiom(s) (valid non-termination)
-
-🎉 No proof holes found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.

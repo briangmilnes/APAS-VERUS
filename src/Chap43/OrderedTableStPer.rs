@@ -6,7 +6,6 @@ pub mod OrderedTableStPer {
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
-    use crate::Chap42::TableStEph::TableStEph::*;
     use crate::Chap42::TableStPer::TableStPer::*;
     use crate::Types::Types::*;
     use vstd::prelude::*;
@@ -247,6 +246,7 @@ broadcast use {
             for i in 0..len {
                 elements.push(array_seq.nth(i).clone());
             }
+            elements.sort_by(|a, b| a.0.cmp(&b.0));
             AVLTreeSeqStPerS::from_vec(elements)
         }
 
