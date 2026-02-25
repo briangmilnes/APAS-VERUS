@@ -12,11 +12,11 @@ pub mod OrderedTableStPer {
 
     verus! {
 
-// Veracity: added broadcast group
-broadcast use {
+   // Veracity: added broadcast group
+   broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::map::group_map_axioms,
-};
+   };
 
     // Table of Contents
     // 1. module (above)
@@ -57,7 +57,12 @@ broadcast use {
             ensures result@ == Map::<K::V, V::V>::empty();
         fn singleton(k: K, v: V) -> (result: Self)
             ensures result@ == Map::<K::V, V::V>::empty().insert(k@, v@), result@.dom().finite();
-        fn find(&self, k: &K) -> (result: Option<V>);
+        fn find(&self, k: &K) -> (result: Option<V>)
+            ensures
+                match result {
+                    Some(v) => self@.contains_key(k@) && self@[k@] == v@,
+                    None => !self@.contains_key(k@),
+                };
         fn insert(&self, k: K, v: V) -> (result: Self)
             ensures result@.dom().finite();
         fn delete(&self, k: &K) -> (result: Self)
@@ -65,14 +70,19 @@ broadcast use {
         fn domain(&self) -> (result: ArraySetStEph<K>)
             ensures self@.dom().finite();
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
+            requires forall|k: &K| f.requires((k,)),
             ensures result@.dom().finite();
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (result: Self)
+            requires forall|v: &V| f.requires((v,)),
             ensures result@.dom().finite();
         fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (result: Self)
+            requires forall|k: &K, v: &V| f.requires((k, v)),
             ensures result@.dom().finite();
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (result: Self)
+            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
             ensures result@.dom().finite();
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (result: Self)
+            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
             ensures result@.dom().finite();
         fn difference(&self, other: &Self) -> (result: Self)
             ensures result@.dom().finite();
@@ -109,14 +119,16 @@ broadcast use {
     // 9. impls
 
     impl<K: StT + Ord, V: StT> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
-        #[verifier::external_body]
         fn size(&self) -> (result: usize)
             ensures result == self@.dom().len(), self@.dom().finite()
         {
+            proof {
+                assume(self.base_table.spec_wf());
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@);
+            }
             self.base_table.size()
         }
 
-        #[verifier::external_body]
         fn empty() -> (result: Self)
             ensures result@ == Map::<K::V, V::V>::empty()
         {
@@ -125,115 +137,107 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn singleton(k: K, v: V) -> (result: Self)
             ensures result@ == Map::<K::V, V::V>::empty().insert(k@, v@), result@.dom().finite()
         {
-            OrderedTableStPer {
-                base_table: TableStPer::singleton(k, v),
-            }
+            let base = TableStPer::singleton(k, v);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
+            OrderedTableStPer { base_table: base }
         }
 
-        #[verifier::external_body]
         fn find(&self, k: &K) -> (result: Option<V>) {
+            proof { assume(self.base_table.spec_wf()); }
             self.base_table.find(k)
         }
 
-        #[verifier::external_body]
         fn insert(&self, k: K, v: V) -> (result: Self)
             ensures result@.dom().finite()
         {
-            OrderedTableStPer {
-                base_table: self.base_table.insert(k, v, |_old, new| new.clone()),
-            }
+            let base = self.base_table.insert(k, v, |_old: &V, new: &V| -> (r: V) { new.clone() });
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
+            OrderedTableStPer { base_table: base }
         }
 
-        #[verifier::external_body]
         fn delete(&self, k: &K) -> (result: Self)
             ensures result@ == self@.remove(k@), result@.dom().finite()
         {
-            OrderedTableStPer {
-                base_table: self.base_table.delete(k),
+            let base = self.base_table.delete(k);
+            proof {
+                lemma_entries_to_map_finite::<K::V, V::V>(base.entries@);
+                assume(spec_entries_to_map(base.entries@) == spec_entries_to_map(self.base_table.entries@).remove(k@));
             }
+            OrderedTableStPer { base_table: base }
         }
 
-        #[verifier::external_body]
         fn domain(&self) -> (result: ArraySetStEph<K>)
             ensures self@.dom().finite()
         {
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
             self.base_table.domain()
         }
 
-        #[verifier::external_body]
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
             ensures result@.dom().finite()
         {
-            OrderedTableStPer {
-                base_table: TableStPer::tabulate(f, keys),
-            }
+            let base = TableStPer::tabulate(f, keys);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
+            OrderedTableStPer { base_table: base }
         }
 
-        #[verifier::external_body]
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (result: Self)
             ensures result@.dom().finite()
         {
-            OrderedTableStPer {
-                base_table: self.base_table.map(f),
-            }
+            let base = self.base_table.map(f);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
+            OrderedTableStPer { base_table: base }
         }
 
-        #[verifier::external_body]
         fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (result: Self)
             ensures result@.dom().finite()
         {
-            OrderedTableStPer {
-                base_table: self.base_table.filter(f),
-            }
+            let base = self.base_table.filter(f);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
+            OrderedTableStPer { base_table: base }
         }
 
-        #[verifier::external_body]
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (result: Self)
             ensures result@.dom().finite()
         {
-            OrderedTableStPer {
-                base_table: self.base_table.intersection(&other.base_table, f),
-            }
+            let base = self.base_table.intersection(&other.base_table, f);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
+            OrderedTableStPer { base_table: base }
         }
 
-        #[verifier::external_body]
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (result: Self)
             ensures result@.dom().finite()
         {
-            OrderedTableStPer {
-                base_table: self.base_table.union(&other.base_table, f),
-            }
+            let base = self.base_table.union(&other.base_table, f);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
+            OrderedTableStPer { base_table: base }
         }
 
-        #[verifier::external_body]
         fn difference(&self, other: &Self) -> (result: Self)
             ensures result@.dom().finite()
         {
-            OrderedTableStPer {
-                base_table: self.base_table.difference(&other.base_table),
-            }
+            let base = self.base_table.difference(&other.base_table);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
+            OrderedTableStPer { base_table: base }
         }
 
-        #[verifier::external_body]
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (result: Self)
             ensures result@.dom().finite()
         {
-            OrderedTableStPer {
-                base_table: self.base_table.restrict(keys),
-            }
+            let base = self.base_table.restrict(keys);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
+            OrderedTableStPer { base_table: base }
         }
 
-        #[verifier::external_body]
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (result: Self)
             ensures result@.dom().finite()
         {
-            OrderedTableStPer {
-                base_table: self.base_table.subtract(keys),
-            }
+            let base = self.base_table.subtract(keys);
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
+            OrderedTableStPer { base_table: base }
         }
 
         #[verifier::external_body]
@@ -339,11 +343,10 @@ broadcast use {
             )
         }
 
-        #[verifier::external_body]
         fn join_key(left: &Self, right: &Self) -> (result: Self)
             ensures result@.dom().finite()
         {
-            left.union(right, |v1, _v2| v1.clone())
+            left.union(right, |v1: &V, _v2: &V| -> (r: V) { v1.clone() })
         }
 
         #[verifier::external_body]
@@ -428,7 +431,9 @@ broadcast use {
     // 11. derive impls in verus!
 
     impl<K: StT + Ord, V: StT> Clone for OrderedTableStPer<K, V> {
-        fn clone(&self) -> Self {
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@
+        {
             OrderedTableStPer {
                 base_table: self.base_table.clone(),
             }
@@ -438,7 +443,9 @@ broadcast use {
     #[verifier::external_body]
     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
-    ) -> OrderedTableStPer<K, V> {
+    ) -> (result: OrderedTableStPer<K, V>)
+        ensures result@.dom().finite()
+    {
         let len = entries.length();
         let mut elements = Vec::new();
         for i in 0..len {

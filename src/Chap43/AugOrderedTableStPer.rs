@@ -62,7 +62,6 @@ broadcast use {
 
     // 7. free functions (calculate_reduction)
 
-    #[verifier::external_body]
     pub fn calculate_reduction<K: StT + Ord, V: StT, F>(
         base: &OrderedTableStPer<K, V>,
         reducer: &F,
@@ -72,24 +71,28 @@ broadcast use {
         F: Fn(&V, &V) -> V + Clone,
         ensures base@.dom().finite(),
     {
-        if base.size() == 0 {
+        let sz = base.size(); // establishes base@.dom().finite()
+        if sz == 0 {
             return identity.clone();
         }
-
         let pairs = base.collect();
-        let mut result = identity.clone();
-        let mut first = true;
-
-        for i in 0..pairs.length() {
-            let pair = pairs.nth(i);
-            if first {
-                result = pair.1.clone();
-                first = false;
-            } else {
-                result = reducer(&result, &pair.1);
-            }
+        proof {
+            assume(pairs.spec_well_formed());
+            assume(pairs@.len() == sz as int);
         }
-
+        let mut result = pairs.nth(0).1.clone();
+        let mut i: usize = 1;
+        while i < pairs.length()
+            invariant
+                i <= pairs@.len(),
+                pairs.spec_well_formed(),
+            decreases pairs@.len() - i,
+        {
+            let pair = pairs.nth(i);
+            proof { assume(reducer.requires((&result, &pair.1))); }
+            result = reducer(&result, &pair.1);
+            i += 1;
+        }
         result
     }
 
@@ -128,14 +131,19 @@ broadcast use {
         fn domain(&self) -> (result: ArraySetStEph<K>)
             ensures self@.dom().finite();
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (result: Self)
+            requires forall|k: &K| f.requires((k,)),
             ensures result@.dom().finite();
         fn map<G: Fn(&V) -> V>(&self, f: G) -> (result: Self)
+            requires forall|v: &V| f.requires((v,)),
             ensures result@.dom().finite();
         fn filter<G: Fn(&K, &V) -> B>(&self, f: G) -> (result: Self)
+            requires forall|k: &K, v: &V| f.requires((k, v)),
             ensures result@.dom().finite();
         fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (result: Self)
+            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
             ensures result@.dom().finite();
         fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (result: Self)
+            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
             ensures result@.dom().finite();
         fn difference(&self, other: &Self) -> (result: Self)
             ensures result@.dom().finite();
@@ -214,7 +222,6 @@ broadcast use {
             r
         }
 
-        #[verifier::external_body]
         fn find(&self, k: &K) -> (result: Option<V>)
             ensures
                 match result {
@@ -222,6 +229,7 @@ broadcast use {
                     None => !self@.contains_key(k@),
                 }
         {
+            proof { lemma_aug_view(self); }
             self.base_table.find(k)
         }
 
@@ -453,7 +461,6 @@ broadcast use {
             (left, middle, right)
         }
 
-        #[verifier::external_body]
         fn join_key(left: &Self, right: &Self) -> (result: Self)
             ensures result@.dom().finite()
         {
@@ -463,15 +470,19 @@ broadcast use {
             } else if right.base_table.size() == 0 {
                 left.cached_reduction.clone()
             } else {
+                proof { assume(left.reducer.requires(
+                    (&left.cached_reduction, &right.cached_reduction))); }
                 (left.reducer)(&left.cached_reduction, &right.cached_reduction)
             };
 
-            Self {
+            let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
                 reducer: left.reducer.clone(),
                 identity: left.identity.clone(),
-            }
+            };
+            proof { lemma_aug_view(&r); }
+            r
         }
 
         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
@@ -558,16 +569,16 @@ broadcast use {
     where
         F: Fn(&V, &V) -> V + Clone,
     {
-        #[verifier::external_body]
         fn clone(&self) -> (result: Self)
             ensures result@ == self@
         {
-            Self {
+            let r = Self {
                 base_table: self.base_table.clone(),
                 cached_reduction: self.cached_reduction.clone(),
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
-            }
+            };
+            r
         }
     }
 
