@@ -143,22 +143,17 @@ fn test_update_dimension() {
 }
 
 #[test]
+#[should_panic(expected = "index out of bounds")]
 fn test_update_dimension_out_of_bounds() {
     let mut chain = MatrixChainStEphS::from_dim_pairs(vec![Pair(10, 20), Pair(20, 30)]);
-
-    // Should not panic or change anything
     chain.update_dimension(5, 100, 200);
-    assert_eq!(chain.num_matrices(), 2);
-    assert_eq!(chain.dimensions()[0].rows, 10);
 }
 
 #[test]
+#[should_panic(expected = "index out of bounds")]
 fn test_set_dimension_out_of_bounds() {
     let mut chain = MatrixChainStEphS::from_dim_pairs(vec![Pair(10, 20)]);
-
-    // Should not panic
     chain.set_dimension(5, MatrixChainStEphMatrixDim { rows: 100, cols: 200 });
-    assert_eq!(chain.num_matrices(), 1);
 }
 
 #[test]

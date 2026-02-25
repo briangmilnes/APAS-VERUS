@@ -387,7 +387,7 @@ pub mod Chap28 {
     pub mod MaxContigSubSumDivConOptMtEph;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap30 {
     pub mod Probability;
 }
@@ -540,7 +540,7 @@ pub mod Chap49 {
     pub mod MinEditDistMtPer;
 }
 
-#[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]
+#[cfg(not(feature = "experiments_only"))]
 pub mod Chap50 {
     pub mod MatrixChainStEph;
     pub mod MatrixChainStPer;

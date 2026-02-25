@@ -216,9 +216,15 @@ broadcast use {
         ensures obeys_feq_full::<Pair<K, V>>()
     { admit(); }
 
+    pub broadcast proof fn axiom_Pair_key_model<K: Eq + vstd::prelude::View + Clone + Sized + Hash, V: Eq + vstd::prelude::View + Clone + Sized + Hash>()
+        requires #[trigger] Pair_feq_trigger::<K, V>()
+        ensures obeys_key_model::<Pair<K, V>>()
+    { admit(); }
+
     pub broadcast group group_Pair_axioms {
         axiom_Pair_view_injective,
         axiom_Pair_feq,
+        axiom_Pair_key_model,
     }
 
     /// For Verus wrapped hash tables we need obeys_key_model and for full equality we need obeys_feq_full.
