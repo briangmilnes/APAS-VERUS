@@ -35,7 +35,7 @@ pub mod BSTTreapStEph {
     struct Node<T: StT + Ord> {
         key: T,
         priority: u64,
-        size: N,
+        size: usize,
         left: Link<T>,
         right: Link<T>,
     }
@@ -196,6 +196,15 @@ pub mod BSTTreapStEph {
     {
     }
 
+    proof fn lemma_wf_assemble_node<T: StT + Ord>(node: &Box<Node<T>>)
+        requires
+            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),
+            spec_size_wf_link(&node.left),
+            spec_size_wf_link(&node.right),
+        ensures spec_size_wf_link(&Some(*node)),
+    {
+    }
+
     //		8. traits
 
     pub trait BSTTreapStEphTrait<T: StT + Ord> {
@@ -209,25 +218,26 @@ pub mod BSTTreapStEph {
             Self: Sized;
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn size(&self)                 -> N;
+        fn size(&self)                 -> usize;
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)             -> B;
+        fn is_empty(&self)             -> bool;
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn height(&self)               -> N
+        fn height(&self)               -> usize
             requires
                 self.spec_size() < usize::MAX as nat,
                 self.spec_wf();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-        fn insert(&mut self, value: T, priority: u64);
+        fn insert(&mut self, value: T, priority: u64)
+            requires old(self).spec_size() + 1 <= usize::MAX as nat, old(self).spec_wf();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn find(&self, target: &T)     -> Option<&T>;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-        fn contains(&self, target: &T) -> B;
+        fn contains(&self, target: &T) -> bool;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn minimum(&self)              -> Option<&T>;
@@ -281,7 +291,7 @@ pub mod BSTTreapStEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn size_link<T: StT + Ord>(link: &Link<T>) -> (result: N)
+    fn size_link<T: StT + Ord>(link: &Link<T>) -> (result: usize)
         ensures result as nat == spec_size_link(link),
     {
         match link.as_ref() {
@@ -290,7 +300,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    fn height_link<T: StT + Ord>(link: &Link<T>) -> (h: N)
+    fn height_link<T: StT + Ord>(link: &Link<T>) -> (h: usize)
         requires
             spec_size_link(link) < usize::MAX as nat,
             spec_size_wf_link(link),
@@ -319,51 +329,97 @@ pub mod BSTTreapStEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     fn update_size<T: StT + Ord>(node: &mut Box<Node<T>>)
+        requires 1 + spec_size_link(&old(node).left) + spec_size_link(&old(node).right) <= usize::MAX as nat,
+        ensures
+            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),
+            node.key == old(node).key,
+            node.left == old(node).left,
+            node.right == old(node).right,
     {
         let l = size_link(&node.left);
         let r = size_link(&node.right);
-        assume(1 + l + r <= usize::MAX);
         node.size = 1 + l + r;
     }
 
-    /// - APAS: Work Θ(1), Span Θ(1)
     fn rotate_left<T: StT + Ord>(mut x: Box<Node<T>>) -> (result: Box<Node<T>>)
+        requires
+            spec_size_wf_link(&Some(x)),
+            spec_size_link(&Some(x)) <= usize::MAX as nat,
+        ensures
+            spec_size_wf_link(&Some(result)),
+            spec_size_link(&Some(result)) == spec_size_link(&Some(x)),
     {
+        assert(spec_size_wf_link(&x.left));
+        assert(spec_size_wf_link(&x.right));
         if let Some(mut y) = x.right.take() {
+            assert(spec_size_wf_link(&y.left));
+            assert(spec_size_wf_link(&y.right));
+            let ghost x_left_sz = spec_size_link(&x.left);
+            let ghost y_left_sz = spec_size_link(&y.left);
+            let ghost y_right_sz = spec_size_link(&y.right);
             x.right = y.left.take();
+            assert(1 + x_left_sz + y_left_sz + 1 + y_right_sz <= usize::MAX as nat);
             update_size(&mut x);
             y.left = Some(x);
             update_size(&mut y);
+            proof { lemma_wf_assemble_node(&y); }
             y
         } else {
             x
         }
     }
 
-    /// - APAS: Work Θ(1), Span Θ(1)
     fn rotate_right<T: StT + Ord>(mut x: Box<Node<T>>) -> (result: Box<Node<T>>)
+        requires
+            spec_size_wf_link(&Some(x)),
+            spec_size_link(&Some(x)) <= usize::MAX as nat,
+        ensures
+            spec_size_wf_link(&Some(result)),
+            spec_size_link(&Some(result)) == spec_size_link(&Some(x)),
     {
+        assert(spec_size_wf_link(&x.left));
+        assert(spec_size_wf_link(&x.right));
         if let Some(mut y) = x.left.take() {
+            assert(spec_size_wf_link(&y.left));
+            assert(spec_size_wf_link(&y.right));
+            let ghost x_right_sz = spec_size_link(&x.right);
+            let ghost y_left_sz = spec_size_link(&y.left);
+            let ghost y_right_sz = spec_size_link(&y.right);
             x.left = y.right.take();
+            assert(1 + y_left_sz + x_right_sz + 1 + y_right_sz <= usize::MAX as nat);
             update_size(&mut x);
             y.right = Some(x);
             update_size(&mut y);
+            proof { lemma_wf_assemble_node(&y); }
             y
         } else {
             x
         }
     }
 
-    /// - APAS: Work O(log n) expected, Span O(log n) expected
     fn insert_link<T: StT + Ord>(link: Link<T>, value: T, priority: u64) -> (result: Link<T>)
+        requires
+            spec_size_link(&link) + 1 <= usize::MAX as nat,
+            spec_size_wf_link(&link),
+        ensures
+            spec_size_wf_link(&result),
+            spec_size_link(&result) <= spec_size_link(&link) + 1,
+            spec_size_link(&result) >= spec_size_link(&link),
         decreases link,
     {
         match link {
-            None => Some(Box::new(new_node(value, priority))),
+            None => {
+                let n = Box::new(Node { key: value, priority, size: 1, left: None, right: None });
+                proof { lemma_wf_assemble_node(&n); }
+                Some(n)
+            },
             Some(mut node) => {
+                assert(spec_size_wf_link(&node.left));
+                assert(spec_size_wf_link(&node.right));
                 if value < node.key {
                     node.left = insert_link(node.left.take(), value, priority);
                     update_size(&mut node);
+                    proof { lemma_wf_assemble_node(&node); }
                     let needs_rotate = match &node.left {
                         Some(l) => l.priority < node.priority,
                         None => false,
@@ -372,6 +428,7 @@ pub mod BSTTreapStEph {
                 } else if value > node.key {
                     node.right = insert_link(node.right.take(), value, priority);
                     update_size(&mut node);
+                    proof { lemma_wf_assemble_node(&node); }
                     let needs_rotate = match &node.right {
                         Some(r) => r.priority < node.priority,
                         None => false,
@@ -490,11 +547,11 @@ pub mod BSTTreapStEph {
 
         fn new() -> Self { BSTTreapStEph { root: None } }
 
-        fn size(&self) -> N { size_link(&self.root) }
+        fn size(&self) -> usize { size_link(&self.root) }
 
-        fn is_empty(&self) -> B { self.size() == 0 }
+        fn is_empty(&self) -> bool { self.size() == 0 }
 
-        fn height(&self) -> N {
+        fn height(&self) -> usize {
             height_link(&self.root)
         }
 
@@ -506,7 +563,7 @@ pub mod BSTTreapStEph {
             find_link(&self.root, target)
         }
 
-        fn contains(&self, target: &T) -> B {
+        fn contains(&self, target: &T) -> bool {
             self.find(target).is_some()
         }
 

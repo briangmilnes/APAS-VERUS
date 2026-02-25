@@ -16,27 +16,32 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Errors: 2 total (1 Verus RwLock external_body, 1 dummy RwLockPredicate)
 ✓ BSTSetTreapMtEph.rs
 ❌ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:240: assume() - assume(1 + l + r <= usize::MAX);
-       237 |     fn update<T: StTInMtT + Ord>(node: &mut Node<T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:476: assume() - assume(spec_size_link(&current) + 1 <= usize::MAX as nat);
+       474 |         fn insert(&self, value: T, priority: u64) {
+       475 |             let (mut current, write_handle) = self.root.acquire_write();
+       477 |             assume(spec_size_wf_link(&current));
+       478 |             insert_link(&mut current, value, priority);
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:477: assume() - assume(spec_size_wf_link(&current));
+       474 |         fn insert(&self, value: T, priority: u64) {
             ...
-       238 |         let l = size_link(&node.left);
-       239 |         let r = size_link(&node.right);
-       241 |         node.size = 1 + l + r;
-       242 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:446: assume() - assume(spec_size_link(link) < usize::MAX as nat);
-       443 |         fn height(&self) -> N {
+       475 |             let (mut current, write_handle) = self.root.acquire_write();
+       476 |             assume(spec_size_link(&current) + 1 <= usize::MAX as nat);
+       478 |             insert_link(&mut current, value, priority);
+       479 |             write_handle.release_write(current);
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:503: assume() - assume(spec_size_link(link) < usize::MAX as nat);
+       500 |         fn height(&self) -> usize {
             ...
-       444 |             let handle = self.root.acquire_read();
-       445 |             let link: &Link<T> = handle.borrow();
-       447 |             assume(spec_size_wf_link(link));
-       448 |             let result = height_link(link);
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:447: assume() - assume(spec_size_wf_link(link));
-       443 |         fn height(&self) -> N {
+       501 |             let handle = self.root.acquire_read();
+       502 |             let link: &Link<T> = handle.borrow();
+       504 |             assume(spec_size_wf_link(link));
+       505 |             let result = height_link(link);
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:504: assume() - assume(spec_size_wf_link(link));
+       500 |         fn height(&self) -> usize {
             ...
-       445 |             let link: &Link<T> = handle.borrow();
-       446 |             assume(spec_size_link(link) < usize::MAX as nat);
-       448 |             let result = height_link(link);
-       449 |             handle.release_read();
+       502 |             let link: &Link<T> = handle.borrow();
+       503 |             assume(spec_size_link(link) < usize::MAX as nat);
+       505 |             let result = height_link(link);
+       506 |             handle.release_read();
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:89: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         71 |         fn clone(&self) -> (cloned: Self)
             ...
@@ -54,36 +59,27 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:51: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:64: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:81: info: accept() - accept hole
-   Holes: 3 total
-      3 × assume()
+   Holes: 4 total
+      4 × assume()
    Errors: 2 total (1 Verus RwLock external_body, 1 dummy RwLockPredicate)
    Info: 3 assume(false); diverge() idiom(s)
-   Proof functions: 2 total (2 clean, 0 holed)
-❌ BSTTreapStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:325: assume() - assume(1 + l + r <= usize::MAX);
-       321 |     fn update_size<T: StT + Ord>(node: &mut Box<Node<T>>)
-            ...
-       323 |         let l = size_link(&node.left);
-       324 |         let r = size_link(&node.right);
-       326 |         node.size = 1 + l + r;
-       327 |     }
-   Holes: 1 total
-      1 × assume()
    Proof functions: 3 total (3 clean, 0 holed)
+✓ BSTTreapStEph.rs
+   4 clean proof functions
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   2 clean (no holes)
-   2 holed (contains holes)
+   3 clean (no holes)
+   1 holed (contains holes)
    4 total
 
 Proof Functions:
-   5 clean
+   7 clean
    0 holed
-   5 total
+   7 total
 
 Holes Found: 4 total
    4 × assume()

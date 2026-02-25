@@ -19,7 +19,7 @@ pub mod BSTTreapMtEph {
     pub struct Node<T: StTInMtT + Ord> {
         pub key: T,
         pub priority: u64,
-        pub size: N,
+        pub size: usize,
         pub left: Link<T>,
         pub right: Link<T>,
     }
@@ -122,16 +122,16 @@ pub mod BSTTreapMtEph {
         fn find(&self, target: &T)     -> Option<T>;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-        fn contains(&self, target: &T) -> B;
+        fn contains(&self, target: &T) -> bool;
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn size(&self)                 -> N;
+        fn size(&self)                 -> usize;
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)             -> B;
+        fn is_empty(&self)             -> bool;
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn height(&self)               -> N;
+        fn height(&self)               -> usize;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn minimum(&self)              -> Option<T>;
@@ -223,7 +223,7 @@ pub mod BSTTreapMtEph {
     }
 
     /// - APAS: Work Θ(1), Span Θ(1)
-    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (result: N)
+    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (result: usize)
         ensures result as nat == spec_size_link(link),
     {
         match link {
@@ -233,23 +233,53 @@ pub mod BSTTreapMtEph {
     }
 
     /// - APAS: Work Θ(1), Span Θ(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn update<T: StTInMtT + Ord>(node: &mut Node<T>) {
+    proof fn lemma_wf_assemble_node<T: StTInMtT + Ord>(node: &Node<T>)
+        requires
+            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),
+            spec_size_wf_link(&node.left),
+            spec_size_wf_link(&node.right),
+        ensures spec_size_wf_link(&Some(Box::new(*node))),
+    {
+    }
+
+    fn update<T: StTInMtT + Ord>(node: &mut Node<T>)
+        requires 1 + spec_size_link(&old(node).left) + spec_size_link(&old(node).right) <= usize::MAX as nat,
+        ensures
+            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),
+            node.key == old(node).key,
+            node.left == old(node).left,
+            node.right == old(node).right,
+    {
         let l = size_link(&node.left);
         let r = size_link(&node.right);
-        assume(1 + l + r <= usize::MAX);
         node.size = 1 + l + r;
     }
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn rotate_left<T: StTInMtT + Ord>(link: &mut Link<T>) {
+    fn rotate_left<T: StTInMtT + Ord>(link: &mut Link<T>)
+        requires
+            spec_size_wf_link(old(link)),
+            spec_size_link(old(link)) <= usize::MAX as nat,
+        ensures
+            spec_size_wf_link(link),
+            spec_size_link(link) == spec_size_link(old(link)),
+    {
         if let Some(mut x) = link.take() {
+            assert(spec_size_wf_link(&x.left));
+            assert(spec_size_wf_link(&x.right));
             if let Some(mut y) = x.right.take() {
+                assert(spec_size_wf_link(&y.left));
+                assert(spec_size_wf_link(&y.right));
+                let ghost x_left_sz = spec_size_link(&x.left);
+                let ghost y_left_sz = spec_size_link(&y.left);
+                let ghost y_right_sz = spec_size_link(&y.right);
                 x.right = y.left.take();
+                assert(1 + x_left_sz + y_left_sz + 1 + y_right_sz <= usize::MAX as nat);
                 update(&mut x);
-                update(&mut y);
                 y.left = Some(x);
+                update(&mut y);
+                proof { lemma_wf_assemble_node(&*y); }
                 *link = Some(y);
             } else {
                 *link = Some(x);
@@ -257,15 +287,29 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    /// - APAS: Work Θ(1), Span Θ(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn rotate_right<T: StTInMtT + Ord>(link: &mut Link<T>) {
+    fn rotate_right<T: StTInMtT + Ord>(link: &mut Link<T>)
+        requires
+            spec_size_wf_link(old(link)),
+            spec_size_link(old(link)) <= usize::MAX as nat,
+        ensures
+            spec_size_wf_link(link),
+            spec_size_link(link) == spec_size_link(old(link)),
+    {
         if let Some(mut x) = link.take() {
+            assert(spec_size_wf_link(&x.left));
+            assert(spec_size_wf_link(&x.right));
             if let Some(mut y) = x.left.take() {
+                assert(spec_size_wf_link(&y.left));
+                assert(spec_size_wf_link(&y.right));
+                let ghost x_right_sz = spec_size_link(&x.right);
+                let ghost y_left_sz = spec_size_link(&y.left);
+                let ghost y_right_sz = spec_size_link(&y.right);
                 x.left = y.right.take();
+                assert(1 + y_left_sz + x_right_sz + 1 + y_right_sz <= usize::MAX as nat);
                 update(&mut x);
-                update(&mut y);
                 y.right = Some(x);
+                update(&mut y);
+                proof { lemma_wf_assemble_node(&*y); }
                 *link = Some(y);
             } else {
                 *link = Some(x);
@@ -276,11 +320,22 @@ pub mod BSTTreapMtEph {
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
     fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T, priority: u64)
+        requires
+            spec_size_link(old(link)) + 1 <= usize::MAX as nat,
+            spec_size_wf_link(old(link)),
+        ensures
+            spec_size_wf_link(link),
+            spec_size_link(link) <= spec_size_link(old(link)) + 1,
+            spec_size_link(link) >= spec_size_link(old(link)),
         decreases old(link),
     {
         if let Some(mut node) = link.take() {
+            assert(spec_size_wf_link(&node.left));
+            assert(spec_size_wf_link(&node.right));
             if value < node.key {
                 insert_link(&mut node.left, value, priority);
+                update(&mut node);
+                proof { lemma_wf_assemble_node(&*node); }
                 *link = Some(node);
                 let need_rotate_right = match link.as_ref().unwrap().left.as_ref() {
                     Some(left) => left.priority < link.as_ref().unwrap().priority,
@@ -291,6 +346,8 @@ pub mod BSTTreapMtEph {
                 }
             } else if value > node.key {
                 insert_link(&mut node.right, value, priority);
+                update(&mut node);
+                proof { lemma_wf_assemble_node(&*node); }
                 *link = Some(node);
                 let need_rotate_left = match link.as_ref().unwrap().right.as_ref() {
                     Some(right) => right.priority < link.as_ref().unwrap().priority,
@@ -302,12 +359,10 @@ pub mod BSTTreapMtEph {
             } else {
                 *link = Some(node);
             }
-            if let Some(mut n) = link.take() {
-                update(&mut n);
-                *link = Some(n);
-            }
         } else {
-            *link = Some(Box::new(Node::new(value, priority)));
+            let n = Box::new(Node { key: value, priority, size: 1, left: None, right: None });
+            proof { lemma_wf_assemble_node(&*n); }
+            *link = Some(n);
         }
     }
 
@@ -358,7 +413,7 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    fn height_link<T: StTInMtT + Ord>(link: &Link<T>) -> (h: N)
+    fn height_link<T: StTInMtT + Ord>(link: &Link<T>) -> (h: usize)
         requires
             spec_size_link(link) < usize::MAX as nat,
             spec_size_wf_link(link),
@@ -418,6 +473,8 @@ pub mod BSTTreapMtEph {
 
         fn insert(&self, value: T, priority: u64) {
             let (mut current, write_handle) = self.root.acquire_write();
+            assume(spec_size_link(&current) + 1 <= usize::MAX as nat);
+            assume(spec_size_wf_link(&current));
             insert_link(&mut current, value, priority);
             write_handle.release_write(current);
         }
@@ -429,18 +486,18 @@ pub mod BSTTreapMtEph {
             result
         }
 
-        fn contains(&self, target: &T) -> B { self.find(target).is_some() }
+        fn contains(&self, target: &T) -> bool { self.find(target).is_some() }
 
-        fn size(&self) -> N {
+        fn size(&self) -> usize {
             let handle = self.root.acquire_read();
             let result = size_link(handle.borrow());
             handle.release_read();
             result
         }
 
-        fn is_empty(&self) -> B { self.size() == 0 }
+        fn is_empty(&self) -> bool { self.size() == 0 }
 
-        fn height(&self) -> N {
+        fn height(&self) -> usize {
             let handle = self.root.acquire_read();
             let link: &Link<T> = handle.borrow();
             assume(spec_size_link(link) < usize::MAX as nat);
