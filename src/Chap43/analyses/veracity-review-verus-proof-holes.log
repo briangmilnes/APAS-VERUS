@@ -1,82 +1,47 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap43/OrderedTableStPer.rs -d src/Chap43/AugOrderedTableStPer.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap43/OrderedTableStPer.rs
 
 ❌ OrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:126: assume() - assume(self.base_table.spec_wf());
-       122 |         fn size(&self) -> (result: usize)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:129: assume() - assume(self.base_table.spec_wf());
+       125 |         fn size(&self) -> (count: usize)
             ...
-       124 |         {
-       125 |             proof {
-       127 |                 lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@);
-       128 |             }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:149: assume() - proof { assume(self.base_table.spec_wf()); }
-       147 | 
-       148 |         fn find(&self, k: &K) -> (result: Option<V>) {
-       150 |             self.base_table.find(k)
-       151 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:167: assume() - assume(spec_entries_to_map(base.entries@) == spec_entries_to
-       161 |         fn delete(&self, k: &K) -> (result: Self)
+       127 |         {
+       128 |             proof {
+       130 |                 lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@);
+       131 |             }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:152: assume() - proof { assume(self.base_table.spec_wf()); }
+       150 | 
+       151 |         fn find(&self, k: &K) -> (found: Option<V>) {
+       153 |             self.base_table.find(k)
+       154 |         }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:170: assume() - assume(spec_entries_to_map(base.entries@) == spec_entries_to
+       164 |         fn delete(&self, k: &K) -> (table: Self)
             ...
-       165 |             proof {
-       166 |                 lemma_entries_to_map_finite::<K::V, V::V>(base.entries@);
-       168 |             }
-       169 |             OrderedTableStPer { base_table: base }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:243: external_body - #[verifier::external_body]
-       244 |         fn collect(&self) -> (result: AVLTreeSeqStPerS<Pair<K, V>>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:257: external_body - #[verifier::external_body]
-       258 |         fn first_key(&self) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:269: external_body - #[verifier::external_body]
-       270 |         fn last_key(&self) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:282: external_body - #[verifier::external_body]
-       283 |         fn previous_key(&self, k: &K) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:298: external_body - #[verifier::external_body]
-       299 |         fn next_key(&self, k: &K) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:314: external_body - #[verifier::external_body]
-       315 |         fn split_key(&self, k: &K) -> (result: (Self, Option<V>, Self))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:352: external_body - #[verifier::external_body]
-       353 |         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:371: external_body - #[verifier::external_body]
-       372 |         fn rank_key(&self, k: &K) -> (result: usize)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:390: external_body - #[verifier::external_body]
-       391 |         fn select_key(&self, i: usize) -> (result: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:402: external_body - #[verifier::external_body]
-       403 |         fn split_rank_key(&self, i: usize) -> (result: (Self, Self))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:443: external_body - #[verifier::external_body]
-       444 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
-   Holes: 14 total
-      3 × assume()
-      11 × external_body
-❌ AugOrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:80: assume() - assume(pairs.spec_well_formed());
-        65 |     pub fn calculate_reduction<K: StT + Ord, V: StT, F>(
+       168 |             proof {
+       169 |                 lemma_entries_to_map_finite::<K::V, V::V>(base.entries@);
+       171 |             }
+       172 |             OrderedTableStPer { base_table: base }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:246: external_body - #[verifier::external_body]
+       247 |         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:330: external_body - #[verifier::external_body]
+       331 |         fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:488: assume() - proof { assume(entries.spec_well_formed()); }
+       483 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
             ...
-        78 |         let pairs = base.collect();
-        79 |         proof {
-        81 |             assume(pairs@.len() == sz as int);
-        82 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:81: assume() - assume(pairs@.len() == sz as int);
-        65 |     pub fn calculate_reduction<K: StT + Ord, V: StT, F>(
+       486 |         ensures table@.dom().finite()
+       487 |     {
+       489 |         let len = entries.length();
+       490 |         let mut elements: Vec<Pair<K, V>> = Vec::new();
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:647: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       643 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-        79 |         proof {
-        80 |             assume(pairs.spec_well_formed());
-        82 |         }
-        83 |         let mut result = pairs.nth(0).1.clone();
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:92: assume() - proof { assume(reducer.requires((&result, &pair.1))); }
-        65 |     pub fn calculate_reduction<K: StT + Ord, V: StT, F>(
-            ...
-        90 |         {
-        91 |             let pair = pairs.nth(i);
-        93 |             result = reducer(&result, &pair.1);
-        94 |             i += 1;
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/AugOrderedTableStPer.rs:473: assume() - proof { assume(left.reducer.requires(
-       464 |         fn join_key(left: &Self, right: &Self) -> (result: Self)
-            ...
-       471 |                 left.cached_reduction.clone()
-       472 |             } else {
-       474 |                     (&left.cached_reduction, &right.cached_reduction))); }
-       475 |                 (left.reducer)(&left.cached_reduction, &right.cached_reduction)
-   Holes: 4 total
+       645 |         {
+       646 |             let equal = self.base_table.entries == other.base_table.entries;
+       648 |             equal
+       649 |         }
+   Holes: 6 total
       4 × assume()
-   Proof functions: 1 total (1 clean, 0 holed)
+      2 × external_body
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -84,14 +49,16 @@ SUMMARY
 
 Modules:
    0 clean (no holes)
-   2 holed (contains holes)
-   2 total
-
-Proof Functions:
-   1 clean
-   0 holed
+   1 holed (contains holes)
    1 total
 
-Holes Found: 18 total
-   7 × assume()
-   11 × external_body
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 6 total
+   4 × assume()
+   2 × external_body
+
+Errors: 1 total (1 assume in eq/clone (Verus workaround))

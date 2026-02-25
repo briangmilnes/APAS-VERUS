@@ -1,0 +1,13 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs
+Codebase: /home/milnes/projects/APAS-VERUS-agent2
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/src/Chap43/analyses/veracity-review-verus-style.log
+
+Checking 1 files...
+
+════════════════════════════════════════════════════════════════
+Summary: 14 passed, 7 warnings in 1 files (checked 1 files)
+════════════════════════════════════════════════════════════════

@@ -10,7 +10,7 @@ table { width: 100% !important; table-layout: fixed; }
 **Date:** 2026-02-19
 **Reviewer:** Claude-Opus-4.6
 **Prose sources:** `prompts/Chap43.txt` (Data Type 43.1, Cost Spec 43.2, Exercise 43.1, Example 43.1), `prompts/Chap43part2.txt` (Definition 43.3, Examples 43.2–43.3)
-**Verification status:** All 10 ADT modules verusified with `#[verifier::external_body]` specs. Verus: 1863 verified, 0 errors. RTT: 2698 passed.
+**Verification status:** All 10 ADT modules verusified. OrderedTableStPer verified bodies (2 external_body, 4 assume remain). Verus: 2765 verified, 0 errors. RTT: 2431 passed. PTT: 99 passed.
 **View types:** Tables use `Map<K::V, V::V>`; Sets use `Set<T>`. All trait methods have `ensures` clauses.
 
 ## Phase 1: Inventory
@@ -23,16 +23,16 @@ Source files: 12 (3 ordered sets, 4 ordered tables, 3 augmented ordered tables, 
 | 2 | Chap43 | OrderedSetStPer | 1 | 22 | 0 | 1 | 25 | 0 | 0 | 25 | 0 |
 | 3 | Chap43 | OrderedSetMtEph | 1 | 21 | 0 | 0 | 23 | 0 | 0 | 23 | 0 |
 | 4 | Chap43 | OrderedTableStEph | 1 | 27 | 0 | 1 | 31 | 0 | 0 | 31 | 0 |
-| 5 | Chap43 | OrderedTableStPer | 1 | 26 | 0 | 1 | 28 | 0 | 0 | 28 | 0 |
+| 5 | Chap43 | OrderedTableStPer | 1 | 26 | 0 | 1 | 28 | 0 | 0 | 6 | 0 |
 | 6 | Chap43 | OrderedTableMtEph | 1 | 29 | 0 | 1 | 32 | 0 | 0 | 32 | 0 |
 | 7 | Chap43 | OrderedTableMtPer | 1 | 19 | 0 | 0 | 21 | 0 | 0 | 21 | 0 |
 | 8 | Chap43 | AugOrderedTableStEph | 1 | 30 | 0 | 1 | 33 | 0 | 0 | 33 | 0 |
 | 9 | Chap43 | AugOrderedTableStPer | 1 | 27 | 0 | 1 | 30 | 0 | 0 | 30 | 0 |
 | 10 | Chap43 | AugOrderedTableMtEph | 1 | 31 | 0 | 2 | 35 | 0 | 0 | 35 | 0 |
 | 11 | Chap43 | Example43_1 | 1 | 0 | 0 | 2 | 0 | 2 | 0 | 0 | 2 |
-| | **Total** | | **11** | | | | **283** | **2** | **0** | **283** | **2** |
+| | **Total** | | **11** | | | | **283** | **2** | **0** | **261** | **2** |
 
-**Notes:** ML = module-level (`from_sorted_elements`, `from_sorted_entries`, `calculate_reduction`, `recalculate_reduction`). Hole = `external_body` count (accepted spec boundary). All ADT trait methods have `ensures` clauses.
+**Notes:** ML = module-level (`from_sorted_elements`, `from_sorted_entries`, `calculate_reduction`, `recalculate_reduction`). Hole = `external_body` + `assume()` count. OrderedTableStPer reduced from 28 external_body to 2 external_body + 4 assume (Feb 2026). All ADT trait methods have `ensures` clauses.
 
 ## Phase 2: Prose Inventory
 
@@ -169,12 +169,13 @@ OrderedTableMtPer implements all 10 ordering ops plus base table ops (size, empt
 ## Phase 4: Proof Holes Summary
 
 ```
-Modules:   1 clean (Example43_1), 10 holed (external_body)
-Holes Found: 283 total
-   283 × external_body
+Modules:   1 clean (Example43_1), 10 holed
+Holes Found: 261 total
+   257 × external_body
+   4 × assume()
 ```
 
-All 10 ADT modules use `#[verifier::external_body]` on exec methods and the View `view` spec. This is the accepted verusification pattern: specs (`requires`/`ensures`) are verified; implementations are trusted at the boundary. Example43_1 has no Verus code and reports clean.
+Nine ADT modules use `#[verifier::external_body]` on exec methods. OrderedTableStPer has verified bodies for 24 of 26 trait methods (2 external_body remain on `collect` and `split_key`; 4 assume for `spec_wf`, delete-remove bridge, and `spec_well_formed`). Example43_1 has no Verus code and reports clean.
 
 ### Per-File Breakdown
 
@@ -184,14 +185,14 @@ All 10 ADT modules use `#[verifier::external_body]` on exec methods and the View
 | 2 | OrderedSetStPer.rs | 25 | Includes clone, from_sorted_elements |
 | 3 | OrderedSetMtEph.rs | 23 | No clone, no from_sorted_elements |
 | 4 | OrderedTableStEph.rs | 31 | Includes from_sorted_entries |
-| 5 | OrderedTableStPer.rs | 28 | Includes from_sorted_entries |
+| 5 | OrderedTableStPer.rs | 2 eb + 4 assume | collect, split_key external_body; spec_wf, delete-remove, well_formed assumes |
 | 6 | OrderedTableMtEph.rs | 32 | Includes clone, from_sorted_entries |
 | 7 | OrderedTableMtPer.rs | 21 | Includes clone; fewer bulk ops |
 | 8 | AugOrderedTableStEph.rs | 33 | Includes calculate_reduction |
 | 9 | AugOrderedTableStPer.rs | 30 | Includes calculate_reduction |
 | 10 | AugOrderedTableMtEph.rs | 35 | Includes calculate_reduction, recalculate_reduction |
 | 11 | Example43_1.rs | 0 | Clean — no verus! code |
-| | **Total** | **283** | |
+| | **Total** | **257 eb + 4 assume** | |
 
 ## Phase 5: Action Items
 
@@ -216,7 +217,7 @@ All 283 ADT functions inside `verus!` have `ensures` clauses (strong specs). Exa
 
 ## Overall Assessment
 
-**Chapter 43 is fully verusified.** All 10 ADT modules have code inside `verus!` with View impls (`Set<T>` for sets, `Map<K::V, V::V>` for tables), trait definitions, and exec methods with `#[verifier::external_body]` and `ensures` clauses. Verus verification: 1863 verified, 0 errors. RTT: 2698 passed.
+**Chapter 43 is fully verusified.** All 10 ADT modules have code inside `verus!` with View impls (`Set<T>` for sets, `Map<K::V, V::V>` for tables), trait definitions, and exec methods with `ensures` clauses. OrderedTableStPer has verified bodies for 24/26 trait methods plus PartialEq/Eq/Clone/Iterator/IntoIterator and PTT coverage. Verus: 2765 verified, 0 errors. RTT: 2431 passed. PTT: 99 passed.
 
 ### Strengths
 
@@ -226,10 +227,11 @@ All 283 ADT functions inside `verus!` have `ensures` clauses (strong specs). Exa
 4. **OrderedTableMtPer** — Now implements all 10 ordering ops via ParamTreap backing.
 5. **Augmented tables** — reduce_val, reduce_range, reduce_range_parallel with specs.
 6. **Example43_1** — Demonstrates ordered set operations from prose.
+7. **OrderedTableStPer verified bodies** — 24/26 trait methods have verified implementations (Feb 2026). Iterator standard with PTT coverage. PartialEq/Eq inside verus! with PartialEqSpecImpl.
 
 ### Weaknesses
 
-1. **All exec code behind `external_body`** — Implementations are trusted; no verified bodies.
+1. **Most exec code behind `external_body`** — 9 of 10 ADT modules still fully external_body. OrderedTableStPer partially verified (2 external_body + 4 assume remain).
 2. **OrderedTableMtPer** — Missing tabulate, reduce, intersection, union, difference, restrict, subtract, collect.
 3. **Cost fidelity** — StEph/StPer use O(n) collect for ordering ops; only Mt variants achieve O(lg n) with treap.
 4. **Examples 43.2, 43.3** — TRAMLAW and QADSAN not implemented as standalone demos.
