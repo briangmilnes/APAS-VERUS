@@ -6,20 +6,22 @@ alwaysApply: true
 
 # Running Verus
 
-The default way to run Verus verification on this project:
+Always use the shell scripts. Do not type raw verus commands.
 
 ```bash
-cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors
+scripts/validate.sh
 ```
 
-Use this command when:
+Use this when:
 - Checking if code verifies
 - After making changes to proofs or implementations
 - Before committing changes
 
+See `validate.mdc` for dev_only and experiments_only modes.
+
 ## Important
 
-- **Always call `verus` directly** — never use `cargo verus`, `cargo build`, or any cargo-based compilation for verification.
+- **Never use `cargo verus`, `cargo build`, or any cargo-based compilation** for verification.
 - Verus includes its own vstd automatically — do not pass `-L dependency`, `--extern vstd`, or any library paths.
 - There is no need for `target/debug/` or `target/release/` directories for verification. Verus manages its own dependencies.
 

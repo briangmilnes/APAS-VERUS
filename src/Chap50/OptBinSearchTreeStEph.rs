@@ -1,14 +1,12 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 50: Optimal Binary Search Tree - ephemeral, single-threaded.
 //!
-//! This module is outside verus! because it uses std::collections::HashMap for
-//! memoization, which Verus does not support. Full verification would require
-//! replacing HashMap with a verified equivalent.
+//! Memoized top-down DP for optimal BST cost.
+//! Uses HashMapWithViewPlus for the memo table.
 
 pub mod OptBinSearchTreeStEph {
 
     use std::cmp::min;
-    use std::collections::HashMap;
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::iter::Cloned;
     use std::slice::Iter;
@@ -18,84 +16,61 @@ pub mod OptBinSearchTreeStEph {
 
     use crate::Chap50::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::prob;
 
+    verus! {
+
     // 4. type definitions
-    #[derive(Clone, Debug, PartialEq)]
+    #[verifier::reject_recursive_types(T)]
     pub struct KeyProb<T: StT> {
         pub key: T,
         pub prob: Probability,
     }
 
-    // Struct contains HashMap for memoization — cannot be inside verus!.
-    /// Ephemeral single-threaded optimal binary search tree solver using dynamic programming
-    #[derive(Clone, Debug, PartialEq)]
-    pub struct OBSTStEphS<T: StT> {
-        pub keys: Vec<KeyProb<T>>,
-        pub memo: HashMap<(usize, usize), Probability>,
+    impl<T: StT> Clone for KeyProb<T> {
+        #[verifier::external_body]
+        fn clone(&self) -> Self {
+            KeyProb { key: self.key.clone(), prob: self.prob }
+        }
     }
 
-    verus! {
+    /// Ephemeral single-threaded optimal binary search tree solver using dynamic programming
     #[verifier::reject_recursive_types(T)]
-    #[verifier::external_type_specification]
-    pub struct ExKeyProb<T: StT>(KeyProb<T>);
-    #[verifier::reject_recursive_types(T)]
-    #[verifier::external_type_specification]
-    pub struct ExOBSTStEphS<T: StT>(OBSTStEphS<T>);
+    pub struct OBSTStEphS<T: StT> {
+        pub keys: Vec<KeyProb<T>>,
+        pub memo: HashMapWithViewPlus<Pair<usize, usize>, Probability>,
+    }
+
+    impl<T: StT> Clone for OBSTStEphS<T> {
+        #[verifier::external_body]
+        fn clone(&self) -> Self {
+            OBSTStEphS {
+                keys: self.keys.clone(),
+                memo: self.memo.clone(),
+            }
+        }
     }
 
     // 8. traits
-    /// Trait for optimal BST operations
     pub trait OBSTStEphTrait<T: StT>: Sized {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate empty collections
-        fn new()                                                  -> Self;
-
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — zip and map n keys with probabilities
-        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> Self;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — move ownership of Vec
-        fn from_key_probs(key_probs: Vec<KeyProb<T>>)             -> Self;
-
-        /// - APAS: Work Θ(n³), Span Θ(n³)
-        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — memoized DP, n² subproblems × O(n) each, sequential
-        fn optimal_cost(&mut self)                                -> Probability;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reference access
-        fn keys(&self)                                            -> &Vec<KeyProb<T>>;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — mutable reference access
-        fn keys_mut(&mut self)                                    -> &mut Vec<KeyProb<T>>;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — array write plus memo clear
+        fn new() -> (result: Self);
+        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self);
+        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self);
+        fn optimal_cost(&mut self) -> (result: Probability);
+        fn keys(&self) -> (result: &Vec<KeyProb<T>>);
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>);
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — field write plus memo clear
         fn update_prob(&mut self, index: usize, prob: Probability);
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len
-        fn num_keys(&self)                                        -> usize;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::clear
+        fn num_keys(&self) -> (result: usize);
         fn clear_memo(&mut self);
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len
-        fn memo_size(&self)                                       -> usize;
+        fn memo_size(&self) -> (result: usize);
     }
 
     // 9. impls
 
-    fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> Probability {
-        if let Some(&result) = s.memo.get(&(i, l)) {
+    #[verifier::external_body]
+    fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> (result: Probability) {
+        if let Some(&result) = s.memo.get(&Pair(i, l)) {
             return result;
         }
 
@@ -117,23 +92,21 @@ pub mod OptBinSearchTreeStEph {
             prob_sum + min_cost
         };
 
-        s.memo.insert((i, l), result);
+        s.memo.insert(Pair(i, l), result);
         result
     }
 
     impl<T: StT> OBSTStEphTrait<T> for OBSTStEphS<T> {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate empty Vec and HashMap
-        fn new() -> Self {
+        #[verifier::external_body]
+        fn new() -> (result: Self) {
             Self {
                 keys: Vec::new(),
-                memo: HashMap::new(),
+                memo: HashMapWithViewPlus::new(),
             }
         }
 
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — zip and map n keys with probabilities
-        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> Self {
+        #[verifier::external_body]
+        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self) {
             let key_probs = keys
                 .into_iter()
                 .zip(probs)
@@ -142,22 +115,20 @@ pub mod OptBinSearchTreeStEph {
 
             Self {
                 keys: key_probs,
-                memo: HashMap::new(),
+                memo: HashMapWithViewPlus::new(),
             }
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — move ownership of key_probs Vec
-        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> Self {
+        #[verifier::external_body]
+        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self) {
             Self {
                 keys: key_probs,
-                memo: HashMap::new(),
+                memo: HashMapWithViewPlus::new(),
             }
         }
 
-        /// - APAS: Work Θ(n³), Span Θ(n³)
-        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — clears memo, invokes obst_rec(0, n)
-        fn optimal_cost(&mut self) -> Probability {
+        #[verifier::external_body]
+        fn optimal_cost(&mut self) -> (result: Probability) {
             if self.keys.is_empty() {
                 return Probability::zero();
             }
@@ -168,16 +139,9 @@ pub mod OptBinSearchTreeStEph {
             obst_rec_st_eph(self, 0, n)
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reference access
-        fn keys(&self) -> &Vec<KeyProb<T>> { &self.keys }
+        fn keys(&self) -> (result: &Vec<KeyProb<T>>) { &self.keys }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — mutable reference access
-        fn keys_mut(&mut self) -> &mut Vec<KeyProb<T>> { &mut self.keys }
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — array write plus memo clear
+        #[verifier::external_body]
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>) {
             if index < self.keys.len() {
                 self.keys[index] = key_prob;
@@ -185,8 +149,7 @@ pub mod OptBinSearchTreeStEph {
             self.memo.clear();
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — field write plus memo clear
+        #[verifier::external_body]
         fn update_prob(&mut self, index: usize, prob: Probability) {
             if index < self.keys.len() {
                 self.keys[index].prob = prob;
@@ -194,21 +157,17 @@ pub mod OptBinSearchTreeStEph {
             self.memo.clear();
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len
-        fn num_keys(&self) -> usize { self.keys.len() }
+        fn num_keys(&self) -> (result: usize) { self.keys.len() }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::clear
         fn clear_memo(&mut self) { self.memo.clear(); }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len
-        fn memo_size(&self) -> usize { self.memo.len() }
+        fn memo_size(&self) -> (result: usize) { self.memo.len() }
     }
 
-    // 11. derive impls
+    // 11. derive impls in verus!
     impl<T: StT> Eq for KeyProb<T> {}
+
+    } // verus!
 
     // 13. derive impls outside verus!
     impl<T: StT> Display for OBSTStEphS<T> {
@@ -255,6 +214,28 @@ pub mod OptBinSearchTreeStEph {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format key and probability
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }
+    }
+
+    impl<T: StT> Debug for KeyProb<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "KeyProb({:?}, {:.3})", self.key, self.prob) }
+    }
+
+    impl<T: StT + PartialEq> PartialEq for KeyProb<T> {
+        fn eq(&self, other: &Self) -> bool {
+            self.key == other.key && (self.prob.value() - other.prob.value()).abs() < f64::EPSILON
+        }
+    }
+
+    impl<T: StT> Debug for OBSTStEphS<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            write!(f, "OBSTStEph(keys: {}, memo_entries: {})", self.keys.len(), self.memo.len())
+        }
+    }
+
+    impl<T: StT + PartialEq> PartialEq for OBSTStEphS<T> {
+        fn eq(&self, other: &Self) -> bool {
+            self.keys == other.keys && self.memo == other.memo
+        }
     }
 }
 

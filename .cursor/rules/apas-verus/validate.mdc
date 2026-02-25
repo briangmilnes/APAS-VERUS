@@ -6,15 +6,15 @@ alwaysApply: true
 
 # Validation Modes
 
+Always use the shell scripts. Do not type raw verus commands.
+
 ## validate (default) — full verification
 
-When the user says "validate", run the full verification with all modules:
+When the user says "validate", run:
 
 ```bash
-cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors
+scripts/validate.sh
 ```
-
-Or: `scripts/validate.sh`
 
 ## dev_only_validate — foundation modules only
 
@@ -22,10 +22,8 @@ When the user says "dev_only_validate" or "dov", run with the dev_only feature.
 This skips all chapters and verifies only foundation (Types, Concurrency, vstdplus):
 
 ```bash
-cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg 'feature="dev_only"'
+scripts/validate.sh dev_only
 ```
-
-Or: `python3 scripts/dev_only_validate.py`
 
 To include specific chapters in dev_only mode, edit `src/lib.rs` and change their cfg from:
 ```rust
@@ -43,9 +41,7 @@ Remember to include transitive dependencies (see dependency table in lib.rs comm
 When the user says "V1", run a single Verus verification. If working with `experiments_only`:
 
 ```bash
-cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors --cfg 'feature="experiments_only"'
+scripts/validate.sh exp
 ```
-
-Or: `scripts/validate.sh exp`
 
 Otherwise, same as validate. Do not iterate or fix errors. Just run once, show the full output, and stop.

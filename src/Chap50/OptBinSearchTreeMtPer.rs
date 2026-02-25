@@ -1,13 +1,11 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Multi-threaded persistent optimal binary search tree implementation using Vec and Arc for thread safety.
+//! Chapter 50: Optimal Binary Search Tree - persistent, multi-threaded.
 //!
-//! This module is outside verus! because it uses std::collections::HashMap for
-//! memoization (via Arc<RwLock<HashMap>>), which Verus does not support. Full
-//! verification would require replacing HashMap with a verified equivalent.
+//! Memoized top-down DP with parallel min reduction.
+//! Uses Arc<RwLock<HashMapWithViewPlus>> for the memo table.
 
 pub mod OptBinSearchTreeMtPer {
 
-    use std::collections::HashMap;
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::iter::Cloned;
     use std::slice::Iter;
@@ -20,70 +18,69 @@ pub mod OptBinSearchTreeMtPer {
 
     use crate::Chap50::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+
+    verus! {
 
     // 4. type definitions
-    #[derive(Clone, Debug)]
+    #[verifier::reject_recursive_types(T)]
     pub struct KeyProb<T: MtVal> {
         pub key: T,
         pub prob: Probability,
     }
 
-    /// Persistent multi-threaded optimal binary search tree solver using parallel dynamic programming
-    #[derive(Clone)]
-    pub struct OBSTMtPerS<T: MtVal> {
-        pub keys: Arc<Vec<KeyProb<T>>>,
-        pub memo: Arc<RwLock<HashMap<(usize, usize), Probability>, ObstPerMemoWf>>,
+    impl<T: MtVal> Clone for KeyProb<T> {
+        #[verifier::external_body]
+        fn clone(&self) -> Self {
+            KeyProb { key: self.key.clone(), prob: self.prob }
+        }
     }
 
-    verus! {
         pub struct ObstPerMemoWf;
-        impl RwLockPredicate<HashMap<(usize, usize), Probability>> for ObstPerMemoWf {
-            open spec fn inv(self, v: HashMap<(usize, usize), Probability>) -> bool { true }
+        impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, Probability>> for ObstPerMemoWf {
+            open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> bool {
+                v@.dom().finite()
+            }
         }
         #[verifier::external_body]
-        fn new_obst_per_memo_lock(val: HashMap<(usize, usize), Probability>) -> (lock: RwLock<HashMap<(usize, usize), Probability>, ObstPerMemoWf>) {
+        fn new_obst_per_memo_lock(val: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, ObstPerMemoWf>)
+            requires val@.dom().finite()
+        {
             RwLock::new(val, Ghost(ObstPerMemoWf))
+        }
+
+    /// Persistent multi-threaded optimal binary search tree solver using parallel dynamic programming
+    #[verifier::reject_recursive_types(T)]
+    pub struct OBSTMtPerS<T: MtVal> {
+        pub keys: Arc<Vec<KeyProb<T>>>,
+        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, ObstPerMemoWf>>,
+    }
+
+    impl<T: MtVal> Clone for OBSTMtPerS<T> {
+        #[verifier::external_body]
+        fn clone(&self) -> Self {
+            OBSTMtPerS {
+                keys: self.keys.clone(),
+                memo: self.memo.clone(),
+            }
         }
     }
 
     // 8. traits
-    /// Trait for parallel optimal BST operations
     pub trait OBSTMtPerTrait<T: MtVal>: Sized {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate Arc wrappers
-        fn new()                                                  -> Self;
-
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — zip n keys with probabilities then wrap in Arc
-        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> Self;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wrap Vec in Arc
-        fn from_key_probs(key_probs: Vec<KeyProb<T>>)             -> Self;
-
-        /// - APAS: Work Θ(n³), Span Θ(n² lg n)
-        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — memoized DP with parallel min reduction
-        fn optimal_cost(&self)                                    -> Probability
-        where
-            T: Send + Sync + 'static;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Arc reference access
-        fn keys(&self)                                            -> &Arc<Vec<KeyProb<T>>>;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len through Arc
-        fn num_keys(&self)                                        -> usize;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under read lock
-        fn memo_size(&self)                                       -> usize;
+        fn new() -> (result: Self);
+        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self);
+        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self);
+        fn optimal_cost(&self) -> (result: Probability) where T: Send + Sync + 'static;
+        fn keys(&self) -> (result: &Arc<Vec<KeyProb<T>>>);
+        fn num_keys(&self) -> (result: usize);
+        fn memo_size(&self) -> (result: usize);
     }
 
     // 9. impls
-    /// - APAS: Work Θ(n), Span Θ(lg n)
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer min reduction
-    fn parallel_min_reduction<T: MtVal>(table: &OBSTMtPerS<T>, costs: Vec<Probability>) -> Probability {
+
+    #[verifier::external_body]
+    fn parallel_min_reduction<T: MtVal>(table: &OBSTMtPerS<T>, costs: Vec<Probability>) -> (result: Probability) {
         if costs.is_empty() {
             return Probability::infinity();
         }
@@ -99,7 +96,6 @@ pub mod OptBinSearchTreeMtPer {
         let table_clone2 = table.clone();
 
         let handle1 = thread::spawn(move || parallel_min_reduction(&table_clone1, left_costs));
-
         let handle2 = thread::spawn(move || parallel_min_reduction(&table_clone2, right_costs));
 
         let left_min = handle1.join().unwrap();
@@ -108,12 +104,11 @@ pub mod OptBinSearchTreeMtPer {
         std::cmp::min(left_min, right_min)
     }
 
-    /// - APAS: Work Θ(n³), Span Θ(n² lg n)
-    /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — memoized DP per Algorithm 50.3, parallel min reduction per subproblem
-    fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtPerS<T>, i: usize, l: usize) -> Probability {
+    #[verifier::external_body]
+    fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtPerS<T>, i: usize, l: usize) -> (result: Probability) {
         {
             let handle = table.memo.acquire_read();
-            let cached = handle.borrow().get(&(i, l)).copied();
+            let cached = handle.borrow().get(&Pair(i, l)).copied();
             handle.release_read();
             if let Some(result) = cached {
                 return result;
@@ -141,7 +136,7 @@ pub mod OptBinSearchTreeMtPer {
 
         {
             let (mut memo, write_handle) = table.memo.acquire_write();
-            memo.insert((i, l), result);
+            memo.insert(Pair(i, l), result);
             write_handle.release_write(memo);
         }
 
@@ -149,69 +144,54 @@ pub mod OptBinSearchTreeMtPer {
     }
 
     impl<T: MtVal> OBSTMtPerTrait<T> for OBSTMtPerS<T> {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate Arc wrappers
-        fn new() -> Self {
+        #[verifier::external_body]
+        fn new() -> (result: Self) {
             Self {
                 keys: Arc::new(Vec::new()),
-                memo: Arc::new(new_obst_per_memo_lock(HashMap::new())),
+                memo: Arc::new(new_obst_per_memo_lock(HashMapWithViewPlus::new())),
             }
         }
 
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — zip n keys then wrap in Arc
-        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> Self {
+        #[verifier::external_body]
+        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self) {
             let key_probs = keys
                 .into_iter()
                 .zip(probs)
                 .map(|(key, prob)| KeyProb { key, prob }).collect::<Vec<KeyProb<T>>>();
-
             Self {
                 keys: Arc::new(key_probs),
-                memo: Arc::new(new_obst_per_memo_lock(HashMap::new())),
+                memo: Arc::new(new_obst_per_memo_lock(HashMapWithViewPlus::new())),
             }
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wrap Vec in Arc
-        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> Self {
+        #[verifier::external_body]
+        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self) {
             Self {
                 keys: Arc::new(key_probs),
-                memo: Arc::new(new_obst_per_memo_lock(HashMap::new())),
+                memo: Arc::new(new_obst_per_memo_lock(HashMapWithViewPlus::new())),
             }
         }
 
-        /// - APAS: Work Θ(n³), Span Θ(n² lg n)
-        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — clears memo, invokes obst_rec(0, n)
-        fn optimal_cost(&self) -> Probability
-        where
-            T: Send + Sync + 'static,
-        {
-            if self.keys.is_empty() {
-                return Probability::zero();
-            }
-
+        #[verifier::external_body]
+        fn optimal_cost(&self) -> (result: Probability) where T: Send + Sync + 'static {
+            if self.keys.is_empty() { return Probability::zero(); }
             {
                 let (mut memo, write_handle) = self.memo.acquire_write();
                 memo.clear();
                 write_handle.release_write(memo);
             }
-
             let n = self.keys.len();
             obst_rec(self, 0, n)
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Arc reference access
-        fn keys(&self) -> &Arc<Vec<KeyProb<T>>> { &self.keys }
+        #[verifier::external_body]
+        fn keys(&self) -> (result: &Arc<Vec<KeyProb<T>>>) { &self.keys }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len through Arc
-        fn num_keys(&self) -> usize { self.keys.len() }
+        #[verifier::external_body]
+        fn num_keys(&self) -> (result: usize) { self.keys.len() }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under read lock
-        fn memo_size(&self) -> usize {
+        #[verifier::external_body]
+        fn memo_size(&self) -> (result: usize) {
             let handle = self.memo.acquire_read();
             let len = handle.borrow().len();
             handle.release_read();
@@ -219,24 +199,23 @@ pub mod OptBinSearchTreeMtPer {
         }
     }
 
-    // 11. derive impls
+    // 11. derive impls in verus!
     impl<T: MtVal> PartialEq for OBSTMtPerS<T> {
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — compare Arc<Vec> contents
+        #[verifier::external_body]
         fn eq(&self, other: &Self) -> bool { self.keys == other.keys }
     }
 
     impl<T: MtVal> Eq for OBSTMtPerS<T> {}
 
+    impl<T: MtVal> Eq for KeyProb<T> {}
+
+    } // verus!
+
     impl<T: MtVal + PartialEq> PartialEq for KeyProb<T> {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — compare key and probability
         fn eq(&self, other: &Self) -> bool {
             self.key == other.key && (self.prob.value() - other.prob.value()).abs() < f64::EPSILON
         }
     }
-
-    impl<T: MtVal> Eq for KeyProb<T> {}
 
     // 13. derive impls outside verus!
     impl<T: MtVal> Debug for OBSTMtPerS<T> {
@@ -281,6 +260,10 @@ pub mod OptBinSearchTreeMtPer {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format key and probability
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }
+    }
+
+    impl<T: MtVal> Debug for KeyProb<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "KeyProb({:?}, {:.3})", self.key, self.prob) }
     }
 }
 

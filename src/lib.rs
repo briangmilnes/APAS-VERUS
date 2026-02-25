@@ -220,6 +220,7 @@ pub mod vstdplus {
     pub mod seq_set;
     pub mod seq;
     pub mod hash_set_with_view_plus;
+    pub mod hash_map_with_view_plus;
     pub mod hash_set_specs;
     pub mod total_order;
     pub mod partial_order;

@@ -61,7 +61,6 @@ pub mod Probability {
 
     // 11. derive impls
     impl Default for Probability {
-        #[verifier::external_body]
         fn default() -> Self { <Probability as ProbabilityTrait>::zero() }
     }
 

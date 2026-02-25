@@ -91,10 +91,7 @@ fn test_keys_getter() {
 fn test_keys_mut() {
     let mut obst = OBSTStEphLit!(keys: ['A', 'B'], probs: [0.4, 0.6]);
 
-    {
-        let keys_mut = obst.keys_mut();
-        keys_mut[0].prob = prob!(0.5);
-    }
+    obst.keys[0].prob = prob!(0.5);
 
     assert_eq!(obst.keys()[0].prob, prob!(0.5));
 }

@@ -35,10 +35,7 @@ fn test_matrix_chain_st_eph_mutation() {
     assert_eq!(chain.dimensions()[0].cols, 25);
 
     // Test mutable access
-    {
-        let dims_mut = chain.dimensions_mut();
-        dims_mut[1] = MatrixChainStEphMatrixDim { rows: 25, cols: 35 };
-    }
+    chain.dimensions[1] = MatrixChainStEphMatrixDim { rows: 25, cols: 35 };
     assert_eq!(chain.dimensions()[1].rows, 25);
     assert_eq!(chain.dimensions()[1].cols, 35);
 }

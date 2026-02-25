@@ -1,11 +1,11 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 50: Matrix Chain Multiplication - ephemeral, single-threaded.
 //!
-//! Uses HashMap for memoization. Struct/trait in verus! with external_type_spec.
+//! Memoized top-down DP for optimal matrix chain parenthesization.
+//! Uses HashMapWithViewPlus for the memo table.
 
 pub mod MatrixChainStEph {
 
-    use std::collections::HashMap;
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::iter::Cloned;
     use std::slice::Iter;
@@ -14,10 +14,23 @@ pub mod MatrixChainStEph {
     use vstd::prelude::*;
 
     use crate::Types::Types::*;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
 
-// Veracity: added broadcast group
+// Table of Contents
+// 1. module
+// 2. imports
+// 3. broadcast use
+// 4. type definitions
+// 5. view impls
+// 8. traits
+// 9. impls
+// 11. derive impls in verus!
+
+// 3. broadcast use
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::map::group_map_axioms,
@@ -25,6 +38,7 @@ broadcast use {
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,
 };
+
     // 4. type definitions
     #[verifier::reject_recursive_types]
     #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -33,6 +47,7 @@ broadcast use {
         pub cols: usize,
     }
 
+    // 5. view impls
     impl View for MatrixDim {
         type V = (nat, nat);
         open spec fn view(&self) -> (nat, nat) {
@@ -40,10 +55,9 @@ broadcast use {
         }
     }
 
-    /// Ephemeral single-threaded matrix chain multiplication solver using dynamic programming.
     pub struct MatrixChainStEphS {
         pub dimensions: Vec<MatrixDim>,
-        pub memo: std::collections::HashMap<(usize, usize), usize>,
+        pub memo: HashMapWithViewPlus<Pair<usize, usize>, usize>,
     }
 
     impl View for MatrixChainStEphS {
@@ -53,89 +67,64 @@ broadcast use {
         }
     }
 
-    impl Clone for MatrixChainStEphS {
-        #[verifier::external_body]
-        fn clone(&self) -> (s: Self)
-            ensures s@ == self@
-        {
-            MatrixChainStEphS {
-                dimensions: self.dimensions.clone(),
-                memo: self.memo.clone(),
-            }
-        }
-    }
-
-    impl PartialEq for MatrixChainStEphS {
-        #[verifier::external_body]
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
-        {
-            self.dimensions == other.dimensions && self.memo == other.memo
-        }
-    }
-
-    impl Eq for MatrixChainStEphS {}
-    }
-
     // 8. traits
-    /// Trait for matrix chain multiplication operations
-    pub trait MatrixChainStEphTrait: Sized {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate empty collections
-        fn new()                                              -> Self;
+    pub trait MatrixChainStEphTrait: Sized + View<V = (Seq<MatrixDim>, Map<(usize, usize), usize>)> {
+        fn new() -> (result: Self)
+            ensures
+                result@.0.len() == 0,
+                result@.1 =~= Map::<(usize, usize), usize>::empty();
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — move ownership of Vec
-        fn from_dimensions(dimensions: Vec<MatrixDim>)        -> Self;
+        fn from_dimensions(dimensions: Vec<MatrixDim>) -> (result: Self)
+            ensures
+                result@.0 =~= dimensions@,
+                result@.1 =~= Map::<(usize, usize), usize>::empty();
 
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — map n pairs to MatrixDim
-        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> Self;
+        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (result: Self)
+            ensures
+                result@.0.len() == dim_pairs@.len(),
+                result@.1 =~= Map::<(usize, usize), usize>::empty();
 
-        /// - APAS: Work Θ(n³), Span Θ(n³)
-        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — memoized DP, n² subproblems × O(n) each, sequential
-        fn optimal_cost(&mut self)                            -> usize;
+        fn optimal_cost(&mut self) -> (result: usize);
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reference access
-        fn dimensions(&self)                                  -> &Vec<MatrixDim>;
+        fn dimensions(&self) -> (result: &Vec<MatrixDim>)
+            ensures result@ =~= self@.0;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — mutable reference access
-        fn dimensions_mut(&mut self)                          -> &mut Vec<MatrixDim>;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — array write plus memo clear
         fn set_dimension(&mut self, index: usize, dim: MatrixDim);
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — array write plus memo clear
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize);
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len
-        fn num_matrices(&self)                                -> usize;
+        fn num_matrices(&self) -> (result: usize)
+            ensures result == self@.0.len();
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::clear
-        fn clear_memo(&mut self);
+        fn clear_memo(&mut self)
+            ensures self@.1 =~= Map::<(usize, usize), usize>::empty();
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len
-        fn memo_size(&self)                                   -> usize;
+        fn memo_size(&self) -> (result: usize)
+            ensures result == self@.1.len();
     }
 
     // 9. impls
 
-    fn multiply_cost_st_eph(s: &MatrixChainStEphS, i: usize, k: usize, j: usize) -> usize {
+    #[verifier::external_body]
+    fn multiply_cost_st_eph(s: &MatrixChainStEphS, i: usize, k: usize, j: usize) -> (result: usize)
+        requires
+            i < s.dimensions@.len(),
+            k < s.dimensions@.len(),
+            j < s.dimensions@.len(),
+    {
         let left_rows = s.dimensions[i].rows;
         let split_cols = s.dimensions[k].cols;
         let right_cols = s.dimensions[j].cols;
         left_rows * split_cols * right_cols
     }
 
-    fn matrix_chain_rec_st_eph(s: &mut MatrixChainStEphS, i: usize, j: usize) -> usize {
-        if let Some(&result) = s.memo.get(&(i, j)) {
+    #[verifier::external_body]
+    fn matrix_chain_rec_st_eph(s: &mut MatrixChainStEphS, i: usize, j: usize) -> (result: usize)
+        requires
+            i <= j,
+            j < old(s).dimensions@.len(),
+    {
+        if let Some(&result) = s.memo.get(&Pair(i, j)) {
             return result;
         }
 
@@ -153,32 +142,29 @@ broadcast use {
                 .unwrap_or(0)
         };
 
-        s.memo.insert((i, j), result);
+        s.memo.insert(Pair(i, j), result);
         result
     }
 
     impl MatrixChainStEphTrait for MatrixChainStEphS {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate empty Vec and HashMap
-        fn new() -> Self {
+        #[verifier::external_body]
+        fn new() -> (result: Self) {
             Self {
                 dimensions: Vec::new(),
-                memo: HashMap::new(),
+                memo: HashMapWithViewPlus::new(),
             }
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — move ownership of dimensions Vec
-        fn from_dimensions(dimensions: Vec<MatrixDim>) -> Self {
+        #[verifier::external_body]
+        fn from_dimensions(dimensions: Vec<MatrixDim>) -> (result: Self) {
             Self {
                 dimensions,
-                memo: HashMap::new(),
+                memo: HashMapWithViewPlus::new(),
             }
         }
 
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — map n Pair values to MatrixDim structs
-        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> Self {
+        #[verifier::external_body]
+        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (result: Self) {
             let dimensions = dim_pairs
                 .into_iter()
                 .map(|pair| MatrixDim {
@@ -189,13 +175,12 @@ broadcast use {
 
             Self {
                 dimensions,
-                memo: HashMap::new(),
+                memo: HashMapWithViewPlus::new(),
             }
         }
 
-        /// - APAS: Work Θ(n³), Span Θ(n³)
-        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — invokes matrix_chain_rec on full range
-        fn optimal_cost(&mut self) -> usize {
+        #[verifier::external_body]
+        fn optimal_cost(&mut self) -> (result: usize) {
             if self.dimensions.len() <= 1 {
                 return 0;
             }
@@ -206,16 +191,10 @@ broadcast use {
             matrix_chain_rec_st_eph(self, 0, n - 1)
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reference access
-        fn dimensions(&self) -> &Vec<MatrixDim> { &self.dimensions }
+        fn dimensions(&self) -> (result: &Vec<MatrixDim>)
+        { &self.dimensions }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — mutable reference access
-        fn dimensions_mut(&mut self) -> &mut Vec<MatrixDim> { &mut self.dimensions }
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — array write plus memo clear
+        #[verifier::external_body]
         fn set_dimension(&mut self, index: usize, dim: MatrixDim) {
             if index < self.dimensions.len() {
                 self.dimensions[index] = dim;
@@ -223,8 +202,7 @@ broadcast use {
             self.memo.clear();
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — array write plus memo clear
+        #[verifier::external_body]
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize) {
             let dim = MatrixDim { rows, cols };
             if index < self.dimensions.len() {
@@ -233,18 +211,46 @@ broadcast use {
             self.memo.clear();
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len
-        fn num_matrices(&self) -> usize { self.dimensions.len() }
+        fn num_matrices(&self) -> (result: usize)
+        { self.dimensions.len() }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::clear
         fn clear_memo(&mut self) { self.memo.clear(); }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len
-        fn memo_size(&self) -> usize { self.memo.len() }
+        fn memo_size(&self) -> (result: usize)
+        { self.memo.len() }
     }
+
+    // 11. derive impls in verus!
+    impl Clone for MatrixChainStEphS {
+        #[verifier::external_body]
+        fn clone(&self) -> (s: Self)
+            ensures s@ == self@
+        {
+            MatrixChainStEphS {
+                dimensions: self.dimensions.clone(),
+                memo: self.memo.clone(),
+            }
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl PartialEqSpecImpl for MatrixChainStEphS {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl PartialEq for MatrixChainStEphS {
+        #[verifier::external_body]
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            self.dimensions == other.dimensions && self.memo == other.memo
+        }
+    }
+
+    impl Eq for MatrixChainStEphS {}
+
+    } // verus!
 
     // 13. derive impls outside verus!
     impl Display for MatrixChainStEphS {

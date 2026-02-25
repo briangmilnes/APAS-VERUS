@@ -1,13 +1,11 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Multi-threaded ephemeral optimal binary search tree implementation using Vec and Arc<RwLock<Vec>> for mutable thread safety.
+//! Chapter 50: Optimal Binary Search Tree - ephemeral, multi-threaded.
 //!
-//! This module is outside verus! because it uses std::collections::HashMap for
-//! memoization (via Arc<RwLock<HashMap>>), which Verus does not support. Full
-//! verification would require replacing HashMap with a verified equivalent.
+//! Memoized top-down DP with parallel min reduction.
+//! Uses Arc<RwLock<HashMapWithViewPlus>> for the memo table.
 
 pub mod OptBinSearchTreeMtEph {
 
-    use std::collections::HashMap;
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::sync::Arc;
     use std::thread;
@@ -18,95 +16,85 @@ pub mod OptBinSearchTreeMtEph {
 
     use crate::Chap50::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+
+    verus! {
 
     // 4. type definitions
-    #[derive(Clone, Debug)]
+    #[verifier::reject_recursive_types(T)]
     pub struct KeyProb<T: MtVal> {
         pub key: T,
         pub prob: Probability,
     }
 
-    /// Ephemeral multi-threaded optimal binary search tree solver using parallel dynamic programming
-    #[derive(Clone)]
-    pub struct OBSTMtEphS<T: MtVal> {
-        pub keys: Arc<RwLock<Vec<KeyProb<T>>, ObstEphKeysWf>>,
-        pub memo: Arc<RwLock<HashMap<(usize, usize), Probability>, ObstEphMemoWf>>,
+    impl<T: MtVal> Clone for KeyProb<T> {
+        #[verifier::external_body]
+        fn clone(&self) -> Self {
+            KeyProb { key: self.key.clone(), prob: self.prob }
+        }
     }
-
-    verus! {
-        #[verifier::reject_recursive_types(T)]
-        #[verifier::external_type_specification]
-        pub struct ExKeyProb<T: MtVal>(KeyProb<T>);
 
         pub struct ObstEphKeysWf;
         impl<T: MtVal> RwLockPredicate<Vec<KeyProb<T>>> for ObstEphKeysWf {
-            open spec fn inv(self, v: Vec<KeyProb<T>>) -> bool { true }
+            open spec fn inv(self, v: Vec<KeyProb<T>>) -> bool {
+                v@.len() <= usize::MAX as nat
+            }
         }
         #[verifier::external_body]
-        fn new_obst_eph_keys_lock<T: MtVal>(val: Vec<KeyProb<T>>) -> (lock: RwLock<Vec<KeyProb<T>>, ObstEphKeysWf>) {
+        fn new_obst_eph_keys_lock<T: MtVal>(val: Vec<KeyProb<T>>) -> (lock: RwLock<Vec<KeyProb<T>>, ObstEphKeysWf>)
+            requires val@.len() <= usize::MAX as nat
+        {
             RwLock::new(val, Ghost(ObstEphKeysWf))
         }
 
         pub struct ObstEphMemoWf;
-        impl RwLockPredicate<HashMap<(usize, usize), Probability>> for ObstEphMemoWf {
-            open spec fn inv(self, v: HashMap<(usize, usize), Probability>) -> bool { true }
+        impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, Probability>> for ObstEphMemoWf {
+            open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> bool {
+                v@.dom().finite()
+            }
         }
         #[verifier::external_body]
-        fn new_obst_eph_memo_lock(val: HashMap<(usize, usize), Probability>) -> (lock: RwLock<HashMap<(usize, usize), Probability>, ObstEphMemoWf>) {
+        fn new_obst_eph_memo_lock(val: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, ObstEphMemoWf>)
+            requires val@.dom().finite()
+        {
             RwLock::new(val, Ghost(ObstEphMemoWf))
+        }
+
+    /// Ephemeral multi-threaded optimal binary search tree solver using parallel dynamic programming
+    #[verifier::reject_recursive_types(T)]
+    pub struct OBSTMtEphS<T: MtVal> {
+        pub keys: Arc<RwLock<Vec<KeyProb<T>>, ObstEphKeysWf>>,
+        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, ObstEphMemoWf>>,
+    }
+
+    impl<T: MtVal> Clone for OBSTMtEphS<T> {
+        #[verifier::external_body]
+        fn clone(&self) -> Self {
+            OBSTMtEphS {
+                keys: self.keys.clone(),
+                memo: self.memo.clone(),
+            }
         }
     }
 
     // 8. traits
-    /// Trait for parallel optimal BST operations
     pub trait OBSTMtEphTrait<T: MtVal>: Sized {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate Arc<RwLock> wrappers
-        fn new()                                                  -> Self;
-
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — zip n keys with probabilities then wrap in Arc<RwLock>
-        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> Self;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wrap Vec in Arc<RwLock>
-        fn from_key_probs(key_probs: Vec<KeyProb<T>>)             -> Self;
-
-        /// - APAS: Work Θ(n³), Span Θ(n² lg n)
-        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — memoized DP with parallel min reduction
-        fn optimal_cost(&mut self)                                -> Probability
-        where
-            T: Send + Sync + 'static;
-
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone Vec under read lock
-        fn keys(&self)                                            -> Vec<KeyProb<T>>;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — write under lock plus memo clear
+        fn new() -> (result: Self);
+        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self);
+        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self);
+        fn optimal_cost(&mut self) -> (result: Probability) where T: Send + Sync + 'static;
+        fn keys(&self) -> (result: Vec<KeyProb<T>>);
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>);
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — field write under lock plus memo clear
         fn update_prob(&mut self, index: usize, prob: Probability);
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len under read lock
-        fn num_keys(&self)                                        -> usize;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::clear under write lock
+        fn num_keys(&self) -> (result: usize);
         fn clear_memo(&mut self);
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under read lock
-        fn memo_size(&self)                                       -> usize;
+        fn memo_size(&self) -> (result: usize);
     }
 
     // 9. impls
-    /// - APAS: Work Θ(n), Span Θ(lg n)
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — parallel divide-and-conquer min reduction
-    fn parallel_min_reduction<T: MtVal>(table: &OBSTMtEphS<T>, costs: Vec<Probability>) -> Probability {
+
+    #[verifier::external_body]
+    fn parallel_min_reduction<T: MtVal>(table: &OBSTMtEphS<T>, costs: Vec<Probability>) -> (result: Probability) {
         if costs.is_empty() {
             return Probability::infinity();
         }
@@ -122,7 +110,6 @@ pub mod OptBinSearchTreeMtEph {
         let table_clone2 = table.clone();
 
         let handle1 = thread::spawn(move || parallel_min_reduction(&table_clone1, left_costs));
-
         let handle2 = thread::spawn(move || parallel_min_reduction(&table_clone2, right_costs));
 
         let left_min = handle1.join().unwrap();
@@ -131,12 +118,11 @@ pub mod OptBinSearchTreeMtEph {
         std::cmp::min(left_min, right_min)
     }
 
-    /// - APAS: Work Θ(n³), Span Θ(n² lg n)
-    /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — memoized DP per Algorithm 50.3, parallel min reduction per subproblem
-    fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> Probability {
+    #[verifier::external_body]
+    fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> (result: Probability) {
         {
             let handle = table.memo.acquire_read();
-            let cached = handle.borrow().get(&(i, l)).copied();
+            let cached = handle.borrow().get(&Pair(i, l)).copied();
             handle.release_read();
             if let Some(result) = cached {
                 return result;
@@ -170,7 +156,7 @@ pub mod OptBinSearchTreeMtEph {
 
         {
             let (mut memo, write_handle) = table.memo.acquire_write();
-            memo.insert((i, l), result);
+            memo.insert(Pair(i, l), result);
             write_handle.release_write(memo);
         }
 
@@ -178,75 +164,60 @@ pub mod OptBinSearchTreeMtEph {
     }
 
     impl<T: MtVal> OBSTMtEphTrait<T> for OBSTMtEphS<T> {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate Arc<RwLock> wrappers
-        fn new() -> Self {
+        #[verifier::external_body]
+        fn new() -> (result: Self) {
             Self {
                 keys: Arc::new(new_obst_eph_keys_lock(Vec::new())),
-                memo: Arc::new(new_obst_eph_memo_lock(HashMap::new())),
+                memo: Arc::new(new_obst_eph_memo_lock(HashMapWithViewPlus::new())),
             }
         }
 
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — zip n keys then wrap in Arc<RwLock>
-        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> Self {
+        #[verifier::external_body]
+        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self) {
             let key_probs = keys
                 .into_iter()
                 .zip(probs)
                 .map(|(key, prob)| KeyProb { key, prob }).collect::<Vec<KeyProb<T>>>();
-
             Self {
                 keys: Arc::new(new_obst_eph_keys_lock(key_probs)),
-                memo: Arc::new(new_obst_eph_memo_lock(HashMap::new())),
+                memo: Arc::new(new_obst_eph_memo_lock(HashMapWithViewPlus::new())),
             }
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wrap Vec in Arc<RwLock>
-        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> Self {
+        #[verifier::external_body]
+        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self) {
             Self {
                 keys: Arc::new(new_obst_eph_keys_lock(key_probs)),
-                memo: Arc::new(new_obst_eph_memo_lock(HashMap::new())),
+                memo: Arc::new(new_obst_eph_memo_lock(HashMapWithViewPlus::new())),
             }
         }
 
-        /// - APAS: Work Θ(n³), Span Θ(n² lg n)
-        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — clears memo, invokes obst_rec(0, n)
-        fn optimal_cost(&mut self) -> Probability
-        where
-            T: Send + Sync + 'static,
-        {
+        #[verifier::external_body]
+        fn optimal_cost(&mut self) -> (result: Probability) where T: Send + Sync + 'static {
             let keys_len = {
                 let handle = self.keys.acquire_read();
                 let len = handle.borrow().len();
                 handle.release_read();
                 len
             };
-
-            if keys_len == 0 {
-                return Probability::zero();
-            }
-
+            if keys_len == 0 { return Probability::zero(); }
             {
                 let (mut memo, write_handle) = self.memo.acquire_write();
                 memo.clear();
                 write_handle.release_write(memo);
             }
-
             obst_rec(self, 0, keys_len)
         }
 
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone Vec under read lock
-        fn keys(&self) -> Vec<KeyProb<T>> {
+        #[verifier::external_body]
+        fn keys(&self) -> (result: Vec<KeyProb<T>>) {
             let handle = self.keys.acquire_read();
             let keys = handle.borrow().clone();
             handle.release_read();
             keys
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — write under lock plus memo clear
+        #[verifier::external_body]
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>) {
             {
                 let (mut keys, write_handle) = self.keys.acquire_write();
@@ -258,8 +229,7 @@ pub mod OptBinSearchTreeMtEph {
             write_handle.release_write(memo);
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — field write under lock plus memo clear
+        #[verifier::external_body]
         fn update_prob(&mut self, index: usize, prob: Probability) {
             {
                 let (mut keys, write_handle) = self.keys.acquire_write();
@@ -271,26 +241,23 @@ pub mod OptBinSearchTreeMtEph {
             write_handle.release_write(memo);
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len under read lock
-        fn num_keys(&self) -> usize {
+        #[verifier::external_body]
+        fn num_keys(&self) -> (result: usize) {
             let handle = self.keys.acquire_read();
             let len = handle.borrow().len();
             handle.release_read();
             len
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::clear under write lock
+        #[verifier::external_body]
         fn clear_memo(&mut self) {
             let (mut memo, write_handle) = self.memo.acquire_write();
             memo.clear();
             write_handle.release_write(memo);
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under read lock
-        fn memo_size(&self) -> usize {
+        #[verifier::external_body]
+        fn memo_size(&self) -> (result: usize) {
             let handle = self.memo.acquire_read();
             let len = handle.borrow().len();
             handle.release_read();
@@ -298,10 +265,9 @@ pub mod OptBinSearchTreeMtEph {
         }
     }
 
-    // 11. derive impls
+    // 11. derive impls in verus!
     impl<T: MtVal> PartialEq for OBSTMtEphS<T> {
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — compare Vec contents under read locks
+        #[verifier::external_body]
         fn eq(&self, other: &Self) -> bool {
             let self_handle = self.keys.acquire_read();
             let other_handle = other.keys.acquire_read();
@@ -314,15 +280,15 @@ pub mod OptBinSearchTreeMtEph {
 
     impl<T: MtVal> Eq for OBSTMtEphS<T> {}
 
+    impl<T: MtVal> Eq for KeyProb<T> {}
+
+    } // verus!
+
     impl<T: MtVal + PartialEq> PartialEq for KeyProb<T> {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — compare key and probability
         fn eq(&self, other: &Self) -> bool {
             self.key == other.key && (self.prob.value() - other.prob.value()).abs() < f64::EPSILON
         }
     }
-
-    impl<T: MtVal> Eq for KeyProb<T> {}
 
     // 13. derive impls outside verus!
     impl<T: MtVal> Debug for OBSTMtEphS<T> {
@@ -389,6 +355,10 @@ pub mod OptBinSearchTreeMtEph {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format key and probability
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }
+    }
+
+    impl<T: MtVal> Debug for KeyProb<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "KeyProb({:?}, {:.3})", self.key, self.prob) }
     }
 
     // 12. macros

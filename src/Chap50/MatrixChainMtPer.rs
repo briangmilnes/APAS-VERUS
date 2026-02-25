@@ -1,13 +1,11 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Multi-threaded persistent matrix chain multiplication implementation using Vec and Arc for thread safety.
+//! Chapter 50: Matrix Chain Multiplication - persistent, multi-threaded.
 //!
-//! This module is outside verus! because it uses std::collections::HashMap for
-//! memoization (via Arc<RwLock<HashMap>>), which Verus does not support. Full
-//! verification would require replacing HashMap with a verified equivalent.
+//! Memoized top-down DP with parallel min reduction.
+//! Uses Arc<RwLock<HashMapWithViewPlus>> for the memo table.
 
 pub mod MatrixChainMtPer {
 
-    use std::collections::HashMap;
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::iter::Cloned;
     use std::slice::Iter;
@@ -19,6 +17,7 @@ pub mod MatrixChainMtPer {
     use vstd::rwlock::*;
 
     use crate::Types::Types::*;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 
     verus! {
     // 4. type definitions
@@ -37,64 +36,57 @@ pub mod MatrixChainMtPer {
     }
 
         pub struct McPerMemoWf;
-        impl RwLockPredicate<HashMap<(usize, usize), usize>> for McPerMemoWf {
-            open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
+        impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for McPerMemoWf {
+            open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
+                v@.dom().finite()
+            }
         }
         #[verifier::external_body]
-        fn new_mcper_memo_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>) {
+        fn new_mcper_memo_lock(val: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, McPerMemoWf>)
+            requires val@.dom().finite()
+        {
             RwLock::new(val, Ghost(McPerMemoWf))
         }
-    }
 
     /// Persistent multi-threaded matrix chain multiplication solver using parallel dynamic programming
-    #[derive(Clone)]
     pub struct MatrixChainMtPerS {
         pub dimensions: Arc<Vec<MatrixDim>>,
-        pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, McPerMemoWf>>,
+        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, McPerMemoWf>>,
+    }
+
+    impl Clone for MatrixChainMtPerS {
+        #[verifier::external_body]
+        fn clone(&self) -> Self {
+            MatrixChainMtPerS {
+                dimensions: self.dimensions.clone(),
+                memo: self.memo.clone(),
+            }
+        }
     }
 
     // 8. traits
-    /// Trait for parallel matrix chain multiplication operations
     pub trait MatrixChainMtPerTrait: Sized {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate Arc wrappers
-        fn new()                                              -> Self;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wrap Vec in Arc
-        fn from_dimensions(dimensions: Vec<MatrixDim>)        -> Self;
-
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — map n pairs then wrap in Arc
-        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> Self;
-
-        /// - APAS: Work Θ(n³), Span Θ(n² lg n)
-        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — memoized DP with parallel min reduction
-        fn optimal_cost(&self)                                -> usize;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Arc reference access
-        fn dimensions(&self)                                  -> &Arc<Vec<MatrixDim>>;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len through Arc
-        fn num_matrices(&self)                                -> usize;
-
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under read lock
-        fn memo_size(&self)                                   -> usize;
+        fn new() -> (result: Self);
+        fn from_dimensions(dimensions: Vec<MatrixDim>) -> (result: Self);
+        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (result: Self);
+        fn optimal_cost(&self) -> (result: usize);
+        fn dimensions(&self) -> (result: &Arc<Vec<MatrixDim>>);
+        fn num_matrices(&self) -> (result: usize);
+        fn memo_size(&self) -> (result: usize);
     }
 
     // 9. impls
 
-    fn multiply_cost_mt_per(s: &MatrixChainMtPerS, i: usize, k: usize, j: usize) -> usize {
+    #[verifier::external_body]
+    fn multiply_cost_mt_per(s: &MatrixChainMtPerS, i: usize, k: usize, j: usize) -> (result: usize) {
         let left_rows = s.dimensions[i].rows;
         let split_cols = s.dimensions[k].cols;
         let right_cols = s.dimensions[j].cols;
         left_rows * split_cols * right_cols
     }
 
-    fn parallel_min_reduction_mt_per(s: &MatrixChainMtPerS, costs: Vec<usize>) -> usize {
+    #[verifier::external_body]
+    fn parallel_min_reduction_mt_per(s: &MatrixChainMtPerS, costs: Vec<usize>) -> (result: usize) {
         if costs.is_empty() {
             return usize::MAX;
         }
@@ -118,10 +110,11 @@ pub mod MatrixChainMtPer {
         left_min.min(right_min)
     }
 
-    fn matrix_chain_rec_mt_per(s: &MatrixChainMtPerS, i: usize, j: usize) -> usize {
+    #[verifier::external_body]
+    fn matrix_chain_rec_mt_per(s: &MatrixChainMtPerS, i: usize, j: usize) -> (result: usize) {
         {
             let handle = s.memo.acquire_read();
-            let cached = handle.borrow().get(&(i, j)).copied();
+            let cached = handle.borrow().get(&Pair(i, j)).copied();
             handle.release_read();
             if let Some(result) = cached {
                 return result;
@@ -145,7 +138,7 @@ pub mod MatrixChainMtPer {
 
         {
             let (mut memo, write_handle) = s.memo.acquire_write();
-            memo.insert((i, j), result);
+            memo.insert(Pair(i, j), result);
             write_handle.release_write(memo);
         }
 
@@ -153,27 +146,24 @@ pub mod MatrixChainMtPer {
     }
 
     impl MatrixChainMtPerTrait for MatrixChainMtPerS {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — allocate Arc wrappers
-        fn new() -> Self {
+        #[verifier::external_body]
+        fn new() -> (result: Self) {
             Self {
                 dimensions: Arc::new(Vec::new()),
-                memo: Arc::new(new_mcper_memo_lock(HashMap::new())),
+                memo: Arc::new(new_mcper_memo_lock(HashMapWithViewPlus::new())),
             }
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wrap Vec in Arc
-        fn from_dimensions(dimensions: Vec<MatrixDim>) -> Self {
+        #[verifier::external_body]
+        fn from_dimensions(dimensions: Vec<MatrixDim>) -> (result: Self) {
             Self {
                 dimensions: Arc::new(dimensions),
-                memo: Arc::new(new_mcper_memo_lock(HashMap::new())),
+                memo: Arc::new(new_mcper_memo_lock(HashMapWithViewPlus::new())),
             }
         }
 
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — map n Pair values then wrap in Arc
-        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> Self {
+        #[verifier::external_body]
+        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (result: Self) {
             let dimensions = dim_pairs
                 .into_iter()
                 .map(|pair| MatrixDim {
@@ -183,13 +173,12 @@ pub mod MatrixChainMtPer {
 
             Self {
                 dimensions: Arc::new(dimensions),
-                memo: Arc::new(new_mcper_memo_lock(HashMap::new())),
+                memo: Arc::new(new_mcper_memo_lock(HashMapWithViewPlus::new())),
             }
         }
 
-        /// - APAS: Work Θ(n³), Span Θ(n² lg n)
-        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n² lg n) — clears memo, invokes matrix_chain_rec
-        fn optimal_cost(&self) -> usize {
+        #[verifier::external_body]
+        fn optimal_cost(&self) -> (result: usize) {
             if self.dimensions.len() <= 1 {
                 return 0;
             }
@@ -204,17 +193,14 @@ pub mod MatrixChainMtPer {
             matrix_chain_rec_mt_per(self, 0, n - 1)
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Arc reference access
-        fn dimensions(&self) -> &Arc<Vec<MatrixDim>> { &self.dimensions }
+        #[verifier::external_body]
+        fn dimensions(&self) -> (result: &Arc<Vec<MatrixDim>>) { &self.dimensions }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec::len through Arc
-        fn num_matrices(&self) -> usize { self.dimensions.len() }
+        #[verifier::external_body]
+        fn num_matrices(&self) -> (result: usize) { self.dimensions.len() }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — HashMap::len under read lock
-        fn memo_size(&self) -> usize {
+        #[verifier::external_body]
+        fn memo_size(&self) -> (result: usize) {
             let handle = self.memo.acquire_read();
             let len = handle.borrow().len();
             handle.release_read();
@@ -222,14 +208,15 @@ pub mod MatrixChainMtPer {
         }
     }
 
-    // 11. derive impls
+    // 11. derive impls in verus!
     impl PartialEq for MatrixChainMtPerS {
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — compare Arc<Vec> contents
+        #[verifier::external_body]
         fn eq(&self, other: &Self) -> bool { self.dimensions == other.dimensions }
     }
 
     impl Eq for MatrixChainMtPerS {}
+
+    } // verus!
 
     // 13. derive impls outside verus!
     impl Debug for MatrixChainMtPerS {
