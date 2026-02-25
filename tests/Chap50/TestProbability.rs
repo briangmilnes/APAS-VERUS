@@ -3,7 +3,7 @@
 
 use std::cmp::Ordering::{Equal, Greater, Less};
 
-use apas_verus::Chap50::Probability::Probability::*;
+use apas_verus::Chap30::Probability::Probability::*;
 use apas_verus::Types::Types::*;
 
 #[test]

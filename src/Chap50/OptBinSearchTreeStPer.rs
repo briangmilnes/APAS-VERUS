@@ -14,7 +14,7 @@ pub mod OptBinSearchTreeStPer {
 
     use vstd::prelude::*;
 
-    use crate::Chap50::Probability::Probability::{Probability, ProbabilityTrait};
+    use crate::Chap30::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::prob;

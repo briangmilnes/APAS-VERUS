@@ -2,7 +2,7 @@
 //! Tests for Chap50 OptBinSearchTreeMtPer.
 
 use apas_verus::Chap50::OptBinSearchTreeMtPer::OptBinSearchTreeMtPer::*;
-use apas_verus::Chap50::Probability::Probability::*;
+use apas_verus::Chap30::Probability::Probability::*;
 use apas_verus::OBSTMtPerLit;
 use apas_verus::Types::Types::*;
 

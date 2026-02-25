@@ -2,7 +2,7 @@
 //! Tests for OBSTMtEph (Optimal Binary Search Tree).
 
 use apas_verus::Chap50::OptBinSearchTreeMtEph::OptBinSearchTreeMtEph::*;
-use apas_verus::Chap50::Probability::Probability::ProbabilityTrait;
+use apas_verus::Chap30::Probability::Probability::ProbabilityTrait;
 use apas_verus::OBSTMtEphLit;
 use apas_verus::Types::Types::*;
 
@@ -20,7 +20,7 @@ fn test_new() {
 
 #[test]
 fn test_from_keys_probs() {
-    use apas_verus::Chap50::Probability::Probability::*;
+    use apas_verus::Chap30::Probability::Probability::*;
     let keys = vec![1, 2, 3];
     let probs = vec![Probability::new(0.1), Probability::new(0.2), Probability::new(0.3)];
     let obst = OBSTMtEphS::from_keys_probs(keys, probs);
@@ -90,7 +90,7 @@ fn test_skewed_probabilities() {
 
 #[test]
 fn test_large_tree() {
-    use apas_verus::Chap50::Probability::Probability::*;
+    use apas_verus::Chap30::Probability::Probability::*;
     let keys = vec![1, 2, 3, 4, 5, 6, 7, 8];
     let probs = vec![
         Probability::new(0.1),
@@ -139,7 +139,7 @@ fn test_clone() {
 
 #[test]
 fn test_set_key_prob() {
-    use apas_verus::Chap50::Probability::Probability::*;
+    use apas_verus::Chap30::Probability::Probability::*;
     let mut obst = OBSTMtEphLit![keys: [1, 2, 3], probs: [0.1, 0.2, 0.3]];
     obst.set_key_prob(
         1,
@@ -154,7 +154,7 @@ fn test_set_key_prob() {
 
 #[test]
 fn test_update_prob() {
-    use apas_verus::Chap50::Probability::Probability::*;
+    use apas_verus::Chap30::Probability::Probability::*;
     let mut obst = OBSTMtEphLit![keys: [1, 2, 3], probs: [0.1, 0.2, 0.3]];
     obst.update_prob(0, Probability::new(0.9));
     let keys = obst.keys();
@@ -187,7 +187,7 @@ fn test_equality() {
 
 #[test]
 fn test_from_key_probs() {
-    use apas_verus::Chap50::Probability::Probability::*;
+    use apas_verus::Chap30::Probability::Probability::*;
     let key_probs = vec![
         KeyProb {
             key: 1,
@@ -218,7 +218,7 @@ fn test_into_iter_ref() {
 
 #[test]
 fn test_keyprob_display() {
-    use apas_verus::Chap50::Probability::Probability::*;
+    use apas_verus::Chap30::Probability::Probability::*;
     let kp = KeyProb {
         key: 42,
         prob: Probability::new(0.333),

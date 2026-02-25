@@ -1,5 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Chapter 50: Probability wrapper type for OBST algorithms.
+//! Chapter 30: Probability wrapper type.
 //!
 //! Uses f64 for probability values. Impls use external_body for f64 operations.
 
@@ -170,7 +170,7 @@ pub mod Probability {
     #[macro_export]
     macro_rules! prob {
         ($value:expr) => {
-            <$crate::Chap50::Probability::Probability::Probability as $crate::Chap50::Probability::Probability::ProbabilityTrait>::new($value)
+            <$crate::Chap30::Probability::Probability::Probability as $crate::Chap30::Probability::Probability::ProbabilityTrait>::new($value)
         };
     }
 }

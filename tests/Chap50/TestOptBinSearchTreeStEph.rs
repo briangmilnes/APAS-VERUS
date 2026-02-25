@@ -3,7 +3,7 @@
 
 use apas_verus::Chap50::OptBinSearchTreeStEph::OptBinSearchTreeStEph::KeyProb as OBSTStEphKeyProb;
 use apas_verus::Chap50::OptBinSearchTreeStEph::OptBinSearchTreeStEph::{OBSTStEphS, OBSTStEphTrait};
-use apas_verus::Chap50::Probability::Probability::*;
+use apas_verus::Chap30::Probability::Probability::*;
 use apas_verus::{OBSTStEphLit, prob};
 
 #[test]

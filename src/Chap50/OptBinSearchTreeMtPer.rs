@@ -16,7 +16,7 @@ pub mod OptBinSearchTreeMtPer {
     use vstd::prelude::*;
     use vstd::rwlock::*;
 
-    use crate::Chap50::Probability::Probability::{Probability, ProbabilityTrait};
+    use crate::Chap30::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 
@@ -272,7 +272,7 @@ macro_rules! OBSTMtPerLit {
     (keys: [$($k:expr),* $(,)?], probs: [$($p:expr),* $(,)?]) => {
         $crate::Chap50::OptBinSearchTreeMtPer::OptBinSearchTreeMtPer::OBSTMtPerS::from_keys_probs(
             vec![$($k),*],
-            vec![$(<$crate::Chap50::Probability::Probability::Probability as $crate::Chap50::Probability::Probability::ProbabilityTrait>::new($p)),*]
+            vec![$(<$crate::Chap30::Probability::Probability::Probability as $crate::Chap30::Probability::Probability::ProbabilityTrait>::new($p)),*]
         )
     };
     () => {
