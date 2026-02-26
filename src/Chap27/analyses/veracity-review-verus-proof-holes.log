@@ -1,5 +1,3 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap27/
-
 ✓ ReduceContractMtEph.rs
 ✓ ReduceContractStEph.rs
    4 clean proof functions
@@ -13,6 +11,18 @@ SUMMARY
 
 Modules:
    4 clean (no holes)
+   0 holed (contains holes)
+   4 total
+
+Proof Functions:
+   5 clean
+   0 holed
+   5 total
+
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
+n (no holes)
    0 holed (contains holes)
    4 total
 

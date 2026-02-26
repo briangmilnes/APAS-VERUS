@@ -1,5 +1,3 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap43/
-
 ❌ AugOrderedTableMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableMtEph.rs:65: external_body - #[verifier::external_body]
         66 |     pub fn recalculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
@@ -318,6 +316,19 @@ Modules:
    1 clean (no holes)
    10 holed (contains holes)
    11 total
+
+Proof Functions:
+   4 clean
+   0 holed
+   4 total
+
+Holes Found: 118 total
+   7 × assume()
+   111 × external_body
+
+Info: 1 total
+   OrderedTableStPer.rs:660: info: accept() - accept hole
+
 
 Proof Functions:
    4 clean

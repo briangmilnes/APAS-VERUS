@@ -1,5 +1,3 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap55/
-
 ✓ CycleDetectStEph.rs
 ✓ CycleDetectStPer.rs
 ✓ DFSStEph.rs
@@ -16,6 +14,18 @@ SUMMARY
 
 Modules:
    8 clean (no holes)
+   0 holed (contains holes)
+   8 total
+
+Proof Functions:
+   1 clean
+   0 holed
+   1 total
+
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
+n (no holes)
    0 holed (contains holes)
    8 total
 
