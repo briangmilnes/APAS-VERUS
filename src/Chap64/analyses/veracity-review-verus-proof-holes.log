@@ -1,17 +1,9 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap64
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap64/
 
-❌ SpanTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:35: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        33 |             open spec fn inv(self, v: SetStEph<Edge<V>>) -> bool { v@.finite() }
-        34 |         }
-        36 |         fn new_spanning_edges_lock<V: StT + MtT + Hash + Ord>(
-        37 |             val: SetStEph<Edge<V>>,
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:46: warning: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-        44 |             open spec fn inv(self, v: bool) -> bool { v == true || v == false }
-        45 |         }
-        47 |         fn new_valid_lock(val: bool) -> (lock: RwLock<bool, SpanTreeMtEphValidWf>) {
-        48 |             RwLock::new(val, Ghost(SpanTreeMtEphValidWf))
-   Errors: 2 total (2 Verus RwLock external_body)
+ℹ SpanTreeMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:35: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:46: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Info: 2 total
 ✓ SpanTreeStEph.rs
 ✓ TSPApproxStEph.rs
    1 clean proof function
@@ -32,6 +24,8 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 2 (bare impl(s), struct/enum outside verus!)
+Info: 2 total
+   SpanTreeMtEph.rs:35: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   SpanTreeMtEph.rs:46: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
 
-🎉 No proof holes found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.

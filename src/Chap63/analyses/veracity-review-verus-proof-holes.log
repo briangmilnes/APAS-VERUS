@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap63
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap63/
 
 ✓ ConnectivityMtEph.rs
 ✓ ConnectivityStEph.rs

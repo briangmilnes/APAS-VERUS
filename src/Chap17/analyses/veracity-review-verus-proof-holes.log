@@ -1,21 +1,9 @@
 $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap17/
 
-❌ MathSeq.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:716: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       712 |         fn clone(&self) -> (cloned: Self)
-            ...
-       714 |         {
-       715 |             let cloned = MathSeqS { data: self.data.clone() };
-       717 |             cloned
-       718 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:728: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       724 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       726 |         {
-       727 |             let equal = self.data == other.data;
-       729 |             equal
-       730 |         }
-   Errors: 2 total (2 assume in eq/clone (Verus workaround))
+ℹ MathSeq.rs
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:719: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:731: info: accept() - accept hole
+   Info: 2 total
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -33,6 +21,8 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 2 (bare impl(s), struct/enum outside verus!)
+Info: 2 total
+   MathSeq.rs:719: info: accept() - accept hole
+   MathSeq.rs:731: info: accept() - accept hole
 
-🎉 No proof holes found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.

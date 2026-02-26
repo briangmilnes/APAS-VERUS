@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap52
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap52/
 
 ✓ AdjMatrixGraphMtEph.rs
    3 clean proof functions
@@ -17,8 +17,8 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
 ✓ AdjSeqGraphStPer.rs
    2 clean proof functions
 ❌ AdjTableGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:170: external_body - #[verifier::external_body]
-       171 |         fn delete_vertex(&self, v: &V) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:178: external_body - #[verifier::external_body]
+       179 |         fn delete_vertex(&self, v: &V) -> Self {
    Holes: 1 total
       1 × external_body
 ✓ AdjTableGraphStEph.rs

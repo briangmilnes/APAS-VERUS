@@ -7,7 +7,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:75: info: external_body_accept_hole - external_body with accept hole comment
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:80: info: external_body_accept_hole - external_body with accept hole comment
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:92: info: external_body_accept_hole - external_body with accept hole comment
-   Info: 6 assume(false); diverge() idiom(s)
+   Info: 6 total
 ✓ Exercise12_2.rs
 ❌ Exercise12_5.rs
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:113: unsafe {} - new_node = unsafe { Box::from_raw(node_ptr) };
@@ -48,7 +48,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:154: info: external_body_accept_hole - external_body with accept hole comment
    Holes: 4 total
       4 × unsafe {}
-   Info: 8 assume(false); diverge() idiom(s)
+   Info: 8 total
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -67,4 +67,18 @@ Proof Functions:
 Holes Found: 4 total
    4 × unsafe {}
 
-Info: 14 assume(false); diverge() idiom(s) (valid non-termination)
+Info: 14 total
+   Exercise12_5.rs:30: info: external_accept_hole - external with accept hole comment
+   Exercise12_5.rs:38: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_5.rs:96: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_5.rs:103: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_5.rs:117: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_5.rs:132: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_5.rs:137: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_5.rs:154: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_1.rs:19: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_1.rs:59: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_1.rs:67: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_1.rs:75: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_1.rs:80: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_1.rs:92: info: external_body_accept_hole - external_body with accept hole comment

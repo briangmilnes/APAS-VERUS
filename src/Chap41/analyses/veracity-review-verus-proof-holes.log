@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap41
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap41/
 
 ❌ AVLTreeSetMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:71: external_body - #[verifier::external_body]
@@ -753,5 +753,5 @@ Errors: 2 total (1 assume in eq/clone (Verus workaround), 1 dummy RwLockPredicat
 Info: 4 total
    AVLTreeSetStPer.rs:424: info: accept() - accept hole
    AVLTreeSetMtEph.rs:59: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   AVLTreeSetStEph.rs:416: info: accept() - accept hole
    AVLTreeSetMtPer.rs:450: info: accept() - accept hole
+   AVLTreeSetStEph.rs:416: info: accept() - accept hole

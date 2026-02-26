@@ -1,11 +1,11 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap66
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap66/
 
 ℹ BoruvkaMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:46: info: accept() - accept hole
-   Info: 1 assume(false); diverge() idiom(s)
+   Info: 1 total
 ℹ BoruvkaStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:44: info: accept() - accept hole
-   Info: 1 assume(false); diverge() idiom(s)
+   Info: 1 total
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -23,6 +23,8 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Info: 2 assume(false); diverge() idiom(s) (valid non-termination)
+Info: 2 total
+   BoruvkaStEph.rs:44: info: accept() - accept hole
+   BoruvkaMtEph.rs:46: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.

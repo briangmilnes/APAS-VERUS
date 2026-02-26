@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap50/
 
 ❌ MatrixChainMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:173: external_body - #[verifier::external_body]
@@ -36,6 +36,145 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /
    Holes: 15 total
       15 × external_body
    Info: 2 total
+❌ MatrixChainMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:207: external_body - #[verifier::external_body]
+       208 |         fn new() -> (mc: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:215: external_body - #[verifier::external_body]
+       216 |         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:223: external_body - #[verifier::external_body]
+       224 |         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:249: external_body - #[verifier::external_body]
+       250 |         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:274: external_body - #[verifier::external_body]
+       275 |         fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:309: external_body - #[verifier::external_body]
+       310 |         fn optimal_cost(&self) -> (cost: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:332: external_body - #[verifier::external_body]
+       333 |         fn memo_size(&self) -> (n: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:362: external_body - #[verifier::external_body]
+       363 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:79: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:350: info: accept() - accept hole
+   Holes: 8 total
+      8 × external_body
+   Info: 2 total
+❌ MatrixChainStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:382: external_body - #[verifier::external_body]
+       383 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:370: info: accept() - accept hole
+   Holes: 1 total
+      1 × external_body
+   Info: 1 total
+❌ MatrixChainStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:351: external_body - #[verifier::external_body]
+       352 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:339: info: accept() - accept hole
+   Holes: 1 total
+      1 × external_body
+   Info: 1 total
+❌ OptBinSearchTreeMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:31: external_body - #[verifier::external_body]
+        32 |         fn clone(&self) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:71: external_body - #[verifier::external_body]
+        72 |         fn clone(&self) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:96: external_body - #[verifier::external_body]
+        97 |     fn parallel_min_reduction<T: MtVal>(table: &OBSTMtEphS<T>, costs: Vec<Probability>) -> (result: Probability) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:121: external_body - #[verifier::external_body]
+       122 |     fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> (result: Probability) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:167: external_body - #[verifier::external_body]
+       168 |         fn new() -> (result: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:175: external_body - #[verifier::external_body]
+       176 |         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:187: external_body - #[verifier::external_body]
+       188 |         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:195: external_body - #[verifier::external_body]
+       196 |         fn optimal_cost(&mut self) -> (result: Probability) where T: Send + Sync + 'static {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:212: external_body - #[verifier::external_body]
+       213 |         fn keys(&self) -> (result: Vec<KeyProb<T>>) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:220: external_body - #[verifier::external_body]
+       221 |         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:232: external_body - #[verifier::external_body]
+       233 |         fn update_prob(&mut self, index: usize, prob: Probability) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:244: external_body - #[verifier::external_body]
+       245 |         fn num_keys(&self) -> (result: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:252: external_body - #[verifier::external_body]
+       253 |         fn clear_memo(&mut self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:259: external_body - #[verifier::external_body]
+       260 |         fn memo_size(&self) -> (result: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:270: external_body - #[verifier::external_body]
+       271 |         fn eq(&self, other: &Self) -> bool {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:43: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:56: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Holes: 15 total
+      15 × external_body
+   Info: 2 total
+❌ OptBinSearchTreeMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:33: external_body - #[verifier::external_body]
+        34 |         fn clone(&self) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:60: external_body - #[verifier::external_body]
+        61 |         fn clone(&self) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:82: external_body - #[verifier::external_body]
+        83 |     fn parallel_min_reduction<T: MtVal>(table: &OBSTMtPerS<T>, costs: Vec<Probability>) -> (result: Probability) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:107: external_body - #[verifier::external_body]
+       108 |     fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtPerS<T>, i: usize, l: usize) -> (result: Probability) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:147: external_body - #[verifier::external_body]
+       148 |         fn new() -> (result: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:155: external_body - #[verifier::external_body]
+       156 |         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:167: external_body - #[verifier::external_body]
+       168 |         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:175: external_body - #[verifier::external_body]
+       176 |         fn optimal_cost(&self) -> (result: Probability) where T: Send + Sync + 'static {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:187: external_body - #[verifier::external_body]
+       188 |         fn keys(&self) -> (result: &Arc<Vec<KeyProb<T>>>) { &self.keys }
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:190: external_body - #[verifier::external_body]
+       191 |         fn num_keys(&self) -> (result: usize) { self.keys.len() }
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:193: external_body - #[verifier::external_body]
+       194 |         fn memo_size(&self) -> (result: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:204: external_body - #[verifier::external_body]
+       205 |         fn eq(&self, other: &Self) -> bool { self.keys == other.keys }
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:45: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   Holes: 12 total
+      12 × external_body
+   Info: 1 total
+❌ OptBinSearchTreeStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:32: external_body - #[verifier::external_body]
+        33 |         fn clone(&self) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:46: external_body - #[verifier::external_body]
+        47 |         fn clone(&self) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:71: external_body - #[verifier::external_body]
+        72 |     fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> (result: Probability) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:100: external_body - #[verifier::external_body]
+       101 |         fn new() -> (result: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:108: external_body - #[verifier::external_body]
+       109 |         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:122: external_body - #[verifier::external_body]
+       123 |         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:130: external_body - #[verifier::external_body]
+       131 |         fn optimal_cost(&mut self) -> (result: Probability) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:144: external_body - #[verifier::external_body]
+       145 |         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:152: external_body - #[verifier::external_body]
+       153 |         fn update_prob(&mut self, index: usize, prob: Probability) {
+   Holes: 9 total
+      9 × external_body
+❌ OptBinSearchTreeStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:32: external_body - #[verifier::external_body]
+        33 |         fn clone(&self) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:46: external_body - #[verifier::external_body]
+        47 |         fn clone(&self) -> Self {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:68: external_body - #[verifier::external_body]
+        69 |     fn obst_rec_st_per<T: StT>(s: &mut OBSTStPerS<T>, i: usize, l: usize) -> (result: Probability) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:97: external_body - #[verifier::external_body]
+        98 |         fn new() -> (result: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:105: external_body - #[verifier::external_body]
+       106 |         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:119: external_body - #[verifier::external_body]
+       120 |         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:127: external_body - #[verifier::external_body]
+       128 |         fn optimal_cost(&self) -> (result: Probability) {
+   Holes: 7 total
+      7 × external_body
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -43,17 +182,24 @@ SUMMARY
 
 Modules:
    0 clean (no holes)
-   1 holed (contains holes)
-   1 total
+   8 holed (contains holes)
+   8 total
 
 Proof Functions:
    0 clean
    0 holed
    0 total
 
-Holes Found: 15 total
-   15 × external_body
+Holes Found: 68 total
+   68 × external_body
 
-Info: 2 total
+Info: 9 total
+   OptBinSearchTreeMtEph.rs:43: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   OptBinSearchTreeMtEph.rs:56: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    MatrixChainMtEph.rs:66: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    MatrixChainMtEph.rs:84: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MatrixChainStEph.rs:370: info: accept() - accept hole
+   OptBinSearchTreeMtPer.rs:45: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MatrixChainMtPer.rs:79: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MatrixChainMtPer.rs:350: info: accept() - accept hole
+   MatrixChainStPer.rs:339: info: accept() - accept hole

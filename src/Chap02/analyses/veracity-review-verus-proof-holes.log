@@ -1,17 +1,26 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap02
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap02/
 
 ✓ FibonacciHFScheduler.rs
    5 clean proof functions
-ℹ HFSchedulerMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:73: info: external_type_specification_accept_hole - external_type_specification with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:74: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:85: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:95: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:122: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:141: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:153: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:175: info: external_body_accept_hole - external_body with accept hole comment
-   Info: 8 assume(false); diverge() idiom(s)
+❌ HFSchedulerMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:18: error: struct_outside_verus - struct PoolState — should be inside verus!
+        18 |     struct PoolState {
+        19 |         available_tasks: Mutex<usize>,
+        20 |         task_freed: Condvar,
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:24: error: enum_outside_verus - enum TaskState — should be inside verus!
+        24 |     pub enum TaskState<T> {
+        25 |         Spawned   { handle: JoinHandlePlus<T> },
+        26 |         Completed { result: Option<T> },
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:74: info: external_type_specification_accept_hole - external_type_specification with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:75: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:86: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:96: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:123: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:142: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:154: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:176: info: external_body_accept_hole - external_body with accept hole comment
+   Errors: 2 total (2 struct/enum outside verus!)
+   Info: 8 total
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -29,6 +38,16 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Info: 8 assume(false); diverge() idiom(s) (valid non-termination)
+Errors: 2 total (2 struct/enum outside verus!)
 
-🎉 No proof holes or warnings found! All proofs are complete.
+Info: 8 total
+   HFSchedulerMtEph.rs:74: info: external_type_specification_accept_hole - external_type_specification with accept hole comment
+   HFSchedulerMtEph.rs:75: info: external_body_accept_hole - external_body with accept hole comment
+   HFSchedulerMtEph.rs:86: info: external_body_accept_hole - external_body with accept hole comment
+   HFSchedulerMtEph.rs:96: info: external_body_accept_hole - external_body with accept hole comment
+   HFSchedulerMtEph.rs:123: info: external_body_accept_hole - external_body with accept hole comment
+   HFSchedulerMtEph.rs:142: info: accept() - accept hole
+   HFSchedulerMtEph.rs:154: info: external_body_accept_hole - external_body with accept hole comment
+   HFSchedulerMtEph.rs:176: info: external_body_accept_hole - external_body with accept hole comment
+
+🎉 No proof holes found! All proofs are complete.

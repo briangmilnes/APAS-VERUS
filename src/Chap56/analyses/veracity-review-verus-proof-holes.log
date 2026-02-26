@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap56
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap56/
 
 ✓ AllPairsResultStEphF64.rs
 ✓ AllPairsResultStEphI64.rs

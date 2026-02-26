@@ -1,5 +1,16 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap26/ETSPStEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap26/
 
+✓ DivConReduceMtPer.rs
+   3 clean proof functions
+✓ DivConReduceStPer.rs
+❌ ETSPMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:508: external_body - #[verifier::external_body]
+       509 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:526: external_body - #[verifier::external_body]
+       527 |     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
+   Holes: 2 total
+      2 × external_body
+   Proof functions: 4 total (4 clean, 0 holed)
 ❌ ETSPStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap26/ETSPStEph.rs:483: external_body - #[verifier::external_body]
        484 |     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
@@ -8,20 +19,28 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/
    Holes: 2 total
       2 × external_body
    Proof functions: 3 total (3 clean, 0 holed)
+✓ MergeSortMtPer.rs
+   4 clean proof functions
+✓ MergeSortStPer.rs
+   1 clean proof function
+✓ ScanDCMtPer.rs
+   1 clean proof function
+✓ ScanDCStPer.rs
+   1 clean proof function
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   0 clean (no holes)
-   1 holed (contains holes)
-   1 total
+   6 clean (no holes)
+   2 holed (contains holes)
+   8 total
 
 Proof Functions:
-   3 clean
+   17 clean
    0 holed
-   3 total
+   17 total
 
-Holes Found: 2 total
-   2 × external_body
+Holes Found: 4 total
+   4 × external_body

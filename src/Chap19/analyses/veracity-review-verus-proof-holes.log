@@ -1,28 +1,35 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap19/ArraySeqStEph.rs -d src/vstdplus/seq_set.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap19/
 
+✓ ArraySeqMtEph.rs
+   6 clean proof functions
+✓ ArraySeqMtEphSlice.rs
 ℹ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap19/ArraySeqStEph.rs:1120: info: accept() - accept hole
-   Info: 1 assume(false); diverge() idiom(s)
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1120: info: accept() - accept hole
+   Info: 1 total
    2 clean proof functions
-✓ /home/milnes/projects/APAS-VERUS-agent3/src/vstdplus/seq_set.rs
-   60 clean proof functions
+ℹ ArraySeqStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:1129: info: accept() - accept hole
+   Info: 1 total
+   2 clean proof functions
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   2 clean (no holes)
+   4 clean (no holes)
    0 holed (contains holes)
-   2 total
+   4 total
 
 Proof Functions:
-   62 clean
+   10 clean
    0 holed
-   62 total
+   10 total
 
 Holes Found: 0 total
 
-Info: 1 assume(false); diverge() idiom(s) (valid non-termination)
+Info: 2 total
+   ArraySeqStEph.rs:1120: info: accept() - accept hole
+   ArraySeqStPer.rs:1129: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.

@@ -2,36 +2,18 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 
 ✓ KleeneStPer.rs
    9 clean proof functions
-❌ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:576: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       566 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       574 |                 }
-       575 |                 // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
-       577 |             }
-       578 |             r
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
+ℹ MappingStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:581: info: accept() - accept hole
+   Info: 1 total
 ✓ RelationStEph.rs
-❌ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:969: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       965 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       967 |         {
-       968 |             let equal = self.elements == other.elements;
-       970 |             equal
-       971 |         }
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-   Proof functions: 1 total (1 clean, 0 holed)
-❌ SetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:878: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       873 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       876 |             let equal = self.elements == other.elements;
-       877 |             // HashSetWithView* eq is external_body so we have to trust it here.
-       879 |             equal
-       880 |         }
-   Errors: 1 total (1 assume in eq/clone (Verus workaround))
-   Proof functions: 1 total (1 clean, 0 holed)
+ℹ SetMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:972: info: accept() - accept hole
+   Info: 1 total
+   1 clean proof function
+ℹ SetStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:881: info: accept() - accept hole
+   Info: 1 total
+   1 clean proof function
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -49,6 +31,9 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 3 (bare impl(s), struct/enum outside verus!)
+Info: 3 total
+   MappingStEph.rs:581: info: accept() - accept hole
+   SetMtEph.rs:972: info: accept() - accept hole
+   SetStEph.rs:881: info: accept() - accept hole
 
-🎉 No proof holes found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.

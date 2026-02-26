@@ -5,7 +5,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 /home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:788: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:806: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:827: info: accept() - accept hole
-   Info: 4 assume(false); diverge() idiom(s)
+   Info: 4 total
    2 clean proof functions
 ℹ PrimTreeSeqStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:857: info: accept() - accept hole
@@ -13,7 +13,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 /home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:883: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:899: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:904: info: accept() - accept hole
-   Info: 5 assume(false); diverge() idiom(s)
+   Info: 5 total
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -31,6 +31,15 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Info: 9 assume(false); diverge() idiom(s) (valid non-termination)
+Info: 9 total
+   BalBinTreeStEph.rs:773: info: accept() - accept hole
+   BalBinTreeStEph.rs:788: info: accept() - accept hole
+   BalBinTreeStEph.rs:806: info: accept() - accept hole
+   BalBinTreeStEph.rs:827: info: accept() - accept hole
+   PrimTreeSeqStPer.rs:857: info: accept() - accept hole
+   PrimTreeSeqStPer.rs:867: info: accept() - accept hole
+   PrimTreeSeqStPer.rs:883: info: accept() - accept hole
+   PrimTreeSeqStPer.rs:899: info: accept() - accept hole
+   PrimTreeSeqStPer.rs:904: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.

@@ -2,26 +2,26 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 
 ℹ BalancedTreePQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:56: info: accept() - accept hole
-   Info: 1 assume(false); diverge() idiom(s)
+   Info: 1 total
    1 clean proof function
 ℹ BinaryHeapPQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:53: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:68: info: accept() - accept hole
-   Info: 2 assume(false); diverge() idiom(s)
+   Info: 2 total
    1 clean proof function
 ✓ Example45_2.rs
    1 clean proof function
 ℹ HeapsortExample.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:84: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:99: info: accept() - accept hole
-   Info: 2 assume(false); diverge() idiom(s)
+   Info: 2 total
    1 clean proof function
 ℹ LeftistHeapPQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:55: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:75: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:93: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:103: info: accept() - accept hole
-   Info: 4 assume(false); diverge() idiom(s)
+   Info: 4 total
    1 clean proof function
 ❌ SortedListPQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:50: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
@@ -33,7 +33,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
         52 |                         self.elements.seq@,
 /home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:65: info: accept() - accept hole
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
-   Info: 1 assume(false); diverge() idiom(s)
+   Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ UnsortedListPQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:50: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
@@ -45,7 +45,7 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
         52 |                         self.elements.seq@,
 /home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:65: info: accept() - accept hole
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
-   Info: 1 assume(false); diverge() idiom(s)
+   Info: 1 total
    Proof functions: 1 total (1 clean, 0 holed)
 
 ═══════════════════════════════════════════════════════════════
@@ -64,8 +64,19 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 2 (bare impl(s), struct/enum outside verus!)
+Errors: 2 total (2 assume in eq/clone (Verus workaround))
 
-Info: 11 assume(false); diverge() idiom(s) (valid non-termination)
+Info: 11 total
+   UnsortedListPQ.rs:65: info: accept() - accept hole
+   LeftistHeapPQ.rs:55: info: accept() - accept hole
+   LeftistHeapPQ.rs:75: info: accept() - accept hole
+   LeftistHeapPQ.rs:93: info: accept() - accept hole
+   LeftistHeapPQ.rs:103: info: accept() - accept hole
+   BalancedTreePQ.rs:56: info: accept() - accept hole
+   BinaryHeapPQ.rs:53: info: accept() - accept hole
+   BinaryHeapPQ.rs:68: info: accept() - accept hole
+   HeapsortExample.rs:84: info: accept() - accept hole
+   HeapsortExample.rs:99: info: accept() - accept hole
+   SortedListPQ.rs:65: info: accept() - accept hole
 
 🎉 No proof holes found! All proofs are complete.
