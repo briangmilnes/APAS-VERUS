@@ -36,24 +36,24 @@ pub mod OptBinSearchTreeMtPer {
         }
     }
 
-        pub struct ObstPerMemoWf;
-        impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, Probability>> for ObstPerMemoWf {
+        pub struct spec_optbinsearchtreemtper_memo_wf;
+        impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, Probability>> for spec_optbinsearchtreemtper_memo_wf {
             open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> bool {
                 v@.dom().finite()
             }
         }
         #[verifier::external_body]
-        fn new_obst_per_memo_lock(val: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, ObstPerMemoWf>)
+        fn new_obst_per_memo_lock(val: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, spec_optbinsearchtreemtper_memo_wf>)
             requires val@.dom().finite()
         {
-            RwLock::new(val, Ghost(ObstPerMemoWf))
+            RwLock::new(val, Ghost(spec_optbinsearchtreemtper_memo_wf))
         }
 
     /// Persistent multi-threaded optimal binary search tree solver using parallel dynamic programming
     #[verifier::reject_recursive_types(T)]
     pub struct OBSTMtPerS<T: MtVal> {
         pub keys: Arc<Vec<KeyProb<T>>>,
-        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, ObstPerMemoWf>>,
+        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, spec_optbinsearchtreemtper_memo_wf>>,
     }
 
     impl<T: MtVal> Clone for OBSTMtPerS<T> {

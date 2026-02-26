@@ -56,8 +56,8 @@ broadcast use {
         }
     }
 
-    pub struct McEphDimWf;
-    impl RwLockPredicate<Vec<MatrixDim>> for McEphDimWf {
+    pub struct spec_matrixchainmteph_dim_wf;
+    impl RwLockPredicate<Vec<MatrixDim>> for spec_matrixchainmteph_dim_wf {
         open spec fn inv(self, v: Vec<MatrixDim>) -> bool {
             v@.len() <= usize::MAX as nat
         }
@@ -65,30 +65,37 @@ broadcast use {
 
     #[verifier::external_body]
     fn new_mceph_dim_lock(val: Vec<MatrixDim>)
-        -> (lock: RwLock<Vec<MatrixDim>, McEphDimWf>)
+        -> (lock: RwLock<Vec<MatrixDim>, spec_matrixchainmteph_dim_wf>)
         requires val@.len() <= usize::MAX as nat
     {
-        RwLock::new(val, Ghost(McEphDimWf))
+        RwLock::new(val, Ghost(spec_matrixchainmteph_dim_wf))
     }
 
-    pub struct McEphMemoWf;
-    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for McEphMemoWf {
+    pub struct spec_matrixchainmteph_memo_wf {
+        pub ghost dims: Seq<MatrixDim>,
+    }
+    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for spec_matrixchainmteph_memo_wf {
         open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
-            v@.dom().finite()
+            &&& v@.dom().finite()
+            &&& spec_memo_correct(self.dims, v@)
         }
     }
 
     #[verifier::external_body]
-    fn new_mceph_memo_lock(val: HashMapWithViewPlus<Pair<usize, usize>, usize>)
-        -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, McEphMemoWf>)
-        requires val@.dom().finite()
+    fn new_mceph_memo_lock(
+        val: HashMapWithViewPlus<Pair<usize, usize>, usize>,
+        Ghost(dims): Ghost<Seq<MatrixDim>>,
+    ) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, spec_matrixchainmteph_memo_wf>)
+        requires
+            val@.dom().finite(),
+            spec_memo_correct(dims, val@),
     {
-        RwLock::new(val, Ghost(McEphMemoWf))
+        RwLock::new(val, Ghost(spec_matrixchainmteph_memo_wf { dims }))
     }
 
     pub struct MatrixChainMtEphS {
-        pub dimensions: Arc<RwLock<Vec<MatrixDim>, McEphDimWf>>,
-        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, McEphMemoWf>>,
+        pub dimensions: Arc<RwLock<Vec<MatrixDim>, spec_matrixchainmteph_dim_wf>>,
+        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, spec_matrixchainmteph_memo_wf>>,
     }
 
     // 6. spec fns
@@ -153,7 +160,11 @@ broadcast use {
         fn memo_size(&self) -> (n: usize);
         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize);
         fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize);
-        fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize);
+        fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize)
+            requires costs@.len() > 0,
+            ensures
+                costs@.contains(min),
+                forall|i: int| 0 <= i < costs@.len() ==> min <= costs@[i];
     }
 
     // 9. impls
@@ -163,7 +174,7 @@ broadcast use {
         fn new() -> (mc: Self) {
             Self {
                 dimensions: Arc::new(new_mceph_dim_lock(Vec::new())),
-                memo: Arc::new(new_mceph_memo_lock(HashMapWithViewPlus::new())),
+                memo: Arc::new(new_mceph_memo_lock(HashMapWithViewPlus::new(), Ghost(Seq::empty()))),
             }
         }
 
@@ -171,22 +182,24 @@ broadcast use {
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self) {
             Self {
                 dimensions: Arc::new(new_mceph_dim_lock(dimensions)),
-                memo: Arc::new(new_mceph_memo_lock(HashMapWithViewPlus::new())),
+                memo: Arc::new(new_mceph_memo_lock(HashMapWithViewPlus::new(), Ghost(Seq::empty()))),
             }
         }
 
         #[verifier::external_body]
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self) {
-            let dimensions = dim_pairs
-                .into_iter()
-                .map(|pair| MatrixDim {
-                    rows: pair.0,
-                    cols: pair.1,
-                }).collect::<Vec<MatrixDim>>();
-
+            let mut dimensions: Vec<MatrixDim> = Vec::new();
+            let mut idx: usize = 0;
+            while idx < dim_pairs.len() {
+                dimensions.push(MatrixDim {
+                    rows: dim_pairs[idx].0,
+                    cols: dim_pairs[idx].1,
+                });
+                idx = idx + 1;
+            }
             Self {
                 dimensions: Arc::new(new_mceph_dim_lock(dimensions)),
-                memo: Arc::new(new_mceph_memo_lock(HashMapWithViewPlus::new())),
+                memo: Arc::new(new_mceph_memo_lock(HashMapWithViewPlus::new(), Ghost(Seq::empty()))),
             }
         }
 

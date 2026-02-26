@@ -1,70 +1,41 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap50/MatrixChainMtEph.rs src/Chap50/MatrixChainMtPer.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs
 
 ❌ MatrixChainMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:69: external_body - #[verifier::external_body]
-        70 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:94: external_body - #[verifier::external_body]
-        95 |     fn multiply_cost_mt_eph(s: &MatrixChainMtEphS, i: usize, k: usize, j: usize) -> (result: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:104: external_body - #[verifier::external_body]
-       105 |     fn parallel_min_reduction(s: &MatrixChainMtEphS, costs: Vec<usize>) -> (result: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:129: external_body - #[verifier::external_body]
-       130 |     fn matrix_chain_rec_mt_eph(s: &MatrixChainMtEphS, i: usize, j: usize) -> (result: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:165: external_body - #[verifier::external_body]
-       166 |         fn new() -> (result: Self) {
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:173: external_body - #[verifier::external_body]
-       174 |         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (result: Self) {
+       174 |         fn new() -> (mc: Self) {
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:181: external_body - #[verifier::external_body]
-       182 |         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (result: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:196: external_body - #[verifier::external_body]
-       197 |         fn optimal_cost(&mut self) -> (result: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:218: external_body - #[verifier::external_body]
-       219 |         fn dimensions(&self) -> (result: Vec<MatrixDim>) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:226: external_body - #[verifier::external_body]
-       227 |         fn set_dimension(&mut self, index: usize, dim: MatrixDim) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:238: external_body - #[verifier::external_body]
-       239 |         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:251: external_body - #[verifier::external_body]
-       252 |         fn num_matrices(&self) -> (result: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:259: external_body - #[verifier::external_body]
-       260 |         fn clear_memo(&mut self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:266: external_body - #[verifier::external_body]
-       267 |         fn memo_size(&self) -> (result: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:277: external_body - #[verifier::external_body]
-       278 |         fn eq(&self, other: &Self) -> bool {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:42: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:55: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+       182 |         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:189: external_body - #[verifier::external_body]
+       190 |         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:206: external_body - #[verifier::external_body]
+       207 |         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:216: external_body - #[verifier::external_body]
+       217 |         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:241: external_body - #[verifier::external_body]
+       242 |         fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:276: external_body - #[verifier::external_body]
+       277 |         fn optimal_cost(&mut self) -> (cost: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:298: external_body - #[verifier::external_body]
+       299 |         fn dimensions(&self) -> (dims: Vec<MatrixDim>) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:306: external_body - #[verifier::external_body]
+       307 |         fn set_dimension(&mut self, index: usize, dim: MatrixDim) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:318: external_body - #[verifier::external_body]
+       319 |         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:331: external_body - #[verifier::external_body]
+       332 |         fn num_matrices(&self) -> (n: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:339: external_body - #[verifier::external_body]
+       340 |         fn clear_memo(&mut self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:346: external_body - #[verifier::external_body]
+       347 |         fn memo_size(&self) -> (n: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:357: external_body - #[verifier::external_body]
+       358 |         fn clone(&self) -> (mc: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:367: external_body - #[verifier::external_body]
+       368 |         fn eq(&self, other: &Self) -> (r: bool) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:66: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:84: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Holes: 15 total
       15 × external_body
    Info: 2 total
-❌ MatrixChainMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:58: external_body - #[verifier::external_body]
-        59 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:80: external_body - #[verifier::external_body]
-        81 |     fn multiply_cost_mt_per(s: &MatrixChainMtPerS, i: usize, k: usize, j: usize) -> (result: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:88: external_body - #[verifier::external_body]
-        89 |     fn parallel_min_reduction_mt_per(s: &MatrixChainMtPerS, costs: Vec<usize>) -> (result: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:113: external_body - #[verifier::external_body]
-       114 |     fn matrix_chain_rec_mt_per(s: &MatrixChainMtPerS, i: usize, j: usize) -> (result: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:149: external_body - #[verifier::external_body]
-       150 |         fn new() -> (result: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:157: external_body - #[verifier::external_body]
-       158 |         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (result: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:165: external_body - #[verifier::external_body]
-       166 |         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (result: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:180: external_body - #[verifier::external_body]
-       181 |         fn optimal_cost(&self) -> (result: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:196: external_body - #[verifier::external_body]
-       197 |         fn dimensions(&self) -> (result: &Arc<Vec<MatrixDim>>) { &self.dimensions }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:199: external_body - #[verifier::external_body]
-       200 |         fn num_matrices(&self) -> (result: usize) { self.dimensions.len() }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:202: external_body - #[verifier::external_body]
-       203 |         fn memo_size(&self) -> (result: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:213: external_body - #[verifier::external_body]
-       214 |         fn eq(&self, other: &Self) -> bool { self.dimensions == other.dimensions }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:44: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   Holes: 12 total
-      12 × external_body
-   Info: 1 total
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -72,18 +43,17 @@ SUMMARY
 
 Modules:
    0 clean (no holes)
-   2 holed (contains holes)
-   2 total
+   1 holed (contains holes)
+   1 total
 
 Proof Functions:
    0 clean
    0 holed
    0 total
 
-Holes Found: 27 total
-   27 × external_body
+Holes Found: 15 total
+   15 × external_body
 
-Info: 3 total
-   MatrixChainMtPer.rs:44: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   MatrixChainMtEph.rs:42: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   MatrixChainMtEph.rs:55: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+Info: 2 total
+   MatrixChainMtEph.rs:66: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MatrixChainMtEph.rs:84: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.

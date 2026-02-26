@@ -17,7 +17,11 @@ pub mod MatrixChainMtPer {
     use vstd::rwlock::*;
 
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
 
@@ -58,24 +62,42 @@ broadcast use {
         }
     }
 
-    pub struct McPerMemoWf;
-    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for McPerMemoWf {
+    pub ghost struct MatrixChainMtPerV {
+        pub dimensions: Seq<MatrixDim>,
+    }
+
+    pub struct spec_matrixchainmtper_memo_wf {
+        pub ghost dims: Seq<MatrixDim>,
+    }
+    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for spec_matrixchainmtper_memo_wf {
         open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
-            v@.dom().finite()
+            &&& v@.dom().finite()
+            &&& spec_memo_correct(self.dims, v@)
         }
     }
 
     #[verifier::external_body]
-    fn new_mcper_memo_lock(val: HashMapWithViewPlus<Pair<usize, usize>, usize>)
-        -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, McPerMemoWf>)
-        requires val@.dom().finite()
+    fn new_mcper_memo_lock(
+        val: HashMapWithViewPlus<Pair<usize, usize>, usize>,
+        Ghost(dims): Ghost<Seq<MatrixDim>>,
+    ) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, spec_matrixchainmtper_memo_wf>)
+        requires
+            val@.dom().finite(),
+            spec_memo_correct(dims, val@),
     {
-        RwLock::new(val, Ghost(McPerMemoWf))
+        RwLock::new(val, Ghost(spec_matrixchainmtper_memo_wf { dims }))
     }
 
     pub struct MatrixChainMtPerS {
         pub dimensions: Arc<Vec<MatrixDim>>,
-        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, McPerMemoWf>>,
+        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, spec_matrixchainmtper_memo_wf>>,
+    }
+
+    impl View for MatrixChainMtPerS {
+        type V = MatrixChainMtPerV;
+        open spec fn view(&self) -> Self::V {
+            MatrixChainMtPerV { dimensions: self.dimensions@ }
+        }
     }
 
     // 6. spec fns
@@ -127,17 +149,56 @@ broadcast use {
     }
 
     // 8. traits
-    pub trait MatrixChainMtPerTrait: Sized {
-        fn new() -> (mc: Self);
-        fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self);
-        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self);
-        fn optimal_cost(&self) -> (cost: usize);
+    pub trait MatrixChainMtPerTrait: Sized + View<V = MatrixChainMtPerV> {
+        fn new() -> (mc: Self)
+            ensures mc@.dimensions.len() == 0;
+
+        fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)
+            ensures mc@.dimensions =~= dimensions@;
+
+        fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
+            ensures mc@.dimensions.len() == dim_pairs@.len();
+
+        fn optimal_cost(&self) -> (cost: usize)
+            requires
+                spec_dims_bounded(self@.dimensions),
+                self@.dimensions.len() > 1 ==>
+                    spec_costs_fit(self@.dimensions, 0, (self@.dimensions.len() - 1) as int),
+            ensures
+                cost as nat == if self@.dimensions.len() <= 1 { 0 }
+                    else { spec_chain_cost(self@.dimensions, 0, (self@.dimensions.len() - 1) as int, 0) };
+
         fn dimensions(&self) -> (dims: &Arc<Vec<MatrixDim>>);
-        fn num_matrices(&self) -> (n: usize);
+
+        fn num_matrices(&self) -> (n: usize)
+            ensures n == self@.dimensions.len();
+
         fn memo_size(&self) -> (n: usize);
-        fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize);
-        fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize);
-        fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize);
+
+        fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize)
+            requires
+                i < self@.dimensions.len(),
+                k < self@.dimensions.len(),
+                j < self@.dimensions.len(),
+                (self@.dimensions[i as int].rows as nat) * (self@.dimensions[k as int].cols as nat) <= usize::MAX as nat,
+                spec_multiply_cost(self@.dimensions, i as int, k as int, j as int) <= usize::MAX as nat,
+            ensures
+                cost as nat == spec_multiply_cost(self@.dimensions, i as int, k as int, j as int);
+
+        fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize)
+            requires
+                i <= j,
+                j < self@.dimensions.len(),
+                spec_dims_bounded(self@.dimensions),
+                spec_costs_fit(self@.dimensions, i as int, j as int),
+            ensures
+                cost as nat == spec_chain_cost(self@.dimensions, i as int, j as int, i as int);
+
+        fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize)
+            requires costs@.len() > 0,
+            ensures
+                costs@.contains(min),
+                forall|i: int| 0 <= i < costs@.len() ==> min <= costs@[i];
     }
 
     // 9. impls
@@ -147,7 +208,7 @@ broadcast use {
         fn new() -> (mc: Self) {
             Self {
                 dimensions: Arc::new(Vec::new()),
-                memo: Arc::new(new_mcper_memo_lock(HashMapWithViewPlus::new())),
+                memo: Arc::new(new_mcper_memo_lock(HashMapWithViewPlus::new(), Ghost(Seq::empty()))),
             }
         }
 
@@ -155,31 +216,34 @@ broadcast use {
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self) {
             Self {
                 dimensions: Arc::new(dimensions),
-                memo: Arc::new(new_mcper_memo_lock(HashMapWithViewPlus::new())),
+                memo: Arc::new(new_mcper_memo_lock(HashMapWithViewPlus::new(), Ghost(Seq::empty()))),
             }
         }
 
         #[verifier::external_body]
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self) {
-            let dimensions = dim_pairs
-                .into_iter()
-                .map(|pair| MatrixDim {
-                    rows: pair.0,
-                    cols: pair.1,
-                }).collect::<Vec<MatrixDim>>();
-
+            let mut dimensions: Vec<MatrixDim> = Vec::new();
+            let mut idx: usize = 0;
+            while idx < dim_pairs.len() {
+                dimensions.push(MatrixDim {
+                    rows: dim_pairs[idx].0,
+                    cols: dim_pairs[idx].1,
+                });
+                idx = idx + 1;
+            }
             Self {
                 dimensions: Arc::new(dimensions),
-                memo: Arc::new(new_mcper_memo_lock(HashMapWithViewPlus::new())),
+                memo: Arc::new(new_mcper_memo_lock(HashMapWithViewPlus::new(), Ghost(Seq::empty()))),
             }
         }
 
-        #[verifier::external_body]
         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize) {
-            let left_rows = self.dimensions[i].rows;
-            let split_cols = self.dimensions[k].cols;
-            let right_cols = self.dimensions[j].cols;
-            left_rows * split_cols * right_cols
+            let dims = arc_deref(&self.dimensions);
+            let left_rows = dims[i].rows;
+            let split_cols = dims[k].cols;
+            let right_cols = dims[j].cols;
+            let intermediate = left_rows * split_cols;
+            intermediate * right_cols
         }
 
         #[verifier::external_body]
@@ -258,11 +322,12 @@ broadcast use {
             self.matrix_chain_rec(0, n - 1)
         }
 
-        #[verifier::external_body]
         fn dimensions(&self) -> (dims: &Arc<Vec<MatrixDim>>) { &self.dimensions }
 
-        #[verifier::external_body]
-        fn num_matrices(&self) -> (n: usize) { self.dimensions.len() }
+        fn num_matrices(&self) -> (n: usize) {
+            let dims = arc_deref(&self.dimensions);
+            dims.len()
+        }
 
         #[verifier::external_body]
         fn memo_size(&self) -> (n: usize) {
@@ -275,18 +340,31 @@ broadcast use {
 
     // 11. derive impls in verus!
     impl Clone for MatrixChainMtPerS {
-        #[verifier::external_body]
-        fn clone(&self) -> (mc: Self) {
-            MatrixChainMtPerS {
+        fn clone(&self) -> (mc: Self)
+            ensures mc@ == self@
+        {
+            let mc = MatrixChainMtPerS {
                 dimensions: self.dimensions.clone(),
                 memo: self.memo.clone(),
-            }
+            };
+            proof { accept(mc@ == self@); }
+            mc
         }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl PartialEqSpecImpl for MatrixChainMtPerS {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
     impl PartialEq for MatrixChainMtPerS {
         #[verifier::external_body]
-        fn eq(&self, other: &Self) -> (r: bool) { self.dimensions == other.dimensions }
+        fn eq(&self, other: &Self) -> (r: bool)
+            ensures r == (self@ == other@)
+        {
+            self.dimensions == other.dimensions
+        }
     }
 
     impl Eq for MatrixChainMtPerS {}

@@ -7,6 +7,7 @@
 #![cfg_attr(verus_keep_ghost, feature(allocator_api))]
 #![cfg_attr(verus_keep_ghost, feature(sized_hierarchy))]
 #![allow(non_snake_case)]
+#![allow(non_camel_case_types)]
 
 // Foundation modules — always included unless experiments_only
 pub mod Types;
