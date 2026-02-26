@@ -30,14 +30,17 @@ Proof Functions:
 Holes Found: 0 total
 
 Info: 9 total
-   BalBinTreeStEph.rs:773: info: accept() - accept hole
-   BalBinTreeStEph.rs:788: info: accept() - accept hole
-   BalBinTreeStEph.rs:806: info: accept() - accept hole
-   BalBinTreeStEph.rs:827: info: accept() - accept hole
    PrimTreeSeqStPer.rs:857: info: accept() - accept hole
    PrimTreeSeqStPer.rs:867: info: accept() - accept hole
    PrimTreeSeqStPer.rs:883: info: accept() - accept hole
    PrimTreeSeqStPer.rs:899: info: accept() - accept hole
    PrimTreeSeqStPer.rs:904: info: accept() - accept hole
+   BalBinTreeStEph.rs:773: info: accept() - accept hole
+   BalBinTreeStEph.rs:788: info: accept() - accept hole
+   BalBinTreeStEph.rs:806: info: accept() - accept hole
+   BalBinTreeStEph.rs:827: info: accept() - accept hole
+
+🎉 No proof holes or warnings found! All proofs are complete.
+fo: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.

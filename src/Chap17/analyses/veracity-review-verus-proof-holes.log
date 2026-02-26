@@ -24,3 +24,10 @@ Info: 2 total
    MathSeq.rs:731: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.
+ound: 0 total
+
+Info: 2 total
+   MathSeq.rs:719: info: accept() - accept hole
+   MathSeq.rs:731: info: accept() - accept hole
+
+🎉 No proof holes or warnings found! All proofs are complete.

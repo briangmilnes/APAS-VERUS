@@ -749,7 +749,8 @@ Holes Found: 132 total
 Errors: 2 total (1 assume in eq/clone (Verus workaround), 1 dummy RwLockPredicate)
 
 Info: 4 total
-   AVLTreeSetStEph.rs:416: info: accept() - accept hole
    AVLTreeSetStPer.rs:424: info: accept() - accept hole
-   AVLTreeSetMtEph.rs:59: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   AVLTreeSetStEph.rs:416: info: accept() - accept hole
    AVLTreeSetMtPer.rs:450: info: accept() - accept hole
+   AVLTreeSetMtEph.rs:59: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+eeSetMtEph.rs:59: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.

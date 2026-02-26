@@ -31,3 +31,6 @@ Info: 2 total
    ArraySeqStEph.rs:1120: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.
+fo: accept() - accept hole
+
+🎉 No proof holes or warnings found! All proofs are complete.

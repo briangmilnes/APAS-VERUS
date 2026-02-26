@@ -202,3 +202,8 @@ Holes Found: 45 total
    29 × external_body
 
 Errors: 1 total (1 assume in eq/clone (Verus workaround))
+5 total
+   16 × assume()
+   29 × external_body
+
+Errors: 1 total (1 assume in eq/clone (Verus workaround))

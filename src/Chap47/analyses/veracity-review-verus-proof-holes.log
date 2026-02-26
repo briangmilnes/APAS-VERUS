@@ -58,3 +58,6 @@ Info: 5 total
    StructChainedHashTable.rs:120: info: accept() - accept hole
 
 🎉 No proof holes found! All proofs are complete.
+e.rs:120: info: accept() - accept hole
+
+🎉 No proof holes found! All proofs are complete.

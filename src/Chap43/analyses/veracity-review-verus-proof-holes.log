@@ -328,3 +328,9 @@ Holes Found: 118 total
 
 Info: 1 total
    OrderedTableStPer.rs:660: info: accept() - accept hole
+l
+   7 × assume()
+   111 × external_body
+
+Info: 1 total
+   OrderedTableStPer.rs:660: info: accept() - accept hole

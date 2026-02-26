@@ -26,3 +26,10 @@ Info: 2 total
    BoruvkaMtEph.rs:46: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.
+total
+
+Info: 2 total
+   BoruvkaStEph.rs:44: info: accept() - accept hole
+   BoruvkaMtEph.rs:46: info: accept() - accept hole
+
+🎉 No proof holes or warnings found! All proofs are complete.

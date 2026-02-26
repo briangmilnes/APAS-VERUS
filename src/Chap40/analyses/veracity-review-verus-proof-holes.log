@@ -28,3 +28,7 @@ Info: 2 total
    BSTReducedStEph.rs:110: info: external_body_accept_hole - external_body with accept hole comment
 
 🎉 No proof holes or warnings found! All proofs are complete.
+with accept hole comment
+   BSTReducedStEph.rs:110: info: external_body_accept_hole - external_body with accept hole comment
+
+🎉 No proof holes or warnings found! All proofs are complete.
