@@ -187,14 +187,14 @@ Every Verus source file follows this section ordering:
 
 ### Running Verus
 
+Use the wrapper scripts — never raw `verus`, `cargo verus`, or `cargo build` for verification:
+
 ```bash
-cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus \
-  --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors
+scripts/validate.sh          # full verification
+scripts/ptt.sh               # compile PTT library + run proof time tests
+scripts/rtt.sh               # run time tests (cargo nextest)
 ```
 
-Or: `scripts/validate.sh`
-
-- **Always call `verus` directly** — never `cargo verus` or `cargo build` for verification.
 - Verus includes its own vstd. Do not pass `-L dependency` or `--extern vstd`.
 - Always show full output in response text as a markdown code block.
 
@@ -413,17 +413,8 @@ comment out the module in lib.rs. Failed experiments are documentation.
 ### PTT Commands
 
 ```bash
-# Compile library for PTTs (both -o and --export required, --export must be absolute path)
-cd ~/projects/APAS-VERUS && ~/projects/verus/source/target-verus/release/verus \
-  --compile --crate-type=lib --crate-name apas_verus src/lib.rs \
-  -o target/verus/libapas_verus.rlib \
-  --export /home/milnes/projects/APAS-VERUS/target/verus/apas_verus.vir
-
-# Run PTTs
-scripts/ptt.sh
-
-# Run RTTs
-scripts/rtt.sh
+scripts/ptt.sh               # compile PTT library + run proof time tests
+scripts/rtt.sh               # run time tests (cargo nextest)
 ```
 
 ### When to Write PTTs

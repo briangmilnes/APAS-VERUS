@@ -339,7 +339,7 @@ pub mod ArraySeq {
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
-              obeys_feq_clone::<T>(),
+              obeys_feq_full::<T>(),
               length <= usize::MAX,
             ensures 
               new_seq.spec_len() == length as int,
@@ -388,7 +388,7 @@ pub mod ArraySeq {
         fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
-                obeys_feq_clone::<T>(),
+                obeys_feq_full::<T>(),
                 start + length <= usize::MAX,
                 start + length <= a.spec_len(),
             ensures
@@ -401,7 +401,7 @@ pub mod ArraySeq {
         fn append(a: &Self, b: &Self) -> (appended: Self)
             where T: Clone + Eq
             requires
-                obeys_feq_clone::<T>(),
+                obeys_feq_full::<T>(),
                 a.spec_len() + b.spec_len() <= usize::MAX as int,
             ensures
                 appended.spec_len() == a.spec_len() + b.spec_len(),
@@ -416,7 +416,7 @@ pub mod ArraySeq {
         fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
             where T: Clone + Eq
             requires 
-              obeys_feq_clone::<T>(),
+              obeys_feq_full::<T>(),
               forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(i),)),
               // The forward bridge ties the exec closure to the spec predicate.
               forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
@@ -436,7 +436,7 @@ pub mod ArraySeq {
         fn update(a: &Self, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires
-                obeys_feq_clone::<T>(),
+                obeys_feq_full::<T>(),
                 index < a.spec_len(),
             ensures
                 updated.spec_len() == a.spec_len(),
@@ -488,7 +488,7 @@ pub mod ArraySeq {
             where T: Clone + Eq
             requires
                 spec_monoid(spec_f, id),
-                obeys_feq_clone::<T>(),
+                obeys_feq_full::<T>(),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
@@ -507,7 +507,7 @@ pub mod ArraySeq {
         fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
             where T: Clone + Eq
             requires
-                obeys_feq_clone::<T>(),
+                obeys_feq_full::<T>(),
             ensures
                 injected.spec_len() == a.spec_len(),
                 Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
@@ -523,7 +523,7 @@ pub mod ArraySeq {
             where T: Clone + Eq
             requires
                 spec_monoid(spec_f, id),
-                obeys_feq_clone::<T>(),
+                obeys_feq_full::<T>(),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
@@ -537,7 +537,7 @@ pub mod ArraySeq {
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
-                obeys_feq_clone::<T>(),
+                obeys_feq_full::<T>(),
                 start + length <= usize::MAX,
                 start + length <= self.spec_len(),
             ensures
@@ -599,8 +599,8 @@ pub mod ArraySeq {
         pairs: &ArraySeqS<(K, V)>,
     ) -> (collected: ArraySeqS<(K, ArraySeqS<V>)>)
         requires
-            obeys_feq_clone::<K>(),
-            obeys_feq_clone::<V>(),
+            obeys_feq_full::<K>(),
+            obeys_feq_full::<V>(),
             obeys_concrete_eq::<K>(),
             obeys_deep_eq::<K>(),
             obeys_deep_eq::<V>(),
@@ -679,7 +679,7 @@ pub mod ArraySeq {
                     end == start + length,
                     end <= a.seq@.len(),
                     seq@.len() == (i - start) as int,
-                    obeys_feq_clone::<T>(),
+                    obeys_feq_full::<T>(),
                     forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> seq@[j] == a.seq@[(start + j) as int],
                 decreases end - i,
             {
@@ -706,7 +706,7 @@ pub mod ArraySeq {
                     i <= a_len,
                     a_len == a.seq@.len(),
                     seq@.len() == i as int,
-                    obeys_feq_clone::<T>(),
+                    obeys_feq_full::<T>(),
                     forall|k: int| #![trigger seq@[k]] 0 <= k < i ==> seq@[k] == a.seq@[k],
                 decreases a_len - i,
             {
@@ -725,7 +725,7 @@ pub mod ArraySeq {
                     b_len == b.seq@.len(),
                     a_len == a.seq@.len(),
                     seq@.len() == a_len + j,
-                    obeys_feq_clone::<T>(),
+                    obeys_feq_full::<T>(),
                     forall|k: int| #![trigger seq@[k]] 0 <= k < a_len ==> seq@[k] == a.seq@[k],
                     forall|k: int| #![trigger b.seq@[k]] 0 <= k < j ==> seq@[a_len as int + k] == b.seq@[k],
                 decreases b_len - j,
@@ -748,7 +748,7 @@ pub mod ArraySeq {
 
             for i in 0..a.seq.len()
                 invariant
-                    obeys_feq_clone::<T>(),
+                    obeys_feq_full::<T>(),
                     forall|j: int| 0 <= j < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(j),)),
                     forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
                     i <= a.seq@.len(),
@@ -798,7 +798,7 @@ pub mod ArraySeq {
                     i <= len,
                     len == a.seq@.len(),
                     seq@.len() == i as int,
-                    obeys_feq_clone::<T>(),
+                    obeys_feq_full::<T>(),
                     index < len,
                     forall|k: int| #![trigger seq@[k]] 0 <= k < i && k != index as int ==> seq@[k] == a.seq@[k],
                     i > index ==> seq@[index as int] == item,
@@ -925,7 +925,7 @@ pub mod ArraySeq {
                     i <= len,
                     len == a.seq@.len(),
                     seq@.len() == i as int,
-                    obeys_feq_clone::<T>(),
+                    obeys_feq_full::<T>(),
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                     forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
                     // The accumulator equals the fold of the first i elements.
@@ -991,7 +991,7 @@ pub mod ArraySeq {
                     len == a.seq@.len(),
                     s == a.seq@,
                     result_vec@.len() == k as int,
-                    obeys_feq_clone::<T>(),
+                    obeys_feq_full::<T>(),
                     forall|j: int| #![trigger result_vec@[j]] 0 <= j < k as int ==> result_vec@[j] == s[j],
                 decreases len - k,
             {
@@ -1011,7 +1011,7 @@ pub mod ArraySeq {
                     len == a.seq@.len(),
                     result_vec@.len() == s.len(),
                     s.len() == len,
-                    obeys_feq_clone::<T>(),
+                    obeys_feq_full::<T>(),
                     s == a.seq@,
                     u == updates@,
                     result_vec@ =~= spec_inject(s, u.subrange(i as int, ulen as int)),
@@ -1063,7 +1063,7 @@ pub mod ArraySeq {
                     i <= len,
                     len == a.seq@.len(),
                     seq@.len() == i as int,
-                    obeys_feq_clone::<T>(),
+                    obeys_feq_full::<T>(),
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                     forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
                     s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
@@ -1114,7 +1114,7 @@ pub mod ArraySeq {
                     end == start + length,
                     end <= self.seq@.len(),
                     seq@.len() == (i - start) as int,
-                    obeys_feq_clone::<T>(),
+                    obeys_feq_full::<T>(),
                     forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> seq@[j] == self.seq@[(start + j) as int],
                 decreases end - i,
             {
@@ -1330,7 +1330,7 @@ pub mod ArraySeq {
     /// (nested concrete types), which creates Verus cycle issues in traits.
     pub fn flatten<T: View + Clone + Eq>(a: &ArraySeqS<ArraySeqS<T>>) -> (flattened: ArraySeqS<T>)
         requires
-            obeys_feq_clone::<T>(),
+            obeys_feq_full::<T>(),
         ensures
             flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqS<T>| inner.seq@).flatten(),
     {
@@ -1341,7 +1341,7 @@ pub mod ArraySeq {
             invariant
                 i <= outer_len,
                 outer_len == a.seq@.len(),
-                obeys_feq_clone::<T>(),
+                obeys_feq_full::<T>(),
                 seq@ =~= a.seq@.take(i as int).map_values(|inner: ArraySeqS<T>| inner.seq@).flatten(),
             decreases outer_len - i,
         {
@@ -1354,7 +1354,7 @@ pub mod ArraySeq {
                     inner_len == inner.seq@.len(),
                     i < outer_len,
                     outer_len == a.seq@.len(),
-                    obeys_feq_clone::<T>(),
+                    obeys_feq_full::<T>(),
                     seq@ =~= a.seq@.take(i as int).map_values(|inner: ArraySeqS<T>| inner.seq@).flatten()
                         + inner.seq@.take(j as int),
                 decreases inner_len - j,
@@ -1392,7 +1392,7 @@ pub mod ArraySeq {
         start_x: A,
     ) -> (prefixes: (ArraySeqS<A>, A))
         requires
-            obeys_feq_clone::<A>(),
+            obeys_feq_full::<A>(),
             forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
             forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
         ensures
@@ -1413,7 +1413,7 @@ pub mod ArraySeq {
                 i <= len,
                 len == a.seq@.len(),
                 seq@.len() == i as int,
-                obeys_feq_clone::<A>(),
+                obeys_feq_full::<A>(),
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
                 forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
                 s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
