@@ -1,0 +1,13 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs
+Codebase: /home/milnes/projects/APAS-VERUS-agent2/src/Chap65
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/src/Chap65/analyses/veracity-review-verus-style.log
+
+Checking 1 files...
+
+════════════════════════════════════════════════════════════════
+Summary: 13 passed, 10 warnings in 1 files (checked 1 files)
+════════════════════════════════════════════════════════════════

@@ -1,98 +1,58 @@
 [
   {
     "id": 1,
-    "function": "reduce_contract_parallel",
-    "file": "Chap27/ReduceContractMtEph.rs",
-    "lines": "53-66",
-    "spec_strength": "unknown",
-    "snippet": "        fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(\n            a: &ArraySeqMtEphS<T>,\n            f: Arc<F>,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: T,\n        ) -> (reduced: T)\n            requires\n                a.spec_len() <= usize::MAX,\n                obeys_feq_clone::<T>(),\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                reduced == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f);"
+    "function": "new",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "27",
+    "spec_strength": "",
+    "snippet": "            fn new() -> Self;"
   },
   {
     "id": 2,
-    "function": "contract_parallel",
-    "file": "Chap27/ReduceContractMtEph.rs",
-    "lines": "78-93",
-    "spec_strength": "unknown",
-    "snippet": "    pub fn contract_parallel<T: StTInMtT + Clone + 'static, F: Fn(&T, &T) -> T + Send + Sync + 'static>(\n        a: &ArraySeqMtEphS<T>,\n        f: &Arc<F>,\n        Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n        half: usize,\n    ) -> (b: ArraySeqMtEphS<T>)\n        requires\n            half == a.spec_len() / 2,\n            a.spec_len() >= 2,\n            half <= usize::MAX,\n            obeys_feq_clone::<T>(),\n            forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n            forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n        ensures\n            b.spec_len() == half as nat,\n            forall|j: int| #![trigger b.spec_index(j)] 0 <= j < half as int ==> {"
+    "function": "insert",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "31",
+    "spec_strength": "",
+    "snippet": "            fn insert(&mut self, v: V);"
   },
   {
     "id": 3,
-    "function": "reduce_contract_verified",
-    "file": "Chap27/ReduceContractMtEph.rs",
-    "lines": "248-262",
-    "spec_strength": "unknown",
-    "snippet": "    fn reduce_contract_verified<T: StTInMtT + Clone + 'static, F: Fn(&T, &T) -> T + Send + Sync + 'static>(\n        a: &ArraySeqMtEphS<T>,\n        f: &Arc<F>,\n        Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n        id: T,\n    ) -> (reduced: T)\n        requires\n            a.spec_len() <= usize::MAX,\n            obeys_feq_clone::<T>(),\n            spec_monoid(spec_f, id),\n            forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n            forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n        ensures\n            reduced == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f),\n        decreases a.spec_len(),"
+    "function": "find",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "35",
+    "spec_strength": "",
+    "snippet": "            fn find(&mut self, v: &V) -> V;"
   },
   {
     "id": 4,
-    "function": "lemma_fold_left_monoid",
-    "file": "Chap27/ReduceContractStEph.rs",
-    "lines": "44-47",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_monoid<T>(s: Seq<T>, x: T, f: spec_fn(T, T) -> T, id: T)\n        requires spec_monoid(f, id),\n        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),\n        decreases s.len(),"
+    "function": "union",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "39",
+    "spec_strength": "",
+    "snippet": "            fn union(&mut self, u: &V, v: &V);"
   },
   {
     "id": 5,
-    "function": "lemma_fold_left_pair",
-    "file": "Chap27/ReduceContractStEph.rs",
-    "lines": "60-62",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_pair<T>(a: T, b: T, f: spec_fn(T, T) -> T, id: T)\n        requires spec_monoid(f, id),\n        ensures seq![a, b].fold_left(id, f) == f(a, b),"
+    "function": "equals",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "43",
+    "spec_strength": "",
+    "snippet": "            fn equals(&mut self, u: &V, v: &V) -> B;"
   },
   {
     "id": 6,
-    "function": "lemma_fold_left_singleton",
-    "file": "Chap27/ReduceContractStEph.rs",
-    "lines": "76-78",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_singleton<T>(a: T, f: spec_fn(T, T) -> T, id: T)\n        requires spec_monoid(f, id),\n        ensures seq![a].fold_left(id, f) == a,"
+    "function": "num_sets",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "47",
+    "spec_strength": "",
+    "snippet": "            fn num_sets(&mut self) -> usize;"
   },
   {
     "id": 7,
-    "function": "lemma_contraction_even",
-    "file": "Chap27/ReduceContractStEph.rs",
-    "lines": "88-98",
-    "spec_strength": "unknown",
-    "snippet": "    pub proof fn lemma_contraction_even<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T)\n        requires\n            spec_monoid(f, id),\n            s.len() >= 2,\n            s.len() % 2 == 0,\n        ensures\n            s.fold_left(id, f) == Seq::new(\n                (s.len() / 2) as nat,\n                |i: int| f(s[2 * i], s[2 * i + 1]),\n            ).fold_left(id, f),\n        decreases s.len(),"
-  },
-  {
-    "id": 8,
-    "function": "reduce_contract",
-    "file": "Chap27/ReduceContractStEph.rs",
-    "lines": "168-180",
-    "spec_strength": "unknown",
-    "snippet": "        fn reduce_contract<F: Fn(&T, &T) -> T>(\n            a: &ArraySeqStEphS<T>,\n            f: &F,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: T,\n        ) -> (reduced: T)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                reduced == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f);"
-  },
-  {
-    "id": 9,
-    "function": "scan_contract_parallel",
-    "file": "Chap27/ScanContractMtEph.rs",
-    "lines": "54-70",
-    "spec_strength": "unknown",
-    "snippet": "        fn scan_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(\n            a: &ArraySeqMtEphS<T>,\n            f: Arc<F>,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: T,\n        ) -> (scanned: ArraySeqMtEphS<T>)\n            requires\n                a.spec_len() <= usize::MAX,\n                obeys_feq_clone::<T>(),\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                scanned.spec_len() == a.spec_len(),\n                forall|i: int| #![trigger scanned.spec_index(i)]\n                    0 <= i < a.spec_len() ==>\n                        scanned.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i).fold_left(id, spec_f);"
-  },
-  {
-    "id": 10,
-    "function": "scan_contract_verified",
-    "file": "Chap27/ScanContractMtEph.rs",
-    "lines": "79-96",
-    "spec_strength": "unknown",
-    "snippet": "    fn scan_contract_verified<T: StTInMtT + Clone + 'static, F: Fn(&T, &T) -> T + Send + Sync + 'static>(\n        a: &ArraySeqMtEphS<T>,\n        f: &Arc<F>,\n        Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n        id: T,\n    ) -> (scanned: ArraySeqMtEphS<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            obeys_feq_clone::<T>(),\n            spec_monoid(spec_f, id),\n            forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n            forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n        ensures\n            scanned.spec_len() == a.spec_len(),\n            forall|i: int| #![trigger scanned.spec_index(i)]\n                0 <= i < a.spec_len() ==>\n                    scanned.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i).fold_left(id, spec_f),\n        decreases a.spec_len(),"
-  },
-  {
-    "id": 11,
-    "function": "lemma_prefix_contraction",
-    "file": "Chap27/ScanContractStEph.rs",
-    "lines": "46-54",
-    "spec_strength": "unknown",
-    "snippet": "    pub proof fn lemma_prefix_contraction<T>(s: Seq<T>, b: Seq<T>, f: spec_fn(T, T) -> T, id: T, k: int)\n        requires\n            spec_monoid(f, id),\n            k >= 1,\n            2 * k <= s.len(),\n            b.len() >= k,\n            forall|i: int| #![trigger b[i]] 0 <= i < b.len() ==> b[i] == f(s[2 * i], s[2 * i + 1]),\n        ensures\n            s.take(2 * k).fold_left(id, f) == b.take(k).fold_left(id, f),"
-  },
-  {
-    "id": 12,
-    "function": "scan_contract",
-    "file": "Chap27/ScanContractStEph.rs",
-    "lines": "72-87",
-    "spec_strength": "unknown",
-    "snippet": "        fn scan_contract<F: Fn(&T, &T) -> T>(\n            a: &ArraySeqStEphS<T>,\n            f: &F,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: T,\n        ) -> (scanned: ArraySeqStEphS<T>)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                scanned.spec_len() == a.spec_len(),\n                forall|i: int| #![trigger scanned.spec_index(i)]\n                    0 <= i < a.spec_len() ==>\n                        scanned.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i).fold_left(id, spec_f);"
+    "function": "default",
+    "file": "Chap65/UnionFindStEph.rs",
+    "lines": "127-129",
+    "spec_strength": "",
+    "snippet": "        /// - APAS: N/A — Rust trait boilerplate.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to new()\n        fn default() -> Self { Self::new() }"
   }
 ]

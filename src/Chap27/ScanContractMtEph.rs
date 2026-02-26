@@ -7,6 +7,7 @@
 //	1. module
 //	2. imports
 //	3. broadcast use
+//	7. proof fns
 //	8. traits
 //	9. impls
 
@@ -24,10 +25,6 @@ pub mod ScanContractMtEph {
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Chap27::ReduceContractMtEph::ReduceContractMtEph::contract_parallel;
     use crate::vstdplus::smart_ptrs::smart_ptrs::call_f;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap27::ReduceContractStEph::ReduceContractStEph::lemma_contraction_even;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap27::ScanContractStEph::ScanContractStEph::lemma_prefix_contraction;
     use crate::Concurrency::Concurrency::StTInMtT;
     use crate::vstdplus::monoid::monoid::*;
     #[cfg(verus_keep_ghost)]
@@ -43,6 +40,130 @@ pub mod ScanContractMtEph {
         vstd::seq_lib::group_seq_properties,
         vstd::seq_lib::group_to_multiset_ensures,
     };
+
+    //		7. proof fns
+
+    /// Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f))
+    /// when (f, id) is a monoid.
+    proof fn lemma_fold_left_monoid<T>(s: Seq<T>, x: T, f: spec_fn(T, T) -> T, id: T)
+        requires spec_monoid(f, id),
+        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),
+        decreases s.len(),
+    {
+        reveal(Seq::fold_left);
+        if s.len() == 0 {
+        } else {
+            lemma_fold_left_monoid::<T>(s.drop_last(), x, f, id);
+            lemma_fold_left_monoid::<T>(s.drop_last(), id, f, id);
+        }
+    }
+
+    /// Helper: fold_left of a 2-element sequence equals f(a, b) under a monoid.
+    proof fn lemma_fold_left_pair<T>(a: T, b: T, f: spec_fn(T, T) -> T, id: T)
+        requires spec_monoid(f, id),
+        ensures seq![a, b].fold_left(id, f) == f(a, b),
+    {
+        let s = seq![a, b];
+        reveal_with_fuel(Seq::fold_left, 3);
+        assert(s.drop_last() =~= seq![a]);
+        assert(seq![a].drop_last() =~= Seq::<T>::empty());
+    }
+
+    /// Helper: fold_left of a 1-element sequence equals f(id, a) = a.
+    proof fn lemma_fold_left_singleton<T>(a: T, f: spec_fn(T, T) -> T, id: T)
+        requires spec_monoid(f, id),
+        ensures seq![a].fold_left(id, f) == a,
+    {
+        reveal_with_fuel(Seq::fold_left, 2);
+        assert(seq![a].drop_last() =~= Seq::<T>::empty());
+    }
+
+    /// Contraction lemma: for an even-length sequence, folding the original equals
+    /// folding the contracted (pairwise-combined) sequence under a monoid.
+    proof fn lemma_contraction_even<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T)
+        requires
+            spec_monoid(f, id),
+            s.len() >= 2,
+            s.len() % 2 == 0,
+        ensures
+            s.fold_left(id, f) == Seq::new(
+                (s.len() / 2) as nat,
+                |i: int| f(s[2 * i], s[2 * i + 1]),
+            ).fold_left(id, f),
+        decreases s.len(),
+    {
+        let n = s.len();
+        let half = (n / 2) as nat;
+        let b = Seq::new(half, |i: int| f(s[2 * i], s[2 * i + 1]));
+
+        if n == 2 {
+            assert(s =~= seq![s[0], s[1]]);
+            lemma_fold_left_pair::<T>(s[0], s[1], f, id);
+            assert(s.fold_left(id, f) == f(s[0], s[1]));
+            assert(b =~= seq![f(s[0], s[1])]);
+            lemma_fold_left_singleton::<T>(f(s[0], s[1]), f, id);
+            assert(b.fold_left(id, f) == f(s[0], s[1]));
+        } else {
+            let s_tail = s.subrange(2, n as int);
+            let b_tail = b.subrange(1, b.len() as int);
+
+            s.lemma_fold_left_split(id, f, 2);
+            let s_head = s.subrange(0, 2);
+            assert(s_head =~= seq![s[0], s[1]]);
+
+            lemma_fold_left_pair::<T>(s[0], s[1], f, id);
+            assert(s.fold_left(id, f) == s_tail.fold_left(b[0], f));
+
+            lemma_fold_left_monoid::<T>(s_tail, b[0], f, id);
+            let s_tail_result = s_tail.fold_left(id, f);
+            assert(s.fold_left(id, f) == f(b[0], s_tail_result));
+
+            assert(s_tail.len() >= 2 && s_tail.len() % 2 == 0) by {
+                assert(s_tail.len() == n - 2);
+            }
+            assert(b_tail =~= Seq::new(
+                (s_tail.len() / 2) as nat,
+                |i: int| f(s_tail[2 * i], s_tail[2 * i + 1]),
+            ));
+
+            lemma_contraction_even::<T>(s_tail, f, id);
+            let b_tail_result = b_tail.fold_left(id, f);
+            assert(s_tail_result == b_tail_result);
+            assert(s.fold_left(id, f) == f(b[0], b_tail_result));
+
+            lemma_fold_left_monoid::<T>(b_tail, b[0], f, id);
+            assert(b_tail.fold_left(b[0], f) == f(b[0], b_tail_result));
+            assert(s.fold_left(id, f) == b_tail.fold_left(b[0], f));
+
+            b.lemma_fold_left_split(id, f, 1);
+            assert(b.subrange(0, 1) =~= seq![b[0]]);
+            assert(b.subrange(1, b.len() as int) =~= b_tail);
+            lemma_fold_left_singleton::<T>(b[0], f, id);
+            assert(b.fold_left(id, f) == b_tail.fold_left(b[0], f));
+            assert(s.fold_left(id, f) == b.fold_left(id, f));
+        }
+    }
+
+    /// Prefix contraction lemma: fold_left of an even-length prefix s.take(2k)
+    /// equals fold_left of the first k elements of the contracted sequence b.
+    proof fn lemma_prefix_contraction<T>(s: Seq<T>, b: Seq<T>, f: spec_fn(T, T) -> T, id: T, k: int)
+        requires
+            spec_monoid(f, id),
+            k >= 1,
+            2 * k <= s.len(),
+            b.len() >= k,
+            forall|i: int| #![trigger b[i]] 0 <= i < b.len() ==> b[i] == f(s[2 * i], s[2 * i + 1]),
+        ensures
+            s.take(2 * k).fold_left(id, f) == b.take(k).fold_left(id, f),
+    {
+        let prefix = s.take(2 * k);
+        lemma_contraction_even::<T>(prefix, f, id);
+        let contracted = Seq::new(
+            (prefix.len() / 2) as nat,
+            |i: int| f(prefix[2 * i], prefix[2 * i + 1]),
+        );
+        assert(contracted =~= b.take(k));
+    }
 
     //		8. traits
 

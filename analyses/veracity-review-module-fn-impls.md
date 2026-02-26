@@ -22,44 +22,21 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap27 | ReduceContractMtEph | 1 | 1 | 0 | 2 | 3 | 0 | 3 | 0 | 0 |
-| 2 | Chap27 | ReduceContractStEph | 1 | 1 | 0 | 4 | 5 | 0 | 5 | 0 | 0 |
-| 3 | Chap27 | ScanContractMtEph | 1 | 1 | 0 | 1 | 2 | 0 | 2 | 0 | 0 |
-| 4 | Chap27 | ScanContractStEph | 1 | 1 | 0 | 1 | 2 | 0 | 2 | 0 | 0 |
+| 1 | Chap65 | UnionFindStEph | 6 | 7 | 0 | 0 | 6 | 1 | 0 | 0 | 7 |
 
 ## Function-by-Function Detail
 
-### Chap27/ReduceContractMtEph.rs
+### Chap65/UnionFindStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `reduce_contract_parallel` | Y | Y |  |  | Y |  |  | unknown | 53&#8209;66 |
-| 2 | `contract_parallel` |  |  |  | Y | Y |  |  | unknown | 78&#8209;93 |
-| 3 | `reduce_contract_verified` |  |  |  | Y | Y |  |  | unknown | 248&#8209;262 |
-
-### Chap27/ReduceContractStEph.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 4 | `lemma_fold_left_monoid` |  |  |  | Y | Y |  |  | unknown | 44&#8209;47 |
-| 5 | `lemma_fold_left_pair` |  |  |  | Y | Y |  |  | unknown | 60&#8209;62 |
-| 6 | `lemma_fold_left_singleton` |  |  |  | Y | Y |  |  | unknown | 76&#8209;78 |
-| 7 | `lemma_contraction_even` |  |  |  | Y | Y |  |  | unknown | 88&#8209;98 |
-| 8 | `reduce_contract` | Y | Y |  |  | Y |  |  | unknown | 168&#8209;180 |
-
-### Chap27/ScanContractMtEph.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 9 | `scan_contract_parallel` | Y | Y |  |  | Y |  |  | unknown | 54&#8209;70 |
-| 10 | `scan_contract_verified` |  |  |  | Y | Y |  |  | unknown | 79&#8209;96 |
-
-### Chap27/ScanContractStEph.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 11 | `lemma_prefix_contraction` |  |  |  | Y | Y |  |  | unknown | 46&#8209;54 |
-| 12 | `scan_contract` | Y | Y |  |  | Y |  |  | unknown | 72&#8209;87 |
+| 1 | `new` | Y | Y |  |  | Y |  | Y |  | 27 |
+| 2 | `insert` | Y | Y |  |  | Y |  | Y |  | 31 |
+| 3 | `find` | Y | Y |  |  | Y |  | Y |  | 35 |
+| 4 | `union` | Y | Y |  |  | Y |  | Y |  | 39 |
+| 5 | `equals` | Y | Y |  |  | Y |  | Y |  | 43 |
+| 6 | `num_sets` | Y | Y |  |  | Y |  | Y |  | 47 |
+| 7 | `default` |  | Y |  |  |  | Y | Y |  | 127&#8209;129 |
 
 
 ### Legend
