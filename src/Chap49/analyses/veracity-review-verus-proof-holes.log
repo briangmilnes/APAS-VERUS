@@ -130,13 +130,9 @@ Holes Found: 0 total
 Errors: 20 total (8 struct/enum outside verus!, 8 Clone derived outside, 4 dummy RwLockPredicate)
 
 Info: 4 total
-   MinEditDistMtPer.rs:28: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MinEditDistMtEph.rs:29: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    SubsetSumMtPer.rs:28: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MinEditDistMtPer.rs:28: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    SubsetSumMtEph.rs:29: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   MinEditDistMtEph.rs:29: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-
-🎉 No proof holes found! All proofs are complete.
-dy at this point.
-   MinEditDistMtEph.rs:29: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
 
 🎉 No proof holes found! All proofs are complete.

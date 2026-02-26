@@ -67,19 +67,14 @@ Errors: 2 total (2 assume in eq/clone (Verus workaround))
 Info: 11 total
    HeapsortExample.rs:84: info: accept() - accept hole
    HeapsortExample.rs:99: info: accept() - accept hole
+   SortedListPQ.rs:65: info: accept() - accept hole
+   UnsortedListPQ.rs:65: info: accept() - accept hole
+   BalancedTreePQ.rs:56: info: accept() - accept hole
    LeftistHeapPQ.rs:55: info: accept() - accept hole
    LeftistHeapPQ.rs:75: info: accept() - accept hole
    LeftistHeapPQ.rs:93: info: accept() - accept hole
    LeftistHeapPQ.rs:103: info: accept() - accept hole
-   BalancedTreePQ.rs:56: info: accept() - accept hole
-   UnsortedListPQ.rs:65: info: accept() - accept hole
    BinaryHeapPQ.rs:53: info: accept() - accept hole
    BinaryHeapPQ.rs:68: info: accept() - accept hole
-   SortedListPQ.rs:65: info: accept() - accept hole
-
-🎉 No proof holes found! All proofs are complete.
-53: info: accept() - accept hole
-   BinaryHeapPQ.rs:68: info: accept() - accept hole
-   SortedListPQ.rs:65: info: accept() - accept hole
 
 🎉 No proof holes found! All proofs are complete.

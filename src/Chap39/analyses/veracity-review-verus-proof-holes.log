@@ -29,14 +29,10 @@ Proof Functions:
 Holes Found: 0 total
 
 Info: 5 total
-   BSTParaTreapMtEph.rs:59: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    BSTTreapMtEph.rs:51: info: accept() - accept hole
    BSTTreapMtEph.rs:64: info: accept() - accept hole
    BSTTreapMtEph.rs:81: info: accept() - accept hole
    BSTTreapMtEph.rs:94: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-
-🎉 No proof holes or warnings found! All proofs are complete.
-pt hole
-   BSTTreapMtEph.rs:94: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   BSTParaTreapMtEph.rs:59: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
 
 🎉 No proof holes or warnings found! All proofs are complete.

@@ -28,17 +28,3 @@ Proof Functions:
 
 Holes Found: 2 total
    2 × external_body
-��═══════
-
-Modules:
-   2 clean (no holes)
-   2 holed (contains holes)
-   4 total
-
-Proof Functions:
-   1 clean
-   0 holed
-   1 total
-
-Holes Found: 2 total
-   2 × external_body

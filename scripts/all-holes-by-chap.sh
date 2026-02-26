@@ -1,6 +1,6 @@
 #!/bin/bash
-# Run veracity-review-proof-holes on each chapter directory, one at a time.
-# Produces a per-chapter summary at the end.
+# Run veracity-review-proof-holes on each chapter directory.
+# Writes full output to each chapter's analyses/ log and prints a summary.
 
 set -euo pipefail
 
@@ -14,7 +14,11 @@ total_holed=0
 
 for dir in src/Chap*/; do
     chap="$(basename "$dir")"
+    mkdir -p "$dir/analyses"
+    logfile="$dir/analyses/veracity-review-verus-proof-holes.log"
+
     output=$("$VERACITY" -d "$dir" 2>&1) || true
+    echo "$output" > "$logfile"
 
     clean=$(echo "$output" | grep -oP '\d+(?= clean \(no holes\))' || echo 0)
     holed=$(echo "$output" | grep -oP '\d+(?= holed \(contains holes\))' || echo 0)

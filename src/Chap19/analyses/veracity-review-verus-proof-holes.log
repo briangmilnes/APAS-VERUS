@@ -27,13 +27,7 @@ Proof Functions:
 Holes Found: 0 total
 
 Info: 2 total
-   ArraySeqStEph.rs:1120: info: accept() - accept hole
    ArraySeqStPer.rs:1129: info: accept() - accept hole
-
-🎉 No proof holes or warnings found! All proofs are complete.
-
-Info: 2 total
    ArraySeqStEph.rs:1120: info: accept() - accept hole
-   ArraySeqStPer.rs:1129: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.

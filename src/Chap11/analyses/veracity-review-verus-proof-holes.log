@@ -31,16 +31,11 @@ Proof Functions:
 Holes Found: 0 total
 
 Info: 6 total
+   FibonacciMtPerTSM.rs:146: info: accept() - accept hole
+   FibonacciMtPerTSM.rs:154: info: accept() - accept hole
    FibonacciMtEph2Threads.rs:156: info: accept() - accept hole
    FibonacciMtEph2Threads.rs:164: info: accept() - accept hole
    FibonacciMtEphRecomputes.rs:152: info: accept() - accept hole
    FibonacciMtEphRecomputes.rs:160: info: accept() - accept hole
-   FibonacciMtPerTSM.rs:146: info: accept() - accept hole
-   FibonacciMtPerTSM.rs:154: info: accept() - accept hole
-
-🎉 No proof holes or warnings found! All proofs are complete.
-ept hole
-   FibonacciMtPerTSM.rs:146: info: accept() - accept hole
-   FibonacciMtPerTSM.rs:154: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.

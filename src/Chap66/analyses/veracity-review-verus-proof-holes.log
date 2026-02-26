@@ -22,14 +22,7 @@ Proof Functions:
 Holes Found: 0 total
 
 Info: 2 total
-   BoruvkaMtEph.rs:46: info: accept() - accept hole
    BoruvkaStEph.rs:44: info: accept() - accept hole
-
-🎉 No proof holes or warnings found! All proofs are complete.
-total
-
-Info: 2 total
    BoruvkaMtEph.rs:46: info: accept() - accept hole
-   BoruvkaStEph.rs:44: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.

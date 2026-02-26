@@ -51,15 +51,10 @@ Holes Found: 0 total
 Errors: 2 total (1 struct/enum outside verus!, 1 assume in eq/clone (Verus workaround))
 
 Info: 5 total
+   ChainedHashTable.rs:58: info: accept() - accept hole
    StructChainedHashTable.rs:66: info: accept() - accept hole
    StructChainedHashTable.rs:83: info: accept() - accept hole
    StructChainedHashTable.rs:106: info: accept() - accept hole
    StructChainedHashTable.rs:120: info: accept() - accept hole
-   ChainedHashTable.rs:58: info: accept() - accept hole
-
-🎉 No proof holes found! All proofs are complete.
-t() - accept hole
-   StructChainedHashTable.rs:120: info: accept() - accept hole
-   ChainedHashTable.rs:58: info: accept() - accept hole
 
 🎉 No proof holes found! All proofs are complete.

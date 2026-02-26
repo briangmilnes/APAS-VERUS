@@ -31,12 +31,7 @@ Holes Found: 0 total
 
 Info: 3 total
    SetStEph.rs:881: info: accept() - accept hole
-   MappingStEph.rs:581: info: accept() - accept hole
    SetMtEph.rs:972: info: accept() - accept hole
-
-🎉 No proof holes or warnings found! All proofs are complete.
-accept() - accept hole
    MappingStEph.rs:581: info: accept() - accept hole
-   SetMtEph.rs:972: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.
