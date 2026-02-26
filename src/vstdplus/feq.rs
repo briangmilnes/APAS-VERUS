@@ -48,9 +48,9 @@ pub mod feq {
     }
 
     pub open spec fn obeys_feq_clone<T: Eq + Clone + Sized>() -> bool {
-        &&& forall|x: T, y: T| #[trigger] cloned(x, y) ==> x.eq_spec(&y)
+        &&& forall|x: T, y: T|  #[trigger] cloned(x, y) ==> x.eq_spec(&y)
         &&& forall|x: &T, y: T| #[trigger] cloned(*x, y) ==> x.eq_spec(&y)
-        &&& forall|x: T, y: T| #[trigger] strictly_cloned(x, y) ==> x.eq_spec(&y)
+        &&& forall|x: T, y: T|  #[trigger] strictly_cloned(x, y) ==> x.eq_spec(&y)
         &&& forall|x: &T, y: T| #[trigger] strictly_cloned(*x, y) ==> x.eq_spec(&y)
     }
 

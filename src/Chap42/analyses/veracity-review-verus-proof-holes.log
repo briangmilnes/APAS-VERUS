@@ -1,62 +1,208 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap42/TableStPer.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap42/
 
-❌ TableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:135: external_body - #[verifier::external_body]
-       136 |         fn size(&self) -> (result: usize)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:148: external_body - #[verifier::external_body]
-       149 |         fn singleton(key: K, value: V) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:156: external_body - #[verifier::external_body]
-       157 |         fn domain(&self) -> (result: ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:166: external_body - #[verifier::external_body]
-       167 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:182: external_body - #[verifier::external_body]
-       183 |         fn map<F: Fn(&V) -> V>(&self, f: F) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:197: external_body - #[verifier::external_body]
-       198 |         fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:212: external_body - #[verifier::external_body]
-       213 |         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:240: external_body - #[verifier::external_body]
-       241 |         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:273: external_body - #[verifier::external_body]
-       274 |         fn difference(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:309: external_body - #[verifier::external_body]
-       310 |         fn find(&self, key: &K) -> (result: Option<V>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:330: external_body - #[verifier::external_body]
-       331 |         fn delete(&self, key: &K) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:345: external_body - #[verifier::external_body]
-       346 |         fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:407: external_body - #[verifier::external_body]
-       408 |         fn restrict(&self, keys: &ArraySetStEph<K>) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:422: external_body - #[verifier::external_body]
-       423 |         fn subtract(&self, keys: &ArraySetStEph<K>) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:437: external_body - #[verifier::external_body]
-       438 |         fn collect(&self) -> (result: ArraySeqStPerS<Pair<K, V>>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:452: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       447 |         fn clone(&self) -> (result: Self)
-            ...
-       450 |             let result = TableStPer { entries: self.entries.clone() };
-       451 |             proof {
-       453 |                 lemma_seq_map_cloned_view_eq(
-       454 |                     self.entries.seq@,
+✓ Example42_1.rs
+   1 clean proof function
+❌ TableMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:124: external_body - #[verifier::external_body]
+       125 |         fn size(&self) -> (result: usize)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:139: external_body - #[verifier::external_body]
+       140 |         fn singleton(key: K, value: V) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:148: external_body - #[verifier::external_body]
+       149 |         fn domain(&self) -> (result: ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:183: external_body - #[verifier::external_body]
+       184 |         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:243: external_body - #[verifier::external_body]
+       244 |         fn map<F: Fn(&V) -> V + Send + Sync + 'static>(&mut self, f: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:297: external_body - #[verifier::external_body]
+       298 |         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(&mut self, f: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:349: external_body - #[verifier::external_body]
+       350 |         fn intersection<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:377: external_body - #[verifier::external_body]
+       378 |         fn union<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:421: external_body - #[verifier::external_body]
+       422 |         fn difference(&mut self, other: &Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:456: external_body - #[verifier::external_body]
+       457 |         fn find(&self, key: &K) -> (result: Option<V>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:477: external_body - #[verifier::external_body]
+       478 |         fn delete(&mut self, key: &K)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:529: external_body - #[verifier::external_body]
+       530 |         fn insert<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, key: K, value: V, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:606: external_body - #[verifier::external_body]
+       607 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:658: external_body - #[verifier::external_body]
+       659 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableMtEph.rs:718: external_body - #[verifier::external_body]
+       719 |         fn clone(&self) -> (result: Self)
    Holes: 15 total
       15 × external_body
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ TableStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:129: external_body - #[verifier::external_body]
+       130 |         fn size(&self) -> (result: usize)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:144: external_body - #[verifier::external_body]
+       145 |         fn singleton(key: K, value: V) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:153: external_body - #[verifier::external_body]
+       154 |         fn domain(&self) -> (result: ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:165: external_body - #[verifier::external_body]
+       166 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:182: external_body - #[verifier::external_body]
+       183 |         fn map<F: Fn(&V) -> V>(&mut self, f: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:197: external_body - #[verifier::external_body]
+       198 |         fn filter<F: Fn(&K, &V) -> B>(&mut self, f: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:211: external_body - #[verifier::external_body]
+       212 |         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:238: external_body - #[verifier::external_body]
+       239 |         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:281: external_body - #[verifier::external_body]
+       282 |         fn difference(&mut self, other: &Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:314: external_body - #[verifier::external_body]
+       315 |         fn find(&self, key: &K) -> (result: Option<V>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:339: external_body - #[verifier::external_body]
+       340 |         fn delete(&mut self, key: &K)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:353: external_body - #[verifier::external_body]
+       354 |         fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:380: external_body - #[verifier::external_body]
+       381 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStEph.rs:394: external_body - #[verifier::external_body]
+       395 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+   Holes: 14 total
+      14 × external_body
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ TableStPer.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:448: assume() - proof { assume(key_clone@ == pair.0@); } // clone preserves 
+       430 |         fn map<F: Fn(&V) -> V>(&self, f: F) -> (result: Self)
+            ...
+       446 |                 let new_value = f(&pair.1);
+       447 |                 let key_clone = pair.0.clone();
+       449 |                 new_entries.push(Pair(key_clone, new_value));
+       450 |                 i += 1;
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:487: assume() - proof { assume(cloned.0@ == pair.0@); }
+       467 |         fn filter<F: Fn(&K, &V) -> B>(&self, f: F) -> (result: Self)
+            ...
+       485 |                 if f(&pair.0, &pair.1) {
+       486 |                     let cloned = pair.clone_plus();
+       488 |                     kept.push(cloned);
+       489 |                     proof { sources = sources.push(i as int); }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:519: assume() - proof { assume(obeys_view_eq::<K>()); }
+       512 |         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (result: Self)
+            ...
+       517 |             let ghost mut self_srcs: Seq<int> = Seq::empty();
+       518 |             let ghost mut other_srcs: Seq<int> = Seq::empty();
+       520 |             let mut i: usize = 0;
+       521 |             while i < self.entries.length()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:563: assume() - proof { assume(key_clone@ == pair.0@); }
+       512 |         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (result: Self)
+            ...
+       561 |                     let combined = combine(&pair.1, &other_val.1);
+       562 |                     let key_clone = pair.0.clone_plus();
+       564 |                     kept.push(Pair(key_clone, combined));
+       565 |                     proof {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:601: assume() - assume(result.spec_wf());
+       594 |         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (result: Self)
+            ...
+       599 |             proof {
+       600 |                 // clone preserves entries@, so spec_wf transfers.
+       602 |             }
+       603 |             let mut j: usize = 0;
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:618: assume() - assume(self@.dom().union(other@.dom()).subset_of(result@.dom
+       594 |         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (result: Self)
+            ...
+       616 |             }
+       617 |             proof {
+       619 |             }
+       620 |             result
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:629: assume() - proof { assume(obeys_view_eq::<K>()); }
+       623 |         fn difference(&self, other: &Self) -> (result: Self)
+            ...
+       627 |             let mut kept: Vec<Pair<K, V>> = Vec::new();
+       628 |             let ghost mut sources: Seq<int> = Seq::empty();
+       630 |             let mut i: usize = 0;
+       631 |             while i < self.entries.length()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:670: assume() - proof { assume(cloned.0@ == pair.0@); }
+       623 |         fn difference(&self, other: &Self) -> (result: Self)
+            ...
+       668 |                     }
+       669 |                     let cloned = pair.clone_plus();
+       671 |                     kept.push(cloned);
+       672 |                     proof { sources = sources.push(i as int); }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:697: assume() - proof { assume(obeys_view_eq::<K>()); }
+       695 |         fn find(&self, key: &K) -> (result: Option<V>)
+       696 |         {
+       698 |             let mut i: usize = 0;
+       699 |             while i < self.entries.length()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:713: assume() - assume(v@ == pair.1@); // clone preserves view
+       695 |         fn find(&self, key: &K) -> (result: Option<V>)
+            ...
+       711 |                     let v = pair.1.clone_plus();
+       712 |                     proof {
+       714 |                         lemma_entries_to_map_get::<K::V, V::V>(self.entries@, i as int);
+       715 |                     }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:728: assume() - proof { assume(obeys_view_eq::<K>()); }
+       726 |         fn delete(&self, key: &K) -> (result: Self)
+       727 |         {
+       729 |             let ghost self_view = self.entries@;
+       730 |             let mut result: Vec<Pair<K, V>> = Vec::new();
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:754: assume() - assume(cloned.0@ == pair.0@); // clone preserves view
+       726 |         fn delete(&self, key: &K) -> (result: Self)
+            ...
+       752 |                     let cloned = pair.clone_plus();
+       753 |                     proof {
+       755 |                     }
+       756 |                     result.push(cloned);
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:790: assume() - proof { assume(obeys_view_eq::<K>()); }
+       788 |         fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (result: Self)
+       789 |         {
+       791 |             let ghost key_view: K::V = key@;
+       792 |             let ghost self_view = self.entries@;
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:821: assume() - assume(cloned.0@ == pair.0@); // clone preserves view
+       788 |         fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (result: Self)
+            ...
+       819 |                     let cloned = pair.clone_plus();
+       820 |                     proof {
+       822 |                     }
+       823 |                     all.push(cloned);
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:882: assume() - proof { assume(cloned.0@ == pair.0@); }
+       863 |         fn restrict(&self, keys: &ArraySetStEph<K>) -> (result: Self)
+            ...
+       880 |                 if keys.find(&pair.0) {
+       881 |                     let cloned = pair.clone_plus();
+       883 |                     kept.push(cloned);
+       884 |                     proof { sources = sources.push(i as int); }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:925: assume() - proof { assume(cloned.0@ == pair.0@); }
+       906 |         fn subtract(&self, keys: &ArraySetStEph<K>) -> (result: Self)
+            ...
+       923 |                 if !keys.find(&pair.0) {
+       924 |                     let cloned = pair.clone_plus();
+       926 |                     kept.push(cloned);
+       927 |                     proof { sources = sources.push(i as int); }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap42/TableStPer.rs:963: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       958 |         fn clone(&self) -> (result: Self)
+            ...
+       961 |             let result = TableStPer { entries: self.entries.clone() };
+       962 |             proof {
+       964 |                 lemma_seq_map_cloned_view_eq(
+       965 |                     self.entries.seq@,
+   Holes: 16 total
+      16 × assume()
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
+   Proof functions: 8 total (8 clean, 0 holed)
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   0 clean (no holes)
-   1 holed (contains holes)
-   1 total
+   1 clean (no holes)
+   3 holed (contains holes)
+   4 total
 
 Proof Functions:
-   0 clean
+   11 clean
    0 holed
-   0 total
+   11 total
 
-Holes Found: 15 total
-   15 × external_body
+Holes Found: 45 total
+   16 × assume()
+   29 × external_body
 
-Errors: 1 (bare impl(s), struct/enum outside verus!)
+Errors: 1 total (1 assume in eq/clone (Verus workaround))

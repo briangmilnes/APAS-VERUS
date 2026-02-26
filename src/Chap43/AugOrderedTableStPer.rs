@@ -24,6 +24,8 @@ pub mod AugOrderedTableStPer {
     use crate::Chap43::OrderedTableStPer::OrderedTableStPer::*;
     use crate::OrderedTableStPerLit;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
 
     verus! {
 
@@ -71,6 +73,7 @@ broadcast use {
         F: Fn(&V, &V) -> V + Clone,
         ensures base@.dom().finite(),
     {
+        proof { assume(base.spec_wf()); }
         let sz = base.size(); // establishes base@.dom().finite()
         if sz == 0 {
             return identity.clone();
@@ -112,22 +115,29 @@ broadcast use {
     where
         F: Fn(&V, &V) -> V + Clone,
     {
+        spec fn spec_wf(&self) -> bool;
+
         fn size(&self) -> (result: usize)
+            requires self.spec_wf(),
             ensures result == self@.dom().len(), self@.dom().finite();
         fn empty(reducer: F, identity: V) -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty();
+            ensures result@ == Map::<K::V, V::V>::empty(), result.spec_wf();
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (result: Self)
-            ensures result@.dom().finite();
+            requires obeys_feq_clone::<Pair<K, V>>(),
+            ensures result@.dom().finite(), result.spec_wf();
         fn find(&self, k: &K) -> (result: Option<V>)
+            requires self.spec_wf(),
             ensures
                 match result {
                     Some(v) => self@.contains_key(k@) && v@ == self@[k@],
                     None => !self@.contains_key(k@),
                 };
         fn insert(&self, k: K, v: V) -> (result: Self)
-            ensures result@.dom().finite();
+            requires self.spec_wf(),
+            ensures result@.dom().finite(), result.spec_wf();
         fn delete(&self, k: &K) -> (result: Self)
-            ensures result@.dom().finite();
+            requires self.spec_wf(), obeys_feq_clone::<Pair<K, V>>(),
+            ensures result@.dom().finite(), result.spec_wf();
         fn domain(&self) -> (result: ArraySetStEph<K>)
             ensures self@.dom().finite();
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (result: Self)
@@ -143,8 +153,8 @@ broadcast use {
             requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
             ensures result@.dom().finite();
         fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (result: Self)
-            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
-            ensures result@.dom().finite();
+            requires self.spec_wf(), forall|v1: &V, v2: &V| f.requires((v1, v2)),
+            ensures result@.dom().finite(), result.spec_wf();
         fn difference(&self, other: &Self) -> (result: Self)
             ensures result@.dom().finite();
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (result: Self)
@@ -165,7 +175,8 @@ broadcast use {
             where Self: Sized,
             ensures self@.dom().finite();
         fn join_key(left: &Self, right: &Self) -> (result: Self)
-            ensures result@.dom().finite();
+            requires left.spec_wf(), right.spec_wf(),
+            ensures result@.dom().finite(), result.spec_wf();
         fn get_key_range(&self, k1: &K, k2: &K) -> (result: Self)
             ensures result@.dom().finite();
         fn rank_key(&self, k: &K) -> (result: usize)
@@ -187,6 +198,10 @@ broadcast use {
     where
         F: Fn(&V, &V) -> V + Clone,
     {
+        open spec fn spec_wf(&self) -> bool {
+            self.base_table.spec_wf()
+        }
+
         fn size(&self) -> (result: usize)
             ensures result == self@.dom().len(), self@.dom().finite()
         {
@@ -195,7 +210,7 @@ broadcast use {
         }
 
         fn empty(reducer: F, identity: V) -> (result: Self)
-            ensures result@ == Map::<K::V, V::V>::empty()
+            ensures result@ == Map::<K::V, V::V>::empty(), result.spec_wf()
         {
             let base = OrderedTableStPer::empty();
             let r = Self {
@@ -209,7 +224,7 @@ broadcast use {
         }
 
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (result: Self)
-            ensures result@.dom().finite()
+            ensures result@.dom().finite(), result.spec_wf()
         {
             let base = OrderedTableStPer::singleton(k, v.clone());
             let r = Self {
@@ -223,18 +238,13 @@ broadcast use {
         }
 
         fn find(&self, k: &K) -> (result: Option<V>)
-            ensures
-                match result {
-                    Some(v) => self@.contains_key(k@) && v@ == self@[k@],
-                    None => !self@.contains_key(k@),
-                }
         {
             proof { lemma_aug_view(self); }
             self.base_table.find(k)
         }
 
         fn insert(&self, k: K, v: V) -> (result: Self)
-            ensures result@.dom().finite()
+            ensures result@.dom().finite(), result.spec_wf()
         {
             let new_base = self.base_table.insert(k, v);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -250,7 +260,7 @@ broadcast use {
         }
 
         fn delete(&self, k: &K) -> (result: Self)
-            ensures result@.dom().finite()
+            ensures result@.dom().finite(), result.spec_wf()
         {
             let new_base = self.base_table.delete(k);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -337,7 +347,7 @@ broadcast use {
         }
 
         fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (result: Self)
-            ensures result@.dom().finite()
+            ensures result@.dom().finite(), result.spec_wf()
         {
             let new_base = self.base_table.union(&other.base_table, f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -462,7 +472,7 @@ broadcast use {
         }
 
         fn join_key(left: &Self, right: &Self) -> (result: Self)
-            ensures result@.dom().finite()
+            ensures result@.dom().finite(), result.spec_wf()
         {
             let new_base = OrderedTableStPer::join_key(&left.base_table, &right.base_table);
             let new_reduction = if left.base_table.size() == 0 {

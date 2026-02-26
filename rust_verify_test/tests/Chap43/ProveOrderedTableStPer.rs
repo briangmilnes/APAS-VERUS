@@ -17,8 +17,11 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::*;
+        use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
 
-        fn test_loop_borrow_iter() {
+        fn test_loop_borrow_iter()
+            requires obeys_feq_clone::<Pair<u64, u64>>(),
+        {
             let t = OrderedTableStPer::singleton(1u64, 10u64)
                 .insert(2u64, 20u64)
                 .insert(3u64, 30u64);
@@ -55,8 +58,11 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::*;
+        use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
 
-        fn test_loop_borrow_into() {
+        fn test_loop_borrow_into()
+            requires obeys_feq_clone::<Pair<u64, u64>>(),
+        {
             let t = OrderedTableStPer::singleton(1u64, 10u64)
                 .insert(2u64, 20u64)
                 .insert(3u64, 30u64);
@@ -93,8 +99,11 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::*;
+        use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
 
-        fn test_for_borrow_iter() {
+        fn test_for_borrow_iter()
+            requires obeys_feq_clone::<Pair<u64, u64>>(),
+        {
             let t = OrderedTableStPer::singleton(1u64, 10u64)
                 .insert(2u64, 20u64)
                 .insert(3u64, 30u64);
@@ -123,8 +132,11 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::*;
+        use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
 
-        fn test_for_borrow_into() {
+        fn test_for_borrow_into()
+            requires obeys_feq_clone::<Pair<u64, u64>>(),
+        {
             let t = OrderedTableStPer::singleton(1u64, 10u64)
                 .insert(2u64, 20u64)
                 .insert(3u64, 30u64);
