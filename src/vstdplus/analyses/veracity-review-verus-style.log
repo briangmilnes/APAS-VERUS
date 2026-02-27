@@ -1,0 +1,13 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/hash_map_with_view_plus.rs
+Codebase: /home/milnes/projects/APAS-VERUS-agent1/src/vstdplus
+Mode: basic
+Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/vstdplus/analyses/veracity-review-verus-style.log
+
+Checking 1 files...
+
+════════════════════════════════════════════════════════════════
+Summary: 12 passed, 22 warnings in 1 files (checked 1 files)
+════════════════════════════════════════════════════════════════

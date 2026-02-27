@@ -49,6 +49,7 @@ verus! {
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusIter;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
 
@@ -830,7 +831,7 @@ verus! {
     /// Iterator wrapper to hide std::collections::hash_set::Iter.
     #[verifier::reject_recursive_types(T)]
     pub struct SetMtEphIter<'a, T: StT + Hash> {
-        pub inner: std::collections::hash_set::Iter<'a, T>,
+        pub inner: HashSetWithViewPlusIter<'a, T>,
     }
 
     impl<'a, T: StT + Hash> View for SetMtEphIter<'a, T> {
