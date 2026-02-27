@@ -8,17 +8,18 @@ pub mod BinaryHeapPQ {
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
-    use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
-    use crate::Types::Types::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{axiom_cloned_implies_eq_owned, lemma_seq_map_cloned_view_eq, obeys_feq_clone};
-    use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use vstd::arithmetic::power2::{pow2, lemma_pow2_pos, lemma_pow2_unfold};
     #[cfg(verus_keep_ghost)]
     use vstd::arithmetic::logarithm::{log, lemma_log0, lemma_log_s, lemma_log_nonnegative};
 
     verus! {
+
+        use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+        use crate::Types::Types::*;
+        #[cfg(verus_keep_ghost)]
+        use crate::vstdplus::feq::feq::*;
+        use crate::vstdplus::accept::accept;
 
         broadcast use {
             crate::vstdplus::feq::feq::group_feq_axioms,

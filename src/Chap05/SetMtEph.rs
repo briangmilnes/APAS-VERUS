@@ -38,7 +38,6 @@ verus! {
     #[cfg(verus_keep_ghost)]
     use {
         vstd::std_specs::hash::obeys_key_model,
-        vstd::std_specs::hash::SetIterAdditionalSpecFns,
         vstd::std_specs::clone::*,
         vstd::std_specs::cmp::PartialEqSpecImpl,
         vstd::pervasive::strictly_cloned,
@@ -513,7 +512,6 @@ verus! {
                         let s2_clone = s2.clone();
                         
                         proof {
-                            use crate::vstdplus::feq::feq::lemma_cloned_view_eq;
                             lemma_cloned_view_eq(*a, a_clone);
                         }
                         
@@ -781,9 +779,6 @@ verus! {
         }
 
         fn choose(&self) -> (element: T) {
-            #[cfg(verus_keep_ghost)]
-            use crate::vstdplus::feq::feq::lemma_cloned_view_eq;
-            
             let mut it = self.elements.iter();
             let ghost s: Seq<T> = it@.1;
             

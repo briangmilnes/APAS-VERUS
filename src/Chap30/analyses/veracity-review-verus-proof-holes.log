@@ -1,52 +1,26 @@
-❌ Probability.rs
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:46: external_body - #[verifier::external_body]
-        47 |         fn new(value: f64) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:52: external_body - #[verifier::external_body]
-        53 |         fn value(&self) -> f64 { self.0 }
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:55: external_body - #[verifier::external_body]
-        56 |         fn infinity() -> Self { Probability(f64::INFINITY) }
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:58: external_body - #[verifier::external_body]
-        59 |         fn zero() -> Self { Probability(0.0) }
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:68: external_body - #[verifier::external_body]
-        69 |         /// - APAS: Work Θ(1), Span Θ(1)
-        70 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — bit-level f64 comparison
-        71 |         fn eq(&self, other: &Self) -> bool {
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:79: external_body - #[verifier::external_body]
-        80 |         fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:84: external_body - #[verifier::external_body]
-        85 |         /// - APAS: Work Θ(1), Span Θ(1)
-        86 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — NaN-aware f64 comparison
-        87 |         fn cmp(&self, other: &Self) -> Ordering {
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:106: external_body - #[verifier::external_body]
-       107 |         /// - APAS: Work Θ(1), Span Θ(1)
-       108 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — hash f64 bits
-       109 |         fn hash<H: Hasher>(&self, state: &mut H) { self.0.to_bits().hash(state); }
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:113: external_body - #[verifier::external_body]
-       114 |         /// - APAS: Work Θ(1), Span Θ(1)
-       115 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 wrapping
-       116 |         fn from(value: f64) -> Self { Probability(value) }
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:120: external_body - #[verifier::external_body]
-       121 |         /// - APAS: Work Θ(1), Span Θ(1)
-       122 |         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 unwrapping
-       123 |         fn from(prob: Probability) -> Self { prob.0 }
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:129: external_body - #[verifier::external_body]
-       130 |         fn add(self, other: Self) -> Self { Probability(self.0 + other.0) }
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:136: external_body - #[verifier::external_body]
-       137 |         fn sub(self, other: Self) -> Self { Probability(self.0 - other.0) }
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:143: external_body - #[verifier::external_body]
-       144 |         fn mul(self, other: Self) -> Self { Probability(self.0 * other.0) }
-/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:150: external_body - #[verifier::external_body]
-       151 |         fn div(self, other: Self) -> Self { Probability(self.0 / other.0) }
-   Holes: 14 total
-      14 × external_body
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap30
+
+ℹ Probability.rs
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:49: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:63: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:72: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:80: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:103: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:110: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:117: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:124: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:130: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:138: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:145: info: external_body_accept_hole - external_body with accept hole comment
+   Info: 11 total
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   0 clean (no holes)
-   1 holed (contains holes)
+   1 clean (no holes)
+   0 holed (contains holes)
    1 total
 
 Proof Functions:
@@ -54,12 +28,19 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 14 total
-   14 × external_body
-f Functions:
-   0 clean
-   0 holed
-   0 total
+Holes Found: 0 total
 
-Holes Found: 14 total
-   14 × external_body
+Info: 11 total
+   Probability.rs:49: info: external_body_accept_hole - external_body with accept hole comment
+   Probability.rs:63: info: external_body_accept_hole - external_body with accept hole comment
+   Probability.rs:72: info: external_body_accept_hole - external_body with accept hole comment
+   Probability.rs:80: info: external_body_accept_hole - external_body with accept hole comment
+   Probability.rs:103: info: external_body_accept_hole - external_body with accept hole comment
+   Probability.rs:110: info: external_body_accept_hole - external_body with accept hole comment
+   Probability.rs:117: info: external_body_accept_hole - external_body with accept hole comment
+   Probability.rs:124: info: external_body_accept_hole - external_body with accept hole comment
+   Probability.rs:130: info: external_body_accept_hole - external_body with accept hole comment
+   Probability.rs:138: info: external_body_accept_hole - external_body with accept hole comment
+   Probability.rs:145: info: external_body_accept_hole - external_body with accept hole comment
+
+🎉 No proof holes or warnings found! All proofs are complete.

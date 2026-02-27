@@ -12,7 +12,7 @@ pub mod OrderedTableStPer {
     use crate::vstdplus::clone_plus::clone_plus::*;
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_clone;
+    use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 

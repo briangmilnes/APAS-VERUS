@@ -300,7 +300,7 @@ pub mod AVLTreeSeqStEph {
     }
 
     #[verifier::external_body]
-    pub(crate) fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>) {
+    pub fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>) {
         match node {
             None => {
                 debug_assert!(index == 0, "insert_at_link reached None with index > 0");

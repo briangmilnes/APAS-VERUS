@@ -33,18 +33,17 @@ verus! {
     #[cfg(verus_keep_ghost)]
     use {
         vstd::std_specs::hash::obeys_key_model,
-        vstd::std_specs::hash::SetIterAdditionalSpecFns,
         vstd::std_specs::clone::*,
         vstd::std_specs::cmp::PartialEqSpecImpl,
         vstd::pervasive::strictly_cloned,
         vstd::laws_eq::*,
     };
+    use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::*;
-    use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
 
 

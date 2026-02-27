@@ -9,7 +9,6 @@ pub mod hash_set_with_view_plus_loops {
 use vstd::prelude::*;
 use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
 use vstd::std_specs::hash::obeys_key_model;
-use vstd::std_specs::hash::SetIterAdditionalSpecFns;
 
 #[cfg(verus_keep_ghost)]
 use vstd::pervasive::ForLoopGhostIteratorNew;

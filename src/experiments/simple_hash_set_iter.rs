@@ -19,8 +19,6 @@ pub mod simple_hash_set_iter {
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
     
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::hash::SetIterAdditionalSpecFns;
-    #[cfg(verus_keep_ghost)]
     use vstd::pervasive::ForLoopGhostIteratorNew;
     #[cfg(verus_keep_ghost)]
     use vstd::pervasive::ForLoopGhostIterator;

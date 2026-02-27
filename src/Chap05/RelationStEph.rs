@@ -31,7 +31,6 @@ verus! {
     #[cfg(verus_keep_ghost)]
     use {
         vstd::std_specs::hash::obeys_key_model,
-        vstd::std_specs::hash::SetIterAdditionalSpecFns,
         vstd::std_specs::clone::*,
         vstd::std_specs::cmp::PartialEqSpecImpl,
     };

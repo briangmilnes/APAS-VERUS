@@ -21,7 +21,7 @@ pub mod MaxContigSubSumDivConOptMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::Chap28::MaxContigSubSumDivConOptStEph::MaxContigSubSumDivConOptStEph::lemma_strength_combine;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_clone;
+    use crate::vstdplus::feq::feq::*;
 
     pub type T = ArraySeqMtEphS<i32>;
 

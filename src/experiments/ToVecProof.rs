@@ -7,7 +7,7 @@ pub mod ToVecProof {
     verus! {
 
 #[cfg(verus_keep_ghost)]
-use vstd::std_specs::hash::{obeys_key_model, SetIterAdditionalSpecFns};
+use vstd::std_specs::hash::obeys_key_model;
 
 #[cfg(verus_keep_ghost)]
         broadcast use {vstd::std_specs::hash::group_hash_axioms, crate::vstdplus::clone_view::clone_view::group_clone_view_axioms};

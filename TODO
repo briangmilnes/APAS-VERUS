@@ -6,6 +6,56 @@
 14) Check my total order and partial orders against updates to vstd.
 15) Deep_view review.
 16) Get the derives in use where they now work.
-17) Why do we have bogus external_body views?
-18) Why do we have bogus Ex types?
+17) Do I need obeys_feq_clone 277 times? Why not obeys_feq_full?
+
+
+Review:
+
+agent1 is on hash_*_with_view_plus.rs iterators.
+
+src/Chap02/analyses/veracity-review-verus-proof-holes.log - accepted 
+src/Chap03/analyses/veracity-review-verus-proof-holes.log - clean
+src/Chap05/analyses/veracity-review-verus-proof-holes.log - clean
+src/Chap06/analyses/veracity-review-verus-proof-holes.log - clean
+src/Chap11/analyses/veracity-review-verus-proof-holes.log - clean
+src/Chap12/analyses/veracity-review-verus-proof-holes.log - clean
+src/Chap17/analyses/veracity-review-verus-proof-holes.log - clean
+src/Chap18/analyses/veracity-review-verus-proof-holes.log - clean
+src/Chap19/analyses/veracity-review-verus-proof-holes.log - clean
+src/Chap21/analyses/veracity-review-verus-proof-holes.log - clean
+src/Chap23/analyses/veracity-review-verus-proof-holes.log - clean
+src/Chap26/analyses/veracity-review-verus-proof-holes.log - clean
+src/Chap27/analyses/veracity-review-verus-proof-holes.log - not correctly verusified, perhaps proven.
+src/Chap28/analyses/veracity-review-verus-proof-holes.log - agent2 cleaning.
+src/Chap30/analyses/veracity-review-verus-proof-holes.log - clean but it's stub.
+src/Chap35/analyses/veracity-review-verus-proof-holes.log - agent3 
+src/Chap36/analyses/veracity-review-verus-proof-holes.log - needs trait and impl on two of them
+src/Chap37/analyses/veracity-review-verus-proof-holes.log - bad
+src/Chap38/analyses/veracity-review-verus-proof-holes.log - bad no trait no specs. 
+src/Chap39/analyses/veracity-review-verus-proof-holes.log - bad closed specs, under specified.
+src/Chap40/analyses/veracity-review-verus-proof-holes.log - N, pub(crate), no trait, no spec.
+src/Chap41/analyses/veracity-review-verus-proof-holes.log
+src/Chap42/analyses/veracity-review-verus-proof-holes.log
+src/Chap43/analyses/veracity-review-verus-proof-holes.log
+src/Chap44/analyses/veracity-review-verus-proof-holes.log
+src/Chap45/analyses/veracity-review-verus-proof-holes.log
+src/Chap47/analyses/veracity-review-verus-proof-holes.log
+src/Chap49/analyses/veracity-review-verus-proof-holes.log
+src/Chap50/analyses/veracity-review-verus-proof-holes.log
+src/Chap51/analyses/veracity-review-verus-proof-holes.log
+src/Chap52/analyses/veracity-review-verus-proof-holes.log
+src/Chap53/analyses/veracity-review-verus-proof-holes.log
+src/Chap54/analyses/veracity-review-verus-proof-holes.log
+src/Chap55/analyses/veracity-review-verus-proof-holes.log
+src/Chap56/analyses/veracity-review-verus-proof-holes.log
+src/Chap57/analyses/veracity-review-verus-proof-holes.log
+src/Chap58/analyses/veracity-review-verus-proof-holes.log
+src/Chap59/analyses/veracity-review-verus-proof-holes.log
+src/Chap61/analyses/veracity-review-verus-proof-holes.log
+src/Chap62/analyses/veracity-review-verus-proof-holes.log
+src/Chap63/analyses/veracity-review-verus-proof-holes.log
+src/Chap64/analyses/veracity-review-verus-proof-holes.log
+src/Chap65/analyses/veracity-review-verus-proof-holes.log
+src/Chap66/analyses/veracity-review-verus-proof-holes.log
+
 

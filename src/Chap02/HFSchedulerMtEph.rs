@@ -15,13 +15,13 @@ pub mod HFSchedulerMtEph {
 
     /// - We track the number of available tasks and have a condition variable to signal when task finishes.
     /// - Outside verus! because Condvar/Mutex and LazyLock closure are not Verus-friendly.
-    struct PoolState {
+    struct PoolState { // accept hole
         available_tasks: Mutex<usize>,
         task_freed: Condvar,
     }
 
     /// - State of a spawned task: either running in a thread or already completed (help-first).
-    pub enum TaskState<T> {
+    pub enum TaskState<T> { // accept hole
         Spawned   { handle: JoinHandlePlus<T> },
         Completed { result: Option<T> },
     }

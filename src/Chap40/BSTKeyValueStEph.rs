@@ -14,12 +14,12 @@ pub mod BSTKeyValueStEph {
 
     type Link<K, V> = Option<Box<Node<K, V>>>;
 
-    pub(crate) struct Node<K: StT + Ord, V: StT> {
-        pub(crate) key: K,
-        pub(crate) value: V,
-        pub(crate) priority: u64,
-        pub(crate) left: Link<K, V>,
-        pub(crate) right: Link<K, V>,
+    pub struct Node<K: StT + Ord, V: StT> {
+        pub key: K,
+        pub value: V,
+        pub priority: u64,
+        pub left: Link<K, V>,
+        pub right: Link<K, V>,
     }
 
     fn clone_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (result: Link<K, V>)
@@ -64,8 +64,8 @@ pub mod BSTKeyValueStEph {
     }
 
     pub struct BSTKeyValueStEph<K: StT + Ord, V: StT> {
-        pub(crate) root: Link<K, V>,
-        pub(crate) size: usize,
+        pub root: Link<K, V>,
+        pub size: usize,
     }
 
     impl<K: StT + Ord, V: StT> Clone for BSTKeyValueStEph<K, V> {
@@ -134,7 +134,7 @@ pub mod BSTKeyValueStEph {
         }
     }
 
-    pub(crate) open spec fn spec_height_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> nat
+    pub open spec fn spec_height_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> nat
         decreases *link,
     {
         match link {

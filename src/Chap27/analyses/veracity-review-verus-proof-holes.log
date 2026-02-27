@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS/src/Chap27/
+
 ✓ ReduceContractMtEph.rs
 ✓ ReduceContractStEph.rs
    4 clean proof functions
@@ -18,11 +20,6 @@ Proof Functions:
    5 clean
    0 holed
    5 total
-
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
-otal
 
 Holes Found: 0 total
 

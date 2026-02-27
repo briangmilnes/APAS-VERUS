@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap12
+
 ℹ Exercise12_1.rs
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:19: info: external_body_accept_hole - external_body with accept hole comment
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:59: info: external_body_accept_hole - external_body with accept hole comment
@@ -7,35 +9,7 @@
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:92: info: external_body_accept_hole - external_body with accept hole comment
    Info: 6 total
 ✓ Exercise12_2.rs
-❌ Exercise12_5.rs
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:113: unsafe {} - new_node = unsafe { Box::from_raw(node_ptr) };
-       104 |     fn push(&self, value: T) {
-            ...
-       111 |                 break;
-       112 |             }
-       114 |         }
-       115 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:124: unsafe {} - let next = unsafe { (*head).next };
-       118 |     fn pop(&self) -> (possible_top: Option<T>) {
-            ...
-       122 |                 return None;
-       123 |             }
-       125 |             if self.head.compare_exchange_weak(head, next, Ordering::AcqRel, Ordering::Acquire).is_ok() {
-       126 |                 let boxed = unsafe { Box::from_raw(head) };
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:126: unsafe {} - let boxed = unsafe { Box::from_raw(head) };
-       118 |     fn pop(&self) -> (possible_top: Option<T>) {
-            ...
-       124 |             let next = unsafe { (*head).next };
-       125 |             if self.head.compare_exchange_weak(head, next, Ordering::AcqRel, Ordering::Acquire).is_ok() {
-       127 |                 return Some(boxed.value);
-       128 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:161: unsafe {} - unsafe {
-       155 |     fn drop(&mut self)
-            ...
-       159 |         let mut current = self.head.load(Ordering::Relaxed);
-       160 |         while !current.is_null() {
-       162 |                 let node = Box::from_raw(current);
-       163 |                 current = node.next;
+ℹ Exercise12_5.rs
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:30: info: external_accept_hole - external with accept hole comment
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:38: info: external_body_accept_hole - external_body with accept hole comment
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:96: info: external_body_accept_hole - external_body with accept hole comment
@@ -44,17 +18,19 @@
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:132: info: external_body_accept_hole - external_body with accept hole comment
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:137: info: external_body_accept_hole - external_body with accept hole comment
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:154: info: external_body_accept_hole - external_body with accept hole comment
-   Holes: 4 total
-      4 × unsafe {}
-   Info: 8 total
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:113: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:124: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:126: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:161: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
+   Info: 12 total
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   2 clean (no holes)
-   1 holed (contains holes)
+   3 clean (no holes)
+   0 holed (contains holes)
    3 total
 
 Proof Functions:
@@ -62,10 +38,9 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 4 total
-   4 × unsafe {}
+Holes Found: 0 total
 
-Info: 14 total
+Info: 18 total
    Exercise12_5.rs:30: info: external_accept_hole - external with accept hole comment
    Exercise12_5.rs:38: info: external_body_accept_hole - external_body with accept hole comment
    Exercise12_5.rs:96: info: external_body_accept_hole - external_body with accept hole comment
@@ -74,11 +49,15 @@ Info: 14 total
    Exercise12_5.rs:132: info: external_body_accept_hole - external_body with accept hole comment
    Exercise12_5.rs:137: info: external_body_accept_hole - external_body with accept hole comment
    Exercise12_5.rs:154: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_5.rs:113: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
+   Exercise12_5.rs:124: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
+   Exercise12_5.rs:126: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
+   Exercise12_5.rs:161: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
    Exercise12_1.rs:19: info: external_body_accept_hole - external_body with accept hole comment
    Exercise12_1.rs:59: info: external_body_accept_hole - external_body with accept hole comment
    Exercise12_1.rs:67: info: external_body_accept_hole - external_body with accept hole comment
    Exercise12_1.rs:75: info: external_body_accept_hole - external_body with accept hole comment
    Exercise12_1.rs:80: info: external_body_accept_hole - external_body with accept hole comment
    Exercise12_1.rs:92: info: external_body_accept_hole - external_body with accept hole comment
- Exercise12_1.rs:80: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_1.rs:92: info: external_body_accept_hole - external_body with accept hole comment
+
+🎉 No proof holes or warnings found! All proofs are complete.

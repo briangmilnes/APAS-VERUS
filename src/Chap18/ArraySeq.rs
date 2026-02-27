@@ -18,9 +18,6 @@
 
 //		1. module
 
-
-
-
 pub mod ArraySeq {
 
     use std::fmt::{Debug, Display, Formatter};
@@ -31,8 +28,6 @@ pub mod ArraySeq {
     use vstd::prelude::*;
 
     verus! {
-
-    //		2. imports
 
     //		2. imports
 
@@ -56,8 +51,6 @@ pub mod ArraySeq {
 
     //		3. broadcast use
 
-    //		3. broadcast use
-
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
@@ -69,18 +62,12 @@ pub mod ArraySeq {
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
-
-    //		4. type definitions
-
     //		4. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqS<T> {
         pub seq: Vec<T>,
     }
-
-
-    //		5. view impls
 
     //		5. view impls
 
@@ -91,9 +78,6 @@ pub mod ArraySeq {
             self.seq@.map(|_i: int, t: T| t@)
         }
     }
-
-
-    //		6. spec fns
 
     //		6. spec fns
 
@@ -320,9 +304,6 @@ pub mod ArraySeq {
         };
         lemma_find_key_index_not_found(s.deep_view(), k.deep_view());
     }
-
-
-    //		8. traits
 
     //		8. traits
 
@@ -1490,9 +1471,6 @@ pub mod ArraySeq {
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-
-    //		10. iterators
-
     //		10. iterators
 
     /// Iterator wrapper with closed spec view for encapsulation.
@@ -1621,9 +1599,6 @@ pub mod ArraySeq {
         fn into_iter(self) -> Self::IntoIter { self.seq.iter_mut() }
     }
 
-
-    //		11. derive impls in verus!
-
     //		11. derive impls in verus!
 
     impl<T: Clone> Clone for ArraySeqS<T> {
@@ -1650,7 +1625,6 @@ pub mod ArraySeq {
     }
 
     } // verus!
-
 
 
     //		13. derive impls outside verus!

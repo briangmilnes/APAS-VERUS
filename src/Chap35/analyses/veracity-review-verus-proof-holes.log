@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap35
+
 ❌ OrderStatSelectMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:64: external_body - #[verifier::external_body]
         65 |     fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
@@ -22,13 +24,6 @@ Modules:
    4 total
 
 Proof Functions:
-   1 clean
-   0 holed
-   1 total
-
-Holes Found: 2 total
-   2 × external_body
-oof Functions:
    1 clean
    0 holed
    1 total

@@ -13,17 +13,12 @@
 
 //		1. module
 
-
-
-
 pub mod ReduceContractMtEph {
 
     use std::sync::Arc;
     use vstd::prelude::*;
 
     verus! {
-
-    //		2. imports
 
     //		2. imports
 
@@ -36,9 +31,6 @@ pub mod ReduceContractMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
-
-    //		3. broadcast use
-
     //		3. broadcast use
 
     broadcast use {
@@ -50,8 +42,6 @@ pub mod ReduceContractMtEph {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-
-    //		8. traits
 
     //		8. traits
 

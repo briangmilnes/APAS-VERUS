@@ -7,8 +7,6 @@ pub mod Types {
     use std::hash::Hash;
     use std::ops::Add;
     use vstd::prelude::*;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::hash::SetIterAdditionalSpecFns;
 
     /// Verus/Rust really needs usize or an int for indexing and lengths; here we have selected usize.
     pub type N = usize;
@@ -104,7 +102,7 @@ broadcast use {
     }
 
     /// Single-threaded friendly elements: Eq + Clone + Display + Debug + Sized + View.
-    pub trait StT: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    pub trait StT: Eq + PartialEq + Clone + Display + Debug + Sized + vstd::prelude::View {}
     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
 
     /// Single-threaded predicate function (boolean function).

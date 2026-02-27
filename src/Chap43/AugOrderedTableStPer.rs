@@ -25,7 +25,7 @@ pub mod AugOrderedTableStPer {
     use crate::OrderedTableStPerLit;
     use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_clone;
+    use crate::vstdplus::feq::feq::*;
 
     verus! {
 

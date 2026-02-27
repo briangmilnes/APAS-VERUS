@@ -110,7 +110,7 @@ impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
             if self.head.compare_exchange_weak(head, node_ptr, Ordering::AcqRel, Ordering::Acquire).is_ok() {
                 break;
             }
-            new_node = unsafe { Box::from_raw(node_ptr) };
+            new_node = unsafe { Box::from_raw(node_ptr) }; // accept hole
         }
     }
 
@@ -121,9 +121,9 @@ impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
             if head.is_null() {
                 return None;
             }
-            let next = unsafe { (*head).next };
+            let next = unsafe { (*head).next };  // accept hole
             if self.head.compare_exchange_weak(head, next, Ordering::AcqRel, Ordering::Acquire).is_ok() {
-                let boxed = unsafe { Box::from_raw(head) };
+                let boxed = unsafe { Box::from_raw(head) };  // accept hole
                 return Some(boxed.value);
             }
         }
@@ -158,7 +158,7 @@ impl<T: Send> Drop for ConcurrentStackMt<T> {
     {
         let mut current = self.head.load(Ordering::Relaxed);
         while !current.is_null() {
-            unsafe {
+            unsafe {  // accept hole
                 let node = Box::from_raw(current);
                 current = node.next;
             }

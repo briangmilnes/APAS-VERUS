@@ -15,14 +15,14 @@ pub mod BSTReducedStEph {
 
     type Link<K, V, R> = Option<Box<Node<K, V, R>>>;
 
-    pub(crate) struct Node<K: StT + Ord, V: StT, R: StT> {
-        pub(crate) key: K,
-        pub(crate) value: V,
-        pub(crate) priority: u64,
-        pub(crate) size: usize,
-        pub(crate) reduced_value: R,
-        pub(crate) left: Link<K, V, R>,
-        pub(crate) right: Link<K, V, R>,
+    pub struct Node<K: StT + Ord, V: StT, R: StT> {
+        pub key: K,
+        pub value: V,
+        pub priority: u64,
+        pub size: usize,
+        pub reduced_value: R,
+        pub left: Link<K, V, R>,
+        pub right: Link<K, V, R>,
     }
 
     fn clone_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (result: Link<K, V, R>)
@@ -113,8 +113,8 @@ pub mod BSTReducedStEph {
     }
 
     pub struct BSTReducedStEph<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> {
-        pub(crate) root: Link<K, V, R>,
-        pub(crate) _op: PhantomData<Op>,
+        pub root: Link<K, V, R>,
+        pub _op: PhantomData<Op>,
     }
 
     impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> Clone for BSTReducedStEph<K, V, R, Op> {
@@ -177,14 +177,14 @@ pub mod BSTReducedStEph {
         fn default() -> Self { Self::new() }
     }
 
-    pub(crate) open spec fn spec_size_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> nat {
+    pub open spec fn spec_size_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> nat {
         match link {
             None => 0,
             Some(n) => n.size as nat,
         }
     }
 
-    pub(crate) open spec fn spec_size_wf_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> bool
+    pub open spec fn spec_size_wf_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> bool
         decreases *link,
     {
         match link {
@@ -504,7 +504,7 @@ pub mod BSTReducedStEph {
         }
     }
 
-    pub(crate) open spec fn spec_height_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> nat
+    pub open spec fn spec_height_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> nat
         decreases *link,
     {
         match link {

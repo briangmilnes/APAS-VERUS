@@ -22,8 +22,7 @@ pub mod OrderStatSelectStPer {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     #[cfg(verus_keep_ghost)]
-    use crate::Chap35::OrderStatSelectStEph::OrderStatSelectStEph::{
-        spec_kth, spec_leq, lemma_total_ordering};
+    use crate::Chap35::OrderStatSelectStEph::OrderStatSelectStEph::{spec_kth, spec_leq, lemma_total_ordering};
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::vstdplus::rand::rand::random_usize_range;
     use vstd::relations::*;
@@ -95,7 +94,7 @@ pub mod OrderStatSelectStPer {
             return Some(elem);
         }
 
-        let pivot_idx = random_usize_range(0, n);
+        let pivot_idx = random_usize_range(0, n); 
         let pivot = *a.nth(pivot_idx);
 
         // Partition into left (< pivot), right (> pivot), equals (== pivot).

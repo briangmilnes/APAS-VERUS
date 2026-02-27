@@ -1,14 +1,8 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap02
+
 ✓ FibonacciHFScheduler.rs
    5 clean proof functions
-❌ HFSchedulerMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:18: error: struct_outside_verus - struct PoolState — should be inside verus!
-        18 |     struct PoolState {
-        19 |         available_tasks: Mutex<usize>,
-        20 |         task_freed: Condvar,
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:24: error: enum_outside_verus - enum TaskState — should be inside verus!
-        24 |     pub enum TaskState<T> {
-        25 |         Spawned   { handle: JoinHandlePlus<T> },
-        26 |         Completed { result: Option<T> },
+ℹ HFSchedulerMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:74: info: external_type_specification_accept_hole - external_type_specification with accept hole comment
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:75: info: external_body_accept_hole - external_body with accept hole comment
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:86: info: external_body_accept_hole - external_body with accept hole comment
@@ -17,8 +11,9 @@
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:142: info: accept() - accept hole
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:154: info: external_body_accept_hole - external_body with accept hole comment
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:176: info: external_body_accept_hole - external_body with accept hole comment
-   Errors: 2 total (2 struct/enum outside verus!)
-   Info: 8 total
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:18: info: struct_outside_verus_accept_hole - struct PoolState — outside verus! with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:24: info: enum_outside_verus_accept_hole - enum TaskState — outside verus! with accept hole comment
+   Info: 10 total
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -36,9 +31,7 @@ Proof Functions:
 
 Holes Found: 0 total
 
-Errors: 2 total (2 struct/enum outside verus!)
-
-Info: 8 total
+Info: 10 total
    HFSchedulerMtEph.rs:74: info: external_type_specification_accept_hole - external_type_specification with accept hole comment
    HFSchedulerMtEph.rs:75: info: external_body_accept_hole - external_body with accept hole comment
    HFSchedulerMtEph.rs:86: info: external_body_accept_hole - external_body with accept hole comment
@@ -47,8 +40,7 @@ Info: 8 total
    HFSchedulerMtEph.rs:142: info: accept() - accept hole
    HFSchedulerMtEph.rs:154: info: external_body_accept_hole - external_body with accept hole comment
    HFSchedulerMtEph.rs:176: info: external_body_accept_hole - external_body with accept hole comment
+   HFSchedulerMtEph.rs:18: info: struct_outside_verus_accept_hole - struct PoolState — outside verus! with accept hole comment
+   HFSchedulerMtEph.rs:24: info: enum_outside_verus_accept_hole - enum TaskState — outside verus! with accept hole comment
 
-🎉 No proof holes found! All proofs are complete.
-external_body with accept hole comment
-
-🎉 No proof holes found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.

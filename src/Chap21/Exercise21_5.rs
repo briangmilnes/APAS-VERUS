@@ -24,7 +24,7 @@ pub mod Exercise21_5 {
 
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::feq::feq::obeys_feq_clone;
+    use crate::vstdplus::feq::feq::*;
 
     //		3. broadcast use
 

@@ -22,18 +22,44 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap42 | Example42_1 | 2 | 0 | 0 | 3 | 1 | 3 | 0 | 0 | 4 |
+| 1 | Chap27 | ReduceContractMtEph | 1 | 1 | 0 | 2 | 3 | 0 | 3 | 0 | 0 |
+| 2 | Chap27 | ReduceContractStEph | 1 | 1 | 0 | 4 | 5 | 0 | 5 | 0 | 0 |
+| 3 | Chap27 | ScanContractMtEph | 1 | 1 | 0 | 1 | 2 | 0 | 2 | 0 | 0 |
+| 4 | Chap27 | ScanContractStEph | 1 | 1 | 0 | 1 | 2 | 0 | 2 | 0 | 0 |
 
 ## Function-by-Function Detail
 
-### Chap42/Example42_1.rs
+### Chap27/ReduceContractMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `_example_42_1_verified` |  |  |  | Y | Y |  | Y |  | 11 |
-| 2 | `example_42_1` | Y |  |  | Y |  | Y | Y |  | 21&#8209;23 |
-| 3 | `demonstrate_table_operations` | Y |  |  |  |  | Y | Y |  | 25&#8209;27 |
-| 4 | `performance_comparison` |  |  |  | Y |  | Y | Y |  | 151&#8209;202 |
+| 1 | `reduce_contract_parallel` | Y | Y |  |  | Y |  |  | unknown | 53&#8209;66 |
+| 2 | `contract_parallel` |  |  |  | Y | Y |  |  | unknown | 78&#8209;93 |
+| 3 | `reduce_contract_verified` |  |  |  | Y | Y |  |  | unknown | 248&#8209;262 |
+
+### Chap27/ReduceContractStEph.rs
+
+| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
+|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
+| 4 | `lemma_fold_left_monoid` |  |  |  | Y | Y |  |  | unknown | 44&#8209;47 |
+| 5 | `lemma_fold_left_pair` |  |  |  | Y | Y |  |  | unknown | 60&#8209;62 |
+| 6 | `lemma_fold_left_singleton` |  |  |  | Y | Y |  |  | unknown | 76&#8209;78 |
+| 7 | `lemma_contraction_even` |  |  |  | Y | Y |  |  | unknown | 88&#8209;98 |
+| 8 | `reduce_contract` | Y | Y |  |  | Y |  |  | unknown | 168&#8209;180 |
+
+### Chap27/ScanContractMtEph.rs
+
+| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
+|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
+| 9 | `scan_contract_parallel` | Y | Y |  |  | Y |  |  | unknown | 54&#8209;70 |
+| 10 | `scan_contract_verified` |  |  |  | Y | Y |  |  | unknown | 79&#8209;96 |
+
+### Chap27/ScanContractStEph.rs
+
+| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
+|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
+| 11 | `lemma_prefix_contraction` |  |  |  | Y | Y |  |  | unknown | 46&#8209;54 |
+| 12 | `scan_contract` | Y | Y |  |  | Y |  |  | unknown | 72&#8209;87 |
 
 
 ### Legend

@@ -2,6 +2,7 @@
 //! Chapter 30: Probability wrapper type.
 //!
 //! Uses f64 for probability values. Impls use external_body for f64 operations.
+//! This is really a very minimal shell until we get better float operations in Verus.
 
 pub mod Probability {
 
@@ -26,7 +27,7 @@ pub mod Probability {
     pub trait ProbabilityTrait: Sized {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 wrapper construction
-        fn new(value: f64) -> Self;
+        fn new(p: f64) -> Self;
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 field access
@@ -43,19 +44,10 @@ pub mod Probability {
 
     // 9. impls
     impl ProbabilityTrait for Probability {
-        #[verifier::external_body]
-        fn new(value: f64) -> Self {
-            debug_assert!(value >= 0.0, "Probability must be non-negative");
-            Probability(value)
-        }
-
-        #[verifier::external_body]
+        fn new(p: f64) -> Self { Probability(p) }
         fn value(&self) -> f64 { self.0 }
-
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole
         fn infinity() -> Self { Probability(f64::INFINITY) }
-
-        #[verifier::external_body]
         fn zero() -> Self { Probability(0.0) }
     }
 
@@ -65,9 +57,10 @@ pub mod Probability {
     }
 
     impl PartialEq for Probability {
-        #[verifier::external_body]
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — bit-level f64 comparison
+
+        #[verifier::external_body] // accept hole
         fn eq(&self, other: &Self) -> bool {
             self.0.to_bits() == other.0.to_bits()
         }
@@ -76,14 +69,15 @@ pub mod Probability {
     impl Eq for Probability {}
 
     impl PartialOrd for Probability {
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole
         fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
     }
 
     impl Ord for Probability {
-        #[verifier::external_body]
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — NaN-aware f64 comparison
+
+        #[verifier::external_body] // accept hole
         fn cmp(&self, other: &Self) -> Ordering {
             match (self.0.is_nan(), other.0.is_nan()) {
                 | (true, true) => Ordering::Equal,
@@ -103,51 +97,52 @@ pub mod Probability {
     }
 
     impl Hash for Probability {
-        #[verifier::external_body]
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — hash f64 bits
+
+        #[verifier::external_body]  // accept hole
         fn hash<H: Hasher>(&self, state: &mut H) { self.0.to_bits().hash(state); }
     }
 
     impl From<f64> for Probability {
-        #[verifier::external_body]
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 wrapping
+        #[verifier::external_body] // accept hole
         fn from(value: f64) -> Self { Probability(value) }
     }
 
     impl From<Probability> for f64 {
-        #[verifier::external_body]
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — f64 unwrapping
+        #[verifier::external_body] // accept hole
         fn from(prob: Probability) -> Self { prob.0 }
     }
 
     impl Add for Probability {
         type Output = Self;
 
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole
         fn add(self, other: Self) -> Self { Probability(self.0 + other.0) }
     }
 
     impl Sub for Probability {
         type Output = Self;
+        #[verifier::external_body] // accept hole
 
-        #[verifier::external_body]
         fn sub(self, other: Self) -> Self { Probability(self.0 - other.0) }
     }
 
     impl Mul for Probability {
         type Output = Self;
 
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole
         fn mul(self, other: Self) -> Self { Probability(self.0 * other.0) }
     }
 
     impl Div for Probability {
         type Output = Self;
 
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole
         fn div(self, other: Self) -> Self { Probability(self.0 / other.0) }
     }
 

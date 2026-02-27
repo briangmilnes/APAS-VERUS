@@ -321,7 +321,7 @@ pub mod AVLTreeSeq {
     }
 
     #[verifier::external_body]
-    pub(crate) fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>)
+    pub fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>)
         requires
             spec_avltreeseq_wf(node),
             0 <= index as int <= spec_avltreeseq_inorder(node).len(),
@@ -604,7 +604,6 @@ pub mod AVLTreeSeq {
                 }
                 let cloned_val: T = values[i].clone_plus();
                 proof {
-                    use crate::vstdplus::feq::feq::lemma_cloned_view_eq;
                     assert(cloned(values@[i as int], cloned_val));
                     // lemma_cloned_view_eq::<T>(values@[i as int], cloned_val);
                     assume(cloned_val@ == values@[i as int]@);

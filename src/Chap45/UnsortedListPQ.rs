@@ -12,7 +12,7 @@ pub mod UnsortedListPQ {
     use crate::vstdplus::accept::accept;
     use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{lemma_seq_map_cloned_view_eq, obeys_feq_clone};
+    use crate::vstdplus::feq::feq::*;
 
     verus! {
 

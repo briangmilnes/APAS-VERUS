@@ -2,8 +2,6 @@
 use vstd::prelude::*;
 use std::collections::HashSet;
 #[cfg(verus_keep_ghost)]
-use vstd::std_specs::hash::SetIterAdditionalSpecFns;
-#[cfg(verus_keep_ghost)]
 use vstd::pervasive::ForLoopGhostIteratorNew;
 
 verus! {
