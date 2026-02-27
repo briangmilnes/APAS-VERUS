@@ -1,0 +1,14 @@
+Verus Style Review
+==================
+
+Path: /home/milnes/projects/APAS-VERUS-agent3/src/Chap45/
+Codebase: /home/milnes/projects/APAS-VERUS-agent3
+Mode: basic
+Excluding: ["vstdplus", "Types.rs", "Concurrency.rs", "experiments", "lib.rs"]
+Logging to: /home/milnes/projects/APAS-VERUS-agent3/src/Chap45/analyses/veracity-review-verus-style.log
+
+Checking 7 files...
+
+════════════════════════════════════════════════════════════════
+Summary: 84 passed, 86 warnings in 7 files (checked 7 files)
+════════════════════════════════════════════════════════════════

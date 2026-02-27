@@ -108,7 +108,7 @@ fn test_meld_with_empty() {
 #[test]
 fn test_from_seq() {
     let seq = vec![10, 5, 15, 3, 8, 12];
-    let heap: LeftistHeapPQ<i32> = LeftistHeapPQTrait::from_seq(&seq);
+    let heap: LeftistHeapPQ<i32> = LeftistHeapPQTrait::from_vec(seq);
 
     assert_eq!(heap.size(), 6);
     assert_eq!(heap.find_min(), Some(&3));

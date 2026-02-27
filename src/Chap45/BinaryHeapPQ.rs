@@ -373,15 +373,21 @@ pub mod BinaryHeapPQ {
             fn empty() -> (result: Self)
                 ensures result@.len() == 0;
 
-            fn singleton(element: T) -> (result: Self)
-                requires obeys_feq_clone::<T>();
+            fn singleton(element: T) -> (pq: Self)
+                requires obeys_feq_clone::<T>(),
+                ensures pq@.len() == 1;
 
-            fn find_min(&self) -> Option<&T>;
+            fn find_min(&self) -> (min_elem: Option<&T>)
+                ensures
+                    self@.len() == 0 ==> min_elem.is_none(),
+                    self@.len() > 0 ==> min_elem.is_some();
 
-            fn insert(&self, element: T) -> Self
+            fn insert(&self, element: T) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
-                    self@.len() + 1 <= usize::MAX as int;
+                    self@.len() + 1 <= usize::MAX as int,
+                ensures
+                    pq@.len() == self@.len() + 1;
 
             fn delete_min(&self) -> (result: (Self, Option<T>))
                 requires
@@ -393,16 +399,20 @@ pub mod BinaryHeapPQ {
                     self@.len() == 0 ==> result.1.is_none(),
                     self@.len() == 0 ==> result.0@.len() == 0;
 
-            fn meld(&self, other: &Self) -> Self
+            fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
                     self@.len() + other@.len() <= usize::MAX as int,
-                    (self@.len() + other@.len()) * 2 <= usize::MAX as int;
+                    (self@.len() + other@.len()) * 2 <= usize::MAX as int,
+                ensures
+                    pq@.len() == self@.len() + other@.len();
 
-            fn from_seq(seq: &ArraySeqStPerS<T>) -> Self
+            fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
-                    seq@.len() * 2 <= usize::MAX as int;
+                    seq@.len() * 2 <= usize::MAX as int,
+                ensures
+                    pq@.len() == seq@.len();
 
             fn size(&self) -> (r: usize)
                 ensures r as int == self.spec_size();
@@ -427,7 +437,9 @@ pub mod BinaryHeapPQ {
             fn is_valid_heap(&self) -> (r: bool)
                 requires self@.len() * 2 <= usize::MAX as int;
 
-            fn height(&self) -> usize;
+            fn height(&self) -> (levels: usize)
+                requires self@.len() <= usize::MAX as int,
+                ensures self@.len() == 0 ==> levels == 0;
 
             fn level_elements(&self, level: usize) -> ArraySeqStPerS<T>
                 requires
@@ -454,19 +466,19 @@ pub mod BinaryHeapPQ {
                 self@.len()
             }
 
-            fn empty() -> (result: Self) {
+            fn empty() -> (pq: Self) {
                 BinaryHeapPQ {
                     elements: ArraySeqStPerS::empty(),
                 }
             }
 
-            fn singleton(element: T) -> (result: Self) {
+            fn singleton(element: T) -> (pq: Self) {
                 BinaryHeapPQ {
                     elements: ArraySeqStPerS::singleton(element),
                 }
             }
 
-            fn find_min(&self) -> Option<&T> {
+            fn find_min(&self) -> (min_elem: Option<&T>) {
                 if self.elements.length() == 0 {
                     None
                 } else {
@@ -527,8 +539,7 @@ pub mod BinaryHeapPQ {
                 BinaryHeapPQ { elements: heapified }
             }
 
-            fn from_seq(seq: &ArraySeqStPerS<T>) -> (result: Self)
-                ensures result@.len() == seq@.len(),
+            fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
             {
                 let heapified = heapify(seq);
                 BinaryHeapPQ { elements: heapified }
