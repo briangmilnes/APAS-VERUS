@@ -1,13 +1,13 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap27/ReduceContractMtEph.rs
-Codebase: /home/milnes/projects/APAS-VERUS-agent1
+Path: /home/milnes/projects/APAS-VERUS-agent2/src/Chap27/ScanContractMtEph.rs
+Codebase: /home/milnes/projects/APAS-VERUS-agent2
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap27/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/src/Chap27/analyses/veracity-review-verus-style.log
 
 Checking 1 files...
 
 ════════════════════════════════════════════════════════════════
-Summary: 14 passed, 4 warnings in 1 files (checked 1 files)
+Summary: 16 passed, 0 warnings in 0 files (checked 1 files)
 ════════════════════════════════════════════════════════════════

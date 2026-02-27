@@ -337,111 +337,90 @@ pub mod ReduceContractMtEph {
         b
     }
 
-    /// Verified reduce using contraction with parallel contraction step.
-    /// Takes &Arc<F> so contract_parallel can clone for fork-join closures.
-    /// - APAS: Work Θ(n), Span Θ(log n) — Algorithm 27.2.
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(log n) — parallel contraction via join; proof verified.
-    fn reduce_contract_verified<T: StTInMtT + Clone + 'static, F: Fn(&T, &T) -> T + Send + Sync + 'static>(
-        a: &ArraySeqMtEphS<T>,
-        f: &Arc<F>,
-        Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
-        id: T,
-    ) -> (reduced: T)
-        requires
-            a.spec_len() <= usize::MAX,
-            obeys_feq_clone::<T>(),
-            spec_monoid(spec_f, id),
-            forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-            forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
-        ensures
-            reduced == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f),
-        decreases a.spec_len(),
-    {
-        let n = a.length();
-        let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
-
-        // Base case: empty
-        if n == 0 {
-            proof {
-                reveal(Seq::fold_left);
-                assert(s =~= Seq::<T>::empty());
-            }
-            return id;
-        }
-
-        // Base case: single element — use f(id, a[0]) to avoid unspecified clone
-        if n == 1 {
-            let reduced = call_f(f, &id, a.nth(0));
-            proof {
-                reveal_with_fuel(Seq::fold_left, 2);
-                assert(s.drop_last() =~= Seq::<T>::empty());
-            }
-            return reduced;
-        }
-
-        // Contract: b[i] = f(a[2i], a[2i+1]) — parallel via join
-        let half = n / 2;
-        let b = contract_parallel(a, f, Ghost(spec_f), half);
-
-        let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));
-        proof {
-            assert(b.spec_len() == half as nat);
-            assert forall|j: int| 0 <= j < half as int implies {
-                &&& 2 * j + 1 < s.len()
-                &&& b_seq[j] == spec_f(s[2 * j], s[2 * j + 1])
-            } by {
-                assert(b_seq[j] == b.spec_index(j));
-            }
-        }
-
-        // Recurse on contracted sequence
-        let id_copy = call_f(f, &id, &id);
-        proof { assert(id_copy == id); }
-        let contracted_result = reduce_contract_verified::<T, F>(&b, f, Ghost(spec_f), id_copy);
-
-        // Expand: handle odd-length sequences
-        if n % 2 == 1 {
-            let last = a.nth(n - 1);
-            let reduced = call_f(f, &contracted_result, last);
-            proof {
-                let s_even = s.subrange(0, (n - 1) as int);
-                let s_last_part = s.subrange((n - 1) as int, n as int);
-
-                s.lemma_fold_left_split(id, spec_f, (n - 1) as int);
-                assert(s_last_part =~= seq![s[(n - 1) as int]]);
-
-                reveal(Seq::fold_left);
-
-                assert(s_even.len() >= 2 && s_even.len() % 2 == 0) by {
-                    assert(s_even.len() == n - 1);
-                }
-                assert(b_seq =~= Seq::new(
-                    (s_even.len() / 2) as nat,
-                    |i: int| spec_f(s_even[2 * i], s_even[2 * i + 1]),
-                ));
-                lemma_contraction_even::<T>(s_even, spec_f, id);
-            }
-            reduced
-        } else {
-            proof {
-                assert(b_seq =~= Seq::new(
-                    (s.len() / 2) as nat,
-                    |i: int| spec_f(s[2 * i], s[2 * i + 1]),
-                ));
-                lemma_contraction_even::<T>(s, spec_f, id);
-            }
-            contracted_result
-        }
-    }
-
     impl<T: StTInMtT + Clone + 'static> ReduceContractMtEphTrait<T> for ArraySeqMtEphS<T> {
         fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: Arc<F>,
             Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
             id: T,
-        ) -> (reduced: T) {
-            reduce_contract_verified(a, &f, Ghost(spec_f), id)
+        ) -> (reduced: T)
+            decreases a.spec_len(),
+        {
+            let n = a.length();
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+
+            // Base case: empty
+            if n == 0 {
+                proof {
+                    reveal(Seq::fold_left);
+                    assert(s =~= Seq::<T>::empty());
+                }
+                return id;
+            }
+
+            // Base case: single element — use f(id, a[0]) to avoid unspecified clone
+            if n == 1 {
+                let reduced = call_f(&f, &id, a.nth(0));
+                proof {
+                    reveal_with_fuel(Seq::fold_left, 2);
+                    assert(s.drop_last() =~= Seq::<T>::empty());
+                }
+                return reduced;
+            }
+
+            // Contract: b[i] = f(a[2i], a[2i+1]) — parallel via join
+            let half = n / 2;
+            let b = contract_parallel(a, &f, Ghost(spec_f), half);
+
+            let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));
+            proof {
+                assert(b.spec_len() == half as nat);
+                assert forall|j: int| 0 <= j < half as int implies {
+                    &&& 2 * j + 1 < s.len()
+                    &&& b_seq[j] == spec_f(s[2 * j], s[2 * j + 1])
+                } by {
+                    assert(b_seq[j] == b.spec_index(j));
+                }
+            }
+
+            // Recurse on contracted sequence
+            let id_copy = call_f(&f, &id, &id);
+            proof { assert(id_copy == id); }
+            let contracted_result = Self::reduce_contract_parallel(&b, Arc::clone(&f), Ghost(spec_f), id_copy);
+
+            // Expand: handle odd-length sequences
+            if n % 2 == 1 {
+                let last = a.nth(n - 1);
+                let reduced = call_f(&f, &contracted_result, last);
+                proof {
+                    let s_even = s.subrange(0, (n - 1) as int);
+                    let s_last_part = s.subrange((n - 1) as int, n as int);
+
+                    s.lemma_fold_left_split(id, spec_f, (n - 1) as int);
+                    assert(s_last_part =~= seq![s[(n - 1) as int]]);
+
+                    reveal(Seq::fold_left);
+
+                    assert(s_even.len() >= 2 && s_even.len() % 2 == 0) by {
+                        assert(s_even.len() == n - 1);
+                    }
+                    assert(b_seq =~= Seq::new(
+                        (s_even.len() / 2) as nat,
+                        |i: int| spec_f(s_even[2 * i], s_even[2 * i + 1]),
+                    ));
+                    lemma_contraction_even::<T>(s_even, spec_f, id);
+                }
+                reduced
+            } else {
+                proof {
+                    assert(b_seq =~= Seq::new(
+                        (s.len() / 2) as nat,
+                        |i: int| spec_f(s[2 * i], s[2 * i + 1]),
+                    ));
+                    lemma_contraction_even::<T>(s, spec_f, id);
+                }
+                contracted_result
+            }
         }
     }
 
