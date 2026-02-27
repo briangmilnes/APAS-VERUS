@@ -3,14 +3,15 @@
 //! Randomized contraction-based selection for finding kth order statistic.
 //! Verusified: select and select_inner are proven; rand is external_body in vstdplus.
 //!
-//! Parallelism: partition uses thread::scope to run left/right filters in parallel,
-//! wrapped in external_body with the sequential spec. The structural select algorithm
-//! and all multiset/sorting proofs remain fully verified.
+//! Parallelism: partition uses join() from HFSchedulerMtEph to run left/right filters
+//! in parallel. Both filter closures and the multiset decomposition are fully verified.
 
 // Table of Contents
 // 1. module
 // 2. imports
 // 3. broadcast use
+// 6. spec fns
+// 7. proof fns
 // 8. traits
 // 9. impls
 
@@ -25,9 +26,7 @@ pub mod OrderStatSelectMtPer {
     // 2. imports
 
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap35::OrderStatSelectStEph::OrderStatSelectStEph::{
-        spec_kth, spec_leq, lemma_total_ordering};
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::vstdplus::rand::rand::random_usize_range;
     use vstd::relations::*;
@@ -39,10 +38,70 @@ pub mod OrderStatSelectMtPer {
         vstd::seq::group_seq_axioms,
         vstd::seq_lib::group_to_multiset_ensures,
         vstd::multiset::group_multiset_axioms,
-        // Veracity: added broadcast groups
         crate::vstdplus::feq::feq::group_feq_axioms,
         vstd::seq_lib::group_seq_properties,
     };
+
+    // 6. spec fns
+
+    /// Spec-level leq closure for sort_by and sorted_by.
+    pub open spec fn spec_leq<T: TotalOrder>() -> spec_fn(T, T) -> bool {
+        |x: T, y: T| T::le(x, y)
+    }
+
+    /// The kth order statistic is the kth element of the sorted sequence.
+    /// Definition 35.1: the element of rank k in a sequence.
+    pub open spec fn spec_kth<T: TotalOrder>(s: Seq<T>, k: int) -> T
+        recommends 0 <= k < s.len()
+    {
+        s.sort_by(spec_leq::<T>())[k]
+    }
+
+    /// Constant sequence of n copies of v.
+    pub open spec fn spec_const_seq<T>(n: nat, v: T) -> Seq<T> {
+        Seq::new(n, |unused: int| v)
+    }
+
+    // 7. proof fns
+
+    /// Bridge from the TotalOrder trait to vstd's total_ordering predicate.
+    pub proof fn lemma_total_ordering<T: TotalOrder>()
+        ensures total_ordering(spec_leq::<T>())
+    {
+        let leq = spec_leq::<T>();
+        assert(reflexive(leq)) by {
+            assert forall|x: T| #[trigger] leq(x, x) by { T::reflexive(x); }
+        };
+        assert(antisymmetric(leq)) by {
+            assert forall|x: T, y: T|
+                #[trigger] leq(x, y) && #[trigger] leq(y, x) implies x == y by
+            { T::antisymmetric(x, y); }
+        };
+        assert(transitive(leq)) by {
+            assert forall|x: T, y: T, z: T|
+                #[trigger] leq(x, y) && #[trigger] leq(y, z) implies leq(x, z) by
+            { T::transitive(x, y, z); }
+        };
+        assert(strongly_connected(leq)) by {
+            assert forall|x: T, y: T|
+                #[trigger] leq(x, y) || #[trigger] leq(y, x) by
+            { T::total(x, y); }
+        };
+    }
+
+    /// Multiset of a constant sequence: count(v) == n, count(x) == 0 for x != v.
+    proof fn lemma_const_seq_multiset<T>(n: nat, v: T)
+        ensures
+            spec_const_seq(n, v).to_multiset().count(v) == n,
+            forall|x: T| x != v ==>
+                (#[trigger] spec_const_seq(n, v).to_multiset().count(x)) == 0nat,
+        decreases n,
+    {
+        if n > 0 {
+            lemma_const_seq_multiset::<T>((n - 1) as nat, v);
+            assert(spec_const_seq(n, v) =~= spec_const_seq((n - 1) as nat, v).push(v));
+        }
+    }
 
     // 8. traits
 
@@ -59,7 +118,9 @@ pub mod OrderStatSelectMtPer {
 
     // 9. impls
 
-    #[verifier::external_body]
+    /// Parallel three-way partition: splits array into (elements < pivot, eq_count, elements > pivot).
+    /// Uses join() for genuine parallelism: left and right filters run concurrently.
+    /// Both filter closures and the post-join multiset assembly are fully verified.
     fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
         a: &ArraySeqMtPerS<T>, pivot: T, pivot_idx: usize, n: usize,
     ) -> (result: (Vec<T>, usize, Vec<T>))
@@ -84,32 +145,244 @@ pub mod OrderStatSelectMtPer {
             }),
             result.1 >= 1,
     {
-        std::thread::scope(|scope| {
-            let left_handle = scope.spawn(|| {
-                let mut left = Vec::new();
-                for i in 0..n {
-                    let elem = *a.nth(i);
-                    if TotalOrder::cmp(&elem, &pivot) == core::cmp::Ordering::Less {
+        let ghost s = Seq::new(n as nat, |i: int| a.spec_index(i));
+
+        // Copy array data so each closure owns its own Vec.
+        let mut data_l: Vec<T> = Vec::new();
+        let mut data_r: Vec<T> = Vec::new();
+        let mut ci: usize = 0;
+        while ci < n
+            invariant
+                0 <= ci <= n,
+                n == a.spec_len(),
+                n <= usize::MAX,
+                s == Seq::new(n as nat, |j: int| a.spec_index(j)),
+                data_l@.len() == ci,
+                data_r@.len() == ci,
+                forall|j: int| #![trigger data_l@[j]]
+                    0 <= j < ci ==> data_l@[j] == s[j],
+                forall|j: int| #![trigger data_r@[j]]
+                    0 <= j < ci ==> data_r@[j] == s[j],
+            decreases n - ci,
+        {
+            let elem = *a.nth(ci);
+            data_l.push(elem);
+            data_r.push(elem);
+            ci = ci + 1;
+        }
+
+        proof {
+            assert(data_l@ =~= s);
+            assert(data_r@ =~= s);
+        }
+
+        let ghost s_l = data_l@;
+        let ghost s_r = data_r@;
+
+        // f_left: filter < pivot, count == pivot.
+        let f_left = move || -> (pair: (Vec<T>, usize))
+            ensures
+                forall|j: int| 0 <= j < pair.0@.len() ==>
+                    (#[trigger] T::le(pair.0@[j], pivot)) && pair.0@[j] != pivot,
+                forall|x: T| (T::le(x, pivot) && x != pivot) ==>
+                    (#[trigger] pair.0@.to_multiset().count(x)) == s_l.to_multiset().count(x),
+                forall|x: T| !(T::le(x, pivot) && x != pivot) ==>
+                    (#[trigger] pair.0@.to_multiset().count(x)) == 0nat,
+                pair.1 == s_l.to_multiset().count(pivot),
+                pair.1 >= 1,
+                pair.0@.len() + pair.1 <= n,
+        {
+            let mut left: Vec<T> = Vec::new();
+            let mut eq_count: usize = 0;
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    0 <= i <= n,
+                    n == data_l.len(),
+                    n <= usize::MAX,
+                    data_l@ == s_l,
+                    pivot_idx < n,
+                    pivot == s_l[pivot_idx as int],
+                    forall|j: int| 0 <= j < left@.len() ==>
+                        (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
+                    forall|x: T| (T::le(x, pivot) && x != pivot) ==>
+                        (#[trigger] left@.to_multiset().count(x)) ==
+                            s_l.subrange(0, i as int).to_multiset().count(x),
+                    forall|x: T| !(T::le(x, pivot) && x != pivot) ==>
+                        (#[trigger] left@.to_multiset().count(x)) == 0nat,
+                    eq_count == s_l.subrange(0, i as int).to_multiset().count(pivot),
+                    i > pivot_idx ==> eq_count >= 1,
+                    left@.len() + eq_count <= i,
+                decreases n - i,
+            {
+                let elem = data_l[i];
+                proof {
+                    assert(s_l.subrange(0, (i + 1) as int) =~=
+                        s_l.subrange(0, i as int).push(s_l[i as int]));
+                    assert(elem == s_l[i as int]);
+                }
+
+                match TotalOrder::cmp(&elem, &pivot) {
+                    core::cmp::Ordering::Less => {
+                        proof {
+                            assert(T::le(elem, pivot));
+                            assert(elem != pivot);
+                        }
                         left.push(elem);
-                    }
+                    },
+                    core::cmp::Ordering::Equal => {
+                        proof { assert(elem == pivot); }
+                        eq_count = eq_count + 1;
+                    },
+                    core::cmp::Ordering::Greater => {
+                        proof {
+                            assert(T::le(pivot, elem));
+                            assert(elem != pivot);
+                        }
+                    },
                 }
-                left
-            });
-            let right_handle = scope.spawn(|| {
-                let mut right = Vec::new();
-                for i in 0..n {
-                    let elem = *a.nth(i);
-                    if TotalOrder::cmp(&elem, &pivot) == core::cmp::Ordering::Greater {
+                proof {
+                    assert forall|x: T| (T::le(x, pivot) && x != pivot) implies
+                        (#[trigger] left@.to_multiset().count(x)) ==
+                            s_l.subrange(0, (i + 1) as int).to_multiset().count(x)
+                    by {
+                        if x == elem && T::le(pivot, elem) {
+                            T::antisymmetric(elem, pivot);
+                        }
+                    };
+                    assert forall|x: T| !(T::le(x, pivot) && x != pivot) implies
+                        (#[trigger] left@.to_multiset().count(x)) == 0nat
+                    by {
+                        if x == elem && T::le(elem, pivot) && elem != pivot {
+                            assert(T::le(x, pivot) && x != pivot);
+                        }
+                    };
+                }
+                i = i + 1;
+            }
+            proof { assert(s_l.subrange(0, n as int) =~= s_l); }
+            (left, eq_count)
+        };
+
+        // f_right: filter > pivot.
+        let f_right = move || -> (right: Vec<T>)
+            ensures
+                forall|j: int| 0 <= j < right@.len() ==>
+                    (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+                forall|x: T| (T::le(pivot, x) && x != pivot) ==>
+                    (#[trigger] right@.to_multiset().count(x)) == s_r.to_multiset().count(x),
+                forall|x: T| !(T::le(pivot, x) && x != pivot) ==>
+                    (#[trigger] right@.to_multiset().count(x)) == 0nat,
+        {
+            let mut right: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    0 <= i <= n,
+                    n == data_r.len(),
+                    n <= usize::MAX,
+                    data_r@ == s_r,
+                    forall|j: int| 0 <= j < right@.len() ==>
+                        (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+                    forall|x: T| (T::le(pivot, x) && x != pivot) ==>
+                        (#[trigger] right@.to_multiset().count(x)) ==
+                            s_r.subrange(0, i as int).to_multiset().count(x),
+                    forall|x: T| !(T::le(pivot, x) && x != pivot) ==>
+                        (#[trigger] right@.to_multiset().count(x)) == 0nat,
+                    right@.len() <= i,
+                decreases n - i,
+            {
+                let elem = data_r[i];
+                proof {
+                    assert(s_r.subrange(0, (i + 1) as int) =~=
+                        s_r.subrange(0, i as int).push(s_r[i as int]));
+                    assert(elem == s_r[i as int]);
+                }
+
+                match TotalOrder::cmp(&elem, &pivot) {
+                    core::cmp::Ordering::Greater => {
+                        proof {
+                            assert(T::le(pivot, elem));
+                            assert(elem != pivot);
+                        }
                         right.push(elem);
-                    }
+                    },
+                    _ => {},
                 }
-                right
-            });
-            let left = left_handle.join().unwrap();
-            let right = right_handle.join().unwrap();
-            let eq_count = n - left.len() - right.len();
-            (left, eq_count, right)
-        })
+                proof {
+                    assert forall|x: T| (T::le(pivot, x) && x != pivot) implies
+                        (#[trigger] right@.to_multiset().count(x)) ==
+                            s_r.subrange(0, (i + 1) as int).to_multiset().count(x)
+                    by {
+                        if x == elem && T::le(elem, pivot) {
+                            T::antisymmetric(elem, pivot);
+                        }
+                    };
+                    assert forall|x: T| !(T::le(pivot, x) && x != pivot) implies
+                        (#[trigger] right@.to_multiset().count(x)) == 0nat
+                    by {
+                        if x == elem && T::le(pivot, elem) && elem != pivot {
+                            assert(T::le(pivot, x) && x != pivot);
+                        }
+                    };
+                }
+                i = i + 1;
+            }
+            proof { assert(s_r.subrange(0, n as int) =~= s_r); }
+            right
+        };
+
+        let ((left, eq_count), right) = join(f_left, f_right);
+
+        proof {
+            assert(s_l =~= s);
+            assert(s_r =~= s);
+
+            let eq_seq = Seq::new(eq_count as nat, |unused: int| pivot);
+            lemma_const_seq_multiset::<T>(eq_count as nat, pivot);
+
+            // Multiset decomposition by extensional equality over element counts.
+            assert forall|x: T|
+                s.to_multiset().count(x) ==
+                (#[trigger] left@.to_multiset().count(x)) +
+                right@.to_multiset().count(x) +
+                eq_seq.to_multiset().count(x)
+            by {
+                T::total(x, pivot);
+                if x == pivot {
+                    assert(!(T::le(pivot, pivot) && pivot != pivot));
+                    assert(left@.to_multiset().count(pivot) == 0nat);
+                    assert(right@.to_multiset().count(pivot) == 0nat);
+                } else if T::le(x, pivot) {
+                    assert(T::le(x, pivot) && x != pivot);
+                    if T::le(pivot, x) {
+                        T::antisymmetric(x, pivot);
+                    }
+                    assert(!(T::le(pivot, x) && x != pivot));
+                    assert(right@.to_multiset().count(x) == 0nat);
+                    assert(eq_seq.to_multiset().count(x) == 0nat);
+                } else {
+                    assert(T::le(pivot, x) && x != pivot);
+                    if T::le(x, pivot) {
+                        T::antisymmetric(x, pivot);
+                    }
+                    assert(!(T::le(x, pivot) && x != pivot));
+                    assert(left@.to_multiset().count(x) == 0nat);
+                    assert(eq_seq.to_multiset().count(x) == 0nat);
+                }
+            };
+
+            assert(s.to_multiset() =~=
+                left@.to_multiset().add(right@.to_multiset()).add(eq_seq.to_multiset()));
+
+            // Derive size constraints from multiset lengths.
+            assert(s.to_multiset().len() == n);
+            assert(left@.to_multiset().len() == left@.len());
+            assert(right@.to_multiset().len() == right@.len());
+            assert(eq_seq.to_multiset().len() == eq_seq.len());
+        }
+
+        (left, eq_count, right)
     }
 
     impl<T: TotalOrder + Copy + Send + Sync + Eq + 'static> OrderStatSelectMtPerTrait<T> for ArraySeqMtPerS<T> {
