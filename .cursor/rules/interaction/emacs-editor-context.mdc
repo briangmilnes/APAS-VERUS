@@ -1,0 +1,27 @@
+---
+description: User edits in Emacs; read files before editing; avoid overwriting user changes
+alwaysApply: true
+---
+
+# Emacs Editor and File Context
+
+## User Edits in Emacs
+
+The user has been using Emacs for 50+ years and will edit files in Emacs, not in Cursor. Assume the user is actively editing in Emacs during the conversation.
+
+## Read Before Editing
+
+- **Always read the current file** before making edits, especially when discussing a specific file or when the user has had time to make changes.
+- Do not rely on stale context from earlier in the conversation. The on-disk state may have changed.
+- Use the Read tool to get the latest contents before applying search_replace or write.
+
+## Avoid Overwriting User Changes
+
+- Do not overwrite changes the user has made in Emacs.
+- If the user has modified a file since your last read, your edit could clobber their work.
+- When in doubt, read the file first. If your proposed edit conflicts with recent user edits, ask or adjust.
+
+## Interaction
+
+- Treat the conversation as collaborative: the user may be editing in parallel.
+- Propose edits that fit the current state of the file, not an outdated view.
