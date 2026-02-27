@@ -6,7 +6,7 @@
 //	1. module
 //	2. imports
 //	3. broadcast use
-//	6. proof functions
+//	7. proof fns
 //	8. traits
 //	9. impls
 
@@ -35,7 +35,7 @@ pub mod ReduceContractStEph {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-    //		6. proof functions
+    //		7. proof fns
 
     /// Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f))
     /// when (f, id) is a monoid.

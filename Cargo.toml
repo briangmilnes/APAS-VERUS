@@ -266,13 +266,13 @@ path = "tests/Chap27/TestReduceContractStEph.rs"
 name = "TestReduceContractMtEph"
 path = "tests/Chap27/TestReduceContractMtEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestScanContractStEph"
-# path = "tests/Chap27/TestScanContractStEph.rs"
+[[test]]
+name = "TestScanContractStEph"
+path = "tests/Chap27/TestScanContractStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestScanContractMtEph"
-# path = "tests/Chap27/TestScanContractMtEph.rs"
+[[test]]
+name = "TestScanContractMtEph"
+path = "tests/Chap27/TestScanContractMtEph.rs"
 
 # Experiments removed - use verus-proof-time-testing project instead
 # [[test]]
