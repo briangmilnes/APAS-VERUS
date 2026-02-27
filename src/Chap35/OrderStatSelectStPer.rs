@@ -7,6 +7,8 @@
 // 1. module
 // 2. imports
 // 3. broadcast use
+// 6. spec fns
+// 7. proof fns
 // 8. traits
 // 9. impls
 
@@ -21,8 +23,6 @@ pub mod OrderStatSelectStPer {
     // 2. imports
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap35::OrderStatSelectStEph::OrderStatSelectStEph::{spec_kth, spec_leq, lemma_total_ordering};
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::vstdplus::rand::rand::random_usize_range;
     use vstd::relations::*;
@@ -34,10 +34,51 @@ pub mod OrderStatSelectStPer {
         vstd::seq::group_seq_axioms,
         vstd::seq_lib::group_to_multiset_ensures,
         vstd::multiset::group_multiset_axioms,
-        // Veracity: added broadcast groups
         crate::vstdplus::feq::feq::group_feq_axioms,
         vstd::seq_lib::group_seq_properties,
     };
+
+    // 6. spec fns
+
+    /// Spec-level leq closure for sort_by and sorted_by.
+    pub open spec fn spec_leq<T: TotalOrder>() -> spec_fn(T, T) -> bool {
+        |x: T, y: T| T::le(x, y)
+    }
+
+    /// The kth order statistic is the kth element of the sorted sequence.
+    /// Definition 35.1: the element of rank k in a sequence.
+    pub open spec fn spec_kth<T: TotalOrder>(s: Seq<T>, k: int) -> T
+        recommends 0 <= k < s.len()
+    {
+        s.sort_by(spec_leq::<T>())[k]
+    }
+
+    // 7. proof fns
+
+    /// Bridge from the TotalOrder trait to vstd's total_ordering predicate.
+    pub proof fn lemma_total_ordering<T: TotalOrder>()
+        ensures total_ordering(spec_leq::<T>())
+    {
+        let leq = spec_leq::<T>();
+        assert(reflexive(leq)) by {
+            assert forall|x: T| #[trigger] leq(x, x) by { T::reflexive(x); }
+        };
+        assert(antisymmetric(leq)) by {
+            assert forall|x: T, y: T|
+                #[trigger] leq(x, y) && #[trigger] leq(y, x) implies x == y by
+            { T::antisymmetric(x, y); }
+        };
+        assert(transitive(leq)) by {
+            assert forall|x: T, y: T, z: T|
+                #[trigger] leq(x, y) && #[trigger] leq(y, z) implies leq(x, z) by
+            { T::transitive(x, y, z); }
+        };
+        assert(strongly_connected(leq)) by {
+            assert forall|x: T, y: T|
+                #[trigger] leq(x, y) || #[trigger] leq(y, x) by
+            { T::total(x, y); }
+        };
+    }
 
     // 8. traits
 

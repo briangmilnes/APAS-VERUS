@@ -1,32 +1,28 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap35
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap35/
 
-❌ OrderStatSelectMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:64: external_body - #[verifier::external_body]
-        65 |     fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
-   Holes: 1 total
-      1 × external_body
-❌ OrderStatSelectMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:62: external_body - #[verifier::external_body]
-        63 |     fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
-   Holes: 1 total
-      1 × external_body
+✓ OrderStatSelectMtEph.rs
+   2 clean proof functions
+✓ OrderStatSelectMtPer.rs
+   2 clean proof functions
 ✓ OrderStatSelectStEph.rs
    1 clean proof function
 ✓ OrderStatSelectStPer.rs
+   1 clean proof function
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   2 clean (no holes)
-   2 holed (contains holes)
+   4 clean (no holes)
+   0 holed (contains holes)
    4 total
 
 Proof Functions:
-   1 clean
+   6 clean
    0 holed
-   1 total
+   6 total
 
-Holes Found: 2 total
-   2 × external_body
+Holes Found: 0 total
+
+🎉 No proof holes or warnings found! All proofs are complete.
