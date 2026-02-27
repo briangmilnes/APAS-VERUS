@@ -87,18 +87,18 @@ pub mod OrderStatSelectStEph {
         /// Find the kth smallest element (0-indexed) using contraction-based selection.
         /// - APAS: Work O(n) expected, Span O(lg^2 n) expected — Algorithm 35.2.
         /// - Claude-Opus-4.6: Work O(n) expected, Span O(n) — sequential, no parallelism.
-        fn select(a: &ArraySeqStEphS<T>, k: usize) -> (result: Option<T>)
+        fn select(a: &ArraySeqStEphS<T>, k: usize) -> (found: Option<T>)
             requires a.spec_len() <= usize::MAX,
             ensures
-                k >= a.spec_len() ==> result is None,
-                k < a.spec_len() ==> result == Some(spec_kth::<T>(
+                k >= a.spec_len() ==> found is None,
+                k < a.spec_len() ==> found == Some(spec_kth::<T>(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));
     }
 
     // 9. impls
 
     impl<T: TotalOrder + Copy> OrderStatSelectStEphTrait<T> for ArraySeqStEphS<T> {
-        fn select(a: &ArraySeqStEphS<T>, k: usize) -> (result: Option<T>)
+        fn select(a: &ArraySeqStEphS<T>, k: usize) -> (found: Option<T>)
         {
             let n = a.length();
             if k >= n {
@@ -110,12 +110,12 @@ pub mod OrderStatSelectStEph {
 
     /// Recursive contraction-based selection. Fully verified: the only external_body
     /// in the call chain is vstdplus::rand::random_usize_range.
-    fn select_inner<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>, k: usize) -> (result: Option<T>)
+    fn select_inner<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>, k: usize) -> (found: Option<T>)
         requires
             a.spec_len() <= usize::MAX,
             0 <= k < a.spec_len(),
         ensures
-            result == Some(spec_kth::<T>(
+            found == Some(spec_kth::<T>(
                 Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int)),
         decreases a.spec_len(),
     {

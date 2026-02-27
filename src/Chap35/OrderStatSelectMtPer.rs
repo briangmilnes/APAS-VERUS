@@ -108,11 +108,11 @@ pub mod OrderStatSelectMtPer {
     pub trait OrderStatSelectMtPerTrait<T: TotalOrder> {
         /// Find the kth smallest element (0-indexed) using contraction-based selection.
         /// - APAS: Work O(n) expected, Span O(lg^2 n) expected — Algorithm 35.2.
-        fn select(a: &ArraySeqMtPerS<T>, k: usize) -> (result: Option<T>)
+        fn select(a: &ArraySeqMtPerS<T>, k: usize) -> (found: Option<T>)
             requires a.spec_len() <= usize::MAX,
             ensures
-                k >= a.spec_len() ==> result is None,
-                k < a.spec_len() ==> result == Some(spec_kth::<T>(
+                k >= a.spec_len() ==> found is None,
+                k < a.spec_len() ==> found == Some(spec_kth::<T>(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));
     }
 
@@ -123,7 +123,7 @@ pub mod OrderStatSelectMtPer {
     /// Both filter closures and the post-join multiset assembly are fully verified.
     fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
         a: &ArraySeqMtPerS<T>, pivot: T, pivot_idx: usize, n: usize,
-    ) -> (result: (Vec<T>, usize, Vec<T>))
+    ) -> (partition: (Vec<T>, usize, Vec<T>))
         requires
             n == a.spec_len(),
             n <= usize::MAX,
@@ -131,19 +131,19 @@ pub mod OrderStatSelectMtPer {
             pivot_idx < n,
             pivot == a.spec_index(pivot_idx as int),
         ensures
-            forall|j: int| 0 <= j < result.0@.len() ==>
-                (#[trigger] T::le(result.0@[j], pivot)) && result.0@[j] != pivot,
-            forall|j: int| 0 <= j < result.2@.len() ==>
-                (#[trigger] T::le(pivot, result.2@[j])) && result.2@[j] != pivot,
-            result.0@.len() + result.1 + result.2@.len() == n,
-            result.0@.len() + result.2@.len() < n,
+            forall|j: int| 0 <= j < partition.0@.len() ==>
+                (#[trigger] T::le(partition.0@[j], pivot)) && partition.0@[j] != pivot,
+            forall|j: int| 0 <= j < partition.2@.len() ==>
+                (#[trigger] T::le(pivot, partition.2@[j])) && partition.2@[j] != pivot,
+            partition.0@.len() + partition.1 + partition.2@.len() == n,
+            partition.0@.len() + partition.2@.len() < n,
             ({
                 let s = Seq::new(n as nat, |i: int| a.spec_index(i));
-                let eq_seq = Seq::new(result.1 as nat, |i: int| pivot);
+                let eq_seq = Seq::new(partition.1 as nat, |i: int| pivot);
                 s.to_multiset() =~=
-                    result.0@.to_multiset().add(result.2@.to_multiset()).add(eq_seq.to_multiset())
+                    partition.0@.to_multiset().add(partition.2@.to_multiset()).add(eq_seq.to_multiset())
             }),
-            result.1 >= 1,
+            partition.1 >= 1,
     {
         let ghost s = Seq::new(n as nat, |i: int| a.spec_index(i));
 
@@ -386,7 +386,7 @@ pub mod OrderStatSelectMtPer {
     }
 
     impl<T: TotalOrder + Copy + Send + Sync + Eq + 'static> OrderStatSelectMtPerTrait<T> for ArraySeqMtPerS<T> {
-        fn select(a: &ArraySeqMtPerS<T>, k: usize) -> (result: Option<T>)
+        fn select(a: &ArraySeqMtPerS<T>, k: usize) -> (found: Option<T>)
         {
             let n = a.length();
             if k >= n {
@@ -398,12 +398,12 @@ pub mod OrderStatSelectMtPer {
 
     fn select_inner<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
         a: &ArraySeqMtPerS<T>, k: usize,
-    ) -> (result: Option<T>)
+    ) -> (found: Option<T>)
         requires
             a.spec_len() <= usize::MAX,
             0 <= k < a.spec_len(),
         ensures
-            result == Some(spec_kth::<T>(
+            found == Some(spec_kth::<T>(
                 Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int)),
         decreases a.spec_len(),
     {
