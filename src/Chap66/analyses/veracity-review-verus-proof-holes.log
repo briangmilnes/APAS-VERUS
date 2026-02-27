@@ -1,8 +1,18 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap66/
+
 ℹ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:46: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:46: info: accept() - accept hole
    Info: 1 total
-ℹ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:44: info: accept() - accept hole
+❌ BoruvkaStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaStEph.rs:228: external_body - #[verifier::external_body]
+       229 |         fn bridge_star_partition<V: StT + Hash + Ord>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaStEph.rs:271: external_body - #[verifier::external_body]
+       272 |         fn boruvka_mst<V: StT + Hash + Ord>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaStEph.rs:320: external_body - #[verifier::external_body]
+       321 |         fn boruvka_mst_with_seed<V: StT + Hash + Ord>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaStEph.rs:71: info: accept() - accept hole
+   Holes: 3 total
+      3 × external_body
    Info: 1 total
 
 ═══════════════════════════════════════════════════════════════
@@ -10,8 +20,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   2 clean (no holes)
-   0 holed (contains holes)
+   1 clean (no holes)
+   1 holed (contains holes)
    2 total
 
 Proof Functions:
@@ -19,17 +29,9 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 0 total
+Holes Found: 3 total
+   3 × external_body
 
 Info: 2 total
-   BoruvkaStEph.rs:44: info: accept() - accept hole
+   BoruvkaStEph.rs:71: info: accept() - accept hole
    BoruvkaMtEph.rs:46: info: accept() - accept hole
-
-🎉 No proof holes or warnings found! All proofs are complete.
-total
-
-Info: 2 total
-   BoruvkaStEph.rs:44: info: accept() - accept hole
-   BoruvkaMtEph.rs:46: info: accept() - accept hole
-
-🎉 No proof holes or warnings found! All proofs are complete.

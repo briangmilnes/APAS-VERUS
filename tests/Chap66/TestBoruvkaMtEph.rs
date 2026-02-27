@@ -50,8 +50,8 @@ fn test_boruvka_mt_square() {
 
 #[test]
 fn test_boruvka_mt_complete_4() {
-    // Complete graph on 4 vertices with increasing weights
-    // MST should have 3 edges with minimum total weight
+    // Complete graph on 4 vertices with increasing weights.
+    // MST should have 3 edges with minimum total weight.
     let vertices = SetLit![1, 2, 3, 4];
     let edges = SetLit![
         LabeledEdge(1, 2, OrderedFloat(1.0), 0),
@@ -71,8 +71,8 @@ fn test_boruvka_mt_complete_4() {
 
 #[test]
 fn test_boruvka_mt_star() {
-    // Star: center 0 connected to 1, 2, 3, 4 with equal weights
-    // MST: all edges from center
+    // Star: center 0 connected to 1, 2, 3, 4 with equal weights.
+    // MST: all edges from center.
     let vertices = SetLit![0, 1, 2, 3, 4];
     let edges = SetLit![
         LabeledEdge(0, 1, OrderedFloat(1.0), 0),
@@ -90,8 +90,8 @@ fn test_boruvka_mt_star() {
 
 #[test]
 fn test_boruvka_mt_path() {
-    // Path: 1-2-3-4-5 with weights 1, 2, 3, 4
-    // MST: all edges (it's a tree already)
+    // Path: 1-2-3-4-5 with weights 1, 2, 3, 4.
+    // MST: all edges (it's a tree already).
     let vertices = SetLit![1, 2, 3, 4, 5];
     let edges = SetLit![
         LabeledEdge(1, 2, OrderedFloat(1.0), 0),
@@ -109,7 +109,7 @@ fn test_boruvka_mt_path() {
 
 #[test]
 fn test_boruvka_mt_single_vertex() {
-    // Single vertex: no edges
+    // Single vertex: no edges.
     let vertices = SetLit![1];
     let edges = SetLit![];
 
@@ -120,7 +120,7 @@ fn test_boruvka_mt_single_vertex() {
 
 #[test]
 fn test_boruvka_mt_two_vertices() {
-    // Two vertices with one edge
+    // Two vertices with one edge.
     let vertices = SetLit![1, 2];
     let edges = SetLit![LabeledEdge(1, 2, OrderedFloat(5.0), 0),];
 
@@ -134,8 +134,8 @@ fn test_boruvka_mt_two_vertices() {
 
 #[test]
 fn test_boruvka_mt_cycle_5() {
-    // Cycle: 1-2-3-4-5-1 with weights 1, 2, 3, 4, 10
-    // MST: omit the heaviest edge (label 4)
+    // Cycle: 1-2-3-4-5-1 with weights 1, 2, 3, 4, 10.
+    // MST: omit the heaviest edge (label 4).
     let vertices = SetLit![1, 2, 3, 4, 5];
     let edges = SetLit![
         LabeledEdge(1, 2, OrderedFloat(1.0), 0),
@@ -155,7 +155,7 @@ fn test_boruvka_mt_cycle_5() {
 
 #[test]
 fn test_boruvka_mt_larger_graph() {
-    // Larger graph: 8 vertices with specific structure
+    // Larger graph: 8 vertices with specific structure.
     let vertices = SetLit![1, 2, 3, 4, 5, 6, 7, 8];
     let edges = SetLit![
         LabeledEdge(1, 2, OrderedFloat(1.0), 0),
@@ -204,48 +204,37 @@ fn test_vertex_bridges_mt_empty() {
 
 #[test]
 fn test_bridge_star_partition_mt() {
-    use rand::rngs::StdRng;
-    use rand::SeedableRng;
     use std::collections::HashMap;
-    
+
     let vertices = vec![1, 2, 3];
     let mut bridges = HashMap::new();
     bridges.insert(1, (2, OrderedFloat(1.0), 0));
     bridges.insert(2, (3, OrderedFloat(2.0), 1));
-    
-    let mut rng = StdRng::seed_from_u64(42);
-    let (remaining, partition) = bridge_star_partition_mt(vertices, bridges, &mut rng);
-    
+
+    let (remaining, partition) = bridge_star_partition_mt(vertices, bridges, 42, 0);
+
     assert!(remaining.size() + partition.len() <= 3);
     assert!(remaining.size() > 0 || partition.len() > 0);
 }
 
 #[test]
 fn test_boruvka_mst_mt_direct() {
-    use rand::rngs::StdRng;
-    use rand::SeedableRng;
-    
     let vertices = vec![1, 2, 3];
     let edges = vec![
         LabeledEdge(1, 2, OrderedFloat(3.0), 0),
         LabeledEdge(2, 3, OrderedFloat(2.0), 1),
         LabeledEdge(3, 1, OrderedFloat(1.0), 2),
     ];
-    let mut rng = StdRng::seed_from_u64(42);
-    let mst_labels = boruvka_mst_mt(vertices, edges, SetLit![], &mut rng);
-    
+    let mst_labels = boruvka_mst_mt(vertices, edges, SetLit![], 42, 0);
+
     assert_eq!(mst_labels.size(), 2);
 }
 
 #[test]
 fn test_boruvka_mst_mt_empty() {
-    use rand::rngs::StdRng;
-    use rand::SeedableRng;
-    
     let vertices: Vec<i32> = vec![];
     let edges: Vec<LabeledEdge<i32>> = vec![];
-    let mut rng = StdRng::seed_from_u64(42);
-    let mst_labels = boruvka_mst_mt(vertices, edges, SetLit![], &mut rng);
-    
+    let mst_labels = boruvka_mst_mt(vertices, edges, SetLit![], 42, 0);
+
     assert_eq!(mst_labels.size(), 0);
 }

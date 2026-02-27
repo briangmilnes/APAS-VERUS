@@ -22,8 +22,8 @@ fn test_boruvka_triangle() {
         LabeledEdge(3, 1, OrderedFloat(1.0), 2),
     ];
 
-    let mst_labels = boruvka_mst_with_seed(&vertices, &edges, 42);
-    let mst_w = mst_weight(&edges, &mst_labels);
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
 
     assert_eq!(mst_labels.size(), 2);
     assert_eq!(mst_w, OrderedFloat(3.0));
@@ -43,8 +43,8 @@ fn test_boruvka_square() {
         LabeledEdge(4, 1, OrderedFloat(4.0), 3),
     ];
 
-    let mst_labels = boruvka_mst_with_seed(&vertices, &edges, 42);
-    let mst_w = mst_weight(&edges, &mst_labels);
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
 
     assert_eq!(mst_labels.size(), 3);
     assert_eq!(mst_w, OrderedFloat(6.0));
@@ -64,8 +64,8 @@ fn test_boruvka_complete_4() {
         LabeledEdge(3, 4, OrderedFloat(6.0), 5),
     ];
 
-    let mst_labels = boruvka_mst_with_seed(&vertices, &edges, 42);
-    let mst_w = mst_weight(&edges, &mst_labels);
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
 
     assert_eq!(mst_labels.size(), 3);
     assert_eq!(mst_w, OrderedFloat(6.0)); // 1+2+3 = 6
@@ -83,8 +83,8 @@ fn test_boruvka_star() {
         LabeledEdge(0, 4, OrderedFloat(1.0), 3),
     ];
 
-    let mst_labels = boruvka_mst_with_seed(&vertices, &edges, 42);
-    let mst_w = mst_weight(&edges, &mst_labels);
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
 
     assert_eq!(mst_labels.size(), 4);
     assert_eq!(mst_w, OrderedFloat(4.0));
@@ -102,8 +102,8 @@ fn test_boruvka_path() {
         LabeledEdge(4, 5, OrderedFloat(4.0), 3),
     ];
 
-    let mst_labels = boruvka_mst_with_seed(&vertices, &edges, 42);
-    let mst_w = mst_weight(&edges, &mst_labels);
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
 
     assert_eq!(mst_labels.size(), 4);
     assert_eq!(mst_w, OrderedFloat(10.0)); // 1+2+3+4 = 10
@@ -115,7 +115,7 @@ fn test_boruvka_single_vertex() {
     let vertices = SetLit![1];
     let edges = SetLit![];
 
-    let mst_labels = boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
 
     assert_eq!(mst_labels.size(), 0);
 }
@@ -126,8 +126,8 @@ fn test_boruvka_two_vertices() {
     let vertices = SetLit![1, 2];
     let edges = SetLit![LabeledEdge(1, 2, OrderedFloat(5.0), 0),];
 
-    let mst_labels = boruvka_mst_with_seed(&vertices, &edges, 42);
-    let mst_w = mst_weight(&edges, &mst_labels);
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
 
     assert_eq!(mst_labels.size(), 1);
     assert_eq!(mst_w, OrderedFloat(5.0));
@@ -147,17 +147,15 @@ fn test_boruvka_cycle_5() {
         LabeledEdge(5, 1, OrderedFloat(10.0), 4),
     ];
 
-    let mst_labels = boruvka_mst_with_seed(&vertices, &edges, 42);
-    let mst_w = mst_weight(&edges, &mst_labels);
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
 
     assert_eq!(mst_labels.size(), 4);
     assert_eq!(mst_w, OrderedFloat(10.0)); // 1+2+3+4 = 10
     assert!(!mst_labels.mem(&4)); // heaviest edge not in MST
 }
 
-// ============================================================================
-// Direct tests for internal helper functions (for coverage)
-// ============================================================================
+// Direct tests for internal helper functions (for coverage).
 
 #[test]
 fn test_vertex_bridges_triangle() {
@@ -168,19 +166,19 @@ fn test_vertex_bridges_triangle() {
         LabeledEdge(3, 1, OrderedFloat(1.0), 2),
     ];
 
-    let bridges = vertex_bridges(&edges);
+    let bridges = BoruvkaStEph::vertex_bridges(&edges);
 
-    // Each vertex should have a minimum bridge
-    assert_eq!(bridges.len(), 3);
-    
-    // Vertex 1: min edge is 3-1 (w=1)
-    assert_eq!(bridges.get(&1), Some(&(3, OrderedFloat(1.0), 2)));
-    
-    // Vertex 2: min edge is 2-3 (w=2)
-    assert_eq!(bridges.get(&2), Some(&(3, OrderedFloat(2.0), 1)));
-    
-    // Vertex 3: min edge is 3-1 (w=1)
-    assert_eq!(bridges.get(&3), Some(&(1, OrderedFloat(1.0), 2)));
+    // Each vertex should have a minimum bridge.
+    assert_eq!(bridges.inner.len(), 3);
+
+    // Vertex 1: min edge is 3-1 (w=1).
+    assert_eq!(bridges.inner.get(&1), Some(&(3, OrderedFloat(1.0), 2)));
+
+    // Vertex 2: min edge is 2-3 (w=2).
+    assert_eq!(bridges.inner.get(&2), Some(&(3, OrderedFloat(2.0), 1)));
+
+    // Vertex 3: min edge is 3-1 (w=1).
+    assert_eq!(bridges.inner.get(&3), Some(&(1, OrderedFloat(1.0), 2)));
 }
 
 #[test]
@@ -192,29 +190,29 @@ fn test_vertex_bridges_star() {
         LabeledEdge(0, 3, OrderedFloat(3.0), 2),
     ];
 
-    let bridges = vertex_bridges(&edges);
+    let bridges = BoruvkaStEph::vertex_bridges(&edges);
 
-    assert_eq!(bridges.len(), 4);
-    
-    // Center 0: min edge is to 1 (w=1)
-    assert_eq!(bridges.get(&0), Some(&(1, OrderedFloat(1.0), 0)));
-    
-    // Each leaf has only one edge (to center)
-    assert_eq!(bridges.get(&1), Some(&(0, OrderedFloat(1.0), 0)));
-    assert_eq!(bridges.get(&2), Some(&(0, OrderedFloat(2.0), 1)));
-    assert_eq!(bridges.get(&3), Some(&(0, OrderedFloat(3.0), 2)));
+    assert_eq!(bridges.inner.len(), 4);
+
+    // Center 0: min edge is to 1 (w=1).
+    assert_eq!(bridges.inner.get(&0), Some(&(1, OrderedFloat(1.0), 0)));
+
+    // Each leaf has only one edge (to center).
+    assert_eq!(bridges.inner.get(&1), Some(&(0, OrderedFloat(1.0), 0)));
+    assert_eq!(bridges.inner.get(&2), Some(&(0, OrderedFloat(2.0), 1)));
+    assert_eq!(bridges.inner.get(&3), Some(&(0, OrderedFloat(3.0), 2)));
 }
 
 #[test]
 fn test_vertex_bridges_empty() {
     let edges: SetStEph<LabeledEdge<i32>> = SetLit![];
-    let bridges = vertex_bridges(&edges);
-    assert_eq!(bridges.len(), 0);
+    let bridges = BoruvkaStEph::vertex_bridges(&edges);
+    assert_eq!(bridges.inner.len(), 0);
 }
 
 #[test]
 fn test_bridge_star_partition() {
-    // Triangle with bridges computed
+    // Triangle with bridges computed.
     let vertices = SetLit![1, 2, 3];
     let edges = SetLit![
         LabeledEdge(1, 2, OrderedFloat(3.0), 0),
@@ -222,33 +220,35 @@ fn test_bridge_star_partition() {
         LabeledEdge(3, 1, OrderedFloat(1.0), 2),
     ];
 
-    let bridges = vertex_bridges(&edges);
+    let bridges = BoruvkaStEph::vertex_bridges(&edges);
     let mut rng = StdRng::seed_from_u64(42);
 
-    let (remaining, partition) = bridge_star_partition(&vertices, &bridges, &mut rng);
+    let (remaining, partition) = BoruvkaStEph::bridge_star_partition(&vertices, &bridges, &mut rng);
 
-    // Some vertices should be contracted (partition non-empty)
-    // Remaining + contracted should equal original vertices
-    assert!(remaining.size() + partition.len() <= 3);
-    assert!(remaining.size() > 0 || partition.len() > 0);
+    // Some vertices should be contracted (partition non-empty).
+    // Remaining + contracted should equal original vertices.
+    assert!(remaining.size() + partition.inner.len() <= 3);
+    assert!(remaining.size() > 0 || partition.inner.len() > 0);
 }
 
 #[test]
 fn test_bridge_star_partition_single_vertex() {
+    use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus;
     let vertices = SetLit![1];
-    let bridges = std::collections::HashMap::new();
+    let bridges: HashMapWithViewPlus<i32, (i32, ordered_float::OrderedFloat<f64>, usize)> =
+        HashMapWithViewPlus { inner: std::collections::HashMap::new() };
     let mut rng = StdRng::seed_from_u64(42);
 
-    let (remaining, partition) = bridge_star_partition(&vertices, &bridges, &mut rng);
+    let (remaining, partition) = BoruvkaStEph::bridge_star_partition(&vertices, &bridges, &mut rng);
 
-    // Single vertex with no bridges: stays as-is
+    // Single vertex with no bridges: stays as-is.
     assert_eq!(remaining.size(), 1);
-    assert_eq!(partition.len(), 0);
+    assert_eq!(partition.inner.len(), 0);
 }
 
 #[test]
 fn test_boruvka_mst_direct() {
-    // Triangle: test the direct boruvka_mst function
+    // Triangle: test the direct boruvka_mst function.
     let vertices = SetLit![1, 2, 3];
     let edges = SetLit![
         LabeledEdge(1, 2, OrderedFloat(3.0), 0),
@@ -257,11 +257,11 @@ fn test_boruvka_mst_direct() {
     ];
 
     let mut rng = StdRng::seed_from_u64(42);
-    let mst_labels = boruvka_mst(&vertices, &edges, SetLit![], &mut rng);
+    let mst_labels = BoruvkaStEph::boruvka_mst(&vertices, &edges, SetLit![], &mut rng);
 
-    // MST of triangle should have 2 edges
+    // MST of triangle should have 2 edges.
     assert_eq!(mst_labels.size(), 2);
-    let mst_w = mst_weight(&edges, &mst_labels);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
     assert_eq!(mst_w, OrderedFloat(3.0)); // edges with weights 1 and 2
 }
 
@@ -271,8 +271,8 @@ fn test_boruvka_mst_direct_empty() {
     let edges: SetStEph<LabeledEdge<i32>> = SetLit![];
 
     let mut rng = StdRng::seed_from_u64(42);
-    let mst_labels = boruvka_mst(&vertices, &edges, SetLit![], &mut rng);
+    let mst_labels = BoruvkaStEph::boruvka_mst(&vertices, &edges, SetLit![], &mut rng);
 
-    // No edges = empty MST
+    // No edges = empty MST.
     assert_eq!(mst_labels.size(), 0);
 }
