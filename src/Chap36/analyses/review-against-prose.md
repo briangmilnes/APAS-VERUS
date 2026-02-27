@@ -7,7 +7,7 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 36 — Quicksort: Review Against Prose
 
-**Date:** 2026-02-19 (updated: StEph/MtEph now implement all 3 pivot strategies; 2 external_body holes for median3_pivot_idx)
+**Date:** 2026-02-27 (updated: trait-impl pattern, module renames, meaningful return names, 0 proof holes)
 **Reviewer:** Claude-Opus-4.6
 
 ## Phase 1: Inventory
@@ -44,7 +44,7 @@ All functions extracted by `veracity-review-module-fn-impls -d src/Chap36`.
 | 26 | QuickSortMtEphSlice | `quick_sort_mt_random` | -V! | Tr+IT | NoSpec | none | 31–33 |
 | 27 | QuickSortMtEphSlice | `sort` (inner fn, x3) | -V! | IT | NoSpec | none | 64–94 |
 
-StEph and MtEph are inside `verus!` with strong `sort_by` postconditions. Both now implement all three pivot strategies (first-element, median-of-three, random) with separate `sort_vec`, `sort_vec_with_idx`, `sort_vec_random`, and `sort_vec_median3` functions. MtEphSlice is entirely outside `verus!` with no specs.
+StEph and MtEph are inside `verus!` with strong `sort_by` postconditions and trait-impl pattern (`QuickSortStEphTrait`, `QuickSortMtEphTrait`). Both implement all three pivot strategies (first-element, median-of-three, random) with separate `sort_vec`, `sort_vec_with_idx`, `sort_vec_random`, and `sort_vec_median3` functions. MtEphSlice is inside `verus!` with `Chapter36MtSliceTrait` having precondition specs on pivot functions; sort functions lack ensures (unverified implementations).
 
 ## Phase 2: Prose Inventory
 
@@ -124,7 +124,7 @@ All Mt implementations achieve Θ(n) span (not Θ(lg² n)) because the three-way
 
 | # | Module | Postcondition | Adequate? |
 |---|--------|---------------|:---------:|
-| 1 | StEph | `result@ =~= a.seq@.sort_by(spec_leq())` | **Strong** — proves output is `sort_by` of input |
+| 1 | StEph | `sorted@ =~= a.seq@.sort_by(spec_leq())` | **Strong** — proves output is `sort_by` of input |
 | 2 | MtEph | Same as StEph | **Strong** — identical proof |
 | 3 | MtEphSlice | N/A — no `verus!` | **None** |
 
@@ -173,7 +173,7 @@ Proof structure for StEph/MtEph `sort_vec`:
 | 2 | TestQuickSortMtEph.rs | 4 | Sorted output, edge cases, all-duplicates, large inputs (n=500) with sorted verification |
 | 3 | TestQuickSortMtEphSlice.rs | 16 | Sorted output, edge cases, large inputs, pivot strategies, concurrent sorting stress test, large data handling |
 
-**Test quality:** Good coverage. MtEph tests correctly use the free-function API (`quick_sort_first(&mut arr)`). MtEphSlice tests exercise all three pivot strategies distinctly and include concurrent stress tests.
+**Test quality:** Good coverage. StEph and MtEph tests use trait method call syntax (`ArraySeqStEphS::quick_sort_first(&mut arr)`). MtEphSlice tests exercise all three pivot strategies distinctly and include concurrent stress tests.
 
 ## Phase 6: PTT Review
 
@@ -216,9 +216,9 @@ The `sort_vec_with_idx` function is a generalized version of `sort_vec` that acc
 
 | # | File | Has TOC? | Correct Sections? | Notes |
 |---|------|:--------:|:-----------------:|-------|
-| 1 | QuickSortStEph.rs | Yes | Yes — 1, 2, 3, 9 | Module, imports, broadcast use, impls. Now includes `spec_median_of_three`, `median_of_three`, `median3_pivot_idx`, `sort_vec_with_idx`, `sort_vec_random`, `sort_vec_median3`. |
-| 2 | QuickSortMtEph.rs | Yes | Yes — 1, 2, 3, 9 | Same structure and new functions as StEph. |
-| 3 | QuickSortMtEphSlice.rs | No | N/A | No `verus!` block — TOC not applicable |
+| 1 | QuickSortStEph.rs | Yes | Yes — 1, 2, 3, 6, 8, 9 | Module, imports, broadcast use, spec fns, traits, impls. |
+| 2 | QuickSortMtEph.rs | Yes | Yes — 1, 2, 3, 6, 8, 9 | Same structure as StEph. |
+| 3 | QuickSortMtEphSlice.rs | No | N/A | Inside verus! but no TOC headers. |
 
 ### In/Out Table
 
@@ -226,26 +226,22 @@ The `sort_vec_with_idx` function is a generalized version of `sort_vec` that acc
 |---|------|:-----:|:------------:|:-------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
 | 1 | QuickSortStEph.rs | - | - | - | - | - | - | - | - | - |
 | 2 | QuickSortMtEph.rs | - | - | - | - | - | - | - | - | - |
-| 3 | QuickSortMtEphSlice.rs | - | - | - | - | - | - | - | - | `Chapter36MtSliceTrait` outside verus! |
+| 3 | QuickSortMtEphSlice.rs | - | - | - | - | - | - | - | - | `Chapter36MtSliceTrait` inside verus! |
 
 ## Proof Holes Summary
 
 ```
 veracity-review-proof-holes -d src/Chap36/
 
-✗ QuickSortMtEph.rs
-  median3_pivot_idx: external_body
-  Holes: 1 total (1 external_body)
-✗ QuickSortStEph.rs
-  median3_pivot_idx: external_body
-  Holes: 1 total (1 external_body)
+✓ QuickSortMtEph.rs
 ✓ QuickSortMtEphSlice.rs
+✓ QuickSortStEph.rs
 
-Modules: 1 clean, 2 holed
-Holes Found: 2 total (2 external_body)
+Modules: 3 clean, 0 holed
+Holes Found: 0 total
 ```
 
-StEph and MtEph each have 1 `external_body` on `median3_pivot_idx` — a helper that returns the index of the median-of-three element. The function has a full spec (`ensures idx < n, a.spec_index(idx) == spec_median_of_three(...)`) but the body uses equality comparisons to find which index holds the median value, which Verus cannot resolve through the trait machinery without existential witnesses. The `median_of_three` exec function that computes the median *value* is fully verified. MtEphSlice is entirely outside `verus!` so has no proof obligations.
+All three modules are clean. The previous `external_body` on `median3_pivot_idx` was resolved — the function now uses `TotalOrder::cmp` equality matching which Verus can verify directly.
 
 ## Spec Strength Summary
 
@@ -260,22 +256,18 @@ The 20 strong specs are the 10 verusified functions in StEph and 10 in MtEph (ea
 
 ## Overall Assessment
 
-**Maturity: Well verified.** StEph and MtEph have strong `sort_by` postconditions with all three pivot strategies genuinely implemented and verified. The only proof holes are 2 `external_body` on `median3_pivot_idx` (trivial index-finding helpers with full specs). MtEph uses `ParaPair!` for parallel recursion, matching the prose structure.
+**Maturity: Well verified.** StEph and MtEph have strong `sort_by` postconditions with all three pivot strategies genuinely implemented and verified. Zero proof holes. Both follow the trait-impl pattern with `QuickSortStEphTrait` and `QuickSortMtEphTrait`. MtEph uses `ParaPair!` for parallel recursion, matching the prose structure.
 
 | # | Issue | Severity |
 |---|-------|:--------:|
-| 1 | ~~**Pivot strategies are fake in verusified code**~~ | ~~High~~ | **Fixed** — all three variants now use genuine pivot selection |
-| 2 | **Sequential partition in all variants** — Θ(n) span vs APAS Θ(lg n) per level | Medium |
-| 3 | **MtEphSlice is unverified** — has no Verus specs | Medium |
-| 4 | **No benchmarks** — prompt explicitly requests them | Low |
-| 5 | **2 external_body on `median3_pivot_idx`** — trivial index lookup, full spec provided | Low |
+| 1 | **Sequential partition in all variants** — Θ(n) span vs APAS Θ(lg n) per level | Medium |
+| 2 | **MtEphSlice is unverified** — has precondition specs on pivots but no sort postconditions; commented out in lib.rs due to missing `with_exclusive` method and nested functions | Medium |
+| 3 | **No benchmarks** — prompt explicitly requests them | Low |
 
 ### Review TODOs
 
 | # | Priority | Action |
 |---|:--------:|--------|
-| 1 | Medium | Add PTTs for partition loop invariant |
-| 2 | Medium | Consider verusifying MtEphSlice (at minimum `external_body` wrapper with sort postcondition) |
-| 3 | Low | Parallelize partition step (replace sequential DNF with parallel filter) |
-| 4 | Low | Add benchmarks comparing St vs Mt vs MtEphSlice |
-| 5 | Low | Close the `median3_pivot_idx` external_body holes (prove the index lookup) |
+| 1 | Medium | Consider verusifying MtEphSlice (requires extracting nested fns, adding `with_exclusive` to ArraySeqMtEphSlice) |
+| 2 | Low | Parallelize partition step (replace sequential DNF with parallel filter) |
+| 3 | Low | Add benchmarks comparing St vs Mt vs MtEphSlice |

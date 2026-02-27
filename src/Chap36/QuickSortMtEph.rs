@@ -8,11 +8,13 @@
 // 1. module
 // 2. imports
 // 3. broadcast use
+// 6. spec fns
+// 8. traits
 // 9. impls
 
 // 1. module
 
-pub mod Chapter36Mt {
+pub mod QuickSortMtEph {
 
     use vstd::prelude::*;
 
@@ -40,12 +42,52 @@ pub mod Chapter36Mt {
         vstd::multiset::group_multiset_axioms,
     };
 
+    // 6. spec fns
+
+    /// Median of three values: returns the value that is neither min nor max.
+    spec fn spec_median_of_three<T: TotalOrder>(a: T, b: T, c: T) -> T {
+        if T::le(a, b) {
+            if T::le(b, c) { b }
+            else if T::le(a, c) { c }
+            else { a }
+        } else {
+            if T::le(a, c) { a }
+            else if T::le(b, c) { c }
+            else { b }
+        }
+    }
+
+    // 8. traits
+
+    pub trait QuickSortMtEphTrait<T: TotalOrder> {
+        /// Quicksort with first-element pivot. Parallel recursion via ParaPair!.
+        /// - APAS: Work O(n^2) worst / O(n lg n) expected, Span O(n) worst / O(lg^2 n) expected.
+        /// - Claude-Opus-4.6: Work O(n^2) worst / O(n lg n) expected, Span O(n) worst / O(lg^2 n) expected.
+        fn quick_sort_first(a: &mut ArraySeqMtEphS<T>)
+            requires old(a).spec_len() <= usize::MAX,
+            ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>());
+
+        /// Quicksort with median-of-three pivot. Parallel recursion via ParaPair!.
+        /// - APAS: Work O(n^2) worst / O(n lg n) expected, Span O(n) worst / O(lg^2 n) expected.
+        /// - Claude-Opus-4.6: Work O(n^2) worst / O(n lg n) expected, Span O(n) worst / O(lg^2 n) expected.
+        fn quick_sort_median3(a: &mut ArraySeqMtEphS<T>)
+            requires old(a).spec_len() <= usize::MAX,
+            ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>());
+
+        /// Quicksort with random pivot. Parallel recursion via ParaPair!.
+        /// - APAS: Work O(n lg n) expected, Span O(lg^2 n) expected.
+        /// - Claude-Opus-4.6: Work O(n lg n) expected, Span O(lg^2 n) expected.
+        fn quick_sort_random(a: &mut ArraySeqMtEphS<T>)
+            requires old(a).spec_len() <= usize::MAX,
+            ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>());
+    }
+
     // 9. impls
 
     /// Recursive non-mutating quicksort for MtEph arrays. Same proof as StEph variant.
-    fn sort_vec<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (result: Vec<T>)
+    fn sort_vec<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (sorted: Vec<T>)
         requires a.spec_len() <= usize::MAX,
-        ensures result@ =~= a.seq@.sort_by(spec_leq::<T>())
+        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())
         decreases a.spec_len(),
     {
         let n = a.length();
@@ -186,7 +228,7 @@ pub mod Chapter36Mt {
             assert(sl + el + sr == n);
         }
 
-        let mut result: Vec<T> = Vec::new();
+        let mut sorted: Vec<T> = Vec::new();
 
         let mut j: usize = 0;
         while j < sl
@@ -197,12 +239,12 @@ pub mod Chapter36Mt {
                 sr == sorted_right_a.spec_len(),
                 sl + el + sr == n,
                 n <= usize::MAX,
-                result@.len() == j as nat,
+                sorted@.len() == j as nat,
                 forall|k: int| 0 <= k < j as int ==>
-                    #[trigger] result@[k] == sorted_left_a.seq@[k],
+                    #[trigger] sorted@[k] == sorted_left_a.seq@[k],
             decreases sl - j,
         {
-            result.push(*sorted_left_a.nth(j));
+            sorted.push(*sorted_left_a.nth(j));
             j = j + 1;
         }
 
@@ -215,14 +257,14 @@ pub mod Chapter36Mt {
                 sr == sorted_right_a.spec_len(),
                 sl + el + sr == n,
                 n <= usize::MAX,
-                result@.len() == (sl + j) as nat,
+                sorted@.len() == (sl + j) as nat,
                 forall|k: int| 0 <= k < sl as int ==>
-                    #[trigger] result@[k] == sorted_left_a.seq@[k],
+                    #[trigger] sorted@[k] == sorted_left_a.seq@[k],
                 forall|k: int| 0 <= k < j as int ==>
-                    #[trigger] result@[(sl + k) as int] == equals_a.seq@[k],
+                    #[trigger] sorted@[(sl + k) as int] == equals_a.seq@[k],
             decreases el - j,
         {
-            result.push(*equals_a.nth(j));
+            sorted.push(*equals_a.nth(j));
             j = j + 1;
         }
 
@@ -235,16 +277,16 @@ pub mod Chapter36Mt {
                 el == equals_a.spec_len(),
                 sl + el + sr == n,
                 n <= usize::MAX,
-                result@.len() == (sl + el + j) as nat,
+                sorted@.len() == (sl + el + j) as nat,
                 forall|k: int| 0 <= k < sl as int ==>
-                    #[trigger] result@[k] == sorted_left_a.seq@[k],
+                    #[trigger] sorted@[k] == sorted_left_a.seq@[k],
                 forall|k: int| 0 <= k < el as int ==>
-                    #[trigger] result@[(sl + k) as int] == equals_a.seq@[k],
+                    #[trigger] sorted@[(sl + k) as int] == equals_a.seq@[k],
                 forall|k: int| 0 <= k < j as int ==>
-                    #[trigger] result@[(sl + el + k) as int] == sorted_right_a.seq@[k],
+                    #[trigger] sorted@[(sl + el + k) as int] == sorted_right_a.seq@[k],
             decreases sr - j,
         {
-            result.push(*sorted_right_a.nth(j));
+            sorted.push(*sorted_right_a.nth(j));
             j = j + 1;
         }
 
@@ -256,26 +298,26 @@ pub mod Chapter36Mt {
             let ghost eq_seq = equals_a.seq@;
             let ghost candidate = sl_seq + eq_seq + sr_seq;
 
-            assert(result@.len() == candidate.len());
-            assert forall|k: int| 0 <= k < result@.len()
-                implies result@[k] == #[trigger] candidate[k] by
+            assert(sorted@.len() == candidate.len());
+            assert forall|k: int| 0 <= k < sorted@.len()
+                implies sorted@[k] == #[trigger] candidate[k] by
             {
                 if k < sl as int {
-                    assert(result@[k] == sorted_left_a.seq@[k]);
+                    assert(sorted@[k] == sorted_left_a.seq@[k]);
                     assert(candidate[k] == sl_seq[k]);
                 } else if k < (sl + el) as int {
                     let k_prime = k - sl as int;
                     assert(0 <= k_prime < el as int);
-                    assert(result@[(sl as int + k_prime)] == equals_a.seq@[k_prime]);
+                    assert(sorted@[(sl as int + k_prime)] == equals_a.seq@[k_prime]);
                     assert(candidate[k] == eq_seq[k_prime]);
                 } else {
                     let k_prime = k - sl as int - el as int;
                     assert(0 <= k_prime < sr as int);
-                    assert(result@[(sl as int + el as int + k_prime)] == sorted_right_a.seq@[k_prime]);
+                    assert(sorted@[(sl as int + el as int + k_prime)] == sorted_right_a.seq@[k_prime]);
                     assert(candidate[k] == sr_seq[k_prime]);
                 }
             };
-            assert(result@ =~= candidate);
+            assert(sorted@ =~= candidate);
 
             assert(sl_seq =~= left_view.sort_by(leq));
             assert(sr_seq =~= right_view.sort_by(leq));
@@ -350,26 +392,14 @@ pub mod Chapter36Mt {
 
             vstd::seq_lib::lemma_sorted_unique(s.sort_by(leq), candidate, leq);
             assert(s.sort_by(leq) =~= candidate);
-            assert(result@ =~= s.sort_by(leq));
+            assert(sorted@ =~= s.sort_by(leq));
         }
 
-        result
+        sorted
     }
 
-    spec fn spec_median_of_three<T: TotalOrder>(a: T, b: T, c: T) -> T {
-        if T::le(a, b) {
-            if T::le(b, c) { b }
-            else if T::le(a, c) { c }
-            else { a }
-        } else {
-            if T::le(a, c) { a }
-            else if T::le(b, c) { c }
-            else { b }
-        }
-    }
-
-    fn median_of_three<T: TotalOrder + Copy>(a: T, b: T, c: T) -> (result: T)
-        ensures result == a || result == b || result == c,
+    fn median_of_three<T: TotalOrder + Copy>(a: T, b: T, c: T) -> (median: T)
+        ensures median == a || median == b || median == c,
     {
         match TotalOrder::cmp(&a, &b) {
             core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
@@ -414,9 +444,9 @@ pub mod Chapter36Mt {
         }
     }
 
-    fn sort_vec_random<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (result: Vec<T>)
+    fn sort_vec_random<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (sorted: Vec<T>)
         requires a.spec_len() <= usize::MAX,
-        ensures result@ =~= a.seq@.sort_by(spec_leq::<T>())
+        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())
         decreases a.spec_len(),
     {
         let n = a.length();
@@ -427,9 +457,9 @@ pub mod Chapter36Mt {
         sort_vec_with_idx(a, pivot_idx)
     }
 
-    fn sort_vec_median3<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (result: Vec<T>)
+    fn sort_vec_median3<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (sorted: Vec<T>)
         requires a.spec_len() <= usize::MAX,
-        ensures result@ =~= a.seq@.sort_by(spec_leq::<T>())
+        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())
         decreases a.spec_len(),
     {
         let n = a.length();
@@ -442,12 +472,12 @@ pub mod Chapter36Mt {
 
     /// Core quicksort with caller-chosen pivot index. Proof is identical to sort_vec
     /// except the pivot comes from an arbitrary valid index instead of always index 0.
-    fn sort_vec_with_idx<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>, pivot_idx: usize) -> (result: Vec<T>)
+    fn sort_vec_with_idx<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>, pivot_idx: usize) -> (sorted: Vec<T>)
         requires
             a.spec_len() <= usize::MAX,
             a.spec_len() >= 2,
             pivot_idx < a.spec_len(),
-        ensures result@ =~= a.seq@.sort_by(spec_leq::<T>())
+        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())
         decreases a.spec_len(),
     {
         let n = a.length();
@@ -563,7 +593,7 @@ pub mod Chapter36Mt {
             assert(sl + el + sr == n);
         }
 
-        let mut result: Vec<T> = Vec::new();
+        let mut sorted: Vec<T> = Vec::new();
 
         let mut j: usize = 0;
         while j < sl
@@ -574,12 +604,12 @@ pub mod Chapter36Mt {
                 sr == sorted_right_a.spec_len(),
                 sl + el + sr == n,
                 n <= usize::MAX,
-                result@.len() == j as nat,
+                sorted@.len() == j as nat,
                 forall|k: int| 0 <= k < j as int ==>
-                    #[trigger] result@[k] == sorted_left_a.seq@[k],
+                    #[trigger] sorted@[k] == sorted_left_a.seq@[k],
             decreases sl - j,
         {
-            result.push(*sorted_left_a.nth(j));
+            sorted.push(*sorted_left_a.nth(j));
             j = j + 1;
         }
 
@@ -592,14 +622,14 @@ pub mod Chapter36Mt {
                 sr == sorted_right_a.spec_len(),
                 sl + el + sr == n,
                 n <= usize::MAX,
-                result@.len() == (sl + j) as nat,
+                sorted@.len() == (sl + j) as nat,
                 forall|k: int| 0 <= k < sl as int ==>
-                    #[trigger] result@[k] == sorted_left_a.seq@[k],
+                    #[trigger] sorted@[k] == sorted_left_a.seq@[k],
                 forall|k: int| 0 <= k < j as int ==>
-                    #[trigger] result@[(sl + k) as int] == equals_a.seq@[k],
+                    #[trigger] sorted@[(sl + k) as int] == equals_a.seq@[k],
             decreases el - j,
         {
-            result.push(*equals_a.nth(j));
+            sorted.push(*equals_a.nth(j));
             j = j + 1;
         }
 
@@ -612,16 +642,16 @@ pub mod Chapter36Mt {
                 el == equals_a.spec_len(),
                 sl + el + sr == n,
                 n <= usize::MAX,
-                result@.len() == (sl + el + j) as nat,
+                sorted@.len() == (sl + el + j) as nat,
                 forall|k: int| 0 <= k < sl as int ==>
-                    #[trigger] result@[k] == sorted_left_a.seq@[k],
+                    #[trigger] sorted@[k] == sorted_left_a.seq@[k],
                 forall|k: int| 0 <= k < el as int ==>
-                    #[trigger] result@[(sl + k) as int] == equals_a.seq@[k],
+                    #[trigger] sorted@[(sl + k) as int] == equals_a.seq@[k],
                 forall|k: int| 0 <= k < j as int ==>
-                    #[trigger] result@[(sl + el + k) as int] == sorted_right_a.seq@[k],
+                    #[trigger] sorted@[(sl + el + k) as int] == sorted_right_a.seq@[k],
             decreases sr - j,
         {
-            result.push(*sorted_right_a.nth(j));
+            sorted.push(*sorted_right_a.nth(j));
             j = j + 1;
         }
 
@@ -633,26 +663,26 @@ pub mod Chapter36Mt {
             let ghost eq_seq = equals_a.seq@;
             let ghost candidate = sl_seq + eq_seq + sr_seq;
 
-            assert(result@.len() == candidate.len());
-            assert forall|k: int| 0 <= k < result@.len()
-                implies result@[k] == #[trigger] candidate[k] by
+            assert(sorted@.len() == candidate.len());
+            assert forall|k: int| 0 <= k < sorted@.len()
+                implies sorted@[k] == #[trigger] candidate[k] by
             {
                 if k < sl as int {
-                    assert(result@[k] == sorted_left_a.seq@[k]);
+                    assert(sorted@[k] == sorted_left_a.seq@[k]);
                     assert(candidate[k] == sl_seq[k]);
                 } else if k < (sl + el) as int {
                     let k_prime = k - sl as int;
                     assert(0 <= k_prime < el as int);
-                    assert(result@[(sl as int + k_prime)] == equals_a.seq@[k_prime]);
+                    assert(sorted@[(sl as int + k_prime)] == equals_a.seq@[k_prime]);
                     assert(candidate[k] == eq_seq[k_prime]);
                 } else {
                     let k_prime = k - sl as int - el as int;
                     assert(0 <= k_prime < sr as int);
-                    assert(result@[(sl as int + el as int + k_prime)] == sorted_right_a.seq@[k_prime]);
+                    assert(sorted@[(sl as int + el as int + k_prime)] == sorted_right_a.seq@[k_prime]);
                     assert(candidate[k] == sr_seq[k_prime]);
                 }
             };
-            assert(result@ =~= candidate);
+            assert(sorted@ =~= candidate);
 
             assert(sl_seq =~= left_view.sort_by(leq));
             assert(sr_seq =~= right_view.sort_by(leq));
@@ -727,37 +757,27 @@ pub mod Chapter36Mt {
 
             vstd::seq_lib::lemma_sorted_unique(s.sort_by(leq), candidate, leq);
             assert(s.sort_by(leq) =~= candidate);
-            assert(result@ =~= s.sort_by(leq));
+            assert(sorted@ =~= s.sort_by(leq));
         }
 
-        result
+        sorted
     }
 
-    /// Quicksort with first-element pivot. Parallel recursion via ParaPair!.
-    pub fn quick_sort_first<T: TotalOrder + Copy + Send + 'static>(a: &mut ArraySeqMtEphS<T>)
-        requires old(a).spec_len() <= usize::MAX,
-        ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>())
-    {
-        let result = sort_vec(&*a);
-        a.seq = result;
-    }
+    impl<T: TotalOrder + Copy + Send + 'static> QuickSortMtEphTrait<T> for ArraySeqMtEphS<T> {
+        fn quick_sort_first(a: &mut ArraySeqMtEphS<T>) {
+            let sorted = sort_vec(&*a);
+            a.seq = sorted;
+        }
 
-    /// Quicksort with median-of-three pivot. Parallel recursion via ParaPair!.
-    pub fn quick_sort_median3<T: TotalOrder + Copy + Send + 'static>(a: &mut ArraySeqMtEphS<T>)
-        requires old(a).spec_len() <= usize::MAX,
-        ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>())
-    {
-        let result = sort_vec_median3(&*a);
-        a.seq = result;
-    }
+        fn quick_sort_median3(a: &mut ArraySeqMtEphS<T>) {
+            let sorted = sort_vec_median3(&*a);
+            a.seq = sorted;
+        }
 
-    /// Quicksort with random pivot. Parallel recursion via ParaPair!.
-    pub fn quick_sort_random<T: TotalOrder + Copy + Send + 'static>(a: &mut ArraySeqMtEphS<T>)
-        requires old(a).spec_len() <= usize::MAX,
-        ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>())
-    {
-        let result = sort_vec_random(&*a);
-        a.seq = result;
+        fn quick_sort_random(a: &mut ArraySeqMtEphS<T>) {
+            let sorted = sort_vec_random(&*a);
+            a.seq = sorted;
+        }
     }
 
     } // verus!

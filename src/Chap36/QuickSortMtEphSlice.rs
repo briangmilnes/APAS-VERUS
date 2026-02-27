@@ -17,21 +17,29 @@ pub mod Chapter36MtEphSlice {
     pub trait Chapter36MtSliceTrait<T: StTInMtT + Ord> {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        fn pivot_mt_first(&self, lo: usize, hi: usize)   -> T;
+        fn pivot_mt_first(&self, lo: usize, hi: usize) -> T
+            requires lo < hi, hi <= self.spec_len();
+
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        fn pivot_mt_median3(&self, lo: usize, hi: usize) -> T;
+        fn pivot_mt_median3(&self, lo: usize, hi: usize) -> T
+            requires lo < hi, hi <= self.spec_len();
+
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS.
-        fn pivot_mt_random(&self, lo: usize, hi: usize)  -> T;
+        fn pivot_mt_random(&self, lo: usize, hi: usize) -> T
+            requires lo < hi, hi <= self.spec_len();
+
         /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst
-        /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst — parallel via thread::scope (slice-based, no copy); partition is sequential Θ(n).
+        /// - Claude-Opus-4.6: parallel via thread::scope (slice-based, no copy).
         fn quick_sort_mt_first(&self);
+
         /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst
-        /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst — parallel via thread::scope (slice-based, no copy); partition is sequential Θ(n).
+        /// - Claude-Opus-4.6: parallel via thread::scope (slice-based, no copy).
         fn quick_sort_mt_median3(&self);
+
         /// - APAS: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst
-        /// - Claude-Opus-4.6: Work Θ(n log n) expected / Θ(n²) worst, Span Θ(log² n) expected / Θ(n) worst — parallel via thread::scope (slice-based, no copy); partition is sequential Θ(n).
+        /// - Claude-Opus-4.6: parallel via thread::scope (slice-based, no copy).
         fn quick_sort_mt_random(&self);
     }
 

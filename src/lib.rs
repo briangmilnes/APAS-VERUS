@@ -405,7 +405,7 @@ pub mod Chap35 {
 pub mod Chap36 {
     pub mod QuickSortStEph;
     pub mod QuickSortMtEph;
-    // pub mod QuickSortMtEphSlice;  // trait impl needs verus! wrapper
+    // pub mod QuickSortMtEphSlice;  // uses missing with_exclusive method + nested fns
 }
 
 #[cfg(not(feature = "experiments_only"))]

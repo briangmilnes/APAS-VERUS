@@ -1,130 +1,194 @@
 [
   {
     "id": 1,
-    "function": "lemma_total_ordering",
-    "file": "Chap35/OrderStatSelectMtEph.rs",
-    "lines": "68-69",
+    "function": "sort_vec",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "46-49",
     "spec_strength": "unknown",
-    "snippet": "    pub proof fn lemma_total_ordering<T: TotalOrder>()\n        ensures total_ordering(spec_leq::<T>())"
+    "snippet": "    fn sort_vec<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (result: Vec<T>)\n        requires a.spec_len() <= usize::MAX,\n        ensures result@ =~= a.seq@.sort_by(spec_leq::<T>())\n        decreases a.spec_len(),"
   },
   {
     "id": 2,
-    "function": "lemma_const_seq_multiset",
-    "file": "Chap35/OrderStatSelectMtEph.rs",
-    "lines": "93-98",
+    "function": "median_of_three",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "371-372",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_const_seq_multiset<T>(n: nat, v: T)\n        ensures\n            spec_const_seq(n, v).to_multiset().count(v) == n,\n            forall|x: T| x != v ==>\n                (#[trigger] spec_const_seq(n, v).to_multiset().count(x)) == 0nat,\n        decreases n,"
+    "snippet": "    fn median_of_three<T: TotalOrder + Copy>(a: T, b: T, c: T) -> (result: T)\n        ensures result == a || result == b || result == c,"
   },
   {
     "id": 3,
-    "function": "select",
-    "file": "Chap35/OrderStatSelectMtEph.rs",
-    "lines": "111-116",
+    "function": "median3_pivot_idx",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "400-402",
     "spec_strength": "unknown",
-    "snippet": "        fn select(a: &ArraySeqMtEphS<T>, k: usize) -> (result: Option<T>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                k >= a.spec_len() ==> result is None,\n                k < a.spec_len() ==> result == Some(spec_kth::<T>(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));"
+    "snippet": "    fn median3_pivot_idx<T: TotalOrder + Copy>(a: &ArraySeqMtEphS<T>, n: usize) -> (idx: usize)\n        requires n >= 2, n == a.spec_len(),\n        ensures idx < n, idx == 0 || idx == n / 2 || idx == n - 1,"
   },
   {
     "id": 4,
-    "function": "parallel_three_way_partition",
-    "file": "Chap35/OrderStatSelectMtEph.rs",
-    "lines": "124-146",
+    "function": "sort_vec_random",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "417-420",
     "spec_strength": "unknown",
-    "snippet": "    fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(\n        a: &ArraySeqMtEphS<T>, pivot: T, pivot_idx: usize, n: usize,\n    ) -> (result: (Vec<T>, usize, Vec<T>))\n        requires\n            n == a.spec_len(),\n            n <= usize::MAX,\n            n >= 2,\n            pivot_idx < n,\n            pivot == a.spec_index(pivot_idx as int),\n        ensures\n            forall|j: int| 0 <= j < result.0@.len() ==>\n                (#[trigger] T::le(result.0@[j], pivot)) && result.0@[j] != pivot,\n            forall|j: int| 0 <= j < result.2@.len() ==>\n                (#[trigger] T::le(pivot, result.2@[j])) && result.2@[j] != pivot,\n            result.0@.len() + result.1 + result.2@.len() == n,\n            result.0@.len() + result.2@.len() < n,\n            ({\n                let s = Seq::new(n as nat, |i: int| a.spec_index(i));\n                let eq_seq = Seq::new(result.1 as nat, |i: int| pivot);\n                s.to_multiset() =~=\n                    result.0@.to_multiset().add(result.2@.to_multiset()).add(eq_seq.to_multiset())\n            }),\n            result.1 >= 1,"
+    "snippet": "    fn sort_vec_random<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (result: Vec<T>)\n        requires a.spec_len() <= usize::MAX,\n        ensures result@ =~= a.seq@.sort_by(spec_leq::<T>())\n        decreases a.spec_len(),"
   },
   {
     "id": 5,
-    "function": "select_inner",
-    "file": "Chap35/OrderStatSelectMtEph.rs",
-    "lines": "399-408",
+    "function": "sort_vec_median3",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "430-433",
     "spec_strength": "unknown",
-    "snippet": "    fn select_inner<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(\n        a: &ArraySeqMtEphS<T>, k: usize,\n    ) -> (result: Option<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            0 <= k < a.spec_len(),\n        ensures\n            result == Some(spec_kth::<T>(\n                Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int)),\n        decreases a.spec_len(),"
+    "snippet": "    fn sort_vec_median3<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (result: Vec<T>)\n        requires a.spec_len() <= usize::MAX,\n        ensures result@ =~= a.seq@.sort_by(spec_leq::<T>())\n        decreases a.spec_len(),"
   },
   {
     "id": 6,
-    "function": "lemma_total_ordering",
-    "file": "Chap35/OrderStatSelectMtPer.rs",
-    "lines": "68-69",
+    "function": "sort_vec_with_idx",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "445-451",
     "spec_strength": "unknown",
-    "snippet": "    pub proof fn lemma_total_ordering<T: TotalOrder>()\n        ensures total_ordering(spec_leq::<T>())"
+    "snippet": "    fn sort_vec_with_idx<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>, pivot_idx: usize) -> (result: Vec<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            a.spec_len() >= 2,\n            pivot_idx < a.spec_len(),\n        ensures result@ =~= a.seq@.sort_by(spec_leq::<T>())\n        decreases a.spec_len(),"
   },
   {
     "id": 7,
-    "function": "lemma_const_seq_multiset",
-    "file": "Chap35/OrderStatSelectMtPer.rs",
-    "lines": "93-98",
+    "function": "quick_sort_first",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "737-739",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_const_seq_multiset<T>(n: nat, v: T)\n        ensures\n            spec_const_seq(n, v).to_multiset().count(v) == n,\n            forall|x: T| x != v ==>\n                (#[trigger] spec_const_seq(n, v).to_multiset().count(x)) == 0nat,\n        decreases n,"
+    "snippet": "    pub fn quick_sort_first<T: TotalOrder + Copy + Send + 'static>(a: &mut ArraySeqMtEphS<T>)\n        requires old(a).spec_len() <= usize::MAX,\n        ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>())"
   },
   {
     "id": 8,
-    "function": "select",
-    "file": "Chap35/OrderStatSelectMtPer.rs",
-    "lines": "111-116",
+    "function": "quick_sort_median3",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "746-748",
     "spec_strength": "unknown",
-    "snippet": "        fn select(a: &ArraySeqMtPerS<T>, k: usize) -> (result: Option<T>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                k >= a.spec_len() ==> result is None,\n                k < a.spec_len() ==> result == Some(spec_kth::<T>(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));"
+    "snippet": "    pub fn quick_sort_median3<T: TotalOrder + Copy + Send + 'static>(a: &mut ArraySeqMtEphS<T>)\n        requires old(a).spec_len() <= usize::MAX,\n        ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>())"
   },
   {
     "id": 9,
-    "function": "parallel_three_way_partition",
-    "file": "Chap35/OrderStatSelectMtPer.rs",
-    "lines": "124-146",
+    "function": "quick_sort_random",
+    "file": "Chap36/QuickSortMtEph.rs",
+    "lines": "755-757",
     "spec_strength": "unknown",
-    "snippet": "    fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(\n        a: &ArraySeqMtPerS<T>, pivot: T, pivot_idx: usize, n: usize,\n    ) -> (result: (Vec<T>, usize, Vec<T>))\n        requires\n            n == a.spec_len(),\n            n <= usize::MAX,\n            n >= 2,\n            pivot_idx < n,\n            pivot == a.spec_index(pivot_idx as int),\n        ensures\n            forall|j: int| 0 <= j < result.0@.len() ==>\n                (#[trigger] T::le(result.0@[j], pivot)) && result.0@[j] != pivot,\n            forall|j: int| 0 <= j < result.2@.len() ==>\n                (#[trigger] T::le(pivot, result.2@[j])) && result.2@[j] != pivot,\n            result.0@.len() + result.1 + result.2@.len() == n,\n            result.0@.len() + result.2@.len() < n,\n            ({\n                let s = Seq::new(n as nat, |i: int| a.spec_index(i));\n                let eq_seq = Seq::new(result.1 as nat, |i: int| pivot);\n                s.to_multiset() =~=\n                    result.0@.to_multiset().add(result.2@.to_multiset()).add(eq_seq.to_multiset())\n            }),\n            result.1 >= 1,"
+    "snippet": "    pub fn quick_sort_random<T: TotalOrder + Copy + Send + 'static>(a: &mut ArraySeqMtEphS<T>)\n        requires old(a).spec_len() <= usize::MAX,\n        ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>())"
   },
   {
     "id": 10,
-    "function": "select_inner",
-    "file": "Chap35/OrderStatSelectMtPer.rs",
-    "lines": "399-408",
-    "spec_strength": "unknown",
-    "snippet": "    fn select_inner<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(\n        a: &ArraySeqMtPerS<T>, k: usize,\n    ) -> (result: Option<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            0 <= k < a.spec_len(),\n        ensures\n            result == Some(spec_kth::<T>(\n                Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int)),\n        decreases a.spec_len(),"
+    "function": "pivot_mt_first",
+    "file": "Chap36/QuickSortMtEphSlice.rs",
+    "lines": "20",
+    "spec_strength": "",
+    "snippet": "        fn pivot_mt_first(&self, lo: usize, hi: usize)   -> T;"
   },
   {
     "id": 11,
-    "function": "lemma_total_ordering",
-    "file": "Chap35/OrderStatSelectStEph.rs",
-    "lines": "60-61",
-    "spec_strength": "unknown",
-    "snippet": "    pub proof fn lemma_total_ordering<T: TotalOrder>()\n        ensures total_ordering(spec_leq::<T>())"
+    "function": "pivot_mt_median3",
+    "file": "Chap36/QuickSortMtEphSlice.rs",
+    "lines": "23",
+    "spec_strength": "",
+    "snippet": "        fn pivot_mt_median3(&self, lo: usize, hi: usize) -> T;"
   },
   {
     "id": 12,
-    "function": "select",
-    "file": "Chap35/OrderStatSelectStEph.rs",
-    "lines": "90-95",
-    "spec_strength": "unknown",
-    "snippet": "        fn select(a: &ArraySeqStEphS<T>, k: usize) -> (result: Option<T>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                k >= a.spec_len() ==> result is None,\n                k < a.spec_len() ==> result == Some(spec_kth::<T>(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));"
+    "function": "pivot_mt_random",
+    "file": "Chap36/QuickSortMtEphSlice.rs",
+    "lines": "26",
+    "spec_strength": "",
+    "snippet": "        fn pivot_mt_random(&self, lo: usize, hi: usize)  -> T;"
   },
   {
     "id": 13,
-    "function": "select_inner",
-    "file": "Chap35/OrderStatSelectStEph.rs",
-    "lines": "113-120",
-    "spec_strength": "unknown",
-    "snippet": "    fn select_inner<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>, k: usize) -> (result: Option<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            0 <= k < a.spec_len(),\n        ensures\n            result == Some(spec_kth::<T>(\n                Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int)),\n        decreases a.spec_len(),"
+    "function": "quick_sort_mt_first",
+    "file": "Chap36/QuickSortMtEphSlice.rs",
+    "lines": "29",
+    "spec_strength": "",
+    "snippet": "        fn quick_sort_mt_first(&self);"
   },
   {
     "id": 14,
-    "function": "lemma_total_ordering",
-    "file": "Chap35/OrderStatSelectStPer.rs",
-    "lines": "59-60",
-    "spec_strength": "unknown",
-    "snippet": "    pub proof fn lemma_total_ordering<T: TotalOrder>()\n        ensures total_ordering(spec_leq::<T>())"
+    "function": "quick_sort_mt_median3",
+    "file": "Chap36/QuickSortMtEphSlice.rs",
+    "lines": "32",
+    "spec_strength": "",
+    "snippet": "        fn quick_sort_mt_median3(&self);"
   },
   {
     "id": 15,
-    "function": "select",
-    "file": "Chap35/OrderStatSelectStPer.rs",
-    "lines": "89-94",
-    "spec_strength": "unknown",
-    "snippet": "        fn select(a: &ArraySeqStPerS<T>, k: usize) -> (result: Option<T>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                k >= a.spec_len() ==> result is None,\n                k < a.spec_len() ==> result == Some(spec_kth::<T>(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));"
+    "function": "quick_sort_mt_random",
+    "file": "Chap36/QuickSortMtEphSlice.rs",
+    "lines": "35",
+    "spec_strength": "",
+    "snippet": "        fn quick_sort_mt_random(&self);"
   },
   {
     "id": 16,
-    "function": "select_inner",
-    "file": "Chap35/OrderStatSelectStPer.rs",
-    "lines": "112-119",
+    "function": "sort_vec",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "44-47",
     "spec_strength": "unknown",
-    "snippet": "    fn select_inner<T: TotalOrder + Copy>(a: &ArraySeqStPerS<T>, k: usize) -> (result: Option<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            0 <= k < a.spec_len(),\n        ensures\n            result == Some(spec_kth::<T>(\n                Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int)),\n        decreases a.spec_len(),"
+    "snippet": "    fn sort_vec<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>) -> (result: Vec<T>)\n        requires a.spec_len() <= usize::MAX,\n        ensures result@ =~= a.seq@.sort_by(spec_leq::<T>())\n        decreases a.spec_len(),"
+  },
+  {
+    "id": 17,
+    "function": "quick_sort_first",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "367-369",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn quick_sort_first<T: TotalOrder + Copy>(a: &mut ArraySeqStEphS<T>)\n        requires old(a).spec_len() <= usize::MAX,\n        ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>())"
+  },
+  {
+    "id": 18,
+    "function": "median_of_three",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "388-389",
+    "spec_strength": "unknown",
+    "snippet": "    fn median_of_three<T: TotalOrder + Copy>(a: T, b: T, c: T) -> (result: T)\n        ensures result == a || result == b || result == c,"
+  },
+  {
+    "id": 19,
+    "function": "median3_pivot_idx",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "419-421",
+    "spec_strength": "unknown",
+    "snippet": "    fn median3_pivot_idx<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>, n: usize) -> (idx: usize)\n        requires n >= 2, n == a.spec_len(),\n        ensures idx < n, idx == 0 || idx == n / 2 || idx == n - 1,"
+  },
+  {
+    "id": 20,
+    "function": "sort_vec_random",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "436-439",
+    "spec_strength": "unknown",
+    "snippet": "    fn sort_vec_random<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>) -> (result: Vec<T>)\n        requires a.spec_len() <= usize::MAX,\n        ensures result@ =~= a.seq@.sort_by(spec_leq::<T>())\n        decreases a.spec_len(),"
+  },
+  {
+    "id": 21,
+    "function": "sort_vec_median3",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "449-452",
+    "spec_strength": "unknown",
+    "snippet": "    fn sort_vec_median3<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>) -> (result: Vec<T>)\n        requires a.spec_len() <= usize::MAX,\n        ensures result@ =~= a.seq@.sort_by(spec_leq::<T>())\n        decreases a.spec_len(),"
+  },
+  {
+    "id": 22,
+    "function": "sort_vec_with_idx",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "464-470",
+    "spec_strength": "unknown",
+    "snippet": "    fn sort_vec_with_idx<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>, pivot_idx: usize) -> (result: Vec<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            a.spec_len() >= 2,\n            pivot_idx < a.spec_len(),\n        ensures result@ =~= a.seq@.sort_by(spec_leq::<T>())\n        decreases a.spec_len(),"
+  },
+  {
+    "id": 23,
+    "function": "quick_sort_median3",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "735-737",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn quick_sort_median3<T: TotalOrder + Copy>(a: &mut ArraySeqStEphS<T>)\n        requires old(a).spec_len() <= usize::MAX,\n        ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>())"
+  },
+  {
+    "id": 24,
+    "function": "quick_sort_random",
+    "file": "Chap36/QuickSortStEph.rs",
+    "lines": "744-746",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn quick_sort_random<T: TotalOrder + Copy>(a: &mut ArraySeqStEphS<T>)\n        requires old(a).spec_len() <= usize::MAX,\n        ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>())"
   }
 ]
