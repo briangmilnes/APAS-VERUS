@@ -1,14 +1,11 @@
-You are agent1 working in gittree: ~/projects/APAS-VERUS-agent1/.
+You are agent1 working in branch: ~/projects/APAS-VERUS-agent1/.
 Your worktree has been updated.
 Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-Excluded: Chap02 (HF scheduler), Chap12 (exercises).
-You are not allowed to add // accept holes or accepts. Read the rule. 
-We are going to work on ~/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs just that. 
+You are working in src/Chap27/.
+Review the verusification, specification and holes on this chapter.
+Propose fixes in a table.
 
-Run veracity-review-proof-holes on this file. 
-Read ~/projects/APAS-VERUS-agent1/src/Chap37/analyses/*.
-Discuss.
 

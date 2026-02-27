@@ -27,10 +27,10 @@ src/Chap19/analyses/veracity-review-verus-proof-holes.log - clean
 src/Chap21/analyses/veracity-review-verus-proof-holes.log - clean
 src/Chap23/analyses/veracity-review-verus-proof-holes.log - clean
 src/Chap26/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap27/analyses/veracity-review-verus-proof-holes.log - AGENT2 cleaning.
+src/Chap27/analyses/veracity-review-verus-proof-holes.log - AGENT1.
 src/Chap28/analyses/veracity-review-verus-proof-holes.log - clean
 src/Chap30/analyses/veracity-review-verus-proof-holes.log - clean but it's stub.
-src/Chap35/analyses/veracity-review-verus-proof-holes.log - AGENT3
+src/Chap35/analyses/veracity-review-verus-proof-holes.log - clean. 
 src/Chap36/analyses/veracity-review-verus-proof-holes.log - needs trait and impl on two of them
 src/Chap37/analyses/veracity-review-verus-proof-holes.log - bad
 src/Chap38/analyses/veracity-review-verus-proof-holes.log - bad no trait no specs. 

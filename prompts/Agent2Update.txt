@@ -1,15 +1,12 @@
+You are agent2 working in branch: ~/projects/APAS-VERUS-agent2/.
+Your branch has been updated.
+It validates, rtts and ptts cleanly. 
+Read senior-proof-engineer.mdc (from .cursor/rules).
+Read senior-prose-engineer.mdc (from .cursor/rules).
+REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-You are agent2 working in gittree: ~/projects/APAS-VERUS-agent2/.
-Your worktree has been updated.
-Read ./rules/apas-verus/senior-proof-engineer.mdc
-Read ./rules/style/senior-prose-engineer.mdc
-REREAD ANY FILES BEFORE MODIFYING THEM.
+src/Chap36 certainly needs trait and impl on two of them
+Review the verusification, specification and holes on this chapter.
+Propose fixes in a table.
 
-I have multiple agents up.
-You are not allowed to add // accept holes or accepts. Read the rule. 
 
-Focus: bogus views, unaccepted external_body, unaccepted assumes.
-Heavy: Chap37 AVLTreeSeq*, Chap38 BSTPara, Chap39 BSTTreap, Chap40 BST* usize::MAX.
-Run veracity-review-proof-holes on each chapter directory.
-Propose a table of fixes in chat.
-Verusification priority. Prove Big Or Go Home.

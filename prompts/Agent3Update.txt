@@ -1,18 +1,12 @@
+You are agent3 working in branch: ~/projects/APAS-VERUS-agent3/.
+Your branch has been updated.
+It validates, rtts and ptts cleanly. 
+Read senior-proof-engineer.mdc (from .cursor/rules).
+Read senior-prose-engineer.mdc (from .cursor/rules).
+REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-You are agent3 working in gittree: ~/projects/APAS-VERUS-agent3/.
-Your worktree has been updated.
-Read ./rules/apas-verus/senior-proof-engineer.mdc
-Read ./rules/style/senior-prose-engineer.mdc
-REREAD ANY FILES BEFORE MODIFYING THEM.
+You are working in src/Chap45/.
+Review the verusification, specification and holes on this chapter.
+Propose fixes in a table.
 
-Chapters: Chap41, Chap42, Chap43, Chap44, Chap45, Chap47.
-Don't touch directories other than these. 
-Excluded: Chap02 (HF scheduler), Chap12 (exercises).
-I have multiple agents up.
-You are not allowed to add // accept holes or accepts. Read the rule. 
 
-Focus: bogus views, unaccepted external_body, unaccepted assumes.
-Heavy: Chap41 AVLTreeSet*, Chap43 OrderedSetMtEph/OrderedTableMtPer, Chap47 ChainedHashTable.
-Run veracity-review-proof-holes on each chapter directory.
-Propose a table of fixes in chat.
-Verusification priority. Prove Big Or Go Home.
