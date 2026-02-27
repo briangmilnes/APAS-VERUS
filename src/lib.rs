@@ -369,8 +369,8 @@ pub mod Chap26 {
 pub mod Chap27 {
     pub mod ReduceContractStEph;
     pub mod ReduceContractMtEph;
-//    pub mod ScanContractStEph;
-//    pub mod ScanContractMtEph;
+    pub mod ScanContractStEph;
+    pub mod ScanContractMtEph;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only")))]

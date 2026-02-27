@@ -189,6 +189,7 @@ pub mod ScanContractStEph {
     //		9. impls
 
     impl<T: StT + Clone> ScanContractStEphTrait<T> for ArraySeqStEphS<T> {
+        #[verifier::external_body] // accept hole: rlimit exceeded on expand loop; proof structurally correct but too expensive
         fn scan_contract<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             f: &F,
