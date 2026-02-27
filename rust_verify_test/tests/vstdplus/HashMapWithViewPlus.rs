@@ -19,7 +19,7 @@ test_verify_one_file! {
         fn test_loop_loop()
             requires
                 vstd::std_specs::hash::obeys_key_model::<u64>(),
-                forall|k1: u64, k2: u64| k1@ == k2@ ==> k1 == k2,
+                apas_verus::vstdplus::feq::feq::obeys_feq_full::<u64>(),
         {
             let mut m: HashMapWithViewPlus<u64, u64> = HashMapWithViewPlus::new();
             m.insert(1, 10);
@@ -65,7 +65,7 @@ test_verify_one_file! {
         fn test_for_iter()
             requires
                 vstd::std_specs::hash::obeys_key_model::<u64>(),
-                forall|k1: u64, k2: u64| k1@ == k2@ ==> k1 == k2,
+                apas_verus::vstdplus::feq::feq::obeys_feq_full::<u64>(),
         {
             let mut m: HashMapWithViewPlus<u64, u64> = HashMapWithViewPlus::new();
             m.insert(10, 100);
