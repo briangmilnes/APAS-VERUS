@@ -25,7 +25,7 @@
 | 1 | Chap39 | BSTParaTreapMtEph | 17 | 17 | 0 | 16 | 1 | 32 | 0 | 1 | 32 |
 | 2 | Chap39 | BSTSetTreapMtEph | 20 | 20 | 0 | 2 | 0 | 22 | 0 | 0 | 22 |
 | 3 | Chap39 | BSTTreapMtEph | 11 | 12 | 0 | 16 | 28 | 0 | 9 | 1 | 18 |
-| 4 | Chap39 | BSTTreapStEph | 11 | 12 | 0 | 21 | 33 | 0 | 20 | 0 | 13 |
+| 4 | Chap39 | BSTTreapStEph | 11 | 12 | 0 | 21 | 33 | 0 | 22 | 1 | 10 |
 
 ## Function-by-Function Detail
 
@@ -131,39 +131,39 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 84 | `lemma_height_le_size` |  |  |  | Y | Y |  |  | unknown | 142&#8209;147 |
-| 85 | `lemma_size_wf_child_bounded` |  |  |  | Y | Y |  |  | unknown | 160&#8209;173 |
-| 86 | `lemma_wf_decompose` |  |  |  | Y | Y |  |  | unknown | 186&#8209;195 |
-| 87 | `lemma_wf_assemble_node` |  |  |  | Y | Y |  |  | unknown | 199&#8209;204 |
-| 88 | `lemma_contains_left` |  |  |  | Y | Y |  |  | unknown | 209&#8209;211 |
-| 89 | `lemma_contains_right` |  |  |  | Y | Y |  |  | unknown | 216&#8209;218 |
-| 90 | `lemma_bst_decompose` |  |  |  | Y | Y |  |  | unknown | 223&#8209;233 |
-| 91 | `lemma_contains_root` |  |  |  | Y | Y |  |  | unknown | 238&#8209;239 |
-| 92 | `new` | Y | Y |  |  | Y |  |  | unknown | 252&#8209;257 |
-| 93 | `size` | Y | Y |  |  | Y |  |  | unknown | 260&#8209;261 |
-| 94 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 264&#8209;265 |
-| 95 | `height` | Y | Y |  |  | Y |  |  | unknown | 268&#8209;271 |
-| 96 | `insert` | Y | Y |  |  | Y |  |  | unknown | 274&#8209;279 |
-| 97 | `find` | Y | Y |  |  | Y |  | Y |  | 282 |
-| 98 | `contains` | Y | Y |  |  | Y |  | Y |  | 285 |
-| 99 | `minimum` | Y | Y |  |  | Y |  | Y |  | 288 |
-| 100 | `maximum` | Y | Y |  |  | Y |  | Y |  | 291 |
-| 101 | `in_order` | Y | Y |  |  | Y |  | Y |  | 294 |
-| 102 | `pre_order` | Y | Y |  |  | Y |  | Y |  | 297 |
-| 103 | `new_node` |  |  |  | Y | Y |  | Y |  | 305 |
-| 104 | `clone_link` |  |  |  | Y | Y |  |  | unknown | 317&#8209;319 |
-| 105 | `size_link` |  |  |  | Y | Y |  |  | unknown | 339&#8209;340 |
-| 106 | `height_link` |  |  |  | Y | Y |  |  | unknown | 348&#8209;353 |
-| 107 | `update_size` |  |  |  | Y | Y |  |  | unknown | 376&#8209;382 |
-| 108 | `rotate_left` |  |  |  | Y | Y |  |  | unknown | 389&#8209;396 |
-| 109 | `rotate_right` |  |  |  | Y | Y |  |  | unknown | 482&#8209;488 |
-| 110 | `insert_link` |  |  |  | Y | Y |  |  | unknown | 510&#8209;518 |
-| 111 | `find_link` |  |  |  | Y | Y |  | Y |  | 556&#8209;557 |
-| 112 | `min_link` |  |  |  | Y | Y |  | Y |  | 575&#8209;576 |
-| 113 | `max_link` |  |  |  | Y | Y |  | Y |  | 589&#8209;590 |
-| 114 | `in_order_vec` |  |  |  | Y | Y |  | Y |  | 601&#8209;602 |
-| 115 | `pre_order_vec` |  |  |  | Y | Y |  | Y |  | 623&#8209;624 |
-| 116 | `default` |  | Y |  |  | Y |  | Y |  | 695 |
+| 84 | `lemma_height_le_size` |  |  |  | Y | Y |  |  | unknown | 141&#8209;146 |
+| 85 | `lemma_size_wf_child_bounded` |  |  |  | Y | Y |  |  | unknown | 159&#8209;172 |
+| 86 | `lemma_wf_decompose` |  |  |  | Y | Y |  |  | unknown | 185&#8209;194 |
+| 87 | `lemma_wf_assemble_node` |  |  |  | Y | Y |  |  | unknown | 198&#8209;203 |
+| 88 | `lemma_contains_left` |  |  |  | Y | Y |  |  | unknown | 208&#8209;210 |
+| 89 | `lemma_contains_right` |  |  |  | Y | Y |  |  | unknown | 215&#8209;217 |
+| 90 | `lemma_bst_decompose` |  |  |  | Y | Y |  |  | unknown | 222&#8209;232 |
+| 91 | `lemma_contains_root` |  |  |  | Y | Y |  |  | unknown | 237&#8209;238 |
+| 92 | `new` | Y | Y |  |  | Y |  |  | unknown | 251&#8209;256 |
+| 93 | `size` | Y | Y |  |  | Y |  |  | unknown | 259&#8209;260 |
+| 94 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 263&#8209;264 |
+| 95 | `height` | Y | Y |  |  | Y |  |  | unknown | 267&#8209;270 |
+| 96 | `insert` | Y | Y |  |  | Y |  |  | unknown | 273&#8209;278 |
+| 97 | `find` | Y | Y |  |  | Y |  | Y |  | 281 |
+| 98 | `contains` | Y | Y |  |  | Y |  | Y |  | 284 |
+| 99 | `minimum` | Y | Y |  |  | Y |  | Y |  | 287 |
+| 100 | `maximum` | Y | Y |  |  | Y |  | Y |  | 290 |
+| 101 | `in_order` | Y | Y |  |  | Y |  | Y |  | 293 |
+| 102 | `pre_order` | Y | Y |  |  | Y |  | Y |  | 296 |
+| 103 | `new_node` |  |  |  | Y | Y |  | Y |  | 304 |
+| 104 | `clone_link` |  |  |  | Y | Y |  |  | unknown | 316&#8209;318 |
+| 105 | `size_link` |  |  |  | Y | Y |  |  | unknown | 338&#8209;339 |
+| 106 | `height_link` |  |  |  | Y | Y |  |  | unknown | 347&#8209;352 |
+| 107 | `update_size` |  |  |  | Y | Y |  |  | unknown | 375&#8209;381 |
+| 108 | `rotate_left` |  |  |  | Y | Y |  |  | hole | 388&#8209;395 |
+| 109 | `rotate_right` |  |  |  | Y | Y |  |  | unknown | 480&#8209;486 |
+| 110 | `insert_link` |  |  |  | Y | Y |  |  | unknown | 508&#8209;516 |
+| 111 | `find_link` |  |  |  | Y | Y |  |  | unknown | 554&#8209;556 |
+| 112 | `min_link` |  |  |  | Y | Y |  | Y |  | 583&#8209;584 |
+| 113 | `max_link` |  |  |  | Y | Y |  | Y |  | 597&#8209;598 |
+| 114 | `in_order_vec` |  |  |  | Y | Y |  |  | unknown | 609&#8209;611 |
+| 115 | `pre_order_vec` |  |  |  | Y | Y |  |  | unknown | 625&#8209;627 |
+| 116 | `default` |  | Y |  |  | Y |  | Y |  | 684 |
 
 
 ### Legend

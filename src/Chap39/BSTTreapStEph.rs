@@ -552,17 +552,27 @@ pub mod BSTTreapStEph {
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
     fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
+        ensures found.is_some() ==> spec_contains_link(link, *found.unwrap()),
         decreases *link,
     {
         match link {
             | None => None,
             | Some(node) => {
                 if *target == node.key {
+                    proof { lemma_contains_root(node); }
                     Some(&node.key)
                 } else if *target < node.key {
-                    find_link(&node.left, target)
+                    let r = find_link(&node.left, target);
+                    proof {
+                        if r.is_some() { lemma_contains_left(node, *r.unwrap()); }
+                    }
+                    r
                 } else {
-                    find_link(&node.right, target)
+                    let r = find_link(&node.right, target);
+                    proof {
+                        if r.is_some() { lemma_contains_right(node, *r.unwrap()); }
+                    }
+                    r
                 }
             }
         }
@@ -597,54 +607,35 @@ pub mod BSTTreapStEph {
     }
 
     fn in_order_vec<T: StT + Ord>(link: &Link<T>) -> (ordered: Vec<T>)
+        ensures ordered@.len() == spec_in_order_link(link).len(),
         decreases *link,
     {
         match link {
             None => Vec::new(),
             Some(node) => {
-                let mut left = in_order_vec(&node.left);
-                left.push(node.key.clone());
-                let right = in_order_vec(&node.right);
-                let mut i: usize = 0;
-                while i < right.len()
-                    invariant i <= right.len(),
-                    decreases right.len() - i,
-                {
-                    left.push(right[i].clone());
-                    i = i + 1;
-                }
-                left
+                let mut result = in_order_vec(&node.left);
+                result.push(node.key.clone());
+                let mut right = in_order_vec(&node.right);
+                result.append(&mut right);
+                result
             }
         }
     }
 
     fn pre_order_vec<T: StT + Ord>(link: &Link<T>) -> (ordered: Vec<T>)
+        ensures ordered@.len() == spec_pre_order_link(link).len(),
         decreases *link,
     {
         match link {
             None => Vec::new(),
             Some(node) => {
-                let mut ordered = Vec::new();
-                ordered.push(node.key.clone());
-                let left = pre_order_vec(&node.left);
-                let mut i: usize = 0;
-                while i < left.len()
-                    invariant i <= left.len(),
-                    decreases left.len() - i,
-                {
-                    ordered.push(left[i].clone());
-                    i = i + 1;
-                }
-                let right = pre_order_vec(&node.right);
-                let mut j: usize = 0;
-                while j < right.len()
-                    invariant j <= right.len(),
-                    decreases right.len() - j,
-                {
-                    ordered.push(right[j].clone());
-                    j = j + 1;
-                }
-                ordered
+                let mut result = Vec::new();
+                result.push(node.key.clone());
+                let mut left = pre_order_vec(&node.left);
+                result.append(&mut left);
+                let mut right = pre_order_vec(&node.right);
+                result.append(&mut right);
+                result
             }
         }
     }

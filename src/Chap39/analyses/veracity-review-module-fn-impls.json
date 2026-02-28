@@ -667,7 +667,7 @@
     "id": 84,
     "function": "lemma_height_le_size",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "142-147",
+    "lines": "141-146",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_height_le_size<T: StT + Ord>(link: &Link<T>)\n        requires\n            spec_size_wf_link(link),\n            spec_size_link(link) < usize::MAX as nat,\n        ensures spec_height_link(link) <= spec_size_link(link),\n        decreases *link,"
   },
@@ -675,7 +675,7 @@
     "id": 85,
     "function": "lemma_size_wf_child_bounded",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "160-173",
+    "lines": "159-172",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_size_wf_child_bounded<T: StT + Ord>(link: &Link<T>)\n        requires\n            spec_size_wf_link(link),\n            spec_size_link(link) > 0,\n            spec_size_link(link) < usize::MAX as nat,\n        ensures\n            match link {\n                None => true,\n                Some(node) => {\n                    spec_size_link(&node.left) < usize::MAX as nat\n                    && spec_size_link(&node.right) < usize::MAX as nat\n                },\n            },\n        decreases *link,"
   },
@@ -683,7 +683,7 @@
     "id": 86,
     "function": "lemma_wf_decompose",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "186-195",
+    "lines": "185-194",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_wf_decompose<T: StT + Ord>(link: &Link<T>)\n        requires spec_size_wf_link(link),\n        ensures match link {\n            None => true,\n            Some(node) => {\n                node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right)\n                && spec_size_wf_link(&node.left)\n                && spec_size_wf_link(&node.right)\n            },\n        },"
   },
@@ -691,7 +691,7 @@
     "id": 87,
     "function": "lemma_wf_assemble_node",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "199-204",
+    "lines": "198-203",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_wf_assemble_node<T: StT + Ord>(node: &Box<Node<T>>)\n        requires\n            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),\n            spec_size_wf_link(&node.left),\n            spec_size_wf_link(&node.right),\n        ensures spec_size_wf_link(&Some(*node)),"
   },
@@ -699,7 +699,7 @@
     "id": 88,
     "function": "lemma_contains_left",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "209-211",
+    "lines": "208-210",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_contains_left<T: StT + Ord>(node: &Box<Node<T>>, k: T)\n        requires spec_contains_link(&node.left, k),\n        ensures spec_contains_link(&Some(*node), k),"
   },
@@ -707,7 +707,7 @@
     "id": 89,
     "function": "lemma_contains_right",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "216-218",
+    "lines": "215-217",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_contains_right<T: StT + Ord>(node: &Box<Node<T>>, k: T)\n        requires spec_contains_link(&node.right, k),\n        ensures spec_contains_link(&Some(*node), k),"
   },
@@ -715,7 +715,7 @@
     "id": 90,
     "function": "lemma_bst_decompose",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "223-233",
+    "lines": "222-232",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_bst_decompose<T: StT + Ord>(link: &Link<T>)\n        requires spec_bst_link(link),\n        ensures match link {\n            None => true,\n            Some(node) => {\n                spec_bst_link(&node.left)\n                && spec_bst_link(&node.right)\n                && (forall|k: T| #[trigger] spec_contains_link(&node.left, k) ==> k.is_lt(&node.key))\n                && (forall|k: T| #[trigger] spec_contains_link(&node.right, k) ==> node.key.is_lt(&k))\n            },\n        },"
   },
@@ -723,7 +723,7 @@
     "id": 91,
     "function": "lemma_contains_root",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "238-239",
+    "lines": "237-238",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_contains_root<T: StT + Ord>(node: &Box<Node<T>>)\n        ensures spec_contains_link(&Some(*node), node.key),"
   },
@@ -731,7 +731,7 @@
     "id": 92,
     "function": "new",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "252-257",
+    "lines": "251-256",
     "spec_strength": "unknown",
     "snippet": "        fn new()                       -> (empty_tree: Self)\n        where\n            Self: Sized,\n            ensures\n                empty_tree.spec_size() == 0,\n                empty_tree.spec_wf();"
   },
@@ -739,7 +739,7 @@
     "id": 93,
     "function": "size",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "260-261",
+    "lines": "259-260",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self)                 -> (sz: usize)\n            ensures sz as nat == self.spec_size();"
   },
@@ -747,7 +747,7 @@
     "id": 94,
     "function": "is_empty",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "264-265",
+    "lines": "263-264",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self)             -> (empty: bool)\n            ensures empty == (self.spec_size() == 0);"
   },
@@ -755,7 +755,7 @@
     "id": 95,
     "function": "height",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "268-271",
+    "lines": "267-270",
     "spec_strength": "unknown",
     "snippet": "        fn height(&self)               -> usize\n            requires\n                self.spec_size() < usize::MAX as nat,\n                self.spec_wf();"
   },
@@ -763,7 +763,7 @@
     "id": 96,
     "function": "insert",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "274-279",
+    "lines": "273-278",
     "spec_strength": "unknown",
     "snippet": "        fn insert(&mut self, value: T, priority: u64)\n            requires old(self).spec_size() + 1 <= usize::MAX as nat, old(self).spec_wf(),\n            ensures\n                self.spec_wf(),\n                self.spec_size() <= old(self).spec_size() + 1,\n                self.spec_size() >= old(self).spec_size();"
   },
@@ -771,7 +771,7 @@
     "id": 97,
     "function": "find",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "282",
+    "lines": "281",
     "spec_strength": "",
     "snippet": "        fn find(&self, target: &T)     -> Option<&T>;"
   },
@@ -779,7 +779,7 @@
     "id": 98,
     "function": "contains",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "285",
+    "lines": "284",
     "spec_strength": "",
     "snippet": "        fn contains(&self, target: &T) -> bool;"
   },
@@ -787,7 +787,7 @@
     "id": 99,
     "function": "minimum",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "288",
+    "lines": "287",
     "spec_strength": "",
     "snippet": "        fn minimum(&self)              -> Option<&T>;"
   },
@@ -795,7 +795,7 @@
     "id": 100,
     "function": "maximum",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "291",
+    "lines": "290",
     "spec_strength": "",
     "snippet": "        fn maximum(&self)              -> Option<&T>;"
   },
@@ -803,7 +803,7 @@
     "id": 101,
     "function": "in_order",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "294",
+    "lines": "293",
     "spec_strength": "",
     "snippet": "        fn in_order(&self)             -> ArraySeqStPerS<T>;"
   },
@@ -811,7 +811,7 @@
     "id": 102,
     "function": "pre_order",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "297",
+    "lines": "296",
     "spec_strength": "",
     "snippet": "        fn pre_order(&self)            -> ArraySeqStPerS<T>;"
   },
@@ -819,7 +819,7 @@
     "id": 103,
     "function": "new_node",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "305",
+    "lines": "304",
     "spec_strength": "",
     "snippet": "    fn new_node<T: StT + Ord>(key: T, priority: u64) -> Node<T> {"
   },
@@ -827,7 +827,7 @@
     "id": 104,
     "function": "clone_link",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "317-319",
+    "lines": "316-318",
     "spec_strength": "unknown",
     "snippet": "    fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)\n        ensures spec_size_link(&c) == spec_size_link(link),\n        decreases *link,"
   },
@@ -835,7 +835,7 @@
     "id": 105,
     "function": "size_link",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "339-340",
+    "lines": "338-339",
     "spec_strength": "unknown",
     "snippet": "    fn size_link<T: StT + Ord>(link: &Link<T>) -> (sz: usize)\n        ensures sz as nat == spec_size_link(link),"
   },
@@ -843,7 +843,7 @@
     "id": 106,
     "function": "height_link",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "348-353",
+    "lines": "347-352",
     "spec_strength": "unknown",
     "snippet": "    fn height_link<T: StT + Ord>(link: &Link<T>) -> (h: usize)\n        requires\n            spec_size_link(link) < usize::MAX as nat,\n            spec_size_wf_link(link),\n        ensures h as nat == spec_height_link(link),\n        decreases *link,"
   },
@@ -851,7 +851,7 @@
     "id": 107,
     "function": "update_size",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "376-382",
+    "lines": "375-381",
     "spec_strength": "unknown",
     "snippet": "    fn update_size<T: StT + Ord>(node: &mut Box<Node<T>>)\n        requires 1 + spec_size_link(&old(node).left) + spec_size_link(&old(node).right) <= usize::MAX as nat,\n        ensures\n            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),\n            node.key == old(node).key,\n            node.left == old(node).left,\n            node.right == old(node).right,"
   },
@@ -859,15 +859,15 @@
     "id": 108,
     "function": "rotate_left",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "389-396",
-    "spec_strength": "unknown",
+    "lines": "388-395",
+    "spec_strength": "hole",
     "snippet": "    fn rotate_left<T: StT + Ord>(mut x: Box<Node<T>>) -> (rotated: Box<Node<T>>)\n        requires\n            spec_size_wf_link(&Some(x)),\n            spec_size_link(&Some(x)) <= usize::MAX as nat,\n        ensures\n            spec_size_wf_link(&Some(rotated)),\n            spec_size_link(&Some(rotated)) == spec_size_link(&Some(x)),\n            spec_bst_link(&Some(x)) ==> spec_bst_link(&Some(rotated)),"
   },
   {
     "id": 109,
     "function": "rotate_right",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "482-488",
+    "lines": "480-486",
     "spec_strength": "unknown",
     "snippet": "    fn rotate_right<T: StT + Ord>(mut x: Box<Node<T>>) -> (rotated: Box<Node<T>>)\n        requires\n            spec_size_wf_link(&Some(x)),\n            spec_size_link(&Some(x)) <= usize::MAX as nat,\n        ensures\n            spec_size_wf_link(&Some(rotated)),\n            spec_size_link(&Some(rotated)) == spec_size_link(&Some(x)),"
   },
@@ -875,7 +875,7 @@
     "id": 110,
     "function": "insert_link",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "510-518",
+    "lines": "508-516",
     "spec_strength": "unknown",
     "snippet": "    fn insert_link<T: StT + Ord>(link: Link<T>, value: T, priority: u64) -> (inserted: Link<T>)\n        requires\n            spec_size_link(&link) + 1 <= usize::MAX as nat,\n            spec_size_wf_link(&link),\n        ensures\n            spec_size_wf_link(&inserted),\n            spec_size_link(&inserted) <= spec_size_link(&link) + 1,\n            spec_size_link(&inserted) >= spec_size_link(&link),\n        decreases link,"
   },
@@ -883,15 +883,15 @@
     "id": 111,
     "function": "find_link",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "556-557",
-    "spec_strength": "",
-    "snippet": "    fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)\n        decreases *link,"
+    "lines": "554-556",
+    "spec_strength": "unknown",
+    "snippet": "    fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)\n        ensures found.is_some() ==> spec_contains_link(link, *found.unwrap()),\n        decreases *link,"
   },
   {
     "id": 112,
     "function": "min_link",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "575-576",
+    "lines": "583-584",
     "spec_strength": "",
     "snippet": "    fn min_link<T: StT + Ord>(link: &Link<T>) -> Option<&T>\n        decreases *link,"
   },
@@ -899,7 +899,7 @@
     "id": 113,
     "function": "max_link",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "589-590",
+    "lines": "597-598",
     "spec_strength": "",
     "snippet": "    fn max_link<T: StT + Ord>(link: &Link<T>) -> Option<&T>\n        decreases *link,"
   },
@@ -907,23 +907,23 @@
     "id": 114,
     "function": "in_order_vec",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "601-602",
-    "spec_strength": "",
-    "snippet": "    fn in_order_vec<T: StT + Ord>(link: &Link<T>) -> (ordered: Vec<T>)\n        decreases *link,"
+    "lines": "609-611",
+    "spec_strength": "unknown",
+    "snippet": "    fn in_order_vec<T: StT + Ord>(link: &Link<T>) -> (ordered: Vec<T>)\n        ensures ordered@.len() == spec_in_order_link(link).len(),\n        decreases *link,"
   },
   {
     "id": 115,
     "function": "pre_order_vec",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "623-624",
-    "spec_strength": "",
-    "snippet": "    fn pre_order_vec<T: StT + Ord>(link: &Link<T>) -> (ordered: Vec<T>)\n        decreases *link,"
+    "lines": "625-627",
+    "spec_strength": "unknown",
+    "snippet": "    fn pre_order_vec<T: StT + Ord>(link: &Link<T>) -> (ordered: Vec<T>)\n        ensures ordered@.len() == spec_pre_order_link(link).len(),\n        decreases *link,"
   },
   {
     "id": 116,
     "function": "default",
     "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "695",
+    "lines": "684",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::new() }"
   }
