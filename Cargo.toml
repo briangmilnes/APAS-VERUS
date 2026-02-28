@@ -423,6 +423,10 @@ name = "TestQuickSortStEph"
 path = "tests/Chap36/TestQuickSortStEph.rs"
 
 [[test]]
+name = "BenchQuickSort"
+path = "tests/Chap36/BenchQuickSort.rs"
+
+[[test]]
 name = "TestAVLTreeSeqMtPer"
 path = "tests/Chap37/TestAVLTreeSeqMtPer.rs"
 

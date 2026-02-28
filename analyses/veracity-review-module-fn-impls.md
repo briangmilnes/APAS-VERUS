@@ -22,9 +22,9 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap36 | QuickSortMtEph | 0 | 0 | 0 | 9 | 9 | 0 | 9 | 0 | 0 |
-| 2 | Chap36 | QuickSortMtEphSlice | 6 | 6 | 0 | 0 | 6 | 0 | 0 | 0 | 6 |
-| 3 | Chap36 | QuickSortStEph | 0 | 0 | 0 | 9 | 9 | 0 | 9 | 0 | 0 |
+| 1 | Chap36 | QuickSortMtEph | 3 | 3 | 0 | 7 | 10 | 0 | 10 | 0 | 0 |
+| 2 | Chap36 | QuickSortMtEphSlice | 6 | 6 | 0 | 0 | 6 | 0 | 3 | 0 | 3 |
+| 3 | Chap36 | QuickSortStEph | 3 | 3 | 0 | 7 | 10 | 0 | 10 | 0 | 0 |
 
 ## Function-by-Function Detail
 
@@ -32,40 +32,42 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `sort_vec` |  |  |  | Y | Y |  |  | unknown | 46&#8209;49 |
-| 2 | `median_of_three` |  |  |  | Y | Y |  |  | unknown | 371&#8209;372 |
-| 3 | `median3_pivot_idx` |  |  |  | Y | Y |  |  | unknown | 400&#8209;402 |
-| 4 | `sort_vec_random` |  |  |  | Y | Y |  |  | unknown | 417&#8209;420 |
-| 5 | `sort_vec_median3` |  |  |  | Y | Y |  |  | unknown | 430&#8209;433 |
-| 6 | `sort_vec_with_idx` |  |  |  | Y | Y |  |  | unknown | 445&#8209;451 |
-| 7 | `quick_sort_first` |  |  |  | Y | Y |  |  | unknown | 737&#8209;739 |
-| 8 | `quick_sort_median3` |  |  |  | Y | Y |  |  | unknown | 746&#8209;748 |
-| 9 | `quick_sort_random` |  |  |  | Y | Y |  |  | unknown | 755&#8209;757 |
+| 1 | `lemma_total_ordering` |  |  |  | Y | Y |  |  | unknown | 64&#8209;65 |
+| 2 | `quick_sort_first` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;96 |
+| 3 | `quick_sort_median3` | Y | Y |  |  | Y |  |  | unknown | 101&#8209;103 |
+| 4 | `quick_sort_random` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;110 |
+| 5 | `sort_vec` |  |  |  | Y | Y |  |  | unknown | 116&#8209;119 |
+| 6 | `median_of_three` |  |  |  | Y | Y |  |  | unknown | 154&#8209;157 |
+| 7 | `median3_pivot_idx` |  |  |  | Y | Y |  |  | unknown | 207&#8209;212 |
+| 8 | `sort_vec_random` |  |  |  | Y | Y |  |  | unknown | 227&#8209;229 |
+| 9 | `sort_vec_median3` |  |  |  | Y | Y |  |  | unknown | 239&#8209;241 |
+| 10 | `sort_vec_with_idx` |  |  |  | Y | Y |  |  | unknown | 253&#8209;259 |
 
 ### Chap36/QuickSortMtEphSlice.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 10 | `pivot_mt_first` | Y | Y |  |  | Y |  | Y |  | 20 |
-| 11 | `pivot_mt_median3` | Y | Y |  |  | Y |  | Y |  | 23 |
-| 12 | `pivot_mt_random` | Y | Y |  |  | Y |  | Y |  | 26 |
-| 13 | `quick_sort_mt_first` | Y | Y |  |  | Y |  | Y |  | 29 |
-| 14 | `quick_sort_mt_median3` | Y | Y |  |  | Y |  | Y |  | 32 |
-| 15 | `quick_sort_mt_random` | Y | Y |  |  | Y |  | Y |  | 35 |
+| 11 | `pivot_mt_first` | Y | Y |  |  | Y |  |  | unknown | 20&#8209;21 |
+| 12 | `pivot_mt_median3` | Y | Y |  |  | Y |  |  | unknown | 25&#8209;26 |
+| 13 | `pivot_mt_random` | Y | Y |  |  | Y |  |  | unknown | 30&#8209;31 |
+| 14 | `quick_sort_mt_first` | Y | Y |  |  | Y |  | Y |  | 35 |
+| 15 | `quick_sort_mt_median3` | Y | Y |  |  | Y |  | Y |  | 39 |
+| 16 | `quick_sort_mt_random` | Y | Y |  |  | Y |  | Y |  | 43 |
 
 ### Chap36/QuickSortStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 16 | `sort_vec` |  |  |  | Y | Y |  |  | unknown | 44&#8209;47 |
-| 17 | `quick_sort_first` |  |  |  | Y | Y |  |  | unknown | 367&#8209;369 |
-| 18 | `median_of_three` |  |  |  | Y | Y |  |  | unknown | 388&#8209;389 |
-| 19 | `median3_pivot_idx` |  |  |  | Y | Y |  |  | unknown | 419&#8209;421 |
-| 20 | `sort_vec_random` |  |  |  | Y | Y |  |  | unknown | 436&#8209;439 |
-| 21 | `sort_vec_median3` |  |  |  | Y | Y |  |  | unknown | 449&#8209;452 |
-| 22 | `sort_vec_with_idx` |  |  |  | Y | Y |  |  | unknown | 464&#8209;470 |
-| 23 | `quick_sort_median3` |  |  |  | Y | Y |  |  | unknown | 735&#8209;737 |
-| 24 | `quick_sort_random` |  |  |  | Y | Y |  |  | unknown | 744&#8209;746 |
+| 17 | `lemma_total_ordering` |  |  |  | Y | Y |  |  | unknown | 62&#8209;63 |
+| 18 | `quick_sort_first` | Y | Y |  |  | Y |  |  | unknown | 92&#8209;94 |
+| 19 | `quick_sort_median3` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;101 |
+| 20 | `quick_sort_random` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;108 |
+| 21 | `sort_vec` |  |  |  | Y | Y |  |  | unknown | 114&#8209;117 |
+| 22 | `median_of_three` |  |  |  | Y | Y |  |  | unknown | 152&#8209;155 |
+| 23 | `median3_pivot_idx` |  |  |  | Y | Y |  |  | unknown | 207&#8209;212 |
+| 24 | `sort_vec_random` |  |  |  | Y | Y |  |  | unknown | 227&#8209;229 |
+| 25 | `sort_vec_median3` |  |  |  | Y | Y |  |  | unknown | 239&#8209;241 |
+| 26 | `sort_vec_with_idx` |  |  |  | Y | Y |  |  | unknown | 253&#8209;259 |
 
 
 ### Legend

@@ -324,8 +324,6 @@ pub mod ScanContractMtEph {
                     b_seq.lemma_fold_left_split(id, spec_f, (half - 1) as int);
                     assert(b_seq.subrange(0, (half - 1) as int) =~= b_seq.take((half - 1) as int));
                     assert(b_seq.subrange((half - 1) as int, half as int) =~= seq![b_seq[(half - 1) as int]]);
-                    reveal(Seq::fold_left);
-
                     lemma_prefix_contraction::<T>(s, b_seq, spec_f, id, half as int);
                     assert(b_seq.take(half as int) =~= b_seq);
 
