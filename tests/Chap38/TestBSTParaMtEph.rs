@@ -150,6 +150,47 @@ fn para_filter_and_reduce_edge_cases() {
     assert_eq!(reduced_single, 42);
 }
 
+#[test]
+fn para_singleton() {
+    let tree = ParamBST::singleton(42);
+    assert_eq!(tree.size(), 1);
+    assert_eq!(tree.find(&42), Some(42));
+    assert_eq!(tree.find(&0), None);
+    assert_eq!(tree.in_order(), ArraySeqStPerS::from_vec(vec![42]));
+}
+
+#[test]
+fn para_split_nonexistent_key() {
+    let tree = make_tree(&[1, 3, 5, 7, 9]);
+    let (less, present, greater) = tree.split(&4);
+    assert!(!present);
+    assert_eq!(less.in_order(), ArraySeqStPerS::from_vec(vec![1, 3]));
+    assert_eq!(greater.in_order(), ArraySeqStPerS::from_vec(vec![5, 7, 9]));
+}
+
+#[test]
+fn para_ops_on_empty_tree() {
+    let empty = ParamBST::<i32>::new();
+    assert_eq!(empty.find(&1), None);
+    assert_eq!(empty.size(), 0);
+    assert!(empty.is_empty());
+
+    let other = make_tree(&[1, 2, 3]);
+    assert_eq!(empty.union(&other).in_order(), ArraySeqStPerS::from_vec(vec![1, 2, 3]));
+    assert_eq!(other.union(&empty).in_order(), ArraySeqStPerS::from_vec(vec![1, 2, 3]));
+    assert_eq!(empty.intersect(&other).size(), 0);
+    assert_eq!(empty.difference(&other).size(), 0);
+    assert_eq!(other.difference(&empty).in_order(), ArraySeqStPerS::from_vec(vec![1, 2, 3]));
+}
+
+#[test]
+fn para_delete_nonexistent_key() {
+    let tree = make_tree(&[1, 3, 5]);
+    tree.delete(&2);
+    assert_eq!(tree.in_order(), ArraySeqStPerS::from_vec(vec![1, 3, 5]));
+    assert_eq!(tree.size(), 3);
+}
+
 // Concurrent operation verification tests for BSTParaMtEph
 #[test]
 fn para_concurrent_insertions() {

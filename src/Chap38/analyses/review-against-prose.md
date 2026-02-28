@@ -7,278 +7,356 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 38 — Parametric BSTs: Review Against Prose
 
-**Date:** 2026-02-19
+**Date:** 2026-02-27
 **Reviewer:** Claude-Opus-4.6
 **Prose source:** `prompts/Chap38.txt`
 **Source files:** `src/Chap38/BSTParaStEph.rs`, `src/Chap38/BSTParaMtEph.rs`
-**Test files:** `tests/Chap38/TestBSTParaStEph.rs` (5 tests), `tests/Chap38/TestBSTParaMtEph.rs` (16 tests)
+**Test files:** `tests/Chap38/TestBSTParaStEph.rs` (13 tests), `tests/Chap38/TestBSTParaMtEph.rs` (20 tests)
 **PTT files:** None
-**Verification status:** No `verus!` blocks — entire chapter is plain Rust, gated with `#[cfg(not(verus_keep_ghost))]`
+**Verification status:** 2879 verified, 0 errors. BSTParaStEph.rs trait+impl inside `verus!` with specs on 11 of 17 trait methods; all impl methods `external_body`. BSTParaMtEph.rs trait+impl still outside `verus!` with no specs.
 
 ## Phase 1: Inventory
 
-| # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
-|---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap38 | BSTParaMtEph | 16 | 16 | 0 | 14 | 0 | 29 | 0 | 0 | 29 |
-| 2 | Chap38 | BSTParaStEph | 12 | 12 | 0 | 8 | 0 | 19 | 0 | 0 | 19 |
+| # | Chap | Module | Tr | IT | IBI | V! | -V! | Holes | NoSpec |
+|---|------|--------|:--:|:--:|:---:|:--:|:---:|:-----:|:------:|
+| 1 | Chap38 | BSTParaStEph.rs | 17 | 17 | 0 | 17 | 11 | 19 eb | 6 |
+| 2 | Chap38 | BSTParaMtEph.rs | 17 | 17 | 0 | 1 | 33 | 1 eb | 33 |
 
-**Total:** 48 functions, 0 inside `verus!`, 48 outside, 0 with specs, 0 proof holes.
+Column key: Tr = trait fns, IT = impl fns, IBI = impl bare fns, V! = fns inside verus!, -V! = fns outside verus!, Holes = external_body count, NoSpec = fns without requires/ensures.
+
+**Totals:** 68 functions across both files. BSTParaStEph.rs: trait+impl inside `verus!`, 19 `external_body` holes, 11 trait methods with specs, 6 without. BSTParaMtEph.rs: trait+impl outside `verus!`, 1 `external_body` (RwLock), no specs.
 
 ## Phase 2: Prose Inventory
 
 ### Definitions
 
-| # | Prose Item | Reference | Type | Description |
-|---|-----------|-----------|------|-------------|
-| 1 | Data Type 38.1 — K (key type with total order) | §1 | Type | Key type supporting `<` |
-| 2 | Data Type 38.1 — T (abstract tree type) | §1 | Type | Opaque tree type |
-| 3 | Data Type 38.1 — E (Exposed: Leaf or Node(T×K×T)) | §1 | Type | Exposed tree variant |
-| 4 | Data Type 38.1 — size : T → N | §1 | Fn | Number of keys in T |
-| 5 | Data Type 38.1 — expose : T → E | §1 | Fn | Expose the root |
-| 6 | Data Type 38.1 — joinMid : E → T | §1 | Fn | Inverse of expose; rebalances |
+| # | Chap | Prose Item | Reference | Type | Description |
+|---|------|-----------|-----------|------|-------------|
+| 1 | Chap38 | Data Type 38.1 — K (key type) | §1 | Type | Key type supporting `<` |
+| 2 | Chap38 | Data Type 38.1 — T (tree type) | §1 | Type | Opaque tree type |
+| 3 | Chap38 | Data Type 38.1 — E (Exposed) | §1 | Type | `Leaf` or `Node(T × K × T)` |
+| 4 | Chap38 | Data Type 38.1 — size | §1 | Fn | Number of keys in T |
+| 5 | Chap38 | Data Type 38.1 — expose | §1 | Fn | Expose the root |
+| 6 | Chap38 | Data Type 38.1 — joinMid | §1 | Fn | Inverse of expose; rebalances |
 
 ### Algorithms
 
-| # | Prose Item | Reference | Description |
-|---|-----------|-----------|-------------|
-| 7 | Algorithm 38.2 — empty | §2 | `joinMid(Leaf)` |
-| 8 | Algorithm 38.2 — singleton k | §2 | `joinMid(Node(empty, k, empty))` |
-| 9 | Algorithm 38.2 — joinM(L, k, R) | §2 | `joinMid(Node(L, k, R))` |
-| 10 | Algorithm 38.3 — split(T, k) | §2 | Three-way recursive split |
-| 11 | Algorithm 38.4 — minKey(T, k) | §2 | Find minimum key |
-| 12 | Algorithm 38.4 — joinPair(T1, T2) | §2 | Join two trees without a middle key |
-| 13 | Algorithm 38.5 — insert(T, k) | §2 | `split` then `joinM(L, k, R)` |
-| 14 | Algorithm 38.5 — delete(T, k) | §2 | `split` then `joinPair(L, R)` |
-| 15 | Algorithm 38.6 — union(T1, T2) | §3 | Parallel divide-and-conquer via split |
-| 16 | Algorithm 38.7 — intersect(T1, T2) | §3 | Parallel, includes key if found in both |
-| 17 | Algorithm 38.8 — difference(T1, T2) | §3 | Parallel, excludes key if found |
-| 18 | Algorithm 38.9 — filter f T | §3 | Parallel, joinM/joinPair based on predicate |
-| 19 | Algorithm 38.10 — reduce f I T | §3 | Parallel, `f(L', f(k, R'))` |
+| # | Chap | Prose Item | Reference | Description |
+|---|------|-----------|-----------|-------------|
+| 7 | Chap38 | Algorithm 38.2 — empty | §2 | `joinMid(Leaf)` |
+| 8 | Chap38 | Algorithm 38.2 — singleton k | §2 | `joinMid(Node(empty, k, empty))` |
+| 9 | Chap38 | Algorithm 38.2 — joinM(L, k, R) | §2 | `joinMid(Node(L, k, R))` |
+| 10 | Chap38 | Algorithm 38.3 — split(T, k) | §2 | Three-way recursive split |
+| 11 | Chap38 | Algorithm 38.4 — minKey(T, k) | §2 | Find minimum key |
+| 12 | Chap38 | Algorithm 38.4 — joinPair(T1, T2) | §2 | Join two trees without middle key |
+| 13 | Chap38 | Algorithm 38.5 — insert(T, k) | §2 | `split` then `joinM(L, k, R)` |
+| 14 | Chap38 | Algorithm 38.5 — delete(T, k) | §2 | `split` then `joinPair(L, R)` |
+| 15 | Chap38 | Algorithm 38.6 — union(T1, T2) | §3 | Parallel divide-and-conquer via split |
+| 16 | Chap38 | Algorithm 38.7 — intersect(T1, T2) | §3 | Parallel, include if found in both |
+| 17 | Chap38 | Algorithm 38.8 — difference(T1, T2) | §3 | Parallel, exclude if found |
+| 18 | Chap38 | Algorithm 38.9 — filter f T | §3 | Parallel, joinM/joinPair on predicate |
+| 19 | Chap38 | Algorithm 38.10 — reduce f I T | §3 | Parallel, `f(L', f(k, R'))` |
 
 ### Cost Specifications
 
-| # | Prose Item | Reference | Description |
-|---|-----------|-----------|-------------|
-| 20 | Cost Specification 38.11 | §4 | Full cost table for all BST operations |
+| # | Chap | Prose Item | Reference | Description |
+|---|------|-----------|-----------|-------------|
+| 20 | Chap38 | Cost Specification 38.11 | §4 | Full cost table for all BST operations |
 
 ### Exercises
 
-| # | Prose Item | Reference | Description |
-|---|-----------|-----------|-------------|
-| 21 | Exercise 38.1 | §3 | Prove correct intersection, difference, and union |
+| # | Chap | Prose Item | Reference | Description |
+|---|------|-----------|-----------|-------------|
+| 21 | Chap38 | Exercise 38.1 | §3 | Prove correct intersection, difference, union |
 
 ### Implementation Status
 
-| # | Prose Item | StEph | MtEph | Notes |
-|---|-----------|:-----:|:-----:|-------|
-| 1 | K (key type) | `T: StT + Ord` | `T: MtKey` | Faithful |
-| 2 | T (tree type) | `ParamBST<T>` (Rc/RefCell) | `ParamBST<T>` (Arc/RwLock) | Faithful |
-| 3 | E (Exposed) | `Exposed<T>` enum | `Exposed<T>` enum | Faithful |
-| 4 | size | Yes | Yes | O(1) via stored field |
-| 5 | expose | Yes | Yes | `expose_internal` + trait |
-| 6 | joinMid | Yes | Yes | `join_mid` free fn + trait |
-| 7 | empty | Yes | Yes | `ParamBST::new()` |
-| 8 | singleton | **No** | **No** | Available indirectly via `ParamBSTLit![k]` in StEph only |
-| 9 | joinM | Yes | Yes | `join_m` wrapper |
-| 10 | split | Yes | Yes | `split_inner` — exact match to prose |
-| 11 | minKey | Yes | Yes | Returns `Option<T>` instead of prose's two-arg form |
-| 12 | joinPair | Yes | Yes | `join_pair_inner` |
-| 13 | insert | Yes | Yes | `split` + `joinM` — matches prose |
-| 14 | delete | Yes | Yes | `split` + `joinPair` — matches prose |
-| 15 | union | Yes (seq) | Yes (par) | MtEph uses `ParaPair!`; StEph sequential |
-| 16 | intersect | **No** | Yes (par) | Missing from StEph |
-| 17 | difference | **No** | Yes (par) | Missing from StEph |
-| 18 | filter | **No** | Yes (par) | Missing from StEph |
-| 19 | reduce | **No** | Yes (par) | Missing from StEph |
-| 20 | Cost Spec 38.11 | Partial | Yes | Doc-comments on all functions |
-| 21 | find | Yes | Yes | Standard BST traversal (not numbered in Ch38 prose) |
-| 22 | in_order | Yes | Yes | Extra utility, not in prose |
-| 23 | is_empty | Yes | Yes | Extra utility, not in prose |
-| 24 | ParamBSTLit! | Yes | No | Convenience macro for StEph |
+| # | Chap | Prose Item | BSTParaStEph.rs | BSTParaMtEph.rs | Notes |
+|---|------|-----------|:---------------:|:---------------:|-------|
+| 1 | Chap38 | K (key type) | `T: StT + Ord` | `T: MtKey` | Faithful |
+| 2 | Chap38 | T (tree type) | `ParamBST<T>` | `ParamBST<T>` | Arc/RwLock |
+| 3 | Chap38 | E (Exposed) | `Exposed<T>` | `Exposed<T>` | Faithful |
+| 4 | Chap38 | size | Yes | Yes | O(1) via stored field |
+| 5 | Chap38 | expose | Yes | Yes | `expose_internal` + trait |
+| 6 | Chap38 | joinMid | Yes | Yes | `join_mid` free fn + trait |
+| 7 | Chap38 | empty | Yes | Yes | `ParamBST::new()` |
+| 8 | Chap38 | singleton | Yes | Yes | `joinMid(Node(empty, k, empty))` |
+| 9 | Chap38 | joinM | Yes | Yes | `join_m` wrapper |
+| 10 | Chap38 | split | Yes | Yes | `split_inner` — exact match |
+| 11 | Chap38 | minKey | Yes | Yes | Returns `Option<T>` |
+| 12 | Chap38 | joinPair | Yes | Yes | `join_pair_inner` |
+| 13 | Chap38 | insert | Yes | Yes | `split` + `joinM` |
+| 14 | Chap38 | delete | Yes | Yes | `split` + `joinPair` |
+| 15 | Chap38 | union | Yes (seq) | Yes (par) | MtEph uses `ParaPair!` |
+| 16 | Chap38 | intersect | Yes (seq) | Yes (par) | Faithful |
+| 17 | Chap38 | difference | Yes (seq) | Yes (par) | Faithful |
+| 18 | Chap38 | filter | Yes (seq) | Yes (par) | Faithful |
+| 19 | Chap38 | reduce | Yes (seq) | Yes (par) | Faithful |
+| 20 | Chap38 | Cost Spec 38.11 | Yes | Yes | Doc-comments on trait |
+| 21 | Chap38 | find | Yes | Yes | Not numbered in Ch38 |
+| 22 | Chap38 | in_order | Yes | Yes | Extra utility |
+| 23 | Chap38 | is_empty | Yes | Yes | Extra utility |
+| 24 | Chap38 | ParamBSTLit! | Yes | No | Convenience macro |
 
-**StEph:** 14 of 19 prose items implemented. Missing: singleton, intersect, difference, filter, reduce.
-**MtEph:** 18 of 19 prose items implemented. Missing: singleton only.
+**BSTParaStEph.rs:** 19 of 19 prose items implemented.
+**BSTParaMtEph.rs:** 19 of 19 prose items implemented.
 
 ## Phase 3: Algorithmic Analysis
 
 ### 3a. Cost Annotations
 
-| # | Operation | APAS Work | APAS Span | Code Work | Code Span | Match? | Notes |
-|---|----------|-----------|-----------|-----------|-----------|:------:|-------|
-| 1 | new/empty | O(1) | O(1) | Θ(1) | Θ(1) | Yes | |
-| 2 | expose | O(1) | O(1) | Θ(1) | Θ(1) | Yes | |
-| 3 | joinMid | O(1) | O(1) | Θ(1) | Θ(1) | Yes | Parametric; balancing deferred to Ch39 |
-| 4 | size | O(1) | O(1) | Θ(1) | Θ(1) | Yes | Stored in node |
-| 5 | split | O(lg \|t\|) | O(lg \|t\|) | Θ(log n) | Θ(log n) | Yes | |
-| 6 | find | O(lg \|t\|) | O(lg \|t\|) | Θ(log n) | Θ(log n) | Yes | |
-| 7 | insert | O(lg \|t\|) | O(lg \|t\|) | Θ(log n) | Θ(log n) | Yes | split + joinM |
-| 8 | delete | O(lg \|t\|) | O(lg \|t\|) | Θ(log n) | Θ(log n) | Yes | split + joinPair |
-| 9 | joinPair | O(lg(\|t1\|+\|t2\|)) | O(lg(\|t1\|+\|t2\|)) | Θ(log(\|t1\|+\|t2\|)) | Θ(log(\|t1\|+\|t2\|)) | Yes | |
-| 10 | union (MtEph) | O(m·lg(n/m)) | O(lg n) | Θ(m·lg(n/m)) | Θ(lg n) | Yes | Missing `(_, Leaf)` base case adds O(\|a\|) when b empty |
-| 11 | union (StEph) | O(m·lg(n/m)) | — | Θ(m·lg(n/m)) | Θ(m·lg(n/m)) | Yes | Sequential; span = work |
-| 12 | intersect | O(m·lg(n/m)) | O(lg n) | Θ(m·lg(n/m)) | Θ(lg n) | Yes | MtEph only |
-| 13 | difference | O(m·lg(n/m)) | O(lg n) | Θ(m·lg(n/m)) | Θ(lg n) | Yes | MtEph only |
-| 14 | filter | O(\|t\|) | O(lg \|t\|) | Θ(n) | Θ(lg n) | Yes | MtEph only |
-| 15 | reduce | O(\|t\|) | O(lg \|t\|) | Θ(n) | Θ(lg n) | Yes | MtEph only |
-| 16 | in_order | O(\|t\|) | O(\|t\|) | Θ(n) | Θ(n) | Yes | Not in prose |
+| # | Chap | Operation | APAS Work | APAS Span | Code Work | Code Span | Match? |
+|---|------|----------|-----------|-----------|-----------|-----------|:------:|
+| 1 | Chap38 | new/empty | O(1) | O(1) | Θ(1) | Θ(1) | Yes |
+| 2 | Chap38 | expose | O(1) | O(1) | Θ(1) | Θ(1) | Yes |
+| 3 | Chap38 | joinMid | O(1) | O(1) | Θ(1) | Θ(1) | Yes |
+| 4 | Chap38 | size | O(1) | O(1) | Θ(1) | Θ(1) | Yes |
+| 5 | Chap38 | split | O(lg n) | O(lg n) | Θ(lg n) | Θ(lg n) | Yes |
+| 6 | Chap38 | find | O(lg n) | O(lg n) | Θ(lg n) | Θ(lg n) | Yes |
+| 7 | Chap38 | insert | O(lg n) | O(lg n) | Θ(lg n) | Θ(lg n) | Yes |
+| 8 | Chap38 | delete | O(lg n) | O(lg n) | Θ(lg n) | Θ(lg n) | Yes |
+| 9 | Chap38 | joinPair | O(lg(n1+n2)) | O(lg(n1+n2)) | Θ(lg(n1+n2)) | Θ(lg(n1+n2)) | Yes |
+| 10 | Chap38 | union (Mt) | O(m·lg(n/m)) | O(lg n) | Θ(m·lg(n/m)) | Θ(lg n) | Yes |
+| 11 | Chap38 | union (St) | O(m·lg(n/m)) | — | Θ(m·lg(n/m)) | seq | Yes |
+| 12 | Chap38 | intersect (Mt) | O(m·lg(n/m)) | O(lg n) | Θ(m·lg(n/m)) | Θ(lg n) | Yes |
+| 13 | Chap38 | intersect (St) | O(m·lg(n/m)) | — | Θ(m·lg(n/m)) | seq | Yes |
+| 14 | Chap38 | difference (Mt) | O(m·lg(n/m)) | O(lg n) | Θ(m·lg(n/m)) | Θ(lg n) | Yes |
+| 15 | Chap38 | difference (St) | O(m·lg(n/m)) | — | Θ(m·lg(n/m)) | seq | Yes |
+| 16 | Chap38 | filter (Mt) | O(n) | O(lg n) | Θ(n) | Θ(lg n) | Yes |
+| 17 | Chap38 | filter (St) | O(n) | — | Θ(n) | seq | Yes |
+| 18 | Chap38 | reduce (Mt) | O(n) | O(lg n) | Θ(n) | Θ(lg n) | Yes |
+| 19 | Chap38 | reduce (St) | O(n) | — | Θ(n) | seq | Yes |
+| 20 | Chap38 | in_order | O(n) | O(n) | Θ(n) | Θ(n) | Yes |
 
 ### 3b. Implementation Fidelity
 
-| # | Algorithm | File | Fidelity | Detail |
-|---|----------|------|:--------:|--------|
-| 1 | expose | Both | Faithful | Reads root via borrow/read lock; returns `Leaf` or `Node(L, k, R)` |
-| 2 | joinMid | Both | Faithful | Creates `NodeInner` with `size = 1 + left.size() + right.size()` |
-| 3 | joinM | Both | Faithful | One-line wrapper `join_mid(Node(L, k, R))` |
-| 4 | split | Both | Faithful | Recursive three-way compare, rebuilds with `join_mid` on way back |
-| 5 | minKey | Both | Minor deviation | Prose takes `(T, k)` with fallback key; impl returns `Option<T>` — equivalent via `unwrap_or` |
-| 6 | joinPair | Both | Minor deviation | Calls `min_key(&right)` on unexposed right tree, re-exposing it; functionally identical |
-| 7 | insert | Both | Faithful | `split(T, k)` then `joinM(L, k, R)` |
-| 8 | delete | Both | Faithful | `split(T, k)` then `joinPair(L, R)` |
-| 9 | union (both) | Both | Missing base case | No check for `(_, Leaf) ⇒ T1`. Traverses all of `a` when `b` is empty — O(\|a\|) instead of O(1). Functionally correct but asymptotically wasteful |
-| 10 | intersect | MtEph | Faithful | Both `(Leaf, _)` and `(_, Leaf)` base cases present. Conditional `joinM`/`joinPair` on `found` |
-| 11 | difference | MtEph | Faithful | Both base cases present. Inverted join logic |
-| 12 | filter | MtEph | Faithful | Parallel left/right, `joinM` when predicate holds, `joinPair` otherwise |
-| 13 | reduce | MtEph | Faithful | Parallel `op(L', op(k, R'))`. Associativity requirement undocumented |
-| 14 | find | Both | Standard | Not a numbered algorithm in Ch38; standard BST search |
+| # | Chap | Algorithm | File | Fidelity | Detail |
+|---|------|----------|------|:--------:|--------|
+| 1 | Chap38 | expose | Both | Faithful | Reads root via read lock |
+| 2 | Chap38 | joinMid | Both | Faithful | Creates NodeInner with computed size |
+| 3 | Chap38 | joinM | Both | Faithful | One-line wrapper |
+| 4 | Chap38 | split | Both | Faithful | Recursive three-way compare |
+| 5 | Chap38 | minKey | Both | Minor | Returns `Option<T>` vs prose `(T, k)` |
+| 6 | Chap38 | joinPair | Both | Minor | Calls `min_key(&right)` then split |
+| 7 | Chap38 | insert | Both | Faithful | `split` + `joinM` |
+| 8 | Chap38 | delete | Both | Faithful | `split` + `joinPair` |
+| 9 | Chap38 | union | Both | Faithful | Both base cases present |
+| 10 | Chap38 | intersect | Both | Faithful | Conditional joinM/joinPair |
+| 11 | Chap38 | difference | Both | Faithful | Inverted join logic |
+| 12 | Chap38 | filter | Both | Faithful | Predicate-based join/joinPair |
+| 13 | Chap38 | reduce | Both | Faithful | `op(L', op(k, R'))` |
+| 14 | Chap38 | find | Both | Standard | Not numbered in Ch38 |
 
 ### 3c. Spec Fidelity
 
-Not applicable — no `verus!` blocks, no `requires`/`ensures`.
+**BSTParaStEph.rs** — 11 of 17 trait methods have specs:
+
+| # | Chap | Function | Spec | Strength | Detail |
+|---|------|---------|------|:--------:|--------|
+| 1 | Chap38 | new | `result@ == Set::empty()` | strong | |
+| 2 | Chap38 | singleton | `result@ == Set::empty().insert(key@)` | strong | |
+| 3 | Chap38 | size | `count == self@.len()` | strong | |
+| 4 | Chap38 | is_empty | `empty == (self@.len() == 0)` | strong | |
+| 5 | Chap38 | find | `found.is_some() <==> self@.contains(key@)` | partial | Missing: `found == Some(key)` |
+| 6 | Chap38 | split | `parts.1 == self@.contains(key@)`, finite | partial | Missing: L < k, R > k |
+| 7 | Chap38 | join_pair | `joined@.finite()` | weak | Missing: result = L ∪ R |
+| 8 | Chap38 | union | `result@ == self@.union(other@)` | strong | |
+| 9 | Chap38 | intersect | `result@ == self@.intersect(other@)` | strong | |
+| 10 | Chap38 | difference | `result@ == self@.difference(other@)` | strong | |
+| 11 | Chap38 | filter | `filtered@.subset_of(self@)` | partial | Missing: exact predicate spec |
+| 12 | Chap38 | expose | none | none | |
+| 13 | Chap38 | join_mid | none | none | |
+| 14 | Chap38 | insert | none | none | Missing: mutates self |
+| 15 | Chap38 | delete | none | none | Missing: mutates self |
+| 16 | Chap38 | reduce | none | none | |
+| 17 | Chap38 | in_order | none | none | |
+
+**BSTParaMtEph.rs** — 0 of 17 trait methods have specs.
+
+**Note:** The `spec_set_view` function on `ParamBST` in BSTParaStEph.rs is `external_body` returning `Set::empty()`. This is a placeholder; the View cannot track actual tree contents until the implementation connects RwLock contents to the ghost state. All `ensures` clauses in BSTParaStEph.rs are currently vacuously trusted via `external_body` on every impl method.
 
 ## Phase 4: Parallelism Review
 
 ### BSTParaMtEph.rs
 
-| # | Function | Parallel? | Mechanism | Prose Match? | Notes |
-|---|---------|:---------:|-----------|:------------:|-------|
-| 1 | `union_inner` | Yes | `ParaPair!` on left/right recursive union | Yes | Matches `(union(L1, L2) \|\| union(R1, R2))` |
-| 2 | `intersect_inner` | Yes | `ParaPair!` on left/right recursive intersect | Yes | Matches Algorithm 38.7 |
-| 3 | `difference_inner` | Yes | `ParaPair!` on left/right recursive difference | Yes | Matches Algorithm 38.8 |
-| 4 | `filter_inner` | Yes | `ParaPair!` on left/right recursive filter | Yes | Matches Algorithm 38.9. Uses `Arc<F>` to share predicate |
-| 5 | `reduce_inner` | Yes | `ParaPair!` on left/right recursive reduce | Yes | Matches Algorithm 38.10. Uses `Arc<F>` for operator |
-| 6 | `collect_in_order` | No | Sequential traversal | N/A | Not in prose |
-| 7 | All other fns | No | Sequential | N/A | expose, joinMid, split, insert, delete, find are sequential per-tree operations |
+| # | Chap | Function | Parallel? | Mechanism | Prose Match? |
+|---|------|---------|:---------:|-----------|:------------:|
+| 1 | Chap38 | `union_inner` | Yes | `ParaPair!` | Yes |
+| 2 | Chap38 | `intersect_inner` | Yes | `ParaPair!` | Yes |
+| 3 | Chap38 | `difference_inner` | Yes | `ParaPair!` | Yes |
+| 4 | Chap38 | `filter_inner` | Yes | `ParaPair!` + `Arc<F>` | Yes |
+| 5 | Chap38 | `reduce_inner` | Yes | `ParaPair!` + `Arc<F>` | Yes |
+| 6 | Chap38 | `collect_in_order` | No | Sequential traversal | N/A |
+| 7 | Chap38 | All others | No | Sequential per-tree ops | N/A |
 
 ### Thread Safety
 
-- `ParamBST<T>` uses `Arc<RwLock<Option<Box<NodeInner>>>>` for thread-safe interior mutability.
+- `ParamBST<T>` uses `Arc<RwLock<Option<Box<NodeInner>>>>`.
 - `insert`/`delete` use `write()` locks; `expose`/`find`/`split` use `read()` locks.
 - `ParaPair!` macro handles fork-join threading.
-- No grain control: every recursive call spawns threads regardless of subtree size.
-- `insert`/`delete` are NOT concurrent-safe: read + compute + write without holding lock across entire operation. Concurrent tests use loose assertions.
+- `insert`/`delete` are NOT linearizable: read-compute-write without holding lock across full operation.
 
 ## Phase 5: Runtime Test Review
 
-### TestBSTParaStEph.rs (5 tests)
+### TestBSTParaStEph.rs (13 tests)
 
-| # | Test | Operations Covered | Edge Cases? |
-|---|------|--------------------|:-----------:|
-| 1 | `test_parambstlit_macro_functionality` | `ParamBSTLit![]`, `ParamBSTLit![2,1,3]`, size, find | Empty tree |
-| 2 | `para_basic_insert_find` | insert, find, size, is_empty, in_order | 7-element tree |
-| 3 | `para_split_and_join_pair` | split, join_pair, in_order | Split at existing key |
-| 4 | `para_union_and_delete` | union, delete, find, in_order | Union of disjoint sets |
-| 5 | `para_join_mid_expose_roundtrip` | expose, join_mid, size | Leaf and single-node |
+| # | Chap | Test | Operations Covered |
+|---|------|----|-----|
+| 1 | Chap38 | `test_parambstlit_macro_functionality` | ParamBSTLit!, size, find |
+| 2 | Chap38 | `para_basic_insert_find` | insert, find, size, is_empty, in_order |
+| 3 | Chap38 | `para_split_and_join_pair` | split, join_pair, in_order |
+| 4 | Chap38 | `para_union_and_delete` | union, delete, find, in_order |
+| 5 | Chap38 | `para_join_mid_expose_roundtrip` | expose, join_mid, size |
+| 6 | Chap38 | `para_singleton` | singleton, size, find, in_order |
+| 7 | Chap38 | `para_intersect_and_difference` | intersect, difference, in_order |
+| 8 | Chap38 | `para_filter_and_reduce` | filter, reduce |
+| 9 | Chap38 | `para_intersect_and_difference_large` | 256-element intersect, difference |
+| 10 | Chap38 | `para_filter_and_reduce_edge_cases` | filter, reduce edge cases |
+| 11 | Chap38 | `para_split_nonexistent_key` | split at missing key |
+| 12 | Chap38 | `para_ops_on_empty_tree` | empty tree operations |
+| 13 | Chap38 | `para_delete_nonexistent_key` | delete non-existent key |
 
-### TestBSTParaMtEph.rs (16 tests)
+### TestBSTParaMtEph.rs (20 tests)
 
-| # | Test | Operations Covered | Edge Cases? |
-|---|------|--------------------|:-----------:|
-| 1 | `para_basic_insert_find` | insert, find, size, is_empty, in_order | 7-element tree |
-| 2 | `para_split_and_join_pair` | split, join_pair, in_order | Split at existing key |
-| 3 | `para_union_and_delete` | union, delete, find, in_order | Union of disjoint sets |
-| 4 | `para_join_mid_expose_roundtrip` | expose, join_mid, size | Leaf and single-node |
-| 5 | `para_intersect_and_difference` | intersect, difference, in_order | Overlapping sets |
-| 6 | `para_filter_and_reduce` | filter, reduce | Even filter, sum, empty reduce |
-| 7 | `para_union_large_balanced` | union on 200+200 element trees | Overlapping ranges |
-| 8 | `para_intersect_and_difference_large` | intersect, difference on 256-element trees | Large overlapping ranges |
-| 9 | `para_filter_and_reduce_edge_cases` | filter, reduce with edge cases | Single element, sum of squares |
-| 10 | `para_concurrent_insertions` | Concurrent insert + find across 4 threads | Thread safety | Weak assertions |
-| 11 | `para_concurrent_operations_stress` | 6-thread concurrent insert + find | Stress test | Weak assertions |
-| 12 | `para_concurrent_set_operations` | Concurrent union, intersect, difference | Parallel set ops on read-only trees | Exact assertions |
-| 13 | `para_concurrent_filter_reduce` | Concurrent filter, reduce | Parallel read-only operations | Exact assertions |
-| 14 | `para_concurrent_split_join` | Concurrent split operations | Parallel read-only splits | Exact assertions |
-| 15 | `para_concurrent_expose_join_mid` | Concurrent expose, join_mid | Building trees in parallel |
-| 16 | `para_concurrent_delete_operations` | Concurrent delete + find | Concurrent mutation | Weak assertions |
+| # | Chap | Test | Operations Covered |
+|---|------|----|-----|
+| 1 | Chap38 | `para_basic_insert_find` | insert, find, size, is_empty, in_order |
+| 2 | Chap38 | `para_split_and_join_pair` | split, join_pair, in_order |
+| 3 | Chap38 | `para_union_and_delete` | union, delete, find, in_order |
+| 4 | Chap38 | `para_join_mid_expose_roundtrip` | expose, join_mid, size |
+| 5 | Chap38 | `para_intersect_and_difference` | intersect, difference, in_order |
+| 6 | Chap38 | `para_filter_and_reduce` | filter, reduce |
+| 7 | Chap38 | `para_union_large_balanced` | 200+200 element union |
+| 8 | Chap38 | `para_intersect_and_difference_large` | 256-element intersect, difference |
+| 9 | Chap38 | `para_filter_and_reduce_edge_cases` | filter, reduce edge cases |
+| 10 | Chap38 | `para_singleton` | singleton, size, find, in_order |
+| 11 | Chap38 | `para_split_nonexistent_key` | split at missing key |
+| 12 | Chap38 | `para_ops_on_empty_tree` | empty tree operations |
+| 13 | Chap38 | `para_delete_nonexistent_key` | delete non-existent key |
+| 14 | Chap38 | `para_concurrent_insertions` | 4-thread concurrent insert+find |
+| 15 | Chap38 | `para_concurrent_operations_stress` | 6-thread stress test |
+| 16 | Chap38 | `para_concurrent_set_operations` | Concurrent union/intersect/diff |
+| 17 | Chap38 | `para_concurrent_filter_reduce` | Concurrent filter/reduce |
+| 18 | Chap38 | `para_concurrent_split_join` | Concurrent split at 25/50/75 |
+| 19 | Chap38 | `para_concurrent_expose_join_mid` | Concurrent tree construction |
+| 20 | Chap38 | `para_concurrent_delete_operations` | Concurrent delete+find |
 
-### Coverage Assessment
-
-- **StEph:** Good for implemented operations. Missing tests for intersect, difference, filter, reduce (not implemented in StEph).
-- **MtEph:** Excellent functional coverage. All 16 trait methods exercised. Large-tree tests provide confidence.
-- **Concurrency tests:** Tests 10, 11, 16 use concurrent mutation with loose assertions (correct given non-linearizable insert/delete). Tests 12–15 use concurrent reads with exact assertions.
-- **Missing:** No test for split at non-existent key, union with empty tree, or delete of non-existent key.
+All 33 tests pass.
 
 ## Phase 6: PTT Review
 
-No PTTs exist. Expected since neither file contains `verus!` blocks. The module is gated with `not(verus_keep_ghost)`.
+No PTTs exist. Neither file contains verified loops or iterators inside `verus!`. No PTTs needed.
 
 ## Phase 7: Gap Analysis
 
-### Prose Items Not Implemented
+### Proof Holes
 
-| # | Priority | Gap | Detail | Recommendation |
-|---|----------|-----|--------|----------------|
-| 1 | High | Union missing `(_, Leaf) ⇒ T1` base case | Both `union_inner` (StEph and MtEph) only check `expose(a)` for Leaf. When `a` is non-empty but `b` is empty, code traverses all of `a` at O(\|a\|) instead of O(1). | Add base case check |
-| 2 | High | StEph missing 4 algorithms | `intersect`, `difference`, `filter`, `reduce` not in StEph. Trait has 12 vs MtEph's 16 methods. | Add sequential implementations |
-| 3 | High | No `verus!` blocks | No formal specs or proofs. Entirely unverified. | Future verusification |
-| 4 | Medium | `singleton` not a named function | Algorithm 38.2 defines it. `ParamBSTLit![k]` serves as workaround for StEph only. | Add `fn singleton(k: T) -> Self` |
-| 5 | Medium | `reduce` associativity undocumented | Prose requires `f` to be associative with identity `I`. Not documented in code. | Add doc comment |
-| 6 | Low | Missing edge case tests | No test for split at non-existent key, ops with empty tree, delete of non-existent key | Add tests |
-| 7 | Low | `ParamBSTLit!` missing from MtEph | StEph has the macro; MtEph does not. | Add or document omission |
+| # | Chap | File | Line | Type | Function | Removable? |
+|---|------|------|-----:|------|----------|:----------:|
+| 1 | Chap38 | BSTParaStEph.rs | 70 | eb (RwLock) | `new_bst_para_lock` | No — vstd req |
+| 2 | Chap38 | BSTParaStEph.rs | 78 | eb | `spec_set_view` | Yes — needs recursive spec |
+| 3 | Chap38 | BSTParaStEph.rs | 158 | eb | `new` | Yes — straightforward |
+| 4 | Chap38 | BSTParaStEph.rs | 163 | eb | `singleton` | Yes — straightforward |
+| 5 | Chap38 | BSTParaStEph.rs | 172 | eb | `expose` | Yes — needs Exposed View |
+| 6 | Chap38 | BSTParaStEph.rs | 175 | eb | `join_mid` | Yes — needs Exposed View |
+| 7 | Chap38 | BSTParaStEph.rs | 178 | eb | `size` | Yes — needs spec_set_view |
+| 8 | Chap38 | BSTParaStEph.rs | 188 | eb | `is_empty` | Yes — needs spec_set_view |
+| 9 | Chap38 | BSTParaStEph.rs | 193 | eb | `insert` | Medium — mutation + RwLock |
+| 10 | Chap38 | BSTParaStEph.rs | 204 | eb | `delete` | Medium — mutation + RwLock |
+| 11 | Chap38 | BSTParaStEph.rs | 215 | eb | `find` | Yes — recursive read-only |
+| 12 | Chap38 | BSTParaStEph.rs | 229 | eb | `split` | Yes — recursive read-only |
+| 13 | Chap38 | BSTParaStEph.rs | 237 | eb | `join_pair` | Yes — delegates to split+joinM |
+| 14 | Chap38 | BSTParaStEph.rs | 242 | eb | `union` | Medium — recursive + set spec |
+| 15 | Chap38 | BSTParaStEph.rs | 247 | eb | `intersect` | Medium — recursive + set spec |
+| 16 | Chap38 | BSTParaStEph.rs | 252 | eb | `difference` | Medium — recursive + set spec |
+| 17 | Chap38 | BSTParaStEph.rs | 257 | eb | `filter` | Hard — higher-order fn spec |
+| 18 | Chap38 | BSTParaStEph.rs | 264 | eb | `reduce` | Hard — needs associativity |
+| 19 | Chap38 | BSTParaStEph.rs | 269 | eb | `in_order` | Medium — needs Seq view |
+| 20 | Chap38 | BSTParaStEph.rs | 308 | eb | `clone` (ParamBST) | No — Arc::clone |
+| 21 | Chap38 | BSTParaStEph.rs | 287 | accept | Clone Exposed | Removable with real View |
+| 22 | Chap38 | BSTParaStEph.rs | 302 | accept | Clone NodeInner | Removable with real View |
+| 23 | Chap38 | BSTParaMtEph.rs | 46 | eb (RwLock) | `new_bst_para_lock` | No — vstd req |
 
-### Code With No Prose Counterpart
+### Missing Specs
 
-| # | Item | Purpose |
-|---|------|---------|
-| 1 | `find` | Standard BST search — not numbered in Ch38 but mentioned in Cost Spec |
-| 2 | `in_order` | Utility for testing and traversal |
-| 3 | `is_empty` | Convenience wrapper |
-| 4 | `ParamBSTLit!` | Test convenience macro |
+| # | Chap | File | Function | Spec Needed |
+|---|------|------|----------|-------------|
+| 1 | Chap38 | BSTParaStEph.rs | expose | ensures on Exposed variant |
+| 2 | Chap38 | BSTParaStEph.rs | join_mid | ensures on result set view |
+| 3 | Chap38 | BSTParaStEph.rs | insert | ensures self@ == old(self@).insert(key@) |
+| 4 | Chap38 | BSTParaStEph.rs | delete | ensures self@ == old(self@).remove(key@) |
+| 5 | Chap38 | BSTParaStEph.rs | reduce | ensures on reduction value |
+| 6 | Chap38 | BSTParaStEph.rs | in_order | ensures sorted, same elements |
+| 7 | Chap38 | BSTParaMtEph.rs | all 17 | No specs at all |
+
+### Style Warnings
+
+| # | Chap | File | Warning | Detail |
+|---|------|------|---------|--------|
+| 1 | Chap38 | BSTParaStEph.rs | [11] | Set usage — `group_set_axioms` present (false positive) |
+| 2 | Chap38 | BSTParaStEph.rs | [12] | 6 trait fns missing requires/ensures |
+| 3 | Chap38 | BSTParaStEph.rs | [18] | Type defs appear after RwLockPredicate impl |
+| 4 | Chap38 | BSTParaStEph.rs | [19] | 6 return names use generic `result` |
+| 5 | Chap38 | BSTParaMtEph.rs | [13] | `impl ParamBSTTrait` outside verus! |
+| 6 | Chap38 | BSTParaMtEph.rs | [15] | 3 Clone impls outside verus! |
+| 7 | Chap38 | BSTParaMtEph.rs | [18] | Type defs appear after RwLockPredicate impl |
 
 ## Phase 8: TOC Review
 
-Neither file contains `verus!` blocks, so the 13-section TOC standard does not apply.
-
 ### In/Out Table
 
-| # | File | Clone | PartialEq/Eq | Default | Drop | Iterator | Debug | Display | Macro | Other |
-|---|------|:-----:|:---:|:------:|:----:|:--------:|:-----:|:-------:|:-----:|-------|
-| 1 | BSTParaStEph.rs | ✅ out (derive) | - | ✅ out (derive on Exposed) | - | - | ✅ out (derive) | - | ✅ out (ParamBSTLit!) | No `verus!` block |
-| 2 | BSTParaMtEph.rs | ✅ out (derive) | - | - | - | - | ✅ out (derive) | - | - | No `verus!` block |
-
-## Proof Holes Summary
-
-```
-✓ BSTParaMtEph.rs
-✓ BSTParaStEph.rs
-
-Modules:     2 clean, 0 holed
-Holes Found: 0 total
-```
-
-Trivially clean — no `verus!` code exists.
+| # | Chap | Item | BSTParaStEph.rs | BSTParaMtEph.rs |
+|---|------|------|:---------------:|:---------------:|
+| 1 | Chap38 | Type definitions | ✅ in | ✅ in |
+| 2 | Chap38 | View impls | ✅ in | - |
+| 3 | Chap38 | RwLockPredicate | ✅ in | ✅ in |
+| 4 | Chap38 | Trait | ✅ in | ❌ out |
+| 5 | Chap38 | Impl | ✅ in (eb) | ❌ out |
+| 6 | Chap38 | Clone (Exposed) | ✅ in (accept) | ❌ out |
+| 7 | Chap38 | Clone (NodeInner) | ✅ in (accept) | ❌ out |
+| 8 | Chap38 | Clone (ParamBST) | ✅ in (eb) | ❌ out |
+| 9 | Chap38 | Debug | ✅ out | ✅ out |
+| 10 | Chap38 | Macro | ✅ out | - |
+| 11 | Chap38 | Free fns | ❌ out | ❌ out |
+| 12 | Chap38 | TOC header | ✅ present | ❌ missing |
+| 13 | Chap38 | broadcast use | ✅ present | ❌ missing |
 
 ## Spec Strength Summary
 
-| Classification | Count |
-|---------------|------:|
-| strong | 0 |
-| partial | 0 |
-| weak | 0 |
-| none | 48 |
+| # | Chap | Classification | BSTParaStEph.rs | BSTParaMtEph.rs | Total |
+|---|------|---------------|----------------:|----------------:|------:|
+| 1 | Chap38 | strong | 5 | 0 | 5 |
+| 2 | Chap38 | partial | 3 | 0 | 3 |
+| 3 | Chap38 | weak | 1 | 0 | 1 |
+| 4 | Chap38 | none | 6 | 17 | 23 |
+| 5 | Chap38 | hole (external_body) | 19 | 1 | 20 |
+| 6 | Chap38 | accept | 2 | 0 | 2 |
 
 ## Overall Assessment
 
-Chapter 38 faithfully implements the parametric BST abstraction from the APAS prose. The MtEph variant implements 18 of 19 prose items with genuine `ParaPair!` parallelism for union, intersect, difference, filter, and reduce. The StEph variant is incomplete (missing 4 parallel algorithms as sequential variants) and both files have a union base case omission.
+Chapter 38 faithfully implements all 19 prose items in both BSTParaStEph.rs (sequential) and BSTParaMtEph.rs (parallel) variants. BSTParaStEph.rs has been partially verusified: trait+impl are inside `verus!` with specs on 11 of 17 methods, View type upgraded to `Set<T::V>`, and broadcast use added. BSTParaMtEph.rs remains entirely un-verusified.
 
 **Strengths:**
-- All implemented algorithms match the prose pseudocode with high fidelity
-- MtEph provides genuine fork-join parallelism via `ParaPair!` for all five parallel algorithms
-- 21 runtime tests with good functional and concurrency coverage
-- Cost annotations on all functions agree with Cost Specification 38.11
+- All 19 prose algorithms implemented in both files
+- High algorithmic fidelity to prose pseudocode
+- BSTParaMtEph.rs provides genuine `ParaPair!` parallelism for all five parallel algorithms
+- 33 runtime tests with comprehensive functional and concurrency coverage
+- BSTParaStEph.rs trait+impl now inside `verus!` with meaningful specs on set operations
+- Cost annotations on all trait methods match Cost Specification 38.11
 
 **Weaknesses:**
-- No formal verification — entirely plain Rust with zero `verus!` code
-- StEph missing intersect, difference, filter, reduce (sequential variants)
-- Union missing `(_, Leaf) ⇒ T1` base case in both files — wasteful O(|a|) traversal
-- No grain control for thread spawning in MtEph
-- `singleton` not exposed as a named function
+- All 19 BSTParaStEph.rs impl methods are `external_body` — specs are trusted, not proved
+- `spec_set_view` is `external_body` returning `Set::empty()` — a placeholder
+- 6 BSTParaStEph.rs trait methods still have no specs (expose, join_mid, insert, delete, reduce, in_order)
+- BSTParaMtEph.rs completely un-verusified: trait+impl outside `verus!`, no specs, no View
+- Free functions (expose_internal, join_mid, split_inner, etc.) live outside `verus!` in both files
+- Generic `result` return names on 6 functions
+- BSTParaMtEph.rs missing TOC and broadcast use
+
+**Progress since prior review (2026-02-19):**
+- BSTParaStEph.rs trait+impl moved inside `verus!`
+- BSTParaStEph.rs View type upgraded from `()` to `Set<T::V>`
+- 11 trait methods now have `ensures` clauses
+- `broadcast use vstd::set::group_set_axioms` added
+- TOC added to BSTParaStEph.rs
+- `accept` import added for Clone holes

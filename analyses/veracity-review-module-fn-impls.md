@@ -22,52 +22,82 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap36 | QuickSortMtEph | 3 | 3 | 0 | 7 | 10 | 0 | 10 | 0 | 0 |
-| 2 | Chap36 | QuickSortMtEphSlice | 6 | 6 | 0 | 0 | 6 | 0 | 3 | 0 | 3 |
-| 3 | Chap36 | QuickSortStEph | 3 | 3 | 0 | 7 | 10 | 0 | 10 | 0 | 0 |
+| 1 | Chap38 | BSTParaMtEph | 17 | 17 | 0 | 16 | 18 | 14 | 0 | 18 | 14 |
+| 2 | Chap38 | BSTParaStEph | 17 | 17 | 0 | 14 | 30 | 0 | 0 | 30 | 0 |
 
 ## Function-by-Function Detail
 
-### Chap36/QuickSortMtEph.rs
+### Chap38/BSTParaMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `lemma_total_ordering` |  |  |  | Y | Y |  |  | unknown | 64&#8209;65 |
-| 2 | `quick_sort_first` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;96 |
-| 3 | `quick_sort_median3` | Y | Y |  |  | Y |  |  | unknown | 101&#8209;103 |
-| 4 | `quick_sort_random` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;110 |
-| 5 | `sort_vec` |  |  |  | Y | Y |  |  | unknown | 116&#8209;119 |
-| 6 | `median_of_three` |  |  |  | Y | Y |  |  | unknown | 154&#8209;157 |
-| 7 | `median3_pivot_idx` |  |  |  | Y | Y |  |  | unknown | 207&#8209;212 |
-| 8 | `sort_vec_random` |  |  |  | Y | Y |  |  | unknown | 227&#8209;229 |
-| 9 | `sort_vec_median3` |  |  |  | Y | Y |  |  | unknown | 239&#8209;241 |
-| 10 | `sort_vec_with_idx` |  |  |  | Y | Y |  |  | unknown | 253&#8209;259 |
+| 1 | `new_bst_para_lock` |  |  |  | Y | Y |  |  | hole | 67 |
+| 2 | `new` | Y | Y |  |  | Y |  |  | hole | 99&#8209;100 |
+| 3 | `singleton` | Y | Y |  |  | Y |  |  | hole | 102&#8209;105 |
+| 4 | `expose` | Y | Y |  |  | Y |  |  | hole | 107&#8209;108 |
+| 5 | `join_mid` | Y | Y |  | Y | Y |  |  | hole | 110&#8209;111 |
+| 6 | `size` | Y | Y |  |  | Y |  |  | hole | 113&#8209;114 |
+| 7 | `is_empty` | Y | Y |  |  | Y |  |  | hole | 116&#8209;117 |
+| 8 | `insert` | Y | Y |  |  | Y |  |  | hole | 120 |
+| 9 | `delete` | Y | Y |  |  | Y |  |  | hole | 123 |
+| 10 | `find` | Y | Y |  |  | Y |  |  | hole | 125&#8209;126 |
+| 11 | `split` | Y | Y |  |  | Y |  |  | hole | 128&#8209;132 |
+| 12 | `join_pair` | Y | Y |  |  | Y |  |  | hole | 134&#8209;135 |
+| 13 | `union` | Y | Y |  |  | Y |  |  | hole | 137&#8209;138 |
+| 14 | `intersect` | Y | Y |  |  | Y |  |  | hole | 140&#8209;141 |
+| 15 | `difference` | Y | Y |  |  | Y |  |  | hole | 143&#8209;144 |
+| 16 | `filter` | Y | Y |  |  | Y |  |  | hole | 146&#8209;147 |
+| 17 | `reduce` | Y | Y |  |  | Y |  |  | hole | 150 |
+| 18 | `in_order` | Y | Y |  |  | Y |  |  | hole | 152&#8209;153 |
+| 19 | `new_leaf` |  |  |  | Y |  | Y | Y |  | 325&#8209;327 |
+| 20 | `expose_internal` |  |  |  | Y |  | Y | Y |  | 329&#8209;337 |
+| 21 | `split_inner` |  |  |  | Y |  | Y | Y |  | 351&#8209;368 |
+| 22 | `join_m` |  |  |  | Y |  | Y | Y |  | 370&#8209;372 |
+| 23 | `min_key` |  |  |  | Y |  | Y | Y |  | 374&#8209;382 |
+| 24 | `join_pair_inner` |  |  |  | Y |  | Y | Y |  | 384&#8209;393 |
+| 25 | `union_inner` |  |  |  | Y |  | Y | Y |  | 395&#8209;406 |
+| 26 | `intersect_inner` |  |  |  | Y |  | Y | Y |  | 408&#8209;422 |
+| 27 | `difference_inner` |  |  |  | Y |  | Y | Y |  | 424&#8209;440 |
+| 28 | `filter_inner` |  |  |  | Y |  | Y | Y |  | 442&#8209;462 |
+| 29 | `filter_parallel` |  |  |  | Y |  | Y | Y |  | 464&#8209;470 |
+| 30 | `reduce_inner` |  |  |  | Y |  | Y | Y |  | 472&#8209;493 |
+| 31 | `reduce_parallel` |  |  |  | Y |  | Y | Y |  | 495&#8209;502 |
+| 32 | `collect_in_order` |  |  |  | Y |  | Y | Y |  | 504&#8209;513 |
 
-### Chap36/QuickSortMtEphSlice.rs
+### Chap38/BSTParaStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 11 | `pivot_mt_first` | Y | Y |  |  | Y |  |  | unknown | 20&#8209;21 |
-| 12 | `pivot_mt_median3` | Y | Y |  |  | Y |  |  | unknown | 25&#8209;26 |
-| 13 | `pivot_mt_random` | Y | Y |  |  | Y |  |  | unknown | 30&#8209;31 |
-| 14 | `quick_sort_mt_first` | Y | Y |  |  | Y |  | Y |  | 35 |
-| 15 | `quick_sort_mt_median3` | Y | Y |  |  | Y |  | Y |  | 39 |
-| 16 | `quick_sort_mt_random` | Y | Y |  |  | Y |  | Y |  | 43 |
-
-### Chap36/QuickSortStEph.rs
-
-| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
-|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 17 | `lemma_total_ordering` |  |  |  | Y | Y |  |  | unknown | 62&#8209;63 |
-| 18 | `quick_sort_first` | Y | Y |  |  | Y |  |  | unknown | 92&#8209;94 |
-| 19 | `quick_sort_median3` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;101 |
-| 20 | `quick_sort_random` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;108 |
-| 21 | `sort_vec` |  |  |  | Y | Y |  |  | unknown | 114&#8209;117 |
-| 22 | `median_of_three` |  |  |  | Y | Y |  |  | unknown | 152&#8209;155 |
-| 23 | `median3_pivot_idx` |  |  |  | Y | Y |  |  | unknown | 207&#8209;212 |
-| 24 | `sort_vec_random` |  |  |  | Y | Y |  |  | unknown | 227&#8209;229 |
-| 25 | `sort_vec_median3` |  |  |  | Y | Y |  |  | unknown | 239&#8209;241 |
-| 26 | `sort_vec_with_idx` |  |  |  | Y | Y |  |  | unknown | 253&#8209;259 |
+| 33 | `new_bst_para_lock` |  |  |  | Y | Y |  |  | hole | 73 |
+| 34 | `new` | Y | Y |  |  | Y |  |  | hole | 105&#8209;106 |
+| 35 | `singleton` | Y | Y |  |  | Y |  |  | hole | 108&#8209;111 |
+| 36 | `expose` | Y | Y |  |  | Y |  |  | hole | 113&#8209;114 |
+| 37 | `join_mid` | Y | Y |  | Y | Y |  |  | hole | 116&#8209;117 |
+| 38 | `size` | Y | Y |  |  | Y |  |  | hole | 119&#8209;120 |
+| 39 | `is_empty` | Y | Y |  |  | Y |  |  | hole | 122&#8209;123 |
+| 40 | `insert` | Y | Y |  |  | Y |  |  | hole | 126 |
+| 41 | `delete` | Y | Y |  |  | Y |  |  | hole | 129 |
+| 42 | `find` | Y | Y |  |  | Y |  |  | hole | 131&#8209;132 |
+| 43 | `split` | Y | Y |  |  | Y |  |  | hole | 134&#8209;138 |
+| 44 | `join_pair` | Y | Y |  |  | Y |  |  | hole | 140&#8209;141 |
+| 45 | `union` | Y | Y |  |  | Y |  |  | hole | 143&#8209;144 |
+| 46 | `intersect` | Y | Y |  |  | Y |  |  | hole | 146&#8209;147 |
+| 47 | `difference` | Y | Y |  |  | Y |  |  | hole | 149&#8209;150 |
+| 48 | `filter` | Y | Y |  |  | Y |  |  | hole | 152&#8209;153 |
+| 49 | `reduce` | Y | Y |  |  | Y |  |  | hole | 156 |
+| 50 | `in_order` | Y | Y |  |  | Y |  |  | hole | 158&#8209;159 |
+| 51 | `new_leaf` |  |  |  | Y | Y |  |  | hole | 293 |
+| 52 | `expose_internal` |  |  |  | Y | Y |  |  | hole | 298 |
+| 53 | `split_inner` |  |  |  | Y | Y |  |  | hole | 322 |
+| 54 | `join_m` |  |  |  | Y | Y |  |  | hole | 342 |
+| 55 | `min_key` |  |  |  | Y | Y |  |  | hole | 347 |
+| 56 | `join_pair_inner` |  |  |  | Y | Y |  |  | hole | 358 |
+| 57 | `union_inner` |  |  |  | Y | Y |  |  | hole | 371 |
+| 58 | `intersect_inner` |  |  |  | Y | Y |  |  | hole | 386 |
+| 59 | `difference_inner` |  |  |  | Y | Y |  |  | hole | 404 |
+| 60 | `filter_inner` |  |  |  | Y | Y |  |  | hole | 423&#8209;426 |
+| 61 | `reduce_inner` |  |  |  | Y | Y |  |  | hole | 443&#8209;447 |
+| 62 | `collect_in_order` |  |  |  | Y | Y |  |  | hole | 460 |
 
 
 ### Legend

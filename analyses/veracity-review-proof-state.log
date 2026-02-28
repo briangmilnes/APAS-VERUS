@@ -1,0 +1,124 @@
+Verus Proof State Analysis
+Looking for:
+  - assume(false)
+  - assume()
+  - admit()
+  - external_body
+  - spec fn with trivial body (true/false)
+  - exec/proof fn without requires or ensures
+
+❌ BSTParaMtEph.rs
+   Holes: 2 total
+      1 × external_body
+      1 × fn without requires/ensures
+         - exec fn new_bst_para_lock
+❌ BSTParaStEph.rs
+   Holes: 33 total
+      20 × external_body
+      13 × fn without requires/ensures
+         - exec fn new_bst_para_lock
+         - exec fn expose
+         - exec fn join_mid
+         - exec fn insert
+         - exec fn delete
+         - exec fn reduce
+         - exec fn in_order
+         - exec fn expose
+         - exec fn join_mid
+         - exec fn insert
+         - exec fn delete
+         - exec fn reduce
+         - exec fn in_order
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Files:
+   0 clean (no holes)
+   2 holed (contains holes)
+   2 total
+
+Proof State Holes: 35 total
+   21 × external_body
+   14 × fn without requires/ensures
+
+Functions Without Specs:
+   - exec fn new_bst_para_lock
+   - exec fn new_bst_para_lock
+   - exec fn expose
+   - exec fn join_mid
+   - exec fn insert
+   - exec fn delete
+   - exec fn reduce
+   - exec fn in_order
+   - exec fn expose
+   - exec fn join_mid
+   - exec fn insert
+   - exec fn delete
+   - exec fn reduce
+   - exec fn in_order
+
+Completed in 3ms
+Verus Proof State Analysis
+Looking for:
+  - assume(false)
+  - assume()
+  - admit()
+  - external_body
+  - spec fn with trivial body (true/false)
+  - exec/proof fn without requires or ensures
+
+❌ BSTParaMtEph.rs
+   Holes: 2 total
+      1 × external_body
+      1 × fn without requires/ensures
+         - exec fn new_bst_para_lock
+❌ BSTParaStEph.rs
+   Holes: 33 total
+      20 × external_body
+      13 × fn without requires/ensures
+         - exec fn new_bst_para_lock
+         - exec fn expose
+         - exec fn join_mid
+         - exec fn insert
+         - exec fn delete
+         - exec fn reduce
+         - exec fn in_order
+         - exec fn expose
+         - exec fn join_mid
+         - exec fn insert
+         - exec fn delete
+         - exec fn reduce
+         - exec fn in_order
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Files:
+   0 clean (no holes)
+   2 holed (contains holes)
+   2 total
+
+Proof State Holes: 35 total
+   21 × external_body
+   14 × fn without requires/ensures
+
+Functions Without Specs:
+   - exec fn new_bst_para_lock
+   - exec fn new_bst_para_lock
+   - exec fn expose
+   - exec fn join_mid
+   - exec fn insert
+   - exec fn delete
+   - exec fn reduce
+   - exec fn in_order
+   - exec fn expose
+   - exec fn join_mid
+   - exec fn insert
+   - exec fn delete
+   - exec fn reduce
+   - exec fn in_order
+
+Completed in 3ms

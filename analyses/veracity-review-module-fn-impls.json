@@ -1,210 +1,498 @@
 [
   {
     "id": 1,
-    "function": "lemma_total_ordering",
-    "file": "Chap36/QuickSortMtEph.rs",
-    "lines": "64-65",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_total_ordering<T: TotalOrder>()\n        ensures total_ordering(spec_leq::<T>())"
+    "function": "new_bst_para_lock",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "67",
+    "spec_strength": "hole",
+    "snippet": "    fn new_bst_para_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {"
   },
   {
     "id": 2,
-    "function": "quick_sort_first",
-    "file": "Chap36/QuickSortMtEph.rs",
-    "lines": "94-96",
-    "spec_strength": "unknown",
-    "snippet": "        fn quick_sort_first(a: &mut ArraySeqMtEphS<T>)\n            requires old(a).spec_len() <= usize::MAX,\n            ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>());"
+    "function": "new",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "99-100",
+    "spec_strength": "hole",
+    "snippet": "        fn new() -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty();"
   },
   {
     "id": 3,
-    "function": "quick_sort_median3",
-    "file": "Chap36/QuickSortMtEph.rs",
-    "lines": "101-103",
-    "spec_strength": "unknown",
-    "snippet": "        fn quick_sort_median3(a: &mut ArraySeqMtEphS<T>)\n            requires old(a).spec_len() <= usize::MAX,\n            ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>());"
+    "function": "singleton",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "102-105",
+    "spec_strength": "hole",
+    "snippet": "        fn singleton(key: T) -> (result: Self)\n            ensures\n                result@ == Set::<<T as View>::V>::empty().insert(key@),\n                result@.finite();"
   },
   {
     "id": 4,
-    "function": "quick_sort_random",
-    "file": "Chap36/QuickSortMtEph.rs",
-    "lines": "108-110",
-    "spec_strength": "unknown",
-    "snippet": "        fn quick_sort_random(a: &mut ArraySeqMtEphS<T>)\n            requires old(a).spec_len() <= usize::MAX,\n            ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>());"
+    "function": "expose",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "107-108",
+    "spec_strength": "hole",
+    "snippet": "        fn expose(&self) -> (exposed: Exposed<T>)\n            ensures self@.len() == 0 ==> exposed is Leaf;"
   },
   {
     "id": 5,
-    "function": "sort_vec",
-    "file": "Chap36/QuickSortMtEph.rs",
-    "lines": "116-119",
-    "spec_strength": "unknown",
-    "snippet": "    fn sort_vec<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (sorted: Vec<T>)\n        requires a.spec_len() <= usize::MAX,\n        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())\n        decreases a.spec_len(), 1usize,"
+    "function": "join_mid",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "110-111",
+    "spec_strength": "hole",
+    "snippet": "        fn join_mid(exposed: Exposed<T>) -> (result: Self)\n            ensures exposed is Leaf ==> result@ == Set::<<T as View>::V>::empty();"
   },
   {
     "id": 6,
-    "function": "median_of_three",
-    "file": "Chap36/QuickSortMtEph.rs",
-    "lines": "154-157",
-    "spec_strength": "unknown",
-    "snippet": "    fn median_of_three<T: TotalOrder + Copy>(a: T, b: T, c: T) -> (median: T)\n        ensures\n            median == a || median == b || median == c,\n            median == spec_median_of_three(a, b, c),"
+    "function": "size",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "113-114",
+    "spec_strength": "hole",
+    "snippet": "        fn size(&self) -> (count: usize)\n            ensures count == self@.len(), self@.finite();"
   },
   {
     "id": 7,
-    "function": "median3_pivot_idx",
-    "file": "Chap36/QuickSortMtEph.rs",
-    "lines": "207-212",
-    "spec_strength": "unknown",
-    "snippet": "    fn median3_pivot_idx<T: TotalOrder + Copy>(a: &ArraySeqMtEphS<T>, n: usize) -> (idx: usize)\n        requires n >= 2, n == a.spec_len(),\n        ensures\n            idx < n,\n            idx == 0 || idx == n / 2 || idx == n - 1,\n            a.seq@[idx as int] == spec_median_of_three(a.seq@[0], a.seq@[(n / 2) as int], a.seq@[(n - 1) as int]),"
+    "function": "is_empty",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "116-117",
+    "spec_strength": "hole",
+    "snippet": "        fn is_empty(&self) -> (empty: B)\n            ensures empty == (self@.len() == 0), self@.finite();"
   },
   {
     "id": 8,
-    "function": "sort_vec_random",
-    "file": "Chap36/QuickSortMtEph.rs",
-    "lines": "227-229",
-    "spec_strength": "unknown",
-    "snippet": "    fn sort_vec_random<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (sorted: Vec<T>)\n        requires a.spec_len() <= usize::MAX,\n        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())"
+    "function": "insert",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "120",
+    "spec_strength": "hole",
+    "snippet": "        fn insert(&self, key: T);"
   },
   {
     "id": 9,
-    "function": "sort_vec_median3",
-    "file": "Chap36/QuickSortMtEph.rs",
-    "lines": "239-241",
-    "spec_strength": "unknown",
-    "snippet": "    fn sort_vec_median3<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (sorted: Vec<T>)\n        requires a.spec_len() <= usize::MAX,\n        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())"
+    "function": "delete",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "123",
+    "spec_strength": "hole",
+    "snippet": "        fn delete(&self, key: &T);"
   },
   {
     "id": 10,
-    "function": "sort_vec_with_idx",
-    "file": "Chap36/QuickSortMtEph.rs",
-    "lines": "253-259",
-    "spec_strength": "unknown",
-    "snippet": "    fn sort_vec_with_idx<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>, pivot_idx: usize) -> (sorted: Vec<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            a.spec_len() >= 2,\n            pivot_idx < a.spec_len(),\n        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())\n        decreases a.spec_len(), 0usize,"
+    "function": "find",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "125-126",
+    "spec_strength": "hole",
+    "snippet": "        fn find(&self, key: &T) -> (found: Option<T>)\n            ensures found.is_some() <==> self@.contains(key@);"
   },
   {
     "id": 11,
-    "function": "pivot_mt_first",
-    "file": "Chap36/QuickSortMtEphSlice.rs",
-    "lines": "20-21",
-    "spec_strength": "unknown",
-    "snippet": "        fn pivot_mt_first(&self, lo: usize, hi: usize) -> T\n            requires lo < hi, hi <= self.spec_len();"
+    "function": "split",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "128-132",
+    "spec_strength": "hole",
+    "snippet": "        fn split(&self, key: &T) -> (parts: (Self, B, Self))\n            ensures\n                parts.1 == self@.contains(key@),\n                parts.0@.finite(),\n                parts.2@.finite();"
   },
   {
     "id": 12,
-    "function": "pivot_mt_median3",
-    "file": "Chap36/QuickSortMtEphSlice.rs",
-    "lines": "25-26",
-    "spec_strength": "unknown",
-    "snippet": "        fn pivot_mt_median3(&self, lo: usize, hi: usize) -> T\n            requires lo < hi, hi <= self.spec_len();"
+    "function": "join_pair",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "134-135",
+    "spec_strength": "hole",
+    "snippet": "        fn join_pair(&self, other: Self) -> (joined: Self)\n            ensures joined@.finite();"
   },
   {
     "id": 13,
-    "function": "pivot_mt_random",
-    "file": "Chap36/QuickSortMtEphSlice.rs",
-    "lines": "30-31",
-    "spec_strength": "unknown",
-    "snippet": "        fn pivot_mt_random(&self, lo: usize, hi: usize) -> T\n            requires lo < hi, hi <= self.spec_len();"
+    "function": "union",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "137-138",
+    "spec_strength": "hole",
+    "snippet": "        fn union(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.union(other@), result@.finite();"
   },
   {
     "id": 14,
-    "function": "quick_sort_mt_first",
-    "file": "Chap36/QuickSortMtEphSlice.rs",
-    "lines": "35",
-    "spec_strength": "",
-    "snippet": "        fn quick_sort_mt_first(&self);"
+    "function": "intersect",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "140-141",
+    "spec_strength": "hole",
+    "snippet": "        fn intersect(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.intersect(other@), result@.finite();"
   },
   {
     "id": 15,
-    "function": "quick_sort_mt_median3",
-    "file": "Chap36/QuickSortMtEphSlice.rs",
-    "lines": "39",
-    "spec_strength": "",
-    "snippet": "        fn quick_sort_mt_median3(&self);"
+    "function": "difference",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "143-144",
+    "spec_strength": "hole",
+    "snippet": "        fn difference(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.difference(other@), result@.finite();"
   },
   {
     "id": 16,
-    "function": "quick_sort_mt_random",
-    "file": "Chap36/QuickSortMtEphSlice.rs",
-    "lines": "43",
-    "spec_strength": "",
-    "snippet": "        fn quick_sort_mt_random(&self);"
+    "function": "filter",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "146-147",
+    "spec_strength": "hole",
+    "snippet": "        fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(&self, predicate: F) -> (filtered: Self)\n            ensures filtered@.subset_of(self@), filtered@.finite();"
   },
   {
     "id": 17,
-    "function": "lemma_total_ordering",
-    "file": "Chap36/QuickSortStEph.rs",
-    "lines": "62-63",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_total_ordering<T: TotalOrder>()\n        ensures total_ordering(spec_leq::<T>())"
+    "function": "reduce",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "150",
+    "spec_strength": "hole",
+    "snippet": "        fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T;"
   },
   {
     "id": 18,
-    "function": "quick_sort_first",
-    "file": "Chap36/QuickSortStEph.rs",
-    "lines": "92-94",
-    "spec_strength": "unknown",
-    "snippet": "        fn quick_sort_first(a: &mut ArraySeqStEphS<T>)\n            requires old(a).spec_len() <= usize::MAX,\n            ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>());"
+    "function": "in_order",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "152-153",
+    "spec_strength": "hole",
+    "snippet": "        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures seq@.len() == self@.len();"
   },
   {
     "id": 19,
-    "function": "quick_sort_median3",
-    "file": "Chap36/QuickSortStEph.rs",
-    "lines": "99-101",
-    "spec_strength": "unknown",
-    "snippet": "        fn quick_sort_median3(a: &mut ArraySeqStEphS<T>)\n            requires old(a).spec_len() <= usize::MAX,\n            ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>());"
+    "function": "new_leaf",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "325-327",
+    "spec_strength": "",
+    "snippet": "    fn new_leaf<T: MtKey>() -> ParamBST<T> {\n        ParamBST { root: Arc::new(new_bst_para_lock(None)) }\n    }"
   },
   {
     "id": 20,
-    "function": "quick_sort_random",
-    "file": "Chap36/QuickSortStEph.rs",
-    "lines": "106-108",
-    "spec_strength": "unknown",
-    "snippet": "        fn quick_sort_random(a: &mut ArraySeqStEphS<T>)\n            requires old(a).spec_len() <= usize::MAX,\n            ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>());"
+    "function": "expose_internal",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "329-337",
+    "spec_strength": "",
+    "snippet": "    fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> Exposed<T> {\n        let handle = tree.root.acquire_read();\n        let result = match handle.borrow() {\n            | None => Exposed::Leaf,\n            | Some(node) => Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone()),\n        };\n        handle.release_read();\n        result\n    }"
   },
   {
     "id": 21,
-    "function": "sort_vec",
-    "file": "Chap36/QuickSortStEph.rs",
-    "lines": "114-117",
-    "spec_strength": "unknown",
-    "snippet": "    fn sort_vec<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>) -> (sorted: Vec<T>)\n        requires a.spec_len() <= usize::MAX,\n        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())\n        decreases a.spec_len(), 1usize,"
+    "function": "split_inner",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "351-368",
+    "spec_strength": "",
+    "snippet": "    fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (ParamBST<T>, B, ParamBST<T>) {\n        match expose_internal(tree) {\n            | Exposed::Leaf => (new_leaf(), false, new_leaf()),\n            | Exposed::Node(left, root_key, right) => match key.cmp(&root_key) {\n                | Less => {\n                    let (ll, found, lr) = split_inner(&left, key);\n                    let rebuilt = join_mid(Exposed::Node(lr, root_key, right));\n                    (ll, found, rebuilt)\n                }\n                | Greater => {\n                    let (rl, found, rr) = split_inner(&right, key);\n                    let rebuilt = join_mid(Exposed::Node(left, root_key, rl));\n                    (rebuilt, found, rr)\n                }\n                | Equal => (left, true, right),\n            },\n        }\n    }"
   },
   {
     "id": 22,
-    "function": "median_of_three",
-    "file": "Chap36/QuickSortStEph.rs",
-    "lines": "152-155",
-    "spec_strength": "unknown",
-    "snippet": "    fn median_of_three<T: TotalOrder + Copy>(a: T, b: T, c: T) -> (median: T)\n        ensures\n            median == a || median == b || median == c,\n            median == spec_median_of_three(a, b, c),"
+    "function": "join_m",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "370-372",
+    "spec_strength": "",
+    "snippet": "    fn join_m<T: MtKey + 'static>(left: ParamBST<T>, key: T, right: ParamBST<T>) -> ParamBST<T> {\n        join_mid(Exposed::Node(left, key, right))\n    }"
   },
   {
     "id": 23,
-    "function": "median3_pivot_idx",
-    "file": "Chap36/QuickSortStEph.rs",
-    "lines": "207-212",
-    "spec_strength": "unknown",
-    "snippet": "    fn median3_pivot_idx<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>, n: usize) -> (idx: usize)\n        requires n >= 2, n == a.spec_len(),\n        ensures\n            idx < n,\n            idx == 0 || idx == n / 2 || idx == n - 1,\n            a.seq@[idx as int] == spec_median_of_three(a.seq@[0], a.seq@[(n / 2) as int], a.seq@[(n - 1) as int]),"
+    "function": "min_key",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "374-382",
+    "spec_strength": "",
+    "snippet": "    fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> Option<T> {\n        match expose_internal(tree) {\n            | Exposed::Leaf => None,\n            | Exposed::Node(left, key, _) => match min_key(&left) {\n                | Some(rec) => Some(rec),\n                | None => Some(key),\n            },\n        }\n    }"
   },
   {
     "id": 24,
-    "function": "sort_vec_random",
-    "file": "Chap36/QuickSortStEph.rs",
-    "lines": "227-229",
-    "spec_strength": "unknown",
-    "snippet": "    fn sort_vec_random<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>) -> (sorted: Vec<T>)\n        requires a.spec_len() <= usize::MAX,\n        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())"
+    "function": "join_pair_inner",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "384-393",
+    "spec_strength": "",
+    "snippet": "    fn join_pair_inner<T: MtKey + 'static>(left: ParamBST<T>, right: ParamBST<T>) -> ParamBST<T> {\n        match expose_internal(&right) {\n            | Exposed::Leaf => left,\n            | Exposed::Node(_, key, _) => {\n                let min_k = min_key(&right).unwrap_or(key);\n                let (_, _, reduced_right) = split_inner(&right, &min_k);\n                join_m(left, min_k, reduced_right)\n            }\n        }\n    }"
   },
   {
     "id": 25,
-    "function": "sort_vec_median3",
-    "file": "Chap36/QuickSortStEph.rs",
-    "lines": "239-241",
-    "spec_strength": "unknown",
-    "snippet": "    fn sort_vec_median3<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>) -> (sorted: Vec<T>)\n        requires a.spec_len() <= usize::MAX,\n        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())"
+    "function": "union_inner",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "395-406",
+    "spec_strength": "",
+    "snippet": "    fn union_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {\n        match (expose_internal(a), expose_internal(b)) {\n            | (Exposed::Leaf, _) => b.clone(),\n            | (_, Exposed::Leaf) => a.clone(),\n            | (Exposed::Node(al, ak, ar), _) => {\n                let (bl, _, br) = split_inner(b, &ak);\n                let Pair(left_union, right_union) =\n                    crate::ParaPair!(move || union_inner(&al, &bl), move || union_inner(&ar, &br));\n                join_m(left_union, ak, right_union)\n            }\n        }\n    }"
   },
   {
     "id": 26,
-    "function": "sort_vec_with_idx",
-    "file": "Chap36/QuickSortStEph.rs",
-    "lines": "253-259",
-    "spec_strength": "unknown",
-    "snippet": "    fn sort_vec_with_idx<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>, pivot_idx: usize) -> (sorted: Vec<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            a.spec_len() >= 2,\n            pivot_idx < a.spec_len(),\n        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())\n        decreases a.spec_len(), 0usize,"
+    "function": "intersect_inner",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "408-422",
+    "spec_strength": "",
+    "snippet": "    fn intersect_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {\n        match (expose_internal(a), expose_internal(b)) {\n            | (Exposed::Leaf, _) | (_, Exposed::Leaf) => new_leaf(),\n            | (Exposed::Node(al, ak, ar), _) => {\n                let (bl, found, br) = split_inner(b, &ak);\n                let Pair(left_res, right_res) =\n                    crate::ParaPair!(move || intersect_inner(&al, &bl), move || { intersect_inner(&ar, &br) });\n                if found {\n                    join_m(left_res, ak, right_res)\n                } else {\n                    join_pair_inner(left_res, right_res)\n                }\n            }\n        }\n    }"
+  },
+  {
+    "id": 27,
+    "function": "difference_inner",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "424-440",
+    "spec_strength": "",
+    "snippet": "    fn difference_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {\n        match (expose_internal(a), expose_internal(b)) {\n            | (Exposed::Leaf, _) => new_leaf(),\n            | (_, Exposed::Leaf) => a.clone(),\n            | (Exposed::Node(al, ak, ar), _) => {\n                let (bl, found, br) = split_inner(b, &ak);\n                let Pair(left_res, right_res) = crate::ParaPair!(move || difference_inner(&al, &bl), move || {\n                    difference_inner(&ar, &br)\n                });\n                if found {\n                    join_pair_inner(left_res, right_res)\n                } else {\n                    join_m(left_res, ak, right_res)\n                }\n            }\n        }\n    }"
+  },
+  {
+    "id": 28,
+    "function": "filter_inner",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "442-462",
+    "spec_strength": "",
+    "snippet": "    fn filter_inner<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(\n        tree: &ParamBST<T>,\n        predicate: &Arc<F>,\n    ) -> ParamBST<T> {\n        match expose_internal(tree) {\n            | Exposed::Leaf => new_leaf(),\n            | Exposed::Node(left, key, right) => {\n                let pred_left = Arc::clone(predicate);\n                let pred_right = Arc::clone(predicate);\n                let Pair(left_filtered, right_filtered) =\n                    crate::ParaPair!(move || filter_inner(&left, &pred_left), move || {\n                        filter_inner(&right, &pred_right)\n                    });\n                if (**predicate)(&key) {\n                    join_m(left_filtered, key, right_filtered)\n                } else {\n                    join_pair_inner(left_filtered, right_filtered)\n                }\n            }\n        }\n    }"
+  },
+  {
+    "id": 29,
+    "function": "filter_parallel",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "464-470",
+    "spec_strength": "",
+    "snippet": "    fn filter_parallel<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(\n        tree: &ParamBST<T>,\n        predicate: F,\n    ) -> ParamBST<T> {\n        let predicate = Arc::new(predicate);\n        filter_inner(tree, &predicate)\n    }"
+  },
+  {
+    "id": 30,
+    "function": "reduce_inner",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "472-493",
+    "spec_strength": "",
+    "snippet": "    fn reduce_inner<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(\n        tree: &ParamBST<T>,\n        op: &Arc<F>,\n        identity: T,\n    ) -> T {\n        match expose_internal(tree) {\n            | Exposed::Leaf => identity,\n            | Exposed::Node(left, key, right) => {\n                let op_left = Arc::clone(op);\n                let op_right = Arc::clone(op);\n                let left_base = identity.clone();\n                let right_base = identity;\n                let Pair(left_acc, right_acc) =\n                    crate::ParaPair!(move || reduce_inner(&left, &op_left, left_base), move || {\n                        reduce_inner(&right, &op_right, right_base)\n                    });\n                let op_ref = op.as_ref();\n                let right_with_key = op_ref(key, right_acc);\n                op_ref(left_acc, right_with_key)\n            }\n        }\n    }"
+  },
+  {
+    "id": 31,
+    "function": "reduce_parallel",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "495-502",
+    "spec_strength": "",
+    "snippet": "    fn reduce_parallel<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(\n        tree: &ParamBST<T>,\n        op: F,\n        base: T,\n    ) -> T {\n        let op = Arc::new(op);\n        reduce_inner(tree, &op, base)\n    }"
+  },
+  {
+    "id": 32,
+    "function": "collect_in_order",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "504-513",
+    "spec_strength": "",
+    "snippet": "    fn collect_in_order<T: MtKey + 'static>(tree: &ParamBST<T>, out: &mut Vec<T>) {\n        match expose_internal(tree) {\n            | Exposed::Leaf => {}\n            | Exposed::Node(left, key, right) => {\n                collect_in_order(&left, out);\n                out.push(key);\n                collect_in_order(&right, out);\n            }\n        }\n    }"
+  },
+  {
+    "id": 33,
+    "function": "new_bst_para_lock",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "73",
+    "spec_strength": "hole",
+    "snippet": "    fn new_bst_para_lock<T: StT + Ord>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {"
+  },
+  {
+    "id": 34,
+    "function": "new",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "105-106",
+    "spec_strength": "hole",
+    "snippet": "        fn new() -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty();"
+  },
+  {
+    "id": 35,
+    "function": "singleton",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "108-111",
+    "spec_strength": "hole",
+    "snippet": "        fn singleton(key: T) -> (result: Self)\n            ensures\n                result@ == Set::<<T as View>::V>::empty().insert(key@),\n                result@.finite();"
+  },
+  {
+    "id": 36,
+    "function": "expose",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "113-114",
+    "spec_strength": "hole",
+    "snippet": "        fn expose(&self) -> (exposed: Exposed<T>)\n            ensures self@.len() == 0 ==> exposed is Leaf;"
+  },
+  {
+    "id": 37,
+    "function": "join_mid",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "116-117",
+    "spec_strength": "hole",
+    "snippet": "        fn join_mid(exposed: Exposed<T>) -> (result: Self)\n            ensures exposed is Leaf ==> result@ == Set::<<T as View>::V>::empty();"
+  },
+  {
+    "id": 38,
+    "function": "size",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "119-120",
+    "spec_strength": "hole",
+    "snippet": "        fn size(&self) -> (count: usize)\n            ensures count == self@.len(), self@.finite();"
+  },
+  {
+    "id": 39,
+    "function": "is_empty",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "122-123",
+    "spec_strength": "hole",
+    "snippet": "        fn is_empty(&self) -> (empty: B)\n            ensures empty == (self@.len() == 0), self@.finite();"
+  },
+  {
+    "id": 40,
+    "function": "insert",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "126",
+    "spec_strength": "hole",
+    "snippet": "        fn insert(&self, key: T);"
+  },
+  {
+    "id": 41,
+    "function": "delete",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "129",
+    "spec_strength": "hole",
+    "snippet": "        fn delete(&self, key: &T);"
+  },
+  {
+    "id": 42,
+    "function": "find",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "131-132",
+    "spec_strength": "hole",
+    "snippet": "        fn find(&self, key: &T) -> (found: Option<T>)\n            ensures found.is_some() <==> self@.contains(key@);"
+  },
+  {
+    "id": 43,
+    "function": "split",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "134-138",
+    "spec_strength": "hole",
+    "snippet": "        fn split(&self, key: &T) -> (parts: (Self, B, Self))\n            ensures\n                parts.1 == self@.contains(key@),\n                parts.0@.finite(),\n                parts.2@.finite();"
+  },
+  {
+    "id": 44,
+    "function": "join_pair",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "140-141",
+    "spec_strength": "hole",
+    "snippet": "        fn join_pair(&self, other: Self) -> (joined: Self)\n            ensures joined@.finite();"
+  },
+  {
+    "id": 45,
+    "function": "union",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "143-144",
+    "spec_strength": "hole",
+    "snippet": "        fn union(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.union(other@), result@.finite();"
+  },
+  {
+    "id": 46,
+    "function": "intersect",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "146-147",
+    "spec_strength": "hole",
+    "snippet": "        fn intersect(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.intersect(other@), result@.finite();"
+  },
+  {
+    "id": 47,
+    "function": "difference",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "149-150",
+    "spec_strength": "hole",
+    "snippet": "        fn difference(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.difference(other@), result@.finite();"
+  },
+  {
+    "id": 48,
+    "function": "filter",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "152-153",
+    "spec_strength": "hole",
+    "snippet": "        fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)\n            ensures filtered@.subset_of(self@), filtered@.finite();"
+  },
+  {
+    "id": 49,
+    "function": "reduce",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "156",
+    "spec_strength": "hole",
+    "snippet": "        fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> T;"
+  },
+  {
+    "id": 50,
+    "function": "in_order",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "158-159",
+    "spec_strength": "hole",
+    "snippet": "        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures seq@.len() == self@.len();"
+  },
+  {
+    "id": 51,
+    "function": "new_leaf",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "293",
+    "spec_strength": "hole",
+    "snippet": "    fn new_leaf<T: StT + Ord>() -> (tree: ParamBST<T>) {"
+  },
+  {
+    "id": 52,
+    "function": "expose_internal",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "298",
+    "spec_strength": "hole",
+    "snippet": "    fn expose_internal<T: StT + Ord>(tree: &ParamBST<T>) -> (exposed: Exposed<T>) {"
+  },
+  {
+    "id": 53,
+    "function": "split_inner",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "322",
+    "spec_strength": "hole",
+    "snippet": "    fn split_inner<T: StT + Ord>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>)) {"
+  },
+  {
+    "id": 54,
+    "function": "join_m",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "342",
+    "spec_strength": "hole",
+    "snippet": "    fn join_m<T: StT + Ord>(left: ParamBST<T>, key: T, right: ParamBST<T>) -> (tree: ParamBST<T>) {"
+  },
+  {
+    "id": 55,
+    "function": "min_key",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "347",
+    "spec_strength": "hole",
+    "snippet": "    fn min_key<T: StT + Ord>(tree: &ParamBST<T>) -> (result: Option<T>) {"
+  },
+  {
+    "id": 56,
+    "function": "join_pair_inner",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "358",
+    "spec_strength": "hole",
+    "snippet": "    fn join_pair_inner<T: StT + Ord>(left: ParamBST<T>, right: ParamBST<T>) -> (tree: ParamBST<T>) {"
+  },
+  {
+    "id": 57,
+    "function": "union_inner",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "371",
+    "spec_strength": "hole",
+    "snippet": "    fn union_inner<T: StT + Ord>(a: &ParamBST<T>, b: &ParamBST<T>) -> (tree: ParamBST<T>) {"
+  },
+  {
+    "id": 58,
+    "function": "intersect_inner",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "386",
+    "spec_strength": "hole",
+    "snippet": "    fn intersect_inner<T: StT + Ord>(a: &ParamBST<T>, b: &ParamBST<T>) -> (tree: ParamBST<T>) {"
+  },
+  {
+    "id": 59,
+    "function": "difference_inner",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "404",
+    "spec_strength": "hole",
+    "snippet": "    fn difference_inner<T: StT + Ord>(a: &ParamBST<T>, b: &ParamBST<T>) -> (tree: ParamBST<T>) {"
+  },
+  {
+    "id": 60,
+    "function": "filter_inner",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "423-426",
+    "spec_strength": "hole",
+    "snippet": "    fn filter_inner<T: StT + Ord, F: Fn(&T) -> bool>(\n        tree: &ParamBST<T>,\n        predicate: &F,\n    ) -> (filtered: ParamBST<T>) {"
+  },
+  {
+    "id": 61,
+    "function": "reduce_inner",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "443-447",
+    "spec_strength": "hole",
+    "snippet": "    fn reduce_inner<T: StT + Ord, F: Fn(T, T) -> T>(\n        tree: &ParamBST<T>,\n        op: &F,\n        identity: T,\n    ) -> T {"
+  },
+  {
+    "id": 62,
+    "function": "collect_in_order",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "460",
+    "spec_strength": "hole",
+    "snippet": "    fn collect_in_order<T: StT + Ord>(tree: &ParamBST<T>, out: &mut Vec<T>) {"
   }
 ]
