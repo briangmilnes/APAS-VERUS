@@ -36,13 +36,19 @@ pub mod BSTParaStEph {
 
     // 4. type definitions
 
-    pub struct BstParaWf;
+    pub struct spec_bstpara_wf<T: StT + Ord> {
+        pub ghost contents: Set<<T as View>::V>,
+    }
 
-    impl<T: StT + Ord> RwLockPredicate<Option<Box<NodeInner<T>>>> for BstParaWf {
+    impl<T: StT + Ord> RwLockPredicate<Option<Box<NodeInner<T>>>> for spec_bstpara_wf<T> {
         open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
             match v {
-                Option::None => true,
-                Option::Some(box_node) => (*box_node).size >= 1,
+                Option::None => self.contents =~= Set::<<T as View>::V>::empty(),
+                Option::Some(box_node) => {
+                    (*box_node).size >= 1
+                    && self.contents.finite()
+                    && self.contents.len() == (*box_node).size as nat
+                }
             }
         }
     }
@@ -66,20 +72,26 @@ pub mod BSTParaStEph {
 
     #[verifier::reject_recursive_types(T)]
     pub struct ParamBST<T: StT + Ord> {
-        root: Arc<RwLock<Option<Box<NodeInner<T>>>, BstParaWf>>,
+        pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, spec_bstpara_wf<T>>>,
     }
 
     #[verifier::external_body]
-    fn new_bst_para_lock<T: StT + Ord>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {
-        RwLock::new(val, Ghost(BstParaWf))
+    fn new_param_bst<T: StT + Ord>(
+        val: Option<Box<NodeInner<T>>>,
+        Ghost(contents): Ghost<Set<<T as View>::V>>,
+    ) -> (tree: ParamBST<T>)
+        requires (spec_bstpara_wf::<T> { contents }).inv(val),
+        ensures tree@ =~= contents,
+    {
+        let ghost pred = spec_bstpara_wf::<T> { contents };
+        ParamBST { root: Arc::new(RwLock::new(val, Ghost(pred))) }
     }
 
     // 5. view impls
 
     impl<T: StT + Ord> ParamBST<T> {
-        #[verifier::external_body]
         pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-            Set::empty()
+            self.root.pred().contents
         }
     }
 
@@ -162,18 +174,18 @@ pub mod BSTParaStEph {
     // 9. impls
 
     impl<T: StT + Ord> ParamBSTTrait<T> for ParamBST<T> {
-        #[verifier::external_body]
         fn new() -> (result: Self)
             ensures result@ == Set::<<T as View>::V>::empty()
         { new_leaf() }
 
-        #[verifier::external_body]
         fn singleton(key: T) -> (result: Self)
             ensures
                 result@ == Set::<<T as View>::V>::empty().insert(key@),
                 result@.finite()
         {
-            join_mid(Exposed::Node(new_leaf(), key, new_leaf()))
+            let left = new_leaf();
+            let right = new_leaf();
+            join_mid(Exposed::Node(left, key, right))
         }
 
         #[verifier::external_body]
@@ -186,17 +198,22 @@ pub mod BSTParaStEph {
             ensures exposed is Leaf ==> result@ == Set::<<T as View>::V>::empty()
         { join_mid(exposed) }
 
-        #[verifier::external_body]
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
         {
             let handle = self.root.acquire_read();
-            let n = handle.borrow().as_ref().map_or(0, |node| node.size);
+            let count = match handle.borrow() {
+                None => {
+                    0usize
+                }
+                Some(node) => {
+                    node.size
+                }
+            };
             handle.release_read();
-            n
+            count
         }
 
-        #[verifier::external_body]
         fn is_empty(&self) -> (empty: B)
             ensures empty == (self@.len() == 0), self@.finite()
         { self.size() == 0 }
@@ -289,13 +306,21 @@ pub mod BSTParaStEph {
 
     // 10. free fns
 
-    #[verifier::external_body]
-    fn new_leaf<T: StT + Ord>() -> (tree: ParamBST<T>) {
-        ParamBST { root: Arc::new(new_bst_para_lock(None)) }
+    fn new_leaf<T: StT + Ord>() -> (tree: ParamBST<T>)
+        ensures tree@ =~= Set::<<T as View>::V>::empty(),
+    {
+        new_param_bst(None, Ghost(Set::empty()))
     }
 
     #[verifier::external_body]
-    fn expose_internal<T: StT + Ord>(tree: &ParamBST<T>) -> (exposed: Exposed<T>) {
+    fn expose_internal<T: StT + Ord>(tree: &ParamBST<T>) -> (exposed: Exposed<T>)
+        ensures
+            tree@.len() == 0 ==> exposed is Leaf,
+            exposed matches Exposed::Node(l, k, r) ==> {
+                tree@ =~= l@.union(r@).insert(k@)
+                && tree@.finite()
+            },
+    {
         let handle = tree.root.acquire_read();
         let result = match handle.borrow() {
             | None => Exposed::Leaf,
@@ -306,14 +331,23 @@ pub mod BSTParaStEph {
     }
 
     #[verifier::external_body]
-    fn join_mid<T: StT + Ord>(exposed: Exposed<T>) -> (tree: ParamBST<T>) {
+    fn join_mid<T: StT + Ord>(exposed: Exposed<T>) -> (tree: ParamBST<T>)
+        ensures
+            exposed is Leaf ==> tree@ =~= Set::<<T as View>::V>::empty(),
+            exposed matches Exposed::Node(l, k, r) ==> tree@ =~= l@.union(r@).insert(k@),
+    {
         match exposed {
             | Exposed::Leaf => new_leaf(),
             | Exposed::Node(left, key, right) => {
+                let ghost lv = left@;
+                let ghost rv = right@;
+                let ghost kv = key@;
                 let size = 1 + left.size() + right.size();
-                ParamBST {
-                    root: Arc::new(new_bst_para_lock(Some(Box::new(NodeInner { key, size, left, right })))),
-                }
+                let ghost contents = lv.union(rv).insert(kv);
+                new_param_bst(
+                    Some(Box::new(NodeInner { key, size, left, right })),
+                    Ghost(contents),
+                )
             }
         }
     }
