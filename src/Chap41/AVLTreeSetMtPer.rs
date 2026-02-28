@@ -49,7 +49,7 @@ broadcast use {
     // 4. type definitions
 
     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + 'static> {
-        elements: AVLTreeSeqMtPerS<T>,
+        pub elements: AVLTreeSeqMtPerS<T>,
     }
 
     /// Sequential cutoff to prevent thread explosion from recursive ParaPair! calls.
@@ -58,7 +58,7 @@ broadcast use {
     // 5. view impls
 
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPer<T> {
-        pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
+        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
             self.elements@.to_set()
         }
     }

@@ -11,9 +11,7 @@
 
 Review:
 
-Chapters finished today: 
- 66 boruvka
- 
+16 Finished:
 
 src/Chap02/analyses/veracity-review-verus-proof-holes.log - accepted 
 src/Chap03/analyses/veracity-review-verus-proof-holes.log - clean
@@ -27,37 +25,43 @@ src/Chap19/analyses/veracity-review-verus-proof-holes.log - clean
 src/Chap21/analyses/veracity-review-verus-proof-holes.log - clean
 src/Chap23/analyses/veracity-review-verus-proof-holes.log - clean
 src/Chap26/analyses/veracity-review-verus-proof-holes.log - clean
-src/Chap27/analyses/veracity-review-verus-proof-holes.log - AGENT1.
 src/Chap28/analyses/veracity-review-verus-proof-holes.log - clean
 src/Chap30/analyses/veracity-review-verus-proof-holes.log - clean but it's stub.
 src/Chap35/analyses/veracity-review-verus-proof-holes.log - clean. 
-src/Chap36/analyses/veracity-review-verus-proof-holes.log - needs trait and impl on two of them
-src/Chap37/analyses/veracity-review-verus-proof-holes.log - bad
-src/Chap38/analyses/veracity-review-verus-proof-holes.log - bad no trait no specs. 
-src/Chap39/analyses/veracity-review-verus-proof-holes.log - bad closed specs, under specified.
+src/Chap44/analyses/veracity-review-verus-proof-holes.log - clean 
+
+4 in process:
+
+src/Chap36/analyses/veracity-review-verus-proof-holes.log - AGENT1, needs trait and impl on two of them
+src/Chap37/analyses/veracity-review-verus-proof-holes.log - MAIN, just bad.
+src/Chap38/analyses/veracity-review-verus-proof-holes.log - AGENT2 bad no trait no specs.
+src/Chap39/analyses/veracity-review-verus-proof-holes.log - AGENT3, bad closed specs, under specified. BSTParaTreapMtEph.rs
+
+25 unfinished: 
+
+src/Chap27/analyses/veracity-review-verus-proof-holes.log - unproven.
 src/Chap40/analyses/veracity-review-verus-proof-holes.log - N, pub(crate), no trait, no spec.
 src/Chap41/analyses/veracity-review-verus-proof-holes.log - hideous
 src/Chap42/analyses/veracity-review-verus-proof-holes.log - hideous
-src/Chap43/analyses/veracity-review-verus-proof-holes.log - bad AugOrderedTables.
-src/Chap44/analyses/veracity-review-verus-proof-holes.log - clean 
-src/Chap45/analyses/veracity-review-verus-proof-holes.log - bad Heaps.
+src/Chap43/analyses/veracity-review-verus-proof-holes.log - AugOrderedTables, bad.
+src/Chap45/analyses/veracity-review-verus-proof-holes.log - Heaps, bad
 src/Chap47/analyses/veracity-review-verus-proof-holes.log - hashtables not even verusified
-src/Chap49/analyses/veracity-review-verus-proof-holes.log
-src/Chap50/analyses/veracity-review-verus-proof-holes.log
-src/Chap51/analyses/veracity-review-verus-proof-holes.log
-src/Chap52/analyses/veracity-review-verus-proof-holes.log
-src/Chap53/analyses/veracity-review-verus-proof-holes.log
-src/Chap54/analyses/veracity-review-verus-proof-holes.log
-src/Chap55/analyses/veracity-review-verus-proof-holes.log
-src/Chap56/analyses/veracity-review-verus-proof-holes.log
-src/Chap57/analyses/veracity-review-verus-proof-holes.log
-src/Chap58/analyses/veracity-review-verus-proof-holes.log
-src/Chap59/analyses/veracity-review-verus-proof-holes.log
-src/Chap61/analyses/veracity-review-verus-proof-holes.log
-src/Chap62/analyses/veracity-review-verus-proof-holes.log
-src/Chap63/analyses/veracity-review-verus-proof-holes.log
-src/Chap64/analyses/veracity-review-verus-proof-holes.log
-src/Chap65/analyses/veracity-review-verus-proof-holes.log 
-src/Chap66/analyses/veracity-review-verus-proof-holes.log - agent1 
+src/Chap49/analyses/veracity-review-verus-proof-holes.log - unclean
+src/Chap50/analyses/veracity-review-verus-proof-holes.log - unclean, iterator status.
+src/Chap51/analyses/veracity-review-verus-proof-holes.log - unclean, not even verusified and specified.
+src/Chap52/analyses/veracity-review-verus-proof-holes.log - unclean, not even specified. 
+src/Chap53/analyses/veracity-review-verus-proof-holes.log - unclean, not even specified. 
+src/Chap54/analyses/veracity-review-verus-proof-holes.log - BFS, not fully verusified.
+src/Chap55/analyses/veracity-review-verus-proof-holes.log - DFS, SCCD, not fully verusified.
+src/Chap56/analyses/veracity-review-verus-proof-holes.log - all pairs, who knows what state.
+src/Chap57/analyses/veracity-review-verus-proof-holes.log - Dijsktra, not fully verusified.
+src/Chap58/analyses/veracity-review-verus-proof-holes.log - Bellman Ford, not fully verusified.
+src/Chap59/analyses/veracity-review-verus-proof-holes.log - Johnson, not fully verusified.
+src/Chap61/analyses/veracity-review-verus-proof-holes.log - edge contract, not fully verusified. 
+src/Chap62/analyses/veracity-review-verus-proof-holes.log - star contract, not fully verusified.
+src/Chap63/analyses/veracity-review-verus-proof-holes.log - connectivity, not fully verusified.
+src/Chap64/analyses/veracity-review-verus-proof-holes.log - spanning tree, not fully verusified.
+src/Chap65/analyses/veracity-review-verus-proof-holes.log - Kruskal, prim and unionfind, not fully verusified.
+src/Chap66/analyses/veracity-review-verus-proof-holes.log - Boruvka, not fully specified, verusified. 
 
 

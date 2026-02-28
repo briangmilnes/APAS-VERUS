@@ -51,9 +51,9 @@ pub mod ArraySeqMtEphSlice {
 
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqMtEphSliceS<T> {
-        data: Arc<Vec<T>>,
-        start: usize,
-        len: usize,
+        pub data: Arc<Vec<T>>,
+        pub start: usize,
+        pub len: usize,
     }
 
     // 5. view impls
@@ -61,7 +61,7 @@ pub mod ArraySeqMtEphSlice {
     impl<T: View> View for ArraySeqMtEphSliceS<T> {
         type V = Seq<T::V>;
 
-        closed spec fn view(&self) -> Seq<T::V> {
+        open spec fn view(&self) -> Seq<T::V> {
             (*self.data)@.map(|_i: int, t: T| t@)
                 .subrange(self.start as int, (self.start + self.len) as int)
         }
@@ -72,7 +72,7 @@ pub mod ArraySeqMtEphSlice {
     impl<T> ArraySeqMtEphSliceS<T> {
         /// The raw backing subrange as a Seq<T> (not View-mapped).
         /// Connects arc_vec_as_slice result to spec_len/spec_index.
-        closed spec fn spec_backing_seq(&self) -> Seq<T> {
+        pub open spec fn spec_backing_seq(&self) -> Seq<T> {
             (*self.data)@.subrange(self.start as int, (self.start + self.len) as int)
         }
     }
@@ -155,16 +155,16 @@ pub mod ArraySeqMtEphSlice {
     // 9. impls
 
     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
-        closed spec fn slice_wf(&self) -> bool {
+        open spec fn slice_wf(&self) -> bool {
             self.start + self.len <= (*self.data)@.len()
             && self.start + self.len <= usize::MAX
         }
 
-        closed spec fn spec_len(&self) -> nat {
+        open spec fn spec_len(&self) -> nat {
             self.len as nat
         }
 
-        closed spec fn spec_index(&self, i: int) -> T {
+        open spec fn spec_index(&self, i: int) -> T {
             (*self.data)@[self.start as int + i]
         }
 

@@ -745,15 +745,15 @@ pub mod LinkedListStEph {
 
     //		10. iterators
 
-    /// Iterator wrapper with closed spec view for encapsulation.
+    
     #[verifier::reject_recursive_types(T)]
     pub struct LinkedListStEphIter<'a, T> {
-        inner: std::slice::Iter<'a, T>,
+        pub inner: std::slice::Iter<'a, T>,
     }
 
     impl<'a, T> View for LinkedListStEphIter<'a, T> {
         type V = (int, Seq<T>);
-        closed spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
     }
 
     pub open spec fn iter_invariant<'a, T>(it: &LinkedListStEphIter<'a, T>) -> bool {

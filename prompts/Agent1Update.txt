@@ -4,8 +4,11 @@ Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-You are working in src/Chap27/.
+You are working in Chap36.
+Update your chapter's analyses:
+  veracity-review-verus-proof-holes.log - by program veracity-review-proof-holes
+  review-against-prose.md - by the review against proof holes rule.
+
+I am not even sure that quicksort is right. Why do we have all these functions?
 Review the verusification, specification and holes on this chapter.
 Propose fixes in a table.
-
-

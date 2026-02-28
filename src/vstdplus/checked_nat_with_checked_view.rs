@@ -113,7 +113,7 @@ verus! {
     impl View for CheckedU32 {
         type V = CheckedU32View;
 
-        closed spec fn view(&self) -> CheckedU32View { 
+        open spec fn view(&self) -> CheckedU32View { 
             CheckedU32View {
                 i: self.i@,
                 state: if self.i@ <= (u32::MAX as int) {
@@ -147,7 +147,7 @@ verus! {
 
         pub open spec fn spec_max() -> nat { $max as nat }
 
-        pub closed spec fn spec_new(v: $concUtype) -> $nat_type { $nat_type { i: Ghost(v as int), v: Some(v) } }
+        pub open spec fn spec_new(v: $concUtype) -> $nat_type { $nat_type { i: Ghost(v as int), v: Some(v) } }
 
         #[verifier::when_used_as_spec(spec_new)]
         pub exec fn new(v: $concUtype) -> (checked: Self)
@@ -353,7 +353,7 @@ verus! {
     impl View for $exec_type {
         type V = $exec_type
 
-        closed spec fn view(&self) -> $nat_typeView { 
+        open spec fn view(&self) -> $nat_typeView { 
             $nat_typeView {
                 i: self.i@,
                 state: if self.i@ <= ($max as int) {
@@ -385,7 +385,7 @@ verus! {
 
         pub open spec fn spec_max() -> nat { $max as nat }
 
-        pub closed spec fn spec_new(v: $concUtype) -> $nat_type { $nat_type { i: Ghost(v as int), v: Some(v) } }
+        pub open spec fn spec_new(v: $concUtype) -> $nat_type { $nat_type { i: Ghost(v as int), v: Some(v) } }
 
         #[verifier::when_used_as_spec(spec_new)]
         pub exec fn new(v: $concUtype) -> (checked: Self)

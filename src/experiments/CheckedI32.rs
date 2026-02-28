@@ -14,14 +14,14 @@ verus! {
     /// - `i`: Ghost value representing the true unbounded integer
     /// - `v`: Some(x) if x is in range, None if overflowed or underflowed
     pub struct CheckedI32 {
-        i: Ghost<int>,
-        v: Option<i32>,
+        pub i: Ghost<int>,
+        pub v: Option<i32>,
     }
 
     impl View for CheckedI32 {
         type V = int;
 
-        closed spec fn view(&self) -> int {
+        open spec fn view(&self) -> int {
             self.i@
         }
     }
@@ -52,7 +52,7 @@ verus! {
         pub open spec fn spec_max() -> int { i32::MAX as int }
 
         /// Create a new checked integer from a primitive value
-        pub closed spec fn spec_new(v: i32) -> CheckedI32 {
+        pub open spec fn spec_new(v: i32) -> CheckedI32 {
            CheckedI32 { i: Ghost(v as int), v: Some(v) }
         }
 

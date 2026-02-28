@@ -534,12 +534,12 @@ pub mod OrderedTableStPer {
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
     pub struct OrderedTableStPerIter<'a, K, V> {
-        inner: ArraySeqStPerIter<'a, Pair<K, V>>,
+        pub inner: ArraySeqStPerIter<'a, Pair<K, V>>,
     }
 
     impl<'a, K, V> View for OrderedTableStPerIter<'a, K, V> {
         type V = (int, Seq<Pair<K, V>>);
-        closed spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
+        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
     }
 
     pub open spec fn iter_invariant<'a, K, V>(it: &OrderedTableStPerIter<'a, K, V>) -> bool {

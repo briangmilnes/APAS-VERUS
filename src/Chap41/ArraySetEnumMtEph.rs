@@ -36,8 +36,8 @@ broadcast use {
     // 4. type definitions
 
     pub struct ArraySetEnumMtEph {
-        bits: BitBox,
-        universe_size: usize,
+        pub bits: BitBox,
+        pub universe_size: usize,
     }
 
     // 5. view impls

@@ -38,7 +38,7 @@ broadcast use {
 
     #[verifier::reject_recursive_types(T)]
     pub struct AVLTreeSetStPer<T: StT + Ord> {
-        elements: AVLTreeSeqStPerS<T>,
+        pub elements: AVLTreeSeqStPerS<T>,
     }
 
     pub type AVLTreeSetPer<T> = AVLTreeSetStPer<T>;
@@ -46,7 +46,7 @@ broadcast use {
     // 5. view impls
 
     impl<T: StT + Ord> AVLTreeSetStPer<T> {
-        pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
+        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
             self.elements@.to_set()
         }
     }

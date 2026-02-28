@@ -16,7 +16,7 @@ pub mod BSTParaMtEph {
         pub struct BstParaWf;
 
         impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for BstParaWf {
-            closed spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
+            open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
                 match v {
                     Option::None => true,
                     Option::Some(box_node) => (*box_node).size >= 1,

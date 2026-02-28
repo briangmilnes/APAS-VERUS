@@ -219,7 +219,6 @@ pub mod ScanContractMtEph {
                 let mut v: Vec<T> = Vec::with_capacity(1);
                 v.push(id);
                 proof {
-                    reveal(Seq::fold_left);
                     assert(s.take(0) =~= Seq::<T>::empty());
                 }
                 return ArraySeqMtEphS { seq: v };
@@ -294,7 +293,6 @@ pub mod ScanContractMtEph {
                     if j > 0 {
                         lemma_prefix_contraction::<T>(s, b_seq, spec_f, id, j as int);
                     } else {
-                        reveal(Seq::fold_left);
                         assert(s.take(0) =~= Seq::<T>::empty());
                         assert(b_seq.take(0) =~= Seq::<T>::empty());
                     }
@@ -309,7 +307,6 @@ pub mod ScanContractMtEph {
                     take_2j1.lemma_fold_left_split(id, spec_f, 2 * j as int);
                     assert(take_2j1.subrange(0, 2 * j as int) =~= s.take(2 * j as int));
                     assert(take_2j1.subrange(2 * j as int, 2 * j as int + 1) =~= seq![s[2 * j as int]]);
-                    reveal(Seq::fold_left);
                     assert(odd_val == s.take(2 * j as int + 1).fold_left(id, spec_f));
                 }
                 result_vec.push(odd_val);
@@ -324,7 +321,6 @@ pub mod ScanContractMtEph {
                     b_seq.lemma_fold_left_split(id, spec_f, (half - 1) as int);
                     assert(b_seq.subrange(0, (half - 1) as int) =~= b_seq.take((half - 1) as int));
                     assert(b_seq.subrange((half - 1) as int, half as int) =~= seq![b_seq[(half - 1) as int]]);
-                    reveal(Seq::fold_left);
 
                     lemma_prefix_contraction::<T>(s, b_seq, spec_f, id, half as int);
                     assert(b_seq.take(half as int) =~= b_seq);

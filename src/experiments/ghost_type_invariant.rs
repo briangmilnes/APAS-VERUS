@@ -46,12 +46,12 @@ broadcast use {
             }
 
             /// Access the vertex set (closed - can't be open with private fields).
-            pub closed spec fn V(self) -> Set<V> {
+            pub open spec fn V(self) -> Set<V> {
                 self.vertices
             }
 
             /// Access the arc set (closed - can't be open with private fields).
-            pub closed spec fn A(self) -> Set<(V, V)> {
+            pub open spec fn A(self) -> Set<(V, V)> {
                 self.arcs
             }
 

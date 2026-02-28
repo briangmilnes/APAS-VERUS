@@ -38,7 +38,7 @@ broadcast use {
     // 4. type definitions
 
     pub struct AVLTreeSetStEph<T: StT + Ord> {
-        elements: AVLTreeSeqStEphS<T>,
+        pub elements: AVLTreeSeqStEphS<T>,
     }
 
     pub type AVLTreeSetS<T> = AVLTreeSetStEph<T>;
@@ -46,7 +46,7 @@ broadcast use {
     // 5. view impls
 
     impl<T: StT + Ord> AVLTreeSetStEph<T> {
-        pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
+        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
             self.elements@.to_set()
         }
     }

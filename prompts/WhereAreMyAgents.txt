@@ -1,7 +1,0 @@
-
-What are my agents working on:
-
-Agent1 - 
-Agent2 -
-Agent3 -
-main

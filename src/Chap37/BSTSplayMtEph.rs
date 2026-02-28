@@ -351,7 +351,7 @@ pub mod BSTSplayMtEph {
             }
         }
 
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole
         fn new_splay_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, SplayLinkWf>) {
             RwLock::new(val, Ghost(SplayLinkWf))
         }

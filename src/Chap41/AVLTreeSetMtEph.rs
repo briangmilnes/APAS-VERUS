@@ -62,14 +62,14 @@ broadcast use {
     }
 
     pub struct AVLTreeSetMtEph<T: StTInMtT + Ord + 'static> {
-        inner: Arc<RwLock<AVLTreeSetStEph<T>, SetMtWf>>,
+        pub inner: Arc<RwLock<AVLTreeSetStEph<T>, SetMtWf>>,
     }
 
     // 5. view impls
 
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEph<T> {
         #[verifier::external_body]
-        pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
+        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
             Set::empty()
         }
     }

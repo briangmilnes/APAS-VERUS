@@ -14,11 +14,11 @@ pub mod BSTSplayStEph {
 
     type Link<T> = Option<Box<Node<T>>>;
 
-    struct Node<T: StT + Ord> {
-        key: T,
-        size: N,
-        left: Link<T>,
-        right: Link<T>,
+    pub struct Node<T: StT + Ord> {
+        pub key: T,
+        pub size: N,
+        pub left: Link<T>,
+        pub right: Link<T>,
     }
 
     impl<T: StT + Ord> Clone for Node<T> {
@@ -42,47 +42,65 @@ pub mod BSTSplayStEph {
         }
     }
 
-    closed spec fn spec_size_link<T: StT + Ord>(link: &Link<T>) -> nat
-        decreases *link,
-    {
+    pub open spec fn spec_size_link<T: StT + Ord>(link: &Link<T>) -> nat {
         match link {
             None => 0,
             Some(node) => node.size as nat,
         }
     }
 
-    fn size_link<T: StT + Ord>(link: &Link<T>) -> N {
+    pub open spec fn spec_height_link<T: StT + Ord>(link: &Link<T>) -> nat
+        decreases *link,
+    {
+        match link {
+            None => 0,
+            Some(node) => {
+                let lh = spec_height_link(&node.left);
+                let rh = spec_height_link(&node.right);
+                1 + if lh >= rh { lh } else { rh }
+            }
+        }
+    }
+
+    fn size_link<T: StT + Ord>(link: &Link<T>) -> (result: N)
+        ensures result as nat == spec_size_link(link),
+    {
+        proof { reveal(spec_size_link); }
         match link.as_ref() {
             None => 0,
             Some(n) => n.size,
         }
     }
 
-    fn height_link<T: StT + Ord>(link: &Link<T>) -> N
-        requires spec_size_link(link) < usize::MAX as nat,
+    fn height_link<T: StT + Ord>(link: &Link<T>) -> (result: N)
+        requires spec_height_link(link) < usize::MAX as nat,
+        ensures result as nat == spec_height_link(link),
         decreases *link,
     {
+        proof { reveal_with_fuel(spec_height_link, 2); }
         match link {
             | None => 0,
             | Some(node) => {
-                proof {
-                    assume(spec_size_link(&node.left) <= spec_size_link(link));
-                    assume(spec_size_link(&node.right) <= spec_size_link(link));
-                    assume(spec_size_link(&node.left) < usize::MAX as nat);
-                    assume(spec_size_link(&node.right) < usize::MAX as nat);
-                }
                 let lh = height_link(&node.left);
                 let rh = height_link(&node.right);
                 let m = if lh >= rh { lh } else { rh };
-                proof { assume(m < usize::MAX); }
                 1 + m
             }
         }
     }
 
-    #[verifier::external_body]
-    fn update<T: StT + Ord>(node: &mut Node<T>) {
-        node.size = 1 + size_link(&node.left) + size_link(&node.right);
+    fn update<T: StT + Ord>(node: &mut Node<T>)
+        ensures
+            node.size as nat == 1 + spec_size_link(&old(node).left) + spec_size_link(&old(node).right),
+            node.key == old(node).key,
+            node.left == old(node).left,
+            node.right == old(node).right,
+    {
+        proof { reveal(spec_size_link); }
+        let ls = size_link(&node.left);
+        let rs = size_link(&node.right);
+        assume(ls as int + rs as int + 1 <= usize::MAX as int);
+        node.size = 1 + ls + rs;
     }
 
     // Bottom-up splay: bring target (or nearest key) toward the root using
@@ -208,10 +226,16 @@ pub mod BSTSplayStEph {
         }
     }
 
-    #[verifier::external_body]
-    fn bst_insert<T: StT + Ord>(link: &mut Link<T>, value: T) -> bool {
-        match link {
-            | Some(node) => {
+    fn bst_insert<T: StT + Ord>(link: &mut Link<T>, value: T) -> (inserted: bool)
+        decreases old(link),
+    {
+        let cur = link.take();
+        match cur {
+            | None => {
+                *link = Some(Box::new(new_node(value)));
+                true
+            }
+            | Some(mut node) => {
                 let inserted = if value < node.key {
                     bst_insert(&mut node.left, value)
                 } else if value > node.key {
@@ -219,20 +243,14 @@ pub mod BSTSplayStEph {
                 } else {
                     false
                 };
-                if inserted { update(node); }
+                if inserted { update(&mut node); }
+                *link = Some(node);
                 inserted
-            }
-            | None => {
-                *link = Some(Box::new(new_node(value)));
-                true
             }
         }
     }
 
-    #[verifier::external_body]
-    fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T) -> bool
-        decreases old(link),
-    {
+    fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T) -> (inserted: bool) {
         let v = value.clone();
         let inserted = bst_insert(link, value);
         if inserted {
@@ -305,7 +323,7 @@ pub mod BSTSplayStEph {
     }
 
     pub struct BSTSplayStEph<T: StT + Ord> {
-        root: Link<T>,
+        pub root: Link<T>,
     }
 
     impl<T: StT + Ord> Clone for BSTSplayStEph<T> {
@@ -320,6 +338,7 @@ pub mod BSTSplayStEph {
 
     pub trait BSTSplayStEphTrait<T: StT + Ord> {
         spec fn spec_size(self) -> nat;
+        spec fn spec_height(self) -> nat;
 
         /// claude-4-sonet: Work Θ(1), Span Θ(1)
         fn new()                       -> Self
@@ -331,7 +350,7 @@ pub mod BSTSplayStEph {
         fn is_empty(&self)             -> B;
         /// claude-4-sonet: Work Θ(n), Span Θ(n)
         fn height(&self)               -> N
-            requires self.spec_size() < usize::MAX as nat;
+            requires self.spec_height() < usize::MAX as nat;
         /// claude-4-sonet: Work Θ(log n) amortized, Θ(n) worst case; Span Θ(log n) amortized, Parallelism Θ(1)
         fn insert(&mut self, value: T);
         /// claude-4-sonet: Work Θ(log n) amortized, Θ(n) worst case; Span Θ(log n) amortized, Parallelism Θ(1)
@@ -349,7 +368,8 @@ pub mod BSTSplayStEph {
     }
 
     impl<T: StT + Ord> BSTSplayStEphTrait<T> for BSTSplayStEph<T> {
-        closed spec fn spec_size(self) -> nat { spec_size_link(&self.root) }
+        open spec fn spec_size(self) -> nat { spec_size_link(&self.root) }
+        open spec fn spec_height(self) -> nat { spec_height_link(&self.root) }
 
         fn new() -> Self { BSTSplayStEph { root: None } }
 

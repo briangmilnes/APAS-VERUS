@@ -7,13 +7,13 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 37 — Introduction to Binary Search Trees: Review Against Prose
 
-**Date:** 2026-02-19
+**Date:** 2026-02-27 (proof holes refresh; initial: 2026-02-19)
 **Reviewer:** Claude-Opus-4.6
 **Prose source:** `prompts/Chap37.txt`
 **Source directory:** `src/Chap37/` (19 files)
 **Test directory:** `tests/Chap37/` (24 files)
 **PTT directory:** none (0 files)
-**Verification status:** Partially verusified — 7 files have `verus!` blocks with specs/proofs; 12 files remain plain Rust
+**Verification status:** All 19 files inside `verus!`; 14 clean, 5 holed; 52 holes (10 assume, 42 external_body)
 
 ## Phase 1: Inventory
 
@@ -314,40 +314,55 @@ PTTs would be valuable for:
 
 ## Proof Holes Summary
 
-From `veracity-review-verus-proof-holes -d src/Chap37/`:
+From `veracity-review-proof-holes -d src/Chap37/` (2026-02-27):
 
 ```
-✓ BSTPlainStEph.rs — clean
+✓ BSTAVLMtEph.rs — 1 clean proof fn
+✓ BSTAVLStEph.rs — 2 clean proof fns
+✓ BSTBBAlphaMtEph.rs — clean
 ✓ BSTBBAlphaStEph.rs — clean
-✓ BSTAVLStEph.rs — clean (2 clean proof fns)
+✓ BSTPlainMtEph.rs — clean
+✓ BSTPlainStEph.rs — clean
 ✓ BSTRBStEph.rs — 1 clean proof fn
-✓ BSTRBMtEph.rs — clean (plain Rust)
-✓ BSTSplayStEph.rs — clean (plain Rust)
-✓ BSTSplayMtEph.rs — clean (plain Rust)
-✓ BSTSetAVLMtEph.rs — clean (plain Rust)
-✓ BSTSetBBAlphaMtEph.rs — clean (plain Rust)
-✓ BSTSetPlainMtEph.rs — clean (plain Rust)
-✓ BSTSetRBMtEph.rs — clean (plain Rust)
-✓ BSTSetSplayMtEph.rs — clean (plain Rust)
+✓ BSTSetAVLMtEph.rs — clean
+✓ BSTSetBBAlphaMtEph.rs — clean
+✓ BSTSetPlainMtEph.rs — clean
+✓ BSTSetRBMtEph.rs — clean
+✓ BSTSetSplayMtEph.rs — clean
+ℹ BSTRBMtEph.rs — 1 info (verus_rwlock_external_body)
+ℹ BSTSplayMtEph.rs — 1 info (verus_rwlock_external_body)
 
-❌ BSTAVLMtEph.rs — 2 × assume() (spec_size/spec_height <= usize::MAX)
-❌ BSTBBAlphaMtEph.rs — 2 × assume() (spec_size/spec_height <= usize::MAX)
-❌ BSTPlainMtEph.rs — 2 × assume() (spec_size/spec_height <= usize::MAX)
+❌ AVLTreeSeq.rs — 7 holes (1 assume, 6 external_body), 3 eq/clone workaround errors, 1 accept info
+❌ AVLTreeSeqMtPer.rs — 12 holes (1 assume, 11 external_body), 1 accept info
+❌ AVLTreeSeqStEph.rs — 15 holes (4 assume, 11 external_body), 1 accept info
+❌ AVLTreeSeqStPer.rs — 14 holes (3 assume, 11 external_body), 1 eq/clone workaround error
+❌ BSTSplayStEph.rs — 4 holes (1 assume, 3 external_body)
 
-+ 5 bare_impl errors in AVLTreeSeq* files
-
-Holes Found: 6 total (6 × assume)
+14 clean, 5 holed, 19 total
+8 clean proof fns, 0 holed proof fns
+52 holes total: 10 assume, 42 external_body
+4 errors (eq/clone workaround), 5 info (3 accept, 2 rwlock)
 ```
 
 ### Hole Analysis
 
-| # | File | Holes | Type | Justification | Avoidable? |
-|---|------|:-----:|------|---------------|:----------:|
-| 1 | BSTAVLMtEph | 2 | assume | `spec_size() <= usize::MAX`, `spec_height() <= usize::MAX` | Tolerable — practical overflow guard |
-| 2 | BSTBBAlphaMtEph | 2 | assume | Same | Tolerable |
-| 3 | BSTPlainMtEph | 2 | assume | Same | Tolerable |
+| # | File | Holes | assume | ext_body | Category | Notes |
+|---|------|:-----:|:------:|:--------:|----------|-------|
+| 1 | AVLTreeSeq | 7 | 1 | 6 | algorithmic | rotate/rebalance/insert_at_link external_body; cached_size overflow assume |
+| 2 | AVLTreeSeqStEph | 15 | 4 | 11 | algorithmic | All tree ops external_body; singleton/from_vec spec_well_formed assumes |
+| 3 | AVLTreeSeqStPer | 14 | 3 | 11 | algorithmic | Same pattern as StEph; subseq_copy/values_in_order/to_arrayseq assumes |
+| 4 | AVLTreeSeqMtPer | 12 | 1 | 11 | algorithmic | Same tree ops external_body; values_in_order spec_well_formed assume |
+| 5 | BSTSplayStEph | 4 | 1 | 3 | mixed | update overflow assume; Node::clone/in_order/pre_order external_body |
 
-**Key observation**: BSTAVLStEph's `rebalance` function is now fully proved — all 9 previous assumes have been eliminated. The rotation proofs provide detailed height and AVL balance reasoning. BSTPlainMtEph uses vstd::rwlock with verified predicate (zero external_body on lock ops). BSTAVLMtEph and BSTBBAlphaMtEph use std::sync::RwLock, requiring external_body on all lock operations — those external_body holes are counted in the veracity output but not in the assume-only count above.
+**Changes since 2026-02-19**: BSTPlainMtEph, BSTAVLMtEph, and BSTBBAlphaMtEph are now clean — the 6 spec_size/spec_height assumes were eliminated. The AVLTreeSeq* files and BSTSplayStEph were verusified since the prior review, bringing their existing external_body and assume holes into scope. AVLTreeSeq eq/clone workaround assumes reclassified from holes to errors (tool update, no code change).
+
+**Changes since 2026-02-27 (a)**: BSTSplayStEph reduced from 11 holes to 4 holes (7 eliminated):
+- `height_link`: 5 assumes removed — defined `spec_height_link` recursive spec fn, replaced overflow/size-bound assumes with provable assertions via `reveal_with_fuel`.
+- `update`: external_body removed — added `ensures` (size updated, key/left/right preserved), 1 overflow assume remains.
+- `bst_insert`: external_body removed — verified with `decreases old(link)` and take/match pattern for `&mut Link<T>`.
+- `insert_link`: external_body removed — non-recursive wrapper, verified directly.
+- `size_link`: added `ensures result as nat == spec_size_link(link)` with `reveal`.
+- `spec_height` added to trait and impl for `height` requires.
 
 ## Spec Strength Summary
 
@@ -383,7 +398,7 @@ The chapter has three layers:
 | 5 | Parallel set operations: 4 of 5 BSTSet files now use `ParaPair!` for union/intersection/difference |
 | 6 | Genuine parallelism in MtEph BSTs: `in_order`, `filter`, `reduce`, `from_sorted_slice` use `ParaPair!` |
 | 7 | Comprehensive test suite: 24 test files, ~568 tests total, all source modules covered |
-| 8 | Low hole count: only 6 assumes (all tolerable spec_size/spec_height bounds) |
+| 8 | BST core is hole-free: all 7 BST StEph/MtEph files now clean (0 assumes, 0 external_body on algorithmic logic) |
 
 ### Weaknesses
 
@@ -391,24 +406,26 @@ The chapter has three layers:
 |---|----------|:--------:|
 | 1 | Asymptotically wrong split/join/delete — O(n) instead of O(lg n) | High |
 | 2 | Splay trees don't splay — plain unbalanced BST insert | High |
-| 3 | RB color invariant not verified — BalBinTree lacks color field | Medium |
-| 4 | BSTSetBBAlphaMtEph still fully sequential (no ParaPair!) | Medium |
-| 5 | BSTSet `filter`/`reduce` sequential in all 5 wrappers | Medium |
-| 6 | No in-order sorted spec equivalence with `tree_is_bst` | Low |
-| 7 | AVLTreeSeq files are misplaced (sequence ops, not BSTs) | Low |
-| 8 | 5 bare_impl errors in AVLTreeSeq* files | Low |
+| 3 | AVLTreeSeq* files: 51 holes (12 assume, 39 external_body) across 4 files — all tree mutation ops unverified | High |
+| 4 | BSTSplayStEph: 4 holes (1 assume, 3 external_body) — clone/in_order/pre_order/overflow remain | Medium |
+| 5 | RB color invariant not verified — BalBinTree lacks color field | Medium |
+| 6 | BSTSetBBAlphaMtEph still fully sequential (no ParaPair!) | Medium |
+| 7 | BSTSet `filter`/`reduce` sequential in all 5 wrappers | Medium |
+| 8 | No in-order sorted spec equivalence with `tree_is_bst` | Low |
+| 9 | AVLTreeSeq files are misplaced (sequence ops, not BSTs) | Low |
 
 ### Review TODOs
 
 | # | Priority | Action | Files Affected |
 |---|:--------:|--------|---------------|
-| 1 | High | Implement proper O(lg n) split/join/delete (or wire to Chap38 parametric BST) | 5 BSTSet*MtEph files |
-| 2 | High | Fix Splay implementations to actually perform splay rotations | BSTSplayStEph.rs, BSTSplayMtEph.rs |
-| 3 | High | Migrate BSTAVLMtEph and BSTBBAlphaMtEph from std::sync::RwLock to vstd::rwlock | BSTAVLMtEph.rs, BSTBBAlphaMtEph.rs |
-| 4 | Medium | Add color field to BalBinTree or create RBBalBinTree for RB invariant verification | Chap23, BSTRBStEph.rs |
-| 5 | Medium | Formalize in-order sorted spec | BSTPlainStEph.rs |
-| 6 | Medium | Add `ensures` to `min_node`/`max_node` | 7 verusified files |
-| 7 | Medium | Add `ParaPair!` to BSTSetBBAlphaMtEph union/intersection/difference | BSTSetBBAlphaMtEph.rs |
-| 8 | Low | Move AVLTreeSeq files to Chap18/Chap19 | 4 AVLTreeSeq* files |
-| 9 | Low | Fix bare_impl errors | AVLTreeSeq* files |
-| 10 | Low | Create PTTs for verusified BST files | New files |
+| 1 | High | Prove AVLTreeSeq rotate/rebalance/insert_at_link (remove external_body) | AVLTreeSeq.rs, AVLTreeSeqStEph.rs |
+| 2 | High | Prove AVLTreeSeqStPer/MtPer tree ops (remove external_body) | AVLTreeSeqStPer.rs, AVLTreeSeqMtPer.rs |
+| 3 | High | Prove BSTSplayStEph insert_link/bst_insert/update (remove external_body + assumes) | BSTSplayStEph.rs |
+| 4 | High | Implement proper O(lg n) split/join/delete (or wire to Chap38 parametric BST) | 5 BSTSet*MtEph files |
+| 5 | High | Fix Splay implementations to actually perform splay rotations | BSTSplayStEph.rs, BSTSplayMtEph.rs |
+| 6 | Medium | Add color field to BalBinTree or create RBBalBinTree for RB invariant verification | Chap23, BSTRBStEph.rs |
+| 7 | Medium | Formalize in-order sorted spec | BSTPlainStEph.rs |
+| 8 | Medium | Add `ensures` to `min_node`/`max_node` | 7 verusified files |
+| 9 | Medium | Add `ParaPair!` to BSTSetBBAlphaMtEph union/intersection/difference | BSTSetBBAlphaMtEph.rs |
+| 10 | Low | Move AVLTreeSeq files to Chap18/Chap19 | 4 AVLTreeSeq* files |
+| 11 | Low | Create PTTs for verusified BST files | New files |

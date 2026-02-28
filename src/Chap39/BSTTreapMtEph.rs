@@ -164,7 +164,7 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    closed spec fn spec_height_link<T: StTInMtT + Ord>(link: &Link<T>) -> nat
+    pub open spec fn spec_height_link<T: StTInMtT + Ord>(link: &Link<T>) -> nat
         decreases *link,
     {
         match link {
@@ -460,8 +460,8 @@ pub mod BSTTreapMtEph {
     }
 
     impl<T: StTInMtT + Ord> BSTTreapMtEphTrait<T> for BSTTreapMtEph<T> {
-        closed spec fn spec_size(&self) -> nat { 0 }
-        closed spec fn spec_height(&self) -> nat { 0 }
+        open spec fn spec_size(&self) -> nat { 0 }
+        open spec fn spec_height(&self) -> nat { 0 }
 
         fn new() -> Self {
             BSTTreapMtEph {

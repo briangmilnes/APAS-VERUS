@@ -628,9 +628,9 @@ pub mod BSTReducedStEph {
     impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> BSTReducedStEphTrait<K, V, R, Op>
         for BSTReducedStEph<K, V, R, Op>
     {
-        closed spec fn spec_size(&self) -> nat { spec_size_link(&self.root) }
-        closed spec fn spec_wf(&self) -> bool { spec_size_wf_link(&self.root) }
-        closed spec fn spec_height(&self) -> nat { spec_height_link(&self.root) }
+        open spec fn spec_size(&self) -> nat { spec_size_link(&self.root) }
+        open spec fn spec_wf(&self) -> bool { spec_size_wf_link(&self.root) }
+        open spec fn spec_height(&self) -> nat { spec_height_link(&self.root) }
 
         fn new() -> Self {
             BSTReducedStEph {

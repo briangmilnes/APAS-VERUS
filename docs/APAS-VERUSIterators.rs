@@ -90,7 +90,7 @@
 //
 //      #[verifier::reject_recursive_types(T)]
 //      pub struct CollectionIter<'a, T> {
-//          inner: std::slice::Iter<'a, T>,   // or hash_set::Iter, etc.
+//          pub inner: std::slice::Iter<'a, T>,   // or hash_set::Iter, etc.
 //      }
 //
 //  ── 2. View for Iterator ───────────────────────────────────────────────────
@@ -98,11 +98,10 @@
 //  The View is a pair: (position_index, full_sequence).
 //  - Position starts at 0 and advances to elements.len().
 //  - The sequence is the *full* iteration order, fixed at creation.
-//  - Use `closed spec fn` to hide the inner implementation.
 //
 //      impl<'a, T> View for CollectionIter<'a, T> {
 //          type V = (int, Seq<T>);
-//          closed spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+//          pub open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
 //      }
 //
 //  ── 3. iter_invariant ──────────────────────────────────────────────────────

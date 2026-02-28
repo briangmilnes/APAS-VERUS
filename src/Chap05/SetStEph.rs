@@ -752,12 +752,12 @@ verus! {
     /// - Inner is private; closed view() can access it but external code cannot see it.
     #[verifier::reject_recursive_types(T)]
     pub struct SetStEphIter<'a, T: StT + Hash> {
-        inner: HashSetWithViewPlusIter<'a, T>,  // PRIVATE
+        pub inner: HashSetWithViewPlusIter<'a, T>,
     }
 
     impl<'a, T: StT + Hash> View for SetStEphIter<'a, T> {
         type V = (int, Seq<T>);
-        closed spec fn view(&self) -> (int, Seq<T>) { 
+        open spec fn view(&self) -> (int, Seq<T>) { 
             self.inner@
         }
     }

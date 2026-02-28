@@ -353,8 +353,8 @@ pub mod BSTKeyValueStEph {
     }
 
     impl<K: StT + Ord, V: StT> BSTKeyValueStEphTrait<K, V> for BSTKeyValueStEph<K, V> {
-        closed spec fn spec_size(&self) -> nat { self.size as nat }
-        closed spec fn spec_height(&self) -> nat { spec_height_link(&self.root) }
+        open spec fn spec_size(&self) -> nat { self.size as nat }
+        open spec fn spec_height(&self) -> nat { spec_height_link(&self.root) }
 
         fn new() -> Self { BSTKeyValueStEph { root: None, size: 0 } }
 

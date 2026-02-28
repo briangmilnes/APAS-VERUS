@@ -157,15 +157,14 @@ impl<Key: View + Eq + Hash> HashSetWithViewPlusTrait<Key> for HashSetWithViewPlu
 
 //		10. iterators
 
-/// Iterator wrapper with closed View for encapsulation.
 #[verifier::reject_recursive_types(Key)]
 pub struct HashSetWithViewPlusIter<'a, Key: View + Eq + Hash> {
-    inner: std::collections::hash_set::Iter<'a, Key>,
+    pub inner: std::collections::hash_set::Iter<'a, Key>,
 }
 
 impl<'a, Key: View + Eq + Hash> View for HashSetWithViewPlusIter<'a, Key> {
     type V = (int, Seq<Key>);
-    closed spec fn view(&self) -> (int, Seq<Key>) {
+    open spec fn view(&self) -> (int, Seq<Key>) {
         self.inner@
     }
 }

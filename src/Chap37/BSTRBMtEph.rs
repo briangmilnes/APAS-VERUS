@@ -329,7 +329,7 @@ pub mod BSTRBMtEph {
             }
         }
 
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole
         fn new_rb_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, RBLinkWf>) {
             RwLock::new(val, Ghost(RBLinkWf))
         }

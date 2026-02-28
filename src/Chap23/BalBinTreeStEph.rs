@@ -472,38 +472,38 @@ pub mod BalBinTreeStEph {
     /// Iterator over in-order traversal of a BalBinTree.
     #[verifier::reject_recursive_types(T)]
     pub struct InOrderIter<T> {
-        inner: IntoIter<T>,
+        pub inner: IntoIter<T>,
     }
 
     /// Iterator over pre-order traversal of a BalBinTree.
     #[verifier::reject_recursive_types(T)]
     pub struct PreOrderIter<T> {
-        inner: IntoIter<T>,
+        pub inner: IntoIter<T>,
     }
 
     /// Iterator over post-order traversal of a BalBinTree.
     #[verifier::reject_recursive_types(T)]
     pub struct PostOrderIter<T> {
-        inner: IntoIter<T>,
+        pub inner: IntoIter<T>,
     }
 
     impl<T> View for InOrderIter<T> {
         type V = (int, Seq<T>);
-        closed spec fn view(&self) -> (int, Seq<T>) {
+        open spec fn view(&self) -> (int, Seq<T>) {
             self.inner@
         }
     }
 
     impl<T> View for PreOrderIter<T> {
         type V = (int, Seq<T>);
-        closed spec fn view(&self) -> (int, Seq<T>) {
+        open spec fn view(&self) -> (int, Seq<T>) {
             self.inner@
         }
     }
 
     impl<T> View for PostOrderIter<T> {
         type V = (int, Seq<T>);
-        closed spec fn view(&self) -> (int, Seq<T>) {
+        open spec fn view(&self) -> (int, Seq<T>) {
             self.inner@
         }
     }

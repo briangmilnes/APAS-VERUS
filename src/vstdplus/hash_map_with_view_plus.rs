@@ -158,12 +158,12 @@ impl<Key: View + Eq + Hash, Value> HashMapWithViewPlusTrait<Key, Value> for Hash
 #[verifier::reject_recursive_types(Key)]
 #[verifier::reject_recursive_types(Value)]
 pub struct HashMapWithViewPlusIter<'a, Key: View + Eq + Hash, Value> {
-    inner: std::collections::hash_map::Iter<'a, Key, Value>,
+    pub inner: std::collections::hash_map::Iter<'a, Key, Value>,
 }
 
 impl<'a, Key: View + Eq + Hash, Value> View for HashMapWithViewPlusIter<'a, Key, Value> {
     type V = (int, Seq<(Key, Value)>);
-    closed spec fn view(&self) -> (int, Seq<(Key, Value)>) {
+    open spec fn view(&self) -> (int, Seq<(Key, Value)>) {
         self.inner@
     }
 }

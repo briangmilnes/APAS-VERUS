@@ -1473,11 +1473,11 @@ pub mod ArraySeq {
 
     //		10. iterators
 
-    /// Iterator wrapper with closed spec view for encapsulation.
+    
     /// Inner is private; closed view() can access it but external code cannot see it.
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqIter<'a, T> {
-        inner: std::slice::Iter<'a, T>,  // PRIVATE
+        pub inner: std::slice::Iter<'a, T>, 
     }
 
     /// Ghost iterator for ForLoopGhostIterator support (for-iter, for-borrow patterns).
@@ -1490,7 +1490,7 @@ pub mod ArraySeq {
 
     impl<'a, T> View for ArraySeqIter<'a, T> {
         type V = (int, Seq<T>);
-        closed spec fn view(&self) -> (int, Seq<T>) {
+        open spec fn view(&self) -> (int, Seq<T>) {
             self.inner@
         }
     }

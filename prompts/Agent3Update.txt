@@ -1,11 +1,14 @@
 You are agent3 working in branch: ~/projects/APAS-VERUS-agent3/.
-Your branch has been updated.
-It validates, rtts and ptts cleanly. 
+Your worktree has been updated.
 Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-You are working in src/Chap45/.
+You are working in src/Chap39.
+Update your chapter's analyses:
+  veracity-review-verus-proof-holes.log - by program veracity-review-proof-holes
+  review-against-prose.md - by the review against proof holes rule.
+
 Review the verusification, specification and holes on this chapter.
 Propose fixes in a table.
 

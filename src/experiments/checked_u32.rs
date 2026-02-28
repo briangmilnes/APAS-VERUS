@@ -12,7 +12,7 @@ pub struct CheckedU32 { i: Ghost<int>, v: Option<u32> }
 impl View for CheckedU32 {
     type V = int;
 
-    closed spec fn view(&self) -> int { self.i@ }
+    open spec fn view(&self) -> int { self.i@ }
 }
 
 impl Clone for CheckedU32 {
@@ -33,7 +33,7 @@ impl CheckedU32 {
         }
     }
 
-    pub closed spec fn spec_new(v: u32) -> CheckedU32 { 
+    pub open spec fn spec_new(v: u32) -> CheckedU32 { 
         CheckedU32 { i: Ghost(v as int), v: Some(v) } 
     }
 
