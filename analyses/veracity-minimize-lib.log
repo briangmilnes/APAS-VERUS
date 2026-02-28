@@ -3,17 +3,20 @@ Verus Library Minimizer
 This minimizer is only possible due to the phenomenal speed of verification
 in Verus. Thanks Verus team!
 
-Logging to: ./analyses/veracity-minimize-lib.log
+Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-minimize-lib.log
 
 Arguments:
-  -c, --codebase:     .
-  -l, --library:      src/vstdplus
+  -c, --codebase:     /home/milnes/projects/APAS-VERUS
+  -l, --library:      ./src/vstdplus/
+  -F, --file:         (all files)
   -n, --dry-run:      false
   -b, --broadcasts:   true
   -L, --lib-broadcasts: true
   -N, --max-lemmas:   all
-  -a, --asserts:      true
+  -a, --asserts:      false
   -A, --max-asserts:  all
+  -p, --proof-blocks: false
+  -P, --max-proof-blocks: all
   -e, --exclude:      (none)
   -f, --fail-fast:    false
   --danger:           false
@@ -22,9 +25,115 @@ Arguments:
 IMPORTANT: No code will be harmed in the improving of your codebase!
 ═══════════════════════════════════════════════════════════════════════════════
 
-✗ Codebase is in git but has uncommitted changes.
+✓ Codebase is in git and committed. Proceeding safely.
 
-  Please commit your changes first:
-    cd . && git add -A && git commit -m 'Before Veracity'
+Veracity will repeatedly comment things in and out using // Veracity: lines
+to test and improve your use of vstd. All changes are reversible comments.
+You will need to review each // Veracity: line and decide what to keep.
 
-  Exiting. Use --danger to proceed anyway (not recommended).
+Phases:
+  Phase 0:  Strip existing Veracity markers (if any)
+  Phase 1:  Analyze and verify codebase
+  Phase 2:  Analyze library structure (lemmas, modules, call sites, spec fns)
+  Phase 3:  Discover vstd broadcast groups from verus installation
+  Phase 4:  Estimate time for testing
+  Phase 5:  Apply broadcast groups to library (-L flag)
+  Phase 6:  Apply broadcast groups to codebase (-b flag)
+  Phase 7:  Test lemma dependence on vstd (can vstd prove it alone?)
+  Phase 8:  Test lemma necessity (can codebase verify without it?)
+  Phase 9:  Test library asserts (can we remove any?)
+  Phase 10: Test codebase asserts (can we remove any?)
+  Phase 11: Test admits (can we remove any? -m flag)
+  Phase 12: Test proof {} blocks (-p flag)
+  Phase 13: Test types (are they used? -t flag)
+  Phase 14: Analyze and verify final codebase
+
+Comment markers inserted:
+  // Veracity: added broadcast group  - Phase 5/6: Inserted broadcast use block
+  // Veracity: DEPENDENT              - Phase 7: Lemma proven by vstd broadcast groups
+  // Veracity: INDEPENDENT            - Phase 7: Lemma provides unique proof logic
+  // Veracity: USED                   - Phase 8: Lemma required, restored after test
+  // Veracity: UNUSED                 - Phase 8: Lemma not needed, left commented out
+  // Veracity: UNNEEDED assert        - Phase 9/10: Assert not needed, left commented
+  // Veracity: UNNEEDED admit         - Phase 11: Admit not needed, left commented
+  // Veracity: UNNEEDED proof block   - Phase 12: Proof block not needed, left commented
+  // Veracity: TYPE USED              - Phase 13: Type is used (verified by removal test)
+  // Veracity: TYPE UNUSED            - Phase 13: Type not used, left commented out
+  // Veracity: UNNEEDED               - Phase 8: Call site not needed, left commented
+
+═══════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 0: Stripping existing Veracity markers
+═══════════════════════════════════════════════════════════════
+
+  Found 387 existing Veracity markers
+  Cleaning up for fresh analysis...
+  ✓ Removed 2819 markers
+
+═══════════════════════════════════════════════════════════════
+Phase 1: Analyzing and verifying codebase
+═══════════════════════════════════════════════════════════════
+
+  Initial LOC (comments not counted):
+    Spec:       0
+    Proof:      0
+    Exec:       0
+    Total:      0
+
+  Verifying...
+  ✗ Verification failed. Exiting.
+  Fix verification errors before running Veracity.
+
+Verus output:
+─────────────────────────────────────────────────────────────────
+   Compiling proc-macro2 v1.0.103
+   Compiling unicode-ident v1.0.22
+   Compiling quote v1.0.41
+   Compiling verus_syn v0.0.0-2026-02-24-1505 (/home/milnes/projects/verus/dependencies/syn)
+   Compiling autocfg v1.5.0
+   Compiling libc v0.2.177
+   Compiling verus_prettyplease v0.0.0-2026-02-24-1505 (/home/milnes/projects/verus/dependencies/prettyplease)
+   Compiling radium v0.7.0
+   Compiling rand_core v0.10.0
+   Compiling hashbrown v0.12.3
+   Compiling cfg-if v1.0.4
+   Compiling getrandom v0.4.1
+   Compiling tap v1.0.1
+   Compiling cpufeatures v0.3.0
+   Compiling unicode-xid v0.2.6
+   Compiling vstd v0.0.0-2026-02-24-1505 (/home/milnes/projects/verus/source/vstd)
+   Compiling verus_builtin v0.0.0-2026-02-24-1505 (/home/milnes/projects/verus/source/builtin)
+   Compiling funty v2.0.0
+   Compiling wyz v0.5.1
+   Compiling chacha20 v0.10.0
+   Compiling indexmap v1.9.3
+   Compiling bitvec v1.0.1
+   Compiling syn v2.0.108
+   Compiling rand v0.10.0
+   Compiling synstructure v0.13.2
+   Compiling derive_more-impl v1.0.0
+   Compiling derive_more v1.0.0
+   Compiling verus_state_machines_macros v0.0.0-2026-02-24-1505 (/home/milnes/projects/verus/source/state_machines_macros)
+   Compiling verus_builtin_macros v0.0.0-2026-02-24-1505 (/home/milnes/projects/verus/source/builtin_macros)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error: this file contains an unclosed delimiter
+   --> src/vstdplus/feq.rs:192:42
+    |
+  8 | pub mod feq {
+    |             - unclosed delimiter
+...
+ 15 |     verus! {
+    |            - unclosed delimiter
+...
+189 |     {
+    |     - unclosed delimiter
+190 |         broadcast use axiom_cloned_implies_eq_owned;
+191 |         broadcast use {
+    |                       - unclosed delimiter
+192 |             vstd::seq::group_seq_axioms,
+    |                                         ^
+
+error: could not compile `apas-verus` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+─────────────────────────────────────────────────────────────────
