@@ -21,7 +21,6 @@
 
 //		1. module
 
-
 pub mod ArraySeqMtEph {
 
     use std::fmt::{Debug, Display, Formatter};
@@ -50,7 +49,6 @@ pub mod ArraySeqMtEph {
         crate::vstdplus::monoid::monoid::*,
         crate::vstdplus::multiset::multiset::*,
     };
-
 
 
     //		3. broadcast use

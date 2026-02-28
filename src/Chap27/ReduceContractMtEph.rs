@@ -51,7 +51,6 @@ pub mod ReduceContractMtEph {
         ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),
         decreases s.len(),
     {
-        reveal(Seq::fold_left);
         if s.len() == 0 {
         } else {
             lemma_fold_left_monoid::<T>(s.drop_last(), x, f, id);
@@ -352,7 +351,6 @@ pub mod ReduceContractMtEph {
             // Base case: empty
             if n == 0 {
                 proof {
-                    reveal(Seq::fold_left);
                     assert(s =~= Seq::<T>::empty());
                 }
                 return id;
@@ -398,9 +396,6 @@ pub mod ReduceContractMtEph {
 
                     s.lemma_fold_left_split(id, spec_f, (n - 1) as int);
                     assert(s_last_part =~= seq![s[(n - 1) as int]]);
-
-                    reveal(Seq::fold_left);
-
                     assert(s_even.len() >= 2 && s_even.len() % 2 == 0) by {
                         assert(s_even.len() == n - 1);
                     }

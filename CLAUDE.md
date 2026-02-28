@@ -113,6 +113,8 @@ minor). You bring:
   has vision limitations and cannot easily read terminal popups.
 - **Show reasoning** directly in response text before taking action ("**Reasoning:**" section).
 - **All tables must be indexed** with a `#` column in column zero.
+- **Tables referencing source files** must include a **Chap** column (just the number, e.g. `36`)
+  and a **File** column (full file name, e.g. `QuickSortStEph.rs`).
 - **Table cells max 40 characters.** Abbreviate, drop redundant words, or use footnotes.
 - **Show module filenames** (e.g., `src/ChapNN/File.rs`) when providing info about modules.
 - **No Python scripts.** All reusable tools must be Rust. Need explicit permission for even

@@ -1,0 +1,21 @@
+---
+description: Tables must include chapter number and full file name columns
+globs:
+alwaysApply: true
+---
+
+# Table Chapter and File Columns
+
+All tables that reference source files must include:
+
+1. A **Chap** column containing just the chapter number (e.g., `36`, not `Chap36`).
+2. A **File** column containing the full file name (e.g., `QuickSortStEph.rs`).
+
+Do not abbreviate or omit the file name. Do not fold the chapter number into the file path.
+
+## Example
+
+| # | Chap | File | Function | Issue |
+|---|:----:|------|----------|-------|
+| 1 | 36 | QuickSortStEph.rs | `sort_vec` | Recursive pivot bug |
+| 2 | 36 | QuickSortMtEph.rs | `sort_vec` | Same bug |

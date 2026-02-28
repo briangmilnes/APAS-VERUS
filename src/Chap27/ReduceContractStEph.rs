@@ -197,7 +197,6 @@ pub mod ReduceContractStEph {
             // Base case: empty
             if n == 0 {
                 proof {
-                    reveal(Seq::fold_left);
                     assert(s =~= Seq::<T>::empty());
                 }
                 return id;
