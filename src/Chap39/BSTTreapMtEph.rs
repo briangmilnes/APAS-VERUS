@@ -76,7 +76,7 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    closed spec fn spec_height_link<T: StTInMtT + Ord>(link: &Link<T>) -> nat
+    pub open spec fn spec_height_link<T: StTInMtT + Ord>(link: &Link<T>) -> nat
         decreases *link,
     {
         match link {

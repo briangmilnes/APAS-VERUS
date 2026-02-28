@@ -39,7 +39,7 @@ pub mod BSTParaStEph {
     pub struct BstParaWf;
 
     impl<T: StT + Ord> RwLockPredicate<Option<Box<NodeInner<T>>>> for BstParaWf {
-        closed spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
+        open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
             match v {
                 Option::None => true,
                 Option::Some(box_node) => (*box_node).size >= 1,
@@ -57,11 +57,11 @@ pub mod BSTParaStEph {
 
     #[verifier::reject_recursive_types(T)]
     #[derive(Debug)]
-    struct NodeInner<T: StT + Ord> {
-        key: T,
-        size: usize,
-        left: ParamBST<T>,
-        right: ParamBST<T>,
+    pub struct NodeInner<T: StT + Ord> {
+        pub key: T,
+        pub size: usize,
+        pub left: ParamBST<T>,
+        pub right: ParamBST<T>,
     }
 
     #[verifier::reject_recursive_types(T)]
@@ -78,7 +78,7 @@ pub mod BSTParaStEph {
 
     impl<T: StT + Ord> ParamBST<T> {
         #[verifier::external_body]
-        pub closed spec fn spec_set_view(&self) -> Set<<T as View>::V> {
+        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
             Set::empty()
         }
     }
