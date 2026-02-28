@@ -1,6 +1,6 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 36 (Multi-threaded): Quicksort over `ArraySeqMtEph`.
-//! Three self-recursive functions: qsort_first, qsort_median3, qsort_random.
+//! Three self-recursive trait methods: quick_sort_first, quick_sort_median3, quick_sort_random.
 //! Each applies its pivot strategy at every recursive level.
 //! Parallel recursion via ParaPair! for left/right subarrays after partition.
 
@@ -46,7 +46,7 @@ pub mod QuickSortMtEph {
     }
 
     /// Median of three values: returns the value that is neither min nor max.
-    spec fn spec_median_of_three<T: TotalOrder>(a: T, b: T, c: T) -> T {
+    pub open spec fn spec_median_of_three<T: TotalOrder>(a: T, b: T, c: T) -> T {
         if T::le(a, b) {
             if T::le(b, c) { b }
             else if T::le(a, c) { c }
@@ -184,535 +184,551 @@ pub mod QuickSortMtEph {
         /// - Claude-Opus-4.6: Agrees.
         fn quick_sort_first(a: &mut ArraySeqMtEphS<T>)
             requires old(a).spec_len() <= usize::MAX,
-            ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>());
+            ensures
+                a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>()),
+                a.spec_len() == old(a).spec_len(),
+            decreases old(a).spec_len();
 
         /// Quicksort with median-of-three pivot. ParaPair! recursion.
         /// - APAS: Work O(n^2) worst / O(n lg n) sorted, Span O(n) — sequential partition.
         /// - Claude-Opus-4.6: Agrees.
         fn quick_sort_median3(a: &mut ArraySeqMtEphS<T>)
             requires old(a).spec_len() <= usize::MAX,
-            ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>());
+            ensures
+                a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>()),
+                a.spec_len() == old(a).spec_len(),
+            decreases old(a).spec_len();
 
         /// Quicksort with random pivot. ParaPair! recursion.
         /// - APAS: Work O(n lg n) expected, Span O(n) — sequential partition.
         /// - Claude-Opus-4.6: Agrees.
         fn quick_sort_random(a: &mut ArraySeqMtEphS<T>)
             requires old(a).spec_len() <= usize::MAX,
-            ensures a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>());
+            ensures
+                a.seq@ =~= old(a).seq@.sort_by(spec_leq::<T>()),
+                a.spec_len() == old(a).spec_len(),
+            decreases old(a).spec_len();
+
+        /// Compute the median of three values.
+        fn median_of_three(a: T, b: T, c: T) -> (median: T)
+            ensures
+                median == a || median == b || median == c,
+                median == spec_median_of_three(a, b, c);
+
+        /// Returns index of median among a[0], a[n/2], a[n-1].
+        fn median3_pivot_idx(a: &ArraySeqMtEphS<T>, n: usize) -> (idx: usize)
+            requires n >= 2, n == a.spec_len(),
+            ensures
+                idx < n,
+                idx == 0 || idx == n / 2 || idx == n - 1,
+                a.seq@[idx as int] == spec_median_of_three(a.seq@[0], a.seq@[(n / 2) as int], a.seq@[(n - 1) as int]);
+
+        /// Concatenate three ArraySeqMtEphS into one Vec.
+        fn concat_three(
+            left: &ArraySeqMtEphS<T>,
+            mid: &ArraySeqMtEphS<T>,
+            right: &ArraySeqMtEphS<T>,
+        ) -> (out: Vec<T>)
+            requires left.spec_len() + mid.spec_len() + right.spec_len() <= usize::MAX,
+            ensures out@ =~= left.seq@ + mid.seq@ + right.seq@;
     }
 
     // 9. impls
 
-    /// Base case: arrays of length 0 or 1 are already sorted.
-    fn qsort_base_case<T: TotalOrder + Copy>(a: &ArraySeqMtEphS<T>) -> (sorted: Vec<T>)
-        requires a.spec_len() <= 1, a.spec_len() <= usize::MAX,
-        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())
-    {
-        let n = a.length();
-        let ghost s = a.seq@;
-        let ghost leq = spec_leq::<T>();
-        if n == 0 {
-            proof {
-                lemma_total_ordering::<T>();
-                s.lemma_sort_by_ensures(leq);
-                assert(s.to_multiset().len() == s.len());
-                assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
-                assert(s.sort_by(leq).to_multiset() =~= s.to_multiset());
-                assert(s.sort_by(leq).len() == s.len());
-            }
-            Vec::new()
-        } else {
-            let elem = *a.nth(0);
-            let mut r: Vec<T> = Vec::new();
-            r.push(elem);
-            proof {
-                lemma_total_ordering::<T>();
-                s.lemma_sort_by_ensures(leq);
-                assert(sorted_by(s, leq));
-                vstd::seq_lib::lemma_sorted_unique(s, s.sort_by(leq), leq);
-                assert(s.sort_by(leq) =~= s);
-                assert(r@ =~= s);
-            }
-            r
-        }
-    }
-
-    fn median_of_three<T: TotalOrder + Copy>(a: T, b: T, c: T) -> (median: T)
-        ensures
-            median == a || median == b || median == c,
-            median == spec_median_of_three(a, b, c),
-    {
-        match TotalOrder::cmp(&a, &b) {
-            core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
-                proof { T::reflexive(a); }
-                match TotalOrder::cmp(&b, &c) {
-                    core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
-                        proof { T::reflexive(b); }
-                        b
-                    }
-                    core::cmp::Ordering::Greater => {
-                        proof { if T::le(b, c) { T::antisymmetric(b, c); } }
-                        match TotalOrder::cmp(&a, &c) {
-                            core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
-                                proof { T::reflexive(a); }
-                                c
-                            }
-                            core::cmp::Ordering::Greater => {
-                                proof { if T::le(a, c) { T::antisymmetric(a, c); } }
-                                a
-                            }
-                        }
-                    }
-                }
-            }
-            core::cmp::Ordering::Greater => {
-                proof { if T::le(a, b) { T::antisymmetric(a, b); } }
-                match TotalOrder::cmp(&a, &c) {
-                    core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
-                        proof { T::reflexive(a); }
-                        a
-                    }
-                    core::cmp::Ordering::Greater => {
-                        proof { if T::le(a, c) { T::antisymmetric(a, c); } }
-                        match TotalOrder::cmp(&b, &c) {
-                            core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
-                                proof { T::reflexive(b); }
-                                c
-                            }
-                            core::cmp::Ordering::Greater => {
-                                proof { if T::le(b, c) { T::antisymmetric(b, c); } }
-                                b
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /// Returns index of median among a[0], a[n/2], a[n-1].
-    fn median3_pivot_idx<T: TotalOrder + Copy>(a: &ArraySeqMtEphS<T>, n: usize) -> (idx: usize)
-        requires n >= 2, n == a.spec_len(),
-        ensures
-            idx < n,
-            idx == 0 || idx == n / 2 || idx == n - 1,
-            a.seq@[idx as int] == spec_median_of_three(a.seq@[0], a.seq@[(n / 2) as int], a.seq@[(n - 1) as int]),
-    {
-        let first = *a.nth(0);
-        let mid = *a.nth(n / 2);
-        let last = *a.nth(n - 1);
-        let median = median_of_three(first, mid, last);
-        match TotalOrder::cmp(a.nth(0), &median) {
-            core::cmp::Ordering::Equal => 0,
-            _ => match TotalOrder::cmp(a.nth(n / 2), &median) {
-                core::cmp::Ordering::Equal => n / 2,
-                _ => n - 1,
-            },
-        }
-    }
-
-    /// Concatenate three ArraySeqMtEphS into one Vec.
-    fn concat_three<T: TotalOrder + Copy>(
-        left: &ArraySeqMtEphS<T>,
-        mid: &ArraySeqMtEphS<T>,
-        right: &ArraySeqMtEphS<T>,
-    ) -> (out: Vec<T>)
-        requires left.spec_len() + mid.spec_len() + right.spec_len() <= usize::MAX,
-        ensures out@ =~= left.seq@ + mid.seq@ + right.seq@,
-    {
-        let sl = left.length();
-        let el = mid.length();
-        let sr = right.length();
-        let mut out: Vec<T> = Vec::new();
-
-        let mut j: usize = 0;
-        while j < sl
-            invariant
-                0 <= j <= sl, sl == left.spec_len(), el == mid.spec_len(),
-                sr == right.spec_len(), sl + el + sr <= usize::MAX,
-                out@.len() == j as nat,
-                forall|k: int| 0 <= k < j as int ==>
-                    #[trigger] out@[k] == left.seq@[k],
-            decreases sl - j,
-        {
-            out.push(*left.nth(j));
-            j = j + 1;
-        }
-
-        j = 0;
-        while j < el
-            invariant
-                0 <= j <= el, sl == left.spec_len(), el == mid.spec_len(),
-                sr == right.spec_len(), sl + el + sr <= usize::MAX,
-                out@.len() == (sl + j) as nat,
-                forall|k: int| 0 <= k < sl as int ==>
-                    #[trigger] out@[k] == left.seq@[k],
-                forall|k: int| 0 <= k < j as int ==>
-                    #[trigger] out@[(sl + k) as int] == mid.seq@[k],
-            decreases el - j,
-        {
-            out.push(*mid.nth(j));
-            j = j + 1;
-        }
-
-        j = 0;
-        while j < sr
-            invariant
-                0 <= j <= sr, sl == left.spec_len(), el == mid.spec_len(),
-                sr == right.spec_len(), sl + el + sr <= usize::MAX,
-                out@.len() == (sl + el + j) as nat,
-                forall|k: int| 0 <= k < sl as int ==>
-                    #[trigger] out@[k] == left.seq@[k],
-                forall|k: int| 0 <= k < el as int ==>
-                    #[trigger] out@[(sl + k) as int] == mid.seq@[k],
-                forall|k: int| 0 <= k < j as int ==>
-                    #[trigger] out@[(sl + el + k) as int] == right.seq@[k],
-            decreases sr - j,
-        {
-            out.push(*right.nth(j));
-            j = j + 1;
-        }
-
-        proof {
-            let ghost l = left.seq@;
-            let ghost m = mid.seq@;
-            let ghost r = right.seq@;
-            let ghost target = l + m + r;
-            assert(out@.len() == target.len());
-            assert forall|k: int| 0 <= k < out@.len()
-                implies out@[k] == #[trigger] target[k] by
-            {
-                if k < sl as int {
-                    assert(out@[k] == left.seq@[k]);
-                    assert(target[k] == l[k]);
-                } else if k < (sl + el) as int {
-                    let kp = k - sl as int;
-                    assert(out@[(sl as int + kp)] == mid.seq@[kp]);
-                    assert(target[k] == m[kp]);
-                } else {
-                    let kp = k - sl as int - el as int;
-                    assert(out@[(sl as int + el as int + kp)] == right.seq@[kp]);
-                    assert(target[k] == r[kp]);
-                }
-            };
-        }
-
-        out
-    }
-
-    /// Quicksort with first-element pivot. Self-recursive via ParaPair!.
-    fn qsort_first<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (sorted: Vec<T>)
-        requires a.spec_len() <= usize::MAX,
-        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())
-        decreases a.spec_len(),
-    {
-        let n = a.length();
-        if n <= 1 { return qsort_base_case(a); }
-        let ghost s = a.seq@;
-        let ghost leq = spec_leq::<T>();
-        let pivot_idx: usize = 0;
-        let pivot = *a.nth(pivot_idx);
-
-        let mut left: Vec<T> = Vec::new();
-        let mut right: Vec<T> = Vec::new();
-        let mut equals: Vec<T> = Vec::new();
-        let mut i: usize = 0;
-        while i < n
-            invariant
-                0 <= i <= n, n == a.spec_len(), n <= usize::MAX, n >= 2,
-                pivot_idx < n, pivot == s[pivot_idx as int], s == a.seq@,
-                leq == spec_leq::<T>(),
-                forall|j: int| 0 <= j < left@.len() ==>
-                    (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
-                forall|j: int| 0 <= j < right@.len() ==>
-                    (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
-                forall|j: int| 0 <= j < equals@.len() ==>
-                    (#[trigger] equals@[j]) == pivot,
-                left@.len() + right@.len() + equals@.len() == i,
-                i > pivot_idx ==> left@.len() + right@.len() < i,
-                s.subrange(0, i as int).to_multiset() =~=
-                    left@.to_multiset().add(right@.to_multiset()).add(equals@.to_multiset()),
-            decreases n - i,
-        {
-            let elem = *a.nth(i);
-            proof {
-                assert(s.subrange(0, (i + 1) as int) =~=
-                    s.subrange(0, i as int).push(s[i as int]));
-            }
-            match TotalOrder::cmp(&elem, &pivot) {
-                core::cmp::Ordering::Less => {
-                    proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
-                    left.push(elem);
-                },
-                core::cmp::Ordering::Greater => {
-                    proof { assert(T::le(pivot, elem)); assert(elem != pivot); }
-                    right.push(elem);
-                },
-                core::cmp::Ordering::Equal => {
-                    equals.push(elem);
-                },
-            }
-            i = i + 1;
-        }
-
-        proof {
-            assert(s.subrange(0, n as int) =~= s);
-            assert(left@.len() + right@.len() < n);
-            assert(equals@.len() >= 1);
-        }
-
-        let ghost left_view = left@;
-        let ghost right_view = right@;
-        let left_a = ArraySeqMtEphS { seq: left };
-        let right_a = ArraySeqMtEphS { seq: right };
-        let equals_a = ArraySeqMtEphS { seq: equals };
-        let f1 = move || -> (r: Vec<T>)
-            ensures r@ =~= left_view.sort_by(spec_leq::<T>())
-        { qsort_first(&left_a) };
-        let f2 = move || -> (r: Vec<T>)
-            ensures r@ =~= right_view.sort_by(spec_leq::<T>())
-        { qsort_first(&right_a) };
-        let Pair(sorted_left, sorted_right) = crate::ParaPair!(f1, f2);
-        let sorted_left_a = ArraySeqMtEphS { seq: sorted_left };
-        let sorted_right_a = ArraySeqMtEphS { seq: sorted_right };
-
-        proof {
-            lemma_total_ordering::<T>();
-            left_view.lemma_sort_by_ensures(leq);
-            right_view.lemma_sort_by_ensures(leq);
-            assert(left_view.to_multiset().len() == left_view.len());
-            assert(left_view.sort_by(leq).to_multiset().len() == left_view.sort_by(leq).len());
-            assert(left_view.sort_by(leq).to_multiset() =~= left_view.to_multiset());
-            assert(sorted_left_a.seq@.len() == left_view.len());
-            assert(right_view.to_multiset().len() == right_view.len());
-            assert(right_view.sort_by(leq).to_multiset().len() == right_view.sort_by(leq).len());
-            assert(right_view.sort_by(leq).to_multiset() =~= right_view.to_multiset());
-            assert(sorted_right_a.seq@.len() == right_view.len());
-        }
-
-        let sorted = concat_three(&sorted_left_a, &equals_a, &sorted_right_a);
-        proof {
-            lemma_partition_sort_concat::<T>(
-                s, left_view, right_view, equals_a.seq@,
-                sorted_left_a.seq@, sorted_right_a.seq@, pivot,
-            );
-        }
-        sorted
-    }
-
-    /// Quicksort with median-of-three pivot. Self-recursive via ParaPair!.
-    fn qsort_median3<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (sorted: Vec<T>)
-        requires a.spec_len() <= usize::MAX,
-        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())
-        decreases a.spec_len(),
-    {
-        let n = a.length();
-        if n <= 1 { return qsort_base_case(a); }
-        let ghost s = a.seq@;
-        let ghost leq = spec_leq::<T>();
-        let pivot_idx = median3_pivot_idx(a, n);
-        let pivot = *a.nth(pivot_idx);
-
-        let mut left: Vec<T> = Vec::new();
-        let mut right: Vec<T> = Vec::new();
-        let mut equals: Vec<T> = Vec::new();
-        let mut i: usize = 0;
-        while i < n
-            invariant
-                0 <= i <= n, n == a.spec_len(), n <= usize::MAX, n >= 2,
-                pivot_idx < n, pivot == s[pivot_idx as int], s == a.seq@,
-                leq == spec_leq::<T>(),
-                forall|j: int| 0 <= j < left@.len() ==>
-                    (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
-                forall|j: int| 0 <= j < right@.len() ==>
-                    (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
-                forall|j: int| 0 <= j < equals@.len() ==>
-                    (#[trigger] equals@[j]) == pivot,
-                left@.len() + right@.len() + equals@.len() == i,
-                i > pivot_idx ==> left@.len() + right@.len() < i,
-                s.subrange(0, i as int).to_multiset() =~=
-                    left@.to_multiset().add(right@.to_multiset()).add(equals@.to_multiset()),
-            decreases n - i,
-        {
-            let elem = *a.nth(i);
-            proof {
-                assert(s.subrange(0, (i + 1) as int) =~=
-                    s.subrange(0, i as int).push(s[i as int]));
-            }
-            match TotalOrder::cmp(&elem, &pivot) {
-                core::cmp::Ordering::Less => {
-                    proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
-                    left.push(elem);
-                },
-                core::cmp::Ordering::Greater => {
-                    proof { assert(T::le(pivot, elem)); assert(elem != pivot); }
-                    right.push(elem);
-                },
-                core::cmp::Ordering::Equal => {
-                    equals.push(elem);
-                },
-            }
-            i = i + 1;
-        }
-
-        proof {
-            assert(s.subrange(0, n as int) =~= s);
-            assert(left@.len() + right@.len() < n);
-            assert(equals@.len() >= 1);
-        }
-
-        let ghost left_view = left@;
-        let ghost right_view = right@;
-        let left_a = ArraySeqMtEphS { seq: left };
-        let right_a = ArraySeqMtEphS { seq: right };
-        let equals_a = ArraySeqMtEphS { seq: equals };
-        let f1 = move || -> (r: Vec<T>)
-            ensures r@ =~= left_view.sort_by(spec_leq::<T>())
-        { qsort_median3(&left_a) };
-        let f2 = move || -> (r: Vec<T>)
-            ensures r@ =~= right_view.sort_by(spec_leq::<T>())
-        { qsort_median3(&right_a) };
-        let Pair(sorted_left, sorted_right) = crate::ParaPair!(f1, f2);
-        let sorted_left_a = ArraySeqMtEphS { seq: sorted_left };
-        let sorted_right_a = ArraySeqMtEphS { seq: sorted_right };
-
-        proof {
-            lemma_total_ordering::<T>();
-            left_view.lemma_sort_by_ensures(leq);
-            right_view.lemma_sort_by_ensures(leq);
-            assert(left_view.to_multiset().len() == left_view.len());
-            assert(left_view.sort_by(leq).to_multiset().len() == left_view.sort_by(leq).len());
-            assert(left_view.sort_by(leq).to_multiset() =~= left_view.to_multiset());
-            assert(sorted_left_a.seq@.len() == left_view.len());
-            assert(right_view.to_multiset().len() == right_view.len());
-            assert(right_view.sort_by(leq).to_multiset().len() == right_view.sort_by(leq).len());
-            assert(right_view.sort_by(leq).to_multiset() =~= right_view.to_multiset());
-            assert(sorted_right_a.seq@.len() == right_view.len());
-        }
-
-        let sorted = concat_three(&sorted_left_a, &equals_a, &sorted_right_a);
-        proof {
-            lemma_partition_sort_concat::<T>(
-                s, left_view, right_view, equals_a.seq@,
-                sorted_left_a.seq@, sorted_right_a.seq@, pivot,
-            );
-        }
-        sorted
-    }
-
-    /// Quicksort with random pivot. Self-recursive via ParaPair!.
-    fn qsort_random<T: TotalOrder + Copy + Send + 'static>(a: &ArraySeqMtEphS<T>) -> (sorted: Vec<T>)
-        requires a.spec_len() <= usize::MAX,
-        ensures sorted@ =~= a.seq@.sort_by(spec_leq::<T>())
-        decreases a.spec_len(),
-    {
-        let n = a.length();
-        if n <= 1 { return qsort_base_case(a); }
-        let ghost s = a.seq@;
-        let ghost leq = spec_leq::<T>();
-        let pivot_idx = random_usize_range(0, n);
-        let pivot = *a.nth(pivot_idx);
-
-        let mut left: Vec<T> = Vec::new();
-        let mut right: Vec<T> = Vec::new();
-        let mut equals: Vec<T> = Vec::new();
-        let mut i: usize = 0;
-        while i < n
-            invariant
-                0 <= i <= n, n == a.spec_len(), n <= usize::MAX, n >= 2,
-                pivot_idx < n, pivot == s[pivot_idx as int], s == a.seq@,
-                leq == spec_leq::<T>(),
-                forall|j: int| 0 <= j < left@.len() ==>
-                    (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
-                forall|j: int| 0 <= j < right@.len() ==>
-                    (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
-                forall|j: int| 0 <= j < equals@.len() ==>
-                    (#[trigger] equals@[j]) == pivot,
-                left@.len() + right@.len() + equals@.len() == i,
-                i > pivot_idx ==> left@.len() + right@.len() < i,
-                s.subrange(0, i as int).to_multiset() =~=
-                    left@.to_multiset().add(right@.to_multiset()).add(equals@.to_multiset()),
-            decreases n - i,
-        {
-            let elem = *a.nth(i);
-            proof {
-                assert(s.subrange(0, (i + 1) as int) =~=
-                    s.subrange(0, i as int).push(s[i as int]));
-            }
-            match TotalOrder::cmp(&elem, &pivot) {
-                core::cmp::Ordering::Less => {
-                    proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
-                    left.push(elem);
-                },
-                core::cmp::Ordering::Greater => {
-                    proof { assert(T::le(pivot, elem)); assert(elem != pivot); }
-                    right.push(elem);
-                },
-                core::cmp::Ordering::Equal => {
-                    equals.push(elem);
-                },
-            }
-            i = i + 1;
-        }
-
-        proof {
-            assert(s.subrange(0, n as int) =~= s);
-            assert(left@.len() + right@.len() < n);
-            assert(equals@.len() >= 1);
-        }
-
-        let ghost left_view = left@;
-        let ghost right_view = right@;
-        let left_a = ArraySeqMtEphS { seq: left };
-        let right_a = ArraySeqMtEphS { seq: right };
-        let equals_a = ArraySeqMtEphS { seq: equals };
-        let f1 = move || -> (r: Vec<T>)
-            ensures r@ =~= left_view.sort_by(spec_leq::<T>())
-        { qsort_random(&left_a) };
-        let f2 = move || -> (r: Vec<T>)
-            ensures r@ =~= right_view.sort_by(spec_leq::<T>())
-        { qsort_random(&right_a) };
-        let Pair(sorted_left, sorted_right) = crate::ParaPair!(f1, f2);
-        let sorted_left_a = ArraySeqMtEphS { seq: sorted_left };
-        let sorted_right_a = ArraySeqMtEphS { seq: sorted_right };
-
-        proof {
-            lemma_total_ordering::<T>();
-            left_view.lemma_sort_by_ensures(leq);
-            right_view.lemma_sort_by_ensures(leq);
-            assert(left_view.to_multiset().len() == left_view.len());
-            assert(left_view.sort_by(leq).to_multiset().len() == left_view.sort_by(leq).len());
-            assert(left_view.sort_by(leq).to_multiset() =~= left_view.to_multiset());
-            assert(sorted_left_a.seq@.len() == left_view.len());
-            assert(right_view.to_multiset().len() == right_view.len());
-            assert(right_view.sort_by(leq).to_multiset().len() == right_view.sort_by(leq).len());
-            assert(right_view.sort_by(leq).to_multiset() =~= right_view.to_multiset());
-            assert(sorted_right_a.seq@.len() == right_view.len());
-        }
-
-        let sorted = concat_three(&sorted_left_a, &equals_a, &sorted_right_a);
-        proof {
-            lemma_partition_sort_concat::<T>(
-                s, left_view, right_view, equals_a.seq@,
-                sorted_left_a.seq@, sorted_right_a.seq@, pivot,
-            );
-        }
-        sorted
-    }
-
     impl<T: TotalOrder + Copy + Send + 'static> QuickSortMtEphTrait<T> for ArraySeqMtEphS<T> {
-        fn quick_sort_first(a: &mut ArraySeqMtEphS<T>) {
-            let sorted = qsort_first(&*a);
+        fn median_of_three(a: T, b: T, c: T) -> (median: T) {
+            match TotalOrder::cmp(&a, &b) {
+                core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
+                    proof { T::reflexive(a); }
+                    match TotalOrder::cmp(&b, &c) {
+                        core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
+                            proof { T::reflexive(b); }
+                            b
+                        }
+                        core::cmp::Ordering::Greater => {
+                            proof { if T::le(b, c) { T::antisymmetric(b, c); } }
+                            match TotalOrder::cmp(&a, &c) {
+                                core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
+                                    proof { T::reflexive(a); }
+                                    c
+                                }
+                                core::cmp::Ordering::Greater => {
+                                    proof { if T::le(a, c) { T::antisymmetric(a, c); } }
+                                    a
+                                }
+                            }
+                        }
+                    }
+                }
+                core::cmp::Ordering::Greater => {
+                    proof { if T::le(a, b) { T::antisymmetric(a, b); } }
+                    match TotalOrder::cmp(&a, &c) {
+                        core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
+                            proof { T::reflexive(a); }
+                            a
+                        }
+                        core::cmp::Ordering::Greater => {
+                            proof { if T::le(a, c) { T::antisymmetric(a, c); } }
+                            match TotalOrder::cmp(&b, &c) {
+                                core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
+                                    proof { T::reflexive(b); }
+                                    c
+                                }
+                                core::cmp::Ordering::Greater => {
+                                    proof { if T::le(b, c) { T::antisymmetric(b, c); } }
+                                    b
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        fn median3_pivot_idx(a: &ArraySeqMtEphS<T>, n: usize) -> (idx: usize) {
+            let first = *a.nth(0);
+            let mid = *a.nth(n / 2);
+            let last = *a.nth(n - 1);
+            let median = Self::median_of_three(first, mid, last);
+            match TotalOrder::cmp(a.nth(0), &median) {
+                core::cmp::Ordering::Equal => 0,
+                _ => match TotalOrder::cmp(a.nth(n / 2), &median) {
+                    core::cmp::Ordering::Equal => n / 2,
+                    _ => n - 1,
+                },
+            }
+        }
+
+        fn concat_three(
+            left: &ArraySeqMtEphS<T>,
+            mid: &ArraySeqMtEphS<T>,
+            right: &ArraySeqMtEphS<T>,
+        ) -> (out: Vec<T>) {
+            let sl = left.length();
+            let el = mid.length();
+            let sr = right.length();
+            let mut out: Vec<T> = Vec::new();
+
+            let mut j: usize = 0;
+            while j < sl
+                invariant
+                    0 <= j <= sl, sl == left.spec_len(), el == mid.spec_len(),
+                    sr == right.spec_len(), sl + el + sr <= usize::MAX,
+                    out@.len() == j as nat,
+                    forall|k: int| 0 <= k < j as int ==>
+                        #[trigger] out@[k] == left.seq@[k],
+                decreases sl - j,
+            {
+                out.push(*left.nth(j));
+                j = j + 1;
+            }
+
+            j = 0;
+            while j < el
+                invariant
+                    0 <= j <= el, sl == left.spec_len(), el == mid.spec_len(),
+                    sr == right.spec_len(), sl + el + sr <= usize::MAX,
+                    out@.len() == (sl + j) as nat,
+                    forall|k: int| 0 <= k < sl as int ==>
+                        #[trigger] out@[k] == left.seq@[k],
+                    forall|k: int| 0 <= k < j as int ==>
+                        #[trigger] out@[(sl + k) as int] == mid.seq@[k],
+                decreases el - j,
+            {
+                out.push(*mid.nth(j));
+                j = j + 1;
+            }
+
+            j = 0;
+            while j < sr
+                invariant
+                    0 <= j <= sr, sl == left.spec_len(), el == mid.spec_len(),
+                    sr == right.spec_len(), sl + el + sr <= usize::MAX,
+                    out@.len() == (sl + el + j) as nat,
+                    forall|k: int| 0 <= k < sl as int ==>
+                        #[trigger] out@[k] == left.seq@[k],
+                    forall|k: int| 0 <= k < el as int ==>
+                        #[trigger] out@[(sl + k) as int] == mid.seq@[k],
+                    forall|k: int| 0 <= k < j as int ==>
+                        #[trigger] out@[(sl + el + k) as int] == right.seq@[k],
+                decreases sr - j,
+            {
+                out.push(*right.nth(j));
+                j = j + 1;
+            }
+
+            proof {
+                let ghost l = left.seq@;
+                let ghost m = mid.seq@;
+                let ghost r = right.seq@;
+                let ghost target = l + m + r;
+                assert(out@.len() == target.len());
+                assert forall|k: int| 0 <= k < out@.len()
+                    implies out@[k] == #[trigger] target[k] by
+                {
+                    if k < sl as int {
+                        assert(out@[k] == left.seq@[k]);
+                        assert(target[k] == l[k]);
+                    } else if k < (sl + el) as int {
+                        let kp = k - sl as int;
+                        assert(out@[(sl as int + kp)] == mid.seq@[kp]);
+                        assert(target[k] == m[kp]);
+                    } else {
+                        let kp = k - sl as int - el as int;
+                        assert(out@[(sl as int + el as int + kp)] == right.seq@[kp]);
+                        assert(target[k] == r[kp]);
+                    }
+                };
+            }
+
+            out
+        }
+
+        fn quick_sort_first(a: &mut ArraySeqMtEphS<T>)
+            decreases old(a).spec_len(),
+        {
+            let n = a.length();
+            if n <= 1 {
+                let ghost s = a.seq@;
+                let ghost leq = spec_leq::<T>();
+                proof {
+                    lemma_total_ordering::<T>();
+                    s.lemma_sort_by_ensures(leq);
+                    if s.len() == 0 {
+                        assert(s.to_multiset().len() == s.len());
+                        assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
+                        assert(s.sort_by(leq).to_multiset() =~= s.to_multiset());
+                        assert(s.sort_by(leq).len() == s.len());
+                    } else {
+                        assert(sorted_by(s, leq));
+                        vstd::seq_lib::lemma_sorted_unique(s, s.sort_by(leq), leq);
+                    }
+                }
+                return;
+            }
+            let ghost s = a.seq@;
+            let ghost leq = spec_leq::<T>();
+            let pivot_idx: usize = 0;
+            let pivot = *a.nth(pivot_idx);
+
+            let mut left: Vec<T> = Vec::new();
+            let mut right: Vec<T> = Vec::new();
+            let mut equals: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    0 <= i <= n, n == a.spec_len(), n <= usize::MAX, n >= 2,
+                    pivot_idx < n, pivot == s[pivot_idx as int], s == a.seq@,
+                    leq == spec_leq::<T>(),
+                    forall|j: int| 0 <= j < left@.len() ==>
+                        (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
+                    forall|j: int| 0 <= j < right@.len() ==>
+                        (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+                    forall|j: int| 0 <= j < equals@.len() ==>
+                        (#[trigger] equals@[j]) == pivot,
+                    left@.len() + right@.len() + equals@.len() == i,
+                    i > pivot_idx ==> left@.len() + right@.len() < i,
+                    s.subrange(0, i as int).to_multiset() =~=
+                        left@.to_multiset().add(right@.to_multiset()).add(equals@.to_multiset()),
+                decreases n - i,
+            {
+                let elem = *a.nth(i);
+                proof {
+                    assert(s.subrange(0, (i + 1) as int) =~=
+                        s.subrange(0, i as int).push(s[i as int]));
+                }
+                match TotalOrder::cmp(&elem, &pivot) {
+                    core::cmp::Ordering::Less => {
+                        proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
+                        left.push(elem);
+                    },
+                    core::cmp::Ordering::Greater => {
+                        proof { assert(T::le(pivot, elem)); assert(elem != pivot); }
+                        right.push(elem);
+                    },
+                    core::cmp::Ordering::Equal => {
+                        equals.push(elem);
+                    },
+                }
+                i = i + 1;
+            }
+
+            proof {
+                assert(s.subrange(0, n as int) =~= s);
+                assert(left@.len() + right@.len() < n);
+                assert(equals@.len() >= 1);
+            }
+
+            let ghost left_view = left@;
+            let ghost right_view = right@;
+            let left_a = ArraySeqMtEphS { seq: left };
+            let right_a = ArraySeqMtEphS { seq: right };
+            let equals_a = ArraySeqMtEphS { seq: equals };
+            let f1 = move || -> (r: Vec<T>)
+                ensures r@ =~= left_view.sort_by(spec_leq::<T>()), r@.len() == left_view.len()
+            {
+                let mut la = left_a;
+                Self::quick_sort_first(&mut la);
+                la.seq
+            };
+            let f2 = move || -> (r: Vec<T>)
+                ensures r@ =~= right_view.sort_by(spec_leq::<T>()), r@.len() == right_view.len()
+            {
+                let mut ra = right_a;
+                Self::quick_sort_first(&mut ra);
+                ra.seq
+            };
+            let Pair(sorted_left, sorted_right) = crate::ParaPair!(f1, f2);
+            let sorted_left_a = ArraySeqMtEphS { seq: sorted_left };
+            let sorted_right_a = ArraySeqMtEphS { seq: sorted_right };
+
+            proof {
+                lemma_total_ordering::<T>();
+                left_view.lemma_sort_by_ensures(leq);
+                right_view.lemma_sort_by_ensures(leq);
+                assert(sorted_left_a.seq@.len() == left_view.len());
+                assert(sorted_right_a.seq@.len() == right_view.len());
+            }
+
+            let sorted = Self::concat_three(&sorted_left_a, &equals_a, &sorted_right_a);
+            proof {
+                lemma_partition_sort_concat::<T>(
+                    s, left_view, right_view, equals_a.seq@,
+                    sorted_left_a.seq@, sorted_right_a.seq@, pivot,
+                );
+            }
             a.seq = sorted;
         }
 
-        fn quick_sort_median3(a: &mut ArraySeqMtEphS<T>) {
-            let sorted = qsort_median3(&*a);
+        fn quick_sort_median3(a: &mut ArraySeqMtEphS<T>)
+            decreases old(a).spec_len(),
+        {
+            let n = a.length();
+            if n <= 1 {
+                let ghost s = a.seq@;
+                let ghost leq = spec_leq::<T>();
+                proof {
+                    lemma_total_ordering::<T>();
+                    s.lemma_sort_by_ensures(leq);
+                    if s.len() == 0 {
+                        assert(s.to_multiset().len() == s.len());
+                        assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
+                        assert(s.sort_by(leq).to_multiset() =~= s.to_multiset());
+                        assert(s.sort_by(leq).len() == s.len());
+                    } else {
+                        assert(sorted_by(s, leq));
+                        vstd::seq_lib::lemma_sorted_unique(s, s.sort_by(leq), leq);
+                    }
+                }
+                return;
+            }
+            let ghost s = a.seq@;
+            let ghost leq = spec_leq::<T>();
+            let pivot_idx = Self::median3_pivot_idx(&*a, n);
+            let pivot = *a.nth(pivot_idx);
+
+            let mut left: Vec<T> = Vec::new();
+            let mut right: Vec<T> = Vec::new();
+            let mut equals: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    0 <= i <= n, n == a.spec_len(), n <= usize::MAX, n >= 2,
+                    pivot_idx < n, pivot == s[pivot_idx as int], s == a.seq@,
+                    leq == spec_leq::<T>(),
+                    forall|j: int| 0 <= j < left@.len() ==>
+                        (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
+                    forall|j: int| 0 <= j < right@.len() ==>
+                        (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+                    forall|j: int| 0 <= j < equals@.len() ==>
+                        (#[trigger] equals@[j]) == pivot,
+                    left@.len() + right@.len() + equals@.len() == i,
+                    i > pivot_idx ==> left@.len() + right@.len() < i,
+                    s.subrange(0, i as int).to_multiset() =~=
+                        left@.to_multiset().add(right@.to_multiset()).add(equals@.to_multiset()),
+                decreases n - i,
+            {
+                let elem = *a.nth(i);
+                proof {
+                    assert(s.subrange(0, (i + 1) as int) =~=
+                        s.subrange(0, i as int).push(s[i as int]));
+                }
+                match TotalOrder::cmp(&elem, &pivot) {
+                    core::cmp::Ordering::Less => {
+                        proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
+                        left.push(elem);
+                    },
+                    core::cmp::Ordering::Greater => {
+                        proof { assert(T::le(pivot, elem)); assert(elem != pivot); }
+                        right.push(elem);
+                    },
+                    core::cmp::Ordering::Equal => {
+                        equals.push(elem);
+                    },
+                }
+                i = i + 1;
+            }
+
+            proof {
+                assert(s.subrange(0, n as int) =~= s);
+                assert(left@.len() + right@.len() < n);
+                assert(equals@.len() >= 1);
+            }
+
+            let ghost left_view = left@;
+            let ghost right_view = right@;
+            let left_a = ArraySeqMtEphS { seq: left };
+            let right_a = ArraySeqMtEphS { seq: right };
+            let equals_a = ArraySeqMtEphS { seq: equals };
+            let f1 = move || -> (r: Vec<T>)
+                ensures r@ =~= left_view.sort_by(spec_leq::<T>()), r@.len() == left_view.len()
+            {
+                let mut la = left_a;
+                Self::quick_sort_median3(&mut la);
+                la.seq
+            };
+            let f2 = move || -> (r: Vec<T>)
+                ensures r@ =~= right_view.sort_by(spec_leq::<T>()), r@.len() == right_view.len()
+            {
+                let mut ra = right_a;
+                Self::quick_sort_median3(&mut ra);
+                ra.seq
+            };
+            let Pair(sorted_left, sorted_right) = crate::ParaPair!(f1, f2);
+            let sorted_left_a = ArraySeqMtEphS { seq: sorted_left };
+            let sorted_right_a = ArraySeqMtEphS { seq: sorted_right };
+
+            proof {
+                lemma_total_ordering::<T>();
+                left_view.lemma_sort_by_ensures(leq);
+                right_view.lemma_sort_by_ensures(leq);
+                assert(sorted_left_a.seq@.len() == left_view.len());
+                assert(sorted_right_a.seq@.len() == right_view.len());
+            }
+
+            let sorted = Self::concat_three(&sorted_left_a, &equals_a, &sorted_right_a);
+            proof {
+                lemma_partition_sort_concat::<T>(
+                    s, left_view, right_view, equals_a.seq@,
+                    sorted_left_a.seq@, sorted_right_a.seq@, pivot,
+                );
+            }
             a.seq = sorted;
         }
 
-        fn quick_sort_random(a: &mut ArraySeqMtEphS<T>) {
-            let sorted = qsort_random(&*a);
+        fn quick_sort_random(a: &mut ArraySeqMtEphS<T>)
+            decreases old(a).spec_len(),
+        {
+            let n = a.length();
+            if n <= 1 {
+                let ghost s = a.seq@;
+                let ghost leq = spec_leq::<T>();
+                proof {
+                    lemma_total_ordering::<T>();
+                    s.lemma_sort_by_ensures(leq);
+                    if s.len() == 0 {
+                        assert(s.to_multiset().len() == s.len());
+                        assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
+                        assert(s.sort_by(leq).to_multiset() =~= s.to_multiset());
+                        assert(s.sort_by(leq).len() == s.len());
+                    } else {
+                        assert(sorted_by(s, leq));
+                        vstd::seq_lib::lemma_sorted_unique(s, s.sort_by(leq), leq);
+                    }
+                }
+                return;
+            }
+            let ghost s = a.seq@;
+            let ghost leq = spec_leq::<T>();
+            let pivot_idx = random_usize_range(0, n);
+            let pivot = *a.nth(pivot_idx);
+
+            let mut left: Vec<T> = Vec::new();
+            let mut right: Vec<T> = Vec::new();
+            let mut equals: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    0 <= i <= n, n == a.spec_len(), n <= usize::MAX, n >= 2,
+                    pivot_idx < n, pivot == s[pivot_idx as int], s == a.seq@,
+                    leq == spec_leq::<T>(),
+                    forall|j: int| 0 <= j < left@.len() ==>
+                        (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
+                    forall|j: int| 0 <= j < right@.len() ==>
+                        (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+                    forall|j: int| 0 <= j < equals@.len() ==>
+                        (#[trigger] equals@[j]) == pivot,
+                    left@.len() + right@.len() + equals@.len() == i,
+                    i > pivot_idx ==> left@.len() + right@.len() < i,
+                    s.subrange(0, i as int).to_multiset() =~=
+                        left@.to_multiset().add(right@.to_multiset()).add(equals@.to_multiset()),
+                decreases n - i,
+            {
+                let elem = *a.nth(i);
+                proof {
+                    assert(s.subrange(0, (i + 1) as int) =~=
+                        s.subrange(0, i as int).push(s[i as int]));
+                }
+                match TotalOrder::cmp(&elem, &pivot) {
+                    core::cmp::Ordering::Less => {
+                        proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
+                        left.push(elem);
+                    },
+                    core::cmp::Ordering::Greater => {
+                        proof { assert(T::le(pivot, elem)); assert(elem != pivot); }
+                        right.push(elem);
+                    },
+                    core::cmp::Ordering::Equal => {
+                        equals.push(elem);
+                    },
+                }
+                i = i + 1;
+            }
+
+            proof {
+                assert(s.subrange(0, n as int) =~= s);
+                assert(left@.len() + right@.len() < n);
+                assert(equals@.len() >= 1);
+            }
+
+            let ghost left_view = left@;
+            let ghost right_view = right@;
+            let left_a = ArraySeqMtEphS { seq: left };
+            let right_a = ArraySeqMtEphS { seq: right };
+            let equals_a = ArraySeqMtEphS { seq: equals };
+            let f1 = move || -> (r: Vec<T>)
+                ensures r@ =~= left_view.sort_by(spec_leq::<T>()), r@.len() == left_view.len()
+            {
+                let mut la = left_a;
+                Self::quick_sort_random(&mut la);
+                la.seq
+            };
+            let f2 = move || -> (r: Vec<T>)
+                ensures r@ =~= right_view.sort_by(spec_leq::<T>()), r@.len() == right_view.len()
+            {
+                let mut ra = right_a;
+                Self::quick_sort_random(&mut ra);
+                ra.seq
+            };
+            let Pair(sorted_left, sorted_right) = crate::ParaPair!(f1, f2);
+            let sorted_left_a = ArraySeqMtEphS { seq: sorted_left };
+            let sorted_right_a = ArraySeqMtEphS { seq: sorted_right };
+
+            proof {
+                lemma_total_ordering::<T>();
+                left_view.lemma_sort_by_ensures(leq);
+                right_view.lemma_sort_by_ensures(leq);
+                assert(sorted_left_a.seq@.len() == left_view.len());
+                assert(sorted_right_a.seq@.len() == right_view.len());
+            }
+
+            let sorted = Self::concat_three(&sorted_left_a, &equals_a, &sorted_right_a);
+            proof {
+                lemma_partition_sort_concat::<T>(
+                    s, left_view, right_view, equals_a.seq@,
+                    sorted_left_a.seq@, sorted_right_a.seq@, pivot,
+                );
+            }
             a.seq = sorted;
         }
     }
