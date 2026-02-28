@@ -539,6 +539,10 @@ name = "TestBSTSetTreapMtEph"
 path = "tests/Chap39/TestBSTSetTreapMtEph.rs"
 
 [[test]]
+name = "TestBSTTreapMtEph"
+path = "tests/Chap39/TestBSTTreapMtEph.rs"
+
+[[test]]
 name = "TestBSTTreapStEph"
 path = "tests/Chap39/TestBSTTreapStEph.rs"
 

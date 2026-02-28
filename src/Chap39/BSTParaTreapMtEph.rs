@@ -1,5 +1,18 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Parametric multi-threaded Treap (probabilistically balanced BST) with parallel operations.
+
+//  Table of Contents
+//	1. module
+//	4. type definitions
+//	6. spec fns
+//	8. traits
+//	9. impls
+//	12. macros
+//	13. derive impls outside verus!
+
+//	1. module
+
 
 pub mod BSTParaTreapMtEph {
 
@@ -15,26 +28,11 @@ pub mod BSTParaTreapMtEph {
 
     verus! {
 
-    // 4. type definitions
+    //		4. type definitions
 
     /// RwLock predicate for treap nodes. Children live behind separate locks,
     /// so we can only check one-level properties: a present node has size >= 1.
     pub struct TreapWf;
-
-    // 6. spec fns
-
-    pub open spec fn spec_node_wf<T: MtKey>(v: &Option<Box<NodeInner<T>>>) -> bool {
-        match v {
-            None => true,
-            Some(node) => node.size >= 1 && node.size < usize::MAX,
-        }
-    }
-
-    impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for TreapWf {
-        open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
-            spec_node_wf(&v)
-        }
-    }
 
     #[verifier::reject_recursive_types(T)]
     pub enum Exposed<T: MtKey> {
@@ -56,6 +54,25 @@ pub mod BSTParaTreapMtEph {
         pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, TreapWf>>,
     }
 
+
+    //		6. spec fns
+
+    pub open spec fn spec_node_wf<T: MtKey>(v: &Option<Box<NodeInner<T>>>) -> bool {
+        match v {
+            None => true,
+            Some(node) => node.size >= 1 && node.size < usize::MAX,
+        }
+    }
+
+
+    //		9. impls
+
+    impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for TreapWf {
+        open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
+            spec_node_wf(&v)
+        }
+    }
+
     #[verifier::external_body]
     fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, TreapWf>)
         requires spec_node_wf(&val),
@@ -65,7 +82,7 @@ pub mod BSTParaTreapMtEph {
 
     } // verus!
 
-    // 11. derive impls outside verus!
+    //		13. derive impls outside verus!
 
     impl<T: MtKey> Clone for Exposed<T> {
         fn clone(&self) -> Self {
@@ -94,7 +111,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    // 6. free helper functions
+    //		9. impls
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -323,7 +340,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    // 8. traits
+    //		8. traits
 
     pub trait ParamTreapTrait<T: MtKey + 'static>: Sized {
         /// - APAS: Work O(1), Span O(1)
@@ -380,8 +397,6 @@ pub mod BSTParaTreapMtEph {
         /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|)
         fn in_order(&self)                         -> ArraySeqStPerS<T>;
     }
-
-    // 9. impls
 
     impl<T: MtKey + 'static> ParamTreapTrait<T> for ParamTreap<T> {
         /// - APAS: Work O(1), Span O(1)
@@ -512,7 +527,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    // 12. macros
+    //		12. macros
 
     #[macro_export]
     macro_rules! ParamTreapLit {

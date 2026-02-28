@@ -1,13 +1,13 @@
 Verus Style Review
 ==================
 
-Path: ./src/Chap39/BSTTreapStEph.rs
-Codebase: .
+Path: /home/milnes/projects/APAS-VERUS-agent3/src/Chap39
+Codebase: /home/milnes/projects/APAS-VERUS-agent3
 Mode: basic
-Logging to: ./src/Chap39/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent3/src/Chap39/analyses/veracity-review-verus-style.log
 
-Checking 1 files...
+Checking 4 files...
 
 ════════════════════════════════════════════════════════════════
-Summary: 13 passed, 30 warnings in 1 files (checked 1 files)
+Summary: 56 passed, 23 warnings in 4 files (checked 4 files)
 ════════════════════════════════════════════════════════════════

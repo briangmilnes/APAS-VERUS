@@ -32,16 +32,16 @@ pub mod BSTTreapStEph {
 
     type Link<T> = Option<Box<Node<T>>>;
 
-    pub struct Node<T: StT + Ord> {
-        pub key: T,
-        pub priority: u64,
-        pub size: usize,
-        pub left: Link<T>,
-        pub right: Link<T>,
+    struct Node<T: StT + Ord> {
+        key: T,
+        priority: u64,
+        size: usize,
+        left: Link<T>,
+        right: Link<T>,
     }
 
     pub struct BSTTreapStEph<T: StT + Ord> {
-        pub root: Link<T>,
+        root: Link<T>,
     }
 
     pub type BSTreeTreap<T> = BSTTreapStEph<T>;
@@ -49,7 +49,8 @@ pub mod BSTTreapStEph {
 
     //		6. spec fns
 
-    pub open spec fn spec_size_link<T: StT + Ord>(link: &Link<T>) -> nat
+    #[allow(private_interfaces)]
+    pub closed spec fn spec_size_link<T: StT + Ord>(link: &Link<T>) -> nat
         decreases *link,
     {
         match link {
@@ -58,7 +59,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    pub open spec fn spec_contains_link<T: StT + Ord>(link: &Link<T>, target: T) -> bool
+    closed spec fn spec_contains_link<T: StT + Ord>(link: &Link<T>, target: T) -> bool
         decreases *link,
     {
         match link {
@@ -71,7 +72,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    pub open spec fn spec_bst_link<T: StT + Ord>(link: &Link<T>) -> bool
+    closed spec fn spec_bst_link<T: StT + Ord>(link: &Link<T>) -> bool
         decreases *link,
     {
         match link {
@@ -85,7 +86,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    pub open spec fn spec_size_wf_link<T: StT + Ord>(link: &Link<T>) -> bool
+    closed spec fn spec_size_wf_link<T: StT + Ord>(link: &Link<T>) -> bool
         decreases *link,
     {
         match link {
@@ -98,7 +99,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    pub open spec fn spec_in_order_link<T: StT + Ord>(link: &Link<T>) -> Seq<T>
+    closed spec fn spec_in_order_link<T: StT + Ord>(link: &Link<T>) -> Seq<T>
         decreases *link,
     {
         match link {
@@ -111,7 +112,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    pub open spec fn spec_pre_order_link<T: StT + Ord>(link: &Link<T>) -> Seq<T>
+    closed spec fn spec_pre_order_link<T: StT + Ord>(link: &Link<T>) -> Seq<T>
         decreases *link,
     {
         match link {
@@ -124,7 +125,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    pub open spec fn spec_height_link<T: StT + Ord>(link: &Link<T>) -> nat
+    closed spec fn spec_height_link<T: StT + Ord>(link: &Link<T>) -> nat
         decreases *link,
     {
         match link {
@@ -204,23 +205,64 @@ pub mod BSTTreapStEph {
     {
     }
 
+    /// If a key is in a child subtree, it is in the parent node's subtree.
+    proof fn lemma_contains_left<T: StT + Ord>(node: &Box<Node<T>>, k: T)
+        requires spec_contains_link(&node.left, k),
+        ensures spec_contains_link(&Some(*node), k),
+    {
+    }
+
+    /// If a key is in a child subtree, it is in the parent node's subtree.
+    proof fn lemma_contains_right<T: StT + Ord>(node: &Box<Node<T>>, k: T)
+        requires spec_contains_link(&node.right, k),
+        ensures spec_contains_link(&Some(*node), k),
+    {
+    }
+
+    /// BST decomposition: if a subtree rooted at a node is BST, all substructure is BST.
+    proof fn lemma_bst_decompose<T: StT + Ord>(link: &Link<T>)
+        requires spec_bst_link(link),
+        ensures match link {
+            None => true,
+            Some(node) => {
+                spec_bst_link(&node.left)
+                && spec_bst_link(&node.right)
+                && (forall|k: T| #[trigger] spec_contains_link(&node.left, k) ==> k.is_lt(&node.key))
+                && (forall|k: T| #[trigger] spec_contains_link(&node.right, k) ==> node.key.is_lt(&k))
+            },
+        },
+    {
+    }
+
+    /// The root key of a non-empty subtree is contained in it.
+    proof fn lemma_contains_root<T: StT + Ord>(node: &Box<Node<T>>)
+        ensures spec_contains_link(&Some(*node), node.key),
+    {
+    }
+
     //		8. traits
 
     pub trait BSTTreapStEphTrait<T: StT + Ord> {
         spec fn spec_size(self) -> nat;
         spec fn spec_wf(self) -> bool;
+        spec fn spec_bst(self) -> bool;
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn new()                       -> Self
+        fn new()                       -> (empty_tree: Self)
         where
-            Self: Sized;
+            Self: Sized,
+            ensures
+                empty_tree.spec_size() == 0,
+                empty_tree.spec_wf();
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn size(&self)                 -> usize;
+        fn size(&self)                 -> (sz: usize)
+            ensures sz as nat == self.spec_size();
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)             -> bool;
+        fn is_empty(&self)             -> (empty: bool)
+            ensures empty == (self.spec_size() == 0);
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
         fn height(&self)               -> usize
@@ -230,7 +272,11 @@ pub mod BSTTreapStEph {
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn insert(&mut self, value: T, priority: u64)
-            requires old(self).spec_size() + 1 <= usize::MAX as nat, old(self).spec_wf();
+            requires old(self).spec_size() + 1 <= usize::MAX as nat, old(self).spec_wf(),
+            ensures
+                self.spec_wf(),
+                self.spec_size() <= old(self).spec_size() + 1,
+                self.spec_size() >= old(self).spec_size();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
         fn find(&self, target: &T)     -> Option<&T>;
@@ -290,8 +336,8 @@ pub mod BSTTreapStEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn size_link<T: StT + Ord>(link: &Link<T>) -> (result: usize)
-        ensures result as nat == spec_size_link(link),
+    fn size_link<T: StT + Ord>(link: &Link<T>) -> (sz: usize)
+        ensures sz as nat == spec_size_link(link),
     {
         match link.as_ref() {
             None => 0,
@@ -340,41 +386,106 @@ pub mod BSTTreapStEph {
         node.size = 1 + l + r;
     }
 
-    fn rotate_left<T: StT + Ord>(mut x: Box<Node<T>>) -> (result: Box<Node<T>>)
+    fn rotate_left<T: StT + Ord>(mut x: Box<Node<T>>) -> (rotated: Box<Node<T>>)
         requires
             spec_size_wf_link(&Some(x)),
             spec_size_link(&Some(x)) <= usize::MAX as nat,
         ensures
-            spec_size_wf_link(&Some(result)),
-            spec_size_link(&Some(result)) == spec_size_link(&Some(x)),
+            spec_size_wf_link(&Some(rotated)),
+            spec_size_link(&Some(rotated)) == spec_size_link(&Some(x)),
+            spec_bst_link(&Some(x)) ==> spec_bst_link(&Some(rotated)),
     {
+        // Capture BST facts before any mutation.
+        let ghost bst_input = spec_bst_link(&Some(x));
+        let ghost xk = x.key;
+        let ghost orig_right = x.right;
         assert(spec_size_wf_link(&x.left));
         assert(spec_size_wf_link(&x.right));
         if let Some(mut y) = x.right.take() {
+            // Original tree: x = Node(a, xk, Some(y)), y = Node(b, yk, c).
+            // Rotation produces: y' = Node(Some(x'), yk, c), x' = Node(a, xk, b).
+            let ghost yk = y.key;
+            let ghost b  = y.left;
+            let ghost c  = y.right;
+
             assert(spec_size_wf_link(&y.left));
             assert(spec_size_wf_link(&y.right));
             let ghost x_left_sz = spec_size_link(&x.left);
             let ghost y_left_sz = spec_size_link(&y.left);
             let ghost y_right_sz = spec_size_link(&y.right);
+
+            // Capture BST quantifier facts about b before y.left is taken.
+            proof {
+                if bst_input {
+                    // orig_right == Some(y) (before x.right.take()).
+                    // From BST on original x: forall k in orig_right: xk < k.
+                    // y.left == b, and for any k in b:
+                    //   contains(b, k) ==> contains(Some(y), k) ==> contains(orig_right, k)
+                    //   ==> xk < k.
+                    lemma_bst_decompose(&orig_right);
+                    assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies xk.is_lt(&k) by {
+                        lemma_contains_left(&y, k);
+                        // Now: contains(Some(y), k) and orig_right == Some(y).
+                        // From BST on orig x: forall k in orig_right: xk < k.
+                    };
+                }
+            }
+
             x.right = y.left.take();
             assert(1 + x_left_sz + y_left_sz + 1 + y_right_sz <= usize::MAX as nat);
             update_size(&mut x);
+            // x = Node(a, xk, _, b) with updated size.
+
+            proof {
+                if bst_input {
+                    // Prove x is BST.
+                    // x.left == a (unchanged), x.right == b (moved from y.left).
+                    // a is BST, b is BST (from original).
+                    // forall k in a: k < xk (from original BST on x).
+                    // forall k in b: xk < k (proved above).
+                    assert(spec_bst_link(&x.left));
+                    assert(spec_bst_link(&x.right));
+                    assert(spec_bst_link(&Some(x)));
+                }
+            }
+
             y.left = Some(x);
             update_size(&mut y);
-            proof { lemma_wf_assemble_node(&y); }
+            proof {
+                lemma_wf_assemble_node(&y);
+                if bst_input {
+                    // Prove y is BST.
+                    // y.left = Some(x) (BST proved above), y.right = c (BST from original).
+                    // forall k in Some(x): k < yk.
+                    // forall k in c: yk < k (from original BST on y).
+                    lemma_bst_decompose(&orig_right);
+                    assert(spec_bst_link(&y.right));
+                    // For k in y.left = Some(x):
+                    //   k == xk ==> xk < yk (yk was in orig_right, BST says xk < yk).
+                    //   k in a ==> k < xk < yk.
+                    //   k in b ==> k < yk (from original BST on y: forall k in b: k < yk).
+                    lemma_contains_root(&y);
+                    assert forall |k: T| #[trigger] spec_contains_link(&y.left, k) implies k.is_lt(&yk) by {
+                        // y.left == Some(x), so k is in subtree(x).
+                        // spec_contains_link(&Some(x), k) means k == xk || k in a || k in b.
+                        // All cases: k < yk.
+                    };
+                    assert(spec_bst_link(&Some(y)));
+                }
+            }
             y
         } else {
             x
         }
     }
 
-    fn rotate_right<T: StT + Ord>(mut x: Box<Node<T>>) -> (result: Box<Node<T>>)
+    fn rotate_right<T: StT + Ord>(mut x: Box<Node<T>>) -> (rotated: Box<Node<T>>)
         requires
             spec_size_wf_link(&Some(x)),
             spec_size_link(&Some(x)) <= usize::MAX as nat,
         ensures
-            spec_size_wf_link(&Some(result)),
-            spec_size_link(&Some(result)) == spec_size_link(&Some(x)),
+            spec_size_wf_link(&Some(rotated)),
+            spec_size_link(&Some(rotated)) == spec_size_link(&Some(x)),
     {
         assert(spec_size_wf_link(&x.left));
         assert(spec_size_wf_link(&x.right));
@@ -396,14 +507,14 @@ pub mod BSTTreapStEph {
         }
     }
 
-    fn insert_link<T: StT + Ord>(link: Link<T>, value: T, priority: u64) -> (result: Link<T>)
+    fn insert_link<T: StT + Ord>(link: Link<T>, value: T, priority: u64) -> (inserted: Link<T>)
         requires
             spec_size_link(&link) + 1 <= usize::MAX as nat,
             spec_size_wf_link(&link),
         ensures
-            spec_size_wf_link(&result),
-            spec_size_link(&result) <= spec_size_link(&link) + 1,
-            spec_size_link(&result) >= spec_size_link(&link),
+            spec_size_wf_link(&inserted),
+            spec_size_link(&inserted) <= spec_size_link(&link) + 1,
+            spec_size_link(&inserted) >= spec_size_link(&link),
         decreases link,
     {
         match link {
@@ -442,7 +553,7 @@ pub mod BSTTreapStEph {
 
     /// - APAS: Work O(log n) expected, Span O(log n) expected
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-    fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> (result: Option<&'a T>)
+    fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
         decreases *link,
     {
         match link {
@@ -487,7 +598,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    fn in_order_vec<T: StT + Ord>(link: &Link<T>) -> (result: Vec<T>)
+    fn in_order_vec<T: StT + Ord>(link: &Link<T>) -> (ordered: Vec<T>)
         decreases *link,
     {
         match link {
@@ -509,21 +620,21 @@ pub mod BSTTreapStEph {
         }
     }
 
-    fn pre_order_vec<T: StT + Ord>(link: &Link<T>) -> (result: Vec<T>)
+    fn pre_order_vec<T: StT + Ord>(link: &Link<T>) -> (ordered: Vec<T>)
         decreases *link,
     {
         match link {
             None => Vec::new(),
             Some(node) => {
-                let mut result = Vec::new();
-                result.push(node.key.clone());
+                let mut ordered = Vec::new();
+                ordered.push(node.key.clone());
                 let left = pre_order_vec(&node.left);
                 let mut i: usize = 0;
                 while i < left.len()
                     invariant i <= left.len(),
                     decreases left.len() - i,
                 {
-                    result.push(left[i].clone());
+                    ordered.push(left[i].clone());
                     i = i + 1;
                 }
                 let right = pre_order_vec(&node.right);
@@ -532,17 +643,18 @@ pub mod BSTTreapStEph {
                     invariant j <= right.len(),
                     decreases right.len() - j,
                 {
-                    result.push(right[j].clone());
+                    ordered.push(right[j].clone());
                     j = j + 1;
                 }
-                result
+                ordered
             }
         }
     }
 
     impl<T: StT + Ord> BSTTreapStEphTrait<T> for BSTTreapStEph<T> {
-        open spec fn spec_size(self) -> nat { spec_size_link(&self.root) }
-        open spec fn spec_wf(self) -> bool { spec_size_wf_link(&self.root) }
+        closed spec fn spec_size(self) -> nat { spec_size_link(&self.root) }
+        closed spec fn spec_wf(self) -> bool { spec_size_wf_link(&self.root) }
+        closed spec fn spec_bst(self) -> bool { spec_bst_link(&self.root) }
 
         fn new() -> Self { BSTTreapStEph { root: None } }
 
@@ -601,34 +713,13 @@ pub mod BSTTreapStEph {
     }
 
     impl<T: StT + Ord> Clone for BSTTreapStEph<T> {
-        fn clone(&self) -> (result: Self)
-            ensures result.spec_size() == self.spec_size(),
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned.spec_size() == self.spec_size(),
         {
             BSTTreapStEph { root: clone_link(&self.root) }
         }
     }
 
-    }
-
-
-    //		13. derive impls outside verus!
-
-    impl<T: StT + Ord + fmt::Debug> fmt::Debug for Node<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("Node")
-                .field("key", &self.key)
-                .field("priority", &self.priority)
-                .field("size", &self.size)
-                .field("left", &self.left)
-                .field("right", &self.right)
-                .finish()
-        }
-    }
-
-    impl<T: StT + Ord + fmt::Debug> fmt::Debug for BSTTreapStEph<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("BSTTreapStEph").field("root", &self.root).finish()
-        }
     }
 
 
@@ -650,5 +741,26 @@ pub mod BSTTreapStEph {
             } )*
             __tree
         }};
+    }
+
+
+    //		13. derive impls outside verus!
+
+    impl<T: StT + Ord + fmt::Debug> fmt::Debug for Node<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("Node")
+                .field("key", &self.key)
+                .field("priority", &self.priority)
+                .field("size", &self.size)
+                .field("left", &self.left)
+                .field("right", &self.right)
+                .finish()
+        }
+    }
+
+    impl<T: StT + Ord + fmt::Debug> fmt::Debug for BSTTreapStEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("BSTTreapStEph").field("root", &self.root).finish()
+        }
     }
 }

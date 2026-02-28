@@ -9,7 +9,6 @@ pub mod BSTSetTreapMtEph {
     use vstd::prelude::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap39::BSTParaTreapMtEph::BSTParaTreapMtEph::*;
-    use crate::Concurrency::Concurrency::*;
     use crate::Types::Types::*;
 
     verus! {
@@ -61,13 +60,13 @@ pub mod BSTSetTreapMtEph {
         /// - APAS: Work O(log n), Span O(log n)
         fn singleton(value: T)                       -> Self;
         /// - APAS: Work Θ(1), Span Θ(1)
-        fn size(&self)                               -> N;
+        fn size(&self)                               -> usize;
         /// - APAS: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)                           -> B;
+        fn is_empty(&self)                           -> bool;
         /// - APAS: Work O(log n), Span O(log n)
         fn find(&self, value: &T)                    -> Option<T>;
         /// - APAS: Work O(log n), Span O(log n)
-        fn contains(&self, value: &T)                -> B;
+        fn contains(&self, value: &T)                -> bool;
         /// - APAS: Work O(log n), Span O(log n)
         fn minimum(&self)                            -> Option<T>;
         /// - APAS: Work O(log n), Span O(log n)
@@ -83,7 +82,7 @@ pub mod BSTSetTreapMtEph {
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         fn difference(&self, other: &Self)           -> Self;
         /// - APAS: Work O(log n), Span O(log n)
-        fn split(&self, pivot: &T)                   -> (Self, B, Self);
+        fn split(&self, pivot: &T)                   -> (Self, bool, Self);
         /// - APAS: Work O(lg(|left| + |right|)), Span O(lg(|left| + |right|))
         fn join_pair(left: Self, right: Self)        -> Self;
         /// - APAS: Work O(lg(|left| + |right|)), Span O(lg(|left| + |right|))
@@ -113,13 +112,13 @@ pub mod BSTSetTreapMtEph {
             BSTSetTreapMtEph { tree }
         }
 
-        fn size(&self) -> N { self.tree.size() }
+        fn size(&self) -> usize { self.tree.size() }
 
-        fn is_empty(&self) -> B { self.tree.is_empty() }
+        fn is_empty(&self) -> bool { self.tree.is_empty() }
 
         fn find(&self, value: &T) -> Option<T> { self.tree.find(value) }
 
-        fn contains(&self, value: &T) -> B { self.find(value).is_some() }
+        fn contains(&self, value: &T) -> bool { self.find(value).is_some() }
 
         fn minimum(&self) -> Option<T> { minimum_inner(&self.tree) }
 
@@ -141,7 +140,7 @@ pub mod BSTSetTreapMtEph {
             BSTSetTreapMtEph { tree: self.tree.difference(&other.tree) }
         }
 
-        fn split(&self, pivot: &T) -> (Self, B, Self) {
+        fn split(&self, pivot: &T) -> (Self, bool, Self) {
             let (left, found, right) = self.tree.split(pivot);
             (BSTSetTreapMtEph { tree: left }, found, BSTSetTreapMtEph { tree: right })
         }
@@ -172,14 +171,6 @@ pub mod BSTSetTreapMtEph {
         fn as_tree(&self) -> &ParamTreap<T> { &self.tree }
     }
 
-    // 13. derive impls outside verus!
-
-    impl<T: MtKey + fmt::Debug> fmt::Debug for BSTSetTreapMtEph<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("BSTSetTreapMtEph").finish()
-        }
-    }
-
     // 12. macros
 
     #[macro_export]
@@ -192,5 +183,14 @@ pub mod BSTSetTreapMtEph {
             $( __set.insert($x); )*
             __set
         }};
+    }
+
+
+    // 13. derive impls outside verus!
+
+    impl<T: MtKey + fmt::Debug> fmt::Debug for BSTSetTreapMtEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("BSTSetTreapMtEph").finish()
+        }
     }
 }

@@ -1,9 +1,23 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Ephemeral Treap (randomized heap-ordered BST) with interior locking for multi-threaded access.
+
+//  Table of Contents
+//	1. module
+//	4. type definitions
+//	6. spec fns
+//	7. proof fns/broadcast groups
+//	8. traits
+//	9. impls
+//	11. derive impls in verus!
+//	12. macros
+//	13. derive impls outside verus!
+
+//	1. module
+
 
 pub mod BSTTreapMtEph {
 
-    use std::fmt::{Debug, Display};
     use std::sync::Arc;
 
     use vstd::prelude::*;
@@ -14,6 +28,8 @@ pub mod BSTTreapMtEph {
     use crate::Types::Types::*;
 
     verus! {
+
+    //		4. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct Node<T: StTInMtT + Ord> {
@@ -26,121 +42,17 @@ pub mod BSTTreapMtEph {
 
     type Link<T> = Option<Box<Node<T>>>;
 
-    trait NodeTrait<T: StTInMtT + Ord>: Sized {
-        fn new(key: T, priority: u64) -> Self;
-    }
-
-    impl<T: StTInMtT + Ord> NodeTrait<T> for Node<T> {
-        fn new(key: T, priority: u64) -> Self {
-            Node {
-                key,
-                priority,
-                size: 1,
-                left: None,
-                right: None,
-            }
-        }
-    }
-
-    fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
-        decreases link,
-    {
-        match link {
-            None => {
-                let c = None;
-                proof { accept(c == *link); }
-                c
-            }
-            Some(node) => {
-                let left = clone_link(&node.left);
-                let right = clone_link(&node.right);
-                let c = Some(Box::new(Node {
-                    key: node.key.clone(),
-                    priority: node.priority,
-                    size: node.size,
-                    left,
-                    right,
-                }));
-                proof { accept(c == *link); }
-                c
-            }
-        }
-    }
-
-    impl<T: StTInMtT + Ord + Clone> Clone for Node<T> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned == *self
-        {
-            let cloned = Node {
-                key: self.key.clone(),
-                priority: self.priority,
-                size: self.size,
-                left: clone_link(&self.left),
-                right: clone_link(&self.right),
-            };
-            proof { accept(cloned == *self); }
-            cloned
-        }
-    }
-
     pub struct TreapLinkWf;
-
-    impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for TreapLinkWf {
-        open spec fn inv(self, v: Link<T>) -> bool {
-            spec_size_wf_link(&v) && spec_size_link(&v) < usize::MAX as nat
-        }
-    }
-
-    #[verifier::external_body]
-    fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>)
-        requires spec_size_wf_link(&val), spec_size_link(&val) < usize::MAX as nat,
-    {
-        RwLock::new(val, Ghost(TreapLinkWf))
-    }
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTTreapMtEph<T: StTInMtT + Ord> {
         root: Arc<RwLock<Link<T>, TreapLinkWf>>,
     }
 
-    impl<T: StTInMtT + Ord> Clone for BSTTreapMtEph<T> {
-        fn clone(&self) -> (cloned: Self)
-            ensures true
-        {
-            let cloned = BSTTreapMtEph { root: self.root.clone() };
-            cloned
-        }
-    }
-
     pub type BSTreeTreap<T> = BSTTreapMtEph<T>;
 
-    pub trait BSTTreapMtEphTrait<T: StTInMtT + Ord>: Sized {
-        spec fn spec_size(&self) -> nat;
-        spec fn spec_height(&self) -> nat;
 
-        fn new()                       -> Self;
-        fn insert(&self, value: T, priority: u64)
-            requires self.spec_size() + 1 <= usize::MAX as nat;
-        fn find(&self, target: &T)     -> Option<T>;
-        fn contains(&self, target: &T) -> bool;
-        fn size(&self)                 -> usize;
-        fn is_empty(&self)             -> bool;
-        fn height(&self)               -> usize
-            requires self.spec_size() < usize::MAX as nat;
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
-        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-        fn minimum(&self)              -> Option<T>;
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
-        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
-        fn maximum(&self)              -> Option<T>;
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn in_order(&self)             -> ArraySeqStPerS<T>;
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn pre_order(&self)            -> ArraySeqStPerS<T>;
-    }
-
+    //		6. spec fns
 
     pub open spec fn spec_size_link<T: StTInMtT + Ord>(link: &Link<T>) -> nat
         decreases *link,
@@ -164,7 +76,7 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    pub open spec fn spec_height_link<T: StTInMtT + Ord>(link: &Link<T>) -> nat
+    closed spec fn spec_height_link<T: StTInMtT + Ord>(link: &Link<T>) -> nat
         decreases *link,
     {
         match link {
@@ -176,6 +88,9 @@ pub mod BSTTreapMtEph {
             }
         }
     }
+
+
+    //		7. proof fns/broadcast groups
 
     proof fn lemma_height_le_size<T: StTInMtT + Ord>(link: &Link<T>)
         requires
@@ -218,16 +133,6 @@ pub mod BSTTreapMtEph {
     }
 
     /// - APAS: Work Θ(1), Span Θ(1)
-    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (result: usize)
-        ensures result as nat == spec_size_link(link),
-    {
-        match link {
-            None => 0,
-            Some(n) => n.size,
-        }
-    }
-
-    /// - APAS: Work Θ(1), Span Θ(1)
     proof fn lemma_wf_assemble_node<T: StTInMtT + Ord>(node: &Node<T>)
         requires
             node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),
@@ -235,6 +140,102 @@ pub mod BSTTreapMtEph {
             spec_size_wf_link(&node.right),
         ensures spec_size_wf_link(&Some(Box::new(*node))),
     {
+    }
+
+
+    //		8. traits
+
+    /// Treap trait for multi-threaded ephemeral access.
+    ///
+    /// No spec fns on the struct because size/height are behind `Arc<RwLock<>>`.
+    /// The RwLock invariant (`TreapLinkWf`) enforces `spec_size_wf_link` and
+    /// `spec_size_link < usize::MAX` on every acquire, so callers need no
+    /// explicit size preconditions.
+    pub trait BSTTreapMtEphTrait<T: StTInMtT + Ord>: Sized {
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        fn new()                       -> Self;
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
+        fn insert(&self, value: T, priority: u64);
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
+        fn find(&self, target: &T)     -> Option<T>;
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
+        fn contains(&self, target: &T) -> bool;
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        fn size(&self)                 -> usize;
+        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        fn is_empty(&self)             -> bool;
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+        fn height(&self)               -> usize;
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
+        fn minimum(&self)              -> Option<T>;
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
+        fn maximum(&self)              -> Option<T>;
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+        fn in_order(&self)             -> ArraySeqStPerS<T>;
+        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+        fn pre_order(&self)            -> ArraySeqStPerS<T>;
+    }
+
+
+    //		9. impls
+
+    fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
+        decreases link,
+    {
+        match link {
+            None => {
+                let c = None;
+                proof { accept(c == *link); }
+                c
+            }
+            Some(node) => {
+                let left = clone_link(&node.left);
+                let right = clone_link(&node.right);
+                let c = Some(Box::new(Node {
+                    key: node.key.clone(),
+                    priority: node.priority,
+                    size: node.size,
+                    left,
+                    right,
+                }));
+                proof { accept(c == *link); }
+                c
+            }
+        }
+    }
+
+    impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for TreapLinkWf {
+        open spec fn inv(self, v: Link<T>) -> bool {
+            spec_size_wf_link(&v) && spec_size_link(&v) < usize::MAX as nat
+        }
+    }
+
+    #[verifier::external_body]
+    fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>)
+        requires spec_size_wf_link(&val), spec_size_link(&val) < usize::MAX as nat,
+    {
+        RwLock::new(val, Ghost(TreapLinkWf))
+    }
+
+    /// - APAS: Work Θ(1), Span Θ(1)
+    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (sz: usize)
+        ensures sz as nat == spec_size_link(link),
+    {
+        match link {
+            None => 0,
+            Some(n) => n.size,
+        }
     }
 
     fn update<T: StTInMtT + Ord>(node: &mut Node<T>)
@@ -460,9 +461,6 @@ pub mod BSTTreapMtEph {
     }
 
     impl<T: StTInMtT + Ord> BSTTreapMtEphTrait<T> for BSTTreapMtEph<T> {
-        open spec fn spec_size(&self) -> nat { 0 }
-        open spec fn spec_height(&self) -> nat { 0 }
-
         fn new() -> Self {
             BSTTreapMtEph {
                 root: Arc::new(new_treap_link_lock(None)),
@@ -539,7 +537,59 @@ pub mod BSTTreapMtEph {
         fn default() -> Self { Self::new() }
     }
 
+
+    //		11. derive impls in verus!
+
+    impl<T: StTInMtT + Ord + Clone> Clone for Node<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned == *self
+        {
+            let cloned = Node {
+                key: self.key.clone(),
+                priority: self.priority,
+                size: self.size,
+                left: clone_link(&self.left),
+                right: clone_link(&self.right),
+            };
+            proof { accept(cloned == *self); }
+            cloned
+        }
+    }
+
+    impl<T: StTInMtT + Ord> Clone for BSTTreapMtEph<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures true
+        {
+            let cloned = BSTTreapMtEph { root: self.root.clone() };
+            cloned
+        }
+    }
+
     } // verus!
+
+
+    //		12. macros
+
+    #[macro_export]
+    macro_rules! BSTTreapMtEphLit {
+        () => {
+            < $crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::BSTTreapMtEph<_> as $crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::BSTTreapMtEphTrait<_> >::new()
+        };
+        ( $( $x:expr ),* $(,)? ) => {{
+            use std::hash::{Hash, Hasher};
+            let __tree = < $crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::BSTTreapMtEph<_> as $crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::BSTTreapMtEphTrait<_> >::new();
+            $( {
+                let __val = $x;
+                let mut __h = ::std::collections::hash_map::DefaultHasher::new();
+                __val.hash(&mut __h);
+                __tree.insert(__val, __h.finish());
+            } )*
+            __tree
+        }};
+    }
+
+
+    //		13. derive impls outside verus!
 
     impl<T: StTInMtT + Ord> std::fmt::Debug for BSTTreapMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -569,23 +619,5 @@ pub mod BSTTreapMtEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "Node(key={}, priority={}, size={})", self.key, self.priority, self.size)
         }
-    }
-
-    #[macro_export]
-    macro_rules! BSTTreapMtEphLit {
-        () => {
-            < $crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::BSTTreapMtEph<_> as $crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::BSTTreapMtEphTrait<_> >::new()
-        };
-        ( $( $x:expr ),* $(,)? ) => {{
-            use std::hash::{Hash, Hasher};
-            let __tree = < $crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::BSTTreapMtEph<_> as $crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::BSTTreapMtEphTrait<_> >::new();
-            $( {
-                let __val = $x;
-                let mut __h = ::std::collections::hash_map::DefaultHasher::new();
-                __val.hash(&mut __h);
-                __tree.insert(__val, __h.finish());
-            } )*
-            __tree
-        }};
     }
 }
