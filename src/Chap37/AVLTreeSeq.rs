@@ -233,8 +233,10 @@ pub mod AVLTreeSeq {
         requires
             spec_avltreeseq_wf(old(n).left),
             spec_avltreeseq_wf(old(n).right),
-            1 + spec_avltreeseq_cached_height(&old(n).left)
-              + spec_avltreeseq_cached_height(&old(n).right) < usize::MAX,
+            spec_avltreeseq_nat_max(
+                spec_avltreeseq_cached_height(&old(n).left),
+                spec_avltreeseq_cached_height(&old(n).right),
+            ) < usize::MAX,
         ensures
             n.left_size as nat == spec_avltreeseq_cached_size(&n.left),
             n.right_size as nat == spec_avltreeseq_cached_size(&n.right),
@@ -255,26 +257,62 @@ pub mod AVLTreeSeq {
         n.height = 1 + if hl >= hr { hl } else { hr };
     }
 
-    #[verifier::external_body]
-        pub fn rotate_right<T: StT>(node: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
-            ensures
-                spec_avltreeseq_wf(Some(result)),
-                spec_avltreeseq_inorder(Some(result)) =~= spec_avltreeseq_inorder(Some(node)),
-                spec_avltreeseq_cached_size(&Some(result)) == spec_avltreeseq_cached_size(&Some(node)),
-        {
-            // Standard AVL right rotation:
-            //      y                x
-            //     / \              / \
-            //    x   C   -->     A   y
-            //   / \                  / \
-            //  A   B                B   C
-            let mut y = node;
-            let mut x = y.left.take().expect("rotate_right: left child must exist");
-            y.left = x.right.take();
-            // Heights and balance factors are updated by caller or in a separate step.
-            x.right = Some(y);
-            x
+    pub fn rotate_right<T: StT>(node: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+        requires
+            spec_avltreeseq_wf(Some(node)),
+            node.left is Some,
+            spec_avltreeseq_cached_height(&Some(node)) < usize::MAX,
+        ensures
+            spec_avltreeseq_wf(Some(result)),
+            spec_avltreeseq_inorder(Some(result)) =~= spec_avltreeseq_inorder(Some(node)),
+            spec_avltreeseq_cached_size(&Some(result)) == spec_avltreeseq_cached_size(&Some(node)),
+    {
+        // Standard AVL right rotation:
+        //      y                x
+        //     / \              / \
+        //    x   C   -->     A   y
+        //   / \                  / \
+        //  A   B                B   C
+        let ghost old_node = node;
+        let mut y = node;
+        let ghost old_y = *y;
+        // wf(Some(old_y)) gives us wf on children two levels deep.
+        proof {
+            // Unfold wf one level: wf(y.left) && wf(y.right) && sizes/height correct.
+            assert(spec_avltreeseq_wf(old_y.left));
+            assert(spec_avltreeseq_wf(old_y.right));
         }
+        let mut x = y.left.take().unwrap();
+        let ghost old_x = *x;
+        proof {
+            // x was old_y.left.unwrap(), so wf(Some(old_x)) == wf(old_y.left).
+            assert(spec_avltreeseq_wf(old_x.left));
+            assert(spec_avltreeseq_wf(old_x.right));
+        }
+        let b = x.right.take();
+        // b == old_x.right, which is wf.
+        proof { assert(b == old_x.right); }
+        y.left = b;
+        // y now: left=B (wf), right=C (wf, unchanged from old_y.right).
+        proof {
+            assert(spec_avltreeseq_wf(y.left));
+            assert(spec_avltreeseq_wf(y.right));
+        }
+        update_size_height(&mut y);
+        // After update_size_height, y has correct cached sizes/height, so wf(Some(y)).
+        x.right = Some(y);
+        // x now: left=A (wf, old_x.left unchanged), right=Some(y) (just proved wf).
+        proof {
+            assert(spec_avltreeseq_wf(x.left));
+            assert(spec_avltreeseq_wf(x.right));
+        }
+        update_size_height(&mut x);
+
+        proof {
+            reveal_with_fuel(spec_avltreeseq_inorder, 3);
+        }
+        x
+    }
 
     #[verifier::external_body]
     fn rotate_left<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)

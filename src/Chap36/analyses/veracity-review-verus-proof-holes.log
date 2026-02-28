@@ -1,10 +1,11 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap36/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap36
 
 ✓ QuickSortMtEph.rs
-   1 clean proof function
+   2 clean proof functions
 ✓ QuickSortMtEphSlice.rs
+   3 clean proof functions
 ✓ QuickSortStEph.rs
-   1 clean proof function
+   2 clean proof functions
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -16,9 +17,9 @@ Modules:
    3 total
 
 Proof Functions:
-   2 clean
+   7 clean
    0 holed
-   2 total
+   7 total
 
 Holes Found: 0 total
 

@@ -7,13 +7,13 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 37 — Introduction to Binary Search Trees: Review Against Prose
 
-**Date:** 2026-02-27 (proof holes refresh; initial: 2026-02-19)
+**Date:** 2026-02-28 (proof holes refresh; initial: 2026-02-19)
 **Reviewer:** Claude-Opus-4.6
 **Prose source:** `prompts/Chap37.txt`
 **Source directory:** `src/Chap37/` (19 files)
 **Test directory:** `tests/Chap37/` (24 files)
 **PTT directory:** none (0 files)
-**Verification status:** All 19 files inside `verus!`; 14 clean, 5 holed; 52 holes (10 assume, 42 external_body)
+**Verification status:** All 19 files inside `verus!`; 14 clean, 5 holed; 55 holes (13 assume, 42 external_body)
 
 ## Phase 1: Inventory
 
@@ -314,7 +314,7 @@ PTTs would be valuable for:
 
 ## Proof Holes Summary
 
-From `veracity-review-proof-holes -d src/Chap37/` (2026-02-27):
+From `veracity-review-proof-holes -d src/Chap37/` (2026-02-28):
 
 ```
 ✓ BSTAVLMtEph.rs — 1 clean proof fn
@@ -332,29 +332,31 @@ From `veracity-review-proof-holes -d src/Chap37/` (2026-02-27):
 ℹ BSTRBMtEph.rs — 1 info (verus_rwlock_external_body)
 ℹ BSTSplayMtEph.rs — 1 info (verus_rwlock_external_body)
 
-❌ AVLTreeSeq.rs — 7 holes (1 assume, 6 external_body), 3 eq/clone workaround errors, 1 accept info
-❌ AVLTreeSeqMtPer.rs — 12 holes (1 assume, 11 external_body), 1 accept info
-❌ AVLTreeSeqStEph.rs — 15 holes (4 assume, 11 external_body), 1 accept info
+❌ AVLTreeSeq.rs — 10 holes (4 assume, 6 external_body), 4 eq/clone workaround errors
+❌ AVLTreeSeqMtPer.rs — 12 holes (1 assume, 11 external_body), 1 eq/clone workaround error
+❌ AVLTreeSeqStEph.rs — 15 holes (4 assume, 11 external_body), 1 eq/clone workaround error
 ❌ AVLTreeSeqStPer.rs — 14 holes (3 assume, 11 external_body), 1 eq/clone workaround error
 ❌ BSTSplayStEph.rs — 4 holes (1 assume, 3 external_body)
 
 14 clean, 5 holed, 19 total
 8 clean proof fns, 0 holed proof fns
-52 holes total: 10 assume, 42 external_body
-4 errors (eq/clone workaround), 5 info (3 accept, 2 rwlock)
+55 holes total: 13 assume, 42 external_body
+7 errors (eq/clone workaround), 2 info (2 rwlock)
 ```
 
 ### Hole Analysis
 
 | # | File | Holes | assume | ext_body | Category | Notes |
 |---|------|:-----:|:------:|:--------:|----------|-------|
-| 1 | AVLTreeSeq | 7 | 1 | 6 | algorithmic | rotate/rebalance/insert_at_link external_body; cached_size overflow assume |
+| 1 | AVLTreeSeq | 10 | 4 | 6 | algorithmic | rotate/rebalance/insert_at_link external_body; cached_size overflow assume; compare_trees eq assumes; from_vec clone assume |
 | 2 | AVLTreeSeqStEph | 15 | 4 | 11 | algorithmic | All tree ops external_body; singleton/from_vec spec_well_formed assumes |
 | 3 | AVLTreeSeqStPer | 14 | 3 | 11 | algorithmic | Same pattern as StEph; subseq_copy/values_in_order/to_arrayseq assumes |
 | 4 | AVLTreeSeqMtPer | 12 | 1 | 11 | algorithmic | Same tree ops external_body; values_in_order spec_well_formed assume |
 | 5 | BSTSplayStEph | 4 | 1 | 3 | mixed | update overflow assume; Node::clone/in_order/pre_order external_body |
 
 **Changes since 2026-02-19**: BSTPlainMtEph, BSTAVLMtEph, and BSTBBAlphaMtEph are now clean — the 6 spec_size/spec_height assumes were eliminated. The AVLTreeSeq* files and BSTSplayStEph were verusified since the prior review, bringing their existing external_body and assume holes into scope. AVLTreeSeq eq/clone workaround assumes reclassified from holes to errors (tool update, no code change).
+
+**Changes since 2026-02-28**: Tool reclassification — AVLTreeSeq.rs compare_trees eq assumes (2) and from_vec clone assume (1) now counted as holes (previously errors-only). Totals shift from 52 to 55 holes. Accept-hole infos (3) no longer reported by tool. No code changes.
 
 **Changes since 2026-02-27 (a)**: BSTSplayStEph reduced from 11 holes to 4 holes (7 eliminated):
 - `height_link`: 5 assumes removed — defined `spec_height_link` recursive spec fn, replaced overflow/size-bound assumes with provable assertions via `reveal_with_fuel`.
@@ -406,7 +408,7 @@ The chapter has three layers:
 |---|----------|:--------:|
 | 1 | Asymptotically wrong split/join/delete — O(n) instead of O(lg n) | High |
 | 2 | Splay trees don't splay — plain unbalanced BST insert | High |
-| 3 | AVLTreeSeq* files: 51 holes (12 assume, 39 external_body) across 4 files — all tree mutation ops unverified | High |
+| 3 | AVLTreeSeq* files: 51 holes (12 assume, 39 external_body) across 4 files — all tree mutation ops unverified; 7 eq/clone workaround errors | High |
 | 4 | BSTSplayStEph: 4 holes (1 assume, 3 external_body) — clone/in_order/pre_order/overflow remain | Medium |
 | 5 | RB color invariant not verified — BalBinTree lacks color field | Medium |
 | 6 | BSTSetBBAlphaMtEph still fully sequential (no ParaPair!) | Medium |
