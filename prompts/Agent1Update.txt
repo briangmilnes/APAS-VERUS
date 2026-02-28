@@ -9,6 +9,6 @@ Update your chapter's analyses:
   veracity-review-verus-proof-holes.log - by program veracity-review-proof-holes
   review-against-prose.md - by the review against proof holes rule.
 
-I am not even sure that quicksort is right. Why do we have all these functions?
-Review the verusification, specification and holes on this chapter.
-Propose fixes in a table.
+You are still stubbing in that the bodies of quicksort_* are not in the
+impl. They are top level functions just called from stubs in the impl.
+Fix this in all the files. 
