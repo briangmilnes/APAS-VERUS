@@ -1,9 +1,8 @@
-Logging to: /home/milnes/projects/APAS-VERUS-agent2/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: eq.*view\|view.*eq\|eq_spec\|PartialEqSpec
+Pattern: fn _ types Ord ensures .*is_lt
 Searching: /home/milnes/projects/verus/source/vstd
-Searching: /home/milnes/projects/verus/source/vstd
-Files: 192, Functions: 4742, Matches: 0
+Files: 102, Functions: 2456, Matches: 0
 

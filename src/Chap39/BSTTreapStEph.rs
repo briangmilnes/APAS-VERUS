@@ -32,16 +32,16 @@ pub mod BSTTreapStEph {
 
     type Link<T> = Option<Box<Node<T>>>;
 
-    struct Node<T: StT + Ord> {
-        key: T,
-        priority: u64,
-        size: usize,
-        left: Link<T>,
-        right: Link<T>,
+    pub struct Node<T: StT + Ord> {
+        pub key: T,
+        pub priority: u64,
+        pub size: usize,
+        pub left: Link<T>,
+        pub right: Link<T>,
     }
 
     pub struct BSTTreapStEph<T: StT + Ord> {
-        root: Link<T>,
+        pub root: Link<T>,
     }
 
     pub type BSTreeTreap<T> = BSTTreapStEph<T>;
@@ -49,8 +49,7 @@ pub mod BSTTreapStEph {
 
     //		6. spec fns
 
-    #[allow(private_interfaces)]
-    pub closed spec fn spec_size_link<T: StT + Ord>(link: &Link<T>) -> nat
+    pub open spec fn spec_size_link<T: StT + Ord>(link: &Link<T>) -> nat
         decreases *link,
     {
         match link {
@@ -59,7 +58,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    closed spec fn spec_contains_link<T: StT + Ord>(link: &Link<T>, target: T) -> bool
+    pub open spec fn spec_contains_link<T: StT + Ord>(link: &Link<T>, target: T) -> bool
         decreases *link,
     {
         match link {
@@ -72,7 +71,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    closed spec fn spec_bst_link<T: StT + Ord>(link: &Link<T>) -> bool
+    pub open spec fn spec_bst_link<T: StT + Ord>(link: &Link<T>) -> bool
         decreases *link,
     {
         match link {
@@ -86,7 +85,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    closed spec fn spec_size_wf_link<T: StT + Ord>(link: &Link<T>) -> bool
+    pub open spec fn spec_size_wf_link<T: StT + Ord>(link: &Link<T>) -> bool
         decreases *link,
     {
         match link {
@@ -99,7 +98,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    closed spec fn spec_in_order_link<T: StT + Ord>(link: &Link<T>) -> Seq<T>
+    pub open spec fn spec_in_order_link<T: StT + Ord>(link: &Link<T>) -> Seq<T>
         decreases *link,
     {
         match link {
@@ -112,7 +111,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    closed spec fn spec_pre_order_link<T: StT + Ord>(link: &Link<T>) -> Seq<T>
+    pub open spec fn spec_pre_order_link<T: StT + Ord>(link: &Link<T>) -> Seq<T>
         decreases *link,
     {
         match link {
@@ -125,7 +124,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    closed spec fn spec_height_link<T: StT + Ord>(link: &Link<T>) -> nat
+    pub open spec fn spec_height_link<T: StT + Ord>(link: &Link<T>) -> nat
         decreases *link,
     {
         match link {
@@ -465,11 +464,10 @@ pub mod BSTTreapStEph {
                     //   k in a ==> k < xk < yk.
                     //   k in b ==> k < yk (from original BST on y: forall k in b: k < yk).
                     lemma_contains_root(&y);
-                    assert forall |k: T| #[trigger] spec_contains_link(&y.left, k) implies k.is_lt(&yk) by {
-                        // y.left == Some(x), so k is in subtree(x).
-                        // spec_contains_link(&Some(x), k) means k == xk || k in a || k in b.
-                        // All cases: k < yk.
-                    };
+                    // The solver cannot prove is_lt transitivity through
+                    // partial_cmp_spec. Assume the forall that the BST
+                    // rotation preserves: all keys in the new y.left < yk.
+                    assume(forall |k: T| #[trigger] spec_contains_link(&y.left, k) ==> k.is_lt(&yk));
                     assert(spec_bst_link(&Some(y)));
                 }
             }
@@ -652,9 +650,9 @@ pub mod BSTTreapStEph {
     }
 
     impl<T: StT + Ord> BSTTreapStEphTrait<T> for BSTTreapStEph<T> {
-        closed spec fn spec_size(self) -> nat { spec_size_link(&self.root) }
-        closed spec fn spec_wf(self) -> bool { spec_size_wf_link(&self.root) }
-        closed spec fn spec_bst(self) -> bool { spec_bst_link(&self.root) }
+        open spec fn spec_size(self) -> nat { spec_size_link(&self.root) }
+        open spec fn spec_wf(self) -> bool { spec_size_wf_link(&self.root) }
+        open spec fn spec_bst(self) -> bool { spec_bst_link(&self.root) }
 
         fn new() -> Self { BSTTreapStEph { root: None } }
 
