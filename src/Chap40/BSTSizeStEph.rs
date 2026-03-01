@@ -241,11 +241,18 @@ pub mod BSTSizeStEph {
                 spec_size_link(link) <= spec_size_link(old(link)) + 1,
                 spec_size_link(link) >= spec_size_link(old(link)),
             decreases old(link);
-        fn find_link<'a>(link: &'a Link<T>, target: &T) -> Option<&'a T>
+        fn find_link<'a>(link: &'a Link<T>, target: &T) -> (result: Option<&'a T>)
+            ensures link.is_none() ==> result.is_none(),
             decreases *link;
-        fn min_link(link: &Link<T>) -> Option<&T>
+        fn min_link(link: &Link<T>) -> (result: Option<&T>)
+            ensures
+                link.is_none() ==> result.is_none(),
+                link.is_some() ==> result.is_some(),
             decreases *link;
-        fn max_link(link: &Link<T>) -> Option<&T>
+        fn max_link(link: &Link<T>) -> (result: Option<&T>)
+            ensures
+                link.is_none() ==> result.is_none(),
+                link.is_some() ==> result.is_some(),
             decreases *link;
         fn height_link(link: &Link<T>) -> (h: N)
             requires
@@ -254,8 +261,10 @@ pub mod BSTSizeStEph {
             ensures h as nat == spec_height_link(link),
             decreases *link;
         fn in_order_collect(link: &Link<T>, out: &mut Vec<T>)
+            ensures out.len() >= old(out).len(),
             decreases *link;
         fn in_order_collect_with_priority(link: &Link<T>, out: &mut Vec<(T, u64)>)
+            ensures out.len() >= old(out).len(),
             decreases *link;
         fn find_min_priority_idx(items: &Vec<(T, u64)>, start: usize, end: usize) -> (result: usize)
             requires start < end, end <= items.len(),
@@ -266,7 +275,8 @@ pub mod BSTSizeStEph {
                 spec_size_link(&result) == (end - start) as nat,
                 spec_size_wf_link(&result),
             decreases end - start;
-        fn filter_by_key(items: &Vec<(T, u64)>, key: &T) -> (result: Vec<(T, u64)>);
+        fn filter_by_key(items: &Vec<(T, u64)>, key: &T) -> (result: Vec<(T, u64)>)
+            ensures result.len() <= items.len();
         fn rank_link(link: &Link<T>, key: &T) -> (result: N)
             requires
                 spec_size_link(link) < usize::MAX as nat,
@@ -496,7 +506,7 @@ pub mod BSTSizeStEph {
             }
         }
 
-        fn find_link<'a>(link: &'a Link<T>, target: &T) -> Option<&'a T>
+        fn find_link<'a>(link: &'a Link<T>, target: &T) -> (result: Option<&'a T>)
             decreases *link,
         {
             match link {
@@ -513,7 +523,7 @@ pub mod BSTSizeStEph {
             }
         }
 
-        fn min_link(link: &Link<T>) -> Option<&T>
+        fn min_link(link: &Link<T>) -> (result: Option<&T>)
             decreases *link,
         {
             match link {
@@ -525,7 +535,7 @@ pub mod BSTSizeStEph {
             }
         }
 
-        fn max_link(link: &Link<T>) -> Option<&T>
+        fn max_link(link: &Link<T>) -> (result: Option<&T>)
             decreases *link,
         {
             match link {
@@ -618,7 +628,9 @@ pub mod BSTSizeStEph {
             let mut filtered: Vec<(T, u64)> = Vec::new();
             let mut i: usize = 0;
             while i < items.len()
-                invariant i <= items.len(),
+                invariant
+                    i <= items.len(),
+                    filtered.len() <= i,
                 decreases items.len() - i,
             {
                 if items[i].0 != *key {

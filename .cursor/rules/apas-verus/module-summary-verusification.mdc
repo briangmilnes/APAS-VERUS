@@ -1,0 +1,39 @@
+# Module Summary Verusification Table
+
+When the user asks for a "module summary verusification" or "module summary" for a chapter,
+produce the following table. Run `veracity-review-module-fn-impls` and
+`veracity-review-proof-holes` first to get counts.
+
+## Table Format
+
+| # | Chap | File | Trait Decl | Trait Impl | Bare Impl | Free Fn | In verus! | Outside verus! | Has Spec | Has Hole | No Spec | Iterators | PTTs |
+|---|------|------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|:---------:|:----:|
+| 1 | NN | FileName.rs | N | N | N | N | N | N | N | N | N | Yes/No | Yes/No |
+
+## Column Definitions
+
+- **Trait Decl**: functions declared in a `trait` block.
+- **Trait Impl**: functions in `impl Trait for Type` blocks.
+- **Bare Impl**: functions in bare `impl Type` blocks (should be 0 per trait-impl pattern).
+- **Free Fn**: module-level free functions (clone_link, proof lemmas).
+- **In verus!**: functions inside `verus!` macro.
+- **Outside verus!**: functions outside `verus!` macro (Debug, Display, macros).
+- **Has Spec**: functions with requires/ensures (strength not yet classified).
+- **Has Hole**: functions containing `assume()`, `admit()`, or `#[verifier::external_body]`.
+- **No Spec**: functions with no requires/ensures.
+- **Iterators**: whether the module implements the collection iterator standard
+  (see `collection-iterators.mdc`). Collection modules must have iterators.
+- **PTTs**: whether proof time tests exist for the module in `rust_verify_test/tests/`.
+
+## Notes Section
+
+After the table, add bullet notes explaining:
+- What the Free Fn entries are (e.g., `clone_link` for Clone impl, proof lemmas).
+- Any accepted holes and why they exist.
+- Whether iterators or PTTs are missing and needed.
+
+## When to Produce
+
+- When the user says "module summary verusification" or "module summary".
+- As part of chapter review or verusification assessment.
+- Before claiming a chapter is complete.

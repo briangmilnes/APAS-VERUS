@@ -308,17 +308,27 @@ pub mod BSTReducedStEph {
                 spec_size_link(link) <= spec_size_link(old(link)) + 1,
                 spec_size_link(link) >= spec_size_link(old(link)),
             decreases old(link);
-        fn find_link<'a>(link: &'a Link<K, V, R>, key: &K) -> Option<&'a V>
+        fn find_link<'a>(link: &'a Link<K, V, R>, key: &K) -> (result: Option<&'a V>)
+            ensures link.is_none() ==> result.is_none(),
             decreases *link;
-        fn min_key_link(link: &Link<K, V, R>) -> Option<&K>
+        fn min_key_link(link: &Link<K, V, R>) -> (result: Option<&K>)
+            ensures
+                link.is_none() ==> result.is_none(),
+                link.is_some() ==> result.is_some(),
             decreases *link;
-        fn max_key_link(link: &Link<K, V, R>) -> Option<&K>
+        fn max_key_link(link: &Link<K, V, R>) -> (result: Option<&K>)
+            ensures
+                link.is_none() ==> result.is_none(),
+                link.is_some() ==> result.is_some(),
             decreases *link;
         fn collect_keys(link: &Link<K, V, R>, out: &mut Vec<K>)
+            ensures out.len() >= old(out).len(),
             decreases *link;
         fn collect_values(link: &Link<K, V, R>, out: &mut Vec<V>)
+            ensures out.len() >= old(out).len(),
             decreases *link;
         fn collect_in_order_kvp(link: &Link<K, V, R>, out: &mut Vec<(K, V, u64)>)
+            ensures out.len() >= old(out).len(),
             decreases *link;
         fn height_link(link: &Link<K, V, R>) -> (result: usize)
             requires spec_height_link(link) < usize::MAX as nat,
@@ -326,7 +336,8 @@ pub mod BSTReducedStEph {
             decreases *link;
         fn filter_by_key_kvp(
             items: &Vec<(K, V, u64)>, key: &K,
-        ) -> (result: Vec<(K, V, u64)>);
+        ) -> (result: Vec<(K, V, u64)>)
+            ensures result.len() <= items.len();
         fn find_min_priority_idx_kvp(
             items: &Vec<(K, V, u64)>, start: usize, end: usize,
         ) -> (result: usize)
@@ -550,7 +561,7 @@ pub mod BSTReducedStEph {
             }
         }
 
-        fn find_link<'a>(link: &'a Link<K, V, R>, key: &K) -> Option<&'a V>
+        fn find_link<'a>(link: &'a Link<K, V, R>, key: &K) -> (result: Option<&'a V>)
             decreases *link,
         {
             match link {
@@ -567,7 +578,7 @@ pub mod BSTReducedStEph {
             }
         }
 
-        fn min_key_link(link: &Link<K, V, R>) -> Option<&K>
+        fn min_key_link(link: &Link<K, V, R>) -> (result: Option<&K>)
             decreases *link,
         {
             match link {
@@ -579,7 +590,7 @@ pub mod BSTReducedStEph {
             }
         }
 
-        fn max_key_link(link: &Link<K, V, R>) -> Option<&K>
+        fn max_key_link(link: &Link<K, V, R>) -> (result: Option<&K>)
             decreases *link,
         {
             match link {
@@ -640,7 +651,9 @@ pub mod BSTReducedStEph {
             let mut filtered: Vec<(K, V, u64)> = Vec::new();
             let mut i: usize = 0;
             while i < items.len()
-                invariant i <= items.len(),
+                invariant
+                    i <= items.len(),
+                    filtered.len() <= i,
                 decreases items.len() - i,
             {
                 if items[i].0 != *key {

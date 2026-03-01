@@ -117,7 +117,10 @@ pub mod BSTKeyValueStEph {
             ensures result as nat == self.spec_height();
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn insert(&mut self, key: K, value: V, priority: u64)
-            requires old(self).spec_size() < usize::MAX;
+            requires old(self).spec_size() < usize::MAX,
+            ensures
+                self.spec_size() >= old(self).spec_size(),
+                self.spec_size() <= old(self).spec_size() + 1;
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — filter + rebuild
         fn delete(&mut self, key: &K);
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
@@ -139,26 +142,45 @@ pub mod BSTKeyValueStEph {
 
         // Internal associated functions.
 
-        fn new_node(key: K, value: V, priority: u64) -> Node<K, V>;
+        fn new_node(key: K, value: V, priority: u64) -> (result: Node<K, V>)
+            ensures
+                result.key == key,
+                result.value == value,
+                result.priority == priority,
+                result.left is None,
+                result.right is None;
         fn height_link(link: &Link<K, V>) -> (result: usize)
             requires spec_height_link(link) < usize::MAX as nat,
             ensures result == spec_height_link(link),
             decreases *link;
-        fn rotate_left(link: &mut Link<K, V>);
-        fn rotate_right(link: &mut Link<K, V>);
+        fn rotate_left(link: &mut Link<K, V>)
+            ensures link.is_some() == old(link).is_some();
+        fn rotate_right(link: &mut Link<K, V>)
+            ensures link.is_some() == old(link).is_some();
         fn insert_link(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> (inserted: bool)
+            ensures link.is_some(),
             decreases old(link);
-        fn find_link<'a>(link: &'a Link<K, V>, key: &K) -> Option<&'a V>
+        fn find_link<'a>(link: &'a Link<K, V>, key: &K) -> (result: Option<&'a V>)
+            ensures link.is_none() ==> result.is_none(),
             decreases *link;
-        fn min_key_link(link: &Link<K, V>) -> Option<&K>
+        fn min_key_link(link: &Link<K, V>) -> (result: Option<&K>)
+            ensures
+                link.is_none() ==> result.is_none(),
+                link.is_some() ==> result.is_some(),
             decreases *link;
-        fn max_key_link(link: &Link<K, V>) -> Option<&K>
+        fn max_key_link(link: &Link<K, V>) -> (result: Option<&K>)
+            ensures
+                link.is_none() ==> result.is_none(),
+                link.is_some() ==> result.is_some(),
             decreases *link;
         fn collect_keys(link: &Link<K, V>, out: &mut Vec<K>)
+            ensures out.len() >= old(out).len(),
             decreases *link;
         fn collect_values(link: &Link<K, V>, out: &mut Vec<V>)
+            ensures out.len() >= old(out).len(),
             decreases *link;
         fn collect_in_order_kvp(link: &Link<K, V>, out: &mut Vec<(K, V, u64)>)
+            ensures out.len() >= old(out).len(),
             decreases *link;
         fn find_min_priority_idx_kvp(
             items: &Vec<(K, V, u64)>, start: usize, end: usize,
@@ -169,10 +191,12 @@ pub mod BSTKeyValueStEph {
             items: &Vec<(K, V, u64)>, start: usize, end: usize,
         ) -> (result: Link<K, V>)
             requires start <= end, end <= items.len(),
+            ensures result.is_none() == (start == end),
             decreases end - start;
         fn filter_by_key_kvp(
             items: &Vec<(K, V, u64)>, key: &K,
-        ) -> (result: Vec<(K, V, u64)>);
+        ) -> (result: Vec<(K, V, u64)>)
+            ensures result.len() <= items.len();
     }
 
     // 9. impls
@@ -228,7 +252,7 @@ pub mod BSTKeyValueStEph {
 
         // Internal associated functions.
 
-        fn new_node(key: K, value: V, priority: u64) -> Node<K, V> {
+        fn new_node(key: K, value: V, priority: u64) -> (result: Node<K, V>) {
             Node { key, value, priority, left: None, right: None }
         }
 
@@ -306,7 +330,7 @@ pub mod BSTKeyValueStEph {
             }
         }
 
-        fn find_link<'a>(link: &'a Link<K, V>, key: &K) -> Option<&'a V>
+        fn find_link<'a>(link: &'a Link<K, V>, key: &K) -> (result: Option<&'a V>)
             decreases *link,
         {
             match link {
@@ -323,7 +347,7 @@ pub mod BSTKeyValueStEph {
             }
         }
 
-        fn min_key_link(link: &Link<K, V>) -> Option<&K>
+        fn min_key_link(link: &Link<K, V>) -> (result: Option<&K>)
             decreases *link,
         {
             match link {
@@ -335,7 +359,7 @@ pub mod BSTKeyValueStEph {
             }
         }
 
-        fn max_key_link(link: &Link<K, V>) -> Option<&K>
+        fn max_key_link(link: &Link<K, V>) -> (result: Option<&K>)
             decreases *link,
         {
             match link {
@@ -422,7 +446,9 @@ pub mod BSTKeyValueStEph {
             let mut filtered: Vec<(K, V, u64)> = Vec::new();
             let mut i: usize = 0;
             while i < items.len()
-                invariant i <= items.len(),
+                invariant
+                    i <= items.len(),
+                    filtered.len() <= i,
                 decreases items.len() - i,
             {
                 if items[i].0 != *key {
