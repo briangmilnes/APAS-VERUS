@@ -140,8 +140,6 @@ pub mod ScanContractStEph {
 
     /// Prefix contraction lemma: fold_left of an even-length prefix s.take(2k)
     /// equals fold_left of the first k elements of the contracted sequence b.
-    /// - APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     pub proof fn lemma_prefix_contraction<T>(s: Seq<T>, b: Seq<T>, f: spec_fn(T, T) -> T, id: T, k: int)
         requires
             spec_monoid(f, id),
@@ -159,6 +157,65 @@ pub mod ScanContractStEph {
             |i: int| f(prefix[2 * i], prefix[2 * i + 1]),
         );
         assert(contracted =~= b.take(k));
+    }
+
+    /// Expand even step: b_seq.take(j).fold_left(id, f) == s.take(2j).fold_left(id, f).
+    proof fn lemma_expand_even<T>(s: Seq<T>, b_seq: Seq<T>, f: spec_fn(T, T) -> T, id: T, j: int)
+        requires
+            spec_monoid(f, id),
+            j >= 0,
+            2 * j <= s.len(),
+            b_seq.len() >= j,
+            forall|i: int| #![trigger b_seq[i]] 0 <= i < b_seq.len() ==> b_seq[i] == f(s[2 * i], s[2 * i + 1]),
+        ensures
+            b_seq.take(j).fold_left(id, f) == s.take(2 * j).fold_left(id, f),
+    {
+        if j > 0 {
+            lemma_prefix_contraction::<T>(s, b_seq, f, id, j);
+        } else {
+            reveal(Seq::fold_left);
+            assert(s.take(0) =~= Seq::<T>::empty());
+            assert(b_seq.take(0) =~= Seq::<T>::empty());
+        }
+    }
+
+    /// Expand odd step: f(s.take(2j).fold_left(id, f), s[2j]) == s.take(2j+1).fold_left(id, f).
+    proof fn lemma_expand_odd<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, j: int)
+        requires
+            spec_monoid(f, id),
+            j >= 0,
+            2 * j + 1 <= s.len(),
+        ensures
+            f(s.take(2 * j).fold_left(id, f), s[2 * j]) == s.take(2 * j + 1).fold_left(id, f),
+    {
+        let take_2j1 = s.take(2 * j + 1);
+        take_2j1.lemma_fold_left_split(id, f, 2 * j);
+        assert(take_2j1.subrange(0, 2 * j) =~= s.take(2 * j));
+        assert(take_2j1.subrange(2 * j, 2 * j + 1) =~= seq![s[2 * j]]);
+        reveal(Seq::fold_left);
+    }
+
+    /// Expand odd-length tail: last element when n is odd.
+    proof fn lemma_expand_odd_tail<T>(
+        s: Seq<T>, b_seq: Seq<T>, f: spec_fn(T, T) -> T, id: T, half: int,
+    )
+        requires
+            spec_monoid(f, id),
+            half >= 1,
+            s.len() == 2 * half + 1,
+            b_seq.len() == half,
+            forall|i: int| #![trigger b_seq[i]] 0 <= i < b_seq.len() ==> b_seq[i] == f(s[2 * i], s[2 * i + 1]),
+        ensures
+            f(b_seq.take(half - 1).fold_left(id, f), b_seq[half - 1])
+                == s.take(2 * half).fold_left(id, f),
+    {
+        b_seq.lemma_fold_left_split(id, f, half - 1);
+        assert(b_seq.subrange(0, half - 1) =~= b_seq.take(half - 1));
+        assert(b_seq.subrange(half - 1, half) =~= seq![b_seq[half - 1]]);
+        reveal(Seq::fold_left);
+
+        lemma_prefix_contraction::<T>(s, b_seq, f, id, half);
+        assert(b_seq.take(half) =~= b_seq);
     }
 
     //		8. traits
@@ -184,12 +241,45 @@ pub mod ScanContractStEph {
                 forall|i: int| #![trigger scanned.spec_index(i)]
                     0 <= i < a.spec_len() ==>
                         scanned.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i).fold_left(id, spec_f);
+
+        /// Expand phase: interleave contracted scan results into full scan output.
+        fn expand_scan<F: Fn(&T, &T) -> T>(
+            a: &ArraySeqStEphS<T>,
+            b: &ArraySeqStEphS<T>,
+            c: &ArraySeqStEphS<T>,
+            f: &F,
+            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
+            id: &T,
+            n: usize,
+            half: usize,
+        ) -> (result: Vec<T>)
+            requires
+                n == a.spec_len(),
+                n >= 2,
+                half == n / 2,
+                half <= n,
+                b.spec_len() == half as nat,
+                c.spec_len() == half as nat,
+                spec_monoid(spec_f, *id),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                forall|k: int| #![trigger b.spec_index(k)] 0 <= k < half as int ==> {
+                    &&& 2 * k + 1 < a.spec_len()
+                    &&& b.spec_index(k) == spec_f(a.spec_index(2 * k), a.spec_index(2 * k + 1))
+                },
+                forall|k: int| #![trigger c.spec_index(k)] 0 <= k < half as int ==>
+                    c.spec_index(k) == Seq::new(b.spec_len(), |j: int| b.spec_index(j)).take(k).fold_left(*id, spec_f),
+            ensures ({
+                let s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+                &&& result@.len() == n
+                &&& forall|k: int| #![trigger result@[k]] 0 <= k < n as int ==>
+                        result@[k] == s.take(k).fold_left(*id, spec_f)
+            });
     }
 
     //		9. impls
 
     impl<T: StT + Clone> ScanContractStEphTrait<T> for ArraySeqStEphS<T> {
-        #[verifier::external_body] // accept hole: rlimit exceeded on expand loop; proof structurally correct but too expensive
         fn scan_contract<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             f: &F,
@@ -210,7 +300,6 @@ pub mod ScanContractStEph {
             }
 
             // Base case: single element — result is [id]
-            // result[0] = fold_left(s.take(0), id, spec_f) = fold_left(empty, id, spec_f) = id
             if n == 1 {
                 let mut v: Vec<T> = Vec::with_capacity(1);
                 v.push(id);
@@ -220,14 +309,13 @@ pub mod ScanContractStEph {
                 return ArraySeqStEphS { seq: v };
             }
 
-            // Create a spec-equal copy of id via f for the recursive call.
             // f(id, id) == id by left identity, producing an owned T without clone.
             let id_for_recurse = f(&id, &id);
             proof {
                 assert(id_for_recurse == id);
             }
 
-            // ---- Contract: b[i] = f(a[2i], a[2i+1]) ----
+            // Contract: b[i] = f(a[2i], a[2i+1])
             let half = n / 2;
             let mut b_vec: Vec<T> = Vec::with_capacity(half);
             let mut i: usize = 0;
@@ -270,7 +358,7 @@ pub mod ScanContractStEph {
                 }
             }
 
-            // ---- Solve: recursively scan contracted sequence ----
+            // Solve: recursively scan contracted sequence
             let c = Self::scan_contract(&b, f, Ghost(spec_f), id_for_recurse);
 
             proof {
@@ -284,92 +372,8 @@ pub mod ScanContractStEph {
                 }
             }
 
-            // ---- Expand: build result via interleaving ----
-            // Even positions: result[2j] = c[j] (via f(id, c[j]) = c[j] by left identity)
-            // Odd positions:  result[2j+1] = f(c[j], a[2j])
-            let mut result_vec: Vec<T> = Vec::with_capacity(n);
-            let mut j: usize = 0;
-            while j < half
-                invariant
-                    j <= half,
-                    half == n / 2,
-                    n == a.spec_len(),
-                    n >= 2,
-                    half <= n,
-                    s == Seq::new(a.spec_len(), |k: int| a.spec_index(k)),
-                    b.spec_len() == half as nat,
-                    b_seq.len() == half as nat,
-                    c.spec_len() == half as nat,
-                    forall|k: int| #![trigger b_seq[k]] 0 <= k < b_seq.len() ==>
-                        b_seq[k] == spec_f(s[2 * k], s[2 * k + 1]),
-                    forall|k: int| #![trigger c.spec_index(k)] 0 <= k < half as int ==>
-                        c.spec_index(k) == b_seq.take(k).fold_left(id, spec_f),
-                    result_vec@.len() == 2 * j as int,
-                    forall|k: int| #![trigger result_vec@[k]] 0 <= k < 2 * j as int ==>
-                        result_vec@[k] == s.take(k).fold_left(id, spec_f),
-                    spec_monoid(spec_f, id),
-                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
-                decreases half - j,
-            {
-                // Even position: result[2j] = f(id, c[j]) = c[j]
-                let even_val = f(&id, c.nth(j));
-                proof {
-                    // even_val == spec_f(id, c[j]) == c[j] by left identity
-                    // c[j] == b_seq.take(j).fold_left(id, spec_f)
-                    // For j == 0: both s.take(0) and b_seq.take(0) are empty, fold_left = id
-                    // For j >= 1: by prefix contraction
-                    if j > 0 {
-                        lemma_prefix_contraction::<T>(s, b_seq, spec_f, id, j as int);
-                    } else {
-                        assert(s.take(0) =~= Seq::<T>::empty());
-                        assert(b_seq.take(0) =~= Seq::<T>::empty());
-                    }
-                    assert(even_val == s.take(2 * j as int).fold_left(id, spec_f));
-                }
-                result_vec.push(even_val);
-
-                // Odd position: result[2j+1] = f(c[j], a[2j])
-                let odd_val = f(c.nth(j), a.nth(2 * j));
-                proof {
-                    // odd_val == spec_f(c[j], s[2j])
-                    //         == spec_f(s.take(2j).fold_left(id, spec_f), s[2j])
-                    // Split s.take(2j+1) at position 2j:
-                    let take_2j1 = s.take(2 * j as int + 1);
-                    take_2j1.lemma_fold_left_split(id, spec_f, 2 * j as int);
-                    assert(take_2j1.subrange(0, 2 * j as int) =~= s.take(2 * j as int));
-                    assert(take_2j1.subrange(2 * j as int, 2 * j as int + 1) =~= seq![s[2 * j as int]]);
-                    assert(odd_val == s.take(2 * j as int + 1).fold_left(id, spec_f));
-                }
-                result_vec.push(odd_val);
-
-                j += 1;
-            }
-
-            // Handle odd-length: one more element
-            if n % 2 == 1 {
-                // result[n-1] = fold_left(s.take(n-1), id, f) = fold_left(s.take(2*half), id, f)
-                // = fold_left(b_seq, id, f) = f(c[half-1], b[half-1])
-                let last_val = f(c.nth(half - 1), b.nth(half - 1));
-                proof {
-                    // Step 1: b_seq.fold_left(id, f) == f(c[half-1], b[half-1])
-                    b_seq.lemma_fold_left_split(id, spec_f, (half - 1) as int);
-                    assert(b_seq.subrange(0, (half - 1) as int) =~= b_seq.take((half - 1) as int));
-                    assert(b_seq.subrange((half - 1) as int, half as int) =~= seq![b_seq[(half - 1) as int]]);
-
-                    // Step 2: s.take(2*half).fold_left(id, f) == b_seq.fold_left(id, f)
-                    lemma_prefix_contraction::<T>(s, b_seq, spec_f, id, half as int);
-                    assert(b_seq.take(half as int) =~= b_seq);
-
-                    // Step 3: s.take(n-1) =~= s.take(2*half)
-                    assert(s.take((n - 1) as int) =~= s.take(2 * half as int));
-
-                    assert(last_val == s.take((n - 1) as int).fold_left(id, spec_f));
-                }
-                result_vec.push(last_val);
-            }
-
-            // Build scanned
+            // Expand
+            let result_vec = Self::expand_scan(a, &b, &c, f, Ghost(spec_f), &id, n, half);
             let scanned = ArraySeqStEphS { seq: result_vec };
             proof {
                 assert(scanned.spec_len() == n as nat);
@@ -381,6 +385,76 @@ pub mod ScanContractStEph {
                 }
             }
             scanned
+        }
+
+        fn expand_scan<F: Fn(&T, &T) -> T>(
+            a: &ArraySeqStEphS<T>,
+            b: &ArraySeqStEphS<T>,
+            c: &ArraySeqStEphS<T>,
+            f: &F,
+            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
+            id: &T,
+            n: usize,
+            half: usize,
+        ) -> (result: Vec<T>)
+        {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+            let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));
+
+            let mut result_vec: Vec<T> = Vec::with_capacity(n);
+            let mut j: usize = 0;
+            while j < half
+                invariant
+                    j <= half,
+                    half == n / 2,
+                    n == a.spec_len(),
+                    n >= 2,
+                    half <= n,
+                    s == Seq::new(a.spec_len(), |k: int| a.spec_index(k)),
+                    b.spec_len() == half as nat,
+                    b_seq == Seq::new(b.spec_len(), |i: int| b.spec_index(i)),
+                    b_seq.len() == half as nat,
+                    c.spec_len() == half as nat,
+                    forall|k: int| #![trigger b_seq[k]] 0 <= k < b_seq.len() ==>
+                        b_seq[k] == spec_f(s[2 * k], s[2 * k + 1]),
+                    forall|k: int| #![trigger c.spec_index(k)] 0 <= k < half as int ==>
+                        c.spec_index(k) == b_seq.take(k).fold_left(*id, spec_f),
+                    result_vec@.len() == 2 * j as int,
+                    forall|k: int| #![trigger result_vec@[k]] 0 <= k < 2 * j as int ==>
+                        result_vec@[k] == s.take(k).fold_left(*id, spec_f),
+                    spec_monoid(spec_f, *id),
+                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                decreases half - j,
+            {
+                let even_val = f(id, c.nth(j));
+                proof {
+                    lemma_expand_even::<T>(s, b_seq, spec_f, *id, j as int);
+                    assert(even_val == s.take(2 * j as int).fold_left(*id, spec_f));
+                }
+                result_vec.push(even_val);
+
+                let odd_val = f(c.nth(j), a.nth(2 * j));
+                proof {
+                    lemma_expand_odd::<T>(s, spec_f, *id, j as int);
+                    assert(odd_val == s.take(2 * j as int + 1).fold_left(*id, spec_f));
+                }
+                result_vec.push(odd_val);
+
+                j += 1;
+            }
+
+            if n % 2 == 1 {
+                let last_val = f(c.nth(half - 1), b.nth(half - 1));
+                proof {
+                    lemma_expand_odd_tail::<T>(s, b_seq, spec_f, *id, half as int);
+                    assert(s.take((n - 1) as int) =~= s.take(2 * half as int));
+                    assert(last_val == s.take((n - 1) as int).fold_left(*id, spec_f));
+                }
+                result_vec.push(last_val);
+            }
+
+            result_vec
         }
     }
 

@@ -1,13 +1,13 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap27/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent1/src/Chap27/
 
 ✓ ReduceContractMtEph.rs
    4 clean proof functions
 ✓ ReduceContractStEph.rs
    4 clean proof functions
 ✓ ScanContractMtEph.rs
-   5 clean proof functions
+   8 clean proof functions
 ✓ ScanContractStEph.rs
-   5 clean proof functions
+   8 clean proof functions
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -19,9 +19,9 @@ Modules:
    4 total
 
 Proof Functions:
-   18 clean
+   24 clean
    0 holed
-   18 total
+   24 total
 
 Holes Found: 0 total
 

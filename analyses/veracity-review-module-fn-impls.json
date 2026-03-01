@@ -1,930 +1,834 @@
 [
   {
     "id": 1,
-    "function": "new_treap_lock",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "77-78",
+    "function": "clone_link",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "38-42",
     "spec_strength": "hole",
-    "snippet": "    fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, TreapWf>)\n        requires spec_node_wf(&val),"
+    "snippet": "    fn clone_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (result: Link<K, V>)\n        ensures\n            spec_content_link(&result) == spec_content_link(link),\n            spec_node_count_link(&result) == spec_node_count_link(link),\n        decreases *link,"
   },
   {
     "id": 2,
-    "function": "priority_for",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "116-124",
-    "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(1), Span Θ(1)\n    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n    fn priority_for<T: MtKey>(key: &T) -> i64 {\n        let mut hasher = std::collections::hash_map::DefaultHasher::new();\n        let mut buf = String::new();\n        let _ = write!(&mut buf, \"{key:?}\");\n        Hash::hash(&buf, &mut hasher);\n        hasher.finish() as i64\n    }"
+    "function": "new",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "144-147",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (result: Self)\n            ensures\n                result.spec_size() == 0,\n                result@ == Map::<K, V>::empty();"
   },
   {
     "id": 3,
-    "function": "tree_priority",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "126-133",
-    "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(1), Span Θ(1)\n    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n    fn tree_priority<T: MtKey>(tree: &ParamTreap<T>) -> i64 {\n        let handle = tree.root.acquire_read();\n        let result = handle.borrow().as_ref().map_or(i64::MIN, |node| node.priority);\n        handle.release_read();\n        result\n    }"
+    "function": "size",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "149-150",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (result: usize)\n            ensures result as nat == self.spec_size();"
   },
   {
     "id": 4,
-    "function": "tree_size",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "135-142",
-    "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(1), Span Θ(1)\n    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n    fn tree_size<T: MtKey>(tree: &ParamTreap<T>) -> usize {\n        let handle = tree.root.acquire_read();\n        let result = handle.borrow().as_ref().map_or(0, |node| node.size);\n        handle.release_read();\n        result\n    }"
+    "function": "is_empty",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "152-153",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (result: bool)\n            ensures result == (self.spec_size() == 0);"
   },
   {
     "id": 5,
-    "function": "make_node",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "144-153",
-    "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(1), Span Θ(1)\n    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n    fn make_node<T: MtKey>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> ParamTreap<T> {\n        let size = 1 + tree_size(&left) + tree_size(&right);\n        ParamTreap {\n            root: Arc::new(new_treap_lock(\n                Some(Box::new(NodeInner { key, priority, size, left, right })),\n            )),\n        }\n    }"
+    "function": "height",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "155-157",
+    "spec_strength": "unknown",
+    "snippet": "        fn height(&self) -> (result: usize)\n            requires self.spec_height() < usize::MAX as nat,\n            ensures result as nat == self.spec_height();"
   },
   {
     "id": 6,
-    "function": "join_with_priority",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "155-177",
-    "spec_strength": "",
-    "snippet": "    fn join_with_priority<T: MtKey + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> ParamTreap<T>\n    where\n        ParamTreap<T>: ParamTreapTrait<T>,\n    {\n        let left_priority = tree_priority(&left);\n        let right_priority = tree_priority(&right);\n        if priority > left_priority && priority > right_priority {\n            return make_node(left, key, priority, right);\n        }\n        if left_priority > right_priority {\n            if let Some((ll, lk, lp, lr)) = left.expose_with_priority() {\n                let merged_right = join_with_priority(lr, key, priority, right);\n                return make_node(ll, lk, lp, merged_right);\n            }\n            make_node(left, key, priority, right)\n        } else {\n            if let Some((rl, rk, rp, rr)) = right.expose_with_priority() {\n                let merged_left = join_with_priority(left, key, priority, rl);\n                return make_node(merged_left, rk, rp, rr);\n            }\n            make_node(left, key, priority, right)\n        }\n    }"
+    "function": "insert",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "159-163",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, key: K, value: V, priority: u64)\n            requires old(self).spec_size() < usize::MAX,\n            ensures\n                self.spec_size() >= old(self).spec_size(),\n                self.spec_size() <= old(self).spec_size() + 1;"
   },
   {
     "id": 7,
-    "function": "split_inner",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "179-199",
-    "spec_strength": "",
-    "snippet": "    fn split_inner<T: MtKey + 'static>(tree: &ParamTreap<T>, key: &T) -> (ParamTreap<T>, bool, ParamTreap<T>)\n    where\n        ParamTreap<T>: ParamTreapTrait<T>,\n    {\n        match tree.expose_with_priority() {\n            | None => (ParamTreap::new(), false, ParamTreap::new()),\n            | Some((left, root_key, priority, right)) => match key.cmp(&root_key) {\n                | Less => {\n                    let (ll, found, lr) = split_inner(&left, key);\n                    let rebuilt = join_with_priority(lr, root_key, priority, right);\n                    (ll, found, rebuilt)\n                }\n                | Greater => {\n                    let (rl, found, rr) = split_inner(&right, key);\n                    let rebuilt = join_with_priority(left, root_key, priority, rl);\n                    (rebuilt, found, rr)\n                }\n                | Equal => (left, true, right),\n            },\n        }\n    }"
+    "function": "delete",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "165-167",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(&mut self, key: &K)\n            requires old(self).spec_wf(),\n            ensures self.spec_size() <= old(self).spec_size();"
   },
   {
     "id": 8,
-    "function": "join_pair_inner",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "201-214",
-    "spec_strength": "",
-    "snippet": "    fn join_pair_inner<T: MtKey + 'static>(left: ParamTreap<T>, right: ParamTreap<T>) -> ParamTreap<T>\n    where\n        ParamTreap<T>: ParamTreapTrait<T>,\n    {\n        match right.expose_with_priority() {\n            | None => left,\n            | Some((r_left, r_key, r_priority, r_right)) => {\n                let (split_left, _, split_right) = split_inner(&left, &r_key);\n                let combined_left = join_pair_inner(split_left, r_left);\n                let combined_right = join_pair_inner(split_right, r_right);\n                join_with_priority(combined_left, r_key, r_priority, combined_right)\n            }\n        }\n    }"
+    "function": "find",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "169-171",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, key: &K) -> (result: Option<&V>)\n            requires self.spec_wf(),\n            ensures self.spec_size() == 0 ==> result is None;"
   },
   {
     "id": 9,
-    "function": "union_inner",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "216-229",
-    "spec_strength": "",
-    "snippet": "    fn union_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> ParamTreap<T>\n    where\n        ParamTreap<T>: ParamTreapTrait<T>,\n    {\n        match a.expose_with_priority() {\n            | None => b.clone(),\n            | Some((al, ak, ap, ar)) => {\n                let (bl, _, br) = split_inner(b, &ak);\n                let Pair(left_union, right_union) =\n                    crate::ParaPair!(move || union_inner(&al, &bl), move || union_inner(&ar, &br));\n                join_with_priority(left_union, ak, ap, right_union)\n            }\n        }\n    }"
+    "function": "contains",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "173-175",
+    "spec_strength": "unknown",
+    "snippet": "        fn contains(&self, key: &K) -> (result: bool)\n            requires self.spec_wf(),\n            ensures self.spec_size() == 0 ==> !result;"
   },
   {
     "id": 10,
-    "function": "intersect_inner",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "231-248",
-    "spec_strength": "",
-    "snippet": "    fn intersect_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> ParamTreap<T>\n    where\n        ParamTreap<T>: ParamTreapTrait<T>,\n    {\n        match a.expose_with_priority() {\n            | None => ParamTreap::new(),\n            | Some((al, ak, ap, ar)) => {\n                let (bl, found, br) = split_inner(b, &ak);\n                let Pair(left_res, right_res) =\n                    crate::ParaPair!(move || intersect_inner(&al, &bl), move || intersect_inner(&ar, &br));\n                if found {\n                    join_with_priority(left_res, ak, ap, right_res)\n                } else {\n                    join_pair_inner(left_res, right_res)\n                }\n            }\n        }\n    }"
+    "function": "get",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "177-179",
+    "spec_strength": "unknown",
+    "snippet": "        fn get(&self, key: &K) -> (result: Option<&V>)\n            requires self.spec_wf(),\n            ensures self.spec_size() == 0 ==> result is None;"
   },
   {
     "id": 11,
-    "function": "difference_inner",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "250-267",
-    "spec_strength": "",
-    "snippet": "    fn difference_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> ParamTreap<T>\n    where\n        ParamTreap<T>: ParamTreapTrait<T>,\n    {\n        match a.expose_with_priority() {\n            | None => ParamTreap::new(),\n            | Some((al, ak, ap, ar)) => {\n                let (bl, found, br) = split_inner(b, &ak);\n                let Pair(left_res, right_res) =\n                    crate::ParaPair!(move || difference_inner(&al, &bl), move || difference_inner(&ar, &br));\n                if found {\n                    join_pair_inner(left_res, right_res)\n                } else {\n                    join_with_priority(left_res, ak, ap, right_res)\n                }\n            }\n        }\n    }"
+    "function": "keys",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "181-183",
+    "spec_strength": "unknown",
+    "snippet": "        fn keys(&self) -> (result: ArraySeqStPerS<K>)\n            requires self.spec_wf(),\n            ensures result.spec_len() == self.spec_size();"
   },
   {
     "id": 12,
-    "function": "filter_inner",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "269-287",
-    "spec_strength": "",
-    "snippet": "    fn filter_inner<T: MtKey + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: &Arc<F>) -> ParamTreap<T>\n    where\n        ParamTreap<T>: ParamTreapTrait<T>,\n    {\n        match tree.expose_with_priority() {\n            | None => ParamTreap::new(),\n            | Some((left, key, priority, right)) => {\n                let pred_left = Arc::clone(predicate);\n                let pred_right = Arc::clone(predicate);\n                let Pair(left_filtered, right_filtered) =\n                    crate::ParaPair!(move || filter_inner(&left, &pred_left), move || filter_inner(&right, &pred_right));\n                if (**predicate)(&key) {\n                    join_with_priority(left_filtered, key, priority, right_filtered)\n                } else {\n                    join_pair_inner(left_filtered, right_filtered)\n                }\n            }\n        }\n    }"
+    "function": "values",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "185-187",
+    "spec_strength": "unknown",
+    "snippet": "        fn values(&self) -> (result: ArraySeqStPerS<V>)\n            requires self.spec_wf(),\n            ensures result.spec_len() == self.spec_size();"
   },
   {
     "id": 13,
-    "function": "filter_parallel",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "289-295",
-    "spec_strength": "",
-    "snippet": "    fn filter_parallel<T: MtKey + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: F) -> ParamTreap<T>\n    where\n        ParamTreap<T>: ParamTreapTrait<T>,\n    {\n        let predicate = Arc::new(predicate);\n        filter_inner(tree, &predicate)\n    }"
+    "function": "minimum_key",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "190-194",
+    "spec_strength": "unknown",
+    "snippet": "        fn minimum_key(&self) -> (result: Option<&K>)\n            requires self.spec_wf(),\n            ensures\n                self.spec_size() == 0 ==> result is None,\n                self.spec_size() > 0 ==> result is Some;"
   },
   {
     "id": 14,
-    "function": "reduce_inner",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "297-318",
-    "spec_strength": "",
-    "snippet": "    fn reduce_inner<T: MtKey + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> T\n    where\n        ParamTreap<T>: ParamTreapTrait<T>,\n        F: Fn(T, T) -> T + Send + Sync + 'static,\n    {\n        match tree.expose_with_priority() {\n            | None => identity,\n            | Some((left, key, _priority, right)) => {\n                let op_left = Arc::clone(op);\n                let op_right = Arc::clone(op);\n                let left_base = identity.clone();\n                let right_base = identity;\n                let Pair(left_acc, right_acc) = crate::ParaPair!(\n                    move || reduce_inner(&left, &op_left, left_base),\n                    move || reduce_inner(&right, &op_right, right_base)\n                );\n                let op_ref = op.as_ref();\n                let right_with_key = op_ref(key, right_acc);\n                op_ref(left_acc, right_with_key)\n            }\n        }\n    }"
+    "function": "maximum_key",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "197-201",
+    "spec_strength": "unknown",
+    "snippet": "        fn maximum_key(&self) -> (result: Option<&K>)\n            requires self.spec_wf(),\n            ensures\n                self.spec_size() == 0 ==> result is None,\n                self.spec_size() > 0 ==> result is Some;"
   },
   {
     "id": 15,
-    "function": "reduce_parallel",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "320-327",
-    "spec_strength": "",
-    "snippet": "    fn reduce_parallel<T: MtKey + 'static, F>(tree: &ParamTreap<T>, op: F, base: T) -> T\n    where\n        ParamTreap<T>: ParamTreapTrait<T>,\n        F: Fn(T, T) -> T + Send + Sync + 'static,\n    {\n        let op = Arc::new(op);\n        reduce_inner(tree, &op, base)\n    }"
+    "function": "new_node",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "205-211",
+    "spec_strength": "unknown",
+    "snippet": "        fn new_node(key: K, value: V, priority: u64) -> (result: Node<K, V>)\n            ensures\n                result.key == key,\n                result.value == value,\n                result.priority == priority,\n                result.left is None,\n                result.right is None;"
   },
   {
     "id": 16,
-    "function": "collect_in_order",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "329-341",
-    "spec_strength": "",
-    "snippet": "    fn collect_in_order<T: MtKey + 'static>(tree: &ParamTreap<T>, out: &mut Vec<T>)\n    where\n        ParamTreap<T>: ParamTreapTrait<T>,\n    {\n        match tree.expose_with_priority() {\n            | None => {}\n            | Some((left, key, _priority, right)) => {\n                collect_in_order(&left, out);\n                out.push(key);\n                collect_in_order(&right, out);\n            }\n        }\n    }"
+    "function": "height_link",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "212-215",
+    "spec_strength": "unknown",
+    "snippet": "        fn height_link(link: &Link<K, V>) -> (result: usize)\n            requires spec_height_link(link) < usize::MAX as nat,\n            ensures result == spec_height_link(link),\n            decreases *link;"
   },
   {
     "id": 17,
-    "function": "new",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "346-348",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(1), Span O(1)\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn new()                                   -> Self;"
+    "function": "rotate_left",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "216-217",
+    "spec_strength": "unknown",
+    "snippet": "        fn rotate_left(link: &mut Link<K, V>)\n            ensures link.is_some() == old(link).is_some();"
   },
   {
     "id": 18,
-    "function": "expose",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "349-351",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(1), Span O(1)\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn expose(&self)                           -> Exposed<T>;"
+    "function": "rotate_right",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "218-219",
+    "spec_strength": "unknown",
+    "snippet": "        fn rotate_right(link: &mut Link<K, V>)\n            ensures link.is_some() == old(link).is_some();"
   },
   {
     "id": 19,
-    "function": "expose_with_priority",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "352-354",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(1), Span O(1)\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn expose_with_priority(&self)             -> Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>;"
+    "function": "insert_link",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "220-222",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert_link(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> (inserted: bool)\n            ensures link.is_some(),\n            decreases old(link);"
   },
   {
     "id": 20,
-    "function": "join_mid",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "355-357",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))\n        /// - Claude-Opus-4.6: Work O(log(|left| + |right|)), Span O(log(|left| + |right|)) — delegates to join_with_priority\n        fn join_mid(exposed: Exposed<T>)           -> Self;"
+    "function": "find_link",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "223-225",
+    "spec_strength": "unknown",
+    "snippet": "        fn find_link<'a>(link: &'a Link<K, V>, key: &K) -> (result: Option<&'a V>)\n            ensures link.is_none() ==> result.is_none(),\n            decreases *link;"
   },
   {
     "id": 21,
-    "function": "size",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "358-360",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(1), Span O(1)\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn size(&self)                             -> usize;"
+    "function": "min_key_link",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "226-230",
+    "spec_strength": "unknown",
+    "snippet": "        fn min_key_link(link: &Link<K, V>) -> (result: Option<&K>)\n            ensures\n                link.is_none() ==> result.is_none(),\n                link.is_some() ==> result.is_some(),\n            decreases *link;"
   },
   {
     "id": 22,
-    "function": "is_empty",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "361-363",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(1), Span O(1)\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn is_empty(&self)                         -> bool;"
+    "function": "max_key_link",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "231-235",
+    "spec_strength": "unknown",
+    "snippet": "        fn max_key_link(link: &Link<K, V>) -> (result: Option<&K>)\n            ensures\n                link.is_none() ==> result.is_none(),\n                link.is_some() ==> result.is_some(),\n            decreases *link;"
   },
   {
     "id": 23,
-    "function": "insert",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "364-366",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(lg |t|), Span O(lg |t|)\n        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)\n        fn insert(&self, key: T);"
+    "function": "collect_keys",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "236-238",
+    "spec_strength": "unknown",
+    "snippet": "        fn collect_keys(link: &Link<K, V>, out: &mut Vec<K>)\n            ensures out.len() == old(out).len() + spec_node_count_link(link),\n            decreases *link;"
   },
   {
     "id": 24,
-    "function": "delete",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "367-369",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(lg |t|), Span O(lg |t|)\n        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)\n        fn delete(&self, key: &T);"
+    "function": "collect_values",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "239-241",
+    "spec_strength": "unknown",
+    "snippet": "        fn collect_values(link: &Link<K, V>, out: &mut Vec<V>)\n            ensures out.len() == old(out).len() + spec_node_count_link(link),\n            decreases *link;"
   },
   {
     "id": 25,
-    "function": "find",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "370-372",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(lg |t|), Span O(lg |t|)\n        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)\n        fn find(&self, key: &T)                    -> Option<T>;"
+    "function": "collect_in_order_kvp",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "242-244",
+    "spec_strength": "unknown",
+    "snippet": "        fn collect_in_order_kvp(link: &Link<K, V>, out: &mut Vec<(K, V, u64)>)\n            ensures out.len() == old(out).len() + spec_node_count_link(link),\n            decreases *link;"
   },
   {
     "id": 26,
-    "function": "split",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "373-375",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(lg |t|), Span O(lg |t|)\n        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)\n        fn split(&self, key: &T)                   -> (Self, bool, Self);"
+    "function": "find_min_priority_idx_kvp",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "245-249",
+    "spec_strength": "unknown",
+    "snippet": "        fn find_min_priority_idx_kvp(\n            items: &Vec<(K, V, u64)>, start: usize, end: usize,\n        ) -> (result: usize)\n            requires start < end, end <= items.len(),\n            ensures start <= result && result < end;"
   },
   {
     "id": 27,
-    "function": "join_pair",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "376-378",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))\n        /// - Claude-Opus-4.6: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))\n        fn join_pair(&self, other: Self)           -> Self;"
+    "function": "build_treap_from_vec",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "250-255",
+    "spec_strength": "unknown",
+    "snippet": "        fn build_treap_from_vec(\n            items: &Vec<(K, V, u64)>, start: usize, end: usize,\n        ) -> (result: Link<K, V>)\n            requires start <= end, end <= items.len(),\n            ensures result.is_none() == (start == end),\n            decreases end - start;"
   },
   {
     "id": 28,
-    "function": "union",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "379-381",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)\n        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)\n        fn union(&self, other: &Self)              -> Self;"
+    "function": "filter_by_key_kvp",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "256-259",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter_by_key_kvp(\n            items: &Vec<(K, V, u64)>, key: &K,\n        ) -> (result: Vec<(K, V, u64)>)\n            ensures result.len() <= items.len();"
   },
   {
     "id": 29,
-    "function": "intersect",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "382-384",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)\n        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)\n        fn intersect(&self, other: &Self)          -> Self;"
+    "function": "default",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "529-530",
+    "spec_strength": "unknown",
+    "snippet": "        fn default() -> (result: Self)\n            ensures result.spec_size() == 0, result@ == Map::<K, V>::empty(),"
   },
   {
     "id": 30,
-    "function": "difference",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "385-387",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)\n        /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)\n        fn difference(&self, other: &Self)         -> Self;"
+    "function": "clone_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "43-48",
+    "spec_strength": "hole",
+    "snippet": "    fn clone_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (result: Link<K, V, R>)\n        ensures\n            spec_content_link(&result) == spec_content_link(link),\n            spec_size_link(&result) == spec_size_link(link),\n            spec_size_wf_link(link) ==> spec_size_wf_link(&result),\n        decreases *link,"
   },
   {
     "id": 31,
-    "function": "filter",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "388-390",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(|t|), Span O(lg |t|)\n        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)\n        fn filter<F: Pred<T>>(&self, predicate: F) -> Self;"
+    "function": "new`",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "246-250",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (result: Self)\n            ensures\n                result.spec_size() == 0,\n                result.spec_wf(),\n                result@ == Map::<K, V>::empty();"
   },
   {
     "id": 32,
-    "function": "reduce",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "391-395",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(|t|), Span O(lg |t|)\n        /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)\n        fn reduce<F>(&self, op: F, base: T)        -> T\n        where\n            F: Fn(T, T) -> T + Send + Sync + 'static;"
+    "function": "identity`",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "107-108",
+    "spec_strength": "hole",
+    "snippet": "        fn identity() -> (result: R)\n            ensures result == Self::spec_identity();"
   },
   {
     "id": 33,
-    "function": "in_order",
-    "file": "Chap39/BSTParaTreapMtEph.rs",
-    "lines": "396-398",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(|t|), Span O(|t|)\n        /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|)\n        fn in_order(&self)                         -> ArraySeqStPerS<T>;"
+    "function": "combine`",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "109-110",
+    "spec_strength": "hole",
+    "snippet": "        fn combine(a: R, b: R) -> (result: R)\n            ensures result == Self::spec_combine(a, b);"
   },
   {
     "id": 34,
-    "function": "minimum_inner",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "35-43",
-    "spec_strength": "",
-    "snippet": "    fn minimum_inner<T: MtKey + 'static>(tree: &ParamTreap<T>) -> Option<T> {\n        match tree.expose_with_priority() {\n            None => None,\n            Some((left, key, _, _)) => {\n                if left.is_empty() { Some(key) }\n                else { minimum_inner(&left) }\n            }\n        }\n    }"
+    "function": "lift`",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "111-112",
+    "spec_strength": "unknown",
+    "snippet": "        fn lift(value: &V) -> (result: R)\n            ensures result == Self::spec_lift(*value);"
   },
   {
     "id": 35,
-    "function": "maximum_inner",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "45-53",
-    "spec_strength": "",
-    "snippet": "    fn maximum_inner<T: MtKey + 'static>(tree: &ParamTreap<T>) -> Option<T> {\n        match tree.expose_with_priority() {\n            None => None,\n            Some((_, key, _, right)) => {\n                if right.is_empty() { Some(key) }\n                else { maximum_inner(&right) }\n            }\n        }\n    }"
+    "function": "lemma_wf_assemble",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "226-235",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_wf_assemble<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>)\n        requires match link {\n            None => true,\n            Some(n) => {\n                n.size as nat == 1 + spec_size_link(&n.left) + spec_size_link(&n.right)\n                && spec_size_wf_link(&n.left)\n                && spec_size_wf_link(&n.right)\n            }\n        },\n        ensures spec_size_wf_link(link),"
   },
   {
     "id": 36,
-    "function": "empty",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "58-59",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work Θ(1), Span Θ(1)\n        fn empty()                                   -> Self;"
+    "function": "size",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "252-253",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (result: usize)\n            ensures result as nat == self.spec_size();"
   },
   {
     "id": 37,
-    "function": "singleton",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "60-61",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(log n), Span O(log n)\n        fn singleton(value: T)                       -> Self;"
+    "function": "is_empty",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "255-256",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (result: bool)\n            ensures result == (self.spec_size() == 0);"
   },
   {
     "id": 38,
-    "function": "size",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "62-63",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work Θ(1), Span Θ(1)\n        fn size(&self)                               -> usize;"
+    "function": "height",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "258-260",
+    "spec_strength": "unknown",
+    "snippet": "        fn height(&self) -> (result: usize)\n            requires self.spec_height() < usize::MAX as nat,\n            ensures result as nat == self.spec_height();"
   },
   {
     "id": 39,
-    "function": "is_empty",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "64-65",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work Θ(1), Span Θ(1)\n        fn is_empty(&self)                           -> bool;"
+    "function": "insert",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "262-269",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, key: K, value: V, priority: u64)\n            requires\n                old(self).spec_size() + 1 <= usize::MAX as nat,\n                old(self).spec_wf(),\n            ensures\n                self.spec_wf(),\n                self.spec_size() <= old(self).spec_size() + 1,\n                self.spec_size() >= old(self).spec_size();"
   },
   {
     "id": 40,
-    "function": "find",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "66-67",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(log n), Span O(log n)\n        fn find(&self, value: &T)                    -> Option<T>;"
+    "function": "delete",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "271-275",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(&mut self, key: &K)\n            requires old(self).spec_wf(),\n            ensures\n                self.spec_wf(),\n                self.spec_size() <= old(self).spec_size();"
   },
   {
     "id": 41,
-    "function": "contains",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "68-69",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(log n), Span O(log n)\n        fn contains(&self, value: &T)                -> bool;"
+    "function": "find",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "277-279",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, key: &K) -> (result: Option<&V>)\n            requires self.spec_wf(),\n            ensures self.spec_size() == 0 ==> result is None;"
   },
   {
     "id": 42,
-    "function": "minimum",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "70-71",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(log n), Span O(log n)\n        fn minimum(&self)                            -> Option<T>;"
+    "function": "contains",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "281-283",
+    "spec_strength": "unknown",
+    "snippet": "        fn contains(&self, key: &K) -> (result: bool)\n            requires self.spec_wf(),\n            ensures self.spec_size() == 0 ==> !result;"
   },
   {
     "id": 43,
-    "function": "maximum",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "72-73",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(log n), Span O(log n)\n        fn maximum(&self)                            -> Option<T>;"
+    "function": "get",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "285-287",
+    "spec_strength": "unknown",
+    "snippet": "        fn get(&self, key: &K) -> (result: Option<&V>)\n            requires self.spec_wf(),\n            ensures self.spec_size() == 0 ==> result is None;"
   },
   {
     "id": 44,
-    "function": "insert",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "74-75",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(log n), Span O(log n)\n        fn insert(&mut self, value: T);"
+    "function": "keys",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "289-291",
+    "spec_strength": "unknown",
+    "snippet": "        fn keys(&self) -> (result: ArraySeqStPerS<K>)\n            requires self.spec_wf(),\n            ensures result.spec_len() == self.spec_size();"
   },
   {
     "id": 45,
-    "function": "delete",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "76-77",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(log n), Span O(log n)\n        fn delete(&mut self, target: &T);"
+    "function": "values",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "293-295",
+    "spec_strength": "unknown",
+    "snippet": "        fn values(&self) -> (result: ArraySeqStPerS<V>)\n            requires self.spec_wf(),\n            ensures result.spec_len() == self.spec_size();"
   },
   {
     "id": 46,
-    "function": "union",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "78-79",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)\n        fn union(&self, other: &Self)                -> Self;"
+    "function": "minimum_key",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "298-302",
+    "spec_strength": "unknown",
+    "snippet": "        fn minimum_key(&self) -> (result: Option<&K>)\n            requires self.spec_wf(),\n            ensures\n                self.spec_size() == 0 ==> result is None,\n                self.spec_size() > 0 ==> result is Some;"
   },
   {
     "id": 47,
-    "function": "intersection",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "80-81",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)\n        fn intersection(&self, other: &Self)         -> Self;"
+    "function": "maximum_key",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "305-309",
+    "spec_strength": "unknown",
+    "snippet": "        fn maximum_key(&self) -> (result: Option<&K>)\n            requires self.spec_wf(),\n            ensures\n                self.spec_size() == 0 ==> result is None,\n                self.spec_size() > 0 ==> result is Some;"
   },
   {
     "id": 48,
-    "function": "difference",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "82-83",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(m · lg(n/m)), Span O(lg n)\n        fn difference(&self, other: &Self)           -> Self;"
+    "function": "reduced_value",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "312-314",
+    "spec_strength": "unknown",
+    "snippet": "        fn reduced_value(&self) -> (result: R)\n            requires self.spec_wf(),\n            ensures self.spec_size() == 0 ==> result == Op::spec_identity();"
   },
   {
     "id": 49,
-    "function": "split",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "84-85",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(log n), Span O(log n)\n        fn split(&self, pivot: &T)                   -> (Self, bool, Self);"
+    "function": "range_reduce",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "317-319",
+    "spec_strength": "unknown",
+    "snippet": "        fn range_reduce(&self, low: &K, high: &K) -> (result: R)\n            requires self.spec_wf(),\n            ensures self.spec_size() == 0 ==> result == Op::spec_identity();"
   },
   {
     "id": 50,
-    "function": "join_pair",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "86-87",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(lg(|left| + |right|)), Span O(lg(|left| + |right|))\n        fn join_pair(left: Self, right: Self)        -> Self;"
+    "function": "size_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "323-324",
+    "spec_strength": "unknown",
+    "snippet": "        fn size_link(link: &Link<K, V, R>) -> (result: usize)\n            ensures result as nat == spec_size_link(link);"
   },
   {
     "id": 51,
-    "function": "join_m",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "88-89",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work O(lg(|left| + |right|)), Span O(lg(|left| + |right|))\n        fn join_m(left: Self, pivot: T, right: Self) -> Self;"
+    "function": "reduced_value_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "327-328",
+    "spec_strength": "unknown",
+    "snippet": "        fn reduced_value_link(link: &Link<K, V, R>) -> (result: R)\n            ensures link.is_none() ==> result == Op::spec_identity();"
   },
   {
     "id": 52,
-    "function": "filter",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "90-91",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work Θ(n), Span O(lg n)\n        fn filter<F: Pred<T>>(&self, predicate: F)   -> Self;"
+    "function": "update_node",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "331-342",
+    "spec_strength": "unknown",
+    "snippet": "        fn update_node(node: &mut Node<K, V, R>)\n            requires\n                1 + spec_size_link(&old(node).left) + spec_size_link(&old(node).right) <= usize::MAX as nat,\n                spec_size_wf_link(&old(node).left),\n                spec_size_wf_link(&old(node).right),\n            ensures\n                node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),\n                spec_size_wf_link(&node.left),\n                spec_size_wf_link(&node.right),\n                node.key == old(node).key,\n                node.left == old(node).left,\n                node.right == old(node).right;"
   },
   {
     "id": 53,
-    "function": "reduce",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "92-95",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work Θ(n), Span O(lg n)\n        fn reduce<F>(&self, op: F, base: T)          -> T\n        where\n            F: Fn(T, T) -> T + Send + Sync + 'static;"
+    "function": "make_node",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "345-355",
+    "spec_strength": "unknown",
+    "snippet": "        fn make_node(\n            key: K, value: V, priority: u64,\n            left: Link<K, V, R>, right: Link<K, V, R>,\n        ) -> (result: Link<K, V, R>)\n            requires\n                1 + spec_size_link(&left) + spec_size_link(&right) <= usize::MAX as nat,\n                spec_size_wf_link(&left),\n                spec_size_wf_link(&right),\n            ensures\n                spec_size_link(&result) == 1 + spec_size_link(&left) + spec_size_link(&right),\n                spec_size_wf_link(&result);"
   },
   {
     "id": 54,
-    "function": "iter_in_order",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "96-97",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work Θ(n), Span Θ(n)\n        fn iter_in_order(&self)                      -> ArraySeqStPerS<T>;"
+    "function": "rotate_left",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "357-363",
+    "spec_strength": "unknown",
+    "snippet": "        fn rotate_left(link: &mut Link<K, V, R>)\n            requires\n                spec_size_link(old(link)) <= usize::MAX as nat,\n                spec_size_wf_link(old(link)),\n            ensures\n                spec_size_link(link) == spec_size_link(old(link)),\n                spec_size_wf_link(link);"
   },
   {
     "id": 55,
-    "function": "as_tree",
-    "file": "Chap39/BSTSetTreapMtEph.rs",
-    "lines": "98-99",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: Work Θ(1), Span Θ(1)\n        fn as_tree(&self)                            -> &ParamTreap<T>;"
+    "function": "rotate_right",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "365-371",
+    "spec_strength": "unknown",
+    "snippet": "        fn rotate_right(link: &mut Link<K, V, R>)\n            requires\n                spec_size_link(old(link)) <= usize::MAX as nat,\n                spec_size_wf_link(old(link)),\n            ensures\n                spec_size_link(link) == spec_size_link(old(link)),\n                spec_size_wf_link(link);"
   },
   {
     "id": 56,
-    "function": "lemma_height_le_size",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "95-100",
+    "function": "insert_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "373-381",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_height_le_size<T: StTInMtT + Ord>(link: &Link<T>)\n        requires\n            spec_size_wf_link(link),\n            spec_size_link(link) < usize::MAX as nat,\n        ensures spec_height_link(link) <= spec_size_link(link),\n        decreases *link,"
+    "snippet": "        fn insert_link(link: &mut Link<K, V, R>, key: K, value: V, priority: u64)\n            requires\n                spec_size_link(old(link)) + 1 <= usize::MAX as nat,\n                spec_size_wf_link(old(link)),\n            ensures\n                spec_size_wf_link(link),\n                spec_size_link(link) <= spec_size_link(old(link)) + 1,\n                spec_size_link(link) >= spec_size_link(old(link)),\n            decreases old(link);"
   },
   {
     "id": 57,
-    "function": "lemma_size_wf_child_bounded",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "112-125",
+    "function": "find_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "382-384",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_size_wf_child_bounded<T: StTInMtT + Ord>(link: &Link<T>)\n        requires\n            spec_size_wf_link(link),\n            spec_size_link(link) > 0,\n            spec_size_link(link) < usize::MAX as nat,\n        ensures\n            match link {\n                None => true,\n                Some(node) => {\n                    spec_size_link(&node.left) < usize::MAX as nat\n                    && spec_size_link(&node.right) < usize::MAX as nat\n                },\n            },\n        decreases *link,"
+    "snippet": "        fn find_link<'a>(link: &'a Link<K, V, R>, key: &K) -> (result: Option<&'a V>)\n            ensures link.is_none() ==> result.is_none(),\n            decreases *link;"
   },
   {
     "id": 58,
-    "function": "lemma_wf_assemble_node",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "136-141",
+    "function": "min_key_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "385-389",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_wf_assemble_node<T: StTInMtT + Ord>(node: &Node<T>)\n        requires\n            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),\n            spec_size_wf_link(&node.left),\n            spec_size_wf_link(&node.right),\n        ensures spec_size_wf_link(&Some(Box::new(*node))),"
+    "snippet": "        fn min_key_link(link: &Link<K, V, R>) -> (result: Option<&K>)\n            ensures\n                link.is_none() ==> result.is_none(),\n                link.is_some() ==> result.is_some(),\n            decreases *link;"
   },
   {
     "id": 59,
-    "function": "new",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "157",
-    "spec_strength": "",
-    "snippet": "        fn new()                       -> Self;"
+    "function": "max_key_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "390-394",
+    "spec_strength": "unknown",
+    "snippet": "        fn max_key_link(link: &Link<K, V, R>) -> (result: Option<&K>)\n            ensures\n                link.is_none() ==> result.is_none(),\n                link.is_some() ==> result.is_some(),\n            decreases *link;"
   },
   {
     "id": 60,
-    "function": "insert",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "160",
-    "spec_strength": "",
-    "snippet": "        fn insert(&self, value: T, priority: u64);"
+    "function": "collect_keys",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "395-398",
+    "spec_strength": "unknown",
+    "snippet": "        fn collect_keys(link: &Link<K, V, R>, out: &mut Vec<K>)\n            requires spec_size_wf_link(link),\n            ensures out.len() == old(out).len() + spec_size_link(link),\n            decreases *link;"
   },
   {
     "id": 61,
-    "function": "find",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "163",
-    "spec_strength": "",
-    "snippet": "        fn find(&self, target: &T)     -> Option<T>;"
+    "function": "collect_values",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "399-402",
+    "spec_strength": "unknown",
+    "snippet": "        fn collect_values(link: &Link<K, V, R>, out: &mut Vec<V>)\n            requires spec_size_wf_link(link),\n            ensures out.len() == old(out).len() + spec_size_link(link),\n            decreases *link;"
   },
   {
     "id": 62,
-    "function": "contains",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "166",
-    "spec_strength": "",
-    "snippet": "        fn contains(&self, target: &T) -> bool;"
+    "function": "collect_in_order_kvp",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "403-406",
+    "spec_strength": "unknown",
+    "snippet": "        fn collect_in_order_kvp(link: &Link<K, V, R>, out: &mut Vec<(K, V, u64)>)\n            requires spec_size_wf_link(link),\n            ensures out.len() == old(out).len() + spec_size_link(link),\n            decreases *link;"
   },
   {
     "id": 63,
-    "function": "size",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "169",
-    "spec_strength": "",
-    "snippet": "        fn size(&self)                 -> usize;"
+    "function": "height_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "407-410",
+    "spec_strength": "unknown",
+    "snippet": "        fn height_link(link: &Link<K, V, R>) -> (result: usize)\n            requires spec_height_link(link) < usize::MAX as nat,\n            ensures result == spec_height_link(link),\n            decreases *link;"
   },
   {
     "id": 64,
-    "function": "is_empty",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "172",
-    "spec_strength": "",
-    "snippet": "        fn is_empty(&self)             -> bool;"
+    "function": "filter_by_key_kvp",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "411-414",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter_by_key_kvp(\n            items: &Vec<(K, V, u64)>, key: &K,\n        ) -> (result: Vec<(K, V, u64)>)\n            ensures result.len() <= items.len();"
   },
   {
     "id": 65,
-    "function": "height",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "175",
-    "spec_strength": "",
-    "snippet": "        fn height(&self)               -> usize;"
+    "function": "find_min_priority_idx_kvp",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "415-419",
+    "spec_strength": "unknown",
+    "snippet": "        fn find_min_priority_idx_kvp(\n            items: &Vec<(K, V, u64)>, start: usize, end: usize,\n        ) -> (result: usize)\n            requires start < end, end <= items.len(),\n            ensures start <= result && result < end;"
   },
   {
     "id": 66,
-    "function": "minimum",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "178",
-    "spec_strength": "",
-    "snippet": "        fn minimum(&self)              -> Option<T>;"
+    "function": "build_treap_from_vec",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "420-427",
+    "spec_strength": "unknown",
+    "snippet": "        fn build_treap_from_vec(\n            items: &Vec<(K, V, u64)>, start: usize, end: usize,\n        ) -> (result: Link<K, V, R>)\n            requires start <= end, end <= items.len(),\n            ensures\n                spec_size_wf_link(&result),\n                spec_size_link(&result) == (end - start) as nat,\n            decreases end - start;"
   },
   {
     "id": 67,
-    "function": "maximum",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "181",
-    "spec_strength": "",
-    "snippet": "        fn maximum(&self)              -> Option<T>;"
+    "function": "range_reduce_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "430-432",
+    "spec_strength": "unknown",
+    "snippet": "        fn range_reduce_link(link: &Link<K, V, R>, low: &K, high: &K) -> (result: R)\n            ensures link.is_none() ==> result == Op::spec_identity(),\n            decreases *link;"
   },
   {
     "id": 68,
-    "function": "in_order",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "184",
-    "spec_strength": "",
-    "snippet": "        fn in_order(&self)             -> ArraySeqStPerS<T>;"
+    "function": "default",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "807-808",
+    "spec_strength": "unknown",
+    "snippet": "        fn default() -> (result: Self)\n            ensures result.spec_size() == 0, result.spec_wf(), result@ == Map::<K, V>::empty(),"
   },
   {
     "id": 69,
-    "function": "pre_order",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "187",
-    "spec_strength": "",
-    "snippet": "        fn pre_order(&self)            -> ArraySeqStPerS<T>;"
-  },
-  {
-    "id": 70,
-    "function": "clone_link",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "193-194",
-    "spec_strength": "",
-    "snippet": "    fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)\n        decreases link,"
-  },
-  {
-    "id": 71,
-    "function": "new_treap_link_lock",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "225-226",
-    "spec_strength": "hole",
-    "snippet": "    fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>)\n        requires spec_size_wf_link(&val), spec_size_link(&val) < usize::MAX as nat,"
-  },
-  {
-    "id": 72,
-    "function": "size_link",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "232-233",
-    "spec_strength": "unknown",
-    "snippet": "    fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (sz: usize)\n        ensures sz as nat == spec_size_link(link),"
-  },
-  {
-    "id": 73,
-    "function": "update",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "241-247",
-    "spec_strength": "unknown",
-    "snippet": "    fn update<T: StTInMtT + Ord>(node: &mut Node<T>)\n        requires 1 + spec_size_link(&old(node).left) + spec_size_link(&old(node).right) <= usize::MAX as nat,\n        ensures\n            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),\n            node.key == old(node).key,\n            node.left == old(node).left,\n            node.right == old(node).right,"
-  },
-  {
-    "id": 74,
-    "function": "rotate_left",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "256-262",
-    "spec_strength": "unknown",
-    "snippet": "    fn rotate_left<T: StTInMtT + Ord>(link: &mut Link<T>)\n        requires\n            spec_size_wf_link(old(link)),\n            spec_size_link(old(link)) <= usize::MAX as nat,\n        ensures\n            spec_size_wf_link(link),\n            spec_size_link(link) == spec_size_link(old(link)),"
-  },
-  {
-    "id": 75,
-    "function": "rotate_right",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "286-292",
-    "spec_strength": "unknown",
-    "snippet": "    fn rotate_right<T: StTInMtT + Ord>(link: &mut Link<T>)\n        requires\n            spec_size_wf_link(old(link)),\n            spec_size_link(old(link)) <= usize::MAX as nat,\n        ensures\n            spec_size_wf_link(link),\n            spec_size_link(link) == spec_size_link(old(link)),"
-  },
-  {
-    "id": 76,
-    "function": "insert_link",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "318-326",
-    "spec_strength": "unknown",
-    "snippet": "    fn insert_link<T: StTInMtT + Ord>(link: &mut Link<T>, value: T, priority: u64)\n        requires\n            spec_size_link(old(link)) + 1 <= usize::MAX as nat,\n            spec_size_wf_link(old(link)),\n        ensures\n            spec_size_wf_link(link),\n            spec_size_link(link) <= spec_size_link(old(link)) + 1,\n            spec_size_link(link) >= spec_size_link(old(link)),\n        decreases old(link),"
-  },
-  {
-    "id": 77,
-    "function": "find_link",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "367-368",
-    "spec_strength": "",
-    "snippet": "    fn find_link<'a, T: StTInMtT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T>\n        decreases *link,"
-  },
-  {
-    "id": 78,
-    "function": "min_link",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "386-387",
-    "spec_strength": "",
-    "snippet": "    fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T>\n        decreases *link,"
-  },
-  {
-    "id": 79,
-    "function": "max_link",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "400-401",
-    "spec_strength": "",
-    "snippet": "    fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> Option<&T>\n        decreases *link,"
-  },
-  {
-    "id": 80,
-    "function": "height_link",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "412-417",
-    "spec_strength": "unknown",
-    "snippet": "    fn height_link<T: StTInMtT + Ord>(link: &Link<T>) -> (h: usize)\n        requires\n            spec_size_link(link) < usize::MAX as nat,\n            spec_size_wf_link(link),\n        ensures h as nat == spec_height_link(link),\n        decreases *link,"
-  },
-  {
-    "id": 81,
-    "function": "in_order_collect",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "441-442",
-    "spec_strength": "",
-    "snippet": "    fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)\n        decreases *link,"
-  },
-  {
-    "id": 82,
-    "function": "pre_order_collect",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "453-454",
-    "spec_strength": "",
-    "snippet": "    fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)\n        decreases *link,"
-  },
-  {
-    "id": 83,
-    "function": "default",
-    "file": "Chap39/BSTTreapMtEph.rs",
-    "lines": "537",
-    "spec_strength": "",
-    "snippet": "        fn default() -> Self { Self::new() }"
-  },
-  {
-    "id": 84,
     "function": "lemma_height_le_size",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "141-146",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "108-113",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_height_le_size<T: StT + Ord>(link: &Link<T>)\n        requires\n            spec_size_wf_link(link),\n            spec_size_link(link) < usize::MAX as nat,\n        ensures spec_height_link(link) <= spec_size_link(link),\n        decreases *link,"
   },
   {
-    "id": 85,
+    "id": 70,
     "function": "lemma_size_wf_child_bounded",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "159-172",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "125-138",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_size_wf_child_bounded<T: StT + Ord>(link: &Link<T>)\n        requires\n            spec_size_wf_link(link),\n            spec_size_link(link) > 0,\n            spec_size_link(link) < usize::MAX as nat,\n        ensures\n            match link {\n                None => true,\n                Some(node) => {\n                    spec_size_link(&node.left) < usize::MAX as nat\n                    && spec_size_link(&node.right) < usize::MAX as nat\n                },\n            },\n        decreases *link,"
   },
   {
-    "id": 86,
-    "function": "lemma_wf_decompose",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "185-194",
+    "id": 71,
+    "function": "lemma_wf_assemble",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "148-158",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_wf_decompose<T: StT + Ord>(link: &Link<T>)\n        requires spec_size_wf_link(link),\n        ensures match link {\n            None => true,\n            Some(node) => {\n                node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right)\n                && spec_size_wf_link(&node.left)\n                && spec_size_wf_link(&node.right)\n            },\n        },"
+    "snippet": "    proof fn lemma_wf_assemble<T: StT + Ord>(link: &Link<T>)\n        requires\n            match link {\n                None => true,\n                Some(node) => {\n                    node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right)\n                    && spec_size_wf_link(&node.left)\n                    && spec_size_wf_link(&node.right)\n                }\n            }\n        ensures spec_size_wf_link(link),"
+  },
+  {
+    "id": 72,
+    "function": "new`",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "173-177",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (result: Self)\n            ensures\n                result.spec_size() == 0,\n                result.spec_wf(),\n                result@ == Set::<T>::empty();"
+  },
+  {
+    "id": 73,
+    "function": "size",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "179-180",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (result: N)\n            ensures result as nat == self.spec_size();"
+  },
+  {
+    "id": 74,
+    "function": "is_empty",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "182-183",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (result: B)\n            ensures result == (self.spec_size() == 0);"
+  },
+  {
+    "id": 75,
+    "function": "height",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "185-190",
+    "spec_strength": "unknown",
+    "snippet": "        fn height(&self) -> (result: N)\n            requires\n                self.spec_size() < usize::MAX as nat,\n                self.spec_wf(),\n            ensures\n                result as nat == self.spec_height();"
+  },
+  {
+    "id": 76,
+    "function": "insert",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "192-199",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, value: T, priority: u64)\n            requires\n                old(self).spec_size() + 1 <= usize::MAX as nat,\n                old(self).spec_wf(),\n            ensures\n                self.spec_wf(),\n                self.spec_size() <= old(self).spec_size() + 1,\n                self.spec_size() >= old(self).spec_size();"
+  },
+  {
+    "id": 77,
+    "function": "delete",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "201-205",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(&mut self, key: &T)\n            requires old(self).spec_wf(),\n            ensures\n                self.spec_wf(),\n                self.spec_size() <= old(self).spec_size();"
+  },
+  {
+    "id": 78,
+    "function": "find",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "207-209",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, target: &T) -> (result: Option<&T>)\n            requires self.spec_wf(),\n            ensures self.spec_size() == 0 ==> result is None;"
+  },
+  {
+    "id": 79,
+    "function": "contains",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "211-213",
+    "spec_strength": "unknown",
+    "snippet": "        fn contains(&self, target: &T) -> (result: B)\n            requires self.spec_wf(),\n            ensures self.spec_size() == 0 ==> !result;"
+  },
+  {
+    "id": 80,
+    "function": "minimum",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "215-219",
+    "spec_strength": "unknown",
+    "snippet": "        fn minimum(&self) -> (result: Option<&T>)\n            requires self.spec_wf(),\n            ensures\n                self.spec_size() == 0 ==> result is None,\n                self.spec_size() > 0 ==> result is Some;"
+  },
+  {
+    "id": 81,
+    "function": "maximum",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "221-225",
+    "spec_strength": "unknown",
+    "snippet": "        fn maximum(&self) -> (result: Option<&T>)\n            requires self.spec_wf(),\n            ensures\n                self.spec_size() == 0 ==> result is None,\n                self.spec_size() > 0 ==> result is Some;"
+  },
+  {
+    "id": 82,
+    "function": "in_order",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "227-229",
+    "spec_strength": "unknown",
+    "snippet": "        fn in_order(&self) -> (result: ArraySeqStPerS<T>)\n            requires self.spec_wf(),\n            ensures result.spec_len() == self.spec_size();"
+  },
+  {
+    "id": 83,
+    "function": "rank",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "231-236",
+    "spec_strength": "unknown",
+    "snippet": "        fn rank(&self, key: &T) -> (result: N)\n            requires\n                self.spec_size() < usize::MAX as nat,\n                self.spec_wf(),\n            ensures\n                result as nat <= self.spec_size();"
+  },
+  {
+    "id": 84,
+    "function": "select",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "238-239",
+    "spec_strength": "unknown",
+    "snippet": "        fn select(&self, rank: N) -> (result: Option<&T>)\n            ensures (rank == 0 || rank as nat > self.spec_size()) ==> result is None;"
+  },
+  {
+    "id": 85,
+    "function": "split_rank",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "241-245",
+    "spec_strength": "unknown",
+    "snippet": "        fn split_rank(&self, rank: N) -> (result: (BSTSizeStEph<T>, BSTSizeStEph<T>))\n            requires self.spec_wf(),\n            ensures\n                spec_size_wf_link(&result.0.root),\n                spec_size_wf_link(&result.1.root);"
+  },
+  {
+    "id": 86,
+    "function": "size_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "249-250",
+    "spec_strength": "unknown",
+    "snippet": "        fn size_link(link: &Link<T>) -> (result: N)\n            ensures result as nat == spec_size_link(link);"
   },
   {
     "id": 87,
-    "function": "lemma_wf_assemble_node",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "198-203",
+    "function": "update_size",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "251-259",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_wf_assemble_node<T: StT + Ord>(node: &Box<Node<T>>)\n        requires\n            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),\n            spec_size_wf_link(&node.left),\n            spec_size_wf_link(&node.right),\n        ensures spec_size_wf_link(&Some(*node)),"
+    "snippet": "        fn update_size(node: &mut Node<T>)\n            requires\n                spec_size_link(&old(node).left) + spec_size_link(&old(node).right) + 1 <= usize::MAX as nat,\n            ensures\n                node.size as nat == spec_size_link(&node.left) + spec_size_link(&node.right) + 1,\n                node.key == old(node).key,\n                node.priority == old(node).priority,\n                node.left == old(node).left,\n                node.right == old(node).right;"
   },
   {
     "id": 88,
-    "function": "lemma_contains_left",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "208-210",
+    "function": "make_node",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "260-265",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_contains_left<T: StT + Ord>(node: &Box<Node<T>>, k: T)\n        requires spec_contains_link(&node.left, k),\n        ensures spec_contains_link(&Some(*node), k),"
+    "snippet": "        fn make_node(key: T, priority: u64, left: Link<T>, right: Link<T>) -> (result: Link<T>)\n            requires\n                spec_size_link(&left) + spec_size_link(&right) + 1 <= usize::MAX as nat,\n            ensures\n                spec_size_link(&result) == spec_size_link(&left) + spec_size_link(&right) + 1,\n                spec_size_wf_link(&result) <==> (spec_size_wf_link(&left) && spec_size_wf_link(&right));"
   },
   {
     "id": 89,
-    "function": "lemma_contains_right",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "215-217",
+    "function": "rotate_left",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "266-272",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_contains_right<T: StT + Ord>(node: &Box<Node<T>>, k: T)\n        requires spec_contains_link(&node.right, k),\n        ensures spec_contains_link(&Some(*node), k),"
+    "snippet": "        fn rotate_left(link: &mut Link<T>)\n            requires\n                spec_size_wf_link(old(link)),\n                spec_size_link(old(link)) <= usize::MAX as nat,\n            ensures\n                spec_size_link(link) == spec_size_link(old(link)),\n                spec_size_wf_link(link);"
   },
   {
     "id": 90,
-    "function": "lemma_bst_decompose",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "222-232",
+    "function": "rotate_right",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "273-279",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_bst_decompose<T: StT + Ord>(link: &Link<T>)\n        requires spec_bst_link(link),\n        ensures match link {\n            None => true,\n            Some(node) => {\n                spec_bst_link(&node.left)\n                && spec_bst_link(&node.right)\n                && (forall|k: T| #[trigger] spec_contains_link(&node.left, k) ==> k.is_lt(&node.key))\n                && (forall|k: T| #[trigger] spec_contains_link(&node.right, k) ==> node.key.is_lt(&k))\n            },\n        },"
+    "snippet": "        fn rotate_right(link: &mut Link<T>)\n            requires\n                spec_size_wf_link(old(link)),\n                spec_size_link(old(link)) <= usize::MAX as nat,\n            ensures\n                spec_size_link(link) == spec_size_link(old(link)),\n                spec_size_wf_link(link);"
   },
   {
     "id": 91,
-    "function": "lemma_contains_root",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "237-238",
+    "function": "insert_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "280-288",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_contains_root<T: StT + Ord>(node: &Box<Node<T>>)\n        ensures spec_contains_link(&Some(*node), node.key),"
+    "snippet": "        fn insert_link(link: &mut Link<T>, value: T, priority: u64)\n            requires\n                spec_size_link(old(link)) + 1 <= usize::MAX as nat,\n                spec_size_wf_link(old(link)),\n            ensures\n                spec_size_wf_link(link),\n                spec_size_link(link) <= spec_size_link(old(link)) + 1,\n                spec_size_link(link) >= spec_size_link(old(link)),\n            decreases old(link);"
   },
   {
     "id": 92,
-    "function": "new",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "251-256",
+    "function": "find_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "289-291",
     "spec_strength": "unknown",
-    "snippet": "        fn new()                       -> (empty_tree: Self)\n        where\n            Self: Sized,\n            ensures\n                empty_tree.spec_size() == 0,\n                empty_tree.spec_wf();"
+    "snippet": "        fn find_link<'a>(link: &'a Link<T>, target: &T) -> (result: Option<&'a T>)\n            ensures link.is_none() ==> result.is_none(),\n            decreases *link;"
   },
   {
     "id": 93,
-    "function": "size",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "259-260",
+    "function": "min_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "292-296",
     "spec_strength": "unknown",
-    "snippet": "        fn size(&self)                 -> (sz: usize)\n            ensures sz as nat == self.spec_size();"
+    "snippet": "        fn min_link(link: &Link<T>) -> (result: Option<&T>)\n            ensures\n                link.is_none() ==> result.is_none(),\n                link.is_some() ==> result.is_some(),\n            decreases *link;"
   },
   {
     "id": 94,
-    "function": "is_empty",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "263-264",
+    "function": "max_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "297-301",
     "spec_strength": "unknown",
-    "snippet": "        fn is_empty(&self)             -> (empty: bool)\n            ensures empty == (self.spec_size() == 0);"
+    "snippet": "        fn max_link(link: &Link<T>) -> (result: Option<&T>)\n            ensures\n                link.is_none() ==> result.is_none(),\n                link.is_some() ==> result.is_some(),\n            decreases *link;"
   },
   {
     "id": 95,
-    "function": "height",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "267-270",
+    "function": "height_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "302-307",
     "spec_strength": "unknown",
-    "snippet": "        fn height(&self)               -> usize\n            requires\n                self.spec_size() < usize::MAX as nat,\n                self.spec_wf();"
+    "snippet": "        fn height_link(link: &Link<T>) -> (h: N)\n            requires\n                spec_size_link(link) < usize::MAX as nat,\n                spec_size_wf_link(link),\n            ensures h as nat == spec_height_link(link),\n            decreases *link;"
   },
   {
     "id": 96,
-    "function": "insert",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "273-278",
+    "function": "in_order_collect",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "308-311",
     "spec_strength": "unknown",
-    "snippet": "        fn insert(&mut self, value: T, priority: u64)\n            requires old(self).spec_size() + 1 <= usize::MAX as nat, old(self).spec_wf(),\n            ensures\n                self.spec_wf(),\n                self.spec_size() <= old(self).spec_size() + 1,\n                self.spec_size() >= old(self).spec_size();"
+    "snippet": "        fn in_order_collect(link: &Link<T>, out: &mut Vec<T>)\n            requires spec_size_wf_link(link),\n            ensures out.len() == old(out).len() + spec_size_link(link),\n            decreases *link;"
   },
   {
     "id": 97,
-    "function": "find",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "281",
-    "spec_strength": "",
-    "snippet": "        fn find(&self, target: &T)     -> Option<&T>;"
+    "function": "in_order_collect_with_priority",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "312-315",
+    "spec_strength": "unknown",
+    "snippet": "        fn in_order_collect_with_priority(link: &Link<T>, out: &mut Vec<(T, u64)>)\n            requires spec_size_wf_link(link),\n            ensures out.len() == old(out).len() + spec_size_link(link),\n            decreases *link;"
   },
   {
     "id": 98,
-    "function": "contains",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "284",
-    "spec_strength": "",
-    "snippet": "        fn contains(&self, target: &T) -> bool;"
+    "function": "find_min_priority_idx",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "316-318",
+    "spec_strength": "unknown",
+    "snippet": "        fn find_min_priority_idx(items: &Vec<(T, u64)>, start: usize, end: usize) -> (result: usize)\n            requires start < end, end <= items.len(),\n            ensures start <= result && result < end;"
   },
   {
     "id": 99,
-    "function": "minimum",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "287",
-    "spec_strength": "",
-    "snippet": "        fn minimum(&self)              -> Option<&T>;"
+    "function": "build_treap_from_vec",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "319-324",
+    "spec_strength": "unknown",
+    "snippet": "        fn build_treap_from_vec(items: &Vec<(T, u64)>, start: usize, end: usize) -> (result: Link<T>)\n            requires start <= end, end <= items.len(),\n            ensures\n                spec_size_link(&result) == (end - start) as nat,\n                spec_size_wf_link(&result),\n            decreases end - start;"
   },
   {
     "id": 100,
-    "function": "maximum",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "290",
-    "spec_strength": "",
-    "snippet": "        fn maximum(&self)              -> Option<&T>;"
+    "function": "filter_by_key",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "325-326",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter_by_key(items: &Vec<(T, u64)>, key: &T) -> (result: Vec<(T, u64)>)\n            ensures result.len() <= items.len();"
   },
   {
     "id": 101,
-    "function": "in_order",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "293",
-    "spec_strength": "",
-    "snippet": "        fn in_order(&self)             -> ArraySeqStPerS<T>;"
+    "function": "rank_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "327-332",
+    "spec_strength": "unknown",
+    "snippet": "        fn rank_link(link: &Link<T>, key: &T) -> (result: N)\n            requires\n                spec_size_link(link) < usize::MAX as nat,\n                spec_size_wf_link(link),\n            ensures result as nat <= spec_size_link(link),\n            decreases *link;"
   },
   {
     "id": 102,
-    "function": "pre_order",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "296",
-    "spec_strength": "",
-    "snippet": "        fn pre_order(&self)            -> ArraySeqStPerS<T>;"
+    "function": "select_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "333-335",
+    "spec_strength": "unknown",
+    "snippet": "        fn select_link(link: &Link<T>, rank: N) -> (result: Option<&T>)\n            ensures link.is_none() ==> result.is_none(),\n            decreases *link;"
   },
   {
     "id": 103,
-    "function": "new_node",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "304",
-    "spec_strength": "",
-    "snippet": "    fn new_node<T: StT + Ord>(key: T, priority: u64) -> Node<T> {"
+    "function": "clone_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "733-738",
+    "spec_strength": "hole",
+    "snippet": "    fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)\n        ensures\n            spec_content_link(&c) == spec_content_link(link),\n            spec_size_link(&c) == spec_size_link(link),\n            spec_size_wf_link(link) ==> spec_size_wf_link(&c),\n        decreases link,"
   },
   {
     "id": 104,
-    "function": "clone_link",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "316-318",
-    "spec_strength": "unknown",
-    "snippet": "    fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)\n        ensures spec_size_link(&c) == spec_size_link(link),\n        decreases *link,"
-  },
-  {
-    "id": 105,
-    "function": "size_link",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "338-339",
-    "spec_strength": "unknown",
-    "snippet": "    fn size_link<T: StT + Ord>(link: &Link<T>) -> (sz: usize)\n        ensures sz as nat == spec_size_link(link),"
-  },
-  {
-    "id": 106,
-    "function": "height_link",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "347-352",
-    "spec_strength": "unknown",
-    "snippet": "    fn height_link<T: StT + Ord>(link: &Link<T>) -> (h: usize)\n        requires\n            spec_size_link(link) < usize::MAX as nat,\n            spec_size_wf_link(link),\n        ensures h as nat == spec_height_link(link),\n        decreases *link,"
-  },
-  {
-    "id": 107,
-    "function": "update_size",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "375-381",
-    "spec_strength": "unknown",
-    "snippet": "    fn update_size<T: StT + Ord>(node: &mut Box<Node<T>>)\n        requires 1 + spec_size_link(&old(node).left) + spec_size_link(&old(node).right) <= usize::MAX as nat,\n        ensures\n            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),\n            node.key == old(node).key,\n            node.left == old(node).left,\n            node.right == old(node).right,"
-  },
-  {
-    "id": 108,
-    "function": "rotate_left",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "388-395",
-    "spec_strength": "hole",
-    "snippet": "    fn rotate_left<T: StT + Ord>(mut x: Box<Node<T>>) -> (rotated: Box<Node<T>>)\n        requires\n            spec_size_wf_link(&Some(x)),\n            spec_size_link(&Some(x)) <= usize::MAX as nat,\n        ensures\n            spec_size_wf_link(&Some(rotated)),\n            spec_size_link(&Some(rotated)) == spec_size_link(&Some(x)),\n            spec_bst_link(&Some(x)) ==> spec_bst_link(&Some(rotated)),"
-  },
-  {
-    "id": 109,
-    "function": "rotate_right",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "480-486",
-    "spec_strength": "unknown",
-    "snippet": "    fn rotate_right<T: StT + Ord>(mut x: Box<Node<T>>) -> (rotated: Box<Node<T>>)\n        requires\n            spec_size_wf_link(&Some(x)),\n            spec_size_link(&Some(x)) <= usize::MAX as nat,\n        ensures\n            spec_size_wf_link(&Some(rotated)),\n            spec_size_link(&Some(rotated)) == spec_size_link(&Some(x)),"
-  },
-  {
-    "id": 110,
-    "function": "insert_link",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "508-516",
-    "spec_strength": "unknown",
-    "snippet": "    fn insert_link<T: StT + Ord>(link: Link<T>, value: T, priority: u64) -> (inserted: Link<T>)\n        requires\n            spec_size_link(&link) + 1 <= usize::MAX as nat,\n            spec_size_wf_link(&link),\n        ensures\n            spec_size_wf_link(&inserted),\n            spec_size_link(&inserted) <= spec_size_link(&link) + 1,\n            spec_size_link(&inserted) >= spec_size_link(&link),\n        decreases link,"
-  },
-  {
-    "id": 111,
-    "function": "find_link",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "554-556",
-    "spec_strength": "unknown",
-    "snippet": "    fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)\n        ensures found.is_some() ==> spec_contains_link(link, *found.unwrap()),\n        decreases *link,"
-  },
-  {
-    "id": 112,
-    "function": "min_link",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "583-584",
-    "spec_strength": "",
-    "snippet": "    fn min_link<T: StT + Ord>(link: &Link<T>) -> Option<&T>\n        decreases *link,"
-  },
-  {
-    "id": 113,
-    "function": "max_link",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "597-598",
-    "spec_strength": "",
-    "snippet": "    fn max_link<T: StT + Ord>(link: &Link<T>) -> Option<&T>\n        decreases *link,"
-  },
-  {
-    "id": 114,
-    "function": "in_order_vec",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "609-611",
-    "spec_strength": "unknown",
-    "snippet": "    fn in_order_vec<T: StT + Ord>(link: &Link<T>) -> (ordered: Vec<T>)\n        ensures ordered@.len() == spec_in_order_link(link).len(),\n        decreases *link,"
-  },
-  {
-    "id": 115,
-    "function": "pre_order_vec",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "625-627",
-    "spec_strength": "unknown",
-    "snippet": "    fn pre_order_vec<T: StT + Ord>(link: &Link<T>) -> (ordered: Vec<T>)\n        ensures ordered@.len() == spec_pre_order_link(link).len(),\n        decreases *link,"
-  },
-  {
-    "id": 116,
     "function": "default",
-    "file": "Chap39/BSTTreapStEph.rs",
-    "lines": "684",
-    "spec_strength": "",
-    "snippet": "        fn default() -> Self { Self::new() }"
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "780-781",
+    "spec_strength": "unknown",
+    "snippet": "        fn default() -> (result: Self)\n            ensures result.spec_size() == 0, result.spec_wf(), result@ == Set::<T>::empty(),"
   }
 ]
