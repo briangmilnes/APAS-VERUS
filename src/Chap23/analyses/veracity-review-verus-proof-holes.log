@@ -1,18 +1,16 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap23/
-
 ℹ BalBinTreeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/BalBinTreeStEph.rs:773: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/BalBinTreeStEph.rs:788: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/BalBinTreeStEph.rs:806: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/BalBinTreeStEph.rs:827: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:773: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:788: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:806: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:827: info: accept() - accept hole
    Info: 4 total
    2 clean proof functions
 ℹ PrimTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/PrimTreeSeqStPer.rs:856: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/PrimTreeSeqStPer.rs:866: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/PrimTreeSeqStPer.rs:882: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/PrimTreeSeqStPer.rs:898: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap23/PrimTreeSeqStPer.rs:903: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:856: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:866: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:882: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:898: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:903: info: accept() - accept hole
    Info: 5 total
 
 ═══════════════════════════════════════════════════════════════
@@ -39,6 +37,11 @@ Info: 9 total
    PrimTreeSeqStPer.rs:856: info: accept() - accept hole
    PrimTreeSeqStPer.rs:866: info: accept() - accept hole
    PrimTreeSeqStPer.rs:882: info: accept() - accept hole
+   PrimTreeSeqStPer.rs:898: info: accept() - accept hole
+   PrimTreeSeqStPer.rs:903: info: accept() - accept hole
+
+🎉 No proof holes or warnings found! All proofs are complete.
+ccept hole
    PrimTreeSeqStPer.rs:898: info: accept() - accept hole
    PrimTreeSeqStPer.rs:903: info: accept() - accept hole
 

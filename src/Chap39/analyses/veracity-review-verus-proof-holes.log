@@ -1,12 +1,12 @@
 ℹ BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Info: 1 total
 ✓ BSTSetTreapMtEph.rs
 ℹ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:199: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:212: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:224: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:554: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:199: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:212: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:224: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:554: info: accept() - accept hole
    Info: 4 total
    3 clean proof functions
 ✓ BSTTreapStEph.rs
@@ -29,11 +29,14 @@ Proof Functions:
 Holes Found: 0 total
 
 Info: 5 total
-   BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    BSTTreapMtEph.rs:199: info: accept() - accept hole
    BSTTreapMtEph.rs:212: info: accept() - accept hole
    BSTTreapMtEph.rs:224: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    BSTTreapMtEph.rs:554: info: accept() - accept hole
+   BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
 
 🎉 No proof holes or warnings found! All proofs are complete.
+ole
+   BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+
 🎉 No proof holes or warnings found! All proofs are complete.

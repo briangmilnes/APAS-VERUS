@@ -1,17 +1,15 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap11/
-
 ℹ FibonacciMtEph2Threads.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap11/FibonacciMtEph2Threads.rs:156: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap11/FibonacciMtEph2Threads.rs:164: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:156: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:164: info: accept() - accept hole
    Info: 2 total
 ℹ FibonacciMtEphRecomputes.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap11/FibonacciMtEphRecomputes.rs:152: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap11/FibonacciMtEphRecomputes.rs:160: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:152: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:160: info: accept() - accept hole
    Info: 2 total
 ✓ FibonacciMtPerAllThreads.rs
 ℹ FibonacciMtPerTSM.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap11/FibonacciMtPerTSM.rs:146: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap11/FibonacciMtPerTSM.rs:154: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:146: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:154: info: accept() - accept hole
    Info: 2 total
 ✓ FibonacciStEph.rs
    3 clean proof functions
@@ -37,6 +35,11 @@ Info: 6 total
    FibonacciMtEph2Threads.rs:164: info: accept() - accept hole
    FibonacciMtEphRecomputes.rs:152: info: accept() - accept hole
    FibonacciMtEphRecomputes.rs:160: info: accept() - accept hole
+   FibonacciMtPerTSM.rs:146: info: accept() - accept hole
+   FibonacciMtPerTSM.rs:154: info: accept() - accept hole
+
+🎉 No proof holes or warnings found! All proofs are complete.
+ept hole
    FibonacciMtPerTSM.rs:146: info: accept() - accept hole
    FibonacciMtPerTSM.rs:154: info: accept() - accept hole
 

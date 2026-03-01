@@ -1,8 +1,6 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap17/
-
 ℹ MathSeq.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap17/MathSeq.rs:716: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap17/MathSeq.rs:728: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:716: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:728: info: accept() - accept hole
    Info: 2 total
 
 ═══════════════════════════════════════════════════════════════
@@ -20,6 +18,13 @@ Proof Functions:
    0 total
 
 Holes Found: 0 total
+
+Info: 2 total
+   MathSeq.rs:716: info: accept() - accept hole
+   MathSeq.rs:728: info: accept() - accept hole
+
+🎉 No proof holes or warnings found! All proofs are complete.
+ound: 0 total
 
 Info: 2 total
    MathSeq.rs:716: info: accept() - accept hole

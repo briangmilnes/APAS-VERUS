@@ -1,73 +1,73 @@
 ❌ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:74: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:74: external_body - #[verifier::external_body]
         75 |         pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:159: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:159: external_body - #[verifier::external_body]
        160 |         fn new() -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:164: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:164: external_body - #[verifier::external_body]
        165 |         fn singleton(key: T) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:173: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:173: external_body - #[verifier::external_body]
        174 |         fn expose(&self) -> (exposed: Exposed<T>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:178: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:178: external_body - #[verifier::external_body]
        179 |         fn join_mid(exposed: Exposed<T>) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:183: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:183: external_body - #[verifier::external_body]
        184 |         fn size(&self) -> (count: usize)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:193: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:193: external_body - #[verifier::external_body]
        194 |         fn is_empty(&self) -> (empty: B)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:198: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:198: external_body - #[verifier::external_body]
        199 |         fn insert(&self, key: T) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:209: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:209: external_body - #[verifier::external_body]
        210 |         fn delete(&self, key: &T) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:220: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:220: external_body - #[verifier::external_body]
        221 |         fn find(&self, key: &T) -> (found: Option<T>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:234: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:234: external_body - #[verifier::external_body]
        235 |         fn split(&self, key: &T) -> (parts: (Self, B, Self))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:242: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:242: external_body - #[verifier::external_body]
        243 |         fn join_pair(&self, other: Self) -> (joined: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:247: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:247: external_body - #[verifier::external_body]
        248 |         fn union(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:252: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:252: external_body - #[verifier::external_body]
        253 |         fn intersect(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:257: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:257: external_body - #[verifier::external_body]
        258 |         fn difference(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:262: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:262: external_body - #[verifier::external_body]
        263 |         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(&self, predicate: F) -> (filtered: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:269: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:269: external_body - #[verifier::external_body]
        270 |         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:274: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:274: external_body - #[verifier::external_body]
        275 |         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:315: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:315: external_body - #[verifier::external_body]
        316 |         fn clone(&self) -> (cloned: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:66: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:294: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:309: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:66: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:294: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:309: info: accept() - accept hole
    Holes: 19 total
       19 × external_body
    Info: 3 total
 ❌ BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:77: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:77: external_body - #[verifier::external_body]
         78 |     fn new_param_bst<T: StT + Ord>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:232: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:232: external_body - #[verifier::external_body]
        233 |         fn expose(&self) -> (exposed: Exposed<T>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:306: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:306: external_body - #[verifier::external_body]
        307 |         fn insert(&self, key: T) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:317: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:317: external_body - #[verifier::external_body]
        318 |         fn delete(&self, key: &T) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:328: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:328: external_body - #[verifier::external_body]
        329 |         fn find(&self, key: &T) -> (found: Option<T>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:343: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:343: external_body - #[verifier::external_body]
        344 |         fn split(&self, key: &T) -> (parts: (Self, B, Self))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:392: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:392: external_body - #[verifier::external_body]
        393 |         fn join_pair(&self, other: Self) -> (joined: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:407: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:407: external_body - #[verifier::external_body]
        408 |         fn union(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:424: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:424: external_body - #[verifier::external_body]
        425 |         fn intersect(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:444: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:444: external_body - #[verifier::external_body]
        445 |         fn difference(&self, other: &Self) -> (result: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:597: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:597: external_body - #[verifier::external_body]
        598 |         fn clone(&self) -> (cloned: Self)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:576: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:591: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:576: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:591: info: accept() - accept hole
    Holes: 11 total
       11 × external_body
    Info: 2 total
@@ -95,6 +95,7 @@ Info: 5 total
    BSTParaMtEph.rs:309: info: accept() - accept hole
    BSTParaStEph.rs:576: info: accept() - accept hole
    BSTParaStEph.rs:591: info: accept() - accept hole
-ept hole
+: info: accept() - accept hole
+   BSTParaMtEph.rs:309: info: accept() - accept hole
    BSTParaStEph.rs:576: info: accept() - accept hole
    BSTParaStEph.rs:591: info: accept() - accept hole

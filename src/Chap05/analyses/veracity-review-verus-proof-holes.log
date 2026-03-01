@@ -1,17 +1,15 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap05/
-
 ✓ KleeneStPer.rs
    9 clean proof functions
 ℹ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap05/MappingStEph.rs:580: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:580: info: accept() - accept hole
    Info: 1 total
 ✓ RelationStEph.rs
 ℹ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap05/SetMtEph.rs:968: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:968: info: accept() - accept hole
    Info: 1 total
    1 clean proof function
 ℹ SetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap05/SetStEph.rs:880: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:880: info: accept() - accept hole
    Info: 1 total
    1 clean proof function
 
@@ -32,8 +30,13 @@ Proof Functions:
 Holes Found: 0 total
 
 Info: 3 total
+   MappingStEph.rs:580: info: accept() - accept hole
    SetMtEph.rs:968: info: accept() - accept hole
    SetStEph.rs:880: info: accept() - accept hole
-   MappingStEph.rs:580: info: accept() - accept hole
+
+🎉 No proof holes or warnings found! All proofs are complete.
+fo: accept() - accept hole
+   SetMtEph.rs:968: info: accept() - accept hole
+   SetStEph.rs:880: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.

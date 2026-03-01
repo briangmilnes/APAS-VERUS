@@ -1,16 +1,14 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap66/
-
 ℹ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:46: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:46: info: accept() - accept hole
    Info: 1 total
 ❌ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaStEph.rs:228: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:228: external_body - #[verifier::external_body]
        229 |         fn bridge_star_partition<V: StT + Hash + Ord>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaStEph.rs:271: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:271: external_body - #[verifier::external_body]
        272 |         fn boruvka_mst<V: StT + Hash + Ord>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaStEph.rs:320: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:320: external_body - #[verifier::external_body]
        321 |         fn boruvka_mst_with_seed<V: StT + Hash + Ord>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaStEph.rs:71: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:71: info: accept() - accept hole
    Holes: 3 total
       3 × external_body
    Info: 1 total
@@ -33,5 +31,15 @@ Holes Found: 3 total
    3 × external_body
 
 Info: 2 total
-   BoruvkaStEph.rs:71: info: accept() - accept hole
    BoruvkaMtEph.rs:46: info: accept() - accept hole
+   BoruvkaStEph.rs:71: info: accept() - accept hole
+lean
+   0 holed
+   0 total
+
+Holes Found: 3 total
+   3 × external_body
+
+Info: 2 total
+   BoruvkaMtEph.rs:46: info: accept() - accept hole
+   BoruvkaStEph.rs:71: info: accept() - accept hole

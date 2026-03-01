@@ -1,17 +1,11 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap27/
-
 ✓ ReduceContractMtEph.rs
    4 clean proof functions
 ✓ ReduceContractStEph.rs
    4 clean proof functions
-ℹ ScanContractMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap27/ScanContractMtEph.rs:197: info: external_body_accept_hole - external_body with accept hole comment
-   Info: 1 total
-   5 clean proof functions
-ℹ ScanContractStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap27/ScanContractStEph.rs:192: info: external_body_accept_hole - external_body with accept hole comment
-   Info: 1 total
-   5 clean proof functions
+✓ ScanContractMtEph.rs
+   8 clean proof functions
+✓ ScanContractStEph.rs
+   8 clean proof functions
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -23,14 +17,22 @@ Modules:
    4 total
 
 Proof Functions:
-   18 clean
+   24 clean
    0 holed
-   18 total
+   24 total
 
 Holes Found: 0 total
 
-Info: 2 total
-   ScanContractStEph.rs:192: info: external_body_accept_hole - external_body with accept hole comment
-   ScanContractMtEph.rs:197: info: external_body_accept_hole - external_body with accept hole comment
+🎉 No proof holes or warnings found! All proofs are complete.
+(no holes)
+   0 holed (contains holes)
+   4 total
+
+Proof Functions:
+   24 clean
+   0 holed
+   24 total
+
+Holes Found: 0 total
 
 🎉 No proof holes or warnings found! All proofs are complete.

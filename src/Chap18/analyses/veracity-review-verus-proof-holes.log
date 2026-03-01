@@ -1,29 +1,27 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap18/
-
 ℹ ArraySeq.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap18/ArraySeq.rs:1463: info: external_accept_hole - external with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap18/ArraySeq.rs:1595: info: external_accept_hole - external with accept hole comment
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap18/ArraySeq.rs:1622: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1463: info: external_accept_hole - external with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1595: info: external_accept_hole - external with accept hole comment
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1622: info: accept() - accept hole
    Info: 3 total
    9 clean proof functions
 ✓ ArraySeqMtEph.rs
    4 clean proof functions
 ℹ ArraySeqMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap18/ArraySeqMtPer.rs:1179: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1179: info: accept() - accept hole
    Info: 1 total
 ℹ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap18/ArraySeqStEph.rs:1046: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1046: info: accept() - accept hole
    Info: 1 total
 ℹ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap18/ArraySeqStPer.rs:1008: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1008: info: accept() - accept hole
    Info: 1 total
 ℹ LinkedListStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap18/LinkedListStEph.rs:867: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap18/LinkedListStEph.rs:881: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:867: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:881: info: accept() - accept hole
    Info: 2 total
 ℹ LinkedListStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap18/LinkedListStPer.rs:850: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap18/LinkedListStPer.rs:864: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:850: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:864: info: accept() - accept hole
    Info: 2 total
 
 ═══════════════════════════════════════════════════════════════
@@ -43,15 +41,20 @@ Proof Functions:
 Holes Found: 0 total
 
 Info: 10 total
+   ArraySeqMtPer.rs:1179: info: accept() - accept hole
+   LinkedListStEph.rs:867: info: accept() - accept hole
+   LinkedListStEph.rs:881: info: accept() - accept hole
    LinkedListStPer.rs:850: info: accept() - accept hole
    LinkedListStPer.rs:864: info: accept() - accept hole
    ArraySeq.rs:1463: info: external_accept_hole - external with accept hole comment
    ArraySeq.rs:1595: info: external_accept_hole - external with accept hole comment
    ArraySeq.rs:1622: info: accept() - accept hole
    ArraySeqStEph.rs:1046: info: accept() - accept hole
-   ArraySeqMtPer.rs:1179: info: accept() - accept hole
    ArraySeqStPer.rs:1008: info: accept() - accept hole
-   LinkedListStEph.rs:867: info: accept() - accept hole
-   LinkedListStEph.rs:881: info: accept() - accept hole
+
+🎉 No proof holes or warnings found! All proofs are complete.
+ - accept hole
+   ArraySeqStEph.rs:1046: info: accept() - accept hole
+   ArraySeqStPer.rs:1008: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.

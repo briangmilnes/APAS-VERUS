@@ -1,41 +1,39 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap53/
-
 ❌ GraphSearchMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/GraphSearchMtPer.rs:61: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:61: external_body - #[verifier::external_body]
         62 |         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (AVLTreeSetMtPer<V>, B) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/GraphSearchMtPer.rs:76: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:76: external_body - #[verifier::external_body]
         77 |     pub fn graph_search<V: StTInMtT + Ord + 'static, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/GraphSearchMtPer.rs:89: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:89: external_body - #[verifier::external_body]
         90 |     pub fn graph_search_multi<V: StTInMtT + Ord + 'static, G, S>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/GraphSearchMtPer.rs:141: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:141: external_body - #[verifier::external_body]
        142 |     pub fn reachable<V: StTInMtT + Ord + 'static, G>(graph: &G, source: V) -> AVLTreeSetMtPer<V>
    Holes: 4 total
       4 × external_body
 ✓ GraphSearchStEph.rs
 ❌ GraphSearchStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/GraphSearchStPer.rs:64: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:64: external_body - #[verifier::external_body]
         65 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (AVLTreeSetStPer<V>, B) {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/GraphSearchStPer.rs:79: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:79: external_body - #[verifier::external_body]
         80 |     pub fn graph_search<V: StT + Ord, G, S>(graph: &G, source: V, strategy: &S) -> SearchResult<V>
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/GraphSearchStPer.rs:92: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:92: external_body - #[verifier::external_body]
         93 |     pub fn graph_search_multi<V: StT + Ord, G, S>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/GraphSearchStPer.rs:151: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:151: external_body - #[verifier::external_body]
        152 |     pub fn reachable<V: StT + Ord, G>(graph: &G, source: V) -> AVLTreeSetStPer<V>
    Holes: 4 total
       4 × external_body
 ❌ PQMinStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStEph.rs:64: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:64: external_body - #[verifier::external_body]
         65 |         fn priority(&self, v: &V) -> P { (self.f)(v) }
    Holes: 1 total
       1 × external_body
 ❌ PQMinStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStPer.rs:61: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:61: external_body - #[verifier::external_body]
         62 |         fn new(f: F) -> Self {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStPer.rs:71: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:71: external_body - #[verifier::external_body]
         72 |         fn priority(&self, v: &V) -> P { (self.f)(v) }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStPer.rs:78: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:78: external_body - #[verifier::external_body]
         79 |     pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF) -> PQMinResult<V, P>
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStPer.rs:91: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:91: external_body - #[verifier::external_body]
         92 |     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
    Holes: 4 total
       4 × external_body
@@ -43,6 +41,20 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
+
+Modules:
+   1 clean (no holes)
+   4 holed (contains holes)
+   5 total
+
+Proof Functions:
+   0 clean
+   0 holed
+   0 total
+
+Holes Found: 13 total
+   13 × external_body
+═══════
 
 Modules:
    1 clean (no holes)
