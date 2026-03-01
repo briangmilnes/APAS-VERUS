@@ -7,21 +7,21 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter 42: Tables — Review Against Prose
 
-**Date:** 2026-02-19
+**Date:** 2026-03-01
 **Reviewer:** Claude-Opus-4.6
 **Prose source:** `prompts/Chap42.txt` (Data Type 42.1, Algorithm 42.3, Cost Specification 42.5, Example 42.1)
 
 ## Phase 1: Inventory
 
-Source files: 4 (`TableStEph.rs`, `TableStPer.rs`, `TableMtEph.rs`, `Example42_1.rs`). All plain Rust, no `verus!` blocks.
+Source files: 4 (`TableStEph.rs`, `TableStPer.rs`, `TableMtEph.rs`, `Example42_1.rs`). All have `verus!` blocks. StPer is the most verified; StEph and MtEph are fully `external_body`.
 
-| # | File | Functions | Traits | Trait Impls | Bare Impls | V! | -V! | NoSpec |
-|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 1 | `TableStEph.rs` | 17 | 1 (15 methods) | 1 (15 methods) | 0 | 0 | 17 | 17 |
-| 2 | `TableStPer.rs` | 17 | 1 (16 methods) | 1 (16 methods) | 0 | 0 | 17 | 17 |
-| 3 | `TableMtEph.rs` | 17 | 1 (15 methods) | 1 (15 methods) | 0 | 0 | 17 | 17 |
-| 4 | `Example42_1.rs` | 3 | 1 (2 methods) | 0 | 0 | 0 | 3 | 3 |
-| | **Total** | **54** | | | | **0** | **54** | **54** |
+| # | Chap | File | Fns | Tr | IT | ML | V! | -V! | Unk | Hole | NoSpec |
+|---|:---:|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 1 | 42 | `TableStEph.rs` | 20 | 16 | 18 | 2 | 18 | 2 | 3 | 14 | 3 |
+| 2 | 42 | `TableStPer.rs` | 26 | 16 | 17 | 9 | 25 | 1 | 14 | 10 | 2 |
+| 3 | 42 | `TableMtEph.rs` | 19 | 16 | 17 | 2 | 18 | 1 | 3 | 14 | 2 |
+| 4 | 42 | `Example42_1.rs` | 4 | 2 | 0 | 3 | 1 | 3 | 0 | 0 | 4 |
+| | | **Total** | **69** | | | | **62** | **7** | **20** | **38** | **11** |
 
 ## Phase 2: Prose Inventory
 
@@ -30,14 +30,14 @@ Source files: 4 (`TableStEph.rs`, `TableStPer.rs`, `TableMtEph.rs`, `Example42_1
 | # | Item | Description |
 |---|---|---|
 | 1 | Data Type 42.1 (Tables) | ADT with 15 operations: `size`, `empty`, `singleton`, `domain`, `tabulate`, `map`, `filter`, `intersection`, `union`, `difference`, `find`, `delete`, `insert`, `restrict`, `subtract` |
-| 2 | Syntax 42.2 (Table Notation) | `{k₁→v₁, k₂→v₂, ...}` for table literals |
-| 3 | Syntax 42.4 (Table Shorthands) | `a[k]`, `a \ m`, `a ∪ b` etc. |
+| 2 | Syntax 42.2 (Table Notation) | `{k1->v1, k2->v2, ...}` for table literals |
+| 3 | Syntax 42.4 (Table Shorthands) | `a[k]`, `a \ m`, `a U b` etc. |
 
 ### Algorithms
 
 | # | Item | Description |
 |---|---|---|
-| 1 | Algorithm 42.3 (collect) | `collect a = Seq.reduce (Table.union Seq.append) {} ⟨{k→⟨v⟩} : (k,v)∈a⟩` — takes a *sequence* of key-value pairs, groups values by key, producing `Table<K, Seq<V>>` |
+| 1 | Algorithm 42.3 (collect) | `collect a = Seq.reduce (Table.union Seq.append) {} <{k-><v>} : (k,v) in a>` -- groups values by key, producing `Table<K, Seq<V>>` |
 
 ### Cost Specs
 
@@ -46,22 +46,22 @@ Source files: 4 (`TableStEph.rs`, `TableStPer.rs`, `TableMtEph.rs`, `Example42_1
 | 1 | `size a` | O(1) | O(1) |
 | 2 | `singleton(k,v)` | O(1) | O(1) |
 | 3 | `domain a` | O(\|a\|) | O(lg\|a\|) |
-| 4 | `filter p a` | O(Σ W(p(k,v))) | O(lg\|a\| + max S(p)) |
-| 5 | `map f a` | O(Σ W(f(v))) | O(lg\|a\| + max S(f)) |
+| 4 | `filter p a` | O(Sum W(p(k,v))) | O(lg\|a\| + max S(p)) |
+| 5 | `map f a` | O(Sum W(f(v))) | O(lg\|a\| + max S(f)) |
 | 6 | `find a k` | O(lg\|a\|) | O(lg\|a\|) |
 | 7 | `delete a k` | O(lg\|a\|) | O(lg\|a\|) |
 | 8 | `insert f a (k,v)` | O(lg\|a\|) | O(lg\|a\|) |
-| 9 | `intersection f a b` | O(m·lg(1+n/m)) | O(lg(n+m)) |
-| 10 | `difference a b` | O(m·lg(1+n/m)) | O(lg(n+m)) |
-| 11 | `union f a b` | O(m·lg(1+n/m)) | O(lg(n+m)) |
-| 12 | `restrict a c` | O(m·lg(1+n/m)) | O(lg(n+m)) |
-| 13 | `subtract a c` | O(m·lg(1+n/m)) | O(lg(n+m)) |
+| 9 | `intersection f a b` | O(m*lg(1+n/m)) | O(lg(n+m)) |
+| 10 | `difference a b` | O(m*lg(1+n/m)) | O(lg(n+m)) |
+| 11 | `union f a b` | O(m*lg(1+n/m)) | O(lg(n+m)) |
+| 12 | `restrict a c` | O(m*lg(1+n/m)) | O(lg(n+m)) |
+| 13 | `subtract a c` | O(m*lg(1+n/m)) | O(lg(n+m)) |
 
 ### Examples
 
 | # | Item | Description |
 |---|---|---|
-| 1 | Example 42.1 | Tables `a = {'a'→4, 'b'→11, 'c'→2}`, `b = {'b'→3, 'd'→5}`, `c = {3,5,7}` with 7 query demonstrations |
+| 1 | Example 42.1 | Tables `a = {'a'->4, 'b'->11, 'c'->2}`, `b = {'b'->3, 'd'->5}`, `c = {3,5,7}` with 7 query demonstrations |
 
 ### Exercises
 
@@ -80,36 +80,36 @@ All implementations use a **sorted array** (`ArraySeqStEphS` / `ArraySeqStPerS` 
 | 1 | `size` | O(1) | O(1) | O(1) | O(1) | Yes |
 | 2 | `empty` | O(1) | O(1) | O(1) | O(1) | Yes |
 | 3 | `singleton` | O(1) | O(1) | O(1) | O(1) | Yes |
-| 4 | `domain` | O(\|a\|) | O(lg\|a\|) | O(n²) | O(n²) | No |
-| 5 | `tabulate` | O(\|s\|·W(f)) | O(lg\|s\|+S(f)) | O(\|s\|·W(f) + n log n) | O(n·(W(f)+log n)) | Partial |
-| 6 | `map` | O(Σ W(f(v))) | O(lg\|a\|+max S(f)) | O(n·W(f)) | O(n·S(f)) | Partial |
-| 7 | `filter` | O(Σ W(p(k,v))) | O(lg\|a\|+max S(p)) | O(n·W(p)) | O(n·S(p)) | Partial |
-| 8 | `intersection` | O(m·lg(1+n/m)) | O(lg(n+m)) | O(m+n) | O(m+n) | No |
-| 9 | `union` | O(m·lg(1+n/m)) | O(lg(n+m)) | O(m+n) | O(m+n) | No |
-| 10 | `difference` | O(m·lg(1+n/m)) | O(lg(n+m)) | O(m+n) | O(m+n) | No |
-| 11 | `find` | O(lg\|a\|) | O(lg\|a\|) | O(log n) | O(log n) | Yes |
+| 4 | `domain` | O(\|a\|) | O(lg\|a\|) | O(n^2) | O(n^2) | No |
+| 5 | `tabulate` | O(\|s\|*W(f)) | O(lg\|s\|+S(f)) | O(\|s\|*W(f)+n*lg n) | O(n*(W(f)+lg n)) | Partial |
+| 6 | `map` | O(Sum W(f(v))) | O(lg\|a\|+max S(f)) | O(n*W(f)) | O(n*S(f)) | Partial |
+| 7 | `filter` | O(Sum W(p(k,v))) | O(lg\|a\|+max S(p)) | O(n*W(p)) | O(n*S(p)) | Partial |
+| 8 | `intersection` | O(m*lg(1+n/m)) | O(lg(n+m)) | O(m+n) | O(m+n) | No |
+| 9 | `union` | O(m*lg(1+n/m)) | O(lg(n+m)) | O(m+n) | O(m+n) | No |
+| 10 | `difference` | O(m*lg(1+n/m)) | O(lg(n+m)) | O(m+n) | O(m+n) | No |
+| 11 | `find` | O(lg\|a\|) | O(lg\|a\|) | O(lg n) | O(lg n) | Yes |
 | 12 | `delete` | O(lg\|a\|) | O(lg\|a\|) | O(n) | O(n) | No |
 | 13 | `insert` | O(lg\|a\|) | O(lg\|a\|) | O(n) | O(n) | No |
-| 14 | `restrict` | O(m·lg(1+n/m)) | O(lg(n+m)) | O(n·log m) | O(n·log m) | No |
-| 15 | `subtract` | O(m·lg(1+n/m)) | O(lg(n+m)) | O(n·log m) | O(n·log m) | No |
+| 14 | `restrict` | O(m*lg(1+n/m)) | O(lg(n+m)) | O(n*lg m) | O(n*lg m) | No |
+| 15 | `subtract` | O(m*lg(1+n/m)) | O(lg(n+m)) | O(n*lg m) | O(n*lg m) | No |
 
 **StEph cost match: 4/15** (size, empty, singleton, find).
 
 #### TableStPer.rs
 
-Costs are similar to StEph. **StPer cost match: 4/15.** Note: StPer `union` is O((m+n)log(m+n)) due to re-sorting after intersection + 2 differences decomposition — worse than a direct merge.
+StPer `find` uses linear scan O(n), not binary search. `union` iterates over other and calls `insert` for each entry: O(m*n) worst case. `intersection` and `difference` also use linear scan for key lookup: O(n*m). **StPer cost match: 3/15** (size, empty, singleton).
 
 #### TableMtEph.rs
 
 | # | Operation | Parallel? | Notes |
 |---|---|:---:|---|
-| 1 | `domain` | Yes | 2-way spawn/join for key extraction, but sequential `ArraySetStEph` insert is O(n²) |
-| 2 | `tabulate` | Yes | 2-way spawn/join + O(n log n) sort |
+| 1 | `domain` | Yes | 2-way spawn/join for key extraction |
+| 2 | `tabulate` | Yes | 2-way spawn/join + O(n lg n) sort |
 | 3 | `map` | Yes | 2-way spawn/join |
 | 4 | `filter` | Yes | 2-way spawn/join |
-| 5 | `intersection` | **No** | Sequential merge despite Mt file |
-| 6 | `union` | **No** | Sequential merge |
-| 7 | `difference` | **No** | Sequential merge |
+| 5 | `intersection` | **No** | Sequential sorted merge |
+| 6 | `union` | **No** | Sequential sorted merge |
+| 7 | `difference` | **No** | Sequential sorted merge |
 | 8 | `find` | No | Binary search (inherently sequential) |
 | 9 | `delete` | Yes | 2-way spawn/join filter |
 | 10 | `insert` | Yes | 2-way spawn/join tabulate + sort |
@@ -117,33 +117,106 @@ Costs are similar to StEph. **StPer cost match: 4/15.** Note: StPer `union` is O
 | 12 | `subtract` | Yes | 2-way spawn/join filter |
 | 13 | `entries` | No | Clone |
 
-**MtEph cost match: 4/15.** Intersection, union, and difference are entirely sequential. Only a single 2-way split, not recursive divide-and-conquer.
+**MtEph cost match: 4/15.** Intersection, union, and difference are entirely sequential. Parallel operations use a single 2-way split, not recursive divide-and-conquer.
 
 ### Phase 3b: Implementation Fidelity
 
 | # | Operation | Prose Definition | Implementation | Fidelity |
 |---|---|---|---|---|
 | 1 | `size(a)` | `\|a\|` | `entries.length()` | High |
-| 2 | `empty` | `∅` | Empty backing array | High |
-| 3 | `singleton(k,v)` | `{k→v}` | Single-entry array | High |
+| 2 | `empty` | `{}` | Empty backing array | High |
+| 3 | `singleton(k,v)` | `{k->v}` | Single-entry array | High |
 | 4 | `domain(a)` | Set of all keys | Extract keys into ArraySetStEph | High |
-| 5 | `tabulate(f)(a:S)` | `{k→f(k) : k∈a}` | Apply f to keys, sort | High |
-| 6 | `map(f)(a)` | `{k→f(v) : (k→v)∈a}` | Apply f to values | High |
-| 7 | `filter(f)(a)` | `{(k→v)∈a \| f(k,v)}` | Filter entries | High |
-| 8 | `intersection(f)(a)(b)` | `{k→f(find a k, find b k) : k∈dom(a)∩dom(b)}` | Sorted merge | High |
-| 9 | `union(f)(a)(b)` | `(intersection f a b) ∪ (diff a b) ∪ (diff b a)` | StPer: decomposition; StEph/MtEph: direct merge | High |
-| 10 | `difference(a)(b)` | `{(k→v)∈a \| k∉dom(b)}` | Sorted merge | High |
-| 11 | `find(a)(k)` | `v if (k→v)∈a, ⊥ otherwise` | Binary search, `Option<V>` | High |
-| 12 | `delete(a)(k)` | `{(k'→v')∈a \| k≠k'}` | Filter out key | High |
+| 5 | `tabulate(f)(a:S)` | `{k->f(k) : k in a}` | Apply f to keys, sort | High |
+| 6 | `map(f)(a)` | `{k->f(v) : (k->v) in a}` | Apply f to values | High |
+| 7 | `filter(f)(a)` | `{(k->v) in a \| f(k,v)}` | Filter entries | High |
+| 8 | `intersection(f)(a)(b)` | `{k->f(find a k, find b k)}` | Sorted merge / linear scan | High |
+| 9 | `union(f)(a)(b)` | `intersect U diff(a,b) U diff(b,a)` | StPer: iter+insert; StEph/MtEph: merge | High |
+| 10 | `difference(a)(b)` | `{(k->v) in a \| k not in dom(b)}` | Sorted merge / linear scan | High |
+| 11 | `find(a)(k)` | `v if (k->v) in a, bot otherwise` | Binary search (StEph/MtEph), linear (StPer) | High |
+| 12 | `delete(a)(k)` | `{(k'->v') in a \| k != k'}` | Filter out key | High |
 | 13 | `insert(f)(a)(k,v)` | `union f a (singleton(k,v))` | Direct implementation with combine | High |
-| 14 | `restrict(a)(b:S)` | `{k→v∈a \| k∈b}` | Filter by set membership | High |
-| 15 | `subtract(a)(b:S)` | `{(k→v)∈a \| k∉b}` | Filter by set non-membership | High |
+| 14 | `restrict(a)(b:S)` | `{k->v in a \| k in b}` | Filter by set membership | High |
+| 15 | `subtract(a)(b:S)` | `{(k->v) in a \| k not in b}` | Filter by set non-membership | High |
 
 **Semantic fidelity: 15/15 operations faithful to prose.**
 
 ### Phase 3c: Spec Fidelity
 
-No Verus specs exist. All functions have `spec_strength = none`.
+#### TableStEph.rs — Spec Strength
+
+All 14 ADT impl functions are `external_body`. Trait specs exist but are unverified.
+
+| # | Operation | Spec | Strength |
+|---|---|---|---|
+| 1 | `size` | `result == self@.len()` | strong (holed) |
+| 2 | `empty` | `result@ == Map::empty()` | strong |
+| 3 | `singleton` | `result@ == Map::empty().insert(key@, value@)` | strong (holed) |
+| 4 | `domain` | `result@.finite()` | weak (holed) |
+| 5 | `tabulate` | `result@.dom().finite()` | weak (holed) |
+| 6 | `map` | `self@.dom() == old(self)@.dom()` | partial (holed) |
+| 7 | `filter` | `self@.dom().subset_of(old(self)@.dom())` | partial (holed) |
+| 8 | `intersection` | `dom subset_of intersect` | partial (holed) |
+| 9 | `union` | `dom.union subset_of self@.dom()` | partial (holed) |
+| 10 | `difference` | `dom subset_of difference` | partial (holed) |
+| 11 | `find` | `contains_key => value match` | strong (holed) |
+| 12 | `delete` | `!self@.contains_key(key@)` | partial (holed) |
+| 13 | `insert` | `self@.contains_key(key@)` | partial (holed) |
+| 14 | `restrict` | `dom subset_of old dom` | partial (holed) |
+| 15 | `subtract` | `dom subset_of old dom` | partial (holed) |
+| 16 | `entries` | none | none |
+
+**StEph: 3 strong, 8 partial, 2 weak, 1 none. All impl bodies are external_body (14 holes).**
+
+#### TableStPer.rs — Spec Strength
+
+StPer has the most verification. 8 proof lemmas support the implementations. Functions are verified (not `external_body`) but use `assume` for `obeys_view_eq` and `obeys_feq_full`.
+
+| # | Operation | Spec | Strength |
+|---|---|---|---|
+| 1 | `size` | `result == self@.len()` (with spec_wf) | strong (verified) |
+| 2 | `empty` | `result@ == Map::empty(), result.spec_wf()` | strong (verified) |
+| 3 | `singleton` | `result@ == Map::empty().insert(key@, value@), result.spec_wf()` | strong (verified) |
+| 4 | `domain` | `result@.finite()` | weak (verified) |
+| 5 | `tabulate` | `result@.dom().finite()` | weak (verified) |
+| 6 | `map` | `result@.dom() == self@.dom()` | partial (assume x1) |
+| 7 | `filter` | `result@.dom().subset_of(self@.dom())` | partial (assume x1) |
+| 8 | `intersection` | `dom subset_of intersect` | partial (assume x2) |
+| 9 | `union` | `dom.union subset_of result@.dom(), result.spec_wf()` | partial (assume x2) |
+| 10 | `difference` | `dom subset_of difference` | partial (assume x2) |
+| 11 | `find` | `contains_key => value match` (with spec_wf) | strong (assume x2) |
+| 12 | `delete` | `!result@.contains_key(key@), result.spec_wf()` | partial (assume x2) |
+| 13 | `insert` | `result@.contains_key(key@), result.spec_wf()` | partial (assume x2) |
+| 14 | `restrict` | `dom subset_of self dom` | partial (assume x1) |
+| 15 | `subtract` | `dom subset_of self dom` | partial (assume x1) |
+| 16 | `collect` | none | none |
+
+**StPer: 4 strong, 9 partial, 2 weak, 1 none. 16 assume() holes (all obeys_view_eq/obeys_feq_full). 1 clone assume (Verus workaround).**
+
+#### TableMtEph.rs — Spec Strength
+
+All 15 ADT impl functions are `external_body`. Specs are weaker than StEph: MtEph intersection/union/difference/find/delete/insert/restrict/subtract only ensure `dom().finite()`.
+
+| # | Operation | Spec | Strength |
+|---|---|---|---|
+| 1 | `size` | `result == self@.dom().len()` | strong (holed) |
+| 2 | `empty` | `result@ == Map::empty()` | strong |
+| 3 | `singleton` | `dom.finite(), dom.len() == 1` | partial (holed) |
+| 4 | `domain` | `result@.finite()` | weak (holed) |
+| 5 | `tabulate` | `result@.dom().finite()` | weak (holed) |
+| 6 | `map` | `self@.dom() == old(self)@.dom()` | partial (holed) |
+| 7 | `filter` | `self@.dom().subset_of(old(self)@.dom())` | partial (holed) |
+| 8 | `intersection` | `self@.dom().finite()` | weak (holed) |
+| 9 | `union` | `self@.dom().finite()` | weak (holed) |
+| 10 | `difference` | `self@.dom().finite()` | weak (holed) |
+| 11 | `find` | `self@.dom().finite()` | weak (holed) |
+| 12 | `delete` | `self@.dom().finite()` | weak (holed) |
+| 13 | `insert` | `self@.dom().finite()` | weak (holed) |
+| 14 | `restrict` | `self@.dom().finite()` | weak (holed) |
+| 15 | `subtract` | `self@.dom().finite()` | weak (holed) |
+| 16 | `entries` | none | none |
+
+**MtEph: 2 strong, 2 partial, 10 weak, 1 none. All impl bodies external_body (15 holes). MtEph find spec is wrong -- says dom().finite() instead of key/value match.**
 
 ## Phase 4: Parallelism Review
 
@@ -167,13 +240,13 @@ MtEph intersection, union, and difference are sequential despite being in the Mt
 
 ## Phase 5: Runtime Test Review
 
-| # | Test File | Tests | Operations Covered |
-|---|---|:---:|---|
-| 1 | `TestTableStEph.rs` | 18 | All 15 ADT ops + ephemeral semantics, macro, large ops |
-| 2 | `TestTableStPer.rs` | 18 | All 15 ADT ops + persistence, macro, empty ops, combine |
-| 3 | `TestTableMtEph.rs` | 19 | All 15 ADT ops + ephemeral semantics, macro, parallel ops, parallel tabulate |
-| 4 | `TestExample42_1.rs` | 2 | Smoke tests: `example_42_1()` and `performance_comparison()` |
-| | **Total RTT** | **57** | |
+| # | Chap | File | Tests | Operations Covered |
+|---|:---:|---|:---:|---|
+| 1 | 42 | `TestTableStEph.rs` | 18 | All 15 ADT ops + ephemeral semantics, macro, large ops |
+| 2 | 42 | `TestTableStPer.rs` | 18 | All 15 ADT ops + persistence, macro, empty ops, combine |
+| 3 | 42 | `TestTableMtEph.rs` | 19 | All 15 ADT ops + ephemeral semantics, macro, parallel ops |
+| 4 | 42 | `TestExample42_1.rs` | 2 | Smoke tests: `example_42_1()` and `performance_comparison()` |
+| | | **Total RTT** | **57** | |
 
 ### Test Gaps
 
@@ -181,12 +254,11 @@ MtEph intersection, union, and difference are sequential despite being in the Mt
 |---|---|---|
 | 1 | No edge-case tests for empty intersection/union/difference | Low |
 | 2 | No tests verifying sorted invariant after operations | Low |
-| 3 | No tests for `entries`/`collect` function | Low |
-| 4 | No tests matching APAS Example 42.1 exact values | Low |
+| 3 | No tests matching APAS Example 42.1 exact values | Low |
 
 ## Phase 6: PTT Review
 
-No PTTs exist. No Verus code to test.
+No PTTs exist. Not needed at current verification level.
 
 ## Phase 7: Gap Analysis
 
@@ -194,75 +266,85 @@ No PTTs exist. No Verus code to test.
 
 | # | Prose Item | Status | Notes |
 |---|---|---|---|
-| 1 | Algorithm 42.3 (collect) | **Not implemented** | APAS collect takes `Seq<(K,V)>` → `Table<K, Seq<V>>`. The implementations provide `entries(&self) → Seq<Pair<K,V>>` which returns flat entries — a different operation. |
+| 1 | Algorithm 42.3 (collect) | **Not implemented** | APAS collect takes `Seq<(K,V)>` -> `Table<K, Seq<V>>`, grouping by key. StPer has `collect` method but it just returns flat entries. |
 
 ### Code with No Prose Counterpart
 
 | # | Item | Kind | Notes |
 |---|---|---|---|
-| 1 | `entries(&self) → Seq<Pair<K,V>>` | Utility | Returns flat entries; not APAS collect |
+| 1 | `entries/collect -> Seq<Pair<K,V>>` | Utility | Returns flat entries; not APAS collect |
 | 2 | `from_sorted_entries(Vec<Pair<K,V>>)` | Constructor | Helper for macros |
-| 3 | `TableStEphLit!` / `TableStPerLit!` / `TableMtEphLit!` | Macros | Convenience literal syntax |
-| 4 | `Example42_1` module | Example | Demonstrates API, doesn't match APAS Example 42.1 values |
+| 3 | `TableStEphLit!/TableStPerLit!/TableMtEphLit!` | Macros | Convenience literal syntax |
+| 4 | `Example42_1` module | Example | Uses integer keys, not APAS exact values |
 
 ## Phase 8: TOC Review
 
-| # | File | Has TOC | Has Module Header | Copyright |
-|---|---|:---:|:---:|:---:|
-| 1 | `TableStEph.rs` | No | Yes | Yes (`//!`) |
-| 2 | `TableStPer.rs` | No | Yes | Yes (`//!`) |
-| 3 | `TableMtEph.rs` | No | Yes | Yes (`//!`) |
-| 4 | `Example42_1.rs` | No | Yes | Yes (`//!`) |
+| # | Chap | File | Has TOC | Has Module Header | Copyright |
+|---|:---:|---|:---:|:---:|:---:|
+| 1 | 42 | `TableStEph.rs` | Yes | Yes | Yes |
+| 2 | 42 | `TableStPer.rs` | Yes | Yes | Yes |
+| 3 | 42 | `TableMtEph.rs` | Yes | Yes | Yes |
+| 4 | 42 | `Example42_1.rs` | No | Yes | Yes |
 
 ### In/Out Table
 
-| # | File | Clone | PartialEq/Eq | Debug | Display | Macro |
-|---|---|:---:|:---:|:---:|:---:|:---:|
-| 1 | `TableStEph.rs` | ❌ out (derive) | ❌ out (derive) | ❌ out (derive) | - | ✅ out |
-| 2 | `TableStPer.rs` | ❌ out (derive) | ❌ out (derive) | ❌ out (derive) | - | ✅ out |
-| 3 | `TableMtEph.rs` | ❌ out (derive) | ❌ out (derive) | ✅ out (manual) | - | ✅ out |
-| 4 | `Example42_1.rs` | - | - | - | - | - |
+| # | Chap | File | Clone | PartialEq/Eq | Debug | Macro |
+|---|:---:|---|:---:|:---:|:---:|:---:|
+| 1 | 42 | `TableStEph.rs` | Y in | X out | Y out | Y out |
+| 2 | 42 | `TableStPer.rs` | Y in | X out | Y out | Y out |
+| 3 | 42 | `TableMtEph.rs` | Y in (ext_body) | X out | Y out | Y out |
+| 4 | 42 | `Example42_1.rs` | - | - | - | - |
 
-No verus! blocks exist, so the "should be inside" classification is aspirational.
+PartialEq is outside `verus!` in all files (style warning).
 
 ## Proof Holes Summary
 
 ```
-Modules:   4 clean (no holes), 0 holed
-Holes Found: 0 total
+Modules:   1 clean (no holes), 3 holed
+Holes Found: 45 total
+   16 x assume()      (TableStPer)
+   29 x external_body (14 TableStEph + 15 TableMtEph)
+Errors: 1 total (1 assume in eq/clone, Verus workaround)
+Proof Functions: 11 total (11 clean, 0 holed)
 ```
 
-Zero proof holes — vacuously clean since no Verus code exists.
+### Assume Pattern Analysis (TableStPer)
+
+All 16 assumes fall into two categories:
+- `assume(obeys_view_eq::<K>())` -- 7 occurrences (map, intersection, difference, find, delete, insert)
+- `assume(obeys_feq_full::<...>())` -- 9 occurrences (map, filter, intersection, difference, find, delete, insert, restrict, subtract)
+
+These are generic trait bound assumptions needed because Verus cannot yet prove that `View`-implementing types preserve equality through their view, or that `clone_plus` preserves the view. These are structural Verus limitations, not logical gaps.
 
 ## Spec Strength Summary
 
-| Classification | Count |
-|---|---|
-| strong | 0 |
-| partial | 0 |
-| weak | 0 |
-| none | 54 |
-
-All functions lack Verus specifications.
+| Classification | StEph | StPer | MtEph | Total |
+|---|:---:|:---:|:---:|:---:|
+| strong | 3 | 4 | 2 | 9 |
+| partial | 8 | 9 | 2 | 19 |
+| weak | 2 | 2 | 10 | 14 |
+| none | 3 | 1 | 2 | 6 |
 
 ## Overall Assessment
 
-**Chapter 42 implements all 15 operations from Data Type 42.1 across 3 variants (StEph, StPer, MtEph) with 57 runtime tests. No Verus verification exists. All files are proof-hole clean (trivially). Algorithm 42.3 (collect) is not implemented.**
+**Chapter 42 implements all 15 operations from Data Type 42.1 across 3 variants (StEph, StPer, MtEph) with 57 runtime tests. TableStPer has the most verification work: all functions verified inside `verus!` with loop invariants and proof lemmas, though 16 assumes remain for generic trait bounds. TableStEph and TableMtEph have trait-level specs but all implementations are `external_body` (29 total). MtEph specs are notably weaker than StEph, with 10 functions only ensuring `dom().finite()`. Algorithm 42.3 (collect) is not implemented.**
 
 ### Strengths
 
 1. All 15 ADT operations semantically faithful to the prose across all 3 variants.
-2. Ephemeral vs persistent semantics correctly distinguished (`&mut self` vs returns `Self`).
-3. Good test coverage: 57 RTTs covering all operations, semantics, macros, and parallelism.
-4. Binary search for `find` achieves the prose's O(lg n) bound.
+2. TableStPer is substantially verified: 8 proof lemmas, loop invariants, spec_wf tracking.
+3. Ephemeral vs persistent semantics correctly distinguished (`&mut self` vs returns `Self`).
+4. Good test coverage: 57 RTTs covering all operations, semantics, macros, and parallelism.
+5. TOC headers present in main source files.
 
 ### Weaknesses
 
-1. **No Verus verification** — zero functions inside `verus!`, zero specs.
-2. **Sorted-array backing** gives O(n) insert/delete instead of APAS-required O(lg n). Only 4/15 operations match APAS costs.
-3. **Algorithm 42.3 (collect) not implemented.** The `entries` function returns flat pairs, not grouped-by-key tables.
-4. **MtEph intersection/union/difference are sequential** despite being in the multi-threaded file.
-5. **MtEph parallelism is shallow** — single 2-way splits, not recursive divide-and-conquer for O(lg n) span.
-6. **Cost annotations in trait declarations are inaccurate** — several claim better costs than implementations achieve.
-7. **No TOC headers** in any source file.
-8. **Example42_1.rs** uses integer keys with string values instead of matching the prose's `{'a'→4, 'b'→11, 'c'→2}`.
+1. **StEph/MtEph fully external_body** -- 29 holes. No implementation-level verification.
+2. **MtEph specs too weak** -- 10 of 15 operations only ensure `dom().finite()`. `find` spec says nothing about the returned value.
+3. **16 assumes in StPer** for obeys_view_eq/obeys_feq_full. Structural Verus limitation but still proof debt.
+4. **Sorted-array backing** gives O(n) insert/delete instead of O(lg n). Only 3-4/15 operations match APAS costs.
+5. **Algorithm 42.3 (collect) not implemented.** StPer `collect` returns flat entries, not grouped-by-key tables.
+6. **MtEph intersection/union/difference are sequential** despite being in the multi-threaded file.
+7. **MtEph parallelism is shallow** -- single 2-way splits, not recursive divide-and-conquer.
+8. **PartialEq outside verus!** in all files (style warning).
+9. **Example42_1.rs** uses integer keys with string values instead of matching the prose.
