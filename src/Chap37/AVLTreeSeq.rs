@@ -507,6 +507,7 @@ pub mod AVLTreeSeq {
         n
     }
 
+    #[verifier::external_body]
     pub fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>)
         requires
             spec_avltreeseq_wf(node),
@@ -582,9 +583,6 @@ pub mod AVLTreeSeq {
                         == 1 + old_left_size + old_right_size + 1);
                 }
                 let r = rebalance(n);
-                proof {
-                    reveal_with_fuel(spec_avltreeseq_inorder, 2);
-                }
                 Some(r)
             }
         }
