@@ -66,10 +66,10 @@ broadcast use {
         pub dimensions: Seq<MatrixDim>,
     }
 
-    pub struct spec_matrixchainmtper_memo_wf {
+    pub struct MatrixChainMtPerMemoInv {
         pub ghost dims: Seq<MatrixDim>,
     }
-    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for spec_matrixchainmtper_memo_wf {
+    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for MatrixChainMtPerMemoInv {
         open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
             &&& v@.dom().finite()
             &&& spec_memo_correct(self.dims, v@)
@@ -80,17 +80,17 @@ broadcast use {
     fn new_mcper_memo_lock(
         val: HashMapWithViewPlus<Pair<usize, usize>, usize>,
         Ghost(dims): Ghost<Seq<MatrixDim>>,
-    ) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, spec_matrixchainmtper_memo_wf>)
+    ) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MatrixChainMtPerMemoInv>)
         requires
             val@.dom().finite(),
             spec_memo_correct(dims, val@),
     {
-        RwLock::new(val, Ghost(spec_matrixchainmtper_memo_wf { dims }))
+        RwLock::new(val, Ghost(MatrixChainMtPerMemoInv { dims }))
     }
 
     pub struct MatrixChainMtPerS {
         pub dimensions: Arc<Vec<MatrixDim>>,
-        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, spec_matrixchainmtper_memo_wf>>,
+        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MatrixChainMtPerMemoInv>>,
     }
 
     impl View for MatrixChainMtPerS {

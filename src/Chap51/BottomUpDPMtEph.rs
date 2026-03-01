@@ -34,14 +34,14 @@ pub mod BottomUpDPMtEph {
         pub seq_t: ArraySeqMtEphS<char>,
     }
 
-    pub struct BottomUpDPMtEphWf;
-    impl RwLockPredicate<Vec<Vec<usize>>> for BottomUpDPMtEphWf {
+    pub struct BottomUpDPMtEphInv;
+    impl RwLockPredicate<Vec<Vec<usize>>> for BottomUpDPMtEphInv {
         open spec fn inv(self, v: Vec<Vec<usize>>) -> bool { true }
     }
 
     #[verifier::external_body]
-    fn new_bu_eph_lock(val: Vec<Vec<usize>>) -> (lock: RwLock<Vec<Vec<usize>>, BottomUpDPMtEphWf>) {
-        RwLock::new(val, Ghost(BottomUpDPMtEphWf))
+    fn new_bu_eph_lock(val: Vec<Vec<usize>>) -> (lock: RwLock<Vec<Vec<usize>>, BottomUpDPMtEphInv>) {
+        RwLock::new(val, Ghost(BottomUpDPMtEphInv))
     }
 
     } // verus!
@@ -57,11 +57,11 @@ pub mod BottomUpDPMtEph {
         fn set_t(&mut self, t: ArraySeqMtEphS<char>);
         fn med_bottom_up_parallel(&mut self) -> usize;
         fn initialize_base_cases(&self) -> Vec<Vec<usize>>;
-        fn compute_diagonal_parallel(&self, table: Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtEphWf>>, k: usize);
+        fn compute_diagonal_parallel(&self, table: Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtEphInv>>, k: usize);
         fn compute_cell_value_static(
             seq_s: &ArraySeqMtEphS<char>,
             seq_t: &ArraySeqMtEphS<char>,
-            table: &Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtEphWf>>,
+            table: &Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtEphInv>>,
             i: usize,
             j: usize,
         ) -> usize;
@@ -113,7 +113,7 @@ pub mod BottomUpDPMtEph {
             table
         }
 
-        fn compute_diagonal_parallel(&self, table: Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtEphWf>>, k: usize) {
+        fn compute_diagonal_parallel(&self, table: Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtEphInv>>, k: usize) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
 
@@ -151,7 +151,7 @@ pub mod BottomUpDPMtEph {
         fn compute_cell_value_static(
             seq_s: &ArraySeqMtEphS<char>,
             seq_t: &ArraySeqMtEphS<char>,
-            table: &Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtEphWf>>,
+            table: &Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtEphInv>>,
             i: usize,
             j: usize,
         ) -> usize {

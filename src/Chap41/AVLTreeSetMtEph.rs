@@ -50,19 +50,19 @@ broadcast use {
 
     // 4. type definitions
 
-    pub struct SetMtWf;
+    pub struct AVLTreeSetMtEphInv;
 
-    impl<T: StTInMtT + Ord + 'static> RwLockPredicate<AVLTreeSetStEph<T>> for SetMtWf {
+    impl<T: StTInMtT + Ord + 'static> RwLockPredicate<AVLTreeSetStEph<T>> for AVLTreeSetMtEphInv {
         open spec fn inv(self, v: AVLTreeSetStEph<T>) -> bool { true }
     }
 
     #[verifier::external_body]
-    fn new_set_mt_lock<T: StTInMtT + Ord + 'static>(val: AVLTreeSetStEph<T>) -> (lock: RwLock<AVLTreeSetStEph<T>, SetMtWf>) {
-        RwLock::new(val, Ghost(SetMtWf))
+    fn new_set_mt_lock<T: StTInMtT + Ord + 'static>(val: AVLTreeSetStEph<T>) -> (lock: RwLock<AVLTreeSetStEph<T>, AVLTreeSetMtEphInv>) {
+        RwLock::new(val, Ghost(AVLTreeSetMtEphInv))
     }
 
     pub struct AVLTreeSetMtEph<T: StTInMtT + Ord + 'static> {
-        pub inner: Arc<RwLock<AVLTreeSetStEph<T>, SetMtWf>>,
+        pub inner: Arc<RwLock<AVLTreeSetStEph<T>, AVLTreeSetMtEphInv>>,
     }
 
     // 5. view impls

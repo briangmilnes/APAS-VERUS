@@ -32,13 +32,13 @@ pub mod BSTPlainMtEph {
     /// Lock invariant: the stored tree satisfies BST ordering.
     /// Because `inv` is `open` and ignores `self`, Verus can resolve
     /// `lock.inv(tree) == tree_is_bst(tree)` without knowing `lock.pred()`.
-    pub struct BstPred<T> {
+    pub struct BSTPlainMtEphInv<T> {
         _phantom: PhantomData<T>,
     }
 
     // 8. traits
 
-    impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BstPred<T> {
+    impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BSTPlainMtEphInv<T> {
         open spec fn inv(self, tree: BalBinTree<T>) -> bool {
             tree_is_bst::<T>(tree)
                 && tree.spec_size() <= usize::MAX
@@ -50,7 +50,7 @@ pub mod BSTPlainMtEph {
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTPlainMtEph<T: TotalOrder> {
-        root: RwLock<BalBinTree<T>, BstPred<T>>,
+        root: RwLock<BalBinTree<T>, BSTPlainMtEphInv<T>>,
     }
 
     // Verified BST operations (same proofs as BSTPlainStEph).
@@ -231,7 +231,7 @@ pub mod BSTPlainMtEph {
             BSTPlainMtEph {
                 root: RwLock::new(
                     BalBinTree::Leaf,
-                    Ghost(BstPred { _phantom: PhantomData }),
+                    Ghost(BSTPlainMtEphInv { _phantom: PhantomData }),
                 ),
             }
         }

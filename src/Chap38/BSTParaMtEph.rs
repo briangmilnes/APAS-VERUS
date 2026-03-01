@@ -33,9 +33,9 @@ pub mod BSTParaMtEph {
 
     // 4. type definitions
 
-    pub struct BstParaWf;
+    pub struct BSTParaMtEphInv;
 
-    impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for BstParaWf {
+    impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for BSTParaMtEphInv {
         open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
             match v {
                 Option::None => true,
@@ -60,12 +60,12 @@ pub mod BSTParaMtEph {
 
     #[verifier::reject_recursive_types(T)]
     pub struct ParamBST<T: MtKey> {
-        pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, BstParaWf>>,
+        pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, BSTParaMtEphInv>>,
     }
 
     #[verifier::external_body]
-    fn new_bst_para_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BstParaWf>) {
-        RwLock::new(val, Ghost(BstParaWf))
+    fn new_bst_para_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BSTParaMtEphInv>) {
+        RwLock::new(val, Ghost(BSTParaMtEphInv))
     }
 
     // 5. view impls

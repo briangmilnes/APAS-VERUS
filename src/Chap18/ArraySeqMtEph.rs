@@ -175,12 +175,12 @@ pub mod ArraySeqMtEph {
     /// Ghost state for the ninject lock. The invariant says the buffer is
     /// always a valid partial ninject result: every element is either the
     /// original or came from some update.
-    pub struct NinjectInv<T> {
+    pub struct ArraySeqMtEphInv<T> {
         pub ghost source: Seq<T>,
         pub ghost updates: Seq<(usize, T)>,
     }
 
-    impl<T> RwLockPredicate<Vec<T>> for NinjectInv<T> {
+    impl<T> RwLockPredicate<Vec<T>> for ArraySeqMtEphInv<T> {
         open spec fn inv(self, v: Vec<T>) -> bool {
             v@.len() == self.source.len()
             && forall|i: int| #![trigger v@[i]] 0 <= i < v@.len() ==> {
@@ -195,9 +195,9 @@ pub mod ArraySeqMtEph {
     /// - APAS: N/A — implementation utility, not in prose.
     /// - Claude-Opus-4.6: Work Θ(|updates|), Span Θ(|updates|).
     fn apply_ninject_updates<T: Clone + Eq + Send + Sync + 'static>(
-        lock: Arc<RwLock<Vec<T>, NinjectInv<T>>>,
+        lock: Arc<RwLock<Vec<T>, ArraySeqMtEphInv<T>>>,
         updates: Vec<(usize, T)>,
-        Ghost(pred): Ghost<NinjectInv<T>>,
+        Ghost(pred): Ghost<ArraySeqMtEphInv<T>>,
     )
         requires
             obeys_feq_clone::<T>(),
@@ -1321,7 +1321,7 @@ pub mod ArraySeqMtEph {
                     Seq::new(result.spec_len(), |i: int| result.spec_index(i))),
         {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
-            let ghost pred = NinjectInv::<T> { source: a.seq@, updates: updates@ };
+            let ghost pred = ArraySeqMtEphInv::<T> { source: a.seq@, updates: updates@ };
 
             let buf = a.seq.clone();
             proof {
@@ -1332,7 +1332,7 @@ pub mod ArraySeqMtEph {
                 }
                 assert(buf@ =~= a.seq@);
             }
-            let lock = Arc::new(RwLock::<Vec<T>, NinjectInv<T>>::new(buf, Ghost(pred)));
+            let lock = Arc::new(RwLock::<Vec<T>, ArraySeqMtEphInv<T>>::new(buf, Ghost(pred)));
 
             // Split updates in half.
             let mid = updates.len() / 2;

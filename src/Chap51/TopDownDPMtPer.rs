@@ -28,14 +28,14 @@ pub mod TopDownDPMtPer {
 
     verus! {
 
-    pub struct TopDownDPMtPerWf;
-    impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtPerWf {
+    pub struct TopDownDPMtPerInv;
+    impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtPerInv {
         open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
     }
 
     #[verifier::external_body]
-    fn new_td_per_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, TopDownDPMtPerWf>) {
-        RwLock::new(val, Ghost(TopDownDPMtPerWf))
+    fn new_td_per_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, TopDownDPMtPerInv>) {
+        RwLock::new(val, Ghost(TopDownDPMtPerInv))
     }
 
     } // verus!
@@ -48,7 +48,7 @@ pub mod TopDownDPMtPer {
         /// Input sequence T
         pub seq_t: ArraySeqMtPerS<char>,
         /// Concurrent memoization table for subproblem results
-        pub memo_table: Arc<RwLock<HashMap<(usize, usize), usize>, TopDownDPMtPerWf>>,
+        pub memo_table: Arc<RwLock<HashMap<(usize, usize), usize>, TopDownDPMtPerInv>>,
     }
 
     // 8. traits

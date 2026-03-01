@@ -28,14 +28,14 @@ pub mod TopDownDPMtEph {
 
     verus! {
 
-    pub struct TopDownDPMtEphWf;
-    impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtEphWf {
+    pub struct TopDownDPMtEphInv;
+    impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtEphInv {
         open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
     }
 
     #[verifier::external_body]
-    fn new_td_eph_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, TopDownDPMtEphWf>) {
-        RwLock::new(val, Ghost(TopDownDPMtEphWf))
+    fn new_td_eph_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, TopDownDPMtEphInv>) {
+        RwLock::new(val, Ghost(TopDownDPMtEphInv))
     }
 
     } // verus!
@@ -48,7 +48,7 @@ pub mod TopDownDPMtEph {
         /// Input sequence T
         pub seq_t: ArraySeqMtEphS<char>,
         /// Concurrent memoization table for subproblem results
-        pub memo_table: Arc<RwLock<HashMap<(usize, usize), usize>, TopDownDPMtEphWf>>,
+        pub memo_table: Arc<RwLock<HashMap<(usize, usize), usize>, TopDownDPMtEphInv>>,
     }
 
     // 8. traits

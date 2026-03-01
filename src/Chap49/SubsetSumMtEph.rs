@@ -21,14 +21,14 @@ pub mod SubsetSumMtEph {
     use crate::ArraySeqMtEphChap19SLit;
 
     verus! {
-        pub struct SubsetSumMtEphWf;
-        impl RwLockPredicate<HashMap<(usize, i32), bool>> for SubsetSumMtEphWf {
+        pub struct SubsetSumMtEphInv;
+        impl RwLockPredicate<HashMap<(usize, i32), bool>> for SubsetSumMtEphInv {
             open spec fn inv(self, v: HashMap<(usize, i32), bool>) -> bool { true }
         }
 
         #[verifier::external_body]
-        fn new_subset_sum_eph_lock(val: HashMap<(usize, i32), bool>) -> (lock: RwLock<HashMap<(usize, i32), bool>, SubsetSumMtEphWf>) {
-            RwLock::new(val, Ghost(SubsetSumMtEphWf))
+        fn new_subset_sum_eph_lock(val: HashMap<(usize, i32), bool>) -> (lock: RwLock<HashMap<(usize, i32), bool>, SubsetSumMtEphInv>) {
+            RwLock::new(val, Ghost(SubsetSumMtEphInv))
         }
     }
 
@@ -37,7 +37,7 @@ pub mod SubsetSumMtEph {
     #[derive(Clone)]
     pub struct SubsetSumMtEphS<T: MtVal> {
         pub multiset: ArraySeqMtEphS<T>,
-        pub memo: Arc<RwLock<HashMap<(usize, i32), bool>, SubsetSumMtEphWf>>,
+        pub memo: Arc<RwLock<HashMap<(usize, i32), bool>, SubsetSumMtEphInv>>,
     }
 
     // 8. traits

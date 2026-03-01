@@ -56,8 +56,8 @@ broadcast use {
         }
     }
 
-    pub struct spec_matrixchainmteph_dim_wf;
-    impl RwLockPredicate<Vec<MatrixDim>> for spec_matrixchainmteph_dim_wf {
+    pub struct MatrixChainMtEphDimInv;
+    impl RwLockPredicate<Vec<MatrixDim>> for MatrixChainMtEphDimInv {
         open spec fn inv(self, v: Vec<MatrixDim>) -> bool {
             v@.len() <= usize::MAX as nat
         }
@@ -65,16 +65,16 @@ broadcast use {
 
     #[verifier::external_body]
     fn new_mceph_dim_lock(val: Vec<MatrixDim>)
-        -> (lock: RwLock<Vec<MatrixDim>, spec_matrixchainmteph_dim_wf>)
+        -> (lock: RwLock<Vec<MatrixDim>, MatrixChainMtEphDimInv>)
         requires val@.len() <= usize::MAX as nat
     {
-        RwLock::new(val, Ghost(spec_matrixchainmteph_dim_wf))
+        RwLock::new(val, Ghost(MatrixChainMtEphDimInv))
     }
 
-    pub struct spec_matrixchainmteph_memo_wf {
+    pub struct MatrixChainMtEphMemoInv {
         pub ghost dims: Seq<MatrixDim>,
     }
-    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for spec_matrixchainmteph_memo_wf {
+    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for MatrixChainMtEphMemoInv {
         open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
             &&& v@.dom().finite()
             &&& spec_memo_correct(self.dims, v@)
@@ -85,17 +85,17 @@ broadcast use {
     fn new_mceph_memo_lock(
         val: HashMapWithViewPlus<Pair<usize, usize>, usize>,
         Ghost(dims): Ghost<Seq<MatrixDim>>,
-    ) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, spec_matrixchainmteph_memo_wf>)
+    ) -> (lock: RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MatrixChainMtEphMemoInv>)
         requires
             val@.dom().finite(),
             spec_memo_correct(dims, val@),
     {
-        RwLock::new(val, Ghost(spec_matrixchainmteph_memo_wf { dims }))
+        RwLock::new(val, Ghost(MatrixChainMtEphMemoInv { dims }))
     }
 
     pub struct MatrixChainMtEphS {
-        pub dimensions: Arc<RwLock<Vec<MatrixDim>, spec_matrixchainmteph_dim_wf>>,
-        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, spec_matrixchainmteph_memo_wf>>,
+        pub dimensions: Arc<RwLock<Vec<MatrixDim>, MatrixChainMtEphDimInv>>,
+        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MatrixChainMtEphMemoInv>>,
     }
 
     // 6. spec fns

@@ -20,3 +20,8 @@ If claude-code generates a settings.local.json do the permissions in
 
 How do we merge these?
 
+And one agent just asked for permission for git:* and for veracity-review-proof-holes:*.
+Why? What got put in settings.local.json that should be in ~/.claude/settings.json?
+Or is it already?
+
+And why can't you read from projects? Permit it. 

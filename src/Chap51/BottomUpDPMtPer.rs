@@ -34,14 +34,14 @@ pub mod BottomUpDPMtPer {
         pub seq_t: ArraySeqMtPerS<char>,
     }
 
-    pub struct BottomUpDPMtPerWf;
-    impl RwLockPredicate<Vec<Vec<usize>>> for BottomUpDPMtPerWf {
+    pub struct BottomUpDPMtPerInv;
+    impl RwLockPredicate<Vec<Vec<usize>>> for BottomUpDPMtPerInv {
         open spec fn inv(self, v: Vec<Vec<usize>>) -> bool { true }
     }
 
     #[verifier::external_body]
-    fn new_bu_per_lock(val: Vec<Vec<usize>>) -> (lock: RwLock<Vec<Vec<usize>>, BottomUpDPMtPerWf>) {
-        RwLock::new(val, Ghost(BottomUpDPMtPerWf))
+    fn new_bu_per_lock(val: Vec<Vec<usize>>) -> (lock: RwLock<Vec<Vec<usize>>, BottomUpDPMtPerInv>) {
+        RwLock::new(val, Ghost(BottomUpDPMtPerInv))
     }
 
     } // verus!
@@ -55,11 +55,11 @@ pub mod BottomUpDPMtPer {
         fn is_empty(&self) -> bool;
         fn med_bottom_up_parallel(&self) -> usize;
         fn initialize_base_cases(&self) -> Vec<Vec<usize>>;
-        fn compute_diagonal_parallel(&self, table: Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtPerWf>>, k: usize);
+        fn compute_diagonal_parallel(&self, table: Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtPerInv>>, k: usize);
         fn compute_cell_value_static(
             seq_s: &ArraySeqMtPerS<char>,
             seq_t: &ArraySeqMtPerS<char>,
-            table: &Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtPerWf>>,
+            table: &Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtPerInv>>,
             i: usize,
             j: usize,
         ) -> usize;
@@ -109,7 +109,7 @@ pub mod BottomUpDPMtPer {
             table
         }
 
-        fn compute_diagonal_parallel(&self, table: Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtPerWf>>, k: usize) {
+        fn compute_diagonal_parallel(&self, table: Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtPerInv>>, k: usize) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
 
@@ -147,7 +147,7 @@ pub mod BottomUpDPMtPer {
         fn compute_cell_value_static(
             seq_s: &ArraySeqMtPerS<char>,
             seq_t: &ArraySeqMtPerS<char>,
-            table: &Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtPerWf>>,
+            table: &Arc<RwLock<Vec<Vec<usize>>, BottomUpDPMtPerInv>>,
             i: usize,
             j: usize,
         ) -> usize {

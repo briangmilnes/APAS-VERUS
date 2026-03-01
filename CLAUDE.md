@@ -370,6 +370,25 @@ impl<T: PartialEq + View> PartialEq for MyType<T> {
 }
 ```
 
+### RwLockPredicate Naming
+
+Every `RwLockPredicate` struct follows the **ModuleInv** convention: for module `X`, the
+struct is `XInv`. Modules with multiple locks use a disambiguating infix (`XDimInv`,
+`XMemoInv`, `XKeysInv`). The `inv` function must carry a real invariant — never just `true`.
+Use `pub ghost` fields when the invariant needs construction-time context. Do not name
+predicates `Wf`, `Pred`, or `Guard`. See `.cursor/rules/apas-verus/rwlock-predicate-naming.mdc`.
+
+```rust
+pub struct FooMtEphInv {
+    pub ghost source: Seq<T>,
+}
+impl<T: Bounds> RwLockPredicate<LockedType<T>> for FooMtEphInv {
+    open spec fn inv(self, v: LockedType<T>) -> bool {
+        v@.len() == self.source.len()  // Real constraint, not `true`.
+    }
+}
+```
+
 ### What Goes Inside vs Outside verus!
 
 **Inside verus!**: Clone, PartialEq/Eq, Default, Drop, Iterator infrastructure (sections 1-11).

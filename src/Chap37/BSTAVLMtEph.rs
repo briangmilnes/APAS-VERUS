@@ -34,13 +34,13 @@ pub mod BSTAVLMtEph {
     // 4. type definitions
 
     /// Lock invariant: the stored tree satisfies BST ordering.
-    struct BstPred<T> {
+    struct BSTAVLMtEphInv<T> {
         _phantom: PhantomData<T>,
     }
 
     // 8. traits
 
-    impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BstPred<T> {
+    impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BSTAVLMtEphInv<T> {
         open spec fn inv(self, tree: BalBinTree<T>) -> bool {
             tree_is_bst::<T>(tree)
                 && tree.spec_size() <= usize::MAX
@@ -92,7 +92,7 @@ pub mod BSTAVLMtEph {
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTAVLMtEph<T: TotalOrder> {
-        root: RwLock<BalBinTree<T>, BstPred<T>>,
+        root: RwLock<BalBinTree<T>, BSTAVLMtEphInv<T>>,
     }
 
     // Verified rotations (same proofs as BSTAVLStEph).
@@ -406,7 +406,7 @@ pub mod BSTAVLMtEph {
             BSTAVLMtEph {
                 root: RwLock::new(
                     BalBinTree::Leaf,
-                    Ghost(BstPred { _phantom: PhantomData }),
+                    Ghost(BSTAVLMtEphInv { _phantom: PhantomData }),
                 ),
             }
         }

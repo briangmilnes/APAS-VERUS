@@ -1,0 +1,62 @@
+---
+description: RwLockPredicate struct naming — use ModuleInv convention, carry real invariants
+globs:
+alwaysApply: true
+---
+
+# RwLockPredicate Naming Convention
+
+Every `RwLockPredicate` struct follows the **ModuleInv** naming convention: for module `X`,
+the predicate struct is `XInv`. Modules with multiple locks use a disambiguating infix
+(e.g., `XDimInv`, `XMemoInv`, `XKeysInv`, `XEdgesInv`).
+
+## Pattern
+
+```rust
+pub struct FooMtEphInv {
+    pub ghost some_state: SomeType,
+}
+
+impl<T: Bounds> RwLockPredicate<LockedType<T>> for FooMtEphInv {
+    open spec fn inv(self, v: LockedType<T>) -> bool {
+        // Real invariant — never just `true`.
+        v@.len() <= usize::MAX as nat
+    }
+}
+```
+
+## Rules
+
+1. **Name after the module, not the operation.** `ArraySeqMtEphInv`, not `NinjectInv`.
+   `BSTTreapMtEphInv`, not `TreapLinkWf`.
+
+2. **Carry real invariants.** The `inv` function should constrain the locked value meaningfully.
+   A predicate returning `true` is a proof hole — it says the lock protects nothing.
+
+3. **Use ghost fields when the invariant needs context.** If the invariant references values
+   known only at construction time (e.g., input dimensions, source sequences), store them as
+   `pub ghost` fields on the struct.
+
+4. **No dummy structs.** Do not create unit structs (`struct Wf;`) with trivial `true`
+   invariants. If you cannot yet write a real invariant, document it as a known hole and
+   file it for follow-up.
+
+## Multi-Lock Modules
+
+When a module has multiple `RwLock`s protecting different data, disambiguate with an infix:
+
+| Module | Lock Purpose | Struct Name |
+|--------|-------------|-------------|
+| MatrixChainMtEph | dimensions vector | `MatrixChainMtEphDimInv` |
+| MatrixChainMtEph | memoization table | `MatrixChainMtEphMemoInv` |
+| OptBinSearchTreeMtEph | keys vector | `OptBSTMtEphKeysInv` |
+| OptBinSearchTreeMtEph | memo table | `OptBSTMtEphMemoInv` |
+| SpanTreeMtEph | spanning edges | `SpanTreeMtEphEdgesInv` |
+| SpanTreeMtEph | validity flag | `SpanTreeMtEphValidInv` |
+
+## Do NOT
+
+- Do NOT name predicates `Wf`, `Pred`, `Guard`, or after the locked type.
+- Do NOT use `spec_fn(V) -> bool` with a trivial lambda — use a named struct with a real
+  invariant.
+- Do NOT return `true` from `inv` without explicit approval and a documented reason.

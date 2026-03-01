@@ -21,14 +21,14 @@ pub mod MinEditDistMtEph {
     use crate::ArraySeqMtEphChap19SLit;
 
     verus! {
-        pub struct MinEditDistMtEphWf;
-        impl RwLockPredicate<HashMap<(usize, usize), usize>> for MinEditDistMtEphWf {
+        pub struct MinEditDistMtEphInv;
+        impl RwLockPredicate<HashMap<(usize, usize), usize>> for MinEditDistMtEphInv {
             open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
         }
 
         #[verifier::external_body]
-        fn new_min_edit_dist_eph_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, MinEditDistMtEphWf>) {
-            RwLock::new(val, Ghost(MinEditDistMtEphWf))
+        fn new_min_edit_dist_eph_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, MinEditDistMtEphInv>) {
+            RwLock::new(val, Ghost(MinEditDistMtEphInv))
         }
     }
 
@@ -38,7 +38,7 @@ pub mod MinEditDistMtEph {
     pub struct MinEditDistMtEphS<T: MtVal> {
         pub source: ArraySeqMtEphS<T>,
         pub target: ArraySeqMtEphS<T>,
-        pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, MinEditDistMtEphWf>>,
+        pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, MinEditDistMtEphInv>>,
     }
 
     // 8. traits
@@ -109,7 +109,7 @@ pub mod MinEditDistMtEph {
     fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
         source: &ArraySeqMtEphS<T>,
         target: &ArraySeqMtEphS<T>,
-        memo: &Arc<RwLock<HashMap<(usize, usize), usize>, MinEditDistMtEphWf>>,
+        memo: &Arc<RwLock<HashMap<(usize, usize), usize>, MinEditDistMtEphInv>>,
         i: usize,
         j: usize,
     ) -> usize {

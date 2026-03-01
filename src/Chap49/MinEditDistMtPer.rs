@@ -20,14 +20,14 @@ pub mod MinEditDistMtPer {
     use crate::Types::Types::*;
 
     verus! {
-        pub struct MinEditDistMtPerWf;
-        impl RwLockPredicate<HashMap<(usize, usize), usize>> for MinEditDistMtPerWf {
+        pub struct MinEditDistMtPerInv;
+        impl RwLockPredicate<HashMap<(usize, usize), usize>> for MinEditDistMtPerInv {
             open spec fn inv(self, v: HashMap<(usize, usize), usize>) -> bool { true }
         }
 
         #[verifier::external_body]
-        fn new_min_edit_dist_per_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, MinEditDistMtPerWf>) {
-            RwLock::new(val, Ghost(MinEditDistMtPerWf))
+        fn new_min_edit_dist_per_lock(val: HashMap<(usize, usize), usize>) -> (lock: RwLock<HashMap<(usize, usize), usize>, MinEditDistMtPerInv>) {
+            RwLock::new(val, Ghost(MinEditDistMtPerInv))
         }
     }
 
@@ -37,7 +37,7 @@ pub mod MinEditDistMtPer {
     pub struct MinEditDistMtPerS<T: MtVal> {
         pub source: ArraySeqMtPerS<T>,
         pub target: ArraySeqMtPerS<T>,
-        pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, MinEditDistMtPerWf>>,
+        pub memo: Arc<RwLock<HashMap<(usize, usize), usize>, MinEditDistMtPerInv>>,
     }
 
     // 8. traits

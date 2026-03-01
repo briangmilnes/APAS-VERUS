@@ -28,24 +28,24 @@ pub mod SpanTreeMtEph {
     pub type T<V> = UnDirGraphMtEph<V>;
 
     verus! {
-        pub struct SpanTreeMtEphSpanningEdgesWf;
-        impl<V: StT + MtT + Hash + Ord> RwLockPredicate<SetStEph<Edge<V>>> for SpanTreeMtEphSpanningEdgesWf {
+        pub struct SpanTreeMtEphEdgesInv;
+        impl<V: StT + MtT + Hash + Ord> RwLockPredicate<SetStEph<Edge<V>>> for SpanTreeMtEphEdgesInv {
             open spec fn inv(self, v: SetStEph<Edge<V>>) -> bool { v@.finite() }
         }
         #[verifier::external_body]
         fn new_spanning_edges_lock<V: StT + MtT + Hash + Ord>(
             val: SetStEph<Edge<V>>,
-        ) -> (lock: RwLock<SetStEph<Edge<V>>, SpanTreeMtEphSpanningEdgesWf>) {
-            RwLock::new(val, Ghost(SpanTreeMtEphSpanningEdgesWf))
+        ) -> (lock: RwLock<SetStEph<Edge<V>>, SpanTreeMtEphEdgesInv>) {
+            RwLock::new(val, Ghost(SpanTreeMtEphEdgesInv))
         }
 
-        pub struct SpanTreeMtEphValidWf;
-        impl RwLockPredicate<bool> for SpanTreeMtEphValidWf {
+        pub struct SpanTreeMtEphValidInv;
+        impl RwLockPredicate<bool> for SpanTreeMtEphValidInv {
             open spec fn inv(self, v: bool) -> bool { v == true || v == false }
         }
         #[verifier::external_body]
-        fn new_valid_lock(val: bool) -> (lock: RwLock<bool, SpanTreeMtEphValidWf>) {
-            RwLock::new(val, Ghost(SpanTreeMtEphValidWf))
+        fn new_valid_lock(val: bool) -> (lock: RwLock<bool, SpanTreeMtEphValidInv>) {
+            RwLock::new(val, Ghost(SpanTreeMtEphValidInv))
         }
 
         pub trait SpanTreeMtEphTrait {

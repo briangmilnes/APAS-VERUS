@@ -42,11 +42,11 @@ pub mod BSTTreapMtEph {
 
     type Link<T> = Option<Box<Node<T>>>;
 
-    pub struct TreapLinkWf;
+    pub struct BSTTreapMtEphInv;
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTTreapMtEph<T: StTInMtT + Ord> {
-        root: Arc<RwLock<Link<T>, TreapLinkWf>>,
+        root: Arc<RwLock<Link<T>, BSTTreapMtEphInv>>,
     }
 
     pub type BSTreeTreap<T> = BSTTreapMtEph<T>;
@@ -148,7 +148,7 @@ pub mod BSTTreapMtEph {
     /// Treap trait for multi-threaded ephemeral access.
     ///
     /// No spec fns on the struct because size/height are behind `Arc<RwLock<>>`.
-    /// The RwLock invariant (`TreapLinkWf`) enforces `spec_size_wf_link` and
+    /// The RwLock invariant (`BSTTreapMtEphInv`) enforces `spec_size_wf_link` and
     /// `spec_size_link < usize::MAX` on every acquire, so callers need no
     /// explicit size preconditions.
     pub trait BSTTreapMtEphTrait<T: StTInMtT + Ord>: Sized {
@@ -215,17 +215,17 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for TreapLinkWf {
+    impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for BSTTreapMtEphInv {
         open spec fn inv(self, v: Link<T>) -> bool {
             spec_size_wf_link(&v) && spec_size_link(&v) < usize::MAX as nat
         }
     }
 
     #[verifier::external_body]
-    fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, TreapLinkWf>)
+    fn new_treap_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, BSTTreapMtEphInv>)
         requires spec_size_wf_link(&val), spec_size_link(&val) < usize::MAX as nat,
     {
-        RwLock::new(val, Ghost(TreapLinkWf))
+        RwLock::new(val, Ghost(BSTTreapMtEphInv))
     }
 
     /// - APAS: Work Θ(1), Span Θ(1)

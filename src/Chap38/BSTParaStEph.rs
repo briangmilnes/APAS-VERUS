@@ -35,11 +35,11 @@ pub mod BSTParaStEph {
 
     // 4. type definitions
 
-    pub struct spec_bstpara_wf<T: StT + Ord> {
+    pub struct BSTParaStEphInv<T: StT + Ord> {
         pub ghost contents: Set<<T as View>::V>,
     }
 
-    impl<T: StT + Ord> RwLockPredicate<Option<Box<NodeInner<T>>>> for spec_bstpara_wf<T> {
+    impl<T: StT + Ord> RwLockPredicate<Option<Box<NodeInner<T>>>> for BSTParaStEphInv<T> {
         open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
             match v {
                 Option::None => self.contents =~= Set::<<T as View>::V>::empty(),
@@ -71,7 +71,7 @@ pub mod BSTParaStEph {
 
     #[verifier::reject_recursive_types(T)]
     pub struct ParamBST<T: StT + Ord> {
-        pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, spec_bstpara_wf<T>>>,
+        pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, BSTParaStEphInv<T>>>,
     }
 
     #[verifier::external_body]
@@ -79,10 +79,10 @@ pub mod BSTParaStEph {
         val: Option<Box<NodeInner<T>>>,
         Ghost(contents): Ghost<Set<<T as View>::V>>,
     ) -> (tree: ParamBST<T>)
-        requires (spec_bstpara_wf::<T> { contents }).inv(val),
+        requires (BSTParaStEphInv::<T> { contents }).inv(val),
         ensures tree@ =~= contents,
     {
-        let ghost pred = spec_bstpara_wf::<T> { contents };
+        let ghost pred = BSTParaStEphInv::<T> { contents };
         ParamBST { root: Arc::new(RwLock::new(val, Ghost(pred))) }
     }
 

@@ -343,23 +343,23 @@ pub mod BSTSplayMtEph {
         /// Uninterpreted well-formedness for splay tree links (Node is outside verus!).
         pub open spec fn link_wf<T: StTInMtT + Ord>(link: Link<T>) -> bool;
 
-        pub struct SplayLinkWf;
+        pub struct BSTSplayMtEphInv;
 
-        impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for SplayLinkWf {
+        impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for BSTSplayMtEphInv {
             open spec fn inv(self, v: Link<T>) -> bool {
                 link_wf(v)
             }
         }
 
         #[verifier::external_body] // accept hole
-        fn new_splay_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, SplayLinkWf>) {
-            RwLock::new(val, Ghost(SplayLinkWf))
+        fn new_splay_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, BSTSplayMtEphInv>) {
+            RwLock::new(val, Ghost(BSTSplayMtEphInv))
         }
 
         #[verifier::reject_recursive_types(T)]
         #[derive(Clone)]
         pub struct BSTSplayMtEph<T: StTInMtT + Ord> {
-            root: Arc<RwLock<Link<T>, SplayLinkWf>>,
+            root: Arc<RwLock<Link<T>, BSTSplayMtEphInv>>,
         }
     }
 

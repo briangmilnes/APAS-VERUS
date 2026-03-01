@@ -321,23 +321,23 @@ pub mod BSTRBMtEph {
         /// Uninterpreted well-formedness for RB tree links (Node is outside verus!).
         pub open spec fn link_wf<T: StTInMtT + Ord>(link: Link<T>) -> bool;
 
-        pub struct RBLinkWf;
+        pub struct BSTRBMtEphInv;
 
-        impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for RBLinkWf {
+        impl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for BSTRBMtEphInv {
             open spec fn inv(self, v: Link<T>) -> bool {
                 link_wf(v)
             }
         }
 
         #[verifier::external_body] // accept hole
-        fn new_rb_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, RBLinkWf>) {
-            RwLock::new(val, Ghost(RBLinkWf))
+        fn new_rb_link_lock<T: StTInMtT + Ord>(val: Link<T>) -> (lock: RwLock<Link<T>, BSTRBMtEphInv>) {
+            RwLock::new(val, Ghost(BSTRBMtEphInv))
         }
 
         #[verifier::reject_recursive_types(T)]
         #[derive(Clone)]
         pub struct BSTRBMtEph<T: StTInMtT + Ord> {
-            root: Arc<RwLock<Link<T>, RBLinkWf>>,
+            root: Arc<RwLock<Link<T>, BSTRBMtEphInv>>,
         }
     }
 

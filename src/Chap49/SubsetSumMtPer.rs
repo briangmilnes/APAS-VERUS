@@ -20,14 +20,14 @@ pub mod SubsetSumMtPer {
     use crate::Types::Types::*;
 
     verus! {
-        pub struct SubsetSumMtPerWf;
-        impl RwLockPredicate<HashMap<(usize, i32), bool>> for SubsetSumMtPerWf {
+        pub struct SubsetSumMtPerInv;
+        impl RwLockPredicate<HashMap<(usize, i32), bool>> for SubsetSumMtPerInv {
             open spec fn inv(self, v: HashMap<(usize, i32), bool>) -> bool { true }
         }
 
         #[verifier::external_body]
-        fn new_subset_sum_per_lock(val: HashMap<(usize, i32), bool>) -> (lock: RwLock<HashMap<(usize, i32), bool>, SubsetSumMtPerWf>) {
-            RwLock::new(val, Ghost(SubsetSumMtPerWf))
+        fn new_subset_sum_per_lock(val: HashMap<(usize, i32), bool>) -> (lock: RwLock<HashMap<(usize, i32), bool>, SubsetSumMtPerInv>) {
+            RwLock::new(val, Ghost(SubsetSumMtPerInv))
         }
     }
 
@@ -36,7 +36,7 @@ pub mod SubsetSumMtPer {
     #[derive(Clone)]
     pub struct SubsetSumMtPerS<T: MtVal> {
         pub multiset: ArraySeqMtPerS<T>,
-        pub memo: Arc<RwLock<HashMap<(usize, i32), bool>, SubsetSumMtPerWf>>,
+        pub memo: Arc<RwLock<HashMap<(usize, i32), bool>, SubsetSumMtPerInv>>,
     }
 
     // 8. traits

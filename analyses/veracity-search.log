@@ -2,7 +2,123 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn _ types Ord ensures .*is_lt
+Pattern: impl RwLockPredicate for _
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 102, Functions: 2456, Matches: 0
+Searching: /home/milnes/projects/VerusCodebases
+Files: 12661, Impls: 34691, Matches: 48
 
+[31m/home/milnes/projects/verus/source/vstd/rwlock.rs:243: [0m
+[38;5;22mimpl<V> RwLockPredicate<V> for spec_fn(V) -> bool[0m
+
+[31m/home/milnes/projects/verus/source/vstd/rwlock.rs:314: [0m
+[38;5;22mimpl RwLockPredicate<u64> for FixedParity[0m
+
+[31m/home/milnes/projects/VerusCodebases/event-sites/2024-sosp-tutorial/exercises/advanced-rust-topics/exercise_03_counting_to_2.rs:214: [0m
+[38;5;22mimpl RwLockPredicate<LockInterior> for CounterPredicate[0m
+
+[31m/home/milnes/projects/VerusCodebases/event-sites/2024-sosp-tutorial/exercises/advanced-rust-topics/solutions/solution_memoize.rs:52: [0m
+[38;5;22mimpl RwLockPredicate<HashMapWithView<Args, Output>> for Pred[0m
+
+[31m/home/milnes/projects/VerusCodebases/event-sites/2024-sosp-tutorial/exercises/advanced-rust-topics/solutions/solution_counting_to_2.rs:214: [0m
+[38;5;22mimpl RwLockPredicate<LockInterior> for CounterPredicate[0m
+
+[31m/home/milnes/projects/VerusCodebases/event-sites/2024-sosp-tutorial/exercises/advanced-rust-topics/exercise_01_memoize.rs:51: [0m
+[38;5;22mimpl RwLockPredicate<HashMapWithView<Args, Output>> for Pred[0m
+
+[31m/home/milnes/projects/VerusCodebases/event-sites/2024-sosp-tutorial/demos/interior_mutability_with_invariants/rwlock_with_trait.rs:10: [0m
+[38;5;22mimpl RwLockPredicate<u64> for FixedParity[0m
+
+[31m/home/milnes/projects/VerusCodebases/verified-storage/capybaraKV/capybarakv/src/kv2/rwlock_t.rs:39: [0m
+[38;5;22mimpl<V> RwLockPredicate<V> for spec_fn(V) -> bool[0m
+
+[31m/home/milnes/projects/VerusCodebases/verified-storage/capybaraKV/capybarakv/src/kv2/rwkv_v.rs:42: [0m
+[38;5;22mimpl<PM, K, I, L> RwLockPredicate<ConcurrentKvStoreInternal<PM, K, I, L>> for ConcurrentKvStorePredicate[0m
+
+[31m/home/milnes/projects/VerusCodebases/VeriStruct/benchmarks/rwlock_vstd.rs:14: [0m
+[38;5;22mimpl RwLockPredicate<u64> for FixedParity[0m
+
+[31m/home/milnes/projects/VerusCodebases/VeriStruct/benchmarks/rwlock_vstd_todo.rs:14: [0m
+[38;5;22mimpl RwLockPredicate<u64> for FixedParity[0m
+
+[31m/home/milnes/projects/VerusCodebases/VeriStruct/external/vstd/rwlock.rs:242: [0m
+[38;5;22mimpl<V> RwLockPredicate<V> for spec_fn(V) -> bool[0m
+
+[31m/home/milnes/projects/VerusCodebases/VeriStruct/external/vstd/rwlock.rs:313: [0m
+[38;5;22mimpl RwLockPredicate<u64> for FixedParity[0m
+
+[31m/home/milnes/projects/VerusCodebases/VeriStruct/benchmarks-complete/rwlock_vstd.rs:14: [0m
+[38;5;22mimpl RwLockPredicate<u64> for FixedParity[0m
+
+[31m/home/milnes/projects/VerusCodebases/VeriStruct/benchmarks-complete/rwlock_vstd_todo.rs:14: [0m
+[38;5;22mimpl RwLockPredicate<u64> for FixedParity[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:48: [0m
+[38;5;22mimpl<T: StTInMtT + Ord + 'static> RwLockPredicate<AVLTreeSetStEph<T>> for SetMtWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap38/BSTParaStEph.rs:22: [0m
+[38;5;22mimpl<T: StT + Ord> RwLockPredicate<Option<Box<NodeInner<T>>>> for BstParaWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:18: [0m
+[38;5;22mimpl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for BstParaWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:25: [0m
+[38;5;22mimpl RwLockPredicate<HashMap<(usize, i32), bool>> for SubsetSumMtEphWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:24: [0m
+[38;5;22mimpl RwLockPredicate<HashMap<(usize, i32), bool>> for SubsetSumMtPerWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap49/MinEditDistMtEph.rs:25: [0m
+[38;5;22mimpl RwLockPredicate<HashMap<(usize, usize), usize>> for MinEditDistMtEphWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap49/MinEditDistMtPer.rs:24: [0m
+[38;5;22mimpl RwLockPredicate<HashMap<(usize, usize), usize>> for MinEditDistMtPerWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/experiments/arc_rwlock_ninject.rs:30: [0m
+[38;5;22mimpl<T> RwLockPredicate<Vec<T>> for NinjectPred<T>[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:87: [0m
+[38;5;22mimpl<T: StTInMtT + Ord> RwLockPredicate<Link<T>> for TreapLinkWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:23: [0m
+[38;5;22mimpl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for TreapWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:32: [0m
+[38;5;22mimpl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtEphWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:38: [0m
+[38;5;22mimpl RwLockPredicate<Vec<Vec<usize>>> for BottomUpDPMtPerWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:32: [0m
+[38;5;22mimpl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtPerWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:38: [0m
+[38;5;22mimpl RwLockPredicate<Vec<Vec<usize>>> for BottomUpDPMtEphWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:42: [0m
+[38;5;22mimpl<T: MtVal> RwLockPredicate<Vec<KeyProb<T>>> for ObstEphKeysWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:51: [0m
+[38;5;22mimpl RwLockPredicate<HashMap<(usize, usize), Probability>> for ObstEphMemoWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:66: [0m
+[38;5;22mimpl RwLockPredicate<HashMap<(usize, usize), usize>> for McPerMemoWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:40: [0m
+[38;5;22mimpl RwLockPredicate<HashMap<(usize, usize), Probability>> for ObstPerMemoWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:64: [0m
+[38;5;22mimpl RwLockPredicate<Vec<MatrixDim>> for McEphDimWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:73: [0m
+[38;5;22mimpl RwLockPredicate<HashMap<(usize, usize), usize>> for McEphMemoWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:180: [0m
+[38;5;22mimpl<T> RwLockPredicate<Vec<T>> for NinjectInv<T>[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:32: [0m
+[38;5;22mimpl<V: StT + MtT + Hash + Ord> RwLockPredicate<SetStEph<Edge<V>>> for SpanTreeMtEphSpanningEdgesWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:43: [0m
+[38;5;22mimpl RwLockPredicate<bool> for SpanTreeMtEphValidWf[0m
+
+[31m/home/milnes/projects/VerusCodebases/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:42: [0m

@@ -32,7 +32,7 @@ pub mod BSTParaTreapMtEph {
 
     /// RwLock predicate for treap nodes. Children live behind separate locks,
     /// so we can only check one-level properties: a present node has size >= 1.
-    pub struct TreapWf;
+    pub struct BSTParaTreapMtEphInv;
 
     #[verifier::reject_recursive_types(T)]
     pub enum Exposed<T: MtKey> {
@@ -51,7 +51,7 @@ pub mod BSTParaTreapMtEph {
 
     #[verifier::reject_recursive_types(T)]
     pub struct ParamTreap<T: MtKey> {
-        pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, TreapWf>>,
+        pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, BSTParaTreapMtEphInv>>,
     }
 
 
@@ -67,17 +67,17 @@ pub mod BSTParaTreapMtEph {
 
     //		9. impls
 
-    impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for TreapWf {
+    impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for BSTParaTreapMtEphInv {
         open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
             spec_node_wf(&v)
         }
     }
 
     #[verifier::external_body]
-    fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, TreapWf>)
+    fn new_treap_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BSTParaTreapMtEphInv>)
         requires spec_node_wf(&val),
     {
-        RwLock::new(val, Ghost(TreapWf))
+        RwLock::new(val, Ghost(BSTParaTreapMtEphInv))
     }
 
     } // verus!

@@ -37,11 +37,11 @@ src/Chap40/analyses/veracity-review-verus-proof-holes.log - AGENT1, N, pub(crate
 src/Chap38/analyses/veracity-review-verus-proof-holes.log - AGENT2 bad no trait no specs.
 src/Chap39/analyses/veracity-review-verus-proof-holes.log - AGENT3, bad closed specs, under specified. BSTParaTreapMtEph.rs
 src/Chap37/analyses/veracity-review-verus-proof-holes.log - MAIN, just bad, bad bad, very no good. 
-src/Chap41/analyses/veracity-review-verus-proof-holes.log - AGENT4
 
 22 unfinished: 
 
 
+src/Chap41/analyses/veracity-review-verus-proof-holes.log - bad
 src/Chap42/analyses/veracity-review-verus-proof-holes.log - hideous
 src/Chap43/analyses/veracity-review-verus-proof-holes.log - AugOrderedTables, bad.
 src/Chap45/analyses/veracity-review-verus-proof-holes.log - Heaps, bad
