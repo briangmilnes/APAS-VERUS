@@ -16,6 +16,7 @@ pub mod BSTKeyValueStEph {
     // 1. module
     // 2. imports
     // 4. type definitions
+    // 5. view impls
     // 6. spec fns
     // 8. traits
     // 9. impls
@@ -35,14 +36,20 @@ pub mod BSTKeyValueStEph {
     }
 
     fn clone_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (result: Link<K, V>)
+        ensures
+            spec_content_link(&result) == spec_content_link(link),
+            spec_node_count_link(&result) == spec_node_count_link(link),
         decreases *link,
     {
         match link {
             None => None,
             Some(node) => {
+                let k = node.key.clone();
+                let v = node.value.clone();
+                proof { assume(k == node.key && v == node.value); } // clone bridge, cf. PartialEq pattern
                 Some(Box::new(Node {
-                    key: node.key.clone(),
-                    value: node.value.clone(),
+                    key: k,
+                    value: v,
                     priority: node.priority,
                     left: clone_link(&node.left),
                     right: clone_link(&node.right),
@@ -96,15 +103,48 @@ pub mod BSTKeyValueStEph {
         }
     }
 
+    pub open spec fn spec_node_count_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> nat
+        decreases *link,
+    {
+        match link {
+            None => 0,
+            Some(node) => 1 + spec_node_count_link(&node.left) + spec_node_count_link(&node.right),
+        }
+    }
+
+    pub open spec fn spec_content_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Map<K, V>
+        decreases *link,
+    {
+        match link {
+            None => Map::empty(),
+            Some(node) =>
+                spec_content_link(&node.left)
+                    .union_prefer_right(spec_content_link(&node.right))
+                    .insert(node.key, node.value),
+        }
+    }
+
+    // 5. view impls
+
+    impl<K: StT + Ord, V: StT> View for BSTKeyValueStEph<K, V> {
+        type V = Map<K, V>;
+        open spec fn view(&self) -> Map<K, V> {
+            spec_content_link(&self.root)
+        }
+    }
+
     // 8. traits
 
-    pub trait BSTKeyValueStEphTrait<K: StT + Ord, V: StT>: Sized {
+    pub trait BSTKeyValueStEphTrait<K: StT + Ord, V: StT>: Sized + View<V = Map<K, V>> {
         spec fn spec_size(&self) -> nat;
         spec fn spec_height(&self) -> nat;
+        spec fn spec_wf(&self) -> bool;
 
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn new() -> (result: Self)
-            ensures result.spec_size() == 0;
+            ensures
+                result.spec_size() == 0,
+                result@ == Map::<K, V>::empty();
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn size(&self) -> (result: usize)
             ensures result as nat == self.spec_size();
@@ -122,23 +162,43 @@ pub mod BSTKeyValueStEph {
                 self.spec_size() >= old(self).spec_size(),
                 self.spec_size() <= old(self).spec_size() + 1;
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — filter + rebuild
-        fn delete(&mut self, key: &K);
+        fn delete(&mut self, key: &K)
+            requires old(self).spec_wf(),
+            ensures self.spec_size() <= old(self).spec_size();
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
-        fn find(&self, key: &K) -> Option<&V>;
+        fn find(&self, key: &K) -> (result: Option<&V>)
+            requires self.spec_wf(),
+            ensures self.spec_size() == 0 ==> result is None;
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
-        fn contains(&self, key: &K) -> bool;
+        fn contains(&self, key: &K) -> (result: bool)
+            requires self.spec_wf(),
+            ensures self.spec_size() == 0 ==> !result;
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
-        fn get(&self, key: &K) -> Option<&V>;
+        fn get(&self, key: &K) -> (result: Option<&V>)
+            requires self.spec_wf(),
+            ensures self.spec_size() == 0 ==> result is None;
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn keys(&self) -> ArraySeqStPerS<K>;
+        fn keys(&self) -> (result: ArraySeqStPerS<K>)
+            requires self.spec_wf(),
+            ensures result.spec_len() == self.spec_size();
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
-        fn values(&self) -> ArraySeqStPerS<V>;
+        fn values(&self) -> (result: ArraySeqStPerS<V>)
+            requires self.spec_wf(),
+            ensures result.spec_len() == self.spec_size();
         /// - APAS: Work Θ(log n) expected, Span Θ(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-        fn minimum_key(&self) -> Option<&K>;
+        fn minimum_key(&self) -> (result: Option<&K>)
+            requires self.spec_wf(),
+            ensures
+                self.spec_size() == 0 ==> result is None,
+                self.spec_size() > 0 ==> result is Some;
         /// - APAS: Work Θ(log n) expected, Span Θ(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-        fn maximum_key(&self) -> Option<&K>;
+        fn maximum_key(&self) -> (result: Option<&K>)
+            requires self.spec_wf(),
+            ensures
+                self.spec_size() == 0 ==> result is None,
+                self.spec_size() > 0 ==> result is Some;
 
         // Internal associated functions.
 
@@ -174,13 +234,13 @@ pub mod BSTKeyValueStEph {
                 link.is_some() ==> result.is_some(),
             decreases *link;
         fn collect_keys(link: &Link<K, V>, out: &mut Vec<K>)
-            ensures out.len() >= old(out).len(),
+            ensures out.len() == old(out).len() + spec_node_count_link(link),
             decreases *link;
         fn collect_values(link: &Link<K, V>, out: &mut Vec<V>)
-            ensures out.len() >= old(out).len(),
+            ensures out.len() == old(out).len() + spec_node_count_link(link),
             decreases *link;
         fn collect_in_order_kvp(link: &Link<K, V>, out: &mut Vec<(K, V, u64)>)
-            ensures out.len() >= old(out).len(),
+            ensures out.len() == old(out).len() + spec_node_count_link(link),
             decreases *link;
         fn find_min_priority_idx_kvp(
             items: &Vec<(K, V, u64)>, start: usize, end: usize,
@@ -204,6 +264,9 @@ pub mod BSTKeyValueStEph {
     impl<K: StT + Ord, V: StT> BSTKeyValueStEphTrait<K, V> for BSTKeyValueStEph<K, V> {
         open spec fn spec_size(&self) -> nat { self.size as nat }
         open spec fn spec_height(&self) -> nat { spec_height_link(&self.root) }
+        open spec fn spec_wf(&self) -> bool {
+            self.size as nat == spec_node_count_link(&self.root)
+        }
 
         fn new() -> (result: Self) { BSTKeyValueStEph { root: None, size: 0 } }
 
@@ -463,7 +526,9 @@ pub mod BSTKeyValueStEph {
     // 11. derive impls in verus!
 
     impl<K: StT + Ord, V: StT> Default for BSTreeKeyValue<K, V> {
-        fn default() -> Self { Self::new() }
+        fn default() -> (result: Self)
+            ensures result.spec_size() == 0, result@ == Map::<K, V>::empty(),
+        { Self::new() }
     }
 
     }

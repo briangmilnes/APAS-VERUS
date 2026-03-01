@@ -13,6 +13,7 @@ pub mod BSTSizeStEph {
     // 1. module
     // 2. imports
     // 4. type definitions
+    // 5. view impls
     // 6. spec fns
     // 7. proof fns
     // 8. traits
@@ -81,6 +82,27 @@ pub mod BSTSizeStEph {
         }
     }
 
+    pub open spec fn spec_content_link<T: StT + Ord>(link: &Link<T>) -> Set<T>
+        decreases *link,
+    {
+        match link {
+            None => Set::empty(),
+            Some(node) =>
+                spec_content_link(&node.left)
+                    .union(spec_content_link(&node.right))
+                    .insert(node.key),
+        }
+    }
+
+    // 5. view impls
+
+    impl<T: StT + Ord> View for BSTSizeStEph<T> {
+        type V = Set<T>;
+        open spec fn view(&self) -> Set<T> {
+            spec_content_link(&self.root)
+        }
+    }
+
     // 7. proof fns
 
     proof fn lemma_height_le_size<T: StT + Ord>(link: &Link<T>)
@@ -142,7 +164,7 @@ pub mod BSTSizeStEph {
         fn new(key: T, priority: u64) -> Self;
     }
 
-    pub trait BSTSizeStEphTrait<T: StT + Ord>: Sized {
+    pub trait BSTSizeStEphTrait<T: StT + Ord>: Sized + View<V = Set<T>> {
         spec fn spec_size(&self) -> nat;
         spec fn spec_wf(&self) -> bool;
         spec fn spec_height(&self) -> nat;
@@ -151,7 +173,8 @@ pub mod BSTSizeStEph {
         fn new() -> (result: Self)
             ensures
                 result.spec_size() == 0,
-                result.spec_wf();
+                result.spec_wf(),
+                result@ == Set::<T>::empty();
         /// - APAS: Work Θ(1), Span Θ(1)
         fn size(&self) -> (result: N)
             ensures result as nat == self.spec_size();
@@ -176,17 +199,34 @@ pub mod BSTSizeStEph {
                 self.spec_size() >= old(self).spec_size();
         /// - APAS: Work Θ(n), Span Θ(n)
         fn delete(&mut self, key: &T)
-            ensures self.spec_wf();
+            requires old(self).spec_wf(),
+            ensures
+                self.spec_wf(),
+                self.spec_size() <= old(self).spec_size();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
-        fn find(&self, target: &T) -> Option<&T>;
+        fn find(&self, target: &T) -> (result: Option<&T>)
+            requires self.spec_wf(),
+            ensures self.spec_size() == 0 ==> result is None;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
-        fn contains(&self, target: &T) -> B;
+        fn contains(&self, target: &T) -> (result: B)
+            requires self.spec_wf(),
+            ensures self.spec_size() == 0 ==> !result;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
-        fn minimum(&self) -> Option<&T>;
+        fn minimum(&self) -> (result: Option<&T>)
+            requires self.spec_wf(),
+            ensures
+                self.spec_size() == 0 ==> result is None,
+                self.spec_size() > 0 ==> result is Some;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
-        fn maximum(&self) -> Option<&T>;
+        fn maximum(&self) -> (result: Option<&T>)
+            requires self.spec_wf(),
+            ensures
+                self.spec_size() == 0 ==> result is None,
+                self.spec_size() > 0 ==> result is Some;
         /// - APAS: Work Θ(n), Span Θ(n)
-        fn in_order(&self) -> ArraySeqStPerS<T>;
+        fn in_order(&self) -> (result: ArraySeqStPerS<T>)
+            requires self.spec_wf(),
+            ensures result.spec_len() == self.spec_size();
         /// - APAS: Work Θ(log n), Span Θ(log n) — Algorithm 40.1
         fn rank(&self, key: &T) -> (result: N)
             requires
@@ -195,9 +235,14 @@ pub mod BSTSizeStEph {
             ensures
                 result as nat <= self.spec_size();
         /// - APAS: Work Θ(log n), Span Θ(log n) — Algorithm 40.1
-        fn select(&self, rank: N) -> Option<&T>;
+        fn select(&self, rank: N) -> (result: Option<&T>)
+            ensures (rank == 0 || rank as nat > self.spec_size()) ==> result is None;
         /// - APAS: Work Θ(log n), Span Θ(log n) — Exercise 40.1
-        fn split_rank(&self, rank: N) -> (BSTSizeStEph<T>, BSTSizeStEph<T>);
+        fn split_rank(&self, rank: N) -> (result: (BSTSizeStEph<T>, BSTSizeStEph<T>))
+            requires self.spec_wf(),
+            ensures
+                spec_size_wf_link(&result.0.root),
+                spec_size_wf_link(&result.1.root);
 
         // Internal associated functions.
 
@@ -261,10 +306,12 @@ pub mod BSTSizeStEph {
             ensures h as nat == spec_height_link(link),
             decreases *link;
         fn in_order_collect(link: &Link<T>, out: &mut Vec<T>)
-            ensures out.len() >= old(out).len(),
+            requires spec_size_wf_link(link),
+            ensures out.len() == old(out).len() + spec_size_link(link),
             decreases *link;
         fn in_order_collect_with_priority(link: &Link<T>, out: &mut Vec<(T, u64)>)
-            ensures out.len() >= old(out).len(),
+            requires spec_size_wf_link(link),
+            ensures out.len() == old(out).len() + spec_size_link(link),
             decreases *link;
         fn find_min_priority_idx(items: &Vec<(T, u64)>, start: usize, end: usize) -> (result: usize)
             requires start < end, end <= items.len(),
@@ -283,7 +330,8 @@ pub mod BSTSizeStEph {
                 spec_size_wf_link(link),
             ensures result as nat <= spec_size_link(link),
             decreases *link;
-        fn select_link(link: &Link<T>, rank: N) -> Option<&T>
+        fn select_link(link: &Link<T>, rank: N) -> (result: Option<&T>)
+            ensures link.is_none() ==> result.is_none(),
             decreases *link;
     }
 
@@ -683,17 +731,25 @@ pub mod BSTSizeStEph {
     // 11. derive impls in verus!
 
     fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)
+        ensures
+            spec_content_link(&c) == spec_content_link(link),
+            spec_size_link(&c) == spec_size_link(link),
+            spec_size_wf_link(link) ==> spec_size_wf_link(&c),
         decreases link,
     {
         match link {
             None => None,
-            Some(node) => Some(Box::new(Node {
-                key: node.key.clone(),
-                priority: node.priority,
-                size: node.size,
-                left: clone_link(&node.left),
-                right: clone_link(&node.right),
-            })),
+            Some(node) => {
+                let k = node.key.clone();
+                proof { assume(k == node.key); } // clone bridge, cf. PartialEq pattern
+                Some(Box::new(Node {
+                    key: k,
+                    priority: node.priority,
+                    size: node.size,
+                    left: clone_link(&node.left),
+                    right: clone_link(&node.right),
+                }))
+            }
         }
     }
 
@@ -711,14 +767,19 @@ pub mod BSTSizeStEph {
 
     impl<T: StT + Ord> Clone for BSTSizeStEph<T> {
         fn clone(&self) -> (result: Self)
-            ensures true,
+            ensures
+                result@ == self@,
+                spec_size_link(&result.root) == spec_size_link(&self.root),
+                spec_size_wf_link(&self.root) ==> spec_size_wf_link(&result.root),
         {
             BSTSizeStEph { root: clone_link(&self.root) }
         }
     }
 
     impl<T: StT + Ord> Default for BSTreeSize<T> {
-        fn default() -> Self { Self::new() }
+        fn default() -> (result: Self)
+            ensures result.spec_size() == 0, result.spec_wf(), result@ == Set::<T>::empty(),
+        { Self::new() }
     }
 
     } // verus!
