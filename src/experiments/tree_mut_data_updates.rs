@@ -8,6 +8,7 @@
 //! mut node: Box<Node> verify. Recursive owned insert with count bump
 //! verifies. Option::take() + reassign on &mut self works.
 
+#[allow(non_shorthand_field_patterns)]
 pub mod tree_mut_data_updates {
 
     use vstd::prelude::*;

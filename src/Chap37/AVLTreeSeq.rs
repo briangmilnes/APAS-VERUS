@@ -623,11 +623,11 @@ pub mod AVLTreeSeq {
         proof { lemma_size_eq_inorder_len::<T>(&n.right); }
         let left_size = n.left_size;
         if index < left_size {
-            set_link(&mut n.left, index, value);
+            let _ = set_link(&mut n.left, index, value);
         } else if index == left_size {
             n.value = value;
         } else {
-            set_link(&mut n.right, index - left_size - 1, value);
+            let _ = set_link(&mut n.right, index - left_size - 1, value);
         }
         *node = Some(n);
         Ok(())
