@@ -3,6 +3,8 @@
 pub mod total_order {
     use core::cmp::Ordering;
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialOrdIs;
 
     verus! {
 
@@ -433,6 +435,38 @@ impl TotalOrder for isize {
         } else {
             Ordering::Greater
         }
+    }
+}
+
+/// Axiomatizes strict-less-than transitivity for vstd's `is_lt` spec fn.
+///
+/// For integer types, `is_lt` reduces to `<` and the solver proves transitivity
+/// automatically (empty proof body). For generic code over ordered types, add
+/// this as a trait bound to access the `is_lt_transitive` proof fn.
+pub trait IsLtTransitive: PartialOrd + Sized {
+    proof fn is_lt_transitive(a: Self, b: Self, c: Self)
+        requires a.is_lt(&b), b.is_lt(&c),
+        ensures a.is_lt(&c);
+}
+
+impl IsLtTransitive for u8   { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
+impl IsLtTransitive for u16  { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
+impl IsLtTransitive for u32  { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
+impl IsLtTransitive for u64  { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
+impl IsLtTransitive for u128 { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
+impl IsLtTransitive for usize { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
+impl IsLtTransitive for i8   { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
+impl IsLtTransitive for i16  { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
+impl IsLtTransitive for i32  { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
+impl IsLtTransitive for i64  { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
+impl IsLtTransitive for i128 { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
+impl IsLtTransitive for isize { proof fn is_lt_transitive(a: Self, b: Self, c: Self) {} }
+
+// String: partial_cmp_spec is opaque, so transitivity of is_lt must be assumed.
+// accept hole
+impl IsLtTransitive for String {
+    proof fn is_lt_transitive(a: Self, b: Self, c: Self) {
+        assume(a.is_lt(&c));
     }
 }
 

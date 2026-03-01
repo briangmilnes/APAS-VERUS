@@ -1,48 +1,39 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap39/
-
 ℹ BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Info: 1 total
 ✓ BSTSetTreapMtEph.rs
 ℹ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:199: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:212: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:224: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:554: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:199: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:212: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:224: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:554: info: accept() - accept hole
    Info: 4 total
    3 clean proof functions
-❌ BSTTreapStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapStEph.rs:249: assume() - assume(a.is_lt(&c));
-       245 |     proof fn axiom_is_lt_transitive<T: StT + Ord>(a: T, b: T, c: T)
-            ...
-       247 |         ensures a.is_lt(&c),
-       248 |     {
-       250 |     }
-       251 | 
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 9 total (8 clean, 1 holed)
+✓ BSTTreapStEph.rs
+   8 clean proof functions
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   3 clean (no holes)
-   1 holed (contains holes)
+   4 clean (no holes)
+   0 holed (contains holes)
    4 total
 
 Proof Functions:
    11 clean
-   1 holed
-   12 total
+   0 holed
+   11 total
 
-Holes Found: 1 total
-   1 × assume()
+Holes Found: 0 total
 
 Info: 5 total
+   BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    BSTTreapMtEph.rs:199: info: accept() - accept hole
    BSTTreapMtEph.rs:212: info: accept() - accept hole
    BSTTreapMtEph.rs:224: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    BSTTreapMtEph.rs:554: info: accept() - accept hole
-   BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+
+🎉 No proof holes or warnings found! All proofs are complete.
+🎉 No proof holes or warnings found! All proofs are complete.
