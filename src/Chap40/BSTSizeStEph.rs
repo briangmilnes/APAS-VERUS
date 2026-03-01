@@ -144,45 +144,60 @@ pub mod BSTSizeStEph {
     pub trait BSTSizeStEphTrait<T: StT + Ord> {
         spec fn spec_size(&self) -> nat;
         spec fn spec_wf(&self) -> bool;
+        spec fn spec_height(&self) -> nat;
         /// - APAS: Work Θ(1), Span Θ(1)
-        fn new()                       -> Self
+        fn new() -> (result: Self)
         where
-            Self: Sized;
+            Self: Sized,
+        ensures
+            result.spec_size() == 0,
+            result.spec_wf();
         /// - APAS: Work Θ(1), Span Θ(1)
-        fn size(&self)                 -> N;
+        fn size(&self) -> (result: N)
+            ensures result as nat == self.spec_size();
         /// - APAS: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)             -> B;
+        fn is_empty(&self) -> (result: B)
+            ensures result == (self.spec_size() == 0);
         /// - APAS: Work Θ(n), Span Θ(n)
-        fn height(&self)               -> N
+        fn height(&self) -> (result: N)
             requires
                 self.spec_size() < usize::MAX as nat,
-                self.spec_wf();
+                self.spec_wf(),
+            ensures
+                result as nat == self.spec_height();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn insert(&mut self, value: T, priority: u64)
             requires
                 old(self).spec_size() + 1 <= usize::MAX as nat,
-                old(self).spec_wf();
+                old(self).spec_wf(),
+            ensures
+                self.spec_wf(),
+                self.spec_size() <= old(self).spec_size() + 1,
+                self.spec_size() >= old(self).spec_size();
         /// - APAS: Work Θ(n), Span Θ(n)
-        fn delete(&mut self, key: &T);
+        fn delete(&mut self, key: &T)
+            ensures self.spec_wf();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
-        fn find(&self, target: &T)     -> Option<&T>;
+        fn find(&self, target: &T) -> Option<&T>;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn contains(&self, target: &T) -> B;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
-        fn minimum(&self)              -> Option<&T>;
+        fn minimum(&self) -> Option<&T>;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
-        fn maximum(&self)              -> Option<&T>;
+        fn maximum(&self) -> Option<&T>;
         /// - APAS: Work Θ(n), Span Θ(n)
-        fn in_order(&self)             -> ArraySeqStPerS<T>;
+        fn in_order(&self) -> ArraySeqStPerS<T>;
         /// - APAS: Work Θ(log n), Span Θ(log n) — Algorithm 40.1
-        fn rank(&self, key: &T)        -> N
+        fn rank(&self, key: &T) -> (result: N)
             requires
                 self.spec_size() < usize::MAX as nat,
-                self.spec_wf();
+                self.spec_wf(),
+            ensures
+                result as nat <= self.spec_size();
         /// - APAS: Work Θ(log n), Span Θ(log n) — Algorithm 40.1
-        fn select(&self, rank: N)      -> Option<&T>;
+        fn select(&self, rank: N) -> Option<&T>;
         /// - APAS: Work Θ(log n), Span Θ(log n) — Exercise 40.1
-        fn split_rank(&self, rank: N)  -> (BSTSizeStEph<T>, BSTSizeStEph<T>);
+        fn split_rank(&self, rank: N) -> (BSTSizeStEph<T>, BSTSizeStEph<T>);
     }
 
     // 9. impls
@@ -571,14 +586,15 @@ pub mod BSTSizeStEph {
     impl<T: StT + Ord> BSTSizeStEphTrait<T> for BSTSizeStEph<T> {
         open spec fn spec_size(&self) -> nat { spec_size_link(&self.root) }
         open spec fn spec_wf(&self) -> bool { spec_size_wf_link(&self.root) }
+        open spec fn spec_height(&self) -> nat { spec_height_link(&self.root) }
 
-        fn new() -> Self { BSTSizeStEph { root: None } }
+        fn new() -> (result: Self) { BSTSizeStEph { root: None } }
 
-        fn size(&self) -> N { size_link(&self.root) }
+        fn size(&self) -> (result: N) { size_link(&self.root) }
 
-        fn is_empty(&self) -> B { self.size() == 0 }
+        fn is_empty(&self) -> (result: B) { self.size() == 0 }
 
-        fn height(&self) -> N { height_link(&self.root) }
+        fn height(&self) -> (result: N) { height_link(&self.root) }
 
         fn insert(&mut self, value: T, priority: u64) {
             insert_link(&mut self.root, value, priority);

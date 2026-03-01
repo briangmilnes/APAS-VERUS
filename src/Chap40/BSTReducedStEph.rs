@@ -13,6 +13,20 @@ pub mod BSTReducedStEph {
 
     verus! {
 
+    // Table of Contents
+    // 1. module
+    // 2. imports
+    // 4. type definitions
+    // 6. spec fns
+    // 7. proof fns
+    // 8. traits
+    // 9. impls
+    // 11. derive impls in verus!
+    // 12. macros
+    // 13. derive impls outside verus!
+
+    // 4. type definitions
+
     type Link<K, V, R> = Option<Box<Node<K, V, R>>>;
 
     pub struct Node<K: StT + Ord, V: StT, R: StT> {
@@ -128,46 +142,61 @@ pub mod BSTReducedStEph {
 
     pub type BSTreeReduced<K, V, R, Op> = BSTReducedStEph<K, V, R, Op>;
 
+    // 8. traits
+
     pub trait BSTReducedStEphTrait<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> {
         spec fn spec_size(&self) -> nat;
         spec fn spec_wf(&self) -> bool;
-
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn new()                                  -> Self
-        where
-            Self: Sized;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn size(&self)                            -> usize;
-        /// claude-4-sonet: Work Θ(1), Span Θ(1)
-        fn is_empty(&self)                        -> bool;
         spec fn spec_height(&self) -> nat;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n)
-        fn height(&self)                          -> usize
-            requires self.spec_height() < usize::MAX as nat;
-        /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
+
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        fn new() -> (result: Self)
+        where
+            Self: Sized,
+        ensures
+            result.spec_size() == 0,
+            result.spec_wf();
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        fn size(&self) -> (result: usize)
+            ensures result as nat == self.spec_size();
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        fn is_empty(&self) -> (result: bool)
+            ensures result == (self.spec_size() == 0);
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+        fn height(&self) -> (result: usize)
+            requires self.spec_height() < usize::MAX as nat,
+            ensures result as nat == self.spec_height();
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
         fn insert(&mut self, key: K, value: V, priority: u64)
-            requires old(self).spec_size() + 1 <= usize::MAX as nat, old(self).spec_wf();
-        /// claude-4-sonet: Work Θ(n), Span Θ(n) — in-order filter + rebuild
-        fn delete(&mut self, key: &K);
-        /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
-        fn find(&self, key: &K)                   -> Option<&V>;
-        /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
-        fn contains(&self, key: &K)               -> bool;
-        /// claude-4-sonet: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected, Parallelism Θ(1)
-        fn get(&self, key: &K)                    -> Option<&V>;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn keys(&self)                            -> ArraySeqStPerS<K>;
-        /// claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
-        fn values(&self)                          -> ArraySeqStPerS<V>;
+            requires
+                old(self).spec_size() + 1 <= usize::MAX as nat,
+                old(self).spec_wf(),
+            ensures
+                self.spec_wf(),
+                self.spec_size() <= old(self).spec_size() + 1,
+                self.spec_size() >= old(self).spec_size();
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — filter + rebuild
+        fn delete(&mut self, key: &K)
+            ensures self.spec_wf();
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
+        fn find(&self, key: &K) -> Option<&V>;
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
+        fn contains(&self, key: &K) -> bool;
+        /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst
+        fn get(&self, key: &K) -> Option<&V>;
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+        fn keys(&self) -> ArraySeqStPerS<K>;
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+        fn values(&self) -> ArraySeqStPerS<V>;
         /// - APAS: Work Θ(log n) expected, Span Θ(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-        fn minimum_key(&self)                     -> Option<&K>;
+        fn minimum_key(&self) -> Option<&K>;
         /// - APAS: Work Θ(log n) expected, Span Θ(log n) expected
         /// - Claude-Opus-4.6: Work Θ(log n) expected, Span Θ(log n) expected
-        fn maximum_key(&self)                     -> Option<&K>;
+        fn maximum_key(&self) -> Option<&K>;
         /// - APAS: Work Θ(1), Span Θ(1) — reads augmented field at root.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn reduced_value(&self)                   -> R;
+        fn reduced_value(&self) -> R;
         /// - APAS: Work Θ(log n), Span Θ(log n) — range query on augmented BST.
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
         fn range_reduce(&self, low: &K, high: &K) -> R;
@@ -176,6 +205,8 @@ pub mod BSTReducedStEph {
     impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> Default for BSTreeReduced<K, V, R, Op> {
         fn default() -> Self { Self::new() }
     }
+
+    // 6. spec fns
 
     pub open spec fn spec_size_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> nat {
         match link {
@@ -196,6 +227,8 @@ pub mod BSTReducedStEph {
             }
         }
     }
+
+    // 7. proof fns
 
     proof fn lemma_wf_assemble<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>)
         requires match link {
@@ -625,6 +658,8 @@ pub mod BSTReducedStEph {
         }
     }
 
+    // 9. impls
+
     impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> BSTReducedStEphTrait<K, V, R, Op>
         for BSTReducedStEph<K, V, R, Op>
     {
@@ -632,18 +667,18 @@ pub mod BSTReducedStEph {
         open spec fn spec_wf(&self) -> bool { spec_size_wf_link(&self.root) }
         open spec fn spec_height(&self) -> nat { spec_height_link(&self.root) }
 
-        fn new() -> Self {
+        fn new() -> (result: Self) {
             BSTReducedStEph {
                 root: None,
                 _op: PhantomData,
             }
         }
 
-        fn size(&self) -> usize { size_link(&self.root) }
+        fn size(&self) -> (result: usize) { size_link(&self.root) }
 
-        fn is_empty(&self) -> bool { self.size() == 0 }
+        fn is_empty(&self) -> (result: bool) { self.size() == 0 }
 
-        fn height(&self) -> usize { height_link(&self.root) }
+        fn height(&self) -> (result: usize) { height_link(&self.root) }
 
         fn insert(&mut self, key: K, value: V, priority: u64) {
             insert_link::<K, V, R, Op>(&mut self.root, key, value, priority);
@@ -691,6 +726,8 @@ pub mod BSTReducedStEph {
 
     }
 
+    // 13. derive impls outside verus!
+
     impl<T: fmt::Debug> fmt::Debug for SumOp<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             f.debug_tuple("SumOp").field(&self.0).finish()
@@ -727,6 +764,8 @@ pub mod BSTReducedStEph {
                 .finish()
         }
     }
+
+    // 12. macros
 
     #[macro_export]
     macro_rules! BSTReducedStEphLit {

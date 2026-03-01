@@ -1,250 +1,834 @@
 [
   {
     "id": 1,
-    "function": "lemma_fold_left_monoid",
-    "file": "Chap27/ReduceContractMtEph.rs",
-    "lines": "49-52",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_monoid<T>(s: Seq<T>, x: T, f: spec_fn(T, T) -> T, id: T)\n        requires spec_monoid(f, id),\n        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),\n        decreases s.len(),"
+    "function": "clone_link",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "37-38",
+    "spec_strength": "",
+    "snippet": "    fn clone_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (result: Link<K, V>)\n        decreases *link,"
   },
   {
     "id": 2,
-    "function": "lemma_fold_left_pair",
-    "file": "Chap27/ReduceContractMtEph.rs",
-    "lines": "62-64",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_pair<T>(a: T, b: T, f: spec_fn(T, T) -> T, id: T)\n        requires spec_monoid(f, id),\n        ensures seq![a, b].fold_left(id, f) == f(a, b),"
+    "function": "new_node",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "67",
+    "spec_strength": "",
+    "snippet": "    fn new_node<K: StT + Ord, V: StT>(key: K, value: V, priority: u64) -> Node<K, V> {"
   },
   {
     "id": 3,
-    "function": "lemma_fold_left_singleton",
-    "file": "Chap27/ReduceContractMtEph.rs",
-    "lines": "73-75",
+    "function": "new",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "102-106",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_singleton<T>(a: T, f: spec_fn(T, T) -> T, id: T)\n        requires spec_monoid(f, id),\n        ensures seq![a].fold_left(id, f) == a,"
+    "snippet": "        fn new() -> (result: Self)\n        where\n            Self: Sized,\n        ensures\n            result.spec_size() == 0;"
   },
   {
     "id": 4,
-    "function": "lemma_contraction_even",
-    "file": "Chap27/ReduceContractMtEph.rs",
-    "lines": "83-93",
+    "function": "size",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "108-109",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_contraction_even<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T)\n        requires\n            spec_monoid(f, id),\n            s.len() >= 2,\n            s.len() % 2 == 0,\n        ensures\n            s.fold_left(id, f) == Seq::new(\n                (s.len() / 2) as nat,\n                |i: int| f(s[2 * i], s[2 * i + 1]),\n            ).fold_left(id, f),\n        decreases s.len(),"
+    "snippet": "        fn size(&self) -> (result: usize)\n            ensures result as nat == self.spec_size();"
   },
   {
     "id": 5,
-    "function": "reduce_contract_parallel",
-    "file": "Chap27/ReduceContractMtEph.rs",
-    "lines": "152-165",
+    "function": "is_empty",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "111-112",
     "spec_strength": "unknown",
-    "snippet": "        fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(\n            a: &ArraySeqMtEphS<T>,\n            f: Arc<F>,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: T,\n        ) -> (reduced: T)\n            requires\n                a.spec_len() <= usize::MAX,\n                obeys_feq_clone::<T>(),\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                reduced == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f);"
+    "snippet": "        fn is_empty(&self) -> (result: bool)\n            ensures result == (self.spec_size() == 0);"
   },
   {
     "id": 6,
-    "function": "contract_parallel",
-    "file": "Chap27/ReduceContractMtEph.rs",
-    "lines": "175-190",
+    "function": "height",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "114-116",
     "spec_strength": "unknown",
-    "snippet": "    pub fn contract_parallel<T: StTInMtT + Clone + 'static, F: Fn(&T, &T) -> T + Send + Sync + 'static>(\n        a: &ArraySeqMtEphS<T>,\n        f: &Arc<F>,\n        Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n        half: usize,\n    ) -> (b: ArraySeqMtEphS<T>)\n        requires\n            half == a.spec_len() / 2,\n            a.spec_len() >= 2,\n            half <= usize::MAX,\n            obeys_feq_clone::<T>(),\n            forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n            forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n        ensures\n            b.spec_len() == half as nat,\n            forall|j: int| #![trigger b.spec_index(j)] 0 <= j < half as int ==> {"
+    "snippet": "        fn height(&self) -> (result: usize)\n            requires self.spec_height() < usize::MAX as nat,\n            ensures result as nat == self.spec_height();"
   },
   {
     "id": 7,
-    "function": "lemma_fold_left_monoid",
-    "file": "Chap27/ReduceContractStEph.rs",
-    "lines": "44-47",
+    "function": "insert",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "118-119",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_monoid<T>(s: Seq<T>, x: T, f: spec_fn(T, T) -> T, id: T)\n        requires spec_monoid(f, id),\n        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),\n        decreases s.len(),"
+    "snippet": "        fn insert(&mut self, key: K, value: V, priority: u64)\n            requires old(self).spec_size() < usize::MAX;"
   },
   {
     "id": 8,
-    "function": "lemma_fold_left_pair",
-    "file": "Chap27/ReduceContractStEph.rs",
-    "lines": "60-62",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_pair<T>(a: T, b: T, f: spec_fn(T, T) -> T, id: T)\n        requires spec_monoid(f, id),\n        ensures seq![a, b].fold_left(id, f) == f(a, b),"
+    "function": "delete",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "121",
+    "spec_strength": "",
+    "snippet": "        fn delete(&mut self, key: &K);"
   },
   {
     "id": 9,
-    "function": "lemma_fold_left_singleton",
-    "file": "Chap27/ReduceContractStEph.rs",
-    "lines": "76-78",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_singleton<T>(a: T, f: spec_fn(T, T) -> T, id: T)\n        requires spec_monoid(f, id),\n        ensures seq![a].fold_left(id, f) == a,"
+    "function": "find",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "123",
+    "spec_strength": "",
+    "snippet": "        fn find(&self, key: &K) -> Option<&V>;"
   },
   {
     "id": 10,
-    "function": "lemma_contraction_even",
-    "file": "Chap27/ReduceContractStEph.rs",
-    "lines": "88-98",
-    "spec_strength": "unknown",
-    "snippet": "    pub proof fn lemma_contraction_even<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T)\n        requires\n            spec_monoid(f, id),\n            s.len() >= 2,\n            s.len() % 2 == 0,\n        ensures\n            s.fold_left(id, f) == Seq::new(\n                (s.len() / 2) as nat,\n                |i: int| f(s[2 * i], s[2 * i + 1]),\n            ).fold_left(id, f),\n        decreases s.len(),"
+    "function": "contains",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "125",
+    "spec_strength": "",
+    "snippet": "        fn contains(&self, key: &K) -> bool;"
   },
   {
     "id": 11,
-    "function": "reduce_contract",
-    "file": "Chap27/ReduceContractStEph.rs",
-    "lines": "168-180",
-    "spec_strength": "unknown",
-    "snippet": "        fn reduce_contract<F: Fn(&T, &T) -> T>(\n            a: &ArraySeqStEphS<T>,\n            f: &F,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: T,\n        ) -> (reduced: T)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                reduced == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f);"
+    "function": "get",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "127",
+    "spec_strength": "",
+    "snippet": "        fn get(&self, key: &K) -> Option<&V>;"
   },
   {
     "id": 12,
-    "function": "lemma_fold_left_monoid",
-    "file": "Chap27/ScanContractMtEph.rs",
-    "lines": "48-51",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_monoid<T>(s: Seq<T>, x: T, f: spec_fn(T, T) -> T, id: T)\n        requires spec_monoid(f, id),\n        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),\n        decreases s.len(),"
+    "function": "keys",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "129",
+    "spec_strength": "",
+    "snippet": "        fn keys(&self) -> ArraySeqStPerS<K>;"
   },
   {
     "id": 13,
-    "function": "lemma_fold_left_pair",
-    "file": "Chap27/ScanContractMtEph.rs",
-    "lines": "62-64",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_pair<T>(a: T, b: T, f: spec_fn(T, T) -> T, id: T)\n        requires spec_monoid(f, id),\n        ensures seq![a, b].fold_left(id, f) == f(a, b),"
+    "function": "values",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "131",
+    "spec_strength": "",
+    "snippet": "        fn values(&self) -> ArraySeqStPerS<V>;"
   },
   {
     "id": 14,
-    "function": "lemma_fold_left_singleton",
-    "file": "Chap27/ScanContractMtEph.rs",
-    "lines": "73-75",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_singleton<T>(a: T, f: spec_fn(T, T) -> T, id: T)\n        requires spec_monoid(f, id),\n        ensures seq![a].fold_left(id, f) == a,"
+    "function": "minimum_key",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "134",
+    "spec_strength": "",
+    "snippet": "        fn minimum_key(&self) -> Option<&K>;"
   },
   {
     "id": 15,
-    "function": "lemma_contraction_even",
-    "file": "Chap27/ScanContractMtEph.rs",
-    "lines": "83-93",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_contraction_even<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T)\n        requires\n            spec_monoid(f, id),\n            s.len() >= 2,\n            s.len() % 2 == 0,\n        ensures\n            s.fold_left(id, f) == Seq::new(\n                (s.len() / 2) as nat,\n                |i: int| f(s[2 * i], s[2 * i + 1]),\n            ).fold_left(id, f),\n        decreases s.len(),"
+    "function": "maximum_key",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "137",
+    "spec_strength": "",
+    "snippet": "        fn maximum_key(&self) -> Option<&K>;"
   },
   {
     "id": 16,
-    "function": "lemma_prefix_contraction",
-    "file": "Chap27/ScanContractMtEph.rs",
-    "lines": "149-157",
+    "function": "height_link",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "142-145",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_prefix_contraction<T>(s: Seq<T>, b: Seq<T>, f: spec_fn(T, T) -> T, id: T, k: int)\n        requires\n            spec_monoid(f, id),\n            k >= 1,\n            2 * k <= s.len(),\n            b.len() >= k,\n            forall|i: int| #![trigger b[i]] 0 <= i < b.len() ==> b[i] == f(s[2 * i], s[2 * i + 1]),\n        ensures\n            s.take(2 * k).fold_left(id, f) == b.take(k).fold_left(id, f),"
+    "snippet": "    fn height_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> (result: usize)\n        requires spec_height_link(link) < usize::MAX as nat,\n        ensures result == spec_height_link(link),\n        decreases *link,"
   },
   {
     "id": 17,
-    "function": "lemma_expand_even",
-    "file": "Chap27/ScanContractMtEph.rs",
-    "lines": "169-177",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_expand_even<T>(s: Seq<T>, b_seq: Seq<T>, f: spec_fn(T, T) -> T, id: T, j: int)\n        requires\n            spec_monoid(f, id),\n            j >= 0,\n            2 * j <= s.len(),\n            b_seq.len() >= j,\n            forall|i: int| #![trigger b_seq[i]] 0 <= i < b_seq.len() ==> b_seq[i] == f(s[2 * i], s[2 * i + 1]),\n        ensures\n            b_seq.take(j).fold_left(id, f) == s.take(2 * j).fold_left(id, f),"
+    "function": "rotate_left",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "172",
+    "spec_strength": "",
+    "snippet": "    fn rotate_left<K: StT + Ord, V: StT>(link: &mut Link<K, V>) {"
   },
   {
     "id": 18,
-    "function": "lemma_expand_odd",
-    "file": "Chap27/ScanContractMtEph.rs",
-    "lines": "189-195",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_expand_odd<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, j: int)\n        requires\n            spec_monoid(f, id),\n            j >= 0,\n            2 * j + 1 <= s.len(),\n        ensures\n            f(s.take(2 * j).fold_left(id, f), s[2 * j]) == s.take(2 * j + 1).fold_left(id, f),"
+    "function": "rotate_right",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "186",
+    "spec_strength": "",
+    "snippet": "    fn rotate_right<K: StT + Ord, V: StT>(link: &mut Link<K, V>) {"
   },
   {
     "id": 19,
-    "function": "lemma_expand_odd_tail",
-    "file": "Chap27/ScanContractMtEph.rs",
-    "lines": "205-216",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_expand_odd_tail<T>(\n        s: Seq<T>, b_seq: Seq<T>, f: spec_fn(T, T) -> T, id: T, half: int,\n    )\n        requires\n            spec_monoid(f, id),\n            half >= 1,\n            s.len() == 2 * half + 1,\n            b_seq.len() == half,\n            forall|i: int| #![trigger b_seq[i]] 0 <= i < b_seq.len() ==> b_seq[i] == f(s[2 * i], s[2 * i + 1]),\n        ensures\n            f(b_seq.take(half - 1).fold_left(id, f), b_seq[half - 1])\n                == s.take(2 * half).fold_left(id, f),"
+    "function": "insert_link",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "198-199",
+    "spec_strength": "",
+    "snippet": "    fn insert_link<K: StT + Ord, V: StT>(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> (inserted: bool)\n        decreases old(link),"
   },
   {
     "id": 20,
-    "function": "scan_contract_parallel",
-    "file": "Chap27/ScanContractMtEph.rs",
-    "lines": "234-250",
-    "spec_strength": "unknown",
-    "snippet": "        fn scan_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(\n            a: &ArraySeqMtEphS<T>,\n            f: Arc<F>,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: T,\n        ) -> (scanned: ArraySeqMtEphS<T>)\n            requires\n                a.spec_len() <= usize::MAX,\n                obeys_feq_clone::<T>(),\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                scanned.spec_len() == a.spec_len(),\n                forall|i: int| #![trigger scanned.spec_index(i)]\n                    0 <= i < a.spec_len() ==>\n                        scanned.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i).fold_left(id, spec_f);"
+    "function": "find_link",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "235-236",
+    "spec_strength": "",
+    "snippet": "    fn find_link<'a, K: StT + Ord, V: StT>(link: &'a Link<K, V>, key: &K) -> Option<&'a V>\n        decreases *link,"
   },
   {
     "id": 21,
-    "function": "expand_scan_parallel",
-    "file": "Chap27/ScanContractMtEph.rs",
-    "lines": "253-273",
-    "spec_strength": "unknown",
-    "snippet": "        fn expand_scan_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(\n            a: &ArraySeqMtEphS<T>,\n            b: &ArraySeqMtEphS<T>,\n            c: &ArraySeqMtEphS<T>,\n            f: &Arc<F>,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: &T,\n            n: usize,\n            half: usize,\n        ) -> (result: Vec<T>)\n            requires\n                n == a.spec_len(),\n                n >= 2,\n                half == n / 2,\n                half <= n,\n                b.spec_len() == half as nat,\n                c.spec_len() == half as nat,\n                spec_monoid(spec_f, *id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n                forall|k: int| #![trigger b.spec_index(k)] 0 <= k < half as int ==> {"
+    "function": "min_key_link",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "254-255",
+    "spec_strength": "",
+    "snippet": "    fn min_key_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Option<&K>\n        decreases *link,"
   },
   {
     "id": 22,
-    "function": "lemma_fold_left_monoid",
-    "file": "Chap27/ScanContractStEph.rs",
-    "lines": "42-45",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_monoid<T>(s: Seq<T>, x: T, f: spec_fn(T, T) -> T, id: T)\n        requires spec_monoid(f, id),\n        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),\n        decreases s.len(),"
+    "function": "max_key_link",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "268-269",
+    "spec_strength": "",
+    "snippet": "    fn max_key_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Option<&K>\n        decreases *link,"
   },
   {
     "id": 23,
-    "function": "lemma_fold_left_pair",
-    "file": "Chap27/ScanContractStEph.rs",
-    "lines": "56-58",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_pair<T>(a: T, b: T, f: spec_fn(T, T) -> T, id: T)\n        requires spec_monoid(f, id),\n        ensures seq![a, b].fold_left(id, f) == f(a, b),"
+    "function": "collect_keys",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "282-283",
+    "spec_strength": "",
+    "snippet": "    fn collect_keys<K: StT + Ord, V: StT>(link: &Link<K, V>, out: &mut Vec<K>)\n        decreases *link,"
   },
   {
     "id": 24,
-    "function": "lemma_fold_left_singleton",
-    "file": "Chap27/ScanContractStEph.rs",
-    "lines": "67-69",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_singleton<T>(a: T, f: spec_fn(T, T) -> T, id: T)\n        requires spec_monoid(f, id),\n        ensures seq![a].fold_left(id, f) == a,"
+    "function": "collect_values",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "294-295",
+    "spec_strength": "",
+    "snippet": "    fn collect_values<K: StT + Ord, V: StT>(link: &Link<K, V>, out: &mut Vec<V>)\n        decreases *link,"
   },
   {
     "id": 25,
-    "function": "lemma_contraction_even",
-    "file": "Chap27/ScanContractStEph.rs",
-    "lines": "77-87",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_contraction_even<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T)\n        requires\n            spec_monoid(f, id),\n            s.len() >= 2,\n            s.len() % 2 == 0,\n        ensures\n            s.fold_left(id, f) == Seq::new(\n                (s.len() / 2) as nat,\n                |i: int| f(s[2 * i], s[2 * i + 1]),\n            ).fold_left(id, f),\n        decreases s.len(),"
+    "function": "collect_in_order_kvp",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "305-306",
+    "spec_strength": "",
+    "snippet": "    fn collect_in_order_kvp<K: StT + Ord, V: StT>(link: &Link<K, V>, out: &mut Vec<(K, V, u64)>)\n        decreases *link,"
   },
   {
     "id": 26,
-    "function": "lemma_prefix_contraction",
-    "file": "Chap27/ScanContractStEph.rs",
-    "lines": "143-151",
+    "function": "find_min_priority_idx_kvp",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "315-319",
     "spec_strength": "unknown",
-    "snippet": "    pub proof fn lemma_prefix_contraction<T>(s: Seq<T>, b: Seq<T>, f: spec_fn(T, T) -> T, id: T, k: int)\n        requires\n            spec_monoid(f, id),\n            k >= 1,\n            2 * k <= s.len(),\n            b.len() >= k,\n            forall|i: int| #![trigger b[i]] 0 <= i < b.len() ==> b[i] == f(s[2 * i], s[2 * i + 1]),\n        ensures\n            s.take(2 * k).fold_left(id, f) == b.take(k).fold_left(id, f),"
+    "snippet": "    fn find_min_priority_idx_kvp<K: StT + Ord, V: StT>(\n        items: &Vec<(K, V, u64)>, start: usize, end: usize,\n    ) -> (result: usize)\n        requires start < end, end <= items.len(),\n        ensures start <= result && result < end,"
   },
   {
     "id": 27,
-    "function": "lemma_expand_even",
-    "file": "Chap27/ScanContractStEph.rs",
-    "lines": "163-171",
+    "function": "build_treap_from_vec",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "337-341",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_expand_even<T>(s: Seq<T>, b_seq: Seq<T>, f: spec_fn(T, T) -> T, id: T, j: int)\n        requires\n            spec_monoid(f, id),\n            j >= 0,\n            2 * j <= s.len(),\n            b_seq.len() >= j,\n            forall|i: int| #![trigger b_seq[i]] 0 <= i < b_seq.len() ==> b_seq[i] == f(s[2 * i], s[2 * i + 1]),\n        ensures\n            b_seq.take(j).fold_left(id, f) == s.take(2 * j).fold_left(id, f),"
+    "snippet": "    fn build_treap_from_vec<K: StT + Ord, V: StT>(\n        items: &Vec<(K, V, u64)>, start: usize, end: usize,\n    ) -> (result: Link<K, V>)\n        requires start <= end, end <= items.len(),\n        decreases end - start,"
   },
   {
     "id": 28,
-    "function": "lemma_expand_odd",
-    "file": "Chap27/ScanContractStEph.rs",
-    "lines": "183-189",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_expand_odd<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, j: int)\n        requires\n            spec_monoid(f, id),\n            j >= 0,\n            2 * j + 1 <= s.len(),\n        ensures\n            f(s.take(2 * j).fold_left(id, f), s[2 * j]) == s.take(2 * j + 1).fold_left(id, f),"
+    "function": "filter_by_key_kvp",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "358-360",
+    "spec_strength": "",
+    "snippet": "    fn filter_by_key_kvp<K: StT + Ord, V: StT>(\n        items: &Vec<(K, V, u64)>, key: &K,\n    ) -> (result: Vec<(K, V, u64)>) {"
   },
   {
     "id": 29,
-    "function": "lemma_expand_odd_tail",
-    "file": "Chap27/ScanContractStEph.rs",
-    "lines": "199-210",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_expand_odd_tail<T>(\n        s: Seq<T>, b_seq: Seq<T>, f: spec_fn(T, T) -> T, id: T, half: int,\n    )\n        requires\n            spec_monoid(f, id),\n            half >= 1,\n            s.len() == 2 * half + 1,\n            b_seq.len() == half,\n            forall|i: int| #![trigger b_seq[i]] 0 <= i < b_seq.len() ==> b_seq[i] == f(s[2 * i], s[2 * i + 1]),\n        ensures\n            f(b_seq.take(half - 1).fold_left(id, f), b_seq[half - 1])\n                == s.take(2 * half).fold_left(id, f),"
+    "function": "default",
+    "file": "Chap40/BSTKeyValueStEph.rs",
+    "lines": "430",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::new() }"
   },
   {
     "id": 30,
-    "function": "scan_contract",
-    "file": "Chap27/ScanContractStEph.rs",
-    "lines": "228-243",
-    "spec_strength": "unknown",
-    "snippet": "        fn scan_contract<F: Fn(&T, &T) -> T>(\n            a: &ArraySeqStEphS<T>,\n            f: &F,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: T,\n        ) -> (scanned: ArraySeqStEphS<T>)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                scanned.spec_len() == a.spec_len(),\n                forall|i: int| #![trigger scanned.spec_index(i)]\n                    0 <= i < a.spec_len() ==>\n                        scanned.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i).fold_left(id, spec_f);"
+    "function": "clone_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "42-43",
+    "spec_strength": "",
+    "snippet": "    fn clone_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (result: Link<K, V, R>)\n        decreases *link,"
   },
   {
     "id": 31,
-    "function": "expand_scan",
-    "file": "Chap27/ScanContractStEph.rs",
-    "lines": "246-266",
+    "function": "new`",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "153-158",
     "spec_strength": "unknown",
-    "snippet": "        fn expand_scan<F: Fn(&T, &T) -> T>(\n            a: &ArraySeqStEphS<T>,\n            b: &ArraySeqStEphS<T>,\n            c: &ArraySeqStEphS<T>,\n            f: &F,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: &T,\n            n: usize,\n            half: usize,\n        ) -> (result: Vec<T>)\n            requires\n                n == a.spec_len(),\n                n >= 2,\n                half == n / 2,\n                half <= n,\n                b.spec_len() == half as nat,\n                c.spec_len() == half as nat,\n                spec_monoid(spec_f, *id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n                forall|k: int| #![trigger b.spec_index(k)] 0 <= k < half as int ==> {"
+    "snippet": "        fn new() -> (result: Self)\n        where\n            Self: Sized,\n        ensures\n            result.spec_size() == 0,\n            result.spec_wf();"
+  },
+  {
+    "id": 32,
+    "function": "identity`",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "94",
+    "spec_strength": "",
+    "snippet": "        fn identity()          -> R;"
+  },
+  {
+    "id": 33,
+    "function": "combine`",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "96",
+    "spec_strength": "hole",
+    "snippet": "        fn combine(a: R, b: R) -> R;"
+  },
+  {
+    "id": 34,
+    "function": "lift`",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "98",
+    "spec_strength": "",
+    "snippet": "        fn lift(value: &V)     -> R;"
+  },
+  {
+    "id": 35,
+    "function": "size",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "160-161",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (result: usize)\n            ensures result as nat == self.spec_size();"
+  },
+  {
+    "id": 36,
+    "function": "is_empty",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "163-164",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (result: bool)\n            ensures result == (self.spec_size() == 0);"
+  },
+  {
+    "id": 37,
+    "function": "height",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "166-168",
+    "spec_strength": "unknown",
+    "snippet": "        fn height(&self) -> (result: usize)\n            requires self.spec_height() < usize::MAX as nat,\n            ensures result as nat == self.spec_height();"
+  },
+  {
+    "id": 38,
+    "function": "insert",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "170-177",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, key: K, value: V, priority: u64)\n            requires\n                old(self).spec_size() + 1 <= usize::MAX as nat,\n                old(self).spec_wf(),\n            ensures\n                self.spec_wf(),\n                self.spec_size() <= old(self).spec_size() + 1,\n                self.spec_size() >= old(self).spec_size();"
+  },
+  {
+    "id": 39,
+    "function": "delete",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "179-180",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(&mut self, key: &K)\n            ensures self.spec_wf();"
+  },
+  {
+    "id": 40,
+    "function": "find",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "182",
+    "spec_strength": "",
+    "snippet": "        fn find(&self, key: &K) -> Option<&V>;"
+  },
+  {
+    "id": 41,
+    "function": "contains",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "184",
+    "spec_strength": "",
+    "snippet": "        fn contains(&self, key: &K) -> bool;"
+  },
+  {
+    "id": 42,
+    "function": "get",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "186",
+    "spec_strength": "",
+    "snippet": "        fn get(&self, key: &K) -> Option<&V>;"
+  },
+  {
+    "id": 43,
+    "function": "keys",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "188",
+    "spec_strength": "",
+    "snippet": "        fn keys(&self) -> ArraySeqStPerS<K>;"
+  },
+  {
+    "id": 44,
+    "function": "values",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "190",
+    "spec_strength": "",
+    "snippet": "        fn values(&self) -> ArraySeqStPerS<V>;"
+  },
+  {
+    "id": 45,
+    "function": "minimum_key",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "193",
+    "spec_strength": "",
+    "snippet": "        fn minimum_key(&self) -> Option<&K>;"
+  },
+  {
+    "id": 46,
+    "function": "maximum_key",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "196",
+    "spec_strength": "",
+    "snippet": "        fn maximum_key(&self) -> Option<&K>;"
+  },
+  {
+    "id": 47,
+    "function": "reduced_value",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "199",
+    "spec_strength": "",
+    "snippet": "        fn reduced_value(&self) -> R;"
+  },
+  {
+    "id": 48,
+    "function": "range_reduce",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "202",
+    "spec_strength": "",
+    "snippet": "        fn range_reduce(&self, low: &K, high: &K) -> R;"
+  },
+  {
+    "id": 49,
+    "function": "default",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "206",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::new() }"
+  },
+  {
+    "id": 50,
+    "function": "lemma_wf_assemble",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "233-242",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_wf_assemble<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>)\n        requires match link {\n            None => true,\n            Some(n) => {\n                n.size as nat == 1 + spec_size_link(&n.left) + spec_size_link(&n.right)\n                && spec_size_wf_link(&n.left)\n                && spec_size_wf_link(&n.right)\n            }\n        },\n        ensures spec_size_wf_link(link),"
+  },
+  {
+    "id": 51,
+    "function": "size_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "245-246",
+    "spec_strength": "unknown",
+    "snippet": "    fn size_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (result: usize)\n        ensures result as nat == spec_size_link(link),"
+  },
+  {
+    "id": 52,
+    "function": "reduced_value_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "256",
+    "spec_strength": "",
+    "snippet": "    fn reduced_value_link<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(link: &Link<K, V, R>) -> R {"
+  },
+  {
+    "id": 53,
+    "function": "update_node",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "265-276",
+    "spec_strength": "unknown",
+    "snippet": "    fn update_node<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(node: &mut Node<K, V, R>)\n        requires\n            1 + spec_size_link(&old(node).left) + spec_size_link(&old(node).right) <= usize::MAX as nat,\n            spec_size_wf_link(&old(node).left),\n            spec_size_wf_link(&old(node).right),\n        ensures\n            node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right),\n            spec_size_wf_link(&node.left),\n            spec_size_wf_link(&node.right),\n            node.key == old(node).key,\n            node.left == old(node).left,\n            node.right == old(node).right,"
+  },
+  {
+    "id": 54,
+    "function": "make_node",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "290-303",
+    "spec_strength": "unknown",
+    "snippet": "    fn make_node<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(\n        key: K,\n        value: V,\n        priority: u64,\n        left: Link<K, V, R>,\n        right: Link<K, V, R>,\n    ) -> (result: Link<K, V, R>)\n        requires\n            1 + spec_size_link(&left) + spec_size_link(&right) <= usize::MAX as nat,\n            spec_size_wf_link(&left),\n            spec_size_wf_link(&right),\n        ensures\n            spec_size_link(&result) == 1 + spec_size_link(&left) + spec_size_link(&right),\n            spec_size_wf_link(&result),"
+  },
+  {
+    "id": 55,
+    "function": "rotate_left",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "319-325",
+    "spec_strength": "unknown",
+    "snippet": "    fn rotate_left<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(link: &mut Link<K, V, R>)\n        requires\n            spec_size_link(old(link)) <= usize::MAX as nat,\n            spec_size_wf_link(old(link)),\n        ensures\n            spec_size_link(link) == spec_size_link(old(link)),\n            spec_size_wf_link(link),"
+  },
+  {
+    "id": 56,
+    "function": "rotate_right",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "354-360",
+    "spec_strength": "unknown",
+    "snippet": "    fn rotate_right<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(link: &mut Link<K, V, R>)\n        requires\n            spec_size_link(old(link)) <= usize::MAX as nat,\n            spec_size_wf_link(old(link)),\n        ensures\n            spec_size_link(link) == spec_size_link(old(link)),\n            spec_size_wf_link(link),"
+  },
+  {
+    "id": 57,
+    "function": "insert_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "389-402",
+    "spec_strength": "unknown",
+    "snippet": "    fn insert_link<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(\n        link: &mut Link<K, V, R>,\n        key: K,\n        value: V,\n        priority: u64,\n    )\n        requires\n            spec_size_link(old(link)) + 1 <= usize::MAX as nat,\n            spec_size_wf_link(old(link)),\n        ensures\n            spec_size_wf_link(link),\n            spec_size_link(link) <= spec_size_link(old(link)) + 1,\n            spec_size_link(link) >= spec_size_link(old(link)),\n        decreases old(link),"
+  },
+  {
+    "id": 58,
+    "function": "find_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "454-458",
+    "spec_strength": "",
+    "snippet": "    fn find_link<'a, K: StT + Ord, V: StT, R: StT>(\n        link: &'a Link<K, V, R>,\n        key: &K,\n    ) -> Option<&'a V>\n        decreases *link,"
+  },
+  {
+    "id": 59,
+    "function": "min_key_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "476-477",
+    "spec_strength": "",
+    "snippet": "    fn min_key_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> Option<&K>\n        decreases *link,"
+  },
+  {
+    "id": 60,
+    "function": "max_key_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "490-491",
+    "spec_strength": "",
+    "snippet": "    fn max_key_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> Option<&K>\n        decreases *link,"
+  },
+  {
+    "id": 61,
+    "function": "collect_keys",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "504-505",
+    "spec_strength": "",
+    "snippet": "    fn collect_keys<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>, out: &mut Vec<K>)\n        decreases *link,"
+  },
+  {
+    "id": 62,
+    "function": "collect_values",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "516-517",
+    "spec_strength": "",
+    "snippet": "    fn collect_values<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>, out: &mut Vec<V>)\n        decreases *link,"
+  },
+  {
+    "id": 63,
+    "function": "collect_in_order_kvp",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "527-531",
+    "spec_strength": "",
+    "snippet": "    fn collect_in_order_kvp<K: StT + Ord, V: StT, R: StT>(\n        link: &Link<K, V, R>,\n        out: &mut Vec<(K, V, u64)>,\n    )\n        decreases *link,"
+  },
+  {
+    "id": 64,
+    "function": "height_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "553-556",
+    "spec_strength": "unknown",
+    "snippet": "    fn height_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (result: usize)\n        requires spec_height_link(link) < usize::MAX as nat,\n        ensures result == spec_height_link(link),\n        decreases *link,"
+  },
+  {
+    "id": 65,
+    "function": "filter_by_key_kvp_r",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "569-571",
+    "spec_strength": "",
+    "snippet": "    fn filter_by_key_kvp_r<K: StT + Ord, V: StT>(\n        items: &Vec<(K, V, u64)>, key: &K,\n    ) -> (result: Vec<(K, V, u64)>) {"
+  },
+  {
+    "id": 66,
+    "function": "find_min_priority_idx_kvp_r",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "586-590",
+    "spec_strength": "unknown",
+    "snippet": "    fn find_min_priority_idx_kvp_r<K: StT + Ord, V: StT>(\n        items: &Vec<(K, V, u64)>, start: usize, end: usize,\n    ) -> (result: usize)\n        requires start < end, end <= items.len(),\n        ensures start <= result && result < end,"
+  },
+  {
+    "id": 67,
+    "function": "build_treap_from_vec_r",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "608-615",
+    "spec_strength": "unknown",
+    "snippet": "    fn build_treap_from_vec_r<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(\n        items: &Vec<(K, V, u64)>, start: usize, end: usize,\n    ) -> (result: Link<K, V, R>)\n        requires start <= end, end <= items.len(),\n        ensures\n            spec_size_wf_link(&result),\n            spec_size_link(&result) == (end - start) as nat,\n        decreases end - start,"
+  },
+  {
+    "id": 68,
+    "function": "range_reduce_link",
+    "file": "Chap40/BSTReducedStEph.rs",
+    "lines": "631-636",
+    "spec_strength": "",
+    "snippet": "    fn range_reduce_link<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(\n        link: &Link<K, V, R>,\n        low: &K,\n        high: &K,\n    ) -> R\n        decreases *link,"
+  },
+  {
+    "id": 69,
+    "function": "lemma_height_le_size",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "85-90",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_height_le_size<T: StT + Ord>(link: &Link<T>)\n        requires\n            spec_size_wf_link(link),\n            spec_size_link(link) < usize::MAX as nat,\n        ensures spec_height_link(link) <= spec_size_link(link),\n        decreases *link,"
+  },
+  {
+    "id": 70,
+    "function": "lemma_size_wf_child_bounded",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "102-115",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_size_wf_child_bounded<T: StT + Ord>(link: &Link<T>)\n        requires\n            spec_size_wf_link(link),\n            spec_size_link(link) > 0,\n            spec_size_link(link) < usize::MAX as nat,\n        ensures\n            match link {\n                None => true,\n                Some(node) => {\n                    spec_size_link(&node.left) < usize::MAX as nat\n                    && spec_size_link(&node.right) < usize::MAX as nat\n                },\n            },\n        decreases *link,"
+  },
+  {
+    "id": 71,
+    "function": "lemma_wf_assemble",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "125-135",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_wf_assemble<T: StT + Ord>(link: &Link<T>)\n        requires\n            match link {\n                None => true,\n                Some(node) => {\n                    node.size as nat == 1 + spec_size_link(&node.left) + spec_size_link(&node.right)\n                    && spec_size_wf_link(&node.left)\n                    && spec_size_wf_link(&node.right)\n                }\n            }\n        ensures spec_size_wf_link(link),"
+  },
+  {
+    "id": 72,
+    "function": "new`",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "149-154",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (result: Self)\n        where\n            Self: Sized,\n        ensures\n            result.spec_size() == 0,\n            result.spec_wf();"
+  },
+  {
+    "id": 73,
+    "function": "size",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "156-157",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (result: N)\n            ensures result as nat == self.spec_size();"
+  },
+  {
+    "id": 74,
+    "function": "is_empty",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "159-160",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (result: B)\n            ensures result == (self.spec_size() == 0);"
+  },
+  {
+    "id": 75,
+    "function": "height",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "162-167",
+    "spec_strength": "unknown",
+    "snippet": "        fn height(&self) -> (result: N)\n            requires\n                self.spec_size() < usize::MAX as nat,\n                self.spec_wf(),\n            ensures\n                result as nat == self.spec_height();"
+  },
+  {
+    "id": 76,
+    "function": "insert",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "169-176",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, value: T, priority: u64)\n            requires\n                old(self).spec_size() + 1 <= usize::MAX as nat,\n                old(self).spec_wf(),\n            ensures\n                self.spec_wf(),\n                self.spec_size() <= old(self).spec_size() + 1,\n                self.spec_size() >= old(self).spec_size();"
+  },
+  {
+    "id": 77,
+    "function": "delete",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "178-179",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(&mut self, key: &T)\n            ensures self.spec_wf();"
+  },
+  {
+    "id": 78,
+    "function": "find",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "181",
+    "spec_strength": "",
+    "snippet": "        fn find(&self, target: &T) -> Option<&T>;"
+  },
+  {
+    "id": 79,
+    "function": "contains",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "183",
+    "spec_strength": "",
+    "snippet": "        fn contains(&self, target: &T) -> B;"
+  },
+  {
+    "id": 80,
+    "function": "minimum",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "185",
+    "spec_strength": "",
+    "snippet": "        fn minimum(&self) -> Option<&T>;"
+  },
+  {
+    "id": 81,
+    "function": "maximum",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "187",
+    "spec_strength": "",
+    "snippet": "        fn maximum(&self) -> Option<&T>;"
+  },
+  {
+    "id": 82,
+    "function": "in_order",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "189",
+    "spec_strength": "",
+    "snippet": "        fn in_order(&self) -> ArraySeqStPerS<T>;"
+  },
+  {
+    "id": 83,
+    "function": "rank",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "191-196",
+    "spec_strength": "unknown",
+    "snippet": "        fn rank(&self, key: &T) -> (result: N)\n            requires\n                self.spec_size() < usize::MAX as nat,\n                self.spec_wf(),\n            ensures\n                result as nat <= self.spec_size();"
+  },
+  {
+    "id": 84,
+    "function": "select",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "198",
+    "spec_strength": "",
+    "snippet": "        fn select(&self, rank: N) -> Option<&T>;"
+  },
+  {
+    "id": 85,
+    "function": "split_rank",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "200",
+    "spec_strength": "",
+    "snippet": "        fn split_rank(&self, rank: N) -> (BSTSizeStEph<T>, BSTSizeStEph<T>);"
+  },
+  {
+    "id": 86,
+    "function": "size_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "217-218",
+    "spec_strength": "unknown",
+    "snippet": "    fn size_link<T: StT + Ord>(link: &Link<T>) -> (result: N)\n        ensures result as nat == spec_size_link(link),"
+  },
+  {
+    "id": 87,
+    "function": "update_size",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "226-234",
+    "spec_strength": "unknown",
+    "snippet": "    fn update_size<T: StT + Ord>(node: &mut Node<T>)\n        requires\n            spec_size_link(&old(node).left) + spec_size_link(&old(node).right) + 1 <= usize::MAX as nat,\n        ensures\n            node.size as nat == spec_size_link(&node.left) + spec_size_link(&node.right) + 1,\n            node.key == old(node).key,\n            node.priority == old(node).priority,\n            node.left == old(node).left,\n            node.right == old(node).right,"
+  },
+  {
+    "id": 88,
+    "function": "make_node",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "241-246",
+    "spec_strength": "unknown",
+    "snippet": "    fn make_node<T: StT + Ord>(key: T, priority: u64, left: Link<T>, right: Link<T>) -> (result: Link<T>)\n        requires\n            spec_size_link(&left) + spec_size_link(&right) + 1 <= usize::MAX as nat,\n        ensures\n            spec_size_link(&result) == spec_size_link(&left) + spec_size_link(&right) + 1,\n            spec_size_wf_link(&result) <==> (spec_size_wf_link(&left) && spec_size_wf_link(&right)),"
+  },
+  {
+    "id": 89,
+    "function": "rotate_left",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "255-261",
+    "spec_strength": "unknown",
+    "snippet": "    fn rotate_left<T: StT + Ord>(link: &mut Link<T>)\n        requires\n            spec_size_wf_link(old(link)),\n            spec_size_link(old(link)) <= usize::MAX as nat,\n        ensures\n            spec_size_link(link) == spec_size_link(old(link)),\n            spec_size_wf_link(link),"
+  },
+  {
+    "id": 90,
+    "function": "rotate_right",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "293-299",
+    "spec_strength": "unknown",
+    "snippet": "    fn rotate_right<T: StT + Ord>(link: &mut Link<T>)\n        requires\n            spec_size_wf_link(old(link)),\n            spec_size_link(old(link)) <= usize::MAX as nat,\n        ensures\n            spec_size_link(link) == spec_size_link(old(link)),\n            spec_size_wf_link(link),"
+  },
+  {
+    "id": 91,
+    "function": "insert_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "331-339",
+    "spec_strength": "unknown",
+    "snippet": "    fn insert_link<T: StT + Ord>(link: &mut Link<T>, value: T, priority: u64)\n        requires\n            spec_size_link(old(link)) + 1 <= usize::MAX as nat,\n            spec_size_wf_link(old(link)),\n        ensures\n            spec_size_wf_link(link),\n            spec_size_link(link) <= spec_size_link(old(link)) + 1,\n            spec_size_link(link) >= spec_size_link(old(link)),\n        decreases old(link),"
+  },
+  {
+    "id": 92,
+    "function": "find_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "392-393",
+    "spec_strength": "",
+    "snippet": "    fn find_link<'a, T: StT + Ord>(link: &'a Link<T>, target: &T) -> Option<&'a T>\n        decreases *link,"
+  },
+  {
+    "id": 93,
+    "function": "min_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "409-410",
+    "spec_strength": "",
+    "snippet": "    fn min_link<T: StT + Ord>(link: &Link<T>) -> Option<&T>\n        decreases *link,"
+  },
+  {
+    "id": 94,
+    "function": "max_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "421-422",
+    "spec_strength": "",
+    "snippet": "    fn max_link<T: StT + Ord>(link: &Link<T>) -> Option<&T>\n        decreases *link,"
+  },
+  {
+    "id": 95,
+    "function": "height_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "433-438",
+    "spec_strength": "unknown",
+    "snippet": "    fn height_link<T: StT + Ord>(link: &Link<T>) -> (h: N)\n        requires\n            spec_size_link(link) < usize::MAX as nat,\n            spec_size_wf_link(link),\n        ensures h as nat == spec_height_link(link),\n        decreases *link,"
+  },
+  {
+    "id": 96,
+    "function": "in_order_collect",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "460-461",
+    "spec_strength": "",
+    "snippet": "    fn in_order_collect<T: StT + Ord>(link: &Link<T>, out: &mut Vec<T>)\n        decreases *link,"
+  },
+  {
+    "id": 97,
+    "function": "in_order_collect_with_priority",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "470-474",
+    "spec_strength": "",
+    "snippet": "    fn in_order_collect_with_priority<T: StT + Ord>(\n        link: &Link<T>,\n        out: &mut Vec<(T, u64)>,\n    )\n        decreases *link,"
+  },
+  {
+    "id": 98,
+    "function": "find_min_priority_idx",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "483-488",
+    "spec_strength": "unknown",
+    "snippet": "    fn find_min_priority_idx<T: StT + Ord>(items: &Vec<(T, u64)>, start: usize, end: usize) -> (result: usize)\n        requires\n            start < end,\n            end <= items.len(),\n        ensures\n            start <= result && result < end,"
+  },
+  {
+    "id": 99,
+    "function": "build_treap_from_vec",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "509-516",
+    "spec_strength": "unknown",
+    "snippet": "    fn build_treap_from_vec<T: StT + Ord>(items: &Vec<(T, u64)>, start: usize, end: usize) -> (result: Link<T>)\n        requires\n            start <= end,\n            end <= items.len(),\n        ensures\n            spec_size_link(&result) == (end - start) as nat,\n            spec_size_wf_link(&result),\n        decreases end - start,"
+  },
+  {
+    "id": 100,
+    "function": "filter_by_key",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "529",
+    "spec_strength": "",
+    "snippet": "    fn filter_by_key<T: StT + Ord>(items: &Vec<(T, u64)>, key: &T) -> (result: Vec<(T, u64)>) {"
+  },
+  {
+    "id": 101,
+    "function": "rank_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "544-549",
+    "spec_strength": "unknown",
+    "snippet": "    fn rank_link<T: StT + Ord>(link: &Link<T>, key: &T) -> (result: N)\n        requires\n            spec_size_link(link) < usize::MAX as nat,\n            spec_size_wf_link(link),\n        ensures result as nat <= spec_size_link(link),\n        decreases *link,"
+  },
+  {
+    "id": 102,
+    "function": "select_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "568-569",
+    "spec_strength": "",
+    "snippet": "    fn select_link<T: StT + Ord>(link: &Link<T>, rank: N) -> Option<&T>\n        decreases *link,"
+  },
+  {
+    "id": 103,
+    "function": "clone_link",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "655-656",
+    "spec_strength": "",
+    "snippet": "    fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)\n        decreases link,"
+  },
+  {
+    "id": 104,
+    "function": "default",
+    "file": "Chap40/BSTSizeStEph.rs",
+    "lines": "691",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::new() }"
   }
 ]
