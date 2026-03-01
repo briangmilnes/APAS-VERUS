@@ -13,7 +13,6 @@ pub mod BSTParaStEph {
     // 6. spec fns
     // 8. traits
     // 9. impls
-    // 10. free fns
     // 11. derive impls in verus!
     // 12. macros
     // 13. derive impls outside verus!
@@ -123,10 +122,40 @@ pub mod BSTParaStEph {
                 result@.finite();
         /// - APAS: Work O(1), Span O(1)
         fn expose(&self) -> (exposed: Exposed<T>)
-            ensures self@.len() == 0 ==> exposed is Leaf;
+            ensures
+                self@.len() == 0 ==> exposed is Leaf,
+                exposed is Leaf ==> self@ =~= Set::<<T as View>::V>::empty(),
+                exposed matches Exposed::Node(l, k, r) ==> {
+                    self@ =~= l@.union(r@).insert(k@)
+                    && self@.finite()
+                    && l@.finite() && r@.finite()
+                    && l@.disjoint(r@)
+                    && !l@.contains(k@)
+                    && !r@.contains(k@)
+                    && l@.len() + r@.len() < usize::MAX as nat
+                };
         /// - APAS: Work O(1), Span O(1)
         fn join_mid(exposed: Exposed<T>) -> (result: Self)
-            ensures exposed is Leaf ==> result@ == Set::<<T as View>::V>::empty();
+            requires
+                exposed matches Exposed::Node(l, k, r) ==> {
+                    l@.finite() && r@.finite()
+                    && l@.disjoint(r@)
+                    && !l@.contains(k@)
+                    && !r@.contains(k@)
+                    && l@.len() + r@.len() < usize::MAX as nat
+                },
+            ensures
+                exposed is Leaf ==> result@ == Set::<<T as View>::V>::empty(),
+                exposed matches Exposed::Node(l, k, r) ==> result@ =~= l@.union(r@).insert(k@);
+        /// Joins left, key, right into a single tree.
+        fn join_m(left: Self, key: T, right: Self) -> (tree: Self)
+            requires
+                left@.finite(), right@.finite(),
+                left@.disjoint(right@),
+                !left@.contains(key@),
+                !right@.contains(key@),
+                left@.len() + right@.len() < usize::MAX as nat,
+            ensures tree@ =~= left@.union(right@).insert(key@);
         /// - APAS: Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite();
@@ -147,10 +176,16 @@ pub mod BSTParaStEph {
             ensures
                 parts.1 == self@.contains(key@),
                 parts.0@.finite(),
-                parts.2@.finite();
+                parts.2@.finite(),
+                parts.0@.union(parts.2@) =~= self@.remove(key@),
+                parts.0@.disjoint(parts.2@),
+                !parts.0@.contains(key@),
+                !parts.2@.contains(key@);
+        /// Returns the minimum key, or None if empty.
+        fn min_key(&self) -> (result: Option<T>);
         /// - APAS: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|))
         fn join_pair(&self, other: Self) -> (joined: Self)
-            ensures joined@.finite();
+            ensures joined@.finite(), joined@ =~= self@.union(other@);
         /// - APAS: Work O(m · lg(n/m)), Span O(m · lg(n/m)) — sequential
         fn union(&self, other: &Self) -> (result: Self)
             ensures result@ == self@.union(other@), result@.finite();
@@ -162,10 +197,15 @@ pub mod BSTParaStEph {
             ensures result@ == self@.difference(other@), result@.finite();
         /// - APAS: Work O(|t|), Span O(|t|) — sequential
         fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)
+            requires self@.finite(), forall|t: &T| predicate.requires((t,)),
             ensures filtered@.subset_of(self@), filtered@.finite();
         /// - APAS: Work O(|t|), Span O(|t|) — sequential
         /// Requires `op` to be associative with identity `base`.
         fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> T;
+        /// Collects elements in order into a mutable vector.
+        fn collect_in_order(&self, out: &mut Vec<T>)
+            requires self@.finite(),
+            ensures out@.len() == old(out)@.len() + self@.len();
         /// - APAS: Work O(|t|), Span O(|t|)
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
             ensures seq@.len() == self@.len();
@@ -176,27 +216,71 @@ pub mod BSTParaStEph {
     impl<T: StT + Ord> ParamBSTTrait<T> for ParamBST<T> {
         fn new() -> (result: Self)
             ensures result@ == Set::<<T as View>::V>::empty()
-        { new_leaf() }
+        { new_param_bst(None, Ghost(Set::empty())) }
 
         fn singleton(key: T) -> (result: Self)
             ensures
                 result@ == Set::<<T as View>::V>::empty().insert(key@),
                 result@.finite()
         {
-            let left = new_leaf();
-            let right = new_leaf();
-            join_mid(Exposed::Node(left, key, right))
+            let left: Self = Self::new();
+            let right: Self = Self::new();
+            Self::join_mid(Exposed::Node(left, key, right))
         }
 
         #[verifier::external_body]
         fn expose(&self) -> (exposed: Exposed<T>)
-            ensures self@.len() == 0 ==> exposed is Leaf
-        { expose_internal(self) }
+            ensures
+                self@.len() == 0 ==> exposed is Leaf,
+                exposed is Leaf ==> self@ =~= Set::<<T as View>::V>::empty(),
+                exposed matches Exposed::Node(l, k, r) ==> {
+                    self@ =~= l@.union(r@).insert(k@)
+                    && self@.finite()
+                    && l@.finite() && r@.finite()
+                    && l@.disjoint(r@)
+                    && !l@.contains(k@)
+                    && !r@.contains(k@)
+                    && l@.len() + r@.len() < usize::MAX as nat
+                },
+        {
+            let handle = self.root.acquire_read();
+            let result = match handle.borrow() {
+                | None => Exposed::Leaf,
+                | Some(node) => Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone()),
+            };
+            handle.release_read();
+            result
+        }
 
-        #[verifier::external_body]
         fn join_mid(exposed: Exposed<T>) -> (result: Self)
-            ensures exposed is Leaf ==> result@ == Set::<<T as View>::V>::empty()
-        { join_mid(exposed) }
+        {
+            match exposed {
+                | Exposed::Leaf => Self::new(),
+                | Exposed::Node(left, key, right) => {
+                    let ghost lv = left@;
+                    let ghost rv = right@;
+                    let ghost kv = key@;
+                    let ls = left.size();
+                    let rs = right.size();
+                    let size = 1 + ls + rs;
+                    let ghost contents = lv.union(rv).insert(kv);
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
+                        assert(!lv.union(rv).contains(kv));
+                        assert(contents.len() == size as nat);
+                    }
+                    new_param_bst(
+                        Some(Box::new(NodeInner { key, size, left, right })),
+                        Ghost(contents),
+                    )
+                }
+            }
+        }
+
+        fn join_m(left: Self, key: T, right: Self) -> (tree: Self)
+        {
+            Self::join_mid(Exposed::Node(left, key, right))
+        }
 
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
@@ -220,8 +304,8 @@ pub mod BSTParaStEph {
 
         #[verifier::external_body]
         fn insert(&self, key: T) {
-            let (left, _, right) = split_inner(self, &key);
-            let rebuilt = join_m(left, key, right);
+            let (left, _, right) = self.split(&key);
+            let rebuilt = Self::join_m(left, key, right);
             let read_h = rebuilt.root.acquire_read();
             let new_val = read_h.borrow().clone();
             read_h.release_read();
@@ -231,8 +315,8 @@ pub mod BSTParaStEph {
 
         #[verifier::external_body]
         fn delete(&self, key: &T) {
-            let (left, _, right) = split_inner(self, key);
-            let merged = join_pair_inner(left, right);
+            let (left, _, right) = self.split(key);
+            let merged = left.join_pair(right);
             let read_h = merged.root.acquire_read();
             let new_val = read_h.borrow().clone();
             read_h.release_read();
@@ -244,260 +328,220 @@ pub mod BSTParaStEph {
         fn find(&self, key: &T) -> (found: Option<T>)
             ensures found.is_some() <==> self@.contains(key@)
         {
-            match expose_internal(self) {
+            match self.expose() {
                 | Exposed::Leaf => None,
                 | Exposed::Node(left, root_key, right) => match key.cmp(&root_key) {
-                    | Less => ParamBSTTrait::find(&left, key),
-                    | Greater => ParamBSTTrait::find(&right, key),
+                    | Less => left.find(key),
+                    | Greater => right.find(key),
                     | Equal => Some(root_key),
                 },
             }
         }
 
+        /// Algorithm 38.5 — split via expose and recursive descent.
         #[verifier::external_body]
         fn split(&self, key: &T) -> (parts: (Self, B, Self))
             ensures
                 parts.1 == self@.contains(key@),
                 parts.0@.finite(),
-                parts.2@.finite()
-        { split_inner(self, key) }
+                parts.2@.finite(),
+                parts.0@.union(parts.2@) =~= self@.remove(key@),
+                parts.0@.disjoint(parts.2@),
+                !parts.0@.contains(key@),
+                !parts.2@.contains(key@)
+        {
+            match self.expose() {
+                | Exposed::Leaf => (Self::new(), false, Self::new()),
+                | Exposed::Node(left, root_key, right) => match key.cmp(&root_key) {
+                    | Less => {
+                        let (ll, found, lr) = left.split(key);
+                        let rebuilt = Self::join_mid(Exposed::Node(lr, root_key, right));
+                        (ll, found, rebuilt)
+                    }
+                    | Greater => {
+                        let (rl, found, rr) = right.split(key);
+                        let rebuilt = Self::join_mid(Exposed::Node(left, root_key, rl));
+                        (rebuilt, found, rr)
+                    }
+                    | Equal => (left, true, right),
+                },
+            }
+        }
 
         #[verifier::external_body]
-        fn join_pair(&self, other: Self) -> (joined: Self)
-            ensures joined@.finite()
-        { join_pair_inner(self.clone(), other) }
+        fn min_key(&self) -> (result: Option<T>) {
+            match self.expose() {
+                | Exposed::Leaf => None,
+                | Exposed::Node(left, key, _) => match left.min_key() {
+                    | Some(rec) => Some(rec),
+                    | None => Some(key),
+                },
+            }
+        }
 
+        /// Algorithm 38.4 — join two trees via min-key extraction.
+        #[verifier::external_body]
+        fn join_pair(&self, other: Self) -> (joined: Self)
+            ensures joined@.finite(), joined@ =~= self@.union(other@)
+        {
+            match other.expose() {
+                | Exposed::Leaf => self.clone(),
+                | Exposed::Node(_, key, _) => {
+                    let min_k = other.min_key().unwrap_or(key);
+                    let (_, _, reduced_right) = other.split(&min_k);
+                    Self::join_m(self.clone(), min_k, reduced_right)
+                }
+            }
+        }
+
+        /// Algorithm 38.6 — sequential union via divide-and-conquer on split.
         #[verifier::external_body]
         fn union(&self, other: &Self) -> (result: Self)
             ensures result@ == self@.union(other@), result@.finite()
-        { union_inner(self, other) }
+        {
+            match (self.expose(), other.expose()) {
+                | (Exposed::Leaf, _) => other.clone(),
+                | (_, Exposed::Leaf) => self.clone(),
+                | (Exposed::Node(al, ak, ar), _) => {
+                    let (bl, _, br) = other.split(&ak);
+                    let left_union = al.union(&bl);
+                    let right_union = ar.union(&br);
+                    Self::join_m(left_union, ak, right_union)
+                }
+            }
+        }
 
+        /// Algorithm 38.7 — sequential intersect. Keeps keys present in both trees.
         #[verifier::external_body]
         fn intersect(&self, other: &Self) -> (result: Self)
             ensures result@ == self@.intersect(other@), result@.finite()
-        { intersect_inner(self, other) }
+        {
+            match (self.expose(), other.expose()) {
+                | (Exposed::Leaf, _) | (_, Exposed::Leaf) => Self::new(),
+                | (Exposed::Node(al, ak, ar), _) => {
+                    let (bl, found, br) = other.split(&ak);
+                    let left_res = al.intersect(&bl);
+                    let right_res = ar.intersect(&br);
+                    if found {
+                        Self::join_m(left_res, ak, right_res)
+                    } else {
+                        left_res.join_pair(right_res)
+                    }
+                }
+            }
+        }
 
+        /// Algorithm 38.8 — sequential difference. Keeps keys in `self` not in `other`.
         #[verifier::external_body]
         fn difference(&self, other: &Self) -> (result: Self)
             ensures result@ == self@.difference(other@), result@.finite()
-        { difference_inner(self, other) }
+        {
+            match (self.expose(), other.expose()) {
+                | (Exposed::Leaf, _) => Self::new(),
+                | (_, Exposed::Leaf) => self.clone(),
+                | (Exposed::Node(al, ak, ar), _) => {
+                    let (bl, found, br) = other.split(&ak);
+                    let left_res = al.difference(&bl);
+                    let right_res = ar.difference(&br);
+                    if found {
+                        left_res.join_pair(right_res)
+                    } else {
+                        Self::join_m(left_res, ak, right_res)
+                    }
+                }
+            }
+        }
 
-        #[verifier::external_body]
+        /// Algorithm 38.9 — sequential filter. Keeps keys satisfying `predicate`.
         fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)
             ensures filtered@.subset_of(self@), filtered@.finite()
         {
             filter_inner(self, &predicate)
         }
 
+        /// Algorithm 38.10 — sequential reduce. Folds `op(L', op(k, R'))`.
         #[verifier::external_body]
         fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> T {
             reduce_inner(self, &op, base)
         }
 
-        #[verifier::external_body]
+        fn collect_in_order(&self, out: &mut Vec<T>)
+            ensures out@.len() == old(out)@.len() + self@.len(),
+            decreases self@.len(),
+        {
+            match self.expose() {
+                | Exposed::Leaf => {}
+                | Exposed::Node(left, key, right) => {
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                        assert(!left@.union(right@).contains(key@));
+                        assert(self@.len() == left@.len() + right@.len() + 1);
+                    }
+                    left.collect_in_order(out);
+                    out.push(key);
+                    right.collect_in_order(out);
+                }
+            }
+        }
+
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
             ensures seq@.len() == self@.len()
         {
-            let mut out = Vec::with_capacity(self.size());
-            collect_in_order(self, &mut out);
+            let count = self.size();
+            let mut out = Vec::with_capacity(count);
+            self.collect_in_order(&mut out);
             ArraySeqStPerS::from_vec(out)
         }
     }
 
     // 10. free fns
 
-    fn new_leaf<T: StT + Ord>() -> (tree: ParamBST<T>)
-        ensures tree@ =~= Set::<<T as View>::V>::empty(),
-    {
-        new_param_bst(None, Ghost(Set::empty()))
-    }
-
-    #[verifier::external_body]
-    fn expose_internal<T: StT + Ord>(tree: &ParamBST<T>) -> (exposed: Exposed<T>)
-        ensures
-            tree@.len() == 0 ==> exposed is Leaf,
-            exposed matches Exposed::Node(l, k, r) ==> {
-                tree@ =~= l@.union(r@).insert(k@)
-                && tree@.finite()
-            },
-    {
-        let handle = tree.root.acquire_read();
-        let result = match handle.borrow() {
-            | None => Exposed::Leaf,
-            | Some(node) => Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone()),
-        };
-        handle.release_read();
-        result
-    }
-
-    #[verifier::external_body]
-    fn join_mid<T: StT + Ord>(exposed: Exposed<T>) -> (tree: ParamBST<T>)
-        ensures
-            exposed is Leaf ==> tree@ =~= Set::<<T as View>::V>::empty(),
-            exposed matches Exposed::Node(l, k, r) ==> tree@ =~= l@.union(r@).insert(k@),
-    {
-        match exposed {
-            | Exposed::Leaf => new_leaf(),
-            | Exposed::Node(left, key, right) => {
-                let ghost lv = left@;
-                let ghost rv = right@;
-                let ghost kv = key@;
-                let size = 1 + left.size() + right.size();
-                let ghost contents = lv.union(rv).insert(kv);
-                new_param_bst(
-                    Some(Box::new(NodeInner { key, size, left, right })),
-                    Ghost(contents),
-                )
-            }
-        }
-    }
-
-    #[verifier::external_body]
-    fn split_inner<T: StT + Ord>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>)) {
-        match expose_internal(tree) {
-            | Exposed::Leaf => (new_leaf(), false, new_leaf()),
-            | Exposed::Node(left, root_key, right) => match key.cmp(&root_key) {
-                | Less => {
-                    let (ll, found, lr) = split_inner(&left, key);
-                    let rebuilt = join_mid(Exposed::Node(lr, root_key, right));
-                    (ll, found, rebuilt)
-                }
-                | Greater => {
-                    let (rl, found, rr) = split_inner(&right, key);
-                    let rebuilt = join_mid(Exposed::Node(left, root_key, rl));
-                    (rebuilt, found, rr)
-                }
-                | Equal => (left, true, right),
-            },
-        }
-    }
-
-    #[verifier::external_body]
-    fn join_m<T: StT + Ord>(left: ParamBST<T>, key: T, right: ParamBST<T>) -> (tree: ParamBST<T>) {
-        join_mid(Exposed::Node(left, key, right))
-    }
-
-    #[verifier::external_body]
-    fn min_key<T: StT + Ord>(tree: &ParamBST<T>) -> (result: Option<T>) {
-        match expose_internal(tree) {
-            | Exposed::Leaf => None,
-            | Exposed::Node(left, key, _) => match min_key(&left) {
-                | Some(rec) => Some(rec),
-                | None => Some(key),
-            },
-        }
-    }
-
-    #[verifier::external_body]
-    fn join_pair_inner<T: StT + Ord>(left: ParamBST<T>, right: ParamBST<T>) -> (tree: ParamBST<T>) {
-        match expose_internal(&right) {
-            | Exposed::Leaf => left,
-            | Exposed::Node(_, key, _) => {
-                let min_k = min_key(&right).unwrap_or(key);
-                let (_, _, reduced_right) = split_inner(&right, &min_k);
-                join_m(left, min_k, reduced_right)
-            }
-        }
-    }
-
-    /// Algorithm 38.6 — sequential union via divide-and-conquer on split.
-    #[verifier::external_body]
-    fn union_inner<T: StT + Ord>(a: &ParamBST<T>, b: &ParamBST<T>) -> (tree: ParamBST<T>) {
-        match (expose_internal(a), expose_internal(b)) {
-            | (Exposed::Leaf, _) => b.clone(),
-            | (_, Exposed::Leaf) => a.clone(),
-            | (Exposed::Node(al, ak, ar), _) => {
-                let (bl, _, br) = split_inner(b, &ak);
-                let left_union = union_inner(&al, &bl);
-                let right_union = union_inner(&ar, &br);
-                join_m(left_union, ak, right_union)
-            }
-        }
-    }
-
-    /// Algorithm 38.7 — sequential intersect. Keeps keys present in both trees.
-    #[verifier::external_body]
-    fn intersect_inner<T: StT + Ord>(a: &ParamBST<T>, b: &ParamBST<T>) -> (tree: ParamBST<T>) {
-        match (expose_internal(a), expose_internal(b)) {
-            | (Exposed::Leaf, _) | (_, Exposed::Leaf) => new_leaf(),
-            | (Exposed::Node(al, ak, ar), _) => {
-                let (bl, found, br) = split_inner(b, &ak);
-                let left_res = intersect_inner(&al, &bl);
-                let right_res = intersect_inner(&ar, &br);
-                if found {
-                    join_m(left_res, ak, right_res)
-                } else {
-                    join_pair_inner(left_res, right_res)
-                }
-            }
-        }
-    }
-
-    /// Algorithm 38.8 — sequential difference. Keeps keys in `a` not in `b`.
-    #[verifier::external_body]
-    fn difference_inner<T: StT + Ord>(a: &ParamBST<T>, b: &ParamBST<T>) -> (tree: ParamBST<T>) {
-        match (expose_internal(a), expose_internal(b)) {
-            | (Exposed::Leaf, _) => new_leaf(),
-            | (_, Exposed::Leaf) => a.clone(),
-            | (Exposed::Node(al, ak, ar), _) => {
-                let (bl, found, br) = split_inner(b, &ak);
-                let left_res = difference_inner(&al, &bl);
-                let right_res = difference_inner(&ar, &br);
-                if found {
-                    join_pair_inner(left_res, right_res)
-                } else {
-                    join_m(left_res, ak, right_res)
-                }
-            }
-        }
-    }
-
-    /// Algorithm 38.9 — sequential filter. Keeps keys satisfying `predicate`.
-    #[verifier::external_body]
+    /// Algorithm 38.9 — sequential filter recursive helper (takes &F for recursion).
     fn filter_inner<T: StT + Ord, F: Fn(&T) -> bool>(
         tree: &ParamBST<T>,
         predicate: &F,
-    ) -> (filtered: ParamBST<T>) {
-        match expose_internal(tree) {
-            | Exposed::Leaf => new_leaf(),
+    ) -> (filtered: ParamBST<T>)
+        requires tree@.finite(), forall|t: &T| predicate.requires((t,)),
+        ensures filtered@.subset_of(tree@), filtered@.finite(),
+        decreases tree@.len(),
+    {
+        match tree.expose() {
+            | Exposed::Leaf => ParamBST::new(),
             | Exposed::Node(left, key, right) => {
+                proof {
+                    vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                    assert(!left@.union(right@).contains(key@));
+                    assert(tree@.len() == left@.len() + right@.len() + 1);
+                }
                 let left_filtered = filter_inner(&left, predicate);
                 let right_filtered = filter_inner(&right, predicate);
                 if predicate(&key) {
-                    join_m(left_filtered, key, right_filtered)
+                    proof {
+                        vstd::set_lib::lemma_len_subset(left_filtered@, left@);
+                        vstd::set_lib::lemma_len_subset(right_filtered@, right@);
+                    }
+                    ParamBST::join_m(left_filtered, key, right_filtered)
                 } else {
-                    join_pair_inner(left_filtered, right_filtered)
+                    left_filtered.join_pair(right_filtered)
                 }
             }
         }
     }
 
-    /// Algorithm 38.10 — sequential reduce. Folds `op(L', op(k, R'))`.
+    /// Algorithm 38.10 — sequential reduce recursive helper (takes &F for recursion).
     #[verifier::external_body]
     fn reduce_inner<T: StT + Ord, F: Fn(T, T) -> T>(
         tree: &ParamBST<T>,
         op: &F,
         identity: T,
     ) -> T {
-        match expose_internal(tree) {
+        match tree.expose() {
             | Exposed::Leaf => identity,
             | Exposed::Node(left, key, right) => {
                 let left_acc = reduce_inner(&left, op, identity.clone());
                 let right_acc = reduce_inner(&right, op, identity);
                 let right_with_key = op(key, right_acc);
                 op(left_acc, right_with_key)
-            }
-        }
-    }
-
-    #[verifier::external_body]
-    fn collect_in_order<T: StT + Ord>(tree: &ParamBST<T>, out: &mut Vec<T>) {
-        match expose_internal(tree) {
-            | Exposed::Leaf => {}
-            | Exposed::Node(left, key, right) => {
-                collect_in_order(&left, out);
-                out.push(key);
-                collect_in_order(&right, out);
             }
         }
     }
