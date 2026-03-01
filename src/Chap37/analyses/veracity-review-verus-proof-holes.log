@@ -248,21 +248,17 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Info: 1 total
 ❌ BSTSplayStEph.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:25: external_body - #[verifier::external_body]
-        26 |         fn clone(&self) -> Self {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:102: assume() - assume(ls as int + rs as int + 1 <= usize::MAX as int);
-        92 |     fn update<T: StT + Ord>(node: &mut Node<T>)
+        26 |         fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:104: assume() - assume(ls as int + rs as int + 1 <= usize::MAX as int);
+        94 |     fn update<T: StT + Ord>(node: &mut Node<T>)
             ...
-       100 |         let ls = size_link(&node.left);
-       101 |         let rs = size_link(&node.right);
-       103 |         node.size = 1 + ls + rs;
-       104 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:394: external_body - #[verifier::external_body]
-       395 |         fn in_order(&self) -> ArraySeqStPerS<T> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap37/BSTSplayStEph.rs:401: external_body - #[verifier::external_body]
-       402 |         fn pre_order(&self) -> ArraySeqStPerS<T> {
-   Holes: 4 total
+       102 |         let ls = size_link(&node.left);
+       103 |         let rs = size_link(&node.right);
+       105 |         node.size = 1 + ls + rs;
+       106 |     }
+   Holes: 2 total
       1 × assume()
-      3 × external_body
+      1 × external_body
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -278,9 +274,9 @@ Proof Functions:
    0 holed
    8 total
 
-Holes Found: 54 total
+Holes Found: 52 total
    13 × assume()
-   41 × external_body
+   39 × external_body
 
 Errors: 7 total (7 assume in eq/clone (Verus workaround))
 

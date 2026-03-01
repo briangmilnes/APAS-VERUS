@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap50
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap50/
 
 ❌ MatrixChainMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainMtEph.rs:173: external_body - #[verifier::external_body]
@@ -59,18 +59,26 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
       8 × external_body
    Info: 2 total
 ❌ MatrixChainStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainStEph.rs:382: external_body - #[verifier::external_body]
-       383 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainStEph.rs:386: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       382 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       384 |         {
+       385 |             let r = self.dimensions == other.dimensions && self.memo == other.memo;
+       387 |             r
+       388 |         }
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainStEph.rs:370: info: accept() - accept hole
-   Holes: 1 total
-      1 × external_body
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Info: 1 total
 ❌ MatrixChainStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainStPer.rs:351: external_body - #[verifier::external_body]
-       352 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainStPer.rs:355: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       351 |         fn eq(&self, other: &Self) -> (r: bool)
+            ...
+       353 |         {
+       354 |             let r = self.dimensions == other.dimensions && self.memo == other.memo;
+       356 |             r
+       357 |         }
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap50/MatrixChainStPer.rs:339: info: accept() - accept hole
-   Holes: 1 total
-      1 × external_body
+   Errors: 1 total (1 assume in eq/clone (Verus workaround))
    Info: 1 total
 ❌ OptBinSearchTreeMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap50/OptBinSearchTreeMtEph.rs:31: external_body - #[verifier::external_body]
@@ -181,8 +189,8 @@ SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   0 clean (no holes)
-   8 holed (contains holes)
+   2 clean (no holes)
+   6 holed (contains holes)
    8 total
 
 Proof Functions:
@@ -190,16 +198,18 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 68 total
-   68 × external_body
+Holes Found: 66 total
+   66 × external_body
+
+Errors: 2 total (2 assume in eq/clone (Verus workaround))
 
 Info: 9 total
    MatrixChainStEph.rs:370: info: accept() - accept hole
    OptBinSearchTreeMtEph.rs:43: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    OptBinSearchTreeMtEph.rs:56: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   OptBinSearchTreeMtPer.rs:45: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MatrixChainMtPer.rs:79: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   MatrixChainMtPer.rs:350: info: accept() - accept hole
    MatrixChainMtEph.rs:66: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    MatrixChainMtEph.rs:84: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    MatrixChainStPer.rs:339: info: accept() - accept hole
-   MatrixChainMtPer.rs:79: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   MatrixChainMtPer.rs:350: info: accept() - accept hole
+   OptBinSearchTreeMtPer.rs:45: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.

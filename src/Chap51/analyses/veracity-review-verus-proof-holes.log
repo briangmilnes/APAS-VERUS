@@ -1,73 +1,75 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap51/
+
 ❌ BottomUpDPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:39: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/BottomUpDPMtEph.rs:39: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         37 |     pub struct BottomUpDPMtEphWf;
         38 |     impl RwLockPredicate<Vec<Vec<usize>>> for BottomUpDPMtEphWf {
         40 |     }
         41 | 
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:42: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/BottomUpDPMtEph.rs:42: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Errors: 1 total (1 dummy RwLockPredicate)
    Info: 1 total
 ❌ BottomUpDPMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:39: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/BottomUpDPMtPer.rs:39: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         37 |     pub struct BottomUpDPMtPerWf;
         38 |     impl RwLockPredicate<Vec<Vec<usize>>> for BottomUpDPMtPerWf {
         40 |     }
         41 | 
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:42: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/BottomUpDPMtPer.rs:42: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Errors: 1 total (1 dummy RwLockPredicate)
    Info: 1 total
 ✓ BottomUpDPStEph.rs
 ✓ BottomUpDPStPer.rs
 ❌ TopDownDPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:33: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/TopDownDPMtEph.rs:33: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         31 |     pub struct TopDownDPMtEphWf;
         32 |     impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtEphWf {
         34 |     }
         35 | 
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:45: error: struct_outside_verus - struct TopDownDPMtEphS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/TopDownDPMtEph.rs:45: error: struct_outside_verus - struct TopDownDPMtEphS — should be inside verus!
         45 |     pub struct TopDownDPMtEphS {
         46 |         /// Input sequence S
         47 |         pub seq_s: ArraySeqMtEphS<char>,
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:45: error: clone_derived_outside - struct TopDownDPMtEphS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/TopDownDPMtEph.rs:45: error: clone_derived_outside - struct TopDownDPMtEphS — Clone should be implemented inside verus!, not derived outside
         45 |     pub struct TopDownDPMtEphS {
         46 |         /// Input sequence S
         47 |         pub seq_s: ArraySeqMtEphS<char>,
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:36: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/TopDownDPMtEph.rs:36: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Errors: 3 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 dummy RwLockPredicate)
    Info: 1 total
 ❌ TopDownDPMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:33: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/TopDownDPMtPer.rs:33: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
         31 |     pub struct TopDownDPMtPerWf;
         32 |     impl RwLockPredicate<HashMap<(usize, usize), usize>> for TopDownDPMtPerWf {
         34 |     }
         35 | 
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:45: error: struct_outside_verus - struct TopDownDPMtPerS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/TopDownDPMtPer.rs:45: error: struct_outside_verus - struct TopDownDPMtPerS — should be inside verus!
         45 |     pub struct TopDownDPMtPerS {
         46 |         /// Input sequence S
         47 |         pub seq_s: ArraySeqMtPerS<char>,
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:45: error: clone_derived_outside - struct TopDownDPMtPerS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/TopDownDPMtPer.rs:45: error: clone_derived_outside - struct TopDownDPMtPerS — Clone should be implemented inside verus!, not derived outside
         45 |     pub struct TopDownDPMtPerS {
         46 |         /// Input sequence S
         47 |         pub seq_s: ArraySeqMtPerS<char>,
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:36: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/TopDownDPMtPer.rs:36: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Errors: 3 total (1 struct/enum outside verus!, 1 Clone derived outside, 1 dummy RwLockPredicate)
    Info: 1 total
 ❌ TopDownDPStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:31: error: struct_outside_verus - struct TopDownDPStEphS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/TopDownDPStEph.rs:31: error: struct_outside_verus - struct TopDownDPStEphS — should be inside verus!
         31 |     pub struct TopDownDPStEphS {
         32 |         /// Input sequence S
         33 |         pub seq_s: ArraySeqStEphS<char>,
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:31: error: clone_derived_outside - struct TopDownDPStEphS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/TopDownDPStEph.rs:31: error: clone_derived_outside - struct TopDownDPStEphS — Clone should be implemented inside verus!, not derived outside
         31 |     pub struct TopDownDPStEphS {
         32 |         /// Input sequence S
         33 |         pub seq_s: ArraySeqStEphS<char>,
    Errors: 2 total (1 struct/enum outside verus!, 1 Clone derived outside)
 ❌ TopDownDPStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:31: error: struct_outside_verus - struct TopDownDPStPerS — should be inside verus!
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/TopDownDPStPer.rs:31: error: struct_outside_verus - struct TopDownDPStPerS — should be inside verus!
         31 |     pub struct TopDownDPStPerS {
         32 |         /// Input sequence S
         33 |         pub seq_s: ArraySeqStPerS<char>,
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:31: error: clone_derived_outside - struct TopDownDPStPerS — Clone should be implemented inside verus!, not derived outside
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap51/TopDownDPStPer.rs:31: error: clone_derived_outside - struct TopDownDPStPerS — Clone should be implemented inside verus!, not derived outside
         31 |     pub struct TopDownDPStPerS {
         32 |         /// Input sequence S
         33 |         pub seq_s: ArraySeqStPerS<char>,
@@ -94,10 +96,7 @@ Errors: 12 total (4 struct/enum outside verus!, 4 Clone derived outside, 4 dummy
 Info: 4 total
    TopDownDPMtPer.rs:36: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    BottomUpDPMtPer.rs:42: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   BottomUpDPMtEph.rs:42: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    TopDownDPMtEph.rs:36: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-
-🎉 No proof holes found! All proofs are complete.
-quires an external body at this point.
+   BottomUpDPMtEph.rs:42: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
 
 🎉 No proof holes found! All proofs are complete.

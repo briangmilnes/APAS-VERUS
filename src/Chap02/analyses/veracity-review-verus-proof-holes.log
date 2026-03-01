@@ -1,18 +1,18 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap02
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap02/
 
 ✓ FibonacciHFScheduler.rs
    5 clean proof functions
 ℹ HFSchedulerMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:74: info: external_type_specification_accept_hole - external_type_specification with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:75: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:86: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:96: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:123: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:142: info: accept() - accept hole
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:154: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:176: info: external_body_accept_hole - external_body with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:18: info: struct_outside_verus_accept_hole - struct PoolState — outside verus! with accept hole comment
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:24: info: enum_outside_verus_accept_hole - enum TaskState — outside verus! with accept hole comment
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:74: info: external_type_specification_accept_hole - external_type_specification with accept hole comment
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:75: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:86: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:96: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:123: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:142: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:154: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:176: info: external_body_accept_hole - external_body with accept hole comment
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:18: info: struct_outside_verus_accept_hole - struct PoolState — outside verus! with accept hole comment
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:24: info: enum_outside_verus_accept_hole - enum TaskState — outside verus! with accept hole comment
    Info: 10 total
 
 ═══════════════════════════════════════════════════════════════

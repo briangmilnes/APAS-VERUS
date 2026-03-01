@@ -1,0 +1,986 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/experiments
+
+✓ ArrayVal.rs
+❌ ArrayVecSet.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/ArrayVecSet.rs:32: assume() - assume(a.len() == l);
+        22 |     fn for_on_array_with_sum(a: &mut [usize]) -> ()
+            ...
+        30 |             for i in iter: 0..l
+        31 |             {
+        33 |                 assert(i < a.len());
+        34 |                 a[i] = i;
+   Holes: 1 total
+      1 × assume()
+❌ CheckedI32.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/CheckedI32.rs:131: external_body - #[verifier::external_body]
+       132 |         pub exec fn add_value(&self, v2: i32) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/CheckedI32.rs:144: external_body - #[verifier::external_body]
+       145 |         pub exec fn add_checked(&self, v2: &CheckedI32) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/CheckedI32.rs:157: external_body - #[verifier::external_body]
+       158 |         pub exec fn sub_value(&self, v2: i32) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/CheckedI32.rs:170: external_body - #[verifier::external_body]
+       171 |         pub exec fn sub_checked(&self, v2: &CheckedI32) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/CheckedI32.rs:183: external_body - #[verifier::external_body]
+       184 |         pub exec fn mul_value(&self, v2: i32) -> (result: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/CheckedI32.rs:202: external_body - #[verifier::external_body]
+       203 |         pub exec fn mul_checked(&self, v2: &CheckedI32) -> (result: Self)
+   Holes: 6 total
+      6 × external_body
+❌ ForFor.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/ForFor.rs:36: assume() - assume(old(a).len() == a.len());
+        27 |       fn unprovable_array_for(a: &mut [u64]) -> (r: &[u64])
+            ...
+        34 |               {
+        35 | //                 assert(old(a).len() == a.len());  // unprovable
+        37 |                    a[i] = a[i];
+        38 | //                 assert(old(a).len() == a.len());  // unprovable
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/ForFor.rs:39: assume() - assume(old(a).len() == a.len());
+        27 |       fn unprovable_array_for(a: &mut [u64]) -> (r: &[u64])
+            ...
+        37 |                    a[i] = a[i];
+        38 | //                 assert(old(a).len() == a.len());  // unprovable
+        40 |               }
+        41 |               a
+   Holes: 2 total
+      2 × assume()
+✓ ForLoops.rs
+❌ HashCheckedU32.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/HashCheckedU32.rs:17: external_body - #[verifier::external_body]
+        18 |     fn hash<H: Hasher>(&self, state: &mut H) {
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/HashCheckedU32.rs:25: external_body - #[verifier::external_body]
+        26 |     fn eq(&self, other: &Self) -> bool {
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/HashCheckedU32.rs:39: admit() - { admit(); }
+        36 | pub broadcast proof fn axiom_CheckedU32_feq()
+            ...
+        37 |     requires #[trigger] CheckedU32_feq_trigger()
+        38 |     ensures obeys_feq_full::<CheckedU32>()
+        40 | 
+        41 | pub broadcast proof fn axiom_CheckedU32_key_model()
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/HashCheckedU32.rs:44: admit() - { admit(); }
+        41 | pub broadcast proof fn axiom_CheckedU32_key_model()
+            ...
+        42 |     requires #[trigger] CheckedU32_feq_trigger()
+        43 |     ensures obeys_key_model::<CheckedU32>()
+        45 | 
+        46 | pub broadcast group group_CheckedU32_axioms {
+   Holes: 4 total
+      2 × admit()
+      2 × external_body
+   Proof functions: 2 total (0 clean, 2 holed)
+✓ SetLoops.rs
+✓ ToVecProof.rs
+❌ VSTDLoopProofs.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/VSTDLoopProofs.rs:93: external_body - #[verifier::external_body] // The proof fails - break doesn'
+        94 | pub fn vec_length_loop_break(s: &Vec<u64>) -> (length: usize)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/VSTDLoopProofs.rs:184: external_body - #[verifier::external_body] // The proof fails so we turn it 
+       185 | pub fn vec_mem_for_vec(v: Vec<u64>, elt: u64) -> (result: bool)
+   Holes: 2 total
+      2 × external_body
+❌ WhileWhile.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/WhileWhile.rs:39: assume() - assume(a.len() == l);
+        28 |       fn unprovable_array_while(a: &mut [u64]) -> (r: &[u64])
+            ...
+        37 |               {
+        38 | //                  assert(a.len() == l); // unprovable
+        40 |                   a[i] = a[i];
+        41 | //                  assert(a.len() == l); // unprovable wo the assume
+   Holes: 1 total
+      1 × assume()
+✓ abstract_set_iter.rs
+❌ accept.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/accept.rs:37: admit() - admit();
+        34 | pub proof fn accept(b: bool)
+            ...
+        35 |     ensures b,
+        36 | {
+        38 | }
+        39 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/accept.rs:67: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        63 |     fn clone(&self) -> (result: Self)
+            ...
+        65 |     {
+        66 |         let result = AssumeBox { data: self.data.clone() };
+        68 |         result
+        69 |     }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/accept.rs:77: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        73 |     fn eq(&self, other: &Self) -> (r: bool)
+            ...
+        75 |     {
+        76 |         let r = self.data == other.data;
+        78 |         r
+        79 |     }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/accept.rs:42: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/accept.rs:105: info: accept() - accept hole
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/accept.rs:116: info: accept() - accept hole
+   Holes: 1 total
+      1 × admit()
+   Errors: 2 total (2 assume in eq/clone (Verus workaround))
+   Info: 3 total
+   Proof functions: 2 total (1 clean, 1 holed)
+✓ accept_external_body.rs
+✓ arc_clone_deref.rs
+❌ arc_rwlock_ninject.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/arc_rwlock_ninject.rs:85: assume() - assume(val == updates@[i as int].1); // clone preserves valu
+        52 | fn apply_updates<T: Clone + Send + Sync + 'static>(
+            ...
+        83 |             let val = updates[i].1.clone();
+        84 |             proof {
+        86 |             }
+        87 |             buf.set(pos, val);
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/arc_rwlock_ninject.rs:132: assume() - proof { assume(buf@ =~= source@); } // clone preserves view
+       113 | fn ninject_par<T: Clone + Send + Sync + 'static>(
+            ...
+       130 |     // Clone source into the result buffer.
+       131 |     let buf = source.clone();
+       133 | 
+       134 |     let lock = Arc::new(RwLock::<Vec<T>, NinjectPred<T>>::new(buf, Ghost(pred)));
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/arc_rwlock_ninject.rs:135: assume() - proof { assume(lock.pred() == pred); } // Arc::new preserves
+       113 | fn ninject_par<T: Clone + Send + Sync + 'static>(
+            ...
+       133 | 
+       134 |     let lock = Arc::new(RwLock::<Vec<T>, NinjectPred<T>>::new(buf, Ghost(pred)));
+       136 | 
+       137 |     // Split updates in half, cloning each entry.
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/arc_rwlock_ninject.rs:160: assume() - proof { assume((pos, val) == updates@[k as int]); } // clone
+       113 | fn ninject_par<T: Clone + Send + Sync + 'static>(
+            ...
+       158 |         let pos = updates[k].0;
+       159 |         let val = updates[k].1.clone();
+       161 |         if k < mid {
+       162 |             left.push((pos, val));
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/arc_rwlock_ninject.rs:171: assume() - proof { assume(lock1.pred() == pred); } // Arc::clone preser
+       113 | fn ninject_par<T: Clone + Send + Sync + 'static>(
+            ...
+       169 |     // Spawn two threads that race for the lock.
+       170 |     let lock1 = lock.clone();
+       172 |     let lock2 = lock.clone();
+       173 |     proof { assume(lock2.pred() == pred); }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/arc_rwlock_ninject.rs:173: assume() - proof { assume(lock2.pred() == pred); }
+       113 | fn ninject_par<T: Clone + Send + Sync + 'static>(
+            ...
+       171 |     proof { assume(lock1.pred() == pred); } // Arc::clone preserves pred
+       172 |     let lock2 = lock.clone();
+       174 | 
+       175 |     // Snapshot ghost views of left/right for closure requires.
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/arc_rwlock_ninject.rs:226: assume() - proof { assume(r@ =~= result@); } // clone preserves view
+       113 | fn ninject_par<T: Clone + Send + Sync + 'static>(
+            ...
+       224 |     }
+       225 |     let r = result.clone();
+       227 |     write_handle.release_write(result);
+       228 |     r
+   Holes: 7 total
+      7 × assume()
+❌ assume_spec_test.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/assume_spec_test.rs:34: assume_specification - pub assume_specification<V: Clone>[ TestIter::<V>::next ](it
+        28 |     open spec fn view(&self) -> (int, Seq<V>) {
+            ...
+        32 | 
+        33 | // Try to use assume_specification with requires on our own type
+        35 |     requires
+        36 |         iter_invariant(&old(it)),  // Try adding requires!
+   Holes: 1 total
+      1 × assume_specification
+✓ baseviewtypes.rs
+   7 clean proof functions
+✓ biconditional_spec_fun.rs
+✓ boxing_fns.rs
+   2 clean proof functions
+❌ checked_comm.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/checked_comm.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Hypothesis: Can we prove commutativity lemmas for checked arithmetic?
+         3 | //! NOTE: These proofs are now in vstdplus/checked_int.rs and vstdplus/checked_nat.rs.
+   Errors: 1 total (1 not verusified)
+✓ checked_signed_int.rs
+❌ checked_u32.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/checked_u32.rs:85: external_body - #[verifier::external_body]
+        86 |     fn from_int(i: Ghost<int>) -> (checked: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/checked_u32.rs:99: external_body - #[verifier::external_body]
+       100 |     fn add_checked(&self, other: &Self) -> (sum: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/checked_u32.rs:110: external_body - #[verifier::external_body]
+       111 |     fn mul_checked(&self, other: &Self) -> (product: Self)
+   Holes: 3 total
+      3 × external_body
+✓ checked_unsigned_int.rs
+❌ clone.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/clone.rs:35: external_body - #[verifier::external_body]
+        36 |     fn test_clone_no_assert_return_eq<T: Clone + View + PartialEq>(x: &T) -> (x_clone: T)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/clone.rs:46: external_body - #[verifier::external_body]
+        47 |     fn test_clone_no_assert_return_eq_view<T: Clone + View + PartialEq>(x: &T) -> (x_clone: T)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/clone.rs:58: external_body - #[verifier::external_body]
+        59 |     fn test_clone_assert_return<T: Clone + View + PartialEq>(x: T) -> (eq_x_clone: (bool,T))
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/clone.rs:77: external_body - #[verifier::external_body]
+        78 |     fn test_clone_with_assert<T: Clone + View + PartialEq>(x: &T)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/clone.rs:96: external_body - #[verifier::external_body]
+        97 |     fn test_2_concrete_eq<T: Clone + View + Eq>(x: &T)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/clone.rs:109: external_body - #[verifier::external_body]
+       110 |     fn test_3_extensional_equality<T: Clone + View>(x: &T)
+   Holes: 6 total
+      6 × external_body
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ clone_fn.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/clone_fn.rs:16: assume() - assume(forall|x: &T| #[trigger] res.requires((x,)));
+         9 | pub fn clone_fn1<T, U, F: Fn(&T) -> U + Clone>(f: F) -> (res: F)
+            ...
+        14 | {
+        15 |     let res = f.clone();
+        17 |     res
+        18 | }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/clone_fn.rs:29: assume() - assume(forall|x: &T| f.requires((x,)) == res.requires((x,)))
+        21 | pub fn clone_fn2<T, U, F: Fn(&T) -> U + Clone>(f: F) -> (res: F)
+            ...
+        27 | {
+        28 |     let res = f.clone();
+        30 |     assume(forall|x: &T, r: U| f.ensures((x,), r) == res.ensures((x,), r));
+        31 |     res
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/clone_fn.rs:30: assume() - assume(forall|x: &T, r: U| f.ensures((x,), r) == res.ensures
+        21 | pub fn clone_fn2<T, U, F: Fn(&T) -> U + Clone>(f: F) -> (res: F)
+            ...
+        28 |     let res = f.clone();
+        29 |     assume(forall|x: &T| f.requires((x,)) == res.requires((x,)));
+        31 |     res
+        32 | }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/clone_fn.rs:43: assume() - assume(forall|x: &T, y: &T| f.requires((x, y)) == res.requir
+        35 | pub fn clone_fn_binary<T, F: Fn(&T, &T) -> T + Clone>(f: F) -> (res: F)
+            ...
+        41 | {
+        42 |     let res = f.clone();
+        44 |     assume(forall|x: &T, y: &T, r: T| f.ensures((x, y), r) == res.ensures((x, y), r));
+        45 |     res
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/clone_fn.rs:44: assume() - assume(forall|x: &T, y: &T, r: T| f.ensures((x, y), r) == re
+        35 | pub fn clone_fn_binary<T, F: Fn(&T, &T) -> T + Clone>(f: F) -> (res: F)
+            ...
+        42 |     let res = f.clone();
+        43 |     assume(forall|x: &T, y: &T| f.requires((x, y)) == res.requires((x, y)));
+        45 |     res
+        46 | }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/clone_fn.rs:57: assume() - assume(forall|x: &T| f.requires((x,)) == res.requires((x,)))
+        49 | pub fn clone_predicate<T, F: Fn(&T) -> bool + Clone>(f: F) -> (res: F)
+            ...
+        55 | {
+        56 |     let res = f.clone();
+        58 |     assume(forall|x: &T, r: bool| f.ensures((x,), r) == res.ensures((x,), r));
+        59 |     res
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/clone_fn.rs:58: assume() - assume(forall|x: &T, r: bool| f.ensures((x,), r) == res.ensu
+        49 | pub fn clone_predicate<T, F: Fn(&T) -> bool + Clone>(f: F) -> (res: F)
+            ...
+        56 |     let res = f.clone();
+        57 |     assume(forall|x: &T| f.requires((x,)) == res.requires((x,)));
+        59 |     res
+        60 | }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/clone_fn.rs:63: external_body - #[verifier::external_body]
+        64 | pub fn clone_fn_axiom<T, U, F: Fn(&T) -> U + Clone>(f: F) -> (res: F)
+   Holes: 8 total
+      7 × assume()
+      1 × external_body
+❌ clone_plus.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/clone_plus.rs:18: external_body - #[verifier::external_body]
+        19 |     fn test_clone_view_no_feq<T: Clone + View>(x: &T) {
+   Holes: 1 total
+      1 × external_body
+✓ clone_plus_vs_deep_clone.rs
+✓ collect.rs
+✓ collect2.rs
+   3 clean proof functions
+❌ collect_deep_view.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/collect_deep_view.rs:284: assume() - assume(k == pairs@[i as int].0);
+       243 |     pub fn collect<K: DeepView<V = K> + Clone + Eq + PartialEq, V: DeepView<V = V> + Clone + Eq + PartialEq>(
+            ...
+       282 |             //   axiom_cloned_implies_eq_owned::<V>(pairs@[i as int].1, v);
+       283 |             proof {
+       285 |                 assume(v == pairs@[i as int].1);
+       286 |             }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/collect_deep_view.rs:285: assume() - assume(v == pairs@[i as int].1);
+       243 |     pub fn collect<K: DeepView<V = K> + Clone + Eq + PartialEq, V: DeepView<V = V> + Clone + Eq + PartialEq>(
+            ...
+       283 |             proof {
+       284 |                 assume(k == pairs@[i as int].0);
+       286 |             }
+       287 |             match vec_find_key(&collected, &k) {
+   Holes: 2 total
+      2 × assume()
+   Proof functions: 9 total (9 clean, 0 holed)
+✓ deep_view_2_tuple.rs
+   2 clean proof functions
+✓ deep_view_struct.rs
+✓ derive_clone_enum_in_verus.rs
+✓ derive_clone_struct_in_verus.rs
+✓ derive_clone_struct_with_vec_in_verus.rs
+✓ derive_copy_enum_in_verus.rs
+✓ derive_copy_struct_in_verus.rs
+✓ derive_debug_enum_in_verus.rs
+✓ derive_debug_struct_in_verus.rs
+✓ derive_debug_struct_with_vec_in_verus.rs
+✓ derive_default_enum_in_verus.rs
+✓ derive_default_struct_in_verus.rs
+✓ derive_default_struct_with_vec_in_verus.rs
+✓ derive_display_enum_in_verus.rs
+✓ derive_display_struct_in_verus.rs
+✓ derive_eq_enum_in_verus.rs
+✓ derive_eq_struct_in_verus.rs
+✓ derive_eq_struct_with_vec_in_verus.rs
+✓ derive_hash_enum_in_verus.rs
+✓ derive_hash_struct_in_verus.rs
+✓ derive_hash_struct_with_vec_in_verus.rs
+✓ derive_ord_enum_in_verus.rs
+✓ derive_ord_struct_in_verus.rs
+✓ derive_ord_struct_with_vec_in_verus.rs
+✓ derive_partial_eq_enum_in_verus.rs
+✓ derive_partial_eq_struct_in_verus.rs
+✓ derive_partial_eq_struct_with_vec_in_verus.rs
+✓ derive_partial_ord_enum_in_verus.rs
+✓ derive_partial_ord_struct_in_verus.rs
+✓ derive_partial_ord_struct_with_vec_in_verus.rs
+❌ eq_rel.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/eq_rel.rs:102: assume() - assume(cloned(*x, *x_clone) ==> *x == *x_clone);
+       100 |          proof fn axiom_cloned_implies_eq(x: &Self, x_clone: &Self) {
+       101 |              // This is an AXIOM for generic T - we assume it
+       103 |          }
+       104 | 
+   Holes: 1 total
+      1 × assume()
+❌ executable_use_of_int.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/executable_use_of_int.rs:19: external_body - #[verifier::external_body]
+        20 | pub fn vec_int_succeeds(s: Vec<int>) -> (result: usize)
+   Holes: 1 total
+      1 × external_body
+ℹ external_body_accept_hole.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/external_body_accept_hole.rs:35: info: external_body_accept_hole - external_body with accept hole comment
+   Info: 1 total
+❌ f64_bits_sort.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/f64_bits_sort.rs:76: assume() - assume(vstd::relations::strongly_connected::<f64>(leq));
+        65 | proof fn axiom_f64_le_total_ordering()
+            ...
+        74 |     by {}
+        75 |     // Strongly connected: for all u64 x, y, x <= y || y <= x. True but Verus needs help.
+        77 |     // Antisymmetric: to_bits(a) == to_bits(b) implies a == b. True for IEEE 754 but
+        78 |     // unprovable since Verus treats f64 as uninterpreted.
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/f64_bits_sort.rs:79: assume() - assume(vstd::relations::antisymmetric::<f64>(leq));
+        65 | proof fn axiom_f64_le_total_ordering()
+            ...
+        77 |     // Antisymmetric: to_bits(a) == to_bits(b) implies a == b. True for IEEE 754 but
+        78 |     // unprovable since Verus treats f64 as uninterpreted.
+        80 | }
+        81 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/f64_bits_sort.rs:92: external_body - #[verifier::external_body]
+        93 | fn f64_le(a: f64, b: f64) -> (r: bool)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/f64_bits_sort.rs:203: assume() - proof { assume(all_well_behaved(v@)); }
+       198 | fn test_sort() {
+            ...
+       201 |     v.push(1.0);
+       202 |     v.push(2.0);
+       204 |     insertion_sort_f64(&mut v);
+       205 |     assert(v@.len() == 3);
+   Holes: 4 total
+      3 × assume()
+      1 × external_body
+   Proof functions: 2 total (1 clean, 1 holed)
+❌ f64_float_cmp_sort.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/f64_float_cmp_sort.rs:85: assume() - assume(spec_f64_sorted(v@.take(i as int + 1)));
+        46 | fn insertion_sort_f64(v: &mut Vec<f64>)
+            ...
+        83 |             // This assume is the cost of uninterpreted le_ensures: the solver can't
+        84 |             // track ordering through swaps. With the bits approach this is provable.
+        86 |         }
+        87 |         i += 1;
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/f64_float_cmp_sort.rs:97: assume() - assume(f64::float_wf(a));
+        93 | fn test_comparison_bridge() {
+            ...
+        95 |     let b: f64 = 2.0;
+        96 |     proof {
+        98 |         assume(f64::float_wf(b));
+        99 |     }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/f64_float_cmp_sort.rs:98: assume() - assume(f64::float_wf(b));
+        93 | fn test_comparison_bridge() {
+            ...
+        96 |     proof {
+        97 |         assume(f64::float_wf(a));
+        99 |     }
+       100 |     if a <= b {
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/f64_float_cmp_sort.rs:112: assume() - assume(f64::float_wf(a));
+       108 | fn test_strong_connectivity() {
+            ...
+       110 |     let b: f64 = 2.0;
+       111 |     proof {
+       113 |         assume(f64::float_wf(b));
+       114 |     }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/f64_float_cmp_sort.rs:113: assume() - assume(f64::float_wf(b));
+       108 | fn test_strong_connectivity() {
+            ...
+       111 |     proof {
+       112 |         assume(f64::float_wf(a));
+       114 |     }
+       115 |     if !(a <= b) {
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/f64_float_cmp_sort.rs:129: assume() - proof { assume(all_float_wf::<f64>(v@)); }
+       124 | fn test_sort() {
+            ...
+       127 |     v.push(1.0);
+       128 |     v.push(2.0);
+       130 |     insertion_sort_f64(&mut v);
+       131 |     assert(v@.len() == 3);
+   Holes: 6 total
+      6 × assume()
+❌ f64_sort.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/f64_sort.rs:63: assume() - assume(vstd::relations::antisymmetric::<f64>(leq));
+        54 | proof fn axiom_f64_le_total_ordering()
+            ...
+        61 | 
+        62 |     // Equal bits =/= equal f64 in Verus's uninterpreted model.
+        64 | 
+        65 |     assert forall|a: f64, b: f64, c: f64|
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/f64_sort.rs:71: assume() - assume(vstd::relations::strongly_connected::<f64>(leq));
+        54 | proof fn axiom_f64_le_total_ordering()
+            ...
+        69 | 
+        70 |     // u64 is totally ordered, so to_bits values are always comparable.
+        72 | }
+        73 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/f64_sort.rs:76: external_body - #[verifier::external_body]
+        77 | fn f64_le(a: f64, b: f64) -> (r: bool)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/f64_sort.rs:190: assume() - proof { assume(all_well_behaved(v@)); }
+       185 | fn test_sort() {
+            ...
+       188 |     v.push(1.0);
+       189 |     v.push(2.0);
+       191 |     insertion_sort_f64(&mut v);
+       192 |     assert(v@.len() == 3);
+   Holes: 4 total
+      3 × assume()
+      1 × external_body
+   Proof functions: 1 total (0 clean, 1 holed)
+✓ ghost_type_invariant.rs
+   1 clean proof function
+✓ hash_set_iter.rs
+❌ hash_set_modern_pattern.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/hash_set_modern_pattern.rs:123: assume() - assume(obeys_key_model::<u64>());
+       119 | fn test_hashset_with_view_comparison() {
+            ...
+       121 |     use vstd::std_specs::hash::obeys_key_model;
+       122 | 
+       124 | 
+       125 |     let mut set: HashSetWithView<u64> = HashSetWithView::new();
+   Holes: 1 total
+      1 × assume()
+❌ hash_set_with_view_plus_loops.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/hash_set_with_view_plus_loops.rs:28: external_body - #[verifier::external_body]
+        29 | fn vec_to_vec_copy_fails(source: &Vec<u32>) -> (dest: Vec<u32>)
+   Holes: 1 total
+      1 × external_body
+✓ invariant_proof_test.rs
+   1 clean proof function
+✓ minimal_iter.rs
+✓ modify_a_ghost_struct.rs
+   4 clean proof functions
+✓ mut_refs_and_mut_returns.rs
+✓ parapair_closure_ensures.rs
+✓ parapair_move_closure_ensures.rs
+✓ parapair_named_closure.rs
+✓ parapair_toplevel_closure.rs
+❌ pervasives.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/pervasives.rs:43: external_body - #[verifier::external_body]
+        44 |     pub proof fn assert_unchecked(b: bool)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/pervasives.rs:59: external_body - #[verifier::external_body]
+        60 |     pub proof fn claim_anything<A>(a: A, b: A)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/pervasives.rs:89: assume(false) - assume(false); — needs diverge(); use `assume(false); diverge()`
+        86 |     pub proof fn using_assume_proves_false()
+            ...
+        87 |         ensures false,
+        88 |     {
+        90 |     }
+        91 | 
+   Holes: 3 total
+      1 × assume(false)
+      2 × external_body
+   Proof functions: 6 total (5 clean, 1 holed)
+✓ possession.rs
+✓ proof_fn_in_trait.rs
+✓ proven_partialeq.rs
+❌ pub_crate_test.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/pub_crate_test.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Test Rust's restricted pub visibility modifiers
+         3 | 
+   Errors: 1 total (1 not verusified)
+❌ seq_array_equality.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/seq_array_equality.rs:7: assume_specification - pub assume_specification<T: Clone> [<[T]>::to_vec] (s: &[T])
+         5 | verus! {
+         6 | 
+         8 |     ensures
+         9 |         result@ == s@,
+   Holes: 1 total
+      1 × assume_specification
+❌ seq_for_basic_proofs.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/seq_for_basic_proofs.rs:382: admit() - admit();
+       358 |     pub fn i64_array_sum_non_negative_down_for(s: &[i64]) -> (result: bool)
+            ...
+       380 |             assert(s@[i as int] as int + seq_i64_sum_down(s@.skip((i + 1) as int))
+       381 |                    == seq_i64_sum_down(s@.skip(i as int))) by {
+       383 |             };
+       384 |             sum = s[i] as i128 + sum;
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/seq_for_basic_proofs.rs:416: admit() - admit();
+       392 |     pub fn i64_vec_sum_non_negative_down_for(s: Vec<i64>) -> (result: bool)
+            ...
+       414 |             assert(s@[i as int] as int + seq_i64_sum_down(s@.skip((i + 1) as int))
+       415 |                    == seq_i64_sum_down(s@.skip(i as int))) by {
+       417 |             };
+       418 |             sum = s[i] as i128 + sum;
+   Holes: 2 total
+      2 × admit()
+   Proof functions: 2 total (2 clean, 0 holed)
+❌ seq_loop_basic_proofs.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/seq_loop_basic_proofs.rs:442: admit() - admit();
+       418 |     pub fn i64_array_sum_non_negative_down_loop(s: &[i64]) -> (result: bool)
+            ...
+       440 |             assert(s@[i as int] as int + seq_i64_sum_down(s@.skip((i + 1) as int))
+       441 |                    == seq_i64_sum_down(s@.skip(i as int))) by {
+       443 |             };
+       444 |             sum = s[i] as i128 + sum;
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/seq_loop_basic_proofs.rs:476: admit() - admit();
+       452 |     pub fn i64_vec_sum_non_negative_down_loop(s: Vec<i64>) -> (result: bool)
+            ...
+       474 |             assert(s@[i as int] as int + seq_i64_sum_down(s@.skip((i + 1) as int))
+       475 |                    == seq_i64_sum_down(s@.skip(i as int))) by {
+       477 |             };
+       478 |             sum = s[i] as i128 + sum;
+   Holes: 2 total
+      2 × admit()
+   Proof functions: 2 total (2 clean, 0 holed)
+❌ seq_set_exec.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/seq_set_exec.rs:78: external_body - #[verifier::external_body]
+        79 | pub fn sum_seq_u32_no_overflow(seq: &Vec<u32>) -> (sum: u32)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/seq_set_exec.rs:85: assume() - assume(((sum + seq[i as int]) as int) < u32::MAX); // Does n
+        79 | pub fn sum_seq_u32_no_overflow(seq: &Vec<u32>) -> (sum: u32)
+            ...
+        83 |     let mut sum = 0;
+        84 |     for i in 0..seq.len() {
+        86 |         sum = sum + seq[i];
+        87 |     }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/seq_set_exec.rs:126: assume() - assume(forall |x: u32| s@.contains(x) <==> seq@.map(|_i: int
+       117 | pub fn sum_set_CheckedU32(s: &SetStEph<u32>) -> (sum: CheckedU32)
+            ...
+       124 |     let seq = s.to_seq();
+       125 |     assert(seq@.no_duplicates());
+       127 | 
+       128 |     let ghost mapped_seq = seq@.map(|_i: int, v: u32| v as nat);
+   Holes: 3 total
+      2 × assume()
+      1 × external_body
+   Proof functions: 3 total (3 clean, 0 holed)
+❌ seq_vec_equality.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/seq_vec_equality.rs:7: external_body - #[verifier::external_body] // The proof fails!
+         8 | pub fn vec_copy_generic_equality<T: Copy>(s: &Vec<T>) -> (result: Vec<T>)
+   Holes: 1 total
+      1 × external_body
+❌ seq_while_basic_proofs.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/seq_while_basic_proofs.rs:424: admit() - admit();
+       403 |     pub fn i64_array_sum_non_negative_down_while(s: &[i64]) -> (result: bool)
+            ...
+       422 |             assert(s@[i as int] as int + seq_i64_sum_down(s@.skip((i + 1) as int))
+       423 |                    == seq_i64_sum_down(s@.skip(i as int))) by {
+       425 |             };
+       426 |             sum = s[i] as i128 + sum;
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/seq_while_basic_proofs.rs:456: admit() - admit();
+       435 |     pub fn i64_vec_sum_non_negative_down_while(s: Vec<i64>) -> (result: bool)
+            ...
+       454 |             assert(s@[i as int] as int + seq_i64_sum_down(s@.skip((i + 1) as int))
+       455 |                    == seq_i64_sum_down(s@.skip(i as int))) by {
+       457 |             };
+       458 |             sum = s[i] as i128 + sum;
+   Holes: 2 total
+      2 × admit()
+   Proof functions: 2 total (2 clean, 0 holed)
+✓ set_len_empty_both_ways.rs
+   4 clean proof functions
+❌ sigma_pi.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/sigma_pi.rs:76: admit() - proof fn lemma_add_commutative() { admit(); }
+        72 |         proof fn add_commutative_at(n1: i32, n2: i32, n3: i32)
+            ...
+        74 |         {}
+        75 | 
+        77 | 
+        78 |         proof fn mul_commutative_at(n1: i32, n2: i32, n3: i32)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/sigma_pi.rs:80: admit() - { admit() }
+        78 |         proof fn mul_commutative_at(n1: i32, n2: i32, n3: i32)
+        79 |             ensures Self::mul(Self::mul(n3, n2), n1) == Self::mul(Self::mul(n3, n1), n2)
+        81 | 
+        82 |         proof fn lemma_mul_commutative() { admit(); }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/sigma_pi.rs:82: admit() - proof fn lemma_mul_commutative() { admit(); }
+        78 |         proof fn mul_commutative_at(n1: i32, n2: i32, n3: i32)
+            ...
+        80 |         { admit() }
+        81 | 
+        83 |     }
+        84 | 
+   Holes: 3 total
+      3 × admit()
+✓ signed_int.rs
+❌ simple_hash_set_iter.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/simple_hash_set_iter.rs:89: assume() - assume(it@.1.map(|i: int, k: V| k@).to_set() == self@);
+        84 |         fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, V>)
+            ...
+        87 |             // HashSetWithViewPlusTrait provides it@.0 == 0 and it@.1.no_duplicates() unconditionally
+        88 |             // The mapping property still needs to be assumed
+        90 |             it
+        91 |         }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/simple_hash_set_iter.rs:144: assume() - assume(s2@ == s1@);
+        95 |     pub fn simple_hash_set_copy_loop<V: Clone + View + std::cmp::Eq + std::hash::Hash>(s1: &SimpleHashSet<V>) -> (s2: SimpleHashSet<V>)
+            ...
+       142 |                         assert(s1_seq.take(s1_seq.len() as int).map(|i: int, k: V| k@).to_set() ==
+       143 |                                s1_seq.map(|i: int, k: V| k@).to_set());
+       145 |                     }
+       146 |                     return s2;
+   Holes: 2 total
+      2 × assume()
+❌ simple_seq_iter.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/simple_seq_iter.rs:150: assume() - assume(self.pos <= self.vec.len());
+       122 |         fn next(&mut self) -> (result: Option<V>)
+            ...
+       148 |             } else {
+       149 |                 // Without a requires on next
+       151 |                 None
+       152 |             }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ simple_set_iter.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/simple_set_iter.rs:91: assume() - assume(self.elements@[i as int] == *v);
+        82 |         fn mem(&self, v: &V) -> (result: bool)
+            ...
+        89 |             {
+        90 |                 if self.elements[i] == *v {
+        92 |                     return true;
+        93 |                 }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/simple_set_iter.rs:94: assume() - assume(self.elements@[i as int] != *v);
+        82 |         fn mem(&self, v: &V) -> (result: bool)
+            ...
+        92 |                     return true;
+        93 |                 }
+        95 |             }
+        96 |             false
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/simple_set_iter.rs:214: assume() - assume(self.pos <= self.vec.len());
+       186 |         fn next(&mut self) -> (result: Option<V>)
+            ...
+       212 |             } else {
+       213 |                 // Without a requires on next this is required, see assumption_free_next.
+       215 |                 None
+       216 |             }
+   Holes: 3 total
+      3 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ spec_fun_argument.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/spec_fun_argument.rs:28: external_body - #[verifier::external_body]
+        29 | fn vec_filter_predicate_provenence_completeness_loop<V: Clone + Eq>(
+   Holes: 1 total
+      1 × external_body
+✓ spec_loop.rs
+❌ struct_construction_test.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/struct_construction_test.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Test whether public fields allow direct construction from outside the module
+         3 | 
+   Errors: 1 total (1 not verusified)
+✓ supertrait.rs
+❌ tcb_foul.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/tcb_foul.rs:32: external_body - #[verifier::external_body]
+        33 | pub fn lying_function() -> (result: u64)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/tcb_foul.rs:53: external_body - #[verifier::external_body]
+        54 | pub fn lying_increment(x: &mut u64)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/tcb_foul.rs:77: assume() - assume(x == 42);  // Just assume a falsehood
+        73 | pub fn tcb_foul_assume() {
+            ...
+        75 | 
+        76 |     proof {
+        78 |         assert(x == 42);  // Now we can "prove" it
+        79 |     }
+   Holes: 3 total
+      1 × assume()
+      2 × external_body
+❌ test_feq.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/test_feq.rs:94: admit() - { admit(); }
+        91 |     broadcast proof fn axiom_point_feq()
+            ...
+        92 |         requires #[trigger] point_feq_trigger()
+        93 |         ensures obeys_feq_full::<Point>()
+        95 | 
+        96 |     broadcast proof fn axiom_color_feq()
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/test_feq.rs:99: admit() - { admit(); }
+        96 |     broadcast proof fn axiom_color_feq()
+            ...
+        97 |         requires #[trigger] color_feq_trigger()
+        98 |         ensures obeys_feq_full::<Color>()
+       100 | 
+       101 |     broadcast proof fn axiom_inttree_feq()
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/test_feq.rs:104: admit() - { admit(); }
+       101 |     broadcast proof fn axiom_inttree_feq()
+            ...
+       102 |         requires #[trigger] inttree_feq_trigger()
+       103 |         ensures obeys_feq_full::<IntTree>()
+       105 | 
+       106 |     broadcast group group_feq_axioms {
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/test_feq.rs:166: external_body - #[verifier::external_body]
+       167 |     fn test_exec_eq_implies_view_eq<T: Eq + View + Clone + Sized>(x: &T, y: &T)
+   Holes: 4 total
+      3 × admit()
+      1 × external_body
+   Proof functions: 3 total (0 clean, 3 holed)
+❌ test_feq_insertion_sort.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/test_feq_insertion_sort.rs:49: assume() - assume(cmp_result == v@[i as int].cmp_spec(&v@[(i + 1) as in
+        28 |     pub fn is_sorted<T: Ord + Clone + Sized>(v: &Vec<T>) -> (sorted: bool)
+            ...
+        47 |             let cmp_result = v[i].cmp(&v[i + 1]);
+        48 |             proof {
+        50 |             }
+        51 |             if matches!(cmp_result, Ordering::Greater) {
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/test_feq_insertion_sort.rs:55: assume() - assume(forall|a: int, b: int| 0 <= a < b <= (i + 1) as int =
+        28 |     pub fn is_sorted<T: Ord + Clone + Sized>(v: &Vec<T>) -> (sorted: bool)
+            ...
+        53 |             }
+        54 |             proof {
+        56 |             }
+        57 |             i = i + 1;
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/test_feq_insertion_sort.rs:96: assume() - assume(cmp_result == a@[(down - 1) as int].cmp_spec(&a@[down
+        62 |     pub fn insertion_sort_while<T: Ord + Copy + Sized>(a: &mut Vec<T>)
+            ...
+        94 |                 let cmp_result = a[down - 1].cmp(&a[down]);
+        95 |                 proof {
+        97 |                 }
+        98 |                 match cmp_result {
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/test_feq_insertion_sort.rs:112: assume() - assume(forall|i: int, j: int| 0 <= i < j < up as int ==> a@[
+        62 |     pub fn insertion_sort_while<T: Ord + Copy + Sized>(a: &mut Vec<T>)
+            ...
+       110 |             up = up + 1;
+       111 |             proof {
+       113 |             }
+       114 |         }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/test_feq_insertion_sort.rs:116: assume() - assume(sorted_spec(a@));
+        62 |     pub fn insertion_sort_while<T: Ord + Copy + Sized>(a: &mut Vec<T>)
+            ...
+       114 |         }
+       115 |         proof {
+       117 |         }
+       118 |     }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/test_feq_insertion_sort.rs:165: assume() - assume(cmp_result == a@[(down - 1) as int].cmp_spec(&a@[down
+       121 |     pub fn insertion_sort_loop<T: Ord + Copy + Sized>(a: &mut Vec<T>)
+            ...
+       163 |                 let cmp_result = a[down - 1].cmp(&a[down]);
+       164 |                 proof {
+       166 |                 }
+       167 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/test_feq_insertion_sort.rs:182: assume() - assume(forall|i: int, j: int| 0 <= i < j < (up + 1) as int =
+       121 |     pub fn insertion_sort_loop<T: Ord + Copy + Sized>(a: &mut Vec<T>)
+            ...
+       180 | 
+       181 |             proof {
+       183 |             }
+       184 | 
+   Holes: 7 total
+      7 × assume()
+✓ test_test.rs
+❌ test_verify_one_file.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/test_verify_one_file.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Experiment: Can we use verus's test_verify_one_file! macro in APAS-VERUS?
+         3 | //!
+   Errors: 1 total (1 not verusified)
+❌ total_ord_gen.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen.rs:45: assume() - proof fn axiom_eq_reflexive(x: &Self) { assume(*x == *x); }
+        40 |         proof fn axiom_le_total(x: &Self, y: &Self) ensures x.le_spec(y) || y.le_spec(x);
+            ...
+        43 | // Generic implementation - axioms are assumed.
+        44 |         impl<T: PartialEq + Eq + Sized + View + Clone> TotalOrdGen for T {
+        46 |             proof fn axiom_eq_symmetric(x: &Self, y: &Self) { assume((*x == *y) == (*y == *x)); }
+        47 |             proof fn axiom_eq_transitive(x: &Self, y: &Self, z: &Self) { assume(*x == *y && *y == *z ==> *x == *z); }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen.rs:46: assume() - proof fn axiom_eq_symmetric(x: &Self, y: &Self) { assume((*x
+        44 |         impl<T: PartialEq + Eq + Sized + View + Clone> TotalOrdGen for T {
+        45 |             proof fn axiom_eq_reflexive(x: &Self) { assume(*x == *x); }
+        47 |             proof fn axiom_eq_transitive(x: &Self, y: &Self, z: &Self) { assume(*x == *y && *y == *z ==> *x == *z); }
+        48 |             proof fn axiom_eq_view(x: &Self, y: &Self) { assume(*x == *y ==> x@ == y@); }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen.rs:47: assume() - proof fn axiom_eq_transitive(x: &Self, y: &Self, z: &Self) {
+        45 |             proof fn axiom_eq_reflexive(x: &Self) { assume(*x == *x); }
+        46 |             proof fn axiom_eq_symmetric(x: &Self, y: &Self) { assume((*x == *y) == (*y == *x)); }
+        48 |             proof fn axiom_eq_view(x: &Self, y: &Self) { assume(*x == *y ==> x@ == y@); }
+        49 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen.rs:48: assume() - proof fn axiom_eq_view(x: &Self, y: &Self) { assume(*x == *y
+        46 |             proof fn axiom_eq_symmetric(x: &Self, y: &Self) { assume((*x == *y) == (*y == *x)); }
+        47 |             proof fn axiom_eq_transitive(x: &Self, y: &Self, z: &Self) { assume(*x == *y && *y == *z ==> *x == *z); }
+        49 | 
+        50 |             proof fn axiom_cloned_implies_eq(x: &Self, x_clone: &Self) {
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen.rs:51: assume() - assume(cloned(*x, *x_clone) ==> *x == *x_clone);
+        49 | 
+        50 |             proof fn axiom_cloned_implies_eq(x: &Self, x_clone: &Self) {
+        52 |             }
+        53 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen.rs:60: assume() - proof fn axiom_le_reflexive(x: &Self) { assume(x.le_spec(x))
+        58 | 
+        59 |             open spec fn le_spec(&self, other: &Self) -> bool { arbitrary() }
+        61 |             proof fn axiom_le_antisymmetric(x: &Self, y: &Self) { assume(x.le_spec(y) && y.le_spec(x) ==> *x == *y); }
+        62 |             proof fn axiom_le_transitive(x: &Self, y: &Self, z: &Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen.rs:61: assume() - proof fn axiom_le_antisymmetric(x: &Self, y: &Self) { assume
+        59 |             open spec fn le_spec(&self, other: &Self) -> bool { arbitrary() }
+        60 |             proof fn axiom_le_reflexive(x: &Self) { assume(x.le_spec(x)); }
+        62 |             proof fn axiom_le_transitive(x: &Self, y: &Self, z: &Self)
+        63 |              { assume(x.le_spec(y) && y.le_spec(z) ==> x.le_spec(z)); }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen.rs:63: assume() - { assume(x.le_spec(y) && y.le_spec(z) ==> x.le_spec(z)); }
+        61 |             proof fn axiom_le_antisymmetric(x: &Self, y: &Self) { assume(x.le_spec(y) && y.le_spec(x) ==> *x == *y); }
+        62 |             proof fn axiom_le_transitive(x: &Self, y: &Self, z: &Self)
+        64 |             proof fn axiom_le_total(x: &Self, y: &Self) { assume(x.le_spec(y) || y.le_spec(x)); }
+        65 |         }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen.rs:64: assume() - proof fn axiom_le_total(x: &Self, y: &Self) { assume(x.le_sp
+        62 |             proof fn axiom_le_transitive(x: &Self, y: &Self, z: &Self)
+        63 |              { assume(x.le_spec(y) && y.le_spec(z) ==> x.le_spec(z)); }
+        65 |         }
+        66 | 
+   Holes: 9 total
+      9 × assume()
+❌ total_ord_gen_axioms.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen_axioms.rs:31: admit() - admit(); // Cannot prove for generic T
+        27 |     broadcast proof fn axiom_eq_transitive<T: TotalOrdGenAxioms>()
+            ...
+        29 |         ensures forall|x: T, y: T, z: T| x == y && y == z ==> #[trigger] (x == z)
+        30 |     {
+        32 |     }
+        33 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen_axioms.rs:38: admit() - admit(); // Cannot prove for generic T
+        34 |     broadcast proof fn axiom_eq_view<T: TotalOrdGenAxioms>()
+            ...
+        36 |         ensures forall|x: T, y: T| x == y ==> #[trigger] (x@ == y@)
+        37 |     {
+        39 |     }
+        40 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen_axioms.rs:46: admit() - admit(); // Cannot prove for generic T
+        42 |     broadcast proof fn axiom_cloned_implies_eq<T: TotalOrdGenAxioms>()
+            ...
+        44 |         ensures forall|x: T, x_clone: T| cloned(x, x_clone) ==> #[trigger] (x == x_clone)
+        45 |     {
+        47 |     }
+        48 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen_axioms.rs:54: admit() - admit(); // le_spec is admit()
+        50 |     broadcast proof fn axiom_le_reflexive<T: TotalOrdGenAxioms>()
+            ...
+        52 |         ensures forall|x: T| #[trigger] x.le_spec(&x)
+        53 |     {
+        55 |     }
+        56 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen_axioms.rs:61: admit() - admit(); // Cannot prove for arbitrary le_spec
+        57 |     broadcast proof fn axiom_le_antisymmetric<T: TotalOrdGenAxioms>()
+            ...
+        59 |         ensures forall|x: T, y: T| x.le_spec(&y) && y.le_spec(&x) ==> #[trigger] (x == y)
+        60 |     {
+        62 |     }
+        63 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen_axioms.rs:68: admit() - admit(); // Cannot prove for arbitrary le_spec
+        64 |     broadcast proof fn axiom_le_transitive<T: TotalOrdGenAxioms>()
+            ...
+        66 |         ensures forall|x: T, y: T, z: T| x.le_spec(&y) && #[trigger] y.le_spec(&z) ==> x.le_spec(&z)
+        67 |     {
+        69 |     }
+        70 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/total_ord_gen_axioms.rs:75: admit() - admit(); // Cannot prove for arbitrary le_spec
+        71 |     broadcast proof fn axiom_le_total<T: TotalOrdGenAxioms>()
+            ...
+        73 |         ensures forall|x: T, y: T| #[trigger] x.le_spec(&y) || y.le_spec(&x)
+        74 |     {
+        76 |     }
+        77 | 
+   Holes: 7 total
+      7 × admit()
+   Proof functions: 7 total (0 clean, 7 holed)
+✓ trait_decreases.rs
+❌ tree_mut_data_updates.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/tree_mut_data_updates.rs:70: assume() - assume(c < u64::MAX);
+        55 |     fn insert(link: Link, key: u64) -> (result: Link)
+            ...
+        68 |                 };
+        69 |                 let built = Box::new(Node { key: k, count: c, left: new_left, right: new_right });
+        71 |                 Some(update_count(built))
+        72 |             }
+   Holes: 1 total
+      1 × assume()
+❌ tree_mut_structure_updates.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/tree_mut_structure_updates.rs:44: assume() - assume(1 + l + r <= usize::MAX);
+        35 |     fn size_link(link: &Option<Box<Node>>) -> (r: usize)
+            ...
+        42 |                 let l = size_link(&node.left);
+        43 |                 let r = size_link(&node.right);
+        45 |                 1 + l + r
+        46 |             }
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/tree_mut_structure_updates.rs:55: assume() - assume(1 + l + r <= usize::MAX);
+        51 |     fn update_size(node: &mut Box<Node>)
+            ...
+        53 |         let l = size_link(&node.left);
+        54 |         let r = size_link(&node.right);
+        56 |         node.size = 1 + l + r;
+        57 |     }
+   Holes: 2 total
+      2 × assume()
+✓ triangle.rs
+   1 clean proof function
+✓ unsigned_int.rs
+✓ use_proven_partialeq.rs
+✓ vec_clone_in_verus.rs
+❌ vec_filter.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/vec_filter.rs:113: external_body - #[verifier::external_body]
+       114 | fn vec_filter_predicate_provenence_completeness_loop<V: Clone + Eq>(
+   Holes: 1 total
+      1 × external_body
+✓ vec_if.rs
+   1 clean proof function
+❌ vec_length_while_rust.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/vec_length_while_rust.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | pub fn vec_length_while(s: &Vec<usize>) -> usize {
+         3 |     let mut length: usize = 0;
+   Errors: 1 total (1 not verusified)
+✓ vec_length_while_verus.rs
+✓ vec_remove_duplicates.rs
+✓ verus_iterator.rs
+✓ verus_keep_ghost_and_test.rs
+✓ verus_pub_crate_test.rs
+✓ verus_sum_loops_iterators.rs
+✓ verus_vec_iterator.rs
+✓ verus_vec_iterator_for_basic_proofs.rs
+✓ verus_vec_iterator_loop_basic_proofs.rs
+✓ verus_vec_iterator_while_basic_proofs.rs
+❌ verus_wrapped_iter_loops.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/verus_wrapped_iter_loops.rs:26: admit() - admit();
+        19 | proof fn lemma_found_at_pos(original_seq: Seq<i64>, elt: i64, pos: int)
+            ...
+        24 |         seq_i64_mem(original_seq, elt) == true,
+        25 | {
+        27 | }
+        28 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/experiments/verus_wrapped_iter_loops.rs:35: admit() - admit();
+        29 | proof fn lemma_not_found(original_seq: Seq<i64>, elt: i64)
+            ...
+        33 |         seq_i64_mem(original_seq, elt) == false,
+        34 | {
+        36 | }
+        37 | 
+   Holes: 2 total
+      2 × admit()
+   Proof functions: 2 total (0 clean, 2 holed)
+
+═══════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Modules:
+   85 clean (no holes)
+   42 holed (contains holes)
+   127 total
+
+Proof Functions:
+   54 clean
+   18 holed
+   72 total
+
+Holes Found: 123 total
+   1 × assume(false)
+   62 × assume()
+   2 × assume_specification
+   24 × admit()
+   34 × external_body
+
+Errors: 7 total (5 not verusified, 2 assume in eq/clone (Verus workaround))
+
+Info: 4 total
+   external_body_accept_hole.rs:35: info: external_body_accept_hole - external_body with accept hole comment
+   accept.rs:42: info: accept() - accept hole
+   accept.rs:105: info: accept() - accept hole
+   accept.rs:116: info: accept() - accept hole

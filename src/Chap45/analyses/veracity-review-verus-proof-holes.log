@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap45/
 
 ℹ BalancedTreePQ.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap45/BalancedTreePQ.rs:64: info: accept() - accept hole
@@ -91,13 +91,14 @@ Holes Found: 3 total
 Errors: 2 total (2 assume in eq/clone (Verus workaround))
 
 Info: 11 total
-   BinaryHeapPQ.rs:54: info: accept() - accept hole
-   BinaryHeapPQ.rs:69: info: accept() - accept hole
-   HeapsortExample.rs:84: info: accept() - accept hole
-   HeapsortExample.rs:99: info: accept() - accept hole
+   SortedListPQ.rs:416: info: accept() - accept hole
    LeftistHeapPQ.rs:392: info: accept() - accept hole
    LeftistHeapPQ.rs:412: info: accept() - accept hole
    LeftistHeapPQ.rs:430: info: accept() - accept hole
    LeftistHeapPQ.rs:440: info: accept() - accept hole
+   UnsortedListPQ.rs:318: info: accept() - accept hole
    BalancedTreePQ.rs:64: info: accept() - accept hole
-   SortedListPQ.rs:416: info: accept() - accept hole
+   HeapsortExample.rs:84: info: accept() - accept hole
+   HeapsortExample.rs:99: info: accept() - accept hole
+   BinaryHeapPQ.rs:54: info: accept() - accept hole
+   BinaryHeapPQ.rs:69: info: accept() - accept hole

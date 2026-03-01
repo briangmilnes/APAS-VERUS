@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap66/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap66/
 
 ℹ BoruvkaMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:46: info: accept() - accept hole
@@ -33,5 +33,5 @@ Holes Found: 3 total
    3 × external_body
 
 Info: 2 total
-   BoruvkaMtEph.rs:46: info: accept() - accept hole
    BoruvkaStEph.rs:71: info: accept() - accept hole
+   BoruvkaMtEph.rs:46: info: accept() - accept hole

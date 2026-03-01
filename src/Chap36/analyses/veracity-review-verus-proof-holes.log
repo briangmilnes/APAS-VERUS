@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap36
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap36/
 
 ✓ QuickSortMtEph.rs
    2 clean proof functions

@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap39
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap39/
 
 ℹ BSTParaTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:76: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
@@ -12,16 +12,16 @@ $ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d s
    Info: 4 total
    3 clean proof functions
 ❌ BSTTreapStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapStEph.rs:470: assume() - assume(forall |k: T| #[trigger] spec_contains_link(&y.left, 
-       388 |     fn rotate_left<T: StT + Ord>(mut x: Box<Node<T>>) -> (rotated: Box<Node<T>>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapStEph.rs:249: assume() - assume(a.is_lt(&c));
+       245 |     proof fn axiom_is_lt_transitive<T: StT + Ord>(a: T, b: T, c: T)
             ...
-       468 |                     // partial_cmp_spec. Assume the forall that the BST
-       469 |                     // rotation preserves: all keys in the new y.left < yk.
-       471 |                     assert(spec_bst_link(&Some(y)));
-       472 |                 }
+       247 |         ensures a.is_lt(&c),
+       248 |     {
+       250 |     }
+       251 | 
    Holes: 1 total
       1 × assume()
-   Proof functions: 8 total (8 clean, 0 holed)
+   Proof functions: 9 total (8 clean, 1 holed)
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
@@ -34,8 +34,8 @@ Modules:
 
 Proof Functions:
    11 clean
-   0 holed
-   11 total
+   1 holed
+   12 total
 
 Holes Found: 1 total
    1 × assume()

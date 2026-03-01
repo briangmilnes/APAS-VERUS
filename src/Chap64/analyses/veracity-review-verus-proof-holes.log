@@ -1,6 +1,8 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap64/
+
 ℹ SpanTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:35: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:46: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/SpanTreeMtEph.rs:35: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/SpanTreeMtEph.rs:46: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    Info: 2 total
 ✓ SpanTreeStEph.rs
 ✓ TSPApproxStEph.rs
@@ -25,8 +27,5 @@ Holes Found: 0 total
 Info: 2 total
    SpanTreeMtEph.rs:35: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    SpanTreeMtEph.rs:46: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-
-🎉 No proof holes or warnings found! All proofs are complete.
-ternal body at this point.
 
 🎉 No proof holes or warnings found! All proofs are complete.

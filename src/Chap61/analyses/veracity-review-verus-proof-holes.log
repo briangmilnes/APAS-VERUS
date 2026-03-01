@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap61/
+
 ✓ EdgeContractionMtEph.rs
 ✓ EdgeContractionStEph.rs
 ✓ VertexMatchingMtEph.rs
@@ -16,11 +18,6 @@ Proof Functions:
    0 clean
    0 holed
    0 total
-
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
-otal
 
 Holes Found: 0 total
 

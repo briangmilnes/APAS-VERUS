@@ -1,16 +1,88 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d /home/milnes/projects/APAS-VERUS-agent2/src/Chap65/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap65/
 
 ✓ KruskalStEph.rs
 ✓ PrimStEph.rs
-✓ UnionFindStEph.rs
+❌ UnionFindStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:213: assume() - assume(self.wf());
+       205 |         fn insert(&mut self, v: V) {
+            ...
+       211 |                     self.roots = self.roots.insert(v@, v@);
+       212 |                     // accept hole: wf maintenance for insert — elements uniqueness and domain coverage
+       214 |                 }
+       215 |             }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:244: assume() - assume(steps < elem_count);
+       220 |         fn find(&mut self, v: &V) -> (root: V) {
+            ...
+       242 |                 proof {
+       243 |                     // accept hole: acyclicity — each step visits a new element
+       245 |                     steps = steps + 1;
+       246 |                 }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:274: assume() - assume(compress_steps < elem_count);
+       220 |         fn find(&mut self, v: &V) -> (root: V) {
+            ...
+       272 |                 proof {
+       273 |                     // accept hole: acyclicity — each compression step visits a new element
+       275 |                     compress_steps = compress_steps + 1;
+       276 |                     // accept hole: wf is maintained after path compression
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:277: assume() - assume(self.wf());
+       220 |         fn find(&mut self, v: &V) -> (root: V) {
+            ...
+       275 |                     compress_steps = compress_steps + 1;
+       276 |                     // accept hole: wf is maintained after path compression
+       278 |                     // accept hole: compressed node is in domain
+       279 |                     assume(self.parent@.contains_key(current@));
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:279: assume() - assume(self.parent@.contains_key(current@));
+       220 |         fn find(&mut self, v: &V) -> (root: V) {
+            ...
+       277 |                     assume(self.wf());
+       278 |                     // accept hole: compressed node is in domain
+       280 |                 }
+       281 |             }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:285: assume() - assume(root@ == old(self).roots[v@]);
+       220 |         fn find(&mut self, v: &V) -> (root: V) {
+            ...
+       283 |             proof {
+       284 |                 // accept hole: root matches the ghost canonical root
+       286 |             }
+       287 | 
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:334: assume() - assume(self.wf());
+       292 |         fn union(&mut self, u: &V, v: &V) {
+            ...
+       332 |                     );
+       333 |                     // accept hole: wf maintained after union
+       335 |                     // accept hole: ensures clause on merged roots
+       336 |                     assume(
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:336: assume() - assume(
+       292 |         fn union(&mut self, u: &V, v: &V) {
+            ...
+       334 |                     assume(self.wf());
+       335 |                     // accept hole: ensures clause on merged roots
+       337 |                         forall|x: <V as View>::V| #[trigger] self.roots.contains_key(x) ==> {
+       338 |                             let or_u = old(self).roots[u@];
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:358: assume() - assume((root_u == root_v) == (root_u@ == root_v@));
+       352 |         fn equals(&mut self, u: &V, v: &V) -> (same: B) {
+            ...
+       356 |             proof {
+       357 |                 // accept hole: PartialEq on V agrees with view equality for roots
+       359 |             }
+       360 |             root_u == root_v
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/UnionFindStEph.rs:383: assume() - assume(self.wf());
+       364 |         fn num_sets(&mut self) -> (count: usize) {
+            ...
+       381 |                 proof {
+       382 |                     // accept hole: wf preserved after find within iteration
+       384 |                 }
+       385 |             }
+   Holes: 10 total
+      10 × assume()
 
 ═══════════════════════════════════════════════════════════════
 SUMMARY
 ═══════════════════════════════════════════════════════════════
 
 Modules:
-   3 clean (no holes)
-   0 holed (contains holes)
+   2 clean (no holes)
+   1 holed (contains holes)
    3 total
 
 Proof Functions:
@@ -18,6 +90,5 @@ Proof Functions:
    0 holed
    0 total
 
-Holes Found: 0 total
-
-🎉 No proof holes or warnings found! All proofs are complete.
+Holes Found: 10 total
+   10 × assume()
