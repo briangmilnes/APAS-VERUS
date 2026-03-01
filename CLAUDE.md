@@ -203,6 +203,8 @@ scripts/rtt.sh               # run time tests (cargo nextest)
   you may use `head -20` to see the first errors, but never filter or discard output.
 - **Read the verification output.** If you don't read the error, you can't fix the proof.
 - Always show full output in response text as a markdown code block.
+- **Run validate, rtt, and ptt sequentially, not in parallel.** They compete for CPU and
+  memory, making all three slower than running them one at a time.
 
 ### Validation Modes
 
