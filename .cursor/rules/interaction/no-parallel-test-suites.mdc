@@ -1,0 +1,20 @@
+---
+description: Never run RTT and PTT test suites simultaneously
+alwaysApply: true
+---
+
+# No Parallel Test Suites
+
+**Never** run RTTs and PTTs simultaneously. The desktop has memory limits that cause failures when both suites run at the same time.
+
+## Rule
+
+- Run RTTs first, wait for completion.
+- Then run PTTs, wait for completion.
+- Never launch both in parallel tool calls.
+
+## Applies to
+
+- `./scripts/rtt.sh` / `cargo nextest run`
+- `./scripts/ptt.sh` / `scripts/pttest.py`
+- Any merge phase that runs both suites

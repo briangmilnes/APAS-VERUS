@@ -1,0 +1,22 @@
+
+ So we have
+  ~/.claude/settings.json
+  ~/projects/APAS-VERUS*/.claude/settings.local.json
+ and
+  ~/projects/APAS-VERUS*/CLAUDE.md.
+
+And I made  ~/projects/APAS-VERUS-agent1/CLAUDE.md learn to always use the
+ scripts/verify.sh scripts/rtt.sh scripts/ptt.sh.
+
+And to not filter the output of scripts/verify.sh execpt by head -10.
+If you don't read the output of the prover you have no idea what to prove.
+
+Yet I still keep getting asked about permissions.
+
+Review the file statuses.
+
+If claude-code generates a settings.local.json do the permissions in
+~/.claude/settings.json override?
+
+How do we merge these?
+

@@ -1,16 +1,17 @@
-You are agent2 working in branch: ~/projects/APAS-VERUS-agent2/.
+You are agent4 working in branch: ~/projects/APAS-VERUS-agent4/.
 Your worktree has been updated.
 Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-You are working in src/Chap38.
-
- Update your chapter's analyses:
+You are working  /home/milnes/projects/APAS-VERUS/src/Chap42
+Update your chapter's analyses:
   veracity-review-verus-proof-holes.log - by program veracity-review-proof-holes
-  Don't review-against-prose yet, it's expensive.
+  Do the review-against-prose.
 
 Review the verusification, specification and holes on this chapter.
 Propose fixes in a table.
+
+
 
 

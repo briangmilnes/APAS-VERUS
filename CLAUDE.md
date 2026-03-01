@@ -11,7 +11,7 @@ APAS-VERUS formally verifies all algorithms from "A Practical Approach to Data S
 (APAS, by Guy Blelloch) using Verus, a Rust verification framework. The primary objective
 is to get code to **verify (prove)** with Verus.
 
-- Run `verus` verification after making changes
+- Run `scripts/validate.sh` after making changes
 - Fix verification errors before moving on
 - Prefer verified code over unverified code, even if it requires restructuring
 - **Never sequentialize parallel files**: Mt (multi-threaded) implementations must remain
@@ -198,6 +198,10 @@ scripts/rtt.sh               # run time tests (cargo nextest)
 ```
 
 - Verus includes its own vstd. Do not pass `-L dependency` or `--extern vstd`.
+- **Never pipe, grep, sed, or tail the output of `scripts/validate.sh`**. The verification
+  output contains the error messages you need to read to fix proofs. If the output is large,
+  you may use `head -20` to see the first errors, but never filter or discard output.
+- **Read the verification output.** If you don't read the error, you can't fix the proof.
 - Always show full output in response text as a markdown code block.
 
 ### Validation Modes

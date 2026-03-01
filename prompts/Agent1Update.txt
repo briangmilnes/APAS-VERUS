@@ -4,11 +4,24 @@ Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-You are working in Chap36.
 Update your chapter's analyses:
   veracity-review-verus-proof-holes.log - by program veracity-review-proof-holes
-  review-against-prose.md - by the review against proof holes rule.
 
-You are still stubbing in that the bodies of quicksort_* are not in the
-impl. They are top level functions just called from stubs in the impl.
-Fix this in all the files. 
+Do not review-against-prose.md to start, it's too costly for this.
+
+You are working in src/Chap40.
+These files have not been fully verusifided. 
+They need traits with specs.
+They need their functions proven.
+
+Do them in this order:
+BSTKeyValueStEph.rs
+BSTReducedStEph.rs
+BSTSizeStEph.rs
+
+DOT.
+
+
+Then review-against-prose.md.
+Does the chapter say these are multithreaded?
+Are the specs good?

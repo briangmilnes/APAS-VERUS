@@ -1,3 +1,5 @@
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -d src/Chap40
+
 ✓ BSTKeyValueStEph.rs
 ℹ BSTReducedStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:96: info: external_body_accept_hole - external_body with accept hole comment
@@ -25,10 +27,6 @@ Holes Found: 0 total
 
 Info: 2 total
    BSTReducedStEph.rs:96: info: external_body_accept_hole - external_body with accept hole comment
-   BSTReducedStEph.rs:110: info: external_body_accept_hole - external_body with accept hole comment
-
-🎉 No proof holes or warnings found! All proofs are complete.
-with accept hole comment
    BSTReducedStEph.rs:110: info: external_body_accept_hole - external_body with accept hole comment
 
 🎉 No proof holes or warnings found! All proofs are complete.

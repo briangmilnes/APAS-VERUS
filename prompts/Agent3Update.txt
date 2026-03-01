@@ -7,9 +7,17 @@ REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs.
 You are working in src/Chap39.
 Update your chapter's analyses:
   veracity-review-verus-proof-holes.log - by program veracity-review-proof-holes
-  review-against-prose.md - by the review against proof holes rule.
+  Don't review-against-prose. It's too expensive.
+
+Work on one file at time in this order:
+BSTTreapStEph.rs
+BSTTreapMtEph.rs
+BSTParaTreapMtEph.rs
+BSTSetTreapMtEph.rs
 
 Review the verusification, specification and holes on this chapter.
 Propose fixes in a table.
+
+
 
 

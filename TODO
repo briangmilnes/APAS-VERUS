@@ -11,7 +11,7 @@
 
 Review:
 
-16 Finished:
+18 Finished:
 
 src/Chap02/analyses/veracity-review-verus-proof-holes.log - accepted 
 src/Chap03/analyses/veracity-review-verus-proof-holes.log - clean
@@ -29,19 +29,19 @@ src/Chap28/analyses/veracity-review-verus-proof-holes.log - clean
 src/Chap30/analyses/veracity-review-verus-proof-holes.log - clean but it's stub.
 src/Chap35/analyses/veracity-review-verus-proof-holes.log - clean. 
 src/Chap44/analyses/veracity-review-verus-proof-holes.log - clean 
+src/Chap36/analyses/veracity-review-verus-proof-holes.log - clean
+src/Chap27/analyses/veracity-review-verus-proof-holes.log - clean
 
 4 in process:
-
-src/Chap36/analyses/veracity-review-verus-proof-holes.log - AGENT1, needs trait and impl on two of them
-src/Chap37/analyses/veracity-review-verus-proof-holes.log - MAIN, just bad.
+src/Chap40/analyses/veracity-review-verus-proof-holes.log - AGENT1, N, pub(crate), no trait, no spec.
 src/Chap38/analyses/veracity-review-verus-proof-holes.log - AGENT2 bad no trait no specs.
 src/Chap39/analyses/veracity-review-verus-proof-holes.log - AGENT3, bad closed specs, under specified. BSTParaTreapMtEph.rs
+src/Chap37/analyses/veracity-review-verus-proof-holes.log - MAIN, just bad, bad bad, very no good. 
+src/Chap41/analyses/veracity-review-verus-proof-holes.log - AGENT4
 
-25 unfinished: 
+22 unfinished: 
 
-src/Chap27/analyses/veracity-review-verus-proof-holes.log - unproven.
-src/Chap40/analyses/veracity-review-verus-proof-holes.log - N, pub(crate), no trait, no spec.
-src/Chap41/analyses/veracity-review-verus-proof-holes.log - hideous
+
 src/Chap42/analyses/veracity-review-verus-proof-holes.log - hideous
 src/Chap43/analyses/veracity-review-verus-proof-holes.log - AugOrderedTables, bad.
 src/Chap45/analyses/veracity-review-verus-proof-holes.log - Heaps, bad
@@ -63,5 +63,3 @@ src/Chap63/analyses/veracity-review-verus-proof-holes.log - connectivity, not fu
 src/Chap64/analyses/veracity-review-verus-proof-holes.log - spanning tree, not fully verusified.
 src/Chap65/analyses/veracity-review-verus-proof-holes.log - Kruskal, prim and unionfind, not fully verusified.
 src/Chap66/analyses/veracity-review-verus-proof-holes.log - Boruvka, not fully specified, verusified. 
-
-
