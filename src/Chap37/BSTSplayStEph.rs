@@ -23,7 +23,9 @@ pub mod BSTSplayStEph {
 
     impl<T: StT + Ord> Clone for Node<T> {
         #[verifier::external_body]
-        fn clone(&self) -> Self {
+        fn clone(&self) -> (result: Self)
+            ensures result == *self
+        {
             Node {
                 key: self.key.clone(),
                 size: self.size,
@@ -391,14 +393,12 @@ pub mod BSTSplayStEph {
 
         fn maximum(&self) -> Option<&T> { max_link(&self.root) }
 
-        #[verifier::external_body]
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
             in_order_collect(&self.root, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
 
-        #[verifier::external_body]
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
             pre_order_collect(&self.root, &mut out);

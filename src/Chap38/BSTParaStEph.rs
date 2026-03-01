@@ -201,7 +201,8 @@ pub mod BSTParaStEph {
             ensures filtered@.subset_of(self@), filtered@.finite();
         /// - APAS: Work O(|t|), Span O(|t|) — sequential
         /// Requires `op` to be associative with identity `base`.
-        fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> T;
+        fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> T
+            requires self@.finite(), forall|a: T, b: T| op.requires((a, b));
         /// Collects elements in order into a mutable vector.
         fn collect_in_order(&self, out: &mut Vec<T>)
             requires self@.finite(),
@@ -368,14 +369,22 @@ pub mod BSTParaStEph {
             }
         }
 
-        #[verifier::external_body]
-        fn min_key(&self) -> (result: Option<T>) {
+        fn min_key(&self) -> (result: Option<T>)
+            decreases self@.len(),
+        {
             match self.expose() {
                 | Exposed::Leaf => None,
-                | Exposed::Node(left, key, _) => match left.min_key() {
-                    | Some(rec) => Some(rec),
-                    | None => Some(key),
-                },
+                | Exposed::Node(left, key, right) => {
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                        assert(!left@.union(right@).contains(key@));
+                        assert(self@.len() == left@.len() + right@.len() + 1);
+                    }
+                    match left.min_key() {
+                        | Some(rec) => Some(rec),
+                        | None => Some(key),
+                    }
+                }
             }
         }
 
@@ -460,7 +469,6 @@ pub mod BSTParaStEph {
         }
 
         /// Algorithm 38.10 — sequential reduce. Folds `op(L', op(k, R'))`.
-        #[verifier::external_body]
         fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> T {
             reduce_inner(self, &op, base)
         }
@@ -529,15 +537,24 @@ pub mod BSTParaStEph {
     }
 
     /// Algorithm 38.10 — sequential reduce recursive helper (takes &F for recursion).
-    #[verifier::external_body]
     fn reduce_inner<T: StT + Ord, F: Fn(T, T) -> T>(
         tree: &ParamBST<T>,
         op: &F,
         identity: T,
-    ) -> T {
+    ) -> T
+        requires
+            tree@.finite(),
+            forall|a: T, b: T| op.requires((a, b)),
+        decreases tree@.len(),
+    {
         match tree.expose() {
             | Exposed::Leaf => identity,
             | Exposed::Node(left, key, right) => {
+                proof {
+                    vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                    assert(!left@.union(right@).contains(key@));
+                    assert(tree@.len() == left@.len() + right@.len() + 1);
+                }
                 let left_acc = reduce_inner(&left, op, identity.clone());
                 let right_acc = reduce_inner(&right, op, identity);
                 let right_with_key = op(key, right_acc);

@@ -239,6 +239,16 @@ pub mod BSTTreapStEph {
     {
     }
 
+    /// Transitivity of strict ordering for Ord types.
+    /// Rust's Ord guarantees total order; vstd's multi-trigger on
+    /// obeys_partial_cmp_spec_properties prevents automatic SMT chaining.
+    proof fn axiom_is_lt_transitive<T: StT + Ord>(a: T, b: T, c: T)
+        requires a.is_lt(&b), b.is_lt(&c),
+        ensures a.is_lt(&c),
+    {
+        assume(a.is_lt(&c));
+    }
+
     //		8. traits
 
     pub trait BSTTreapStEphTrait<T: StT + Ord> {
@@ -397,6 +407,7 @@ pub mod BSTTreapStEph {
         // Capture BST facts before any mutation.
         let ghost bst_input = spec_bst_link(&Some(x));
         let ghost xk = x.key;
+        let ghost a = x.left;
         let ghost orig_right = x.right;
         assert(spec_size_wf_link(&x.left));
         assert(spec_size_wf_link(&x.right));
@@ -463,11 +474,23 @@ pub mod BSTTreapStEph {
                     //   k == xk ==> xk < yk (yk was in orig_right, BST says xk < yk).
                     //   k in a ==> k < xk < yk.
                     //   k in b ==> k < yk (from original BST on y: forall k in b: k < yk).
-                    lemma_contains_root(&y);
-                    // The solver cannot prove is_lt transitivity through
-                    // partial_cmp_spec. Assume the forall that the BST
-                    // rotation preserves: all keys in the new y.left < yk.
-                    assume(forall |k: T| #[trigger] spec_contains_link(&y.left, k) ==> k.is_lt(&yk));
+                    // yk is the root of orig_right; BST on original x
+                    // gives xk < k for all k in orig_right.
+                    assert(spec_contains_link(&orig_right, yk));
+                    assert(xk.is_lt(&yk));
+                    // Prove forall k in y.left (= Some(x')): k < yk.
+                    // x' = Node(a, xk, b). Three cases:
+                    //   k == xk: xk < yk (just proved).
+                    //   k in a: k < xk (BST on original x) and xk < yk, transitivity.
+                    //   k in b: k < yk (BST on original y: all keys in y.left < yk).
+                    assert forall |k: T| #[trigger] spec_contains_link(&y.left, k) implies k.is_lt(&yk) by {
+                        if spec_contains_link(&a, k) {
+                            axiom_is_lt_transitive(k, xk, yk);
+                        }
+                        if spec_contains_link(&b, k) {
+                            // k.is_lt(&yk) from BST on orig_right: all keys in orig y.left < yk.
+                        }
+                    };
                     assert(spec_bst_link(&Some(y)));
                 }
             }

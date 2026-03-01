@@ -348,11 +348,12 @@ broadcast use {
     }
 
     impl PartialEq for MatrixChainStPerS {
-        #[verifier::external_body]
         fn eq(&self, other: &Self) -> (r: bool)
             ensures r == (self@ == other@)
         {
-            self.dimensions == other.dimensions && self.memo == other.memo
+            let r = self.dimensions == other.dimensions && self.memo == other.memo;
+            proof { assume(r == (self@ == other@)); }
+            r
         }
     }
 
