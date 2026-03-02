@@ -1,0 +1,143 @@
+---
+description: Multi-struct spec style — separate structs per variant, per-type traits, recursive specs in trait impls, no inherent blocks or free fns
+alwaysApply: true
+---
+
+# Multi-Struct Spec Style
+
+## Overview
+
+For tree-like data structures with multiple node kinds (leaf, interior, root/tree wrapper),
+use separate structs composed into a discriminated enum. Each type gets its own trait with
+abstract specs and exec methods. Recursive spec fns go directly in the trait impl — no
+inherent `impl` blocks, no free spec fns, no stub delegation.
+
+## Structure
+
+### Types (bottom-up order)
+
+```rust
+pub struct Leaf { pub key: u64 }
+
+pub struct Interior {
+    pub key: u64,
+    pub left: Option<Box<Node>>,
+    pub right: Option<Box<Node>>,
+}
+
+pub enum Node {
+    LeafNode(Leaf),
+    InteriorNode(Interior),
+}
+
+pub struct Tree {
+    pub child: Option<Box<Node>>,
+}
+```
+
+- Structs ordered bottom-up: Leaf, Interior, Node, Tree.
+- Tree is **not** in the enum — it wraps `Option<Box<Node>>`.
+- Enum variants ordered bottom-up matching struct order.
+
+### Traits (bottom-up order)
+
+Each type gets its own trait with abstract spec fns and exec methods:
+
+```rust
+pub trait LeafTrait: Sized {
+    spec fn spec_size(&self) -> nat;
+    spec fn spec_height(&self) -> nat;
+    spec fn spec_contains(&self, needle: u64) -> bool;
+
+    fn new(key: u64) -> (t: Self)
+        ensures t.spec_size() == 1, t.spec_height() == 1, t.spec_contains(key);
+
+    fn set_key(&mut self, key: u64)
+        ensures self.spec_contains(key);
+}
+
+pub trait InteriorTrait: Sized { ... }
+pub trait NodeTrait: Sized { ... }
+pub trait TreeTrait: Sized { ... }
+```
+
+### Impls (bottom-up order)
+
+Impl member order matches trait declaration order.
+
+**Leaf** — non-recursive, specs are constants or field comparisons:
+
+```rust
+impl LeafTrait for Leaf {
+    open spec fn spec_size(&self) -> nat { 1 }
+    open spec fn spec_height(&self) -> nat { 1 }
+    open spec fn spec_contains(&self, needle: u64) -> bool { needle == self.key }
+    fn new(key: u64) -> (t: Self) { Leaf { key } }
+    fn set_key(&mut self, key: u64) { self.key = key; }
+}
+```
+
+**Interior** — references children via qualified trait calls:
+
+```rust
+impl InteriorTrait for Interior {
+    open spec fn spec_size(&self) -> nat {
+        let l = match self.left { None => 0nat, Some(n) => NodeTrait::spec_size(&*n) };
+        let r = match self.right { None => 0nat, Some(n) => NodeTrait::spec_size(&*n) };
+        1 + l + r
+    }
+    // ...
+}
+```
+
+**Node** — recursive specs with `decreases *self`, self-referencing via qualified calls:
+
+```rust
+impl NodeTrait for Node {
+    open spec fn spec_size(&self) -> nat
+        decreases *self,
+    {
+        match *self {
+            Node::LeafNode(_) => 1,
+            Node::InteriorNode(i) => {
+                let l = match i.left { None => 0nat, Some(n) => NodeTrait::spec_size(&*n) };
+                let r = match i.right { None => 0nat, Some(n) => NodeTrait::spec_size(&*n) };
+                1 + l + r
+            },
+        }
+    }
+    // ...
+}
+```
+
+**Tree** — wrapper, references children via qualified trait calls:
+
+```rust
+impl TreeTrait for Tree {
+    open spec fn spec_size(&self) -> nat {
+        match self.child { None => 0, Some(n) => NodeTrait::spec_size(&*n) }
+    }
+    // ...
+}
+```
+
+## Key Rules
+
+1. **Bottom-up ordering** for structs, enum variants, traits, and impls.
+2. **No inherent `impl` blocks** — all specs and methods go through traits.
+3. **No free spec fns** — child traversal uses `NodeTrait::spec_fn(&*n)`.
+4. **No stub delegation** — each trait impl carries its own logic inline.
+5. **`decreases *self`** on the enum's trait impl spec fns (not on leaf/interior/tree).
+6. **Qualified trait calls** (`NodeTrait::spec_size(&*n)`) for cross-type spec references.
+7. **Impl member order** matches trait declaration order.
+
+## Why This Works
+
+Verus resolves `NodeTrait::spec_size(&*n)` to the single `impl NodeTrait for Node` and
+unfolds the `open spec fn` body. The `decreases *self` annotation provides the termination
+argument. Because there is exactly one impl of `NodeTrait`, Verus can see through the trait
+dispatch — no indirection opacity.
+
+## Evidence
+
+`src/experiments/tree_module_style.rs` — 630 verified, 0 errors, 0 warnings.

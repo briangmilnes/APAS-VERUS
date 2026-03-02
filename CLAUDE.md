@@ -362,9 +362,63 @@ impl FooTrait for Foo {
 }
 ```
 
-Bare `impl Type` blocks are errors (exception: recursive spec fns with `decreases self`,
-`&mut`-returning methods, standalone exercise files). See the recursive enum delegation
-pattern in `.cursor/rules/apas-verus/trait-impl-pattern.mdc`.
+Bare `impl Type` blocks are errors (exception: `&mut`-returning methods, standalone exercise
+files). See `.cursor/rules/apas-verus/trait-impl-pattern.mdc`.
+
+### Multi-Struct Spec Style (Recursive Enum with Per-Type Traits)
+
+For tree-like types with multiple node kinds, use separate structs composed into a
+discriminated enum, each with its own trait. Recursive spec fns go directly in the trait
+impl with `decreases *self` — no inherent `impl` blocks or free spec fns needed. Child
+traversal uses qualified trait calls: `NodeTrait::spec_size(&*n)`.
+
+```rust
+pub struct Leaf { pub key: u64 }
+pub struct Interior { pub key: u64, pub left: Option<Box<Node>>, pub right: Option<Box<Node>> }
+pub enum Node { LeafNode(Leaf), InteriorNode(Interior) }
+pub struct Tree { pub child: Option<Box<Node>> }
+
+// Each type gets its own trait with abstract specs and exec methods.
+pub trait LeafTrait: Sized {
+    spec fn spec_size(&self) -> nat;
+    fn new(key: u64) -> (t: Self) ensures t.spec_size() == 1;
+    fn set_key(&mut self, key: u64) ensures self.spec_contains(key);
+}
+
+pub trait NodeTrait: Sized {
+    spec fn spec_size(&self) -> nat;
+}
+
+// Recursive specs go directly in the trait impl, not inherent blocks.
+impl NodeTrait for Node {
+    open spec fn spec_size(&self) -> nat
+        decreases *self,
+    {
+        match *self {
+            Node::LeafNode(_) => 1,
+            Node::InteriorNode(i) => {
+                let l = match i.left { None => 0nat, Some(n) => NodeTrait::spec_size(&*n) };
+                let r = match i.right { None => 0nat, Some(n) => NodeTrait::spec_size(&*n) };
+                1 + l + r
+            },
+        }
+    }
+}
+
+// Non-recursive types reference children via qualified trait calls.
+impl InteriorTrait for Interior {
+    open spec fn spec_size(&self) -> nat {
+        let l = match self.left { None => 0nat, Some(n) => NodeTrait::spec_size(&*n) };
+        let r = match self.right { None => 0nat, Some(n) => NodeTrait::spec_size(&*n) };
+        1 + l + r
+    }
+}
+```
+
+Key rules: structs/traits/impls ordered bottom-up (Leaf, Interior, Node, Tree). Impl member
+order matches trait declaration order. No stub delegation, no free spec fns, no inherent impl
+blocks. Reference: `src/experiments/tree_module_style.rs`. See
+`.cursor/rules/apas-verus/multi-struct-spec-style.mdc`.
 
 ### PartialEq/Eq Pattern
 
