@@ -154,6 +154,7 @@ pub mod experiments {
     // pub mod total_ord_gen;  // FAILS: assertion failed (axiom_cloned_view_eq)
     // pub mod ToVecProof;  // FAILS: clone_view moved to attic
     // pub mod triangle;
+    pub mod tree_module_style;
     pub mod tree_mut_data_updates;
     pub mod tree_mut_structure_updates;
     // pub mod unsigned_int;
