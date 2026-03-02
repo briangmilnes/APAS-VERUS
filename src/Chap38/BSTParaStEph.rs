@@ -502,7 +502,7 @@ pub mod BSTParaStEph {
                             proof {
                                 assert(rebuilt@ =~= lrv.union(rv).insert(rkv));
                                 assert(!rv.contains(key@));
-                                assert forall|x| (llv.union(rebuilt@)).contains(x) <==> self@.remove(key@).contains(x) by {
+                                assert forall|x| #[trigger] (llv.union(rebuilt@)).contains(x) <==> self@.remove(key@).contains(x) by {
                                     if llv.contains(x) {
                                         assert(llv.union(lrv).contains(x));
                                     }
@@ -542,7 +542,7 @@ pub mod BSTParaStEph {
                             proof {
                                 assert(rebuilt@ =~= lv.union(rlv).insert(rkv));
                                 assert(!lv.contains(key@));
-                                assert forall|x| (rebuilt@.union(rrv)).contains(x) <==> self@.remove(key@).contains(x) by {
+                                assert forall|x| #[trigger] (rebuilt@.union(rrv)).contains(x) <==> self@.remove(key@).contains(x) by {
                                     if rrv.contains(x) {
                                         assert(rlv.union(rrv).contains(x));
                                     }
@@ -596,7 +596,7 @@ pub mod BSTParaStEph {
                     match left.min_key() {
                         | Some(rec) => {
                             proof {
-                                assert forall|t: T| self@.contains(t@) implies
+                                assert forall|t: T| #![trigger self@.contains(t@)] self@.contains(t@) implies
                                     rec.cmp_spec(&t) == Less || rec@ == t@ by {
                                     if left@.contains(t@) {
                                         // IH covers this.
@@ -618,7 +618,7 @@ pub mod BSTParaStEph {
                         }
                         | None => {
                             proof {
-                                assert forall|t: T| self@.contains(t@) implies
+                                assert forall|t: T| #![trigger self@.contains(t@)] self@.contains(t@) implies
                                     key.cmp_spec(&t) == Less || key@ == t@ by {
                                     if right@.contains(t@) {
                                         lemma_cmp_antisymmetry(t, key);
