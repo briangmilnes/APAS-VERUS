@@ -22,10 +22,9 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [16] no Lit macro definitions (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:92: warning: [19] flatten_inner return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_1.rs:152: warning: [19] points2d_tab_flat return name 'result' could be more descriptive
 
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [1] has mod declarations
@@ -41,9 +40,9 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [16] no Lit macro definitions (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_2.rs:46: warning: [19] points3d_tab_flat return name 'result' could be more descriptive
 
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_5.rs:1: info: [1] has mod declarations
@@ -77,9 +76,9 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [16] no Lit macro definitions (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap21/Algorithm21_6.rs:62: warning: [19] prime_sieve return name 'result' could be more descriptive
 
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [1] has mod declarations
@@ -95,9 +94,9 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [16] no Lit macro definitions (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_5.rs:72: warning: [19] all_contiguous_subseqs return name 'result' could be more descriptive
 
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_6.rs:1: info: [1] has mod declarations
@@ -135,7 +134,6 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:52: warning: [18] spec fn spec_is_vowel should come before impls (expected spec fns before impls)
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:47: warning: [19] is_even return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:60: warning: [19] is_vowel return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_7.rs:75: warning: [19] pair_even_with_vowels return name 'result' could be more descriptive
 
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap21/Exercise21_8.rs:1: info: [1] has mod declarations
@@ -205,9 +203,9 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [16] no Lit macro definitions (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_3.rs:37: warning: [19] points3d_loops return name 'result' could be more descriptive
 
 /home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [1] has mod declarations
@@ -223,11 +221,10 @@ Checking 12 files...
 /home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [16] no Lit macro definitions (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [20] no traits defined
 /home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:40: warning: [19] cartesian_loops return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap21/Problem21_4.rs:92: warning: [19] cartesian_tab_flat return name 'result' could be more descriptive
 
 ════════════════════════════════════════════════════════════════
-Summary: 182 passed, 14 warnings in 9 files (checked 12 files)
+Summary: 188 passed, 5 warnings in 3 files (checked 12 files)
 ════════════════════════════════════════════════════════════════

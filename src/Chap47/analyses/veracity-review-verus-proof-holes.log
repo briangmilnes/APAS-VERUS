@@ -1,10 +1,10 @@
 ❌ ChainedHashTable.rs
 /home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:48: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        44 |             fn clone(&self) -> (result: Self)
+        44 |             fn clone(&self) -> (cloned: Self)
             ...
         46 |             {
-        47 |                 let result = ChainEntry { chain: self.chain.clone(), _phantom: PhantomData };
-        49 |                 result
+        47 |                 let cloned = ChainEntry { chain: self.chain.clone(), _phantom: PhantomData };
+        49 |                 cloned
         50 |             }
 /home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:58: info: accept() - accept hole
    Errors: 1 total (1 assume in eq/clone (Verus workaround))
@@ -51,15 +51,13 @@ Holes Found: 0 total
 Errors: 2 total (1 struct/enum outside verus!, 1 assume in eq/clone (Verus workaround))
 
 Info: 5 total
-   ChainedHashTable.rs:58: info: accept() - accept hole
    StructChainedHashTable.rs:66: info: accept() - accept hole
    StructChainedHashTable.rs:83: info: accept() - accept hole
    StructChainedHashTable.rs:106: info: accept() - accept hole
    StructChainedHashTable.rs:120: info: accept() - accept hole
+   ChainedHashTable.rs:58: info: accept() - accept hole
 
 🎉 No proof holes found! All proofs are complete.
-ccept hole
-   StructChainedHashTable.rs:106: info: accept() - accept hole
-   StructChainedHashTable.rs:120: info: accept() - accept hole
+le.rs:58: info: accept() - accept hole
 
 🎉 No proof holes found! All proofs are complete.

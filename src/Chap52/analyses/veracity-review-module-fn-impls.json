@@ -29,7 +29,7 @@
     "file": "Chap52/AdjMatrixGraphMtEph.rs",
     "lines": "112-117",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (result: Self)\n            ensures\n                result.spec_wf(),\n                result.spec_n() == n,\n                forall|u: int, v: int| #![auto]\n                    0 <= u < n && 0 <= v < n ==> !result.spec_edge(u, v);"
+    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_wf(),\n                empty.spec_n() == n,\n                forall|u: int, v: int| #![auto]\n                    0 <= u < n && 0 <= v < n ==> !empty.spec_edge(u, v);"
   },
   {
     "id": 5,
@@ -37,7 +37,7 @@
     "file": "Chap52/AdjMatrixGraphMtEph.rs",
     "lines": "120-129",
     "spec_strength": "unknown",
-    "snippet": "        fn from_matrix(matrix: ArraySeqMtEphS<ArraySeqMtEphS<bool>>) -> (result: Self)\n            requires\n                forall|i: int| #![auto] 0 <= i < matrix.spec_len() ==>\n                    matrix.spec_index(i).spec_len() == matrix.spec_len()\n            ensures\n                result.spec_wf(),\n                result.spec_n() == matrix.spec_len(),\n                forall|u: int, v: int| #![auto]\n                    0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()\n                    ==> result.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);"
+    "snippet": "        fn from_matrix(matrix: ArraySeqMtEphS<ArraySeqMtEphS<bool>>) -> (constructed: Self)\n            requires\n                forall|i: int| #![auto] 0 <= i < matrix.spec_len() ==>\n                    matrix.spec_index(i).spec_len() == matrix.spec_len()\n            ensures\n                constructed.spec_wf(),\n                constructed.spec_n() == matrix.spec_len(),\n                forall|u: int, v: int| #![auto]\n                    0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()\n                    ==> constructed.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);"
   },
   {
     "id": 6,
@@ -93,7 +93,7 @@
     "file": "Chap52/AdjMatrixGraphMtEph.rs",
     "lines": "190-197",
     "spec_strength": "unknown",
-    "snippet": "        fn complement(&self) -> (result: Self)\n            requires self.spec_wf()\n            ensures\n                result.spec_wf(),\n                result.spec_n() == self.spec_n(),\n                forall|i: int, j: int| #![auto]\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> result.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
+    "snippet": "        fn complement(&self) -> (complemented: Self)\n            requires self.spec_wf()\n            ensures\n                complemented.spec_wf(),\n                complemented.spec_n() == self.spec_n(),\n                forall|i: int, j: int| #![auto]\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
   },
   {
     "id": 13,
@@ -125,7 +125,7 @@
     "file": "Chap52/AdjMatrixGraphMtPer.rs",
     "lines": "113-118",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (result: Self)\n            ensures\n                result.spec_wf(),\n                result.spec_n() == n,\n                forall|u: int, v: int| #![auto]\n                    0 <= u < n && 0 <= v < n ==> !result.spec_edge(u, v);"
+    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_wf(),\n                empty.spec_n() == n,\n                forall|u: int, v: int| #![auto]\n                    0 <= u < n && 0 <= v < n ==> !empty.spec_edge(u, v);"
   },
   {
     "id": 17,
@@ -173,7 +173,7 @@
     "file": "Chap52/AdjMatrixGraphMtPer.rs",
     "lines": "171-178",
     "spec_strength": "unknown",
-    "snippet": "        fn complement(&self) -> (result: Self)\n            requires self.spec_wf()\n            ensures\n                result.spec_wf(),\n                result.spec_n() == self.spec_n(),\n                forall|i: int, j: int| #![auto]\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> result.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
+    "snippet": "        fn complement(&self) -> (complemented: Self)\n            requires self.spec_wf()\n            ensures\n                complemented.spec_wf(),\n                complemented.spec_n() == self.spec_n(),\n                forall|i: int, j: int| #![auto]\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
   },
   {
     "id": 23,
@@ -205,7 +205,7 @@
     "file": "Chap52/AdjMatrixGraphStEph.rs",
     "lines": "112-117",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (result: Self)\n            ensures\n                result.spec_wf(),\n                result.spec_n() == n,\n                forall|u: int, v: int| #![auto]\n                    0 <= u < n && 0 <= v < n ==> !result.spec_edge(u, v);"
+    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_wf(),\n                empty.spec_n() == n,\n                forall|u: int, v: int| #![auto]\n                    0 <= u < n && 0 <= v < n ==> !empty.spec_edge(u, v);"
   },
   {
     "id": 27,
@@ -213,7 +213,7 @@
     "file": "Chap52/AdjMatrixGraphStEph.rs",
     "lines": "120-129",
     "spec_strength": "unknown",
-    "snippet": "        fn from_matrix(matrix: ArraySeqStEphS<ArraySeqStEphS<bool>>) -> (result: Self)\n            requires\n                forall|i: int| #![auto] 0 <= i < matrix.spec_len() ==>\n                    matrix.spec_index(i).spec_len() == matrix.spec_len()\n            ensures\n                result.spec_wf(),\n                result.spec_n() == matrix.spec_len(),\n                forall|u: int, v: int| #![auto]\n                    0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()\n                    ==> result.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);"
+    "snippet": "        fn from_matrix(matrix: ArraySeqStEphS<ArraySeqStEphS<bool>>) -> (constructed: Self)\n            requires\n                forall|i: int| #![auto] 0 <= i < matrix.spec_len() ==>\n                    matrix.spec_index(i).spec_len() == matrix.spec_len()\n            ensures\n                constructed.spec_wf(),\n                constructed.spec_n() == matrix.spec_len(),\n                forall|u: int, v: int| #![auto]\n                    0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()\n                    ==> constructed.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);"
   },
   {
     "id": 28,
@@ -269,7 +269,7 @@
     "file": "Chap52/AdjMatrixGraphStEph.rs",
     "lines": "190-197",
     "spec_strength": "unknown",
-    "snippet": "        fn complement(&self) -> (result: Self)\n            requires self.spec_wf()\n            ensures\n                result.spec_wf(),\n                result.spec_n() == self.spec_n(),\n                forall|i: int, j: int| #![auto]\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> result.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
+    "snippet": "        fn complement(&self) -> (complemented: Self)\n            requires self.spec_wf()\n            ensures\n                complemented.spec_wf(),\n                complemented.spec_n() == self.spec_n(),\n                forall|i: int, j: int| #![auto]\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
   },
   {
     "id": 35,
@@ -301,7 +301,7 @@
     "file": "Chap52/AdjMatrixGraphStPer.rs",
     "lines": "115-120",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (result: Self)\n            ensures\n                result.spec_wf(),\n                result.spec_n() == n,\n                forall|u: int, v: int| #![auto]\n                    0 <= u < n && 0 <= v < n ==> !result.spec_edge(u, v);"
+    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_wf(),\n                empty.spec_n() == n,\n                forall|u: int, v: int| #![auto]\n                    0 <= u < n && 0 <= v < n ==> !empty.spec_edge(u, v);"
   },
   {
     "id": 39,
@@ -309,7 +309,7 @@
     "file": "Chap52/AdjMatrixGraphStPer.rs",
     "lines": "123-132",
     "spec_strength": "unknown",
-    "snippet": "        fn from_matrix(matrix: ArraySeqStPerS<ArraySeqStPerS<bool>>) -> (result: Self)\n            requires\n                forall|i: int| #![auto] 0 <= i < matrix.spec_len() ==>\n                    matrix.spec_index(i).spec_len() == matrix.spec_len()\n            ensures\n                result.spec_wf(),\n                result.spec_n() == matrix.spec_len(),\n                forall|u: int, v: int| #![auto]\n                    0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()\n                    ==> result.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);"
+    "snippet": "        fn from_matrix(matrix: ArraySeqStPerS<ArraySeqStPerS<bool>>) -> (constructed: Self)\n            requires\n                forall|i: int| #![auto] 0 <= i < matrix.spec_len() ==>\n                    matrix.spec_index(i).spec_len() == matrix.spec_len()\n            ensures\n                constructed.spec_wf(),\n                constructed.spec_n() == matrix.spec_len(),\n                forall|u: int, v: int| #![auto]\n                    0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()\n                    ==> constructed.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);"
   },
   {
     "id": 40,
@@ -357,7 +357,7 @@
     "file": "Chap52/AdjMatrixGraphStPer.rs",
     "lines": "178-190",
     "spec_strength": "unknown",
-    "snippet": "        fn set_edge(&self, u: N, v: N, exists: B) -> (result: Self)\n            requires\n                self.spec_wf(),\n                u < self.spec_n(),\n                v < self.spec_n(),\n            ensures\n                result.spec_wf(),\n                result.spec_n() == self.spec_n(),\n                result.spec_edge(u as int, v as int) == exists,\n                forall|i: int, j: int| #![auto]\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    && !(i == u as int && j == v as int)\n                    ==> result.spec_edge(i, j) == self.spec_edge(i, j);"
+    "snippet": "        fn set_edge(&self, u: N, v: N, exists: B) -> (updated: Self)\n            requires\n                self.spec_wf(),\n                u < self.spec_n(),\n                v < self.spec_n(),\n            ensures\n                updated.spec_wf(),\n                updated.spec_n() == self.spec_n(),\n                updated.spec_edge(u as int, v as int) == exists,\n                forall|i: int, j: int| #![auto]\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    && !(i == u as int && j == v as int)\n                    ==> updated.spec_edge(i, j) == self.spec_edge(i, j);"
   },
   {
     "id": 46,
@@ -365,7 +365,7 @@
     "file": "Chap52/AdjMatrixGraphStPer.rs",
     "lines": "193-200",
     "spec_strength": "unknown",
-    "snippet": "        fn complement(&self) -> (result: Self)\n            requires self.spec_wf()\n            ensures\n                result.spec_wf(),\n                result.spec_n() == self.spec_n(),\n                forall|i: int, j: int| #![auto]\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> result.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
+    "snippet": "        fn complement(&self) -> (complemented: Self)\n            requires self.spec_wf()\n            ensures\n                complemented.spec_wf(),\n                complemented.spec_n() == self.spec_n(),\n                forall|i: int, j: int| #![auto]\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
   },
   {
     "id": 47,
@@ -389,7 +389,7 @@
     "file": "Chap52/AdjSeqGraphMtEph.rs",
     "lines": "90-93",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (result: Self)\n            ensures\n                result.spec_num_vertices() == n,\n                forall|i: int| #![auto] 0 <= i < n ==> result.spec_degree(i) == 0;"
+    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_num_vertices() == n,\n                forall|i: int| #![auto] 0 <= i < n ==> empty.spec_degree(i) == 0;"
   },
   {
     "id": 50,
@@ -461,7 +461,7 @@
     "file": "Chap52/AdjSeqGraphMtPer.rs",
     "lines": "85-88",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (result: Self)\n            ensures\n                result.spec_num_vertices() == n,\n                forall|i: int| #![auto] 0 <= i < n ==> result.spec_degree(i) == 0;"
+    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_num_vertices() == n,\n                forall|i: int| #![auto] 0 <= i < n ==> empty.spec_degree(i) == 0;"
   },
   {
     "id": 59,
@@ -525,7 +525,7 @@
     "file": "Chap52/AdjSeqGraphStEph.rs",
     "lines": "88-91",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (result: Self)\n            ensures\n                result.spec_num_vertices() == n,\n                forall|i: int| #![auto] 0 <= i < n ==> result.spec_degree(i) == 0;"
+    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_num_vertices() == n,\n                forall|i: int| #![auto] 0 <= i < n ==> empty.spec_degree(i) == 0;"
   },
   {
     "id": 67,
@@ -533,7 +533,7 @@
     "file": "Chap52/AdjSeqGraphStEph.rs",
     "lines": "94-101",
     "spec_strength": "unknown",
-    "snippet": "        fn from_seq(adj: ArraySeqStEphS<ArraySeqStEphS<N>>) -> (result: Self)\n            ensures\n                result.spec_num_vertices() == adj.spec_len(),\n                forall|i: int| #![auto] 0 <= i < adj.spec_len() ==>\n                    result.spec_degree(i) == adj.spec_index(i).spec_len(),\n                forall|i: int, j: int| #![auto] 0 <= i < adj.spec_len()\n                    && 0 <= j < adj.spec_index(i).spec_len()\n                    ==> result.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);"
+    "snippet": "        fn from_seq(adj: ArraySeqStEphS<ArraySeqStEphS<N>>) -> (constructed: Self)\n            ensures\n                constructed.spec_num_vertices() == adj.spec_len(),\n                forall|i: int| #![auto] 0 <= i < adj.spec_len() ==>\n                    constructed.spec_degree(i) == adj.spec_index(i).spec_len(),\n                forall|i: int, j: int| #![auto] 0 <= i < adj.spec_len()\n                    && 0 <= j < adj.spec_index(i).spec_len()\n                    ==> constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);"
   },
   {
     "id": 68,
@@ -613,7 +613,7 @@
     "file": "Chap52/AdjSeqGraphStPer.rs",
     "lines": "89-92",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (result: Self)\n            ensures\n                result.spec_num_vertices() == n,\n                forall|i: int| #![auto] 0 <= i < n ==> result.spec_degree(i) == 0;"
+    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_num_vertices() == n,\n                forall|i: int| #![auto] 0 <= i < n ==> empty.spec_degree(i) == 0;"
   },
   {
     "id": 78,
@@ -621,7 +621,7 @@
     "file": "Chap52/AdjSeqGraphStPer.rs",
     "lines": "95-102",
     "spec_strength": "unknown",
-    "snippet": "        fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: Self)\n            ensures\n                result.spec_num_vertices() == adj.spec_len(),\n                forall|i: int| #![auto] 0 <= i < adj.spec_len() ==>\n                    result.spec_degree(i) == adj.spec_index(i).spec_len(),\n                forall|i: int, j: int| #![auto] 0 <= i < adj.spec_len()\n                    && 0 <= j < adj.spec_index(i).spec_len()\n                    ==> result.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);"
+    "snippet": "        fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<N>>) -> (constructed: Self)\n            ensures\n                constructed.spec_num_vertices() == adj.spec_len(),\n                forall|i: int| #![auto] 0 <= i < adj.spec_len() ==>\n                    constructed.spec_degree(i) == adj.spec_index(i).spec_len(),\n                forall|i: int, j: int| #![auto] 0 <= i < adj.spec_len()\n                    && 0 <= j < adj.spec_index(i).spec_len()\n                    ==> constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);"
   },
   {
     "id": 79,
@@ -669,7 +669,7 @@
     "file": "Chap52/AdjSeqGraphStPer.rs",
     "lines": "142-156",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_edge(&self, u: N, v: N) -> (result: Self)\n            requires\n                u < self.spec_num_vertices(),\n                v < self.spec_num_vertices(),\n            ensures\n                result.spec_num_vertices() == self.spec_num_vertices(),\n                forall|i: int| #![auto] 0 <= i < self.spec_num_vertices() && i != u as int\n                    ==> result.spec_degree(i) == self.spec_degree(i),\n                forall|i: int, j: int| #![auto]\n                    0 <= i < self.spec_num_vertices() && i != u as int\n                    && 0 <= j < self.spec_degree(i)\n                    ==> result.spec_neighbor(i, j) == self.spec_neighbor(i, j),\n                exists|j: int| #![auto]\n                    0 <= j < result.spec_degree(u as int)\n                    && result.spec_neighbor(u as int, j) == v;"
+    "snippet": "        fn insert_edge(&self, u: N, v: N) -> (updated: Self)\n            requires\n                u < self.spec_num_vertices(),\n                v < self.spec_num_vertices(),\n            ensures\n                updated.spec_num_vertices() == self.spec_num_vertices(),\n                forall|i: int| #![auto] 0 <= i < self.spec_num_vertices() && i != u as int\n                    ==> updated.spec_degree(i) == self.spec_degree(i),\n                forall|i: int, j: int| #![auto]\n                    0 <= i < self.spec_num_vertices() && i != u as int\n                    && 0 <= j < self.spec_degree(i)\n                    ==> updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),\n                exists|j: int| #![auto]\n                    0 <= j < updated.spec_degree(u as int)\n                    && updated.spec_neighbor(u as int, j) == v;"
   },
   {
     "id": 85,
@@ -677,7 +677,7 @@
     "file": "Chap52/AdjSeqGraphStPer.rs",
     "lines": "159-171",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_edge(&self, u: N, v: N) -> (result: Self)\n            requires u < self.spec_num_vertices()\n            ensures\n                result.spec_num_vertices() == self.spec_num_vertices(),\n                forall|i: int| #![auto] 0 <= i < self.spec_num_vertices() && i != u as int\n                    ==> result.spec_degree(i) == self.spec_degree(i),\n                forall|i: int, j: int| #![auto]\n                    0 <= i < self.spec_num_vertices() && i != u as int\n                    && 0 <= j < self.spec_degree(i)\n                    ==> result.spec_neighbor(i, j) == self.spec_neighbor(i, j),\n                forall|j: int| #![auto]\n                    0 <= j < result.spec_degree(u as int)\n                    ==> result.spec_neighbor(u as int, j) != v;"
+    "snippet": "        fn delete_edge(&self, u: N, v: N) -> (updated: Self)\n            requires u < self.spec_num_vertices()\n            ensures\n                updated.spec_num_vertices() == self.spec_num_vertices(),\n                forall|i: int| #![auto] 0 <= i < self.spec_num_vertices() && i != u as int\n                    ==> updated.spec_degree(i) == self.spec_degree(i),\n                forall|i: int, j: int| #![auto]\n                    0 <= i < self.spec_num_vertices() && i != u as int\n                    && 0 <= j < self.spec_degree(i)\n                    ==> updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),\n                forall|j: int| #![auto]\n                    0 <= j < updated.spec_degree(u as int)\n                    ==> updated.spec_neighbor(u as int, j) != v;"
   },
   {
     "id": 86,
@@ -717,7 +717,7 @@
     "file": "Chap52/AdjTableGraphMtPer.rs",
     "lines": "77-80",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: &V) -> (result: AVLTreeSetMtPer<V>)\n            ensures\n                self.spec_adj().dom().contains(u@) ==> result@ == self.spec_adj()[u@],\n                !self.spec_adj().dom().contains(u@) ==> result@ == Set::<<V as View>::V>::empty();"
+    "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)\n            ensures\n                self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],\n                !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();"
   },
   {
     "id": 91,
@@ -733,7 +733,7 @@
     "file": "Chap52/AdjTableGraphMtPer.rs",
     "lines": "84-85",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_vertex(&self, v: V) -> (result: Self)\n            ensures result.spec_adj().dom().contains(v@);"
+    "snippet": "        fn insert_vertex(&self, v: V) -> (updated: Self)\n            ensures updated.spec_adj().dom().contains(v@);"
   },
   {
     "id": 93,
@@ -741,7 +741,7 @@
     "file": "Chap52/AdjTableGraphMtPer.rs",
     "lines": "87-88",
     "spec_strength": "hole",
-    "snippet": "        fn delete_vertex(&self, v: &V) -> (result: Self)\n            ensures !result.spec_adj().dom().contains(v@);"
+    "snippet": "        fn delete_vertex(&self, v: &V) -> (updated: Self)\n            ensures !updated.spec_adj().dom().contains(v@);"
   },
   {
     "id": 94,
@@ -749,7 +749,7 @@
     "file": "Chap52/AdjTableGraphMtPer.rs",
     "lines": "90-94",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_edge(&self, u: V, v: V) -> (result: Self)\n            ensures\n                result.spec_adj().dom().contains(u@),\n                result.spec_adj().dom().contains(v@),\n                result.spec_adj()[u@].contains(v@);"
+    "snippet": "        fn insert_edge(&self, u: V, v: V) -> (updated: Self)\n            ensures\n                updated.spec_adj().dom().contains(u@),\n                updated.spec_adj().dom().contains(v@),\n                updated.spec_adj()[u@].contains(v@);"
   },
   {
     "id": 95,
@@ -757,7 +757,7 @@
     "file": "Chap52/AdjTableGraphMtPer.rs",
     "lines": "96-99",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_edge(&self, u: &V, v: &V) -> (result: Self)\n            ensures\n                !result.spec_adj().dom().contains(u@)\n                    || !result.spec_adj()[u@].contains(v@);"
+    "snippet": "        fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)\n            ensures\n                !updated.spec_adj().dom().contains(u@)\n                    || !updated.spec_adj()[u@].contains(v@);"
   },
   {
     "id": 96,
@@ -909,7 +909,7 @@
     "file": "Chap52/AdjTableGraphStPer.rs",
     "lines": "66-67",
     "spec_strength": "unknown",
-    "snippet": "        fn vertices(&self) -> (result: AVLTreeSetStPer<V>)\n            ensures result@ == self.spec_adj().dom();"
+    "snippet": "        fn vertices(&self) -> (verts: AVLTreeSetStPer<V>)\n            ensures verts@ == self.spec_adj().dom();"
   },
   {
     "id": 115,
@@ -925,7 +925,7 @@
     "file": "Chap52/AdjTableGraphStPer.rs",
     "lines": "72-75",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: &V) -> (result: AVLTreeSetStPer<V>)\n            ensures\n                self.spec_adj().dom().contains(u@) ==> result@ == self.spec_adj()[u@],\n                !self.spec_adj().dom().contains(u@) ==> result@ == Set::<<V as View>::V>::empty();"
+    "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)\n            ensures\n                self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],\n                !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();"
   },
   {
     "id": 117,
@@ -941,7 +941,7 @@
     "file": "Chap52/AdjTableGraphStPer.rs",
     "lines": "79-80",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_vertex(&self, v: V) -> (result: Self)\n            ensures result.spec_adj().dom().contains(v@);"
+    "snippet": "        fn insert_vertex(&self, v: V) -> (updated: Self)\n            ensures updated.spec_adj().dom().contains(v@);"
   },
   {
     "id": 119,
@@ -949,7 +949,7 @@
     "file": "Chap52/AdjTableGraphStPer.rs",
     "lines": "82-83",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_vertex(&self, v: &V) -> (result: Self)\n            ensures !result.spec_adj().dom().contains(v@);"
+    "snippet": "        fn delete_vertex(&self, v: &V) -> (updated: Self)\n            ensures !updated.spec_adj().dom().contains(v@);"
   },
   {
     "id": 120,
@@ -957,7 +957,7 @@
     "file": "Chap52/AdjTableGraphStPer.rs",
     "lines": "85-89",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_edge(&self, u: V, v: V) -> (result: Self)\n            ensures\n                result.spec_adj().dom().contains(u@),\n                result.spec_adj().dom().contains(v@),\n                result.spec_adj()[u@].contains(v@);"
+    "snippet": "        fn insert_edge(&self, u: V, v: V) -> (updated: Self)\n            ensures\n                updated.spec_adj().dom().contains(u@),\n                updated.spec_adj().dom().contains(v@),\n                updated.spec_adj()[u@].contains(v@);"
   },
   {
     "id": 121,
@@ -965,7 +965,7 @@
     "file": "Chap52/AdjTableGraphStPer.rs",
     "lines": "91-94",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_edge(&self, u: &V, v: &V) -> (result: Self)\n            ensures\n                !result.spec_adj().dom().contains(u@)\n                    || !result.spec_adj()[u@].contains(v@);"
+    "snippet": "        fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)\n            ensures\n                !updated.spec_adj().dom().contains(u@)\n                    || !updated.spec_adj()[u@].contains(v@);"
   },
   {
     "id": 122,
@@ -1029,7 +1029,7 @@
     "file": "Chap52/EdgeSetGraphMtPer.rs",
     "lines": "63-64",
     "spec_strength": "hole",
-    "snippet": "        fn out_neighbors(&self, u: &V) -> (result: AVLTreeSetMtPer<V>)\n            ensures result@ == Set::new(|v: <V as View>::V| self.edges@.contains((u@, v)));"
+    "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)\n            ensures neighbors@ == Set::new(|v: <V as View>::V| self.edges@.contains((u@, v)));"
   },
   {
     "id": 130,
@@ -1053,7 +1053,7 @@
     "file": "Chap52/EdgeSetGraphMtPer.rs",
     "lines": "70-71",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_vertex(&self, v: &V) -> (result: Self)\n            ensures !result.vertices@.contains(v@);"
+    "snippet": "        fn delete_vertex(&self, v: &V) -> (updated: Self)\n            ensures !updated.vertices@.contains(v@);"
   },
   {
     "id": 133,
@@ -1141,7 +1141,7 @@
     "file": "Chap52/EdgeSetGraphStEph.rs",
     "lines": "67-68",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: &V) -> (result: AVLTreeSetStEph<V>)\n            ensures result@ == self.spec_out_neighbors(u@);"
+    "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)\n            ensures neighbors@ == self.spec_out_neighbors(u@);"
   },
   {
     "id": 144,
@@ -1245,7 +1245,7 @@
     "file": "Chap52/EdgeSetGraphStPer.rs",
     "lines": "69-70",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: &V) -> (result: AVLTreeSetStPer<V>)\n            ensures result@ == self.spec_out_neighbors(u@);"
+    "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)\n            ensures neighbors@ == self.spec_out_neighbors(u@);"
   },
   {
     "id": 157,
@@ -1269,7 +1269,7 @@
     "file": "Chap52/EdgeSetGraphStPer.rs",
     "lines": "76-77",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_vertex(&self, v: &V) -> (result: Self)\n            ensures !result.vertices@.contains(v@);"
+    "snippet": "        fn delete_vertex(&self, v: &V) -> (updated: Self)\n            ensures !updated.vertices@.contains(v@);"
   },
   {
     "id": 160,

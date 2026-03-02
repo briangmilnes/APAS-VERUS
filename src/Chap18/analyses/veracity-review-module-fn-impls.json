@@ -461,7 +461,7 @@
     "file": "Chap18/ArraySeqMtEph.rs",
     "lines": "418-426",
     "spec_strength": "unknown",
-    "snippet": "        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (result: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                spec_ninject(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    updates@,\n                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));"
+    "snippet": "        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                spec_ninject(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    updates@,\n                    Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)));"
   },
   {
     "id": 59,
@@ -485,7 +485,7 @@
     "file": "Chap18/ArraySeqMtEph.rs",
     "lines": "443-448",
     "spec_strength": "unknown",
-    "snippet": "        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (result: A)\n            requires\n                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),\n                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),\n            ensures\n                result == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);"
+    "snippet": "        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (acc: A)\n            requires\n                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),\n                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),\n            ensures\n                acc == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);"
   },
   {
     "id": 62,
@@ -493,7 +493,7 @@
     "file": "Chap18/ArraySeqMtEph.rs",
     "lines": "453-461",
     "spec_strength": "unknown",
-    "snippet": "        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (result: T)\n            where T: Clone\n            requires\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                result == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);"
+    "snippet": "        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)\n            where T: Clone\n            requires\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);"
   },
   {
     "id": 63,
@@ -581,7 +581,7 @@
     "file": "Chap18/ArraySeqMtEph.rs",
     "lines": "1311-1321",
     "spec_strength": "unknown",
-    "snippet": "        pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (result: ArraySeqMtEphS<T>)\n            where T: Clone + Send + Sync + Eq + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==>\n                    0 <= updates@[k].0 < a.seq@.len(),\n            ensures\n                spec_ninject(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    updates@,\n                    Seq::new(result.spec_len(), |i: int| result.spec_index(i))),"
+    "snippet": "        pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)\n            where T: Clone + Send + Sync + Eq + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==>\n                    0 <= updates@[k].0 < a.seq@.len(),\n            ensures\n                spec_ninject(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    updates@,\n                    Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))),"
   },
   {
     "id": 74,

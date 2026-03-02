@@ -429,7 +429,7 @@
     "file": "Chap50/OptBinSearchTreeMtEph.rs",
     "lines": "82",
     "spec_strength": "hole",
-    "snippet": "        fn new() -> (result: Self);"
+    "snippet": "        fn new() -> (empty: Self);"
   },
   {
     "id": 55,
@@ -437,7 +437,7 @@
     "file": "Chap50/OptBinSearchTreeMtEph.rs",
     "lines": "83",
     "spec_strength": "hole",
-    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self);"
+    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self);"
   },
   {
     "id": 56,
@@ -445,7 +445,7 @@
     "file": "Chap50/OptBinSearchTreeMtEph.rs",
     "lines": "84",
     "spec_strength": "hole",
-    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self);"
+    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self);"
   },
   {
     "id": 57,
@@ -453,7 +453,7 @@
     "file": "Chap50/OptBinSearchTreeMtEph.rs",
     "lines": "85",
     "spec_strength": "hole",
-    "snippet": "        fn optimal_cost(&mut self) -> (result: Probability) where T: Send + Sync + 'static;"
+    "snippet": "        fn optimal_cost(&mut self) -> (cost: Probability) where T: Send + Sync + 'static;"
   },
   {
     "id": 58,
@@ -461,7 +461,7 @@
     "file": "Chap50/OptBinSearchTreeMtEph.rs",
     "lines": "86",
     "spec_strength": "hole",
-    "snippet": "        fn keys(&self) -> (result: Vec<KeyProb<T>>);"
+    "snippet": "        fn keys(&self) -> (keys: Vec<KeyProb<T>>);"
   },
   {
     "id": 59,
@@ -485,7 +485,7 @@
     "file": "Chap50/OptBinSearchTreeMtEph.rs",
     "lines": "89",
     "spec_strength": "hole",
-    "snippet": "        fn num_keys(&self) -> (result: usize);"
+    "snippet": "        fn num_keys(&self) -> (count: usize);"
   },
   {
     "id": 62,
@@ -501,7 +501,7 @@
     "file": "Chap50/OptBinSearchTreeMtEph.rs",
     "lines": "91",
     "spec_strength": "hole",
-    "snippet": "        fn memo_size(&self) -> (result: usize);"
+    "snippet": "        fn memo_size(&self) -> (count: usize);"
   },
   {
     "id": 64,
@@ -509,7 +509,7 @@
     "file": "Chap50/OptBinSearchTreeMtEph.rs",
     "lines": "97",
     "spec_strength": "hole",
-    "snippet": "    fn parallel_min_reduction<T: MtVal>(table: &OBSTMtEphS<T>, costs: Vec<Probability>) -> (result: Probability) {"
+    "snippet": "    fn parallel_min_reduction<T: MtVal>(table: &OBSTMtEphS<T>, costs: Vec<Probability>) -> (cost: Probability) {"
   },
   {
     "id": 65,
@@ -517,7 +517,7 @@
     "file": "Chap50/OptBinSearchTreeMtEph.rs",
     "lines": "122",
     "spec_strength": "hole",
-    "snippet": "    fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> (result: Probability) {"
+    "snippet": "    fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> (cost: Probability) {"
   },
   {
     "id": 66,
@@ -541,7 +541,7 @@
     "file": "Chap50/OptBinSearchTreeMtPer.rs",
     "lines": "71",
     "spec_strength": "hole",
-    "snippet": "        fn new() -> (result: Self);"
+    "snippet": "        fn new() -> (empty: Self);"
   },
   {
     "id": 69,
@@ -549,7 +549,7 @@
     "file": "Chap50/OptBinSearchTreeMtPer.rs",
     "lines": "72",
     "spec_strength": "hole",
-    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self);"
+    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self);"
   },
   {
     "id": 70,
@@ -557,7 +557,7 @@
     "file": "Chap50/OptBinSearchTreeMtPer.rs",
     "lines": "73",
     "spec_strength": "hole",
-    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self);"
+    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self);"
   },
   {
     "id": 71,
@@ -565,7 +565,7 @@
     "file": "Chap50/OptBinSearchTreeMtPer.rs",
     "lines": "74",
     "spec_strength": "hole",
-    "snippet": "        fn optimal_cost(&self) -> (result: Probability) where T: Send + Sync + 'static;"
+    "snippet": "        fn optimal_cost(&self) -> (cost: Probability) where T: Send + Sync + 'static;"
   },
   {
     "id": 72,
@@ -573,7 +573,7 @@
     "file": "Chap50/OptBinSearchTreeMtPer.rs",
     "lines": "75",
     "spec_strength": "hole",
-    "snippet": "        fn keys(&self) -> (result: &Arc<Vec<KeyProb<T>>>);"
+    "snippet": "        fn keys(&self) -> (keys: &Arc<Vec<KeyProb<T>>>);"
   },
   {
     "id": 73,
@@ -581,7 +581,7 @@
     "file": "Chap50/OptBinSearchTreeMtPer.rs",
     "lines": "76",
     "spec_strength": "hole",
-    "snippet": "        fn num_keys(&self) -> (result: usize);"
+    "snippet": "        fn num_keys(&self) -> (count: usize);"
   },
   {
     "id": 74,
@@ -589,7 +589,7 @@
     "file": "Chap50/OptBinSearchTreeMtPer.rs",
     "lines": "77",
     "spec_strength": "hole",
-    "snippet": "        fn memo_size(&self) -> (result: usize);"
+    "snippet": "        fn memo_size(&self) -> (count: usize);"
   },
   {
     "id": 75,
@@ -597,7 +597,7 @@
     "file": "Chap50/OptBinSearchTreeMtPer.rs",
     "lines": "83",
     "spec_strength": "hole",
-    "snippet": "    fn parallel_min_reduction<T: MtVal>(table: &OBSTMtPerS<T>, costs: Vec<Probability>) -> (result: Probability) {"
+    "snippet": "    fn parallel_min_reduction<T: MtVal>(table: &OBSTMtPerS<T>, costs: Vec<Probability>) -> (cost: Probability) {"
   },
   {
     "id": 76,
@@ -605,7 +605,7 @@
     "file": "Chap50/OptBinSearchTreeMtPer.rs",
     "lines": "108",
     "spec_strength": "hole",
-    "snippet": "    fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtPerS<T>, i: usize, l: usize) -> (result: Probability) {"
+    "snippet": "    fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtPerS<T>, i: usize, l: usize) -> (cost: Probability) {"
   },
   {
     "id": 77,
@@ -621,7 +621,7 @@
     "file": "Chap50/OptBinSearchTreeStEph.rs",
     "lines": "57",
     "spec_strength": "hole",
-    "snippet": "        fn new() -> (result: Self);"
+    "snippet": "        fn new() -> (empty: Self);"
   },
   {
     "id": 79,
@@ -629,7 +629,7 @@
     "file": "Chap50/OptBinSearchTreeStEph.rs",
     "lines": "58",
     "spec_strength": "hole",
-    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self);"
+    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self);"
   },
   {
     "id": 80,
@@ -637,7 +637,7 @@
     "file": "Chap50/OptBinSearchTreeStEph.rs",
     "lines": "59",
     "spec_strength": "hole",
-    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self);"
+    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self);"
   },
   {
     "id": 81,
@@ -645,7 +645,7 @@
     "file": "Chap50/OptBinSearchTreeStEph.rs",
     "lines": "60",
     "spec_strength": "hole",
-    "snippet": "        fn optimal_cost(&mut self) -> (result: Probability);"
+    "snippet": "        fn optimal_cost(&mut self) -> (cost: Probability);"
   },
   {
     "id": 82,
@@ -653,7 +653,7 @@
     "file": "Chap50/OptBinSearchTreeStEph.rs",
     "lines": "61",
     "spec_strength": "",
-    "snippet": "        fn keys(&self) -> (result: &Vec<KeyProb<T>>);"
+    "snippet": "        fn keys(&self) -> (keys: &Vec<KeyProb<T>>);"
   },
   {
     "id": 83,
@@ -677,7 +677,7 @@
     "file": "Chap50/OptBinSearchTreeStEph.rs",
     "lines": "64",
     "spec_strength": "",
-    "snippet": "        fn num_keys(&self) -> (result: usize);"
+    "snippet": "        fn num_keys(&self) -> (count: usize);"
   },
   {
     "id": 86,
@@ -693,7 +693,7 @@
     "file": "Chap50/OptBinSearchTreeStEph.rs",
     "lines": "66",
     "spec_strength": "",
-    "snippet": "        fn memo_size(&self) -> (result: usize);"
+    "snippet": "        fn memo_size(&self) -> (count: usize);"
   },
   {
     "id": 88,
@@ -701,7 +701,7 @@
     "file": "Chap50/OptBinSearchTreeStEph.rs",
     "lines": "72",
     "spec_strength": "hole",
-    "snippet": "    fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> (result: Probability) {"
+    "snippet": "    fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> (cost: Probability) {"
   },
   {
     "id": 89,
@@ -717,7 +717,7 @@
     "file": "Chap50/OptBinSearchTreeStPer.rs",
     "lines": "57",
     "spec_strength": "hole",
-    "snippet": "        fn new() -> (result: Self);"
+    "snippet": "        fn new() -> (empty: Self);"
   },
   {
     "id": 91,
@@ -725,7 +725,7 @@
     "file": "Chap50/OptBinSearchTreeStPer.rs",
     "lines": "58",
     "spec_strength": "hole",
-    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (result: Self);"
+    "snippet": "        fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self);"
   },
   {
     "id": 92,
@@ -733,7 +733,7 @@
     "file": "Chap50/OptBinSearchTreeStPer.rs",
     "lines": "59",
     "spec_strength": "hole",
-    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (result: Self);"
+    "snippet": "        fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self);"
   },
   {
     "id": 93,
@@ -741,7 +741,7 @@
     "file": "Chap50/OptBinSearchTreeStPer.rs",
     "lines": "60",
     "spec_strength": "hole",
-    "snippet": "        fn optimal_cost(&self) -> (result: Probability);"
+    "snippet": "        fn optimal_cost(&self) -> (cost: Probability);"
   },
   {
     "id": 94,
@@ -749,7 +749,7 @@
     "file": "Chap50/OptBinSearchTreeStPer.rs",
     "lines": "61",
     "spec_strength": "",
-    "snippet": "        fn keys(&self) -> (result: &Vec<KeyProb<T>>);"
+    "snippet": "        fn keys(&self) -> (keys: &Vec<KeyProb<T>>);"
   },
   {
     "id": 95,
@@ -757,7 +757,7 @@
     "file": "Chap50/OptBinSearchTreeStPer.rs",
     "lines": "62",
     "spec_strength": "",
-    "snippet": "        fn num_keys(&self) -> (result: usize);"
+    "snippet": "        fn num_keys(&self) -> (count: usize);"
   },
   {
     "id": 96,
@@ -765,7 +765,7 @@
     "file": "Chap50/OptBinSearchTreeStPer.rs",
     "lines": "63",
     "spec_strength": "",
-    "snippet": "        fn memo_size(&self) -> (result: usize);"
+    "snippet": "        fn memo_size(&self) -> (count: usize);"
   },
   {
     "id": 97,
@@ -773,7 +773,7 @@
     "file": "Chap50/OptBinSearchTreeStPer.rs",
     "lines": "69",
     "spec_strength": "hole",
-    "snippet": "    fn obst_rec_st_per<T: StT>(s: &mut OBSTStPerS<T>, i: usize, l: usize) -> (result: Probability) {"
+    "snippet": "    fn obst_rec_st_per<T: StT>(s: &mut OBSTStPerS<T>, i: usize, l: usize) -> (cost: Probability) {"
   },
   {
     "id": 98,

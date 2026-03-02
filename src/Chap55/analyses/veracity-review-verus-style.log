@@ -94,9 +94,8 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [16] no Lit macro definitions (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:77: warning: [19] transpose_graph return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:139: warning: [19] check_wf_adj_list_eph return name 'result' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:30: warning: [20] trait SCCStEphTrait is defined but has no impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:
@@ -113,9 +112,8 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [16] no Lit macro definitions (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:134: warning: [19] transpose_graph return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:194: warning: [19] check_wf_adj_list_per return name 'result' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:28: warning: [20] trait SCCStPerTrait is defined but has no impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:
@@ -155,5 +153,5 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:36: warning: [20] trait TopoSortStPerTrait is defined but has no impl
 
 ════════════════════════════════════════════════════════════════
-Summary: 112 passed, 18 warnings in 8 files (checked 8 files)
+Summary: 114 passed, 14 warnings in 8 files (checked 8 files)
 ════════════════════════════════════════════════════════════════

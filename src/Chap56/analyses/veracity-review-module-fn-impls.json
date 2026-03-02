@@ -5,7 +5,7 @@
     "file": "Chap56/AllPairsResultStEphF64.rs",
     "lines": "36",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: usize) -> (result: Self);"
+    "snippet": "        fn new(n: usize) -> (empty: Self);"
   },
   {
     "id": 2,
@@ -29,7 +29,7 @@
     "file": "Chap56/AllPairsResultStEphF64.rs",
     "lines": "42",
     "spec_strength": "",
-    "snippet": "        fn get_predecessor(&self, u: usize, v: usize) -> (result: Option<usize>);"
+    "snippet": "        fn get_predecessor(&self, u: usize, v: usize) -> (predecessor: Option<usize>);"
   },
   {
     "id": 5,
@@ -45,7 +45,7 @@
     "file": "Chap56/AllPairsResultStEphF64.rs",
     "lines": "46",
     "spec_strength": "",
-    "snippet": "        fn is_reachable(&self, u: usize, v: usize) -> (result: bool);"
+    "snippet": "        fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool);"
   },
   {
     "id": 7,
@@ -53,7 +53,7 @@
     "file": "Chap56/AllPairsResultStEphF64.rs",
     "lines": "48",
     "spec_strength": "",
-    "snippet": "        fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);"
+    "snippet": "        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);"
   },
   {
     "id": 8,
@@ -61,7 +61,7 @@
     "file": "Chap56/AllPairsResultStEphI64.rs",
     "lines": "26",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: usize) -> (result: Self);"
+    "snippet": "        fn new(n: usize) -> (empty: Self);"
   },
   {
     "id": 9,
@@ -109,7 +109,7 @@
     "file": "Chap56/AllPairsResultStEphI64.rs",
     "lines": "38",
     "spec_strength": "",
-    "snippet": "        fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);"
+    "snippet": "        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);"
   },
   {
     "id": 15,
@@ -117,7 +117,7 @@
     "file": "Chap56/AllPairsResultStPerF64.rs",
     "lines": "35",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: usize) -> (result: Self);"
+    "snippet": "        fn new(n: usize) -> (empty: Self);"
   },
   {
     "id": 16,
@@ -133,7 +133,7 @@
     "file": "Chap56/AllPairsResultStPerF64.rs",
     "lines": "39",
     "spec_strength": "unknown",
-    "snippet": "        fn set_distance(self, u: usize, v: usize, dist: WrappedF64) -> (result: Self);"
+    "snippet": "        fn set_distance(self, u: usize, v: usize, dist: WrappedF64) -> (updated: Self);"
   },
   {
     "id": 18,
@@ -141,7 +141,7 @@
     "file": "Chap56/AllPairsResultStPerF64.rs",
     "lines": "41",
     "spec_strength": "",
-    "snippet": "        fn get_predecessor(&self, u: usize, v: usize) -> (result: Option<usize>);"
+    "snippet": "        fn get_predecessor(&self, u: usize, v: usize) -> (predecessor: Option<usize>);"
   },
   {
     "id": 19,
@@ -149,7 +149,7 @@
     "file": "Chap56/AllPairsResultStPerF64.rs",
     "lines": "43",
     "spec_strength": "unknown",
-    "snippet": "        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (result: Self);"
+    "snippet": "        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self);"
   },
   {
     "id": 20,
@@ -157,7 +157,7 @@
     "file": "Chap56/AllPairsResultStPerF64.rs",
     "lines": "45",
     "spec_strength": "",
-    "snippet": "        fn is_reachable(&self, u: usize, v: usize) -> (result: bool);"
+    "snippet": "        fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool);"
   },
   {
     "id": 21,
@@ -165,7 +165,7 @@
     "file": "Chap56/AllPairsResultStPerF64.rs",
     "lines": "47",
     "spec_strength": "",
-    "snippet": "        fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);"
+    "snippet": "        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);"
   },
   {
     "id": 22,
@@ -173,7 +173,7 @@
     "file": "Chap56/AllPairsResultStPerI64.rs",
     "lines": "25",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: usize) -> (result: Self);"
+    "snippet": "        fn new(n: usize) -> (empty: Self);"
   },
   {
     "id": 23,
@@ -189,7 +189,7 @@
     "file": "Chap56/AllPairsResultStPerI64.rs",
     "lines": "29",
     "spec_strength": "unknown",
-    "snippet": "        fn set_distance(self, u: usize, v: usize, dist: i64) -> (result: Self);"
+    "snippet": "        fn set_distance(self, u: usize, v: usize, dist: i64) -> (updated: Self);"
   },
   {
     "id": 25,
@@ -205,7 +205,7 @@
     "file": "Chap56/AllPairsResultStPerI64.rs",
     "lines": "33",
     "spec_strength": "unknown",
-    "snippet": "        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (result: Self);"
+    "snippet": "        fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self);"
   },
   {
     "id": 27,
@@ -221,7 +221,7 @@
     "file": "Chap56/AllPairsResultStPerI64.rs",
     "lines": "37",
     "spec_strength": "",
-    "snippet": "        fn extract_path(&self, u: usize, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);"
+    "snippet": "        fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);"
   },
   {
     "id": 29,
@@ -333,7 +333,7 @@
     "file": "Chap56/SSSPResultStEphF64.rs",
     "lines": "36-37",
     "spec_strength": "unknown",
-    "snippet": "        pub fn new(n: usize, source: usize) -> (result: Self)\n            requires source < n,"
+    "snippet": "        pub fn new(n: usize, source: usize) -> (empty: Self)\n            requires source < n,"
   },
   {
     "id": 43,
@@ -389,7 +389,7 @@
     "file": "Chap56/SSSPResultStEphI64.rs",
     "lines": "27-28",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: usize, source: usize) -> (result: Self)\n            requires source < n;"
+    "snippet": "        fn new(n: usize, source: usize) -> (empty: Self)\n            requires source < n;"
   },
   {
     "id": 50,
@@ -437,7 +437,7 @@
     "file": "Chap56/SSSPResultStEphI64.rs",
     "lines": "40",
     "spec_strength": "",
-    "snippet": "        fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);"
+    "snippet": "        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);"
   },
   {
     "id": 56,
@@ -445,7 +445,7 @@
     "file": "Chap56/SSSPResultStPerF64.rs",
     "lines": "53-54",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: usize, source: usize) -> (result: Self)\n            requires source < n;"
+    "snippet": "        fn new(n: usize, source: usize) -> (empty: Self)\n            requires source < n;"
   },
   {
     "id": 57,
@@ -461,7 +461,7 @@
     "file": "Chap56/SSSPResultStPerF64.rs",
     "lines": "58",
     "spec_strength": "unknown",
-    "snippet": "        fn set_distance(self, v: usize, dist: WrappedF64) -> (result: Self);"
+    "snippet": "        fn set_distance(self, v: usize, dist: WrappedF64) -> (updated: Self);"
   },
   {
     "id": 59,
@@ -469,7 +469,7 @@
     "file": "Chap56/SSSPResultStPerF64.rs",
     "lines": "60",
     "spec_strength": "",
-    "snippet": "        fn get_predecessor(&self, v: usize) -> (result: Option<usize>);"
+    "snippet": "        fn get_predecessor(&self, v: usize) -> (predecessor: Option<usize>);"
   },
   {
     "id": 60,
@@ -477,7 +477,7 @@
     "file": "Chap56/SSSPResultStPerF64.rs",
     "lines": "62",
     "spec_strength": "unknown",
-    "snippet": "        fn set_predecessor(self, v: usize, pred: usize) -> (result: Self);"
+    "snippet": "        fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self);"
   },
   {
     "id": 61,
@@ -485,7 +485,7 @@
     "file": "Chap56/SSSPResultStPerF64.rs",
     "lines": "64",
     "spec_strength": "",
-    "snippet": "        fn is_reachable(&self, v: usize) -> (result: bool);"
+    "snippet": "        fn is_reachable(&self, v: usize) -> (reachable: bool);"
   },
   {
     "id": 62,
@@ -493,7 +493,7 @@
     "file": "Chap56/SSSPResultStPerF64.rs",
     "lines": "66",
     "spec_strength": "",
-    "snippet": "        fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);"
+    "snippet": "        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);"
   },
   {
     "id": 63,
@@ -501,7 +501,7 @@
     "file": "Chap56/SSSPResultStPerI64.rs",
     "lines": "25-26",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: usize, source: usize) -> (result: Self)\n            requires source < n;"
+    "snippet": "        fn new(n: usize, source: usize) -> (empty: Self)\n            requires source < n;"
   },
   {
     "id": 64,
@@ -517,7 +517,7 @@
     "file": "Chap56/SSSPResultStPerI64.rs",
     "lines": "30",
     "spec_strength": "unknown",
-    "snippet": "        fn set_distance(self, v: usize, dist: i64) -> (result: Self);"
+    "snippet": "        fn set_distance(self, v: usize, dist: i64) -> (updated: Self);"
   },
   {
     "id": 66,
@@ -533,7 +533,7 @@
     "file": "Chap56/SSSPResultStPerI64.rs",
     "lines": "34",
     "spec_strength": "unknown",
-    "snippet": "        fn set_predecessor(self, v: usize, pred: usize) -> (result: Self);"
+    "snippet": "        fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self);"
   },
   {
     "id": 68,
@@ -549,6 +549,6 @@
     "file": "Chap56/SSSPResultStPerI64.rs",
     "lines": "38",
     "spec_strength": "",
-    "snippet": "        fn extract_path(&self, v: usize) -> (result: Option<ArraySeqStPerS<usize>>);"
+    "snippet": "        fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>);"
   }
 ]

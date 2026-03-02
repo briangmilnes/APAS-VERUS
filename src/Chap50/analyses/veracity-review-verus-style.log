@@ -147,6 +147,7 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: info: [11] no Set/Seq usage (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: info: [14] Debug, Display outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:82: warning: [12] trait OBSTMtEphTrait fn new should have requires/ensures
@@ -183,22 +184,6 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:97: warning: [18] fn parallel_min_reduction should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:122: warning: [18] fn obst_rec should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:166: warning: [18] impl OBSTMtEphTrait for OBSTMtEphS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:82: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:83: warning: [19] from_keys_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:84: warning: [19] from_key_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:85: warning: [19] optimal_cost return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:86: warning: [19] keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:89: warning: [19] num_keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:91: warning: [19] memo_size return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:97: warning: [19] parallel_min_reduction return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:122: warning: [19] obst_rec return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:168: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:176: warning: [19] from_keys_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:188: warning: [19] from_key_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:196: warning: [19] optimal_cost return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:213: warning: [19] keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:245: warning: [19] num_keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:260: warning: [19] memo_size return name 'result' could be more descriptive
 
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: info: [1] has mod declarations
@@ -209,6 +194,7 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: info: [11] no Set/Seq usage (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: info: [14] Debug, Display outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:71: warning: [12] trait OBSTMtPerTrait fn new should have requires/ensures
@@ -237,22 +223,6 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:83: warning: [18] fn parallel_min_reduction should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:108: warning: [18] fn obst_rec should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:146: warning: [18] impl OBSTMtPerTrait for OBSTMtPerS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:71: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:72: warning: [19] from_keys_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:73: warning: [19] from_key_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:74: warning: [19] optimal_cost return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:75: warning: [19] keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:76: warning: [19] num_keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:77: warning: [19] memo_size return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:83: warning: [19] parallel_min_reduction return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:108: warning: [19] obst_rec return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:148: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:156: warning: [19] from_keys_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:168: warning: [19] from_key_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:176: warning: [19] optimal_cost return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:188: warning: [19] keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:191: warning: [19] num_keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:194: warning: [19] memo_size return name 'result' could be more descriptive
 
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [1] has mod declarations
@@ -263,6 +233,7 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [11] no Set/Seq usage (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [14] Display, Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:57: warning: [12] trait OBSTStEphTrait fn new should have requires/ensures
@@ -292,21 +263,6 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:56: warning: [18] trait OBSTStEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:72: warning: [18] fn obst_rec_st_eph should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:99: warning: [18] impl OBSTStEphTrait for OBSTStEphS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:57: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:58: warning: [19] from_keys_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:59: warning: [19] from_key_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:60: warning: [19] optimal_cost return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:61: warning: [19] keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:64: warning: [19] num_keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:66: warning: [19] memo_size return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:72: warning: [19] obst_rec_st_eph return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:101: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:109: warning: [19] from_keys_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:123: warning: [19] from_key_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:131: warning: [19] optimal_cost return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:142: warning: [19] keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:160: warning: [19] num_keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:164: warning: [19] memo_size return name 'result' could be more descriptive
 
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [1] has mod declarations
@@ -317,6 +273,7 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [11] no Set/Seq usage (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [14] Display, Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:57: warning: [12] trait OBSTStPerTrait fn new should have requires/ensures
@@ -341,22 +298,7 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:56: warning: [18] trait OBSTStPerTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:69: warning: [18] fn obst_rec_st_per should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:96: warning: [18] impl OBSTStPerTrait for OBSTStPerS < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:57: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:58: warning: [19] from_keys_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:59: warning: [19] from_key_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:60: warning: [19] optimal_cost return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:61: warning: [19] keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:62: warning: [19] num_keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:63: warning: [19] memo_size return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:69: warning: [19] obst_rec_st_per return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:98: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:106: warning: [19] from_keys_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:120: warning: [19] from_key_probs return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:128: warning: [19] optimal_cost return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:140: warning: [19] keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:142: warning: [19] num_keys return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:144: warning: [19] memo_size return name 'result' could be more descriptive
 
 ════════════════════════════════════════════════════════════════
-Summary: 86 passed, 247 warnings in 8 files (checked 8 files)
+Summary: 90 passed, 185 warnings in 8 files (checked 8 files)
 ════════════════════════════════════════════════════════════════

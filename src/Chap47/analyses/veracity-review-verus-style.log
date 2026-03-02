@@ -22,7 +22,6 @@ Checking 9 files...
 /home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:32: warning: [18] struct ChainEntry should come before proof fns/broadcast groups (expected type definitions before proof fns/broadcast groups)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:44: warning: [19] clone return name 'result' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:54: warning: [19] eq return name 'r' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:68: warning: [20] trait ChainedHashTable is defined but has no impl
 
@@ -57,9 +56,9 @@ Checking 9 files...
 /home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [15] Clone inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [16] no Lit macro definitions (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:50: warning: [18] impl EntryTrait for FlatEntry < Key , Value > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:39: warning: [19] clone return name 'result' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:91: warning: [20] trait FlatHashTable is defined but has no impl
 
 /home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:
@@ -164,9 +163,7 @@ Checking 9 files...
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:91: warning: [18] impl PartialEqSpecImpl for ChainList < Key , Value > should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:127: warning: [18] impl Default for ChainList < Key , Value > should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:132: warning: [18] struct StructChainedHashTableStEph should come before derive impls in verus! (expected type definitions before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:54: warning: [19] clone return name 'result' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:72: warning: [19] eq return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:97: warning: [19] clone return name 'result' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:112: warning: [19] eq return name 'r' could be more descriptive
 
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:
@@ -190,5 +187,5 @@ Checking 9 files...
 /home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:25: warning: [18] struct VecChainedHashTableStEph should come before proof fns/broadcast groups (expected type definitions before proof fns/broadcast groups)
 
 ════════════════════════════════════════════════════════════════
-Summary: 123 passed, 40 warnings in 9 files (checked 9 files)
+Summary: 124 passed, 36 warnings in 9 files (checked 9 files)
 ════════════════════════════════════════════════════════════════

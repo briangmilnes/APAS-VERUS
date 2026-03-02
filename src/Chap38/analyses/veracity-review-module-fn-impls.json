@@ -13,7 +13,7 @@
     "file": "Chap38/BSTParaMtEph.rs",
     "lines": "99-100",
     "spec_strength": "hole",
-    "snippet": "        fn new() -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty();"
+    "snippet": "        fn new() -> (empty: Self)\n            ensures empty@ == Set::<<T as View>::V>::empty();"
   },
   {
     "id": 3,
@@ -21,7 +21,7 @@
     "file": "Chap38/BSTParaMtEph.rs",
     "lines": "102-105",
     "spec_strength": "hole",
-    "snippet": "        fn singleton(key: T) -> (result: Self)\n            ensures\n                result@ == Set::<<T as View>::V>::empty().insert(key@),\n                result@.finite();"
+    "snippet": "        fn singleton(key: T) -> (tree: Self)\n            ensures\n                tree@ == Set::<<T as View>::V>::empty().insert(key@),\n                tree@.finite();"
   },
   {
     "id": 4,
@@ -37,7 +37,7 @@
     "file": "Chap38/BSTParaMtEph.rs",
     "lines": "110-111",
     "spec_strength": "hole",
-    "snippet": "        fn join_mid(exposed: Exposed<T>) -> (result: Self)\n            ensures exposed is Leaf ==> result@ == Set::<<T as View>::V>::empty();"
+    "snippet": "        fn join_mid(exposed: Exposed<T>) -> (joined: Self)\n            ensures exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty();"
   },
   {
     "id": 6,
@@ -101,7 +101,7 @@
     "file": "Chap38/BSTParaMtEph.rs",
     "lines": "137-138",
     "spec_strength": "hole",
-    "snippet": "        fn union(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.union(other@), result@.finite();"
+    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            ensures combined@ == self@.union(other@), combined@.finite();"
   },
   {
     "id": 14,
@@ -109,7 +109,7 @@
     "file": "Chap38/BSTParaMtEph.rs",
     "lines": "140-141",
     "spec_strength": "hole",
-    "snippet": "        fn intersect(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.intersect(other@), result@.finite();"
+    "snippet": "        fn intersect(&self, other: &Self) -> (common: Self)\n            ensures common@ == self@.intersect(other@), common@.finite();"
   },
   {
     "id": 15,
@@ -117,7 +117,7 @@
     "file": "Chap38/BSTParaMtEph.rs",
     "lines": "143-144",
     "spec_strength": "hole",
-    "snippet": "        fn difference(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.difference(other@), result@.finite();"
+    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            ensures remaining@ == self@.difference(other@), remaining@.finite();"
   },
   {
     "id": 16,
@@ -157,7 +157,7 @@
     "file": "Chap38/BSTParaMtEph.rs",
     "lines": "329-337",
     "spec_strength": "",
-    "snippet": "    fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> Exposed<T> {\n        let handle = tree.root.acquire_read();\n        let result = match handle.borrow() {\n            | None => Exposed::Leaf,\n            | Some(node) => Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone()),\n        };\n        handle.release_read();\n        result\n    }"
+    "snippet": "    fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> Exposed<T> {\n        let handle = tree.root.acquire_read();\n        let exposed = match handle.borrow() {\n            | None => Exposed::Leaf,\n            | Some(node) => Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone()),\n        };\n        handle.release_read();\n        exposed\n    }"
   },
   {
     "id": 21,
@@ -259,183 +259,223 @@
     "id": 33,
     "function": "new_param_bst",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "78-83",
+    "lines": "80-85",
     "spec_strength": "hole",
     "snippet": "    fn new_param_bst<T: StT + Ord>(\n        val: Option<Box<NodeInner<T>>>,\n        Ghost(contents): Ghost<Set<<T as View>::V>>,\n    ) -> (tree: ParamBST<T>)\n        requires (BSTParaStEphInv::<T> { contents }).inv(val),\n        ensures tree@ =~= contents,"
   },
   {
     "id": 34,
-    "function": "new",
+    "function": "lemma_cmp_antisymmetry",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "116-117",
+    "lines": "124-129",
     "spec_strength": "unknown",
-    "snippet": "        fn new() -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty();"
+    "snippet": "    proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            a.cmp_spec(&b) == Greater,\n        ensures\n            b.cmp_spec(&a) == Less,"
   },
   {
     "id": 35,
-    "function": "singleton",
+    "function": "lemma_cmp_transitivity",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "119-122",
+    "lines": "136-142",
     "spec_strength": "unknown",
-    "snippet": "        fn singleton(key: T) -> (result: Self)\n            ensures\n                result@ == Set::<<T as View>::V>::empty().insert(key@),\n                result@.finite();"
+    "snippet": "    proof fn lemma_cmp_transitivity<T: StT + Ord>(a: T, b: T, c: T)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            a.cmp_spec(&b) == Less,\n            b.cmp_spec(&c) == Less,\n        ensures\n            a.cmp_spec(&c) == Less,"
   },
   {
     "id": 36,
+    "function": "lemma_cmp_eq_subst",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "151-157",
+    "spec_strength": "hole",
+    "snippet": "    proof fn lemma_cmp_eq_subst<T: StT + Ord>(a: T, b: T, c: T)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            a.cmp_spec(&b) == Less,\n            b.cmp_spec(&c) == Equal,\n        ensures\n            a.cmp_spec(&c) == Less,"
+  },
+  {
+    "id": 37,
+    "function": "lemma_cmp_equal_congruent",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "168-173",
+    "spec_strength": "hole",
+    "snippet": "    proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            a.cmp_spec(&b) == Equal,\n        ensures\n            a.cmp_spec(&c) == b.cmp_spec(&c),"
+  },
+  {
+    "id": 38,
+    "function": "lemma_cmp_equal_congruent_right",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "182-187",
+    "spec_strength": "hole",
+    "snippet": "    proof fn lemma_cmp_equal_congruent_right<T: StT + Ord>(a: T, b: T, c: T)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            b.cmp_spec(&c) == Equal,\n        ensures\n            a.cmp_spec(&b) == a.cmp_spec(&c),"
+  },
+  {
+    "id": 39,
+    "function": "new",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "198-199",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (empty: Self)\n            ensures empty@ == Set::<<T as View>::V>::empty();"
+  },
+  {
+    "id": 40,
+    "function": "singleton",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "201-204",
+    "spec_strength": "unknown",
+    "snippet": "        fn singleton(key: T) -> (tree: Self)\n            ensures\n                tree@ == Set::<<T as View>::V>::empty().insert(key@),\n                tree@.finite();"
+  },
+  {
+    "id": 41,
     "function": "expose",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "124-128",
+    "lines": "206-210",
     "spec_strength": "hole",
     "snippet": "        fn expose(&self) -> (exposed: Exposed<T>)\n            ensures\n                self@.len() == 0 ==> exposed is Leaf,\n                exposed is Leaf ==> self@ =~= Set::<<T as View>::V>::empty(),\n                exposed matches Exposed::Node(l, k, r) ==> {"
   },
   {
-    "id": 37,
+    "id": 42,
     "function": "join_mid",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "138-140",
+    "lines": "222-224",
     "spec_strength": "unknown",
-    "snippet": "        fn join_mid(exposed: Exposed<T>) -> (result: Self)\n            requires\n                exposed matches Exposed::Node(l, k, r) ==> {"
+    "snippet": "        fn join_mid(exposed: Exposed<T>) -> (joined: Self)\n            requires\n                exposed matches Exposed::Node(l, k, r) ==> {"
   },
   {
-    "id": 38,
+    "id": 43,
     "function": "join_m",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "151-158",
+    "lines": "235-242",
     "spec_strength": "unknown",
     "snippet": "        fn join_m(left: Self, key: T, right: Self) -> (tree: Self)\n            requires\n                left@.finite(), right@.finite(),\n                left@.disjoint(right@),\n                !left@.contains(key@),\n                !right@.contains(key@),\n                left@.len() + right@.len() < usize::MAX as nat,\n            ensures tree@ =~= left@.union(right@).insert(key@);"
   },
   {
-    "id": 39,
+    "id": 44,
     "function": "size",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "160-161",
+    "lines": "244-245",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self) -> (count: usize)\n            ensures count == self@.len(), self@.finite();"
   },
   {
-    "id": 40,
+    "id": 45,
     "function": "is_empty",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "163-164",
+    "lines": "247-248",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self) -> (empty: B)\n            ensures empty == (self@.len() == 0), self@.finite();"
   },
   {
-    "id": 41,
+    "id": 46,
     "function": "insert",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "167",
+    "lines": "251",
     "spec_strength": "hole",
     "snippet": "        fn insert(&self, key: T);"
   },
   {
-    "id": 42,
+    "id": 47,
     "function": "delete",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "170",
+    "lines": "254",
     "spec_strength": "hole",
     "snippet": "        fn delete(&self, key: &T);"
   },
   {
-    "id": 43,
+    "id": 48,
     "function": "find",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "172-173",
-    "spec_strength": "hole",
-    "snippet": "        fn find(&self, key: &T) -> (found: Option<T>)\n            ensures found.is_some() <==> self@.contains(key@);"
-  },
-  {
-    "id": 44,
-    "function": "split",
-    "file": "Chap38/BSTParaStEph.rs",
-    "lines": "175-183",
-    "spec_strength": "hole",
-    "snippet": "        fn split(&self, key: &T) -> (parts: (Self, B, Self))\n            ensures\n                parts.1 == self@.contains(key@),\n                parts.0@.finite(),\n                parts.2@.finite(),\n                parts.0@.union(parts.2@) =~= self@.remove(key@),\n                parts.0@.disjoint(parts.2@),\n                !parts.0@.contains(key@),\n                !parts.2@.contains(key@);"
-  },
-  {
-    "id": 45,
-    "function": "min_key",
-    "file": "Chap38/BSTParaStEph.rs",
-    "lines": "185",
-    "spec_strength": "",
-    "snippet": "        fn min_key(&self) -> (result: Option<T>);"
-  },
-  {
-    "id": 46,
-    "function": "join_pair",
-    "file": "Chap38/BSTParaStEph.rs",
-    "lines": "187-188",
-    "spec_strength": "hole",
-    "snippet": "        fn join_pair(&self, other: Self) -> (joined: Self)\n            ensures joined@.finite(), joined@ =~= self@.union(other@);"
-  },
-  {
-    "id": 47,
-    "function": "union",
-    "file": "Chap38/BSTParaStEph.rs",
-    "lines": "190-191",
-    "spec_strength": "hole",
-    "snippet": "        fn union(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.union(other@), result@.finite();"
-  },
-  {
-    "id": 48,
-    "function": "intersect",
-    "file": "Chap38/BSTParaStEph.rs",
-    "lines": "193-194",
-    "spec_strength": "hole",
-    "snippet": "        fn intersect(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.intersect(other@), result@.finite();"
+    "lines": "256-260",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, key: &T) -> (found: Option<T>)\n            requires\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n            ensures found.is_some() <==> self@.contains(key@);"
   },
   {
     "id": 49,
-    "function": "difference",
+    "function": "split",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "196-197",
+    "lines": "262-275",
     "spec_strength": "hole",
-    "snippet": "        fn difference(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.difference(other@), result@.finite();"
+    "snippet": "        fn split(&self, key: &T) -> (parts: (Self, B, Self))\n            requires\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                parts.1 == self@.contains(key@),\n                parts.0@.finite(),\n                parts.2@.finite(),\n                parts.0@.union(parts.2@) =~= self@.remove(key@),\n                parts.0@.disjoint(parts.2@),\n                !parts.0@.contains(key@),\n                !parts.2@.contains(key@),\n                forall|t: T| #![auto] parts.0@.contains(t@) ==> t.cmp_spec(&key) == Less,\n                forall|t: T| #![auto] parts.2@.contains(t@) ==> t.cmp_spec(&key) == Greater;"
   },
   {
     "id": 50,
+    "function": "min_key",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "277-285",
+    "spec_strength": "unknown",
+    "snippet": "        fn min_key(&self) -> (minimum: Option<T>)\n            requires\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                self@.len() == 0 <==> minimum.is_none(),\n                minimum.is_some() ==> self@.contains(minimum.unwrap()@),\n                minimum.is_some() ==> forall|t: T| #![auto] self@.contains(t@) ==>\n                    minimum.unwrap().cmp_spec(&t) == Less || minimum.unwrap()@ == t@;"
+  },
+  {
+    "id": 51,
+    "function": "join_pair",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "287-292",
+    "spec_strength": "unknown",
+    "snippet": "        fn join_pair(&self, other: Self) -> (joined: Self)\n            requires\n                self@.disjoint(other@),\n                self@.finite(), other@.finite(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures joined@.finite(), joined@ =~= self@.union(other@);"
+  },
+  {
+    "id": 52,
+    "function": "union",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "294-295",
+    "spec_strength": "hole",
+    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            ensures combined@ == self@.union(other@), combined@.finite();"
+  },
+  {
+    "id": 53,
+    "function": "intersect",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "297-298",
+    "spec_strength": "hole",
+    "snippet": "        fn intersect(&self, other: &Self) -> (common: Self)\n            ensures common@ == self@.intersect(other@), common@.finite();"
+  },
+  {
+    "id": 54,
+    "function": "difference",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "300-301",
+    "spec_strength": "hole",
+    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            ensures remaining@ == self@.difference(other@), remaining@.finite();"
+  },
+  {
+    "id": 55,
     "function": "filter",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "199-201",
+    "lines": "303-305",
     "spec_strength": "unknown",
     "snippet": "        fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)\n            requires self@.finite(), forall|t: &T| predicate.requires((t,)),\n            ensures filtered@.subset_of(self@), filtered@.finite();"
   },
   {
-    "id": 51,
+    "id": 56,
     "function": "reduce",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "204-205",
+    "lines": "308-309",
     "spec_strength": "unknown",
     "snippet": "        fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> T\n            requires self@.finite(), forall|a: T, b: T| op.requires((a, b));"
   },
   {
-    "id": 52,
+    "id": 57,
     "function": "collect_in_order",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "207-209",
+    "lines": "311-313",
     "spec_strength": "unknown",
     "snippet": "        fn collect_in_order(&self, out: &mut Vec<T>)\n            requires self@.finite(),\n            ensures out@.len() == old(out)@.len() + self@.len();"
   },
   {
-    "id": 53,
+    "id": 58,
     "function": "in_order",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "211-212",
+    "lines": "315-316",
     "spec_strength": "unknown",
     "snippet": "        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures seq@.len() == self@.len();"
   },
   {
-    "id": 54,
+    "id": 59,
     "function": "filter_inner",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "508-514",
+    "lines": "783-789",
     "spec_strength": "unknown",
     "snippet": "    fn filter_inner<T: StT + Ord, F: Fn(&T) -> bool>(\n        tree: &ParamBST<T>,\n        predicate: &F,\n    ) -> (filtered: ParamBST<T>)\n        requires tree@.finite(), forall|t: &T| predicate.requires((t,)),\n        ensures filtered@.subset_of(tree@), filtered@.finite(),\n        decreases tree@.len(),"
   },
   {
-    "id": 55,
+    "id": 60,
     "function": "reduce_inner",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "540-548",
+    "lines": "822-830",
     "spec_strength": "unknown",
     "snippet": "    fn reduce_inner<T: StT + Ord, F: Fn(T, T) -> T>(\n        tree: &ParamBST<T>,\n        op: &F,\n        identity: T,\n    ) -> T\n        requires\n            tree@.finite(),\n            forall|a: T, b: T| op.requires((a, b)),\n        decreases tree@.len(),"
   }

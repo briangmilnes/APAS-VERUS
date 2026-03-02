@@ -21,7 +21,7 @@
     "file": "Chap21/Algorithm21_1.rs",
     "lines": "92-96",
     "spec_strength": "unknown",
-    "snippet": "    fn flatten_inner<T: View + Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (result: ArraySeqStPerS<T>)\n        requires\n            sum_inner_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,\n        ensures\n            result.seq@.len() == sum_inner_lens(ss.seq@, ss.seq@.len() as int),"
+    "snippet": "    fn flatten_inner<T: View + Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (flattened: ArraySeqStPerS<T>)\n        requires\n            sum_inner_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,\n        ensures\n            flattened.seq@.len() == sum_inner_lens(ss.seq@, ss.seq@.len() as int),"
   },
   {
     "id": 4,
@@ -29,7 +29,7 @@
     "file": "Chap21/Algorithm21_1.rs",
     "lines": "152-158",
     "spec_strength": "unknown",
-    "snippet": "    pub fn points2d_tab_flat(n: N) -> (result: ArraySeqStPerS<Pair<N, N>>)\n        requires\n            n <= usize::MAX,\n            n as int * (n as int - 1) <= usize::MAX as int,\n        ensures\n            n == 0 ==> result.seq@.len() == 0,\n            n > 0 ==> result.seq@.len() == n as int * (n as int - 1),"
+    "snippet": "    pub fn points2d_tab_flat(n: N) -> (points: ArraySeqStPerS<Pair<N, N>>)\n        requires\n            n <= usize::MAX,\n            n as int * (n as int - 1) <= usize::MAX as int,\n        ensures\n            n == 0 ==> points.seq@.len() == 0,\n            n > 0 ==> points.seq@.len() == n as int * (n as int - 1),"
   },
   {
     "id": 5,
@@ -37,7 +37,7 @@
     "file": "Chap21/Algorithm21_2.rs",
     "lines": "46-53",
     "spec_strength": "unknown",
-    "snippet": "    pub fn points3d_tab_flat(n: N) -> (result: ArraySeqStPerS<Pair<N, Pair<N, N>>>)\n        requires\n            n + 2 <= usize::MAX,\n            pow(n as int, 2) <= usize::MAX as int,\n            pow(n as int, 3) <= usize::MAX as int,\n        ensures\n            n == 0 ==> result.seq@.len() == 0,\n            n > 0  ==> result.seq@.len() == pow(n as int, 3),"
+    "snippet": "    pub fn points3d_tab_flat(n: N) -> (points: ArraySeqStPerS<Pair<N, Pair<N, N>>>)\n        requires\n            n + 2 <= usize::MAX,\n            pow(n as int, 2) <= usize::MAX as int,\n            pow(n as int, 3) <= usize::MAX as int,\n        ensures\n            n == 0 ==> points.seq@.len() == 0,\n            n > 0  ==> points.seq@.len() == pow(n as int, 3),"
   },
   {
     "id": 6,
@@ -61,7 +61,7 @@
     "file": "Chap21/Algorithm21_6.rs",
     "lines": "62-68",
     "spec_strength": "unknown",
-    "snippet": "    pub fn prime_sieve(n: N) -> (result: ArraySeqStPerS<N>)\n        requires n < usize::MAX,\n        ensures\n            n <= 2 ==> result.spec_len() == 0,\n            n > 2  ==> result.spec_len() <= n - 1,\n            forall|i: int| 0 <= i < result.spec_len() ==>\n                2 <= #[trigger] result.spec_index(i) && result.spec_index(i) <= n,"
+    "snippet": "    pub fn prime_sieve(n: N) -> (primes: ArraySeqStPerS<N>)\n        requires n < usize::MAX,\n        ensures\n            n <= 2 ==> primes.spec_len() == 0,\n            n > 2  ==> primes.spec_len() <= n - 1,\n            forall|i: int| 0 <= i < primes.spec_len() ==>\n                2 <= #[trigger] primes.spec_index(i) && primes.spec_index(i) <= n,"
   },
   {
     "id": 9,
@@ -77,7 +77,7 @@
     "file": "Chap21/Exercise21_5.rs",
     "lines": "72-76",
     "spec_strength": "unknown",
-    "snippet": "    pub fn all_contiguous_subseqs(a: &ArraySeqStPerS<N>) -> (result: ArraySeqStPerS<ArraySeqStPerS<N>>)\n         requires obeys_feq_clone::<ArraySeqStPerS<N>>()\n         ensures\n            a.spec_len() == 0 ==> result.spec_len() == 0,\n            a.spec_len() > 0 ==> result.spec_len() * 2 == a.spec_len() * (a.spec_len() + 1),"
+    "snippet": "    pub fn all_contiguous_subseqs(a: &ArraySeqStPerS<N>) -> (subseqs: ArraySeqStPerS<ArraySeqStPerS<N>>)\n         requires obeys_feq_clone::<ArraySeqStPerS<N>>()\n         ensures\n            a.spec_len() == 0 ==> subseqs.spec_len() == 0,\n            a.spec_len() > 0 ==> subseqs.spec_len() * 2 == a.spec_len() * (a.spec_len() + 1),"
   },
   {
     "id": 11,
@@ -101,7 +101,7 @@
     "file": "Chap21/Exercise21_7.rs",
     "lines": "75-84",
     "spec_strength": "unknown",
-    "snippet": "    pub fn pair_even_with_vowels(\n        a: &ArraySeqStPerS<N>,\n        b: &ArraySeqStPerS<char>,\n    ) -> (result: ArraySeqStPerS<Pair<N, char>>)\n       requires \n            obeys_feq_clone::<char>(),\n            obeys_feq_clone::<Pair<N, char>>(),\n            a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,\n       ensures\n            result.seq@.len() <= a.seq@.len() as int * b.seq@.len() as int,"
+    "snippet": "    pub fn pair_even_with_vowels(\n        a: &ArraySeqStPerS<N>,\n        b: &ArraySeqStPerS<char>,\n    ) -> (pairs: ArraySeqStPerS<Pair<N, char>>)\n       requires \n            obeys_feq_clone::<char>(),\n            obeys_feq_clone::<Pair<N, char>>(),\n            a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,\n       ensures\n            pairs.seq@.len() <= a.seq@.len() as int * b.seq@.len() as int,"
   },
   {
     "id": 14,
@@ -197,7 +197,7 @@
     "file": "Chap21/Problem21_3.rs",
     "lines": "37-48",
     "spec_strength": "unknown",
-    "snippet": "    pub fn points3d_loops(n: N) -> (result: ArraySeqStPerS<Pair<N, Pair<N, N>>>)\n        requires\n            n + 2 <= usize::MAX,\n            n as int * n as int <= usize::MAX as int,\n            n as int * n as int * n as int <= usize::MAX as int,\n        ensures\n            n == 0 ==> result.seq@.len() == 0,\n            n > 0  ==> result.seq@.len() == n as int * n as int * n as int,\n            forall|k: int| 0 <= k < result.seq@.len() ==>\n                (#[trigger] result.seq@[k]).0 < n\n                && 1 <= result.seq@[k].1.0 && result.seq@[k].1.0 <= n\n                && 2 <= result.seq@[k].1.1 && result.seq@[k].1.1 <= n + 1,"
+    "snippet": "    pub fn points3d_loops(n: N) -> (points: ArraySeqStPerS<Pair<N, Pair<N, N>>>)\n        requires\n            n + 2 <= usize::MAX,\n            n as int * n as int <= usize::MAX as int,\n            n as int * n as int * n as int <= usize::MAX as int,\n        ensures\n            n == 0 ==> points.seq@.len() == 0,\n            n > 0  ==> points.seq@.len() == n as int * n as int * n as int,\n            forall|k: int| 0 <= k < points.seq@.len() ==>\n                (#[trigger] points.seq@[k]).0 < n\n                && 1 <= points.seq@[k].1.0 && points.seq@[k].1.0 <= n\n                && 2 <= points.seq@[k].1.1 && points.seq@[k].1.1 <= n + 1,"
   },
   {
     "id": 26,
@@ -205,7 +205,7 @@
     "file": "Chap21/Problem21_4.rs",
     "lines": "40-47",
     "spec_strength": "unknown",
-    "snippet": "    pub fn cartesian_loops(\n        a: &ArraySeqStPerS<N>,\n        b: &ArraySeqStPerS<N>,\n    ) -> (result: ArraySeqStPerS<Pair<N, N>>)\n        requires\n            a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,\n        ensures\n            result.seq@.len() == a.seq@.len() as int * b.seq@.len() as int,"
+    "snippet": "    pub fn cartesian_loops(\n        a: &ArraySeqStPerS<N>,\n        b: &ArraySeqStPerS<N>,\n    ) -> (pairs: ArraySeqStPerS<Pair<N, N>>)\n        requires\n            a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,\n        ensures\n            pairs.seq@.len() == a.seq@.len() as int * b.seq@.len() as int,"
   },
   {
     "id": 27,
@@ -213,6 +213,6 @@
     "file": "Chap21/Problem21_4.rs",
     "lines": "92-103",
     "spec_strength": "unknown",
-    "snippet": "    pub fn cartesian_tab_flat(\n        a: &ArraySeqStPerS<N>,\n        b: &ArraySeqStPerS<N>,\n    ) -> (result: ArraySeqStPerS<Pair<N, N>>)\n        requires\n            a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,\n        ensures\n            result.seq@.len() == a.seq@.len() as int * b.seq@.len() as int,\n            forall|k: int| 0 <= k < result.seq@.len() ==> (\n                a.seq@.contains((#[trigger] result.seq@[k]).0)\n                && b.seq@.contains(result.seq@[k].1)\n            ),"
+    "snippet": "    pub fn cartesian_tab_flat(\n        a: &ArraySeqStPerS<N>,\n        b: &ArraySeqStPerS<N>,\n    ) -> (pairs: ArraySeqStPerS<Pair<N, N>>)\n        requires\n            a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,\n        ensures\n            pairs.seq@.len() == a.seq@.len() as int * b.seq@.len() as int,\n            forall|k: int| 0 <= k < pairs.seq@.len() ==> (\n                a.seq@.contains((#[trigger] pairs.seq@[k]).0)\n                && b.seq@.contains(pairs.seq@[k].1)\n            ),"
   }
 ]

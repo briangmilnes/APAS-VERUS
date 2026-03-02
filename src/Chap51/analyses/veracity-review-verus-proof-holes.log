@@ -93,12 +93,11 @@ Errors: 12 total (4 struct/enum outside verus!, 4 Clone derived outside, 4 dummy
 
 Info: 4 total
    TopDownDPMtEph.rs:36: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   BottomUpDPMtEph.rs:42: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
-   BottomUpDPMtPer.rs:42: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
    TopDownDPMtPer.rs:36: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   BottomUpDPMtPer.rs:42: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+   BottomUpDPMtEph.rs:42: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
 
 🎉 No proof holes found! All proofs are complete.
-ody at this point.
-   TopDownDPMtPer.rs:36: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
+DPMtEph.rs:42: info: verus_rwlock_external_body - Verus RwLock new requires an external body at this point.
 
 🎉 No proof holes found! All proofs are complete.

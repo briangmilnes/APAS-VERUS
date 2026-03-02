@@ -125,7 +125,7 @@
     "file": "Chap19/ArraySeqMtEph.rs",
     "lines": "332-340",
     "spec_strength": "unknown",
-    "snippet": "        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (result: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                spec_ninject(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    updates@,\n                    Seq::new(result.spec_len(), |i: int| result.spec_index(i)));"
+    "snippet": "        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                spec_ninject(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    updates@,\n                    Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)));"
   },
   {
     "id": 17,

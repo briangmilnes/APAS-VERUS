@@ -22,7 +22,7 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap37 | AVLTreeSeq | 20 | 23 | 0 | 13 | 35 | 1 | 31 | 4 | 1 |
+| 1 | Chap37 | AVLTreeSeq | 20 | 23 | 0 | 13 | 35 | 1 | 32 | 3 | 1 |
 | 2 | Chap37 | AVLTreeSeqMtPer | 11 | 14 | 0 | 13 | 25 | 2 | 11 | 12 | 4 |
 | 3 | Chap37 | AVLTreeSeqStEph | 18 | 21 | 0 | 12 | 30 | 3 | 17 | 13 | 3 |
 | 4 | Chap37 | AVLTreeSeqStPer | 13 | 16 | 0 | 14 | 27 | 3 | 11 | 14 | 5 |
@@ -61,29 +61,29 @@
 | 11 | `subseq_copy` | Y | Y |  |  | Y |  |  | unknown | 221&#8209;224 |
 | 12 | `new_root` | Y | Y |  |  | Y |  |  | unknown | 226&#8209;227 |
 | 13 | `update` | Y | Y |  |  | Y |  |  | unknown | 229&#8209;235 |
-| 14 | `from_vec` | Y | Y |  |  | Y |  |  | hole | 237&#8209;241 |
-| 15 | `to_arrayseq` | Y | Y |  |  | Y |  |  | unknown | 243&#8209;248 |
-| 16 | `iter` | Y | Y |  |  | Y |  |  | unknown | 250&#8209;255 |
-| 17 | `push_back` | Y | Y |  |  | Y |  |  | unknown | 257&#8209;259 |
-| 18 | `contains_value` | Y | Y |  |  | Y |  |  | unknown | 261&#8209;264 |
-| 19 | `insert_value` | Y | Y |  |  | Y |  |  | unknown | 266&#8209;268 |
-| 20 | `delete_value` | Y | Y |  |  | Y |  |  | unknown | 270&#8209;281 |
-| 21 | `is_tree_empty` | Y | Y |  |  | Y |  |  | unknown | 283&#8209;285 |
-| 22 | `values_in_order` | Y | Y |  |  | Y |  |  | unknown | 287&#8209;289 |
-| 23 | `cached_height` |  |  |  | Y | Y |  |  | unknown | 294&#8209;295 |
-| 24 | `cached_size` |  |  |  | Y | Y |  |  | unknown | 303&#8209;305 |
-| 25 | `update_size_height` |  |  |  | Y | Y |  |  | unknown | 315&#8209;336 |
-| 26 | `rotate_right` |  |  |  | Y | Y |  |  | unknown | 345&#8209;355 |
-| 27 | `rotate_left` |  |  |  | Y | Y |  |  | unknown | 404&#8209;414 |
-| 28 | `rebalance` |  |  |  | Y | Y |  |  | unknown | 456&#8209;471 |
-| 29 | `insert_at_link` |  |  |  | Y | Y |  |  | hole | 511&#8209;522 |
-| 30 | `nth_link` |  |  |  | Y | Y |  |  | unknown | 591&#8209;594 |
-| 31 | `set_link` |  |  |  | Y | Y |  |  | unknown | 609&#8209;619 |
-| 32 | `push_inorder` |  |  |  | Y | Y |  |  | unknown | 636&#8209;641 |
-| 33 | `compare_trees` |  |  |  | Y | Y |  |  | unknown | 671&#8209;676 |
-| 34 | `next` |  | Y |  |  | Y |  |  | hole | 1066&#8209;1082 |
-| 35 | `eq` |  | Y |  |  | Y |  |  | hole | 1174&#8209;1175 |
-| 36 | `default` |  | Y |  |  |  | Y | Y |  | 1213 |
+| 14 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 237&#8209;243 |
+| 15 | `to_arrayseq` | Y | Y |  |  | Y |  |  | unknown | 245&#8209;250 |
+| 16 | `iter` | Y | Y |  |  | Y |  |  | unknown | 252&#8209;257 |
+| 17 | `push_back` | Y | Y |  |  | Y |  |  | unknown | 259&#8209;261 |
+| 18 | `contains_value` | Y | Y |  |  | Y |  |  | unknown | 263&#8209;266 |
+| 19 | `insert_value` | Y | Y |  |  | Y |  |  | unknown | 268&#8209;270 |
+| 20 | `delete_value` | Y | Y |  |  | Y |  |  | unknown | 272&#8209;283 |
+| 21 | `is_tree_empty` | Y | Y |  |  | Y |  |  | unknown | 285&#8209;287 |
+| 22 | `values_in_order` | Y | Y |  |  | Y |  |  | unknown | 289&#8209;291 |
+| 23 | `cached_height` |  |  |  | Y | Y |  |  | unknown | 296&#8209;297 |
+| 24 | `cached_size` |  |  |  | Y | Y |  |  | unknown | 305&#8209;307 |
+| 25 | `update_size_height` |  |  |  | Y | Y |  |  | unknown | 317&#8209;338 |
+| 26 | `rotate_right` |  |  |  | Y | Y |  |  | unknown | 347&#8209;357 |
+| 27 | `rotate_left` |  |  |  | Y | Y |  |  | unknown | 406&#8209;416 |
+| 28 | `rebalance` |  |  |  | Y | Y |  |  | unknown | 458&#8209;473 |
+| 29 | `insert_at_link` |  |  |  | Y | Y |  |  | hole | 512&#8209;523 |
+| 30 | `nth_link` |  |  |  | Y | Y |  |  | unknown | 592&#8209;595 |
+| 31 | `set_link` |  |  |  | Y | Y |  |  | unknown | 610&#8209;620 |
+| 32 | `push_inorder` |  |  |  | Y | Y |  |  | unknown | 637&#8209;642 |
+| 33 | `compare_trees` |  |  |  | Y | Y |  |  | unknown | 672&#8209;677 |
+| 34 | `next` |  | Y |  |  | Y |  |  | hole | 1073&#8209;1089 |
+| 35 | `eq` |  | Y |  |  | Y |  |  | hole | 1181&#8209;1182 |
+| 36 | `default` |  | Y |  |  |  | Y | Y |  | 1219 |
 
 ### Chap37/AVLTreeSeqMtPer.rs
 

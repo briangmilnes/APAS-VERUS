@@ -45,7 +45,7 @@
     "file": "Chap55/DFSStEph.rs",
     "lines": "25-41",
     "spec_strength": "unknown",
-    "snippet": "    fn dfs_recursive(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,\n        visited: &mut ArraySeqStEphS<B>,\n        result: &mut AVLTreeSetStEph<N>,\n        vertex: N,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_wf_adj_list(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            forall|j: int| #![auto]\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+    "snippet": "    fn dfs_recursive(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,\n        visited: &mut ArraySeqStEphS<B>,\n        reachable: &mut AVLTreeSetStEph<N>,\n        vertex: N,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_wf_adj_list(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            forall|j: int| #![auto]\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
   },
   {
     "id": 7,
@@ -61,7 +61,7 @@
     "file": "Chap55/DFSStPer.rs",
     "lines": "27-43",
     "spec_strength": "unknown",
-    "snippet": "    fn dfs_recursive(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,\n        visited_bool: &mut Vec<bool>,\n        result: AVLTreeSetStPer<N>,\n        vertex: N,\n    ) -> (out: AVLTreeSetStPer<N>)\n        requires\n            vertex < old(visited_bool)@.len(),\n            old(visited_bool)@.len() == graph@.len(),\n            spec_wf_adj_list_per(graph),\n        ensures\n            visited_bool@.len() == old(visited_bool)@.len(),\n            forall|j: int| #![auto]\n                0 <= j < visited_bool@.len() && old(visited_bool)@[j]\n                ==> visited_bool@[j],\n            spec_num_false(visited_bool@) <= spec_num_false(old(visited_bool)@),\n        decreases spec_num_false(old(visited_bool)@),"
+    "snippet": "    fn dfs_recursive(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,\n        visited_bool: &mut Vec<bool>,\n        reachable: AVLTreeSetStPer<N>,\n        vertex: N,\n    ) -> (out: AVLTreeSetStPer<N>)\n        requires\n            vertex < old(visited_bool)@.len(),\n            old(visited_bool)@.len() == graph@.len(),\n            spec_wf_adj_list_per(graph),\n        ensures\n            visited_bool@.len() == old(visited_bool)@.len(),\n            forall|j: int| #![auto]\n                0 <= j < visited_bool@.len() && old(visited_bool)@[j]\n                ==> visited_bool@[j],\n            spec_num_false(visited_bool@) <= spec_num_false(old(visited_bool)@),\n        decreases spec_num_false(old(visited_bool)@),"
   },
   {
     "id": 9,
@@ -85,7 +85,7 @@
     "file": "Chap55/SCCStEph.rs",
     "lines": "77-79",
     "spec_strength": "unknown",
-    "snippet": "    fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (result: ArraySeqStEphS<ArraySeqStEphS<N>>)\n        requires spec_wf_adj_list(graph),\n        ensures result@.len() == graph@.len(),"
+    "snippet": "    fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<N>>)\n        requires spec_wf_adj_list(graph),\n        ensures transposed@.len() == graph@.len(),"
   },
   {
     "id": 12,
@@ -93,7 +93,7 @@
     "file": "Chap55/SCCStEph.rs",
     "lines": "139-140",
     "spec_strength": "unknown",
-    "snippet": "    fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (result: bool)\n        ensures result ==> spec_wf_adj_list(graph),"
+    "snippet": "    fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (valid: bool)\n        ensures valid ==> spec_wf_adj_list(graph),"
   },
   {
     "id": 13,
@@ -117,7 +117,7 @@
     "file": "Chap55/SCCStPer.rs",
     "lines": "38-54",
     "spec_strength": "unknown",
-    "snippet": "    fn dfs_finish_order(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,\n        visited: &mut Vec<bool>,\n        result: &mut Vec<N>,\n        vertex: N,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_wf_adj_list_per(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            forall|j: int| #![auto]\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+    "snippet": "    fn dfs_finish_order(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,\n        visited: &mut Vec<bool>,\n        finish_order: &mut Vec<N>,\n        vertex: N,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_wf_adj_list_per(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            forall|j: int| #![auto]\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
   },
   {
     "id": 16,
@@ -133,7 +133,7 @@
     "file": "Chap55/SCCStPer.rs",
     "lines": "134-136",
     "spec_strength": "unknown",
-    "snippet": "    fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: ArraySeqStPerS<ArraySeqStPerS<N>>)\n        requires spec_wf_adj_list_per(graph),\n        ensures result@.len() == graph@.len(),"
+    "snippet": "    fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<N>>)\n        requires spec_wf_adj_list_per(graph),\n        ensures transposed@.len() == graph@.len(),"
   },
   {
     "id": 18,
@@ -141,7 +141,7 @@
     "file": "Chap55/SCCStPer.rs",
     "lines": "194-195",
     "spec_strength": "unknown",
-    "snippet": "    fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: bool)\n        ensures result ==> spec_wf_adj_list_per(graph),"
+    "snippet": "    fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (valid: bool)\n        ensures valid ==> spec_wf_adj_list_per(graph),"
   },
   {
     "id": 19,
@@ -173,7 +173,7 @@
     "file": "Chap55/TopoSortStEph.rs",
     "lines": "83-99",
     "spec_strength": "unknown",
-    "snippet": "    pub fn dfs_finish_order(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,\n        visited: &mut ArraySeqStEphS<B>,\n        result: &mut Vec<N>,\n        vertex: N,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_wf_adj_list(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            forall|j: int| #![auto]\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+    "snippet": "    pub fn dfs_finish_order(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,\n        visited: &mut ArraySeqStEphS<B>,\n        finish_order: &mut Vec<N>,\n        vertex: N,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_wf_adj_list(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            forall|j: int| #![auto]\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
   },
   {
     "id": 23,
@@ -181,7 +181,7 @@
     "file": "Chap55/TopoSortStEph.rs",
     "lines": "136-155",
     "spec_strength": "unknown",
-    "snippet": "    fn dfs_finish_order_cycle_detect(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,\n        visited: &mut ArraySeqStEphS<B>,\n        rec_stack: &mut ArraySeqStEphS<B>,\n        result: &mut Vec<N>,\n        vertex: N,\n    ) -> (cycle_free: bool)\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            old(rec_stack)@.len() == graph@.len(),\n            spec_wf_adj_list(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            rec_stack@.len() == old(rec_stack)@.len(),\n            forall|j: int| #![auto]\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+    "snippet": "    fn dfs_finish_order_cycle_detect(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,\n        visited: &mut ArraySeqStEphS<B>,\n        rec_stack: &mut ArraySeqStEphS<B>,\n        finish_order: &mut Vec<N>,\n        vertex: N,\n    ) -> (cycle_free: bool)\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            old(rec_stack)@.len() == graph@.len(),\n            spec_wf_adj_list(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            rec_stack@.len() == old(rec_stack)@.len(),\n            forall|j: int| #![auto]\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
   },
   {
     "id": 24,
@@ -205,7 +205,7 @@
     "file": "Chap55/TopoSortStPer.rs",
     "lines": "45-61",
     "spec_strength": "unknown",
-    "snippet": "    fn dfs_finish_order(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,\n        visited: &mut Vec<bool>,\n        result: &mut Vec<N>,\n        vertex: N,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_wf_adj_list_per(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            forall|j: int| #![auto]\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+    "snippet": "    fn dfs_finish_order(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,\n        visited: &mut Vec<bool>,\n        finish_order: &mut Vec<N>,\n        vertex: N,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_wf_adj_list_per(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            forall|j: int| #![auto]\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
   },
   {
     "id": 27,
@@ -213,7 +213,7 @@
     "file": "Chap55/TopoSortStPer.rs",
     "lines": "97-116",
     "spec_strength": "unknown",
-    "snippet": "    fn dfs_finish_order_cycle_detect(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,\n        visited: &mut Vec<bool>,\n        rec_stack: &mut Vec<bool>,\n        result: &mut Vec<N>,\n        vertex: N,\n    ) -> (cycle_free: bool)\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            old(rec_stack)@.len() == graph@.len(),\n            spec_wf_adj_list_per(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            rec_stack@.len() == old(rec_stack)@.len(),\n            forall|j: int| #![auto]\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+    "snippet": "    fn dfs_finish_order_cycle_detect(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,\n        visited: &mut Vec<bool>,\n        rec_stack: &mut Vec<bool>,\n        finish_order: &mut Vec<N>,\n        vertex: N,\n    ) -> (cycle_free: bool)\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            old(rec_stack)@.len() == graph@.len(),\n            spec_wf_adj_list_per(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            rec_stack@.len() == old(rec_stack)@.len(),\n            forall|j: int| #![auto]\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
   },
   {
     "id": 28,

@@ -41,8 +41,6 @@ Info: 9 total
    PrimTreeSeqStPer.rs:903: info: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.
-ccept hole
-   PrimTreeSeqStPer.rs:898: info: accept() - accept hole
-   PrimTreeSeqStPer.rs:903: info: accept() - accept hole
+fo: accept() - accept hole
 
 🎉 No proof holes or warnings found! All proofs are complete.

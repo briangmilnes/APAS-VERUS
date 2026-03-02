@@ -59,9 +59,7 @@ Checking 2 files...
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:103: warning: [18] trait BoruvkaStEphTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:154: warning: [18] impl BoruvkaStEphTrait for BoruvkaStEph should come before derive impls in verus! (expected impls before derive impls in verus!)
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:67: warning: [19] eq return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:121: warning: [19] bridge_star_partition return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:229: warning: [19] bridge_star_partition return name 'result' could be more descriptive
 
 ════════════════════════════════════════════════════════════════
-Summary: 22 passed, 28 warnings in 2 files (checked 2 files)
+Summary: 22 passed, 26 warnings in 2 files (checked 2 files)
 ════════════════════════════════════════════════════════════════

@@ -269,7 +269,7 @@
     "file": "Chap45/BinaryHeapPQ.rs",
     "lines": "105-111",
     "spec_strength": "unknown",
-    "snippet": "        fn swap_elements<T: StT + Ord>(seq: &ArraySeqStPerS<T>, i: usize, j: usize) -> (result: ArraySeqStPerS<T>)\n            requires\n                obeys_feq_clone::<T>(),\n                (i as int) < seq.view().len(),\n                (j as int) < seq.view().len(),\n                seq@.len() <= usize::MAX as int,\n            ensures result@.len() == seq@.len()"
+    "snippet": "        fn swap_elements<T: StT + Ord>(seq: &ArraySeqStPerS<T>, i: usize, j: usize) -> (swapped: ArraySeqStPerS<T>)\n            requires\n                obeys_feq_clone::<T>(),\n                (i as int) < seq.view().len(),\n                (j as int) < seq.view().len(),\n                seq@.len() <= usize::MAX as int,\n            ensures swapped@.len() == seq@.len()"
   },
   {
     "id": 35,
@@ -277,7 +277,7 @@
     "file": "Chap45/BinaryHeapPQ.rs",
     "lines": "139-144",
     "spec_strength": "unknown",
-    "snippet": "        fn bubble_up<T: StT + Ord>(seq: &ArraySeqStPerS<T>, mut i: usize) -> (result: ArraySeqStPerS<T>)\n            requires\n                obeys_feq_clone::<T>(),\n                (i as int) < seq.view().len(),\n                seq@.len() <= usize::MAX as int,\n            ensures result@.len() == seq@.len()"
+    "snippet": "        fn bubble_up<T: StT + Ord>(seq: &ArraySeqStPerS<T>, mut i: usize) -> (heapified: ArraySeqStPerS<T>)\n            requires\n                obeys_feq_clone::<T>(),\n                (i as int) < seq.view().len(),\n                seq@.len() <= usize::MAX as int,\n            ensures heapified@.len() == seq@.len()"
   },
   {
     "id": 36,
@@ -285,7 +285,7 @@
     "file": "Chap45/BinaryHeapPQ.rs",
     "lines": "179-185",
     "spec_strength": "unknown",
-    "snippet": "        fn bubble_down<T: StT + Ord>(heap: &ArraySeqStPerS<T>, i: usize) -> (result: ArraySeqStPerS<T>)\n            requires\n                obeys_feq_clone::<T>(),\n                (i as int) < heap.view().len(),\n                heap@.len() <= usize::MAX as int,\n                heap@.len() * 2 <= usize::MAX as int,\n            ensures result@.len() == heap@.len()"
+    "snippet": "        fn bubble_down<T: StT + Ord>(heap: &ArraySeqStPerS<T>, i: usize) -> (heapified: ArraySeqStPerS<T>)\n            requires\n                obeys_feq_clone::<T>(),\n                (i as int) < heap.view().len(),\n                heap@.len() <= usize::MAX as int,\n                heap@.len() * 2 <= usize::MAX as int,\n            ensures heapified@.len() == heap@.len()"
   },
   {
     "id": 37,
@@ -293,7 +293,7 @@
     "file": "Chap45/BinaryHeapPQ.rs",
     "lines": "230-235",
     "spec_strength": "unknown",
-    "snippet": "        fn heapify<T: StT + Ord>(seq: &ArraySeqStPerS<T>) -> (result: ArraySeqStPerS<T>)\n            requires\n                obeys_feq_clone::<T>(),\n                seq@.len() <= usize::MAX as int,\n                seq@.len() * 2 <= usize::MAX as int,\n            ensures result@.len() == seq@.len()"
+    "snippet": "        fn heapify<T: StT + Ord>(seq: &ArraySeqStPerS<T>) -> (heapified: ArraySeqStPerS<T>)\n            requires\n                obeys_feq_clone::<T>(),\n                seq@.len() <= usize::MAX as int,\n                seq@.len() * 2 <= usize::MAX as int,\n            ensures heapified@.len() == seq@.len()"
   },
   {
     "id": 38,
@@ -333,7 +333,7 @@
     "file": "Chap45/BinaryHeapPQ.rs",
     "lines": "373-374",
     "spec_strength": "unknown",
-    "snippet": "            fn empty() -> (result: Self)\n                ensures result@.len() == 0;"
+    "snippet": "            fn empty() -> (empty: Self)\n                ensures empty@.len() == 0;"
   },
   {
     "id": 43,
@@ -365,7 +365,7 @@
     "file": "Chap45/BinaryHeapPQ.rs",
     "lines": "392-400",
     "spec_strength": "unknown",
-    "snippet": "            fn delete_min(&self) -> (result: (Self, Option<T>))\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() * 2 <= usize::MAX as int,\n                ensures\n                    self@.len() > 0 ==> result.1.is_some(),\n                    self@.len() > 0 ==> result.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> result.1.is_none(),\n                    self@.len() == 0 ==> result.0@.len() == 0;"
+    "snippet": "            fn delete_min(&self) -> (min_pair: (Self, Option<T>))\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() * 2 <= usize::MAX as int,\n                ensures\n                    self@.len() > 0 ==> min_pair.1.is_some(),\n                    self@.len() > 0 ==> min_pair.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> min_pair.1.is_none(),\n                    self@.len() == 0 ==> min_pair.0@.len() == 0;"
   },
   {
     "id": 47,
@@ -573,7 +573,7 @@
     "file": "Chap45/HeapsortExample.rs",
     "lines": "107-123",
     "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(n²), Span Θ(n²) — n × O(n) deleteMin dominates.\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS.\n    pub fn heapsort_unsorted_list<T: StT + Ord>(sequence: &[T]) -> Vec<T> {\n        let mut pq = UnsortedListPQ::empty();\n        for element in sequence {\n            pq = pq.insert(element.clone());\n        }\n        let mut result = Vec::new();\n        while !pq.is_empty() {\n            let (new_pq, min_element) = pq.delete_min();\n            if let Some(element) = min_element {\n                result.push(element);\n            }\n            pq = new_pq;\n        }\n        result\n    }"
+    "snippet": "    /// - APAS: Work Θ(n²), Span Θ(n²) — n × O(n) deleteMin dominates.\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS.\n    pub fn heapsort_unsorted_list<T: StT + Ord>(sequence: &[T]) -> Vec<T> {\n        let mut pq = UnsortedListPQ::empty();\n        for element in sequence {\n            pq = pq.insert(element.clone());\n        }\n        let mut cloned = Vec::new();\n        while !pq.is_empty() {\n            let (new_pq, min_element) = pq.delete_min();\n            if let Some(element) = min_element {\n                cloned.push(element);\n            }\n            pq = new_pq;\n        }\n        cloned\n    }"
   },
   {
     "id": 73,
@@ -581,7 +581,7 @@
     "file": "Chap45/HeapsortExample.rs",
     "lines": "125-141",
     "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(n²), Span Θ(n²) — n × O(n) insert dominates.\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS.\n    pub fn heapsort_sorted_list<T: StT + Ord>(sequence: &[T]) -> Vec<T> {\n        let mut pq = SortedListPQ::empty();\n        for element in sequence {\n            pq = pq.insert(element.clone());\n        }\n        let mut result = Vec::new();\n        while !pq.is_empty() {\n            let (new_pq, min_element) = pq.delete_min();\n            if let Some(element) = min_element {\n                result.push(element);\n            }\n            pq = new_pq;\n        }\n        result\n    }"
+    "snippet": "    /// - APAS: Work Θ(n²), Span Θ(n²) — n × O(n) insert dominates.\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS.\n    pub fn heapsort_sorted_list<T: StT + Ord>(sequence: &[T]) -> Vec<T> {\n        let mut pq = SortedListPQ::empty();\n        for element in sequence {\n            pq = pq.insert(element.clone());\n        }\n        let mut cloned = Vec::new();\n        while !pq.is_empty() {\n            let (new_pq, min_element) = pq.delete_min();\n            if let Some(element) = min_element {\n                cloned.push(element);\n            }\n            pq = new_pq;\n        }\n        cloned\n    }"
   },
   {
     "id": 74,
@@ -589,7 +589,7 @@
     "file": "Chap45/HeapsortExample.rs",
     "lines": "143-159",
     "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(n log n), Span Θ(n log n)\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — insert is O(n) due to Vec conversion, not O(log n).\n    pub fn heapsort_balanced_tree<T: StT + Ord>(sequence: &[T]) -> Vec<T> {\n        let mut pq = BalancedTreePQ::empty();\n        for element in sequence {\n            pq = pq.insert(element.clone());\n        }\n        let mut result = Vec::new();\n        while !pq.is_empty() {\n            let (new_pq, min_element) = pq.delete_min();\n            if let Some(element) = min_element {\n                result.push(element);\n            }\n            pq = new_pq;\n        }\n        result\n    }"
+    "snippet": "    /// - APAS: Work Θ(n log n), Span Θ(n log n)\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — insert is O(n) due to Vec conversion, not O(log n).\n    pub fn heapsort_balanced_tree<T: StT + Ord>(sequence: &[T]) -> Vec<T> {\n        let mut pq = BalancedTreePQ::empty();\n        for element in sequence {\n            pq = pq.insert(element.clone());\n        }\n        let mut cloned = Vec::new();\n        while !pq.is_empty() {\n            let (new_pq, min_element) = pq.delete_min();\n            if let Some(element) = min_element {\n                cloned.push(element);\n            }\n            pq = new_pq;\n        }\n        cloned\n    }"
   },
   {
     "id": 75,
@@ -597,7 +597,7 @@
     "file": "Chap45/HeapsortExample.rs",
     "lines": "161-177",
     "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(n log n), Span Θ(n log n)\n    /// - Claude-Opus-4.6: Work Θ(n² log n), Span Θ(n² log n) — each insert/delete is O(n log n) due to array swaps.\n    pub fn heapsort_binary_heap<T: StT + Ord>(sequence: &[T]) -> Vec<T> {\n        let mut pq = BinaryHeapPQ::empty();\n        for element in sequence {\n            pq = pq.insert(element.clone());\n        }\n        let mut result = Vec::new();\n        while !pq.is_empty() {\n            let (new_pq, min_element) = pq.delete_min();\n            if let Some(element) = min_element {\n                result.push(element);\n            }\n            pq = new_pq;\n        }\n        result\n    }"
+    "snippet": "    /// - APAS: Work Θ(n log n), Span Θ(n log n)\n    /// - Claude-Opus-4.6: Work Θ(n² log n), Span Θ(n² log n) — each insert/delete is O(n log n) due to array swaps.\n    pub fn heapsort_binary_heap<T: StT + Ord>(sequence: &[T]) -> Vec<T> {\n        let mut pq = BinaryHeapPQ::empty();\n        for element in sequence {\n            pq = pq.insert(element.clone());\n        }\n        let mut cloned = Vec::new();\n        while !pq.is_empty() {\n            let (new_pq, min_element) = pq.delete_min();\n            if let Some(element) = min_element {\n                cloned.push(element);\n            }\n            pq = new_pq;\n        }\n        cloned\n    }"
   },
   {
     "id": 76,
@@ -605,7 +605,7 @@
     "file": "Chap45/HeapsortExample.rs",
     "lines": "179-195",
     "spec_strength": "",
-    "snippet": "    /// - APAS: Work Θ(n log n), Span Θ(n log n)\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — each insert/delete clones tree O(n).\n    pub fn heapsort_leftist_heap<T: StT + Ord>(sequence: &[T]) -> Vec<T> {\n        let mut pq = LeftistHeapPQ::empty();\n        for element in sequence {\n            pq = pq.insert(element.clone());\n        }\n        let mut result = Vec::new();\n        while !pq.is_empty() {\n            let (new_pq, min_element) = pq.delete_min();\n            if let Some(element) = min_element {\n                result.push(element);\n            }\n            pq = new_pq;\n        }\n        result\n    }"
+    "snippet": "    /// - APAS: WorkΘ(n log n), Span Θ(n log n)\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — each insert/delete clones tree O(n).\n    pub fn heapsort_leftist_heap<T: StT + Ord>(sequence: &[T]) -> Vec<T> {\n        let mut pq = LeftistHeapPQ::empty();\n        for element in sequence {\n            pq = pq.insert(element.clone());\n        }\n        let mut elements = Vec::new();\n        while !pq.is_empty() {\n            let (new_pq, min_element) = pq.delete_min();\n            if let Some(element) = min_element {\n                elements.push(element);\n            }\n            pq = new_pq;\n        }\n        elements\n    }"
   },
   {
     "id": 77,
@@ -621,7 +621,7 @@
     "file": "Chap45/HeapsortExample.rs",
     "lines": "223-224",
     "spec_strength": "",
-    "snippet": "        /// Verify that all implementations produce the same sorted result\n        fn all_results_match(&self)  -> bool;"
+    "snippet": "        /// Verify that all implementations produce the same sorted elements\n        fn all_results_match(&self)  -> bool;"
   },
   {
     "id": 79,
@@ -693,7 +693,7 @@
     "file": "Chap45/HeapsortExample.rs",
     "lines": "285-295",
     "spec_strength": "",
-    "snippet": "    /// Generate a large random-like sequence for performance testing\n    pub fn large_example(size: usize) -> Vec<i32> {\n        // Generate pseudo-random sequence for testing\n        let mut result = Vec::with_capacity(size);\n        let mut x: i64 = 1;\n        for _ in 0..size {\n            x = (x * 1103515245 + 12345) % (1i64 << 31); // Linear congruential generator\n            result.push((x % 1000) as i32);\n        }\n        result\n    }"
+    "snippet": "    /// Generate a large random-like sequence for performance testing\n    pub fn large_example(size: usize) -> Vec<i32> {\n        // Generate pseudo-random sequence for testing\n        let mut elements = Vec::with_capacity(size);\n        let mut x: i64 = 1;\n        for _ in 0..size {\n            x = (x * 1103515245 + 12345) % (1i64 << 31); // Linear congruential generator\n            elements.push((x % 1000) as i32);\n        }\n        elements\n    }"
   },
   {
     "id": 88,
@@ -725,7 +725,7 @@
     "file": "Chap45/HeapsortExample.rs",
     "lines": "355-363",
     "spec_strength": "",
-    "snippet": "    /// Convert Vec to ArraySeqStPerS for use with APAS sequence types\n    pub fn vec_to_array_seq<T: StT>(vec: &[T]) -> ArraySeqStPerS<T> {\n        let mut result = ArraySeqStPerS::empty();\n        for element in vec {\n            let single_seq = ArraySeqStPerS::singleton(element.clone());\n            result = ArraySeqStPerS::append(&result, &single_seq);\n        }\n        result\n    }"
+    "snippet": "    /// Convert Vec to ArraySeqStPerS for use with APAS sequence types\n    pub fn vec_to_array_seq<T: StT>(vec: &[T]) -> ArraySeqStPerS<T> {\n        let mut elements = ArraySeqStPerS::empty();\n        for element in vec {\n            let single_seq = ArraySeqStPerS::singleton(element.clone());\n            elements = ArraySeqStPerS::append(&elements, &single_seq);\n        }\n        elements\n    }"
   },
   {
     "id": 92,
@@ -853,7 +853,7 @@
     "file": "Chap45/LeftistHeapPQ.rs",
     "lines": "79",
     "spec_strength": "",
-    "snippet": "            fn delete_min(&self) -> (result: (Self, Option<T>));"
+    "snippet": "            fn delete_min(&self) -> (min_pair: (Self, Option<T>));"
   },
   {
     "id": 108,
@@ -1021,7 +1021,7 @@
     "file": "Chap45/SortedListPQ.rs",
     "lines": "66-72",
     "spec_strength": "unknown",
-    "snippet": "            fn delete_min(&self) -> (result: (Self, Option<T>))\n                requires obeys_feq_clone::<T>(),\n                ensures\n                    self@.len() > 0 ==> result.1.is_some(),\n                    self@.len() > 0 ==> result.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> result.1.is_none(),\n                    self@.len() == 0 ==> result.0@.len() == self@.len();"
+    "snippet": "            fn delete_min(&self) -> (min_pair: (Self, Option<T>))\n                requires obeys_feq_clone::<T>(),\n                ensures\n                    self@.len() > 0 ==> min_pair.1.is_some(),\n                    self@.len() > 0 ==> min_pair.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> min_pair.1.is_none(),\n                    self@.len() == 0 ==> min_pair.0@.len() == self@.len();"
   },
   {
     "id": 129,
@@ -1093,7 +1093,7 @@
     "file": "Chap45/SortedListPQ.rs",
     "lines": "108-114",
     "spec_strength": "unknown",
-    "snippet": "            fn delete_max(&self) -> (result: (Self, Option<T>))\n                requires obeys_feq_clone::<T>(),\n                ensures\n                    self@.len() > 0 ==> result.1.is_some(),\n                    self@.len() > 0 ==> result.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> result.1.is_none(),\n                    self@.len() == 0 ==> result.0@.len() == self@.len();"
+    "snippet": "            fn delete_max(&self) -> (max_pair: (Self, Option<T>))\n                requires obeys_feq_clone::<T>(),\n                ensures\n                    self@.len() > 0 ==> max_pair.1.is_some(),\n                    self@.len() > 0 ==> max_pair.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> max_pair.1.is_none(),\n                    self@.len() == 0 ==> max_pair.0@.len() == self@.len();"
   },
   {
     "id": 138,
@@ -1189,7 +1189,7 @@
     "file": "Chap45/UnsortedListPQ.rs",
     "lines": "66-72",
     "spec_strength": "unknown",
-    "snippet": "            fn delete_min(&self) -> (result: (Self, Option<T>))\n                requires obeys_feq_clone::<T>(),\n                ensures\n                    self@.len() > 0 ==> result.1.is_some(),\n                    self@.len() > 0 ==> result.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> result.1.is_none(),\n                    self@.len() == 0 ==> result.0@.len() == self@.len();"
+    "snippet": "            fn delete_min(&self) -> (min_pair: (Self, Option<T>))\n                requires obeys_feq_clone::<T>(),\n                ensures\n                    self@.len() > 0 ==> min_pair.1.is_some(),\n                    self@.len() > 0 ==> min_pair.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> min_pair.1.is_none(),\n                    self@.len() == 0 ==> min_pair.0@.len() == self@.len();"
   },
   {
     "id": 150,

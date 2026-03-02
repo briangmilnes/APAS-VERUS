@@ -39,12 +39,6 @@ Proof Functions:
 Holes Found: 0 total
 
 Info: 18 total
-   Exercise12_1.rs:19: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_1.rs:59: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_1.rs:67: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_1.rs:75: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_1.rs:80: info: external_body_accept_hole - external_body with accept hole comment
-   Exercise12_1.rs:92: info: external_body_accept_hole - external_body with accept hole comment
    Exercise12_5.rs:30: info: external_accept_hole - external with accept hole comment
    Exercise12_5.rs:38: info: external_body_accept_hole - external_body with accept hole comment
    Exercise12_5.rs:96: info: external_body_accept_hole - external_body with accept hole comment
@@ -57,9 +51,14 @@ Info: 18 total
    Exercise12_5.rs:124: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
    Exercise12_5.rs:126: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
    Exercise12_5.rs:161: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
+   Exercise12_1.rs:19: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_1.rs:59: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_1.rs:67: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_1.rs:75: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_1.rs:80: info: external_body_accept_hole - external_body with accept hole comment
+   Exercise12_1.rs:92: info: external_body_accept_hole - external_body with accept hole comment
 
 🎉 No proof holes or warnings found! All proofs are complete.
- {{}} with accept hole comment
-   Exercise12_5.rs:161: info: unsafe_block_accept_hole - unsafe {{}} with accept hole comment
+l_body with accept hole comment
 
 🎉 No proof holes or warnings found! All proofs are complete.

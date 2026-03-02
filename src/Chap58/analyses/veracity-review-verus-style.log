@@ -39,11 +39,11 @@ Checking 2 files...
 /home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphI64.rs:1: info: [16] no Lit macro definitions (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphI64.rs:1: info: [17] no collection structs (ok)
 /home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphI64.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphI64.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphI64.rs:1: info: [21] no broadcast use entries
 /home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphI64.rs:26: warning: [12] trait BellmanFordStEphI64Trait fn bellman_ford should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphI64.rs:26: warning: [19] bellman_ford return name 'result' could be more descriptive
 /home/milnes/projects/APAS-VERUS/src/Chap58/BellmanFordStEphI64.rs:25: warning: [20] trait BellmanFordStEphI64Trait is defined but has no impl
 
 ════════════════════════════════════════════════════════════════
-Summary: 28 passed, 4 warnings in 2 files (checked 2 files)
+Summary: 29 passed, 3 warnings in 2 files (checked 2 files)
 ════════════════════════════════════════════════════════════════

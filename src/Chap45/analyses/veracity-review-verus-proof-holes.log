@@ -46,9 +46,9 @@
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ SortedListPQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:401: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       396 |             fn clone(&self) -> (result: Self)
+       396 |             fn clone(&self) -> (cloned: Self)
             ...
-       399 |                 let result = SortedListPQ { elements: self.elements.clone() };
+       399 |                 let cloned = SortedListPQ { elements: self.elements.clone() };
        400 |                 proof {
        402 |                     lemma_seq_map_cloned_view_eq(
        403 |                         self.elements.seq@,
@@ -58,9 +58,9 @@
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ UnsortedListPQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:303: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       298 |             fn clone(&self) -> (result: Self)
+       298 |             fn clone(&self) -> (cloned: Self)
             ...
-       301 |                 let result = UnsortedListPQ { elements: self.elements.clone() };
+       301 |                 let cloned = UnsortedListPQ { elements: self.elements.clone() };
        302 |                 proof {
        304 |                     lemma_seq_map_cloned_view_eq(
        305 |                         self.elements.seq@,
@@ -89,18 +89,18 @@ Holes Found: 3 total
 Errors: 2 total (2 assume in eq/clone (Verus workaround))
 
 Info: 11 total
+   UnsortedListPQ.rs:318: info: accept() - accept hole
+   SortedListPQ.rs:416: info: accept() - accept hole
    BalancedTreePQ.rs:64: info: accept() - accept hole
    BinaryHeapPQ.rs:54: info: accept() - accept hole
    BinaryHeapPQ.rs:69: info: accept() - accept hole
-   SortedListPQ.rs:416: info: accept() - accept hole
    HeapsortExample.rs:84: info: accept() - accept hole
    HeapsortExample.rs:99: info: accept() - accept hole
    LeftistHeapPQ.rs:392: info: accept() - accept hole
    LeftistHeapPQ.rs:412: info: accept() - accept hole
    LeftistHeapPQ.rs:430: info: accept() - accept hole
    LeftistHeapPQ.rs:440: info: accept() - accept hole
-   UnsortedListPQ.rs:318: info: accept() - accept hole
-fo: accept() - accept hole
+nfo: accept() - accept hole
+   LeftistHeapPQ.rs:412: info: accept() - accept hole
    LeftistHeapPQ.rs:430: info: accept() - accept hole
    LeftistHeapPQ.rs:440: info: accept() - accept hole
-   UnsortedListPQ.rs:318: info: accept() - accept hole

@@ -58,6 +58,7 @@ Checking 3 files...
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [14] Debug outside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [15] Clone inside verus!
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [19] no generic return names
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [20] all traits have impls
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:63: warning: [12] trait StackStEphTrait fn new should have requires/ensures
@@ -71,18 +72,7 @@ Checking 3 files...
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS/rust_verify_test/tests/Chap57/ProveStackStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:43: warning: [18] use vstd::... should come before broadcast use (expected imports before broadcast use)
 /home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:123: warning: [18] impl Default for StackStEph < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:63: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:67: warning: [19] pop return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:69: warning: [19] peek return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:71: warning: [19] is_empty return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:73: warning: [19] size return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:79: warning: [19] new return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:87: warning: [19] pop return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:94: warning: [19] peek return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:100: warning: [19] is_empty return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:104: warning: [19] size return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS/src/Chap57/StackStEph.rs:124: warning: [19] default return name 'result' could be more descriptive
 
 ════════════════════════════════════════════════════════════════
-Summary: 38 passed, 31 warnings in 3 files (checked 3 files)
+Summary: 39 passed, 20 warnings in 3 files (checked 3 files)
 ════════════════════════════════════════════════════════════════
