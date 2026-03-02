@@ -4,8 +4,7 @@ Read senior-proof-engineer.mdc (from .cursor/rules).
 Read senior-prose-engineer.mdc (from .cursor/rules).
 REREAD ANY FILES BEFORE MODIFYING THEM as I modify files in emacs. 
 
-You are working in src/Chap38.
-
+You are working in src/Chap38/
  Update your chapter's analyses:
   veracity-review-verus-proof-holes.log - by program veracity-review-proof-holes
   Don't review-against-prose yet, it's expensive.
