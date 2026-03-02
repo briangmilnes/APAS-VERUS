@@ -22,45 +22,75 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap66 | BoruvkaMtEph | 5 | 4 | 0 | 12 | 6 | 10 | 1 | 0 | 15 |
-| 2 | Chap66 | BoruvkaStEph | 5 | 9 | 0 | 0 | 6 | 3 | 2 | 3 | 4 |
+| 1 | Chap38 | BSTParaMtEph | 17 | 17 | 0 | 16 | 18 | 14 | 0 | 18 | 14 |
+| 2 | Chap38 | BSTParaStEph | 20 | 20 | 0 | 3 | 23 | 0 | 13 | 10 | 0 |
 
 ## Function-by-Function Detail
 
-### Chap66/BoruvkaMtEph.rs
+### Chap38/BSTParaMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `eq` |  | Y |  |  | Y |  |  | unknown | 42&#8209;43 |
-| 2 | `vertex_bridges_mt` | Y |  |  | Y | Y |  | Y |  | 56&#8209;60 |
-| 3 | `bridge_star_partition_mt` | Y |  |  | Y | Y |  | Y |  | 64&#8209;69 |
-| 4 | `boruvka_mst_mt` | Y |  |  | Y | Y |  | Y |  | 73&#8209;79 |
-| 5 | `boruvka_mst_mt_with_seed` | Y |  |  | Y | Y |  | Y |  | 83&#8209;87 |
-| 6 | `mst_weight` | Y |  |  | Y | Y |  | Y |  | 91&#8209;94 |
-| 7 | `partial_cmp` |  | Y |  |  |  | Y | Y |  | 105&#8209;107 |
-| 8 | `cmp` |  | Y |  |  |  | Y | Y |  | 111&#8209;116 |
-| 9 | `hash` |  | Y |  |  |  | Y | Y |  | 120&#8209;125 |
-| 10 | `hash_coin` |  |  |  | Y |  | Y | Y |  | 140&#8209;151 |
-| 11 | `hash_coin_flips_mt` |  |  |  | Y |  | Y | Y |  | 153&#8209;186 |
-| 12 | `compute_remaining_mt` |  |  |  | Y |  | Y | Y |  | 188&#8209;224 |
-| 13 | `collect_mst_labels_mt` |  |  |  | Y |  | Y | Y |  | 226&#8209;261 |
-| 14 | `build_partition_map_mt` |  |  |  | Y |  | Y | Y |  | 263&#8209;303 |
-| 15 | `filter_tail_to_head_mt` |  |  |  | Y |  | Y | Y |  | 404&#8209;454 |
-| 16 | `reroute_edges_mt` |  |  |  | Y |  | Y | Y |  | 519&#8209;561 |
+| 1 | `new_bst_para_lock` |  |  |  | Y | Y |  |  | hole | 67 |
+| 2 | `new` | Y | Y |  |  | Y |  |  | hole | 99&#8209;100 |
+| 3 | `singleton` | Y | Y |  |  | Y |  |  | hole | 102&#8209;105 |
+| 4 | `expose` | Y | Y |  |  | Y |  |  | hole | 107&#8209;108 |
+| 5 | `join_mid` | Y | Y |  | Y | Y |  |  | hole | 110&#8209;111 |
+| 6 | `size` | Y | Y |  |  | Y |  |  | hole | 113&#8209;114 |
+| 7 | `is_empty` | Y | Y |  |  | Y |  |  | hole | 116&#8209;117 |
+| 8 | `insert` | Y | Y |  |  | Y |  |  | hole | 120 |
+| 9 | `delete` | Y | Y |  |  | Y |  |  | hole | 123 |
+| 10 | `find` | Y | Y |  |  | Y |  |  | hole | 125&#8209;126 |
+| 11 | `split` | Y | Y |  |  | Y |  |  | hole | 128&#8209;132 |
+| 12 | `join_pair` | Y | Y |  |  | Y |  |  | hole | 134&#8209;135 |
+| 13 | `union` | Y | Y |  |  | Y |  |  | hole | 137&#8209;138 |
+| 14 | `intersect` | Y | Y |  |  | Y |  |  | hole | 140&#8209;141 |
+| 15 | `difference` | Y | Y |  |  | Y |  |  | hole | 143&#8209;144 |
+| 16 | `filter` | Y | Y |  |  | Y |  |  | hole | 146&#8209;147 |
+| 17 | `reduce` | Y | Y |  |  | Y |  |  | hole | 150 |
+| 18 | `in_order` | Y | Y |  |  | Y |  |  | hole | 152&#8209;153 |
+| 19 | `new_leaf` |  |  |  | Y |  | Y | Y |  | 325&#8209;327 |
+| 20 | `expose_internal` |  |  |  | Y |  | Y | Y |  | 329&#8209;337 |
+| 21 | `split_inner` |  |  |  | Y |  | Y | Y |  | 351&#8209;368 |
+| 22 | `join_m` |  |  |  | Y |  | Y | Y |  | 370&#8209;372 |
+| 23 | `min_key` |  |  |  | Y |  | Y | Y |  | 374&#8209;382 |
+| 24 | `join_pair_inner` |  |  |  | Y |  | Y | Y |  | 384&#8209;393 |
+| 25 | `union_inner` |  |  |  | Y |  | Y | Y |  | 395&#8209;406 |
+| 26 | `intersect_inner` |  |  |  | Y |  | Y | Y |  | 408&#8209;422 |
+| 27 | `difference_inner` |  |  |  | Y |  | Y | Y |  | 424&#8209;440 |
+| 28 | `filter_inner` |  |  |  | Y |  | Y | Y |  | 442&#8209;462 |
+| 29 | `filter_parallel` |  |  |  | Y |  | Y | Y |  | 464&#8209;470 |
+| 30 | `reduce_inner` |  |  |  | Y |  | Y | Y |  | 472&#8209;493 |
+| 31 | `reduce_parallel` |  |  |  | Y |  | Y | Y |  | 495&#8209;502 |
+| 32 | `collect_in_order` |  |  |  | Y |  | Y | Y |  | 504&#8209;513 |
 
-### Chap66/BoruvkaStEph.rs
+### Chap38/BSTParaStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 17 | `eq` |  | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
-| 18 | `vertex_bridges` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;114 |
-| 19 | `bridge_star_partition` | Y | Y |  |  | Y |  |  | hole | 121&#8209;125 |
-| 20 | `boruvka_mst` | Y | Y |  |  | Y |  |  | hole | 129&#8209;134 |
-| 21 | `boruvka_mst_with_seed` | Y | Y |  |  | Y |  |  | hole | 138&#8209;142 |
-| 22 | `mst_weight` | Y | Y |  |  | Y |  | Y |  | 146&#8209;149 |
-| 23 | `partial_cmp` |  | Y |  |  |  | Y | Y |  | 369&#8209;371 |
-| 24 | `cmp` |  | Y |  |  |  | Y | Y |  | 375&#8209;380 |
-| 25 | `hash` |  | Y |  |  |  | Y | Y |  | 384&#8209;389 |
+| 33 | `new_param_bst` |  |  |  | Y | Y |  |  | hole | 78&#8209;83 |
+| 34 | `new` | Y | Y |  |  | Y |  |  | unknown | 116&#8209;117 |
+| 35 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 119&#8209;122 |
+| 36 | `expose` | Y | Y |  |  | Y |  |  | hole | 124&#8209;128 |
+| 37 | `join_mid` | Y | Y |  |  | Y |  |  | unknown | 138&#8209;140 |
+| 38 | `join_m` | Y | Y |  |  | Y |  |  | unknown | 151&#8209;158 |
+| 39 | `size` | Y | Y |  |  | Y |  |  | unknown | 160&#8209;161 |
+| 40 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 163&#8209;164 |
+| 41 | `insert` | Y | Y |  |  | Y |  |  | hole | 167 |
+| 42 | `delete` | Y | Y |  |  | Y |  |  | hole | 170 |
+| 43 | `find` | Y | Y |  |  | Y |  |  | hole | 172&#8209;173 |
+| 44 | `split` | Y | Y |  |  | Y |  |  | hole | 175&#8209;183 |
+| 45 | `min_key` | Y | Y |  |  | Y |  |  | unknown | 185&#8209;188 |
+| 46 | `join_pair` | Y | Y |  |  | Y |  |  | hole | 190&#8209;191 |
+| 47 | `union` | Y | Y |  |  | Y |  |  | hole | 193&#8209;194 |
+| 48 | `intersect` | Y | Y |  |  | Y |  |  | hole | 196&#8209;197 |
+| 49 | `difference` | Y | Y |  |  | Y |  |  | hole | 199&#8209;200 |
+| 50 | `filter` | Y | Y |  |  | Y |  |  | unknown | 202&#8209;204 |
+| 51 | `reduce` | Y | Y |  |  | Y |  |  | unknown | 207&#8209;208 |
+| 52 | `collect_in_order` | Y | Y |  |  | Y |  |  | unknown | 210&#8209;212 |
+| 53 | `in_order` | Y | Y |  |  | Y |  |  | unknown | 214&#8209;215 |
+| 54 | `filter_inner` |  |  |  | Y | Y |  |  | unknown | 514&#8209;520 |
+| 55 | `reduce_inner` |  |  |  | Y | Y |  |  | unknown | 546&#8209;554 |
 
 
 ### Legend

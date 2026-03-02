@@ -1,202 +1,442 @@
 [
   {
     "id": 1,
-    "function": "eq",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "42-43",
-    "spec_strength": "unknown",
-    "snippet": "            fn eq(&self, other: &Self) -> (r: bool)\n                ensures r == (self@ == other@)"
+    "function": "new_bst_para_lock",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "67",
+    "spec_strength": "hole",
+    "snippet": "    fn new_bst_para_lock<T: MtKey>(val: Option<Box<NodeInner<T>>>) -> (lock: RwLock<Option<Box<NodeInner<T>>>, BSTParaMtEphInv>) {"
   },
   {
     "id": 2,
-    "function": "vertex_bridges_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "56-60",
-    "spec_strength": "",
-    "snippet": "            fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(\n                edges: Arc<Vec<LabeledEdge<V>>>,\n                start: usize,\n                end: usize,\n            ) -> HashMap<V, (V, WrappedF64, usize)>;"
+    "function": "new",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "99-100",
+    "spec_strength": "hole",
+    "snippet": "        fn new() -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty();"
   },
   {
     "id": 3,
-    "function": "bridge_star_partition_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "64-69",
-    "spec_strength": "",
-    "snippet": "            fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(\n                vertices_vec: Vec<V>,\n                bridges: HashMap<V, (V, WrappedF64, usize)>,\n                seed: u64,\n                round: usize,\n            ) -> (SetStEph<V>, HashMap<V, (V, WrappedF64, usize)>);"
+    "function": "singleton",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "102-105",
+    "spec_strength": "hole",
+    "snippet": "        fn singleton(key: T) -> (result: Self)\n            ensures\n                result@ == Set::<<T as View>::V>::empty().insert(key@),\n                result@.finite();"
   },
   {
     "id": 4,
-    "function": "boruvka_mst_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "73-79",
-    "spec_strength": "",
-    "snippet": "            fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(\n                vertices_vec: Vec<V>,\n                edges_vec: Vec<LabeledEdge<V>>,\n                mst_labels: SetStEph<usize>,\n                seed: u64,\n                round: usize,\n            ) -> SetStEph<usize>;"
+    "function": "expose",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "107-108",
+    "spec_strength": "hole",
+    "snippet": "        fn expose(&self) -> (exposed: Exposed<T>)\n            ensures self@.len() == 0 ==> exposed is Leaf;"
   },
   {
     "id": 5,
-    "function": "boruvka_mst_mt_with_seed",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "83-87",
-    "spec_strength": "",
-    "snippet": "            fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(\n                vertices: &SetStEph<V>,\n                edges: &SetStEph<LabeledEdge<V>>,\n                seed: u64,\n            ) -> SetStEph<usize>;"
+    "function": "join_mid",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "110-111",
+    "spec_strength": "hole",
+    "snippet": "        fn join_mid(exposed: Exposed<T>) -> (result: Self)\n            ensures exposed is Leaf ==> result@ == Set::<<T as View>::V>::empty();"
   },
   {
     "id": 6,
-    "function": "mst_weight",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "91-94",
-    "spec_strength": "",
-    "snippet": "            fn mst_weight<V: StT + Hash>(\n                edges: &SetStEph<LabeledEdge<V>>,\n                mst_labels: &SetStEph<usize>,\n            ) -> WrappedF64;"
+    "function": "size",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "113-114",
+    "spec_strength": "hole",
+    "snippet": "        fn size(&self) -> (count: usize)\n            ensures count == self@.len(), self@.finite();"
   },
   {
     "id": 7,
-    "function": "partial_cmp",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "105-107",
-    "spec_strength": "",
-    "snippet": "        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {\n            Some(self.cmp(other))\n        }"
+    "function": "is_empty",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "116-117",
+    "spec_strength": "hole",
+    "snippet": "        fn is_empty(&self) -> (empty: B)\n            ensures empty == (self@.len() == 0), self@.finite();"
   },
   {
     "id": 8,
-    "function": "cmp",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "111-116",
-    "spec_strength": "",
-    "snippet": "        fn cmp(&self, other: &Self) -> std::cmp::Ordering {\n            self.0.cmp(&other.0)\n                .then_with(|| self.1.cmp(&other.1))\n                .then_with(|| self.2.val.partial_cmp(&other.2.val).unwrap_or(std::cmp::Ordering::Equal))\n                .then_with(|| self.3.cmp(&other.3))\n        }"
+    "function": "insert",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "120",
+    "spec_strength": "hole",
+    "snippet": "        fn insert(&self, key: T);"
   },
   {
     "id": 9,
-    "function": "hash",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "120-125",
-    "spec_strength": "",
-    "snippet": "        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {\n            self.0.hash(state);\n            self.1.hash(state);\n            self.2.val.to_bits().hash(state);\n            self.3.hash(state);\n        }"
+    "function": "delete",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "123",
+    "spec_strength": "hole",
+    "snippet": "        fn delete(&self, key: &T);"
   },
   {
     "id": 10,
-    "function": "hash_coin",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "140-151",
-    "spec_strength": "",
-    "snippet": "    // Hash-based coin flip: deterministic from (seed, round, vertex index).\n    // Replaces sequential StdRng coin flips with a parallelizable hash function.\n    #[cfg(not(verus_keep_ghost))]\n    fn hash_coin(seed: u64, round: usize, index: usize) -> bool {\n        use std::hash::{Hash, Hasher};\n        use std::collections::hash_map::DefaultHasher;\n        let mut hasher = DefaultHasher::new();\n        seed.hash(&mut hasher);\n        round.hash(&mut hasher);\n        index.hash(&mut hasher);\n        hasher.finish() % 2 == 0\n    }"
+    "function": "find",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "125-126",
+    "spec_strength": "hole",
+    "snippet": "        fn find(&self, key: &T) -> (found: Option<T>)\n            ensures found.is_some() <==> self@.contains(key@);"
   },
   {
     "id": 11,
-    "function": "hash_coin_flips_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "153-186",
-    "spec_strength": "",
-    "snippet": "    /// Parallel coin flip generation using divide-and-conquer.\n    ///\n    /// - Work O(n), Span O(log n) — parallel hash-based coin generation via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        seed: u64,\n        round: usize,\n        start: usize,\n        end: usize,\n    ) -> HashMap<V, bool> {\n        let size = end - start;\n        if size == 0 {\n            return HashMap::new();\n        }\n        if size == 1 {\n            let mut result = HashMap::new();\n            let _ = result.insert(vertices[start].clone(), hash_coin(seed, round, start));\n            return result;\n        }\n\n        let mid = start + size / 2;\n        let v1 = vertices.clone();\n        let v2 = vertices;\n\n        let pair = ParaPair!(\n            move || hash_coin_flips_mt(v1, seed, round, start, mid),\n            move || hash_coin_flips_mt(v2, seed, round, mid, end)\n        );\n\n        let mut merged = pair.0;\n        merged.extend(pair.1);\n        merged\n    }"
+    "function": "split",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "128-132",
+    "spec_strength": "hole",
+    "snippet": "        fn split(&self, key: &T) -> (parts: (Self, B, Self))\n            ensures\n                parts.1 == self@.contains(key@),\n                parts.0@.finite(),\n                parts.2@.finite();"
   },
   {
     "id": 12,
-    "function": "compute_remaining_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "188-224",
-    "spec_strength": "",
-    "snippet": "    /// Parallel remaining-vertex filter using divide-and-conquer.\n    ///\n    /// - Work O(n), Span O(log n) — parallel filter via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn compute_remaining_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,\n        start: usize,\n        end: usize,\n    ) -> Vec<V> {\n        let size = end - start;\n        if size == 0 {\n            return Vec::new();\n        }\n        if size == 1 {\n            let v = &vertices[start];\n            if !partition.contains_key(v) {\n                return vec![v.clone()];\n            }\n            return Vec::new();\n        }\n\n        let mid = start + size / 2;\n        let v1 = vertices.clone();\n        let p1 = partition.clone();\n        let v2 = vertices;\n        let p2 = partition;\n\n        let pair = ParaPair!(\n            move || compute_remaining_mt(v1, p1, start, mid),\n            move || compute_remaining_mt(v2, p2, mid, end)\n        );\n\n        let mut left = pair.0;\n        left.extend(pair.1);\n        left\n    }"
+    "function": "join_pair",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "134-135",
+    "spec_strength": "hole",
+    "snippet": "        fn join_pair(&self, other: Self) -> (joined: Self)\n            ensures joined@.finite();"
   },
   {
     "id": 13,
-    "function": "collect_mst_labels_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "226-261",
-    "spec_strength": "",
-    "snippet": "    /// Parallel MST label collection using divide-and-conquer.\n    ///\n    /// - Work O(n), Span O(log n) — parallel label extraction via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + 'static>(\n        keys: Arc<Vec<V>>,\n        partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,\n        start: usize,\n        end: usize,\n    ) -> Vec<usize> {\n        let size = end - start;\n        if size == 0 {\n            return Vec::new();\n        }\n        if size == 1 {\n            if let Some((_, _, label)) = partition.get(&keys[start]) {\n                return vec![*label];\n            }\n            return Vec::new();\n        }\n\n        let mid = start + size / 2;\n        let k1 = keys.clone();\n        let p1 = partition.clone();\n        let k2 = keys;\n        let p2 = partition;\n\n        let pair = ParaPair!(\n            move || collect_mst_labels_mt(k1, p1, start, mid),\n            move || collect_mst_labels_mt(k2, p2, mid, end)\n        );\n\n        let mut left = pair.0;\n        left.extend(pair.1);\n        left\n    }"
+    "function": "union",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "137-138",
+    "spec_strength": "hole",
+    "snippet": "        fn union(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.union(other@), result@.finite();"
   },
   {
     "id": 14,
-    "function": "build_partition_map_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "263-303",
-    "spec_strength": "",
-    "snippet": "    /// Parallel partition map construction using divide-and-conquer.\n    /// Maps tails→heads from partition, remaining→identity.\n    ///\n    /// - Work O(n), Span O(log n) — parallel map building via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn build_partition_map_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,\n        start: usize,\n        end: usize,\n    ) -> HashMap<V, V> {\n        let size = end - start;\n        if size == 0 {\n            return HashMap::new();\n        }\n        if size == 1 {\n            let v = &vertices[start];\n            let mut result = HashMap::new();\n            if let Some((head, _, _)) = partition.get(v) {\n                let _ = result.insert(v.clone(), head.clone());\n            } else {\n                let _ = result.insert(v.clone(), v.clone());\n            }\n            return result;\n        }\n\n        let mid = start + size / 2;\n        let v1 = vertices.clone();\n        let p1 = partition.clone();\n        let v2 = vertices;\n        let p2 = partition;\n\n        let pair = ParaPair!(\n            move || build_partition_map_mt(v1, p1, start, mid),\n            move || build_partition_map_mt(v2, p2, mid, end)\n        );\n\n        let mut merged = pair.0;\n        merged.extend(pair.1);\n        merged\n    }"
+    "function": "intersect",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "140-141",
+    "spec_strength": "hole",
+    "snippet": "        fn intersect(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.intersect(other@), result@.finite();"
   },
   {
     "id": 15,
-    "function": "filter_tail_to_head_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "404-454",
-    "spec_strength": "",
-    "snippet": "    /// Parallel filter: find edges from Tail→Head.\n    ///\n    /// - Claude-Opus-4.6: Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        bridges: Arc<HashMap<V, (V, WrappedF64, usize)>>,\n        coin_flips: Arc<HashMap<V, bool>>,\n        start: usize,\n        end: usize,\n    ) -> HashMap<V, (V, WrappedF64, usize)> {\n        let size = end - start;\n        if size == 0 {\n            return HashMap::new();\n        }\n\n        if size == 1 {\n            // Base case: check single vertex.\n            let u = &vertices[start];\n            if let Some((v, w, label)) = bridges.get(u) {\n                let u_heads = coin_flips.get(u).copied().unwrap_or(false);\n                let v_heads = coin_flips.get(v).copied().unwrap_or(false);\n\n                if !u_heads && v_heads {\n                    let mut result = HashMap::new();\n                    let _ = result.insert(u.clone(), (v.clone(), *w, *label));\n                    return result;\n                }\n            }\n            return HashMap::new();\n        }\n\n        // Divide and conquer.\n        let mid = start + size / 2;\n        let verts1 = vertices.clone();\n        let bridges1 = bridges.clone();\n        let flips1 = coin_flips.clone();\n        let verts2 = vertices;\n        let bridges2 = bridges;\n        let flips2 = coin_flips;\n\n        let pair = ParaPair!(\n            move || filter_tail_to_head_mt(verts1, bridges1, flips1, start, mid),\n            move || filter_tail_to_head_mt(verts2, bridges2, flips2, mid, end)\n        );\n\n        // Merge.\n        let mut merged = pair.0;\n        merged.extend(pair.1);\n        merged\n    }"
+    "function": "difference",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "143-144",
+    "spec_strength": "hole",
+    "snippet": "        fn difference(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.difference(other@), result@.finite();"
   },
   {
     "id": 16,
-    "function": "reroute_edges_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "519-561",
-    "spec_strength": "",
-    "snippet": "    /// Parallel edge re-routing: map edges to new endpoints and remove self-edges.\n    ///\n    /// - Claude-Opus-4.6: Work O(m), Span O(log m) — parallel divide-and-conquer via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(\n        edges: Arc<Vec<LabeledEdge<V>>>,\n        partition: Arc<HashMap<V, V>>,\n        start: usize,\n        end: usize,\n    ) -> Vec<LabeledEdge<V>> {\n        let size = end - start;\n        if size == 0 {\n            return Vec::new();\n        }\n\n        if size == 1 {\n            let LabeledEdge(u, v, w, label) = &edges[start];\n            let new_u = partition.get(u).cloned().unwrap_or_else(|| u.clone());\n            let new_v = partition.get(v).cloned().unwrap_or_else(|| v.clone());\n\n            if new_u != new_v {\n                return vec![LabeledEdge(new_u, new_v, *w, *label)];\n            }\n            return Vec::new();\n        }\n\n        // Divide and conquer.\n        let mid = start + size / 2;\n        let edges1 = edges.clone();\n        let part1 = partition.clone();\n        let edges2 = edges;\n        let part2 = partition;\n\n        let pair = ParaPair!(move || reroute_edges_mt(edges1, part1, start, mid), move || {\n            reroute_edges_mt(edges2, part2, mid, end)\n        });\n\n        // Merge.\n        let mut left_result = pair.0;\n        let mut right_result = pair.1;\n        left_result.append(&mut right_result);\n        left_result\n    }"
+    "function": "filter",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "146-147",
+    "spec_strength": "hole",
+    "snippet": "        fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(&self, predicate: F) -> (filtered: Self)\n            ensures filtered@.subset_of(self@), filtered@.finite();"
   },
   {
     "id": 17,
-    "function": "eq",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "67-68",
-    "spec_strength": "unknown",
-    "snippet": "        fn eq(&self, other: &Self) -> (r: bool)\n            ensures r == (self@ == other@)"
+    "function": "reduce",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "150",
+    "spec_strength": "hole",
+    "snippet": "        fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T;"
   },
   {
     "id": 18,
-    "function": "vertex_bridges",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "106-114",
-    "spec_strength": "unknown",
-    "snippet": "        fn vertex_bridges<V: StT + Hash + Ord>(\n            edges: &SetStEph<LabeledEdge<V>>,\n        ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)\n            requires\n                obeys_key_model::<V>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,\n                spec_all_weights_finite(edges@),\n            ensures\n                forall|v: V| #[trigger] bridges@.contains_key(v@) ==> {"
+    "function": "in_order",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "152-153",
+    "spec_strength": "hole",
+    "snippet": "        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures seq@.len() == self@.len();"
   },
   {
     "id": 19,
-    "function": "bridge_star_partition",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "121-125",
-    "spec_strength": "hole",
-    "snippet": "        fn bridge_star_partition<V: StT + Hash + Ord>(\n            vertices: &SetStEph<V>,\n            bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,\n            rng: &mut StdRng,\n        ) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>));"
+    "function": "new_leaf",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "325-327",
+    "spec_strength": "",
+    "snippet": "    fn new_leaf<T: MtKey>() -> ParamBST<T> {\n        ParamBST { root: Arc::new(new_bst_para_lock(None)) }\n    }"
   },
   {
     "id": 20,
-    "function": "boruvka_mst",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "129-134",
-    "spec_strength": "hole",
-    "snippet": "        fn boruvka_mst<V: StT + Hash + Ord>(\n            vertices: &SetStEph<V>,\n            edges: &SetStEph<LabeledEdge<V>>,\n            mst_labels: SetStEph<usize>,\n            rng: &mut StdRng,\n        ) -> (mst: SetStEph<usize>);"
+    "function": "expose_internal",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "329-337",
+    "spec_strength": "",
+    "snippet": "    fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> Exposed<T> {\n        let handle = tree.root.acquire_read();\n        let result = match handle.borrow() {\n            | None => Exposed::Leaf,\n            | Some(node) => Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone()),\n        };\n        handle.release_read();\n        result\n    }"
   },
   {
     "id": 21,
-    "function": "boruvka_mst_with_seed",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "138-142",
-    "spec_strength": "hole",
-    "snippet": "        fn boruvka_mst_with_seed<V: StT + Hash + Ord>(\n            vertices: &SetStEph<V>,\n            edges: &SetStEph<LabeledEdge<V>>,\n            seed: u64,\n        ) -> (mst: SetStEph<usize>);"
+    "function": "split_inner",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "351-368",
+    "spec_strength": "",
+    "snippet": "    fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (ParamBST<T>, B, ParamBST<T>) {\n        match expose_internal(tree) {\n            | Exposed::Leaf => (new_leaf(), false, new_leaf()),\n            | Exposed::Node(left, root_key, right) => match key.cmp(&root_key) {\n                | Less => {\n                    let (ll, found, lr) = split_inner(&left, key);\n                    let rebuilt = join_mid(Exposed::Node(lr, root_key, right));\n                    (ll, found, rebuilt)\n                }\n                | Greater => {\n                    let (rl, found, rr) = split_inner(&right, key);\n                    let rebuilt = join_mid(Exposed::Node(left, root_key, rl));\n                    (rebuilt, found, rr)\n                }\n                | Equal => (left, true, right),\n            },\n        }\n    }"
   },
   {
     "id": 22,
-    "function": "mst_weight",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "146-149",
+    "function": "join_m",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "370-372",
     "spec_strength": "",
-    "snippet": "        fn mst_weight<V: StT + Hash>(\n            edges: &SetStEph<LabeledEdge<V>>,\n            mst_labels: &SetStEph<usize>,\n        ) -> (total: WrappedF64);"
+    "snippet": "    fn join_m<T: MtKey + 'static>(left: ParamBST<T>, key: T, right: ParamBST<T>) -> ParamBST<T> {\n        join_mid(Exposed::Node(left, key, right))\n    }"
   },
   {
     "id": 23,
-    "function": "partial_cmp",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "369-371",
+    "function": "min_key",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "374-382",
     "spec_strength": "",
-    "snippet": "        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {\n            Some(self.cmp(other))\n        }"
+    "snippet": "    fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> Option<T> {\n        match expose_internal(tree) {\n            | Exposed::Leaf => None,\n            | Exposed::Node(left, key, _) => match min_key(&left) {\n                | Some(rec) => Some(rec),\n                | None => Some(key),\n            },\n        }\n    }"
   },
   {
     "id": 24,
-    "function": "cmp",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "375-380",
+    "function": "join_pair_inner",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "384-393",
     "spec_strength": "",
-    "snippet": "        fn cmp(&self, other: &Self) -> std::cmp::Ordering {\n            self.0.cmp(&other.0)\n                .then_with(|| self.1.cmp(&other.1))\n                .then_with(|| self.2.val.partial_cmp(&other.2.val).unwrap_or(std::cmp::Ordering::Equal))\n                .then_with(|| self.3.cmp(&other.3))\n        }"
+    "snippet": "    fn join_pair_inner<T: MtKey + 'static>(left: ParamBST<T>, right: ParamBST<T>) -> ParamBST<T> {\n        match expose_internal(&right) {\n            | Exposed::Leaf => left,\n            | Exposed::Node(_, key, _) => {\n                let min_k = min_key(&right).unwrap_or(key);\n                let (_, _, reduced_right) = split_inner(&right, &min_k);\n                join_m(left, min_k, reduced_right)\n            }\n        }\n    }"
   },
   {
     "id": 25,
-    "function": "hash",
-    "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "384-389",
+    "function": "union_inner",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "395-406",
     "spec_strength": "",
-    "snippet": "        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {\n            self.0.hash(state);\n            self.1.hash(state);\n            self.2.val.to_bits().hash(state);\n            self.3.hash(state);\n        }"
+    "snippet": "    fn union_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {\n        match (expose_internal(a), expose_internal(b)) {\n            | (Exposed::Leaf, _) => b.clone(),\n            | (_, Exposed::Leaf) => a.clone(),\n            | (Exposed::Node(al, ak, ar), _) => {\n                let (bl, _, br) = split_inner(b, &ak);\n                let Pair(left_union, right_union) =\n                    crate::ParaPair!(move || union_inner(&al, &bl), move || union_inner(&ar, &br));\n                join_m(left_union, ak, right_union)\n            }\n        }\n    }"
+  },
+  {
+    "id": 26,
+    "function": "intersect_inner",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "408-422",
+    "spec_strength": "",
+    "snippet": "    fn intersect_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {\n        match (expose_internal(a), expose_internal(b)) {\n            | (Exposed::Leaf, _) | (_, Exposed::Leaf) => new_leaf(),\n            | (Exposed::Node(al, ak, ar), _) => {\n                let (bl, found, br) = split_inner(b, &ak);\n                let Pair(left_res, right_res) =\n                    crate::ParaPair!(move || intersect_inner(&al, &bl), move || { intersect_inner(&ar, &br) });\n                if found {\n                    join_m(left_res, ak, right_res)\n                } else {\n                    join_pair_inner(left_res, right_res)\n                }\n            }\n        }\n    }"
+  },
+  {
+    "id": 27,
+    "function": "difference_inner",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "424-440",
+    "spec_strength": "",
+    "snippet": "    fn difference_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {\n        match (expose_internal(a), expose_internal(b)) {\n            | (Exposed::Leaf, _) => new_leaf(),\n            | (_, Exposed::Leaf) => a.clone(),\n            | (Exposed::Node(al, ak, ar), _) => {\n                let (bl, found, br) = split_inner(b, &ak);\n                let Pair(left_res, right_res) = crate::ParaPair!(move || difference_inner(&al, &bl), move || {\n                    difference_inner(&ar, &br)\n                });\n                if found {\n                    join_pair_inner(left_res, right_res)\n                } else {\n                    join_m(left_res, ak, right_res)\n                }\n            }\n        }\n    }"
+  },
+  {
+    "id": 28,
+    "function": "filter_inner",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "442-462",
+    "spec_strength": "",
+    "snippet": "    fn filter_inner<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(\n        tree: &ParamBST<T>,\n        predicate: &Arc<F>,\n    ) -> ParamBST<T> {\n        match expose_internal(tree) {\n            | Exposed::Leaf => new_leaf(),\n            | Exposed::Node(left, key, right) => {\n                let pred_left = Arc::clone(predicate);\n                let pred_right = Arc::clone(predicate);\n                let Pair(left_filtered, right_filtered) =\n                    crate::ParaPair!(move || filter_inner(&left, &pred_left), move || {\n                        filter_inner(&right, &pred_right)\n                    });\n                if (**predicate)(&key) {\n                    join_m(left_filtered, key, right_filtered)\n                } else {\n                    join_pair_inner(left_filtered, right_filtered)\n                }\n            }\n        }\n    }"
+  },
+  {
+    "id": 29,
+    "function": "filter_parallel",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "464-470",
+    "spec_strength": "",
+    "snippet": "    fn filter_parallel<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(\n        tree: &ParamBST<T>,\n        predicate: F,\n    ) -> ParamBST<T> {\n        let predicate = Arc::new(predicate);\n        filter_inner(tree, &predicate)\n    }"
+  },
+  {
+    "id": 30,
+    "function": "reduce_inner",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "472-493",
+    "spec_strength": "",
+    "snippet": "    fn reduce_inner<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(\n        tree: &ParamBST<T>,\n        op: &Arc<F>,\n        identity: T,\n    ) -> T {\n        match expose_internal(tree) {\n            | Exposed::Leaf => identity,\n            | Exposed::Node(left, key, right) => {\n                let op_left = Arc::clone(op);\n                let op_right = Arc::clone(op);\n                let left_base = identity.clone();\n                let right_base = identity;\n                let Pair(left_acc, right_acc) =\n                    crate::ParaPair!(move || reduce_inner(&left, &op_left, left_base), move || {\n                        reduce_inner(&right, &op_right, right_base)\n                    });\n                let op_ref = op.as_ref();\n                let right_with_key = op_ref(key, right_acc);\n                op_ref(left_acc, right_with_key)\n            }\n        }\n    }"
+  },
+  {
+    "id": 31,
+    "function": "reduce_parallel",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "495-502",
+    "spec_strength": "",
+    "snippet": "    fn reduce_parallel<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(\n        tree: &ParamBST<T>,\n        op: F,\n        base: T,\n    ) -> T {\n        let op = Arc::new(op);\n        reduce_inner(tree, &op, base)\n    }"
+  },
+  {
+    "id": 32,
+    "function": "collect_in_order",
+    "file": "Chap38/BSTParaMtEph.rs",
+    "lines": "504-513",
+    "spec_strength": "",
+    "snippet": "    fn collect_in_order<T: MtKey + 'static>(tree: &ParamBST<T>, out: &mut Vec<T>) {\n        match expose_internal(tree) {\n            | Exposed::Leaf => {}\n            | Exposed::Node(left, key, right) => {\n                collect_in_order(&left, out);\n                out.push(key);\n                collect_in_order(&right, out);\n            }\n        }\n    }"
+  },
+  {
+    "id": 33,
+    "function": "new_param_bst",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "78-83",
+    "spec_strength": "hole",
+    "snippet": "    fn new_param_bst<T: StT + Ord>(\n        val: Option<Box<NodeInner<T>>>,\n        Ghost(contents): Ghost<Set<<T as View>::V>>,\n    ) -> (tree: ParamBST<T>)\n        requires (BSTParaStEphInv::<T> { contents }).inv(val),\n        ensures tree@ =~= contents,"
+  },
+  {
+    "id": 34,
+    "function": "new",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "116-117",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (result: Self)\n            ensures result@ == Set::<<T as View>::V>::empty();"
+  },
+  {
+    "id": 35,
+    "function": "singleton",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "119-122",
+    "spec_strength": "unknown",
+    "snippet": "        fn singleton(key: T) -> (result: Self)\n            ensures\n                result@ == Set::<<T as View>::V>::empty().insert(key@),\n                result@.finite();"
+  },
+  {
+    "id": 36,
+    "function": "expose",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "124-128",
+    "spec_strength": "hole",
+    "snippet": "        fn expose(&self) -> (exposed: Exposed<T>)\n            ensures\n                self@.len() == 0 ==> exposed is Leaf,\n                exposed is Leaf ==> self@ =~= Set::<<T as View>::V>::empty(),\n                exposed matches Exposed::Node(l, k, r) ==> {"
+  },
+  {
+    "id": 37,
+    "function": "join_mid",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "138-140",
+    "spec_strength": "unknown",
+    "snippet": "        fn join_mid(exposed: Exposed<T>) -> (result: Self)\n            requires\n                exposed matches Exposed::Node(l, k, r) ==> {"
+  },
+  {
+    "id": 38,
+    "function": "join_m",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "151-158",
+    "spec_strength": "unknown",
+    "snippet": "        fn join_m(left: Self, key: T, right: Self) -> (tree: Self)\n            requires\n                left@.finite(), right@.finite(),\n                left@.disjoint(right@),\n                !left@.contains(key@),\n                !right@.contains(key@),\n                left@.len() + right@.len() < usize::MAX as nat,\n            ensures tree@ =~= left@.union(right@).insert(key@);"
+  },
+  {
+    "id": 39,
+    "function": "size",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "160-161",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (count: usize)\n            ensures count == self@.len(), self@.finite();"
+  },
+  {
+    "id": 40,
+    "function": "is_empty",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "163-164",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (empty: B)\n            ensures empty == (self@.len() == 0), self@.finite();"
+  },
+  {
+    "id": 41,
+    "function": "insert",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "167",
+    "spec_strength": "hole",
+    "snippet": "        fn insert(&self, key: T);"
+  },
+  {
+    "id": 42,
+    "function": "delete",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "170",
+    "spec_strength": "hole",
+    "snippet": "        fn delete(&self, key: &T);"
+  },
+  {
+    "id": 43,
+    "function": "find",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "172-173",
+    "spec_strength": "hole",
+    "snippet": "        fn find(&self, key: &T) -> (found: Option<T>)\n            ensures found.is_some() <==> self@.contains(key@);"
+  },
+  {
+    "id": 44,
+    "function": "split",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "175-183",
+    "spec_strength": "hole",
+    "snippet": "        fn split(&self, key: &T) -> (parts: (Self, B, Self))\n            ensures\n                parts.1 == self@.contains(key@),\n                parts.0@.finite(),\n                parts.2@.finite(),\n                parts.0@.union(parts.2@) =~= self@.remove(key@),\n                parts.0@.disjoint(parts.2@),\n                !parts.0@.contains(key@),\n                !parts.2@.contains(key@);"
+  },
+  {
+    "id": 45,
+    "function": "min_key",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "185-188",
+    "spec_strength": "unknown",
+    "snippet": "        fn min_key(&self) -> (result: Option<T>)\n            ensures\n                self@.len() == 0 <==> result.is_none(),\n                result.is_some() ==> self@.contains(result.unwrap()@);"
+  },
+  {
+    "id": 46,
+    "function": "join_pair",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "190-191",
+    "spec_strength": "hole",
+    "snippet": "        fn join_pair(&self, other: Self) -> (joined: Self)\n            ensures joined@.finite(), joined@ =~= self@.union(other@);"
+  },
+  {
+    "id": 47,
+    "function": "union",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "193-194",
+    "spec_strength": "hole",
+    "snippet": "        fn union(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.union(other@), result@.finite();"
+  },
+  {
+    "id": 48,
+    "function": "intersect",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "196-197",
+    "spec_strength": "hole",
+    "snippet": "        fn intersect(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.intersect(other@), result@.finite();"
+  },
+  {
+    "id": 49,
+    "function": "difference",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "199-200",
+    "spec_strength": "hole",
+    "snippet": "        fn difference(&self, other: &Self) -> (result: Self)\n            ensures result@ == self@.difference(other@), result@.finite();"
+  },
+  {
+    "id": 50,
+    "function": "filter",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "202-204",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)\n            requires self@.finite(), forall|t: &T| predicate.requires((t,)),\n            ensures filtered@.subset_of(self@), filtered@.finite();"
+  },
+  {
+    "id": 51,
+    "function": "reduce",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "207-208",
+    "spec_strength": "unknown",
+    "snippet": "        fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> T\n            requires self@.finite(), forall|a: T, b: T| op.requires((a, b));"
+  },
+  {
+    "id": 52,
+    "function": "collect_in_order",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "210-212",
+    "spec_strength": "unknown",
+    "snippet": "        fn collect_in_order(&self, out: &mut Vec<T>)\n            requires self@.finite(),\n            ensures out@.len() == old(out)@.len() + self@.len();"
+  },
+  {
+    "id": 53,
+    "function": "in_order",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "214-215",
+    "spec_strength": "unknown",
+    "snippet": "        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures seq@.len() == self@.len();"
+  },
+  {
+    "id": 54,
+    "function": "filter_inner",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "514-520",
+    "spec_strength": "unknown",
+    "snippet": "    fn filter_inner<T: StT + Ord, F: Fn(&T) -> bool>(\n        tree: &ParamBST<T>,\n        predicate: &F,\n    ) -> (filtered: ParamBST<T>)\n        requires tree@.finite(), forall|t: &T| predicate.requires((t,)),\n        ensures filtered@.subset_of(tree@), filtered@.finite(),\n        decreases tree@.len(),"
+  },
+  {
+    "id": 55,
+    "function": "reduce_inner",
+    "file": "Chap38/BSTParaStEph.rs",
+    "lines": "546-554",
+    "spec_strength": "unknown",
+    "snippet": "    fn reduce_inner<T: StT + Ord, F: Fn(T, T) -> T>(\n        tree: &ParamBST<T>,\n        op: &F,\n        identity: T,\n    ) -> T\n        requires\n            tree@.finite(),\n            forall|a: T, b: T| op.requires((a, b)),\n        decreases tree@.len(),"
   }
 ]

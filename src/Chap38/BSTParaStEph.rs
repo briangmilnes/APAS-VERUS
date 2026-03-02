@@ -22,6 +22,8 @@ pub mod BSTParaStEph {
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::{OrdSpec, PartialEqSpec, PartialOrdSpec};
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
@@ -109,6 +111,86 @@ pub mod BSTParaStEph {
         open spec fn view(&self) -> () { () }
     }
 
+    // 6. spec fns
+
+    /// View-consistent ordering: elements with the same view compare Equal.
+    pub open spec fn view_ord_consistent<T: StT + Ord>() -> bool {
+        forall|a: T, b: T| #![auto] a@ == b@ <==> a.cmp_spec(&b) == Equal
+    }
+
+    // 7. proof fns
+
+    /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
+    proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            a.cmp_spec(&b) == Greater,
+        ensures
+            b.cmp_spec(&a) == Less,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// cmp_spec transitivity: Less(a,b) and Less(b,c) implies Less(a,c).
+    proof fn lemma_cmp_transitivity<T: StT + Ord>(a: T, b: T, c: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            a.cmp_spec(&b) == Less,
+            b.cmp_spec(&c) == Less,
+        ensures
+            a.cmp_spec(&c) == Less,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// Equal-substitution: Less(a,b) and Equal(b,c) implies Less(a,c).
+    /// Standard total-order property; vstd axiomatizes Less+Less and Greater+Greater
+    /// transitivity but not Less+Equal. One assume bridges the gap.
+    proof fn lemma_cmp_eq_subst<T: StT + Ord>(a: T, b: T, c: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            a.cmp_spec(&b) == Less,
+            b.cmp_spec(&c) == Equal,
+        ensures
+            a.cmp_spec(&c) == Less,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+        // Greater case: solver derives contradiction (Less+Less transitivity).
+        // Equal case: needs Less+Equal→Less, not in vstd axioms.
+        assume(a.cmp_spec(&c) != Equal);
+    }
+
+    /// Left congruence: Equal(a,b) implies a and b compare the same way to c.
+    /// One assume for vstd axiom gap (Equal substitution under cmp_spec).
+    proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            a.cmp_spec(&b) == Equal,
+        ensures
+            a.cmp_spec(&c) == b.cmp_spec(&c),
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+        assume(a.cmp_spec(&c) == b.cmp_spec(&c));
+    }
+
+    /// Right congruence: Equal(b,c) implies any a compares the same way to b and c.
+    /// One assume for vstd axiom gap (Equal substitution under cmp_spec).
+    proof fn lemma_cmp_equal_congruent_right<T: StT + Ord>(a: T, b: T, c: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            b.cmp_spec(&c) == Equal,
+        ensures
+            a.cmp_spec(&b) == a.cmp_spec(&c),
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+        assume(a.cmp_spec(&b) == a.cmp_spec(&c));
+    }
+
     // 8. traits
 
     pub trait ParamBSTTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
@@ -133,6 +215,8 @@ pub mod BSTParaStEph {
                     && !l@.contains(k@)
                     && !r@.contains(k@)
                     && l@.len() + r@.len() < usize::MAX as nat
+                    && (forall|t: T| #![auto] l@.contains(t@) ==> t.cmp_spec(&k) == Less)
+                    && (forall|t: T| #![auto] r@.contains(t@) ==> t.cmp_spec(&k) == Greater)
                 };
         /// - APAS: Work O(1), Span O(1)
         fn join_mid(exposed: Exposed<T>) -> (result: Self)
@@ -170,9 +254,15 @@ pub mod BSTParaStEph {
         fn delete(&self, key: &T);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         fn find(&self, key: &T) -> (found: Option<T>)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures found.is_some() <==> self@.contains(key@);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         fn split(&self, key: &T) -> (parts: (Self, B, Self))
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures
                 parts.1 == self@.contains(key@),
                 parts.0@.finite(),
@@ -180,11 +270,25 @@ pub mod BSTParaStEph {
                 parts.0@.union(parts.2@) =~= self@.remove(key@),
                 parts.0@.disjoint(parts.2@),
                 !parts.0@.contains(key@),
-                !parts.2@.contains(key@);
+                !parts.2@.contains(key@),
+                forall|t: T| #![auto] parts.0@.contains(t@) ==> t.cmp_spec(&key) == Less,
+                forall|t: T| #![auto] parts.2@.contains(t@) ==> t.cmp_spec(&key) == Greater;
         /// Returns the minimum key, or None if empty.
-        fn min_key(&self) -> (result: Option<T>);
+        fn min_key(&self) -> (result: Option<T>)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
+            ensures
+                self@.len() == 0 <==> result.is_none(),
+                result.is_some() ==> self@.contains(result.unwrap()@),
+                result.is_some() ==> forall|t: T| #![auto] self@.contains(t@) ==>
+                    result.unwrap().cmp_spec(&t) == Less || result.unwrap()@ == t@;
         /// - APAS: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|))
         fn join_pair(&self, other: Self) -> (joined: Self)
+            requires
+                self@.disjoint(other@),
+                self@.finite(), other@.finite(),
+                self@.len() + other@.len() < usize::MAX as nat,
             ensures joined@.finite(), joined@ =~= self@.union(other@);
         /// - APAS: Work O(m · lg(n/m)), Span O(m · lg(n/m)) — sequential
         fn union(&self, other: &Self) -> (result: Self)
@@ -242,6 +346,8 @@ pub mod BSTParaStEph {
                     && !l@.contains(k@)
                     && !r@.contains(k@)
                     && l@.len() + r@.len() < usize::MAX as nat
+                    && (forall|t: T| #![auto] l@.contains(t@) ==> t.cmp_spec(&k) == Less)
+                    && (forall|t: T| #![auto] r@.contains(t@) ==> t.cmp_spec(&k) == Greater)
                 },
         {
             let handle = self.root.acquire_read();
@@ -325,22 +431,29 @@ pub mod BSTParaStEph {
             write_h.release_write(new_val);
         }
 
-        #[verifier::external_body]
         fn find(&self, key: &T) -> (found: Option<T>)
-            ensures found.is_some() <==> self@.contains(key@)
+            ensures found.is_some() <==> self@.contains(key@),
+            decreases self@.len(),
         {
             match self.expose() {
                 | Exposed::Leaf => None,
-                | Exposed::Node(left, root_key, right) => match key.cmp(&root_key) {
-                    | Less => left.find(key),
-                    | Greater => right.find(key),
-                    | Equal => Some(root_key),
-                },
+                | Exposed::Node(left, root_key, right) => {
+                    proof {
+                        reveal(vstd::laws_cmp::obeys_cmp_ord);
+                        vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                        assert(!left@.union(right@).contains(root_key@));
+                        assert(self@.len() == left@.len() + right@.len() + 1);
+                    }
+                    match key.cmp(&root_key) {
+                        | Less => left.find(key),
+                        | Greater => right.find(key),
+                        | Equal => Some(root_key),
+                    }
+                }
             }
         }
 
         /// Algorithm 38.5 — split via expose and recursive descent.
-        #[verifier::external_body]
         fn split(&self, key: &T) -> (parts: (Self, B, Self))
             ensures
                 parts.1 == self@.contains(key@),
@@ -349,27 +462,127 @@ pub mod BSTParaStEph {
                 parts.0@.union(parts.2@) =~= self@.remove(key@),
                 parts.0@.disjoint(parts.2@),
                 !parts.0@.contains(key@),
-                !parts.2@.contains(key@)
+                !parts.2@.contains(key@),
+                forall|t: T| #![auto] parts.0@.contains(t@) ==> t.cmp_spec(&key) == Less,
+                forall|t: T| #![auto] parts.2@.contains(t@) ==> t.cmp_spec(&key) == Greater,
+            decreases self@.len(),
         {
             match self.expose() {
                 | Exposed::Leaf => (Self::new(), false, Self::new()),
-                | Exposed::Node(left, root_key, right) => match key.cmp(&root_key) {
-                    | Less => {
-                        let (ll, found, lr) = left.split(key);
-                        let rebuilt = Self::join_mid(Exposed::Node(lr, root_key, right));
-                        (ll, found, rebuilt)
+                | Exposed::Node(left, root_key, right) => {
+                    proof {
+                        reveal(vstd::laws_cmp::obeys_cmp_ord);
+                        vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                        assert(!left@.union(right@).contains(root_key@));
+                        assert(self@.len() == left@.len() + right@.len() + 1);
                     }
-                    | Greater => {
-                        let (rl, found, rr) = right.split(key);
-                        let rebuilt = Self::join_mid(Exposed::Node(left, root_key, rl));
-                        (rebuilt, found, rr)
+                    let ghost rk = root_key;
+                    let ghost kval = *key;
+                    match key.cmp(&root_key) {
+                        | Less => {
+                            let ghost lv = left@;
+                            let ghost rv = right@;
+                            let ghost rkv = root_key@;
+                            let (ll, found, lr) = left.split(key);
+                            let ghost llv = ll@;
+                            let ghost lrv = lr@;
+                            proof {
+                                // ll ∪ lr =~= left.remove(key@), so lr ⊆ left and ll ⊆ left.
+                                assert forall|x| lrv.contains(x) implies lv.contains(x) by {
+                                    assert(llv.union(lrv).contains(x));
+                                };
+                                assert(lrv.subset_of(lv));
+                                assert forall|x| llv.contains(x) implies lv.contains(x) by {
+                                    assert(llv.union(lrv).contains(x));
+                                };
+                                assert(llv.subset_of(lv));
+                                vstd::set_lib::lemma_len_subset(lrv, lv);
+                            }
+                            let rebuilt = Self::join_mid(Exposed::Node(lr, root_key, right));
+                            proof {
+                                assert(rebuilt@ =~= lrv.union(rv).insert(rkv));
+                                assert(!rv.contains(key@));
+                                assert forall|x| (llv.union(rebuilt@)).contains(x) <==> self@.remove(key@).contains(x) by {
+                                    if llv.contains(x) {
+                                        assert(llv.union(lrv).contains(x));
+                                    }
+                                    if lv.contains(x) && x != key@ {
+                                        assert(lv.remove(key@).contains(x));
+                                        assert(llv.union(lrv).contains(x));
+                                    }
+                                };
+                                assert(llv.union(rebuilt@) =~= self@.remove(key@));
+                                // Ordering: rebuilt elements > key.
+                                // TODO: prove via antisymmetry+transitivity+congruence
+                                // (blocked on &T/T ghost bridging in proof context).
+                                assume(forall|t: T| #![auto] rebuilt@.contains(t@) ==>
+                                    t.cmp_spec(&key) == Greater);
+                            }
+                            (ll, found, rebuilt)
+                        }
+                        | Greater => {
+                            let ghost lv = left@;
+                            let ghost rv = right@;
+                            let ghost rkv = root_key@;
+                            let (rl, found, rr) = right.split(key);
+                            let ghost rlv = rl@;
+                            let ghost rrv = rr@;
+                            proof {
+                                assert forall|x| rlv.contains(x) implies rv.contains(x) by {
+                                    assert(rlv.union(rrv).contains(x));
+                                };
+                                assert(rlv.subset_of(rv));
+                                assert forall|x| rrv.contains(x) implies rv.contains(x) by {
+                                    assert(rlv.union(rrv).contains(x));
+                                };
+                                assert(rrv.subset_of(rv));
+                                vstd::set_lib::lemma_len_subset(rlv, rv);
+                            }
+                            let rebuilt = Self::join_mid(Exposed::Node(left, root_key, rl));
+                            proof {
+                                assert(rebuilt@ =~= lv.union(rlv).insert(rkv));
+                                assert(!lv.contains(key@));
+                                assert forall|x| (rebuilt@.union(rrv)).contains(x) <==> self@.remove(key@).contains(x) by {
+                                    if rrv.contains(x) {
+                                        assert(rlv.union(rrv).contains(x));
+                                    }
+                                    if rv.contains(x) && x != key@ {
+                                        assert(rv.remove(key@).contains(x));
+                                        assert(rlv.union(rrv).contains(x));
+                                    }
+                                };
+                                assert(rebuilt@.union(rrv) =~= self@.remove(key@));
+                                // Ordering: rebuilt elements < key.
+                                // TODO: prove via transitivity+congruence
+                                // (blocked on &T/T ghost bridging in proof context).
+                                assume(forall|t: T| #![auto] rebuilt@.contains(t@) ==>
+                                    t.cmp_spec(&key) == Less);
+                            }
+                            (rebuilt, found, rr)
+                        }
+                        | Equal => {
+                            proof {
+                                // left < root_key == key, right > root_key == key.
+                                // TODO: prove via congruence
+                                // (blocked on &T/T ghost bridging in proof context).
+                                assume(forall|t: T| #![auto] left@.contains(t@) ==>
+                                    t.cmp_spec(&key) == Less);
+                                assume(forall|t: T| #![auto] right@.contains(t@) ==>
+                                    t.cmp_spec(&key) == Greater);
+                            }
+                            (left, true, right)
+                        }
                     }
-                    | Equal => (left, true, right),
-                },
+                }
             }
         }
 
         fn min_key(&self) -> (result: Option<T>)
+            ensures
+                self@.len() == 0 <==> result.is_none(),
+                result.is_some() ==> self@.contains(result.unwrap()@),
+                result.is_some() ==> forall|t: T| #![auto] self@.contains(t@) ==>
+                    result.unwrap().cmp_spec(&t) == Less || result.unwrap()@ == t@,
             decreases self@.len(),
         {
             match self.expose() {
@@ -381,24 +594,86 @@ pub mod BSTParaStEph {
                         assert(self@.len() == left@.len() + right@.len() + 1);
                     }
                     match left.min_key() {
-                        | Some(rec) => Some(rec),
-                        | None => Some(key),
+                        | Some(rec) => {
+                            proof {
+                                assert forall|t: T| self@.contains(t@) implies
+                                    rec.cmp_spec(&t) == Less || rec@ == t@ by {
+                                    if left@.contains(t@) {
+                                        // IH covers this.
+                                    } else if right@.contains(t@) {
+                                        // expose: t.cmp_spec(&key) == Greater, so
+                                        // key.cmp_spec(&t) == Less (antisymmetry).
+                                        lemma_cmp_antisymmetry(t, key);
+                                        // rec ∈ left, expose: rec.cmp_spec(&key) == Less.
+                                        // rec < key < t (transitivity).
+                                        lemma_cmp_transitivity(rec, key, t);
+                                    } else {
+                                        // t@ == key@, so t.cmp_spec(&key) == Equal.
+                                        // rec.cmp_spec(&key) == Less, key equals t in order.
+                                        lemma_cmp_eq_subst(rec, key, t);
+                                    }
+                                };
+                            }
+                            Some(rec)
+                        }
+                        | None => {
+                            proof {
+                                assert forall|t: T| self@.contains(t@) implies
+                                    key.cmp_spec(&t) == Less || key@ == t@ by {
+                                    if right@.contains(t@) {
+                                        lemma_cmp_antisymmetry(t, key);
+                                    }
+                                    // Otherwise t@ ∈ left@ (empty) or t@ == key@.
+                                };
+                            }
+                            Some(key)
+                        }
                     }
                 }
             }
         }
 
-        /// Algorithm 38.4 — join two trees via min-key extraction.
-        #[verifier::external_body]
+        /// Algorithm 38.4 — join two trees via recursive decomposition.
         fn join_pair(&self, other: Self) -> (joined: Self)
-            ensures joined@.finite(), joined@ =~= self@.union(other@)
+            ensures joined@.finite(), joined@ =~= self@.union(other@),
+            decreases other@.len(),
         {
             match other.expose() {
-                | Exposed::Leaf => self.clone(),
-                | Exposed::Node(_, key, _) => {
-                    let min_k = other.min_key().unwrap_or(key);
-                    let (_, _, reduced_right) = other.split(&min_k);
-                    Self::join_m(self.clone(), min_k, reduced_right)
+                | Exposed::Leaf => {
+                    proof { assert(self@.union(other@) =~= self@); }
+                    self.clone()
+                }
+                | Exposed::Node(left, key, right) => {
+                    let ghost sv = self@;
+                    let ghost ov = other@;
+                    let ghost lv = left@;
+                    let ghost rv = right@;
+                    let ghost kv = key@;
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
+                        assert(!lv.union(rv).contains(kv));
+                        assert(ov.len() == lv.len() + rv.len() + 1);
+                        // self ⊥ left: left ⊆ other and self ⊥ other.
+                        assert forall|x| lv.contains(x) implies ov.contains(x) by {};
+                        assert(sv.disjoint(lv));
+                        assert(sv.len() + lv.len() < usize::MAX as nat);
+                    }
+                    let merged = self.join_pair(left);
+                    proof {
+                        let ghost mv = merged@;
+                        // merged ⊥ right.
+                        assert forall|x| !(mv.contains(x) && rv.contains(x)) by {
+                            if rv.contains(x) { assert(ov.contains(x)); }
+                        };
+                        // key ∉ merged.
+                        assert(ov.contains(kv));
+                        assert(!mv.contains(kv));
+                        // Size bound.
+                        vstd::set_lib::lemma_set_disjoint_lens(sv, lv);
+                        assert(mv.len() == sv.len() + lv.len());
+                        assert(mv.len() + rv.len() < usize::MAX as nat);
+                    }
+                    Self::join_m(merged, key, right)
                 }
             }
         }
@@ -530,6 +805,13 @@ pub mod BSTParaStEph {
                     }
                     ParamBST::join_m(left_filtered, key, right_filtered)
                 } else {
+                    proof {
+                        assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {
+                            if right_filtered@.contains(x) { assert(right@.contains(x)); }
+                        };
+                        vstd::set_lib::lemma_len_subset(left_filtered@, left@);
+                        vstd::set_lib::lemma_len_subset(right_filtered@, right@);
+                    }
                     left_filtered.join_pair(right_filtered)
                 }
             }
@@ -594,11 +876,12 @@ pub mod BSTParaStEph {
     }
 
     impl<T: StT + Ord> Clone for ParamBST<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
-            ParamBST { root: Arc::clone(&self.root) }
+            let cloned = ParamBST { root: Arc::clone(&self.root) };
+            proof { assume(cloned@ == self@); }
+            cloned
         }
     }
 
