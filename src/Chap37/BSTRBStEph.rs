@@ -84,13 +84,13 @@ pub mod BSTRBStEph {
     }
 
     /// Right rotation preserving BST ordering and containment.
-    fn rotate_right<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+    fn rotate_right<T: TotalOrder>(tree: BalBinTree<T>) -> (rotated: BalBinTree<T>)
         requires
             tree_is_bst::<T>(tree),
             !(tree is Leaf),
         ensures
-            tree_is_bst::<T>(result),
-            forall|x: T| #![auto] tree_contains(result, x) == tree_contains(tree, x),
+            tree_is_bst::<T>(rotated),
+            forall|x: T| #![auto] tree_contains(rotated, x) == tree_contains(tree, x),
     {
         let ghost tree_ghost = tree;
         match tree {
@@ -182,13 +182,13 @@ pub mod BSTRBStEph {
     }
 
     /// Left rotation preserving BST ordering and containment.
-    fn rotate_left<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+    fn rotate_left<T: TotalOrder>(tree: BalBinTree<T>) -> (rotated: BalBinTree<T>)
         requires
             tree_is_bst::<T>(tree),
             !(tree is Leaf),
         ensures
-            tree_is_bst::<T>(result),
-            forall|x: T| #![auto] tree_contains(result, x) == tree_contains(tree, x),
+            tree_is_bst::<T>(rotated),
+            forall|x: T| #![auto] tree_contains(rotated, x) == tree_contains(tree, x),
     {
         let ghost tree_ghost = tree;
         match tree {
@@ -279,12 +279,12 @@ pub mod BSTRBStEph {
         }
     }
 
-    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (result: BalBinTree<T>)
+    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)
         requires tree_is_bst::<T>(node),
         ensures
-            tree_is_bst::<T>(result),
-            tree_contains(result, value),
-            forall|x: T| #![auto] tree_contains(result, x) <==>
+            tree_is_bst::<T>(inserted),
+            tree_contains(inserted, value),
+            forall|x: T| #![auto] tree_contains(inserted, x) <==>
                 (tree_contains(node, x) || x == value),
         decreases node.spec_size(),
     {
@@ -408,9 +408,9 @@ pub mod BSTRBStEph {
         }
     }
 
-    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (result: bool)
+    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)
         requires tree_is_bst::<T>(*node),
-        ensures result == tree_contains(*node, *target),
+        ensures found == tree_contains(*node, *target),
         decreases node.spec_size(),
     {
         match node {

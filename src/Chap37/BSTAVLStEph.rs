@@ -105,13 +105,13 @@ pub mod BSTAVLStEph {
         pub root: BalBinTree<T>,
     }
 
-    fn rotate_right<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+    fn rotate_right<T: TotalOrder>(tree: BalBinTree<T>) -> (rotated: BalBinTree<T>)
         requires
             tree_is_bst::<T>(tree),
             !(tree is Leaf),
         ensures
-            tree_is_bst::<T>(result),
-            forall|x: T| #![auto] tree_contains(result, x) == tree_contains(tree, x),
+            tree_is_bst::<T>(rotated),
+            forall|x: T| #![auto] tree_contains(rotated, x) == tree_contains(tree, x),
             match tree {
                 BalBinTree::Node(outer) => match outer.left {
                     BalBinTree::Node(l) => {
@@ -119,13 +119,13 @@ pub mod BSTAVLStEph {
                         let r_h = outer.right.spec_height();
                         let ll_h = l.left.spec_height();
                         let new_rh: nat = 1 + if lr_h >= r_h { lr_h } else { r_h };
-                        &&& result.spec_height() == (1 + if ll_h >= new_rh { ll_h } else { new_rh })
+                        &&& rotated.spec_height() == (1 + if ll_h >= new_rh { ll_h } else { new_rh })
                         &&& ((avl_balanced(l.left) && avl_balanced(l.right) && avl_balanced(outer.right)
                              && lr_h as int - r_h as int >= -1 && lr_h as int - r_h as int <= 1
                              && ll_h as int - new_rh as int >= -1 && ll_h as int - new_rh as int <= 1)
-                            ==> avl_balanced(result))
-                        &&& result is Node
-                        &&& match result {
+                            ==> avl_balanced(rotated))
+                        &&& rotated is Node
+                        &&& match rotated {
                             BalBinTree::Node(res) => {
                                 &&& res.left.spec_height() == ll_h
                                 &&& avl_balanced(res.left) == avl_balanced(l.left)
@@ -257,13 +257,13 @@ pub mod BSTAVLStEph {
         }
     }
 
-    fn rotate_left<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+    fn rotate_left<T: TotalOrder>(tree: BalBinTree<T>) -> (rotated: BalBinTree<T>)
         requires
             tree_is_bst::<T>(tree),
             !(tree is Leaf),
         ensures
-            tree_is_bst::<T>(result),
-            forall|x: T| #![auto] tree_contains(result, x) == tree_contains(tree, x),
+            tree_is_bst::<T>(rotated),
+            forall|x: T| #![auto] tree_contains(rotated, x) == tree_contains(tree, x),
             match tree {
                 BalBinTree::Node(outer) => match outer.right {
                     BalBinTree::Node(r) => {
@@ -271,13 +271,13 @@ pub mod BSTAVLStEph {
                         let l_h = outer.left.spec_height();
                         let rr_h = r.right.spec_height();
                         let new_lh: nat = 1 + if l_h >= rl_h { l_h } else { rl_h };
-                        &&& result.spec_height() == (1 + if new_lh >= rr_h { new_lh } else { rr_h })
+                        &&& rotated.spec_height() == (1 + if new_lh >= rr_h { new_lh } else { rr_h })
                         &&& ((avl_balanced(outer.left) && avl_balanced(r.left) && avl_balanced(r.right)
                              && l_h as int - rl_h as int >= -1 && l_h as int - rl_h as int <= 1
                              && new_lh as int - rr_h as int >= -1 && new_lh as int - rr_h as int <= 1)
-                            ==> avl_balanced(result))
-                        &&& result is Node
-                        &&& match result {
+                            ==> avl_balanced(rotated))
+                        &&& rotated is Node
+                        &&& match rotated {
                             BalBinTree::Node(res) => {
                                 &&& res.right.spec_height() == rr_h
                                 &&& avl_balanced(res.right) == avl_balanced(r.right)
@@ -416,7 +416,7 @@ pub mod BSTAVLStEph {
     // - lemma_rotate_height: rotate_right/rotate_left do not increase height
     // - lemma_rotate_avl: after rotation on left-heavy (balance=2) or right-heavy
     //   (balance=-2) tree, result has |h(left)-h(right)| <= 1 at every node
-    fn rebalance<T: TotalOrder>(tree: BalBinTree<T>) -> (result: BalBinTree<T>)
+    fn rebalance<T: TotalOrder>(tree: BalBinTree<T>) -> (balanced: BalBinTree<T>)
         requires
             tree_is_bst::<T>(tree),
             !(tree is Leaf),
@@ -432,16 +432,16 @@ pub mod BSTAVLStEph {
                 _ => false,
             },
         ensures
-            tree_is_bst::<T>(result),
-            avl_balanced(result),
-            result.spec_height() <= tree.spec_height(),
-            result.spec_height() + 1 >= tree.spec_height(),
-            forall|x: T| #![auto] tree_contains(result, x) == tree_contains(tree, x),
+            tree_is_bst::<T>(balanced),
+            avl_balanced(balanced),
+            balanced.spec_height() <= tree.spec_height(),
+            balanced.spec_height() + 1 >= tree.spec_height(),
+            forall|x: T| #![auto] tree_contains(balanced, x) == tree_contains(tree, x),
             match tree {
                 BalBinTree::Node(inner) => {
                     let lh = inner.left.spec_height() as int;
                     let rh = inner.right.spec_height() as int;
-                    (-1 <= lh - rh && lh - rh <= 1) ==> result.spec_height() == tree.spec_height()
+                    (-1 <= lh - rh && lh - rh <= 1) ==> balanced.spec_height() == tree.spec_height()
                 },
                 _ => true,
             },
@@ -702,16 +702,16 @@ pub mod BSTAVLStEph {
         }
     }
 
-    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (result: BalBinTree<T>)
+    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)
         requires
             tree_is_avl::<T>(node),
             node.spec_height() <= usize::MAX - 1,
         ensures
-            tree_is_avl::<T>(result),
-            tree_contains(result, value),
-            result.spec_height() <= node.spec_height() + 1,
-            result.spec_height() >= node.spec_height(),
-            forall|x: T| #![auto] tree_contains(result, x) <==>
+            tree_is_avl::<T>(inserted),
+            tree_contains(inserted, value),
+            inserted.spec_height() <= node.spec_height() + 1,
+            inserted.spec_height() >= node.spec_height(),
+            forall|x: T| #![auto] tree_contains(inserted, x) <==>
                 (tree_contains(node, x) || x == value),
         decreases node.spec_size(),
     {
@@ -856,9 +856,9 @@ pub mod BSTAVLStEph {
         }
     }
 
-    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (result: bool)
+    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)
         requires tree_is_bst::<T>(*node),
-        ensures result == tree_contains(*node, *target),
+        ensures found == tree_contains(*node, *target),
         decreases node.spec_size(),
     {
         match node {
@@ -889,11 +889,11 @@ pub mod BSTAVLStEph {
         }
     }
 
-    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (result: Option<&'a T>)
+    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)
         requires tree_is_bst::<T>(*node),
         ensures
-            result.is_some() == tree_contains(*node, *target),
-            result.is_some() ==> *result.unwrap() == *target,
+            found.is_some() == tree_contains(*node, *target),
+            found.is_some() ==> *found.unwrap() == *target,
         decreases node.spec_size(),
     {
         match node {
@@ -924,7 +924,7 @@ pub mod BSTAVLStEph {
         }
     }
 
-    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (result: Option<&T>)
+    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
         decreases node.spec_size(),
     {
         match node {
@@ -939,7 +939,7 @@ pub mod BSTAVLStEph {
         }
     }
 
-    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (result: Option<&T>)
+    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
         decreases node.spec_size(),
     {
         match node {
@@ -982,31 +982,31 @@ pub mod BSTAVLStEph {
         tree.root.height()
     }
 
-    pub fn avl_insert<T: TotalOrder>(tree: BSTAVLStEph<T>, value: T) -> (result: BSTAVLStEph<T>)
+    pub fn avl_insert<T: TotalOrder>(tree: BSTAVLStEph<T>, value: T) -> (inserted: BSTAVLStEph<T>)
         requires
             tree_is_avl::<T>(tree.root),
             tree.root.spec_height() <= usize::MAX - 1,
         ensures
-            tree_is_avl::<T>(result.root),
-            tree_contains(result.root, value),
-            forall|x: T| #![auto] tree_contains(result.root, x) <==>
+            tree_is_avl::<T>(inserted.root),
+            tree_contains(inserted.root, value),
+            forall|x: T| #![auto] tree_contains(inserted.root, x) <==>
                 (tree_contains(tree.root, x) || x == value),
     {
         BSTAVLStEph { root: insert_node(tree.root, value) }
     }
 
-    pub fn avl_contains<T: TotalOrder>(tree: &BSTAVLStEph<T>, target: &T) -> (result: bool)
+    pub fn avl_contains<T: TotalOrder>(tree: &BSTAVLStEph<T>, target: &T) -> (found: bool)
         requires tree_is_bst::<T>(tree.root),
-        ensures result == tree_contains(tree.root, *target),
+        ensures found == tree_contains(tree.root, *target),
     {
         contains_node(&tree.root, target)
     }
 
-    pub fn avl_find<'a, T: TotalOrder>(tree: &'a BSTAVLStEph<T>, target: &T) -> (result: Option<&'a T>)
+    pub fn avl_find<'a, T: TotalOrder>(tree: &'a BSTAVLStEph<T>, target: &T) -> (found: Option<&'a T>)
         requires tree_is_bst::<T>(tree.root),
         ensures
-            result.is_some() == tree_contains(tree.root, *target),
-            result.is_some() ==> *result.unwrap() == *target,
+            found.is_some() == tree_contains(tree.root, *target),
+            found.is_some() ==> *found.unwrap() == *target,
     {
         find_node(&tree.root, target)
     }

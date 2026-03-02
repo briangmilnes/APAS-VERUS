@@ -147,69 +147,69 @@ pub mod AVLTreeSeqStEph {
         spec fn spec_seq(&self) -> Seq<T::V>;
         spec fn spec_well_formed(&self) -> bool;
 
-        fn empty() -> (result: Self)
-            ensures result.spec_seq() =~= Seq::<T::V>::empty(), result.spec_well_formed();
+        fn empty() -> (tree: Self)
+            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_well_formed();
 
-        fn new() -> (result: Self)
-            ensures result.spec_seq() =~= Seq::<T::V>::empty(), result.spec_well_formed();
+        fn new() -> (tree: Self)
+            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_well_formed();
 
-        fn length(&self) -> (result: N)
+        fn length(&self) -> (len: N)
             requires self.spec_well_formed(),
-            ensures result as nat == self.spec_seq().len();
+            ensures len as nat == self.spec_seq().len();
 
-        fn nth(&self, index: N) -> (result: &T)
+        fn nth(&self, index: N) -> (elem: &T)
             requires self.spec_well_formed(), (index as int) < self.spec_seq().len(),
-            ensures result@ == self.spec_seq()[index as int];
+            ensures elem@ == self.spec_seq()[index as int];
 
-        fn set(&mut self, index: N, item: T) -> (result: Result<(), &'static str>)
+        fn set(&mut self, index: N, item: T) -> (outcome: Result<(), &'static str>)
             requires old(self).spec_well_formed(), (index as int) < old(self).spec_seq().len();
 
-        fn singleton(item: T) -> (result: Self)
-            ensures result.spec_seq().len() == 1, result.spec_well_formed();
+        fn singleton(item: T) -> (tree: Self)
+            ensures tree.spec_seq().len() == 1, tree.spec_well_formed();
 
-        fn isEmpty(&self) -> (result: B)
+        fn isEmpty(&self) -> (empty: B)
             requires self.spec_well_formed(),
-            ensures result == (self.spec_seq().len() == 0);
+            ensures empty == (self.spec_seq().len() == 0);
 
-        fn isSingleton(&self) -> (result: B)
+        fn isSingleton(&self) -> (single: B)
             requires self.spec_well_formed(),
-            ensures result == (self.spec_seq().len() == 1);
+            ensures single == (self.spec_seq().len() == 1);
 
-        fn subseq_copy(&self, start: N, length: N) -> (result: Self)
+        fn subseq_copy(&self, start: N, length: N) -> (sub: Self)
             requires self.spec_well_formed();
 
-        fn new_root() -> (result: Self)
-            ensures result.spec_seq() =~= Seq::<T::V>::empty(), result.spec_well_formed();
+        fn new_root() -> (tree: Self)
+            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_well_formed();
 
         fn update(&mut self, index: N, item: T)
             requires
                 old(self).spec_well_formed(),
                 (index as int) < old(self).spec_seq().len();
 
-        fn from_vec(values: Vec<T>) -> (result: AVLTreeSeqStEphS<T>);
+        fn from_vec(values: Vec<T>) -> (tree: AVLTreeSeqStEphS<T>);
 
-        fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>)
+        fn to_arrayseq(&self) -> (seq: ArraySeqStEphS<T>)
             requires self.spec_well_formed();
 
-        fn iter<'a>(&'a self) -> (result: AVLTreeSeqIterStEph<'a, T>);
+        fn iter<'a>(&'a self) -> (it: AVLTreeSeqIterStEph<'a, T>);
 
         fn push_back(&mut self, value: T)
             requires old(self).spec_well_formed();
 
-        fn contains_value(&self, target: &T) -> (result: B)
+        fn contains_value(&self, target: &T) -> (found: B)
             requires self.spec_well_formed();
 
         fn insert_value(&mut self, value: T)
             requires old(self).spec_well_formed();
 
-        fn delete_value(&mut self, target: &T) -> (result: bool)
+        fn delete_value(&mut self, target: &T) -> (deleted: bool)
             requires old(self).spec_well_formed();
     }
 
     // 9. impls
 
-    fn h_fn<T: StT>(n: &Link<T>) -> (result: N)
-        ensures result as nat == spec_cached_height(n),
+    fn h_fn<T: StT>(n: &Link<T>) -> (height: N)
+        ensures height as nat == spec_cached_height(n),
     {
         match n {
             None => 0,
@@ -217,8 +217,8 @@ pub mod AVLTreeSeqStEph {
         }
     }
 
-    fn size_link_fn<T: StT>(n: &Link<T>) -> (result: N)
-        ensures result as nat == spec_cached_size(n),
+    fn size_link_fn<T: StT>(n: &Link<T>) -> (size: N)
+        ensures size as nat == spec_cached_size(n),
     {
         match n {
             None => 0,
@@ -239,11 +239,11 @@ pub mod AVLTreeSeqStEph {
     }
 
     #[verifier::external_body]
-    fn rotate_right_fn<T: StT>(mut y: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+    fn rotate_right_fn<T: StT>(mut y: Box<AVLTreeNode<T>>) -> (rotated: Box<AVLTreeNode<T>>)
         requires spec_avltreeseqsteph_wf(Some(y)),
         ensures
-            spec_inorder(Some(result)) =~= spec_inorder(Some(y)),
-            spec_avltreeseqsteph_wf(Some(result)),
+            spec_inorder(Some(rotated)) =~= spec_inorder(Some(y)),
+            spec_avltreeseqsteph_wf(Some(rotated)),
     {
         let mut x = y.left.take().expect("rotate_right requires left child");
         let t2 = x.right.take();
@@ -256,11 +256,11 @@ pub mod AVLTreeSeqStEph {
     }
 
     #[verifier::external_body]
-    fn rotate_left_fn<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+    fn rotate_left_fn<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (rotated: Box<AVLTreeNode<T>>)
         requires spec_avltreeseqsteph_wf(Some(x)),
         ensures
-            spec_inorder(Some(result)) =~= spec_inorder(Some(x)),
-            spec_avltreeseqsteph_wf(Some(result)),
+            spec_inorder(Some(rotated)) =~= spec_inorder(Some(x)),
+            spec_avltreeseqsteph_wf(Some(rotated)),
     {
         let mut y = x.right.take().expect("rotate_left requires right child");
         let t2 = y.left.take();
@@ -273,11 +273,11 @@ pub mod AVLTreeSeqStEph {
     }
 
     #[verifier::external_body]
-    fn rebalance_fn<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (result: Box<AVLTreeNode<T>>)
+    fn rebalance_fn<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (balanced: Box<AVLTreeNode<T>>)
         requires spec_avltreeseqsteph_wf(Some(n)),
         ensures
-            spec_inorder(Some(result)) =~= spec_inorder(Some(n)),
-            spec_avltreeseqsteph_wf(Some(result)),
+            spec_inorder(Some(balanced)) =~= spec_inorder(Some(n)),
+            spec_avltreeseqsteph_wf(Some(balanced)),
     {
         update_meta(&mut n);
         let hl = h_fn(&n.left);
@@ -300,7 +300,7 @@ pub mod AVLTreeSeqStEph {
     }
 
     #[verifier::external_body]
-    pub fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (result: Link<T>) {
+    pub fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (inserted: Link<T>) {
         match node {
             None => {
                 debug_assert!(index == 0, "insert_at_link reached None with index > 0");
@@ -329,9 +329,9 @@ pub mod AVLTreeSeqStEph {
     }
 
     #[verifier::external_body]
-    fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (result: &'a T)
+    fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (elem: &'a T)
         requires spec_avltreeseqsteph_wf(*node), (index as int) < spec_inorder(*node).len(),
-        ensures result@ == spec_inorder(*node)[index as int],
+        ensures elem@ == spec_inorder(*node)[index as int],
     {
         let n = node.as_ref().expect("index out of bounds");
         let left_size = n.left_size;
@@ -345,7 +345,7 @@ pub mod AVLTreeSeqStEph {
     }
 
     #[verifier::external_body]
-    fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (result: Result<(), &'static str>) {
+    fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (outcome: Result<(), &'static str>) {
         match node {
             None => Err("Index out of bounds"),
             Some(n) => {
@@ -363,7 +363,7 @@ pub mod AVLTreeSeqStEph {
     }
 
     #[verifier::external_body]
-    fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (result: bool) {
+    fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool) {
         let sa = size_link_fn(a);
         let sb = size_link_fn(b);
         if sa != sb { return false; }
@@ -386,29 +386,29 @@ pub mod AVLTreeSeqStEph {
             spec_avltreeseqsteph_wf(self.root)
         }
 
-        fn empty() -> (result: Self) {
+        fn empty() -> (tree: Self) {
             AVLTreeSeqStEphS { root: None, next_key: 0 }
         }
 
-        fn new() -> (result: Self) {
+        fn new() -> (tree: Self) {
             Self::empty()
         }
 
-        fn length(&self) -> (result: N) {
+        fn length(&self) -> (len: N) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             size_link_fn(&self.root)
         }
 
-        fn nth(&self, index: N) -> (result: &T) {
+        fn nth(&self, index: N) -> (elem: &T) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             nth_link(&self.root, index)
         }
 
-        fn set(&mut self, index: N, item: T) -> (result: Result<(), &'static str>) {
+        fn set(&mut self, index: N, item: T) -> (outcome: Result<(), &'static str>) {
             set_link(&mut self.root, index, item)
         }
 
-        fn singleton(item: T) -> (result: Self) {
+        fn singleton(item: T) -> (tree: Self) {
             let mut t = Self::empty();
             t.root = insert_at_link(t.root.take(), 0, item, &mut t.next_key);
             proof {
@@ -418,15 +418,15 @@ pub mod AVLTreeSeqStEph {
             t
         }
 
-        fn isEmpty(&self) -> (result: B) {
+        fn isEmpty(&self) -> (empty: B) {
             self.length() == 0
         }
 
-        fn isSingleton(&self) -> (result: B) {
+        fn isSingleton(&self) -> (single: B) {
             self.length() == 1
         }
 
-        fn subseq_copy(&self, start: N, length: N) -> (result: Self) {
+        fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
             assert(self.spec_well_formed());
             let n = self.length();
             let s = if start < n { start } else { n };
@@ -451,7 +451,7 @@ pub mod AVLTreeSeqStEph {
             AVLTreeSeqStEphS::from_vec(vals)
         }
 
-        fn new_root() -> (result: Self) {
+        fn new_root() -> (tree: Self) {
             Self::empty()
         }
 
@@ -461,7 +461,7 @@ pub mod AVLTreeSeqStEph {
             let _ = self.set(index, item);
         }
 
-        fn from_vec(values: Vec<T>) -> (result: AVLTreeSeqStEphS<T>) {
+        fn from_vec(values: Vec<T>) -> (tree: AVLTreeSeqStEphS<T>) {
             let length = values.len();
             let mut t = AVLTreeSeqStEphS::empty();
             let mut i: usize = 0;
@@ -478,7 +478,7 @@ pub mod AVLTreeSeqStEph {
             t
         }
 
-        fn to_arrayseq(&self) -> (result: ArraySeqStEphS<T>) {
+        fn to_arrayseq(&self) -> (seq: ArraySeqStEphS<T>) {
             assert(self.spec_well_formed());
             let n = self.length();
             let mut vals: Vec<T> = Vec::new();
@@ -497,7 +497,7 @@ pub mod AVLTreeSeqStEph {
         }
 
         #[verifier::external_body]
-        fn iter<'a>(&'a self) -> (result: AVLTreeSeqIterStEph<'a, T>) {
+        fn iter<'a>(&'a self) -> (it: AVLTreeSeqIterStEph<'a, T>) {
             let mut it = AVLTreeSeqIterStEph {
                 stack: Vec::new(),
                 current: None,
@@ -513,7 +513,7 @@ pub mod AVLTreeSeqStEph {
             self.root = node;
         }
 
-        fn contains_value(&self, target: &T) -> (result: B) {
+        fn contains_value(&self, target: &T) -> (found: B) {
             assert(self.spec_well_formed());
             let n = self.length();
             let mut i: usize = 0;
@@ -537,7 +537,7 @@ pub mod AVLTreeSeqStEph {
             self.push_back(value);
         }
 
-        fn delete_value(&mut self, target: &T) -> (result: bool) {
+        fn delete_value(&mut self, target: &T) -> (deleted: bool) {
             assert(self.spec_well_formed());
             let len = self.length();
             let mut found_index: Option<N> = None;
@@ -596,7 +596,7 @@ pub mod AVLTreeSeqStEph {
 
     impl<T: StT> Clone for AVLTreeNode<T> {
         #[verifier::external_body]
-        fn clone(&self) -> (result: Self) {
+        fn clone(&self) -> (copy: Self) {
             AVLTreeNode {
                 value: self.value.clone(),
                 height: self.height,
@@ -618,19 +618,19 @@ pub mod AVLTreeSeqStEph {
     impl<T: StT> Eq for AVLTreeSeqStEphS<T> {}
 
     impl<T: StT> PartialEq for AVLTreeSeqStEphS<T> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
-            let r = compare_trees(&self.root, &other.root);
-            proof { assume(r == (self@ == other@)); }
-            r
+            let equal = compare_trees(&self.root, &other.root);
+            proof { assume(equal == (self@ == other@)); }
+            equal
         }
     }
 
     impl<T: StT> Clone for AVLTreeSeqStEphS<T> {
         #[verifier::external_body]
-        fn clone(&self) -> (result: Self)
-            ensures result@ == self@,
+        fn clone(&self) -> (copy: Self)
+            ensures copy@ == self@,
         {
             AVLTreeSeqStEphS {
                 root: self.root.clone(),

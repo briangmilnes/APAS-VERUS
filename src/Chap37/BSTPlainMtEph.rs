@@ -55,15 +55,15 @@ pub mod BSTPlainMtEph {
 
     // Verified BST operations (same proofs as BSTPlainStEph).
 
-    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (result: BalBinTree<T>)
+    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)
         requires tree_is_bst::<T>(node),
         ensures
-            tree_is_bst::<T>(result),
-            tree_contains(result, value),
-            forall|x: T| #![auto] tree_contains(result, x) <==>
+            tree_is_bst::<T>(inserted),
+            tree_contains(inserted, value),
+            forall|x: T| #![auto] tree_contains(inserted, x) <==>
                 (tree_contains(node, x) || x == value),
-            result.spec_size() <= node.spec_size() + 1,
-            result.spec_height() <= node.spec_height() + 1,
+            inserted.spec_size() <= node.spec_size() + 1,
+            inserted.spec_height() <= node.spec_height() + 1,
         decreases node.spec_size(),
     {
         match node {
@@ -147,9 +147,9 @@ pub mod BSTPlainMtEph {
         }
     }
 
-    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (result: bool)
+    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)
         requires tree_is_bst::<T>(*node),
-        ensures result == tree_contains(*node, *target),
+        ensures found == tree_contains(*node, *target),
         decreases node.spec_size(),
     {
         match node {
@@ -172,11 +172,11 @@ pub mod BSTPlainMtEph {
         }
     }
 
-    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (result: Option<&'a T>)
+    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)
         requires tree_is_bst::<T>(*node),
         ensures
-            result.is_some() == tree_contains(*node, *target),
-            result.is_some() ==> *result.unwrap() == *target,
+            found.is_some() == tree_contains(*node, *target),
+            found.is_some() ==> *found.unwrap() == *target,
         decreases node.spec_size(),
     {
         match node {
@@ -199,7 +199,7 @@ pub mod BSTPlainMtEph {
         }
     }
 
-    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (result: Option<&T>)
+    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
         decreases node.spec_size(),
     {
         match node {
@@ -211,7 +211,7 @@ pub mod BSTPlainMtEph {
         }
     }
 
-    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (result: Option<&T>)
+    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
         decreases node.spec_size(),
     {
         match node {
@@ -259,13 +259,13 @@ pub mod BSTPlainMtEph {
             }
         }
 
-        pub fn contains(&self, target: &T) -> (result: bool)
+        pub fn contains(&self, target: &T) -> (found: bool)
         {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
-            let result = contains_node(tree_ref, target);
+            let found = contains_node(tree_ref, target);
             read_handle.release_read();
-            result
+            found
         }
 
         pub fn is_empty(&self) -> (b: bool)

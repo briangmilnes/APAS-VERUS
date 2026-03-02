@@ -57,12 +57,12 @@ pub mod BSTBBAlphaStEph {
         pub root: BalBinTree<T>,
     }
 
-    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (result: BalBinTree<T>)
+    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)
         requires tree_is_bst::<T>(node),
         ensures
-            tree_is_bst::<T>(result),
-            tree_contains(result, value),
-            forall|x: T| #![auto] tree_contains(result, x) <==>
+            tree_is_bst::<T>(inserted),
+            tree_contains(inserted, value),
+            forall|x: T| #![auto] tree_contains(inserted, x) <==>
                 (tree_contains(node, x) || x == value),
         decreases node.spec_size(),
     {
@@ -186,9 +186,9 @@ pub mod BSTBBAlphaStEph {
         }
     }
 
-    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (result: bool)
+    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)
         requires tree_is_bst::<T>(*node),
-        ensures result == tree_contains(*node, *target),
+        ensures found == tree_contains(*node, *target),
         decreases node.spec_size(),
     {
         match node {
@@ -219,11 +219,11 @@ pub mod BSTBBAlphaStEph {
         }
     }
 
-    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (result: Option<&'a T>)
+    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)
         requires tree_is_bst::<T>(*node),
         ensures
-            result.is_some() == tree_contains(*node, *target),
-            result.is_some() ==> *result.unwrap() == *target,
+            found.is_some() == tree_contains(*node, *target),
+            found.is_some() ==> *found.unwrap() == *target,
         decreases node.spec_size(),
     {
         match node {
@@ -254,7 +254,7 @@ pub mod BSTBBAlphaStEph {
         }
     }
 
-    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (result: Option<&T>)
+    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
         decreases node.spec_size(),
     {
         match node {
@@ -269,7 +269,7 @@ pub mod BSTBBAlphaStEph {
         }
     }
 
-    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (result: Option<&T>)
+    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
         decreases node.spec_size(),
     {
         match node {
@@ -312,29 +312,29 @@ pub mod BSTBBAlphaStEph {
         tree.root.height()
     }
 
-    pub fn bb_insert<T: TotalOrder>(tree: BSTBBAlphaStEph<T>, value: T) -> (result: BSTBBAlphaStEph<T>)
+    pub fn bb_insert<T: TotalOrder>(tree: BSTBBAlphaStEph<T>, value: T) -> (inserted: BSTBBAlphaStEph<T>)
         requires tree_is_bst::<T>(tree.root),
         ensures
-            tree_is_bst::<T>(result.root),
-            tree_contains(result.root, value),
-            forall|x: T| #![auto] tree_contains(result.root, x) <==>
+            tree_is_bst::<T>(inserted.root),
+            tree_contains(inserted.root, value),
+            forall|x: T| #![auto] tree_contains(inserted.root, x) <==>
                 (tree_contains(tree.root, x) || x == value),
     {
         BSTBBAlphaStEph { root: insert_node(tree.root, value) }
     }
 
-    pub fn bb_contains<T: TotalOrder>(tree: &BSTBBAlphaStEph<T>, target: &T) -> (result: bool)
+    pub fn bb_contains<T: TotalOrder>(tree: &BSTBBAlphaStEph<T>, target: &T) -> (found: bool)
         requires tree_is_bst::<T>(tree.root),
-        ensures result == tree_contains(tree.root, *target),
+        ensures found == tree_contains(tree.root, *target),
     {
         contains_node(&tree.root, target)
     }
 
-    pub fn bb_find<'a, T: TotalOrder>(tree: &'a BSTBBAlphaStEph<T>, target: &T) -> (result: Option<&'a T>)
+    pub fn bb_find<'a, T: TotalOrder>(tree: &'a BSTBBAlphaStEph<T>, target: &T) -> (found: Option<&'a T>)
         requires tree_is_bst::<T>(tree.root),
         ensures
-            result.is_some() == tree_contains(tree.root, *target),
-            result.is_some() ==> *result.unwrap() == *target,
+            found.is_some() == tree_contains(tree.root, *target),
+            found.is_some() ==> *found.unwrap() == *target,
     {
         find_node(&tree.root, target)
     }
